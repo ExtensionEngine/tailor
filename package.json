@@ -10,7 +10,7 @@
     "unit:client": "karma start client/test/unit/karma.conf.js --single-run",
     "e2e:client": "node client/test/e2e/runner.js",
     "test:client": "npm run unit:client && npm run e2e:client",
-    "lint": "eslint --ext .js,.vue src client/test/unit/specs client/test/e2e/specs",
+    "lint": "eslint --ext .js,.vue src client/test/unit/specs client/test/e2e/specs server",
     "dev:server": "node -r dotenv/config ./server/src/index.js"
   },
   "dependencies": {
