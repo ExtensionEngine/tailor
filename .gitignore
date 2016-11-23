@@ -171,3 +171,16 @@ fabric.properties
 # modules.xml
 # .idea/misc.xml
 # *.ipr
+
+
+### Client ###
+# Build
+dist/
+
+# Debug
+npm-debug.log
+
+# Testing
+test/unit/coverage
+test/e2e/reports
+selenium-debug.log
