@@ -10,10 +10,15 @@
     "unit:client": "karma start client/test/unit/karma.conf.js --single-run",
     "e2e:client": "node client/test/e2e/runner.js",
     "test:client": "npm run unit:client && npm run e2e:client",
-    "lint": "eslint --ext .js,.vue src client/test/unit/specs client/test/e2e/specs"
+    "lint": "eslint --ext .js,.vue src client/test/unit/specs client/test/e2e/specs",
+    "dev:server": "node -r dotenv/config ./server/src/index.js"
   },
   "dependencies": {
     "axios": "^0.15.2",
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
     "vue": "^2.1.0",
     "vue-router": "^2.0.3",
     "vuex": "^2.0.0"
