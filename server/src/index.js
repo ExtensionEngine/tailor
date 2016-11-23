@@ -3,10 +3,16 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const router = require('./router')
+const logger = require('./logger')
 
 const server = express()
 server.use(cors())
 server.use(bodyParser.json())
+server.use('/v1', (req, res, next) => {
+  logger.info({ req })
+  next()
+})
+
 server.use('/v1', router)
 
 server.use((req, res, next) => {
@@ -14,8 +20,7 @@ server.use((req, res, next) => {
 })
 
 server.use((err, req, res, next) => {
-  // TODO(matej): setup proper logging.
-  console.log(err)
+  logger.error({ err })
   res.status(500).json({ error: err })
 })
 
