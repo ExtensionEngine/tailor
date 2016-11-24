@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "node client/build/dev-server.js",
     "build": "npm run clean && npm run build:dist",
-    "build:dist": "cross-env NODE_ENV=production webpack --config config/webpack/webpack.client.config.js --progress --hide-modules",
+    "build:dist": "cross-env NODE_ENV=production webpack --config config/webpack/prod.js --progress --hide-modules",
     "unit:client": "karma start client/test/unit/karma.conf.js --single-run",
     "e2e:client": "node client/test/e2e/runner.js",
     "test:client": "npm run unit && npm run e2e",
