@@ -26,17 +26,17 @@ let devMiddleware = require('webpack-dev-middleware')(compiler, {
   }
 });
 
-let hotMiddleware = require('webpack-hot-middleware')(compiler)
+let hotMiddleware = require('webpack-hot-middleware')(compiler);
 compiler.plugin('compilation', function (compilation) {
   compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
-    hotMiddleware.publish({ action: 'reload' })
-    cb()
-  })
-})
+    hotMiddleware.publish({ action: 'reload' });
+    cb();
+  });
+});
 
 // proxy api requests
 Object.keys(proxyTable).forEach(function (context) {
-  let options = proxyTable[context]
+  let options = proxyTable[context];
   if (typeof options === 'string') {
     options = { target: options };
   }
@@ -59,14 +59,14 @@ app.use(staticPath, express.static('./static'));
 
 module.exports = app.listen(port, function (err) {
   if (err) {
-    console.log(err)
-    return
+    console.log(err);
+    return;
   }
   const uri = `http://localhost:${port}`;
   console.log(`Listening at ${uri}` + '\n');
 
   // when env is testing, don't need open it
   if (process.env.NODE_ENV !== 'testing') {
-    opn(uri)
+    opn(uri);
   }
-})
+});

@@ -40,7 +40,7 @@ module.exports = function (config) {
 
     // Coverage config, target dir etc.
     coverageReporter: {
-      dir: 'coverage/',
+      dir: projectRoot('client', 'test', 'unit', 'coverage'),
       reporters: [
         {
           type: 'lcov',
