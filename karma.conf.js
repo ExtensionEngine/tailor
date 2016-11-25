@@ -19,12 +19,12 @@ module.exports = function (config) {
 
     // List of files / patterns to execute
     files: [
-      { pattern: '*.spec.js', watched: false },
+      { pattern: '*.spec.js', watched: false }
     ],
 
     // List of preprocessors to apply
     preprocessors: {
-      '*.spec.js': ['webpack', 'sourcemap'],
+      '*.spec.js': ['webpack', 'sourcemap']
     },
 
     // Run only once instead of watching
@@ -35,7 +35,7 @@ module.exports = function (config) {
 
     // Apply webpack middleware
     webpackMiddleware: {
-      noInfo: true,
+      noInfo: true
     },
 
     // Coverage config, target div etc.
@@ -45,12 +45,12 @@ module.exports = function (config) {
         {
           type: 'lcov',
           dir: 'coverage',
-          subdir: 'lcov',
+          subdir: 'lcov'
         },
         {
-          type: 'text-summary',
-        },
-      ],
-    },
+          type: 'text-summary'
+        }
+      ]
+    }
   });
 };
