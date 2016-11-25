@@ -8,9 +8,9 @@
     "dev": "node client/build/dev-server.js",
     "build": "npm run clean && npm run build:dist",
     "build:dist": "cross-env NODE_ENV=production webpack --config config/webpack/prod.js --progress --hide-modules",
-    "unit:client": "karma start client/test/unit/karma.conf.js --single-run",
+    "unit:client": "karma start karma.conf.js",
     "e2e:client": "node client/test/e2e/runner.js",
-    "test:client": "npm run unit && npm run e2e",
+    "test:client": "npm run unit:client && npm run e2e",
     "clean": "rimraf dist",
     "lint": "eslint --ext .js,.vue src client/test/unit/specs client/test/e2e/specs"
   },
