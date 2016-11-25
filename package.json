@@ -5,11 +5,11 @@
   "author": "Damir Perisic <dperisic@extensionengine.com>",
   "private": true,
   "scripts": {
-    "dev": "node client/build/dev-server.js",
+    "dev": "node config/startup/client.js",
     "build": "npm run clean && npm run build:dist",
     "build:dist": "cross-env NODE_ENV=production webpack --config config/webpack/prod.js --progress --hide-modules",
+    "e2e": "node client/test/e2e/runner.js",
     "unit:client": "karma start karma.conf.js",
-    "e2e:client": "node client/test/e2e/runner.js",
     "test:client": "npm run unit:client && npm run e2e",
     "clean": "rimraf dist",
     "lint": "eslint --ext .js,.vue src client/test/unit/specs client/test/e2e/specs"

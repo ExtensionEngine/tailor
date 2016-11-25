@@ -181,6 +181,6 @@ dist/
 npm-debug.log
 
 # Testing
-test/unit/coverage
-test/e2e/reports
+client/test/unit/coverage
+client/test/e2e/reports
 selenium-debug.log

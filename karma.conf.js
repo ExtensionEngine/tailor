@@ -38,7 +38,7 @@ module.exports = function (config) {
       noInfo: true
     },
 
-    // Coverage config, target div etc.
+    // Coverage config, target dir etc.
     coverageReporter: {
       dir: 'coverage/',
       reporters: [
