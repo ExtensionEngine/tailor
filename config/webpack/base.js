@@ -1,16 +1,23 @@
+const envSettings = require('../helpers/envSettings');
+const getAssetsPath = require('../helpers/assetsPath');
+const loaderGenerators = require('../helpers/loaderGenerators');
 const projectRoot = require('../helpers/projectRoot');
-const utils = require('../../client/build/utils');
 
-const ASSETS_PUBLIC_PATH = '/';
-const DIST_PATH = projectRoot('dist');
-const USE_CSS_SOURCE_MAP = true;
+const ASSETS_PUBLIC_PATH = process.env.NODE_ENV === 'production'
+  ? envSettings.prod.assetsPublicPath
+  : envSettings.dev.assetsPublicPath;
+
+const env = process.env.NODE_ENV;
+const cssSourceMapDev = (env === 'development' && envSettings.dev.cssSourceMap);
+const cssSourceMapProd = (env === 'development' && envSettings.prod.cssSourceMap);
+const USE_CSS_SOURCE_MAP = cssSourceMapDev || cssSourceMapProd;
 
 module.exports = {
   entry: {
     app: './client/main.js'
   },
   output: {
-    path: DIST_PATH,
+    path: envSettings.prod.assetsRoot,
     publicPath: ASSETS_PUBLIC_PATH,
     filename: '[name].js'
   },
@@ -62,7 +69,7 @@ module.exports = {
         loader: 'url',
         query: {
           limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+          name: getAssetsPath('img/[name].[hash:7].[ext]')
         }
       },
       {
@@ -70,7 +77,7 @@ module.exports = {
         loader: 'url',
         query: {
           limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+          name: getAssetsPath('fonts/[name].[hash:7].[ext]')
         }
       }
     ]
@@ -79,7 +86,7 @@ module.exports = {
     formatter: require('eslint-friendly-formatter')
   },
   vue: {
-    loaders: utils.cssLoaders({ sourceMap: USE_CSS_SOURCE_MAP }),
+    loaders: loaderGenerators.cssLoaders({ sourceMap: USE_CSS_SOURCE_MAP }),
     postcss: [
       require('autoprefixer')({
         browsers: ['last 2 versions']

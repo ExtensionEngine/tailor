@@ -2,9 +2,9 @@ const merge = require('webpack-merge');
 const webpack = require('webpack');
 
 const baseConfig = require('./base');
+const envSettings = require('../helpers/envSettings');
 const loaderGenerators = require('../helpers/loaderGenerators');
 const projectRoot = require('../helpers/projectRoot');
-const testEnv = require('../../client/config/test.env');
 
 let webpackConfig = merge(baseConfig, {
   module: {
@@ -18,7 +18,7 @@ let webpackConfig = merge(baseConfig, {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': testEnv
+      'process.env': envSettings.test.env
     })
   ]
 });

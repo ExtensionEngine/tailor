@@ -5,27 +5,28 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const baseConfig = require('./base');
+const envSettings = require('../helpers/envSettings');
+const getAssetsPath = require('../helpers/assetsPath');
 const loaderGenerators = require('../helpers/loaderGenerators');
 const projectRoot = require('../helpers/projectRoot');
-const utils = require('../../client/build/utils');
-
-const ASSETS_SUBDIRECTORY = 'static';
-const BUILD_INDEX = projectRoot('dist', 'index.html');
-const USE_CSS_SOURCE_MAP = true;
-
-const getAssetsPath = _path => path.posix.join(ASSETS_SUBDIRECTORY, _path);
 
 let webpackConfig = merge(baseConfig, {
-  devtool: '#source-map',
+  devtool: envSettings.prod.cssSourceMap ? '#source-map' : false,
   output: {
     filename: getAssetsPath('js/[name].[chunkhash].js'),
     chunkFilename: getAssetsPath('js/[id].[chunkhash].js')
   },
   module: {
-    loaders: loaderGenerators.styleLoaders({ sourceMap: true, extract: true })
+    loaders: loaderGenerators.styleLoaders({
+      sourceMap: envSettings.prod.cssSourceMap,
+      extract: true
+    })
   },
   vue: {
-    loaders: utils.cssLoaders({ sourceMap: USE_CSS_SOURCE_MAP, extract: true })
+    loaders: loaderGenerators.cssLoaders({
+      sourceMap: envSettings.prod.cssSourceMap,
+      extract: true
+    })
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -37,11 +38,11 @@ let webpackConfig = merge(baseConfig, {
       }
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
+    new ExtractTextPlugin(getAssetsPath('css/[name].[contenthash].css')),
     new HtmlWebpackPlugin({
       filename: process.env.NODE_ENV === 'testing'
         ? 'index.html'
-        : BUILD_INDEX,
+        : envSettings.prod.index,
       template: 'index.html',
       inject: true,
       minify: {
@@ -58,7 +59,7 @@ let webpackConfig = merge(baseConfig, {
           module.resource &&
           /\.js$/.test(module.resource) &&
           module.resource.indexOf(
-            path.join(__dirname, '../node_modules')
+            projectRoot('node_modules')
           ) === 0
         );
       }

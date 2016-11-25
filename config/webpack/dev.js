@@ -3,13 +3,18 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const baseConfig = require('./base');
+const envSettings = require('../helpers/envSettings');
+const loaderGenerators = require('../helpers/loaderGenerators');
 
 let webpackConfig = merge(baseConfig, {
   devtool: '#eval-source-map',
-  entry: ['./client/build/dev-client', './client/main.js'],
+  entry: ['./config/helpers/devClient.js', './client/main.js'],
+  module: {
+    loaders: loaderGenerators.styleLoaders({ sourceMap: envSettings.dev.cssSourceMap })
+  },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': { NODE_ENV: '"development"' }
+      'process.env': envSettings.dev.env
     }),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
