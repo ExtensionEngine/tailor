@@ -2,9 +2,7 @@
 * Taken from the original Vue-webpack start
 * https://github.com/vuejs-templates/webpack/blob/master/template/build/utils.js
 */
-
-var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 function cssLoaders(options) {
   options = options || {};
@@ -41,7 +39,7 @@ function cssLoaders(options) {
     sass: generateLoaders(['css', 'sass?indentedSyntax']),
     scss: generateLoaders(['css', 'sass']),
     stylus: generateLoaders(['css', 'stylus']),
-    styl: generateLoaders(['css', 'stylus']),
+    styl: generateLoaders(['css', 'stylus'])
   };
 };
 
@@ -53,7 +51,7 @@ function styleLoaders(options) {
     const loader = loaders[extension];
     output.push({
       test: new RegExp('\\.' + extension + '$'),
-      loader: loader,
+      loader: loader
     });
   }
 
@@ -62,5 +60,5 @@ function styleLoaders(options) {
 
 module.exports = {
   cssLoaders,
-  styleLoaders,
+  styleLoaders
 };

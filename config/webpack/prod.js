@@ -1,127 +1,55 @@
+const merge = require('webpack-merge');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const config = require('../../client/config');
-const prodLoaderGenerators = require('../helpers/prodLoaderGenerators');
+const baseConfig = require('./base');
+const loaderGenerators = require('../helpers/loaderGenerators');
 const projectRoot = require('../helpers/projectRoot');
 const utils = require('../../client/build/utils');
 
-const distPath = projectRoot('dist');
-const assetsPublicPath = '/';
-const assetsSubDirectory = 'static';
-const useCssSourceMap = true;
+const ASSETS_SUBDIRECTORY = 'static';
+const BUILD_INDEX = projectRoot('dist', 'index.html');
+const USE_CSS_SOURCE_MAP = true;
 
-const getAssetsPath = _path => path.posix.join(assetsSubDirectory, _path);
+const getAssetsPath = _path => path.posix.join(ASSETS_SUBDIRECTORY, _path);
 
-module.exports = {
+let webpackConfig = merge(baseConfig, {
   devtool: '#source-map',
-  entry: {
-    app: './client/main.js',
-  },
   output: {
-    path: distPath,
-    publicPath: assetsPublicPath,
     filename: getAssetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: getAssetsPath('js/[id].[chunkhash].js'),
-  },
-  resolve: {
-    extensions: ['', '.js', '.vue'],
-    fallback: projectRoot('node_modules'),
-    alias: {
-      vue$: 'vue/dist/vue.common.js',
-      src: projectRoot('client', 'src'),
-      assets: projectRoot('client', 'src', 'assets'),
-      components: projectRoot('client', 'src', 'components'),
-    },
-  },
-  resolveLoader: {
-    fallback: projectRoot('node_modules'),
+    chunkFilename: getAssetsPath('js/[id].[chunkhash].js')
   },
   module: {
-    preLoaders: [
-      {
-        test: /\.vue$/,
-        loader: 'eslint',
-        include: projectRoot(),
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.js$/,
-        loader: 'eslint',
-        include: projectRoot(),
-        exclude: /node_modules/,
-      },
-    ],
-    loaders: [
-      {
-        test: /\.vue$/,
-        loader: 'vue',
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel',
-        include: projectRoot(),
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.json$/,
-        loader: 'json',
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url',
-        query: {
-          limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]'),
-        },
-      },
-      {
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url',
-        query: {
-          limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]'),
-        },
-      },
-      ...prodLoaderGenerators.styleLoaders({ sourceMap: true, extract: true }),
-    ],
-  },
-  eslint: {
-    formatter: require('eslint-friendly-formatter'),
+    loaders: loaderGenerators.styleLoaders({ sourceMap: true, extract: true })
   },
   vue: {
-    loaders: utils.cssLoaders({ sourceMap: useCssSourceMap, extract: true }),
-    postcss: [
-      require('autoprefixer')({
-        browsers: ['last 2 versions'],
-      }),
-    ],
+    loaders: utils.cssLoaders({ sourceMap: USE_CSS_SOURCE_MAP, extract: true })
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': config.build.env,
+      'process.env': { NODE_ENV: '"production"' }
     }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
-        warnings: false,
-      },
+        warnings: false
+      }
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
     new HtmlWebpackPlugin({
       filename: process.env.NODE_ENV === 'testing'
         ? 'index.html'
-        : config.build.index,
+        : BUILD_INDEX,
       template: 'index.html',
       inject: true,
       minify: {
         removeComments: true,
         collapseWhitespace: true,
-        removeAttributeQuotes: true,
+        removeAttributeQuotes: true
       },
-      chunksSortMode: 'dependency',
+      chunksSortMode: 'dependency'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -133,11 +61,13 @@ module.exports = {
             path.join(__dirname, '../node_modules')
           ) === 0
         );
-      },
+      }
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
-      chunks: ['vendor'],
-    }),
-  ],
-};
+      chunks: ['vendor']
+    })
+  ]
+});
+
+module.exports = webpackConfig;
