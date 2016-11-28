@@ -26,11 +26,20 @@ app.use((req, res, next) => {
 // Global error handler.
 app.use((err, req, res, next) => {
   logger.error({ err });
-  if (process.env.NODE_ENV === 'production') {
-    res.status(500).json();
-  } else {
-    res.status(500).json({ error: err });
+
+  if (err.isArangoError) {
+    if (process.env.NODE_ENV === 'production') return res.status(500).json();
+    // err.response is circular and cannot be serialized with res.json().
+    delete err.response;
   }
+
+  return res.status(500).json({
+    error: {
+      name: err.name,
+      message: err.message,
+      meta: err
+    }
+  });
 });
 
 module.exports = app;
