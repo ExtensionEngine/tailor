@@ -1,28 +1,31 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <hello></hello>
+    <navbar></navbar>
+    <div class="contaner-fluid">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-import Hello from './components/Hello'
+  import Navbar from './layout/Navbar';
 
-export default {
-  name: 'app',
-  components: {
-    Hello
-  }
-}
+  export default {
+    name: 'app',
+    components: {
+      Navbar
+    }
+  };
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss">
+  @import './assets/stylesheets/main';
+
+  #app {
+    color: #2c3e50;
+    font-family: 'Catamaran', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+  }
 </style>
