@@ -1,18 +1,9 @@
 'use strict';
-const arangojs = require('arangojs');
 const app = require('./app');
+const database = require('./database');
 const logger = require('./logger');
 
 const serverPort = process.env.SERVER_PORT;
-const dbUri = process.env.ARANGODB_URI;
-const dbName = process.env.DB_NAME;
-
-function connectToDb() {
-  const db = arangojs(dbUri);
-  return db.listUserDatabases()
-    .then(names => names.includes(dbName) ? null : db.createDatabase(dbName))
-    .then(result => db.useDatabase(dbName));
-}
 
 function runApp() {
   return new Promise((resolve, reject) => {
@@ -20,8 +11,8 @@ function runApp() {
   });
 }
 
-connectToDb()
-.then(() => logger.info(`Connected to database ${dbName}`))
-.then(runApp)
-.then(() => logger.info(`Server listening on port ${serverPort}`))
-.catch(err => logger.error({ err }));
+database.initialize()
+  .then(db => logger.info(`Connected to database ${db.name}`))
+  .then(runApp)
+  .then(() => logger.info(`Server listening on port ${serverPort}`))
+  .catch(err => logger.error({ err }));
