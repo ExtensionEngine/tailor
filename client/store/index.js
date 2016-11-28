@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import createLogger from 'vuex/dist/logger';
 
-import auth from './auth';
+import auth from './modules/auth';
 import settings from '../settings';
 
 Vue.use(Vuex);

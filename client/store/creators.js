@@ -5,7 +5,7 @@
  * @return {Object} Key/value pairs of action names and prefixed action names
  */
 export function createMutationTypes(prefix, actions) {
-  return actions.map(action => ({
-    [action]: `${prefix}/${action}`
-  }));
+  let types = {};
+  actions.forEach(action => { types[action] = `${prefix}/${action}`; });
+  return types;
 };

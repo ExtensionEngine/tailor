@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+
 const envSettings = require('../helpers/envSettings');
 const getAssetsPath = require('../helpers/assetsPath');
 const loaderGenerators = require('../helpers/loaderGenerators');
@@ -92,5 +94,11 @@ module.exports = {
         browsers: ['last 2 versions']
       })
     ]
-  }
+  },
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    })
+  ]
 };

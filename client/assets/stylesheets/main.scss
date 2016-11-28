@@ -1,3 +1,7 @@
 // Bootstrap files
 $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~bootstrap-sass/assets/stylesheets/bootstrap';
+@import '~bootswatch/paper/variables';
+@import '~bootswatch/paper/bootswatch';
+
+@import 'common/all';
