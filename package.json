@@ -11,7 +11,7 @@
     "e2e:client": "node client/test/e2e/runner.js",
     "test:client": "npm run unit:client && npm run e2e:client",
     "lint": "eslint --ext .js,.vue src client/test/unit/specs client/test/e2e/specs server",
-    "dev:server": "nodemon --ignore client/ --exec \"node -r dotenv/config\" ./server/src/index.js"
+    "dev:server": "nodemon --ignore client/ --exec \"node -r dotenv/config\" ./server"
   },
   "dependencies": {
     "axios": "^0.15.2",
