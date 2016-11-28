@@ -14,7 +14,11 @@ class CourseController {
 
   create(req, res, next) {
     this.model.create(req.body)
-      .then(course => res.status(201).json({ data: course }))
+      .then(course => {
+        res.location(`${req.originalUrl}/${course._key}`)
+          .status(201)
+          .json({ data: course });
+      })
       .catch(next);
   }
 
