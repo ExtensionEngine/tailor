@@ -1,18 +1,11 @@
 'use strict';
 const Joi = require('joi');
-const db = require('../database').db;
 
-const courseSchema = Joi.object().keys({
-  name: Joi.string().min(3).max(100).required()
-});
-
-const COLLECTION_NAME = 'course';
-
-class CourseModel {
-  constructor(db, collectionName, schema) {
+class BaseModel {
+  constructor(db, collectionName, schema = Joi.any()) {
     this.db = db;
-    this.collectionName = collectionName;
     this.schema = schema;
+    this.collectionName = collectionName;
     this.collection = db.collection(collectionName);
   }
 
@@ -69,9 +62,4 @@ class CourseModel {
   }
 }
 
-module.exports = {
-  COLLECTION_NAME,
-  schema: courseSchema,
-  Model: CourseModel,
-  model: new CourseModel(db, COLLECTION_NAME, courseSchema)
-};
+module.exports = BaseModel;

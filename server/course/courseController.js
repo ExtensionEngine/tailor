@@ -1,5 +1,5 @@
 'use strict';
-const courseModel = require('./courseModel').model;
+const courseModel = require('./course.model').model;
 
 class CourseController {
   constructor(model) {
