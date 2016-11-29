@@ -28,23 +28,18 @@ class BaseModel {
       .then(cursor => cursor.next());
   }
 
-  get(key) {
+  getByKey(key) {
     return this.collection.document({ _key: key });
   }
 
-  // TODO(matej): rename to getMany, expose offset and limit.
-  getAll() {
-    return this.collection.all().then(cursor => cursor.all());
-  }
-
   // TODO(matej): can Joi be used to validate individual keys?
-  update(key, partialDocument) {
+  updateByKey(key, partialDocument) {
     return this.collection
       .update({ _key: key }, partialDocument, { returnNew: true })
       .then(result => result.new);
   }
 
-  replace(key, newDocument) {
+  replaceByKey(key, newDocument) {
     return this
       .validate(newDocument)
       .then(validDocument => this.collection.replace(
@@ -55,10 +50,15 @@ class BaseModel {
       .then(result => result.new);
   }
 
-  remove(key) {
+  removeByKey(key) {
     return this.collection
       .remove({ _key: key }, { returnOld: true })
       .then(result => result.old);
+  }
+
+  // TODO(matej): expose offset and limit.
+  getMany() {
+    return this.collection.all().then(cursor => cursor.all());
   }
 }
 
