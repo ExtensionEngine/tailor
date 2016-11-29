@@ -21,8 +21,12 @@
 <style lang="scss">
   @import './assets/stylesheets/main';
 
+  body {
+    background-color: #e0e0e0;
+  }
+
   #app {
-    color: #2c3e50;
+    color: rgba(0, 0, 0, .87);
     font-family: 'Catamaran', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
