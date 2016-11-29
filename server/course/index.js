@@ -1,6 +1,6 @@
 'use strict';
 const express = require('express');
-const controller = require('./courseController').controller;
+const controller = require('./course.controller').controller;
 
 const router = express.Router();
 router.get('/', controller.getAll);
