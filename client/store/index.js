@@ -9,7 +9,7 @@ Vue.use(Vuex);
 
 const isDevEnv = process.env.NODE_ENV !== 'production';
 const middlewares = settings.debug.state && isDevEnv ? [createLogger()] : [];
-const modules = [auth];
+const modules = { auth };
 
 export default new Vuex.Store({
   middlewares,
