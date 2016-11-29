@@ -8,12 +8,6 @@ const courseSchema = Joi.object().keys({
 
 const COLLECTION_NAME = 'course';
 
-function validate(data, schema) {
-  return new Promise((resolve, reject) => {
-    Joi.validate(data, schema, (err, value) => err ? reject(err) : resolve(value));
-  });
-};
-
 class CourseModel {
   constructor(db, collectionName, schema) {
     this.db = db;
@@ -22,8 +16,17 @@ class CourseModel {
     this.collection = db.collection(collectionName);
   }
 
+  validate(document) {
+    return new Promise((resolve, reject) => {
+      Joi.validate(document, this.schema, (err, value) => {
+        return err ? reject(err) : resolve(value);
+      });
+    });
+  }
+
   create(document) {
-    return validate(document, this.schema)
+    return this
+      .validate(document)
       .then(validDocument => this.db.query(
         'INSERT @validDocument IN @@collection RETURN NEW', {
           '@collection': this.collectionName,
@@ -36,10 +39,12 @@ class CourseModel {
     return this.collection.document({ _key: key });
   }
 
+  // TODO(matej): rename to getMany, expose offset and limit.
   getAll() {
     return this.collection.all().then(cursor => cursor.all());
   }
 
+  // TODO(matej): can Joi be used to validate individual keys?
   update(key, partialDocument) {
     return this.collection
       .update({ _key: key }, partialDocument, { returnNew: true })
@@ -47,7 +52,8 @@ class CourseModel {
   }
 
   replace(key, newDocument) {
-    return validate(newDocument, this.schema)
+    return this
+      .validate(newDocument)
       .then(validDocument => this.collection.replace(
         { _key: key },
         validDocument,
