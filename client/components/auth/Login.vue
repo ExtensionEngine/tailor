@@ -9,27 +9,29 @@
     <form @submit.prevent="handleLoginUser">
       <div class="form-group">
         <input
-        ref="email"
-        type="email"
-        class="form-control"
-        placeholder="email"
+          ref="email"
+          type="email"
+          class="form-control"
+          placeholder="email"
         />
       </div>
 
       <div class="form-group">
         <input
-        ref="password"
-        type="password"
-        class="form-control"
-        placeholder="password"
+          ref="password"
+          type="password"
+          class="form-control"
+          placeholder="password"
         />
       </div>
 
-      <div>
+      <div class="form-subtext">
         <router-link :to="{ name: 'reset-password' }">Forgotten password?</router-link>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block">Login</button>
+      <div class="form-submit">
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+      </div>
     </form>
   </div>
 </template>
@@ -76,8 +78,24 @@
     form {
       padding-top: 20px;
 
-      button {
-        margin-top: 30px;
+      .form-subtext {
+        text-align: right;
+
+        a {
+          color: inherit;
+          font-weight: 500;
+          text-decoration: none;
+        }
+      }
+
+      .form-submit {
+        padding-top: 30px;
+        overflow: visible;
+        width: 100%;
+      }
+
+      .form-group + .form-group {
+        margin-bottom: 8px;
       }
     }
 
