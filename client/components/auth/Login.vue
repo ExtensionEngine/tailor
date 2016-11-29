@@ -25,6 +25,10 @@
         />
       </div>
 
+      <div>
+        <router-link :to="{ name: 'reset-password' }">Forgotten password?</router-link>
+      </div>
+
       <button type="submit" class="btn btn-primary btn-block">Login</button>
     </form>
   </div>
