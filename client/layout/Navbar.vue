@@ -38,8 +38,19 @@
 
 <style lang="scss">
   .navbar {
-    background-color: #fff;
+    background-color: #f5f5f5;
     border-radius: 0;
+    color: rgba(0, 0, 0, .87);
     font-weight: 500;
+
+    .navbar-brand {
+      color: inherit;
+    }
+
+    .navbar-right {
+      > li > a {
+        color: inherit;
+      }
+    }
   }
 </style>

@@ -4,4 +4,7 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~bootswatch/paper/variables';
 @import '~bootswatch/paper/bootswatch';
 
+$fa-font-path: '~font-awesome/fonts';
+@import '~font-awesome/scss/font-awesome';
+
 @import 'common/all';
