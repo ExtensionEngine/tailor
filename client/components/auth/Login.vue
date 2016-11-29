@@ -112,6 +112,7 @@
       }
 
       .fa {
+        font-size: 18px;
         padding-right: 3px;
       }
     }
