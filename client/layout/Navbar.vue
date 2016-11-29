@@ -22,15 +22,18 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
+
   export default {
     name: 'navbar',
 
     computed: {
+      ...mapGetters({
+        request: 'loginUserRequest',
+        success: 'loginUserSuccess'
+      }),
       loggedIn() {
-        const request = this.$store.state[0].request;
-        const success = this.$store.state[0].success;
-
-        return success && !request;
+        return this.success && !this.request;
       }
     }
   };

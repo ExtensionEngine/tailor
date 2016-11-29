@@ -1,8 +1,8 @@
 <template>
   <div class="login">
     <div class="info">
-      <div v-if="message" class="message">
-        <span class="fa fa-exclamation-triangle"></span> {{message}}
+      <div v-if="errorMessage" class="message">
+        <span class="fa fa-exclamation-triangle"></span> {{errorMessage}}
       </div>
     </div>
 
@@ -37,14 +37,16 @@
 </template>
 
 <script>
-  import { mapActions, mapState } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex';
 
   export default {
-    name: 'login-form',
+    name: 'login',
 
-    computed: mapState({
-      message: state => state[0].message
-    }),
+    computed: {
+      ...mapGetters({
+        errorMessage: 'loginUserMessage'
+      })
+    },
 
     methods: {
       handleLoginUser() {
@@ -54,6 +56,7 @@
         if (email.length && password.length) {
           this.loginUser({ email, password });
         } else {
+          // TODO: Remove when backend is implemented
           this.loginUserFail();
         }
       },
