@@ -1,31 +1,59 @@
 import authMutations from './mutation-types';
+import { asyncState } from '../../../utils/async';
 
 const state = {
-  failure: false,
-  request: true,
-  success: false,
-  message: null
+  loginUser: {
+    ...asyncState.REQUEST,
+    message: null
+  },
+  resetPassword: {
+    ...asyncState.REQUEST,
+    message: null
+  }
 };
 
-// TODO: Placeholders, replace with real mutators
+// TODO: one mutator for every fetch?
 const mutations = {
   [authMutations.LOGIN_FAILURE](state, { message }) {
-    state.message = message;
-    state.failure = true;
-    state.request = false;
+    state.loginUser = Object.assign(state.loginUser, {
+      ...asyncState.FAILURE,
+      message
+    });
   },
 
   [authMutations.LOGIN_REQUEST](state) {
-    state.message = null;
-    state.failure = false;
-    state.request = true;
-    state.success = false;
+    state.loginUser = Object.assign(state.loginUser, {
+      ...asyncState.REQUEST,
+      message: null
+    });
   },
 
   [authMutations.LOGIN_SUCCESS](state) {
-    state.message = null;
-    state.request = false;
-    state.success = true;
+    state.loginUser = Object.assign(state.loginUser, {
+      ...asyncState.SUCCESS,
+      message: null
+    });
+  },
+
+  [authMutations.RESET_PASSWORD_FAILURE](state, { message }) {
+    state.resetPassword = Object.assign(state.resetPassword, {
+      ...asyncState.FAILURE,
+      message
+    });
+  },
+
+  [authMutations.RESET_PASSWORD_REQUEST](state) {
+    state.resetPassword = Object.assign(state.resetPassword, {
+      ...asyncState.REQUEST,
+      message: null
+    });
+  },
+
+  [authMutations.RESET_PASSWORD_SUCCESS](state) {
+    state.resetPassword = Object.assign(state.resetPassword, {
+      ...asyncState.SUCCESS,
+      message: null
+    });
   }
 };
 
