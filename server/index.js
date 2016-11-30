@@ -1,4 +1,5 @@
 'use strict';
+
 const app = require('./app');
 const database = require('./database');
 const logger = require('./logger');

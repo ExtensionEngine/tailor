@@ -1,4 +1,5 @@
 'use strict';
+
 const arangojs = require('arangojs');
 
 const dbUri = process.env.ARANGODB_URI;

@@ -16,10 +16,10 @@ class BaseController {
   create(req, res, next) {
     this.model
       .create(req.body)
-      .then(item => {
-        res.location(`${req.originalUrl}/${item._key}`)
+      .then(data => {
+        res.location(`${req.originalUrl}/${data._key}`)
           .status(201)
-          .json({ data: item });
+          .json({ data });
       })
       .catch(next);
   }
@@ -27,35 +27,35 @@ class BaseController {
   getByKey(req, res, next) {
     this.model
       .getByKey(req.params[this.resourceKey])
-      .then(item => res.status(200).json({ data: item }))
+      .then(data => res.status(200).json({ data }))
       .catch(next);
   }
 
   updateByKey(req, res, next) {
     this.model
       .updateByKey(req.params[this.resourceKey], req.body)
-      .then(item => res.status(200).json({ data: item }))
+      .then(data => res.status(200).json({ data }))
       .catch(next);
   }
 
   replaceByKey(req, res, next) {
     this.model
       .replaceByKey(req.params[this.resourceKey], req.body)
-      .then(item => res.status(200).json({ data: item }))
+      .then(data => res.status(200).json({ data }))
       .catch(next);
   }
 
   removeByKey(req, res, next) {
     this.model
       .removeByKey(req.params[this.resourceKey])
-      .then(item => res.status(200).json({ data: item }))
+      .then(data => res.status(200).json({ data }))
       .catch(next);
   }
 
   getMany(req, res, next) {
     this.model
       .getMany()
-      .then(items => res.status(200).json({ data: items || [] }))
+      .then(data => res.status(200).json({ data }))
       .catch(next);
   }
 }

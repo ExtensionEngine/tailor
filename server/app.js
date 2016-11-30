@@ -1,4 +1,5 @@
 'use strict';
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -10,13 +11,13 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Log all incoming requests.
-app.use('/v1', (req, res, next) => {
+app.use('/api/v1', (req, res, next) => {
   logger.info({ req });
   next();
 });
 
 // Mount the main router.
-app.use('/v1', router);
+app.use('/api/v1', router);
 
 // Handle non-existing routes.
 app.use((req, res, next) => {
