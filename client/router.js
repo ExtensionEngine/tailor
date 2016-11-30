@@ -3,6 +3,7 @@ import Router from 'vue-router';
 
 import Auth from './containers/Auth';
 import Home from './containers/Home';
+import Course from './containers/Course';
 import Login from './components/auth/Login';
 import ResetPassword from './components/auth/ResetPassword';
 
@@ -16,6 +17,11 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/course/:id',
+      name: 'course',
+      component: Course
     },
     {
       path: '/',
