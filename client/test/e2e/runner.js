@@ -1,6 +1,6 @@
 // 1. start the dev server using production config
-const envSettings = require('../../../config/helpers/envSettings');
-let server = require('../../../config/startup/client');
+const envSettings = require('../../../config/client/helpers/envSettings');
+let server = require('../../../config/client/startup/client');
 
 process.env.NODE_ENV = envSettings.test.env.NODE_ENV;
 

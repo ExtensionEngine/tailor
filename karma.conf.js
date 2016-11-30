@@ -1,5 +1,5 @@
-const projectRoot = require('./config/helpers/projectRoot');
-const webpackConfig = require('./config/webpack/test.js');
+const projectRoot = require('./config/client/helpers/projectRoot');
+const webpackConfig = require('./config/client/webpack/test.js');
 
 const CLIENT_TEST_PATH = projectRoot('client', 'test', 'unit', 'specs');
 

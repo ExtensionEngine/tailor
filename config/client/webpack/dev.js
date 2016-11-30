@@ -8,7 +8,7 @@ const loaderGenerators = require('../helpers/loaderGenerators');
 
 let webpackConfig = merge(baseConfig, {
   devtool: '#eval-source-map',
-  entry: ['./config/helpers/devClient.js', './client/main.js'],
+  entry: ['./config/client/helpers/devClient.js', './client/main.js'],
   module: {
     loaders: loaderGenerators.styleLoaders({ sourceMap: envSettings.dev.cssSourceMap })
   },
