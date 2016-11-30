@@ -4,12 +4,12 @@ const express = require('express');
 const controller = require('./course.controller').controller;
 
 const router = express.Router();
-router.get('/', controller.getMany);
+router.get('/', controller.list);
 router.post('/', controller.create);
-router.get('/:courseKey', controller.getByKey);
-router.patch('/:courseKey', controller.updateByKey);
-router.put('/:courseKey', controller.replaceByKey);
-router.delete('/:courseKey', controller.removeByKey);
+router.get('/:courseKey', controller.show);
+router.patch('/:courseKey', controller.patch);
+router.put('/:courseKey', controller.replace);
+router.delete('/:courseKey', controller.remove);
 
 module.exports = {
   router
