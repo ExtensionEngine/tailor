@@ -1,12 +1,12 @@
 <template>
   <div>
-    Home Page Placeholder
+    Courses Placeholder
   </div>
 </template>
 
 <script>
   export default {
-    name: 'home'
+    name: 'courses'
   };
 </script>
 

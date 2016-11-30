@@ -8,7 +8,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <router-link :to="{ name: 'home' }" class="navbar-brand">Tailor</router-link>
+        <router-link :to="{ name: 'courses' }" class="navbar-brand">Tailor</router-link>
       </div>
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

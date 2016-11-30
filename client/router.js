@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 import Auth from './containers/Auth';
-import Home from './containers/Home';
+import Courses from './containers/Courses';
 import Login from './components/auth/Login';
 import ResetPassword from './components/auth/ResetPassword';
 
@@ -14,8 +14,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: 'courses',
+      component: Courses
     },
     {
       path: '/',
