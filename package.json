@@ -25,12 +25,14 @@
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "font-awesome": "^4.7.0",
+    "joi": "^10.0.1",
     "vue": "^2.1.0",
     "vue-router": "^2.0.3",
     "vuex": "^2.0.0",
     "vuex-router-sync": "^3.0.0"
   },
   "devDependencies": {
+    "arangojs": "^5.4.1",
     "autoprefixer": "^6.4.0",
     "babel-core": "^6.0.0",
     "babel-eslint": "^7.0.0",
