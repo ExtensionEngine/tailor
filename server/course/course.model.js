@@ -2,7 +2,7 @@
 
 const Joi = require('joi');
 const BaseModel = require('../base.model');
-const db = require('../database').db;
+const db = require('../shared/database').db;
 
 /**
  * @swagger

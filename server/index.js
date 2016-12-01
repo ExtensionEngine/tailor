@@ -1,9 +1,9 @@
 'use strict';
 
 const app = require('./app');
-const database = require('./database');
 const logger = require('./logger');
 const config = require('../config/server');
+const connector = require('./shared/database').databaseConnector;
 
 function runApp() {
   return new Promise((resolve, reject) => {
@@ -11,7 +11,7 @@ function runApp() {
   });
 }
 
-database.initialize()
+connector.initialize()
   .then(db => logger.info(`Connected to database ${db.name}`))
   .then(runApp)
   .then(() => logger.info(`Server listening on port ${config.port}`))
