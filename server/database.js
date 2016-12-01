@@ -1,10 +1,9 @@
 'use strict';
 
 const arangojs = require('arangojs');
+const config = require('../config/server');
 
-const dbUri = process.env.ARANGODB_URI;
-const dbName = process.env.DB_NAME;
-const db = arangojs(dbUri);
+const db = arangojs(config.database.uri);
 
 function ensureDatabase(name) {
   return db.listUserDatabases()
@@ -27,7 +26,7 @@ function ensureCollections(names) {
 }
 
 function initialize() {
-  return ensureDatabase(dbName)
+  return ensureDatabase(config.database.name)
     // TODO(matej): load required collections from model files.
     .then(() => ensureCollections(['course']))
     .then(() => db);

@@ -1,4 +1,4 @@
-const port = process.env.SERVER_PORT;
+const port = process.env.SERVER_PORT || 3000;
 
 module.exports = {
   info: {
