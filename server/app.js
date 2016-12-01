@@ -30,7 +30,7 @@ app.use((err, req, res, next) => {
     return res.status(400).json({
       error: {
         name: err.name,
-        message: err.message,
+        message: err.message
       }
     });
   }
@@ -60,7 +60,7 @@ app.use((err, req, res, next) => {
 if (process.env.NODE_ENV !== 'production') {
   const spec = swaggerJsDoc({
     swaggerDefinition,
-    apis: ['./server/**/*.js'],
+    apis: ['./server/**/*.js']
   });
 
   app.get('/api/v1/swagger.json', (req, res, next) => res.status(200).json(spec));
