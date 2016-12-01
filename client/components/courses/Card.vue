@@ -1,18 +1,10 @@
 <template>
   <div class="courses-card">
     <div class="header">
-      <a href="#">
-        Course Title
-      </a>
+      <a href="#">{{title}}</a>
     </div>
 
-    <div class="content">
-      It's just like the story of the grasshopper and the octopus.
-      All year long, the grasshopper kept burying acorns for winter,
-      while the octopus mooched off his girlfriend and watched TV.
-      But then the winter came, and the grasshopper died, and the
-      octopus ate all his acorns.
-    </div>
+    <div class="content">{{preview}}</div>
 
     <div class="footer">
       <ul class="row">
@@ -26,7 +18,18 @@
 
 <script>
   export default {
-    name: 'course-card'
+    name: 'course-card',
+
+    props: ['title', 'description'],
+
+    computed: {
+      preview() {
+        const MAX_CHARS = 180;
+        return this.description.length > MAX_CHARS
+          ? `${this.description.slice(0, MAX_CHARS)} ...`
+          : this.description;
+      }
+    }
   };
 </script>
 
@@ -34,13 +37,10 @@
   .courses-card {
     background-color: #fff;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
+    margin-top: 30px;
     min-height: 300px;
     padding: 30px;
     transition: box-shadow 0.2s ease;
-
-    @media only screen and (max-width: 992px) {
-      margin-top: 30px;
-    }
 
     &:hover {
       box-shadow: 0 3px 9px rgba(0, 0, 0, 0.74);
