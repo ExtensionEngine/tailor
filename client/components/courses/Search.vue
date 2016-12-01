@@ -24,7 +24,9 @@
 
     .form-control {
       font-size: 18px;
-      padding: 20px 5px;
+      padding: 0 5px;
+      height: 35px;
+      line-height: 32px;
 
       &:focus {
         box-shadow: none;
@@ -39,6 +41,7 @@
       width: 40px;
 
       button {
+        position: absolute;
         padding: 0;
         margin: 0;
         bottom: 0;
