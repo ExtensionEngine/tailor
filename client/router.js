@@ -3,7 +3,7 @@ import Router from 'vue-router';
 
 import Auth from './containers/Auth';
 import Home from './containers/Home';
-import Course from './containers/Course';
+import Course from './components/course/Container';
 import Login from './components/auth/Login';
 import ResetPassword from './components/auth/ResetPassword';
 
