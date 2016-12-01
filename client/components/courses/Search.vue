@@ -1,5 +1,5 @@
 <template>
-  <div class="input-group search">
+  <div class="input-group courses-search">
     <input type="search" class="form-control" placeholder="search..." />
     <div class="input-group-addon">
       <button class="btn btn-primary">
@@ -16,7 +16,7 @@
 </script>
 
 <style lang="scss">
-  .search {
+  .courses-search {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
     margin: 0 auto;
     max-width: 80%;
