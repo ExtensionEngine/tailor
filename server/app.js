@@ -25,6 +25,16 @@ app.use('/api/v1', router);
 app.use((err, req, res, next) => {
   logger.error({ err });
 
+  // TODO(matej): validation errors should be handled by validation middleware.
+  if (err.isJoi) {
+    return res.status(400).json({
+      error: {
+        name: err.name,
+        message: err.message,
+      }
+    });
+  }
+
   if (err.isArangoError) {
     // Treat '1202 - ERROR_ARANGO_DOCUMENT_NOT_FOUND' as '404 Not Found'.
     // https://docs.arangodb.com/3.0.10/Manual/Appendix/ErrorCodes.html
