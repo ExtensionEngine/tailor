@@ -28,6 +28,7 @@
     "joi": "^10.0.1",
     "vue": "^2.1.0",
     "vue-router": "^2.0.3",
+    "vuedraggable": "^2.4.0",
     "vuex": "^2.0.0",
     "vuex-router-sync": "^3.0.0"
   },

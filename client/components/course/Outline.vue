@@ -1,17 +1,47 @@
 <template>
-  <div>Total: {{ activities.length }}</div>
+  <div>
+    <draggable :activities="activities" @start="dragging=true" @end="dragging=false">
+      <div class='activity' v-for="it in activities">
+        {{ it.name }}
+      </div>
+    </draggable>
+  </div>
 </template>
 
 <script>
+import Draggable from 'vuedraggable';
+
 export default {
+  name: 'course-outline',
   data: function () {
     return {
-      activities: []
+      name: 'Javascript',
+      activities: [
+        { name: 'Introduction' },
+        { name: 'Values, Types, and Operators' },
+        { name: 'Program Structure' },
+        { name: 'Functions' },
+        { name: 'Data Structures: Objects and Arrays' },
+        { name: 'Higher-Order Functions' },
+        { name: 'The Secret Life of Objects' },
+        { name: 'Higher-Order Functions' },
+        { name: 'Bugs and Error Handling' }
+      ]
     };
+  },
+  components: {
+    Draggable
   }
 };
 </script>
 
 <style lang="scss">
-
+.activity {
+  margin: 10px 200px;
+  padding: 5px;
+  font-size: 22px;
+  color: red;
+  background-color: #ccc;
+  cursor: pointer;
+}
 </style>
