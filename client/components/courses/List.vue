@@ -1,6 +1,7 @@
 <template>
   <div class="row courses-list">
-    <div v-for="course in courses" class="col-lg-4">
+    <cube-spinner v-if="fetchStatus.request"></cube-spinner>
+    <div v-else v-for="course in courses" class="col-lg-4">
       <card :title="course.title" :description="course.description"></card>
     </div>
   </div>
@@ -10,12 +11,14 @@
   import { mapActions, mapGetters } from 'vuex';
 
   import Card from './Card';
+  import CubeSpinner from '../loaders/CubeSpinner';
 
   export default {
     name: 'courses-list',
 
     components: {
-      Card
+      Card,
+      CubeSpinner
     },
 
     created() {
@@ -25,7 +28,7 @@
     computed: {
       ...mapGetters({
         courses: 'getCourses',
-        message: 'getMessage'
+        fetchStatus: 'getFetchStatus'
       })
     },
 

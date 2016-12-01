@@ -1,7 +1,7 @@
 const getCourses = state => state.courses;
-const getMessage = state => state.fetchCourses.message;
+const getFetchStatus = state => state.fetchCourses;
 
 export default {
   getCourses,
-  getMessage
+  getFetchStatus
 };
