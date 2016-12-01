@@ -1,9 +1,9 @@
 'use strict';
+
 const express = require('express');
+const courseRouter = require('./course').router;
 
 const router = express.Router();
-router.get('/hello', (req, res, next) => {
-  res.status(200).json({ hello: 'world' });
-});
+router.use('/courses', courseRouter);
 
 module.exports = router;

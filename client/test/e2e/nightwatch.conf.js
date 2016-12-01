@@ -1,5 +1,5 @@
 require('babel-register')
-const settings = require('../../../config/startup/settings');
+const settings = require('../../../config/client/startup/settings');
 
 // http://nightwatchjs.org/guide#settings-file
 module.exports = {

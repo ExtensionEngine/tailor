@@ -1,13 +1,19 @@
 'use strict';
+
 const app = require('./app');
+const database = require('./database');
+const logger = require('./logger');
 
 const serverPort = process.env.SERVER_PORT;
-app.listen(serverPort, err => {
-  if (err) {
-    console.log(err);
-    process.exit(1);
-    return;
-  }
 
-  console.log(`Server listening on port ${serverPort}`);
-});
+function runApp() {
+  return new Promise((resolve, reject) => {
+    app.listen(serverPort, err => err ? reject(err) : resolve());
+  });
+}
+
+database.initialize()
+  .then(db => logger.info(`Connected to database ${db.name}`))
+  .then(runApp)
+  .then(() => logger.info(`Server listening on port ${serverPort}`))
+  .catch(err => logger.error({ err }));

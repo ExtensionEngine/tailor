@@ -5,9 +5,9 @@
   "author": "Damir Perisic <dperisic@extensionengine.com>",
   "private": true,
   "scripts": {
-    "dev": "node config/startup/client.js",
+    "dev": "node config/client/startup/client.js",
     "build": "npm run clean && npm run build:dist",
-    "build:dist": "cross-env NODE_ENV=production webpack --config config/webpack/prod.js --progress --hide-modules",
+    "build:dist": "cross-env NODE_ENV=production webpack --config config/client/webpack/prod.js --progress --hide-modules",
     "e2e": "node client/test/e2e/runner.js",
     "unit:client": "karma start karma.conf.js",
     "test:client": "npm run unit:client && npm run e2e",
@@ -25,12 +25,14 @@
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "font-awesome": "^4.7.0",
+    "joi": "^10.0.1",
     "vue": "^2.1.0",
     "vue-router": "^2.0.3",
     "vuex": "^2.0.0",
     "vuex-router-sync": "^3.0.0"
   },
   "devDependencies": {
+    "arangojs": "^5.4.1",
     "autoprefixer": "^6.4.0",
     "babel-core": "^6.0.0",
     "babel-eslint": "^7.0.0",
