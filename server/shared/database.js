@@ -3,6 +3,9 @@
 const arangojs = require('arangojs');
 const config = require('../../config/server');
 
+// TODO(matej): load required collections from model files.
+config.database.collections = ['course'];
+
 class DatabaseConnector {
   constructor(arangoInstance, dbConfig) {
     this.db = arangoInstance;
@@ -11,8 +14,7 @@ class DatabaseConnector {
 
   initialize() {
     return this.ensureDatabase(this.config.name)
-      // TODO(matej): load required collections from model files.
-      .then(() => this.ensureCollections(['course']))
+      .then(() => this.ensureCollections(this.config.collections))
       .then(() => this.db);
   }
 
