@@ -22,7 +22,7 @@ const router = express.Router();
  *           items:
  *             $ref: "#/definitions/CourseOutput"
  */
-router.get('/', controller.list);
+router.get('/courses/', controller.list);
 
 /**
  * @swagger
@@ -47,7 +47,7 @@ router.get('/', controller.list);
  *       404:
  *         description: course with the given key does not exist
  */
-router.get('/:courseKey', controller.show);
+router.get('/courses/:courseKey', controller.show);
 
 /**
  * @swagger
@@ -74,7 +74,7 @@ router.get('/:courseKey', controller.show);
  *       400:
  *          description: request body contains invalid values
  */
-router.post('/', controller.create);
+router.post('/courses/', controller.create);
 
 /**
  * @swagger
@@ -106,7 +106,7 @@ router.post('/', controller.create);
  *       404:
  *         description: course with the given key does not exist
  */
-router.patch('/:courseKey', controller.patch);
+router.patch('/courses/:courseKey', controller.patch);
 
 /**
  * @swagger
@@ -140,7 +140,7 @@ router.patch('/:courseKey', controller.patch);
  *       404:
  *         description: course with the given key does not exist
  */
-router.put('/:courseKey', controller.replace);
+router.put('/courses/:courseKey', controller.replace);
 
 /**
  * @swagger
@@ -165,7 +165,7 @@ router.put('/:courseKey', controller.replace);
  *       404:
  *         description: course with the given key does not exist
  */
-router.delete('/:courseKey', controller.remove);
+router.delete('/courses/:courseKey', controller.remove);
 
 module.exports = {
   router
