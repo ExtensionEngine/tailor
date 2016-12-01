@@ -3,7 +3,8 @@
     <div class="activity"
       v-if="name"
       @click="collapsed =! collapsed">
-      <div>{{ name }}</div>
+      <span :class="classObject"></span>
+      <span>{{ name }}</span>
     </div>
     <transition name="fade">
       <draggable
@@ -31,6 +32,17 @@ export default {
     return {
       collapsed: false
     };
+  },
+  computed: {
+    hasChildren: function () {
+      return this.activities && this.activities.length;
+    },
+    classObject: function () {
+      return {
+        'fa fa-caret-right': this.collapsed && this.hasChildren,
+        'fa fa-caret-down': !this.collapsed && this.hasChildren
+      };
+    }
   },
   components: {
     Draggable
