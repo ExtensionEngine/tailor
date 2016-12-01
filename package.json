@@ -16,7 +16,8 @@
     "lint:server": "eslint --ext .js server",
     "lint": "npm run lint:client && npm run lint:server",
     "dev:server": "nodemon --ignore client/ --exec \"node -r dotenv/config\" ./server",
-    "unit:server": "mocha --recursive ./server/**/*.spec.js"
+    "unit:server": "mocha --recursive ./server/**/*.spec.js",
+    "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server"
   },
   "dependencies": {
     "axios": "^0.15.2",
