@@ -3,6 +3,7 @@ import Router from 'vue-router';
 
 import Auth from './containers/Auth';
 import Courses from './containers/Courses';
+import CourseEditor from './containers/CourseEditor';
 import Login from './components/auth/Login';
 import ResetPassword from './components/auth/ResetPassword';
 
@@ -16,6 +17,11 @@ export default new Router({
       path: '/',
       name: 'courses',
       component: Courses
+    },
+    {
+      path: '/:courseId',
+      name: 'course-editor',
+      component: CourseEditor
     },
     {
       path: '/',
