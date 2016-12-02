@@ -25,8 +25,9 @@
     .form-control {
       font-size: 18px;
       padding: 0 5px;
-      height: 35px;
+      height: 45px;
       line-height: 32px;
+      text-indent: 5px;
 
       &:focus {
         box-shadow: none;
