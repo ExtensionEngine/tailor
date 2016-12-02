@@ -16,6 +16,7 @@
     "lint:server": "eslint --ext .js server",
     "lint": "npm run lint:client && npm run lint:server",
     "dev:server": "nodemon --ignore client/ --exec \"node -r dotenv/config\" ./server",
+    "doc:server": "jsdoc --pedantic --destination ./server/_doc_ --recurse ./server",
     "unit:server": "mocha --recursive ./server/**/*.spec.js",
     "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server"
   },
@@ -69,6 +70,7 @@
     "inject-loader": "^2.0.1",
     "isparta-loader": "^2.0.0",
     "jquery": "^3.1.1",
+    "jsdoc": "^3.4.3",
     "json-loader": "^0.5.4",
     "karma": "^1.3.0",
     "karma-coverage": "^1.1.1",
