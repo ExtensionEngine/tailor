@@ -6,6 +6,7 @@
       <span class="order" :style="{ 'background-color': color }">{{ order }}</span>
       <span class="collapsible" :class="classObject"></span>
       <span>{{ name }}</span>
+      <span class="badge pull-right" v-if="hasChildren && collapsed">{{ activities.length }}</span>
     </div>
     <transition name="fade">
       <draggable
@@ -80,22 +81,31 @@ export default {
   background-color: white;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+
+  .order {
+    margin-right: 7px;
+    padding: 0 10px;
+    display: inline-block;
+    color: white;
+  }
+
+  .collapsible {
+    display: inline-block;
+    width: 13px;
+    color: #bbb;
+    font-size: 16px;
+  }
+
+  .badge {
+    margin: 6px 10px;
+    padding: 4px 10px;
+    color: #777;
+    background-color: #eee;
+  }
 }
 
 .sub-activity {
   margin-left: 50px;
-}
-
-.order {
-  margin-right: 7px;
-  padding: 0 10px;
-  display: inline-block;
-  color: white;
-}
-
-.collapsible {
-  display: inline-block;
-  width: 13px;
 }
 
 .fade-enter-active, .fade-leave-active {
