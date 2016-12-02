@@ -1,7 +1,9 @@
 <template>
   <div class="courses-card">
     <div class="header">
-      <a href="#">{{title}}</a>
+      <router-link :to="{ name: 'course-editor', params: { courseId: id }}">
+        {{title}}
+      </router-link>
     </div>
 
     <div class="content">{{preview}}</div>
@@ -20,7 +22,7 @@
   export default {
     name: 'course-card',
 
-    props: ['title', 'description'],
+    props: ['id', 'title', 'description'],
 
     computed: {
       preview() {

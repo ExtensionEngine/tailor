@@ -2,7 +2,11 @@
   <div class="row courses-list">
     <cube-spinner v-if="fetchStatus.request"></cube-spinner>
     <div v-else v-for="course in courses" class="col-lg-4">
-      <card :title="course.title" :description="course.description"></card>
+      <card
+        :id="course.id"
+        :title="course.title"
+        :description="course.description"
+      ></card>
     </div>
   </div>
 </template>
