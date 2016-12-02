@@ -62,6 +62,13 @@ const mutations = {
       ...asyncState.SUCCESS,
       message: null
     });
+  },
+
+  [courseMutations.CREATE_COURSE_STATUS_RESET](state) {
+    state.createCourse = Object.assign(state.createCourse, {
+      ...asyncState.INITIAL,
+      message: null
+    });
   }
 };
 

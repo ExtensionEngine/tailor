@@ -32,11 +32,6 @@
       CourseCreate,
       CoursesList,
       CoursesSearch
-    },
-
-    beforeRouteLeave(to, from, next) {
-      console.log('leave');
-      next();
     }
   };
 </script>

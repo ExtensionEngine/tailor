@@ -2,6 +2,11 @@ import courseMutations from './mutation-types';
 import coursesApi from '../../../api/courses';
 import router from '../../../router';
 
+function createCourseStatusReset({ commit }) {
+  commit(courseMutations.CREATE_COURSE_STATUS_RESET);
+}
+
+// Async
 function createCourse({ commit }, data) {
   commit(courseMutations.CREATE_COURSE_REQUEST);
   coursesApi.create(data)
@@ -32,6 +37,7 @@ function fetchCourses({ dispatch, commit }) {
 }
 
 export default {
+  createCourseStatusReset,
   createCourse,
   fetchCourses
 };

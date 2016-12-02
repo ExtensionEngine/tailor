@@ -34,7 +34,14 @@
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button
+              @click="handleCancelDialog"
+              type="button"
+              class="btn btn-default"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
             <button type="submit" class="btn btn-primary">Create</button>
           </div>
           </form>
@@ -67,6 +74,10 @@
       })
     },
 
+    created() {
+      this.createCourseStatusReset();
+    },
+
     beforeDestroy() {
       $(this.$el.querySelector('#createCourse')).modal('hide');
     },
@@ -80,8 +91,14 @@
 
         this.createCourse(data);
       },
+      handleCancelDialog() {
+        // TODO: Better reset handling once
+        // modal Vue component is implemented
+        this.createCourseStatusReset();
+      },
       ...mapActions([
-        'createCourse'
+        'createCourse',
+        'createCourseStatusReset'
       ])
     }
   };

@@ -9,6 +9,8 @@ export default createMutationTypes('courses', [
   'CREATE_COURSE_REQUEST',
   'CREATE_COURSE_SUCCESS',
 
+  'CREATE_COURSE_STATUS_RESET',
+
   'ADD_COURSES',
   'ADD_COURSE'
 ]);
