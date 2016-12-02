@@ -1,6 +1,6 @@
 <template>
   <div>
-    <activity :activities="activities"></activity>
+    <activity :level="0" :activities="activities"></activity>
   </div>
 </template>
 
