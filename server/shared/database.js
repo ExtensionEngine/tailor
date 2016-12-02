@@ -10,12 +10,12 @@ config.database.collections = ['course'];
 class DatabaseConnector {
   /**
    * Create the connector instance. Typically you'll only need one of these.
-   * @param {object} arangoInstance - an object encapsuling all arangojs
+   * @param {object} arangoInstance - An object encapsuling all arangojs
    * functionality; created by calling arangojs().
-   * @param {object} dbConfig - configuration details.
-   * @param {string} dbConfig.name - database name. All data will be persisted
+   * @param {object} dbConfig - configuration details
+   * @param {string} dbConfig.name - Database name. All data will be persisted
    * to this Arango database.
-   * @param {string} dbConfig.collections[] - array of collection names. These
+   * @param {string[]} dbConfig.collections - Array of collection names. These
    * collections must exist for app to work.
    */
   constructor(arangoInstance, dbConfig) {
