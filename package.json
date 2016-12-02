@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "axios": "^0.15.2",
+    "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.2",
     "bunyan": "^1.8.5",
     "cors": "^2.8.1",
