@@ -14,30 +14,30 @@ export default {
     return {
       name: 'Computer Science',
       outline: [
+        { order: 1, name: 'Introduction' },
+        { order: 2, name: 'Values, Types, and Operators' },
+        { order: 3, name: 'Program Structure' },
         {
-          name: 'Introduction',
-          activities: [{ name: '1' }, { name: '2' }, { name: '3' }]
-        },
-        { name: 'Values, Types, and Operators' },
-        { name: 'Program Structure' },
-        {
+          order: 4,
           name: 'Functions',
           activities: [
-            {
-              name: '1',
-              activities: [{ name: '1' }, { name: '2' }, { name: '3' }]
-            },
-            { name: '2' },
-            { name: '3' }
+            { order: 1, name: 'Defining a function' },
+            { order: 2, name: 'Parameters and scopes' },
+            { order: 3, name: 'Nested scope' }
           ]
         },
         {
+          order: 5,
           name: 'Data Structures: Objects and Arrays',
-          activities: [{ name: '1' }, { name: '2' }, { name: '3' }]
+          activities: [
+            { order: 1, name: 'Data sets' },
+            { order: 2, name: 'Properties' },
+            { order: 3, name: 'Methods' }
+          ]
         },
-        { name: 'Higher-Order Functions' },
-        { name: 'The Secret Life of Objects' },
-        { name: 'Bugs and Error Handling' }
+        { order: 6, name: 'Higher-Order Functions' },
+        { order: 7, name: 'The Secret Life of Objects' },
+        { order: 8, name: 'Bugs and Error Handling' }
       ]
     };
   },

@@ -3,17 +3,20 @@
     <div class="activity"
       v-if="name"
       @click="collapsed =! collapsed">
-      <span :class="classObject"></span>
+      <span class="order">{{ order }}</span>
+      <span class="collapsible" :class="classObject"></span>
       <span>{{ name }}</span>
     </div>
     <transition name="fade">
       <draggable
         v-if="!collapsed"
+        :list=activities
         @start="dragging = true"
         @end="dragging = false">
         <activity
           v-bind:class="{ 'sub-activity': name }"
           v-for="it in activities"
+          :order="it.order"
           :name="it.name"
           :activities="it.activities">
         </activity>
@@ -27,7 +30,7 @@ import Draggable from 'vuedraggable';
 
 export default {
   name: 'activity',
-  props: ['name', 'activities'],
+  props: ['name', 'order', 'activities'],
   data: function () {
     return {
       collapsed: false
@@ -42,6 +45,14 @@ export default {
         'fa fa-caret-right': this.collapsed && this.hasChildren,
         'fa fa-caret-down': !this.collapsed && this.hasChildren
       };
+    }
+  },
+  watch: {
+    'activities': function (activities) {
+      if (!activities) return;
+      activities.forEach((it, index) => {
+        it.order = index + 1;
+      });
     }
   },
   components: {
@@ -64,6 +75,18 @@ export default {
 
 .sub-activity {
   margin-left: 50px;
+}
+
+.order {
+  margin-right: 7px;
+  padding: 0 10px;
+  display: inline-block;
+  background-color: #f8f8f8;
+}
+
+.collapsible {
+  display: inline-block;
+  width: 13px;
 }
 
 .fade-enter-active, .fade-leave-active {
