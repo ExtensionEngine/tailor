@@ -22,7 +22,7 @@ export default {
       if (!isEmpty(course)) {
         setTimeout(() => { return resolve({ course }); }, 1500);
       } else {
-        setTimeout(() => { return reject(new Error('Course create failed')); }, 1000);
+        setTimeout(() => { return reject(new Error('Please enter title and description')); }, 1000);
       }
     });
   }

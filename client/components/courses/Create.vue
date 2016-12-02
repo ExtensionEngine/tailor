@@ -7,8 +7,8 @@
     <div class="modal fade" id="createCourse" tabindex="-1" role="dialog" aria-labelledby="createCourseLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div v-if="createStatus.failure">
-            {{createStatus.message}}
+          <div v-if="createStatus.failure" class="error">
+            <span class="fa fa-exclamation-triangle"></span> {{createStatus.message}}
           </div>
 
           <cube-grid v-if="createStatus.request"></cube-grid>
@@ -122,6 +122,20 @@
 
     .modal-footer {
       border: 0;
+    }
+
+    .error {
+      color: #dd4b39;
+      font-size: 16px;
+      font-weight: 600;
+      min-height: 40px;
+      margin: 0 auto;
+      padding: 15px 20px 0 20px;
+
+      .fa {
+        font-size: 18px;
+        padding-right: 3px;
+      }
     }
   }
 </style>
