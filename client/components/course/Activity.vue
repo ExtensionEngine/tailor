@@ -13,11 +13,7 @@
           </span>
         </span>
       </div>
-      <div class="divider-wrapper">
-        <div class="divider">
-          <div class="action"><span class="fa fa-plus"></span></div>
-        </div>
-      </div>
+      <insert-activity></insert-activity>
     </div>
     <transition name="fade">
       <draggable
@@ -40,6 +36,7 @@
 
 <script>
 import Draggable from 'vuedraggable';
+import InsertActivity from './InsertActivity';
 
 export default {
   name: 'activity',
@@ -78,7 +75,8 @@ export default {
     }
   },
   components: {
-    Draggable
+    Draggable,
+    InsertActivity
   }
 };
 </script>
