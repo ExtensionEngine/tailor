@@ -1,12 +1,23 @@
 <template>
   <div>
-    <div class="activity"
-      v-if="name"
-      @click="collapsed =! collapsed">
-      <span class="order" :style="{ 'background-color': color }">{{ order }}</span>
-      <span class="collapsible" :class="classObject"></span>
-      <span>{{ name }}</span>
-      <span class="badge pull-right" v-if="hasChildren && collapsed">{{ activities.length }}</span>
+    <div class="activity-wrapper" v-if="!isRoot">
+      <div class="activity"
+        @click="collapsed = !collapsed">
+        <span class="order" :style="{ 'background-color': color }">{{ order }}</span>
+        <span class="collapsible" :class="classObject"></span>
+        <span>{{ name }}</span>
+        <span class="pull-right">
+          <span class="badge"
+            v-if="hasChildren && collapsed">
+            {{ activities.length }}
+          </span>
+        </span>
+      </div>
+      <div class="divider-wrapper">
+        <div class="divider">
+          <div class="action"><span class="fa fa-plus"></span></div>
+        </div>
+      </div>
     </div>
     <transition name="fade">
       <draggable
@@ -35,10 +46,13 @@ export default {
   props: ['level', 'order', 'name', 'activities'],
   data: function () {
     return {
-      collapsed: false
+      collapsed: this.level !== 0
     };
   },
   computed: {
+    isRoot: function () {
+      return this.level === 0;
+    },
     color: function () {
       // TODO: Externalize
       let colors = ['#29B6F6', '#8BC34A', '#EF5350'];
@@ -72,9 +86,8 @@ export default {
 <style lang="scss">
 // TODO: Do proper styling
 .activity {
-  margin: 10px 200px;
-  padding: 5px;
-  font-size: 22px;
+  padding: 10px;
+  font-size: 18px;
   color: #555;
   text-align: left;
   cursor: pointer;
@@ -101,6 +114,38 @@ export default {
     padding: 4px 10px;
     color: #777;
     background-color: #eee;
+  }
+}
+
+.divider-wrapper {
+  width: 100%;
+  padding: 7px 0;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 2s cubic-bezier(.25,.8,.25,1);
+
+  &:hover {
+    opacity: 1;
+  }
+
+  .divider {
+    position: relative;
+    width: 100%;
+    height: 2px;
+    background-color: #aaa;
+
+    .action {
+      position: absolute;
+      right: -50px;
+      bottom: -26px;
+      width: 50px;
+      height: 50px;
+      padding-left: 13px;
+      line-height: 50px;
+      font-size: 16px;
+      color: #aaa;
+      text-align: left;
+    }
   }
 }
 

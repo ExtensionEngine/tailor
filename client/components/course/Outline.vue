@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="outline">
     <activity :level="0" :activities="activities"></activity>
   </div>
 </template>
@@ -16,5 +16,7 @@ export default {
 </script>
 
 <style lang="scss">
-
+.outline {
+  padding: 0 200px;
+}
 </style>
