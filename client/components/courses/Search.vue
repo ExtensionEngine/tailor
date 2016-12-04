@@ -1,17 +1,38 @@
 <template>
-  <div class="input-group courses-search">
-    <input type="search" class="form-control" placeholder="search..." />
-    <div class="input-group-addon">
-      <button class="btn btn-primary">
-        <span class="fa fa-search"></span>
-      </button>
-    </div>
+  <div class="form-group courses-search">
+    <input
+      type="search"
+      class="form-control"
+      placeholder="search..."
+      @input="handleSearch($event)"
+    />
   </div>
 </template>
 
 <script>
+  import { mapActions, mapGetters } from 'vuex';
+  import { debounce } from 'lodash';
+
   export default {
-    name: 'courses-search'
+    name: 'courses-search',
+
+    computed: {
+      ...mapGetters({
+        filters: 'getFilters'
+      })
+    },
+
+    methods: {
+      handleSearch(event) {
+        const value = event.target.value;
+        const search = value.length >= 2 ? value : '';
+
+        debounce(this.setSearchFilter, 800)(search);
+      },
+      ...mapActions([
+        'setSearchFilter'
+      ])
+    }
   };
 </script>
 
@@ -31,26 +52,6 @@
 
       &:focus {
         box-shadow: none;
-      }
-    }
-
-    .input-group-addon {
-      border: 0;
-      padding: 0;
-      margin: 0;
-      position: relative;
-      width: 40px;
-
-      button {
-        position: absolute;
-        padding: 0;
-        margin: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        top: 0;
-        height: 100%;
-        width: 100%;
       }
     }
   }
