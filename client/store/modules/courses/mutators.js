@@ -2,6 +2,7 @@ import courseMutations from './mutation-types';
 import { asyncState } from '../../../utils/async';
 
 const state = {
+  course: {},
   courses: [],
   createCourse: {
     ...asyncState.INITIAL,
@@ -10,16 +11,45 @@ const state = {
   fetchCourses: {
     ...asyncState.INITIAL,
     message: null
+  },
+  fetchCourse: {
+    ...asyncState.INITIAL,
+    message: null
   }
 };
 
 const mutations = {
+  [courseMutations.ADD_COURSE](state, course) {
+    state.course = course;
+  },
+
   [courseMutations.ADD_COURSES](state, courses) {
     state.courses = courses;
   },
 
-  [courseMutations.ADD_COURSE](state, course) {
+  [courseMutations.CREATE_COURSE](state, course) {
     state.courses.push(course);
+  },
+
+  [courseMutations.FETCH_COURSE_FAILURE](state, { message }) {
+    state.fetchCourse = Object.assign(state.fetchCourse, {
+      ...asyncState.FAILURE,
+      message
+    });
+  },
+
+  [courseMutations.FETCH_COURSE_REQUEST](state) {
+    state.fetchCourse = Object.assign(state.fetchCourse, {
+      ...asyncState.REQUEST,
+      message: null
+    });
+  },
+
+  [courseMutations.FETCH_COURSE_SUCCESS](state) {
+    state.fetchCourse = Object.assign(state.fetchCourse, {
+      ...asyncState.SUCCESS,
+      message: null
+    });
   },
 
   [courseMutations.FETCH_COURSES_FAILURE](state, { message }) {

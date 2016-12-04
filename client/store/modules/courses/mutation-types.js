@@ -2,6 +2,9 @@ import { createMutationTypes } from '../../creators';
 
 export default createMutationTypes('courses', [
   // async
+  'FETCH_COURSE_FAILURE',
+  'FETCH_COURSE_REQUEST',
+  'FETCH_COURSE_SUCCESS',
   'FETCH_COURSES_FAILURE',
   'FETCH_COURSES_REQUEST',
   'FETCH_COURSES_SUCCESS',
@@ -12,5 +15,5 @@ export default createMutationTypes('courses', [
   'CREATE_COURSE_STATUS_RESET',
 
   'ADD_COURSES',
-  'ADD_COURSE'
+  'CREATE_COURSE'
 ]);

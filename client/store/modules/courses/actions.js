@@ -9,10 +9,10 @@ function createCourseStatusReset({ commit }) {
 // Async
 function createCourse({ commit }, data) {
   commit(courseMutations.CREATE_COURSE_REQUEST);
-  coursesApi.create(data)
+  coursesApi.createCourse(data)
     .then(resp => {
       commit(courseMutations.CREATE_COURSE_SUCCESS);
-      commit(courseMutations.ADD_COURSE, resp.course);
+      commit(courseMutations.CREATE_COURSE, resp.course);
 
       router.push({
         name: 'course-editor',
@@ -24,9 +24,21 @@ function createCourse({ commit }, data) {
     });
 }
 
-function fetchCourses({ dispatch, commit }) {
+function fetchCourse({ commit }, id) {
+  commit(courseMutations.FETCH_COURSE_REQUEST);
+  coursesApi.getCourse(id)
+    .then(resp => {
+      commit(courseMutations.FETCH_COURSE_SUCCESS);
+      commit(courseMutations.ADD_COURSE, resp.course);
+    })
+    .catch(error => {
+      commit(courseMutations.FETCH_COURSE_FAILURE, error);
+    });
+};
+
+function fetchCourses({ commit }) {
   commit(courseMutations.FETCH_COURSES_REQUEST);
-  coursesApi.get()
+  coursesApi.getCourses()
     .then(resp => {
       commit(courseMutations.FETCH_COURSES_SUCCESS);
       commit(courseMutations.ADD_COURSES, resp.courses);
@@ -39,5 +51,6 @@ function fetchCourses({ dispatch, commit }) {
 export default {
   createCourseStatusReset,
   createCourse,
+  fetchCourse,
   fetchCourses
 };
