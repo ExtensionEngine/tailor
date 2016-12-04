@@ -11,9 +11,12 @@ export default createMutationTypes('courses', [
   'CREATE_COURSE_FAILURE',
   'CREATE_COURSE_REQUEST',
   'CREATE_COURSE_SUCCESS',
-
   'CREATE_COURSE_STATUS_RESET',
 
+  // store
   'ADD_COURSES',
-  'CREATE_COURSE'
+  'CREATE_COURSE',
+
+  // filter
+  'SET_SEARCH_FILTER'
 ]);

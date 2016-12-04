@@ -15,6 +15,9 @@ const state = {
   fetchCourse: {
     ...asyncState.INITIAL,
     message: null
+  },
+  filters: {
+    search: ''
   }
 };
 
@@ -29,6 +32,10 @@ const mutations = {
 
   [courseMutations.CREATE_COURSE](state, course) {
     state.courses.push(course);
+  },
+
+  [courseMutations.SET_SEARCH_FILTER](state, search) {
+    state.filters.search = search;
   },
 
   [courseMutations.FETCH_COURSE_FAILURE](state, { message }) {

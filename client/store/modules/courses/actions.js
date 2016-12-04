@@ -6,6 +6,10 @@ function createCourseStatusReset({ commit }) {
   commit(courseMutations.CREATE_COURSE_STATUS_RESET);
 }
 
+function setSearchFilter({ commit }, search) {
+  commit(courseMutations.SET_SEARCH_FILTER, search);
+}
+
 // Async
 function createCourse({ commit }, data) {
   commit(courseMutations.CREATE_COURSE_REQUEST);
@@ -52,5 +56,6 @@ export default {
   createCourseStatusReset,
   createCourse,
   fetchCourse,
-  fetchCourses
+  fetchCourses,
+  setSearchFilter
 };
