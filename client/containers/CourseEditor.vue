@@ -1,14 +1,22 @@
 <template>
   <div class="course-editor">
-    <h1>{{course.title}}</h1>
+    <cube-spinner v-if="fetchStatus.request"></cube-spinner>
+    <div v-else>
+      <h1>{{course.title}}</h1>
+    </div>
   </div>
 </template>
 
 <script>
   import { mapActions, mapGetters } from 'vuex';
+  import CubeSpinner from '../components/loaders/CubeSpinner';
 
   export default {
     name: 'course-edit',
+
+    components: {
+      CubeSpinner
+    },
 
     methods: {
       ...mapActions([
@@ -18,11 +26,12 @@
 
     computed: {
       ...mapGetters({
-        course: 'getCourse'
+        course: 'getCourse',
+        fetchStatus: 'getCourseFetchStatus'
       })
     },
 
-    created() {
+    mounted() {
       this.fetchCourse(this.$route.params.courseId);
     }
   };

@@ -19,7 +19,7 @@ export default {
   // TODO: fetch from server once backend is implemented
   getCourse(courseId) {
     return new Promise((resolve, reject) => {
-      const course = find(dummyData.courses, c => c.id.toString() === courseId);
+      const course = find(dummyData.courses, c => c.id === parseInt(courseId));
 
       if (course) {
         setTimeout(() => {

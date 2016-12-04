@@ -32,7 +32,7 @@
     computed: {
       ...mapGetters({
         courses: 'getCourses',
-        fetchStatus: 'getFetchStatus'
+        fetchStatus: 'getCoursesFetchStatus'
       })
     },
 
