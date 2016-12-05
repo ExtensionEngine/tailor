@@ -49,6 +49,20 @@ RETURN {
 }
 `;
 
+const GET_USER_BY_EMAIL = `
+FOR user IN @@collection
+  FILTER user.email == @email
+  RETURN user
+`;
+
+class AuthError {
+  constructor() {
+    this.name = 'AuthError';
+    this.message = 'Invalid user email or password';
+    this.isAuthError = true;
+  }
+}
+
 class UserModel extends BaseModel {
   constructor(db, collectionName = COLLECTION_NAME, schema = userSchema) {
     super(db, collectionName, schema);
@@ -76,12 +90,39 @@ class UserModel extends BaseModel {
   create(user) {
     return this
       .validate(user)
-      .then(user => this.hashPassword(user))
-      .then(user => this.db.query(INSERT_USER, {
+      .then(validUser => this.hashPassword(validUser))
+      .then(hashedUser => this.db.query(INSERT_USER, {
         '@collection': this.collectionName,
-        user
+        hashedUser
       }))
       .then(cursor => cursor.next());
+  }
+
+  getByEmail(email) {
+    return this.db
+      .query(GET_USER_BY_EMAIL, {
+        '@collection': this.collectionName,
+        email
+      })
+      .then(cursor => cursor.next());
+  }
+
+  validateCredentials(email, password) {
+    let user;
+    return this
+      .getByEmail(email)
+      .then(maybeUser => {
+        if (maybeUser) {
+          user = maybeUser;
+          return this.comparePasswords(password, user.password);
+        }
+
+        return Promise.reject(new AuthError());
+      })
+      .then(passwordsMatch => {
+        delete user.password;
+        return passwordsMatch ? user : Promise.reject(new AuthError());
+      });
   }
 }
 

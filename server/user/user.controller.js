@@ -12,11 +12,12 @@ class UserController extends BaseController {
   }
 
   login(req, res, next) {
-    res.status(403).json();
+    res.status(200).json({ data: req.user });
   }
 
   logout(req, res, next) {
-    res.status(403).json();
+    req.logout();
+    res.status(204).json();
   }
 }
 

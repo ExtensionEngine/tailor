@@ -3,14 +3,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const passport = require('passport');
+const expressSession = require('express-session');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerDefinition = require('../config/server/swagger');
+const auth = require('./shared/auth');
 const router = require('./router');
 const logger = require('./logger');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
+// Initialize Passport and restore authentication state, if any, from the
+// session.
+const session = expressSession({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
+});
+app.use(session);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Log all incoming requests.
 app.use('/api/v1', (req, res, next) => {
@@ -28,6 +42,15 @@ app.use((err, req, res, next) => {
   // TODO(matej): validation errors should be handled by validation middleware.
   if (err.isJoi) {
     return res.status(400).json({
+      error: {
+        name: err.name,
+        message: err.message
+      }
+    });
+  }
+
+  if (err.isAuthError) {
+    return res.status(401).json({
       error: {
         name: err.name,
         message: err.message
