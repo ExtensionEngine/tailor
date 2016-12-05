@@ -12,7 +12,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const auth = require('./shared/auth');
 const router = require('./router');
 const logger = require('./logger');
-const swaggerDefinition = require('../config/server/swagger');
+const config = require('../config/server');
 
 const app = express();
 app.use(cors());
@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 // Initialize Passport and restore authentication state, if any, from the
 // session.
 const session = expressSession({
-  secret: 'keyboard cat',
+  secret: config.auth.sessionSecret,
   resave: false,
   saveUninitialized: false
 });
@@ -85,7 +85,7 @@ app.use((err, req, res, next) => {
 // Serve swagger API spec in development environment.
 if (process.env.NODE_ENV !== 'production') {
   const spec = swaggerJsDoc({
-    swaggerDefinition,
+    swaggerDefinition: config.swagger,
     apis: ['./server/**/*.js']
   });
 
