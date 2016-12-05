@@ -6,10 +6,13 @@ const cors = require('cors');
 const passport = require('passport');
 const expressSession = require('express-session');
 const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerDefinition = require('../config/server/swagger');
+
+// Setup authentication before instantiating the main app router.
+// eslint-disable-next-line no-unused-vars
 const auth = require('./shared/auth');
 const router = require('./router');
 const logger = require('./logger');
+const swaggerDefinition = require('../config/server/swagger');
 
 const app = express();
 app.use(cors());

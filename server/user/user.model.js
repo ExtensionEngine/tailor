@@ -5,6 +5,7 @@ const Joi = require('joi');
 const config = require('../../config/server');
 const db = require('../shared/database').db;
 const BaseModel = require('../base.model');
+const query = require('./query');
 
 /**
  * @swagger
@@ -39,22 +40,6 @@ const userSchema = Joi.object().keys({
   password: Joi.string().required()
 });
 
-const COLLECTION_NAME = 'user';
-
-const INSERT_USER = `
-INSERT @user IN @@collection
-RETURN {
-  _key: NEW._key,
-  email: NEW.email
-}
-`;
-
-const GET_USER_BY_EMAIL = `
-FOR user IN @@collection
-  FILTER user.email == @email
-  RETURN user
-`;
-
 class AuthError {
   constructor() {
     this.name = 'AuthError';
@@ -62,6 +47,8 @@ class AuthError {
     this.isAuthError = true;
   }
 }
+
+const COLLECTION_NAME = 'user';
 
 class UserModel extends BaseModel {
   constructor(db, collectionName = COLLECTION_NAME, schema = userSchema) {
@@ -91,7 +78,7 @@ class UserModel extends BaseModel {
     return this
       .validate(user)
       .then(validUser => this.hashPassword(validUser))
-      .then(hashedUser => this.db.query(INSERT_USER, {
+      .then(hashedUser => this.db.query(query.INSERT_USER, {
         '@collection': this.collectionName,
         hashedUser
       }))
@@ -100,7 +87,7 @@ class UserModel extends BaseModel {
 
   getByEmail(email) {
     return this.db
-      .query(GET_USER_BY_EMAIL, {
+      .query(query.GET_USER_BY_EMAIL, {
         '@collection': this.collectionName,
         email
       })
