@@ -1,12 +1,20 @@
 <template>
   <div class="courses-card">
     <div class="header">
-      <router-link :to="{ name: 'course-editor', params: { courseId: id }}">
-        {{title}}
-      </router-link>
+      <img :src="placeholder" class="img-responsive" alt="Responsive image"  />
     </div>
 
-    <div class="content">{{preview}}</div>
+    <div class="body">
+      <div class="title">
+        <router-link :to="{ name: 'course-editor', params: { courseId: id }}">
+          {{title}}
+        </router-link>
+      </div>
+
+      <div class="content">
+        {{preview}}
+      </div>
+    </div>
 
     <div class="footer">
       <ul class="row">
@@ -22,9 +30,12 @@
   export default {
     name: 'course-card',
 
-    props: ['id', 'title', 'description'],
+    props: ['id', 'title', 'description', 'image'],
 
     computed: {
+      placeholder() {
+        return require(`../../assets/img/${this.image}`);
+      },
       preview() {
         const MAX_CHARS = 180;
         return this.description.length > MAX_CHARS
@@ -49,6 +60,10 @@
     }
 
     .header {
+      height: 400px;
+    }
+
+    .title {
       font-weight: 500;
       font-size: 22px;
       min-height: 80px;
@@ -63,7 +78,7 @@
     .content {
       font-size: 15px;
       font-weight: 400;
-      min-height: 120px;
+      max-height: 120px;
       padding-bottom: 10px;
       text-align: left;
     }

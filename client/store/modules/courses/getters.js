@@ -8,7 +8,15 @@ const getCourses = state => {
   const { courses, filters } = state;
   const pattern = new RegExp(filters.search, 'i');
 
-  return courses.filter(c => pattern.test(c.title));
+  const filtered = courses.filter(c => pattern.test(c.title));
+  const sorted = filtered.sort((prev, curr) => {
+    const prevDate = new Date(JSON.parse(prev.recentActivity));
+    const currDate = new Date(JSON.parse(curr.recentActivity));
+
+    return currDate.getTime() - prevDate.getTime();
+  });
+
+  return sorted;
 };
 
 export default {

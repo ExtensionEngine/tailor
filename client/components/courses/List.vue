@@ -6,6 +6,7 @@
         :id="course.id"
         :title="course.title"
         :description="course.description"
+        :image="course.image"
       ></card>
     </div>
   </div>
