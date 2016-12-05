@@ -52,6 +52,12 @@ export default {
 
   input {
     background-color: #e0e0e0;
+    box-shadow: inset 0 -2px 0 #337ab7;
+  }
+
+  select {
+    background-color: #e0e0e0;
+    box-shadow: inset 0 -2px 0 #337ab7;
   }
 }
 </style>
