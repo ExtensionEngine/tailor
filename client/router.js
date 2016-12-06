@@ -19,7 +19,7 @@ export default new Router({
       component: Courses
     },
     {
-      path: '/:courseId',
+      path: '/catalog/:courseId',
       name: 'course-editor',
       component: CourseEditor
     },
