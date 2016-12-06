@@ -2,7 +2,7 @@ import courseMutations from './mutation-types';
 import { asyncState } from '../../../utils/async';
 
 const state = {
-  course: {},
+  course: null,
   courses: [],
   createCourse: {
     ...asyncState.INITIAL,
@@ -24,6 +24,10 @@ const state = {
 const mutations = {
   [courseMutations.ADD_COURSE](state, course) {
     state.course = course;
+  },
+
+  [courseMutations.REMOVE_COURSE](state) {
+    state.course = null;
   },
 
   [courseMutations.ADD_COURSES](state, courses) {
