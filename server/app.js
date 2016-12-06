@@ -13,6 +13,7 @@ const auth = require('./shared/auth');
 const logger = require('./shared/logger');
 const config = require('../config/server');
 const router = require('./router');
+const errorHandler = require('./shared/error').errorHandler;
 
 const app = express();
 app.use(cors());
@@ -39,48 +40,7 @@ app.use('/api/v1', (req, res, next) => {
 app.use('/api/v1', router);
 
 // Global error handler.
-app.use((err, req, res, next) => {
-  logger.error({ err });
-
-  // TODO(matej): validation errors should be handled by validation middleware.
-  if (err.isJoi) {
-    return res.status(400).json({
-      error: {
-        name: err.name,
-        message: err.message
-      }
-    });
-  }
-
-  if (err.isAuthError) {
-    return res.status(401).json({
-      error: {
-        name: err.name,
-        message: err.message
-      }
-    });
-  }
-
-  if (err.isArangoError) {
-    // Treat '1202 - ERROR_ARANGO_DOCUMENT_NOT_FOUND' as '404 Not Found'.
-    // https://docs.arangodb.com/3.0.10/Manual/Appendix/ErrorCodes.html
-    if (err.errorNum === 1202) return res.status(404).json();
-
-    // Don't leak error details in production.
-    if (process.env.NODE_ENV === 'production') return res.status(500).json();
-
-    // err.response is circular and cannot be serialized with res.json().
-    delete err.response;
-  }
-
-  return res.status(500).json({
-    error: {
-      name: err.name,
-      message: err.message,
-      meta: err
-    }
-  });
-});
+app.use(errorHandler());
 
 // Serve swagger API spec in development environment.
 if (process.env.NODE_ENV !== 'production') {
