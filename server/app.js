@@ -10,9 +10,9 @@ const swaggerJsDoc = require('swagger-jsdoc');
 // Setup authentication before instantiating the main app router.
 // eslint-disable-next-line no-unused-vars
 const auth = require('./shared/auth');
-const router = require('./router');
-const logger = require('./logger');
+const logger = require('./shared/logger');
 const config = require('../config/server');
+const router = require('./router');
 
 const app = express();
 app.use(cors());
