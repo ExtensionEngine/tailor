@@ -43,9 +43,9 @@ app.use('/api/v1', router);
 app.use(errorHandler());
 
 // Serve swagger API spec in development environment.
-if (process.env.NODE_ENV !== 'production') {
+if (config.swagger.serveDocs) {
   const spec = swaggerJsDoc({
-    swaggerDefinition: config.swagger,
+    swaggerDefinition: config.swagger.swaggerDefinition,
     apis: ['./server/**/*.js']
   });
 
