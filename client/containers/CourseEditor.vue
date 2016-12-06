@@ -57,7 +57,8 @@
 
     methods: {
       ...mapActions([
-        'fetchCourse'
+        'fetchCourse',
+        'removeCourse'
       ])
     },
 
@@ -68,8 +69,12 @@
       })
     },
 
-    mounted() {
+    created() {
       this.fetchCourse(this.$route.params.courseId);
+    },
+
+    destroyed() {
+      this.removeCourse();
     }
   };
 </script>

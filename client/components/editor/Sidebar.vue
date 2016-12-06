@@ -31,7 +31,13 @@
 
 <script>
   export default {
-    name: 'editor-sidebar'
+    name: 'editor-sidebar',
+
+    methods: {
+      handleClick() {
+        console.log('clicked');
+      }
+    }
   };
 </script>
 
@@ -54,7 +60,7 @@
 
     ul {
       list-style: none;
-      padding-left: 10px;
+      padding: 0;
 
       li > a {
         color: #000;
