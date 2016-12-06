@@ -1,5 +1,5 @@
 const logger = require('../logger');
-const genericProcessor = require('./generic');
+const genericErrorProcessor = require('./generic');
 const defaultProcessors = [
   require('./auth'),
   require('./validation'),
@@ -7,7 +7,7 @@ const defaultProcessors = [
 ];
 
 function errorHandler(processors = defaultProcessors) {
-  processors.push(genericProcessor);
+  processors.push(genericErrorProcessor);
 
   return (err, req, res, next) => {
     logger.error({ err });
