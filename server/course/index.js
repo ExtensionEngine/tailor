@@ -2,6 +2,8 @@
 
 const express = require('express');
 const controller = require('./course.controller').controller;
+const model = require('./course.model').model;
+const middleware = require('./middleware');
 
 const router = express.Router();
 
@@ -13,5 +15,8 @@ router.put('/courses/:courseKey', controller.replace);
 router.delete('/courses/:courseKey', controller.remove);
 
 module.exports = {
+  controller,
+  middleware,
+  model,
   router
 };
