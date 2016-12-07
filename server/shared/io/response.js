@@ -4,7 +4,7 @@ const { save, load } = require('./locals');
 
 const IO_DATA_PATH = 'io.data';
 
-function setSuccess(response, data) {
+function setOK(response, data) {
   if (data) save(response, IO_DATA_PATH, data);
   response.status(200);
 }
@@ -21,11 +21,11 @@ function setEmpty(response) {
 }
 
 function getData(response) {
-  load(response, IO_DATA_PATH);
+  return load(response, IO_DATA_PATH);
 }
 
 module.exports = {
-  setSuccess,
+  setOK,
   setCreated,
   setEmpty,
   getData

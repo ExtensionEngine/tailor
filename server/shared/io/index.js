@@ -24,7 +24,7 @@ module.exports = {
   input,
   locals,
   output,
-  setSuccess: response.setSuccess,
+  setOK: response.setOK,
   setCreated: response.setCreated,
   setEmpty: response.setEmpty,
   getData: response.getData
