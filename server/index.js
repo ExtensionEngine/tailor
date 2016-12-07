@@ -1,9 +1,9 @@
 'use strict';
 
 const app = require('./app');
-const logger = require('./logger');
 const config = require('../config/server');
 const connector = require('./shared/database').databaseConnector;
+const logger = require('./shared/logger');
 
 function runApp() {
   return new Promise((resolve, reject) => {

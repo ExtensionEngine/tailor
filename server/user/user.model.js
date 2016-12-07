@@ -80,7 +80,7 @@ class UserModel extends BaseModel {
       .then(validUser => this.hashPassword(validUser))
       .then(hashedUser => this.db.query(query.INSERT_USER, {
         '@collection': this.collectionName,
-        hashedUser
+        user: hashedUser
       }))
       .then(cursor => cursor.next());
   }
