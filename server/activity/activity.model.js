@@ -2,8 +2,9 @@
 
 const Joi = require('joi');
 const BaseModel = require('../base.model');
-const query = require('./query');
-const db = require('../shared/database').db;
+const database = require('../shared/database');
+const db = database.db;
+const ACTIVITY_COLLECTION = database.collection.ACTIVITY;
 
 const activitySchema = Joi.object().keys({
   name: Joi.string().min(3).max(100).required(),
@@ -13,10 +14,8 @@ const activitySchema = Joi.object().keys({
   position: Joi.number().integer()
 });
 
-const COLLECTION_NAME = 'activity';
-
 class ActivityModel extends BaseModel {
-  constructor(db, collectionName = COLLECTION_NAME, schema = activitySchema) {
+  constructor(db, collectionName = ACTIVITY_COLLECTION, schema = activitySchema) {
     super(db, collectionName, schema);
   }
 
@@ -26,8 +25,10 @@ class ActivityModel extends BaseModel {
       const db = arango.db;
       const aql = arango.aql;
 
-      if (doc.parentKey && !db.activity.exists(doc.parentKey)) throw new Error(
-        `Parent activity (${doc.parentKey}) does not exist`);
+      if (doc.parentKey && !db.activity.exists(doc.parentKey)) {
+        throw new Error(
+          `Parent activity (${doc.parentKey}) does not exist`);
+      }
 
       const countSiblings = aql`RETURN LENGTH(FOR act IN activity
         FILTER act.courseKey == ${doc.courseKey} AND
@@ -64,7 +65,6 @@ class ActivityModel extends BaseModel {
 }
 
 module.exports = {
-  COLLECTION_NAME,
   schema: activitySchema,
   Model: ActivityModel,
   model: new ActivityModel(db)
