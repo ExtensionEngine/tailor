@@ -35,6 +35,38 @@ class ActivityModel extends BaseModel {
           activityCollection: ACTIVITY_COLLECTION
         }));
   }
+
+  getByKey(courseKey, activityKey) {
+    const query = `
+      FOR activity IN @@activityCollection
+        FILTER activity.courseKey == @courseKey AND
+               activity._key == @activityKey
+        RETURN activity`;
+    const bindVars = {
+      courseKey,
+      activityKey,
+      '@activityCollection': ACTIVITY_COLLECTION
+    };
+
+    return this.db
+      .query(query, bindVars)
+      .then(cursor => cursor.next());
+  }
+
+  getMany(courseKey) {
+    const query = `
+      FOR activity IN @@activityCollection
+        FILTER activity.courseKey == @courseKey
+        RETURN activity`;
+    const bindVars = {
+      courseKey,
+      '@activityCollection': ACTIVITY_COLLECTION
+    };
+
+    return this.db
+      .query(query, bindVars)
+      .then(cursor => cursor.all());
+  }
 }
 
 module.exports = {

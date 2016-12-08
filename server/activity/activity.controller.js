@@ -27,6 +27,28 @@ class ActivityController extends BaseController {
       })
       .catch(next);
   }
+
+  show(req, res, next) {
+    const courseKey = locals.load(req, 'course._key');
+    this.model
+      .getByKey(courseKey, req.params.activityKey)
+      .then(data => {
+        io.setOK(res, data);
+        next();
+      })
+      .catch(next);
+  }
+
+  list(req, res, next) {
+    const courseKey = locals.load(req, 'course._key');
+    this.model
+      .getMany(courseKey)
+      .then(data => {
+        io.setOK(res, data);
+        next();
+      })
+      .catch(next);
+  }
 }
 
 module.exports = {
