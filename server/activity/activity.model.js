@@ -33,7 +33,7 @@ class ActivityModel extends BaseModel {
         {
           newActivity: validActivity,
           activityCollection: ACTIVITY_COLLECTION
-        }))
+        }));
   }
 }
 

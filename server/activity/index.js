@@ -1,4 +1,8 @@
 'use strict';
+/**
+ * Activity resource.
+ * @namespace Activity
+ */
 
 const express = require('express');
 const io = require('../shared/io');
