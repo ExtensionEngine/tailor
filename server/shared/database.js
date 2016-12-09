@@ -4,7 +4,7 @@ const arangojs = require('arangojs');
 const config = require('../../config/server');
 
 // TODO(matej): load required collections from model files.
-config.database.collections = ['course', 'user'];
+config.database.collections = ['asset', 'course', 'user'];
 
 /** Utility class for initializing ArangoDB. */
 class DatabaseConnector {
