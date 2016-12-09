@@ -26,6 +26,9 @@ router.get('/courses/:courseKey/activities/:activityKey',
 router.post('/courses/:courseKey/activities/:activityKey/actions/reorder',
   loadCourse,
   controller.reorder);
+router.delete('/courses/:courseKey/activities/:activityKey',
+  loadCourse,
+  controller.remove);
 router.use('/courses/:courseKey/activities', io.output());
 
 module.exports = {

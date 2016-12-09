@@ -52,6 +52,17 @@ class ActivityController extends BaseController {
       .catch(next);
   }
 
+  remove(req, res, next) {
+    const courseKey = locals.load(req, 'course._key');
+    this.model
+      .removeByKey(courseKey, req.params.activityKey)
+      .then(data => {
+        io.setOK(res, data);
+        next();
+      })
+      .catch(next);
+  }
+
   reorder(req, res, next) {
     const courseKey = locals.load(req, 'course._key');
     this.model

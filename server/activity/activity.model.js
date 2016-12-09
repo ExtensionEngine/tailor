@@ -72,6 +72,10 @@ class ActivityModel extends BaseModel {
       .then(cursor => cursor.all());
   }
 
+  removeByKey(courseKey, activityKey) {
+    return Promise.resolve(`${courseKey} ${activityKey}`);
+  }
+
   reorder(courseKey, activityKey, newPosition) {
     const { error, value } = Joi.validate({ position: newPosition }, positionSchema);
     if (error) return Promise.reject(error);
