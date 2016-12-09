@@ -151,7 +151,88 @@ function reorder({ courseKey, activityKey, requestedPosition, activityCollection
   }).next();
 }
 
+/**
+ * Remove an activity and all its sub-activities.
+ * @memberof Activity.Action
+ *
+ * @param {object} param - Action parameters.
+ * @param {string} param.courseKey - Course which contains the activity.
+ * @param {string} param.activityKey - Activity to remove.
+ * @param {string} param.activityCollection - Name of the collection containing
+ * all activities.
+ * @return {Promise<object[]>} Array of removed activities.
+ */
+function remove({ courseKey, activityKey, activityCollection }) {
+  const db = require('@arangodb').db;
+
+  const findActivity = `
+    FOR act IN @@collection
+      FILTER act.courseKey == @courseKey AND
+             act._key == @activityKey
+      RETURN act`;
+  const activity = db._query(findActivity, {
+    courseKey,
+    activityKey,
+    '@collection': activityCollection
+  }).next();
+
+  if (!activity) {
+    throw new Error(
+    `Activity (${activityKey}) in course (${courseKey}) does not exist`);
+  }
+
+  const getAll = `
+    FOR act IN @@collection
+      FILTER act.courseKey == @courseKey
+      RETURN act`;
+  const activities = db._query(getAll, {
+    courseKey,
+    '@collection': activityCollection
+  }).toArray();
+
+  // Recursively find all descendants/children of the given activity, and
+  // remove them (including the starting activity).
+  function getSubtreeRec(startNode, allNodes) {
+    let result = [startNode];
+    for (const node of allNodes) {
+      if (node.parentKey === startNode._key) {
+        result = result.concat(getSubtreeRec(node, allNodes));
+      }
+    }
+    return result;
+  }
+
+  const keysToRemove = getSubtreeRec(activity, activities).map(a => a._key);
+  const removeRelated = `
+    FOR act IN @@collection
+      FILTER act.courseKey == @courseKey AND
+             act._key IN @keysToRemove
+      REMOVE act IN @@collection
+      RETURN OLD`;
+  const removed = db._query(removeRelated, {
+    courseKey,
+    keysToRemove,
+    '@collection': activityCollection
+  }).toArray();
+
+  // Once activity is removed, its siblings need to readjust their position.
+  const compactSiblings = `
+    FOR act in @@collection
+      FILTER act.courseKey == @courseKey AND
+             act.parentKey == @activity.parentKey AND
+             act.position > @activity.position
+      UPDATE act WITH { position: act.position - 1 } IN @@collection`;
+  db._query(compactSiblings, {
+    courseKey,
+    activity,
+    '@collection': activityCollection
+  });
+
+  return removed;
+}
+
 module.exports = {
   insert,
-  reorder
+  reorder,
+  remove
 };

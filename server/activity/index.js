@@ -12,24 +12,34 @@ const course = require('../course');
 const loadCourse = course.middleware.loadCourse(course.model);
 
 const router = express.Router();
+const input = io.input();
+const output = io.output();
 
-router.use('/courses/:courseKey/activities', io.input());
 router.get('/courses/:courseKey/activities',
+  input,
   loadCourse,
-  controller.list);
-router.post('/courses/:courseKey/activities/',
+  controller.list,
+  output);
+router.post('/courses/:courseKey/activities',
+  input,
   loadCourse,
-  controller.create);
+  controller.create,
+  output);
 router.get('/courses/:courseKey/activities/:activityKey',
+  input,
   loadCourse,
-  controller.show);
-router.post('/courses/:courseKey/activities/:activityKey/actions/reorder',
-  loadCourse,
-  controller.reorder);
+  controller.show,
+  output);
 router.delete('/courses/:courseKey/activities/:activityKey',
+  input,
   loadCourse,
-  controller.remove);
-router.use('/courses/:courseKey/activities', io.output());
+  controller.remove,
+  output);
+router.post('/courses/:courseKey/activities/:activityKey/actions/reorder',
+  input,
+  loadCourse,
+  controller.reorder,
+  output);
 
 module.exports = {
   controller,

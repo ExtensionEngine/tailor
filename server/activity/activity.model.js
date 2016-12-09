@@ -73,7 +73,17 @@ class ActivityModel extends BaseModel {
   }
 
   removeByKey(courseKey, activityKey) {
-    return Promise.resolve(`${courseKey} ${activityKey}`);
+    return this.db.transaction(
+      {
+        read: ACTIVITY_COLLECTION,
+        write: ACTIVITY_COLLECTION
+      },
+      String(action.remove),
+      {
+        courseKey,
+        activityKey,
+        activityCollection: ACTIVITY_COLLECTION
+      });
   }
 
   reorder(courseKey, activityKey, newPosition) {
