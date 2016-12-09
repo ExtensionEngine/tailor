@@ -8,12 +8,16 @@ const action = require('./action');
 const db = database.db;
 const ACTIVITY_COLLECTION = database.collection.ACTIVITY;
 
-const activitySchema = Joi.object().keys({
+const schemaKeys = {
   name: Joi.string().min(3).max(100).required(),
   type: Joi.string(), // TODO(matej): type should be one of predefined types
   courseKey: Joi.string().regex(/[0-9]+/).required(),
   parentKey: Joi.string().allow(null).regex(/[0-9]+/).required(),
   position: Joi.number().integer().min(0)
+};
+const activitySchema = Joi.object().keys(schemaKeys);
+const positionSchema = Joi.object().keys({
+  position: schemaKeys.position.required()
 });
 
 class ActivityModel extends BaseModel {
@@ -69,6 +73,8 @@ class ActivityModel extends BaseModel {
   }
 
   reorder(courseKey, activityKey, newPosition) {
+    const { error, value } = Joi.validate({ position: newPosition }, positionSchema);
+    if (error) return Promise.reject(error);
     return this.db.transaction(
       {
         read: ACTIVITY_COLLECTION,
@@ -78,7 +84,7 @@ class ActivityModel extends BaseModel {
       {
         courseKey,
         activityKey,
-        requestedPosition: newPosition,
+        requestedPosition: value.position,
         activityCollection: ACTIVITY_COLLECTION
       });
   }

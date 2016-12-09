@@ -65,7 +65,7 @@ function insert({ newActivity, activityCollection }) {
  * @param {object} param - Action parameters.
  * @param {string} param.courseKey - Course which contains the activity.
  * @param {string} param.activityKey - Activity to reorder.
- * @param {string} param.requestedPosition - New position.
+ * @param {number} param.requestedPosition - New position.
  * @param {string} param.activityCollection - Name of the collection containing
  * all activities.
  * @return {Promise<object>} Updated activity.
