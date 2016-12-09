@@ -67,6 +67,21 @@ class ActivityModel extends BaseModel {
       .query(query, bindVars)
       .then(cursor => cursor.all());
   }
+
+  reorder(courseKey, activityKey, newPosition) {
+    return this.db.transaction(
+      {
+        read: ACTIVITY_COLLECTION,
+        write: ACTIVITY_COLLECTION
+      },
+      String(action.REORDER),
+      {
+        courseKey,
+        activityKey,
+        requestedPosition: newPosition,
+        activityCollection: ACTIVITY_COLLECTION
+      });
+  }
 }
 
 module.exports = {

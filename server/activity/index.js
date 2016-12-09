@@ -23,7 +23,9 @@ router.post('/courses/:courseKey/activities/',
 router.get('/courses/:courseKey/activities/:activityKey',
   loadCourse,
   controller.show);
-// router.post('/courses/:courseKey/activities/:activityKey/actions/reorder', controller.show);
+router.post('/courses/:courseKey/activities/:activityKey/actions/reorder',
+  loadCourse,
+  controller.reorder);
 router.use('/courses/:courseKey/activities', io.output());
 
 module.exports = {

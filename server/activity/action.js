@@ -56,6 +56,100 @@ function INSERT({ newActivity, activityCollection }) {
   return db._query(saveNew, bindVars).next();
 }
 
+/**
+ * Change position of one activity among its siblings.
+ * @memberof Activity.Action
+ *
+ * @param {object} param - Action parameters.
+ * @param {string} param.courseKey - Course which contains the activity.
+ * @param {string} param.activityKey - Activity to reorder.
+ * @param {string} param.requestedPosition - New position.
+ * @param {string} param.activityCollection - Name of the collection containing
+ * all activities.
+ * @return {Promise<object>} Updated activity.
+ */
+function REORDER({ courseKey, activityKey, requestedPosition, activityCollection }) {
+  const db = require('@arangodb').db;
+
+  const findActivity = `
+    FOR act IN @@collection
+      FILTER act.courseKey == @courseKey AND
+             act._key == @activityKey
+      RETURN act`;
+  const activity = db._query(findActivity, {
+    courseKey,
+    activityKey,
+    '@collection': activityCollection
+  }).next();
+
+  if (!activity) {
+    throw new Error(
+    `Activity (${activityKey}) in course (${courseKey}) does not exist`);
+  }
+
+  // New position is whatever client requested (requestedPosition), but
+  // clamped to range [0, N), where N is the number of sibling activities.
+  let newPosition;
+  if (requestedPosition < 0) {
+    newPosition = 0;
+  } else {
+    const countSiblings = `
+      RETURN LENGTH(
+        FOR act IN @@collection
+          FILTER act.courseKey == @activity.courseKey AND
+                 act.parentKey == @activity.parentKey
+          RETURN act)`;
+    const numSiblings = db._query(countSiblings, {
+      activity,
+      '@collection': activityCollection
+    }).next();
+    newPosition = requestedPosition >= numSiblings ? (numSiblings - 1) : requestedPosition;
+  }
+
+  // Activity is already at requested position - nothing to do here.
+  if (newPosition === activity.position) return activity;
+
+  let from; // smallest position affected by reorder
+  let to;   // largest position affected by reorder
+  let step; // increment or decrement each position
+  if (newPosition > activity.position) {
+    from = activity.position + 1;
+    to = newPosition;
+    step = -1;
+  } else {
+    from = newPosition;
+    to = activity.position - 1;
+    step = 1;
+  }
+
+  const updateAffected = `
+    FOR act IN @@collection
+      FILTER act.courseKey == @activity.courseKey AND
+             act.parentKey == @activity.parentKey AND
+             act.position >= @from AND
+             act.position <= @to
+      UPDATE act WITH { position: act.position + @step } IN @@collection`;
+  db._query(updateAffected, {
+    from,
+    to,
+    step,
+    activity,
+    '@collection': activityCollection
+  });
+
+  const moveToNewPos = `
+    FOR act IN @@collection
+      FILTER act._key == @activityKey
+      UPDATE act WITH { position: @newPosition } IN @@collection
+      RETURN NEW`;
+  return db._query(moveToNewPos, {
+    activityKey,
+    newPosition,
+    '@collection': activityCollection
+  }).next();
+}
+
 module.exports = {
-  INSERT
+  INSERT,
+  REORDER
 };

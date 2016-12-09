@@ -8,6 +8,8 @@ const locals = io.locals;
 class ActivityController extends BaseController {
   constructor(model = activityModel, resourceKey = 'activityKey') {
     super(model, resourceKey);
+
+    this.reorder = this.reorder.bind(this);
   }
 
   create(req, res, next) {
@@ -43,6 +45,17 @@ class ActivityController extends BaseController {
     const courseKey = locals.load(req, 'course._key');
     this.model
       .getMany(courseKey)
+      .then(data => {
+        io.setOK(res, data);
+        next();
+      })
+      .catch(next);
+  }
+
+  reorder(req, res, next) {
+    const courseKey = locals.load(req, 'course._key');
+    this.model
+      .reorder(courseKey, req.params.activityKey, req.body.position)
       .then(data => {
         io.setOK(res, data);
         next();
