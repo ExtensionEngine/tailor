@@ -29,7 +29,7 @@ class ActivityModel extends BaseModel {
           read: ACTIVITY_COLLECTION,
           write: ACTIVITY_COLLECTION
         },
-        String(action.INSERT),
+        String(action.insert),
         {
           newActivity: validActivity,
           activityCollection: ACTIVITY_COLLECTION
@@ -74,7 +74,7 @@ class ActivityModel extends BaseModel {
         read: ACTIVITY_COLLECTION,
         write: ACTIVITY_COLLECTION
       },
-      String(action.REORDER),
+      String(action.reorder),
       {
         courseKey,
         activityKey,

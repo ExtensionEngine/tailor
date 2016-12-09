@@ -14,7 +14,7 @@
  * all activities.
  * @return {Promise<object>} Inserted activity.
  */
-function INSERT({ newActivity, activityCollection }) {
+function insert({ newActivity, activityCollection }) {
   const db = require('@arangodb').db;
   const collection = db._collection(activityCollection);
 
@@ -28,11 +28,12 @@ function INSERT({ newActivity, activityCollection }) {
   const saveNew = `INSERT @newActivity IN @@collection RETURN NEW`;
   const bindVars = { newActivity, '@collection': activityCollection };
 
-  const countSiblings = `RETURN LENGTH(
-    FOR activity IN @@collection
-      FILTER activity.courseKey == @newActivity.courseKey AND
-             activity.parentKey == @newActivity.parentKey
-      RETURN activity)`;
+  const countSiblings = `
+    RETURN LENGTH(
+      FOR activity IN @@collection
+        FILTER activity.courseKey == @newActivity.courseKey AND
+               activity.parentKey == @newActivity.parentKey
+        RETURN activity)`;
   const numSiblings = db._query(countSiblings, bindVars).next();
 
   // Place the new activity at the end of the array of its siblings and return.
@@ -47,11 +48,12 @@ function INSERT({ newActivity, activityCollection }) {
 
   // Place the new activity at the specified position, and push activities
   // behind it one place further.
-  const updateExisting = `FOR activity IN @@collection
-    FILTER activity.courseKey == @newActivity.courseKey AND
-           activity.parentKey == @newActivity.parentKey AND
-           activity.position >= @newActivity.position
-    UPDATE activity WITH { position: activity.position + 1 } IN @@collection`;
+  const updateExisting = `
+    FOR activity IN @@collection
+      FILTER activity.courseKey == @newActivity.courseKey AND
+             activity.parentKey == @newActivity.parentKey AND
+             activity.position >= @newActivity.position
+      UPDATE activity WITH { position: activity.position + 1 } IN @@collection`;
   db._query(updateExisting, bindVars);
   return db._query(saveNew, bindVars).next();
 }
@@ -68,7 +70,7 @@ function INSERT({ newActivity, activityCollection }) {
  * all activities.
  * @return {Promise<object>} Updated activity.
  */
-function REORDER({ courseKey, activityKey, requestedPosition, activityCollection }) {
+function reorder({ courseKey, activityKey, requestedPosition, activityCollection }) {
   const db = require('@arangodb').db;
 
   const findActivity = `
@@ -150,6 +152,6 @@ function REORDER({ courseKey, activityKey, requestedPosition, activityCollection
 }
 
 module.exports = {
-  INSERT,
-  REORDER
+  insert,
+  reorder
 };
