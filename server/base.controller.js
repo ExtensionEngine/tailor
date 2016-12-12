@@ -1,5 +1,7 @@
 'use strict';
 
+const io = require('./shared/io');
+
 class BaseController {
   constructor(model, resourceKey) {
     this.model = model;
@@ -17,9 +19,8 @@ class BaseController {
     this.model
       .create(req.body)
       .then(data => {
-        res.location(`${req.originalUrl}/${data._key}`)
-          .status(201)
-          .json({ data });
+        io.setCreated(res, data);
+        next();
       })
       .catch(next);
   }
@@ -27,35 +28,50 @@ class BaseController {
   show(req, res, next) {
     this.model
       .getByKey(req.params[this.resourceKey])
-      .then(data => res.status(200).json({ data }))
+      .then(data => {
+        io.setOK(res, data);
+        next();
+      })
       .catch(next);
   }
 
   patch(req, res, next) {
     this.model
       .updateByKey(req.params[this.resourceKey], req.body)
-      .then(data => res.status(200).json({ data }))
+      .then(data => {
+        io.setOK(res, data);
+        next();
+      })
       .catch(next);
   }
 
   replace(req, res, next) {
     this.model
       .replaceByKey(req.params[this.resourceKey], req.body)
-      .then(data => res.status(200).json({ data }))
+      .then(data => {
+        io.setOK(res, data);
+        next();
+      })
       .catch(next);
   }
 
   remove(req, res, next) {
     this.model
       .removeByKey(req.params[this.resourceKey])
-      .then(data => res.status(200).json({ data }))
+      .then(data => {
+        io.setOK(res, data);
+        next();
+      })
       .catch(next);
   }
 
   list(req, res, next) {
     this.model
       .getMany()
-      .then(data => res.status(200).json({ data }))
+      .then(data => {
+        io.setOK(res, data);
+        next();
+      })
       .catch(next);
   }
 }

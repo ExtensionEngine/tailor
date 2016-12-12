@@ -1,6 +1,6 @@
 const chai = require('chai');
 const sinon = require('sinon');
-const DatabaseConnector = require('../database').DatabaseConnector;
+const DatabaseConnector = require('../connector').DatabaseConnector;
 
 sinon.assert.expose(chai.assert, { prefix: '' });
 const assert = chai.assert;

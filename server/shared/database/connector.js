@@ -1,10 +1,9 @@
 'use strict';
 
+const values = require('lodash/values');
 const arangojs = require('arangojs');
-const config = require('../../config/server');
-
-// TODO(matej): load required collections from model files.
-config.database.collections = ['course', 'user'];
+const config = require('../../../config/server');
+const collection = require('./collection');
 
 /** Utility class for initializing ArangoDB. */
 class DatabaseConnector {
@@ -67,6 +66,7 @@ class DatabaseConnector {
 }
 
 const db = arangojs(config.database.uri);
+config.database.collections = values(collection);
 
 module.exports = {
   db,
