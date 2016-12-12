@@ -1,8 +1,8 @@
 <template>
   <div class="login">
     <div class="info">
-      <div v-if="errorMessage" class="message">
-        <span class="fa fa-exclamation-triangle"></span> {{errorMessage}}
+      <div v-if="status.message" class="message">
+        <span class="fa fa-exclamation-triangle"></span> {{status.message}}
       </div>
     </div>
 
@@ -37,15 +37,13 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex-module';
 
   export default {
     name: 'login',
 
     computed: {
-      ...mapGetters({
-        errorMessage: 'loginUserMessage'
-      })
+      ...mapGetters({ status: 'loginUserStatus' }, 'auth')
     },
 
     methods: {
@@ -63,7 +61,7 @@
       ...mapActions([
         'loginUser',
         'loginUserFail'
-      ])
+      ], 'auth')
     }
   };
 </script>

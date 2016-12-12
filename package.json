@@ -5,7 +5,7 @@
   "author": "Damir Perisic <dperisic@extensionengine.com>",
   "private": true,
   "scripts": {
-    "dev": "node config/client/startup/client.js",
+    "dev:client": "node config/client/startup/client.js",
     "build": "npm run clean && npm run build:dist",
     "build:dist": "cross-env NODE_ENV=production webpack --config config/client/webpack/prod.js --progress --hide-modules",
     "e2e": "node client/test/e2e/runner.js",
