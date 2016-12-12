@@ -28,19 +28,19 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
+  import { mapGetters } from 'vuex-module';
 
   export default {
     name: 'navbar',
 
     computed: {
-      ...mapGetters({
-        request: 'loginUserRequest',
-        success: 'loginUserSuccess',
-        course: 'getCourse'
-      }),
+      ...mapGetters({ status: 'loginUserStatus' }, 'auth'),
+      ...mapGetters({ course: 'getCourse' }),
       loggedIn() {
-        return this.success && !this.request;
+        return this.status.success && !this.status.request;
+      },
+      status() {
+        return true;
       }
     }
   };

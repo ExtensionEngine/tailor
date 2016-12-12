@@ -1,16 +1,16 @@
 <template>
   <div class="reset-password">
     <div class="info">
-      <div v-show="!submitted && !errorMessage" class="init">
+      <div v-show="!submitted && !status.message" class="init">
         <span class="fa fa-info"></span> {{initMessage}}
       </div>
 
-      <div v-show="submitted && !errorMessage" class="sent">
+      <div v-show="submitted && !status.message" class="sent">
         <span class="fa fa-check"></span> {{sentMessage}}
       </div>
 
-      <div v-show="errorMessage" class="error">
-        <span class="fa fa-exclamation-triangle"></span> {{errorMessage}}
+      <div v-show="status.message" class="error">
+        <span class="fa fa-exclamation-triangle"></span> {{status.message}}
       </div>
     </div>
     <form @submit.prevent="handleResetPassword" novalidate>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex-module';
 
   export default {
     name: 'reset-password',
@@ -53,8 +53,8 @@
 
     computed: {
       ...mapGetters({
-        errorMessage: 'resetPasswordMessage'
-      })
+        status: 'resetPasswordStatus'
+      }, 'auth')
     },
 
     methods: {
@@ -72,7 +72,7 @@
       ...mapActions([
         'resetPassword',
         'resetPasswordFail'
-      ])
+      ], 'auth')
     }
   };
 </script>
