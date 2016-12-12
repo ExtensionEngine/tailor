@@ -15,14 +15,12 @@ function input() {
   };
 }
 
-const propsToRemove = new Set([
-  '_id',
-  '_rev',
-  'password'
-]);
-const picker = (value, key) => !propsToRemove.has(key);
+function output(config = {
+  propsToRemove: ['_id', '_rev', 'password']
+}) {
+  const propsToRemove = new Set(config.propsToRemove);
+  const picker = (value, key) => !propsToRemove.has(key);
 
-function output() {
   return (req, res, next) => {
     const data = getData(res);
 
