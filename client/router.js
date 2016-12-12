@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 import Auth from './containers/Auth';
-import Home from './containers/Home';
 import Course from './components/course/Container';
 import Courses from './containers/Courses';
 import CourseEditor from './containers/CourseEditor';
