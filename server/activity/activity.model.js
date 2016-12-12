@@ -8,6 +8,57 @@ const action = require('./action');
 const db = database.db;
 const ACTIVITY_COLLECTION = database.collection.ACTIVITY;
 
+/**
+ * @swagger
+ * definitions:
+ *   ActivityInput:
+ *     type: object
+ *     required:
+ *     - name
+ *     properties:
+ *       name:
+ *         type: string
+ *         description: activity title
+ *       parentKey:
+ *         type: string
+ *         description: key to the parent activity, or null for root activities
+ *       position:
+ *         type: integer
+ *         description: position within the array of sibling activities. If not
+ *                      set, the server will auto-generate correct position.
+ *   ActivityReorderInput:
+ *     type: object
+ *     required:
+ *     - position
+ *     properties:
+ *       position:
+ *         type: integer
+ *         description: non-negative integer representing the new position
+ *   ActivityOutput:
+ *     type: object
+ *     required:
+ *     - _key
+ *       courseKey
+ *       parentKey
+ *       name
+ *       position
+ *     properties:
+ *       _key:
+ *         type: string
+ *         description: unique activity identifier
+ *       courseKey:
+ *         type: string
+ *         description: id of the course containing this activity
+ *       parentKey:
+ *         type: string
+ *         description: key to the parent activity, or null for root activities
+ *       name:
+ *         type: string
+ *         description: activity title
+ *       position:
+ *         type: integer
+ *         description: position within the array of sibling activities
+ */
 const schemaKeys = {
   name: Joi.string().min(3).max(100).required(),
   type: Joi.string(), // TODO(matej): type should be one of predefined types
