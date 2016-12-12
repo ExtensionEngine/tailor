@@ -4,14 +4,12 @@
       <div class="col-md-2">
         <course-sidebar></course-sidebar>
       </div>
-
       <div class="col-md-10 col-md-offset-2 content">
         <cube-spinner v-if="fetchStatus.request"></cube-spinner>
         <div v-else>
           <div class="row heading">
             <div class="col-md-12">
               <h1>Expressions</h1>
-
               <ul>
                 <li v-for="user in users">
                   <span class="fa fa-2x fa-user"></span>
@@ -19,7 +17,6 @@
               </ul>
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-12">
               <div class="editor">
@@ -38,8 +35,8 @@
 <script>
   import { mapActions, mapGetters } from 'vuex';
 
-  import CourseSidebar from '../components/editor/Sidebar';
-  import CubeSpinner from '../components/loaders/CubeSpinner';
+  import CourseSidebar from './Sidebar';
+  import CubeSpinner from '../loaders/CubeSpinner';
 
   export default {
     name: 'course-edit',
