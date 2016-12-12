@@ -1,0 +1,67 @@
+{
+  "courses": [
+    {
+      "id": 1,
+      "title": "Improving your business model with advanced analytics",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nibh eros, pharetra eget diam sed, malesuada ullamcorper metus. In consequat neque ut arcu cursus egestas. Duis pretium ut nunc vitae dictum. Vestibulum convallis nunc sagittis velit iaculis, blandit eleifend dui consectetur. Vestibulum eu pretium turpis. Proin ut imperdiet mi, quis malesuada ligula. Cras ex leo, porttitor in risus ac, bibendum gravida leo. Suspendisse dignissim varius nibh. Fusce quis turpis quis dolor maximus ultricies vestibulum eu leo.",
+      "recentActivity": "\"2016-11-20T07:00:00.000Z\"",
+      "image": "analytics.jpg"
+    },
+    {
+      "id": 2,
+      "title": "How to take notes while traveling the world",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nibh eros, pharetra eget diam sed, malesuada ullamcorper metus. In consequat neque ut arcu cursus egestas. Duis pretium ut nunc vitae dictum. Vestibulum convallis nunc sagittis velit iaculis, blandit eleifend dui consectetur. Vestibulum eu pretium turpis. Proin ut imperdiet mi, quis malesuada ligula. Cras ex leo, porttitor in risus ac, bibendum gravida leo. Suspendisse dignissim varius nibh. Fusce quis turpis quis dolor maximus ultricies vestibulum eu leo.",
+      "recentActivity": "\"2016-10-10T01:00:00.000Z\"",
+      "image": "archaeology.jpg"
+    },
+    {
+      "id": 3,
+      "title": "Pinning down strategic management",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nibh eros, pharetra eget diam sed, malesuada ullamcorper metus. In consequat neque ut arcu cursus egestas. Duis pretium ut nunc vitae dictum. Vestibulum convallis nunc sagittis velit iaculis, blandit eleifend dui consectetur. Vestibulum eu pretium turpis. Proin ut imperdiet mi, quis malesuada ligula. Cras ex leo, porttitor in risus ac, bibendum gravida leo. Suspendisse dignissim varius nibh. Fusce quis turpis quis dolor maximus ultricies vestibulum eu leo.",
+      "recentActivity": "\"2016-11-22T15:00:00.000Z\"",
+      "image": "travelorganization.jpg"
+    },
+    {
+      "id": 4,
+      "title": "Enhancing your learning process with unusual study techniques",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nibh eros, pharetra eget diam sed, malesuada ullamcorper metus. In consequat neque ut arcu cursus egestas. Duis pretium ut nunc vitae dictum. Vestibulum convallis nunc sagittis velit iaculis, blandit eleifend dui consectetur. Vestibulum eu pretium turpis. Proin ut imperdiet mi, quis malesuada ligula. Cras ex leo, porttitor in risus ac, bibendum gravida leo. Suspendisse dignissim varius nibh. Fusce quis turpis quis dolor maximus ultricies vestibulum eu leo.",
+      "recentActivity": "\"2016-10-04T03:00:00.000Z\"",
+      "image": "seastudy.jpg"
+    },
+    {
+      "id": 5,
+      "title": "Tetris for grown ups",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nibh eros, pharetra eget diam sed, malesuada ullamcorper metus. In consequat neque ut arcu cursus egestas. Duis pretium ut nunc vitae dictum. Vestibulum convallis nunc sagittis velit iaculis, blandit eleifend dui consectetur. Vestibulum eu pretium turpis. Proin ut imperdiet mi, quis malesuada ligula. Cras ex leo, porttitor in risus ac, bibendum gravida leo. Suspendisse dignissim varius nibh. Fusce quis turpis quis dolor maximus ultricies vestibulum eu leo.",
+      "recentActivity": "\"2016-11-06T16:00:00.000Z\"",
+      "image": "tetris.jpg"
+    },
+    {
+      "id": 6,
+      "title": "Successfully avoid lego bricks and achieve immortality",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nibh eros, pharetra eget diam sed, malesuada ullamcorper metus. In consequat neque ut arcu cursus egestas. Duis pretium ut nunc vitae dictum. Vestibulum convallis nunc sagittis velit iaculis, blandit eleifend dui consectetur. Vestibulum eu pretium turpis. Proin ut imperdiet mi, quis malesuada ligula. Cras ex leo, porttitor in risus ac, bibendum gravida leo. Suspendisse dignissim varius nibh. Fusce quis turpis quis dolor maximus ultricies vestibulum eu leo.",
+      "recentActivity": "\"2016-11-02T15:00:00.000Z\"",
+      "image": "lego.jpg"
+    },
+    {
+      "id": 7,
+      "title": "Learn a learning process",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nibh eros, pharetra eget diam sed, malesuada ullamcorper metus. In consequat neque ut arcu cursus egestas. Duis pretium ut nunc vitae dictum. Vestibulum convallis nunc sagittis velit iaculis, blandit eleifend dui consectetur. Vestibulum eu pretium turpis. Proin ut imperdiet mi, quis malesuada ligula. Cras ex leo, porttitor in risus ac, bibendum gravida leo. Suspendisse dignissim varius nibh. Fusce quis turpis quis dolor maximus ultricies vestibulum eu leo.",
+      "recentActivity": "\"2016-10-17T11:00:00.000Z\"",
+      "image": "library.jpg"
+    },
+    {
+      "id": 8,
+      "title": "How to become an artist in 30 days",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nibh eros, pharetra eget diam sed, malesuada ullamcorper metus. In consequat neque ut arcu cursus egestas. Duis pretium ut nunc vitae dictum. Vestibulum convallis nunc sagittis velit iaculis, blandit eleifend dui consectetur. Vestibulum eu pretium turpis. Proin ut imperdiet mi, quis malesuada ligula. Cras ex leo, porttitor in risus ac, bibendum gravida leo. Suspendisse dignissim varius nibh. Fusce quis turpis quis dolor maximus ultricies vestibulum eu leo.",
+      "recentActivity": "\"2016-10-22T07:00:00.000Z\"",
+      "image": "fineart.jpg"
+    },
+    {
+      "id": 9,
+      "title": "Minimize procrastination, maximize time efficiency",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nibh eros, pharetra eget diam sed, malesuada ullamcorper metus. In consequat neque ut arcu cursus egestas. Duis pretium ut nunc vitae dictum. Vestibulum convallis nunc sagittis velit iaculis, blandit eleifend dui consectetur. Vestibulum eu pretium turpis. Proin ut imperdiet mi, quis malesuada ligula. Cras ex leo, porttitor in risus ac, bibendum gravida leo. Suspendisse dignissim varius nibh. Fusce quis turpis quis dolor maximus ultricies vestibulum eu leo.",
+      "recentActivity": "\"2016-10-01T10:00:00.000Z\"",
+      "image": "timemanagement.jpg"
+    }
+  ]
+}

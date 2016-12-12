@@ -1,4 +1,5 @@
 'use strict';
+
 const Joi = require('joi');
 
 class BaseModel {

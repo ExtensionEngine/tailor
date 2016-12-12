@@ -1,8 +1,33 @@
 'use strict';
+
 const Joi = require('joi');
 const BaseModel = require('../base.model');
-const db = require('../database').db;
+const db = require('../shared/database').db;
 
+/**
+ * @swagger
+ * definitions:
+ *   CourseInput:
+ *     type: object
+ *     required:
+ *     - name
+ *     properties:
+ *       name:
+ *         type: string
+ *         description: course title
+ *   CourseOutput:
+ *     type: object
+ *     required:
+ *     - _key
+ *     - name
+ *     properties:
+ *       _key:
+ *         type: string
+ *         description: unique course identifier
+ *       name:
+ *         type: string
+ *         description: course title
+ */
 const courseSchema = Joi.object().keys({
   name: Joi.string().min(3).max(100).required()
 });

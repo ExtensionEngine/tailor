@@ -1,4 +1,5 @@
 'use strict';
+
 const BaseController = require('../base.controller');
 const courseModel = require('./course.model').model;
 

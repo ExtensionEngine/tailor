@@ -6,56 +6,56 @@ class BaseController {
     this.resourceKey = resourceKey;
 
     this.create = this.create.bind(this);
-    this.getByKey = this.getByKey.bind(this);
-    this.updateByKey = this.updateByKey.bind(this);
-    this.replaceByKey = this.replaceByKey.bind(this);
-    this.removeByKey = this.removeByKey.bind(this);
-    this.getMany = this.getMany.bind(this);
+    this.show = this.show.bind(this);
+    this.patch = this.patch.bind(this);
+    this.replace = this.replace.bind(this);
+    this.remove = this.remove.bind(this);
+    this.list = this.list.bind(this);
   }
 
   create(req, res, next) {
     this.model
       .create(req.body)
-      .then(item => {
-        res.location(`${req.originalUrl}/${item._key}`)
+      .then(data => {
+        res.location(`${req.originalUrl}/${data._key}`)
           .status(201)
-          .json({ data: item });
+          .json({ data });
       })
       .catch(next);
   }
 
-  getByKey(req, res, next) {
+  show(req, res, next) {
     this.model
       .getByKey(req.params[this.resourceKey])
-      .then(item => res.status(200).json({ data: item }))
+      .then(data => res.status(200).json({ data }))
       .catch(next);
   }
 
-  updateByKey(req, res, next) {
+  patch(req, res, next) {
     this.model
       .updateByKey(req.params[this.resourceKey], req.body)
-      .then(item => res.status(200).json({ data: item }))
+      .then(data => res.status(200).json({ data }))
       .catch(next);
   }
 
-  replaceByKey(req, res, next) {
+  replace(req, res, next) {
     this.model
       .replaceByKey(req.params[this.resourceKey], req.body)
-      .then(item => res.status(200).json({ data: item }))
+      .then(data => res.status(200).json({ data }))
       .catch(next);
   }
 
-  removeByKey(req, res, next) {
+  remove(req, res, next) {
     this.model
       .removeByKey(req.params[this.resourceKey])
-      .then(item => res.status(200).json({ data: item }))
+      .then(data => res.status(200).json({ data }))
       .catch(next);
   }
 
-  getMany(req, res, next) {
+  list(req, res, next) {
     this.model
       .getMany()
-      .then(items => res.status(200).json({ data: items || [] }))
+      .then(data => res.status(200).json({ data }))
       .catch(next);
   }
 }
