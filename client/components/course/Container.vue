@@ -7,12 +7,15 @@
 
 <script>
 import Outline from './Outline.vue';
-import { mapState } from 'vuex';
+import { mapState } from 'vuex-module';
 
 export default {
-  computed: mapState({
-    activities: state => state.editor.activities
-  }),
+  data() {
+    return {
+      name: 'Javascript'
+    };
+  },
+  computed: mapState(['activities']),
   components: {
     Outline
   }
