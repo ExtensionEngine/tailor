@@ -16,6 +16,7 @@ export default createMutationTypes('courses', [
   // store
   'ADD_COURSES',
   'CREATE_COURSE',
+  'REMOVE_COURSE',
 
   // filter
   'SET_SEARCH_FILTER'

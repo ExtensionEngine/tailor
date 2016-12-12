@@ -8,10 +8,16 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <router-link :to="{ name: 'courses' }" class="navbar-brand">Tailor</router-link>
+        <router-link :to="{ name: 'courses' }" class="navbar-brand">
+          <img src="../../assets/img/logo.png" alt="Logo" />
+        </router-link>
       </div>
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div v-if="course" class="course-title">
+          {{course.title}}
+        </div>
+
         <ul class="nav navbar-nav navbar-right">
           <li v-if="!loggedIn"><router-link :to="{ name: 'login' }">Login</router-link></li>
           <li v-if="loggedIn"><a href="#">Logout</a></li>
@@ -30,7 +36,8 @@
     computed: {
       ...mapGetters({
         request: 'loginUserRequest',
-        success: 'loginUserSuccess'
+        success: 'loginUserSuccess',
+        course: 'getCourse'
       }),
       loggedIn() {
         return this.success && !this.request;
@@ -45,15 +52,27 @@
     border-radius: 0;
     color: rgba(0, 0, 0, .87);
     font-weight: 500;
+    margin: 0;
+    z-index: 1000;
 
     .navbar-brand {
       color: inherit;
+      padding: 10px 20px;
+      width: 80px;
     }
 
     .navbar-right {
       > li > a {
         color: inherit;
       }
+    }
+
+    .course-title {
+      display: inline-block;
+      float: left;
+      font-size: 22px;
+      font-weight: 600;
+      padding-top: 12px;
     }
   }
 </style>
