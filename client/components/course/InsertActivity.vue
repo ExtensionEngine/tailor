@@ -1,23 +1,28 @@
 <template>
   <div>
-    <div class="divider-wrapper" v-if="!input" @click="show">
+    <div class="divider-wrapper" v-if="!inputShown" @click="show">
       <div class="divider">
         <div class="action"><span class="fa fa-plus"></span></div>
       </div>
     </div>
-    <div class="activity-input" v-if="input">
+    <div class="activity-input" v-if="inputShown">
       <div class="row">
         <div class="col-lg-8">
-          <input type="text" class="form-control" placeholder="Activity name">
+          <input
+            v-model="activityName"
+            v-focus="inputFocused"
+            type="text"
+            class="form-control"
+            placeholder="Activity name">
         </div>
         <div class="col-lg-2">
-          <select class="form-control">
-            <option>Section</option>
-            <option>Subsection</option>
+          <select class="form-control" v-model.number="activityLevel">
+            <option value="1">Section</option>
+            <option value="2">Subsection</option>
           </select>
         </div>
         <div class="col-lg-2">
-          <button class="btn btn-default">Add</button>
+          <button class="btn btn-default" @click.stop="add">Add</button>
           <button class="btn btn-default" @click.stop="hide">X</button>
         </div>
       </div>
@@ -26,22 +31,46 @@
 </template>
 
 <script>
+import cuid from 'cuid';
+import { focus } from 'vue-focus';
+import { mapActions } from 'vuex-module';
+
 export default {
-  data: function () {
+  directives: { focus },
+  props: ['parent'],
+  data() {
     return {
-      input: false
+      inputShown: false,
+      inputFocused: true,
+      activityName: '',
+      activityLevel: 1
     };
   },
   methods: {
-    show: function () {
-      this.input = true;
+    show() {
+      this.inputShown = true;
+      this.inputFocused = true;
     },
-    hide: function () {
-      this.input = false;
+    hide() {
+      this.activityName = '';
+      this.inputShown = false;
     },
-    add: function () {
-      // TODO: Dispatch action
-    }
+    add() {
+      let subLevel = this.activityLevel === 2;
+      let order = subLevel ? 1 : this.parent.order + 1;
+      let parent = subLevel ? this.parent._key : this.parent.parentKey;
+
+      this.create({
+        _key: cuid(),
+        name: this.activityName,
+        order: order,
+        parentKey: parent,
+        unsynced: true
+      });
+
+      this.hide();
+    },
+    ...mapActions(['create'], 'activities')
   }
 };
 </script>
@@ -52,12 +81,10 @@ export default {
 
   input {
     background-color: #e0e0e0;
-    box-shadow: inset 0 -2px 0 #337ab7;
   }
 
   select {
     background-color: #e0e0e0;
-    box-shadow: inset 0 -2px 0 #337ab7;
   }
 }
 </style>
