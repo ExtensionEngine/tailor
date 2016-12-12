@@ -76,19 +76,21 @@ class ActivityModel extends BaseModel {
     super(db, collectionName, schema);
   }
 
+  execAction(action, params) {
+    const locks = {
+      read: ACTIVITY_COLLECTION,
+      write: ACTIVITY_COLLECTION
+    };
+    return this.db.transaction(locks, String(action), params);
+  }
+
   create(activity) {
     return this
       .validate(activity)
-      .then(validActivity => this.db.transaction(
-        {
-          read: ACTIVITY_COLLECTION,
-          write: ACTIVITY_COLLECTION
-        },
-        String(action.insert),
-        {
-          newActivity: validActivity,
-          activityCollection: ACTIVITY_COLLECTION
-        }));
+      .then(validActivity => this.execAction(action.insert, {
+        newActivity: validActivity,
+        activityCollection: ACTIVITY_COLLECTION
+      }));
   }
 
   getByKey(courseKey, activityKey) {
@@ -124,34 +126,22 @@ class ActivityModel extends BaseModel {
   }
 
   removeByKey(courseKey, activityKey) {
-    return this.db.transaction(
-      {
-        read: ACTIVITY_COLLECTION,
-        write: ACTIVITY_COLLECTION
-      },
-      String(action.remove),
-      {
-        courseKey,
-        activityKey,
-        activityCollection: ACTIVITY_COLLECTION
-      });
+    return this.execAction(action.remove, {
+      courseKey,
+      activityKey,
+      activityCollection: ACTIVITY_COLLECTION
+    });
   }
 
   reorder(courseKey, activityKey, newPosition) {
     const { error, value } = Joi.validate({ position: newPosition }, positionSchema);
     if (error) return Promise.reject(error);
-    return this.db.transaction(
-      {
-        read: ACTIVITY_COLLECTION,
-        write: ACTIVITY_COLLECTION
-      },
-      String(action.reorder),
-      {
-        courseKey,
-        activityKey,
-        requestedPosition: value.position,
-        activityCollection: ACTIVITY_COLLECTION
-      });
+    return this.execAction(action.reorder, {
+      courseKey,
+      activityKey,
+      requestedPosition: value.position,
+      activityCollection: ACTIVITY_COLLECTION
+    });
   }
 }
 
