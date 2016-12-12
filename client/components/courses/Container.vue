@@ -21,9 +21,9 @@
 </template>
 
 <script>
-  import CourseCreate from '../components/courses/Create';
-  import CoursesList from '../components/courses/List';
-  import CoursesSearch from '../components/courses/Search';
+  import CourseCreate from './Create';
+  import CoursesList from './List';
+  import CoursesSearch from './Search';
 
   export default {
     name: 'courses',
