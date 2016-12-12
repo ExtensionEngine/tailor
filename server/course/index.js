@@ -7,15 +7,39 @@ const model = require('./course.model').model;
 const middleware = require('./middleware');
 
 const router = express.Router();
+const input = io.input();
+const output = io.output();
 
-router.use('/courses', io.input());
-router.get('/courses', controller.list);
-router.get('/courses/:courseKey', controller.show);
-router.post('/courses', controller.create);
-router.patch('/courses/:courseKey', controller.patch);
-router.put('/courses/:courseKey', controller.replace);
-router.delete('/courses/:courseKey', controller.remove);
-router.use('/courses', io.output());
+router.get('/courses',
+  input,
+  controller.list,
+  output);
+
+router.get('/courses/:courseKey',
+  input,
+  controller.show,
+  output);
+
+router.post('/courses',
+  input,
+  controller.create,
+  output);
+
+router.patch('/courses/:courseKey',
+  input,
+  controller.patch,
+  output);
+
+router.put('/courses/:courseKey',
+  input,
+  controller.replace,
+  output);
+
+router.delete('/courses/:courseKey',
+  input,
+  controller.remove,
+  output);
+
 
 module.exports = {
   controller,

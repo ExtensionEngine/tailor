@@ -20,26 +20,31 @@ router.get('/courses/:courseKey/activities',
   loadCourse,
   controller.list,
   output);
+
 router.post('/courses/:courseKey/activities',
   input,
   loadCourse,
   controller.create,
   output);
+
 router.get('/courses/:courseKey/activities/:activityKey',
   input,
   loadCourse,
   controller.show,
   output);
+
 router.delete('/courses/:courseKey/activities/:activityKey',
   input,
   loadCourse,
   controller.remove,
   output);
+
 router.post('/courses/:courseKey/activities/:activityKey/actions/reorder',
   input,
   loadCourse,
   controller.reorder,
   output);
+
 
 module.exports = {
   controller,
