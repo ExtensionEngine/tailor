@@ -2,6 +2,7 @@
 
 const BaseController = require('../base.controller');
 const userModel = require('./user.model').model;
+const io = require('../shared/io');
 
 class UserController extends BaseController {
   constructor(model = userModel, resourceKey = 'userKey') {
@@ -12,12 +13,15 @@ class UserController extends BaseController {
   }
 
   login(req, res, next) {
-    res.status(200).json({ data: req.user });
+    const user = req.user;
+    io.setOK(res, user);
+    next();
   }
 
   logout(req, res, next) {
     req.logout();
-    res.status(204).json();
+    io.setEmpty(res);
+    next();
   }
 }
 

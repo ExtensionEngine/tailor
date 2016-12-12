@@ -6,6 +6,10 @@ function createCourseStatusReset({ commit }) {
   commit(courseMutations.CREATE_COURSE_STATUS_RESET);
 }
 
+function removeCourse({ commit }) {
+  commit(courseMutations.REMOVE_COURSE);
+}
+
 function setSearchFilter({ commit }, search) {
   commit(courseMutations.SET_SEARCH_FILTER, search);
 }
@@ -55,6 +59,7 @@ function fetchCourses({ commit }) {
 export default {
   createCourseStatusReset,
   createCourse,
+  removeCourse,
   fetchCourse,
   fetchCourses,
   setSearchFilter

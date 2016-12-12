@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Auth from './containers/Auth';
-import Courses from './containers/Courses';
-import CourseEditor from './containers/CourseEditor';
+import Auth from './components/auth/Container';
+import Course from './components/course/Container';
+import Catalog from './components/catalog/Container';
+import CourseEditor from './components/editor/Container';
 import Login from './components/auth/Login';
 import ResetPassword from './components/auth/ResetPassword';
 
@@ -15,13 +16,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'courses',
-      component: Courses
+      name: 'catalog',
+      component: Catalog
     },
     {
-      path: '/:courseId',
+      path: '/catalog/:courseId',
       name: 'course-editor',
       component: CourseEditor
+    },
+    {
+      path: '/course/:id',
+      name: 'course',
+      component: Course
     },
     {
       path: '/',
