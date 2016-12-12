@@ -1,5 +1,7 @@
 'use strict';
 
+const isArray = require('lodash/isArray');
+const pickBy = require('lodash/pickBy');
 const locals = require('./locals');
 const response = require('./response');
 const getData = response.getData;
@@ -13,10 +15,23 @@ function input() {
   };
 }
 
+const propsToRemove = new Set([
+  '_id',
+  '_rev',
+  'password'
+]);
+const picker = (value, key) => !propsToRemove.has(key);
+
 function output() {
   return (req, res, next) => {
     const data = getData(res);
-    res.json({ data });
+
+    // Remove sensitive or database-specific properties:
+    const out = isArray(data)
+      ? data.map(obj => pickBy(obj, picker))
+      : pickBy(data, picker);
+
+    res.json({ data: out });
   };
 }
 
