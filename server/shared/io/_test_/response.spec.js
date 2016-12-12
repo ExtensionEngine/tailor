@@ -1,3 +1,5 @@
+'use strict';
+
 const chai = require('chai');
 const sinon = require('sinon');
 const response = require('../response');

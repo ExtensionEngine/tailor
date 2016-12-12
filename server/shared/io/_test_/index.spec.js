@@ -1,3 +1,5 @@
+'use strict';
+
 const _ = require('lodash');
 const chai = require('chai');
 const sinon = require('sinon');
