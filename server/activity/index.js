@@ -45,7 +45,6 @@ router.post('/courses/:courseKey/activities/:activityKey/actions/reorder',
   controller.reorder,
   output);
 
-
 module.exports = {
   controller,
   model,

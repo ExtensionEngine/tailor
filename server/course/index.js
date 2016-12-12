@@ -40,7 +40,6 @@ router.delete('/courses/:courseKey',
   controller.remove,
   output);
 
-
 module.exports = {
   controller,
   middleware,

@@ -1,16 +1,19 @@
 'use strict';
 
-const _ = require('lodash');
+const get = require('lodash/get');
+const set = require('lodash/set');
+const merge = require('lodash/merge');
+const isPlainObject = require('lodash/isPlainObject');
 
 function load(obj, path) {
-  return _.get(obj, `locals.${path}`);
+  return get(obj, `locals.${path}`);
 }
 
 function save(obj, path, value) {
   if (!obj.locals) obj.locals = {};
-  const target = _.get(obj, `locals.${path}`);
-  if (_.isPlainObject(target) && _.isPlainObject(value)) return _.merge(target, value);
-  return _.set(obj, `locals.${path}`, value);
+  const target = get(obj, `locals.${path}`);
+  if (isPlainObject(target) && isPlainObject(value)) return merge(target, value);
+  return set(obj, `locals.${path}`, value);
 }
 
 module.exports = {

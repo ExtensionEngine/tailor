@@ -21,8 +21,7 @@ function insert({ newActivity, activityCollection }) {
   // parentKey can either be null (meaning, this is one of root activities),
   // or must point to another activity (parent-child relationship).
   if (newActivity.parentKey && !collection.exists(newActivity.parentKey)) {
-    throw new Error(
-      `Parent activity (${newActivity.parentKey}) does not exist`);
+    throw new Error(`Parent activity (${newActivity.parentKey}) does not exist`);
   }
 
   const saveNew = `INSERT @newActivity IN @@collection RETURN NEW`;
@@ -105,24 +104,22 @@ function reorder({ courseKey, activityKey, requestedPosition, activityCollection
       activity,
       '@collection': activityCollection
     }).next();
-    newPosition = requestedPosition >= numSiblings ? (numSiblings - 1) : requestedPosition;
+
+    newPosition = requestedPosition >= numSiblings
+      ? (numSiblings - 1)
+      : requestedPosition;
   }
 
   // Activity is already at requested position - nothing to do here.
   if (newPosition === activity.position) return activity;
 
-  let from; // smallest position affected by reorder
-  let to;   // largest position affected by reorder
-  let step; // increment or decrement each position
-  if (newPosition > activity.position) {
-    from = activity.position + 1;
-    to = newPosition;
-    step = -1;
-  } else {
-    from = newPosition;
-    to = activity.position - 1;
-    step = 1;
-  }
+  const isMovingToLargerPos = newPosition > activity.position;
+  // smallest position affected by reorder
+  const from = isMovingToLargerPos ? activity.position + 1 : newPosition;
+  // largest position affected by reorder
+  const to = isMovingToLargerPos ? newPosition : activity.position - 1;
+  // increment or decrement each position
+  const step = isMovingToLargerPos ? -1 : 1;
 
   const updateAffected = `
     FOR act IN @@collection

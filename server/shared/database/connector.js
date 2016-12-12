@@ -1,6 +1,6 @@
 'use strict';
 
-const _ = require('lodash');
+const values = require('lodash/values');
 const arangojs = require('arangojs');
 const config = require('../../../config/server');
 const collection = require('./collection');
@@ -66,7 +66,7 @@ class DatabaseConnector {
 }
 
 const db = arangojs(config.database.uri);
-config.database.collections = _.values(collection);
+config.database.collections = values(collection);
 
 module.exports = {
   db,
