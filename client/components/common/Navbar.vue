@@ -8,7 +8,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <router-link :to="{ name: 'courses' }" class="navbar-brand">
+        <router-link :to="{ name: 'catalog' }" class="navbar-brand">
           <img src="../../assets/img/logo.png" alt="Logo" />
         </router-link>
       </div>
