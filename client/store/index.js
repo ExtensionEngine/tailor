@@ -11,7 +11,7 @@ Vue.use(Vuex);
 
 const isDevEnv = process.env.NODE_ENV !== 'production';
 const middlewares = settings.debug.state && isDevEnv ? [createLogger()] : [];
-const modules = { auth, courses, activities };
+const modules = { activities, auth, courses };
 
 export default new Vuex.Store({
   middlewares,
