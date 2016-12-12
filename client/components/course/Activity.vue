@@ -1,33 +1,28 @@
 <template>
   <div>
     <div class="activity-wrapper" v-if="!isRoot">
-      <div class="activity"
-        @click="collapsed = !collapsed">
+      <div class="activity" @click="collapsed = !collapsed">
         <span class="order" :style="{ 'background-color': color }">{{ order }}</span>
-        <span class="collapsible" :class="classObject"></span>
+        <span class="collapsible" :class="collapsibleIcon"></span>
         <span>{{ name }}</span>
         <span class="pull-right">
-          <span class="badge"
-            v-if="hasChildren && collapsed">
-            {{ activities.length }}
-          </span>
+          <span class="badge" v-if="showBadge">{{ children.length }}</span>
         </span>
       </div>
-      <insert-activity></insert-activity>
+      <insert-activity :parent="activity"></insert-activity>
     </div>
-    <transition name="fade">
-      <draggable
-        v-if="!collapsed"
-        :list=activities
-        @start="dragging = true"
-        @end="dragging = false">
+    <transition name="fade" v-if="!collapsed">
+      <draggable @update="reorder">
         <activity
-          v-bind:class="{ 'sub-activity': name }"
-          v-for="it in activities"
-          :level="level + 1"
-          :order="it.order"
+          v-for="it in children"
+          :key="it._key"
+          :_key="it._key"
           :name="it.name"
-          :activities="it.activities">
+          :order="it.order"
+          :level="level + 1"
+          :class="{ 'sub-activity': name }"
+          :activities="activities"
+          :activity="it">
         </activity>
       </draggable>
     </transition>
@@ -37,41 +32,50 @@
 <script>
 import Draggable from 'vuedraggable';
 import InsertActivity from './InsertActivity';
+import { mapActions } from 'vuex-module';
+
+const COLORS = ['#29B6F6', '#8BC34A', '#EF5350'];
 
 export default {
   name: 'activity',
-  props: ['level', 'order', 'name', 'activities'],
-  data: function () {
+  props: ['_key', 'name', 'order', 'level', 'activities', 'activity'],
+  data() {
     return {
       collapsed: this.level !== 0
     };
   },
   computed: {
-    isRoot: function () {
+    showBadge() {
+      return this.hasChildren && this.collapsed;
+    },
+    isRoot() {
       return this.level === 0;
     },
-    color: function () {
-      // TODO: Externalize
-      let colors = ['#29B6F6', '#8BC34A', '#EF5350'];
+    color() {
       let index = this.level - 1;
-      return index > colors.length ? '#555' : colors[index];
+      return index > COLORS.length ? '#555' : COLORS[index];
     },
-    hasChildren: function () {
-      return this.activities && this.activities.length;
+    hasChildren() {
+      return this.children.length > 0;
     },
-    classObject: function () {
+    children() {
+      return this.activities
+        .filter(it => it.parentKey === this._key)
+        .sort((a, b) => a.order - b.order);
+    },
+    collapsibleIcon() {
       return {
         'fa fa-caret-right': this.collapsed && this.hasChildren,
         'fa fa-caret-down': !this.collapsed && this.hasChildren
       };
     }
   },
-  watch: {
-    'activities': function (activities) {
-      if (!activities) return;
-      activities.forEach((it, index) => {
-        it.order = index + 1;
-      });
+  methods: {
+    ...mapActions({ reorderActivities: 'reorder' }, 'activities'),
+    reorder({ newIndex: to, item: { __vue__: { order: from } } }) {
+      // 0 based array pos
+      to += 1;
+      this.reorderActivities({ from, to, parentKey: this._key });
     }
   },
   components: {
@@ -120,7 +124,6 @@ export default {
   padding: 7px 0;
   cursor: pointer;
   opacity: 0;
-  transition: all 2s cubic-bezier(.25,.8,.25,1);
 
   &:hover {
     opacity: 1;
