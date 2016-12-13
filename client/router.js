@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-
+import store from './store';
 import Auth from './components/auth/Container';
 import Course from './components/course/Container';
 import Catalog from './components/catalog/Container';
@@ -10,24 +10,26 @@ import ResetPassword from './components/auth/ResetPassword';
 
 Vue.use(Router);
 
-// TODO: Implement auth based route checking
-export default new Router({
+let router = new Router({
   mode: 'history',
   routes: [
     {
       path: '/',
       name: 'catalog',
-      component: Catalog
-    },
-    {
-      path: '/catalog/:courseId',
-      name: 'course-editor',
-      component: CourseEditor
+      component: Catalog,
+      meta: { auth: true }
     },
     {
       path: '/course/:id',
       name: 'course',
-      component: Course
+      component: Course,
+      meta: { auth: true }
+    },
+    {
+      path: '/editor/:activityId',
+      name: 'course-editor',
+      component: CourseEditor,
+      meta: { auth: true }
     },
     {
       path: '/',
@@ -48,3 +50,13 @@ export default new Router({
     }
   ]
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(it => it.meta.auth) && !store.getters.user) {
+    next({ path: '/login', query: { redirect: to.fullPath } });
+  } else {
+    next();
+  }
+});
+
+export default router;

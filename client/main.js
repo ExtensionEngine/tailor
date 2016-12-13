@@ -4,8 +4,8 @@ import { sync } from 'vuex-router-sync';
 // NOTE: Is there another way?
 import '../node_modules/bootstrap-sass/assets/javascripts/bootstrap';
 
-import router from './router';
 import store from './store';
+import router from './router';
 import App from './App';
 
 sync(store, router);

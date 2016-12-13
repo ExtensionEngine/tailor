@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-default navbar-fixed-top">
+  <nav v-if="user" class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
       <div class="navbar-header">
         <router-link :to="{ name: 'catalog' }" class="navbar-brand">
@@ -9,33 +9,45 @@
       </div>
       <div v-if="course" class="course-title">{{course.title}}</div>
       <ul class="nav navbar-nav navbar-right">
-        <li v-if="loggedIn"><a href="#">Logout</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Welcome {{ user.firstName }}
+            <span class="fa fa-caret-down"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#" @click="logoutUser">Logout</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
   </nav>
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
+import { mapGetters, mapActions } from 'vuex-module';
 
 export default {
   name: 'navbar',
-
   computed: {
-    ...mapGetters({ status: 'loginUserStatus' }, 'auth'),
-    ...mapGetters({ course: 'getCourse' }),
-    loggedIn() {
-      return this.status.success && !this.status.request;
-    }
+    ...mapGetters({ course: 'getCourse', user: 'user' })
+  },
+  methods: {
+    logoutUser() {
+      this.logout();
+      this.$router.push('/login');
+    },
+    ...mapActions(['logout'])
   }
 };
 </script>
 
 <style lang="scss">
 .navbar {
-  color: #555;
-  font-weight: 500;
   background-color: white;
+
+  .fa {
+    padding: 0 5px;
+  }
 
   .navbar-brand {
     width: 250px;

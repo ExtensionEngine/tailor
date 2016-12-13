@@ -1,121 +1,108 @@
 <template>
-  <div class="login">
-    <div class="info">
-      <div v-if="status.message" class="message">
-        <span class="fa fa-exclamation-triangle"></span> {{status.message}}
-      </div>
+  <div class="auth-container">
+    <div class="auth-header">
+      <img src="../../assets/img/logo.png" alt="Logo"/>
+      <h1>CGMA Authoring</h1>
     </div>
-
-    <form @submit.prevent="handleLoginUser">
-      <div class="form-group">
-        <input
-          ref="email"
-          type="email"
-          class="form-control"
-          placeholder="email"
-        />
+    <div class="auth-body">
+      <div class="message">
+        <span v-if="message">{{ message }}</span>
       </div>
-
-      <div class="form-group">
-        <input
-          ref="password"
-          type="password"
-          class="form-control"
-          placeholder="password"
-        />
-      </div>
-
-      <div class="form-subtext">
-        <router-link :to="{ name: 'reset-password' }">Forgotten password?</router-link>
-      </div>
-
-      <div class="form-submit">
-        <button type="submit" class="btn btn-primary btn-block">Login</button>
-      </div>
-    </form>
+      <form @submit.prevent="submit">
+        <div class="form-group">
+          <input
+            v-model="email"
+            class="form-control"
+            type="email"
+            placeholder="Email"/>
+        </div>
+        <div class="form-group">
+          <input
+            v-model="password"
+            class="form-control"
+            type="password"
+            placeholder="Password"/>
+        </div>
+        <div class="options">
+          <router-link :to="{ name: 'reset-password' }">
+            Forgot password ?
+          </router-link>
+        </div>
+        <button type="submit" class="btn btn-default btn-block">Login</button>
+      </form>
+    </div>
   </div>
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 
-  export default {
-    name: 'login',
-
-    computed: {
-      ...mapGetters({ status: 'loginUserStatus' }, 'auth')
-    },
-
-    methods: {
-      handleLoginUser() {
-        const email = this.$refs.email.value;
-        const password = this.$refs.password.value;
-
-        if (email.length && password.length) {
-          this.loginUser({ email, password });
-        } else {
-          // TODO: Remove when backend is implemented
-          this.loginUserFail();
-        }
-      },
-      ...mapActions([
-        'loginUser',
-        'loginUserFail'
-      ], 'auth')
+export default {
+  name: 'login',
+  data() {
+    return {
+      email: '',
+      password: '',
+      message: ''
+    };
+  },
+  computed: {
+    ...mapGetters(['user'])
+  },
+  methods: {
+    ...mapActions(['login']),
+    submit() {
+      this.login({ email: this.email, password: this.password })
+        .then(() => this.$router.push('/'));
     }
-  };
+  }
+};
 </script>
 
 <style lang="scss">
-  .login {
-    background-color: #fff;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
-    color: rgba(0, 0, 0, .87);
-    padding: 0 20px 30px 20px;
-    margin: 0 auto;
-    max-width: 80%;
-    width: 400px;
+.auth-container {
+  width: 500px;
+  margin: 10% auto;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 
-    form {
-      padding-top: 20px;
+  &:hover {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.15);
+  }
 
-      .form-subtext {
-        text-align: right;
+  h1 {
+    margin: 0;
+    color: white;
+    font-size: 18px;
+    line-height: 18px;
+  }
 
-        a {
-          color: inherit;
-          font-weight: 500;
-          text-decoration: none;
-        }
-      }
+  .auth-header {
+    background-color: #da126d;
+    padding-bottom: 10px;
+  }
 
-      .form-submit {
-        padding-top: 30px;
-        overflow: visible;
-        width: 100%;
-      }
+  .auth-body {
+    padding: 20px 30px;
 
-      .form-group + .form-group {
-        margin-bottom: 8px;
-      }
-    }
-
-    .info {
-      color: #dd4b39;
-      font-size: 16px;
-      font-weight: 600;
-      min-height: 40px;
-      margin: 0 auto;
-      padding: 15px 20px 0 20px;
-
-      .message {
-        height: 100%;
-      }
-
-      .fa {
-        font-size: 18px;
-        padding-right: 3px;
-      }
+    a {
+      color: inherit;
+      font-weight: 500;
     }
   }
+
+  .options {
+    padding: 5px 0 10px 0;
+    text-align: right;
+  }
+
+  .message {
+    min-height: 16px;
+    margin-bottom: 20px;
+    color: #da126d;
+    font-size: 16px;
+    line-height: 16px;
+  }
+}
 </style>
