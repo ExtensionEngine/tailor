@@ -1,4 +1,4 @@
-'use-strict';
+'use strict';
 
 const BaseController = require('../base.controller');
 const assetModel = require('./asset.model').model;

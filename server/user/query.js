@@ -1,3 +1,5 @@
+'use strict';
+
 const INSERT_USER = `
 INSERT @user IN @@collection
 RETURN {
