@@ -20,6 +20,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="editor">
+                <multiple-choice></multiple-choice>
                 <div class="wrapper">
                   <a><span class="fa fa-3x fa-plus"></span></a>
                 </div>
@@ -37,13 +38,15 @@
 
   import CourseSidebar from './Sidebar';
   import CubeSpinner from '../loaders/CubeSpinner';
+  import MultipleChoice from '../assessments/MultipleChoice';
 
   export default {
     name: 'course-edit',
 
     components: {
       CourseSidebar,
-      CubeSpinner
+      CubeSpinner,
+      MultipleChoice
     },
 
     data() {
