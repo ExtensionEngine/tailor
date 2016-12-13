@@ -1,17 +1,62 @@
 'use-strict';
 
 const express = require('express');
+
 const controller = require('./asset.controller').controller;
+const course = require('../course');
+const io = require('../shared/io');
+const model = require('./asset.model');
+
+const loadCourse = course.middleware.loadCourse(course.model);
 
 const router = express.Router();
+const input = io.input();
+const output = io.output();
 
-router.get('/assets/', controller.list);
-router.get('/assets/:assetKey', controller.show);
-router.post('/assets/', controller.create);
-router.patch('/assets/:assetKey', controller.patch);
-router.put('/assets/:assetKey', controller.replace);
-router.delete('/assets/:assetKey', controller.remove);
+router.get('/courses/:courseKey/assets',
+  input,
+  loadCourse,
+  controller.list,
+  output
+);
+
+router.get('/courses/:courseKey/assets/:assetKey',
+  input,
+  loadCourse,
+  controller.show,
+  output
+);
+
+router.post('/courses/:courseKey/assets/',
+  input,
+  loadCourse,
+  controller.create,
+  output
+);
+
+router.patch('/courses/:courseKey/assets/:assetKey',
+  input,
+  loadCourse,
+  controller.patch,
+  output
+);
+
+router.put('/courses/:courseKey/assets/:assetKey',
+  input,
+  loadCourse,
+  controller.replace,
+  output
+);
+
+router.delete('/courses/:courseKey/assets/:assetKey',
+  input,
+  loadCourse,
+  controller.remove,
+  output
+);
 
 module.exports = {
+  controller,
+  model,
   router
 };

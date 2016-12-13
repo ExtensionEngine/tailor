@@ -30,7 +30,8 @@ const db = require('../shared/database').db;
  */
 
 const assetSchema = Joi.object().keys({
-  type: Joi.string().min(3).max(100).required()
+  type: Joi.string().min(3).max(100).required(),
+  courseKey: Joi.string().regex(/[0-9]+/).required()
 });
 
 const COLLECTION_NAME = 'asset';
