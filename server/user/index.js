@@ -10,6 +10,14 @@ const router = express.Router();
 const input = io.input();
 const output = io.output();
 
+// TODO(marko): used for testing, override
+// controller method and add permission check
+router.get('/users',
+  input,
+  controller.list,
+  output
+);
+
 router.post('/users',
   input,
   controller.create,
