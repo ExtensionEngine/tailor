@@ -14,6 +14,7 @@ export default createMutationTypes('courses', [
   'CREATE_COURSE_STATUS_RESET',
 
   // store
+  'ADD_COURSE',
   'ADD_COURSES',
   'CREATE_COURSE',
   'REMOVE_COURSE',
