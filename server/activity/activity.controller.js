@@ -35,9 +35,14 @@ class ActivityController extends BaseController {
     this.model
       .getByKey(courseKey, req.params.activityKey)
       .then(data => {
-        // TODO(matej): if data is undefined, result should be 404.
-        io.setOK(res, data);
-        next();
+        if (data) {
+          io.setOK(res, data);
+          return next();
+        }
+
+        // TODO(matej): if other model methods return empty results, add a new
+        // error class, make an instance, and pass it to next().
+        return res.status(404).json();
       })
       .catch(next);
   }

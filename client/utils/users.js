@@ -13,7 +13,6 @@ function getRoles(exclude = []) {
 };
 
 export function getRolesForUser(user) {
-  console.log('USER: ', user);
   let exclude = [];
 
   if (user.role === settings.role.COURSE_ADMIN.value) {

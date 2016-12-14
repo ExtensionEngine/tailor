@@ -6,6 +6,7 @@
  */
 module.exports = {
   ACTIVITY: 'activity',
+  ASSET: 'asset',
   COURSE: 'course',
   USER: 'user'
 };

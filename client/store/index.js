@@ -7,6 +7,7 @@ import auth from './modules/auth';
 import courses from './modules/courses';
 import users from './modules/users';
 import settings from '../settings';
+import plugins from './plugins';
 
 Vue.use(Vuex);
 
@@ -17,5 +18,6 @@ const modules = { activities, auth, courses, users };
 export default new Vuex.Store({
   middlewares,
   modules,
+  plugins,
   strict: isDevEnv
 });

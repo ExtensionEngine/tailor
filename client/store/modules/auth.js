@@ -1,73 +1,43 @@
+import Promise from 'bluebird';
 import { VuexModule } from 'vuex-module';
-import { asyncState } from '../../utils/async';
+const { action, build, getter, mutation, state } = new VuexModule();
 
-const { action, build, getter, mutation, state } = new VuexModule('auth');
-
+// TODO: Temp, integrate with backend
 state({
-  loginUser: {
-    ...asyncState.REQUEST,
-    message: null
-  },
-  resetPassword: {
-    ...asyncState.REQUEST,
-    message: null
-  }
+  user: JSON.parse(window.localStorage.getItem('CGMA_AUTHOR_USER')) || {}
 });
 
-// TODO: sync with backend
-action(function loginUser(email, password) {
-  this.commit('loginRequest');
-  this.commit('loginSuccess');
+getter(function user() {
+  let res = this.state.user;
+  return res.email ? res : null;
 });
 
-// NOTE: dummy action for testing purposes
-action(function loginUserFail() {
-  this.commit('loginRequest');
-  this.commit('loginFailure', { message: 'Login failed' });
+// TODO: integrate with backend
+action(function login(email, password) {
+  return new Promise((resolve, reject) => {
+    this.commit('login');
+    resolve();
+  });
 });
 
-// TODO: sync with backend
+action(function logout() {
+  this.commit('logout');
+});
+
+// TODO: integrate with backend
 action(function resetPassword(email) {
-  this.commit('resetPasswordRequest');
-  this.commit('resetPasswordSuccess');
 });
 
-// NOTE: dummy action for testing purposes
-action(function resetPasswordFail() {
-  this.commit('resetPasswordRequest');
-  this.commit('resetPasswordFailure', { message: 'Password reset failed' });
+mutation(function login() {
+  this.state.user = {
+    email: 'tomitto@yorke.com',
+    firstName: 'Thom',
+    lastName: 'Yorke'
+  };
 });
 
-getter(function loginUserStatus() {
-  return this.state.loginUser;
-});
-
-getter(function resetPasswordStatus() {
-  return this.state.resetPassword;
-});
-
-mutation(function loginFailure({ message }) {
-  this.state.loginUser = { ...asyncState.FAILURE, message };
-});
-
-mutation(function loginRequest() {
-  this.state.loginUser = { ...asyncState.REQUEST, message: null };
-});
-
-mutation(function loginSuccess() {
-  this.state.loginUser = { ...asyncState.SUCCESS, message: null };
-});
-
-mutation(function resetPasswordFailure({ message }) {
-  this.state.resetPassword = { ...asyncState.FAILURE, message };
-});
-
-mutation(function resetPasswordRequest() {
-  this.state.resetPassword = { ...asyncState.REQUEST, message: null };
-});
-
-mutation(function resetPasswordSuccess() {
-  this.state.resetPassword = { ...asyncState.SUCCESS, message: null };
+mutation(function logout() {
+  this.state.user = {};
 });
 
 export default build();

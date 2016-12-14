@@ -24,6 +24,7 @@
   "dependencies": {
     "axios": "^0.15.2",
     "bcryptjs": "^2.3.0",
+    "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
     "bunyan": "^1.8.5",
     "cors": "^2.8.1",
@@ -36,6 +37,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "urijs": "^1.18.4",
+    "truncate": "^2.0.0",
     "vue": "^2.1.0",
     "vue-focus": "^2.1.0",
     "vue-router": "^2.0.3",

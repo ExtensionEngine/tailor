@@ -8,28 +8,29 @@
 </template>
 
 <script>
-  import Navbar from './components/common/Navbar';
+import Navbar from './components/common/Navbar';
 
-  export default {
-    name: 'app',
-    components: {
-      Navbar
-    }
-  };
+export default {
+  name: 'app',
+  components: {
+    Navbar
+  }
+};
 </script>
 
 <style lang="scss">
-  @import './assets/stylesheets/main';
+@import './assets/stylesheets/main';
 
-  body {
-    background-color: #e0e0e0;
-  }
+body {
+  padding-top: 60px;
+  background-color: #e0e0e0;
+}
 
-  #app {
-    color: rgba(0, 0, 0, .87);
-    font-family: 'Catamaran', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-  }
+#app {
+  color: rgba(0, 0, 0, .87);
+  font-family: 'Catamaran', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+}
 </style>

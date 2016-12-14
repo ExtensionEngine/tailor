@@ -1,5 +1,5 @@
 <template>
-  <div class="courses">
+  <div class="catalog-container">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <courses-search></courses-search>
@@ -37,12 +37,16 @@
 </script>
 
 <style lang="scss">
-  .courses {
-    padding-top: 40px;
+.catalog-container {
+  padding: 20px 100px 100px 100px;
 
-    .create-action {
-      position: absolute;
-      right: 60px;
-    }
+  @media (min-width: 1700px) {
+    padding: 20px 300px 100px 300px;
   }
+
+  .create-action {
+    position: absolute;
+    right: 60px;
+  }
+}
 </style>
