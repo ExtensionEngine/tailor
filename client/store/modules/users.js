@@ -6,23 +6,42 @@ import { asyncState } from '../../utils/async';
 const { action, build, getter, mutation, state } = new VuexModule('users');
 
 state({
+  // TODO: mock user
+  user: {
+    email: 'admin@example.com',
+    role: 'global_admin'
+  },
   users: [],
-  fetchUsers: {
+  listUserStatus: {
     ...asyncState.INITIAL,
     message: null
   }
 });
 
-action(function fetchUsers() {
-  this.commit('fetchUsersRequest');
+action(function listUser() {
+  this.commit('listUserRequest');
   UserAPI.list()
     .then(resp => {
-      this.commit('fetchUsersSuccess');
+      this.commit('listUserSuccess');
       this.commit('addUsers', resp.data.data);
     })
     .catch(error => {
-      this.commit('fetchUsersFailure', error);
+      this.commit('listUserFailure', error);
     });
+});
+
+// TODO: mock action
+action(function addUser(data) {
+  console.log('add user: ', data);
+});
+
+// TODO: mock action
+action(function updateUserRole(data) {
+  console.log('update role: ', data);
+});
+
+getter(function user() {
+  return this.state.user;
 });
 
 getter(function users() {
@@ -33,16 +52,16 @@ mutation(function addUsers(users) {
   this.state.users = users;
 });
 
-mutation(function fetchUsersFailure({ message }) {
-  this.state.fetchUsers = { ...asyncState.FAILURE, message };
+mutation(function listUserFailure({ message }) {
+  this.state.listUserStatus = { ...asyncState.FAILURE, message };
 });
 
-mutation(function fetchUsersRequest() {
-  this.state.fetchUsers = { ...asyncState.REQUEST, message: null };
+mutation(function listUserRequest() {
+  this.state.listUserStatus = { ...asyncState.REQUEST, message: null };
 });
 
-mutation(function fetchUsersSuccess() {
-  this.state.fetchUsers = { ...asyncState.SUCCESS, message: null };
+mutation(function listUserSuccess() {
+  this.state.listUserStatus = { ...asyncState.SUCCESS, message: null };
 });
 
 export default build();

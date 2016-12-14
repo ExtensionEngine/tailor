@@ -3,6 +3,8 @@ import Router from 'vue-router';
 
 import Auth from './components/auth/Container';
 import Course from './components/course/Container';
+import CourseDetails from './components/course/Details';
+import CourseSettings from './components/course/Settings';
 import Catalog from './components/catalog/Container';
 import CourseEditor from './components/editor/Container';
 import Login from './components/auth/Login';
@@ -27,7 +29,19 @@ export default new Router({
     {
       path: '/course/:id',
       name: 'course',
-      component: Course
+      component: Course,
+      children: [
+        {
+          path: '',
+          name: 'course-details',
+          component: CourseDetails
+        },
+        {
+          path: 'settings',
+          name: 'course-settings',
+          component: CourseSettings
+        }
+      ]
     },
     {
       path: '/',

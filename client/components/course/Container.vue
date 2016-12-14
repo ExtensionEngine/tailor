@@ -1,27 +1,30 @@
 <template>
-  <div>
-    {{ name }}
-    <outline :activities="activities"></outline>
+  <div class="row">
+    <div class="col-md-2">
+      <course-sidebar></course-sidebar>
+    </div>
+
+    <div class="col-md-10 col-md-offset-2">
+      <div class="course">
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import Outline from './Outline.vue';
-import { mapState } from 'vuex-module';
+import CourseSidebar from './Sidebar';
 
 export default {
-  data() {
-    return {
-      name: 'Javascript'
-    };
-  },
-  computed: mapState(['activities']),
   components: {
-    Outline
+    CourseSidebar
   }
 };
 </script>
 
 <style lang="scss">
-
+.course {
+  margin-left: -5%;
+  width: 95%;
+}
 </style>
