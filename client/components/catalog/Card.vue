@@ -1,114 +1,93 @@
 <template>
   <div class="courses-card">
     <div class="header">
-      <img :src="placeholder" class="img-responsive" alt="Responsive image"  />
+      <img :src="placeholder" alt="Responsive image"  />
     </div>
-
     <div class="body">
       <div class="title">
-        <router-link :to="{ name: 'course-editor', params: { courseId: id }}">
-          {{title}}
+        <router-link :to="{ name: 'course', params: { id }}">
+          {{ title }}
         </router-link>
       </div>
-
-      <div class="content">
-        {{preview}}
-      </div>
+      <div class="content">{{ preview }}</div>
     </div>
-
     <div class="footer">
-      <ul class="row">
-        <li class="col-md-4 col-sm-4">stats #1</li>
-        <li class="col-md-4 col-sm-4">stats #2</li>
-        <li class="col-md-4 col-sm-4">stats #3</li>
+      <div class="row">
+        <span class="col-xs-4">stats #1</span>
+        <span class="col-xs-4">stats #2</span>
+        <span class="col-xs-4">stats #3</span>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'course-card',
+import truncate from 'truncate';
 
-    props: ['id', 'title', 'description', 'image'],
-
-    computed: {
-      placeholder() {
-        return require(`../../assets/img/${this.image}`);
-      },
-      preview() {
-        const MAX_CHARS = 180;
-        return this.description.length > MAX_CHARS
-          ? `${this.description.slice(0, MAX_CHARS)} ...`
-          : this.description;
-      }
+export default {
+  name: 'course-card',
+  props: ['id', 'title', 'description', 'image'],
+  computed: {
+    placeholder() {
+      return require(`../../assets/img/${this.image}`);
+    },
+    preview() {
+      return truncate(this.description, 180);
     }
-  };
+  }
+};
 </script>
 
 <style lang="scss">
-  .courses-card {
-    background-color: #fff;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
-    margin-top: 30px;
-    min-height: 300px;
-    padding: 30px;
-    transition: box-shadow 0.2s ease;
+.courses-card {
+  min-height: 300px;
+  margin-top: 30px;
+  padding: 30px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.54);
+  transition: box-shadow 0.2s ease;
+  cursor: pointer;
 
-    &:hover {
-      box-shadow: 0 3px 9px rgba(0, 0, 0, 0.74);
-    }
+  &:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.54);
+  }
 
-    .header {
-      height: 400px;
-    }
+  .header {
+    max-height: 180px;
+    overflow: hidden;
 
-    .title {
-      font-weight: 500;
-      font-size: 22px;
-      min-height: 80px;
-      text-align: left;
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-    }
-
-    .content {
-      font-size: 15px;
-      font-weight: 400;
-      max-height: 120px;
-      padding-bottom: 10px;
-      text-align: left;
-    }
-
-    .footer {
-      border-top: 1px solid #e0e0e0;
-      min-height: 40px;
-      padding-top: 10px;
-
-      ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-
-        li {
-          display: inline;
-          padding: 0;
-          text-align: center;
-
-          &:first-child {
-            text-align: left;
-          }
-
-          &:last-child {
-            text-align: right;
-          }
-        }
-      }
+    img {
+      max-width: 100%;
+      max-height: 100%;
     }
   }
 
+  .body {
+    height: 220px;
+    overflow: hidden;
+  }
+
+  .title {
+    margin: 20px 0 5px 0;
+    font-size: 20px;
+    text-align: left;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  .content {
+    max-height: 120px;
+    padding-bottom: 10px;
+    font-size: 15px;
+    text-align: left;
+  }
+
+  .footer {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 10px;
+  }
+}
 </style>
