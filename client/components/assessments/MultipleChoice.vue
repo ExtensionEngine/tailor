@@ -110,13 +110,11 @@ export default {
         return;
       }
 
-      for (let item in this.answers) {
-        if (item === '') {
-          this.userError = true;
-          this.isSuccess = false;
-          this.alertMessage = "Please don't leave any answers empty !";
-          return;
-        }
+      if (this.answers.indexOf('') !== -1) {
+        this.userError = true;
+        this.isSuccess = false;
+        this.alertMessage = "Please don't leave any answers empty !";
+        return;
       }
 
       if (this.correctAnswer.length < 2) {
@@ -126,6 +124,7 @@ export default {
         return;
       }
 
+      this.userError = false;
       this.isSuccess = true;
       question.questionText = this.questionText;
       question.correct = this.correctAnswer;
