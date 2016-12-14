@@ -12,7 +12,7 @@
     "unit:client": "karma start karma.conf.js",
     "test:client": "npm run unit:client && npm run e2e",
     "clean": "rimraf dist",
-    "lint:client": "eslint --ext .js,.vue config client/test/e2e/specs client/test/unit/specs client/components client/store",
+    "lint:client": "eslint --ext .js,.vue config/client client/test/e2e/specs client/test/unit/specs client/components client/store",
     "lint:server": "eslint --ext .js server",
     "lint": "npm run lint:client && npm run lint:server",
     "dev:server": "nodemon --ignore client/ --exec \"node -r dotenv/config\" ./server",
