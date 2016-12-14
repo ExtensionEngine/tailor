@@ -2,7 +2,10 @@
   <div class="auth-container">
     <div class="auth-header">
       <img src="../../assets/img/logo.png" alt="Logo"/>
-      <h1>CGMA Authoring</h1>
+      <h1>
+        CGMA Authoring
+        <span class="fa fa-paint-brush"></span>
+      </h1>
     </div>
     <div class="auth-body">
       <div class="message">
@@ -81,6 +84,11 @@ export default {
   .auth-header {
     background-color: #da126d;
     padding-bottom: 10px;
+
+    .fa {
+      padding-left: 7px;
+      font-size: 26px;
+    }
   }
 
   .auth-body {
