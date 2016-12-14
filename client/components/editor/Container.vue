@@ -10,8 +10,8 @@
           <div class="row heading">
             <div class="col-md-12">
               <h1>Expressions</h1>
-              <ul>
-                <li v-for="user in users">
+              <ul class="viewer-list">
+                <li v-for="user in users" class="viewer">
                   <span class="fa fa-2x fa-user"></span>
                 </li>
               </ul>
@@ -92,12 +92,12 @@
         margin: 0;
       }
 
-      ul {
+      .viewer-list {
         float: right;
         margin: 0;
         padding: 30px 0 5px;
 
-        li {
+        .viewer {
           display: inline-block;
           padding: 0 10px;
         }
