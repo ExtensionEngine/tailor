@@ -1,12 +1,6 @@
 import { omit } from 'lodash';
 import settings from '../settings';
 
-/**
- * getRoles - description
- *
- * @param  {Array} exclude = [] array of roles exclude
- * @return {Array} roles = [] array of roles that user can use
- */
 function getRoles(exclude = []) {
   const roles = omit(settings.role, exclude);
   return Object.keys(roles).map(role => roles[role]);
