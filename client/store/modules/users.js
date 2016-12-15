@@ -6,7 +6,7 @@ import { asyncState } from '../../utils/async';
 const { action, build, getter, mutation, state } = new VuexModule('users');
 
 state({
-  // TODO: mock user
+  // TODO(marko): mock user
   user: {
     email: 'admin@example.com',
     role: 'global_admin'
@@ -30,14 +30,14 @@ action(function listUser() {
     });
 });
 
-// TODO: mock action
-action(function addUser(data) {
-  console.log('add user: ', data);
+// TODO(marko): mock action
+action(function addUserToCourse(data) {
+  this.commit('addUserToCourse', data);
 });
 
-// TODO: mock action
+// TODO(marko): mock action
 action(function updateUserRole(data) {
-  console.log('update role: ', data);
+  this.commit('updateUserRole', data);
 });
 
 getter(function user() {
@@ -48,8 +48,27 @@ getter(function users() {
   return this.state.users;
 });
 
+// TODO(marko): temporarily add user to store
+// currently ignores course until the endpoint
+// gets implemented
+mutation(function addUserToCourse(data) {
+  const _key = Math.random().toString(10).substring(2, 8);
+  const { email, role } = data;
+  this.state.users.push({ _key, email, role });
+});
+
 mutation(function addUsers(users) {
   this.state.users = users;
+});
+
+// TODO(marko): mock mutation
+mutation(function updateUserRole(data) {
+  this.state.users = this.state.users.map(
+    user => {
+      if (user._key === data.userKey) user.role = data.role;
+      return user;
+    }
+  );
 });
 
 mutation(function listUserFailure({ message }) {

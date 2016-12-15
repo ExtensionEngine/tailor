@@ -1,8 +1,9 @@
 <template>
   <user-management
+    :courseKey="courseKey"
     :roles="roles"
     :users="users"
-    :addUser="addUser"
+    :addUser="addUserToCourse"
     :changeRole="updateUserRole"
   >
   </user-management>
@@ -11,6 +12,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 
+import Permissions from '../../utils/perms';
 import UserManagement from '../common/UserManagement';
 import { getRolesForUser } from '../../utils/users';
 
@@ -27,13 +29,25 @@ export default {
 
   computed: {
     ...mapGetters(['user', 'users'], 'users'),
+    courseKey() {
+      return this.$route.params.id;
+    },
     roles() {
       return getRolesForUser(this.user);
     }
   },
 
   methods: {
-    ...mapActions(['addUser', 'listUser', 'updateUserRole'], 'users')
+    ...mapActions(['addUserToCourse', 'listUser', 'updateUserRole'], 'users')
+  },
+
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (!Permissions.isGlobalOrCourseAdmin(vm.user)) {
+        return next({ name: 'course', params: { id: vm.courseKey } });
+      }
+      return next(to.path);
+    });
   }
 };
 </script>

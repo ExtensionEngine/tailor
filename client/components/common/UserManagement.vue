@@ -6,7 +6,7 @@
         <form class="user" @submit.prevent="handleAddUser" novalidate>
           <div class="row">
             <div class="col-md-4 form-group">
-              <input ref="newUser" type="email" class="form-control" placeholder="email" />
+              <input ref="newUserEmail" type="email" class="form-control" placeholder="email" />
             </div>
 
             <div class="col-md-2 form-group">
@@ -65,7 +65,12 @@ import { debounce } from 'lodash';
 export default {
   name: 'user-management',
 
+  // TODO(marko): substitute courseKey for generic entity?
   props: {
+    courseKey: {
+      type: String,
+      required: true
+    },
     roles: {
       type: Array,
       required: true
@@ -86,9 +91,9 @@ export default {
 
   methods: {
     handleAddUser() {
-      const user = this.$refs.newUser.value;
+      const email = this.$refs.newUserEmail.value;
       const role = this.$refs.newUserRole.value;
-      this.addUser({ user, role });
+      this.addUser({ email, role, courseKey: this.courseKey });
     },
     handleChangeRole(userKey, role) {
       debounce(this.changeRole, 1000)({ userKey, role });

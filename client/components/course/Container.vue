@@ -6,18 +6,23 @@
 
     <div class="col-md-10 col-md-offset-2">
       <div class="course">
-        <router-view></router-view>
+        <router-view :course="course"></router-view>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex-module';
 import CourseSidebar from './Sidebar';
 
 export default {
   components: {
     CourseSidebar
+  },
+
+  computed: {
+    ...mapGetters({ course: 'getCourse' })
   }
 };
 </script>

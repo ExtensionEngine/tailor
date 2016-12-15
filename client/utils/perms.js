@@ -1,6 +1,6 @@
 import settings from '../settings';
 
-// TODO(marko): implement as plugin
+// TODO(marko): implement as plugin, inject current user?
 /** Class for permission checking */
 class Permissions {
 
@@ -88,6 +88,10 @@ class Permissions {
   isStudent(user) {
     const student = this.roles.STUDENT.value;
     return this.hasPermission(user, student);
+  }
+
+  isGlobalOrCourseAdmin(user) {
+    return this.isGlobalAdmin(user) || this.isCourseAdmin(user);
   }
 }
 
