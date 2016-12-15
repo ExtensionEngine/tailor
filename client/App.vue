@@ -21,16 +21,30 @@ export default {
 <style lang="scss">
 @import './assets/stylesheets/main';
 
+html {
+  width: 100%;
+  height: 100%;
+}
+
 body {
-  padding-top: 60px;
+  width: 100%;
+  height: 100%;
+  padding-top: 50px;
   background-color: #e0e0e0;
 }
 
 #app {
+  width: 100%;
+  height: 100%;
   color: rgba(0, 0, 0, .87);
   font-family: 'Catamaran', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+
+.contaner-fluid {
+  width: 100%;
+  height: 100%;
 }
 </style>
