@@ -17,6 +17,10 @@ export default {
 
 <style lang="scss">
 .outline {
-  padding: 0 200px;
+  width: 100%;
+  height: 100%;
+  float: left;
+  padding: 80px 60px;
+  overflow-y: scroll;
 }
 </style>

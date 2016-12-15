@@ -1,4 +1,5 @@
 <template>
+<!-- <<<<<<< HEAD
   <div class="sidebar">
     <ul>
       <li>
@@ -15,65 +16,43 @@
         </li>
       </permission-wrapper>
     </ul>
+======= -->
+  <div class="course-sidebar">
+    Course sidebar
   </div>
 </template>
 
 <script>
-import Permissions from '../../utils/perms';
-import PermissionWrapper from '../common/PermissionWrapper';
-
+// import Permissions from '../../utils/perms';
+// import PermissionWrapper from '../common/PermissionWrapper';
+//
+// export default {
+//   name: 'course-sidebar',
+//
+//   components: {
+//     'permission-wrapper': PermissionWrapper
+//   },
+//
+//   computed: {
+//     courseId() {
+//       return this.$route.params.courseId;
+//     },
+//     perms() {
+//       const { isGlobalAdmin, isCourseAdmin } = Permissions;
+//       return [isGlobalAdmin, isCourseAdmin];
+//     }
+//   }
 export default {
-  name: 'course-sidebar',
-
-  components: {
-    'permission-wrapper': PermissionWrapper
-  },
-
-  computed: {
-    courseId() {
-      return this.$route.params.courseId;
-    },
-    perms() {
-      const { isGlobalAdmin, isCourseAdmin } = Permissions;
-      return [isGlobalAdmin, isCourseAdmin];
-    }
-  }
 };
 </script>
 
 <style lang="scss">
-.sidebar {
-  background-color: #fff;
-  border-right: 1px solid #eee;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .74);
-  bottom: 0;
-  display: block;
-  padding: 0;
+.course-sidebar {
+  width: 400px;
+  height: 100%;
   position: fixed;
-  top: 50px;
-  width: 80px;
-  z-index: 1;
-
-  .row:before {
-    display: inline;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-
-    li > a {
-      color: #000;
-      cursor: pointer;
-      display: block;
-      height: 100%;
-      padding: 20px 10px;
-      width: 100%;
-
-      &:hover {
-        background-color: #eee;
-      }
-    }
-  }
+  right: 0;
+  border-top: 1px solid #e8e8e8;
+  background-color: #fcfcfc;
 }
 </style>
