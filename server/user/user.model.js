@@ -94,6 +94,15 @@ class UserModel extends BaseModel {
       .then(cursor => cursor.next());
   }
 
+  getByKey(userKey) {
+    return this.db
+      .query(query.GET_USER_BY_KEY, {
+        '@collection': this.collectionName,
+        userKey
+      })
+      .then(cursor => cursor.next());
+  }
+
   getByEmail(email) {
     return this.db
       .query(query.GET_USER_BY_EMAIL, {
