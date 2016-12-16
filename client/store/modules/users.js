@@ -12,6 +12,9 @@ state({
     role: 'global_admin'
   },
   users: [],
+  filters: {
+    search: ''
+  },
   listUserStatus: {
     ...asyncState.INITIAL,
     message: null
@@ -30,6 +33,10 @@ action(function listUser() {
     });
 });
 
+action(function setSearchFilter(search) {
+  this.commit('setSearchFilter', search);
+});
+
 // TODO(marko): mock action
 action(function addUserToCourse(data) {
   this.commit('addUserToCourse', data);
@@ -44,8 +51,14 @@ getter(function user() {
   return this.state.user;
 });
 
-getter(function users() {
-  return this.state.users;
+getter(function totalUsers() {
+  return this.state.users.length;
+});
+
+getter(function filteredUsers() {
+  const { users, filters } = this.state;
+  const pattern = new RegExp(filters.search, 'i');
+  return users.filter(u => pattern.test(u.email));
 });
 
 // TODO(marko): temporarily add user to store
@@ -59,6 +72,10 @@ mutation(function addUserToCourse(data) {
 
 mutation(function addUsers(users) {
   this.state.users = users;
+});
+
+mutation(function setSearchFilter(search) {
+  this.state.filters.search = search;
 });
 
 // TODO(marko): mock mutation

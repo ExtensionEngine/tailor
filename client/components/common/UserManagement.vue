@@ -2,28 +2,35 @@
   <div class="user-management">
     <div class="row">
       <div class="col-md-12 content">
+        <div class="row">
+          <div class="col-md-7">
+            <form class="user" @submit.prevent="handleAddUser" novalidate>
+              <div class="row">
+                <div class="col-md-7 form-group">
+                  <input ref="newUserEmail" type="email" class="form-control" placeholder="email" />
+                </div>
 
-        <form class="user" @submit.prevent="handleAddUser" novalidate>
-          <div class="row">
-            <div class="col-md-4 form-group">
-              <input ref="newUserEmail" type="email" class="form-control" placeholder="email" />
-            </div>
+                <div class="col-md-3 form-group">
+                  <select ref="newUserRole" class="form-control select-role">
+                    <option v-for="role in roles" :value="role.value">
+                      {{ role.render }}
+                    </option>
+                  </select>
+                </div>
 
-            <div class="col-md-2 form-group">
-              <select ref="newUserRole" class="form-control select-role">
-                <option v-for="role in roles" :value="role.value">
-                  {{ role.render }}
-                </option>
-              </select>
-            </div>
-
-            <div class="col-md-2 form-submit">
-              <button type="submit" class="btn btn-primary">Add</button>
-            </div>
+                <div class="col-md-2 form-submit">
+                  <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+              </div>
+            </form>
           </div>
-        </form>
 
-        <form class="role">
+          <div class="col-md-3 col-md-offset-2">
+            <expandable-search :setSearch="setSearchFilter"></expandable-search>
+          </div>
+        </div>
+
+        <form class="role" v-if="usersExist">
           <table class="table table-striped table-hover">
             <thead>
               <tr>
@@ -53,6 +60,11 @@
             </tbody>
           </table>
         </form>
+        <div v-else>
+          <div class="jumbotron">
+            {{ noUsersMessage }}
+          </div>
+        </div>
 
       </div>
     </div>
@@ -61,6 +73,9 @@
 
 <script>
 import { debounce } from 'lodash';
+import { mapActions } from 'vuex-module';
+
+import ExpandableSearch from './ExpandableSearch';
 
 export default {
   name: 'user-management',
@@ -79,6 +94,10 @@ export default {
       type: Array,
       required: true
     },
+    totalUsers: {
+      type: Number,
+      required: true
+    },
     addUser: {
       type: Function,
       required: true
@@ -89,7 +108,28 @@ export default {
     }
   },
 
+  computed: {
+    usersExist() {
+      return this.users.length;
+    },
+    noUsersMessage() {
+      const noTotalMessage = 'No users were added to the course, add users?';
+      const noFiltered = 'No users found';
+
+      if (!this.totalUsers) {
+        return noTotalMessage;
+      } else if (!this.users.length) {
+        return noFiltered;
+      }
+    }
+  },
+
+  components: {
+    'expandable-search': ExpandableSearch
+  },
+
   methods: {
+    ...mapActions(['setSearchFilter'], 'users'),
     handleAddUser() {
       const email = this.$refs.newUserEmail.value;
       const role = this.$refs.newUserRole.value;
@@ -131,6 +171,11 @@ export default {
     }
   }
 
+  .input-group-addon {
+    background-color: #fff;
+    border: 0;
+  }
+
   .table {
     margin: 0;
     text-align: left;
@@ -151,6 +196,13 @@ export default {
       line-height: 2;
       padding: 8px;
     }
+  }
+
+  .jumbotron {
+    background-color: #fff;
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0;
   }
 }
 </style>

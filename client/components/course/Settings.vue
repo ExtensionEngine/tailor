@@ -2,7 +2,8 @@
   <user-management
     :courseKey="courseKey"
     :roles="roles"
-    :users="users"
+    :users="filteredUsers"
+    :totalUsers="totalUsers"
     :addUser="addUserToCourse"
     :changeRole="updateUserRole"
   >
@@ -12,12 +13,12 @@
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 
-import Permissions from '../../utils/perms';
 import UserManagement from '../common/UserManagement';
+import Permissions from '../../utils/perms';
 import { getRolesForUser } from '../../utils/users';
 
 export default {
-  name: 'course-settings',
+  name: 'settings',
 
   components: {
     UserManagement
@@ -28,9 +29,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['user', 'users'], 'users'),
+    ...mapGetters(['filteredUsers', 'totalUsers', 'user'], 'users'),
     courseKey() {
-      return this.$route.params.id;
+      return String(this.$route.params.id);
     },
     roles() {
       return getRolesForUser(this.user);

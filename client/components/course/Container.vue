@@ -29,7 +29,9 @@
       </div>
       <div id="history" role="tabpanel" class="tab-pane"></div>
       <div id="comments" role="tabpanel" class="tab-pane"></div>
-      <div id="settings" role="tabpanel" class="tab-pane"></div>
+      <div id="settings" role="tabpanel" class="tab-pane">
+        <settings></settings>
+      </div>
     </div>
   </div>
 </template>
@@ -37,13 +39,15 @@
 <script>
 import Outline from './Outline.vue';
 import Sidebar from './Sidebar.vue';
+import Settings from './Settings.vue';
 import { mapState } from 'vuex-module';
 
 export default {
   computed: mapState(['activities']),
   components: {
     Outline,
-    Sidebar
+    Sidebar,
+    Settings
   }
 };
 </script>
