@@ -4,8 +4,10 @@ const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 const config = require('../../config/server');
 const db = require('../shared/database').db;
+const collection = require('../shared/database').collection;
 const BaseModel = require('../base.model');
 const query = require('./query');
+const role = require('./role');
 
 /**
  * @swagger
@@ -14,7 +16,7 @@ const query = require('./query');
  *     type: object
  *     required:
  *     - email
- *     - password
+ *       password
  *     properties:
  *       email:
  *         type: string
@@ -22,11 +24,16 @@ const query = require('./query');
  *       password:
  *         type: string
  *         description: user password
+ *       role:
+ *         type: string
+ *         description: user role
  *   UserOutput:
  *     type: object
  *     required:
  *     - _key
- *     - email
+ *       email
+ *       isAdmin
+ *       role
  *     properties:
  *       _key:
  *         type: string
@@ -34,10 +41,14 @@ const query = require('./query');
  *       email:
  *         type: string
  *         description: user email
+ *       role:
+ *         type: string
+ *         description: user role
  */
 const userSchema = Joi.object().keys({
   email: Joi.string().email().required(),
-  password: Joi.string().required()
+  password: Joi.string().required(),
+  role: Joi.string().default(role.default).regex(role.validationRegex)
 });
 
 class AuthError {
@@ -48,10 +59,8 @@ class AuthError {
   }
 }
 
-const COLLECTION_NAME = 'user';
-
 class UserModel extends BaseModel {
-  constructor(db, collectionName = COLLECTION_NAME, schema = userSchema) {
+  constructor(db, collectionName = collection.USER, schema = userSchema) {
     super(db, collectionName, schema);
   }
 
@@ -114,7 +123,6 @@ class UserModel extends BaseModel {
 }
 
 module.exports = {
-  COLLECTION_NAME,
   schema: userSchema,
   Model: UserModel,
   model: new UserModel(db)
