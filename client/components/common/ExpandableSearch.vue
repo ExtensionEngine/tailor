@@ -18,8 +18,8 @@
         class="btn btn-link btn-trigger"
         @click="handleShow"
       >
-        <span class="fa fa-search" v-if="!show"></span>
-        <span class="fa fa-times" v-if="show"></span>
+        <span class="fa fa-lg fa-search" v-if="!show"></span>
+        <span class="fa fa-lg fa-times" v-if="show"></span>
       </button>
     </div>
   </div>
@@ -62,11 +62,13 @@ $primary-color-active: lighten($primary-color, 10%);
   height: 100%;
   width: 100%;
 
-  .search  {
-    left: 0;
+  .search {
     overflow: hidden;
+    position: absolute;
+    right: 0;
     transition: width 0.5s ease-in-out;
-    width: 0%;
+    top: 0;
+    width: 0;
   }
 
   .search-show {
@@ -78,15 +80,12 @@ $primary-color-active: lighten($primary-color, 10%);
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
     color: #fff;
     outline: 0;
+    padding: 7px;
     width: 80%;
 
     &:active {
       background-color: $primary-color-active;
       background-image: radial-gradient(circle, $primary-color-active 10%, $primary-color-active 11%);
-    }
-
-    .fa {
-      font-size: 24px;
     }
   }
 }
