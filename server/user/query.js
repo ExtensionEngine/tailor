@@ -2,22 +2,12 @@
 
 const INSERT_USER = `
 INSERT @user IN @@collection
-RETURN {
-  _key: NEW._key,
-  email: NEW.email,
-  role: NEW.role,
-  courses: NEW.courses
-}`;
+RETURN KEEP(NEW, ['_key', 'email', 'role', 'courses'])`;
 
 const GET_USER_BY_KEY = `
 FOR user IN @@collection
   FILTER user._key == @userKey
-  RETURN {
-    _key: user._key,
-    email: user.email,
-    role: user.role,
-    courses: user.courses
-}`;
+  RETURN KEEP(user, ['_key', 'email', 'role', 'courses'])`;
 
 // Entire user is returned (including password), so that password can be verified.
 const GET_USER_BY_EMAIL = `
