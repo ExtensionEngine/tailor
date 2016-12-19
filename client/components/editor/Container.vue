@@ -20,7 +20,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="editor">
-                <multiple-choice></multiple-choice>
+                <multiple-choice propHint="AAA" propQuestion="SSSS" :propAnswers="['aa','dd', 'ddd']" :propCorrect="[1]"></multiple-choice>
                 <div class="wrapper">
                   <a><span class="fa fa-3x fa-plus"></span></a>
                 </div>
