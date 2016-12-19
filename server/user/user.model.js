@@ -27,6 +27,9 @@ const role = require('./role');
  *       role:
  *         type: string
  *         description: user role
+ *       courses:
+ *         type: array
+ *         description: list of courses user can access
  *   UserOutput:
  *     type: object
  *     required:
@@ -34,6 +37,7 @@ const role = require('./role');
  *       email
  *       isAdmin
  *       role
+ *       courses
  *     properties:
  *       _key:
  *         type: string
@@ -44,11 +48,15 @@ const role = require('./role');
  *       role:
  *         type: string
  *         description: user role
+ *       courses:
+ *         type: array
+ *         description: list of courses user can access
  */
 const userSchema = Joi.object().keys({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
-  role: Joi.string().default(role.default).regex(role.validationRegex)
+  role: Joi.string().default(role.default).regex(role.validationRegex),
+  courses: Joi.array().items(Joi.string())
 });
 
 class AuthError {
@@ -128,6 +136,26 @@ class UserModel extends BaseModel {
         delete user.password;
         return passwordsMatch ? user : Promise.reject(new AuthError());
       });
+  }
+
+  grantAccessToCourse(userKey, courseKey) {
+    return this.db
+      .query(query.ADD_COURSE_TO_USER, {
+        '@collection': this.collectionName,
+        userKey,
+        courseKey
+      })
+      .then(cursor => cursor.next());
+  }
+
+  revokeAccessToCourse(userKey, courseKey) {
+    return this.db
+      .query(query.REMOVE_COURSE_FROM_USER, {
+        '@collection': this.collectionName,
+        userKey,
+        courseKey
+      })
+      .then(cursor => cursor.next());
   }
 }
 
