@@ -58,7 +58,7 @@ const userSchema = Joi.object().keys({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
   role: Joi.string().default(role.default).regex(role.validationRegex),
-  courses: Joi.array().items(Joi.string())
+  courses: Joi.array().items(Joi.string()).default([])
 });
 
 class AuthError {
