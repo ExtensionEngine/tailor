@@ -2,7 +2,10 @@
 
 const Joi = require('joi');
 const BaseModel = require('../base.model');
-const db = require('../shared/database').db;
+const database = require('../shared/database');
+
+const db = database.db;
+const ASSET_COLLECTION = database.collection.ASSET;
 
 /**
  * @swagger
@@ -34,16 +37,13 @@ const assetSchema = Joi.object().keys({
   courseKey: Joi.string().regex(/[0-9]+/).required()
 });
 
-const COLLECTION_NAME = 'asset';
-
 class AssetModel extends BaseModel {
-  constructor(db, collectionName = COLLECTION_NAME, schema = assetSchema) {
+  constructor(db, collectionName = ASSET_COLLECTION, schema = assetSchema) {
     super(db, collectionName, schema);
   }
 }
 
 module.exports = {
-  COLLECTION_NAME,
   schema: assetSchema,
   Model: AssetModel,
   model: new AssetModel(db)

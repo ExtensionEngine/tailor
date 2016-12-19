@@ -2,8 +2,10 @@
 
 const Joi = require('joi');
 const BaseModel = require('../base.model');
-const db = require('../shared/database').db;
-const collection = require('../shared/database').collection;
+const database = require('../shared/database');
+
+const db = database.db;
+const COURSE_COLLECTION = database.collection.COURSE;
 
 /**
  * @swagger
@@ -34,7 +36,7 @@ const courseSchema = Joi.object().keys({
 });
 
 class CourseModel extends BaseModel {
-  constructor(db, collectionName = collection.COURSE, schema = courseSchema) {
+  constructor(db, collectionName = COURSE_COLLECTION, schema = courseSchema) {
     super(db, collectionName, schema);
   }
 

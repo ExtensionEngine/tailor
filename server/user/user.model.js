@@ -3,11 +3,13 @@
 const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 const config = require('../../config/server');
-const db = require('../shared/database').db;
-const collection = require('../shared/database').collection;
+const database = require('../shared/database');
 const BaseModel = require('../base.model');
 const query = require('./query');
 const role = require('./role');
+
+const db = database.db;
+const USER_COLLECTION = database.collection.USER;
 
 /**
  * @swagger
@@ -68,7 +70,7 @@ class AuthError {
 }
 
 class UserModel extends BaseModel {
-  constructor(db, collectionName = collection.USER, schema = userSchema) {
+  constructor(db, collectionName = USER_COLLECTION, schema = userSchema) {
     super(db, collectionName, schema);
   }
 
