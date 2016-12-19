@@ -1,19 +1,20 @@
 'use strict';
 
-const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const passport = require('passport');
+const express = require('express');
 const expressSession = require('express-session');
+const passport = require('passport');
 const swaggerJsDoc = require('swagger-jsdoc');
 
 // Setup authentication before instantiating the main app router.
 // eslint-disable-next-line no-unused-vars
 const auth = require('./shared/auth');
-const logger = require('./shared/logger');
 const config = require('../config/server');
-const router = require('./router');
 const errorHandler = require('./shared/error').errorHandler;
+const logger = require('./shared/logger');
+const router = require('./router');
+const sessionStore = require('./session').store;
 
 const app = express();
 app.disable('x-powered-by');
@@ -25,7 +26,8 @@ app.use(bodyParser.json());
 const session = expressSession({
   secret: config.auth.sessionSecret,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: sessionStore
 });
 app.use(session);
 app.use(passport.initialize());

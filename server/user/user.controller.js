@@ -21,7 +21,7 @@ class UserController extends BaseController {
   }
 
   logout(req, res, next) {
-    req.logout();
+    req.session.destroy();
     io.setEmpty(res);
     next();
   }
