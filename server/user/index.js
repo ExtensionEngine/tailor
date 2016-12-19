@@ -26,11 +26,25 @@ router.post('/users/actions/logout',
   controller.logout,
   output);
 
-// router.post('/users/:userKey/relationships/courses/:courseKey',
-//   input,
-//   // TODO(matej): validate both userKey and courseKey
-//   controller.addUserToCourse,
-//   output);
+router.get('/users',
+  input,
+  controller.list,
+  output);
+
+router.get('/users/:userKey',
+  input,
+  controller.show,
+  output);
+
+router.post('/users/:userKey/access/courses/:courseKey',
+  input,
+  controller.grantAccessToCourse,
+  output);
+
+router.delete('/users/:userKey/access/courses/:courseKey',
+  input,
+  controller.revokeAccessToCourse,
+  output);
 
 module.exports = {
   controller,
