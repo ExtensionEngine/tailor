@@ -12,7 +12,7 @@ const output = io.output();
 
 router.get('/courses',
   input,
-  controller.list,
+  controller.listCoursesForUser,
   output);
 
 router.get('/courses/:courseKey',
