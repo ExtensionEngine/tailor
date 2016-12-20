@@ -6,7 +6,7 @@
       <span :class="{'has-error': errors.includes('question')}">
         <input
           v-model="question"
-          :disabled="isDisabled"
+          :disabled="isSuccess"
           class="form-control"
           type="text"
           placeholder="Question..">
@@ -15,7 +15,7 @@
     <div class="form-group">
       <span class="form-label">Answers</span>
       <button
-        :disabled="isDisabled"
+        :disabled="isSuccess"
         @click="addAnswer"
         class="btn btn-default answers-add"
         type="button">
@@ -29,7 +29,7 @@
             <input
               v-model="correctAnswers"
               :value="index"
-              :disabled="isDisabled"
+              :disabled="isSuccess"
               type="checkbox">
           </span>
           <span
@@ -37,12 +37,12 @@
             :class="{'has-error': errors.includes(`answers[${index}]`)}">
             <input
               v-model="answers[index]"
-              :disabled="isDisabled"
+              :disabled="isSuccess"
               type="text"
               placeholder="Answer..">
           </span>
           <button
-            :disabled="isDisabled"
+            :disabled="isSuccess"
             @click="removeAnswer(index)"
             class="destroy"
             type="button">
@@ -55,7 +55,7 @@
       <span class="form-label">Hint</span>
       <input
         v-model="hint"
-        :disabled="isDisabled"
+        :disabled="isSuccess"
         class="form-control"
         type="text"
         placeholder="Optional hint..">
@@ -73,7 +73,7 @@
       </div>
     </div>
     <button
-      :disabled="isDisabled"
+      :disabled="isSuccess"
       @click="save"
       class="btn btn-default"
       type="button">
@@ -122,7 +122,6 @@ export default {
       correctAnswers: this.propCorrect,
       hint: this.propHint,
       isSuccess: false,
-      isDisabled: false,
       errors: []
     };
   },
@@ -144,18 +143,14 @@ export default {
         answers: this.answers,
         hint: this.hint
       };
+      this.errors = [];
 
       this.validate(question)
         .then(() => {
-          this.errors = [];
           this.isSuccess = true;
-          this.isDisabled = true;
-
           this.$emit('addQuestion', question);
         })
         .catch((err) => {
-          this.errors = [];
-
           err.inner.forEach((item) => {
             this.errors.push(item.path);
           });
@@ -194,11 +189,6 @@ export default {
   button {
     margin: 15px 10px 0 0;
     float: right;
-  }
-
-  .intro {
-    overflow: hidden;
-    padding: 15px 10px 45px 10px;
   }
 
   .assessment-type {
