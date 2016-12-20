@@ -2,7 +2,10 @@
 
 const Joi = require('joi');
 const BaseModel = require('../base.model');
-const db = require('../shared/database').db;
+const database = require('../shared/database');
+
+const db = database.db;
+const COURSE_COLLECTION = database.collection.COURSE;
 
 /**
  * @swagger
@@ -32,16 +35,28 @@ const courseSchema = Joi.object().keys({
   name: Joi.string().min(3).max(100).required()
 });
 
-const COLLECTION_NAME = 'course';
-
 class CourseModel extends BaseModel {
-  constructor(db, collectionName = COLLECTION_NAME, schema = courseSchema) {
+  constructor(db, collectionName = COURSE_COLLECTION, schema = courseSchema) {
     super(db, collectionName, schema);
+  }
+
+  getByKeys(courseKeys) {
+    const query = `
+      FOR course IN @@courseCollection
+        FILTER course._key IN @courseKeys
+        RETURN course`;
+    const bindVars = {
+      '@courseCollection': this.collectionName,
+      courseKeys
+    };
+
+    return this.db
+      .query(query, bindVars)
+      .then(cursor => cursor.all());
   }
 }
 
 module.exports = {
-  COLLECTION_NAME,
   schema: courseSchema,
   Model: CourseModel,
   model: new CourseModel(db)

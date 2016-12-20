@@ -1,4 +1,5 @@
 'use strict';
+
 /**
  * Functions executed in activity-related transactions.
  * @namespace Activity.Action
