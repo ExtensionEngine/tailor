@@ -1,26 +1,27 @@
 import axios from 'axios';
-import urljoin from 'url-join';
 
-const BASE_URL = 'http://localhost:8081/';
-const loginUrl = urljoin(BASE_URL, 'login');
-const passwordResetUrl = urljoin(BASE_URL, 'reset-password');
+const BASE_URL = 'http://localhost:3000/api/v1/';
 
-// TODO: place in a separate config file
-const headerConfig = {
+const request = axios.create({
+  baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  transformResponse: [
+    data => JSON.parse(data).data
+  ]
+});
+
+const url = {
+  login: '/users/actions/login'
 };
 
-// TODO: create one instance of axios with predefined headers?
-export default {
-  loginUser(email, password) {
-    const data = { email, password };
-    return axios.post(loginUrl, data, headerConfig);
-  },
+function login(credentials) {
+  return request
+    .post(url.login, credentials)
+    .then(res => res.data);
+}
 
-  resetPassword(email) {
-    const data = { email };
-    return axios.post(passwordResetUrl, data, headerConfig);
-  }
+export default {
+  login
 };
