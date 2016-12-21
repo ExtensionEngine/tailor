@@ -1,14 +1,4 @@
-import axios from 'axios';
-
-const BASE_URL = 'http://localhost:3000/api/v1/';
-
-const request = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
+import request from './request';
 
 const url = {
   login: '/users/actions/login',
