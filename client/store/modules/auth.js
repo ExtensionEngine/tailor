@@ -20,7 +20,9 @@ action(function login(credentials) {
 });
 
 action(function logout() {
-  this.commit('logout');
+  return authApi
+    .logout()
+    .then(() => this.commit('logout'));
 });
 
 // TODO: integrate with backend
