@@ -19,7 +19,8 @@
     "debug:server": "node --inspect --debug-brk -r dotenv/config ./server",
     "doc:server": "jsdoc --pedantic --destination ./server/_doc_ --recurse ./server",
     "unit:server": "mocha --recursive \"./server/**/*.spec.js\"",
-    "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server"
+    "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server",
+    "db:init": "node -r dotenv/config ./server/script/initDatabase.js"
   },
   "dependencies": {
     "axios": "^0.15.2",
