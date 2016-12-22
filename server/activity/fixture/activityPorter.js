@@ -4,16 +4,19 @@ const ActivityModel = require('../activity.model').Model;
 const activities = require('./activityData').data;
 
 function insertActivitiesForCourse(db, course) {
-  const model = new ActivityModel(db);
-  const data = activities.map(a => {
-    a.courseKey = course._key;
-    return a;
-  });
+  const numChars = Math.min(course.name.length, 20);
+  const courseTitle = course.name.slice(0, numChars);
+  const data = activities.map(a => ({
+    name: `${courseTitle}... ${a.name}`,
+    parentKey: a.parentKey,
+    courseKey: course._key
+  }));
 
   const topActivities = data.filter(a => a.parentKey === null);
   const subActivities = data.filter(a => a.parentKey !== null);
-  const createTops = topActivities.map(a => model.create(a));
 
+  const model = new ActivityModel(db);
+  const createTops = topActivities.map(a => model.create(a));
   return Promise.all(createTops)
     .then(createdActivities => {
       // Convert parent indexes into actual parent activity keys.
