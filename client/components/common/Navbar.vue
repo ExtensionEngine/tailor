@@ -11,7 +11,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Welcome {{ user.firstName }}
+            Welcome {{ user.email }}
             <span class="fa fa-caret-down"></span>
           </a>
           <ul class="dropdown-menu">
