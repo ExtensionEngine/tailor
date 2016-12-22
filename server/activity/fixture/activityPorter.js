@@ -14,10 +14,19 @@ function insertActivitiesForCourse(db, course) {
 
   const topActivities = data.filter(a => a.parentKey === null);
   const subActivities = data.filter(a => a.parentKey !== null);
-
   const model = new ActivityModel(db);
-  const createTops = topActivities.map(a => model.create(a));
-  return Promise.all(createTops)
+
+  function createSequential(acts) {
+    const results = [];
+    let seq = Promise.resolve();
+    acts.forEach(act => {
+      seq = seq.then(() => model.create(act))
+               .then(result => results.push(result));
+    });
+    return seq.then(() => results);
+  }
+
+  return createSequential(topActivities)
     .then(createdActivities => {
       // Convert parent indexes into actual parent activity keys.
       for (let i = 0; i < createdActivities.length; i++) {
@@ -27,9 +36,7 @@ function insertActivitiesForCourse(db, course) {
           }
         }
       }
-
-      const createSubs = subActivities.map(a => model.create(a));
-      return Promise.all(createSubs);
+      return createSequential(subActivities);
     });
 }
 
