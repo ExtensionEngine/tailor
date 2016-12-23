@@ -29,8 +29,9 @@ class BaseModel {
   }
 
   markAsCreated(document) {
-    document.createdAt = new Date().toISOString();
-    document.modifiedAt = new Date().toISOString();
+    const now = new Date().toISOString();
+    document.createdAt = now;
+    document.modifiedAt = now;
     return document;
   }
 
