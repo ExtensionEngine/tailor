@@ -96,6 +96,7 @@ class UserModel extends BaseModel {
   create(user) {
     return this
       .validate(user)
+      .then(this.markAsCreated)
       .then(validUser => this.hashPassword(validUser))
       .then(hashedUser => this.db.query(query.INSERT_USER, {
         '@collection': this.collectionName,

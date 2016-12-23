@@ -87,6 +87,7 @@ class ActivityModel extends BaseModel {
   create(activity) {
     return this
       .validate(activity)
+      .then(this.markAsCreated)
       .then(validActivity => this.execAction(action.insert, {
         newActivity: validActivity,
         activityCollection: ACTIVITY_COLLECTION

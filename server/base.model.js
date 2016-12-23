@@ -8,6 +8,16 @@ class BaseModel {
     this.schema = schema;
     this.collectionName = collectionName;
     this.collection = db.collection(collectionName);
+
+    this.validate = this.validate.bind(this);
+    this.markAsCreated = this.markAsCreated.bind(this);
+    this.markAsModified = this.markAsModified.bind(this);
+    this.create = this.create.bind(this);
+    this.getByKey = this.getByKey.bind(this);
+    this.updateByKey = this.updateByKey.bind(this);
+    this.replaceByKey = this.replaceByKey.bind(this);
+    this.removeByKey = this.removeByKey.bind(this);
+    this.getMany = this.getMany.bind(this);
   }
 
   validate(document) {
@@ -18,9 +28,21 @@ class BaseModel {
     });
   }
 
+  markAsCreated(document) {
+    document.createdAt = new Date().toISOString();
+    document.modifiedAt = new Date().toISOString();
+    return document;
+  }
+
+  markAsModified(document) {
+    document.modifiedAt = new Date().toISOString();
+    return document;
+  }
+
   create(document) {
     return this
       .validate(document)
+      .then(this.markAsCreated)
       .then(validDocument => this.db.query(
         'INSERT @validDocument IN @@collection RETURN NEW', {
           '@collection': this.collectionName,
@@ -33,17 +55,22 @@ class BaseModel {
     return this.collection.document({ _key: key });
   }
 
-  // TODO(matej): can Joi be used to validate individual keys?
+  // This method allows inserting arbitrary documents. TODO(matej): fix this
+  // by validating with Joi or removing all keys not present in the schema.
   updateByKey(key, partialDocument) {
+    delete partialDocument.createdAt;
+    delete partialDocument.modifiedAt;
+    const doc = this.markAsModified(partialDocument);
     return this.collection
-      .update({ _key: key }, partialDocument, { returnNew: true })
+      .update({ _key: key }, doc, { returnNew: true })
       .then(result => result.new);
   }
 
   replaceByKey(key, newDocument) {
     return this
       .validate(newDocument)
-      .then(validDocument => this.collection.replace(
+      .then(this.markAsModified)
+      .then(validDocument => this.collection.update(
         { _key: key },
         validDocument,
         { returnNew: true }
