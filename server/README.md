@@ -21,10 +21,12 @@ defaults.
 Before launching the server for the first time:
 * make sure ArangoDB deamon is running (default on OSX: `/usr/local/opt/arangodb/sbin/arangod`)
 * run `npm run db:init <admin-email> <admin-password>`
+
 This will make sure that:
 1. the database with correct name exists,
 2. all required collections exist,
 3. one user with administrator privileges exists.
+
 After the script finishes, you can log into the website with `<admin-email>`
 and `<admin-password>` you picked.
 
