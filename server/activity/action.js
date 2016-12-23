@@ -121,6 +121,8 @@ function reorder({ courseKey, activityKey, requestedPosition, activityCollection
   const to = isMovingToLargerPos ? newPosition : activity.position - 1;
   // increment or decrement each position
   const step = isMovingToLargerPos ? -1 : 1;
+  // refresh the timestamp
+  const modifiedAt = new Date().toISOString();
 
   const updateAffected = `
     FOR act IN @@collection
@@ -128,23 +130,31 @@ function reorder({ courseKey, activityKey, requestedPosition, activityCollection
              act.parentKey == @activity.parentKey AND
              act.position >= @from AND
              act.position <= @to
-      UPDATE act WITH { position: act.position + @step } IN @@collection`;
+      UPDATE act WITH {
+        position: act.position + @step,
+        modifiedAt: @modifiedAt
+      } IN @@collection`;
   db._query(updateAffected, {
     from,
     to,
     step,
     activity,
+    modifiedAt,
     '@collection': activityCollection
   });
 
   const moveToNewPos = `
     FOR act IN @@collection
       FILTER act._key == @activityKey
-      UPDATE act WITH { position: @newPosition } IN @@collection
+      UPDATE act WITH {
+        position: @newPosition,
+        modifiedAt: @modifiedAt
+      } IN @@collection
       RETURN NEW`;
   return db._query(moveToNewPos, {
     activityKey,
     newPosition,
+    modifiedAt,
     '@collection': activityCollection
   }).next();
 }
@@ -219,10 +229,14 @@ function remove({ courseKey, activityKey, activityCollection }) {
       FILTER act.courseKey == @courseKey AND
              act.parentKey == @activity.parentKey AND
              act.position > @activity.position
-      UPDATE act WITH { position: act.position - 1 } IN @@collection`;
+      UPDATE act WITH {
+        position: act.position - 1,
+        modifiedAt: @modifiedAt
+      } IN @@collection`;
   db._query(compactSiblings, {
     courseKey,
     activity,
+    modifiedAt: new Date().toISOString(),
     '@collection': activityCollection
   });
 
