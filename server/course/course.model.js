@@ -14,15 +14,20 @@ const COURSE_COLLECTION = database.collection.COURSE;
  *     type: object
  *     required:
  *     - name
+ *       description
  *     properties:
  *       name:
  *         type: string
  *         description: course title
+ *       description:
+ *         type: string
+ *         description: short course description
  *   CourseOutput:
  *     type: object
  *     required:
  *     - _key
- *     - name
+ *       name
+ *       description
  *     properties:
  *       _key:
  *         type: string
@@ -30,9 +35,13 @@ const COURSE_COLLECTION = database.collection.COURSE;
  *       name:
  *         type: string
  *         description: course title
+ *       description:
+ *         type: string
+ *         description: short course description
  */
 const courseSchema = Joi.object().keys({
-  name: Joi.string().min(3).max(100).required()
+  name: Joi.string().min(3).max(100).required(),
+  description: Joi.string().min(3).max(2000).required()
 });
 
 class CourseModel extends BaseModel {
