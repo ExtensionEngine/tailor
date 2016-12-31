@@ -38,6 +38,7 @@
     "joi": "^10.0.1",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
+    "promise-queue": "^2.2.3",
     "truncate": "^2.0.0",
     "vue": "^2.1.0",
     "vue-focus": "^2.1.0",
