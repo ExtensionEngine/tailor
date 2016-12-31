@@ -18,5 +18,5 @@ export default new Vuex.Store({
   middlewares,
   modules,
   plugins,
-  strict: isDevEnv
+  strict: false
 });

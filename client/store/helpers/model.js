@@ -1,5 +1,6 @@
 import cuid from 'cuid';
 import Resource from '../../api/resource';
+import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
 
 export default function (collectionName, url) {
@@ -55,7 +56,7 @@ export default function (collectionName, url) {
   });
 
   mutation(function save(model) {
-    this.state.items[model._cid] = model;
+    Vue.set(this.state.items, model._cid, model);
   });
 
   return module;

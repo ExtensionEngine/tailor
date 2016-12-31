@@ -1,36 +1,35 @@
 <template>
-  <div class="form-group courses-search">
+  <div class="course-search">
     <input
-      type="search"
       class="form-control"
       placeholder="Search..."
-      @input="handleSearch($event)"
+      @input="search($event)"
     />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import { debounce } from 'lodash';
+// import { mapActions, mapGetters } from 'vuex-module';
+// import { debounce } from 'lodash';
 
 export default {
-  name: 'courses-search',
-  computed: mapGetters({
-    filters: 'getFilters'
-  }),
+  name: 'search',
+  // computed: mapGetters({
+  //   filters: 'getFilters'
+  // }),
   methods: {
-    ...mapActions(['setSearchFilter']),
-    handleSearch({ target }) {
-      const value = target.value;
-      const search = value.length >= 2 ? value : '';
-      debounce(this.setSearchFilter, 800)(search);
+    // ...mapActions(['search']),
+    search({ target }) {
+      // const value = target.value;
+      // const search = value.length >= 2 ? value : '';
+      // debounce(this.search, 800)(search);
     }
   }
 };
 </script>
 
 <style lang="scss">
-.courses-search {
+.course-search {
   width: 500px;
   margin: 0 auto;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.34);

@@ -1,141 +1,102 @@
 <template>
-  <div class="course-create">
-    <button type="button" class="btn btn-primary btn-trigger" data-toggle="modal" data-target="#createCourse">
-      Create new Course
+  <div class="create-course">
+    <button type="button" class="btn btn-primary" @click="show">
+      Create course
     </button>
-
-    <div class="modal fade" id="createCourse" tabindex="-1" role="dialog" aria-labelledby="createCourseLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div v-if="createStatus.failure" class="error">
-            <span class="fa fa-exclamation-triangle"></span> {{createStatus.message}}
+    <modal :show="showModal" effect="fade">
+      <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title">Create course</h4>
+      </div>
+      <div slot="modal-body" class="modal-body">
+        <div v-if="error" class="error">{{ error }}</div>
+        <cube-grid v-if="loader"></cube-grid>
+        <div v-if="!loader">
+          <div class="form-group">
+            <input v-model="name" type="text" class="form-control" placeholder="Name"/>
           </div>
-
-          <cube-grid v-if="createStatus.request"></cube-grid>
-          <form v-else @submit.prevent="handleCreateCourse">
-            <div class="modal-body">
-              <div class="form-group">
-                <input
-                ref="title"
-                type="text"
-                class="form-control"
-                placeholder="title..."
-                />
-              </div>
-
-              <div class="form-group">
-                <textarea
-                ref="description"
-                class="form-control"
-                placeholder="description..."
-                >
-              </textarea>
-            </div>
+          <div class="form-group">
+            <textarea v-model="description" class="form-control" placeholder="Description"></textarea>
           </div>
-
-          <div class="modal-footer">
-            <button
-              @click="handleCancelDialog"
-              type="button"
-              class="btn btn-default"
-              data-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <button type="submit" class="btn btn-primary">Create</button>
-          </div>
-          </form>
         </div>
       </div>
-    </div>
+      <div slot="modal-footer" class="modal-footer">
+        <button type="button" @click="hide" class="btn btn-default">Cancel</button>
+        <button type="button" @click="create" class="btn btn-primary">Create</button>
+      </div>
+    </modal>
   </div>
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex';
-  import { max } from 'lodash';
+import { mapActions } from 'vuex-module';
+import { modal } from 'vue-strap';
+import CubeGrid from '../loaders/CubeGrid';
 
-  // TODO: replace with Vue component
-  import $ from 'jquery';
-
-  import CubeGrid from '../loaders/CubeGrid';
-
-  export default {
-    name: 'course-create',
-
-    components: {
-      CubeGrid
+export default {
+  name: 'create-course',
+  data() {
+    return {
+      name: '',
+      description: '',
+      error: '',
+      loader: false,
+      showModal: false
+    };
+  },
+  components: {
+    modal,
+    CubeGrid
+  },
+  methods: {
+    ...mapActions(['save'], 'courses'),
+    create() {
+      // TODO: Add validation
+      this.loader = true;
+      const course = { name: this.name, description: this.description };
+      this.save(course).then(() => {
+        this.loader = false;
+        this.hide();
+      });
     },
-
-    computed: {
-      ...mapGetters({
-        courses: 'getCourses',
-        createStatus: 'getCreateStatus'
-      })
+    show() {
+      this.showModal = true;
     },
-
-    created() {
-      this.createCourseStatusReset();
-    },
-
-    beforeDestroy() {
-      $(this.$el.querySelector('#createCourse')).modal('hide');
-    },
-
-    methods: {
-      handleCreateCourse() {
-        const id = max(this.courses.map(c => c.id)) + 1;
-        const title = this.$refs.title.value;
-        const description = this.$refs.description.value;
-        const data = title && description ? { id, title, description } : {};
-
-        this.createCourse(data);
-      },
-      handleCancelDialog() {
-        // TODO: Better reset handling once
-        // modal Vue component is implemented
-        this.createCourseStatusReset();
-      },
-      ...mapActions([
-        'createCourse',
-        'createCourseStatusReset'
-      ])
+    hide() {
+      this.showModal = false;
+      this.name = '';
+      this.description = '';
     }
-  };
+  }
+};
 </script>
 
 <style lang="scss">
-  .course-create {
-    input[type="text"] {
-      padding: 0 10px;
-    }
-
-    textarea.form-control {
-      height: 80px;
-      padding: 10px;
-      resize: none;
-    }
-
-    .modal-content {
-      border-radius: 0;
-    }
-
-    .modal-footer {
-      border: 0;
-    }
-
-    .error {
-      color: #dd4b39;
-      font-size: 16px;
-      font-weight: 600;
-      min-height: 40px;
-      margin: 0 auto;
-      padding: 15px 20px 0 20px;
-
-      .fa {
-        font-size: 18px;
-        padding-right: 3px;
-      }
-    }
+.create-course {
+  textarea {
+    resize: none;
   }
+
+  .modal-content {
+    padding: 10px;
+    border-radius: 0;
+  }
+
+  .modal-header {
+    border: 0;
+    text-align: left;
+  }
+
+  .modal-footer {
+    border: 0;
+  }
+
+  .error {
+    margin: 0 auto;
+    padding: 15px 20px 0 20px;
+    color: #dd4b39;
+    font-size: 16px;
+    font-weight: 600;
+    min-height: 40px;
+  }
+}
 </style>

@@ -31,7 +31,7 @@ export default class Resource {
    * @param {object} model
    */
   setCid(model) {
-    model._cid = cuid();
+    model._cid = this.getCid(model._key) || cuid();
     if (model._key) this.map(model._cid, model._key);
   }
 
@@ -99,7 +99,7 @@ export default class Resource {
     return this.get('', params).then(response => {
       let result = {};
       response.data.data.forEach(it => {
-        if (!this.getCid(it._key)) this.setCid(it);
+        this.setCid(it);
         result[it._cid] = it;
       });
       return result;
