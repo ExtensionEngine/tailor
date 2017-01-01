@@ -25,7 +25,7 @@ class DatabaseConnector {
   /**
    * Create the database and all collections specified in dbConfig.
    * @return {Promise<object>} A db object used to call all ArangoDB methods
-   * (as listed here: https://www.npmjs.com/package/arangojs#table-of-contents).
+   * (as listed here: {@link https://www.npmjs.com/package/arangojs#table-of-contents}).
    */
   initialize() {
     return this.ensureDatabase(this.config.name)

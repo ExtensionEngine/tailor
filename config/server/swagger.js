@@ -4,17 +4,17 @@ module.exports = {
   serveDocs: Boolean(parseInt(process.env.API_SERVE_SWAGGER_DOCS, 10)) || false,
   swaggerDefinition: {
     info: {
-      title: "Tailor API",
-      description: "These are the API docs for Tailor server.",
+      title: 'Tailor API',
+      description: 'These are the API docs for Tailor server.',
       contact: {
-        url: "https://github.com/ExtensionEngine/tailor"
+        url: 'https://github.com/ExtensionEngine/tailor'
       },
-      version: "1.0.0"
+      version: '1.0.0'
     },
     schemes: [
-      "http"
+      'http'
     ],
     host: `localhost:${port}`,
-    basePath: "/api/v1"
+    basePath: '/api/v1'
   }
-}
+};

@@ -1,3 +1,9 @@
+'use strict';
+
+const loadCourse = require('./loadCourse');
+const requireCourseAccess = require('./requireCourseAccess');
+
 module.exports = {
-  loadCourse: require('./loadCourse')
+  loadCourse,
+  requireCourseAccess
 };

@@ -8,5 +8,6 @@ module.exports = {
   ACTIVITY: 'activity',
   ASSET: 'asset',
   COURSE: 'course',
+  SESSION: 'session',
   USER: 'user'
 };

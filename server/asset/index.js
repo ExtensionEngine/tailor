@@ -1,4 +1,4 @@
-'use-strict';
+'use strict';
 
 const express = require('express');
 
@@ -8,6 +8,7 @@ const io = require('../shared/io');
 const model = require('./asset.model');
 
 const loadCourse = course.middleware.loadCourse(course.model);
+const requireCourseAccess = course.middleware.requireCourseAccess;
 
 const router = express.Router();
 const input = io.input();
@@ -15,6 +16,7 @@ const output = io.output();
 
 router.get('/courses/:courseKey/assets',
   input,
+  requireCourseAccess,
   loadCourse,
   controller.list,
   output
@@ -22,6 +24,7 @@ router.get('/courses/:courseKey/assets',
 
 router.get('/courses/:courseKey/assets/:assetKey',
   input,
+  requireCourseAccess,
   loadCourse,
   controller.show,
   output
@@ -29,6 +32,7 @@ router.get('/courses/:courseKey/assets/:assetKey',
 
 router.post('/courses/:courseKey/assets/',
   input,
+  requireCourseAccess,
   loadCourse,
   controller.create,
   output
@@ -36,6 +40,7 @@ router.post('/courses/:courseKey/assets/',
 
 router.patch('/courses/:courseKey/assets/:assetKey',
   input,
+  requireCourseAccess,
   loadCourse,
   controller.patch,
   output
@@ -43,6 +48,7 @@ router.patch('/courses/:courseKey/assets/:assetKey',
 
 router.put('/courses/:courseKey/assets/:assetKey',
   input,
+  requireCourseAccess,
   loadCourse,
   controller.replace,
   output
@@ -50,6 +56,7 @@ router.put('/courses/:courseKey/assets/:assetKey',
 
 router.delete('/courses/:courseKey/assets/:assetKey',
   input,
+  requireCourseAccess,
   loadCourse,
   controller.remove,
   output

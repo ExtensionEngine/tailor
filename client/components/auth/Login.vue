@@ -40,6 +40,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 
+const INVALID_CREDENTIALS_MESSAGE = 'User email and password do not match';
+
 export default {
   name: 'login',
   data() {
@@ -55,8 +57,12 @@ export default {
   methods: {
     ...mapActions(['login']),
     submit() {
+      this.message = '';
       this.login({ email: this.email, password: this.password })
-        .then(() => this.$router.push('/'));
+        .then(() => this.$router.push('/'))
+        .catch(() => {
+          this.message = INVALID_CREDENTIALS_MESSAGE;
+        });
     }
   }
 };

@@ -38,7 +38,7 @@ describe('Course middleware', () => {
 
     it('calls next with error from course model', done => {
       const { req, res } = getMocks();
-      const error = new Error('course module error');
+      const error = new Error('course model error');
       const model = {
         getByKey: sinon.stub().returns(Promise.reject(error))
       };

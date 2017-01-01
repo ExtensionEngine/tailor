@@ -3,9 +3,13 @@
 const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 const config = require('../../config/server');
-const db = require('../shared/database').db;
+const database = require('../shared/database');
 const BaseModel = require('../base.model');
 const query = require('./query');
+const role = require('./role');
+
+const db = database.db;
+const USER_COLLECTION = database.collection.USER;
 
 /**
  * @swagger
@@ -14,7 +18,7 @@ const query = require('./query');
  *     type: object
  *     required:
  *     - email
- *     - password
+ *       password
  *     properties:
  *       email:
  *         type: string
@@ -22,11 +26,20 @@ const query = require('./query');
  *       password:
  *         type: string
  *         description: user password
+ *       role:
+ *         type: string
+ *         description: user role
+ *       courses:
+ *         type: array
+ *         description: list of courses user can access
  *   UserOutput:
  *     type: object
  *     required:
  *     - _key
- *     - email
+ *       email
+ *       isAdmin
+ *       role
+ *       courses
  *     properties:
  *       _key:
  *         type: string
@@ -34,10 +47,18 @@ const query = require('./query');
  *       email:
  *         type: string
  *         description: user email
+ *       role:
+ *         type: string
+ *         description: user role
+ *       courses:
+ *         type: array
+ *         description: list of courses user can access
  */
 const userSchema = Joi.object().keys({
   email: Joi.string().email().required(),
-  password: Joi.string().required()
+  password: Joi.string().required(),
+  role: Joi.string().default(role.default).regex(role.validationRegex),
+  courses: Joi.array().items(Joi.string()).default([])
 });
 
 class AuthError {
@@ -48,10 +69,8 @@ class AuthError {
   }
 }
 
-const COLLECTION_NAME = 'user';
-
 class UserModel extends BaseModel {
-  constructor(db, collectionName = COLLECTION_NAME, schema = userSchema) {
+  constructor(db, collectionName = USER_COLLECTION, schema = userSchema) {
     super(db, collectionName, schema);
   }
 
@@ -85,6 +104,15 @@ class UserModel extends BaseModel {
       .then(cursor => cursor.next());
   }
 
+  getByKey(userKey) {
+    return this.db
+      .query(query.GET_USER_BY_KEY, {
+        '@collection': this.collectionName,
+        userKey
+      })
+      .then(cursor => cursor.next());
+  }
+
   getByEmail(email) {
     return this.db
       .query(query.GET_USER_BY_EMAIL, {
@@ -111,10 +139,29 @@ class UserModel extends BaseModel {
         return passwordsMatch ? user : Promise.reject(new AuthError());
       });
   }
+
+  grantAccessToCourse(userKey, courseKey) {
+    return this.db
+      .query(query.ADD_COURSE_TO_USER, {
+        '@collection': this.collectionName,
+        userKey,
+        courseKey
+      })
+      .then(cursor => cursor.next());
+  }
+
+  revokeAccessToCourse(userKey, courseKey) {
+    return this.db
+      .query(query.REMOVE_COURSE_FROM_USER, {
+        '@collection': this.collectionName,
+        userKey,
+        courseKey
+      })
+      .then(cursor => cursor.next());
+  }
 }
 
 module.exports = {
-  COLLECTION_NAME,
   schema: userSchema,
   Model: UserModel,
   model: new UserModel(db)
