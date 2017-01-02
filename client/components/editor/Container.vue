@@ -14,6 +14,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="editor">
+                <content-container></content-container>
                 <div class="wrapper">
                   <a><span class="fa fa-3x fa-plus"></span></a>
                 </div>
@@ -30,13 +31,15 @@
 import { mapGetters } from 'vuex-module';
 import CourseSidebar from './Sidebar';
 import CubeSpinner from '../loaders/CubeSpinner';
+import ContentContainer from './contentStructure/ContentContainer';
 
 export default {
   name: 'course-edit',
   computed: mapGetters(['activity'], 'editor'),
   components: {
     CourseSidebar,
-    CubeSpinner
+    CubeSpinner,
+    ContentContainer
   }
 };
 </script>
@@ -63,18 +66,19 @@ export default {
       border: 1px solid transparent;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
       min-height: 600px;
+      padding: 30px 40px;
 
       .wrapper {
+        margin-top: 20px;
         border: 1px dashed #000;
-        height: 100px;
-        margin: 60px 90px;
+        height: 50px;
 
         a {
           color: #000;
           cursor: pointer;
           display: block;
           height: 100%;
-          padding-top: 29px;
+          padding-top: 5px;
           width: 100%;
 
           &:hover {
