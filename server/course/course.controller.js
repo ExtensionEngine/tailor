@@ -13,11 +13,16 @@ class CourseController extends BaseController {
   }
 
   listCoursesForUser(req, res, next) {
-    const search = req.user.role === role.ADMIN
-      ? this.model.getMany.bind(this.model)
-      : this.model.getByKeys.bind(this.model, req.user.courses);
+    const courseKeys = req.user.role !== role.ADMIN ? req.user.courses : null;
+    const search = req.query.search && req.query.search.length ? req.query.search : null;
 
-    search()
+    const getCourses = this.model.getFiltered.bind(this.model, courseKeys, search);
+
+    // const search = req.user.role === role.ADMIN
+    //   ? this.model.getMany.bind(this.model)
+    //   : this.model.getByKeys.bind(this.model, req.user.courses);
+
+    getCourses()
       .then(courses => {
         io.setOK(res, courses);
         next();

@@ -49,15 +49,68 @@ class CourseModel extends BaseModel {
     super(db, collectionName, schema);
   }
 
-  getByKeys(courseKeys) {
+  // getByKeys(courseKeys) {
+  //   const query = `
+  //     FOR course IN @@courseCollection
+  //       FILTER course._key IN @courseKeys
+  //       RETURN course`;
+  //   const bindVars = {
+  //     '@courseCollection': this.collectionName,
+  //     courseKeys
+  //   };
+  //
+  //   return this.db
+  //     .query(query, bindVars)
+  //     .then(cursor => cursor.all());
+  // }
+
+  /**
+   * getSearchFilter - Get filter string and bind variables for search filter,
+   * if they are provided. Otherwise return empty values.
+   *
+   * @param  {string} search Search search
+   * @return {array} Array containing filter string and bind variables object
+   */
+  getSearchFilter(search) {
+    const filter = 'FILTER CONTAINS(LOWER(course.name), LOWER(@search))';
+    const bindVars = { search };
+    return search ? [filter, bindVars] : [null, {}];
+  }
+
+  /**
+   * getCourseKeysFilter - Get filter string and bind variables for course keys,
+   * if they are provided. Otherwise return empty values.
+   *
+   * @param  {array} courseKeys Course key array
+   * @return {array} Array containing filter string and bind variables object
+   */
+  getCourseKeysFilter(courseKeys) {
+    const filter = 'FILTER course._key IN @courseKeys';
+    const bindVars = { courseKeys };
+    return courseKeys ? [filter, bindVars] : [null, {}];
+  }
+
+  /**
+   * getFiltered - Filter courses by course keys and search if they are
+   * passed. Otherwise, return all courses.
+   *
+   * @param  {array} courseKeys Course key array
+   * @param  {string} search Search search
+   * @return {function}
+   */
+  getFiltered(courseKeys, search) {
+    const [srFilter, srBindVars] = this.getSearchFilter(search);
+    const [ckFilter, ckBindVars] = this.getCourseKeysFilter(courseKeys);
+
+    const filters = [srFilter, ckFilter].filter(f => f).join(' && ');
+    const bindVars = Object.assign({}, srBindVars, ckBindVars, {
+      '@courseCollection': this.collectionName
+    });
+
     const query = `
       FOR course IN @@courseCollection
-        FILTER course._key IN @courseKeys
-        RETURN course`;
-    const bindVars = {
-      '@courseCollection': this.collectionName,
-      courseKeys
-    };
+        ${filters}
+      RETURN course`;
 
     return this.db
       .query(query, bindVars)
