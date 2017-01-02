@@ -20,7 +20,7 @@ let router = new Router({
       meta: { auth: true }
     },
     {
-      path: '/course/:id',
+      path: '/course/:courseKey',
       name: 'course',
       component: Course,
       meta: { auth: true }

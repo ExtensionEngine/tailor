@@ -23,7 +23,7 @@ export default {
       loader: true
     };
   },
-  computed: mapGetters(['courses'], 'courses'),
+  computed: mapGetters(['courses']),
   methods: mapActions(['fetch'], 'courses'),
   created() {
     this.loader = true;
