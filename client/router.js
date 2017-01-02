@@ -26,8 +26,8 @@ let router = new Router({
       meta: { auth: true }
     },
     {
-      path: '/editor/:activityId',
-      name: 'course-editor',
+      path: '/editor/:activityKey',
+      name: 'editor',
       component: CourseEditor,
       meta: { auth: true }
     },

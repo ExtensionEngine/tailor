@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="activity-wrapper" v-if="!isRoot">
-      <div class="activity" @click="select">
+      <div class="activity" @click="select" @dblclick="edit">
         <span class="order" :style="{ 'background-color': color }">{{ order }}</span>
         <span class="collapsible" :class="collapsibleIcon"></span>
         <span>{{ name }}</span>
@@ -78,6 +78,13 @@ export default {
     select() {
       this.collapsed = !this.collapsed;
       this.focusActivity(this._cid);
+    },
+    edit() {
+      if (this.activity.type !== 'CLO') return;
+      this.$router.push({
+        name: 'editor',
+        params: { activityKey: this._cid }
+      });
     },
     reorder({ newIndex: to, item: { __vue__: { order: from } } }) {
       // 0 based array pos
