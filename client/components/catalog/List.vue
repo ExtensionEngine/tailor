@@ -23,13 +23,24 @@ export default {
       loader: true
     };
   },
-  computed: mapGetters(['courses']),
+  computed: {
+    ...mapGetters(['courses']),
+    ...mapGetters(['search'], 'courses')
+  },
   methods: mapActions(['fetch'], 'courses'),
   created() {
     this.loader = true;
     this.fetch().then(() => {
       this.loader = false;
     });
+  },
+  watch: {
+    search(value, oldValue) {
+      this.loader = true;
+      this.fetch({ search: this.search }).then(() => {
+        this.loader = false;
+      });
+    }
   },
   components: {
     Card,

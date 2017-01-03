@@ -3,27 +3,28 @@
     <input
       class="form-control"
       placeholder="Search..."
+      ref="search"
       @input="search($event)"
     />
   </div>
 </template>
 
 <script>
-// import { mapActions, mapGetters } from 'vuex-module';
-// import { debounce } from 'lodash';
+import { mapActions } from 'vuex-module';
+import { debounce } from 'lodash';
 
 export default {
   name: 'search',
-  // computed: mapGetters({
-  //   filters: 'getFilters'
-  // }),
   methods: {
-    // ...mapActions(['search']),
-    search({ target }) {
-      // const value = target.value;
-      // const search = value.length >= 2 ? value : '';
-      // debounce(this.search, 800)(search);
-    }
+    ...mapActions(['setSearch'], 'courses'),
+    search: debounce(function() {
+      const search = this.$refs.search.value;
+      this.setSearch(search);
+    }, 1000)
+  },
+  beforeDestroy() {
+    // state cleanup
+    this.setSearch('');
   }
 };
 </script>
