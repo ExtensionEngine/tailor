@@ -1,44 +1,48 @@
 <template>
   <div class="auth-container">
-    <div class="auth-header">
-      <img src="../../assets/img/logo.png" alt="Logo"/>
-      <h1>
-        CGMA Authoring
-        <span class="fa fa-paint-brush"></span>
-      </h1>
-    </div>
-    <div class="auth-body">
-      <div class="message">
-        <span v-if="message">{{ message }}</span>
+    <div class="auth-panel">
+      <div class="auth-header">
+        <img src="../../assets/img/logo.png" alt="Logo"/>
+        <h1>
+          CGMA Authoring
+          <span class="fa fa-paint-brush"></span>
+        </h1>
       </div>
-      <form @submit.prevent="submit">
-        <div class="form-group">
-          <input
-            v-model="email"
-            class="form-control"
-            type="email"
-            placeholder="Email"/>
+      <div class="auth-body">
+        <div class="message">
+          <span v-if="message">{{ message }}</span>
         </div>
-        <div class="form-group">
-          <input
-            v-model="password"
-            class="form-control"
-            type="password"
-            placeholder="Password"/>
-        </div>
-        <div class="options">
-          <router-link :to="{ name: 'reset-password' }">
-            Forgot password ?
-          </router-link>
-        </div>
-        <button type="submit" class="btn btn-default btn-block">Login</button>
-      </form>
+        <form @submit.prevent="submit">
+          <div class="form-group">
+            <input
+              v-model="email"
+              class="form-control"
+              type="email"
+              placeholder="Email"/>
+          </div>
+          <div class="form-group">
+            <input
+              v-model="password"
+              class="form-control"
+              type="password"
+              placeholder="Password"/>
+          </div>
+          <div class="options">
+            <router-link :to="{ name: 'reset-password' }">
+              Forgot password ?
+            </router-link>
+          </div>
+          <button type="submit" class="btn btn-default btn-block">Login</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
+
+const INVALID_CREDENTIALS_MESSAGE = 'User email and password do not match';
 
 export default {
   name: 'login',
@@ -55,8 +59,12 @@ export default {
   methods: {
     ...mapActions(['login']),
     submit() {
+      this.message = '';
       this.login({ email: this.email, password: this.password })
-        .then(() => this.$router.push('/'));
+        .then(() => this.$router.push('/'))
+        .catch(() => {
+          this.message = INVALID_CREDENTIALS_MESSAGE;
+        });
     }
   }
 };
@@ -64,8 +72,12 @@ export default {
 
 <style lang="scss">
 .auth-container {
+  padding-top: 5%;
+}
+
+.auth-panel {
   width: 500px;
-  margin: 10% auto;
+  margin: auto;
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);

@@ -18,7 +18,11 @@ const sessionStore = require('./session').store;
 
 const app = express();
 app.disable('x-powered-by');
-app.use(cors());
+
+app.use(cors({
+  origin: config.auth.corsAllowedOrigins,
+  credentials: true
+}));
 app.use(bodyParser.json());
 
 // Initialize Passport and restore authentication state, if any, from the

@@ -1,35 +1,39 @@
 <template>
-  <div class="row courses-list">
-    <cube-spinner v-if="fetchStatus.request"></cube-spinner>
+  <div class="row course-list">
+    <cube-spinner v-if="loader"></cube-spinner>
     <div v-else v-for="course in courses" class="col-lg-4">
       <card
-        :id="course.id"
-        :title="course.title"
-        :description="course.description"
-        :image="course.image">
+        :id="course._cid"
+        :name="course.name"
+        :description="course.description">
       </card>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex-module';
 import Card from './Card';
 import CubeSpinner from '../loaders/CubeSpinner';
 
 export default {
-  name: 'courses-list',
+  name: 'course-list',
+  data() {
+    return {
+      loader: true
+    };
+  },
+  computed: mapGetters(['courses']),
+  methods: mapActions(['fetch'], 'courses'),
+  created() {
+    this.loader = true;
+    this.fetch().then(() => {
+      this.loader = false;
+    });
+  },
   components: {
     Card,
     CubeSpinner
-  },
-  created() {
-    this.fetchCourses();
-  },
-  computed: mapGetters({
-    courses: 'getCourses',
-    fetchStatus: 'getCoursesFetchStatus'
-  }),
-  methods: mapActions(['fetchCourses'])
+  }
 };
 </script>

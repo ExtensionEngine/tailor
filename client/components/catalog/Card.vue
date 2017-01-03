@@ -1,22 +1,19 @@
 <template>
-  <div class="courses-card">
-    <div class="header">
-      <img :src="placeholder" alt="Responsive image"  />
-    </div>
+  <div class="course-card">
     <div class="body">
       <div class="title">
-        <router-link :to="{ name: 'course', params: { id }}">
-          {{ title }}
+        <router-link :to="{ name: 'course', params: { courseKey: id }}">
+          {{ name }}
         </router-link>
       </div>
-      <div class="content">{{ preview }}</div>
+      <div class="description">{{ shortDescription }}</div>
     </div>
     <div class="footer">
       <div class="row">
         <span class="col-xs-4">stats #1</span>
         <span class="col-xs-4">stats #2</span>
         <span class="col-xs-4">stats #3</span>
-      </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -26,12 +23,9 @@ import truncate from 'truncate';
 
 export default {
   name: 'course-card',
-  props: ['id', 'title', 'description', 'image'],
+  props: ['id', 'name', 'description'],
   computed: {
-    placeholder() {
-      return require(`../../assets/img/${this.image}`);
-    },
-    preview() {
+    shortDescription() {
       return truncate(this.description, 180);
     }
   }
@@ -39,7 +33,7 @@ export default {
 </script>
 
 <style lang="scss">
-.courses-card {
+.course-card {
   min-height: 300px;
   margin-top: 30px;
   padding: 30px;
@@ -50,16 +44,6 @@ export default {
 
   &:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.54);
-  }
-
-  .header {
-    max-height: 180px;
-    overflow: hidden;
-
-    img {
-      max-width: 100%;
-      max-height: 100%;
-    }
   }
 
   .body {
@@ -78,7 +62,7 @@ export default {
     }
   }
 
-  .content {
+  .description {
     max-height: 120px;
     padding-bottom: 10px;
     font-size: 15px;
