@@ -1,6 +1,7 @@
 'use strict';
 
 const Joi = require('joi');
+const get = require('lodash/get');
 
 class BaseModel {
   constructor(db, collectionName, schema = Joi.any()) {
@@ -10,6 +11,7 @@ class BaseModel {
     this.collection = db.collection(collectionName);
 
     this.validate = this.validate.bind(this);
+    this.validatePartial = this.validatePartial.bind(this);
     this.markAsCreated = this.markAsCreated.bind(this);
     this.markAsModified = this.markAsModified.bind(this);
     this.create = this.create.bind(this);
@@ -23,6 +25,19 @@ class BaseModel {
   validate(document) {
     return new Promise((resolve, reject) => {
       Joi.validate(document, this.schema, (err, value) => {
+        return err ? reject(err) : resolve(value);
+      });
+    });
+  }
+
+  validatePartial(partialDocument, atLeastOneKeyRequired = true) {
+    const allKeys = get(this.schema, '_inner.children', []).map(c => c.key);
+    const partialSchema = this.schema
+      .optionalKeys(allKeys)
+      .min(atLeastOneKeyRequired ? 1 : 0);
+
+    return new Promise((resolve, reject) => {
+      Joi.validate(partialDocument, partialSchema, (err, value) => {
         return err ? reject(err) : resolve(value);
       });
     });
@@ -56,14 +71,15 @@ class BaseModel {
     return this.collection.document({ _key: key });
   }
 
-  // This method allows inserting arbitrary documents. TODO(matej): fix this
-  // by validating with Joi or removing all keys not present in the schema.
   updateByKey(key, partialDocument) {
-    delete partialDocument.createdAt;
-    delete partialDocument.modifiedAt;
-    const doc = this.markAsModified(partialDocument);
-    return this.collection
-      .update({ _key: key }, doc, { returnNew: true })
+    return this
+      .validatePartial(partialDocument)
+      .then(this.markAsModified)
+      .then(validDocument => this.collection.update(
+        { _key: key },
+        validDocument,
+        { returnNew: true }
+      ))
       .then(result => result.new);
   }
 
