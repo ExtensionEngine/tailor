@@ -53,8 +53,15 @@ function insert({ newActivity, activityCollection }) {
       FILTER activity.courseKey == @newActivity.courseKey AND
              activity.parentKey == @newActivity.parentKey AND
              activity.position >= @newActivity.position
-      UPDATE activity WITH { position: activity.position + 1 } IN @@collection`;
-  db._query(updateExisting, bindVars);
+      UPDATE activity WITH {
+        position: activity.position + 1,
+        updatedAt: @updatedAt
+      } IN @@collection`;
+  db._query(updateExisting, {
+    newActivity,
+    updatedAt: new Date().toISOString(),
+    '@collection': activityCollection
+  });
   return db._query(saveNew, bindVars).next();
 }
 
