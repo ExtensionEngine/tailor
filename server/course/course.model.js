@@ -49,21 +49,6 @@ class CourseModel extends BaseModel {
     super(db, collectionName, schema);
   }
 
-  // getByKeys(courseKeys) {
-  //   const query = `
-  //     FOR course IN @@courseCollection
-  //       FILTER course._key IN @courseKeys
-  //       RETURN course`;
-  //   const bindVars = {
-  //     '@courseCollection': this.collectionName,
-  //     courseKeys
-  //   };
-  //
-  //   return this.db
-  //     .query(query, bindVars)
-  //     .then(cursor => cursor.all());
-  // }
-
   /**
    * getSearchFilter - Get filter string and bind variables for search filter,
    * if they are provided. Otherwise return empty values.
@@ -71,10 +56,10 @@ class CourseModel extends BaseModel {
    * @param  {string} search Search search
    * @return {array} Array containing filter string and bind variables object
    */
-  getSearchFilter(search) {
-    const filter = 'FILTER CONTAINS(LOWER(course.name), LOWER(@search))';
-    const bindVars = { search };
-    return search ? [filter, bindVars] : [null, {}];
+  static getCourseNameFilter(courseName) {
+    const filter = 'FILTER CONTAINS(LOWER(course.name), LOWER(@courseName))';
+    const bindVars = { courseName };
+    return courseName ? [filter, bindVars] : [null, {}];
   }
 
   /**
@@ -84,7 +69,7 @@ class CourseModel extends BaseModel {
    * @param  {array} courseKeys Course key array
    * @return {array} Array containing filter string and bind variables object
    */
-  getCourseKeysFilter(courseKeys) {
+  static getCourseKeysFilter(courseKeys) {
     const filter = 'FILTER course._key IN @courseKeys';
     const bindVars = { courseKeys };
     return courseKeys ? [filter, bindVars] : [null, {}];
@@ -95,12 +80,12 @@ class CourseModel extends BaseModel {
    * passed. Otherwise, return all courses.
    *
    * @param  {array} courseKeys Course key array
-   * @param  {string} search Search search
-   * @return {function}
+   * @param  {string} courseName Course name to search by
+   * @return {Promise<array>} Array of courses
    */
-  getFiltered(courseKeys, search) {
-    const [srFilter, srBindVars] = this.getSearchFilter(search);
-    const [ckFilter, ckBindVars] = this.getCourseKeysFilter(courseKeys);
+  getFiltered(filter) {
+    const [srFilter, srBindVars] = CourseModel.getCourseNameFilter(filter.courseName);
+    const [ckFilter, ckBindVars] = CourseModel.getCourseKeysFilter(filter.courseKeys);
 
     const filters = [srFilter, ckFilter].filter(f => f).join(' && ');
     const bindVars = Object.assign({}, srBindVars, ckBindVars, {

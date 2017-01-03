@@ -37,7 +37,7 @@ export default {
   watch: {
     search(value, oldValue) {
       this.loader = true;
-      this.fetch({ search: this.search }).then(() => {
+      this.fetch({ name: this.search }).then(() => {
         this.loader = false;
       });
     }
