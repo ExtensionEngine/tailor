@@ -13,7 +13,7 @@ class BaseModel {
     this.validate = this.validate.bind(this);
     this.validatePartial = this.validatePartial.bind(this);
     this.markAsCreated = this.markAsCreated.bind(this);
-    this.markAsModified = this.markAsModified.bind(this);
+    this.markAsUpdated = this.markAsUpdated.bind(this);
     this.create = this.create.bind(this);
     this.getByKey = this.getByKey.bind(this);
     this.updateByKey = this.updateByKey.bind(this);
@@ -46,12 +46,12 @@ class BaseModel {
   markAsCreated(document) {
     const now = new Date().toISOString();
     document.createdAt = now;
-    document.modifiedAt = now;
+    document.updatedAt = now;
     return document;
   }
 
-  markAsModified(document) {
-    document.modifiedAt = new Date().toISOString();
+  markAsUpdated(document) {
+    document.updatedAt = new Date().toISOString();
     return document;
   }
 
@@ -74,7 +74,7 @@ class BaseModel {
   updateByKey(key, partialDocument) {
     return this
       .validatePartial(partialDocument)
-      .then(this.markAsModified)
+      .then(this.markAsUpdated)
       .then(validDocument => this.collection.update(
         { _key: key },
         validDocument,
@@ -86,7 +86,7 @@ class BaseModel {
   replaceByKey(key, newDocument) {
     return this
       .validate(newDocument)
-      .then(this.markAsModified)
+      .then(this.markAsUpdated)
       .then(validDocument => this.collection.update(
         { _key: key },
         validDocument,
