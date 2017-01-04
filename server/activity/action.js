@@ -59,7 +59,7 @@ function insert({ newActivity, activityCollection }) {
       } IN @@collection`;
   db._query(updateExisting, {
     newActivity,
-    updatedAt: new Date().toISOString(),
+    updatedAt: Date.now(),
     '@collection': activityCollection
   });
   return db._query(saveNew, bindVars).next();
@@ -129,7 +129,7 @@ function reorder({ courseKey, activityKey, requestedPosition, activityCollection
   // increment or decrement each position
   const step = isMovingToLargerPos ? -1 : 1;
   // refresh the timestamp
-  const updatedAt = new Date().toISOString();
+  const updatedAt = Date.now();
 
   const updateAffected = `
     FOR act IN @@collection
@@ -243,7 +243,7 @@ function remove({ courseKey, activityKey, activityCollection }) {
   db._query(compactSiblings, {
     courseKey,
     activity,
-    updatedAt: new Date().toISOString(),
+    updatedAt: Date.now(),
     '@collection': activityCollection
   });
 

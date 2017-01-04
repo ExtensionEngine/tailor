@@ -44,14 +44,14 @@ class BaseModel {
   }
 
   markAsCreated(document) {
-    const now = new Date().toISOString();
+    const now = Date.now();
     document.createdAt = now;
     document.updatedAt = now;
     return document;
   }
 
   markAsUpdated(document) {
-    document.updatedAt = new Date().toISOString();
+    document.updatedAt = Date.now();
     return document;
   }
 
