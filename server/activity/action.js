@@ -53,8 +53,15 @@ function insert({ newActivity, activityCollection }) {
       FILTER activity.courseKey == @newActivity.courseKey AND
              activity.parentKey == @newActivity.parentKey AND
              activity.position >= @newActivity.position
-      UPDATE activity WITH { position: activity.position + 1 } IN @@collection`;
-  db._query(updateExisting, bindVars);
+      UPDATE activity WITH {
+        position: activity.position + 1,
+        updatedAt: @updatedAt
+      } IN @@collection`;
+  db._query(updateExisting, {
+    newActivity,
+    updatedAt: Date.now(),
+    '@collection': activityCollection
+  });
   return db._query(saveNew, bindVars).next();
 }
 
@@ -121,6 +128,8 @@ function reorder({ courseKey, activityKey, requestedPosition, activityCollection
   const to = isMovingToLargerPos ? newPosition : activity.position - 1;
   // increment or decrement each position
   const step = isMovingToLargerPos ? -1 : 1;
+  // refresh the timestamp
+  const updatedAt = Date.now();
 
   const updateAffected = `
     FOR act IN @@collection
@@ -128,23 +137,31 @@ function reorder({ courseKey, activityKey, requestedPosition, activityCollection
              act.parentKey == @activity.parentKey AND
              act.position >= @from AND
              act.position <= @to
-      UPDATE act WITH { position: act.position + @step } IN @@collection`;
+      UPDATE act WITH {
+        position: act.position + @step,
+        updatedAt: @updatedAt
+      } IN @@collection`;
   db._query(updateAffected, {
     from,
     to,
     step,
     activity,
+    updatedAt,
     '@collection': activityCollection
   });
 
   const moveToNewPos = `
     FOR act IN @@collection
       FILTER act._key == @activityKey
-      UPDATE act WITH { position: @newPosition } IN @@collection
+      UPDATE act WITH {
+        position: @newPosition,
+        updatedAt: @updatedAt
+      } IN @@collection
       RETURN NEW`;
   return db._query(moveToNewPos, {
     activityKey,
     newPosition,
+    updatedAt,
     '@collection': activityCollection
   }).next();
 }
@@ -219,10 +236,14 @@ function remove({ courseKey, activityKey, activityCollection }) {
       FILTER act.courseKey == @courseKey AND
              act.parentKey == @activity.parentKey AND
              act.position > @activity.position
-      UPDATE act WITH { position: act.position - 1 } IN @@collection`;
+      UPDATE act WITH {
+        position: act.position - 1,
+        updatedAt: @updatedAt
+      } IN @@collection`;
   db._query(compactSiblings, {
     courseKey,
     activity,
+    updatedAt: Date.now(),
     '@collection': activityCollection
   });
 
