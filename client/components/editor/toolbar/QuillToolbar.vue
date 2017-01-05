@@ -1,5 +1,7 @@
 <template>
-  <div id="quillToolbar" class="quill-toolbar">
+  <div
+    id="quillToolbar"
+    class="quill-toolbar">
     <select class="ql-font"></select>
     <select class="ql-header"></select>
     <button class="ql-bold"></button>
