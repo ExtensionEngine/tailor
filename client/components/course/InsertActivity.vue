@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import cuid from 'cuid';
 import { focus } from 'vue-focus';
 import { mapActions } from 'vuex-module';
 
@@ -56,22 +55,19 @@ export default {
       this.inputShown = false;
     },
     add() {
-      let subLevel = this.activityLevel === 2;
-      let order = subLevel ? 1 : this.parent.order + 1;
-      let parent = subLevel ? this.parent._cid : this.parent.parentKey;
+      const isOnSameLevel = this.activityLevel === 1;
+      const position = isOnSameLevel ? this.parent.position + 1 : 0;
+      const parentKey = isOnSameLevel ? this.parent.parentKey : this.parent._key;
 
-      this.create({
-        _cid: cuid(),
-        _key: cuid(),
+      const model = {
         name: this.activityName,
-        order: order,
-        parentKey: parent,
-        unsynced: true
-      });
-
+        position,
+        parentKey
+      };
+      this.save(model).then(() => this.fetch());
       this.hide();
     },
-    ...mapActions(['create'], 'activities')
+    ...mapActions(['save', 'fetch'], 'activity')
   }
 };
 </script>

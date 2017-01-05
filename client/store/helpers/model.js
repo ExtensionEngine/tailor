@@ -27,11 +27,9 @@ export default function (collectionName, url) {
   });
 
   action(function save(model) {
-    // set client id
     if (!model._cid) model._cid = cuid();
-    // set metadata
     model._synced = false;
-    model._version = new Date().getTime();
+    model._version = Date.now();
 
     // create or update model locally
     this.commit('save', model);
@@ -41,7 +39,7 @@ export default function (collectionName, url) {
         // check if new change happened locally during api call
         // do not update meta if there is newer change
         const previous = this.context.state.items[model._cid];
-        if (previous._version === model._version) model._synced = true;
+        if (previous && previous._version === model._version) model._synced = true;
         this.commit('save', model);
       });
   });
