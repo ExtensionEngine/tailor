@@ -1,6 +1,7 @@
 import assign from 'lodash/assign';
 import axios from './request';
 import cuid from 'cuid';
+import join from 'url-join';
 import omit from 'lodash/omit';
 import Queue from 'promise-queue';
 
@@ -14,8 +15,8 @@ export default class Resource {
     this.mappings = {};
   }
 
-  url(path) {
-    return `${this.baseUrl}/${path}`;
+  url(path = '') {
+    return join(this.baseUrl, path);
   }
 
   /**
