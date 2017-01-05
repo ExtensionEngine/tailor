@@ -2,7 +2,7 @@
   <div class="catalog">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <search :search="search"></search>
+        <search v-on:query="search"></search>
       </div>
       <div class="col-md-3">
         <div class="create">

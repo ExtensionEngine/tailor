@@ -4,14 +4,12 @@
       <input
         class="form-control"
         placeholder="Search..."
-        v-model="input"
-      />
-      <span v-if="input" class="input-group-btn">
+        v-model="query"/>
+      <span v-if="query" class="input-group-btn">
         <button
           type="button"
           class="btn input-action"
-          @click="searchReset"
-        >
+          @click="clearSearch">
           <span class="fa fa-lg fa-times" aria-hidden="true"></span>
         </button>
       </span>
@@ -25,29 +23,23 @@ import { debounce } from 'lodash';
 
 export default {
   name: 'search',
-  props: {
-    search: {
-      type: Function,
-      required: true
-    }
-  },
   data() {
     return {
-      input: ''
+      query: ''
     };
   },
   computed: {
     inputClass() {
-      return this.input.length ? 'input-group' : 'form-group';
+      return this.query.length ? 'input-group' : 'form-group';
     }
   },
   methods: {
     ...mapMutations(['setSearch'], 'courses'),
-    searchReset() {
-      this.input = '';
+    clearSearch() {
+      this.query = '';
 
       this.setSearch('');
-      this.search('');
+      this.$emit('query', this.query);
     }
   },
   beforeDestroy() {
@@ -55,9 +47,9 @@ export default {
     this.setSearch('');
   },
   watch: {
-    input: debounce(function() {
-      this.setSearch(this.input);
-      this.search(this.input);
+    query: debounce(function search() {
+      this.setSearch(this.query);
+      this.$emit('query', this.query);
     }, 1000)
   }
 };

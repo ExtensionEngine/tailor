@@ -2,7 +2,6 @@ import VuexModel from '../helpers/model.js';
 const { state, getter, mutation, build } = new VuexModel('courses', '/courses');
 
 state({
-  ...state,
   search: ''
 });
 
