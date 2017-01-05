@@ -14,7 +14,7 @@ export default {
 .content-row {
   margin-top: 10px;
   padding: 5px;
-  border: 1px dashed #aaa;
+  border: 1px dashed #bbb;
   cursor: pointer;
 }
 </style>

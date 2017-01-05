@@ -4,7 +4,7 @@
       v-if="input"
       v-model="content"
       :config="config"
-      @blur="input = false">
+      @blur="onEditorBlur">
     </quill-editor>
     <div
       v-else
@@ -26,6 +26,11 @@ export default {
       content: '',
       config: { modules: { toolbar: '#quillToolbar' } }
     };
+  },
+  methods: {
+    onEditorBlur(editor) {
+      this.input = false;
+    }
   },
   components: { quillEditor }
 };

@@ -1,11 +1,10 @@
 <template>
-  <div class="asset-container">
-  </div>
+  <div class="asset"></div>
 </template>
 
 <script>
 export default {
-  name: 'asset-container'
+  name: 'asset'
 };
 </script>
 

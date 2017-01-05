@@ -52,3 +52,19 @@ export default {
   name: 'quill-toolbar'
 };
 </script>
+
+<style lang="scss">
+.quill-toolbar {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  height: 45px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
+}
+
+.quill-toolbar.ql-toolbar {
+  display: block;
+}
+</style>
