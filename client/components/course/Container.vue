@@ -37,10 +37,14 @@
 <script>
 import Outline from './Outline.vue';
 import Sidebar from './Sidebar.vue';
-import { mapGetters } from 'vuex-module';
+import { mapGetters, mapActions } from 'vuex-module';
 
 export default {
   computed: mapGetters(['activities']),
+  methods: mapActions(['fetch'], 'activity'),
+  created() {
+    this.fetch().then();
+  },
   components: {
     Outline,
     Sidebar
