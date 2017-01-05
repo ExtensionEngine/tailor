@@ -2,7 +2,7 @@
   <div class="catalog">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <search></search>
+        <search :search="search"></search>
       </div>
       <div class="col-md-3">
         <div class="create">
@@ -12,19 +12,43 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <course-list></course-list>
+        <course-list :courses="courses" :loader="loader"></course-list>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex-module';
 import CourseList from './List';
 import CreateCourse from './Create';
 import Search from './Search';
 
 export default {
   name: 'catalog',
+  data() {
+    return {
+      loader: true
+    };
+  },
+  computed: {
+    ...mapGetters(['courses'])
+  },
+  methods: {
+    ...mapActions(['fetch'], 'courses'),
+    search(name) {
+      this.loader = true;
+      this.fetch({ name }).then(() => {
+        this.loader = false;
+      });
+    }
+  },
+  created() {
+    this.loader = true;
+    this.fetch().then(() => {
+      this.loader = false;
+    });
+  },
   components: {
     CreateCourse,
     CourseList,

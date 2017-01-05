@@ -1,30 +1,64 @@
 <template>
   <div class="course-search">
-    <input
-      class="form-control"
-      placeholder="Search..."
-      ref="search"
-      @input="search($event)"
-    />
+    <div :class="inputClass">
+      <input
+        class="form-control"
+        placeholder="Search..."
+        v-model="input"
+      />
+      <span v-if="input" class="input-group-btn">
+        <button
+          type="button"
+          class="btn input-action"
+          @click="searchReset"
+        >
+          <span class="fa fa-lg fa-times" aria-hidden="true"></span>
+        </button>
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
+import { mapMutations } from 'vuex-module';
 import { debounce } from 'lodash';
 
 export default {
   name: 'search',
+  props: {
+    search: {
+      type: Function,
+      required: true
+    }
+  },
+  data() {
+    return {
+      input: ''
+    };
+  },
+  computed: {
+    inputClass() {
+      return this.input.length ? 'input-group' : 'form-group';
+    }
+  },
   methods: {
-    ...mapActions(['setSearch'], 'courses'),
-    search: debounce(function() {
-      const search = this.$refs.search.value;
-      this.setSearch(search);
-    }, 1000)
+    ...mapMutations(['setSearch'], 'courses'),
+    searchReset() {
+      this.input = '';
+
+      this.setSearch('');
+      this.search('');
+    }
   },
   beforeDestroy() {
     // state cleanup
     this.setSearch('');
+  },
+  watch: {
+    input: debounce(function() {
+      this.setSearch(this.input);
+      this.search(this.input);
+    }, 1000)
   }
 };
 </script>
@@ -44,6 +78,27 @@ export default {
 
     &:focus {
       box-shadow: none;
+    }
+  }
+
+  .input-group-btn {
+    background-color: #fff;
+  }
+
+  .input-action {
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    height: 44px;
+
+    &:hover {
+      background-color: #fff;
+    }
+
+    &:active {
+      border-color: transparent;
+      outline: 0;
     }
   }
 }

@@ -12,34 +12,19 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
 import Card from './Card';
 import CubeSpinner from '../loaders/CubeSpinner';
 
 export default {
   name: 'course-list',
-  data() {
-    return {
-      loader: true
-    };
-  },
-  computed: {
-    ...mapGetters(['courses']),
-    ...mapGetters(['search'], 'courses')
-  },
-  methods: mapActions(['fetch'], 'courses'),
-  created() {
-    this.loader = true;
-    this.fetch().then(() => {
-      this.loader = false;
-    });
-  },
-  watch: {
-    search(value, oldValue) {
-      this.loader = true;
-      this.fetch({ name: this.search }).then(() => {
-        this.loader = false;
-      });
+  props: {
+    courses: {
+      type: Object,
+      required: true
+    },
+    loader: {
+      type: Boolean,
+      required: true
     }
   },
   components: {
