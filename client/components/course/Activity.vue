@@ -2,7 +2,7 @@
   <div>
     <div class="activity-wrapper" v-if="!isRoot">
       <div class="activity" @click="select" @dblclick="edit">
-        <span class="order" :style="{ 'background-color': color }">{{ order }}</span>
+        <span class="order" :style="{ 'background-color': color }">{{ position }}</span>
         <span class="collapsible" :class="collapsibleIcon"></span>
         <span>{{ name }}</span>
         <span class="pull-right">
@@ -15,10 +15,10 @@
       <draggable @update="reorder">
         <activity
           v-for="it in children"
-          :key="it._cid"
+          :_key="it._key"
           :_cid="it._cid"
           :name="it.name"
-          :order="it.order"
+          :position="it.position"
           :level="level + 1"
           :class="{ 'sub-activity': name }"
           :activities="activities"
@@ -30,16 +30,16 @@
 </template>
 
 <script>
+import { mapActions, mapMutations } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import InsertActivity from './InsertActivity';
-import { mapActions, mapMutations } from 'vuex-module';
 import values from 'lodash/values';
 
 const COLORS = ['#29B6F6', '#8BC34A', '#EF5350'];
 
 export default {
   name: 'activity',
-  props: ['_cid', 'name', 'order', 'level', 'activities', 'activity'],
+  props: ['_cid', '_key', 'name', 'position', 'level', 'activities', 'activity'],
   data() {
     return {
       collapsed: this.level !== 0
@@ -60,10 +60,12 @@ export default {
       return this.children.length > 0;
     },
     children() {
-      let activities = values(this.activities);
-      return activities
-        .filter(it => it.parentKey === this._cid)
-        .sort((a, b) => a.order - b.order);
+      const filterByParent = this.isRoot
+        ? act => act.parentKey === null
+        : act => act.parentKey === this._key;
+      return values(this.activities)
+        .filter(filterByParent)
+        .sort((a, b) => a.position - b.position);
     },
     collapsibleIcon() {
       return {
