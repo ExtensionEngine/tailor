@@ -11,7 +11,7 @@
       </div>
       <insert-activity :parent="activity"></insert-activity>
     </div>
-    <transition name="fade" v-if="!collapsed">
+    <transition name="fade" v-if="!isCollapsed">
       <draggable @update="reorder">
         <activity
           v-for="it in children"
@@ -42,12 +42,12 @@ export default {
   props: ['_cid', '_key', 'name', 'position', 'level', 'activities', 'activity'],
   data() {
     return {
-      collapsed: this.level !== 0
+      isCollapsed: this.level !== 0
     };
   },
   computed: {
     showBadge() {
-      return this.hasChildren && this.collapsed;
+      return this.hasChildren && this.isCollapsed;
     },
     isRoot() {
       return this.level === 0;
@@ -69,8 +69,8 @@ export default {
     },
     collapsibleIcon() {
       return {
-        'fa fa-caret-right': this.collapsed && this.hasChildren,
-        'fa fa-caret-down': !this.collapsed && this.hasChildren
+        'fa fa-caret-right': this.isCollapsed && this.hasChildren,
+        'fa fa-caret-down': !this.isCollapsed && this.hasChildren
       };
     }
   },
@@ -78,7 +78,7 @@ export default {
     ...mapMutations(['focusActivity'], 'editor'),
     ...mapActions({ reorderActivities: 'reorder' }, 'activities'),
     select() {
-      this.collapsed = !this.collapsed;
+      this.isCollapsed = !this.isCollapsed;
       this.focusActivity(this._cid);
     },
     edit() {
