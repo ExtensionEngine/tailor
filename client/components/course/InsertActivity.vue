@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div class="divider-wrapper" v-if="!inputShown" @click="show">
+    <div class="divider-wrapper" v-if="!isInputVisible" @click="show">
       <div class="divider">
         <div class="action"><span class="fa fa-plus"></span></div>
       </div>
     </div>
-    <div class="activity-input" v-if="inputShown">
+    <div class="activity-input" v-if="isInputVisible">
       <div class="row">
         <div class="col-lg-8">
           <input
             v-model="activityName"
-            v-focus="inputFocused"
+            v-focus="isInputFocused"
             type="text"
             class="form-control"
             placeholder="Activity name">
@@ -42,8 +42,8 @@ export default {
   props: ['parent', 'level'],
   data() {
     return {
-      inputShown: false,
-      inputFocused: true,
+      isInputVisible: false,
+      isInputFocused: true,
       activityName: '',
       newActivityLevel: 0
     };
@@ -55,12 +55,12 @@ export default {
   },
   methods: {
     show() {
-      this.inputShown = true;
-      this.inputFocused = true;
+      this.isInputVisible = true;
+      this.isInputFocused = true;
     },
     hide() {
       this.activityName = '';
-      this.inputShown = false;
+      this.isInputVisible = false;
     },
     add() {
       const isOnSameLevel = this.newActivityLevel === 0;
