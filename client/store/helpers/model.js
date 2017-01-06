@@ -44,6 +44,9 @@ export default function (collectionName, url) {
       });
   });
 
+  action(function remove(model) {
+  });
+
   // TODO: Do the proper syncing
   mutation(function fetch(result) {
     this.state.items = result;

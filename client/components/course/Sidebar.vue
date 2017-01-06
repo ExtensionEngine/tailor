@@ -1,14 +1,25 @@
 <template>
   <div class="course-sidebar">
-    <h3 class="title">{{ activity.name }}</h3>
+    <div class="title-bar" v-if="isActivitySelected">
+      <h3 class="title">{{ activity.name }}</h3>
+      <button class="btn btn-default" @click.stop="remove">X</button>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
-  computed: mapGetters(['activity'], 'editor')
+  computed: {
+    isActivitySelected() {
+      return Boolean(this.activity.name);
+    },
+    ...mapGetters(['activity'], 'editor')
+  },
+  methods: {
+    ...mapActions(['remove'], 'activity')
+  }
 };
 </script>
 
@@ -23,6 +34,8 @@ export default {
   background-color: #fcfcfc;
 
   .title {
+    display: inline-block;
+    width: 90%;
     text-align: left;
     font-size: 18px;
   }
