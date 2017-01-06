@@ -1,9 +1,11 @@
 import assign from 'lodash/assign';
-import axios from './request';
 import cuid from 'cuid';
+import isArray from 'lodash/isArray';
 import join from 'url-join';
 import omit from 'lodash/omit';
 import Queue from 'promise-queue';
+
+import axios from './request';
 
 // used to serialize api calls that modify data
 const queue = new Queue(1, Infinity);
@@ -66,6 +68,16 @@ export default class Resource {
     this.mappings[_key] = _cid;
   }
 
+  /*
+   * Remove both client and server ids for given model.
+   * @param {object} model
+   */
+  unmap(model) {
+    const cid = this.mappings[model._key];
+    if (cid) delete this.mappings[cid];
+    delete this.mappings[model._key];
+  }
+
   /**
    * Returns copy of model without client metadata.
    * @param {object} model
@@ -88,6 +100,27 @@ export default class Resource {
     }).then(response => {
       if (!model._key) this.map(model._cid, response.data.data._key);
       return assign(model, response.data.data);
+    });
+  }
+
+  /**
+   * Remove the model.
+   * @param {object} model
+   */
+  remove(model) {
+    return this.delete(model._key).then(response => {
+      let result = {};
+      const data = response.data.data;
+      if (isArray(data)) {
+        data.forEach(it => {
+          result[this.mappings[it._key]] = it;
+          this.unmap(it);
+        });
+      } else {
+        result[this.mappings[data._key]] = data;
+        this.unmap(data);
+      }
+      return result;
     });
   }
 

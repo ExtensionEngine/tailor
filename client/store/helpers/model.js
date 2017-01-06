@@ -1,7 +1,8 @@
 import cuid from 'cuid';
-import Resource from '../../api/resource';
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
+
+import Resource from '../../api/resource';
 
 export default function (collectionName, url) {
   let module = new VuexModule(collectionName);
@@ -45,6 +46,8 @@ export default function (collectionName, url) {
   });
 
   action(function remove(model) {
+    return this.api.remove(model)
+      .then(removed => this.commit('remove', removed));
   });
 
   // TODO: Do the proper syncing
@@ -63,6 +66,10 @@ export default function (collectionName, url) {
 
   mutation(function save(model) {
     Vue.set(this.state.items, model._cid, model);
+  });
+
+  mutation(function remove(result) {
+    Object.keys(result).forEach(cid => Vue.delete(this.state.items, cid));
   });
 
   return module;
