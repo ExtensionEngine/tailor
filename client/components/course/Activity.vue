@@ -2,7 +2,9 @@
   <div>
     <div class="activity-wrapper" v-if="!isRoot">
       <div class="activity" @click="select" @dblclick="edit">
-        <span class="order" :style="{ 'background-color': color }">{{ position }}</span>
+        <span class="order" :style="{ 'background-color': color }">
+          {{ position + 1 }}
+        </span>
         <span class="collapsible" :class="collapsibleIcon"></span>
         <span>{{ name }}</span>
         <span class="pull-right">
