@@ -16,9 +16,12 @@
             placeholder="Activity name">
         </div>
         <div class="col-lg-2">
-          <select class="form-control" v-model.number="activityLevel">
-            <option value="1">Section</option>
-            <option value="2">Subsection</option>
+          <select
+            v-if="canCreateSubsection"
+            v-model.number="newActivityLevel"
+            class="form-control">
+              <option value="0">Section</option>
+              <option value="1">Subsection</option>
           </select>
         </div>
         <div class="col-lg-2">
@@ -36,14 +39,19 @@ import { mapActions } from 'vuex-module';
 
 export default {
   directives: { focus },
-  props: ['parent'],
+  props: ['parent', 'level'],
   data() {
     return {
       inputShown: false,
       inputFocused: true,
       activityName: '',
-      activityLevel: 1
+      newActivityLevel: 0
     };
+  },
+  computed: {
+    canCreateSubsection() {
+      return this.level < 2;
+    }
   },
   methods: {
     show() {
@@ -55,7 +63,7 @@ export default {
       this.inputShown = false;
     },
     add() {
-      const isOnSameLevel = this.activityLevel === 1;
+      const isOnSameLevel = this.newActivityLevel === 0;
       const position = isOnSameLevel ? this.parent.position + 1 : 0;
       const parentKey = isOnSameLevel ? this.parent.parentKey : this.parent._key;
 
