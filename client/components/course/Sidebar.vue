@@ -1,8 +1,8 @@
 <template>
   <div class="course-sidebar">
-    <div class="title-bar" v-if="isActivitySelected">
+    <div class="title-bar" v-show="isActivitySelected">
       <h3 class="title">{{ activity.name }}</h3>
-      <button class="btn btn-default" @click.stop="remove">X</button>
+      <button class="btn btn-default" @click.stop="removeSelectedActivity">X</button>
     </div>
   </div>
 </template>
@@ -18,7 +18,10 @@ export default {
     ...mapGetters(['activity'], 'editor')
   },
   methods: {
-    ...mapActions(['remove'], 'activity')
+    removeSelectedActivity() {
+      this.remove(this.activity).then(() => this.reset());
+    },
+    ...mapActions(['remove', 'reset'], 'activity')
   }
 };
 </script>
