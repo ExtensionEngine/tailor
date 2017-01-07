@@ -55,6 +55,11 @@ export default function (collectionName, url) {
     this.state.items = result;
   });
 
+  mutation(function add(model) {
+    if (!model._cid) model._cid = cuid();
+    Vue.set(this.state.items, model._cid, model);
+  });
+
   mutation(function save(model) {
     Vue.set(this.state.items, model._cid, model);
   });
