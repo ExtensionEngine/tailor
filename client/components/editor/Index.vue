@@ -3,7 +3,7 @@
     <toolbar></toolbar>
     <div class="container">
       <h2>{{ activity.name }}</h2>
-      <content-container></content-container>
+      <perspectives></perspectives>
     </div>
   </div>
 </template>
@@ -11,19 +11,19 @@
 <script>
 import { mapGetters } from 'vuex-module';
 import Toolbar from './toolbar';
-import ContentContainer from './structure/ContentContainer';
+import Perspectives from './structure/Perspectives';
 
 export default {
   name: 'editor',
   computed: mapGetters(['activity'], 'editor'),
   methods: {
     clicked(e) {
-      // TODO: Implement asset editor focusout handling
+      // TODO: Implement asset toolbar focusout handling
     }
   },
   components: {
     Toolbar,
-    ContentContainer
+    Perspectives
   }
 };
 </script>
