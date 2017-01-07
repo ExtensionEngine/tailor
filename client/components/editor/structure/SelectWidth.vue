@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="select-width">
     <div
       class="content-width"
       v-for="width in widths"
@@ -22,3 +22,30 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.select-width {
+  display: inline-block;
+}
+
+.content-width {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 20px;
+
+  &:hover {
+    color: #42b983;
+    cursor: pointer;
+  }
+
+  span {
+    display: block;
+    font-size: 16px;
+  }
+
+  .fa {
+    padding-bottom: 7px;
+    font-size: 26px;
+  }
+}
+</style>
