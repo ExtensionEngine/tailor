@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="select-asset">
     <div
       v-for="asset in assets"
       @click="$emit('selected', asset.type)"
@@ -24,3 +24,30 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.select-asset {
+  display: inline-block;
+}
+
+.content-type {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 20px;
+
+  &:hover {
+    color: #42b983;
+    cursor: pointer;
+  }
+
+  span {
+    display: block;
+    font-size: 16px;
+  }
+
+  .fa {
+    padding-bottom: 7px;
+    font-size: 26px;
+  }
+}
+</style>
