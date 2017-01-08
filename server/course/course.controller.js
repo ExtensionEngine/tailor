@@ -15,7 +15,7 @@ class CourseController extends BaseController {
 
   listCoursesForUser(req, res, next) {
     const courseKeys = req.user.role === role.ADMIN ? null : req.user.courses;
-    const courseName = isEmpty(req.query.name) ? null : req.query.name;
+    const courseName = isEmpty(req.query.query) ? null : req.query.query;
 
     this.model.getFiltered({ courseKeys, courseName })
       .then(courses => {

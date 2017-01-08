@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex-module';
 import { debounce } from 'lodash';
 
 export default {
@@ -34,23 +33,14 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setSearch'], 'courses'),
     clearSearch() {
       this.query = '';
-
-      this.setSearch('');
-      this.$emit('query', this.query);
     }
-  },
-  beforeDestroy() {
-    // state cleanup
-    this.setSearch('');
   },
   watch: {
     query: debounce(function search() {
-      this.setSearch(this.query);
-      this.$emit('query', this.query);
-    }, 1000)
+      this.$emit('change', this.query);
+    }, 800)
   }
 };
 </script>
