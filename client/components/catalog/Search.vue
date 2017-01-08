@@ -1,29 +1,46 @@
 <template>
   <div class="course-search">
-    <input
-      class="form-control"
-      placeholder="Search..."
-      @input="search($event)"
-    />
+    <div :class="inputClass">
+      <input
+        class="form-control"
+        placeholder="Search..."
+        v-model="query"/>
+      <span v-if="query" class="input-group-btn">
+        <button
+          type="button"
+          class="btn input-action"
+          @click="clearSearch">
+          <span class="fa fa-lg fa-times" aria-hidden="true"></span>
+        </button>
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
-// import { mapActions, mapGetters } from 'vuex-module';
-// import { debounce } from 'lodash';
+import { debounce } from 'lodash';
 
 export default {
   name: 'search',
-  // computed: mapGetters({
-  //   filters: 'getFilters'
-  // }),
-  methods: {
-    // ...mapActions(['search']),
-    search({ target }) {
-      // const value = target.value;
-      // const search = value.length >= 2 ? value : '';
-      // debounce(this.search, 800)(search);
+  data() {
+    return {
+      query: ''
+    };
+  },
+  computed: {
+    inputClass() {
+      return this.query.length ? 'input-group' : 'form-group';
     }
+  },
+  methods: {
+    clearSearch() {
+      this.query = '';
+    }
+  },
+  watch: {
+    query: debounce(function search() {
+      this.$emit('change', this.query);
+    }, 800)
   }
 };
 </script>
@@ -43,6 +60,27 @@ export default {
 
     &:focus {
       box-shadow: none;
+    }
+  }
+
+  .input-group-btn {
+    background-color: #fff;
+  }
+
+  .input-action {
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    height: 44px;
+
+    &:hover {
+      background-color: #fff;
+    }
+
+    &:active {
+      border-color: transparent;
+      outline: 0;
     }
   }
 }

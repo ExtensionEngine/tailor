@@ -58,6 +58,16 @@ export default {
       this.loader = false;
     });
   },
+  props: {
+    courses: {
+      type: Object,
+      required: true
+    },
+    loader: {
+      type: Boolean,
+      required: true
+    }
+  },
   components: {
     Card,
     CubeSpinner,

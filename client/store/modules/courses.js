@@ -1,6 +1,10 @@
 import VuexModel from '../helpers/model.js';
 import cuid from 'cuid';
-const { getter, action, mutation, build } = new VuexModel('courses', '/courses');
+const { state, getter, action, mutation, build } = new VuexModel('courses', '/courses');
+
+state({
+  search: ''
+});
 
 getter(function courses() {
   return this.state.items;
@@ -42,6 +46,10 @@ mutation(function fetchNextPage(courses) {
   );
 
   this.state.items = items;
+});
+
+mutation(function setSearch(search) {
+  this.state.search = search;
 });
 
 export default build();
