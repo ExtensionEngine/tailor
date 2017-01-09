@@ -1,5 +1,8 @@
 <template>
   <div class="perspectives">
+    <div class="well" v-if="!perspectives.length">
+      Click the button bellow to Create first Perspective.
+    </div>
     <perspective v-for="it in perspectives"></perspective>
     <create-perspective @create="add"></create-perspective>
   </div>
@@ -30,4 +33,15 @@ export default {
 </script>
 
 <style lang="scss">
+.perspectives {
+  h2 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #444;
+  }
+
+  .well {
+    font-size: 16px;
+  }
+}
 </style>
