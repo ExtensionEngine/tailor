@@ -18,45 +18,35 @@
         <div slot="spinner">
           <cube-spinner></cube-spinner>
         </div>
+        <div slot="no-more"></div>
       </infinite-loading>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import InfiniteLoading from 'vue-infinite-loading';
 import Card from './Card';
 import CubeSpinner from '../loaders/CubeSpinner';
 
 export default {
   name: 'course-list',
-  data() {
-    return {
-      loader: true,
-      loaderPaginate: false
-    };
-  },
-  computed: mapGetters(['courses']),
+  computed: mapGetters(['noMoreResults'], 'courses'),
   methods: {
-    ...mapActions(['fetch', 'fetchNextPage'], 'courses'),
+    ...mapActions(['fetch'], 'courses'),
+    ...mapMutations(['setPage'], 'courses'),
     onInfinite() {
-      this.loaderPaginate = true;
-
-      // TODO(marko): trigger is very sensitive without setTimeout?
-      setTimeout(() => {
-        this.fetchNextPage().then(() => {
-          this.loaderPaginate = false;
-          this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+      this.setPage();
+      this.fetch(true).then(
+        () => {
+          if (this.noMoreResults) {
+            this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+          } else {
+            this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+          }
         });
-      }, 1000);
     }
-  },
-  created() {
-    this.loader = true;
-    this.fetch().then(() => {
-      this.loader = false;
-    });
   },
   props: {
     courses: {

@@ -12,7 +12,10 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <course-list :courses="courses" :loader="loader"></course-list>
+        <course-list
+          :courses="courses"
+          :loader="loader">
+        </course-list>
       </div>
     </div>
   </div>
@@ -35,15 +38,15 @@ export default {
   methods: {
     ...mapActions(['fetch'], 'courses'),
     ...mapMutations(['setSearch'], 'courses'),
-    fetchCourses(query = '') {
+    fetchCourses() {
       this.loader = true;
-      this.fetch({ query }).then(() => {
+      this.fetch().then(() => {
         this.loader = false;
       });
     },
     filterCourses(query) {
       this.setSearch(query);
-      this.fetchCourses(query);
+      this.fetchCourses();
     }
   },
   created() {

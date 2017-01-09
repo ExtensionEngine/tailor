@@ -1,51 +1,83 @@
 import VuexModel from '../helpers/model.js';
-import cuid from 'cuid';
-const { state, getter, action, mutation, build } = new VuexModel('courses', '/courses');
+const { api, state, getter, action, mutation, build } = new VuexModel('courses', '/courses');
 
 state({
-  search: ''
+  search: '',
+  $internals: {
+    pagination: {
+      limit: 9,
+      page: 1,
+      pages: 1,
+      noMore: false
+    },
+    sort: {
+      order: 'ASC',
+      field: '_key'
+    }
+  }
 });
 
 getter(function courses() {
   return this.state.items;
 }, { global: true });
 
-action(function fetchNextPage() {
-  this.api.fetch()
-    .then(courses => {
-      const stateItemCount = Object.keys(this.state.items).length;
-      let newItems = [];
+getter(function params() {
+  const { pagination, sort } = this.state.$internals;
+  const search = this.state.search;
 
-      // Generate dummy values
-      for (let i = stateItemCount + 1; i < stateItemCount + 10; i++) {
-        newItems.push({
-          _cid: cuid(),
-          name: `Test name ${i}`,
-          description: 'Test description'
-        });
-      }
+  return {
+    search,
+    page: pagination.page,
+    limit: pagination.limit,
+    sortOrder: sort.order,
+    sortBy: sort.field
+  };
+}, { global: true });
 
-      this.commit('fetchNextPage', newItems);
+getter(function noMoreResults() {
+  const { page, pages } = this.state.$internals.pagination;
+  return page >= pages;
+});
+
+action(function fetch(nextPage = false) {
+  return api.get('', this.getters.params).then(response => {
+    let result = {};
+    const { docs, page, pages } = response.data.data;
+
+    docs.forEach(it => {
+      this.api.setCid(it);
+      result[it._cid] = it;
     });
+
+    this.commit('setPagination', { page, pages });
+    if (nextPage) this.commit('fetchNextPage', result);
+    else this.commit('fetch', result);
+  });
 });
 
 mutation(function fetchNextPage(courses) {
-  let stateItems = [];
-  let items = {};
+  const items = {};
 
-  // Convert state items to array
-  for (let key in this.state.items) {
-    stateItems.push(this.state.items[key]);
-  }
-
-  // Concat and convert back to object
-  stateItems.concat(courses).forEach(
-    item => {
-      items[item._cid] = item;
-    }
-  );
+  Object.keys(this.state.items).forEach(key => {
+    items[key] = this.state.items[key];
+  });
+  Object.keys(courses).forEach(key => {
+    items[key] = courses[key];
+  });
 
   this.state.items = items;
+});
+
+mutation(function setPagination(params) {
+  const { page, pages } = params;
+  const pagination = this.state.$internals.pagination;
+
+  this.state.$internals.pagination = { ...pagination, page, pages };
+});
+
+mutation(function setPage() {
+  const { page, pages } = this.state.$internals.pagination;
+  this.state.$internals.pagination.page = page < pages ? page + 1 : page;
 });
 
 mutation(function setSearch(search) {
