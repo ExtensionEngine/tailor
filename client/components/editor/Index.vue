@@ -34,7 +34,9 @@ export default {
 <style lang="scss">
 .editor {
   h2 {
-    margin-top: 80px;
+    margin: 80px 0 30px 0;
+    font-size: 20px;
+    color: #444;
     text-align: left;
   }
 }
