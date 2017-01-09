@@ -19,6 +19,12 @@ getter(function activity() {
   return activities[this.state.activity] || {};
 });
 
+getter(function assets() {
+  const { route } = this.rootState;
+  if (route.name !== 'editor') return;
+  return this.rootGetters.assets;
+});
+
 mutation(function focusActivity(_cid) {
   this.state.activity = _cid;
 });

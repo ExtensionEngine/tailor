@@ -6,7 +6,7 @@ import Course from './components/course/Container';
 import CourseDetails from './components/course/Details';
 import CourseSettings from './components/course/Settings';
 import Catalog from './components/catalog/Container';
-import CourseEditor from './components/editor/Container';
+import Editor from './components/editor';
 import Login from './components/auth/Login';
 import ResetPassword from './components/auth/ResetPassword';
 
@@ -40,9 +40,9 @@ let router = new Router({
       meta: { auth: true }
     },
     {
-      path: '/editor/:activityKey',
+      path: '/course/:courseKey/editor/:activityKey',
       name: 'editor',
-      component: CourseEditor,
+      component: Editor,
       meta: { auth: true }
     },
     {
