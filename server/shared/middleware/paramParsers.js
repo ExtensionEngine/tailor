@@ -24,7 +24,7 @@ function parseSort(req, res, next) {
 }
 
 function parseSearch(req, res, next) {
-  const query = req.query.query;
+  const query = req.query.search;
 
   save(req, 'search', {
     query: helpers.validateQuery(query)

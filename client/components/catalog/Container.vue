@@ -2,7 +2,7 @@
   <div class="catalog">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <search @change="filterCourses"></search>
+        <search :spinner="searchSpinner" @change="filterCourses"></search>
       </div>
       <div class="col-md-3">
         <div class="create">
@@ -14,7 +14,7 @@
       <div class="col-md-12">
         <course-list
           :courses="courses"
-          :loader="loader">
+          :loader="courseLoader">
         </course-list>
       </div>
     </div>
@@ -23,6 +23,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import Promise from 'bluebird';
 import CourseList from './List';
 import CreateCourse from './Create';
 import Search from './Search';
@@ -31,7 +32,8 @@ export default {
   name: 'catalog',
   data() {
     return {
-      loader: true
+      courseLoader: true,
+      searchSpinner: false
     };
   },
   computed: mapGetters(['courses']),
@@ -39,14 +41,19 @@ export default {
     ...mapActions(['fetch'], 'courses'),
     ...mapMutations(['setSearch'], 'courses'),
     fetchCourses() {
-      this.loader = true;
-      this.fetch().then(() => {
-        this.loader = false;
+      this.courseLoader = true;
+      return this.fetch().then(() => {
+        this.courseLoader = false;
       });
     },
     filterCourses(query) {
       this.setSearch(query);
-      this.fetchCourses();
+      this.searchSpinner = true;
+      Promise.resolve(this.fetchCourses())
+        .delay(2000)
+        .then(() => {
+          this.searchSpinner = false;
+        });
     }
   },
   created() {

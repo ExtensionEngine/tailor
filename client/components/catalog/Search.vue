@@ -7,10 +7,11 @@
         v-model="query"/>
       <span v-if="query" class="input-group-btn">
         <button
-          type="button"
-          class="btn input-action"
-          @click="clearSearch">
-          <span class="fa fa-lg fa-times" aria-hidden="true"></span>
+        type="button"
+        class="btn input-action"
+        @click="clearSearch">
+          <span v-if="spinner" class="fa fa-refresh fa-spin fa-2x fa-fw"></span>
+          <span v-else class="fa fa-2x fa-times" aria-hidden="true"></span>
         </button>
       </span>
     </div>
@@ -41,6 +42,12 @@ export default {
     query: debounce(function search() {
       this.$emit('change', this.query);
     }, 800)
+  },
+  props: {
+    spinner: {
+      type: Boolean,
+      required: true
+    }
   }
 };
 </script>
