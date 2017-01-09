@@ -16,8 +16,8 @@ export default function (collectionName, url) {
     }
   });
 
-  action(function fetch() {
-    return this.api.fetch()
+  action(function fetch(params = {}) {
+    return this.api.fetch(params)
       .then(result => this.commit('fetch', result));
   });
 

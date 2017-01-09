@@ -1,6 +1,7 @@
 'use strict';
 
 const Joi = require('joi');
+const get = require('lodash/get');
 
 class BaseModel {
   constructor(db, collectionName, schema = Joi.any()) {
@@ -8,6 +9,17 @@ class BaseModel {
     this.schema = schema;
     this.collectionName = collectionName;
     this.collection = db.collection(collectionName);
+
+    this.validate = this.validate.bind(this);
+    this.validatePartial = this.validatePartial.bind(this);
+    this.markAsCreated = this.markAsCreated.bind(this);
+    this.markAsUpdated = this.markAsUpdated.bind(this);
+    this.create = this.create.bind(this);
+    this.getByKey = this.getByKey.bind(this);
+    this.updateByKey = this.updateByKey.bind(this);
+    this.replaceByKey = this.replaceByKey.bind(this);
+    this.removeByKey = this.removeByKey.bind(this);
+    this.getMany = this.getMany.bind(this);
   }
 
   validate(document) {
@@ -18,9 +30,35 @@ class BaseModel {
     });
   }
 
+  validatePartial(partialDocument, atLeastOneKeyRequired = true) {
+    const allKeys = get(this.schema, '_inner.children', []).map(c => c.key);
+    const partialSchema = this.schema
+      .optionalKeys(allKeys)
+      .min(atLeastOneKeyRequired ? 1 : 0);
+
+    return new Promise((resolve, reject) => {
+      Joi.validate(partialDocument, partialSchema, (err, value) => {
+        return err ? reject(err) : resolve(value);
+      });
+    });
+  }
+
+  markAsCreated(document) {
+    const now = Date.now();
+    document.createdAt = now;
+    document.updatedAt = now;
+    return document;
+  }
+
+  markAsUpdated(document) {
+    document.updatedAt = Date.now();
+    return document;
+  }
+
   create(document) {
     return this
       .validate(document)
+      .then(this.markAsCreated)
       .then(validDocument => this.db.query(
         'INSERT @validDocument IN @@collection RETURN NEW', {
           '@collection': this.collectionName,
@@ -33,17 +71,23 @@ class BaseModel {
     return this.collection.document({ _key: key });
   }
 
-  // TODO(matej): can Joi be used to validate individual keys?
   updateByKey(key, partialDocument) {
-    return this.collection
-      .update({ _key: key }, partialDocument, { returnNew: true })
+    return this
+      .validatePartial(partialDocument)
+      .then(this.markAsUpdated)
+      .then(validDocument => this.collection.update(
+        { _key: key },
+        validDocument,
+        { returnNew: true }
+      ))
       .then(result => result.new);
   }
 
   replaceByKey(key, newDocument) {
     return this
       .validate(newDocument)
-      .then(validDocument => this.collection.replace(
+      .then(this.markAsUpdated)
+      .then(validDocument => this.collection.update(
         { _key: key },
         validDocument,
         { returnNew: true }

@@ -12,24 +12,20 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
 import Card from './Card';
 import CubeSpinner from '../loaders/CubeSpinner';
 
 export default {
   name: 'course-list',
-  data() {
-    return {
-      loader: true
-    };
-  },
-  computed: mapGetters(['courses'], 'courses'),
-  methods: mapActions(['fetch'], 'courses'),
-  created() {
-    this.loader = true;
-    this.fetch().then(() => {
-      this.loader = false;
-    });
+  props: {
+    courses: {
+      type: Object,
+      required: true
+    },
+    loader: {
+      type: Boolean,
+      required: true
+    }
   },
   components: {
     Card,

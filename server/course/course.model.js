@@ -49,15 +49,53 @@ class CourseModel extends BaseModel {
     super(db, collectionName, schema);
   }
 
-  getByKeys(courseKeys) {
+  /**
+   * getSearchFilter - Get filter string and bind variables for search filter,
+   * if they are provided. Otherwise return empty values.
+   *
+   * @param  {string} search Search search
+   * @return {array} Array containing filter string and bind variables object
+   */
+  static getCourseNameFilter(courseName) {
+    const filter = 'FILTER CONTAINS(LOWER(course.name), LOWER(@courseName))';
+    const bindVars = { courseName };
+    return courseName ? [filter, bindVars] : [null, {}];
+  }
+
+  /**
+   * getCourseKeysFilter - Get filter string and bind variables for course keys,
+   * if they are provided. Otherwise return empty values.
+   *
+   * @param  {array} courseKeys Course key array
+   * @return {array} Array containing filter string and bind variables object
+   */
+  static getCourseKeysFilter(courseKeys) {
+    const filter = 'FILTER course._key IN @courseKeys';
+    const bindVars = { courseKeys };
+    return courseKeys ? [filter, bindVars] : [null, {}];
+  }
+
+  /**
+   * getFiltered - Filter courses by course keys and search if they are
+   * passed. Otherwise, return all courses.
+   *
+   * @param  {array} courseKeys Course key array
+   * @param  {string} courseName Course name to search by
+   * @return {Promise<array>} Array of courses
+   */
+  getFiltered(filter) {
+    const [srFilter, srBindVars] = CourseModel.getCourseNameFilter(filter.courseName);
+    const [ckFilter, ckBindVars] = CourseModel.getCourseKeysFilter(filter.courseKeys);
+
+    const filters = [srFilter, ckFilter].filter(f => f).join(' && ');
+    const bindVars = Object.assign({}, srBindVars, ckBindVars, {
+      '@courseCollection': this.collectionName
+    });
+
     const query = `
       FOR course IN @@courseCollection
-        FILTER course._key IN @courseKeys
-        RETURN course`;
-    const bindVars = {
-      '@courseCollection': this.collectionName,
-      courseKeys
-    };
+        ${filters}
+      RETURN course`;
 
     return this.db
       .query(query, bindVars)

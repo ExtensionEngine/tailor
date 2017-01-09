@@ -37,13 +37,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex-module';
 import Outline from './Outline.vue';
 import Sidebar from './Sidebar.vue';
 import Settings from './Settings.vue';
-import { mapState } from 'vuex-module';
 
 export default {
-  computed: mapState(['activities']),
+  computed: mapGetters(['activities']),
   components: {
     Outline,
     Sidebar,

@@ -7,7 +7,7 @@
           <span>CGMA Author</span>
         </router-link>
       </div>
-      <div v-if="course" class="course-title">{{course.title}}</div>
+      <div v-if="course" class="course-title">{{ course.name }}</div>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -29,7 +29,8 @@ import { mapGetters, mapActions } from 'vuex-module';
 export default {
   name: 'navbar',
   computed: {
-    ...mapGetters({ course: 'getCourse', user: 'user' })
+    ...mapGetters(['user']),
+    ...mapGetters(['course'], 'editor')
   },
   methods: {
     logoutUser() {

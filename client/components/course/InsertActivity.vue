@@ -58,9 +58,10 @@ export default {
     add() {
       let subLevel = this.activityLevel === 2;
       let order = subLevel ? 1 : this.parent.order + 1;
-      let parent = subLevel ? this.parent._key : this.parent.parentKey;
+      let parent = subLevel ? this.parent._cid : this.parent.parentKey;
 
       this.create({
+        _cid: cuid(),
         _key: cuid(),
         name: this.activityName,
         order: order,
