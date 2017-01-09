@@ -34,7 +34,7 @@ function validateLimit(limit) {
  * @return {string} Ordering received from client or default ordering.
  */
 function validateSortOrder(order) {
-  const { ASC, DESC } = config.params.sort.sortOrder;
+  const { ASC, DESC } = config.params.sort.order;
   return order === ASC || order === DESC ? order : DESC;
 }
 
@@ -46,7 +46,7 @@ function validateSortOrder(order) {
  * @return {string} Sort field received from client or default sort field.
  */
 function validateSortBy(sortBy) {
-  const defaultSortBy = config.params.sort.sortBy;
+  const defaultSortBy = config.params.sort.field;
   return sortBy && (typeof sortBy === 'string' || sortBy instanceof String) && sortBy.length
     ? sortBy : defaultSortBy;
 }

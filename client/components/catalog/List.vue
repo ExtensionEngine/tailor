@@ -18,6 +18,7 @@
         <div slot="spinner">
           <cube-spinner></cube-spinner>
         </div>
+        <div slot="no-results"></div>
         <div slot="no-more"></div>
       </infinite-loading>
     </div>
@@ -32,18 +33,23 @@ import CubeSpinner from '../loaders/CubeSpinner';
 
 export default {
   name: 'course-list',
-  computed: mapGetters(['noMoreResults'], 'courses'),
+  data() {
+    return {
+      paginate: true
+    };
+  },
+  computed: mapGetters(['moreResults'], 'courses'),
   methods: {
     ...mapActions(['fetch'], 'courses'),
     ...mapMutations(['setPage'], 'courses'),
     onInfinite() {
       this.setPage();
-      this.fetch(true).then(
+      this.fetch(this.paginate).then(
         () => {
-          if (this.noMoreResults) {
-            this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
-          } else {
+          if (this.moreResults) {
             this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+          } else {
+            this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
           }
         });
     }

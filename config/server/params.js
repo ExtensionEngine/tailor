@@ -4,8 +4,8 @@ module.exports = {
     limit: 20
   },
   sort: {
-    sortBy: '_key',
-    sortOrder: {
+    field: '_key',
+    order: {
       ASC: 'ASC',
       DESC: 'DESC'
     }

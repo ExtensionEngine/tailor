@@ -1,4 +1,5 @@
 import VuexModel from '../helpers/model.js';
+import config from '../../../config/server';
 const { api, state, getter, action, mutation, build } = new VuexModel('courses', '/courses');
 
 state({
@@ -7,12 +8,11 @@ state({
     pagination: {
       limit: 9,
       page: 1,
-      pages: 1,
-      noMore: false
+      pages: 1
     },
     sort: {
-      order: 'ASC',
-      field: '_key'
+      order: config.params.sort.order.DESC,
+      field: config.params.sort.field
     }
   }
 });
@@ -34,9 +34,9 @@ getter(function params() {
   };
 }, { global: true });
 
-getter(function noMoreResults() {
+getter(function moreResults() {
   const { page, pages } = this.state.$internals.pagination;
-  return page >= pages;
+  return page < pages;
 });
 
 action(function fetch(nextPage = false) {
