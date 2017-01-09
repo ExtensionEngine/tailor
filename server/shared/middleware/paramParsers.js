@@ -6,8 +6,8 @@ function parsePagination(req, res, next) {
   const { validateLimit, validatePage } = helpers;
 
   save(req, 'pagination', {
-    limit: validateLimit(limit),
-    page: validatePage(page)
+    limit: validateLimit(parseInt(limit)),
+    page: validatePage(parseInt(page))
   });
   next();
 }
@@ -24,10 +24,10 @@ function parseSort(req, res, next) {
 }
 
 function parseSearch(req, res, next) {
-  const query = req.query.search;
+  const query = req.query.query;
 
   save(req, 'search', {
-    search: helpers.validateQuery(query)
+    query: helpers.validateQuery(query)
   });
   next();
 }

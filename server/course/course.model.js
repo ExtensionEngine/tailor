@@ -63,8 +63,8 @@ class CourseModel extends BaseModel {
   }
 
   /**
-   * getCourseKeysFilter - Get filter string and bind variables for course keys,
-   * if they are provided. Otherwise return empty values.
+   * getCourseKeysFilter - Get filter string and bind variables for
+   * course keys, if they are provided. Otherwise return empty values.
    *
    * @param  {array} courseKeys Course key array
    * @return {array} Array containing filter string and bind variables object
@@ -76,6 +76,59 @@ class CourseModel extends BaseModel {
   }
 
   /**
+   * getSortQuery - Get sort query and bind variables for sort field and
+   * sort order.
+   *
+   * @param {object} sort Object containing sort order and field to sort by
+   * @return {array} Array containing sort query string and bind
+   * variables object
+   */
+  static getSortQuery(sort) {
+    const { sortBy, sortOrder } = sort;
+    const query = 'SORT course.@field @order';
+    const bindVars = { field: sortBy, order: sortOrder };
+    return [query, bindVars];
+  }
+
+  /**
+   * getPaginationQuery - Get pagination query and bind variables for page
+   * and item limit.
+   *
+   * @param {object} pagination Object containing page and item limit
+   * @return {array} Array containing pagination query string and bind
+   * variables object
+   */
+  static getPaginationQuery(pagination) {
+    const { limit, page } = pagination;
+    const query = 'LIMIT @offset, @count';
+    const bindVars = {
+      offset: (page * limit) - limit,
+      count: limit
+    };
+    return [query, bindVars];
+  }
+
+  /**
+   * getPaginatedData - Wrap paginated data into a singe object.
+   *
+   * @param {object} data Query data - docs and total doc number
+   * @param {object} pagination Pagination - page and limit number
+   * @return {object} Total number of pages along with rest of
+   * passed data.
+   */
+  static getPaginatedData(data, pagination) {
+    const { docs, total } = data;
+    const { page, limit } = pagination;
+
+    return {
+      docs,
+      total,
+      page,
+      pages: Math.ceil(total / limit)
+    };
+  }
+
+  /**
    * getFiltered - Filter courses by course keys and search if they are
    * passed. Otherwise, return all courses.
    *
@@ -83,23 +136,38 @@ class CourseModel extends BaseModel {
    * @param  {string} courseName Course name to search by
    * @return {Promise<array>} Array of courses
    */
-  getFiltered(filter) {
+  getFiltered(filter, pagination, sort) {
     const [srFilter, srBindVars] = CourseModel.getCourseNameFilter(filter.courseName);
     const [ckFilter, ckBindVars] = CourseModel.getCourseKeysFilter(filter.courseKeys);
+    const [paginationQuery, pgBindVars] = CourseModel.getPaginationQuery(pagination);
+    const [sortQuery, stBindVars] = CourseModel.getSortQuery(sort);
 
-    const filters = [srFilter, ckFilter].filter(f => f).join(' && ');
-    const bindVars = Object.assign({}, srBindVars, ckBindVars, {
-      '@courseCollection': this.collectionName
-    });
+    const filterQuery = [srFilter, ckFilter].filter(f => f).join(' && ');
+    const bindVars = Object.assign({},
+      srBindVars, ckBindVars, pgBindVars, stBindVars, {
+        '@courseCollection': this.collectionName
+      });
 
     const query = `
-      FOR course IN @@courseCollection
-        ${filters}
-      RETURN course`;
+      LET docs = (
+        FOR course IN @@courseCollection
+          ${filterQuery}
+          ${sortQuery}
+          ${paginationQuery}
+        RETURN course
+      )
+      RETURN {
+        total: COUNT(@@courseCollection),
+        docs: docs
+      }`;
 
     return this.db
       .query(query, bindVars)
-      .then(cursor => cursor.all());
+      .then(cursor =>
+        cursor.all().then(
+          results => CourseModel.getPaginatedData(results[0], pagination)
+        )
+      );
   }
 }
 

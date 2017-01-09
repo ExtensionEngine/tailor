@@ -6,8 +6,8 @@ module.exports = {
   sort: {
     sortBy: '_key',
     sortOrder: {
-      ASC: 1,
-      DESC: -1
+      ASC: 'ASC',
+      DESC: 'DESC'
     }
   },
   search: {

@@ -4,8 +4,8 @@ const config = require('../../../config/server');
  * Checks if page is a valid non-zero integer. Returns page if all
  * conditions are true, else it returns defaultPage.
  *
- * @param  {Number} page Page number received from client.
- * @return {Number}      Page number received from client or defaultPage.
+ * @param  {number} page Page number received from client.
+ * @return {number} Page number received from client or defaultPage.
  */
 function validatePage(page) {
   const defaultPage = config.params.pagination.page;
@@ -17,8 +17,8 @@ function validatePage(page) {
  * Check if limit is lower than or equal to the default limit. Returns
  * limit if all conditions are true, else it returns defaultLimit.
  *
- * @param  {Number} limit Number of items per page received from client.
- * @return {Number}       Limit received from client or defaultLimit.
+ * @param  {number} limit Number of items per page received from client.
+ * @return {number} Limit received from client or defaultLimit.
  */
 function validateLimit(limit) {
   const defaultLimit = config.params.pagination.limit;
@@ -30,8 +30,8 @@ function validateLimit(limit) {
  * Check if order is ascending or descending. Returns order if all
  * conditions are true, else it returns default ordering.
  *
- * @param  {Number} order Item ordering received from client.
- * @return {Number}       Ordering received from client or default ordering.
+ * @param  {string} order Item ordering received from client.
+ * @return {string} Ordering received from client or default ordering.
  */
 function validateSortOrder(order) {
   const { ASC, DESC } = config.params.sort.sortOrder;
@@ -42,8 +42,8 @@ function validateSortOrder(order) {
  * Check if sortBy is a valid, non-empty string. Returns sortBy if
  * all conditions are true, else it returns default sortBy field.
  *
- * @param  {String} sortBy Sort field received from client.
- * @return {String}        Sort field received from client or default sort field.
+ * @param  {string} sortBy Sort field received from client.
+ * @return {string} Sort field received from client or default sort field.
  */
 function validateSortBy(sortBy) {
   const defaultSortBy = config.params.sort.sortBy;
@@ -55,8 +55,8 @@ function validateSortBy(sortBy) {
  * Check if query exists and is a string. Returns query if all conditions
  * are true, else it returns default query field.
  *
- * @param  {String} query Query value received from client.
- * @return {String}       Query value received from client or default sort value.
+ * @param  {string} query Query value received from client.
+ * @return {string} Query value received from client or default sort value.
  */
 function validateQuery(query) {
   const defaultQuery = config.params.search.query;
