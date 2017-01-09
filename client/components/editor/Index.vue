@@ -4,6 +4,7 @@
     <div class="container">
       <h2>{{ activity.name }}</h2>
       <perspectives></perspectives>
+      <assessments></assessments>
     </div>
   </div>
 </template>
@@ -12,6 +13,7 @@
 import { mapGetters } from 'vuex-module';
 import Toolbar from './toolbar';
 import Perspectives from './structure/Perspectives';
+import Assessments from './structure/Assessments';
 
 export default {
   name: 'editor',
@@ -23,7 +25,8 @@ export default {
   },
   components: {
     Toolbar,
-    Perspectives
+    Perspectives,
+    Assessments
   }
 };
 </script>

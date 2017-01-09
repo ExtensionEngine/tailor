@@ -1,7 +1,7 @@
 <template>
   <div class="assessment-container">
     <div class="assessment">
-      <multiple-choice v-if="assesment.type === 'MC'"></multiple-choice>
+      <multiple-choice v-if="assessment.type === 'MC'"></multiple-choice>
     </div>
   </div>
 </template>

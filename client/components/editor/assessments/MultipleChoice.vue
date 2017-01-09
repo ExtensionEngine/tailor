@@ -168,11 +168,10 @@ export default {
 
 <style lang="scss">
 .assessment.multiple-choice {
-  max-width: 700px;
   min-height: 400px;
   margin: 10px auto;
   padding: 10px 30px 30px 30px;
-  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.74);
+  background-color: white;
   overflow: hidden;
 
   .alert-container {
