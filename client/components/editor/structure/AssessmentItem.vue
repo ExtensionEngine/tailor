@@ -1,8 +1,9 @@
 <template>
-  <li class="list-group-item">
-    <div>
+  <li class="list-group-item assessment-item" @click="$emit('selected')">
+    <assessment v-if="edit" :assessment="assessment"></assessment>
+    <div v-else>
       <span class="label label-success">{{ assessment.type }}</span>
-      <span>{{ assessment.title }}</span>
+      <span class="title">{{ assessment.title }}</span>
     </div>
   </li>
 </template>
@@ -12,9 +13,28 @@ import Assessment from '../assessments';
 
 export default {
   name: 'assessment-item',
-  props: ['assessment'],
+  props: ['assessment', 'edit'],
   components: {
     Assessment
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.assessment-item {
+  margin-bottom: 7px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .title {
+    display: inline-block;
+    height: 19px;
+  }
+
+  .label {
+    float: left;
+  }
+}
+</style>
