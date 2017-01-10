@@ -1,5 +1,5 @@
-const paramParsers = require('./paramParsers');
+const queryParamParsers = require('./queryParamParsers');
 
 module.exports = {
-  paramParsers
+  queryParamParsers
 };
