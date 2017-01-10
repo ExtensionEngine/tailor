@@ -1,7 +1,7 @@
 module.exports = {
   pagination: {
-    page: 1,
-    limit: 20
+    page: process.env.CURRENT_PAGE || 1,
+    limit: process.env.ITEMS_PER_PAGE || 20
   },
   sort: {
     field: '_key',
@@ -9,8 +9,5 @@ module.exports = {
       ASC: 'ASC',
       DESC: 'DESC'
     }
-  },
-  search: {
-    query: ''
   }
 };
