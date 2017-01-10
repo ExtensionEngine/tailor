@@ -1,7 +1,7 @@
 'use strict';
 
 const get = require('lodash/get');
-const ADMIN = require('../../user/role').ADMIN;
+const ADMIN = require('../../../config/shared').role.ADMIN;
 
 function requireCourseAccess(req, res, next) {
   const courseKey = req.params.courseKey;

@@ -1,6 +1,6 @@
 'use strict';
 
-const ADMIN = require('../role').ADMIN;
+const ADMIN = require('../../../config/shared').role.ADMIN;
 
 function requireUser(req, res, next) {
   if (req.user) next();

@@ -6,7 +6,7 @@ const config = require('../../config/server');
 const database = require('../shared/database');
 const BaseModel = require('../base.model');
 const query = require('./query');
-const role = require('./role');
+const role = require('../../config/shared').role;
 
 const db = database.db;
 const USER_COLLECTION = database.collection.USER;

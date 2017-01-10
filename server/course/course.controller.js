@@ -4,7 +4,7 @@ const BaseController = require('../base.controller');
 const courseModel = require('./course.model').model;
 const io = require('../shared/io');
 const isEmpty = require('lodash/isEmpty');
-const role = require('../user/role');
+const role = require('../../config/shared').role;
 
 class CourseController extends BaseController {
   constructor(model = courseModel, resourceKey = 'courseKey') {
