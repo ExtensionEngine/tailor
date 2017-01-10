@@ -76,55 +76,17 @@ class CourseModel extends BaseModel {
   }
 
   /**
-   * getSortQuery - Get sort query and bind variables for sort field and
-   * sort order.
-   *
-   * @param {object} sort Object containing sort order and field to sort by
-   * @return {array} Array containing sort query string and bind
-   * variables object
-   */
-  static getSortQuery(sort) {
-    const { sortBy, sortOrder } = sort;
-    const query = 'SORT course.@field @order';
-    const bindVars = { field: sortBy, order: sortOrder };
-    return [query, bindVars];
-  }
-
-  /**
-   * getPaginationQuery - Get pagination query and bind variables for page
-   * and item limit.
+   * getPaginationBindVars- Get bind variables for page
+   * and item count.
    *
    * @param {object} pagination Object containing page and item limit
-   * @return {array} Array containing pagination query string and bind
-   * variables object
+   * @return {object} Object containing bind variables object
    */
-  static getPaginationQuery(pagination) {
+  static getPaginationBindVars(pagination) {
     const { limit, page } = pagination;
-    const query = 'LIMIT @offset, @count';
-    const bindVars = {
+    return {
       offset: (page * limit) - limit,
       count: limit
-    };
-    return [query, bindVars];
-  }
-
-  /**
-   * getPaginatedData - Wrap paginated data into a singe object.
-   *
-   * @param {object} data Query data - docs and total doc number
-   * @param {object} pagination Pagination - page and limit number
-   * @return {object} Total number of pages along with rest of
-   * passed data.
-   */
-  static getPaginatedData(data, pagination) {
-    const { docs, total } = data;
-    const { page, limit } = pagination;
-
-    return {
-      docs,
-      total,
-      page,
-      pages: Math.ceil(total / limit)
     };
   }
 
@@ -139,8 +101,8 @@ class CourseModel extends BaseModel {
   getFiltered(filter, pagination, sort) {
     const [srFilter, srBindVars] = CourseModel.getCourseNameFilter(filter.courseName);
     const [ckFilter, ckBindVars] = CourseModel.getCourseKeysFilter(filter.courseKeys);
-    const [paginationQuery, pgBindVars] = CourseModel.getPaginationQuery(pagination);
-    const [sortQuery, stBindVars] = CourseModel.getSortQuery(sort);
+    const pgBindVars = CourseModel.getPaginationBindVars(pagination);
+    const stBindVars = { field: sort.sortBy, order: sort.sortOrder };
 
     const filterQuery = [srFilter, ckFilter].filter(f => f).join(' && ');
     const bindVars = Object.assign({},
@@ -149,25 +111,15 @@ class CourseModel extends BaseModel {
       });
 
     const query = `
-      LET docs = (
-        FOR course IN @@courseCollection
-          ${filterQuery}
-          ${sortQuery}
-          ${paginationQuery}
-        RETURN course
-      )
-      RETURN {
-        total: COUNT(@@courseCollection),
-        docs: docs
-      }`;
+      FOR course IN @@courseCollection
+        ${filterQuery}
+        SORT course.@field @order
+        LIMIT @offset, @count
+      RETURN course`;
 
     return this.db
       .query(query, bindVars)
-      .then(cursor =>
-        cursor.all().then(
-          results => CourseModel.getPaginatedData(results[0], pagination)
-        )
-      );
+      .then(cursor => cursor.all());
   }
 }
 
