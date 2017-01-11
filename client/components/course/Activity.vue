@@ -17,6 +17,7 @@
       <draggable @update="reorder">
         <activity
           v-for="it in children"
+          :key="it._key"
           :_key="it._key"
           :_cid="it._cid"
           :name="it.name"
@@ -67,7 +68,7 @@ export default {
         : act => act.parentKey === this._key;
       return values(this.activities)
         .filter(filterByParent)
-        .sort((a, b) => a.position - b.position);
+        .sort((x, y) => x.position - y.position);
     },
     collapsibleIcon() {
       return {
@@ -78,7 +79,7 @@ export default {
   },
   methods: {
     ...mapMutations(['focusActivity'], 'editor'),
-    ...mapActions({ reorderActivities: 'reorder' }, 'activities'),
+    ...mapActions({ reorderActivities: 'reorder', reset: 'reset' }, 'activity'),
     select() {
       this.isCollapsed = !this.isCollapsed;
       this.focusActivity(this._cid);
@@ -90,10 +91,8 @@ export default {
         params: { activityKey: this._cid }
       });
     },
-    reorder({ newIndex: to, item: { __vue__: { order: from } } }) {
-      // 0 based array pos
-      to += 1;
-      this.reorderActivities({ from, to, parentKey: this._cid });
+    reorder({ newIndex: to, item: { __vue__: { position: from } } }) {
+      this.reorderActivities({ from, to, parentKey: this._key || null });
     }
   },
   components: {

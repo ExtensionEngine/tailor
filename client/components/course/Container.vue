@@ -43,7 +43,7 @@ export default {
   computed: mapGetters(['activities']),
   methods: mapActions(['fetch'], 'activity'),
   created() {
-    this.fetch().then();
+    this.fetch();
   },
   components: {
     Outline,
