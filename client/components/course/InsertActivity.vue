@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     canCreateSubsection() {
-      return this.level < 2;
+      return this.level < 3;
     }
   },
   methods: {
