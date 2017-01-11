@@ -35,7 +35,7 @@ function output(config = {
     if (pagination && isArray(out)) {
       const { page, limit } = pagination;
       const next = out.length < limit ? null : page + 1;
-      const previous = page - 1 === 0 ? null : page - 1;
+      const previous = page - 1;
       responseData.page = { next, previous };
     }
 
