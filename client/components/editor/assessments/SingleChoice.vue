@@ -1,6 +1,6 @@
 <template>
-  <div class="assessment multiple-choice">
-    <div class="label label-primary assessment-type">Multiple choice</div>
+  <div class="assessment single-choice">
+    <div class="label label-primary assessment-type">Single choice</div>
     <div class="form-group">
       <span class="form-label">Question</span>
       <span :class="{'has-error': errors.includes('question')}">
@@ -9,7 +9,7 @@
           v-model="question"
           :disabled="isEditing"
           type="text"
-          placeholder="Question.">
+          placeholder="Question..">
       </span>
     </div>
     <div class="form-group">
@@ -24,13 +24,13 @@
       <ul>
         <li v-for="(answer, index) in answers">
           <span
-            class="answers-checkbox"
-            :class="{'error': errors.includes('correct')}">
+              class="answers-radio"
+              :class="{'has-error': errors.includes('correct')}">
             <input
               v-model="correct"
               :value="index"
               :disabled="isEditing"
-              type="checkbox">
+              type="radio">
           </span>
           <span
             class="answers-input"
@@ -39,7 +39,7 @@
               v-model="answers[index]"
               :disabled="isEditing"
               type="text"
-              placeholder="Answer.">
+              placeholder="Answer..">
           </span>
           <button
             class="destroy"
@@ -58,13 +58,13 @@
         v-model="hint"
         :disabled="isEditing"
         type="text"
-        placeholder="Optional hint.">
+        placeholder="Optional hint..">
     </div>
     <div class="alert-container">
       <div
         class="alert alert-dismissible"
         :class="alertType"
-        v-show="answers.length < 3 || isEditing">
+        v-show="answers.length < 2 || isEditing">
         <strong>{{ alert }}</strong>
       </div>
     </div>
@@ -105,14 +105,14 @@ import cloneDeep from 'lodash/cloneDeep';
 
 const schema = yup.object().shape({
   question: yup.string().trim().min(1).required(),
-  answers: yup.array().min(3).of(yup.string().trim().min(1)).required(),
-  correct: yup.array().min(2).of(yup.number()).required()
+  answers: yup.array().min(2).of(yup.string().trim().min(1)).required(),
+  correct: yup.number().required()
 });
 
 const defaultAssessment = {
   question: '',
-  answers: ['', '', ''],
-  correct: [],
+  answers: ['', ''],
+  correct: '',
   hint: ''
 };
 
@@ -133,8 +133,8 @@ export default {
     removeAnswer(index) {
       this.answers.splice(index, 1);
 
-      if (this.correct.indexOf(index) !== -1) {
-        this.correct.splice(this.correct.indexOf(index), 1);
+      if (this.correct === (index)) {
+        this.correct = null;
       }
     },
     save() {
@@ -173,8 +173,8 @@ export default {
   },
   computed: {
     alertType() {
-      if (this.answers.length < 3) {
-        this.alert = 'Please make at least three answers available !';
+      if (this.answers.length < 2) {
+        this.alert = 'Please make at least two answers available !';
         return 'alert-danger';
       } else {
         this.alert = 'Question saved !';
@@ -186,17 +186,12 @@ export default {
 </script>
 
 <style lang="scss">
-.assessment.multiple-choice {
+.assessment.single-choice {
   min-height: 400px;
   margin: 10px auto;
   padding: 10px 30px 30px 30px;
   background-color: white;
   overflow: hidden;
-
-  .controls {
-    overflow: hidden;
-    padding: 10px;
-  }
 
   .alert-container {
     padding: 0 20px;
@@ -261,14 +256,14 @@ export default {
       position: relative;
       margin: 10px 0;
 
-      .answers-checkbox {
+      .answers-radio {
         display: inline-block;
         float: left;
         margin-top: 7px;
         width: 19px;
 
         input {
-          padding-bottom: 11px;
+          padding-bottom: 9px;
         }
       }
 
@@ -311,7 +306,7 @@ export default {
 }
 
 @media (max-width: 850px) {
-  .assessment.multiple-choice {
+  .assessment.single-choice {
     ul {
       padding-left: 0;
     }
