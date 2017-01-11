@@ -72,10 +72,10 @@ export default {
         position,
         parentKey
       };
-      this.save(model).then(() => this.reset());
+      this.save(model);
       this.hide();
     },
-    ...mapActions(['save', 'reset'], 'activity')
+    ...mapActions(['save'], 'activity')
   }
 };
 </script>

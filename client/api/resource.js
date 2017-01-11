@@ -104,7 +104,9 @@ export default class Resource {
   }
 
   /**
-   * Remove the model.
+   * Remove the model. In some situations, removing one model causes removal
+   * of related resources. Because of that, result of successful remove is
+   * a map of cid -> removed model (just like with fetch).
    * @param {object} model
    */
   remove(model) {

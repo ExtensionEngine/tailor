@@ -1,4 +1,5 @@
 import values from 'lodash/values';
+import Vue from 'vue';
 import VuexModule from '../helpers/model.js';
 
 const { action, build, getter, mutation, state } = new VuexModule('activity');
@@ -42,6 +43,21 @@ mutation(function reorder({ from, to, parentKey }) {
 
 mutation(function activateCourse(courseKey) {
   this.url = `/courses/${courseKey}/activities`;
+});
+
+mutation(function save(model) {
+  // Recalculate positions only once - after model is saved locally.
+  if (!this.state.items[model._cid]) {
+    Object.keys(this.state.items).forEach(key => {
+      const item = this.state.items[key];
+      if ((item.parentKey === model.parentKey) && (item.position >= model.position)) {
+        item.position += 1;
+      }
+    });
+  }
+
+  // Update the state after local save, and after successful save on server.
+  Vue.set(this.state.items, model._cid, model);
 });
 
 export default build();
