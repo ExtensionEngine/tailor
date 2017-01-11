@@ -1,25 +1,20 @@
 <template>
   <div>
-    <div class="divider-wrapper" v-if="!isInputVisible" @click="show">
-      <div class="divider">
-        <div class="action"><span class="fa fa-plus"></span></div>
-      </div>
-    </div>
-    <div class="activity-input" v-if="isInputVisible">
+    <div class="activity-input" v-if="showInput">
       <div class="row">
         <div class="col-lg-8">
           <input
-            v-model="activityName"
-            v-focus="isInputFocused"
-            type="text"
             class="form-control"
+            v-model="activityName"
+            v-focus="focusInput"
+            type="text"
             placeholder="Activity name">
         </div>
         <div class="col-lg-2">
           <select
+            class="form-control"
             v-if="canCreateSubsection"
-            v-model.number="newActivityLevel"
-            class="form-control">
+            v-model.number="newActivityLevel">
               <option value="0">Section</option>
               <option value="1">Subsection</option>
           </select>
@@ -28,6 +23,11 @@
           <button class="btn btn-default" @click.stop="add">Add</button>
           <button class="btn btn-default" @click.stop="hide">X</button>
         </div>
+      </div>
+    </div>
+    <div class="divider-wrapper" v-else @click="show">
+      <div class="divider">
+        <div class="action"><span class="fa fa-plus"></span></div>
       </div>
     </div>
   </div>
@@ -42,8 +42,8 @@ export default {
   props: ['parent', 'level'],
   data() {
     return {
-      isInputVisible: false,
-      isInputFocused: true,
+      showInput: false,
+      focusInput: true,
       activityName: '',
       newActivityLevel: 0
     };
@@ -55,12 +55,12 @@ export default {
   },
   methods: {
     show() {
-      this.isInputVisible = true;
-      this.isInputFocused = true;
+      this.showInput = true;
+      this.focusInput = true;
     },
     hide() {
       this.activityName = '';
-      this.isInputVisible = false;
+      this.showInput = false;
     },
     add() {
       const isOnSameLevel = this.newActivityLevel === 0;
