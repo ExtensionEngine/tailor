@@ -5,9 +5,9 @@
       <span class="form-label">Question</span>
       <span :class="{'has-error': errors.includes('question')}">
         <input
+          class="form-control"
           v-model="question"
           :disabled="isSuccess"
-          class="form-control"
           type="text"
           placeholder="Question..">
       </span>
@@ -15,17 +15,17 @@
     <div class="form-group">
       <span class="form-label">Answers</span>
       <button
+        class="btn btn-default answers-add"
         :disabled="isSuccess"
         @click="addAnswer"
-        class="btn btn-default answers-add"
         type="button">
         <span class="fa fa-plus"></span>
       </button>
       <ul>
         <li v-for="(answer, index) in answers">
           <span
-              class="answers-checkbox"
-              :class="{'error': errors.includes('correct')}">
+            class="answers-checkbox"
+            :class="{'error': errors.includes('correct')}">
             <input
               v-model="correctAnswers"
               :value="index"
@@ -42,9 +42,9 @@
               placeholder="Answer..">
           </span>
           <button
+            class="destroy"
             :disabled="isSuccess"
             @click="removeAnswer(index)"
-            class="destroy"
             type="button">
             <span class="fa fa-times"></span>
           </button>
@@ -54,31 +54,54 @@
     <div class="form-group">
       <span class="form-label">Hint</span>
       <input
+        class="form-control"
         v-model="hint"
         :disabled="isSuccess"
-        class="form-control"
         type="text"
         placeholder="Optional hint..">
     </div>
     <div class="alert-container">
       <div
-        v-show="answers.length < 3"
-        class="alert alert-dismissible alert-danger">
+        class="alert alert-dismissible alert-danger"
+        v-show="answers.length < 3">
         <strong>Please make at least three answers available !</strong>
       </div>
       <div
-        v-show="isSuccess"
-        class="alert alert-dismissible alert-success">
+        class="alert alert-dismissible alert-success"
+        v-show="isSuccess">
         <strong>Question successfully saved !</strong>
       </div>
     </div>
-    <button
-      :disabled="isSuccess"
-      @click="save"
-      class="btn btn-default"
-      type="button">
-      Save Question
-    </button>
+    <div class="controls" v-if="!isSuccess">
+      <button
+        class="btn btn-default"
+        :disabled="isSuccess"
+        @click="save"
+        type="button">
+        Save
+      </button>
+      <button
+        class="btn btn-default"
+        :disabled="isSuccess"
+        @click="deselect"
+        type="button">
+        Cancel
+      </button>
+    </div>
+    <div class="controls" v-else>
+      <button
+        class="btn btn-default"
+        @click="deselect"
+        type="button">
+        Close
+      </button>
+      <button
+        class="btn btn-default"
+        @click="edit"
+        type="button">
+        Edit
+      </button>
+    </div>
   </div>
 </template>
 
@@ -93,34 +116,20 @@ const schema = yup.object().shape({
 
 export default {
   props: {
-    'propQuestion': {
-      type: String,
-      default: ''
-    },
-    'propAnswers': {
-      type: Array,
+    'propAssessment': {
+      type: Object,
       default: function () {
-        return ['', '', ''];
+        return {};
       }
-    },
-    'propCorrect': {
-      type: Array,
-      default: function () {
-        return [];
-      }
-    },
-    'propHint': {
-      type: String,
-      default: ''
     }
   },
   data() {
     return {
-      question: this.propQuestion,
+      question: this.propAssessment.question || '',
       // slice array to avoid changing data in parent component
-      answers: this.propAnswers.slice(0),
-      correctAnswers: this.propCorrect,
-      hint: this.propHint,
+      answers: (this.propAssessment.answers || ['', '', '']).slice(0),
+      correctAnswers: (this.propAssessment.correct || []).slice(0),
+      hint: this.propAssessment.hint,
       isSuccess: false,
       errors: []
     };
@@ -141,14 +150,15 @@ export default {
         question: this.question,
         correct: this.correctAnswers,
         answers: this.answers,
-        hint: this.hint
+        hint: this.hint,
+        _cid: this.propAssessment._cid,
+        type: this.propAssessment.type
       };
       this.errors = [];
-
       this.validate(question)
         .then(() => {
           this.isSuccess = true;
-          this.$emit('addQuestion', question);
+          this.$emit('saveAssessment', question);
         })
         .catch((err) => {
           err.inner.forEach((item) => {
@@ -161,6 +171,12 @@ export default {
         question,
         { recursive: true, abortEarly: false }
       );
+    },
+    deselect() {
+      this.$emit('selected');
+    },
+    edit() {
+      this.isSuccess = false;
     }
   }
 };
@@ -173,6 +189,11 @@ export default {
   padding: 10px 30px 30px 30px;
   background-color: white;
   overflow: hidden;
+
+  .controls {
+    overflow: hidden;
+    padding: 10px;
+  }
 
   .alert-container {
     padding: 0 20px;

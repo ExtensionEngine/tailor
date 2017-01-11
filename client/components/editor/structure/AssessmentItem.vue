@@ -1,9 +1,20 @@
 <template>
-  <li class="list-group-item assessment-item" @click="$emit('selected')">
-    <assessment v-if="edit" :assessment="assessment"></assessment>
-    <div v-else>
+  <li class="list-group-item assessment-item">
+    <assessment
+      v-if="edit"
+      :assessment="assessment"
+      @selected="$emit('selected')"
+      @saveAssessment="$emit('saveAssessment', $event)">
+    </assessment>
+    <div v-else @click="$emit('selected')">
       <span class="label label-success">{{ assessment.type }}</span>
-      <span class="title">{{ assessment.title }}</span>
+      <span class="title">{{ assessment.question }}</span>
+      <button
+        class="delete"
+        @click.stop="$emit('remove')"
+        type="button">
+        <span class="fa fa-times"></span>
+      </button>
     </div>
   </li>
 </template>
@@ -23,6 +34,11 @@ export default {
 <style lang="scss" scoped>
 .assessment-item {
   margin-bottom: 7px;
+  padding: 0;
+
+  div {
+    padding: 15px;
+  }
 
   &:hover {
     cursor: pointer;
@@ -35,6 +51,33 @@ export default {
 
   .label {
     float: left;
+  }
+
+  .delete {
+    display: none;
+    position: absolute;
+    opacity: 0.5;
+    transition: all 0.2s;
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+    top: 13px;
+    right: 18px;
+
+
+    span {
+      font-size: 20px;
+    }
+  }
+
+  .delete:focus {
+    outline: none;
+  }
+
+  div:hover {
+    .delete:enabled {
+      display: inline;
+    }
   }
 }
 </style>
