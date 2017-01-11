@@ -4,9 +4,17 @@ import { VuexModule } from 'vuex-module';
 
 import Resource from '../../api/resource';
 
-export default function (collectionName, url) {
+export default function (collectionName, url = '') {
   let module = new VuexModule(collectionName);
-  module.api = new Resource(url);
+
+  Object.defineProperty(module, 'url', {
+    get: () => module.api ? module.api.baseUrl : '',
+    set: url => {
+      module.api = new Resource(url);
+    }
+  });
+
+  module.url = url;
 
   let { state, action, mutation } = module;
 

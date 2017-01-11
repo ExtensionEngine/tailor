@@ -1,10 +1,7 @@
 import values from 'lodash/values';
-import VuexModel from '../helpers/model.js';
+import VuexModule from '../helpers/model.js';
 
-const { action, build, getter, mutation, state } = new VuexModel(
-  'activity',
-  '/courses/885350/activities' // hardcode the URL for now
-);
+const { action, build, getter, mutation, state } = new VuexModule('activity');
 
 state({
   items: {}
@@ -41,6 +38,10 @@ mutation(function reorder({ from, to, parentKey }) {
       item.position += step;
     }
   });
+});
+
+mutation(function activateCourse(courseKey) {
+  this.url = `/courses/${courseKey}/activities`;
 });
 
 export default build();
