@@ -1,98 +1,45 @@
-import settings from '../settings';
+import { flattenDeep } from 'lodash';
+import settings from '../../config/shared';
 
-// TODO(marko): implement as plugin, inject current user?
-/** Class for permission checking */
-class Permissions {
+/**
+ * Partially applied function for lazy binding of reactive data.
+ * Returns object which exposes check function for checking wether
+ * logged in user has given permissions.
+ *
+ * @param  {object} role Object with predefined user roles.
+ * @param  {user} user Currently logged in user. Passed from state.
+ * @return {object} Object containing check function.
+ */
+const Permissions = role => user => {
+  const hasPermission = role => user.role === role;
 
-  /**
-   * @param  {type} roles - object with predefined roles
-   * @example - inside component
-   * // check if user is student or editor
-   * computed: {
-   *   const { isEditor, isStudent } = permissions;
-   *   return permissions.checkPerms(user, [isEditor, isStudent]);
-   * }
-   */
-  constructor(roles) {
-    this.roles = roles;
+  const permissionMapper = {
+    isSystemAdmin: () => hasPermission(role.SYSTEM_ADMIN),
+    isAdmin: () => hasPermission(role.ADMIN),
+    isContentAuthor: () => hasPermission(role.CONTENT_AUTHOR),
+    isUser: () => hasPermission(role.USER)
+  };
 
-    this.isGlobalAdmin = this.isGlobalAdmin.bind(this);
-    this.isCourseAdmin = this.isCourseAdmin.bind(this);
-    this.isEditor = this.isEditor.bind(this);
-    this.isStudent = this.isStudent.bind(this);
-  }
+  return {
+    /**
+     * Spreads multipe arguments in an array. Iterates through passed perms
+     * and check against permission function from permission wrapper.
+     *
+     * @param  {array} ...perms Perms to check for logged in user.
+     * @return {boolean} Wether or not user has the permission.
+     */
+    check(...perms) {
+      let allow = false;
 
-  /**
-   * hasPermission - check if user has passed permission
-   *
-   * @param  {object} user - user data
-   * @param  {string} role - role name
-   * @return {boolean} check result
-   */
-  hasPermission(user, role) {
-    return user.role === role;
-  }
+      // Flatten just in case
+      flattenDeep(perms).forEach(p => {
+        const mapper = permissionMapper[p];
+        if (mapper) allow = allow || mapper(p);
+      });
 
-  /**
-   * checkPerms - check if user has at least one permission
-   *
-   * @param  {object} user - user data
-   * @param  {array} perms - array of permission checking functions
-   * @return {boolean} allow or deny permission
-   */
-  checkPerms(user, perms) {
-    let allow = false;
-    perms.forEach(perm => { allow = allow || perm(user); });
-    return allow;
-  }
+      return allow;
+    }
+  };
+};
 
-  /**
-   * isGlobalAdmin - check if user is a global admin
-   *
-   * @param  {object} user - user data
-   * @return {boolean} global admin role check
-   */
-  isGlobalAdmin(user) {
-    const globalAdmin = this.roles.GLOBAL_ADMIN.value;
-    return this.hasPermission(user, globalAdmin);
-  }
-
-  /**
-   * isCourseAdmin - check if user is a course admin
-   *
-   * @param  {object} user - user data
-   * @return {boolean} course admin role check
-   */
-  isCourseAdmin(user) {
-    const courseAdmin = this.roles.COURSE_ADMIN.value;
-    return this.hasPermission(user, courseAdmin);
-  }
-
-  /**
-   * isEditor - check if user is an editor
-   *
-   * @param  {object} user - user data
-   * @return {boolean} editor role check
-   */
-  isEditor(user) {
-    const editor = this.roles.EDITOR.value;
-    return this.hasPermission(user, editor);
-  }
-
-  /**
-   * isStudent - check if user is a student
-   *
-   * @param  {object} user - user data
-   * @return {boolean} student role check
-   */
-  isStudent(user) {
-    const student = this.roles.STUDENT.value;
-    return this.hasPermission(user, student);
-  }
-
-  isGlobalOrCourseAdmin(user) {
-    return this.isGlobalAdmin(user) || this.isCourseAdmin(user);
-  }
-}
-
-export default new Permissions(settings.role);
+export default Permissions(settings.role);

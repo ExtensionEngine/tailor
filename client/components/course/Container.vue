@@ -16,7 +16,7 @@
           Comments
         </a>
       </li>
-      <li role="presentation">
+      <li role="presentation" v-permissions.isSystemAdmin.isAdmin>
         <a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">
           Settings
         </a>
@@ -41,6 +41,7 @@ import { mapGetters } from 'vuex-module';
 import Outline from './Outline.vue';
 import Sidebar from './Sidebar.vue';
 import Settings from './Settings.vue';
+import Permissions from '../../directives/permissions';
 
 export default {
   computed: mapGetters(['activities']),
@@ -48,6 +49,9 @@ export default {
     Outline,
     Sidebar,
     Settings
+  },
+  directives: {
+    Permissions
   }
 };
 </script>

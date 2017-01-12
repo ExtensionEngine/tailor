@@ -1,7 +1,6 @@
 import { VuexModule } from 'vuex-module';
 
 import UserAPI from '../../api/users';
-import { asyncState } from '../../utils/async';
 
 const { action, build, getter, mutation, state } = new VuexModule('users');
 
@@ -9,27 +8,21 @@ state({
   // TODO(marko): mock user
   user: {
     email: 'admin@example.com',
-    role: 'global_admin'
+    role: 'SYSTEM_ADMIN'
   },
   users: [],
   filters: {
     search: ''
-  },
-  listUserStatus: {
-    ...asyncState.INITIAL,
-    message: null
   }
 });
 
 action(function listUser() {
-  this.commit('listUserRequest');
   UserAPI.list()
     .then(resp => {
-      this.commit('listUserSuccess');
       this.commit('addUsers', resp.data.data);
     })
     .catch(error => {
-      this.commit('listUserFailure', error);
+      console.log(error);
     });
 });
 
@@ -86,18 +79,6 @@ mutation(function updateUserRole(data) {
       return user;
     }
   );
-});
-
-mutation(function listUserFailure({ message }) {
-  this.state.listUserStatus = { ...asyncState.FAILURE, message };
-});
-
-mutation(function listUserRequest() {
-  this.state.listUserStatus = { ...asyncState.REQUEST, message: null };
-});
-
-mutation(function listUserSuccess() {
-  this.state.listUserStatus = { ...asyncState.SUCCESS, message: null };
 });
 
 export default build();

@@ -1,19 +1,26 @@
-import { omit } from 'lodash';
-import settings from '../settings';
+import settings from '../../config/shared';
 
-function getRoles(exclude = []) {
-  const roles = omit(settings.role, exclude);
-  return Object.keys(roles).map(role => roles[role]);
-};
+function formatRole(role) {
+  return role
+    .toLowerCase()
+    .split('_')
+    .map(r => `${r[0].toUpperCase()}${r.substr(1)}`)
+    .join(' ');
+}
 
-export function getRolesForUser(user) {
-  let exclude = [];
+// TODO(marko): kinda funky
+export function getAdministrativeRoles(user) {
+  let showRoles = [];
+  const { SYSTEM_ADMIN, ADMIN, CONTENT_AUTHOR, USER } = settings.role;
 
-  if (user.role === settings.role.COURSE_ADMIN.value) {
-    exclude = ['GLOBAL_ADMIN'];
-  } else if (user.role !== settings.role.GLOBAL_ADMIN.value) {
-    exclude = Object.keys(settings.role);
+  if (user.role === SYSTEM_ADMIN) {
+    showRoles = [SYSTEM_ADMIN, ADMIN, CONTENT_AUTHOR, USER];
+  } else if (user.role === SYSTEM_ADMIN) {
+    showRoles = [ADMIN, CONTENT_AUTHOR, USER];
   }
 
-  return getRoles(exclude);
+  return showRoles.map(role => ({
+    value: role,
+    render: formatRole(role)
+  }));
 }
