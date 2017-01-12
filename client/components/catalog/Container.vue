@@ -2,7 +2,7 @@
   <div class="catalog">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <search :spinner="searchSpinner" @change="filterCourses"></search>
+        <search :spinner="showLoader" @change="filterCourses"></search>
       </div>
       <div class="col-md-3">
         <div class="create">
@@ -14,7 +14,8 @@
       <div class="col-md-12">
         <course-list
           :courses="courses"
-          :loader="courseLoader">
+          :loader="showLoader"
+          :fetchNextPage="fetch">
         </course-list>
       </div>
     </div>
@@ -32,32 +33,29 @@ export default {
   name: 'catalog',
   data() {
     return {
-      courseLoader: true,
-      searchSpinner: false
+      showLoader: false
     };
   },
   computed: mapGetters(['courses']),
   methods: {
     ...mapActions(['fetch'], 'courses'),
-    ...mapMutations(['setSearch'], 'courses'),
-    fetchCourses() {
-      this.courseLoader = true;
-      return this.fetch().then(() => {
-        this.courseLoader = false;
+    ...mapMutations(['resetPagination', 'setSearch'], 'courses'),
+    fetchWithLoader() {
+      const minDelay = 2000;
+
+      this.resetPagination();
+      this.showLoader = true;
+      Promise.join(this.fetch(), Promise.delay(minDelay)).then(() => {
+        this.showLoader = false;
       });
     },
     filterCourses(query) {
       this.setSearch(query);
-      this.searchSpinner = true;
-      Promise.resolve(this.fetchCourses())
-        .delay(2000)
-        .then(() => {
-          this.searchSpinner = false;
-        });
+      this.fetchWithLoader();
     }
   },
   created() {
-    this.fetchCourses();
+    this.fetchWithLoader();
   },
   beforeDestroy() {
     // state cleanup

@@ -1,18 +1,16 @@
 <template>
   <div class="course-search">
-    <div :class="inputClass">
+    <div class="input-group">
       <input
         class="form-control"
         placeholder="Search..."
         v-model="query"/>
-      <span v-if="query" class="input-group-btn">
-        <button
-        type="button"
-        class="btn input-action"
-        @click="clearSearch">
-          <span v-if="spinner" class="fa fa-refresh fa-spin fa-2x fa-fw"></span>
-          <span v-else class="fa fa-2x fa-times" aria-hidden="true"></span>
+      <span class="input-group-btn">
+        <button v-show="query" type="button" class="btn input-action" @click="clearSearch">
+          <span v-show="spinner" class="fa fa-refresh fa-spin fa-2x fa-fw"></span>
+          <span v-show="!spinner" class="fa fa-2x fa-times" aria-hidden="true"></span>
         </button>
+        <div v-show="!query" class="input-group-placeholder"></div>
       </span>
     </div>
   </div>
@@ -28,11 +26,6 @@ export default {
       query: ''
     };
   },
-  computed: {
-    inputClass() {
-      return this.query.length ? 'input-group' : 'form-group';
-    }
-  },
   methods: {
     clearSearch() {
       this.query = '';
@@ -41,7 +34,7 @@ export default {
   watch: {
     query: debounce(function search() {
       this.$emit('change', this.query);
-    }, 800)
+    }, 500)
   },
   props: {
     spinner: {
@@ -58,6 +51,12 @@ export default {
   margin: 0 auto;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.34);
 
+  .input-group-placeholder {
+    box-shadow: inset 0 -1px 0 #ddd;
+    height: 45px;
+    width: 20px;
+  }
+
   .form-control {
     height: 45px;
     padding: 0 5px;
@@ -68,6 +67,11 @@ export default {
     &:focus {
       box-shadow: none;
     }
+  }
+
+  .form-control:focus + .input-group-btn > .input-group-placeholder {
+    // Follow input box shadow
+    box-shadow: none;
   }
 
   .input-group-btn {

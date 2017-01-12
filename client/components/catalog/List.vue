@@ -1,7 +1,7 @@
 <template>
   <div class="row course-list">
     <cube-spinner v-if="loader"></cube-spinner>
-    <div v-else  v-for="course in courses" class="col-lg-4">
+    <div v-else v-for="course in courses" class="col-lg-4">
       <card
         :id="course._cid"
         :name="course.name"
@@ -10,24 +10,19 @@
     </div>
 
     <div class="col-lg-12 loader-wrapper">
-      <infinite-loading
-        :on-infinite="onInfinite"
-        :distance="60"
-        ref="infiniteLoading"
-      >
-        <div slot="spinner">
-          <cube-spinner></cube-spinner>
-        </div>
-        <div slot="no-results"></div>
-        <div slot="no-more"></div>
-      </infinite-loading>
+      <cube-spinner v-show="paginate"></cube-spinner>
+      <div
+        v-infinite-scroll="loadMore"
+        infinite-scroll-disabled="paginate"
+        infinite-scroll-distance="100">
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import InfiniteLoading from 'vue-infinite-loading';
+import { mapGetters } from 'vuex-module';
+import InfiniteScroll from 'vue-infinite-scroll';
 import Card from './Card';
 import CubeSpinner from '../loaders/CubeSpinner';
 
@@ -35,23 +30,18 @@ export default {
   name: 'course-list',
   data() {
     return {
-      paginate: true
+      paginate: false
     };
   },
-  computed: mapGetters(['moreResults'], 'courses'),
+  computed: mapGetters(['hasMoreResults'], 'courses'),
   methods: {
-    ...mapActions(['fetch'], 'courses'),
-    ...mapMutations(['setPage'], 'courses'),
-    onInfinite() {
-      this.setPage();
-      this.fetch(this.paginate).then(
-        () => {
-          if (this.moreResults) {
-            this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
-          } else {
-            this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
-          }
+    loadMore() {
+      if (!this.loader && this.hasMoreResults) {
+        this.paginate = true;
+        this.fetchNextPage(this.paginate).then(() => {
+          this.paginate = false;
         });
+      }
     }
   },
   props: {
@@ -62,12 +52,18 @@ export default {
     loader: {
       type: Boolean,
       required: true
+    },
+    fetchNextPage: {
+      type: Function,
+      required: true
     }
   },
   components: {
     Card,
-    CubeSpinner,
-    InfiniteLoading
+    CubeSpinner
+  },
+  directives: {
+    InfiniteScroll
   }
 };
 </script>
