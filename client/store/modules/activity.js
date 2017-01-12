@@ -1,20 +1,17 @@
-import values from 'lodash/values';
+import find from 'lodash/find';
+import forEach from 'lodash/forEach';
 import Vue from 'vue';
 import VuexModule from '../helpers/model.js';
 
-const { action, build, getter, mutation, state } = new VuexModule('activity');
-
-state({
-  items: {}
-});
+const { action, build, getter, mutation } = new VuexModule('activity');
 
 getter(function activities() {
   return this.state.items;
 }, { global: true });
 
 action(function reorder({ from, to, parentKey }) {
-  const activityKey = values(this.state.items)
-    .find(it => it.parentKey === parentKey && it.position === from)._key;
+  const activityKey = find(this.state.items,
+    it => it.parentKey === parentKey && it.position === from)._key;
   return this.api
     .post(`${activityKey}/actions/reorder`, { position: to })
     .then(() => this.commit('reorder', { from, to, parentKey }));
@@ -48,10 +45,9 @@ mutation(function activateCourse(courseKey) {
 mutation(function save(model) {
   // Recalculate positions only once - after model is saved locally.
   if (!this.state.items[model._cid]) {
-    Object.keys(this.state.items).forEach(key => {
-      const item = this.state.items[key];
-      if ((item.parentKey === model.parentKey) && (item.position >= model.position)) {
-        item.position += 1;
+    forEach(this.state.items, it => {
+      if ((it.parentKey === model.parentKey) && (it.position >= model.position)) {
+        it.position += 1;
       }
     });
   }
@@ -62,10 +58,9 @@ mutation(function save(model) {
 
 mutation(function remove(result) {
   const root = result[0];
-  Object.keys(this.state.items).forEach(key => {
-    const item = this.state.items[key];
-    if ((item.parentKey === root.parentKey) && (item.position > root.position)) {
-      item.position -= 1;
+  forEach(this.state.items, it => {
+    if ((it.parentKey === root.parentKey) && (it.position > root.position)) {
+      it.position -= 1;
     }
   });
 

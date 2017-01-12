@@ -13,7 +13,7 @@ import { mapActions, mapGetters } from 'vuex-module';
 export default {
   computed: {
     isActivitySelected() {
-      return Boolean(this.activity.name);
+      return !!this.activity.name;
     },
     ...mapGetters(['activity'], 'editor')
   },
