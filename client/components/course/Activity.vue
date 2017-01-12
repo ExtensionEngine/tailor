@@ -129,7 +129,7 @@ export default {
   }
 
   .badge {
-    margin: 6px 10px;
+    margin-right: 10px;
     padding: 4px 10px;
     color: #777;
     background-color: #eee;
