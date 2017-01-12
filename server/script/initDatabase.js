@@ -2,7 +2,7 @@
 
 const connector = require('../shared/database').databaseConnector;
 const userModel = require('../user').model;
-const SYSTEM_ADMIN = require('../../../config/shared').SYSTEM_ADMIN;
+const SYSTEM_ADMIN = require('../../config/shared').role.SYSTEM_ADMIN;
 
 // Last two arguments should be admin email and password - strip them out and
 // create the admin with those credentials.
