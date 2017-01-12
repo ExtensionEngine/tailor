@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import InfiniteScroll from 'vue-infinite-scroll';
 import Card from './Card';
 import CubeSpinner from '../loaders/CubeSpinner';
@@ -35,10 +35,11 @@ export default {
   },
   computed: mapGetters(['hasMoreResults'], 'courses'),
   methods: {
+    ...mapActions(['fetch'], 'courses'),
     loadMore() {
       if (!this.loader && this.hasMoreResults) {
         this.paginate = true;
-        this.fetchNextPage(this.paginate).then(() => {
+        this.fetch(this.paginate).then(() => {
           this.paginate = false;
         });
       }
@@ -51,10 +52,6 @@ export default {
     },
     loader: {
       type: Boolean,
-      required: true
-    },
-    fetchNextPage: {
-      type: Function,
       required: true
     }
   },

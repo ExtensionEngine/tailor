@@ -14,8 +14,7 @@
       <div class="col-md-12">
         <course-list
           :courses="courses"
-          :loader="showLoader"
-          :fetchNextPage="fetch">
+          :loader="showLoader">
         </course-list>
       </div>
     </div>
