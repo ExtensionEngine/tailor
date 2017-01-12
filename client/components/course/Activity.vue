@@ -17,7 +17,7 @@
       <draggable @update="reorder">
         <activity
           v-for="it in children"
-          :key="it._key"
+          :key="it._cid"
           :_key="it._key"
           :_cid="it._cid"
           :name="it.name"
