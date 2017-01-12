@@ -2,7 +2,7 @@
   <div>
     <div class="activity-wrapper" v-if="!isRoot">
       <div class="activity" @click="select" @dblclick="edit">
-        <span class="order" :style="{ 'background-color': color }">
+        <span class="position" :style="{ 'background-color': color }">
           {{ position + 1 }}
         </span>
         <span class="collapsible" :class="collapsibleIcon"></span>
@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     ...mapMutations(['focusActivity'], 'editor'),
-    ...mapActions({ reorderActivities: 'reorder', reset: 'reset' }, 'activity'),
+    ...mapActions({ reorderActivities: 'reorder' }, 'activity'),
     select() {
       this.isCollapsed = !this.isCollapsed;
       this.focusActivity(this._cid);
@@ -114,11 +114,13 @@ export default {
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 
-  .order {
+  .position {
+    display: inline-block;
+    min-width: 30px;
     margin-right: 7px;
     padding: 0 10px;
-    display: inline-block;
     color: white;
+    text-align: center;
   }
 
   .collapsible {
