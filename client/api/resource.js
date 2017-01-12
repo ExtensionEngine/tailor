@@ -105,23 +105,21 @@ export default class Resource {
 
   /**
    * Remove the model. In some situations, removing one model causes removal
-   * of related resources. Because of that, result of successful remove is
-   * a map of cid -> removed model (just like with fetch).
+   * of related resources; result is always an array.
    * @param {object} model
    */
   remove(model) {
     return this.delete(model._key).then(response => {
-      let result = {};
       const data = response.data.data;
-      if (isArray(data)) {
-        data.forEach(it => {
-          result[this.mappings[it._key]] = it;
-          this.unmap(it);
-        });
-      } else {
-        result[this.mappings[data._key]] = data;
-        this.unmap(data);
-      }
+      const result = isArray(data) ? data : [data];
+      // Attach cid to server results so that state can be correctly updated
+      // using client ids.
+      result.forEach(it => {
+        it._cid = this.getCid(it._key);
+      });
+
+      const unmap = this.unmap.bind(this);
+      result.forEach(unmap);
       return result;
     });
   }

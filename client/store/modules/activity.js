@@ -60,4 +60,16 @@ mutation(function save(model) {
   Vue.set(this.state.items, model._cid, model);
 });
 
+mutation(function remove(result) {
+  const root = result[0];
+  Object.keys(this.state.items).forEach(key => {
+    const item = this.state.items[key];
+    if ((item.parentKey === root.parentKey) && (item.position > root.position)) {
+      item.position -= 1;
+    }
+  });
+
+  result.forEach(it => Vue.delete(this.state.items, it._cid));
+});
+
 export default build();

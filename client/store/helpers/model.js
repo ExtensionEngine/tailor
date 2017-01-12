@@ -77,7 +77,7 @@ export default function (collectionName, url = '') {
   });
 
   mutation(function remove(result) {
-    Object.keys(result).forEach(cid => Vue.delete(this.state.items, cid));
+    result.forEach(it => Vue.delete(this.state.items, it._cid));
   });
 
   return module;

@@ -19,9 +19,9 @@ export default {
   },
   methods: {
     removeSelectedActivity() {
-      this.remove(this.activity).then(() => this.reset());
+      this.remove(this.activity);
     },
-    ...mapActions(['remove', 'reset'], 'activity')
+    ...mapActions(['remove'], 'activity')
   }
 };
 </script>
