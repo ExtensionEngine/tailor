@@ -20,7 +20,12 @@
           </select>
         </div>
         <div class="col-lg-2">
-          <button class="btn btn-default" @click.stop="add">Add</button>
+          <button
+            class="btn btn-default"
+            :disabled="!isActivityNameValid"
+            @click.stop="add">
+            Add
+          </button>
           <button class="btn btn-default" @click.stop="hide">X</button>
         </div>
       </div>
@@ -51,6 +56,11 @@ export default {
   computed: {
     canCreateSubsection() {
       return this.level < 3;
+    },
+    isActivityNameValid() {
+      // Server imposes these requirements (see activity schema).
+      const length = this.activityName.length;
+      return length >= 3 && length <= 100;
     }
   },
   methods: {
