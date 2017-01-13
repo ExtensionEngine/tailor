@@ -40,7 +40,7 @@ export default {
     ...mapActions(['fetch'], 'courses'),
     ...mapMutations(['resetPagination', 'setSearch'], 'courses'),
     fetchWithLoader() {
-      const minDelay = 2000;
+      const minDelay = 1500;
 
       this.resetPagination();
       this.showLoader = true;
