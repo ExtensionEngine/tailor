@@ -1,11 +1,12 @@
 <template>
   <div class="row course-list">
     <cube-spinner v-if="loader"></cube-spinner>
-    <div v-else v-for="course in courses" class="col-lg-4">
-      <card
-        :id="course._cid"
-        :name="course.name"
-        :description="course.description">
+    <div
+      v-else
+      v-for="course in courses"
+      :key="course._cid"
+      class="col-lg-4">
+      <card :course="course">
       </card>
     </div>
   </div>

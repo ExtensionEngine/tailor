@@ -11,10 +11,17 @@ or install `nvm` first, then follow instructions listed on the
 * ArangoDB: https://www.arangodb.com/download/
 * clone this repo and run `npm install` in the repo directory
 
+Fresh installation of ArangoDB comes with one administrator user (username 'root',
+blank password).
+
 ### Configuration
 Server is configured via environment variables contained in a file named `.env`.
-Use the `.env.example` file as a template - it contains explanations and reasonable
-defaults.
+Use the `.env.example` file as a template:
+```
+cp .env.example .env
+```
+Values set in the example file are reasonable defaults for production - you will
+probably flip all the boolean switches in development environment.
 
 ### Database setup
 #### Initialization
@@ -23,9 +30,9 @@ Before launching the server for the first time:
 * run `npm run db:init <admin-email> <admin-password>`
 
 This will make sure that:
-1. the database with correct name exists,
-2. all required collections exist,
-3. one user with administrator privileges exists.
+* the database with correct name exists
+* all required collections exist
+* one user with administrator privileges exists
 
 After the script finishes, you can log into the website with `<admin-email>`
 and `<admin-password>` you picked.
