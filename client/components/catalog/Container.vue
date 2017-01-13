@@ -70,6 +70,7 @@ export default {
 
 <style lang="scss">
 .catalog {
+  min-height: 101%;
   padding: 20px 100px 100px 100px;
 
   @media (min-width: 1700px) {
