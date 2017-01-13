@@ -63,8 +63,8 @@ class CourseModel extends BaseModel {
   }
 
   /**
-   * getCourseKeysFilter - Get filter string and bind variables for course keys,
-   * if they are provided. Otherwise return empty values.
+   * getCourseKeysFilter - Get filter string and bind variables for
+   * course keys, if they are provided. Otherwise return empty values.
    *
    * @param  {array} courseKeys Course key array
    * @return {array} Array containing filter string and bind variables object
@@ -76,6 +76,21 @@ class CourseModel extends BaseModel {
   }
 
   /**
+   * getPaginationBindVars- Get bind variables for page
+   * and item count.
+   *
+   * @param {object} pagination Object containing page and item limit
+   * @return {object} Object containing bind variables object
+   */
+  static getPaginationBindVars(pagination) {
+    const { limit, page } = pagination;
+    return {
+      offset: (page * limit) - limit,
+      count: limit
+    };
+  }
+
+  /**
    * getFiltered - Filter courses by course keys and search if they are
    * passed. Otherwise, return all courses.
    *
@@ -83,18 +98,23 @@ class CourseModel extends BaseModel {
    * @param  {string} courseName Course name to search by
    * @return {Promise<array>} Array of courses
    */
-  getFiltered(filter) {
+  getFiltered(filter, pagination, sort) {
     const [srFilter, srBindVars] = CourseModel.getCourseNameFilter(filter.courseName);
     const [ckFilter, ckBindVars] = CourseModel.getCourseKeysFilter(filter.courseKeys);
+    const pgBindVars = CourseModel.getPaginationBindVars(pagination);
+    const stBindVars = { field: sort.sortBy, order: sort.sortOrder };
 
-    const filters = [srFilter, ckFilter].filter(f => f).join(' && ');
-    const bindVars = Object.assign({}, srBindVars, ckBindVars, {
-      '@courseCollection': this.collectionName
-    });
+    const filterQuery = [srFilter, ckFilter].filter(f => f).join(' && ');
+    const bindVars = Object.assign({},
+      srBindVars, ckBindVars, pgBindVars, stBindVars, {
+        '@courseCollection': this.collectionName
+      });
 
     const query = `
       FOR course IN @@courseCollection
-        ${filters}
+        ${filterQuery}
+        SORT course.@field @order
+        LIMIT @offset, @count
       RETURN course`;
 
     return this.db

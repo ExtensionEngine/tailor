@@ -1,4 +1,5 @@
 import cuid from 'cuid';
+import each from 'lodash/each';
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
 
@@ -60,7 +61,7 @@ export default function (collectionName, url = '') {
 
   // TODO: Do the proper syncing
   mutation(function fetch(result) {
-    this.state.items = result;
+    each(result, it => Vue.set(this.state.items, it._cid, it));
   });
 
   mutation(function reset(result) {

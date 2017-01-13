@@ -25,11 +25,21 @@ function output(config = {
     const data = getData(res);
 
     // Remove sensitive or database-specific properties:
-    const out = isArray(data)
+    let out = isArray(data)
       ? data.map(obj => pickBy(obj, picker))
       : pickBy(data, picker);
+    let responseData = { data: out };
 
-    res.json({ data: out });
+    // Add pagination to the returning object
+    const pagination = locals.load(req, 'pagination');
+    if (pagination && isArray(out)) {
+      const { page, limit } = pagination;
+      const next = out.length < limit ? null : page + 1;
+      const previous = page - 1;
+      responseData.page = { next, previous };
+    }
+
+    res.json(responseData);
   };
 }
 
