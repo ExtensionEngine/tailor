@@ -70,10 +70,21 @@ const activitySchema = Joi.object().keys(schemaKeys);
 const positionSchema = Joi.object().keys({
   position: schemaKeys.position.required()
 });
+const updateSchema = Joi.object().keys({
+  name: schemaKeys.name.required()
+});
 
 class ActivityModel extends BaseModel {
   constructor(db, collectionName = ACTIVITY_COLLECTION, schema = activitySchema) {
     super(db, collectionName, schema);
+  }
+
+  validatePartial(partialDocument) {
+    return new Promise((resolve, reject) => {
+      Joi.validate(partialDocument, updateSchema, (err, value) => {
+        return err ? reject(err) : resolve(value);
+      });
+    });
   }
 
   execAction(action, params) {
