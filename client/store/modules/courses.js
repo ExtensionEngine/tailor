@@ -48,7 +48,7 @@ action(function fetch(nextPage = false) {
     });
 
     this.commit('setPagination', pagination);
-    this.commit('fetch', result);
+    this.commit(queryParams.search ? 'reset' : 'fetch', result);
   });
 });
 
