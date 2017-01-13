@@ -2,23 +2,26 @@
   <div>
     <div class="activity-wrapper" v-if="!isRoot">
       <div class="activity" @click="select" @dblclick="edit">
-        <span class="order" :style="{ 'background-color': color }">{{ order }}</span>
+        <span class="position" :style="{ 'background-color': color }">
+          {{ position + 1 }}
+        </span>
         <span class="collapsible" :class="collapsibleIcon"></span>
         <span>{{ name }}</span>
         <span class="pull-right">
           <span class="badge" v-if="showBadge">{{ children.length }}</span>
         </span>
       </div>
-      <insert-activity :parent="activity"></insert-activity>
+      <insert-activity :parent="activity" :level="level"></insert-activity>
     </div>
-    <transition name="fade" v-if="!collapsed">
+    <transition name="fade" v-if="!isCollapsed">
       <draggable @update="reorder">
         <activity
           v-for="it in children"
           :key="it._cid"
+          :_key="it._key"
           :_cid="it._cid"
           :name="it.name"
-          :order="it.order"
+          :position="it.position"
           :level="level + 1"
           :class="{ 'sub-activity': name }"
           :activities="activities"
@@ -30,24 +33,24 @@
 </template>
 
 <script>
+import { mapActions, mapMutations } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import InsertActivity from './InsertActivity';
-import { mapActions, mapMutations } from 'vuex-module';
 import values from 'lodash/values';
 
 const COLORS = ['#29B6F6', '#8BC34A', '#EF5350'];
 
 export default {
   name: 'activity',
-  props: ['_cid', 'name', 'order', 'level', 'activities', 'activity'],
+  props: ['_cid', '_key', 'name', 'position', 'level', 'activities', 'activity'],
   data() {
     return {
-      collapsed: this.level !== 0
+      isCollapsed: this.level !== 0
     };
   },
   computed: {
     showBadge() {
-      return this.hasChildren && this.collapsed;
+      return this.hasChildren && this.isCollapsed;
     },
     isRoot() {
       return this.level === 0;
@@ -60,23 +63,25 @@ export default {
       return this.children.length > 0;
     },
     children() {
-      let activities = values(this.activities);
-      return activities
-        .filter(it => it.parentKey === this._cid)
-        .sort((a, b) => a.order - b.order);
+      const filterByParent = this.isRoot
+        ? act => act.parentKey === null
+        : act => act.parentKey === this._key;
+      return values(this.activities)
+        .filter(filterByParent)
+        .sort((x, y) => x.position - y.position);
     },
     collapsibleIcon() {
       return {
-        'fa fa-caret-right': this.collapsed && this.hasChildren,
-        'fa fa-caret-down': !this.collapsed && this.hasChildren
+        'fa fa-caret-right': this.isCollapsed && this.hasChildren,
+        'fa fa-caret-down': !this.isCollapsed && this.hasChildren
       };
     }
   },
   methods: {
     ...mapMutations(['focusActivity'], 'editor'),
-    ...mapActions({ reorderActivities: 'reorder' }, 'activities'),
+    ...mapActions({ reorderActivities: 'reorder' }, 'activity'),
     select() {
-      this.collapsed = !this.collapsed;
+      this.isCollapsed = !this.isCollapsed;
       this.focusActivity(this._cid);
     },
     edit() {
@@ -86,10 +91,8 @@ export default {
         params: { activityKey: this._cid }
       });
     },
-    reorder({ newIndex: to, item: { __vue__: { order: from } } }) {
-      // 0 based array pos
-      to += 1;
-      this.reorderActivities({ from, to, parentKey: this._cid });
+    reorder({ newIndex: to, item: { __vue__: { position: from } } }) {
+      this.reorderActivities({ from, to, parentKey: this._key || null });
     }
   },
   components: {
@@ -111,11 +114,13 @@ export default {
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 
-  .order {
+  .position {
+    display: inline-block;
+    min-width: 30px;
     margin-right: 7px;
     padding: 0 10px;
-    display: inline-block;
     color: white;
+    text-align: center;
   }
 
   .collapsible {
@@ -126,7 +131,7 @@ export default {
   }
 
   .badge {
-    margin: 6px 10px;
+    margin-right: 10px;
     padding: 4px 10px;
     color: #777;
     background-color: #eee;
@@ -151,12 +156,9 @@ export default {
 
     .action {
       position: absolute;
-      right: -50px;
-      bottom: -26px;
-      width: 50px;
-      height: 50px;
-      padding-left: 13px;
-      line-height: 50px;
+      top: -8px;
+      right: -27px;
+      height: 0; // avoids visual issues while dragging
       font-size: 16px;
       color: #aaa;
       text-align: left;

@@ -2,8 +2,8 @@
   <div class="course-card">
     <div class="body">
       <div class="title">
-        <router-link :to="{ name: 'course', params: { courseKey: id }}">
-          {{ name }}
+        <router-link :to="{ name: 'course', params: { courseKey: course._key }}">
+          {{ course.name }}
         </router-link>
       </div>
       <div class="description">{{ shortDescription }}</div>
@@ -23,10 +23,10 @@ import truncate from 'truncate';
 
 export default {
   name: 'course-card',
-  props: ['id', 'name', 'description'],
+  props: ['course'],
   computed: {
     shortDescription() {
-      return truncate(this.description, 180);
+      return truncate(this.course.description, 180);
     }
   }
 };

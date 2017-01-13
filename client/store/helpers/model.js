@@ -1,12 +1,21 @@
 import cuid from 'cuid';
 import each from 'lodash/each';
-import Resource from '../../api/resource';
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
 
-export default function (collectionName, url) {
+import Resource from '../../api/resource';
+
+export default function (collectionName, url = '') {
   let module = new VuexModule(collectionName);
-  module.api = new Resource(url);
+
+  Object.defineProperty(module, 'url', {
+    get: () => module.api ? module.api.baseUrl : '',
+    set: url => {
+      module.api = new Resource(url);
+    }
+  });
+
+  module.url = url;
 
   let { state, action, mutation } = module;
 
@@ -28,11 +37,9 @@ export default function (collectionName, url) {
   });
 
   action(function save(model) {
-    // set client id
     if (!model._cid) model._cid = cuid();
-    // set metadata
     model._synced = false;
-    model._version = new Date().getTime();
+    model._version = Date.now();
 
     // create or update model locally
     this.commit('save', model);
@@ -42,9 +49,14 @@ export default function (collectionName, url) {
         // check if new change happened locally during api call
         // do not update meta if there is newer change
         const previous = this.context.state.items[model._cid];
-        if (previous._version === model._version) model._synced = true;
+        if (previous && previous._version === model._version) model._synced = true;
         this.commit('save', model);
       });
+  });
+
+  action(function remove(model) {
+    return this.api.remove(model)
+      .then(removed => this.commit('remove', removed));
   });
 
   // TODO: Do the proper syncing
@@ -63,6 +75,10 @@ export default function (collectionName, url) {
 
   mutation(function save(model) {
     Vue.set(this.state.items, model._cid, model);
+  });
+
+  mutation(function remove(result) {
+    result.forEach(it => Vue.delete(this.state.items, it._cid));
   });
 
   return module;
