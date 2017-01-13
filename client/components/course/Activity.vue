@@ -156,12 +156,9 @@ export default {
 
     .action {
       position: absolute;
-      right: -50px;
-      bottom: -26px;
-      width: 50px;
-      height: 50px;
-      padding-left: 13px;
-      line-height: 50px;
+      top: -8px;
+      right: -27px;
+      height: 0; // avoids visual issues while dragging
       font-size: 16px;
       color: #aaa;
       text-align: left;

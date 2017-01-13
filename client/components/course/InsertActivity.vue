@@ -32,7 +32,9 @@
     </div>
     <div class="divider-wrapper" v-else @click="show">
       <div class="divider">
-        <div class="action"><span class="fa fa-plus"></span></div>
+        <div class="action">
+          <span class="fa fa-plus plus"></span>
+        </div>
       </div>
     </div>
   </div>
@@ -101,5 +103,9 @@ export default {
   select {
     background-color: #e0e0e0;
   }
+}
+
+.plus {
+  padding: 0px 7px;
 }
 </style>
