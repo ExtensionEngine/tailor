@@ -3,29 +3,29 @@
     <div class="label label-primary assessment-type">Multiple choice</div>
     <div class="form-group">
       <span class="form-label">Question</span>
-      <span :class="{'has-error': errors.includes('question')}">
+      <span :class="{ 'has-error': errors.includes('question') }">
         <input
-          class="form-control"
           v-model="question"
           :disabled="isEditing"
+          class="form-control"
           type="text"
-          placeholder="Question.">
+          placeholder="Question">
       </span>
     </div>
     <div class="form-group">
       <span class="form-label">Answers</span>
       <button
-        class="btn btn-default answers-add"
         :disabled="isEditing"
         @click="addAnswer"
+        class="btn btn-default answers-add"
         type="button">
         <span class="fa fa-plus"></span>
       </button>
       <ul>
         <li v-for="(answer, index) in answers">
           <span
-            class="answers-checkbox"
-            :class="{'error': errors.includes('correct')}">
+            :class="{ 'error': errors.includes('correct') }"
+            class="answers-checkbox">
             <input
               v-model="correct"
               :value="index"
@@ -33,18 +33,18 @@
               type="checkbox">
           </span>
           <span
-            class="answers-input"
-            :class="{'has-error': errors.includes(`answers[${index}]`)}">
+            :class="{ 'has-error': errors.includes(`answers[${index}]`) }"
+            class="answers-input">
             <input
               v-model="answers[index]"
               :disabled="isEditing"
               type="text"
-              placeholder="Answer.">
+              placeholder="Answer">
           </span>
           <button
-            class="destroy"
             :disabled="isEditing"
             @click="removeAnswer(index)"
+            class="destroy"
             type="button">
             <span class="fa fa-times"></span>
           </button>
@@ -54,45 +54,33 @@
     <div class="form-group">
       <span class="form-label">Hint</span>
       <input
-        class="form-control"
         v-model="hint"
         :disabled="isEditing"
+        class="form-control"
         type="text"
-        placeholder="Optional hint.">
+        placeholder="Optional hint">
     </div>
     <div class="alert-container">
       <div
-        class="alert alert-dismissible"
+        v-show="answers.length < 3 || isEditing"
         :class="alertType"
-        v-show="answers.length < 3 || isEditing">
+        class="alert alert-dismissible">
         <strong>{{ alert }}</strong>
       </div>
     </div>
-    <div class="controls" v-if="!isEditing">
-      <button
-        class="btn btn-default"
-        @click="save"
-        type="button">
+    <div v-if="!isEditing" class="controls">
+      <button @click="save" class="btn btn-default" type="button">
         Save
       </button>
-      <button
-        class="btn btn-default"
-        @click="close"
-        type="button">
+      <button @click="close" class="btn btn-default" type="button">
         Cancel
       </button>
     </div>
-    <div class="controls" v-else>
-      <button
-        class="btn btn-default"
-        @click="close"
-        type="button">
+    <div v-else class="controls">
+      <button @click="close" class="btn btn-default" type="button">
         Close
       </button>
-      <button
-        class="btn btn-default"
-        @click="edit"
-        type="button">
+      <button @click="edit" class="btn btn-default" type="button">
         Edit
       </button>
     </div>
@@ -100,8 +88,8 @@
 </template>
 
 <script>
-import yup from 'yup';
 import cloneDeep from 'lodash/cloneDeep';
+import yup from 'yup';
 
 const schema = yup.object().shape({
   question: yup.string().trim().min(1).required(),
@@ -120,7 +108,8 @@ export default {
   props: { assessment: Object },
   data() {
     return {
-      ...(Object.assign(cloneDeep(defaultAssessment), cloneDeep(this.assessment))),
+      ...defaultAssessment,
+      ...cloneDeep(this.assessment),
       isEditing: !!this.assessment.question,
       errors: [],
       alert: ''
@@ -138,19 +127,17 @@ export default {
       }
 
       this.correct.forEach(item => {
-        if (item >= index) {
-          this.correct.splice(index, 1, item - 1);
-        }
+        if (item >= index) this.correct.splice(index, 1, item - 1);
       });
     },
     save() {
       let question = {
+        _cid: this.assessment._cid,
+        type: this.type,
         question: this.question,
         correct: this.correct,
         answers: this.answers,
-        hint: this.hint,
-        _cid: this.assessment._cid,
-        type: this.type
+        hint: this.hint
       };
       this.errors = [];
       this.validate(question)
@@ -158,17 +145,11 @@ export default {
           this.isEditing = true;
           this.$emit('save', question);
         })
-        .catch(err => {
-          err.inner.forEach((item) => {
-            this.errors.push(item.path);
-          });
-        });
+        .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
     },
     validate(question) {
-      return schema.validate(
-        question,
-        { recursive: true, abortEarly: false }
-      );
+      const options = { recursive: true, abortEarly: false };
+      return schema.validate(question, options);
     },
     close() {
       this.$emit('selected');
@@ -191,7 +172,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .assessment.multiple-choice {
   min-height: 400px;
   margin: 10px auto;
