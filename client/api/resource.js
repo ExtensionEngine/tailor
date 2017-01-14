@@ -1,8 +1,11 @@
 import assign from 'lodash/assign';
-import axios from './request';
 import cuid from 'cuid';
+import isArray from 'lodash/isArray';
+import join from 'url-join';
 import omit from 'lodash/omit';
 import Queue from 'promise-queue';
+
+import axios from './request';
 
 // used to serialize api calls that modify data
 const queue = new Queue(1, Infinity);
@@ -14,8 +17,8 @@ export default class Resource {
     this.mappings = {};
   }
 
-  url(path) {
-    return `${this.baseUrl}/${path}`;
+  url(path = '') {
+    return join(this.baseUrl, path);
   }
 
   /**
@@ -65,6 +68,16 @@ export default class Resource {
     this.mappings[_key] = _cid;
   }
 
+  /*
+   * Remove both client and server ids for given model.
+   * @param {object} model
+   */
+  unmap(model) {
+    const cid = this.mappings[model._key];
+    if (cid) delete this.mappings[cid];
+    delete this.mappings[model._key];
+  }
+
   /**
    * Returns copy of model without client metadata.
    * @param {object} model
@@ -87,6 +100,27 @@ export default class Resource {
     }).then(response => {
       if (!model._key) this.map(model._cid, response.data.data._key);
       return assign(model, response.data.data);
+    });
+  }
+
+  /**
+   * Remove the model. In some situations, removing one model causes removal
+   * of related resources; result is always an array.
+   * @param {object} model
+   */
+  remove(model) {
+    return this.delete(model._key).then(response => {
+      const data = response.data.data;
+      const result = isArray(data) ? data : [data];
+      // Attach cid to server results so that state can be correctly updated
+      // using client ids.
+      result.forEach(it => {
+        it._cid = this.getCid(it._key);
+      });
+
+      const unmap = this.unmap.bind(this);
+      result.forEach(unmap);
+      return result;
     });
   }
 
