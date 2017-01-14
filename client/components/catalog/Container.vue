@@ -2,7 +2,7 @@
   <div class="catalog">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <search :spinner="showLoader" @change="filterCourses"></search>
+        <search @change="filterCourses"></search>
       </div>
       <div class="col-md-3">
         <div class="create">
@@ -44,13 +44,15 @@ export default {
 
       this.resetPagination();
       this.showLoader = true;
-      Promise.join(this.fetch(), Promise.delay(minDelay)).then(() => {
+      return Promise.join(this.fetch(), Promise.delay(minDelay)).then(() => {
         this.showLoader = false;
       });
     },
-    filterCourses(query) {
+    filterCourses(query, setSpinner) {
       this.setSearch(query);
-      this.fetchWithLoader();
+      this.fetchWithLoader().then(() => {
+        setSpinner(false);
+      });
     }
   },
   created() {

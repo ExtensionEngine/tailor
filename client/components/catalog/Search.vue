@@ -3,16 +3,17 @@
     <div class="input-group">
       <input
         v-model="query"
+        @input="setSpinner(true)"
         class="form-control"
         placeholder="Search..."/>
       <span class="input-group-btn">
         <button v-show="query" type="button" class="btn">
           <span
-            v-show="spinner"
+            v-show="showSpinner"
             class="fa fa-refresh fa-spin">
           </span>
           <span
-            v-show="!spinner"
+            v-show="!showSpinner"
             @click="query = ''"
             class="fa fa-times">
           </span>
@@ -29,19 +30,19 @@ export default {
   name: 'search',
   data() {
     return {
-      query: ''
+      query: '',
+      showSpinner: false
     };
+  },
+  methods: {
+    setSpinner(value) {
+      this.showSpinner = value;
+    }
   },
   watch: {
     query: debounce(function () {
-      this.$emit('change', this.query);
+      this.$emit('change', this.query, this.setSpinner);
     }, 500)
-  },
-  props: {
-    spinner: {
-      type: Boolean,
-      required: true
-    }
   }
 };
 </script>
