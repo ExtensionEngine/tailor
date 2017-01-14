@@ -11,7 +11,10 @@ export default {
   name: 'toolbar',
   methods: {
     onClick(e) {
-      e.component = 'Toolbar';
+      e.component = {
+        name: 'toolbar',
+        data: {}
+      };
     }
   },
   components: {
