@@ -33,10 +33,10 @@ getter(function focusedAsset() {
 
 // TODO: Implement persistance upon focusout
 action(function focusoutAsset() {
-  this.commit('focusAsset', null);
+  this.commit('focusAsset');
 });
 
-mutation(function focusAsset(asset) {
+mutation(function focusAsset(asset = {}) {
   this.state.focusedAsset = asset._cid;
 });
 
