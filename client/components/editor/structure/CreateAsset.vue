@@ -16,12 +16,13 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex-module';
+import { mapActions } from 'vuex-module';
 import SelectAsset from './SelectAsset';
 import SelectWidth from './SelectWidth';
 
 export default {
   name: 'create-asset',
+  props: ['perspective'],
   data() {
     return {
       selection: false,
@@ -30,10 +31,13 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['add'], 'assets'),
+    ...mapActions(['save'], 'assets'),
     create() {
-      this.add({ type: this.type, width: this.width });
-      this.close();
+      this.save({
+        type: this.type,
+        width: this.width,
+        activityKey: this.perspective._key
+      });
     },
     setWidth(width) {
       this.width = width;
@@ -41,6 +45,7 @@ export default {
     setType(type) {
       this.type = type;
       this.create();
+      this.close();
     },
     close() {
       this.selection = false;
