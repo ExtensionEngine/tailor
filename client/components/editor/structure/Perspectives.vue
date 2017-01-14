@@ -3,26 +3,23 @@
     <div class="well" v-if="!perspectives.length">
       Click the button bellow to Create first Perspective.
     </div>
-    <perspective v-for="it in perspectives"></perspective>
+    <perspective v-for="it in perspectives" :perspective="it"></perspective>
     <create-perspective @create="add"></create-perspective>
   </div>
 </template>
 
 <script>
-import cuid from 'cuid';
+import { mapGetters, mapActions } from 'vuex-module';
 import Perspective from './Perspective';
 import CreatePerspective from './CreatePerspective';
 
 export default {
   name: 'perspectives',
-  data() {
-    return {
-      perspectives: []
-    };
-  },
+  computed: mapGetters(['activity', 'perspectives'], 'atom'),
   methods: {
+    ...mapActions(['save'], 'activity'),
     add() {
-      this.perspectives.push({ _cid: cuid() });
+      this.save({ name: 'perspective', parentKey: this.activity._key });
     }
   },
   components: {
