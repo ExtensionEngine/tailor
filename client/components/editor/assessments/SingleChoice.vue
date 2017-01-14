@@ -136,6 +136,10 @@ export default {
       if (this.correct === (index)) {
         this.correct = null;
       }
+
+      if (this.correct >= index) {
+        this.correct -= 1;
+      }
     },
     save() {
       let question = {

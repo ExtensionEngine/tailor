@@ -136,6 +136,12 @@ export default {
       if (this.correct.indexOf(index) !== -1) {
         this.correct.splice(this.correct.indexOf(index), 1);
       }
+
+      this.correct.forEach(item => {
+        if (item >= index) {
+          this.correct.splice(index, 1, item - 1);
+        }
+      });
     },
     save() {
       let question = {
