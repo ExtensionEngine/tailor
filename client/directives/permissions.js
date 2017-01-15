@@ -13,6 +13,7 @@ export default {
     // be checked and values can be passed in dynamically.
     const staticPermissions = !isEmpty(modifiers) ? Object.keys(modifiers) : [];
     const dynamicPermissions = isArray(value) && !isEmpty(value) ? value : [];
+
     const allow = permissions.check(concat(staticPermissions, dynamicPermissions));
 
     if (!allow) vnode.elm.parentNode.removeChild(el);

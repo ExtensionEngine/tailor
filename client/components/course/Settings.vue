@@ -25,10 +25,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchForCourse'], 'course')
+    ...mapActions(['fetchUsersForCourse'], 'course')
   },
   created() {
-    this.fetchForCourse();
+    this.fetchUsersForCourse(this.$route.params.courseKey);
   }
 };
 </script>

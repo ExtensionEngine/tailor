@@ -6,13 +6,9 @@ const { state, getter, action, mutation, build } = new VuexModel('course');
 
 // TODO(marko): offline mode support should probably have different structure?
 state({
-  search: ''
+  search: '',
+  users: {}
 });
-
-getter(function courseKey() {
-  const ck = this.rootState.route.params.courseKey;
-  return this.getters.courses[ck]._key;
-}, { global: true });
 
 getter(function users() {
   return this.state.items;
@@ -22,9 +18,7 @@ getter(function userCount() {
   return values(this.state.items).length;
 });
 
-action(function fetchForCourse() {
-  const courseKey = this.context.getters.courseKey;
-
+action(function fetchUsersForCourse(courseKey) {
   return usersApi.fetchUsersForCourse(courseKey)
     .then(users => {
       let result = {};
@@ -37,10 +31,12 @@ action(function fetchForCourse() {
     });
 });
 
-// TODO(marko): Rename with something like 'setUserSearch' because
-// course could contain other search filters
 mutation(function setSearch(query) {
   this.state.search = query;
+});
+
+mutation(function fetchUsersForCourse(users) {
+  this.state.users = users;
 });
 
 export default build();

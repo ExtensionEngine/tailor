@@ -24,10 +24,10 @@ const Permissions = role => user => {
      * Spreads multipe arguments in an array. Iterates through passed perms
      * and check against permission function from permission wrapper.
      *
-     * @param  {array} ...perms Perms to check for logged in user.
+     * @param  {array} perms Perms to check for logged in user.
      * @return {boolean} Wether or not user has the permission.
      */
-    check(...perms) {
+    check(perms) {
       let allow = false;
 
       // Flatten just in case
