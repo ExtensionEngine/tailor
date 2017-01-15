@@ -1,9 +1,15 @@
-import BaseApi from './base.api';
+import request from './request';
 
-class UserAPI extends BaseApi {
-  constructor(basePath = 'users') {
-    super(basePath);
-  }
-}
+const url = {
+  usersForCourse: courseKey => `/courses/${courseKey}/users`
+};
 
-export default new UserAPI();
+function fetchUsersForCourse(courseKey) {
+  return request
+    .get(url.usersForCourse(courseKey))
+    .then(res => res.data.data);
+};
+
+export default {
+  fetchUsersForCourse
+};
