@@ -1,4 +1,3 @@
-import { flattenDeep } from 'lodash';
 import settings from '../../config/shared';
 
 /**
@@ -32,7 +31,7 @@ const Permissions = role => user => {
       let allow = false;
 
       // Flatten just in case
-      flattenDeep(perms).forEach(p => {
+      perms.forEach(p => {
         const mapper = permissionMapper[p];
         if (mapper) allow = allow || mapper(p);
       });
