@@ -1,16 +1,21 @@
 <template>
   <div class="course-search">
-    <div :class="inputClass">
+    <div class="input-group">
       <input
+        v-model="query"
         class="form-control"
-        placeholder="Search..."
-        v-model="query"/>
-      <span v-if="query" class="input-group-btn">
-        <button
-          type="button"
-          class="btn input-action"
-          @click="clearSearch">
-          <span class="fa fa-lg fa-times" aria-hidden="true"></span>
+        placeholder="Search..."/>
+      <span class="input-group-btn">
+        <button v-show="query" type="button" class="btn">
+          <span
+            v-show="spinner"
+            class="fa fa-refresh fa-spin">
+          </span>
+          <span
+            v-show="!spinner"
+            @click="query = ''"
+            class="fa fa-times">
+          </span>
         </button>
       </span>
     </div>
@@ -27,60 +32,57 @@ export default {
       query: ''
     };
   },
-  computed: {
-    inputClass() {
-      return this.query.length ? 'input-group' : 'form-group';
-    }
-  },
-  methods: {
-    clearSearch() {
-      this.query = '';
-    }
-  },
   watch: {
-    query: debounce(function search() {
+    query: debounce(function () {
       this.$emit('change', this.query);
-    }, 800)
+    }, 500)
+  },
+  props: {
+    spinner: {
+      type: Boolean,
+      required: true
+    }
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .course-search {
   width: 500px;
   margin: 0 auto;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.34);
+
+  .input-group {
+    width: 100%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.24);
+  }
 
   .form-control {
     height: 45px;
-    padding: 0 5px;
+    padding: 0 7px;
     font-size: 18px;
-    line-height: 32px;
-    text-indent: 5px;
-
-    &:focus {
-      box-shadow: none;
-    }
+    text-indent: 10px;
+    box-shadow: none;
   }
 
   .input-group-btn {
     background-color: #fff;
   }
 
-  .input-action {
-    background-color: transparent;
-    border: 0;
-    border-radius: 0;
+  button {
+    background-color: white;
     box-shadow: none;
-    height: 44px;
 
-    &:hover {
-      background-color: #fff;
+    &:focus {
+      outline: none;
     }
 
-    &:active {
-      border-color: transparent;
-      outline: 0;
+    .fa {
+      color: #666;
+      font-size: 18px;
+
+      &:hover {
+        color: #444;
+      }
     }
   }
 }

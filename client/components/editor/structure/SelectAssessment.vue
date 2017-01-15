@@ -23,7 +23,11 @@ export default {
     return {
       selection: false,
       assessments: [
-        { type: 'MC', title: 'Multiple Choice' }
+        { type: 'MC', title: 'Multiple Choice' },
+        { type: 'SC', title: 'Single Choice' },
+        { type: 'TF', title: 'True - False' },
+        { type: 'NR', title: 'Numerical' },
+        { type: 'TR', title: 'Text' }
       ]
     };
   },
@@ -62,6 +66,7 @@ export default {
   .assessment-type {
     font-size: 16px;
     line-height: 16px;
+    margin: 0 15px;
   }
 }
 </style>

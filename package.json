@@ -43,6 +43,7 @@
     "urijs": "^1.18.4",
     "vue": "^2.1.0",
     "vue-focus": "^2.1.0",
+    "vue-infinite-scroll": "^2.0.0",
     "vue-quill-editor": "^1.1.0",
     "vue-router": "^2.0.3",
     "vue-strap": "^1.1.34",

@@ -4,11 +4,7 @@ const BaseController = require('../base.controller');
 const courseModel = require('./course.model').model;
 const userModel = require('../user/user.model').model;
 const io = require('../shared/io');
-const isEmpty = require('lodash/isEmpty');
 const role = require('../../config/shared').role;
-
-// TODO(marko): move to middleware
-const isString = require('lodash/isString');
 
 class CourseController extends BaseController {
   constructor(model = courseModel, resourceKey = 'courseKey') {
@@ -20,12 +16,16 @@ class CourseController extends BaseController {
   }
 
   listCoursesForUser(req, res, next) {
-    const courseKeys = req.user.role === role.SYSTEM_ADMIN ? null : req.user.courses;
-    const courseName = isEmpty(req.query.query) ? null : req.query.query;
+    const pagination = io.locals.load(req, 'pagination');
+    const sort = io.locals.load(req, 'sort');
 
-    this.model.getFiltered({ courseKeys, courseName })
-      .then(courses => {
-        io.setOK(res, courses);
+    const courseName = io.locals.load(req, 'search').query;
+    const courseKeys = req.user.role === role.SYSTEM_ADMIN ? null : req.user.courses;
+    const filter = { courseKeys, courseName };
+
+    this.model.getFiltered(filter, pagination, sort)
+      .then(results => {
+        io.setOK(res, results);
         next();
       })
       .catch(next);
@@ -33,11 +33,8 @@ class CourseController extends BaseController {
 
   // TODO(marko): add query course access?
   listUsersForCourse(req, res, next) {
-    let email = req.query.email;
     const courseKey = req.params.courseKey;
-
-    // TODO(marko): move search validation to middleware
-    email = isString(email) && !isEmpty(email) ? email : null;
+    const email = io.locals.load(req, 'search').query;
 
     this.userModel.getFiltered({ courseKey, email })
       .then(users => {

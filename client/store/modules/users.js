@@ -21,6 +21,7 @@ getter(function userCount() {
 
 action(function fetchForCourse() {
   const courseKey = this.context.getters.courseKey;
+
   return usersApi.fetchUsersForCourse(courseKey)
     .then(users => {
       let result = {};

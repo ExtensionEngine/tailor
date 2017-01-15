@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Outline from './Outline.vue';
 import Sidebar from './Sidebar.vue';
 import Settings from './Settings.vue';
@@ -45,6 +45,14 @@ import Permissions from '../../directives/permissions';
 
 export default {
   computed: mapGetters(['activities']),
+  methods: {
+    ...mapActions(['fetch'], 'activity'),
+    ...mapMutations(['activateCourse'], 'activity')
+  },
+  created() {
+    this.activateCourse(this.$route.params.courseKey);
+    this.fetch();
+  },
   components: {
     Outline,
     Sidebar,

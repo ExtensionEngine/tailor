@@ -2,7 +2,7 @@
   <div class="catalog">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <search @change="filterCourses"></search>
+        <search :spinner="showLoader" @change="filterCourses"></search>
       </div>
       <div class="col-md-3">
         <div class="create">
@@ -12,7 +12,10 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <course-list :courses="courses" :loader="loader"></course-list>
+        <course-list
+          :courses="courses"
+          :loader="showLoader">
+        </course-list>
       </div>
     </div>
   </div>
@@ -20,6 +23,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import Promise from 'bluebird';
 import CourseList from './List';
 import CreateCourse from './Create';
 import Search from './Search';
@@ -28,26 +32,29 @@ export default {
   name: 'catalog',
   data() {
     return {
-      loader: true
+      showLoader: false
     };
   },
   computed: mapGetters(['courses']),
   methods: {
     ...mapActions(['fetch'], 'courses'),
-    ...mapMutations(['setSearch'], 'courses'),
-    fetchCourses(query = '') {
-      this.loader = true;
-      this.fetch({ query }).then(() => {
-        this.loader = false;
+    ...mapMutations(['resetPagination', 'setSearch'], 'courses'),
+    fetchWithLoader() {
+      const minDelay = 1500;
+
+      this.resetPagination();
+      this.showLoader = true;
+      Promise.join(this.fetch(), Promise.delay(minDelay)).then(() => {
+        this.showLoader = false;
       });
     },
     filterCourses(query) {
       this.setSearch(query);
-      this.fetchCourses(query);
+      this.fetchWithLoader();
     }
   },
   created() {
-    this.fetchCourses();
+    this.fetchWithLoader();
   },
   beforeDestroy() {
     // state cleanup
@@ -63,6 +70,7 @@ export default {
 
 <style lang="scss">
 .catalog {
+  min-height: 101%;
   padding: 20px 100px 100px 100px;
 
   @media (min-width: 1700px) {

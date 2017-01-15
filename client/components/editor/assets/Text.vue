@@ -1,15 +1,13 @@
 <template>
   <div>
     <quill-editor
-      v-if="input"
+      v-if="isFocused"
       v-model="content"
-      :config="config"
-      @blur="onEditorBlur">
+      :config="config">
     </quill-editor>
     <div
       v-else
       v-html="content"
-      @click="input = true"
       class="ql-editor">
     </div>
   </div>
@@ -20,21 +18,13 @@ import { quillEditor } from 'vue-quill-editor';
 
 export default {
   name: 'text-editor',
+  props: ['asset', 'isFocused'],
   data() {
     return {
-      input: true,
       content: '',
       config: { modules: { toolbar: '#quillToolbar' } }
     };
   },
-  methods: {
-    onEditorBlur(editor) {
-      this.input = false;
-    }
-  },
   components: { quillEditor }
 };
 </script>
-
-<style lang="scss">
-</style>

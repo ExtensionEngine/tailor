@@ -6,6 +6,7 @@ const controller = require('./course.controller').controller;
 const model = require('./course.model').model;
 const middleware = require('./middleware');
 const { requireUser } = require('../user').middleware;
+const queryParams = require('../shared/middleware').queryParamParsers;
 
 const router = express.Router();
 const input = io.input();
@@ -14,6 +15,9 @@ const output = io.output();
 router.get('/courses',
   input,
   requireUser,
+  queryParams.parsePagination,
+  queryParams.parseSearch,
+  queryParams.parseSort,
   controller.listCoursesForUser,
   output);
 

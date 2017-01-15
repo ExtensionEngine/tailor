@@ -10,18 +10,27 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
-import Toolbar from './toolbar';
-import Perspectives from './structure/Perspectives';
+import { mapGetters, mapActions } from 'vuex-module';
 import Assessments from './structure/Assessments';
+import Perspectives from './structure/Perspectives';
+import Toolbar from './toolbar';
 
 export default {
   name: 'editor',
-  computed: mapGetters(['activity'], 'editor'),
+  computed: {
+    ...mapGetters(['activity'], 'editor'),
+    ...mapGetters(['focusedAsset'], 'atom')
+  },
   methods: {
     clicked(e) {
-      // TODO: Implement asset toolbar focusout handling
-    }
+      if (!this.focusedAsset) return;
+      if (!e.component ||
+        ((e.component.name !== 'toolbar') &&
+        (e.component.data._cid !== this.focusedAsset._cid))) {
+        this.focusoutAsset();
+      }
+    },
+    ...mapActions(['focusoutAsset'], 'atom')
   },
   components: {
     Toolbar,
