@@ -2,7 +2,7 @@
   <div class="course-card">
     <div class="body">
       <div class="title">
-        <router-link :to="{ name: 'course-details', params: { courseKey: id }}">
+        <router-link :to="{ name: 'course-details', params: { courseKey: course._cid }}">
           {{ course.name }}
         </router-link>
       </div>
