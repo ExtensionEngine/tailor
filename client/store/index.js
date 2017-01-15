@@ -11,7 +11,6 @@ import editor from './modules/editor';
 import users from './modules/users';
 import settings from '../settings';
 import plugins from './plugins';
-import settings from '../settings';
 
 Vue.use(Vuex);
 Vue.use(VueQuillEditor);
