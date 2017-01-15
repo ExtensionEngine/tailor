@@ -25,7 +25,7 @@ router.get('/courses/:courseKey',
 
 router.post('/courses',
   input,
-  requireUser,
+  middleware.requireCourseAccess,
   controller.create,
   output);
 
@@ -45,6 +45,12 @@ router.delete('/courses/:courseKey',
   input,
   middleware.requireCourseAccess,
   controller.remove,
+  output);
+
+router.get('/courses/:courseKey/users',
+  input,
+  middleware.requireCourseAccess,
+  controller.listUsersForCourse,
   output);
 
 module.exports = {

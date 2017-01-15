@@ -1,14 +1,15 @@
 'use strict';
 
 const get = require('lodash/get');
-const ADMIN = require('../../../config/shared').role.ADMIN;
+const role = require('../../../config/shared').role;
 
 function requireCourseAccess(req, res, next) {
   const courseKey = req.params.courseKey;
   const userHasAccess = get(req, 'user.courses', []).includes(courseKey);
-  const userIsAdmin = get(req, 'user.role') === ADMIN;
+  const userIsSystemAdmin = get(req, 'user.role') === role.SYSTEM_ADMIN;
+  const userIsAdmin = get(req, 'user.role') === role.ADMIN;
 
-  if (userIsAdmin || userHasAccess) next();
+  if (userIsSystemAdmin || userIsAdmin || userHasAccess) next();
   else res.status(401).json();
 }
 

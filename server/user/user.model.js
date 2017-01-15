@@ -74,6 +74,32 @@ class UserModel extends BaseModel {
     super(db, collectionName, schema);
   }
 
+  static getUserEmailFilter(email) {
+    const filter = 'FILTER CONTAINS(LOWER(user.email), LOWER(@email))';
+    const bindVars = { email };
+    return email ? [filter, bindVars] : ['', {}];
+  }
+
+  getFiltered(filter) {
+    const { courseKey, email } = filter;
+    const [emailFilter, emailBindVars] = UserModel.getUserEmailFilter(email);
+
+    const query = `
+      FOR user IN @@collection
+        FILTER POSITION(user.courses, @courseKey)
+        ${emailFilter}
+      RETURN user
+    `;
+    const bindVars = Object.assign({
+      '@collection': this.collectionName,
+      courseKey
+    }, emailBindVars);
+
+    return this.db
+      .query(query, bindVars)
+      .then(cursor => cursor.all());
+  }
+
   hashPassword(user) {
     return new Promise((resolve, reject) => {
       bcrypt.hash(user.password, config.auth.saltRounds, (err, hash) => {

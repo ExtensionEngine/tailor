@@ -11,7 +11,6 @@ const router = express.Router();
 const input = io.input();
 const output = io.output();
 
-
 // Process of creating/inviting users is not fully specified yet, so allow
 // developers to create new users as they see fit.
 if (process.env.NODE_ENV !== 'production') {
