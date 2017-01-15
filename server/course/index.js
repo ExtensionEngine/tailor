@@ -54,6 +54,7 @@ router.delete('/courses/:courseKey',
 router.get('/courses/:courseKey/users',
   input,
   middleware.requireCourseAccess,
+  queryParams.parseSearch,
   controller.listUsersForCourse,
   output);
 
