@@ -80,7 +80,7 @@ class UserModel extends BaseModel {
     return email ? [filter, bindVars] : ['', {}];
   }
 
-  getFiltered(filter) {
+  getUsersForCourse(filter) {
     const { courseKey, email } = filter;
     const [emailFilter, emailBindVars] = UserModel.getUserEmailFilter(email);
 

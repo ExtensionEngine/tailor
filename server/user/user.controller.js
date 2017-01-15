@@ -10,6 +10,7 @@ class UserController extends BaseController {
 
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
+    this.listUsersForCourse = this.listUsersForCourse.bind(this);
     this.grantAccessToCourse = this.grantAccessToCourse.bind(this);
     this.revokeAccessToCourse = this.revokeAccessToCourse.bind(this);
   }
@@ -24,6 +25,18 @@ class UserController extends BaseController {
     req.session.destroy();
     io.setEmpty(res);
     next();
+  }
+
+  listUsersForCourse(req, res, next) {
+    const courseKey = req.params.courseKey;
+    const email = io.locals.load(req, 'search').query;
+
+    this.model.getUsersForCourse({ courseKey, email })
+      .then(users => {
+        io.setOK(res, users);
+        next();
+      })
+      .catch(next);
   }
 
   grantAccessToCourse(req, res, next) {

@@ -1,11 +1,18 @@
 'use strict';
 
+/**
+ * User resource.
+ * @namespace User
+ */
+
 const express = require('express');
 const passport = require('passport');
 const io = require('../shared/io');
 const controller = require('./user.controller').controller;
 const model = require('./user.model').model;
 const middleware = require('./middleware');
+const queryParams = require('../shared/middleware').queryParamParsers;
+const { requireCourseAccess } = require('../course/middleware');
 
 const router = express.Router();
 const input = io.input();
@@ -49,6 +56,13 @@ router.get('/users/:userKey',
   input,
   middleware.requireAdmin,
   controller.show,
+  output);
+
+router.get('/courses/:courseKey/users',
+  input,
+  requireCourseAccess,
+  queryParams.parseSearch,
+  controller.listUsersForCourse,
   output);
 
 router.post('/users/:userKey/access/courses/:courseKey',

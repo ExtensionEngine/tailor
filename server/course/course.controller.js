@@ -12,7 +12,6 @@ class CourseController extends BaseController {
 
     this.userModel = userModel;
     this.listCoursesForUser = this.listCoursesForUser.bind(this);
-    this.listUsersForCourse = this.listUsersForCourse.bind(this);
   }
 
   listCoursesForUser(req, res, next) {
@@ -26,19 +25,6 @@ class CourseController extends BaseController {
     this.model.getFiltered(filter, pagination, sort)
       .then(results => {
         io.setOK(res, results);
-        next();
-      })
-      .catch(next);
-  }
-
-  // TODO(marko): add query course access?
-  listUsersForCourse(req, res, next) {
-    const courseKey = req.params.courseKey;
-    const email = io.locals.load(req, 'search').query;
-
-    this.userModel.getFiltered({ courseKey, email })
-      .then(users => {
-        io.setOK(res, users);
         next();
       })
       .catch(next);
