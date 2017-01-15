@@ -1,19 +1,15 @@
 <template>
   <user-management
-    :courseKey="courseKey"
     :roles="roles"
-    :users="filteredUsers"
-    :totalUsers="totalUsers"
-    :addUser="addUserToCourse"
-    :changeRole="updateUserRole"
-  >
+    :users="users"
+    :totalUsers="userCount">
   </user-management>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 
-import UserManagement from '../common/UserManagement';
+import UserManagement from './UserManagement';
 import { getAdministrativeRoles } from '../../utils/users';
 
 export default {
@@ -21,24 +17,18 @@ export default {
   components: {
     UserManagement
   },
-  created() {
-    this.listUser();
-  },
   computed: {
-    ...mapGetters(['filteredUsers', 'totalUsers', 'user'], 'users'),
-    courseKey() {
-      return String(this.$route.params.id);
-    },
+    ...mapGetters(['user']),
+    ...mapGetters(['users', 'userCount'], 'users'),
     roles() {
       return getAdministrativeRoles(this.user);
     }
   },
   methods: {
-    ...mapActions(['addUserToCourse', 'listUser', 'updateUserRole'], 'users')
+    ...mapActions(['fetchForCourse'], 'users')
+  },
+  created() {
+    this.fetchForCourse();
   }
 };
 </script>
-
-<style lang="scss">
-
-</style>

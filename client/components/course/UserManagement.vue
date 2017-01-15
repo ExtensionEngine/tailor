@@ -26,7 +26,7 @@
           </div>
 
           <div class="col-md-3 col-md-offset-2">
-            <expandable-search :setSearch="setSearchFilter"></expandable-search>
+            <expandable-search @change="search"></expandable-search>
           </div>
         </div>
 
@@ -37,6 +37,9 @@
                 <th class="data">User</th>
                 <th class="center data" v-for="role in roles">
                   {{ role.render }}
+                </th>
+                <th class="center data">
+                  Remove user
                 </th>
               </tr>
             </thead>
@@ -56,6 +59,14 @@
                     />
                   </div>
                 </td>
+
+                <td class="center data">
+                  <div class="form-group">
+                    <button type="button" class="btn btn-link" @click="remove(user)">
+                      <span class="fa fa-lg fa-close"></span>
+                    </button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -72,45 +83,16 @@
 </template>
 
 <script>
-import { debounce } from 'lodash';
+// import { debounce } from 'lodash';
 import { mapActions } from 'vuex-module';
 
-import ExpandableSearch from './ExpandableSearch';
+import ExpandableSearch from '../common/ExpandableSearch';
 
 export default {
   name: 'user-management',
-
-  // TODO(marko): substitute courseKey for generic entity?
-  props: {
-    courseKey: {
-      type: String,
-      required: true
-    },
-    roles: {
-      type: Array,
-      required: true
-    },
-    users: {
-      type: Array,
-      required: true
-    },
-    totalUsers: {
-      type: Number,
-      required: true
-    },
-    addUser: {
-      type: Function,
-      required: true
-    },
-    changeRole: {
-      type: Function,
-      required: true
-    }
-  },
-
   computed: {
     usersExist() {
-      return this.users.length;
+      return this.totalUsers > 0;
     },
     noUsersMessage() {
       const noTotalMessage = 'No users were added to the course, add users?';
@@ -123,21 +105,42 @@ export default {
       }
     }
   },
-
-  components: {
-    'expandable-search': ExpandableSearch
-  },
-
   methods: {
     ...mapActions(['setSearchFilter'], 'users'),
     handleAddUser() {
       const email = this.$refs.newUserEmail.value;
       const role = this.$refs.newUserRole.value;
-      this.addUser({ email, role, courseKey: this.courseKey });
+      console.log(email, role);
+      // TODO(marko): add action for inviting users to course
+      // this.addUser({ email, role, courseKey: this.courseKey });
     },
     handleChangeRole(userKey, role) {
-      debounce(this.changeRole, 1000)({ userKey, role });
+      // TODO(marko): add action for updating user role
+      // debounce(this.changeRole, 1000)({ userKey, role });
+    },
+    search(query) {
+      this.setSearchFilter(query);
+    },
+    remove(user) {
+      console.log('user: ', user.courses);
     }
+  },
+  props: {
+    roles: {
+      type: Array,
+      required: true
+    },
+    users: {
+      type: Object,
+      required: true
+    },
+    totalUsers: {
+      type: Number,
+      required: true
+    }
+  },
+  components: {
+    'expandable-search': ExpandableSearch
   }
 };
 </script>

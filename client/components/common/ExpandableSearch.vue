@@ -3,53 +3,47 @@
     <div class="col-sm-9">
       <div class="form-group">
         <input
-          type="search"
           class="search form-control"
           placeholder="search..."
-          ref="search"
           :class="{ 'search-show': show }"
-          @input="handleSearch"
-        />
+          v-model="query"/>
       </div>
     </div>
 
     <div class="col-sm-3">
       <button
         class="btn btn-link btn-trigger"
-        @click="handleShow"
-      >
-        <span class="fa fa-lg fa-search" v-if="!show"></span>
-        <span class="fa fa-lg fa-times" v-if="show"></span>
+        @click="handleShow">
+          <span class="fa fa-lg fa-times" v-show="show"></span>
+          <span class="fa fa-lg fa-search" v-show="!show"></span>
       </button>
     </div>
   </div>
 </template>
 
 <script>
+import { debounce } from 'lodash';
+
 export default {
   name: 'expandable-search',
-
-  props: {
-    setSearch: {
-      type: Function,
-      required: true
-    }
-  },
-
   data() {
     return {
+      query: '',
       show: false
     };
   },
-
   methods: {
     handleShow() {
       this.show = !this.show;
-    },
-    handleSearch() {
-      const search = this.$refs.search.value;
-      this.setSearch(search);
+
+      // Reset search state when form is hidden
+      if (!this.show) this.query = '';
     }
+  },
+  watch: {
+    query: debounce(function () {
+      this.$emit('change', this.query);
+    }, 500)
   }
 };
 </script>
@@ -57,7 +51,7 @@ export default {
 <style lang="scss">
 $primary-color: #da126d;
 $primary-color-active: lighten($primary-color, 10%);
-// TODO(marko): search expand direction
+
 .expandable-search {
   height: 100%;
   width: 100%;
