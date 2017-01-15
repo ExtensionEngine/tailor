@@ -23,7 +23,6 @@ let router = new Router({
     },
     {
       path: '/course/:courseKey',
-      name: 'course',
       component: Course,
       children: [
         {
