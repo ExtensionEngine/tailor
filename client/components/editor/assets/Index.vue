@@ -6,6 +6,11 @@
         :asset="asset"
         :isFocused="isFocused">
       </text-editor>
+      <video-editor
+        v-if="asset.type === 'video'"
+        :asset="asset"
+        :isFocused="isFocused">
+      </video-editor>
     </div>
   </div>
 </template>
@@ -13,6 +18,7 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex-module';
 import TextEditor from './Text';
+import VideoEditor from './Video';
 
 export default {
   name: 'asset',
@@ -38,7 +44,8 @@ export default {
     }
   },
   components: {
-    TextEditor
+    TextEditor,
+    VideoEditor
   }
 };
 </script>
