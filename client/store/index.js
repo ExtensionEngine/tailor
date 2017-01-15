@@ -5,6 +5,7 @@ import createLogger from 'vuex/dist/logger';
 
 import auth from './modules/auth';
 import assets from './modules/assets';
+import atom from './modules/atom';
 import courses from './modules/courses';
 import activity from './modules/activity';
 import editor from './modules/editor';
@@ -22,6 +23,7 @@ const modules = {
   assets,
   auth,
   courses,
+  atom,
   editor
 };
 
