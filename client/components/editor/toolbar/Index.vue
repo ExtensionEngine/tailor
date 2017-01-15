@@ -1,6 +1,6 @@
 <template>
   <div @click="onClick">
-    <quill-toolbar v-show="showTextToolbar"></quill-toolbar>
+    <quill-toolbar v-if="showTextToolbar"></quill-toolbar>
   </div>
 </template>
 
