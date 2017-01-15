@@ -19,13 +19,13 @@ export default {
   },
   computed: {
     ...mapGetters(['user']),
-    ...mapGetters(['users', 'userCount'], 'users'),
+    ...mapGetters(['users', 'userCount'], 'course'),
     roles() {
       return getAdministrativeRoles(this.user);
     }
   },
   methods: {
-    ...mapActions(['fetchForCourse'], 'users')
+    ...mapActions(['fetchForCourse'], 'course')
   },
   created() {
     this.fetchForCourse();

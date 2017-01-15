@@ -84,7 +84,7 @@
 
 <script>
 // import { debounce } from 'lodash';
-import { mapActions } from 'vuex-module';
+import { mapMutations } from 'vuex-module';
 
 import ExpandableSearch from '../common/ExpandableSearch';
 
@@ -106,7 +106,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setSearchFilter'], 'users'),
+    ...mapMutations(['setSearch'], 'course'),
     handleAddUser() {
       const email = this.$refs.newUserEmail.value;
       const role = this.$refs.newUserRole.value;
@@ -119,7 +119,7 @@ export default {
       // debounce(this.changeRole, 1000)({ userKey, role });
     },
     search(query) {
-      this.setSearchFilter(query);
+      this.setSearch(query);
     },
     remove(user) {
       console.log('user: ', user.courses);
