@@ -11,11 +11,11 @@ state({
 });
 
 getter(function users() {
-  return this.state.items;
+  return this.state.users;
 });
 
 getter(function userCount() {
-  return values(this.state.items).length;
+  return values(this.state.users).length;
 });
 
 action(function fetchUsersForCourse(courseKey) {
@@ -27,7 +27,7 @@ action(function fetchUsersForCourse(courseKey) {
         result[it._cid] = it;
       });
 
-      this.commit('fetch', result);
+      this.commit('fetchUsersForCourse', result);
     });
 });
 
