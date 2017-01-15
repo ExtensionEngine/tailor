@@ -1,22 +1,27 @@
 <template>
-  <div class="asset-container" :class="columnWidth">
-    <div class="asset" @click="focus">
+  <div :class="columnWidth" class="asset-container">
+    <div @click="focus" class="asset">
       <text-editor
         v-if="asset.type === 'text'"
-        :asset="asset">
+        :asset="asset"
+        :isFocused="isFocused">
       </text-editor>
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex-module';
+import { mapGetters, mapMutations } from 'vuex-module';
 import TextEditor from './Text';
 
 export default {
   name: 'asset',
   props: { asset: Object },
   computed: {
+    ...mapGetters(['focusedAsset'], 'atom'),
+    isFocused() {
+      return this.focusedAsset && (this.focusedAsset._cid === this.asset._cid);
+    },
     columnWidth() {
       return `col-xs-${this.asset.width}`;
     }
