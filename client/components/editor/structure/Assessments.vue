@@ -17,6 +17,7 @@
 
 <script>
 import cuid from 'cuid';
+import cloneDeep from 'lodash/cloneDeep';
 import AssessmentItem from './AssessmentItem';
 import SelectAssessment from './SelectAssessment';
 
@@ -62,6 +63,12 @@ export default {
           question: 'Name three countries',
           correct: 'USA, Canada, Croatia',
           hint: ''
+        },
+        '427': {
+          _cid: '427',
+          type: 'FB',
+          question: 'The capital of USA is (1)__________, the capital of Croatia is (2)__________, the capital of Germany is (3)__________',
+          correct: [['Washington'], ['Zagreb'], ['Berlin']]
         }
       }
     };
@@ -88,7 +95,7 @@ export default {
     },
     save(assessment) {
       if (this.assessments[assessment._cid]) {
-        this.assessments[assessment._cid] = assessment;
+        this.assessments[assessment._cid] = cloneDeep(assessment);
       }
     },
     remove(assessment) {
