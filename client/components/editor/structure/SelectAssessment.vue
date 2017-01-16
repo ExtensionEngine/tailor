@@ -27,7 +27,8 @@ export default {
         { type: 'SC', title: 'Single Choice' },
         { type: 'TF', title: 'True - False' },
         { type: 'NR', title: 'Numerical' },
-        { type: 'TR', title: 'Text' }
+        { type: 'TR', title: 'Text' },
+        { type: 'FB', title: 'Fill in the blank' }
       ]
     };
   },

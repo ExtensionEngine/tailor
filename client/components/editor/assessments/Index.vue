@@ -31,6 +31,12 @@
         @selected="$emit('selected')"
         @save="$emit('save', $event)">
       </text-response>
+      <fill-blank
+        v-if="assessment.type === 'FB'"
+        :assessment="assessment"
+        @selected="$emit('selected')"
+        @save="$emit('save', $event)">
+      </fill-blank>
     </div>
   </div>
 </template>
@@ -41,6 +47,7 @@ import SingleChoice from './SingleChoice';
 import TrueFalse from './TrueFalse';
 import NumericalResponse from './NumericalResponse';
 import TextResponse from './TextResponse';
+import FillBlank from './FillBlank';
 
 export default {
   name: 'assessment',
@@ -50,7 +57,8 @@ export default {
     SingleChoice,
     TrueFalse,
     NumericalResponse,
-    TextResponse
+    TextResponse,
+    FillBlank
   }
 };
 </script>
