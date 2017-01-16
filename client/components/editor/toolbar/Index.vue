@@ -1,7 +1,13 @@
 <template>
   <div @click="onClick">
-    <quill-toolbar v-if="isVisible('text')"></quill-toolbar>
-    <video-toolbar v-if="isVisible('video')"></video-toolbar>
+    <quill-toolbar
+      v-if="isVisible('text')"
+      :asset="focusedAsset">
+    </quill-toolbar>
+    <video-toolbar
+      v-if="isVisible('video')"
+      :asset="focusedAsset">
+    </video-toolbar>
   </div>
 </template>
 
