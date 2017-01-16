@@ -54,7 +54,7 @@ export default {
 }
 
 .asset {
-  padding: 5px;
+  padding: 10px;
   border: 1px dashed #ccc;
 }
 </style>
