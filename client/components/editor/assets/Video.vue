@@ -11,10 +11,7 @@
     </div>
     <div v-else>
       <div class="overlay" v-if="!isFocused">
-        <div class="message">
-          Click to preview
-          <span class="fa fa-play"></span>
-        </div>
+        <div class="message">Double click to preview</div>
       </div>
       <video-player
         ref="video"
@@ -84,7 +81,8 @@ export default {
   opacity: 0.9;
 
   .message {
-    margin-top: 60px;
+    position: relative;
+    top: 45%;
     color: green;
     font-size: 22px;
   }
@@ -93,7 +91,9 @@ export default {
 .well {
   margin: 0;
 }
+</style>
 
+<style lang="scss">
 .video-asset .vjs-big-play-button {
   display: none !important;
 }
