@@ -62,14 +62,13 @@ export default {
     },
     saveActivityName() {
       if (this.newActivityName !== this.activity.name) {
-        // TODO(matej): call update action
-        console.log('name updated');
+        this.update({ _cid: this.activity._cid, name: this.newActivityName });
       }
     },
     removeSelectedActivity() {
       this.remove(this.activity);
     },
-    ...mapActions(['remove'], 'activity')
+    ...mapActions(['remove', 'update'], 'activity')
   }
 };
 </script>
