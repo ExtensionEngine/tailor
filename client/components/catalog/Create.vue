@@ -48,7 +48,7 @@ export default {
     CubeGrid
   },
   methods: {
-    ...mapActions(['save'], 'courses'),
+    ...mapActions(['save'], 'catalog'),
     create() {
       // TODO: Add validation
       this.loader = true;
