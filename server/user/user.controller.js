@@ -31,6 +31,7 @@ class UserController extends BaseController {
     const courseKey = req.params.courseKey;
     const email = io.locals.load(req, 'search').query;
 
+    // TODO(marko): Should filter user roles based on current user role.
     this.model.getUsersForCourse({ courseKey, email })
       .then(users => {
         io.setOK(res, users);

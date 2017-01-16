@@ -2,6 +2,7 @@
 
 const Joi = require('joi');
 const get = require('lodash/get');
+const omitBy = require('lodash/omitBy');
 
 class BaseModel {
   constructor(db, collectionName, schema = Joi.any()) {
@@ -38,7 +39,11 @@ class BaseModel {
 
     return new Promise((resolve, reject) => {
       Joi.validate(partialDocument, partialSchema, (err, value) => {
-        return err ? reject(err) : resolve(value);
+        // Omit any default fields filled by Joi
+        const newValue = omitBy(value, (_, k) =>
+          Object.keys(partialDocument).indexOf(k) === -1
+        );
+        return err ? reject(err) : resolve(newValue);
       });
     });
   }

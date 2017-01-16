@@ -8,15 +8,16 @@ function formatRole(role) {
     .join(' ');
 }
 
-// TODO(marko): kinda funky
+// TODO(marko): Should be replaced with unique list of roles returned
+// from server.
 export function getAdministrativeRoles(user) {
   let showRoles = [];
   const { SYSTEM_ADMIN, ADMIN, CONTENT_AUTHOR, USER } = settings.role;
 
   if (user.role === SYSTEM_ADMIN) {
-    showRoles = [SYSTEM_ADMIN, ADMIN, CONTENT_AUTHOR, USER];
-  } else if (user.role === SYSTEM_ADMIN) {
     showRoles = [ADMIN, CONTENT_AUTHOR, USER];
+  } else if (user.role === ADMIN) {
+    showRoles = [CONTENT_AUTHOR, USER];
   }
 
   return showRoles.map(role => ({

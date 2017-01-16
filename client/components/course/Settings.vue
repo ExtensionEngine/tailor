@@ -4,7 +4,7 @@
       <div class="col-md-12 content">
         <div class="row">
           <div class="col-md-7">
-            <form class="user" @submit.prevent="handleAddUser" novalidate>
+            <form class="user" @submit.prevent="addUser" novalidate>
               <div class="row">
                 <div class="col-md-7 form-group">
                   <input ref="newUserEmail" type="email" class="form-control" placeholder="email" />
@@ -39,7 +39,7 @@
                   {{ role.render }}
                 </th>
                 <th class="center data">
-                  Remove user
+                  Remove from course
                 </th>
               </tr>
             </thead>
@@ -55,7 +55,7 @@
                       :name="user._key"
                       :value="role.value"
                       :checked="user.role === role.value"
-                      @click="handleChangeRole(user._key, role.value)"
+                      @click="changeRole(user._key, role.value)"
                     />
                   </div>
                 </td>
@@ -73,7 +73,7 @@
         </form>
         <div v-else>
           <div class="jumbotron">
-            {{ noUsersMessage }}
+            {{ noStoredMessage }}
           </div>
         </div>
 
@@ -84,7 +84,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-
+import { debounce, isEmpty } from 'lodash';
 import ExpandableSearch from '../common/ExpandableSearch';
 import { getAdministrativeRoles } from '../../utils/users';
 
@@ -95,7 +95,7 @@ export default {
   },
   computed: {
     ...mapGetters(['user']),
-    ...mapGetters(['users', 'userCount'], 'course'),
+    ...mapGetters(['users', 'userCount', 'userSearch'], 'course'),
     roles() {
       return getAdministrativeRoles(this.user);
     },
@@ -103,38 +103,33 @@ export default {
       return this.userCount > 0;
     },
     noUsersMessage() {
-      const noTotalMessage = 'No users were added to the course, add users?';
+      const noStoredMessage = 'No users were added to the course, add users?';
       const noFiltered = 'No users found';
 
-      if (!this.totalUsers) {
-        return noTotalMessage;
-      } else if (!this.users.length) {
+      if (!this.userCount && isEmpty(this.userSearch)) {
+        return noStoredMessage;
+      } else if (!this.userCount) {
         return noFiltered;
       }
     }
   },
   methods: {
-    ...mapActions(['fetchUsersForCourse'], 'course'),
-    ...mapMutations(['setSearch'], 'course'),
-    handleAddUser() {
+    ...mapActions(['changeUserRole', 'fetchUsersForCourse'], 'course'),
+    ...mapMutations(['setUserSearch'], 'course'),
+    addUser() {
+      // TODO(marko): add action for inviting users to course
       const email = this.$refs.newUserEmail.value;
       const role = this.$refs.newUserRole.value;
       console.log(email, role);
-      // TODO(marko): add action for inviting users to course
-      // this.addUser({ email, role, courseKey: this.courseKey });
     },
-    handleChangeRole(userKey, role) {
-      // TODO(marko): add action for updating user role
-      // debounce(this.changeRole, 1000)({ userKey, role });
+    changeRole(userKey, role) {
+      debounce(this.changeUserRole, 500)(userKey, role);
     },
     search(query) {
-      this.setSearch(query);
+      this.setUserSearch(query);
     },
     remove(user) {
       console.log('user: ', user.courses);
-    },
-    created() {
-      console.log('users', this.users);
     }
   },
   created() {

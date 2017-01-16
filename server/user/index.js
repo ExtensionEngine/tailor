@@ -58,6 +58,12 @@ router.get('/users/:userKey',
   controller.show,
   output);
 
+// TODO(marko): Implement permission checking.
+router.put('/users/:userKey',
+  input,
+  controller.patch,
+  output);
+
 router.get('/courses/:courseKey/users',
   input,
   requireCourseAccess,
