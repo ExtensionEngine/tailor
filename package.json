@@ -46,6 +46,7 @@
     "vue-quill-editor": "^1.1.0",
     "vue-router": "^2.0.3",
     "vue-strap": "^1.1.34",
+    "vue-video-player": "^2.4.5",
     "vuedraggable": "^2.4.0",
     "vuex": "^2.0.0",
     "vuex-module": "^0.3.0",
