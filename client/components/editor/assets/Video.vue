@@ -90,6 +90,10 @@ export default {
   }
 }
 
+.well {
+  margin: 0;
+}
+
 .video-asset .vjs-big-play-button {
   display: none !important;
 }
