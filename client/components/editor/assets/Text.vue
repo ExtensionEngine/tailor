@@ -61,7 +61,7 @@ export default {
 <style lang="scss" scoped>
 .text-placeholder {
   .message {
-    padding: 10px;
+    padding: 9px;
 
     .heading {
       font-size: 24px;
@@ -82,5 +82,9 @@ export default {
 <style lang="scss">
 .ql-editor {
   min-height: 117px;
+}
+
+.ql-container.ql-snow {
+  border: none !important;
 }
 </style>
