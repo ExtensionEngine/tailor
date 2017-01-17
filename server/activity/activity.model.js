@@ -38,10 +38,10 @@ const ACTIVITY_COLLECTION = database.collection.ACTIVITY;
  *     type: object
  *     required:
  *     - _key
- *       courseKey
- *       parentKey
- *       name
- *       position
+ *     - courseKey
+ *     - parentKey
+ *     - name
+ *     - position
  *     properties:
  *       _key:
  *         type: string

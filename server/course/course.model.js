@@ -14,7 +14,7 @@ const COURSE_COLLECTION = database.collection.COURSE;
  *     type: object
  *     required:
  *     - name
- *       description
+ *     - description
  *     properties:
  *       name:
  *         type: string
@@ -26,8 +26,8 @@ const COURSE_COLLECTION = database.collection.COURSE;
  *     type: object
  *     required:
  *     - _key
- *       name
- *       description
+ *     - name
+ *     - description
  *     properties:
  *       _key:
  *         type: string
