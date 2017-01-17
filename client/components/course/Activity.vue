@@ -13,7 +13,7 @@
       </div>
       <insert-activity :parent="activity" :level="level"></insert-activity>
     </div>
-    <transition name="fade" v-if="!isCollapsed">
+    <transition name="fade" v-if="!isCollapsed && hasChildren">
       <draggable @update="reorder">
         <activity
           v-for="it in children"
@@ -38,6 +38,7 @@ import Draggable from 'vuedraggable';
 import InsertActivity from './InsertActivity';
 import values from 'lodash/values';
 
+const MAX_LEVELS = 3;
 const COLORS = ['#29B6F6', '#8BC34A', '#EF5350'];
 
 export default {
@@ -55,12 +56,15 @@ export default {
     isRoot() {
       return this.level === 0;
     },
+    isAtom() {
+      return this.level === MAX_LEVELS;
+    },
     color() {
       let index = this.level - 1;
       return index > COLORS.length ? '#555' : COLORS[index];
     },
     hasChildren() {
-      return this.children.length > 0;
+      return this.children.length > 0 && this.level < MAX_LEVELS;
     },
     children() {
       const filterByParent = this.isRoot
@@ -85,10 +89,10 @@ export default {
       this.focusActivity(this._cid);
     },
     edit() {
-      if (this.activity.type !== 'CLO') return;
+      if (!this.isAtom) return;
       this.$router.push({
         name: 'editor',
-        params: { activityKey: this._cid }
+        params: { activityKey: this.activity._key }
       });
     },
     reorder({ newIndex: to, item: { __vue__: { position: from } } }) {

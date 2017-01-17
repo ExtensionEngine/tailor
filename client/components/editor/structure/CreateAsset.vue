@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
+import { mapActions, mapMutations } from 'vuex-module';
 import SelectAsset from './SelectAsset';
 import SelectWidth from './SelectWidth';
 
@@ -32,12 +32,14 @@ export default {
   },
   methods: {
     ...mapActions(['save'], 'assets'),
+    ...mapMutations(['focusAsset'], 'atom'),
     create() {
-      this.save({
+      let asset = this.save({
         type: this.type,
         width: this.width,
         activityKey: this.perspective._key
       });
+      this.focusAsset(asset);
     },
     setWidth(width) {
       this.width = width;

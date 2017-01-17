@@ -44,7 +44,7 @@ import Settings from './Settings.vue';
 import Permissions from '../../directives/permissions';
 
 export default {
-  computed: mapGetters(['activities']),
+  computed: mapGetters(['activities'], 'editor'),
   methods: {
     ...mapActions(['fetch'], 'activity'),
     ...mapMutations(['activateCourse'], 'activity')

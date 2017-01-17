@@ -76,7 +76,7 @@ export default {
   props: { assessment: Object },
   data() {
     return {
-      ...defaultAssessment,
+      ...cloneDeep(defaultAssessment),
       ...cloneDeep(this.assessment),
       isEditing: !!this.assessment.question,
       errors: []

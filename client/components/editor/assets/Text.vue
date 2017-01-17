@@ -1,30 +1,90 @@
 <template>
   <div>
-    <quill-editor
-      v-if="isFocused"
-      v-model="content"
-      :config="config">
-    </quill-editor>
-    <div
-      v-else
-      v-html="content"
-      class="ql-editor">
+    <div v-if="!isFocused && !content">
+      <div class="well text-placeholder">
+        <div class="message">
+          <span class="heading">Text placeholder</span>
+          <span>Click to edit</span>
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <quill-editor
+        v-if="isFocused"
+        v-model="content"
+        :config="config">
+      </quill-editor>
+      <div
+        v-else
+        v-html="content"
+        class="ql-editor">
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import { quillEditor } from 'vue-quill-editor';
+
+const defaultAsset = {
+  type: 'text',
+  content: ''
+};
 
 export default {
   name: 'text-editor',
   props: ['asset', 'isFocused'],
   data() {
     return {
-      content: '',
+      ...cloneDeep(defaultAsset),
+      ...cloneDeep(this.asset),
       config: { modules: { toolbar: '#quillToolbar' } }
     };
+  },
+  computed: {
+    localAsset() {
+      return {
+        content: this.content
+      };
+    }
+  },
+  watch: {
+    isFocused(val, oldVal) {
+      if (oldVal && !val) this.$emit('save', this.localAsset);
+    }
   },
   components: { quillEditor }
 };
 </script>
+
+<style lang="scss" scoped>
+.text-placeholder {
+  .message {
+    padding: 9px;
+
+    .heading {
+      font-size: 24px;
+    }
+
+    span {
+      display: block;
+      font-size: 18px;
+    }
+  }
+}
+
+.well {
+  margin-bottom: 0;
+}
+</style>
+
+<style lang="scss">
+.ql-editor {
+  min-height: 117px;
+}
+
+.ql-container.ql-snow {
+  border: none !important;
+}
+</style>
