@@ -58,7 +58,8 @@ router.get('/users/:userKey',
   controller.show,
   output);
 
-// TODO(marko): Implement permission checking.
+// TODO(marko): Implement permission checking. Implement role
+// checking depending on inviting user.
 router.put('/users/:userKey',
   input,
   controller.patch,
@@ -71,15 +72,23 @@ router.get('/courses/:courseKey/users',
   controller.listUsersForCourse,
   output);
 
+// TODO(marko): Implement permission checking. Implement role
+// checking depending on inviting user.
+router.post('/users/invite',
+  input,
+  controller.inviteUserToCourse,
+  output
+);
+
 router.post('/users/:userKey/access/courses/:courseKey',
   input,
-  middleware.requireAdmin,
+  requireCourseAccess,
   controller.grantAccessToCourse,
   output);
 
 router.delete('/users/:userKey/access/courses/:courseKey',
   input,
-  middleware.requireAdmin,
+  requireCourseAccess,
   controller.revokeAccessToCourse,
   output);
 

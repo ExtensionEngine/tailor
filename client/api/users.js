@@ -1,6 +1,8 @@
 import request from './request';
 
 const url = {
+  userInvite: '/users/invite',
+  courseAccess: (userKey, courseKey) => `/users/${userKey}/access/courses/${courseKey}`,
   userRole: userKey => `/users/${userKey}`,
   usersForCourse: courseKey => `/courses/${courseKey}/users`
 };
@@ -17,7 +19,21 @@ function fetchUsersForCourse(courseKey) {
     .then(res => res.data.data);
 };
 
+function inviteUserToCourse(data) {
+  return request
+    .post(url.userInvite, data)
+    .then(res => res.data.data);
+}
+
+function revokeAccessToCourse(userKey, courseKey) {
+  return request
+    .delete(url.courseAccess(userKey, courseKey), { userKey, courseKey })
+    .then(res => res.data.data);
+}
+
 export default {
   changeUserRole,
-  fetchUsersForCourse
+  fetchUsersForCourse,
+  inviteUserToCourse,
+  revokeAccessToCourse
 };

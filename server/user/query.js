@@ -15,6 +15,12 @@ FOR user IN @@collection
   FILTER user.email == @email
   RETURN user`;
 
+const INVITE_USER_TO_COURSE = `
+  UPSERT { email: @email }
+  INSERT { email: @email, role: @role, courses: @courses, password: @password }
+  UPDATE { courses: APPEND(OLD.courses, @courses, true) } IN @@collection
+  RETURN NEW`;
+
 const ADD_COURSE_TO_USER = `
 FOR user IN @@collection
   FILTER user._key == @userKey
@@ -36,5 +42,6 @@ module.exports = {
   GET_USER_BY_EMAIL,
   GET_USER_BY_KEY,
   INSERT_USER,
+  INVITE_USER_TO_COURSE,
   REMOVE_COURSE_FROM_USER
 };

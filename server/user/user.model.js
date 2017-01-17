@@ -2,6 +2,7 @@
 
 const bcrypt = require('bcryptjs');
 const Joi = require('joi');
+const assign = require('lodash/assign');
 const config = require('../../config/server');
 const database = require('../shared/database');
 const BaseModel = require('../base.model');
@@ -165,6 +166,22 @@ class UserModel extends BaseModel {
         delete user.password;
         return passwordsMatch ? user : Promise.reject(new AuthError());
       });
+  }
+
+  inviteUserToCourse(email, role, courseKey) {
+    // TODO(marko): User should be inactive once invited and password should
+    // be set via link provided in the invitation email.
+    const document = { email, role, courses: [courseKey], password: 'pass' };
+
+    return this
+      .validatePartial(document)
+      .then(validDocument =>
+        this.db.query(query.INVITE_USER_TO_COURSE, assign(
+          validDocument,
+          { '@collection': this.collectionName }
+        ))
+      )
+      .then(result => result.next());
   }
 
   grantAccessToCourse(userKey, courseKey) {

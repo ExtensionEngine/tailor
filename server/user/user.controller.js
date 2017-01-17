@@ -11,6 +11,7 @@ class UserController extends BaseController {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.listUsersForCourse = this.listUsersForCourse.bind(this);
+    this.inviteUserToCourse = this.inviteUserToCourse.bind(this);
     this.grantAccessToCourse = this.grantAccessToCourse.bind(this);
     this.revokeAccessToCourse = this.revokeAccessToCourse.bind(this);
   }
@@ -32,9 +33,25 @@ class UserController extends BaseController {
     const email = io.locals.load(req, 'search').query;
 
     // TODO(marko): Should filter user roles based on current user role.
-    this.model.getUsersForCourse({ courseKey, email })
+    this.model
+      .getUsersForCourse({ courseKey, email })
       .then(users => {
         io.setOK(res, users);
+        next();
+      })
+      .catch(next);
+  }
+
+  inviteUserToCourse(req, res, next) {
+    const { email, role, courseKey } = req.body;
+
+    // TODO(marko): Should create inactive user and sent invitation link
+    // to their email. This invitation link should lead to password set
+    // page. Alternatively, entire add / invite flow should be different.
+    this.model
+      .inviteUserToCourse(email, role, courseKey)
+      .then(user => {
+        io.setOK(res, user);
         next();
       })
       .catch(next);

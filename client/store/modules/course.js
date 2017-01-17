@@ -5,8 +5,6 @@ import usersApi from '../../api/users';
 
 const { state, getter, action, mutation, build } = new VuexModel('course');
 
-// TODO(marko): offline mode support should probably have
-// different state structure.
 state({
   search: '',
   users: {}
@@ -38,11 +36,29 @@ action(function fetchUsersForCourse(courseKey) {
     });
 });
 
-action(function changeUserRole(userKey, role) {
+action(function changeUserRole(data) {
+  const { userKey, role } = data;
   return usersApi.changeUserRole(userKey, role)
     .then(user => {
       this.api.setCid(user);
       this.commit('saveUser', user);
+    });
+});
+
+action(function inviteUserToCourse(data) {
+  return usersApi.inviteUserToCourse(data)
+    .then(user => {
+      this.api.setCid(user);
+      this.commit('saveUser', user);
+    });
+});
+
+action(function revokeAccessToCourse(data) {
+  const { userKey, courseKey } = data;
+  return usersApi.revokeAccessToCourse(userKey, courseKey)
+    .then(user => {
+      const cid = this.api.getCid(user._key);
+      this.commit('removeUser', cid);
     });
 });
 
@@ -56,6 +72,11 @@ mutation(function fetchUsersForCourse(users) {
 
 mutation(function saveUser(user) {
   Vue.set(this.state.users, user._cid, user);
+});
+
+mutation(function removeUser(cid) {
+  console.log(cid);
+  Vue.delete(this.state.users, cid);
 });
 
 export default build();
