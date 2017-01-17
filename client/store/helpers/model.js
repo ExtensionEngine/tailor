@@ -59,6 +59,14 @@ export default function (collectionName, url = '') {
       .then(removed => this.commit('remove', removed));
   });
 
+  action(function update(model) {
+    const cid = model._cid;
+    const changes = { ...model };
+    delete changes._cid;
+    return this.api.update(cid, changes)
+      .then(updated => this.commit('update', updated));
+  });
+
   // TODO: Do the proper syncing
   mutation(function fetch(result) {
     each(result, it => Vue.set(this.state.items, it._cid, it));
@@ -79,6 +87,10 @@ export default function (collectionName, url = '') {
 
   mutation(function remove(result) {
     result.forEach(it => Vue.delete(this.state.items, it._cid));
+  });
+
+  mutation(function update(model) {
+    Vue.set(this.state.items, model._cid, model);
   });
 
   return module;

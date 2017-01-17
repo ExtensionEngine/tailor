@@ -40,6 +40,13 @@ router.get('/courses/:courseKey/activities/:activityKey',
   controller.show,
   output);
 
+router.patch('/courses/:courseKey/activities/:activityKey',
+  input,
+  requireCourseAccess,
+  loadCourse,
+  controller.patch,
+  output);
+
 router.delete('/courses/:courseKey/activities/:activityKey',
   input,
   requireCourseAccess,

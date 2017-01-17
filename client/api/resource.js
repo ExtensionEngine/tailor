@@ -87,7 +87,7 @@ export default class Resource {
   }
 
   /**
-   * Creates or updates the model.
+   * Creates a new model, or replaces an existing one.
    * @param {object} model
    */
   save(model) {
@@ -101,6 +101,22 @@ export default class Resource {
       if (!model._key) this.map(model._cid, response.data.data._key);
       return assign(model, response.data.data);
     });
+  }
+
+  /**
+   * Partially updates an existing model.
+   * @param {object} cid - Client ID of the model to update.
+   * @param {object} changes - Key-value collection of properties to update.
+   */
+  update(cid, changes) {
+    const key = this.getKey(cid);
+    return this
+      .patch(key, changes)
+      .then(response => {
+        const updated = response.data.data;
+        updated._cid = cid;
+        return updated;
+      });
   }
 
   /**
