@@ -3,7 +3,7 @@
     <div class="label label-primary assessment-type">Fill in the blank</div>
     <div class="form-group">
       <span class="form-label">Question</span>
-      <span :class="{'has-error': errors.includes('question')}">
+      <span :class="{ 'has-error': questionError }">
         <textarea
           v-model="question"
           :disabled="isEditing"
@@ -16,13 +16,13 @@
         Type "@blank" when new blank is needed.
       </span>
     </div>
-    <div class="form-group" v-if="correct.length > 0">
+    <div class="form-group" v-if="hasAnswer">
       <span class="form-label">Answers</span>
-      <span v-show="correct.length > 1" class="help-block" type="text">
+      <span v-if="hasMultipleAnswers" class="help-block" type="text">
         Arrange answers by dragging if needed !
       </span>
       <draggable
-        v-if="correct.length > 1"
+        v-if="hasMultipleAnswers"
         :list="correct"
         :options="{ disabled: isEditing }"
         class="draggable">
@@ -53,7 +53,7 @@
             <li v-for="(answer, indexAnswer) in blank">
               <span
                 class="answers-input"
-                :class="{'has-error': errors.includes(`correct[${index}][${indexAnswer}]`)}">
+                :class="{ 'has-error': answerError(index, indexAnswer)} ">
                 <input
                   v-model="correct[index][indexAnswer]"
                   :disabled="isEditing"
@@ -102,11 +102,12 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import yup from 'yup';
 import draggable from 'vuedraggable';
+import times from 'lodash/times';
+import yup from 'yup';
 
 const schema = yup.object().shape({
-  question: yup.string().trim().matches(/\(\d+\)_{10}/g).required(),
+  question: yup.string().trim().matches(/\(\d+\)_{10}/).required(),
   correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).required()))
 });
 
@@ -134,18 +135,12 @@ export default {
   methods: {
     parse() {
       let index = 0;
-      this.question = this.question.replace(
-        new RegExp(`(@blank|${regex})`, 'g'),
-        () => {
-          index++;
-          return `(${index})__________`;
-        }
-      );
+      const searchValue = new RegExp(`(@blank|${regex})`, 'g');
+      const newValue = () => ++index && `(${index})__________`;
+      this.question = this.question.replace(searchValue, newValue);
 
       let count = index - this.correct.length;
-      for (let i = 0; i < count; i++) {
-        this.correct.push(['']);
-      }
+      this.correct.push(...times(count, () => ['']));
     },
     addAnswer(index) {
       this.correct[index].push('');
@@ -180,13 +175,16 @@ export default {
     },
     edit() {
       this.isEditing = false;
+    },
+    answerError(index, indexAnswer) {
+      return this.errors.includes(`correct[${index}][${indexAnswer}]`);
     }
   },
   computed: {
     alertType() {
       if (this.isSynced) {
         this.alert = `Question and blanks are out of sync ! Please delete
-        unnecessary answers or add blanks in the question !`;
+                      unnecessary answers or add blanks in the question !`;
         return 'alert-danger';
       } else {
         this.alert = 'Question saved !';
@@ -196,10 +194,18 @@ export default {
     isSynced() {
       let blanksCount = this.question.match(new RegExp(regex, 'g'));
 
-      if (blanksCount) {
-        return this.correct.length !== blanksCount.length;
-      }
-      return this.correct.length === 0 ? false : this.correct.length !== 0;
+      if (blanksCount) return this.correct.length !== blanksCount.length;
+
+      return this.correct.length !== 0;
+    },
+    hasAnswer() {
+      return this.correct.length > 0;
+    },
+    hasMultipleAnswers() {
+      return this.correct.length > 1;
+    },
+    questionError() {
+      return this.errors.includes('question');
     }
   },
   watch: {
