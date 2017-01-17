@@ -2,13 +2,14 @@
   <div class="course-sidebar">
     <div class="title-bar" v-if="isActivitySelected">
       <template v-if="showNameInput">
-        <input
+        <textarea
           class="form-control"
           v-model="newActivityName"
           @blur="onInputBlur"
           @keyup.enter="onInputEnter"
           @keyup.esc="deactivateInput"
           type="text">
+        </textarea>
       </template>
       <template v-else>
         <span class="title-editor">
@@ -106,6 +107,10 @@ export default {
   button {
     float: right;
     margin-top: 12px;
+  }
+
+  textarea {
+    margin: 10px 0;
   }
 }
 </style>
