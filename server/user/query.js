@@ -18,7 +18,7 @@ FOR user IN @@collection
 const INVITE_USER_TO_COURSE = `
   UPSERT { email: @email }
   INSERT { email: @email, role: @role, courses: @courses, password: @password }
-  UPDATE { courses: APPEND(OLD.courses, @courses, true) } IN @@collection
+  UPDATE { courses: APPEND(OLD.courses, @courses, true), role: @role } IN @@collection
   RETURN NEW`;
 
 const ADD_COURSE_TO_USER = `

@@ -2,52 +2,52 @@
   "data": [{
     "email": "LanceMBurges@dayrep.com",
     "password": "LanceMBurges",
-    "role": "USER",
+    "role": "CONTENT_AUTHOR",
     "courses": [0, 1, 2, 3, 4, 5, 6, 7, 8]
   }, {
     "email": "JeffGAlameda@teleworm.us",
     "password": "JeffGAlameda",
-    "role": "USER",
+    "role": "ADMIN",
     "courses": [0, 1, 2, 3, 4, 5, 6, 7]
   }, {
     "email": "KeithVBaker@jourrapide.com",
     "password": "KeithVBaker",
-    "role": "USER",
+    "role": "CONTENT_AUTHOR",
     "courses": [0, 1, 2, 3, 4, 5, 6]
   }, {
     "email": "RenaldoDHaggerty@armyspy.com",
     "password": "RenaldoDHaggerty",
-    "role": "USER",
+    "role": "CONTENT_AUTHOR",
     "courses": [0, 1, 2, 3, 4, 5]
   }, {
     "email": "ShawnNPhilpot@teleworm.us",
     "password": "ShawnNPhilpot",
-    "role": "USER",
+    "role": "ADMIN",
     "courses": [0, 1, 2, 3, 4]
   }, {
     "email": "RubenTRoberts@rhyta.com",
     "password": "RubenTRoberts",
-    "role": "USER",
+    "role": "CONTENT_AUTHOR",
     "courses": [0, 1, 2, 3]
   }, {
     "email": "ThomasVBrown@rhyta.com",
     "password": "ThomasVBrown",
-    "role": "USER",
+    "role": "CONTENT_AUTHOR",
     "courses": [0, 1, 2]
   }, {
     "email": "WendellPGardner@teleworm.us",
     "password": "WendellPGardner",
-    "role": "USER",
+    "role": "CONTENT_AUTHOR",
     "courses": [0, 1]
   }, {
     "email": "RobertYDeane@jourrapide.com",
     "password": "RobertYDeane",
-    "role": "USER",
+    "role": "ADMIN",
     "courses": [0]
   }, {
     "email": "BenFGrimm@armyspy.com",
     "password": "BenFGrimm",
-    "role": "USER",
+    "role": "CONTENT_AUTHOR",
     "courses": []
   }]
 }
