@@ -18,11 +18,9 @@ const router = express.Router();
 const input = io.input();
 const output = io.output();
 
-// Process of creating/inviting users is not fully specified yet, so allow
-// developers to create new users as they see fit.
 if (process.env.NODE_ENV !== 'production') {
-  // TODO(marko): list users used for testing, override
-  // controller method and add permission check
+  // Process of creating/inviting users is not fully specified yet, so allow
+  // developers to create new users as they see fit.
   router.get('/users',
     input,
     controller.list,
