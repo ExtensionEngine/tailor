@@ -40,7 +40,7 @@ import Sidebar from './Sidebar.vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 
 export default {
-  computed: mapGetters(['activities']),
+  computed: mapGetters(['activities'], 'editor'),
   methods: {
     ...mapActions(['fetch'], 'activity'),
     ...mapMutations(['activateCourse'], 'activity')

@@ -1,3 +1,4 @@
+import filter from 'lodash/filter';
 import { VuexModule } from 'vuex-module';
 
 const { build, getter, mutation, state } = new VuexModule('editor');
@@ -12,6 +13,12 @@ getter(function course() {
   const { courses } = this.rootGetters;
   if (EDITOR_ROUTES.indexOf(route.name) < 0) return;
   return courses[route.params.courseKey];
+});
+
+getter(function activities() {
+  const { route } = this.rootState;
+  const { activities: collection } = this.rootGetters;
+  return filter(collection, { courseKey: route.params.courseKey });
 });
 
 getter(function activity() {
