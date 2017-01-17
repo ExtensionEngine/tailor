@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { values } from 'lodash';
+import { isEmpty, values } from 'lodash';
 import VuexModel from '../helpers/model.js';
 import usersApi from '../../api/users';
 
@@ -18,13 +18,15 @@ getter(function userCount() {
   return values(this.state.users).length;
 });
 
-// TODO(marko): Temporary. Should be mapped with mapState.
 getter(function userSearch() {
   return this.state.search;
-});
+}, { global: true });
 
 action(function fetchUsersForCourse(courseKey) {
-  return usersApi.fetchUsersForCourse(courseKey)
+  const userSearch = this.context.getters.userSearch;
+  const params = !isEmpty(userSearch) ? { search: userSearch } : {};
+
+  return usersApi.fetchUsersForCourse(courseKey, params)
     .then(users => {
       let result = {};
       users.forEach(it => {

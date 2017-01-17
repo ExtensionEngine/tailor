@@ -11,10 +11,11 @@
           </div>
         </div>
         <user-list
-          v-if="usersExist"
+          v-if="usersExist && !showLoader"
           :roles="roles"
           :users="users">
         </user-list>
+        <cube-spinner v-else-if="showLoader"></cube-spinner>
         <div v-else>
           <div class="jumbotron">
             {{ noUsersMessage }}
@@ -27,7 +28,9 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import Promise from 'bluebird';
 import { isEmpty } from 'lodash';
+import CubeSpinner from '../loaders/CubeSpinner';
 import ExpandableSearch from '../common/ExpandableSearch';
 import UserInvite from './UserInvite';
 import UserList from './UserList';
@@ -35,9 +38,14 @@ import { getAdministrativeRoles } from '../../utils/users';
 
 export default {
   name: 'settings',
+  data() {
+    return {
+      showLoader: false
+    };
+  },
   computed: {
-    ...mapGetters(['user']),
-    ...mapGetters(['users', 'userCount', 'userSearch'], 'course'),
+    ...mapGetters(['user', 'userSearch']),
+    ...mapGetters(['users', 'userCount'], 'course'),
     roles() {
       return getAdministrativeRoles(this.user);
     },
@@ -58,14 +66,26 @@ export default {
   methods: {
     ...mapActions(['fetchUsersForCourse'], 'course'),
     ...mapMutations(['setUserSearch'], 'course'),
+    fetchWithLoader() {
+      const courseKey = this.$route.params.courseKey;
+      const minDelay = 1500;
+
+      this.showLoader = true;
+      return Promise.join(this.fetchUsersForCourse(courseKey), Promise.delay(minDelay))
+        .then(() => {
+          this.showLoader = false;
+        });
+    },
     search(query) {
       this.setUserSearch(query);
+      this.fetchWithLoader();
     }
   },
   created() {
-    this.fetchUsersForCourse(this.$route.params.courseKey);
+    this.fetchWithLoader();
   },
   components: {
+    CubeSpinner,
     ExpandableSearch,
     UserInvite,
     UserList

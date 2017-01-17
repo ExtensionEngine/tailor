@@ -13,9 +13,9 @@ function changeUserRole(userKey, role) {
     .then(res => res.data.data);
 };
 
-function fetchUsersForCourse(courseKey) {
+function fetchUsersForCourse(courseKey, params) {
   return request
-    .get(url.usersForCourse(courseKey))
+    .get(url.usersForCourse(courseKey), { params })
     .then(res => res.data.data);
 };
 
