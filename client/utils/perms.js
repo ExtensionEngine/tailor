@@ -15,8 +15,7 @@ const Permissions = role => user => {
   const permissionMapper = {
     isSystemAdmin: () => hasPermission(role.SYSTEM_ADMIN),
     isAdmin: () => hasPermission(role.ADMIN),
-    isContentAuthor: () => hasPermission(role.CONTENT_AUTHOR),
-    isUser: () => hasPermission(role.USER)
+    isContentAuthor: () => hasPermission(role.CONTENT_AUTHOR)
   };
 
   return {

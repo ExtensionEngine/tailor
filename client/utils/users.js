@@ -12,12 +12,12 @@ function formatRole(role) {
 // from server.
 export function getAdministrativeRoles(user) {
   let showRoles = [];
-  const { SYSTEM_ADMIN, ADMIN, CONTENT_AUTHOR, USER } = settings.role;
+  const { SYSTEM_ADMIN, ADMIN, CONTENT_AUTHOR } = settings.role;
 
   if (user.role === SYSTEM_ADMIN) {
-    showRoles = [ADMIN, CONTENT_AUTHOR, USER];
+    showRoles = [ADMIN, CONTENT_AUTHOR];
   } else if (user.role === ADMIN) {
-    showRoles = [CONTENT_AUTHOR, USER];
+    showRoles = [CONTENT_AUTHOR];
   }
 
   return showRoles.map(role => ({

@@ -82,18 +82,20 @@ class UserModel extends BaseModel {
   }
 
   getUsersForCourse(filter) {
-    const { courseKey, email } = filter;
+    const { courseKey, email, roles } = filter;
     const [emailFilter, emailBindVars] = UserModel.getUserEmailFilter(email);
 
     const query = `
       FOR user IN @@collection
         FILTER POSITION(user.courses, @courseKey)
+        FILTER POSITION(@roles, user.role)
         ${emailFilter}
       RETURN user
     `;
     const bindVars = Object.assign({
       '@collection': this.collectionName,
-      courseKey
+      courseKey,
+      roles
     }, emailBindVars);
 
     return this.db

@@ -1,8 +1,8 @@
 import request from './request';
 
 const url = {
-  userInvite: '/users/invite',
   courseAccess: (userKey, courseKey) => `/users/${userKey}/access/courses/${courseKey}`,
+  userInvite: '/users/invite',
   userRole: userKey => `/users/${userKey}`,
   usersForCourse: courseKey => `/courses/${courseKey}/users`
 };

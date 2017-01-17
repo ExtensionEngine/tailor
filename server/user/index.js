@@ -48,13 +48,11 @@ router.post('/users/actions/logout',
 
 router.get('/users',
   input,
-  middleware.requireAdmin,
   controller.list,
   output);
 
 router.get('/users/:userKey',
   input,
-  middleware.requireAdmin,
   controller.show,
   output);
 
