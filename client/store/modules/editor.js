@@ -1,4 +1,5 @@
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import { VuexModule } from 'vuex-module';
 
 const { build, getter, mutation, state } = new VuexModule('editor');
@@ -12,7 +13,7 @@ getter(function course() {
   const { route } = this.rootState;
   const { courses } = this.rootGetters;
   if (EDITOR_ROUTES.indexOf(route.name) < 0) return;
-  return courses[route.params.courseKey];
+  return find(courses, { _key: route.params.courseKey });
 });
 
 getter(function activities() {

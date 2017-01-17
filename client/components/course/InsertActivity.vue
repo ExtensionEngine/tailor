@@ -42,7 +42,7 @@
 
 <script>
 import { focus } from 'vue-focus';
-import { mapActions } from 'vuex-module';
+import { mapGetters, mapActions } from 'vuex-module';
 
 export default {
   directives: { focus },
@@ -56,6 +56,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['course'], 'editor'),
     canCreateSubsection() {
       return this.level < 3;
     },
@@ -81,9 +82,11 @@ export default {
 
       const model = {
         name: this.activityName,
+        courseKey: this.course._key,
         position,
         parentKey
       };
+
       this.save(model);
       this.hide();
     },
