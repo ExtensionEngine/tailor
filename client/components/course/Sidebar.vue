@@ -7,8 +7,7 @@
           v-model="newActivityName"
           @blur="onInputBlur"
           @keyup.enter="onInputEnter"
-          @keyup.esc="deactivateInput"
-          type="text">
+          @keyup.esc="deactivateInput">
         </textarea>
       </template>
       <template v-else>
