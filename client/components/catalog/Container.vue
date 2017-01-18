@@ -2,26 +2,20 @@
   <div class="catalog">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <search :spinner="showLoader" @change="filterCourses"></search>
+        <search @change="filterCourses" :showLoader="showLoader"></search>
       </div>
       <div class="col-md-3">
-        <div class="create">
-          <create-course></create-course>
-        </div>
+        <create-course class="pull-right"></create-course>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
-        <course-list
-          :courses="courses"
-          :loader="showLoader">
-        </course-list>
-      </div>
+      <course-list :courses="courses" :showLoader="showLoader"></course-list>
     </div>
   </div>
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Promise from 'bluebird';
 import CourseList from './List';
@@ -29,7 +23,6 @@ import CreateCourse from './Create';
 import Search from './Search';
 
 export default {
-  name: 'catalog',
   data() {
     return {
       showLoader: false
@@ -38,26 +31,26 @@ export default {
   computed: mapGetters(['courses']),
   methods: {
     ...mapActions(['fetch'], 'courses'),
-    ...mapMutations(['resetPagination', 'setSearch'], 'courses'),
-    fetchWithLoader() {
-      const minDelay = 1500;
-
-      this.resetPagination();
+    ...mapMutations(['setSearch', 'resetPagination'], 'courses'),
+    fetchCourses() {
       this.showLoader = true;
-      Promise.join(this.fetch(), Promise.delay(minDelay)).then(() => {
+      this.resetPagination();
+      return Promise.join(this.fetch(), Promise.delay(400)).then(() => {
         this.showLoader = false;
       });
     },
     filterCourses(query) {
-      this.setSearch(query);
-      this.fetchWithLoader();
+      this.showLoader = true;
+      debounce(() => {
+        this.setSearch(query);
+        this.fetchCourses();
+      }, 700)();
     }
   },
   created() {
-    this.fetchWithLoader();
+    this.fetchCourses();
   },
   beforeDestroy() {
-    // state cleanup
     this.setSearch('');
   },
   components: {
@@ -68,18 +61,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .catalog {
   min-height: 101%;
   padding: 20px 100px 100px 100px;
 
   @media (min-width: 1700px) {
     padding: 20px 300px 100px 300px;
-  }
-
-  .create {
-    position: absolute;
-    right: 60px;
   }
 }
 </style>

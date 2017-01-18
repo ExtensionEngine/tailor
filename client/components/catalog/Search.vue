@@ -7,15 +7,7 @@
         placeholder="Search..."/>
       <span class="input-group-btn">
         <button v-show="query" type="button" class="btn">
-          <span
-            v-show="spinner"
-            class="fa fa-refresh fa-spin">
-          </span>
-          <span
-            v-show="!spinner"
-            @click="query = ''"
-            class="fa fa-times">
-          </span>
+          <span :class="inputIcon" @click="query = ''"></span>
         </button>
       </span>
     </div>
@@ -23,24 +15,24 @@
 </template>
 
 <script>
-import { debounce } from 'lodash';
-
 export default {
-  name: 'search',
+  props: { showLoader: Boolean },
   data() {
     return {
       query: ''
     };
   },
-  watch: {
-    query: debounce(function () {
-      this.$emit('change', this.query);
-    }, 500)
+  computed: {
+    inputIcon() {
+      return {
+        'fa fa-refresh fa-spin': this.showLoader,
+        'fa fa-times': !this.showLoader
+      };
+    }
   },
-  props: {
-    spinner: {
-      type: Boolean,
-      required: true
+  watch: {
+    query() {
+      this.$emit('change', this.query);
     }
   }
 };
