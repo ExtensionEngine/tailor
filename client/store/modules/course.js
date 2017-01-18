@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { isEmpty, values } from 'lodash';
 import VuexModel from '../helpers/model.js';
+import courseApi from '../../api/course';
 import usersApi from '../../api/users';
 
 const { state, getter, action, mutation, build } = new VuexModel('course');
@@ -22,11 +23,11 @@ getter(function userSearch() {
   return this.state.search;
 }, { global: true });
 
-action(function fetchUsersForCourse(courseKey) {
+action(function fetchUsers(courseKey) {
   const userSearch = this.context.getters.userSearch;
   const params = !isEmpty(userSearch) ? { search: userSearch } : {};
 
-  return usersApi.fetchUsersForCourse(courseKey, params)
+  return courseApi.getUsers(courseKey, params)
     .then(users => {
       let result = {};
       users.forEach(it => {
@@ -34,30 +35,31 @@ action(function fetchUsersForCourse(courseKey) {
         result[it._cid] = it;
       });
 
-      this.commit('fetchUsersForCourse', result);
+      this.commit('fetchUsers', result);
     });
 });
 
-action(function changeUserRole(data) {
+action(function updateRole(data) {
   const { userKey, role } = data;
-  return usersApi.changeUserRole(userKey, role)
+  return usersApi.patch(userKey, { role })
     .then(user => {
       this.api.setCid(user);
       this.commit('saveUser', user);
     });
 });
 
-action(function inviteUserToCourse(data) {
-  return usersApi.inviteUserToCourse(data)
+action(function invite(data) {
+  const { courseKey, email, role } = data;
+  return courseApi.invite(courseKey, { email, role })
     .then(user => {
       this.api.setCid(user);
       this.commit('saveUser', user);
     });
 });
 
-action(function revokeAccessToCourse(data) {
-  const { userKey, courseKey } = data;
-  return usersApi.revokeAccessToCourse(userKey, courseKey)
+action(function revoke(data) {
+  const { courseKey, userKey } = data;
+  return courseApi.revoke(courseKey, userKey)
     .then(user => {
       const cid = this.api.getCid(user._key);
       this.commit('removeUser', cid);
@@ -68,7 +70,7 @@ mutation(function setUserSearch(query) {
   this.state.search = query;
 });
 
-mutation(function fetchUsersForCourse(users) {
+mutation(function fetchUsers(users) {
   this.state.users = users;
 });
 
@@ -77,7 +79,6 @@ mutation(function saveUser(user) {
 });
 
 mutation(function removeUser(cid) {
-  console.log(cid);
   Vue.delete(this.state.users, cid);
 });
 

@@ -45,14 +45,14 @@ import { debounce } from 'lodash';
 export default {
   name: 'user-list',
   methods: {
-    ...mapActions(['changeUserRole', 'revokeAccessToCourse'], 'course'),
+    ...mapActions(['updateRole', 'revoke'], 'course'),
     changeRole(userKey, role) {
-      debounce(this.changeUserRole, 500)({ userKey, role });
+      debounce(this.updateRole, 500)({ userKey, role });
     },
     revokeAccess(user) {
       const userKey = user._key;
       const courseKey = this.$route.params.courseKey;
-      this.revokeAccessToCourse({ userKey, courseKey });
+      this.revoke({ userKey, courseKey });
     }
   },
   props: {

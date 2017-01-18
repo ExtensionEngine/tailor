@@ -1,39 +1,15 @@
 import request from './request';
 
 const url = {
-  courseAccess: (userKey, courseKey) => `/users/${userKey}/access/courses/${courseKey}`,
-  userInvite: '/users/invite',
-  userRole: userKey => `/users/${userKey}`,
-  usersForCourse: courseKey => `/courses/${courseKey}/users`
+  user: userKey => `/users/${userKey}`
 };
 
-function changeUserRole(userKey, role) {
+function patch(userKey, data) {
   return request
-    .put(url.userRole(userKey), { role })
+    .patch(url.user(userKey), data)
     .then(res => res.data.data);
 };
-
-function fetchUsersForCourse(courseKey, params) {
-  return request
-    .get(url.usersForCourse(courseKey), { params })
-    .then(res => res.data.data);
-};
-
-function inviteUserToCourse(data) {
-  return request
-    .post(url.userInvite, data)
-    .then(res => res.data.data);
-}
-
-function revokeAccessToCourse(userKey, courseKey) {
-  return request
-    .delete(url.courseAccess(userKey, courseKey), { userKey, courseKey })
-    .then(res => res.data.data);
-}
 
 export default {
-  changeUserRole,
-  fetchUsersForCourse,
-  inviteUserToCourse,
-  revokeAccessToCourse
+  patch
 };

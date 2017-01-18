@@ -64,14 +64,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchUsersForCourse'], 'course'),
+    ...mapActions(['fetchUsers'], 'course'),
     ...mapMutations(['setUserSearch'], 'course'),
     fetchWithLoader() {
       const courseKey = this.$route.params.courseKey;
       const minDelay = 1500;
 
       this.showLoader = true;
-      return Promise.join(this.fetchUsersForCourse(courseKey), Promise.delay(minDelay))
+      return Promise.join(this.fetchUsers(courseKey), Promise.delay(minDelay))
         .then(() => {
           this.showLoader = false;
         });

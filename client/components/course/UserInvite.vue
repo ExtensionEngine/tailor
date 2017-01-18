@@ -48,7 +48,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['inviteUserToCourse'], 'course'),
+    ...mapActions(['invite'], 'course'),
     hasError(type) {
       return this.errors.indexOf(type) > -1;
     },
@@ -61,7 +61,7 @@ export default {
       this.validate({ email, role })
         .then(() => {
           this.email = '';
-          this.inviteUserToCourse({ email, role, courseKey });
+          this.invite({ email, role, courseKey });
         })
         .catch(err => {
           err.inner.forEach(it => this.errors.push(it.path));
