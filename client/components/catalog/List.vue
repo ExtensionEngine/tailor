@@ -1,13 +1,12 @@
 <template>
   <div class="row course-list">
-    <cube-spinner v-if="loader"></cube-spinner>
+    <cube-spinner v-if="showLoader"></cube-spinner>
     <div
       v-else
       v-for="course in courses"
       :key="course._cid"
       class="col-lg-4">
-      <card :course="course">
-      </card>
+      <card :course="course"></card>
     </div>
 
     <div class="col-lg-12 loader-wrapper">
@@ -38,7 +37,7 @@ export default {
   methods: {
     ...mapActions(['fetch'], 'courses'),
     loadMore() {
-      if (!this.loader && this.hasMoreResults) {
+      if (!this.showLoader && this.hasMoreResults) {
         this.paginate = true;
         this.fetch(this.paginate).then(() => {
           this.paginate = false;
@@ -51,7 +50,7 @@ export default {
       type: Object,
       required: true
     },
-    loader: {
+    showLoader: {
       type: Boolean,
       required: true
     }

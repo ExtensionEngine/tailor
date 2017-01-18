@@ -3,20 +3,11 @@
     <div class="input-group">
       <input
         v-model="query"
-        @input="setSpinner(true)"
         class="form-control"
         placeholder="Search..."/>
       <span class="input-group-btn">
         <button v-show="query" type="button" class="btn">
-          <span
-            v-show="showSpinner"
-            class="fa fa-refresh fa-spin">
-          </span>
-          <span
-            v-show="!showSpinner"
-            @click="query = ''"
-            class="fa fa-times">
-          </span>
+          <span :class="inputIcon" @click="query = ''"></span>
         </button>
       </span>
     </div>
@@ -24,25 +15,25 @@
 </template>
 
 <script>
-import { debounce } from 'lodash';
-
 export default {
-  name: 'search',
+  props: { showLoader: Boolean },
   data() {
     return {
-      query: '',
-      showSpinner: false
+      query: ''
     };
   },
-  methods: {
-    setSpinner(value) {
-      this.showSpinner = value;
+  computed: {
+    inputIcon() {
+      return {
+        'fa fa-refresh fa-spin': this.showLoader,
+        'fa fa-times': !this.showLoader
+      };
     }
   },
   watch: {
-    query: debounce(function () {
-      this.$emit('change', this.query, this.setSpinner);
-    }, 500)
+    query() {
+      this.$emit('change', this.query);
+    }
   }
 };
 </script>
