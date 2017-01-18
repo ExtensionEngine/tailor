@@ -1,5 +1,5 @@
-import VuexModel from '../helpers/model.js';
-const { getter, build } = new VuexModel('assets', '/assets');
+import VuexCollection from '../helpers/collection.js';
+const { getter, build } = new VuexCollection('assets', '/assets');
 
 getter(function assets() {
   return this.state.items;

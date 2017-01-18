@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { isEmpty, values } from 'lodash';
-import VuexModel from '../helpers/model.js';
+import VuexCollection from '../helpers/collection.js';
 import courseApi from '../../api/course';
 import usersApi from '../../api/users';
 
-const { state, getter, action, mutation, build } = new VuexModel('course');
+const { state, getter, action, mutation, build } = new VuexCollection('course');
 
 state({
   search: '',

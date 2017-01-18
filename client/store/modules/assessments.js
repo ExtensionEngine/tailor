@@ -1,5 +1,5 @@
-import VuexModel from '../helpers/model.js';
-const { getter, build } = new VuexModel('assessments', '/assessments');
+import VuexCollection from '../helpers/collection.js';
+const { getter, build } = new VuexCollection('assessments', '/assessments');
 
 getter(function assessments() {
   return this.state.items;

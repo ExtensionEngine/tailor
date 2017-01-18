@@ -1,6 +1,6 @@
-import VuexModel from '../helpers/model.js';
+import VuexCollection from '../helpers/collection.js';
 
-const { state, getter, action, mutation, build } = new VuexModel('courses', '/courses');
+const { state, getter, action, mutation, build } = new VuexCollection('courses', '/courses');
 const PAGINATION_DEFAULTS = { next: 1, limit: 20 };
 
 state({
