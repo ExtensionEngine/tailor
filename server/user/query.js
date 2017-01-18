@@ -19,14 +19,6 @@ const INVITE_USER_TO_COURSE = `
   UPSERT { email: @email }
   INSERT { email: @email, role: @role, courses: @courses, password: @password }
   UPDATE { courses: APPEND(OLD.courses, @courses, true), role: @role } IN @@collection
-  RETURN NEW`;
-
-const ADD_COURSE_TO_USER = `
-FOR user IN @@collection
-  FILTER user._key == @userKey
-  UPDATE user WITH {
-    courses: APPEND(user.courses, @courseKey, true)
-  } IN @@collection
   RETURN UNSET(NEW, 'password')`;
 
 const REMOVE_COURSE_FROM_USER = `
@@ -38,7 +30,6 @@ FOR user IN @@collection
   RETURN UNSET(NEW, 'password')`;
 
 module.exports = {
-  ADD_COURSE_TO_USER,
   GET_USER_BY_EMAIL,
   GET_USER_BY_KEY,
   INSERT_USER,

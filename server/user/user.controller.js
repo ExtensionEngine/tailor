@@ -10,10 +10,6 @@ class UserController extends BaseController {
 
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
-    this.listUsersForCourse = this.listUsersForCourse.bind(this);
-    this.inviteUserToCourse = this.inviteUserToCourse.bind(this);
-    this.grantAccessToCourse = this.grantAccessToCourse.bind(this);
-    this.revokeAccessToCourse = this.revokeAccessToCourse.bind(this);
   }
 
   login(req, res, next) {
@@ -26,61 +22,6 @@ class UserController extends BaseController {
     req.session.destroy();
     io.setEmpty(res);
     next();
-  }
-
-  listUsersForCourse(req, res, next) {
-    const courseKey = req.params.courseKey;
-    const email = io.locals.load(req, 'search').query;
-
-    // TODO(marko): Temporary fix, build this array dynamically.
-    const roles = req.user.role === 'SYSTEM_ADMIN'
-      ? ['ADMIN', 'CONTENT_AUTHOR']
-      : ['CONTENT_AUTHOR'];
-
-    this.model
-      .getUsersForCourse({ courseKey, email, roles })
-      .then(users => {
-        io.setOK(res, users);
-        next();
-      })
-      .catch(next);
-  }
-
-  inviteUserToCourse(req, res, next) {
-    const { email, role, courseKey } = req.body;
-
-    // TODO(marko): Should create inactive user and sent invitation link
-    // to their email. This invitation link should lead to password set
-    // page. Alternatively, entire add / invite flow should be different.
-    this.model
-      .inviteUserToCourse(email, role, courseKey)
-      .then(user => {
-        io.setOK(res, user);
-        next();
-      })
-      .catch(next);
-  }
-
-  grantAccessToCourse(req, res, next) {
-    const { userKey, courseKey } = req.params;
-    this.model
-      .grantAccessToCourse(userKey, courseKey)
-      .then(user => {
-        io.setOK(res, user);
-        next();
-      })
-      .catch(next);
-  }
-
-  revokeAccessToCourse(req, res, next) {
-    const { userKey, courseKey } = req.params;
-    this.model
-      .revokeAccessToCourse(userKey, courseKey)
-      .then(user => {
-        io.setOK(res, user);
-        next();
-      })
-      .catch(next);
   }
 }
 

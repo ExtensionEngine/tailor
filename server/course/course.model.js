@@ -6,6 +6,7 @@ const database = require('../shared/database');
 
 const db = database.db;
 const COURSE_COLLECTION = database.collection.COURSE;
+const USER_COLLECTION = database.collection.USER;
 
 /**
  * @swagger
@@ -45,8 +46,13 @@ const courseSchema = Joi.object().keys({
 });
 
 class CourseModel extends BaseModel {
-  constructor(db, collectionName = COURSE_COLLECTION, schema = courseSchema) {
-    super(db, collectionName, schema);
+  constructor(db,
+    courseCollectionName = COURSE_COLLECTION,
+    userCollectionName = USER_COLLECTION,
+    schema = courseSchema
+  ) {
+    super(db, courseCollectionName, schema);
+    this.userCollectionName = userCollectionName;
   }
 
   /**
@@ -116,6 +122,44 @@ class CourseModel extends BaseModel {
         SORT course.@field @order
         LIMIT @offset, @count
       RETURN course`;
+
+    return this.db
+      .query(query, bindVars)
+      .then(cursor => cursor.all());
+  }
+
+  /**
+   * getEmailFilter - description
+   *
+   * @param {string} email Description
+   * @return {array} Description
+   */
+  static getEmailFilter(email) {
+    if (!email) return ['', {}];
+    return ['FILTER CONTAINS(LOWER(user.email), LOWER(@email))', { email }];
+  }
+
+  /**
+   * getUsers - description
+   *
+   * @param {object} filter Description
+   * @return {Promise<array>} Description
+   */
+  getUsers(filter) {
+    const { courseKey, email, roles } = filter;
+    const [emailFilter, emailBindVars] = CourseModel.getEmailFilter(email);
+
+    const query = `
+      FOR user IN @@collection
+        FILTER POSITION(user.courses, @courseKey)
+        FILTER POSITION(@roles, user.role)
+        ${emailFilter}
+      RETURN UNSET(user, 'password')`;
+    const bindVars = Object.assign({
+      '@collection': this.userCollectionName,
+      courseKey,
+      roles
+    }, emailBindVars);
 
     return this.db
       .query(query, bindVars)

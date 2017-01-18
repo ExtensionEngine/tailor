@@ -12,6 +12,20 @@ const router = express.Router();
 const input = io.input();
 const output = io.output();
 
+// TODO(marko): Implement permission checking. Implement role
+// checking depending on inviting user.
+if (process.env.NODE_ENV !== 'production') {
+  router.post('/courses/:courseKey/users',
+    input,
+    controller.inviteUser,
+    output);
+
+  router.delete('/courses/:courseKey/users/:userKey',
+    input,
+    controller.revokeAccess,
+    output);
+}
+
 router.get('/courses',
   input,
   requireUser,
@@ -49,6 +63,13 @@ router.delete('/courses/:courseKey',
   input,
   middleware.requireCourseAccess,
   controller.remove,
+  output);
+
+router.get('/courses/:courseKey/users',
+  input,
+  middleware.requireCourseAccess,
+  queryParams.parseSearch,
+  controller.listUsersForCourse,
   output);
 
 module.exports = {

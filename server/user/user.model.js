@@ -75,34 +75,6 @@ class UserModel extends BaseModel {
     super(db, collectionName, schema);
   }
 
-  static getUserEmailFilter(email) {
-    const filter = 'FILTER CONTAINS(LOWER(user.email), LOWER(@email))';
-    const bindVars = { email };
-    return email ? [filter, bindVars] : ['', {}];
-  }
-
-  getUsersForCourse(filter) {
-    const { courseKey, email, roles } = filter;
-    const [emailFilter, emailBindVars] = UserModel.getUserEmailFilter(email);
-
-    const query = `
-      FOR user IN @@collection
-        FILTER POSITION(user.courses, @courseKey)
-        FILTER POSITION(@roles, user.role)
-        ${emailFilter}
-      RETURN user
-    `;
-    const bindVars = Object.assign({
-      '@collection': this.collectionName,
-      courseKey,
-      roles
-    }, emailBindVars);
-
-    return this.db
-      .query(query, bindVars)
-      .then(cursor => cursor.all());
-  }
-
   hashPassword(user) {
     return new Promise((resolve, reject) => {
       bcrypt.hash(user.password, config.auth.saltRounds, (err, hash) => {
@@ -152,6 +124,19 @@ class UserModel extends BaseModel {
       .then(cursor => cursor.next());
   }
 
+  updateByKey(key, partialDocument) {
+    // Omit password on patch
+    return this
+      .validatePartial(partialDocument, ['password'])
+      .then(this.markAsUpdated)
+      .then(validDocument => this.collection.update(
+        { _key: key },
+        validDocument,
+        { returnNew: true }
+      ))
+      .then(result => result.new);
+  }
+
   validateCredentials(email, password) {
     let user;
     return this
@@ -170,7 +155,7 @@ class UserModel extends BaseModel {
       });
   }
 
-  inviteUserToCourse(email, role, courseKey) {
+  inviteToCourse(email, role, courseKey) {
     // TODO(marko): User should be inactive once invited and password should
     // be set via link provided in the invitation email.
     const document = { email, role, courses: [courseKey], password: 'pass' };
@@ -186,17 +171,7 @@ class UserModel extends BaseModel {
       .then(result => result.next());
   }
 
-  grantAccessToCourse(userKey, courseKey) {
-    return this.db
-      .query(query.ADD_COURSE_TO_USER, {
-        '@collection': this.collectionName,
-        userKey,
-        courseKey
-      })
-      .then(cursor => cursor.next());
-  }
-
-  revokeAccessToCourse(userKey, courseKey) {
+  revokeCourseAccess(userKey, courseKey) {
     return this.db
       .query(query.REMOVE_COURSE_FROM_USER, {
         '@collection': this.collectionName,
