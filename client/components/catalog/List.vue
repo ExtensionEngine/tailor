@@ -34,9 +34,9 @@ export default {
       paginate: false
     };
   },
-  computed: mapGetters(['hasMoreResults'], 'catalog'),
+  computed: mapGetters(['hasMoreResults'], 'courses'),
   methods: {
-    ...mapActions(['fetch'], 'catalog'),
+    ...mapActions(['fetch'], 'courses'),
     loadMore() {
       if (!this.loader && this.hasMoreResults) {
         this.paginate = true;

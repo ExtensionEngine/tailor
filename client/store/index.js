@@ -7,7 +7,7 @@ import activity from './modules/activity';
 import assets from './modules/assets';
 import atom from './modules/atom';
 import auth from './modules/auth';
-import catalog from './modules/catalog';
+import courses from './modules/courses';
 import course from './modules/course';
 import editor from './modules/editor';
 import plugins from './plugins';
@@ -25,7 +25,7 @@ const modules = {
   atom,
   auth,
   course,
-  catalog,
+  courses,
   editor
 };
 

@@ -37,8 +37,8 @@ export default {
   },
   computed: mapGetters(['courses']),
   methods: {
-    ...mapActions(['fetch'], 'catalog'),
-    ...mapMutations(['resetPagination', 'setSearch'], 'catalog'),
+    ...mapActions(['fetch'], 'courses'),
+    ...mapMutations(['resetPagination', 'setSearch'], 'courses'),
     fetchWithLoader() {
       const minDelay = 1500;
 
