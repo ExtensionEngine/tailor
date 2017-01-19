@@ -40,7 +40,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Outline from './Outline.vue';
 import Sidebar from './Sidebar.vue';
-import Settings from './Settings.vue';
+import Settings from './settings';
 import Permissions from '../../directives/permissions';
 
 export default {

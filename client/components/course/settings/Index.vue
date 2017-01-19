@@ -30,11 +30,11 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Promise from 'bluebird';
 import { isEmpty } from 'lodash';
-import CubeSpinner from '../loaders/CubeSpinner';
-import ExpandableSearch from '../common/ExpandableSearch';
+import CubeSpinner from '../../loaders/CubeSpinner';
+import ExpandableSearch from '../../common/ExpandableSearch';
 import UserInvite from './UserInvite';
 import UserList from './UserList';
-import { getAdministrativeRoles } from '../../utils/users';
+import { getAdministrativeRoles } from '../../../utils/users';
 
 export default {
   name: 'settings',

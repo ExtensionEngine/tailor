@@ -3,8 +3,8 @@ import Router from 'vue-router';
 import store from './store';
 import Auth from './components/auth/Container';
 import Course from './components/course/Container';
-import CourseDetails from './components/course/Details';
-import CourseSettings from './components/course/Settings';
+import Outline from './components/course/Outline';
+import CourseSettings from './components/course/settings';
 import Catalog from './components/catalog/Container';
 import Editor from './components/editor';
 import Login from './components/auth/Login';
@@ -28,7 +28,7 @@ let router = new Router({
         {
           path: '',
           name: 'course-details',
-          component: CourseDetails
+          component: Outline
         },
         {
           path: 'settings',
