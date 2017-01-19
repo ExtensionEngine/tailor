@@ -5,6 +5,7 @@
         <input
           class="form-control"
           v-model="newCourseName"
+          v-focus="true"
           @blur="onNameInputBlur"
           @keyup.enter="onNameInputBlur"
           @keyup.esc="showNameInput = false">
@@ -21,6 +22,7 @@
         <textarea
           class="form-control"
           v-model="newCourseDescription"
+          v-focus="true"
           @blur="onDescriptionInputBlur"
           @keyup.esc="showDescriptionInput = false">
         </textarea>
@@ -42,10 +44,12 @@
 </template>
 
 <script>
+import { focus } from 'vue-focus';
 import { mapGetters } from 'vuex-module';
 import find from 'lodash/find';
 
 export default {
+  directives: { focus },
   data() {
     return {
       showNameInput: false,
