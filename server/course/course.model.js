@@ -1,6 +1,8 @@
 'use strict';
 
 const Joi = require('joi');
+const isArray = require('lodash/isArray');
+const isEmpty = require('lodash/isEmpty');
 const BaseModel = require('../base.model');
 const database = require('../shared/database');
 
@@ -63,7 +65,7 @@ class CourseModel extends BaseModel {
    * @return {array} Array containing filter string and bind variables object
    */
   static getCourseNameFilter(courseName) {
-    const filter = 'FILTER CONTAINS(LOWER(course.name), LOWER(@courseName))';
+    const filter = 'CONTAINS(LOWER(course.name), LOWER(@courseName))';
     const bindVars = { courseName };
     return courseName ? [filter, bindVars] : [null, {}];
   }
@@ -76,9 +78,9 @@ class CourseModel extends BaseModel {
    * @return {array} Array containing filter string and bind variables object
    */
   static getCourseKeysFilter(courseKeys) {
-    const filter = 'FILTER course._key IN @courseKeys';
+    const filter = 'course._key IN @courseKeys';
     const bindVars = { courseKeys };
-    return courseKeys ? [filter, bindVars] : [null, {}];
+    return isArray(courseKeys) ? [filter, bindVars] : [null, {}];
   }
 
   /**
@@ -110,7 +112,9 @@ class CourseModel extends BaseModel {
     const pgBindVars = CourseModel.getPaginationBindVars(pagination);
     const stBindVars = { field: sort.sortBy, order: sort.sortOrder };
 
-    const filterQuery = [srFilter, ckFilter].filter(f => f).join(' && ');
+    const combinedFilters = [srFilter, ckFilter].filter(f => f).join(' && ');
+    const filterQuery = !isEmpty(combinedFilters) ? `FILTER ${combinedFilters}` : '';
+
     const bindVars = Object.assign({},
       srBindVars, ckBindVars, pgBindVars, stBindVars, {
         '@courseCollection': this.collectionName
