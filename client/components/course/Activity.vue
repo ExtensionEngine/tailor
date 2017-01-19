@@ -39,7 +39,7 @@ import InsertActivity from './InsertActivity';
 import values from 'lodash/values';
 
 const MAX_LEVELS = 3;
-const COLORS = ['#29B6F6', '#8BC34A', '#EF5350'];
+const COLORS = ['#42A5F5', '#66BB6A', '#EC407A'];
 
 export default {
   name: 'activity',
