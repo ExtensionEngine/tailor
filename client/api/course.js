@@ -11,13 +11,13 @@ function getUsers(courseKey, params) {
     .then(res => res.data.data);
 };
 
-function invite(courseKey, data) {
+function addUser(courseKey, data) {
   return request
     .post(url.users(courseKey), data)
     .then(res => res.data.data);
 }
 
-function revoke(courseKey, userKey) {
+function removeUser(courseKey, userKey) {
   return request
     .delete(url.user(courseKey, userKey))
     .then(res => res.data.data);
@@ -25,6 +25,6 @@ function revoke(courseKey, userKey) {
 
 export default {
   getUsers,
-  invite,
-  revoke
+  addUser,
+  removeUser
 };

@@ -50,7 +50,7 @@ action(function updateRole(data) {
 
 action(function invite(data) {
   const { courseKey, email, role } = data;
-  return courseApi.invite(courseKey, { email, role })
+  return courseApi.addUser(courseKey, { email, role })
     .then(user => {
       this.api.setCid(user);
       this.commit('saveUser', user);
@@ -59,7 +59,7 @@ action(function invite(data) {
 
 action(function revoke(data) {
   const { courseKey, userKey } = data;
-  return courseApi.revoke(courseKey, userKey)
+  return courseApi.removeUser(courseKey, userKey)
     .then(user => {
       const cid = this.api.getCid(user._key);
       this.commit('removeUser', cid);
