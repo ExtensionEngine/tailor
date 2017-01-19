@@ -15,14 +15,15 @@
       <template v-if="showDescriptionInput">
         <textarea
           class="form-control"
-          v-model="newCourseDescription">
-          <!-- @blur="onInputBlur"
-          @keyup.enter="onInputEnter"
-          @keyup.esc="deactivateInput"> -->
+          v-model="newCourseDescription"
+          @blur="onDescriptionInputBlur"
+          @keyup.esc="showDescriptionInput = false">
         </textarea>
       </template>
       <template v-else>
-        {{ course.description }}
+        <span @click.stop="showDescriptionInput = true">
+          {{ course.description }}
+        </span>
         <span class="fa fa-pencil pencil" aria-hidden="true"></span>
       </template>
     </div>
@@ -43,9 +44,9 @@ export default {
   data() {
     return {
       showNameInput: true,
-      showDescriptionInput: true,
+      showDescriptionInput: false,
       newCourseName: '',
-      newCourseDescription: '',
+      newCourseDescription: ''
     };
   },
   computed: {
@@ -54,9 +55,19 @@ export default {
     },
     ...mapGetters(['courses'])
   },
-  onCreated() {
-    this.newCourseName = this.course.name || '';
-    this.newCourseDescription = this.course.description || '';
+  methods: {
+    onDescriptionInputBlur() {
+      if (this.showDescriptionInput) {
+        this.showDescriptionInput = false;
+        if (this.newCourseDescription !== this.course.description) {
+          console.log('update course description!');
+        }
+      }
+    }
+  },
+  created() {
+    this.newCourseName = this.course.name || 'aaaa';
+    this.newCourseDescription = this.course.description || 'bbbb';
   }
 };
 </script>
@@ -95,5 +106,12 @@ h2 {
   display: inline-block;
   font-size: 20px;
   color: #444;
+}
+
+.container {
+  textarea {
+    resize: vertical;
+    height: 200px;
+  }
 }
 </style>
