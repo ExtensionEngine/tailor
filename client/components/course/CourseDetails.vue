@@ -2,10 +2,15 @@
   <div class="container">
     <div class="course-name">
       <template v-if="showNameInput">
-        <input class="form-control" v-model="newCourseName"/>
+        <input
+          class="form-control"
+          v-model="newCourseName"
+          @blur="onNameInputBlur"
+          @keyup.enter="onNameInputBlur"
+          @keyup.esc="showNameInput = false">
       </template>
       <template v-else>
-        <h2>
+        <h2 @click.stop="showNameInput = true">
           {{ course.name }}
         </h2>
         <span class="fa fa-pencil pencil" aria-hidden="true"></span>
@@ -43,7 +48,7 @@ import find from 'lodash/find';
 export default {
   data() {
     return {
-      showNameInput: true,
+      showNameInput: false,
       showDescriptionInput: false,
       newCourseName: '',
       newCourseDescription: ''
@@ -56,6 +61,14 @@ export default {
     ...mapGetters(['courses'])
   },
   methods: {
+    onNameInputBlur() {
+      if (this.showNameInput) {
+        this.showNameInput = false;
+        if (this.newCourseName !== this.course.name) {
+          console.log('update course name!');
+        }
+      }
+    },
     onDescriptionInputBlur() {
       if (this.showDescriptionInput) {
         this.showDescriptionInput = false;
@@ -66,8 +79,8 @@ export default {
     }
   },
   created() {
-    this.newCourseName = this.course.name || 'aaaa';
-    this.newCourseDescription = this.course.description || 'bbbb';
+    this.newCourseName = this.course ? this.course.name.slice(0) : 'name';
+    this.newCourseDescription = this.course ? this.course.description.slice(0) : 'bbbb';
   }
 };
 </script>
