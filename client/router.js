@@ -27,7 +27,7 @@ let router = new Router({
       children: [
         {
           path: '',
-          name: 'course-details',
+          name: 'course',
           component: Outline
         },
         {

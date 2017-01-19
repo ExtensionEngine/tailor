@@ -1,50 +1,29 @@
 <template>
   <div class="course-container">
-    <ul class="nav nav-tabs" role="tablist">
-      <li role="presentation" class="active">
-        <a href="#outline" aria-controls="outline" role="tab" data-toggle="tab">
-          Activities
-        </a>
+    <ul class="nav nav-tabs">
+      <!-- TODO: Create component for nav tabs -->
+      <li :class="{ active: $route.name === 'course' }">
+        <router-link :to="{ name: 'course' }">Outline</router-link>
       </li>
-      <li role="presentation">
-        <a href="#history" aria-controls="history" role="tab" data-toggle="tab">
-          Revision history
-        </a>
-      </li>
-      <li role="presentation">
-        <a href="#comments" aria-controls="comments" role="tab" data-toggle="tab">
-          Comments
-        </a>
-      </li>
-      <li role="presentation" v-permissions.isSystemAdmin.isAdmin>
-        <a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">
-          Settings
-        </a>
+      <li><a>Revision history</a></li>
+      <li><a>Comments</a></li>
+      <li
+        :class="{ active: $route.name === 'course-settings' }"
+        v-permissions.isSystemAdmin.isAdmin>
+        <router-link :to="{ name: 'course-settings' }">Settings</router-link>
       </li>
     </ul>
     <div class="tab-content">
-      <div id="outline" role="tabpanel" class="activities tab-pane active">
-        <outline :activities="activities"></outline>
-        <sidebar></sidebar>
-      </div>
-      <div id="history" role="tabpanel" class="tab-pane"></div>
-      <div id="comments" role="tabpanel" class="tab-pane"></div>
-      <div id="settings" role="tabpanel" class="tab-pane">
-        <settings></settings>
-      </div>
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import Outline from './Outline.vue';
-import Sidebar from './Sidebar.vue';
-import Settings from './settings';
+import { mapActions, mapMutations } from 'vuex-module';
 import Permissions from '../../directives/permissions';
 
 export default {
-  computed: mapGetters(['activities'], 'editor'),
   methods: {
     ...mapActions(['fetch'], 'activity'),
     ...mapMutations(['activateCourse'], 'activity')
@@ -52,11 +31,6 @@ export default {
   created() {
     this.activateCourse(this.$route.params.courseKey);
     this.fetch();
-  },
-  components: {
-    Outline,
-    Sidebar,
-    Settings
   },
   directives: {
     Permissions
@@ -83,10 +57,6 @@ export default {
 
   .tab-content {
     padding-top: 41px;
-  }
-
-  .activities {
-    padding-right: 400px;
   }
 }
 </style>
