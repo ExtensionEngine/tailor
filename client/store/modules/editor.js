@@ -33,6 +33,13 @@ getter(function assets() {
   return this.rootGetters.assets;
 });
 
+getter(function users() {
+  const { route } = this.rootState;
+  const { courseKey } = route.params;
+  const { users: collection } = this.rootGetters;
+  return filter(collection, it => it.courses.indexOf(courseKey) > -1);
+});
+
 mutation(function focusActivity(_cid) {
   this.state.activity = _cid;
 });
