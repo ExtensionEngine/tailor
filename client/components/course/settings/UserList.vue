@@ -1,93 +1,62 @@
 <template>
-  <form class="role">
-    <table class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th class="data">User</th>
-          <th class="center data" v-for="role in roles">
-            {{ role.render }}
-          </th>
-          <th class="center data">
-            Remove from course
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(user, index) in users">
-          <td class="data">{{ user.email }}</td>
-          <td v-for="role in roles" class="center data">
-            <div class="form-group">
-              <input
-                type="radio"
-                :name="user._key"
-                :value="role.value"
-                :checked="user.role === role.value"
-                @click="changeRole(user._key, role.value)"/>
-            </div>
-          </td>
-          <td class="center data">
-            <div class="form-group">
-              <button type="button" class="btn btn-link" @click="revokeAccess(user)">
-                <span class="fa fa-lg fa-close"></span>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </form>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th v-for="role in roles" class="text-center">{{ role.render }}</th>
+        <th class="text-center">Remove from course</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="user in users">
+        <td>{{ user.email }}</td>
+        <td v-for="role in roles" class="text-center">
+          <input
+            type="radio"
+            :name="user._key"
+            :value="role.value"
+            :checked="user.role === role.value"
+            @click="changeRole(user._cid, role.value)"/>
+        </td>
+        <td class="text-center">
+          <button type="button" class="btn btn-link" @click="removeUser(user)">
+            <span class="fa fa-close"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
 import { mapActions } from 'vuex-module';
-import { debounce } from 'lodash';
 
 export default {
-  name: 'user-list',
   methods: {
-    ...mapActions(['updateRole', 'revoke'], 'course'),
-    changeRole(userKey, role) {
-      debounce(this.updateRole, 500)({ userKey, role });
+    ...mapActions(['update', 'removeFromCourse'], 'users'),
+    changeRole(_cid, role) {
+      debounce(this.update, 500)({ _cid, role });
     },
-    revokeAccess(user) {
+    removeUser(user) {
       const userKey = user._key;
-      const courseKey = this.$route.params.courseKey;
-      this.revoke({ userKey, courseKey });
+      const { courseKey } = this.$route.params;
+      this.removeFromCourse({ userKey, courseKey });
     }
   },
   props: {
-    roles: {
-      type: Array,
-      required: true
-    },
-    users: {
-      type: Object,
-      required: true
-    }
+    roles: { type: Array, required: true },
+    users: { type: Array, required: true }
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .table {
-  margin: 0;
   text-align: left;
 
   input[type="radio"] {
-    margin: 8px 0 0 4px;
-  }
-
-  .form-group {
-    margin: 0;
-  }
-
-  .center {
-    text-align: center;
-  }
-
-  .data {
-    line-height: 2;
-    padding: 8px;
+    display: inline-block;
   }
 }
 </style>
