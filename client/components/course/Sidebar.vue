@@ -40,7 +40,6 @@
 import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
-  name: 'course-sidebar',
   data() {
     return {
       newActivityName: '',
