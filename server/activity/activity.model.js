@@ -62,8 +62,8 @@ const ACTIVITY_COLLECTION = database.collection.ACTIVITY;
 const schemaKeys = {
   name: Joi.string().min(3).max(100).required(),
   type: Joi.string(), // TODO(matej): type should be one of predefined types
-  courseKey: Joi.string().regex(/[0-9]+/).required(),
-  parentKey: Joi.string().allow(null).regex(/[0-9]+/).required(),
+  courseKey: Joi.string().regex(/^\d+$/).required(),
+  parentKey: Joi.string().allow(null).regex(/^\d+$/).required(),
   position: Joi.number().integer().min(0)
 };
 const activitySchema = Joi.object().keys(schemaKeys);

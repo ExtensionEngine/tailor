@@ -32,8 +32,8 @@ const ASSET_COLLECTION = database.collection.ASSET;
  *         description: asset type
  */
 const schemaKeys = {
-  courseKey: Joi.string().regex(/[0-9]+/).required(),
-  activityKey: Joi.string().regex(/[0-9]+/).required(),
+  courseKey: Joi.string().regex(/^\d+$/).required(),
+  activityKey: Joi.string().regex(/^\d+$/).required(),
   type: Joi.string().valid(['TEXT', 'IMAGE', 'VIDEO']).required(),
   content: Joi.string().when('type', { is: 'TEXT', then: Joi.required() }),
   url: Joi.string().uri().when('type', { is: 'IMAGE', then: Joi.required() }),
