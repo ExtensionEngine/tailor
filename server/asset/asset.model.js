@@ -31,15 +31,36 @@ const ASSET_COLLECTION = database.collection.ASSET;
  *         type: string
  *         description: asset type
  */
+const schemaKeys = {
+  courseKey: Joi.string().regex(/[0-9]+/).required(),
+  activityKey: Joi.string().regex(/[0-9]+/).required(),
+  type: Joi.string().valid(['TEXT', 'IMAGE', 'VIDEO']).required(),
+  content: Joi.string().when('type', { is: 'TEXT', then: Joi.required() }),
+  url: Joi.string().uri().when('type', { is: 'IMAGE', then: Joi.required() }),
+  layoutWidth: Joi.number().integer().min(1).max(12).required(),
+  position: Joi.number().required()
+};
 
-const assetSchema = Joi.object().keys({
-  type: Joi.string().min(3).max(100).required(),
-  courseKey: Joi.string().regex(/[0-9]+/).required()
-});
+const assetSchema = Joi.object().keys(schemaKeys).xor('content', 'url');
+
+const updateSchema = Joi.object().keys({
+  content: schemaKeys.content.optional(),
+  url: schemaKeys.url.optional(),
+  layoutWidth: schemaKeys.layoutWidth.optional(),
+  position: schemaKeys.position.optional()
+}).min(1);
 
 class AssetModel extends BaseModel {
   constructor(db, collectionName = ASSET_COLLECTION, schema = assetSchema) {
     super(db, collectionName, schema);
+  }
+
+  validatePartial(partialDocument) {
+    return new Promise((resolve, reject) => {
+      Joi.validate(partialDocument, updateSchema, (err, value) => {
+        return err ? reject(err) : resolve(value);
+      });
+    });
   }
 }
 
