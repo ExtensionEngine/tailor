@@ -10,35 +10,49 @@ const ASSET_COLLECTION = database.collection.ASSET;
 /**
  * @swagger
  * definitions:
- *   AssetInput:
+ *   Asset:
  *     type: object
  *     required:
+ *     - courseKey
+ *     - activityKey
+ *     - layoutWidth
+ *     - position
  *     - type
  *     properties:
+ *       courseKey:
+ *         type: string
+ *         description: course owning the asset
+ *       activityKey:
+ *         type: string
+ *         description: activity owning the asset
+ *       layoutWidth:
+ *         type: integer
+ *         description: width of the layout column containing the asset
+ *       position:
+ *         type: float
+ *         description: position within the array of other assets
  *       type:
  *         type: string
  *         description: asset type
- *   AssetOutput:
- *     type: object
- *     required:
- *     - _key
- *     - type
- *     properties:
- *       _key:
+ *         enum:
+ *         - TEXT
+ *         - IMAGE
+ *         - VIDEO
+ *       content:
  *         type: string
- *         description: unique asset identifier
- *       type:
+ *         description: text content entered by user; required for TEXT assets
+ *       url:
  *         type: string
- *         description: asset type
+ *         description: URL of image or video; required for IMAGE and VIDEO assets
  */
 const schemaKeys = {
   courseKey: Joi.string().regex(/^\d+$/).required(),
   activityKey: Joi.string().regex(/^\d+$/).required(),
+  layoutWidth: Joi.number().integer().min(1).max(12).required(),
+  position: Joi.number().required(),
   type: Joi.string().valid(['TEXT', 'IMAGE', 'VIDEO']).required(),
   content: Joi.string().when('type', { is: 'TEXT', then: Joi.required() }),
-  url: Joi.string().uri().when('type', { is: 'IMAGE', then: Joi.required() }),
-  layoutWidth: Joi.number().integer().min(1).max(12).required(),
-  position: Joi.number().required()
+  url: Joi.string().uri().when('type', { is: 'IMAGE', then: Joi.required() })
 };
 
 const assetSchema = Joi.object().keys(schemaKeys).xor('content', 'url');
