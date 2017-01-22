@@ -17,7 +17,7 @@ const USER_COLLECTION = database.collection.USER;
  *     type: object
  *     required:
  *     - name
- *       description
+ *     - description
  *     properties:
  *       name:
  *         type: string
@@ -29,8 +29,8 @@ const USER_COLLECTION = database.collection.USER;
  *     type: object
  *     required:
  *     - _key
- *       name
- *       description
+ *     - name
+ *     - description
  *     properties:
  *       _key:
  *         type: string
