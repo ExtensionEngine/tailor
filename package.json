@@ -117,6 +117,7 @@
     "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0",
     "swagger-jsdoc": "^1.8.2",
+    "swagger-ui": "^2.2.10",
     "url-join": "^1.1.0",
     "url-loader": "^0.5.7",
     "vue-loader": "^10.0.0",

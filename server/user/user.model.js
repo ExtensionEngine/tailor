@@ -18,7 +18,7 @@ const USER_COLLECTION = database.collection.USER;
  *     type: object
  *     required:
  *     - email
- *       password
+ *     - password
  *     properties:
  *       email:
  *         type: string
@@ -32,14 +32,15 @@ const USER_COLLECTION = database.collection.USER;
  *       courses:
  *         type: array
  *         description: list of courses user can access
+ *         items:
+ *           type: string
  *   UserOutput:
  *     type: object
  *     required:
  *     - _key
- *       email
- *       isAdmin
- *       role
- *       courses
+ *     - email
+ *     - role
+ *     - courses
  *     properties:
  *       _key:
  *         type: string
@@ -53,6 +54,8 @@ const USER_COLLECTION = database.collection.USER;
  *       courses:
  *         type: array
  *         description: list of courses user can access
+ *         items:
+ *           type: string
  */
 const userSchema = Joi.object().keys({
   email: Joi.string().email().required(),

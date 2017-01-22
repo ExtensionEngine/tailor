@@ -5,7 +5,6 @@ const cors = require('cors');
 const express = require('express');
 const expressSession = require('express-session');
 const passport = require('passport');
-const swaggerJsDoc = require('swagger-jsdoc');
 
 // Setup authentication before instantiating the main app router.
 // eslint-disable-next-line no-unused-vars
@@ -51,12 +50,17 @@ app.use(errorHandler());
 
 // Serve swagger API spec in development environment.
 if (config.swagger.serveDocs) {
+  const path = require('path');
+  const swaggerJsDoc = require('swagger-jsdoc');
+
   const spec = swaggerJsDoc({
     swaggerDefinition: config.swagger.swaggerDefinition,
     apis: ['./server/**/*.js']
   });
-
   app.get('/api/v1/swagger.json', (req, res, next) => res.status(200).json(spec));
+
+  const dir = path.join(__dirname, '..', 'node_modules', 'swagger-ui', 'dist');
+  app.use('/swagger', express.static(dir));
 }
 
 // Handle non-existing routes.

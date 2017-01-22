@@ -57,10 +57,14 @@ Once the dev server is running, GETting `/api/v1/swagger.json` will return a
 JSON object documenting the API in Swagger syntax.
 
 To view the human-friendly version:
-* clone the swagger-ui repo: `git clone https://github.com/swagger-api/swagger-ui.git`
-* open `swagger-ui/dist/index.html` in your browser
+* set `API_SERVE_SWAGGER_DOCS=1` in your local .env file
 * launch the Tailor server
-* point swagger-ui to `http://localhost:3000/api/v1/swagger.json` and click 'Explore'
+* open `localhost:3000/swagger` in your browser
+* point swagger-ui to `http://localhost:3000/api/v1/swagger.json` and click
+'Explore'
+
+(In both cases port 3000 is used; the exact value depends on environment
+variable `SERVER_PORT`.)
 
 #### JSDoc
 * generate the docs with `npm run doc:server`
