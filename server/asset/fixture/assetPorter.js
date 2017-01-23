@@ -12,7 +12,7 @@ function getLeafActivities(activities) {
     return act.parentKey === null ? 0 : 1 + countParents(getParent(act));
   }
 
-  return activities.filter(act => countParents(act) > 1);
+  return activities.filter(act => countParents(act) > 2);
 }
 
 function createAssets(model, courseActivities) {

@@ -32,5 +32,11 @@
   }, {
     "name": "Subactivity 0-1-1",
     "parentKey": 4
+  }, {
+    "name": "Perspective 0",
+    "parentKey": 7
+  }, {
+    "name": "Perspective 1",
+    "parentKey": 7
   }]
 }
