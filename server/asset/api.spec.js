@@ -7,6 +7,12 @@
  *     - asset
  *     produces:
  *     - application/json
+ *     parameters:
+ *     - in: query
+ *       name: activityKey
+ *       required: false
+ *       type: string
+ *       description: filter by activityKey
  *     responses:
  *       200:
  *         description: array of asset objects
