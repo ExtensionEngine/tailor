@@ -9,6 +9,7 @@ class BaseModel {
     this.schema = schema;
     this.collectionName = collectionName;
     this.collection = db.collection(collectionName);
+    this.searchTerms = {};
 
     this.validate = this.validate.bind(this);
     this.validatePartial = this.validatePartial.bind(this);
@@ -20,6 +21,8 @@ class BaseModel {
     this.replaceByKey = this.replaceByKey.bind(this);
     this.removeByKey = this.removeByKey.bind(this);
     this.getMany = this.getMany.bind(this);
+    this.getFiltered = this.getFiltered.bind(this);
+    this.parseSearchTerms = this.parseSearchTerms.bind(this);
   }
 
   validate(document) {
@@ -101,9 +104,50 @@ class BaseModel {
       .then(result => result.old);
   }
 
-  // TODO(matej): expose offset and limit.
   getMany() {
     return this.collection.all().then(cursor => cursor.all());
+  }
+
+  getFiltered(search, pagination, sort) {
+    const { page, limit } = pagination;
+    const { sortBy, sortOrder } = sort;
+    const { filter, vars } = this.parseSearchTerms(search);
+
+    const bindVars = Object.assign(vars, {
+      prop: sortBy,
+      order: sortOrder,
+      offset: (page * limit) - limit,
+      count: limit,
+      '@collection': this.collectionName
+    });
+    const query = `
+      FOR doc IN @@collection
+        ${filter}
+        SORT doc.@prop @order
+        LIMIT @offset, @count
+      RETURN doc`;
+
+    return this.db
+      .query(query, bindVars)
+      .then(cursor => cursor.all());
+  }
+
+  parseSearchTerms(search) {
+    let bindVars = {};
+    const filters = [];
+    const supportedTerms = Object.keys(this.searchTerms);
+
+    Object.keys(search).forEach(searchTerm => {
+      if (supportedTerms.includes(searchTerm)) {
+        const searchValue = search[searchTerm];
+        const parseFn = this.searchTerms[searchTerm];
+        const { filter, vars } = parseFn(searchValue);
+        filters.push(filter);
+        bindVars = Object.assign(bindVars, vars);
+      }
+    });
+
+    return { filter: filters.join('\n'), vars: bindVars };
   }
 }
 
