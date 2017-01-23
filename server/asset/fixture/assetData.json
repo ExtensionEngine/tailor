@@ -1,0 +1,23 @@
+{
+  "data": [{
+    "type": "IMAGE",
+    "url": "http://i.imgur.com/jD7ejTa.jpg",
+    "layoutWidth": 12,
+    "position": -1.25
+  }, {
+    "type": "TEXT",
+    "content": "<h1>Heading one</h1><p>This is a paragraph.</p>",
+    "layoutWidth": 6,
+    "position": 0
+  }, {
+    "type": "TEXT",
+    "content": "<h2>Heading two</h2><p>Another paragraph here.</p>",
+    "layoutWidth": 6,
+    "position": 2.333333
+  }, {
+    "type": "VIDEO",
+    "url": "https://www.youtube.com/watch?v=zP0sqRMzkwo",
+    "layoutWidth": 12,
+    "position": 10
+  }]
+}

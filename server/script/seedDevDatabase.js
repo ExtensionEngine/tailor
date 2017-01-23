@@ -3,10 +3,12 @@
 const connector = require('../shared/database').databaseConnector;
 const coursePorter = require('../course/fixture/coursePorter');
 const activityPorter = require('../activity/fixture/activityPorter');
+const assetPorter = require('../asset/fixture/assetPorter');
 const userPorter = require('../user/fixture/userPorter');
 
 let db;
 let insertedCourses;
+let insertedActivities;
 
 connector
   .initialize()
@@ -20,6 +22,11 @@ connector
     console.log('Adding activities...');
     insertedCourses = courses;
     return activityPorter.insertFixtures(db, insertedCourses);
+  })
+  .then(activities => {
+    console.log('Adding assets...');
+    insertedActivities = activities;
+    return assetPorter.insertFixtures(db, insertedActivities);
   })
   .then(() => {
     console.log('Adding users...');
