@@ -5,14 +5,21 @@ const express = require('express');
 const controller = require('./asset.controller').controller;
 const io = require('../shared/io');
 const model = require('./asset.model');
+const parsers = require('../shared/middleware').queryParamParsers;
 
 const router = express.Router();
 const input = io.input();
 const output = io.output();
+const queryParsers = [
+  parsers.parsePagination,
+  parsers.parseSearchTerms,
+  parsers.parseSort
+];
 
 router.get('/assets',
   input,
-  controller.list,
+  queryParsers,
+  controller.listFiltered,
   output
 );
 

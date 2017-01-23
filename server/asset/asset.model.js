@@ -67,6 +67,14 @@ const updateSchema = Joi.object().keys({
 class AssetModel extends BaseModel {
   constructor(db, collectionName = ASSET_COLLECTION, schema = assetSchema) {
     super(db, collectionName, schema);
+
+    // Support filtering assets by activity key.
+    this.searchTerms = {
+      activityKey: activityKey => ({
+        filter: 'FILTER doc.activityKey == @activityKey',
+        vars: { activityKey }
+      })
+    };
   }
 
   validatePartial(partialDocument) {
