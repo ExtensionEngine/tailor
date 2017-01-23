@@ -1,6 +1,6 @@
 'use strict';
 
-const io = require('./shared/io');
+const io = require('../io');
 
 class BaseController {
   constructor(model, resourceKey) {

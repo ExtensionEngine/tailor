@@ -1,6 +1,6 @@
 'use strict';
 
-const BaseController = require('../base.controller');
+const BaseController = require('../shared/controller/base.controller');
 const assetModel = require('./asset.model').model;
 
 class AssetController extends BaseController {

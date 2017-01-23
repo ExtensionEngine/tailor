@@ -1,6 +1,6 @@
 'use strict';
 
-const BaseController = require('../base.controller');
+const BaseController = require('../shared/controller/base.controller');
 const activityModel = require('./activity.model').model;
 const io = require('../shared/io');
 const locals = io.locals;

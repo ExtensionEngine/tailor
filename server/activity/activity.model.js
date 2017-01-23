@@ -2,7 +2,7 @@
 
 const Joi = require('joi');
 const database = require('../shared/database');
-const BaseModel = require('../base.model');
+const BaseModel = require('../shared/model/base.model');
 const action = require('./action');
 
 const db = database.db;

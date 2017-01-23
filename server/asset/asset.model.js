@@ -1,7 +1,7 @@
 'use strict';
 
 const Joi = require('joi');
-const BaseModel = require('../base.model');
+const BaseModel = require('../shared/model/base.model');
 const database = require('../shared/database');
 
 const db = database.db;

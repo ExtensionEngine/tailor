@@ -1,6 +1,6 @@
 'use strict';
 
-const BaseController = require('../base.controller');
+const BaseController = require('../shared/controller/base.controller');
 const courseModel = require('./course.model').model;
 const io = require('../shared/io');
 const role = require('../user/role');

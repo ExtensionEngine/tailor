@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 const config = require('../../config/server');
 const database = require('../shared/database');
-const BaseModel = require('../base.model');
+const BaseModel = require('../shared/model/base.model');
 const query = require('./query');
 const role = require('./role');
 
