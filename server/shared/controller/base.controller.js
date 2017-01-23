@@ -13,6 +13,7 @@ class BaseController {
     this.replace = this.replace.bind(this);
     this.remove = this.remove.bind(this);
     this.list = this.list.bind(this);
+    this.listFiltered = this.listFiltered.bind(this);
   }
 
   create(req, res, next) {
@@ -68,6 +69,20 @@ class BaseController {
   list(req, res, next) {
     this.model
       .getMany()
+      .then(data => {
+        io.setOK(res, data);
+        next();
+      })
+      .catch(next);
+  }
+
+  listFiltered(req, res, next) {
+    const search = io.locals.load(req, 'searchTerms');
+    const pagination = io.locals.load(req, 'pagination');
+    const sort = io.locals.load(req, 'sort');
+
+    this.model
+      .getFiltered(search, pagination, sort)
       .then(data => {
         io.setOK(res, data);
         next();
