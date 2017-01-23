@@ -13,7 +13,7 @@
  *         schema:
  *           type: array
  *           items:
- *             $ref: "#/definitions/AssetOutput"
+ *             $ref: "#/definitions/Asset"
  *   post:
  *     summary: create a new asset
  *     tags:
@@ -27,12 +27,12 @@
  *       name: body
  *       required: true
  *       schema:
- *         $ref: "#/definitions/AssetInput"
+ *         $ref: "#/definitions/Asset"
  *     responses:
  *       201:
  *         description: newly-created asset
  *         schema:
- *           $ref: "#/definitions/AssetOutput"
+ *           $ref: "#/definitions/Asset"
  *       400:
  *          description: request body contains invalid values
  * /assets/{assetKey}:
@@ -52,7 +52,7 @@
  *       200:
  *         description: single asset
  *         schema:
- *           $ref: "#/definitions/AssetOutput"
+ *           $ref: "#/definitions/Asset"
  *       404:
  *         description: asset with the given key does not exist
  *   patch:
@@ -73,12 +73,12 @@
  *       in: body
  *       required: true
  *       schema:
- *         $ref: "#/definitions/AssetInput"
+ *         $ref: "#/definitions/Asset"
  *     responses:
  *       200:
  *         description: updated asset
  *         schema:
- *           $ref: "#/definitions/AssetOutput"
+ *           $ref: "#/definitions/Asset"
  *       404:
  *         description: asset with the given key does not exist
  *   put:
@@ -99,12 +99,12 @@
  *       in: body
  *       required: true
  *       schema:
- *         $ref: "#/definitions/AssetInput"
+ *         $ref: "#/definitions/Asset"
  *     responses:
  *       200:
  *         description: asset with changes applied
  *         schema:
- *           $ref: "#/definitions/AssetOutput"
+ *           $ref: "#/definitions/Asset"
  *       400:
  *          description: request body contains invalid values
  *       404:
@@ -125,7 +125,7 @@
  *       200:
  *         description: asset object which was just removed
  *         schema:
- *           $ref: "#/definitions/AssetOutput"
+ *           $ref: "#/definitions/Asset"
  *       404:
  *         description: asset with the given key does not exist
  */
