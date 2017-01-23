@@ -9,31 +9,28 @@
     "name": "Main activity 2",
     "parentKey": null
   }, {
-    "name": "Subactivity 0 - 0",
+    "name": "Subactivity 0-0",
     "parentKey": 0
   }, {
-    "name": "Subactivity 0 - 1",
+    "name": "Subactivity 0-1",
     "parentKey": 0
   }, {
-    "name": "Subactivity 0 - 2",
-    "parentKey": 0
-  }, {
-    "name": "Subactivity 1 - 0",
+    "name": "Subactivity 1-0",
     "parentKey": 1
   }, {
-    "name": "Subactivity 1 - 1",
+    "name": "Subactivity 1-1",
     "parentKey": 1
   }, {
-    "name": "Subactivity 1 - 2",
-    "parentKey": 1
+    "name": "Subactivity 0-0-0",
+    "parentKey": 3
   }, {
-    "name": "Subactivity 2 - 0",
-    "parentKey": 2
+    "name": "Subactivity 0-0-1",
+    "parentKey": 3
   }, {
-    "name": "Subactivity 2 - 1",
-    "parentKey": 2
+    "name": "Subactivity 0-1-0",
+    "parentKey": 4
   }, {
-    "name": "Subactivity 2 - 2",
-    "parentKey": 2
+    "name": "Subactivity 0-1-1",
+    "parentKey": 4
   }]
 }
