@@ -3,7 +3,7 @@
     <thead>
       <tr>
         <th>User</th>
-        <th v-for="role in roles" class="text-center">{{ role.render }}</th>
+        <th v-for="role in roles" class="text-center">{{ role.title }}</th>
         <th class="text-center">Remove from course</th>
       </tr>
     </thead>
@@ -16,10 +16,10 @@
             :name="user._key"
             :value="role.value"
             :checked="user.role === role.value"
-            @click="changeRole(user._cid, role.value)"/>
+            @click="changeRole(user._key, role.value)"/>
         </td>
         <td class="text-center">
-          <button type="button" class="btn btn-link" @click="removeUser(user)">
+          <button type="button" class="btn btn-link" @click="remove(user)">
             <span class="fa fa-close"></span>
           </button>
         </td>
@@ -34,14 +34,15 @@ import { mapActions } from 'vuex-module';
 
 export default {
   methods: {
-    ...mapActions(['update', 'removeFromCourse'], 'users'),
-    changeRole(_cid, role) {
-      debounce(this.update, 500)({ _cid, role });
+    ...mapActions(['upsertUser', 'removeUser'], 'courses'),
+    changeRole(userKey, role) {
+      const { courseKey } = this.$route.params;
+      debounce(this.upsertUser, 500)({ courseKey, userKey, role });
     },
-    removeUser(user) {
+    remove(user) {
       const userKey = user._key;
       const { courseKey } = this.$route.params;
-      this.removeFromCourse({ userKey, courseKey });
+      this.removeUser({ userKey, courseKey });
     }
   },
   props: {
