@@ -1,5 +1,6 @@
 const Joi = require('Joi');
 const s3 = require('s3');
+const AWS = require('aws-sdk');
 const validateConfig = require('../validation').validateConfig;
 
 const schema = Joi.object().keys({
@@ -9,10 +10,10 @@ const schema = Joi.object().keys({
   secret: Joi.string().required()
 });
 
-// TODO(marko): Process and adapt necessary options.
 class Amazon {
   constructor(config) {
     const validated = validateConfig(config, schema);
+
     const clientOptions = {
       maxAsyncS3: 20,
       s3RetryCount: 3,
@@ -27,9 +28,12 @@ class Amazon {
       region: validated.region
     };
 
-    const options = Object.assign(clientOptions, { s3Options });
+    // Workaround for: https://github.com/andrewrk/node-s3-client/issues/69
+    const s3Client = new AWS.S3(s3Options);
+    const options = Object.assign(clientOptions, { s3Client });
 
     this.bucket = validated.bucket;
+    this.region = validated.region;
     this.client = s3.createClient(options);
   }
 
@@ -42,72 +46,74 @@ class Amazon {
    * @param {string} error Name of error event.
    * @return {Promise<listener>} Promisified event listener.
    */
-   // NOTE(marko): All methods emit several different events. Perhaps promises
-   // aren't the best solution? Look into RXJS.
-  static promisifyListener(listener, success = 'end', error = 'error') {
+  static promisifyListener(listener, success = 'end', error = 'error', data = 'data') {
     return new Promise((resolve, reject) => {
-      listener.on(success, resolve).on(error, reject);
+      let value = null;
+
+      // If any data was emitted on 'data' event, store it inside value variable.
+      // If any data was received on 'end' event, store that data in value
+      // variable. Resolve with value variable.
+      listener
+        .on(error, reject)
+        .on(data, d => {
+          value = d;
+        })
+        .on(success, d => {
+          if (d) value = d;
+          resolve(value);
+        });
     });
   }
 
-  // NOTE(marko): https://github.com/andrewrk/node-s3-client#clientdownloadfileparams
-  // downloadFile emits three events. 'error' (err), 'end' and
-  // 'progress' (progressAmount, progressTotal).
-  getFile(options) {
-    const listener = this.client.downloadFile(options);
+  loadFile(key, location, options) {
+    const s3Params = Object.assign(options, { Bucket: this.bucket, Key: key });
+    const listener = this.client.downloadFile({ s3Params, localFile: location });
     return Amazon.promisifyListener(listener);
   }
 
-  // NOTE(marko): https://github.com/andrewrk/node-s3-client#clientlistobjectsparams
-  // listObjects emits four events: 'error' (err), 'end', 'data' (data),
-  // 'progress' (progressAmount, objectsFound, dirsFound).
-  // Considering that returned data is found in 'data' event and 'end' marks
-  // the end of download, how to safely return data inside a promise?
+  saveFile(key, file, options) {
+    const s3Params = Object.assign(options, { Bucket: this.bucket, Key: key });
+    const listener = this.client.uploadFile({ s3Params, localFile: file });
+    return Amazon.promisifyListener(listener);
+  }
+
+  deleteFile(key, options) {
+    const deleteParams = {
+      Delete: {
+        Objects: [
+          {
+            Key: key
+          }
+        ]
+      }
+    };
+    const s3Params = Object.assign(options, deleteParams, { Bucket: this.bucket });
+    const listener = this.client.deleteObjects(s3Params);
+    return Amazon.promisifyListener(listener);
+  }
+
   listFiles(options) {
-    options = Object.assign(options, { Bucket: this.bucket });
-    const listener = this.client.listObjects({ s3Params: options });
-    return Amazon.promisifyListener(listener, 'data');
-  }
-
-  // NOTE(marko): https://github.com/andrewrk/node-s3-client#clientuploadfileparams
-  // uploadFile emits five events: 'error' (err), 'end' (data),
-  // 'progress' (progressMd5Amount, progressAmount. progressTotal),
-  // 'fileOpened' (fdSlicer) and 'fileClosed'.
-  // This time 'end' event returns upload data so it's somewhat save to use
-  // it as a promise resolve.
-  saveFile(file, options) {
-    options = Object.assign(options, { Bucket: this.bucket });
-    const listener = this.client.uploadFile({ s3Params: options, localFile: file });
+    const s3Params = Object.assign(options, { Bucket: this.bucket });
+    const listener = this.client.listObjects({ s3Params });
     return Amazon.promisifyListener(listener);
   }
 
-  // NOTE(marko): https://github.com/andrewrk/node-s3-client#clientdeleteobjectss3params
-  // deleteObjects emits four events. 'error' (err), 'end',
-  // 'progress' (progressAmount, progressTotal), 'data' (data).
-  // Again, data is not returned on 'end' event.
-  deleteFile(options) {
-    // NOTE(marko): Objects are repersented as a list of JS objects with key
-    // attribute.
-    const listener = this.client.deleteObjects();
-    return Amazon.promisifyListener(listener);
-  }
-
-  // Should be safe for promisifying.
-  getFileUrl(options) {
-    const { bucket, key, location } = options;
-    const listener = this.client.getPublicUrl(bucket, key, location);
-    return Amazon.promisifyListener(listener);
-  }
-
-  // Should be safe for promisifying.
-  fileExists(options) {
-    const { bucket, key } = options;
-
+  getFileUrl(key, options) {
     return new Promise((resolve, reject) => {
-      this.client.headObject({ bucket, key }, (err, data) => {
-        if (err) return reject(err);
-        return resolve(data);
-      });
+      const url = s3.getPublicUrl(this.bucket, key, this.region);
+      if (!url) return reject(url);
+      return resolve(url);
+    });
+  }
+
+  fileExists(key, options) {
+    return new Promise((resolve, reject) => {
+      this.client.s3.headObject(
+        { Key: key, Bucket: this.bucket },
+        (err, data) => {
+          if (err) return reject(err);
+          return resolve(data);
+        });
     });
   }
 };
