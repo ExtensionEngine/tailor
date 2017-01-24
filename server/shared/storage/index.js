@@ -47,28 +47,28 @@ class Storage {
     return { client, config };
   }
 
+  loadFile(key, location, options = {}) {
+    return this.provider.loadFile(key, location, options);
+  }
+
+  saveFile(key, file, options = {}) {
+    return this.provider.saveFile(key, file, options);
+  }
+
+  deleteFile(key, options = {}) {
+    return this.provider.deleteFile(key, options);
+  }
+
   listFiles(options = {}) {
     return this.provider.listFiles(options);
   }
 
-  getFile(options = {}) {
-    return this.provider.getFile(options);
+  getFileUrl(key, options = {}) {
+    return this.provider.getFileUrl(key, options);
   }
 
-  saveFile(file = '', options = {}) {
-    return this.provider.saveFile(file, options);
-  }
-
-  deleteFile(options = {}) {
-    return this.provider.deleteFile(options);
-  }
-
-  getFileUrl(options = {}) {
-    return this.provider.getFileUrl(options);
-  }
-
-  fileExists(options = {}) {
-    return this.provider.fileExists(options);
+  fileExists(key, options = {}) {
+    return this.provider.fileExists(key, options);
   }
 }
 
