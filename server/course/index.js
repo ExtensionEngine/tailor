@@ -17,12 +17,12 @@ const output = io.output();
 if (process.env.NODE_ENV !== 'production') {
   router.post('/courses/:courseKey/users',
     input,
-    controller.inviteUser,
+    controller.addUser,
     output);
 
   router.delete('/courses/:courseKey/users/:userKey',
     input,
-    controller.revokeAccess,
+    controller.removeUser,
     output);
 }
 
@@ -63,13 +63,6 @@ router.delete('/courses/:courseKey',
   input,
   middleware.requireCourseAccess,
   controller.remove,
-  output);
-
-router.get('/courses/:courseKey/users',
-  input,
-  middleware.requireCourseAccess,
-  queryParams.parseSearch,
-  controller.listUsersForCourse,
   output);
 
 module.exports = {

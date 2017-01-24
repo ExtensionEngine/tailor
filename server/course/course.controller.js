@@ -11,9 +11,8 @@ class CourseController extends BaseController {
     super(courseModel, resourceKey);
 
     this.userModel = userModel;
-    this.inviteUser = this.inviteUser.bind(this);
-    this.revokeAccess = this.revokeAccess.bind(this);
-    this.listUsersForCourse = this.listUsersForCourse.bind(this);
+    this.addUser = this.addUser.bind(this);
+    this.removeUser = this.removeUser.bind(this);
     this.listCoursesForUser = this.listCoursesForUser.bind(this);
   }
 
@@ -34,46 +33,23 @@ class CourseController extends BaseController {
       .catch(next);
   }
 
-  listUsersForCourse(req, res, next) {
-    const courseKey = req.params.courseKey;
-    const email = io.locals.load(req, 'search').query;
-
-    // TODO(marko): Temporary fix, build this array dynamically.
-    const roles = req.user.role === role.SYSTEM_ADMIN
-      ? [role.ADMIN, role.CONTENT_AUTHOR]
-      : [role.CONTENT_AUTHOR];
-
+  addUser({ body, params }, res, next) {
+    const { userKey, role } = body;
     this.model
-      .getUsers({ courseKey, email, roles })
-      .then(users => {
-        io.setOK(res, users);
+      .addUser(params.courseKey, userKey, role)
+      .then(course => {
+        io.setOK(res, course);
         next();
       })
       .catch(next);
   }
 
-  inviteUser(req, res, next) {
-    const { email, role } = req.body;
-    const courseKey = req.params.courseKey;
-
-    // TODO(marko): Should create inactive user and sent invitation link
-    // to their email. This invitation link should lead to password set
-    // page. Alternatively, entire add / invite flow should be different.
-    this.userModel
-      .inviteToCourse(email, role, courseKey)
-      .then(user => {
-        io.setOK(res, user);
-        next();
-      })
-      .catch(next);
-  }
-
-  revokeAccess(req, res, next) {
-    const { userKey, courseKey } = req.params;
-    this.userModel
-      .revokeCourseAccess(userKey, courseKey)
-      .then(user => {
-        io.setOK(res, user);
+  removeUser(req, res, next) {
+    const { courseKey, userKey } = req.params;
+    this.model
+      .removeUser(courseKey, userKey)
+      .then(course => {
+        io.setOK(res, course);
         next();
       })
       .catch(next);
