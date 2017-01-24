@@ -5,11 +5,12 @@
       <li :class="{ active: $route.name === 'course' }">
         <router-link :to="{ name: 'course' }">Outline</router-link>
       </li>
+      <!--
       <li><a>Revision history</a></li>
       <li><a>Comments</a></li>
-      <li
-        :class="{ active: $route.name === 'course-settings' }"
-        v-permissions.isSystemAdmin.isAdmin>
+      -->
+      <li v-if="showSettings"
+        :class="{ active: $route.name === 'course-settings' }">
         <router-link :to="{ name: 'course-settings' }">Settings</router-link>
       </li>
     </ul>
@@ -20,20 +21,22 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex-module';
-import Permissions from '../../directives/permissions';
+import { mapGetters, mapActions, mapMutations } from 'vuex-module';
 
 export default {
   methods: {
     ...mapActions(['fetch'], 'activity'),
     ...mapMutations(['activateCourse'], 'activity')
   },
+  computed: {
+    ...mapGetters(['isAdmin', 'isCourseAdmin']),
+    showSettings() {
+      return this.isAdmin || this.isCourseAdmin;
+    }
+  },
   created() {
     this.activateCourse(this.$route.params.courseKey);
     this.fetch();
-  },
-  directives: {
-    Permissions
   }
 };
 </script>
