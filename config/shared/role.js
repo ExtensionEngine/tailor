@@ -1,16 +1,14 @@
-const role = {
-  SYSTEM_ADMIN: 'SYSTEM_ADMIN',
-  ADMIN: 'ADMIN',
-  CONTENT_AUTHOR: 'CONTENT_AUTHOR'
-};
+const values = require('lodash/values');
 
-const roleNames = Object.keys(role).map(k => role[k]);
-const validationRegex = new RegExp(`^(${roleNames.join('|')})$`);
+const userRoles = { USER: 'USER', ADMIN: 'ADMIN' };
+const courseRoles = { ADMIN: 'COURSE_ADMIN', AUTHOR: 'COURSE_AUTHOR' };
+
+const userRoleRegex = new RegExp(`^(${values(userRoles).join('|')})$`);
+const courseRoleRegex = new RegExp(`^(${values(courseRoles).join('|')})$`);
 
 module.exports = {
-  SYSTEM_ADMIN: role.SYSTEM_ADMIN,
-  ADMIN: role.ADMIN,
-  CONTENT_AUTHOR: role.CONTENT_AUTHOR,
-  default: role.CONTENT_AUTHOR,
-  validationRegex
+  user: userRoles,
+  course: courseRoles,
+  userRoleRegex,
+  courseRoleRegex
 };
