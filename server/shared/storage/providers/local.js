@@ -1,25 +1,25 @@
-// Fallback class for local development
+// TODO(marko): Fallback class for local development
 class Local {
   constructor(options = {}) {
     this.options = options;
   }
 
-  listFiles(options) {
-  }
-
-  getFile(options) {
+  loadFile(key, location, options) {
   }
 
   saveFile(file, options) {
   }
 
-  deleteFile(options) {
+  deleteFile(key, options) {
   }
 
-  getFileUrl(options) {
+  listFiles(options) {
   }
 
-  fileExists(options) {
+  getFileUrl(key, options) {
+  }
+
+  fileExists(key, options) {
   }
 }
 
