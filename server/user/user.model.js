@@ -1,13 +1,13 @@
 'use strict';
 
-const bcrypt = require('bcryptjs');
-const Joi = require('joi');
 const assign = require('lodash/assign');
+const BaseModel = require('../base.model');
+const bcrypt = require('bcryptjs');
 const config = require('../../config/server');
 const database = require('../shared/database');
-const BaseModel = require('../base.model');
+const Joi = require('joi');
+const { user: role, userRoleRegex } = require('../../config/shared').role;
 const query = require('./query');
-const role = require('../../config/shared').role;
 
 const db = database.db;
 const USER_COLLECTION = database.collection.USER;
@@ -20,6 +20,7 @@ const USER_COLLECTION = database.collection.USER;
  *     required:
  *     - email
  *     - password
+ *     - role
  *     properties:
  *       email:
  *         type: string
@@ -30,18 +31,12 @@ const USER_COLLECTION = database.collection.USER;
  *       role:
  *         type: string
  *         description: user role
- *       courses:
- *         type: array
- *         description: list of courses user can access
- *         items:
- *           type: string
  *   UserOutput:
  *     type: object
  *     required:
  *     - _key
  *     - email
  *     - role
- *     - courses
  *     properties:
  *       _key:
  *         type: string
@@ -52,17 +47,11 @@ const USER_COLLECTION = database.collection.USER;
  *       role:
  *         type: string
  *         description: user role
- *       courses:
- *         type: array
- *         description: list of courses user can access
- *         items:
- *           type: string
  */
 const userSchema = Joi.object().keys({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
-  role: Joi.string().default(role.default).regex(role.validationRegex),
-  courses: Joi.array().items(Joi.string()).default([])
+  role: Joi.string().default(role.USER).regex(userRoleRegex)
 });
 
 class AuthError {
@@ -156,32 +145,6 @@ class UserModel extends BaseModel {
         delete user.password;
         return passwordsMatch ? user : Promise.reject(new AuthError());
       });
-  }
-
-  inviteToCourse(email, role, courseKey) {
-    // TODO(marko): User should be inactive once invited and password should
-    // be set via link provided in the invitation email.
-    const document = { email, role, courses: [courseKey], password: 'pass' };
-
-    return this
-      .validatePartial(document)
-      .then(validDocument =>
-        this.db.query(query.INVITE_USER_TO_COURSE, assign(
-          validDocument,
-          { '@collection': this.collectionName }
-        ))
-      )
-      .then(result => result.next());
-  }
-
-  revokeCourseAccess(userKey, courseKey) {
-    return this.db
-      .query(query.REMOVE_COURSE_FROM_USER, {
-        '@collection': this.collectionName,
-        userKey,
-        courseKey
-      })
-      .then(cursor => cursor.next());
   }
 }
 
