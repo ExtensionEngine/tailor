@@ -12,11 +12,13 @@
 </template>
 
 <script>
+import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Promise from 'bluebird';
+import { role } from 'shared';
+import toTitleCase from 'to-title-case';
 
 import CubeSpinner from '../../loaders/CubeSpinner';
-import { getAdministrativeRoles } from '../../../utils/users';
 import UserInvite from './UserInvite';
 import UserList from './UserList';
 
@@ -33,15 +35,14 @@ export default {
       return !!this.users.length;
     },
     roles() {
-      return getAdministrativeRoles(this.user);
+      return map(role.course, it => ({ title: toTitleCase(it), value: it }));
     }
   },
   methods: {
     ...mapActions(['fetch'], 'users'),
     fetchUsers() {
       this.showLoader = true;
-      const { courseKey } = this.$route.params;
-      const request = Promise.join(this.fetch(courseKey), Promise.delay(1000));
+      const request = Promise.join(this.fetch(), Promise.delay(500));
       return request.then(() => (this.showLoader = false));
     }
   },
