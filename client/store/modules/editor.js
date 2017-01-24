@@ -1,5 +1,6 @@
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import map from 'lodash/map';
 import { VuexModule } from 'vuex-module';
 
 const { build, getter, mutation, state } = new VuexModule('editor');
@@ -36,8 +37,9 @@ getter(function assets() {
 getter(function users() {
   const { route } = this.rootState;
   const { courseKey } = route.params;
-  const { users: collection } = this.rootGetters;
-  return filter(collection, it => it.courses.indexOf(courseKey) > -1);
+  const course = find(this.rootGetters.courses, { _key: courseKey });
+  let result = filter(this.rootGetters.users, it => course.users[it._key]);
+  return map(result, it => ({ ...it, role: course.users[it._key] }));
 });
 
 mutation(function focusActivity(_cid) {
