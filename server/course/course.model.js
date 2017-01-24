@@ -30,6 +30,7 @@ const COURSE_COLLECTION = database.collection.COURSE;
  *     - _key
  *     - name
  *     - description
+ *     - users
  *     properties:
  *       _key:
  *         type: string
@@ -40,6 +41,9 @@ const COURSE_COLLECTION = database.collection.COURSE;
  *       description:
  *         type: string
  *         description: short course description
+ *       users:
+ *         type: object
+ *         description: user course roles
  */
 const courseSchema = Joi.object().keys({
   name: Joi.string().min(3).max(100).required(),
