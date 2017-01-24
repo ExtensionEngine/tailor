@@ -1,14 +1,13 @@
 'use strict';
 
-const Joi = require('joi');
 const isArray = require('lodash/isArray');
 const isEmpty = require('lodash/isEmpty');
+const Joi = require('joi');
 const BaseModel = require('../base.model');
 const database = require('../shared/database');
 
 const db = database.db;
 const COURSE_COLLECTION = database.collection.COURSE;
-const USER_COLLECTION = database.collection.USER;
 
 /**
  * @swagger
@@ -44,17 +43,13 @@ const USER_COLLECTION = database.collection.USER;
  */
 const courseSchema = Joi.object().keys({
   name: Joi.string().min(3).max(100).required(),
-  description: Joi.string().min(3).max(2000).required()
+  description: Joi.string().min(3).max(2000).required(),
+  users: Joi.object().default({})
 });
 
 class CourseModel extends BaseModel {
-  constructor(db,
-    courseCollectionName = COURSE_COLLECTION,
-    userCollectionName = USER_COLLECTION,
-    schema = courseSchema
-  ) {
-    super(db, courseCollectionName, schema);
-    this.userCollectionName = userCollectionName;
+  constructor(db, collectionName = COURSE_COLLECTION, schema = courseSchema) {
+    super(db, collectionName, schema);
   }
 
   /**
@@ -133,41 +128,48 @@ class CourseModel extends BaseModel {
   }
 
   /**
-   * getEmailFilter - description
-   *
-   * @param {string} email Description
-   * @return {array} Description
+   * Add user to the course.
+   * @param {string} courseKey
+   * @param {string} userKey
+   * @param {string} role
+   * @return {Course} Updated course
    */
-  static getEmailFilter(email) {
-    if (!email) return ['', {}];
-    return ['FILTER CONTAINS(LOWER(user.email), LOWER(@email))', { email }];
+  addUser(courseKey, userKey, role) {
+    const query = `
+      LET course = DOCUMENT(@@courses, @courseKey)
+      LET users = MERGE(course.users, { [@userKey]: @role })
+      UPDATE course WITH { users } IN @@courses
+      RETURN NEW`;
+
+    const bindVars = {
+      '@courses': this.collectionName,
+      courseKey,
+      userKey,
+      role
+    };
+
+    return this.db.query(query, bindVars).then(c => c.next());
   }
 
   /**
-   * getUsers - description
-   *
-   * @param {object} filter Description
-   * @return {Promise<array>} Description
+   * Remove user from the course.
+   * @param {string} courseKey
+   * @param {string} userKey
+   * @return {Course} Updated course
    */
-  getUsers(filter) {
-    const { courseKey, email, roles } = filter;
-    const [emailFilter, emailBindVars] = CourseModel.getEmailFilter(email);
-
+  removeUser(courseKey, userKey) {
     const query = `
-      FOR user IN @@collection
-        FILTER POSITION(user.courses, @courseKey)
-        FILTER POSITION(@roles, user.role)
-        ${emailFilter}
-      RETURN UNSET(user, 'password')`;
-    const bindVars = Object.assign({
-      '@collection': this.userCollectionName,
-      courseKey,
-      roles
-    }, emailBindVars);
+      LET course = DOCUMENT(@@courses, @courseKey)
+      REPLACE UNSET_RECURSIVE(course, [@userKey]) IN @@courses
+      RETURN NEW`;
 
-    return this.db
-      .query(query, bindVars)
-      .then(cursor => cursor.all());
+    const bindVars = {
+      '@courses': this.collectionName,
+      courseKey,
+      userKey
+    };
+
+    return this.db.query(query, bindVars).then(c => c.next());
   }
 }
 
