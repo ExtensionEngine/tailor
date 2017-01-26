@@ -1,5 +1,9 @@
 <template>
   <div @click="onClick">
+    <image-toolbar
+      v-if="isVisible('image')"
+      :asset="focusedAsset">
+    </image-toolbar>
     <quill-toolbar
       v-if="isVisible('text')"
       :asset="focusedAsset">
@@ -13,6 +17,7 @@
 
 <script>
 import { mapGetters } from 'vuex-module';
+import ImageToolbar from './ImageToolbar';
 import QuillToolbar from './QuillToolbar';
 import VideoToolbar from './VideoToolbar';
 
@@ -31,6 +36,7 @@ export default {
     }
   },
   components: {
+    ImageToolbar,
     QuillToolbar,
     VideoToolbar
   }
