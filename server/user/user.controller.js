@@ -1,31 +1,52 @@
 'use strict';
 
-const BaseController = require('../base.controller');
-const userModel = require('./user.model').model;
-const io = require('../shared/io');
+const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
+const User = require('./user.model');
+const { validationError } = require('../shared/error');
 
-class UserController extends BaseController {
-  constructor(model = userModel, resourceKey = 'userKey') {
-    super(model, resourceKey);
+function index(req, res) {
+  const attributes = ['id', 'email', 'role'];
+  return User
+    .findAll({ attributes })
+    .then(users => res.json({ data: users }));
+}
 
-    this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
-  }
+function requestPasswordReset({ body }, res) {
+  let { email } = body;
+  email = email.toLowerCase();
+  return User
+    .find({ where: { email } })
+    .then(user => user || validationError(NOT_FOUND, 'User not found'))
+    .then(user => user.sendResetToken())
+    .then(() => res.end());
+}
 
-  login(req, res, next) {
-    const user = req.user;
-    io.setOK(res, user);
-    next();
-  }
+function resetPassword({ body, params }, res) {
+  const { password, token } = body;
+  return User
+    .find({ where: { token } })
+    .then(user => user || validationError(NOT_FOUND, 'Invalid token'))
+    .then(user => {
+      user.password = password;
+      return user.save().catch(validationError());
+    })
+    .then(() => res.end());
+}
 
-  logout(req, res, next) {
-    req.session.destroy();
-    io.setEmpty(res);
-    next();
-  }
+function login(req, res) {
+  const user = req.user;
+  res.json({ data: user });
+}
+
+function logout(req, res) {
+  req.session.destroy();
+  res.status(NO_CONTENT).end();
 }
 
 module.exports = {
-  Controller: UserController,
-  controller: new UserController()
+  index,
+  requestPasswordReset,
+  resetPassword,
+  login,
+  logout
 };
