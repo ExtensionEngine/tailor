@@ -54,6 +54,7 @@
 import { isEmpty, map, zipObject } from 'lodash';
 import actions from './toolbarActions';
 
+// TODO(marko): URL image upload. Multiple image assets. Image name?
 export default {
   name: 'image-toolbar',
   props: ['asset'],
@@ -159,6 +160,7 @@ export default {
     padding: 20px 5px;
 
     input[type="text"] {
+      border-bottom: 1px solid #b3b3b3;
       width: 100%;
     }
 
