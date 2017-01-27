@@ -44,6 +44,7 @@
     "s3": "^4.4.0",
     "truncate": "^2.0.0",
     "vue": "^2.1.0",
+    "vue-cropperjs": "^2.0.2",
     "vue-focus": "^2.1.0",
     "vue-infinite-scroll": "^2.0.0",
     "vue-quill-editor": "^1.1.0",
