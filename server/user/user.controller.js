@@ -1,8 +1,8 @@
 'use strict';
 
-const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
+const { createError, validationError } = require('../shared/error');
+const { NOT_FOUND } = require('http-status-codes');
 const User = require('./user.model');
-const { validationError } = require('../shared/error');
 
 function index(req, res) {
   const attributes = ['id', 'email', 'role'];
@@ -16,7 +16,7 @@ function requestPasswordReset({ body }, res) {
   email = email.toLowerCase();
   return User
     .find({ where: { email } })
-    .then(user => user || validationError(NOT_FOUND, 'User not found'))
+    .then(user => user || createError(NOT_FOUND, 'User not found'))
     .then(user => user.sendResetToken())
     .then(() => res.end());
 }
@@ -25,28 +25,35 @@ function resetPassword({ body, params }, res) {
   const { password, token } = body;
   return User
     .find({ where: { token } })
-    .then(user => user || validationError(NOT_FOUND, 'Invalid token'))
+    .then(user => user || createError(NOT_FOUND, 'Invalid token'))
     .then(user => {
       user.password = password;
-      return user.save().catch(validationError());
+      return user.save().catch(validationError);
     })
     .then(() => res.end());
 }
 
-function login(req, res) {
-  const user = req.user;
-  res.json({ data: user });
-}
+function login({ body }, res) {
+  let { email, password } = body;
+  if (!email || !password) {
+    createError(400, 'Please enter email and password');
+  }
 
-function logout(req, res) {
-  req.session.destroy();
-  res.status(NO_CONTENT).end();
+  email = email.toLowerCase();
+  return User
+    .find({ where: { email } })
+    .then(user => user || createError(NOT_FOUND, 'User does not exist'))
+    .then(user => user.authenticate(password))
+    .then(user => user || createError(NOT_FOUND, 'Wrong password'))
+    .then(user => {
+      const token = user.createToken();
+      res.json({ data: { token, user: user.profile() } });
+    });
 }
 
 module.exports = {
   index,
   requestPasswordReset,
   resetPassword,
-  login,
-  logout
+  login
 };
