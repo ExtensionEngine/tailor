@@ -66,9 +66,19 @@ const User = db.define('user', {
     unique: true
   }
 }, {
+  getterMethods: {
+    profile() {
+      return {
+        id: this.id,
+        email: this.email,
+        role: this.role
+      };
+    }
+  },
   instanceMethods: {
     authenticate(password) {
-      return bcrypt.compare(password, this.password) ? this : null;
+      return bcrypt.compare(password, this.password)
+        .then(match => match ? this : null);
     },
     encrypt(val) {
       return bcrypt.hash(val, config.auth.saltRounds);
@@ -76,7 +86,8 @@ const User = db.define('user', {
     encryptPassword() {
       return this.encrypt(this.password).then(pw => (this.password = pw));
     },
-    createToken(payload) {
+    createToken() {
+      const payload = { id: this.id, email: this.email };
       return jwt.sign({ payload }, AUTH_SECRET, { expiresIn: '2 days' });
     },
     invite() {
