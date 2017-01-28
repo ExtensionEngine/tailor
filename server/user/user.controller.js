@@ -11,7 +11,7 @@ function index(req, res) {
     .then(users => res.json({ data: users }));
 }
 
-function requestPasswordReset({ body }, res) {
+function forgotPassword({ body }, res) {
   let { email } = body;
   email = email.toLowerCase();
   return User
@@ -53,7 +53,7 @@ function login({ body }, res) {
 
 module.exports = {
   index,
-  requestPasswordReset,
+  forgotPassword,
   resetPassword,
   login
 };
