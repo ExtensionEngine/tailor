@@ -1,14 +1,3 @@
-'use strict';
-
-const isArray = require('lodash/isArray');
-const isEmpty = require('lodash/isEmpty');
-const Joi = require('joi');
-const BaseModel = require('../base.model');
-const database = require('../shared/database');
-
-const db = database.db;
-const COURSE_COLLECTION = database.collection.COURSE;
-
 /**
  * @swagger
  * definitions:
@@ -27,13 +16,13 @@ const COURSE_COLLECTION = database.collection.COURSE;
  *   CourseOutput:
  *     type: object
  *     required:
- *     - _key
+ *     - id
  *     - name
  *     - description
  *     - users
  *     properties:
- *       _key:
- *         type: string
+ *       id:
+ *         type: number
  *         description: unique course identifier
  *       name:
  *         type: string
@@ -42,143 +31,28 @@ const COURSE_COLLECTION = database.collection.COURSE;
  *         type: string
  *         description: short course description
  *       users:
- *         type: object
+ *         type: array
  *         description: user course roles
  */
-const courseSchema = Joi.object().keys({
-  name: Joi.string().min(3).max(100).required(),
-  description: Joi.string().min(3).max(2000).required(),
-  users: Joi.object().default({})
-});
+module.exports = function (sequelize, DataTypes) {
+  const Course = sequelize.define('course', {
+    name: {
+      type: DataTypes.STRING,
+      validate: { notNull: true, notEmpty: true, len: [2, 250] }
+    },
+    description: {
+      type: DataTypes.STRING,
+      validate: { notNull: true, notEmpty: true, len: [2, 2000] }
+    }
+  }, {
+    classMethods: {
+      associate(models) {
+        Course.belongsToMany(models.User, { through: models.CourseUser });
+      }
+    },
+    underscored: true,
+    freezeTableName: true
+  });
 
-class CourseModel extends BaseModel {
-  constructor(db, collectionName = COURSE_COLLECTION, schema = courseSchema) {
-    super(db, collectionName, schema);
-  }
-
-  /**
-   * getSearchFilter - Get filter string and bind variables for search filter,
-   * if they are provided. Otherwise return empty values.
-   *
-   * @param  {string} search Search search
-   * @return {array} Array containing filter string and bind variables object
-   */
-  static getCourseNameFilter(courseName) {
-    const filter = 'CONTAINS(LOWER(course.name), LOWER(@courseName))';
-    const bindVars = { courseName };
-    return courseName ? [filter, bindVars] : [null, {}];
-  }
-
-  /**
-   * getCourseKeysFilter - Get filter string and bind variables for
-   * course keys, if they are provided. Otherwise return empty values.
-   *
-   * @param  {array} courseKeys Course key array
-   * @return {array} Array containing filter string and bind variables object
-   */
-  static getCourseKeysFilter(courseKeys) {
-    const filter = 'course._key IN @courseKeys';
-    const bindVars = { courseKeys };
-    return isArray(courseKeys) ? [filter, bindVars] : [null, {}];
-  }
-
-  /**
-   * getPaginationBindVars- Get bind variables for page
-   * and item count.
-   *
-   * @param {object} pagination Object containing page and item limit
-   * @return {object} Object containing bind variables object
-   */
-  static getPaginationBindVars(pagination) {
-    const { limit, page } = pagination;
-    return {
-      offset: (page * limit) - limit,
-      count: limit
-    };
-  }
-
-  /**
-   * getFiltered - Filter courses by course keys and search if they are
-   * passed. Otherwise, return all courses.
-   *
-   * @param  {array} courseKeys Course key array
-   * @param  {string} courseName Course name to search by
-   * @return {Promise<array>} Array of courses
-   */
-  getFiltered(filter, pagination, sort) {
-    const [srFilter, srBindVars] = CourseModel.getCourseNameFilter(filter.courseName);
-    const [ckFilter, ckBindVars] = CourseModel.getCourseKeysFilter(filter.courseKeys);
-    const pgBindVars = CourseModel.getPaginationBindVars(pagination);
-    const stBindVars = { field: sort.sortBy, order: sort.sortOrder };
-
-    const combinedFilters = [srFilter, ckFilter].filter(f => f).join(' && ');
-    const filterQuery = !isEmpty(combinedFilters) ? `FILTER ${combinedFilters}` : '';
-
-    const bindVars = Object.assign({},
-      srBindVars, ckBindVars, pgBindVars, stBindVars, {
-        '@courseCollection': this.collectionName
-      });
-
-    const query = `
-      FOR course IN @@courseCollection
-        ${filterQuery}
-        SORT course.@field @order
-        LIMIT @offset, @count
-      RETURN course`;
-
-    return this.db
-      .query(query, bindVars)
-      .then(cursor => cursor.all());
-  }
-
-  /**
-   * Add user to the course.
-   * @param {string} courseKey
-   * @param {string} userKey
-   * @param {string} role
-   * @return {Course} Updated course
-   */
-  addUser(courseKey, userKey, role) {
-    const query = `
-      LET course = DOCUMENT(@@courses, @courseKey)
-      LET users = MERGE(course.users, { [@userKey]: @role })
-      UPDATE course WITH { users } IN @@courses
-      RETURN NEW`;
-
-    const bindVars = {
-      '@courses': this.collectionName,
-      courseKey,
-      userKey,
-      role
-    };
-
-    return this.db.query(query, bindVars).then(c => c.next());
-  }
-
-  /**
-   * Remove user from the course.
-   * @param {string} courseKey
-   * @param {string} userKey
-   * @return {Course} Updated course
-   */
-  removeUser(courseKey, userKey) {
-    const query = `
-      LET course = DOCUMENT(@@courses, @courseKey)
-      REPLACE UNSET_RECURSIVE(course, [@userKey]) IN @@courses
-      RETURN NEW`;
-
-    const bindVars = {
-      '@courses': this.collectionName,
-      courseKey,
-      userKey
-    };
-
-    return this.db.query(query, bindVars).then(c => c.next());
-  }
-}
-
-module.exports = {
-  schema: courseSchema,
-  Model: CourseModel,
-  model: new CourseModel(db)
+  return Course;
 };
