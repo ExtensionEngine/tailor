@@ -3,10 +3,8 @@
 const Promise = require('bluebird');
 const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const config = require('../../config/server');
-const db = require('../shared/database').sequelize;
-const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
-const Sequelize = require('sequelize');
+const jwt = require('jsonwebtoken');
 const { user: role } = require('../../config/shared').role;
 
 const AUTH_SECRET = process.env.AUTH_SESSION_SECRET;
@@ -47,74 +45,87 @@ const AUTH_SECRET = process.env.AUTH_SESSION_SECRET;
  *         type: string
  *         description: user role
  */
-const User = db.define('user', {
-  email: {
-    type: Sequelize.STRING,
-    validate: { isEmail: true },
-    unique: { msg: 'The specified email address is already in use.' }
-  },
-  password: {
-    type: Sequelize.STRING,
-    validate: { notEmpty: true, len: [5, 100] }
-  },
-  role: {
-    type: Sequelize.ENUM(role.ADMIN, role.USER),
-    defaultValue: role.USER
-  },
-  token: {
-    type: Sequelize.STRING,
-    unique: true
-  }
-}, {
-  getterMethods: {
-    profile() {
-      return {
-        id: this.id,
-        email: this.email,
-        role: this.role
-      };
+module.exports = function (sequelize, DataTypes) {
+  const User = sequelize.define('user', {
+    email: {
+      type: DataTypes.STRING,
+      validate: { isEmail: true },
+      unique: { msg: 'The specified email address is already in use.' }
+    },
+    password: {
+      type: DataTypes.STRING,
+      validate: { notEmpty: true, len: [5, 100] }
+    },
+    role: {
+      type: DataTypes.ENUM(role.ADMIN, role.USER),
+      defaultValue: role.USER
+    },
+    token: {
+      type: DataTypes.STRING,
+      unique: true
     }
-  },
-  instanceMethods: {
-    authenticate(password) {
-      return bcrypt.compare(password, this.password)
-        .then(match => match ? this : null);
+  }, {
+    getterMethods: {
+      profile() {
+        return {
+          id: this.id,
+          email: this.email,
+          role: this.role
+        };
+      }
     },
-    encrypt(val) {
-      return bcrypt.hash(val, config.auth.saltRounds);
+    classMethods: {
+      associate(models) {
+        User.belongsToMany(models.Course, { through: models.CourseUser });
+      }
     },
-    encryptPassword() {
-      return this.encrypt(this.password).then(pw => (this.password = pw));
+    instanceMethods: {
+      authenticate(password) {
+        return bcrypt
+          .compare(password, this.password)
+          .then(match => match ? this : null);
+      },
+      invite() {
+        return mail.invite(this).then(() => this);
+      },
+      encrypt(val) {
+        return bcrypt.hash(val, config.auth.saltRounds);
+      },
+      encryptPassword() {
+        return this
+          .encrypt(this.password)
+          .then(pw => (this.password = pw));
+      },
+      createToken() {
+        const payload = { id: this.id, email: this.email };
+        return jwt.sign({ payload }, AUTH_SECRET, { expiresIn: '5 days' });
+      },
+      sendResetToken() {
+        return this.createToken().then(token => {
+          this.token = token;
+          this.invite();
+          return this.save();
+        });
+      }
     },
-    createToken() {
-      const payload = { id: this.id, email: this.email };
-      return jwt.sign({ payload }, AUTH_SECRET, { expiresIn: '2 days' });
+    hooks: {
+      beforeCreate(user) {
+        return user.encryptPassword();
+      },
+      beforeUpdate(user) {
+        return user.changed('password')
+          ? user.encryptPassword()
+          : Promise.resolve();
+      },
+      beforeBulkCreate(users) {
+        let updates = [];
+        users.forEach(user => updates.push(user.encryptPassword()));
+        return Promise.all(updates);
+      }
     },
-    invite() {
-      return mail.invite(this).then(() => this);
-    },
-    sendResetToken() {
-      return this.createToken({}).then(token => {
-        this.token = token;
-        return this.save();
-      });
-    }
-  },
-  hooks: {
-    beforeCreate(user) {
-      return user.encryptPassword();
-    },
-    beforeUpdate(user) {
-      return user.changed('password')
-        ? user.encryptPassword()
-        : Promise.resolve();
-    },
-    beforeBulkCreate(users) {
-      let updates = [];
-      users.forEach(user => updates.push(user.encryptPassword()));
-      return Promise.all(updates);
-    }
-  }
-});
+    underscored: true,
+    freezeTableName: true
+  });
 
-module.exports = User;
+  return User;
+};
