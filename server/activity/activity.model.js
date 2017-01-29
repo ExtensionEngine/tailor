@@ -63,9 +63,7 @@ const Activity = sequelize.define('activity', {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    validate: { notEmpty: true }
   },
   type: {
     type: Sequelize.STRING, // ENUM?
@@ -74,9 +72,7 @@ const Activity = sequelize.define('activity', {
   position: {
     type: Sequelize.DOUBLE,
     allowNull: false,
-    validate: {
-      min: 0
-    }
+    validate: { min: 0 }
   },
   parentId: { // TEMP
     type: Sequelize.INTEGER,
@@ -87,16 +83,17 @@ const Activity = sequelize.define('activity', {
     defaultValue: 1
   }
 }, {
-  scopes: {
+  classMethods: {
     findById(id) {
-      return {
+      return this.findOne({
         where: { id }
-      };
+      });
     },
-    findAllByCourse(courseId) {
-      return {
-        where: { courseId: courseId }
-      };
+    findByCourseAndOrder(courseId) {
+      return this.findAll({
+        where: { courseId },
+        order: 'position ASC'
+      });
     }
   },
   instanceMethods: {
@@ -150,9 +147,8 @@ const Activity = sequelize.define('activity', {
           }
 
           this.set('position', newPosition);
-          this.save();
 
-          return this;
+          return this.save();
         });
       });
     }
@@ -168,7 +164,6 @@ const Activity = sequelize.define('activity', {
 
 // Activity.hasMany(Asset);
 // Activity.hasMany(Assesment);
-
 
 // Temporary tesing data
 
@@ -197,7 +192,7 @@ Activity
           where: { name: 'fourth' }
         })
         .then((activity) => {
-          return activity.reorder(10);
+          return activity.reorder(3);
         })
         .then(() => {
           return Activity.findAll({ order: 'position ASC' })

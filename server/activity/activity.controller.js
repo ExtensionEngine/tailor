@@ -31,10 +31,10 @@ class ActivityController extends BaseController {
   }
 
   show(req, res, next) {
+    const id = req.params.activityKey;
+
     this.model
-      .findOne({
-        where: { id: req.params.activityKey }
-      })
+      .findById(id)
       .then(data => {
         if (data) {
           io.setOK(res, data);
@@ -49,10 +49,10 @@ class ActivityController extends BaseController {
   }
 
   list(req, res, next) {
-    const courseId = locals.load(req, 'course._key');
+    const courseId = req.params.courseKey;
 
     this.model
-      .findAllByCourse(courseId)
+      .findByCourseAndOrder(courseId)
       .then(data => {
         io.setOK(res, data);
         next();
@@ -61,8 +61,10 @@ class ActivityController extends BaseController {
   }
 
   remove(req, res, next) {
+    const id = req.params.activityKey;
+
     this.model
-      .findById(req.params.activityKey)
+      .findById(id)
       .deleteTree()
       .then(data => {
         io.setOK(res, data);
@@ -72,9 +74,12 @@ class ActivityController extends BaseController {
   }
 
   reorder(req, res, next) {
+    const id = req.params.activityKey;
+    const position = req.body.position;
+
     this.model
-      .findById(req.params.activityKey)
-      .reorder(req.body.position)
+      .findById(id)
+      .reorder(position)
       .then(data => {
         io.setOK(res, data);
         next();
