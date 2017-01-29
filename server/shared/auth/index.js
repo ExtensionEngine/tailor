@@ -1,24 +1,26 @@
 'use strict';
 
+const { ExtractJwt, Strategy } = require('passport-jwt');
 const passport = require('passport');
-const Strategy = require('passport-local').Strategy;
-const userModel = require('../../user/user.model').model;
+const { User } = require('../../db');
 
-passport.use(new Strategy({
-  usernameField: 'email'
-}, (email, password, callback) => userModel
-  .validateCredentials(email, password)
-  .then(user => callback(null, user))
-  .catch(callback)
-));
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeader(),
+  secretOrKey: process.env.AUTH_JWT_SECRET
+  // issuer: process.env.AUTH_JWT_ISSUER,
+  // audience: process.env.SERVER_URL
+};
 
-passport.serializeUser((user, callback) => callback(null, user._key));
+passport.use(new Strategy(jwtOptions, (payload, done) => {
+  return User.findOne({ id: payload.sub })
+    .then(user => done(null, user || false))
+    .error(err => done(err, false));
+}));
 
-passport.deserializeUser((key, callback) => userModel
-  .getByKey(key)
-  .then(user => {
-    delete user.password;
-    return callback(null, user);
-  })
-  .catch(callback)
-);
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});

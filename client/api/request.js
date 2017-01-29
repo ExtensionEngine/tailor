@@ -13,7 +13,7 @@ const client = axios.create({
 client.interceptors.request.use(config => {
   const token = window.localStorage.getItem('JWT_TOKEN');
   if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+    config.headers['Authorization'] = `JWT ${token}`;
   } else if (!token && config.headers['Authorization']) {
     delete config.headers['Authorization'];
   }
@@ -21,10 +21,8 @@ client.interceptors.request.use(config => {
 });
 
 client.interceptors.response.use(res => {
-  if (res.status === 401) {
-    window.localStorage.removeItem('JWT_TOKEN');
-    delete res.config.headers['Authorization'];
-  }
+  if (res.status === 401) window.localStorage.removeItem('JWT_TOKEN');
+  return res;
 });
 
 export default client;
