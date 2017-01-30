@@ -1,94 +1,62 @@
 'use strict';
 
-const BaseController = require('../base.controller');
-const activityModel = require('./activity.model');
-const io = require('../shared/io');
-const locals = io.locals;
+const { createError } = require('../shared/error/helpers');
+const { NOT_FOUND } = require('http-status-codes');
+const { Activity } = require('../shared/database/sequelize');
 
-class ActivityController extends BaseController {
-  constructor(model = activityModel, resourceKey = 'activityKey') {
-    super(model, resourceKey);
+function create(req, res) {
+  const activity = {
+    name: req.body.name,
+    type: req.body.type,
+    courseId: req.body.courseId,
+    parentId: req.body.parentKey,
+    position: req.body.position
+  };
+  Activity
+    .create(activity)
+    .then(data => res.json({ data }));
+}
 
-    this.reorder = this.reorder.bind(this);
-  }
+function show(req, res) {
+  const id = req.params.activityId;
 
-  create(req, res, next) {
-    const courseId = locals.load(req, 'course._key');
-    const activity = {
-      name: req.body.name,
-      type: req.body.type,
-      courseId,
-      parentId: req.body.parentKey,
-      position: req.body.position
-    };
-    this.model
-      .create(activity)
-      .then(data => {
-        io.setCreated(res, data);
-        next();
-      })
-      .catch(next);
-  }
+  return Activity
+    .findById(id)
+    .then(activity => activity || createError(NOT_FOUND, 'Activity not found'))
+    .then(activity => res.json({ data: activity }));
+}
 
-  show(req, res, next) {
-    const id = req.params.activityKey;
+function list(req, res) {
+  const courseId = req.params.courseKey;
 
-    this.model
-      .findById(id)
-      .then(data => {
-        if (data) {
-          io.setOK(res, data);
-          return next();
-        }
+  return Activity
+    .findAll({ where: { courseId }, order: 'position ASC' })
+    .then(activities => res.json({ data: activities }));
+}
 
-        // TODO(matej): if other model methods return empty results, add a new
-        // error class, make an instance, and pass it to next().
-        return res.status(404).json();
-      })
-      .catch(next);
-  }
+function remove(req, res, next) {
+  const id = req.params.activityKey;
 
-  list(req, res, next) {
-    const courseId = req.params.courseKey;
+  return Activity
+    .findById(id)
+    .deleteTree()
+    .then(data => res.json({ data }));
+}
 
-    this.model
-      .findByCourseAndOrder(courseId)
-      .then(data => {
-        io.setOK(res, data);
-        next();
-      })
-      .catch(next);
-  }
+function reorder(req, res, next) {
+  const id = req.params.activityKey;
+  const position = req.body.position;
 
-  remove(req, res, next) {
-    const id = req.params.activityKey;
-
-    this.model
-      .findById(id)
-      .deleteTree()
-      .then(data => {
-        io.setOK(res, data);
-        next();
-      })
-      .catch(next);
-  }
-
-  reorder(req, res, next) {
-    const id = req.params.activityKey;
-    const position = req.body.position;
-
-    this.model
-      .findById(id)
-      .reorder(position)
-      .then(data => {
-        io.setOK(res, data);
-        next();
-      })
-      .catch(next);
-  }
+  return Activity
+    .findById(id)
+    .reorder(position)
+    .then(data => res.json({ data }));
 }
 
 module.exports = {
-  Controller: ActivityController,
-  controller: new ActivityController()
+  create,
+  show,
+  list,
+  remove,
+  reorder
 };

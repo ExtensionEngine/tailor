@@ -2,7 +2,7 @@
 
 const forEach = require('lodash/forEach');
 const database = require('../shared/database');
-const logger = require('../shared/logger');
+// const logger = require('../shared/logger');
 
 const Sequelize = require('sequelize');
 const sequelize = database.sequelize;
@@ -73,28 +73,10 @@ const Activity = sequelize.define('activity', {
     type: Sequelize.DOUBLE,
     allowNull: false,
     validate: { min: 0 }
-  },
-  parentId: { // TEMP
-    type: Sequelize.INTEGER,
-    defaultValue: 1
-  },
-  courseId: { // TEMP
-    type: Sequelize.INTEGER,
-    defaultValue: 1
   }
 }, {
   classMethods: {
-    findById(id) {
-      return this.findOne({
-        where: { id }
-      });
-    },
-    findByCourseAndOrder(courseId) {
-      return this.findAll({
-        where: { courseId },
-        order: 'position ASC'
-      });
-    }
+
   },
   instanceMethods: {
     siblings() {
@@ -166,7 +148,7 @@ const Activity = sequelize.define('activity', {
 // Activity.hasMany(Assesment);
 
 // Temporary tesing data
-
+/*
 const tempActivities = [
   { name: 'first', type: 'basic', position: 1 },
   { name: 'second', type: 'basic', position: 2 },
@@ -204,5 +186,5 @@ Activity
         });
       });
   });
-
+*/
 module.exports = Activity;
