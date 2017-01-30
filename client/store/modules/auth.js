@@ -47,8 +47,12 @@ action(function logout() {
     .then(() => this.commit('logout'));
 });
 
-// TODO: integrate with backend
-action(function resetPassword(email) {
+action(function forgotPassword({ email }) {
+  return authApi.forgotPassword(email);
+});
+
+action(function resetPassword({ token, password }) {
+  return authApi.resetPassword(token, password);
 });
 
 mutation(function login(user) {
