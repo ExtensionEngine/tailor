@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseController = require('../shared/controller/base.controller');
-const Asset = require('./asset.model');
+const { Asset } = require('../shared/database/sequelize');
 const io = require('../shared/io');
 
 class AssetController extends BaseController {
