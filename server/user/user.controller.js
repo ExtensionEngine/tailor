@@ -39,7 +39,6 @@ function login({ body }, res) {
     createError(400, 'Please enter email and password');
   }
 
-  email = email.toLowerCase();
   return User
     .find({ where: { email } })
     .then(user => user || createError(NOT_FOUND, 'User does not exist'))
