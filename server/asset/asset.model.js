@@ -72,12 +72,12 @@ const Asset = sequelize.define(ASSET_COLLECTION, {
     validate: { isUrl: true }
   },
   // TODO(marko): hasMany on Course and Activity models.
-  courseId: {
+  course_id: {
     type: Sequelize.INTEGER,
     allowNull: false,
     default: 1
   },
-  activityId: {
+  activity_id: {
     type: Sequelize.INTEGER,
     allowNull: false,
     default: 1
@@ -104,7 +104,7 @@ const Asset = sequelize.define(ASSET_COLLECTION, {
     },
     findAllByActivity(activityId) {
       return this.findAll({
-        where: { activityId }
+        where: { activity_id: activityId }
       });
     },
     serializeMany(data) {
@@ -119,7 +119,21 @@ const Asset = sequelize.define(ASSET_COLLECTION, {
       // Invoked directly on query results.
       return (new Serializer(this.Model)).serialize(this);
     }
-  }
+  },
+  underscored: true,
+  freezeTableName: true
 });
+
+const testData = [
+  { layoutWidth: 19, position: 1, type: 'IMAGE', url: 'http://lorempixel.com/200/200', course_id: 1, activity_id: 1 },
+  { layoutWidth: 18, position: 2, type: 'VIDEO', url: 'http://vimeo.com/video1', course_id: 2, activity_id: 2 },
+  { layoutWidth: 17, position: 3, type: 'TEXT', content: 'lorem ipsum', course_id: 3, activity_id: 3 },
+  { layoutWidth: 16, position: 4, type: 'IMAGE', url: 'http://lorempixel.com/200/200', course_id: 4, activity_id: 4 }
+];
+
+Asset.sync({ force: true })
+  .then(() => {
+    Asset.bulkCreate(testData);
+  });
 
 module.exports = Asset;
