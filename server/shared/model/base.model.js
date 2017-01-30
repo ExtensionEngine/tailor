@@ -2,6 +2,10 @@
 
 const Joi = require('joi');
 const get = require('lodash/get');
+const isArray = require('lodash/isArray');
+const isEmpty = require('lodash/isEmpty');
+const pickBy = require('lodash/pickBy');
+const omitBy = require('lodash/omitBy');
 
 class BaseModel {
   constructor(db, collectionName, schema = Joi.any()) {
@@ -33,15 +37,24 @@ class BaseModel {
     });
   }
 
-  validatePartial(partialDocument, atLeastOneKeyRequired = true) {
+  validatePartial(partialDocument, omitFields = []) {
     const allKeys = get(this.schema, '_inner.children', []).map(c => c.key);
     const partialSchema = this.schema
       .optionalKeys(allKeys)
-      .min(atLeastOneKeyRequired ? 1 : 0);
+      .min(1);
 
     return new Promise((resolve, reject) => {
       Joi.validate(partialDocument, partialSchema, (err, value) => {
-        return err ? reject(err) : resolve(value);
+        // Only update fields received from client.
+        // Ommit Joi default fields.
+        let newValue = pickBy(value, (_, k) =>
+          Object.keys(partialDocument).includes(k));
+
+        if (isArray(omitFields) && !isEmpty(omitFields)) {
+          newValue = omitBy(newValue, (_, k) => omitFields.includes(k));
+        }
+
+        return err ? reject(err) : resolve(newValue);
       });
     });
   }

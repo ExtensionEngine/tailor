@@ -7,21 +7,23 @@ const assetPorter = require('../asset/fixture/assetPorter');
 const userPorter = require('../user/fixture/userPorter');
 
 let db;
-let insertedCourses;
 let insertedActivities;
 
 connector
   .initialize()
   .then(conn => {
     console.log('Database initialized');
-    console.log('Adding courses...');
+    console.log('Adding users...');
     db = conn;
-    return coursePorter.insertFixtures(db);
+    return userPorter.insertFixtures(db);
+  })
+  .then(users => {
+    console.log('Adding courses...');
+    return coursePorter.insertFixtures(db, users);
   })
   .then(courses => {
     console.log('Adding activities...');
-    insertedCourses = courses;
-    return activityPorter.insertFixtures(db, insertedCourses);
+    return activityPorter.insertFixtures(db, courses);
   })
   .then(activities => {
     console.log('Adding assets...');
@@ -29,10 +31,6 @@ connector
     return assetPorter.insertFixtures(db, insertedActivities);
   })
   .then(() => {
-    console.log('Adding users...');
-    return userPorter.insertFixtures(db, insertedCourses);
-  })
-  .then(users => {
     console.log('Seeding complete');
     process.exit(0);
   })

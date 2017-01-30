@@ -1,64 +1,18 @@
 'use strict';
 
-const express = require('express');
-const passport = require('passport');
-const io = require('../shared/io');
-const controller = require('./user.controller').controller;
-const model = require('./user.model').model;
-const middleware = require('./middleware');
+const ctrl = require('./user.controller');
+const model = require('./user.model');
+const mw = require('./middleware');
+const router = require('express-promise-router')();
 
-const router = express.Router();
-const input = io.input();
-const output = io.output();
-
-// Process of creating/inviting users is not fully specified yet, so allow
-// developers to create new users as they see fit.
-if (process.env.NODE_ENV !== 'production') {
-  router.post('/users',
-    input,
-    controller.create,
-    output);
-}
-
-router.post('/users/actions/login',
-  input,
-  passport.authenticate('local'),
-  controller.login,
-  output);
-
-router.post('/users/actions/logout',
-  input,
-  middleware.requireUser,
-  controller.logout,
-  output);
-
-router.get('/users',
-  input,
-  middleware.requireAdmin,
-  controller.list,
-  output);
-
-router.get('/users/:userKey',
-  input,
-  middleware.requireAdmin,
-  controller.show,
-  output);
-
-router.post('/users/:userKey/access/courses/:courseKey',
-  input,
-  middleware.requireAdmin,
-  controller.grantAccessToCourse,
-  output);
-
-router.delete('/users/:userKey/access/courses/:courseKey',
-  input,
-  middleware.requireAdmin,
-  controller.revokeAccessToCourse,
-  output);
+router
+  .post('/users/login', ctrl.login)
+  .get('/users', ctrl.index)
+  .post('/users/forgotPassword', ctrl.forgotPassword)
+  .post('/users/resetPassword', ctrl.resetPassword);
 
 module.exports = {
-  controller,
-  middleware,
   model,
-  router
+  router,
+  middleware: mw
 };

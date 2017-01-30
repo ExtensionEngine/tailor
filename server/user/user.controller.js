@@ -1,55 +1,59 @@
 'use strict';
 
-const BaseController = require('../shared/controller/base.controller');
-const userModel = require('./user.model').model;
-const io = require('../shared/io');
+const { createError, validationError } = require('../shared/error/helpers');
+const { NOT_FOUND } = require('http-status-codes');
+const { User } = require('../shared/database/sequelize');
 
-class UserController extends BaseController {
-  constructor(model = userModel, resourceKey = 'userKey') {
-    super(model, resourceKey);
+function index(req, res) {
+  const attributes = ['id', 'email', 'role'];
+  return User
+    .findAll({ attributes })
+    .then(users => res.json({ data: users }));
+}
 
-    this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
-    this.grantAccessToCourse = this.grantAccessToCourse.bind(this);
-    this.revokeAccessToCourse = this.revokeAccessToCourse.bind(this);
+function forgotPassword({ body }, res) {
+  let { email } = body;
+  email = email.toLowerCase();
+  return User
+    .find({ where: { email } })
+    .then(user => user || createError(NOT_FOUND, 'User not found'))
+    .then(user => user.sendResetToken())
+    .then(() => res.end());
+}
+
+function resetPassword({ body, params }, res) {
+  const { password, token } = body;
+  return User
+    .find({ where: { token } })
+    .then(user => user || createError(NOT_FOUND, 'Invalid token'))
+    .then(user => {
+      user.password = password;
+      return user.save().catch(validationError);
+    })
+    .then(() => res.end());
+}
+
+function login({ body }, res) {
+  let { email, password } = body;
+  if (!email || !password) {
+    createError(400, 'Please enter email and password');
   }
 
-  login(req, res, next) {
-    const user = req.user;
-    io.setOK(res, user);
-    next();
-  }
-
-  logout(req, res, next) {
-    req.session.destroy();
-    io.setEmpty(res);
-    next();
-  }
-
-  grantAccessToCourse(req, res, next) {
-    const { userKey, courseKey } = req.params;
-    this.model
-      .grantAccessToCourse(userKey, courseKey)
-      .then(user => {
-        io.setOK(res, user);
-        next();
-      })
-      .catch(next);
-  }
-
-  revokeAccessToCourse(req, res, next) {
-    const { userKey, courseKey } = req.params;
-    this.model
-      .revokeAccessToCourse(userKey, courseKey)
-      .then(user => {
-        io.setOK(res, user);
-        next();
-      })
-      .catch(next);
-  }
+  email = email.toLowerCase();
+  return User
+    .find({ where: { email } })
+    .then(user => user || createError(NOT_FOUND, 'User does not exist'))
+    .then(user => user.authenticate(password))
+    .then(user => user || createError(NOT_FOUND, 'Wrong password'))
+    .then(user => {
+      const token = user.createToken();
+      res.json({ data: { token, user: user.profile } });
+    });
 }
 
 module.exports = {
-  Controller: UserController,
-  controller: new UserController()
+  index,
+  forgotPassword,
+  resetPassword,
+  login
 };
