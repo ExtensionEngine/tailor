@@ -101,11 +101,9 @@ module.exports = function (sequelize, DataTypes) {
         return jwt.sign({ payload }, AUTH_SECRET, { expiresIn: '5 days' });
       },
       sendResetToken() {
-        return this.createToken().then(token => {
-          this.token = token;
-          this.invite();
-          return this.save();
-        });
+        this.token = this.createToken();
+        this.invite();
+        return this.save();
       }
     },
     hooks: {
