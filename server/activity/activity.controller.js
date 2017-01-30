@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseController = require('../base.controller');
-const activityModel = require('./activity.model').model;
+const activityModel = require('./activity.model');
 const io = require('../shared/io');
 const locals = io.locals;
 
@@ -13,12 +13,12 @@ class ActivityController extends BaseController {
   }
 
   create(req, res, next) {
-    const courseKey = locals.load(req, 'course._key');
+    const courseId = locals.load(req, 'course._key');
     const activity = {
       name: req.body.name,
       type: req.body.type,
-      courseKey,
-      parentKey: req.body.parentKey,
+      courseId,
+      parentId: req.body.parentKey,
       position: req.body.position
     };
     this.model
@@ -31,9 +31,10 @@ class ActivityController extends BaseController {
   }
 
   show(req, res, next) {
-    const courseKey = locals.load(req, 'course._key');
+    const id = req.params.activityKey;
+
     this.model
-      .getByKey(courseKey, req.params.activityKey)
+      .findById(id)
       .then(data => {
         if (data) {
           io.setOK(res, data);
@@ -48,9 +49,10 @@ class ActivityController extends BaseController {
   }
 
   list(req, res, next) {
-    const courseKey = locals.load(req, 'course._key');
+    const courseId = req.params.courseKey;
+
     this.model
-      .getMany(courseKey)
+      .findByCourseAndOrder(courseId)
       .then(data => {
         io.setOK(res, data);
         next();
@@ -59,9 +61,11 @@ class ActivityController extends BaseController {
   }
 
   remove(req, res, next) {
-    const courseKey = locals.load(req, 'course._key');
+    const id = req.params.activityKey;
+
     this.model
-      .removeByKey(courseKey, req.params.activityKey)
+      .findById(id)
+      .deleteTree()
       .then(data => {
         io.setOK(res, data);
         next();
@@ -70,9 +74,12 @@ class ActivityController extends BaseController {
   }
 
   reorder(req, res, next) {
-    const courseKey = locals.load(req, 'course._key');
+    const id = req.params.activityKey;
+    const position = req.body.position;
+
     this.model
-      .reorder(courseKey, req.params.activityKey, req.body.position)
+      .findById(id)
+      .reorder(position)
       .then(data => {
         io.setOK(res, data);
         next();
