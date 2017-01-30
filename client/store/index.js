@@ -3,12 +3,14 @@ import Vuex from 'vuex';
 import VueQuillEditor from 'vue-quill-editor';
 import createLogger from 'vuex/dist/logger';
 
-import auth from './modules/auth';
+import activity from './modules/activity';
 import assets from './modules/assets';
 import atom from './modules/atom';
+import auth from './modules/auth';
 import courses from './modules/courses';
-import activity from './modules/activity';
 import editor from './modules/editor';
+import users from './modules/users';
+
 import plugins from './plugins';
 import settings from '../settings';
 
@@ -21,10 +23,11 @@ const middlewares = settings.debug.state && isDevEnv ? [createLogger()] : [];
 const modules = {
   activity,
   assets,
+  atom,
   auth,
   courses,
-  atom,
-  editor
+  editor,
+  users
 };
 
 export default new Vuex.Store({

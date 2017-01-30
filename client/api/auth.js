@@ -1,21 +1,38 @@
 import request from './request';
 
 const url = {
-  login: '/users/actions/login',
-  logout: '/users/actions/logout'
+  login: '/users/login',
+  forgotPassword: '/users/forgotPassword',
+  resetPassword: '/users/resetPassword'
 };
 
 function login(credentials) {
   return request
     .post(url.login, credentials)
-    .then(res => res.data.data);
+    .then(res => res.data.data)
+    .then(({ token, user }) => {
+      window.localStorage.setItem('JWT_TOKEN', token);
+      return user;
+    });
 }
 
 function logout() {
-  return request.post(url.logout);
+  window.localStorage.removeItem('JWT_TOKEN');
+  // TODO(underscope): Add server side invalidation
+  return Promise.resolve(true);
+}
+
+function forgotPassword(email) {
+  return request.post(url.forgotPassword, { email });
+}
+
+function resetPassword(token, password) {
+  return request.post(url.resetPassword, { token, password });
 }
 
 export default {
   login,
-  logout
+  logout,
+  forgotPassword,
+  resetPassword
 };

@@ -1,15 +1,13 @@
 'use strict';
 
-const bcrypt = require('bcryptjs');
-const Joi = require('joi');
+const Promise = require('bluebird');
+const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const config = require('../../config/server');
-const database = require('../shared/database');
-const BaseModel = require('../base.model');
-const query = require('./query');
-const role = require('./role');
+const mail = require('../shared/mail');
+const jwt = require('jsonwebtoken');
+const { user: role } = require('../../config/shared').role;
 
-const db = database.db;
-const USER_COLLECTION = database.collection.USER;
+const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
 
 /**
  * @swagger
@@ -19,6 +17,7 @@ const USER_COLLECTION = database.collection.USER;
  *     required:
  *     - email
  *     - password
+ *     - role
  *     properties:
  *       email:
  *         type: string
@@ -29,21 +28,15 @@ const USER_COLLECTION = database.collection.USER;
  *       role:
  *         type: string
  *         description: user role
- *       courses:
- *         type: array
- *         description: list of courses user can access
- *         items:
- *           type: string
  *   UserOutput:
  *     type: object
  *     required:
- *     - _key
+ *     - id
  *     - email
  *     - role
- *     - courses
  *     properties:
- *       _key:
- *         type: string
+ *       id:
+ *         type: number
  *         description: unique user identifier
  *       email:
  *         type: string
@@ -51,122 +44,86 @@ const USER_COLLECTION = database.collection.USER;
  *       role:
  *         type: string
  *         description: user role
- *       courses:
- *         type: array
- *         description: list of courses user can access
- *         items:
- *           type: string
  */
-const userSchema = Joi.object().keys({
-  email: Joi.string().email().required(),
-  password: Joi.string().required(),
-  role: Joi.string().default(role.default).regex(role.validationRegex),
-  courses: Joi.array().items(Joi.string()).default([])
-});
+module.exports = function (sequelize, DataTypes) {
+  const User = sequelize.define('user', {
+    email: {
+      type: DataTypes.STRING,
+      validate: { isEmail: true },
+      unique: { msg: 'The specified email address is already in use.' }
+    },
+    password: {
+      type: DataTypes.STRING,
+      validate: { notEmpty: true, len: [5, 100] }
+    },
+    role: {
+      type: DataTypes.ENUM(role.ADMIN, role.USER),
+      defaultValue: role.USER
+    },
+    token: {
+      type: DataTypes.STRING,
+      unique: true
+    }
+  }, {
+    getterMethods: {
+      profile() {
+        return {
+          id: this.id,
+          email: this.email,
+          role: this.role
+        };
+      }
+    },
+    classMethods: {
+      associate(models) {
+        User.belongsToMany(models.Course, { through: models.CourseUser });
+      }
+    },
+    instanceMethods: {
+      authenticate(password) {
+        return bcrypt
+          .compare(password, this.password)
+          .then(match => match ? this : null);
+      },
+      invite() {
+        return mail.invite(this).then(() => this);
+      },
+      encrypt(val) {
+        return bcrypt.hash(val, config.auth.saltRounds);
+      },
+      encryptPassword() {
+        return this
+          .encrypt(this.password)
+          .then(pw => (this.password = pw));
+      },
+      createToken() {
+        const payload = { id: this.id, email: this.email };
+        return jwt.sign({ payload }, AUTH_SECRET, { expiresIn: '5 days' });
+      },
+      sendResetToken() {
+        this.token = this.createToken();
+        this.invite();
+        return this.save();
+      }
+    },
+    hooks: {
+      beforeCreate(user) {
+        return user.encryptPassword();
+      },
+      beforeUpdate(user) {
+        return user.changed('password')
+          ? user.encryptPassword()
+          : Promise.resolve();
+      },
+      beforeBulkCreate(users) {
+        let updates = [];
+        users.forEach(user => updates.push(user.encryptPassword()));
+        return Promise.all(updates);
+      }
+    },
+    underscored: true,
+    freezeTableName: true
+  });
 
-class AuthError {
-  constructor() {
-    this.name = 'AuthError';
-    this.message = 'Invalid user email or password';
-    this.isAuthError = true;
-  }
-}
-
-class UserModel extends BaseModel {
-  constructor(db, collectionName = USER_COLLECTION, schema = userSchema) {
-    super(db, collectionName, schema);
-  }
-
-  hashPassword(user) {
-    return new Promise((resolve, reject) => {
-      bcrypt.hash(user.password, config.auth.saltRounds, (err, hash) => {
-        if (err) {
-          reject(err);
-        } else {
-          user.password = hash;
-          resolve(user);
-        }
-      });
-    });
-  }
-
-  comparePasswords(p1, p2) {
-    return new Promise((resolve, reject) => {
-      bcrypt.compare(p1, p2, (err, result) => err ? reject(err) : resolve(result));
-    });
-  }
-
-  create(user) {
-    return this
-      .validate(user)
-      .then(this.markAsCreated)
-      .then(validUser => this.hashPassword(validUser))
-      .then(hashedUser => this.db.query(query.INSERT_USER, {
-        '@collection': this.collectionName,
-        user: hashedUser
-      }))
-      .then(cursor => cursor.next());
-  }
-
-  getByKey(userKey) {
-    return this.db
-      .query(query.GET_USER_BY_KEY, {
-        '@collection': this.collectionName,
-        userKey
-      })
-      .then(cursor => cursor.next());
-  }
-
-  getByEmail(email) {
-    return this.db
-      .query(query.GET_USER_BY_EMAIL, {
-        '@collection': this.collectionName,
-        email
-      })
-      .then(cursor => cursor.next());
-  }
-
-  validateCredentials(email, password) {
-    let user;
-    return this
-      .getByEmail(email)
-      .then(maybeUser => {
-        if (maybeUser) {
-          user = maybeUser;
-          return this.comparePasswords(password, user.password);
-        }
-
-        return Promise.reject(new AuthError());
-      })
-      .then(passwordsMatch => {
-        delete user.password;
-        return passwordsMatch ? user : Promise.reject(new AuthError());
-      });
-  }
-
-  grantAccessToCourse(userKey, courseKey) {
-    return this.db
-      .query(query.ADD_COURSE_TO_USER, {
-        '@collection': this.collectionName,
-        userKey,
-        courseKey
-      })
-      .then(cursor => cursor.next());
-  }
-
-  revokeAccessToCourse(userKey, courseKey) {
-    return this.db
-      .query(query.REMOVE_COURSE_FROM_USER, {
-        '@collection': this.collectionName,
-        userKey,
-        courseKey
-      })
-      .then(cursor => cursor.next());
-  }
-}
-
-module.exports = {
-  schema: userSchema,
-  Model: UserModel,
-  model: new UserModel(db)
+  return User;
 };

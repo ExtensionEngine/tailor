@@ -1,9 +1,9 @@
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import Vue from 'vue';
-import VuexModule from '../helpers/model.js';
+import VuexCollection from '../helpers/collection.js';
 
-const { action, build, getter, mutation } = new VuexModule('activity');
+const { action, build, getter, mutation } = new VuexCollection('activity');
 
 getter(function activities() {
   return this.state.items;

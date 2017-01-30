@@ -30,7 +30,8 @@ module.exports = {
       vue$: 'vue/dist/vue.common.js',
       client: projectRoot('client'),
       assets: projectRoot('client', 'assets'),
-      components: projectRoot('client', 'components')
+      components: projectRoot('client', 'components'),
+      shared: projectRoot('config/shared')
     }
   },
   resolveLoader: {

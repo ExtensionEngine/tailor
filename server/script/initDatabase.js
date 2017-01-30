@@ -2,7 +2,7 @@
 
 const connector = require('../shared/database').databaseConnector;
 const userModel = require('../user').model;
-const ADMIN = require('../user/role').ADMIN;
+const { user: role } = require('../../config/shared').role;
 
 // Last two arguments should be admin email and password - strip them out and
 // create the admin with those credentials.
@@ -21,7 +21,7 @@ connector
   .then(() => userModel.create({
     email,
     password,
-    role: ADMIN
+    role: role.ADMIN
   }))
   .then(user => {
     console.log(`Administrator created (user key: ${user._key})`);
