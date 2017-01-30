@@ -10,7 +10,7 @@ const express = require('express');
 const controller = require('./activity.controller').controller;
 const course = require('../course');
 const io = require('../shared/io');
-const model = require('./activity.model');
+const model = require('./activity.model').model;
 
 const loadCourse = course.middleware.loadCourse(course.model);
 const requireCourseAccess = course.middleware.requireCourseAccess;
