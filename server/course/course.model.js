@@ -38,11 +38,11 @@ module.exports = function (sequelize, DataTypes) {
   const Course = sequelize.define('course', {
     name: {
       type: DataTypes.STRING,
-      validate: { notNull: true, notEmpty: true, len: [2, 250] }
+      validate: { notEmpty: true, len: [2, 250] }
     },
     description: {
-      type: DataTypes.STRING,
-      validate: { notNull: true, notEmpty: true, len: [2, 2000] }
+      type: DataTypes.TEXT,
+      validate: { notEmpty: true, len: [2, 2000] }
     }
   }, {
     classMethods: {
