@@ -1,10 +1,10 @@
 'use strict';
 
-const Joi = require('joi');
-const BaseModel = require('../shared/model/base.model');
+const Sequelize = require('sequelize');
+const Serializer = require('sequelize-to-json');
 const database = require('../shared/database');
 
-const db = database.db;
+const sequelize = database.sequelize;
 const ASSET_COLLECTION = database.collection.ASSET;
 
 /**
@@ -19,11 +19,11 @@ const ASSET_COLLECTION = database.collection.ASSET;
  *     - position
  *     - type
  *     properties:
- *       courseKey:
- *         type: string
+ *       courseId:
+ *         type: integer
  *         description: course owning the asset
- *       activityKey:
- *         type: string
+ *       activityId:
+ *         type: integer
  *         description: activity owning the asset
  *       layoutWidth:
  *         type: integer
@@ -45,49 +45,81 @@ const ASSET_COLLECTION = database.collection.ASSET;
  *         type: string
  *         description: URL of image or video; required for IMAGE and VIDEO assets
  */
-const schemaKeys = {
-  courseKey: Joi.string().regex(/^\d+$/).required(),
-  activityKey: Joi.string().regex(/^\d+$/).required(),
-  layoutWidth: Joi.number().integer().min(1).max(12).required(),
-  position: Joi.number().required(),
-  type: Joi.string().valid(['TEXT', 'IMAGE', 'VIDEO']).required(),
-  content: Joi.string().when('type', { is: 'TEXT', then: Joi.required() }),
-  url: Joi.string().uri().when('type', { is: 'IMAGE', then: Joi.required() })
-};
 
-const assetSchema = Joi.object().keys(schemaKeys).xor('content', 'url');
-
-const updateSchema = Joi.object().keys({
-  content: schemaKeys.content.optional(),
-  url: schemaKeys.url.optional(),
-  layoutWidth: schemaKeys.layoutWidth.optional(),
-  position: schemaKeys.position.optional()
-}).min(1);
-
-class AssetModel extends BaseModel {
-  constructor(db, collectionName = ASSET_COLLECTION, schema = assetSchema) {
-    super(db, collectionName, schema);
-
-    // Support filtering assets by activity key.
-    this.searchTerms = {
-      activityKey: activityKey => ({
-        filter: 'FILTER doc.activityKey == @activityKey',
-        vars: { activityKey }
-      })
-    };
+// TODO(marko): Denormalization is ok for now,
+// could be split into hierarchy later.
+const Asset = sequelize.define(ASSET_COLLECTION, {
+  layoutWidth: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  position: {
+    type: Sequelize.FLOAT,
+    allowNull: false,
+    validate: { min: 1, max: 12 }
+  },
+  type: {
+    type: Sequelize.ENUM,
+    values: ['TEXT', 'IMAGE', 'VIDEO'],
+    allowNull: false
+  },
+  content: {
+    type: Sequelize.TEXT
+  },
+  url: {
+    type: Sequelize.STRING,
+    allowNull: true,
+    validate: { isUrl: true }
+  },
+  // TODO(marko): hasMany on Course and Activity models.
+  courseId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    default: 1
+  },
+  activityId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    default: 1
   }
-
-  validatePartial(partialDocument) {
-    return new Promise((resolve, reject) => {
-      Joi.validate(partialDocument, updateSchema, (err, value) => {
-        return err ? reject(err) : resolve(value);
+}, {
+  classMethods: {
+    deleteById(id) {
+      // Wrap instance delete method into class method
+      // for easier chaining.
+      return this
+        .findById(id)
+        .then(result => {
+          return result.destroy();
+        });
+    },
+    updateById(id, updates) {
+      // Wrap instance delete method into class method
+      // for easier chaining.
+      return this
+        .findById(id)
+        .then(result => {
+          return result.update(updates);
+        });
+    },
+    findAllByActivity(activityId) {
+      return this.findAll({
+        where: { activityId }
       });
-    });
+    },
+    serializeMany(data) {
+      // Helper method used for converting query result in JSON.
+      // Invoked directly on query results.
+      return Serializer.serializeMany(data, this);
+    }
+  },
+  instanceMethods: {
+    serialize() {
+      // Helper method used for converting query result in JSON.
+      // Invoked directly on query results.
+      return (new Serializer(this.Model)).serialize(this);
+    }
   }
-}
+});
 
-module.exports = {
-  schema: assetSchema,
-  Model: AssetModel,
-  model: new AssetModel(db)
-};
+module.exports = Asset;

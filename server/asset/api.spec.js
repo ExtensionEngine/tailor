@@ -9,10 +9,10 @@
  *     - application/json
  *     parameters:
  *     - in: query
- *       name: activityKey
+ *       name: activityId
  *       required: false
  *       type: string
- *       description: filter by activityKey
+ *       description: filter by activityId
  *     responses:
  *       200:
  *         description: array of asset objects
@@ -41,7 +41,7 @@
  *           $ref: "#/definitions/Asset"
  *       400:
  *          description: request body contains invalid values
- * /assets/{assetKey}:
+ * /assets/{assetId}:
  *   get:
  *     summary: get one specific asset
  *     tags:
@@ -49,7 +49,7 @@
  *     produces:
  *     - application/json
  *     parameters:
- *     - name: assetKey
+ *     - name: assetId
  *       in: path
  *       description: asset identifier
  *       required: true
@@ -60,7 +60,7 @@
  *         schema:
  *           $ref: "#/definitions/Asset"
  *       404:
- *         description: asset with the given key does not exist
+ *         description: asset with the given id does not exist
  *   patch:
  *     summary: partially change an existing asset
  *     tags:
@@ -70,7 +70,7 @@
  *     produces:
  *     - application/json
  *     parameters:
- *     - name: assetKey
+ *     - name: assetId
  *       in: path
  *       description: asset identifier
  *       required: true
@@ -86,7 +86,7 @@
  *         schema:
  *           $ref: "#/definitions/Asset"
  *       404:
- *         description: asset with the given key does not exist
+ *         description: asset with the given id does not exist
  *   put:
  *     summary: replace an existing asset with another one
  *     tags:
@@ -96,7 +96,7 @@
  *     produces:
  *     - application/json
  *     parameters:
- *     - name: assetKey
+ *     - name: assetId
  *       in: path
  *       description: asset identifier
  *       required: true
@@ -114,7 +114,7 @@
  *       400:
  *          description: request body contains invalid values
  *       404:
- *         description: asset with the given key does not exist
+ *         description: asset with the given id does not exist
  *   delete:
  *     summary: permanently remove an existing asset
  *     tags:
@@ -122,7 +122,7 @@
  *     produces:
  *     - application/json
  *     parameters:
- *     - name: assetKey
+ *     - name: assetId
  *       in: path
  *       description: asset identifier
  *       required: true
@@ -133,5 +133,5 @@
  *         schema:
  *           $ref: "#/definitions/Asset"
  *       404:
- *         description: asset with the given key does not exist
+ *         description: asset with the given id does not exist
  */
