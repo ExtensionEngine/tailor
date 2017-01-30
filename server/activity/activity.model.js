@@ -1,11 +1,7 @@
 'use strict';
 
 const forEach = require('lodash/forEach');
-const database = require('../shared/database');
 // const logger = require('../shared/logger');
-
-const Sequelize = require('sequelize');
-const sequelize = database.sequelize;
 
 /**
  * @swagger
@@ -59,132 +55,92 @@ const sequelize = database.sequelize;
  *         description: position within the array of sibling activities
  */
 
-const Activity = sequelize.define('activity', {
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: { notEmpty: true }
-  },
-  type: {
-    type: Sequelize.STRING, // ENUM?
-    allowNull: false
-  },
-  position: {
-    type: Sequelize.DOUBLE,
-    allowNull: false,
-    validate: { min: 0 }
-  }
-}, {
-  classMethods: {
-
-  },
-  instanceMethods: {
-    siblings() {
-      return Activity.findAll({
-        where: {
-          $and: [
-            { parentId: this.parentId },
-            { courseId: this.courseId }
-          ]
-        },
-        order: 'position ASC'
-      });
+module.exports = function (sequelize, DataTypes) {
+  const Activity = sequelize.define('activity', {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: { notEmpty: true }
     },
-    deleteTree() { // transaction
-      this.getSubactivities()
-        .then((subactivities) => {
-          const promises = [];
-
-          forEach(subactivities, (subactivity) => {
-            promises.push(subactivity.deleteTree());
-          });
-
-          return Promise.all(promises);
-        })
-        .then(() => {
-          return this.deleteSubactivities();
-        });
+    type: {
+      type: DataTypes.STRING, // ENUM?
+      allowNull: false
     },
-    deleteSubactivities() { // recursion
-      return Activity.destroy({
-        where: { parentId: this.id }
-      });
-    },
-    reorder(newPosition) {
-      return sequelize.transaction((t) => {
-        return this.siblings().then((siblings) => {
-          const currentActivity = siblings[newPosition - 1];
-
-          if (currentActivity) {
-            const nextPosition = currentActivity.get('position');
-            let prevPosition = newPosition - 2;
-
-            prevPosition = prevPosition + 1 > 0
-                            ? prevPosition = siblings[prevPosition].get('position')
-                            : prevPosition = 0;
-
-            newPosition = (nextPosition + prevPosition) / 2;
-          } else {
-            newPosition = siblings.length + 1;
-          }
-
-          this.set('position', newPosition);
-
-          return this.save();
-        });
-      });
+    position: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+      validate: { min: 0 }
     }
-  }
-});
-
-// Activity.belongsTo(Course);
-
-/* Activity.hasMany(Activity, {
-  as: 'Subactivities',
-  foreignKey: 'parentId'
-}); */
-
-// Activity.hasMany(Asset);
-// Activity.hasMany(Assesment);
-
-// Temporary tesing data
-/*
-const tempActivities = [
-  { name: 'first', type: 'basic', position: 1 },
-  { name: 'second', type: 'basic', position: 2 },
-  { name: 'third', type: 'basic', position: 3 },
-  { name: 'fourth', type: 'basic', position: 4 },
-  { name: 'fifth', type: 'basic', position: 5 }
-];
-
-Activity
-  .sync({ force: true })
-  .then(() => {
-    return Activity.bulkCreate(tempActivities);
-  })
-  .then(() => {
-    Activity
-      .findAll({ order: 'position ASC' })
-      .then((activities) => {
-        forEach(activities, (activity) => {
-          logger.info(activity.get('name'), activity.get('position'));
+  }, {
+    classMethods: {
+      associate(models) {
+        Activity.belongsTo(models.Course);
+        Activity.belongsTo(Activity, { as: 'parent', foreignKey: 'parentId' });
+        Activity.hasMany(Activity, { as: 'children', foreignKey: 'parentId' });
+        // Activity.hasMany(models.Asset);
+        // Activity.hasMany(models.Assesment);
+      }
+    },
+    instanceMethods: {
+      siblings() {
+        return Activity.findAll({
+          where: {
+            $and: [
+              { parentId: this.parentId },
+              { courseId: this.courseId }
+            ]
+          },
+          order: 'position ASC'
         });
+      },
+      deleteTree() { // transaction
+        this.getSubactivities()
+          .then((subactivities) => {
+            const promises = [];
 
-        return Activity.findOne({
-          where: { name: 'fourth' }
-        })
-        .then((activity) => {
-          return activity.reorder(3);
-        })
-        .then(() => {
-          return Activity.findAll({ order: 'position ASC' })
-          .then((activities) => {
-            forEach(activities, (activity) => {
-              logger.info(activity.get('name'), activity.get('position'));
+            forEach(subactivities, (subactivity) => {
+              promises.push(subactivity.deleteTree());
             });
+
+            return Promise.all(promises);
+          })
+          .then(() => {
+            return this.deleteSubactivities();
+          });
+      },
+      deleteSubactivities() { // recursion
+        return Activity.destroy({
+          where: { parentId: this.id }
+        });
+      },
+      reorder(newPosition) {
+        return sequelize.transaction((t) => {
+          return this.siblings().then((siblings) => {
+            const currentActivity = siblings[newPosition - 1];
+
+            if (currentActivity) {
+              const nextPosition = currentActivity.get('position');
+              let prevPosition = newPosition - 2;
+
+              prevPosition = prevPosition + 1 > 0
+                              ? prevPosition = siblings[prevPosition].get('position')
+                              : prevPosition = 0;
+
+              newPosition = (nextPosition + prevPosition) / 2;
+            } else {
+              newPosition = siblings.length;
+            }
+
+            this.set('position', newPosition);
+
+            return this.save();
           });
         });
-      });
+      }
+    },
+    underscored: true,
+    freezeTableName: true
   });
-*/
-module.exports = Activity;
+
+  return Activity;
+};
