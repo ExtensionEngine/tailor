@@ -27,7 +27,12 @@ app.use('/api/v1', (req, res, next) => {
 
 // Apply auth for all routes except whitelisted.
 app.use('*', (req, res, next) => {
-  const whitelisted = ['/api/v1/users/login'];
+  const whitelisted = [
+    '/api/v1/users/login',
+    '/api/v1/users/forgotPassword',
+    '/api/v1/users/resetPassword'
+  ];
+
   if (includes(whitelisted, req.baseUrl)) {
     next();
   } else {
@@ -42,6 +47,7 @@ app.use('/api/v1', router);
 app.use((err, req, res, next) => {
   if (!err.status || err.status === 500) {
     res.status(500).end();
+    logger.error({ err });
     return;
   }
   const { status, message } = err;
