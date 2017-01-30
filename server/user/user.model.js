@@ -7,7 +7,7 @@ const mail = require('../shared/mail');
 const jwt = require('jsonwebtoken');
 const { user: role } = require('../../config/shared').role;
 
-const AUTH_SECRET = process.env.AUTH_SESSION_SECRET;
+const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
 
 /**
  * @swagger
