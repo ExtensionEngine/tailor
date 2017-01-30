@@ -3,9 +3,15 @@ const Promise = require('bluebird');
 const courseData = require('./courses.json').data;
 const userData = require('./users.json').data;
 
-function initialize(db) {
-  let users = insertMocks(db.User, userData);
-  let courses = insertMocks(db.Course, courseData);
+function initializeModel(Model, records) {
+  const result = [];
+  records.forEach(it => result.push(Model.create(it)));
+  return Promise.all(result);
+}
+
+function insertAll(db) {
+  let users = initializeModel(db.User, userData);
+  let courses = initializeModel(db.Course, courseData);
   return Promise.join(users, courses).then(() => {
     let result = [];
     users = users.value();
@@ -15,10 +21,8 @@ function initialize(db) {
   });
 };
 
-function insertMocks(Model, records) {
-  const result = [];
-  records.forEach(it => result.push(Model.create(it)));
-  return Promise.all(result);
-}
-
-module.exports = initialize;
+module.exports = db => {
+  return db.User.findOne().then(user => {
+    return user ? false : insertAll(db);
+  });
+};

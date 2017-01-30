@@ -2,7 +2,7 @@
 
 const { createError, validationError } = require('../shared/error');
 const { NOT_FOUND } = require('http-status-codes');
-const User = require('./user.model');
+const { User } = require('../shared/database/sequelize');
 
 function index(req, res) {
   const attributes = ['id', 'email', 'role'];
@@ -47,7 +47,7 @@ function login({ body }, res) {
     .then(user => user || createError(NOT_FOUND, 'Wrong password'))
     .then(user => {
       const token = user.createToken();
-      res.json({ data: { token, user: user.profile() } });
+      res.json({ data: { token, user: user.profile } });
     });
 }
 
