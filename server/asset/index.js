@@ -23,7 +23,7 @@ router.get('/assets',
   output
 );
 
-router.get('/assets/:assetKey',
+router.get('/assets/:assetId',
   input,
   controller.show,
   output
@@ -35,19 +35,13 @@ router.post('/assets/',
   output
 );
 
-router.patch('/assets/:assetKey',
+router.patch('/assets/:assetId',
   input,
   controller.patch,
   output
 );
 
-router.put('/assets/:assetKey',
-  input,
-  controller.replace,
-  output
-);
-
-router.delete('/assets/:assetKey',
+router.delete('/assets/:assetId',
   input,
   controller.remove,
   output
