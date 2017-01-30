@@ -39,7 +39,7 @@ export default {
     loadMore() {
       if (!this.showLoader && this.hasMoreResults) {
         this.paginate = true;
-        this.fetch(this.paginate).then(() => {
+        this.fetch().then(() => {
           this.paginate = false;
         });
       }
