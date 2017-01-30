@@ -4,6 +4,26 @@
     "password": "eeTest1",
     "role": "ADMIN"
   }, {
+    "email": "dperisic@extensionengine.com",
+    "password": "eeTest1",
+    "role": "ADMIN"
+  }, {
+    "email": "matej@extensionengine.com",
+    "password": "eeTest1",
+    "role": "ADMIN"
+  }, {
+    "email": "mvrbanec@extensionengine.com",
+    "password": "eeTest1",
+    "role": "ADMIN"
+  }, {
+    "email": "nediljko@extensionengine.com",
+    "password": "eeTest1",
+    "role": "ADMIN"
+  }, {
+    "email": "yolo@extensionengine.com",
+    "password": "eeTest1",
+    "role": "ADMIN"
+  }, {
     "email": "evan@extensionengine.com",
     "password": "eeTest1",
     "role": "ADMIN"
