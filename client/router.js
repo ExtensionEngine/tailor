@@ -3,15 +3,17 @@ import Router from 'vue-router';
 import store from './store';
 import Auth from './components/auth/Container';
 import Course from './components/course/Container';
+import Outline from './components/course/Outline';
+import CourseSettings from './components/course/settings';
 import Catalog from './components/catalog/Container';
 import Editor from './components/editor';
 import Login from './components/auth/Login';
+import ForgotPassword from './components/auth/ForgotPassword';
 import ResetPassword from './components/auth/ResetPassword';
 
 Vue.use(Router);
 
 let router = new Router({
-  mode: 'history',
   routes: [
     {
       path: '/',
@@ -21,8 +23,19 @@ let router = new Router({
     },
     {
       path: '/course/:courseKey',
-      name: 'course',
       component: Course,
+      children: [
+        {
+          path: '',
+          name: 'course',
+          component: Outline
+        },
+        {
+          path: 'settings',
+          name: 'course-settings',
+          component: CourseSettings
+        }
+      ],
       meta: { auth: true }
     },
     {
@@ -42,7 +55,12 @@ let router = new Router({
           component: Login
         },
         {
-          path: 'reset-password',
+          path: 'forgot-password',
+          name: 'forgot-password',
+          component: ForgotPassword
+        },
+        {
+          path: 'reset-password/:token',
           name: 'reset-password',
           component: ResetPassword
         }

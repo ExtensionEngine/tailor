@@ -3,7 +3,7 @@
 const chai = require('chai');
 const sinon = require('sinon');
 const requireCourseAccess = require('../requireCourseAccess');
-const ADMIN = require('../../../user/role').ADMIN;
+const ADMIN = require('../../../../config/shared').role.ADMIN;
 
 sinon.assert.expose(chai.assert, { prefix: '' });
 const assert = chai.assert;
