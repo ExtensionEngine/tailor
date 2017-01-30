@@ -9,7 +9,7 @@ router
   .post('/users/login', ctrl.login)
   .get('/users', ctrl.index)
   .post('/users/forgotPassword', ctrl.forgotPassword)
-  .post('/users/reset', ctrl.resetPassword);
+  .post('/users/resetPassword', ctrl.resetPassword);
 
 module.exports = {
   model,
