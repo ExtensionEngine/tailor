@@ -3,10 +3,18 @@
 const Sequelize = require('sequelize');
 const connector = require('./connector');
 const collection = require('./collection');
-const config = require('../../../config/server');
+const logger = require('../logger');
 
-// TODO(marko): Temp solution.
-const sequelize = new Sequelize(config.database.postgresUri);
+const sequelize = new Sequelize(process.env.POSTGRES_URI);
+
+sequelize
+  .authenticate()
+  .then(function(yes) {
+    logger.info('Connection has been established successfully.');
+  })
+  .catch(function (err) {
+    logger.info('Unable to connect to the database:', err);
+  });
 
 module.exports = {
   sequelize,
