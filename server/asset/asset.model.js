@@ -1,10 +1,9 @@
 'use strict';
 
-const Sequelize = require('sequelize');
 const Serializer = require('sequelize-to-json');
 const database = require('../shared/database');
+// const { Activity, Course } = require('../shared/database/sequelize');
 
-const sequelize = database.sequelize;
 const ASSET_COLLECTION = database.collection.ASSET;
 
 /**
@@ -46,94 +45,71 @@ const ASSET_COLLECTION = database.collection.ASSET;
  *         description: URL of image or video; required for IMAGE and VIDEO assets
  */
 
-// TODO(marko): Denormalization is ok for now,
-// could be split into hierarchy later.
-const Asset = sequelize.define(ASSET_COLLECTION, {
-  layoutWidth: {
-    type: Sequelize.INTEGER,
-    allowNull: false
-  },
-  position: {
-    type: Sequelize.FLOAT,
-    allowNull: false,
-    validate: { min: 1, max: 12 }
-  },
-  type: {
-    type: Sequelize.ENUM,
-    values: ['TEXT', 'IMAGE', 'VIDEO'],
-    allowNull: false
-  },
-  content: {
-    type: Sequelize.TEXT
-  },
-  url: {
-    type: Sequelize.STRING,
-    allowNull: true,
-    validate: { isUrl: true }
-  },
-  // TODO(marko): hasMany on Course and Activity models.
-  course_id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    default: 1
-  },
-  activity_id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    default: 1
-  }
-}, {
-  classMethods: {
-    deleteById(id) {
-      // Wrap instance delete method into class method
-      // for easier chaining.
-      return this
+module.exports = function(sequelize, DataTypes) {
+  const Asset = sequelize.define(ASSET_COLLECTION, {
+    layout_width: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    position: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: { min: 1, max: 12 }
+    },
+    type: {
+      type: DataTypes.ENUM,
+      values: ['TEXT', 'IMAGE', 'VIDEO'],
+      allowNull: false
+    },
+    data: {
+      type: DataTypes.JSON,
+      allowNull: false,
+      validate: { notEmpty: true }
+    }
+  }, {
+    classMethods: {
+      deleteById(id) {
+        // Wrap instance delete method into class method
+        // for easier chaining.
+        return this
         .findById(id)
         .then(result => {
           return result.destroy();
         });
-    },
-    updateById(id, updates) {
-      // Wrap instance delete method into class method
-      // for easier chaining.
-      return this
+      },
+      updateById(id, updates) {
+        // Wrap instance delete method into class method
+        // for easier chaining.
+        return this
         .findById(id)
         .then(result => {
           return result.update(updates);
         });
+      },
+      findAllByActivity(activityId) {
+        return this.findAll({
+          where: { activity_id: activityId }
+        });
+      },
+      serializeMany(data) {
+        // Helper method used for converting query result in JSON.
+        // Invoked directly on query results.
+        return Serializer.serializeMany(data, this);
+      }
     },
-    findAllByActivity(activityId) {
-      return this.findAll({
-        where: { activity_id: activityId }
-      });
+    instanceMethods: {
+      serialize() {
+        // Helper method used for converting query result in JSON.
+        // Invoked directly on query results.
+        return (new Serializer(this.Model)).serialize(this);
+      }
     },
-    serializeMany(data) {
-      // Helper method used for converting query result in JSON.
-      // Invoked directly on query results.
-      return Serializer.serializeMany(data, this);
-    }
-  },
-  instanceMethods: {
-    serialize() {
-      // Helper method used for converting query result in JSON.
-      // Invoked directly on query results.
-      return (new Serializer(this.Model)).serialize(this);
-    }
-  },
-  underscored: true,
-  freezeTableName: true
-});
-
-const testData = [
-  { layoutWidth: 19, position: 1, type: 'IMAGE', url: 'http://lorempixel.com/200/200', course_id: 1, activity_id: 1 },
-  { layoutWidth: 18, position: 2, type: 'VIDEO', url: 'http://vimeo.com/video1', course_id: 2, activity_id: 2 },
-  { layoutWidth: 17, position: 3, type: 'TEXT', content: 'lorem ipsum', course_id: 3, activity_id: 3 },
-  { layoutWidth: 16, position: 4, type: 'IMAGE', url: 'http://lorempixel.com/200/200', course_id: 4, activity_id: 4 }
-];
-
-Asset.sync({ force: true })
-  .then(() => {
-    Asset.bulkCreate(testData);
+    underscored: true,
+    freezeTableName: true
   });
 
-module.exports = Asset;
+  // Activity.hasMany(Asset);
+  // Course.hasMany(Asset);
+
+  return Asset;
+};
