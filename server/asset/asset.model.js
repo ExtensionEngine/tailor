@@ -2,7 +2,6 @@
 
 const Serializer = require('sequelize-to-json');
 const database = require('../shared/database');
-// const { Activity, Course } = require('../shared/database/sequelize');
 
 const ASSET_COLLECTION = database.collection.ASSET;
 
@@ -65,6 +64,15 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.JSON,
       allowNull: false,
       validate: { notEmpty: true }
+    },
+    // TODO(marko): Temp solutions.
+    activity_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    course_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     classMethods: {
@@ -107,9 +115,6 @@ module.exports = function(sequelize, DataTypes) {
     underscored: true,
     freezeTableName: true
   });
-
-  // Activity.hasMany(Asset);
-  // Course.hasMany(Asset);
 
   return Asset;
 };

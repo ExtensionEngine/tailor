@@ -1,0 +1,40 @@
+{
+  "data": [{
+    "type": "IMAGE",
+    "layout_width": 12,
+    "position": 3,
+    "data": {
+      "url": "http://i.imgur.com/jD7ejTa.jpg"
+    },
+    "activity_id": 1,
+    "course_id": 2
+  }, {
+    "type": "TEXT",
+    "layout_width": 6,
+    "position": 5,
+    "data": {
+      "content": "<h1>Heading one</h1><p>This is a paragraph.</p>"
+    },
+    "activity_id": 2,
+    "course_id": 2
+  }, {
+    "type": "TEXT",
+    "layout_width": 6,
+    "position": 2.333333,
+    "data": {
+      "content": "<h2>Heading two</h2><p>Another paragraph here.</p>"
+    },
+    "activity_id": 3,
+    "course_id": 4
+  }, {
+    "type": "VIDEO",
+    "url": "https://www.youtube.com/watch?v=zP0sqRMzkwo",
+    "layout_width": 12,
+    "position": 10,
+    "data": {
+      "content": "<h2>Heading two</h2><p>Another paragraph here.</p>"
+    },
+    "activity_id": 4,
+    "course_id": 1
+  }]
+}
