@@ -77,7 +77,6 @@
     "babel-preset-es2015": "^6.0.0",
     "babel-preset-stage-2": "^6.0.0",
     "babel-register": "^6.0.0",
-    "bluebird": "^3.4.6",
     "bootstrap-sass": "^3.3.7",
     "bootswatch": "^3.3.7",
     "chai": "^3.5.0",
