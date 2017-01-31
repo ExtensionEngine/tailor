@@ -1,6 +1,8 @@
 'use strict';
 
 const omit = require('lodash/omit');
+const userRoles = require('../../config/shared').role.user;
+const courseRoles = require('../../config/shared').role.course;
 const { Course } = require('../shared/database/sequelize');
 
 function index(req, res) {
@@ -24,8 +26,29 @@ function remove(req, res) {
     .then(() => res.status(204).send());
 };
 
+function canPatch(req, res) {
+  const user = req.user;
+  return user.role === userRoles.ADMIN
+    ? Promise.resolve('next')
+    : user.getCourses().then(courses => {
+      // eslint-disable-next-line eqeqeq
+      const course = courses.find(c => c.id == req.params.id);
+      return course && course.courseUser.role === courseRoles.ADMIN
+        ? Promise.resolve('next')
+        : res.status(401).send();
+    });
+};
+
+function canRemove(req, res) {
+  return req.user.role === userRoles.ADMIN
+    ? Promise.resolve('next')
+    : res.status(401).send();
+};
+
 module.exports = {
   index,
   patch,
-  remove
+  remove,
+  canPatch,
+  canRemove
 };

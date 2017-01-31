@@ -5,8 +5,8 @@ const middleware = require('./middleware');
 const router = require('express-promise-router')();
 
 router.get('/courses', ctrl.index);
-router.patch('/courses/:id', ctrl.patch);
-router.delete('/courses/:id', ctrl.remove);
+router.patch('/courses/:id', ctrl.canPatch, ctrl.patch);
+router.delete('/courses/:id', ctrl.canRemove, ctrl.remove);
 
 module.exports = {
   controller: ctrl,
