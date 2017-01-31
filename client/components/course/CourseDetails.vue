@@ -12,7 +12,7 @@
       </template>
       <template v-else>
         <h2 @click.stop="showNameInput = true">
-          {{ course.name }}
+          {{ course ? course.name : '' }}
         </h2>
         <span class="fa fa-pencil pencil" aria-hidden="true"></span>
       </template>
@@ -29,7 +29,7 @@
       </template>
       <template v-else>
         <span @click.stop="showDescriptionInput = true">
-          {{ course.description }}
+          {{ course ? course.description : '' }}
         </span>
         <span class="fa fa-pencil pencil" aria-hidden="true"></span>
       </template>
@@ -87,7 +87,7 @@ export default {
       }
     },
     removeCourse() {
-      this.remove(this.course).then();
+      this.remove(this.course).then(() => this.$router.push('/'));
     },
     ...mapActions(['remove', 'update'], 'courses')
 
