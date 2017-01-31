@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
+
 export default {
   props: { showLoader: Boolean },
   data() {
@@ -28,11 +30,14 @@ export default {
         'fa fa-refresh fa-spin': this.showLoader,
         'fa fa-times': !this.showLoader
       };
+    },
+    emitChange() {
+      return debounce(() => { this.$emit('change', this.query); }, 700);
     }
   },
   watch: {
     query() {
-      this.$emit('change', this.query);
+      this.emitChange();
     }
   }
 };
