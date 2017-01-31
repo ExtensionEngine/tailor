@@ -1,21 +1,30 @@
 <template>
-  <div class="create-course">
+  <div class="create-course" v-if="showCreateButton">
     <button type="button" class="btn btn-primary" @click="show">
       Create course
     </button>
-    <modal :show="showModal" effect="fade">
+    <modal :show="showModal" :backdrop="false" effect="fade">
       <div slot="modal-header" class="modal-header">
         <h4 class="modal-title">Create course</h4>
       </div>
       <div slot="modal-body" class="modal-body">
-        <div v-if="error" class="error">{{ error }}</div>
-        <cube-grid v-if="loader"></cube-grid>
-        <div v-if="!loader">
-          <div class="form-group">
+        <cube-grid v-show="loader"></cube-grid>
+        <div v-show="!loader">
+          <div class="form-group" :class="getErrorClass('name')">
             <input v-model="name" type="text" class="form-control" placeholder="Name"/>
+            <div v-show="hasError('name')" class="error-message">
+              {{ getErrorMessage('name') }}
+            </div>
           </div>
-          <div class="form-group">
-            <textarea v-model="description" class="form-control" placeholder="Description"></textarea>
+          <div class="form-group" :class="getErrorClass('description')">
+            <textarea
+              v-model="description"
+              class="form-control"
+              placeholder="Description">
+            </textarea>
+            <div v-show="hasError('description')" class="error-message">
+              {{ getErrorMessage('description') }}
+            </div>
           </div>
         </div>
       </div>
@@ -28,9 +37,28 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import { modal } from 'vue-strap';
+import { isEmpty } from 'lodash';
+import yup from 'yup';
+import Promise from 'bluebird';
 import CubeGrid from '../loaders/CubeGrid';
+
+const bounds = {
+  name: { min: 2, max: 250 },
+  description: { min: 2, max: 2000 }
+};
+
+const schema = yup.object().shape({
+  name: yup.string().trim()
+    .min(bounds.name.min)
+    .max(bounds.name.max)
+    .required(),
+  description: yup.string().trim()
+    .min(bounds.description.min)
+    .max(bounds.description.max)
+    .required()
+});
 
 export default {
   name: 'create-course',
@@ -38,9 +66,9 @@ export default {
     return {
       name: '',
       description: '',
-      error: '',
       loader: false,
-      showModal: false
+      showModal: false,
+      errors: this.getDefaultErrors()
     };
   },
   components: {
@@ -50,21 +78,66 @@ export default {
   methods: {
     ...mapActions(['save'], 'courses'),
     create() {
-      // TODO: Add validation
-      this.loader = true;
       const course = { name: this.name, description: this.description };
-      this.save(course).then(() => {
-        this.loader = false;
-        this.hide();
-      });
+      const save = course => {
+        this.loader = true;
+        return Promise.join(this.save(course), Promise.delay(1000))
+          .then(() => {
+            this.loader = false;
+            this.hide();
+          });
+      };
+
+      this.errors = this.getDefaultErrors();
+      this.validate(course)
+        .then(save)
+        .catch(err => {
+          err.inner.forEach(it => this.errors[it.path].push(it.type));
+        });
     },
     show() {
       this.showModal = true;
     },
     hide() {
-      this.showModal = false;
       this.name = '';
       this.description = '';
+      this.errors = this.getDefaultErrors();
+      this.showModal = false;
+    },
+    validate(course) {
+      return schema.validate(course, { abortEarly: false });
+    },
+    getDefaultErrors() {
+      // Array of error types for input fields
+      return { name: [], description: [] };
+    },
+    hasError(field) {
+      return !isEmpty(this.errors[field]);
+    },
+    getErrorClass(field) {
+      return { 'has-error': this.hasError(field) };
+    },
+    getErrorMessage(field) {
+      // Helpers
+      const capitalize = word => word.replace(/(^|\s)[a-z]/g, l => l.toUpperCase());
+      const [minValue, maxValue] = [bounds[field].min, bounds[field].max];
+
+      // Error messages
+      const required = `${capitalize(field)} should not be empty`;
+      const min = `${capitalize(field)} field should contain at least ${minValue} characters`;
+      const max = `${capitalize(field)} field should contain at most ${maxValue} characters`;
+
+      // Display message by error priority
+      const types = this.errors[field];
+      if (types.includes('required')) return required;
+      else if (types.includes('min')) return min;
+      else if (types.includes('max')) return max;
+    }
+  },
+  computed: {
+    ...mapGetters(['isAdmin']),
+    showCreateButton() {
+      return this.isAdmin;
     }
   }
 };
@@ -90,13 +163,17 @@ export default {
     border: 0;
   }
 
-  .error {
-    margin: 0 auto;
-    padding: 15px 20px 0 20px;
+  .form-group {
+    margin: 0;
+    min-height: 80px;
+  }
+
+  .error-message {
+    padding: 3px 0;
     color: #dd4b39;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
-    min-height: 40px;
+    text-align: left;
   }
 }
 </style>
