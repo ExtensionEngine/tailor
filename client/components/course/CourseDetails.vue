@@ -35,7 +35,7 @@
       </template>
     </div>
     <div class="course-actions">
-      <button type="button" class="btn btn-danger" @click.stop="removeCourse">
+      <button v-if="showRemoveButton" type="button" class="btn btn-danger" @click.stop="removeCourse">
         <span class="fa fa-trash"></span>
         remove course
       </button>
@@ -62,7 +62,10 @@ export default {
     course() {
       return find(this.courses, c => c.id === this.$route.params.courseKey);
     },
-    ...mapGetters(['courses'])
+    showRemoveButton() {
+      return this.isAdmin;
+    },
+    ...mapGetters(['courses', 'isAdmin'])
   },
   methods: {
     onNameInputBlur() {
