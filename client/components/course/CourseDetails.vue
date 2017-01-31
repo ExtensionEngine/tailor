@@ -35,7 +35,7 @@
       </template>
     </div>
     <div class="course-actions">
-      <button type="button" class="btn btn-danger">
+      <button type="button" class="btn btn-danger" @click.stop="removeCourse">
         <span class="fa fa-trash"></span>
         remove course
       </button>
@@ -60,7 +60,7 @@ export default {
   },
   computed: {
     course() {
-      return find(this.courses, c => c._key === this.$route.params.courseKey) || {};
+      return find(this.courses, c => c.id === this.$route.params.courseKey);
     },
     ...mapGetters(['courses'])
   },
@@ -80,11 +80,14 @@ export default {
           console.log('update course description!');
         }
       }
+    },
+    removeCourse() {
+      console.log('remove course!');
     }
   },
   created() {
-    this.newCourseName = this.course ? this.course.name.slice(0) : 'name';
-    this.newCourseDescription = this.course ? this.course.description.slice(0) : 'bbbb';
+    this.newCourseName = this.course.name.slice(0);
+    this.newCourseDescription = this.course.description.slice(0);
   }
 };
 </script>
