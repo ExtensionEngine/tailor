@@ -1,9 +1,10 @@
-import { VuexModule } from 'vuex-module';
 import authApi from '../../api/auth';
+import find from 'lodash/find';
+import { role } from 'shared';
+import { VuexModule } from 'vuex-module';
 
-const { action, build, getter, mutation, state } = new VuexModule();
+const { state, getter, action, mutation, build } = new VuexModule();
 
-// TODO: Temp, integrate with backend
 state({
   user: JSON.parse(window.localStorage.getItem('CGMA_AUTHOR_USER') || '{}')
 });
@@ -11,6 +12,27 @@ state({
 getter(function user() {
   let res = this.state.user;
   return res.email ? res : null;
+});
+
+getter(function isAdmin() {
+  const user = this.state.user;
+  return user.role === role.user.ADMIN;
+});
+
+getter(function isCourseAdmin() {
+  const { route } = this.rootState;
+  const { courses } = this.rootGetters;
+  const user = this.state.user;
+  const course = find(courses, { _key: route.params.courseKey });
+  return course && (course.users[user._key] === role.course.ADMIN);
+});
+
+getter(function isCourseAuthor() {
+  const { route } = this.rootState;
+  const { courses } = this.rootGetters;
+  const user = this.state.user;
+  const course = find(courses, { _key: route.params.courseKey });
+  return course && (course.users[user._key] === role.course.AUTHOR);
 });
 
 action(function login(credentials) {
@@ -25,8 +47,12 @@ action(function logout() {
     .then(() => this.commit('logout'));
 });
 
-// TODO: integrate with backend
-action(function resetPassword(email) {
+action(function forgotPassword({ email }) {
+  return authApi.forgotPassword(email);
+});
+
+action(function resetPassword({ token, password }) {
+  return authApi.resetPassword(token, password);
 });
 
 mutation(function login(user) {

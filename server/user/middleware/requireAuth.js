@@ -1,6 +1,6 @@
 'use strict';
 
-const ADMIN = require('../role').ADMIN;
+const role = require('../../../config/shared').role;
 
 function requireUser(req, res, next) {
   if (req.user) next();
@@ -14,10 +14,14 @@ function requireRole(role) {
   };
 }
 
-const requireAdmin = requireRole(ADMIN);
+const requireSystemAdmin = requireRole(role.SYSTEM_ADMIN);
+const requireAdmin = requireRole(role.ADMIN);
+const requireContentAuthor = requireRole(role.CONTENT_AUTHOR);
 
 module.exports = {
+  requireSystemAdmin,
   requireAdmin,
+  requireContentAuthor,
   requireRole,
   requireUser
 };

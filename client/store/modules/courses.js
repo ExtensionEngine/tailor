@@ -1,6 +1,7 @@
-import VuexModel from '../helpers/model.js';
+import courseApi from '../../api/course';
+import VuexCollection from '../helpers/collection.js';
 
-const { state, getter, action, mutation, build } = new VuexModel('courses', '/courses');
+const { state, getter, action, mutation, build } = new VuexCollection('courses', '/courses');
 const PAGINATION_DEFAULTS = { next: 1, limit: 20 };
 
 state({
@@ -50,6 +51,22 @@ action(function fetch(nextPage = false) {
     this.commit('setPagination', pagination);
     this.commit(queryParams.search ? 'reset' : 'fetch', result);
   });
+});
+
+action(function upsertUser({ courseKey, userKey, role }) {
+  return courseApi.addUser(courseKey, { userKey, role })
+    .then(course => {
+      this.api.setCid(course);
+      this.commit('save', course);
+    });
+});
+
+action(function removeUser({ courseKey, userKey }) {
+  return courseApi.removeUser(courseKey, userKey)
+    .then(course => {
+      this.api.setCid(course);
+      this.commit('save', course);
+    });
 });
 
 mutation(function resetPagination() {

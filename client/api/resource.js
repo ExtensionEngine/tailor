@@ -23,10 +23,10 @@ export default class Resource {
 
   /**
    * Get client id based on server id.
-   * @param {string} _key
+   * @param {string} id
    */
-  getCid(_key) {
-    return this.mappings[_key];
+  getCid(id) {
+    return this.mappings[id];
   }
 
   /**
@@ -34,8 +34,8 @@ export default class Resource {
    * @param {object} model
    */
   setCid(model) {
-    model._cid = this.getCid(model._key) || cuid();
-    if (model._key) this.map(model._cid, model._key);
+    model._cid = this.getCid(model.id) || cuid();
+    if (model.id) this.map(model._cid, model.id);
   }
 
   /**
@@ -51,7 +51,7 @@ export default class Resource {
    * @param {object} model
    */
   setKey(model) {
-    model._key = this.getKey(model._cid);
+    model.id = this.getKey(model._cid);
   }
 
   /**
@@ -61,11 +61,11 @@ export default class Resource {
    * module can use key recieved from previous action in order
    * to execute apropriate action.
    * @param {string} _cid
-   * @param {string} _key
+   * @param {string} id
    */
-  map(_cid, _key) {
-    this.mappings[_cid] = _key;
-    this.mappings[_key] = _cid;
+  map(_cid, id) {
+    this.mappings[_cid] = id;
+    this.mappings[id] = _cid;
   }
 
   /*
@@ -73,9 +73,9 @@ export default class Resource {
    * @param {object} model
    */
   unmap(model) {
-    const cid = this.mappings[model._key];
+    const cid = this.mappings[model.id];
     if (cid) delete this.mappings[cid];
-    delete this.mappings[model._key];
+    delete this.mappings[model.id];
   }
 
   /**
@@ -94,11 +94,11 @@ export default class Resource {
     const url = this.url('');
     return this.queue.add(() => {
       // if server id is not provided but exist inside resource cache
-      if (!model._key && this.getKey(model._cid)) this.setKey(model);
-      const action = model._key ? 'put' : 'post';
+      if (!model.id && this.getKey(model._cid)) this.setKey(model);
+      const action = model.id ? 'put' : 'post';
       return axios[action](url, this.clean(model));
     }).then(response => {
-      if (!model._key) this.map(model._cid, response.data.data._key);
+      if (!model.id) this.map(model._cid, response.data.data.id);
       return assign(model, response.data.data);
     });
   }
@@ -125,13 +125,13 @@ export default class Resource {
    * @param {object} model
    */
   remove(model) {
-    return this.delete(model._key).then(response => {
+    return this.delete(model.id).then(response => {
       const data = response.data.data;
       const result = isArray(data) ? data : [data];
       // Attach cid to server results so that state can be correctly updated
       // using client ids.
       result.forEach(it => {
-        it._cid = this.getCid(it._key);
+        it._cid = this.getCid(it.id);
       });
 
       const unmap = this.unmap.bind(this);
