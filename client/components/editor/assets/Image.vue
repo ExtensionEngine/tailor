@@ -19,7 +19,6 @@
         :zoomable="false"
         :scalable="true"
         :movable="false"
-        :imgStyle="'max-width: 100%;'"
         :alt="asset.name"
         :src="image">
       </image-cropper>
