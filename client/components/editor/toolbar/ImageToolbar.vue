@@ -1,50 +1,45 @@
 <template>
   <div class="image-toolbar">
-    <div class="col-md-4 actions">
-      <ul v-show="isUploaded">
-        <li>
-          <button @click="emitAction(action.reset)" class="btn btn-link">Reset</button>
+    <div class="col-md-4">
+      <ul v-show="isUploaded" class="menu">
+        <li class="menu-item">
+          <div class="dropdown">
+            <button
+              class="btn btn-link btn-menu dropdown-toggle"
+              type="button"
+              id="image-file"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true">
+                Image
+                <span class="fa fa-caret-down"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="image-file">
+              <li><a @click="emitAction(action.clear)" type="button">Clear</a></li>
+              <li><a @click="emitAction(action.reset)" type="button">Reset</a></li>
+            </ul>
+          </div>
         </li>
-        <li>
-          <button @click="removeImage" class="btn btn-link">Remove</button>
-        </li>
-        <li>
-          <button
-            @click="emitAction(action.crop)"
-            class="btn btn-link"
-            title="Crop">
-              <span class="fa fa-crop fa-lg"></span>
-          </button>
-        </li>
-        <li>
-          <button
-            @click="emitAction(action.rotateLeft)"
-            class="btn btn-link"
-            title="Rotate Left">
-              <span class="fa fa-rotate-left fa-lg"></span>
-          </button>
-        </li>
-        <li>
-          <button
-            @click="emitAction(action.rotateRight)"
-            class="btn btn-link"
-            title="Rotate Right">
-              <span class="fa fa-rotate-right fa-lg"></span>
+        <li class="menu-item">
+          <button @click="emitAction(action.crop)" class="btn btn-link btn-menu" title="Crop">
+            <span class="fa fa-crop"></span>
           </button>
         </li>
       </ul>
     </div>
 
-    <div class="col-md-4 file-upload">
-      <div class="col-md-2 file-input">
-        <label>
-          <input @change="saveImage" type="file" />
-          <span class="fa fa-upload fa-2x"></span>
-        </label>
-      </div>
-      <div class="col-md-10 file-text" :class="errorClass">
-        <input type="text" :value="asset.name" disabled readonly />
-        <div v-show="error" class="error-message">{{ error }}</div>
+    <div class="col-md-4">
+      <div v-show="!isUploaded" class="file-upload">
+        <div class="col-md-2 file-input">
+          <label>
+            <input @change="saveImage" type="file" />
+            <span class="fa fa-upload fa-2x"></span>
+          </label>
+        </div>
+        <div class="col-md-10 file-text" :class="errorClass">
+          <input type="text" :value="asset.name" disabled readonly />
+          <div v-show="error" class="error-message">{{ error }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -54,7 +49,6 @@
 import { isEmpty, map, zipObject } from 'lodash';
 import actions from './toolbarActions';
 
-// TODO(marko): URL image upload. Multiple image assets. Image name?
 export default {
   name: 'image-toolbar',
   props: ['asset'],
@@ -66,7 +60,7 @@ export default {
   computed: {
     action() {
       // Namespace event names
-      const events = ['crop', 'reset', 'upload', 'rotateLeft', 'rotateRight'];
+      const events = ['clear', 'crop', 'reset', 'upload'];
       const namespaceEvent = name => `${name}/${this.asset._cid}`;
       return zipObject(events, map(events, e => namespaceEvent(e)));
     },
@@ -74,7 +68,7 @@ export default {
       return { 'has-error': this.error };
     },
     isUploaded() {
-      return this.asset.file && !isEmpty(this.asset.file);
+      return this.asset.url && !isEmpty(this.asset.url);
     }
   },
   methods: {
@@ -96,18 +90,11 @@ export default {
       if (!this.error) {
         const reader = new window.FileReader();
         reader.onload = (e) => {
-          const file = e.target.result;
-          const name = image.name;
-          this.setImage({ file, name });
+          const url = e.target.result;
+          actions.$emit(this.action.upload, url);
         };
         reader.readAsDataURL(input.files[0]);
       }
-    },
-    removeImage() {
-      this.setImage({ file: '', name: '' });
-    },
-    setImage(data) {
-      actions.$emit(this.action.upload, data);
     },
     emitAction(name) {
       actions.$emit(name);
@@ -118,24 +105,79 @@ export default {
 
 <style lang="scss">
 .image-toolbar {
-  position: fixed;
-  z-index: 999;
-  width: 100%;
-  height: 60px;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
+  height: 60px;
+  position: fixed;
+  width: 100%;
+  z-index: 999;
 
-  .actions {
-    padding: 12px 10px;
+  .col-md-4 {
+    height: 100%;
+    padding: 0;
+  }
+
+  .menu {
+    height: 100%;
+    margin: 0;
+    padding: 0;
     text-align: left;
 
-    ul {
-      padding: 0;
+    .menu-item {
+      display: inline-block;
+      height: 100%;
+      min-width: 50px;
+      text-align: center;
 
-      li {
-        display: inline-block;
-        margin: 0 2px;
+      .fa {
+        font-size: 16px;
       }
+    }
+
+    .dropdown {
+      height: 100%;
+    }
+  }
+
+  .dropdown-menu {
+    border-radius: 0;
+    left: -2%;
+    padding: 0;
+
+    li > a {
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 20px;
+      text-transform: uppercase;
+    }
+  }
+
+  .open > .btn-menu.dropdown-toggle {
+    &:hover, &:focus {
+      background-color: transparent;
+      border-color: none;
+    }
+  }
+
+  .btn-menu {
+    box-shadow: none;
+    height: 100%;
+    outline: 0;
+
+    &:hover {
+      background-color: transparent;
+      background-image: none;
+      border: none;
+      box-shadow: none;
+      outline: 0;
+    }
+
+    &:focus:active {
+      background-color: transparent;
+      background-image: none;
+      border: none;
+      box-shadow: none;
+      outline: 0;
     }
   }
 }
@@ -143,7 +185,7 @@ export default {
 .file-upload {
   .file-input {
     overflow: hidden;
-    padding: 15px 0;
+    padding: 12px 0;
     position: relative;
     width: 50px;
 
@@ -157,7 +199,7 @@ export default {
   }
 
   .file-text {
-    padding: 20px 5px;
+    padding: 17px 5px;
 
     input[type="text"] {
       border-bottom: 1px solid #b3b3b3;
@@ -168,7 +210,7 @@ export default {
       color: darken(#d9534f, 15%);
       font-size: 14px;
       font-weight: 500;
-      padding: 1px 0;
+      padding: 2px 0;
       text-align: left;
     }
   }
