@@ -45,7 +45,7 @@
 
 <script>
 import { focus } from 'vue-focus';
-import { mapGetters } from 'vuex-module';
+import { mapGetters, mapActions } from 'vuex-module';
 import find from 'lodash/find';
 
 export default {
@@ -71,22 +71,26 @@ export default {
     onNameInputBlur() {
       if (this.showNameInput) {
         this.showNameInput = false;
-        if (this.newCourseName !== this.course.name) {
-          console.log('update course name!');
+        if (this.course.name !== this.newCourseName) {
+          this.course.name = this.newCourseName;
+          this.update(this.course).then();
         }
       }
     },
     onDescriptionInputBlur() {
       if (this.showDescriptionInput) {
         this.showDescriptionInput = false;
-        if (this.newCourseDescription !== this.course.description) {
-          console.log('update course description!');
+        if (this.course.description !== this.newCourseDescription) {
+          this.course.description = this.newCourseDescription;
+          this.update(this.course).then();
         }
       }
     },
     removeCourse() {
-      console.log('remove course!');
-    }
+      this.remove(this.course).then();
+    },
+    ...mapActions(['remove', 'update'], 'courses')
+
   },
   created() {
     this.newCourseName = this.course.name.slice(0);
