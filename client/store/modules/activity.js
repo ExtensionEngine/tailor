@@ -9,15 +9,15 @@ getter(function activities() {
   return this.state.items;
 }, { global: true });
 
-action(function reorder({ from, to, parentKey }) {
-  const activityKey = find(this.state.items,
-    it => it.parentKey === parentKey && it.position === from)._key;
+action(function reorder({ from, to, parentId }) {
+  const activityId = find(this.state.items,
+    it => it.parent_id === parentId && it.position === from).id;
   return this.api
-    .post(`${activityKey}/actions/reorder`, { position: to })
-    .then(() => this.commit('reorder', { from, to, parentKey }));
+    .post(`${activityId}/actions/reorder`, { position: to })
+    .then(() => this.commit('reorder', { from, to, parentId }));
 });
 
-mutation(function reorder({ from, to, parentKey }) {
+mutation(function reorder({ from, to, parentId }) {
   const isMovingToLargerPos = from < to;
   const low = isMovingToLargerPos ? from - 1 : to - 1;
   const high = isMovingToLargerPos ? to + 1 : from;
@@ -25,7 +25,7 @@ mutation(function reorder({ from, to, parentKey }) {
 
   Object.keys(this.state.items).forEach(key => {
     const item = this.state.items[key];
-    if (item.parentKey !== parentKey) return;
+    if (item.parent_id !== parentId) return;
 
     if (item.position === from) {
       item.position = to;
@@ -46,7 +46,7 @@ mutation(function save(model) {
   // Recalculate positions only once - after model is saved locally.
   if (!this.state.items[model._cid]) {
     forEach(this.state.items, it => {
-      if ((it.parentKey === model.parentKey) && (it.position >= model.position)) {
+      if ((it.parent_id === model.parent_id) && (it.position >= model.position)) {
         it.position += 1;
       }
     });

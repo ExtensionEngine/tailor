@@ -11,14 +11,14 @@
           <span class="badge" v-if="showBadge">{{ children.length }}</span>
         </span>
       </div>
-      <insert-activity :parent="activity" :level="level"></insert-activity>
+      <insert-activity :parent="activity" :level="level" :siblings="children"></insert-activity>
     </div>
     <transition name="fade" v-if="!isCollapsed && hasChildren">
       <draggable @update="reorder">
         <activity
           v-for="it in children"
           :key="it._cid"
-          :_key="it._key"
+          :id="it.id"
           :_cid="it._cid"
           :name="it.name"
           :position="it.position"
@@ -43,7 +43,7 @@ const COLORS = ['#42A5F5', '#66BB6A', '#EC407A'];
 
 export default {
   name: 'activity',
-  props: ['_cid', '_key', 'name', 'position', 'level', 'activities', 'activity'],
+  props: ['_cid', 'id', 'name', 'position', 'level', 'activities', 'activity'],
   data() {
     return {
       isCollapsed: this.level !== 0
@@ -68,8 +68,9 @@ export default {
     },
     children() {
       const filterByParent = this.isRoot
-        ? act => act.parentKey === null
-        : act => act.parentKey === this._key;
+        ? act => act.parent_id === null
+        : act => act.parent_id === this.id;
+
       return values(this.activities)
         .filter(filterByParent)
         .sort((x, y) => x.position - y.position);
@@ -96,7 +97,7 @@ export default {
       });
     },
     reorder({ newIndex: to, item: { __vue__: { position: from } } }) {
-      this.reorderActivities({ from, to, parentKey: this._key || null });
+      this.reorderActivities({ from, to, parentId: this.id || null });
     }
   },
   components: {

@@ -75,8 +75,8 @@ module.exports = function (sequelize, DataTypes) {
     classMethods: {
       associate(models) {
         Activity.belongsTo(models.Course);
-        Activity.belongsTo(Activity, { as: 'parent', foreignKey: 'parentId' });
-        Activity.hasMany(Activity, { as: 'children', foreignKey: 'parentId' });
+        Activity.belongsTo(Activity, { as: 'parent', foreignKey: 'parent_id' });
+        Activity.hasMany(Activity, { as: 'children', foreignKey: 'parent_id' });
         // Activity.hasMany(models.Asset);
         // Activity.hasMany(models.Assesment);
       }
@@ -86,8 +86,8 @@ module.exports = function (sequelize, DataTypes) {
         return Activity.findAll({
           where: {
             $and: [
-              { parentId: this.parentId },
-              { courseId: this.courseId }
+              { parent_id: this.parent_id },
+              { course_id: this.course_id }
             ]
           },
           order: 'position ASC'
@@ -116,19 +116,15 @@ module.exports = function (sequelize, DataTypes) {
       reorder(newPosition) {
         return sequelize.transaction((t) => {
           return this.siblings().then((siblings) => {
-            const currentActivity = siblings[newPosition - 1];
-
-            if (currentActivity) {
-              const nextPosition = currentActivity.get('position');
-              let prevPosition = newPosition - 2;
-
-              prevPosition = prevPosition + 1 > 0
-                              ? prevPosition = siblings[prevPosition].get('position')
-                              : prevPosition = 0;
+            if (!newPosition) {
+              newPosition = siblings[0].get('position') / 2;
+            } else if (newPosition + 1 === siblings.length) {
+              newPosition = siblings[newPosition].get('position') + 1;
+            } else {
+              const prevPosition = siblings[newPosition].get('position');
+              const nextPosition = siblings[newPosition + 1].get('position');
 
               newPosition = (nextPosition + prevPosition) / 2;
-            } else {
-              newPosition = siblings.length;
             }
 
             this.set('position', newPosition);

@@ -57,6 +57,7 @@ export default {
   },
   computed: {
     ...mapGetters(['course'], 'editor'),
+    ...mapGetters(['activities']),
     canCreateSubsection() {
       return this.level < 3;
     },
@@ -78,13 +79,14 @@ export default {
     add() {
       const isOnSameLevel = this.newActivityLevel === 0;
       const position = isOnSameLevel ? this.parent.position + 1 : 0;
-      const parentKey = isOnSameLevel ? this.parent.parentKey : this.parent._key;
+      const parentId = isOnSameLevel ? this.parent.parent_id : this.parent.id;
 
       const model = {
         name: this.activityName,
-        courseKey: this.course._key,
+        courseId: this.parent.course_id,
         position,
-        parentKey
+        parentId,
+        type: 'basic'
       };
 
       this.save(model);

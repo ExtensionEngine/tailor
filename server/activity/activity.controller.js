@@ -3,13 +3,14 @@
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { Activity } = require('../shared/database/sequelize');
+// const logger = require('../shared/logger');
 
 function create(req, res) {
   const activity = {
     name: req.body.name,
     type: req.body.type,
-    courseId: req.body.courseId,
-    parentId: req.body.parentKey,
+    course_id: req.body.courseId,
+    parent_id: req.body.parentId,
     position: req.body.position
   };
   Activity
@@ -27,10 +28,10 @@ function show(req, res) {
 }
 
 function list(req, res) {
-  const courseId = req.params.courseKey;
+  const courseId = req.params.courseId;
 
   return Activity
-    .findAll({ where: { courseId }, order: 'position ASC' })
+    .findAll({ where: { course_id: courseId }, order: 'position ASC' })
     .then(activities => res.json({ data: activities }));
 }
 
@@ -39,17 +40,17 @@ function remove(req, res, next) {
 
   return Activity
     .findById(id)
-    .deleteTree()
+    .then(activity => activity.deleteTree())
     .then(data => res.json({ data }));
 }
 
 function reorder(req, res, next) {
-  const id = req.params.activityKey;
+  const id = req.params.activityId;
   const position = req.body.position;
 
   return Activity
     .findById(id)
-    .reorder(position)
+    .then(activity => activity.reorder(position))
     .then(data => res.json({ data }));
 }
 

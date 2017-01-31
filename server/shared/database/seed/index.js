@@ -10,6 +10,7 @@ function initializeModel(Model, records) {
   records.forEach(it => result.push(Model.create(it)));
   return Promise.all(result);
 }
+
 function insertActivities(Activity, course, result, level, parent) {
   range(maxPos).forEach(pos => {
     let name = level ? 'Sub' : 'Main';
@@ -18,7 +19,7 @@ function insertActivities(Activity, course, result, level, parent) {
     let promise = Activity.create({
       name: `${name} activity ${pos}`,
       type: 'basic',
-      position: pos
+      position: pos + 1
     }).then(data => {
       let promises = [];
       activity = data;
@@ -28,13 +29,14 @@ function insertActivities(Activity, course, result, level, parent) {
 
       return promises;
     }).then(promises => {
-      if (level < maxLevel) insertActivities(Activity, course, result, ++level, activity);
+      let _level = level + 1;
+
+      if (_level <= maxLevel) insertActivities(Activity, course, result, _level, activity);
     });
 
     result.push(promise);
   });
 }
-
 
 function insertAll(db) {
   let users = initializeModel(db.User, userData);

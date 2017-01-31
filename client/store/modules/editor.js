@@ -14,13 +14,14 @@ getter(function course() {
   const { route } = this.rootState;
   const { courses } = this.rootGetters;
   if (EDITOR_ROUTES.indexOf(route.name) < 0) return;
-  return find(courses, { _key: route.params.courseKey });
+  return find(courses, { id: route.params.courseKey });
 });
 
 getter(function activities() {
   const { route } = this.rootState;
   const { activities: collection } = this.rootGetters;
-  return filter(collection, { courseKey: route.params.courseKey });
+  const id = Number(route.params.courseKey);
+  return filter(collection, { course_id: id });
 });
 
 getter(function activity() {
