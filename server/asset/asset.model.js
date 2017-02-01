@@ -65,24 +65,25 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate: { notEmpty: true }
     },
-    // TODO(marko): Temp solutions.
-    activity_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    course_id: {
+    // TODO(marko): Temp solution.
+    activityId: {
       type: DataTypes.INTEGER,
       allowNull: false
     }
   }, {
     classMethods: {
+      associate(models) {
+        // Asset.belongsTo(models.Activity);
+        Asset.belongsTo(models.Course);
+      },
       deleteById(id) {
         // Wrap instance delete method into class method
         // for easier chaining.
         return this
         .findById(id)
         .then(result => {
-          return result.destroy();
+          if (result) result.destroy();
+          return result;
         });
       },
       updateById(id, updates) {
@@ -96,7 +97,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       findAllByActivity(activityId) {
         return this.findAll({
-          where: { activity_id: activityId }
+          where: { activityId }
         });
       },
       serializeMany(data) {
@@ -112,7 +113,6 @@ module.exports = function(sequelize, DataTypes) {
         return (new Serializer(this.Model)).serialize(this);
       }
     },
-    underscored: true,
     freezeTableName: true
   });
 
