@@ -51,7 +51,12 @@ module.exports = function (sequelize, DataTypes) {
         Course.hasMany(models.Activity, { as: 'activities' });
       }
     },
-    underscored: true,
+    instanceMethods: {
+      getUser(user) {
+        return this.getUsers({ where: { id: user.id } })
+          .then(users => users[0]);
+      }
+    },
     freezeTableName: true
   });
 
