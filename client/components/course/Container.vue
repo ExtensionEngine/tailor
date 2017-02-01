@@ -13,6 +13,10 @@
         :class="{ active: $route.name === 'course-settings' }">
         <router-link :to="{ name: 'course-settings' }">Settings</router-link>
       </li>
+      <li v-if="showDetails"
+        :class="{ active: $route.name === 'course-details' }">
+        <router-link :to="{ name: 'course-details' }">Details</router-link>
+      </li>
     </ul>
     <div class="tab-content">
       <router-view></router-view>
@@ -31,6 +35,9 @@ export default {
   computed: {
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
     showSettings() {
+      return this.isAdmin || this.isCourseAdmin;
+    },
+    showDetails() {
       return this.isAdmin || this.isCourseAdmin;
     }
   },
