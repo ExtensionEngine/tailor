@@ -42,6 +42,8 @@
 
 <script>
 import { focus } from 'vue-focus';
+import filter from 'lodash/filter';
+import findIndex from 'lodash/findIndex';
 import { mapGetters, mapActions } from 'vuex-module';
 
 export default {
@@ -78,15 +80,30 @@ export default {
     },
     add() {
       const isOnSameLevel = this.newActivityLevel === 0;
-      const position = isOnSameLevel ? this.parent.position + 1 : 0;
-      const parentId = isOnSameLevel ? this.parent.parent_id : this.parent.id;
+      const parentId = isOnSameLevel ? this.parent.parentId : this.parent.id;
+      const courseId = this.parent.courseId;
+
+      let children = filter(this.activities, it => {
+        return it.parentId === parentId && it.courseId === courseId;
+      }).sort((a, b) => a.position > b.position);
+
+      let prev = findIndex(children, it => it.position === this.parent.position);
+
+      let position;
+      if (!isOnSameLevel) {
+        position = 1;
+      } else if (prev + 1 === children.length) {
+        position = children[prev].position + 1;
+      } else {
+        let nextPosition = children[prev + 1].position;
+        position = (this.parent.position + nextPosition) / 2;
+      }
 
       const model = {
         name: this.activityName,
-        courseId: this.parent.course_id,
+        courseId: courseId,
         position,
-        parentId,
-        type: 'basic'
+        parentId
       };
 
       this.save(model);

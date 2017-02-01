@@ -1,6 +1,7 @@
 'use strict';
 
-const forEach = require('lodash/forEach');
+const findIndex = require('lodash/findIndex');
+const Promise = require('bluebird');
 // const logger = require('../shared/logger');
 
 /**
@@ -58,12 +59,11 @@ const forEach = require('lodash/forEach');
 module.exports = function (sequelize, DataTypes) {
   const Activity = sequelize.define('activity', {
     name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: { notEmpty: true }
+      type: DataTypes.STRING
     },
     type: {
-      type: DataTypes.STRING, // ENUM?
+      type: DataTypes.ENUM('GOAL', 'CONCEPT', 'TOPIC', 'PERSPECTIVE'),
+      defaultValue: 'GOAL',
       allowNull: false
     },
     position: {
@@ -75,8 +75,8 @@ module.exports = function (sequelize, DataTypes) {
     classMethods: {
       associate(models) {
         Activity.belongsTo(models.Course);
-        Activity.belongsTo(Activity, { as: 'parent', foreignKey: 'parent_id' });
-        Activity.hasMany(Activity, { as: 'children', foreignKey: 'parent_id' });
+        Activity.belongsTo(Activity, { as: 'parent', foreignKey: 'parentId' });
+        Activity.hasMany(Activity, { as: 'children', foreignKey: 'parentId' });
         // Activity.hasMany(models.Asset);
         // Activity.hasMany(models.Assesment);
       }
@@ -86,55 +86,51 @@ module.exports = function (sequelize, DataTypes) {
         return Activity.findAll({
           where: {
             $and: [
-              { parent_id: this.parent_id },
-              { course_id: this.course_id }
+              { parentId: this.parentId },
+              { courseId: this.courseId }
             ]
           },
           order: 'position ASC'
         });
       },
-      deleteTree() { // transaction
-        this.getSubactivities()
-          .then((subactivities) => {
-            const promises = [];
-
-            forEach(subactivities, (subactivity) => {
-              promises.push(subactivity.deleteTree());
-            });
-
-            return Promise.all(promises);
-          })
-          .then(() => {
-            return this.deleteSubactivities();
-          });
-      },
-      deleteSubactivities() { // recursion
-        return Activity.destroy({
-          where: { parentId: this.id }
+      remove() {
+        return sequelize.transaction(t => {
+          return this.deleteTree().then(() => this.destroy()).then(() => this);
         });
       },
-      reorder(newPosition) {
-        return sequelize.transaction((t) => {
-          return this.siblings().then((siblings) => {
-            if (!newPosition) {
-              newPosition = siblings[0].get('position') / 2;
-            } else if (newPosition + 1 === siblings.length) {
-              newPosition = siblings[newPosition].get('position') + 1;
-            } else {
-              const prevPosition = siblings[newPosition].get('position');
-              const nextPosition = siblings[newPosition + 1].get('position');
+      deleteTree() {
+        return Promise.resolve(this.getChildren())
+          .each(it => it.deleteTree())
+          .then(() => this.deleteChildren());
+      },
+      deleteChildren() {
+        return Activity.destroy({ where: { parentId: this.id } });
+      },
+      reorder(index) {
+        return sequelize.transaction(t => {
+          return this.siblings().then(siblings => {
+            let newpos;
 
-              newPosition = (nextPosition + prevPosition) / 2;
+            if (!index) {
+              newpos = siblings[0].get('position') / 2;
+            } else if (index + 1 === siblings.length) {
+              newpos = siblings[index].get('position') + 1;
+            } else {
+              const currIndex = findIndex(siblings, it => it.id === this.id);
+              const inc = currIndex > index ? -1 : 1;
+              const prevPos = siblings[index].get('position');
+              const nextPos = siblings[index + inc].get('position');
+
+              newpos = (nextPos + prevPos) / 2;
             }
 
-            this.set('position', newPosition);
+            this.set('position', newpos);
 
             return this.save();
           });
         });
       }
     },
-    underscored: true,
     freezeTableName: true
   });
 

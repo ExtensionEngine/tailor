@@ -3,7 +3,7 @@
     <div class="activity-wrapper" v-if="!isRoot">
       <div class="activity" @click="select" @dblclick="edit">
         <span class="position" :style="{ 'background-color': color }">
-          {{ position + 1 }}
+          {{ index + 1 }}
         </span>
         <span class="collapsible" :class="collapsibleIcon"></span>
         <span>{{ name }}</span>
@@ -14,14 +14,15 @@
       <insert-activity :parent="activity" :level="level" :siblings="children"></insert-activity>
     </div>
     <transition name="fade" v-if="!isCollapsed && hasChildren">
-      <draggable @update="reorder">
+      <draggable @update="reorder" :list="children">
         <activity
-          v-for="it in children"
+          v-for="(it, index) in children"
           :key="it._cid"
           :id="it.id"
           :_cid="it._cid"
           :name="it.name"
           :position="it.position"
+          :index="index"
           :level="level + 1"
           :class="{ 'sub-activity': name }"
           :activities="activities"
@@ -43,7 +44,7 @@ const COLORS = ['#42A5F5', '#66BB6A', '#EC407A'];
 
 export default {
   name: 'activity',
-  props: ['_cid', 'id', 'name', 'position', 'level', 'activities', 'activity'],
+  props: ['_cid', 'id', 'name', 'position', 'level', 'activities', 'activity', 'index'],
   data() {
     return {
       isCollapsed: this.level !== 0
@@ -68,8 +69,8 @@ export default {
     },
     children() {
       const filterByParent = this.isRoot
-        ? act => act.parent_id === null
-        : act => act.parent_id === this.id;
+        ? act => act.parentId === null
+        : act => act.parentId === this.id;
 
       return values(this.activities)
         .filter(filterByParent)
@@ -85,6 +86,7 @@ export default {
   methods: {
     ...mapMutations(['focusActivity'], 'editor'),
     ...mapActions({ reorderActivities: 'reorder' }, 'activity'),
+    ...mapMutations(['save'], 'activity'),
     select() {
       this.isCollapsed = !this.isCollapsed;
       this.focusActivity(this._cid);
@@ -96,8 +98,24 @@ export default {
         params: { activityKey: this.activity._key }
       });
     },
-    reorder({ newIndex: to, item: { __vue__: { position: from } } }) {
-      this.reorderActivities({ from, to, parentId: this.id || null });
+    reorder({ newIndex: to, oldIndex: from }) {
+      const activity = this.children[to];
+
+      if (to === 0) {
+        activity.position = this.children[1].position / 2;
+      } else {
+        const prev = this.children[to - 1];
+        const next = this.children[to + 1];
+
+        if (to + 1 === this.children.length) {
+          activity.position = prev.position + 1;
+        } else {
+          activity.position = (prev.position + next.position) / 2;
+        }
+      }
+
+      this.save(activity);
+      this.reorderActivities({ activity, to });
     }
   },
   components: {

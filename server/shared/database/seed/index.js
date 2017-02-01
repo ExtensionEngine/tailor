@@ -18,7 +18,6 @@ function insertActivities(Activity, course, result, level, parent) {
 
     let promise = Activity.create({
       name: `${name} activity ${pos}`,
-      type: 'basic',
       position: pos + 1
     }).then(data => {
       let promises = [];

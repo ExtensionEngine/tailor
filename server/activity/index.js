@@ -23,7 +23,7 @@ router
   .delete(ctrl.remove);
 
 router
-  .post('/courses/:courseId/activities/:activityId/actions/reorder', ctrl.reorder);
+  .post('/courses/:courseId/activities/:activityId/reorder', ctrl.reorder);
 
 module.exports = {
   model,
