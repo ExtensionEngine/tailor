@@ -58,8 +58,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course'], 'editor'),
     ...mapGetters(['activities']),
+    ...mapGetters(['course'], 'editor'),
     canCreateSubsection() {
       return this.level < 3;
     },
@@ -70,6 +70,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['save'], 'activity'),
     show() {
       this.showInput = true;
       this.focusInput = true;
@@ -83,33 +84,33 @@ export default {
       const parentId = isOnSameLevel ? this.parent.parentId : this.parent.id;
       const courseId = this.parent.courseId;
 
-      let children = filter(this.activities, it => {
+      const children = filter(this.activities, it => {
         return it.parentId === parentId && it.courseId === courseId;
       }).sort((a, b) => a.position > b.position);
 
-      let prev = findIndex(children, it => it.position === this.parent.position);
+      const previousIndex = findIndex(children, activity => {
+        return activity.position === this.parent.position;
+      });
 
       let position;
       if (!isOnSameLevel) {
         position = 1;
-      } else if (prev + 1 === children.length) {
-        position = children[prev].position + 1;
+      } else if (previousIndex + 1 === children.length) {
+        position = children[previousIndex].position + 1;
       } else {
-        let nextPosition = children[prev + 1].position;
+        const nextPosition = children[previousIndex + 1].position;
         position = (this.parent.position + nextPosition) / 2;
       }
 
-      const model = {
+      this.save({
         name: this.activityName,
-        courseId: courseId,
+        courseId,
         position,
         parentId
-      };
+      });
 
-      this.save(model);
       this.hide();
-    },
-    ...mapActions(['save'], 'activity')
+    }
   }
 };
 </script>
