@@ -5,7 +5,6 @@ const { Course, User } = require('../shared/database/sequelize');
 const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const params = require('../../config/server').queryParams;
-const userRoles = require('../../config/shared').role.user;
 
 function index(req, res) {
   const user = req.user;
@@ -19,10 +18,8 @@ function index(req, res) {
     ? { name: { $iLike: `%${req.query.search}%` } }
     : undefined;
 
-  const promise = user.role === userRoles.ADMIN
-    ? Course.findAll({ offset, limit, order, where })
-    : user.getCourses({ offset, limit, order, where });
-
+  const opts = { offset, limit, order, where };
+  const promise = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return promise.then(courses => res.json({ data: courses }));
 };
 
