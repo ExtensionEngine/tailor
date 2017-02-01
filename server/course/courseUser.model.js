@@ -9,7 +9,6 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: role.AUTHOR
     }
   }, {
-    tableName: 'course_user',
-    underscored: true
+    tableName: 'course_user'
   });
 };

@@ -129,7 +129,6 @@ module.exports = function (sequelize, DataTypes) {
         return Promise.all(updates);
       }
     },
-    underscored: true,
     freezeTableName: true
   });
 
