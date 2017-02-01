@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="addUser">
+  <form @submit.prevent="addUser" novalidate>
     <div class="row">
       <div class="col-md-7" :class="{ 'has-error': hasError('email') }">
         <input
@@ -14,7 +14,7 @@
       <div class="col-md-3">
         <select v-model="role" class="form-control">
           <option v-for="role in roles" :value="role.value">
-            {{ role.render }}
+            {{ role.title }}
           </option>
         </select>
       </div>
@@ -41,23 +41,21 @@ export default {
       email: '',
       role: this.roles[0].value,
       errors: [],
-      errorMessages: {
-        email: 'Please enter a valid email'
-      }
+      errorMessages: { email: 'Please enter a valid email' }
     };
   },
   methods: {
-    ...mapActions(['addToCourse'], 'users'),
+    ...mapActions(['upsertUser'], 'editor'),
     hasError(type) {
       return this.errors.indexOf(type) > -1;
     },
     addUser() {
       const { email, role } = this;
-      const { courseKey } = this.$route.params;
+      const { courseKey: courseId } = this.$route.params;
       this.validate({ email, role })
         .then(() => {
           this.email = '';
-          this.addToCourse({ email, role, courseKey });
+          this.upsertUser({ courseId, email, role });
         })
         .catch(err => {
           err.inner.forEach(it => this.errors.push(it.path));

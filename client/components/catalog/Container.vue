@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import debounce from 'lodash/debounce';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Promise from 'bluebird';
 import CourseList from './List';
@@ -41,10 +40,8 @@ export default {
     },
     filterCourses(query) {
       this.showLoader = true;
-      debounce(() => {
-        this.setSearch(query);
-        this.fetchCourses();
-      }, 700)();
+      this.setSearch(query);
+      this.fetchCourses();
     }
   },
   created() {
