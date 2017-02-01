@@ -1,9 +1,9 @@
 'use strict';
 
-const pick = require('lodash/pick');
+const { Activity } = require('../shared/database/sequelize');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
-const { Activity } = require('../shared/database/sequelize');
+const pick = require('lodash/pick');
 
 function create({ body }, res) {
   return Activity
@@ -18,10 +18,8 @@ function show({ params }, res) {
     .then(activity => res.json({ data: activity }));
 }
 
-function list({ params }, res) {
-  const courseId = params.courseId;
-  return Activity
-    .findAll({ where: { courseId }, order: 'position ASC' })
+function list(req, res) {
+  return req.course.getActivities({ order: 'position ASC' })
     .then(activities => res.json({ data: activities }));
 }
 
