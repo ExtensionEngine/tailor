@@ -4,11 +4,8 @@ const { createError } = require('../shared/error/helpers');
 const { Course, User } = require('../shared/database/sequelize');
 const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
-const omit = require('lodash/omit');
-
-const userRoles = require('../../config/shared').role.user;
-const courseRoles = require('../../config/shared').role.course;
 const params = require('../../config/server').queryParams;
+const pick = require('lodash/pick');
 
 function index(req, res) {
   const user = req.user;
@@ -25,6 +22,18 @@ function index(req, res) {
   const opts = { offset, limit, order, where };
   const promise = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return promise.then(courses => res.json({ data: courses }));
+};
+
+function patch(req, res) {
+  const data = pick(req.body, ['name', 'description']);
+  return req.course.update(data).then(course => {
+    res.json({ data: course });
+  });
+};
+
+function remove(req, res) {
+  return req.course.destroy()
+    .then(() => res.status(204).send());
 };
 
 function getUsers(req, res) {
@@ -60,46 +69,10 @@ const transform = user => {
   return Object.assign(user.profile, { courseRole: user.courseUser.role });
 };
 
-function patch(req, res) {
-  const id = req.params.id;
-  const course = omit(req.body, ['id', 'created_at', 'updated_at']);
-  return Course.update(course, { where: { id }, returning: true })
-    .then(([n, courses]) => n
-      ? res.status(200).json({ data: courses[0] })
-      : res.status(404).send());
-};
-
-function remove(req, res) {
-  const id = req.params.id;
-  return Course.destroy({ where: { id } })
-    .then(() => res.status(204).send());
-};
-
-function canPatch(req, res) {
-  const user = req.user;
-  return user.role === userRoles.ADMIN
-    ? Promise.resolve('next')
-    : user.getCourses().then(courses => {
-      // eslint-disable-next-line eqeqeq
-      const course = courses.find(c => c.id == req.params.id);
-      return course && course.courseUser.role === courseRoles.ADMIN
-        ? Promise.resolve('next')
-        : res.status(401).send();
-    });
-};
-
-function canRemove(req, res) {
-  return req.user.role === userRoles.ADMIN
-    ? Promise.resolve('next')
-    : res.status(401).send();
-};
-
 module.exports = {
   index,
   patch,
   remove,
-  canPatch,
-  canRemove,
   getUsers,
   upsertUser,
   removeUser
