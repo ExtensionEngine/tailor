@@ -1,13 +1,16 @@
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import map from 'lodash/map';
+import values from 'lodash/values';
+import courseApi from '../../api/course';
+import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
 
-const { build, getter, mutation, state } = new VuexModule('editor');
+const { build, getter, action, mutation, state } = new VuexModule('editor');
 const EDITOR_ROUTES = ['course', 'editor'];
 
 state({
-  activity: undefined
+  activity: undefined,
+  users: {}
 });
 
 getter(function course() {
@@ -35,11 +38,37 @@ getter(function assets() {
 });
 
 getter(function users() {
+  return values(this.state.users);
+});
+
+action(function getUsers() {
   const { route } = this.rootState;
-  const { courseKey } = route.params;
-  const course = find(this.rootGetters.courses, { _key: courseKey });
-  let result = filter(this.rootGetters.users, it => course.users[it._key]);
-  return map(result, it => ({ ...it, role: course.users[it._key] }));
+  const courseId = route.params.courseKey;
+  return courseApi.getUsers(courseId)
+    .then(users => this.commit('setUsers', users));
+});
+
+action(function upsertUser({ courseId, email, role }) {
+  return courseApi.upsertUser(courseId, { email, role })
+    .then(user => this.commit('upsertUser', user));
+});
+
+action(function removeUser({ courseId, userId }) {
+  return courseApi.removeUser(courseId, userId)
+    .then(() => this.commit('removeUser', userId));
+});
+
+mutation(function upsertUser(user) {
+  Vue.set(this.state.users, user.id, user);
+});
+
+mutation(function removeUser(id) {
+  Vue.delete(this.state.users, id);
+});
+
+mutation(function setUsers(users) {
+  this.state.users = {};
+  users.forEach(it => (this.state.users[it.id] = it));
 });
 
 mutation(function focusActivity(_cid) {

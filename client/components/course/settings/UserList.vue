@@ -13,10 +13,10 @@
         <td v-for="role in roles" class="text-center">
           <input
             type="radio"
-            :name="user._key"
+            :name="user.id"
             :value="role.value"
-            :checked="user.role === role.value"
-            @click="changeRole(user._key, role.value)"/>
+            :checked="user.courseRole === role.value"
+            @click="changeRole(user.email, role.value)"/>
         </td>
         <td class="text-center">
           <button type="button" class="btn btn-link" @click="remove(user)">
@@ -34,15 +34,14 @@ import { mapActions } from 'vuex-module';
 
 export default {
   methods: {
-    ...mapActions(['upsertUser', 'removeUser'], 'courses'),
-    changeRole(userKey, role) {
-      const { courseKey } = this.$route.params;
-      debounce(this.upsertUser, 500)({ courseKey, userKey, role });
+    ...mapActions(['upsertUser', 'removeUser'], 'editor'),
+    changeRole(email, role) {
+      const { courseKey: courseId } = this.$route.params;
+      debounce(this.upsertUser, 500)({ courseId, email, role });
     },
     remove(user) {
-      const userKey = user._key;
-      const { courseKey } = this.$route.params;
-      this.removeUser({ userKey, courseKey });
+      const { courseKey: courseId } = this.$route.params;
+      this.removeUser({ userId: user.id, courseId });
     }
   },
   props: {

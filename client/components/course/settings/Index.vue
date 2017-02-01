@@ -2,11 +2,11 @@
   <div class="settings">
     <div class="row">
       <div class="col-md-10">
-        <user-invite :roles="roles"></user-invite>
+        <add-user :roles="roles"></add-user>
       </div>
     </div>
     <cube-spinner v-if="showLoader"></cube-spinner>
-    <user-list v-else-if="hasUsers" :roles="roles" :users="users"></user-list>
+    <user-list v-else-if="hasUsers" :users="users" :roles="roles"></user-list>
     <div v-else class="well">There are no users assigned with this course.</div>
   </div>
 </template>
@@ -18,8 +18,8 @@ import Promise from 'bluebird';
 import { role } from 'shared';
 import toTitleCase from 'to-title-case';
 
+import AddUser from './AddUser';
 import CubeSpinner from '../../loaders/CubeSpinner';
-import UserInvite from './UserInvite';
 import UserList from './UserList';
 
 export default {
@@ -29,7 +29,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user']),
     ...mapGetters(['users'], 'editor'),
     hasUsers() {
       return !!this.users.length;
@@ -39,10 +38,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch'], 'users'),
+    ...mapActions(['getUsers'], 'editor'),
     fetchUsers() {
       this.showLoader = true;
-      const request = Promise.join(this.fetch(), Promise.delay(500));
+      const request = Promise.join(this.getUsers(), Promise.delay(500));
       return request.then(() => (this.showLoader = false));
     }
   },
@@ -50,8 +49,8 @@ export default {
     this.fetchUsers();
   },
   components: {
+    AddUser,
     CubeSpinner,
-    UserInvite,
     UserList
   }
 };
