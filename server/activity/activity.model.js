@@ -2,7 +2,6 @@
 
 const findIndex = require('lodash/findIndex');
 const Promise = require('bluebird');
-// const logger = require('../shared/logger');
 
 /**
  * @swagger
@@ -10,18 +9,20 @@ const Promise = require('bluebird');
  *   ActivityInput:
  *     type: object
  *     required:
- *     - name
+ *     - type
  *     properties:
  *       name:
  *         type: string
  *         description: activity title
- *       parentKey:
+ *       type:
  *         type: string
- *         description: key to the parent activity, or null for root activities
- *       position:
+ *         description: activity type
+ *       parentId:
  *         type: integer
- *         description: position within the array of sibling activities. If not
- *                      set, the server will auto-generate correct position.
+ *         description: id of parent activity, null for root activities
+ *       position:
+ *         type: float
+ *         description: position within the array of sibling activities.
  *   ActivityReorderInput:
  *     type: object
  *     required:
@@ -33,26 +34,26 @@ const Promise = require('bluebird');
  *   ActivityOutput:
  *     type: object
  *     required:
- *     - _key
- *     - courseKey
- *     - parentKey
- *     - name
+ *     - id
+ *     - courseId
+ *     - parentId
+ *     - type
  *     - position
  *     properties:
- *       _key:
- *         type: string
+ *       id:
+ *         type: integer
  *         description: unique activity identifier
- *       courseKey:
- *         type: string
+ *       courseId:
+ *         type: integer
  *         description: id of the course containing this activity
- *       parentKey:
- *         type: string
- *         description: key to the parent activity, or null for root activities
+ *       parentId:
+ *         type: integer
+ *         description: id of parent activity, null for root activities
  *       name:
  *         type: string
  *         description: activity title
  *       position:
- *         type: integer
+ *         type: float
  *         description: position within the array of sibling activities
  */
 
@@ -95,7 +96,9 @@ module.exports = function (sequelize, DataTypes) {
       },
       remove() {
         return sequelize.transaction(t => {
-          return this.deleteTree().then(() => this.destroy()).then(() => this);
+          return this.deleteTree()
+            .then(() => this.destroy())
+            .then(() => this);
         });
       },
       deleteTree() {
@@ -112,20 +115,18 @@ module.exports = function (sequelize, DataTypes) {
             let newpos;
 
             if (!index) {
-              newpos = siblings[0].get('position') / 2;
+              newpos = siblings[0].position / 2;
             } else if (index + 1 === siblings.length) {
-              newpos = siblings[index].get('position') + 1;
+              newpos = siblings[index].position + 1;
             } else {
-              const currIndex = findIndex(siblings, it => it.id === this.id);
-              const inc = currIndex > index ? -1 : 1;
-              const prevPos = siblings[index].get('position');
-              const nextPos = siblings[index + inc].get('position');
-
+              const currentIndex = findIndex(siblings, it => it.id === this.id);
+              const direction = currentIndex > index ? -1 : 1;
+              const prevPos = siblings[index].position;
+              const nextPos = siblings[index + direction].position;
               newpos = (nextPos + prevPos) / 2;
             }
 
-            this.set('position', newpos);
-
+            this.position = newpos;
             return this.save();
           });
         });
