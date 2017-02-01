@@ -50,7 +50,12 @@ module.exports = function (sequelize, DataTypes) {
         Course.belongsToMany(models.User, { through: models.CourseUser });
       }
     },
-    underscored: true,
+    instanceMethods: {
+      getUser(user) {
+        return this.getUsers({ where: { id: user.id } })
+          .then(users => users[0]);
+      }
+    },
     freezeTableName: true
   });
 
