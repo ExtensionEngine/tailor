@@ -23,6 +23,11 @@ function index(req, res) {
   return promise.then(courses => res.json({ data: courses }));
 };
 
+function create(req, res) {
+  return Course.create(req.body, { isNewRecord: true, returning: true })
+    .then(course => res.json({ data: course }));
+}
+
 function getUsers(req, res) {
   return req.course.getUsers()
     .then(users => res.json({ data: map(users, transform) }));
@@ -58,6 +63,7 @@ const transform = user => {
 
 module.exports = {
   index,
+  create,
   getUsers,
   upsertUser,
   removeUser
