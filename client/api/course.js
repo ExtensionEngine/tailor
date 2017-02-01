@@ -1,30 +1,29 @@
 import request from './request';
 
 const url = {
-  users: courseKey => `/courses/${courseKey}/users`,
-  user: (courseKey, userKey) => `/courses/${courseKey}/users/${userKey}`
+  users: (courseId, userId = '') => `/courses/${courseId}/users/${userId}`
 };
 
-function getUsers(courseKey, params) {
+function getUsers(courseId, params) {
   return request
-    .get(url.users(courseKey), { params })
+    .get(url.users(courseId), { params })
     .then(res => res.data.data);
 };
 
-function addUser(courseKey, data) {
+function upsertUser(courseId, data) {
   return request
-    .post(url.users(courseKey), data)
-    .then(res => res.data.data);
+    .post(url.users(courseId), data)
+    .then(res => res.data.data.user);
 }
 
-function removeUser(courseKey, userKey) {
+function removeUser(courseId, userId) {
   return request
-    .delete(url.user(courseKey, userKey))
-    .then(res => res.data.data);
+    .delete(url.users(courseId, userId))
+    .then(res => res.data);
 }
 
 export default {
   getUsers,
-  addUser,
+  upsertUser,
   removeUser
 };
