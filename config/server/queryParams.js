@@ -4,7 +4,7 @@ module.exports = {
     limit: process.env.ITEMS_PER_PAGE || 20
   },
   sort: {
-    field: '_key',
+    field: 'id',
     order: {
       ASC: 'ASC',
       DESC: 'DESC'
