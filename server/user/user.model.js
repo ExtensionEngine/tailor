@@ -77,28 +77,36 @@ module.exports = function (sequelize, DataTypes) {
     classMethods: {
       associate(models) {
         User.belongsToMany(models.Course, { through: models.CourseUser });
+      },
+      invite(user) {
+        return User.create(user).then(user => {
+          mail.invite(user);
+          return user;
+        });
       }
     },
     instanceMethods: {
+      isAdmin() {
+        return this.role === role.ADMIN;
+      },
       authenticate(password) {
+        if (!this.password) return Promise.resolve(false);
         return bcrypt
           .compare(password, this.password)
-          .then(match => match ? this : null);
-      },
-      invite() {
-        return mail.invite(this).then(() => this);
+          .then(match => match ? this : false);
       },
       encrypt(val) {
         return bcrypt.hash(val, config.auth.saltRounds);
       },
       encryptPassword() {
+        if (!this.password) return Promise.resolve(false);
         return this
           .encrypt(this.password)
           .then(pw => (this.password = pw));
       },
       createToken() {
         const payload = { id: this.id, email: this.email };
-        return jwt.sign({ payload }, AUTH_SECRET, { expiresIn: '5 days' });
+        return jwt.sign(payload, AUTH_SECRET, { expiresIn: '5 days' });
       },
       sendResetToken() {
         this.token = this.createToken();
