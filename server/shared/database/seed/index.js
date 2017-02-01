@@ -1,9 +1,10 @@
 const Promise = require('bluebird');
-const range = require('lodash/range');
+const times = require('lodash/times');
 
 const courseData = require('./courses.json').data;
 const userData = require('./users.json').data;
-const { maxPos, maxLevel } = require('./activity.json').data;
+const ACTIVITY_LEVELS = 2;
+const ACTIVITIES_PER_LEVEL = 4;
 
 function initializeModel(Model, records) {
   const result = [];
@@ -11,44 +12,41 @@ function initializeModel(Model, records) {
   return Promise.all(result);
 }
 
-function insertActivities(Activity, course, result, level, parent) {
-  range(maxPos).forEach(pos => {
-    let name = level ? 'Sub' : 'Main';
-    let activity;
-
-    let promise = Activity.create({
-      name: `${name} activity ${pos}`,
-      position: pos + 1
-    }).then(data => {
-      let promises = [];
-      activity = data;
-
-      promises.push(course.addActivity(activity));
-      if (parent) promises.push(parent.addChild(activity));
-
-      return promises;
-    }).then(promises => {
-      let _level = level + 1;
-
-      if (_level <= maxLevel) insertActivities(Activity, course, result, _level, activity);
-    });
-
-    result.push(promise);
+function insertActivities(Model, course, level, parent) {
+  let activities = [];
+  times(ACTIVITIES_PER_LEVEL, position => {
+    position += 1;
+    const name = level ? 'Sub' : 'Main';
+    const attrs = { name: `${name} activity ${position}`, position };
+    activities.push(Model.create(attrs)
+      .then(activity => {
+        let io = [course.addActivity(activity)];
+        if (parent) io.push(parent.addChild(activity));
+        return Promise.all(io).then(() => activity);
+      })
+      .then(item => {
+        const nextLevel = level + 1;
+        const isLeaf = nextLevel === ACTIVITY_LEVELS;
+        return isLeaf ? item : insertActivities(Model, course, nextLevel, item);
+      }));
   });
+  return Promise.all(activities);
 }
 
 function insertAll(db) {
   let users = initializeModel(db.User, userData);
   let courses = initializeModel(db.Course, courseData);
+
   return Promise.join(users, courses).then(() => {
     let result = [];
     users = users.value();
     courses = courses.value();
 
     courses.forEach(course => {
-      insertActivities(db.Activity, course, result, 0, null);
+      result.push(insertActivities(db.Activity, course, 0, null));
       result.push(course.setUsers(users));
     });
+
     return Promise.all(result);
   });
 };
