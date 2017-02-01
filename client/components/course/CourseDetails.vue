@@ -6,8 +6,8 @@
           class="form-control"
           v-model="newCourseName"
           v-focus="true"
-          @blur="onNameInputBlur"
-          @keyup.enter="onNameInputBlur"
+          @blur="updateName"
+          @keyup.enter="updateName"
           @keyup.esc="showNameInput = false">
       </template>
       <template v-else>
@@ -23,7 +23,7 @@
           class="form-control"
           v-model="newCourseDescription"
           v-focus="true"
-          @blur="onDescriptionInputBlur"
+          @blur="updateDescription"
           @keyup.esc="showDescriptionInput = false">
         </textarea>
       </template>
@@ -59,38 +59,37 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['courses', 'isAdmin']),
     course() {
       return find(this.courses, c => c.id === this.$route.params.courseKey);
     },
     showRemoveButton() {
       return this.isAdmin;
-    },
-    ...mapGetters(['courses', 'isAdmin'])
+    }
   },
   methods: {
-    onNameInputBlur() {
+    ...mapActions(['remove', 'update'], 'courses'),
+    updateName() {
       if (this.showNameInput) {
         this.showNameInput = false;
         if (this.course.name !== this.newCourseName) {
           this.course.name = this.newCourseName;
-          this.update(this.course).then();
+          this.update(this.course);
         }
       }
     },
-    onDescriptionInputBlur() {
+    updateDescription() {
       if (this.showDescriptionInput) {
         this.showDescriptionInput = false;
         if (this.course.description !== this.newCourseDescription) {
           this.course.description = this.newCourseDescription;
-          this.update(this.course).then();
+          this.update(this.course);
         }
       }
     },
     removeCourse() {
       this.remove(this.course).then(() => this.$router.push('/'));
-    },
-    ...mapActions(['remove', 'update'], 'courses')
-
+    }
   },
   created() {
     this.newCourseName = this.course.name.slice(0);
