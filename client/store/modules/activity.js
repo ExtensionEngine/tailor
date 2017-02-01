@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VuexCollection from '../helpers/collection.js';
 
 const { action, build, getter, mutation } = new VuexCollection('activity');
@@ -18,15 +17,6 @@ action(function reorder({ activity, to }) {
 
 mutation(function activateCourse(courseKey) {
   this.url = `/courses/${courseKey}/activities`;
-});
-
-mutation(function save(model) {
-  // Update the state after local save, and after successful save on server.
-  Vue.set(this.state.items, model._cid, model);
-});
-
-mutation(function remove(result) {
-  result.forEach(it => Vue.delete(this.state.items, it._cid));
 });
 
 export default build();
