@@ -1,7 +1,7 @@
 import VuexCollection from '../helpers/collection.js';
 
 const { state, getter, action, mutation, build } = new VuexCollection('courses', '/courses');
-const PAGINATION_DEFAULTS = { next: 1, limit: 20 };
+const PAGINATION_DEFAULTS = { offset: 0, limit: 10 };
 
 state({
   search: '',
@@ -9,8 +9,9 @@ state({
     pagination: PAGINATION_DEFAULTS,
     sort: {
       order: 'DESC',
-      field: '_key'
-    }
+      field: 'updated_at'
+    },
+    allCoursesFetched: false
   }
 });
 
@@ -24,6 +25,7 @@ getter(function courseQueryParams() {
 
   return {
     search,
+    offset: pagination.offset,
     limit: pagination.limit,
     sortOrder: sort.order,
     sortBy: sort.field
@@ -31,15 +33,13 @@ getter(function courseQueryParams() {
 }, { global: true });
 
 getter(function hasMoreResults() {
-  return !!this.state.$internals.pagination.next;
+  return !this.state.$internals.allCoursesFetched;
 });
 
-action(function fetch(nextPage = false) {
-  let queryParams = this.getters.courseQueryParams;
-  if (nextPage) queryParams.page = this.state.$internals.pagination.next;
-
-  return this.api.get('', queryParams).then(response => {
-    const { data: courses, page: pagination } = response.data;
+action(function fetch() {
+  const params = this.getters.courseQueryParams;
+  return this.api.get('', params).then(response => {
+    const { data: courses } = response.data;
 
     let result = {};
     courses.forEach(it => {
@@ -47,8 +47,9 @@ action(function fetch(nextPage = false) {
       result[it._cid] = it;
     });
 
-    this.commit('setPagination', pagination);
-    this.commit(queryParams.search ? 'reset' : 'fetch', result);
+    this.commit('setPagination', { offset: params.offset + params.limit });
+    this.commit('allCoursesFetched', courses.length < params.limit);
+    this.commit(params.search ? 'reset' : 'fetch', result);
   });
 });
 
@@ -63,6 +64,10 @@ mutation(function setPagination(changes) {
 
 mutation(function setSearch(search) {
   this.state.search = search;
+});
+
+mutation(function allCoursesFetched(allFetched) {
+  this.state.$internals.allCoursesFetched = allFetched;
 });
 
 export default build();
