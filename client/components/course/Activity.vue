@@ -11,11 +11,7 @@
           <span class="badge" v-if="showBadge">{{ children.length }}</span>
         </span>
       </div>
-      <insert-activity
-        :parent="activity"
-        :level="level"
-        :siblings="children">
-      </insert-activity>
+      <insert-activity :parent="activity" :level="level"></insert-activity>
     </div>
     <transition name="fade" v-if="!isCollapsed && hasChildren">
       <draggable @update="reorder" :list="children">
