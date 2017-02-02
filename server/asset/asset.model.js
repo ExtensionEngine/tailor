@@ -8,11 +8,12 @@ const Serializer = require('sequelize-to-json');
  *   Asset:
  *     type: object
  *     required:
- *     - courseKey
- *     - activityKey
+ *     - courseId
+ *     - activityId
  *     - layoutWidth
  *     - position
  *     - type
+ *     - data
  *     properties:
  *       courseId:
  *         type: integer
@@ -33,17 +34,15 @@ const Serializer = require('sequelize-to-json');
  *         - TEXT
  *         - IMAGE
  *         - VIDEO
- *       content:
- *         type: string
- *         description: text content entered by user; required for TEXT assets
- *       url:
- *         type: string
- *         description: URL of image or video; required for IMAGE and VIDEO assets
+ *       data:
+ *         type: json
+ *         description: json structure with asset data; structure dependends
+ *                      on the asset type
  */
 
 module.exports = function(sequelize, DataTypes) {
   const Asset = sequelize.define('asset', {
-    layout_width: {
+    layoutWidth: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -89,7 +88,8 @@ module.exports = function(sequelize, DataTypes) {
       },
       findAllByActivity(activityId) {
         return this.findAll({
-          where: { activityId }
+          where: { activityId },
+          order: 'position ASC'
         });
       },
       serializeMany(data) {

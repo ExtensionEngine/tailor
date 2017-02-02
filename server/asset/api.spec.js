@@ -2,7 +2,7 @@
  * @swagger
  * /assets:
  *   get:
- *     summary: get all existing assets
+ *     summary: get all assets for current activity
  *     tags:
  *     - asset
  *     produces:
@@ -35,12 +35,10 @@
  *       schema:
  *         $ref: "#/definitions/Asset"
  *     responses:
- *       201:
+ *       200:
  *         description: newly-created asset
  *         schema:
  *           $ref: "#/definitions/Asset"
- *       400:
- *          description: request body contains invalid values
  * /assets/{assetId}:
  *   get:
  *     summary: get one specific asset
@@ -85,34 +83,6 @@
  *         description: updated asset
  *         schema:
  *           $ref: "#/definitions/Asset"
- *       404:
- *         description: asset with the given id does not exist
- *   put:
- *     summary: replace an existing asset with another one
- *     tags:
- *     - asset
- *     consumes:
- *     - application/json
- *     produces:
- *     - application/json
- *     parameters:
- *     - name: assetId
- *       in: path
- *       description: asset identifier
- *       required: true
- *       type: string
- *     - name: body
- *       in: body
- *       required: true
- *       schema:
- *         $ref: "#/definitions/Asset"
- *     responses:
- *       200:
- *         description: asset with changes applied
- *         schema:
- *           $ref: "#/definitions/Asset"
- *       400:
- *          description: request body contains invalid values
  *       404:
  *         description: asset with the given id does not exist
  *   delete:
