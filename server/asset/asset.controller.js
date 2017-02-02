@@ -5,9 +5,10 @@ const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
 
-function list({ query }, res) {
-  return Asset
-    .findAllByActivity(query.activityId)
+function list(req, res) {
+  // TODO: Temporary returns all course assets;
+  // switch to per activity
+  return req.course.getAssets()
     .then(assets => res.json({ data: assets }));
 }
 
@@ -18,10 +19,10 @@ function show({ params }, res) {
     .then(asset => res.json({ data: asset }));
 }
 
-function create({ body }, res) {
-  const fields = ['layoutWidth', 'position', 'type', 'data', 'courseId', 'activityId'];
-  return Asset
-    .create(pick(body, fields))
+function create({ body, params }, res) {
+  const attr = ['activityId', 'type', 'data', 'position', 'layoutWidth'];
+  const data = Object.assign(pick(body, attr), { courseId: params.courseId });
+  return Asset.create(data)
     .then(asset => res.json({ data: asset }));
 }
 
@@ -35,8 +36,7 @@ function patch({ body, params }, res) {
 function remove({ params }, res) {
   return Asset
     .deleteById(params.assetId)
-    .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
-    .then(asset => res.json({ data: asset }));
+    .then(() => res.end());
 }
 
 module.exports = {
