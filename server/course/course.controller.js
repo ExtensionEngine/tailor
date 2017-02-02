@@ -24,6 +24,10 @@ function index(req, res) {
   return promise.then(courses => res.json({ data: courses }));
 };
 
+function get(req, res) {
+  res.json({ data: req.course });
+}
+
 function patch(req, res) {
   const data = pick(req.body, ['name', 'description']);
   return req.course.update(data).then(course => {
@@ -71,6 +75,7 @@ const transform = user => {
 
 module.exports = {
   index,
+  get,
   patch,
   remove,
   getUsers,
