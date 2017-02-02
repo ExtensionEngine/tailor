@@ -1,87 +1,46 @@
 'use strict';
 
-const BaseController = require('../base.controller');
-const activityModel = require('./activity.model').model;
-const io = require('../shared/io');
-const locals = io.locals;
+const { Activity } = require('../shared/database/sequelize');
+const { createError } = require('../shared/error/helpers');
+const { NOT_FOUND } = require('http-status-codes');
+const pick = require('lodash/pick');
 
-class ActivityController extends BaseController {
-  constructor(model = activityModel, resourceKey = 'activityKey') {
-    super(model, resourceKey);
+function create({ body }, res) {
+  return Activity
+    .create(pick(body, ['name', 'parentId', 'courseId', 'position']))
+    .then(activity => res.json({ data: activity }));
+}
 
-    this.reorder = this.reorder.bind(this);
-  }
+function show({ params }, res) {
+  return Activity
+    .findById(params.activityId)
+    .then(activity => activity || createError(NOT_FOUND, 'Activity not found'))
+    .then(activity => res.json({ data: activity }));
+}
 
-  create(req, res, next) {
-    const courseKey = locals.load(req, 'course._key');
-    const activity = {
-      name: req.body.name,
-      type: req.body.type,
-      courseKey,
-      parentKey: req.body.parentKey,
-      position: req.body.position
-    };
-    this.model
-      .create(activity)
-      .then(data => {
-        io.setCreated(res, data);
-        next();
-      })
-      .catch(next);
-  }
+function list(req, res) {
+  return req.course.getActivities({ order: 'position ASC' })
+    .then(activities => res.json({ data: activities }));
+}
 
-  show(req, res, next) {
-    const courseKey = locals.load(req, 'course._key');
-    this.model
-      .getByKey(courseKey, req.params.activityKey)
-      .then(data => {
-        if (data) {
-          io.setOK(res, data);
-          return next();
-        }
+function remove({ params }, res) {
+  return Activity
+    .findById(params.activityId)
+    .then(activity => activity.remove())
+    .then(activity => res.json({ data: pick(activity, ['id']) }));
+}
 
-        // TODO(matej): if other model methods return empty results, add a new
-        // error class, make an instance, and pass it to next().
-        return res.status(404).json();
-      })
-      .catch(next);
-  }
-
-  list(req, res, next) {
-    const courseKey = locals.load(req, 'course._key');
-    this.model
-      .getMany(courseKey)
-      .then(data => {
-        io.setOK(res, data);
-        next();
-      })
-      .catch(next);
-  }
-
-  remove(req, res, next) {
-    const courseKey = locals.load(req, 'course._key');
-    this.model
-      .removeByKey(courseKey, req.params.activityKey)
-      .then(data => {
-        io.setOK(res, data);
-        next();
-      })
-      .catch(next);
-  }
-
-  reorder(req, res, next) {
-    const courseKey = locals.load(req, 'course._key');
-    this.model
-      .reorder(courseKey, req.params.activityKey, req.body.position)
-      .then(data => {
-        io.setOK(res, data);
-        next();
-      })
-      .catch(next);
-  }
+function reorder({ body, params }, res) {
+  return Activity
+    .findById(params.activityId)
+    .then(activity => activity.reorder(body.position))
+    .then(activity => res.json({ data: activity }));
 }
 
 module.exports = {
-  Controller: ActivityController,
-  controller: new ActivityController()
+  create,
+  show,
+  list,
+  remove,
+  reorder
 };

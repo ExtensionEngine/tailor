@@ -42,6 +42,8 @@
 
 <script>
 import { focus } from 'vue-focus';
+import filter from 'lodash/filter';
+import findIndex from 'lodash/findIndex';
 import { mapGetters, mapActions } from 'vuex-module';
 
 export default {
@@ -56,6 +58,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['activities']),
     ...mapGetters(['course'], 'editor'),
     canCreateSubsection() {
       return this.level < 3;
@@ -67,6 +70,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['save'], 'activity'),
     show() {
       this.showInput = true;
       this.focusInput = true;
@@ -77,20 +81,36 @@ export default {
     },
     add() {
       const isOnSameLevel = this.newActivityLevel === 0;
-      const position = isOnSameLevel ? this.parent.position + 1 : 0;
-      const parentKey = isOnSameLevel ? this.parent.parentKey : this.parent._key;
+      const parentId = isOnSameLevel ? this.parent.parentId : this.parent.id;
+      const courseId = this.parent.courseId;
 
-      const model = {
+      const children = filter(this.activities, it => {
+        return it.parentId === parentId && it.courseId === courseId;
+      }).sort((a, b) => a.position > b.position);
+
+      const previousIndex = findIndex(children, activity => {
+        return activity.position === this.parent.position;
+      });
+
+      let position;
+      if (!isOnSameLevel) {
+        position = 1;
+      } else if (previousIndex + 1 === children.length) {
+        position = children[previousIndex].position + 1;
+      } else {
+        const nextPosition = children[previousIndex + 1].position;
+        position = (this.parent.position + nextPosition) / 2;
+      }
+
+      this.save({
         name: this.activityName,
-        courseKey: this.course._key,
+        courseId,
         position,
-        parentKey
-      };
+        parentId
+      });
 
-      this.save(model);
       this.hide();
-    },
-    ...mapActions(['save'], 'activity')
+    }
   }
 };
 </script>
