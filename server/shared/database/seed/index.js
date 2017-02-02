@@ -1,6 +1,9 @@
 const Promise = require('bluebird');
 const times = require('lodash/times');
+const clone = require('lodash/clone');
+const flattenDeep = require('lodash/flattenDeep');
 
+const assessmentData = require('./assessments.json').data;
 const courseData = require('./courses.json').data;
 const userData = require('./users.json').data;
 const ACTIVITY_LEVELS = 3;
@@ -47,7 +50,14 @@ function insertAll(db) {
       result.push(course.setUsers(users));
     });
 
-    return Promise.all(result);
+    return Promise.all(result).then(stuff => {
+      const activities = flattenDeep(stuff.filter((_, i) => i % 2 === 0));
+      return Promise.all(activities.map(a => {
+        const data = clone(assessmentData);
+        data.forEach(d => { d.activityId = a.id; });
+        return initializeModel(db.Assessment, data);
+      }));
+    });
   });
 };
 
