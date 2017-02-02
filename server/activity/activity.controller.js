@@ -5,9 +5,10 @@ const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
 
-function create({ body }, res) {
+function create({ body, params }, res) {
+  const attrs = ['name', 'parentId', 'position'];
   return Activity
-    .create(pick(body, ['name', 'parentId', 'courseId', 'position']))
+    .create(Object.assign(pick(body, attrs), { courseId: params.courseId }))
     .then(activity => res.json({ data: activity }));
 }
 
