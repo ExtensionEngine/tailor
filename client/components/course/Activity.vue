@@ -94,7 +94,7 @@ export default {
       if (!this.isAtom) return;
       this.$router.push({
         name: 'editor',
-        params: { activityKey: this.activity._key }
+        params: { activityKey: this.activity.id }
       });
     },
     reorder({ newIndex }) {
