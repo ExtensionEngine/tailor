@@ -3,7 +3,7 @@ const times = require('lodash/times');
 
 const courseData = require('./courses.json').data;
 const userData = require('./users.json').data;
-const ACTIVITY_LEVELS = 2;
+const ACTIVITY_LEVELS = 3;
 const ACTIVITIES_PER_LEVEL = 4;
 
 function initializeModel(Model, records) {
