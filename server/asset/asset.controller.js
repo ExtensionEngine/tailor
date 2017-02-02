@@ -1,67 +1,48 @@
 'use strict';
 
-const BaseController = require('../shared/controller/base.controller');
 const { Asset } = require('../shared/database/sequelize');
-const io = require('../shared/io');
+const { createError } = require('../shared/error/helpers');
+const { NOT_FOUND } = require('http-status-codes');
+const pick = require('lodash/pick');
 
-class AssetController extends BaseController {
-  constructor(model = Asset, resourceKey = 'assetId') {
-    super(model, resourceKey);
-  }
+function list({ query }, res) {
+  return Asset
+    .findAllByActivity(query.activityId)
+    .then(activities => res.json({ data: Asset.serializeMany(activities) }));
+}
 
-  listFiltered(req, res, next) {
-    const activityId = io.locals.load(req, 'searchTerms').activityId || null;
-    return this.model
-      .findAllByActivity(activityId)
-      .then(data => {
-        io.setOK(res, this.model.serializeMany(data));
-        next();
-      })
-      .catch(next);
-  }
+function show({ params }, res) {
+  return Asset
+    .findById(params.assetId)
+    .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
+    .then(asset => res.json({ data: asset.serialize() }));
+}
 
-  show(req, res, next) {
-    return this.model
-      .findById(req.params.assetId)
-      .then(data => {
-        io.setOK(res, data.serialize());
-        next();
-      })
-      .catch(next);
-  }
+function create({ body }, res) {
+  const fields = ['layoutWidth', 'position', 'type', 'data', 'courseId', 'parentId'];
+  return Asset
+    .create(pick(body, fields))
+    .then(asset => res.json({ data: asset.serialize() }));
+}
 
-  create(req, res, next) {
-    this.model
-      .create(req.body)
-      .then(data => {
-        io.setCreated(res, data.serialize());
-        next();
-      })
-      .catch(next);
-  }
+function patch({ body, params }, res) {
+  return Asset
+    .updateById(params.assetId, body)
+    .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
+    .then(asset => res.json({ data: asset.serialize() }));
+}
 
-  patch(req, res, next) {
-    this.model
-      .updateById(req.params.assetId, req.body)
-      .then(data => {
-        io.setOK(res, data.serialize());
-        next();
-      })
-      .catch(next);
-  }
-
-  remove(req, res, next) {
-    this.model
-      .deleteById(req.params.assetId)
-      .then(data => {
-        io.setOK(res, data);
-        next();
-      })
-      .catch(next);
-  }
+function remove({ params }, res) {
+  return Asset
+    .deleteById(params.assetId)
+    .asset(asset => asset || createError(NOT_FOUND, 'Asset not found'))
+    .then(asset => res.json({ data: asset.serialize() }));
 }
 
 module.exports = {
-  Controller: AssetController,
-  controller: new AssetController()
+  list,
+  show,
+  create,
+  patch,
+  remove
 };
