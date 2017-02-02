@@ -5,6 +5,7 @@ const { Course, User } = require('../shared/database/sequelize');
 const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const params = require('../../config/server').queryParams;
+const pick = require('lodash/pick');
 
 function index(req, res) {
   const user = req.user;
@@ -21,6 +22,18 @@ function index(req, res) {
   const opts = { offset, limit, order, where };
   const promise = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return promise.then(courses => res.json({ data: courses }));
+};
+
+function patch(req, res) {
+  const data = pick(req.body, ['name', 'description']);
+  return req.course.update(data).then(course => {
+    res.json({ data: course });
+  });
+};
+
+function remove(req, res) {
+  return req.course.destroy()
+    .then(() => res.status(204).send());
 };
 
 function getUsers(req, res) {
@@ -58,6 +71,8 @@ const transform = user => {
 
 module.exports = {
   index,
+  patch,
+  remove,
   getUsers,
   upsertUser,
   removeUser
