@@ -23,6 +23,11 @@ export default function (collectionName, url = '') {
     }
   });
 
+  action(function get(id) {
+    return this.api.get(id)
+      .then(result => this.commit('save', result.data.data));
+  });
+
   action(function fetch(params = {}) {
     return this.api.fetch(params)
       .then(result => this.commit('fetch', result));

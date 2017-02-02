@@ -5,10 +5,6 @@
       <li :class="{ active: $route.name === 'course' }">
         <router-link :to="{ name: 'course' }">Outline</router-link>
       </li>
-      <!--
-      <li><a>Revision history</a></li>
-      <li><a>Comments</a></li>
-      -->
       <li v-if="showSettings"
         :class="{ active: $route.name === 'course-settings' }">
         <router-link :to="{ name: 'course-settings' }">Settings</router-link>
@@ -29,10 +25,12 @@ import { mapGetters, mapActions, mapMutations } from 'vuex-module';
 
 export default {
   methods: {
-    ...mapActions(['fetch'], 'activity'),
-    ...mapMutations(['activateCourse'], 'activity')
+    ...mapActions({ getCourse: 'get' }, 'courses'),
+    ...mapActions({ getActivities: 'fetch' }, 'activity'),
+    ...mapMutations({ setApiRoute: 'activateCourse' }, 'activity')
   },
   computed: {
+    ...mapGetters(['course'], 'editor'),
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
     showSettings() {
       return this.isAdmin || this.isCourseAdmin;
@@ -42,8 +40,10 @@ export default {
     }
   },
   created() {
-    this.activateCourse(this.$route.params.courseKey);
-    this.fetch();
+    const courseId = this.$route.params.courseKey;
+    this.setApiRoute(courseId);
+    if (!this.course) this.getCourse(courseId);
+    this.getActivities();
   }
 };
 </script>

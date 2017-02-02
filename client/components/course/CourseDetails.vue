@@ -46,7 +46,6 @@
 <script>
 import { focus } from 'vue-focus';
 import { mapGetters, mapActions } from 'vuex-module';
-import find from 'lodash/find';
 
 export default {
   directives: { focus },
@@ -59,10 +58,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['courses', 'isAdmin']),
-    course() {
-      return find(this.courses, c => c.id === this.$route.params.courseKey);
-    },
+    ...mapGetters(['isAdmin']),
+    ...mapGetters(['course'], 'editor'),
     showRemoveButton() {
       return this.isAdmin;
     }
