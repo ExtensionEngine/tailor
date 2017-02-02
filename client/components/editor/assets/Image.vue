@@ -61,7 +61,7 @@ export default {
       this.$refs.cropper.replace(this.image);
     },
     clear() {
-      this.$emit('save', { file: '' });
+      this.$emit('save', { url: '' });
     },
     reset() {
       this.image = this.original;
