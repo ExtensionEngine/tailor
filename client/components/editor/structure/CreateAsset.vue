@@ -38,7 +38,8 @@ export default {
         position: this.position,
         type: this.type,
         layoutWidth: this.width,
-        activityId: this.perspective.id
+        activityId: this.perspective.id,
+        data: {}
       });
       this.focusAsset(asset);
     },
