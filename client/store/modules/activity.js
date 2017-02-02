@@ -6,8 +6,9 @@ getter(function activities() {
   return this.state.items;
 }, { global: true });
 
-action(function reorder({ activity, to }) {
-  return this.api.post(`${activity.id}/reorder`, { position: to })
+action(function reorder({ activity, newIndex }) {
+  this.commit('save', activity);
+  return this.api.post(`${activity.id}/reorder`, { position: newIndex })
     .then(res => {
       let activity = res.data.data;
       this.api.setCid(activity);

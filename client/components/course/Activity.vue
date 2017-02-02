@@ -11,7 +11,11 @@
           <span class="badge" v-if="showBadge">{{ children.length }}</span>
         </span>
       </div>
-      <insert-activity :parent="activity" :level="level" :siblings="children"></insert-activity>
+      <insert-activity
+        :parent="activity"
+        :level="level"
+        :siblings="children">
+      </insert-activity>
     </div>
     <transition name="fade" v-if="!isCollapsed && hasChildren">
       <draggable @update="reorder" :list="children">
@@ -86,7 +90,6 @@ export default {
   methods: {
     ...mapMutations(['focusActivity'], 'editor'),
     ...mapActions({ reorderActivities: 'reorder' }, 'activity'),
-    ...mapMutations(['save'], 'activity'),
     select() {
       this.isCollapsed = !this.isCollapsed;
       this.focusActivity(this._cid);
@@ -98,24 +101,20 @@ export default {
         params: { activityKey: this.activity._key }
       });
     },
-    reorder({ newIndex: to, oldIndex: from }) {
-      const activity = this.children[to];
+    reorder({ newIndex }) {
+      const activity = this.children[newIndex];
+      const prev = this.children[newIndex - 1];
+      const next = this.children[newIndex + 1];
 
-      if (to === 0) {
+      if (newIndex === 0) {
         activity.position = this.children[1].position / 2;
+      } else if (newIndex + 1 === this.children.length) {
+        activity.position = prev.position + 1;
       } else {
-        const prev = this.children[to - 1];
-        const next = this.children[to + 1];
-
-        if (to + 1 === this.children.length) {
-          activity.position = prev.position + 1;
-        } else {
-          activity.position = (prev.position + next.position) / 2;
-        }
+        activity.position = (prev.position + next.position) / 2;
       }
 
-      this.save(activity);
-      this.reorderActivities({ activity, to });
+      this.reorderActivities({ activity, newIndex });
     }
   },
   components: {
