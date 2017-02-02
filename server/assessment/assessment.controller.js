@@ -1,6 +1,8 @@
 'use strict';
 
-const { Assessment } = require('../shared/database/sequelize');
+const { createError } = require('../shared/error/helpers');
+const { NOT_FOUND } = require('http-status-codes');
+const { Assessment, sequelize } = require('../shared/database/sequelize');
 const params = require('../../config/server').queryParams;
 
 function index(req, res) {
@@ -18,6 +20,20 @@ function index(req, res) {
   });
 }
 
+function remove(req, res) {
+  const q = 'DELETE FROM assessment USING activity ' +
+            'WHERE activity."courseId" = ? ' +
+            'AND assessment.id = ? ' +
+            'RETURNING *';
+  return sequelize.query(q, {
+      replacements: [req.params.courseId, req.params.assessmentId],
+      model: Assessment
+    }).then(assessments => assessments.length
+      ? res.send({ data: assessments[0] })
+      : createError(404, 'Not found'));
+}
+
 module.exports = {
-  index
+  index,
+  remove
 };
