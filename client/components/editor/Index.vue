@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex-module';
+import { mapGetters, mapActions, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import Perspectives from './structure/Perspectives';
 import Toolbar from './toolbar';
@@ -18,10 +18,13 @@ import Toolbar from './toolbar';
 export default {
   name: 'editor',
   computed: {
-    ...mapGetters(['activity'], 'editor'),
+    ...mapGetters(['course', 'activity'], 'editor'),
     ...mapGetters(['focusedAsset'], 'atom')
   },
   methods: {
+    ...mapActions({ getCourse: 'get' }, 'courses'),
+    ...mapActions({ getActivities: 'fetch' }, 'activity'),
+    ...mapMutations({ setApiRoute: 'activateCourse' }, 'activity'),
     clicked(e) {
       if (!this.focusedAsset) return;
       if (!e.component ||
@@ -31,6 +34,12 @@ export default {
       }
     },
     ...mapActions(['focusoutAsset'], 'atom')
+  },
+  created() {
+    const courseId = this.$route.params.courseKey;
+    this.setApiRoute(courseId);
+    if (!this.course) this.getCourse(courseId);
+    this.getActivities();
   },
   components: {
     Toolbar,

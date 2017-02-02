@@ -6,7 +6,7 @@ import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
 
 const { build, getter, action, mutation, state } = new VuexModule('editor');
-const EDITOR_ROUTES = ['course', 'editor'];
+const COURSE_ROUTE = /\/course\/\d+/;
 
 state({
   activity: undefined,
@@ -16,7 +16,7 @@ state({
 getter(function course() {
   const { route } = this.rootState;
   const { courses } = this.rootGetters;
-  if (EDITOR_ROUTES.indexOf(route.name) < 0) return;
+  if (!route.fullPath.match(COURSE_ROUTE)) return;
   const id = Number(route.params.courseKey);
   return find(courses, { id });
 });
