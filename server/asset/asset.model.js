@@ -1,7 +1,5 @@
 'use strict';
 
-const Serializer = require('sequelize-to-json');
-
 /**
  * @swagger
  * definitions:
@@ -91,18 +89,6 @@ module.exports = function(sequelize, DataTypes) {
           where: { activityId },
           order: 'position ASC'
         });
-      },
-      serializeMany(data) {
-        // Helper method used for converting query result in JSON.
-        // Invoked directly on query results.
-        return Serializer.serializeMany(data, this);
-      }
-    },
-    instanceMethods: {
-      serialize() {
-        // Helper method used for converting query result in JSON.
-        // Invoked directly on query results.
-        return (new Serializer(this.Model)).serialize(this);
       }
     },
     freezeTableName: true
