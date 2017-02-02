@@ -1,7 +1,7 @@
 <template>
   <div class="image-toolbar">
     <div class="col-md-4">
-      <ul v-show="isUploaded" class="menu">
+      <ul v-show="isSaved" class="menu">
         <li class="menu-item">
           <div class="dropdown">
             <button
@@ -15,13 +15,13 @@
                 <span class="fa fa-caret-down"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="image-file">
-              <li><a @click="emitAction(action.clear)" type="button">Clear</a></li>
-              <li><a @click="emitAction(action.reset)" type="button">Reset</a></li>
+              <li><a @click="emitAction(event.clear)" type="button">Clear</a></li>
+              <li><a @click="emitAction(event.reset)" type="button">Reset</a></li>
             </ul>
           </div>
         </li>
         <li class="menu-item">
-          <button @click="emitAction(action.crop)" class="btn btn-link btn-menu" title="Crop">
+          <button @click="emitAction(event.crop)" class="btn btn-link btn-menu" title="Crop">
             <span class="fa fa-crop"></span>
           </button>
         </li>
@@ -29,7 +29,7 @@
     </div>
 
     <div class="col-md-4">
-      <div v-show="!isUploaded" class="file-upload">
+      <div v-show="!isSaved" class="file-upload">
         <div class="col-md-2 file-input">
           <label>
             <input @change="input" type="file" />
@@ -58,26 +58,25 @@ export default {
     };
   },
   computed: {
-    action() {
+    event() {
       // Namespace event names
-      const events = ['clear', 'crop', 'reset', 'upload'];
-      const namespaceEvent = name => `${name}/${this.asset._cid}`;
-      return zipObject(events, map(events, e => namespaceEvent(e)));
+      const names = ['clear', 'crop', 'reset', 'upload'];
+      const namespace = name => `${name}/${this.asset._cid}`;
+      return zipObject(names, map(names, e => namespace(e)));
     },
     errorClass() {
       return { 'has-error': this.error };
     },
-    isUploaded() {
-      return this.asset.url && !isEmpty(this.asset.url);
+    isSaved() {
+      return !isEmpty(this.asset.url);
     }
   },
   methods: {
     input(event) {
-      const input = event.target;
-      const file = !isEmpty(input.files) ? input.files[0] : null;
+      const file = !isEmpty(event.target.files) ? event.target.files[0] : null;
       const image = file && file.type.match('image.*') ? file : null;
 
-      this.error = this.validate(file, image);
+      this.error = this.validate(image);
       if (!this.error) this.save(image);
     },
     save(image) {
@@ -85,16 +84,13 @@ export default {
       const reader = new window.FileReader();
       reader.onload = (e) => {
         const url = e.target.result;
-        actions.$emit(this.action.upload, url);
+        actions.$emit(this.event.upload, url);
       };
       reader.readAsDataURL(image);
     },
-    validate(file, image) {
-      const noFileMessage = 'Please upload a file';
-      const wrongFileTypeMessage = 'Please upload an image file';
-
-      if (!file) return noFileMessage;
-      else if (!image) return wrongFileTypeMessage;
+    validate(image) {
+      const errorMessage = 'Please upload an image file';
+      return !image ? errorMessage : null;
     },
     emitAction(name) {
       actions.$emit(name);
