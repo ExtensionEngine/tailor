@@ -97,20 +97,19 @@ export default {
         params: { activityKey: this.activity.id }
       });
     },
-    reorder({ newIndex }) {
-      const activity = this.children[newIndex];
-      const prev = this.children[newIndex - 1];
-      const next = this.children[newIndex + 1];
+    reorder({ newIndex: index }) {
+      const activity = this.children[index];
+      const positionData = {
+        index,
+        prev: this.children[index - 1],
+        next: this.children[index + 1],
+        first: this.children[1],
+        count: this.children.length,
+        sameLevel: true,
+        reorder: true
+      };
 
-      if (newIndex === 0) {
-        activity.position = this.children[1].position / 2;
-      } else if (newIndex + 1 === this.children.length) {
-        activity.position = prev.position + 1;
-      } else {
-        activity.position = (prev.position + next.position) / 2;
-      }
-
-      this.reorderActivities({ activity, newIndex });
+      this.reorderActivities({ activity, positionData, index });
     }
   },
   components: {
