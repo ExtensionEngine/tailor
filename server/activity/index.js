@@ -1,46 +1,22 @@
 'use strict';
 
-const express = require('express');
-const controller = require('./activity.controller').controller;
-const io = require('../shared/io');
-const model = require('./activity.model').model;
+const ctrl = require('./activity.controller');
+const model = require('./activity.model');
+const router = require('express-promise-router')();
 
-const router = express.Router();
-const input = io.input();
-const output = io.output();
+router
+  .route('/courses/:courseId/activities')
+  .get(ctrl.list)
+  .post(ctrl.create);
 
-router.get('/courses/:courseId/activities',
-  input,
-  controller.list,
-  output);
+router
+  .route('/courses/:courseId/activities/:activityId')
+  .get(ctrl.show)
+  .delete(ctrl.remove);
 
-router.post('/courses/:courseId/activities',
-  input,
-  controller.create,
-  output);
-
-router.get('/courses/:courseId/activities/:activityKey',
-  input,
-  controller.show,
-  output);
-
-router.patch('/courses/:courseId/activities/:activityKey',
-  input,
-  controller.patch,
-  output);
-
-router.delete('/courses/:courseId/activities/:activityKey',
-  input,
-  controller.remove,
-  output);
-
-router.post('/courses/:courseId/activities/:activityKey/actions/reorder',
-  input,
-  controller.reorder,
-  output);
+router.post('/courses/:courseId/activities/:activityId/reorder', ctrl.reorder);
 
 module.exports = {
-  controller,
   model,
   router
 };

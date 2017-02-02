@@ -6,6 +6,7 @@ const sequelize = new Sequelize(process.env.POSTGRES_URI);
 let db = { Sequelize, sequelize };
 
 const models = {
+  Activity: '../../activity/activity.model',
   Course: '../../course/course.model',
   CourseUser: '../../course/courseUser.model',
   User: '../../user/user.model'

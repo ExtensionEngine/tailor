@@ -20,7 +20,7 @@ export default {
   computed: {
     ...mapGetters(['assets']),
     perspectiveAssets() {
-      return filter(this.assets, { activityKey: this.perspective._key });
+      return filter(this.assets, { activityId: this.perspective.id });
     }
   },
   components: {

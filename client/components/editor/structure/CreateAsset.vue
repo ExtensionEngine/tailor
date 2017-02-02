@@ -37,7 +37,7 @@ export default {
       let asset = this.save({
         type: this.type,
         width: this.width,
-        activityKey: this.perspective._key
+        activityId: this.perspective.id
       });
       this.focusAsset(asset);
     },
