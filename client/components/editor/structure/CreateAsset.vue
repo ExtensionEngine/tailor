@@ -36,7 +36,7 @@ export default {
     create() {
       let asset = this.save({
         type: this.type,
-        width: this.width,
+        layoutWidth: this.width,
         activityId: this.perspective.id
       });
       this.focusAsset(asset);

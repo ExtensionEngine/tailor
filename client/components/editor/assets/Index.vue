@@ -27,7 +27,7 @@ export default {
   computed: {
     ...mapGetters(['focusedAsset'], 'atom'),
     columnWidth() {
-      return `col-xs-${this.asset.width}`;
+      return `col-xs-${this.asset.layoutWidth}`;
     },
     isFocused() {
       return this.focusedAsset && (this.focusedAsset._cid === this.asset._cid);
