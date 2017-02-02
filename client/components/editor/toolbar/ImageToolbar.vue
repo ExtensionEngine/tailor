@@ -32,7 +32,7 @@
       <div v-show="!isUploaded" class="file-upload">
         <div class="col-md-2 file-input">
           <label>
-            <input @change="saveImage" type="file" />
+            <input @change="input" type="file" />
             <span class="fa fa-upload fa-2x"></span>
           </label>
         </div>
@@ -72,29 +72,29 @@ export default {
     }
   },
   methods: {
-    saveImage(event) {
-      this.error = null;
-      const noFileMessage = 'Please upload a file';
-      const wrongFileTypeMessage = 'Please upload an image file';
-
-      // Validation
+    input(event) {
       const input = event.target;
       const file = !isEmpty(input.files) ? input.files[0] : null;
       const image = file && file.type.match('image.*') ? file : null;
 
-      // Set error message if validation fails
-      if (!file) this.error = noFileMessage;
-      else if (!image) this.error = wrongFileTypeMessage;
+      this.error = this.validate(file, image);
+      if (!this.error) this.save(image);
+    },
+    save(image) {
+      // Convert to base64
+      const reader = new window.FileReader();
+      reader.onload = (e) => {
+        const url = e.target.result;
+        actions.$emit(this.action.upload, url);
+      };
+      reader.readAsDataURL(image);
+    },
+    validate(file, image) {
+      const noFileMessage = 'Please upload a file';
+      const wrongFileTypeMessage = 'Please upload an image file';
 
-      // Create image file and pass it to the Image component
-      if (!this.error) {
-        const reader = new window.FileReader();
-        reader.onload = (e) => {
-          const url = e.target.result;
-          actions.$emit(this.action.upload, url);
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
+      if (!file) return noFileMessage;
+      else if (!image) return wrongFileTypeMessage;
     },
     emitAction(name) {
       actions.$emit(name);
