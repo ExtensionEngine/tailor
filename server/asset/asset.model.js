@@ -1,9 +1,6 @@
 'use strict';
 
 const Serializer = require('sequelize-to-json');
-const database = require('../shared/database');
-
-const ASSET_COLLECTION = database.collection.ASSET;
 
 /**
  * @swagger
@@ -45,7 +42,7 @@ const ASSET_COLLECTION = database.collection.ASSET;
  */
 
 module.exports = function(sequelize, DataTypes) {
-  const Asset = sequelize.define(ASSET_COLLECTION, {
+  const Asset = sequelize.define('asset', {
     layout_width: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -64,16 +61,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.JSON,
       allowNull: false,
       validate: { notEmpty: true }
-    },
-    // TODO(marko): Temp solution.
-    activityId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
     }
   }, {
     classMethods: {
       associate(models) {
-        // Asset.belongsTo(models.Activity);
+        Asset.belongsTo(models.Activity);
         Asset.belongsTo(models.Course);
       },
       deleteById(id) {
