@@ -80,8 +80,9 @@ module.exports = function (sequelize, DataTypes) {
       },
       invite(user) {
         return User.create(user).then(user => {
+          user.token = user.createToken();
           mail.invite(user);
-          return user;
+          return user.save();
         });
       }
     },
@@ -110,7 +111,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       sendResetToken() {
         this.token = this.createToken();
-        this.invite();
+        mail.resetPassword(this);
         return this.save();
       }
     },
