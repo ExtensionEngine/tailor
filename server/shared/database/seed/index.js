@@ -1,7 +1,6 @@
 const Promise = require('bluebird');
 const times = require('lodash/times');
 
-const assetData = require('./assets.json').data;
 const courseData = require('./courses.json').data;
 const userData = require('./users.json').data;
 const ACTIVITY_LEVELS = 3;
@@ -35,7 +34,6 @@ function insertActivities(Model, course, level, parent) {
 }
 
 function insertAll(db) {
-  let assets = initializeModel(db.Asset, assetData);
   let users = initializeModel(db.User, userData);
   let courses = initializeModel(db.Course, courseData);
 
@@ -49,7 +47,7 @@ function insertAll(db) {
       result.push(course.setUsers(users));
     });
 
-    return Promise.all(result, assets);
+    return Promise.all(result);
   });
 };
 
