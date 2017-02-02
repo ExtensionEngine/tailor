@@ -17,10 +17,16 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate(models) {
-        Assessment.belongsTo(models.Activity);
-      },
-    freezeTableName: true,
-    underscored: true
+        Assessment.belongsTo(models.Activity, {
+          foreignKey: {
+            name: 'activityId',
+            allowNull: false
+          },
+          onDelete: 'CASCADE'
+        });
+      }
+    },
+    freezeTableName: true
   });
 
   return Assessment;
