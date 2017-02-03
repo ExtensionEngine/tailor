@@ -8,8 +8,8 @@
         <h4 class="modal-title">Create course</h4>
       </div>
       <div slot="modal-body" class="modal-body">
-        <cube-grid v-show="loader"></cube-grid>
-        <div v-show="!loader">
+        <loader v-show="showLoader"></loader>
+        <div v-show="!showLoader">
           <div class="form-group" :class="getErrorClass('name')">
             <input v-model="name" type="text" class="form-control" placeholder="Name"/>
             <div v-show="hasError('name')" class="error-message">
@@ -37,12 +37,12 @@
 </template>
 
 <script>
+import { isEmpty } from 'lodash';
+import Loader from '../common/Loader';
 import { mapActions, mapGetters } from 'vuex-module';
 import { modal } from 'vue-strap';
-import { isEmpty } from 'lodash';
-import yup from 'yup';
 import Promise from 'bluebird';
-import CubeGrid from '../loaders/CubeGrid';
+import yup from 'yup';
 
 const bounds = {
   name: { min: 2, max: 250 },
@@ -66,26 +66,25 @@ export default {
     return {
       name: '',
       description: '',
-      loader: false,
+      showLoader: false,
       showModal: false,
       errors: this.getDefaultErrors()
     };
   },
   components: {
     modal,
-    CubeGrid
+    Loader
   },
   methods: {
     ...mapActions(['save'], 'courses'),
     create() {
       const course = { name: this.name, description: this.description };
       const save = course => {
-        this.loader = true;
-        return Promise.join(this.save(course), Promise.delay(1000))
-          .then(() => {
-            this.loader = false;
-            this.hide();
-          });
+        this.showLoader = true;
+        return Promise.join(this.save(course), Promise.delay(1000)).then(() => {
+          this.showLoader = false;
+          this.hide();
+        });
       };
 
       this.errors = this.getDefaultErrors();
