@@ -27,15 +27,16 @@ function create({ body, params }, res) {
 }
 
 function patch({ body, params }, res) {
-  return Asset
-    .updateById(params.assetId, body)
+  return Asset.findById(params.assetId)
     .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
+    .then(asset => asset.update(body))
     .then(asset => res.json({ data: asset }));
 }
 
 function remove({ params }, res) {
-  return Asset
-    .deleteById(params.assetId)
+  return Asset.findById(params.assetId)
+    .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
+    .then(asset => asset.destroy())
     .then(() => res.end());
 }
 

@@ -38,57 +38,30 @@
  *                      on the asset type
  */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   const Asset = sequelize.define('asset', {
-    layoutWidth: {
-      type: DataTypes.INTEGER,
+    type: {
+      type: DataTypes.ENUM,
+      values: ['TEXT', 'IMAGE', 'VIDEO', 'GOMO'],
       allowNull: false
+    },
+    data: {
+      type: DataTypes.JSON
     },
     position: {
       type: DataTypes.FLOAT,
       allowNull: false,
-      validate: { min: 1, max: 12 }
+      validate: { min: 1, max: 1000000 }
     },
-    type: {
-      type: DataTypes.ENUM,
-      values: ['TEXT', 'IMAGE', 'VIDEO'],
+    layoutWidth: {
+      type: DataTypes.INTEGER,
       allowNull: false
-    },
-    data: {
-      type: DataTypes.JSON,
-      allowNull: false,
-      validate: { notEmpty: true }
     }
   }, {
     classMethods: {
       associate(models) {
         Asset.belongsTo(models.Activity);
         Asset.belongsTo(models.Course);
-      },
-      deleteById(id) {
-        // Wrap instance delete method into class method
-        // for easier chaining.
-        return this
-        .findById(id)
-        .then(result => {
-          if (result) result.destroy();
-          return result;
-        });
-      },
-      updateById(id, updates) {
-        // Wrap instance delete method into class method
-        // for easier chaining.
-        return this
-        .findById(id)
-        .then(result => {
-          return result.update(updates);
-        });
-      },
-      findAllByActivity(activityId) {
-        return this.findAll({
-          where: { activityId },
-          order: 'position ASC'
-        });
       }
     },
     freezeTableName: true
