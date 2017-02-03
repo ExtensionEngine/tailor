@@ -174,5 +174,9 @@ export default {
     font-weight: 600;
     text-align: left;
   }
+
+  .loader {
+    margin: 50px 0;
+  }
 }
 </style>
