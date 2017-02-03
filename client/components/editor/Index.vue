@@ -50,13 +50,14 @@ export default {
   created() {
     // TODO: Do this better!
     const courseId = this.$route.params.courseKey;
+    const parentId = this.$route.params.activityKey;
     const baseUrl = `/courses/${courseId}`;
     this.setupActivityApi(`${baseUrl}/activities`);
     this.setupAssetsApi(`${baseUrl}/assets`);
     if (!this.course) this.getCourse(courseId);
 
     Promise
-      .join(this.getAssets(), this.getActivities(), Promise.delay(500))
+      .join(this.getAssets({ parentId }), this.getActivities(), Promise.delay(500))
       .then(() => (this.showLoader = false));
   },
   components: {
