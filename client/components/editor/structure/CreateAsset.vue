@@ -35,12 +35,13 @@ export default {
     ...mapMutations(['focusAsset'], 'atom'),
     create() {
       let asset = this.save({
-        position: this.position,
-        type: this.type,
-        layoutWidth: this.width,
         activityId: this.perspective.id,
-        data: {}
+        type: this.type,
+        data: {},
+        position: this.position,
+        layoutWidth: this.width
       });
+
       this.focusAsset(asset);
     },
     setWidth(width) {

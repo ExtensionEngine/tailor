@@ -3,12 +3,15 @@
     <draggable class="row">
       <asset v-for="asset in perspectiveAssets" :asset="asset"></asset>
     </draggable>
-    <create-asset :perspective="perspective" :position="nextPosition"></create-asset>
+    <create-asset
+      :perspective="perspective"
+      :position="perspectiveAssets.length + 1">
+    </create-asset>
   </div>
 </template>
 
 <script>
-import { filter, map, max } from 'lodash';
+import { filter } from 'lodash';
 import { mapGetters } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import Asset from '../assets';
@@ -21,14 +24,7 @@ export default {
     ...mapGetters(['assets']),
     perspectiveAssets() {
       return filter(this.assets, { activityId: this.perspective.id });
-    },
-    nextPosition() {
-      const position = max(map(this.perspectiveAssets, a => a.position));
-      return position + 1 || 1;
     }
-  },
-  created() {
-    this.nextPosition;
   },
   components: {
     Draggable,
