@@ -57,6 +57,9 @@ export default {
 
 <style lang="scss">
 .editor {
+  // Force scroll
+  min-height: 101%;
+
   h2 {
     margin: 80px 0 30px 0;
     font-size: 20px;
