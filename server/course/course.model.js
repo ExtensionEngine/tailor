@@ -56,6 +56,10 @@ module.exports = function (sequelize, DataTypes) {
       getUser(user) {
         return this.getUsers({ where: { id: user.id } })
           .then(users => users[0]);
+      },
+      hasActivity(activityId) {
+        return this.getActivities()
+          .then(activities => activities.map(a => a.id).includes(activityId));
       }
     },
     freezeTableName: true
