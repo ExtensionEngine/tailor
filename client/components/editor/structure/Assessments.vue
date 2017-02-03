@@ -19,54 +19,27 @@
 import cuid from 'cuid';
 import AssessmentItem from './AssessmentItem';
 import SelectAssessment from './SelectAssessment';
+import { mapActions, mapMutations, mapGetters } from 'vuex-module';
 
 export default {
   name: 'assessments',
   data() {
     return {
       selected: [],
-      assessments: {
-        '123': {
-          _cid: '123',
-          type: 'MC',
-          question: 'What are two biggest cities in Croatia ?',
-          answers: ['Zagreb', 'Split', 'Rijeka'],
-          correct: [0, 1],
-          hint: ''
-        },
-        '423': {
-          _cid: '423',
-          type: 'SC',
-          question: 'What is the biggest city in USA ?',
-          answers: ['NY', 'Los Angeles'],
-          correct: '0',
-          hint: ''
-        },
-        '424': {
-          _cid: '424',
-          type: 'TF',
-          question: 'The biggest city in the UK is London ?',
-          correct: 'True',
-          hint: ''
-        },
-        '425': {
-          _cid: '425',
-          type: 'NR',
-          question: 'What is the value of pi (two decimals) ?',
-          correct: '3.14',
-          hint: ''
-        },
-        '426': {
-          _cid: '426',
-          type: 'TR',
-          question: 'Name three countries',
-          correct: 'USA, Canada, Croatia',
-          hint: ''
-        }
-      }
+      assessments: {}
     };
   },
+  created() {
+    const courseId = this.$route.params.courseKey;
+    const activityId = this.$route.params.activityKey;
+    this.setupAssessmentApi(`/courses/${courseId}/assessments`);
+    this.fetch({ activityId })
+      .then(() => { this.assessments = this.getAssessments(); });
+  },
   methods: {
+    ...mapGetters({ getAssessments: 'assessments' }),
+    ...mapActions(['fetch'], 'assessments'),
+    ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
     add(type) {
       const _cid = cuid();
       this.assessments[_cid] = { _cid, type };
