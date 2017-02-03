@@ -3,7 +3,8 @@ const genericErrorProcessor = require('./generic');
 const defaultProcessors = [
   require('./auth'),
   require('./validation'),
-  require('./arango')
+  require('./arango'),
+  require('./bodyParser')
 ];
 
 function errorHandler(processors = defaultProcessors) {

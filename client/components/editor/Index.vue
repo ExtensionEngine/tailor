@@ -24,7 +24,9 @@ export default {
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activity'),
-    ...mapMutations({ setApiRoute: 'activateCourse' }, 'activity'),
+    ...mapActions({ getAssets: 'fetch' }, 'assets'),
+    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity'),
+    ...mapMutations({ setupAssetsApi: 'setBaseUrl' }, 'assets'),
     clicked(e) {
       if (!this.focusedAsset) return;
       if (!e.component ||
@@ -37,8 +39,12 @@ export default {
   },
   created() {
     const courseId = this.$route.params.courseKey;
-    this.setApiRoute(courseId);
+    // TODO: Do this better!
+    const baseUrl = `/courses/${courseId}`;
+    this.setupActivityApi(`${baseUrl}/activities`);
+    this.setupAssetsApi(`${baseUrl}/assets`);
     if (!this.course) this.getCourse(courseId);
+    this.getAssets();
     this.getActivities();
   },
   components: {

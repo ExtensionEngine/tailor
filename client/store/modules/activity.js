@@ -1,7 +1,7 @@
 import VuexCollection from '../helpers/collection.js';
 import { updatePosition } from '../../utils/activity.js';
 
-const { action, build, getter, mutation } = new VuexCollection('activity');
+const { action, build, getter } = new VuexCollection('activity');
 
 getter(function activities() {
   return this.state.items;
@@ -16,10 +16,6 @@ action(function reorder({ activity, positionData, index }) {
       this.api.setCid(activity);
       this.commit('save', activity);
     });
-});
-
-mutation(function activateCourse(courseKey) {
-  this.url = `/courses/${courseKey}/activities`;
 });
 
 export default build();

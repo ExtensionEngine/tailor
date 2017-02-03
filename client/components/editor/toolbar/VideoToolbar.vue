@@ -1,7 +1,7 @@
 <template>
   <div class="video-toolbar">
     <input
-      v-model="src"
+      v-model="url"
       :disabled="!edit"
       type="text"
       class="form-control"
@@ -32,16 +32,16 @@ export default {
   props: ['asset', 'isFocused'],
   data() {
     return {
-      edit: !this.asset.src,
-      src: '',
+      edit: !this.asset.data.url,
+      url: '',
       ...cloneDeep(this.asset)
     };
   },
   methods: {
-    ...mapActions({ saveAsset: 'save' }, 'assets'),
+    ...mapActions({ updateAsset: 'update' }, 'assets'),
     save() {
       this.edit = false;
-      this.saveAsset({ ...this.asset, src: this.src });
+      this.updateAsset({ ...this.asset, data: { url: this.url } });
     }
   }
 };

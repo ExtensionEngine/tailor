@@ -78,7 +78,7 @@ module.exports = function (sequelize, DataTypes) {
         Activity.belongsTo(models.Course);
         Activity.belongsTo(Activity, { as: 'parent', foreignKey: 'parentId' });
         Activity.hasMany(Activity, { as: 'children', foreignKey: 'parentId' });
-        // Activity.hasMany(models.Asset);
+        Activity.hasMany(models.Asset);
         // Activity.hasMany(models.Assesment);
       }
     },
