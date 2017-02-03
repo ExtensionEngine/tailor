@@ -19,6 +19,14 @@ function show({ params }, res) {
     .then(activity => res.json({ data: activity }));
 }
 
+function patch({ params, body }, res) {
+  return Activity
+    .findById(params.activityId)
+    .then(activity => activity || createError(NOT_FOUND, 'Activity not found'))
+    .then(activity => activity.update(body))
+    .then(activity => res.json({ data: activity }));
+}
+
 function list(req, res) {
   return req.course.getActivities({ order: 'position ASC' })
     .then(activities => res.json({ data: activities }));
@@ -42,6 +50,7 @@ module.exports = {
   create,
   show,
   list,
+  patch,
   remove,
   reorder
 };
