@@ -5,6 +5,7 @@ const { Course, User } = require('../shared/database/sequelize');
 const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const params = require('../../config/server').queryParams;
+const pick = require('lodash/pick');
 
 function index(req, res) {
   const user = req.user;
@@ -27,6 +28,22 @@ function create(req, res) {
   return Course.create(req.body, { isNewRecord: true, returning: true })
     .then(course => res.json({ data: course }));
 }
+
+function get(req, res) {
+  res.json({ data: req.course });
+}
+
+function patch(req, res) {
+  const data = pick(req.body, ['name', 'description']);
+  return req.course.update(data).then(course => {
+    res.json({ data: course });
+  });
+};
+
+function remove(req, res) {
+  return req.course.destroy()
+    .then(() => res.status(204).send());
+};
 
 function getUsers(req, res) {
   return req.course.getUsers()
@@ -64,6 +81,9 @@ const transform = user => {
 module.exports = {
   index,
   create,
+  get,
+  patch,
+  remove,
   getUsers,
   upsertUser,
   removeUser

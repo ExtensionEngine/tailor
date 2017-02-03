@@ -9,7 +9,7 @@ state({
     pagination: PAGINATION_DEFAULTS,
     sort: {
       order: 'DESC',
-      field: 'updated_at'
+      field: 'updatedAt'
     },
     allCoursesFetched: false
   }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!isFocused && !content">
+    <div v-if="!isFocused && !data.content">
       <div class="well text-placeholder">
         <div class="message">
           <span class="heading">Text placeholder</span>
@@ -11,12 +11,12 @@
     <div v-else>
       <quill-editor
         v-if="isFocused"
-        v-model="content"
+        v-model="data.content"
         :config="config">
       </quill-editor>
       <div
         v-else
-        v-html="content"
+        v-html="data.content"
         class="ql-editor">
       </div>
     </div>
@@ -29,7 +29,9 @@ import { quillEditor } from 'vue-quill-editor';
 
 const defaultAsset = {
   type: 'text',
-  content: ''
+  data: {
+    content: ''
+  }
 };
 
 export default {
@@ -45,7 +47,7 @@ export default {
   computed: {
     localAsset() {
       return {
-        content: this.content
+        content: this.data.content
       };
     }
   },

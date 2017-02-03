@@ -3,12 +3,15 @@
     <draggable class="row">
       <asset v-for="asset in perspectiveAssets" :asset="asset"></asset>
     </draggable>
-    <create-asset :perspective="perspective"></create-asset>
+    <create-asset
+      :perspective="perspective"
+      :position="perspectiveAssets.length + 1">
+    </create-asset>
   </div>
 </template>
 
 <script>
-import filter from 'lodash/filter';
+import { filter } from 'lodash';
 import { mapGetters } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import Asset from '../assets';
@@ -20,7 +23,7 @@ export default {
   computed: {
     ...mapGetters(['assets']),
     perspectiveAssets() {
-      return filter(this.assets, { activityKey: this.perspective._key });
+      return filter(this.assets, { activityId: this.perspective.id });
     }
   },
   components: {

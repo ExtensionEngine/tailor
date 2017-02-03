@@ -1,6 +1,6 @@
 <template>
   <div class="row course-list">
-    <cube-spinner v-if="showLoader"></cube-spinner>
+    <loader v-if="showLoader"></loader>
     <div
       v-else
       v-for="course in courses"
@@ -10,7 +10,7 @@
     </div>
 
     <div class="col-lg-12 loader-wrapper">
-      <cube-spinner v-show="paginate"></cube-spinner>
+      <loader v-show="paginate"></loader>
       <div
         v-infinite-scroll="loadMore"
         infinite-scroll-disabled="paginate"
@@ -24,7 +24,7 @@
 import { mapActions, mapGetters } from 'vuex-module';
 import InfiniteScroll from 'vue-infinite-scroll';
 import Card from './Card';
-import CubeSpinner from '../loaders/CubeSpinner';
+import Loader from '../common/Loader';
 
 export default {
   name: 'course-list',
@@ -57,7 +57,7 @@ export default {
   },
   components: {
     Card,
-    CubeSpinner
+    Loader
   },
   directives: {
     InfiniteScroll
@@ -66,11 +66,7 @@ export default {
 </script>
 
 <style lang="scss">
-.loader-wrapper {
-  height: 80px;
-
-  .spinner {
-    margin: 60px auto;
-  }
+.loader {
+  margin-top: 150px;
 }
 </style>

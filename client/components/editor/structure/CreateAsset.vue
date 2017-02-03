@@ -22,7 +22,7 @@ import SelectWidth from './SelectWidth';
 
 export default {
   name: 'create-asset',
-  props: ['perspective'],
+  props: ['perspective', 'position'],
   data() {
     return {
       selection: false,
@@ -35,10 +35,13 @@ export default {
     ...mapMutations(['focusAsset'], 'atom'),
     create() {
       let asset = this.save({
+        activityId: this.perspective.id,
         type: this.type,
-        width: this.width,
-        activityKey: this.perspective._key
+        data: {},
+        position: this.position,
+        layoutWidth: this.width
       });
+
       this.focusAsset(asset);
     },
     setWidth(width) {

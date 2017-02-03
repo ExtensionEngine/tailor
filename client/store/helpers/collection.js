@@ -5,22 +5,23 @@ import { VuexModule } from 'vuex-module';
 
 import Resource from '../../api/resource';
 
-export default function (collectionName, url = '') {
+export default function (collectionName, baseUrl = '') {
   let module = new VuexModule(collectionName);
-  module.api = new Resource(url);
-
-  Object.defineProperty(module, 'url', {
-    get: () => module.api.baseUrl,
-    set: url => (module.api.baseUrl = url)
-  });
 
   let { state, action, mutation } = module;
 
   state({
     items: {},
-    $internals: {
-      subscriptions: {}
-    }
+    $internals: {},
+    $baseUrl: baseUrl
+  });
+
+  const getBaseUrl = () => module.state.$baseUrl;
+  module.api = new Resource(getBaseUrl);
+
+  action(function get(id) {
+    return this.api.get(id)
+      .then(result => this.commit('save', result.data.data));
   });
 
   action(function fetch(params = {}) {
@@ -88,6 +89,12 @@ export default function (collectionName, url = '') {
 
   mutation(function update(model) {
     Vue.set(this.state.items, model._cid, model);
+  });
+
+  // TODO: Fix state extend in order to nest $baseUrl
+  // within $internals
+  mutation(function setBaseUrl(url) {
+    this.state.$baseUrl = url;
   });
 
   return module;

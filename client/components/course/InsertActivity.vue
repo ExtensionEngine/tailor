@@ -42,7 +42,9 @@
 
 <script>
 import { focus } from 'vue-focus';
+import findIndex from 'lodash/findIndex';
 import { mapGetters, mapActions } from 'vuex-module';
+import { getChildren, updatePosition } from '../../utils/activity.js';
 
 export default {
   directives: { focus },
@@ -56,6 +58,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['activities']),
     ...mapGetters(['course'], 'editor'),
     canCreateSubsection() {
       return this.level < 3;
@@ -67,6 +70,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['save'], 'activity'),
     show() {
       this.showInput = true;
       this.focusInput = true;
@@ -76,21 +80,30 @@ export default {
       this.showInput = false;
     },
     add() {
-      const isOnSameLevel = this.newActivityLevel === 0;
-      const position = isOnSameLevel ? this.parent.position + 1 : 0;
-      const parentKey = isOnSameLevel ? this.parent.parentKey : this.parent._key;
-
-      const model = {
-        name: this.activityName,
-        courseKey: this.course._key,
-        position,
-        parentKey
+      const sameLevel = this.newActivityLevel === 0;
+      const parentId = sameLevel ? this.parent.parentId : this.parent.id;
+      const courseId = this.parent.courseId;
+      const children = getChildren(this.activities, parentId, courseId);
+      const index = findIndex(children, it => it.position === this.parent.position);
+      const positionData = {
+        index,
+        prev: this.parent,
+        next: children[index + 1],
+        first: children[0],
+        count: children.length,
+        sameLevel,
+        reorder: false
       };
 
-      this.save(model);
+      this.save({
+        name: this.activityName,
+        courseId,
+        position: updatePosition(positionData),
+        parentId
+      });
+
       this.hide();
-    },
-    ...mapActions(['save'], 'activity')
+    }
   }
 };
 </script>

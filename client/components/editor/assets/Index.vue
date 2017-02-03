@@ -2,16 +2,21 @@
   <div :class="columnWidth" class="asset-container">
     <div @click="focus" class="asset">
       <text-editor
-        v-if="asset.type === 'text'"
+        v-if="asset.type === 'TEXT'"
         :asset="asset"
         :isFocused="isFocused"
         @save="save">
       </text-editor>
       <video-editor
-        v-if="asset.type === 'video'"
+        v-if="asset.type === 'VIDEO'"
         :asset="asset"
         :isFocused="isFocused">
       </video-editor>
+      <gomo
+        v-if="asset.type === 'GOMO'"
+        :asset="asset"
+        :isFocused="isFocused">
+      </gomo>
     </div>
   </div>
 </template>
@@ -20,6 +25,7 @@
 import { mapGetters, mapActions, mapMutations } from 'vuex-module';
 import TextEditor from './Text';
 import VideoEditor from './Video';
+import Gomo from './Gomo';
 
 export default {
   name: 'asset',
@@ -27,14 +33,14 @@ export default {
   computed: {
     ...mapGetters(['focusedAsset'], 'atom'),
     columnWidth() {
-      return `col-xs-${this.asset.width}`;
+      return `col-xs-${this.asset.layoutWidth}`;
     },
     isFocused() {
       return this.focusedAsset && (this.focusedAsset._cid === this.asset._cid);
     }
   },
   methods: {
-    ...mapActions({ saveAsset: 'save' }, 'assets'),
+    ...mapActions({ updateAsset: 'update' }, 'assets'),
     ...mapMutations(['focusAsset'], 'atom'),
     focus(e) {
       this.focusAsset(this.asset);
@@ -44,13 +50,14 @@ export default {
         data: this.asset
       };
     },
-    save(asset) {
-      this.saveAsset({ ...this.asset, ...asset });
+    save(data) {
+      this.updateAsset({ ...this.asset, data });
     }
   },
   components: {
     TextEditor,
-    VideoEditor
+    VideoEditor,
+    Gomo
   }
 };
 </script>

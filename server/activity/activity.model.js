@@ -1,12 +1,7 @@
 'use strict';
 
-const Joi = require('joi');
-const database = require('../shared/database');
-const BaseModel = require('../base.model');
-const action = require('./action');
-
-const db = database.db;
-const ACTIVITY_COLLECTION = database.collection.ACTIVITY;
+const findIndex = require('lodash/findIndex');
+const Promise = require('bluebird');
 
 /**
  * @swagger
@@ -14,18 +9,20 @@ const ACTIVITY_COLLECTION = database.collection.ACTIVITY;
  *   ActivityInput:
  *     type: object
  *     required:
- *     - name
+ *     - type
  *     properties:
  *       name:
  *         type: string
  *         description: activity title
- *       parentKey:
+ *       type:
  *         type: string
- *         description: key to the parent activity, or null for root activities
- *       position:
+ *         description: activity type
+ *       parentId:
  *         type: integer
- *         description: position within the array of sibling activities. If not
- *                      set, the server will auto-generate correct position.
+ *         description: id of parent activity, null for root activities
+ *       position:
+ *         type: float
+ *         description: position within the array of sibling activities.
  *   ActivityReorderInput:
  *     type: object
  *     required:
@@ -37,128 +34,106 @@ const ACTIVITY_COLLECTION = database.collection.ACTIVITY;
  *   ActivityOutput:
  *     type: object
  *     required:
- *     - _key
- *     - courseKey
- *     - parentKey
- *     - name
+ *     - id
+ *     - courseId
+ *     - parentId
+ *     - type
  *     - position
  *     properties:
- *       _key:
- *         type: string
+ *       id:
+ *         type: integer
  *         description: unique activity identifier
- *       courseKey:
- *         type: string
+ *       courseId:
+ *         type: integer
  *         description: id of the course containing this activity
- *       parentKey:
- *         type: string
- *         description: key to the parent activity, or null for root activities
+ *       parentId:
+ *         type: integer
+ *         description: id of parent activity, null for root activities
  *       name:
  *         type: string
  *         description: activity title
  *       position:
- *         type: integer
+ *         type: float
  *         description: position within the array of sibling activities
  */
-const schemaKeys = {
-  name: Joi.string().min(3).max(100).required(),
-  type: Joi.string(), // TODO(matej): type should be one of predefined types
-  courseKey: Joi.string().regex(/[0-9]+/).required(),
-  parentKey: Joi.string().allow(null).regex(/[0-9]+/).required(),
-  position: Joi.number().integer().min(0)
-};
-const activitySchema = Joi.object().keys(schemaKeys);
-const positionSchema = Joi.object().keys({
-  position: schemaKeys.position.required()
-});
-const updateSchema = Joi.object().keys({
-  name: schemaKeys.name.required()
-});
 
-class ActivityModel extends BaseModel {
-  constructor(db, collectionName = ACTIVITY_COLLECTION, schema = activitySchema) {
-    super(db, collectionName, schema);
-  }
+module.exports = function (sequelize, DataTypes) {
+  const Activity = sequelize.define('activity', {
+    name: {
+      type: DataTypes.STRING
+    },
+    type: {
+      type: DataTypes.ENUM('GOAL', 'CONCEPT', 'TOPIC', 'PERSPECTIVE'),
+      defaultValue: 'GOAL',
+      allowNull: false
+    },
+    position: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+      validate: { min: 0 }
+    }
+  }, {
+    classMethods: {
+      associate(models) {
+        Activity.belongsTo(models.Course);
+        Activity.belongsTo(Activity, { as: 'parent', foreignKey: 'parentId' });
+        Activity.hasMany(Activity, { as: 'children', foreignKey: 'parentId' });
+        Activity.hasMany(models.Asset);
+        // Activity.hasMany(models.Assesment);
+      }
+    },
+    instanceMethods: {
+      siblings() {
+        return Activity.findAll({
+          where: {
+            $and: [
+              { parentId: this.parentId },
+              { courseId: this.courseId }
+            ]
+          },
+          order: 'position ASC'
+        });
+      },
+      remove() {
+        return sequelize.transaction(t => {
+          return this.deleteTree()
+            .then(() => this.destroy())
+            .then(() => this);
+        });
+      },
+      deleteTree() {
+        return Promise.resolve(this.getChildren())
+          .each(it => it.deleteTree())
+          .then(() => this.deleteChildren());
+      },
+      deleteChildren() {
+        return Activity.destroy({ where: { parentId: this.id } });
+      },
+      reorder(index) {
+        return sequelize.transaction(t => {
+          return this.siblings().then(siblings => {
+            let newpos;
 
-  validatePartial(partialDocument) {
-    return new Promise((resolve, reject) => {
-      Joi.validate(partialDocument, updateSchema, (err, value) => {
-        return err ? reject(err) : resolve(value);
-      });
-    });
-  }
+            if (!index) {
+              newpos = siblings[0].position / 2;
+            } else if (index + 1 === siblings.length) {
+              newpos = siblings[index].position + 1;
+            } else {
+              const currentIndex = findIndex(siblings, it => it.id === this.id);
+              const direction = currentIndex > index ? -1 : 1;
+              const prevPos = siblings[index].position;
+              const nextPos = siblings[index + direction].position;
+              newpos = (nextPos + prevPos) / 2;
+            }
 
-  execAction(action, params) {
-    const locks = {
-      read: ACTIVITY_COLLECTION,
-      write: ACTIVITY_COLLECTION
-    };
-    return this.db.transaction(locks, String(action), params);
-  }
+            this.position = newpos;
+            return this.save();
+          });
+        });
+      }
+    },
+    freezeTableName: true
+  });
 
-  create(activity) {
-    return this
-      .validate(activity)
-      .then(this.markAsCreated)
-      .then(validActivity => this.execAction(action.insert, {
-        newActivity: validActivity,
-        activityCollection: ACTIVITY_COLLECTION
-      }));
-  }
-
-  getByKey(courseKey, activityKey) {
-    const query = `
-      FOR activity IN @@activityCollection
-        FILTER activity.courseKey == @courseKey AND
-               activity._key == @activityKey
-        RETURN activity`;
-    const bindVars = {
-      courseKey,
-      activityKey,
-      '@activityCollection': ACTIVITY_COLLECTION
-    };
-
-    return this.db
-      .query(query, bindVars)
-      .then(cursor => cursor.next());
-  }
-
-  getMany(courseKey) {
-    const query = `
-      FOR activity IN @@activityCollection
-        FILTER activity.courseKey == @courseKey
-        RETURN activity`;
-    const bindVars = {
-      courseKey,
-      '@activityCollection': ACTIVITY_COLLECTION
-    };
-
-    return this.db
-      .query(query, bindVars)
-      .then(cursor => cursor.all());
-  }
-
-  removeByKey(courseKey, activityKey) {
-    return this.execAction(action.remove, {
-      courseKey,
-      activityKey,
-      activityCollection: ACTIVITY_COLLECTION
-    });
-  }
-
-  reorder(courseKey, activityKey, newPosition) {
-    const { error, value } = Joi.validate({ position: newPosition }, positionSchema);
-    if (error) return Promise.reject(error);
-    return this.execAction(action.reorder, {
-      courseKey,
-      activityKey,
-      requestedPosition: value.position,
-      activityCollection: ACTIVITY_COLLECTION
-    });
-  }
-}
-
-module.exports = {
-  schema: activitySchema,
-  Model: ActivityModel,
-  model: new ActivityModel(db)
+  return Activity;
 };

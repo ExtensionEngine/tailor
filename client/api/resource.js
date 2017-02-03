@@ -1,6 +1,5 @@
 import assign from 'lodash/assign';
 import cuid from 'cuid';
-import isArray from 'lodash/isArray';
 import join from 'url-join';
 import omit from 'lodash/omit';
 import Queue from 'promise-queue';
@@ -11,14 +10,14 @@ import axios from './request';
 const queue = new Queue(1, Infinity);
 
 export default class Resource {
-  constructor(baseUrl) {
-    this.baseUrl = baseUrl;
+  constructor(getBaseUrl) {
+    this.getBaseUrl = getBaseUrl;
     this.queue = queue;
     this.mappings = {};
   }
 
   url(path = '') {
-    return join(this.baseUrl, path);
+    return join(this.getBaseUrl(), path);
   }
 
   /**
@@ -120,23 +119,13 @@ export default class Resource {
   }
 
   /**
-   * Remove the model. In some situations, removing one model causes removal
-   * of related resources; result is always an array.
+   * Remove the model.
    * @param {object} model
    */
   remove(model) {
-    return this.delete(model.id).then(response => {
-      const data = response.data.data;
-      const result = isArray(data) ? data : [data];
-      // Attach cid to server results so that state can be correctly updated
-      // using client ids.
-      result.forEach(it => {
-        it._cid = this.getCid(it.id);
-      });
-
-      const unmap = this.unmap.bind(this);
-      result.forEach(unmap);
-      return result;
+    return this.delete(model.id).then(() => {
+      this.unmap(model);
+      return [model];
     });
   }
 

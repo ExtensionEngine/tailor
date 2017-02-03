@@ -5,6 +5,7 @@ const sinon = require('sinon');
 const config = require('../../../../config/server');
 const arangoErrorProcessor = require('../arango');
 const authErrorProcessor = require('../auth');
+const bodyParserErrorProcessor = require('../bodyParser');
 const genericErrorProcessor = require('../generic');
 const validationErrorProcessor = require('../validation');
 
@@ -92,37 +93,21 @@ describe('Error processors', () => {
     });
   });
 
-  describe('Validation error processor', () => {
-    it('handles Joi errors, returns 400 with error name and message', () => {
-      const error = {
-        isJoi: true,
-        name: 'some validation error',
-        message: 'you probably forgot a property'
-      };
+  describe('BodyParser error processor', () => {
+    it('returns 400 if request body cannot be JSON.parsed', () => {
+      let error;
+      try {
+        JSON.parse('{ "x": this is bad" }');
+      } catch (e) {
+        error = e;
+      }
 
-      const result = validationErrorProcessor.processError(error);
+      const result = bodyParserErrorProcessor.processError(error);
 
-      assert.isTrue(validationErrorProcessor.canProcessError(error));
+      assert.isTrue(bodyParserErrorProcessor.canProcessError(error));
       assert.strictEqual(result.status, 400);
       assert.deepEqual(result.error, {
-        name: error.name,
-        message: error.message
-      });
-    });
-
-    it('handles validation errors, returns 400 with error name and message', () => {
-      const error = {
-        isValidationError: true,
-        name: 'some validation error',
-        message: 'you probably forgot a property'
-      };
-
-      const result = validationErrorProcessor.processError(error);
-
-      assert.isTrue(validationErrorProcessor.canProcessError(error));
-      assert.strictEqual(result.status, 400);
-      assert.deepEqual(result.error, {
-        name: error.name,
+        name: 'Invalid JSON',
         message: error.message
       });
     });
@@ -159,6 +144,42 @@ describe('Error processors', () => {
 
       assert.strictEqual(result.status, 500);
       assert.isUndefined(result.error);
+    });
+  });
+
+  describe('Validation error processor', () => {
+    it('handles Joi errors, returns 400 with error name and message', () => {
+      const error = {
+        isJoi: true,
+        name: 'some validation error',
+        message: 'you probably forgot a property'
+      };
+
+      const result = validationErrorProcessor.processError(error);
+
+      assert.isTrue(validationErrorProcessor.canProcessError(error));
+      assert.strictEqual(result.status, 400);
+      assert.deepEqual(result.error, {
+        name: error.name,
+        message: error.message
+      });
+    });
+
+    it('handles validation errors, returns 400 with error name and message', () => {
+      const error = {
+        isValidationError: true,
+        name: 'some validation error',
+        message: 'you probably forgot a property'
+      };
+
+      const result = validationErrorProcessor.processError(error);
+
+      assert.isTrue(validationErrorProcessor.canProcessError(error));
+      assert.strictEqual(result.status, 400);
+      assert.deepEqual(result.error, {
+        name: error.name,
+        message: error.message
+      });
     });
   });
 });

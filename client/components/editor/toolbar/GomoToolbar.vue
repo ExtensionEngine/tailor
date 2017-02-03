@@ -1,11 +1,11 @@
 <template>
-  <div class="video-toolbar">
+  <div class="gomo-toolbar">
     <input
-      v-model="url"
+      v-model="courseUrl"
       :disabled="!edit"
       type="text"
       class="form-control"
-      placeholder="URL">
+      placeholder="Gomo course url">
     <button
       v-if="!edit"
       @click="edit = true"
@@ -28,27 +28,27 @@ import cloneDeep from 'lodash/cloneDeep';
 import { mapActions } from 'vuex-module';
 
 export default {
-  name: 'video-toolbar',
+  name: 'gomo-toolbar',
   props: ['asset', 'isFocused'],
   data() {
     return {
-      edit: !this.asset.data.url,
-      url: '',
-      ...cloneDeep(this.asset)
+      edit: !this.asset.data.courseUrl,
+      courseUrl: '',
+      ...cloneDeep(this.asset.data)
     };
   },
   methods: {
     ...mapActions({ updateAsset: 'update' }, 'assets'),
     save() {
       this.edit = false;
-      this.updateAsset({ ...this.asset, data: { url: this.url } });
+      this.updateAsset({ ...this.asset, data: { courseUrl: this.courseUrl } });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.video-toolbar {
+.gomo-toolbar {
   position: fixed;
   z-index: 999;
   width: 100%;

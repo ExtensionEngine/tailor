@@ -1,3 +1,4 @@
+const omit = require('lodash/omit');
 const validators = require('./queryParamValidators');
 const { save } = require('../io').locals;
 
@@ -32,8 +33,15 @@ function parseSearch(req, res, next) {
   next();
 }
 
+function parseSearchTerms(req, res, next) {
+  const terms = omit(req.query, ['limit', 'page', 'sortBy', 'sortOrder', 'search']);
+  save(req, 'searchTerms', terms);
+  next();
+}
+
 module.exports = {
   parsePagination,
-  parseSort,
-  parseSearch
+  parseSearch,
+  parseSearchTerms,
+  parseSort
 };

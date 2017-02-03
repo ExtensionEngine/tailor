@@ -11,19 +11,22 @@ state({
 getter(function activity() {
   const { route } = this.rootState;
   const { activities } = this.rootGetters;
-  return find(activities, { _key: route.params.activityKey });
+  const id = Number(route.params.activityKey);
+  return find(activities, { id });
 });
 
 getter(function perspectives() {
   const { route } = this.rootState;
   const { activities } = this.rootGetters;
-  return filter(activities, { parentKey: route.params.activityKey });
+  const parentId = Number(route.params.activityKey);
+  return filter(activities, { parentId });
 });
 
 getter(function assessments() {
   const { route } = this.rootState;
   const { assessments: collection } = this.rootGetters;
-  return filter(collection, { activityKey: route.params.activityKey });
+  const activityId = Number(route.params.activityKey);
+  return filter(collection, { activityId });
 });
 
 getter(function focusedAsset() {

@@ -19,7 +19,11 @@ export default {
   methods: {
     ...mapActions(['save'], 'activity'),
     add() {
-      this.save({ name: 'perspective', parentKey: this.activity._key });
+      this.save({
+        name: 'perspective',
+        parentId: this.activity.id,
+        position: this.perspectives.length + 1
+      });
     }
   },
   components: {
