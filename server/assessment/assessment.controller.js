@@ -48,8 +48,25 @@ function remove(req, res) {
     : createError(NOT_FOUND, 'Not found'));
 }
 
+function patch(req, res) {
+  const data = JSON.stringify(req.body.data);
+  const q = 'UPDATE assessment SET data = ? FROM activity ' +
+            'WHERE assessment."activityId" = activity.id ' +
+            'AND activity."courseId" = ? ' +
+            'AND assessment.id = ? ' +
+            'RETURNING assessment.id, assessment.type, assessment.data, ' +
+            'assessment."createdAt", assessment."updatedAt"';
+  return sequelize.query(q, {
+    replacements: [data, req.params.courseId, req.params.assessmentId],
+    model: Assessment
+  }).then(assessments => assessments.length
+    ? res.send({ data: assessments[0] })
+    : createError(NOT_FOUND, 'Not found'));
+}
+
 module.exports = {
   index,
   create,
+  patch,
   remove
 };

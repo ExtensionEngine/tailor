@@ -11,6 +11,7 @@ router.use('/courses/:courseId*', mw.hasCourseAccess);
 router.get('/courses/:courseId/assessments', ctrl.index);
 router.post('/courses/:courseId/assessments', ctrl.create);
 router.delete('/courses/:courseId/assessments/:assessmentId', ctrl.remove);
+router.patch('/courses/:courseId/assessments/:assessmentId', ctrl.patch);
 
 module.exports = {
   controller: ctrl,
