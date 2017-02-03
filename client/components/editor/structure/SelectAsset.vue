@@ -18,7 +18,8 @@ export default {
       assets: [
         { type: 'VIDEO', label: 'Video', icon: 'fa-video-camera' },
         { type: 'TEXT', label: 'Text', icon: 'fa-file-text-o' },
-        { type: 'IMAGE', label: 'Image', icon: 'fa-image' }
+        { type: 'IMAGE', label: 'Image', icon: 'fa-image' },
+        { type: 'GOMO', label: 'Gomo', icon: 'fa-window-maximize' }
       ]
     };
   }

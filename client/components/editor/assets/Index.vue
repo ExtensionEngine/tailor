@@ -12,6 +12,11 @@
         :asset="asset"
         :isFocused="isFocused">
       </video-editor>
+      <gomo
+        v-if="asset.type === 'GOMO'"
+        :asset="asset"
+        :isFocused="isFocused">
+      </gomo>
     </div>
   </div>
 </template>
@@ -20,6 +25,7 @@
 import { mapGetters, mapActions, mapMutations } from 'vuex-module';
 import TextEditor from './Text';
 import VideoEditor from './Video';
+import Gomo from './Gomo';
 
 export default {
   name: 'asset',
@@ -50,7 +56,8 @@ export default {
   },
   components: {
     TextEditor,
-    VideoEditor
+    VideoEditor,
+    Gomo
   }
 };
 </script>
