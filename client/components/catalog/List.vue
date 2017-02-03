@@ -10,7 +10,7 @@
     </div>
 
     <div class="col-lg-12 loader-wrapper">
-      <cube-spinner v-show="paginate"></cube-spinner>
+      <loader v-show="paginate"></loader>
       <div
         v-infinite-scroll="loadMore"
         infinite-scroll-disabled="paginate"
