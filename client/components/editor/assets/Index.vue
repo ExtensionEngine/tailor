@@ -2,7 +2,7 @@
   <div :class="columnWidth" class="asset-container">
     <div @click="focus" class="asset">
       <image-editor
-        v-if="asset.type === 'image'"
+        v-if="asset.type === 'IMAGE'"
         :asset="asset"
         :isFocused="isFocused"
         @save="save">

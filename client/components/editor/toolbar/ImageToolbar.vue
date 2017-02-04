@@ -68,7 +68,7 @@ export default {
       return { 'has-error': this.error };
     },
     isSaved() {
-      return !isEmpty(this.asset.url);
+      return !isEmpty(this.asset.data.url);
     }
   },
   methods: {

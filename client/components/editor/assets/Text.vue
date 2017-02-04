@@ -28,7 +28,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import { quillEditor } from 'vue-quill-editor';
 
 const defaultAsset = {
-  type: 'text',
   data: {
     content: ''
   }

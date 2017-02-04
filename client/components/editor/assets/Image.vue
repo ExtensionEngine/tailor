@@ -44,12 +44,11 @@ export default {
   computed: {
     localAsset() {
       return {
-        url: this.image,
-        courseId: this.$route.params.courseId
+        url: this.image
       };
     },
     showPlaceholder() {
-      return isEmpty(this.asset.url);
+      return isEmpty(this.asset.data.url);
     }
   },
   methods: {
@@ -96,7 +95,7 @@ export default {
     }
   },
   created() {
-    if (this.asset.url) this.image = this.original = this.asset.url;
+    if (this.asset.data.url) this.image = this.original = this.asset.data.url;
     this.registerEvents();
   },
   destroyed() {
@@ -108,10 +107,10 @@ export default {
       this.$nextTick(() => this.toggleCropBox());
     },
     original(val, oldVal) {
-      // Wait for 100ms before querying child component elements
+      // Wait before querying child component elements
       setTimeout(() => {
         this.$nextTick(() => this.toggleCropBox());
-      }, 100);
+      }, 150);
     }
   },
   components: {
