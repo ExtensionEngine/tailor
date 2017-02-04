@@ -6,24 +6,23 @@
         <span>Click to edit</span>
       </div>
     </div>
-    <div class="image-wrapper" v-else>
+    <div v-else class="image-wrapper">
       <image-cropper
-        v-show="isFocused"
         ref='cropper'
         drag-mode="crop"
         :view-mode="2"
         :auto-crop-area="0.5"
         :guides="true"
-        :rotatable="true"
+        :responsive="true"
+        :rotatable="false"
         :background="false"
         :zoomable="false"
         :scalable="false"
         :movable="false"
-        :checkCrossOrigin="false"
-        :alt="asset.name"
+        :modal="false"
+        :style="{ 'width': '100%' }"
         :src="image">
       </image-cropper>
-      <img v-show="!isFocused" :src="image" class="preview"/>
     </div>
   </div>
 </template>
@@ -45,9 +44,8 @@ export default {
   computed: {
     localAsset() {
       return {
-        // TODO(marko): Change to course id.
         url: this.image,
-        courseKey: this.$route.params.courseKey
+        courseId: this.$route.params.courseId
       };
     },
     showPlaceholder() {
@@ -85,10 +83,19 @@ export default {
     },
     cleanupEvents() {
       this.generateEvents('$off');
+    },
+
+    // Helpers
+    toggleCropBox() {
+      const cropBox = this.$el.querySelector('.cropper-crop-box');
+
+      if (this.image) {
+        if (this.isFocused) cropBox.style.display = 'block';
+        else cropBox.style.display = 'none';
+      }
     }
   },
   created() {
-    // TODO(marko): Loading images from remote URL into cropper.
     if (this.asset.url) this.image = this.original = this.asset.url;
     this.registerEvents();
   },
@@ -98,6 +105,13 @@ export default {
   watch: {
     isFocused(val, oldVal) {
       if (oldVal && !val) this.$emit('save', this.localAsset);
+      this.$nextTick(() => this.toggleCropBox());
+    },
+    original(val, oldVal) {
+      // Wait for 100ms before querying child component elements
+      setTimeout(() => {
+        this.$nextTick(() => this.toggleCropBox());
+      }, 100);
     }
   },
   components: {
@@ -122,13 +136,8 @@ export default {
         font-size: 18px;
       }
     }
-  }
 
-  .image-wrapper {
-    max-width: 100%;
-
-    .preview {
-      max-height: 100%;
+    .image-wrapper {
       max-width: 100%;
     }
   }
@@ -141,14 +150,6 @@ export default {
     .cropper-modal {
       background-color: transparent;
       opacity: 0;
-    }
-
-    .cropper-canvas {
-      img {
-        display: block;
-        height: 100px;
-        width: 100px;
-      }
     }
   }
 }
