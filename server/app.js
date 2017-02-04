@@ -16,7 +16,7 @@ const router = require('./router');
 const app = express();
 app.disable('x-powered-by');
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(passport.initialize());
 
 // Log all incoming requests.
