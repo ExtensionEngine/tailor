@@ -9,6 +9,7 @@ router.use('/courses/:courseId*', mw.getCourse);
 router.use('/courses/:courseId*', mw.hasCourseAccess);
 
 router.get('/courses', ctrl.index);
+router.post('/courses', ctrl.create);
 router.get('/courses/:id', ctrl.get);
 router.patch('/courses/:id', ctrl.patch);
 router.delete('/courses/:id', ctrl.remove);

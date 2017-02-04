@@ -12,6 +12,7 @@ router
 router
   .route('/courses/:courseId/activities/:activityId')
   .get(ctrl.show)
+  .patch(ctrl.patch)
   .delete(ctrl.remove);
 
 router.post('/courses/:courseId/activities/:activityId/reorder', ctrl.reorder);

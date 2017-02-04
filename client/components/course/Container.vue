@@ -27,7 +27,7 @@ export default {
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activity'),
-    ...mapMutations({ setApiRoute: 'activateCourse' }, 'activity')
+    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity')
   },
   computed: {
     ...mapGetters(['course'], 'editor'),
@@ -41,7 +41,8 @@ export default {
   },
   created() {
     const courseId = this.$route.params.courseKey;
-    this.setApiRoute(courseId);
+    // TODO: Do this better!
+    this.setupActivityApi(`/courses/${courseId}/activities`);
     if (!this.course) this.getCourse(courseId);
     this.getActivities();
   }

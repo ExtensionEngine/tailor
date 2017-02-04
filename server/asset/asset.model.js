@@ -1,50 +1,71 @@
 'use strict';
 
-const Joi = require('joi');
-const BaseModel = require('../base.model');
-const database = require('../shared/database');
-
-const db = database.db;
-const ASSET_COLLECTION = database.collection.ASSET;
-
 /**
  * @swagger
  * definitions:
- *   AssetInput:
+ *   Asset:
  *     type: object
  *     required:
+ *     - courseId
+ *     - activityId
+ *     - layoutWidth
+ *     - position
  *     - type
+ *     - data
  *     properties:
+ *       courseId:
+ *         type: integer
+ *         description: course owning the asset
+ *       activityId:
+ *         type: integer
+ *         description: activity owning the asset
+ *       layoutWidth:
+ *         type: integer
+ *         description: width of the layout column containing the asset
+ *       position:
+ *         type: float
+ *         description: position within the array of other assets
  *       type:
  *         type: string
  *         description: asset type
- *   AssetOutput:
- *     type: object
- *     required:
- *     - _key
- *     - type
- *     properties:
- *       _key:
- *         type: string
- *         description: unique asset identifier
- *       type:
- *         type: string
- *         description: asset type
+ *         enum:
+ *         - TEXT
+ *         - IMAGE
+ *         - VIDEO
+ *       data:
+ *         type: json
+ *         description: json structure with asset data; structure dependends
+ *                      on the asset type
  */
 
-const assetSchema = Joi.object().keys({
-  type: Joi.string().min(3).max(100).required(),
-  courseKey: Joi.string().regex(/[0-9]+/).required()
-});
+module.exports = function (sequelize, DataTypes) {
+  const Asset = sequelize.define('asset', {
+    type: {
+      type: DataTypes.ENUM,
+      values: ['TEXT', 'IMAGE', 'VIDEO', 'GOMO'],
+      allowNull: false
+    },
+    data: {
+      type: DataTypes.JSON
+    },
+    position: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: { min: 1, max: 1000000 }
+    },
+    layoutWidth: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
+  }, {
+    classMethods: {
+      associate(models) {
+        Asset.belongsTo(models.Activity);
+        Asset.belongsTo(models.Course);
+      }
+    },
+    freezeTableName: true
+  });
 
-class AssetModel extends BaseModel {
-  constructor(db, collectionName = ASSET_COLLECTION, schema = assetSchema) {
-    super(db, collectionName, schema);
-  }
-}
-
-module.exports = {
-  schema: assetSchema,
-  Model: AssetModel,
-  model: new AssetModel(db)
+  return Asset;
 };

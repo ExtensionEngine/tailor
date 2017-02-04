@@ -2,18 +2,24 @@
  * @swagger
  * /assets:
  *   get:
- *     summary: get all existing assets
+ *     summary: get all assets for current activity
  *     tags:
  *     - asset
  *     produces:
  *     - application/json
+ *     parameters:
+ *     - in: query
+ *       name: activityId
+ *       required: false
+ *       type: string
+ *       description: filter by activityId
  *     responses:
  *       200:
  *         description: array of asset objects
  *         schema:
  *           type: array
  *           items:
- *             $ref: "#/definitions/AssetOutput"
+ *             $ref: "#/definitions/Asset"
  *   post:
  *     summary: create a new asset
  *     tags:
@@ -27,15 +33,13 @@
  *       name: body
  *       required: true
  *       schema:
- *         $ref: "#/definitions/AssetInput"
+ *         $ref: "#/definitions/Asset"
  *     responses:
- *       201:
+ *       200:
  *         description: newly-created asset
  *         schema:
- *           $ref: "#/definitions/AssetOutput"
- *       400:
- *          description: request body contains invalid values
- * /assets/{assetKey}:
+ *           $ref: "#/definitions/Asset"
+ * /assets/{assetId}:
  *   get:
  *     summary: get one specific asset
  *     tags:
@@ -43,7 +47,7 @@
  *     produces:
  *     - application/json
  *     parameters:
- *     - name: assetKey
+ *     - name: assetId
  *       in: path
  *       description: asset identifier
  *       required: true
@@ -52,9 +56,9 @@
  *       200:
  *         description: single asset
  *         schema:
- *           $ref: "#/definitions/AssetOutput"
+ *           $ref: "#/definitions/Asset"
  *       404:
- *         description: asset with the given key does not exist
+ *         description: asset with the given id does not exist
  *   patch:
  *     summary: partially change an existing asset
  *     tags:
@@ -64,7 +68,7 @@
  *     produces:
  *     - application/json
  *     parameters:
- *     - name: assetKey
+ *     - name: assetId
  *       in: path
  *       description: asset identifier
  *       required: true
@@ -73,42 +77,14 @@
  *       in: body
  *       required: true
  *       schema:
- *         $ref: "#/definitions/AssetInput"
+ *         $ref: "#/definitions/Asset"
  *     responses:
  *       200:
  *         description: updated asset
  *         schema:
- *           $ref: "#/definitions/AssetOutput"
+ *           $ref: "#/definitions/Asset"
  *       404:
- *         description: asset with the given key does not exist
- *   put:
- *     summary: replace an existing asset with another one
- *     tags:
- *     - asset
- *     consumes:
- *     - application/json
- *     produces:
- *     - application/json
- *     parameters:
- *     - name: assetKey
- *       in: path
- *       description: asset identifier
- *       required: true
- *       type: string
- *     - name: body
- *       in: body
- *       required: true
- *       schema:
- *         $ref: "#/definitions/AssetInput"
- *     responses:
- *       200:
- *         description: asset with changes applied
- *         schema:
- *           $ref: "#/definitions/AssetOutput"
- *       400:
- *          description: request body contains invalid values
- *       404:
- *         description: asset with the given key does not exist
+ *         description: asset with the given id does not exist
  *   delete:
  *     summary: permanently remove an existing asset
  *     tags:
@@ -116,7 +92,7 @@
  *     produces:
  *     - application/json
  *     parameters:
- *     - name: assetKey
+ *     - name: assetId
  *       in: path
  *       description: asset identifier
  *       required: true
@@ -125,7 +101,7 @@
  *       200:
  *         description: asset object which was just removed
  *         schema:
- *           $ref: "#/definitions/AssetOutput"
+ *           $ref: "#/definitions/Asset"
  *       404:
- *         description: asset with the given key does not exist
+ *         description: asset with the given id does not exist
  */

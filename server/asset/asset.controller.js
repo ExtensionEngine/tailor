@@ -1,15 +1,49 @@
 'use strict';
 
-const BaseController = require('../base.controller');
-const assetModel = require('./asset.model').model;
+const { Asset } = require('../shared/database/sequelize');
+const { createError } = require('../shared/error/helpers');
+const { NOT_FOUND } = require('http-status-codes');
+const pick = require('lodash/pick');
 
-class AssetController extends BaseController {
-  constructor(model = assetModel, resourceKey = 'assetKey') {
-    super(model, resourceKey);
-  }
+function list(req, res) {
+  // TODO: Temporary returns all course assets;
+  // switch to per activity
+  return req.course.getAssets()
+    .then(assets => res.json({ data: assets }));
+}
+
+function show({ params }, res) {
+  return Asset
+    .findById(params.assetId)
+    .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
+    .then(asset => res.json({ data: asset }));
+}
+
+function create({ body, params }, res) {
+  const attr = ['activityId', 'type', 'data', 'position', 'layoutWidth'];
+  const data = Object.assign(pick(body, attr), { courseId: params.courseId });
+  return Asset.create(data)
+    .then(asset => res.json({ data: asset }));
+}
+
+function patch({ body, params }, res) {
+  return Asset.findById(params.assetId)
+    .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
+    .then(asset => asset.update(body))
+    .then(asset => res.json({ data: asset }));
+}
+
+function remove({ params }, res) {
+  return Asset.findById(params.assetId)
+    .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
+    .then(asset => asset.destroy())
+    .then(() => res.end());
 }
 
 module.exports = {
-  Controller: AssetController,
-  controller: new AssetController()
+  list,
+  show,
+  create,
+  patch,
+  remove
 };

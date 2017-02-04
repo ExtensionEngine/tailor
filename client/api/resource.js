@@ -10,14 +10,14 @@ import axios from './request';
 const queue = new Queue(1, Infinity);
 
 export default class Resource {
-  constructor(baseUrl) {
-    this.baseUrl = baseUrl;
+  constructor(getBaseUrl) {
+    this.getBaseUrl = getBaseUrl;
     this.queue = queue;
     this.mappings = {};
   }
 
   url(path = '') {
-    return join(this.baseUrl, path);
+    return join(this.getBaseUrl(), path);
   }
 
   /**

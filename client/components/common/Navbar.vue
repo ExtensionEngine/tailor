@@ -7,7 +7,12 @@
           <span>CGMA Author</span>
         </router-link>
       </div>
-      <div v-if="course" class="course-title">{{ course.name }}</div>
+      <router-link
+        v-if="course"
+        :to="{ name: 'course', params: { courseKey: course.id }}"
+        class="course-title">
+        {{ course.name }}
+      </router-link>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -68,9 +73,27 @@ export default {
 
   .course-title {
     float: left;
-    padding-left: 10px;
+    width: 50%;
+    color: #666;
     font-size: 15px;
     line-height: 50px;
+    font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+    overflow: hidden;
+
+    &:hover {
+      color: #444;
+    }
+
+    @media (max-width: 1200px) {
+      width: 40%;
+    }
+    @media (max-width: 1000px) {
+      width: 25%;
+    }
   }
 }
 </style>

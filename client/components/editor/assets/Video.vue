@@ -34,11 +34,11 @@ export default {
     options() {
       return {
         autoplay: false,
-        source: { src: this.asset.src }
+        source: { src: this.asset.data.url }
       };
     },
     showPlaceholder() {
-      return !this.asset.src;
+      return !this.asset.data.url;
     }
   },
   watch: {
