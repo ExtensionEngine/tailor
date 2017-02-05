@@ -2,7 +2,6 @@
 
 const ctrl = require('./user.controller');
 const model = require('./user.model');
-const mw = require('./middleware');
 const router = require('express-promise-router')();
 
 router
@@ -13,6 +12,5 @@ router
 
 module.exports = {
   model,
-  router,
-  middleware: mw
+  router
 };
