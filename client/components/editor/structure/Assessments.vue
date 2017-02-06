@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     ...mapGetters({ getAssessments: 'assessments' }),
-    ...mapActions(['fetch'], 'assessments'),
+    ...mapActions({ removeAssessment: 'remove', fetch: 'fetch' }, 'assessments'),
     ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
     add(type) {
       const _cid = cuid();
@@ -65,8 +65,12 @@ export default {
       }
     },
     remove(assessment) {
-      delete this.assessments[assessment._cid];
-      this.selected.splice(this.selected.indexOf(assessment._cid), 1);
+      if (assessment.id) {
+        this.removeAssessment(assessment);
+      } else {
+        delete this.assessments[assessment._cid];
+        this.selected.splice(this.selected.indexOf(assessment._cid), 1);
+      }
     }
   },
   components: {

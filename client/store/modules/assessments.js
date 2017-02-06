@@ -11,6 +11,7 @@ action(function fetch(params = {}) {
     .then(result => {
       each(result, assessment => {
         each(assessment.data, (v, k) => { assessment[k] = v; });
+        delete assessment.data;
       });
       this.commit('fetch', result);
     });
