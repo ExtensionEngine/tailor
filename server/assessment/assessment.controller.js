@@ -1,6 +1,5 @@
 'use strict';
 
-const omit = require('lodash/omit');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { Assessment, sequelize } = require('../shared/database/sequelize');
