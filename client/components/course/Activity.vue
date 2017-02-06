@@ -30,6 +30,7 @@
         </activity>
       </draggable>
     </transition>
+    <no-activities v-if="isRoot && !hasChildren"></no-activities>
   </div>
 </template>
 
@@ -37,6 +38,7 @@
 import { mapActions, mapMutations } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import InsertActivity from './InsertActivity';
+import NoActivities from './NoActivities';
 import values from 'lodash/values';
 
 const MAX_LEVELS = 3;
@@ -69,8 +71,8 @@ export default {
     },
     children() {
       const filterByParent = this.isRoot
-        ? act => act.parentId === null
-        : act => act.parentId === this.id;
+        ? act => !act.parentId
+        : act => this.id && this.id === act.parentId;
 
       return values(this.activities)
         .filter(filterByParent)
@@ -114,7 +116,8 @@ export default {
   },
   components: {
     Draggable,
-    InsertActivity
+    InsertActivity,
+    NoActivities
   }
 };
 </script>
