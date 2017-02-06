@@ -33,12 +33,16 @@ export default {
     const courseId = this.$route.params.courseKey;
     const activityId = this.$route.params.activityKey;
     this.setupAssessmentApi(`/courses/${courseId}/assessments`);
-    this.fetch({ activityId })
+    this.fetchAssessments({ activityId })
       .then(() => { this.assessments = this.getAssessments(); });
   },
   methods: {
     ...mapGetters({ getAssessments: 'assessments' }),
-    ...mapActions({ removeAssessment: 'remove', fetch: 'fetch' }, 'assessments'),
+    ...mapActions({
+      removeAssessment: 'remove',
+      saveAssessment: 'save',
+      fetchAssessments: 'fetch'
+    }, 'assessments'),
     ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
     add(type) {
       const _cid = cuid();
@@ -62,6 +66,8 @@ export default {
     save(assessment) {
       if (this.assessments[assessment._cid]) {
         this.assessments[assessment._cid] = assessment;
+        assessment.activityId = this.$route.params.activityKey;
+        this.saveAssessment(assessment);
       }
     },
     remove(assessment) {
