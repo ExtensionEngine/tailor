@@ -11,7 +11,7 @@ function nest(model) {
   each(model, (v, k) => {
     if (dataKeys.includes(k)) {
       model.data[k] = v;
-      delete model[k]
+      delete model[k];
     }
   });
   return model;
@@ -53,6 +53,14 @@ action(function save(model) {
       if (previous && previous._version === model._version) model._synced = true;
       this.commit('save', model);
     });
+});
+
+action(function update(model) {
+  const cid = model._cid;
+  const changes = nest(cloneDeep(model));
+  delete changes._cid;
+  return this.api.update(cid, changes)
+    .then(updated => this.commit('update', flatten(updated)));
 });
 
 export default build();

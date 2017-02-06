@@ -41,6 +41,7 @@ export default {
     ...mapActions({
       removeAssessment: 'remove',
       saveAssessment: 'save',
+      updateAssessment: 'update',
       fetchAssessments: 'fetch'
     }, 'assessments'),
     ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
@@ -65,9 +66,12 @@ export default {
     },
     save(assessment) {
       if (this.assessments[assessment._cid]) {
-        this.assessments[assessment._cid] = assessment;
         assessment.activityId = this.$route.params.activityKey;
-        this.saveAssessment(assessment);
+        assessment.id = this.assessments[assessment._cid].id;
+        this.assessments[assessment._cid] = assessment;
+        return assessment.id
+          ? this.updateAssessment(assessment)
+          : this.saveAssessment(assessment);
       }
     },
     remove(assessment) {
