@@ -23,14 +23,9 @@ function index(req, res) {
 
 function create(req, res) {
   const activityId = req.body.activityId;
-  const assessment = {
-    activityId,
-    type: req.body.type,
-    data: omit(req.body, ['id', 'type', 'activityId', 'createdAt', 'updatedAt'])
-  };
   return req.course.hasActivity(activityId)
     .then(ok => ok
-      ? Assessment.create(assessment, { isNewRecord: true, returning: true })
+      ? Assessment.create(req.body, { isNewRecord: true, returning: true })
       : createError(NOT_FOUND, `Activity ${activityId} not found`))
     .then(data => res.json({ data }));
 }
