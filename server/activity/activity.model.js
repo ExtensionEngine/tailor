@@ -1,7 +1,7 @@
 'use strict';
 
-const findIndex = require('lodash/findIndex');
 const Promise = require('bluebird');
+const reorder = require('../shared/util/reorder');
 
 /**
  * @swagger
@@ -111,24 +111,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       reorder(index) {
         return sequelize.transaction(t => {
-          return this.siblings().then(siblings => {
-            let newpos;
-
-            if (!index) {
-              newpos = siblings[0].position / 2;
-            } else if (index + 1 === siblings.length) {
-              newpos = siblings[index].position + 1;
-            } else {
-              const currentIndex = findIndex(siblings, it => it.id === this.id);
-              const direction = currentIndex > index ? -1 : 1;
-              const prevPos = siblings[index].position;
-              const nextPos = siblings[index + direction].position;
-              newpos = (nextPos + prevPos) / 2;
-            }
-
-            this.position = newpos;
-            return this.save();
-          });
+          return this.siblings().then(reorder.bind(this, index));
         });
       }
     },

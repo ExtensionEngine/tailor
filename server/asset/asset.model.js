@@ -1,5 +1,7 @@
 'use strict';
 
+const reorder = require('../shared/util/reorder');
+
 /**
  * @swagger
  * definitions:
@@ -51,7 +53,7 @@ module.exports = function (sequelize, DataTypes) {
     position: {
       type: DataTypes.FLOAT,
       allowNull: false,
-      validate: { min: 1, max: 1000000 }
+      validate: { min: 0, max: 1000000 }
     },
     layoutWidth: {
       type: DataTypes.INTEGER,
@@ -62,6 +64,19 @@ module.exports = function (sequelize, DataTypes) {
       associate(models) {
         Asset.belongsTo(models.Activity);
         Asset.belongsTo(models.Course);
+      }
+    },
+    instanceMethods: {
+      siblings() {
+        return Asset.findAll({
+          where: { activityId: this.activityId },
+          order: 'position ASC'
+        });
+      },
+      reorder(index) {
+        return sequelize.transaction(t => {
+          return this.siblings().then(reorder.bind(this, index));
+        });
       }
     },
     freezeTableName: true

@@ -44,7 +44,8 @@
 import { focus } from 'vue-focus';
 import findIndex from 'lodash/findIndex';
 import { mapGetters, mapActions } from 'vuex-module';
-import { getChildren, updatePosition } from '../../utils/activity.js';
+import { getChildren } from '../../utils/activity.js';
+import updatePosition from '../../utils/reorder.js';
 
 export default {
   directives: { focus },

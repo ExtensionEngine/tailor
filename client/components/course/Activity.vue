@@ -14,7 +14,7 @@
       <insert-activity :parent="activity" :level="level"></insert-activity>
     </div>
     <transition name="fade" v-if="!isCollapsed && hasChildren">
-      <draggable @update="reorder" :list="children">
+      <draggable @update="reorder" :options="dragOptions" :list="children">
         <activity
           v-for="(it, index) in children"
           :key="it._cid"
@@ -47,7 +47,8 @@ export default {
   props: ['_cid', 'id', 'name', 'position', 'level', 'activities', 'activity', 'index'],
   data() {
     return {
-      isCollapsed: this.level !== 0
+      isCollapsed: this.level !== 0,
+      dragOptions: { handle: '.activity' }
     };
   },
   computed: {
@@ -109,7 +110,7 @@ export default {
         reorder: true
       };
 
-      this.reorderActivities({ activity, positionData, index });
+      this.reorderActivities({ item: activity, positionData, index });
     }
   },
   components: {

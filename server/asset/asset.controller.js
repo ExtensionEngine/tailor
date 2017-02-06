@@ -39,10 +39,17 @@ function remove({ params }, res) {
     .then(() => res.end());
 }
 
+function reorder({ body, params }, res) {
+  return Asset.findById(params.assetId)
+    .then(asset => asset.reorder(body.position))
+    .then(asset => res.json({ data: asset }));
+}
+
 module.exports = {
   list,
   show,
   create,
   patch,
-  remove
+  remove,
+  reorder
 };
