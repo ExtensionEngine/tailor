@@ -2,7 +2,9 @@
   <div class="assessments">
     <div class="overview">
       <h2>Assessments</h2>
-      <span>show all</span>
+      <span @click.stop="toggleAllSelected">
+        {{ allSelected ? 'hide all' : 'show all' }}
+      </span>
     </div>
     <ul class="list-group">
       <assessment-item
@@ -29,7 +31,8 @@ export default {
   data() {
     return {
       selected: [],
-      assessments: {}
+      assessments: {},
+      allSelected: false
     };
   },
   created() {
@@ -49,9 +52,7 @@ export default {
     ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
     refresh() {
       const assessments = {};
-      this.getAssessments().forEach(a => {
-        assessments[a._cid] = a
-      });
+      this.getAssessments().forEach(a => { assessments[a._cid] = a; });
       this.assessments = assessments;
     },
     add(type) {
@@ -72,6 +73,13 @@ export default {
     },
     isSelected(assessment) {
       return this.selected.includes(assessment._cid);
+    },
+    toggleAllSelected() {
+      this.allSelected = !this.allSelected;
+      const cids = this.allSelected
+        ? Object.keys(this.assessments).filter(cid => !this.selected.includes(cid))
+        : this.selected.slice(0);
+      cids.forEach(cid => this.toggleSelect(this.assessments[cid]));
     },
     save(assessment) {
       if (this.assessments[assessment._cid]) {
@@ -104,7 +112,6 @@ export default {
   margin: 70px 0;
 
   .overview {
-    // border: 1px dotted red !important;
     text-align: left;
 
     span {
