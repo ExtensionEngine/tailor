@@ -11,7 +11,11 @@
           <span class="badge" v-if="showBadge">{{ children.length }}</span>
         </span>
       </div>
-      <insert-activity :parent="activity" :level="level"></insert-activity>
+      <insert-activity
+        :parent="activity"
+        :level="level"
+        @expand="isCollapsed = false">
+      </insert-activity>
     </div>
     <div v-if="!isCollapsed && hasChildren">
       <draggable @update="reorder" :list="children">
