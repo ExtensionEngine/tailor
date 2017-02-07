@@ -13,7 +13,7 @@
       </div>
       <insert-activity :parent="activity" :level="level"></insert-activity>
     </div>
-    <transition name="fade" v-if="!isCollapsed && hasChildren">
+    <div v-if="!isCollapsed && hasChildren">
       <draggable @update="reorder" :list="children">
         <activity
           v-for="(it, index) in children"
@@ -29,7 +29,7 @@
           :activity="it">
         </activity>
       </draggable>
-    </transition>
+    </div>
     <no-activities v-if="isRoot && !hasChildren"></no-activities>
   </div>
 </template>
@@ -188,13 +188,5 @@ export default {
 
 .sub-activity {
   margin-left: 50px;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .2s
-}
-
-.fade-enter, .fade-leave-active {
-  opacity: 0
 }
 </style>
