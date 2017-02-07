@@ -33,11 +33,10 @@ export default {
     const courseId = this.$route.params.courseKey;
     const activityId = this.$route.params.activityKey;
     this.setupAssessmentApi(`/courses/${courseId}/assessments`);
-    this.fetchAssessments({ activityId })
-      .then(() => { this.assessments = this.getAssessments(); });
+    this.fetchAssessments({ activityId }).then(() => this.refresh());
   },
   methods: {
-    ...mapGetters({ getAssessments: 'assessments' }),
+    ...mapGetters({ getAssessments: 'assessments' }, 'atom'),
     ...mapActions({
       removeAssessment: 'remove',
       saveAssessment: 'save',
@@ -45,6 +44,13 @@ export default {
       fetchAssessments: 'fetch'
     }, 'assessments'),
     ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
+    refresh() {
+      const assessments = {};
+      this.getAssessments().forEach(a => {
+        assessments[a._cid] = a
+      });
+      this.assessments = assessments;
+    },
     add(type) {
       const _cid = cuid();
       this.assessments[_cid] = { _cid, type };
@@ -76,7 +82,7 @@ export default {
     },
     remove(assessment) {
       if (assessment.id) {
-        this.removeAssessment(assessment);
+        this.removeAssessment(assessment).then(() => this.refresh());
       } else {
         delete this.assessments[assessment._cid];
         this.selected.splice(this.selected.indexOf(assessment._cid), 1);
