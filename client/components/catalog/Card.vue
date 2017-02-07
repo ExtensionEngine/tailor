@@ -1,18 +1,16 @@
 <template>
-  <div class="course-card">
-    <div class="body">
-      <div class="title">
-        <router-link :to="{ name: 'course', params: { courseKey: course.id }}">
-          {{ course.name }}
-        </router-link>
+  <div class="col-lg-4">
+    <div class="course-card" @click="navigateTo">
+      <div class="body">
+        <div class="title">{{ course.name }}</div>
+        <div class="description">{{ shortDescription }}</div>
       </div>
-      <div class="description">{{ shortDescription }}</div>
-    </div>
-    <div class="footer">
-      <div class="row">
-        <span class="col-xs-4">stats #1</span>
-        <span class="col-xs-4">stats #2</span>
-        <span class="col-xs-4">stats #3</span>
+      <div class="footer">
+        <div class="row">
+          <span class="col-xs-4">stats #1</span>
+          <span class="col-xs-4">stats #2</span>
+          <span class="col-xs-4">stats #3</span>
+        </div>
       </div>
     </div>
   </div>
@@ -22,21 +20,29 @@
 import truncate from 'truncate';
 
 export default {
-  name: 'course-card',
   props: ['course'],
   computed: {
     shortDescription() {
       return truncate(this.course.description, 180);
     }
+  },
+  methods: {
+    navigateTo() {
+      this.$router.push({
+        name: 'course',
+        params: { courseKey: this.course.id }
+      });
+    }
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .course-card {
   min-height: 300px;
   margin-top: 30px;
-  padding: 30px;
+  padding: 30px 30px 20px 30px;
+  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background-color: #fff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.54);
   transition: box-shadow 0.2s ease;
@@ -52,8 +58,9 @@ export default {
   }
 
   .title {
-    margin: 20px 0 5px 0;
-    font-size: 20px;
+    margin: 20px 0 10px 0;
+    height: 100px;
+    font-size: 18px;
     text-align: left;
 
     a {
@@ -63,15 +70,15 @@ export default {
   }
 
   .description {
-    max-height: 120px;
-    padding-bottom: 10px;
-    font-size: 15px;
+    max-height: 130px;
+    font-size: 14px;
     text-align: left;
   }
 
   .footer {
-    border-top: 1px solid #e0e0e0;
-    padding-top: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
   }
 }
 </style>

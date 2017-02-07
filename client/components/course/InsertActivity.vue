@@ -96,6 +96,7 @@ export default {
       });
 
       this.hide();
+      if (!sameLevel) this.$emit('expand');
     }
   }
 };

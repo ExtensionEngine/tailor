@@ -1,14 +1,12 @@
 <template>
   <div class="row course-list">
     <loader v-if="showLoader"></loader>
-    <div
+    <card
       v-else
       v-for="course in courses"
       :key="course._cid"
-      class="col-lg-4">
-      <card :course="course"></card>
-    </div>
-
+      :course="course">
+    </card>
     <div class="col-lg-12 loader-wrapper">
       <loader v-show="paginate"></loader>
       <div
