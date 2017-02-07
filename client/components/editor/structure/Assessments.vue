@@ -6,6 +6,9 @@
         {{ allSelected ? 'hide all' : 'show all' }}
       </span>
     </div>
+    <div class="well" v-if="isEmpty">
+      Click the button bellow to Create first Assessment.
+    </div>
     <ul class="list-group">
       <assessment-item
         v-for="assessment in assessments"
@@ -22,6 +25,7 @@
 
 <script>
 import cuid from 'cuid';
+import Vue from 'vue';
 import AssessmentItem from './AssessmentItem';
 import SelectAssessment from './SelectAssessment';
 import { mapActions, mapMutations, mapGetters } from 'vuex-module';
@@ -41,6 +45,11 @@ export default {
     this.setupAssessmentApi(`/courses/${courseId}/assessments`);
     this.fetchAssessments({ activityId }).then(() => this.refresh());
   },
+  computed: {
+    isEmpty() {
+      return !Object.keys(this.assessments).length;
+    }
+  },
   methods: {
     ...mapGetters({ getAssessments: 'assessments' }, 'atom'),
     ...mapActions({
@@ -57,7 +66,7 @@ export default {
     },
     add(type) {
       const _cid = cuid();
-      this.assessments[_cid] = { _cid, type };
+      Vue.set(this.assessments, _cid, { _cid, type });
       this.selected.push(_cid);
     },
     toggleSelect(assessment) {
@@ -83,7 +92,7 @@ export default {
     },
     save(assessment) {
       if (this.assessments[assessment._cid]) {
-        assessment.activityId = this.$route.params.activityKey;
+        assessment.activityId = Number(this.$route.params.activityKey);
         assessment.id = this.assessments[assessment._cid].id;
         this.assessments[assessment._cid] = assessment;
         return assessment.id
@@ -95,7 +104,7 @@ export default {
       if (assessment.id) {
         this.removeAssessment(assessment).then(() => this.refresh());
       } else {
-        delete this.assessments[assessment._cid];
+        Vue.delete(this.assessments, assessment._cid);
         this.selected.splice(this.selected.indexOf(assessment._cid), 1);
       }
     }
@@ -110,6 +119,10 @@ export default {
 <style lang="scss" scoped>
 .assessments {
   margin: 70px 0;
+
+  .well {
+    font-size: 16px;
+  }
 
   .overview {
     text-align: left;
