@@ -101,12 +101,9 @@ export default {
       }
     },
     remove(assessment) {
-      if (assessment.id) {
-        this.removeAssessment(assessment).then(() => this.refresh());
-      } else {
-        Vue.delete(this.assessments, assessment._cid);
-        this.selected.splice(this.selected.indexOf(assessment._cid), 1);
-      }
+      if (assessment.id) this.removeAssessment(assessment);
+      Vue.delete(this.assessments, assessment._cid);
+      this.selected.splice(this.selected.indexOf(assessment._cid), 1);
     }
   },
   components: {
