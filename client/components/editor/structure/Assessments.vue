@@ -1,6 +1,9 @@
 <template>
   <div class="assessments">
-    <h2>Assessments</h2>
+    <div class="overview">
+      <h2>Assessments</h2>
+      <span>show all</span>
+    </div>
     <ul class="list-group">
       <assessment-item
         v-for="assessment in assessments"
@@ -100,8 +103,21 @@ export default {
 .assessments {
   margin: 70px 0;
 
+  .overview {
+    // border: 1px dotted red !important;
+    text-align: left;
+
+    span {
+      float: right;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+  }
+
   h2 {
-    margin-bottom: 15px;
+    display: inline-block;
+    margin: 10px 0 15px 0;
+    padding: 0;
     font-size: 18px;
     color: #444;
   }
