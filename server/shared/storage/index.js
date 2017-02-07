@@ -72,6 +72,4 @@ class Storage {
   }
 }
 
-module.exports = {
-  storage: new Storage(config)
-};
+module.exports = new Storage(config);

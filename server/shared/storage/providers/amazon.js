@@ -1,6 +1,9 @@
+const fs = require('fs');
 const Joi = require('Joi');
-const s3 = require('s3');
-const AWS = require('aws-sdk');
+const last = require('lodash/last');
+const trimEnd = require('lodash/trimEnd');
+const Promise = require('bluebird');
+const S3 = require('aws-sdk/clients/s3');
 const validateConfig = require('../validation').validateConfig;
 
 const schema = Joi.object().keys({
@@ -13,107 +16,87 @@ const schema = Joi.object().keys({
 class Amazon {
   constructor(config) {
     const validated = validateConfig(config, schema);
-
-    const clientOptions = {
-      maxAsyncS3: 20,
-      s3RetryCount: 3,
-      s3RetryDelay: 1000,
-      multipartUploadThreshold: 20971520,
-      multipartUploadSize: 15728640
-    };
-
-    const s3Options = {
+    const s3Config = {
       accessKeyId: validated.key,
       secretAccessKey: validated.secret,
-      region: validated.region
+      region: validated.region,
+      apiVersion: '2006-03-01',
+      maxRetries: 3
     };
-
-    // Workaround for: https://github.com/andrewrk/node-s3-client/issues/69
-    const s3Client = new AWS.S3(s3Options);
-    const options = Object.assign(clientOptions, { s3Client });
 
     this.bucket = validated.bucket;
     this.region = validated.region;
-    this.client = s3.createClient(options);
+    this.client = new S3(s3Config);
   }
 
-  /**
-   * @description Takes in listener and event names. Rejects on error or
-   * resolves otherwise.
-   *
-   * @param {object} listener Listener listening to the S3 event.
-   * @param {string} success Name of success event.
-   * @param {string} error Name of error event.
-   * @return {Promise<listener>} Promisified event listener.
-   */
-  static promisifyListener(listener, success = 'end', error = 'error', data = 'data') {
-    return new Promise((resolve, reject) => {
-      let value = null;
+  static getLocalPath(s3Path, localDir) {
+    const filename = last(s3Path.split('/'));
+    const path = trimEnd(localDir, '/');
+    return `${path}/${filename}`;
+  }
 
-      // If any data was emitted on 'data' event, store it inside value variable.
-      // If any data was received on 'end' event, store that data in value
-      // variable. Resolve with value variable.
-      listener
-        .on(error, reject)
-        .on(data, d => {
-          value = d;
-        })
-        .on(success, d => {
-          if (d) value = d;
-          resolve(value);
-        });
+  static streamToPromise(stream) {
+    return new Promise((resolve, reject) => {
+      stream.on('end', resolve);
+      stream.on('error', reject);
+      stream.resume();
     });
   }
 
+  // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
   loadFile(key, location, options) {
     const s3Params = Object.assign(options, { Bucket: this.bucket, Key: key });
-    const listener = this.client.downloadFile({ s3Params, localFile: location });
-    return Amazon.promisifyListener(listener);
+    const localPath = Amazon.getLocalPath(key, location);
+
+    const input = this.client.getObject(s3Params).createReadStream();
+    const output = fs.createWriteStream(localPath);
+    input.pipe(output);
+
+    // Promisify stream and return output path.
+    return Amazon
+      .streamToPromise(input)
+      .then(() => output.path);
   }
 
+  // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
   saveFile(key, file, options) {
-    const s3Params = Object.assign(options, { Bucket: this.bucket, Key: key });
-    const listener = this.client.uploadFile({ s3Params, localFile: file });
-    return Amazon.promisifyListener(listener);
+    const s3Params = Object.assign(options, { Key: key, Bucket: this.bucket, Body: file });
+    return this.client.putObject(s3Params).promise();
   }
 
+  // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObject-property
   deleteFile(key, options) {
-    const deleteParams = {
-      Delete: {
-        Objects: [
-          {
-            Key: key
-          }
-        ]
-      }
-    };
-    const s3Params = Object.assign(options, deleteParams, { Bucket: this.bucket });
-    const listener = this.client.deleteObjects(s3Params);
-    return Amazon.promisifyListener(listener);
+    const s3Params = Object.assign(options, { Key: key, Bucket: this.bucket });
+    return this.client.deleteObject(s3Params).promise();
   }
 
+  // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#listObjects-property
   listFiles(options) {
     const s3Params = Object.assign(options, { Bucket: this.bucket });
-    const listener = this.client.listObjects({ s3Params });
-    return Amazon.promisifyListener(listener);
+    return this.client.listObjects(s3Params).promise();
   }
 
+  // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getSignedUrl-property
   getFileUrl(key, options) {
+    const params = { Key: key, Bucket: this.bucket, Expires: 3600 };
+    const s3Params = Object.assign(options, params);
+
     return new Promise((resolve, reject) => {
-      const url = s3.getPublicUrl(this.bucket, key, this.region);
-      if (!url) return reject(url);
-      return resolve(url);
+      this.client.getSignedUrl('getObject', s3Params, (err, url) => {
+        if (err) return reject(err);
+        return resolve(url);
+      });
     });
   }
 
+  // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#headObject-property
   fileExists(key, options) {
+    const s3Params = { Key: key, Bucket: this.bucket };
     return new Promise((resolve, reject) => {
-      this.client.s3.headObject(
-        { Key: key, Bucket: this.bucket },
-        (err, data) => {
-          if (err) return reject(err);
-          return resolve(data);
-        });
+      this.client.headObject(s3Params, (err, data) => {
+        if (err) return reject(false);
+        return resolve(true);
+      });
     });
   }
 };
