@@ -50,7 +50,6 @@
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
     "promise-queue": "^2.2.3",
-    "s3": "^4.4.0",
     "sequelize": "^3.3.0",
     "sequelize-cli": "^2.5.1",
     "to-title-case": "^1.0.0",
