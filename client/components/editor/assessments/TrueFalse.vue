@@ -20,7 +20,7 @@
             <input
               v-model="correct"
               :disabled="isEditing"
-              value="True"
+              :value="true"
               type="radio">
           </span>
           <span class="answers">True</span>
@@ -30,7 +30,7 @@
             <input
               v-model="correct"
               :disabled="isEditing"
-              value="False"
+              :value="false"
               type="radio">
           </span>
           <span class="answers">False</span>
@@ -76,12 +76,12 @@ import cloneDeep from 'lodash/cloneDeep';
 
 const schema = yup.object().shape({
   question: yup.string().trim().min(1).required(),
-  correct: yup.string().matches(/^(True|False)$/).required()
+  correct: yup.boolean().required()
 });
 
 const defaultAssessment = {
   question: '',
-  correct: [],
+  correct: null,
   hint: ''
 };
 
