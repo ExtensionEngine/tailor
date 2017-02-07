@@ -1,5 +1,16 @@
-function updatePosition({ index, prev, next, first, count, sameLevel, reorder }) {
-  let position;
+export default function ({ index, siblings, sameLevel, reorder }) {
+  const next = siblings[index + 1];
+  const count = siblings.length;
+  let position, first, prev;
+
+  if (reorder) {
+    first = siblings[1];
+    prev = siblings[index - 1];
+  } else {
+    first = siblings[0];
+    prev = siblings[index];
+  }
+
   if (!sameLevel || (index === 0 && reorder) || index === -1) {
     position = first ? first.position * 0.5 : 1;
   } else if (index + 1 === count) {
@@ -9,15 +20,4 @@ function updatePosition({ index, prev, next, first, count, sameLevel, reorder })
   }
 
   return position;
-}
-
-export default function reorder({ item, positionData, index }) {
-  item.position = updatePosition(positionData);
-  this.commit('save', item);
-  return this.api.post(`${item.id}/reorder`, { position: index })
-    .then(res => {
-      let item = res.data.data;
-      this.api.setCid(item);
-      this.commit('save', item);
-    });
-}
+};

@@ -99,18 +99,11 @@ export default {
       });
     },
     reorder({ newIndex: index }) {
-      const activity = this.children[index];
-      const positionData = {
-        index,
-        prev: this.children[index - 1],
-        next: this.children[index + 1],
-        first: this.children[1],
-        count: this.children.length,
-        sameLevel: true,
-        reorder: true
-      };
+      const siblings = this.children;
+      const activity = siblings[index];
+      const positionData = { index, siblings, sameLevel: true, reorder: true };
 
-      this.reorderActivities({ item: activity, positionData, index });
+      this.reorderActivities({ activity, positionData, index });
     }
   },
   components: {

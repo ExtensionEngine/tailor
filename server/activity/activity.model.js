@@ -1,7 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
-const reorder = require('../shared/util/reorder');
+const updatePostion = require('../shared/util/reorder');
 
 /**
  * @swagger
@@ -111,7 +111,10 @@ module.exports = function (sequelize, DataTypes) {
       },
       reorder(index) {
         return sequelize.transaction(t => {
-          return this.siblings().then(reorder.bind(this, index));
+          return this.siblings().then(siblings => {
+            this.position = updatePostion(index, siblings, this.id);
+            return this.save({ transaction: t });
+          });
         });
       }
     },

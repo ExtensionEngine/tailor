@@ -84,17 +84,9 @@ export default {
       const sameLevel = this.newActivityLevel === 0;
       const parentId = sameLevel ? this.parent.parentId : this.parent.id;
       const courseId = this.parent.courseId;
-      const children = getChildren(this.activities, parentId, courseId);
-      const index = findIndex(children, it => it.position === this.parent.position);
-      const positionData = {
-        index,
-        prev: this.parent,
-        next: children[index + 1],
-        first: children[0],
-        count: children.length,
-        sameLevel,
-        reorder: false
-      };
+      const siblings = getChildren(this.activities, parentId, courseId);
+      const index = findIndex(siblings, it => it.position === this.parent.position);
+      const positionData = { index, siblings, sameLevel, reorder: false };
 
       this.save({
         name: this.activityName,
