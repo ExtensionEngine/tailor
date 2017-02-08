@@ -12,7 +12,10 @@
       </thead>
       <tbody>
         <tr v-for="revision in revisions">
-          <td>{{ new Date(revision.createdAt).toDateString() }}</td>
+          <td>
+            {{ revision.createdAt.toLocaleDateString() }}
+            {{ revision.createdAt.getHours() }}:{{ revision.createdAt.getMinutes() }}
+          </td>
           <td>{{ getDescription(revision) }}</td>
         </tr>
       </tbody>
@@ -26,9 +29,9 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 
 const ops = {
   'CREATE': 'created a new',
-  'UPDATE': 'updated the',
-  'REMOVE': 'removed the',
-}
+  'UPDATE': 'changed the',
+  'REMOVE': 'removed the'
+};
 
 export default {
   name: 'course-revisions',
@@ -44,8 +47,7 @@ export default {
     getDescription(revision) {
       const value = revision.oldValue || revision.newValue;
       const parts = [
-        'User',
-        revision.userId,
+        revision.user.email,
         ops[revision.operation],
         `${revision.resourceType.toLowerCase()}`,
         `'${value.data.question}'` // only for assessments
@@ -58,6 +60,10 @@ export default {
     this.setupRevisionApi(`/courses/${courseId}/revisions`);
     this.fetchRevisions().then(() => {
       this.revisions = filter(this.getRevisions(), { courseId });
+      this.revisions.forEach(rev => {
+        rev.createdAt = new Date(rev.createdAt);
+      });
+      this.revisions.sort((r1, r2) => r2.createdAt - r1.createdAt);
     });
   }
 };
