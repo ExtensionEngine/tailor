@@ -1,7 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
-const updatePostion = require('../shared/util/reorder');
+const updatePostion = require('../shared/util/updatePostion');
 
 /**
  * @swagger

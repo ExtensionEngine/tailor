@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     ...mapMutations(['focusActivity'], 'editor'),
-    ...mapActions({ reorderActivities: 'reorder' }, 'activity'),
+    ...mapActions({ updatePosition: 'reorder' }, 'activity'),
     select() {
       this.isCollapsed = !this.isCollapsed;
       this.focusActivity(this._cid);
@@ -104,12 +104,13 @@ export default {
         params: { activityKey: this.activity.id }
       });
     },
-    reorder({ newIndex: index }) {
-      const siblings = this.children;
-      const activity = siblings[index];
-      const positionData = { index, siblings, sameLevel: true, reorder: true };
+    reorder({ newIndex: newPosition }) {
+      const items = this.children;
+      const activity = items[newPosition];
+      const isFirstChild = newPosition === 0;
+      const positionData = { newPosition, items, isFirstChild };
 
-      this.reorderActivities({ activity, positionData, index });
+      this.updatePosition({ activity, positionData, newPosition });
     }
   },
   components: {

@@ -32,13 +32,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ reorderAssets: 'reorder' }, 'assets'),
-    reorder({ newIndex: index }) {
-      const siblings = this.perspectiveAssets;
-      const asset = siblings[index];
-      const positionData = { index, siblings, sameLevel: true, reorder: true };
+    ...mapActions({ updatePosition: 'reorder' }, 'assets'),
+    reorder({ newIndex: newPosition }) {
+      const items = this.perspectiveAssets;
+      const asset = items[newPosition];
+      const isFirstChild = newPosition === 0;
+      const positionData = { newPosition, items, isFirstChild };
 
-      this.reorderAssets({ asset, positionData, index });
+      this.updatePosition({ asset, positionData, newPosition });
     }
   },
   components: {

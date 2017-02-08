@@ -1,6 +1,6 @@
 'use strict';
 
-const updatePostion = require('../shared/util/reorder');
+const updatePostion = require('../shared/util/updatePostion');
 
 /**
  * @swagger
