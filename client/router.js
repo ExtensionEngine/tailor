@@ -6,7 +6,7 @@ import Course from './components/course/Container';
 import Outline from './components/course/Outline';
 import CourseSettings from './components/course/settings';
 import CourseDetails from './components/course/courseDetails';
-import CourseRevisions from './components/course/revisions/Revisions';
+import CourseRevisions from './components/course/Revisions';
 import Catalog from './components/catalog/Container';
 import Editor from './components/editor';
 import Login from './components/auth/Login';
