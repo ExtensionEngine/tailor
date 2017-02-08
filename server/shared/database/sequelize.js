@@ -10,6 +10,7 @@ const models = {
   Activity: '../../activity/activity.model',
   Course: '../../course/course.model',
   CourseUser: '../../course/courseUser.model',
+  Revision: '../../revision/revision.model',
   User: '../../user/user.model'
 };
 
