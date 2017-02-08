@@ -6,6 +6,7 @@ import Course from './components/course/Container';
 import Outline from './components/course/Outline';
 import CourseSettings from './components/course/settings';
 import CourseDetails from './components/course/courseDetails';
+import CourseRevisions from './components/course/revisions/Revisions';
 import Catalog from './components/catalog/Container';
 import Editor from './components/editor';
 import Login from './components/auth/Login';
@@ -40,6 +41,11 @@ let router = new Router({
           path: 'details',
           name: 'course-details',
           component: CourseDetails
+        },
+        {
+          path: 'revisions',
+          name: 'course-revisions',
+          component: CourseRevisions
         }
       ],
       meta: { auth: true }
