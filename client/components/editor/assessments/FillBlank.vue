@@ -22,55 +22,49 @@
         Arrange answers by dragging if needed !
       </span>
       <draggable
-        v-if="hasMultipleAnswers"
         :list="correct"
-        :options="{ disabled: isEditing }"
+        :options="{ disabled: isEditing || !hasMultipleAnswers }"
         class="draggable">
-        <transition-group name="questions">
-          <span v-for="(element, index) in correct" ref="order" :key="index">
-            {{ index + 1 }}
-          </span>
+        <transition-group name="answers">
+          <div v-for="(blank, index) in correct" ref="order" :key="index">
+            <span class="blank-label"> ({{ index + 1 }}) </span>
+            <button
+              :disabled="isEditing"
+              @click="addAnswer(index)"
+              class="btn btn-default answers-add controls"
+              type="button">
+              <span class="fa fa-plus"></span>
+            </button>
+            <button
+              v-show="isSynced > 0"
+              @click="removeBlank(index)"
+              class="btn btn-default delete"
+              type="button">
+              <span class="fa fa-trash-o"></span>
+            </button>
+            <ul>
+              <li v-for="(answer, indexAnswer) in blank">
+                <span
+                  class="answers-input"
+                  :class="{ 'has-error': answerError(index, indexAnswer)} ">
+                  <input
+                    v-model="correct[index][indexAnswer]"
+                    :disabled="isEditing"
+                    type="text"
+                    placeholder="Answer..">
+                </span>
+                <button
+                  :disabled="isEditing"
+                  @click="removeAnswer(index, indexAnswer)"
+                  class="destroy controls"
+                  type="button">
+                  <span class="fa fa-times"></span>
+                </button>
+              </li>
+            </ul>
+          </div>
         </transition-group>
       </draggable>
-      <ul>
-        <li v-for="(blank, index) in correct">
-          <span class="blank-label"> ({{ index + 1 }}) </span>
-          <button
-            :disabled="isEditing"
-            @click="addAnswer(index)"
-            class="btn btn-default answers-add controls"
-            type="button">
-            <span class="fa fa-plus"></span>
-          </button>
-          <button
-            v-show="isSynced > 0"
-            @click="removeBlank(index)"
-            class="btn btn-default delete"
-            type="button">
-            <span class="fa fa-trash-o"></span>
-          </button>
-          <ul>
-            <li v-for="(answer, indexAnswer) in blank">
-              <span
-                class="answers-input"
-                :class="{ 'has-error': answerError(index, indexAnswer)} ">
-                <input
-                  v-model="correct[index][indexAnswer]"
-                  :disabled="isEditing"
-                  type="text"
-                  placeholder="Answer..">
-              </span>
-              <button
-                :disabled="isEditing"
-                @click="removeAnswer(index, indexAnswer)"
-                class="destroy controls"
-                type="button">
-                <span class="fa fa-times"></span>
-              </button>
-            </li>
-          </ul>
-        </li>
-      </ul>
     </div>
     <div class="alert-container">
       <div
@@ -242,26 +236,6 @@ export default {
     text-align: center;
 
   }
-  .draggable {
-    font-size: 20px;
-    margin: 0 auto;
-    text-align: center;
-    padding: 40px 0px 10px 0px;
-    width: 100%;
-
-    span {
-      display: inline-block;
-
-      span {
-        padding: 0 10px;
-        border: 1px solid #ddd;
-      }
-
-      &:hover {
-        cursor: pointer;
-      }
-    }
-  }
 
   .controls {
     overflow: hidden;
@@ -322,7 +296,7 @@ export default {
     float: right;
   }
 
-  ul {
+  .draggable div {
     padding: 10px 0 0 50px;
     width: 100%;
 
@@ -357,11 +331,9 @@ export default {
       }
     }
 
-    li {
-      li:hover {
-        .destroy:enabled {
-          display: inline;
-        }
+    li:hover {
+      .destroy:enabled {
+        display: inline;
       }
     }
   }
