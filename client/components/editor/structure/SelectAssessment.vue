@@ -28,7 +28,8 @@ export default {
         { type: 'TF', title: 'True - False' },
         { type: 'NR', title: 'Numerical' },
         { type: 'TR', title: 'Text' },
-        { type: 'FB', title: 'Fill in the blank' }
+        { type: 'FB', title: 'Fill in the blank' },
+        { type: 'HS', title: 'Hotspot' }
       ]
     };
   },

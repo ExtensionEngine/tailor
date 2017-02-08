@@ -37,6 +37,12 @@
         @selected="$emit('selected')"
         @save="$emit('save', $event)">
       </fill-blank>
+      <hotspot
+        v-if="assessment.type === 'HS'"
+        :assessment="assessment"
+        @selected="$emit('selected')"
+        @save="$emit('save', $event)">
+      </hotspot>
     </div>
   </div>
 </template>
@@ -48,6 +54,7 @@ import TrueFalse from './TrueFalse';
 import NumericalResponse from './NumericalResponse';
 import TextResponse from './TextResponse';
 import FillBlank from './FillBlank';
+import Hotspot from './Hotspot';
 
 export default {
   name: 'assessment',
@@ -58,7 +65,8 @@ export default {
     TrueFalse,
     NumericalResponse,
     TextResponse,
-    FillBlank
+    FillBlank,
+    Hotspot
   }
 };
 </script>
