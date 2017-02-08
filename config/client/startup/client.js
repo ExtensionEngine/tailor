@@ -7,11 +7,15 @@ const webpack = require('webpack');
 const envSettings = require('../helpers/envSettings');
 const settings = require('./settings');
 
-if (!process.env.NODE_ENV) process.env.NODE_ENV = JSON.parse(envSettings.dev.env.NODE_ENV);
+if (!process.env.NODE_ENV) {
+  process.env.NODE_ENV = JSON.parse(envSettings.dev.env.NODE_ENV);
+}
+
 const webpackConfig = process.env.NODE_ENV === envSettings.test.env.NODE_ENV
   ? require('../webpack/prod')
   : require('../webpack/dev');
 
+const hostname = '0.0.0.0';
 const port = process.env.PORT || settings.client.PORT;
 const proxyTable = envSettings.dev.proxyTable;
 
@@ -26,16 +30,16 @@ let devMiddleware = require('webpack-dev-middleware')(compiler, {
   }
 });
 
-let hotMiddleware = require('webpack-hot-middleware')(compiler);
-compiler.plugin('compilation', function (compilation) {
-  compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
+const hotMiddleware = require('webpack-hot-middleware')(compiler);
+compiler.plugin('compilation', compilation => {
+  compilation.plugin('html-webpack-plugin-after-emit', (data, cb) => {
     hotMiddleware.publish({ action: 'reload' });
     cb();
   });
 });
 
 // proxy api requests
-Object.keys(proxyTable).forEach(function (context) {
+Object.keys(proxyTable).forEach(context => {
   let options = proxyTable[context];
   if (typeof options === 'string') {
     options = { target: options };
@@ -57,12 +61,13 @@ app.use(hotMiddleware);
 const staticPath = path.posix.join('/', 'static');
 app.use(staticPath, express.static('./static'));
 
-module.exports = app.listen(port, function (err) {
+module.exports = app.listen(port, err => {
   if (err) {
     console.log(err);
     return;
   }
-  const uri = `http://localhost:${port}`;
+
+  const uri = `http://${hostname}:${port}`;
   console.log(`Listening at ${uri}` + '\n');
 
   // when env is testing, don't need open it

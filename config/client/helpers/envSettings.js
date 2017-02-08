@@ -7,7 +7,11 @@ module.exports = {
     assetsPublicPath: '/',
     cssSourceMap: false,
     port: 8080,
-    proxyTable: {}
+    proxyTable: {
+      '/api/v1': {
+        target: 'http://127.0.0.1:3000'
+      }
+    }
   },
   prod: {
     env: { NODE_ENV: '"production"' },

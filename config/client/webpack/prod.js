@@ -31,11 +31,11 @@ let webpackConfig = merge(baseConfig, {
     new webpack.DefinePlugin({
       'process.env': { NODE_ENV: '"production"' }
     }),
-    new webpack.optimize.UglifyJsPlugin({
+    /* new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
       }
-    }),
+    }), */
     new webpack.optimize.OccurrenceOrderPlugin(),
     new ExtractTextPlugin(getAssetsPath('css/[name].[contenthash].css')),
     new HtmlWebpackPlugin({
