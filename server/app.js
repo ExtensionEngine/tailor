@@ -5,6 +5,7 @@ const cors = require('cors');
 const express = require('express');
 const includes = require('lodash/includes');
 const passport = require('passport');
+const path = require('path');
 
 // Setup authentication before instantiating the main app router.
 // eslint-disable-next-line no-unused-vars
@@ -18,6 +19,7 @@ app.disable('x-powered-by');
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
+app.use(express.static(path.join(__dirname, '../dist/')));
 
 // Log all incoming requests.
 app.use('/api/v1', (req, res, next) => {
