@@ -1,25 +1,27 @@
 <template>
-    <!-- <div v-for="revision in revisions">
-      {{ revision }}
-    </div> -->
-  <div class="revision-container">
-    <table class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="revision in revisions">
-          <td>
-            {{ revision.createdAt.toLocaleDateString() }}
-            {{ revision.createdAt.getHours() }}:{{ revision.createdAt.getMinutes() }}
-          </td>
-          <td>{{ getDescription(revision) }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="container">
+    <div class="well" v-if="!revisions.length">
+      No changes recorded.
+    </div>
+    <div class="revisions" v-else>
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="revision in revisions">
+            <td>
+              {{ revision.createdAt.toLocaleDateString() }}
+              {{ revision.createdAt.getHours() }}:{{ revision.createdAt.getMinutes() }}
+            </td>
+            <td>{{ getDescription(revision) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -70,7 +72,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.revision-container {
+.well {
+  margin: 40px;
+  font-size: 16px;
+}
+
+.revisions {
   margin: 40px 20px;
   padding: 30px;
   background-color: #fff;
