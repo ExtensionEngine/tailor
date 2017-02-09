@@ -11,9 +11,13 @@
           <span class="badge" v-if="showBadge">{{ children.length }}</span>
         </span>
       </div>
-      <insert-activity :parent="activity" :level="level"></insert-activity>
+      <insert-activity
+        :parent="activity"
+        :level="level"
+        @expand="isCollapsed = false">
+      </insert-activity>
     </div>
-    <transition name="fade" v-if="!isCollapsed && hasChildren">
+    <div v-if="!isCollapsed && hasChildren">
       <draggable @update="reorder" :list="children">
         <activity
           v-for="(it, index) in children"
@@ -29,7 +33,8 @@
           :activity="it">
         </activity>
       </draggable>
-    </transition>
+    </div>
+    <no-activities v-if="isRoot && !hasChildren"></no-activities>
   </div>
 </template>
 
@@ -37,6 +42,7 @@
 import { mapActions, mapMutations } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import InsertActivity from './InsertActivity';
+import NoActivities from './NoActivities';
 import values from 'lodash/values';
 
 const MAX_LEVELS = 3;
@@ -69,8 +75,8 @@ export default {
     },
     children() {
       const filterByParent = this.isRoot
-        ? act => act.parentId === null
-        : act => act.parentId === this.id;
+        ? act => !act.parentId
+        : act => this.id && this.id === act.parentId;
 
       return values(this.activities)
         .filter(filterByParent)
@@ -114,7 +120,8 @@ export default {
   },
   components: {
     Draggable,
-    InsertActivity
+    InsertActivity,
+    NoActivities
   }
 };
 </script>
@@ -185,13 +192,5 @@ export default {
 
 .sub-activity {
   margin-left: 50px;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .2s
-}
-
-.fade-enter, .fade-leave-active {
-  opacity: 0
 }
 </style>

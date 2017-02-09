@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // TODO: read this from configuration.
-const BASE_URL = 'http://localhost:3000/api/v1/';
+const BASE_URL = '/api/v1/';
 
 // Instance of axios to be used for all API requests.
 const client = axios.create({

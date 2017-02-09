@@ -20,8 +20,8 @@
     "doc:server": "jsdoc --pedantic --destination ./server/_doc_ --recurse ./server",
     "unit:server": "mocha --recursive \"./server/**/*.spec.js\"",
     "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server",
-    "db:init": "node -r dotenv/config ./server/script/initDatabase.js",
-    "db:seed": "node -r dotenv/config ./server/script/seedDevDatabase.js"
+    "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
+    "start": "node -r dotenv/config ./server"
   },
   "dependencies": {
     "aws-sdk": "^2.7.27",
