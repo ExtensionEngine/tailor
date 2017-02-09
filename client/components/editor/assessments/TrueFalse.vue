@@ -20,7 +20,7 @@
             <input
               v-model="correct"
               :disabled="isEditing"
-              value="True"
+              :value="true"
               type="radio">
           </span>
           <span class="answers">True</span>
@@ -30,7 +30,7 @@
             <input
               v-model="correct"
               :disabled="isEditing"
-              value="False"
+              :value="false"
               type="radio">
           </span>
           <span class="answers">False</span>
@@ -47,7 +47,9 @@
         placeholder="Optional hint...">
     </div>
     <div class="alert-container">
-      <div v-show="isEditing" class="alert alert-dismissible alert-success">
+      <div
+        v-show="isEditing && isSaved"
+        class="alert alert-dismissible alert-success">
         <strong>Question saved !</strong>
       </div>
     </div>
@@ -76,12 +78,12 @@ import cloneDeep from 'lodash/cloneDeep';
 
 const schema = yup.object().shape({
   question: yup.string().trim().min(1).required(),
-  correct: yup.string().matches(/^(True|False)$/).required()
+  correct: yup.boolean().required()
 });
 
 const defaultAssessment = {
   question: '',
-  correct: [],
+  correct: null,
   hint: ''
 };
 
@@ -92,7 +94,8 @@ export default {
       ...cloneDeep(defaultAssessment),
       ...cloneDeep(this.assessment),
       isEditing: !!this.assessment.question,
-      errors: []
+      errors: [],
+      isSaved: false
     };
   },
   methods: {
@@ -108,6 +111,7 @@ export default {
       this.validate(question)
         .then(() => {
           this.isEditing = true;
+          this.isSaved = true;
           this.$emit('save', question);
         })
         .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
@@ -121,6 +125,7 @@ export default {
     },
     edit() {
       this.isEditing = false;
+      this.isSaved = false;
     }
   }
 };

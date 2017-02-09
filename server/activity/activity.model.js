@@ -63,9 +63,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING
     },
     type: {
-      type: DataTypes.ENUM('GOAL', 'CONCEPT', 'TOPIC', 'PERSPECTIVE'),
-      defaultValue: 'GOAL',
-      allowNull: false
+      type: DataTypes.STRING
     },
     position: {
       type: DataTypes.DOUBLE,
@@ -79,7 +77,7 @@ module.exports = function (sequelize, DataTypes) {
         Activity.belongsTo(Activity, { as: 'parent', foreignKey: 'parentId' });
         Activity.hasMany(Activity, { as: 'children', foreignKey: 'parentId' });
         Activity.hasMany(models.Asset);
-        // Activity.hasMany(models.Assesment);
+        Activity.hasMany(models.Assessment);
       }
     },
     instanceMethods: {
