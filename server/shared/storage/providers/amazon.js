@@ -52,7 +52,6 @@ class Amazon {
     const output = fs.createWriteStream(localPath);
     input.pipe(output);
 
-    // Promisify stream and return output path.
     return Amazon
       .streamToPromise(input)
       .then(() => output.path);
@@ -83,8 +82,8 @@ class Amazon {
 
     return new Promise((resolve, reject) => {
       this.client.getSignedUrl('getObject', s3Params, (err, url) => {
-        if (err) return reject(err);
-        return resolve(url);
+        if (err) reject(err);
+        resolve(url);
       });
     });
   }
@@ -94,8 +93,8 @@ class Amazon {
     const s3Params = { Key: key, Bucket: this.bucket };
     return new Promise((resolve, reject) => {
       this.client.headObject(s3Params, (err, data) => {
-        if (err) return reject(false);
-        return resolve(true);
+        if (err) resolve(false);
+        resolve(true);
       });
     });
   }
