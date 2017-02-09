@@ -1,7 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
-const updatePostion = require('../shared/util/updatePostion');
+const calculatePosition = require('../shared/util/calculatePosition');
 
 /**
  * @swagger
@@ -112,7 +112,7 @@ module.exports = function (sequelize, DataTypes) {
       reorder(index) {
         return sequelize.transaction(t => {
           return this.siblings().then(siblings => {
-            this.position = updatePostion(this.id, index, siblings);
+            this.position = calculatePosition(this.id, index, siblings);
             return this.save({ transaction: t });
           });
         });
