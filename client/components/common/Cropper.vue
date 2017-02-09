@@ -125,7 +125,7 @@ export default {
     }
   },
   methods: {
-    showCrop() {
+    show() {
       return this.cropper.crop();
     },
     reset() {
