@@ -32,7 +32,18 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 const ops = {
   'CREATE': 'created a new',
   'UPDATE': 'changed the',
-  'REMOVE': 'removed the'
+  'REMOVE': 'removed one'
+};
+
+const name = rev => {
+  if (rev.operation === 'REMOVE') return '';
+
+  switch (rev.resourceType) {
+    case 'ACTIVITY':
+      return `"${rev.currentValue.name}"`;
+    default:
+      return '';
+  }
 };
 
 export default {
@@ -47,12 +58,11 @@ export default {
     ...mapActions({ fetchRevisions: 'fetch' }, 'revisions'),
     ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
     getDescription(revision) {
-      const value = revision.oldValue || revision.newValue;
       const parts = [
         revision.user.email,
         ops[revision.operation],
         `${revision.resourceType.toLowerCase()}`,
-        `'${value.data.question}'` // only for assessments
+        name(revision)
       ];
       return parts.join(' ');
     }
