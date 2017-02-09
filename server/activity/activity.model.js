@@ -112,7 +112,7 @@ module.exports = function (sequelize, DataTypes) {
       reorder(index) {
         return sequelize.transaction(t => {
           return this.siblings().then(siblings => {
-            this.position = updatePostion(index, siblings, this.id);
+            this.position = updatePostion(this.id, index, siblings);
             return this.save({ transaction: t });
           });
         });

@@ -1,6 +1,6 @@
 const findIndex = require('lodash/findIndex');
 
-module.exports = function (index, siblings, id) {
+module.exports = function (id, index, siblings) {
   let newpos;
 
   if (!index) {
