@@ -47,8 +47,9 @@
         placeholder="Optional hint...">
     </div>
     <div class="alert-container">
-      <div v-show="isEditing && isSaved"
-           class="alert alert-dismissible alert-success">
+      <div
+        v-show="isEditing && isSaved"
+        class="alert alert-dismissible alert-success">
         <strong>Question saved !</strong>
       </div>
     </div>
