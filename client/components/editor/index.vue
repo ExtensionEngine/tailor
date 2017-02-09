@@ -61,7 +61,7 @@ export default {
     if (!this.course) this.getCourse(courseId);
 
     Promise.join(
-      this.getAssets(),
+      this.getAssets({ parentId: activityId }),
       this.getActivities(),
       this.getAssessments({ activityId }),
       Promise.delay(500)

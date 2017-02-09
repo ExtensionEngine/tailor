@@ -1,7 +1,11 @@
 <template>
   <div class="perspective">
-    <draggable class="row">
-      <asset v-for="asset in perspectiveAssets" :asset="asset"></asset>
+    <draggable class="row" :list="perspectiveAssets" @update="reorder">
+      <asset
+        v-for="asset in perspectiveAssets"
+        :asset="asset"
+        :key="asset._cid">
+      </asset>
     </draggable>
     <create-asset
       :perspective="perspective"
@@ -12,7 +16,7 @@
 
 <script>
 import { filter } from 'lodash';
-import { mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import Asset from '../assets';
 import CreateAsset from './CreateAsset';
@@ -23,7 +27,18 @@ export default {
   computed: {
     ...mapGetters(['assets']),
     perspectiveAssets() {
-      return filter(this.assets, { activityId: this.perspective.id });
+      return filter(this.assets, { activityId: this.perspective.id })
+        .sort((a, b) => a.position - b.position);
+    }
+  },
+  methods: {
+    ...mapActions({ updatePosition: 'reorder' }, 'assets'),
+    reorder({ newIndex: newPosition }) {
+      const items = this.perspectiveAssets;
+      const asset = items[newPosition];
+      const isFirstChild = newPosition === 0;
+      const context = { items, newPosition, isFirstChild };
+      this.updatePosition({ asset, context });
     }
   },
   components: {

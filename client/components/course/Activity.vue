@@ -18,7 +18,7 @@
       </insert-activity>
     </div>
     <div v-if="!isCollapsed && hasChildren">
-      <draggable @update="reorder" :list="children">
+      <draggable @update="reorder" :options="dragOptions" :list="children">
         <activity
           v-for="(it, index) in children"
           :key="it._cid"
@@ -53,7 +53,8 @@ export default {
   props: ['_cid', 'id', 'name', 'position', 'level', 'activities', 'activity', 'index'],
   data() {
     return {
-      isCollapsed: this.level !== 0
+      isCollapsed: this.level !== 0,
+      dragOptions: { handle: '.activity' }
     };
   },
   computed: {
@@ -91,7 +92,7 @@ export default {
   },
   methods: {
     ...mapMutations(['focusActivity'], 'editor'),
-    ...mapActions({ reorderActivities: 'reorder' }, 'activity'),
+    ...mapActions({ updatePosition: 'reorder' }, 'activity'),
     select() {
       this.isCollapsed = !this.isCollapsed;
       this.focusActivity(this._cid);
@@ -103,19 +104,12 @@ export default {
         params: { activityKey: this.activity.id }
       });
     },
-    reorder({ newIndex: index }) {
-      const activity = this.children[index];
-      const positionData = {
-        index,
-        prev: this.children[index - 1],
-        next: this.children[index + 1],
-        first: this.children[1],
-        count: this.children.length,
-        sameLevel: true,
-        reorder: true
-      };
-
-      this.reorderActivities({ activity, positionData, index });
+    reorder({ newIndex: newPosition }) {
+      const items = this.children;
+      const activity = items[newPosition];
+      const isFirstChild = newPosition === 0;
+      const context = { items, newPosition, isFirstChild };
+      this.updatePosition({ activity, context });
     }
   },
   components: {

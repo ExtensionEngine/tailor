@@ -44,7 +44,8 @@
 import { focus } from 'vue-focus';
 import findIndex from 'lodash/findIndex';
 import { mapGetters, mapActions } from 'vuex-module';
-import { getChildren, updatePosition } from '../../utils/activity.js';
+import { getChildren } from '../../utils/activity.js';
+import calculatePosition from '../../utils/calculatePosition.js';
 
 export default {
   directives: { focus },
@@ -83,23 +84,16 @@ export default {
       const sameLevel = this.newActivityLevel === 0;
       const parentId = sameLevel ? this.parent.parentId : this.parent.id;
       const courseId = this.parent.courseId;
-      const children = getChildren(this.activities, parentId, courseId);
-      const index = findIndex(children, it => it.position === this.parent.position);
-      const positionData = {
-        index,
-        prev: this.parent,
-        next: children[index + 1],
-        first: children[0],
-        count: children.length,
-        sameLevel,
-        reorder: false
-      };
+      const items = getChildren(this.activities, parentId, courseId);
+      const newPosition = findIndex(items, it => it.position === this.parent.position);
+      const isFirstChild = !sameLevel || newPosition === -1;
+      const context = { items, newPosition, isFirstChild, insert: true };
 
       this.save({
         name: this.activityName,
         courseId,
-        position: updatePosition(positionData),
-        parentId
+        parentId,
+        position: calculatePosition(context)
       });
 
       this.hide();
