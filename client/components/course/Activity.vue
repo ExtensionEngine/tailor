@@ -108,9 +108,8 @@ export default {
       const items = this.children;
       const activity = items[newPosition];
       const isFirstChild = newPosition === 0;
-      const positionData = { newPosition, items, isFirstChild };
-
-      this.updatePosition({ activity, positionData, newPosition });
+      const context = { items, newPosition, isFirstChild };
+      this.updatePosition({ activity, context });
     }
   },
   components: {

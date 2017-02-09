@@ -87,13 +87,13 @@ export default {
       const items = getChildren(this.activities, parentId, courseId);
       const newPosition = findIndex(items, it => it.position === this.parent.position);
       const isFirstChild = !sameLevel || newPosition === -1;
-      const positionData = { newPosition, items, isFirstChild, insert: true };
+      const context = { items, newPosition, isFirstChild, insert: true };
 
       this.save({
         name: this.activityName,
         courseId,
-        position: updatePosition(positionData),
-        parentId
+        parentId,
+        position: updatePosition(context)
       });
 
       this.hide();

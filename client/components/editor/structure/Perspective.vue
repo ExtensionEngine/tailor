@@ -37,9 +37,8 @@ export default {
       const items = this.perspectiveAssets;
       const asset = items[newPosition];
       const isFirstChild = newPosition === 0;
-      const positionData = { newPosition, items, isFirstChild };
-
-      this.updatePosition({ asset, positionData, newPosition });
+      const context = { items, newPosition, isFirstChild };
+      this.updatePosition({ asset, context });
     }
   },
   components: {

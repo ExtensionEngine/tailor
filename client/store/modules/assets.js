@@ -7,10 +7,10 @@ getter(function assets() {
   return this.state.items;
 }, { global: true });
 
-action(function reorder({ asset, positionData, newPosition }) {
-  asset.position = updatePosition(positionData);
+action(function reorder({ asset, context }) {
+  asset.position = updatePosition(context);
   this.commit('save', asset);
-  return this.api.post(`${asset.id}/reorder`, { position: newPosition })
+  return this.api.post(`${asset.id}/reorder`, { position: context.newPosition })
     .then(res => {
       let asset = res.data.data;
       this.api.setCid(asset);
