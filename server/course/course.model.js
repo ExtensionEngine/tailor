@@ -50,6 +50,7 @@ module.exports = function (sequelize, DataTypes) {
         Course.belongsToMany(models.User, { through: models.CourseUser });
         Course.hasMany(models.Activity);
         Course.hasMany(models.Asset);
+        Course.hasMany(models.Assessment);
       }
     },
     instanceMethods: {

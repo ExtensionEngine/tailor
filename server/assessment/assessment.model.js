@@ -17,6 +17,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate(models) {
+        Assessment.belongsTo(models.Course);
         Assessment.belongsTo(models.Activity, {
           foreignKey: {
             name: 'activityId',

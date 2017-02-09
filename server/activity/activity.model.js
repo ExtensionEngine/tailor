@@ -63,9 +63,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING
     },
     type: {
-      type: DataTypes.ENUM('GOAL', 'CONCEPT', 'TOPIC', 'PERSPECTIVE'),
-      defaultValue: 'GOAL',
-      allowNull: false
+      type: DataTypes.STRING
     },
     position: {
       type: DataTypes.DOUBLE,

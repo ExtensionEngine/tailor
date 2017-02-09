@@ -2,7 +2,7 @@
 
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
-const { Assessment, sequelize } = require('../shared/database/sequelize');
+const { Assessment } = require('../shared/database/sequelize');
 const params = require('../../config/server').queryParams;
 
 function index(req, res) {
@@ -29,33 +29,18 @@ function create(req, res) {
     .then(data => res.json({ data }));
 }
 
-function remove(req, res) {
-  const q = 'DELETE FROM assessment USING activity ' +
-            'WHERE activity."courseId" = ? ' +
-            'AND assessment.id = ? ' +
-            'RETURNING *';
-  return sequelize.query(q, {
-    replacements: [req.params.courseId, req.params.assessmentId],
-    model: Assessment
-  }).then(assessments => assessments.length
-    ? res.send({ data: assessments[0] })
-    : createError(NOT_FOUND, 'Not found'));
+function patch({ body, params }, res) {
+  const { courseId, assessmentId } = params;
+  return Assessment.findOne({ where: { id: assessmentId, courseId } })
+    .then(assessment => assessment || createError(NOT_FOUND, 'Not found'))
+    .then(assessment => assessment.update({ data: body.data }))
+    .then(assessment => res.json({ data: assessment }));
 }
 
-function patch(req, res) {
-  const data = JSON.stringify(req.body.data);
-  const q = 'UPDATE assessment SET data = ? FROM activity ' +
-            'WHERE assessment."activityId" = activity.id ' +
-            'AND activity."courseId" = ? ' +
-            'AND assessment.id = ? ' +
-            'RETURNING assessment.id, assessment.type, assessment.data, ' +
-            'assessment."createdAt", assessment."updatedAt"';
-  return sequelize.query(q, {
-    replacements: [data, req.params.courseId, req.params.assessmentId],
-    model: Assessment
-  }).then(assessments => assessments.length
-    ? res.send({ data: assessments[0] })
-    : createError(NOT_FOUND, 'Not found'));
+function remove({ params }, res) {
+  const { courseId, assessmentId } = params;
+  return Assessment.destroy({ where: { id: assessmentId, courseId } })
+    .then(() => res.end());
 }
 
 module.exports = {
