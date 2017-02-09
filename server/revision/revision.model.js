@@ -4,7 +4,7 @@ module.exports = function(sequelize, DataTypes) {
   const Revision = sequelize.define('revision', {
     resourceType: {
       type: DataTypes.ENUM,
-      values: ['ASSESSMENT'],
+      values: ['ACTIVITY', 'ASSET', 'COURSE'],
       allowNull: false
     },
     operation: {

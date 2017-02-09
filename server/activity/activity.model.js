@@ -80,9 +80,51 @@ module.exports = function (sequelize, DataTypes) {
         Activity.hasMany(Activity, { as: 'children', foreignKey: 'parentId' });
         Activity.hasMany(models.Asset);
         // Activity.hasMany(models.Assesment);
+      },
+      track(models) {
+        const Revision = models.Revision;
+        Activity.hook('afterCreate', (activity, { context }) => {
+          if (context && context.userId) {
+            Revision.create({
+              userId: context.userId,
+              courseId: activity.courseId,
+              resourceType: 'ACTIVITY',
+              operation: 'CREATE',
+              currentValue: activity.plain()
+            });
+          }
+        });
+
+        Activity.hook('afterUpdate', (activity, { context }) => {
+          if (context && context.userId) {
+            Revision.create({
+              userId: context.userId,
+              courseId: activity.courseId,
+              resourceType: 'ACTIVITY',
+              operation: 'UPDATE',
+              currentValue: activity.plain()
+            });
+          }
+        });
+
+        Activity.hook('afterDestroy', (activity, { context }) => {
+          if (context && context.userId) {
+            Revision.create({
+              userId: context.userId,
+              courseId: activity.courseId,
+              resourceType: 'ACTIVITY',
+              operation: 'REMOVE',
+              currentValue: null
+            });
+          }
+        });
       }
     },
     instanceMethods: {
+      plain() {
+        return ['id', 'courseId', 'parentId', 'name', 'type', 'position']
+          .reduce((acc, val) => { acc[val] = this[val]; return acc; }, {});
+      },
       siblings() {
         return Activity.findAll({
           where: {
