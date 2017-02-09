@@ -1,12 +1,12 @@
 <template>
   <div class="assessments">
-    <div class="overview">
+    <div class="heading">
       <h2>Assessments</h2>
-      <span @click.stop="toggleAllSelected">
+      <span @click="toggleAssessments">
         {{ allSelected ? 'hide all' : 'show all' }}
       </span>
     </div>
-    <div class="well" v-if="isEmpty">
+    <div class="well" v-if="hasAssessments">
       Click the button bellow to Create first Assessment.
     </div>
     <ul class="list-group">
@@ -24,46 +24,35 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
+import difference from 'lodash/difference';
+import keyBy from 'lodash/keyBy';
 import Vue from 'vue';
 import AssessmentItem from './AssessmentItem';
 import SelectAssessment from './SelectAssessment';
-import { mapActions, mapMutations, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
-  name: 'assessments',
   data() {
     return {
       selected: [],
-      assessments: {},
+      assessments: cloneDeep(keyBy(this.getAssessments(), '_cid')),
       allSelected: false
     };
   },
-  created() {
-    const courseId = this.$route.params.courseKey;
-    const activityId = this.$route.params.activityKey;
-    this.setupAssessmentApi(`/courses/${courseId}/assessments`);
-    this.fetchAssessments({ activityId }).then(() => this.refresh());
-  },
   computed: {
-    isEmpty() {
+    hasAssessments() {
       return !Object.keys(this.assessments).length;
     }
   },
   methods: {
     ...mapGetters({ getAssessments: 'assessments' }, 'atom'),
     ...mapActions({
-      removeAssessment: 'remove',
       saveAssessment: 'save',
       updateAssessment: 'update',
-      fetchAssessments: 'fetch'
+      removeAssessment: 'remove'
     }, 'assessments'),
-    ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
-    refresh() {
-      const assessments = {};
-      this.getAssessments().forEach(a => { assessments[a._cid] = a; });
-      this.assessments = assessments;
-    },
     add(type) {
       const _cid = cuid();
       Vue.set(this.assessments, _cid, { _cid, type });
@@ -71,7 +60,6 @@ export default {
     },
     toggleSelect(assessment) {
       const hasQuestion = this.assessments[assessment._cid].question;
-
       if (this.isSelected(assessment) && !hasQuestion) {
         this.remove(assessment);
       } else if (this.isSelected(assessment)) {
@@ -83,14 +71,15 @@ export default {
     isSelected(assessment) {
       return this.selected.includes(assessment._cid);
     },
-    toggleAllSelected() {
+    toggleAssessments() {
       this.allSelected = !this.allSelected;
       const cids = this.allSelected
-        ? Object.keys(this.assessments).filter(cid => !this.selected.includes(cid))
+        ? difference(Object.keys(this.assessments), this.selected)
         : this.selected.slice(0);
       cids.forEach(cid => this.toggleSelect(this.assessments[cid]));
     },
     save(assessment) {
+      // TODO: Do this better!
       if (this.assessments[assessment._cid]) {
         assessment.activityId = Number(this.$route.params.activityKey);
         assessment.id = this.assessments[assessment._cid].id;
@@ -101,6 +90,7 @@ export default {
       }
     },
     remove(assessment) {
+      // TODO: Has unsolved scenarios
       if (assessment.id) this.removeAssessment(assessment);
       Vue.delete(this.assessments, assessment._cid);
       this.selected.splice(this.selected.indexOf(assessment._cid), 1);
@@ -121,7 +111,7 @@ export default {
     font-size: 16px;
   }
 
-  .overview {
+  .heading {
     text-align: left;
 
     span {
