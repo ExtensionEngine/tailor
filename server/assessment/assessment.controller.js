@@ -1,40 +1,41 @@
 'use strict';
 
+const { Assessment } = require('../shared/database/sequelize');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
-const { Assessment } = require('../shared/database/sequelize');
-const params = require('../../config/server').queryParams;
+const { sort } = require('../../config/server').queryParams;
 
-function index(req, res) {
-  const order = [[
-    req.query.sortBy || params.sort.field,
-    req.query.sortOrder || params.sort.order.ASC
-  ]];
-  return req.course.getActivities().then(activities => {
-    const activityId = req.query.activityId;
-    const where = activityId
-      ? { activityId }
-      : { activityId: { $in: activities.map(a => a.id) } };
-    return Assessment.findAll({ where, order })
-      .then(data => res.json({ data }));
-  });
+function index({ query, course }, res) {
+  const { activityId } = query;
+  let opts = {
+    where: activityId ? { activityId } : {},
+    order: [[
+      query.sortBy || sort.field,
+      query.sortOrder || sort.order.ASC
+    ]]
+  };
+
+  return course.getAssessments(opts).then(data => res.json({ data }));
 }
 
-function create(req, res) {
-  const activityId = req.body.activityId;
-  return req.course.hasActivity(activityId)
-    .then(ok => ok
-      ? Assessment.create(req.body, { isNewRecord: true, returning: true })
+function create({ params, body, course }, res) {
+  const { courseId } = params;
+  const { activityId } = body;
+
+  Object.assign(body, { courseId });
+  return course.getActivities({ where: { id: activityId } })
+    .then(activities => activities.length
+      ? Assessment.create(body, { isNewRecord: true, returning: true })
       : createError(NOT_FOUND, `Activity ${activityId} not found`))
     .then(data => res.json({ data }));
 }
 
-function patch({ body, params }, res) {
+function patch({ params, body }, res) {
   const { courseId, assessmentId } = params;
   return Assessment.findOne({ where: { id: assessmentId, courseId } })
     .then(assessment => assessment || createError(NOT_FOUND, 'Not found'))
     .then(assessment => assessment.update({ data: body.data }))
-    .then(assessment => res.json({ data: assessment }));
+    .then(data => res.json({ data }));
 }
 
 function remove({ params }, res) {
