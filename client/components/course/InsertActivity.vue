@@ -45,7 +45,7 @@ import { focus } from 'vue-focus';
 import findIndex from 'lodash/findIndex';
 import { mapGetters, mapActions } from 'vuex-module';
 import { getChildren } from '../../utils/activity.js';
-import updatePosition from '../../utils/updatePosition.js';
+import calculatePosition from '../../utils/calculatePosition.js';
 
 export default {
   directives: { focus },
@@ -93,7 +93,7 @@ export default {
         name: this.activityName,
         courseId,
         parentId,
-        position: updatePosition(context)
+        position: calculatePosition(context)
       });
 
       this.hide();
