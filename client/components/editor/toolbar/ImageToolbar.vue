@@ -2,6 +2,7 @@
   <div class="image-toolbar">
     <div class="col-md-4">
       <ul v-show="isSaved" class="menu">
+        <!-- Image dropdown -->
         <li class="menu-item">
           <div class="dropdown">
             <button
@@ -16,11 +17,41 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="image-file">
               <li><a @click="emitAction(event.clear)" type="button">Clear</a></li>
-              <li><a @click="emitAction(event.reset)" type="button">Reset</a></li>
             </ul>
           </div>
         </li>
+
+        <!-- Tool dropdown -->
         <li class="menu-item">
+          <div class="dropdown">
+            <button
+              class="btn btn-link btn-menu dropdown-toggle"
+              type="button"
+              id="image-tool"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true">
+                Tools
+                <span class="fa fa-caret-down"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="image-tool">
+              <li>
+                <a
+                  @click="setTool(event.showCrop)"
+                  :class="activeToolClass(event.showCrop)"
+                  type="button">
+                    Crop
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- Tool items -->
+        <li v-show="tool === event.showCrop" class="menu-item">
+          <button @click="emitAction(event.reset)" class="btn btn-link btn-menu" title="Reset">
+            <span class="fa fa-undo"></span>
+          </button>
           <button @click="emitAction(event.crop)" class="btn btn-link btn-menu" title="Crop">
             <span class="fa fa-crop"></span>
           </button>
@@ -28,6 +59,7 @@
       </ul>
     </div>
 
+    <!-- Image input -->
     <div class="col-md-4">
       <div v-show="!isSaved" class="file-upload">
         <div class="col-md-2 file-input">
@@ -46,7 +78,7 @@
 </template>
 
 <script>
-import { isEmpty, map, zipObject } from 'lodash';
+import { concat, isEmpty, map, replace, zipObject } from 'lodash';
 import actions from './toolbarActions';
 
 export default {
@@ -54,13 +86,16 @@ export default {
   props: ['asset'],
   data() {
     return {
-      error: null
+      error: null,
+      tool: null
     };
   },
   computed: {
     event() {
       // Namespace event names
-      const names = ['clear', 'crop', 'reset', 'upload'];
+      const events = ['clear', 'crop', 'reset', 'upload'];
+      const tools = ['showCrop', 'hideCrop'];
+      const names = concat(events, tools);
       const namespace = name => `${name}/${this.asset._cid}`;
       return zipObject(names, map(names, e => namespace(e)));
     },
@@ -73,6 +108,7 @@ export default {
   },
   methods: {
     input(event) {
+      this.resetTool();
       const file = !isEmpty(event.target.files) ? event.target.files[0] : null;
       const image = file && file.type.match('image.*') ? file : null;
 
@@ -94,7 +130,26 @@ export default {
     },
     emitAction(name) {
       actions.$emit(name);
+    },
+    setTool(name) {
+      this.tool = name;
+      this.emitAction(this.tool);
+    },
+    resetTool() {
+      // Tool toggling methods should be implemented
+      // with 'show' / 'hide' prefix
+      if (!isEmpty(this.tool)) {
+        const action = replace(this.tool, 'show', 'hide');
+        this.tool = null;
+        this.emitAction(action);
+      }
+    },
+    activeToolClass(name) {
+      return { 'active': name === this.tool };
     }
+  },
+  beforeDestroy() {
+    this.resetTool();
   }
 };
 </script>
@@ -127,6 +182,10 @@ export default {
 
       .fa {
         font-size: 16px;
+      }
+
+      .active {
+        background-color: #cecece;
       }
     }
 
