@@ -62,6 +62,50 @@ module.exports = function (sequelize, DataTypes) {
       associate(models) {
         Asset.belongsTo(models.Activity);
         Asset.belongsTo(models.Course);
+      },
+      track(models) {
+        const Revision = models.Revision;
+        Asset.hook('afterCreate', (asset, { context }) => {
+          if (context && context.userId) {
+            Revision.create({
+              userId: context.userId,
+              courseId: asset.courseId,
+              resourceType: 'ASSET',
+              operation: 'CREATE',
+              currentValue: asset.plain()
+            });
+          }
+        });
+
+        Asset.hook('afterUpdate', (asset, { context }) => {
+          if (context && context.userId) {
+            Revision.create({
+              userId: context.userId,
+              courseId: asset.courseId,
+              resourceType: 'ASSET',
+              operation: 'UPDATE',
+              currentValue: asset.plain()
+            });
+          }
+        });
+
+        Asset.hook('afterDestroy', (asset, { context }) => {
+          if (context && context.userId) {
+            Revision.create({
+              userId: context.userId,
+              courseId: asset.courseId,
+              resourceType: 'ASSET',
+              operation: 'REMOVE',
+              currentValue: null
+            });
+          }
+        });
+      }
+    },
+    instanceMethods: {
+      plain() {
+        return ['id', 'courseId', 'activityId', 'type', 'data', 'position', 'layoutWidth']
+          .reduce((acc, val) => { acc[val] = this[val]; return acc; }, {});
       }
     },
     freezeTableName: true
