@@ -13,10 +13,7 @@
         </thead>
         <tbody>
           <tr v-for="revision in revisions">
-            <td>
-              {{ revision.createdAt.toLocaleDateString() }}
-              {{ revision.createdAt.getHours() }}:{{ revision.createdAt.getMinutes() }}
-            </td>
+            <td>{{ getTimestamp(revision) }}</td>
             <td>{{ getDescription(revision) }}</td>
           </tr>
         </tbody>
@@ -29,21 +26,49 @@
 import filter from 'lodash/filter';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 
-const ops = {
-  'CREATE': 'created a new',
-  'UPDATE': 'changed the',
-  'REMOVE': 'removed one'
-};
-
-const name = rev => {
-  if (rev.operation === 'REMOVE') return '';
-
-  switch (rev.resourceType) {
-    case 'ACTIVITY':
-      return `"${rev.currentValue.name}"`;
+function describeActivityRevision(rev) {
+  const name = rev.currentValue ? rev.currentValue.name : '';
+  switch (rev.operation) {
+    case 'CREATE':
+      return `created a new activity: "${name}"`;
+    case 'REMOVE':
+      return `removed an activity`;
     default:
-      return '';
+      return `changed the activity "${name}"`;
   }
+}
+
+function describeAssetRevision(rev) {
+  const type = rev.currentValue ? rev.currentValue.type.toLowerCase() : '';
+  switch (rev.operation) {
+    case 'CREATE':
+      return `created a new ${type} asset`;
+    case 'REMOVE':
+      return `removed an asset`;
+    default: {
+      const article = type === 'image' ? 'an' : 'a';
+      return `changed ${article} ${type} asset`;
+    }
+  }
+}
+
+function describeCourseRevision(rev) {
+  switch (rev.operation) {
+    case 'CREATE':
+      return `created the course`;
+    case 'REMOVE':
+      return `removed the course`;
+    case 'UPDATE':
+      return `changed the course name/description`;
+    default:
+      return `changed the course`;
+  }
+}
+
+const describe = {
+  'ACTIVITY': describeActivityRevision,
+  'ASSET': describeAssetRevision,
+  'COURSE': describeCourseRevision
 };
 
 export default {
@@ -57,14 +82,16 @@ export default {
     ...mapGetters({ getRevisions: 'revisions' }),
     ...mapActions({ fetchRevisions: 'fetch' }, 'revisions'),
     ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
-    getDescription(revision) {
-      const parts = [
-        revision.user.email,
-        ops[revision.operation],
-        `${revision.resourceType.toLowerCase()}`,
-        name(revision)
-      ];
-      return parts.join(' ');
+    getTimestamp(rev) {
+      const date = rev.createdAt.toLocaleDateString();
+      const hours = rev.createdAt.getHours();
+      const minutes = rev.createdAt.getMinutes();
+      return `${date} ${hours}:` + (minutes < 10 ? `0${minutes}` : minutes);
+    },
+    getDescription(rev) {
+      const user = rev.user.email;
+      const description = describe[rev.resourceType](rev);
+      return `User ${user} ${description}`;
     }
   },
   created() {
