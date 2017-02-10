@@ -1,6 +1,14 @@
 <template>
   <div class="assessments">
-    <h2>Assessments</h2>
+    <div class="heading">
+      <h2>Assessments</h2>
+      <span @click="toggleAssessments">
+        {{ allSelected ? 'hide all' : 'show all' }}
+      </span>
+    </div>
+    <div class="well" v-if="hasAssessments">
+      Click the button bellow to Create first Assessment.
+    </div>
     <ul class="list-group">
       <assessment-item
         v-for="assessment in assessments"
@@ -16,65 +24,42 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
+import difference from 'lodash/difference';
+import keyBy from 'lodash/keyBy';
+import Vue from 'vue';
 import AssessmentItem from './AssessmentItem';
 import SelectAssessment from './SelectAssessment';
+import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
-  name: 'assessments',
   data() {
     return {
       selected: [],
-      assessments: {
-        '123': {
-          _cid: '123',
-          type: 'MC',
-          question: 'What are two biggest cities in Croatia ?',
-          answers: ['Zagreb', 'Split', 'Rijeka'],
-          correct: [0, 1],
-          hint: ''
-        },
-        '423': {
-          _cid: '423',
-          type: 'SC',
-          question: 'What is the biggest city in USA ?',
-          answers: ['NY', 'Los Angeles'],
-          correct: '0',
-          hint: ''
-        },
-        '424': {
-          _cid: '424',
-          type: 'TF',
-          question: 'The biggest city in the UK is London ?',
-          correct: 'True',
-          hint: ''
-        },
-        '425': {
-          _cid: '425',
-          type: 'NR',
-          question: 'What is the value of pi (two decimals) ?',
-          correct: '3.14',
-          hint: ''
-        },
-        '426': {
-          _cid: '426',
-          type: 'TR',
-          question: 'Name three countries',
-          correct: 'USA, Canada, Croatia',
-          hint: ''
-        }
-      }
+      assessments: cloneDeep(keyBy(this.getAssessments(), '_cid')),
+      allSelected: false
     };
   },
+  computed: {
+    hasAssessments() {
+      return !Object.keys(this.assessments).length;
+    }
+  },
   methods: {
+    ...mapGetters({ getAssessments: 'assessments' }, 'atom'),
+    ...mapActions({
+      saveAssessment: 'save',
+      updateAssessment: 'update',
+      removeAssessment: 'remove'
+    }, 'assessments'),
     add(type) {
       const _cid = cuid();
-      this.assessments[_cid] = { _cid, type };
+      Vue.set(this.assessments, _cid, { _cid, type });
       this.selected.push(_cid);
     },
     toggleSelect(assessment) {
       const hasQuestion = this.assessments[assessment._cid].question;
-
       if (this.isSelected(assessment) && !hasQuestion) {
         this.remove(assessment);
       } else if (this.isSelected(assessment)) {
@@ -86,13 +71,28 @@ export default {
     isSelected(assessment) {
       return this.selected.includes(assessment._cid);
     },
+    toggleAssessments() {
+      this.allSelected = !this.allSelected;
+      const cids = this.allSelected
+        ? difference(Object.keys(this.assessments), this.selected)
+        : this.selected.slice(0);
+      cids.forEach(cid => this.toggleSelect(this.assessments[cid]));
+    },
     save(assessment) {
+      // TODO: Do this better!
       if (this.assessments[assessment._cid]) {
+        assessment.activityId = Number(this.$route.params.activityKey);
+        assessment.id = this.assessments[assessment._cid].id;
         this.assessments[assessment._cid] = assessment;
+        return assessment.id
+          ? this.updateAssessment(assessment)
+          : this.saveAssessment(assessment);
       }
     },
     remove(assessment) {
-      delete this.assessments[assessment._cid];
+      // TODO: Has unsolved scenarios
+      if (assessment.id) this.removeAssessment(assessment);
+      Vue.delete(this.assessments, assessment._cid);
       this.selected.splice(this.selected.indexOf(assessment._cid), 1);
     }
   },
@@ -107,8 +107,24 @@ export default {
 .assessments {
   margin: 70px 0;
 
+  .well {
+    font-size: 16px;
+  }
+
+  .heading {
+    text-align: left;
+
+    span {
+      float: right;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+  }
+
   h2 {
-    margin-bottom: 15px;
+    display: inline-block;
+    margin: 10px 0 15px 0;
+    padding: 0;
     font-size: 18px;
     color: #444;
   }

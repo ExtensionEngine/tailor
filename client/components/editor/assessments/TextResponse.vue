@@ -34,7 +34,9 @@
         placeholder="Optional hint...">
     </div>
     <div class="alert-container">
-      <div v-show="isEditing" class="alert alert-dismissible alert-success">
+      <div
+        v-show="isEditing && isSaved"
+        class="alert alert-dismissible alert-success">
         <strong>Question saved !</strong>
       </div>
     </div>
@@ -79,7 +81,8 @@ export default {
       ...cloneDeep(defaultAssessment),
       ...cloneDeep(this.assessment),
       isEditing: !!this.assessment.question,
-      errors: []
+      errors: [],
+      isSaved: false
     };
   },
   methods: {
@@ -95,6 +98,7 @@ export default {
       this.validate(question)
         .then(() => {
           this.isEditing = true;
+          this.isSaved = true;
           this.$emit('save', question);
         })
         .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
@@ -108,6 +112,7 @@ export default {
     },
     edit() {
       this.isEditing = false;
+      this.isSaved = false;
     }
   }
 };

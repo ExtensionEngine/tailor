@@ -5,6 +5,7 @@ const assign = require('lodash/assign');
 const isEmpty = require('lodash/isEmpty');
 const isString = require('lodash/isString');
 const set = require('lodash/set');
+const calculatePosition = require('../shared/util/calculatePosition');
 const storage = require('../shared/storage');
 
 const DEFAULT_IMAGE_EXTENSION = 'png';
@@ -73,7 +74,7 @@ module.exports = function (sequelize, DataTypes) {
     position: {
       type: DataTypes.FLOAT,
       allowNull: false,
-      validate: { min: 1, max: 1000000 }
+      validate: { min: 0, max: 1000000 }
     },
     layoutWidth: {
       type: DataTypes.INTEGER,
@@ -177,6 +178,20 @@ module.exports = function (sequelize, DataTypes) {
       destroyWithRemote() {
         return this.deleteRemote()
           .then(asset => asset.destroy());
+      },
+      siblings() {
+        return Asset.findAll({
+          where: { activityId: this.activityId },
+          order: 'position ASC'
+        });
+      },
+      reorder(index) {
+        return sequelize.transaction(t => {
+          return this.siblings().then(siblings => {
+            this.position = calculatePosition(this.id, index, siblings);
+            return this.save({ transaction: t });
+          });
+        });
       }
     },
     freezeTableName: true

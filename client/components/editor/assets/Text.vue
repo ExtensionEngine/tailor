@@ -16,8 +16,11 @@
       </quill-editor>
       <div
         v-else
-        v-html="data.content"
-        class="ql-editor">
+        class="ql-container ql-snow">
+        <div
+          v-html="data.content"
+          class="ql-editor">
+        </div>
       </div>
     </div>
   </div>
