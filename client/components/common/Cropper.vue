@@ -9,115 +9,119 @@ import Cropper from 'cropperjs';
 import { assign, omit } from 'lodash';
 
 // Forked from https://github.com/Agontuk/vue-cropperjs/blob/master/VueCropper.js
+// Cropperjs docs: https://github.com/fengyuanchen/cropperjs
 export default {
   name: 'cropper',
   props: {
-    'style': Object,
-    'data': Object,
-    'preview': String,
-    'src': {
+    style: Object,
+    data: Object,
+    preview: String,
+    src: {
       type: String,
       default: ''
     },
-    'alt': String,
-    'imgStyle': Object,
-    'dragMode': String,
-    'responsive': {
+    alt: String,
+    imgStyle: Object,
+    dragMode: String,
+    responsive: {
       type: Boolean,
       default: true
     },
-    'restore': {
+    restore: {
       type: Boolean,
       default: true
     },
-    'checkCrossOrigin': {
+    checkCrossOrigin: {
       type: Boolean,
       default: true
     },
-    'checkOrientation': {
+    checkOrientation: {
       type: Boolean,
       default: true
     },
-    'cropBoxMovable': {
+    cropBoxMovable: {
       type: Boolean,
       default: true
     },
-    'cropBoxResizable': {
+    cropBoxResizable: {
       type: Boolean,
       default: true
     },
-    'toggleDragModeOnDblclick': {
+    toggleDragModeOnDblclick: {
       type: Boolean,
       default: true
     },
-    'modal': {
+    modal: {
       type: Boolean,
       default: true
     },
-    'center': {
+    center: {
       type: Boolean,
       default: true
     },
-    'highlight': {
+    highlight: {
       type: Boolean,
       default: true
     },
-    'zoomOnTouch': {
+    zoomOnTouch: {
       type: Boolean,
       default: true
     },
-    'zoomOnWheel': {
+    zoomOnWheel: {
       type: Boolean,
       default: true
     },
-    'scalable': {
+    scalable: {
       type: Boolean,
       default: true
     },
-    'zoomable': {
+    zoomable: {
       type: Boolean,
       default: true
     },
-    'guides': {
+    guides: {
       type: Boolean,
       default: true
     },
-    'background': {
+    background: {
       type: Boolean,
       default: true
     },
-    'autoCrop': {
+    autoCrop: {
       type: Boolean,
       default: true
     },
-    'movable': {
+    autoCropUpdate: {
+      type: Boolean,
+      default: false
+    },
+    movable: {
       type: Boolean,
       default: true
     },
-    'rotatable': {
+    rotatable: {
       type: Boolean,
       default: true
     },
-    'viewMode': Number,
-    'aspectRatio': Number,
-    'autoCropArea': Number,
-    'wheelZoomRatio': Number,
+    viewMode: Number,
+    aspectRatio: Number,
+    autoCropArea: Number,
+    wheelZoomRatio: Number,
 
     // Size limitation
-    'minCanvasWidth': Number,
-    'minCanvasHeight': Number,
-    'minCropBoxWidth': Number,
-    'minCropBoxHeight': Number,
-    'minContainerWidth': Number,
-    'minContainerHeight': Number,
+    minCanvasWidth: Number,
+    minCanvasHeight: Number,
+    minCropBoxWidth: Number,
+    minCropBoxHeight: Number,
+    minContainerWidth: Number,
+    minContainerHeight: Number,
 
-    // callbacks
-    'ready': Function,
-    'cropstart': Function,
-    'cropmove': Function,
-    'cropend': Function,
-    'crop': Function
-    // 'zoom': Function
+    // Callbacks
+    ready: Function,
+    cropstart: Function,
+    cropmove: Function,
+    cropend: Function,
+    crop: Function
   },
   computed: {
     containerStyle() {
@@ -126,6 +130,7 @@ export default {
   },
   methods: {
     show() {
+      // Event handler and crop function share the same name
       return this.cropper.crop();
     },
     reset() {
@@ -208,14 +213,20 @@ export default {
     }
   },
   mounted() {
-    var data = omit(this.$options.props, ['style', 'src', 'alt', 'imgStyle']);
-    var props = {};
-    for (var key in data) {
+    let props = {};
+    const data = omit(this.$options.props, ['style', 'src', 'alt', 'imgStyle']);
+    for (let key in data) {
       if (this[key] !== undefined) {
         props[key] = this[key];
       }
     }
     this.cropper = new Cropper(this.$refs.img, props);
+  },
+  updated() {
+    if (this.autoCropUpdate) {
+      // Toggle inital autoCrop value on component update
+      this.cropper.options.autoCrop = !this.autoCrop;
+    }
   }
 };
 </script>
