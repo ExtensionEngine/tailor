@@ -9,9 +9,10 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex-module';
-import Perspective from './Perspective';
+import { ASSET_GROUP } from 'shared/activities';
 import CreatePerspective from './CreatePerspective';
+import { mapActions, mapGetters } from 'vuex-module';
+import Perspective from './Perspective';
 
 export default {
   name: 'perspectives',
@@ -20,7 +21,7 @@ export default {
     ...mapActions(['save'], 'activity'),
     add() {
       this.save({
-        name: 'perspective',
+        type: ASSET_GROUP,
         parentId: this.activity.id,
         position: this.perspectives.length + 1
       });
