@@ -50,9 +50,54 @@ module.exports = function (sequelize, DataTypes) {
         Course.belongsToMany(models.User, { through: models.CourseUser });
         Course.hasMany(models.Activity);
         Course.hasMany(models.Asset);
+      },
+      track(models) {
+        const Revision = models.Revision;
+        Course.hook('afterCreate', (course, { context }) => {
+          if (context && context.userId) {
+            Revision.create({
+              userId: context.userId,
+              courseId: course.id,
+              resourceType: 'COURSE',
+              operation: 'CREATE',
+              currentValue: course.plain()
+            });
+          }
+        });
+
+        Course.hook('afterUpdate', (course, { context }) => {
+          if (context && context.userId) {
+            Revision.create({
+              userId: context.userId,
+              courseId: course.id,
+              resourceType: 'COURSE',
+              operation: 'UPDATE',
+              currentValue: course.plain()
+            });
+          }
+        });
+
+        Course.hook('afterDestroy', (course, { context }) => {
+          if (context && context.userId) {
+            // This won't work because course.id is no longer a valid foreign
+            // key. Uncomment if/when courses are soft-deleted.
+
+            // Revision.create({
+            //   userId: context.userId,
+            //   courseId: course.id,
+            //   resourceType: 'COURSE',
+            //   operation: 'REMOVE',
+            //   currentValue: null
+            // });
+          }
+        });
       }
     },
     instanceMethods: {
+      plain() {
+        return ['id', 'name', 'description']
+          .reduce((acc, val) => { acc[val] = this[val]; return acc; }, {});
+      },
       getUser(user) {
         return this.getUsers({ where: { id: user.id } })
           .then(users => users[0]);
