@@ -7,11 +7,13 @@
       </div>
     </div>
     <div v-else class="image-wrapper">
-      <image-cropper
+      <cropper
         ref='cropper'
-        drag-mode="crop"
+        drag-mode="none"
         :view-mode="2"
         :auto-crop-area="0.5"
+        :autoCrop="false"
+        :autoCropUpdate="true"
         :guides="true"
         :responsive="true"
         :rotatable="false"
@@ -22,14 +24,14 @@
         :modal="false"
         :style="{ 'width': '100%' }"
         :src="image">
-      </image-cropper>
+      </cropper>
     </div>
   </div>
 </template>
 
 <script>
-import ImageCropper from 'vue-cropperjs';
-import { isEmpty } from 'lodash';
+import Cropper from '../../common/Cropper';
+import { concat, isEmpty } from 'lodash';
 import toolbarActions from '../toolbar/toolbarActions';
 
 export default {
@@ -37,8 +39,8 @@ export default {
   props: ['asset', 'isFocused'],
   data() {
     return {
-      original: '',
-      image: ''
+      original: null,
+      image: null
     };
   },
   computed: {
@@ -58,7 +60,8 @@ export default {
       this.$refs.cropper.replace(this.image);
     },
     clear() {
-      this.$emit('save', { url: '' });
+      this.image = this.original = null;
+      this.$emit('save', { url: null });
     },
     reset() {
       this.image = this.original;
@@ -68,13 +71,21 @@ export default {
       this.image = this.original = url;
       this.$emit('save', { url: this.image });
     },
+    showCrop() {
+      this.$refs.cropper.show();
+    },
+    hideCrop() {
+      this.$refs.cropper.clear();
+    },
 
     // Event generation methods
     generateEvents(method) {
       const events = ['clear', 'crop', 'reset', 'upload'];
+      const tools = ['showCrop', 'hideCrop'];
+      const names = concat(events, tools);
       const namespaceEvent = name => `${name}/${this.asset._cid}`;
-      events.forEach(e => {
-        toolbarActions[method](namespaceEvent(e), this[e]);
+      names.forEach(n => {
+        toolbarActions[method](namespaceEvent(n), this[n]);
       });
     },
     registerEvents() {
@@ -82,39 +93,29 @@ export default {
     },
     cleanupEvents() {
       this.generateEvents('$off');
-    },
-
-    // Helpers
-    toggleCropBox() {
-      const cropBox = this.$el.querySelector('.cropper-crop-box');
-
-      if (this.image) {
-        if (this.isFocused) cropBox.style.display = 'block';
-        else cropBox.style.display = 'none';
-      }
     }
   },
   created() {
-    if (this.asset.data.url) this.image = this.original = this.asset.data.url;
     this.registerEvents();
+  },
+  mounted() {
+    if (this.asset.data.url) {
+      this.image = this.original = this.asset.data.url;
+    }
   },
   destroyed() {
     this.cleanupEvents();
   },
   watch: {
     isFocused(val, oldVal) {
-      if (oldVal && !val) this.$emit('save', this.localAsset);
-      this.$nextTick(() => this.toggleCropBox());
-    },
-    original(val, oldVal) {
-      // Wait before querying child component elements
-      setTimeout(() => {
-        this.$nextTick(() => this.toggleCropBox());
-      }, 150);
+      if (oldVal && !val) {
+        if (this.image) this.hideCrop();
+        this.$emit('save', this.localAsset);
+      }
     }
   },
   components: {
-    ImageCropper
+    Cropper
   }
 };
 </script>
