@@ -1,5 +1,13 @@
 <template>
   <div class="perspective">
+    <div class="actions">
+      <span @click="remove(perspective)" class="pull-right">
+        <span class="fa fa-trash"></span>
+      </span>
+    </div>
+    <div v-if="!perspectiveAssets.length" class="well">
+      Click the button bellow to Create your first asset.
+    </div>
     <draggable class="row" :list="perspectiveAssets" @update="reorder">
       <asset
         v-for="asset in perspectiveAssets"
@@ -32,6 +40,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['remove'], 'activity'),
     ...mapActions({ updatePosition: 'reorder' }, 'assets'),
     reorder({ newIndex: newPosition }) {
       const items = this.perspectiveAssets;
@@ -49,13 +58,29 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .perspective {
   width: 100%;
-  min-height: 200px;
+  min-height: 245px;
   margin: 25px 0px;
   padding: 20px 40px;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30);
+}
+
+.actions {
+  width: 100%;
+  min-height: 36px;
+  font-size: 20px;
+  color: #707070;
+
+  > span {
+    padding: 0 10px;
+  }
+
+  > span:hover {
+    cursor: pointer;
+    color: #444;
+  }
 }
 </style>
