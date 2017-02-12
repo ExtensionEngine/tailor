@@ -2,11 +2,11 @@
   <div class="assessments">
     <div class="heading">
       <h2>Assessments</h2>
-      <span @click="toggleAssessments">
+      <span v-if="hasAssessments" @click="toggleAssessments">
         {{ allSelected ? 'hide all' : 'show all' }}
       </span>
     </div>
-    <div class="well" v-if="hasAssessments">
+    <div class="well" v-if="!hasAssessments">
       Click the button bellow to Create first Assessment.
     </div>
     <ul class="list-group">
@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     hasAssessments() {
-      return !Object.keys(this.assessments).length;
+      return !!Object.keys(this.assessments).length;
     }
   },
   methods: {
