@@ -86,6 +86,17 @@ export default class Resource {
   }
 
   /**
+   * Retrieves model by id.
+   */
+  getById(id) {
+    return this.get(id).then(response => {
+      let item = response.data.data;
+      this.setCid(item);
+      return item;
+    });
+  }
+
+  /**
    * Creates a new model, or replaces an existing one.
    * @param {object} model
    */
