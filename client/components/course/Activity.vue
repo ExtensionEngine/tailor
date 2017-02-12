@@ -8,7 +8,7 @@
         <span class="collapsible" :class="collapsibleIcon"></span>
         <span>{{ name }}</span>
         <span class="actions pull-right" v-if="isEditable">
-          <span @click.stop="edit" class="fa fa-edit"></span>
+          <span @click.stop="edit" class="fa fa-pencil"></span>
         </span>
       </div>
       <insert-activity
