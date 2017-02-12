@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="activity-wrapper" v-if="!isRoot">
-      <div class="activity" @click="select" @dblclick="edit">
+      <div class="activity" @click="select">
         <span class="position" :style="{ 'background-color': color }">
           {{ index + 1 }}
         </span>
         <span class="collapsible" :class="collapsibleIcon"></span>
         <span>{{ name }}</span>
-        <span class="pull-right">
-          <span class="badge" v-if="showBadge">{{ children.length }}</span>
+        <span class="actions pull-right" v-if="isEditable">
+          <span @click.stop="edit" class="fa fa-edit"></span>
         </span>
       </div>
       <insert-activity
@@ -39,14 +39,12 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex-module';
+import { ASSET_GROUP, OUTLINE_LEVELS, isEditable } from 'shared/activities';
 import Draggable from 'vuedraggable';
 import InsertActivity from './InsertActivity';
+import { mapActions, mapMutations } from 'vuex-module';
 import NoActivities from './NoActivities';
 import values from 'lodash/values';
-
-const MAX_LEVELS = 3;
-const COLORS = ['#42A5F5', '#66BB6A', '#EC407A'];
 
 export default {
   name: 'activity',
@@ -58,26 +56,22 @@ export default {
     };
   },
   computed: {
-    showBadge() {
-      return this.hasChildren && this.isCollapsed;
-    },
     isRoot() {
       return this.level === 0;
     },
-    isAtom() {
-      return this.level === MAX_LEVELS;
-    },
     color() {
-      let index = this.level - 1;
-      return index > COLORS.length ? '#555' : COLORS[index];
+      return OUTLINE_LEVELS[this.level - 1].color;
+    },
+    isEditable() {
+      return isEditable(this.level);
     },
     hasChildren() {
-      return this.children.length > 0 && this.level < MAX_LEVELS;
+      return (this.children.length > 0) && (this.level < OUTLINE_LEVELS.length);
     },
     children() {
       const filterByParent = this.isRoot
         ? act => !act.parentId
-        : act => this.id && this.id === act.parentId;
+        : act => this.id && this.id === act.parentId && act.type !== ASSET_GROUP;
 
       return values(this.activities)
         .filter(filterByParent)
@@ -98,7 +92,7 @@ export default {
       this.focusActivity(this._cid);
     },
     edit() {
-      if (!this.isAtom) return;
+      if (!this.isEditable) return;
       this.$router.push({
         name: 'editor',
         params: { activityKey: this.activity.id }
@@ -148,11 +142,14 @@ export default {
     font-size: 16px;
   }
 
-  .badge {
-    margin-right: 10px;
-    padding: 4px 10px;
-    color: #777;
-    background-color: #eee;
+  .actions {
+    padding-right: 5px;
+    font-size: 20px;
+    color: #999;
+
+    .fa:hover {
+      color: #707070;
+    }
   }
 }
 
