@@ -43,6 +43,15 @@ getter(function users() {
   return values(this.state.users);
 });
 
+getter(function revisions() {
+  const { route } = this.rootState;
+  const courseId = Number(route.params.courseKey);
+  const revs = this.rootGetters.revisions;
+  return filter(revs, { courseId })
+    .map(rev => ({ ...rev, createdAt: new Date(rev.createdAt) }))
+    .sort((rev1, rev2) => rev2.createdAt - rev1.createdAt);
+});
+
 action(function getUsers() {
   const { route } = this.rootState;
   const courseId = route.params.courseKey;

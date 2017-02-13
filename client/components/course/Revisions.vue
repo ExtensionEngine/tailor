@@ -40,7 +40,7 @@ const describe = {
 export default {
   name: 'course-revisions',
   computed: {
-    ...mapGetters(['revisions'])
+    ...mapGetters(['revisions'], 'editor')
   },
   methods: {
     ...mapActions(['fetch'], 'revisions'),
