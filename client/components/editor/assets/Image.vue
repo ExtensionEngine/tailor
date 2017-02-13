@@ -1,30 +1,33 @@
 <template>
   <div class="image-asset">
-    <div v-if="showPlaceholder" class="well text-placeholder">
-      <div class="message">
-        <span class="heading">Image placeholder</span>
-        <span>Click to edit</span>
+    <loader v-if="showLoader"></loader>
+    <div v-else>
+      <div v-if="showPlaceholder" class="well text-placeholder">
+        <div class="message">
+          <span class="heading">Image placeholder</span>
+          <span>Click to edit</span>
+        </div>
       </div>
-    </div>
-    <div v-else class="image-wrapper">
-      <cropper
-        ref='cropper'
-        drag-mode="none"
-        :view-mode="2"
-        :auto-crop-area="0.5"
-        :autoCrop="false"
-        :autoCropUpdate="true"
-        :guides="true"
-        :responsive="true"
-        :rotatable="false"
-        :background="false"
-        :zoomable="false"
-        :scalable="false"
-        :movable="false"
-        :modal="false"
-        :style="{ 'width': '100%' }"
-        :src="image">
-      </cropper>
+      <div v-else class="image-wrapper">
+        <cropper
+          ref='cropper'
+          drag-mode="none"
+          :view-mode="2"
+          :auto-crop-area="0.5"
+          :autoCrop="false"
+          :autoCropUpdate="true"
+          :guides="true"
+          :responsive="true"
+          :rotatable="false"
+          :background="false"
+          :zoomable="false"
+          :scalable="false"
+          :movable="false"
+          :modal="false"
+          :style="{ 'width': '100%' }"
+          :src="image">
+        </cropper>
+      </div>
     </div>
   </div>
 </template>
@@ -33,11 +36,12 @@
 import { concat, isEmpty } from 'lodash';
 import { imgSrcToDataURL } from 'blob-util';
 import Cropper from '../../common/Cropper';
+import Loader from '../../common/Loader';
 import toolbarActions from '../toolbar/toolbarActions';
 
 export default {
   name: 'image-asset',
-  props: ['asset', 'isFocused'],
+  props: ['asset', 'isFocused', 'showLoader'],
   data() {
     return {
       original: null,
@@ -121,7 +125,8 @@ export default {
     }
   },
   components: {
-    Cropper
+    Cropper,
+    Loader
   }
 };
 </script>
@@ -157,6 +162,10 @@ export default {
       background-color: transparent;
       opacity: 0;
     }
+  }
+
+  .loader {
+    margin: 118px 100px;
   }
 }
 </style>

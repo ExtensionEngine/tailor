@@ -5,6 +5,7 @@
         v-if="asset.type === 'IMAGE'"
         :asset="asset"
         :isFocused="isFocused"
+        :showLoader="showLoader"
         @save="save">
       </image-editor>
       <text-editor
@@ -29,6 +30,7 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex-module';
+import Promise from 'bluebird';
 import ImageEditor from './Image';
 import TextEditor from './Text';
 import VideoEditor from './Video';
@@ -37,6 +39,11 @@ import Gomo from './Gomo';
 export default {
   name: 'asset',
   props: { asset: Object },
+  data() {
+    return {
+      showLoader: false
+    };
+  },
   computed: {
     ...mapGetters(['focusedAsset'], 'atom'),
     columnWidth() {
@@ -58,7 +65,11 @@ export default {
       };
     },
     save(data) {
-      this.updateAsset({ ...this.asset, data });
+      this.showLoader = true;
+      Promise.join(Promise.delay(300), this.updateAsset({ ...this.asset, data }))
+        .then(() => {
+          this.showLoader = false;
+        });
     }
   },
   components: {
