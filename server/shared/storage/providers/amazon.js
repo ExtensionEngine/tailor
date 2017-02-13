@@ -77,9 +77,7 @@ class Amazon {
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getSignedUrl-property
   getFileUrl(key, options) {
-    const params = { Key: key, Bucket: this.bucket, Expires: 3600 };
-    const s3Params = Object.assign(options, params);
-
+    const s3Params = Object.assign(options, { Key: key, Bucket: this.bucket, Expires: 3600 });
     return new Promise((resolve, reject) => {
       this.client.getSignedUrl('getObject', s3Params, (err, url) => {
         if (err) reject(err);
