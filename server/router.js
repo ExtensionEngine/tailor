@@ -8,9 +8,9 @@ const revisionRouter = require('./revision').router;
 const userRouter = require('./user').router;
 
 const router = express.Router();
+router.use('/', courseRouter);
 router.use('/', activityRouter);
 router.use('/', assetRouter);
-router.use('/', courseRouter);
 router.use('/', revisionRouter);
 router.use('/', userRouter);
 
