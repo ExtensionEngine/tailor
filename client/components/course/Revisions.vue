@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
-    <div class="well" v-if="!revisions.length">
+  <div>
+    <div v-if="revisions.length === 0" class="well">
       No changes recorded.
     </div>
-    <div class="revisions" v-else>
+    <div v-else class="revisions">
       <table class="table table-striped table-hover">
         <thead>
           <tr>
@@ -25,45 +25,11 @@
 <script>
 import filter from 'lodash/filter';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-
-function describeActivityRevision(rev) {
-  const name = rev.currentValue ? rev.currentValue.name : '';
-  switch (rev.operation) {
-    case 'CREATE':
-      return `created a new activity: "${name}"`;
-    case 'REMOVE':
-      return `removed an activity`;
-    default:
-      return `changed the activity "${name}"`;
-  }
-}
-
-function describeAssetRevision(rev) {
-  const type = rev.currentValue ? rev.currentValue.type.toLowerCase() : '';
-  switch (rev.operation) {
-    case 'CREATE':
-      return `created a new ${type} asset`;
-    case 'REMOVE':
-      return `removed an asset`;
-    default: {
-      const article = type === 'image' ? 'an' : 'a';
-      return `changed ${article} ${type} asset`;
-    }
-  }
-}
-
-function describeCourseRevision(rev) {
-  switch (rev.operation) {
-    case 'CREATE':
-      return `created the course`;
-    case 'REMOVE':
-      return `removed the course`;
-    case 'UPDATE':
-      return `changed the course name/description`;
-    default:
-      return `changed the course`;
-  }
-}
+import {
+  describeActivityRevision,
+  describeAssetRevision,
+  describeCourseRevision
+} from './helpers';
 
 const describe = {
   'ACTIVITY': describeActivityRevision,
