@@ -13,8 +13,8 @@
         </thead>
         <tbody>
           <tr v-for="revision in revisions">
-            <td>{{ getTimestamp(revision) }}</td>
-            <td>{{ getDescription(revision) }}</td>
+            <td>{{ formatDate(revision) }}</td>
+            <td>{{ formatDescription(revision) }}</td>
           </tr>
         </tbody>
       </table>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-// import filter from 'lodash/filter';
+import fecha from 'fecha';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import {
   describeActivityRevision,
@@ -45,13 +45,10 @@ export default {
   methods: {
     ...mapActions(['fetch'], 'revisions'),
     ...mapMutations(['setBaseUrl'], 'revisions'),
-    getTimestamp(rev) {
-      const date = rev.createdAt.toLocaleDateString();
-      const hours = rev.createdAt.getHours();
-      const minutes = rev.createdAt.getMinutes();
-      return `${date} ${hours}:` + (minutes < 10 ? `0${minutes}` : minutes);
+    formatDate(rev) {
+      return fecha.format(rev.createdAt, 'M/D/YY HH:mm');
     },
-    getDescription(rev) {
+    formatDescription(rev) {
       const user = rev.user.email;
       const description = describe[rev.resourceType](rev);
       return `User ${user} ${description}`;
