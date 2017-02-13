@@ -1,38 +1,45 @@
 <template>
-  <div @click="onClick">
-    <image-toolbar
-      v-if="isVisible('IMAGE')"
-      :asset="focusedAsset">
-    </image-toolbar>
-    <quill-toolbar
-      v-if="isVisible('TEXT')"
-      :asset="focusedAsset">
-    </quill-toolbar>
-    <video-toolbar
-      v-if="isVisible('VIDEO')"
-      :asset="focusedAsset">
-    </video-toolbar>
-    <gomo-toolbar
-      v-if="isVisible('GOMO')"
-      :asset="focusedAsset">
-    </gomo-toolbar>
+  <div @click="onClick" class="toolbar">
+    <div class="toolbar-container">
+      <image-toolbar
+        v-if="isVisible('IMAGE')"
+        :asset="focusedAsset">
+      </image-toolbar>
+      <quill-toolbar
+        v-if="isFocused('TEXT')"
+        :asset="focusedAsset">
+      </quill-toolbar>
+      <video-toolbar
+        v-if="isFocused('VIDEO')"
+        :asset="focusedAsset">
+      </video-toolbar>
+      <gomo-toolbar
+        v-if="isFocused('GOMO')"
+        :asset="focusedAsset">
+      </gomo-toolbar>
+      <div v-if="focusedAsset" class="delete-asset">
+        <span
+          @click="removeAsset(focusedAsset)"
+          class="btn btn-fab btn-danger">
+          <span class="fa fa-trash"></span>
+        </span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import ImageToolbar from './ImageToolbar';
+import GomoToolbar from './GomoToolbar';
 import QuillToolbar from './QuillToolbar';
 import VideoToolbar from './VideoToolbar';
-import GomoToolbar from './GomoToolbar';
 
 export default {
-  name: 'toolbar',
-  computed: {
-    ...mapGetters(['focusedAsset'], 'atom')
-  },
+  computed: mapGetters(['focusedAsset'], 'atom'),
   methods: {
-    isVisible(type) {
+    ...mapActions({ removeAsset: 'remove' }, 'assets'),
+    isFocused(type) {
       return this.focusedAsset && (this.focusedAsset.type === type);
     },
     onClick(e) {
@@ -42,9 +49,27 @@ export default {
   },
   components: {
     ImageToolbar,
+    GomoToolbar,
     QuillToolbar,
-    VideoToolbar,
-    GomoToolbar
+    VideoToolbar
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.toolbar {
+  position: fixed;
+  width: 100%;
+}
+
+.toolbar-container {
+  position: relative;
+}
+
+.delete-asset {
+  position: absolute;
+  z-index: 999;
+  right: 0;
+  transform: translate(-90%, -55%);
+}
+</style>

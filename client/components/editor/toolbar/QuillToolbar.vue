@@ -88,7 +88,7 @@ export default {
 <style lang="scss">
 .quill-toolbar {
   display: none;
-  position: fixed;
+  position: relative;
   z-index: 999;
   width: 100%;
   height: 45px;

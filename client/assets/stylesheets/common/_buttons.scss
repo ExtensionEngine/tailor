@@ -1,16 +1,40 @@
+$fab-size: 48px;
+$fab-font-size: 18px;
+
 .btn {
-  border-radius: 0;
-  font-size: 14px;
-  font-weight: $font-weight-semibold;
   padding: 10px;
+  font-size: 14px;
+  border-radius: 0;
 
   &:focus {
     outline: 0;
   }
+
+  &.btn-fab {
+    position: relative;
+    margin: auto;
+    padding: 0;
+    min-width: $fab-size;
+    width: $fab-size;
+    height: $fab-size;
+    font-size: $fab-font-size;
+    line-height: normal;
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow: 0 1px 1.5px 0 rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.24);
+
+    .fa {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-($fab-font-size / 2), -($fab-font-size / 2));
+      width: $fab-font-size;
+      line-height: $fab-font-size;
+    }
+  }
 }
 
 .btn-link {
-
   &:focus {
     border: 0;
     outline: 0;

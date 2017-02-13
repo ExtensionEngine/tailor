@@ -28,8 +28,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'activity'], 'editor'),
-    ...mapGetters(['focusedAsset'], 'atom')
+    ...mapGetters(['course'], 'editor'),
+    ...mapGetters(['activity', 'focusedAsset'], 'atom')
   },
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
@@ -50,6 +50,8 @@ export default {
     ...mapActions(['focusoutAsset'], 'atom')
   },
   created() {
+    this.focusoutAsset();
+
     // TODO: Do this better!
     const courseId = this.$route.params.courseKey;
     const activityId = this.$route.params.activityKey;
