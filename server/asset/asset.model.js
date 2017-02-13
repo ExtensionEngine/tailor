@@ -5,20 +5,20 @@ const assign = require('lodash/assign');
 const isEmpty = require('lodash/isEmpty');
 const isString = require('lodash/isString');
 const set = require('lodash/set');
+const mime = require('mime-types');
 const calculatePosition = require('../shared/util/calculatePosition');
 const storage = require('../shared/storage');
 
 const DEFAULT_IMAGE_EXTENSION = 'png';
 
-// TODO(marko): Add as 'static' method on the model?
 const generateS3Data = (assetId, courseId, image) => {
   const base64Pattern = /^data:image\/(\w+);base64,/;
+  const file = Buffer.from(image.replace(base64Pattern, ''), 'base64');
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
 
-  const hashString = `${courseId}/${assetId}`;
+  const hashString = `${file}/${courseId}/${assetId}`;
   const hash = crypto.createHash('md5').update(hashString).digest('hex');
 
-  const file = Buffer.from(image.replace(base64Pattern, ''), 'base64');
   const key = `/course/${courseId}/asset/${hash}.${extension}`;
   return { file, key };
 };
@@ -94,77 +94,74 @@ module.exports = function (sequelize, DataTypes) {
             { id: result[0].nextval }
           ));
       },
+      findAllAndFetch(options) {
+        return Asset.findAll(options)
+          .then(assets => {
+            return Promise.all(assets.map(a => a.getRemote()));
+          });
+      },
       findByIdAndFetch(id) {
-        return Asset
-          .findById(id)
+        return Asset.findById(id)
           .then(asset => asset && asset.getRemote());
       }
     },
     instanceMethods: {
       getRemote() {
-        const asset = this;
-        const getFileUrl = key => storage.getFileUrl(key)
-          .then(url => set(asset, 'data.url', url));
+        const getFileUrl = key => storage.getFileUrl(key, { Expires: 3600 })
+          .then(url => set(this, 'data.url', url));
 
         return storage.fileExists(this.data.url)
           .then(exists => exists ? getFileUrl(this.data.url) : this);
       },
       createRemote(key, file) {
-        // TODO(marko): Internal helper method, hide from instance somehow?
-        const asset = this; // Asset should be passed in as argument.
-        return storage.saveFile(key, file)
-          .then(() => asset);
+        const options = { ACL: 'public-read', ContentType: mime.lookup(key) };
+        return storage.saveFile(key, file, options)
+          .then(() => this);
       },
       deleteRemote() {
-        // TODO(marko): Internal helper method, hide from instance somehow?
-        const asset = this; // Asset should be passed in as argument.
         const deleteFile = key => storage.deleteFile(key)
-          .then(() => set(asset, 'data.url', ''));
+          .then(() => set(this, 'data.url', ''));
 
-        return storage.fileExists(asset.data.url)
-          .then(exists => exists && !isEmpty(asset.data.url)
-            ? deleteFile(asset.data.url)
-            : asset);
+        return storage.fileExists(this.data.url)
+          .then(exists => exists && !isEmpty(this.data.url)
+            ? deleteFile(this.data.url)
+            : this);
       },
       getImageData(data) {
-        // TODO(marko): Internal helper method, hide from instance somehow?
-        const asset = this; // Asset should be passed in as argument.
         const getUrl = ({ data }) => (data && data.url) && data.url;
-        const [currKey, currFile] = [getUrl(asset), getUrl(data)];
+        const [currentKey, receivedFile] = [getUrl(this), getUrl(data)];
 
-        const { key, file } = !isEmpty(currFile)
-          ? generateS3Data(asset.id, asset.courseId || data.courseId, currFile)
+        const { key, file } = !isEmpty(receivedFile)
+          ? generateS3Data(this.id, this.courseId || data.courseId, receivedFile)
           : { key: null, file: null };
 
-        const shouldCreate = isString(currFile) && !isEmpty(currFile) && isEmpty(currKey);
-        const shouldDelete = isString(currFile) && isEmpty(currFile) && !isEmpty(currKey);
-        const shouldUpdate = !isEmpty(currFile) && !isEmpty(currKey);
+        const shouldCreate = isString(receivedFile) && !isEmpty(receivedFile) && isEmpty(currentKey);
+        const shouldDelete = isEmpty(receivedFile) && !isEmpty(currentKey);
+        const shouldUpdate = !isEmpty(receivedFile) && !isEmpty(currentKey);
 
         if (shouldCreate) {
-          const method = asset.createRemote(key, file);
+          const method = this.createRemote(key, file);
           return { asset: assign(data, { data: { url: key } }), method };
         } else if (shouldDelete) {
-          const method = asset.deleteRemote(currKey);
+          const method = this.deleteRemote(currentKey);
           return { asset: assign(data, { data: { url: null } }), method };
         } else if (shouldUpdate) {
-          const shouldReplace = currKey !== key;
+          const shouldReplace = currentKey !== key;
           if (shouldReplace) {
-            const method = storage.deleteFile(currKey)
-              .then(() => asset.createRemote(key, file));
+            const method = storage.deleteFile(currentKey)
+              .then(() => this.createRemote(key, file));
             return { asset: assign(data, { data: { url: key } }), method };
           } else {
-            return { asset: assign(data, { data: { url: currKey } }), method: null };
+            return { asset: assign(data, { data: { url: currentKey } }), method: null };
           }
         } else {
-          if (isEmpty(currKey)) set(data, 'data.url', null);
+          if (isEmpty(currentKey)) set(data, 'data.url', null);
           return { asset: data, method: null };
         }
       },
       getTypeData(data) {
-        // TODO(marko): Internal helper method, hide from instance somehow?
-        const asset = this; // Asset should be passed in as argument.
-        const isImage = (asset.type && asset.type === 'IMAGE') || data.type === 'IMAGE';
-        if (isImage) return asset.getImageData(data);
+        const isImage = (this.type && this.type === 'IMAGE') || data.type === 'IMAGE';
+        if (isImage) return this.getImageData(data);
         return { asset: data, method: null };
       },
       saveAndUpload(data) {
