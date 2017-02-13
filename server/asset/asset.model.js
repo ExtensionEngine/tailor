@@ -191,6 +191,12 @@ module.exports = function (sequelize, DataTypes) {
         });
       }
     },
+    hooks: {
+      beforeDestroy(asset) {
+        // Cleanup uploaded data
+        return asset.deleteRemote();
+      }
+    },
     freezeTableName: true
   });
 
