@@ -2,7 +2,7 @@
   <div @click="onClick" class="toolbar">
     <div class="toolbar-container">
       <image-toolbar
-        v-if="isVisible('IMAGE')"
+        v-if="isFocused('IMAGE')"
         :asset="focusedAsset">
       </image-toolbar>
       <quill-toolbar
