@@ -30,8 +30,9 @@
 </template>
 
 <script>
-import Cropper from '../../common/Cropper';
 import { concat, isEmpty } from 'lodash';
+import { imgSrcToDataURL } from 'blob-util';
+import Cropper from '../../common/Cropper';
 import toolbarActions from '../toolbar/toolbarActions';
 
 export default {
@@ -100,7 +101,12 @@ export default {
   },
   mounted() {
     if (this.asset.data.url) {
-      this.image = this.original = this.asset.data.url;
+      imgSrcToDataURL(this.asset.data.url, 'image/png', 'Anonymous')
+        .then(dataUrl => {
+          this.image = this.original = dataUrl;
+          this.$refs.cropper.replace(this.image);
+        })
+        .then(() => setTimeout(this.hideCrop, 50));
     }
   },
   destroyed() {
