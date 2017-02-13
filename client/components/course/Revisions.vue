@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import filter from 'lodash/filter';
+// import filter from 'lodash/filter';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import {
   describeActivityRevision,
@@ -39,15 +39,12 @@ const describe = {
 
 export default {
   name: 'course-revisions',
-  data() {
-    return {
-      revisions: []
-    };
+  computed: {
+    ...mapGetters(['revisions'])
   },
   methods: {
-    ...mapGetters({ getRevisions: 'revisions' }),
-    ...mapActions({ fetchRevisions: 'fetch' }, 'revisions'),
-    ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
+    ...mapActions(['fetch'], 'revisions'),
+    ...mapMutations(['setBaseUrl'], 'revisions'),
     getTimestamp(rev) {
       const date = rev.createdAt.toLocaleDateString();
       const hours = rev.createdAt.getHours();
@@ -62,14 +59,8 @@ export default {
   },
   created() {
     const courseId = Number(this.$route.params.courseKey);
-    this.setupRevisionApi(`/courses/${courseId}/revisions`);
-    this.fetchRevisions().then(() => {
-      this.revisions = filter(this.getRevisions(), { courseId });
-      this.revisions.forEach(rev => {
-        rev.createdAt = new Date(rev.createdAt);
-      });
-      this.revisions.sort((r1, r2) => r2.createdAt - r1.createdAt);
-    });
+    this.setBaseUrl(`/courses/${courseId}/revisions`);
+    this.fetch();
   }
 };
 </script>
