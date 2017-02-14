@@ -77,10 +77,10 @@ export default {
       this.$emit('save', { url: this.image });
     },
     showCrop() {
-      this.$refs.cropper.show();
+      if (this.image) this.$refs.cropper.show();
     },
     hideCrop() {
-      this.$refs.cropper.clear();
+      if (this.image) this.$refs.cropper.clear();
     },
 
     // Event generation methods
@@ -119,7 +119,7 @@ export default {
   watch: {
     isFocused(val, oldVal) {
       if (oldVal && !val) {
-        if (this.image) this.hideCrop();
+        this.hideCrop();
         this.$emit('save', this.localAsset);
       }
     }
