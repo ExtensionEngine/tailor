@@ -24,14 +24,12 @@ module.exports = function(sequelize, DataTypes) {
       associate(models) {
         Revision.belongsTo(models.Course, {
           foreignKey: {
-            name: 'courseId',
             allowNull: false
           },
           onDelete: 'CASCADE'
         });
         Revision.belongsTo(models.User, {
           foreignKey: {
-            name: 'userId',
             allowNull: false
           },
           onDelete: 'CASCADE'
