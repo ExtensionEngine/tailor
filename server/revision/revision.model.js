@@ -2,7 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   const Revision = sequelize.define('revision', {
-    resourceType: {
+    entity: {
       type: DataTypes.ENUM,
       values: ['ACTIVITY', 'ASSET', 'COURSE'],
       allowNull: false

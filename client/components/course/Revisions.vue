@@ -50,7 +50,7 @@ export default {
     },
     formatDescription(rev) {
       const user = rev.user.email;
-      const description = describe[rev.resourceType](rev);
+      const description = describe[rev.entity](rev);
       return `User ${user} ${description}`;
     }
   },

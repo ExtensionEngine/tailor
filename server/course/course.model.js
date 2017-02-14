@@ -58,7 +58,7 @@ module.exports = function (sequelize, DataTypes) {
             Revision.create({
               userId: context.userId,
               courseId: course.id,
-              resourceType: 'COURSE',
+              entity: 'COURSE',
               operation: 'CREATE',
               state: course.plain()
             });
@@ -70,7 +70,7 @@ module.exports = function (sequelize, DataTypes) {
             Revision.create({
               userId: context.userId,
               courseId: course.id,
-              resourceType: 'COURSE',
+              entity: 'COURSE',
               operation: 'UPDATE',
               state: course.plain()
             });
@@ -85,7 +85,7 @@ module.exports = function (sequelize, DataTypes) {
             // Revision.create({
             //   userId: context.userId,
             //   courseId: course.id,
-            //   resourceType: 'COURSE',
+            //   entity: 'COURSE',
             //   operation: 'REMOVE',
             //   state: null
             // });
