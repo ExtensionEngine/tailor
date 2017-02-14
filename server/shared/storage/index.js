@@ -1,17 +1,12 @@
 const isEmpty = require('lodash/isEmpty');
 const isString = require('lodash/isString');
 const Amazon = require('./providers/amazon').provider;
-const Local = require('./providers/local').provider;
 const config = require('../../../config/server').storage;
 
 const providerMapping = {
   amazon: {
     client: Amazon,
     config: config.amazon
-  },
-  local: {
-    client: Local,
-    config: config.local
   }
 };
 
