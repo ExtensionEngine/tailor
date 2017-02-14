@@ -61,10 +61,10 @@
 
     <!-- Image input -->
     <div class="col-md-4">
-      <div v-show="!isSaved" class="file-upload">
+      <div v-if="!isSaved" class="file-upload">
         <div class="col-md-2 file-input">
           <label>
-            <input @change="input" type="file" />
+            <input @change="input($event)" type="file" />
             <span class="fa fa-upload fa-2x"></span>
           </label>
         </div>
