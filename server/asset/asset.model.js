@@ -62,44 +62,6 @@ module.exports = function (sequelize, DataTypes) {
       associate(models) {
         Asset.belongsTo(models.Activity);
         Asset.belongsTo(models.Course);
-      },
-      track(models) {
-        const Revision = models.Revision;
-        Asset.hook('afterCreate', (asset, { context }) => {
-          if (context && context.userId) {
-            Revision.create({
-              userId: context.userId,
-              courseId: asset.courseId,
-              entity: 'ASSET',
-              operation: 'CREATE',
-              state: asset.get({ plain: true })
-            });
-          }
-        });
-
-        Asset.hook('afterUpdate', (asset, { context }) => {
-          if (context && context.userId) {
-            Revision.create({
-              userId: context.userId,
-              courseId: asset.courseId,
-              entity: 'ASSET',
-              operation: 'UPDATE',
-              state: asset.get({ plain: true })
-            });
-          }
-        });
-
-        Asset.hook('afterDestroy', (asset, { context }) => {
-          if (context && context.userId) {
-            Revision.create({
-              userId: context.userId,
-              courseId: asset.courseId,
-              entity: 'ASSET',
-              operation: 'REMOVE',
-              state: asset.get({ plain: true })
-            });
-          }
-        });
       }
     },
     freezeTableName: true

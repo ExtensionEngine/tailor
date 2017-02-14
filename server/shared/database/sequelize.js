@@ -20,8 +20,9 @@ each(models, (path, name) => {
 
 each(db, (v, modelName) => {
   if ('associate' in db[modelName]) db[modelName].associate(db);
-  if ('track' in db[modelName]) db[modelName].track(db);
 });
+
+db['Revision'].addHooks(db);
 
 db.initialize = () => sequelize.sync({ force: false }).then(() => seed(db));
 

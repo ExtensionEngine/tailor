@@ -1,6 +1,8 @@
 'use strict';
 
-module.exports = function(sequelize, DataTypes) {
+const hooks = require('./hooks');
+
+module.exports = function (sequelize, DataTypes) {
   const Revision = sequelize.define('revision', {
     entity: {
       type: DataTypes.ENUM,
@@ -34,6 +36,9 @@ module.exports = function(sequelize, DataTypes) {
           },
           onDelete: 'CASCADE'
         });
+      },
+      addHooks(models) {
+        hooks.add(models);
       }
     },
     freezeTableName: true
