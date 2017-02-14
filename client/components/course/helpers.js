@@ -10,16 +10,16 @@ export function describeActivityRevision(rev) {
   }
 }
 
-export function describeAssetRevision(rev) {
+export function describeAssetRevision(rev, topic) {
   const type = rev.state ? rev.state.type.toLowerCase() : '';
   switch (rev.operation) {
     case 'CREATE':
-      return `created a new ${type} asset`;
+      return `created a new ${type} asset in topic "${topic.name}"`;
     case 'REMOVE':
-      return `removed an asset`;
+      return `removed an asset from topic "${topic.name}"`;
     default: {
       const article = type === 'image' ? 'an' : 'a';
-      return `changed ${article} ${type} asset`;
+      return `changed ${article} ${type} asset in topic "${topic.name}"`;
     }
   }
 }

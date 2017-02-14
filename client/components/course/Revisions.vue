@@ -40,7 +40,8 @@ const describe = {
 export default {
   name: 'course-revisions',
   computed: {
-    ...mapGetters(['revisions'], 'editor')
+    ...mapGetters(['revisions'], 'editor'),
+    ...mapGetters(['getParent'], 'activity')
   },
   methods: {
     ...mapActions(['fetch'], 'revisions'),
@@ -50,7 +51,10 @@ export default {
     },
     formatDescription(rev) {
       const user = rev.user.email;
-      const description = describe[rev.entity](rev);
+      const topic = rev.entity === 'ASSET'
+        ? this.getParent(rev.activityId)
+        : undefined;
+      const description = describe[rev.entity](rev, topic);
       return `User ${user} ${description}`;
     }
   },

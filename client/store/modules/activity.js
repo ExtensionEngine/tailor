@@ -1,3 +1,4 @@
+import find from 'lodash/find';
 import VuexCollection from '../helpers/collection.js';
 import { updatePosition } from '../../utils/activity.js';
 
@@ -6,6 +7,13 @@ const { action, build, getter } = new VuexCollection('activity');
 getter(function activities() {
   return this.state.items;
 }, { global: true });
+
+getter(function getParent() {
+  return activityId => {
+    const activity = find(this.state.items, { id: activityId });
+    return find(this.state.items, { id: activity.parentId });
+  };
+});
 
 action(function reorder({ activity, positionData, index }) {
   activity.position = updatePosition(positionData);
