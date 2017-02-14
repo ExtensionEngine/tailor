@@ -90,7 +90,7 @@ module.exports = function (sequelize, DataTypes) {
               courseId: activity.courseId,
               entity: 'ACTIVITY',
               operation: 'CREATE',
-              state: activity.plain()
+              state: activity.get({ plain: true })
             });
           }
         });
@@ -102,7 +102,7 @@ module.exports = function (sequelize, DataTypes) {
               courseId: activity.courseId,
               entity: 'ACTIVITY',
               operation: 'UPDATE',
-              state: activity.plain()
+              state: activity.get({ plain: true })
             });
           }
         });
@@ -114,17 +114,13 @@ module.exports = function (sequelize, DataTypes) {
               courseId: activity.courseId,
               entity: 'ACTIVITY',
               operation: 'REMOVE',
-              state: null
+              state: activity.get({ plain: true })
             });
           }
         });
       }
     },
     instanceMethods: {
-      plain() {
-        return ['id', 'courseId', 'parentId', 'name', 'type', 'position']
-          .reduce((acc, val) => { acc[val] = this[val]; return acc; }, {});
-      },
       siblings() {
         return Activity.findAll({
           where: {

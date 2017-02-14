@@ -72,7 +72,7 @@ module.exports = function (sequelize, DataTypes) {
               courseId: asset.courseId,
               entity: 'ASSET',
               operation: 'CREATE',
-              state: asset.plain()
+              state: asset.get({ plain: true })
             });
           }
         });
@@ -84,7 +84,7 @@ module.exports = function (sequelize, DataTypes) {
               courseId: asset.courseId,
               entity: 'ASSET',
               operation: 'UPDATE',
-              state: asset.plain()
+              state: asset.get({ plain: true })
             });
           }
         });
@@ -96,16 +96,10 @@ module.exports = function (sequelize, DataTypes) {
               courseId: asset.courseId,
               entity: 'ASSET',
               operation: 'REMOVE',
-              state: null
+              state: asset.get({ plain: true })
             });
           }
         });
-      }
-    },
-    instanceMethods: {
-      plain() {
-        return ['id', 'courseId', 'activityId', 'type', 'data', 'position', 'layoutWidth']
-          .reduce((acc, val) => { acc[val] = this[val]; return acc; }, {});
       }
     },
     freezeTableName: true

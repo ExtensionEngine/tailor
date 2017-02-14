@@ -60,7 +60,7 @@ module.exports = function (sequelize, DataTypes) {
               courseId: course.id,
               entity: 'COURSE',
               operation: 'CREATE',
-              state: course.plain()
+              state: course.get({ plain: true })
             });
           }
         });
@@ -72,7 +72,7 @@ module.exports = function (sequelize, DataTypes) {
               courseId: course.id,
               entity: 'COURSE',
               operation: 'UPDATE',
-              state: course.plain()
+              state: course.get({ plain: true })
             });
           }
         });
@@ -87,17 +87,13 @@ module.exports = function (sequelize, DataTypes) {
             //   courseId: course.id,
             //   entity: 'COURSE',
             //   operation: 'REMOVE',
-            //   state: null
+            //   state: course.get({ plain: true })
             // });
           }
         });
       }
     },
     instanceMethods: {
-      plain() {
-        return ['id', 'name', 'description']
-          .reduce((acc, val) => { acc[val] = this[val]; return acc; }, {});
-      },
       getUser(user) {
         return this.getUsers({ where: { id: user.id } })
           .then(users => users[0]);
