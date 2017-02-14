@@ -1,17 +1,19 @@
 export function describeActivityRevision(rev) {
-  const name = rev.state ? rev.state.name : '';
+  const name = rev.state.name;
   switch (rev.operation) {
     case 'CREATE':
-      return `created a new activity: "${name}"`;
+      return name === 'perspective'
+        ? `created a new perspective`
+        : `created a new activity: "${name}"`;
     case 'REMOVE':
-      return `removed an activity`;
+      return `removed the activity "${name}"`;
     default:
       return `changed the activity "${name}"`;
   }
 }
 
 export function describeAssetRevision(rev, topic) {
-  const type = rev.state ? rev.state.type.toLowerCase() : '';
+  const type = rev.state.type.toLowerCase();
   switch (rev.operation) {
     case 'CREATE':
       return `created a new ${type} asset in topic "${topic.name}"`;
