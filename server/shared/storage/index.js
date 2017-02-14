@@ -23,6 +23,13 @@ class Storage {
     const { client: ProviderClass, config: providerConfig } = providerData;
 
     this.provider = new ProviderClass(providerConfig);
+
+    this.loadFile = this.loadFile.bind(this);
+    this.saveFile = this.saveFile.bind(this);
+    this.deleteFile = this.deleteFile.bind(this);
+    this.listFiles = this.listFiles.bind(this);
+    this.getFileUrl = this.getFileUrl.bind(this);
+    this.fileExists = this.fileExists.bind(this);
   }
 
   static validateProvider(provider) {
