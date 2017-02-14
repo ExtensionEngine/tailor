@@ -60,7 +60,7 @@ module.exports = function (sequelize, DataTypes) {
               courseId: course.id,
               resourceType: 'COURSE',
               operation: 'CREATE',
-              currentValue: course.plain()
+              state: course.plain()
             });
           }
         });
@@ -72,7 +72,7 @@ module.exports = function (sequelize, DataTypes) {
               courseId: course.id,
               resourceType: 'COURSE',
               operation: 'UPDATE',
-              currentValue: course.plain()
+              state: course.plain()
             });
           }
         });
@@ -87,7 +87,7 @@ module.exports = function (sequelize, DataTypes) {
             //   courseId: course.id,
             //   resourceType: 'COURSE',
             //   operation: 'REMOVE',
-            //   currentValue: null
+            //   state: null
             // });
           }
         });

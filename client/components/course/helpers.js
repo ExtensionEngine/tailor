@@ -1,5 +1,5 @@
 export function describeActivityRevision(rev) {
-  const name = rev.currentValue ? rev.currentValue.name : '';
+  const name = rev.state ? rev.state.name : '';
   switch (rev.operation) {
     case 'CREATE':
       return `created a new activity: "${name}"`;
@@ -11,7 +11,7 @@ export function describeActivityRevision(rev) {
 }
 
 export function describeAssetRevision(rev) {
-  const type = rev.currentValue ? rev.currentValue.type.toLowerCase() : '';
+  const type = rev.state ? rev.state.type.toLowerCase() : '';
   switch (rev.operation) {
     case 'CREATE':
       return `created a new ${type} asset`;

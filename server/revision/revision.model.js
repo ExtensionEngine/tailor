@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
       values: ['CREATE', 'UPDATE', 'REMOVE'],
       allowNull: false
     },
-    currentValue: {
+    state: {
       type: DataTypes.JSON,
       allowNull: true,
       validate: {
