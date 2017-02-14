@@ -1,5 +1,5 @@
 <template>
-  <div class="editor" @click="clicked">
+  <div class="editor" @mousedown="click" @click="clicked">
     <loader v-if="showLoader"></loader>
     <div v-else>
       <toolbar></toolbar>
@@ -24,7 +24,8 @@ export default {
   name: 'editor',
   data() {
     return {
-      showLoader: true
+      showLoader: true,
+      isClicked: false
     };
   },
   computed: {
@@ -39,12 +40,20 @@ export default {
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity'),
     ...mapMutations({ setupAssetsApi: 'setBaseUrl' }, 'assets'),
     ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
+    click() {
+      // Ignore click if it was initiated on any of the child elements
+      this.isClicked = true;
+    },
     clicked(e) {
-      if (!this.focusedAsset) return;
-      if (!e.component ||
-        ((e.component.name !== 'toolbar') &&
-        (e.component.data._cid !== this.focusedAsset._cid))) {
-        this.focusoutAsset();
+      if (this.isClicked) {
+        // Reset flag
+        this.isClicked = false;
+        if (!this.focusedAsset) return;
+        if (!e.component ||
+          ((e.component.name !== 'toolbar') &&
+          (e.component.data._cid !== this.focusedAsset._cid))) {
+          this.focusoutAsset();
+        }
       }
     },
     ...mapActions(['focusoutAsset'], 'atom')
