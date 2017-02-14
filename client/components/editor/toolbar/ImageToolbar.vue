@@ -68,8 +68,8 @@
             <span class="fa fa-upload fa-2x"></span>
           </label>
         </div>
-        <div class="col-md-10 file-text" :class="errorClass">
-          <input type="text" :value="asset.name" disabled readonly />
+        <div :class="errorClass" class="col-md-10 file-text">
+          <input :value="asset.name" type="text" disabled readonly />
           <div v-show="error" class="error-message">{{ error }}</div>
         </div>
       </div>
