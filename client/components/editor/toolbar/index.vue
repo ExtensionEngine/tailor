@@ -1,16 +1,15 @@
 <template>
   <div @click="onClick">
     <quill-toolbar
-      v-if="isVisible('TEXT')"
-      :asset="focusedAsset">
+      v-if="isVisible('TEXT')">
     </quill-toolbar>
     <video-toolbar
       v-if="isVisible('VIDEO')"
-      :asset="focusedAsset">
+      :asset="toolbar.context">
     </video-toolbar>
     <gomo-toolbar
       v-if="isVisible('GOMO')"
-      :asset="focusedAsset">
+      :asset="toolbar.context">
     </gomo-toolbar>
   </div>
 </template>
@@ -24,11 +23,11 @@ import GomoToolbar from './GomoToolbar';
 export default {
   name: 'toolbar',
   computed: {
-    ...mapGetters(['focusedAsset'], 'atom')
+    ...mapGetters(['toolbar'])
   },
   methods: {
     isVisible(type) {
-      return this.focusedAsset && (this.focusedAsset.type === type);
+      return this.toolbar.type === type;
     },
     onClick(e) {
       // Attach component data

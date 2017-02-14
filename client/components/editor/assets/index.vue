@@ -31,19 +31,19 @@ export default {
   name: 'asset',
   props: { asset: Object },
   computed: {
-    ...mapGetters(['focusedAsset'], 'atom'),
+    ...mapGetters(['toolbar']),
     columnWidth() {
       return `col-xs-${this.asset.layoutWidth}`;
     },
     isFocused() {
-      return this.focusedAsset && (this.focusedAsset._cid === this.asset._cid);
+      return this.toolbar.context._cid === this.asset._cid;
     }
   },
   methods: {
     ...mapActions({ updateAsset: 'update' }, 'assets'),
-    ...mapMutations(['focusAsset'], 'atom'),
+    ...mapMutations(['setToolbar']),
     focus(e) {
-      this.focusAsset(this.asset);
+      this.setToolbar(this.asset);
       // Attach component meta to event
       e.component = {
         name: 'asset',

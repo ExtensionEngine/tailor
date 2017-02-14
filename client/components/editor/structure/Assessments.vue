@@ -53,9 +53,10 @@ export default {
       updateAssessment: 'update',
       removeAssessment: 'remove'
     }, 'assessments'),
-    add(type) {
+    add(assessment) {
       const _cid = cuid();
-      Vue.set(this.assessments, _cid, { _cid, type });
+      assessment._cid = _cid;
+      Vue.set(this.assessments, _cid, assessment);
       this.selected.push(_cid);
     },
     toggleSelect(assessment) {

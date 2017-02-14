@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     ...mapGetters(['course', 'activity'], 'editor'),
-    ...mapGetters(['focusedAsset'], 'atom')
+    ...mapGetters(['toolbar'])
   },
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
@@ -40,14 +40,14 @@ export default {
     ...mapMutations({ setupAssetsApi: 'setBaseUrl' }, 'assets'),
     ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
     clicked(e) {
-      if (!this.focusedAsset) return;
+      if (!this.toolbar.type) return;
       if (!e.component ||
         ((e.component.name !== 'toolbar') &&
-        (e.component.data._cid !== this.focusedAsset._cid))) {
-        this.focusoutAsset();
+        (e.component.data._cid !== this.toolbar.context._cid))) {
+        this.clearContext();
       }
     },
-    ...mapActions(['focusoutAsset'], 'atom')
+    ...mapMutations({ clearContext: 'setToolbar' })
   },
   created() {
     // TODO: Do this better!

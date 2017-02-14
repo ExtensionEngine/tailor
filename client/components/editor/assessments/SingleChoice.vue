@@ -1,21 +1,9 @@
 <template>
-  <div class="assessment single-choice">
-    <div class="label label-primary assessment-type">Single choice</div>
-    <div class="form-group">
-      <span class="form-label">Question</span>
-      <span :class="{ 'has-error': errors.includes('question') }">
-        <input
-          v-model="question"
-          :disabled="isEditing"
-          class="form-control"
-          type="text"
-          placeholder="Question...">
-      </span>
-    </div>
+  <div>
     <div class="form-group">
       <span class="form-label">Answers</span>
       <button
-        :disabled="isEditing"
+        :disabled="!isEditing"
         @click="addAnswer"
         class="btn btn-default answers-add"
         type="button">
@@ -29,7 +17,8 @@
             <input
               v-model="correct"
               :value="index"
-              :disabled="isEditing"
+              :disabled="!isEditing"
+              @change="update"
               type="radio">
           </span>
           <span
@@ -37,12 +26,13 @@
             class="answers-input">
             <input
               v-model="answers[index]"
-              :disabled="isEditing"
+              :disabled="!isEditing"
+              @blur="update"
               type="text"
               placeholder="Answer...">
           </span>
           <button
-            :disabled="isEditing"
+            :disabled="!isEditing"
             @click="removeAnswer(index)"
             class="destroy"
             type="button">
@@ -51,125 +41,55 @@
         </li>
       </ul>
     </div>
-    <div class="form-group">
-      <span class="form-label">Hint</span>
-      <input
-        v-model="hint"
-        :disabled="isEditing"
-        class="form-control"
-        type="text"
-        placeholder="Optional hint...">
-    </div>
-    <div class="alert-container">
-      <div
-        v-show="answers.length < 2 || (isEditing && isSaved)"
-        :class="alertType"
-        class="alert alert-dismissible">
-        <strong>{{ alert }}</strong>
-      </div>
-    </div>
-    <div v-if="!isEditing" class="controls">
-      <button @click="save" class="btn btn-default" type="button">
-        Save
-      </button>
-      <button @click="close" class="btn btn-default" type="button">
-        Cancel
-      </button>
-    </div>
-    <div v-else class="controls">
-      <button @click="close" class="btn btn-default" type="button">
-        Close
-      </button>
-      <button @click="edit" class="btn btn-default" type="button">
-        Edit
-      </button>
-    </div>
   </div>
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
-import yup from 'yup';
-
-const schema = yup.object().shape({
-  question: yup.string().trim().min(1).required(),
-  answers: yup.array().min(2).of(yup.string().trim().min(1)).required(),
-  correct: yup.number().required()
-});
-
-const defaultAssessment = {
-  question: '',
-  answers: ['', ''],
-  correct: '',
-  hint: ''
-};
-
 export default {
-  props: { assessment: Object },
+  props: {
+    assessment: Object,
+    errors: Array,
+    isEditing: Boolean
+  },
   data() {
     return {
-      ...cloneDeep(defaultAssessment),
-      ...cloneDeep(this.assessment),
-      isEditing: !!this.assessment.question,
-      errors: [],
-      alert: '',
-      isSaved: false
+      answers: this.assessment.answers,
+      correct: this.assessment.correct
     };
   },
   methods: {
     addAnswer() {
       this.answers.push('');
+      this.update();
     },
     removeAnswer(index) {
       this.answers.splice(index, 1);
+
       if (this.correct === index) this.correct = null;
       if (this.correct >= index) this.correct -= 1;
+
+      this.update();
     },
-    save() {
-      let question = {
-        _cid: this.assessment._cid,
-        question: this.question,
-        correct: this.correct,
+    update() {
+      let data = {
         answers: this.answers,
-        hint: this.hint,
-        type: this.type
+        correct: this.correct
       };
-      this.errors = [];
-      this.validate(question)
-        .then(() => {
-          this.isEditing = true;
-          this.isSaved = true;
-          this.$emit('save', question);
-        })
-        .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
-    },
-    validate(question) {
-      const options = { recursive: true, abortEarly: false };
-      return schema.validate(question, options);
-    },
-    close() {
-      this.$emit('selected');
-    },
-    edit() {
-      this.isEditing = false;
-      this.isSaved = false;
+      this.$emit('update', data);
     }
   },
-  computed: {
-    alertType() {
-      if (this.answers.length < 2) {
-        this.alert = 'Please make at least two answers available !';
-        return 'alert-danger';
-      } else {
-        this.alert = 'Question saved !';
-        return 'alert-success';
+  watch: {
+    isEditing: function(newVal) {
+      if (!newVal) {
+        this.answers = this.assessment.answers;
+        this.correct = this.assessment.correct;
       }
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .assessment.single-choice {
   min-height: 400px;
   margin: 10px auto;

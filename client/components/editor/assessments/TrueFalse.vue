@@ -1,17 +1,5 @@
 <template>
-  <div class="assessment true-false">
-    <div class="label label-primary assessment-type">True - false</div>
-    <div class="form-group">
-      <span class="form-label">Question</span>
-      <span :class="{ 'has-error': errors.includes('question') }">
-        <input
-          v-model="question"
-          :disabled="isEditing"
-          class="form-control"
-          type="text"
-          placeholder="Question...">
-      </span>
-    </div>
+  <div>
     <div class="form-group">
       <span class="form-label">Select correct answer</span>
       <ul>
@@ -19,8 +7,9 @@
           <span :class="{ 'has-error': errors.includes('correct') }">
             <input
               v-model="correct"
-              :disabled="isEditing"
+              :disabled="!isEditing"
               :value="true"
+              @change="update"
               type="radio">
           </span>
           <span class="answers">True</span>
@@ -29,110 +18,46 @@
           <span :class="{ 'has-error': errors.includes('correct') }">
             <input
               v-model="correct"
-              :disabled="isEditing"
+              :disabled="!isEditing"
               :value="false"
+              @change="update"
               type="radio">
           </span>
           <span class="answers">False</span>
         </li>
       </ul>
     </div>
-    <div class="form-group">
-      <span class="form-label">Hint</span>
-      <input
-        v-model="hint"
-        :disabled="isEditing"
-        class="form-control"
-        type="text"
-        placeholder="Optional hint...">
-    </div>
-    <div class="alert-container">
-      <div
-        v-show="isEditing && isSaved"
-        class="alert alert-dismissible alert-success">
-        <strong>Question saved !</strong>
-      </div>
-    </div>
-    <div v-if="!isEditing" class="controls">
-      <button @click="save" class="btn btn-default" type="button">
-        Save
-      </button>
-      <button @click="close" class="btn btn-default" type="button">
-        Cancel
-      </button>
-    </div>
-    <div v-else class="controls">
-      <button @click="close" class="btn btn-default" type="button">
-        Close
-      </button>
-      <button @click="edit" class="btn btn-default" type="button">
-        Edit
-      </button>
-    </div>
   </div>
 </template>
 
 <script>
-import yup from 'yup';
-import cloneDeep from 'lodash/cloneDeep';
-
-const schema = yup.object().shape({
-  question: yup.string().trim().min(1).required(),
-  correct: yup.boolean().required()
-});
-
-const defaultAssessment = {
-  question: '',
-  correct: null,
-  hint: ''
-};
-
 export default {
-  props: { assessment: Object },
+  props: {
+    assessment: Object,
+    errors: Array,
+    isEditing: Boolean
+  },
   data() {
     return {
-      ...cloneDeep(defaultAssessment),
-      ...cloneDeep(this.assessment),
-      isEditing: !!this.assessment.question,
-      errors: [],
-      isSaved: false
+      correct: this.assessment.correct
     };
   },
   methods: {
-    save() {
-      let question = {
-        _cid: this.assessment._cid,
-        question: this.question,
-        correct: this.correct,
-        hint: this.hint,
-        type: this.type
-      };
-      this.errors = [];
-      this.validate(question)
-        .then(() => {
-          this.isEditing = true;
-          this.isSaved = true;
-          this.$emit('save', question);
-        })
-        .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
-    },
-    validate(question) {
-      const options = { recursive: true, abortEarly: false };
-      return schema.validate(question, options);
-    },
-    close() {
-      this.$emit('selected');
-    },
-    edit() {
-      this.isEditing = false;
-      this.isSaved = false;
+    update() {
+      let data = { correct: this.correct };
+      this.$emit('update', data);
+    }
+  },
+  watch: {
+    isEditing: function(newVal) {
+      if (!newVal) this.correct = this.assessment.correct;
     }
   }
 };
 </script>
 
 
-<style lang="scss" scoped>
+<style lang="scss">
 .assessment.true-false {
   min-height: 400px;
   margin: 10px auto;
