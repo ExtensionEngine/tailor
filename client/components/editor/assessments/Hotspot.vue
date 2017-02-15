@@ -32,12 +32,10 @@
     </div>
     <div v-show="page === 2" class="img-container">
       <div class="controlers">
-        <button @click="removeImage" class="btn btn-default" type="button">Remove image</button>
-        <button @click="starDrawing" class="btn btn-default" type="button" v-show="!start"><span class="fa fa-pencil"></span></button>
-        <button @click="finishDrawing" class="btn btn-default" type="button"v-show="start"><span class="fa fa-check"></span></button>
+        <button @click="starDrawing" class="btn btn-default" type="button" v-show="!drawing"><span class="fa fa-pencil"></span></button>
+        <button @click="finishDrawing" class="btn btn-default" type="button"v-show="drawing"><span class="fa fa-check"></span></button>
         <button @click="undo" class="btn btn-default" type="button"><span class="fa fa-undo"></span></button>
         <button @click="redo" class="btn btn-default" type="button"><span class="fa fa-repeat"></span></button>
-        <input type="range" name="points" min="0" max="1" @change="changeOpacity($event)" step="0.1">
       </div>
       <div class="canvas">
         <canvas ref="canvas" @mousedown="onmousedown"></canvas>
@@ -48,9 +46,9 @@
         <span class="form-label">Select correct areas:</span>
       </div>
       <div class="svg">
-        <img :src="image">
+        <img ref="img" :src="image">
         <svg ref="svg">
-          <polygon v-for="(element, index) in surface.areas" @click="select(index, $event)" :points="parsePoints(element)"/>
+          <polygon v-for="(element, index) in areas" @click="select(index, $event)" :points="parsePoints(element)"/>
         </svg>
       </div>
     </div>
@@ -83,8 +81,8 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import clone from 'lodash/clone';
 import yup from 'yup';
+import zoomCanvas from './zoomCanvas';
 
 const schema = yup.object().shape({
   question: yup.string().trim().min(1).required(),
@@ -96,17 +94,9 @@ const defaultAssessment = {
   hint: '',
   image: '',
   correct: [],
-  surface: {
-    positions: [],
-    lastPosition: null,
-    areas: [],
-    scale: 0,
-    width: 0,
-    states: {
-      undo: [],
-      redo: []
-    }
-  }
+  areas: [],
+  width: 0,
+  redo: [[]]
 };
 
 export default {
@@ -118,9 +108,7 @@ export default {
       img: new Image, //  eslint-disable-line
       errors: [],
       isEditing: !!this.assessment.question,
-      start: false,
-      lastX: null,
-      lastY: null,
+      drawing: false,
       page: 1
     };
   },
@@ -133,12 +121,26 @@ export default {
   watch: {
     page: function(val, oldVal) {
       if (this.page === 2) {
-        this.updateCanvas();
+        this.updateCanvas(1);
       }
-    },
-    'surface.width': function() {
-      if (this.page === 2) this.updateCanvas(this.surface.scale);
-      if (this.page === 3) this.updateSvg(this.surface.scale);
+      if (this.page === 3) {
+        this.$nextTick(() => {
+          if (this.$refs.svg.parentElement.clientWidth - 10 > this.img.naturalWidth) {
+            let height = this.img.naturalHeight / (this.img.naturalWidth / this.width);
+            this.$refs.svg.setAttribute('height', height + 'px');
+            this.$refs.svg.setAttribute('width', this.width + 'px');
+            this.$refs.svg.style.left = (Math.abs(this.$refs.svg.parentElement.clientWidth - this.width) / 2) + 'px';
+            this.$refs.img.style.removeProperty('height');
+            this.$refs.img.style.removeProperty('width');
+          } else {
+            this.$refs.svg.style.left = '5px';
+            this.$refs.svg.setAttribute('width', this.width + 'px');
+            this.$refs.svg.setAttribute('height', '100%');
+            this.$refs.img.style.height = '100%';
+            this.$refs.img.style.width = '100%';
+          }
+        });
+      }
     }
   },
   methods: {
@@ -157,7 +159,6 @@ export default {
         correct: this.correct,
         image: this.image,
         surfaceImage: canvas.toDataURL(),
-        surface: this.surface,
         hint: this.hint
       };
       this.errors = [];
@@ -173,254 +174,52 @@ export default {
       return schema.validate(question, options);
     },
     handleResize() {
-      // check if canvas has been created
       if (this.page === 2) {
-        this.updateCanvas();
-      } else if (this.page === 3) {
-        this.updateCanvas();
+        console.log('BEFORE', this.$refs.canvas.getBoundingClientRect().width - 10, this.width);
+        this.updateCanvas((this.$refs.canvas.getBoundingClientRect().width - 10) / this.width);
       }
+      /*  else if (this.page === 3) {
+        if (this.width === this.$refs.svg.parentElement.clientWidth - 10) return;
+        this.$nextTick(() => {
+          if ((this.$refs.svg.parentElement.clientWidth - 10) > this.img.naturalWidth) {
+            let height = this.img.naturalHeight / (this.img.naturalWidth / this.width);
+            this.$refs.svg.setAttribute('height', height);
+            this.$refs.svg.setAttribute('width', this.width);
+            this.$refs.svg.style.left = (Math.abs(this.$refs.svg.parentElement.clientWidth - this.width) / 2) + 'px';
+            this.$refs.img.style.removeProperty('height');
+            this.$refs.img.style.removeProperty('width');
+            console.log(this.$refs.img.clientWidth, '3');
+            this.updateSvg((this.$refs.img.clientWidth) / this.width);
+            this.width = this.$refs.svg.clientWidth;
+          } else {
+            this.$refs.svg.style.left = '5px';
+            this.$refs.svg.setAttribute('width', '100%');
+            this.$refs.svg.setAttribute('height', '100%');
+            this.$refs.img.style.height = '100%';
+            this.$refs.img.style.width = '100%';
+            this.updateSvg((this.$refs.svg.parentElement.clientWidth - 10) / this.width);
+            this.width = this.$refs.svg.parentElement.clientWidth - 10;
+          }
+        });
+      } */
     },
-    changeOpacity(event) {
-      this.$refs.canvas.style.opacity = event.target.value;
-    },
-    updateSvg(scale) {
-      [].concat(...this.surface.areas).forEach(item => {
-        item.x *= (scale || 1);
-        item.y *= (scale || 1);
+    updateSvg(resizeScale) {
+      if (this.areas.length === 0) return;
+      this.areas.forEach(outerItem => {
+        outerItem.forEach(innerItem => {
+          innerItem.x *= resizeScale;
+          innerItem.y *= resizeScale;
+        });
       });
+      resizeScale = 1;
     },
     parsePoints(element) {
       return element.map(item => {
         return item.x + ',' + item.y;
       });
     },
-    updateCanvas() {
-      var canvas = this.$refs.canvas;
-      let ratio;
-      var self = this;
-      this.$nextTick(() => {
-        if (this.img.naturalWidth > this.$refs.canvas.parentElement.clientWidth) {
-          ratio = this.img.naturalWidth / this.$refs.canvas.parentElement.clientWidth;
-          canvas.width = this.$refs.canvas.parentElement.clientWidth;
-          canvas.height = this.img.naturalHeight / ratio;
-          redraw();
-        }
-      });
-      var ctx = canvas.getContext('2d');
-      trackTransforms(ctx);
-      function redraw() {
-      // Clear the entire canvas
-        var p1 = ctx.transformedPoint(0, 0);
-        var p2 = ctx.transformedPoint(canvas.width, canvas.height);
-        ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
-
-        ctx.save();
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.restore();
-        ctx.drawImage(self.img, 0, 0, canvas.width, canvas.height);
-        if (self.surface.areas.length === 0) return;
-        var tempArray = [];
-        var scale = ctx.getTransform().a;
-
-        tempArray = clone(self.surface.areas);
-
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = 'white';
-        ctx.lineCap = 'butt';
-        tempArray.forEach(outerItem => {
-          ctx.beginPath();
-          outerItem.forEach((innerItem, index) => {
-            innerItem = {
-              x: ctx.transformedPoint(innerItem.x, innerItem.y).x * scale + ctx.getTransform().e,
-              y: ctx.transformedPoint(innerItem.x, innerItem.y).y * scale + ctx.getTransform().f
-            };
-            if (index === 0 || index / 2 === 0) {
-              ctx.moveTo(innerItem.x, innerItem.y);
-            } else {
-              ctx.lineTo(innerItem.x, innerItem.y);
-              ctx.stroke();
-            }
-          });
-        });
-      }
-
-      redraw();
-      self.lastX = canvas.width / 2;
-      self.lastY = canvas.height / 2;
-
-      var dragStart, dragged;
-
-      canvas.addEventListener('mousedown', function(evt) {
-        if (self.start) return;
-        document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
-        self.lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-        self.lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
-        dragStart = ctx.transformedPoint(self.lastX, self.lastY);
-        dragged = false;
-      }, false);
-
-      canvas.addEventListener('mousemove', function(evt) {
-        if (self.start) return;
-        self.lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-        self.lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
-        dragged = true;
-
-        if (dragStart) {
-          var pt = ctx.transformedPoint(self.lastX, self.lastY);
-          var scale = ctx.getTransform().a;
-          ctx.save();
-          ctx.translate(pt.x - dragStart.x, pt.y - dragStart.y);
-          var XLeft = ctx.getTransform().e;
-          var YTop = ctx.getTransform().f;
-          var XRight = XLeft + scale * canvas.width;
-          var YBottom = YTop + scale * canvas.height;
-          if (XLeft > 0 || XRight < canvas.width || YTop > 0 || YBottom < canvas.height) {
-            ctx.restore();
-          } else redraw();
-        }
-      }, false);
-
-      canvas.addEventListener('mouseup', function(evt) {
-        if (self.start) return;
-        dragStart = null;
-        if (!dragged) return;
-      }, false);
-
-      var zoomPoint = null;
-      var scaleFactor = 1.1;
-      function checkBoundaries(pt) {
-        var scale = ctx.getTransform().a;
-        var XLeft = ctx.getTransform().e;
-        var YTop = ctx.getTransform().f;
-        var XRight = XLeft + scale * canvas.width;
-        var YBottom = YTop + scale * canvas.height;
-
-        if (XLeft > 0 || XRight < canvas.width || YTop > 0 || YBottom < canvas.height) {
-          zoomPoint = pt;
-          if (XLeft > 0) {
-            zoomPoint.x = 0;
-          } else if (YTop > 0) {
-            zoomPoint.y = 0;
-          } else if (XRight < canvas.width) {
-            zoomPoint.x = canvas.width;
-          } else if (YBottom < canvas.height) {
-            zoomPoint.y = canvas.height;
-          }
-          return false;
-        }
-        return true;
-      }
-
-      function drawLoop(pt, scale, factor) {
-        if (scale !== 1 && scale < 1.0001) {
-          ctx.setTransform(1, 0, 0, 1, 0, 0);
-          redraw();
-          return;
-        }
-        if (checkBoundaries(pt)) {
-          redraw();
-        } else {
-          ctx.restore();
-          ctx.save();
-          ctx.translate(zoomPoint.x, zoomPoint.y);
-          ctx.scale(factor, factor);
-          ctx.translate(-zoomPoint.x, -zoomPoint.y);
-          if (drawLoop(pt, factor)) {
-            zoomPoint = null;
-            return true;
-          }
-        }
-      }
-      var zoom = (clicks) => {
-        var factor = Math.pow(scaleFactor, clicks);
-        var pt = ctx.transformedPoint(self.lastX, self.lastY);
-        var scale = ctx.getTransform().a;
-        if (scale > 8 && clicks > 0) return;
-        ctx.save();
-        ctx.translate(pt.x, pt.y);
-        ctx.scale(factor, factor);
-        ctx.translate(-pt.x, -pt.y);
-        drawLoop(pt, scale, factor);
-      };
-
-      var handleScroll = function(evt) {
-        var delta = evt.wheelDelta ? evt.wheelDelta / 200 : evt.detail ? -evt.detail : 0;
-        if (delta) {
-          for (let i = Math.abs(delta); i >= 0; i -= 0.2) {
-            if (delta < 0) zoom(-0.2);
-            if (delta > 0) zoom(0.2);
-          }
-        }
-        return evt.preventDefault() && false;
-      };
-
-      canvas.addEventListener('DOMMouseScroll', handleScroll, false);
-      canvas.addEventListener('mousewheel', handleScroll, false);
-
-      // Adds ctx.getTransform() - returns an SVGMatrix
-      // Adds ctx.transformedPoint(x,y) - returns an SVGPoint
-      function trackTransforms(ctx) {
-        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        var xform = svg.createSVGMatrix();
-        ctx.getTransform = function() { return xform; };
-
-        var savedTransforms = [];
-        var save = ctx.save;
-        ctx.save = function() {
-          savedTransforms.push(xform.translate(0, 0));
-          return save.call(ctx);
-        };
-
-        var restore = ctx.restore;
-        ctx.restore = function() {
-          xform = savedTransforms.pop();
-          return restore.call(ctx);
-        };
-
-        var scale = ctx.scale;
-        ctx.scale = function(sx, sy) {
-          xform = xform.scaleNonUniform(sx, sy);
-          return scale.call(ctx, sx, sy);
-        };
-
-        var rotate = ctx.rotate;
-        ctx.rotate = function(radians) {
-          xform = xform.rotate(radians * 180 / Math.PI);
-          return rotate.call(ctx, radians);
-        };
-
-        var translate = ctx.translate;
-        ctx.translate = function(dx, dy) {
-          xform = xform.translate(dx, dy);
-          return translate.call(ctx, dx, dy);
-        };
-
-        var transform = ctx.transform;
-        ctx.transform = function(a, b, c, d, e, f) {
-          var m2 = svg.createSVGMatrix();
-          m2.a = a; m2.b = b; m2.c = c; m2.d = d; m2.e = e; m2.f = f;
-          xform = xform.multiply(m2);
-          return transform.call(ctx, a, b, c, d, e, f);
-        };
-
-        var setTransform = ctx.setTransform;
-        ctx.setTransform = function(a, b, c, d, e, f) {
-          xform.a = a;
-          xform.b = b;
-          xform.c = c;
-          xform.d = d;
-          xform.e = e;
-          xform.f = f;
-          return setTransform.call(ctx, a, b, c, d, e, f);
-        };
-
-        var pt = svg.createSVGPoint();
-        ctx.transformedPoint = function(x, y) {
-          pt.x = x; pt.y = y;
-          return pt.matrixTransform(xform.inverse());
-        };
-      }
+    updateCanvas(resizeScale) {
+      zoomCanvas(this, resizeScale);
     },
     select(index, event) {
       if (this.correct.includes(index)) {
@@ -432,73 +231,101 @@ export default {
       this.correct.push(index);
     },
     starDrawing() {
-      this.start = true;
+      this.drawing = true;
+      let canvas = this.$refs.canvas;
+      let ctx = canvas.getContext('2d');
+      if (this.areas.length === 0) this.areas.push([]);
+      ctx.beginPath();
     },
     finishDrawing() {
-      this.start = false;
-      var canvas = this.$refs.canvas;
-      var ctx = canvas.getContext('2d');
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = 'white';
-      ctx.lineCap = 'butt';
-      ctx.beginPath();
-      ctx.moveTo(this.surface.lastPosition.x, this.surface.lastPosition.y);
-      ctx.lineTo(this.surface.positions[0].x, this.surface.positions[0].y);
+      this.drawing = false;
+      let canvas = this.$refs.canvas;
+      let ctx = canvas.getContext('2d');
+      let lastItem = this.areas[this.areas.length - 1];
+      ctx.lineTo(lastItem[0].x, lastItem[0].y);
       ctx.stroke();
-      this.surface.positions.push(this.surface.positions[0]);
-      this.surface.areas.push(
-        this.surface.positions.map(item => {
-          return {x: item.x, y: item.y};
-        })
-      );
-      this.surface.positions = [];
-    },
-    undo() {
-      if (this.surface.states.undo.length === 0) return;
-      this.surface.states.redo.push({
-        shape: this.surface.areas[this.surface.areas.length - 1]
-      });
-      this.surface.areas.pop();
-      this.updateCanvas();
-    },
-    redo() {
-      if (this.surface.states.redo.length === 0) return;
-      let obj = this.surface.states.redo.pop();
-      this.surface.areas.push(obj.shape);
+      lastItem.push({x: lastItem[0].x, y: lastItem[0].y});
     },
     onmousedown(event) {
-      if (!this.start) return;
-      var canvas = this.$refs.canvas;
-      var ctx = canvas.getContext('2d');
-      this.lastX = event.offsetX || (event.pageX - canvas.offsetLeft);
-      this.lastY = event.offsetY || (event.pageY - canvas.offsetTop);
-      if (this.surface.positions.length === 0) {
-        let pos = this.getXY(event);
-        this.surface.lastPosition = pos;
-        this.surface.positions.push(pos);
+      if (!this.drawing) return;
+      this.redo = [[]];
+      let canvas = this.$refs.canvas;
+      let ctx = canvas.getContext('2d');
+      let pos = this.getXY(event);
+      let lastAreasItem = this.areas[this.areas.length - 1];
+      if (lastAreasItem.length !== 0 && lastAreasItem.length > 1 && lastAreasItem[lastAreasItem.length - 1].x === lastAreasItem[0].x && lastAreasItem[lastAreasItem.length - 1].y === lastAreasItem[0].y) {
+        this.areas.push([]);
+        lastAreasItem = this.areas[this.areas.length - 1];
+      }
+      if (lastAreasItem.length === 0) {
+        lastAreasItem.push(pos);
+        ctx.moveTo(pos.x, pos.y);
       } else {
-        let pos = this.getXY(event);
-        this.surface.positions.push(pos);
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = 'white';
-        ctx.lineCap = 'butt';
-        ctx.beginPath();
-        ctx.moveTo(this.surface.lastPosition.x, this.surface.lastPosition.y);
+        ctx.moveTo(lastAreasItem[lastAreasItem.length - 1].x, lastAreasItem[lastAreasItem.length - 1].y);
+        lastAreasItem.push(pos);
         ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
-        this.surface.lastPosition = pos;
       }
     },
+    undo() {
+      if (this.areas.length === 0) return;
+      let lastAreasItem = this.areas[this.areas.length - 1];
+      if (lastAreasItem.length === 0) {
+        this.areas.splice(this.areas.length - 1, 1);
+        if (this.areas.length === 0) return;
+        lastAreasItem = this.areas[this.areas.length - 1];
+        this.redo.push([]);
+      }
+      let lastRedoItem = this.redo[this.redo.length - 1];
+      if (lastAreasItem.length === 2) {
+        lastRedoItem.push(lastAreasItem.pop());
+        lastRedoItem.push(lastAreasItem.pop());
+      } else lastRedoItem.push(lastAreasItem.pop());
+      this.updateCanvas(1);
+      if (this.areas[0] && this.areas[0].length === 0) {
+        this.areas.pop();
+      }
+    },
+    redo() {
+      if (this.redo[0].length === 0) return;
+      let lastAreasItem;
+      if (this.areas.length === 0) {
+        this.areas.push([]);
+        lastAreasItem = this.areas[this.areas.length - 1];
+      } else {
+        lastAreasItem = this.areas[this.areas.length - 1];
+      }
+      let lastRedoItem = this.redo[this.redo.length - 1];
+
+      if (lastRedoItem.length === 0) {
+        this.redo.splice(this.redo.length - 1, 1);
+        if (this.redo.length === 0) return;
+        this.areas.push([]);
+        lastAreasItem = this.areas[this.areas.length - 1];
+        lastRedoItem = this.redo[this.redo.length - 1];
+        lastAreasItem.push(lastRedoItem.pop());
+        lastAreasItem.push(lastRedoItem.pop());
+        this.updateCanvas(1);
+        if (this.redo.length === 0) this.redo.push([]);
+        return;
+      }
+      if (lastRedoItem.length !== 1 && lastRedoItem[lastRedoItem.length - 1].x === lastRedoItem[0].x && lastRedoItem[lastRedoItem.length - 1].y === lastRedoItem[0].y) {
+        lastAreasItem.push(lastRedoItem.pop());
+        lastAreasItem.push(lastRedoItem.pop());
+      } else lastAreasItem.push(lastRedoItem.pop());
+      this.updateCanvas(1);
+    },
     onFileChange(e) {
-      var files = e.target.files || e.dataTransfer.files;
+      let files = e.target.files || e.dataTransfer.files;
       if (!files.length) {
         return;
       }
       this.createImage(files[0]);
+      this.areas = [];
     },
     createImage(file) {
-      var reader = new FileReader();  //  eslint-disable-line
-      var vm = this;
+      let reader = new FileReader();  //  eslint-disable-line
+      let vm = this;
 
       reader.onload = (e) => {
         vm.image = e.target.result;
@@ -507,13 +334,12 @@ export default {
 
       reader.readAsDataURL(file);
     },
-    removeImage: function (e) {
-      this.image = '';
-    },
     getXY(event) {
-      var canvas = this.$refs.canvas;
-      var ctx = canvas.getContext('2d');
-      var pos = ctx.transformedPoint(this.lastX, this.lastY);
+      let canvas = this.$refs.canvas;
+      let ctx = canvas.getContext('2d');
+      let lastX = event.offsetX || (event.pageX - canvas.offsetLeft);
+      let lastY = event.offsetY || (event.pageY - canvas.offsetTop);
+      let pos = ctx.transformedPoint(lastX, lastY);
       return {x: pos.x, y: pos.y};
     },
     previous() {
@@ -597,34 +423,17 @@ export default {
     }
 
     .canvas {
-
       canvas {
         display: block;
-      }
-
-      .coveringCanvas1:hover {
-        cursor: crosshair;
-      }
-
-      img {
-      width: 100%;
-      height: 100%;
-      max-width: 1008px;
-      z-index: 1;
-      opacity: 1;
-      }
-
-      .coveringCanvas1 {
-        position: absolute;
-        z-index: 2;
-      }
-
-      .select-region {
-        position: absolute;
-        width: 100px;
-        height: 100px;
-        z-index: 3;
-        border: 1px solid white;
+        margin: 0 auto;
+        padding: 4px;
+        line-height: 1.42857143;
+        background-color: #fff;
+        border: 1px solid grey;
+        border-radius: 4px;
+        -webkit-transition: all .2s ease-in-out;
+        -o-transition: all .2s ease-in-out;
+        transition: all .2s ease-in-out;
       }
     }
   }
@@ -634,18 +443,21 @@ export default {
       position: relative;
 
       img {
-        width: 100%;
-        height: 100%;
-        max-width: 1008px;
+        margin: 0 auto;
+        display: block;
+        padding: 4px;
+        line-height: 1.42857143;
+        background-color: #fff;
+        border: 1px solid grey;
+        border-radius: 4px;
+        -webkit-transition: all .2s ease-in-out;
+        -o-transition: all .2s ease-in-out;
+        transition: all .2s ease-in-out;
         z-index: 1;
       }
       svg {
         position: absolute;
-        width: 100%;
-        height: 100%;
-        max-width: 1008px;
-        top: 0px;
-        right: 0px;
+        top: 5px;
         z-index: 2;
 
         polygon {
