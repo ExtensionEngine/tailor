@@ -1,12 +1,12 @@
 <template>
   <div :style="containerStyle">
-    <img ref="img" :src="src" :style="imgStyle" :alt="alt" />
+    <img ref="img" :src="src" :style="imgStyle" :alt="alt"/>
   </div>
 </template>
 
 <script>
-import Cropper from 'cropperjs';
 import { assign, omit } from 'lodash';
+import Cropper from 'cropperjs';
 
 // Forked from https://github.com/Agontuk/vue-cropperjs/blob/master/VueCropper.js
 // Cropperjs docs: https://github.com/fengyuanchen/cropperjs
@@ -232,5 +232,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '~cropperjs/dist/cropper.min.css';
+@import '~cropperjs/dist/cropper.min.css';
 </style>
