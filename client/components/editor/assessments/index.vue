@@ -75,10 +75,12 @@
         @update="update">
       </text-response>
       <fill-blank
-        v-if="assessment.type === 'FB'"
+        v-else-if="assessment.type === 'FB'"
         :assessment="assessment"
-        @selected="$emit('selected')"
-        @save="$emit('save', $event)">
+        :errors="errors"
+        :isEditing="isEditing"
+        @update="update"
+        @alert="setAlert">
       </fill-blank>
       <div class="form-group">
         <span class="form-label">Hint</span>
@@ -98,21 +100,21 @@
         </div>
       </div>
       <div v-if="isEditing" class="controls">
-        <button @click="cancel" class="btn btn-default" type="button">
+        <button @click="cancel" class="btn btn-default">
           Cancel
         </button>
-        <button @click="save" class="btn btn-default" type="button">
+        <button @click="save" class="btn btn-default">
           Save
         </button>
       </div>
       <div v-else class="controls">
-        <button @click="close" class="btn btn-default" type="button">
+        <button @click="close" class="btn btn-default">
           Close
         </button>
-        <button @click="edit" class="btn btn-default" type="button">
+        <button @click="edit" class="btn btn-default">
           Edit
         </button>
-        <button @click="remove" class="btn btn-default" type="button">
+        <button @click="remove" class="btn btn-default">
           Remove
         </button>
       </div>

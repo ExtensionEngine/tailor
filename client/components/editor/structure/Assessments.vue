@@ -29,7 +29,6 @@ import cuid from 'cuid';
 import difference from 'lodash/difference';
 import keyBy from 'lodash/keyBy';
 import Vue from 'vue';
-import cloneDeep from 'lodash/cloneDeep';
 import AssessmentItem from './AssessmentItem';
 import SelectAssessment from './SelectAssessment';
 import { mapActions, mapGetters } from 'vuex-module';

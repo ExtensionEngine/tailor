@@ -5,7 +5,8 @@ export const typeInfo = {
   SC: { type: 'SC', title: 'Single choice', class: 'single-choice' },
   TR: { type: 'TR', title: 'Text response', class: 'text-response' },
   NR: { type: 'NR', title: 'Numerical response', class: 'numerical-response' },
-  TF: { type: 'TF', title: 'True - false', class: 'true-false' }
+  TF: { type: 'TF', title: 'True - false', class: 'true-false' },
+  FB: { type: 'FB', title: 'Fill in the blank', class: 'fill-blank' }
 };
 
 export const schemas = {
@@ -30,6 +31,10 @@ export const schemas = {
   TF: yup.object().shape({
     question: yup.string().trim().min(1).required(),
     correct: yup.boolean().required()
+  }),
+  FB: yup.object().shape({
+    question: yup.string().trim().matches(/\(\d+\)_{10}/).required(),
+    correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).required()))
   })
 };
 
@@ -65,5 +70,10 @@ export const defaults = {
     question: '',
     correct: null,
     hint: ''
+  },
+  FB: {
+    type: 'FB',
+    question: '',
+    correct: []
   }
 };
