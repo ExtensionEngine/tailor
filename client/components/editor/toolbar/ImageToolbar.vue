@@ -1,273 +1,143 @@
 <template>
   <div class="image-toolbar">
-    <div class="col-md-4">
-      <ul v-show="isSaved" class="menu">
-        <!-- Image dropdown -->
-        <li class="menu-item">
-          <div class="dropdown">
-            <button
-              class="btn btn-link btn-menu dropdown-toggle"
-              type="button"
-              id="image-file"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="true">
-                Image
-                <span class="fa fa-caret-down"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="image-file">
-              <li><a @click="emitAction(event.clear)" type="button">Clear</a></li>
-            </ul>
-          </div>
-        </li>
-
-        <!-- Tool dropdown -->
-        <li class="menu-item">
-          <div class="dropdown">
-            <button
-              class="btn btn-link btn-menu dropdown-toggle"
-              type="button"
-              id="image-tool"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="true">
-                Tools
-                <span class="fa fa-caret-down"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="image-tool">
-              <li>
-                <a
-                  @click="setTool(event.showCrop)"
-                  :class="activeToolClass(event.showCrop)"
-                  type="button">
-                    Crop
-                </a>
-              </li>
-            </ul>
-          </div>
-        </li>
-
-        <!-- Tool items -->
-        <li v-show="tool === event.showCrop" class="menu-item">
-          <button @click="emitAction(event.reset)" class="btn btn-link btn-menu" title="Reset">
-            <span class="fa fa-undo"></span>
-          </button>
-          <button @click="emitAction(event.crop)" class="btn btn-link btn-menu" title="Crop">
-            <span class="fa fa-crop"></span>
-          </button>
-        </li>
-      </ul>
+    <div v-if="!isUploaded" class="file-upload">
+      <label>
+        <input @change="upload" type="file"/>
+        <span class="btn btn-success btn-sm">
+          <span class="fa fa-upload"></span> Upload image
+        </span>
+      </label>
     </div>
-
-    <!-- Image input -->
-    <div class="col-md-4">
-      <div v-show="!isSaved" class="file-upload">
-        <div class="col-md-2 file-input">
-          <label>
-            <input @change="input" type="file" />
-            <span class="fa fa-upload fa-2x"></span>
-          </label>
-        </div>
-        <div class="col-md-10 file-text" :class="errorClass">
-          <input type="text" :value="asset.name" disabled readonly />
-          <div v-show="error" class="error-message">{{ error }}</div>
-        </div>
-      </div>
+    <ul v-if="isUploaded">
+      <li
+        @click="emit(event.clear)"
+        class="btn btn-link btn-sm">
+        <span class="fa fa-image"></span> New
+      </li>
+      <li
+        @click="toggleTool(event.crop)"
+        :class="{ 'active': tool === event.crop }"
+        class="btn btn-link btn-sm">
+        <span class="fa fa-crop"></span> Crop
+      </li>
+    </ul>
+    <div v-if="tool === event.crop" class="tool">
+      <button @click="emit(event.reset)" class="btn btn-default btn-sm">
+        Undo
+      </button>
+      <button @click="emit(event.crop)" class="btn btn-success btn-sm">
+        Crop
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import { concat, isEmpty, map, replace, zipObject } from 'lodash';
 import actions from './toolbarActions';
+import isEmpty from 'lodash/isEmpty';
+import map from 'lodash/map';
+import zipObject from 'lodash/zipObject';
+
+const capitalize = word => word.charAt(0).toUpperCase() + word.slice(1);
 
 export default {
-  name: 'image-toolbar',
   props: ['asset'],
   data() {
     return {
-      error: null,
       tool: null
     };
   },
   computed: {
     event() {
-      // Namespace event names
-      const events = ['clear', 'crop', 'reset', 'upload'];
-      const tools = ['showCrop', 'hideCrop'];
-      const names = concat(events, tools);
-      const namespace = name => `${name}/${this.asset._cid}`;
-      return zipObject(names, map(names, e => namespace(e)));
+      // Namespace events
+      const events = ['clear', 'reset', 'upload', 'crop'];
+      return zipObject(events, map(events, it => `${it}/${this.asset._cid}`));
     },
-    errorClass() {
-      return { 'has-error': this.error };
-    },
-    isSaved() {
+    isUploaded() {
       return !isEmpty(this.asset.data.url);
     }
   },
   methods: {
-    input(event) {
-      this.resetTool();
-      const file = !isEmpty(event.target.files) ? event.target.files[0] : null;
-      const image = file && file.type.match('image.*') ? file : null;
-
-      this.error = this.validate(image);
-      if (!this.error) this.save(image);
-    },
-    save(image) {
-      // Convert to base64
-      const reader = new window.FileReader();
-      reader.onload = (e) => {
-        const url = e.target.result;
-        actions.$emit(this.event.upload, url);
-      };
-      reader.readAsDataURL(image);
-    },
-    validate(image) {
-      const errorMessage = 'Please upload an image file';
-      return !image ? errorMessage : null;
-    },
-    emitAction(name) {
+    emit(name) {
       actions.$emit(name);
     },
-    setTool(name) {
-      this.tool = name;
-      this.emitAction(this.tool);
+    upload({ target }) {
+      this.reset();
+      const image = !isEmpty(target.files) ? target.files[0] : null;
+      // TODO: Show global error modal if invalid
+      // const isValid = image && image.type.match('image.*');
+      // if (!isValid) ...
+      const reader = new window.FileReader();
+      reader.onload = e => actions.$emit(this.event.upload, e.target.result);
+      reader.readAsDataURL(image);
     },
-    resetTool() {
-      // Tool toggling methods should be implemented
-      // with 'show' / 'hide' prefix
-      if (!isEmpty(this.tool)) {
-        const action = replace(this.tool, 'show', 'hide');
-        this.tool = null;
-        this.emitAction(action);
-      }
+    toggleTool(tool) {
+      const show = this.tool !== tool;
+      const prefix = show ? 'show' : 'hide';
+      this.emit(`${prefix}${capitalize(tool)}`);
+      this.tool = show ? tool : null;
     },
-    activeToolClass(name) {
-      return { 'active': name === this.tool };
+    reset() {
+      if (!this.tool) return;
+      this.emit(`hide${capitalize(this.tool)}`);
+      this.tool = null;
     }
   },
   beforeDestroy() {
-    this.resetTool();
+    this.reset();
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .image-toolbar {
+  position: relative;
+  width: 100%;
+  height: 50px;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
-  height: 60px;
-  position: fixed;
-  width: 100%;
-  z-index: 999;
 
-  .col-md-4 {
-    height: 100%;
-    padding: 0;
-  }
-
-  .menu {
+  ul {
+    float: left;
     height: 100%;
     margin: 0;
-    padding: 0;
-    text-align: left;
+    padding: 0 30px 0 10px;
 
-    .menu-item {
-      display: inline-block;
+    li {
       height: 100%;
-      min-width: 50px;
-      text-align: center;
+      padding-top: 15px;
+      color: #444;
 
       .fa {
-        font-size: 16px;
+        margin-right: 5px;
+        font-size: 20px;
+        line-height: 20px;
+        vertical-align: bottom;
       }
 
-      .active {
-        background-color: #cecece;
+      &.active {
+        background-color: #e8e8e8;
       }
     }
-
-    .dropdown {
-      height: 100%;
-    }
   }
 
-  .dropdown-menu {
-    border-radius: 0;
-    left: -2%;
-    padding: 0;
+  .tool {
+    float: left;
+    padding: 12px 20px 0 20px;
 
-    li > a {
-      font-size: 14px;
-      font-weight: 500;
-      padding: 10px 20px;
-      text-transform: uppercase;
-    }
-  }
-
-  .open > .btn-menu.dropdown-toggle {
-    &:hover, &:focus {
-      background-color: transparent;
-      border-color: none;
-    }
-  }
-
-  .btn-menu {
-    box-shadow: none;
-    height: 100%;
-    outline: 0;
-
-    &:hover {
-      background-color: transparent;
-      background-image: none;
-      border: none;
-      box-shadow: none;
-      outline: 0;
-    }
-
-    &:focus:active {
-      background-color: transparent;
-      background-image: none;
-      border: none;
-      box-shadow: none;
-      outline: 0;
+    .btn {
+      margin-left: 5px;
     }
   }
 }
 
 .file-upload {
-  .file-input {
-    overflow: hidden;
-    padding: 12px 0;
-    position: relative;
-    width: 50px;
-
-    label {
-      cursor: pointer;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
+  input {
+    display: none;
   }
 
-  .file-text {
-    padding: 17px 5px;
-
-    input[type="text"] {
-      border-bottom: 1px solid #b3b3b3;
-      width: 100%;
-    }
-
-    .error-message {
-      color: darken(#d9534f, 15%);
-      font-size: 14px;
-      font-weight: 500;
-      padding: 2px 0;
-      text-align: left;
-    }
+  .btn {
+    margin-top: 12px;
   }
 }
 </style>
