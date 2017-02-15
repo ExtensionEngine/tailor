@@ -1,97 +1,85 @@
 <template>
   <div class="image-asset">
-    <loader v-if="showLoader"></loader>
-    <div v-else>
-      <div v-if="showPlaceholder" class="well text-placeholder">
-        <div class="message">
-          <span class="heading">Image placeholder</span>
-          <span>Click to edit</span>
-        </div>
+    <div v-if="showPlaceholder" class="well image-placeholder">
+      <div class="message">
+        <span class="heading">Image placeholder</span>
+        <span>Click to edit</span>
       </div>
-      <div v-else class="image-wrapper">
-        <cropper
-          ref='cropper'
-          drag-mode="none"
-          :view-mode="2"
-          :auto-crop-area="0.5"
-          :autoCrop="false"
-          :autoCropUpdate="true"
-          :guides="true"
-          :responsive="true"
-          :rotatable="false"
-          :background="false"
-          :zoomable="false"
-          :scalable="false"
-          :movable="false"
-          :modal="false"
-          :style="{ 'width': '100%' }"
-          :src="image">
-        </cropper>
-      </div>
+    </div>
+    <div v-else class="image-wrapper">
+      <cropper
+        ref="cropper"
+        drag-mode="none"
+        :view-mode="2"
+        :auto-crop-area="0.5"
+        :autoCrop="false"
+        :autoCropUpdate="true"
+        :guides="true"
+        :responsive="true"
+        :rotatable="false"
+        :background="false"
+        :zoomable="false"
+        :scalable="false"
+        :movable="false"
+        :modal="false"
+        :style="{ 'width': '100%' }"
+        :src="currentImage">
+      </cropper>
     </div>
   </div>
 </template>
 
 <script>
-import { concat, isEmpty } from 'lodash';
-import { imgSrcToDataURL } from 'blob-util';
+import concat from 'lodash/concat';
 import Cropper from '../../common/Cropper';
-import Loader from '../../common/Loader';
-import toolbarActions from '../toolbar/toolbarActions';
+import eventBus from '../toolbar/toolbarActions';
+import { imgSrcToDataURL } from 'blob-util';
+import isEmpty from 'lodash/isEmpty';
 
 export default {
-  name: 'image-asset',
-  props: ['asset', 'isFocused', 'showLoader'],
+  props: ['asset', 'isFocused'],
   data() {
     return {
-      original: null,
-      image: null
+      persistedImage: null,
+      currentImage: null
     };
   },
   computed: {
-    localAsset() {
-      return {
-        url: this.image
-      };
-    },
     showPlaceholder() {
       return isEmpty(this.asset.data.url);
     }
   },
   methods: {
-    // Events received from toolbar
+    upload(dataUrl) {
+      this.currentImage = dataUrl;
+      this.persistedImage = dataUrl;
+      this.$emit('save', { url: dataUrl });
+    },
     crop() {
-      this.image = this.$refs.cropper.getCroppedCanvas().toDataURL();
-      this.$refs.cropper.replace(this.image);
+      this.currentImage = this.$refs.cropper.getCroppedCanvas().toDataURL();
+      this.$refs.cropper.replace(this.currentImage);
+    },
+    showCrop() {
+      if (this.currentImage) this.$refs.cropper.show();
+    },
+    hideCrop() {
+      this.$refs.cropper.clear();
     },
     clear() {
-      this.image = this.original = null;
+      this.persistedImage = null;
+      this.currentImage = null;
       this.$emit('save', { url: null });
     },
     reset() {
-      this.image = this.original;
-      this.$refs.cropper.replace(this.original);
+      this.currentImage = this.persistedImage;
+      this.$refs.cropper.replace(this.persistedImage);
     },
-    upload(url) {
-      this.image = this.original = url;
-      this.$emit('save', { url: this.image });
-    },
-    showCrop() {
-      if (this.image) this.$refs.cropper.show();
-    },
-    hideCrop() {
-      if (this.image) this.$refs.cropper.clear();
-    },
-
-    // Event generation methods
     generateEvents(method) {
-      const events = ['clear', 'crop', 'reset', 'upload'];
+      const actions = ['clear', 'crop', 'reset', 'upload'];
       const tools = ['showCrop', 'hideCrop'];
-      const names = concat(events, tools);
-      const namespaceEvent = name => `${name}/${this.asset._cid}`;
-      names.forEach(n => {
-        toolbarActions[method](namespaceEvent(n), this[n]);
-      });
+      const events = concat(actions, tools);
+      const namespace = name => `${name}/${this.asset._cid}`;
+      events.forEach(it => eventBus[method](namespace(it), this[it]));
     },
     registerEvents() {
       this.generateEvents('$on');
@@ -104,68 +92,45 @@ export default {
     this.registerEvents();
   },
   mounted() {
-    if (this.asset.data.url) {
-      imgSrcToDataURL(this.asset.data.url, 'image/png', 'Anonymous')
-        .then(dataUrl => {
-          this.image = this.original = dataUrl;
-          this.$refs.cropper.replace(this.image);
-        })
-        .then(() => setTimeout(this.hideCrop, 50));
-    }
+    const imageUrl = this.asset.data.url;
+    if (!imageUrl) return;
+    imgSrcToDataURL(imageUrl, 'image/png', 'Anonymous').then(dataUrl => {
+      this.currentImage = dataUrl;
+      this.persistedImage = dataUrl;
+      this.$refs.cropper.replace(this.currentImage);
+      setTimeout(this.hideCrop, 0);
+    });
   },
   destroyed() {
     this.cleanupEvents();
   },
   watch: {
     isFocused(val, oldVal) {
-      if (oldVal && !val) {
-        this.hideCrop();
-        this.$emit('save', this.localAsset);
+      if (oldVal && !val && (this.persistedImage !== this.currentImage)) {
+        this.$emit('save', { url: this.currentImage });
       }
     }
   },
   components: {
-    Cropper,
-    Loader
+    Cropper
   }
 };
 </script>
 
-<style lang="scss">
-.image-asset {
-  .text-placeholder.well {
-    padding: 100px;
-    margin-bottom: 0;
+<style lang="scss" scoped>
+.image-placeholder {
+  padding: 100px;
+  margin-bottom: 0;
 
-    .message {
-      .heading {
-        font-size: 24px;
-      }
-
-      span {
-        display: block;
-        font-size: 18px;
-      }
+  .message {
+    .heading {
+      font-size: 24px;
     }
 
-    .image-wrapper {
-      max-width: 100%;
+    span {
+      display: block;
+      font-size: 18px;
     }
-  }
-
-  .cropper-container {
-    .cropper-wrap-box {
-      background-color: #fff;
-    }
-
-    .cropper-modal {
-      background-color: transparent;
-      opacity: 0;
-    }
-  }
-
-  .loader {
-    margin: 118px 100px;
   }
 }
 </style>
