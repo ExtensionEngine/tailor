@@ -1,7 +1,7 @@
 'use strict';
 
-const findIndex = require('lodash/findIndex');
 const Promise = require('bluebird');
+const calculatePosition = require('../shared/util/calculatePosition');
 
 /**
  * @swagger
@@ -63,9 +63,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING
     },
     type: {
-      type: DataTypes.ENUM('GOAL', 'CONCEPT', 'TOPIC', 'PERSPECTIVE'),
-      defaultValue: 'GOAL',
-      allowNull: false
+      type: DataTypes.STRING
     },
     position: {
       type: DataTypes.DOUBLE,
@@ -79,7 +77,7 @@ module.exports = function (sequelize, DataTypes) {
         Activity.belongsTo(Activity, { as: 'parent', foreignKey: 'parentId' });
         Activity.hasMany(Activity, { as: 'children', foreignKey: 'parentId' });
         Activity.hasMany(models.Asset);
-        // Activity.hasMany(models.Assesment);
+        Activity.hasMany(models.Assessment);
       }
     },
     instanceMethods: {
@@ -112,22 +110,8 @@ module.exports = function (sequelize, DataTypes) {
       reorder(index) {
         return sequelize.transaction(t => {
           return this.siblings().then(siblings => {
-            let newpos;
-
-            if (!index) {
-              newpos = siblings[0].position / 2;
-            } else if (index + 1 === siblings.length) {
-              newpos = siblings[index].position + 1;
-            } else {
-              const currentIndex = findIndex(siblings, it => it.id === this.id);
-              const direction = currentIndex > index ? -1 : 1;
-              const prevPos = siblings[index].position;
-              const nextPos = siblings[index + direction].position;
-              newpos = (nextPos + prevPos) / 2;
-            }
-
-            this.position = newpos;
-            return this.save();
+            this.position = calculatePosition(this.id, index, siblings);
+            return this.save({ transaction: t });
           });
         });
       }
