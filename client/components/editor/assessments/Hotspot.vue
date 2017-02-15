@@ -35,7 +35,7 @@
         <button @click="starDrawing" class="btn btn-default" type="button" v-show="!drawing"><span class="fa fa-pencil"></span></button>
         <button @click="finishDrawing" class="btn btn-default" type="button"v-show="drawing"><span class="fa fa-check"></span></button>
         <button @click="undo" class="btn btn-default" type="button"><span class="fa fa-undo"></span></button>
-        <button @click="redo" class="btn btn-default" type="button"><span class="fa fa-repeat"></span></button>
+        <button @click="redoFunction" class="btn btn-default" type="button"><span class="fa fa-repeat"></span></button>
       </div>
       <div class="canvas">
         <canvas ref="canvas" @mousedown="onmousedown"></canvas>
@@ -175,33 +175,30 @@ export default {
     },
     handleResize() {
       if (this.page === 2) {
-        console.log('BEFORE', this.$refs.canvas.getBoundingClientRect().width - 10, this.width);
-        this.updateCanvas((this.$refs.canvas.getBoundingClientRect().width - 10) / this.width);
+        this.updateCanvas(1);
       }
-      /*  else if (this.page === 3) {
-        if (this.width === this.$refs.svg.parentElement.clientWidth - 10) return;
+      if (this.page === 3) {
         this.$nextTick(() => {
           if ((this.$refs.svg.parentElement.clientWidth - 10) > this.img.naturalWidth) {
             let height = this.img.naturalHeight / (this.img.naturalWidth / this.width);
             this.$refs.svg.setAttribute('height', height);
             this.$refs.svg.setAttribute('width', this.width);
-            this.$refs.svg.style.left = (Math.abs(this.$refs.svg.parentElement.clientWidth - this.width) / 2) + 'px';
+            this.$refs.svg.style.left = (Math.abs(this.$refs.svg.parentElement.clientWidth - 10 - this.width - 10) / 2) + 'px';
             this.$refs.img.style.removeProperty('height');
             this.$refs.img.style.removeProperty('width');
-            console.log(this.$refs.img.clientWidth, '3');
-            this.updateSvg((this.$refs.img.clientWidth) / this.width);
-            this.width = this.$refs.svg.clientWidth;
+            this.updateSvg((this.$refs.img.clientWidth - 10) / (this.width - 10));
+            this.width = this.$refs.svg.clientWidth - 10;
           } else {
             this.$refs.svg.style.left = '5px';
-            this.$refs.svg.setAttribute('width', '100%');
-            this.$refs.svg.setAttribute('height', '100%');
             this.$refs.img.style.height = '100%';
             this.$refs.img.style.width = '100%';
-            this.updateSvg((this.$refs.svg.parentElement.clientWidth - 10) / this.width);
+            this.$refs.svg.setAttribute('width', this.$refs.svg.parentElement.clientWidth - 10);
+            this.$refs.svg.setAttribute('height', this.$refs.svg.parentElement.clientHeight - 10);
+            this.updateSvg((this.$refs.svg.parentElement.clientWidth - 10) / (this.width - 10));
             this.width = this.$refs.svg.parentElement.clientWidth - 10;
           }
         });
-      } */
+      }
     },
     updateSvg(resizeScale) {
       if (this.areas.length === 0) return;
@@ -286,7 +283,7 @@ export default {
         this.areas.pop();
       }
     },
-    redo() {
+    redoFunction() {
       if (this.redo[0].length === 0) return;
       let lastAreasItem;
       if (this.areas.length === 0) {
@@ -296,7 +293,6 @@ export default {
         lastAreasItem = this.areas[this.areas.length - 1];
       }
       let lastRedoItem = this.redo[this.redo.length - 1];
-
       if (lastRedoItem.length === 0) {
         this.redo.splice(this.redo.length - 1, 1);
         if (this.redo.length === 0) return;

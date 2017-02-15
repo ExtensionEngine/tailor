@@ -10,8 +10,11 @@ var zoomCanvas = function (self, resizeScale) {
       canvas.width = self.img.naturalWidth;
       canvas.height = self.img.naturalHeight;
     }
+    if (canvas.width === self.width) resizeScale = 1;
+    if (canvas.width !== self.width) resizeScale = canvas.width / self.width;
     self.width = canvas.width;
     redraw();
+    resizeScale = 1;
   });
 
   trackTransforms(ctx);
@@ -37,7 +40,6 @@ var zoomCanvas = function (self, resizeScale) {
     self.areas.forEach(outerItem => {
       ctx.beginPath();
       outerItem.forEach((innerItem, index) => {
-        console.log(resizeScale);
         if (resizeScale === 1) {
           innerItem.x = ctx.transformedPoint(innerItem.x, innerItem.y).x * scale + ctx.getTransform().e;
           innerItem.y = ctx.transformedPoint(innerItem.x, innerItem.y).y * scale + ctx.getTransform().f;
