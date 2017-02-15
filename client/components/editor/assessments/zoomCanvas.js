@@ -1,3 +1,4 @@
+// TODO: Rework and move to utils
 var zoomCanvas = function (self, resizeScale) {
   var canvas = self.$refs.canvas;
   var ctx = canvas.getContext('2d');
@@ -37,7 +38,6 @@ var zoomCanvas = function (self, resizeScale) {
     self.areas.forEach(outerItem => {
       ctx.beginPath();
       outerItem.forEach((innerItem, index) => {
-        console.log(resizeScale);
         if (resizeScale === 1) {
           innerItem.x = ctx.transformedPoint(innerItem.x, innerItem.y).x * scale + ctx.getTransform().e;
           innerItem.y = ctx.transformedPoint(innerItem.x, innerItem.y).y * scale + ctx.getTransform().f;
