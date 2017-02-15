@@ -45,6 +45,11 @@
 </template>
 
 <script>
+const customAlert = {
+  text: 'Please make at least three answers available !',
+  type: 'alert-danger'
+};
+
 export default {
   props: {
     assessment: Object,
@@ -75,12 +80,17 @@ export default {
 
       this.update();
     },
+    validate() {
+      if (this.answers.length < 3) this.$emit('alert', customAlert);
+      else this.$emit('alert');
+    },
     update() {
       let data = {
         answers: this.answers,
         correct: this.correct
       };
       this.$emit('update', data);
+      this.validate();
     }
   },
   watch: {
@@ -94,136 +104,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.assessment.multiple-choice {
-  min-height: 400px;
-  margin: 10px auto;
-  padding: 10px 30px 30px 30px;
-  background-color: white;
-  overflow: hidden;
-
-  .controls {
-    overflow: hidden;
-    padding: 10px;
-  }
-
-  .alert-container {
-    padding: 0 20px;
-  }
-
-  .alert {
-    display: inline-block;
-    margin: 0 auto;
-    padding: 3px 7px;
-    text-align: center;
-  }
-
-  button {
-    margin: 15px 10px 0 0;
-    float: right;
-  }
-
-  .assessment-type {
-    font-size: 13px;
-    float: right;
-    background-color: grey;
-    margin: 15px 15px 50px 0;
-  }
-
-  .form-label {
-    font-size: 20px;
-  }
-
-  .destroy {
-    display: none;
-    position: absolute;
-    opacity: 0.6;
-    transition: all 0.2s;
-    border: 0;
-    background-color: transparent;
-    padding: 0;
-    bottom: 8px;
-    right: 10px;
-
-    span {
-      font-size: 16px;
-    }
-  }
-
-  .destroy:focus {
-    outline: none;
-  }
-
-  .answers-add {
-    padding: 7px;
-    height: 28px;
-    width: 50px;
-    float: right;
-  }
-
-  ul {
-    padding: 10px 0 0 50px;
-
-    li {
-      display: inline-block;
-      width: 100%;
-      position: relative;
-      margin: 10px 0;
-
-      .answers-checkbox {
-        display: inline-block;
-        float: left;
-        margin-top: 7px;
-        width: 19px;
-
-        input {
-          padding-bottom: 11px;
-        }
-      }
-
-      .answers-input {
-        display: block;
-        overflow: hidden;
-
-        input {
-          height: 40px;
-          width: 100%;
-          margin-left: 3px;
-          padding: 0 33px 0 10px;
-        }
-
-        input:focus {
-          outline: none;
-        }
-      }
-    }
-
-    li:hover {
-      .destroy:enabled {
-        display: inline;
-      }
-    }
-  }
-
-  .form-group {
-    text-align: left;
-    margin: 0 auto;
-    padding: 25px 20px 15px 20px;
-    width: 100%;
-    overflow: hidden;
-  }
-
-  .form-control,
-  .answers-input {
-    padding-left: 10px !important;
-  }
-}
-
-@media (max-width: 850px) {
-  .assessment.multiple-choice {
-    ul {
-      padding-left: 0;
-    }
-  }
-}
-</style>
+<style lang="scss"></style>

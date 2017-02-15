@@ -3,9 +3,9 @@ import yup from 'yup';
 export const typeInfo = {
   MC: { type: 'MC', title: 'Multiple choice', class: 'multiple-choice' },
   SC: { type: 'SC', title: 'Single choice', class: 'single-choice' },
-  TF: { type: 'TF', title: 'Text response', class: 'text-response' },
+  TR: { type: 'TR', title: 'Text response', class: 'text-response' },
   NR: { type: 'NR', title: 'Numerical response', class: 'numerical-response' },
-  TR: { type: 'TR', title: 'True - false', class: 'true-false' }
+  TF: { type: 'TF', title: 'True - false', class: 'true-false' }
 };
 
 export const schemas = {

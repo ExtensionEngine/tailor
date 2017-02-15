@@ -1,5 +1,7 @@
 <template>
-  <div class="assessment-container" @selected="$emit('selected')">
+  <div
+    class="assessment-container"
+    @selected="$emit('selected')">
     <div class="assessment" v-bind:class="typeInfo.class">
       <div class="label label-primary assessment-type">
         {{ typeInfo.title }}
@@ -11,7 +13,6 @@
             <div v-if="!isFocused && !assessment.question">
               <div class="well text-placeholder">
                 <div class="message">
-                  <span class="heading">Text placeholder</span>
                   <span>Click to edit</span>
                 </div>
               </div>
@@ -39,14 +40,16 @@
         :assessment="assessment"
         :errors="errors"
         :isEditing="isEditing"
-        @update="update">
+        @update="update"
+        @alert="setAlert">
       </multiple-choice>
       <single-choice
         v-else-if="assessment.type === 'SC'"
         :assessment="assessment"
         :errors="errors"
         :isEditing="isEditing"
-        @update="update">
+        @update="update"
+        @alert="setAlert">
       </single-choice>
       <true-false
         v-else-if="assessment.type === 'TF'"
@@ -80,29 +83,29 @@
       </div>
       <div class="alert-container">
         <div
-          v-show="showAlert"
-          :class="alertType"
+          v-show="alert.text"
+          :class="alert.type"
           class="alert alert-dismissible">
-          <strong>{{ alert }}</strong>
+          <strong>{{ alert.text }}</strong>
         </div>
       </div>
       <div v-if="isEditing" class="controls">
-        <button @click="save" class="btn btn-default" type="button">
-          Save
-        </button>
         <button @click="cancel" class="btn btn-default" type="button">
           Cancel
+        </button>
+        <button @click="save" class="btn btn-default" type="button">
+          Save
         </button>
       </div>
       <div v-else class="controls">
         <button @click="close" class="btn btn-default" type="button">
           Close
         </button>
-        <button @click.stop="remove" class="btn btn-default" type="button">
-          Remove
-        </button>
         <button @click="edit" class="btn btn-default" type="button">
           Edit
+        </button>
+        <button @click="remove" class="btn btn-default" type="button">
+          Remove
         </button>
       </div>
     </div>
@@ -121,6 +124,7 @@ import TextResponse from './TextResponse';
 import { schemas, typeInfo } from '../../../utils/assessment';
 
 const validationOptions = { recursive: true, abortEarly: false };
+const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 
 export default {
   name: 'assessment',
@@ -129,9 +133,7 @@ export default {
     return {
       assessment: cloneDeep(this.initAssessment),
       isEditing: !this.initAssessment.question,
-      showAlert: false,
-      alertType: null,
-      alert: '',
+      alert: {},
       errors: [],
       config: { modules: { toolbar: '#quillToolbar' } }
     };
@@ -149,11 +151,15 @@ export default {
     }
   },
   methods: {
+    setAlert(data = {}) {
+      this.alert = data;
+    },
     save() {
       this.errors = [];
       this.validate(this.assessment)
         .then(() => {
           this.isEditing = false;
+          this.setAlert(saveAlert);
           this.$emit('save', cloneDeep(this.assessment));
         })
         .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
@@ -176,6 +182,8 @@ export default {
     cancel() {
       Object.assign(this.assessment, cloneDeep(this.initAssessment));
       this.isEditing = false;
+      this.setAlert();
+      this.errors = [];
     },
     close() {
       this.$emit('selected');
@@ -199,11 +207,161 @@ export default {
 </script>
 
 <style lang="scss">
-.question {
-  border: 1px dashed transparent;
+.assessment {
+  min-height: 400px;
+  margin: 10px auto;
+  padding: 10px 30px 30px 30px;
+  background-color: white;
+  overflow: hidden;
 
-  &.editing {
-    border-color: #ccc;
+  .question {
+    font-size: 22px;
+    border: 1px dashed transparent;
+    text-align: center;
+    padding: 10px;
+
+    .message {
+      padding: 13px;
+    }
+
+    &.editing {
+      border-color: #ccc;
+    }
+
+    .well {
+      margin: 0;
+      padding: 29px;
+    }
+  }
+
+  .alert {
+    display: inline-block;
+    margin: 0 auto;
+    padding: 3px 7px;
+    text-align: center;
+  }
+
+  .controls {
+    float: right;
+    padding: 10px;
+  }
+
+  button {
+    margin-right: 10px;
+  }
+
+  .assessment-type {
+    font-size: 13px;
+    float: right;
+    background-color: grey;
+    margin: 15px 15px 50px 0;
+  }
+
+  .form-label {
+    font-size: 20px;
+  }
+
+  .destroy {
+    display: none;
+    position: absolute;
+    opacity: 0.6;
+    transition: all 0.2s;
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+    bottom: 8px;
+    right: 10px;
+
+    span {
+      font-size: 16px;
+    }
+  }
+
+  .destroy:focus {
+    outline: none;
+  }
+
+  .form-group {
+    text-align: left;
+    margin: 0 auto;
+    padding: 25px 20px 15px 20px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  input.form-control {
+    padding-left: 10px;
+  }
+
+  .answer {
+    padding: 10px 0 0 50px;
+    font-size: 16px;
+    margin: 10px 0;
+  }
+
+  .answers-add {
+    padding: 7px;
+    height: 28px;
+    width: 50px;
+    float: right;
+  }
+
+  ul {
+    padding: 10px 0 0 50px;
+
+    li {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      margin: 10px 0;
+
+      .answers {
+        vertical-align: bottom;
+        font-size: 16px;
+      }
+
+      .answers-radio,
+      .answers-checkbox {
+        float: left;
+        margin-top: 7px;
+        width: 19px;
+      }
+
+      .answers-radio input {
+        padding-bottom: 9px;
+      }
+      .answers-checkbox input {
+        padding-bottom: 11px;
+      }
+
+      .answers-input {
+        display: block;
+        overflow: hidden;
+
+        input {
+          height: 40px;
+          width: 100%;
+          margin-left: 3px;
+          padding: 0 33px 0 10px;
+        }
+
+        input:focus {
+          outline: none;
+        }
+      }
+    }
+
+    li:hover {
+      .destroy:enabled {
+        display: inline;
+      }
+    }
+  }
+}
+
+@media (max-width: 850px) {
+  .assessment ul {
+    padding-left: 0;
   }
 }
 </style>
