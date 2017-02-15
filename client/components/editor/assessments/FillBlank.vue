@@ -12,13 +12,13 @@
           type="text">
         </textarea>
       </span>
-      <span class="help-block" type="text">
+      <span class="help-block">
         Type "@blank" when new blank is needed.
       </span>
     </div>
     <div class="form-group" v-if="hasAnswer">
       <span class="form-label">Answers</span>
-      <span v-if="hasMultipleAnswers" class="help-block" type="text">
+      <span v-if="hasMultipleAnswers" class="help-block">
         Arrange answers by dragging if needed !
       </span>
       <draggable
