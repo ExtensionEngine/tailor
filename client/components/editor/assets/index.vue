@@ -41,9 +41,9 @@ export default {
   },
   methods: {
     ...mapActions({ updateAsset: 'update' }, 'assets'),
-    ...mapMutations(['setToolbar']),
+    ...mapMutations(['setToolbarContext']),
     focus(e) {
-      this.setToolbar(this.asset);
+      this.setToolbarContext(this.asset);
       // Attach component meta to event
       e.component = {
         name: 'asset',

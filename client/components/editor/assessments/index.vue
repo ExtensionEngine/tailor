@@ -7,33 +7,35 @@
         {{ typeInfo.title }}
       </div>
       <div class="form-group">
-        <span class="form-label">Question</span>
-        <span :class="{ 'has-error': errors.includes('question') }">
-          <div @click="focus" class="question" v-bind:class="{ editing: isEditing }">
-            <div v-if="!isFocused && !assessment.question">
-              <div class="well text-placeholder">
-                <div class="message">
-                  <span>Click to edit</span>
-                </div>
-              </div>
-            </div>
-            <div v-else>
-              <quill-editor
-                v-if="isFocused"
-                v-model="assessment.question"
-                :config="config">
-              </quill-editor>
-              <div
-                v-else
-                class="ql-container ql-snow">
-                <div
-                  v-html="assessment.question"
-                  class="ql-editor">
-                </div>
+        <span class="form-label">
+          Question
+        </span>
+        <div @click="focus" class="question" :class="{ editing: isEditing }">
+          <div v-if="!isFocused && !assessment.question">
+            <div class="well text-placeholder">
+              <div class="message">
+                <span :class="{ 'error': errors.includes('question') }">
+                  Click to edit
+                </span>
               </div>
             </div>
           </div>
-        </span>
+          <div v-else>
+            <quill-editor
+              v-if="isFocused"
+              v-model="assessment.question"
+              :config="config">
+            </quill-editor>
+            <div
+              v-else
+              class="ql-container ql-snow">
+              <div
+                v-html="assessment.question"
+                class="ql-editor">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <multiple-choice
         v-if="assessment.type === 'MC'"
@@ -85,7 +87,7 @@
         <div
           v-show="alert.text"
           :class="alert.type"
-          class="alert alert-dismissible">
+          class="alert">
           <strong>{{ alert.text }}</strong>
         </div>
       </div>
@@ -170,9 +172,9 @@ export default {
     update(data) {
       Object.assign(this.assessment, cloneDeep(data));
     },
-    ...mapMutations(['setToolbar']),
+    ...mapMutations(['setToolbarContext']),
     focus(e) {
-      this.setToolbar(this.assessment);
+      this.setToolbarContext(this.assessment);
       // Attach component meta to event
       e.component = {
         name: 'assessment',

@@ -9,7 +9,7 @@
     </assessment>
     <div v-else @click="$emit('selected')">
       <span class="label label-success">{{ assessment.type }}</span>
-      <span class="title">{{ text }}</span>
+      <span class="title">{{ question }}</span>
       <button
         class="delete"
         @click.stop="$emit('remove')"
@@ -27,7 +27,7 @@ export default {
   name: 'assessment-item',
   props: ['assessment', 'edit'],
   computed: {
-    text() {
+    question() {
       let question = this.assessment.question;
       return question ? question.replace(/<\/?[^>]+(>|$)/g, '') : '';
     }

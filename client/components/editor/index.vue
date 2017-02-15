@@ -44,10 +44,10 @@ export default {
       if (!e.component ||
         ((e.component.name !== 'toolbar') &&
         (e.component.data._cid !== this.toolbar.context._cid))) {
-        this.clearContext();
+        this.clearToolbarContext();
       }
     },
-    ...mapMutations({ clearContext: 'setToolbar' })
+    ...mapMutations({ clearToolbarContext: 'setToolbarContext' })
   },
   created() {
     // TODO: Do this better!
