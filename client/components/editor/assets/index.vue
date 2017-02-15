@@ -1,11 +1,10 @@
 <template>
   <div :class="columnWidth" class="asset-container">
-    <div @mousedown.stop.prevent @click.stop.prevent="focus" class="asset">
+    <div @click="focus" class="asset">
       <image-editor
         v-if="asset.type === 'IMAGE'"
         :asset="asset"
         :isFocused="isFocused"
-        :showLoader="showLoader"
         @save="save">
       </image-editor>
       <text-editor
@@ -29,21 +28,15 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex-module';
-import Promise from 'bluebird';
+import Gomo from './Gomo';
 import ImageEditor from './Image';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TextEditor from './Text';
 import VideoEditor from './Video';
-import Gomo from './Gomo';
 
 export default {
   name: 'asset',
   props: { asset: Object },
-  data() {
-    return {
-      showLoader: false
-    };
-  },
   computed: {
     ...mapGetters(['focusedAsset'], 'atom'),
     columnWidth() {
@@ -56,7 +49,6 @@ export default {
   methods: {
     ...mapActions({ updateAsset: 'update' }, 'assets'),
     ...mapMutations(['focusAsset'], 'atom'),
-    // Event handlers prevent mousedown and click to bubble
     focus(e) {
       this.focusAsset(this.asset);
       // Attach component meta to event
@@ -66,11 +58,7 @@ export default {
       };
     },
     save(data) {
-      this.showLoader = true;
-      Promise.join(Promise.delay(300), this.updateAsset({ ...this.asset, data }))
-        .then(() => {
-          this.showLoader = false;
-        });
+      this.updateAsset({ ...this.asset, data });
     }
   },
   components: {

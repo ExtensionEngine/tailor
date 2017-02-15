@@ -1,5 +1,5 @@
 <template>
-  <div class="editor" @mousedown="click" @click="clicked">
+  <div class="editor" @mousedown="onMousedown" @click="onClick">
     <loader v-if="showLoader"></loader>
     <div v-else>
       <toolbar></toolbar>
@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       showLoader: true,
-      isClicked: false
+      mousedownCaptured: false
     };
   },
   computed: {
@@ -40,20 +40,20 @@ export default {
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity'),
     ...mapMutations({ setupAssetsApi: 'setBaseUrl' }, 'assets'),
     ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
-    click() {
-      // Ignore click if it was initiated on any of the child elements
-      this.isClicked = true;
+    onMousedown() {
+      this.mousedownCaptured = true;
     },
-    clicked(e) {
-      if (this.isClicked) {
-        // Reset flag
-        this.isClicked = false;
-        if (!this.focusedAsset) return;
-        if (!e.component ||
-          ((e.component.name !== 'toolbar') &&
-          (e.component.data._cid !== this.focusedAsset._cid))) {
-          this.focusoutAsset();
-        }
+    onClick(e) {
+      // TODO: Temp, figure out better way to handle this
+      // (i.e. stop propagation for cropper)
+      if (!this.mousedownCaptured) return;
+      // Reset
+      this.mousedownCaptured = false;
+      if (!this.focusedAsset) return;
+      if (!e.component ||
+        ((e.component.name !== 'toolbar') &&
+        (e.component.data._cid !== this.focusedAsset._cid))) {
+        this.focusoutAsset();
       }
     },
     ...mapActions(['focusoutAsset'], 'atom')
