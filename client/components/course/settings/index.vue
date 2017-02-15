@@ -41,7 +41,7 @@ export default {
     ...mapActions(['getUsers'], 'editor'),
     fetchUsers() {
       this.showLoader = true;
-      const request = Promise.join(this.getUsers(), Promise.delay(700));
+      const request = Promise.join(this.getUsers(), Promise.delay(500));
       return request.then(() => (this.showLoader = false));
     }
   },
