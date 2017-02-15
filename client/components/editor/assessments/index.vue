@@ -74,6 +74,12 @@
         :isEditing="isEditing"
         @update="update">
       </text-response>
+      <fill-blank
+        v-if="assessment.type === 'FB'"
+        :assessment="assessment"
+        @selected="$emit('selected')"
+        @save="$emit('save', $event)">
+      </fill-blank>
       <div class="form-group">
         <span class="form-label">Hint</span>
         <input
@@ -123,6 +129,7 @@ import SingleChoice from './SingleChoice';
 import TrueFalse from './TrueFalse';
 import NumericalResponse from './NumericalResponse';
 import TextResponse from './TextResponse';
+import FillBlank from './FillBlank';
 import { schemas, typeInfo } from '../../../utils/assessment';
 
 const validationOptions = { recursive: true, abortEarly: false };
@@ -203,7 +210,8 @@ export default {
     SingleChoice,
     TrueFalse,
     NumericalResponse,
-    TextResponse
+    TextResponse,
+    FillBlank
   }
 };
 </script>
