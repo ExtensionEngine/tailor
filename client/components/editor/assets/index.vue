@@ -1,6 +1,6 @@
 <template>
   <div :class="columnWidth" class="asset-container">
-    <div @click="focus" class="asset">
+    <div @mousedown.stop.prevent @click.stop.prevent="focus" class="asset">
       <image-editor
         v-if="asset.type === 'IMAGE'"
         :asset="asset"
@@ -56,6 +56,7 @@ export default {
   methods: {
     ...mapActions({ updateAsset: 'update' }, 'assets'),
     ...mapMutations(['focusAsset'], 'atom'),
+    // Event handlers prevent mousedown and click to bubble
     focus(e) {
       this.focusAsset(this.asset);
       // Attach component meta to event

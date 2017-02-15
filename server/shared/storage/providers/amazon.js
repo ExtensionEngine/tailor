@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Joi = require('Joi');
 const last = require('lodash/last');
-const trimEnd = require('lodash/trimEnd');
+const path = require('path');
 const Promise = require('bluebird');
 const S3 = require('aws-sdk/clients/s3');
 const validateConfig = require('../validation').validateConfig;
@@ -31,8 +31,7 @@ class Amazon {
 
   static getLocalPath(s3Path, localDir) {
     const filename = last(s3Path.split('/'));
-    const path = trimEnd(localDir, '/');
-    return `${path}/${filename}`;
+    return path.join(localDir, filename);
   }
 
   static streamToPromise(stream) {
