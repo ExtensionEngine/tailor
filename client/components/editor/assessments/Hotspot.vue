@@ -338,53 +338,41 @@ export default {
       this.updateCanvas(1);
       if (isArray(this.areas[0]) && isEmpty(this.areas[0])) this.areas.pop();
     },
-    test() {
-      if (this.areas.length === 0) return;
-      let lastAreasItem = this.areas[this.areas.length - 1];
-
-      if (lastAreasItem.length === 0) {
-        this.areas.splice(this.areas.length - 1, 1);
-
-        if (this.areas.length === 0) return;
-        lastAreasItem = this.areas[this.areas.length - 1];
-        this.redo.push([]);
-      }
-      let lastRedoItem = this.redo[this.redo.length - 1];
-      if (lastAreasItem.length === 2) {
-        lastRedoItem.push(lastAreasItem.pop());
-        lastRedoItem.push(lastAreasItem.pop());
-      } else lastRedoItem.push(lastAreasItem.pop());
-      this.updateCanvas(1);
-      if (this.areas[0] && this.areas[0].length === 0) {
-        this.areas.pop();
-      }
-    },
     redo() {
-      if (this.actions[0].length === 0) return;
-      let lastAreasItem;
-      if (this.areas.length === 0) {
-        this.areas.push([]);
-        lastAreasItem = this.areas[this.areas.length - 1];
-      } else {
-        lastAreasItem = this.areas[this.areas.length - 1];
+      if (isEmpty(this.actions[0])) return;
+      let lastArea = last(this.areas);
+      let lastRedone = last(this.actions);
+
+      if (isEmpty(this.areas)) {
+        lastArea = [];
+        this.areas.push(lastArea);
       }
-      let lastRedoItem = this.actions[this.actions.length - 1];
-      if (lastRedoItem.length === 0) {
-        this.actions.splice(this.actions.length - 1, 1);
-        if (this.actions.length === 0) return;
-        this.areas.push([]);
-        lastAreasItem = this.areas[this.areas.length - 1];
-        lastRedoItem = this.actions[this.actions.length - 1];
-        lastAreasItem.push(lastRedoItem.pop());
-        lastAreasItem.push(lastRedoItem.pop());
+
+      if (isEmpty(lastRedone)) {
+        this.actions.pop();
+        if (isEmpty(this.actions)) return;
+
+        lastArea = [];
+        this.areas.push(lastArea);
+
+        lastRedone = last(this.actions);
+        lastArea.push(lastRedone.pop());
+        lastArea.push(lastRedone.pop());
         this.updateCanvas(1);
-        if (this.actions.length === 0) this.actions.push([]);
+
+        if (isEmpty(this.actions)) this.actions.push([]);
         return;
       }
-      if (lastRedoItem.length !== 1 && lastRedoItem[lastRedoItem.length - 1].x === lastRedoItem[0].x && lastRedoItem[lastRedoItem.length - 1].y === lastRedoItem[0].y) {
-        lastAreasItem.push(lastRedoItem.pop());
-        lastAreasItem.push(lastRedoItem.pop());
-      } else lastAreasItem.push(lastRedoItem.pop());
+
+      if (lastRedone.length !== 1 &&
+        last(lastRedone).x === lastRedone[0].x &&
+        last(lastRedone).y === lastRedone[0].y
+      ) {
+        lastArea.push(lastRedone.pop());
+        lastArea.push(lastRedone.pop());
+      } else {
+        lastArea.push(lastRedone.pop());
+      }
       this.updateCanvas(1);
     },
     imageInput(e) {
