@@ -216,25 +216,30 @@ export default {
       }
       if (this.page === 3) {
         this.$nextTick(() => {
-          if ((this.$refs.svg.parentElement.clientWidth - 10) > this.img.naturalWidth) {
-            let height = this.img.naturalHeight / (this.img.naturalWidth / this.img.naturalWidth);
+          const imgHeight = this.img.naturalHeight;
+          const imgWidth = this.img.naturalWidth;
+          const svgWrapperWidth = this.$refs.svg.parentElement.clientWidth;
+          const svgWrapperHeight = this.$refs.svg.parentElement.clientHeight;
+
+          if ((svgWrapperWidth - 10) > imgWidth) {
+            let height = imgHeight / (imgWidth / imgWidth);
             this.$refs.svg.setAttribute('height', height);
-            this.$refs.svg.setAttribute('width', this.img.naturalWidth);
-            this.$refs.svg.style.left = `${(Math.abs(this.$refs.svg.parentElement.clientWidth - this.img.naturalWidth) / 2)}px`;
+            this.$refs.svg.setAttribute('width', imgWidth);
+            this.$refs.svg.style.left = `${(Math.abs(svgWrapperWidth - imgWidth) / 2)}px`;
             this.$refs.img.style.removeProperty('height');
             this.$refs.img.style.removeProperty('width');
-            this.$refs.img.style['max-width'] = this.img.naturalWidth;
-            this.$refs.img.style['max-height'] = this.img.naturalHeight;
-            this.updateSvg(this.img.naturalWidth / this.width);
-            this.width = this.img.naturalWidth;
+            this.$refs.img.style['max-width'] = imgWidth;
+            this.$refs.img.style['max-height'] = imgHeight;
+            this.updateSvg(imgWidth / this.width);
+            this.width = imgWidth;
           } else {
             this.$refs.svg.style.left = '5px';
             this.$refs.img.style.height = '100%';
             this.$refs.img.style.width = '100%';
-            this.$refs.svg.setAttribute('width', this.$refs.svg.parentElement.clientWidth - 10);
-            this.$refs.svg.setAttribute('height', this.$refs.svg.parentElement.clientHeight - 10);
-            this.updateSvg((this.$refs.svg.parentElement.clientWidth - 10) / this.width);
-            this.width = this.$refs.svg.parentElement.clientWidth - 10;
+            this.$refs.svg.setAttribute('width', svgWrapperWidth - 10);
+            this.$refs.svg.setAttribute('height', svgWrapperHeight - 10);
+            this.updateSvg((svgWrapperWidth - 10) / this.width);
+            this.width = svgWrapperWidth - 10;
           }
         });
       }
