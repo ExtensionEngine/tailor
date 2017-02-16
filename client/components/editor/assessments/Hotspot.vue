@@ -377,7 +377,7 @@ export default {
     },
     imageInput(e) {
       let files = e.target.files || e.dataTransfer.files;
-      if (!files.length) {
+      if (isEmpty(files)) {
         return;
       }
       this.createImage(files[0]);
