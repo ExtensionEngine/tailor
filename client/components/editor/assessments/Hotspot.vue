@@ -114,7 +114,9 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import findLastIndex from 'lodash/findLastIndex';
 import isEmpty from 'lodash/isEmpty';
+import last from 'lodash/last';
 import yup from 'yup';
 import zoomCanvas from './zoomCanvas';
 
@@ -277,14 +279,14 @@ export default {
       this.drawing = false;
       let canvas = this.$refs.canvas;
       let ctx = canvas.getContext('2d');
-      let lastItem = this.areas[this.areas.length - 1];
-      if (lastItem.length === 0) {
-        this.areas.splice(this.areas.length - 1, 1);
+      let lastItem = last(this.areas);
+      if (isEmpty(lastItem)) {
+        this.areas.splice(findLastIndex(this.areas), 1);
         return;
       }
       ctx.lineTo(lastItem[0].x, lastItem[0].y);
       ctx.stroke();
-      lastItem.push({x: lastItem[0].x, y: lastItem[0].y});
+      lastItem.push({ x: lastItem[0].x, y: lastItem[0].y });
     },
     saveArea(event) {
       if (!this.drawing) return;
