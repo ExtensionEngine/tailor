@@ -15,17 +15,18 @@ const schema = Joi.object().keys({
 
 class Amazon {
   constructor(config) {
-    const validated = validateConfig(config, schema);
+    config = validateConfig(config, schema);
+
     const s3Config = {
-      accessKeyId: validated.key,
-      secretAccessKey: validated.secret,
-      region: validated.region,
+      accessKeyId: config.key,
+      secretAccessKey: config.secret,
+      region: config.region,
       apiVersion: '2006-03-01',
       maxRetries: 3
     };
 
-    this.bucket = validated.bucket;
-    this.region = validated.region;
+    this.bucket = config.bucket;
+    this.region = config.region;
     this.client = new S3(s3Config);
   }
 
