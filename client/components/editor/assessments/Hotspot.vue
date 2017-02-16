@@ -219,7 +219,7 @@ export default {
             let height = this.img.naturalHeight / (this.img.naturalWidth / this.img.naturalWidth);
             this.$refs.svg.setAttribute('height', height);
             this.$refs.svg.setAttribute('width', this.img.naturalWidth);
-            this.$refs.svg.style.left = (Math.abs(this.$refs.svg.parentElement.clientWidth - this.img.naturalWidth) / 2) + 'px';
+            this.$refs.svg.style.left = `${(Math.abs(this.$refs.svg.parentElement.clientWidth - this.img.naturalWidth) / 2)}px`;
             this.$refs.img.style.removeProperty('height');
             this.$refs.img.style.removeProperty('width');
             this.$refs.img.style['max-width'] = this.img.naturalWidth;
