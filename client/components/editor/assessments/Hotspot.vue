@@ -160,9 +160,9 @@ export default {
         this.$nextTick(() => {
           if (this.$refs.svg.parentElement.clientWidth - 10 > this.img.naturalWidth) {
             let height = this.img.naturalHeight / (this.img.naturalWidth / this.width);
-            this.$refs.svg.setAttribute('height', height + 'px');
-            this.$refs.svg.setAttribute('width', this.width + 'px');
-            this.$refs.svg.style.left = (Math.abs(this.$refs.svg.parentElement.clientWidth - this.width) / 2) + 'px';
+            this.$refs.svg.setAttribute('height', `${height}px`);
+            this.$refs.svg.setAttribute('width', `${this.width}px`);
+            this.$refs.svg.style.left = `${(Math.abs(this.$refs.svg.parentElement.clientWidth - this.width) / 2)}px`;
             this.$refs.img.style['max-width'] = this.img.naturalWidth;
             this.$refs.img.style['max-height'] = this.img.naturalHeight;
             this.$refs.img.style.removeProperty('height');
