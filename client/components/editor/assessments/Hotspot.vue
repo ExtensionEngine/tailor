@@ -30,19 +30,14 @@
     </div>
 
     <div v-show="page === 2" class="img-editor">
-      <div :class="['hint', drawing ? 'bg-info' : '']">
-        <span v-show="drawing">
-          <span class="highlight">Hint:</span> Use scroll on image in order to zoom in or out
+      <div class="info bg-info">
+        <span>
+          <span class="highlight">Hint:</span> {{ infoMessage }}
         </span>
       </div>
       <div class="controllers">
         <button
-          @click="toggleDrawing"
-          :class="['btn btn-default btn-draw', drawing ? 'btn-success' : 'btn-info']"
-          type="button">
-            <span :class="['fa', drawing ? 'fa-check' : 'fa-pencil']"></span>
-        </button>
-        <button
+          v-tooltip.bottom-center="'Undo'"
           @click="undo"
           :disabled="!drawing"
           class="btn btn-default"
@@ -50,11 +45,27 @@
             <span class="fa fa-undo"></span>
         </button>
         <button
+          v-tooltip.bottom-center="'Redo'"
           @click="redo"
           :disabled="!drawing"
           class="btn btn-default"
           type="button">
             <span class="fa fa-repeat"></span>
+        </button>
+        <button
+          v-tooltip.bottom-center="drawing ? 'Finish Drawing' : 'Start Drawing'"
+          @click="toggleDrawing"
+          :class="['btn btn-default btn-draw', drawing ? 'btn-success' : 'btn-primary']"
+          type="button">
+            <span :class="['fa', drawing ? 'fa-check' : 'fa-pencil']"></span>
+        </button>
+        <button
+          v-show="drawing"
+          v-tooltip.bottom-center="'Create Shape'"
+          @click="finishDrawing"
+          type="button"
+          class="btn btn-default btn-area">
+            <span class="fa fa-plus"></span>
         </button>
       </div>
       <div class="canvas-wrapper">
@@ -113,12 +124,16 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
 import yup from 'yup';
+import VTooltip from 'v-tooltip';
 import zoomCanvas from '../../../utils/zoomCanvas';
+
+Vue.use(VTooltip);
 
 const schema = yup.object().shape({
   question: yup.string().trim().min(1).required(),
@@ -160,7 +175,7 @@ export default {
       this.drawing = false;
 
       if (this.page === 2) {
-        this.updateCanvas(1);
+        this.updateCanvas();
       }
       if (this.page === 3) {
         this.$nextTick(() => {
@@ -192,7 +207,18 @@ export default {
     },
     drawing: function(val, oldVal) {
       // Enable zoom only if canvas is in drawing mode
-      this.updateCanvas(1);
+      this.updateCanvas();
+    }
+  },
+  computed: {
+    infoMessage() {
+      const initMessage = `Click on the pencil button to enter drawing mode.
+        When finished go to the next page to select correct areas.`;
+      const drawMessage = `Use the scroll on image to zoom in or out. After
+        drawing click on the Plus button to create a new shape. Use undo and
+        redo buttons for corrections. Click on Check button to exit draw mode
+        and return to normal mode.`;
+      return this.drawing ? drawMessage : initMessage;
     }
   },
   methods: {
@@ -227,7 +253,7 @@ export default {
     },
     handleResize() {
       if (this.page === 2) {
-        this.updateCanvas(1);
+        this.updateCanvas();
       }
       if (this.page === 3) {
         this.$nextTick(() => {
@@ -274,7 +300,7 @@ export default {
         return `${item.x},${item.y}`;
       });
     },
-    updateCanvas(resizeScale) {
+    updateCanvas(resizeScale = 1) {
       zoomCanvas(this, resizeScale);
     },
     select(index, event) {
@@ -288,9 +314,7 @@ export default {
     },
     toggleDrawing() {
       this.drawing = !this.drawing;
-
       if (this.drawing) this.startDrawing();
-      else this.finishDrawing();
     },
     startDrawing() {
       let canvas = this.$refs.canvas;
@@ -357,7 +381,7 @@ export default {
         lastRedone.push(lastArea.pop());
       }
 
-      this.updateCanvas(1);
+      this.updateCanvas();
       if (isArray(this.areas[0]) && isEmpty(this.areas[0])) this.areas.pop();
     },
     redo() {
@@ -380,7 +404,7 @@ export default {
         lastRedone = last(this.actions);
         lastArea.push(lastRedone.pop());
         lastArea.push(lastRedone.pop());
-        this.updateCanvas(1);
+        this.updateCanvas();
 
         if (isEmpty(this.actions)) this.actions.push([]);
         return;
@@ -395,7 +419,7 @@ export default {
       } else {
         lastArea.push(lastRedone.pop());
       }
-      this.updateCanvas(1);
+      this.updateCanvas();
     },
     imageInput(e) {
       let files = e.target.files || e.dataTransfer.files;
@@ -512,10 +536,10 @@ export default {
     padding: 0 20px;
     text-align: left;
 
-    .hint {
+    .info {
       font-size: 18px;
       font-weight: 400;
-      height: 40px;
+      min-height: 40px;
       margin-top: 30px;
       padding: 9px 5px;
 
@@ -532,7 +556,15 @@ export default {
         display: inline-block;
       }
 
-      .btn-draw {
+      .btn-area {
+        background-color: rgb(236, 64, 122);
+        color: #fff;
+        font-weight: 500;
+        padding: 10px 12px;
+      }
+
+      .btn-draw
+      .btn-area {
         width: 40px;
       }
     }
@@ -588,6 +620,29 @@ export default {
         }
       }
     }
+  }
+}
+
+.tooltip {
+  display: none;
+  opacity: 0;
+  transition: opacity .15s;
+  pointer-events: none;
+  padding: 8px;
+  z-index: 10000;
+
+  .tooltip-content {
+    background: #828080;
+    color: #fff;
+    padding: 5px 10px 4px;
+  }
+
+  &.tooltip-open-transitionend {
+    display: block;
+  }
+
+  &.tooltip-after-open {
+    opacity: 1;
   }
 }
 </style>
