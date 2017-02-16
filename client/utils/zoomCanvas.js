@@ -1,19 +1,25 @@
-// TODO: Rework and move to utils
-var zoomCanvas = function (self, resizeScale) {
-  var canvas = self.$refs.canvas;
-  var ctx = canvas.getContext('2d');
-  self.$nextTick(() => {
-    if (self.img.naturalWidth > self.$refs.canvas.parentElement.clientWidth) {
-      let ratio = self.img.naturalWidth / (self.$refs.canvas.parentElement.clientWidth - 10);
-      canvas.width = self.$refs.canvas.parentElement.clientWidth - 10;
-      canvas.height = (self.img.naturalHeight / ratio);
+import isEmpty from 'lodash/isEmpty';
+
+export default function (component, resizeScale) {
+  let canvas = component.$refs.canvas;
+  let ctx = canvas.getContext('2d');
+  component.$nextTick(() => {
+    const canvasWrapperWidth = component.$refs.canvas.parentElement.clientWidth;
+    const imgHeight = component.img.naturalHeight;
+    const imgWidth = component.img.naturalWidth;
+
+    if (imgWidth > canvasWrapperWidth) {
+      let ratio = imgWidth / (canvasWrapperWidth - 10);
+      canvas.width = canvasWrapperWidth - 10;
+      canvas.height = imgHeight / ratio;
     } else {
-      canvas.width = self.img.naturalWidth;
-      canvas.height = self.img.naturalHeight;
+      canvas.width = imgWidth;
+      canvas.height = imgHeight;
     }
-    if (canvas.width === self.width) resizeScale = 1;
-    if (canvas.width !== self.width) resizeScale = canvas.width / self.width;
-    self.width = canvas.width;
+    if (canvas.width === component.width) resizeScale = 1;
+    else resizeScale = canvas.width / component.width;
+
+    component.width = canvas.width;
     redraw();
     resizeScale = 1;
   });
@@ -29,16 +35,16 @@ var zoomCanvas = function (self, resizeScale) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
-    ctx.drawImage(self.img, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(component.img, 0, 0, canvas.width, canvas.height);
     ctx.lineWidth = 1;
     ctx.strokeStyle = 'white';
     ctx.lineCap = 'butt';
 
-    if (self.areas.length === 0) return;
+    if (isEmpty(component.areas)) return;
 
     let scale = ctx.getTransform().a;
 
-    self.areas.forEach(outerItem => {
+    component.areas.forEach(outerItem => {
       ctx.beginPath();
       outerItem.forEach((innerItem, index) => {
         if (resizeScale === 1) {
@@ -59,28 +65,28 @@ var zoomCanvas = function (self, resizeScale) {
     resizeScale = 1;
   }
 
-  self.lastX = canvas.width / 2;
-  self.lastY = canvas.height / 2;
+  component.lastX = canvas.width / 2;
+  component.lastY = canvas.height / 2;
 
-  var dragStart, dragged;
+  let dragStart, dragged;
 
   canvas.addEventListener('mousedown', function(evt) {
-    if (self.start) return;
+    if (component.start) return;
     document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
-    self.lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-    self.lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
-    dragStart = ctx.transformedPoint(self.lastX, self.lastY);
+    component.lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+    component.lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+    dragStart = ctx.transformedPoint(component.lastX, component.lastY);
     dragged = false;
   }, false);
 
   canvas.addEventListener('mousemove', function(evt) {
-    if (self.start) return;
-    self.lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-    self.lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+    if (component.start) return;
+    component.lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+    component.lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
     dragged = true;
 
     if (dragStart) {
-      let pt = ctx.transformedPoint(self.lastX, self.lastY);
+      let pt = ctx.transformedPoint(component.lastX, component.lastY);
       let scale = ctx.getTransform().a;
       ctx.save();
       ctx.translate(pt.x - dragStart.x, pt.y - dragStart.y);
@@ -95,13 +101,13 @@ var zoomCanvas = function (self, resizeScale) {
   }, false);
 
   canvas.addEventListener('mouseup', function(evt) {
-    if (self.start) return;
+    if (component.start) return;
     dragStart = null;
     if (!dragged) return;
   }, false);
 
-  var zoomPoint = null;
-  var scaleFactor = 1.1;
+  let zoomPoint = null;
+  let scaleFactor = 1.1;
 
   function checkBoundaries(pt) {
     let scale = ctx.getTransform().a;
@@ -147,9 +153,9 @@ var zoomCanvas = function (self, resizeScale) {
     }
   }
 
-  var zoom = (clicks) => {
+  const zoom = clicks => {
     let factor = Math.pow(scaleFactor, clicks);
-    let pt = ctx.transformedPoint(self.lastX, self.lastY);
+    let pt = ctx.transformedPoint(component.lastX, component.lastY);
     let scale = ctx.getTransform().a;
     if (scale > 6 && clicks > 0) return;
     ctx.save();
@@ -159,7 +165,7 @@ var zoomCanvas = function (self, resizeScale) {
     drawLoop(pt, scale, factor);
   };
 
-  var handleScroll = function(evt) {
+  const handleScroll = evt => {
     let delta = evt.wheelDelta ? evt.wheelDelta / 200 : evt.detail ? -evt.detail : 0;
     if (delta) {
       for (let i = Math.abs(delta); i >= 0; i -= 0.4) {
@@ -178,49 +184,54 @@ var zoomCanvas = function (self, resizeScale) {
   function trackTransforms(ctx) {
     let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     let xform = svg.createSVGMatrix();
-    ctx.getTransform = function() { return xform; };
+    ctx.getTransform = () => xform;
 
     let savedTransforms = [];
     let save = ctx.save;
-    ctx.save = function() {
+    ctx.save = () => {
       savedTransforms.push(xform.translate(0, 0));
       return save.call(ctx);
     };
 
     let restore = ctx.restore;
-    ctx.restore = function() {
+    ctx.restore = () => {
       xform = savedTransforms.pop();
       return restore.call(ctx);
     };
 
     let scale = ctx.scale;
-    ctx.scale = function(sx, sy) {
+    ctx.scale = (sx, sy) => {
       xform = xform.scaleNonUniform(sx, sy);
       return scale.call(ctx, sx, sy);
     };
 
     let rotate = ctx.rotate;
-    ctx.rotate = function(radians) {
+    ctx.rotate = radians => {
       xform = xform.rotate(radians * 180 / Math.PI);
       return rotate.call(ctx, radians);
     };
 
     let translate = ctx.translate;
-    ctx.translate = function(dx, dy) {
+    ctx.translate = (dx, dy) => {
       xform = xform.translate(dx, dy);
       return translate.call(ctx, dx, dy);
     };
 
     let transform = ctx.transform;
-    ctx.transform = function(a, b, c, d, e, f) {
+    ctx.transform = (a, b, c, d, e, f) => {
       let m2 = svg.createSVGMatrix();
-      m2.a = a; m2.b = b; m2.c = c; m2.d = d; m2.e = e; m2.f = f;
+      m2.a = a;
+      m2.b = b;
+      m2.c = c;
+      m2.d = d;
+      m2.e = e;
+      m2.f = f;
       xform = xform.multiply(m2);
       return transform.call(ctx, a, b, c, d, e, f);
     };
 
     let setTransform = ctx.setTransform;
-    ctx.setTransform = function(a, b, c, d, e, f) {
+    ctx.setTransform = (a, b, c, d, e, f) => {
       xform.a = a;
       xform.b = b;
       xform.c = c;
@@ -231,11 +242,10 @@ var zoomCanvas = function (self, resizeScale) {
     };
 
     let pt = svg.createSVGPoint();
-    ctx.transformedPoint = function(x, y) {
-      pt.x = x; pt.y = y;
+    ctx.transformedPoint = (x, y) => {
+      pt.x = x;
+      pt.y = y;
       return pt.matrixTransform(xform.inverse());
     };
   }
 };
-
-module.exports = zoomCanvas;
