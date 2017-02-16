@@ -28,15 +28,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'activity'], 'editor'),
-    ...mapGetters(['focusedAsset'], 'atom')
+    ...mapGetters(['course'], 'editor'),
+    ...mapGetters(['activity', 'focusedAsset'], 'atom')
   },
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activity'),
     ...mapActions({ getAssets: 'fetch' }, 'assets'),
+    ...mapActions({ getAssessments: 'fetch' }, 'assessments'),
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity'),
     ...mapMutations({ setupAssetsApi: 'setBaseUrl' }, 'assets'),
+    ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
     clicked(e) {
       if (!this.focusedAsset) return;
       if (!e.component ||
@@ -48,16 +50,24 @@ export default {
     ...mapActions(['focusoutAsset'], 'atom')
   },
   created() {
+    this.focusoutAsset();
+
     // TODO: Do this better!
     const courseId = this.$route.params.courseKey;
+    const activityId = this.$route.params.activityKey;
+
     const baseUrl = `/courses/${courseId}`;
     this.setupActivityApi(`${baseUrl}/activities`);
     this.setupAssetsApi(`${baseUrl}/assets`);
+    this.setupAssessmentApi(`${baseUrl}/assessments`);
     if (!this.course) this.getCourse(courseId);
 
-    Promise
-      .join(this.getAssets(), this.getActivities(), Promise.delay(500))
-      .then(() => (this.showLoader = false));
+    Promise.join(
+      this.getAssets({ parentId: activityId }),
+      this.getActivities(),
+      this.getAssessments({ activityId }),
+      Promise.delay(500)
+    ).then(() => (this.showLoader = false));
   },
   components: {
     Toolbar,

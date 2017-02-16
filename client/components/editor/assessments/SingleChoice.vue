@@ -62,7 +62,7 @@
     </div>
     <div class="alert-container">
       <div
-        v-show="answers.length < 2 || isEditing"
+        v-show="answers.length < 2 || (isEditing && isSaved)"
         :class="alertType"
         class="alert alert-dismissible">
         <strong>{{ alert }}</strong>
@@ -112,7 +112,8 @@ export default {
       ...cloneDeep(this.assessment),
       isEditing: !!this.assessment.question,
       errors: [],
-      alert: ''
+      alert: '',
+      isSaved: false
     };
   },
   methods: {
@@ -137,6 +138,7 @@ export default {
       this.validate(question)
         .then(() => {
           this.isEditing = true;
+          this.isSaved = true;
           this.$emit('save', question);
         })
         .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
@@ -150,6 +152,7 @@ export default {
     },
     edit() {
       this.isEditing = false;
+      this.isSaved = false;
     }
   },
   computed: {
