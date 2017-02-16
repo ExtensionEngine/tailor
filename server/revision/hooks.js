@@ -5,7 +5,7 @@ const entities = ['ACTIVITY', 'ASSET', 'COURSE'];
 const operations = ['CREATE', 'UPDATE', 'REMOVE'];
 const hooks = ['afterCreate', 'afterUpdate', 'afterDestroy'];
 
-function add (models) {
+function add(models) {
   zip(operations, hooks).forEach(([operation, hook]) => {
     entities.forEach(entity => {
       // When course is removed, its id is no longer valid and cannot be saved
