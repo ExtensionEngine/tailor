@@ -270,7 +270,7 @@ export default {
       this.drawing = true;
       let canvas = this.$refs.canvas;
       let ctx = canvas.getContext('2d');
-      if (this.areas.length === 0) this.areas.push([]);
+      if (isEmpty(this.areas)) this.areas.push([]);
       ctx.beginPath();
     },
     finishDrawing() {
