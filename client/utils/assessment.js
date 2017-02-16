@@ -9,6 +9,10 @@ export const typeInfo = {
   FB: { type: 'FB', title: 'Fill in the blank', class: 'fill-blank' }
 };
 
+export const helperText = {
+  FB: { question: 'Type "@blank" when new blank is needed.' }
+};
+
 export const schemas = {
   MC: yup.object().shape({
     question: yup.string().trim().min(1).required(),

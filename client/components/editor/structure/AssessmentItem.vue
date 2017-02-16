@@ -7,9 +7,16 @@
       @remove="$emit('remove')"
       @save="$emit('save', $event)">
     </assessment>
-    <div v-else @click="$emit('selected')">
-      <span class="label label-success">{{ assessment.type }}</span>
-      <span class="title">{{ question }}</span>
+    <div
+      v-else
+      class="minimized"
+      @click="$emit('selected')">
+      <span class="label label-success">
+        {{ assessment.type }}
+      </span>
+      <span class="title">
+        {{ question }}
+      </span>
       <button
         class="delete"
         @click.stop="$emit('remove')"
@@ -21,15 +28,19 @@
 </template>
 
 <script>
+import truncate from 'lodash/truncate';
 import Assessment from '../assessments';
+
+const regex = /<\/?[^>]+(>|$)/g;
+const options = { length: 50 };
 
 export default {
   name: 'assessment-item',
   props: ['assessment', 'edit'],
   computed: {
     question() {
-      let question = this.assessment.question;
-      return question ? question.replace(/<\/?[^>]+(>|$)/g, '') : '';
+      let question = this.assessment.question || '';
+      return truncate(question.replace(regex, ''), options);
     }
   },
   components: {
@@ -47,7 +58,7 @@ export default {
     padding: 15px;
   }
 
-  &:hover {
+  .minimized:hover {
     cursor: pointer;
   }
 

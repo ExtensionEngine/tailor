@@ -1,41 +1,41 @@
 <template>
   <div>
     <div class="form-group">
-      <span class="form-label">Answers</span>
+      <span class="form-label">
+        Answers
+      </span>
       <button
-        :disabled="!isEditing"
+        :disabled="disabled"
         @click="addAnswer"
-        class="btn btn-default answers-add"
-        type="button">
+        class="btn btn-default answers-add">
         <span class="fa fa-plus"></span>
       </button>
       <ul>
         <li v-for="(answer, index) in answers">
           <span
-            :class="{ 'has-error': errors.includes('correct') }"
+            :class="{ 'has-error': correctError }"
             class="answers-radio">
             <input
               v-model="correct"
               :value="index"
-              :disabled="!isEditing"
+              :disabled="disabled"
               @change="update"
               type="radio">
           </span>
           <span
-            :class="{ 'has-error': errors.includes(`answers[${index}]`) }"
+            :class="{ 'has-error': answerError(index) }"
             class="answers-input">
             <input
               v-model="answers[index]"
-              :disabled="!isEditing"
+              :disabled="disabled"
               @blur="update"
               type="text"
               placeholder="Answer...">
           </span>
           <button
-            :disabled="!isEditing"
+            :disabled="disabled"
             @click="removeAnswer(index)"
-            class="destroy"
-            type="button">
+            class="destroy">
             <span class="fa fa-times"></span>
           </button>
         </li>
@@ -62,7 +62,18 @@ export default {
       correct: this.assessment.correct
     };
   },
+  computed: {
+    correctError() {
+      return this.errors.includes('correct');
+    },
+    disabled() {
+      return !this.isEditing;
+    }
+  },
   methods: {
+    answerError(index) {
+      return this.errors.includes(`answers[${index}]`);
+    },
     addAnswer() {
       this.answers.push('');
       this.update();
@@ -99,4 +110,92 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.form-group {
+  text-align: left;
+  margin: 0 auto;
+  padding: 25px 20px 15px 20px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.form-label {
+  font-size: 20px;
+}
+
+.answers-add {
+  padding: 7px;
+  height: 28px;
+  width: 50px;
+  float: right;
+}
+
+.destroy {
+  display: none;
+  position: absolute;
+  opacity: 0.6;
+  transition: all 0.2s;
+  border: 0;
+  background-color: transparent;
+  padding: 0;
+  bottom: 8px;
+  right: 10px;
+
+  span {
+    font-size: 16px;
+  }
+}
+
+.destroy:focus {
+  outline: none;
+}
+
+ul {
+  padding: 10px 0 0 50px;
+
+  li {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin: 10px 0;
+
+    .answers-radio {
+      float: left;
+      margin-top: 7px;
+      width: 19px;
+
+      input {
+        padding-bottom: 9px;
+      }
+    }
+
+    .answers-input {
+      display: block;
+      overflow: hidden;
+
+      input {
+        height: 40px;
+        width: 100%;
+        margin-left: 3px;
+        padding: 0 33px 0 10px;
+      }
+
+      input:focus {
+        outline: none;
+      }
+    }
+  }
+
+  li:hover {
+    .destroy:enabled {
+      display: inline;
+    }
+  }
+}
+
+@media (max-width: 850px) {
+  ul {
+    padding-left: 0;
+  }
+}
+</style>
