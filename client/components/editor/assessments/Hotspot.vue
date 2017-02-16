@@ -118,7 +118,7 @@ import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
 import yup from 'yup';
-import zoomCanvas from './zoomCanvas';
+import zoomCanvas from '../../../utils/zoomCanvas';
 
 const schema = yup.object().shape({
   question: yup.string().trim().min(1).required(),
