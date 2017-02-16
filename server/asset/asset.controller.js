@@ -8,12 +8,12 @@ const pick = require('lodash/pick');
 function list({ query }, res) {
   const parentId = parseInt(query.parentId, 10);
   const include = [{ model: Activity, attributes: [], where: { parentId } }];
-  return Asset.findAllAndFetch({ include })
+  return Asset.fetch({ include })
     .then(assets => res.json({ data: assets }));
 }
 
 function show({ params }, res) {
-  return Asset.findByIdAndFetch(params.assetId)
+  return Asset.fetch(params.assetId)
     .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
     .then(asset => res.json({ data: asset }));
 }
@@ -22,21 +22,21 @@ function create({ body, params }, res) {
   const attr = ['activityId', 'type', 'data', 'position', 'layoutWidth'];
   const data = Object.assign(pick(body, attr), { courseId: params.courseId });
   return Asset.initialize()
-    .then(asset => asset.saveAndUpload(data))
+    .then(asset => asset.update(data))
     .then(asset => res.json({ data: asset }));
 }
 
 function patch({ body, params }, res) {
   return Asset.findById(params.assetId)
     .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
-    .then(asset => asset.saveAndUpload(body))
+    .then(asset => asset.update(body))
     .then(asset => res.json({ data: asset }));
 }
 
 function remove({ params }, res) {
   return Asset.findById(params.assetId)
     .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
-    .then(asset => asset.destroyWithRemote())
+    .then(asset => asset.destroy())
     .then(() => res.end());
 }
 
