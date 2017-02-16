@@ -400,13 +400,13 @@ export default {
       let lastX = event.offsetX || (event.pageX - canvas.offsetLeft);
       let lastY = event.offsetY || (event.pageY - canvas.offsetTop);
       let pos = ctx.transformedPoint(lastX, lastY);
-      return {x: pos.x, y: pos.y};
+      return { x: pos.x, y: pos.y };
     },
     previous() {
-      this.page -= 1;
+      this.page--;
     },
     next() {
-      this.page += 1;
+      this.page++;
     }
   }
 };
