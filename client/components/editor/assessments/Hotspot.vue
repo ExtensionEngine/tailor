@@ -1,8 +1,8 @@
 <template>
   <div class="assessment hotspot">
     <div class="label label-primary assessment-type">Hotspot</div>
-    <div v-show="page === 1">
-      <div class="form-group">
+    <div v-show="page === 1" class="hotspot-input">
+      <div class="form-group question-input">
         <span class="form-label">Question</span>
         <span :class="{ 'has-error': errors.includes('question') }">
           <input
@@ -12,7 +12,7 @@
             type="text">
         </span>
       </div>
-      <div class="img-load">
+      <div class="img-input">
         <h2>Image</h2>
         <input type="file" @change="imageInput">
         <div class="img-preview">
@@ -29,7 +29,12 @@
       </div>
     </div>
 
-    <div v-show="page === 2" class="img-container">
+    <div v-show="page === 2" class="img-editor">
+      <div :class="['hint', drawing ? 'bg-info' : '']">
+        <span v-show="drawing">
+          <span class="highlight">Hint:</span> Use scroll on image in order to zoom in or out
+        </span>
+      </div>
       <div class="controllers">
         <button
           @click="toggleDrawing"
@@ -432,16 +437,26 @@ export default {
 <style lang="scss">
 .assessment.hotspot {
   min-height: 400px;
-  margin: 10px auto;
+  margin: 0 auto;
   padding: 10px 30px 30px 30px;
   background-color: white;
   overflow: hidden;
+  position: relative;
 
   .assessment-type {
-    font-size: 13px;
-    float: right;
     background-color: grey;
-    margin: 15px 15px 50px 0;
+    font-size: 13px;
+    position: absolute;
+    right: 30px;
+    top: 10px;
+  }
+
+  .hotspot-input {
+    padding-top: 50px;
+
+    .question-input {
+      padding-top: 0;
+    }
   }
 
   .form-label {
@@ -453,10 +468,10 @@ export default {
     padding: 10px;
   }
 
-  .form-group,
-  .img-load,
-  .img-container,
-  .nav-control,
+  // .form-group,
+  // .img-input,
+  // .img-editor,
+  // .nav-control,
   .svg-container {
     text-align: left;
     margin: 0 auto;
@@ -488,9 +503,29 @@ export default {
     padding-left: 10px !important;
   }
 
-  .img-container {
+  .nav-control {
+    padding: 20px;
+    text-align: left;
+  }
+
+  .img-editor {
+    padding: 0 20px;
+    text-align: left;
+
+    .hint {
+      font-size: 18px;
+      font-weight: 400;
+      height: 40px;
+      margin-top: 30px;
+      padding: 9px 5px;
+
+      .highlight {
+        font-weight: 600;
+      }
+    }
+
     .controllers {
-      margin: 10px 0;
+      padding: 15px 0;
 
       input {
         max-width: 100px;
