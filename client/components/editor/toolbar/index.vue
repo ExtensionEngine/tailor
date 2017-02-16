@@ -1,6 +1,10 @@
 <template>
   <div @click="onClick" class="toolbar">
     <div class="toolbar-container">
+      <image-toolbar
+        v-if="isFocused('IMAGE')"
+        :asset="focusedAsset">
+      </image-toolbar>
       <quill-toolbar
         v-if="isFocused('TEXT')"
         :asset="focusedAsset">
@@ -26,6 +30,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
+import ImageToolbar from './ImageToolbar';
 import GomoToolbar from './GomoToolbar';
 import QuillToolbar from './QuillToolbar';
 import VideoToolbar from './VideoToolbar';
@@ -43,6 +48,7 @@ export default {
     }
   },
   components: {
+    ImageToolbar,
     GomoToolbar,
     QuillToolbar,
     VideoToolbar
@@ -54,6 +60,7 @@ export default {
 .toolbar {
   position: fixed;
   width: 100%;
+  z-index: 999;
 }
 
 .toolbar-container {

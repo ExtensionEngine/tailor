@@ -2,9 +2,8 @@ $fab-size: 48px;
 $fab-font-size: 18px;
 
 .btn {
-  padding: 10px;
-  font-size: 14px;
   border-radius: 0;
+  outline: none;
 
   &:focus {
     outline: 0;
