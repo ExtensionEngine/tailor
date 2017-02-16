@@ -251,7 +251,7 @@ export default {
     },
     parsePoints(element) {
       return element.map(item => {
-        return item.x + ',' + item.y;
+        return `${item.x},${item.y}`;
       });
     },
     updateCanvas(resizeScale) {
