@@ -15,7 +15,7 @@
       </div>
       <div class="img-load">
         <h2>Image</h2>
-        <input type="file" @change="onFileChange">
+        <input type="file" @change="inputImage">
         <div class="img-preview">
           <img :src="image">
         </div>
@@ -31,14 +31,30 @@
       </div>
     </div>
     <div v-show="page === 2" class="img-container">
-      <div class="controlers">
-        <button @click="starDrawing" class="btn btn-default" type="button" v-show="!drawing"><span class="fa fa-pencil"></span></button>
-        <button @click="finishDrawing" class="btn btn-default" type="button"v-show="drawing"><span class="fa fa-check"></span></button>
-        <button @click="undo" class="btn btn-default" type="button"><span class="fa fa-undo"></span></button>
-        <button @click="redo" class="btn btn-default" type="button"><span class="fa fa-repeat"></span></button>
+      <div class="controllers">
+        <button
+          v-show="!drawing"
+          @click="startDrawing"
+          class="btn btn-default"
+          type="button">
+            <span class="fa fa-pencil"></span>
+        </button>
+        <button
+          v-show="drawing"
+          @click="finishDrawing"
+          class="btn btn-default"
+          type="button">
+            <span class="fa fa-check"></span>
+        </button>
+        <button @click="undo" class="btn btn-default" type="button">
+          <span class="fa fa-undo"></span>
+        </button>
+        <button @click="redo" class="btn btn-default" type="button">
+          <span class="fa fa-repeat"></span>
+        </button>
       </div>
       <div class="canvas">
-        <canvas ref="canvas" @mousedown="onmousedown"></canvas>
+        <canvas ref="canvas" @mousedown="saveArea"></canvas>
       </div>
     </div>
     <div v-show="image && page === 3" class="svg-container">
@@ -48,7 +64,10 @@
       <div class="svg">
         <img ref="img" :src="image">
         <svg ref="svg">
-          <polygon v-for="(element, index) in areas" @click="select(index, $event)" :points="parsePoints(element)"/>
+          <polygon
+            v-for="(element, index) in areas"
+            @click="select(index, $event)"
+            :points="parsePoints(element)"/>
         </svg>
       </div>
     </div>
@@ -80,7 +99,7 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
+import { cloneDeep, findLastIndex, isArray, isEmpty, last } from 'lodash';
 import yup from 'yup';
 import zoomCanvas from './zoomCanvas';
 
@@ -96,7 +115,7 @@ const defaultAssessment = {
   correct: [],
   areas: [],
   width: 0,
-  redo: [[]]
+  actions: [[]]
 };
 
 export default {
@@ -112,6 +131,7 @@ export default {
       page: 1
     };
   },
+  // TODO: Event listeners or width watcher?
   mounted: function () {
     window.addEventListener('resize', this.handleResize);
   },
@@ -127,14 +147,15 @@ export default {
         this.$nextTick(() => {
           if (this.$refs.svg.parentElement.clientWidth - 10 > this.img.naturalWidth) {
             let height = this.img.naturalHeight / (this.img.naturalWidth / this.width);
-            this.$refs.svg.setAttribute('height', height + 'px');
-            this.$refs.svg.setAttribute('width', this.width + 'px');
-            this.$refs.svg.style.left = (Math.abs(this.$refs.svg.parentElement.clientWidth - this.width) / 2) + 'px';
+            this.$refs.svg.setAttribute('height', `${height}px`);
+            this.$refs.svg.setAttribute('width', `${this.width}px`);
+            // NOTE: Split in two lines?
+            this.$refs.svg.style.left = `${(Math.abs(this.$refs.svg.parentElement.clientWidth - this.width) / 2)}px`;
             this.$refs.img.style.removeProperty('height');
             this.$refs.img.style.removeProperty('width');
           } else {
             this.$refs.svg.style.left = '5px';
-            this.$refs.svg.setAttribute('width', this.width + 'px');
+            this.$refs.svg.setAttribute('width', `${this.width}px`);
             this.$refs.svg.setAttribute('height', '100%');
             this.$refs.img.style.height = '100%';
             this.$refs.img.style.width = '100%';
@@ -151,6 +172,7 @@ export default {
       this.$emit('selected');
     },
     save() {
+      // NOTE: Canvas1?
       let canvas = this.$refs.canvas1;
       let question = {
         _cid: this.assessment._cid,
@@ -204,7 +226,7 @@ export default {
       } */
     },
     updateSvg(resizeScale) {
-      if (this.areas.length === 0) return;
+      if (isEmpty(this.areas)) return;
       this.areas.forEach(outerItem => {
         outerItem.forEach(innerItem => {
           innerItem.x *= resizeScale;
@@ -215,13 +237,14 @@ export default {
     },
     parsePoints(element) {
       return element.map(item => {
-        return item.x + ',' + item.y;
+        return `${item.x},${item.y}`;
       });
     },
     updateCanvas(resizeScale) {
       zoomCanvas(this, resizeScale);
     },
     select(index, event) {
+      // NOTE: Could it be improved?
       if (this.correct.includes(index)) {
         this.correct.splice(this.correct.indexOf(index), 1);
         event.target.style.removeProperty('opacity');
@@ -230,96 +253,111 @@ export default {
       event.target.style.opacity = 0.5;
       this.correct.push(index);
     },
-    starDrawing() {
+    startDrawing() {
       this.drawing = true;
       let canvas = this.$refs.canvas;
       let ctx = canvas.getContext('2d');
-      if (this.areas.length === 0) this.areas.push([]);
+
+      if (isEmpty(this.areas)) this.areas.push([]);
       ctx.beginPath();
     },
     finishDrawing() {
       this.drawing = false;
       let canvas = this.$refs.canvas;
       let ctx = canvas.getContext('2d');
-      let lastItem = this.areas[this.areas.length - 1];
+      let lastItem = last(this.areas);
       ctx.lineTo(lastItem[0].x, lastItem[0].y);
       ctx.stroke();
-      lastItem.push({x: lastItem[0].x, y: lastItem[0].y});
+      lastItem.push({ x: lastItem[0].x, y: lastItem[0].y });
     },
-    onmousedown(event) {
+    saveArea(event) {
       if (!this.drawing) return;
-      this.redo = [[]];
+      this.actions = [[]];
       let canvas = this.$refs.canvas;
       let ctx = canvas.getContext('2d');
       let pos = this.getXY(event);
-      let lastAreasItem = this.areas[this.areas.length - 1];
-      if (lastAreasItem.length !== 0 && lastAreasItem.length > 1 && lastAreasItem[lastAreasItem.length - 1].x === lastAreasItem[0].x && lastAreasItem[lastAreasItem.length - 1].y === lastAreasItem[0].y) {
+      let lastArea = last(this.areas);
+
+      if (!isEmpty(lastArea) &&
+        lastArea.length > 1 &&
+        last(lastArea).x === lastArea[0].x &&
+        last(lastArea).y === lastArea[0].y
+      ) {
         this.areas.push([]);
-        lastAreasItem = this.areas[this.areas.length - 1];
+        lastArea = last(this.areas);
       }
-      if (lastAreasItem.length === 0) {
-        lastAreasItem.push(pos);
+
+      if (isEmpty(lastArea)) {
+        lastArea.push(pos);
         ctx.moveTo(pos.x, pos.y);
       } else {
-        ctx.moveTo(lastAreasItem[lastAreasItem.length - 1].x, lastAreasItem[lastAreasItem.length - 1].y);
-        lastAreasItem.push(pos);
+        ctx.moveTo(last(lastArea).x, last(lastArea).y);
+        lastArea.push(pos);
         ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
       }
     },
     undo() {
-      if (this.areas.length === 0) return;
-      let lastAreasItem = this.areas[this.areas.length - 1];
-      if (lastAreasItem.length === 0) {
+      if (isEmpty(this.areas)) return;
+      let lastArea = last(this.areas);
+      let lastRedone = last(this.actions);
+
+      if (isEmpty(lastArea)) {
         this.areas.splice(this.areas.length - 1, 1);
-        if (this.areas.length === 0) return;
-        lastAreasItem = this.areas[this.areas.length - 1];
-        this.redo.push([]);
+        if (isEmpty(this.areas)) return;
+        lastArea = last(this.areas);
+        this.actions.push([]);
       }
-      let lastRedoItem = this.redo[this.redo.length - 1];
-      if (lastAreasItem.length === 2) {
-        lastRedoItem.push(lastAreasItem.pop());
-        lastRedoItem.push(lastAreasItem.pop());
-      } else lastRedoItem.push(lastAreasItem.pop());
+
+      if (lastArea.length === 2) {
+        lastRedone.push(lastArea.pop());
+        lastRedone.push(lastArea.pop());
+      } else {
+        lastRedone.push(lastArea.pop());
+      }
+
       this.updateCanvas(1);
-      if (this.areas[0] && this.areas[0].length === 0) {
-        this.areas.pop();
-      }
+      if (isArray(this.areas[0]) && isEmpty(this.areas[0])) this.areas.pop();
     },
     redo() {
-      if (this.redo[0].length === 0) return;
-      let lastAreasItem;
-      if (this.areas.length === 0) {
+      // TODO: Not working properly
+      if (isEmpty(this.actions[0])) return;
+      let lastArea;
+      if (isEmpty(this.areas)) {
         this.areas.push([]);
-        lastAreasItem = this.areas[this.areas.length - 1];
+        lastArea = last(this.areas);
       } else {
-        lastAreasItem = this.areas[this.areas.length - 1];
+        lastArea = last(this.areas);
       }
-      let lastRedoItem = this.redo[this.redo.length - 1];
 
-      if (lastRedoItem.length === 0) {
-        this.redo.splice(this.redo.length - 1, 1);
-        if (this.redo.length === 0) return;
+      let lastRedone = last(this.actions);
+      if (isEmpty(lastRedone)) {
+        this.actions.splice(findLastIndex(this.actions), 1);
+        if (isEmpty(this.actions)) return;
         this.areas.push([]);
-        lastAreasItem = this.areas[this.areas.length - 1];
-        lastRedoItem = this.redo[this.redo.length - 1];
-        lastAreasItem.push(lastRedoItem.pop());
-        lastAreasItem.push(lastRedoItem.pop());
+        lastArea = last(this.areas);
+        lastRedone = last(this.actions);
+        lastArea.push(lastRedone.pop());
+        lastArea.push(lastRedone.pop());
         this.updateCanvas(1);
-        if (this.redo.length === 0) this.redo.push([]);
+        if (isEmpty(this.actions)) this.actions.push([]);
         return;
       }
-      if (lastRedoItem.length !== 1 && lastRedoItem[lastRedoItem.length - 1].x === lastRedoItem[0].x && lastRedoItem[lastRedoItem.length - 1].y === lastRedoItem[0].y) {
-        lastAreasItem.push(lastRedoItem.pop());
-        lastAreasItem.push(lastRedoItem.pop());
-      } else lastAreasItem.push(lastRedoItem.pop());
+
+      if (lastRedone.length !== 1 &&
+        last(lastRedone).x === lastRedone[0].x &&
+        last(lastRedone).y === lastRedone[0].y
+      ) {
+        lastArea.push(lastRedone.pop());
+        lastArea.push(lastRedone.pop());
+      } else {
+        lastArea.push(lastRedone.pop());
+      }
       this.updateCanvas(1);
     },
-    onFileChange(e) {
+    inputImage(e) {
       let files = e.target.files || e.dataTransfer.files;
-      if (!files.length) {
-        return;
-      }
+      if (isEmpty(files)) return;
       this.createImage(files[0]);
       this.areas = [];
     },
@@ -340,7 +378,7 @@ export default {
       let lastX = event.offsetX || (event.pageX - canvas.offsetLeft);
       let lastY = event.offsetY || (event.pageY - canvas.offsetTop);
       let pos = ctx.transformedPoint(lastX, lastY);
-      return {x: pos.x, y: pos.y};
+      return { x: pos.x, y: pos.y };
     },
     previous() {
       this.page -= 1;
@@ -412,8 +450,7 @@ export default {
   }
 
   .img-container {
-
-    .controlers {
+    .controllers {
       margin: 10px 0;
 
       input {
