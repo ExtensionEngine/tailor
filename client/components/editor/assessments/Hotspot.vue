@@ -114,7 +114,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import findLastIndex from 'lodash/findLastIndex';
+import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
 import yup from 'yup';
@@ -281,7 +281,7 @@ export default {
       let ctx = canvas.getContext('2d');
       let lastItem = last(this.areas);
       if (isEmpty(lastItem)) {
-        this.areas.splice(findLastIndex(this.areas), 1);
+        this.areas.pop();
         return;
       }
       ctx.lineTo(lastItem[0].x, lastItem[0].y);
@@ -316,15 +316,40 @@ export default {
       }
     },
     undo() {
-      if (this.areas.length === 0) return;
-      let lastAreasItem = this.areas[this.areas.length - 1];
-      if (lastAreasItem.length === 0) {
-        this.areas.splice(this.areas.length - 1, 1);
-        if (this.areas.length === 0) return;
-        lastAreasItem = this.areas[this.areas.length - 1];
+      if (isEmpty(this.areas)) return;
+      let lastArea = last(this.areas);
+
+      if (isEmpty(lastArea)) {
+        this.areas.pop();
+
+        if (isEmpty(this.areas)) return;
+        lastArea = last(this.areas);
         this.actions.push([]);
       }
-      let lastRedoItem = this.actions[this.actions.length - 1];
+
+      let lastRedone = last(this.actions);
+      if (lastArea.length === 2) {
+        lastRedone.push(lastArea.pop());
+        lastRedone.push(lastArea.pop());
+      } else {
+        lastRedone.push(lastArea.pop());
+      }
+
+      this.updateCanvas(1);
+      if (isArray(this.areas[0]) && isEmpty(this.areas[0])) this.areas.pop();
+    },
+    test() {
+      if (this.areas.length === 0) return;
+      let lastAreasItem = this.areas[this.areas.length - 1];
+
+      if (lastAreasItem.length === 0) {
+        this.areas.splice(this.areas.length - 1, 1);
+
+        if (this.areas.length === 0) return;
+        lastAreasItem = this.areas[this.areas.length - 1];
+        this.redo.push([]);
+      }
+      let lastRedoItem = this.redo[this.redo.length - 1];
       if (lastAreasItem.length === 2) {
         lastRedoItem.push(lastAreasItem.pop());
         lastRedoItem.push(lastAreasItem.pop());
