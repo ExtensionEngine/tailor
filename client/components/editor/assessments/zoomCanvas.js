@@ -11,8 +11,11 @@ var zoomCanvas = function (self, resizeScale) {
       canvas.width = self.img.naturalWidth;
       canvas.height = self.img.naturalHeight;
     }
+    if (canvas.width === self.width) resizeScale = 1;
+    if (canvas.width !== self.width) resizeScale = canvas.width / self.width;
     self.width = canvas.width;
     redraw();
+    resizeScale = 1;
   });
 
   trackTransforms(ctx);
