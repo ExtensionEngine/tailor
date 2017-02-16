@@ -33,27 +33,21 @@
     <div v-show="page === 2" class="img-container">
       <div class="controllers">
         <button
-          v-show="!drawing"
-          @click="startDrawing"
-          class="btn btn-default"
+          @click="toggleDrawing"
+          :class="['btn btn-default btn-draw', drawing ? 'btn-success' : 'btn-info']"
           type="button">
-            <span class="fa fa-pencil"></span>
-        </button>
-        <button
-          v-show="drawing"
-          @click="finishDrawing"
-          class="btn btn-default"
-          type="button">
-            <span class="fa fa-check"></span>
+            <span :class="['fa', drawing ? 'fa-check' : 'fa-pencil']"></span>
         </button>
         <button
           @click="undo"
+          :disabled="!drawing"
           class="btn btn-default"
           type="button">
             <span class="fa fa-undo"></span>
         </button>
         <button
           @click="redo"
+          :disabled="!drawing"
           class="btn btn-default"
           type="button">
             <span class="fa fa-repeat"></span>
@@ -180,6 +174,10 @@ export default {
           }
         });
       }
+    },
+    drawing: function(val, oldVal) {
+      // Enable zoom only if canvas is in drawing mode
+      this.updateCanvas(1);
     }
   },
   methods: {
@@ -268,15 +266,19 @@ export default {
       event.target.style.opacity = 0.5;
       this.correct.push(index);
     },
+    toggleDrawing() {
+      this.drawing = !this.drawing;
+
+      if (this.drawing) this.startDrawing();
+      else this.finishDrawing();
+    },
     startDrawing() {
-      this.drawing = true;
       let canvas = this.$refs.canvas;
       let ctx = canvas.getContext('2d');
       if (isEmpty(this.areas)) this.areas.push([]);
       ctx.beginPath();
     },
     finishDrawing() {
-      this.drawing = false;
       let canvas = this.$refs.canvas;
       let ctx = canvas.getContext('2d');
       let lastItem = last(this.areas);
@@ -478,6 +480,10 @@ export default {
       input {
         max-width: 100px;
         display: inline-block;
+      }
+
+      .btn-draw {
+        width: 40px;
       }
     }
 

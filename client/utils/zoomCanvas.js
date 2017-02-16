@@ -176,8 +176,15 @@ export default function (component, resizeScale) {
     return evt.preventDefault() && false;
   };
 
-  canvas.addEventListener('DOMMouseScroll', handleScroll, false);
-  canvas.addEventListener('mousewheel', handleScroll, false);
+  // Store handler reference in canvas element
+  canvas.handleScroll = canvas.handleScroll || handleScroll;
+  if (component.drawing) {
+    canvas.addEventListener('DOMMouseScroll', canvas.handleScroll, false);
+    canvas.addEventListener('mousewheel', canvas.handleScroll, false);
+  } else {
+    canvas.removeEventListener('DOMMouseScroll', canvas.handleScroll, false);
+    canvas.removeEventListener('mousewheel', canvas.handleScroll, false);
+  }
 
   // Adds ctx.getTransform() - returns an SVGMatrix
   // Adds ctx.transformedPoint(x,y) - returns an SVGPoint
