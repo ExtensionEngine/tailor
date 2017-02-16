@@ -9,8 +9,7 @@
             v-model="question"
             :disabled="isEditing"
             class="form-control"
-            type="text"
-            placeholder="Question">
+            type="text">
         </span>
       </div>
       <div class="img-load">
@@ -26,10 +25,10 @@
           v-model="hint"
           :disabled="isEditing"
           class="form-control"
-          type="text"
-          placeholder="Optional hint">
+          type="text">
       </div>
     </div>
+
     <div v-show="page === 2" class="img-container">
       <div class="controllers">
         <button
@@ -53,10 +52,11 @@
             <span class="fa fa-repeat"></span>
         </button>
       </div>
-      <div class="canvas">
+      <div class="canvas-wrapper">
         <canvas ref="canvas" @mousedown="saveArea"></canvas>
       </div>
     </div>
+
     <div v-show="image && page === 3" class="svg-container">
       <div class="form-group">
         <span class="form-label">Select correct areas:</span>
@@ -71,6 +71,7 @@
         </svg>
       </div>
     </div>
+
     <div class="nav-control">
       <button
         @click="previous"
@@ -501,7 +502,7 @@ export default {
       }
     }
 
-    .canvas {
+    .canvas-wrapper {
       canvas {
         display: block;
         margin: 0 auto;
@@ -553,6 +554,5 @@ export default {
       }
     }
   }
-
 }
 </style>
