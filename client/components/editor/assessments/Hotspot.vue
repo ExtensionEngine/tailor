@@ -187,7 +187,7 @@ export default {
       this.$emit('selected');
     },
     save() {
-      let canvas = this.$refs.canvas1;
+      let canvas = this.$refs.canvas;
       let question = {
         _cid: this.assessment._cid,
         type: this.type,
