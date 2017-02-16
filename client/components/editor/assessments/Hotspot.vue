@@ -114,6 +114,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import isEmpty from 'lodash/isEmpty';
 import yup from 'yup';
 import zoomCanvas from './zoomCanvas';
 
@@ -239,7 +240,7 @@ export default {
       }
     },
     updateSvg(resizeScale) {
-      if (this.areas.length === 0) return;
+      if (isEmpty(this.areas)) return;
       this.areas.forEach(outerItem => {
         outerItem.forEach(innerItem => {
           innerItem.x *= resizeScale;
