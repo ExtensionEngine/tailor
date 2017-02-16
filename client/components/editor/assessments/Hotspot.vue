@@ -294,17 +294,23 @@ export default {
       let canvas = this.$refs.canvas;
       let ctx = canvas.getContext('2d');
       let pos = this.getXY(event);
-      let lastAreasItem = this.areas[this.areas.length - 1];
-      if (lastAreasItem.length !== 0 && lastAreasItem.length > 1 && lastAreasItem[lastAreasItem.length - 1].x === lastAreasItem[0].x && lastAreasItem[lastAreasItem.length - 1].y === lastAreasItem[0].y) {
-        this.areas.push([]);
-        lastAreasItem = this.areas[this.areas.length - 1];
+      let lastArea = last(this.areas);
+
+      if (!isEmpty(lastArea) &&
+        lastArea.length > 1 &&
+        last(lastArea).x === lastArea[0].x &&
+        last(lastArea).y === lastArea[0].y
+      ) {
+        lastArea = [];
+        this.areas.push(lastArea);
       }
-      if (lastAreasItem.length === 0) {
-        lastAreasItem.push(pos);
+
+      if (isEmpty(lastArea)) {
         ctx.moveTo(pos.x, pos.y);
+        lastArea.push(pos);
       } else {
-        ctx.moveTo(lastAreasItem[lastAreasItem.length - 1].x, lastAreasItem[lastAreasItem.length - 1].y);
-        lastAreasItem.push(pos);
+        ctx.moveTo(last(lastArea).x, last(lastArea).y);
+        lastArea.push(pos);
         ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
       }
