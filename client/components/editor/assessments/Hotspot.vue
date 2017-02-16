@@ -150,27 +150,36 @@ export default {
   },
   watch: {
     page: function(val, oldVal) {
+      // Reset drawing mode
+      this.drawing = false;
+
       if (this.page === 2) {
         this.updateCanvas(1);
       }
       if (this.page === 3) {
         this.$nextTick(() => {
-          if (this.$refs.svg.parentElement.clientWidth - 10 > this.img.naturalWidth) {
-            let height = this.img.naturalHeight / (this.img.naturalWidth / this.width);
+          const imgWidth = this.img.naturalWidth;
+          const imgHeight = this.img.naturalHeight;
+          const svgWidth = this.$refs.svg.clientWidth;
+          const svgWrapperWidth = this.$refs.svg.parentElement.clientWidth;
+          const svgWrapperHeight = this.$refs.svg.parentElement.clientHeight;
+
+          if (svgWrapperWidth - 10 > imgWidth) {
+            let height = imgHeight / (imgWidth / this.width);
             this.$refs.svg.setAttribute('height', `${height}px`);
             this.$refs.svg.setAttribute('width', `${this.width}px`);
-            this.$refs.svg.style.left = `${(Math.abs(this.$refs.svg.parentElement.clientWidth - this.width) / 2)}px`;
-            this.$refs.img.style['max-width'] = this.img.naturalWidth;
-            this.$refs.img.style['max-height'] = this.img.naturalHeight;
+            this.$refs.svg.style.left = `${(Math.abs(svgWrapperWidth - this.width) / 2)}px`;
+            this.$refs.img.style['max-width'] = imgWidth;
+            this.$refs.img.style['max-height'] = imgHeight;
             this.$refs.img.style.removeProperty('height');
             this.$refs.img.style.removeProperty('width');
-            this.width = this.$refs.svg.clientWidth;
+            this.width = svgWidth;
           } else {
             this.$refs.svg.style.left = '5px';
             this.$refs.img.style.height = '100%';
             this.$refs.img.style.width = '100%';
-            this.$refs.svg.setAttribute('width', this.$refs.svg.parentElement.clientWidth - 10);
-            this.$refs.svg.setAttribute('height', this.$refs.svg.parentElement.clientHeight - 10);
+            this.$refs.svg.setAttribute('width', svgWrapperWidth - 10);
+            this.$refs.svg.setAttribute('height', svgWrapperHeight - 10);
           }
         });
       }
@@ -216,8 +225,8 @@ export default {
       }
       if (this.page === 3) {
         this.$nextTick(() => {
-          const imgHeight = this.img.naturalHeight;
           const imgWidth = this.img.naturalWidth;
+          const imgHeight = this.img.naturalHeight;
           const svgWrapperWidth = this.$refs.svg.parentElement.clientWidth;
           const svgWrapperHeight = this.$refs.svg.parentElement.clientHeight;
 
