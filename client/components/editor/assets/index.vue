@@ -1,6 +1,12 @@
 <template>
   <div :class="columnWidth" class="asset-container">
     <div @click="focus" class="asset">
+      <image-editor
+        v-if="asset.type === 'IMAGE'"
+        :asset="asset"
+        :isFocused="isFocused"
+        @save="save">
+      </image-editor>
       <text-editor
         v-if="asset.type === 'TEXT'"
         :asset="asset"
@@ -22,10 +28,11 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex-module';
+import Gomo from './Gomo';
+import ImageEditor from './Image';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TextEditor from './Text';
 import VideoEditor from './Video';
-import Gomo from './Gomo';
 
 export default {
   name: 'asset',
@@ -55,6 +62,7 @@ export default {
     }
   },
   components: {
+    ImageEditor,
     TextEditor,
     VideoEditor,
     Gomo
