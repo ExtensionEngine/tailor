@@ -8,51 +8,14 @@
         :isEditing="isEditing"
         @update="update">
       </question>
-      <multiple-choice
-        v-if="assessment.type === 'MC'"
+      <component
+        :is="getComponentName(assessment)"
         :assessment="assessment"
         :errors="errors"
         :isEditing="isEditing"
         @update="update"
         @alert="setAlert">
-      </multiple-choice>
-      <single-choice
-        v-else-if="assessment.type === 'SC'"
-        :assessment="assessment"
-        :errors="errors"
-        :isEditing="isEditing"
-        @update="update"
-        @alert="setAlert">
-      </single-choice>
-      <true-false
-        v-else-if="assessment.type === 'TF'"
-        :assessment="assessment"
-        :errors="errors"
-        :isEditing="isEditing"
-        @update="update">
-      </true-false>
-      <numerical-response
-        v-else-if="assessment.type === 'NR'"
-        :assessment="assessment"
-        :errors="errors"
-        :isEditing="isEditing"
-        @update="update">
-      </numerical-response>
-      <text-response
-        v-else-if="assessment.type === 'TR'"
-        :assessment="assessment"
-        :errors="errors"
-        :isEditing="isEditing"
-        @update="update">
-      </text-response>
-      <fill-blank
-        v-else-if="assessment.type === 'FB'"
-        :assessment="assessment"
-        :errors="errors"
-        :isEditing="isEditing"
-        @update="update"
-        @alert="setAlert">
-      </fill-blank>
+      </component>
       <div class="form-group">
         <span class="form-label">Hint</span>
         <input
@@ -91,8 +54,17 @@ import Question from './Question';
 import Controls from './Controls';
 import { schemas, typeInfo } from '../../../utils/assessment';
 
-const validationOptions = { recursive: true, abortEarly: false };
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
+const validationOptions = { recursive: true, abortEarly: false };
+
+const ASSESSMENT_TYPES = {
+  MC: 'multiple-choice',
+  SC: 'single-choice',
+  TF: 'true-false',
+  NR: 'numerical-response',
+  TR: 'text-response',
+  FB: 'fill-blank'
+};
 
 export default {
   name: 'assessment',
@@ -114,6 +86,9 @@ export default {
     }
   },
   methods: {
+    getComponentName(assessment) {
+      return ASSESSMENT_TYPES[assessment.type];
+    },
     setAlert(data = {}) {
       this.alert = data;
     },
