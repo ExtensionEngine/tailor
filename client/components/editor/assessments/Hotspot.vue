@@ -38,10 +38,9 @@
     </div>
 
     <div v-show="page === 2" class="img-editor">
-      <div class="info bg-info">
-        <span>
-          <span class="highlight">Hint:</span> {{ infoMessage }}
-        </span>
+      <div class="info bg-info clearfix">
+        <div class="icon"><span class="fa fa-info"></span></div>
+        <div class="message">{{ infoMessage }}</div>
       </div>
       <div class="controllers">
         <button
@@ -96,7 +95,7 @@
       </div>
     </div>
 
-    <div class="nav-control">
+    <div class="page-nav">
       <button
         @click="previous"
         :disabled="page < 2"
@@ -494,22 +493,15 @@ export default {
     top: 10px;
   }
 
-  .controls {
-    overflow: hidden;
-    padding: 10px;
-  }
 
-  .nav-control {
-    text-align: center;
-  }
-
-  .form-control {
-    padding-left: 10px !important;
-  }
-
-  .nav-control {
+  .page-nav {
     padding: 20px;
     text-align: left;
+
+    .controls {
+      overflow: hidden;
+      padding: 10px;
+    }
   }
 }
 
@@ -523,6 +515,10 @@ export default {
 
   .form-group {
     margin: 0;
+
+    .form-control {
+      padding-left: 10px !important;
+    }
   }
 
   .question-input {
@@ -588,8 +584,16 @@ export default {
     margin-top: 30px;
     padding: 9px 5px;
 
-    .highlight {
-      font-weight: 600;
+    .icon {
+      float: left;
+      font-size: 26px;
+      text-align: center;
+      width: 3%;
+    }
+
+    .message {
+      float: left;
+      width: 97%;
     }
   }
 
@@ -601,16 +605,14 @@ export default {
       display: inline-block;
     }
 
+    .btn {
+      width: 40px;
+    }
+
     .btn-area {
       background-color: rgb(236, 64, 122);
       color: #fff;
       font-weight: 500;
-      padding: 10px 12px;
-    }
-
-    .btn-draw
-    .btn-area {
-      width: 40px;
     }
   }
 
