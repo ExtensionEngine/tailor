@@ -6,7 +6,7 @@ const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
 
 function create({ body, params, user }, res) {
-  const attrs = ['name', 'parentId', 'position'];
+  const attrs = ['name', 'type', 'parentId', 'position'];
   const data = Object.assign(pick(body, attrs), { courseId: params.courseId });
   const opts = { context: { userId: user.id } };
   return Activity

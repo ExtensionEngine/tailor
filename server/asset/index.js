@@ -15,6 +15,8 @@ router
   .patch(ctrl.patch)
   .delete(ctrl.remove);
 
+router.post('/courses/:courseId/assets/:assetId/reorder', ctrl.reorder);
+
 module.exports = {
   model,
   router

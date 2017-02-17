@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="activity-wrapper" v-if="!isRoot">
-      <div class="activity" @click="select" @dblclick="edit">
+      <div class="activity" @click="select">
         <span class="position" :style="{ 'background-color': color }">
           {{ index + 1 }}
         </span>
         <span class="collapsible" :class="collapsibleIcon"></span>
         <span>{{ name }}</span>
-        <span class="pull-right">
-          <span class="badge" v-if="showBadge">{{ children.length }}</span>
+        <span class="actions pull-right" v-if="isEditable">
+          <span @click.stop="edit" class="fa fa-pencil"></span>
         </span>
       </div>
       <insert-activity
@@ -18,7 +18,7 @@
       </insert-activity>
     </div>
     <div v-if="!isCollapsed && hasChildren">
-      <draggable @update="reorder" :list="children">
+      <draggable @update="reorder" :options="dragOptions" :list="children">
         <activity
           v-for="(it, index) in children"
           :key="it._cid"
@@ -39,44 +39,39 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex-module';
+import { ASSET_GROUP, OUTLINE_LEVELS, isEditable } from 'shared/activities';
 import Draggable from 'vuedraggable';
 import InsertActivity from './InsertActivity';
+import { mapActions, mapMutations } from 'vuex-module';
 import NoActivities from './NoActivities';
 import values from 'lodash/values';
-
-const MAX_LEVELS = 3;
-const COLORS = ['#42A5F5', '#66BB6A', '#EC407A'];
 
 export default {
   name: 'activity',
   props: ['_cid', 'id', 'name', 'position', 'level', 'activities', 'activity', 'index'],
   data() {
     return {
-      isCollapsed: this.level !== 0
+      isCollapsed: this.level !== 0,
+      dragOptions: { handle: '.activity' }
     };
   },
   computed: {
-    showBadge() {
-      return this.hasChildren && this.isCollapsed;
-    },
     isRoot() {
       return this.level === 0;
     },
-    isAtom() {
-      return this.level === MAX_LEVELS;
-    },
     color() {
-      let index = this.level - 1;
-      return index > COLORS.length ? '#555' : COLORS[index];
+      return OUTLINE_LEVELS[this.level - 1].color;
+    },
+    isEditable() {
+      return isEditable(this.level);
     },
     hasChildren() {
-      return this.children.length > 0 && this.level < MAX_LEVELS;
+      return (this.children.length > 0) && (this.level < OUTLINE_LEVELS.length);
     },
     children() {
       const filterByParent = this.isRoot
         ? act => !act.parentId
-        : act => this.id && this.id === act.parentId;
+        : act => this.id && this.id === act.parentId && act.type !== ASSET_GROUP;
 
       return values(this.activities)
         .filter(filterByParent)
@@ -91,31 +86,24 @@ export default {
   },
   methods: {
     ...mapMutations(['focusActivity'], 'editor'),
-    ...mapActions({ reorderActivities: 'reorder' }, 'activity'),
+    ...mapActions({ updatePosition: 'reorder' }, 'activity'),
     select() {
       this.isCollapsed = !this.isCollapsed;
       this.focusActivity(this._cid);
     },
     edit() {
-      if (!this.isAtom) return;
+      if (!this.isEditable) return;
       this.$router.push({
         name: 'editor',
         params: { activityKey: this.activity.id }
       });
     },
-    reorder({ newIndex: index }) {
-      const activity = this.children[index];
-      const positionData = {
-        index,
-        prev: this.children[index - 1],
-        next: this.children[index + 1],
-        first: this.children[1],
-        count: this.children.length,
-        sameLevel: true,
-        reorder: true
-      };
-
-      this.reorderActivities({ activity, positionData, index });
+    reorder({ newIndex: newPosition }) {
+      const items = this.children;
+      const activity = items[newPosition];
+      const isFirstChild = newPosition === 0;
+      const context = { items, newPosition, isFirstChild };
+      this.updatePosition({ activity, context });
     }
   },
   components: {
@@ -154,11 +142,14 @@ export default {
     font-size: 16px;
   }
 
-  .badge {
-    margin-right: 10px;
-    padding: 4px 10px;
-    color: #777;
-    background-color: #eee;
+  .actions {
+    padding-right: 5px;
+    font-size: 20px;
+    color: #999;
+
+    .fa:hover {
+      color: #707070;
+    }
   }
 }
 

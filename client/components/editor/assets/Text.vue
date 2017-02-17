@@ -16,8 +16,11 @@
       </quill-editor>
       <div
         v-else
-        v-html="data.content"
-        class="ql-editor">
+        class="ql-container ql-snow">
+        <div
+          v-html="data.content"
+          class="ql-editor">
+        </div>
       </div>
     </div>
   </div>
@@ -28,7 +31,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import { quillEditor } from 'vue-quill-editor';
 
 const defaultAsset = {
-  type: 'text',
   data: {
     content: ''
   }

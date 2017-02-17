@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import createLogger from 'vuex/dist/logger';
 
 import activity from './modules/activity';
+import assessments from './modules/assessments';
 import assets from './modules/assets';
 import atom from './modules/atom';
 import auth from './modules/auth';
@@ -20,6 +21,7 @@ const middlewares = settings.debug.state && isDevEnv ? [createLogger()] : [];
 
 const modules = {
   activity,
+  assessments,
   assets,
   atom,
   auth,

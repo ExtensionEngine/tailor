@@ -20,8 +20,8 @@ export default function (collectionName, baseUrl = '') {
   module.api = new Resource(getBaseUrl);
 
   action(function get(id) {
-    return this.api.get(id)
-      .then(result => this.commit('save', result.data.data));
+    return this.api.getById(id)
+      .then(result => this.commit('save', result));
   });
 
   action(function fetch(params = {}) {

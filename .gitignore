@@ -101,7 +101,7 @@ Temporary Items
 
 # project files should be checked into the repository, unless a significant
 # proportion of contributors will probably not be using SublimeText
-# *.sublime-project
+*.sublime-project
 
 # sftp configuration file
 sftp-config.json
@@ -169,3 +169,7 @@ selenium-debug.log
 
 # Configuration
 .env
+
+# Local IJavascript REPL files
+.ipynb_checkpoints
+*.ipynb

@@ -1,8 +1,8 @@
+import calculatePosition from '../../utils/calculatePosition.js';
 import find from 'lodash/find';
 import VuexCollection from '../helpers/collection.js';
-import { updatePosition } from '../../utils/activity.js';
 
-const { action, build, getter } = new VuexCollection('activity');
+const { getter, action, mutation, build } = new VuexCollection('activity');
 
 getter(function activities() {
   return this.state.items;
@@ -15,15 +15,19 @@ getter(function getParent() {
   };
 });
 
-action(function reorder({ activity, positionData, index }) {
-  activity.position = updatePosition(positionData);
-  this.commit('save', activity);
-  return this.api.post(`${activity.id}/reorder`, { position: index })
+action(function reorder({ activity, context }) {
+  this.commit('reorder', { activity, position: calculatePosition(context) });
+  const data = { position: context.newPosition };
+  return this.api.post(`${activity.id}/reorder`, data)
     .then(res => {
       let activity = res.data.data;
       this.api.setCid(activity);
       this.commit('save', activity);
     });
+});
+
+mutation(function reorder({ activity, position }) {
+  activity.position = position;
 });
 
 export default build();
