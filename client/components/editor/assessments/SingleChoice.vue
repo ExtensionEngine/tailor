@@ -1,46 +1,35 @@
 <template>
-  <div>
-    <div class="form-group">
-      <span class="form-label">
-        Answers
-      </span>
-      <button
-        :disabled="disabled"
-        @click="addAnswer"
-        class="btn btn-default answers-add">
-        <span class="fa fa-plus"></span>
-      </button>
-      <ul>
-        <li v-for="(answer, index) in answers">
-          <span
-            :class="{ 'has-error': correctError }"
-            class="answers-radio">
-            <input
-              v-model="correct"
-              :value="index"
-              :disabled="disabled"
-              @change="update"
-              type="radio">
-          </span>
-          <span
-            :class="{ 'has-error': answerError(index) }"
-            class="answers-input">
-            <input
-              v-model="answers[index]"
-              :disabled="disabled"
-              @blur="update"
-              type="text"
-              placeholder="Answer...">
-          </span>
-          <button
+  <div class="form-group">
+    <span class="form-label">Answers</span>
+    <button
+      :disabled="disabled"
+      @click="addAnswer"
+      class="btn btn-default answers-add">
+      <span class="fa fa-plus"></span>
+    </button>
+    <ul>
+      <li v-for="(answer, index) in answers">
+        <span class="answers-radio" :class="{ 'has-error': correctError }">
+          <input
+            v-model="correct"
+            :value="index"
             :disabled="disabled"
-            @click="removeAnswer(index)"
-            class="destroy">
-            <span class="fa fa-times"></span>
-          </button>
-        </li>
-      </ul>
-    </div>
+            @change="update"
+            type="radio">
+        </span>
+        <span class="answers-input" :class="{ 'has-error': answerError(index) }">
+          <input
+            v-model="answers[index]"
+            :disabled="disabled"
+            @blur="update"
+            type="text"
+            placeholder="Answer...">
+        </span>
+        <button :disabled="disabled" @click="removeAnswer(index)" class="destroy">
+          <span class="fa fa-times"></span>
+        </button>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -100,7 +89,7 @@ export default {
     }
   },
   watch: {
-    isEditing: function(newVal) {
+    isEditing(newVal) {
       if (!newVal) {
         this.answers = this.assessment.answers;
         this.correct = this.assessment.correct;
