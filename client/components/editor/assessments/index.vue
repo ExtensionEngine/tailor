@@ -52,6 +52,7 @@ import TrueFalse from './TrueFalse';
 import NumericalResponse from './NumericalResponse';
 import TextResponse from './TextResponse';
 import FillBlank from './FillBlank';
+import Hotspot from './Hotspot';
 import Question from './Question';
 import Controls from './Controls';
 import { schemas, typeInfo } from '../../../utils/assessment';
@@ -65,7 +66,8 @@ const ASSESSMENT_TYPES = {
   TF: 'true-false',
   NR: 'numerical-response',
   TR: 'text-response',
-  FB: 'fill-blank'
+  FB: 'fill-blank',
+  HS: 'hotspot'
 };
 
 export default {
@@ -133,6 +135,7 @@ export default {
     NumericalResponse,
     TextResponse,
     FillBlank,
+    Hotspot,
     Question,
     Controls
   }

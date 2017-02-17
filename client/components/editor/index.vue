@@ -1,5 +1,5 @@
 <template>
-  <div class="editor" @click="clicked">
+  <div class="editor" @mousedown="onMousedown" @click="onClick">
     <loader v-if="showLoader"></loader>
     <div v-else>
       <toolbar></toolbar>
@@ -24,7 +24,8 @@ export default {
   name: 'editor',
   data() {
     return {
-      showLoader: true
+      showLoader: true,
+      mousedownCaptured: false
     };
   },
   computed: {
@@ -39,7 +40,15 @@ export default {
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity'),
     ...mapMutations({ setupAssetsApi: 'setBaseUrl' }, 'assets'),
     ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
-    clicked(e) {
+    onMousedown() {
+      this.mousedownCaptured = true;
+    },
+    onClick(e) {
+      // TODO: Temp, figure out better way to handle this
+      // (i.e. stop propagation for cropper)
+      if (!this.mousedownCaptured) return;
+      // Reset
+      this.mousedownCaptured = false;
       if (!this.toolbar.type) return;
       if (!e.component ||
         ((e.component.name !== 'toolbar') &&
@@ -50,6 +59,8 @@ export default {
     ...mapMutations({ clearToolbarContext: 'setToolbarContext' })
   },
   created() {
+    this.clearToolbarContext();
+
     // TODO: Do this better!
     const courseId = this.$route.params.courseKey;
     const activityId = this.$route.params.activityKey;

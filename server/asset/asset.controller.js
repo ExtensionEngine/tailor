@@ -8,34 +8,35 @@ const pick = require('lodash/pick');
 function list({ query }, res) {
   const parentId = parseInt(query.parentId, 10);
   const include = [{ model: Activity, attributes: [], where: { parentId } }];
-  return Asset.findAll({ include })
+  return Asset.fetch({ include })
     .then(assets => res.json({ data: assets }));
 }
 
 function show({ params }, res) {
-  return Asset.findById(params.assetId)
+  return Asset.fetch(params.assetId)
     .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
     .then(asset => res.json({ data: asset }));
 }
 
-function create({ body, params }, res) {
+function create({ body, params, user }, res) {
   const attr = ['activityId', 'type', 'data', 'position', 'layoutWidth'];
   const data = Object.assign(pick(body, attr), { courseId: params.courseId });
-  return Asset.create(data)
+  return Asset.initialize()
+    .then(asset => asset.update(data, { context: { userId: user.id } }))
     .then(asset => res.json({ data: asset }));
 }
 
-function patch({ body, params }, res) {
+function patch({ body, params, user }, res) {
   return Asset.findById(params.assetId)
     .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
-    .then(asset => asset.update(body))
+    .then(asset => asset.update(body, { context: { userId: user.id } }))
     .then(asset => res.json({ data: asset }));
 }
 
-function remove({ params }, res) {
+function remove({ params, user }, res) {
   return Asset.findById(params.assetId)
     .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
-    .then(asset => asset.destroy())
+    .then(asset => asset.destroy({ context: { userId: user.id } }))
     .then(() => res.end());
 }
 

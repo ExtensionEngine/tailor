@@ -1,6 +1,7 @@
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import { VuexModule } from 'vuex-module';
+import { ASSET_GROUP } from 'shared/activities';
 
 const { state, getter, action, mutation, build } = new VuexModule('atom');
 
@@ -19,7 +20,7 @@ getter(function perspectives() {
   const { route } = this.rootState;
   const { activities } = this.rootGetters;
   const parentId = Number(route.params.activityKey);
-  return filter(activities, { parentId });
+  return filter(activities, { parentId, type: ASSET_GROUP });
 });
 
 getter(function assessments() {

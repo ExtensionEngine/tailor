@@ -24,8 +24,13 @@ function index(req, res) {
   return promise.then(courses => res.json({ data: courses }));
 };
 
-function create(req, res) {
-  return Course.create(req.body, { isNewRecord: true, returning: true })
+function create({ body, user }, res) {
+  return Course
+    .create(body, {
+      isNewRecord: true,
+      returning: true,
+      context: { userId: user.id }
+    })
     .then(course => res.json({ data: course }));
 }
 
@@ -33,15 +38,14 @@ function get(req, res) {
   res.json({ data: req.course });
 }
 
-function patch(req, res) {
-  const data = pick(req.body, ['name', 'description']);
-  return req.course.update(data).then(course => {
-    res.json({ data: course });
-  });
+function patch({ body, course, user }, res) {
+  const data = pick(body, ['name', 'description']);
+  return course.update(data, { context: { userId: user.id } })
+    .then(course => res.json({ data: course }));
 };
 
-function remove(req, res) {
-  return req.course.destroy()
+function remove({ course, user }, res) {
+  return course.destroy({ context: { userId: user.id } })
     .then(() => res.status(204).send());
 };
 

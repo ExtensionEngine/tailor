@@ -4,7 +4,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import VuexCollection from '../helpers/collection.js';
 const { action, build, getter } = new VuexCollection('assessments');
 
-const dataKeys = ['question', 'answers', 'correct', 'hint'];
+const dataKeys = ['question', 'answers', 'correct', 'hint', 'image', 'areas', 'surfaceImage'];
 
 function nest(model) {
   model.data = {};

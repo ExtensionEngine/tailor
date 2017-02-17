@@ -55,6 +55,7 @@ export default {
 
 <style lang="scss" scoped>
 .assessment-item {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
   margin-bottom: 7px;
   padding: 0;
 

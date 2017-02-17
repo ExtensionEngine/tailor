@@ -10,6 +10,7 @@ import auth from './modules/auth';
 import courses from './modules/courses';
 import editor from './modules/editor';
 import toolbar from './modules/toolbar';
+import revisions from './modules/revisions';
 
 import plugins from './plugins';
 import settings from '../settings';
@@ -27,7 +28,8 @@ const modules = {
   auth,
   courses,
   editor,
-  toolbar
+  toolbar,
+  revisions
 };
 
 export default new Vuex.Store({

@@ -2,11 +2,11 @@
   <div class="assessments">
     <div class="heading">
       <h2>Assessments</h2>
-      <span @click="toggleAssessments">
+      <span v-if="hasAssessments" @click="toggleAssessments">
         {{ allSelected ? 'hide all' : 'show all' }}
       </span>
     </div>
-    <div class="well" v-if="hasAssessments">
+    <div class="well" v-if="!hasAssessments">
       Click the button bellow to Create first Assessment.
     </div>
     <ul class="list-group">
@@ -24,14 +24,14 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
+import Vue from 'vue';
+import { mapActions, mapGetters } from 'vuex-module';
 import cuid from 'cuid';
+import cloneDeep from 'lodash/cloneDeep';
 import difference from 'lodash/difference';
 import keyBy from 'lodash/keyBy';
-import Vue from 'vue';
 import AssessmentItem from './AssessmentItem';
 import SelectAssessment from './SelectAssessment';
-import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
   data() {
@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     hasAssessments() {
-      return !Object.keys(this.assessments).length;
+      return !!Object.keys(this.assessments).length;
     }
   },
   methods: {

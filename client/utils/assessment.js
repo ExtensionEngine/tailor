@@ -6,7 +6,8 @@ export const typeInfo = {
   TR: { type: 'TR', title: 'Text response', class: 'text-response' },
   NR: { type: 'NR', title: 'Numerical response', class: 'numerical-response' },
   TF: { type: 'TF', title: 'True - false', class: 'true-false' },
-  FB: { type: 'FB', title: 'Fill in the blank', class: 'fill-blank' }
+  FB: { type: 'FB', title: 'Fill in the blank', class: 'fill-blank' },
+  HS: { type: 'HS', title: 'Hotspot', class: 'hotspot' }
 };
 
 export const helperText = {
@@ -39,6 +40,10 @@ export const schemas = {
   FB: yup.object().shape({
     question: yup.string().trim().matches(/@blank/).required(),
     correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).required()))
+  }),
+  HS: yup.object().shape({
+    question: yup.string().trim().min(1).required(),
+    correct: yup.array().of((yup.string().trim().min(1).required()))
   })
 };
 
@@ -79,5 +84,15 @@ export const defaults = {
     type: 'FB',
     question: '',
     correct: []
+  },
+  HS: {
+    type: 'HS',
+    question: '',
+    hint: '',
+    image: '',
+    correct: [],
+    areas: [],
+    width: 0,
+    actions: [[]]
   }
 };

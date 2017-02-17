@@ -13,6 +13,9 @@
         :class="{ active: $route.name === 'course-details' }">
         <router-link :to="{ name: 'course-details' }">Details</router-link>
       </li>
+      <li :class="{ active: $route.name === 'course-revisions' }">
+        <router-link :to="{ name: 'course-revisions' }">Revisions</router-link>
+      </li>
     </ul>
     <div class="tab-content">
       <router-view></router-view>

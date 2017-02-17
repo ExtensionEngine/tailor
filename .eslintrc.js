@@ -31,6 +31,9 @@ module.exports = {
     'semi': ['warn', 'always'],
 
     // add space before function parameters
-    'space-before-function-paren': 0
+    'space-before-function-paren': ['error', {
+      anonymous: 'always',
+      named: 'never'
+    }]
   }
 }
