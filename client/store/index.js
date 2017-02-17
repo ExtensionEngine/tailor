@@ -9,6 +9,7 @@ import atom from './modules/atom';
 import auth from './modules/auth';
 import courses from './modules/courses';
 import editor from './modules/editor';
+import revisions from './modules/revisions';
 
 import plugins from './plugins';
 import settings from '../settings';
@@ -25,7 +26,8 @@ const modules = {
   atom,
   auth,
   courses,
-  editor
+  editor,
+  revisions
 };
 
 export default new Vuex.Store({
