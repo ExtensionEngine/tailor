@@ -64,7 +64,8 @@ const ASSESSMENT_TYPES = {
   TF: 'true-false',
   NR: 'numerical-response',
   TR: 'text-response',
-  FB: 'fill-blank'
+  FB: 'fill-blank',
+  HS: 'hotspot'
 };
 
 export default {

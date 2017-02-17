@@ -1,6 +1,5 @@
 <template>
-  <div class="assessment hotspot">
-    <div class="label label-primary assessment-type">Hotspot</div>
+  <div>
     <div v-show="page === 1" class="hotspot-input">
       <div :class="['info', !isUploaded ? 'bg-info clearfix' : '']">
         <div v-show="!isUploaded">
@@ -8,15 +7,6 @@
           <div class="message">Please upload an image to continue</div>
         </div>
       </div>
-      <div class="form-group question-input">
-        <span class="form-label">Question</span>
-          <input
-            v-model="question"
-            :disabled="isEditing"
-            class="form-control"
-            type="text">
-      </div>
-
       <div class="img-input">
         <span class="form-label">Image</span>
         <div v-show="!isUploaded" class="file">
@@ -31,15 +21,6 @@
           <img :src="image">
           <span @click="imageRemove" class="fa fa-times fa-lg"></span>
         </div>
-      </div>
-
-      <div class="form-group hint-input">
-        <span class="form-label">Hint</span>
-        <input
-          v-model="hint"
-          :disabled="isEditing"
-          class="form-control"
-          type="text">
       </div>
     </div>
 
@@ -117,22 +98,6 @@
         type="button">
           <span class="fa fa-chevron-right"></span>
       </button>
-      <span class="controls" v-if="!isEditing">
-        <button @click="save" class="btn btn-default" type="button">
-          Save
-        </button>
-        <button @click="close" class="btn btn-default" type="button">
-          Cancel
-        </button>
-      </span>
-      <span v-else class="controls">
-        <button @click="close" class="btn btn-default" type="button">
-          Close
-        </button>
-        <button @click="edit" class="btn btn-default" type="button">
-          Edit
-        </button>
-      </span>
     </div>
   </div>
 </template>
@@ -143,36 +108,21 @@ import cloneDeep from 'lodash/cloneDeep';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
-import yup from 'yup';
 import VTooltip from 'v-tooltip';
 import zoomCanvas from '../../../utils/zoomCanvas';
 
 Vue.use(VTooltip);
 
-const schema = yup.object().shape({
-  question: yup.string().trim().min(1).required(),
-  correct: yup.array().of((yup.string().trim().min(1).required()))
-});
-
-const defaultAssessment = {
-  question: '',
-  hint: '',
-  image: '',
-  correct: [],
-  areas: [],
-  width: 0,
-  actions: [[]]
-};
-
 export default {
-  props: { assessment: Object },
+  props: {
+    assessment: Object,
+    errors: Array,
+    isEditing: Boolean
+  },
   data() {
     return {
-      ...cloneDeep(defaultAssessment),
       ...cloneDeep(this.assessment),
       img: new Image(), //  eslint-disable-line
-      errors: [],
-      isEditing: !!this.assessment.question,
       drawing: false,
       page: 1
     };
@@ -241,35 +191,14 @@ export default {
     }
   },
   methods: {
-    edit() {
-      this.isEditing = false;
-    },
-    close() {
-      this.$emit('selected');
-    },
-    save() {
-      let canvas = this.$refs.canvas;
-      let question = {
-        _cid: this.assessment._cid,
-        type: this.type,
-        question: this.question,
+    update() {
+      let data = {
+        areas: this.areas,
         correct: this.correct,
         image: this.image,
-        surfaceImage: canvas.toDataURL(),
-        hint: this.hint
+        surfaceImage: this.$refs.canvas.toDataURL()
       };
-
-      // TODO: New way of handling errors. To be continued...
-      this.validate(question)
-        .then(() => {
-          this.$emit('save', question);
-          this.isEditing = true;
-        })
-        .catch(err => err.inner.forEach(item => this.errors.push(item.path)));
-    },
-    validate(question) {
-      const options = { recursive: true, abortEarly: false };
-      return schema.validate(question, options);
+      this.$emit('update', data);
     },
     handleResize() {
       if (this.page === 2) {
@@ -330,6 +259,7 @@ export default {
       }
       event.target.style.opacity = 0.5;
       this.correct.push(index);
+      this.update();
     },
     toggleDrawing() {
       this.drawing = !this.drawing;
@@ -352,6 +282,7 @@ export default {
       ctx.lineTo(lastItem[0].x, lastItem[0].y);
       ctx.stroke();
       lastItem.push({ x: lastItem[0].x, y: lastItem[0].y });
+      this.update();
     },
     saveArea(event) {
       if (!this.drawing) return;
