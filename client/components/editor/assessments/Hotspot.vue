@@ -105,14 +105,14 @@
     <div class="page-nav">
       <button
         @click="previous"
-        :disabled="page < 2"
+        :disabled="drawing || page < 2"
         class="btn btn-default"
         type="button">
           <span class="fa fa-chevron-left"></span>
       </button>
       <button
         @click="next"
-        :disabled="!isUploaded || page > 2"
+        :disabled="drawing || !isUploaded || page > 2"
         class="btn btn-default"
         type="button">
           <span class="fa fa-chevron-right"></span>
