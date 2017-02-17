@@ -1,22 +1,16 @@
 <template>
-  <div>
-    <div class="form-group">
-      <span class="form-label">
-        Answer
-      </span>
-      <span
-        :class="{ 'has-error': correctError }"
-        class="answer">
-        <textarea
-          v-model="correct"
-          :disabled="!isEditing"
-          @blur="update"
-          class="form-control"
-          rows="6"
-          type="text">
-        </textarea>
-      </span>
-    </div>
+  <div class="form-group">
+    <span class="form-label">Answer</span>
+    <span :class="{ 'has-error': correctError }" class="answer">
+      <textarea
+        v-model="correct"
+        :disabled="!isEditing"
+        @blur="update"
+        class="form-control"
+        rows="6"
+        type="text">
+      </textarea>
+    </span>
   </div>
 </template>
 
@@ -44,7 +38,7 @@ export default {
     }
   },
   watch: {
-    isEditing: function(newVal) {
+    isEditing(newVal) {
       if (!newVal) this.correct = this.assessment.correct;
     }
   }
