@@ -70,3 +70,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.assessment-container {
+  cursor: default;
+}
+</style>
