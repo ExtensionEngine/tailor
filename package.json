@@ -24,7 +24,7 @@
     "start": "node -r dotenv/config ./server"
   },
   "dependencies": {
-    "aws-sdk": "^2.7.27",
+    "aws-sdk": "2.7.27",
     "axios": "^0.15.2",
     "bcryptjs": "^2.3.0",
     "blob-util": "^1.2.1",
