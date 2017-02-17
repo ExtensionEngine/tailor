@@ -177,14 +177,14 @@ export default {
       page: 1
     };
   },
-  mounted: function () {
+  mounted() {
     window.addEventListener('resize', this.handleResize);
   },
-  beforeDestroy: function () {
+  beforeDestroy() {
     window.removeEventListener('resize', this.handleResize);
   },
   watch: {
-    page: function(val, oldVal) {
+    page(val, oldVal) {
       // Reset drawing mode
       this.drawing = false;
 
@@ -219,7 +219,7 @@ export default {
         });
       }
     },
-    drawing: function(val, oldVal) {
+    drawing(val, oldVal) {
       // Enable zoom only if canvas is in drawing mode
       this.updateCanvas();
     }

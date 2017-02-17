@@ -70,7 +70,7 @@ export default function (component, resizeScale) {
 
   let dragStart, dragged;
 
-  canvas.addEventListener('mousedown', function(evt) {
+  canvas.addEventListener('mousedown', function (evt) {
     if (component.start) return;
     document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
     component.lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
@@ -79,7 +79,7 @@ export default function (component, resizeScale) {
     dragged = false;
   }, false);
 
-  canvas.addEventListener('mousemove', function(evt) {
+  canvas.addEventListener('mousemove', function (evt) {
     if (component.start) return;
     component.lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
     component.lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
@@ -100,7 +100,7 @@ export default function (component, resizeScale) {
     }
   }, false);
 
-  canvas.addEventListener('mouseup', function(evt) {
+  canvas.addEventListener('mouseup', function (evt) {
     if (component.start) return;
     dragStart = null;
     if (!dragged) return;

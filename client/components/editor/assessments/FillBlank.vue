@@ -204,7 +204,7 @@ export default {
   },
   watch: {
     question: debounce(
-      function() {
+      function () {
         this.parse();
       }, 500
     )
