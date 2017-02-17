@@ -2,6 +2,12 @@
   <div class="assessment hotspot">
     <div class="label label-primary assessment-type">Hotspot</div>
     <div v-show="page === 1" class="hotspot-input">
+      <div :class="['info', !isUploaded ? 'bg-info clearfix' : '']">
+        <div v-show="!isUploaded">
+          <div class="icon"><span class="fa fa-info"></span></div>
+          <div class="message">Please upload an image to continue</div>
+        </div>
+      </div>
       <div class="form-group question-input">
         <span class="form-label">Question</span>
           <input
@@ -80,11 +86,12 @@
       </div>
     </div>
 
-    <div v-show="image && page === 3" class="svg-container">
-      <div class="form-group">
-        <span class="form-label">Select correct areas:</span>
+    <div v-show="page === 3" class="area-picker">
+      <div class="info bg-info clearfix">
+        <div class="icon"><span class="fa fa-info"></span></div>
+        <div class="message">Select correct areas</div>
       </div>
-      <div class="svg">
+      <div class="picker">
         <img ref="img" :src="image">
         <svg ref="svg">
           <polygon
@@ -105,7 +112,7 @@
       </button>
       <button
         @click="next"
-        :disabled="page > 2"
+        :disabled="!isUploaded || page > 2"
         class="btn btn-default"
         type="button">
           <span class="fa fa-chevron-right"></span>
@@ -494,6 +501,31 @@ export default {
     top: 10px;
   }
 
+  .info {
+    font-size: 18px;
+    font-weight: 400;
+    min-height: 40px;
+    padding: 9px 5px;
+
+    .icon {
+      float: left;
+      font-size: 26px;
+      text-align: center;
+      width: 3%;
+    }
+
+    .message {
+      float: left;
+      width: 97%;
+    }
+  }
+
+  .hotspot-input,
+  .img-editor,
+  .area-picker {
+    padding: 30px 0;
+  }
+
 
   .page-nav {
     padding: 20px;
@@ -502,13 +534,15 @@ export default {
     .controls {
       overflow: hidden;
       padding: 10px;
+
+      button {
+        font-weight: 500;
+      }
     }
   }
 }
 
 .hotspot-input {
-  padding-top: 50px;
-
   .form-label {
     font-size: 18px;
     font-weight: 500;
@@ -575,28 +609,7 @@ export default {
 }
 
 .img-editor {
-  padding: 0 20px;
   text-align: left;
-
-  .info {
-    font-size: 18px;
-    font-weight: 400;
-    min-height: 40px;
-    margin-top: 30px;
-    padding: 9px 5px;
-
-    .icon {
-      float: left;
-      font-size: 26px;
-      text-align: center;
-      width: 3%;
-    }
-
-    .message {
-      float: left;
-      width: 97%;
-    }
-  }
 
   .controllers {
     padding: 15px 0;
@@ -633,12 +646,13 @@ export default {
   }
 }
 
-.svg-container {
+.area-picker {
   margin: 0 auto;
-  padding: 25px 20px 15px 20px;
   width: 100%;
   overflow: hidden;
-  .svg {
+
+  .picker {
+    padding-top: 10px;
     position: relative;
 
     img {
