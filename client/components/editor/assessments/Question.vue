@@ -1,18 +1,11 @@
 <template>
   <div class="form-group">
-    <span class="form-label">
-      Question
-    </span>
-    <div
-      @click="focus"
-      class="question"
-      :class="{ editing: isEditing }">
+    <span class="form-label">Question</span>
+    <div :class="{ editing: isEditing }" @click="focus" class="question">
       <div v-if="!isFocused && !question">
         <div class="well text-placeholder">
           <div class="message">
-            <span :class="{ 'error': questionError }">
-              Click to edit
-            </span>
+            <span :class="{ 'error': questionError }">Click to edit</span>
           </div>
         </div>
       </div>
@@ -23,26 +16,19 @@
           :config="config"
           @change="update">
         </quill-editor>
-        <div
-          v-else
-          class="ql-container ql-snow">
-          <div
-            v-html="question"
-            class="ql-editor">
-          </div>
+        <div v-else class="ql-container ql-snow">
+          <div v-html="question" class="ql-editor"></div>
         </div>
       </div>
     </div>
-    <span class="help-block" v-if="isEditing">
-        {{ helperText }}
-    </span>
+    <span class="help-block" v-if="isEditing">{{ helperText }}</span>
   </div>
 </template>
 
 <script>
+import { helperText } from '../../../utils/assessment';
 import { mapGetters, mapMutations } from 'vuex-module';
 import { quillEditor } from 'vue-quill-editor';
-import { helperText } from '../../../utils/assessment';
 
 export default {
   props: {
@@ -57,6 +43,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['toolbar']),
     initQuestion() { // rename?
       return this.assessment.question;
     },
@@ -64,7 +51,6 @@ export default {
       const helper = helperText[this.assessment.type] || {};
       return helper.question;
     },
-    ...mapGetters(['toolbar']),
     isFocused() {
       return this.isEditing && (this.toolbar.context._cid === this.assessment._cid);
     },
@@ -91,14 +77,14 @@ export default {
     quillEditor
   },
   watch: {
-    initQuestion: function(newVal) {
+    initQuestion(newVal) {
       if (newVal !== this.question) this.question = newVal;
     }
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .assessment .question {
   font-size: 22px;
   border: 1px dashed transparent;
