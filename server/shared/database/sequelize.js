@@ -11,6 +11,7 @@ const models = {
   Assessment: '../../assessment/assessment.model',
   Course: '../../course/course.model',
   CourseUser: '../../course/courseUser.model',
+  Revision: '../../revision/revision.model',
   User: '../../user/user.model'
 };
 
@@ -21,6 +22,8 @@ each(models, (path, name) => {
 each(db, (v, modelName) => {
   if ('associate' in db[modelName]) db[modelName].associate(db);
 });
+
+db['Revision'].addHooks(db);
 
 db.initialize = () => sequelize.sync({ force: false }).then(() => seed(db));
 

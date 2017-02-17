@@ -1,4 +1,5 @@
 import calculatePosition from '../../utils/calculatePosition.js';
+import find from 'lodash/find';
 import VuexCollection from '../helpers/collection.js';
 
 const { getter, action, mutation, build } = new VuexCollection('activity');
@@ -6,6 +7,13 @@ const { getter, action, mutation, build } = new VuexCollection('activity');
 getter(function activities() {
   return this.state.items;
 }, { global: true });
+
+getter(function getParent() {
+  return activityId => {
+    const activity = find(this.state.items, { id: activityId });
+    return find(this.state.items, { id: activity.parentId });
+  };
+});
 
 action(function reorder({ activity, context }) {
   this.commit('reorder', { activity, position: calculatePosition(context) });

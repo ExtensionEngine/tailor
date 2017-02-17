@@ -5,10 +5,12 @@ const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
 
-function create({ body, params }, res) {
-  const attrs = ['name', 'parentId', 'position'];
+function create({ body, params, user }, res) {
+  const attrs = ['name', 'type', 'parentId', 'position'];
+  const data = Object.assign(pick(body, attrs), { courseId: params.courseId });
+  const opts = { context: { userId: user.id } };
   return Activity
-    .create(Object.assign(pick(body, attrs), { courseId: params.courseId }))
+    .create(data, opts)
     .then(activity => res.json({ data: activity }));
 }
 
@@ -19,11 +21,11 @@ function show({ params }, res) {
     .then(activity => res.json({ data: activity }));
 }
 
-function patch({ params, body }, res) {
+function patch({ body, params, user }, res) {
   return Activity
     .findById(params.activityId)
     .then(activity => activity || createError(NOT_FOUND, 'Activity not found'))
-    .then(activity => activity.update(body))
+    .then(activity => activity.update(body, { context: { userId: user.id } }))
     .then(activity => res.json({ data: activity }));
 }
 
@@ -32,10 +34,10 @@ function list(req, res) {
     .then(activities => res.json({ data: activities }));
 }
 
-function remove({ params }, res) {
+function remove({ params, user }, res) {
   return Activity
     .findById(params.activityId)
-    .then(activity => activity.remove())
+    .then(activity => activity.destroy({ context: { userId: user.id } }))
     .then(activity => res.json({ data: pick(activity, ['id']) }));
 }
 
