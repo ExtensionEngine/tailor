@@ -31,7 +31,8 @@
 import truncate from 'lodash/truncate';
 import Assessment from '../assessments';
 
-const regex = /<\/?[^>]+(>|$)/g;
+const htmlRegex = /<\/?[^>]+(>|$)/g;
+const blankRegex = /(@blank)/g;
 const options = { length: 50 };
 
 export default {
@@ -40,7 +41,10 @@ export default {
   computed: {
     question() {
       let question = this.assessment.question || '';
-      return truncate(question.replace(regex, ''), options);
+      let index = 0;
+      const newValue = () => `(${++index})`;
+      const parsedQuestion = question.replace(htmlRegex, '').replace(blankRegex, newValue);
+      return truncate(parsedQuestion, options);
     }
   },
   components: {
