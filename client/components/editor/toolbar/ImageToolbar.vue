@@ -34,11 +34,10 @@
 
 <script>
 import actions from './toolbarActions';
+import capitalize from 'lodash/capitalize';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import zipObject from 'lodash/zipObject';
-
-const capitalize = word => word.charAt(0).toUpperCase() + word.slice(1);
 
 export default {
   props: ['asset'],
