@@ -1,11 +1,7 @@
 <template>
-  <div
-    class="assessment-container"
-    @selected="$emit('selected')">
+  <div @selected="$emit('selected')" class="assessment-container">
     <div class="assessment" :class="typeInfo.class">
-      <div class="label label-primary assessment-type">
-        {{ typeInfo.title }}
-      </div>
+      <div class="label label-primary assessment-type">{{ typeInfo.title }}</div>
       <question
         :assessment="assessment"
         :errors="errors"
@@ -58,9 +54,7 @@
         @alert="setAlert">
       </fill-blank>
       <div class="form-group">
-        <span class="form-label">
-          Hint
-        </span>
+        <span class="form-label">Hint</span>
         <input
           v-model="assessment.hint"
           :disabled="!isEditing"
@@ -69,13 +63,8 @@
           placeholder="Optional hint">
       </div>
       <div class="alert-container">
-        <div
-          v-show="alert.text"
-          :class="alert.type"
-          class="alert">
-          <strong>
-            {{ alert.text }}
-          </strong>
+        <div v-show="alert.text" :class="alert.type" class="alert">
+          <strong>{{ alert.text }}</strong>
         </div>
       </div>
       <controls
@@ -173,7 +162,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .assessment {
   min-height: 400px;
   margin: 10px auto;
