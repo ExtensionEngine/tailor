@@ -17,7 +17,7 @@
           @change="update">
         </quill-editor>
         <div v-else class="ql-container ql-snow">
-          <div v-html="question" class="ql-editor"></div>
+          <div v-html="parsedQuestion" class="ql-editor"></div>
         </div>
       </div>
     </div>
@@ -29,6 +29,8 @@
 import { helperText } from '../../../utils/assessment';
 import { mapGetters, mapMutations } from 'vuex-module';
 import { quillEditor } from 'vue-quill-editor';
+
+const blankRegex = /(@blank)/g;
 
 export default {
   props: {
@@ -46,6 +48,11 @@ export default {
     ...mapGetters(['toolbar']),
     initQuestion() { // rename?
       return this.assessment.question;
+    },
+    parsedQuestion() {
+      let index = 0;
+      const newValue = () => `(${++index})__________`;
+      return this.question.replace(blankRegex, newValue);
     },
     helperText() {
       const helper = helperText[this.assessment.type] || {};

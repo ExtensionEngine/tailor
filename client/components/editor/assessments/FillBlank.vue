@@ -1,21 +1,13 @@
 <template>
   <div class="form-group" v-if="hasAnswer">
-    <span class="form-label">
-      Answers
-    </span>
+    <span class="form-label">Answers</span>
     <span v-if="isEditing && hasMultipleAnswers" class="help-block">
       Arrange answers by dragging if needed !
     </span>
-    <draggable
-      :list="correct"
-      :options="dragOptions"
-      @update="update"
-      class="draggable">
+    <draggable :list="correct" :options="dragOptions" @update="update" class="draggable">
       <transition-group name="answers">
         <div v-for="(blank, index) in correct" ref="order" :key="index">
-          <span class="badge">
-            {{ index + 1 }}
-          </span>
+          <span class="badge">{{ index + 1 }}</span>
           <button
             :disabled="disabled"
             @click="addAnswer(index)"
@@ -60,7 +52,7 @@ import debounce from 'lodash/debounce';
 import draggable from 'vuedraggable';
 import times from 'lodash/times';
 
-const regex = '\\(\\d+\\)_{10}';
+const regex = /(@blank)/g;
 const customAlert = {
   text: `Question and blanks are out of sync ! Please delete
          unnecessary answers or add blanks in the question !`,
@@ -78,18 +70,12 @@ export default {
   },
   data() {
     return {
-      correct: this.assessment.correct,
-      parsedQuestion: this.assessment.question
+      correct: this.assessment.correct
     };
   },
   methods: {
     parse() {
-      let index = 0;
-      const searchValue = new RegExp(`(@blank|${regex})`, 'g');
-      const newValue = () => ++index && `(${index})__________`;
-      this.parsedQuestion = this.question.replace(searchValue, newValue);
-
-      let count = index - this.correct.length;
+      let count = this.blanksCount - this.correct.length;
       this.correct.push(...times(count, () => ['']));
       this.update();
     },
@@ -112,10 +98,7 @@ export default {
       else this.$emit('alert');
     },
     update(que) {
-      let data = {
-        question: this.parsedQuestion,
-        correct: this.correct
-      };
+      let data = { correct: this.correct };
       this.$emit('update', data);
       this.validate();
     },
@@ -136,12 +119,11 @@ export default {
     question() {
       return this.assessment.question;
     },
+    blanksCount() {
+      return (this.question.match(regex) || []).length;
+    },
     isSynced() {
-      let blanksCount = this.question.match(new RegExp(regex, 'g'));
-
-      if (blanksCount) return this.correct.length !== blanksCount.length;
-
-      return this.correct.length !== blanksCount;
+      return this.correct.length !== this.blanksCount;
     },
     hasAnswer() {
       return this.correct.length > 0;
@@ -156,11 +138,8 @@ export default {
         this.parse();
       }, 500
     ),
-    isEditing: function(newVal) {
-      if (!newVal) {
-        this.correct = this.assessment.correct;
-        this.parsedQuestion = this.assessment.question;
-      }
+    isEditing(newVal) {
+      if (!newVal) this.correct = this.assessment.correct;
     }
   }
 };

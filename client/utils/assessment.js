@@ -37,7 +37,7 @@ export const schemas = {
     correct: yup.boolean().required()
   }),
   FB: yup.object().shape({
-    question: yup.string().trim().matches(/\(\d+\)_{10}/).required(),
+    question: yup.string().trim().matches(/@blank/).required(),
     correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).required()))
   })
 };
