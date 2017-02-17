@@ -4,7 +4,7 @@
     <div v-show="page === 1" class="hotspot-input">
       <div :class="['info', !isUploaded ? 'bg-info clearfix' : '']">
         <div v-show="!isUploaded">
-          <div class="icon"><span class="fa fa-info"></span></div>
+          <span class="fa fa-info-circle"></span>
           <div class="message">Please upload an image to continue</div>
         </div>
       </div>
@@ -45,7 +45,7 @@
 
     <div v-show="page === 2" class="img-editor">
       <div class="info bg-info clearfix">
-        <div class="icon"><span class="fa fa-info"></span></div>
+        <span class="fa fa-info-circle"></span>
         <div class="message">{{ infoMessage }}</div>
       </div>
       <div class="controllers">
@@ -88,7 +88,7 @@
 
     <div v-show="page === 3" class="area-picker">
       <div class="info bg-info clearfix">
-        <div class="icon"><span class="fa fa-info"></span></div>
+        <span class="fa fa-info-circle"></span>
         <div class="message">Select correct areas</div>
       </div>
       <div class="picker">
@@ -507,17 +507,17 @@ export default {
     font-weight: 400;
     min-height: 40px;
     padding: 9px 5px;
+    position: relative;
 
-    .icon {
-      float: left;
-      font-size: 26px;
-      text-align: center;
-      width: 3%;
+    .fa {
+      font-size: 20px;
+      left: 10px;
+      position: absolute;
+      top: 10px;
     }
 
     .message {
-      float: left;
-      width: 97%;
+      padding: 0 20px 0 30px;;
     }
   }
 
