@@ -1,7 +1,10 @@
 <template>
   <div @selected="$emit('selected')" class="assessment-container">
     <div class="assessment" :class="typeInfo.class">
-      <div class="label label-primary assessment-type">{{ typeInfo.title }}</div>
+      <div>
+        <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
+        <span @click="close" class="btn btn-link pull-right">Collapse</span>
+      </div>
       <question
         :assessment="assessment"
         :errors="errors"
@@ -33,7 +36,6 @@
       <controls
         :isEditing="isEditing"
         @cancel="cancel"
-        @close="close"
         @save="save"
         @remove="remove"
         @edit="edit">
@@ -153,10 +155,11 @@ export default {
   }
 
   .assessment-type {
+    margin: 10px 0 50px 0;
+    padding: 4px 15px;
     font-size: 13px;
-    float: right;
-    background-color: grey;
-    margin: 15px 15px 50px 0;
+    background-color: #707070;
+    border-radius: 1px;
   }
 
   .form-group {
