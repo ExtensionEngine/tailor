@@ -32,7 +32,7 @@ describe('Error-handling middleware', () => {
   });
 
   it('uses generic error processor when no processors are supplied',
-    sinon.test(function() {
+    sinon.test(function () {
       const status = 123456;
       this.mock(genericErrorProcessor).expects('canProcessError').exactly(1).returns(true);
       this.mock(genericErrorProcessor).expects('processError').exactly(1).returns({ status });
