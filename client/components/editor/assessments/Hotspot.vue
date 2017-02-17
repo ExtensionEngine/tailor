@@ -453,6 +453,7 @@ export default {
       reader.onload = (e) => {
         vm.image = e.target.result;
         vm.img.src = vm.image;
+        this.$nextTick(() => this.next());
       };
 
       reader.readAsDataURL(file);
