@@ -29,7 +29,7 @@ import {
   describeActivityRevision,
   describeAssetRevision,
   describeCourseRevision
-} from './helpers';
+} from '../../utils/revision';
 
 const describe = {
   'ACTIVITY': describeActivityRevision,
