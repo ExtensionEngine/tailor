@@ -1,23 +1,17 @@
 <template>
-  <div>
-    <div class="form-group">
-      <span class="form-label">
-        Answer
-      </span>
-      <span
-        :class="{ 'has-error': correctError }"
-        class="answer">
-        <input
-          v-model="correct"
-          :disabled="!isEditing"
-          @blur="update"
-          class="form-control">
-          <span class="help-block" type="text">
-            Only numerical input allowed, if decimal number is needed please
-            use '.' to separate numbers (e.g. '3.14').
-          </span>
-      </span>
-    </div>
+  <div class="form-group">
+    <span class="form-label">Answer</span>
+    <span :class="{ 'has-error': correctError }" class="answer">
+      <input
+        v-model="correct"
+        :disabled="!isEditing"
+        @blur="update"
+        class="form-control">
+        <span class="help-block">
+          Only numerical input allowed, if decimal number is needed please
+          use '.' to separate numbers (e.g. '3.14').
+        </span>
+    </span>
   </div>
 </template>
 
@@ -45,7 +39,7 @@ export default {
     }
   },
   watch: {
-    isEditing: function(newVal) {
+    isEditing(newVal) {
       if (!newVal) this.correct = this.assessment.correct;
     }
   }
