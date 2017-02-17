@@ -22,7 +22,7 @@ function create({ body, params, user }, res) {
   const attr = ['activityId', 'type', 'data', 'position', 'layoutWidth'];
   const data = Object.assign(pick(body, attr), { courseId: params.courseId });
   return Asset.initialize()
-    .then(asset => asset.update(data, { context: { userId: user.id }))
+    .then(asset => asset.update(data, { context: { userId: user.id } }))
     .then(asset => res.json({ data: asset }));
 }
 
