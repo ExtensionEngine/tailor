@@ -4,13 +4,11 @@
     <div v-show="page === 1" class="hotspot-input">
       <div class="form-group question-input">
         <span class="form-label">Question</span>
-        <span :class="{ 'has-error': errors.includes('question') }">
           <input
             v-model="question"
             :disabled="isEditing"
             class="form-control"
             type="text">
-        </span>
       </div>
       <div class="img-input">
         <h2>Image</h2>
@@ -239,7 +237,8 @@ export default {
         surfaceImage: canvas.toDataURL(),
         hint: this.hint
       };
-      this.errors = [];
+
+      // TODO: New way of handling errors. To be continued...
       this.validate(question)
         .then(() => {
           this.$emit('save', question);
