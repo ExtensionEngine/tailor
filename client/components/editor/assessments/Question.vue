@@ -1,6 +1,6 @@
 <template>
-  <div class="form-group">
-    <span class="form-label">Question</span>
+  <div class="question-container">
+    <h4>Question</h4>
     <div :class="{ editing: isEditing }" @click="focus" class="question">
       <div v-if="!isFocused && !question">
         <div class="well text-placeholder">
@@ -21,7 +21,9 @@
         </div>
       </div>
     </div>
-    <span class="help-block" v-if="isEditing">{{ helperText }}</span>
+    <span class="help-block" v-if="isEditing && helperText">
+      {{ helperText }}
+    </span>
   </div>
 </template>
 
@@ -92,7 +94,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.assessment .question {
+.question-container {
+  clear: both;
+  width: 100%;
+  text-align: left;
+}
+
+.question {
   font-size: 22px;
   border: 1px dashed transparent;
   text-align: center;

@@ -52,7 +52,6 @@ import TrueFalse from './TrueFalse';
 import NumericalResponse from './NumericalResponse';
 import TextResponse from './TextResponse';
 import FillBlank from './FillBlank';
-import Hotspot from './Hotspot';
 import Question from './Question';
 import Controls from './Controls';
 import { schemas, typeInfo } from '../../../utils/assessment';
@@ -134,7 +133,6 @@ export default {
     NumericalResponse,
     TextResponse,
     FillBlank,
-    Hotspot,
     Question,
     Controls
   }
