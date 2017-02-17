@@ -10,14 +10,24 @@
             class="form-control"
             type="text">
       </div>
+
       <div class="img-input">
-        <h2>Image</h2>
-        <input type="file" @change="imageInput">
-        <div class="img-preview">
+        <span class="form-label">Image</span>
+        <div v-show="!isUploaded" class="file">
+          <label>
+            <input @change="imageInput" type="file"/>
+            <span class="btn btn-success btn-sm">
+              <span class="fa fa-upload"></span> Upload image
+            </span>
+          </label>
+        </div>
+        <div v-show="isUploaded" class="preview">
           <img :src="image">
+          <span @click="imageRemove" class="fa fa-times fa-lg"></span>
         </div>
       </div>
-      <div class="form-group">
+
+      <div class="form-group hint-input">
         <span class="form-label">Hint</span>
         <input
           v-model="hint"
@@ -154,7 +164,7 @@ export default {
     return {
       ...cloneDeep(defaultAssessment),
       ...cloneDeep(this.assessment),
-      img: new Image, //  eslint-disable-line
+      img: new Image(), //  eslint-disable-line
       errors: [],
       isEditing: !!this.assessment.question,
       drawing: false,
@@ -212,11 +222,16 @@ export default {
     infoMessage() {
       const initMessage = `Click on the pencil button to enter drawing mode.
         When finished go to the next page to select correct areas.`;
+
       const drawMessage = `Use the scroll on image to zoom in or out. After
         drawing click on the Plus button to create a new shape. Use undo and
         redo buttons for corrections. Click on Check button to exit draw mode
         and return to normal mode.`;
+
       return this.drawing ? drawMessage : initMessage;
+    },
+    isUploaded() {
+      return !isEmpty(this.image);
     }
   },
   methods: {
@@ -420,12 +435,16 @@ export default {
       }
       this.updateCanvas();
     },
+    imageRemove() {
+      this.image = '';
+    },
     imageInput(e) {
       let files = e.target.files || e.dataTransfer.files;
       if (isEmpty(files)) {
         return;
       }
       this.createImage(files[0]);
+      e.target.value = '';
       this.areas = [];
     },
     createImage(file) {
@@ -459,12 +478,13 @@ export default {
 
 <style lang="scss">
 .assessment.hotspot {
+  background-color: #fff;
   min-height: 400px;
   margin: 0 auto;
-  padding: 10px 30px 30px 30px;
-  background-color: white;
   overflow: hidden;
+  padding: 10px 30px 30px 30px;
   position: relative;
+  text-align: left;
 
   .assessment-type {
     background-color: grey;
@@ -474,52 +494,13 @@ export default {
     top: 10px;
   }
 
-  .hotspot-input {
-    padding-top: 50px;
-
-    .question-input {
-      padding-top: 0;
-    }
-  }
-
-  .form-label {
-    font-size: 20px;
-  }
-
   .controls {
     overflow: hidden;
     padding: 10px;
   }
 
-  // .form-group,
-  // .img-input,
-  // .img-editor,
-  // .nav-control,
-  .svg-container {
-    text-align: left;
-    margin: 0 auto;
-    padding: 25px 20px 15px 20px;
-    width: 100%;
-    overflow: hidden;
-
-    h2 {
-      margin: 30px 0;
-    }
-  }
-
   .nav-control {
     text-align: center;
-  }
-
-  .img-preview {
-    margin: 10px 0;
-    max-width: 150px;
-    max-height: 150px;
-
-    img {
-      max-width: 100%;
-      max-height: 100%;
-    }
   }
 
   .form-control {
@@ -530,93 +511,161 @@ export default {
     padding: 20px;
     text-align: left;
   }
+}
 
-  .img-editor {
-    padding: 0 20px;
-    text-align: left;
+.hotspot-input {
+  padding-top: 50px;
 
-    .info {
-      font-size: 18px;
-      font-weight: 400;
-      min-height: 40px;
-      margin-top: 30px;
-      padding: 9px 5px;
+  .form-label {
+    font-size: 18px;
+    font-weight: 500;
+  }
 
-      .highlight {
-        font-weight: 600;
-      }
+  .form-group {
+    margin: 0;
+  }
+
+  .question-input {
+    padding: 20px 0 30px;
+  }
+
+  .img-input {
+    min-height: 250px;
+    padding: 20px 0 30px;
+    position: relative;
+
+    input[type="file"] {
+      display: none;
     }
 
-    .controllers {
-      padding: 15px 0;
-
-      input {
-        max-width: 100px;
-        display: inline-block;
-      }
-
-      .btn-area {
-        background-color: rgb(236, 64, 122);
-        color: #fff;
-        font-weight: 500;
-        padding: 10px 12px;
-      }
-
-      .btn-draw
-      .btn-area {
-        width: 40px;
-      }
+    .file {
+      bottom: 30px;
+      left: 0;
+      position: absolute;
     }
 
-    .canvas-wrapper {
-      canvas {
-        display: block;
-        margin: 0 auto;
-        padding: 4px;
-        line-height: 1.42857143;
-        background-color: #fff;
-        border: 1px solid grey;
-        border-radius: 4px;
-        -webkit-transition: all .2s ease-in-out;
-        -o-transition: all .2s ease-in-out;
-        transition: all .2s ease-in-out;
+    .preview {
+      max-width: 250px;
+      position: relative;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      span {
+        color: #000;
+        cursor: pointer;
+        opacity: 0;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        transition: opacity .15s;
+      }
+
+      &:hover {
+        span {
+          transition: opacity .15s;
+          opacity: 1;
+        }
       }
     }
   }
 
-  .svg-container {
-    .svg {
-      position: relative;
+  .hint-input {
+    padding: 20px 0 10px;
+  }
+}
 
-      img {
-        margin: 0 auto;
-        display: block;
-        padding: 4px;
-        line-height: 1.42857143;
-        background-color: #fff;
-        border: 1px solid grey;
-        border-radius: 4px;
-        -webkit-transition: all .2s ease-in-out;
-        -o-transition: all .2s ease-in-out;
-        transition: all .2s ease-in-out;
-        z-index: 1;
-      }
-      svg {
+.img-editor {
+  padding: 0 20px;
+  text-align: left;
+
+  .info {
+    font-size: 18px;
+    font-weight: 400;
+    min-height: 40px;
+    margin-top: 30px;
+    padding: 9px 5px;
+
+    .highlight {
+      font-weight: 600;
+    }
+  }
+
+  .controllers {
+    padding: 15px 0;
+
+    input {
+      max-width: 100px;
+      display: inline-block;
+    }
+
+    .btn-area {
+      background-color: rgb(236, 64, 122);
+      color: #fff;
+      font-weight: 500;
+      padding: 10px 12px;
+    }
+
+    .btn-draw
+    .btn-area {
+      width: 40px;
+    }
+  }
+
+  .canvas-wrapper {
+    canvas {
+      display: block;
+      margin: 0 auto;
+      padding: 4px;
+      line-height: 1.42857143;
+      background-color: #fff;
+      border: 1px solid grey;
+      border-radius: 4px;
+      -webkit-transition: all .2s ease-in-out;
+      -o-transition: all .2s ease-in-out;
+      transition: all .2s ease-in-out;
+    }
+  }
+}
+
+.svg-container {
+  margin: 0 auto;
+  padding: 25px 20px 15px 20px;
+  width: 100%;
+  overflow: hidden;
+  .svg {
+    position: relative;
+
+    img {
+      margin: 0 auto;
+      display: block;
+      padding: 4px;
+      line-height: 1.42857143;
+      background-color: #fff;
+      border: 1px solid grey;
+      border-radius: 4px;
+      -webkit-transition: all .2s ease-in-out;
+      -o-transition: all .2s ease-in-out;
+      transition: all .2s ease-in-out;
+      z-index: 1;
+    }
+    svg {
+      position: absolute;
+      top: 5px;
+      z-index: 2;
+
+      polygon {
         position: absolute;
-        top: 5px;
-        z-index: 2;
+        opacity: 0;
+        fill: white;
+        stroke: green;
+        stroke-width: 5px;
+      }
 
-        polygon {
-          position: absolute;
-          opacity: 0;
-          fill: white;
-          stroke: green;
-          stroke-width: 5px;
-        }
-
-        polygon:hover {
-          opacity: 0.5;
-        }
+      polygon:hover {
+        opacity: 0.5;
       }
     }
   }
