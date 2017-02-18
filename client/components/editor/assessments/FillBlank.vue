@@ -1,48 +1,34 @@
 <template>
-  <div class="form-group" v-if="hasAnswer">
-    <span class="form-label">Answers</span>
-    <span v-if="isEditing && hasMultipleAnswers" class="help-block">
-      Arrange answers by dragging if needed !
-    </span>
-    <draggable :list="correct" :options="dragOptions" @update="update" class="draggable">
-      <transition-group name="answers">
-        <div v-for="(blank, index) in correct" ref="order" :key="index">
-          <span class="badge">{{ index + 1 }}</span>
-          <button
-            :disabled="disabled"
-            @click="addAnswer(index)"
-            class="btn btn-default answers-add controls">
-            <span class="fa fa-plus"></span>
-          </button>
-          <button
-            v-show="isSynced"
-            @click="removeBlank(index)"
-            class="btn btn-default delete">
-            <span class="fa fa-trash-o"></span>
-          </button>
-          <ul>
-            <li v-for="(answer, indexAnswer) in blank">
-              <span class="fa fa-bars fa-lg drag-handler"></span>
-              <span
-                class="answers-input"
-                :class="{ 'has-error': answerError(index, indexAnswer)} ">
-                <input
-                  v-model="correct[index][indexAnswer]"
-                  :disabled="disabled"
-                  type="text"
-                  @blur="update"
-                  placeholder="Answer..">
-              </span>
-              <button
-                :disabled="disabled"
-                @click="removeAnswer(index, indexAnswer)"
-                class="destroy controls">
-                <span class="fa fa-times"></span>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </transition-group>
+  <div v-if="hasBlanks">
+    <h5>Answers</h5>
+    <draggable :list="answers" :options="dragOptions" @update="save">
+      <div v-for="(blank, i) in answers" :key="i" class="answer-group">
+        <span class="fa fa-bars"></span>
+        <span class="label">{{ i + 1 }}</span>
+        <span
+          :disabled="disabled"
+          @click="addAnswer(i)"
+          class="fa fa-plus btn btn-link pull-right">
+        </span>
+        <span
+          v-if="hasExtraAnswers"
+          :disabled="disabled"
+          @click="removeBlank(i)"
+          class="fa fa-trash-o btn btn-link pull-right">
+        </span>
+        <ul>
+          <li v-for="(answer, j) in blank" :class="errorClass(i, j)">
+            <input
+              v-model="answers[i][j]"
+              :disabled="disabled"
+              @blur="save"
+              type="text"
+              class="form-control"
+              placeholder="Answer...">
+            <span @click="removeAnswer(i, j)" class="fa fa-times"></span>
+          </li>
+        </ul>
+      </div>
     </draggable>
   </div>
 </template>
@@ -52,215 +38,135 @@ import debounce from 'lodash/debounce';
 import draggable from 'vuedraggable';
 import times from 'lodash/times';
 
-const regex = /(@blank)/g;
-const customAlert = {
-  text: `Question and blanks are out of sync ! Please delete
-         unnecessary answers or add blanks in the question !`,
-  type: 'alert-danger'
+const PLACEHOLDER = /(@blank)/g;
+const ALERT = {
+  type: 'alert-danger',
+  text: `Question and blanks are out of sync !
+        Please delete unnecessary answers or add blanks in the question !`
 };
 
 export default {
-  components: {
-    draggable
-  },
   props: {
     assessment: Object,
     errors: Array,
     isEditing: Boolean
   },
-  data() {
-    return {
-      correct: this.assessment.correct
-    };
-  },
-  methods: {
-    parse() {
-      let count = this.blanksCount - this.correct.length;
-      this.correct.push(...times(count, () => ['']));
-      this.update();
-    },
-    addAnswer(index) {
-      this.correct[index].push('');
-      this.update();
-    },
-    removeAnswer(index, indexAnswer) {
-      if (this.correct[index].length !== 1) {
-        this.correct[index].splice(indexAnswer, 1);
-        this.update();
-      }
-    },
-    removeBlank(index) {
-      this.correct.splice(index, 1);
-      this.update();
-    },
-    validate() {
-      if (this.isSynced) this.$emit('alert', customAlert);
-      else this.$emit('alert');
-    },
-    update(que) {
-      let data = { correct: this.correct };
-      this.$emit('update', data);
-      this.validate();
-    },
-    answerError(index, indexAnswer) {
-      return this.errors.includes(`correct[${index}][${indexAnswer}]`);
-    }
-  },
   computed: {
-    dragOptions() {
-      return {
-        disabled: this.disabled || !this.hasMultipleAnswers,
-        handle: '.drag-handler'
-      };
+    question() {
+      return this.assessment.question;
+    },
+    answers() {
+      return this.assessment.correct;
+    },
+    hasBlanks() {
+      return this.answers.length > 0;
+    },
+    blanksCount() {
+      return (this.question.match(PLACEHOLDER) || []).length;
+    },
+    hasExtraAnswers() {
+      return this.answers.length !== this.blanksCount;
     },
     disabled() {
       return !this.isEditing;
     },
-    question() {
-      return this.assessment.question;
+    dragOptions() {
+      return {
+        disabled: this.disabled || !(this.answers.length > 1),
+        handle: '.fa-bars'
+      };
+    }
+  },
+  methods: {
+    save() {
+      if (!this.validate()) return;
+      this.$emit('update', { correct: this.answers });
     },
-    blanksCount() {
-      return (this.question.match(regex) || []).length;
+    addAnswer(index) {
+      this.answers[index].push('');
+      this.save();
     },
-    isSynced() {
-      return this.correct.length !== this.blanksCount;
+    removeAnswer(index, indexAnswer) {
+      if (this.answers[index].length === 1) return;
+      this.answers[index].splice(indexAnswer, 1);
+      this.save();
     },
-    hasAnswer() {
-      return this.correct.length > 0;
+    removeBlank(index) {
+      this.answers.splice(index, 1);
+      this.save();
     },
-    hasMultipleAnswers() {
-      return this.correct.length > 1;
+    validate() {
+      this.$emit('alert', this.hasExtraAnswers ? ALERT : {});
+    },
+    parse() {
+      const count = this.blanksCount - this.answers.length;
+      this.answers.push(...times(count, () => ['']));
+      this.save();
+    },
+    errorClass(index, indexAnswer) {
+      const answer = `answers[${index}][${indexAnswer}]`;
+      return { 'has-error': this.errors.includes(answer) };
     }
   },
   watch: {
+    isEditing(newVal) {
+      if (!newVal) this.answers = this.assessment.answers;
+    },
     question: debounce(
       function () {
         this.parse();
-      }, 500
-    ),
-    isEditing(newVal) {
-      if (!newVal) this.correct = this.assessment.correct;
-    }
-  }
+      }, 200
+    )
+  },
+  components: { draggable }
 };
 </script>
 
 <style lang="scss" scoped>
-.badge {
-  font-size: 14px;
-  padding: 3px 7px 2px;
-  position: relative;
-  top: 8px;
+h5 {
+  display: block;
+  margin: 30px 0 10px 0;
+  font-size: 18px;
+  text-align: left;
 }
 
-.destroy {
-  margin: 15px 0 0 0;
-  float: right;
-  display: none;
-  position: absolute;
-  opacity: 0.6;
-  transition: all 0.2s;
-  border: 0;
-  background-color: transparent;
-  padding: 0;
-  bottom: 8px;
-  right: 10px;
+.answer-group {
+  padding: 10px;
+  text-align: left;
 
-  span {
-    font-size: 16px;
+  .fa-bars {
+    float: left;
+    font-size: 18px;
+    margin: 1px 15px 0 0;
+  }
+
+  .label {
+    font-size: 12px;
+    padding: 0px 10px;
+    border-radius: 1px;
+    background-color: #aaa;
   }
 }
 
-.destroy:focus {
-  outline: none;
-}
-
-.delete {
-  float: right;
-  padding: 3px 10px 0 10px;
-  margin-right: 10px;
-}
-
-.answers-add {
-  float: right;
-  padding: 3px 10px 0 10px;
-  margin-right: 2px;
-}
-
-.form-label {
-  font-size: 20px;
-}
-
-.draggable div {
-  padding: 10px 0 0 50px;
-  width: 100%;
-
-  .drag-handler {
-    position: absolute;
-    left: -8px;
-    top: 14px;
-    cursor: move;
-  }
-
-  ul {
-    padding: 0 0 0 10px;
-  }
+ul {
+  padding: 0 0 0 10px;
+  list-style: none;
 
   li {
-    display: inline-block;
-    width: 100%;
     position: relative;
-    margin: 10px 0;
-    .answers-input {
-      display: block;
-      overflow: hidden;
-
-      input {
-        height: 40px;
-        width: 100%;
-        margin-left: 3px;
-        padding: 0 33px 0 10px;
-      }
-
-      input[disabled] {
-        background-color: #eeeeee;
-      }
-
-      input:focus {
-        outline: none;
-      }
-    }
+    margin: 20px 0;
   }
 
-  li:hover {
-    .destroy:enabled {
-      display: inline;
-    }
-  }
-}
+  .fa-times {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    padding: 5px;
+    cursor: pointer;
+    color: #888;
 
-.form-label {
-  font-size: 20px;
-}
-
-.form-group {
-  text-align: left;
-  margin: 0 auto;
-  padding: 25px 20px 15px 20px;
-  width: 100%;
-  overflow: hidden;
-}
-
-.form-control,
-.answers-input {
-  padding-left: 10px !important;
-}
-
-@media (max-width: 850px) {
-  ul {
-    padding-left: 0;
-    ul {
-      padding-left: 0;
+    &:hover {
+      color: darken(#888, 20%);
     }
   }
 }
