@@ -1,27 +1,24 @@
 <template>
-  <div v-if="hasBlanks">
+  <div v-if="hasAnswers" :class="{ 'disabled': disabled }">
     <h5>Answers</h5>
-    <draggable :list="answers" :options="dragOptions" @update="save">
-      <div v-for="(blank, i) in answers" :key="i" class="answer-group">
+    <draggable :list="answerGroups" :options="dragOptions" @update="save">
+      <div v-for="(answers, i) in answerGroups" :key="i" class="answer-group">
         <span class="fa fa-bars"></span>
         <span class="label">{{ i + 1 }}</span>
         <span
-          :disabled="disabled"
           @click="addAnswer(i)"
           class="fa fa-plus btn btn-link pull-right">
         </span>
         <span
           v-if="hasExtraAnswers"
-          :disabled="disabled"
-          @click="removeBlank(i)"
+          @click="removeAnswerGroup(i)"
           class="fa fa-trash-o btn btn-link pull-right">
         </span>
         <ul>
-          <li v-for="(answer, j) in blank" :class="errorClass(i, j)">
+          <li v-for="(answer, j) in answers" :class="errorClass(i, j)">
             <input
-              v-model="answers[i][j]"
+              v-model="answers[j]"
               :disabled="disabled"
-              @blur="save"
               type="text"
               class="form-control"
               placeholder="Answer...">
@@ -55,62 +52,62 @@ export default {
     question() {
       return this.assessment.question;
     },
-    answers() {
+    answerGroups() {
       return this.assessment.correct;
     },
-    hasBlanks() {
-      return this.answers.length > 0;
+    hasAnswers() {
+      return this.answerGroups.length > 0;
+    },
+    hasExtraAnswers() {
+      return this.answerGroups.length !== this.blanksCount;
     },
     blanksCount() {
       return (this.question.match(PLACEHOLDER) || []).length;
-    },
-    hasExtraAnswers() {
-      return this.answers.length !== this.blanksCount;
     },
     disabled() {
       return !this.isEditing;
     },
     dragOptions() {
       return {
-        disabled: this.disabled || !(this.answers.length > 1),
+        disabled: this.disabled || !(this.answerGroups.length > 1),
         handle: '.fa-bars'
       };
     }
   },
   methods: {
     save() {
-      if (!this.validate()) return;
-      this.$emit('update', { correct: this.answers });
+      this.validate();
+      this.$emit('update', { correct: this.answerGroups });
     },
     addAnswer(index) {
-      this.answers[index].push('');
+      this.answerGroups[index].push('');
       this.save();
     },
-    removeAnswer(index, indexAnswer) {
-      if (this.answers[index].length === 1) return;
-      this.answers[index].splice(indexAnswer, 1);
+    removeAnswer(groupIndex, answerIndex) {
+      if (this.answerGroups[groupIndex].length === 1) return;
+      this.answerGroups[groupIndex].splice(answerIndex, 1);
       this.save();
     },
-    removeBlank(index) {
-      this.answers.splice(index, 1);
+    removeAnswerGroup(index) {
+      this.answerGroups.splice(index, 1);
       this.save();
     },
     validate() {
       this.$emit('alert', this.hasExtraAnswers ? ALERT : {});
     },
     parse() {
-      const count = this.blanksCount - this.answers.length;
-      this.answers.push(...times(count, () => ['']));
+      const count = this.blanksCount - this.answerGroups.length;
+      this.answerGroups.push(...times(count, () => ['']));
       this.save();
     },
-    errorClass(index, indexAnswer) {
-      const answer = `answers[${index}][${indexAnswer}]`;
+    errorClass(groupIndex, answerIndex) {
+      const answer = `correct[${groupIndex}][${answerIndex}]`;
       return { 'has-error': this.errors.includes(answer) };
     }
   },
   watch: {
     isEditing(newVal) {
-      if (!newVal) this.answers = this.assessment.answers;
+      if (!newVal) this.answerGroups = this.assessment.answerGroups;
     },
     question: debounce(
       function () {
@@ -136,13 +133,13 @@ h5 {
 
   .fa-bars {
     float: left;
-    font-size: 18px;
     margin: 1px 15px 0 0;
+    font-size: 18px;
   }
 
   .label {
+    padding: 1px 10px;
     font-size: 12px;
-    padding: 0px 10px;
     border-radius: 1px;
     background-color: #aaa;
   }
@@ -169,5 +166,9 @@ ul {
       color: darken(#888, 20%);
     }
   }
+}
+
+.disabled {
+  pointer-events:none;
 }
 </style>
