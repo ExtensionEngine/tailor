@@ -1,28 +1,12 @@
 <template>
   <div :class="columnWidth" class="asset-container">
     <div @click="focus" class="asset">
-      <image-editor
-        v-if="asset.type === 'IMAGE'"
+      <component
+        :is="getComponentName(asset.type)"
         :asset="asset"
         :isFocused="isFocused"
         @save="save">
-      </image-editor>
-      <text-editor
-        v-if="asset.type === 'TEXT'"
-        :asset="asset"
-        :isFocused="isFocused"
-        @save="save">
-      </text-editor>
-      <video-editor
-        v-if="asset.type === 'VIDEO'"
-        :asset="asset"
-        :isFocused="isFocused">
-      </video-editor>
-      <gomo
-        v-if="asset.type === 'GOMO'"
-        :asset="asset"
-        :isFocused="isFocused">
-      </gomo>
+      </component>
     </div>
   </div>
 </template>
@@ -34,23 +18,34 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TextEditor from './Text';
 import VideoEditor from './Video';
 
+const ASSET_TYPES = {
+  IMAGE: 'image-editor',
+  TEXT: 'text-editor',
+  VIDEO: 'video-editor',
+  GOMO: 'gomo'
+};
+
 export default {
   name: 'asset',
   props: { asset: Object },
   computed: {
-    ...mapGetters(['toolbar']),
+    ...mapGetters(['toolbar'], 'atom'),
     columnWidth() {
       return `col-xs-${this.asset.layoutWidth}`;
     },
     isFocused() {
-      return this.toolbar.context._cid === this.asset._cid;
+      let context = this.toolbar.context;
+      return context && context._cid === this.asset._cid;
     }
   },
   methods: {
+    ...mapMutations(['setToolbarContext'], 'atom'),
     ...mapActions({ updateAsset: 'update' }, 'assets'),
-    ...mapMutations(['setToolbarContext']),
+    getComponentName(type) {
+      return ASSET_TYPES[type];
+    },
     focus(e) {
-      this.setToolbarContext(this.asset);
+      this.setToolbarContext({ type: this.asset.type, context: this.asset });
       // Attach component meta to event
       e.component = {
         name: 'asset',

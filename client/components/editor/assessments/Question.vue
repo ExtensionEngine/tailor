@@ -47,7 +47,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['toolbar']),
+    ...mapGetters(['toolbar'], 'atom'),
     initQuestion() { // rename?
       return this.assessment.question;
     },
@@ -61,16 +61,17 @@ export default {
       return helper.question;
     },
     isFocused() {
-      return this.isEditing && (this.toolbar.context._cid === this.assessment._cid);
+      const context = this.toolbar.context;
+      return this.isEditing && (context._cid === this.assessment._cid);
     },
     questionError() {
       return this.errors.includes('question');
     }
   },
   methods: {
-    ...mapMutations(['setToolbarContext']),
+    ...mapMutations(['setToolbarContext'], 'atom'),
     focus(e) {
-      this.setToolbarContext(this.assessment);
+      this.setToolbarContext({ type: 'ASSESSMENT', context: this.assessment });
       // Attach component meta to event
       e.component = {
         name: 'assessment',

@@ -1,22 +1,11 @@
 <template>
   <div @click="onClick" class="toolbar">
-    <div class="toolbar-container">
-      <image-toolbar
-        v-if="isVisible('IMAGE')"
+    <div v-if="toolbar.type" class="toolbar-container">
+      <component
+        :is="getComponentName(toolbar.type)"
         :asset="toolbar.context">
-      </image-toolbar>
-      <quill-toolbar
-        v-if="isVisible('TEXT')">
-      </quill-toolbar>
-      <video-toolbar
-        v-if="isVisible('VIDEO')"
-        :asset="toolbar.context">
-      </video-toolbar>
-      <gomo-toolbar
-        v-if="isVisible('GOMO')"
-        :asset="toolbar.context">
-      </gomo-toolbar>
-      <div v-if="toolbar.context" class="delete-asset">
+      </component>
+      <div v-if="showDeleteButton" class="delete-asset">
         <span
           @click="removeAsset(toolbar.context)"
           class="btn btn-fab btn-danger">
@@ -28,22 +17,34 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
-import ImageToolbar from './ImageToolbar';
 import GomoToolbar from './GomoToolbar';
+import ImageToolbar from './ImageToolbar';
+import { mapActions, mapGetters } from 'vuex-module';
 import QuillToolbar from './QuillToolbar';
 import VideoToolbar from './VideoToolbar';
+
+const TOOLBAR_TYPES = {
+  ASSESSMENT: 'quill-toolbar',
+  IMAGE: 'image-toolbar',
+  VIDEO: 'video-toolbar',
+  GOMO: 'gomo-toolbar',
+  TEXT: 'quill-toolbar'
+};
 
 export default {
   name: 'toolbar',
   computed: {
-    ...mapGetters(['toolbar'])
+    ...mapGetters(['toolbar'], 'atom'),
+    showDeleteButton() {
+      const type = this.toolbar.type;
+      return type && type !== 'ASSESSMENT';
+    }
   },
   methods: {
-    isVisible(type) {
-      return this.toolbar.type === type;
-    },
     ...mapActions({ removeAsset: 'remove' }, 'assets'),
+    getComponentName(type) {
+      return TOOLBAR_TYPES[type];
+    },
     onClick(e) {
       // Attach component data
       e.component = { name: 'toolbar', data: {} };

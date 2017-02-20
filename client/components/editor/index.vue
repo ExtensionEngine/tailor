@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import Loader from '../common/Loader';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Perspectives from './structure/Perspectives';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
@@ -29,8 +29,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'activity'], 'editor'),
-    ...mapGetters(['toolbar'])
+    ...mapGetters(['toolbar'], 'atom'),
+    ...mapGetters(['activity', 'course'], 'editor')
   },
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
@@ -40,6 +40,7 @@ export default {
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity'),
     ...mapMutations({ setupAssetsApi: 'setBaseUrl' }, 'assets'),
     ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
+    ...mapMutations({ clearToolbarContext: 'setToolbarContext' }, 'atom'),
     onMousedown() {
       this.mousedownCaptured = true;
     },
@@ -55,8 +56,7 @@ export default {
         (e.component.data._cid !== this.toolbar.context._cid))) {
         this.clearToolbarContext();
       }
-    },
-    ...mapMutations({ clearToolbarContext: 'setToolbarContext' })
+    }
   },
   created() {
     this.clearToolbarContext();

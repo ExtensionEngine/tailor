@@ -9,7 +9,6 @@ import atom from './modules/atom';
 import auth from './modules/auth';
 import courses from './modules/courses';
 import editor from './modules/editor';
-import toolbar from './modules/toolbar';
 import revisions from './modules/revisions';
 
 import plugins from './plugins';
@@ -28,7 +27,6 @@ const modules = {
   auth,
   courses,
   editor,
-  toolbar,
   revisions
 };
 
