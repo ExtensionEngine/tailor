@@ -1,7 +1,7 @@
 <template>
   <div v-if="hasAnswers" :class="{ 'disabled': disabled }">
     <h5>Answers</h5>
-    <draggable :list="answerGroups" :options="dragOptions" @update="save">
+    <draggable :list="answerGroups" :options="dragOptions" @update="update">
       <div v-for="(answers, i) in answerGroups" :key="i" class="answer-group">
         <span class="fa fa-bars"></span>
         <span class="label">{{ i + 1 }}</span>
@@ -75,22 +75,22 @@ export default {
     }
   },
   methods: {
-    save() {
+    update() {
       this.validate();
       this.$emit('update', { correct: this.answerGroups });
     },
     addAnswer(index) {
       this.answerGroups[index].push('');
-      this.save();
+      this.update();
     },
     removeAnswer(groupIndex, answerIndex) {
       if (this.answerGroups[groupIndex].length === 1) return;
       this.answerGroups[groupIndex].splice(answerIndex, 1);
-      this.save();
+      this.update();
     },
     removeAnswerGroup(index) {
       this.answerGroups.splice(index, 1);
-      this.save();
+      this.update();
     },
     validate() {
       this.$emit('alert', this.hasExtraAnswers ? ALERT : {});
@@ -98,7 +98,7 @@ export default {
     parse() {
       const count = this.blanksCount - this.answerGroups.length;
       this.answerGroups.push(...times(count, () => ['']));
-      this.save();
+      this.update();
     },
     errorClass(groupIndex, answerIndex) {
       const answer = `correct[${groupIndex}][${answerIndex}]`;
