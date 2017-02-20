@@ -1,15 +1,10 @@
 <template>
-  <div class="form-group">
-    <span class="form-label">Answers</span>
-    <button
-      :disabled="disabled"
-      @click="addAnswer"
-      class="btn btn-default answers-add">
-      <span class="fa fa-plus"></span>
-    </button>
+  <div :class="{ 'disabled': disabled }">
+    <h5>Answers</h5>
+    <span @click="addAnswer" class="btn btn-link fa fa-plus pull-right"></span>
     <ul>
       <li v-for="(answer, index) in answers">
-        <span :class="{ 'error': correctError }" class="answers-checkbox">
+        <span :class="{ 'has-error': !hasCorrectAnswers }">
           <input
             v-model="correct"
             :value="index"
@@ -17,22 +12,15 @@
             @change="update"
             type="checkbox">
         </span>
-        <span
-          :class="{ 'has-error': answerError(index) }"
-          class="answers-input">
+        <span :class="errorClass(index)">
           <input
             v-model="answers[index]"
             :disabled="disabled"
             @blur="update"
-            type="text"
-            placeholder="Answer">
+            class="form-control"
+            placeholder="Answer...">
         </span>
-        <button
-          :disabled="disabled"
-          @click="removeAnswer(index)"
-          class="destroy">
-          <span class="fa fa-times"></span>
-        </button>
+        <span @click="removeAnswer(index)" class="fa fa-times control"></span>
       </li>
     </ul>
   </div>
@@ -57,144 +45,110 @@ export default {
     };
   },
   computed: {
-    correctError() {
-      return this.errors.includes('correct');
+    hasCorrectAnswers() {
+      return !this.errors.includes('correct');
     },
     disabled() {
       return !this.isEditing;
     }
   },
   methods: {
-    answerError(index) {
-      return this.errors.includes(`answers[${index}]`);
+    update() {
+      this.validate();
+      this.$emit('update', { answers: this.answers, correct: this.correct });
     },
     addAnswer() {
       this.answers.push('');
       this.update();
     },
-    removeAnswer(index) {
-      this.answers.splice(index, 1);
+    removeAnswer(answerIndex) {
+      this.answers.splice(answerIndex, 1);
 
-      if (this.correct.indexOf(index) !== -1) {
-        this.correct.splice(this.correct.indexOf(index), 1);
-      }
-
-      this.correct.forEach((item, i) => {
-        if (item >= index) this.correct[i] = item - 1;
+      const index = this.correct.indexOf(index);
+      if (index !== -1) this.correct.splice(index, 1);
+      this.correct.forEach((it, i) => {
+        if (it >= answerIndex) this.correct[i] = it - 1;
       });
 
       this.update();
     },
     validate() {
-      if (this.answers.length < 3) this.$emit('alert', customAlert);
-      else this.$emit('alert');
+      this.$emit('alert', this.answers.length < 3 ? customAlert : {});
     },
-    update() {
-      let data = {
-        answers: this.answers,
-        correct: this.correct
+    errorClass(index) {
+      return {
+        'has-error': this.errors.includes(`answers[${index}]`)
       };
-      this.$emit('update', data);
-      this.validate();
     }
   },
   watch: {
     isEditing(newVal) {
-      if (!newVal) {
-        this.answers = this.assessment.answers;
-        this.correct = this.assessment.correct;
-      }
+      if (newVal) return;
+      this.answers = this.assessment.answers;
+      this.correct = this.assessment.correct;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.form-group {
+h5 {
+  display: block;
+  margin: 30px 0 10px 0;
+  font-size: 18px;
   text-align: left;
-  margin: 0 auto;
-  padding: 25px 20px 15px 20px;
-  width: 100%;
-  overflow: hidden;
-}
-
-.form-label {
-  font-size: 20px;
-}
-
-.answers-add {
-  padding: 7px;
-  height: 28px;
-  width: 50px;
-  float: right;
-}
-
-.destroy {
-  display: none;
-  position: absolute;
-  opacity: 0.6;
-  transition: all 0.2s;
-  border: 0;
-  background-color: transparent;
-  padding: 0;
-  bottom: 8px;
-  right: 10px;
-
-  span {
-    font-size: 16px;
-  }
-}
-
-.destroy:focus {
-  outline: none;
 }
 
 ul {
-  padding: 10px 0 0 50px;
+  clear: both;
+  padding: 5px 0 0 10px;
+  list-style: none;
 
   li {
     position: relative;
-    display: inline-block;
-    width: 100%;
-    margin: 10px 0;
+    margin: 20px 0;
+    padding-left: 40px;
 
-    .answers-checkbox {
-      float: left;
-      margin-top: 7px;
-      width: 19px;
-
-      input {
-        padding-bottom: 11px;
-      }
+    .form-control {
+      padding-left: 10px;
     }
 
-    .answers-input {
-      display: block;
-      overflow: hidden;
-
-      input {
-        height: 40px;
-        width: 100%;
-        margin-left: 3px;
-        padding: 0 33px 0 10px;
-      }
-
-      input:focus {
-        outline: none;
-      }
+    input[type=checkbox]{
+      position: absolute;
+      left: 0;
+      top: 5px;
     }
   }
 
-  li:hover {
-    .destroy:enabled {
-      display: inline;
+  .fa-times {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    padding: 5px;
+    cursor: pointer;
+    color: #888;
+
+    &:hover {
+      color: darken(#888, 20%);
     }
   }
 }
 
-@media (max-width: 850px) {
-  ul {
-    padding-left: 0;
+.has-error {
+  input[type="checkbox"]:after {
+    border-color: #d9534f;
+  }
+
+  input[type="checkbox"]:checked:after  {
+    border-color: #337ab7;
+  }
+}
+
+.disabled {
+  pointer-events: none;
+
+  .control, .btn {
+    opacity: 0;
   }
 }
 </style>
