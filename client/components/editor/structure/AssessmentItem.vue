@@ -7,20 +7,10 @@
       @remove="$emit('remove')"
       @save="$emit('save', $event)">
     </assessment>
-    <div
-      v-else
-      class="minimized"
-      @click="$emit('selected')">
-      <span class="label label-success">
-        {{ assessment.type }}
-      </span>
-      <span class="title">
-        {{ question }}
-      </span>
-      <button
-        class="delete"
-        @click.stop="$emit('remove')"
-        type="button">
+    <div v-else @click="$emit('selected')" class="minimized">
+      <span class="label label-success">{{ assessment.type }}</span>
+      <span class="title">{{ question }}</span>
+      <button @click.stop="$emit('remove')" type="button" class="delete">
         <span class="fa fa-times"></span>
       </button>
     </div>
@@ -28,8 +18,8 @@
 </template>
 
 <script>
-import truncate from 'lodash/truncate';
 import Assessment from '../assessments';
+import truncate from 'lodash/truncate';
 
 const htmlRegex = /<\/?[^>]+(>|$)/g;
 const blankRegex = /(@blank)/g;
@@ -55,7 +45,7 @@ export default {
 
 <style lang="scss" scoped>
 .assessment-item {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
   margin-bottom: 7px;
   padding: 0;
 

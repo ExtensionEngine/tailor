@@ -72,9 +72,10 @@ export default {
   name: 'assessment',
   props: { initAssessment: Object },
   data() {
+    const assessment = cloneDeep(this.initAssessment);
     return {
-      assessment: cloneDeep(this.initAssessment),
-      isEditing: !this.initAssessment.question,
+      assessment,
+      isEditing: !assessment.question,
       alert: {},
       errors: []
     };
