@@ -24,14 +24,15 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import { mapActions, mapGetters } from 'vuex-module';
-import cuid from 'cuid';
+import AssessmentItem from './AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
+import cuid from 'cuid';
+import { defaults } from '../../../utils/assessment';
 import difference from 'lodash/difference';
 import keyBy from 'lodash/keyBy';
-import AssessmentItem from './AssessmentItem';
+import { mapActions, mapGetters } from 'vuex-module';
 import SelectAssessment from './SelectAssessment';
+import Vue from 'vue';
 
 export default {
   data() {
@@ -53,11 +54,10 @@ export default {
       updateAssessment: 'update',
       removeAssessment: 'remove'
     }, 'assessments'),
-    add(assessment) {
-      const _cid = cuid();
-      assessment._cid = _cid;
-      Vue.set(this.assessments, _cid, assessment);
-      this.selected.push(_cid);
+    add(type) {
+      const assessment = { _cid: cuid(), ...defaults[type] };
+      Vue.set(this.assessments, assessment._cid, assessment);
+      this.selected.push(assessment._cid);
     },
     toggleSelect(assessment) {
       const hasQuestion = this.assessments[assessment._cid].question;

@@ -61,8 +61,8 @@ export default {
       return helper.question;
     },
     isFocused() {
-      const context = this.toolbar.context;
-      return this.isEditing && (context._cid === this.assessment._cid);
+      const ctx = this.toolbar.context;
+      return this.isEditing && (ctx && ctx._cid === this.assessment._cid);
     },
     questionError() {
       return this.errors.includes('question');

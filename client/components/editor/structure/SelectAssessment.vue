@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { defaults, typeInfo } from '../../../utils/assessment';
+import { typeInfo } from '../../../utils/assessment';
 
 export default {
   name: 'select-assessment',
@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     select(assessment) {
-      this.$emit('selected', defaults[assessment.type]);
+      this.$emit('selected', assessment.type);
       this.selection = false;
     }
   }
