@@ -4,6 +4,14 @@
     "password": "eeTest1",
     "role": "ADMIN"
   }, {
+    "email": "Brian.Bolduc@aicpa-cima.com",
+    "password": "eeTest1",
+    "role": "ADMIN"
+  }, {
+    "email": "David.Bottjen@aicpa-cima.com",
+    "password": "eeTest1",
+    "role": "ADMIN"
+  }, {
     "email": "dperisic@extensionengine.com",
     "password": "eeTest1",
     "role": "ADMIN"
