@@ -8,5 +8,8 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 $fa-font-path: '~font-awesome/fonts';
 @import '~font-awesome/scss/font-awesome';
 
+$mdi-font-path: '~mdi/fonts';
+@import '~mdi/scss/materialdesignicons';
+
 @import 'common/all';
 @import 'common/assessments/all';

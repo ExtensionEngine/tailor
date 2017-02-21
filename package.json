@@ -46,6 +46,7 @@
     "http-status-codes": "^1.1.6",
     "joi": "^10.0.1",
     "jsonwebtoken": "^7.2.1",
+    "mdi": "^1.8.36",
     "mime-types": "^2.1.14",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
