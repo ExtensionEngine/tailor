@@ -1,4 +1,4 @@
-const Joi = require('Joi');
+const Joi = require('joi');
 
 function validateConfig(config, schema) {
   const options = { stripUnknown: true };

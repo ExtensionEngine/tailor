@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import Loader from '../common/Loader';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Perspectives from './structure/Perspectives';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
@@ -29,8 +29,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course'], 'editor'),
-    ...mapGetters(['activity', 'focusedAsset'], 'atom')
+    ...mapGetters(['toolbar'], 'atom'),
+    ...mapGetters(['activity', 'course'], 'editor')
   },
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
@@ -40,6 +40,7 @@ export default {
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity'),
     ...mapMutations({ setupAssetsApi: 'setBaseUrl' }, 'assets'),
     ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
+    ...mapMutations({ clearToolbarContext: 'setToolbarContext' }, 'atom'),
     onMousedown() {
       this.mousedownCaptured = true;
     },
@@ -49,17 +50,16 @@ export default {
       if (!this.mousedownCaptured) return;
       // Reset
       this.mousedownCaptured = false;
-      if (!this.focusedAsset) return;
+      if (!this.toolbar.type) return;
       if (!e.component ||
         ((e.component.name !== 'toolbar') &&
-        (e.component.data._cid !== this.focusedAsset._cid))) {
-        this.focusoutAsset();
+        (e.component.data._cid !== this.toolbar.context._cid))) {
+        this.clearToolbarContext();
       }
-    },
-    ...mapActions(['focusoutAsset'], 'atom')
+    }
   },
   created() {
-    this.focusoutAsset();
+    this.clearToolbarContext();
 
     // TODO: Do this better!
     const courseId = this.$route.params.courseKey;

@@ -1,25 +1,13 @@
 <template>
   <div @click="onClick" class="toolbar">
-    <div class="toolbar-container">
-      <image-toolbar
-        v-if="isFocused('IMAGE')"
-        :asset="focusedAsset">
-      </image-toolbar>
-      <quill-toolbar
-        v-if="isFocused('TEXT')"
-        :asset="focusedAsset">
-      </quill-toolbar>
-      <video-toolbar
-        v-if="isFocused('VIDEO')"
-        :asset="focusedAsset">
-      </video-toolbar>
-      <gomo-toolbar
-        v-if="isFocused('GOMO')"
-        :asset="focusedAsset">
-      </gomo-toolbar>
-      <div v-if="focusedAsset" class="delete-asset">
+    <div v-if="toolbar.type" class="toolbar-container">
+      <component
+        :is="getComponentName(toolbar.type)"
+        :asset="toolbar.context">
+      </component>
+      <div v-if="showDeleteButton" class="delete-asset">
         <span
-          @click="removeAsset(focusedAsset)"
+          @click="removeAsset(toolbar.context)"
           class="btn btn-fab btn-danger">
           <span class="fa fa-trash"></span>
         </span>
@@ -29,18 +17,33 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
-import ImageToolbar from './ImageToolbar';
 import GomoToolbar from './GomoToolbar';
+import ImageToolbar from './ImageToolbar';
+import { mapActions, mapGetters } from 'vuex-module';
 import QuillToolbar from './QuillToolbar';
 import VideoToolbar from './VideoToolbar';
 
+const TOOLBAR_TYPES = {
+  ASSESSMENT: 'quill-toolbar',
+  IMAGE: 'image-toolbar',
+  VIDEO: 'video-toolbar',
+  GOMO: 'gomo-toolbar',
+  TEXT: 'quill-toolbar'
+};
+
 export default {
-  computed: mapGetters(['focusedAsset'], 'atom'),
+  name: 'toolbar',
+  computed: {
+    ...mapGetters(['toolbar'], 'atom'),
+    showDeleteButton() {
+      const type = this.toolbar.type;
+      return type && type !== 'ASSESSMENT';
+    }
+  },
   methods: {
     ...mapActions({ removeAsset: 'remove' }, 'assets'),
-    isFocused(type) {
-      return this.focusedAsset && (this.focusedAsset.type === type);
+    getComponentName(type) {
+      return TOOLBAR_TYPES[type];
     },
     onClick(e) {
       // Attach component data

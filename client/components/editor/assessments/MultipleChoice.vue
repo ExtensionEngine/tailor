@@ -1,310 +1,154 @@
 <template>
-  <div class="assessment multiple-choice">
-    <div class="label label-primary assessment-type">Multiple choice</div>
-    <div class="form-group">
-      <span class="form-label">Question</span>
-      <span :class="{ 'has-error': errors.includes('question') }">
-        <input
-          v-model="question"
-          :disabled="isEditing"
-          class="form-control"
-          type="text"
-          placeholder="Question">
-      </span>
-    </div>
-    <div class="form-group">
-      <span class="form-label">Answers</span>
-      <button
-        :disabled="isEditing"
-        @click="addAnswer"
-        class="btn btn-default answers-add"
-        type="button">
-        <span class="fa fa-plus"></span>
-      </button>
-      <ul>
-        <li v-for="(answer, index) in answers">
-          <span
-            :class="{ 'error': errors.includes('correct') }"
-            class="answers-checkbox">
-            <input
-              v-model="correct"
-              :value="index"
-              :disabled="isEditing"
-              type="checkbox">
-          </span>
-          <span
-            :class="{ 'has-error': errors.includes(`answers[${index}]`) }"
-            class="answers-input">
-            <input
-              v-model="answers[index]"
-              :disabled="isEditing"
-              type="text"
-              placeholder="Answer">
-          </span>
-          <button
-            :disabled="isEditing"
-            @click="removeAnswer(index)"
-            class="destroy"
-            type="button">
-            <span class="fa fa-times"></span>
-          </button>
-        </li>
-      </ul>
-    </div>
-    <div class="form-group">
-      <span class="form-label">Hint</span>
-      <input
-        v-model="hint"
-        :disabled="isEditing"
-        class="form-control"
-        type="text"
-        placeholder="Optional hint">
-    </div>
-    <div class="alert-container">
-      <div
-        v-show="answers.length < 3 || (isEditing && isSaved)"
-        :class="alertType"
-        class="alert alert-dismissible">
-        <strong>{{ alert }}</strong>
-      </div>
-    </div>
-    <div v-if="!isEditing" class="controls">
-      <button @click="save" class="btn btn-default" type="button">
-        Save
-      </button>
-      <button @click="close" class="btn btn-default" type="button">
-        Cancel
-      </button>
-    </div>
-    <div v-else class="controls">
-      <button @click="close" class="btn btn-default" type="button">
-        Close
-      </button>
-      <button @click="edit" class="btn btn-default" type="button">
-        Edit
-      </button>
-    </div>
+  <div :class="{ 'disabled': disabled }">
+    <h5>Answers</h5>
+    <span @click="addAnswer" class="btn btn-link fa fa-plus pull-right"></span>
+    <ul>
+      <li v-for="(answer, index) in answers">
+        <span :class="{ 'has-error': !hasCorrectAnswers }">
+          <input
+            v-model="correct"
+            :value="index"
+            :disabled="disabled"
+            @change="update"
+            type="checkbox">
+        </span>
+        <span :class="errorClass(index)">
+          <input
+            v-model="answers[index]"
+            :disabled="disabled"
+            @blur="update"
+            class="form-control"
+            placeholder="Answer...">
+        </span>
+        <span @click="removeAnswer(index)" class="fa fa-times control"></span>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
-import yup from 'yup';
-
-const schema = yup.object().shape({
-  question: yup.string().trim().min(1).required(),
-  answers: yup.array().min(3).of(yup.string().trim().min(1)).required(),
-  correct: yup.array().min(2).of(yup.number()).required()
-});
-
-const defaultAssessment = {
-  question: '',
-  answers: ['', '', ''],
-  correct: [],
-  hint: ''
+const customAlert = {
+  text: 'Please make at least three answers available !',
+  type: 'alert-danger'
 };
 
 export default {
-  props: { assessment: Object },
+  props: {
+    assessment: Object,
+    errors: Array,
+    isEditing: Boolean
+  },
   data() {
     return {
-      ...cloneDeep(defaultAssessment),
-      ...cloneDeep(this.assessment),
-      isEditing: !!this.assessment.question,
-      errors: [],
-      alert: '',
-      isSaved: false
+      answers: this.assessment.answers,
+      correct: this.assessment.correct
     };
   },
-  methods: {
-    addAnswer() {
-      this.answers.push('');
+  computed: {
+    hasCorrectAnswers() {
+      return !this.errors.includes('correct');
     },
-    removeAnswer(index) {
-      this.answers.splice(index, 1);
-
-      if (this.correct.indexOf(index) !== -1) {
-        this.correct.splice(this.correct.indexOf(index), 1);
-      }
-
-      this.correct.forEach(item => {
-        if (item >= index) this.correct.splice(index, 1, item - 1);
-      });
-    },
-    save() {
-      let question = {
-        _cid: this.assessment._cid,
-        type: this.type,
-        question: this.question,
-        correct: this.correct,
-        answers: this.answers,
-        hint: this.hint
-      };
-      this.errors = [];
-      this.validate(question)
-        .then(() => {
-          this.isEditing = true;
-          this.isSaved = true;
-          this.$emit('save', question);
-        })
-        .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
-    },
-    validate(question) {
-      const options = { recursive: true, abortEarly: false };
-      return schema.validate(question, options);
-    },
-    close() {
-      this.$emit('selected');
-    },
-    edit() {
-      this.isEditing = false;
-      this.isSaved = false;
+    disabled() {
+      return !this.isEditing;
     }
   },
-  computed: {
-    alertType() {
-      if (this.answers.length < 3) {
-        this.alert = 'Please make at least three answers available !';
-        return 'alert-danger';
-      } else {
-        this.alert = 'Question saved !';
-        return 'alert-success';
-      }
+  methods: {
+    update() {
+      this.validate();
+      this.$emit('update', { answers: this.answers, correct: this.correct });
+    },
+    addAnswer() {
+      this.answers.push('');
+      this.update();
+    },
+    removeAnswer(answerIndex) {
+      this.answers.splice(answerIndex, 1);
+
+      const index = this.correct.indexOf(index);
+      if (index !== -1) this.correct.splice(index, 1);
+      this.correct.forEach((it, i) => {
+        if (it >= answerIndex) this.correct[i] = it - 1;
+      });
+
+      this.update();
+    },
+    validate() {
+      this.$emit('alert', this.answers.length < 3 ? customAlert : {});
+    },
+    errorClass(index) {
+      return {
+        'has-error': this.errors.includes(`answers[${index}]`)
+      };
+    }
+  },
+  watch: {
+    isEditing(newVal) {
+      if (newVal) return;
+      this.answers = this.assessment.answers;
+      this.correct = this.assessment.correct;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.assessment.multiple-choice {
-  min-height: 400px;
-  margin: 10px auto;
-  padding: 10px 30px 30px 30px;
-  background-color: white;
-  overflow: hidden;
+h5 {
+  display: block;
+  margin: 30px 0 10px 0;
+  font-size: 18px;
+  text-align: left;
+}
 
-  .controls {
-    overflow: hidden;
-    padding: 10px;
+ul {
+  clear: both;
+  padding: 5px 0 0 10px;
+  list-style: none;
+
+  li {
+    position: relative;
+    margin: 20px 0;
+    padding-left: 40px;
+
+    .form-control {
+      padding-left: 10px;
+    }
+
+    input[type=checkbox]{
+      position: absolute;
+      left: 0;
+      top: 5px;
+    }
   }
 
-  .alert-container {
-    padding: 0 20px;
-  }
-
-  .alert {
-    display: inline-block;
-    margin: 0 auto;
-    padding: 3px 7px;
-    text-align: center;
-  }
-
-  button {
-    margin: 15px 10px 0 0;
-    float: right;
-  }
-
-  .assessment-type {
-    font-size: 13px;
-    float: right;
-    background-color: grey;
-    margin: 15px 15px 50px 0;
-  }
-
-  .form-label {
-    font-size: 20px;
-  }
-
-  .destroy {
-    display: none;
+  .fa-times {
     position: absolute;
-    opacity: 0.6;
-    transition: all 0.2s;
-    border: 0;
-    background-color: transparent;
-    padding: 0;
-    bottom: 8px;
-    right: 10px;
+    right: 5px;
+    bottom: 5px;
+    padding: 5px;
+    cursor: pointer;
+    color: #888;
 
-    span {
-      font-size: 16px;
+    &:hover {
+      color: darken(#888, 20%);
     }
-  }
-
-  .destroy:focus {
-    outline: none;
-  }
-
-  .answers-add {
-    padding: 7px;
-    height: 28px;
-    width: 50px;
-    float: right;
-  }
-
-  ul {
-    padding: 10px 0 0 50px;
-
-    li {
-      display: inline-block;
-      width: 100%;
-      position: relative;
-      margin: 10px 0;
-
-      .answers-checkbox {
-        display: inline-block;
-        float: left;
-        margin-top: 7px;
-        width: 19px;
-
-        input {
-          padding-bottom: 11px;
-        }
-      }
-
-      .answers-input {
-        display: block;
-        overflow: hidden;
-
-        input {
-          height: 40px;
-          width: 100%;
-          margin-left: 3px;
-          padding: 0 33px 0 10px;
-        }
-
-        input:focus {
-          outline: none;
-        }
-      }
-    }
-
-    li:hover {
-      .destroy:enabled {
-        display: inline;
-      }
-    }
-  }
-
-  .form-group {
-    text-align: left;
-    margin: 0 auto;
-    padding: 25px 20px 15px 20px;
-    width: 100%;
-    overflow: hidden;
-  }
-
-  .form-control,
-  .answers-input {
-    padding-left: 10px !important;
   }
 }
 
-@media (max-width: 850px) {
-  .assessment.multiple-choice {
-    ul {
-      padding-left: 0;
-    }
+.has-error {
+  input[type="checkbox"]:after {
+    border-color: #d9534f;
+  }
+
+  input[type="checkbox"]:checked:after  {
+    border-color: #337ab7;
+  }
+}
+
+.disabled {
+  pointer-events: none;
+
+  .control, .btn {
+    opacity: 0;
   }
 }
 </style>

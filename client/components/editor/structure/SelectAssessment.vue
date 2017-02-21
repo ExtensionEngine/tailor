@@ -17,18 +17,14 @@
 </template>
 
 <script>
+import { typeInfo } from '../../../utils/assessment';
+
 export default {
   name: 'select-assessment',
   data() {
     return {
       selection: false,
-      assessments: [
-        { type: 'MC', title: 'Multiple Choice' },
-        { type: 'SC', title: 'Single Choice' },
-        { type: 'TF', title: 'True - False' },
-        { type: 'NR', title: 'Numerical' },
-        { type: 'TR', title: 'Text' }
-      ]
+      assessments: typeInfo
     };
   },
   methods: {

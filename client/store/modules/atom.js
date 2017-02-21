@@ -6,7 +6,11 @@ import { ASSET_GROUP } from 'shared/activities';
 const { state, getter, action, mutation, build } = new VuexModule('atom');
 
 state({
-  focusedAsset: null
+  focusedAsset: null,
+  toolbar: {
+    type: null,
+    context: null
+  }
 });
 
 getter(function activity() {
@@ -35,6 +39,10 @@ getter(function focusedAsset() {
   return assets[this.state.focusedAsset];
 });
 
+getter(function toolbar() {
+  return this.state.toolbar;
+});
+
 // TODO: Implement persistance upon focusout
 action(function focusoutAsset() {
   this.commit('focusAsset');
@@ -42,6 +50,10 @@ action(function focusoutAsset() {
 
 mutation(function focusAsset(asset = {}) {
   this.state.focusedAsset = asset._cid;
+});
+
+mutation(function setToolbarContext(state) {
+  this.state.toolbar = state || { type: null, context: null };
 });
 
 export default build();

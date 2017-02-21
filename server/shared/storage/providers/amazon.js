@@ -1,5 +1,5 @@
 const fs = require('fs');
-const Joi = require('Joi');
+const Joi = require('joi');
 const last = require('lodash/last');
 const path = require('path');
 const Promise = require('bluebird');
