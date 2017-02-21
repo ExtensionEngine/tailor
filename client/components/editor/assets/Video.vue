@@ -25,6 +25,9 @@
 <script>
 import { videoPlayer } from 'vue-video-player';
 
+const regex = { youtube: /youtu\.?be/, vimeo: /vimeo/ };
+const types = { youtube: 'video/youtube', vimeo: 'video/vimeo' };
+
 export default {
   name: 'video-asset',
   props: ['asset', 'isFocused'],
@@ -33,18 +36,27 @@ export default {
       config: { youtube: true, vimeo: true }
     };
   },
-  beforeDestroy() {
-    this.$refs.video.player.pause = null;
-  },
   computed: {
     player() {
       return this.$refs.video && this.$refs.video.player;
+    },
+    source() {
+      const src = this.asset.data.url;
+      let type = '';
+
+      if (src.match(regex.youtube)) {
+        type = types.youtube;
+      } else if (src.match(regex.vimeo)) {
+        type = types.vimeo;
+      }
+
+      return { type, src };
     },
     options() {
       return {
         autoplay: false,
         techOrder: ['html5', 'youtube', 'vimeo'],
-        source: { type: this.asset.data.type, src: this.asset.data.url }
+        source: this.source
       };
     },
     showPlaceholder() {
@@ -55,6 +67,9 @@ export default {
     isFocused(val, oldVal) {
       if (oldVal && !val && this.player) this.player.pause();
     }
+  },
+  beforeDestroy() {
+    this.$refs.video.player.pause = null;
   },
   components: {
     videoPlayer
