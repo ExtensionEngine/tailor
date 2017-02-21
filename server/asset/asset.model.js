@@ -7,6 +7,13 @@ const set = require('lodash/set');
 const storage = require('../shared/storage');
 const isNumber = require('lodash/isNumber');
 
+const types = {
+  TEXT: 'TEXT',
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO',
+  GOMO: 'GOMO'
+};
+
 /**
  * @swagger
  * definitions:
@@ -48,7 +55,7 @@ module.exports = function (sequelize, DataTypes) {
   const Asset = sequelize.define('asset', {
     type: {
       type: DataTypes.ENUM,
-      values: ['TEXT', 'IMAGE', 'VIDEO', 'GOMO'],
+      values: Object.values(types),
       allowNull: false
     },
     data: {
@@ -121,9 +128,8 @@ module.exports = function (sequelize, DataTypes) {
         return asset.processFiles();
       },
       beforeUpdate(asset) {
-        return asset.changed('data')
-          ? asset.processFiles()
-          : Promise.resolve();
+        const cond = asset.type === types.IMAGE && asset.changed('data');
+        return cond ? asset.processFiles() : Promise.resolve();
       }
     },
     freezeTableName: true

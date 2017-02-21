@@ -27,6 +27,9 @@
 import cloneDeep from 'lodash/cloneDeep';
 import { mapActions } from 'vuex-module';
 
+const regex = { youtube: /youtu\.?be/, vimeo: /vimeo/ };
+const types = { youtube: 'video/youtube', vimeo: 'video/vimeo' };
+
 export default {
   name: 'video-toolbar',
   props: ['asset', 'isFocused'],
@@ -41,7 +44,16 @@ export default {
     ...mapActions({ updateAsset: 'update' }, 'assets'),
     save() {
       this.edit = false;
-      this.updateAsset({ ...this.asset, data: { url: this.url } });
+      this.updateAsset({ ...this.asset, data: this.getVideoData() });
+    },
+    getVideoData() {
+      let type = '';
+      const url = this.url;
+
+      if (url.match(regex.youtube)) type = types.youtube;
+      else if (url.match(regex.vimeo)) type = types.vimeo;
+
+      return { type, url };
     }
   }
 };
