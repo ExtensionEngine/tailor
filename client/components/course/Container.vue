@@ -18,19 +18,19 @@
       </li>
     </ul>
     <div class="tab-content">
-      <router-view></router-view>
+      <router-view :showLoader="showLoader"></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 
 export default {
-  methods: {
-    ...mapActions({ getCourse: 'get' }, 'courses'),
-    ...mapActions({ getActivities: 'fetch' }, 'activity'),
-    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity')
+  data() {
+    return {
+      showLoader: true
+    };
   },
   computed: {
     ...mapGetters(['course'], 'editor'),
@@ -42,12 +42,17 @@ export default {
       return this.isAdmin || this.isCourseAdmin;
     }
   },
+  methods: {
+    ...mapActions({ getCourse: 'get' }, 'courses'),
+    ...mapActions({ getActivities: 'fetch' }, 'activity'),
+    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity')
+  },
   created() {
     const courseId = this.$route.params.courseKey;
     // TODO: Do this better!
     this.setupActivityApi(`/courses/${courseId}/activities`);
     if (!this.course) this.getCourse(courseId);
-    this.getActivities();
+    this.getActivities().then(() => (this.showLoader = false));
   }
 };
 </script>

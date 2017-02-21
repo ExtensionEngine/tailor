@@ -1,23 +1,23 @@
 <template>
   <div class="activities">
-    <activity
-      class="outline"
-      :level="0"
-      :activities="activities">
-    </activity>
+    <loader v-if="showLoader"></loader>
+    <activity v-else :level="0" :activities="activities" class="outline"></activity>
     <sidebar></sidebar>
   </div>
 </template>
 
 <script>
+import Activity from './Activity';
+import Loader from '../common/Loader';
 import { mapGetters } from 'vuex-module';
-import Activity from './Activity.vue';
-import Sidebar from './Sidebar.vue';
+import Sidebar from './Sidebar';
 
 export default {
+  props: ['showLoader'],
   computed: mapGetters(['activities'], 'editor'),
   components: {
     Activity,
+    Loader,
     Sidebar
   }
 };
