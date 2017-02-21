@@ -1,8 +1,10 @@
 <template>
-  <div class="activities">
+  <div class="activities-container">
     <loader v-if="showLoader"></loader>
-    <activity v-else :level="0" :activities="activities" class="outline"></activity>
-    <sidebar></sidebar>
+    <div v-else class="activities">
+      <activity :level="0" :activities="activities" class="outline"></activity>
+      <sidebar></sidebar>
+    </div>
   </div>
 </template>
 
@@ -24,6 +26,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.activities-container {
+  height: 100%;
+}
+
 .activities {
   padding-right: 400px;
   height: 100%;
