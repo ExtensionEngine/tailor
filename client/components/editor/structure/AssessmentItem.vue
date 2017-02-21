@@ -65,6 +65,9 @@ export default {
 
   .label {
     float: left;
+    min-width: 30px;
+    padding: 3px 5px;
+    font-size: 11px;
   }
 
   .delete {

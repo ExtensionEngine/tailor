@@ -106,7 +106,7 @@ export default {
 
 <style lang="scss" scoped>
 .assessments {
-  margin: 70px 0;
+  margin: 70px 0 250px 0;
 
   .well {
     font-size: 16px;
