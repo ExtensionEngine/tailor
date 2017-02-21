@@ -1,7 +1,7 @@
 <template>
   <div class="create-course" v-if="showCreateButton">
-    <button type="button" class="btn btn-primary" @click="show">
-      Create course
+    <button type="button" class="btn btn-primary btn-fab" @click="show">
+      <span class="mdi mdi-plus"></span>
     </button>
     <modal :show="showModal" :backdrop="false" effect="fade">
       <div slot="modal-header" class="modal-header">
@@ -142,7 +142,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.btn-fab .mdi {
+  display: inline-block;
+  font-size: 28px;
+  line-height: 28px;
+  vertical-align: middle;
+}
+
 .create-course {
   textarea {
     resize: none;
