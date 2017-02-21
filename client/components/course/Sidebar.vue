@@ -28,7 +28,6 @@
           </button>
           <ul class="dropdown-menu pull-right">
             <li><a @click.stop="removeSelectedActivity">Delete</a></li>
-            <li><a href="#">Action 2</a></li>
           </ul>
         </div>
       </div>
