@@ -1,6 +1,6 @@
 <template>
   <div @selected="$emit('selected')" class="assessment-container">
-    <div class="assessment" :class="typeInfo.class">
+    <div :class="typeInfo.class" class="assessment">
       <div>
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>

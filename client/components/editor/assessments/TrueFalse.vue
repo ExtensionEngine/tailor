@@ -47,8 +47,7 @@ export default {
   },
   methods: {
     update() {
-      let data = { correct: this.correct };
-      this.$emit('update', data);
+      this.$emit('update', { correct: this.correct });
     }
   },
   watch: {
