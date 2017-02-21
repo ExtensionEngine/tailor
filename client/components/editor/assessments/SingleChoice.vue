@@ -9,7 +9,7 @@
     </button>
     <ul>
       <li v-for="(answer, index) in answers">
-        <span class="answers-radio" :class="{ 'has-error': correctError }">
+        <span :class="{ 'has-error': correctError }" class="answers-radio">
           <input
             v-model="correct"
             :value="index"
@@ -76,24 +76,18 @@ export default {
       this.update();
     },
     validate() {
-      if (this.answers.length < 2) this.$emit('alert', customAlert);
-      else this.$emit('alert');
+      this.$emit('alert', this.answers.length < 2 ? customAlert : {});
     },
     update() {
-      let data = {
-        answers: this.answers,
-        correct: this.correct
-      };
-      this.$emit('update', data);
+      this.$emit('update', { answers: this.answers, correct: this.correct });
       this.validate();
     }
   },
   watch: {
     isEditing(newVal) {
-      if (!newVal) {
-        this.answers = this.assessment.answers;
-        this.correct = this.assessment.correct;
-      }
+      if (newVal) return;
+      this.answers = this.assessment.answers;
+      this.correct = this.assessment.correct;
     }
   }
 };
