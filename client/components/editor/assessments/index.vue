@@ -46,15 +46,15 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import MultipleChoice from './MultipleChoice';
-import SingleChoice from './SingleChoice';
-import TrueFalse from './TrueFalse';
-import NumericalResponse from './NumericalResponse';
-import TextResponse from './TextResponse';
-import FillBlank from './FillBlank';
-import Question from './Question';
 import Controls from './Controls';
-import { schemas, typeInfo } from '../../../utils/assessment';
+import FillBlank from './FillBlank';
+import MultipleChoice from './MultipleChoice';
+import NumericalResponse from './NumericalResponse';
+import SingleChoice from './SingleChoice';
+import TextResponse from './TextResponse';
+import TrueFalse from './TrueFalse';
+import { typeInfo, schemas } from '../../../utils/assessment';
+import Question from './Question';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };

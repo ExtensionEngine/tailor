@@ -3,7 +3,7 @@
     <h4>Question</h4>
     <div :class="{ editing: isEditing }" @click="focus" class="question">
       <div v-if="!isFocused && !question">
-        <div class="well text-placeholder">
+        <div class="well">
           <div class="message">
             <span :class="{ 'error': questionError }">Click to edit</span>
           </div>
@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     ...mapGetters(['toolbar'], 'atom'),
-    initQuestion() { // rename?
+    initialQuestion() {
       return this.assessment.question;
     },
     parsedQuestion() {
@@ -87,7 +87,7 @@ export default {
     quillEditor
   },
   watch: {
-    initQuestion(newVal) {
+    initialQuestion(newVal) {
       if (newVal !== this.question) this.question = newVal;
     }
   }
