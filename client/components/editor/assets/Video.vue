@@ -15,7 +15,8 @@
       </div>
       <video-player
         ref="video"
-        :options="options">
+        :options="options"
+        :configs="config">
       </video-player>
     </div>
   </div>
@@ -24,17 +25,38 @@
 <script>
 import { videoPlayer } from 'vue-video-player';
 
+const regex = { youtube: /youtu\.?be/, vimeo: /vimeo/ };
+const types = { youtube: 'video/youtube', vimeo: 'video/vimeo' };
+
 export default {
   name: 'video-asset',
   props: ['asset', 'isFocused'],
+  data() {
+    return {
+      config: { youtube: true, vimeo: true }
+    };
+  },
   computed: {
     player() {
       return this.$refs.video && this.$refs.video.player;
     },
+    source() {
+      const src = this.asset.data.url;
+      let type = '';
+
+      if (src.match(regex.youtube)) {
+        type = types.youtube;
+      } else if (src.match(regex.vimeo)) {
+        type = types.vimeo;
+      }
+
+      return { type, src };
+    },
     options() {
       return {
         autoplay: false,
-        source: { src: this.asset.data.url }
+        techOrder: ['html5', 'youtube', 'vimeo'],
+        source: this.source
       };
     },
     showPlaceholder() {
@@ -43,8 +65,11 @@ export default {
   },
   watch: {
     isFocused(val, oldVal) {
-      if (oldVal && !val) if (this.player) this.player.pause();
+      if (oldVal && !val && this.player) this.player.pause();
     }
+  },
+  beforeDestroy() {
+    this.$refs.video.player.pause = null;
   },
   components: {
     videoPlayer
