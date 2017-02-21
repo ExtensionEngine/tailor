@@ -69,7 +69,9 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$refs.video.player.pause = null;
+    if (this.$refs.video && this.$refs.video.player) {
+      this.$refs.video.player.pause = null;
+    }
   },
   components: {
     videoPlayer
