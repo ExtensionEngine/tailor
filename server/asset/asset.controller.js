@@ -13,7 +13,8 @@ function list({ query }, res) {
 }
 
 function show({ params }, res) {
-  return Asset.fetch(params.assetId)
+  const assetId = parseInt(params.assetId, 10);
+  return Asset.fetch(assetId)
     .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
     .then(asset => res.json({ data: asset }));
 }
