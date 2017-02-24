@@ -173,3 +173,6 @@ selenium-debug.log
 # Local IJavascript REPL files
 .ipynb_checkpoints
 *.ipynb
+
+# Vscode
+.vscode/
