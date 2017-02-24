@@ -6,6 +6,7 @@ const mime = require('mime-types');
 const set = require('lodash/set');
 const storage = require('../shared/storage');
 const isNumber = require('lodash/isNumber');
+const values = require('lodash/values');
 
 const types = {
   TEXT: 'TEXT',
@@ -55,7 +56,7 @@ module.exports = function (sequelize, DataTypes) {
   const Asset = sequelize.define('asset', {
     type: {
       type: DataTypes.ENUM,
-      values: Object.values(types),
+      values: values(types),
       allowNull: false
     },
     data: {

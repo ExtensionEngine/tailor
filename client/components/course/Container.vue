@@ -45,7 +45,8 @@ export default {
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activity'),
-    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity')
+    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity'),
+    ...mapMutations(['focusActivity'], 'editor')
   },
   created() {
     const courseId = this.$route.params.courseKey;
@@ -53,6 +54,7 @@ export default {
     this.setupActivityApi(`/courses/${courseId}/activities`);
     if (!this.course) this.getCourse(courseId);
     this.getActivities().then(() => (this.showLoader = false));
+    this.focusActivity();
   }
 };
 </script>
