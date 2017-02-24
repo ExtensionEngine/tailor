@@ -11,7 +11,7 @@ getter(function activities() {
 getter(function getParent() {
   return activityId => {
     const activity = find(this.state.items, { id: activityId });
-    return find(this.state.items, { id: activity.parentId });
+    return activity ? find(this.state.items, { id: activity.parentId }) : null;
   };
 });
 

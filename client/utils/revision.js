@@ -14,14 +14,15 @@ export function describeActivityRevision(rev) {
 
 export function describeAssetRevision(rev, topic) {
   const type = rev.state.type.toLowerCase();
+  const topicName = topic ? topic.name : 'DELETED';
   switch (rev.operation) {
     case 'CREATE':
-      return `created a new ${type} asset in topic "${topic.name}"`;
+      return `created a new ${type} asset in topic "${topicName}"`;
     case 'REMOVE':
-      return `removed an asset from topic "${topic.name}"`;
+      return `removed an asset from topic "${topicName}"`;
     default: {
       const article = type === 'image' ? 'an' : 'a';
-      return `changed ${article} ${type} asset in topic "${topic.name}"`;
+      return `changed ${article} ${type} asset in topic "${topicName}"`;
     }
   }
 }
