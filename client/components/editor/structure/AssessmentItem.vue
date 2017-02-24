@@ -4,13 +4,12 @@
       v-if="edit"
       :init-assessment="assessment"
       @selected="$emit('selected')"
-      @remove="$emit('remove')"
       @save="$emit('save', $event)">
     </assessment>
     <div v-else @click="$emit('selected')" class="minimized">
       <span class="label label-success">{{ assessment.type }}</span>
       <span class="title">{{ question }}</span>
-      <button @click.stop="$emit('remove')" type="button" class="delete">
+      <button @click.stop="remove" type="button" class="delete">
         <span class="fa fa-times"></span>
       </button>
     </div>
@@ -19,6 +18,7 @@
 
 <script>
 import Assessment from '../assessments';
+import modalBus from '../../common/deletionModal/eventBus';
 import truncate from 'lodash/truncate';
 
 const htmlRegex = /<\/?[^>]+(>|$)/g;
@@ -35,6 +35,11 @@ export default {
       const newValue = () => `(${++index})`;
       const parsedQuestion = question.replace(htmlRegex, '').replace(blankRegex, newValue);
       return truncate(parsedQuestion, options);
+    }
+  },
+  methods: {
+    remove() {
+      modalBus.$emit('show', { item: this.assessment, type: 'assessment' });
     }
   },
   components: {

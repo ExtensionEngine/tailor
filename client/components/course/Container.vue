@@ -25,6 +25,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import modalBus from '../common/deletionModal/eventBus';
 
 export default {
   data() {
@@ -43,9 +44,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ getCourse: 'get' }, 'courses'),
-    ...mapActions({ getActivities: 'fetch' }, 'activity'),
-    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity')
+    ...mapActions({ getCourse: 'get', removeCourse: 'remove' }, 'courses'),
+    ...mapActions({ getActivities: 'fetch', removeActivity: 'remove' }, 'activity'),
+    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity'),
+    createEvents() {
+      modalBus.$on('activity/delete', this.removeActivity);
+      modalBus.$on('course/delete', (course) => {
+        this.removeCourse(course).then(() => this.$router.push('/'));
+      });
+    },
+    removeEvents() {
+      modalBus.$off('activity/delete');
+      modalBus.$off('course/delete');
+    }
   },
   created() {
     const courseId = this.$route.params.courseKey;
@@ -53,6 +64,10 @@ export default {
     this.setupActivityApi(`/courses/${courseId}/activities`);
     if (!this.course) this.getCourse(courseId);
     this.getActivities().then(() => (this.showLoader = false));
+    this.createEvents();
+  },
+  destroyed() {
+    this.removeEvents();
   }
 };
 </script>

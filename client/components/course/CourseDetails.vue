@@ -35,7 +35,7 @@
       </template>
     </div>
     <div class="course-actions">
-      <button v-if="showRemoveButton" type="button" class="btn btn-danger" @click.stop="removeCourse">
+      <button v-if="showRemoveButton" type="button" class="btn btn-danger" @click.stop="showModal">
         <span class="fa fa-trash"></span>
         remove course
       </button>
@@ -46,6 +46,7 @@
 <script>
 import { focus } from 'vue-focus';
 import { mapGetters, mapActions } from 'vuex-module';
+import modalBus from '../common/deletionModal/eventBus';
 
 export default {
   directives: { focus },
@@ -65,7 +66,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['remove', 'update'], 'courses'),
+    ...mapActions(['update'], 'courses'),
     updateName() {
       if (this.showNameInput) {
         this.showNameInput = false;
@@ -84,8 +85,8 @@ export default {
         }
       }
     },
-    removeCourse() {
-      this.remove(this.course).then(() => this.$router.push('/'));
+    showModal() {
+      modalBus.$emit('show', { item: this.course, type: 'course' });
     }
   },
   created() {

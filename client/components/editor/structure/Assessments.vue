@@ -15,8 +15,7 @@
         :assessment="assessment"
         :edit="isSelected(assessment)"
         @selected="toggleSelect(assessment)"
-        @save="save"
-        @remove="remove(assessment)">
+        @save="save">
       </assessment-item>
     </ul>
     <select-assessment @selected="add"></select-assessment>
@@ -31,8 +30,8 @@ import { defaults } from '../../../utils/assessment';
 import difference from 'lodash/difference';
 import keyBy from 'lodash/keyBy';
 import { mapActions, mapGetters } from 'vuex-module';
+import modalBus from '../../common/deletionModal/eventBus';
 import SelectAssessment from './SelectAssessment';
-import Vue from 'vue';
 
 export default {
   data() {
@@ -56,7 +55,7 @@ export default {
     }, 'assessments'),
     add(type) {
       const assessment = { _cid: cuid(), ...defaults[type] };
-      Vue.set(this.assessments, assessment._cid, assessment);
+      this.$set(this.assessments, assessment._cid, assessment);
       this.selected.push(assessment._cid);
     },
     toggleSelect(assessment) {
@@ -92,10 +91,17 @@ export default {
     },
     remove(assessment) {
       // TODO: Has unsolved scenarios
+      assessment = this.assessments[assessment._cid];
       if (assessment.id) this.removeAssessment(assessment);
-      Vue.delete(this.assessments, assessment._cid);
+      this.$delete(this.assessments, assessment._cid);
       this.selected.splice(this.selected.indexOf(assessment._cid), 1);
     }
+  },
+  created() {
+    modalBus.$on('assessment/delete', this.remove);
+  },
+  destroyed() {
+    modalBus.$off('assessment/delete');
   },
   components: {
     AssessmentItem,

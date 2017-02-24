@@ -7,7 +7,7 @@
       </component>
       <div v-if="showDeleteButton" class="delete-asset">
         <span
-          @click="removeAsset(toolbar.context)"
+          @click="showModal"
           class="btn btn-fab btn-danger">
           <span class="fa fa-trash"></span>
         </span>
@@ -19,9 +19,10 @@
 <script>
 import GomoToolbar from './GomoToolbar';
 import ImageToolbar from './ImageToolbar';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapGetters } from 'vuex-module';
 import QuillToolbar from './QuillToolbar';
 import VideoToolbar from './VideoToolbar';
+import modalBus from '../../common/deletionModal/eventBus';
 
 const TOOLBAR_TYPES = {
   ASSESSMENT: 'quill-toolbar',
@@ -41,13 +42,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ removeAsset: 'remove' }, 'assets'),
     getComponentName(type) {
       return TOOLBAR_TYPES[type];
     },
     onClick(e) {
       // Attach component data
       e.component = { name: 'toolbar', data: {} };
+    },
+    showModal() {
+      modalBus.$emit('show', { item: this.toolbar.context, type: 'asset' });
     }
   },
   components: {

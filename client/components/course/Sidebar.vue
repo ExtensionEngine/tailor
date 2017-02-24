@@ -27,7 +27,7 @@
             <span class="fa fa-ellipsis-v"></span>
           </button>
           <ul class="dropdown-menu pull-right">
-            <li><a @click.stop="removeSelectedActivity">Delete</a></li>
+            <li><a @click.stop="showModal">Delete</a></li>
           </ul>
         </div>
       </div>
@@ -37,6 +37,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
+import modalBus from '../common/deletionModal/eventBus';
 
 export default {
   data() {
@@ -52,7 +53,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['remove', 'update'], 'activity'),
+    ...mapActions(['update'], 'activity'),
     activateInput() {
       this.newActivityName = this.activity.name.slice(0);
       this.showNameInput = true;
@@ -78,8 +79,8 @@ export default {
         this.update({ _cid: this.activity._cid, name: this.newActivityName });
       }
     },
-    removeSelectedActivity() {
-      this.remove(this.activity);
+    showModal() {
+      modalBus.$emit('show', { item: this.activity, type: 'activity' });
     }
   }
 };
