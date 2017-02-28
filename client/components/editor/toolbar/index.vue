@@ -6,9 +6,7 @@
         :asset="toolbar.context">
       </component>
       <div v-if="showDeleteButton" class="delete-asset">
-        <span
-          @click="removeAsset(toolbar.context)"
-          class="btn btn-fab btn-danger">
+        <span @click="remove" class="btn btn-fab btn-danger">
           <span class="fa fa-trash"></span>
         </span>
       </div>
@@ -19,7 +17,7 @@
 <script>
 import GomoToolbar from './GomoToolbar';
 import ImageToolbar from './ImageToolbar';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import QuillToolbar from './QuillToolbar';
 import VideoToolbar from './VideoToolbar';
 
@@ -42,6 +40,11 @@ export default {
   },
   methods: {
     ...mapActions({ removeAsset: 'remove' }, 'assets'),
+    ...mapMutations(['setToolbarContext'], 'atom'),
+    remove() {
+      this.removeAsset(this.toolbar.context);
+      this.setToolbarContext();
+    },
     getComponentName(type) {
       return TOOLBAR_TYPES[type];
     },
