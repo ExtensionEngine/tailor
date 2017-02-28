@@ -9,7 +9,7 @@
           </div>
         </div>
       </div>
-      <div v-else>
+      <div :class="{ 'error': blankError }" v-else>
         <quill-editor
           v-if="isFocused"
           v-model="question"
@@ -66,6 +66,9 @@ export default {
     },
     questionError() {
       return this.errors.includes('question');
+    },
+    blankError() {
+      return this.errors.filter(it => it === 'question').length === 1;
     }
   },
   methods: {
