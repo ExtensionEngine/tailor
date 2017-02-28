@@ -16,8 +16,7 @@ export const helperText = {
 export const schemas = {
   MC: yup.object().shape({
     question: yup.string().trim().min(1).required(),
-    answers: yup.array().min(3).of(yup.string().trim().min(1)).required(),
-    correct: yup.array().min(2).of(yup.number()).required()
+    answers: yup.array().min(3).of(yup.string().trim().min(1)).required()
   }),
   NR: yup.object().shape({
     question: yup.string().trim().min(1).required(),
@@ -25,8 +24,7 @@ export const schemas = {
   }),
   SC: yup.object().shape({
     question: yup.string().trim().min(1).required(),
-    answers: yup.array().min(2).of(yup.string().trim().min(1)).required(),
-    correct: yup.number().required()
+    answers: yup.array().min(2).of(yup.string().trim().min(1)).required()
   }),
   TR: yup.object().shape({
     question: yup.string().trim().min(1).required(),

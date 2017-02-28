@@ -9,14 +9,12 @@
     </button>
     <ul>
       <li v-for="(answer, index) in answers">
-        <span :class="{ 'has-error': correctError }" class="answers-radio">
-          <input
-            v-model="correct"
-            :value="index"
-            :disabled="disabled"
-            @change="update"
-            type="radio">
-        </span>
+        <input
+          v-model="correct"
+          :value="index"
+          :disabled="disabled"
+          @change="update"
+          type="radio">
         <span class="answers-input" :class="{ 'has-error': answerError(index) }">
           <input
             v-model="answers[index]"
@@ -52,9 +50,6 @@ export default {
     };
   },
   computed: {
-    correctError() {
-      return this.errors.includes('correct');
-    },
     disabled() {
       return !this.isEditing;
     }
@@ -142,14 +137,11 @@ ul {
     width: 100%;
     margin: 10px 0;
 
-    .answers-radio {
+    input[type=radio] {
       float: left;
-      margin-top: 7px;
+      margin-top: 12px;
       width: 19px;
-
-      input {
-        padding-bottom: 9px;
-      }
+      padding-bottom: 9px;
     }
 
     .answers-input {
