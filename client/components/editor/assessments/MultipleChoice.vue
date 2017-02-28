@@ -4,12 +4,14 @@
     <span @click="addAnswer" class="btn btn-link fa fa-plus pull-right"></span>
     <ul>
       <li v-for="(answer, index) in answers">
-        <input
-          v-model="correct"
-          :value="index"
-          :disabled="disabled"
-          @change="update"
-          type="checkbox">
+        <span :class="{ 'has-error': !hasCorrectAnswers }">
+          <input
+            v-model="correct"
+            :value="index"
+            :disabled="disabled"
+            @change="update"
+            type="checkbox">
+        </span>
         <span :class="errorClass(index)">
           <input
             v-model="answers[index]"
@@ -43,6 +45,9 @@ export default {
     };
   },
   computed: {
+    hasCorrectAnswers() {
+      return !this.errors.includes('correct');
+    },
     disabled() {
       return !this.isEditing;
     }
@@ -59,7 +64,7 @@ export default {
     removeAnswer(answerIndex) {
       this.answers.splice(answerIndex, 1);
 
-      const index = this.correct.indexOf(answerIndex);
+      const index = this.correct.indexOf(index);
       if (index !== -1) this.correct.splice(index, 1);
       this.correct.forEach((it, i) => {
         if (it >= answerIndex) this.correct[i] = it - 1;
@@ -126,6 +131,16 @@ ul {
     &:hover {
       color: darken(#888, 20%);
     }
+  }
+}
+
+.has-error {
+  input[type="checkbox"]:after {
+    border-color: #d9534f;
+  }
+
+  input[type="checkbox"]:checked:after  {
+    border-color: #337ab7;
   }
 }
 
