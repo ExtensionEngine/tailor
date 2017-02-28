@@ -71,7 +71,7 @@ export default {
       this.answers.splice(index, 1);
 
       if (this.correct === index) this.correct = null;
-      if (this.correct >= index) this.correct -= 1;
+      if (this.correct && this.correct >= index) this.correct -= 1;
 
       this.update();
     },

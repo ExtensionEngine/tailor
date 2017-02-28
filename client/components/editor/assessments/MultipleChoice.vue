@@ -64,7 +64,7 @@ export default {
     removeAnswer(answerIndex) {
       this.answers.splice(answerIndex, 1);
 
-      const index = this.correct.indexOf(index);
+      const index = this.correct.indexOf(answerIndex);
       if (index !== -1) this.correct.splice(index, 1);
       this.correct.forEach((it, i) => {
         if (it >= answerIndex) this.correct[i] = it - 1;
