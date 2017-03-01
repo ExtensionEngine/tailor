@@ -6,7 +6,7 @@
           <span class="form-group" :class="{ 'has-error': errors.has('name') }">
             <input
               v-model="activityName"
-              v-focus="focusInput"
+              v-focus.lazy="focusInput"
               v-validate="{ rules: { required: true, min: 2, max: 250 } }"
               class="form-control"
               name="name"
