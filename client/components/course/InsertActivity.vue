@@ -3,26 +3,33 @@
     <div class="activity-input" v-if="showInput">
       <div class="row">
         <div class="col-lg-8">
-          <input
-            class="form-control"
-            v-model="activityName"
-            v-focus="focusInput"
-            type="text"
-            placeholder="Activity name">
+          <span class="form-group" :class="{ 'has-error': errors.has('name') }">
+            <input
+              v-model="activityName"
+              v-focus="focusInput"
+              v-validate="{ rules: { required: true, min: 2 } }"
+              class="form-control"
+              name="name"
+              type="text"
+              placeholder="Activity name">
+            <span v-show="errors.has('name')" class="help-block">
+              {{ errors.first('name') }}
+            </span>
+          </span>
         </div>
         <div class="col-lg-2">
           <select
             class="form-control"
             v-if="canCreateSubsection"
             v-model.number="newActivityLevel">
-              <option value="0">Section</option>
-              <option value="1">Subsection</option>
+            <option value="0">Section</option>
+            <option value="1">Subsection</option>
           </select>
         </div>
         <div class="col-lg-2">
           <button
             class="btn btn-default"
-            :disabled="!isActivityNameValid"
+            :disabled="this.errors.any()"
             @click.stop="add">
             Add
           </button>
@@ -46,6 +53,7 @@ import findIndex from 'lodash/findIndex';
 import { mapGetters, mapActions } from 'vuex-module';
 import { getChildren } from '../../utils/activity.js';
 import calculatePosition from '../../utils/calculatePosition.js';
+const noop = Function.prototype;
 
 export default {
   directives: { focus },
@@ -63,11 +71,6 @@ export default {
     ...mapGetters(['course'], 'editor'),
     canCreateSubsection() {
       return this.level < 3;
-    },
-    isActivityNameValid() {
-      // Server imposes these requirements (see activity schema).
-      const length = this.activityName.length;
-      return length >= 3 && length <= 100;
     }
   },
   methods: {
@@ -81,23 +84,25 @@ export default {
       this.showInput = false;
     },
     add() {
-      const sameLevel = this.newActivityLevel === 0;
-      const parentId = sameLevel ? this.parent.parentId : this.parent.id;
-      const courseId = this.parent.courseId;
-      const items = getChildren(this.activities, parentId, courseId);
-      const newPosition = findIndex(items, it => it.position === this.parent.position);
-      const isFirstChild = !sameLevel || newPosition === -1;
-      const context = { items, newPosition, isFirstChild, insert: true };
+      this.$validator.validateAll().then(() => {
+        const sameLevel = this.newActivityLevel === 0;
+        const parentId = sameLevel ? this.parent.parentId : this.parent.id;
+        const courseId = this.parent.courseId;
+        const items = getChildren(this.activities, parentId, courseId);
+        const newPosition = findIndex(items, it => it.position === this.parent.position);
+        const isFirstChild = !sameLevel || newPosition === -1;
+        const context = { items, newPosition, isFirstChild, insert: true };
 
-      this.save({
-        name: this.activityName,
-        courseId,
-        parentId,
-        position: calculatePosition(context)
-      });
+        this.save({
+          name: this.activityName,
+          courseId,
+          parentId,
+          position: calculatePosition(context)
+        });
 
-      this.hide();
-      if (!sameLevel) this.$emit('expand');
+        this.hide();
+        if (!sameLevel) this.$emit('expand');
+      }, noop);
     }
   }
 };

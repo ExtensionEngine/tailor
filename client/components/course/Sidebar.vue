@@ -2,15 +2,25 @@
   <div class="course-sidebar">
     <div v-if="isActivitySelected" class="row">
       <div class="col-xs-10">
-        <textarea
-          class="form-control"
-          ref="activityName"
+        <div
           v-show="showNameInput"
-          v-model="newActivityName"
-          @blur="onInputBlur"
-          @keyup.enter="onInputEnter"
-          @keyup.esc="deactivateInput">
-        </textarea>
+          :class="{ 'has-error': errors.has('newActivityName') }"
+          class="form-group">
+          <textarea
+            ref="newActivityName"
+            @blur="onInputBlur"
+            @keyup.enter="onInputEnter"
+            @keyup.esc="deactivateInput"
+            class="form-control"
+            name="newActivityName"
+            v-model="newActivityName"
+            v-validate="{ rules: { required: true, min: 2 } }"
+            data-vv-as="name">
+          </textarea>
+          <span v-if="errors.has('newActivityName')" class="help-block">
+            {{ errors.first('newActivityName') }}
+          </span>
+        </div>
         <div v-show="!showNameInput" class="title-container">
           <h3 class="title" @click.stop="activateInput">
             {{ activity.name }}
@@ -56,16 +66,14 @@ export default {
     activateInput() {
       this.newActivityName = this.activity.name.slice(0);
       this.showNameInput = true;
-      setTimeout(() => this.$refs.activityName.focus(), 0);
+      setTimeout(() => this.$refs.newActivityName.focus(), 0);
     },
     deactivateInput() {
-      this.newActivityName = '';
       // This removes input from DOM and triggers blur event!
       this.showNameInput = false;
     },
     onInputBlur() {
-      // Input lost focus as a side-effect of being removed from HTML.
-      if (!this.showNameInput) return;
+      if (this.newActivityName.length < 2) return;
       this.saveActivityName();
       this.deactivateInput();
     },
