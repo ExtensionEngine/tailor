@@ -1,7 +1,7 @@
 <template>
   <div class="perspectives">
     <div class="well" v-if="!perspectives.length">
-      Click the button bellow to Create first Perspective.
+      Click the button below to Create first Perspective.
     </div>
     <perspective v-for="it in perspectives" :perspective="it"></perspective>
     <create-perspective @create="add"></create-perspective>

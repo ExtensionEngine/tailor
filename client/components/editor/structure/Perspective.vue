@@ -6,7 +6,7 @@
       </span>
     </div>
     <div v-if="!perspectiveAssets.length" class="well">
-      Click the button bellow to Create your first asset.
+      Click the button below to Create your first asset.
     </div>
     <draggable
       :list="perspectiveAssets"

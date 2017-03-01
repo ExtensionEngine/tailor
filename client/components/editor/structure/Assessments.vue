@@ -7,7 +7,7 @@
       </span>
     </div>
     <div class="well" v-if="!hasAssessments">
-      Click the button bellow to Create first Assessment.
+      Click the button below to Create first Assessment.
     </div>
     <ul class="list-group">
       <assessment-item
