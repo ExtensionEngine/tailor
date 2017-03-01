@@ -14,7 +14,7 @@
             class="form-control"
             name="newActivityName"
             v-model="newActivityName"
-            v-validate="{ rules: { required: true, min: 2 } }"
+            v-validate="{ rules: { required: true, min: 2, max: 250 } }"
             data-vv-as="name">
           </textarea>
           <span v-if="errors.has('newActivityName')" class="help-block">
@@ -47,6 +47,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
+const noop = Function.prototype;
 
 export default {
   data() {
@@ -73,9 +74,10 @@ export default {
       this.showNameInput = false;
     },
     onInputBlur() {
-      if (this.newActivityName.length < 2) return;
-      this.saveActivityName();
-      this.deactivateInput();
+      this.$validator.validateAll().then(() => {
+        this.saveActivityName();
+        this.deactivateInput();
+      }, noop);
     },
     onInputEnter() {
       this.saveActivityName();

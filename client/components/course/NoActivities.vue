@@ -7,7 +7,7 @@
           class="form-group">
           <input
             v-model="name"
-            v-validate="{ rules: { required: true, min: 2 } }"
+            v-validate="{ rules: { required: true, min: 2, max: 250 } }"
             class="form-control"
             type="text"
             name="name"

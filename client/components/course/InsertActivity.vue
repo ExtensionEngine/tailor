@@ -7,7 +7,7 @@
             <input
               v-model="activityName"
               v-focus="focusInput"
-              v-validate="{ rules: { required: true, min: 2 } }"
+              v-validate="{ rules: { required: true, min: 2, max: 250 } }"
               class="form-control"
               name="name"
               type="text"
