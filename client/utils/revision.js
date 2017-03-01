@@ -16,12 +16,12 @@ export function describeAssetRevision(rev, topic) {
   const type = rev.state.type.toLowerCase();
   switch (rev.operation) {
     case 'CREATE':
-      return `created a new ${type} asset in topic "${topic.name}"`;
+      return `created a new ${type} asset ${topic ? `in topic "${topic.name}"` : ''}`;
     case 'REMOVE':
-      return `removed an asset from topic "${topic.name}"`;
+      return `removed an asset ${topic ? `from topic "${topic.name}"` : ''}`;
     default: {
       const article = type === 'image' ? 'an' : 'a';
-      return `changed ${article} ${type} asset in topic "${topic.name}"`;
+      return `changed ${article} ${type} asset ${topic ? `in topic "${topic.name}"` : ''}`;
     }
   }
 }
