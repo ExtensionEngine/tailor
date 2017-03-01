@@ -8,7 +8,11 @@
     <div v-if="!perspectiveAssets.length" class="well">
       Click the button bellow to Create your first asset.
     </div>
-    <draggable class="row" :list="perspectiveAssets" @update="reorder">
+    <draggable
+      :list="perspectiveAssets"
+      :options="dragOptions"
+      @update="reorder"
+      class="row">
       <asset
         v-for="asset in perspectiveAssets"
         :asset="asset"
@@ -32,6 +36,13 @@ import CreateAsset from './CreateAsset';
 export default {
   name: 'perspective',
   props: ['perspective'],
+  data() {
+    return {
+      dragOptions: {
+        forceFallback: true
+      }
+    };
+  },
   computed: {
     ...mapGetters(['assets']),
     perspectiveAssets() {
