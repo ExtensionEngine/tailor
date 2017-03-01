@@ -15,6 +15,9 @@
         <button type="submit" class="btn btn-default btn-block">
           Send reset email
         </button>
+        <div class="options">
+          <a @click="$router.go(-1)">Back</a>
+        </div>
       </form>
     </div>
   </div>
@@ -48,5 +51,17 @@ export default {
 <style lang="scss" scoped>
 .well {
   font-size: 16px;
+}
+
+.options {
+  padding-top: 16px;
+  
+  a {
+    display: inline-block;
+    line-height: 14px;
+    font-size: 14px;
+    vertical-align: bottom;
+    cursor: pointer;
+  }
 }
 </style>
