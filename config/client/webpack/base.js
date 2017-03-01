@@ -31,7 +31,8 @@ module.exports = {
       client: projectRoot('client'),
       assets: projectRoot('client', 'assets'),
       components: projectRoot('client', 'components'),
-      shared: projectRoot('config/shared')
+      shared: projectRoot('config/shared'),
+      EventBus: projectRoot('client', 'EventBus')
     }
   },
   resolveLoader: {

@@ -10,7 +10,7 @@
 
 <script>
 import Navbar from './components/common/Navbar';
-import DeletionModal from './components/common/deletionModal';
+import DeletionModal from './components/common/DeletionModal';
 
 export default {
   name: 'app',

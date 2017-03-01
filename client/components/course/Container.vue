@@ -53,7 +53,6 @@ export default {
     this.setupActivityApi(`/courses/${courseId}/activities`);
     if (!this.course) this.getCourse(courseId);
     this.getActivities().then(() => (this.showLoader = false));
-    this.createEvents();
   }
 };
 </script>
