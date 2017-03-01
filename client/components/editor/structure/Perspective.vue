@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     ...mapActions(['remove'], 'activity'),
+    ...mapActions({ updatePosition: 'reorder' }, 'assets'),
     reorder({ newIndex: newPosition }) {
       const items = this.perspectiveAssets;
       const asset = items[newPosition];
