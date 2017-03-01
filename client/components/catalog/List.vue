@@ -3,7 +3,7 @@
     <loader v-if="showLoader"></loader>
     <card
       v-else
-      v-for="course in courses"
+      v-for="course in orderedCourses"
       :key="course._cid"
       :course="course">
     </card>
@@ -19,10 +19,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
-import InfiniteScroll from 'vue-infinite-scroll';
 import Card from './Card';
+import InfiniteScroll from 'vue-infinite-scroll';
 import Loader from '../common/Loader';
+import { mapActions, mapGetters } from 'vuex-module';
+import orderBy from 'lodash/orderBy';
 
 export default {
   name: 'course-list',
@@ -31,7 +32,12 @@ export default {
       paginate: false
     };
   },
-  computed: mapGetters(['hasMoreResults'], 'courses'),
+  computed: {
+    ...mapGetters(['hasMoreResults'], 'courses'),
+    orderedCourses() {
+      return orderBy(this.courses, 'updatedAt', 'desc');
+    }
+  },
   methods: {
     ...mapActions(['fetch'], 'courses'),
     loadMore() {
@@ -63,7 +69,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .loader {
   margin-top: 150px;
 }
