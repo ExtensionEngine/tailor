@@ -1,7 +1,7 @@
 <template>
   <div class="perspective">
     <div class="actions">
-      <span @click="showModal" class="pull-right">
+      <span @click="remove(perspective)" class="pull-right">
         <span class="fa fa-trash"></span>
       </span>
     </div>
@@ -28,7 +28,6 @@ import { mapActions, mapGetters } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import Asset from '../assets';
 import CreateAsset from './CreateAsset';
-import modalBus from '../../common/deletionModal/eventBus';
 
 export default {
   name: 'perspective',
@@ -41,16 +40,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ updatePosition: 'reorder' }, 'assets'),
+    ...mapActions(['remove'], 'activity'),
     reorder({ newIndex: newPosition }) {
       const items = this.perspectiveAssets;
       const asset = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.updatePosition({ asset, context });
-    },
-    showModal() {
-      modalBus.$emit('show', { item: this.perspective, type: 'perspective' });
     }
   },
   components: {
