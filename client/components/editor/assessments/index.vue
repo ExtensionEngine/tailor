@@ -55,7 +55,6 @@ import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
 import { typeInfo, schemas } from '../../../utils/assessment';
 import Question from './Question';
-import modalBus from '../../common/deletionModal/eventBus';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
@@ -125,7 +124,7 @@ export default {
       this.isEditing = true;
     },
     remove() {
-      modalBus.$emit('show', { item: this.assessment, type: 'assessment' });
+      this.$emit('remove');
     }
   },
   components: {
