@@ -3,20 +3,20 @@
     <navbar></navbar>
     <div class="contaner-fluid">
       <router-view></router-view>
-      <deletion-modal></deletion-modal>
+      <confirmation-modal></confirmation-modal>
     </div>
   </div>
 </template>
 
 <script>
 import Navbar from './components/common/Navbar';
-import DeletionModal from './components/common/DeletionModal';
+import ConfirmationModal from './components/common/ConfirmationModal';
 
 export default {
   name: 'app',
   components: {
     Navbar,
-    DeletionModal
+    ConfirmationModal
   }
 };
 </script>
