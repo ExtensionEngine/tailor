@@ -12,8 +12,7 @@
       <quill-editor
         v-if="isFocused"
         v-model="data.content"
-        :config="config"
-        @change="update">
+        :config="config">
       </quill-editor>
       <div
         v-else
@@ -29,7 +28,6 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import debounce from 'lodash/debounce';
 import { quillEditor } from 'vue-quill-editor';
 
 const defaultAsset = {
@@ -49,16 +47,16 @@ export default {
     };
   },
   computed: {
-    content() {
-      return this.data.content;
+    localAsset() {
+      return {
+        content: this.data.content
+      };
     }
   },
-  methods: {
-    update: debounce(
-      function () {
-        this.$emit('save', { content: this.content });
-      }, 500
-    )
+  watch: {
+    isFocused(val, oldVal) {
+      if (oldVal && !val) this.$emit('save', this.localAsset);
+    }
   },
   components: { quillEditor }
 };
