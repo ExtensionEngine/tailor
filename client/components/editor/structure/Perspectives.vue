@@ -11,17 +11,14 @@
 <script>
 import { ASSET_GROUP } from 'shared/activities';
 import CreatePerspective from './CreatePerspective';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import Perspective from './Perspective';
-import modalBus from '../../common/deletionModal/eventBus';
 
 export default {
   name: 'perspectives',
   computed: mapGetters(['activity', 'perspectives'], 'atom'),
   methods: {
-    ...mapActions({ removeActivity: 'remove', save: 'save' }, 'activity'),
-    ...mapActions({ removeAsset: 'remove' }, 'assets'),
-    ...mapMutations(['setToolbarContext'], 'atom'),
+    ...mapActions(['save'], 'activity'),
     add() {
       this.save({
         type: ASSET_GROUP,
@@ -29,17 +26,6 @@ export default {
         position: this.perspectives.length + 1
       });
     }
-  },
-  created() {
-    modalBus.$on('perspective/delete', this.removeActivity);
-    modalBus.$on('asset/delete', (asset) => {
-      this.removeAsset(asset);
-      this.setToolbarContext();
-    });
-  },
-  destroyed() {
-    modalBus.$off('perspective/delete');
-    modalBus.$off('asset/delete');
   },
   components: {
     CreatePerspective,
