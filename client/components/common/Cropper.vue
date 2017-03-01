@@ -1,7 +1,5 @@
 <template>
-  <div :style="containerStyle">
-    <img ref="img" :src="src" :style="imgStyle" :alt="alt"/>
-  </div>
+  <img ref="img" :src="src" :style="containerStyle" :alt="alt"/>
 </template>
 
 <script>
@@ -21,7 +19,6 @@ export default {
       default: ''
     },
     alt: String,
-    imgStyle: Object,
     dragMode: String,
     responsive: {
       type: Boolean,
@@ -214,7 +211,7 @@ export default {
   },
   mounted() {
     let props = {};
-    const data = omit(this.$options.props, ['style', 'src', 'alt', 'imgStyle']);
+    const data = omit(this.$options.props, ['style', 'src', 'alt']);
     for (let key in data) {
       if (this[key] !== undefined) {
         props[key] = this[key];

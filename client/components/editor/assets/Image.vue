@@ -22,7 +22,6 @@
         :scalable="false"
         :movable="false"
         :modal="false"
-        :style="{ 'width': '100%' }"
         :src="currentImage">
       </cropper>
     </div>
