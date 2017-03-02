@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="showMessage" class="well">
-      <span>Reset email sent</span>
+      <span>{{ message }}</span>
     </div>
     <div v-else>
       <form @submit.prevent="submit">
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { delay } from 'bluebird';
 import { mapActions } from 'vuex-module';
 
 export default {
@@ -37,6 +38,7 @@ export default {
       // TODO: Temp
       this.showMessage = true;
       this.forgotPassword({ email: this.email })
+        .then(() => delay(1000))
         .then(() => this.$router.push('/'))
         .catch(() => (this.message = 'Error'));
     }
