@@ -1,11 +1,14 @@
 <template>
   <div class="question-container">
     <h4>Question</h4>
-    <div :class="{ editing: isEditing }" @click="focus" class="question">
+    <div
+      :class="{ editing: isEditing, 'question-error': questionError }"
+      @click="focus"
+      class="question">
       <div v-if="!isFocused && !question">
         <div class="well">
           <div class="message">
-            <span :class="{ 'error': questionError }">Click to edit</span>
+            <span>Click to edit</span>
           </div>
         </div>
       </div>
@@ -113,6 +116,13 @@ export default {
 
   &.editing {
     border-color: #ccc;
+  }
+
+  &.question-error {
+    .ql-container, span {
+      border-bottom: 0;
+      box-shadow: inset 0 -2px 0 #e51c23;
+    }
   }
 
   .well {
