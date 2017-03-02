@@ -9,7 +9,7 @@ import store from './store';
 import router from './router';
 import App from './App';
 
-Vue.use(VeeValidate, { delay: 700 });
+Vue.use(VeeValidate, { errorBagName: 'vErrors', delay: 700 });
 
 sync(store, router);
 

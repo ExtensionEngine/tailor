@@ -4,7 +4,7 @@
       <div class="col-xs-10">
         <div
           v-show="showNameInput"
-          :class="{ 'has-error': errors.has('newActivityName') }"
+          :class="{ 'has-error': vErrors.has('newActivityName') }"
           class="form-group">
           <textarea
             ref="newActivityName"
@@ -17,8 +17,8 @@
             v-validate="{ rules: { required: true, min: 2, max: 250 } }"
             data-vv-as="name">
           </textarea>
-          <span v-if="errors.has('newActivityName')" class="help-block">
-            {{ errors.first('newActivityName') }}
+          <span v-if="vErrors.has('newActivityName')" class="help-block">
+            {{ vErrors.first('newActivityName') }}
           </span>
         </div>
         <div v-show="!showNameInput" class="title-container">

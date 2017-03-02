@@ -3,7 +3,7 @@
     <div class="activity-input" v-if="showInput">
       <div class="row">
         <div class="col-lg-8">
-          <span class="form-group" :class="{ 'has-error': errors.has('name') }">
+          <span class="form-group" :class="{ 'has-error': vErrors.has('name') }">
             <input
               v-model="activityName"
               v-focus.lazy="focusInput"
@@ -12,8 +12,8 @@
               name="name"
               type="text"
               placeholder="Activity name">
-            <span v-show="errors.has('name')" class="help-block">
-              {{ errors.first('name') }}
+            <span v-show="vErrors.has('name')" class="help-block">
+              {{ vErrors.first('name') }}
             </span>
           </span>
         </div>
@@ -29,7 +29,7 @@
         <div class="col-lg-2">
           <button
             class="btn btn-default"
-            :disabled="this.errors.any()"
+            :disabled="vErrors.any()"
             @click.stop="add">
             Add
           </button>

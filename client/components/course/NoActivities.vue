@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-10">
         <span
-          :class="{ 'has-error': errors.has('name') }"
+          :class="{ 'has-error': vErrors.has('name') }"
           class="form-group">
           <input
             v-model="name"
@@ -13,8 +13,8 @@
             name="name"
             autofocus=""
             placeholder="Create your first activity">
-          <span v-show="errors.has('name')" class="help-block">
-            {{ errors.first('name') }}
+          <span v-show="vErrors.has('name')" class="help-block">
+            {{ vErrors.first('name') }}
           </span>
         </span>
       </div>
