@@ -3,17 +3,20 @@
     <navbar></navbar>
     <div class="contaner-fluid">
       <router-view></router-view>
+      <confirmation-modal></confirmation-modal>
     </div>
   </div>
 </template>
 
 <script>
 import Navbar from './components/common/Navbar';
+import ConfirmationModal from './components/common/ConfirmationModal';
 
 export default {
   name: 'app',
   components: {
-    Navbar
+    Navbar,
+    ConfirmationModal
   }
 };
 </script>
