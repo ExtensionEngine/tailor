@@ -42,7 +42,7 @@ export default {
     },
     source() {
       const src = this.asset.data.url;
-      let type = '';
+      let type = 'video/webm';
 
       if (src.match(regex.youtube)) {
         type = types.youtube;
