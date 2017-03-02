@@ -119,8 +119,7 @@ export default {
   }
 
   &.question-error {
-    .ql-container,
-    span {
+    .ql-container, span {
       border-bottom: 0;
       box-shadow: inset 0 -2px 0 #e51c23;
     }
