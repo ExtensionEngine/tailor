@@ -28,6 +28,7 @@ export default {
   },
   methods: {
     navigateTo() {
+      if (window.getSelection().toString()) return;
       this.$router.push({
         name: 'course',
         params: { courseKey: this.course.id }
