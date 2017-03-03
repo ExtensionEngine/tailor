@@ -20,7 +20,7 @@
             <span class="fa fa-caret-down"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#" @click="logoutUser">Log out</a></li>
+            <li><a href="#" @click="logout">Log out</a></li>
           </ul>
         </li>
       </ul>
@@ -37,13 +37,7 @@ export default {
     ...mapGetters(['user']),
     ...mapGetters(['course'], 'editor')
   },
-  methods: {
-    logoutUser() {
-      this.logout();
-      this.$router.push('/login');
-    },
-    ...mapActions(['logout'])
-  }
+  methods: mapActions(['logout'])
 };
 </script>
 
