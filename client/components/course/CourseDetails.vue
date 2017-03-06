@@ -1,6 +1,8 @@
 <template>
-  <div class="container">
-    <div class="course-name">
+  <div class="settings">
+    <loader v-if="showLoader"></loader>
+    <div v-else class="course-name">
+      <label>Name</label>
       <template v-if="showNameInput">
         <input
           class="form-control"
@@ -10,14 +12,14 @@
           @keyup.enter="updateName"
           @keyup.esc="showNameInput = false">
       </template>
-      <template v-else>
+      <template v-else class="course-name">
         <h2 @click.stop="showNameInput = true">
           {{ course ? course.name : '' }}
         </h2>
-        <span class="fa fa-pencil pencil" aria-hidden="true"></span>
       </template>
     </div>
     <div class="course-description">
+      <label>Description</label>
       <template v-if="showDescriptionInput">
         <textarea
           class="form-control"
@@ -28,10 +30,9 @@
         </textarea>
       </template>
       <template v-else>
-        <span @click.stop="showDescriptionInput = true">
-          {{ course ? course.description : '' }}
+        <span class="form-display" @click.stop="showDescriptionInput = true">
+            {{ course ? course.description : '' }}
         </span>
-        <span class="fa fa-pencil pencil" aria-hidden="true"></span>
       </template>
     </div>
     <div class="course-actions">
@@ -50,12 +51,16 @@
 <script>
 import EventBus from 'EventBus';
 import { focus } from 'vue-focus';
+import Loader from '../common/Loader';
 import { mapGetters, mapActions } from 'vuex-module';
+import { tooltip } from 'vue-strap';
 
 const appChannel = EventBus.channel('app');
 
 export default {
+  props: ['showLoader'],
   directives: { focus },
+  components: { Loader, tooltip },
   data() {
     return {
       showNameInput: false,
@@ -101,9 +106,11 @@ export default {
       appChannel.emit('showConfirmationModal', payload);
     }
   },
-  created() {
-    this.newCourseName = this.course.name.slice(0);
-    this.newCourseDescription = this.course.description.slice(0);
+  watch: {
+    course() {
+      this.newCourseName = this.course.name;
+      this.newCourseDescription = this.course.description;
+    }
   }
 };
 </script>
@@ -114,7 +121,7 @@ export default {
 }
 
 .course-name {
-  margin: 80px 0 30px 0;
+  margin: 20px 0 30px 0;
   text-align: left;
 
   &:hover {
@@ -140,14 +147,41 @@ export default {
 
 h2 {
   display: inline-block;
-  font-size: 20px;
+  font-size: 16px;
   color: #444;
+  font-weight: normal;
+  margin: 20px 0 7px 0; 
 }
 
-.container {
-  textarea {
-    resize: vertical;
-    height: 200px;
-  }
+input.form-control {
+  padding-top: 3px; 
+  margin-top: 15px;
+}
+
+textarea.form-control {
+  height: 300px;
+  padding-top: 22px;
+  font-size: 16px;
+  letter-spacing: 0.1px;
+}
+
+span.form-display {
+  font-size: 16px;
+  white-space: pre-line;
+  display: inline-block;
+  height: 300px;
+}
+
+label {
+  color: gray;
+  display: block;
+  font-size: 14px;
+}
+
+.settings {
+  margin: 40px 20px; 
+  padding: 10px 30px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
 }
 </style>
