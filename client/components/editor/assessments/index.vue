@@ -73,9 +73,10 @@ export default {
   props: { initAssessment: Object },
   data() {
     const assessment = cloneDeep(this.initAssessment);
+    const question = assessment.question;
     return {
       assessment,
-      isEditing: !assessment.question,
+      isEditing: question.length === 1 && !question[0].data,
       alert: {},
       errors: []
     };
