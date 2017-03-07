@@ -27,7 +27,7 @@ const ASSET_TYPES = {
 
 export default {
   name: 'asset',
-  props: { asset: Object },
+  props: { asset: Object, disabled: Boolean },
   computed: {
     ...mapGetters(['toolbar'], 'atom'),
     columnWidth() {
@@ -45,6 +45,7 @@ export default {
       return ASSET_TYPES[type];
     },
     focus(e) {
+      if (this.disabled) return;
       this.setToolbarContext({ type: this.asset.type, context: this.asset });
       // Attach component meta to event
       e.component = {
@@ -53,7 +54,11 @@ export default {
       };
     },
     save(data) {
-      this.updateAsset({ ...this.asset, data });
+      if (this.asset.embed) {
+        this.asset.data = data;
+      } else {
+        this.updateAsset({ ...this.asset, data });
+      }
     }
   },
   components: {
