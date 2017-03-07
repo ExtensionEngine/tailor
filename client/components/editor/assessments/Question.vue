@@ -3,26 +3,13 @@
     <h4>Question</h4>
     <div
       :class="{ editing: isEditing, 'question-error': questionError }"
-      @click="focus"
       class="question">
-      <div v-if="!isFocused && !question">
-        <div class="well">
-          <div class="message">
-            <span>Click to edit</span>
-          </div>
-        </div>
-      </div>
-      <div v-else>
-        <quill-editor
-          v-if="isFocused"
-          v-model="question"
-          :config="config"
-          @change="update">
-        </quill-editor>
-        <div v-else class="ql-container ql-snow">
-          <div v-html="parsedQuestion" class="ql-editor"></div>
-        </div>
-      </div>
+      <asset
+        v-for="asset in question"
+        :asset="asset"
+        :disabled="!isEditing">
+      </asset>
+      <select-asset v-show="isEditing" @selected="addAsset"></select-asset>
     </div>
     <span class="help-block" v-if="isEditing && helperText">
       {{ helperText }}
@@ -31,9 +18,11 @@
 </template>
 
 <script>
+import Asset from '../assets';
+import cuid from 'cuid';
 import { helperText } from '../../../utils/assessment';
-import { mapGetters, mapMutations } from 'vuex-module';
-import { quillEditor } from 'vue-quill-editor';
+import { mapGetters } from 'vuex-module';
+import SelectAsset from './SelectAsset';
 
 const blankRegex = /(@blank)/g;
 
@@ -56,8 +45,7 @@ export default {
     },
     parsedQuestion() {
       let index = 0;
-      const newValue = () => `(${++index})__________`;
-      return this.question.replace(blankRegex, newValue);
+      return this.question.replace(blankRegex, () => `(${++index})__________`);
     },
     helperText() {
       const helper = helperText[this.assessment.type] || {};
@@ -72,22 +60,16 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setToolbarContext'], 'atom'),
-    focus(e) {
-      this.setToolbarContext({ type: 'ASSESSMENT', context: this.assessment });
-      // Attach component meta to event
-      e.component = {
-        name: 'assessment',
-        data: this.assessment
-      };
-    },
     update() {
-      let data = { question: this.question };
-      this.$emit('update', data);
+      this.$emit('update', { question: this.question });
+    },
+    addAsset(type) {
+      this.question.push({ cid: cuid(), type, embed: true });
     }
   },
   components: {
-    quillEditor
+    Asset,
+    SelectAsset
   },
   watch: {
     initialQuestion(newVal) {

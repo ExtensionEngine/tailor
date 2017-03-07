@@ -1,9 +1,11 @@
 <template>
   <div class="select-question-asset">
     <transition name="slide-fade">
-      <select-asset v-if="selection" @selected="selected"></select-asset>
-      <div @click="close" class="btn-base btn-close">
-        <span class="fa fa-close"></span>
+      <div v-if="selection">
+        <select-asset @selected="selected"></select-asset>
+        <div @click="close" class="btn-base btn-close">
+          <span class="fa fa-close"></span>
+        </div>
       </div>
     </transition>
     <div v-if="!selection" @click="selection = !selection" class="btn-base">
