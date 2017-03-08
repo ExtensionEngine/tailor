@@ -45,39 +45,39 @@ export const schemas = {
 export const defaults = {
   MC: {
     type: 'MC',
-    question: '',
+    question: [],
     answers: ['', '', ''],
     correct: [],
     hint: ''
   },
   NR: {
     type: 'NR',
-    question: '',
+    question: [],
     correct: '',
     hint: ''
   },
   SC: {
     type: 'SC',
-    question: '',
+    question: [],
     answers: ['', ''],
     correct: '',
     hint: ''
   },
   TR: {
     type: 'TR',
-    question: '',
+    question: [],
     correct: '',
     hint: ''
   },
   TF: {
     type: 'TF',
-    question: '',
+    question: [],
     correct: null,
     hint: ''
   },
   FB: {
     type: 'FB',
-    question: '',
+    question: [],
     correct: []
   }
 };
