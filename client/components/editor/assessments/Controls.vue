@@ -2,7 +2,7 @@
   <div class="controls">
     <div v-if="isEditing" class="pull-right">
       <button @click="$emit('cancel')" class="btn btn-default">Cancel</button>
-      <button @click="$emit('save')" class="btn btn-success">Save</button>
+      <button @click="save" class="btn btn-success">Save</button>
     </div>
     <div v-else class="pull-right">
       <button @click="$emit('remove')" class="btn btn-default">Remove</button>
@@ -13,7 +13,13 @@
 
 <script>
 export default {
-  props: { isEditing: Boolean }
+  props: { isEditing: Boolean },
+  methods: {
+    save() {
+      // Make sure all other handlers are executed prior to save
+      setTimeout(() => this.$emit('save'), 0);
+    }
+  }
 };
 </script>
 

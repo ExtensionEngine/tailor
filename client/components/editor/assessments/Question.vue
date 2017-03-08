@@ -20,9 +20,14 @@
 <script>
 import Asset from '../assets';
 import cuid from 'cuid';
+import EventBus from 'EventBus';
+import findIndex from 'lodash/findIndex';
 import { helperText } from '../../../utils/assessment';
 import { mapGetters } from 'vuex-module';
+import pullAt from 'lodash/pullAt';
 import SelectAsset from './SelectAsset';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   props: {
@@ -50,6 +55,15 @@ export default {
       const question = this.assessment.question.concat(asset);
       this.$emit('update', { question });
     }
+  },
+  created() {
+    appChannel.on('deleteAsset', asset => {
+      if (!asset.embed) return;
+      const index = findIndex(this.assessment.question, { _cid: asset._cid });
+      if (index === -1) return;
+      const question = pullAt(this.assessment.question.slice(0), index);
+      this.$emit('update', { question });
+    });
   },
   components: {
     Asset,
