@@ -20,6 +20,7 @@
 
 <script>
 import Asset from '../assets';
+import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import EventBus from 'EventBus';
 import findIndex from 'lodash/findIndex';
@@ -65,7 +66,8 @@ export default {
       if (!asset.embed) return;
       const index = findIndex(this.assessment.question, { _cid: asset._cid });
       if (index === -1) return;
-      const question = pullAt(this.assessment.question.slice(0), index);
+      let question = cloneDeep(this.assessment.question);
+      pullAt(question, index);
       this.$emit('update', { question });
     });
   },
