@@ -33,6 +33,8 @@
 <script>
 import debounce from 'lodash/debounce';
 import draggable from 'vuedraggable';
+import filter from 'lodash/filter';
+import reduce from 'lodash/reduce';
 import times from 'lodash/times';
 
 const PLACEHOLDER = /(@blank)/g;
@@ -62,7 +64,11 @@ export default {
       return this.answerGroups.length !== this.blanksCount;
     },
     blanksCount() {
-      return (this.question.match(PLACEHOLDER) || []).length;
+      const textAssets = filter(this.question, { type: 'TEXT' });
+      return reduce(textAssets, (count, it) => {
+        const content = it.data ? it.data.content : '';
+        return count + (content.match(PLACEHOLDER) || []).length;
+      }, 0);
     },
     disabled() {
       return !this.isEditing;

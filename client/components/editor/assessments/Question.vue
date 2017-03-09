@@ -7,7 +7,8 @@
       <asset
         v-for="asset in assessment.question"
         :asset="asset"
-        :disabled="!isEditing">
+        :disabled="!isEditing"
+        @input="assetChanged">
       </asset>
       <select-asset v-show="isEditing" @selected="addAsset"></select-asset>
     </div>
@@ -54,6 +55,9 @@ export default {
       const asset = { _cid: cuid(), type, embed: true };
       const question = this.assessment.question.concat(asset);
       this.$emit('update', { question });
+    },
+    assetChanged(value) {
+      this.$emit('update', { question: this.assessment.question });
     }
   },
   created() {
