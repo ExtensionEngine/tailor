@@ -56,6 +56,9 @@ export default {
   watch: {
     isFocused(val, oldVal) {
       if (oldVal && !val) this.$emit('save', this.localAsset);
+    },
+    localAsset() {
+      if (this.asset.embed) this.$emit('save', this.localAsset);
     }
   },
   components: { quillEditor }

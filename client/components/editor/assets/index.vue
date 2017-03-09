@@ -59,6 +59,8 @@ export default {
       } else {
         this.updateAsset({ ...this.asset, data });
       }
+
+      this.$emit('input', this.asset);
     }
   },
   components: {
