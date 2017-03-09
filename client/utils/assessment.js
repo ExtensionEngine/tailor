@@ -15,29 +15,29 @@ export const helperText = {
 
 export const schemas = {
   MC: yup.object().shape({
-    question: yup.string().trim().min(1).required(),
+    question: yup.array().min(1),
     answers: yup.array().min(3).of(yup.string().trim().min(1)).required(),
     correct: yup.array().min(2).of(yup.number()).required()
   }),
   NR: yup.object().shape({
-    question: yup.string().trim().min(1).required(),
+    question: yup.array().min(1),
     correct: yup.string().trim().matches(/^(^\d+$)|(^\d+\.\d+$)$/).required()
   }),
   SC: yup.object().shape({
-    question: yup.string().trim().min(1).required(),
+    question: yup.array().min(1),
     answers: yup.array().min(2).of(yup.string().trim().min(1)).required(),
     correct: yup.number().required()
   }),
   TR: yup.object().shape({
-    question: yup.string().trim().min(1).required(),
+    question: yup.array().min(1),
     correct: yup.string().trim().min(1).required()
   }),
   TF: yup.object().shape({
-    question: yup.string().trim().min(1).required(),
+    question: yup.array().min(1),
     correct: yup.boolean().required()
   }),
   FB: yup.object().shape({
-    question: yup.string().trim().matches(/@blank/).required(),
+    question: yup.array().min(1),
     correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).required()))
   })
 };
