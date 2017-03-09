@@ -7,7 +7,7 @@ function index(req, res) {
   return Revision
     .findAll({
       where: { courseId },
-      include: [User],
+      include: [{ model: User, attributes: ['id', 'email'] }],
       order: [['createdAt', 'DESC']]
     })
     .then(data => res.json({ data }));
