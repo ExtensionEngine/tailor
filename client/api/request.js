@@ -20,9 +20,12 @@ client.interceptors.request.use(config => {
   return config;
 });
 
-client.interceptors.response.use(res => {
-  if (res.status === 401) window.localStorage.removeItem('JWT_TOKEN');
-  return res;
+client.interceptors.response.use(res => res, err => {
+  if (err.response.status === 401) {
+    window.localStorage.removeItem('JWT_TOKEN');
+    window.localStorage.removeItem('CGMA_AUTHOR_USER');
+    window.location.reload();
+  }
 });
 
 export default client;
