@@ -17,24 +17,24 @@ module.exports = function (sequelize, DataTypes) {
     state: {
       type: DataTypes.JSON,
       allowNull: true,
-      validate: {
-        notEmpty: true
-      }
+      validate: { notEmpty: true }
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at'
     }
   }, {
     classMethods: {
       associate(models) {
         Revision.belongsTo(models.Course, {
-          foreignKey: {
-            allowNull: false
-          },
-          onDelete: 'CASCADE'
+          foreignKey: { name: 'courseId', field: 'course_id' }
         });
         Revision.belongsTo(models.User, {
-          foreignKey: {
-            allowNull: false
-          },
-          onDelete: 'CASCADE'
+          foreignKey: { name: 'userId', field: 'user_id' }
         });
       },
       addHooks(models) {
