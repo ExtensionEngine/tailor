@@ -47,6 +47,7 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
+import DragDrop from './DragDrop';
 import FillBlank from './FillBlank';
 import MultipleChoice from './MultipleChoice';
 import NumericalResponse from './NumericalResponse';
@@ -65,7 +66,8 @@ const ASSESSMENT_TYPES = {
   TF: 'true-false',
   NR: 'numerical-response',
   TR: 'text-response',
-  FB: 'fill-blank'
+  FB: 'fill-blank',
+  DD: 'drag-drop'
 };
 
 export default {
@@ -135,7 +137,8 @@ export default {
     TextResponse,
     FillBlank,
     Question,
-    Controls
+    Controls,
+    DragDrop
   }
 };
 </script>
@@ -180,3 +183,8 @@ export default {
   }
 }
 </style>
+<!-- display: block;
+position: absolute;
+right: 20px;
+top: 50%;
+transform: translateY(-50%); -->
