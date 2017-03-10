@@ -3,7 +3,7 @@
 const app = require('./app');
 const config = require('../config/server');
 const logger = require('./shared/logger');
-const sequelize = require('./shared/database/sequelize');
+const database = require('./shared/database');
 
 function runApp() {
   return new Promise((resolve, reject) => {
@@ -11,7 +11,7 @@ function runApp() {
   });
 }
 
-sequelize.initialize()
+database.initialize()
   .then(() => logger.info(`Database initialized`))
   .then(runApp)
   .then(() => logger.info(`Server listening on port ${config.port}`))

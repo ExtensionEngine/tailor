@@ -1,6 +1,6 @@
 'use strict';
 
-const { Revision, User } = require('../shared/database/sequelize');
+const { Revision, User } = require('../shared/database');
 
 function index(req, res) {
   const courseId = req.params.courseId;

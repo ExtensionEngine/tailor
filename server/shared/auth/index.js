@@ -2,7 +2,7 @@
 
 const { ExtractJwt, Strategy } = require('passport-jwt');
 const passport = require('passport');
-const { User } = require('../database/sequelize');
+const { User } = require('../database');
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeader(),
