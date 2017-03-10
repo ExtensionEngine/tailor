@@ -56,7 +56,6 @@ const calculatePosition = require('../shared/util/calculatePosition');
  *         type: float
  *         description: position within the array of sibling activities
  */
-
 module.exports = function (sequelize, DataTypes) {
   const Activity = sequelize.define('activity', {
     name: {
@@ -69,25 +68,42 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.DOUBLE,
       allowNull: false,
       validate: { min: 0 }
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at'
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: 'deleted_at'
     }
   }, {
     classMethods: {
       associate(models) {
-        Activity.belongsTo(models.Course);
-        Activity.belongsTo(Activity, { as: 'parent', foreignKey: 'parentId' });
-        Activity.hasMany(Activity, { as: 'children', foreignKey: 'parentId' });
         Activity.hasMany(models.Asset);
         Activity.hasMany(models.Assessment);
+        Activity.belongsTo(models.Course, {
+          foreignKey: { name: 'courseId', field: 'course_id' }
+        });
+        Activity.belongsTo(Activity, {
+          as: 'parent',
+          foreignKey: { name: 'parentId', field: 'parent_id' }
+        });
+        Activity.hasMany(Activity, {
+          as: 'children',
+          foreignKey: { name: 'parentId', field: 'parent_id' }
+        });
       }
     },
     instanceMethods: {
       siblings() {
         return Activity.findAll({
           where: {
-            $and: [
-              { parentId: this.parentId },
-              { courseId: this.courseId }
-            ]
+            $and: [{ parentId: this.parentId }, { courseId: this.courseId }]
           },
           order: 'position ASC'
         });
@@ -116,6 +132,9 @@ module.exports = function (sequelize, DataTypes) {
         });
       }
     },
+    underscored: true,
+    timestamps: true,
+    paranoid: true,
     freezeTableName: true
   });
 
