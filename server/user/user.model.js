@@ -3,8 +3,8 @@
 const Promise = require('bluebird');
 const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const config = require('../../config/server');
-const mail = require('../shared/mail');
 const jwt = require('jsonwebtoken');
+const mail = require('../shared/mail');
 const { user: role } = require('../../config/shared').role;
 
 const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
@@ -63,6 +63,18 @@ module.exports = function (sequelize, DataTypes) {
     token: {
       type: DataTypes.STRING,
       unique: true
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at'
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: 'deleted_at'
     }
   }, {
     getterMethods: {
@@ -76,7 +88,10 @@ module.exports = function (sequelize, DataTypes) {
     },
     classMethods: {
       associate(models) {
-        User.belongsToMany(models.Course, { through: models.CourseUser });
+        User.belongsToMany(models.Course, {
+          through: models.CourseUser,
+          foreignKey: { name: 'userId', field: 'user_id' }
+        });
       },
       invite(user) {
         return User.create(user).then(user => {
@@ -130,6 +145,9 @@ module.exports = function (sequelize, DataTypes) {
         return Promise.all(updates);
       }
     },
+    underscored: true,
+    timestamps: true,
+    paranoid: true,
     freezeTableName: true
   });
 
