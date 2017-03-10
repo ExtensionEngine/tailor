@@ -5,62 +5,57 @@
         v-for="(dropSpot, index) in dropSpots"
         :class="fillSpace()"
         class="drop-spots col-md-6 col-sm-12">
-        <transition name="fade" mode="out-in">
+        <span
+          @click="toggleDisplay(index)"
+          :class="{'flip': elementsDisplay[index].flip === true}"
+          class="heading-box flipper">
           <span
-            v-if="elementsDisplay[index].display === 'view'"
-            @click="toggleDisplay(index)"
-            class="heading-box">
-            <span
-              :class="errorClass(index)"
-              class="heading" >
-              {{ dropSpot.heading }}
-            </span>
-            <span
-              v-show="allowRemove(index)"
-              @click.stop="removeDropSpot(index)"
-              class="fa fa-times destroy">
-            </span>
+            :class="errorClass(index)"
+            class="heading-view" >
+            {{ dropSpot.heading }}
+          </span>
+          <span
+            v-show="allowRemove(index)"
+            @click.stop="removeDropSpot(index)"
+            class="fa fa-times destroy">
           </span>
           <input
-            v-else="elementsDisplay[index].display === 'edit'"
             v-model="dropSpot.heading"
-            v-focus
+            v-focus="elementsDisplay[index]"
+            @click.stop=""
             @keyup.enter="toggleDisplay(index)"
             @keyup.esc="toggleDisplay(index)"
-            @blur="elementsDisplay[index].display === 'edit'
+            @blur="elementsDisplay[index].flip === true
               && toggleDisplay(index)"
             class="form-control heading-input"
             type="text">
-        </transition>
+        </span>
         <ul>
           <li v-for="(answer, j) in answerGroup(index)">
-            <transition name="fade" mode="out-in">
+            <span
+              @click.stop="toggleDisplay(index, j)"
+              :class="{'flip': elementsDisplay[index].items[j].flip === true}"
+              class="response-box flipper">
               <span
-                v-if="elementsDisplay[index].items[j] === 'view'"
-                @click.stop="toggleDisplay(index, j)"
-                class="response-box">
-                <span
-                :class="errorClass(index, j)"
-                class="response">
-                {{ answer }}
+              :class="errorClass(index, j)"
+              class="response-view">
+              {{ answer }}
               </span>
-                <span
-                  v-show="allowRemove(index, j)"
-                  @click.stop="removeAnswer(index, j)"
-                  class="fa fa-times destroy">
-                </span>
+              <span
+                v-show="allowRemove(index, j)"
+                @click.stop="removeAnswer(index, j)"
+                class="fa fa-times destroy">
               </span>
               <input
-                v-else="elementsDisplay[index].items[j] === 'edit'"
                 v-model="answerGroup(index)[j]"
-                v-focus
+                v-focus="elementsDisplay[index].items[j]"
                 @keyup.esc="toggleDisplay(index, j)"
                 @keyup.enter="toggleDisplay(index, j)"
-                @blur="elementsDisplay[index].items[j] === 'edit'
+                @blur="elementsDisplay[index].items[j].flip === true
                   && toggleDisplay(index, j)"
                 class="form-control response-input"
                 type="text">
-            </transition>
+            </span>
           </li>
           <span
             @click="addAnswer(index)"
@@ -93,8 +88,8 @@ export default {
       this.assessment.correct.push({ heading: 'Drop spot', answers: ['Response item'] });
       this.assessment.correct.push({ heading: 'Drop spot', answers: ['Response item'] });
     }
-    this.elementsDisplay.push({ display: 'view', items: ['view'] });
-    this.elementsDisplay.push({ display: 'view', items: ['view'] });
+    this.elementsDisplay.push({ flip: false, items: [{ flip: false }] });
+    this.elementsDisplay.push({ flip: false, items: [{ flip: false }] });
   },
   computed: {
     dropSpots() {
@@ -110,12 +105,12 @@ export default {
     },
     addAnswer(index) {
       this.answerGroup(index).push('Response item');
-      this.elementsDisplay[index].items.push('view');
+      this.elementsDisplay[index].items.push({ flip: false });
       this.update();
     },
     addDropSpot() {
       this.assessment.correct.push({ heading: 'Drop spot', answers: ['Response item'] });
-      this.elementsDisplay.push({ display: 'view', items: ['view'] });
+      this.elementsDisplay.push({ flip: false, items: [{ flip: false }] });
       this.update();
     },
     removeAnswer(index, j) {
@@ -136,11 +131,15 @@ export default {
     toggleDisplay(index, j) {
       if (j !== undefined) {
         let mode = this.elementsDisplay[index].items;
-        mode[j] === 'view' ? mode.splice(j, 1, 'edit') : mode.splice(j, 1, 'view');
-        return;
+        return mode[j].flip === false
+          ? mode.splice(j, 1, { flip: true })
+          : mode.splice(j, 1, { flip: false });
       }
       let mode = this.elementsDisplay[index];
-      mode.display === 'view' ? mode.display = 'edit' : mode.display = 'view';
+      mode.flip === false
+        ? mode.flip = true
+        : mode.flip = false;
+      return;
     },
     errorClass(groupIndex, answerIndex) {
       if (answerIndex === undefined) {
@@ -160,8 +159,8 @@ export default {
   },
   directives: {
     focus: {
-      inserted: function (el) {
-        el.focus();
+      update(el, binding, vnode) {
+        if (binding.value && binding.value.flip === true) el.focus();
       }
     }
   }
@@ -173,11 +172,13 @@ export default {
   overflow: hidden;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .17s
+.flipper{
+  transition: 0.5s;
+	transform-style: preserve-3d;
 }
-.fade-enter, .fade-leave-to {
-  opacity: 0
+
+.flipper.flip{
+  transform: rotateX(180deg);
 }
 
 .error {
@@ -215,27 +216,39 @@ export default {
     }
   }
   .heading-input {
-    width: 100%;
     min-height: 52px;
-    margin: 0 auto;
+    position: absolute;
+    top: 0;
+    left: 0;
     display: table-cell;
     vertical-align: middle;
     overflow: hidden;
+    backface-visibility: hidden;
+    transform: rotateX( 180deg );
   }
 
   .heading-box {
-    padding: 14px 26px;
     text-align: center;
     position: relative;
     display: table;
-    background-color: rgb(238, 238, 238);
-    border: 1px solid rgb(89, 89, 89);
     width: 100%;
     min-height: 52px;
     margin: 0 auto;
 
-    .heading {
+    .heading-view {
+      background-color: rgb(238, 238, 238);
+      border: 1px solid rgb(89, 89, 89);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 14px 26px;
       display: inline-block;
+      backface-visibility: hidden;
+      z-index: 2;
+      /* for firefox 31 */
+      transform: rotateX(0deg);
     }
 
     .destroy {
@@ -252,21 +265,32 @@ export default {
   .response-input {
     display: table-cell;
     vertical-align: middle;
+    position: relative;
     width: 100%;
     min-height: 46px;
+    backface-visibility: hidden;
+    transform: rotateX( 180deg );
   }
 
   .response-box {
     display: table;
-    padding: 11px 26px;
-    position: relative;
-    background-color: rgb(217, 217, 217);
-    border: 1px dashed rgb(89, 89, 89);
     width: 100%;
     min-height: 40px;
 
-    .response {
+    .response-view {
       display: inline-block;
+      backface-visibility: hidden;
+      z-index: 2;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: rgb(217, 217, 217);
+      border: 1px dashed rgb(89, 89, 89);
+      width: 100%;
+      height: 100%;
+      padding: 11px 26px;
+      /* for firefox 31 */
+      transform: rotateX(0deg);
     }
 
     .destroy {
@@ -280,9 +304,10 @@ export default {
     }
   }
 
-  .response-box:hover,
-  .heading-box:hover {
+  .response-view:hover,
+  .heading-view:hover {
     .destroy {
+      z-index: 3;
       visibility: visible;
     }
   }
