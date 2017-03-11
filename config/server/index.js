@@ -1,7 +1,5 @@
 module.exports = {
   auth: require('./auth'),
-  database: require('./database.js'),
-  error: require('./error'),
   queryParams: require('./queryParams'),
   storage: require('./storage'),
   swagger: require('./swagger'),
