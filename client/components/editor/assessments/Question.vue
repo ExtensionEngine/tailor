@@ -91,10 +91,7 @@ export default {
   padding: 10px;
 
   &.question-error {
-    .ql-container, span {
-      border-bottom: 0;
-      box-shadow: inset 0 -2px 0 #e51c23;
-    }
+    box-shadow: inset 0 -2px 0 #e51c23;
   }
 }
 </style>
