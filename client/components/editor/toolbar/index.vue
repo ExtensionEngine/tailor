@@ -40,7 +40,7 @@ export default {
     ...mapMutations(['setToolbarContext'], 'atom'),
     remove() {
       const asset = this.toolbar.context;
-      if (asset.embed) {
+      if (asset.embedded) {
         appChannel.emit('deleteAsset', asset);
       } else {
         this.removeAsset(asset);

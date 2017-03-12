@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     addAsset(type) {
-      const asset = { _cid: cuid(), type, embed: true };
+      const asset = { id: cuid(), _cid: cuid(), type, data: {}, embedded: true };
       const question = this.assessment.question.concat(asset);
       this.$emit('update', { question });
     },
@@ -63,7 +63,7 @@ export default {
   },
   created() {
     appChannel.on('deleteAsset', asset => {
-      if (!asset.embed) return;
+      if (!asset.embedded) return;
       const index = findIndex(this.assessment.question, { _cid: asset._cid });
       if (index === -1) return;
       let question = cloneDeep(this.assessment.question);

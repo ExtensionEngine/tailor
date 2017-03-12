@@ -58,7 +58,7 @@ export default {
       const assessment = {
         _cid: cuid(),
         ...defaults[type],
-        question: [{ _cid: cuid(), type: 'TEXT', embed: true }]
+        question: [{ id: cuid(), _cid: cuid(), type: 'TEXT', embedded: true }]
       };
 
       Vue.set(this.assessments, assessment._cid, assessment);

@@ -54,7 +54,7 @@ export default {
       };
     },
     save(data) {
-      if (this.asset.embed) {
+      if (this.asset.embedded) {
         this.asset.data = data;
       } else {
         this.updateAsset({ ...this.asset, data });
