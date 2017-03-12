@@ -1,11 +1,8 @@
 'use strict';
 
 const calculatePosition = require('../shared/util/calculatePosition');
-const { extractFileAsset } = require('../shared/storage/helpers');
-const mime = require('mime-types');
-const set = require('lodash/set');
-const storage = require('../shared/storage');
 const isNumber = require('lodash/isNumber');
+const { processAsset, resolveAsset } = require('../shared/storage/helpers');
 const values = require('lodash/values');
 
 const types = {
@@ -84,31 +81,11 @@ module.exports = function (sequelize, DataTypes) {
       },
       fetch(opt) {
         return isNumber(opt)
-          ? Asset.findById(opt).then(it => it && it.resolveUrl())
-          : Asset.findAll(opt).then(arr => Promise.all(arr.map(it => it.resolveUrl())));
+          ? Asset.findById(opt).then(it => it && resolveAsset(it))
+          : Asset.findAll(opt).then(arr => Promise.all(arr.map(it => resolveAsset(it))));
       }
     },
     instanceMethods: {
-      saveFile(key, file) {
-        const options = { ACL: 'public-read', ContentType: mime.lookup(key) };
-        return storage.saveFile(key, file, options).then(() => this);
-      },
-      resolveUrl() {
-        const getUrl = key => {
-          return storage.getFileUrl(key, { Expires: 3600 })
-            .then(url => set(this, 'data.url', url));
-        };
-
-        return storage.fileExists(this.data.url)
-          .then(exists => exists ? getUrl(this.data.url) : this);
-      },
-      processFiles() {
-        // TODO: Add support for multiple file assets
-        if (!this.data.url) return Promise.resolve(this);
-        const { key, file } = extractFileAsset(this);
-        this.data.url = key;
-        return this.saveFile(key, file);
-      },
       siblings() {
         return Asset.findAll({
           where: { activityId: this.activityId },
@@ -126,11 +103,11 @@ module.exports = function (sequelize, DataTypes) {
     },
     hooks: {
       beforeCreate(asset) {
-        return asset.processFiles();
+        return processAsset(asset);
       },
       beforeUpdate(asset) {
-        const cond = asset.type === types.IMAGE && asset.changed('data');
-        return cond ? asset.processFiles() : Promise.resolve();
+        const changed = asset.changed('data');
+        return changed ? processAsset(asset) : Promise.resolve();
       }
     },
     freezeTableName: true
