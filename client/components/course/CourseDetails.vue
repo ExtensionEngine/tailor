@@ -1,49 +1,51 @@
 <template>
   <div class="settings">
     <loader v-if="showLoader"></loader>
-    <div v-else class="course-name">
-      <label>Name</label>
-      <template v-if="showNameInput">
-        <input
-          class="form-control"
-          v-model="newCourseName"
-          v-focus="true"
-          @blur="updateName"
-          @keyup.enter="updateName"
-          @keyup.esc="showNameInput = false">
-      </template>
-      <template v-else class="course-name">
-        <h2 @click.stop="showNameInput = true">
-          {{ course ? course.name : '' }}
-        </h2>
-      </template>
-    </div>
-    <div class="course-description">
-      <label>Description</label>
-      <template v-if="showDescriptionInput">
-        <textarea
-          class="form-control"
-          v-model="newCourseDescription"
-          v-focus="true"
-          @blur="updateDescription"
-          @keyup.esc="showDescriptionInput = false">
-        </textarea>
-      </template>
-      <template v-else>
-        <span class="form-display" @click.stop="showDescriptionInput = true">
-            {{ course ? course.description : '' }}
-        </span>
-      </template>
-    </div>
-    <div class="course-actions">
-      <button
-        v-if="showRemoveButton"
-        @click.stop="removeCourse"
-        class="btn btn-danger"
-        type="button">
-        <span class="fa fa-trash"></span>
-        remove course
-      </button>
+    <div v-else>
+      <div class="course-name">
+        <label>Name</label>
+        <template v-if="showNameInput">
+          <input
+            class="form-control"
+            v-model="newCourseName"
+            v-focus="true"
+            @blur="updateName"
+            @keyup.enter="updateName"
+            @keyup.esc="showNameInput = false">
+        </template>
+        <template v-else class="course-name">
+          <h2 @click.stop="showNameInput = true">
+            {{ course ? course.name : '' }}
+          </h2>
+        </template>
+      </div>
+      <div class="course-description">
+        <label>Description</label>
+        <template v-if="showDescriptionInput">
+          <textarea
+            class="form-control"
+            v-model="newCourseDescription"
+            v-focus="true"
+            @blur="updateDescription"
+            @keyup.esc="showDescriptionInput = false">
+          </textarea>
+        </template>
+        <template v-else>
+          <span class="form-display" @click.stop="showDescriptionInput = true">
+              {{ course ? course.description : '' }}
+          </span>
+        </template>
+      </div>
+      <div class="course-actions">
+        <button
+          v-if="showRemoveButton"
+          @click.stop="removeCourse"
+          class="btn btn-danger"
+          type="button">
+          <span class="fa fa-trash"></span>
+          remove course
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -116,29 +118,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.pencil {
-  display: none;
-}
-
 .course-name {
   margin: 20px 0 30px 0;
   text-align: left;
-
-  &:hover {
-    .pencil {
-      display: inline;
-    }
-  }
 }
 
 .course-description {
   text-align: left;
-
-  &:hover {
-    .pencil {
-      display: inline;
-    }
-  }
 }
 
 .course-actions {
