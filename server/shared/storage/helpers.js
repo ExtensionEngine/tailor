@@ -34,9 +34,9 @@ function processComposite(composite, courseId) {
 let processor = {};
 
 processor.IMAGE = (asset, courseId) => {
-  if (!asset.data.url) return Promise.resolve(asset);
   const image = asset.data.url;
   const base64Pattern = /^data:image\/(\w+);base64,/;
+  if (!image || !image.match(base64Pattern)) return Promise.resolve(asset);
   const file = Buffer.from(image.replace(base64Pattern, ''), 'base64');
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
   const hashString = `${asset.id}${file}`;

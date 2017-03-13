@@ -38,8 +38,7 @@ module.exports = function (sequelize, DataTypes) {
         return processAssessment(assessment);
       },
       beforeUpdate(assessment) {
-        const changed = assessment.changed('question');
-        return changed ? processAssessment(assessment) : Promise.resolve();
+        return processAssessment(assessment);
       }
     },
     freezeTableName: true
