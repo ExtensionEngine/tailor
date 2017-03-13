@@ -1,7 +1,7 @@
 <template>
   <div class="select-asset">
     <div
-      v-for="asset in assets"
+      v-for="asset in filteredAssets"
       @click="$emit('selected', asset.type)"
       class="content-type">
       <span class="fa" :class="asset.icon"></span>
@@ -11,8 +11,11 @@
 </template>
 
 <script>
+import filter from 'lodash/filter';
+
 export default {
   name: 'select-asset',
+  props: ['include'],
   data() {
     return {
       assets: [
@@ -22,6 +25,12 @@ export default {
         { type: 'GOMO', label: 'Gomo', icon: 'fa-window-maximize' }
       ]
     };
+  },
+  computed: {
+    filteredAssets() {
+      if (!this.include) return this.assets;
+      return filter(this.assets, it => this.include.indexOf(it.type) > -1);
+    }
   }
 };
 </script>

@@ -2,7 +2,7 @@
   <div class="select-question-asset">
     <transition name="slide-fade">
       <div v-if="selection">
-        <select-asset @selected="selected"></select-asset>
+        <select-asset @selected="selected" :include="['TEXT', 'IMAGE']"></select-asset>
         <div @click="close" class="btn-base btn-close">
           <span class="fa fa-close"></span>
         </div>
