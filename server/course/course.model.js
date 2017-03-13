@@ -43,14 +43,29 @@ module.exports = function (sequelize, DataTypes) {
     description: {
       type: DataTypes.TEXT,
       validate: { notEmpty: true, len: [2, 2000] }
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at'
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: 'deleted_at'
     }
   }, {
     classMethods: {
       associate(models) {
-        Course.belongsToMany(models.User, { through: models.CourseUser });
         Course.hasMany(models.Activity);
         Course.hasMany(models.Asset);
         Course.hasMany(models.Assessment);
+        Course.belongsToMany(models.User, {
+          through: models.CourseUser,
+          foreignKey: { name: 'courseId', field: 'course_id' }
+        });
       }
     },
     instanceMethods: {
@@ -59,6 +74,9 @@ module.exports = function (sequelize, DataTypes) {
           .then(users => users[0]);
       }
     },
+    underscored: true,
+    timestamps: true,
+    paranoid: true,
     freezeTableName: true
   });
 

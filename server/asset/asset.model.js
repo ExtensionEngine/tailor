@@ -66,13 +66,30 @@ module.exports = function (sequelize, DataTypes) {
     },
     layoutWidth: {
       type: DataTypes.INTEGER,
+      field: 'layout_width',
       allowNull: false
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at'
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: 'deleted_at'
     }
   }, {
     classMethods: {
       associate(models) {
-        Asset.belongsTo(models.Activity);
-        Asset.belongsTo(models.Course);
+        Asset.belongsTo(models.Activity, {
+          foreignKey: { name: 'activityId', field: 'activity_id' }
+        });
+        Asset.belongsTo(models.Course, {
+          foreignKey: { name: 'courseId', field: 'course_id' }
+        });
       },
       initialize() {
         const opts = { type: sequelize.QueryTypes.SELECT };
@@ -110,6 +127,9 @@ module.exports = function (sequelize, DataTypes) {
         return changed ? processAsset(asset) : Promise.resolve();
       }
     },
+    underscored: true,
+    timestamps: true,
+    paranoid: true,
     freezeTableName: true
   });
 

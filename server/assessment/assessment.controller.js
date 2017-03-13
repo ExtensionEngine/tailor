@@ -1,6 +1,6 @@
 'use strict';
 
-const { Assessment } = require('../shared/database/sequelize');
+const { Assessment } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { sort } = require('../../config/server').queryParams;

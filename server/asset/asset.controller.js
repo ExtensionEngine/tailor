@@ -1,6 +1,6 @@
 'use strict';
 
-const { Asset, Activity } = require('../shared/database/sequelize');
+const { Asset, Activity } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
