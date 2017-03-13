@@ -106,12 +106,18 @@ export default {
       };
 
       appChannel.emit('showConfirmationModal', payload);
+    },
+    setCourseFields() {
+      this.newCourseName = this.course.name;
+      this.newCourseDescription = this.course.description;
     }
+  },
+  created() {
+    this.setCourseFields();
   },
   watch: {
     course() {
-      this.newCourseName = this.course.name;
-      this.newCourseDescription = this.course.description;
+      this.setCourseFields();
     }
   }
 };
