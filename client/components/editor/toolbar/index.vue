@@ -5,7 +5,7 @@
         :is="getComponentName(toolbar.type)"
         :asset="toolbar.context">
       </component>
-      <div v-if="showDeleteButton" class="delete-asset">
+      <div class="delete-asset">
         <span @click="remove" class="btn btn-fab btn-danger">
           <span class="fa fa-trash"></span>
         </span>
@@ -15,11 +15,14 @@
 </template>
 
 <script>
+import EventBus from 'EventBus';
 import GomoToolbar from './GomoToolbar';
 import ImageToolbar from './ImageToolbar';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import QuillToolbar from './QuillToolbar';
 import VideoToolbar from './VideoToolbar';
+
+const appChannel = EventBus.channel('app');
 
 const TOOLBAR_TYPES = {
   ASSESSMENT: 'quill-toolbar',
@@ -31,18 +34,18 @@ const TOOLBAR_TYPES = {
 
 export default {
   name: 'toolbar',
-  computed: {
-    ...mapGetters(['toolbar'], 'atom'),
-    showDeleteButton() {
-      const type = this.toolbar.type;
-      return type && type !== 'ASSESSMENT';
-    }
-  },
+  computed: mapGetters(['toolbar'], 'atom'),
   methods: {
     ...mapActions({ removeAsset: 'remove' }, 'assets'),
     ...mapMutations(['setToolbarContext'], 'atom'),
     remove() {
-      this.removeAsset(this.toolbar.context);
+      const asset = this.toolbar.context;
+      if (asset.embedded) {
+        appChannel.emit('deleteAsset', asset);
+      } else {
+        this.removeAsset(asset);
+      }
+
       this.setToolbarContext();
     },
     getComponentName(type) {

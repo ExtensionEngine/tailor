@@ -1,3 +1,4 @@
+import find from 'lodash/find';
 import yup from 'yup';
 
 export const typeInfo = {
@@ -13,31 +14,53 @@ export const helperText = {
   FB: { question: 'Type "@blank" when new blank is needed.' }
 };
 
+const BLANK_PLACEHOLDER = /(@blank)/g;
+
+function containsText(asset) {
+  return asset.type === 'TEXT' &&
+    asset.data.content &&
+    asset.data.content.trim().length > 0;
+}
+
+function containsBlanks(asset) {
+  return asset.data.content.match(BLANK_PLACEHOLDER);
+}
+
+const question = yup.array().test(
+  'has-text', 'Please define question', question => !!find(question, containsText)
+);
+
+const fbQuestion = yup.array().test(
+  'has-blanks', 'At least one @blank required', question => {
+    return !!find(question, it => containsText(it) && containsBlanks(it));
+  }
+);
+
 export const schemas = {
   MC: yup.object().shape({
-    question: yup.string().trim().min(1).required(),
+    question,
     answers: yup.array().min(3).of(yup.string().trim().min(1)).required(),
     correct: yup.array().min(2).of(yup.number()).required()
   }),
   NR: yup.object().shape({
-    question: yup.string().trim().min(1).required(),
+    question,
     correct: yup.string().trim().matches(/^(^\d+$)|(^\d+\.\d+$)$/).required()
   }),
   SC: yup.object().shape({
-    question: yup.string().trim().min(1).required(),
+    question,
     answers: yup.array().min(2).of(yup.string().trim().min(1)).required(),
     correct: yup.number().required()
   }),
   TR: yup.object().shape({
-    question: yup.string().trim().min(1).required(),
+    question,
     correct: yup.string().trim().min(1).required()
   }),
   TF: yup.object().shape({
-    question: yup.string().trim().min(1).required(),
+    question,
     correct: yup.boolean().required()
   }),
   FB: yup.object().shape({
-    question: yup.string().trim().matches(/@blank/).required(),
+    question: fbQuestion,
     correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).required()))
   })
 };
@@ -45,39 +68,39 @@ export const schemas = {
 export const defaults = {
   MC: {
     type: 'MC',
-    question: '',
+    question: [],
     answers: ['', '', ''],
     correct: [],
     hint: ''
   },
   NR: {
     type: 'NR',
-    question: '',
+    question: [],
     correct: '',
     hint: ''
   },
   SC: {
     type: 'SC',
-    question: '',
+    question: [],
     answers: ['', ''],
     correct: '',
     hint: ''
   },
   TR: {
     type: 'TR',
-    question: '',
+    question: [],
     correct: '',
     hint: ''
   },
   TF: {
     type: 'TF',
-    question: '',
+    question: [],
     correct: null,
     hint: ''
   },
   FB: {
     type: 'FB',
-    question: '',
+    question: [],
     correct: []
   }
 };

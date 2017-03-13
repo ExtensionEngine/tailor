@@ -3,26 +3,14 @@
     <h4>Question</h4>
     <div
       :class="{ editing: isEditing, 'question-error': questionError }"
-      @click="focus"
       class="question">
-      <div v-if="!isFocused && !question">
-        <div class="well">
-          <div class="message">
-            <span>Click to edit</span>
-          </div>
-        </div>
-      </div>
-      <div v-else>
-        <quill-editor
-          v-if="isFocused"
-          v-model="question"
-          :config="config"
-          @change="update">
-        </quill-editor>
-        <div v-else class="ql-container ql-snow">
-          <div v-html="parsedQuestion" class="ql-editor"></div>
-        </div>
-      </div>
+      <asset
+        v-for="asset in assessment.question"
+        :asset="asset"
+        :disabled="!isEditing"
+        @input="assetChanged">
+      </asset>
+      <select-asset v-show="isEditing" @selected="addAsset"></select-asset>
     </div>
     <span class="help-block" v-if="isEditing && helperText">
       {{ helperText }}
@@ -31,11 +19,17 @@
 </template>
 
 <script>
+import Asset from '../assets';
+import cloneDeep from 'lodash/cloneDeep';
+import cuid from 'cuid';
+import EventBus from 'EventBus';
+import findIndex from 'lodash/findIndex';
 import { helperText } from '../../../utils/assessment';
-import { mapGetters, mapMutations } from 'vuex-module';
-import { quillEditor } from 'vue-quill-editor';
+import { mapGetters } from 'vuex-module';
+import pullAt from 'lodash/pullAt';
+import SelectAsset from './SelectAsset';
 
-const blankRegex = /(@blank)/g;
+const appChannel = EventBus.channel('app');
 
 export default {
   props: {
@@ -43,56 +37,43 @@ export default {
     isEditing: Boolean,
     errors: Array
   },
-  data() {
-    return {
-      question: this.assessment.question,
-      config: { modules: { toolbar: '#quillToolbar' } }
-    };
-  },
   computed: {
     ...mapGetters(['toolbar'], 'atom'),
-    initialQuestion() {
-      return this.assessment.question;
-    },
-    parsedQuestion() {
-      let index = 0;
-      const newValue = () => `(${++index})__________`;
-      return this.question.replace(blankRegex, newValue);
+    isFocused() {
+      const ctx = this.toolbar.context;
+      return this.isEditing && (ctx && ctx._cid === this.assessment._cid);
     },
     helperText() {
       const helper = helperText[this.assessment.type] || {};
       return helper.question;
-    },
-    isFocused() {
-      const ctx = this.toolbar.context;
-      return this.isEditing && (ctx && ctx._cid === this.assessment._cid);
     },
     questionError() {
       return this.errors.includes('question');
     }
   },
   methods: {
-    ...mapMutations(['setToolbarContext'], 'atom'),
-    focus(e) {
-      this.setToolbarContext({ type: 'ASSESSMENT', context: this.assessment });
-      // Attach component meta to event
-      e.component = {
-        name: 'assessment',
-        data: this.assessment
-      };
+    addAsset(type) {
+      const asset = { id: cuid(), _cid: cuid(), type, data: {}, embedded: true };
+      const question = this.assessment.question.concat(asset);
+      this.$emit('update', { question });
     },
-    update() {
-      let data = { question: this.question };
-      this.$emit('update', data);
+    assetChanged(value) {
+      this.$emit('update', { question: this.assessment.question });
     }
+  },
+  created() {
+    appChannel.on('deleteAsset', asset => {
+      if (!asset.embedded) return;
+      const index = findIndex(this.assessment.question, { _cid: asset._cid });
+      if (index === -1) return;
+      let question = cloneDeep(this.assessment.question);
+      pullAt(question, index);
+      this.$emit('update', { question });
+    });
   },
   components: {
-    quillEditor
-  },
-  watch: {
-    initialQuestion(newVal) {
-      if (newVal !== this.question) this.question = newVal;
-    }
+    Asset,
+    SelectAsset
   }
 };
 </script>
@@ -106,28 +87,11 @@ export default {
 
 .question {
   font-size: 22px;
-  border: 1px dashed transparent;
   text-align: center;
   padding: 10px;
 
-  .message {
-    padding: 13px;
-  }
-
-  &.editing {
-    border-color: #ccc;
-  }
-
   &.question-error {
-    .ql-container, span {
-      border-bottom: 0;
-      box-shadow: inset 0 -2px 0 #e51c23;
-    }
-  }
-
-  .well {
-    margin: 0;
-    padding: 29px;
+    box-shadow: inset 0 -2px 0 #e51c23;
   }
 }
 </style>

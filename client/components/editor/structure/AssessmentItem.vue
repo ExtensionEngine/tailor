@@ -19,22 +19,22 @@
 
 <script>
 import Assessment from '../assessments';
+import filter from 'lodash/filter';
+import map from 'lodash/map';
 import truncate from 'lodash/truncate';
 
 const htmlRegex = /<\/?[^>]+(>|$)/g;
 const blankRegex = /(@blank)/g;
-const options = { length: 50 };
 
 export default {
   name: 'assessment-item',
   props: ['assessment', 'edit'],
   computed: {
     question() {
-      let question = this.assessment.question || '';
-      let index = 0;
-      const newValue = () => `(${++index})`;
-      const parsedQuestion = question.replace(htmlRegex, '').replace(blankRegex, newValue);
-      return truncate(parsedQuestion, options);
+      let question = filter(this.assessment.question, { type: 'TEXT' });
+      question = map(question, 'data.content').join(' ');
+      question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
+      return truncate(question, { length: 50 });
     }
   },
   components: {

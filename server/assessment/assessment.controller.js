@@ -6,16 +6,17 @@ const { NOT_FOUND } = require('http-status-codes');
 const { sort } = require('../../config/server').queryParams;
 
 function index({ query, course }, res) {
-  const { activityId } = query;
-  let opts = {
-    where: activityId ? { activityId } : {},
+  const where = { courseId: course.id };
+  if (query.activityId) where.activityId = query.activityId;
+  const opts = {
+    where,
     order: [[
       query.sortBy || sort.field,
       query.sortOrder || sort.order.ASC
     ]]
   };
 
-  return course.getAssessments(opts).then(data => res.json({ data }));
+  return Assessment.fetch(opts).then(data => res.json({ data }));
 }
 
 function create({ params, body, course }, res) {

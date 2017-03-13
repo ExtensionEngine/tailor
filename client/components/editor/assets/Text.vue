@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!isFocused && !data.content">
+    <div v-if="!isFocused && !content">
       <div class="well text-placeholder">
         <div class="message">
           <span class="heading">Text placeholder</span>
@@ -11,16 +11,11 @@
     <div v-else>
       <quill-editor
         v-if="isFocused"
-        v-model="data.content"
+        v-model="content"
         :config="config">
       </quill-editor>
-      <div
-        v-else
-        class="ql-container ql-snow">
-        <div
-          v-html="data.content"
-          class="ql-editor">
-        </div>
+      <div v-else class="ql-container ql-snow">
+        <div v-html="content" class="ql-editor"></div>
       </div>
     </div>
   </div>
@@ -30,32 +25,29 @@
 import cloneDeep from 'lodash/cloneDeep';
 import { quillEditor } from 'vue-quill-editor';
 
-const defaultAsset = {
-  data: {
-    content: ''
-  }
-};
-
 export default {
   name: 'text-editor',
   props: ['asset', 'isFocused'],
   data() {
     return {
-      ...cloneDeep(defaultAsset),
-      ...cloneDeep(this.asset),
+      content: '',
+      ...cloneDeep(this.asset.data),
       config: { modules: { toolbar: '#quillToolbar' } }
     };
   },
   computed: {
     localAsset() {
       return {
-        content: this.data.content
+        content: this.content
       };
     }
   },
   watch: {
     isFocused(val, oldVal) {
       if (oldVal && !val) this.$emit('save', this.localAsset);
+    },
+    localAsset() {
+      if (this.asset.embedded) this.$emit('save', this.localAsset);
     }
   },
   components: { quillEditor }

@@ -55,7 +55,12 @@ export default {
       removeAssessment: 'remove'
     }, 'assessments'),
     add(type) {
-      const assessment = { _cid: cuid(), ...defaults[type] };
+      const assessment = {
+        _cid: cuid(),
+        ...defaults[type],
+        question: [{ id: cuid(), _cid: cuid(), type: 'TEXT', embedded: true }]
+      };
+
       Vue.set(this.assessments, assessment._cid, assessment);
       this.selected.push(assessment._cid);
     },
