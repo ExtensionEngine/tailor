@@ -44,8 +44,8 @@ export const schemas = {
   DD: yup.object().shape({
     question: yup.string().trim().required(),
     correct: yup.array().of(yup.object().shape({
-      heading: yup.string().trim().notOneOf(['Drop spot']).required(),
-      answers: yup.array().of(yup.string().trim().notOneOf(['Response item']).required())
+      heading: yup.string().trim().notOneOf(['Drop spot..']).required(),
+      answers: yup.array().of(yup.string().trim().notOneOf(['Response item..']).required())
     }))
   })
 };
