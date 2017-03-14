@@ -73,7 +73,7 @@ export default {
       // This removes input from DOM and triggers blur event!
       this.showNameInput = false;
     },
-    onfocusOut() {
+    onFocusOut() {
       this.$validator.validateAll().then(() => {
         this.saveActivityName();
         this.deactivateInput();
