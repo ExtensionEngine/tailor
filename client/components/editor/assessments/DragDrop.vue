@@ -147,8 +147,9 @@ export default {
     },
     flip(col, row) {
       const flipped = this.flipped;
-      if (row !== undefined) return flipped.col === col && flipped.row === row;
-      return flipped.col === col && flipped.row === null;
+      return row !== undefined
+        ? flipped.col === col && flipped.row === row
+        : flipped.col === col && flipped.row === null;
     },
     errorClass(col, row) {
       const answer = row === undefined
