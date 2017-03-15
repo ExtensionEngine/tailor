@@ -5,12 +5,8 @@
         v-for="(dropSpot, col) in dropSpots"
         :class="lgCol"
         class="drop-spots col-md-6 col-sm-12">
-        <div
-          :class="{'flip': flip(col)}"
-          class="heading-box flipper">
-          <div
-            @click="toggleDisplay(col)"
-            class="heading-view">
+        <div :class="{'flip': flip(col)}" class="heading-box flipper">
+          <div @click="toggleDisplay(col)" class="heading-view">
             <span :class="errorClass(col)" class="heading-text">
               {{ dropSpot.heading }}
             </span>
@@ -34,9 +30,7 @@
             v-for="(answer, row) in answerGroup(col)"
             :class="{'flip': flip(col, row)}"
             class="response-box flipper">
-            <div
-              @click="toggleDisplay(col, row)"
-              class="response-view">
+            <div @click="toggleDisplay(col, row)" class="response-view">
               <span :class="errorClass(col, row)" class="response-text">
                 {{ answer }}
               </span>
