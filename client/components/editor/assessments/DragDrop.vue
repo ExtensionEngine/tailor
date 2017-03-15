@@ -151,8 +151,9 @@ export default {
       return flipped.col === col && flipped.row === null;
     },
     errorClass(col, row) {
-      let answer = `correct[${col}].answers[${row}]`;
-      if (row === undefined) answer = `correct[${col}].heading`;
+      const answer = row === undefined
+        ? `correct[${col}].heading`
+        : `correct[${col}].answers[${row}]`;
       return { 'error': this.localErrors.includes(answer) };
     },
     removeSingleError(col, row) {
