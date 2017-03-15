@@ -16,6 +16,7 @@
         :assessment="assessment"
         :errors="errors"
         :isEditing="isEditing"
+        @syncErrors="syncErrors"
         @update="update"
         @alert="setAlert">
       </component>
@@ -99,6 +100,11 @@ export default {
     },
     validate(question) {
       return this.schema.validate(question, validationOptions);
+    },
+    syncErrors() {
+      this.errors = [];
+      this.validate(this.assessment)
+        .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
     },
     update(data) {
       Object.assign(this.assessment, cloneDeep(data));

@@ -5,7 +5,7 @@
         v-for="(dropSpot, col) in dropSpots"
         :class="lgCol"
         class="drop-spots col-md-6 col-sm-12">
-        <div :class="{'flip': flip(col)}" class="heading-box flipper">
+        <div :class="{'flip': allowFlip(col)}" class="heading-box flipper">
           <div @click="toggleDisplay(col)" class="heading-view">
             <span :class="errorClass(col)" class="heading-text">
               {{ dropSpot.heading }}
@@ -19,16 +19,16 @@
           <input
             v-model="dropSpot.heading"
             v-focus="{ col, row: null }"
-            @keyup.enter="allowToggle(col) && toggleDisplay(col)"
-            @keyup.esc="allowToggle(col) && toggleDisplay(col)"
-            @blur="allowToggle(col) && toggleDisplay(col)"
+            @keyup.enter="allowFlip(col) && toggleDisplay(col)"
+            @keyup.esc="allowFlip(col) && toggleDisplay(col)"
+            @blur="allowFlip(col) && toggleDisplay(col)"
             class="form-control heading-input"
             type="text">
         </div>
         <ul>
           <li
             v-for="(answer, row) in answerGroup(col)"
-            :class="{'flip': flip(col, row)}"
+            :class="{'flip': allowFlip(col, row)}"
             class="response-box flipper">
             <div @click="toggleDisplay(col, row)" class="response-view">
               <span :class="errorClass(col, row)" class="response-text">
@@ -43,9 +43,9 @@
             <input
               v-model="answerGroup(col)[row]"
               v-focus="{ col, row }"
-              @keyup.esc="allowToggle(col, row) && toggleDisplay(col, row)"
-              @keyup.enter="allowToggle(col, row) && toggleDisplay(col, row)"
-              @blur="allowToggle(col, row) && toggleDisplay(col, row)"
+              @keyup.esc="allowFlip(col, row) && toggleDisplay(col, row)"
+              @keyup.enter="allowFlip(col, row) && toggleDisplay(col, row)"
+              @blur="allowFlip(col, row) && toggleDisplay(col, row)"
               class="form-control response-input"
               type="text">
           </li>
@@ -119,12 +119,12 @@ export default {
     },
     removeAnswer(col, row) {
       this.answerGroup(col).splice(row, 1);
-      this.removeSingleError(col, row);
+      this.$emit('syncErrors');
       this.update();
     },
     removeDropSpot(col) {
       this.dropSpots.splice(col, 1);
-      this.removeSetError(col);
+      this.$emit('syncErrors');
       this.update();
     },
     allowRemove(col, row) {
@@ -132,10 +132,11 @@ export default {
         ? this.dropSpots[col].answers.length > 1
         : this.dropSpots.length > 2;
     },
-    allowToggle(col, row = null) {
+    allowFlip(col, row) {
       const flipped = this.flipped;
-      if (row === null) return flipped.col === col && flipped.row === null;
-      return flipped.col === col && flipped.row === row;
+      return row === undefined
+        ? flipped.col === col && flipped.row === null
+        : flipped.col === col && flipped.row === row;
     },
     toggleDisplay(col, row) {
       if (this.flipped.col === col &&
@@ -145,43 +146,11 @@ export default {
       }
       this.flipped = row !== undefined ? { col, row } : { col, row: null };
     },
-    flip(col, row) {
-      const flipped = this.flipped;
-      return row !== undefined
-        ? flipped.col === col && flipped.row === row
-        : flipped.col === col && flipped.row === null;
-    },
     errorClass(col, row) {
       const answer = row === undefined
         ? `correct[${col}].heading`
         : `correct[${col}].answers[${row}]`;
       return { 'error': this.localErrors.includes(answer) };
-    },
-    removeSingleError(col, row) {
-      let tempArr = this.localErrors;
-      const message = `correct[${col}].answers[${row}]`;
-      if (tempArr.indexOf(message) !== -1) tempArr.splice(tempArr.indexOf(message), 1);
-      tempArr.forEach((it, index) => {
-        if (it.includes(`correct[${col}].answers`)) {
-          let num = Number(it.substring(it.lastIndexOf('[') + 1, it.length - 1));
-          if (num > row) tempArr[index] = `correct[${col}].answers[${num - 1}]`;
-        }
-      });
-    },
-    removeSetError(col) {
-      const message = `correct[${col}]`;
-      this.localErrors = this.localErrors.filter(it => it.includes(message) === false);
-      this.localErrors.forEach((it, index) => {
-        if (it.includes('correct')) {
-          let num = Number(it.substring(it.indexOf('[') + 1, it.indexOf(']')));
-          if (num > col) {
-            let firstPart = it.substring(0, it.indexOf('[') + 1);
-            let changedPart = `${num - 1}`;
-            let lastPart = it.substring(it.indexOf(']'), it.length);
-            this.localErrors[index] = firstPart + changedPart + lastPart;
-          }
-        }
-      });
     }
   },
   watch: {
