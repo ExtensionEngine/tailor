@@ -24,8 +24,8 @@ const ELEMENT_TYPES = [
   { type: 'HTML', label: 'Text', icon: 'mdi-format-text' },
   { type: 'IMAGE', label: 'Image', icon: 'mdi-image' },
   { type: 'VIDEO', label: 'Video', icon: 'mdi-video' },
-  { type: 'EMBED', label: 'Embed', icon: 'mdi-arrange-bring-forward' },
-  { type: 'QUESTION', label: 'Question', icon: 'mdi-help' }
+  { type: 'QUESTION', label: 'Question', icon: 'mdi-help' },
+  { type: 'EMBED', label: 'Embed', icon: 'mdi-arrange-bring-forward' }
 ];
 
 export default {

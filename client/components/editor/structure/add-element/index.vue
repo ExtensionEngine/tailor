@@ -23,7 +23,7 @@ import SelectWidth from './SelectWidth';
 
 export default {
   name: 'add-element',
-  props: ['activityId', 'position'],
+  props: ['activity', 'position'],
   data() {
     return {
       type: null,
@@ -46,8 +46,8 @@ export default {
   methods: {
     create() {
       let element = { type: this.type, data: {} };
-      if (this.activityId) {
-        element.activityId = this.activityId;
+      if (this.activity) {
+        element.activityId = this.activity.id;
         element.position = this.position;
       } else {
         element.embedded = true;
