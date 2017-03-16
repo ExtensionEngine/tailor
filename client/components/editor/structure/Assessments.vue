@@ -13,28 +13,27 @@
       <assessment-item
         v-for="assessment in assessments"
         :assessment="assessment"
-        :edit="isSelected(assessment)"
+        :expanded="isSelected(assessment)"
         @selected="toggleSelect(assessment)"
         @save="save"
         @remove="remove(assessment)">
       </assessment-item>
     </ul>
-    <select-assessment @selected="add"></select-assessment>
+    <add-element :include="['ASSESSMENT']" @selected="add"></add-element>
   </div>
 </template>
 
 <script>
+import AddElement from './AddElement';
 import AssessmentItem from './AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import { defaults } from '../../../utils/assessment';
 import difference from 'lodash/difference';
 import keyBy from 'lodash/keyBy';
 import { mapActions, mapGetters } from 'vuex-module';
-import SelectAssessment from './SelectAssessment';
-import Vue from 'vue';
 
 export default {
+  name: 'assessments',
   data() {
     return {
       selected: [],
@@ -48,24 +47,20 @@ export default {
     }
   },
   methods: {
-    ...mapGetters({ getAssessments: 'assessments' }, 'atom'),
+    ...mapGetters({ getAssessments: 'assessments' }, 'editor'),
     ...mapActions({
       saveAssessment: 'save',
       updateAssessment: 'update',
       removeAssessment: 'remove'
-    }, 'assessments'),
-    add(type) {
-      const assessment = {
-        _cid: cuid(),
-        ...defaults[type],
-        question: [{ id: cuid(), _cid: cuid(), type: 'TEXT', embedded: true }]
-      };
-
-      Vue.set(this.assessments, assessment._cid, assessment);
+    }, 'tes'),
+    add(assessment) {
+      assessment._cid = cuid();
+      this.$set(this.assessments, assessment._cid, assessment);
       this.selected.push(assessment._cid);
     },
     toggleSelect(assessment) {
-      const hasQuestion = this.assessments[assessment._cid].question;
+      const question = assessment.data.question;
+      const hasQuestion = question && question.lenght > 0;
       if (this.isSelected(assessment) && !hasQuestion) {
         this.remove(assessment);
       } else if (this.isSelected(assessment)) {
@@ -87,7 +82,7 @@ export default {
     save(assessment) {
       // TODO: Do this better!
       if (this.assessments[assessment._cid]) {
-        assessment.activityId = Number(this.$route.params.activityKey);
+        assessment.activityId = Number(this.$route.params.activityId);
         assessment.id = this.assessments[assessment._cid].id;
         this.assessments[assessment._cid] = assessment;
         return assessment.id
@@ -98,13 +93,13 @@ export default {
     remove(assessment) {
       // TODO: Has unsolved scenarios
       if (assessment.id) this.removeAssessment(assessment);
-      Vue.delete(this.assessments, assessment._cid);
+      this.$delete(this.assessments, assessment._cid);
       this.selected.splice(this.selected.indexOf(assessment._cid), 1);
     }
   },
   components: {
-    AssessmentItem,
-    SelectAssessment
+    AddElement,
+    AssessmentItem
   }
 };
 </script>

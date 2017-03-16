@@ -6,7 +6,7 @@
       <div class="container">
         <h2>{{ activity.name }}</h2>
         <perspectives></perspectives>
-        <questions></questions>
+        <assessments></assessments>
       </div>
     </div>
   </div>
@@ -18,7 +18,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Perspectives from './structure/Perspectives';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
-import Questions from './structure/Questions';
+import Assessments from './structure/Assessments';
 
 export default {
   name: 'editor',
@@ -73,10 +73,10 @@ export default {
     ).then(() => (this.showLoader = false));
   },
   components: {
+    Assessments,
     Loader,
     Perspectives,
-    Toolbar,
-    Questions
+    Toolbar
   }
 };
 </script>

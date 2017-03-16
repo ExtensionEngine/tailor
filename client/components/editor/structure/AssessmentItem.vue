@@ -1,7 +1,7 @@
 <template>
   <li class="list-group-item assessment-item">
     <te-assessment
-      v-if="edit"
+      v-if="expanded"
       :element="assessment"
       @selected="$emit('selected')"
       @remove="$emit('remove')"
@@ -28,7 +28,7 @@ const htmlRegex = /<\/?[^>]+(>|$)/g;
 
 export default {
   name: 'assessment-item',
-  props: ['assessment', 'edit'],
+  props: ['assessment', 'expanded'],
   computed: {
     question() {
       let question = filter(this.assessment.data.question, { type: 'HTML' });
