@@ -1,8 +1,5 @@
 <template>
-  <button
-    class="btn btn-primary"
-    type="button"
-    @click="$emit('create')">
+  <button @click="$emit('create')" class="btn btn-primary" type="button">
     <span class="fa fa-plus"></span> Create perspective
   </button>
 </template>
@@ -20,6 +17,6 @@ export default {
 }
 
 .fa {
-  padding-right: 5px;
+  padding-right: 7px;
 }
 </style>
