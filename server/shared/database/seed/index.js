@@ -3,9 +3,9 @@ const flattenDeep = require('lodash/flattenDeep');
 const Promise = require('bluebird');
 const times = require('lodash/times');
 
-const assessmentData = require('./assessments.json').data;
 const courseData = require('./courses.json').data;
 const userData = require('./users.json').data;
+const questionData = require('./questions.json').data;
 
 const OUTLINE_LEVELS = ['GOAL', 'OBJECTIVE', 'TOPIC'];
 const LEAF = OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1];
@@ -39,10 +39,10 @@ function insertActivities(Model, course, level, parent) {
   return Promise.all(flattenDeep(activities));
 }
 
-function insertAssessments(activity) {
-  assessmentData.forEach(assessment => {
+function insertQuestions(activity) {
+  questionData.forEach(assessment => {
     assign(assessment, { courseId: activity.courseId });
-    activity.createAssessment(assessment);
+    activity.createTel(assessment);
   });
 }
 
@@ -55,7 +55,7 @@ function insertAll(db) {
     return Promise.each(courses, course => {
       return insertActivities(Activity, course, 0, null)
         .then(() => Activity.findAll({ where: { courseId: course.id, type: LEAF } }))
-        .then(leafs => Promise.each(leafs, it => insertAssessments(it)))
+        .then(leafs => Promise.each(leafs, it => insertQuestions(it)))
         .then(() => course.setUsers(users));
     });
   });

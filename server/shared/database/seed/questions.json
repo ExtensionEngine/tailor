@@ -1,44 +1,50 @@
 {
   "data": [{
-    "type": "MC",
+    "type": "QUESTION",
     "data": {
+      "type": "MC",
       "question": [{ "_cid": 1, "type": "TEXT", "data": { "content": "What are the two biggest cities in Croatia?" } }],
       "answers": ["Zagreb", "Split", "Rijeka"],
       "correct": [0, 1],
       "hint": ""
     }
   }, {
-    "type": "SC",
+    "type": "QUESTION",
     "data": {
-    "question": [{ "_cid": 2, "type": "TEXT", "data": { "content": "What is the biggest city in USA ?" } }],
+      "type": "SC",
+      "question": [{ "_cid": 2, "type": "TEXT", "data": { "content": "What is the biggest city in USA ?" } }],
       "answers": ["NY", "Los Angeles"],
       "correct": "0",
       "hint": ""
     }
   }, {
-    "type": "TF",
+    "type": "QUESTION",
     "data": {
+      "type": "TF",
       "question": [{ "_cid": 3, "type": "TEXT", "data": { "content": "The biggest city in the UK is London ?" } }],
       "correct": true,
       "hint": ""
     }
   }, {
-    "type": "NR",
+    "type": "QUESTION",
     "data": {
+      "type": "NR",
       "question": [{ "_cid": 4, "type": "TEXT", "data": { "content": "What is the value of pi (two decimals) ?" } }],
       "correct": "3.14",
       "hint": ""
     }
   }, {
-    "type": "TR",
+    "type": "QUESTION",
     "data": {
+      "type": "TR",
       "question": [{ "_cid": 5, "type": "TEXT", "data": { "content": "Name three countries" } }],
       "correct": "USA, Canada, Croatia",
       "hint": ""
     }
   }, {
-    "type": "FB",
+    "type": "QUESTION",
     "data": {
+      "type": "FB",
       "question": [{ "_cid": 6, "type": "TEXT", "data": { "content": "The capital of USA is (1)__________, the capital of Croatia is (2)__________, the capital of Germany is (3)__________" } }],
       "correct": [["Washington"], ["Zagreb"], ["Berlin"]]
     }
