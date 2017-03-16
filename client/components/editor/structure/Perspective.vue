@@ -5,66 +5,70 @@
         <span class="fa fa-trash"></span>
       </span>
     </div>
-    <div v-if="!perspectiveAssets.length" class="well">
-      Click the button below to Create your first asset.
+    <div v-if="!teachingElements.length" class="well">
+      Click the button below to Create your first teaching element.
     </div>
     <draggable
-      :list="perspectiveAssets"
+      :list="teachingElements"
       :options="dragOptions"
       @update="reorder"
       class="row">
-      <asset
-        v-for="asset in perspectiveAssets"
-        :asset="asset"
-        :key="asset._cid">
-      </asset>
+      <teaching-element
+        v-for="element in teachingElements"
+        :element="element"
+        :key="element._cid">
+      </teaching-element>
     </draggable>
-    <create-asset
-      :perspective="perspective"
-      :position="perspectiveAssets.length + 1">
-    </create-asset>
+    <add-element
+      :activity="perspective"
+      :position="teachingElements.length + 1"
+      @add="addElement">
+    </add-element>
   </div>
 </template>
 
 <script>
-import { filter } from 'lodash';
-import { mapActions, mapGetters } from 'vuex-module';
+import AddElement from './add-element';
 import Draggable from 'vuedraggable';
-import Asset from '../assets';
-import CreateAsset from './CreateAsset';
+import filter from 'lodash/filter';
+import { mapActions, mapGetters } from 'vuex-module';
+import TeachingElement from '../teaching-elements';
 
 export default {
   name: 'perspective',
   props: ['perspective'],
   data() {
     return {
-      dragOptions: {
-        forceFallback: true
-      }
+      dragOptions: { forceFallback: true }
     };
   },
   computed: {
-    ...mapGetters(['assets']),
-    perspectiveAssets() {
-      return filter(this.assets, { activityId: this.perspective.id })
+    ...mapGetters(['tes'], 'editor'),
+    teachingElements() {
+      return filter(this.tes, { activityId: this.perspective.id })
         .sort((a, b) => a.position - b.position);
     }
   },
   methods: {
-    ...mapActions(['remove'], 'activity'),
-    ...mapActions({ updatePosition: 'reorder' }, 'assets'),
+    ...mapActions(['focusElement'], 'editor'),
+    ...mapActions(['remove'], 'activities'),
+    ...mapActions({ reorderElements: 'reorder', saveElement: 'save' }, 'tes'),
     reorder({ newIndex: newPosition }) {
-      const items = this.perspectiveAssets;
-      const asset = items[newPosition];
+      const items = this.teachingElements;
+      const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
-      this.updatePosition({ asset, context });
+      this.reorderElements({ element, context });
+    },
+    addElement(element) {
+      this.saveElement(element);
+      this.focusElement(element);
     }
   },
   components: {
+    AddElement,
     Draggable,
-    Asset,
-    CreateAsset
+    TeachingElement
   }
 };
 </script>

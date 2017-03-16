@@ -7,19 +7,19 @@ getter(function tes() {
   return this.state.items;
 }, { global: true });
 
-action(function reorder({ te, context }) {
-  this.commit('reorder', { te, position: calculatePosition(context) });
+action(function reorder({ element, context }) {
+  this.commit('reorder', { element, position: calculatePosition(context) });
   const data = { position: context.newPosition };
-  return this.api.post(`${te.id}/reorder`, data)
+  return this.api.post(`${element.id}/reorder`, data)
     .then(res => {
-      let te = res.data.data;
-      this.api.setCid(te);
-      this.commit('save', te);
+      let element = res.data.data;
+      this.api.setCid(element);
+      this.commit('save', element);
     });
 });
 
-mutation(function reorder({ te, position }) {
-  te.position = position;
+mutation(function reorder({ element, position }) {
+  element.position = position;
 });
 
 export default build();
