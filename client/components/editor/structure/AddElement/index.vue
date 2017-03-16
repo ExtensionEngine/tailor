@@ -2,7 +2,11 @@
   <div class="add-element">
     <transition name="slide-fade">
       <div v-if="selection">
-        <select-element v-if="selectType" @selected="setType"></select-element>
+        <select-element
+          v-if="selectType"
+          :include="include"
+          @selected="setType">
+        </select-element>
         <select-width v-if="selectWidth" @selected="setWidth"></select-width>
         <div class="btn-base btn-close" @click="close">
           <span class="mdi mdi-close"></span>
@@ -23,7 +27,7 @@ import SelectWidth from './SelectWidth';
 
 export default {
   name: 'add-element',
-  props: ['activity', 'position'],
+  props: ['include', 'activity', 'position'],
   data() {
     return {
       type: null,
@@ -36,11 +40,8 @@ export default {
     selectType(selection) {
       return !this.type;
     },
-    selectQuestion() {
-      return this.type === 'QUESTION';
-    },
     selectWidth() {
-      return !this.selectType && !this.selectQuestion;
+      return !this.selectType && (this.type !== 'ASSESSMENT');
     }
   },
   methods: {
@@ -53,7 +54,7 @@ export default {
         element.embedded = true;
       }
 
-      if (element.type === 'QUESTION') {
+      if (element.type === 'ASSESSMENT') {
         element.data = defaults[this.subtype];
         element.data.type = this.subtype;
         element.data.question = [

@@ -1,6 +1,6 @@
 <template>
   <div class="select-element">
-    <div v-if="!showQuestions">
+    <div v-if="!showAssessments">
       <div
         v-for="element in elements"
         @click="setType(element.type)"
@@ -9,22 +9,22 @@
         <span>{{ element.label }}</span>
       </div>
     </div>
-    <select-question
-      v-if="showQuestions"
+    <select-assessment
+      v-if="showAssessments"
       @selected="setSubtype">
-    </select-question>
+    </select-assessment>
   </div>
 </template>
 
 <script>
 import filter from 'lodash/filter';
-import SelectQuestion from './SelectQuestion';
+import SelectAssessment from './SelectAssessment';
 
 const ELEMENT_TYPES = [
   { type: 'HTML', label: 'Text', icon: 'mdi-format-text' },
   { type: 'IMAGE', label: 'Image', icon: 'mdi-image' },
   { type: 'VIDEO', label: 'Video', icon: 'mdi-video' },
-  { type: 'QUESTION', label: 'Question', icon: 'mdi-help' },
+  { type: 'ASSESSMENT', label: 'Question', icon: 'mdi-help' },
   { type: 'EMBED', label: 'Embed', icon: 'mdi-arrange-bring-forward' }
 ];
 
@@ -39,16 +39,16 @@ export default {
       if (!this.include) return ELEMENT_TYPES;
       return filter(ELEMENT_TYPES, it => this.include.indexOf(it.type) > -1);
     },
-    showQuestions() {
-      return this.questionsOnly || this.type === 'QUESTION';
+    showAssessments() {
+      return this.assessmentsOnly || this.type === 'ASSESSMENT';
     },
-    questionsOnly() {
-      return this.elements.length === 1 && this.elements[0].type === 'QUESTION';
+    assessmentsOnly() {
+      return this.elements.length === 1 && this.elements[0].type === 'ASSESSMENT';
     }
   },
   methods: {
     setType(type) {
-      if (type !== 'QUESTION') {
+      if (type !== 'ASSESSMENT') {
         this.$emit('selected', { type });
         this.close();
       } else {
@@ -64,7 +64,7 @@ export default {
     }
   },
   components: {
-    SelectQuestion
+    SelectAssessment
   }
 };
 </script>

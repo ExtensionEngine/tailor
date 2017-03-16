@@ -1,10 +1,10 @@
 <template>
-  <div class="select-question">
+  <div class="select-assessment">
     <div
-      v-for="question in questions"
-      @click="$emit('selected', question.type)"
-      class="btn-base question-type">
-      <span>{{ question.title }}</span>
+      v-for="assessment in assessments"
+      @click="$emit('selected', assessment.type)"
+      class="btn-base assessment-type">
+      <span>{{ assessment.title }}</span>
     </div>
   </div>
 </template>
@@ -13,15 +13,15 @@
 import { typeInfo } from 'utils/assessment';
 
 export default {
-  name: 'select-question',
+  name: 'select-assessment',
   data() {
-    return { questions: typeInfo };
+    return { assessments: typeInfo };
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.select-question {
+.select-assessment {
   margin: 15px 0;
   color: #444;
 
@@ -37,7 +37,7 @@ export default {
     }
   }
 
-  .question-type {
+  .assessment-type {
     margin: 0 15px;
     font-size: 16px;
     line-height: 16px;
