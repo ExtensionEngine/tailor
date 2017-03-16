@@ -3,7 +3,7 @@ const zip = require('lodash/zip');
 
 const hooks = ['afterCreate', 'afterUpdate', 'afterDestroy'];
 const operations = ['CREATE', 'UPDATE', 'REMOVE'];
-const entities = ['ACTIVITY', 'ASSET', 'COURSE'];
+const entities = ['COURSE', 'ACTIVITY', 'TEL'];
 
 function add(models) {
   zip(hooks, operations).forEach(hook => {
