@@ -3,7 +3,7 @@ const mime = require('mime-types');
 const Promise = require('bluebird');
 const storage = require('./index');
 
-const PRIMITIVES = ['TEXT', 'IMAGE', 'VIDEO', 'GOMO'];
+const PRIMITIVES = ['TEXT', 'IMAGE', 'VIDEO', 'GOMO', 'ACCORDION'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 
