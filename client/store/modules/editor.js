@@ -1,7 +1,7 @@
+import { ASSET_GROUP } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import { VuexModule } from 'vuex-module';
-import { ASSET_GROUP } from 'shared/activities';
 
 const { state, getter, action, mutation, build } = new VuexModule('editor');
 
@@ -29,9 +29,9 @@ getter(function perspectives() {
 
 getter(function assessments() {
   const { route } = this.rootState;
-  const { tes: collection } = this.rootGetters;
+  const { tes } = this.rootGetters;
   const activityId = Number(route.params.activityId);
-  return filter(collection, { activityId });
+  return filter(tes, { activityId });
 });
 
 // TODO: Implement persistance upon focusout
