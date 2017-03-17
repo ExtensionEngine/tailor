@@ -121,7 +121,7 @@ export default {
     }
   }
 };
-</script>course-name
+</script>
 
 <style scoped lang="scss">
 .course-actions {
