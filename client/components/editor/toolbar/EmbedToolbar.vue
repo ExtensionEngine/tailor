@@ -1,23 +1,23 @@
 <template>
-  <div class="gomo-toolbar">
+  <div class="embed-toolbar">
     <input
-      v-model="courseUrl"
+      v-model="url"
       :disabled="!edit"
-      type="text"
       class="form-control"
-      placeholder="Gomo course url">
+      type="text"
+      placeholder="Embed url">
     <button
       v-if="!edit"
       @click="edit = true"
-      type="button"
-      class="btn btn-default">
+      class="btn btn-default"
+      type="button">
       Edit
     </button>
     <button
       v-if="edit"
-      type="button"
+      @click="save"
       class="btn btn-success"
-      @click="save">
+      type="button">
       Save
     </button>
   </div>
@@ -28,27 +28,27 @@ import cloneDeep from 'lodash/cloneDeep';
 import { mapActions } from 'vuex-module';
 
 export default {
-  name: 'gomo-toolbar',
-  props: ['asset', 'isFocused'],
+  name: 'embed-toolbar',
+  props: ['element'],
   data() {
     return {
-      edit: !this.asset.data.courseUrl,
-      courseUrl: '',
-      ...cloneDeep(this.asset.data)
+      edit: !this.element.data.url,
+      url: '',
+      ...cloneDeep(this.element.data)
     };
   },
   methods: {
-    ...mapActions({ updateAsset: 'update' }, 'assets'),
+    ...mapActions({ updateElement: 'update' }, 'tes'),
     save() {
       this.edit = false;
-      this.updateAsset({ ...this.asset, data: { courseUrl: this.courseUrl } });
+      this.updateElement({ ...this.element, data: { url: this.url } });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.gomo-toolbar {
+.embed-toolbar {
   position: relative;
   z-index: 999;
   width: 100%;
