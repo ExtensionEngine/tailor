@@ -27,7 +27,7 @@ import SelectWidth from './SelectWidth';
 
 export default {
   name: 'add-element',
-  props: ['include', 'activity', 'position'],
+  props: ['include', 'activity', 'position', 'layout'],
   data() {
     return {
       type: null,
@@ -41,7 +41,7 @@ export default {
       return !this.type;
     },
     selectWidth() {
-      return !this.selectType && (this.type !== 'ASSESSMENT');
+      return this.layout && !this.selectType && (this.type !== 'ASSESSMENT');
     }
   },
   methods: {
@@ -51,6 +51,7 @@ export default {
         element.activityId = this.activity.id;
         element.position = this.position;
       } else {
+        element.id = cuid();
         element.embedded = true;
       }
 
