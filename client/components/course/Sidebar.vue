@@ -57,13 +57,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activity'], 'editor'),
+    ...mapGetters(['activity'], 'course'),
     isActivitySelected() {
       return !!this.activity.name;
     }
   },
   methods: {
-    ...mapActions(['remove', 'update'], 'activity'),
+    ...mapActions(['remove', 'update'], 'activities'),
     activateInput() {
       this.newActivityName = this.activity.name.slice(0);
       this.showNameInput = true;
