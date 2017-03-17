@@ -17,7 +17,7 @@ export const helperText = {
 const BLANK_PLACEHOLDER = /(@blank)/g;
 
 function containsText(asset) {
-  return asset.type === 'TEXT' &&
+  return asset.type === 'HTML' &&
     asset.data.content &&
     asset.data.content.trim().length > 0;
 }
