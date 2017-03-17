@@ -14,12 +14,14 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeAssessment from './Assessment';
+import TeBreak from './PageBreak';
 import TeEmbed from './Embed';
 import TeHtml from './Html';
 import TeImage from './Image';
 import TeVideo from './Video';
 
 const TE_TYPES = {
+  BREAK: 'te-break',
   EMBED: 'te-embed',
   HTML: 'te-html',
   IMAGE: 'te-image',
@@ -69,6 +71,7 @@ export default {
   },
   components: {
     TeAssessment,
+    TeBreak,
     TeEmbed,
     TeHtml,
     TeImage,

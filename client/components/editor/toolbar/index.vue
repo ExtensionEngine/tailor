@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import EmbedToolbar from './EmbedToolbar';
 import ImageToolbar from './ImageToolbar';
@@ -49,7 +50,7 @@ export default {
       this.focusoutElement();
     },
     getComponentName(type) {
-      return TOOLBAR_TYPES[type];
+      return TOOLBAR_TYPES[type] || 'default-toolbar';
     },
     onClick(e) {
       // Attach component data
@@ -57,6 +58,7 @@ export default {
     }
   },
   components: {
+    DefaultToolbar,
     ImageToolbar,
     EmbedToolbar,
     QuillToolbar,

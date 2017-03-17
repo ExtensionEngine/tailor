@@ -41,7 +41,10 @@ export default {
       return !this.type;
     },
     selectWidth() {
-      return this.layout && !this.selectType && (this.type !== 'ASSESSMENT');
+      return this.layout &&
+        !this.selectType &&
+        (this.type !== 'ASSESSMENT') &&
+        (this.type !== 'BREAK');
     }
   },
   methods: {
