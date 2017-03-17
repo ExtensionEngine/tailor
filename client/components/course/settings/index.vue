@@ -29,7 +29,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['users'], 'editor'),
+    ...mapGetters(['users'], 'course'),
     hasUsers() {
       return !!this.users.length;
     },
@@ -38,7 +38,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getUsers'], 'editor'),
+    ...mapActions(['getUsers'], 'course'),
     fetchUsers() {
       this.showLoader = true;
       const request = Promise.join(this.getUsers(), Promise.delay(500));
