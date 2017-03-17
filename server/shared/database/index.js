@@ -10,7 +10,7 @@ const models = {
   Course: '../../course/course.model',
   CourseUser: '../../course/courseUser.model',
   Revision: '../../revision/revision.model',
-  Tel: '../../tel/tel.model',
+  TeachingElement: '../../teaching-element/te.model',
   User: '../../user/user.model'
 };
 
@@ -24,6 +24,6 @@ each(db, (v, modelName) => {
 
 db['Revision'].addHooks(db);
 
-db.initialize = () => sequelize.sync({ force: false }).then(() => seed(db));
+db.initialize = () => sequelize.sync({ force: true }).then(() => seed(db));
 
 module.exports = db;

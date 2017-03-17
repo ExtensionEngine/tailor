@@ -42,7 +42,7 @@ function insertActivities(Model, course, level, parent) {
 function insertQuestions(activity) {
   questionData.forEach(assessment => {
     assign(assessment, { courseId: activity.courseId });
-    activity.createTel(assessment);
+    activity.createTeachingElement(assessment);
   });
 }
 

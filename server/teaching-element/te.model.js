@@ -5,7 +5,7 @@ const isNumber = require('lodash/isNumber');
 const { processAsset, resolveAsset } = require('../shared/storage/helpers');
 
 module.exports = function (sequelize, DataTypes) {
-  const Tel = sequelize.define('tel', {
+  const TeachingElement = sequelize.define('TeachingElement', {
     type: {
       type: DataTypes.STRING
     },
@@ -31,27 +31,27 @@ module.exports = function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate(models) {
-        Tel.belongsTo(models.Activity, {
+        TeachingElement.belongsTo(models.Activity, {
           foreignKey: { name: 'activityId', field: 'activity_id' }
         });
-        Tel.belongsTo(models.Course, {
+        TeachingElement.belongsTo(models.Course, {
           foreignKey: { name: 'courseId', field: 'course_id' }
         });
       },
       initialize() {
         const opts = { type: sequelize.QueryTypes.SELECT };
-        return sequelize.query('SELECT NEXTVAL(\'tel_id_seq\')', opts)
-          .then(result => Tel.build({ id: result[0].nextval }));
+        return sequelize.query('SELECT NEXTVAL(\'teaching_element_id_seq\')', opts)
+          .then(result => TeachingElement.build({ id: result[0].nextval }));
       },
       fetch(opt) {
         return isNumber(opt)
-          ? Tel.findById(opt).then(it => it && resolveAsset(it))
-          : Tel.findAll(opt).then(arr => Promise.all(arr.map(it => resolveAsset(it))));
+          ? TeachingElement.findById(opt).then(it => it && resolveAsset(it))
+          : TeachingElement.findAll(opt).then(arr => Promise.all(arr.map(it => resolveAsset(it))));
       }
     },
     instanceMethods: {
       siblings() {
-        return Tel.findAll({
+        return TeachingElement.findAll({
           where: { activityId: this.activityId },
           order: 'position ASC'
         });
@@ -66,19 +66,19 @@ module.exports = function (sequelize, DataTypes) {
       }
     },
     hooks: {
-      beforeCreate(tel) {
-        return processAsset(tel);
+      beforeCreate(te) {
+        return processAsset(te);
       },
-      beforeUpdate(tel) {
-        const changed = tel.changed('data');
-        return changed ? processAsset(tel) : Promise.resolve();
+      beforeUpdate(te) {
+        const changed = te.changed('data');
+        return changed ? processAsset(te) : Promise.resolve();
       }
     },
     underscored: true,
     timestamps: true,
     paranoid: true,
-    freezeTableName: true
+    tableName: 'teaching_element'
   });
 
-  return Tel;
+  return TeachingElement;
 };
