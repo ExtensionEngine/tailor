@@ -78,7 +78,8 @@ export default {
       const actions = ['clear', 'crop', 'reset', 'upload'];
       const tools = ['showCrop', 'hideCrop'];
       const events = concat(actions, tools);
-      const namespace = name => `${name}/${this.element._cid}`;
+      const id = this.element.embedded ? this.element.id : this.element._cid;
+      const namespace = name => `${name}/${id}`;
       events.forEach(it => eventBus[method](namespace(it), this[it]));
     },
     registerEvents() {
