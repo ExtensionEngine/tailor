@@ -3,45 +3,47 @@
     <loader v-if="showLoader"></loader>
     <div v-else>
       <div class="course-name">
-        <label>Name</label>
-        <template v-if="showNameInput">
+        <label for="name-field">Name</label>
+        <span v-if="showNameInput">
           <input
-            class="form-control"
             v-model="newCourseName"
             v-focus="true"
             @blur="updateName"
             @keyup.enter="updateName"
-            @keyup.esc="showNameInput = false">
-        </template>
-        <template v-else class="course-name">
+            @keyup.esc="showNameInput = false"
+            id="name-field"
+            class="form-control">
+        </span>
+        <span v-else class="course-name">
           <h2 @click.stop="showNameInput = true">
             {{ course ? course.name : '' }}
           </h2>
-        </template>
+        </span>
       </div>
       <div class="course-description">
-        <label>Description</label>
-        <template v-if="showDescriptionInput">
+        <label for="description-field">Description</label>
+        <span v-if="showDescriptionInput">
           <textarea
-            class="form-control"
             v-model="newCourseDescription"
             v-focus="true"
             @blur="updateDescription"
-            @keyup.esc="showDescriptionInput = false">
+            @keyup.esc="showDescriptionInput = false"
+            id="description-field"
+            class="form-control">
           </textarea>
-        </template>
-        <template v-else>
-          <span class="form-display" @click.stop="showDescriptionInput = true">
-              {{ course ? course.description : '' }}
+        </span>
+        <span v-else>
+          <span @click.stop="showDescriptionInput = true" class="form-display">
+            {{ course ? course.description : '' }}
           </span>
-        </template>
+        </span>
       </div>
       <div class="course-actions">
         <button
           v-if="showRemoveButton"
           @click.stop="removeCourse"
-          class="btn btn-danger"
-          type="button">
+          type="button"
+          class="btn btn-danger">
           <span class="fa fa-trash"></span>
           remove course
         </button>
@@ -81,21 +83,19 @@ export default {
   methods: {
     ...mapActions(['update', 'remove'], 'courses'),
     updateName() {
-      if (this.showNameInput) {
-        this.showNameInput = false;
-        if (this.course.name !== this.newCourseName) {
-          this.course.name = this.newCourseName;
-          this.update(this.course);
-        }
+      if (this.showNameInput) return;
+      this.showNameInput = false;
+      if (this.course.name !== this.newCourseName) {
+        this.course.name = this.newCourseName;
+        this.update(this.course);
       }
     },
     updateDescription() {
-      if (this.showDescriptionInput) {
-        this.showDescriptionInput = false;
-        if (this.course.description !== this.newCourseDescription) {
-          this.course.description = this.newCourseDescription;
-          this.update(this.course);
-        }
+      if (this.showDescriptionInput) return;
+      this.showDescriptionInput = false;
+      if (this.course.description !== this.newCourseDescription) {
+        this.course.description = this.newCourseDescription;
+        this.update(this.course);
       }
     },
     removeCourse() {
