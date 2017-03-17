@@ -68,13 +68,13 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['course'], 'editor'),
+    ...mapGetters(['course'], 'course'),
     canCreateSubsection() {
       return this.level < 3;
     }
   },
   methods: {
-    ...mapActions(['save'], 'activity'),
+    ...mapActions(['save'], 'activities'),
     show() {
       this.showInput = true;
       this.focusInput = true;

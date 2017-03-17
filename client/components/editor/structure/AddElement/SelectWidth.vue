@@ -4,7 +4,7 @@
       class="content-width"
       v-for="width in widths"
       @click="$emit('selected', width.value)">
-      <span class="fa" :class="width.icon"></span>
+      <span :class="width.icon" class="fa"></span>
     </div>
   </div>
 </template>
@@ -23,15 +23,15 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .select-width {
   display: inline-block;
 }
 
 .content-width {
   display: inline-block;
-  padding: 5px 10px;
   margin: 0 20px;
+  padding: 15px 10px;
 
   &:hover {
     color: #42b983;
@@ -45,7 +45,7 @@ export default {
 
   .fa {
     padding-bottom: 7px;
-    font-size: 26px;
+    font-size: 24px;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 'use strict';
 
-const Promise = require('bluebird');
 const calculatePosition = require('../shared/util/calculatePosition');
+const Promise = require('bluebird');
 
 /**
  * @swagger
@@ -87,8 +87,7 @@ module.exports = function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate(models) {
-        Activity.hasMany(models.Asset);
-        Activity.hasMany(models.Assessment);
+        Activity.hasMany(models.TeachingElement);
         Activity.belongsTo(models.Course, {
           foreignKey: { name: 'courseId', field: 'course_id' }
         });

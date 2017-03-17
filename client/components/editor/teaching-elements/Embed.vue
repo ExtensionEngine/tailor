@@ -1,8 +1,8 @@
 <template>
-  <div class="gomo-viewer">
+  <div class="te-embed">
     <div v-if="showPlaceholder">
       <div class="well placeholder">
-        <span class="heading">Gomo Viewer placeholder</span>
+        <span class="heading">Embed placeholder</span>
         <span class="message" v-show="!isFocused">Select to edit</span>
         <span class="message" v-show="isFocused">Please use toolbar to enter url</span>
       </div>
@@ -13,8 +13,8 @@
           <div class="message">Click to preview</div>
         </div>
         <iframe
+          :src="url"
           ref="frame"
-          :src="courseUrl"
           class="content"
           frameborder="0">
         </iframe>
@@ -26,21 +26,21 @@
 
 <script>
 export default {
-  name: 'gomo-course',
-  props: ['asset', 'isFocused'],
+  name: 'te-embed',
+  props: ['element', 'isFocused'],
   computed: {
-    courseUrl() {
-      return this.asset.data.courseUrl;
+    url() {
+      return this.element.data.url;
     },
     showPlaceholder() {
-      return !this.asset.data.courseUrl;
+      return !this.element.data.url;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.gomo-viewer {
+.te-embed {
   position: relative;
   overflow: auto;
 }

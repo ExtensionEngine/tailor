@@ -15,8 +15,8 @@
         <span class="fa fa-image"></span> New
       </li>
       <li
-        @click="toggleTool(event.crop)"
         :class="{ 'active': tool === event.crop }"
+        @click="toggleTool(event.crop)"
         class="btn btn-link btn-sm">
         <span class="fa fa-crop"></span> Crop
       </li>
@@ -40,7 +40,7 @@ import map from 'lodash/map';
 import zipObject from 'lodash/zipObject';
 
 export default {
-  props: ['asset'],
+  props: ['element'],
   data() {
     return {
       tool: null
@@ -50,10 +50,11 @@ export default {
     event() {
       // Namespace events
       const events = ['clear', 'reset', 'upload', 'crop'];
-      return zipObject(events, map(events, it => `${it}/${this.asset._cid}`));
+      const id = this.element.embedded ? this.element.id : this.element._cid;
+      return zipObject(events, map(events, it => `${it}/${id}`));
     },
     isUploaded() {
-      return !isEmpty(this.asset.data.url);
+      return !isEmpty(this.element.data.url);
     }
   },
   methods: {

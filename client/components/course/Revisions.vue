@@ -27,21 +27,21 @@ import fecha from 'fecha';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import {
   describeActivityRevision,
-  describeAssetRevision,
+  describeElementRevision,
   describeCourseRevision
 } from '../../utils/revision';
 
 const describe = {
+  'COURSE': describeCourseRevision,
   'ACTIVITY': describeActivityRevision,
-  'ASSET': describeAssetRevision,
-  'COURSE': describeCourseRevision
+  'TEACHING_ELEMENT': describeElementRevision
 };
 
 export default {
   name: 'course-revisions',
   computed: {
-    ...mapGetters(['getParent'], 'activity'),
-    ...mapGetters(['revisions'], 'editor')
+    ...mapGetters(['getParent'], 'activities'),
+    ...mapGetters(['revisions'], 'course')
   },
   methods: {
     ...mapActions(['fetch'], 'revisions'),
@@ -59,7 +59,7 @@ export default {
     }
   },
   created() {
-    const courseId = Number(this.$route.params.courseKey);
+    const courseId = Number(this.$route.params.courseId);
     this.setBaseUrl(`/courses/${courseId}/revisions`);
     this.fetch();
   }

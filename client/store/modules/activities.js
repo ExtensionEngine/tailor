@@ -2,7 +2,7 @@ import calculatePosition from '../../utils/calculatePosition.js';
 import find from 'lodash/find';
 import VuexCollection from '../helpers/collection.js';
 
-const { getter, action, mutation, build } = new VuexCollection('activity');
+const { getter, action, mutation, build } = new VuexCollection('activities');
 
 getter(function activities() {
   return this.state.items;

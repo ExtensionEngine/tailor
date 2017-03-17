@@ -13,7 +13,7 @@
       </question>
       <component
         :is="getComponentName(assessment)"
-        :assessment="assessment"
+        :assessment="assessment.data"
         :errors="errors"
         :isEditing="isEditing"
         @update="update"
@@ -22,7 +22,7 @@
       <div class="form-group">
         <span class="form-label">Hint</span>
         <input
-          v-model="assessment.hint"
+          v-model="assessment.data.hint"
           :disabled="!isEditing"
           class="form-control"
           type="text"
@@ -53,7 +53,7 @@ import NumericalResponse from './NumericalResponse';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
-import { typeInfo, schemas } from '../../../utils/assessment';
+import { typeInfo, schemas } from 'utils/assessment';
 import Question from './Question';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
@@ -69,29 +69,28 @@ const ASSESSMENT_TYPES = {
 };
 
 export default {
-  name: 'assessment',
-  props: { initAssessment: Object },
+  name: 'te-assessment',
+  props: { element: Object },
   data() {
-    const assessment = cloneDeep(this.initAssessment);
-    const question = assessment.question;
+    const assessment = cloneDeep(this.element);
     return {
       assessment,
-      isEditing: question.length === 1 && !question[0].data,
+      isEditing: !assessment.id,
       alert: {},
       errors: []
     };
   },
   computed: {
     schema() {
-      return schemas[this.assessment.type] || {};
+      return schemas[this.assessment.data.type] || {};
     },
     typeInfo() {
-      return typeInfo[this.assessment.type] || {};
+      return typeInfo[this.assessment.data.type] || {};
     }
   },
   methods: {
     getComponentName(assessment) {
-      return ASSESSMENT_TYPES[assessment.type];
+      return ASSESSMENT_TYPES[assessment.data.type];
     },
     setAlert(data = {}) {
       this.alert = data;
@@ -100,11 +99,11 @@ export default {
       return this.schema.validate(question, validationOptions);
     },
     update(data) {
-      Object.assign(this.assessment, cloneDeep(data));
+      Object.assign(this.assessment.data, data);
     },
     save() {
       this.errors = [];
-      this.validate(this.assessment)
+      this.validate(this.assessment.data)
         .then(() => {
           this.isEditing = false;
           this.setAlert(saveAlert);

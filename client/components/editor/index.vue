@@ -1,5 +1,5 @@
 <template>
-  <div class="editor" @mousedown="onMousedown" @click="onClick">
+  <div @mousedown="onMousedown" @click="onClick" class="editor">
     <loader v-if="showLoader"></loader>
     <div v-else>
       <toolbar></toolbar>
@@ -13,12 +13,12 @@
 </template>
 
 <script>
-import Assessments from './structure/Assessments';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Perspectives from './structure/Perspectives';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
+import Assessments from './structure/Assessments';
 
 export default {
   name: 'editor',
@@ -29,18 +29,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['toolbar'], 'atom'),
-    ...mapGetters(['activity', 'course'], 'editor')
+    ...mapGetters(['focusedElement'], 'editor'),
+    ...mapGetters(['course', 'activity'], 'course')
   },
   methods: {
+    ...mapActions(['focusoutElement'], 'editor'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
-    ...mapActions({ getActivities: 'fetch' }, 'activity'),
-    ...mapActions({ getAssets: 'fetch' }, 'assets'),
-    ...mapActions({ getAssessments: 'fetch' }, 'assessments'),
-    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity'),
-    ...mapMutations({ setupAssetsApi: 'setBaseUrl' }, 'assets'),
-    ...mapMutations({ setupAssessmentApi: 'setBaseUrl' }, 'assessments'),
-    ...mapMutations({ clearToolbarContext: 'setToolbarContext' }, 'atom'),
+    ...mapActions({ getActivities: 'fetch' }, 'activities'),
+    ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
+    ...mapMutations({ setupActivitiesApi: 'setBaseUrl' }, 'activities'),
+    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
     onMousedown() {
       this.mousedownCaptured = true;
     },
@@ -50,44 +48,40 @@ export default {
       if (!this.mousedownCaptured) return;
       // Reset
       this.mousedownCaptured = false;
-      if (!this.toolbar.type) return;
+      if (!this.focusedElement) return;
       if (!e.component ||
         ((e.component.name !== 'toolbar') &&
-        (e.component.data._cid !== this.toolbar.context._cid))) {
-        this.clearToolbarContext();
+        ((e.component.data._cid !== this.focusedElement._cid) &&
+        (e.component.data.id !== this.focusedElement.id)))) {
+        this.focusoutElement();
       }
     }
   },
   created() {
-    this.clearToolbarContext();
-
+    this.focusoutElement();
     // TODO: Do this better!
-    const courseId = this.$route.params.courseKey;
-    const activityId = this.$route.params.activityKey;
-
+    const courseId = this.$route.params.courseId;
+    const activityId = this.$route.params.activityId;
     const baseUrl = `/courses/${courseId}`;
-    this.setupActivityApi(`${baseUrl}/activities`);
-    this.setupAssetsApi(`${baseUrl}/assets`);
-    this.setupAssessmentApi(`${baseUrl}/assessments`);
+    this.setupActivitiesApi(`${baseUrl}/activities`);
+    this.setupTesApi(`${baseUrl}/tes`);
     if (!this.course) this.getCourse(courseId);
-
     Promise.join(
-      this.getAssets({ parentId: activityId }),
       this.getActivities(),
-      this.getAssessments({ activityId }),
+      this.getTeachingElements({ activityId, parentId: activityId }),
       Promise.delay(500)
     ).then(() => (this.showLoader = false));
   },
   components: {
-    Toolbar,
-    Perspectives,
     Assessments,
-    Loader
+    Loader,
+    Perspectives,
+    Toolbar
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .editor {
   // Force scroll
   min-height: 101%;

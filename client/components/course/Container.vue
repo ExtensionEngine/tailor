@@ -33,7 +33,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course'], 'editor'),
+    ...mapGetters(['course'], 'course'),
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
     showSettings() {
       return this.isAdmin || this.isCourseAdmin;
@@ -44,12 +44,12 @@ export default {
   },
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
-    ...mapActions({ getActivities: 'fetch' }, 'activity'),
-    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activity'),
-    ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'editor')
+    ...mapActions({ getActivities: 'fetch' }, 'activities'),
+    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activities'),
+    ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course')
   },
   created() {
-    const courseId = this.$route.params.courseKey;
+    const { courseId } = this.$route.params;
     // TODO: Do this better!
     this.setupActivityApi(`/courses/${courseId}/activities`);
     if (!this.course) this.getCourse(courseId);

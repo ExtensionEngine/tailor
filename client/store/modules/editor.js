@@ -1,89 +1,46 @@
+import { ASSET_GROUP } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import values from 'lodash/values';
-import courseApi from '../../api/course';
-import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
 
-const { build, getter, action, mutation, state } = new VuexModule('editor');
-const COURSE_ROUTE = /\/course\/\d+/;
+const { state, getter, action, mutation, build } = new VuexModule('editor');
 
 state({
-  activity: undefined,
-  users: {}
+  focusedElement: null
 });
 
-getter(function course() {
-  const { route } = this.rootState;
-  const { courses } = this.rootGetters;
-  if (!route.fullPath.match(COURSE_ROUTE)) return;
-  const id = Number(route.params.courseKey);
-  return find(courses, { id });
-});
-
-getter(function activities() {
-  const { route } = this.rootState;
-  const { activities: collection } = this.rootGetters;
-  const id = Number(route.params.courseKey);
-  return filter(collection, { courseId: id });
+getter(function focusedElement() {
+  return this.state.focusedElement;
 });
 
 getter(function activity() {
+  const { route } = this.rootState;
   const { activities } = this.rootGetters;
-  return activities[this.state.activity] || {};
+  const id = Number(route.params.activityId);
+  return find(activities, { id });
 });
 
-getter(function assets() {
+getter(function perspectives() {
   const { route } = this.rootState;
-  if (route.name !== 'editor') return;
-  return this.rootGetters.assets;
+  const { activities } = this.rootGetters;
+  const parentId = Number(route.params.activityId);
+  return filter(activities, { parentId, type: ASSET_GROUP });
 });
 
-getter(function users() {
-  return values(this.state.users);
-});
-
-getter(function revisions() {
+getter(function assessments() {
   const { route } = this.rootState;
-  const courseId = Number(route.params.courseKey);
-  const revs = this.rootGetters.revisions;
-  return filter(revs, { courseId })
-    .map(rev => ({ ...rev, createdAt: new Date(rev.createdAt) }))
-    .sort((rev1, rev2) => rev2.createdAt - rev1.createdAt);
+  const { tes } = this.rootGetters;
+  const activityId = Number(route.params.activityId);
+  return filter(tes, { activityId });
 });
 
-action(function getUsers() {
-  const { route } = this.rootState;
-  const courseId = route.params.courseKey;
-  return courseApi.getUsers(courseId)
-    .then(users => this.commit('setUsers', users));
+// TODO: Implement persistance upon focusout
+action(function focusoutElement() {
+  this.commit('focusElement');
 });
 
-action(function upsertUser({ courseId, email, role }) {
-  return courseApi.upsertUser(courseId, { email, role })
-    .then(user => this.commit('upsertUser', user));
-});
-
-action(function removeUser({ courseId, userId }) {
-  return courseApi.removeUser(courseId, userId)
-    .then(() => this.commit('removeUser', userId));
-});
-
-mutation(function upsertUser(user) {
-  Vue.set(this.state.users, user.id, user);
-});
-
-mutation(function removeUser(id) {
-  Vue.delete(this.state.users, id);
-});
-
-mutation(function setUsers(users) {
-  this.state.users = {};
-  users.forEach(it => (this.state.users[it.id] = it));
-});
-
-mutation(function focusActivity(_cid) {
-  this.state.activity = _cid;
+mutation(function focusElement(element = {}) {
+  this.state.focusedElement = element;
 });
 
 export default build();

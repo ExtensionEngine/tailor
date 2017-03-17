@@ -3,21 +3,21 @@
     <input
       v-model="url"
       :disabled="!edit"
-      type="text"
       class="form-control"
+      type="text"
       placeholder="URL">
     <button
       v-if="!edit"
       @click="edit = true"
-      type="button"
-      class="btn btn-default">
+      class="btn btn-default"
+      type="button">
       Edit
     </button>
     <button
       v-if="edit"
-      type="button"
+      @click="save"
       class="btn btn-success"
-      @click="save">
+      type="button">
       Save
     </button>
   </div>
@@ -29,19 +29,19 @@ import { mapActions } from 'vuex-module';
 
 export default {
   name: 'video-toolbar',
-  props: ['asset', 'isFocused'],
+  props: ['element'],
   data() {
     return {
-      edit: !this.asset.data.url,
+      edit: !this.element.data.url,
       url: '',
-      ...cloneDeep(this.asset)
+      ...cloneDeep(this.element.data)
     };
   },
   methods: {
-    ...mapActions({ updateAsset: 'update' }, 'assets'),
+    ...mapActions({ updateElement: 'update' }, 'tes'),
     save() {
       this.edit = false;
-      this.updateAsset({ ...this.asset, data: { url: this.url } });
+      this.updateElement({ ...this.element, data: { url: this.url } });
     }
   }
 };

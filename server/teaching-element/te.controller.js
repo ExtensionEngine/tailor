@@ -1,48 +1,49 @@
 'use strict';
 
-const { Asset, Activity } = require('../shared/database');
+const { TeachingElement, Activity } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
 
 function list({ query }, res) {
-  const parentId = parseInt(query.parentId, 10);
-  const include = [{ model: Activity, attributes: [], where: { parentId } }];
-  return Asset.fetch({ include })
+  let where = { $or: [] };
+  if (query.activityId) where.$or.push({ id: parseInt(query.activityId, 10) });
+  if (query.parentId) where.$or.push({ parentId: parseInt(query.parentId, 10) });
+  return TeachingElement.fetch({ include: [{ model: Activity, attributes: [], where }] })
     .then(assets => res.json({ data: assets }));
 }
 
 function show({ params }, res) {
-  const assetId = parseInt(params.assetId, 10);
-  return Asset.fetch(assetId)
-    .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
+  const teId = parseInt(params.teId, 10);
+  return TeachingElement.fetch(teId)
+    .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
     .then(asset => res.json({ data: asset }));
 }
 
 function create({ body, params, user }, res) {
-  const attr = ['activityId', 'type', 'data', 'position', 'layoutWidth'];
+  const attr = ['activityId', 'type', 'data', 'position'];
   const data = Object.assign(pick(body, attr), { courseId: params.courseId });
-  return Asset.initialize()
+  return TeachingElement.initialize()
     .then(asset => asset.update(data, { context: { userId: user.id } }))
     .then(asset => res.json({ data: asset }));
 }
 
 function patch({ body, params, user }, res) {
-  return Asset.findById(params.assetId)
-    .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
+  return TeachingElement.findById(params.teId)
+    .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
     .then(asset => asset.update(body, { context: { userId: user.id } }))
     .then(asset => res.json({ data: asset }));
 }
 
 function remove({ params, user }, res) {
-  return Asset.findById(params.assetId)
-    .then(asset => asset || createError(NOT_FOUND, 'Asset not found'))
+  return TeachingElement.findById(params.teId)
+    .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
     .then(asset => asset.destroy({ context: { userId: user.id } }))
     .then(() => res.end());
 }
 
 function reorder({ body, params }, res) {
-  return Asset.findById(params.assetId)
+  return TeachingElement.findById(params.teId)
     .then(asset => asset.reorder(body.position))
     .then(asset => res.json({ data: asset }));
 }

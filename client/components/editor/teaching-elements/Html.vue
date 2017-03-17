@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="te-html">
     <div v-if="!isFocused && !content">
       <div class="well text-placeholder">
         <div class="message">
@@ -23,32 +23,28 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import debounce from 'lodash/debounce';
 import { quillEditor } from 'vue-quill-editor';
 
 export default {
-  name: 'text-editor',
-  props: ['asset', 'isFocused'],
+  name: 'te-html',
+  props: ['element', 'isFocused'],
   data() {
     return {
       content: '',
-      ...cloneDeep(this.asset.data),
+      ...cloneDeep(this.element.data),
       config: { modules: { toolbar: '#quillToolbar' } }
     };
   },
-  computed: {
-    localAsset() {
-      return {
-        content: this.content
-      };
-    }
-  },
   watch: {
     isFocused(val, oldVal) {
-      if (oldVal && !val) this.$emit('save', this.localAsset);
+      if (oldVal && !val) {
+        this.$emit('save', { content: this.content });
+      }
     },
-    localAsset() {
-      if (this.asset.embedded) this.$emit('save', this.localAsset);
-    }
+    content: debounce(function () {
+      this.$emit('save', { content: this.content });
+    }, 2000)
   },
   components: { quillEditor }
 };

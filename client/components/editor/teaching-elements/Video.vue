@@ -1,5 +1,5 @@
 <template>
-  <div class="video-asset">
+  <div class="te-video">
     <div v-if="showPlaceholder">
       <div class="well video-placeholder">
         <div class="message">
@@ -13,11 +13,7 @@
       <div class="overlay" v-if="!isFocused">
         <div class="message">Double click to preview</div>
       </div>
-      <video-player
-        ref="video"
-        :options="options"
-        :configs="config">
-      </video-player>
+      <video-player ref="video" :options="options" :configs="config"></video-player>
     </div>
   </div>
 </template>
@@ -25,29 +21,23 @@
 <script>
 import { videoPlayer } from 'vue-video-player';
 
-const regex = { youtube: /youtu\.?be/, vimeo: /vimeo/ };
-const types = { youtube: 'video/youtube', vimeo: 'video/vimeo' };
-
 export default {
-  name: 'video-asset',
-  props: ['asset', 'isFocused'],
+  name: 'te-video',
+  props: ['element', 'isFocused'],
   data() {
-    return {
-      config: { youtube: true, vimeo: true }
-    };
+    return { config: { youtube: true, vimeo: true } };
   },
   computed: {
     player() {
       return this.$refs.video && this.$refs.video.player;
     },
     source() {
-      const src = this.asset.data.url;
+      const src = this.element.data.url;
       let type = 'video/webm';
-
-      if (src.match(regex.youtube)) {
-        type = types.youtube;
-      } else if (src.match(regex.vimeo)) {
-        type = types.vimeo;
+      if (src.match(/youtu\.?be/)) {
+        type = 'video/youtube';
+      } else if (src.match(/vimeo/)) {
+        type = 'video/vimeo';
       }
 
       return { type, src };
@@ -60,7 +50,7 @@ export default {
       };
     },
     showPlaceholder() {
-      return !this.asset.data.url;
+      return !this.element.data.url;
     }
   },
   watch: {
@@ -80,7 +70,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.video-asset {
+.te-video {
   position: relative;
 }
 
@@ -121,7 +111,7 @@ export default {
 </style>
 
 <style lang="scss">
-.video-asset .vjs-big-play-button {
+.te-video .vjs-big-play-button {
   display: none !important;
 }
 </style>

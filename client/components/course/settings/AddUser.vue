@@ -45,13 +45,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['upsertUser'], 'editor'),
+    ...mapActions(['upsertUser'], 'course'),
     hasError(type) {
       return this.errors.indexOf(type) > -1;
     },
     addUser() {
       const { email, role } = this;
-      const { courseKey: courseId } = this.$route.params;
+      const { courseId } = this.$route.params;
       this.validate({ email, role })
         .then(() => {
           this.email = '';

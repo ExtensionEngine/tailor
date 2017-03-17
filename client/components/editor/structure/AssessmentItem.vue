@@ -1,16 +1,16 @@
 <template>
   <li class="list-group-item assessment-item">
-    <assessment
-      v-if="edit"
-      :init-assessment="assessment"
+    <te-assessment
+      v-if="expanded"
+      :element="assessment"
       @selected="$emit('selected')"
       @remove="$emit('remove')"
       @save="$emit('save', $event)">
-    </assessment>
+    </te-assessment>
     <div v-else @click="$emit('selected')" class="minimized">
-      <span class="label label-success">{{ assessment.type }}</span>
+      <span class="label label-success">{{ assessment.data.type }}</span>
       <span class="title">{{ question }}</span>
-      <button @click.stop="$emit('remove')" type="button" class="delete">
+      <button @click.stop="$emit('remove')" class="delete" type="button">
         <span class="fa fa-times"></span>
       </button>
     </div>
@@ -18,36 +18,36 @@
 </template>
 
 <script>
-import Assessment from '../assessments';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
+import TeAssessment from '../teaching-elements/Assessment';
 import truncate from 'lodash/truncate';
 
-const htmlRegex = /<\/?[^>]+(>|$)/g;
 const blankRegex = /(@blank)/g;
+const htmlRegex = /<\/?[^>]+(>|$)/g;
 
 export default {
   name: 'assessment-item',
-  props: ['assessment', 'edit'],
+  props: ['assessment', 'expanded'],
   computed: {
     question() {
-      let question = filter(this.assessment.question, { type: 'TEXT' });
+      let question = filter(this.assessment.data.question, { type: 'HTML' });
       question = map(question, 'data.content').join(' ');
       question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
       return truncate(question, { length: 50 });
     }
   },
   components: {
-    Assessment
+    TeAssessment
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .assessment-item {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
   margin-bottom: 7px;
   padding: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
 
   div {
     padding: 15px;
@@ -73,10 +73,10 @@ export default {
   .delete {
     visibility: hidden;
     float: right;
+    padding: 0;
     opacity: 0.5;
     border: 0;
     background-color: transparent;
-    padding: 0;
 
     span {
       font-size: 20px;

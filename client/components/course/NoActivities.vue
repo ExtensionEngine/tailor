@@ -39,9 +39,9 @@ export default {
       name: ''
     };
   },
-  computed: mapGetters(['course'], 'editor'),
+  computed: mapGetters(['course'], 'course'),
   methods: {
-    ...mapActions(['save'], 'activity'),
+    ...mapActions(['save'], 'activities'),
     create() {
       this.$validator.validateAll().then(() => {
         this.save({

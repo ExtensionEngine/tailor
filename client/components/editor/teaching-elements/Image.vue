@@ -1,5 +1,5 @@
 <template>
-  <div class="image-asset">
+  <div class="te-image">
     <div v-if="showPlaceholder" class="well image-placeholder">
       <div class="message">
         <span class="heading">Image placeholder</span>
@@ -36,16 +36,17 @@ import { imgSrcToDataURL } from 'blob-util';
 import isEmpty from 'lodash/isEmpty';
 
 export default {
-  props: ['asset', 'isFocused'],
+  name: 'te-image',
+  props: ['element', 'isFocused'],
   data() {
     return {
-      persistedImage: null,
-      currentImage: null
+      currentImage: null,
+      persistedImage: null
     };
   },
   computed: {
     showPlaceholder() {
-      return isEmpty(this.asset.data.url);
+      return isEmpty(this.element.data.url);
     }
   },
   methods: {
@@ -77,7 +78,8 @@ export default {
       const actions = ['clear', 'crop', 'reset', 'upload'];
       const tools = ['showCrop', 'hideCrop'];
       const events = concat(actions, tools);
-      const namespace = name => `${name}/${this.asset._cid}`;
+      const id = this.element.embedded ? this.element.id : this.element._cid;
+      const namespace = name => `${name}/${id}`;
       events.forEach(it => eventBus[method](namespace(it), this[it]));
     },
     registerEvents() {
@@ -91,7 +93,7 @@ export default {
     this.registerEvents();
   },
   mounted() {
-    const imageUrl = this.asset.data.url;
+    const imageUrl = this.element.data.url;
     if (!imageUrl) return;
     imgSrcToDataURL(imageUrl, 'image/png', 'Anonymous').then(dataUrl => {
       this.currentImage = dataUrl;

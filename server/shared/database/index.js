@@ -6,12 +6,11 @@ const sequelize = new Sequelize(process.env.POSTGRES_URI);
 let db = { Sequelize, sequelize };
 
 const models = {
-  Asset: '../../asset/asset.model',
   Activity: '../../activity/activity.model',
-  Assessment: '../../assessment/assessment.model',
   Course: '../../course/course.model',
   CourseUser: '../../course/courseUser.model',
   Revision: '../../revision/revision.model',
+  TeachingElement: '../../teaching-element/te.model',
   User: '../../user/user.model'
 };
 
