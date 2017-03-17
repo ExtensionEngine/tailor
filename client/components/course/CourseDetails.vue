@@ -2,8 +2,8 @@
   <div class="settings">
     <loader v-if="showLoader"></loader>
     <div v-else>
-      <div class="course-name">
-        <label for="name-field">Name</label>
+      <div class="form-group">
+        <label for="courseName">Name</label>
         <span v-if="showNameInput">
           <input
             v-model="newCourseName"
@@ -11,24 +11,24 @@
             @blur="updateName"
             @keyup.enter="updateName"
             @keyup.esc="showNameInput = false"
-            id="name-field"
+            id="courseName"
             class="form-control">
         </span>
-        <span v-else class="course-name">
+        <span v-else>
           <h2 @click.stop="showNameInput = true">
             {{ course ? course.name : '' }}
           </h2>
         </span>
       </div>
-      <div class="course-description">
-        <label for="description-field">Description</label>
+      <div class="form-group">
+        <label for="courseDescription">Description</label>
         <span v-if="showDescriptionInput">
           <textarea
             v-model="newCourseDescription"
             v-focus="true"
             @blur="updateDescription"
             @keyup.esc="showDescriptionInput = false"
-            id="description-field"
+            id="courseDescription"
             class="form-control">
           </textarea>
         </span>
@@ -121,20 +121,12 @@ export default {
     }
   }
 };
-</script>
+</script>course-name
 
 <style scoped lang="scss">
-.course-name {
-  margin: 20px 0 30px 0;
-  text-align: left;
-}
-
-.course-description {
-  text-align: left;
-}
-
 .course-actions {
   margin: 25px 0;
+  text-align: center;
 }
 
 h2 {
@@ -147,12 +139,12 @@ h2 {
 
 input.form-control {
   padding-top: 3px; 
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 textarea.form-control {
   height: 300px;
-  padding-top: 22px;
+  padding-top: 15px;
   font-size: 16px;
   letter-spacing: 0.1px;
 }
@@ -165,6 +157,7 @@ span.form-display {
 }
 
 label {
+  margin-top: 30px;
   color: gray;
   display: block;
   font-size: 14px;
@@ -175,5 +168,6 @@ label {
   padding: 10px 30px;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
+  text-align: left;
 }
 </style>
