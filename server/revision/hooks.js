@@ -1,9 +1,9 @@
-const capitalize = require('lodash/capitalize');
+const to = require('to-case');
 const zip = require('lodash/zip');
 
 const hooks = ['afterCreate', 'afterUpdate', 'afterDestroy'];
 const operations = ['CREATE', 'UPDATE', 'REMOVE'];
-const entities = ['COURSE', 'ACTIVITY', 'TEL'];
+const entities = ['COURSE', 'ACTIVITY', 'TEACHING_ELEMENT'];
 
 function add(models) {
   zip(hooks, operations).forEach(hook => {
@@ -19,7 +19,7 @@ function createHook(models, entity, [name, operation]) {
   if (entity === 'COURSE' && operation === 'REMOVE') return;
 
   const Revision = models.Revision;
-  const Model = models[capitalize(entity)];
+  const Model = models[to.pascal(entity)];
 
   Model.hook(name, (instance, { context }) => {
     if (!context || !context.userId) return;

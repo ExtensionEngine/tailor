@@ -6,7 +6,7 @@ module.exports = function (sequelize, DataTypes) {
   const Revision = sequelize.define('revision', {
     entity: {
       type: DataTypes.ENUM,
-      values: ['ACTIVITY', 'COURSE', 'TEL'],
+      values: ['ACTIVITY', 'COURSE', 'TEACHING_ELEMENT'],
       allowNull: false
     },
     operation: {

@@ -58,6 +58,7 @@
     "pg-hstore": "^2.3.2",
     "promise-queue": "^2.2.3",
     "sequelize": "^3.3.0",
+    "to-case": "^2.0.0",
     "to-title-case": "^1.0.0",
     "truncate": "^2.0.0",
     "url-join": "^1.1.0",
