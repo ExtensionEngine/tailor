@@ -33,12 +33,12 @@ export default {
     ...mapGetters(['course', 'activity'], 'course')
   },
   methods: {
+    ...mapActions(['focusoutElement'], 'editor'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
     ...mapMutations({ setupActivitiesApi: 'setBaseUrl' }, 'activities'),
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
-    ...mapMutations(['focusoutElement'], 'editor'),
     onMousedown() {
       this.mousedownCaptured = true;
     },
