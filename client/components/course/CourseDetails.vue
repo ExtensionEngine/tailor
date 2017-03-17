@@ -83,7 +83,7 @@ export default {
   methods: {
     ...mapActions(['update', 'remove'], 'courses'),
     updateName() {
-      if (this.showNameInput) return;
+      if (!this.showNameInput) return;
       this.showNameInput = false;
       if (this.course.name !== this.newCourseName) {
         this.course.name = this.newCourseName;
@@ -91,7 +91,7 @@ export default {
       }
     },
     updateDescription() {
-      if (this.showDescriptionInput) return;
+      if (!this.showDescriptionInput) return;
       this.showDescriptionInput = false;
       if (this.course.description !== this.newCourseDescription) {
         this.course.description = this.newCourseDescription;
@@ -112,7 +112,8 @@ export default {
       this.newCourseDescription = this.course.description;
     }
   },
-  created() {
+  mounted() {
+    if (!this.course) return;
     this.setCourseFields();
   },
   watch: {
@@ -134,17 +135,17 @@ h2 {
   font-size: 16px;
   color: #444;
   font-weight: normal;
-  margin: 20px 0 7px 0; 
+  margin: 20px 0 7px 0;
 }
 
 input.form-control {
-  padding-top: 3px; 
-  margin-top: 10px;
+  padding-top: 3px;
+  margin-top: 15px;
 }
 
 textarea.form-control {
   height: 300px;
-  padding-top: 15px;
+  padding-top: 22px;
   font-size: 16px;
   letter-spacing: 0.1px;
 }
@@ -164,7 +165,7 @@ label {
 }
 
 .settings {
-  margin: 40px 20px; 
+  margin: 40px 20px;
   padding: 10px 30px;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
