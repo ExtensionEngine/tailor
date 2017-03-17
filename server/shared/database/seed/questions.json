@@ -3,7 +3,7 @@
     "type": "QUESTION",
     "data": {
       "type": "MC",
-      "question": [{ "_cid": 1, "type": "HTML", "data": { "content": "What are the two biggest cities in Croatia?" } }],
+      "question": [{ "id": 1, "type": "HTML", "data": { "content": "What are the two biggest cities in Croatia?" } }],
       "answers": ["Zagreb", "Split", "Rijeka"],
       "correct": [0, 1],
       "hint": ""
@@ -12,7 +12,7 @@
     "type": "QUESTION",
     "data": {
       "type": "SC",
-      "question": [{ "_cid": 2, "type": "HTML", "data": { "content": "What is the biggest city in USA ?" } }],
+      "question": [{ "id": 2, "type": "HTML", "data": { "content": "What is the biggest city in USA ?" } }],
       "answers": ["NY", "Los Angeles"],
       "correct": "0",
       "hint": ""
@@ -21,7 +21,7 @@
     "type": "QUESTION",
     "data": {
       "type": "TF",
-      "question": [{ "_cid": 3, "type": "HTML", "data": { "content": "The biggest city in the UK is London ?" } }],
+      "question": [{ "id": 3, "type": "HTML", "data": { "content": "The biggest city in the UK is London ?" } }],
       "correct": true,
       "hint": ""
     }
@@ -29,7 +29,7 @@
     "type": "QUESTION",
     "data": {
       "type": "NR",
-      "question": [{ "_cid": 4, "type": "HTML", "data": { "content": "What is the value of pi (two decimals) ?" } }],
+      "question": [{ "id": 4, "type": "HTML", "data": { "content": "What is the value of pi (two decimals) ?" } }],
       "correct": "3.14",
       "hint": ""
     }
@@ -37,7 +37,7 @@
     "type": "QUESTION",
     "data": {
       "type": "TR",
-      "question": [{ "_cid": 5, "type": "HTML", "data": { "content": "Name three countries" } }],
+      "question": [{ "id": 5, "type": "HTML", "data": { "content": "Name three countries" } }],
       "correct": "USA, Canada, Croatia",
       "hint": ""
     }
@@ -45,7 +45,7 @@
     "type": "QUESTION",
     "data": {
       "type": "FB",
-      "question": [{ "_cid": 6, "type": "HTML", "data": { "content": "The capital of USA is (1)__________, the capital of Croatia is (2)__________, the capital of Germany is (3)__________" } }],
+      "question": [{ "id": 6, "type": "HTML", "data": { "content": "The capital of USA is @blank, the capital of Croatia is @blank, the capital of Germany is @blank" } }],
       "correct": [["Washington"], ["Zagreb"], ["Berlin"]]
     }
   }]
