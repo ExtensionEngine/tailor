@@ -65,7 +65,7 @@ export default {
     },
     toggleSelect(assessment) {
       const question = assessment.data.question;
-      const hasQuestion = question && question.lenght > 0;
+      const hasQuestion = question && question.length > 0;
       if (this.isSelected(assessment) && !hasQuestion) {
         this.remove(assessment);
       } else if (this.isSelected(assessment)) {
