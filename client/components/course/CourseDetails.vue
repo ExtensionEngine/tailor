@@ -123,7 +123,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .course-actions {
   margin: 25px 0;
   text-align: center;
