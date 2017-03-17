@@ -24,6 +24,6 @@ each(db, (v, modelName) => {
 
 db['Revision'].addHooks(db);
 
-db.initialize = () => sequelize.sync({ force: true }).then(() => seed(db));
+db.initialize = () => sequelize.sync({ force: false }).then(() => seed(db));
 
 module.exports = db;
