@@ -2,7 +2,7 @@
 
 const calculatePosition = require('../shared/util/calculatePosition');
 const isNumber = require('lodash/isNumber');
-const { processAsset, resolveAsset } = require('../shared/storage/helpers');
+const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 
 module.exports = function (sequelize, DataTypes) {
   const TeachingElement = sequelize.define('TeachingElement', {
@@ -45,8 +45,9 @@ module.exports = function (sequelize, DataTypes) {
       },
       fetch(opt) {
         return isNumber(opt)
-          ? TeachingElement.findById(opt).then(it => it && resolveAsset(it))
-          : TeachingElement.findAll(opt).then(arr => Promise.all(arr.map(it => resolveAsset(it))));
+          ? TeachingElement.findById(opt).then(it => it && resolveStatics(it))
+          : TeachingElement.findAll(opt)
+              .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
       }
     },
     instanceMethods: {
@@ -67,11 +68,11 @@ module.exports = function (sequelize, DataTypes) {
     },
     hooks: {
       beforeCreate(te) {
-        return processAsset(te);
+        return processStatics(te);
       },
       beforeUpdate(te) {
         const changed = te.changed('data');
-        return changed ? processAsset(te) : Promise.resolve();
+        return changed ? processStatics(te) : Promise.resolve();
       }
     },
     underscored: true,

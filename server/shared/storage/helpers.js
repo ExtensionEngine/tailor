@@ -7,6 +7,12 @@ const PRIMITIVES = ['TEXT', 'IMAGE', 'VIDEO', 'GOMO'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 
+function processStatics(item, courseId) {
+  return item.type === 'ASSESSMENT'
+    ? processAssessment(item)
+    : processAsset(item, courseId);
+}
+
 function processAsset(asset, courseId) {
   courseId = courseId || asset.courseId;
   return isPrimitive(asset)
@@ -46,6 +52,12 @@ processor.IMAGE = (asset, courseId) => {
   return saveFile(key, file).then(() => asset);
 };
 
+function resolveStatics(item) {
+  return item.type === 'ASSESSMENT'
+    ? resolveAssessment(item)
+    : resolveAsset(item);
+}
+
 function resolveAsset(asset) {
   if (!isPrimitive(asset)) Promise.resolve(asset);
   if (!resolver[asset.type]) return Promise.resolve(asset);
@@ -79,8 +91,6 @@ function saveFile(key, file) {
 }
 
 module.exports = {
-  processAsset,
-  processAssessment,
-  resolveAsset,
-  resolveAssessment
+  processStatics,
+  resolveStatics
 };
