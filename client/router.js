@@ -1,6 +1,7 @@
-import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
+import Vue from 'vue';
+
 import Auth from './components/auth/Container';
 import Course from './components/course/Container';
 import Outline from './components/course/Outline';
@@ -24,7 +25,7 @@ let router = new Router({
       meta: { auth: true }
     },
     {
-      path: '/course/:courseKey',
+      path: '/course/:courseId',
       component: Course,
       children: [
         {
@@ -51,7 +52,7 @@ let router = new Router({
       meta: { auth: true }
     },
     {
-      path: '/course/:courseKey/editor/:activityKey',
+      path: '/course/:courseId/editor/:activityId',
       name: 'editor',
       component: Editor,
       meta: { auth: true }
