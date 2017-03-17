@@ -28,10 +28,10 @@
 </template>
 
 <script>
-import AddElement from './add-element';
+import AddElement from './AddElement';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeachingElement from '../teaching-elements';
 
 export default {
@@ -43,16 +43,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['tes'], 'editor'),
+    ...mapGetters(['tes']),
     teachingElements() {
       return filter(this.tes, { activityId: this.perspective.id })
         .sort((a, b) => a.position - b.position);
     }
   },
   methods: {
-    ...mapActions(['focusElement'], 'editor'),
     ...mapActions(['remove'], 'activities'),
     ...mapActions({ reorderElements: 'reorder', saveElement: 'save' }, 'tes'),
+    ...mapMutations(['focusElement'], 'editor'),
     reorder({ newIndex: newPosition }) {
       const items = this.teachingElements;
       const element = items[newPosition];
