@@ -20,7 +20,7 @@
 import filter from 'lodash/filter';
 import SelectAssessment from './SelectAssessment';
 
-const ELEMENT_TYPES = [
+const TE_TYPES = [
   { type: 'HTML', label: 'Text', icon: 'mdi-format-text' },
   { type: 'IMAGE', label: 'Image', icon: 'mdi-image' },
   { type: 'VIDEO', label: 'Video', icon: 'mdi-video' },
@@ -36,14 +36,16 @@ export default {
   },
   computed: {
     elements() {
-      if (!this.include) return ELEMENT_TYPES;
-      return filter(ELEMENT_TYPES, it => this.include.indexOf(it.type) > -1);
+      if (!this.include) return TE_TYPES;
+      let items = filter(TE_TYPES, it => this.include.indexOf(it.type) > -1);
+      if (items.length === 1 && items[0].type === 'ASSESSMENT') {
+        this.type = 'ASSESSMENT';
+      }
+
+      return items;
     },
     showAssessments() {
-      return this.assessmentsOnly || this.type === 'ASSESSMENT';
-    },
-    assessmentsOnly() {
-      return this.elements.length === 1 && this.elements[0].type === 'ASSESSMENT';
+      return this.type === 'ASSESSMENT';
     }
   },
   methods: {

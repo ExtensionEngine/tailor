@@ -19,7 +19,11 @@
         @remove="remove(assessment)">
       </assessment-item>
     </ul>
-    <add-element :include="['ASSESSMENT']" @selected="add"></add-element>
+    <add-element
+      :include="['ASSESSMENT']"
+      :activity="activity"
+      @add="add">
+    </add-element>
   </div>
 </template>
 
@@ -42,6 +46,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['activity'], 'editor'),
     hasAssessments() {
       return !!Object.keys(this.assessments).length;
     }

@@ -20,7 +20,7 @@
 <script>
 import filter from 'lodash/filter';
 import map from 'lodash/map';
-import TeQuestion from '../teaching-elements/assessment';
+import TeAssessment from '../teaching-elements/Assessment';
 import truncate from 'lodash/truncate';
 
 const blankRegex = /(@blank)/g;
@@ -38,7 +38,7 @@ export default {
     }
   },
   components: {
-    TeQuestion
+    TeAssessment
   }
 };
 </script>
