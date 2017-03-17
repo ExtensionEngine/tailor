@@ -22,6 +22,7 @@
     <add-element
       :activity="perspective"
       :position="teachingElements.length + 1"
+      :include="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       @add="addElement">
     </add-element>
   </div>
