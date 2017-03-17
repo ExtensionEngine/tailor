@@ -87,7 +87,7 @@ module.exports = function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate(models) {
-        Activity.hasMany(models.Tel);
+        Activity.hasMany(models.TeachingElement);
         Activity.belongsTo(models.Course, {
           foreignKey: { name: 'courseId', field: 'course_id' }
         });
