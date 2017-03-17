@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course'], 'editor'),
+    ...mapGetters(['course'], 'course'),
     showRemoveButton() {
       return this.isAdmin;
     }
