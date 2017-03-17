@@ -85,8 +85,8 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['focusActivity'], 'editor'),
-    ...mapActions({ updatePosition: 'reorder' }, 'activity'),
+    ...mapMutations(['focusActivity'], 'course'),
+    ...mapActions({ updatePosition: 'reorder' }, 'activities'),
     select() {
       this.isCollapsed = !this.isCollapsed;
       this.focusActivity(this._cid);
@@ -95,7 +95,7 @@ export default {
       if (!this.isEditable) return;
       this.$router.push({
         name: 'editor',
-        params: { activityKey: this.activity.id }
+        params: { activityId: this.activity.id }
       });
     },
     reorder({ newIndex: newPosition }) {
