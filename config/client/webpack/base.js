@@ -32,6 +32,7 @@ module.exports = {
       assets: projectRoot('client', 'assets'),
       components: projectRoot('client', 'components'),
       shared: projectRoot('config/shared'),
+      utils: projectRoot('client', 'utils'),
       EventBus: projectRoot('client', 'EventBus')
     }
   },
