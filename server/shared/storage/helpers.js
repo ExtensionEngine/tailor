@@ -47,7 +47,7 @@ processor.IMAGE = (asset, courseId) => {
 };
 
 function resolveAsset(asset) {
-  if (!isPrimitive(asset)) throw new Error('Invalid primitive');
+  if (!isPrimitive(asset)) Promise.resolve(asset);
   if (!resolver[asset.type]) return Promise.resolve(asset);
   return resolver[asset.type](asset);
 }
