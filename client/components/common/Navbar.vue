@@ -9,7 +9,7 @@
       </div>
       <router-link
         v-if="course"
-        :to="{ name: 'course', params: { courseKey: course.id }}"
+        :to="{ name: 'course', params: { courseId: course.id }}"
         class="course-title">
         {{ course.name }}
       </router-link>
@@ -35,7 +35,7 @@ export default {
   name: 'navbar',
   computed: {
     ...mapGetters(['user']),
-    ...mapGetters(['course'], 'editor')
+    ...mapGetters(['course'], 'course')
   },
   methods: mapActions(['logout'])
 };
