@@ -3,7 +3,7 @@ import store from './store';
 import Vue from 'vue';
 
 import Auth from './components/auth/Container';
-import Course from './components/course/Container';
+import Course from './components/course';
 import Outline from './components/course/Outline';
 import CourseSettings from './components/course/settings';
 import CourseDetails from './components/course/CourseDetails';
