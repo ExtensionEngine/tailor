@@ -39,8 +39,8 @@ const fbQuestion = yup.array().test(
 export const schemas = {
   MC: yup.object().shape({
     question,
-    answers: yup.array().min(3).of(yup.string().trim().min(1)).required(),
-    correct: yup.array().min(2).of(yup.number()).required()
+    answers: yup.array().min(2).of(yup.string().trim().min(1)).required(),
+    correct: yup.array().min(1).of(yup.number()).required()
   }),
   NR: yup.object().shape({
     question,
