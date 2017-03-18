@@ -1,7 +1,7 @@
 <template>
   <div class="add-element">
     <transition name="slide-fade">
-      <div v-if="selection">
+      <div v-if="selection" class="selections">
         <select-element
           v-if="selectType"
           :include="include"
@@ -97,6 +97,10 @@ export default {
 .add-element {
   margin: 20px 0;
   color: #444;
+
+  .selections {
+    min-height: 85px;
+  }
 
   .btn-base {
     font-size: 28px;

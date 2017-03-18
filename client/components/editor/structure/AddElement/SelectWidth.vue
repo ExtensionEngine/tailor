@@ -1,10 +1,10 @@
 <template>
   <div class="select-width">
     <div
-      class="content-width"
       v-for="width in widths"
-      @click="$emit('selected', width.value)">
-      <span :class="width.icon" class="fa"></span>
+      @click="$emit('selected', width.value)"
+      class="content-width">
+      <span :class="width.icon" class="mdi"></span>
     </div>
   </div>
 </template>
@@ -15,8 +15,8 @@ export default {
   data() {
     return {
       widths: [
-        { value: 6, icon: 'fa-pause' },
-        { value: 12, icon: 'fa-stop' }
+        { value: 6, icon: 'mdi-view-agenda mdi-rotate-90' },
+        { value: 12, icon: 'mdi-checkbox-blank' }
       ]
     };
   }
@@ -31,7 +31,7 @@ export default {
 .content-width {
   display: inline-block;
   margin: 0 20px;
-  padding: 15px 10px;
+  padding: 5px 10px;
 
   &:hover {
     color: #42b983;
@@ -43,9 +43,8 @@ export default {
     font-size: 16px;
   }
 
-  .fa {
-    padding-bottom: 7px;
-    font-size: 24px;
+  .mdi {
+    font-size: 26px;
   }
 }
 </style>
