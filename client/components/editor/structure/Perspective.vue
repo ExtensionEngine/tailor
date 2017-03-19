@@ -2,7 +2,7 @@
   <div class="perspective">
     <div class="actions">
       <span @click="remove(perspective)" class="pull-right">
-        <span class="fa fa-trash"></span>
+        <span class="mdi mdi-delete"></span>
       </span>
     </div>
     <div v-if="!teachingElements.length" class="well">
@@ -88,7 +88,7 @@ export default {
 .actions {
   width: 100%;
   min-height: 36px;
-  font-size: 20px;
+  font-size: 22px;
   color: #707070;
 
   > span {
