@@ -7,19 +7,20 @@ const map = require('lodash/map');
 const params = require('../../config/server').queryParams;
 const pick = require('lodash/pick');
 
-function index(req, res) {
-  const user = req.user;
-  const offset = parseInt(req.query.offset, 10) || 0;
-  const limit = parseInt(req.query.limit, 10) || params.pagination.limit;
+function index({ query, user }, res) {
+  const offset = parseInt(query.offset, 10) || 0;
+  const limit = parseInt(query.limit, 10) || params.pagination.limit;
   const order = [[
-    req.query.sortBy || params.sort.field,
-    req.query.sortOrder || params.sort.order.ASC
+    query.sortBy || params.sort.field,
+    query.sortOrder || params.sort.order.ASC
   ]];
-  const where = req.query.search
-    ? { name: { $iLike: `%${req.query.search}%` } }
-    : undefined;
+  const paranoid = !query.integration;
+  const where = {};
+  if (query.search) where.name = { $iLike: `%${query.search}%` };
+  if (query.include) where.id = { $in: map(query.include, num => parseInt(num, 10)) };
+  if (query.exclude) where.id = { $notIn: map(query.exclude, num => parseInt(num, 10)) };
 
-  const opts = { offset, limit, order, where };
+  const opts = { offset, limit, order, where, paranoid };
   const promise = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return promise.then(courses => res.json({ data: courses }));
 };
