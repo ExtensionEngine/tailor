@@ -36,13 +36,20 @@ export default {
       config: { modules: { toolbar: '#quillToolbar' } }
     };
   },
+  computed: {
+    hasChanges() {
+      const previousValue = this.element.data.content || '';
+      return previousValue !== this.content;
+    }
+  },
   watch: {
     isFocused(val, oldVal) {
-      if (oldVal && !val) {
+      if (oldVal && !val && this.hasChanges) {
         this.$emit('save', { content: this.content });
       }
     },
     content: debounce(function () {
+      if (!this.hasChanges) return;
       this.$emit('save', { content: this.content });
     }, 2000)
   },
