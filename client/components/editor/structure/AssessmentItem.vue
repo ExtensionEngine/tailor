@@ -10,9 +10,9 @@
     <div v-else @click="$emit('selected')" class="minimized">
       <span class="label label-success">{{ assessment.data.type }}</span>
       <span class="title">{{ question }}</span>
-      <button @click.stop="$emit('remove')" class="delete" type="button">
-        <span class="fa fa-times"></span>
-      </button>
+      <span @click="$emit('remove')" class="delete">
+        <span class="mdi mdi-close"></span>
+      </span>
     </div>
   </li>
 </template>
@@ -71,24 +71,21 @@ export default {
   }
 
   .delete {
+    display: block;
+    position: absolute;
+    top: 7px;
+    right: 15px;
     visibility: hidden;
-    float: right;
-    padding: 0;
-    opacity: 0.5;
-    border: 0;
-    background-color: transparent;
+    color: #707070;
+    font-size: 26px;
 
-    span {
-      font-size: 20px;
+    &:hover {
+      color: #555;
     }
   }
 
-  .delete:focus {
-    outline: none;
-  }
-
-  div:hover {
-    .delete:enabled {
+  &:hover {
+    .delete {
       visibility: visible;
     }
   }
