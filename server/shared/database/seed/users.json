@@ -1,5 +1,9 @@
 {
   "data": [{
+    "email": "integration@extensionengine.com",
+    "password": "eeTest1",
+    "role": "INTEGRATION"
+  }, {
     "email": "cima@extensionengine.com",
     "password": "eeTest1",
     "role": "ADMIN"

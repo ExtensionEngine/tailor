@@ -58,6 +58,10 @@ action(function resetPassword({ token, password }) {
   return authApi.resetPassword(token, password);
 });
 
+action(function generateIntegrationToken() {
+  return authApi.generateIntegrationToken();
+});
+
 mutation(function login(user) {
   this.state.user = user;
 });

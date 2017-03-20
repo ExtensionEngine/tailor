@@ -3,7 +3,8 @@ import request from './request';
 const url = {
   login: '/users/login',
   forgotPassword: '/users/forgotPassword',
-  resetPassword: '/users/resetPassword'
+  resetPassword: '/users/resetPassword',
+  generateIntegrationToken: '/users/generateIntegrationToken'
 };
 
 function login(credentials) {
@@ -30,9 +31,14 @@ function resetPassword(token, password) {
   return request.post(url.resetPassword, { token, password });
 }
 
+function generateIntegrationToken() {
+  return request.get(url.generateIntegrationToken);
+}
+
 export default {
   login,
   logout,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  generateIntegrationToken
 };

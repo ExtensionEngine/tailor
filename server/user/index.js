@@ -8,7 +8,8 @@ router
   .post('/users/login', ctrl.login)
   .get('/users', ctrl.index)
   .post('/users/forgotPassword', ctrl.forgotPassword)
-  .post('/users/resetPassword', ctrl.resetPassword);
+  .post('/users/resetPassword', ctrl.resetPassword)
+  .get('/users/generateIntegrationToken', ctrl.generateIntegrationToken);
 
 module.exports = {
   model,

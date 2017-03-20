@@ -2,6 +2,7 @@ import Router from 'vue-router';
 import store from './store';
 import Vue from 'vue';
 
+import Admin from './components/admin';
 import Auth from './components/auth/Container';
 import Catalog from './components/catalog/Container';
 import Course from './components/course';
@@ -47,6 +48,11 @@ let router = new Router({
     path: '/course/:courseId/editor/:activityId',
     name: 'editor',
     component: Editor,
+    meta: { auth: true }
+  }, {
+    path: '/admin',
+    name: 'admin',
+    component: Admin,
     meta: { auth: true }
   }, {
     path: '/',

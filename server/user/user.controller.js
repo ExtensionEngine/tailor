@@ -50,9 +50,17 @@ function login({ body }, res) {
     });
 }
 
+function generateIntegrationToken(req, res) {
+  return User.find({ where: { role: 'INTEGRATION' } })
+    .then(user => user.createToken({}))
+    .then(token => res.json({token}));
+}
+
+
 module.exports = {
   index,
   forgotPassword,
   resetPassword,
-  login
+  login,
+  generateIntegrationToken
 };
