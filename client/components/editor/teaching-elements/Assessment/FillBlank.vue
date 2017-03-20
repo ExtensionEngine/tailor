@@ -64,7 +64,7 @@ export default {
       return this.answerGroups.length !== this.blanksCount;
     },
     blanksCount() {
-      const textAssets = filter(this.question, { type: 'TEXT' });
+      const textAssets = filter(this.question, { type: 'HTML' });
       return reduce(textAssets, (count, it) => {
         const content = it.data ? it.data.content : '';
         return count + (content.match(PLACEHOLDER) || []).length;
