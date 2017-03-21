@@ -2,7 +2,7 @@
   <div :class="{ 'disabled': disabled }">
     <div class="row">
       <div v-for="(dropSpot, col) in dropSpots" :class="lgCol" class="col-md-6">
-        <div :class="{'flip': isSelected(col)}" class="heading-box">
+        <div :class="{ 'flip': isSelected(col) }" class="heading-box">
           <div @click="flip(col)" class="heading-view">
             <span :class="errorClass(col)">{{ dropSpot.heading }}</span>
             <span
@@ -22,7 +22,7 @@
         <ul>
           <li
             v-for="(answer, row) in answerGroup(col)"
-            :class="{'flip': isSelected(col, row)}"
+            :class="{ 'flip': isSelected(col, row) }"
             class="response-box">
             <div @click="flip(col, row)" class="response-view">
               <span :class="errorClass(col, row)">{{ answer }}</span>
@@ -46,7 +46,7 @@
         </ul>
       </div>
     </div>
-    <div class="add-spot">
+    <div class="add-dropSpot">
       <span @click="addDropSpot()" class="fa fa-plus btn btn-link"></span>
     </div>
   </div>
@@ -64,13 +64,11 @@ export default {
   directives: {
     focus: {
       update(el, binding, vnode) {
-        const flippedCol = vnode.context.flipped.col;
-        const flippedRow = vnode.context.flipped.row;
-        const selectedCol = binding.value.col;
-        const selectedRow = binding.value.row;
-        flippedCol === selectedCol && flippedRow === selectedRow
-          ? el.focus()
-          : el.blur();
+        const col = vnode.context.flipped.col;
+        const row = vnode.context.flipped.row;
+        const newCol = binding.value.col;
+        const newRow = binding.value.row;
+        col === newCol && row === newRow ? el.focus() : el.blur();
       }
     }
   },
@@ -107,15 +105,14 @@ export default {
   methods: {
     addAnswer(col) {
       this.answerGroup(col).push(defaultAnswer);
-      this.update();
     },
     addDropSpot() {
       this.dropSpots.push({ heading: defaultHead, answers: [defaultAnswer] });
-      this.update();
     },
     allowRemove(col, row) {
-      if (row !== undefined) return this.dropSpots[col].answers.length > 1;
-      return this.dropSpots.length > 2;
+      const dropSpotsLen = this.dropSpots.length;
+      const answersLen = this.dropSpots[col].answers.length;
+      return row !== undefined ? answersLen > 1 : dropSpotsLen > 2;
     },
     answerGroup(col) {
       return this.dropSpots[col].answers;
@@ -130,20 +127,17 @@ export default {
       if (this.isSelected(col, row)) {
         this.flipped = { col: null, row: null };
       } else {
-        this.flipped = row !== null ? { col, row } : { col, row: null };
+        this.flipped = { col, row };
       }
-      this.syncErrors();
     },
     isSelected(col, row = null) {
       return this.flipped.col === col && this.flipped.row === row;
     },
     removeAnswer(col, row) {
       this.answerGroup(col).splice(row, 1);
-      this.update();
     },
     removeDropSpot(col) {
       this.dropSpots.splice(col, 1);
-      this.update();
     },
     syncErrors() {
       if (!isEmpty(this.localErrors)) this.$emit('syncErrors');
@@ -153,8 +147,12 @@ export default {
     }
   },
   watch: {
-    dropSpots() {
-      this.syncErrors();
+    dropSpots: {
+      handler() {
+        this.update();
+        this.syncErrors();
+      },
+      deep: true
     },
     errors() {
       this.localErrors = this.errors;
@@ -175,7 +173,7 @@ export default {
 }
 
 .disabled {
-  pointer-events:none;
+  pointer-events: none;
 }
 
 .row {
@@ -194,10 +192,10 @@ ul {
 }
 
 .add-answer {
-  margin: 0 0 25px 0;
+  margin-bottom: 25px;
 }
 
-.add-spot {
+.add-dropSpot {
   display: inline-block;
   font-size: 22px;
   float: right;

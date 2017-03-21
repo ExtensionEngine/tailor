@@ -103,7 +103,7 @@ export default {
     },
     syncErrors() {
       this.errors = [];
-      this.validate(this.assessment)
+      this.validate(this.assessment.data)
         .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
     },
     update(data) {

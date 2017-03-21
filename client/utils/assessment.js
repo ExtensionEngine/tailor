@@ -65,7 +65,7 @@ export const schemas = {
     correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).required()))
   }),
   DD: yup.object().shape({
-    question: yup.string().trim().required(),
+    question,
     correct: yup.array().of(yup.object().shape({
       heading: yup.string().trim().notOneOf(['Drop spot..']).required(),
       answers: yup.array().of(yup.string().trim().notOneOf(['Response item..']).required())
@@ -113,7 +113,7 @@ export const defaults = {
   },
   DD: {
     type: 'DD',
-    question: '',
+    question: [],
     correct: [],
     hint: ''
   }
