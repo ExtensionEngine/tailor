@@ -34,13 +34,13 @@ import { mapActions } from 'vuex-module';
 
 export default {
   methods: {
-    ...mapActions(['upsertUser', 'removeUser'], 'editor'),
+    ...mapActions(['upsertUser', 'removeUser'], 'course'),
     changeRole(email, role) {
-      const { courseKey: courseId } = this.$route.params;
+      const { courseId } = this.$route.params;
       debounce(this.upsertUser, 500)({ courseId, email, role });
     },
     remove(user) {
-      const { courseKey: courseId } = this.$route.params;
+      const { courseId } = this.$route.params;
       this.removeUser({ userId: user.id, courseId });
     }
   },

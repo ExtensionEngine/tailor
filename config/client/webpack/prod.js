@@ -1,5 +1,7 @@
 const merge = require('webpack-merge');
 const webpack = require('webpack');
+const { DefinePlugin } = webpack;
+const { UglifyJsPlugin, OccurrenceOrderPlugin, CommonsChunkPlugin } = webpack.optimize;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -9,7 +11,7 @@ const getAssetsPath = require('../helpers/assetsPath');
 const loaderGenerators = require('../helpers/loaderGenerators');
 const projectRoot = require('../helpers/projectRoot');
 
-let webpackConfig = merge(baseConfig, {
+const config = merge(baseConfig, {
   devtool: envSettings.prod.cssSourceMap ? '#source-map' : false,
   output: {
     filename: getAssetsPath('js/[name].[chunkhash].js'),
@@ -28,15 +30,12 @@ let webpackConfig = merge(baseConfig, {
     })
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': { NODE_ENV: '"production"' }
+    new DefinePlugin({ 'process.env': { NODE_ENV: '"production"' } }),
+    new UglifyJsPlugin({
+      compress: { warnings: false, keep_fnames: true },
+      mangle: { keep_fnames: true }
     }),
-    /* new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    }), */
-    new webpack.optimize.OccurrenceOrderPlugin(),
+    new OccurrenceOrderPlugin(),
     new ExtractTextPlugin(getAssetsPath('css/[name].[contenthash].css')),
     new HtmlWebpackPlugin({
       filename: process.env.NODE_ENV === 'testing'
@@ -51,7 +50,7 @@ let webpackConfig = merge(baseConfig, {
       },
       chunksSortMode: 'dependency'
     }),
-    new webpack.optimize.CommonsChunkPlugin({
+    new CommonsChunkPlugin({
       name: 'vendor',
       minChunks(module, count) {
         return (
@@ -63,11 +62,11 @@ let webpackConfig = merge(baseConfig, {
         );
       }
     }),
-    new webpack.optimize.CommonsChunkPlugin({
+    new CommonsChunkPlugin({
       name: 'manifest',
       chunks: ['vendor']
     })
   ]
 });
 
-module.exports = webpackConfig;
+module.exports = config;

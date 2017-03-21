@@ -1,48 +1,53 @@
 <template>
-  <div class="container">
-    <div class="course-name">
-      <template v-if="showNameInput">
-        <input
-          class="form-control"
-          v-model="newCourseName"
-          v-focus="true"
-          @blur="updateName"
-          @keyup.enter="updateName"
-          @keyup.esc="showNameInput = false">
-      </template>
-      <template v-else>
-        <h2 @click.stop="showNameInput = true">
-          {{ course ? course.name : '' }}
-        </h2>
-        <span class="fa fa-pencil pencil" aria-hidden="true"></span>
-      </template>
-    </div>
-    <div class="course-description">
-      <template v-if="showDescriptionInput">
-        <textarea
-          class="form-control"
-          v-model="newCourseDescription"
-          v-focus="true"
-          @blur="updateDescription"
-          @keyup.esc="showDescriptionInput = false">
-        </textarea>
-      </template>
-      <template v-else>
-        <span @click.stop="showDescriptionInput = true">
-          {{ course ? course.description : '' }}
+  <div class="settings">
+    <loader v-if="showLoader"></loader>
+    <div v-else>
+      <div class="form-group">
+        <label for="courseName">Name</label>
+        <span v-if="showNameInput">
+          <input
+            v-model="newCourseName"
+            v-focus="true"
+            @blur="updateName"
+            @keyup.enter="updateName"
+            @keyup.esc="showNameInput = false"
+            id="courseName"
+            class="form-control">
         </span>
-        <span class="fa fa-pencil pencil" aria-hidden="true"></span>
-      </template>
-    </div>
-    <div class="course-actions">
-      <button
-        v-if="showRemoveButton"
-        @click.stop="removeCourse"
-        class="btn btn-danger"
-        type="button">
-        <span class="fa fa-trash"></span>
-        remove course
-      </button>
+        <span v-else>
+          <h2 @click.stop="showNameInput = true">
+            {{ course ? course.name : '' }}
+          </h2>
+        </span>
+      </div>
+      <div class="form-group">
+        <label for="courseDescription">Description</label>
+        <span v-if="showDescriptionInput">
+          <textarea
+            v-model="newCourseDescription"
+            v-focus="true"
+            @blur="updateDescription"
+            @keyup.esc="showDescriptionInput = false"
+            id="courseDescription"
+            class="form-control">
+          </textarea>
+        </span>
+        <span v-else>
+          <span @click.stop="showDescriptionInput = true" class="form-display">
+            {{ course ? course.description : '' }}
+          </span>
+        </span>
+      </div>
+      <div class="course-actions">
+        <button
+          v-if="showRemoveButton"
+          @click.stop="removeCourse"
+          type="button"
+          class="btn btn-danger">
+          <span class="fa fa-trash"></span>
+          remove course
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -50,12 +55,16 @@
 <script>
 import EventBus from 'EventBus';
 import { focus } from 'vue-focus';
+import Loader from '../common/Loader';
 import { mapGetters, mapActions } from 'vuex-module';
+import { tooltip } from 'vue-strap';
 
 const appChannel = EventBus.channel('app');
 
 export default {
+  props: ['showLoader'],
   directives: { focus },
+  components: { Loader, tooltip },
   data() {
     return {
       showNameInput: false,
@@ -66,7 +75,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course'], 'editor'),
+    ...mapGetters(['course'], 'course'),
     showRemoveButton() {
       return this.isAdmin;
     }
@@ -74,21 +83,19 @@ export default {
   methods: {
     ...mapActions(['update', 'remove'], 'courses'),
     updateName() {
-      if (this.showNameInput) {
-        this.showNameInput = false;
-        if (this.course.name !== this.newCourseName) {
-          this.course.name = this.newCourseName;
-          this.update(this.course);
-        }
+      if (!this.showNameInput) return;
+      this.showNameInput = false;
+      if (this.course.name !== this.newCourseName) {
+        this.course.name = this.newCourseName;
+        this.update(this.course);
       }
     },
     updateDescription() {
-      if (this.showDescriptionInput) {
-        this.showDescriptionInput = false;
-        if (this.course.description !== this.newCourseDescription) {
-          this.course.description = this.newCourseDescription;
-          this.update(this.course);
-        }
+      if (!this.showDescriptionInput) return;
+      this.showDescriptionInput = false;
+      if (this.course.description !== this.newCourseDescription) {
+        this.course.description = this.newCourseDescription;
+        this.update(this.course);
       }
     },
     removeCourse() {
@@ -99,55 +106,69 @@ export default {
       };
 
       appChannel.emit('showConfirmationModal', payload);
+    },
+    setCourseFields() {
+      this.newCourseName = this.course.name;
+      this.newCourseDescription = this.course.description;
     }
   },
-  created() {
-    this.newCourseName = this.course.name.slice(0);
-    this.newCourseDescription = this.course.description.slice(0);
+  mounted() {
+    if (!this.course) return;
+    this.setCourseFields();
+  },
+  watch: {
+    course() {
+      this.setCourseFields();
+    }
   }
 };
 </script>
 
-<style scoped lang="scss">
-.pencil {
-  display: none;
-}
-
-.course-name {
-  margin: 80px 0 30px 0;
-  text-align: left;
-
-  &:hover {
-    .pencil {
-      display: inline;
-    }
-  }
-}
-
-.course-description {
-  text-align: left;
-
-  &:hover {
-    .pencil {
-      display: inline;
-    }
-  }
-}
-
+<style lang="scss" scoped>
 .course-actions {
   margin: 25px 0;
+  text-align: center;
 }
 
 h2 {
   display: inline-block;
-  font-size: 20px;
+  font-size: 16px;
   color: #444;
+  font-weight: normal;
+  margin: 20px 0 7px 0;
 }
 
-.container {
-  textarea {
-    resize: vertical;
-    height: 200px;
-  }
+input.form-control {
+  padding-top: 3px;
+  margin-top: 15px;
+}
+
+textarea.form-control {
+  height: 300px;
+  padding-top: 22px;
+  font-size: 16px;
+  letter-spacing: 0.1px;
+}
+
+span.form-display {
+  font-size: 16px;
+  white-space: pre-line;
+  display: inline-block;
+  height: 300px;
+}
+
+label {
+  margin-top: 30px;
+  color: gray;
+  display: block;
+  font-size: 14px;
+}
+
+.settings {
+  margin: 40px 20px;
+  padding: 10px 30px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
+  text-align: left;
 }
 </style>

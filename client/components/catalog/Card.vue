@@ -2,8 +2,8 @@
   <div class="col-lg-4">
     <div class="course-card" @click="navigateTo">
       <div class="body">
-        <div class="title">{{ course.name }}</div>
-        <div class="description">{{ shortDescription }}</div>
+        <div class="title">{{ name }}</div>
+        <div class="description">{{ description }}</div>
       </div>
       <div class="footer">
         <div class="row">
@@ -22,15 +22,19 @@ import truncate from 'truncate';
 export default {
   props: ['course'],
   computed: {
-    shortDescription() {
+    name() {
+      return truncate(this.course.name, 100);
+    },
+    description() {
       return truncate(this.course.description, 180);
     }
   },
   methods: {
     navigateTo() {
+      if (window.getSelection().toString()) return;
       this.$router.push({
         name: 'course',
-        params: { courseKey: this.course.id }
+        params: { courseId: this.course.id }
       });
     }
   }

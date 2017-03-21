@@ -2,14 +2,13 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import createLogger from 'vuex/dist/logger';
 
-import activity from './modules/activity';
-import assessments from './modules/assessments';
-import assets from './modules/assets';
-import atom from './modules/atom';
+import activities from './modules/activities';
 import auth from './modules/auth';
+import course from './modules/course';
 import courses from './modules/courses';
 import editor from './modules/editor';
 import revisions from './modules/revisions';
+import tes from './modules/tes';
 
 import plugins from './plugins';
 import settings from '../settings';
@@ -20,14 +19,13 @@ const isDevEnv = process.env.NODE_ENV !== 'production';
 const middlewares = settings.debug.state && isDevEnv ? [createLogger()] : [];
 
 const modules = {
-  activity,
-  assessments,
-  assets,
-  atom,
+  activities,
   auth,
+  course,
   courses,
   editor,
-  revisions
+  revisions,
+  tes
 };
 
 export default new Vuex.Store({

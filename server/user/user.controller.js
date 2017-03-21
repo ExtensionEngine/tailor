@@ -2,7 +2,7 @@
 
 const { createError, validationError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
-const { User } = require('../shared/database/sequelize');
+const { User } = require('../shared/database');
 
 function index(req, res) {
   const attributes = ['id', 'email', 'role'];

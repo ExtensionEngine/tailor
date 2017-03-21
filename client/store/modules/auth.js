@@ -44,7 +44,10 @@ action(function login(credentials) {
 action(function logout() {
   return authApi
     .logout()
-    .then(() => this.commit('logout'));
+    .then(() => setTimeout(() => {
+      window.localStorage.removeItem('CGMA_AUTHOR_USER');
+      window.location.reload();
+    }, 0));
 });
 
 action(function forgotPassword({ email }) {

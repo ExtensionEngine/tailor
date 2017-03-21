@@ -16,7 +16,7 @@ import Sidebar from './Sidebar';
 
 export default {
   props: ['showLoader'],
-  computed: mapGetters(['activities'], 'editor'),
+  computed: mapGetters(['activities'], 'course'),
   components: {
     Activity,
     Loader,

@@ -1,9 +1,6 @@
 <template>
-  <button
-    class="btn btn-primary"
-    type="button"
-    @click="$emit('create')">
-    <span class="fa fa-plus"></span> Create perspective
+  <button @click="$emit('create')" class="btn btn-primary" type="button">
+    <span class="mdi mdi-plus"></span> Create perspective
   </button>
 </template>
 
@@ -15,11 +12,13 @@ export default {
 
 <style lang="scss" scoped>
 .btn {
-  margin: 20px 0;
+  margin: 30px 0 0 0;
   padding: 10px 15px;
+  font-size: 16px;
+  line-height: 16px;
 }
 
-.fa {
-  padding-right: 5px;
+.mdi {
+  padding-right: 3px;
 }
 </style>

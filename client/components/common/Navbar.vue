@@ -9,7 +9,7 @@
       </div>
       <router-link
         v-if="course"
-        :to="{ name: 'course', params: { courseKey: course.id }}"
+        :to="{ name: 'course', params: { courseId: course.id }}"
         class="course-title">
         {{ course.name }}
       </router-link>
@@ -20,7 +20,7 @@
             <span class="fa fa-caret-down"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#" @click="logoutUser">Log out</a></li>
+            <li><a href="#" @click="logout">Log out</a></li>
           </ul>
         </li>
       </ul>
@@ -35,15 +35,9 @@ export default {
   name: 'navbar',
   computed: {
     ...mapGetters(['user']),
-    ...mapGetters(['course'], 'editor')
+    ...mapGetters(['course'], 'course')
   },
-  methods: {
-    logoutUser() {
-      this.logout();
-      this.$router.push('/login');
-    },
-    ...mapActions(['logout'])
-  }
+  methods: mapActions(['logout'])
 };
 </script>
 

@@ -1,11 +1,11 @@
 <template>
   <div @click="onClick" class="toolbar">
-    <div v-if="toolbar.type" class="toolbar-container">
+    <div v-if="focusedElement.type" class="toolbar-container">
       <component
-        :is="getComponentName(toolbar.type)"
-        :asset="toolbar.context">
+        :is="getComponentName(focusedElement.type)"
+        :element="focusedElement">
       </component>
-      <div v-if="showDeleteButton" class="delete-asset">
+      <div class="delete-element">
         <span @click="remove" class="btn btn-fab btn-danger">
           <span class="fa fa-trash"></span>
         </span>
@@ -15,38 +15,42 @@
 </template>
 
 <script>
-import GomoToolbar from './GomoToolbar';
+import DefaultToolbar from './DefaultToolbar';
+import EventBus from 'EventBus';
+import EmbedToolbar from './EmbedToolbar';
 import ImageToolbar from './ImageToolbar';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import QuillToolbar from './QuillToolbar';
 import VideoToolbar from './VideoToolbar';
 
+const appChannel = EventBus.channel('app');
+
 const TOOLBAR_TYPES = {
-  ASSESSMENT: 'quill-toolbar',
   IMAGE: 'image-toolbar',
   VIDEO: 'video-toolbar',
-  GOMO: 'gomo-toolbar',
-  TEXT: 'quill-toolbar'
+  EMBED: 'embed-toolbar',
+  HTML: 'quill-toolbar'
 };
 
 export default {
   name: 'toolbar',
-  computed: {
-    ...mapGetters(['toolbar'], 'atom'),
-    showDeleteButton() {
-      const type = this.toolbar.type;
-      return type && type !== 'ASSESSMENT';
-    }
-  },
+  computed: mapGetters(['focusedElement'], 'editor'),
   methods: {
-    ...mapActions({ removeAsset: 'remove' }, 'assets'),
-    ...mapMutations(['setToolbarContext'], 'atom'),
+    ...mapActions({ removeElement: 'remove' }, 'tes'),
+    ...mapActions(['focusoutElement'], 'editor'),
+    ...mapMutations(['focusElement'], 'editor'),
     remove() {
-      this.removeAsset(this.toolbar.context);
-      this.setToolbarContext();
+      const element = this.focusedElement;
+      if (element.embedded) {
+        appChannel.emit('deleteElement', element);
+      } else {
+        this.removeElement(element);
+      }
+
+      this.focusoutElement();
     },
     getComponentName(type) {
-      return TOOLBAR_TYPES[type];
+      return TOOLBAR_TYPES[type] || 'default-toolbar';
     },
     onClick(e) {
       // Attach component data
@@ -54,8 +58,9 @@ export default {
     }
   },
   components: {
+    DefaultToolbar,
     ImageToolbar,
-    GomoToolbar,
+    EmbedToolbar,
     QuillToolbar,
     VideoToolbar
   }
@@ -73,7 +78,7 @@ export default {
   position: relative;
 }
 
-.delete-asset {
+.delete-element {
   position: absolute;
   z-index: 999;
   right: 0;

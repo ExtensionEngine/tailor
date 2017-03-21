@@ -1,6 +1,6 @@
 <template>
   <div class="perspectives">
-    <div class="well" v-if="!perspectives.length">
+    <div v-if="!perspectives.length" class="well">
       Click the button below to Create first Perspective.
     </div>
     <perspective v-for="it in perspectives" :perspective="it"></perspective>
@@ -16,9 +16,9 @@ import Perspective from './Perspective';
 
 export default {
   name: 'perspectives',
-  computed: mapGetters(['activity', 'perspectives'], 'atom'),
+  computed: mapGetters(['activity', 'perspectives'], 'editor'),
   methods: {
-    ...mapActions(['save'], 'activity'),
+    ...mapActions(['save'], 'activities'),
     add() {
       this.save({
         type: ASSET_GROUP,
@@ -34,7 +34,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .perspectives {
   h2 {
     margin-bottom: 20px;

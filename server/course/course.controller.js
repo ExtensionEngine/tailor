@@ -1,7 +1,7 @@
 'use strict';
 
 const { createError } = require('../shared/error/helpers');
-const { Course, User } = require('../shared/database/sequelize');
+const { Course, User } = require('../shared/database');
 const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const params = require('../../config/server').queryParams;

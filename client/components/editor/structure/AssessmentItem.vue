@@ -1,53 +1,53 @@
 <template>
   <li class="list-group-item assessment-item">
-    <assessment
-      v-if="edit"
-      :init-assessment="assessment"
+    <te-assessment
+      v-if="expanded"
+      :element="assessment"
       @selected="$emit('selected')"
       @remove="$emit('remove')"
       @save="$emit('save', $event)">
-    </assessment>
+    </te-assessment>
     <div v-else @click="$emit('selected')" class="minimized">
-      <span class="label label-success">{{ assessment.type }}</span>
+      <span class="label label-success">{{ assessment.data.type }}</span>
       <span class="title">{{ question }}</span>
-      <button @click.stop="$emit('remove')" type="button" class="delete">
-        <span class="fa fa-times"></span>
-      </button>
+      <span @click="$emit('remove')" class="delete">
+        <span class="mdi mdi-close"></span>
+      </span>
     </div>
   </li>
 </template>
 
 <script>
-import Assessment from '../assessments';
+import filter from 'lodash/filter';
+import map from 'lodash/map';
+import TeAssessment from '../teaching-elements/Assessment';
 import truncate from 'lodash/truncate';
 
-const htmlRegex = /<\/?[^>]+(>|$)/g;
 const blankRegex = /(@blank)/g;
-const options = { length: 50 };
+const htmlRegex = /<\/?[^>]+(>|$)/g;
 
 export default {
   name: 'assessment-item',
-  props: ['assessment', 'edit'],
+  props: ['assessment', 'expanded'],
   computed: {
     question() {
-      let question = this.assessment.question || '';
-      let index = 0;
-      const newValue = () => `(${++index})`;
-      const parsedQuestion = question.replace(htmlRegex, '').replace(blankRegex, newValue);
-      return truncate(parsedQuestion, options);
+      let question = filter(this.assessment.data.question, { type: 'HTML' });
+      question = map(question, 'data.content').join(' ');
+      question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
+      return truncate(question, { length: 50 });
     }
   },
   components: {
-    Assessment
+    TeAssessment
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .assessment-item {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
   margin-bottom: 7px;
   padding: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
 
   div {
     padding: 15px;
@@ -71,24 +71,21 @@ export default {
   }
 
   .delete {
+    display: block;
+    position: absolute;
+    top: 7px;
+    right: 15px;
     visibility: hidden;
-    float: right;
-    opacity: 0.5;
-    border: 0;
-    background-color: transparent;
-    padding: 0;
+    color: #707070;
+    font-size: 26px;
 
-    span {
-      font-size: 20px;
+    &:hover {
+      color: #555;
     }
   }
 
-  .delete:focus {
-    outline: none;
-  }
-
-  div:hover {
-    .delete:enabled {
+  &:hover {
+    .delete {
       visibility: visible;
     }
   }

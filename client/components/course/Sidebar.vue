@@ -8,8 +8,8 @@
           class="form-group">
           <textarea
             ref="newActivityName"
-            @blur="onInputBlur"
-            @keyup.enter="onInputEnter"
+            @blur="onFocusOut"
+            @keyup.enter="onFocusOut"
             @keyup.esc="deactivateInput"
             class="form-control"
             name="newActivityName"
@@ -57,13 +57,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activity'], 'editor'),
+    ...mapGetters(['activity'], 'course'),
     isActivitySelected() {
       return !!this.activity.name;
     }
   },
   methods: {
-    ...mapActions(['remove', 'update'], 'activity'),
+    ...mapActions(['remove', 'update'], 'activities'),
     activateInput() {
       this.newActivityName = this.activity.name.slice(0);
       this.showNameInput = true;
@@ -73,15 +73,11 @@ export default {
       // This removes input from DOM and triggers blur event!
       this.showNameInput = false;
     },
-    onInputBlur() {
+    onFocusOut() {
       this.$validator.validateAll().then(() => {
         this.saveActivityName();
         this.deactivateInput();
       }, noop);
-    },
-    onInputEnter() {
-      this.saveActivityName();
-      this.deactivateInput();
     },
     saveActivityName() {
       if (this.newActivityName !== this.activity.name) {

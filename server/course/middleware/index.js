@@ -1,6 +1,6 @@
 const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const { course: role } = require('../../../config/shared').role;
-const { Course } = require('../../shared/database/sequelize');
+const { Course } = require('../../shared/database');
 const { createError } = require('../../shared/error/helpers');
 
 /**
