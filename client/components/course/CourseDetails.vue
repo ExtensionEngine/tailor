@@ -4,17 +4,23 @@
     <div v-else>
       <div class="form-group">
         <label for="courseName">Name</label>
-        <span v-if="showNameInput">
+        <span v-show="showNameInput" :class="{ 'has-error': vErrors.has('courseName') }">
           <input
             v-model="newCourseName"
             v-focus="true"
+            v-validate="{ rules: { required: true, min: 2, max: 250 } }"
             @blur="updateName"
             @keyup.enter="updateName"
             @keyup.esc="showNameInput = false"
+            name="courseName"
+            data-vv-as="Name"
             id="courseName"
             class="form-control">
+            <span class="help-block">
+              {{ vErrors.first('courseName') }}
+            </span>
         </span>
-        <span v-else>
+        <span v-show="!showNameInput">
           <h2 @click.stop="showNameInput = true">
             {{ course ? course.name : '' }}
           </h2>
@@ -22,17 +28,23 @@
       </div>
       <div class="form-group">
         <label for="courseDescription">Description</label>
-        <span v-if="showDescriptionInput">
+        <span v-show="showDescriptionInput" :class="{ 'has-error': vErrors.has('courseDescription') }">
           <textarea
             v-model="newCourseDescription"
             v-focus="true"
+            v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
             @blur="updateDescription"
             @keyup.esc="showDescriptionInput = false"
+            name="courseDescription"
+            data-vv-as="Description"
             id="courseDescription"
             class="form-control">
           </textarea>
+          <span class="help-block">
+            {{ vErrors.first('courseDescription') }}
+          </span>
         </span>
-        <span v-else>
+        <span v-show="!showDescriptionInput">
           <span @click.stop="showDescriptionInput = true" class="form-display">
             {{ course ? course.description : '' }}
           </span>
@@ -85,18 +97,20 @@ export default {
     updateName() {
       if (!this.showNameInput) return;
       this.showNameInput = false;
-      if (this.course.name !== this.newCourseName) {
-        this.course.name = this.newCourseName;
-        this.update(this.course);
-      }
+      this.$validator.validateAll().then(() => {
+        if (this.course.name !== this.newCourseName) {
+          this.update(Object.assign({}, this.course, { name: this.newCourseName }));
+        }
+      }, () => { this.setCourseFields(); });
     },
     updateDescription() {
       if (!this.showDescriptionInput) return;
       this.showDescriptionInput = false;
-      if (this.course.description !== this.newCourseDescription) {
-        this.course.description = this.newCourseDescription;
-        this.update(this.course);
-      }
+      this.$validator.validateAll().then(() => {
+        if (this.course.description !== this.newCourseDescription) {
+          this.update(Object.assign({}, this.course, {description: this.newCourseDescription}));
+        }
+      }, () => { this.setCourseFields(); });
     },
     removeCourse() {
       const payload = {
@@ -126,7 +140,7 @@ export default {
 
 <style lang="scss" scoped>
 .course-actions {
-  margin: 25px 0;
+  margin: 15px 0;
   text-align: center;
 }
 
@@ -135,7 +149,7 @@ h2 {
   font-size: 16px;
   color: #444;
   font-weight: normal;
-  margin: 20px 0 7px 0;
+  margin: 20px 0 32px 0;
 }
 
 input.form-control {
@@ -144,7 +158,7 @@ input.form-control {
 }
 
 textarea.form-control {
-  height: 300px;
+  height: 200px;
   padding-top: 22px;
   font-size: 16px;
   letter-spacing: 0.1px;
@@ -154,7 +168,7 @@ span.form-display {
   font-size: 16px;
   white-space: pre-line;
   display: inline-block;
-  height: 300px;
+  height: 225px;
 }
 
 label {
@@ -165,10 +179,14 @@ label {
 }
 
 .settings {
-  margin: 40px 20px;
+  margin: 40px 20px 20px;
   padding: 10px 30px;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
   text-align: left;
+}
+
+.help-block {
+  min-height: 20px;
 }
 </style>
