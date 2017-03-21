@@ -4,7 +4,7 @@ const { Activity } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
-const { syncOptions } = require('../../config/server').queryParams;
+const listOptions = require('../shared/util/listOptions');
 
 function create({ body, params, user }, res) {
   const attrs = ['name', 'type', 'parentId', 'position'];
@@ -31,8 +31,8 @@ function patch({ body, params, user }, res) {
 }
 
 function list({ course, query }, res) {
-  const params = query.integration ? syncOptions(query) : { order: 'position ASC' };
-  return course.getActivities(params)
+  const opts = listOptions(query.integration ? query : { sortBy: 'position' });
+  return course.getActivities(opts)
     .then(activities => res.json({ data: activities }));
 }
 

@@ -4,23 +4,11 @@ const { createError } = require('../shared/error/helpers');
 const { Course, User } = require('../shared/database');
 const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
-const params = require('../../config/server').queryParams;
+const listOptions = require('../shared/util/listOptions');
 const pick = require('lodash/pick');
 
 function index({ query, user }, res) {
-  const offset = parseInt(query.offset, 10) || 0;
-  const limit = parseInt(query.limit, 10) || params.pagination.limit;
-  const order = [[
-    query.sortBy || params.sort.field,
-    query.sortOrder || params.sort.order.ASC
-  ]];
-  const paranoid = !query.integration;
-  const where = {};
-  if (query.search) where.name = { $iLike: `%${query.search}%` };
-  if (query.include) where.id = { $in: map(query.include, num => parseInt(num, 10)) };
-  if (query.exclude) where.id = { $notIn: map(query.exclude, num => parseInt(num, 10)) };
-
-  const opts = { offset, limit, order, where, paranoid };
+  const opts = listOptions(query);
   const promise = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return promise.then(courses => res.json({ data: courses }));
 };

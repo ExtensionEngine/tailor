@@ -1,23 +1,16 @@
 'use strict';
 
-const { TeachingElement, Activity } = require('../shared/database');
+const { TeachingElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
-const { syncOptions } = require('../../config/server').queryParams;
+const listOptions = require('../shared/util/listOptions');
 
 function list({ course, query }, res) {
-  let promise;
-  if (query.integration) {
-    promise = course.getTeachingElements(syncOptions(query));
-  } else {
-    let where = { $or: [] };
-    if (query.activityId) where.$or.push({ id: parseInt(query.activityId, 10) });
-    if (query.parentId) where.$or.push({ parentId: parseInt(query.parentId, 10) });
-    promise = TeachingElement.fetch({ include: [{ model: Activity, attributes: [], where }] });
-  }
-
-  return promise.then(assets => res.json({ data: assets }));
+  query.courseId = course.id;
+  const opts = listOptions(query, 'tes');
+  return TeachingElement.list(query.integration, opts)
+    .then(assets => res.json({ data: assets }));
 }
 
 function show({ params }, res) {
