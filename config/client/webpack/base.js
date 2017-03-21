@@ -86,6 +86,6 @@ module.exports = {
     postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ]
   },
   plugins: [
-    new ProvidePlugin({ $: 'jquery', jQuery: 'jquery' })
+    new ProvidePlugin({ $: 'jquery', jQuery: 'jquery', 'Promise': 'bluebird' })
   ]
 };
