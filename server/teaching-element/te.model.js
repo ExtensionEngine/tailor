@@ -43,11 +43,6 @@ module.exports = function (sequelize, DataTypes) {
         return sequelize.query('SELECT NEXTVAL(\'teaching_element_id_seq\')', opts)
           .then(result => TeachingElement.build({ id: result[0].nextval }));
       },
-      list(integration, opt) {
-        return integration
-          ? TeachingElement.findAll(opt)
-          : TeachingElement.fetch({ include: opt });
-      },
       fetch(opt) {
         return isNumber(opt)
           ? TeachingElement.findById(opt).then(it => it && resolveStatics(it))
