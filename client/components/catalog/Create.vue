@@ -11,7 +11,7 @@
         <loader v-show="showLoader"></loader>
         <div v-show="!showLoader">
           <div class="form-group" :class="getErrorClass('name')">
-            <input v-model="name" type="text" class="form-control" placeholder="Name"/>
+            <input v-model="name" type="text" class="form-control" placeholder="Name" autofocus/>
             <div v-show="hasError('name')" class="error-message">
               {{ getErrorMessage('name') }}
             </div>
