@@ -95,7 +95,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       invite(user) {
         return User.create(user).then(user => {
-          user.token = user.createToken();
+          user.token = user.createToken({ expiresIn: '5 days' });
           mail.invite(user);
           return user.save();
         });
@@ -103,8 +103,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     instanceMethods: {
       isAdmin() {
-        return this.role === role.ADMIN ||
-               this.role === role.INTEGRATION;
+        return this.role === role.ADMIN || this.role === role.INTEGRATION;
       },
       authenticate(password) {
         if (!this.password) return Promise.resolve(false);
@@ -121,12 +120,12 @@ module.exports = function (sequelize, DataTypes) {
           .encrypt(this.password)
           .then(pw => (this.password = pw));
       },
-      createToken(options = { expiresIn: '5 days' }) {
+      createToken(options = {}) {
         const payload = { id: this.id, email: this.email };
         return jwt.sign(payload, AUTH_SECRET, options);
       },
       sendResetToken() {
-        this.token = this.createToken();
+        this.token = this.createToken({ expiresIn: '5 days' });
         mail.resetPassword(this);
         return this.save();
       }

@@ -21,7 +21,8 @@
     "unit:server": "mocha --recursive \"./server/**/*.spec.js\"",
     "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server",
     "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
-    "start": "node -r dotenv/config ./server"
+    "start": "node -r dotenv/config ./server",
+    "integration:token": "node -r dotenv/config ./server/script/generateIntegrationToken.js"
   },
   "dependencies": {
     "aws-sdk": "2.7.27",

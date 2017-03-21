@@ -45,22 +45,14 @@ function login({ body }, res) {
     .then(user => user.authenticate(password))
     .then(user => user || createError(NOT_FOUND, 'Wrong password'))
     .then(user => {
-      const token = user.createToken();
+      const token = user.createToken({ expiresIn: '5 days' });
       res.json({ data: { token, user: user.profile } });
     });
 }
-
-function generateIntegrationToken(req, res) {
-  return User.find({ where: { role: 'INTEGRATION' } })
-    .then(user => user.createToken({}))
-    .then(token => res.json({token}));
-}
-
 
 module.exports = {
   index,
   forgotPassword,
   resetPassword,
-  login,
-  generateIntegrationToken
+  login
 };

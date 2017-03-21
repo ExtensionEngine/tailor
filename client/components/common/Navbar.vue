@@ -20,11 +20,6 @@
             <span class="fa fa-caret-down"></span>
           </a>
           <ul class="dropdown-menu">
-            <li v-if="isAdmin">
-              <router-link :to="{ name: 'admin' }">
-                Administration
-              </router-link>
-            </li>
             <li><a href="#" @click="logout">Log out</a></li>
           </ul>
         </li>
@@ -39,7 +34,7 @@ import { mapGetters, mapActions } from 'vuex-module';
 export default {
   name: 'navbar',
   computed: {
-    ...mapGetters(['user', 'isAdmin']),
+    ...mapGetters(['user']),
     ...mapGetters(['course'], 'course')
   },
   methods: mapActions(['logout'])
