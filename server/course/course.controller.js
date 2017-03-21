@@ -9,6 +9,7 @@ const pick = require('lodash/pick');
 
 function index({ query, user }, res) {
   const opts = listOptions(query);
+  if (query.search) opts.where.name = { $iLike: `%${query.search}%` };
   const promise = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return promise.then(courses => res.json({ data: courses }));
 };
