@@ -59,6 +59,10 @@ export default {
   .body {
     height: 220px;
     overflow: hidden;
+
+    @media (min-width: 1200px) and (max-width: 1279px) { 
+      height: 250px;
+    }
   }
 
   .title {
@@ -70,6 +74,10 @@ export default {
     a {
       color: inherit;
       text-decoration: none;
+    }
+
+    @media (min-width: 1200px) and (max-width: 1279px) { 
+      height: 125px;
     }
   }
 
