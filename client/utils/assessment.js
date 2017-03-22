@@ -44,7 +44,7 @@ export const schemas = {
   }),
   NR: yup.object().shape({
     question,
-    correct: yup.string().trim().matches(/^(^\d+$)|(^\d+\.\d+$)$/).required()
+    correct: yup.string().trim().matches(/^(^(-)?\d+$)|(^(-)?\d+\.\d+$)$/).required()
   }),
   SC: yup.object().shape({
     question,
