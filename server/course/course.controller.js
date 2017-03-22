@@ -4,14 +4,14 @@ const { createError } = require('../shared/error/helpers');
 const { Course, User } = require('../shared/database');
 const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
-const listOptions = require('../shared/util/listOptions');
 const pick = require('lodash/pick');
+const processListQuery = require('../shared/util/processListQuery');
 
 function index({ query, user }, res) {
-  const opts = listOptions(query);
+  const opts = processListQuery(query);
   if (query.search) opts.where.name = { $iLike: `%${query.search}%` };
-  const promise = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
-  return promise.then(courses => res.json({ data: courses }));
+  const courses = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
+  return courses.then(data => res.json({ data }));
 };
 
 function create({ body, user }, res) {

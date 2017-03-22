@@ -1,4 +1,4 @@
-module.exports = function build(query, type) {
+module.exports = function build(query) {
   const options = {
     where: {},
     offset: parseInt(query.offset, 10) || 0,
