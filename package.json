@@ -21,6 +21,9 @@
     "unit:server": "mocha --recursive \"./server/**/*.spec.js\"",
     "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server",
     "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
+    "db:seed": "node -r dotenv/config ./server/script/dbSeed.js",
+    "db:reset": "node -r dotenv/config ./server/script/dbReset.js",
+    "add:admin": "node -r dotenv/config ./server/script/addAdmin.js",
     "start": "node -r dotenv/config ./server"
   },
   "dependencies": {
