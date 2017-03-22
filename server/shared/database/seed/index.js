@@ -62,7 +62,5 @@ function insertAll(db) {
 };
 
 module.exports = db => {
-  return db.User.findOne().then(user => {
-    return user ? false : insertAll(db);
-  });
+  return insertAll(db);
 };
