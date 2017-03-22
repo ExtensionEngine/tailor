@@ -1,6 +1,6 @@
 const values = require('lodash/values');
 
-const userRoles = { USER: 'USER', ADMIN: 'ADMIN' };
+const userRoles = { USER: 'USER', ADMIN: 'ADMIN', INTEGRATION: 'INTEGRATION' };
 const courseRoles = { ADMIN: 'COURSE_ADMIN', AUTHOR: 'COURSE_AUTHOR' };
 
 const userRoleRegex = new RegExp(`^(${values(userRoles).join('|')})$`);
