@@ -44,16 +44,17 @@ function getUsers(req, res) {
     .then(users => res.json({ data: map(users, transform) }));
 }
 
-function upsertUser(req, res) {
-  const { course } = req;
-  const { email, role } = req.body;
+function upsertUser({ course, body }, res) {
+  const { email, role } = body;
+  let profile;
   return User.findOne({ where: { email } })
     .then(user => user || User.invite({ email }))
-    .then(user => findOrCreateRole(course, user, role))
+    .then(user => { profile = user.profile; })
+    .then(() => findOrCreateRole(course, profile, role))
     .then(([ cu, created ]) => created ? cu : cu.update({ role }))
     .then(cu => cu.deletedAt ? cu.restore() : cu)
-    .then(cu => course.getUsers({ where: { id: cu.userId } }))
-    .then(user => res.json({ data: { user: transform(user[0]) } }));
+    .then(() => Object.assign(profile, { courseRole: role }))
+    .then(user => res.json({ data: { user } }));
 }
 
 function removeUser(req, res) {
