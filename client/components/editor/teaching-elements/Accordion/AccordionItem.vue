@@ -1,17 +1,19 @@
 <template>
   <li>
-    <div v-if="!isEditingHeader" class="accordion-header" @click="toggle">
-      <span class="title">{{ item.header }}</span>
-      <span @click.stop="isEditingHeader = true" class="mdi mdi-pencil"></span>
-      <span @click.stop="deleteItem" class="mdi mdi-delete"></span>
-    </div>
-    <div v-else class="accordion-header">
-      <input v-model="header" class="edit" type="text" placeholder="Header" />
-      <span @click.stop="saveHeader" class="mdi mdi-content-save"></span>
-      <span @click.stop="isEditingHeader = false" class="mdi mdi-close"></span>
+    <div class="accordion-header">
+      <div v-if="!isEditingHeader" @click="toggle" class="contents">
+        <span class="title">{{ item.header }}</span>
+        <span @click.stop="editHeader" class="mdi mdi-pencil"></span>
+        <span @click.stop="deleteItem" class="mdi mdi-delete"></span>
+      </div>
+      <div v-else class="contents">
+        <input v-model="header" class="form-control" type="text" placeholder="Header"/>
+        <span @click.stop="saveHeader" class="mdi mdi-content-save"></span>
+        <span @click.stop="isEditingHeader = false" class="mdi mdi-close"></span>
+      </div>
     </div>
     <transition name="slide-fade">
-      <div class="container-fluid accordion-body" v-show="isActive">
+      <div v-show="isCollapsed" class="container-fluid accordion-body">
         <div class="row">
           <primitive
             v-for="element in item.body"
@@ -43,14 +45,18 @@ export default {
   props: ['item'],
   data() {
     return {
-      header: '',
-      isActive: false,
+      header: this.item.header,
+      isCollapsed: false,
       isEditingHeader: false
     };
   },
   methods: {
     toggle() {
-      this.isActive = !this.isActive;
+      this.isCollapsed = !this.isCollapsed;
+    },
+    editHeader(event) {
+      this.isEditingHeader = true;
+      this.header = this.item.header;
     },
     saveHeader(event) {
       this.isEditingHeader = false;
@@ -73,14 +79,11 @@ export default {
   },
   created() {
     appChannel.on('deleteElement', element => {
-      if (!element.embedded) return;
+      if (!element.embedded || !this.item.body[element.id]) return;
       const body = cloneDeep(this.item.body);
       delete body[element.id];
       this.$emit('save', { ...this.item, body });
     });
-  },
-  mounted() {
-    this.header = this.item.header;
   },
   components: {
     AddElement,
@@ -91,41 +94,61 @@ export default {
 
 <style lang="scss" scoped>
 .accordion-header {
-  text-align: justify;
-  cursor: pointer;
-  height: 48px;
-  border-bottom: 1px solid #ddd;
+  height: 60px;
   padding: 12px;
   font-size: 16px;
+  border-bottom: 1px solid #ddd;
+  text-align: justify;
+  cursor: pointer;
 
-  &:after {
-    content: '';
-    display: inline-block;
-    width: 100%;
-  }
+  .contents {
+    line-height: 34px;
 
-  .title {
-    display: inline-block;
-    width: 90%;
-  }
-
-  .edit {
-    display: inline-block;
-    outline-style: none;
-    width: 90%;
-  }
-
-  .btn {
-    display: inline-block;
-    font-size: 11px;
-
-    &:active {
-      outline: none;
+    &:after {
+      display: inline-block;
+      width: 100%;
+      content: '';
     }
-  }
 
-  .mdi {
-    color: #707070;
+    span {
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1em;
+    }
+
+    .title {
+      display: inline-block;
+      width: 90%;
+      max-width: 90%;
+      padding-top: 1px;
+      color: #555555;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .form-control {
+      display: inline-block;
+      width: 90%;
+      outline-style: none;
+    }
+
+    .btn {
+      display: inline-block;
+      font-size: 11px;
+
+      &:active {
+        outline: none;
+      }
+    }
+
+    .mdi {
+      color: #707070;
+
+      &:hover {
+        color: #444;
+      }
+    }
   }
 }
 

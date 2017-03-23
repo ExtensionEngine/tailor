@@ -1,10 +1,8 @@
 <template>
   <div class="accordion-toolbar">
     <ul>
-      <li
-        class="btn btn-link btn-sm"
-        @click="add">
-        <span class="mdi mdi-plus-circle"></span>Add item
+      <li @click="add" class="btn btn-link btn-sm">
+        <span class="mdi mdi-plus"></span> Add item
       </li>
     </ul>
   </div>
@@ -18,10 +16,9 @@ const teChannel = EventBus.channel('te');
 export default {
   name: 'accordion-toolbar',
   props: ['element'],
-
   methods: {
     add() {
-      teChannel.emit(`addAccordionItem/${this.element.id}`);
+      teChannel.emit(`${this.element._cid}/add`);
     }
   }
 };

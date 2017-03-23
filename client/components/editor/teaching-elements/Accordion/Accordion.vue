@@ -47,7 +47,7 @@ export default {
     }
   },
   created() {
-    teChannel.on(`addAccordionItem/${this.element.id}`, () => {
+    teChannel.on(`${this.element._cid}/add`, () => {
       const element = cloneDeep(this.element);
       element.data.items = element.data.items || {};
       const id = cuid();
@@ -63,10 +63,10 @@ export default {
 
 <style lang="scss" scoped>
 .accordion {
-  list-style-type: none;
+  margin: 0;
+  padding-left: 0;
   border: 1px solid #ddd;
   border-bottom: none;
-  padding-left: 0;
-  margin: 0;
+  list-style-type: none;
 }
 </style>
