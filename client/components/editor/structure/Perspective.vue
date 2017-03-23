@@ -41,7 +41,7 @@ export default {
   props: ['perspective'],
   data() {
     return {
-      dragOptions: { forceFallback: true }
+      dragOptions: { forceFallback: true, handle: '.drag-handle' }
     };
   },
   computed: {

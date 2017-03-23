@@ -1,6 +1,13 @@
 <template>
-  <div :class="columnWidth" class="te-container">
+  <div
+    :class="[columnWidth, hovered ? 'hovered' : '']"
+    @mouseover="hovered = true"
+    @mouseleave="hovered = false"
+    class="te-container">
     <div @click="focus" class="teaching-element">
+      <span class="drag-handle">
+        <span class="mdi mdi-drag-vertical"></span>
+      </span>
       <component
         :is="resolveElement(element.type)"
         :element="element"
@@ -34,6 +41,11 @@ export default {
   props: {
     element: Object,
     disabled: Boolean
+  },
+  data() {
+    return {
+      hovered: false
+    };
   },
   computed: {
     ...mapGetters(['focusedElement'], 'editor'),
@@ -81,12 +93,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.drag-handle {
+  position: absolute;
+  top: 0px;
+  left: -3px;
+  z-index: 2;
+  width: 26px;
+  opacity: 0;
+
+  .mdi {
+    color: #888;
+    font-size: 28px;
+  }
+}
+
+.hovered {
+  .drag-handle {
+    opacity: 1;
+    transition: opacity .6s ease-in-out;
+    cursor: pointer;
+  }
+}
+
 .te-container {
   padding: 7px 0;
 }
 
 .teaching-element {
-  padding: 10px;
+  position: relative;
+  padding: 10px 20px 10px 20px;
   border: 1px dashed #ccc;
 }
 </style>
