@@ -2,12 +2,12 @@
 
 Adaptive course authoring platform.
 
-## Dependencies
+## :blue_book: Dependencies
 * Node.js (>= 7.0)
 * npm (>= 4.0)
 * PostgreSQL (>= 9.6)
 
-## Installation
+## :coffee: Installation
 
 ### Prerequisites
 * Node.js & npm: https://nodejs.org/en/download/
@@ -23,7 +23,7 @@ configuration details.
 * You can init the db (for development) by running `npm run db:seed`
 * You can create admin user by running `npm run add:admin <email> <password>`
 
-## Launch
+## :rocket: Launch
 
 ### Development
 * Server: `npm run dev:server`
