@@ -17,16 +17,16 @@
             </span>
           </span>
         </div>
-        <div class="col-lg-2">
-          <select
-            class="form-control"
-            v-if="canCreateSubsection"
-            v-model.number="newActivityLevel">
-            <option value="0">Section</option>
-            <option value="1">Subsection</option>
-          </select>
+        <div class="col-lg-3">
+          <v-select 
+            :options="activityLevels"
+            :value="activityLevels[0]"
+            :searchable="true"
+            :onChange="onActivityLevelChange"
+            :placeholder="'Activity Level'">
+          </v-select>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-1">
           <button
             class="btn btn-default"
             :disabled="vErrors.any()"
@@ -53,6 +53,8 @@ import findIndex from 'lodash/findIndex';
 import { mapGetters, mapActions } from 'vuex-module';
 import { getChildren } from '../../utils/activity.js';
 import calculatePosition from '../../utils/calculatePosition.js';
+import vSelect from '../common/Select'
+
 const noop = Function.prototype;
 
 export default {
@@ -63,8 +65,15 @@ export default {
       showInput: false,
       focusInput: true,
       activityName: '',
-      newActivityLevel: 0
+      activityLevels: [
+        { label: 'Section', value: 0 },
+        { label: 'Subsection', value: 1 }
+      ],
+      newActivityLevel: ''
     };
+  },
+  components: {
+    vSelect
   },
   computed: {
     ...mapGetters(['activities']),
@@ -85,7 +94,7 @@ export default {
     },
     add() {
       this.$validator.validateAll().then(() => {
-        const sameLevel = this.newActivityLevel === 0;
+        const sameLevel = this.newActivityLevel.value === 0;
         const parentId = sameLevel ? this.parent.parentId : this.parent.id;
         const courseId = this.parent.courseId;
         const items = getChildren(this.activities, parentId, courseId);
@@ -103,7 +112,13 @@ export default {
         this.hide();
         if (!sameLevel) this.$emit('expand');
       }, noop);
+    },
+    onActivityLevelChange(value) {
+      this.newActivityLevel = value;
     }
+  },
+  created() {
+    this.newActivityLevel = this.activityLevels[0];
   }
 };
 </script>
