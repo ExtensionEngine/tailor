@@ -29,6 +29,9 @@ export default {
     items() {
       return this.element.data.items || {};
     },
+    embeds() {
+      return this.element.data.embeds || {};
+    },
     hasItems() {
       return !isEmpty(this.items);
     }
@@ -38,7 +41,8 @@ export default {
     saveItem(item) {
       const items = cloneDeep(this.items);
       items[item.id] = item;
-      this.$emit('save', { items });
+      const embeds = cloneDeep(item.body);
+      this.$emit('save', { embeds, items });
     },
     deleteItem(itemId) {
       const items = cloneDeep(this.items);
@@ -52,6 +56,7 @@ export default {
       element.data.items = element.data.items || {};
       const id = cuid();
       element.data.items[id] = { id, header: 'Header', body: {} };
+      element.data.embeds = {};
       this.updateElement(element);
     });
   },

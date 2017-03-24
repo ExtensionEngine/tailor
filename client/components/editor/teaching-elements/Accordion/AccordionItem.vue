@@ -54,19 +54,17 @@ export default {
     toggle() {
       this.isCollapsed = !this.isCollapsed;
     },
-    editHeader(event) {
+    editHeader() {
       this.isEditingHeader = true;
       this.header = this.item.header;
     },
-    saveHeader(event) {
+    saveHeader() {
       this.isEditingHeader = false;
       this.$emit('save', { ...this.item, header: this.header });
     },
     saveBodyElement(element) {
       if (this.item.body && !this.item.body[element.id]) return;
-      const body = cloneDeep(this.item.body);
-      body[element.id] = element;
-      this.$emit('save', { ...this.item, body });
+      this.addElement(element);
     },
     addElement(element) {
       const body = cloneDeep(this.item.body);
