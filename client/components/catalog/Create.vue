@@ -11,7 +11,7 @@
         <loader v-show="showLoader"></loader>
         <div v-show="!showLoader">
           <div class="form-group" :class="getErrorClass('name')">
-            <input v-model="name" type="text" class="form-control" placeholder="Name" autofocus/>
+            <input v-model="name" type="text" class="form-control" placeholder="Name" v-focus="focused" @focus="focused = true" @blur="focused = false" />
             <div v-show="hasError('name')" class="error-message">
               {{ getErrorMessage('name') }}
             </div>
@@ -43,6 +43,7 @@ import { mapActions, mapGetters } from 'vuex-module';
 import { modal } from 'vue-strap';
 import Promise from 'bluebird';
 import yup from 'yup';
+import { focus } from 'vue-focus';
 
 const bounds = {
   name: { min: 2, max: 250 },
@@ -68,8 +69,12 @@ export default {
       description: '',
       showLoader: false,
       showModal: false,
-      errors: this.getDefaultErrors()
+      errors: this.getDefaultErrors(),
+      focused: true
     };
+  },
+  directives: {
+    focus: focus
   },
   components: {
     modal,
@@ -96,6 +101,7 @@ export default {
     },
     show() {
       this.showModal = true;
+      this.focused = true;
     },
     hide() {
       this.name = '';
