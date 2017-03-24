@@ -1,7 +1,7 @@
 'use strict';
 
 const { createError } = require('../shared/error/helpers');
-const { Course, User } = require('../shared/database');
+const { Course, CourseUser, User } = require('../shared/database');
 const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -44,18 +44,12 @@ function getUsers(req, res) {
     .then(users => res.json({ data: map(users, transform) }));
 }
 
-function upsertUser(req, res) {
-  const { course } = req;
-  const { email, role } = req.body;
+function upsertUser({ course, body }, res) {
+  const { email, role } = body;
   return User.findOne({ where: { email } })
     .then(user => user || User.invite({ email }))
-    // TODO: Find out why through: { role } isn't working
-    .then(user => course.addUser(user).then(() => user))
-    .then(user => course.getUser(user))
-    .then(user => {
-      user.courseUser.role = role;
-      return user.courseUser.save().then(() => transform(user));
-    })
+    .then(user => findOrCreateRole(course, user, role))
+    .then(user => Object.assign({}, user.profile, { courseRole: role }))
     .then(user => res.json({ data: { user } }));
 }
 
@@ -67,6 +61,17 @@ function removeUser(req, res) {
     .then(user => course.removeUser(user))
     .then(() => res.end());
 }
+
+function findOrCreateRole(course, user, role) {
+  return CourseUser.findOrCreate({
+    where: { courseId: course.id, userId: user.id },
+    defaults: { courseId: course.id, userId: user.id, role },
+    paranoid: false
+  })
+  .then(([cu, created]) => created ? cu : cu.update({ role }))
+  .then(cu => cu.deletedAt ? cu.restore() : cu)
+  .then(() => user);
+};
 
 const transform = user => {
   return Object.assign(user.profile, { courseRole: user.courseUser.role });
