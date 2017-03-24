@@ -1,10 +1,10 @@
 <template>
   <div
-    :class="[columnWidth, hovered ? 'hovered' : '']"
+    :class="[columnWidth, hovered ? 'hovered' : '', { focused: isFocused }]"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
     class="te-container">
-    <div @click="focus" class="teaching-element">
+    <div :class="{ focused: isFocused }" @click="focus" class="teaching-element">
       <span class="drag-handle">
         <span class="mdi mdi-drag-vertical"></span>
       </span>
@@ -117,11 +117,17 @@ export default {
 
 .te-container {
   padding: 7px 0;
+  user-select: none;
 }
 
 .teaching-element {
   position: relative;
   padding: 10px 20px 10px 20px;
   border: 1px dashed #ccc;
+  user-select: none;
+}
+
+.focused {
+  user-select: unset;
 }
 </style>
