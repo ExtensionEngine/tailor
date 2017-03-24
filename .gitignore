@@ -169,6 +169,7 @@ selenium-debug.log
 
 # Configuration
 .env
+ecosystem.config.js
 
 # Local IJavascript REPL files
 .ipynb_checkpoints
