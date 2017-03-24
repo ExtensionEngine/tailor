@@ -52,7 +52,7 @@ export default {
       this.fetchCourses();
     }
   },
-  created() {
+  mounted() {
     this.fetchCourses();
   },
   beforeDestroy() {
