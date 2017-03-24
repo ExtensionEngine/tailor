@@ -37,7 +37,7 @@
             <span class="fa fa-ellipsis-v"></span>
           </button>
           <ul class="dropdown-menu pull-right">
-            <li><a @click.stop="removeSelectedActivity">Delete</a></li>
+            <li><a @click.stop="deleteActivity">Delete</a></li>
           </ul>
         </div>
       </div>
@@ -46,8 +46,11 @@
 </template>
 
 <script>
+import EventBus from 'EventBus';
 import { mapActions, mapGetters } from 'vuex-module';
 const noop = Function.prototype;
+
+const appChannel = EventBus.channel('app');
 
 export default {
   data() {
@@ -84,8 +87,12 @@ export default {
         this.update({ _cid: this.activity._cid, name: this.newActivityName });
       }
     },
-    removeSelectedActivity() {
-      this.remove(this.activity);
+    deleteActivity() {
+      appChannel.emit('showConfirmationModal', {
+        type: 'activity',
+        item: this.activity,
+        action: () => this.remove(this.activity)
+      });
     }
   }
 };

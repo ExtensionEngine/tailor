@@ -10,7 +10,7 @@
     <div v-else @click="$emit('selected')" class="minimized">
       <span class="label label-success">{{ assessment.data.type }}</span>
       <span class="title">{{ question }}</span>
-      <span @click="$emit('remove')" class="delete">
+      <span @click.stop="$emit('remove')" class="delete">
         <span class="mdi mdi-close"></span>
       </span>
     </div>

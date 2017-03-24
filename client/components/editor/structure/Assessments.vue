@@ -16,7 +16,7 @@
         :expanded="isSelected(assessment)"
         @selected="toggleSelect(assessment)"
         @save="save"
-        @remove="remove(assessment)">
+        @remove="requestDeleteConfirmation(assessment)">
       </assessment-item>
     </ul>
     <add-element
@@ -33,8 +33,11 @@ import AssessmentItem from './AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import difference from 'lodash/difference';
+import EventBus from 'EventBus';
 import keyBy from 'lodash/keyBy';
 import { mapActions, mapGetters } from 'vuex-module';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   name: 'assessments',
@@ -100,6 +103,13 @@ export default {
       if (assessment.id) this.removeAssessment(assessment);
       this.$delete(this.assessments, assessment._cid);
       this.selected.splice(this.selected.indexOf(assessment._cid), 1);
+    },
+    requestDeleteConfirmation(assessment) {
+      appChannel.emit('showConfirmationModal', {
+        type: 'assessment',
+        item: assessment,
+        action: () => this.remove(assessment)
+      });
     }
   },
   components: {
