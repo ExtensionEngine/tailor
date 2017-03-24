@@ -5,7 +5,7 @@ const ASSET_GROUP = 'PERSPECTIVE';
 const OUTLINE_LEVELS = [{
   type: 'GOAL',
   color: '#42A5F5',
-  isEditable: true
+  isEditable: false
 }, {
   type: 'OBJECTIVE',
   color: '#66BB6A',
