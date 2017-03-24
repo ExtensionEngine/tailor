@@ -6,7 +6,7 @@
         :element="focusedElement">
       </component>
       <div class="delete-element">
-        <span @click="remove" class="btn btn-fab btn-danger">
+        <span @click="requestDeleteConfirmation" class="btn btn-fab btn-danger">
           <span class="fa fa-trash"></span>
         </span>
       </div>
@@ -39,8 +39,7 @@ export default {
     ...mapActions({ removeElement: 'remove' }, 'tes'),
     ...mapActions(['focusoutElement'], 'editor'),
     ...mapMutations(['focusElement'], 'editor'),
-    remove() {
-      const element = this.focusedElement;
+    remove(element) {
       if (element.embedded) {
         appChannel.emit('deleteElement', element);
       } else {
@@ -48,6 +47,13 @@ export default {
       }
 
       this.focusoutElement();
+    },
+    requestDeleteConfirmation() {
+      appChannel.emit('showConfirmationModal', {
+        type: 'element',
+        item: this.focusedElement,
+        action: () => this.remove(this.focusedElement)
+      });
     },
     getComponentName(type) {
       return TOOLBAR_TYPES[type] || 'default-toolbar';
