@@ -79,7 +79,7 @@ mutation(function removeUser(id) {
 
 mutation(function setUsers(users) {
   this.state.users = {};
-  users.forEach(it => (this.state.users[it.id] = it));
+  users.forEach(it => Vue.set(this.state.users, it.id, it));
 });
 
 mutation(function focusActivity(_cid) {
