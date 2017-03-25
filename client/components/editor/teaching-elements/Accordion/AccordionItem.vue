@@ -16,9 +16,9 @@
       <div v-show="isCollapsed" class="container-fluid accordion-body">
         <div class="row">
           <primitive
-            v-for="element in item.body"
-            :key="element.id"
-            :initialElement="element"
+            v-for="(val, id) in item.body"
+            :key="id"
+            :initialElement="embeds[id]"
             @save="saveBodyElement">
           </primitive>
         </div>
@@ -35,14 +35,11 @@
 <script>
 import AddElement from '../../structure/AddElement';
 import cloneDeep from 'lodash/cloneDeep';
-import EventBus from 'EventBus';
 import Primitive from '../Primitive';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   name: 'accordion-item',
-  props: ['item'],
+  props: ['item', 'embeds'],
   data() {
     return {
       header: this.item.header,
@@ -60,28 +57,20 @@ export default {
     },
     saveHeader() {
       this.isEditingHeader = false;
-      this.$emit('save', { ...this.item, header: this.header });
+      this.$emit('save', { item: { ...this.item, header: this.header } });
     },
     saveBodyElement(element) {
       if (this.item.body && !this.item.body[element.id]) return;
       this.addElement(element);
     },
     addElement(element) {
-      const body = cloneDeep(this.item.body);
-      body[element.id] = element;
-      this.$emit('save', { ...this.item, body });
+      let item = cloneDeep(this.item);
+      item.body[element.id] = true;
+      this.$emit('save', { item, element });
     },
     deleteItem() {
       this.$emit('delete', this.item.id);
     }
-  },
-  created() {
-    appChannel.on('deleteElement', element => {
-      if (!element.embedded || !this.item.body[element.id]) return;
-      const body = cloneDeep(this.item.body);
-      delete body[element.id];
-      this.$emit('save', { ...this.item, body });
-    });
   },
   components: {
     AddElement,
