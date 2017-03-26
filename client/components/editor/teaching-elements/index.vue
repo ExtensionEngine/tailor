@@ -19,7 +19,9 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import TeAccordion from './Accordion/Accordion';
 import TeAssessment from './Assessment';
 import TeBreak from './PageBreak';
 import TeEmbed from './Embed';
@@ -33,7 +35,8 @@ const TE_TYPES = {
   HTML: 'te-html',
   IMAGE: 'te-image',
   ASSESSMENT: 'te-assessment',
-  VIDEO: 'te-video'
+  VIDEO: 'te-video',
+  ACCORDION: 'te-accordion'
 };
 
 export default {
@@ -67,21 +70,24 @@ export default {
       return TE_TYPES[type];
     },
     focus(e) {
-      if (this.disabled) return;
+      if (this.disabled || e.component) return;
       this.focusElement(this.element);
       // Attach component meta
       e.component = { name: 'teaching-element', data: this.element };
     },
-    save(data) {
-      Object.assign(this.element.data, data);
+    save(elementData) {
       if (this.element.embedded) {
-        this.$emit('save', this.element);
+        let data = cloneDeep(this.element.data);
+        Object.assign(data, elementData);
+        this.$emit('save', { ...this.element, data });
       } else {
+        Object.assign(this.element.data, elementData);
         this.updateElement(this.element);
       }
     }
   },
   components: {
+    TeAccordion,
     TeAssessment,
     TeBreak,
     TeEmbed,

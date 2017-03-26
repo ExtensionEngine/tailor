@@ -1,5 +1,5 @@
 <template>
-  <div class="te-container col-xs-12">
+  <div :class="columnWidth" class="te-container">
     <div @click="focus" class="teaching-element">
       <component
         :is="resolveElement(element.type)"
@@ -37,6 +37,10 @@ export default {
       return this.focusedElement.embedded
         ? this.focusedElement.id === this.element.id
         : this.focusedElement._cid === this.element._cid;
+    },
+    columnWidth() {
+      const data = this.element.data;
+      return data && data.width ? `col-xs-${data.width}` : 'col-xs-12';
     }
   },
   methods: {
@@ -65,7 +69,8 @@ export default {
 
 <style lang="scss" scoped>
 .te-container {
-  padding: 7px 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .teaching-element {
