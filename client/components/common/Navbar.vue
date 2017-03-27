@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="navbar-header">
         <router-link :to="{ name: 'catalog' }" class="navbar-brand">
-          <img src="../../assets/img/logo_b.svg" alt="Logo"/>
+          <img src="../../assets/img/logo-b.svg" alt="Logo"/>
           <span>CGMA Author</span>
         </router-link>
       </div>

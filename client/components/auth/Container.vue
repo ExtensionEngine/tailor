@@ -2,7 +2,7 @@
   <div class="auth-container">
     <div class="auth-panel">
       <div class="auth-header">
-        <img src="../../assets/img/logo_a.svg" alt="Logo"/>
+        <img src="../../assets/img/logo-a.svg" alt="Logo"/>
         <h1>Course Authoring</h1>
       </div>
       <div class="auth-body">
