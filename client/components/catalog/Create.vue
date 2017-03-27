@@ -11,7 +11,14 @@
         <loader v-show="showLoader"></loader>
         <div v-show="!showLoader">
           <div class="form-group" :class="getErrorClass('name')">
-            <input v-model="name" type="text" class="form-control" placeholder="Name" v-focus="focused" @focus="focused = true" @blur="focused = false" />
+            <input 
+              v-focus="focusName" 
+              v-model="name" 
+              @focus="focusName=true" 
+              @blur="focusName=false" 
+              type="text" 
+              class="form-control" 
+              placeholder="Name"/>
             <div v-show="hasError('name')" class="error-message">
               {{ getErrorMessage('name') }}
             </div>
@@ -37,13 +44,13 @@
 </template>
 
 <script>
+import { focus } from 'vue-focus';
 import { isEmpty } from 'lodash';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters } from 'vuex-module';
 import { modal } from 'vue-strap';
 import Promise from 'bluebird';
 import yup from 'yup';
-import { focus } from 'vue-focus';
 
 const bounds = {
   name: { min: 2, max: 250 },
@@ -70,11 +77,11 @@ export default {
       showLoader: false,
       showModal: false,
       errors: this.getDefaultErrors(),
-      focused: true
+      focusName: true
     };
   },
   directives: {
-    focus: focus
+    focus
   },
   components: {
     modal,
@@ -101,7 +108,7 @@ export default {
     },
     show() {
       this.showModal = true;
-      this.focused = true;
+      this.focusName = true;
     },
     hide() {
       this.name = '';
