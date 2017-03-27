@@ -4,7 +4,9 @@
     <div v-else>
       <div class="form-group">
         <label for="courseName">Name</label>
-        <span v-show="showNameInput" :class="{ 'has-error': vErrors.has('courseName') }">
+        <span
+          v-show="showNameInput"
+          :class="{ 'has-error': vErrors.has('courseName') }">
           <input
             v-model="newCourseName"
             v-focus="true"
@@ -16,19 +18,17 @@
             data-vv-as="Name"
             id="courseName"
             class="form-control">
-            <span class="help-block">
-              {{ vErrors.first('courseName') }}
-            </span>
+            <span class="help-block">{{ vErrors.first('courseName') }}</span>
         </span>
         <span v-show="!showNameInput">
-          <h2 @click.stop="showNameInput = true">
-            {{ course ? course.name : '' }}
-          </h2>
+          <h2 @click.stop="showNameInput = true">{{ course.name }}</h2>
         </span>
       </div>
       <div class="form-group">
         <label for="courseDescription">Description</label>
-        <span v-show="showDescriptionInput" :class="{ 'has-error': vErrors.has('courseDescription') }">
+        <span
+          v-show="showDescriptionInput"
+          :class="{ 'has-error': vErrors.has('courseDescription') }">
           <textarea
             v-model="newCourseDescription"
             v-focus="true"
@@ -46,7 +46,7 @@
         </span>
         <span v-show="!showDescriptionInput">
           <span @click.stop="showDescriptionInput = true" class="form-display">
-            {{ course ? course.description : '' }}
+            {{ course.description }}
           </span>
         </span>
       </div>
@@ -97,19 +97,17 @@ export default {
     updateName() {
       if (!this.showNameInput) return;
       this.showNameInput = false;
+      if (this.course.name === this.newCourseName) return;
       this.$validator.validateAll().then(() => {
-        if (this.course.name !== this.newCourseName) {
-          this.update(Object.assign({}, this.course, { name: this.newCourseName }));
-        }
+        this.update({ ...this.course, name: this.newCourseName });
       }, () => { this.setCourseFields(); });
     },
     updateDescription() {
       if (!this.showDescriptionInput) return;
       this.showDescriptionInput = false;
+      if (this.course.description === this.newCourseDescription) return;
       this.$validator.validateAll().then(() => {
-        if (this.course.description !== this.newCourseDescription) {
-          this.update(Object.assign({}, this.course, {description: this.newCourseDescription}));
-        }
+        this.update({ ...this.course, description: this.newCourseDescription });
       }, () => { this.setCourseFields(); });
     },
     removeCourse() {
