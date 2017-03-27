@@ -2,7 +2,7 @@
   <div class="auth-container">
     <div class="auth-panel">
       <div class="auth-header">
-        <img src="../../assets/img/logo.svg" alt="CGMA"/>
+        <img src="../../assets/img/logo_a.svg" alt="Logo"/>
         <h1>Course Authoring</h1>
       </div>
       <div class="auth-body">
@@ -29,7 +29,7 @@
   }
 
   img {
-    margin: 15px 0px 10px 0px;
+    margin: 15px 0 10px 0;
     width: 130px;
   }
 
