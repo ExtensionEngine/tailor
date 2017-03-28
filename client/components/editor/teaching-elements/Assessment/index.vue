@@ -16,6 +16,7 @@
         :assessment="assessment.data"
         :errors="errors"
         :isEditing="isEditing"
+        @syncErrors="syncErrors"
         @update="update"
         @alert="setAlert">
       </component>
@@ -48,6 +49,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
 import FillBlank from './FillBlank';
+import MatchingQuestion from './MatchingQuestion';
 import MultipleChoice from './MultipleChoice';
 import NumericalResponse from './NumericalResponse';
 import SingleChoice from './SingleChoice';
@@ -65,7 +67,8 @@ const ASSESSMENT_TYPES = {
   TF: 'true-false',
   NR: 'numerical-response',
   TR: 'text-response',
-  FB: 'fill-blank'
+  FB: 'fill-blank',
+  MQ: 'matching-question'
 };
 
 export default {
@@ -97,6 +100,11 @@ export default {
     },
     validate(question) {
       return this.schema.validate(question, validationOptions);
+    },
+    syncErrors() {
+      this.errors = [];
+      this.validate(this.assessment.data)
+        .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
     },
     update(data) {
       Object.assign(this.assessment.data, data);
@@ -135,7 +143,8 @@ export default {
     TextResponse,
     FillBlank,
     Question,
-    Controls
+    Controls,
+    MatchingQuestion
   }
 };
 </script>
