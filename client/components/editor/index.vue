@@ -42,17 +42,13 @@ export default {
     }, 'editor'),
     ...mapGetters(['course', 'activity'], 'course'),
     breadcrumbs() {
-      let hasParent = true;
-      const items = [this.openedActivity];
-
-      while (hasParent) {
-        let parentActivity = find(this.activities, {
-          'id': items[items.length - 1].parentId
-        });
-        items.push(parentActivity);
-        if (!parentActivity.parentId) hasParent = false;
-      }
-      return items.reverse();
+      const items = [];
+      let activity = this.openedActivity;
+      while (activity) {
+        items.unshift(activity);
+        activity = find(this.activities, { id: activity.parentId });
+      };
+      return items;
     }
   },
   methods: {
