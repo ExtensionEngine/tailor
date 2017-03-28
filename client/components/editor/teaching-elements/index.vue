@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[columnWidth, { hovered: hovered, focused: isFocused }]"
+    :class="[columnWidth, { hovered, focused: isFocused }]"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
     class="te-container">
