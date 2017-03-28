@@ -4,7 +4,12 @@
     <div v-else>
       <toolbar></toolbar>
       <div class="container">
-        <h2>{{ activity.name }}</h2>
+        <h2>
+          <span v-for="(item, index) in breadcrumbs">
+            {{ item.name }}
+            <span v-show="index !== (breadcrumbs.length - 1)"> | </span>
+          </span>
+        </h2>
         <perspectives></perspectives>
         <assessments></assessments>
       </div>
@@ -13,6 +18,7 @@
 </template>
 
 <script>
+import find from 'lodash/find';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Perspectives from './structure/Perspectives';
@@ -29,8 +35,28 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['focusedElement'], 'editor'),
-    ...mapGetters(['course', 'activity'], 'course')
+    ...mapGetters(['activities']),
+    ...mapGetters({
+      focusedElement: 'focusedElement',
+      openedActivity: 'activity'
+    }, 'editor'),
+    ...mapGetters(['course', 'activity'], 'course'),
+    breadcrumbs() {
+      let hasParent = false;
+      const breadcrumbItems = [];
+      let currentActivity = this.openedActivity;
+      breadcrumbItems.push(currentActivity);
+
+      while (!hasParent) {
+        let parentActivity = find(this.activities, { 'id': currentActivity.parentId });
+        if (!currentActivity.parentId) hasParent = true;
+        else {
+          currentActivity = parentActivity;
+          breadcrumbItems.push(currentActivity);
+        }
+      }
+      return breadcrumbItems.reverse();
+    }
   },
   methods: {
     ...mapActions(['focusoutElement'], 'editor'),
