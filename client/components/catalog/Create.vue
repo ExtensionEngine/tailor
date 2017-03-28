@@ -12,10 +12,10 @@
         <div v-show="!showLoader">
           <div class="form-group" :class="getErrorClass('name')">
             <input 
-              v-focus="focusName" 
               v-model="name" 
-              @focus="focusName=true" 
-              @blur="focusName=false" 
+              v-focus="focusName" 
+              @focus="focusName = true" 
+              @blur="focusName = false" 
               type="text" 
               class="form-control" 
               placeholder="Name"/>
