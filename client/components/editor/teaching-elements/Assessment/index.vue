@@ -1,7 +1,7 @@
 <template>
   <div @selected="$emit('selected')" class="assessment-container">
     <div :class="typeInfo.class" class="assessment">
-      <div>
+      <div v-if="summative">
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
       </div>
@@ -70,7 +70,7 @@ const ASSESSMENT_TYPES = {
 
 export default {
   name: 'te-assessment',
-  props: { element: Object },
+  props: { element: Object, summative: Boolean },
   data() {
     const assessment = cloneDeep(this.element);
     return {
@@ -105,9 +105,10 @@ export default {
       this.errors = [];
       this.validate(this.assessment.data)
         .then(() => {
+          const data = this.summative ? this.assessment : this.assessment.data;
+          this.$emit('save', cloneDeep(data));
           this.isEditing = false;
           this.setAlert(saveAlert);
-          this.$emit('save', cloneDeep(this.assessment));
         })
         .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
     },
