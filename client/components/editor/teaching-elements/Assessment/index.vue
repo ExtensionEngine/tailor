@@ -35,6 +35,7 @@
       </div>
       <controls
         :isEditing="isEditing"
+        :summative="summative"
         @cancel="cancel"
         @save="save"
         @remove="remove"
