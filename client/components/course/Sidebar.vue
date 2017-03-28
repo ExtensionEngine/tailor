@@ -131,6 +131,7 @@ export default {
     margin: 5px 3px 0 0;
     font-size: 17px;
     font-weight: normal;
+    word-wrap: break-word;
   }
 
   .title-container {
