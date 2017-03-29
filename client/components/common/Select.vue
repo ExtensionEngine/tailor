@@ -1,21 +1,24 @@
 <template>
-  <v-select
-    :value="value"
+  <multiselect 
+    :value="value" 
     :options="options" 
-    :searchable="searchable"
-    :onChange="onChange"
-    :placeholder="'Activity Level'"
-    :class="{ focused: isFocused }"
+    :searchable="searchable" 
+    @input="onChange"
+    :close-on-select="true" 
+    :show-labels="false" 
+    track-by="name" 
+    label="name"
+    :allow-empty="false"
     :id="id">
-  </v-select>
+  </multiselect>
 </template>
 
 <script>
-import vSelect from 'vue-select';
+import multiselect from 'vue-multiselect';
 
 export default {
   name: 'select',
-  props: ['value', 'options', 'searchable', 'onChange', 'placeholder'],
+  props: ['value', 'options', 'searchable', 'onChange'],
   data() {
     return {
       isFocused: false,
@@ -23,60 +26,62 @@ export default {
     };
   },
   components: {
-    vSelect
-  },
-  mounted() {
-    var input = document.getElementById(this.id).getElementsByTagName('input')[0];
-    input.onfocus = () => { this.isFocused = true; };
-    input.onblur = () => { this.isFocused = false; };
+    multiselect
   }
 };
 </script>
 
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="scss">
-.v-select {
+.multiselect {
   font-size: 16px !important;
   font-family: 'Catamaran', Helvetica, Arial, sans-serif !important;
-
-  &.focused {
+  color: #555555 !important;
+  height: 34px !important;
+  min-height: 0 !important;
+  
+  &:focus {
     box-shadow: inset 0 -2px 0 #337AB7;
     transition: box-shadow 0.15s;
   }
 
-  .dropdown-toggle {
-    border: 0px !important;
-
-    input {
-      padding: 0px !important;
-    }
-  }
-
-  .dropdown-menu {
-    background: #E0E0E0 !important;
-    overflow: auto !important;
-
-    a {
-      font-size: 16px !important;
-      color: #555555 !important;
-      padding: 5px 10px !important;
-    }
-
-    .active a {
-      background: none !important;
-    }
-
-    li:hover{
-      background: #5897fb;
-    }
-  }
-
-  .selected-tag {
+  .multiselect__option--selected {
     background: none !important;
-    border: 0px !important;
-    color: #555555 !important;
-    padding: 0px !important;
-    margin: 6px 10px 0px 0px !important;
+  }
+
+  .multiselect__option--highlight {
+    background: #5897fb !important;
   }
 }
 
+.multiselect__content {
+  background: #E0E0E0 !important;
+  border: 1px solid #999999 !important;
+  border-radius: 0px !important;
+}
+
+.multiselect__tags {
+  min-height: 0 !important;
+  padding: 0px !important;
+  height: 100%;
+}
+.multiselect__select {
+  min-height: 0 !important;
+  padding: 0px !important;
+  width: 20px !important;
+  height: 34px !important;
+}
+
+.multiselect__single {
+  line-height: 34px !important;
+  padding-left: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.multiselect__input, .multiselect__single, .multiselect__tags {
+  background: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  font-size: inherit !important;
+}
 </style>

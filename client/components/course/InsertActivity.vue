@@ -18,13 +18,13 @@
           </span>
         </div>
         <div class="col-lg-3">
-          <v-select 
+          <multiselect 
+            v-if="canCreateSubsection"
             :value="activityLevels[0]"
             :options="activityLevels"
-            :searchable="true"
-            :onChange="onActivityLevelChange"
-            :placeholder="'Activity Level'">
-          </v-select>
+            :searchable="false"
+            :onChange="onActivityLevelChange">
+          </multiselect>
         </div>
         <div class="col-lg-1">
           <button
@@ -53,7 +53,7 @@ import findIndex from 'lodash/findIndex';
 import { mapGetters, mapActions } from 'vuex-module';
 import { getChildren } from '../../utils/activity.js';
 import calculatePosition from '../../utils/calculatePosition.js';
-import vSelect from '../common/Select'
+import multiselect from '../common/Select'
 
 const noop = Function.prototype;
 
@@ -66,14 +66,14 @@ export default {
       focusInput: true,
       activityName: '',
       activityLevels: [
-        { label: 'Section', value: 0 },
-        { label: 'Subsection', value: 1 }
+        { name: 'Section', value: 0 },
+        { name: 'Subsection', value: 1 }
       ],
       newActivityLevel: ''
     };
   },
   components: {
-    vSelect
+    multiselect
   },
   computed: {
     ...mapGetters(['activities']),
