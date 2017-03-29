@@ -39,7 +39,7 @@ export default {
     ...mapGetters(['focusedElement', 'activity'], 'editor'),
     ...mapGetters(['course'], 'course'),
     breadcrumbs() {
-      const items = [];
+      let items = [];
       let item = this.activity;
       while (item) {
         items.unshift(item);
