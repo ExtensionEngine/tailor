@@ -19,8 +19,8 @@
         </div>
         <div class="col-lg-3">
           <v-select 
-            :options="activityLevels"
             :value="activityLevels[0]"
+            :options="activityLevels"
             :searchable="true"
             :onChange="onActivityLevelChange"
             :placeholder="'Activity Level'">

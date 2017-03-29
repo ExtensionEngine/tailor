@@ -1,12 +1,12 @@
 <template>
   <v-select
-    :class="{ focused: isFocused }"
-    :options="options" 
     :value="value"
+    :options="options" 
     :searchable="searchable"
     :onChange="onChange"
-    :resetOnOptionsChange="false"
-    :placeholder="'Activity Level'">
+    :placeholder="'Activity Level'"
+    :class="{ focused: isFocused }"
+    :id="id">
   </v-select>
 </template>
 
@@ -15,17 +15,18 @@ import vSelect from 'vue-select';
 
 export default {
   name: 'select',
-  props: ['options', 'value', 'searchable', 'onChange', 'placeholder'],
+  props: ['value', 'options', 'searchable', 'onChange', 'placeholder'],
   data() {
     return {
-      isFocused: false
+      isFocused: false,
+      id: this._uid
     };
   },
   components: {
     vSelect
   },
   mounted() {
-    var elSearch = document.getElementsByClassName('v-select')[0].getElementsByTagName('input')[0];
+    var elSearch = document.getElementById(this.id).getElementsByTagName('input')[0];
     elSearch.onfocus = () => { this.isFocused = true; };
     elSearch.onblur = () => { this.isFocused = false; };
   }
