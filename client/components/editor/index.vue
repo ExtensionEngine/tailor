@@ -4,7 +4,12 @@
     <div v-else>
       <toolbar></toolbar>
       <div class="container">
-        <h2>{{ activity.name }}</h2>
+        <h2>
+          <span v-for="(item, index) in breadcrumbs">
+            {{ item.name }}
+            <span v-if="index !== (breadcrumbs.length - 1)" class="divider"> | </span>
+          </span>
+        </h2>
         <perspectives></perspectives>
         <assessments></assessments>
       </div>
@@ -13,6 +18,7 @@
 </template>
 
 <script>
+import find from 'lodash/find';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Perspectives from './structure/Perspectives';
@@ -29,8 +35,18 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['focusedElement'], 'editor'),
-    ...mapGetters(['course', 'activity'], 'course')
+    ...mapGetters(['activities']),
+    ...mapGetters(['focusedElement', 'activity'], 'editor'),
+    ...mapGetters(['course'], 'course'),
+    breadcrumbs() {
+      let items = [];
+      let item = this.activity;
+      while (item) {
+        items.unshift(item);
+        item = find(this.activities, { id: item.parentId });
+      };
+      return items;
+    }
   },
   methods: {
     ...mapActions(['focusoutElement'], 'editor'),
