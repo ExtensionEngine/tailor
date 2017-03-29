@@ -7,7 +7,7 @@
         <h2>
           <span v-for="(item, index) in breadcrumbs">
             {{ item.name }}
-            <span v-show="index !== (breadcrumbs.length - 1)"> | </span>
+            <span v-if="index !== (breadcrumbs.length - 1)" class="divider"> | </span>
           </span>
         </h2>
         <perspectives></perspectives>
@@ -36,17 +36,14 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters({
-      focusedElement: 'focusedElement',
-      openedActivity: 'activity'
-    }, 'editor'),
-    ...mapGetters(['course', 'activity'], 'course'),
+    ...mapGetters(['focusedElement', 'activity'], 'editor'),
+    ...mapGetters(['course'], 'course'),
     breadcrumbs() {
       const items = [];
-      let activity = this.openedActivity;
-      while (activity) {
-        items.unshift(activity);
-        activity = find(this.activities, { id: activity.parentId });
+      let item = this.activity;
+      while (item) {
+        items.unshift(item);
+        item = find(this.activities, { id: item.parentId });
       };
       return items;
     }
