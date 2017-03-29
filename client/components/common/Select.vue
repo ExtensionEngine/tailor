@@ -1,15 +1,15 @@
 <template>
   <multiselect 
+    @input="onChange"
     :value="value" 
     :options="options" 
     :searchable="searchable" 
-    @input="onChange"
     :close-on-select="true" 
     :show-labels="false" 
-    track-by="name" 
-    label="name"
     :allow-empty="false"
-    :id="id">
+    :id="id"
+    track-by="name" 
+    label="name">
   </multiselect>
 </template>
 
