@@ -1,7 +1,7 @@
 <template>
   <div>
     <form @submit.prevent="submit">
-      <div class="form-group" :class="{'has-error': vErrors.has('password') }">
+      <div class="form-group" :class="{ 'has-error': vErrors.has('password') }">
         <input
           v-model="password"
           v-validate="'required|min:6'"
@@ -9,7 +9,9 @@
           type="password"
           name="password"
           placeholder="Password"/>
-          <span v-show="vErrors.has('password')" class="help-block">{{ vErrors.first('password') }}</span>
+        <span v-show="vErrors.has('password')" class="help-block">
+          {{ vErrors.first('password') }}
+        </span>
       </div>
       <div class="form-group" :class="{'has-error': vErrors.has('password-match') }">
         <input
