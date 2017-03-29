@@ -15,6 +15,7 @@
 
 <script>
 import multiselect from 'vue-multiselect';
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'select',
@@ -31,7 +32,6 @@ export default {
 };
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="scss">
 .multiselect {
   font-size: 16px !important;
