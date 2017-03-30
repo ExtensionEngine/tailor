@@ -124,6 +124,7 @@ export default {
 .te-container {
   padding: 7px 0;
   user-select: none;
+  
   &.focused {
     user-select: unset;
   }
@@ -134,6 +135,7 @@ export default {
   padding: 10px 20px 10px 20px;
   border: 1px dashed #ccc;
   user-select: none;
+
   .focused & {
     user-select: unset;
   }
