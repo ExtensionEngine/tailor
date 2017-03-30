@@ -36,32 +36,40 @@ const fbQuestion = yup.array().test(
   }
 );
 
+const hint = yup.string().trim().max(200);
+
 export const schemas = {
   MC: yup.object().shape({
     question,
-    answers: yup.array().min(2).of(yup.string().trim().min(1)).required(),
-    correct: yup.array().min(1).of(yup.number()).required()
+    answers: yup.array().min(2).of(yup.string().trim().min(1).max(200)).required(),
+    correct: yup.array().min(1).of(yup.number()).required(),
+    hint
   }),
   NR: yup.object().shape({
     question,
-    correct: yup.string().trim().matches(/^(^\d+$)|(^\d+\.\d+$)$/).required()
+    correct: yup.string().trim().matches(/^(^\d+$)|(^\d+\.\d+$)$/).max(200).required(),
+    hint
   }),
   SC: yup.object().shape({
     question,
-    answers: yup.array().min(2).of(yup.string().trim().min(1)).required(),
-    correct: yup.number().required()
+    answers: yup.array().min(2).of(yup.string().trim().min(1).max(200).required()).required(),
+    correct: yup.number().required(),
+    hint
   }),
   TR: yup.object().shape({
     question,
-    correct: yup.string().trim().min(1).required()
+    correct: yup.string().trim().min(1).max(200).required(),
+    hint
   }),
   TF: yup.object().shape({
     question,
-    correct: yup.boolean().required()
+    correct: yup.boolean().required(),
+    hint
   }),
   FB: yup.object().shape({
     question: fbQuestion,
-    correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).required()))
+    correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).max(200).required())),
+    hint
   })
 };
 
