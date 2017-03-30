@@ -13,7 +13,7 @@
                   class="form-control"
                   name="name"
                   type="text"
-                  placeholder="Activity name">
+                  placeholder="Title">
                 <span v-show="vErrors.has('name')" class="help-block">
                   {{ vErrors.first('name') }}
                 </span>
@@ -84,7 +84,7 @@ export default {
     },
     activityLevels() {
       let levels = OUTLINE_LEVELS.slice(this.level - 1, this.level + 1);
-      levels.forEach((item, index, array) => {
+      levels.forEach((item, index) => {
         item.value = index;
       });
       return levels;
