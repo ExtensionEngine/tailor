@@ -13,15 +13,22 @@
       </div>
     </div>
     <transition name="slide-fade">
-      <div v-show="isCollapsed" class="container-fluid accordion-body">
-        <div class="row">
+      <div v-if="!isCollapsed" class="container-fluid accordion-body">
+        <div v-if="!hasElements" class="well">
+          Click the button below to Create your first teaching element.
+        </div>
+        <draggable
+          :list="elements"
+          :options="dragOptions"
+          @update="reorder"
+          class="row">
           <primitive
-            v-for="(val, id) in item.body"
-            :key="id"
-            :initialElement="embeds[id]"
+            v-for="element in elements"
+            :key="element.id"
+            :initialElement="element"
             @save="saveBodyElement">
           </primitive>
-        </div>
+        </draggable>
         <add-element
           :include="['HTML', 'IMAGE']"
           :layout="true"
@@ -34,20 +41,46 @@
 
 <script>
 import AddElement from '../../structure/AddElement';
+import calculatePosition from '../../../../utils/calculatePosition.js';
 import cloneDeep from 'lodash/cloneDeep';
+import Draggable from 'vuedraggable';
+import isEmpty from 'lodash/isEmpty';
+import pick from 'lodash/pick';
 import Primitive from '../Primitive';
+import toArray from 'lodash/toArray';
 
 export default {
   name: 'accordion-item',
   props: ['item', 'embeds'],
   data() {
     return {
+      dragOptions: { forceFallback: true, handle: '.embed-drag-handle' },
       header: this.item.header,
       isCollapsed: false,
       isEditingHeader: false
     };
   },
+  computed: {
+    elements() {
+      return toArray(pick(this.embeds, Object.keys(this.item.body)))
+        .sort((a, b) => a.position - b.position);
+    },
+    hasElements() {
+      return !isEmpty(this.item.body);
+    }
+  },
   methods: {
+    reorder({ newIndex: newPosition }) {
+      const items = cloneDeep(this.elements);
+
+      const isFirstChild = newPosition === 0;
+      const context = { items, newPosition, isFirstChild };
+      const newElementPosition = calculatePosition(context);
+      const element = cloneDeep(items[newPosition]);
+      element.position = newElementPosition;
+
+      this.$emit('save', { element });
+    },
     toggle() {
       this.isCollapsed = !this.isCollapsed;
     },
@@ -59,13 +92,16 @@ export default {
       this.isEditingHeader = false;
       this.$emit('save', { item: { ...this.item, header: this.header } });
     },
-    saveBodyElement(element) {
-      if (this.item.body && !this.item.body[element.id]) return;
-      this.addElement(element);
+    saveBodyElement(elem) {
+      if (this.item.body && !this.item.body[elem.id]) return;
+      const element = cloneDeep(elem);
+      this.$emit('save', { element });
     },
-    addElement(element) {
+    addElement(elem) {
       let item = cloneDeep(this.item);
-      item.body[element.id] = true;
+      item.body[elem.id] = true;
+      const element = cloneDeep(elem);
+      element.position = Object.keys(item.body).length;
       this.$emit('save', { item, element });
     },
     deleteItem() {
@@ -74,6 +110,7 @@ export default {
   },
   components: {
     AddElement,
+    Draggable,
     Primitive
   }
 };
@@ -140,7 +177,7 @@ export default {
 }
 
 .accordion-body {
-  max-height: 3000px;
+  height: auto;
   border-bottom: 1px solid #ddd;
   box-sizing: border-box;
   padding: 32px 8px;
@@ -154,7 +191,7 @@ export default {
 }
 
 .slide-fade-enter, .slide-fade-leave-to {
-  max-height: 0px;
+  height: 0px;
   padding-top: 0px;
   padding-bottom: 0px;
 }

@@ -1,6 +1,13 @@
 <template>
-  <div :class="columnWidth" class="te-container">
-    <div @click="focus" class="teaching-element">
+  <div
+    :class="[columnWidth, hovered ? 'embed-hovered' : '']"
+    @mouseover="hovered = true"
+    @mouseleave="hovered = false"
+    class="te-container">
+    <div @click="focus" class="embed-element">
+      <span class="embed-drag-handle">
+        <span class="mdi mdi-drag-vertical"></span>
+      </span>
       <component
         :is="resolveElement(element.type)"
         :element="initialElement"
@@ -27,7 +34,8 @@ export default {
   },
   data() {
     return {
-      element: cloneDeep(this.initialElement)
+      element: cloneDeep(this.initialElement),
+      hovered: false
     };
   },
   computed: {
@@ -53,11 +61,12 @@ export default {
       if (this.disabled) return;
       this.focusElement(this.element);
       // Attach component meta
-      e.component = { name: 'teaching-element', data: this.element };
+      e.component = { name: 'embed-element', data: this.element };
     },
-    save(data) {
-      Object.assign(this.element.data, data);
-      this.$emit('save', this.element);
+    save(elementData) {
+      let data = cloneDeep(this.element.data);
+      Object.assign(data, elementData);
+      this.$emit('save', { ...this.element, data });
     }
   },
   components: {
@@ -68,13 +77,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.embed-drag-handle {
+  position: absolute;
+  top: 10px;
+  left: 13px;
+  z-index: 2;
+  width: 26px;
+  opacity: 0;
+
+  .mdi {
+    color: #888;
+    font-size: 28px;
+  }
+}
+
+.embed-hovered {
+  .embed-drag-handle {
+    opacity: 1;
+    transition: opacity .6s ease-in-out;
+    cursor: pointer;
+  }
+}
+
 .te-container {
   padding-top: 8px;
   padding-bottom: 8px;
 }
 
-.teaching-element {
-  padding: 10px;
+.embed-element {
+  padding: 10px 20px;
   border: 1px dashed #ccc;
 }
 </style>

@@ -43,10 +43,16 @@ export default {
   methods: {
     ...mapActions({ updateElement: 'update' }, 'tes'),
     saveItem({ item, element }) {
-      let embeds = cloneDeep(this.embeds);
-      let items = cloneDeep(this.items);
-      items[item.id] = item;
-      if (element) embeds[element.id] = element;
+      let embeds = this.embeds;
+      if (element) {
+        embeds = cloneDeep(this.embeds);
+        embeds[element.id] = element;
+      }
+      let items = this.items;
+      if (item) {
+        items = cloneDeep(this.items);
+        items[item.id] = item;
+      }
       this.$emit('save', { embeds, items });
     },
     deleteItem(itemId) {
