@@ -11,12 +11,12 @@
     </div>
     <ul class="list-group">
       <assessment-item
-        v-for="assessment in assessments"
-        :assessment="assessment"
-        :expanded="isSelected(assessment)"
-        @selected="toggleSelect(assessment)"
+        v-for="it in assessments"
+        :assessment="it"
+        :expanded="isSelected(it)"
+        @selected="toggleSelect(it)"
         @save="save"
-        @remove="requestDeleteConfirmation(assessment)">
+        @remove="it.id ? requestDeleteConfirmation(it) : remove(it)">
       </assessment-item>
     </ul>
     <add-element
