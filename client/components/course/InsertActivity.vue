@@ -2,38 +2,42 @@
   <div>
     <div class="activity-input" v-if="showInput">
       <div class="row">
-        <div class="col-lg-8">
-          <span class="form-group" :class="{ 'has-error': vErrors.has('name') }">
-            <input
-              v-model="activityName"
-              v-focus.lazy="focusInput"
-              v-validate="{ rules: { required: true, min: 2, max: 250 } }"
-              class="form-control"
-              name="name"
-              type="text"
-              placeholder="Activity name">
-            <span v-show="vErrors.has('name')" class="help-block">
-              {{ vErrors.first('name') }}
-            </span>
-          </span>
+        <div class="col-lg-9">
+          <div class="row">
+            <div class="col-lg-9">
+              <span class="form-group" :class="{ 'has-error': vErrors.has('name') }">
+                <input
+                  v-model="activityName"
+                  v-focus.lazy="focusInput"
+                  v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+                  class="form-control"
+                  name="name"
+                  type="text"
+                  placeholder="Activity name">
+                <span v-show="vErrors.has('name')" class="help-block">
+                  {{ vErrors.first('name') }}
+                </span>
+              </span>
+            </div>
+            <div class="col-lg-3">
+              <multiselect
+                v-if="canCreateSubsection"
+                :value="activityLevels[0]"
+                :options="activityLevels"
+                :searchable="false"
+                :onChange="onActivityLevelChange">
+              </multiselect>
+            </div>
+          </div>
         </div>
         <div class="col-lg-3">
-          <multiselect 
-            v-if="canCreateSubsection"
-            :value="activityLevels[0]"
-            :options="activityLevels"
-            :searchable="false"
-            :onChange="onActivityLevelChange">
-          </multiselect>
-        </div>
-        <div class="col-lg-1">
+          <button class="btn delete btn-default pull-right" @click.stop="hide">X</button>
           <button
-            class="btn btn-default"
+            class="btn add btn-default pull-right"
             :disabled="vErrors.any()"
             @click.stop="add">
             Add
           </button>
-          <button class="btn btn-default" @click.stop="hide">X</button>
         </div>
       </div>
     </div>
@@ -53,7 +57,7 @@ import findIndex from 'lodash/findIndex';
 import { mapGetters, mapActions } from 'vuex-module';
 import { getChildren } from '../../utils/activity.js';
 import calculatePosition from '../../utils/calculatePosition.js';
-import multiselect from '../common/Select'
+import multiselect from '../common/Select';
 
 const noop = Function.prototype;
 
@@ -138,5 +142,11 @@ export default {
 
 .plus {
   padding: 0px 7px;
+}
+
+.btn {
+  &.add {
+    margin-right: 3px;
+  }
 }
 </style>
