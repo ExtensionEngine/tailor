@@ -1,7 +1,7 @@
 <template>
   <div class="perspective">
     <div class="actions">
-      <span @click="remove(perspective)" class="pull-right">
+      <span @click="deletePerspective" class="pull-right">
         <span class="mdi mdi-delete"></span>
       </span>
     </div>
@@ -22,7 +22,7 @@
     <add-element
       :activity="perspective"
       :position="teachingElements.length + 1"
-      :include="['HTML', 'IMAGE', 'VIDEO', 'EMBED', 'BREAK']"
+      :include="elementTypes"
       :layout="true"
       @add="addElement">
     </add-element>
@@ -32,16 +32,31 @@
 <script>
 import AddElement from './AddElement';
 import Draggable from 'vuedraggable';
+import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeachingElement from '../teaching-elements';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   name: 'perspective',
   props: ['perspective'],
   data() {
     return {
-      dragOptions: { forceFallback: true, handle: '.drag-handle' }
+      dragOptions: {
+        handle: '.drag-handle',
+        forceFallback: true
+      },
+      elementTypes: [
+        'HTML',
+        'IMAGE',
+        'VIDEO',
+        'EMBED',
+        'ASSESSMENT',
+        'BREAK',
+        'ACCORDION'
+      ]
     };
   },
   computed: {
@@ -65,6 +80,13 @@ export default {
     addElement(element) {
       this.saveElement(element);
       this.focusElement(element);
+    },
+    deletePerspective() {
+      appChannel.emit('showConfirmationModal', {
+        type: 'perspective',
+        item: this.perspective,
+        action: () => this.remove(this.perspective)
+      });
     }
   },
   components: {

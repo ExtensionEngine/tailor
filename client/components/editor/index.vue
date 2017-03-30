@@ -4,6 +4,15 @@
     <div v-else>
       <toolbar></toolbar>
       <div class="container">
+        <div class="breadcrumbs">
+          <span v-for="(item, index) in breadcrumbs">
+            {{ truncate(item.name) }}
+            <span
+              v-if="index !== (breadcrumbs.length - 1)"
+              class="mdi mdi-chevron-right">
+            </span>
+          </span>
+        </div>
         <h2>{{ activity.name }}</h2>
         <perspectives></perspectives>
         <assessments></assessments>
@@ -13,12 +22,14 @@
 </template>
 
 <script>
+import Assessments from './structure/Assessments';
+import find from 'lodash/find';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Perspectives from './structure/Perspectives';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
-import Assessments from './structure/Assessments';
+import truncate from 'truncate';
 
 export default {
   name: 'editor',
@@ -29,8 +40,18 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['focusedElement'], 'editor'),
-    ...mapGetters(['course', 'activity'], 'course')
+    ...mapGetters(['activities']),
+    ...mapGetters(['focusedElement', 'activity'], 'editor'),
+    ...mapGetters(['course'], 'course'),
+    breadcrumbs() {
+      let items = [];
+      let item = this.activity;
+      while (item) {
+        item = find(this.activities, { id: item.parentId });
+        if (item) items.unshift(item);
+      };
+      return items;
+    }
   },
   methods: {
     ...mapActions(['focusoutElement'], 'editor'),
@@ -39,6 +60,9 @@ export default {
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
     ...mapMutations({ setupActivitiesApi: 'setBaseUrl' }, 'activities'),
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
+    truncate(str, len = 50) {
+      return truncate(str, len);
+    },
     onMousedown() {
       this.mousedownCaptured = true;
     },
@@ -86,15 +110,30 @@ export default {
   // Force scroll
   min-height: 101%;
 
+  .breadcrumbs {
+    margin: 70px 0 10px 0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: #555;
+    text-align: left;
+  }
+
   h2 {
-    margin: 80px 0 30px 0;
+    margin: 20px 0 30px 0;
     font-size: 20px;
+    line-height: 30px;
     color: #444;
     text-align: left;
   }
 
   .loader {
     margin-top: 150px;
+  }
+
+  .divider {
+    padding: 0 10px;
+    color: #999;
   }
 }
 </style>

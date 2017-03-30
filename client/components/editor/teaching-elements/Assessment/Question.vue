@@ -4,12 +4,14 @@
     <div
       :class="{ editing: isEditing, 'question-error': questionError }"
       class="question">
-      <primitive
-        v-for="element in assessment.data.question"
-        :initialElement="element"
-        :disabled="!isEditing"
-        @save="elementChanged">
-      </primitive>
+      <div class="row">
+        <primitive
+          v-for="element in assessment.data.question"
+          :initialElement="element"
+          :disabled="!isEditing"
+          @save="elementChanged">
+        </primitive>
+      </div>
       <add-element
         v-show="isEditing"
         :include="['HTML', 'IMAGE']"

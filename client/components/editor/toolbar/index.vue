@@ -6,7 +6,7 @@
         :element="focusedElement">
       </component>
       <div class="delete-element">
-        <span @click="remove" class="btn btn-fab btn-danger">
+        <span @click="requestDeleteConfirmation" class="btn btn-fab btn-danger">
           <span class="fa fa-trash"></span>
         </span>
       </div>
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import AccordionToolbar from './AccordionToolbar';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import EmbedToolbar from './EmbedToolbar';
@@ -29,7 +30,8 @@ const TOOLBAR_TYPES = {
   IMAGE: 'image-toolbar',
   VIDEO: 'video-toolbar',
   EMBED: 'embed-toolbar',
-  HTML: 'quill-toolbar'
+  HTML: 'quill-toolbar',
+  ACCORDION: 'accordion-toolbar'
 };
 
 export default {
@@ -39,8 +41,7 @@ export default {
     ...mapActions({ removeElement: 'remove' }, 'tes'),
     ...mapActions(['focusoutElement'], 'editor'),
     ...mapMutations(['focusElement'], 'editor'),
-    remove() {
-      const element = this.focusedElement;
+    remove(element) {
       if (element.embedded) {
         appChannel.emit('deleteElement', element);
       } else {
@@ -48,6 +49,13 @@ export default {
       }
 
       this.focusoutElement();
+    },
+    requestDeleteConfirmation() {
+      appChannel.emit('showConfirmationModal', {
+        type: 'element',
+        item: this.focusedElement,
+        action: () => this.remove(this.focusedElement)
+      });
     },
     getComponentName(type) {
       return TOOLBAR_TYPES[type] || 'default-toolbar';
@@ -62,7 +70,8 @@ export default {
     ImageToolbar,
     EmbedToolbar,
     QuillToolbar,
-    VideoToolbar
+    VideoToolbar,
+    AccordionToolbar
   }
 };
 </script>

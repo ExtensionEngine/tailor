@@ -26,7 +26,8 @@ const TE_TYPES = [
   { type: 'VIDEO', label: 'Video', icon: 'mdi-video' },
   { type: 'ASSESSMENT', label: 'Question', icon: 'mdi-help' },
   { type: 'EMBED', label: 'Embed', icon: 'mdi-arrange-bring-forward' },
-  { type: 'BREAK', label: 'Page Break', icon: 'mdi-format-page-break' }
+  { type: 'BREAK', label: 'Page Break', icon: 'mdi-format-page-break' },
+  { type: 'ACCORDION', label: 'Accordion', icon: 'mdi-view-sequential' }
 ];
 
 export default {

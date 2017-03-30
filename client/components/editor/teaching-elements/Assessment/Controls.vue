@@ -5,7 +5,11 @@
       <button @click="save" class="btn btn-success">Save</button>
     </div>
     <div v-else class="pull-right">
-      <button @click="$emit('remove')" class="btn btn-default">Remove</button>
+      <button
+        v-if="summative"
+        @click="$emit('remove')"
+        class="btn btn-default"> Remove
+      </button>
       <button @click="$emit('edit')" class="btn btn-success">Edit</button>
     </div>
   </div>
@@ -13,7 +17,7 @@
 
 <script>
 export default {
-  props: { isEditing: Boolean },
+  props: { isEditing: Boolean, summative: Boolean },
   methods: {
     save() {
       // Make sure all other handlers are executed prior to save
