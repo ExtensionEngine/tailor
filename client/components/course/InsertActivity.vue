@@ -52,12 +52,12 @@
 </template>
 
 <script>
+import calculatePosition from '../../utils/calculatePosition.js';
 import { focus } from 'vue-focus';
 import findIndex from 'lodash/findIndex';
+import { getChildren } from '../../utils/activity.js';
 import { mapGetters, mapActions } from 'vuex-module';
 import multiselect from '../common/Select';
-import { getChildren } from '../../utils/activity.js';
-import calculatePosition from '../../utils/calculatePosition.js';
 
 const noop = Function.prototype;
 
