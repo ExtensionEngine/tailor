@@ -114,10 +114,14 @@ export default {
         .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
     },
     cancel() {
-      Object.assign(this.assessment, cloneDeep(this.initAssessment));
-      this.isEditing = false;
-      this.setAlert();
-      this.errors = [];
+      if (!this.element.id) {
+        this.$emit('remove');
+      } else {
+        Object.assign(this.assessment, cloneDeep(this.initAssessment));
+        this.isEditing = false;
+        this.setAlert();
+        this.errors = [];
+      }
     },
     close() {
       this.$emit('selected');
