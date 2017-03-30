@@ -38,7 +38,6 @@ export default {
   font-family: 'Catamaran', Helvetica, Arial, sans-serif !important;
   color: #555555 !important;
   height: 34px !important;
-  // min-width: 200px !important;
   min-height: 0 !important;
   
   &:focus {
