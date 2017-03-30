@@ -55,9 +55,9 @@
 import { focus } from 'vue-focus';
 import findIndex from 'lodash/findIndex';
 import { mapGetters, mapActions } from 'vuex-module';
+import multiselect from '../common/Select';
 import { getChildren } from '../../utils/activity.js';
 import calculatePosition from '../../utils/calculatePosition.js';
-import multiselect from '../common/Select';
 
 const noop = Function.prototype;
 
