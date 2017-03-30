@@ -22,10 +22,10 @@
             <div class="col-lg-3">
               <multiselect
                 v-if="canCreateSubsection"
-                :value="activityLevels[0]"
+                :value="newActivityLevel"
                 :options="activityLevels"
                 :searchable="false"
-                :onChange="onActivityLevelChange">
+                :onChange="onOutlineLevelChange">
               </multiselect>
             </div>
           </div>
@@ -58,6 +58,7 @@ import findIndex from 'lodash/findIndex';
 import { getChildren } from '../../utils/activity.js';
 import { mapGetters, mapActions } from 'vuex-module';
 import multiselect from '../common/Select';
+import { OUTLINE_LEVELS } from 'shared/activities';
 
 const noop = Function.prototype;
 
@@ -69,10 +70,6 @@ export default {
       showInput: false,
       focusInput: true,
       activityName: '',
-      activityLevels: [
-        { name: 'Section', value: 0 },
-        { name: 'Subsection', value: 1 }
-      ],
       newActivityLevel: ''
     };
   },
@@ -84,6 +81,13 @@ export default {
     ...mapGetters(['course'], 'course'),
     canCreateSubsection() {
       return this.level < 3;
+    },
+    activityLevels() {
+      let levels = OUTLINE_LEVELS.slice(this.level - 1, this.level + 1);
+      levels.forEach((item, index, array) => {
+        item.value = index;
+      });
+      return levels;
     }
   },
   methods: {
@@ -117,8 +121,8 @@ export default {
         if (!sameLevel) this.$emit('expand');
       }, noop);
     },
-    onActivityLevelChange(value) {
-      this.newActivityLevel = value;
+    onOutlineLevelChange(selected) {
+      this.newActivityLevel = selected;
     }
   },
   created() {

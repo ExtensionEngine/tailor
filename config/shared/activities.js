@@ -4,14 +4,17 @@ import isNumber from 'lodash/isNumber';
 const ASSET_GROUP = 'PERSPECTIVE';
 const OUTLINE_LEVELS = [{
   type: 'GOAL',
+  label: 'Goal',
   color: '#42A5F5',
   isEditable: false
 }, {
   type: 'OBJECTIVE',
+  label: 'Learning Objective',
   color: '#66BB6A',
   isEditable: false
 }, {
   type: 'TOPIC',
+  label: 'Learning Objective Topic',
   color: '#EC407A',
   isEditable: true
 }];

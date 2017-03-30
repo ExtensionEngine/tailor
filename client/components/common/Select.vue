@@ -8,8 +8,8 @@
     :show-labels="false" 
     :allow-empty="false"
     :id="id"
-    track-by="name" 
-    label="name">
+    track-by="label" 
+    label="label">
   </multiselect>
 </template>
 
