@@ -55,7 +55,8 @@ export default {
         'EMBED',
         'ASSESSMENT',
         'BREAK',
-        'ACCORDION'
+        'ACCORDION',
+        'CAROUSEL'
       ]
     };
   },

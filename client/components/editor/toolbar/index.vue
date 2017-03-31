@@ -16,6 +16,7 @@
 
 <script>
 import AccordionToolbar from './AccordionToolbar';
+import CarouselToolbar from './CarouselToolbar';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import EmbedToolbar from './EmbedToolbar';
@@ -31,7 +32,8 @@ const TOOLBAR_TYPES = {
   VIDEO: 'video-toolbar',
   EMBED: 'embed-toolbar',
   HTML: 'quill-toolbar',
-  ACCORDION: 'accordion-toolbar'
+  ACCORDION: 'accordion-toolbar',
+  CAROUSEL: 'carousel-toolbar'
 };
 
 export default {
@@ -71,7 +73,8 @@ export default {
     EmbedToolbar,
     QuillToolbar,
     VideoToolbar,
-    AccordionToolbar
+    AccordionToolbar,
+    CarouselToolbar
   }
 };
 </script>
