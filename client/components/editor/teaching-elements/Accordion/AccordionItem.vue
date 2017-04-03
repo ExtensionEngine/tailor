@@ -72,13 +72,11 @@ export default {
   methods: {
     reorder({ newIndex: newPosition }) {
       const items = cloneDeep(this.elements);
-
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       const newElementPosition = calculatePosition(context);
       const element = cloneDeep(items[newPosition]);
       element.position = newElementPosition;
-
       this.$emit('save', { element });
     },
     toggle() {
@@ -92,15 +90,14 @@ export default {
       this.isEditingHeader = false;
       this.$emit('save', { item: { ...this.item, header: this.header } });
     },
-    saveBodyElement(elem) {
-      if (this.item.body && !this.item.body[elem.id]) return;
-      const element = cloneDeep(elem);
-      this.$emit('save', { element });
+    saveBodyElement(element) {
+      if (this.item.body && !this.item.body[element.id]) return;
+      this.$emit('save', { element: cloneDeep(element) });
     },
-    addElement(elem) {
+    addElement(element) {
       let item = cloneDeep(this.item);
-      item.body[elem.id] = true;
-      const element = cloneDeep(elem);
+      item.body[element.id] = true;
+      element = cloneDeep(element);
       element.position = Object.keys(item.body).length;
       this.$emit('save', { item, element });
     },
