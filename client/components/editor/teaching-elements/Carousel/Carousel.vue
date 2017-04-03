@@ -2,8 +2,8 @@
   <div v-if="!hasItems" class="well">
     Use the toolbar to add the first item to the carousel.
   </div>
-  <div v-else class="carousel">
-    <ul class="carousel-items">
+  <div v-else :style="{ height: height + 'px' }" class="carousel">
+    <ul :style="{ height: height - 40 + 'px' }" class="carousel-items">
       <carousel-item
         v-for="it in items"
         :item="it"
@@ -62,6 +62,9 @@ export default {
     },
     hasItems() {
       return !isEmpty(this.items);
+    },
+    height() {
+      return this.element.data.height;
     }
   },
   methods: {
@@ -91,7 +94,7 @@ export default {
     }
   },
   created() {
-    teChannel.on(`${this.element._cid}/add`, () => {
+    teChannel.on(`${this.element._cid}/add`, height => {
       const element = cloneDeep(this.element);
       if (!element.data.items) {
         element.data.items = {};
@@ -99,8 +102,15 @@ export default {
       }
       const id = cuid();
       element.data.items[id] = { id, body: {} };
+      element.data.height = height;
       this.updateElement(element);
       this.activateItem(element.data.items[id]);
+    });
+
+    teChannel.on(`${this.element._cid}/height`, height => {
+      const element = cloneDeep(this.element);
+      element.data.height = height;
+      this.updateElement(element);
     });
 
     appChannel.on('deleteElement', element => {
@@ -122,11 +132,9 @@ export default {
 .carousel {
   position: relative;
   width: 100%;
-  height: 500px;
 }
 
 .carousel-items {
-  height: 460px;
   margin: 0;
   padding-left: 0;
   list-style-type: none;
@@ -155,7 +163,7 @@ export default {
     cursor: pointer;
 
     &.active {
-      background-color: #000;
+      background-color: #444;
     }
   }
 }

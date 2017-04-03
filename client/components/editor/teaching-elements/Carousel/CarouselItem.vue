@@ -1,27 +1,25 @@
 <template>
-  <li>
-    <div :class="{ 'active': isActive }" class="container-fluid carousel-item">
-      <div v-if="!hasElements" class="well">
-        Click the button below to Create your first teaching element.
-      </div>
-      <draggable
-        :list="elements"
-        :options="dragOptions"
-        @update="reorder"
-        class="row">
-        <primitive
-          v-for="element in elements"
-          :key="element.id"
-          :initialElement="element"
-          @save="saveBodyElement">
-        </primitive>
-      </draggable>
-      <add-element v-if="!hasElements"
-        :include="['HTML', 'IMAGE']"
-        :layout="true"
-        @add="addElement">
-      </add-element>
+  <li :class="{ 'active': isActive }" class="container-fluid carousel-item">
+    <div v-if="!hasElements" class="well">
+      Click the button below to Create your first teaching element.
     </div>
+    <draggable
+      :list="elements"
+      :options="dragOptions"
+      @update="reorder"
+      class="row">
+      <primitive
+        v-for="element in elements"
+        :key="element.id"
+        :initialElement="element"
+        @save="saveBodyElement">
+      </primitive>
+    </draggable>
+    <add-element v-if="!hasElements"
+      :include="['HTML', 'IMAGE']"
+      :layout="true"
+      @add="addElement">
+    </add-element>
   </li>
 </template>
 
@@ -103,7 +101,7 @@ export default {
   left: 0;
   opacity: 0;
   z-index: 1;
-  overflow-x: auto;
+  overflow-y: auto;
 
   transition: opacity 300ms cubic-bezier(0.165, 0.84, 0.44, 1); // "easeOutQuart"
 }
