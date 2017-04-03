@@ -1,7 +1,6 @@
 import { ASSET_GROUP } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import toArray from 'lodash/toArray';
 import { VuexModule } from 'vuex-module';
 
 const { state, getter, action, mutation, build } = new VuexModule('editor');
@@ -11,27 +10,14 @@ state({
 });
 
 getter(function focusedElement() {
-  if (!this.state.focusedElement.id) return {};
-  const id = this.state.focusedElement.id;
-  const tes = toArray(this.rootGetters.tes);
-  let element;
-  for (let i = 0; i < tes.length; i++) {
-    if (tes[i].id === id) {
-      element = tes[i];
-      break;
-    }
-    if (tes[i].data.embeds) {
-      const embeds = toArray(tes[i].data.embeds);
-      for (let j = 0; j < embeds.length; j++) {
-        if (embeds[j].id === id) {
-          element = embeds[j];
-          break;
-        }
-      }
-    }
-  }
+  const focused = this.state.focusedElement;
+  if (!focused || !focused.id) return {};
+  const tes = this.rootGetters.tes;
+  const id = focused.id;
 
-  return element;
+  return !focused.embedded
+    ? find(tes, { id })
+    : find(find(tes, te => !!te.data.embeds[id]).data.embeds, { id });
 });
 
 getter(function activity() {

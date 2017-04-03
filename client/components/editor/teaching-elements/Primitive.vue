@@ -61,12 +61,11 @@ export default {
       if (this.disabled) return;
       this.focusElement(this.element);
       // Attach component meta
-      e.component = { name: 'embed-element', data: this.element };
+      e.component = { name: 'teaching-element', data: this.element };
     },
-    save(elementData) {
-      let data = cloneDeep(this.element.data);
-      Object.assign(data, elementData);
-      this.$emit('save', { ...this.element, data });
+    save(data) {
+      Object.assign(this.element.data, data);
+      this.$emit('save', this.element);
     }
   },
   components: {
