@@ -1,47 +1,56 @@
 <template>
-  <div :class="{ 'disabled': disabled }">
-    <div class="row heading">
-      <div class="col-xs-5">Premise</div>
-      <div class="col-xs-offset-2 col-xs-5">Response</div>
+  <div>
+    <div class="row no-gutters header">
+      <span class="col-xs-offset-1 col-xs-4 center">Premise</span>
+      <span class="col-xs-offset-2 col-xs-4 center">Response</span>
     </div>
-    <div v-for="(it, row) in getMatch" class="row">
-      <div :class="{ 'flip': isSelected(row, 0) }" class="box-flip col-xs-5">
-        <div @click="flip(row, 0)" class="premise-view">
-          <span :class="errorClass(row, 0)">{{ it.premise || 'Click to edit' }}</span>
+    <div v-for="(pair, row) in pairs" class="row no-gutters">
+      <div
+        :class="{ 'flip': isFocused(row, 0) }"
+        class="col-xs-offset-1 col-xs-4 flip-container">
+        <div @click="focus(row, 0)" class="premise-view front center">
+          <span :class="errorClass(row, 0)">
+            {{ pair.premise || 'Click to edit' }}
+          </span>
         </div>
         <input
-          v-model="it.premise"
+          v-model="pair.premise"
           v-focus="{ row, col: 0 }"
-          @keyup.enter="flip(row, 0)"
-          @keyup.esc="flip(row, 0)"
-          @blur="isSelected(row, 0) && flip(row, 0)"
-          class="form-control premise-input"
+          @keyup.enter="focus(row, 0)"
+          @keyup.esc="focus(row, 0)"
+          @blur="isFocused(row, 0) && focus(row, 0)"
+          class="form-control premise-input back"
           placeholder="Insert text here ...">
       </div>
-      <div class="col-xs-2 relation">
-        <span @click="removeMatch(row)" class="fa fa-times destroy"></span>
-        <span class="fa fa-long-arrow-right"></span>
+      <div class="col-xs-2 center">
+        <span class="mdi mdi-arrow-right"></span>
       </div>
-      <div :class="{ 'flip': isSelected(row, 1) }" class="box-flip col-xs-5">
-        <div @click="flip(row, 1)" class="response-view">
-          <span :class="errorClass(row, 1)">{{ it.response || 'Click to edit' }}</span>
+      <div :class="{ 'flip': isFocused(row, 1) }" class="col-xs-4 flip-container">
+        <div @click="focus(row, 1)" class="response-view front center">
+          <span :class="errorClass(row, 1)">
+            {{ pair.response || 'Click to edit' }}
+          </span>
         </div>
         <input
-          v-model="it.response"
+          v-model="pair.response"
           v-focus="{ row, col: 1 }"
-          @keyup.enter="flip(row, 1)"
-          @keyup.esc="flip(row, 1)"
-          @blur="isSelected(row, 1) && flip(row, 1)"
-          class="form-control response-input"
+          @keyup.enter="focus(row, 1)"
+          @keyup.esc="focus(row, 1)"
+          @blur="isFocused(row, 1) && focus(row, 1)"
+          class="form-control response-input back"
           placeholder="Insert text here ...">
       </div>
+      <div class="col-xs-1 destroy center">
+        <span v-show="isEditing" @click="removePair(row)" class="mdi mdi-close">
+        </span>
+      </div>
     </div>
-    <div v-show="isAllowed" class="add-match">
-      <span @click="addMatch()" class="mdi mdi-plus"></span>
+    <div v-show="!maxPairsReached && isEditing" class="add-pair">
+      <span @click="addPair" class="mdi mdi-plus"></span>
     </div>
     <div class="alert-container">
       <transition name="fade">
-        <span v-if="hasMatchError" class="alert alert-danger">
+        <span v-if="hasPairsError" class="alert alert-danger">
           Please create at least two premise-response pairs !
         </span>
       </transition>
@@ -50,15 +59,14 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
 
 export default {
   directives: {
     focus: {
       update(el, binding, vnode) {
-        const col = vnode.context.flipped.col;
-        const row = vnode.context.flipped.row;
+        const col = vnode.context.focused.col;
+        const row = vnode.context.focused.row;
         const newCol = binding.value.col;
         const newRow = binding.value.row;
         col === newCol && row === newRow ? el.focus() : el.blur();
@@ -72,67 +80,45 @@ export default {
   },
   data() {
     return {
-      flipped: { row: null, col: null },
-      localErrors: cloneDeep(this.errors)
+      focused: { row: null, col: null }
     };
   },
   computed: {
-    hasMatchError() {
-      const errors = this.localErrors;
-      return !isEmpty(errors) && errors.indexOf('correct') !== -1;
+    hasPairsError() {
+      return !isEmpty(this.errors) && this.errors.indexOf('correct') !== -1;
     },
-    question() {
-      return this.assessment.question;
-    },
-    getMatch() {
+    pairs() {
       return this.assessment.correct;
     },
-    disabled() {
-      return !this.isEditing;
-    },
-    isAllowed() {
-      return this.getMatch.length < 10;
+    maxPairsReached() {
+      return this.pairs.length >= 10;
     }
   },
   methods: {
-    removeMatch(row) {
-      this.getMatch.splice(row, 1);
-      this.update();
+    removePair(row) {
+      this.pairs.splice(row, 1);
     },
-    addMatch() {
-      if (this.getMatch.length === 10) return;
-      this.getMatch.push({ premise: '', response: '' });
-      this.update();
+    addPair() {
+      this.pairs.push({ premise: '', response: '' });
     },
-    flip(row, col) {
-      if (this.isSelected(row, col)) {
-        this.flipped = { row: null, col: null };
-      } else {
-        this.flipped = { row, col };
-      }
+    focus(row, col) {
+      this.focused = this.isFocused(row, col) ? {} : { row, col };
     },
-    isSelected(row, col) {
-      return this.flipped.col === col && this.flipped.row === row;
+    isFocused(row, col) {
+      return this.focused.col === col && this.focused.row === row;
     },
-    update(message) {
-      this.$emit('update', { correct: this.getMatch });
-    },
-    syncErrors() {
-      if (!isEmpty(this.localErrors)) this.$emit('syncErrors');
+    update(validate) {
+      this.$emit('update', { correct: this.pairs }, validate);
     },
     errorClass(row, col) {
-      const answer = `correct[${row}].${col === 0 ? 'premise' : 'response'}`;
-      return { 'error': this.localErrors.includes(answer) };
+      const answer = `correct[${row}].${col ? 'response' : 'premise'}`;
+      return { 'error': this.errors.includes(answer) };
     }
   },
   watch: {
-    errors() {
-      this.localErrors = this.errors;
-    },
-    getMatch: {
+    pairs: {
       handler() {
-        this.update();
-        this.syncErrors();
+        this.update(true);
       },
       deep: true
     }
@@ -141,128 +127,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.row {
-  margin: 0 auto 40px auto;
-  min-height: 50px;
-  font-size: 18px;
-  width: 90%;
+.no-gutters {
+  margin: 40px 0;
 
   [class*="col-"] {
-    min-height: 50px;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
-.heading {
-  margin-top: 50px;
-
-  div {
-    border-bottom: 1px dashed grey;
-  }
+.center {
+  padding: 14px 5px;
 }
 
-.box-flip.flip {
-   transform: rotateX(180deg);
- }
-
-.error {
-  box-shadow: inset 0 -2px 0 #e51c23;
-  border-bottom: 0;
+.header span {
+  border-bottom: 1px dashed grey;
 }
 
-.alert-container {
-  min-height: 40px;
-  margin-top: 20px;
-
-  .alert {
-    display: inline-block;
-    padding: 7px 13px;
-    font-size: 15px;
-    margin: 0;
-  }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.disabled {
-  pointer-events: none;
-}
-
-.add-match {
-  text-align: center;
-  margin-top: 40px;
-  min-height: 50px;
-  font-size: 28px;
-
-  .mdi:hover {
-    cursor: pointer;
-    color: #42b983;
-  }
-}
-
-.relation {
-  display: table;
-
-  .destroy {
-    background-color: transparent;
-    transform-style: preserve-3d;
-    transition: 0.5s;
-    display: none;
-    opacity: 0.5;
-    border: 0;
-  }
-
-  .fa-long-arrow-right {
-    vertical-align: middle;
-    display: table-cell;
-    font-size: 28px;
-    color: #707070;
-  }
-}
-
-.relation:hover {
-  .destroy {
-    vertical-align: middle;
-    display: table-cell;
-
-    &:hover {
-      cursor: pointer;
-      color: #555;
-    }
-  }
-
-  .fa-long-arrow-right {
-    display: none;
-  }
-}
-
-.box-flip {
-  transform-style: preserve-3d;
+.flip-container {
   transition: 0.5s;
-  min-height: 50px;
-}
+  transform-style: preserve-3d;
 
-.premise-view,
-.response-view {
-  backface-visibility: hidden;
-  text-overflow: ellipsis;
-  transform: rotateX(0deg);
-  text-align: center;
-  padding: 12px 13px;
-  position: absolute;
-  white-space: nowrap;
-  min-height: 50px;
-  overflow: hidden;
-  width: 100%;
-  left: 0;
-  top: 0;
+  .front, .back {
+    backface-visibility: hidden;
+  }
+
+  .front {
+    transform: rotateX(0deg);
+  }
+
+  .back {
+    transform: rotateX(180deg);
+  }
+
+  &.flip {
+     transform: rotateX(180deg);
+   }
 }
 
 .premise-view {
@@ -275,13 +175,36 @@ export default {
   border: 1px dashed rgb(89, 89, 89);
 }
 
-.premise-input,
-.response-input {
-  backface-visibility: hidden;
-  transform: rotateX(180deg);
+.premise-input, .response-input {
   position: absolute;
-  min-height: 50px;
-  left: 0;
   top: 0;
+  height: 100%;
+}
+
+.mdi-plus {
+  font-size: 28px;
+}
+
+.destroy {
+  padding: 9.5px 5px;
+  font-size: 20px
+}
+
+.mdi:hover {
+  cursor: pointer;
+  color: #42b983;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.error {
+  box-shadow: inset 0 -2px 0 #e51c23;
+  border-bottom: 0;
 }
 </style>

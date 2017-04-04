@@ -9,16 +9,17 @@
         :assessment="assessment"
         :errors="errors"
         :isEditing="isEditing"
-        @update="update">
+        @update="update"
+        :class="{ 'disabled': !isEditing }">
       </question>
       <component
         :is="getComponentName(assessment)"
         :assessment="assessment.data"
         :errors="errors"
         :isEditing="isEditing"
-        @syncErrors="syncErrors"
         @update="update"
-        @alert="setAlert">
+        @alert="setAlert"
+        :class="{ 'disabled': !isEditing }">
       </component>
       <div class="form-group">
         <span class="form-label">Hint</span>
@@ -49,6 +50,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
 import FillBlank from './FillBlank';
+import isEmpty from 'lodash/isEmpty';
 import MatchingQuestion from './MatchingQuestion';
 import MultipleChoice from './MultipleChoice';
 import NumericalResponse from './NumericalResponse';
@@ -98,16 +100,16 @@ export default {
     setAlert(data = {}) {
       this.alert = data;
     },
-    validate(question) {
-      return this.schema.validate(question, validationOptions);
+    validate(data) {
+      return this.schema.validate(data, validationOptions);
     },
-    syncErrors() {
-      this.errors = [];
-      this.validate(this.assessment.data)
-        .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
-    },
-    update(data) {
+    update(data, validate) {
       Object.assign(this.assessment.data, data);
+      if (validate && !isEmpty(this.errors)) {
+        this.errors = [];
+        this.validate(this.assessment.data)
+          .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
+      }
     },
     save() {
       this.errors = [];
@@ -187,5 +189,9 @@ export default {
   input.form-control {
     padding-left: 10px;
   }
+}
+
+.disabled {
+  pointer-events: none;
 }
 </style>
