@@ -6,19 +6,19 @@
     </div>
     <div v-for="(pair, row) in pairs" class="row no-gutters">
       <div
-        :class="{ 'flip': isFocused(row, 0) }"
+        :class="{ 'flip': isFocused(row) }"
         class="col-xs-offset-1 col-xs-4 flip-container">
-        <div @click="focus(row, 0)" class="premise-view front center">
-          <span :class="errorClass(row, 0)">
+        <div @click="focus(row)" class="premise-view front center">
+          <span :class="errorClass(row)">
             {{ pair.premise || 'Click to edit' }}
           </span>
         </div>
         <input
           v-model="pair.premise"
-          v-focus="{ row, col: 0 }"
-          @keyup.enter="focus(row, 0)"
-          @keyup.esc="focus(row, 0)"
-          @blur="isFocused(row, 0) && focus(row, 0)"
+          v-focus="{ row }"
+          @keyup.enter="focus(row)"
+          @keyup.esc="focus(row)"
+          @blur="isFocused(row) && focus(row)"
           class="form-control premise-input back"
           placeholder="Insert text here ...">
       </div>
