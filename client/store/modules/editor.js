@@ -20,6 +20,13 @@ getter(function activity() {
   return find(activities, { id });
 });
 
+getter(function introduction() {
+  const { route } = this.rootState;
+  const { activities } = this.rootGetters;
+  const parentId = Number(route.params.activityId);
+  return find(activities, { parentId, type: 'INTRO' });
+});
+
 getter(function perspectives() {
   const { route } = this.rootState;
   const { activities } = this.rootGetters;
