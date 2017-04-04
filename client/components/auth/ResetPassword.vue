@@ -4,7 +4,7 @@
       <div class="form-group" :class="{ 'has-error': vErrors.has('password') }">
         <input
           v-model="password"
-          v-validate="'required|min:6|alpha_num'"
+          v-validate="'required|min:6|alphanumerical'"
           class="form-control"
           type="password"
           name="password"
