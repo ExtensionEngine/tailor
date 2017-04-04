@@ -1,11 +1,11 @@
 <template>
   <div
-    :class="[columnWidth, hovered ? 'embed-hovered' : '']"
+    :class="[columnWidth, isDraggable ? 'embedded-hovered' : '']"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
     class="te-container">
-    <div @click="focus" class="embed-element">
-      <span class="embed-drag-handle">
+    <div @click="focus" class="teaching-element">
+      <span class="drag-handle">
         <span class="mdi mdi-drag-vertical"></span>
       </span>
       <component
@@ -30,7 +30,8 @@ export default {
   name: 'te-primitive',
   props: {
     initialElement: Object,
-    disabled: Boolean
+    disabled: Boolean,
+    drag: Boolean
   },
   data() {
     return {
@@ -49,6 +50,9 @@ export default {
     columnWidth() {
       const data = this.element.data;
       return data && data.width ? `col-xs-${data.width}` : 'col-xs-12';
+    },
+    isDraggable() {
+      return this.drag && this.hovered && !this.disabled;
     }
   },
   methods: {
@@ -76,7 +80,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.embed-drag-handle {
+.drag-handle {
   position: absolute;
   top: 10px;
   left: 13px;
@@ -90,8 +94,8 @@ export default {
   }
 }
 
-.embed-hovered {
-  .embed-drag-handle {
+.embedded-hovered {
+  .drag-handle {
     opacity: 1;
     transition: opacity .6s ease-in-out;
     cursor: pointer;
@@ -103,7 +107,7 @@ export default {
   padding-bottom: 8px;
 }
 
-.embed-element {
+.teaching-element {
   padding: 10px 20px;
   border: 1px dashed #ccc;
 }

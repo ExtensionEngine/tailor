@@ -26,6 +26,7 @@
             v-for="element in elements"
             :key="element.id"
             :initialElement="element"
+            :drag="true"
             @save="saveBodyElement">
           </primitive>
         </draggable>
@@ -44,7 +45,6 @@ import AddElement from '../../structure/AddElement';
 import calculatePosition from '../../../../utils/calculatePosition.js';
 import cloneDeep from 'lodash/cloneDeep';
 import Draggable from 'vuedraggable';
-import isEmpty from 'lodash/isEmpty';
 import pick from 'lodash/pick';
 import Primitive from '../Primitive';
 import toArray from 'lodash/toArray';
@@ -54,7 +54,7 @@ export default {
   props: ['item', 'embeds'],
   data() {
     return {
-      dragOptions: { forceFallback: true, handle: '.embed-drag-handle' },
+      dragOptions: { forceFallback: true, handle: '.drag-handle' },
       header: this.item.header,
       isCollapsed: false,
       isEditingHeader: false
@@ -66,7 +66,7 @@ export default {
         .sort((a, b) => a.position - b.position);
     },
     hasElements() {
-      return !isEmpty(this.item.body);
+      return !!this.elements.length;
     }
   },
   methods: {
@@ -182,14 +182,14 @@ export default {
 
 .slide-fade-enter-active, .slide-fade-leave-active {
   overflow: hidden;
-  margin-top: 0px;
-  margin-bottom: 0px;
+  margin-top: 0;
+  margin-bottom: 0;
   transition: all 350ms cubic-bezier(0.165, 0.84, 0.44, 1); // "easeOutQuart"
 }
 
 .slide-fade-enter, .slide-fade-leave-to {
-  height: 0px;
-  padding-top: 0px;
-  padding-bottom: 0px;
+  height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 </style>

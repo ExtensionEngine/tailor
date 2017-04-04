@@ -1,9 +1,17 @@
 import { ASSET_GROUP } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import { VuexModule } from 'vuex-module';
 
 const { state, getter, action, mutation, build } = new VuexModule('editor');
+
+function findEmbeddedElement(tes, id) {
+  const embedsKey = `data.embeds`;
+  const questionKey = `data.question`;
+  const getEmbed = it => find(get(it, embedsKey) || get(it, questionKey), { id });
+  return getEmbed(find(tes, it => getEmbed(it)));
+}
 
 state({
   focusedElement: null
@@ -17,7 +25,7 @@ getter(function focusedElement() {
 
   return !focused.embedded
     ? find(tes, { id })
-    : find(find(tes, te => !!te.data.embeds[id]).data.embeds, { id });
+    : findEmbeddedElement(tes, id);
 });
 
 getter(function activity() {
@@ -38,7 +46,7 @@ getter(function assessments() {
   const { route } = this.rootState;
   const { tes } = this.rootGetters;
   const activityId = Number(route.params.activityId);
-  return filter(tes, { activityId });
+  return filter(tes, { activityId, type: 'ASSESSMENT' });
 });
 
 // TODO: Implement persistance upon focusout
