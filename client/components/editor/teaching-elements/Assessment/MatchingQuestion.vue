@@ -41,25 +41,22 @@
           placeholder="Insert text here ...">
       </div>
       <div class="col-xs-1 destroy center">
-        <span v-show="isEditing" @click="removePair(row)" class="mdi mdi-close">
+        <span
+          v-show="!minPairsReached && isEditing"
+          @click="removePair(row)"
+          class="mdi mdi-close">
         </span>
       </div>
     </div>
     <div v-show="!maxPairsReached && isEditing" class="add-pair">
       <span @click="addPair" class="mdi mdi-plus"></span>
     </div>
-    <div class="alert-container">
-      <transition name="fade">
-        <span v-if="hasPairsError" class="alert alert-danger">
-          Please create at least two premise-response pairs !
-        </span>
-      </transition>
-    </div>
   </div>
 </template>
 
 <script>
 import isEmpty from 'lodash/isEmpty';
+import times from 'lodash/times';
 
 export default {
   directives: {
@@ -83,6 +80,11 @@ export default {
       focused: { row: null, col: null }
     };
   },
+  created() {
+    if (this.pairs.length < 2) {
+      times(2, () => this.pairs.push({ premise: '', response: '' }));
+    }
+  },
   computed: {
     hasPairsError() {
       return !isEmpty(this.errors) && this.errors.indexOf('correct') !== -1;
@@ -92,6 +94,9 @@ export default {
     },
     maxPairsReached() {
       return this.pairs.length >= 10;
+    },
+    minPairsReached() {
+      return this.pairs.length <= 2;
     }
   },
   methods: {
@@ -190,23 +195,9 @@ export default {
   font-size: 20px
 }
 
-.alert {
-  display: inline-block;
-  padding: 7px 13px;
-  margin: 20px 0;
-}
-
 .mdi:hover {
   cursor: pointer;
   color: #42b983;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.3s
-}
-
-.fade-enter, .fade-leave-to {
-  opacity: 0;
 }
 
 .error {
