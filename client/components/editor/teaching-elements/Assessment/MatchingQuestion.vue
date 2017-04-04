@@ -190,6 +190,12 @@ export default {
   font-size: 20px
 }
 
+.alert {
+  display: inline-block;
+  padding: 7px 13px;
+  margin: 20px 0;
+}
+
 .mdi:hover {
   cursor: pointer;
   color: #42b983;
