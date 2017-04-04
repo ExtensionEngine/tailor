@@ -2,7 +2,7 @@
   <div>
     <h2>Introduction</h2>
     <div v-if="!introduction">
-      <button class="btn btn-primary" @click="addIntroduction">
+      <button @click="addIntroduction" class="btn btn-primary">
         <span class="mdi mdi-plus"></span>
         Create introduction
       </button>
