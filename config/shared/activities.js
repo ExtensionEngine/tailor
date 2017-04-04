@@ -7,19 +7,22 @@ const OUTLINE_LEVELS = [{
   color: '#42A5F5',
   isEditable: true,
   hasIntroduction: true,
-  hasPerspectives: false
+  hasPerspectives: false,
+  hasAssessments: false
 }, {
   type: 'OBJECTIVE',
   color: '#66BB6A',
   isEditable: false,
   hasIntroduction: false,
-  hasPerspectives: false
+  hasPerspectives: false,
+  hasAssessments: false
 }, {
   type: 'TOPIC',
   color: '#EC407A',
   isEditable: true,
   hasIntroduction: false,
-  hasPerspectives: true
+  hasPerspectives: true,
+  hasAssessments: true
 }];
 
 function getLevel(level) {
@@ -33,5 +36,6 @@ module.exports = {
   ASSET_GROUP,
   isEditable: level => getLevel(level).isEditable,
   hasIntroduction: level => getLevel(level).hasIntroduction,
-  hasPerspectives: level => getLevel(level).hasPerspectives
+  hasPerspectives: level => getLevel(level).hasPerspectives,
+  hasAssessments: level => getLevel(level).hasAssessments
 };
