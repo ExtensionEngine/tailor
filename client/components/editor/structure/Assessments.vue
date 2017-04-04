@@ -30,7 +30,6 @@
 <script>
 import AddElement from './AddElement';
 import AssessmentItem from './AssessmentItem';
-import difference from 'lodash/difference';
 import EventBus from 'EventBus';
 import map from 'lodash/map';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
@@ -73,11 +72,7 @@ export default {
       return this.selected.includes(assessment._cid);
     },
     toggleAssessments() {
-      this.allSelected = !this.allSelected;
-      const cids = this.allSelected
-        ? difference(map(this.assessments, assessment => assessment.id), this.selected)
-        : this.selected.slice(0);
-      cids.forEach(cid => this.toggleSelect(this.assessments[cid]));
+      this.selected = this.allSelected ? map(this.assessments, it => it._cid) : [];
     },
     requestDeleteConfirmation(assessment) {
       appChannel.emit('showConfirmationModal', {
