@@ -14,8 +14,9 @@
           </span>
         </div>
         <h2>{{ activity.name }}</h2>
-        <perspectives></perspectives>
-        <assessments></assessments>
+        <introduction v-if="showIntroduction"></introduction>
+        <perspectives v-if="showPerspectives"></perspectives>
+        <assessments v-if="showAssessments"></assessments>
       </div>
     </div>
   </div>
@@ -24,6 +25,8 @@
 <script>
 import Assessments from './structure/Assessments';
 import find from 'lodash/find';
+import { hasAssessments, hasIntroduction, hasPerspectives } from 'shared/activities';
+import Introduction from './structure/Introduction';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Perspectives from './structure/Perspectives';
@@ -43,6 +46,15 @@ export default {
     ...mapGetters(['activities']),
     ...mapGetters(['focusedElement', 'activity'], 'editor'),
     ...mapGetters(['course'], 'course'),
+    showIntroduction() {
+      return hasIntroduction(this.activity.type);
+    },
+    showPerspectives() {
+      return hasPerspectives(this.activity.type);
+    },
+    showAssessments() {
+      return hasAssessments(this.activity.type);
+    },
     breadcrumbs() {
       let items = [];
       let item = this.activity;
@@ -98,6 +110,7 @@ export default {
   },
   components: {
     Assessments,
+    Introduction,
     Loader,
     Perspectives,
     Toolbar
