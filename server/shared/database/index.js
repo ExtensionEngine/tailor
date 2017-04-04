@@ -1,5 +1,4 @@
 const each = require('lodash/each');
-const seed = require('./seed');
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize(process.env.POSTGRES_URI);
@@ -24,6 +23,6 @@ each(db, (v, modelName) => {
 
 db['Revision'].addHooks(db);
 
-db.initialize = () => sequelize.sync({ force: false }).then(() => seed(db));
+db.initialize = () => sequelize.sync();
 
 module.exports = db;

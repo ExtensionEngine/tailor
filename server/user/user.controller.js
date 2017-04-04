@@ -45,7 +45,7 @@ function login({ body }, res) {
     .then(user => user.authenticate(password))
     .then(user => user || createError(NOT_FOUND, 'Wrong password'))
     .then(user => {
-      const token = user.createToken();
+      const token = user.createToken({ expiresIn: '5 days' });
       res.json({ data: { token, user: user.profile } });
     });
 }

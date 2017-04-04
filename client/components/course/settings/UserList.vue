@@ -8,7 +8,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="user in users">
+      <tr v-for="user in users" :key="user.id">
         <td>{{ user.email }}</td>
         <td v-for="role in roles" class="text-center">
           <input

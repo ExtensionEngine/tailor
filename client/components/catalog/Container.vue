@@ -8,8 +8,11 @@
         <create-course class="pull-right"></create-course>
       </div>
     </div>
-    <div class="row">
+    <div v-if="courseTotal" class="row">
       <course-list :courses="courses" :showLoader="showLoader"></course-list>
+    </div>
+    <div v-if="!courseTotal && !showLoader" class="well well-a">
+      No courses found.
     </div>
   </div>
 </template>
@@ -27,7 +30,12 @@ export default {
       showLoader: false
     };
   },
-  computed: mapGetters(['courses']),
+  computed: {
+    ...mapGetters(['courses']),
+    courseTotal() {
+      return Object.keys(this.courses).length;
+    }
+  },
   methods: {
     ...mapActions(['fetch'], 'courses'),
     ...mapMutations(['setSearch', 'resetPagination'], 'courses'),
@@ -44,7 +52,7 @@ export default {
       this.fetchCourses();
     }
   },
-  created() {
+  mounted() {
     this.fetchCourses();
   },
   beforeDestroy() {
@@ -66,5 +74,9 @@ export default {
   @media (min-width: 1700px) {
     padding: 20px 300px 100px 300px;
   }
+}
+
+.well-a {
+  margin-top: 50px;
 }
 </style>

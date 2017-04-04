@@ -14,7 +14,7 @@
           v-model="passwordConfirmation"
           class="form-control"
           type="password"
-          placeholder="Please re enter your password"/>
+          placeholder="Please re-enter your password"/>
       </div>
       <button type="submit" class="btn btn-default btn-block">
         Change password

@@ -2,8 +2,8 @@
   <div class="auth-container">
     <div class="auth-panel">
       <div class="auth-header">
-        <img src="../../assets/img/logo.png" alt="Logo"/>
-        <h1>CGMA Authoring</h1>
+        <img src="../../assets/img/logo-a.svg" alt="Logo"/>
+        <h1>Course Authoring</h1>
       </div>
       <div class="auth-body">
         <router-view></router-view>
@@ -28,6 +28,11 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.15);
   }
 
+  img {
+    margin: 15px 0 10px 0;
+    width: 130px;
+  }
+
   h1 {
     margin: 0;
     color: white;
@@ -36,7 +41,7 @@
   }
 
   .auth-header {
-    background-color: #da126d;
+    background: linear-gradient(90deg, #672D89 60%, #B94164);
     padding-bottom: 15px;
   }
 

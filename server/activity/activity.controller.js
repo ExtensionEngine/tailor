@@ -4,6 +4,7 @@ const { Activity } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
+const processQuery = require('../shared/util/processListQuery');
 
 function create({ body, params, user }, res) {
   const attrs = ['name', 'type', 'parentId', 'position'];
@@ -29,9 +30,9 @@ function patch({ body, params, user }, res) {
     .then(activity => res.json({ data: activity }));
 }
 
-function list(req, res) {
-  return req.course.getActivities({ order: 'position ASC' })
-    .then(activities => res.json({ data: activities }));
+function list({ course, query }, res) {
+  const opts = processQuery(query.integration ? query : { sortBy: 'position' });
+  return course.getActivities(opts).then(data => res.json({ data }));
 }
 
 function remove({ params, user }, res) {

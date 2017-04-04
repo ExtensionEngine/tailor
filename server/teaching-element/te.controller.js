@@ -4,13 +4,24 @@ const { TeachingElement, Activity } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
+const processListQuery = require('../shared/util/processListQuery');
 
-function list({ query }, res) {
-  let where = { $or: [] };
-  if (query.activityId) where.$or.push({ id: parseInt(query.activityId, 10) });
-  if (query.parentId) where.$or.push({ parentId: parseInt(query.parentId, 10) });
-  return TeachingElement.fetch({ include: [{ model: Activity, attributes: [], where }] })
-    .then(assets => res.json({ data: assets }));
+function list({ course, query }, res) {
+  const opts = processListQuery(query);
+
+  if (query.activityId || query.parentId) {
+    const { activityId, parentId } = query;
+    const where = { $or: [] };
+    if (activityId) where.$or.push({ id: parseInt(activityId, 10) });
+    if (parentId) where.$or.push({ parentId: parseInt(parentId, 10) });
+    opts.include = { model: Activity, attributes: [], where };
+  }
+
+  const elements = query.integration
+    ? course.getTeachingElements(opts)
+    : TeachingElement.fetch(opts);
+
+  return elements.then(data => res.json({ data }));
 }
 
 function show({ params }, res) {

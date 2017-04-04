@@ -9,7 +9,7 @@ const { createError } = require('../../shared/error/helpers');
 function getCourse(req, res) {
   const { courseId } = req.params;
   return Course
-    .findById(courseId)
+    .findById(courseId, { paranoid: false })
     .then(course => course || createError(NOT_FOUND, 'Course not found'))
     .then(course => {
       req.course = course;

@@ -1,3 +1,5 @@
+import 'babel-polyfill';
+
 import VeeValidate from 'vee-validate';
 import Vue from 'vue';
 import { sync } from 'vuex-router-sync';
