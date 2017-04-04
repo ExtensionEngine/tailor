@@ -140,5 +140,4 @@ export default {
     user-select: unset;
   }
 }
-
 </style>
