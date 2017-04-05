@@ -54,7 +54,7 @@ export default {
       return zipObject(events, map(events, it => `${it}/${id}`));
     },
     isUploaded() {
-      return !isEmpty(this.element.data.url);
+      return this.element.data && this.element.data.url;
     }
   },
   methods: {
