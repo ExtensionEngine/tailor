@@ -7,7 +7,7 @@
     <div v-for="(pair, row) in pairs" class="row no-gutters">
       <div
         :class="{ 'flip': isFocused(row) }"
-        class="col-xs-offset-1 col-xs-4 flip-container">
+        class="col-xs-offset-1 col-xs-4 premise-container">
         <div @click="focus(row)" class="premise-view front center">
           <span :class="errorClass(row)">
             {{ pair.premise || 'Click to edit' }}
@@ -25,7 +25,7 @@
       <div class="col-xs-2 center">
         <span class="mdi mdi-arrow-right"></span>
       </div>
-      <div :class="{ 'flip': isFocused(row, 1) }" class="col-xs-4 flip-container">
+      <div :class="{ 'flip': isFocused(row, 1) }" class="col-xs-4 response-container">
         <div @click="focus(row, 1)" class="response-view front center">
           <span :class="errorClass(row, 1)">
             {{ pair.response || 'Click to edit' }}
@@ -149,7 +149,7 @@ export default {
   border-bottom: 1px dashed grey;
 }
 
-.flip-container {
+.premise-container, .response-container {
   transition: 0.5s;
   transform-style: preserve-3d;
 
