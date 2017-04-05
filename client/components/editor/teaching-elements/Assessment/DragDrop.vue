@@ -1,71 +1,72 @@
 <template>
-  <div :class="{ 'disabled': disabled }">
+  <div>
     <div class="row">
-      <div v-for="(dropSpot, col) in dropSpots" :class="lgCol" class="col-md-6">
-        <div :class="{ 'flip': isSelected(col) }" class="heading-box">
-          <div @click="flip(col)" class="heading-view">
-            <span :class="errorClass(col)">{{ dropSpot.heading }}</span>
+      <div v-for="(dropSpot, col) in dropSpots" :class="colLg" class="col-md-6">
+        <div :class="{ 'flip': isFocused(col) }" class="drop-container">
+          <div @click="focus(col)" class="heading-view front center">
+            <span :class="errorClass(col)">
+              {{ dropSpot.heading || 'Click to edit' }}
+            </span>
             <span
-              v-show="allowRemove(col)"
+              v-show="!minDropsReached(col) && isEditing"
               @click.stop="removeDropSpot(col)"
-              class="fa fa-times destroy">
+              class="destroy mdi mdi-close">
             </span>
           </div>
           <input
             v-model="dropSpot.heading"
-            v-focus="{ col, row: null }"
-            @keyup.enter="flip(col)"
-            @keyup.esc="flip(col)"
-            @blur="isSelected(col) && flip(col)"
-            class="form-control heading-input">
+            v-focus="{ col }"
+            @keyup.enter="focus(col)"
+            @keyup.esc="focus(col)"
+            @blur="isFocused(col) && focus(col)"
+            class="form-control heading-input back"
+            placeholder="Insert text here ...">
         </div>
         <ul>
           <li
             v-for="(answer, row) in answerGroup(col)"
-            :class="{ 'flip': isSelected(col, row) }"
-            class="response-box">
-            <div @click="flip(col, row)" class="response-view">
-              <span :class="errorClass(col, row)">{{ answer }}</span>
+            :class="{ 'flip': isFocused(col, row) }"
+            class="answer-container">
+            <div @click="focus(col, row)" class="response-view front center">
+              <span :class="errorClass(col, row)">
+                {{ answer || 'Click to edit' }}
+              </span>
               <span
-                v-show="allowRemove(col, row)"
+                v-show="!minAnswersReached(col, row) && isEditing"
                 @click.stop="removeAnswer(col, row)"
-                class="fa fa-times destroy">
+                class="destroy mdi mdi-close">
               </span>
             </div>
             <input
               v-model="answerGroup(col)[row]"
               v-focus="{ col, row }"
-              @keyup.esc="flip(col, row)"
-              @keyup.enter="flip(col, row)"
-              @blur="isSelected(col, row) && flip(col, row)"
-              class="form-control response-input">
+              @keyup.esc="focus(col, row)"
+              @keyup.enter="focus(col, row)"
+              @blur="isFocused(col, row) && focus(col, row)"
+              class="form-control response-input back"
+              placeholder="Insert text here ...">
           </li>
           <span
-            @click="addAnswer(col)" class="fa fa-plus btn btn-link add-answer">
+            v-show="isEditing" @click="addAnswer(col)" class="add-answer mdi mdi-plus">
           </span>
         </ul>
       </div>
     </div>
     <div class="add-dropSpot">
-      <span @click="addDropSpot()" class="fa fa-plus btn btn-link"></span>
+      <span v-show="isEditing" @click="addDropSpot()" class="mdi mdi-plus"></span>
     </div>
   </div>
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
-import isEmpty from 'lodash/isEmpty';
 import times from 'lodash/times';
-
-const defaultAnswer = 'Response item..';
-const defaultHead = 'Drop spot..';
 
 export default {
   directives: {
     focus: {
       update(el, binding, vnode) {
-        const col = vnode.context.flipped.col;
-        const row = vnode.context.flipped.row;
+        const col = vnode.context.focused.col;
+        const row = vnode.context.focused.row;
         const newCol = binding.value.col;
         const newRow = binding.value.row;
         col === newCol && row === newRow ? el.focus() : el.blur();
@@ -79,59 +80,49 @@ export default {
   },
   data() {
     return {
-      flipped: { col: null, row: null },
-      localErrors: cloneDeep(this.errors)
+      focused: { col: null, row: null }
     };
   },
   created() {
     if (this.dropSpots.length < 2) {
-      times(2, () => this.dropSpots.push({
-        heading: defaultHead,
-        answers: [defaultAnswer]
-      }));
+      times(2, () => this.dropSpots.push({ heading: '', answers: [''] }));
     }
   },
   computed: {
-    disabled() {
-      return !this.isEditing;
-    },
     dropSpots() {
       return this.assessment.correct;
     },
-    lgCol() {
+    colLg() {
       return this.dropSpots.length === 2 ? 'col-lg-6' : 'col-lg-4';
     }
   },
   methods: {
     addAnswer(col) {
-      this.answerGroup(col).push(defaultAnswer);
+      this.answerGroup(col).push('');
     },
     addDropSpot() {
-      this.dropSpots.push({ heading: defaultHead, answers: [defaultAnswer] });
+      this.dropSpots.push({ heading: '', answers: [''] });
     },
-    allowRemove(col, row) {
-      const dropSpotsLen = this.dropSpots.length;
-      const answersLen = this.dropSpots[col].answers.length;
-      return row !== undefined ? answersLen > 1 : dropSpotsLen > 2;
+    minDropsReached(col) {
+      return this.dropSpots.length <= 2;
+    },
+    minAnswersReached(col, row) {
+      return this.dropSpots[col].answers.length <= 1;
     },
     answerGroup(col) {
       return this.dropSpots[col].answers;
     },
     errorClass(col, row) {
-      const answer = row === undefined
-        ? `correct[${col}].heading`
-        : `correct[${col}].answers[${row}]`;
-      return { 'error': this.localErrors.includes(answer) };
+      const answer = `correct[${col}].${row !== undefined
+        ? `answers[${row}]`
+        : 'heading'}`;
+      return { 'error': this.errors.includes(answer) };
     },
-    flip(col, row = null) {
-      if (this.isSelected(col, row)) {
-        this.flipped = { col: null, row: null };
-      } else {
-        this.flipped = { col, row };
-      }
+    focus(col, row) {
+      this.focused = this.isFocused(col, row) ? {} : { col, row };
     },
-    isSelected(col, row = null) {
-      return this.flipped.col === col && this.flipped.row === row;
+    isFocused(col, row) {
+      return this.focused.col === col && this.focused.row === row;
     },
     removeAnswer(col, row) {
       this.answerGroup(col).splice(row, 1);
@@ -139,138 +130,103 @@ export default {
     removeDropSpot(col) {
       this.dropSpots.splice(col, 1);
     },
-    syncErrors() {
-      if (!isEmpty(this.localErrors)) this.$emit('syncErrors');
-    },
-    update(message) {
-      this.$emit('update', { correct: this.dropSpots });
+    update(validate) {
+      this.$emit('update', { correct: this.dropSpots }, validate);
     }
   },
   watch: {
     dropSpots: {
       handler() {
-        this.update();
-        this.syncErrors();
+        this.update(true);
       },
       deep: true
-    },
-    errors() {
-      this.localErrors = this.errors;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.heading-box.flip,
-.response-box.flip {
-  transform: rotateX(180deg);
+.row {
+  display: inline-block;
+  width: 80%;
+  margin-top: 63px;
 }
 
 .error {
-  border-bottom: 0;
   box-shadow: inset 0 -2px 0 #e51c23;
-}
-
-.disabled {
-  pointer-events: none;
-}
-
-.row {
-  display: inline-block;
-  width: 70%;
-  padding-top: 63px;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-
-  li {
-    margin: 13px 0;
-  }
-}
-
-.add-answer {
-  margin-bottom: 25px;
+  border-bottom: 0;
 }
 
 .add-dropSpot {
-  display: inline-block;
-  font-size: 22px;
+  font-size: 28px;
   float: right;
-  width: 30%;
-  margin-top: 141px;
+  width: 20%;
+  margin-top: 133px;
+}
+
+.center {
+  padding: 14px 21px 14px 5px;
+}
+
+.mdi:hover {
+  cursor: pointer;
+  color: #42b983;
+}
+
+.add-answer {
+  font-size: 20px;
 }
 
 .destroy {
   position: absolute;
-  right: 11px;
-  visibility: hidden;
-  opacity: 0.5;
-  border: 0;
-  background-color: transparent;
+  top: 14px;
+  right: 6px;
 }
 
-.heading-view,
-.response-view {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  position: absolute;
-  width: 100%;
-  backface-visibility: hidden;
-  transform: rotateX(0deg);
-}
-
-.heading-box,
-.response-box {
-  position: relative;
+.drop-container, .answer-container {
   transition: 0.5s;
   transform-style: preserve-3d;
-}
 
-.heading-box {
-  min-height: 52px;
-
-  .heading-view {
-    height: 100%;
-    background-color: rgb(238, 238, 238);
-    padding: 14px 30px;
-    border: 1px solid rgb(89, 89, 89);
-
-    .destroy {
-      top: 16px;
-    }
+  .front, .back {
+    backface-visibility: hidden;
   }
-}
 
-.response-box {
-  min-height: 46px;
-
-  .response-view {
-    background-color: rgb(217, 217, 217);
-    border: 1px dashed rgb(89, 89, 89);
-    padding: 11px 30px;
-
-    .destroy {
-      top: 12px;
-    }
+  .front {
+    transform: rotateX(0deg);
   }
-}
 
-.response-box:hover,
-.heading-box:hover {
-  .destroy {
-    visibility: visible;
+  .back {
+    transform: rotateX(180deg);
   }
+
+  &.flip {
+     transform: rotateX(180deg);
+   }
 }
 
-.response-input,
-.heading-input {
-  min-height: inherit;
+.heading-view {
+  background-color: rgb(217, 217, 217);
+  border: 1px solid rgb(89, 89, 89);
+}
+
+.response-view {
+  background-color: rgb(238, 238, 238);
+  border: 1px dashed rgb(89, 89, 89);
+}
+
+.heading-input, .response-input {
   position: absolute;
-  backface-visibility: hidden;
-  transform: rotateX( 180deg );
+  top: 0;
+  height: 100%;
+}
+
+ul {
+  padding: 0;
+  margin: 15px 0;
+  list-style: none;
+
+  li {
+    margin: 10px 0;
+  }
 }
 </style>
