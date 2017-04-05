@@ -9,8 +9,7 @@
         :assessment="assessment"
         :errors="errors"
         :isEditing="isEditing"
-        @update="update"
-        :class="{ 'disabled': !isEditing }">
+        @update="update">
       </question>
       <component
         :is="getComponentName(assessment)"
@@ -18,8 +17,7 @@
         :errors="errors"
         :isEditing="isEditing"
         @update="update"
-        @alert="setAlert"
-        :class="{ 'disabled': !isEditing }">
+        @alert="setAlert">
       </component>
       <div class="form-group">
         <span class="form-label">Hint</span>
@@ -189,9 +187,5 @@ export default {
   input.form-control {
     padding-left: 10px;
   }
-}
-
-.disabled {
-  pointer-events: none;
 }
 </style>

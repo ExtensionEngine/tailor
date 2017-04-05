@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'disabled': !isEditing }">
     <div class="row no-gutters header">
       <span class="col-xs-offset-1 col-xs-4 center">Premise</span>
       <span class="col-xs-offset-2 col-xs-4 center">Response</span>
@@ -16,6 +16,7 @@
         <input
           v-model="pair.premise"
           v-focus="{ row }"
+          @change="update()"
           @keyup.enter="focus(row)"
           @keyup.esc="focus(row)"
           @blur="isFocused(row) && focus(row)"
@@ -34,6 +35,7 @@
         <input
           v-model="pair.response"
           v-focus="{ row, col: 1 }"
+          @change="update()"
           @keyup.enter="focus(row, 1)"
           @keyup.esc="focus(row, 1)"
           @blur="isFocused(row, 1) && focus(row, 1)"
@@ -83,6 +85,7 @@ export default {
   created() {
     if (this.pairs.length < 2) {
       times(2, () => this.pairs.push({ premise: '', response: '' }));
+      this.update();
     }
   },
   computed: {
@@ -102,9 +105,11 @@ export default {
   methods: {
     removePair(row) {
       this.pairs.splice(row, 1);
+      this.update();
     },
     addPair() {
       this.pairs.push({ premise: '', response: '' });
+      this.update();
     },
     focus(row, col) {
       this.focused = this.isFocused(row, col) ? {} : { row, col };
@@ -112,20 +117,12 @@ export default {
     isFocused(row, col) {
       return this.focused.col === col && this.focused.row === row;
     },
-    update(validate) {
-      this.$emit('update', { correct: this.pairs }, validate);
+    update() {
+      this.$emit('update', { correct: this.pairs }, true);
     },
     errorClass(row, col) {
       const answer = `correct[${row}].${col ? 'response' : 'premise'}`;
       return { 'error': this.errors.includes(answer) };
-    }
-  },
-  watch: {
-    pairs: {
-      handler() {
-        this.update(true);
-      },
-      deep: true
     }
   }
 };
@@ -198,10 +195,5 @@ export default {
 .mdi:hover {
   cursor: pointer;
   color: #42b983;
-}
-
-.error {
-  box-shadow: inset 0 -2px 0 #e51c23;
-  border-bottom: 0;
 }
 </style>
