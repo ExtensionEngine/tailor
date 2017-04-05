@@ -1,5 +1,6 @@
 <template>
   <li :class="{ 'active': isActive }" class="container-fluid carousel-item">
+    <span @click.stop="deleteItem" class="mdi mdi-delete"></span>
     <div v-if="!hasElements" class="well">
       Click the button below to Create your first teaching element.
     </div>
@@ -104,6 +105,16 @@ export default {
   overflow-y: auto;
 
   transition: opacity 300ms cubic-bezier(0.165, 0.84, 0.44, 1); // "easeOutQuart"
+
+  .mdi {
+    font-size: 22px;
+    color: #707070;
+
+    &:hover {
+      cursor: pointer;
+      color: #444;
+    }
+  }
 }
 
 .active {

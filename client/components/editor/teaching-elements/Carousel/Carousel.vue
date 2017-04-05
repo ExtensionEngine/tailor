@@ -41,7 +41,7 @@ function getInitialActiveItem(element) {
   const hasItems = !isEmpty(items);
 
   // TODO(marko): Replace items with an ordered map (or an array), so we can
-  //  easily get first item in it (the one which was inserted first)
+  // easily get first item in it (the one which was inserted first)
   return hasItems ? items[Object.keys(items)[0]].id : null;
 }
 
@@ -88,6 +88,8 @@ export default {
       embeds = omit(embeds, Object.keys(items[itemId].body));
       delete items[itemId];
       this.$emit('save', { embeds, items });
+      const initialActiveItem = getInitialActiveItem(this.element);
+      if (initialActiveItem) this.activateItem(items[initialActiveItem]);
     },
     activateItem(item) {
       this.activeItem = item.id;

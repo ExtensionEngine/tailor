@@ -5,7 +5,7 @@
     @mouseleave="hovered = false"
     class="te-container">
     <div @click="focus" class="teaching-element">
-      <span class="drag-handle">
+      <span v-if="isDraggable" class="drag-handle">
         <span class="mdi mdi-drag-vertical"></span>
       </span>
       <component
