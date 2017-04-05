@@ -133,6 +133,14 @@ export default {
       this.$emit('remove');
     }
   },
+  watch: {
+    element: {
+      deep: true,
+      handler(val) {
+        this.assessment = cloneDeep(val);
+      }
+    }
+  },
   components: {
     MultipleChoice,
     SingleChoice,

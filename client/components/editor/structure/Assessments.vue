@@ -12,17 +12,18 @@
     <ul class="list-group">
       <assessment-item
         v-for="it in assessments"
+        :key="it._cid"
         :assessment="it"
         :expanded="isSelected(it)"
         @selected="toggleSelect(it)"
-        @save="save"
+        @save="saveAssessment"
         @remove="it.id ? requestDeleteConfirmation(it) : remove(it)">
       </assessment-item>
     </ul>
     <add-element
       :include="['ASSESSMENT']"
       :activity="activity"
-      @add="add">
+      @add="addAssessment">
     </add-element>
   </div>
 </template>
@@ -51,11 +52,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save', 'remove'], 'tes'),
-    ...mapMutations({ addAssessment: 'add' }, 'tes'),
-    add(assessment) {
-      this.addAssessment(assessment);
+    ...mapActions(['save', 'update', 'remove'], 'tes'),
+    ...mapMutations(['add'], 'tes'),
+    addAssessment(assessment) {
+      this.add(assessment);
       this.selected.push(assessment._cid);
+    },
+    saveAssessment(assessment) {
+      // TODO: Figure out why save is broken (for update)
+      assessment.id ? this.update(assessment) : this.save(assessment);
     },
     toggleSelect(assessment) {
       const question = assessment.data.question;
