@@ -157,6 +157,7 @@ export default {
   }
 
   .actions {
+    position: relative;
     padding-right: 5px;
     font-size: 20px;
     color: #999;
