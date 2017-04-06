@@ -100,7 +100,7 @@ export default {
       if (this.course.name === this.newCourseName) return;
       this.$validator.validateAll().then(() => {
         this.update({ ...this.course, name: this.newCourseName });
-      }, () => { this.setCourseFields(); });
+      }, () => this.setCourseFields());
     },
     updateDescription() {
       if (!this.showDescriptionInput) return;
@@ -108,7 +108,7 @@ export default {
       if (this.course.description === this.newCourseDescription) return;
       this.$validator.validateAll().then(() => {
         this.update({ ...this.course, description: this.newCourseDescription });
-      }, () => { this.setCourseFields(); });
+      }, () => this.setCourseFields());
     },
     removeCourse() {
       const payload = {
