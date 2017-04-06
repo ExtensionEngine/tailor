@@ -2,6 +2,7 @@
   <div @click="onClick" class="toolbar">
     <div v-if="focusedElement.type" class="toolbar-container">
       <component
+        :key="focusedElement._cid"
         :is="getComponentName(focusedElement.type)"
         :element="focusedElement">
       </component>
