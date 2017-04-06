@@ -89,6 +89,7 @@ export default {
   created() {
     if (this.dropSpots.length < 2) {
       times(2, () => this.dropSpots.push({ heading: '', answers: [''] }));
+      this.update();
     }
   },
   computed: {
