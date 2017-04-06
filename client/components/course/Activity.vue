@@ -157,10 +157,10 @@ export default {
   }
 
   .actions {
+    position: relative;
     padding-right: 5px;
     font-size: 20px;
     color: #999;
-    position: relative;
 
     .mdi:hover {
       color: #707070;
