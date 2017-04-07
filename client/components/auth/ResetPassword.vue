@@ -4,7 +4,7 @@
       <div class="form-group" :class="{ 'has-error': vErrors.has('password') }">
         <input
           v-model="password"
-          v-validate="'required|min:6|alphanumerical'"
+          v-validate="{ rules: { required: true, min: 6, alphanumerical: true } }"
           class="form-control"
           type="password"
           name="password"
@@ -15,7 +15,7 @@
       </div>
       <div class="form-group" :class=" {'has-error': vErrors.has('passwordMatch') }">
         <input
-          v-validate="'confirmed:password'"
+          v-validate="{ rules: { confirmed: 'password'} }"
           class="form-control"
           type="password"
           name="passwordMatch"
@@ -25,8 +25,8 @@
       <button type="submit" class="btn btn-default btn-block">
         Change password
       </button>
-      <div class="errorMessage">
-        <span v-if="errorMessage">{{ errorMessage }}</span>
+      <div class="error-message">
+        <span v-if="vErrors.has('default')">{{ vErrors.first('default') }}</span>
       </div>
     </form>
   </div>
@@ -38,14 +38,12 @@ import { mapActions } from 'vuex-module';
 export default {
   data() {
     return {
-      password: '',
-      errorMessage: ''
+      password: ''
     };
   },
   methods: {
     ...mapActions(['resetPassword']),
     submit() {
-      this.errorMessage = '';
       this.$validator.validateAll()
         .then(() => {
           return this.resetPassword({
@@ -54,14 +52,14 @@ export default {
           });
         })
         .then(() => this.$router.push('/'))
-        .catch(() => { this.errorMessage = 'An error has occurred!'; });
+        .catch(() => { this.vErrors.add('default', 'An error has occurred!'); });
     }
   }
 };
 </script>
 
 <style>
-.errorMessage {
+.error-message {
   margin-top: 10px;
   color: #a94442;
 }
