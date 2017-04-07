@@ -53,7 +53,7 @@ import calculatePosition from '../../utils/calculatePosition';
 import findIndex from 'lodash/findIndex';
 import { focus } from 'vue-focus';
 import { getChildren } from '../../utils/activity';
-import { mapGetters, mapActions } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import multiselect from '../common/Select';
 import { OUTLINE_LEVELS } from 'shared/activities';
 
