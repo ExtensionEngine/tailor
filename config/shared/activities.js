@@ -14,7 +14,7 @@ const OUTLINE_LEVELS = [{
   isEditable: false
 }, {
   type: 'TOPIC',
-  label: 'Learning Objective Topic',
+  label: 'Topic',
   color: '#EC407A',
   isEditable: true
 }];
