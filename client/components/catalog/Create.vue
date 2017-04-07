@@ -10,28 +10,37 @@
       <div slot="modal-body" class="modal-body">
         <loader v-show="showLoader"></loader>
         <div v-show="!showLoader">
-          <div class="form-group" :class="getErrorClass('name')">
+          <div class="error-message">
+            <span v-if="vErrors.has('default')">
+              {{ vErrors.first('default') }}
+            </span>
+          </div>
+          <div class="form-group" :class="{ 'has-error': vErrors.has('name') }">
             <input 
               v-model="name" 
               v-focus="focusName" 
+              v-validate="{ rules: { required: true, min: 2, max: 250 } }"
               @focus="focusName = true" 
               @blur="focusName = false" 
               type="text" 
+              name="name"
               class="form-control" 
               placeholder="Name"/>
-            <div v-show="hasError('name')" class="error-message">
-              {{ getErrorMessage('name') }}
-            </div>
+            <span v-show="vErrors.has('name')" class="help-block">
+              {{ vErrors.first('name') }}
+            </span>
           </div>
-          <div class="form-group" :class="getErrorClass('description')">
+          <div class="form-group" :class="{ 'has-error': vErrors.has('description') }">
             <textarea
               v-model="description"
+              v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
               class="form-control"
+              name="description"
               placeholder="Description">
             </textarea>
-            <div v-show="hasError('description')" class="error-message">
-              {{ getErrorMessage('description') }}
-            </div>
+            <span v-show="vErrors.has('description')" class="help-block">
+              {{ vErrors.first('description') }}
+            </span>
           </div>
         </div>
       </div>
@@ -45,28 +54,10 @@
 
 <script>
 import { focus } from 'vue-focus';
-import { isEmpty } from 'lodash';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters } from 'vuex-module';
 import { modal } from 'vue-strap';
 import Promise from 'bluebird';
-import yup from 'yup';
-
-const bounds = {
-  name: { min: 2, max: 250 },
-  description: { min: 2, max: 2000 }
-};
-
-const schema = yup.object().shape({
-  name: yup.string().trim()
-    .min(bounds.name.min)
-    .max(bounds.name.max)
-    .required(),
-  description: yup.string().trim()
-    .min(bounds.description.min)
-    .max(bounds.description.max)
-    .required()
-});
 
 export default {
   name: 'create-course',
@@ -76,7 +67,6 @@ export default {
       description: '',
       showLoader: false,
       showModal: false,
-      errors: this.getDefaultErrors(),
       focusName: true
     };
   },
@@ -91,7 +81,7 @@ export default {
     ...mapActions(['save'], 'courses'),
     create() {
       const course = { name: this.name, description: this.description };
-      const save = course => {
+      const save = () => {
         this.showLoader = true;
         return Promise.join(this.save(course), Promise.delay(1000)).then(() => {
           this.showLoader = false;
@@ -99,51 +89,21 @@ export default {
         });
       };
 
-      this.errors = this.getDefaultErrors();
-      this.validate(course)
+      this.$validator.validateAll()
         .then(save)
-        .catch(err => {
-          err.inner.forEach(it => this.errors[it.path].push(it.type));
+        .catch(() => {
+          this.vErrors.add('default', 'An error has occurred!');
         });
     },
     show() {
+      this.vErrors.clear();
       this.showModal = true;
       this.focusName = true;
     },
     hide() {
       this.name = '';
       this.description = '';
-      this.errors = this.getDefaultErrors();
       this.showModal = false;
-    },
-    validate(course) {
-      return schema.validate(course, { abortEarly: false });
-    },
-    getDefaultErrors() {
-      // Array of error types for input fields
-      return { name: [], description: [] };
-    },
-    hasError(field) {
-      return !isEmpty(this.errors[field]);
-    },
-    getErrorClass(field) {
-      return { 'has-error': this.hasError(field) };
-    },
-    getErrorMessage(field) {
-      // Helpers
-      const capitalize = word => word.replace(/(^|\s)[a-z]/g, l => l.toUpperCase());
-      const [minValue, maxValue] = [bounds[field].min, bounds[field].max];
-
-      // Error messages
-      const required = `${capitalize(field)} should not be empty`;
-      const min = `${capitalize(field)} field should contain at least ${minValue} characters`;
-      const max = `${capitalize(field)} field should contain at most ${maxValue} characters`;
-
-      // Display message by error priority
-      const types = this.errors[field];
-      if (types.includes('required')) return required;
-      else if (types.includes('min')) return min;
-      else if (types.includes('max')) return max;
     }
   },
   computed: {
@@ -189,7 +149,7 @@ export default {
 
   .error-message {
     padding: 3px 0;
-    color: #dd4b39;
+    color: #a94442;
     font-size: 15px;
     font-weight: 600;
     text-align: left;
