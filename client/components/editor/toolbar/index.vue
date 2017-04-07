@@ -2,8 +2,8 @@
   <div @click="onClick" class="toolbar">
     <div v-if="focusedElement.type" class="toolbar-container">
       <component
-        :key="focusedElement._cid"
         :is="getComponentName(focusedElement.type)"
+        :key="focusedElement._cid || focusedElement.id"
         :element="focusedElement">
       </component>
       <div class="delete-element">
