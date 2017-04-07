@@ -3,6 +3,7 @@
     <div v-if="focusedElement.type" class="toolbar-container">
       <component
         :is="getComponentName(focusedElement.type)"
+        :key="focusedElement._cid || focusedElement.id"
         :element="focusedElement">
       </component>
       <div class="delete-element">
