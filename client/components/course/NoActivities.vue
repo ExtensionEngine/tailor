@@ -12,7 +12,7 @@
             type="text"
             name="name"
             autofocus=""
-            placeholder="Create your first activity">
+            placeholder="Create your first Goal">
           <span v-show="vErrors.has('name')" class="help-block">
             {{ vErrors.first('name') }}
           </span>
