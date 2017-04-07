@@ -26,31 +26,26 @@
 <script>
 import CarouselItem from './CarouselItem';
 import cloneDeep from 'lodash/cloneDeep';
-import cuid from 'cuid';
 import EventBus from 'EventBus';
+import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
+import map from 'lodash/map';
 import { mapActions } from 'vuex-module';
 import omit from 'lodash/omit';
 
 const appChannel = EventBus.channel('app');
 const teChannel = EventBus.channel('te');
 
-function getInitialActiveItem(element) {
-  const items = element.data.items || {};
-  const hasItems = !isEmpty(items);
-
-  // TODO(marko): Replace items with an ordered map (or an array), so we can
-  // easily get first item in it (the one which was inserted first)
-  return hasItems ? items[Object.keys(items)[0]].id : null;
-}
+let getIndices = obj => map(Object.keys(obj), it => parseInt(it)).sort().reverse();
 
 export default {
   name: 'te-carousel',
   props: ['element'],
   data() {
+    let indices = getIndices(this.element.data.items || {});
     return {
-      activeItem: getInitialActiveItem(this.element)
+      activeItem: indices.length ? indices[indices.length - 1] : null
     };
   },
   computed: {
@@ -88,25 +83,27 @@ export default {
       embeds = omit(embeds, Object.keys(items[itemId].body));
       delete items[itemId];
       this.$emit('save', { embeds, items });
-      const initialActiveItem = getInitialActiveItem(this.element);
-      if (initialActiveItem) this.activateItem(items[initialActiveItem]);
+
+      let indices = getIndices(items);
+      let previousId = indices.length
+        ? find(indices, it => it < itemId) || indices[indices.length - 1]
+        : null;
+      if (previousId) this.activateItem({ id: previousId });
     },
     activateItem(item) {
       this.activeItem = item.id;
     }
   },
-  created() {
+  mounted() {
     teChannel.on(`${this.element._cid}/add`, height => {
       const element = cloneDeep(this.element);
-      if (!element.data.items) {
-        element.data.items = {};
-        element.data.embeds = {};
-      }
-      const id = cuid();
+      const indices = getIndices(this.items) || [];
+      const id = this.hasItems ? indices[0] + 1 : 1;
+      if (!this.hasItems) element.data = { embeds: {}, items: {} };
       element.data.items[id] = { id, body: {} };
       element.data.height = height;
       this.updateElement(element);
-      this.activateItem(element.data.items[id]);
+      this.activateItem({ id });
     });
 
     teChannel.on(`${this.element._cid}/height`, height => {
