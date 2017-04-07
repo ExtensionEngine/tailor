@@ -150,8 +150,6 @@ export default {
   .error-message {
     padding: 3px 0;
     color: #a94442;
-    font-size: 15px;
-    font-weight: 600;
     text-align: left;
   }
 
