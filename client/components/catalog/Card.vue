@@ -79,7 +79,6 @@ export default {
       color: inherit;
       text-decoration: none;
     }
-
   }
 
   .description {
