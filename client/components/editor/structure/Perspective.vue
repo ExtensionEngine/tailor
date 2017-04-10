@@ -22,7 +22,7 @@
     <add-element
       :activity="perspective"
       :position="teachingElements.length + 1"
-      :include="['HTML', 'IMAGE', 'VIDEO', 'EMBED', 'BREAK', 'ACCORDION']"
+      :include="elementTypes"
       :layout="true"
       @add="addElement">
     </add-element>
@@ -44,7 +44,19 @@ export default {
   props: ['perspective'],
   data() {
     return {
-      dragOptions: { forceFallback: true, handle: '.drag-handle' }
+      dragOptions: {
+        handle: '.drag-handle',
+        forceFallback: true
+      },
+      elementTypes: [
+        'HTML',
+        'IMAGE',
+        'VIDEO',
+        'EMBED',
+        'ASSESSMENT',
+        'BREAK',
+        'ACCORDION'
+      ]
     };
   },
   computed: {

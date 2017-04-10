@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="navbar-header">
         <router-link :to="{ name: 'catalog' }" class="navbar-brand">
-          <img src="../../assets/img/logo.png" alt="Logo" />
+          <img src="../../assets/img/logo-b.svg" alt="Logo"/>
           <span>CGMA Author</span>
         </router-link>
       </div>
@@ -50,12 +50,13 @@ export default {
   }
 
   .navbar-brand {
-    width: 250px;
-    padding: 9px 15px;
+    width: 195px;
+    padding: 10px 20px 0 20px;
 
     img {
       float: left;
-      width: 72px;
+      width: 30px;
+      margin-right: 15px;
     }
 
     span {
