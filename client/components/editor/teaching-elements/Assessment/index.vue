@@ -195,8 +195,3 @@ export default {
   }
 }
 </style>
-<!-- display: block;
-position: absolute;
-right: 20px;
-top: 50%;
-transform: translateY(-50%); -->
