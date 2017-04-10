@@ -138,7 +138,7 @@ export default {
   }
 }
 
-.header > span, .front, .mdi {
+.header >  span, .front, .mdi {
   padding: 14px 5px;
   display: block;
 }
@@ -186,13 +186,14 @@ export default {
 
 .mdi-plus {
   font-size: 28px;
+  display: inline;
 }
 
 .destroy {
-  font-size: 15px;
+  font-size: 15px
 }
 
-.mdi:hover {
+.mdi-plus:hover, .mdi-close:hover {
   cursor: pointer;
   color: #42b983;
 }
