@@ -1,6 +1,5 @@
 <template>
   <li :class="{ 'active': isActive }" class="container-fluid carousel-item">
-    <span @click.stop="deleteItem" class="mdi mdi-delete"></span>
     <div v-if="!hasElements" class="well">
       Click the button below to Create your first teaching element.
     </div>
@@ -80,9 +79,6 @@ export default {
       const element = cloneDeep(elem);
       element.position = Object.keys(item.body).length;
       this.$emit('save', { item, element });
-    },
-    deleteItem() {
-      this.$emit('delete', this.item.id);
     }
   },
   components: {
