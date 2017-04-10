@@ -67,7 +67,7 @@ export const schemas = {
   MQ: yup.object().shape({
     question,
     correct: yup.array().of(yup.object().shape({
-      premise: yup.string().trim().notOneOf(['Click to edit.']).required(),
+      premise: yup.string().trim().notOneOf(['Click to edit']).required(),
       response: yup.string().trim().notOneOf(['Click to edit']).required()
     })).min(2).required()
   })

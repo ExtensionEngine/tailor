@@ -1,14 +1,14 @@
 <template>
   <div :class="{ 'disabled': !isEditing }">
     <div class="row no-gutters header">
-      <span class="col-xs-offset-1 col-xs-4 center">Premise</span>
-      <span class="col-xs-offset-2 col-xs-4 center">Response</span>
+      <span class="col-xs-offset-1 col-xs-4">Premise</span>
+      <span class="col-xs-offset-2 col-xs-4">Response</span>
     </div>
     <div v-for="(pair, row) in pairs" class="row no-gutters">
       <div
         :class="{ 'flip': isFocused(row) }"
         class="col-xs-offset-1 col-xs-4 premise-container">
-        <div @click="focus(row)" class="premise-view front center">
+        <div @click="focus(row)" class="premise-view front">
           <span :class="errorClass(row)">
             {{ pair.premise || 'Click to edit' }}
           </span>
@@ -16,18 +16,18 @@
         <input
           v-model="pair.premise"
           v-focus="{ row }"
-          @change="update()"
+          @change="update"
           @keyup.enter="focus(row)"
           @keyup.esc="focus(row)"
           @blur="isFocused(row) && focus(row)"
           class="form-control premise-input back"
           placeholder="Insert text here ...">
       </div>
-      <div class="col-xs-2 center">
+      <div class="col-xs-2">
         <span class="mdi mdi-arrow-right"></span>
       </div>
       <div :class="{ 'flip': isFocused(row, 1) }" class="col-xs-4 response-container">
-        <div @click="focus(row, 1)" class="response-view front center">
+        <div @click="focus(row, 1)" class="response-view front">
           <span :class="errorClass(row, 1)">
             {{ pair.response || 'Click to edit' }}
           </span>
@@ -35,14 +35,14 @@
         <input
           v-model="pair.response"
           v-focus="{ row, col: 1 }"
-          @change="update()"
+          @change="update"
           @keyup.enter="focus(row, 1)"
           @keyup.esc="focus(row, 1)"
           @blur="isFocused(row, 1) && focus(row, 1)"
           class="form-control response-input back"
           placeholder="Insert text here ...">
       </div>
-      <div class="col-xs-1 destroy center">
+      <div class="col-xs-1 destroy">
         <span
           v-show="!minPairsReached && isEditing"
           @click="removePair(row)"
@@ -138,8 +138,9 @@ export default {
   }
 }
 
-.center {
+.header > span, .front, .mdi {
   padding: 14px 5px;
+  display: block;
 }
 
 .header span {
@@ -188,8 +189,7 @@ export default {
 }
 
 .destroy {
-  padding: 9.5px 5px;
-  font-size: 20px
+  font-size: 15px;
 }
 
 .mdi:hover {
