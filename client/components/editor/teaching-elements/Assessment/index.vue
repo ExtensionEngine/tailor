@@ -49,6 +49,8 @@
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
 import FillBlank from './FillBlank';
+import isEmpty from 'lodash/isEmpty';
+import MatchingQuestion from './MatchingQuestion';
 import MultipleChoice from './MultipleChoice';
 import NumericalResponse from './NumericalResponse';
 import SingleChoice from './SingleChoice';
@@ -66,7 +68,8 @@ const ASSESSMENT_TYPES = {
   TF: 'true-false',
   NR: 'numerical-response',
   TR: 'text-response',
-  FB: 'fill-blank'
+  FB: 'fill-blank',
+  MQ: 'matching-question'
 };
 
 export default {
@@ -96,11 +99,16 @@ export default {
     setAlert(data = {}) {
       this.alert = data;
     },
-    validate(question) {
-      return this.schema.validate(question, validationOptions);
+    validate(data) {
+      return this.schema.validate(data, validationOptions);
     },
-    update(data) {
+    update(data, validate) {
       Object.assign(this.assessment.data, data);
+      if (validate && !isEmpty(this.errors)) {
+        this.errors = [];
+        this.validate(this.assessment.data)
+          .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
+      }
     },
     save() {
       this.errors = [];
@@ -149,7 +157,8 @@ export default {
     TextResponse,
     FillBlank,
     Question,
-    Controls
+    Controls,
+    MatchingQuestion
   }
 };
 </script>
