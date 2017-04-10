@@ -31,6 +31,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex-module';
+import { OUTLINE_LEVELS } from 'shared/activities';
 const noop = Function.prototype;
 
 export default {
@@ -46,6 +47,7 @@ export default {
       this.$validator.validateAll().then(() => {
         this.save({
           name: this.name,
+          type: OUTLINE_LEVELS[0].type,
           courseId: this.course.id,
           position: 1
         });
