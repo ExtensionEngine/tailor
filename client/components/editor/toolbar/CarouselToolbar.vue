@@ -2,10 +2,22 @@
   <div class="carousel-toolbar">
     <ul>
       <li @click="add" class="btn btn-link btn-sm">
-        <span class="mdi mdi-plus"></span> Add item
+        <span class="mdi mdi-plus"></span>
+        Add item
+      </li>
+      <li @click="remove" class="btn btn-link btn-sm">
+        <span class="mdi mdi-minus"></span>
+        Remove item
       </li>
       <li class="height">
-        <span class="form-group" :class="{ 'has-error': vErrors.has('height') }">
+        <label for="heightInput">
+          <span class="mdi mdi-arrow-expand"></span>
+          Height
+        </label>
+        <span
+          :class="{ 'has-error': vErrors.has('height') }"
+          id="heightInput"
+          class="form-group">
           <input
             v-model="height"
             v-validate="{ rules: { required: true, min_value: 300, max_value: 3000 } }"
@@ -38,9 +50,10 @@ export default {
   },
   methods: {
     add() {
-      if (!this.vErrors.has('height')) {
-        teChannel.emit(`${this.element._cid}/add`, this.height);
-      }
+      teChannel.emit(`${this.element._cid}/add`);
+    },
+    remove() {
+      teChannel.emit(`${this.element._cid}/remove`);
     }
   },
   watch: {
@@ -97,10 +110,29 @@ export default {
 
   .height {
     display: inline-block;
-    margin-bottom: 0;
-    padding: 6px 12px;
-    text-align: center;
-    vertical-align: middle;
+    margin: 0 0 0 10px;
+    padding: 0;
+
+    input {
+      height: 25px;
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
+      line-height: 14px;
+    }
+
+    label {
+      padding: 0 10px;
+      font-size: 12px;
+      line-height: 12px;
+      font-family: 'Catamaran', Helvetica, Arial, sans-serif;
+      text-transform: uppercase;
+    }
+
+    .form-group {
+      margin: 0;
+      padding: 0;
+    }
   }
 }
 </style>
