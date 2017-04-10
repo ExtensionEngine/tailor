@@ -37,6 +37,7 @@ function getLevel(level) {
 module.exports = {
   OUTLINE_LEVELS,
   ASSET_GROUP,
+  getLevel,
   isEditable: level => getLevel(level).isEditable,
   hasIntroduction: level => getLevel(level).hasIntroduction,
   hasPerspectives: level => getLevel(level).hasPerspectives,

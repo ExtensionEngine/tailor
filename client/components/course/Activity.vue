@@ -39,8 +39,8 @@
 </template>
 
 <script>
-import { ASSET_GROUP, OUTLINE_LEVELS, isEditable } from 'shared/activities';
 import Draggable from 'vuedraggable';
+import { getLevel, isEditable, OUTLINE_LEVELS } from 'shared/activities';
 import InsertActivity from './InsertActivity';
 import { mapActions, mapMutations } from 'vuex-module';
 import NoActivities from './NoActivities';
@@ -69,9 +69,11 @@ export default {
       return (this.children.length > 0) && (this.level < OUTLINE_LEVELS.length);
     },
     children() {
+      const childLevel = getLevel(this.level + 1);
+      const childType = childLevel ? childLevel.type : undefined;
       const filterByParent = this.isRoot
         ? act => !act.parentId
-        : act => this.id && this.id === act.parentId && act.type !== ASSET_GROUP;
+        : act => this.id && this.id === act.parentId && act.type === childType;
 
       return values(this.activities)
         .filter(filterByParent)
