@@ -59,6 +59,10 @@ export default {
   .body {
     height: 220px;
     overflow: hidden;
+
+    @media (min-width: 1200px) and (max-width: 1300px) { 
+      height: 250px;
+    }
   }
 
   .title {
@@ -67,10 +71,15 @@ export default {
     font-size: 18px;
     text-align: left;
 
+    @media (min-width: 1200px) and (max-width: 1300px) { 
+      height: 125px;
+    }
+
     a {
       color: inherit;
       text-decoration: none;
     }
+
   }
 
   .description {
