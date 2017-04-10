@@ -77,6 +77,7 @@ export default {
       return this.selected.includes(assessment._cid);
     },
     toggleAssessments() {
+      this.allSelected = !this.allSelected;
       this.selected = this.allSelected ? map(this.assessments, it => it._cid) : [];
     },
     requestDeleteConfirmation(assessment) {
