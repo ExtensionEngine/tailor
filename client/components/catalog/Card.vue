@@ -60,7 +60,7 @@ export default {
     height: 220px;
     overflow: hidden;
 
-    @media (min-width: 1200px) and (max-width: 1279px) { 
+    @media (min-width: 1200px) and (max-width: 1300px) { 
       height: 250px;
     }
   }
@@ -71,14 +71,15 @@ export default {
     font-size: 18px;
     text-align: left;
 
+    @media (min-width: 1200px) and (max-width: 1300px) { 
+      height: 125px;
+    }
+
     a {
       color: inherit;
       text-decoration: none;
     }
 
-    @media (min-width: 1200px) and (max-width: 1279px) { 
-      height: 125px;
-    }
   }
 
   .description {
