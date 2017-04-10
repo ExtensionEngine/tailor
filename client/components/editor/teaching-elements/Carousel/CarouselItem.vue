@@ -17,7 +17,7 @@
     </draggable>
     <add-element v-if="!hasElements"
       :include="['HTML', 'IMAGE']"
-      :layout="true"
+      :layout="false"
       @add="addElement">
     </add-element>
   </li>
