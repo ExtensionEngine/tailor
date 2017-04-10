@@ -104,7 +104,7 @@ export default {
       const indices = getIndices(this.items) || [];
       const id = this.hasItems ? indices[0] + 1 : 1;
 
-      if (!this.data.items) {
+      if (!element.data.items) {
         element.data = { embeds: {}, items: {}, height: DEFAULT_HEIGHT };
       }
 
