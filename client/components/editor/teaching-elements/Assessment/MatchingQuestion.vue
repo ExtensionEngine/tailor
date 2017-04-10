@@ -196,4 +196,13 @@ export default {
   cursor: pointer;
   color: #42b983;
 }
+
+.error {
+  border-bottom: 0;
+  box-shadow: inset 0 -2px 0 #e51c23;
+}
+
+.disabled {
+  pointer-events: none;
+}
 </style>
