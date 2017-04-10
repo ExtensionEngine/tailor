@@ -36,6 +36,7 @@ import omit from 'lodash/omit';
 
 const appChannel = EventBus.channel('app');
 const teChannel = EventBus.channel('te');
+const DEFAULT_HEIGHT = 500;
 
 let getIndices = obj => map(Object.keys(obj), it => parseInt(it)).sort().reverse();
 
@@ -66,15 +67,18 @@ export default {
     ...mapActions({ updateElement: 'update' }, 'tes'),
     saveItem({ item, element }) {
       let embeds = this.embeds;
+      let items = this.items;
+
       if (element) {
         embeds = cloneDeep(this.embeds);
         embeds[element.id] = element;
       }
-      let items = this.items;
+
       if (item) {
         items = cloneDeep(this.items);
         items[item.id] = item;
       }
+
       this.$emit('save', { embeds, items });
     },
     deleteItem(itemId) {
@@ -95,15 +99,22 @@ export default {
     }
   },
   mounted() {
-    teChannel.on(`${this.element._cid}/add`, height => {
+    teChannel.on(`${this.element._cid}/add`, () => {
       const element = cloneDeep(this.element);
       const indices = getIndices(this.items) || [];
       const id = this.hasItems ? indices[0] + 1 : 1;
-      if (!this.hasItems) element.data = { embeds: {}, items: {} };
+
+      if (!this.data.items) {
+        element.data = { embeds: {}, items: {}, height: DEFAULT_HEIGHT };
+      }
+
       element.data.items[id] = { id, body: {} };
-      element.data.height = height;
       this.updateElement(element);
       this.activateItem({ id });
+    });
+
+    teChannel.on(`${this.element._cid}/remove`, () => {
+      this.deleteItem(this.activeItem);
     });
 
     teChannel.on(`${this.element._cid}/height`, height => {
