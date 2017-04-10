@@ -56,27 +56,25 @@ export default {
   methods: {
     reorder({ newIndex: newPosition }) {
       const items = cloneDeep(this.elements);
-
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       const newElementPosition = calculatePosition(context);
       const element = cloneDeep(items[newPosition]);
       element.position = newElementPosition;
-
       this.$emit('save', { element });
     },
     toggle() {
       this.isActive = !this.isActive;
     },
-    saveBodyElement(elem) {
-      if (this.item.body && !this.item.body[elem.id]) return;
-      const element = cloneDeep(elem);
+    saveBodyElement(element) {
+      if (this.item.body && !this.item.body[element.id]) return;
+      element = cloneDeep(element);
       this.$emit('save', { element });
     },
-    addElement(elem) {
+    addElement(element) {
       let item = cloneDeep(this.item);
-      item.body[elem.id] = true;
-      const element = cloneDeep(elem);
+      item.body[element.id] = true;
+      element = cloneDeep(element);
       element.position = Object.keys(item.body).length;
       this.$emit('save', { item, element });
     }
@@ -92,15 +90,15 @@ export default {
 <style lang="scss" scoped>
 .carousel-item {
   position: absolute;
-  width: 100%;
-  height: inherit;
   top: 0;
   left: 0;
+  width: 100%;
+  height: inherit;
   opacity: 0;
   z-index: 1;
   overflow-y: auto;
 
-  transition: opacity 300ms cubic-bezier(0.165, 0.84, 0.44, 1); // "easeOutQuart"
+  transition: opacity 300ms cubic-bezier(0.165, 0.84, 0.44, 1);
 
   .mdi {
     font-size: 22px;
