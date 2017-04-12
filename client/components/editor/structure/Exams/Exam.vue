@@ -3,8 +3,7 @@
     <div class="actions">
       <span
         @click="remove(exam)"
-        class="btn btn-inverse btn-sm pull-right"
-        type="button">
+        class="btn btn-inverse btn-sm pull-right">
         Delete exam
         <span class="mdi mdi-delete"></span>
       </span>
