@@ -67,6 +67,7 @@ export default {
 }
 
 .create-group {
-  margin: 30px 0;
+  min-width: 210px;
+  margin: 40px 0;
 }
 </style>

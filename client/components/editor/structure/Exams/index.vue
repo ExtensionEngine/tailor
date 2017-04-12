@@ -4,7 +4,7 @@
     <ul class="list-group">
       <exam v-for="it in exams" :key="it._cid" :exam="it"></exam>
     </ul>
-    <button @click="create" class="btn btn-primary">
+    <button @click="create" class="btn btn-primary create-exam">
       <span class="mdi mdi-plus"></span>
       Create Exam Version
     </button>
@@ -53,5 +53,10 @@ h2 {
 
 .exams {
   margin: 80px 0 200px 0;
+}
+
+.create-exam {
+  min-width: 210px;
+  margin: 40px 0;
 }
 </style>
