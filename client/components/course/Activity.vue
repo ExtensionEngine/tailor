@@ -72,7 +72,7 @@ export default {
       const childLevel = getLevel(this.level + 1);
       const childType = childLevel ? childLevel.type : undefined;
       const filterByParent = this.isRoot
-        ? act => !act.parentId
+        ? act => !act.parentId && act.type === childType
         : act => this.id && this.id === act.parentId && act.type === childType;
 
       return values(this.activities)
