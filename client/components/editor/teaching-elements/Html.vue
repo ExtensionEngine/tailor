@@ -12,7 +12,8 @@
       <quill-editor
         v-if="isFocused"
         v-model="content"
-        :config="config">
+        :config="config"
+        @ready="onQuillReady">
       </quill-editor>
       <div v-else class="ql-container ql-snow">
         <div v-html="content" class="ql-editor"></div>
@@ -35,6 +36,11 @@ export default {
       ...cloneDeep(this.element.data),
       config: { modules: { toolbar: '#quillToolbar' } }
     };
+  },
+  methods: {
+    onQuillReady(quill) {
+      quill.focus();
+    }
   },
   computed: {
     hasChanges() {
