@@ -130,7 +130,7 @@ export default {
       if (!this.element.id) {
         this.$emit('remove');
       } else {
-        this.addElemet(cloneDeep(this.previousVersion));
+        this.addElement(cloneDeep(this.previousVersion));
         this.isEditing = false;
         this.setAlert();
         this.errors = [];
