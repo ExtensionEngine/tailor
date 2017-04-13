@@ -1,7 +1,7 @@
 <template>
   <div class="group-introduction">
     <draggable
-      :list="teachingElements"
+      :list="introductionElements"
       :options="dragOptions"
       @update="reorder"
       class="row">
@@ -13,7 +13,7 @@
     </draggable>
     <add-element
       :activity="group"
-      :position="teachingElements.length + 1"
+      :position="introductionElements.length + 1"
       :include="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true"
       @add="saveElement">

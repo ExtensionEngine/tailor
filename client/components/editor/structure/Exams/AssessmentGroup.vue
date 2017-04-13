@@ -4,6 +4,9 @@
       <span class="mdi mdi-delete"></span>
     </span>
     <h3>Question group</h3>
+    <h4>Introduction</h4>
+    <group-introduction :group="group"></group-introduction>
+    <h4>Questions</h4>
     <div v-if="!hasAssessments" class="well">
       Click the button below to Create first Assessment.
     </div>
@@ -31,6 +34,7 @@ import AddElement from '../AddElement';
 import AssessmentItem from '../AssessmentItem';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
+import GroupIntroduction from './GroupIntroduction';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 
 const appChannel = EventBus.channel('app');
@@ -46,7 +50,7 @@ export default {
   computed: {
     ...mapGetters(['tes']),
     assessments() {
-      return filter(this.tes, { activityId: this.group.id });
+      return filter(this.tes, { activityId: this.group.id, type: 'ASSESSMENT' });
     },
     hasAssessments() {
       return this.assessments && !!this.assessments.length;
@@ -87,24 +91,30 @@ export default {
   },
   components: {
     AddElement,
-    AssessmentItem
+    AssessmentItem,
+    GroupIntroduction
   }
 };
 </script>
 
 <style lang="scss" scoped>
 h3 {
-  margin: 20px 5px;
+  margin: 30px 5px;
   color: #444;
   font-size: 18px;
+  text-align: left;
+}
+
+h4 {
+  margin: 20px 5px;
+  color: #444;
+  font-size: 16px;
   text-align: left;
 }
 
 .assessment-group {
   margin: 30px 0;
   padding: 15px 20px;
-  border-radius: 4px;
-  background-color: #f1f1f1;
 
   .well {
     font-size: 16px;
