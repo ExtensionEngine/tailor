@@ -1,7 +1,10 @@
 <template>
   <div :class="{ 'disabled': !isEditing }">
     <div class="row">
-      <div v-for="(dropSpot, col) in dropSpots" :class="colWidth" class="col-md-6">
+      <div
+        v-for="(dropSpot, col) in dropSpots"
+        :class="[colWidth, clearCol(col)]"
+        class="col-md-6">
         <div :class="{ 'flip': isFocused(col) }" class="drop-container">
           <div @click="focus(col)" class="heading-view front center">
             <span :class="errorClass(col)">
@@ -101,6 +104,15 @@ export default {
     }
   },
   methods: {
+    clearCol(col) {
+      if (col % 3 === 0 && col % 2 === 0) {
+        return 'clear-large clear-medium';
+      } else if (col % 3 === 0) {
+        return 'clear-large';
+      } else if (col % 2 === 0) {
+        return 'clear-medium';
+      }
+    },
     addAnswer(col) {
       this.answerGroup(col).push('');
       this.update();
@@ -231,5 +243,17 @@ ul {
 
 .disabled {
   pointer-events: none;
+}
+
+@media (min-width: 1200px) {
+  .clear-large {
+    clear: left;
+  }
+}
+
+@media (max-width: 1199px) {
+  .clear-medium {
+    clear: left;
+  }
 }
 </style>
