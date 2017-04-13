@@ -36,6 +36,7 @@ export default {
   },
   methods: {
     ...mapActions(['save', 'remove'], 'activities'),
+    ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
     createGroup() {
       this.save({
         type: 'ASSESSMENT_GROUP',
@@ -43,6 +44,9 @@ export default {
         position: this.groups.length + 1
       });
     }
+  },
+  created() {
+    this.getTeachingElements({ parentId: this.exam.id });
   },
   components: {
     AssessmentGroup
