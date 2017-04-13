@@ -54,7 +54,7 @@ export default {
   props: ['item', 'embeds'],
   data() {
     return {
-      dragOptions: { forceFallback: true, handle: '.drag-handle' },
+      dragOptions: { handle: '.drag-handle' },
       header: this.item.header,
       isCollapsed: false,
       isEditingHeader: false

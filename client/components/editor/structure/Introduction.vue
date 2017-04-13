@@ -52,10 +52,7 @@ export default {
   name: 'introduction',
   data() {
     return {
-      dragOptions: {
-        handle: '.drag-handle',
-        forceFallback: true
-      }
+      dragOptions: { handle: '.drag-handle' }
     };
   },
   computed: {

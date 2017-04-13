@@ -38,7 +38,7 @@ export default {
   props: ['item', 'embeds', 'activeItem'],
   data() {
     return {
-      dragOptions: { forceFallback: true, handle: '.embed-drag-handle' }
+      dragOptions: { handle: '.embed-drag-handle' }
     };
   },
   computed: {
