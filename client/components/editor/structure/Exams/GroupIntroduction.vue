@@ -6,7 +6,7 @@
       @update="reorder"
       class="row">
       <teaching-element
-        v-for="element in teachingElements"
+        v-for="element in introductionElements"
         :element="element"
         :key="element._cid">
       </teaching-element>
@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     ...mapGetters(['tes']),
-    teachingElements() {
+    introductionElements() {
       let cond = it => it.activityId === this.group.id && it.type !== 'ASSESSMENT';
       return filter(this.tes, cond).sort((a, b) => a.position - b.position);
     }
