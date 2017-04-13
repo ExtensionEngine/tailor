@@ -19,7 +19,7 @@
           <input
             v-model="dropSpot.heading"
             v-focus="{ col }"
-            @change="update()"
+            @change="update"
             @keyup.enter="focus(col)"
             @keyup.esc="focus(col)"
             @blur="isFocused(col) && focus(col)"
@@ -44,7 +44,7 @@
             <input
               v-model="answerGroup(col)[row]"
               v-focus="{ col, row }"
-              @change="update()"
+              @change="update"
               @keyup.esc="focus(col, row)"
               @keyup.enter="focus(col, row)"
               @blur="isFocused(col, row) && focus(col, row)"
