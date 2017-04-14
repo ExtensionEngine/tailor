@@ -46,7 +46,7 @@ export default {
   methods: {
     ...mapActions({ reorderElements: 'reorder', saveElement: 'save' }, 'tes'),
     reorder({ newIndex: newPosition }) {
-      const items = this.teachingElements;
+      const items = this.introductionElements;
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
