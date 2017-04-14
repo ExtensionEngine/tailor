@@ -42,7 +42,7 @@ import numberToLetter from 'utils/numberToLetter';
 const appChannel = EventBus.channel('app');
 
 export default {
-  name: 'assessments',
+  name: 'assessment-group',
   props: ['group', 'position'],
   data() {
     return {
