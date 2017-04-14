@@ -1,6 +1,6 @@
 <template>
   <div class="assessment-group">
-    <span @click="removeGroup(group)" class="remove">
+    <span @click="requestDeletion(group)" class="remove">
       <span class="mdi mdi-delete"></span>
     </span>
     <h3>Question group {{ toLetter(position) }}</h3>
@@ -18,7 +18,7 @@
         :expanded="isSelected(it)"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @remove="it.id ? requestDeleteConfirmation(it) : remove(it)">
+        @remove="it.id ? requestDeletion(it) : remove(it)">
       </assessment-item>
     </ul>
     <add-element
@@ -85,11 +85,13 @@ export default {
     toLetter(number) {
       return numberToLetter(number);
     },
-    requestDeleteConfirmation(assessment) {
+    requestDeletion(item) {
+      const isGroup = item.type === 'ASSESSMENT_GROUP';
+      const action = isGroup ? 'removeGroup' : 'remove';
       appChannel.emit('showConfirmationModal', {
-        type: 'assessment',
-        item: assessment,
-        action: () => this.remove(assessment)
+        type: isGroup ? 'group' : 'element',
+        item,
+        action: () => this[action](item)
       });
     }
   },
