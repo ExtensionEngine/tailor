@@ -2,7 +2,12 @@
   <div class="exams">
     <h2>Exams</h2>
     <ul class="list-group">
-      <exam v-for="it in exams" :key="it._cid" :exam="it"></exam>
+      <exam
+        v-for="(exam, index) in exams"
+        :key="exam._cid"
+        :exam="exam"
+        :position="index">
+      </exam>
     </ul>
     <button @click="create" class="btn btn-primary create-exam">
       <span class="mdi mdi-plus"></span>
