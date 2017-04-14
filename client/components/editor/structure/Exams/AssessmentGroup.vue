@@ -1,5 +1,6 @@
 <template>
   <div class="assessment-group">
+    <div :class="{ 'divider': position }"></div>
     <span @click="requestDeletion(group)" class="remove">
       <span class="mdi mdi-delete"></span>
     </span>
@@ -125,6 +126,11 @@ h4 {
   .well {
     font-size: 16px;
   }
+}
+
+.divider {
+  margin: 20px 0 70px 0;
+  border-top: 1px solid #e1e1e1;
 }
 
 .remove {
