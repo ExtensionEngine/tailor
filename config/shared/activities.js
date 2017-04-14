@@ -9,7 +9,8 @@ const OUTLINE_LEVELS = [{
   isEditable: true,
   hasIntroduction: true,
   hasPerspectives: false,
-  hasAssessments: false
+  hasAssessments: false,
+  hasExams: true
 }, {
   type: 'OBJECTIVE',
   label: 'Learning Objective',
@@ -17,7 +18,8 @@ const OUTLINE_LEVELS = [{
   isEditable: false,
   hasIntroduction: false,
   hasPerspectives: false,
-  hasAssessments: false
+  hasAssessments: false,
+  hasExams: false
 }, {
   type: 'TOPIC',
   label: 'Topic',
@@ -25,7 +27,8 @@ const OUTLINE_LEVELS = [{
   isEditable: true,
   hasIntroduction: false,
   hasPerspectives: true,
-  hasAssessments: true
+  hasAssessments: true,
+  hasExams: false
 }];
 
 function getLevel(level) {
@@ -41,5 +44,6 @@ module.exports = {
   isEditable: level => getLevel(level).isEditable,
   hasIntroduction: level => getLevel(level).hasIntroduction,
   hasPerspectives: level => getLevel(level).hasPerspectives,
-  hasAssessments: level => getLevel(level).hasAssessments
+  hasAssessments: level => getLevel(level).hasAssessments,
+  hasExams: level => getLevel(level).hasExams
 };

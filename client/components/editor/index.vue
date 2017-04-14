@@ -17,6 +17,7 @@
         <introduction v-if="showIntroduction"></introduction>
         <perspectives v-if="showPerspectives"></perspectives>
         <assessments v-if="showAssessments"></assessments>
+        <exams v-if="showExams"></exams>
       </div>
     </div>
   </div>
@@ -24,8 +25,9 @@
 
 <script>
 import Assessments from './structure/Assessments';
+import * as config from 'shared/activities';
+import Exams from './structure/Exams';
 import find from 'lodash/find';
-import { hasAssessments, hasIntroduction, hasPerspectives } from 'shared/activities';
 import Introduction from './structure/Introduction';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
@@ -47,13 +49,16 @@ export default {
     ...mapGetters(['focusedElement', 'activity'], 'editor'),
     ...mapGetters(['course'], 'course'),
     showIntroduction() {
-      return hasIntroduction(this.activity.type);
+      return config.hasIntroduction(this.activity.type);
     },
     showPerspectives() {
-      return hasPerspectives(this.activity.type);
+      return config.hasPerspectives(this.activity.type);
     },
     showAssessments() {
-      return hasAssessments(this.activity.type);
+      return config.hasAssessments(this.activity.type);
+    },
+    showExams() {
+      return config.hasExams(this.activity.type);
     },
     breadcrumbs() {
       let items = [];
@@ -110,6 +115,7 @@ export default {
   },
   components: {
     Assessments,
+    Exams,
     Introduction,
     Loader,
     Perspectives,
