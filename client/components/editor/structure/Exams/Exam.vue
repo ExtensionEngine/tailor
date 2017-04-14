@@ -5,18 +5,20 @@
       <span class="label label-success pull-right">{{ label }}</span>
     </div>
     <div v-else>
-      <h3 class="pull-left">{{ title }}</h3>
-      <div class="actions">
-        <span
-          @click="requestDeletion(exam)"
-          class="btn btn-sm btn-link pull-right">
-          Delete
-        </span>
-        <span
-          @click="collapsed = true"
-          class="btn btn-sm btn-link pull-right">
-          Collapse
-        </span>
+      <div class="header">
+        <h3 class="pull-left">{{ title }}</h3>
+        <div class="actions">
+          <span
+            @click="requestDeletion(exam)"
+            class="btn btn-sm btn-link pull-right">
+            Delete
+          </span>
+          <span
+            @click="collapsed = true"
+            class="btn btn-sm btn-link pull-right">
+            Collapse
+          </span>
+        </div>
       </div>
       <div v-if="!groups.length" class="well">
         Click the button below to Create first question group.
@@ -111,6 +113,11 @@ h3 {
 
   > {
     padding: 15px 25px;
+  }
+
+  .header {
+    min-height: 50px;
+    padding: 5px;
   }
 }
 
