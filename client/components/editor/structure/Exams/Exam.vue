@@ -7,10 +7,14 @@
     <div v-else>
       <h3 class="pull-left">{{ title }}</h3>
       <div class="actions">
-        <span @click="remove(exam)" class="btn btn-sm btn-link pull-right">
+        <span
+          @click="requestDeletion(exam)"
+          class="btn btn-sm btn-link pull-right">
           Delete
         </span>
-        <span @click="collapsed = true" class="btn btn-sm btn-link pull-right">
+        <span
+          @click="collapsed = true"
+          class="btn btn-sm btn-link pull-right">
           Collapse
         </span>
       </div>
@@ -33,10 +37,13 @@
 
 <script>
 import AssessmentGroup from './AssessmentGroup';
+import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import { mapActions, mapGetters } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
 import pluralize from 'pluralize';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   name: 'exam',
@@ -68,6 +75,13 @@ export default {
         type: 'ASSESSMENT_GROUP',
         parentId: this.exam.id,
         position: this.groups.length + 1
+      });
+    },
+    requestDeletion(item) {
+      appChannel.emit('showConfirmationModal', {
+        type: 'exam',
+        item,
+        action: () => this.remove(item)
       });
     }
   },
