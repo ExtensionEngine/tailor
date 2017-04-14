@@ -10,22 +10,22 @@
     </div>
     <ul v-if="isUploaded">
       <li
-        @click="emit(event.clear)"
+        @click="clear"
         class="btn btn-link btn-sm">
         <span class="fa fa-image"></span> New
       </li>
       <li
-        :class="{ 'active': tool === event.crop }"
-        @click="toggleTool(event.crop)"
+        :class="{ 'active': currentTool === 'cropper' }"
+        @click="toggleTool('cropper')"
         class="btn btn-link btn-sm">
         <span class="fa fa-crop"></span> Crop
       </li>
     </ul>
-    <div v-if="tool === event.crop" class="tool">
-      <button @click="emit(event.reset)" class="btn btn-default btn-sm">
+    <div v-if="currentTool === 'cropper'" class="tool">
+      <button @click="undo" class="btn btn-default btn-sm">
         Undo
       </button>
-      <button @click="emit(event.crop)" class="btn btn-success btn-sm">
+      <button @click="crop" class="btn btn-success btn-sm">
         Crop
       </button>
     </div>
@@ -33,34 +33,25 @@
 </template>
 
 <script>
-import actions from './toolbarActions';
 import capitalize from 'lodash/capitalize';
+import EventBus from 'EventBus';
 import isEmpty from 'lodash/isEmpty';
-import map from 'lodash/map';
-import zipObject from 'lodash/zipObject';
+
+const teChannel = EventBus.channel('te');
 
 export default {
   props: ['element'],
   data() {
     return {
-      tool: null
+      currentTool: null
     };
   },
   computed: {
-    event() {
-      // Namespace events
-      const events = ['clear', 'reset', 'upload', 'crop'];
-      const id = this.element.embedded ? this.element.id : this.element._cid;
-      return zipObject(events, map(events, it => `${it}/${id}`));
-    },
     isUploaded() {
       return this.element.data && this.element.data.url;
     }
   },
   methods: {
-    emit(name) {
-      actions.$emit(name);
-    },
     upload({ target }) {
       this.reset();
       const image = !isEmpty(target.files) ? target.files[0] : null;
@@ -68,18 +59,28 @@ export default {
       // const isValid = image && image.type.match('image.*');
       // if (!isValid) ...
       const reader = new window.FileReader();
-      reader.onload = e => actions.$emit(this.event.upload, e.target.result);
       reader.readAsDataURL(image);
+      reader.addEventListener('load', e =>
+        teChannel.emit(`${this.element._cid}/upload`, e.target.result));
+    },
+    clear() {
+      teChannel.emit(`${this.element._cid}/clear`);
     },
     toggleTool(tool) {
-      const show = this.tool !== tool;
+      const show = this.currentTool !== tool;
       const prefix = show ? 'show' : 'hide';
-      this.emit(`${prefix}${capitalize(tool)}`);
-      this.tool = show ? tool : null;
+      teChannel.emit(`${this.element._cid}/${prefix}${capitalize(tool)}`);
+      this.currentTool = show ? tool : null;
+    },
+    crop() {
+      teChannel.emit(`${this.element._cid}/crop`);
+    },
+    undo() {
+      teChannel.emit(`${this.element._cid}/undo`);
     },
     reset() {
       if (!this.tool) return;
-      this.emit(`hide${capitalize(this.tool)}`);
+      teChannel.emit(`hide${capitalize(this.tool)}`);
       this.tool = null;
     }
   },
