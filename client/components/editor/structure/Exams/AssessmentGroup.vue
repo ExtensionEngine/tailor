@@ -3,7 +3,7 @@
     <span @click="removeGroup(group)" class="remove">
       <span class="mdi mdi-delete"></span>
     </span>
-    <h3>Question group</h3>
+    <h3>Question group {{ toLetter(position) }}</h3>
     <h4>Introduction</h4>
     <group-introduction :group="group"></group-introduction>
     <h4>Questions</h4>
@@ -36,12 +36,13 @@ import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import GroupIntroduction from './GroupIntroduction';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import numberToLetter from 'utils/numberToLetter';
 
 const appChannel = EventBus.channel('app');
 
 export default {
   name: 'assessments',
-  props: ['group'],
+  props: ['group', 'position'],
   data() {
     return {
       selected: []
@@ -80,6 +81,9 @@ export default {
     },
     isSelected(assessment) {
       return this.selected.includes(assessment._cid);
+    },
+    toLetter(number) {
+      return numberToLetter(number);
     },
     requestDeleteConfirmation(assessment) {
       appChannel.emit('showConfirmationModal', {
