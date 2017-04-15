@@ -92,4 +92,8 @@ export default {
 .ql-container.ql-snow {
   border: none !important;
 }
+
+.ql-editor.ql-blank:before {
+  width: 100%;
+}
 </style>
