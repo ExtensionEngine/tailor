@@ -185,6 +185,7 @@ export default {
     width: 100%;
     height: 2px;
     background-color: #aaa;
+    opacity: inherit;
 
     .action {
       position: absolute;
