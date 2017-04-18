@@ -1,17 +1,28 @@
 <template>
   <div class="course-sidebar">
     <div v-if="isActivitySelected">
-      <div class="row name-row">
+      <div class="sb-row">
+        <div class="dropdown">
+          <button
+            class="btn btn-default btn-options dropdown-toggle"
+            type="button"
+            data-toggle="dropdown">
+            <span class="fa fa-ellipsis-v"></span>
+          </button>
+          <ul class="dropdown-menu pull-right">
+            <li><a @click.stop="deleteActivity">Delete</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sb-row name-row">
         <div class="form-group">
-          <div class="col-xs-10">
             <label for="name">Name</label>
             <div
               v-show="editName"
-              :class="{ 'has-error': vErrors.has('nameInput') }"
-              class="form-group">
+              :class="{ 'has-error': vErrors.has('nameInput') }">
               <textarea
                 v-model="nameInput"
-                v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+                v-validate="{ rules: { required: true, min: 2, max: 150 } }"
                 @blur="focusoutName"
                 @keyup.enter="focusoutName"
                 @keyup.esc="hideNameInput"
@@ -32,30 +43,14 @@
                   {{ activity.name }}
                 </h3>
             </div>
-          </div>
-          <div class="col-xs-2">
-            <div class="dropdown">
-              <button
-                class="btn btn-default btn-options dropdown-toggle"
-                type="button"
-                data-toggle="dropdown">
-                <span class="fa fa-ellipsis-v"></span>
-              </button>
-              <ul class="dropdown-menu pull-right">
-                <li><a @click.stop="deleteActivity">Delete</a></li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-xs-12">
+      <div class="sb-row">
           <div class="form-group">
             <label for="description">Description</label>
             <div
               v-show="editDescription"
-              :class="{ 'has-error': vErrors.has('descriptionInput') }"
-              class="form-group">
+              :class="{ 'has-error': vErrors.has('descriptionInput') }">
               <textarea
                 v-model="descriptionInput"
                 v-validate="{ rules: { required: false, max: 250 } }"
@@ -81,7 +76,6 @@
                 </h3>
             </div>
           </div>
-        </div>
       </div>
     </div>
 
@@ -186,7 +180,7 @@ export default {
   right: 0;
   width: 400px;
   height: 100%;
-  padding: 30px 20px;
+  padding: 30px 10px;
   text-align: left;
   border-top: 1px solid #e8e8e8;
   background-color: #fcfcfc;
@@ -220,16 +214,31 @@ export default {
     }
   }
 
+  .sb-row {
+    width: 100%;
+    margin: 0;
+  }
+
+  .form-group {
+    padding: 0 5px 5px 5px;
+
+    &:hover {
+      background-color: #f9f9f9;
+    }
+  }
+
   .dropdown {
-    padding-top: 10px;
-    margin-right: 5px;
+    text-align: right;
+
+    .dropdown-menu {
+      margin-right: 10px;
+    }
   }
 
   .title {
     display: inline-block;
-    width: 94%;
-    height: 64px;
-    margin: 0 3px 51px 0;
+    height: 100px;
+    margin: 0 3px 5px 0;
     font-size: 17px;
     line-height: 24px;
     word-wrap: break-word;
@@ -237,12 +246,8 @@ export default {
     color: #333;
    }
 
-   .row:hover {
-     background-color: #f9f9f9;
-   }
-
   .name-row {
-    height: 150px;
+    height: 155px;
   }
 
   .form-control {
@@ -262,12 +267,16 @@ export default {
   }
 
   .desc-textarea {
-    height: 200px;
+    height: 150px;
+  }
+
+  .help-block {
+    margin-bottom: 0;
   }
 
   label {
     display: block;
-    margin: 10px 0;
+    margin: 5px 0;
     color: gray;
   }
 }
