@@ -4,6 +4,17 @@
     <span @click="requestDeletion(group)" class="remove">
       <span class="mdi mdi-delete"></span>
     </span>
+    <div class="form-inline pull-right">
+      <div class="form-group time-limit">
+        <label for="timeLimit">Time limit (minutes)</label>
+        <input
+          v-model="timeLimit"
+          id="timeLimit"
+          class="form-control"
+          type="number"
+          step="15">
+      </div>
+    </div>
     <h3>Question group {{ toLetter(position) }}</h3>
     <h4>Introduction</h4>
     <group-introduction :group="group"></group-introduction>
@@ -33,8 +44,11 @@
 <script>
 import AddElement from '../AddElement';
 import AssessmentItem from '../AssessmentItem';
+import cloneDeep from 'lodash/cloneDeep';
+import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
+import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
@@ -46,7 +60,8 @@ export default {
   props: ['group', 'position'],
   data() {
     return {
-      selected: []
+      selected: [],
+      timeLimit: get(this.group, 'data.timeLimit', 0)
     };
   },
   computed: {
@@ -61,7 +76,7 @@ export default {
   methods: {
     ...mapMutations(['add'], 'tes'),
     ...mapActions(['save', 'update', 'remove'], 'tes'),
-    ...mapActions({ removeGroup: 'remove' }, 'activities'),
+    ...mapActions({ updateGroup: 'update', removeGroup: 'remove' }, 'activities'),
     addAssessment(assessment) {
       this.add(assessment);
       this.selected.push(assessment._cid);
@@ -95,6 +110,14 @@ export default {
         action: () => this[action](item)
       });
     }
+  },
+  watch: {
+    timeLimit: debounce(function (val) {
+      let group = cloneDeep(this.group);
+      group.data = group.data || {};
+      group.data.timeLimit = val;
+      this.updateGroup(group);
+    }, 1500)
   },
   components: {
     AddElement,
@@ -142,6 +165,20 @@ h4 {
   &:hover {
     color: #444;
     cursor: pointer;
+  }
+}
+
+.time-limit {
+  margin: 7px 20px;
+
+  label {
+    margin-right: 5px;
+    vertical-align: bottom;
+  }
+
+  input {
+    width: 50px;
+    text-align: center;
   }
 }
 </style>
