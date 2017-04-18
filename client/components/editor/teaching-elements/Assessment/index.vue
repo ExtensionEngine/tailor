@@ -19,7 +19,7 @@
         @update="update"
         @alert="setAlert">
       </component>
-      <div class="form-group">
+      <div :class="{ 'has-error': hintError }" class="form-group">
         <span class="form-label">Hint</span>
         <input
           v-model="element.data.hint"
@@ -91,6 +91,9 @@ export default {
     },
     typeInfo() {
       return typeInfo[this.element.data.type] || {};
+    },
+    hintError() {
+      return this.errors.includes('hint');
     }
   },
   methods: {
