@@ -18,10 +18,10 @@
         <div class="col-lg-3">
           <multiselect
             v-if="hasChildren"
-            :value="levels[0]"
+            :value="activityType ? getActivityLevel(activityType) : levels[0]"
             :options="levels"
             :searchable="false"
-            :onChange="levelSelected">
+            :onChange="onLevelSelected">
           </multiselect>
         </div>
         <div class="col-lg-2">
@@ -52,10 +52,10 @@
 import calculatePosition from '../../utils/calculatePosition';
 import findIndex from 'lodash/findIndex';
 import { focus } from 'vue-focus';
+import { getLevel, OUTLINE_LEVELS } from 'shared/activities';
 import { getChildren } from '../../utils/activity';
 import { mapActions, mapGetters } from 'vuex-module';
 import multiselect from '../common/Select';
-import { OUTLINE_LEVELS } from 'shared/activities';
 
 const noop = Function.prototype;
 
@@ -112,7 +112,10 @@ export default {
         if (!sameLevel) this.$emit('expand');
       }, noop);
     },
-    levelSelected(activity) {
+    getActivityLevel(type) {
+      return getLevel(type);
+    },
+    onLevelSelected(activity) {
       this.activityType = activity.type;
     }
   },
