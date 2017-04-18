@@ -70,6 +70,7 @@ export default {
     position: fixed;
     width: 100%;
     background-color: white;
+    z-index: 1;
 
     li a {
       font-size: 16px;

@@ -28,7 +28,7 @@
 
 <script>
 const customAlert = {
-  text: 'Please make at least three answers available !',
+  text: 'Please make at least two answers available !',
   type: 'alert-danger'
 };
 
@@ -73,7 +73,7 @@ export default {
       this.update();
     },
     validate() {
-      this.$emit('alert', this.answers.length < 3 ? customAlert : {});
+      this.$emit('alert', this.answers.length < 2 ? customAlert : {});
     },
     errorClass(index) {
       return {

@@ -2,8 +2,9 @@ const crypto = require('crypto');
 const mime = require('mime-types');
 const Promise = require('bluebird');
 const storage = require('./index');
+const values = require('lodash/values');
 
-const PRIMITIVES = ['TEXT', 'IMAGE', 'VIDEO', 'GOMO'];
+const PRIMITIVES = ['HTML', 'IMAGE', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 
@@ -33,8 +34,9 @@ function processPrimitive(primitive, courseId) {
 }
 
 function processComposite(composite, courseId) {
-  // TODO: Implement
-  return Promise.resolve(composite);
+  if (!composite.data.embeds) Promise.resolve(composite);
+  return Promise.each(values(composite.data.embeds), it => processPrimitive(it, courseId))
+    .then(() => composite);
 }
 
 let processor = {};
@@ -47,7 +49,7 @@ processor.IMAGE = (asset, courseId) => {
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
   const hashString = `${asset.id}${file}`;
   const hash = crypto.createHash('md5').update(hashString).digest('hex');
-  const key = `/course/${courseId}/asset/${asset.id}/${hash}.${extension}`;
+  const key = `course/${courseId}/asset/${asset.id}/${hash}.${extension}`;
   asset.data.url = key;
   return saveFile(key, file).then(() => asset);
 };
@@ -58,16 +60,26 @@ function resolveStatics(item) {
     : resolveAsset(item);
 }
 
-function resolveAsset(asset) {
-  if (!isPrimitive(asset)) Promise.resolve(asset);
-  if (!resolver[asset.type]) return Promise.resolve(asset);
-  return resolver[asset.type](asset);
-}
-
 function resolveAssessment(assessment) {
   let question = assessment.data.question;
   if (!question || question.length < 1) return Promise.resolve(assessment);
   return Promise.each(question, it => resolveAsset(it)).then(() => assessment);
+}
+
+function resolveAsset(element) {
+  return isPrimitive(element)
+    ? resolvePrimitive(element)
+    : resolveComposite(element);
+}
+
+function resolvePrimitive(primitive) {
+  if (!resolver[primitive.type]) return Promise.resolve(primitive);
+  return resolver[primitive.type](primitive);
+}
+
+function resolveComposite(composite) {
+  return Promise.each(values(composite.data.embeds), resolvePrimitive)
+    .then(() => composite);
 }
 
 let resolver = {};

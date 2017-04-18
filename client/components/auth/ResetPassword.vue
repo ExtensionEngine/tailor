@@ -19,7 +19,7 @@
           class="form-control"
           type="password"
           name="passwordMatch"
-          placeholder="Please re enter your password"/>
+          placeholder="Please re-enter your password"/>
           <span class="help-block">{{ vErrors.first('passwordMatch') }}</span>
       </div>
       <button type="submit" class="btn btn-default btn-block">

@@ -5,6 +5,7 @@ const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
 const processListQuery = require('../shared/util/processListQuery');
+const { resolveStatics } = require('../shared/storage/helpers');
 
 function list({ course, query }, res) {
   const opts = processListQuery(query);
@@ -36,6 +37,7 @@ function create({ body, params, user }, res) {
   const data = Object.assign(pick(body, attr), { courseId: params.courseId });
   return TeachingElement.initialize()
     .then(asset => asset.update(data, { context: { userId: user.id } }))
+    .then(asset => resolveStatics(asset))
     .then(asset => res.json({ data: asset }));
 }
 
@@ -43,6 +45,7 @@ function patch({ body, params, user }, res) {
   return TeachingElement.findById(params.teId)
     .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
     .then(asset => asset.update(body, { context: { userId: user.id } }))
+    .then(asset => resolveStatics(asset))
     .then(asset => res.json({ data: asset }));
 }
 

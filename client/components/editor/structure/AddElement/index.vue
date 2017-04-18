@@ -43,8 +43,10 @@ export default {
     selectWidth() {
       return this.layout &&
         !this.selectType &&
+        (this.type !== 'ACCORDION') &&
         (this.type !== 'ASSESSMENT') &&
-        (this.type !== 'BREAK');
+        (this.type !== 'BREAK') &&
+        (this.type !== 'CAROUSEL');
     }
   },
   methods: {

@@ -69,8 +69,8 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       validate: { min: 0 }
     },
-    prerequisites: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER)
+    data: {
+      type: DataTypes.JSON
     },
     createdAt: {
       type: DataTypes.DATE,

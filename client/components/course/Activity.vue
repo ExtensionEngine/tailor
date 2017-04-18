@@ -6,9 +6,9 @@
           {{ index + 1 }}
         </span>
         <span class="collapsible" :class="collapsibleIcon"></span>
-        <span>{{ name }}</span>
+        <span class="activity-name">{{ name }}</span>
         <span class="actions pull-right" v-if="isEditable">
-          <span @mousedown.stop="edit" class="fa fa-pencil"></span>
+          <span @mousedown.stop="edit" class="mdi mdi-pencil"></span>
         </span>
       </div>
       <insert-activity
@@ -39,8 +39,8 @@
 </template>
 
 <script>
-import { ASSET_GROUP, OUTLINE_LEVELS, isEditable } from 'shared/activities';
 import Draggable from 'vuedraggable';
+import { getLevel, isEditable, OUTLINE_LEVELS } from 'shared/activities';
 import InsertActivity from './InsertActivity';
 import { mapActions, mapMutations } from 'vuex-module';
 import NoActivities from './NoActivities';
@@ -69,9 +69,11 @@ export default {
       return (this.children.length > 0) && (this.level < OUTLINE_LEVELS.length);
     },
     children() {
+      const childLevel = getLevel(this.level + 1);
+      const childType = childLevel ? childLevel.type : undefined;
       const filterByParent = this.isRoot
-        ? act => !act.parentId
-        : act => this.id && this.id === act.parentId && act.type !== ASSET_GROUP;
+        ? act => !act.parentId && act.type === childType
+        : act => this.id && this.id === act.parentId && act.type === childType;
 
       return values(this.activities)
         .filter(filterByParent)
@@ -117,6 +119,7 @@ export default {
 <style lang="scss">
 // TODO: Do proper styling
 .activity {
+  position: relative;
   padding: 10px;
   font-size: 18px;
   color: #555;
@@ -142,12 +145,26 @@ export default {
     font-size: 16px;
   }
 
+  .activity-name {
+    display: block;
+    width: 100%;
+    height: 45px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 60px 0 75px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
   .actions {
+    position: relative;
     padding-right: 5px;
     font-size: 20px;
     color: #999;
 
-    .fa:hover {
+    .mdi:hover {
       color: #707070;
     }
   }
@@ -168,6 +185,7 @@ export default {
     width: 100%;
     height: 2px;
     background-color: #aaa;
+    opacity: inherit;
 
     .action {
       position: absolute;

@@ -3,6 +3,7 @@
     <te-assessment
       v-if="expanded"
       :element="assessment"
+      :summative="true"
       @selected="$emit('selected')"
       @remove="$emit('remove')"
       @save="$emit('save', $event)">
