@@ -12,7 +12,7 @@
             type="text"
             name="name"
             autofocus=""
-            placeholder="Create your first activity">
+            placeholder="Create your first Goal">
           <span v-show="vErrors.has('name')" class="help-block">
             {{ vErrors.first('name') }}
           </span>
@@ -31,6 +31,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex-module';
+import { OUTLINE_LEVELS } from 'shared/activities';
 const noop = Function.prototype;
 
 export default {
@@ -46,6 +47,7 @@ export default {
       this.$validator.validateAll().then(() => {
         this.save({
           name: this.name,
+          type: OUTLINE_LEVELS[0].type,
           courseId: this.course.id,
           position: 1
         });

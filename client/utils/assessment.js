@@ -7,7 +7,8 @@ export const typeInfo = {
   TR: { type: 'TR', title: 'Text response', class: 'text-response' },
   NR: { type: 'NR', title: 'Numerical response', class: 'numerical-response' },
   TF: { type: 'TF', title: 'True - false', class: 'true-false' },
-  FB: { type: 'FB', title: 'Fill in the blank', class: 'fill-blank' }
+  FB: { type: 'FB', title: 'Fill in the blank', class: 'fill-blank' },
+  MQ: { type: 'MQ', title: 'Matching question', class: 'matching-question' }
 };
 
 export const helperText = {
@@ -47,7 +48,7 @@ export const schemas = {
   }),
   NR: yup.object().shape({
     question,
-    correct: yup.string().trim().matches(/^(^\d+$)|(^\d+\.\d+$)$/).max(200).required(),
+    correct: yup.string().trim().matches(/^(-?\d+(\.\d+)?)$/).max(200).required(),
     hint
   }),
   SC: yup.object().shape({
@@ -70,6 +71,13 @@ export const schemas = {
     question: fbQuestion,
     correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).max(200).required())),
     hint
+  }),
+  MQ: yup.object().shape({
+    question,
+    correct: yup.array().of(yup.object().shape({
+      premise: yup.string().trim().notOneOf(['Click to edit']).required(),
+      response: yup.string().trim().notOneOf(['Click to edit']).required()
+    })).min(2).required()
   })
 };
 
@@ -110,5 +118,11 @@ export const defaults = {
     type: 'FB',
     question: [],
     correct: []
+  },
+  MQ: {
+    type: 'MQ',
+    question: [],
+    correct: [],
+    hint: ''
   }
 };

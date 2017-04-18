@@ -24,6 +24,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeAccordion from './Accordion/Accordion';
 import TeAssessment from './Assessment';
 import TeBreak from './PageBreak';
+import TeCarousel from './Carousel/Carousel';
 import TeEmbed from './Embed';
 import TeHtml from './Html';
 import TeImage from './Image';
@@ -36,7 +37,8 @@ const TE_TYPES = {
   IMAGE: 'te-image',
   ASSESSMENT: 'te-assessment',
   VIDEO: 'te-video',
-  ACCORDION: 'te-accordion'
+  ACCORDION: 'te-accordion',
+  CAROUSEL: 'te-carousel'
 };
 
 export default {
@@ -90,6 +92,7 @@ export default {
     TeAccordion,
     TeAssessment,
     TeBreak,
+    TeCarousel,
     TeEmbed,
     TeHtml,
     TeImage,
@@ -123,17 +126,11 @@ export default {
 
 .te-container {
   padding: 7px 0;
-  user-select: none;
 }
 
 .teaching-element {
   position: relative;
   padding: 10px 20px 10px 20px;
   border: 1px dashed #ccc;
-  user-select: none;
-}
-
-.focused {
-  user-select: unset;
 }
 </style>

@@ -45,7 +45,8 @@ export default {
         !this.selectType &&
         (this.type !== 'ACCORDION') &&
         (this.type !== 'ASSESSMENT') &&
-        (this.type !== 'BREAK');
+        (this.type !== 'BREAK') &&
+        (this.type !== 'CAROUSEL');
     }
   },
   methods: {
