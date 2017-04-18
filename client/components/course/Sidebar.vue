@@ -24,10 +24,13 @@
                 {{ vErrors.first('nameInput') }}
               </span>
             </div>
-            <div v-show="!editName" class="title-container">
-              <h3 class="title" @click.stop="focusName">
-                {{ activity.name }}
-              </h3>
+            <div
+              v-show="!editName"
+              @click.stop="focusName"
+              class="title-container">
+                <h3 class="title">
+                  {{ activity.name }}
+                </h3>
             </div>
           </div>
           <div class="col-xs-2">
@@ -59,21 +62,23 @@
                 @blur="focusoutDescription"
                 @keyup.enter="focusoutDescription"
                 @keyup.esc="hideDescriptionInput"
-                placeholder="Add decription here..."
+                placeholder="Add description here..."
                 ref="descriptionInput"
                 name="descriptionInput"
                 data-vv-as="description"
-                class="form-control desc-text-area">
+                class="form-control desc-textarea">
               </textarea>
               <span v-if="vErrors.has('descriptionInput')" class="help-block">
                 {{ vErrors.first('descriptionInput') }}
               </span>
             </div>
-            <div v-show="!editDescription">
-              <h3
-                @click.stop="focusDescription"
-                class="title desc-title">{{ description || 'Add description here...' }}
-              </h3>
+            <div
+              v-show="!editDescription"
+              @click.stop="focusDescription"
+              class="title-container">
+                <h3 class="title desc-title">
+                  {{ description || 'Add description here...' }}
+                </h3>
             </div>
           </div>
         </div>
@@ -168,7 +173,7 @@ export default {
     name(val) {
       this.nameInput = val;
     },
-    decription(val) {
+    description(val) {
       this.descriptionInput = val;
     }
   }
@@ -187,7 +192,7 @@ export default {
   background-color: #fcfcfc;
 
   .btn-options {
-    margin: 0px 10px;
+    margin: 0 10px;
     padding: 6px 8px 4px;
     color: #555;
     border: 1px #ddd solid;
@@ -201,20 +206,6 @@ export default {
     }
   }
 
-  .title {
-    display: inline-block;
-    width: 94%;
-    margin: 0px 3px 51px 0;
-    line-height: 24px;
-    font-size: 17px;
-    font-weight: normal;
-    word-wrap: break-word;
-
-      &:hover {
-        background-color: #eaeaea;
-      }
-   }
-
   .title-container {
     .fa {
       display: none;
@@ -224,40 +215,60 @@ export default {
       cursor: pointer;
 
       .fa {
-        display: inline-block;;
+        display: inline-block;
       }
     }
   }
 
-  .form-control {
-    letter-spacing: 0.1px;
-    font-size: 17px;
+  .dropdown {
+    padding-top: 10px;
+    margin-right: 5px;
   }
+
+  .title {
+    display: inline-block;
+    width: 94%;
+    height: 64px;
+    margin: 0 3px 51px 0;
+    font-size: 17px;
+    line-height: 24px;
+    word-wrap: break-word;
+    font-weight: normal;
+    color: #333;
+   }
+
+   .row:hover {
+     background-color: #f9f9f9;
+   }
 
   .name-row {
     height: 150px;
   }
 
-  .desc-text-area {
-    height: 200px;
+  .form-control {
     font-size: 17px;
+    letter-spacing: 0.1px;
   }
 
   .desc-title {
-    margin-top: 0px;
     width: 100%;
+    height: 150px;
   }
 
   textarea {
     margin: 5px 0;
-    min-height: 60px;
+    height: 100px;
+    resize: none;
+  }
+
+  .desc-textarea {
+    height: 200px;
   }
 
   label {
-    color: gray;
     display: block;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px 0;
+    color: gray;
   }
 }
 </style>
