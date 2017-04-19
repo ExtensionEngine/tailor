@@ -1,20 +1,14 @@
 <template>
   <div class="image-toolbar">
-    <div v-if="!isUploaded" class="file-upload">
-      <label>
-        <input @change="upload" type="file"/>
-        <span class="btn btn-success btn-sm">
-          <span class="fa fa-upload"></span> Upload image
-        </span>
-      </label>
-    </div>
-    <ul v-if="isUploaded">
-      <li
-        @click="clear"
-        class="btn btn-link btn-sm">
-        <span class="fa fa-image"></span> New
+    <ul>
+      <li class="btn btn-link btn-sm upload-button">
+        <label for="upload" class="upload-label">
+          <span class="fa fa-image"></span> Upload
+          <input @change="upload" type="file" id="upload" class="upload-input"/>
+        </label>
       </li>
       <li
+        v-if="isUploaded"
         :class="{ 'active': currentTool === 'cropper' }"
         @click="toggleTool('cropper')"
         class="btn btn-link btn-sm">
@@ -60,11 +54,9 @@ export default {
       // if (!isValid) ...
       const reader = new window.FileReader();
       reader.readAsDataURL(image);
-      reader.addEventListener('load', e =>
-        teChannel.emit(`${this.element._cid}/upload`, e.target.result));
-    },
-    clear() {
-      teChannel.emit(`${this.element._cid}/clear`);
+      reader.addEventListener('load', e => {
+        teChannel.emit(`${this.element._cid}/upload`, e.target.result);
+      });
     },
     toggleTool(tool) {
       const show = this.currentTool !== tool;
@@ -79,9 +71,9 @@ export default {
       teChannel.emit(`${this.element._cid}/undo`);
     },
     reset() {
-      if (!this.tool) return;
-      teChannel.emit(`hide${capitalize(this.tool)}`);
-      this.tool = null;
+      if (!this.currentTool) return;
+      teChannel.emit(`${this.element._cid}/hide${capitalize(this.currentTool)}`);
+      this.currentTool = null;
     }
   },
   beforeDestroy() {
@@ -122,6 +114,22 @@ export default {
     }
   }
 
+  .upload-button {
+    padding: 0;
+  }
+
+  .upload-label {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 15px 10px 5px 10px;
+    cursor: pointer;
+  }
+
+  .upload-input {
+    display: none;
+  }
+
   .tool {
     float: left;
     padding: 12px 20px 0 20px;
@@ -129,16 +137,6 @@ export default {
     .btn {
       margin-left: 5px;
     }
-  }
-}
-
-.file-upload {
-  input {
-    display: none;
-  }
-
-  .btn {
-    margin-top: 12px;
   }
 }
 </style>

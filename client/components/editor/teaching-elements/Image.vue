@@ -14,6 +14,7 @@
         :auto-crop-area="0.5"
         :autoCrop="false"
         :guides="true"
+        :ready="ready"
         :responsive="true"
         :rotatable="false"
         :background="false"
@@ -41,8 +42,15 @@ export default {
   data() {
     return {
       currentImage: null,
-      persistedImage: null
+      persistedImage: null,
+      showCropper: false
     };
+  },
+  methods: {
+    ready() {
+      if (!this.showCropper || !this.$refs.cropper) return;
+      this.$refs.cropper.show();
+    }
   },
   computed: {
     showPlaceholder() {
@@ -60,22 +68,21 @@ export default {
     }
 
     teChannel.on(`${this.element._cid}/upload`, dataUrl => {
+      if (this.currentImage) {
+        this.$refs.cropper.replace(dataUrl);
+      }
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
       this.$emit('save', { url: dataUrl });
     });
 
-    teChannel.on(`${this.element._cid}/clear`, () => {
-      this.persistedImage = null;
-      this.currentImage = null;
-      this.$emit('save', { url: null });
-    });
-
     teChannel.on(`${this.element._cid}/showCropper`, () => {
+      this.showCropper = true;
       this.$refs.cropper.show();
     });
 
     teChannel.on(`${this.element._cid}/hideCropper`, () => {
+      this.showCropper = false;
       this.$refs.cropper.clear();
     });
 
@@ -91,14 +98,14 @@ export default {
   },
   watch: {
     isFocused(val, oldVal) {
-      if (oldVal && !val) {
-        // The image is losing focus; save the current image if it changed and
-        // hide the cropper
-        if (this.persistedImage !== this.currentImage) {
-          this.$emit('save', { url: this.currentImage });
-        }
-        this.$refs.cropper.clear();
+      if (!oldVal || val) return;
+
+      // The image is losing focus; save the current image if it changed and
+      // hide the cropper
+      if (this.persistedImage !== this.currentImage) {
+        this.$emit('save', { url: this.currentImage });
       }
+      if (this.currentImage) this.$refs.cropper.clear();
     }
   },
   components: {
