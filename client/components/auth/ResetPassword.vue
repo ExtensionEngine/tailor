@@ -16,7 +16,7 @@
         :class="{ 'has-error': vErrors.has('passwordConfirmation') }"
         class="form-group">
         <input
-          v-validate="{ rules: { confirmed: 'password'} }"
+          v-validate="{ rules: { required: true, confirmed: 'password' } }"
           data-vv-as="password"
           class="form-control"
           name="passwordConfirmation"
