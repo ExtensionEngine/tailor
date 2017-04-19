@@ -25,6 +25,8 @@ client.interceptors.response.use(res => res, err => {
     window.localStorage.removeItem('JWT_TOKEN');
     window.localStorage.removeItem('CGMA_AUTHOR_USER');
     window.location.reload();
+  } else {
+    throw err;
   }
 });
 
