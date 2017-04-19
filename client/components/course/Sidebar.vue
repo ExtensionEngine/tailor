@@ -1,68 +1,56 @@
 <template>
   <div class="course-sidebar">
-    <div v-if="isActivitySelected">
-      <div class="sb-row">
-        <div class="dropdown">
-          <button
-            class="btn btn-default btn-options dropdown-toggle"
-            type="button"
-            data-toggle="dropdown">
-            <span class="mdi mdi-dots-vertical"></span>
-          </button>
-          <ul class="dropdown-menu pull-right">
-            <li><a @click.stop="deleteActivity">Delete</a></li>
-          </ul>
+    <div v-if="name">
+      <div class="dropdown">
+        <button
+          class="btn btn-default btn-options dropdown-toggle"
+          type="button"
+          data-toggle="dropdown">
+          <span class="mdi mdi-dots-vertical"></span>
+        </button>
+        <ul class="dropdown-menu pull-right">
+          <li><a @click.stop="deleteActivity">Delete</a></li>
+        </ul>
+      </div>
+      <div class="row-sb row-name">
+        <label>Name</label>
+        <div v-show="showNameInput" :class="{ 'has-error': vErrors.has('name') }">
+          <textarea
+            v-model="nameInput"
+            v-validate="{ rules: { required: true, min: 2, max: 150 } }"
+            @blur="focusoutName"
+            @keyup.enter="focusoutName"
+            @keyup.esc="hideNameInput"
+            ref="nameInput"
+            name="name"
+            class="form-control">
+          </textarea>
+          <span class="help-block">{{ vErrors.first('name') }}</span>
+        </div>
+        <div v-show="!showNameInput" @click.stop="focusName">
+          <div class="title">{{ name }}</div>
         </div>
       </div>
-      <div class="sb-row name-row">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <div v-show="editName" :class="{ 'has-error': vErrors.has('name') }">
-            <textarea
-              v-model="nameInput"
-              v-validate="{ rules: { required: true, min: 2, max: 150 } }"
-              @blur="focusoutName"
-              @keyup.enter="focusoutName"
-              @keyup.esc="hideNameInput"
-              ref="nameInput"
-              name="name"
-              class="form-control">
-            </textarea>
-            <span v-if="vErrors.has('name')" class="help-block">
-              {{ vErrors.first('name') }}
-            </span>
-          </div>
-          <div v-show="!editName" @click.stop="focusName">
-            <h3 class="title">{{ activity.name }}</h3>
-          </div>
+      <div class="row-sb row-description">
+        <label>Description</label>
+        <div
+          v-show="showDescriptionInput"
+          :class="{ 'has-error': vErrors.has('description') }">
+          <textarea
+            v-model="descriptionInput"
+            v-validate="{ rules: { required: false, max: 250 } }"
+            @blur="focusoutDescription"
+            @keyup.enter="focusoutDescription"
+            @keyup.esc="hideDescriptionInput"
+            ref="descriptionInput"
+            placeholder="Click to add..."
+            name="description"
+            class="form-control">
+          </textarea>
+          <span class="help-block">{{ vErrors.first('description') }}</span>
         </div>
-      </div>
-      <div class="sb-row">
-        <div class="form-group">
-          <label for="description">Description</label>
-          <div
-            v-show="editDescription"
-            :class="{ 'has-error': vErrors.has('description') }">
-            <textarea
-              v-model="descriptionInput"
-              v-validate="{ rules: { required: false, max: 250 } }"
-              @blur="focusoutDescription"
-              @keyup.enter="focusoutDescription"
-              @keyup.esc="hideDescriptionInput"
-              placeholder="Add description here..."
-              ref="descriptionInput"
-              name="description"
-              class="form-control desc-textarea">
-            </textarea>
-            <span v-if="vErrors.has('description')" class="help-block">
-              {{ vErrors.first('description') }}
-            </span>
-          </div>
-          <div v-show="!editDescription" @click.stop="focusDescription">
-            <h3 class="title desc-title">
-              {{ description || 'Add description here...' }}
-            </h3>
-          </div>
+        <div v-show="!showDescriptionInput" @click.stop="focusDescription">
+          <div class="title">{{ description || 'Click to add...' }}</div>
         </div>
       </div>
     </div>
@@ -82,65 +70,53 @@ export default {
     return {
       nameInput: '',
       descriptionInput: '',
-      editName: false,
-      editDescription: false
+      showNameInput: false,
+      showDescriptionInput: false
     };
   },
   computed: {
     ...mapGetters(['activity'], 'course'),
-    activityData() {
-      return this.activity.data || {};
-    },
     name() {
       return this.activity.name;
     },
     description() {
       return get(this.activity, 'data.description', '');
-    },
-    isActivitySelected() {
-      return !!this.activity.name;
     }
   },
   methods: {
     ...mapActions(['remove', 'update'], 'activities'),
     focusName() {
       this.nameInput = this.activity.name;
-      this.editName = true;
+      this.showNameInput = true;
       setTimeout(() => this.$refs.nameInput.focus(), 0);
     },
     focusoutName() {
       this.$validator.validateAll().then(() => {
         if (this.nameInput === this.activity.name) {
-          this.hideNameInput();
+          this.showNameInput = false;
           return;
         }
         this.update({ _cid: this.activity._cid, name: this.nameInput });
-        this.hideNameInput();
+        this.showNameInput = false;
       }, noop);
     },
-    hideNameInput() {
-      this.editName = false;
-    },
     focusDescription() {
-      this.descriptionInput = this.activityData.description;
-      this.editDescription = true;
+      this.descriptionInput = get(this.activity, 'data.description', '');
+      this.showDescriptionInput = true;
       setTimeout(() => this.$refs.descriptionInput.focus(), 0);
     },
     focusoutDescription() {
       this.$validator.validateAll().then(() => {
         if (this.descriptionInput === this.description) {
-          this.hideDescriptionInput();
+          this.showDescriptionInput = false;
           return;
         }
         this.update({
           _cid: this.activity._cid,
           data: { description: this.descriptionInput }
         });
-        this.hideDescriptionInput();
+        this.showDescriptionInput = false;
       }, noop);
-    },
-    hideDescriptionInput() {
-      this.editDescription = false;
     },
     deleteActivity() {
       appChannel.emit('showConfirmationModal', {
@@ -173,7 +149,7 @@ export default {
   background-color: #fcfcfc;
 
   .btn-options {
-    margin: 0 10px;
+    margin: 0 15px;
     padding: 6px 8px 4px;
     color: #555;
     border: 1px #ddd solid;
@@ -187,13 +163,8 @@ export default {
     }
   }
 
-  .sb-row {
-    width: 100%;
-    margin: 0;
-  }
-
-  .form-group {
-    padding: 1px 5px 5px 5px;
+  .row-sb {
+    padding: 3px 8px;
 
     &:hover {
       background-color: #f5f5f5;
@@ -209,7 +180,7 @@ export default {
     }
 
     .dropdown-menu {
-      margin-right: 10px;
+      margin-right: 15px;
     }
 
     .mdi-dots-vertical {
@@ -218,9 +189,8 @@ export default {
   }
 
   .title {
-    display: inline-block;
     height: 100px;
-    margin: 3px 3px 5px 0;
+    margin: 5px 3px 5px 0;
     font-size: 17px;
     line-height: 24px;
     word-wrap: break-word;
@@ -228,18 +198,9 @@ export default {
     color: #333;
    }
 
-  .name-row {
-    height: 155px;
-  }
-
   .form-control {
     font-size: 17px;
     letter-spacing: 0.1px;
-  }
-
-  .desc-title {
-    width: 100%;
-    height: 150px;
   }
 
   textarea {
@@ -248,18 +209,27 @@ export default {
     resize: none;
   }
 
-  .desc-textarea {
-    height: 150px;
-  }
-
   .help-block {
     margin-bottom: 0;
   }
 
   label {
-    display: block;
-    margin: 2px 0;
     color: gray;
+  }
+}
+
+.row-name {
+  height: 155px;
+}
+
+.row-description {
+  .title {
+    width: 100%;
+    height: 150px;
+  }
+
+  textarea {
+    height: 150px;
   }
 }
 </style>
