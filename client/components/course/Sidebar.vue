@@ -12,7 +12,7 @@
           <li><a @click.stop="deleteActivity">Delete</a></li>
         </ul>
       </div>
-      <div class="row-sb row-name">
+      <div class="row-a">
         <label>Name</label>
         <div v-show="showNameInput" :class="{ 'has-error': vErrors.has('name') }">
           <textarea
@@ -31,7 +31,7 @@
           <div class="title">{{ name }}</div>
         </div>
       </div>
-      <div class="row-sb row-description">
+      <div class="row-a">
         <label>Description</label>
         <div
           v-show="showDescriptionInput"
@@ -163,28 +163,17 @@ export default {
     }
   }
 
-  .row-sb {
-    padding: 3px 8px;
-
-    &:hover {
-      background-color: #f5f5f5;
-    }
-  }
-
   .dropdown {
     margin-bottom: 10px;
     text-align: right;
 
     button {
       padding: 2px;
+      font-size: 18px;
     }
 
     .dropdown-menu {
       margin-right: 15px;
-    }
-
-    .mdi-dots-vertical {
-      font-size: 18px;
     }
   }
 
@@ -218,18 +207,13 @@ export default {
   }
 }
 
-.row-name {
+.row-a {
   height: 155px;
-}
+  padding: 3px 8px;
 
-.row-description {
-  .title {
-    width: 100%;
-    height: 150px;
-  }
-
-  textarea {
-    height: 150px;
+  &:hover {
+    cursor: pointer;
+    background-color: #f5f5f5;
   }
 }
 </style>
