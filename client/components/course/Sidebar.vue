@@ -16,69 +16,60 @@
       </div>
       <div class="sb-row name-row">
         <div class="form-group">
-            <label for="name">Name</label>
-            <div
-              v-show="editName"
-              :class="{ 'has-error': vErrors.has('nameInput') }">
-              <textarea
-                v-model="nameInput"
-                v-validate="{ rules: { required: true, min: 2, max: 150 } }"
-                @blur="focusoutName"
-                @keyup.enter="focusoutName"
-                @keyup.esc="hideNameInput"
-                ref="nameInput"
-                name="nameInput"
-                data-vv-as="name"
-                class="form-control">
-              </textarea>
-              <span v-if="vErrors.has('nameInput')" class="help-block">
-                {{ vErrors.first('nameInput') }}
-              </span>
-            </div>
-            <div
-              v-show="!editName"
-              @click.stop="focusName"
-              class="title-container">
-                <h3 class="title">
-                  {{ activity.name }}
-                </h3>
-            </div>
+          <label for="name">Name</label>
+          <div
+            v-show="editName"
+            :class="{ 'has-error': vErrors.has('nameInput') }">
+            <textarea
+              v-model="nameInput"
+              v-validate="{ rules: { required: true, min: 2, max: 150 } }"
+              @blur="focusoutName"
+              @keyup.enter="focusoutName"
+              @keyup.esc="hideNameInput"
+              ref="nameInput"
+              name="nameInput"
+              data-vv-as="name"
+              class="form-control">
+            </textarea>
+            <span v-if="vErrors.has('nameInput')" class="help-block">
+              {{ vErrors.first('nameInput') }}
+            </span>
+          </div>
+          <div v-show="!editName" @click.stop="focusName">
+            <h3 class="title">{{ activity.name }}</h3>
+          </div>
         </div>
       </div>
       <div class="sb-row">
-          <div class="form-group">
-            <label for="description">Description</label>
-            <div
-              v-show="editDescription"
-              :class="{ 'has-error': vErrors.has('descriptionInput') }">
-              <textarea
-                v-model="descriptionInput"
-                v-validate="{ rules: { required: false, max: 250 } }"
-                @blur="focusoutDescription"
-                @keyup.enter="focusoutDescription"
-                @keyup.esc="hideDescriptionInput"
-                placeholder="Add description here..."
-                ref="descriptionInput"
-                name="descriptionInput"
-                data-vv-as="description"
-                class="form-control desc-textarea">
-              </textarea>
-              <span v-if="vErrors.has('descriptionInput')" class="help-block">
-                {{ vErrors.first('descriptionInput') }}
-              </span>
-            </div>
-            <div
-              v-show="!editDescription"
-              @click.stop="focusDescription"
-              class="title-container">
-                <h3 class="title desc-title">
-                  {{ description || 'Add description here...' }}
-                </h3>
-            </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <div
+            v-show="editDescription"
+            :class="{ 'has-error': vErrors.has('descriptionInput') }">
+            <textarea
+              v-model="descriptionInput"
+              v-validate="{ rules: { required: false, max: 250 } }"
+              @blur="focusoutDescription"
+              @keyup.enter="focusoutDescription"
+              @keyup.esc="hideDescriptionInput"
+              placeholder="Add description here..."
+              ref="descriptionInput"
+              name="descriptionInput"
+              data-vv-as="description"
+              class="form-control desc-textarea">
+            </textarea>
+            <span v-if="vErrors.has('descriptionInput')" class="help-block">
+              {{ vErrors.first('descriptionInput') }}
+            </span>
           </div>
+          <div v-show="!editDescription" @click.stop="focusDescription">
+            <h3 class="title desc-title">
+              {{ description || 'Add description here...' }}
+            </h3>
+          </div>
+        </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -197,20 +188,6 @@ export default {
     &:hover {
       color: #444;
       border: 1px #555 solid;
-    }
-  }
-
-  .title-container {
-    .fa {
-      display: none;
-    }
-
-    &:hover {
-      cursor: pointer;
-
-      .fa {
-        display: inline-block;
-      }
     }
   }
 
