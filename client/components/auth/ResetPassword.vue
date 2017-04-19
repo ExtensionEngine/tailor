@@ -19,12 +19,12 @@
           v-validate="{ rules: { confirmed: 'password'} }"
           data-vv-as="password"
           class="form-control"
-          type="password"
           name="passwordConfirmation"
+          type="password"
           placeholder="Please re-enter your password"/>
-          <span class="help-block">
-            {{ vErrors.first('passwordConfirmation') }}
-          </span>
+        <span class="help-block">
+          {{ vErrors.first('passwordConfirmation') }}
+        </span>
       </div>
       <button type="submit" class="btn btn-default btn-block">
         Change password
