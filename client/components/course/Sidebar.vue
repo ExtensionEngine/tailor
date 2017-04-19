@@ -193,14 +193,15 @@ export default {
   }
 
   .form-group {
-    padding: 0 5px 5px 5px;
+    padding: 1px 5px 5px 5px;
 
     &:hover {
-      background-color: #f9f9f9;
+      background-color: #f5f5f5;
     }
   }
 
   .dropdown {
+    margin-bottom: 10px;
     text-align: right;
 
     button {
@@ -219,7 +220,7 @@ export default {
   .title {
     display: inline-block;
     height: 100px;
-    margin: 0 3px 5px 0;
+    margin: 3px 3px 5px 0;
     font-size: 17px;
     line-height: 24px;
     word-wrap: break-word;
@@ -257,7 +258,7 @@ export default {
 
   label {
     display: block;
-    margin: 5px 0;
+    margin: 2px 0;
     color: gray;
   }
 }
