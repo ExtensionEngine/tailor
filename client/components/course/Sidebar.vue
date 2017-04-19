@@ -7,7 +7,7 @@
             class="btn btn-default btn-options dropdown-toggle"
             type="button"
             data-toggle="dropdown">
-            <span class="fa fa-ellipsis-v"></span>
+            <span class="mdi mdi-dots-vertical"></span>
           </button>
           <ul class="dropdown-menu pull-right">
             <li><a @click.stop="deleteActivity">Delete</a></li>
@@ -17,9 +17,7 @@
       <div class="sb-row name-row">
         <div class="form-group">
           <label for="name">Name</label>
-          <div
-            v-show="editName"
-            :class="{ 'has-error': vErrors.has('nameInput') }">
+          <div v-show="editName" :class="{ 'has-error': vErrors.has('name') }">
             <textarea
               v-model="nameInput"
               v-validate="{ rules: { required: true, min: 2, max: 150 } }"
@@ -27,12 +25,11 @@
               @keyup.enter="focusoutName"
               @keyup.esc="hideNameInput"
               ref="nameInput"
-              name="nameInput"
-              data-vv-as="name"
+              name="name"
               class="form-control">
             </textarea>
-            <span v-if="vErrors.has('nameInput')" class="help-block">
-              {{ vErrors.first('nameInput') }}
+            <span v-if="vErrors.has('name')" class="help-block">
+              {{ vErrors.first('name') }}
             </span>
           </div>
           <div v-show="!editName" @click.stop="focusName">
@@ -45,7 +42,7 @@
           <label for="description">Description</label>
           <div
             v-show="editDescription"
-            :class="{ 'has-error': vErrors.has('descriptionInput') }">
+            :class="{ 'has-error': vErrors.has('description') }">
             <textarea
               v-model="descriptionInput"
               v-validate="{ rules: { required: false, max: 250 } }"
@@ -54,12 +51,11 @@
               @keyup.esc="hideDescriptionInput"
               placeholder="Add description here..."
               ref="descriptionInput"
-              name="descriptionInput"
-              data-vv-as="description"
+              name="description"
               class="form-control desc-textarea">
             </textarea>
-            <span v-if="vErrors.has('descriptionInput')" class="help-block">
-              {{ vErrors.first('descriptionInput') }}
+            <span v-if="vErrors.has('description')" class="help-block">
+              {{ vErrors.first('description') }}
             </span>
           </div>
           <div v-show="!editDescription" @click.stop="focusDescription">
@@ -207,8 +203,16 @@ export default {
   .dropdown {
     text-align: right;
 
+    button {
+      padding: 2px;
+    }
+
     .dropdown-menu {
       margin-right: 10px;
+    }
+
+    .mdi-dots-vertical {
+      font-size: 18px;
     }
   }
 
