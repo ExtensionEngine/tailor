@@ -45,9 +45,6 @@ export default {
     upload({ target }) {
       this.reset();
       const image = !isEmpty(target.files) ? target.files[0] : null;
-      // TODO: Show global error modal if invalid
-      // const isValid = image && image.type.match('image.*');
-      // if (!isValid) ...
       const reader = new window.FileReader();
       reader.readAsDataURL(image);
       reader.addEventListener('load', e => {
@@ -97,11 +94,12 @@ export default {
       padding-top: 15px;
       color: #444;
 
-      .fa {
+      .mdi {
+        display: inline-block;
         margin-right: 5px;
         font-size: 20px;
         line-height: 20px;
-        vertical-align: bottom;
+        vertical-align: middle;
       }
 
       &.active {
