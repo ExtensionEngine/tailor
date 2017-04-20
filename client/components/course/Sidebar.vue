@@ -54,6 +54,14 @@
         </div>
       </div>
     </div>
+    <div v-else class="placeholder">
+      <h4>Outline Sidebar</h4>
+      <div class="mdi mdi-arrow-left"></div>
+      <div class="helper">
+        Please create your first Goal on the left to view and edit its details
+        here.
+      </div>
+    </div>
   </div>
 </template>
 
@@ -214,6 +222,27 @@ export default {
   &:hover {
     cursor: pointer;
     background-color: #f5f5f5;
+  }
+}
+
+.placeholder {
+  color: gray;
+
+  h4 {
+    font-size: 19px;
+    text-align: center;
+    padding: 8px 0 18px;
+  }
+
+  .mdi {
+    float: left;
+    font-size: 20px;
+    padding: 5px 20px 5px 12px;
+  }
+
+  .helper {
+    display: block;
+    width: 330px;
   }
 }
 </style>
