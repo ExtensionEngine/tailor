@@ -69,6 +69,17 @@ export default {
       }
 
       element.data.width = this.width || 12;
+
+      if (element.type === 'ACCORDION') {
+        const id = cuid();
+        element.data = {
+          embeds: {},
+          items: {
+            [id]: { id, header: 'Header', body: {} }
+          }
+        };
+      }
+
       this.$emit('add', element);
       this.close();
     },
