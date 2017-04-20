@@ -3,7 +3,7 @@
     <ul>
       <li class="btn btn-link btn-sm upload-button">
         <label for="upload" class="upload-label">
-          <span class="fa fa-image"></span> Upload
+          <span class="mdi mdi-image"></span> Upload
           <input @change="upload" type="file" id="upload" class="upload-input"/>
         </label>
       </li>
@@ -12,16 +12,12 @@
         :class="{ 'active': currentTool === 'cropper' }"
         @click="toggleTool('cropper')"
         class="btn btn-link btn-sm">
-        <span class="fa fa-crop"></span> Crop
+        <span class="mdi mdi-crop"></span> Crop
       </li>
     </ul>
     <div v-if="currentTool === 'cropper'" class="tool">
-      <button @click="undo" class="btn btn-default btn-sm">
-        Undo
-      </button>
-      <button @click="crop" class="btn btn-success btn-sm">
-        Crop
-      </button>
+      <button @click="undo" class="btn btn-default btn-sm">Undo</button>
+      <button @click="crop" class="btn btn-success btn-sm">Crop</button>
     </div>
   </div>
 </template>

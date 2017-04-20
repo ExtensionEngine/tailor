@@ -68,9 +68,7 @@ export default {
     }
 
     teChannel.on(`${this.element._cid}/upload`, dataUrl => {
-      if (this.currentImage) {
-        this.$refs.cropper.replace(dataUrl);
-      }
+      if (this.currentImage) this.$refs.cropper.replace(dataUrl);
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
       this.$emit('save', { url: dataUrl });
@@ -97,11 +95,9 @@ export default {
     });
   },
   watch: {
-    isFocused(val, oldVal) {
-      if (!oldVal || val) return;
+    isFocused(focused) {
+      if (focused) return;
 
-      // The image is losing focus; save the current image if it changed and
-      // hide the cropper
       if (this.persistedImage !== this.currentImage) {
         this.$emit('save', { url: this.currentImage });
       }
