@@ -229,19 +229,18 @@ export default {
   color: gray;
 
   h4 {
-    font-size: 19px;
-    text-align: center;
     padding: 8px 0 18px;
+    text-align: center;
+    font-size: 19px;
   }
 
   .mdi {
     float: left;
-    font-size: 20px;
     padding: 5px 20px 5px 12px;
+    font-size: 20px;
   }
 
   .helper {
-    display: block;
     width: 330px;
   }
 }
