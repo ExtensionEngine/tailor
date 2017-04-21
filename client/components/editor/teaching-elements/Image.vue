@@ -101,6 +101,7 @@ export default {
       if (this.persistedImage !== this.currentImage) {
         this.$emit('save', { url: this.currentImage });
       }
+
       if (this.currentImage) this.$refs.cropper.clear();
     }
   },
