@@ -66,7 +66,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ updateElement: 'update' }, 'tes'),
+    ...mapActions({ saveElement: 'save' }, 'tes'),
     ...mapMutations(['focusElement'], 'editor'),
     resolveElement(type) {
       return TE_TYPES[type];
@@ -84,7 +84,7 @@ export default {
         this.$emit('save', { ...this.element, data });
       } else {
         Object.assign(this.element.data, elementData);
-        this.updateElement(this.element);
+        this.saveElement(this.element);
       }
     }
   },
