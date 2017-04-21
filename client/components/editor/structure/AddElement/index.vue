@@ -2,15 +2,15 @@
   <div class="add-element">
     <transition name="slide-fade">
       <div v-if="selection" class="selections">
+        <div class="btn-base btn-close" @click="close">
+          <span class="mdi mdi-close"></span>
+        </div>
         <select-element
           v-if="selectType"
           :include="include"
           @selected="setType">
         </select-element>
         <select-width v-if="selectWidth" @selected="setWidth"></select-width>
-        <div class="btn-base btn-close" @click="close">
-          <span class="mdi mdi-close"></span>
-        </div>
       </div>
     </transition>
     <div class="btn-base" v-if="!selection" @click="selection = !selection">
@@ -127,8 +127,7 @@ export default {
   }
 
   .btn-close {
-    display: inline-block;
-    margin: 10px 0px 0px 20px;
+    margin: 10px 0px;
     color: #333;
   }
 
