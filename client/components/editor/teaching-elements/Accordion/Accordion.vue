@@ -5,6 +5,7 @@
   <ul v-else class="accordion">
     <accordion-item
       v-for="it in items"
+      :key="it.id"
       :item="it"
       :embeds="embeds"
       @save="saveItem"
