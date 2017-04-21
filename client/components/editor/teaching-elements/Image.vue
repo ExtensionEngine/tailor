@@ -13,8 +13,8 @@
         :view-mode="2"
         :auto-crop-area="0.5"
         :autoCrop="false"
-        :autoCropUpdate="true"
         :guides="true"
+        :ready="ready"
         :responsive="true"
         :rotatable="false"
         :background="false"
@@ -29,11 +29,12 @@
 </template>
 
 <script>
-import concat from 'lodash/concat';
 import Cropper from '../../common/Cropper';
-import eventBus from '../toolbar/toolbarActions';
+import EventBus from 'EventBus';
 import { imgSrcToDataURL } from 'blob-util';
 import isEmpty from 'lodash/isEmpty';
+
+const teChannel = EventBus.channel('te');
 
 export default {
   name: 'te-image',
@@ -41,75 +42,67 @@ export default {
   data() {
     return {
       currentImage: null,
-      persistedImage: null
+      persistedImage: null,
+      showCropper: false
     };
+  },
+  methods: {
+    ready() {
+      if (!this.showCropper || !this.$refs.cropper) return;
+      this.$refs.cropper.show();
+    }
   },
   computed: {
     showPlaceholder() {
       return isEmpty(this.element.data.url);
     }
   },
-  methods: {
-    upload(dataUrl) {
+  mounted() {
+    const imageUrl = this.element.data.url;
+    if (imageUrl) {
+      imgSrcToDataURL(imageUrl, 'image/png', 'Anonymous').then(dataUrl => {
+        this.currentImage = dataUrl;
+        this.persistedImage = dataUrl;
+        this.$refs.cropper.replace(this.currentImage);
+      });
+    }
+
+    teChannel.on(`${this.element._cid}/upload`, dataUrl => {
+      if (this.currentImage) this.$refs.cropper.replace(dataUrl);
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
       this.$emit('save', { url: dataUrl });
-    },
-    crop() {
+    });
+
+    teChannel.on(`${this.element._cid}/showCropper`, () => {
+      this.showCropper = true;
+      this.$refs.cropper.show();
+    });
+
+    teChannel.on(`${this.element._cid}/hideCropper`, () => {
+      this.showCropper = false;
+      this.$refs.cropper.clear();
+    });
+
+    teChannel.on(`${this.element._cid}/crop`, () => {
       this.currentImage = this.$refs.cropper.getCroppedCanvas().toDataURL();
       this.$refs.cropper.replace(this.currentImage);
-    },
-    showCrop() {
-      if (this.currentImage) this.$refs.cropper.show();
-    },
-    hideCrop() {
-      this.$refs.cropper.clear();
-    },
-    clear() {
-      this.persistedImage = null;
-      this.currentImage = null;
-      this.$emit('save', { url: null });
-    },
-    reset() {
+    });
+
+    teChannel.on(`${this.element._cid}/undo`, () => {
       this.currentImage = this.persistedImage;
       this.$refs.cropper.replace(this.persistedImage);
-    },
-    generateEvents(method) {
-      const actions = ['clear', 'crop', 'reset', 'upload'];
-      const tools = ['showCrop', 'hideCrop'];
-      const events = concat(actions, tools);
-      const id = this.element.embedded ? this.element.id : this.element._cid;
-      const namespace = name => `${name}/${id}`;
-      events.forEach(it => eventBus[method](namespace(it), this[it]));
-    },
-    registerEvents() {
-      this.generateEvents('$on');
-    },
-    cleanupEvents() {
-      this.generateEvents('$off');
-    }
-  },
-  created() {
-    this.registerEvents();
-  },
-  mounted() {
-    const imageUrl = this.element.data.url;
-    if (!imageUrl) return;
-    imgSrcToDataURL(imageUrl, 'image/png', 'Anonymous').then(dataUrl => {
-      this.currentImage = dataUrl;
-      this.persistedImage = dataUrl;
-      this.$refs.cropper.replace(this.currentImage);
-      setTimeout(this.hideCrop, 0);
     });
   },
-  destroyed() {
-    this.cleanupEvents();
-  },
   watch: {
-    isFocused(val, oldVal) {
-      if (oldVal && !val && (this.persistedImage !== this.currentImage)) {
+    isFocused(focused) {
+      if (focused) return;
+
+      if (this.persistedImage !== this.currentImage) {
         this.$emit('save', { url: this.currentImage });
       }
+
+      if (this.currentImage) this.$refs.cropper.clear();
     }
   },
   components: {
