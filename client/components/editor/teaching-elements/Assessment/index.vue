@@ -119,6 +119,7 @@ export default {
       }
     },
     save() {
+      if (!this.isEditing) return;
       this.errors = [];
       this.validate(this.element.data)
         .then(() => {

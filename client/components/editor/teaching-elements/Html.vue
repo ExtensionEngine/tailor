@@ -49,6 +49,9 @@ export default {
     }
   },
   watch: {
+    element(val) {
+      this.content = val.data.content;
+    },
     isFocused(val, oldVal) {
       if (oldVal && !val && this.hasChanges) {
         this.$emit('save', { content: this.content });
