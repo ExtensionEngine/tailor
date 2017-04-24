@@ -4,7 +4,7 @@
       v-if="!showAssessments"
       :style="{ 'max-width': maxWidth + 'px' }"
       class="elements">
-      <div v-for="(row, index) in rows" :key="index" class="row">
+      <div v-for="(row, index) in rows" :key="row[index].type" class="row">
         <div
           v-for="element in row"
           :key="element.type"
