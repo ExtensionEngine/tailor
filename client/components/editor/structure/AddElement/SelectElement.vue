@@ -1,6 +1,9 @@
 <template>
-  <div :style="{ 'max-width': maxWidth + 'px' }" class="select-element">
-    <div v-if="!showAssessments">
+  <div class="select-element">
+    <div
+      v-if="!showAssessments"
+      :style="{ 'max-width': maxWidth + 'px' }"
+      class="elements">
       <div v-for="(row, index) in rows" :key="index" class="row">
         <div
           v-for="element in row"
@@ -36,7 +39,7 @@ const TE_TYPES = [
   { type: 'CAROUSEL', label: 'Carousel', icon: 'mdi-view-carousel' }
 ];
 
-const ELEMENTS_PER_ROW = 4;
+const ELEMENTS_PER_ROW = 6;
 
 export default {
   name: 'select-element',
@@ -96,6 +99,10 @@ export default {
 .select-element {
   margin: 0 auto;
   max-width: 600px;
+
+  .elements {
+    margin: 0 auto;
+  }
 }
 
 .element-type {
