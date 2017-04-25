@@ -5,10 +5,7 @@
       @click="toggleButton"
       class="btn-base">
       <span
-        :class="{
-          'open-button': !selectionOpened,
-          'close-button': selectionOpened
-        }"
+        :class="[selectionOpened ? 'close-button' : 'open-button']"
         class="mdi mdi-plus toggle-button">
       </span>
     </div>
