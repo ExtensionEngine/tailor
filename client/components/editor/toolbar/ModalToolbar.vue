@@ -30,8 +30,7 @@ export default {
   props: ['element'],
   data() {
     return {
-      title: this.element.data.title,
-      isEditing: false
+      title: this.element.data.title
     };
   },
   computed: {
@@ -42,7 +41,6 @@ export default {
   methods: {
     ...mapActions(['save'], 'tes'),
     toggleEdit() {
-      this.isEditing = !this.isEditing;
       teChannel.emit(`${this.id}/toggleEdit`);
     }
   },
