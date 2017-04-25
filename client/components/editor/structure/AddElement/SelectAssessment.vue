@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ 'max-width': maxWidth + 'px' }" class="select-assessment">
+  <div class="select-assessment">
     <div v-for="row in rows" class="row">
       <div
         v-for="assessment in row"
@@ -31,11 +31,6 @@ export default {
     },
     columnWidth() {
       return `col-xs-${12 / this.rows[0].length}`;
-    },
-    maxWidth() {
-      // Set the maximum width of the select component container in the
-      // increments of 150px, with the baseline of 2 elements having 200px width
-      return 200 + (this.rows[0].length - 2) * 150;
     }
   }
 };
@@ -43,11 +38,12 @@ export default {
 
 <style lang="scss" scoped>
 .select-assessment {
-  margin: 0 auto;
+  max-width: 970px;
+  margin: 20px auto;
   color: #444;
 
   .row {
-    padding-bottom: 12px;
+    padding-bottom: 40px;
   }
 
   .btn-base {

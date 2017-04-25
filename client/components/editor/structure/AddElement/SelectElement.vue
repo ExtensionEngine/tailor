@@ -98,7 +98,6 @@ export default {
 <style lang="scss" scoped>
 .select-element {
   margin: 0 auto;
-  max-width: 600px;
 
   .elements {
     margin: 0 auto;

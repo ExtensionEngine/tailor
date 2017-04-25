@@ -121,7 +121,7 @@ export default {
 
 <style lang="scss" scoped>
 .add-element {
-  margin: 20px 0;
+  margin: 20px 0 30px 0;
   color: #444;
 
   .toggle-button {
