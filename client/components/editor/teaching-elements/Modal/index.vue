@@ -81,8 +81,8 @@ export default {
     }
   },
   created() {
-    teChannel.on(`${this.element._cid}/edit`, isEditing => {
-      this.isEditing = isEditing;
+    teChannel.on(`${this.element._cid}/toggleEdit`, () => {
+      this.isEditing = !this.isEditing;
     });
   },
   components: {

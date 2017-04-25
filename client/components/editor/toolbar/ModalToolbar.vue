@@ -43,7 +43,7 @@ export default {
     ...mapActions(['save'], 'tes'),
     toggleEdit() {
       this.isEditing = !this.isEditing;
-      teChannel.emit(`${this.id}/edit`, this.isEditing);
+      teChannel.emit(`${this.id}/toggleEdit`);
     }
   },
   watch: {
