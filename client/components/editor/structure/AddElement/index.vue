@@ -3,7 +3,7 @@
     <div @click="toggleSelection" class="btn-base">
       <span
         :class="[selectionOpened ? 'btn-close' : 'btn-open']"
-        class="mdi mdi-plus toggle-button">
+        class="mdi mdi-plus toggle-selection">
       </span>
     </div>
     <transition name="slide-fade">
@@ -118,7 +118,7 @@ export default {
   margin: 20px 0 30px 0;
   color: #444;
 
-  .toggle-button {
+  .toggle-selection {
     display: inline-block;
   }
 
@@ -147,13 +147,17 @@ export default {
     }
   }
 
-  .slide-fade-enter-active, .slide-fade-leave-active {
+  .slide-fade-enter-active {
     transition: all .2s ease-in-out;
   }
 
-  .slide-fade-enter, .slide-fade-leave-to {
+  .slide-fade-enter {
     transform: translateY(-30px);
     opacity: 0;
+  }
+
+  .slide-fade-leave-to, .slide-fade-leave-active {
+    display: none;
   }
 }
 </style>
