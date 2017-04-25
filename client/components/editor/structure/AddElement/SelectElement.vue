@@ -1,12 +1,19 @@
 <template>
   <div class="select-element">
-    <div v-if="!showAssessments">
-      <div
-        v-for="element in elements"
-        @click="setType(element.type)"
-        class="element-type">
-        <span class="mdi" :class="element.icon"></span>
-        <span>{{ element.label }}</span>
+    <div
+      v-if="!showAssessments"
+      :style="{ 'max-width': maxWidth + 'px' }"
+      class="elements">
+      <div v-for="row in rows" class="row">
+        <div
+          v-for="element in row"
+          :key="element.type"
+          :class="columnWidth"
+          @click="setType(element.type)"
+          class="element-type">
+          <span :class="element.icon" class="mdi"></span>
+          <span>{{ element.label }}</span>
+        </div>
       </div>
     </div>
     <select-assessment
@@ -17,6 +24,7 @@
 </template>
 
 <script>
+import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
 import SelectAssessment from './SelectAssessment';
 
@@ -32,6 +40,8 @@ const TE_TYPES = [
   { type: 'MODAL', label: 'Modal', icon: 'mdi-window-maximize' }
 ];
 
+const ELEMENTS_PER_ROW = 6;
+
 export default {
   name: 'select-element',
   props: ['include'],
@@ -39,6 +49,9 @@ export default {
     return { type: null };
   },
   computed: {
+    rows() {
+      return chunk(this.elements, ELEMENTS_PER_ROW);
+    },
     elements() {
       if (!this.include) return TE_TYPES;
       let items = filter(TE_TYPES, it => this.include.indexOf(it.type) > -1);
@@ -50,6 +63,14 @@ export default {
     },
     showAssessments() {
       return this.type === 'ASSESSMENT';
+    },
+    columnWidth() {
+      return `col-xs-${12 / this.rows[0].length}`;
+    },
+    maxWidth() {
+      // Set the maximum width of the select component container in the
+      // increments of 150px, with the baseline of 2 elements having 200px width
+      return 200 + (this.rows[0].length - 2) * 150;
     }
   },
   methods: {
@@ -77,14 +98,18 @@ export default {
 
 <style lang="scss" scoped>
 .select-element {
-  display: inline-block;
+  margin: 0 auto;
+}
+
+.elements {
+  margin: 0 auto;
+
+  .row {
+    padding-bottom: 30px;
+  }
 }
 
 .element-type {
-  display: inline-block;
-  margin: 0 20px;
-  padding: 5px 10px;
-
   &:hover {
     color: #42b983;
     cursor: pointer;

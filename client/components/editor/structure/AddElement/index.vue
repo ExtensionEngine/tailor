@@ -1,21 +1,21 @@
 <template>
   <div class="add-element">
+    <div @click="toggleSelection" class="btn-base">
+      <span
+        :class="[selectionOpened ? 'btn-close' : 'btn-open']"
+        class="mdi mdi-plus toggle-selection">
+      </span>
+    </div>
     <transition name="slide-fade">
-      <div v-if="selection" class="selections">
+      <div v-if="selectionOpened" class="selections">
         <select-element
           v-if="selectType"
           :include="include"
           @selected="setType">
         </select-element>
         <select-width v-if="selectWidth" @selected="setWidth"></select-width>
-        <div class="btn-base btn-close" @click="close">
-          <span class="mdi mdi-close"></span>
-        </div>
       </div>
     </transition>
-    <div class="btn-base" v-if="!selection" @click="selection = !selection">
-      <span class="mdi mdi-plus"></span>
-    </div>
   </div>
 </template>
 
@@ -33,11 +33,11 @@ export default {
       type: null,
       subtype: null,
       width: null,
-      selection: false
+      selectionOpened: false
     };
   },
   computed: {
-    selectType(selection) {
+    selectType() {
       return !this.type;
     },
     selectWidth() {
@@ -50,6 +50,13 @@ export default {
     }
   },
   methods: {
+    toggleSelection() {
+      if (this.selectionOpened) {
+        this.close();
+      } else {
+        this.selectionOpened = true;
+      }
+    },
     create() {
       let element = { type: this.type, data: {} };
       if (this.activity) {
@@ -96,7 +103,7 @@ export default {
       this.type = null;
       this.subtype = null;
       this.width = null;
-      this.selection = false;
+      this.selectionOpened = false;
     }
   },
   components: {
@@ -108,10 +115,24 @@ export default {
 
 <style lang="scss" scoped>
 .add-element {
-  margin: 20px 0;
+  margin: 20px 0 30px 0;
   color: #444;
 
+  .toggle-selection {
+    display: inline-block;
+  }
+
+  .btn-open {
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn-close {
+    transform: rotate(45deg);
+    transition: all 0.2s ease-in-out;
+  }
+
   .selections {
+    margin-top: 10px;
     min-height: 85px;
   }
 
@@ -126,22 +147,16 @@ export default {
     }
   }
 
-  .btn-close {
-    display: inline-block;
-    margin: 10px 0px 0px 20px;
-    color: #333;
-  }
-
   .slide-fade-enter-active {
-    transition: all .5s ease;
+    transition: all .2s ease-in-out;
   }
 
   .slide-fade-enter {
-    transform: translateX(10px);
+    transform: translateY(-30px);
     opacity: 0;
   }
 
-  .slide-fade-leave-active {
+  .slide-fade-leave-to, .slide-fade-leave-active {
     display: none;
   }
 }
