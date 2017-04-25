@@ -86,8 +86,8 @@ export default {
       .mdi {
         display: inline-block;
         margin-right: 5px;
-        font-size: 20px;
-        line-height: 20px;
+        font-size: 18px;
+        line-height: 18px;
         vertical-align: middle;
       }
 
@@ -106,8 +106,6 @@ export default {
   input {
     height: 20px;
     min-width: 250px;
-    margin: 0;
-    padding: 0;
     font-size: 14px;
     line-height: 14px;
   }
