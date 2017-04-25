@@ -55,6 +55,9 @@ export default {
   computed: {
     showPlaceholder() {
       return isEmpty(this.element.data.url);
+    },
+    id() {
+      return this.element._cid || this.element.id;
     }
   },
   mounted() {
@@ -67,29 +70,29 @@ export default {
       });
     }
 
-    teChannel.on(`${this.element._cid}/upload`, dataUrl => {
+    teChannel.on(`${this.id}/upload`, dataUrl => {
       if (this.currentImage) this.$refs.cropper.replace(dataUrl);
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
       this.$emit('save', { url: dataUrl });
     });
 
-    teChannel.on(`${this.element._cid}/showCropper`, () => {
+    teChannel.on(`${this.id}/showCropper`, () => {
       this.showCropper = true;
       this.$refs.cropper.show();
     });
 
-    teChannel.on(`${this.element._cid}/hideCropper`, () => {
+    teChannel.on(`${this.id}/hideCropper`, () => {
       this.showCropper = false;
       this.$refs.cropper.clear();
     });
 
-    teChannel.on(`${this.element._cid}/crop`, () => {
+    teChannel.on(`${this.id}/crop`, () => {
       this.currentImage = this.$refs.cropper.getCroppedCanvas().toDataURL();
       this.$refs.cropper.replace(this.currentImage);
     });
 
-    teChannel.on(`${this.element._cid}/undo`, () => {
+    teChannel.on(`${this.id}/undo`, () => {
       this.currentImage = this.persistedImage;
       this.$refs.cropper.replace(this.persistedImage);
     });
