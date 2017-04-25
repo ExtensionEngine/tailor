@@ -39,6 +39,9 @@ export default {
   computed: {
     isUploaded() {
       return this.element.data && this.element.data.url;
+    },
+    id() {
+      return this.element._cid || this.element.id;
     }
   },
   methods: {
@@ -48,24 +51,24 @@ export default {
       const reader = new window.FileReader();
       reader.readAsDataURL(image);
       reader.addEventListener('load', e => {
-        teChannel.emit(`${this.element._cid}/upload`, e.target.result);
+        teChannel.emit(`${this.id}/upload`, e.target.result);
       });
     },
     toggleTool(tool) {
       const show = this.currentTool !== tool;
       const prefix = show ? 'show' : 'hide';
-      teChannel.emit(`${this.element._cid}/${prefix}${capitalize(tool)}`);
+      teChannel.emit(`${this.id}/${prefix}${capitalize(tool)}`);
       this.currentTool = show ? tool : null;
     },
     crop() {
-      teChannel.emit(`${this.element._cid}/crop`);
+      teChannel.emit(`${this.id}/crop`);
     },
     undo() {
-      teChannel.emit(`${this.element._cid}/undo`);
+      teChannel.emit(`${this.id}/undo`);
     },
     reset() {
       if (!this.currentTool) return;
-      teChannel.emit(`${this.element._cid}/hide${capitalize(this.currentTool)}`);
+      teChannel.emit(`${this.id}/hide${capitalize(this.currentTool)}`);
       this.currentTool = null;
     }
   },
