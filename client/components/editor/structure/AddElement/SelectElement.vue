@@ -11,7 +11,7 @@
           :class="columnWidth"
           @click="setType(element.type)"
           class="element-type">
-          <span class="mdi" :class="element.icon"></span>
+          <span :class="element.icon" class="mdi"></span>
           <span>{{ element.label }}</span>
         </div>
       </div>
