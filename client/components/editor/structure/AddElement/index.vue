@@ -1,11 +1,8 @@
 <template>
   <div class="add-element">
-    <div
-      :class="{ 'btn-close': selectionOpened }"
-      @click="toggleButton"
-      class="btn-base">
+    <div @click="toggleSelection" class="btn-base">
       <span
-        :class="[selectionOpened ? 'close-button' : 'open-button']"
+        :class="[selectionOpened ? 'btn-close' : 'btn-open']"
         class="mdi mdi-plus toggle-button">
       </span>
     </div>
@@ -53,7 +50,7 @@ export default {
     }
   },
   methods: {
-    toggleButton() {
+    toggleSelection() {
       if (this.selectionOpened) {
         this.close();
       } else {
@@ -125,11 +122,11 @@ export default {
     display: inline-block;
   }
 
-  .open-button {
+  .btn-open {
     transition: all 0.2s ease-in-out;
   }
 
-  .close-button {
+  .btn-close {
     transform: rotate(45deg);
     transition: all 0.2s ease-in-out;
   }
@@ -148,10 +145,6 @@ export default {
       color: #42b983;
       cursor: pointer;
     }
-  }
-
-  .btn-close {
-    color: #333;
   }
 
   .slide-fade-enter-active, .slide-fade-leave-active {
