@@ -28,6 +28,7 @@ import TeCarousel from './Carousel/Carousel';
 import TeEmbed from './Embed';
 import TeHtml from './Html';
 import TeImage from './Image';
+import TeModal from './Modal';
 import TeVideo from './Video';
 
 const TE_TYPES = {
@@ -38,7 +39,8 @@ const TE_TYPES = {
   ASSESSMENT: 'te-assessment',
   VIDEO: 'te-video',
   ACCORDION: 'te-accordion',
-  CAROUSEL: 'te-carousel'
+  CAROUSEL: 'te-carousel',
+  MODAL: 'te-modal'
 };
 
 export default {
@@ -96,6 +98,7 @@ export default {
     TeEmbed,
     TeHtml,
     TeImage,
+    TeModal,
     TeVideo
   }
 };

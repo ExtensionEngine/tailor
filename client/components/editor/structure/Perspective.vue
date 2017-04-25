@@ -53,7 +53,8 @@ export default {
         'ASSESSMENT',
         'BREAK',
         'ACCORDION',
-        'CAROUSEL'
+        'CAROUSEL',
+        'MODAL'
       ]
     };
   },

@@ -23,6 +23,7 @@ import EventBus from 'EventBus';
 import EmbedToolbar from './EmbedToolbar';
 import ImageToolbar from './ImageToolbar';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import ModalToolbar from './ModalToolbar';
 import QuillToolbar from './QuillToolbar';
 import VideoToolbar from './VideoToolbar';
 
@@ -34,7 +35,8 @@ const TOOLBAR_TYPES = {
   EMBED: 'embed-toolbar',
   HTML: 'quill-toolbar',
   ACCORDION: 'accordion-toolbar',
-  CAROUSEL: 'carousel-toolbar'
+  CAROUSEL: 'carousel-toolbar',
+  MODAL: 'modal-toolbar'
 };
 
 export default {
@@ -69,13 +71,14 @@ export default {
     }
   },
   components: {
-    DefaultToolbar,
-    ImageToolbar,
-    EmbedToolbar,
-    QuillToolbar,
-    VideoToolbar,
     AccordionToolbar,
-    CarouselToolbar
+    CarouselToolbar,
+    DefaultToolbar,
+    EmbedToolbar,
+    ImageToolbar,
+    ModalToolbar,
+    QuillToolbar,
+    VideoToolbar
   }
 };
 </script>

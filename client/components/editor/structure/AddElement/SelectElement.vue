@@ -28,7 +28,8 @@ const TE_TYPES = [
   { type: 'EMBED', label: 'Embed', icon: 'mdi-arrange-bring-forward' },
   { type: 'BREAK', label: 'Page Break', icon: 'mdi-format-page-break' },
   { type: 'ACCORDION', label: 'Accordion', icon: 'mdi-view-sequential' },
-  { type: 'CAROUSEL', label: 'Carousel', icon: 'mdi-view-carousel' }
+  { type: 'CAROUSEL', label: 'Carousel', icon: 'mdi-view-carousel' },
+  { type: 'MODAL', label: 'Modal', icon: 'mdi-window-maximize' }
 ];
 
 export default {
