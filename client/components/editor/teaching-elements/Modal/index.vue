@@ -2,7 +2,7 @@
   <div class="te-modal">
     <div v-if="isEditing" class="container-fluid">
       <div v-if="!hasElements" class="well">
-        Click the button below to Create your first teaching element.
+        Click the button below to Add first teaching element to your modal.
       </div>
       <draggable
         :list="embeds"
