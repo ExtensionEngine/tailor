@@ -98,9 +98,13 @@ export default {
 <style lang="scss" scoped>
 .select-element {
   margin: 0 auto;
+}
 
-  .elements {
-    margin: 0 auto;
+.elements {
+  margin: 0 auto;
+
+  .row {
+    padding-bottom: 30px;
   }
 }
 
