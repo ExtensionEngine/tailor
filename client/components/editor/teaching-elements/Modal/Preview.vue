@@ -4,6 +4,7 @@
       {{ title }}
     </button>
     <modal :show.sync="showModal" :backdrop="false">
+      <div slot="modal-header"></div>
       <div slot="modal-body" class="modal-body">
         <div class="row">
           <primitive
