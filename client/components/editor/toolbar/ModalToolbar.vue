@@ -1,13 +1,9 @@
 <template>
   <div class="modal-toolbar">
     <ul>
-      <li v-if="!isEditing" @click="edit" class="btn btn-link btn-sm">
+      <li @click="toggleEdit" class="btn btn-link btn-sm">
         <span class="mdi mdi-pencil"></span>
-        <span>Edit</span>
-      </li>
-      <li v-else @click="preview" class="btn btn-link btn-sm">
-        <span class="mdi mdi-eye"></span>
-        <span>Preview</span>
+        <span>Toggle Edit</span>
       </li>
       <li class="title form-inline">
         <label for="titleInput">Title</label>
@@ -45,13 +41,9 @@ export default {
   },
   methods: {
     ...mapActions(['save'], 'tes'),
-    edit() {
-      this.isEditing = true;
-      teChannel.emit(`${this.id}/edit`, true);
-    },
-    preview() {
-      this.isEditing = false;
-      teChannel.emit(`${this.id}/edit`, false);
+    toggleEdit() {
+      this.isEditing = !this.isEditing;
+      teChannel.emit(`${this.id}/edit`, this.isEditing);
     }
   },
   watch: {
