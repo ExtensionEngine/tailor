@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[columnWidth, isDraggable ? 'embedded-hovered' : '']"
+    :class="[columnWidth, elementClass]"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
     class="te-container">
@@ -53,6 +53,12 @@ export default {
     },
     isDraggable() {
       return this.drag && this.hovered && !this.disabled;
+    },
+    elementClass() {
+      return {
+        'focused': this.isFocused,
+        'embedded-hovered': this.isDraggable
+      };
     }
   },
   methods: {
@@ -109,6 +115,13 @@ export default {
 
 .teaching-element {
   padding: 10px 20px;
-  border: 1px dashed #ccc;
+  border: 1px dotted #ccc;
+}
+
+.focused {
+  > .teaching-element {
+    border: 1px solid #EF9A9A;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+  }
 }
 </style>

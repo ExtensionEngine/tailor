@@ -134,6 +134,13 @@ export default {
 .teaching-element {
   position: relative;
   padding: 10px 20px 10px 20px;
-  border: 1px dashed #ccc;
+  border: 1px dotted #ccc;
+}
+
+.focused {
+  > .teaching-element {
+    border: 1px solid #EF9A9A;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+  }
 }
 </style>
