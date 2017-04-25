@@ -34,6 +34,7 @@ import Preview from './Preview';
 import Primitive from '../Primitive';
 import values from 'lodash/values';
 
+const appChannel = EventBus.channel('app');
 const teChannel = EventBus.channel('te');
 
 export default {
@@ -73,16 +74,19 @@ export default {
       element.data.embeds = element.data.embeds || {};
       element.data.embeds[item.id] = item;
       this.save(element);
-    },
-    deleteItem(item) {
-      let element = cloneDeep(this.element);
-      delete element.data.embeds[item.id];
-      this.save(element);
     }
   },
   created() {
     teChannel.on(`${this.element._cid}/toggleEdit`, () => {
       this.isEditing = !this.isEditing;
+    });
+
+    appChannel.on('deleteElement', item => {
+      if (!item.embedded) return;
+      if (!this.hasElements || !this.element.data.embeds[item.id]) return;
+      let element = cloneDeep(this.element);
+      delete element.data.embeds[item.id];
+      this.save(element);
     });
   },
   components: {
