@@ -13,7 +13,8 @@
         v-if="isFocused"
         v-model="content"
         :config="config"
-        @ready="onQuillReady">
+        @ready="onQuillReady"
+        ref="quill">
       </quill-editor>
       <div v-else class="ql-container ql-snow">
         <div v-html="content" class="ql-editor"></div>
@@ -40,6 +41,11 @@ export default {
   methods: {
     onQuillReady(quill) {
       quill.focus();
+    },
+    save() {
+      if (!this.$refs.quill || !this.hasChanges) return;
+      const text = this.$refs.quill.quillEditor.getText().trim();
+      this.$emit('save', { content: text ? this.content : '' });
     }
   },
   computed: {
@@ -53,13 +59,10 @@ export default {
       this.content = val.data.content;
     },
     isFocused(val, oldVal) {
-      if (oldVal && !val && this.hasChanges) {
-        this.$emit('save', { content: this.content });
-      }
+      if (oldVal && !val) this.save();
     },
     content: debounce(function () {
-      if (!this.hasChanges) return;
-      this.$emit('save', { content: this.content });
+      this.save();
     }, 2000)
   },
   components: { quillEditor }
