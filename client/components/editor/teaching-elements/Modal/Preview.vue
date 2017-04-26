@@ -1,6 +1,9 @@
 <template>
   <div>
-    <button @click="showModal = true" class="btn btn-primary" type="button">
+    <button
+      @click="showModal = true"
+      class="btn btn-primary btn-open"
+      type="button">
       {{ title }}
     </button>
     <modal :show.sync="showModal" :backdrop="false">
@@ -42,3 +45,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.btn-open {
+  max-width: 90%;
+  padding: 9px 20px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+</style>
