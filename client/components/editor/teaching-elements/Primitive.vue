@@ -120,7 +120,7 @@ export default {
 
 .focused {
   > .teaching-element {
-    border: 1px solid #EF9A9A;
+    border: 1px solid #90a4ae;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
   }
 }
