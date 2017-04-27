@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import { defaults } from 'utils/assessment';
 import SelectElement from './SelectElement';
@@ -68,7 +69,7 @@ export default {
       }
 
       if (element.type === 'ASSESSMENT') {
-        element.data = defaults[this.subtype];
+        element.data = cloneDeep(defaults[this.subtype]);
         element.data.type = this.subtype;
         element.data.question = [
           { id: cuid(), type: 'HTML', data: { width: 12 }, embedded: true }
