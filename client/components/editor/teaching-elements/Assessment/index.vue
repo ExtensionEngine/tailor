@@ -29,7 +29,7 @@
           placeholder="Optional hint">
       </div>
       <div class="alert-container">
-        <div v-show="alert.text && !isEditing" :class="alert.type" class="alert">
+        <div v-show="alert.text" :class="alert.type" class="alert">
           <strong>{{ alert.text }}</strong>
         </div>
       </div>
@@ -103,6 +103,12 @@ export default {
     },
     setAlert(data = {}) {
       this.alert = data;
+      const { type, message } = data;
+      if (type && type !== 'alert-danger') {
+        setTimeout(() => {
+          if (message === this.alert.message) this.setAlert();
+        }, 3000);
+      }
     },
     validate(data) {
       return this.schema.validate(data, validationOptions);
