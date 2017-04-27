@@ -56,7 +56,7 @@ export default {
     return {
       dragOptions: { handle: '.drag-handle' },
       header: this.item.header,
-      isCollapsed: false,
+      isCollapsed: true,
       isEditingHeader: false
     };
   },
