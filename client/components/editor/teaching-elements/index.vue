@@ -29,6 +29,7 @@ import TeEmbed from './Embed';
 import TeHtml from './Html';
 import TeImage from './Image';
 import TeModal from './Modal';
+import TeTable from './Table';
 import TeVideo from './Video';
 
 const TE_TYPES = {
@@ -40,7 +41,8 @@ const TE_TYPES = {
   VIDEO: 'te-video',
   ACCORDION: 'te-accordion',
   CAROUSEL: 'te-carousel',
-  MODAL: 'te-modal'
+  MODAL: 'te-modal',
+  TABLE: 'te-table'
 };
 
 export default {
@@ -99,6 +101,7 @@ export default {
     TeHtml,
     TeImage,
     TeModal,
+    TeTable,
     TeVideo
   }
 };

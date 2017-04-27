@@ -37,7 +37,8 @@ const TE_TYPES = [
   { type: 'BREAK', label: 'Page Break', icon: 'mdi-format-page-break' },
   { type: 'ACCORDION', label: 'Accordion', icon: 'mdi-view-sequential' },
   { type: 'CAROUSEL', label: 'Carousel', icon: 'mdi-view-carousel' },
-  { type: 'MODAL', label: 'Modal', icon: 'mdi-window-maximize' }
+  { type: 'MODAL', label: 'Modal', icon: 'mdi-window-maximize' },
+  { type: 'TABLE', label: 'Table', icon: 'mdi-table' }
 ];
 
 const ELEMENTS_PER_ROW = 6;

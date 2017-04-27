@@ -46,7 +46,8 @@ export default {
         (this.type !== 'ACCORDION') &&
         (this.type !== 'ASSESSMENT') &&
         (this.type !== 'BREAK') &&
-        (this.type !== 'CAROUSEL');
+        (this.type !== 'CAROUSEL') &&
+        (this.type !== 'TABLE');
     }
   },
   methods: {
@@ -84,6 +85,36 @@ export default {
           items: {
             [id]: { id, header: 'Header', body: {} }
           }
+        };
+      }
+
+      if (element.type === 'TABLE') {
+        let embeds = {};
+        let rows = {};
+        // Create a default 3x2 table
+        for (let i = 1; i <= 2; i++) {
+          const rowId = cuid();
+          rows[rowId] = { id: rowId, position: i, cells: {} };
+          for (let j = 1; j <= 3; j++) {
+            const embedId = cuid();
+            embeds[embedId] = {
+              id: embedId,
+              type: 'HTML-TABLE',
+              embedded: true,
+              data: { width: 12 }
+            };
+
+            const cellId = cuid();
+            rows[rowId].cells[cellId] = {
+              id: cellId,
+              position: j,
+              body: { [embedId]: true }
+            };
+          }
+        }
+        element.data = {
+          embeds,
+          rows
         };
       }
 

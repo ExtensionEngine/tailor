@@ -1,23 +1,13 @@
 <template>
-  <div class="te-html">
-    <div v-if="!isFocused && !content">
-      <div class="well text-placeholder">
-        <div class="message">
-          <span class="heading">Text placeholder</span>
-          <span>Click to edit</span>
-        </div>
-      </div>
-    </div>
-    <div v-else>
-      <quill-editor
-        v-if="isFocused"
-        v-model="content"
-        :config="config"
-        @ready="onQuillReady">
-      </quill-editor>
-      <div v-else class="ql-container ql-snow">
-        <div v-html="content" class="ql-editor"></div>
-      </div>
+  <div class="te-html-table">
+    <quill-editor
+      v-if="isFocused"
+      v-model="content"
+      :config="config"
+      @ready="onQuillReady">
+    </quill-editor>
+    <div v-else class="ql-container ql-snow">
+      <div v-html="content" class="ql-editor"></div>
     </div>
   </div>
 </template>
@@ -28,7 +18,7 @@ import debounce from 'lodash/debounce';
 import { quillEditor } from 'vue-quill-editor';
 
 export default {
-  name: 'te-html',
+  name: 'te-html-table',
   props: ['element', 'isFocused'],
   data() {
     return {
@@ -66,39 +56,15 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.text-placeholder {
-  .message {
-    padding: 9px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
-}
-
-.well {
-  margin-bottom: 0;
-}
-</style>
-
 <style lang="scss">
-.te-html {
+.te-html-table {
   .ql-editor {
-    min-height: 117px;
+    min-height: 18px;
+    padding: 0 !important;
   }
 
   .ql-container.ql-snow {
     border: none !important;
-  }
-
-  .ql-editor.ql-blank:before {
-    width: 100%;
   }
 }
 </style>

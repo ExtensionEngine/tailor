@@ -22,9 +22,14 @@
 import cloneDeep from 'lodash/cloneDeep';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeHtml from './Html';
+import TeHtmlTable from './Table/HtmlTable';
 import TeImage from './Image';
 
-const TE_TYPES = { HTML: 'te-html', IMAGE: 'te-image' };
+const TE_TYPES = {
+  HTML: 'te-html',
+  'HTML-TABLE': 'te-html-table',
+  IMAGE: 'te-image'
+};
 
 export default {
   name: 'te-primitive',
@@ -80,6 +85,7 @@ export default {
   },
   components: {
     TeHtml,
+    TeHtmlTable,
     TeImage
   }
 };

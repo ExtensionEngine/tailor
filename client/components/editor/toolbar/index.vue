@@ -25,6 +25,7 @@ import ImageToolbar from './ImageToolbar';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ModalToolbar from './ModalToolbar';
 import QuillToolbar from './QuillToolbar';
+import TableToolbar from './TableToolbar';
 import VideoToolbar from './VideoToolbar';
 
 const appChannel = EventBus.channel('app');
@@ -36,7 +37,9 @@ const TOOLBAR_TYPES = {
   HTML: 'quill-toolbar',
   ACCORDION: 'accordion-toolbar',
   CAROUSEL: 'carousel-toolbar',
-  MODAL: 'modal-toolbar'
+  MODAL: 'modal-toolbar',
+  TABLE: 'table-toolbar',
+  'HTML-TABLE': 'quill-toolbar'
 };
 
 export default {
@@ -78,6 +81,7 @@ export default {
     ImageToolbar,
     ModalToolbar,
     QuillToolbar,
+    TableToolbar,
     VideoToolbar
   }
 };
