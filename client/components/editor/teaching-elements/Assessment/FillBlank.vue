@@ -34,6 +34,7 @@
 import debounce from 'lodash/debounce';
 import draggable from 'vuedraggable';
 import filter from 'lodash/filter';
+import get from 'lodash/get';
 import reduce from 'lodash/reduce';
 import times from 'lodash/times';
 
@@ -66,7 +67,7 @@ export default {
     blanksCount() {
       const textAssets = filter(this.question, { type: 'HTML' });
       return reduce(textAssets, (count, it) => {
-        const content = it.data ? it.data.content : '';
+        const content = get(it, 'data.content', '');
         return count + (content.match(PLACEHOLDER) || []).length;
       }, 0);
     },
@@ -109,17 +110,21 @@ export default {
     errorClass(groupIndex, answerIndex) {
       const answer = `correct[${groupIndex}][${answerIndex}]`;
       return { 'has-error': this.errors.includes(answer) };
+    },
+    hasChanges(newVal, oldVal) {
+      let v1 = reduce(oldVal, (r, it) => r + get(it, 'data.content', ''), '');
+      let v2 = reduce(newVal, (r, it) => r + get(it, 'data.content', ''), '');
+      return v1 !== v2;
     }
   },
   watch: {
     isEditing(newVal) {
       if (!newVal) this.answerGroups = this.assessment.answerGroups;
     },
-    question: debounce(
-      function () {
-        this.parse();
-      }, 200
-    )
+    question: debounce(function (newVal, oldVal) {
+      if (!this.hasChanges(newVal, oldVal)) return;
+      this.parse();
+    }, 200)
   },
   components: { draggable }
 };
