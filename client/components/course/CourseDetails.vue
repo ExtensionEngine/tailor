@@ -114,7 +114,7 @@ export default {
       const payload = {
         type: 'course',
         item: this.course,
-        action: () => this.remove(this.course).then(() => this.$router.push('/'))
+        action: () => this.remove(this.course) && this.$router.push('/')
       };
 
       appChannel.emit('showConfirmationModal', payload);
