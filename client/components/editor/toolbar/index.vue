@@ -39,7 +39,7 @@ const TOOLBAR_TYPES = {
   CAROUSEL: 'carousel-toolbar',
   MODAL: 'modal-toolbar',
   TABLE: 'table-toolbar',
-  'HTML-TABLE': 'quill-toolbar'
+  'HTML-TABLE': 'table-toolbar'
 };
 
 export default {

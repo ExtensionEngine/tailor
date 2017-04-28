@@ -97,14 +97,14 @@ export default {
           rows[rowId] = { id: rowId, position: i, cells: {} };
           for (let j = 1; j <= 3; j++) {
             const embedId = cuid();
+            const cellId = cuid();
+
             embeds[embedId] = {
               id: embedId,
               type: 'HTML-TABLE',
               embedded: true,
-              data: { width: 12 }
+              data: { rowId, cellId, width: 12 }
             };
-
-            const cellId = cuid();
             rows[rowId].cells[cellId] = {
               id: cellId,
               position: j,

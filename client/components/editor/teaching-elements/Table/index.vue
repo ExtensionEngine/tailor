@@ -21,10 +21,13 @@
 <script>
 import TableCell from './TableCell';
 import cloneDeep from 'lodash/cloneDeep';
+import cuid from 'cuid';
 import EventBus from 'EventBus';
+import filter from 'lodash/filter';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { mapActions } from 'vuex-module';
+import size from 'lodash/size';
 
 const teChannel = EventBus.channel('te');
 
@@ -57,14 +60,62 @@ export default {
     },
     hasRows() {
       return !isEmpty(this.rows);
+    },
+    id() {
+      return this.element._cid || this.element.id;
     }
   },
   methods: {
     ...mapActions({ saveElement: 'save' }, 'tes'),
-    addRow() {
+    addRow(element, position, numberOfCells) {
+      const rows = element.rows;
+      const embeds = element.embeds;
+      const rowId = cuid();
+      rows[rowId] = { id: rowId, position, cells: {} };
+
+      for (let j = 1; j <= numberOfCells; j++) {
+        const embedId = cuid();
+        const cellId = cuid();
+
+        embeds[embedId] = {
+          id: embedId,
+          type: 'HTML-TABLE',
+          embedded: true,
+          data: { rowId, cellId, width: 12 }
+        };
+        rows[rowId].cells[cellId] = {
+          id: cellId,
+          position: j,
+          body: { [embedId]: true }
+        };
+      }
+
+      this.saveElement(element);
+    },
+    addRowBefore(rowId) {
+      let element = cloneDeep(this.element);
+      const rows = element.data.rows;
+      const sortedRows = sortMap(rows);
+      const currentPosition = rows[rowId].position;
+      const previousRows = filter(sortedRows, ([, pos]) => pos > currentPosition);
+      let previousRow;
+      let previousRowPosition = 0;
+      let numberOfCells = 1;
+      if (previousRows.length) {
+        [previousRow, previousRowPosition] = previousRows[0];
+        numberOfCells = size(previousRow.cells);
+      }
+
+      const newRowPosition = (currentPosition + previousRowPosition) / 2;
+      this.addRow(element, newRowPosition, numberOfCells);
+    },
+    addRowAfter() {
       // TODO(marko): Implement
     },
-    addColumn() {
+    addColBefore() {
+      // TODO(marko): Implement
+    },
+    addColAfter() {
       // TODO(marko): Implement
     },
     saveCell({ rowId, cell, element }) {
@@ -94,10 +145,12 @@ export default {
     }
   },
   mounted() {
-    teChannel.on(`${this.element._cid}/addRow`, () => this.addRow());
-    teChannel.on(`${this.element._cid}/addColumn`, () => this.addColumn());
-    teChannel.on(`${this.element._cid}/removeRow`, () => this.removeRow());
-    teChannel.on(`${this.element._cid}/removeColumn`, () => this.removeColumn());
+    teChannel.on(`${this.id}/addRowBefore`, rowId => this.addRowBefore(rowId));
+    teChannel.on(`${this.id}/addRowAfter`, () => this.addRowAfter());
+    teChannel.on(`${this.id}/addColBefore`, () => this.addColBefore());
+    teChannel.on(`${this.id}/addColAfter`, () => this.addColAfter());
+    teChannel.on(`${this.id}/removeRow`, () => this.removeRow());
+    teChannel.on(`${this.id}/removeColumn`, () => this.removeColumn());
   },
   components: {
     TableCell
