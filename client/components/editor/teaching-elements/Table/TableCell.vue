@@ -41,7 +41,7 @@ export default {
   display: table-cell;
   width: 312px;
   max-width: 312px;
-  padding: 8px;
+  height: 100%;
   border: 1px solid black;
 }
 </style>
@@ -49,9 +49,11 @@ export default {
 <style lang="scss">
 .table-cell {
   .te-container {
+    height: 100% !important;
     padding: 0 !important;
 
     .teaching-element {
+      height: 100% !important;
       padding: 0 !important;
       border: none !important;
       box-shadow: none !important;

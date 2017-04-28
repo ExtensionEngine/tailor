@@ -58,9 +58,11 @@ export default {
 
 <style lang="scss">
 .te-html-table {
+  height: 100%;
+
   .ql-editor {
-    min-height: 18px;
-    padding: 0 !important;
+    min-height: 42px;
+    padding: 8 !important;
   }
 
   .ql-container.ql-snow {
