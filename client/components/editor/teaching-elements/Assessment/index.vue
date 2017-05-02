@@ -169,7 +169,8 @@ export default {
     },
     updateFeedback(feedback) {
       let element = cloneDeep(this.element);
-      element.data.feedback = feedback;
+      element.data.feedback = element.data.feedback || {};
+      Object.assign(element.data.feedback, feedback);
       this.addElement(element);
     }
   },
