@@ -63,6 +63,11 @@ export default {
 
   .heading {
     font-size: 20px;
+
+    .btn {
+      margin-left: 15px;
+      padding: 3px 10px;
+    }
   }
 
   ul {
