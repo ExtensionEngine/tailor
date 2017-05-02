@@ -29,6 +29,7 @@
           placeholder="Optional hint">
       </div>
       <feedback
+        v-if="showFeedback"
         :answers="element.data.answers"
         :feedback="element.data.feedback"
         @update="updateFeedback">
@@ -100,6 +101,10 @@ export default {
     },
     hintError() {
       return this.errors.includes('hint');
+    },
+    showFeedback() {
+      let feedbackSupported = ['MC', 'SC', 'TF'].indexOf(this.element.data.type);
+      return !this.summative && feedbackSupported;
     }
   },
   methods: {
