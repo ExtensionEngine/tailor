@@ -52,6 +52,11 @@ export default {
       options[index] = this.$refs['option' + index][0].value;
       this.$emit('update', options);
     }
+  },
+  watch: {
+    isEditing(val) {
+      if (val) this.isExpanded = true;
+    }
   }
 };
 </script>
