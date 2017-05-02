@@ -170,7 +170,7 @@ span.form-display {
 }
 
 label {
-  margin-top: 30px;
+  margin-top: 10px;
   color: gray;
   display: block;
   font-size: 14px;
