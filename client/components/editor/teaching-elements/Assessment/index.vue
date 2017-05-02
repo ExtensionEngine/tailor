@@ -32,6 +32,7 @@
         v-if="showFeedback"
         :answers="element.data.answers"
         :feedback="element.data.feedback"
+        :isEditing="isEditing"
         @update="updateFeedback">
       </feedback>
       <div class="alert-container">

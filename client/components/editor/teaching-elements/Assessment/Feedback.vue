@@ -15,6 +15,7 @@
           <textarea
             :ref="'option' + index"
             :value="feedback ? feedback[index] : ''"
+            :disabled="!isEditing"
             @change="update(index)"
             class="form-control">
           </textarea>
@@ -32,7 +33,8 @@ export default {
   name: 'feedback',
   props: {
     answers: [Array, Boolean],
-    feedback: Object
+    feedback: Object,
+    isEditing: Boolean
   },
   data() {
     return {
