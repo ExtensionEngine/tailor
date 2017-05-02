@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      isExpanded: false
+      isExpanded: this.isEditing
     };
   },
   computed: {
