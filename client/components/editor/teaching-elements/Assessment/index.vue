@@ -103,7 +103,8 @@ export default {
       return this.errors.includes('hint');
     },
     showFeedback() {
-      let feedbackSupported = ['MC', 'SC', 'TF'].indexOf(this.element.data.type);
+      const assessmentType = this.element.data.type;
+      const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
       return !this.summative && feedbackSupported;
     }
   },
