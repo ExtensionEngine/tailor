@@ -28,6 +28,11 @@
           type="text"
           placeholder="Optional hint">
       </div>
+      <feedback
+        :answers="element.data.answers"
+        :feedback="element.data.feedback"
+        @update="updateFeedback">
+      </feedback>
       <div class="alert-container">
         <div v-show="alert.text" :class="alert.type" class="alert">
           <strong>{{ alert.text }}</strong>
@@ -48,6 +53,7 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
+import Feedback from './Feedback';
 import FillBlank from './FillBlank';
 import isEmpty from 'lodash/isEmpty';
 import { mapMutations } from 'vuex-module';
@@ -155,6 +161,11 @@ export default {
     },
     remove() {
       this.$emit('remove');
+    },
+    updateFeedback(feedback) {
+      let element = cloneDeep(this.element);
+      element.data.feedback = feedback;
+      this.addElement(element);
     }
   },
   components: {
@@ -163,6 +174,7 @@ export default {
     TrueFalse,
     NumericalResponse,
     TextResponse,
+    Feedback,
     FillBlank,
     Question,
     Controls,

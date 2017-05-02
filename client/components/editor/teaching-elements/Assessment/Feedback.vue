@@ -48,7 +48,7 @@ export default {
     update(index) {
       let options = this.options ? cloneDeep(this.options) : {};
       options[index] = this.$refs['option' + index][0].value;
-      this.$emit('save', options);
+      this.$emit('update', options);
     }
   }
 };
