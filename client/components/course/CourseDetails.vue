@@ -180,7 +180,7 @@ label {
   margin: 40px 20px 20px;
   padding: 10px 30px;
   background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   text-align: left;
 }
 
