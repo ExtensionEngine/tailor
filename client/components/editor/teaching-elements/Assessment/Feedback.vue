@@ -11,7 +11,10 @@
     <transition name="fade">
       <ul v-if="isExpanded">
         <li v-for="(answer, index) in processedAnswers">
-          <div>Answer {{ index + 1 }}: {{ answer }}</div>
+          <div>
+            <span class="answer-index">Answer {{ index + 1 }}:</span>
+            {{ answer }}
+          </div>
           <textarea
             :ref="'option' + index"
             :value="feedback ? feedback[index] : ''"
@@ -26,7 +29,6 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import isArray from 'lodash/isArray';
 
 export default {
@@ -48,9 +50,8 @@ export default {
   },
   methods: {
     update(index) {
-      let options = this.options ? cloneDeep(this.options) : {};
-      options[index] = this.$refs['option' + index][0].value;
-      this.$emit('update', options);
+      let data = { [index]: this.$refs[`option${index}`][0].value };
+      this.$emit('update', data);
     }
   },
   watch: {
@@ -67,42 +68,48 @@ export default {
   margin: 0 auto;
   padding: 30px 20px 15px 20px;
   text-align: left;
+}
 
-  .heading {
-    font-size: 20px;
+.heading {
+  font-size: 20px;
 
-    .btn {
-      margin-left: 15px;
-      padding: 3px 10px;
-    }
+  .btn {
+    margin-left: 15px;
+    padding: 3px 10px;
   }
+}
 
-  ul {
-    margin-top: 20px;
-    list-style: none;
-  }
+ul {
+  margin-top: 20px;
+  list-style: none;
+}
 
-  li {
-    padding: 10px 0;
-    font-size: 15px;
+li {
+  padding: 10px 0;
+  font-size: 15px;
+
+  .answer-index {
+    padding-right: 10px;
+    color: #444;
+    font-weight: bold;
   }
 
   textarea {
-    height: 60px;
+    height: 50px;
     margin: 10px 0;
     resize: none;
   }
+}
 
-  .fade-enter-active {
-    transition: opacity .5s
-  }
+.fade-enter-active {
+  transition: opacity .5s
+}
 
-  .fade-enter {
-    opacity: 0
-  }
+.fade-enter {
+  opacity: 0
+}
 
-  .fade-leave, .fade-leave-active, .fade-leave-to {
-    display: none;
-  }
+.fade-leave, .fade-leave-active, .fade-leave-to {
+  display: none;
 }
 </style>
