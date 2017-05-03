@@ -41,7 +41,8 @@ export default {
   data() {
     return {
       answers: this.assessment.answers,
-      correct: this.assessment.correct
+      correct: this.assessment.correct,
+      feedback: this.assessment.feedback
     };
   },
   computed: {
@@ -55,7 +56,11 @@ export default {
   methods: {
     update() {
       this.validate();
-      this.$emit('update', { answers: this.answers, correct: this.correct });
+      this.$emit('update', {
+        answers: this.answers,
+        correct: this.correct,
+        feedback: this.feedback
+      });
     },
     addAnswer() {
       this.answers.push('');
@@ -69,6 +74,11 @@ export default {
       this.correct.forEach((it, i) => {
         if (it >= answerIndex) this.correct[i] = it - 1;
       });
+
+      if (this.feedback) {
+        this.feedback[answerIndex] = this.feedback[answerIndex + 1];
+        delete this.feedback[answerIndex + 1];
+      }
 
       this.update();
     },

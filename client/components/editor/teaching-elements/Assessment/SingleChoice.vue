@@ -48,7 +48,8 @@ export default {
   data() {
     return {
       answers: this.assessment.answers,
-      correct: this.assessment.correct
+      correct: this.assessment.correct,
+      feedback: this.assessment.feedback
     };
   },
   computed: {
@@ -72,6 +73,11 @@ export default {
 
       if (this.correct === index) this.correct = null;
       if (this.correct && this.correct >= index) this.correct -= 1;
+
+      if (this.feedback) {
+        this.feedback[index] = this.feedback[index + 1];
+        delete this.feedback[index + 1];
+      }
 
       this.update();
     },
