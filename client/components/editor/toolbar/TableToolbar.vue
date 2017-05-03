@@ -5,6 +5,26 @@
         <span class="mdi mdi-table-row-plus-before"></span>
         Add row before
       </li>
+      <li @click="addRowAfter" class="btn btn-link btn-sm">
+        <span class="mdi mdi-table-row-plus-after"></span>
+        Add row after
+      </li>
+      <li @click="addColBefore" class="btn btn-link btn-sm">
+        <span class="mdi mdi-table-column-plus-before"></span>
+        Add column before
+      </li>
+      <li @click="addColAfter" class="btn btn-link btn-sm">
+        <span class="mdi mdi-table-column-plus-after"></span>
+        Add column after
+      </li>
+      <li @click="removeRow" class="btn btn-link btn-sm">
+        <span class="mdi mdi-table-row-remove"></span>
+        Delete row
+      </li>
+      <li @click="removeColumn" class="btn btn-link btn-sm">
+        <span class="mdi mdi-table-column-remove"></span>
+        Delete column
+      </li>
     </ul>
   </div>
 </template>
@@ -17,25 +37,24 @@ const teChannel = EventBus.channel('te');
 export default {
   name: 'table-toolbar',
   props: ['element'],
-  computed: {
-    id() {
-      return this.element._cid || this.element.id;
-    }
-  },
   methods: {
     addRowBefore() {
-      // TODO(marko): this `id` is the `id` of the HtmlTable component in most
-      // cases instead of the Table component. Fix this.
-      teChannel.emit(`${this.id}/addRowBefore`, this.element.data.rowId);
+      teChannel.emit('addRowBefore', this.element.data.rowId);
     },
     addRowAfter() {
-      teChannel.emit(`${this.id}/addRowAfter`);
+      teChannel.emit('addRowAfter', this.element.data.rowId);
     },
     addColBefore() {
-      teChannel.emit(`${this.id}/addColBefore`);
+      teChannel.emit('addColBefore', this.element.data.rowId, this.element.data.cellId);
     },
     addColAfter() {
-      teChannel.emit(`${this.id}/addColAfter`);
+      teChannel.emit('addColAfter', this.element.data.rowId, this.element.data.cellId);
+    },
+    removeRow() {
+      teChannel.emit('removeRow', this.element.data.rowId);
+    },
+    removeColumn() {
+      teChannel.emit('removeColumn', this.element.data.rowId, this.element.data.cellId);
     }
   }
 };

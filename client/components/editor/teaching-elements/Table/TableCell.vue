@@ -1,5 +1,5 @@
 <template>
-  <div @click="activateCell" class="table-cell">
+  <div class="table-cell">
     <primitive :initialElement="element" @save="saveBodyElement"></primitive>
   </div>
 </template>
@@ -10,11 +10,8 @@ import Primitive from '../Primitive';
 
 export default {
   name: 'table-cell',
-  props: ['cell', 'rowId', 'embeds', 'activeCell'],
+  props: ['cell', 'rowId', 'embeds'],
   computed: {
-    isActive() {
-      return this.cell.id === this.activeCell;
-    },
     element() {
       return this.embeds[Object.keys(this.cell.body)[0]];
     }
@@ -24,10 +21,6 @@ export default {
       if (this.cell.body && !this.cell.body[element.id]) return;
       element = cloneDeep(element);
       this.$emit('save', { element });
-    },
-    activateCell() {
-      if (this.isActive) return;
-      this.$emit('activateCell', this.cell.id);
     }
   },
   components: {

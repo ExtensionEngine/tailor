@@ -24,7 +24,7 @@ export default {
     return {
       content: '',
       ...cloneDeep(this.element.data),
-      config: { modules: { toolbar: '#tableToolbar' } }
+      config: { placeholder: '', modules: { toolbar: '#tableToolbar' } }
     };
   },
   methods: {
