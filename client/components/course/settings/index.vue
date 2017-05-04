@@ -37,17 +37,17 @@ export default {
   float: left;
   width: 19%;
   margin: 75px 10px 0 60px;
-  padding: 10px 10px 350px 10px;
+  padding: 10px 10px 350px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  background-color: white;
   line-height: 32px;
+  background-color: white;
 
   .list-group-item {
     margin-bottom: 2px;
     padding: 10px;
     border: 0px;
-    text-align: left;
     cursor: pointer;
+    text-align: left;
 
     &:hover, &.selected {
       background-color: #f9f9f9;

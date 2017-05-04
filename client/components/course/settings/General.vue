@@ -137,6 +137,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.settings {
+  float: right;
+  width: 71%;
+  margin: 75px 75px 40px 0px;
+  padding: 30px 30px 10px 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  background-color: white;
+  text-align: left;
+}
+
 .course-actions {
   margin: 15px 0;
   text-align: center;
@@ -174,16 +184,6 @@ label {
   color: gray;
   display: block;
   font-size: 14px;
-}
-
-.settings {
-  float: right;
-  width: 71%;
-  margin: 75px 75px 40px 0px;
-  padding: 30px 30px 10px 30px;
-  background-color: white;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-  text-align: left;
 }
 
 .help-block {
