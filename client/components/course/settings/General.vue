@@ -56,7 +56,7 @@
           @click.stop="removeCourse"
           type="button"
           class="btn btn-danger">
-          <span class="fa fa-trash"></span>
+          <span class="mdi mdi-delete"></span>
           remove course
         </button>
       </div>
@@ -67,7 +67,7 @@
 <script>
 import EventBus from 'EventBus';
 import { focus } from 'vue-focus';
-import Loader from '../common/Loader';
+import Loader from '../../common/Loader';
 import { mapGetters, mapActions } from 'vuex-module';
 import { tooltip } from 'vue-strap';
 

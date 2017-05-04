@@ -1,28 +1,22 @@
 <template>
   <div class="main-container">
     <div class="list-group table-of-contents">
-      <a
-        class="list-group-item"
-        @click="generalSelected = true"
-        :class="{ selected: generalSelected }">
-        <span class="mdi mdi-wrench"></span>
-        General
-      </a>
-      <a
-        class="list-group-item"
-        @click="generalSelected = false"
-        :class="{ selected: !generalSelected }">
-        <span class="mdi mdi-account"></span>
-        User management
-      </a>
+      <router-link
+        :class="{ selected: $route.name === 'general' }"
+        :to="{ name: 'general' }"
+        class="list-group-item">
+        <span class="mdi mdi-wrench"></span>General</router-link>
+      <router-link
+        :class="{ selected: $route.name === 'user-management' }"
+        :to="{ name: 'user-management' }" class="list-group-item">
+        <span class="mdi mdi-account"></span>User Management</router-link>
     </div>
-    <course-details v-if="generalSelected"></course-details>
-    <user-management v-else></user-management>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import CourseDetails from '../CourseDetails';
+import General from './General';
 import UserManagement from './UserManagement';
 
 export default {
@@ -32,7 +26,7 @@ export default {
     };
   },
   components: {
-    CourseDetails,
+    General,
     UserManagement
   }
 };
@@ -59,15 +53,6 @@ export default {
       background-color: #f9f9f9;
     }
   }
-}
-
-.settings {
-  float: right;
-  width: 71%;
-  margin: 75px 75px 40px 0px;
-  padding: 30px 30px 10px 30px;
-  background-color: white;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .mdi {

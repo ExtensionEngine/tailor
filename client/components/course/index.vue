@@ -9,7 +9,7 @@
         <router-link :to="{ name: 'course-revisions' }">Revisions</router-link>
       </li>
       <li v-if="showSettings"
-        :class="{ active: $route.name === 'course-settings' }">
+        :class="{ active: $route.matched.some(it => it.name === 'course-settings') }">
         <router-link :to="{ name: 'course-settings' }">Settings</router-link>
       </li>
     </ul>

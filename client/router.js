@@ -9,9 +9,11 @@ import CourseRevisions from './components/course/Revisions';
 import CourseSettings from './components/course/settings';
 import Editor from './components/editor';
 import ForgotPassword from './components/auth/ForgotPassword';
+import General from './components/course/settings/General';
 import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
+import UserManagement from './components/course/settings/UserManagement';
 
 Vue.use(Router);
 
@@ -32,7 +34,16 @@ let router = new Router({
     }, {
       path: 'settings',
       name: 'course-settings',
-      component: CourseSettings
+      component: CourseSettings,
+      children: [{
+        path: '',
+        name: 'general',
+        component: General
+      }, {
+        path: 'users',
+        name: 'user-management',
+        component: UserManagement
+      }]
     }, {
       path: 'revisions',
       name: 'course-revisions',
