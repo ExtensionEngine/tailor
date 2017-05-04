@@ -3,6 +3,7 @@
     :class="[columnWidth, { hovered, focused: isFocused }]"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
+    @dragover="scrollContainer"
     class="te-container">
     <div @click="focus" class="teaching-element">
       <span class="drag-handle">
@@ -30,6 +31,7 @@ import TeHtml from './Html';
 import TeImage from './Image';
 import TeModal from './Modal';
 import TeVideo from './Video';
+import throttle from 'lodash/throttle';
 
 const TE_TYPES = {
   BREAK: 'te-break',
@@ -88,7 +90,14 @@ export default {
         Object.assign(this.element.data, elementData);
         this.saveElement(this.element);
       }
-    }
+    },
+    scrollContainer: throttle(function (e) {
+      const scrollUp = e.y < 200;
+      const scrollDown = e.y > (window.innerHeight - 200);
+      if (scrollUp || scrollDown) {
+        window.scrollBy(0, scrollUp ? -10 : 10);
+      }
+    }, 20)
   },
   components: {
     TeAccordion,
