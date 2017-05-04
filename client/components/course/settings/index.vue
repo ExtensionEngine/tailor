@@ -5,11 +5,13 @@
         :class="{ selected: $route.name === 'general' }"
         :to="{ name: 'general' }"
         class="list-group-item">
-        <span class="mdi mdi-wrench"></span>General</router-link>
+        <span class="mdi mdi-wrench"></span>General
+      </router-link>
       <router-link
         :class="{ selected: $route.name === 'user-management' }"
         :to="{ name: 'user-management' }" class="list-group-item">
-        <span class="mdi mdi-account"></span>User Management</router-link>
+        <span class="mdi mdi-account"></span>User Management
+      </router-link>
     </div>
     <router-view></router-view>
   </div>
