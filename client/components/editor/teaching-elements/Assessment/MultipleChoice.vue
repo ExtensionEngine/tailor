@@ -99,7 +99,7 @@ export default {
 
       if (feedback) {
         let nextFeedback = feedback[answerIndex + 1];
-        if (nextFeedback) feedback[answerIndex] = nextFeedback;
+        feedback[answerIndex] = nextFeedback;
         delete feedback[answerIndex + 1];
       }
 

@@ -87,7 +87,7 @@ export default {
 
       if (feedback) {
         let nextFeedback = feedback[index + 1];
-        if (nextFeedback) feedback[index] = nextFeedback;
+        feedback[index] = nextFeedback;
         delete feedback[index + 1];
       }
 
