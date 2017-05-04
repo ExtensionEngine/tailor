@@ -35,6 +35,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import range from 'lodash/range';
 
 const customAlert = {
   type: 'alert-danger',
@@ -86,9 +87,10 @@ export default {
       if (correct && correct >= index) correct -= 1;
 
       if (feedback) {
-        let nextFeedback = feedback[index + 1];
-        feedback[index] = nextFeedback;
-        delete feedback[index + 1];
+        range(index, answers.length).forEach(it => {
+          feedback[it] = feedback[index + 1];
+        });
+        delete feedback[answers.length];
       }
 
       this.update({ answers, correct, feedback });
