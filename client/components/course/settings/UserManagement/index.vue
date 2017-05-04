@@ -59,7 +59,7 @@ export default {
   float: right;
   width: 71%;
   margin: 75px 75px 40px 0px;
-  padding: 30px 30px 10px 30px;
+  padding: 30px 30px 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   background-color: white;
 }
