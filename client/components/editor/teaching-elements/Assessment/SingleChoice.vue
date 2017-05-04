@@ -11,7 +11,7 @@
       <li v-for="(answer, index) in answers">
         <span :class="{ 'has-error': correctError }" class="answers-radio">
           <input
-            :value="correct === index"
+            :checked="correct === index"
             :disabled="disabled"
             @change="selectAnswer(index)"
             type="radio">
