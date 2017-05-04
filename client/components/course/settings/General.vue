@@ -154,15 +154,15 @@ export default {
 
 h2 {
   display: inline-block;
-  font-size: 16px;
-  color: #444;
-  font-weight: normal;
   margin: 20px 0 32px 0;
+  font-size: 16px;
+  font-weight: normal;
+  color: #444;
 }
 
 input.form-control {
-  padding-top: 3px;
   margin-top: 15px;
+  padding-top: 3px;
 }
 
 textarea.form-control {
@@ -173,17 +173,17 @@ textarea.form-control {
 }
 
 span.form-display {
-  font-size: 16px;
-  white-space: pre-line;
   display: inline-block;
+  white-space: pre-line;
+  font-size: 16px;
   height: 225px;
 }
 
 label {
-  margin-top: 10px;
-  color: gray;
   display: block;
+  margin-top: 10px;
   font-size: 14px;
+  color: gray;
 }
 
 .help-block {
