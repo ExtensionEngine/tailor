@@ -88,7 +88,7 @@ export default {
 
       if (feedback) {
         range(index, answers.length).forEach(it => {
-          feedback[it] = feedback[index + 1];
+          feedback[it] = feedback[it + 1];
         });
         delete feedback[answers.length];
       }
