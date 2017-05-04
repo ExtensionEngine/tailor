@@ -1,21 +1,27 @@
 <template>
-  <div class="main-container">
-    <div class="list-group table-of-contents">
-      <router-link
-        :class="{ selected: $route.name === 'general' }"
-        :to="{ name: 'general' }"
-        class="list-group-item">
-        <span class="mdi mdi-wrench"></span>General
-      </router-link>
-      <router-link
-        :class="{ selected: $route.name === 'user-management' }"
-        :to="{ name: 'user-management' }"
-        class="list-group-item">
-        <span class="mdi mdi-account"></span>User Management
-      </router-link>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="list-group table-of-contents">
+            <router-link
+              :class="{ selected: $route.name === 'general' }"
+              :to="{ name: 'general' }"
+              class="list-group-item">
+              <span class="mdi mdi-wrench"></span>General
+            </router-link>
+            <router-link
+              :class="{ selected: $route.name === 'user-management' }"
+              :to="{ name: 'user-management' }"
+              class="list-group-item">
+              <span class="mdi mdi-account"></span>User Management
+            </router-link>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <router-view></router-view>
+        </div>
+      </div>
     </div>
-    <router-view></router-view>
-  </div>
 </template>
 
 <script>
@@ -36,11 +42,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.row {
+  margin: 60px 30px 5px;
+}
+
 .list-group {
-  float: left;
-  width: 19%;
-  margin: 75px 10px 0 60px;
-  padding: 10px 10px 350px;
+  padding: 10px 10px 344px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   line-height: 32px;
   background-color: white;
@@ -59,8 +66,8 @@ export default {
 }
 
 .mdi {
-  float: left;
-  margin: 0 30px;
+  margin-right: 15%;
+  margin-left: 5%;
   font-size: 20px;
 }
 </style>
