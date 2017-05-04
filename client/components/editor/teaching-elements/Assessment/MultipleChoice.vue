@@ -8,15 +8,15 @@
           <input
             :checked="correct.includes(index)"
             :disabled="disabled"
-            @change="checked(index)"
+            @change="toggleAnswer(index)"
             type="checkbox">
         </span>
         <span :class="errorClass(index)">
           <input
-            :ref="'input' + index"
+            :ref="`input${index}`"
             :value="answers[index]"
             :disabled="disabled"
-            @change="updateOption(index)"
+            @change="updateAnswer(index)"
             class="form-control"
             placeholder="Answer...">
         </span>
@@ -37,8 +37,8 @@ const customAlert = {
 export default {
   props: {
     assessment: Object,
-    errors: Array,
-    isEditing: Boolean
+    isEditing: Boolean,
+    errors: Array
   },
   computed: {
     answers() {
@@ -62,9 +62,9 @@ export default {
       this.validate();
       this.$emit('update', data);
     },
-    checked(index) {
+    toggleAnswer(index) {
       let correct = cloneDeep(this.correct);
-      let position = correct.indexOf(index);
+      const position = correct.indexOf(index);
 
       if (position < 0) {
         correct.push(index);
@@ -74,7 +74,7 @@ export default {
 
       this.update({ correct });
     },
-    updateOption(index) {
+    updateAnswer(index) {
       let answers = cloneDeep(this.answers);
       answers[index] = this.$refs[`input${index}`][0].value;
       this.update({ answers });
@@ -90,7 +90,6 @@ export default {
       let feedback = cloneDeep(this.feedback);
 
       answers.splice(answerIndex, 1);
-
       const index = correct.indexOf(answerIndex);
       if (index !== -1) correct.splice(index, 1);
 
@@ -99,7 +98,8 @@ export default {
       });
 
       if (feedback) {
-        feedback[answerIndex] = feedback[answerIndex + 1];
+        let nextFeedback = feedback[answerIndex + 1];
+        if (nextFeedback) feedback[answerIndex] = nextFeedback;
         delete feedback[answerIndex + 1];
       }
 
