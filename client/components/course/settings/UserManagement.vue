@@ -56,12 +56,11 @@ export default {
 
 <style lang="scss" scoped>
 .settings {
-  display: inline-block;
   float: right;
   width: 71%;
   margin: 75px 75px 40px 0px;
   padding: 30px 30px 10px 30px;
-  background-color: #fff;
+  background-color: white;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 .loader {

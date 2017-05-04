@@ -40,36 +40,33 @@ export default {
 
 <style lang="scss" scoped>
 .list-group {
-  line-height: 32px;
-  display: inline-block;
   float: left;
-  margin: 75px 10px 0 60px;
   width: 19%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  cursor: pointer;
+  margin: 75px 10px 0 60px;
   padding: 10px 10px 350px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   background-color: white;
+  line-height: 32px;
 
   .list-group-item {
-    padding: 10px 0;
-    margin-bottom: 1px;
+    margin-bottom: 2px;
+    padding: 10px;
     border: 0px;
-    border-radius: 0;
     text-align: left;
+    cursor: pointer;
 
-    &.selected {
+    &:hover, &.selected {
       background-color: #f9f9f9;
     }
   }
 }
 
 .settings {
-  display: inline-block;
   float: right;
   width: 71%;
   margin: 75px 75px 40px 0px;
   padding: 30px 30px 10px 30px;
-  background-color: #fff;
+  background-color: white;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 

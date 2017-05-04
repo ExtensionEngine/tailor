@@ -5,7 +5,6 @@ import Vue from 'vue';
 import Auth from './components/auth/Container';
 import Catalog from './components/catalog/Container';
 import Course from './components/course';
-import CourseDetails from './components/course/CourseDetails';
 import CourseRevisions from './components/course/Revisions';
 import CourseSettings from './components/course/settings';
 import Editor from './components/editor';
@@ -34,10 +33,6 @@ let router = new Router({
       path: 'settings',
       name: 'course-settings',
       component: CourseSettings
-    }, {
-      path: 'details',
-      name: 'course-details',
-      component: CourseDetails
     }, {
       path: 'revisions',
       name: 'course-revisions',
