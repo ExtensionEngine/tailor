@@ -70,6 +70,11 @@ export default {
       answers.push('');
       this.update({ answers });
     },
+    updateAnswer(index) {
+      let answers = cloneDeep(this.answers);
+      answers[index] = this.$refs[`input${index}`][0].value;
+      this.update({ answers });
+    },
     removeAnswer(index) {
       let answers = cloneDeep(this.answers);
       let correct = cloneDeep(this.correct);
