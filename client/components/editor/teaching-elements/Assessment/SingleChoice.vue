@@ -104,6 +104,10 @@ export default {
     },
     update(data) {
       this.$emit('update', data);
+    }
+  },
+  watch: {
+    assessment() {
       this.validate();
     }
   }

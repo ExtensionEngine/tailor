@@ -59,7 +59,6 @@ export default {
   },
   methods: {
     update(data) {
-      this.validate();
       this.$emit('update', data);
     },
     toggleAnswer(index) {
@@ -112,6 +111,11 @@ export default {
       return {
         'has-error': this.errors.includes(`answers[${index}]`)
       };
+    }
+  },
+  watch: {
+    assessment() {
+      this.validate();
     }
   }
 };
