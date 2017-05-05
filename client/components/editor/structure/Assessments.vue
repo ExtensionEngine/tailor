@@ -12,17 +12,18 @@
     <ul class="list-group">
       <assessment-item
         v-for="it in assessments"
+        :key="it._cid"
         :assessment="it"
         :expanded="isSelected(it)"
         @selected="toggleSelect(it)"
-        @save="save"
+        @save="saveAssessment"
         @remove="it.id ? requestDeleteConfirmation(it) : remove(it)">
       </assessment-item>
     </ul>
     <add-element
       :include="['ASSESSMENT']"
       :activity="activity"
-      @add="add">
+      @add="addAssessment">
     </add-element>
   </div>
 </template>
@@ -30,12 +31,9 @@
 <script>
 import AddElement from './AddElement';
 import AssessmentItem from './AssessmentItem';
-import cloneDeep from 'lodash/cloneDeep';
-import cuid from 'cuid';
-import difference from 'lodash/difference';
 import EventBus from 'EventBus';
-import keyBy from 'lodash/keyBy';
-import { mapActions, mapGetters } from 'vuex-module';
+import map from 'lodash/map';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 
 const appChannel = EventBus.channel('app');
 
@@ -44,27 +42,25 @@ export default {
   data() {
     return {
       selected: [],
-      assessments: cloneDeep(keyBy(this.getAssessments(), '_cid')),
       allSelected: false
     };
   },
   computed: {
-    ...mapGetters(['activity'], 'editor'),
+    ...mapGetters(['activity', 'assessments'], 'editor'),
     hasAssessments() {
-      return !!Object.keys(this.assessments).length;
+      return this.assessments.length;
     }
   },
   methods: {
-    ...mapGetters({ getAssessments: 'assessments' }, 'editor'),
-    ...mapActions({
-      saveAssessment: 'save',
-      updateAssessment: 'update',
-      removeAssessment: 'remove'
-    }, 'tes'),
-    add(assessment) {
-      assessment._cid = cuid();
-      this.$set(this.assessments, assessment._cid, assessment);
+    ...mapActions(['save', 'update', 'remove'], 'tes'),
+    ...mapMutations(['add'], 'tes'),
+    addAssessment(assessment) {
+      this.add(assessment);
       this.selected.push(assessment._cid);
+    },
+    saveAssessment(assessment) {
+      // TODO: Figure out why save is broken (for update)
+      assessment.id ? this.update(assessment) : this.save(assessment);
     },
     toggleSelect(assessment) {
       const question = assessment.data.question;
@@ -82,27 +78,7 @@ export default {
     },
     toggleAssessments() {
       this.allSelected = !this.allSelected;
-      const cids = this.allSelected
-        ? difference(Object.keys(this.assessments), this.selected)
-        : this.selected.slice(0);
-      cids.forEach(cid => this.toggleSelect(this.assessments[cid]));
-    },
-    save(assessment) {
-      // TODO: Do this better!
-      if (this.assessments[assessment._cid]) {
-        assessment.activityId = Number(this.$route.params.activityId);
-        assessment.id = this.assessments[assessment._cid].id;
-        this.assessments[assessment._cid] = assessment;
-        return assessment.id
-          ? this.updateAssessment(assessment)
-          : this.saveAssessment(assessment);
-      }
-    },
-    remove(assessment) {
-      // TODO: Has unsolved scenarios
-      if (assessment.id) this.removeAssessment(assessment);
-      this.$delete(this.assessments, assessment._cid);
-      this.selected.splice(this.selected.indexOf(assessment._cid), 1);
+      this.selected = this.allSelected ? map(this.assessments, it => it._cid) : [];
     },
     requestDeleteConfirmation(assessment) {
       appChannel.emit('showConfirmationModal', {

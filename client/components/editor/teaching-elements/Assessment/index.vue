@@ -6,23 +6,23 @@
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
       </div>
       <question
-        :assessment="assessment"
+        :assessment="element"
         :errors="errors"
         :isEditing="isEditing"
         @update="update">
       </question>
       <component
-        :is="getComponentName(assessment)"
-        :assessment="assessment.data"
+        :is="getComponentName(element)"
+        :assessment="element.data"
         :errors="errors"
         :isEditing="isEditing"
         @update="update"
         @alert="setAlert">
       </component>
-      <div class="form-group">
+      <div :class="{ 'has-error': hintError }" class="form-group">
         <span class="form-label">Hint</span>
         <input
-          v-model="assessment.data.hint"
+          v-model="element.data.hint"
           :disabled="!isEditing"
           class="form-control"
           type="text"
@@ -51,6 +51,8 @@ import Controls from './Controls';
 import DragDrop from './DragDrop';
 import FillBlank from './FillBlank';
 import isEmpty from 'lodash/isEmpty';
+import { mapMutations } from 'vuex-module';
+import MatchingQuestion from './MatchingQuestion';
 import MultipleChoice from './MultipleChoice';
 import NumericalResponse from './NumericalResponse';
 import SingleChoice from './SingleChoice';
@@ -69,6 +71,7 @@ const ASSESSMENT_TYPES = {
   NR: 'numerical-response',
   TR: 'text-response',
   FB: 'fill-blank',
+  MQ: 'matching-question',
   DD: 'drag-drop'
 };
 
@@ -76,45 +79,59 @@ export default {
   name: 'te-assessment',
   props: { element: Object, summative: Boolean },
   data() {
-    const assessment = cloneDeep(this.element);
+    const isEditing = !this.element.id;
     return {
-      assessment,
-      isEditing: !assessment.id,
+      isEditing,
       alert: {},
-      errors: []
+      errors: [],
+      previousVersion: null
     };
   },
   computed: {
     schema() {
-      return schemas[this.assessment.data.type] || {};
+      return schemas[this.element.data.type] || {};
     },
     typeInfo() {
-      return typeInfo[this.assessment.data.type] || {};
+      return typeInfo[this.element.data.type] || {};
+    },
+    hintError() {
+      return this.errors.includes('hint');
     }
   },
   methods: {
-    getComponentName(assessment) {
-      return ASSESSMENT_TYPES[assessment.data.type];
+    ...mapMutations({ addElement: 'add' }, 'tes'),
+    getComponentName(element) {
+      return ASSESSMENT_TYPES[element.data.type];
     },
     setAlert(data = {}) {
       this.alert = data;
+      const { type, message } = data;
+      if (type && type !== 'alert-danger') {
+        setTimeout(() => {
+          if (message === this.alert.message) this.setAlert();
+        }, 3000);
+      }
     },
     validate(data) {
       return this.schema.validate(data, validationOptions);
     },
     update(data, validate) {
-      Object.assign(this.assessment.data, data);
+      let element = cloneDeep(this.element);
+      Object.assign(element.data, data);
+      this.addElement(element);
+
       if (validate && !isEmpty(this.errors)) {
         this.errors = [];
-        this.validate(this.assessment.data)
+        this.validate(this.element.data)
           .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
       }
     },
     save() {
+      if (!this.isEditing) return;
       this.errors = [];
-      this.validate(this.assessment.data)
+      this.validate(this.element.data)
         .then(() => {
-          const data = this.summative ? this.assessment : this.assessment.data;
+          const data = this.summative ? this.element : this.element.data;
           this.$emit('save', cloneDeep(data));
           this.isEditing = false;
           this.setAlert(saveAlert);
@@ -125,7 +142,7 @@ export default {
       if (!this.element.id) {
         this.$emit('remove');
       } else {
-        Object.assign(this.assessment, cloneDeep(this.initAssessment));
+        this.addElement(cloneDeep(this.previousVersion));
         this.isEditing = false;
         this.setAlert();
         this.errors = [];
@@ -135,6 +152,7 @@ export default {
       this.$emit('selected');
     },
     edit() {
+      this.previousVersion = cloneDeep(this.element);
       this.isEditing = true;
     },
     remove() {
@@ -150,6 +168,7 @@ export default {
     FillBlank,
     Question,
     Controls,
+    MatchingQuestion,
     DragDrop
   }
 };

@@ -88,10 +88,6 @@ export default {
       type: Boolean,
       default: true
     },
-    autoCropUpdate: {
-      type: Boolean,
-      default: false
-    },
     movable: {
       type: Boolean,
       default: true
@@ -218,12 +214,6 @@ export default {
       }
     }
     this.cropper = new Cropper(this.$refs.img, props);
-  },
-  updated() {
-    if (this.autoCropUpdate) {
-      // Toggle inital autoCrop value on component update
-      this.cropper.options.autoCrop = !this.autoCrop;
-    }
   }
 };
 </script>

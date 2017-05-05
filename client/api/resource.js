@@ -1,4 +1,5 @@
 import assign from 'lodash/assign';
+import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import join from 'url-join';
 import omit from 'lodash/omit';
@@ -101,15 +102,17 @@ export default class Resource {
    * @param {object} model
    */
   save(model) {
-    const url = this.url('');
     return this.queue.add(() => {
       // if server id is not provided but exist inside resource cache
       if (!model.id && this.getKey(model._cid)) this.setKey(model);
-      const action = model.id ? 'put' : 'post';
-      return axios[action](url, this.clean(model));
-    }).then(response => {
-      if (!model.id) this.map(model._cid, response.data.data.id);
-      return assign(model, response.data.data);
+      const action = model.id ? 'patch' : 'post';
+      const url = model.id ? this.url(model.id) : this.url('');
+      return axios[action](url, this.clean(model))
+        .then(response => {
+          if (!model.id) this.map(model._cid, response.data.data.id);
+          model = cloneDeep(model);
+          return assign(model, response.data.data);
+        });
     });
   }
 

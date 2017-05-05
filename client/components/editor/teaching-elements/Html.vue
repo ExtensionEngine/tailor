@@ -12,7 +12,9 @@
       <quill-editor
         v-if="isFocused"
         v-model="content"
-        :config="config">
+        :config="config"
+        @ready="onQuillReady"
+        ref="quill">
       </quill-editor>
       <div v-else class="ql-container ql-snow">
         <div v-html="content" class="ql-editor"></div>
@@ -36,6 +38,16 @@ export default {
       config: { modules: { toolbar: '#quillToolbar' } }
     };
   },
+  methods: {
+    onQuillReady(quill) {
+      quill.focus();
+    },
+    save() {
+      if (!this.$refs.quill || !this.hasChanges) return;
+      const text = this.$refs.quill.quillEditor.getText().trim();
+      this.$emit('save', { content: text ? this.content : '' });
+    }
+  },
   computed: {
     hasChanges() {
       const previousValue = this.element.data.content || '';
@@ -43,14 +55,14 @@ export default {
     }
   },
   watch: {
+    element(val) {
+      this.content = val.data.content;
+    },
     isFocused(val, oldVal) {
-      if (oldVal && !val && this.hasChanges) {
-        this.$emit('save', { content: this.content });
-      }
+      if (oldVal && !val) this.save();
     },
     content: debounce(function () {
-      if (!this.hasChanges) return;
-      this.$emit('save', { content: this.content });
+      this.save();
     }, 2000)
   },
   components: { quillEditor }
@@ -85,5 +97,9 @@ export default {
 
 .ql-container.ql-snow {
   border: none !important;
+}
+
+.ql-editor.ql-blank:before {
+  width: 100%;
 }
 </style>

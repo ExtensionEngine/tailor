@@ -1,45 +1,65 @@
 <template>
   <div class="course-sidebar">
-    <div v-if="isActivitySelected" class="row">
-      <div class="col-xs-10">
-        <div
-          v-show="showNameInput"
-          :class="{ 'has-error': vErrors.has('newActivityName') }"
-          class="form-group">
+    <div v-if="name">
+      <div class="dropdown">
+        <button
+          class="btn btn-default btn-options dropdown-toggle"
+          type="button"
+          data-toggle="dropdown">
+          <span class="mdi mdi-dots-vertical"></span>
+        </button>
+        <ul class="dropdown-menu pull-right">
+          <li><a @click.stop="deleteActivity">Delete</a></li>
+        </ul>
+      </div>
+      <div class="row-a">
+        <label>Name</label>
+        <div v-show="showNameInput" :class="{ 'has-error': vErrors.has('name') }">
           <textarea
-            ref="newActivityName"
-            @blur="onFocusOut"
-            @keyup.enter="onFocusOut"
-            @keyup.esc="deactivateInput"
-            class="form-control"
-            name="newActivityName"
-            v-model="newActivityName"
-            v-validate="{ rules: { required: true, min: 2, max: 250 } }"
-            data-vv-as="name">
+            v-model="nameInput"
+            v-validate="{ rules: { required: true, min: 2, max: 150 } }"
+            @blur="focusoutName"
+            @keyup.enter="focusoutName"
+            @keyup.esc="hideNameInput"
+            ref="nameInput"
+            name="name"
+            class="form-control">
           </textarea>
-          <span v-if="vErrors.has('newActivityName')" class="help-block">
-            {{ vErrors.first('newActivityName') }}
-          </span>
+          <span class="help-block">{{ vErrors.first('name') }}</span>
         </div>
-        <div v-show="!showNameInput" class="title-container">
-          <h3 class="title" @click.stop="activateInput">
-            {{ activity.name }}
-          </h3>
-          <span class="fa fa-pencil"></span>
+        <div v-show="!showNameInput" @click.stop="focusName">
+          <div class="title">{{ name }}</div>
         </div>
       </div>
-      <div class="col-xs-2">
-        <div class="dropdown">
-          <button
-            class="btn btn-default btn-options dropdown-toggle"
-            type="button"
-            data-toggle="dropdown">
-            <span class="fa fa-ellipsis-v"></span>
-          </button>
-          <ul class="dropdown-menu pull-right">
-            <li><a @click.stop="deleteActivity">Delete</a></li>
-          </ul>
+      <div class="row-a">
+        <label>Description</label>
+        <div
+          v-show="showDescriptionInput"
+          :class="{ 'has-error': vErrors.has('description') }">
+          <textarea
+            v-model="descriptionInput"
+            v-validate="{ rules: { required: false, max: 250 } }"
+            @blur="focusoutDescription"
+            @keyup.enter="focusoutDescription"
+            @keyup.esc="hideDescriptionInput"
+            ref="descriptionInput"
+            placeholder="Click to add..."
+            name="description"
+            class="form-control">
+          </textarea>
+          <span class="help-block">{{ vErrors.first('description') }}</span>
         </div>
+        <div v-show="!showDescriptionInput" @click.stop="focusDescription">
+          <div class="title">{{ description || 'Click to add...' }}</div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="placeholder">
+      <h4>Outline Sidebar</h4>
+      <div class="mdi mdi-arrow-left"></div>
+      <div class="helper">
+        Please create your first Goal on the left to view and edit its details
+        here.
       </div>
     </div>
   </div>
@@ -47,6 +67,7 @@
 
 <script>
 import EventBus from 'EventBus';
+import get from 'lodash/get';
 import { mapActions, mapGetters } from 'vuex-module';
 const noop = Function.prototype;
 
@@ -55,37 +76,55 @@ const appChannel = EventBus.channel('app');
 export default {
   data() {
     return {
-      newActivityName: '',
-      showNameInput: false
+      nameInput: '',
+      descriptionInput: '',
+      showNameInput: false,
+      showDescriptionInput: false
     };
   },
   computed: {
     ...mapGetters(['activity'], 'course'),
-    isActivitySelected() {
-      return !!this.activity.name;
+    name() {
+      return this.activity.name;
+    },
+    description() {
+      return get(this.activity, 'data.description', '');
     }
   },
   methods: {
     ...mapActions(['remove', 'update'], 'activities'),
-    activateInput() {
-      this.newActivityName = this.activity.name.slice(0);
+    focusName() {
+      this.nameInput = this.activity.name;
       this.showNameInput = true;
-      setTimeout(() => this.$refs.newActivityName.focus(), 0);
+      setTimeout(() => this.$refs.nameInput.focus(), 0);
     },
-    deactivateInput() {
-      // This removes input from DOM and triggers blur event!
-      this.showNameInput = false;
-    },
-    onFocusOut() {
+    focusoutName() {
       this.$validator.validateAll().then(() => {
-        this.saveActivityName();
-        this.deactivateInput();
+        if (this.nameInput === this.activity.name) {
+          this.showNameInput = false;
+          return;
+        }
+        this.update({ _cid: this.activity._cid, name: this.nameInput });
+        this.showNameInput = false;
       }, noop);
     },
-    saveActivityName() {
-      if (this.newActivityName !== this.activity.name) {
-        this.update({ _cid: this.activity._cid, name: this.newActivityName });
-      }
+    focusDescription() {
+      this.descriptionInput = get(this.activity, 'data.description', '');
+      this.showDescriptionInput = true;
+      setTimeout(() => this.$refs.descriptionInput.focus(), 0);
+    },
+    focusoutDescription() {
+      this.$validator.validateAll().then(() => {
+        if (this.descriptionInput === this.description) {
+          this.showDescriptionInput = false;
+          return;
+        }
+        this.update({
+          _cid: this.activity._cid,
+          data: { description: this.descriptionInput }
+        });
+        this.showDescriptionInput = false;
+      }, noop);
     },
     deleteActivity() {
       appChannel.emit('showConfirmationModal', {
@@ -93,6 +132,14 @@ export default {
         item: this.activity,
         action: () => this.remove(this.activity)
       });
+    }
+  },
+  watch: {
+    name(val) {
+      this.nameInput = val;
+    },
+    description(val) {
+      this.descriptionInput = val;
     }
   }
 };
@@ -104,13 +151,13 @@ export default {
   right: 0;
   width: 400px;
   height: 100%;
-  padding: 30px 20px;
+  padding: 30px 10px;
   text-align: left;
   border-top: 1px solid #e8e8e8;
   background-color: #fcfcfc;
 
   .btn-options {
-    margin: 0px 10px;
+    margin: 0 15px;
     padding: 6px 8px 4px;
     color: #555;
     border: 1px #ddd solid;
@@ -124,33 +171,77 @@ export default {
     }
   }
 
-  .title {
-    display: inline-block;
-    float: left;
-    width: 94%;
-    margin: 5px 3px 0 0;
-    font-size: 17px;
-    font-weight: normal;
-    word-wrap: break-word;
+  .dropdown {
+    margin-bottom: 10px;
+    text-align: right;
+
+    button {
+      padding: 2px;
+      font-size: 18px;
+    }
+
+    .dropdown-menu {
+      margin-right: 15px;
+    }
   }
 
-  .title-container {
-    .fa {
-      display: none;
-    }
+  .title {
+    height: 100px;
+    margin: 5px 3px 5px 0;
+    font-size: 17px;
+    line-height: 24px;
+    word-wrap: break-word;
+    font-weight: normal;
+    color: #333;
+   }
 
-    &:hover {
-      cursor: pointer;
-
-      .fa {
-        display: inline-block;;
-      }
-    }
+  .form-control {
+    font-size: 17px;
+    letter-spacing: 0.1px;
   }
 
   textarea {
     margin: 5px 0;
-    min-height: 100px;
+    height: 100px;
+    resize: none;
+  }
+
+  .help-block {
+    margin-bottom: 0;
+  }
+
+  label {
+    color: gray;
+  }
+}
+
+.row-a {
+  height: 155px;
+  padding: 3px 8px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #f5f5f5;
+  }
+}
+
+.placeholder {
+  color: gray;
+
+  h4 {
+    padding: 8px 0 18px;
+    text-align: center;
+    font-size: 19px;
+  }
+
+  .mdi {
+    float: left;
+    padding: 5px 20px 5px 12px;
+    font-size: 20px;
+  }
+
+  .helper {
+    width: 330px;
   }
 }
 </style>

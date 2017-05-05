@@ -24,9 +24,11 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeAccordion from './Accordion/Accordion';
 import TeAssessment from './Assessment';
 import TeBreak from './PageBreak';
+import TeCarousel from './Carousel/Carousel';
 import TeEmbed from './Embed';
 import TeHtml from './Html';
 import TeImage from './Image';
+import TeModal from './Modal';
 import TeVideo from './Video';
 
 const TE_TYPES = {
@@ -36,7 +38,9 @@ const TE_TYPES = {
   IMAGE: 'te-image',
   ASSESSMENT: 'te-assessment',
   VIDEO: 'te-video',
-  ACCORDION: 'te-accordion'
+  ACCORDION: 'te-accordion',
+  CAROUSEL: 'te-carousel',
+  MODAL: 'te-modal'
 };
 
 export default {
@@ -64,7 +68,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ updateElement: 'update' }, 'tes'),
+    ...mapActions({ saveElement: 'save' }, 'tes'),
     ...mapMutations(['focusElement'], 'editor'),
     resolveElement(type) {
       return TE_TYPES[type];
@@ -82,7 +86,7 @@ export default {
         this.$emit('save', { ...this.element, data });
       } else {
         Object.assign(this.element.data, elementData);
-        this.updateElement(this.element);
+        this.saveElement(this.element);
       }
     }
   },
@@ -90,9 +94,11 @@ export default {
     TeAccordion,
     TeAssessment,
     TeBreak,
+    TeCarousel,
     TeEmbed,
     TeHtml,
     TeImage,
+    TeModal,
     TeVideo
   }
 };
@@ -123,22 +129,18 @@ export default {
 
 .te-container {
   padding: 7px 0;
-  user-select: none;
-  
-  &.focused {
-    user-select: unset;
-  }
 }
 
 .teaching-element {
   position: relative;
   padding: 10px 20px 10px 20px;
-  border: 1px dashed #ccc;
-  user-select: none;
-
-  .focused & {
-    user-select: unset;
-  }
+  border: 1px dotted #ccc;
 }
 
+.focused {
+  > .teaching-element {
+    border: 1px solid #90a4ae;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+  }
+}
 </style>

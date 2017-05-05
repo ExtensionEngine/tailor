@@ -44,10 +44,7 @@ export default {
   props: ['perspective'],
   data() {
     return {
-      dragOptions: {
-        handle: '.drag-handle',
-        forceFallback: true
-      },
+      dragOptions: { handle: '.drag-handle' },
       elementTypes: [
         'HTML',
         'IMAGE',
@@ -55,7 +52,9 @@ export default {
         'EMBED',
         'ASSESSMENT',
         'BREAK',
-        'ACCORDION'
+        'ACCORDION',
+        'CAROUSEL',
+        'MODAL'
       ]
     };
   },

@@ -57,6 +57,7 @@ export default {
       this.$emit('update', { question });
     },
     elementChanged(element) {
+      if (!this.isEditing) return;
       const question = cloneDeep(this.assessment.data.question);
       const index = findIndex(question, { id: element.id });
       if (index < 0) return;

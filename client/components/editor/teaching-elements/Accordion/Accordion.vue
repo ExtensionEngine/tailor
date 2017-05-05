@@ -5,6 +5,7 @@
   <ul v-else class="accordion">
     <accordion-item
       v-for="it in items"
+      :key="it.id"
       :item="it"
       :embeds="embeds"
       @save="saveItem"
@@ -31,10 +32,10 @@ export default {
   props: ['element'],
   computed: {
     items() {
-      return this.element.data.items || {};
+      return this.element.data.items;
     },
     embeds() {
-      return this.element.data.embeds || {};
+      return this.element.data.embeds;
     },
     hasItems() {
       return !isEmpty(this.items);
@@ -43,10 +44,19 @@ export default {
   methods: {
     ...mapActions({ updateElement: 'update' }, 'tes'),
     saveItem({ item, element }) {
-      let embeds = cloneDeep(this.embeds);
-      let items = cloneDeep(this.items);
-      items[item.id] = item;
-      if (element) embeds[element.id] = element;
+      let embeds = this.embeds;
+      let items = this.items;
+
+      if (element) {
+        embeds = cloneDeep(embeds);
+        embeds[element.id] = element;
+      }
+
+      if (item) {
+        items = cloneDeep(items);
+        items[item.id] = item;
+      }
+
       this.$emit('save', { embeds, items });
     },
     deleteItem(itemId) {
@@ -60,10 +70,6 @@ export default {
   created() {
     teChannel.on(`${this.element._cid}/add`, () => {
       const element = cloneDeep(this.element);
-      if (!element.data.items) {
-        element.data.items = {};
-        element.data.embeds = {};
-      }
       const id = cuid();
       element.data.items[id] = { id, header: 'Header', body: {} };
       this.updateElement(element);

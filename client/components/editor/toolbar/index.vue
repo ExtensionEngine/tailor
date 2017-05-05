@@ -3,6 +3,7 @@
     <div v-if="focusedElement.type" class="toolbar-container">
       <component
         :is="getComponentName(focusedElement.type)"
+        :key="focusedElement._cid || focusedElement.id"
         :element="focusedElement">
       </component>
       <div class="delete-element">
@@ -16,11 +17,13 @@
 
 <script>
 import AccordionToolbar from './AccordionToolbar';
+import CarouselToolbar from './CarouselToolbar';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import EmbedToolbar from './EmbedToolbar';
 import ImageToolbar from './ImageToolbar';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import ModalToolbar from './ModalToolbar';
 import QuillToolbar from './QuillToolbar';
 import VideoToolbar from './VideoToolbar';
 
@@ -31,7 +34,9 @@ const TOOLBAR_TYPES = {
   VIDEO: 'video-toolbar',
   EMBED: 'embed-toolbar',
   HTML: 'quill-toolbar',
-  ACCORDION: 'accordion-toolbar'
+  ACCORDION: 'accordion-toolbar',
+  CAROUSEL: 'carousel-toolbar',
+  MODAL: 'modal-toolbar'
 };
 
 export default {
@@ -66,12 +71,14 @@ export default {
     }
   },
   components: {
+    AccordionToolbar,
+    CarouselToolbar,
     DefaultToolbar,
-    ImageToolbar,
     EmbedToolbar,
+    ImageToolbar,
+    ModalToolbar,
     QuillToolbar,
-    VideoToolbar,
-    AccordionToolbar
+    VideoToolbar
   }
 };
 </script>
