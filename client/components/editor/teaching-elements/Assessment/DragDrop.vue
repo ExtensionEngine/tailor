@@ -3,7 +3,7 @@
     <div class="row">
       <div
         v-for="(dropSpot, col) in dropSpots"
-        :class="[colWidth, clearCol(col)]"
+        :class="{ 'clear': col % 2 === 0 }"
         class="col-md-6">
         <div :class="{ 'flip': isFocused(col) }" class="drop-container">
           <div @click="focus(col)" class="heading-view front center">
@@ -20,8 +20,7 @@
             v-model="dropSpot.heading"
             v-focus="{ col }"
             @change="update"
-            @keyup.enter="focus(col)"
-            @keyup.esc="focus(col)"
+            @keyup.enter.esc="focus(col)"
             @blur="isFocused(col) && focus(col)"
             class="form-control heading-input back"
             placeholder="Insert text here ...">
@@ -45,21 +44,18 @@
               v-model="answerGroup(col)[row]"
               v-focus="{ col, row }"
               @change="update"
-              @keyup.esc="focus(col, row)"
-              @keyup.enter="focus(col, row)"
+              @keyup.enter.esc="focus(col, row)"
               @blur="isFocused(col, row) && focus(col, row)"
               class="form-control response-input back"
               placeholder="Insert text here ...">
           </li>
-          <span
-            v-show="isEditing" @click="addAnswer(col)" class="add-answer mdi mdi-plus">
-          </span>
         </ul>
+        <span @click="addAnswer(col)" class="add-answer mdi mdi-plus"></span>
       </div>
     </div>
-    <div class="add-dropSpot">
-      <span v-show="isEditing" @click="addDropSpot()" class="mdi mdi-plus"></span>
-    </div>
+    <button @click="addDropSpot" class="btn btn-primary add-dropspot">
+      <span class="mdi mdi-plus"></span> Add Group
+    </button>
   </div>
 </template>
 
@@ -68,51 +64,22 @@ import isNumber from 'lodash/isNumber';
 import times from 'lodash/times';
 
 export default {
-  directives: {
-    focus: {
-      update(el, binding, vnode) {
-        const col = vnode.context.focused.col;
-        const row = vnode.context.focused.row;
-        const newCol = binding.value.col;
-        const newRow = binding.value.row;
-        col === newCol && row === newRow ? el.focus() : el.blur();
-      }
-    }
-  },
   props: {
     assessment: Object,
-    errors: Array,
-    isEditing: Boolean
+    isEditing: Boolean,
+    errors: Array
   },
   data() {
     return {
       focused: { col: null, row: null }
     };
   },
-  created() {
-    if (this.dropSpots.length < 2) {
-      times(2, () => this.dropSpots.push({ heading: '', answers: [''] }));
-      this.update();
-    }
-  },
   computed: {
     dropSpots() {
       return this.assessment.correct;
-    },
-    colWidth() {
-      return this.dropSpots.length === 2 ? 'col-lg-6' : 'col-lg-4';
     }
   },
   methods: {
-    clearCol(col) {
-      if (col % 3 === 0 && col % 2 === 0) {
-        return 'clear-large clear-medium';
-      } else if (col % 3 === 0) {
-        return 'clear-large';
-      } else if (col % 2 === 0) {
-        return 'clear-medium';
-      }
-    },
     addAnswer(col) {
       this.answerGroup(col).push('');
       this.update();
@@ -152,22 +119,29 @@ export default {
     update() {
       this.$emit('update', { correct: this.dropSpots }, true);
     }
+  },
+  directives: {
+    focus: {
+      update(el, binding, vnode) {
+        const { col, row } = vnode.context.focused;
+        const { col: newCol, row: newRow } = binding.value;
+        col === newCol && row === newRow ? el.focus() : el.blur();
+      }
+    }
+  },
+  created() {
+    if (this.dropSpots.length < 2) {
+      times(2, () => this.dropSpots.push({ heading: '', answers: [''] }));
+      this.update();
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.row {
-  display: inline-block;
-  width: 80%;
-  margin-top: 63px;
-}
-
-.add-dropSpot {
-  font-size: 28px;
-  float: right;
-  width: 20%;
-  margin-top: 133px;
+.add-dropspot {
+  padding: 5px 20px;
+  margin-top: 80px;
 }
 
 .center {
@@ -243,17 +217,14 @@ ul {
 
 .disabled {
   pointer-events: none;
-}
 
-@media (min-width: 1200px) {
-  .clear-large {
-    clear: left;
+  .add-answer, .add-dropspot {
+    visibility: hidden;
   }
 }
 
-@media (max-width: 1199px) {
-  .clear-medium {
-    clear: left;
-  }
+.clear  {
+  clear: left;
+  margin-bottom: 80px;
 }
 </style>
