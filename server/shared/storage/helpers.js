@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 const storage = require('./index');
 const values = require('lodash/values');
 
-const PRIMITIVES = ['HTML', 'HTML-TABLE', 'IMAGE', 'VIDEO', 'EMBED'];
+const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 

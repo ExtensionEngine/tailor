@@ -1,30 +1,79 @@
 <template>
-  <div class="table-cell">
-    <primitive :initialElement="element" @save="saveBodyElement"></primitive>
+  <div @click="focus" class="table-cell">
+    <div class="cell-editor col-xs-12">
+      <quill-editor
+        v-if="isFocused"
+        v-model="content"
+        :config="config"
+        @ready="onQuillReady">
+      </quill-editor>
+      <div v-else class="ql-container ql-snow">
+        <div v-html="content" class="ql-editor"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import Primitive from '../Primitive';
+import debounce from 'lodash/debounce';
+import { mapGetters, mapMutations } from 'vuex-module';
+import { quillEditor } from 'vue-quill-editor';
 
 export default {
   name: 'table-cell',
-  props: ['cell', 'rowId', 'embeds'],
+  props: ['element'],
+  data() {
+    return {
+      content: this.element.data.content,
+      config: { placeholder: '', modules: { toolbar: '#tableToolbar' } }
+    };
+  },
   computed: {
-    element() {
-      return this.embeds[Object.keys(this.cell.body)[0]];
+    ...mapGetters(['focusedElement'], 'editor'),
+    isFocused() {
+      if (!this.focusedElement.type) return false;
+      return this.focusedElement.embedded
+        ? this.focusedElement.id === this.element.id
+        : this.focusedElement._cid === this.element._cid;
+    },
+    hasChanges() {
+      const previousValue = this.element.data.content || '';
+      return previousValue !== this.content;
     }
   },
   methods: {
-    saveBodyElement(element) {
-      if (this.cell.body && !this.cell.body[element.id]) return;
-      element = cloneDeep(element);
+    ...mapMutations(['focusElement'], 'editor'),
+    onQuillReady(quill) {
+      quill.focus();
+    },
+    focus(e) {
+      this.focusElement(this.element);
+      // Attach component meta
+      e.component = { name: 'table-cell', data: this.element };
+    },
+    saveElement(data) {
+      const element = cloneDeep(this.element);
+      Object.assign(element.data, data);
       this.$emit('save', { element });
     }
   },
+  watch: {
+    element(val) {
+      this.content = val.data.content;
+    },
+    isFocused(val, oldVal) {
+      if (oldVal && !val && this.hasChanges) {
+        this.saveElement({ content: this.content });
+      }
+    },
+    content: debounce(function () {
+      if (!this.hasChanges) return;
+      this.saveElement({ content: this.content });
+    }, 2000)
+  },
   components: {
-    Primitive
+    quillEditor
   }
 };
 </script>
@@ -36,21 +85,22 @@ export default {
   max-width: 312px;
   height: 100%;
   border: 1px solid black;
+
+  .cell-editor {
+    height: 100%;
+    padding: 0;
+  }
 }
 </style>
 
 <style lang="scss">
-.table-cell {
-  .te-container {
-    height: 100% !important;
-    padding: 0 !important;
+.cell-editor {
+  .ql-editor {
+    min-height: 42px;
+  }
 
-    .teaching-element {
-      height: 100% !important;
-      padding: 0 !important;
-      border: none !important;
-      box-shadow: none !important;
-    }
+  .ql-container.ql-snow {
+    border: none !important;
   }
 }
 </style>

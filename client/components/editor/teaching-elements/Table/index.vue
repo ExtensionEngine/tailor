@@ -7,9 +7,7 @@
       <table-cell
         v-for="cell in sortCells(row.cells)"
         :key="cell.id"
-        :cell="cell"
-        :rowId="row.id"
-        :embeds="embeds"
+        :element="embeds[cell.embedId]"
         @save="saveCell">
       </table-cell>
     </div>
@@ -26,7 +24,6 @@ import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { mapActions, mapMutations } from 'vuex-module';
-import omit from 'lodash/omit';
 import size from 'lodash/size';
 
 const teChannel = EventBus.channel('te');
@@ -73,14 +70,14 @@ export default {
 
         embeds[embedId] = {
           id: embedId,
-          type: 'HTML-TABLE',
+          type: 'TABLE-CELL',
           embedded: true,
-          data: { rowId, cellId, width: 12 }
+          data: { rowId, cellId }
         };
         rows[rowId].cells[cellId] = {
           id: cellId,
           position: cells[cell].position,
-          body: { [embedId]: true }
+          embedId
         };
       }
 
@@ -129,14 +126,14 @@ export default {
 
         embeds[embedId] = {
           id: embedId,
-          type: 'HTML-TABLE',
+          type: 'TABLE-CELL',
           embedded: true,
-          data: { rowId, cellId, width: 12 }
+          data: { rowId, cellId }
         };
         rows[rowId].cells[cellId] = {
           id: cellId,
           position,
-          body: { [embedId]: true }
+          embedId
         };
       }
 
@@ -211,14 +208,14 @@ export default {
       let { rows, embeds } = element.data;
       const position = rows[rowId].position;
       for (let cellId in rows[rowId].cells) {
-        embeds = omit(embeds, Object.keys(rows[rowId].cells[cellId].body));
+        delete embeds[rows[rowId].cells[cellId].embedId];
       }
       delete rows[rowId];
 
       const rowToFocus = this.getItemToFocus(rows, position);
       if (rowToFocus) {
         const [cellToFocus] = sortMap(rowToFocus.cells)[0];
-        this.focusElement(embeds[Object.keys(cellToFocus.body)[0]]);
+        this.focusElement(embeds[cellToFocus.embedId]);
       }
       this.$emit('save', { embeds, rows });
     },
@@ -232,12 +229,12 @@ export default {
         const cellToDelete = find(rows[row].cells, cell => {
           return cell.position === currentPosition;
         });
-        embeds = omit(embeds, Object.keys(cellToDelete.body));
+        delete embeds[cellToDelete.embedId];
         delete rows[row].cells[cellToDelete.id];
       }
 
       const cellToFocus = this.getItemToFocus(cells, currentPosition);
-      if (cellToFocus) this.focusElement(embeds[Object.keys(cellToFocus.body)[0]]);
+      if (cellToFocus) this.focusElement(embeds[cellToFocus.embedId]);
       this.$emit('save', { embeds, rows });
     }
   },
@@ -258,6 +255,7 @@ export default {
 <style lang="scss" scoped>
 .table {
   display: table;
+  width: 100%;
   border-collapse: collapse;
 
   .table-row {

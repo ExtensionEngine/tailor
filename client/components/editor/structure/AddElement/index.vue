@@ -101,14 +101,14 @@ export default {
 
             embeds[embedId] = {
               id: embedId,
-              type: 'HTML-TABLE',
+              type: 'TABLE-CELL',
               embedded: true,
-              data: { rowId, cellId, width: 12 }
+              data: { rowId, cellId }
             };
             rows[rowId].cells[cellId] = {
               id: cellId,
               position: j,
-              body: { [embedId]: true }
+              embedId
             };
           }
         }
