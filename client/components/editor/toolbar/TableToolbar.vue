@@ -39,22 +39,28 @@ export default {
   props: ['element'],
   methods: {
     addRowBefore() {
-      teChannel.emit('addRowBefore', this.element.data.rowId);
+      const { tableId, rowId } = this.element.data;
+      teChannel.emit(`${tableId}/addRowBefore`, rowId);
     },
     addRowAfter() {
-      teChannel.emit('addRowAfter', this.element.data.rowId);
+      const { tableId, rowId } = this.element.data;
+      teChannel.emit(`${tableId}/addRowAfter`, rowId);
     },
     addColBefore() {
-      teChannel.emit('addColBefore', this.element.data.rowId, this.element.data.cellId);
+      const { tableId, rowId, cellId } = this.element.data;
+      teChannel.emit(`${tableId}/addColBefore`, rowId, cellId);
     },
     addColAfter() {
-      teChannel.emit('addColAfter', this.element.data.rowId, this.element.data.cellId);
+      const { tableId, rowId, cellId } = this.element.data;
+      teChannel.emit(`${tableId}/addColAfter`, rowId, cellId);
     },
     removeRow() {
-      teChannel.emit('removeRow', this.element.data.rowId);
+      const { tableId, rowId } = this.element.data;
+      teChannel.emit(`${tableId}/removeRow`, rowId);
     },
     removeColumn() {
-      teChannel.emit('removeColumn', this.element.data.rowId, this.element.data.cellId);
+      const { tableId, rowId, cellId } = this.element.data;
+      teChannel.emit(`${tableId}/removeColumn`, rowId, cellId);
     }
   }
 };

@@ -1,8 +1,5 @@
 <template>
-  <div v-if="!hasRows" class="well">
-    Use the toolbar to add some rows and columns to the table.
-  </div>
-  <div v-else class="table">
+  <div class="table">
     <div v-for="row in sortedRows" :key="row.id" class="table-row">
       <table-cell
         v-for="cell in sortCells(row.cells)"
@@ -59,6 +56,39 @@ export default {
     sortCells(cells) {
       return map(sortMap(cells), ([cell]) => cell);
     },
+    createDefaultTable() {
+      const element = cloneDeep(this.element);
+      let embeds = {};
+      let rows = {};
+      // Create a default 3x2 table
+      for (let i = 1; i <= 2; i++) {
+        const rowId = cuid();
+        rows[rowId] = { id: rowId, position: i, cells: {} };
+        for (let j = 1; j <= 3; j++) {
+          const embedId = cuid();
+          const cellId = cuid();
+
+          embeds[embedId] = {
+            id: embedId,
+            type: 'TABLE-CELL',
+            embedded: true,
+            data: { tableId: this.element._cid, rowId, cellId }
+          };
+          rows[rowId].cells[cellId] = {
+            id: cellId,
+            position: j,
+            embedId
+          };
+        }
+      }
+
+      element.data = {
+        embeds,
+        rows
+      };
+
+      this.saveElement(element);
+    },
     addRow(element, position, cells) {
       const { rows, embeds } = element.data;
       const rowId = cuid();
@@ -72,7 +102,7 @@ export default {
           id: embedId,
           type: 'TABLE-CELL',
           embedded: true,
-          data: { rowId, cellId }
+          data: { tableId: this.element._cid, rowId, cellId }
         };
         rows[rowId].cells[cellId] = {
           id: cellId,
@@ -128,7 +158,7 @@ export default {
           id: embedId,
           type: 'TABLE-CELL',
           embedded: true,
-          data: { rowId, cellId }
+          data: { tableId: this.element._cid, rowId, cellId }
         };
         rows[rowId].cells[cellId] = {
           id: cellId,
@@ -173,21 +203,15 @@ export default {
 
       this.addColumn(element, newCellPosition);
     },
-    saveCell({ rowId, cell, element }) {
+    saveCell(element) {
       let embeds = this.embeds;
-      let rows = this.rows;
 
       if (element) {
         embeds = cloneDeep(this.embeds);
         embeds[element.id] = element;
       }
 
-      if (rowId && cell) {
-        rows = cloneDeep(this.rows);
-        rows[rowId].cells[cell.id] = cell;
-      }
-
-      this.$emit('save', { embeds, rows });
+      this.$emit('save', { embeds });
     },
     getItemToFocus(items, position) {
       const sortedItems = sortMap(items);
@@ -238,13 +262,28 @@ export default {
       this.$emit('save', { embeds, rows });
     }
   },
+  created() {
+    if (!this.hasRows) this.createDefaultTable();
+  },
   mounted() {
-    teChannel.on('addRowBefore', rowId => this.addRowBefore(rowId));
-    teChannel.on('addRowAfter', rowId => this.addRowAfter(rowId));
-    teChannel.on('addColBefore', (rowId, cellId) => this.addColBefore(rowId, cellId));
-    teChannel.on('addColAfter', (rowId, cellId) => this.addColAfter(rowId, cellId));
-    teChannel.on('removeRow', rowId => this.removeRow(rowId));
-    teChannel.on('removeColumn', (rowId, cellId) => this.removeColumn(rowId, cellId));
+    teChannel.on(`${this.element._cid}/addRowBefore`, rowId => {
+      this.addRowBefore(rowId);
+    });
+    teChannel.on(`${this.element._cid}/addRowAfter`, rowId => {
+      this.addRowAfter(rowId);
+    });
+    teChannel.on(`${this.element._cid}/addColBefore`, (rowId, cellId) => {
+      this.addColBefore(rowId, cellId);
+    });
+    teChannel.on(`${this.element._cid}/addColAfter`, (rowId, cellId) => {
+      this.addColAfter(rowId, cellId);
+    });
+    teChannel.on(`${this.element._cid}/removeRow`, rowId => {
+      this.removeRow(rowId);
+    });
+    teChannel.on(`${this.element._cid}/removeColumn`, (rowId, cellId) => {
+      this.removeColumn(rowId, cellId);
+    });
   },
   components: {
     TableCell
@@ -255,7 +294,6 @@ export default {
 <style lang="scss" scoped>
 .table {
   display: table;
-  width: 100%;
   border-collapse: collapse;
 
   .table-row {

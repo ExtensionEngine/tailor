@@ -55,7 +55,7 @@ export default {
     saveElement(data) {
       const element = cloneDeep(this.element);
       Object.assign(element.data, data);
-      this.$emit('save', { element });
+      this.$emit('save', element);
     }
   },
   watch: {
