@@ -1,67 +1,72 @@
 <template>
-  <div :class="{ 'disabled': !isEditing }">
+  <div :class="{ disabled: !isEditing }">
     <div class="row">
       <div
-        v-for="(dropSpot, col) in dropSpots"
-        :class="{ 'clear': col % 2 === 0 }"
+        v-for="(groupName, groupKey, index) in groups"
+        :class="{ clear: index % 2 === 0 }"
         class="col-md-6">
-        <div :class="{ 'flip': isFocused(col) }" class="drop-container">
-          <div @click="focus(col)" class="heading-view front center">
-            <span :class="errorClass(col)">
-              {{ dropSpot.heading || 'Click to edit' }}
+        <div :class="{ flip: isFocused(groupKey) }" class="drop-container">
+          <div @click="focus(groupKey)" class="heading-view front center">
+            <span>
+              {{ groupName || 'Click to edit' }}
             </span>
             <span
-              v-show="!minDropsReached(col) && isEditing"
-              @click.stop="removeDropSpot(col)"
+              v-show="!minGroups(groupKey) && isEditing"
+              @click.stop="removeGroup(groupKey)"
               class="destroy mdi mdi-close">
             </span>
           </div>
           <input
-            v-model="dropSpot.heading"
-            v-focus="{ col }"
-            @change="update"
-            @keyup.enter.esc="focus(col)"
-            @blur="isFocused(col) && focus(col)"
+            :ref="`heading${groupKey}`"
+            v-focus="{ groupKey }"
+            @change="updateHeading(groupKey)"
+            @keyup.enter.esc="focus(groupKey)"
+            @blur="isFocused(groupKey) && focus(groupKey)"
             class="form-control heading-input back"
             placeholder="Insert text here ...">
         </div>
         <ul>
           <li
-            v-for="(answer, row) in answerGroup(col)"
-            :class="{ 'flip': isFocused(col, row) }"
+            v-for="(answer, answerKey) in getGroupAnswers(groupKey)"
+            :class="{ flip: isFocused(groupKey, answerKey) }"
             class="answer-container">
-            <div @click="focus(col, row)" class="response-view front center">
-              <span :class="errorClass(col, row)">
+            <div
+              @click="focus(groupKey, answerKey)"
+              class="response-view front center">
+              <span>
                 {{ answer || 'Click to edit' }}
               </span>
               <span
-                v-show="!minAnswersReached(col, row) && isEditing"
-                @click.stop="removeAnswer(col, row)"
+                v-show="!minAnswers(groupKey) && isEditing"
+                @click.stop="removeAnswer(groupKey, answerKey)"
                 class="destroy mdi mdi-close">
               </span>
             </div>
             <input
-              v-model="answerGroup(col)[row]"
-              v-focus="{ col, row }"
-              @change="update"
-              @keyup.enter.esc="focus(col, row)"
-              @blur="isFocused(col, row) && focus(col, row)"
+              :ref="`answer${answerKey}`"
+              v-focus="{ groupKey, answerKey }"
+              @change="updateAnswer(answerKey)"
+              @keyup.enter.esc="focus(groupKey, answerKey)"
+              @blur="isFocused(groupKey, answerKey) && focus(groupKey, answerKey)"
               class="form-control response-input back"
               placeholder="Insert text here ...">
           </li>
         </ul>
-        <span @click="addAnswer(col)" class="add-answer mdi mdi-plus"></span>
+        <span @click="addAnswer(groupKey)" class="add-answer mdi mdi-plus"></span>
       </div>
     </div>
-    <button @click="addDropSpot" class="btn btn-primary add-dropspot">
+    <button @click="addGroup" class="btn btn-primary add-group">
       <span class="mdi mdi-plus"></span> Add Group
     </button>
   </div>
 </template>
 
 <script>
-import isNumber from 'lodash/isNumber';
-import times from 'lodash/times';
+import cloneDeep from 'lodash/cloneDeep';
+import cuid from 'cuid';
+import forEach from 'lodash/forEach';
+import pick from 'lodash/pick';
+import pull from 'lodash/pull';
 
 export default {
   props: {
@@ -71,75 +76,107 @@ export default {
   },
   data() {
     return {
-      focused: { col: null, row: null }
+      focused: { groupKey: null, answerKey: null }
     };
   },
   computed: {
-    dropSpots() {
-      return this.assessment.correct;
+    groups() {
+      return this.assessment.groups || {};
+    },
+    answers() {
+      return this.assessment.answers || {};
+    },
+    correct() {
+      return this.assessment.correct || {};
     }
   },
   methods: {
-    addAnswer(col) {
-      this.answerGroup(col).push('');
-      this.update();
+    getGroupAnswers(groupKey) {
+      let keys = this.correct[groupKey] || [];
+      return pick(this.answers, keys);
     },
-    addDropSpot() {
-      this.dropSpots.push({ heading: '', answers: [''] });
-      this.update();
+    updateHeading(groupKey) {
+      let groups = cloneDeep(this.groups);
+      groups[groupKey] = this.$refs[`heading${groupKey}`][0].value;
+      this.update({ groups });
     },
-    minDropsReached(col) {
-      return this.dropSpots.length <= 2;
+    updateAnswer(answerKey) {
+      let answers = cloneDeep(this.answers);
+      answers[answerKey] = this.$refs[`answer${answerKey}`][0].value;
+      this.update({ answers });
     },
-    minAnswersReached(col, row) {
-      return this.dropSpots[col].answers.length <= 1;
+    addGroup() {
+      let groups = cloneDeep(this.groups);
+      let correct = cloneDeep(this.correct);
+      let groupKey = cuid();
+      groups[groupKey] = '';
+      correct[groupKey] = [];
+      this.update({ groups, correct });
     },
-    answerGroup(col) {
-      return this.dropSpots[col].answers;
+    addAnswer(groupKey) {
+      let answers = cloneDeep(this.answers);
+      let correct = cloneDeep(this.correct);
+      const answerKey = cuid();
+      answers[answerKey] = '';
+      correct[groupKey].push(answerKey);
+      this.update({ answers, correct });
     },
-    errorClass(col, row) {
-      const general = `correct[${col}].`;
-      const mutable = `${isNumber(row) ? `answers[${row}]` : 'heading'}`;
-      return { 'error': this.errors.includes(general + mutable) };
+    minGroups(groupKey) {
+      return Object.keys(this.groups).length <= 2;
     },
-    focus(col, row) {
-      this.focused = this.isFocused(col, row) ? {} : { col, row };
+    minAnswers(groupKey) {
+      return this.correct[groupKey].length <= 1;
     },
-    isFocused(col, row) {
-      return this.focused.col === col && this.focused.row === row;
+    focus(groupKey, answerKey) {
+      this.focused = this.isFocused(groupKey, answerKey)
+        ? {}
+        : { groupKey, answerKey };
     },
-    removeAnswer(col, row) {
-      this.answerGroup(col).splice(row, 1);
-      this.update();
+    isFocused(groupKey, answerKey) {
+      const state = this.focused;
+      return state.groupKey === groupKey && state.answerKey === answerKey;
     },
-    removeDropSpot(col) {
-      this.dropSpots.splice(col, 1);
-      this.update();
+    removeAnswer(groupKey, answerKey) {
+      let answers = cloneDeep(this.answers);
+      let correct = cloneDeep(this.correct);
+      delete answers[answerKey];
+      correct[groupKey] = pull(correct[groupKey], answerKey);
+      this.update({ answers, correct });
     },
-    update() {
-      this.$emit('update', { correct: this.dropSpots }, true);
+    removeGroup(groupKey) {
+      let groups = cloneDeep(this.groups);
+      let answers = cloneDeep(this.answers);
+      let correct = cloneDeep(this.correct);
+      forEach(correct[groupKey], answerKey => delete answers[answerKey]);
+      delete groups[groupKey];
+      delete correct[groupKey];
+      this.update({ groups, answers, correct });
+    },
+    update(data) {
+      this.$emit('update', data, true);
     }
   },
   directives: {
     focus: {
       update(el, binding, vnode) {
-        const { col, row } = vnode.context.focused;
-        const { col: newCol, row: newRow } = binding.value;
-        col === newCol && row === newRow ? el.focus() : el.blur();
+        const { groupKey, answerKey } = vnode.context.focused;
+        const { groupKey: newGroupKey, answerKey: newAnswerKey } = binding.value;
+        if (groupKey === newGroupKey && answerKey === newAnswerKey) {
+          el.focus();
+        } else {
+          el.blur();
+        }
       }
     }
   },
   created() {
-    if (this.dropSpots.length < 2) {
-      times(2, () => this.dropSpots.push({ heading: '', answers: [''] }));
-      this.update();
-    }
+    if (Object.keys(this.groups).length === 0) this.addGroup();
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.add-dropspot {
+.add-group {
   padding: 5px 20px;
   margin-top: 80px;
 }
@@ -218,7 +255,7 @@ ul {
 .disabled {
   pointer-events: none;
 
-  .add-answer, .add-dropspot {
+  .add-answer, .add-group {
     visibility: hidden;
   }
 }
