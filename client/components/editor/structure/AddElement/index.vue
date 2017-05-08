@@ -88,6 +88,38 @@ export default {
         };
       }
 
+      if (element.type === 'TABLE') {
+        let embeds = {};
+        let rows = {};
+        const tableId = cuid();
+        // Create a default 3x2 table
+        for (let i = 1; i <= 2; i++) {
+          const rowId = cuid();
+          rows[rowId] = { id: rowId, position: i, cells: {} };
+          for (let j = 1; j <= 3; j++) {
+            const embedId = cuid();
+            const cellId = cuid();
+
+            embeds[embedId] = {
+              id: embedId,
+              type: 'TABLE-CELL',
+              embedded: true,
+              data: { tableId, rowId, cellId }
+            };
+            rows[rowId].cells[cellId] = {
+              id: cellId,
+              position: j,
+              embedId
+            };
+          }
+        }
+        element.data = {
+          tableId,
+          embeds,
+          rows
+        };
+      }
+
       this.$emit('add', element);
       this.close();
     },

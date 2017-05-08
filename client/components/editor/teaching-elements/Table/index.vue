@@ -46,8 +46,8 @@ export default {
     hasRows() {
       return !isEmpty(this.rows);
     },
-    id() {
-      return this.element._cid || this.element.id;
+    tableId() {
+      return this.element.data.tableId;
     }
   },
   methods: {
@@ -56,41 +56,8 @@ export default {
     sortCells(cells) {
       return map(sortMap(cells), ([cell]) => cell);
     },
-    createDefaultTable() {
-      const element = cloneDeep(this.element);
-      let embeds = {};
-      let rows = {};
-      // Create a default 3x2 table
-      for (let i = 1; i <= 2; i++) {
-        const rowId = cuid();
-        rows[rowId] = { id: rowId, position: i, cells: {} };
-        for (let j = 1; j <= 3; j++) {
-          const embedId = cuid();
-          const cellId = cuid();
-
-          embeds[embedId] = {
-            id: embedId,
-            type: 'TABLE-CELL',
-            embedded: true,
-            data: { tableId: this.element._cid, rowId, cellId }
-          };
-          rows[rowId].cells[cellId] = {
-            id: cellId,
-            position: j,
-            embedId
-          };
-        }
-      }
-
-      element.data = {
-        embeds,
-        rows
-      };
-
-      this.saveElement(element);
-    },
     addRow(element, position, cells) {
-      const { rows, embeds } = element.data;
+      const { tableId, rows, embeds } = element.data;
       const rowId = cuid();
       rows[rowId] = { id: rowId, position, cells: {} };
 
@@ -102,7 +69,7 @@ export default {
           id: embedId,
           type: 'TABLE-CELL',
           embedded: true,
-          data: { tableId: this.element._cid, rowId, cellId }
+          data: { tableId, rowId, cellId }
         };
         rows[rowId].cells[cellId] = {
           id: cellId,
@@ -148,7 +115,7 @@ export default {
       this.addRow(element, newRowPosition, rows[rowId].cells);
     },
     addColumn(element, position) {
-      let { rows, embeds } = element.data;
+      let { tableId, rows, embeds } = element.data;
 
       for (let rowId in rows) {
         const embedId = cuid();
@@ -158,7 +125,7 @@ export default {
           id: embedId,
           type: 'TABLE-CELL',
           embedded: true,
-          data: { tableId: this.element._cid, rowId, cellId }
+          data: { tableId, rowId, cellId }
         };
         rows[rowId].cells[cellId] = {
           id: cellId,
@@ -262,26 +229,23 @@ export default {
       this.$emit('save', { embeds, rows });
     }
   },
-  created() {
-    if (!this.hasRows) this.createDefaultTable();
-  },
   mounted() {
-    teChannel.on(`${this.element._cid}/addRowBefore`, rowId => {
+    teChannel.on(`${this.tableId}/addRowBefore`, rowId => {
       this.addRowBefore(rowId);
     });
-    teChannel.on(`${this.element._cid}/addRowAfter`, rowId => {
+    teChannel.on(`${this.tableId}/addRowAfter`, rowId => {
       this.addRowAfter(rowId);
     });
-    teChannel.on(`${this.element._cid}/addColBefore`, (rowId, cellId) => {
+    teChannel.on(`${this.tableId}/addColBefore`, (rowId, cellId) => {
       this.addColBefore(rowId, cellId);
     });
-    teChannel.on(`${this.element._cid}/addColAfter`, (rowId, cellId) => {
+    teChannel.on(`${this.tableId}/addColAfter`, (rowId, cellId) => {
       this.addColAfter(rowId, cellId);
     });
-    teChannel.on(`${this.element._cid}/removeRow`, rowId => {
+    teChannel.on(`${this.tableId}/removeRow`, rowId => {
       this.removeRow(rowId);
     });
-    teChannel.on(`${this.element._cid}/removeColumn`, (rowId, cellId) => {
+    teChannel.on(`${this.tableId}/removeColumn`, (rowId, cellId) => {
       this.removeColumn(rowId, cellId);
     });
   },
