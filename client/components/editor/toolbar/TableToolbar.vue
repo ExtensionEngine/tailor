@@ -1,30 +1,19 @@
 <template>
   <div id="tableToolbar" class="table-toolbar">
     <ul>
-      <li @click="addRowBefore" class="btn btn-link btn-sm">
-        <span class="mdi mdi-table-row-plus-before"></span>
-        Add row before
+      <li class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
+        <span class="mdi mdi-table"></span>
+        Table
       </li>
-      <li @click="addRowAfter" class="btn btn-link btn-sm">
-        <span class="mdi mdi-table-row-plus-after"></span>
-        Add row after
-      </li>
-      <li @click="addColBefore" class="btn btn-link btn-sm">
-        <span class="mdi mdi-table-column-plus-before"></span>
-        Add column before
-      </li>
-      <li @click="addColAfter" class="btn btn-link btn-sm">
-        <span class="mdi mdi-table-column-plus-after"></span>
-        Add column after
-      </li>
-      <li @click="removeRow" class="btn btn-link btn-sm">
-        <span class="mdi mdi-table-row-remove"></span>
-        Delete row
-      </li>
-      <li @click="removeColumn" class="btn btn-link btn-sm">
-        <span class="mdi mdi-table-column-remove"></span>
-        Delete column
-      </li>
+      <ul class="dropdown-menu" role="menu">
+        <li @click="addRowBefore" class="btn btn-link btn-sm">Add row before</li>
+        <li @click="addRowAfter" class="btn btn-link btn-sm">Add row after</li>
+        <li @click="addColBefore" class="btn btn-link btn-sm">Add column before</li>
+        <li @click="addColAfter" class="btn btn-link btn-sm">Add column after</li>
+        <li class="divider"></li>
+        <li @click="removeRow" class="btn btn-link btn-sm">Delete row</li>
+        <li @click="removeColumn" class="btn btn-link btn-sm">Delete column</li>
+      </ul>
     </ul>
   </div>
 </template>
@@ -96,6 +85,28 @@ export default {
       &.active {
         background-color: #e8e8e8;
       }
+    }
+  }
+
+  .dropdown-menu {
+    height: auto;
+    margin-left: 10px;
+    padding: 5px 0;
+
+    li {
+      display: block;
+    }
+
+    .btn {
+      padding-left: 20px;
+      text-align: left;
+      text-transform: none;
+      font-size: 14px;
+    }
+
+    .divider {
+      height: 1px;
+      padding: 0;
     }
   }
 }
