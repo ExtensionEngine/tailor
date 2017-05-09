@@ -38,6 +38,9 @@ export default {
         : this.focusedElement._cid === this.element._cid;
     },
     hasChanges() {
+      // This can happen when deleting a table from within a cell
+      if (this.content === undefined) return false;
+
       const previousValue = this.element.data.content || '';
       return previousValue !== this.content;
     }

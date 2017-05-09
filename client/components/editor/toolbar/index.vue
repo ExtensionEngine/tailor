@@ -21,6 +21,7 @@ import CarouselToolbar from './CarouselToolbar';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import EmbedToolbar from './EmbedToolbar';
+import find from 'lodash/find';
 import ImageToolbar from './ImageToolbar';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ModalToolbar from './ModalToolbar';
@@ -44,12 +45,24 @@ const TOOLBAR_TYPES = {
 
 export default {
   name: 'toolbar',
-  computed: mapGetters(['focusedElement'], 'editor'),
+  computed: {
+    ...mapGetters(['focusedElement'], 'editor'),
+    ...mapGetters(['tes'])
+  },
   methods: {
     ...mapActions({ removeElement: 'remove' }, 'tes'),
     ...mapActions(['focusoutElement'], 'editor'),
     ...mapMutations(['focusElement'], 'editor'),
     remove(element) {
+      // Special case the deletion of tables, so it's possible to delete them
+      // from cells as well
+      if (element.type === 'TABLE-CELL') {
+        const tableElement = find(this.tes, te => !!te.data.embeds[element.id]);
+        this.removeElement(tableElement);
+        this.focusoutElement();
+        return;
+      }
+
       if (element.embedded) {
         appChannel.emit('deleteElement', element);
       } else {
