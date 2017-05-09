@@ -47,7 +47,7 @@ export default {
 }
 
 .list-group {
-  padding: 10px 10px 344px;
+  padding: 10px 10px 359px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   line-height: 32px;
   background-color: white;
@@ -66,7 +66,7 @@ export default {
 }
 
 .mdi {
-  margin-right: 15%;
+  margin-right: 13%;
   margin-left: 5%;
   font-size: 20px;
 }

@@ -7,7 +7,7 @@
         <span
           v-show="showNameInput"
           :class="{ 'has-error': vErrors.has('courseName') }">
-          <input
+          <textarea
             v-model="newCourseName"
             v-focus="true"
             v-validate="{ rules: { required: true, min: 2, max: 250 } }"
@@ -17,8 +17,9 @@
             name="courseName"
             data-vv-as="Name"
             id="courseName"
-            class="form-control">
-            <span class="help-block">{{ vErrors.first('courseName') }}</span>
+            class="form-control name">
+          </textarea>
+          <span class="help-block">{{ vErrors.first('courseName') }}</span>
         </span>
         <span v-show="!showNameInput">
           <h2 @click.stop="showNameInput = true">{{ course.name }}</h2>
@@ -151,21 +152,24 @@ export default {
 
 h2 {
   display: inline-block;
-  margin: 20px 0 32px;
+  margin: 15px 0 30px;
+  line-height: 20px;
   font-size: 16px;
   font-weight: normal;
   color: #444;
 }
 
-input.form-control {
+textarea.form-control.name {
+  height: 50px;
   margin-top: 15px;
-  padding-top: 3px;
+  padding-top: 5px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
 }
 
 textarea.form-control {
   height: 200px;
   padding-top: 22px;
-  font-size: 16px;
   letter-spacing: 0.1px;
 }
 
