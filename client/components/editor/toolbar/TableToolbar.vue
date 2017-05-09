@@ -6,14 +6,47 @@
         Table
       </li>
       <ul class="dropdown-menu" role="menu">
-        <li @click="addRowBefore" class="btn btn-link btn-sm">Add row before</li>
-        <li @click="addRowAfter" class="btn btn-link btn-sm">Add row after</li>
-        <li @click="addColBefore" class="btn btn-link btn-sm">Add column before</li>
-        <li @click="addColAfter" class="btn btn-link btn-sm">Add column after</li>
+        <li @click="addRowBefore" :disabled="!isCell" class="btn btn-link btn-sm">
+          Add row before
+        </li>
+        <li @click="addRowAfter" :disabled="!isCell" class="btn btn-link btn-sm">
+          Add row after
+        </li>
+        <li @click="addColBefore" :disabled="!isCell" class="btn btn-link btn-sm">
+          Add column before
+        </li>
+        <li @click="addColAfter" :disabled="!isCell" class="btn btn-link btn-sm">
+          Add column after
+        </li>
         <li class="divider"></li>
-        <li @click="removeRow" class="btn btn-link btn-sm">Delete row</li>
-        <li @click="removeColumn" class="btn btn-link btn-sm">Delete column</li>
+        <li @click="removeRow" :disabled="!isCell" class="btn btn-link btn-sm">
+          Delete row
+        </li>
+        <li @click="removeColumn" :disabled="!isCell" class="btn btn-link btn-sm">
+          Delete column
+        </li>
       </ul>
+      <div v-if="isCell" class="quill-options">
+        <li class="quill-group">
+          <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+            <button class="ql-strike"></button>
+          </span>
+        </li>
+        <li class="quill-group">
+          <span class="ql-formats">
+            <button class="ql-script" value="sub"></button>
+            <button class="ql-script" value="super"></button>
+          </span>
+        </li>
+        <li class="quill-group">
+          <span class="ql-formats">
+            <button class="ql-link" type="button"></button>
+          </span>
+        </li>
+      </div>
     </ul>
   </div>
 </template>
@@ -26,6 +59,11 @@ const teChannel = EventBus.channel('te');
 export default {
   name: 'table-toolbar',
   props: ['element'],
+  computed: {
+    isCell() {
+      return this.element.type === 'TABLE-CELL';
+    }
+  },
   methods: {
     addRowBefore() {
       const { tableId, rowId } = this.element.data;
@@ -70,12 +108,13 @@ export default {
     padding: 0 30px 0 10px;
 
     li {
+      display: inline-block;
       height: 100%;
       padding-top: 15px;
+      vertical-align: middle;
       color: #444;
 
       .mdi {
-        display: inline-block;
         margin-right: 5px;
         font-size: 20px;
         line-height: 20px;
@@ -85,6 +124,15 @@ export default {
       &.active {
         background-color: #e8e8e8;
       }
+    }
+
+    .quill-options {
+      display: inline-block;
+      height: 100%;
+    }
+
+    .quill-group {
+      padding-left: 15px;
     }
   }
 
