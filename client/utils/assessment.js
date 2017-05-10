@@ -1,5 +1,6 @@
 import find from 'lodash/find';
 import yup from 'yup';
+import values from 'lodash/values';
 
 export const typeInfo = {
   MC: { type: 'MC', title: 'Multiple choice', class: 'multiple-choice' },
@@ -39,6 +40,13 @@ const fbQuestion = yup.array().test(
 );
 
 const hint = yup.string().trim().max(200);
+
+yup.addMethod(yup.array, 'castMap', function () {
+  return this.transform(function (value, originalValue) {
+    if (this.isType(value)) return value;
+    return values(originalValue);
+  });
+});
 
 export const schemas = {
   MC: yup.object().shape({
@@ -82,10 +90,10 @@ export const schemas = {
   }),
   DD: yup.object().shape({
     question,
-    correct: yup.array().of(yup.object().shape({
-      heading: yup.string().trim().required(),
-      answers: yup.array().of(yup.string().trim().required())
-    }))
+    hint,
+    groups: yup.array().castMap().of(yup.string().required()).min(2),
+    answers: yup.array().castMap().of(yup.string().required()),
+    correct: yup.array().castMap().of(yup.array().min(1))
   })
 };
 
@@ -136,7 +144,9 @@ export const defaults = {
   DD: {
     type: 'DD',
     question: [],
-    correct: [],
+    groups: {},
+    answers: {},
+    correct: {},
     hint: ''
   }
 };
