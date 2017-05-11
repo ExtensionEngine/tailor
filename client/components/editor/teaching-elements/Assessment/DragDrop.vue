@@ -3,6 +3,7 @@
     <div class="row">
       <div
         v-for="(groupName, groupKey, index) in groups"
+        :key="groupKey"
         :class="{ clear: index % 2 === 0 }"
         class="col-md-6">
         <div :class="{ flip: isFocused(groupKey) }" class="drop-container">
@@ -18,6 +19,7 @@
           </div>
           <input
             :ref="`heading${groupKey}`"
+            :value="groupName"
             v-focus="{ groupKey }"
             @change="updateHeading(groupKey)"
             @keyup.enter.esc="focus(groupKey)"
@@ -28,6 +30,7 @@
         <ul>
           <li
             v-for="(answer, answerKey) in getGroupAnswers(groupKey)"
+            :key="answerKey"
             :class="{ flip: isFocused(groupKey, answerKey) }"
             class="answer-container">
             <div
@@ -44,6 +47,7 @@
             </div>
             <input
               :ref="`answer${answerKey}`"
+              :value="answer"
               v-focus="{ groupKey, answerKey }"
               @change="updateAnswer(answerKey)"
               @keyup.enter.esc="focus(groupKey, answerKey)"
