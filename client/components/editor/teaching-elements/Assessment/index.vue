@@ -122,8 +122,9 @@ export default {
 
       if (validate && !isEmpty(this.errors)) {
         this.errors = [];
-        this.validate(this.element.data)
-          .catch(err => (this.errors = errorProcessor(err)));
+        this.validate(element.data).catch(err => {
+          this.errors = errorProcessor(err);
+        });
       }
     },
     save() {

@@ -9,7 +9,7 @@
         <div :class="{ flip: isFocused(groupKey) }" class="drop-container">
           <div @click="focus(groupKey)" class="heading-view front center">
             <span :class="hasError(`groups${groupKey}`)">
-              {{ groupName || 'Click to edit' }}
+              {{ groupName || 'Click to edit group name' }}
             </span>
             <span
               v-show="!minGroups(groupKey) && isEditing"
@@ -37,7 +37,7 @@
               @click="focus(groupKey, answerKey)"
               class="response-view front center">
               <span :class="hasError(`answers${answerKey}`)">
-                {{ answer || 'Click to edit' }}
+                {{ answer || 'Click to edit answer' }}
               </span>
               <span
                 v-show="!minAnswers(groupKey) && isEditing"
@@ -102,20 +102,23 @@ export default {
     updateHeading(groupKey) {
       let groups = cloneDeep(this.groups);
       groups[groupKey] = this.$refs[`heading${groupKey}`][0].value;
-      this.update({ groups });
+      this.update({ groups }, true);
     },
     updateAnswer(answerKey) {
       let answers = cloneDeep(this.answers);
       answers[answerKey] = this.$refs[`answer${answerKey}`][0].value;
-      this.update({ answers });
+      this.update({ answers }, true);
     },
     addGroup() {
       let groups = cloneDeep(this.groups);
+      let answers = cloneDeep(this.answers);
       let correct = cloneDeep(this.correct);
-      let groupKey = cuid();
+      const groupKey = cuid();
+      const answerKey = cuid();
       groups[groupKey] = '';
-      correct[groupKey] = [];
-      this.update({ groups, correct });
+      answers[answerKey] = '';
+      correct[groupKey] = [answerKey];
+      this.update({ groups, answers, correct });
     },
     addAnswer(groupKey) {
       let answers = cloneDeep(this.answers);
