@@ -5,7 +5,7 @@
         v-for="(groupName, groupKey, index) in groups"
         :key="groupKey"
         :class="{ clear: index % 2 === 0 }"
-        class="col-md-6">
+        class="col-md-6 group">
         <div :class="{ flip: isFocused(groupKey) }" class="drop-container">
           <div @click="focus(groupKey)" class="heading-view front center">
             <span :class="hasError(`groups${groupKey}`)">
@@ -71,6 +71,7 @@ import cuid from 'cuid';
 import forEach from 'lodash/forEach';
 import pick from 'lodash/pick';
 import pull from 'lodash/pull';
+import times from 'lodash/times';
 
 export default {
   props: {
@@ -177,12 +178,17 @@ export default {
     }
   },
   created() {
-    if (Object.keys(this.groups).length === 0) this.addGroup();
+    if (Object.keys(this.groups).length !== 0) return;
+    times(2, () => setTimeout(() => this.addGroup(), 0));
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.group {
+  margin-top: 45px;
+}
+
 .add-group {
   padding: 5px 20px;
   margin-top: 80px;
