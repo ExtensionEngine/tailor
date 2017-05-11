@@ -71,7 +71,6 @@ import cuid from 'cuid';
 import forEach from 'lodash/forEach';
 import pick from 'lodash/pick';
 import pull from 'lodash/pull';
-import times from 'lodash/times';
 
 export default {
   props: {
