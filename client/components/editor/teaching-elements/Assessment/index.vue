@@ -58,7 +58,7 @@ import NumericalResponse from './NumericalResponse';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
-import { typeInfo, schemas } from 'utils/assessment';
+import { errorProcessor, schemas, typeInfo } from 'utils/assessment';
 import Question from './Question';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
@@ -123,7 +123,7 @@ export default {
       if (validate && !isEmpty(this.errors)) {
         this.errors = [];
         this.validate(this.element.data)
-          .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
+          .catch(err => (this.errors = errorProcessor(err)));
       }
     },
     save() {
@@ -136,7 +136,7 @@ export default {
           this.isEditing = false;
           this.setAlert(saveAlert);
         })
-        .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
+        .catch(err => (this.errors = errorProcessor(err)));
     },
     cancel() {
       if (!this.element.id) {
