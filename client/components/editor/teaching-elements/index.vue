@@ -95,7 +95,7 @@ export default {
       const scrollUp = e.y < 200;
       const scrollDown = e.y > (window.innerHeight - 200);
       if (scrollUp || scrollDown) {
-        window.scrollBy(0, scrollUp ? -10 : 10);
+        window.scrollBy(0, scrollUp ? -30 : 30);
       }
     }, 20)
   },
