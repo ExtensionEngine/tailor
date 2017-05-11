@@ -176,10 +176,6 @@ export default {
         }
       }
     }
-  },
-  created() {
-    if (Object.keys(this.groups).length !== 0) return;
-    times(2, () => setTimeout(() => this.addGroup(), 0));
   }
 };
 </script>

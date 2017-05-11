@@ -1,8 +1,10 @@
+import cuid from 'cuid';
 import dropRight from 'lodash/dropRight';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import last from 'lodash/last';
 import map from 'lodash/map';
+import times from 'lodash/times';
 import toPairs from 'lodash/toPairs';
 import toPath from 'lodash/toPath';
 import yup from 'yup';
@@ -167,12 +169,22 @@ export const defaults = {
     correct: [],
     hint: ''
   },
-  DD: {
-    type: 'DD',
-    question: [],
-    groups: {},
-    answers: {},
-    correct: {},
-    hint: ''
+  DD() {
+    let element = {
+      type: 'DD',
+      question: [],
+      groups: {},
+      answers: {},
+      correct: {},
+      hint: ''
+    };
+    times(2, () => {
+      const groupKey = cuid();
+      const answerKey = cuid();
+      element.groups[groupKey] = '';
+      element.answers[answerKey] = '';
+      element.correct[groupKey] = [answerKey];
+    });
+    return element;
   }
 };
