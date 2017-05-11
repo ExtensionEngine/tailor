@@ -21,7 +21,7 @@
     </draggable>
     <add-element
       :activity="perspective"
-      :position="teachingElements.length + 1"
+      :position="nextPosition"
       :include="elementTypes"
       :layout="true"
       @add="addElement">
@@ -34,6 +34,7 @@ import AddElement from './AddElement';
 import Draggable from 'vuedraggable';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
+import last from 'lodash/last';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeachingElement from '../teaching-elements';
 
@@ -63,6 +64,10 @@ export default {
     teachingElements() {
       return filter(this.tes, { activityId: this.perspective.id })
         .sort((a, b) => a.position - b.position);
+    },
+    nextPosition() {
+      const element = last(this.teachingElements);
+      return element ? element.position + 1 : 1;
     }
   },
   methods: {
