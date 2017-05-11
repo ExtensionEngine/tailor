@@ -59,7 +59,7 @@ export const schemas = {
   }),
   TR: yup.object().shape({
     question,
-    correct: yup.string().trim().min(1).max(200).required(),
+    correct: yup.string().trim().min(1).max(7000).required(),
     hint
   }),
   TF: yup.object().shape({
