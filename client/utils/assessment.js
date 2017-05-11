@@ -1,6 +1,11 @@
+import dropRight from 'lodash/dropRight';
 import find from 'lodash/find';
+import get from 'lodash/get';
+import last from 'lodash/last';
+import map from 'lodash/map';
+import toPairs from 'lodash/toPairs';
+import toPath from 'lodash/toPath';
 import yup from 'yup';
-import values from 'lodash/values';
 
 export const typeInfo = {
   MC: { type: 'MC', title: 'Multiple choice', class: 'multiple-choice' },
@@ -41,10 +46,15 @@ const fbQuestion = yup.array().test(
 
 const hint = yup.string().trim().max(200);
 
+const objectMap = yup.object().shape({
+  key: yup.string().required(),
+  value: yup.string().required()
+});
+
 yup.addMethod(yup.array, 'castMap', function () {
   return this.transform(function (value, originalValue) {
     if (this.isType(value)) return value;
-    return values(originalValue);
+    return map(toPairs(originalValue), it => ({ key: it[0], value: it[1] }));
   });
 });
 
@@ -91,11 +101,27 @@ export const schemas = {
   DD: yup.object().shape({
     question,
     hint,
-    groups: yup.array().castMap().of(yup.string().required()).min(2),
-    answers: yup.array().castMap().of(yup.string().required()),
-    correct: yup.array().castMap().of(yup.array().min(1))
+    groups: yup.array().castMap().of(objectMap).min(2),
+    answers: yup.array().castMap().of(objectMap),
+    correct: yup.array().castMap().of(yup.object().shape({
+      key: yup.string().required(),
+      value: yup.array().of(yup.string().required()).min(1)
+    })).min(1)
   })
 };
+
+export function errorProcessor(error) {
+  let item = error.value;
+  if (item.type !== 'DD') return map(error.inner, it => it.path);
+  // TODO: Nasty !!
+  return map(error.inner, it => {
+    let path = toPath(it.path);
+    if (path.length === 1) return it.path;
+    if (last(path) !== 'value') return;
+    let key = get(error.value, dropRight(path).concat('key'));
+    return `${path[0]}${key}`;
+  });
+}
 
 export const defaults = {
   MC: {
