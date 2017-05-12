@@ -275,6 +275,6 @@ ul {
 
 .clear  {
   clear: left;
-  margin-bottom: 80px;
+  margin-bottom: 10px;
 }
 </style>
