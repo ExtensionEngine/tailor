@@ -9,7 +9,7 @@
         <div :class="{ flip: isFocused(groupKey) }" class="drop-container">
           <div @click="focus(groupKey)" class="heading-view front center">
             <span :class="hasError(`groups${groupKey}`)">
-              {{ groupName || 'Click to edit group name' }}
+              {{ groupName || (isEditing ? 'Click to edit group name' : 'Group') }}
             </span>
             <span
               v-show="!minGroups(groupKey) && isEditing"
@@ -37,7 +37,7 @@
               @click="focus(groupKey, answerKey)"
               class="response-view front center">
               <span :class="hasError(`answers${answerKey}`)">
-                {{ answer || 'Click to edit answer' }}
+                {{ answer || (isEditing ? 'Click to edit answer' : 'Answer') }}
               </span>
               <span
                 v-show="!minAnswers(groupKey) && isEditing"
