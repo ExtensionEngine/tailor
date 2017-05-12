@@ -1,5 +1,7 @@
 const crypto = require('crypto');
+const isString = require('lodash/isString');
 const mime = require('mime-types');
+const nodeUrl = require('url');
 const Promise = require('bluebird');
 const storage = require('./index');
 const values = require('lodash/values');
@@ -44,7 +46,14 @@ let processor = {};
 processor.IMAGE = (asset, courseId) => {
   const image = asset.data.url;
   const base64Pattern = /^data:image\/(\w+);base64,/;
-  if (!image || !image.match(base64Pattern)) return Promise.resolve(asset);
+
+  if (!image || !isString(image)) return Promise.resolve(asset);
+  if (!image.match(base64Pattern)) {
+    let url = nodeUrl.parse(image);
+    asset.data.url = url.pathname.substr(1, image.length);
+    return Promise.resolve(asset);
+  }
+
   const file = Buffer.from(image.replace(base64Pattern, ''), 'base64');
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
   const hashString = `${asset.id}${file}`;

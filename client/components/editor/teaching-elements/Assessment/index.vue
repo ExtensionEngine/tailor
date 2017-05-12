@@ -28,6 +28,13 @@
           type="text"
           placeholder="Optional hint">
       </div>
+      <feedback
+        v-if="showFeedback"
+        :answers="element.data.answers"
+        :feedback="element.data.feedback"
+        :isEditing="isEditing"
+        @update="updateFeedback">
+      </feedback>
       <div class="alert-container">
         <div v-show="alert.text" :class="alert.type" class="alert">
           <strong>{{ alert.text }}</strong>
@@ -49,6 +56,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
 import DragDrop from './DragDrop';
+import Feedback from './Feedback';
 import FillBlank from './FillBlank';
 import isEmpty from 'lodash/isEmpty';
 import { mapMutations } from 'vuex-module';
@@ -96,6 +104,11 @@ export default {
     },
     hintError() {
       return this.errors.includes('hint');
+    },
+    showFeedback() {
+      const assessmentType = this.element.data.type;
+      const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
+      return !this.summative && feedbackSupported;
     }
   },
   methods: {
@@ -158,6 +171,12 @@ export default {
     },
     remove() {
       this.$emit('remove');
+    },
+    updateFeedback(feedback) {
+      let element = cloneDeep(this.element);
+      element.data.feedback = element.data.feedback || {};
+      Object.assign(element.data.feedback, feedback);
+      this.addElement(element);
     }
   },
   components: {
@@ -166,6 +185,7 @@ export default {
     TrueFalse,
     NumericalResponse,
     TextResponse,
+    Feedback,
     FillBlank,
     Question,
     Controls,
