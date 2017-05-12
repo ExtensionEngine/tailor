@@ -65,6 +65,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['course'], 'course'),
     ...mapGetters(['tes']),
     teachingElements() {
       return filter(this.tes, { activityId: this.perspective.id })
@@ -75,8 +76,11 @@ export default {
       return element ? element.position + 1 : 1;
     },
     previewUrl() {
-      const baseUrl = 'https://cgma.lms.extensionengine.com/integration';
-      return `${baseUrl}/${this.perspective.id}`;
+      const baseUrl = 'https://cgma.lms.extensionengine.com/admin/#/';
+      const courseId = this.course.id;
+      const perspectiveId = this.perspective.id;
+      const route = `course/${courseId}/activity/${perspectiveId}/preview`;
+      return `${baseUrl}${route}`;
     }
   },
   methods: {
