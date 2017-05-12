@@ -1,4 +1,12 @@
+import cuid from 'cuid';
+import dropRight from 'lodash/dropRight';
 import find from 'lodash/find';
+import get from 'lodash/get';
+import last from 'lodash/last';
+import map from 'lodash/map';
+import times from 'lodash/times';
+import toPairs from 'lodash/toPairs';
+import toPath from 'lodash/toPath';
 import yup from 'yup';
 
 export const typeInfo = {
@@ -8,7 +16,8 @@ export const typeInfo = {
   NR: { type: 'NR', title: 'Numerical response', class: 'numerical-response' },
   TF: { type: 'TF', title: 'True - false', class: 'true-false' },
   FB: { type: 'FB', title: 'Fill in the blank', class: 'fill-blank' },
-  MQ: { type: 'MQ', title: 'Matching question', class: 'matching-question' }
+  MQ: { type: 'MQ', title: 'Matching question', class: 'matching-question' },
+  DD: { type: 'DD', title: 'Drag & Drop', class: 'drag-drop' }
 };
 
 export const helperText = {
@@ -38,6 +47,18 @@ const fbQuestion = yup.array().test(
 );
 
 const hint = yup.string().trim().max(200);
+
+const objectMap = yup.object().shape({
+  key: yup.string().required(),
+  value: yup.string().required()
+});
+
+yup.addMethod(yup.array, 'castMap', function () {
+  return this.transform(function (value, originalValue) {
+    if (this.isType(value)) return value;
+    return map(toPairs(originalValue), it => ({ key: it[0], value: it[1] }));
+  });
+});
 
 export const schemas = {
   MC: yup.object().shape({
@@ -78,8 +99,31 @@ export const schemas = {
       premise: yup.string().trim().notOneOf(['Click to edit']).required(),
       response: yup.string().trim().notOneOf(['Click to edit']).required()
     })).min(2).required()
+  }),
+  DD: yup.object().shape({
+    question,
+    hint,
+    groups: yup.array().castMap().of(objectMap).min(2),
+    answers: yup.array().castMap().of(objectMap),
+    correct: yup.array().castMap().of(yup.object().shape({
+      key: yup.string().required(),
+      value: yup.array().of(yup.string().required()).min(1)
+    })).min(1)
   })
 };
+
+export function errorProcessor(error) {
+  let item = error.value;
+  if (item.type !== 'DD') return map(error.inner, it => it.path);
+  // TODO: Nasty !!
+  return map(error.inner, it => {
+    let path = toPath(it.path);
+    if (path.length === 1) return it.path;
+    if (last(path) !== 'value') return;
+    let key = get(error.value, dropRight(path).concat('key'));
+    return `${path[0]}${key}`;
+  });
+}
 
 export const defaults = {
   MC: {
@@ -124,5 +168,23 @@ export const defaults = {
     question: [],
     correct: [],
     hint: ''
+  },
+  DD() {
+    let element = {
+      type: 'DD',
+      question: [],
+      groups: {},
+      answers: {},
+      correct: {},
+      hint: ''
+    };
+    times(2, () => {
+      const groupKey = cuid();
+      const answerKey = cuid();
+      element.groups[groupKey] = '';
+      element.answers[answerKey] = '';
+      element.correct[groupKey] = [answerKey];
+    });
+    return element;
   }
 };
