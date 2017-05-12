@@ -76,7 +76,7 @@ export default {
       return element ? element.position + 1 : 1;
     },
     previewUrl() {
-      const baseUrl = 'https://cgma.lms.extensionengine.com/admin/#/';
+      const baseUrl = 'https://cgma.dev.extensionengine.com/admin/#/';
       const courseId = this.course.id;
       const perspectiveId = this.perspective.id;
       const route = `course/${courseId}/activity/${perspectiveId}/preview`;
