@@ -124,10 +124,10 @@ export default {
   width: 100%;
   min-height: 36px;
   font-size: 22px;
-  color: #707070;
 
   .action {
     padding: 0 10px;
+    color: #707070;
   }
 
   .action:hover {
