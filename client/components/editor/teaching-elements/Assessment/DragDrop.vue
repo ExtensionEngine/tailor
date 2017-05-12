@@ -7,7 +7,7 @@
         :class="{ clear: index % 2 === 0 }"
         class="col-md-6 group">
         <div :class="{ flip: isFocused(groupKey) }" class="drop-container">
-          <div @click="focus(groupKey)" class="heading-view front center">
+          <div @click="focus(groupKey)" class="group-view front center">
             <span :class="hasError(`groups${groupKey}`)">
               {{ groupName || (isEditing ? 'Click to edit group name' : 'Group') }}
             </span>
@@ -18,13 +18,13 @@
             </span>
           </div>
           <input
-            :ref="`heading${groupKey}`"
+            :ref="`group${groupKey}`"
             :value="groupName"
             v-focus="{ groupKey }"
-            @change="updateHeading(groupKey)"
+            @change="updateGroupName(groupKey)"
             @keyup.enter.esc="focus(groupKey)"
             @blur="isFocused(groupKey) && focus(groupKey)"
-            class="form-control heading-input back"
+            class="form-control group-input back"
             placeholder="Insert text here ...">
         </div>
         <ul>
@@ -99,9 +99,9 @@ export default {
       let keys = this.correct[groupKey] || [];
       return pick(this.answers, keys);
     },
-    updateHeading(groupKey) {
+    updateGroupName(groupKey) {
       let groups = cloneDeep(this.groups);
-      groups[groupKey] = this.$refs[`heading${groupKey}`][0].value;
+      groups[groupKey] = this.$refs[`group${groupKey}`][0].value;
       this.update({ groups }, true);
     },
     updateAnswer(answerKey) {
@@ -232,7 +232,7 @@ export default {
    }
 }
 
-.heading-view {
+.group-view {
   background-color: rgb(217, 217, 217);
   border: 1px solid rgb(89, 89, 89);
 }
@@ -242,7 +242,7 @@ export default {
   border: 1px dashed rgb(89, 89, 89);
 }
 
-.heading-input, .response-input {
+.group-input, .response-input {
   position: absolute;
   top: 0;
   height: 100%;
