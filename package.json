@@ -25,6 +25,7 @@
     "db:reset": "node -r dotenv/config ./server/script/dbReset.js",
     "add:admin": "node -r dotenv/config ./server/script/addAdmin.js",
     "fix:activities": "node -r dotenv/config ./server/script/fixActivities.js",
+    "fix:images": "node -r dotenv/config ./server/script/fixImageUrls.js",
     "integration:token": "node -r dotenv/config ./server/script/generateIntegrationToken.js",
     "start": "node -r dotenv/config ./server"
   },
