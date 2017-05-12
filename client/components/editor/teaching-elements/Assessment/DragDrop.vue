@@ -235,11 +235,13 @@ export default {
 .group-view {
   background-color: rgb(217, 217, 217);
   border: 1px solid rgb(89, 89, 89);
+  word-wrap: break-word;
 }
 
 .response-view {
   background-color: rgb(238, 238, 238);
   border: 1px dashed rgb(89, 89, 89);
+  word-wrap: break-word;
 }
 
 .group-input, .response-input {
