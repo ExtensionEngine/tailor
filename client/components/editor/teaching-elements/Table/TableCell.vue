@@ -17,6 +17,7 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
+import get from 'lodash/get';
 import { mapGetters, mapMutations } from 'vuex-module';
 import { quillEditor } from 'vue-quill-editor';
 
@@ -25,7 +26,7 @@ export default {
   props: ['element'],
   data() {
     return {
-      content: this.element.data.content,
+      content: get(this.element, 'data.content', ''),
       config: { placeholder: '', modules: { toolbar: '#tableToolbar' } }
     };
   },
@@ -38,11 +39,8 @@ export default {
         : this.focusedElement._cid === this.element._cid;
     },
     hasChanges() {
-      // This can happen when deleting a table from within a cell
-      if (this.content === undefined) return false;
-
-      const previousValue = this.element.data.content || '';
-      return previousValue !== this.content;
+      const previousValue = get(this.element, 'data.content', '');
+      return previousValue !== get(this, 'content', '');
     }
   },
   methods: {
@@ -56,7 +54,7 @@ export default {
       e.component = { name: 'table-cell', data: this.element };
     },
     saveElement(data) {
-      const element = cloneDeep(this.element);
+      let element = cloneDeep(this.element);
       Object.assign(element.data, data);
       this.$emit('save', element);
     }
