@@ -26,6 +26,7 @@
     "add:admin": "node -r dotenv/config ./server/script/addAdmin.js",
     "fix:activities": "node -r dotenv/config ./server/script/fixActivities.js",
     "fix:images": "node -r dotenv/config ./server/script/fixImageUrls.js",
+    "integration:add": "node -r dotenv/config ./server/script/addIntegration.js",
     "integration:token": "node -r dotenv/config ./server/script/generateIntegrationToken.js",
     "start": "node -r dotenv/config ./server"
   },
