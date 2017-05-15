@@ -48,7 +48,8 @@ export default {
         (this.type !== 'ACCORDION') &&
         (this.type !== 'ASSESSMENT') &&
         (this.type !== 'BREAK') &&
-        (this.type !== 'CAROUSEL');
+        (this.type !== 'CAROUSEL') &&
+        (this.type !== 'TABLE');
     }
   },
   methods: {

@@ -24,7 +24,10 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeHtml from './Html';
 import TeImage from './Image';
 
-const TE_TYPES = { HTML: 'te-html', IMAGE: 'te-image' };
+const TE_TYPES = {
+  HTML: 'te-html',
+  IMAGE: 'te-image'
+};
 
 export default {
   name: 'te-primitive',

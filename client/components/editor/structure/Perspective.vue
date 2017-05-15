@@ -55,7 +55,8 @@ export default {
         'BREAK',
         'ACCORDION',
         'CAROUSEL',
-        'MODAL'
+        'MODAL',
+        'TABLE'
       ]
     };
   },

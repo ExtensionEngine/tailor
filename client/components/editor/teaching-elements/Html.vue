@@ -91,15 +91,17 @@ export default {
 </style>
 
 <style lang="scss">
-.ql-editor {
-  min-height: 117px;
-}
+.te-html {
+  .ql-editor {
+    min-height: 117px;
+  }
 
-.ql-container.ql-snow {
-  border: none !important;
-}
+  .ql-container.ql-snow {
+    border: none !important;
+  }
 
-.ql-editor.ql-blank:before {
-  width: 100%;
+  .ql-editor.ql-blank:before {
+    width: 100%;
+  }
 }
 </style>
