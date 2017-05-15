@@ -22,6 +22,7 @@ import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import EmbedToolbar from './EmbedToolbar';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import ImageToolbar from './ImageToolbar';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ModalToolbar from './ModalToolbar';
@@ -57,7 +58,7 @@ export default {
       // Special case the deletion of tables, so it's possible to delete them
       // from cells as well
       if (element.type === 'TABLE-CELL') {
-        const tableElement = find(this.tes, te => !!te.data.embeds[element.id]);
+        const tableElement = find(this.tes, te => !!get(te, `data.embeds.${element.id}`));
         this.removeElement(tableElement);
         this.focusoutElement();
         return;
