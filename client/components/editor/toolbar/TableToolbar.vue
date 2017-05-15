@@ -1,53 +1,32 @@
 <template>
   <div id="tableToolbar" class="table-toolbar">
-    <ul>
-      <li class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
-        <span class="mdi mdi-table"></span>
-        Table
+    <span class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
+      <span class="mdi mdi-table"></span>
+      Table
+    </span>
+    <ul class="dropdown-menu" role="menu">
+      <li
+        v-for="action in actions"
+        :disabled="!isCell"
+        @click="trigger(action.name)"
+        class="btn btn-link btn-sm">
+        {{ action.label }}
       </li>
-      <ul class="dropdown-menu" role="menu">
-        <li @click="addRowBefore" :disabled="!isCell" class="btn btn-link btn-sm">
-          Add row before
-        </li>
-        <li @click="addRowAfter" :disabled="!isCell" class="btn btn-link btn-sm">
-          Add row after
-        </li>
-        <li @click="addColBefore" :disabled="!isCell" class="btn btn-link btn-sm">
-          Add column before
-        </li>
-        <li @click="addColAfter" :disabled="!isCell" class="btn btn-link btn-sm">
-          Add column after
-        </li>
-        <li class="divider"></li>
-        <li @click="removeRow" :disabled="!isCell" class="btn btn-link btn-sm">
-          Delete row
-        </li>
-        <li @click="removeColumn" :disabled="!isCell" class="btn btn-link btn-sm">
-          Delete column
-        </li>
-      </ul>
-      <div v-if="isCell" class="quill-options">
-        <li class="quill-group">
-          <span class="ql-formats">
-            <button class="ql-bold"></button>
-            <button class="ql-italic"></button>
-            <button class="ql-underline"></button>
-            <button class="ql-strike"></button>
-          </span>
-        </li>
-        <li class="quill-group">
-          <span class="ql-formats">
-            <button class="ql-script" value="sub"></button>
-            <button class="ql-script" value="super"></button>
-          </span>
-        </li>
-        <li class="quill-group">
-          <span class="ql-formats">
-            <button class="ql-link" type="button"></button>
-          </span>
-        </li>
-      </div>
     </ul>
+    <div v-if="isCell" class="quill-options">
+      <span class="quill-group">
+        <span class="ql-formats">
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+          <button class="ql-underline"></button>
+        </span>
+      </span>
+      <span class="quill-group">
+        <span class="ql-formats">
+          <button class="ql-link" type="button"></button>
+        </span>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -56,39 +35,40 @@ import EventBus from 'EventBus';
 
 const teChannel = EventBus.channel('te');
 
+const actions = [
+  { name: 'addRowBefore', label: 'Add row before' },
+  { name: 'addRowAfter', label: 'Add row after' },
+  { name: 'addColumnBefore', label: 'Add column before' },
+  { name: 'addColumnAfter', label: 'Add column after' },
+  { name: 'removeRow', label: 'Delete row' },
+  { name: 'removeColumn', label: 'Delete column' }
+];
+
 export default {
   name: 'table-toolbar',
   props: ['element'],
+  data() {
+    return {
+      actions
+    };
+  },
   computed: {
     isCell() {
       return this.element.type === 'TABLE-CELL';
     }
   },
   methods: {
-    addRowBefore() {
-      const { tableId, rowId } = this.element.data;
-      teChannel.emit(`${tableId}/addRowBefore`, rowId);
-    },
-    addRowAfter() {
-      const { tableId, rowId } = this.element.data;
-      teChannel.emit(`${tableId}/addRowAfter`, rowId);
-    },
-    addColBefore() {
-      const { tableId, rowId, cellId } = this.element.data;
-      teChannel.emit(`${tableId}/addColBefore`, rowId, cellId);
-    },
-    addColAfter() {
-      const { tableId, rowId, cellId } = this.element.data;
-      teChannel.emit(`${tableId}/addColAfter`, rowId, cellId);
-    },
-    removeRow() {
-      const { tableId, rowId } = this.element.data;
-      teChannel.emit(`${tableId}/removeRow`, rowId);
-    },
-    removeColumn() {
-      const { tableId, rowId, cellId } = this.element.data;
-      teChannel.emit(`${tableId}/removeColumn`, rowId, cellId);
+    trigger(action) {
+      this[action]();
     }
+  },
+  mounted() {
+    actions.forEach(action => {
+      this[action.name] = () => {
+        const { tableId, cellId } = this.element.data;
+        teChannel.emit(`${tableId}/${action.name}`, cellId);
+      };
+    });
   }
 };
 </script>
@@ -101,39 +81,37 @@ export default {
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
 
-  ul {
+  > {
     float: left;
     height: 100%;
     margin: 0;
-    padding: 0 30px 0 10px;
+    padding: 0 10px;
+  }
 
-    li {
-      display: inline-block;
-      height: 100%;
-      padding-top: 15px;
+  .dropdown-toggle {
+    margin-left: 10px;
+    padding-top: 15px;
+    color: #444;
+
+    .mdi {
+      margin-right: 5px;
+      font-size: 20px;
+      line-height: 20px;
       vertical-align: middle;
-      color: #444;
-
-      .mdi {
-        margin-right: 5px;
-        font-size: 20px;
-        line-height: 20px;
-        vertical-align: middle;
-      }
-
-      &.active {
-        background-color: #e8e8e8;
-      }
     }
 
-    .quill-options {
-      display: inline-block;
-      height: 100%;
+    &.active {
+      background-color: #e8e8e8;
     }
+  }
 
-    .quill-group {
-      padding-left: 15px;
-    }
+  .quill-options {
+    padding-top: 13px;
+    height: 100%;
+  }
+
+  .quill-group {
+    padding-left: 5px;
   }
 
   .dropdown-menu {
@@ -146,18 +124,12 @@ export default {
     }
 
     .btn {
-      padding-left: 20px;
+      padding: 10px 12px;
       text-align: left;
-      text-transform: none;
-      font-size: 14px;
-    }
-
-    .divider {
-      height: 1px;
-      padding: 0;
     }
   }
 }
+
 .table-toolbar.ql-toolbar.ql-snow {
   padding: 0 !important;
   border: none !important;
