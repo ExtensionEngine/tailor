@@ -1,10 +1,12 @@
 <template>
   <div class="table">
-    <div v-for="row in sortedRows" :key="row.id" class="table-row">
+    <div class="table-row"
+      v-for="row in table"
+      :key="row.id">
       <table-cell
-        v-for="cell in sortCells(row.cells)"
+        v-for="cell in cells(row)"
         :key="cell.id"
-        :element="embeds[cell.embedId]"
+        :element="embeds[cell.id]"
         @save="saveCell">
       </table-cell>
     </div>
@@ -12,246 +14,212 @@
 </template>
 
 <script>
-import TableCell from './TableCell';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import EventBus from 'EventBus';
-import filter from 'lodash/filter';
 import find from 'lodash/find';
-import isEmpty from 'lodash/isEmpty';
-import map from 'lodash/map';
+import first from 'lodash/first';
+import forEach from 'lodash/forEach';
+import last from 'lodash/last';
 import { mapActions, mapMutations } from 'vuex-module';
 import size from 'lodash/size';
+import sortBy from 'lodash/sortBy';
+import TableCell from './TableCell';
+import times from 'lodash/times';
 
 const teChannel = EventBus.channel('te');
 
-const sortMap = items => {
-  return map(items, item => [item, item.position])
-    .sort(([, a], [, b]) => a - b);
-};
+const MIN_ROWS = 1;
+const MIN_COLUMNS = 1;
+const Direction = { BEFORE: -1, AFTER: 1 };
+
+const between = (position1, position2) => (position1 + position2) / 2;
+const limit = (anchor, direction) => anchor.position + direction;
+
+function sibling(arr, item, direction = Direction.BEFORE) {
+  if (direction === Direction.BEFORE) {
+    return last(arr.filter(it => it.position < item.position));
+  }
+  return first(arr.filter(it => it.position > item.position));
+}
+
+function calculateInsertPosition(collection, anchor, direction) {
+  const sorted = sortBy(collection, 'position');
+  const adjacent = sibling(sorted, anchor, direction);
+  return between(
+    anchor.position,
+    (adjacent && adjacent.position) || limit(anchor, direction)
+  );
+}
+
+function getFocusedItem(collection, current) {
+  const sorted = sortBy(collection, 'position');
+  return sibling(sorted, current, Direction.BEFORE) ||
+         sibling(sorted, current, Direction.AFTER);
+}
+
+function addCell(row, cell = {}) {
+  if (!row.cells) row.cells = {};
+  row.cells[cell.id] = cell;
+  return cell;
+}
+
+function removeCell(row, predicate = {}) {
+  const cell = find(row.cells, predicate);
+  if (!cell) return;
+  delete row.cells[cell.id];
+  return cell;
+}
+
+function addEmbed(embeds, cellId, tableId) {
+  const embed = {
+    id: cellId,
+    type: 'TABLE-CELL',
+    embedded: true,
+    data: { tableId, cellId }
+  };
+  embeds[cellId] = embed;
+  return embed;
+}
+
+function removeEmbed(embeds, predicate = {}) {
+  const embed = find(embeds, predicate);
+  if (!embed) return;
+  delete embeds[embed.id];
+  return embed;
+}
 
 export default {
   name: 'te-table',
   props: ['element'],
   computed: {
+    table() {
+      return sortBy(this.rows, 'position');
+    },
     rows() {
       return this.element.data.rows;
     },
-    sortedRows() {
-      return map(sortMap(this.element.data.rows), ([row]) => row);
-    },
     embeds() {
       return this.element.data.embeds;
-    },
-    hasRows() {
-      return !isEmpty(this.rows);
-    },
-    tableId() {
-      return this.element.data.tableId;
     }
   },
   methods: {
     ...mapActions({ saveElement: 'save' }, 'tes'),
     ...mapMutations(['focusElement'], 'editor'),
-    sortCells(cells) {
-      return map(sortMap(cells), ([cell]) => cell);
+    cells(row) {
+      return sortBy(row.cells, 'position');
     },
-    addRow(element, position, cells) {
-      const { tableId, rows, embeds } = element.data;
-      const rowId = cuid();
-      rows[rowId] = { id: rowId, position, cells: {} };
+    findRow(cellId, rows = this.rows) {
+      return find(rows, row => row.cells[cellId]);
+    },
+    addRow(cellId, direction = Direction.AFTER) {
+      const row = this.findRow(cellId);
+      if (!row) return;
 
-      for (let cell in cells) {
-        const embedId = cuid();
+      let element = cloneDeep(this.element);
+      let { tableId, rows, embeds } = element.data;
+      const position = calculateInsertPosition(rows, row, direction);
+      const newRow = { id: cuid(), position, cells: {} };
+      forEach(row.cells, ({ position }) => {
         const cellId = cuid();
-
-        embeds[embedId] = {
-          id: embedId,
-          type: 'TABLE-CELL',
-          embedded: true,
-          data: { tableId, rowId, cellId }
-        };
-        rows[rowId].cells[cellId] = {
-          id: cellId,
-          position: cells[cell].position,
-          embedId
-        };
-      }
-
+        addCell(newRow, { id: cellId, position });
+        addEmbed(embeds, cellId, tableId);
+      });
+      rows[newRow.id] = newRow;
       this.saveElement(element);
     },
-    addRowBefore(rowId) {
-      if (!rowId) return;
-      let element = cloneDeep(this.element);
-      const rows = element.data.rows;
-      const sortedRows = sortMap(rows);
-      const currentPosition = rows[rowId].position;
-      const previousRows = filter(sortedRows, ([, pos]) => {
-        return pos < currentPosition;
-      }).reverse();
-      let previousRowPosition = 0;
-      if (previousRows.length) {
-        [, previousRowPosition] = previousRows[0];
-      }
-      const newRowPosition = (currentPosition + previousRowPosition) / 2;
+    addColumn(cellId, direction = Direction.AFTER) {
+      const row = this.findRow(cellId);
+      if (!row) return;
+      const cell = row.cells[cellId];
+      if (!cell) return;
 
-      this.addRow(element, newRowPosition, rows[rowId].cells);
-    },
-    addRowAfter(rowId) {
-      if (!rowId) return;
       let element = cloneDeep(this.element);
-      const rows = element.data.rows;
-      const sortedRows = sortMap(rows);
-      const currentPosition = rows[rowId].position;
-      const followingRows = filter(sortedRows, ([, pos]) => {
-        return pos > currentPosition;
-      });
-      let followingRowPosition = currentPosition + 1;
-      if (followingRows.length) {
-        [, followingRowPosition] = followingRows[0];
-      }
-      const newRowPosition = (currentPosition + followingRowPosition) / 2;
-
-      this.addRow(element, newRowPosition, rows[rowId].cells);
-    },
-    addColumn(element, position) {
       let { tableId, rows, embeds } = element.data;
 
-      for (let rowId in rows) {
-        const embedId = cuid();
+      const position = calculateInsertPosition(row.cells, cell, direction);
+      forEach(rows, row => {
         const cellId = cuid();
-
-        embeds[embedId] = {
-          id: embedId,
-          type: 'TABLE-CELL',
-          embedded: true,
-          data: { tableId, rowId, cellId }
-        };
-        rows[rowId].cells[cellId] = {
-          id: cellId,
-          position,
-          embedId
-        };
-      }
+        addCell(row, { id: cellId, position });
+        addEmbed(embeds, cellId, tableId);
+      });
 
       this.saveElement(element);
     },
-    addColBefore(rowId, cellId) {
-      if (!rowId || !cellId) return;
-      let element = cloneDeep(this.element);
-      const cells = element.data.rows[rowId].cells;
-      const sortedCells = sortMap(cells);
-      const currentPosition = cells[cellId].position;
-      const previousCells = filter(sortedCells, ([, pos]) => {
-        return pos < currentPosition;
-      }).reverse();
-      let previousCellPosition = 0;
-      if (previousCells.length) {
-        [, previousCellPosition] = previousCells[0];
-      }
-      const newCellPosition = (currentPosition + previousCellPosition) / 2;
+    removeRow(cellId) {
+      const row = this.findRow(cellId);
+      if (!row || size(this.rows) <= MIN_ROWS) return;
 
-      this.addColumn(element, newCellPosition);
+      let element = cloneDeep(this.element);
+      let { rows, embeds } = element.data;
+      forEach(row.cells, cell => removeEmbed(embeds, { id: cell.id }));
+      delete rows[row.id];
+
+      const focusedRow = getFocusedItem(rows, row);
+      if (focusedRow) {
+        const cell = first(this.cells(focusedRow));
+        if (cell) this.focusElement(embeds[cell.id]);
+      }
+
+      this.$emit('save', { embeds, rows });
     },
-    addColAfter(rowId, cellId) {
-      if (!rowId || !cellId) return;
-      let element = cloneDeep(this.element);
-      const cells = element.data.rows[rowId].cells;
-      const sortedCells = sortMap(cells);
-      const currentPosition = cells[cellId].position;
-      const followingCells = filter(sortedCells, ([, pos]) => {
-        return pos > currentPosition;
-      });
-      let followingCellPosition = currentPosition + 1;
-      if (followingCells.length) {
-        [, followingCellPosition] = followingCells[0];
-      }
-      const newCellPosition = (currentPosition + followingCellPosition) / 2;
+    removeColumn(cellId) {
+      const row = this.findRow(cellId);
+      if (!row || size(row.cells) <= MIN_COLUMNS) return;
+      const cell = row.cells[cellId];
+      if (!cell) return;
 
-      this.addColumn(element, newCellPosition);
+      let element = cloneDeep(this.element);
+      let { rows, embeds } = element.data;
+
+      forEach(rows, row => {
+        const deletedCell = removeCell(row, { position: cell.position });
+        if (deletedCell) removeEmbed(embeds, { id: deletedCell.id });
+      });
+
+      const focusedCell = getFocusedItem(row.cells, cell);
+      if (focusedCell) this.focusElement(embeds[focusedCell.id]);
+      this.$emit('save', { embeds, rows });
     },
     saveCell(element) {
-      let embeds = this.embeds;
-
+      let { embeds } = this.element.data;
       if (element) {
         embeds = cloneDeep(this.embeds);
         embeds[element.id] = element;
       }
 
       this.$emit('save', { embeds });
-    },
-    getItemToFocus(items, position) {
-      const sortedItems = sortMap(items);
-      const previousItems = sortedItems.filter(([, pos]) => pos < position).reverse();
-      const followingItems = sortedItems.filter(([, pos]) => pos > position).reverse();
-      let itemToFocus;
-      if (previousItems.length) {
-        [itemToFocus] = previousItems[0];
-      }
-      if (!itemToFocus) {
-        [itemToFocus] = followingItems[size(followingItems) - 1];
-      }
-      return itemToFocus;
-    },
-    removeRow(rowId) {
-      if (!rowId || size(this.element.data.rows) < 2) return;
-      let element = cloneDeep(this.element);
-      let { rows, embeds } = element.data;
-      const position = rows[rowId].position;
-      for (let cellId in rows[rowId].cells) {
-        delete embeds[rows[rowId].cells[cellId].embedId];
-      }
-      delete rows[rowId];
-
-      const rowToFocus = this.getItemToFocus(rows, position);
-      if (rowToFocus) {
-        const [cellToFocus] = sortMap(rowToFocus.cells)[0];
-        this.focusElement(embeds[cellToFocus.embedId]);
-      }
-      this.$emit('save', { embeds, rows });
-    },
-    removeColumn(rowId, cellId) {
-      if (!rowId || !cellId || size(this.element.data.rows[rowId].cells) < 2) return;
-      let element = cloneDeep(this.element);
-      let { rows, embeds } = element.data;
-      const cells = rows[rowId].cells;
-      const currentPosition = cells[cellId].position;
-      for (let row in rows) {
-        const cellToDelete = find(rows[row].cells, cell => {
-          return cell.position === currentPosition;
-        });
-        delete embeds[cellToDelete.embedId];
-        delete rows[row].cells[cellToDelete.id];
-      }
-
-      const cellToFocus = this.getItemToFocus(cells, currentPosition);
-      if (cellToFocus) this.focusElement(embeds[cellToFocus.embedId]);
-      this.$emit('save', { embeds, rows });
     }
   },
-  mounted() {
-    teChannel.on(`${this.tableId}/addRowBefore`, rowId => {
-      this.addRowBefore(rowId);
+  created() {
+    if (this.element.data.rows) return;
+    const tableId = cuid();
+    let embeds = {};
+    let rows = {};
+    times(2, position => {
+      const rowId = cuid();
+      const row = { id: rowId, position, cells: {} };
+      rows[rowId] = row;
+
+      times(3, position => {
+        const cellId = cuid();
+        addCell(row, { id: cellId, position });
+        addEmbed(embeds, cellId, tableId);
+      });
     });
-    teChannel.on(`${this.tableId}/addRowAfter`, rowId => {
-      this.addRowAfter(rowId);
-    });
-    teChannel.on(`${this.tableId}/addColBefore`, (rowId, cellId) => {
-      this.addColBefore(rowId, cellId);
-    });
-    teChannel.on(`${this.tableId}/addColAfter`, (rowId, cellId) => {
-      this.addColAfter(rowId, cellId);
-    });
-    teChannel.on(`${this.tableId}/removeRow`, rowId => {
-      this.removeRow(rowId);
-    });
-    teChannel.on(`${this.tableId}/removeColumn`, (rowId, cellId) => {
-      this.removeColumn(rowId, cellId);
-    });
+
+    this.$emit('save', { tableId, embeds, rows });
   },
-  components: {
-    TableCell
-  }
+  mounted() {
+    const { tableId } = this.element.data;
+    teChannel.on(`${tableId}/addRowBefore`, id => this.addRow(id, Direction.BEFORE));
+    teChannel.on(`${tableId}/addRowAfter`, id => this.addRow(id, Direction.AFTER));
+    teChannel.on(`${tableId}/addColumnBefore`, id => this.addColumn(id, Direction.BEFORE));
+    teChannel.on(`${tableId}/addColumnAfter`, id => this.addColumn(id, Direction.AFTER));
+    teChannel.on(`${tableId}/removeRow`, id => this.removeRow(id));
+    teChannel.on(`${tableId}/removeColumn`, id => this.removeColumn(id));
+  },
+  components: { TableCell }
 };
 </script>
 
