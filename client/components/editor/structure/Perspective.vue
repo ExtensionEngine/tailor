@@ -65,7 +65,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course'], 'course'),
     ...mapGetters(['tes']),
     teachingElements() {
       return filter(this.tes, { activityId: this.perspective.id })
@@ -77,7 +76,7 @@ export default {
     },
     previewUrl() {
       const baseUrl = 'https://cgma.dev.extensionengine.com/admin/#/';
-      const courseId = this.course.id;
+      const { courseId } = this.$route.params;
       const perspectiveId = this.perspective.id;
       const route = `course/${courseId}/activity/${perspectiveId}/preview`;
       return `${baseUrl}${route}`;
