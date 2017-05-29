@@ -7,7 +7,7 @@
         <span
           v-show="showNameInput"
           :class="{ 'has-error': vErrors.has('courseName') }">
-          <input
+          <textarea
             v-model="newCourseName"
             v-focus="true"
             v-validate="{ rules: { required: true, min: 2, max: 250 } }"
@@ -17,8 +17,9 @@
             name="courseName"
             data-vv-as="Name"
             id="courseName"
-            class="form-control">
-            <span class="help-block">{{ vErrors.first('courseName') }}</span>
+            class="form-control name">
+          </textarea>
+          <span class="help-block">{{ vErrors.first('courseName') }}</span>
         </span>
         <span v-show="!showNameInput">
           <h2 @click.stop="showNameInput = true">{{ course.name }}</h2>
@@ -56,7 +57,7 @@
           @click.stop="removeCourse"
           type="button"
           class="btn btn-danger">
-          <span class="fa fa-trash"></span>
+          <span class="mdi mdi-delete"></span>
           remove course
         </button>
       </div>
@@ -67,7 +68,7 @@
 <script>
 import EventBus from 'EventBus';
 import { focus } from 'vue-focus';
-import Loader from '../common/Loader';
+import Loader from '../../common/Loader';
 import { mapGetters, mapActions } from 'vuex-module';
 import { tooltip } from 'vue-strap';
 
@@ -137,6 +138,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.settings {
+  padding: 30px 30px 10px;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  background-color: white;
+}
+
 .course-actions {
   margin: 15px 0;
   text-align: center;
@@ -144,44 +152,40 @@ export default {
 
 h2 {
   display: inline-block;
+  height: 40px;
+  margin: 15px 0 30px;
+  line-height: 20px;
   font-size: 16px;
-  color: #444;
   font-weight: normal;
-  margin: 20px 0 32px 0;
+  color: #444;
 }
 
-input.form-control {
-  padding-top: 3px;
+textarea.form-control.name {
+  height: 50px;
   margin-top: 15px;
+  padding-top: 5px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
 }
 
 textarea.form-control {
   height: 200px;
   padding-top: 22px;
-  font-size: 16px;
   letter-spacing: 0.1px;
 }
 
 span.form-display {
-  font-size: 16px;
-  white-space: pre-line;
   display: inline-block;
   height: 225px;
+  white-space: pre-line;
+  font-size: 16px;
 }
 
 label {
-  margin-top: 30px;
-  color: gray;
   display: block;
+  margin-top: 10px;
   font-size: 14px;
-}
-
-.settings {
-  margin: 40px 20px 20px;
-  padding: 10px 30px;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
-  text-align: left;
+  color: gray;
 }
 
 .help-block {
