@@ -20,6 +20,7 @@ import Promise from 'bluebird';
 import { role } from 'shared';
 import toTitleCase from 'to-title-case';
 import UserList from './UserList';
+
 export default {
   data() {
     return {

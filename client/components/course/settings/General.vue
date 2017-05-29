@@ -140,9 +140,9 @@ export default {
 <style lang="scss" scoped>
 .settings {
   padding: 30px 30px 10px;
+  text-align: left;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   background-color: white;
-  text-align: left;
 }
 
 .course-actions {
@@ -152,6 +152,7 @@ export default {
 
 h2 {
   display: inline-block;
+  height: 40px;
   margin: 15px 0 30px;
   line-height: 20px;
   font-size: 16px;

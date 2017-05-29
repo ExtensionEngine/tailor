@@ -4,14 +4,14 @@
       <div class="col-md-3">
         <div class="list-group">
           <router-link
-            :class="{ selected: $route.name === 'general' }"
             :to="{ name: 'general' }"
+            :class="{ selected: $route.name === 'general' }"
             class="list-group-item">
             <span class="mdi mdi-wrench"></span>General
           </router-link>
           <router-link
-            :class="{ selected: $route.name === 'user-management' }"
             :to="{ name: 'user-management' }"
+            :class="{ selected: $route.name === 'user-management' }"
             class="list-group-item">
             <span class="mdi mdi-account"></span>User Management
           </router-link>
