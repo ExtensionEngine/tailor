@@ -175,9 +175,9 @@ textarea.form-control {
 
 span.form-display {
   display: inline-block;
+  height: 225px;
   white-space: pre-line;
   font-size: 16px;
-  height: 225px;
 }
 
 label {

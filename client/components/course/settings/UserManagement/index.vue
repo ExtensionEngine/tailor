@@ -12,13 +12,13 @@
 </template>
 
 <script>
+import AddUser from './AddUser';
+import Loader from '../../../common/Loader';
 import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Promise from 'bluebird';
 import { role } from 'shared';
 import toTitleCase from 'to-title-case';
-import AddUser from './AddUser';
-import Loader from '../../../common/Loader';
 import UserList from './UserList';
 export default {
   data() {
