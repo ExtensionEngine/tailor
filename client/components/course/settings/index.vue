@@ -15,6 +15,12 @@
             class="list-group-item">
             <span class="mdi mdi-account"></span>User Management
           </router-link>
+          <router-link
+            :to="{ name: 'integrations' }"
+            :class="{ selected: $route.name === 'integrations' }"
+            class="list-group-item">
+            <span class="mdi mdi-asterisk"></span>Integrations
+          </router-link>
         </div>
       </div>
       <div class="col-md-9">
