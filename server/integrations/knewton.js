@@ -22,22 +22,16 @@ function createContentInventory(course, activities, tes) {
     const lo = getLearningObjective(activities, atom);
     if (!lo) return;
 
-    let row = {
-      id: `A-${atom.id}`,
-      name: `A-${atom.id} ${atom.type}`,
-      type: atom.type === 'ASSESSMENT' ? 'Assessment' : 'Instruction',
-      objectiveId: lo.id,
-      objectiveDesc: lo.name || `Objective ${lo.id}`,
-      structure: `${taxonomy}:${taxons[atom.activityId]}|A-${atom.id}`
-    };
+    let row = [
+      `A-${atom.id}`,
+      `A-${atom.id} ${atom.type}`,
+      atom.type === 'ASSESSMENT' ? 'Assessment' : 'Instruction',
+      lo.id,
+      lo.name || `Objective ${lo.id}`,
+      `${taxonomy}:${taxons[atom.activityId]}|A-${atom.id}`
+    ];
 
-    if (container) {
-      Object.assign(row, {
-        containerId: container.id,
-        containerName: `Perspective ${container.id}`
-      });
-    }
-
+    if (container) row = row.concat([container.id, `Perspective ${container.id}`]);
     inventory.addRow(row).commit();
   });
 
@@ -50,17 +44,22 @@ function createSpreadsheet() {
   workbook.created = new Date();
 
   let inventory = workbook.addWorksheet('Content Inventory');
-  inventory.columns = [
-    { header: 'Atom ID', key: 'id', width: 8 },
-    { header: 'Atom Name', key: 'name', width: 30 },
-    { header: 'Atom Type', key: 'type', width: 15 },
-    { header: 'Learning Objective ID', key: 'objectiveId', width: 30 },
-    { header: 'Learning Objective Description', key: 'objectiveDesc', width: 50 },
-    { header: 'Structure', key: 'structure', width: 50 },
-    { header: 'Container ID', key: 'containerId', width: 50 },
-    { header: 'Container Name', key: 'containerName', width: 50 }
-  ];
-
+  inventory.addRow(['Knewton Client ID']);
+  inventory.addRow(['Partner Inventory ID']);
+  inventory.addRow(['Atoms in your product']);
+  inventory.addRow(['Identify every Atom in your product.']);
+  inventory.addRow([
+    'Atom ID',
+    'Atom Name',
+    'Atom Type',
+    'Learning Objective ID',
+    'Learning Objective Description',
+    'Structure',
+    'Container ID',
+    'Container Name'
+  ]);
+  inventory.addRow(['THIS', 'ROW', 'INTENTIONALLY', 'LEFT']);
+  styleInventorySheet(inventory);
   return workbook;
 }
 
@@ -81,6 +80,38 @@ function getTaxon(items, itemId, result = []) {
   if (!item) return result.length ? result.join('|') : '';
   result.unshift(`${item.type[0]}-${item.id}`);
   return getTaxon(items, item.parentId, result);
+}
+
+function styleInventorySheet(sheet) {
+  sheet.views = [{
+    state: 'frozen',
+    xSplit: 2,
+    ySplit: 6,
+    activeCell: 'A7'
+  }];
+
+  sheet.columns = [
+    { width: 30 },
+    { width: 30 },
+    { width: 15 },
+    { width: 5 },
+    { width: 70 },
+    { width: 50 },
+    { width: 50 },
+    { width: 50 }
+  ];
+
+  sheet.getRow(5).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FFECECEC' }
+  };
+
+  sheet.getRow(6).style.font = {
+    name: 'Arial',
+    size: 6,
+    color: { argb: 'FF333333' }
+  };
 }
 
 module.exports = {
