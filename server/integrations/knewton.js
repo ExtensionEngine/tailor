@@ -94,12 +94,18 @@ function styleInventorySheet(sheet) {
     { width: 30 },
     { width: 30 },
     { width: 15 },
-    { width: 5 },
+    { width: 20 },
     { width: 70 },
     { width: 50 },
     { width: 50 },
     { width: 50 }
   ];
+
+  sheet.getRow(4).style.font = {
+    name: 'Arial',
+    size: 8,
+    color: { argb: 'FF333333' }
+  };
 
   sheet.getRow(5).fill = {
     type: 'pattern',
