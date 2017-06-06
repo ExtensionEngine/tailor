@@ -35,6 +35,9 @@ function createContentInventory(course, activities, tes) {
     inventory.addRow(row).commit();
   });
 
+  let loInventory = workbook.getWorksheet('Learning Objectives');
+  loInventory.addRows(filter(activities, { type: last(OUTLINE_LEVELS).type }));
+
   return workbook;
 }
 
@@ -43,6 +46,7 @@ function createSpreadsheet() {
   workbook.creator = 'Tailor';
   workbook.created = new Date();
 
+  // Create 'Content Inventory' sheet
   let inventory = workbook.addWorksheet('Content Inventory');
   inventory.addRow(['Knewton Client ID']);
   inventory.addRow(['Partner Inventory ID']);
@@ -60,6 +64,17 @@ function createSpreadsheet() {
   ]);
   inventory.addRow(['THIS', 'ROW', 'INTENTIONALLY', 'LEFT']);
   styleInventorySheet(inventory);
+
+  // Create 'LO-LO Map' sheet
+  workbook.addWorksheet('LO-LO Map');
+
+  // Create 'Learning Objectives' sheet
+  let loInventory = workbook.addWorksheet('Learning Objectives');
+  loInventory.columns = [
+    { header: 'Learning Objective ID', key: 'id', width: 20 },
+    { header: 'Learning Objective Description', key: 'name', width: 100 }
+  ];
+
   return workbook;
 }
 
