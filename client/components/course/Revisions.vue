@@ -12,12 +12,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="revision in revisions">
+          <tr v-for="revision in getRevisions">
             <td>{{ formatDate(revision) }}</td>
             <td>{{ formatDescription(revision) }}</td>
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="col-lg-12 loader-wrapper">
+      <loader v-show="paginate"></loader>
+      <div
+        v-infinite-scroll="loadMore"
+        infinite-scroll-disabled="paginate"
+        infinite-scroll-distance="100">
+      </div>
     </div>
   </div>
 </template>
@@ -30,6 +38,8 @@ import {
   describeElementRevision,
   describeCourseRevision
 } from '../../utils/revision';
+import InfiniteScroll from 'vue-infinite-scroll';
+import Loader from '../common/Loader';
 
 const describe = {
   'COURSE': describeCourseRevision,
@@ -39,13 +49,32 @@ const describe = {
 
 export default {
   name: 'course-revisions',
+  data() {
+    return {
+      paginate: false
+    };
+  },
   computed: {
     ...mapGetters(['getParent'], 'activities'),
-    ...mapGetters(['revisions'], 'course')
+    ...mapGetters(['revisions'], 'course'),
+    ...mapGetters(['hasMoreResults'], 'revisions'),
+    getRevisions() {
+      console.log('In Vue: getRevisions()');
+      return this.revisions;
+    }
   },
   methods: {
     ...mapActions(['fetch'], 'revisions'),
     ...mapMutations(['setBaseUrl'], 'revisions'),
+    loadMore() {
+      if (this.hasMoreResults) {
+        console.log('In Vue: loadMore()');
+        this.paginate = true;
+        this.fetch().then(() => {
+          this.paginate = false;
+        });
+      }
+    },
     formatDate(rev) {
       return fecha.format(rev.createdAt, 'M/D/YY HH:mm');
     },
@@ -58,10 +87,16 @@ export default {
       return `User ${user} ${description}`;
     }
   },
-  created() {
+  mounted() {
     const courseId = Number(this.$route.params.courseId);
     this.setBaseUrl(`/courses/${courseId}/revisions`);
     this.fetch();
+  },
+  components: {
+    Loader
+  },
+  directives: {
+    InfiniteScroll
   }
 };
 </script>
