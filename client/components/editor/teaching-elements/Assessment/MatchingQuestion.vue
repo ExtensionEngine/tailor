@@ -1,19 +1,19 @@
 <template>
   <div :class="{ 'disabled': !isEditing }">
-    <div class="row no-gutters header">
-      <div class="col-xs-offset-1 col-xs-4 header-input-wrapper">
+    <div class="row no-gutters heading">
+      <div class="col-xs-offset-1 col-xs-4 heading-input-wrapper">
         <input
-          v-model="premiseHeader"
+          v-model="premiseHeading"
           @blur="update"
-          class="header-input"
+          class="heading-input"
           type="text"/>
       </div>
       <div class="col-xs-2"></div>
-      <div class="col-xs-4 header-input-wrapper">
+      <div class="col-xs-4 heading-input-wrapper">
         <input
-          v-model="responseHeader"
+          v-model="responseHeading"
           @blur="update"
-          class="col-xs-4 header-input"
+          class="col-xs-4 heading-input"
           type="text"/>
       </div>
     </div>
@@ -92,10 +92,11 @@ export default {
     isEditing: Boolean
   },
   data() {
+    console.log(this.assessment)
     return {
       focused: { row: null, col: null },
-      premiseHeader: this.assessment.premiseHeader,
-      responseHeader: this.assessment.responseHeader
+      premiseHeading: this.assessment.headings.premise,
+      responseHeading: this.assessment.headings.response
     };
   },
   created() {
@@ -134,8 +135,8 @@ export default {
       return this.focused.col === col && this.focused.row === row;
     },
     update() {
-      const { premiseHeader, responseHeader } = this;
-      this.$emit('update', { correct: this.pairs, premiseHeader, responseHeader }, true);
+      const { premiseHeading: premise, responseHeading: response } = this;
+      this.$emit('update', { correct: this.pairs, headings: { premise, response } }, true);
     },
     errorClass(row, col) {
       const answer = `correct[${row}].${col ? 'response' : 'premise'}`;
@@ -163,18 +164,21 @@ export default {
   }
 }
 
-.header > span, .front, .mdi {
+.heading > span, .front, .mdi {
   padding: 14px 5px;
   display: block;
 }
 
-.header {
-  .header-input-wrapper {
+.heading {
+  .heading-input-wrapper {
+    height: 48px;
     border-bottom: 1px dashed grey;
 
-    .header-input {
+    .heading-input {
       width: 100%;
+      height: 100%;
       text-align: center;
+      vertical-align: middle;
       box-shadow: none;
 
       &:focus {

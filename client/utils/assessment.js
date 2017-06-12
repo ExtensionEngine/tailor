@@ -96,9 +96,13 @@ export const schemas = {
   MQ: yup.object().shape({
     question,
     correct: yup.array().of(yup.object().shape({
-      premise: yup.string().trim().min(1).max(200).required(),
-      response: yup.string().trim().min(1).max(100).required()
-    })).min(2).required()
+      premise: yup.string().trim().notOneOf(['Click to edit']).required(),
+      response: yup.string().trim().notOneOf(['Click to edit']).required()
+    })).min(2).required(),
+    headings: yup.object().shape({
+      premise: yup.string().trim().min(1).max(50).required(),
+      response: yup.string().trim().min(1).max(50).required()
+    })
   }),
   DD: yup.object().shape({
     question,
@@ -168,8 +172,10 @@ export const defaults = {
     question: [],
     correct: [],
     hint: '',
-    premiseHeader: 'Premise',
-    responseHeader: 'Response'
+    headings: {
+      premise: 'Premise',
+      response: 'Response'
+    }
   },
   DD() {
     let element = {
