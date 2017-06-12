@@ -63,7 +63,7 @@ yup.addMethod(yup.array, 'castMap', function () {
 export const schemas = {
   MC: yup.object().shape({
     question,
-    answers: yup.array().min(2).of(yup.string().trim().min(1).max(200)).required(),
+    answers: yup.array().min(2).of(yup.string().trim().min(1).max(500)).required(),
     correct: yup.array().min(1).of(yup.number()).required(),
     hint
   }),
