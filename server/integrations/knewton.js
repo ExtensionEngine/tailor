@@ -7,6 +7,7 @@ const last = require('lodash/last');
 const { OUTLINE_LEVELS } = require('../../config/shared/activities');
 
 function createContentInventory(course, activities, tes) {
+  tes = filter(tes, it => it.type !== 'BREAK');
   const containers = keyBy(filter(activities, { type: 'PERSPECTIVE' }), 'id');
   const taxonomy = getTaxonomyName(course);
   const taxons = activities.reduce((acc, it) => {
