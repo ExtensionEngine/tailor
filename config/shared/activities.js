@@ -1,5 +1,5 @@
-import find from 'lodash/find';
-import isNumber from 'lodash/isNumber';
+const find = require('lodash/find');
+const isNumber = require('lodash/isNumber');
 
 const ASSET_GROUP = 'PERSPECTIVE';
 const OUTLINE_LEVELS = [{
