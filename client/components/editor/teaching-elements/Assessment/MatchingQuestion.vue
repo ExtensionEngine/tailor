@@ -1,8 +1,21 @@
 <template>
   <div :class="{ 'disabled': !isEditing }">
     <div class="row no-gutters header">
-      <span class="col-xs-offset-1 col-xs-4">Premise</span>
-      <span class="col-xs-offset-2 col-xs-4">Response</span>
+      <div class="col-xs-offset-1 col-xs-4 header-input-wrapper">
+        <input
+          v-model="premiseHeader"
+          @blur="update"
+          class="header-input"
+          type="text"/>
+      </div>
+      <div class="col-xs-2"></div>
+      <div class="col-xs-4 header-input-wrapper">
+        <input
+          v-model="responseHeader"
+          @blur="update"
+          class="col-xs-4 header-input"
+          type="text"/>
+      </div>
     </div>
     <div v-for="(pair, row) in pairs" class="row no-gutters">
       <div
@@ -57,6 +70,7 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
 import isEmpty from 'lodash/isEmpty';
 import times from 'lodash/times';
 
@@ -79,7 +93,9 @@ export default {
   },
   data() {
     return {
-      focused: { row: null, col: null }
+      focused: { row: null, col: null },
+      premiseHeader: this.assessment.premiseHeader,
+      responseHeader: this.assessment.responseHeader
     };
   },
   created() {
@@ -118,12 +134,21 @@ export default {
       return this.focused.col === col && this.focused.row === row;
     },
     update() {
-      this.$emit('update', { correct: this.pairs }, true);
+      const { premiseHeader, responseHeader } = this;
+      this.$emit('update', { correct: this.pairs, premiseHeader, responseHeader }, true);
     },
     errorClass(row, col) {
       const answer = `correct[${row}].${col ? 'response' : 'premise'}`;
       return { 'error': this.errors.includes(answer) };
     }
+  },
+  watch: {
+    premiseHeader: debounce(function () {
+      this.update();
+    }, 2000),
+    responseHeader: debounce(function () {
+      this.update();
+    }, 2000)
   }
 };
 </script>
@@ -138,13 +163,26 @@ export default {
   }
 }
 
-.header >  span, .front, .mdi {
+.header > span, .front, .mdi {
   padding: 14px 5px;
   display: block;
 }
 
-.header span {
-  border-bottom: 1px dashed grey;
+.header {
+  .header-input-wrapper {
+    border-bottom: 1px dashed grey;
+
+    .header-input {
+      width: 100%;
+      text-align: center;
+      box-shadow: none;
+
+      &:focus {
+        box-shadow: none;
+        outline: none;
+      }
+    }
+  }
 }
 
 .premise-container, .response-container {
