@@ -40,6 +40,7 @@ import {
 } from '../../utils/revision';
 import InfiniteScroll from 'vue-infinite-scroll';
 import Loader from '../common/Loader';
+import Promise from 'bluebird';
 
 const describe = {
   'COURSE': describeCourseRevision,
@@ -65,7 +66,11 @@ export default {
   },
   methods: {
     ...mapActions(['fetch'], 'revisions'),
-    ...mapMutations(['setBaseUrl'], 'revisions'),
+    ...mapMutations(['setBaseUrl', 'resetPagination'], 'revisions'),
+    fetchRevisions() {
+      this.resetPagination();
+      return Promise.join(this.fetch(), Promise.delay(400));
+    },
     loadMore() {
       if (this.hasMoreResults) {
         console.log('In Vue: loadMore()');
@@ -90,7 +95,7 @@ export default {
   mounted() {
     const courseId = Number(this.$route.params.courseId);
     this.setBaseUrl(`/courses/${courseId}/revisions`);
-    this.fetch();
+    this.fetchRevisions();
   },
   components: {
     Loader
