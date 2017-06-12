@@ -60,7 +60,6 @@ export default {
     ...mapGetters(['revisions'], 'course'),
     ...mapGetters(['hasMoreResults'], 'revisions'),
     getRevisions() {
-      console.log('In Vue: getRevisions()');
       return this.revisions;
     }
   },
@@ -73,7 +72,6 @@ export default {
     },
     loadMore() {
       if (this.hasMoreResults) {
-        console.log('In Vue: loadMore()');
         this.paginate = true;
         this.fetch().then(() => {
           this.paginate = false;

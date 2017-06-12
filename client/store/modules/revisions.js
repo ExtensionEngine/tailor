@@ -12,12 +12,10 @@ state({
 });
 
 getter(function revisions() {
-  console.log('In JS: revisions()');
   return this.state.items;
 }, { global: true });
 
 getter(function revisionQueryParams() {
-  console.log('In JS: revisionQueryParams()');
   const { pagination } = this.state.$internals;
   const search = this.state.search;
   return {
@@ -32,7 +30,6 @@ getter(function hasMoreResults() {
 });
 
 action(function fetch() {
-  console.log('In JS: fetch()');
   const params = this.getters.revisionQueryParams;
   return this.api.get('', params).then(response => {
     const { data: revisions } = response.data;
@@ -50,96 +47,20 @@ action(function fetch() {
 });
 
 mutation(function resetPagination() {
-  console.log('In JS: resetPagination()');
   this.state.$internals.pagination = PAGINATION_DEFAULTS;
 });
 
 mutation(function setPagination(changes) {
-  console.log('In JS: setPagination()');
   let $internals = this.state.$internals;
   $internals.pagination = { ...$internals.pagination, ...changes };
 });
 
 mutation(function setSearch(search) {
-  console.log('In JS: setSearch()');
   this.state.search = search;
 });
 
 mutation(function allRevisionsFetched(allFetched) {
-  console.log('In JS: allRevisionsFetched()');
   this.state.$internals.allRevisionsFetched = allFetched;
 });
 
 export default build();
-
-// const { state, getter, action, mutation, build } = new VuexCollection('revisions');
-// const PAGINATION_DEFAULTS = { offset: 0, limit: 9 };
-
-// state({
-//   search: '',
-//   $internals: {
-//     pagination: PAGINATION_DEFAULTS,
-//     sort: {
-//       order: 'DESC',
-//       field: 'updatedAt'
-//     },
-//     allRevisionsFetched: false
-//   }
-// });
-
-// getter(function revisions() {
-//   return this.state.items;
-// }, { global: true });
-
-// getter(function revisionQueryParams() {
-//   const { pagination, sort } = this.state.$internals;
-//   const search = this.state.search;
-
-//   return {
-//     search,
-//     offset: pagination.offset,
-//     limit: pagination.limit,
-//     sortOrder: sort.order,
-//     sortBy: sort.field
-//   };
-// }, { global: true });
-
-// getter(function hasMoreResults() {
-//   return !this.state.$internals.allRevisionsFetched;
-// });
-
-// action(function fetch() {
-//   const params = this.getters.revisionQueryParams;
-//   return this.api.get('', params).then(response => {
-//     const { data: revisions } = response.data;
-
-//     let result = {};
-//     revisions.forEach(it => {
-//       this.api.setCid(it);
-//       result[it._cid] = it;
-//     });
-
-//     this.commit('setPagination', { offset: params.offset + params.limit });
-//     this.commit('allRevisionsFetched', revisions.length < params.limit);
-//     this.commit(params.search ? 'reset' : 'fetch', result);
-//   });
-// });
-
-// mutation(function resetPagination() {
-//   this.state.$internals.pagination = PAGINATION_DEFAULTS;
-// });
-
-// mutation(function setPagination(changes) {
-//   let $internals = this.state.$internals;
-//   $internals.pagination = { ...$internals.pagination, ...changes };
-// });
-
-// mutation(function setSearch(search) {
-//   this.state.search = search;
-// });
-
-// mutation(function allRevisionsFetched(allFetched) {
-//   this.state.$internals.allRevisionsFetched = allFetched;
-// });
-
-// export default build();
