@@ -4,7 +4,6 @@ const { state, build, getter, action, mutation } = new VuexCollection('revisions
 const PAGINATION_DEFAULTS = { offset: 0, limit: 25 };
 
 state({
-  search: '',
   $internals: {
     pagination: PAGINATION_DEFAULTS,
     allRevisionsFetched: false
@@ -17,12 +16,7 @@ getter(function revisions() {
 
 getter(function revisionQueryParams() {
   const { pagination } = this.state.$internals;
-  const search = this.state.search;
-  return {
-    search,
-    offset: pagination.offset,
-    limit: pagination.limit
-  };
+  return pagination;
 }, { global: true });
 
 getter(function hasMoreResults() {
@@ -42,7 +36,7 @@ action(function fetch() {
 
     this.commit('setPagination', { offset: params.offset + params.limit });
     this.commit('allRevisionsFetched', revisions.length < params.limit);
-    this.commit(params.search ? 'reset' : 'fetch', result);
+    this.commit('fetch', result);
   });
 });
 
@@ -53,10 +47,6 @@ mutation(function resetPagination() {
 mutation(function setPagination(changes) {
   let $internals = this.state.$internals;
   $internals.pagination = { ...$internals.pagination, ...changes };
-});
-
-mutation(function setSearch(search) {
-  this.state.search = search;
 });
 
 mutation(function allRevisionsFetched(allFetched) {
