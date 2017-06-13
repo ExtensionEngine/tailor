@@ -143,10 +143,10 @@ export default {
     }
   },
   watch: {
-    premiseHeader: debounce(function () {
+    premiseHeading: debounce(function () {
       this.update();
     }, 2000),
-    responseHeader: debounce(function () {
+    responseHeading: debounce(function () {
       this.update();
     }, 2000)
   }
