@@ -92,7 +92,6 @@ export default {
     isEditing: Boolean
   },
   data() {
-    console.log(this.assessment)
     return {
       focused: { row: null, col: null },
       premiseHeading: this.assessment.headings.premise,
