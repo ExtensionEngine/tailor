@@ -71,6 +71,7 @@
 
 <script>
 import debounce from 'lodash/debounce';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import times from 'lodash/times';
 
@@ -94,8 +95,8 @@ export default {
   data() {
     return {
       focused: { row: null, col: null },
-      premiseHeading: this.assessment.headings.premise,
-      responseHeading: this.assessment.headings.response
+      premiseHeading: get(this.assessment, 'headings.premise', 'Premise'),
+      responseHeading: get(this.assessment, 'headings.response', 'Response')
     };
   },
   created() {
