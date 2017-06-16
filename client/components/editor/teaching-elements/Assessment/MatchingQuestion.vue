@@ -17,72 +17,76 @@
           type="text"/>
       </div>
     </div>
-    <div v-for="(pair, row) in pairs" class="row no-gutters">
+    <div v-for="(responseKey, premiseKey) in pairs" class="row no-gutters">
       <div
-        :class="{ 'flip': isFocused(row) }"
+        :class="{ 'flip': isFocused(premiseKey) }"
         class="col-xs-offset-1 col-xs-4 premise-container">
-        <div @click="focus(row)" class="premise-view front">
-          <span :class="errorClass(row)">
-            {{ pair.premise || 'Click to edit' }}
+        <div @click="focus(premiseKey)" class="premise-view front">
+          <span :class="errorClass(premiseKey)">
+            {{ premises[premiseKey] || 'Click to edit' }}
           </span>
         </div>
         <input
-          v-model="pair.premise"
-          v-focus="{ row }"
-          @change="update"
-          @keyup.enter="focus(row)"
-          @keyup.esc="focus(row)"
-          @blur="isFocused(row) && focus(row)"
+          v-model="premises[premiseKey]"
+          v-focus="{ newKey: premiseKey }"
+          @change="update(premiseKey, responseKey[0])"
+          @keyup.enter="focus(premiseKey)"
+          @keyup.esc="focus(premiseKey)"
+          @blur="isFocused(premiseKey) && focus(premiseKey)"
           class="form-control premise-input back"
           placeholder="Insert text here ...">
       </div>
       <div class="col-xs-2">
         <span class="mdi mdi-arrow-right"></span>
       </div>
-      <div :class="{ 'flip': isFocused(row, 1) }" class="col-xs-4 response-container">
-        <div @click="focus(row, 1)" class="response-view front">
-          <span :class="errorClass(row, 1)">
-            {{ pair.response || 'Click to edit' }}
+      <div
+        :class="{ 'flip': isFocused(responseKey[0]) }"
+        class="col-xs-4 response-container">
+        <div @click="focus(responseKey[0])" class="response-view front">
+          <span :class="errorClass(responses[responseKey[0]])">
+            {{ responses[responseKey[0]] || 'Click to edit' }}
           </span>
         </div>
         <input
-          v-model="pair.response"
-          v-focus="{ row, col: 1 }"
-          @change="update"
-          @keyup.enter="focus(row, 1)"
-          @keyup.esc="focus(row, 1)"
-          @blur="isFocused(row, 1) && focus(row, 1)"
+          v-model="responses[responseKey[0]]"
+          v-focus="{ newKey: responseKey[0] }"
+          @change="update(premiseKey, responseKey[0])"
+          @keyup.enter="focus(responseKey[0])"
+          @keyup.esc="focus(responseKey[0])"
+          @blur="isFocused(responseKey[0]) && focus(responseKey[0])"
           class="form-control response-input back"
           placeholder="Insert text here ...">
       </div>
       <div class="col-xs-1 destroy">
         <span
-          v-show="!minPairsReached && isEditing"
-          @click="removePair(row)"
+          v-show="!minPairs && isEditing"
+          @click="removePair(responseKey[0])"
           class="mdi mdi-close">
         </span>
       </div>
     </div>
-    <div v-show="!maxPairsReached && isEditing" class="add-pair">
+    <div v-show="!maxPairs && isEditing" class="add-pair">
       <span @click="addPair" class="mdi mdi-plus"></span>
     </div>
   </div>
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
+import cuid from 'cuid';
 import debounce from 'lodash/debounce';
 import isEmpty from 'lodash/isEmpty';
-import times from 'lodash/times';
+import keys from 'lodash/keys';
 
 export default {
   directives: {
     focus: {
       update(el, binding, vnode) {
-        const col = vnode.context.focused.col;
-        const row = vnode.context.focused.row;
-        const newCol = binding.value.col;
-        const newRow = binding.value.row;
-        col === newCol && row === newRow ? el.focus() : el.blur();
+        if (vnode.context.focused.key === binding.value.newKey) {
+          el.focus();
+        } else {
+          el.blur();
+        }
       }
     }
   },
@@ -93,53 +97,63 @@ export default {
   },
   data() {
     return {
-      focused: { row: null, col: null },
+      focused: { key: null },
       premiseHeading: this.assessment.headings.premise,
       responseHeading: this.assessment.headings.response
     };
-  },
-  created() {
-    if (this.pairs.length < 2) {
-      times(2, () => this.pairs.push({ premise: '', response: '' }));
-      this.update();
-    }
   },
   computed: {
     hasPairsError() {
       return !isEmpty(this.errors) && this.errors.indexOf('correct') !== -1;
     },
+    premises() {
+      return cloneDeep(this.assessment.premises) || {};
+    },
+    responses() {
+      return cloneDeep(this.assessment.responses) || {};
+    },
     pairs() {
-      return this.assessment.correct;
+      return cloneDeep(this.assessment.correct) || {};
     },
-    maxPairsReached() {
-      return this.pairs.length >= 10;
+    maxPairs() {
+      return keys(this.pairs).length >= 10;
     },
-    minPairsReached() {
-      return this.pairs.length <= 2;
+    minPairs() {
+      return keys(this.pairs).length <= 2;
     }
   },
   methods: {
-    removePair(row) {
-      this.pairs.splice(row, 1);
-      this.update();
+    removePair(premiseKey) {
+      const responseKey = this.pairs[premiseKey];
+      delete this.pairs[premiseKey];
+      this.update(premiseKey, responseKey);
     },
     addPair() {
-      this.pairs.push({ premise: '', response: '' });
-      this.update();
+      const premise = cuid();
+      const response = cuid();
+      this.premises[premise] = '';
+      this.responses[response] = '';
+      this.pairs[premise] = [response];
+      // this.update();
     },
-    focus(row, col) {
-      this.focused = this.isFocused(row, col) ? {} : { row, col };
+    focus(key) {
+      this.focused.key = this.isFocused(key) ? null : key;
     },
-    isFocused(row, col) {
-      return this.focused.col === col && this.focused.row === row;
+    isFocused(key) {
+      return this.focused.key === key;
     },
-    update() {
-      const { premiseHeading: premise, responseHeading: response } = this;
-      this.$emit('update', { correct: this.pairs, headings: { premise, response } }, true);
+    update(premise, response) {
+      const { premiseHeading: premiseTitle, responseHeading: responseTitle } = this;
+      this.$emit('update', {
+        correct: this.pairs,
+        headings: { premiseTitle, responseTitle },
+        premises: this.premises,
+        responses: this.responses
+      }, true);
     },
-    errorClass(row, col) {
-      const answer = `correct[${row}].${col ? 'response' : 'premise'}`;
-      return { 'error': this.errors.includes(answer) };
+    errorClass(key) {
+      // const answer = `correct[${row}].${col ? 'response' : 'premise'}`;
+      // return { 'error': this.errors.includes(answer) };
     }
   },
   watch: {
