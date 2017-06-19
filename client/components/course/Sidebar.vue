@@ -31,28 +31,7 @@
           <div class="title">{{ name }}</div>
         </div>
       </div>
-      <div class="row-a">
-        <label>Description</label>
-        <div
-          v-show="showDescriptionInput"
-          :class="{ 'has-error': vErrors.has('description') }">
-          <textarea
-            v-model="descriptionInput"
-            v-validate="{ rules: { required: false, max: 250 } }"
-            @blur="focusoutDescription"
-            @keyup.enter="focusoutDescription"
-            @keyup.esc="hideDescriptionInput"
-            ref="descriptionInput"
-            placeholder="Click to add..."
-            name="description"
-            class="form-control">
-          </textarea>
-          <span class="help-block">{{ vErrors.first('description') }}</span>
-        </div>
-        <div v-show="!showDescriptionInput" @click.stop="focusDescription">
-          <div class="title">{{ description || 'Click to add...' }}</div>
-        </div>
-      </div>
+      <metax :activity="activity"></metax>
     </div>
     <div v-else class="placeholder">
       <h4>Outline Sidebar</h4>
@@ -67,8 +46,8 @@
 
 <script>
 import EventBus from 'EventBus';
-import get from 'lodash/get';
 import { mapActions, mapGetters } from 'vuex-module';
+import Metax from './meta';
 const noop = Function.prototype;
 
 const appChannel = EventBus.channel('app');
@@ -77,18 +56,13 @@ export default {
   data() {
     return {
       nameInput: '',
-      descriptionInput: '',
-      showNameInput: false,
-      showDescriptionInput: false
+      showNameInput: false
     };
   },
   computed: {
     ...mapGetters(['activity'], 'course'),
     name() {
       return this.activity.name;
-    },
-    description() {
-      return get(this.activity, 'data.description', '');
     }
   },
   methods: {
@@ -108,24 +82,6 @@ export default {
         this.showNameInput = false;
       }, noop);
     },
-    focusDescription() {
-      this.descriptionInput = get(this.activity, 'data.description', '');
-      this.showDescriptionInput = true;
-      setTimeout(() => this.$refs.descriptionInput.focus(), 0);
-    },
-    focusoutDescription() {
-      this.$validator.validateAll().then(() => {
-        if (this.descriptionInput === this.description) {
-          this.showDescriptionInput = false;
-          return;
-        }
-        this.update({
-          _cid: this.activity._cid,
-          data: { description: this.descriptionInput }
-        });
-        this.showDescriptionInput = false;
-      }, noop);
-    },
     deleteActivity() {
       appChannel.emit('showConfirmationModal', {
         type: 'activity',
@@ -137,10 +93,10 @@ export default {
   watch: {
     name(val) {
       this.nameInput = val;
-    },
-    description(val) {
-      this.descriptionInput = val;
     }
+  },
+  components: {
+    Metax
   }
 };
 </script>
