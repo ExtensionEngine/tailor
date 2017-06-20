@@ -96,10 +96,14 @@ export const schemas = {
   MQ: yup.object().shape({
     question,
     hint,
-    correct: yup.array().of(yup.object().shape({
-      premise: yup.string().trim().notOneOf(['Click to edit']).required(),
-      response: yup.string().trim().notOneOf(['Click to edit']).required()
-    })).required(),
+    premises: yup.array().of(yup.object().shape({
+      key: yup.string().trim().required(),
+      value: yup.string().trim().required()
+    })),
+    responses: yup.array().of(yup.object().shape({
+      key: yup.string().trim().required(),
+      value: yup.string().trim().required()
+    })),
     headings: yup.object().shape({
       premise: yup.string().trim().min(1).max(200).required(),
       response: yup.string().trim().min(1).max(200).required()
@@ -172,8 +176,8 @@ export const defaults = {
     let element = {
       type: 'MQ',
       question: [],
-      premises: {},
-      responses: {},
+      premises: [],
+      responses: [],
       correct: {},
       hint: '',
       headings: {
@@ -184,9 +188,9 @@ export const defaults = {
     times(2, () => {
       const premiseKey = cuid();
       const responseKey = cuid();
-      element.premises[premiseKey] = '';
-      element.responses[responseKey] = '';
-      element.correct[premiseKey] = [responseKey];
+      element.premises.push({ key: premiseKey, value: '' });
+      element.responses.push({ key: responseKey, value: '' });
+      element.correct[premiseKey] = responseKey;
     });
     return element;
   },
