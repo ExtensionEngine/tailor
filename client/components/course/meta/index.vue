@@ -15,9 +15,11 @@ import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
 import { mapActions } from 'vuex-module';
+import MetaInput from './MetaInput';
 import MetaTextarea from './MetaTextarea';
 
 const META_TYPES = {
+  INPUT: 'meta-input',
   TEXTAREA: 'meta-textarea'
 };
 
@@ -48,6 +50,7 @@ export default {
     }
   },
   components: {
+    MetaInput,
     MetaTextarea
   }
 };
