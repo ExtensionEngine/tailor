@@ -4,6 +4,17 @@
       <div v-if="summative">
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
+        <div class="clearfix"></div>
+        <div v-if="isInExam" class="select-topic pull-right">
+          <multiselect
+            :value="topic"
+            :options="topics"
+            :searchable="false"
+            :trackBy="'id'"
+            :label="'name'"
+            :onChange="onTopicSelected">
+          </multiselect>
+        </div>
       </div>
       <question
         :assessment="element"
@@ -62,6 +73,7 @@ import isEmpty from 'lodash/isEmpty';
 import { mapMutations } from 'vuex-module';
 import MatchingQuestion from './MatchingQuestion';
 import MultipleChoice from './MultipleChoice';
+import multiselect from '../../../common/Select';
 import NumericalResponse from './NumericalResponse';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
@@ -85,14 +97,15 @@ const ASSESSMENT_TYPES = {
 
 export default {
   name: 'te-assessment',
-  props: { element: Object, summative: Boolean },
+  props: { element: Object, summative: Boolean, isInExam: Boolean, topics: Array },
   data() {
     const isEditing = !this.element.id;
     return {
       isEditing,
       alert: {},
       errors: [],
-      previousVersion: null
+      previousVersion: null,
+      topic: null
     };
   },
   computed: {
@@ -177,6 +190,9 @@ export default {
       element.data.feedback = element.data.feedback || {};
       Object.assign(element.data.feedback, feedback);
       this.addElement(element);
+    },
+    onTopicSelected(topic) {
+      this.topic = topic;
     }
   },
   components: {
@@ -190,7 +206,8 @@ export default {
     Question,
     Controls,
     MatchingQuestion,
-    DragDrop
+    DragDrop,
+    multiselect
   }
 };
 </script>
@@ -211,7 +228,7 @@ export default {
   }
 
   .assessment-type {
-    margin: 10px 0 50px 0;
+    margin: 10px 0 20px 0;
     padding: 4px 15px;
     font-size: 13px;
     background-color: #707070;
@@ -232,6 +249,10 @@ export default {
 
   input.form-control {
     padding-left: 10px;
+  }
+
+  .select-topic {
+    width: 150px;
   }
 }
 </style>

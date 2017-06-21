@@ -6,10 +6,10 @@
     :close-on-select="true"
     :show-labels="false"
     :allow-empty="false"
+    :track-by="trackBy || 'label'"
+    :label="label || 'label'"
     @input="onChange"
-    class="custom-select"
-    track-by="label"
-    label="label">
+    class="custom-select">
   </multiselect>
 </template>
 
@@ -19,7 +19,7 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'select',
-  props: ['value', 'options', 'searchable', 'onChange'],
+  props: ['value', 'options', 'searchable', 'trackBy', 'label', 'onChange'],
   components: { multiselect }
 };
 </script>

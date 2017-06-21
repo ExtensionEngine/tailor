@@ -28,6 +28,8 @@
         :key="it._cid"
         :assessment="it"
         :expanded="isSelected(it)"
+        :isInExam="true"
+        :topics="topics"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
         @remove="it.id ? requestDeletion(it) : remove(it)">
@@ -57,7 +59,7 @@ const appChannel = EventBus.channel('app');
 
 export default {
   name: 'assessment-group',
-  props: ['group', 'position'],
+  props: ['group', 'topics', 'position'],
   data() {
     return {
       selected: [],

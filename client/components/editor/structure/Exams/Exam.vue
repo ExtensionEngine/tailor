@@ -27,6 +27,7 @@
         v-for="(group, index) in groups"
         :key="group._cid"
         :group="group"
+        :topics="topics"
         :position="index">
       </assessment-group>
       <button @click="createGroup" class="btn btn-primary create-group">
@@ -39,11 +40,13 @@
 
 <script>
 import AssessmentGroup from './AssessmentGroup';
+import concat from 'lodash/concat';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import { mapActions, mapGetters } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
 import pluralize from 'pluralize';
+import reduce from 'lodash/reduce';
 
 const appChannel = EventBus.channel('app');
 
@@ -60,6 +63,15 @@ export default {
     ...mapGetters(['activities']),
     groups() {
       return filter(this.activities, { parentId: this.exam.id });
+    },
+    topics() {
+      const objectives = filter(this.activities, it => {
+        return it.type === 'OBJECTIVE' && it.parentId === this.exam.parentId;
+      });
+      return reduce(objectives, (allTopics, objective) => {
+        const objectiveTopics = filter(this.activities, { parentId: objective.id });
+        return concat(allTopics, objectiveTopics);
+      }, []);
     },
     title() {
       return `Exam ${numberToLetter(this.position)}`;

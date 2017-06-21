@@ -4,6 +4,8 @@
       v-if="expanded"
       :element="assessment"
       :summative="true"
+      :isInExam="isInExam"
+      :topics="topics"
       @selected="$emit('selected')"
       @remove="$emit('remove')"
       @save="$emit('save', $event)">
@@ -29,7 +31,7 @@ const htmlRegex = /<\/?[^>]+(>|$)/g;
 
 export default {
   name: 'assessment-item',
-  props: ['assessment', 'expanded'],
+  props: ['assessment', 'expanded', 'isInExam', 'topics'],
   computed: {
     question() {
       let question = filter(this.assessment.data.question, { type: 'HTML' });
