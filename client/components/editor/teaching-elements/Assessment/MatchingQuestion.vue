@@ -2,11 +2,19 @@
   <div :class="{ 'disabled': !isEditing }">
     <div class="row no-gutters heading">
       <div class="col-xs-offset-1 col-xs-4 heading-input-wrapper">
-        <input v-model="premiseHeading" class="heading-input" type="text"/>
+        <input
+          v-model="premiseHeading"
+          @blur="update"
+          class="heading-input"
+          type="text"/>
       </div>
       <div class="col-xs-2"></div>
       <div class="col-xs-4 heading-input-wrapper">
-        <input v-model="responseHeading" class="col-xs-4 heading-input" type="text"/>
+        <input
+          v-model="responseHeading"
+          @blur="update"
+          class="col-xs-4 heading-input"
+          type="text"/>
       </div>
     </div>
     <div v-for="(responseKey, premiseKey, index) in correct" class="row no-gutters">
@@ -166,7 +174,8 @@ export default {
     isFocused(key) {
       return this.focused.key === key;
     },
-    update(data) {
+    update(data = {}) {
+      console.log('update');
       const { premiseHeading: premise, responseHeading: response } = this;
       data.headings = { premise, response };
       this.$emit('update', data, true);
