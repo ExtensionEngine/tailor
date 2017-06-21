@@ -175,7 +175,6 @@ export default {
       return this.focused.key === key;
     },
     update(data = {}) {
-      console.log('update');
       const { premiseHeading: premise, responseHeading: response } = this;
       data.headings = { premise, response };
       this.$emit('update', data, true);
