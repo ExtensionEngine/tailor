@@ -9,19 +9,19 @@
         <input v-model="responseHeading" class="col-xs-4 heading-input" type="text"/>
       </div>
     </div>
-    <div v-for="(responseKey, premiseKey, index) in pairs" class="row no-gutters">
+    <div v-for="(responseKey, premiseKey, index) in correct" class="row no-gutters">
       <div
         :class="{ 'flip': isFocused(premiseKey) }"
         class="col-xs-offset-1 col-xs-4 premise-container">
         <div @click="focus(premiseKey)" class="premise-view front">
           <span :class="hasError(premiseKey, 'premises')">
-            {{ premiseContent(premiseKey) || 'Click to edit' }}
+            {{ getPremiseContent(premiseKey) || 'Click to edit' }}
           </span>
         </div>
         <input
           v-focus="{ newKey: premiseKey }"
-          :value="premiseContent(premiseKey)"
-          @change="premiseChange(premiseKey, $event)"
+          :value="getPremiseContent(premiseKey)"
+          @change="updatePremiseContent(premiseKey, $event)"
           @keyup.enter="focus(premiseKey)"
           @keyup.esc="focus(premiseKey)"
           @blur="isFocused(premiseKey) && focus(premiseKey)"
@@ -36,13 +36,13 @@
         class="col-xs-4 response-container">
         <div @click="focus(responseKey)" class="response-view front">
           <span :class="hasError(responseKey, 'responses')">
-            {{ responseContent(responseKey) || 'Click to edit' }}
+            {{ getResponseContent(responseKey) || 'Click to edit' }}
           </span>
         </div>
         <input
           v-focus="{ newKey: responseKey }"
-          :value="responseContent(responseKey)"
-          @change="responseChange(responseKey, $event)"
+          :value="getResponseContent(responseKey)"
+          @change="updateResponseContent(responseKey, $event)"
           @keyup.enter="focus(responseKey)"
           @keyup.esc="focus(responseKey)"
           @blur="isFocused(responseKey) && focus(responseKey)"
@@ -51,14 +51,14 @@
       </div>
       <div class="col-xs-1 destroy">
         <span
-          v-show="!minPairs && isEditing"
-          @click="removePair(premiseKey, responseKey)"
+          v-show="!minItems && isEditing"
+          @click="removeItems(premiseKey, responseKey)"
           class="mdi mdi-close">
         </span>
       </div>
     </div>
-    <div v-show="!maxPairs && isEditing" class="add-pair">
-      <span @click="addPair" class="mdi mdi-plus"></span>
+    <div v-show="!maxItems && isEditing">
+      <span @click="addItems" class="mdi mdi-plus"></span>
     </div>
   </div>
 </template>
@@ -103,27 +103,31 @@ export default {
     responses() {
       return this.assessment.responses || {};
     },
-    pairs() {
+    correct() {
       return this.assessment.correct || {};
     },
-    maxPairs() {
-      return keys(this.pairs).length >= 10;
+    maxItems() {
+      return keys(this.correct).length >= 10;
     },
-    minPairs() {
-      return keys(this.pairs).length <= 2;
+    minItems() {
+      return keys(this.correct).length <= 2;
     }
   },
   methods: {
-    premiseChange(key, evt) {
-      this.getPremiseItem(key).value = evt.target.value;
+    updatePremiseContent(key, evt) {
+      let premises = cloneDeep(this.premises);
+      this.getPremiseItem(key, premises).value = evt.target.value;
+      this.update({ premises: shuffle(premises) });
     },
-    responseChange(key, evt) {
-      this.getResponseItem(key).value = evt.target.value;
+    updateResponseContent(key, evt) {
+      let responses = cloneDeep(this.responses);
+      this.getResponseItem(key, responses).value = evt.target.value;
+      this.update({ responses: shuffle(responses) });
     },
-    responseContent(key) {
+    getResponseContent(key) {
       return this.getResponseItem(key).value;
     },
-    premiseContent(key) {
+    getPremiseContent(key) {
       return this.getPremiseItem(key).value;
     },
     getPremiseItem(key, premises = this.premises) {
@@ -132,32 +136,32 @@ export default {
     getResponseItem(key, responses = this.responses) {
       return responses.find(it => it.key === key);
     },
-    removePair(premiseKey, responseKey) {
+    removeItems(premiseKey, responseKey) {
       let premises = cloneDeep(this.premises);
       let responses = cloneDeep(this.responses);
-      let pairs = cloneDeep(this.pairs);
+      let correct = cloneDeep(this.correct);
       pull(premises, this.getPremiseItem(premiseKey, premises));
       pull(responses, this.getResponseItem(responseKey, responses));
-      delete pairs[premiseKey];
-      this.update({ premises, responses, correct: pairs });
+      delete correct[premiseKey];
+      this.update({ premises, responses, correct: correct });
     },
-    addPair() {
+    addItems() {
       let premises = cloneDeep(this.premises);
       let responses = cloneDeep(this.responses);
-      let pairs = cloneDeep(this.pairs);
+      let correct = cloneDeep(this.correct);
       const premiseKey = cuid();
       const responseKey = cuid();
       premises.push({ key: premiseKey, value: '' });
       responses.push({ key: responseKey, value: '' });
-      pairs[premiseKey] = responseKey;
+      correct[premiseKey] = responseKey;
       this.update({
         premises: shuffle(premises),
         responses: shuffle(responses),
-        correct: pairs
+        correct
       });
     },
     focus(key) {
-      this.focused.key = this.isFocused(key) ? null : key;
+      this.focused.key = this.isFocused(key) ? {} : key;
     },
     isFocused(key) {
       return this.focused.key === key;

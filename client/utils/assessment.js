@@ -96,14 +96,8 @@ export const schemas = {
   MQ: yup.object().shape({
     question,
     hint,
-    premises: yup.array().of(yup.object().shape({
-      key: yup.string().trim().required(),
-      value: yup.string().trim().required()
-    })),
-    responses: yup.array().of(yup.object().shape({
-      key: yup.string().trim().required(),
-      value: yup.string().trim().required()
-    })),
+    premises: yup.array().of(objectMap),
+    responses: yup.array().of(objectMap),
     headings: yup.object().shape({
       premise: yup.string().trim().min(1).max(200).required(),
       response: yup.string().trim().min(1).max(200).required()
