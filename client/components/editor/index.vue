@@ -13,10 +13,12 @@
             </span>
           </span>
         </div>
-        <a :href="previewUrl" class="btn btn-default btn-sm pull-right" target="_blank">
-          Preview
-        </a>
-        <h2>{{ activity.name }}</h2>
+        <h2>
+          {{ activity.name }}
+          <a :href="previewUrl" class="preview-link" target="_blank">
+            <span class="mdi mdi-eye"></span>
+          </a>
+        </h2>
         <introduction v-if="showIntroduction"></introduction>
         <perspectives v-if="showPerspectives"></perspectives>
         <assessments v-if="showAssessments"></assessments>
@@ -148,12 +150,15 @@ export default {
   }
 
   h2 {
-    width: 80%;
     margin: 20px 0 30px 0;
     font-size: 20px;
     line-height: 30px;
     color: #444;
     text-align: left;
+
+    a {
+      margin-left: 15px;
+    }
   }
 
   .loader {
