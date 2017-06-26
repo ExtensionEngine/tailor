@@ -13,6 +13,9 @@
             </span>
           </span>
         </div>
+        <a :href="previewUrl" class="btn btn-default btn-sm pull-right" target="_blank">
+          Preview
+        </a>
         <h2>{{ activity.name }}</h2>
         <introduction v-if="showIntroduction"></introduction>
         <perspectives v-if="showPerspectives"></perspectives>
@@ -68,6 +71,12 @@ export default {
         if (item) items.unshift(item);
       };
       return items;
+    },
+    previewUrl() {
+      const baseUrl = 'https://cgma.dev.extensionengine.com/admin/#/';
+      const { courseId, activityId } = this.$route.params;
+      const route = `course/${courseId}/activity/${activityId}/preview`;
+      return `${baseUrl}${route}`;
     }
   },
   methods: {
@@ -139,6 +148,7 @@ export default {
   }
 
   h2 {
+    width: 80%;
     margin: 20px 0 30px 0;
     font-size: 20px;
     line-height: 30px;
