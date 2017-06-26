@@ -9,7 +9,7 @@
           <multiselect
             :value="topic"
             :options="topics"
-            :searchable="false"
+            :searchable="true"
             :trackBy="'id'"
             :label="'name'"
             :onChange="onTopicSelected">
@@ -250,9 +250,15 @@ export default {
   input.form-control {
     padding-left: 10px;
   }
+}
+</style>
 
-  .select-topic {
-    width: 150px;
+<style lang="scss">
+.select-topic {
+  width: 150px;
+
+  input {
+    height: 36px;
   }
 }
 </style>
