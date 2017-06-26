@@ -6,6 +6,8 @@
     :close-on-select="true"
     :show-labels="false"
     :allow-empty="false"
+    :disabled="disabled"
+    :placeholder="placeholder || 'Select option'"
     :track-by="trackBy || 'label'"
     :label="label || 'label'"
     @input="onChange"
@@ -19,7 +21,16 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'select',
-  props: ['value', 'options', 'searchable', 'trackBy', 'label', 'onChange'],
+  props: [
+    'value',
+    'options',
+    'searchable',
+    'disabled',
+    'placeholder',
+    'trackBy',
+    'label',
+    'onChange'
+  ],
   components: { multiselect }
 };
 </script>

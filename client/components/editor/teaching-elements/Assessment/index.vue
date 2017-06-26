@@ -10,6 +10,8 @@
             :value="topic"
             :options="topics"
             :searchable="true"
+            :disabled="!hasTopics"
+            :placeholder="hasTopics ? 'Select topic' : 'Error: no topics'"
             :trackBy="'id'"
             :label="'name'"
             :onChange="onTopicSelected">
@@ -122,6 +124,9 @@ export default {
       const assessmentType = this.element.data.type;
       const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
       return !this.summative && feedbackSupported;
+    },
+    hasTopics() {
+      return this.topics && this.topics.length > 0;
     }
   },
   methods: {
@@ -250,15 +255,18 @@ export default {
   input.form-control {
     padding-left: 10px;
   }
+
+  .select-topic {
+    width: 150px;
+  }
 }
 </style>
 
 <style lang="scss">
 .select-topic {
-  width: 150px;
-
   input {
-    height: 36px;
+    height: 36px !important;
+    padding-left: 8px !important;
   }
 }
 </style>

@@ -43,8 +43,10 @@ import AssessmentGroup from './AssessmentGroup';
 import concat from 'lodash/concat';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import { mapActions, mapGetters } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
+import { OUTLINE_LEVELS } from 'shared/activities';
 import pluralize from 'pluralize';
 import reduce from 'lodash/reduce';
 
@@ -65,13 +67,10 @@ export default {
       return filter(this.activities, { parentId: this.exam.id });
     },
     topics() {
-      const objectives = filter(this.activities, it => {
-        return it.type === 'OBJECTIVE' && it.parentId === this.exam.parentId;
-      });
-      return reduce(objectives, (allTopics, objective) => {
-        const objectiveTopics = filter(this.activities, { parentId: objective.id });
-        return concat(allTopics, objectiveTopics);
-      }, []);
+      const parentActivity = find(this.activities, { id: this.exam.parentId });
+      const leafType = OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1].type;
+
+      return this.getLeafs([parentActivity], leafType);
     },
     title() {
       return `Exam ${numberToLetter(this.position)}`;
@@ -84,6 +83,20 @@ export default {
   methods: {
     ...mapActions(['save', 'remove'], 'activities'),
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
+    getChildren(activity) {
+      return filter(this.activities, it => {
+        return it.parentId === activity.id && it.type !== 'EXAM';
+      });
+    },
+    getLeafs(activities, leafType) {
+      if (!activities || activities.length < 1) return [];
+      if (activities[0].type === leafType) return activities;
+
+      const children = reduce(activities, (result, it) => {
+        return concat(result, this.getChildren(it));
+      }, []);
+      return this.getLeafs(children, leafType);
+    },
     createGroup() {
       this.save({
         type: 'ASSESSMENT_GROUP',
