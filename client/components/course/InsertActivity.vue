@@ -21,7 +21,7 @@
             :value="activityType ? getActivityLevel(activityType) : levels[0]"
             :options="levels"
             :searchable="false"
-            :onChange="onLevelSelected">
+            @input="onLevelSelected">
           </multiselect>
         </div>
         <div class="col-lg-2">

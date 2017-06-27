@@ -60,12 +60,14 @@ import { getLevel } from 'shared/activities';
 import Input from './Input';
 import { mapActions, mapGetters } from 'vuex-module';
 import map from 'lodash/map';
+import Select from './Select';
 import Textarea from './Textarea';
 const noop = Function.prototype;
 
 const META_TYPES = {
   INPUT: Input.name,
-  TEXTAREA: Textarea.name
+  TEXTAREA: Textarea.name,
+  SELECT: Select.name
 };
 
 const appChannel = EventBus.channel('app');
@@ -131,7 +133,8 @@ export default {
   },
   components: {
     [Input.name]: Input,
-    [Textarea.name]: Textarea
+    [Textarea.name]: Textarea,
+    [Select.name]: Select
   }
 };
 </script>

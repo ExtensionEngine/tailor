@@ -6,7 +6,10 @@
     :close-on-select="true"
     :show-labels="false"
     :allow-empty="false"
-    @input="onChange"
+    :placeholder="placeholder"
+    @input="val => $emit('input', val)"
+    @close="id => $emit('close', id)"
+    @open="(value, id) => $emit('open', value, id)"
     class="custom-select"
     track-by="label"
     label="label">
@@ -19,7 +22,7 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'select',
-  props: ['value', 'options', 'searchable', 'onChange'],
+  props: ['value', 'options', 'placeholder', 'searchable'],
   components: { multiselect }
 };
 </script>
