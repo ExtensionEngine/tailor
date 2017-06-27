@@ -3,7 +3,7 @@
     @focusout="focusoutInput"
     @mousedown="onEdit"
     :class="{ 'editing': editing }"
-    class="meta-input">
+    class="input">
 		<label>{{ meta.label }}</label>
     <div
       v-show="editing"
@@ -29,6 +29,7 @@
 const noop = Function.prototype;
 
 export default {
+  name: 'line-input',
   props: ['meta'],
   data() {
     return {
@@ -60,7 +61,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.meta-input {
+.input {
   padding: 3px 8px;
   cursor: pointer;
 

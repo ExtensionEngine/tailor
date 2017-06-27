@@ -31,7 +31,15 @@
           <div class="title">{{ name }}</div>
         </div>
       </div>
-      <metax :activity="activity"></metax>
+      <div class="meta-element">
+        <component
+          v-for="data in metadata"
+          :is="resolveElement(data.type)"
+          :meta="data"
+          :key="`${activity.id}${data.type}`"
+          @update="updateActivity">
+        </component>
+      </div>
     </div>
     <div v-else class="placeholder">
       <h4>Outline Sidebar</h4>
@@ -45,10 +53,20 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import EventBus from 'EventBus';
+import get from 'lodash/get';
+import { getLevel } from 'shared/activities';
+import Input from './Input';
 import { mapActions, mapGetters } from 'vuex-module';
-import Metax from './meta';
+import map from 'lodash/map';
+import Textarea from './Textarea';
 const noop = Function.prototype;
+
+const META_TYPES = {
+  INPUT: Input.name,
+  TEXTAREA: Textarea.name
+};
 
 const appChannel = EventBus.channel('app');
 
@@ -63,6 +81,14 @@ export default {
     ...mapGetters(['activity'], 'course'),
     name() {
       return this.activity.name;
+    },
+    metadata() {
+      if (!this.activity) return [];
+      const properties = getLevel(this.activity.type).meta;
+      return map(properties, it => {
+        let value = get(this.activity, `data.${it.key}`);
+        return { ...it, value };
+      });
     }
   },
   methods: {
@@ -82,6 +108,14 @@ export default {
         this.showNameInput = false;
       }, noop);
     },
+    resolveElement(type) {
+      return META_TYPES[type];
+    },
+    updateActivity(key, value) {
+      const data = cloneDeep(this.activity.data) || {};
+      data[key] = value;
+      this.update({ _cid: this.activity._cid, data });
+    },
     deleteActivity() {
       appChannel.emit('showConfirmationModal', {
         type: 'activity',
@@ -96,7 +130,8 @@ export default {
     }
   },
   components: {
-    Metax
+    [Input.name]: Input,
+    [Textarea.name]: Textarea
   }
 };
 </script>

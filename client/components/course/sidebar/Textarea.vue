@@ -3,7 +3,7 @@
     @focusout="focusoutTextarea"
     @mousedown="onEdit"
     :class="{ 'editing': editing }"
-    class="meta-textarea">
+    class="textarea">
 		<label>{{ meta.label }}</label>
     <div
       v-show="editing"
@@ -32,6 +32,7 @@
 const noop = Function.prototype;
 
 export default {
+  name: 'multiline-input',
   props: ['meta'],
   data() {
     return {
@@ -68,7 +69,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.meta-textarea {
+.textarea {
   padding: 3px 8px;
   cursor: pointer;
 
