@@ -1,10 +1,10 @@
 <template>
-	<div
-    @focusout="focusoutTextarea"
-    @mousedown="onEdit"
+  <div
     :class="{ 'editing': editing }"
-    class="textarea">
-		<label>{{ meta.label }}</label>
+    class="textarea"
+    @focusout="focusoutTextarea"
+    @mousedown="onEdit">
+    <label>{{ meta.label }}</label>
     <div
       v-show="editing"
       :class="{ 'has-error': vErrors.has(meta.key) }">
@@ -21,9 +21,7 @@
       <span class="help-block">{{ vErrors.first(meta.key) }}</span>
     </div>
     <div v-show="!editing" @click.stop="focusTextarea">
-      <div class="content">
-        <pre>{{ value || meta.placeholder }}</pre>
-      </div>
+      <div class="content"><pre>{{ value || meta.placeholder }}</pre></div>
     </div>
   </div>
 </template>

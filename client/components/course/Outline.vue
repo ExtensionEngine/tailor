@@ -12,7 +12,7 @@
 import Activity from './Activity';
 import Loader from '../common/Loader';
 import { mapGetters } from 'vuex-module';
-import Sidebar from './sidebar';
+import Sidebar from './Sidebar';
 
 export default {
   props: ['showLoader'],

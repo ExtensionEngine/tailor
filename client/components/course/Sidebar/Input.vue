@@ -1,10 +1,10 @@
 <template>
-	<div
-    @focusout="focusoutInput"
-    @mousedown="onEdit"
+  <div
     :class="{ 'editing': editing }"
-    class="input">
-		<label>{{ meta.label }}</label>
+    class="input"
+    @focusout="focusoutInput"
+    @mousedown="onEdit">
+    <label>{{ meta.label }}</label>
     <div
       v-show="editing"
       :class="{ 'has-error': vErrors.has(meta.key) }">
