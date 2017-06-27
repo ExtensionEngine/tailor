@@ -63,47 +63,42 @@ yup.addMethod(yup.array, 'castMap', function () {
   });
 });
 
+const baseSchema = {
+  question,
+  hint,
+  _refs
+};
+
 export const schemas = {
   MC: yup.object().shape({
-    question,
+    ...baseSchema,
     answers: yup.array().min(2).of(yup.string().trim().min(1).max(500)).required(),
-    correct: yup.array().min(1).of(yup.number()).required(),
-    hint,
-    _refs
+    correct: yup.array().min(1).of(yup.number()).required()
   }),
   NR: yup.object().shape({
-    question,
-    correct: yup.string().trim().matches(/^(-?\d+(\.\d+)?)$/).max(200).required(),
-    hint,
-    _refs
+    ...baseSchema,
+    correct: yup.string().trim().matches(/^(-?\d+(\.\d+)?)$/).max(200).required()
   }),
   SC: yup.object().shape({
-    question,
+    ...baseSchema,
     answers: yup.array().min(2).of(yup.string().trim().min(1).max(200).required()).required(),
-    correct: yup.number().required(),
-    hint,
-    _refs
+    correct: yup.number().required()
   }),
   TR: yup.object().shape({
-    question,
-    correct: yup.string().trim().min(1).max(7000).required(),
-    hint,
-    _refs
+    ...baseSchema,
+    correct: yup.string().trim().min(1).max(7000).required()
   }),
   TF: yup.object().shape({
-    question,
-    correct: yup.boolean().required(),
-    hint,
-    _refs
+    ...baseSchema,
+    correct: yup.boolean().required()
   }),
   FB: yup.object().shape({
+    ...baseSchema,
     question: fbQuestion,
-    correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).max(200).required())),
-    hint,
-    _refs
+    correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).max(200).required()))
   }),
   MQ: yup.object().shape({
-    question,
+    ...baseSchema,
     correct: yup.array().of(yup.object().shape({
       premise: yup.string().trim().notOneOf(['Click to edit']).required(),
       response: yup.string().trim().notOneOf(['Click to edit']).required()
@@ -111,20 +106,16 @@ export const schemas = {
     headings: yup.object().shape({
       premise: yup.string().trim().min(1).max(200).required(),
       response: yup.string().trim().min(1).max(200).required()
-    }),
-    hint,
-    _refs
+    })
   }),
   DD: yup.object().shape({
-    question,
-    hint,
+    ...baseSchema,
     groups: yup.array().castMap().of(objectMap).min(2),
     answers: yup.array().castMap().of(objectMap),
     correct: yup.array().castMap().of(yup.object().shape({
       key: yup.string().required(),
       value: yup.array().of(yup.string().required()).min(1)
-    })).min(1),
-    _refs
+    })).min(1)
   })
 };
 
@@ -141,87 +132,63 @@ export function errorProcessor(error) {
   });
 }
 
+const baseDefaults = {
+  question: [],
+  hint: '',
+  _refs: {
+    leafId: 0
+  }
+};
+
 export const defaults = {
   MC: {
     type: 'MC',
-    question: [],
+    ...baseDefaults,
     answers: ['', '', ''],
-    correct: [],
-    hint: '',
-    _refs: {
-      leafId: 0
-    }
+    correct: []
   },
   NR: {
     type: 'NR',
-    question: [],
-    correct: '',
-    hint: '',
-    _refs: {
-      leafId: 0
-    }
+    ...baseDefaults,
+    correct: ''
   },
   SC: {
     type: 'SC',
-    question: [],
+    ...baseDefaults,
     answers: ['', ''],
-    correct: '',
-    hint: '',
-    _refs: {
-      leafId: 0
-    }
+    correct: ''
   },
   TR: {
     type: 'TR',
-    question: [],
-    correct: '',
-    hint: '',
-    _refs: {
-      leafId: 0
-    }
+    ...baseDefaults,
+    correct: ''
   },
   TF: {
     type: 'TF',
-    question: [],
-    correct: null,
-    hint: '',
-    _refs: {
-      leafId: 0
-    }
+    ...baseDefaults,
+    correct: null
   },
   FB: {
     type: 'FB',
-    question: [],
-    correct: [],
-    hint: '',
-    _refs: {
-      leafId: 0
-    }
+    ...baseDefaults,
+    correct: []
   },
   MQ: {
     type: 'MQ',
-    question: [],
+    ...baseDefaults,
     correct: [],
-    hint: '',
     headings: {
       premise: 'Premise',
       response: 'Response'
-    },
-    _refs: {
-      leafId: 0
     }
   },
   DD() {
     let element = {
       type: 'DD',
-      question: [],
+      ...baseDefaults,
       groups: {},
       answers: {},
-      correct: {},
-      hint: '',
-      _refs: {
-        leafId: 0
-      }
+      correct: {}
     };
     times(2, () => {
       const groupKey = cuid();
