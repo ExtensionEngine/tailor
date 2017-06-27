@@ -18,6 +18,7 @@
     </div>
     <select-assessment
       v-if="showAssessments"
+      :activity="activity"
       @selected="setSubtype">
     </select-assessment>
   </div>
@@ -45,7 +46,7 @@ const ELEMENTS_PER_ROW = 6;
 
 export default {
   name: 'select-element',
-  props: ['include'],
+  props: ['activity', 'include'],
   data() {
     return { type: null };
   },
