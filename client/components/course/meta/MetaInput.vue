@@ -1,8 +1,12 @@
 <template>
-	<div class="meta-input">
+	<div
+    @focusout="focusoutInput"
+    @mousedown="onEdit"
+    :class="{ 'editing': editing }"
+    class="meta-input">
 		<label>{{ meta.label }}</label>
     <div
-      v-show="showInput"
+      v-show="editing"
       :class="{ 'has-error': vErrors.has(meta.key) }">
       <input
         v-model="value"
@@ -10,14 +14,13 @@
         :ref="meta.key"
         :name="meta.key"
         :placeholder="meta.placeholder"
-        @blur="focusoutInput"
         @keyup.enter="focusoutInput"
         class="form-control">
       </input>
       <span class="help-block">{{ vErrors.first(meta.key) }}</span>
     </div>
-    <div v-show="!showInput" @click.stop="focusInput">
-      <div class="title">{{ value || meta.placeholder }}</div>
+    <div v-show="!editing" @click.stop="focusInput">
+      <div class="content">{{ value || meta.placeholder }}</div>
     </div>
   </div>
 </template>
@@ -30,23 +33,26 @@ export default {
   data() {
     return {
       value: this.meta.value,
-      showInput: false
+      editing: false
     };
   },
   methods: {
+    onEdit(e) {
+      if (this.editing) {
+        e.preventDefault();
+        return;
+      }
+      this.focusInput();
+    },
     focusInput() {
-      this.showInput = true;
+      this.editing = true;
       setTimeout(() => this.$refs[this.meta.key].focus(), 0);
     },
     focusoutInput() {
       this.$validator.validate(this.meta.key).then(() => {
-        if (this.value === this.meta.value) {
-          this.showInput = false;
-          return;
-        }
-
+        this.editing = false;
+        if (this.value === this.meta.value) return;
         this.$emit('update', this.meta.key, this.value);
-        this.showInput = false;
       }, noop);
     }
   }
@@ -56,27 +62,32 @@ export default {
 <style lang="scss" scoped>
 .meta-input {
   padding: 3px 8px;
+  cursor: pointer;
 
   &:hover {
-    cursor: pointer;
     background-color: #f5f5f5;
   }
 
+  &.editing:hover {
+    background-color: inherit;
+  }
+
   label {
-    color: gray;
+    color: #808080;
   }
 
-  .form-control {
-    font-size: 17px;
-    letter-spacing: 0.1px;
+  input {
+    letter-spacing: inherit;
   }
 
-  .title {
-    margin: 5px 3px 5px 0;
+  .form-control, .content {
     font-size: 17px;
+  }
+
+  .content {
+    margin: 5px 3px 15px 0;
     line-height: 24px;
     word-wrap: break-word;
-    font-weight: normal;
     color: #333;
    }
 }

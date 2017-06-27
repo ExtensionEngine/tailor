@@ -1,8 +1,12 @@
 <template>
-	<div class="meta-textarea">
+	<div
+    @focusout="focusoutTextarea"
+    @mousedown="onEdit"
+    :class="{ 'editing': editing }"
+    class="meta-textarea">
 		<label>{{ meta.label }}</label>
     <div
-      v-show="showTextarea"
+      v-show="editing"
       :class="{ 'has-error': vErrors.has(meta.key) }">
       <textarea
         v-model="value"
@@ -10,14 +14,16 @@
         :ref="meta.key"
         :name="meta.key"
         :placeholder="meta.placeholder"
-        @blur="focusoutTextarea"
-        @keyup.enter="focusoutTextarea"
+        @keydown.enter="onEnter"
+        @keydown.esc="editing = false"
         class="form-control">
       </textarea>
       <span class="help-block">{{ vErrors.first(meta.key) }}</span>
     </div>
-    <div v-show="!showTextarea" @click.stop="focusTextarea">
-      <div class="title">{{ value || meta.placeholder }}</div>
+    <div v-show="!editing" @click.stop="focusTextarea">
+      <div class="content">
+        <pre>{{ value || meta.placeholder }}</pre>
+      </div>
     </div>
   </div>
 </template>
@@ -30,23 +36,31 @@ export default {
   data() {
     return {
       value: this.meta.value,
-      showTextarea: false
+      editing: false
     };
   },
   methods: {
+    onEdit(e) {
+      if (this.editing) {
+        e.preventDefault();
+        return;
+      }
+      this.focusTextarea();
+    },
+    onEnter(e) {
+      if (e.shiftKey) return;
+      e.preventDefault();
+      this.focusoutTextarea();
+    },
     focusTextarea() {
-      this.showTextarea = true;
+      this.editing = true;
       setTimeout(() => this.$refs[this.meta.key].focus(), 0);
     },
     focusoutTextarea() {
       this.$validator.validate(this.meta.key).then(() => {
-        if (this.value === this.meta.value) {
-          this.showTextarea = false;
-          return;
-        }
-
+        this.editing = false;
+        if (this.value === this.meta.value) return;
         this.$emit('update', this.meta.key, this.value);
-        this.showTextarea = false;
       }, noop);
     }
   }
@@ -55,37 +69,47 @@ export default {
 
 <style lang="scss" scoped>
 .meta-textarea {
-  height: 155px;
   padding: 3px 8px;
+  cursor: pointer;
 
   &:hover {
-    cursor: pointer;
     background-color: #f5f5f5;
   }
 
+  &.editing:hover {
+    background-color: inherit;
+  }
+
   label {
-    color: gray;
+    color: #808080;
   }
 
   textarea {
+    height: 100px;
+    box-sizing: border-box;
     margin: 5px 0;
-    height: 100px;
     resize: none;
+    letter-spacing: inherit;
   }
 
-  .form-control {
+  .form-control, .content {
     font-size: 17px;
-    letter-spacing: 0.1px;
   }
 
-  .title {
-    height: 100px;
-    margin: 5px 3px 5px 0;
-    font-size: 17px;
+  .content {
+    margin: 5px 3px 10px 0;
     line-height: 24px;
-    word-wrap: break-word;
-    font-weight: normal;
+    height: 100px;
     color: #333;
-   }
+    overflow: auto;
+
+    pre {
+      padding: 0;
+      margin: 0;
+      border: none;
+      font: inherit;
+      background: inherit;
+    }
+  }
 }
 </style>

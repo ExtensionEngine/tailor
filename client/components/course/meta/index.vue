@@ -4,6 +4,7 @@
       v-for="meta in metas"
       :is="resolveElement(meta.type)"
       :meta="meta"
+      :key="`${activity.id}${meta.type}`"
       @update="updateActivity">
     </component>
   </div>
@@ -41,7 +42,7 @@ export default {
       return META_TYPES[type];
     },
     updateActivity(key, value) {
-      const data = cloneDeep(this.activity.data);
+      const data = cloneDeep(this.activity.data) || {};
       data[key] = value;
       this.update({
         _cid: this.activity._cid,
