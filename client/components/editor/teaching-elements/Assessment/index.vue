@@ -5,16 +5,16 @@
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
         <div class="clearfix"></div>
-        <div v-if="isInExam" class="select-topic pull-right">
+        <div v-if="isInExam" class="select-leaf pull-right">
           <multiselect
-            :value="topic"
-            :options="topics"
+            :value="leaf"
+            :options="leafs"
             :searchable="true"
-            :disabled="!hasTopics"
-            :placeholder="hasTopics ? 'Select topic' : 'Error: no topics'"
+            :disabled="!isEditing || !hasLeafs"
+            :placeholder="hasLeafs ? 'Select leaf' : 'Error: no leafs'"
             :trackBy="'id'"
             :label="'name'"
-            :onChange="onTopicSelected">
+            :onChange="onLeafSelected">
           </multiselect>
         </div>
       </div>
@@ -71,6 +71,7 @@ import Controls from './Controls';
 import DragDrop from './DragDrop';
 import Feedback from './Feedback';
 import FillBlank from './FillBlank';
+import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
 import { mapMutations } from 'vuex-module';
 import MatchingQuestion from './MatchingQuestion';
@@ -99,7 +100,7 @@ const ASSESSMENT_TYPES = {
 
 export default {
   name: 'te-assessment',
-  props: { element: Object, summative: Boolean, isInExam: Boolean, topics: Array },
+  props: { element: Object, summative: Boolean, isInExam: Boolean, leafs: Array },
   data() {
     const isEditing = !this.element.id;
     return {
@@ -107,7 +108,7 @@ export default {
       alert: {},
       errors: [],
       previousVersion: null,
-      topic: null
+      leaf: find(this.leafs, { id: this.element.data._refs.leafId })
     };
   },
   computed: {
@@ -125,8 +126,8 @@ export default {
       const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
       return !this.summative && feedbackSupported;
     },
-    hasTopics() {
-      return this.topics && this.topics.length > 0;
+    hasLeafs() {
+      return this.leafs && this.leafs.length > 0;
     }
   },
   methods: {
@@ -163,8 +164,14 @@ export default {
       this.errors = [];
       this.validate(this.element.data)
         .then(() => {
-          const data = this.summative ? this.element : this.element.data;
-          this.$emit('save', cloneDeep(data));
+          let element;
+          if (this.summative) {
+            element = this.element;
+            element.data._refs.leafId = this.leaf.id;
+          } else {
+            element = this.element.data;
+          }
+          this.$emit('save', cloneDeep(element));
           this.isEditing = false;
           this.setAlert(saveAlert);
         })
@@ -196,8 +203,8 @@ export default {
       Object.assign(element.data.feedback, feedback);
       this.addElement(element);
     },
-    onTopicSelected(topic) {
-      this.topic = topic;
+    onLeafSelected(leaf) {
+      this.leaf = leaf;
     }
   },
   components: {
@@ -256,14 +263,14 @@ export default {
     padding-left: 10px;
   }
 
-  .select-topic {
+  .select-leaf {
     width: 150px;
   }
 }
 </style>
 
 <style lang="scss">
-.select-topic {
+.select-leaf {
   input {
     height: 36px !important;
     padding-left: 8px !important;

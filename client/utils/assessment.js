@@ -47,6 +47,9 @@ const fbQuestion = yup.array().test(
 );
 
 const hint = yup.string().trim().max(200);
+const _refs = yup.object().shape({
+  leafId: yup.number().integer().positive()
+});
 
 const objectMap = yup.object().shape({
   key: yup.string().required(),
@@ -65,33 +68,39 @@ export const schemas = {
     question,
     answers: yup.array().min(2).of(yup.string().trim().min(1).max(500)).required(),
     correct: yup.array().min(1).of(yup.number()).required(),
-    hint
+    hint,
+    _refs
   }),
   NR: yup.object().shape({
     question,
     correct: yup.string().trim().matches(/^(-?\d+(\.\d+)?)$/).max(200).required(),
-    hint
+    hint,
+    _refs
   }),
   SC: yup.object().shape({
     question,
     answers: yup.array().min(2).of(yup.string().trim().min(1).max(200).required()).required(),
     correct: yup.number().required(),
-    hint
+    hint,
+    _refs
   }),
   TR: yup.object().shape({
     question,
     correct: yup.string().trim().min(1).max(7000).required(),
-    hint
+    hint,
+    _refs
   }),
   TF: yup.object().shape({
     question,
     correct: yup.boolean().required(),
-    hint
+    hint,
+    _refs
   }),
   FB: yup.object().shape({
     question: fbQuestion,
     correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).max(200).required())),
-    hint
+    hint,
+    _refs
   }),
   MQ: yup.object().shape({
     question,
@@ -102,7 +111,9 @@ export const schemas = {
     headings: yup.object().shape({
       premise: yup.string().trim().min(1).max(200).required(),
       response: yup.string().trim().min(1).max(200).required()
-    })
+    }),
+    hint,
+    _refs
   }),
   DD: yup.object().shape({
     question,
@@ -112,7 +123,8 @@ export const schemas = {
     correct: yup.array().castMap().of(yup.object().shape({
       key: yup.string().required(),
       value: yup.array().of(yup.string().required()).min(1)
-    })).min(1)
+    })).min(1),
+    _refs
   })
 };
 
@@ -135,37 +147,56 @@ export const defaults = {
     question: [],
     answers: ['', '', ''],
     correct: [],
-    hint: ''
+    hint: '',
+    _refs: {
+      leafId: 0
+    }
   },
   NR: {
     type: 'NR',
     question: [],
     correct: '',
-    hint: ''
+    hint: '',
+    _refs: {
+      leafId: 0
+    }
   },
   SC: {
     type: 'SC',
     question: [],
     answers: ['', ''],
     correct: '',
-    hint: ''
+    hint: '',
+    _refs: {
+      leafId: 0
+    }
   },
   TR: {
     type: 'TR',
     question: [],
     correct: '',
-    hint: ''
+    hint: '',
+    _refs: {
+      leafId: 0
+    }
   },
   TF: {
     type: 'TF',
     question: [],
     correct: null,
-    hint: ''
+    hint: '',
+    _refs: {
+      leafId: 0
+    }
   },
   FB: {
     type: 'FB',
     question: [],
-    correct: []
+    correct: [],
+    hint: '',
+    _refs: {
+      leafId: 0
+    }
   },
   MQ: {
     type: 'MQ',
@@ -175,6 +206,9 @@ export const defaults = {
     headings: {
       premise: 'Premise',
       response: 'Response'
+    },
+    _refs: {
+      leafId: 0
     }
   },
   DD() {
@@ -184,7 +218,10 @@ export const defaults = {
       groups: {},
       answers: {},
       correct: {},
-      hint: ''
+      hint: '',
+      _refs: {
+        leafId: 0
+      }
     };
     times(2, () => {
       const groupKey = cuid();

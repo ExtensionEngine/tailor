@@ -5,7 +5,7 @@
       :element="assessment"
       :summative="true"
       :isInExam="isInExam"
-      :topics="topics"
+      :leafs="leafs"
       @selected="$emit('selected')"
       @remove="$emit('remove')"
       @save="$emit('save', $event)">
@@ -31,7 +31,7 @@ const htmlRegex = /<\/?[^>]+(>|$)/g;
 
 export default {
   name: 'assessment-item',
-  props: ['assessment', 'expanded', 'isInExam', 'topics'],
+  props: ['assessment', 'expanded', 'isInExam', 'leafs'],
   computed: {
     question() {
       let question = filter(this.assessment.data.question, { type: 'HTML' });

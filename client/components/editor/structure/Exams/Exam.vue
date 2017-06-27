@@ -27,7 +27,7 @@
         v-for="(group, index) in groups"
         :key="group._cid"
         :group="group"
-        :topics="topics"
+        :leafs="leafs"
         :position="index">
       </assessment-group>
       <button @click="createGroup" class="btn btn-primary create-group">
@@ -66,7 +66,7 @@ export default {
     groups() {
       return filter(this.activities, { parentId: this.exam.id });
     },
-    topics() {
+    leafs() {
       const parentActivity = find(this.activities, { id: this.exam.parentId });
       const leafType = OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1].type;
 
