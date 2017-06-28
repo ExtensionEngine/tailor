@@ -1,6 +1,6 @@
 <template>
   <div>
-    <modal :show.sync="showModal" :backdrop="false">
+    <modal :show.sync="visible" :backdrop="false">
       <div slot="modal-header"></div>
       <div slot="modal-body" class="modal-body">
         <div class="row">
@@ -30,15 +30,15 @@ export default {
   props: ['elements'],
   data() {
     return {
-      showModal: false
+      visible: false
     };
   },
   mounted() {
-    this.showModal = true;
+    this.visible = true;
   },
   methods: {
     close() {
-      this.showModal = false;
+      this.visible = false;
       this.$emit('close');
     }
   },
