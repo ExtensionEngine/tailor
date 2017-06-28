@@ -34,7 +34,7 @@
       <div class="meta-element">
         <component
           v-for="data in metadata"
-          :is="resolveElement(data.type)"
+          :is="tagname(data.type)"
           :meta="data"
           :key="`${activity.id}${data.type}`"
           @update="updateActivity">
@@ -65,9 +65,9 @@ import Textarea from './Textarea';
 const noop = Function.prototype;
 
 const META_TYPES = {
-  INPUT: Input.name,
-  TEXTAREA: Textarea.name,
-  SELECT: Select.name
+  INPUT: Input,
+  TEXTAREA: Textarea,
+  SELECT: Select
 };
 
 const appChannel = EventBus.channel('app');
@@ -110,8 +110,9 @@ export default {
         this.showNameInput = false;
       }, noop);
     },
-    resolveElement(type) {
-      return META_TYPES[type];
+    tagname(type = '') {
+      const cls = META_TYPES[type.toUpperCase()] || META_TYPES.INPUT;
+      return cls.name;
     },
     updateActivity(key, value) {
       const data = cloneDeep(this.activity.data) || {};

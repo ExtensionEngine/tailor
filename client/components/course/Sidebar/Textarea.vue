@@ -1,9 +1,9 @@
 <template>
   <div
-    :class="{ 'editing': editing }"
-    class="textarea"
+    :class="{ editing }"
     @focusout="focusoutTextarea"
-    @mousedown="onEdit">
+    @mousedown="onEdit"
+    class="textarea">
     <label>{{ meta.label }}</label>
     <div
       v-show="editing"

@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ 'active': active }"
+    :class="{ active }"
     class="select">
     <label>{{ meta.label }}</label>
     <multiselect
@@ -39,9 +39,7 @@ export default {
   data() {
     return { active: false };
   },
-  components: {
-    multiselect: Select
-  }
+  components: { multiselect: Select }
 };
 </script>
 
