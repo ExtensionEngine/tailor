@@ -62,6 +62,7 @@
     "lodash": "^4.17.2",
     "mdi": "^1.8.36",
     "mime-types": "^2.1.14",
+    "minimist": "^1.2.0",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
     "pg": "^6.1.2",
