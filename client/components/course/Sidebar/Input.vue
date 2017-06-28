@@ -4,7 +4,7 @@
     @focusout="focusoutInput"
     @mousedown="onEdit"
     class="input">
-    <label>{{ meta.label }}</label>
+    <label :for="meta.key">{{ meta.label }}</label>
     <div
       v-show="editing"
       :class="{ 'has-error': vErrors.has(meta.key) }">
@@ -16,7 +16,6 @@
         :placeholder="meta.placeholder"
         @keyup.enter="focusoutInput"
         class="form-control">
-      </input>
       <span class="help-block">{{ vErrors.first(meta.key) }}</span>
     </div>
     <div v-show="!editing" @click.stop="focusInput">

@@ -58,10 +58,11 @@ import EventBus from 'EventBus';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import Input from './Input';
-import { mapActions, mapGetters } from 'vuex-module';
 import map from 'lodash/map';
+import { mapActions, mapGetters } from 'vuex-module';
 import Select from './Select';
 import Textarea from './Textarea';
+
 const noop = Function.prototype;
 
 const META_TYPES = {

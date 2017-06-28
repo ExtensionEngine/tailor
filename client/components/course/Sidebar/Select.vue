@@ -2,9 +2,10 @@
   <div
     :class="{ active }"
     class="select">
-    <label>{{ meta.label }}</label>
+    <label :for="meta.key">{{ meta.label }}</label>
     <multiselect
       :value="value"
+      :name="meta.key"
       :options="options"
       :searchable="false"
       :placeholder="meta.placeholder"
@@ -17,23 +18,19 @@
 
 <script>
 import find from 'lodash/find';
+import isString from 'lodash/isString';
 import Select from '../../common/Select';
-const isString = arg => typeof arg === 'string';
 
 export default {
   name: 'multi-select',
   props: ['meta'],
   computed: {
     value() {
-      return find(this.options, ({ value }) => value === this.meta.value);
+      return find(this.options, { value: this.meta.value });
     },
     options() {
-      return this.meta.options.map(option => {
-        if (isString(option)) {
-          return { label: option, value: option };
-        }
-        return option;
-      });
+      const { options } = this.meta;
+      return options.map(it => isString(it) ? { label: it, value: it } : it);
     }
   },
   data() {

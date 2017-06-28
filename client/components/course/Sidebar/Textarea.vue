@@ -4,7 +4,7 @@
     @focusout="focusoutTextarea"
     @mousedown="onEdit"
     class="textarea">
-    <label>{{ meta.label }}</label>
+    <label :for="meta.key">{{ meta.label }}</label>
     <div
       v-show="editing"
       :class="{ 'has-error': vErrors.has(meta.key) }">
@@ -85,8 +85,8 @@ export default {
 
   textarea {
     height: 100px;
-    box-sizing: border-box;
     margin: 5px 0;
+    box-sizing: border-box;
     resize: none;
     letter-spacing: inherit;
   }
@@ -96,9 +96,9 @@ export default {
   }
 
   .content {
+    height: 100px;
     margin: 5px 3px 10px 0;
     line-height: 24px;
-    height: 100px;
     color: #333;
     overflow: auto;
 
