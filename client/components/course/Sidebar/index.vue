@@ -112,8 +112,8 @@ export default {
       }, noop);
     },
     tagname(type = '') {
-      const cls = META_TYPES[type.toUpperCase()] || META_TYPES.INPUT;
-      return cls.name;
+      const component = META_TYPES[type.toUpperCase()] || META_TYPES.INPUT;
+      return component.name;
     },
     updateActivity(key, value) {
       const data = cloneDeep(this.activity.data) || {};
