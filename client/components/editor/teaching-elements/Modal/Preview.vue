@@ -29,9 +29,7 @@ export default {
   name: 'te-modal-preview',
   props: ['elements'],
   data() {
-    return {
-      visible: false
-    };
+    return { visible: false };
   },
   mounted() {
     this.visible = true;
