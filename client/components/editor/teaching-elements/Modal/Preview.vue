@@ -13,7 +13,7 @@
         </div>
       </div>
       <div slot="modal-footer" class="modal-footer">
-        <button @click="close()" class="btn btn-default" type="button">
+        <button @click="visible = false" class="btn btn-default" type="button">
           Close
         </button>
       </div>
@@ -34,10 +34,9 @@ export default {
   mounted() {
     this.visible = true;
   },
-  methods: {
-    close() {
-      this.visible = false;
-      this.$emit('close');
+  watch: {
+    visible(val) {
+      if (!val) setTimeout(() => this.$emit('close'), 0);
     }
   },
   components: {
