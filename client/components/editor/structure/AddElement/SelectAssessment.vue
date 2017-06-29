@@ -19,11 +19,12 @@ import toArray from 'lodash/toArray';
 import { typeInfo } from 'utils/assessment';
 
 const ASSESSMENTS_PER_ROW = 6;
-const EXTRA_TYPES = ['TR'];
 
-const pullExtra = function (data) {
-  return data.filter(it => !EXTRA_TYPES.includes(it.type));
-};
+function filterAssessments(data, ignored) {
+  return ignored.length
+    ? data.filter(it => !ignored.includes(it.type))
+    : data;
+}
 
 export default {
   name: 'select-assessment',
@@ -33,9 +34,10 @@ export default {
   },
   computed: {
     rows() {
-      const data = this.activity === 'PERSPECTIVE'
-        ? toArray(this.assessments)
-        : pullExtra(toArray(this.assessments));
+      const data = filterAssessments(
+        toArray(this.assessments),
+        this.activity !== 'PERSPECTIVE' ? ['TR'] : []
+      );
       return chunk(data, ASSESSMENTS_PER_ROW);
     },
     columnWidth() {
