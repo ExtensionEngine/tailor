@@ -97,12 +97,13 @@ export default {
 
   .content {
     height: 100px;
-    margin: 5px 3px 10px 0;
+    margin: 5px 0 10px 0;
     line-height: 24px;
     color: #333;
     overflow: auto;
 
     pre {
+      height: 100%;
       padding: 0;
       margin: 0;
       border: none;
