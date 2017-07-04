@@ -4,8 +4,7 @@
       <div v-if="summative">
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
-        <div class="clearfix"></div>
-        <div v-if="exam" class="select-leaf pull-right">
+        <div v-if="exam" class="select-leaf">
           <multiselect
             :value="objective"
             :options="examObjectives"
@@ -243,7 +242,7 @@ export default {
   margin: 10px auto;
   padding: 10px 30px 30px 30px;
   background-color: white;
-  overflow: hidden;
+  overflow: visible;
 
   .alert {
     display: inline-block;
@@ -277,7 +276,12 @@ export default {
   }
 
   .select-leaf {
-    width: 400px;
+    clear: both;
+
+    > {
+      width: 400px;
+      float: right;
+    }
   }
 }
 </style>
