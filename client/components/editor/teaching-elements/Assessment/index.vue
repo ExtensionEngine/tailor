@@ -11,9 +11,9 @@
             :options="examObjectives"
             :searchable="true"
             :disabled="!isEditing || !examObjectives.length"
-            :placeholder="examObjectives.length ? 'Select item' : 'No items'"
             :trackBy="'id'"
             :label="'name'"
+            :placeholder="placeholder"
             :onChange="onLeafSelected">
           </multiselect>
         </div>
@@ -71,17 +71,23 @@ import Controls from './Controls';
 import DragDrop from './DragDrop';
 import Feedback from './Feedback';
 import FillBlank from './FillBlank';
+import find from 'lodash/find';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
+import last from 'lodash/last';
 import { mapGetters, mapMutations } from 'vuex-module';
 import MatchingQuestion from './MatchingQuestion';
 import MultipleChoice from './MultipleChoice';
 import multiselect from '../../../common/Select';
 import NumericalResponse from './NumericalResponse';
+import { OUTLINE_LEVELS } from 'shared/activities';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
 import { errorProcessor, schemas, typeInfo } from 'utils/assessment';
 import Question from './Question';
+import pluralize from 'pluralize';
+import set from 'lodash/set';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
@@ -128,6 +134,12 @@ export default {
     },
     examObjectives() {
       return this.getExamObjectives(this.exam);
+    },
+    placeholder() {
+      const label = last(OUTLINE_LEVELS).label;
+      return isEmpty(this.examObjectives)
+        ? `No ${pluralize(label)}`
+        : `Link ${label}`;
     }
   },
   methods: {
@@ -164,14 +176,10 @@ export default {
       this.errors = [];
       this.validate(this.element.data)
         .then(() => {
-          let element;
-          if (this.summative) {
-            element = this.element;
-            element.data._refs.leafId = this.leaf.id;
-          } else {
-            element = this.element.data;
-          }
-          this.$emit('save', cloneDeep(element));
+          let data = this.summative ? this.element : this.element.data;
+          data = cloneDeep(data);
+          if (this.objective) set(data, 'data._refs.objectiveId', this.objective.id);
+          this.$emit('save', data);
           this.isEditing = false;
           this.setAlert(saveAlert);
         })
@@ -203,9 +211,14 @@ export default {
       Object.assign(element.data.feedback, feedback);
       this.addElement(element);
     },
-    onLeafSelected(leaf) {
-      this.leaf = leaf;
+    onLeafSelected(objective) {
+      this.objective = objective;
     }
+  },
+  mounted() {
+    const objectiveId = get(this.element, 'data._refs.objectiveId');
+    if (!objectiveId) return;
+    this.objective = find(this.examObjectives, { id: objectiveId });
   },
   components: {
     MultipleChoice,
@@ -264,7 +277,7 @@ export default {
   }
 
   .select-leaf {
-    width: 150px;
+    width: 400px;
   }
 }
 </style>
