@@ -10,7 +10,9 @@
     :placeholder="placeholder || 'Select option'"
     :track-by="trackBy || 'label'"
     :label="label || 'label'"
-    @input="onChange"
+    @input="val => $emit('input', val)"
+    @close="id => $emit('close', id)"
+    @open="(value, id) => $emit('open', value, id)"
     class="custom-select">
   </multiselect>
 </template>
@@ -28,8 +30,7 @@ export default {
     'disabled',
     'placeholder',
     'trackBy',
-    'label',
-    'onChange'
+    'label'
   ],
   components: { multiselect }
 };
