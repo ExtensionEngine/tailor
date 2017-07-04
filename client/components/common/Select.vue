@@ -6,13 +6,14 @@
     :close-on-select="true"
     :show-labels="false"
     :allow-empty="false"
-    :placeholder="placeholder"
+    :disabled="disabled"
+    :placeholder="placeholder || 'Select option'"
+    :track-by="trackBy || 'label'"
+    :label="label || 'label'"
     @input="val => $emit('input', val)"
     @close="id => $emit('close', id)"
     @open="(value, id) => $emit('open', value, id)"
-    class="custom-select"
-    track-by="label"
-    label="label">
+    class="custom-select">
   </multiselect>
 </template>
 
@@ -22,7 +23,15 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'select',
-  props: ['value', 'options', 'placeholder', 'searchable'],
+  props: [
+    'value',
+    'options',
+    'searchable',
+    'disabled',
+    'placeholder',
+    'trackBy',
+    'label'
+  ],
   components: { multiselect }
 };
 </script>
@@ -76,6 +85,10 @@ export default {
     border-radius: 0;
     font-size: inherit;
     background: none;
+  }
+
+  .multiselect__input {
+    padding-right: 25px;
   }
 }
 </style>

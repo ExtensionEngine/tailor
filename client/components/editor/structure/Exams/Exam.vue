@@ -27,6 +27,7 @@
         v-for="(group, index) in groups"
         :key="group._cid"
         :group="group"
+        :exam="exam"
         :position="index">
       </assessment-group>
       <button @click="createGroup" class="btn btn-primary create-group">
