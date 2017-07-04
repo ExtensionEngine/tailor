@@ -47,8 +47,9 @@ const fbQuestion = yup.array().test(
 );
 
 const hint = yup.string().trim().max(200);
+
 const _refs = yup.object().shape({
-  leafId: yup.number().integer().positive()
+  objectiveId: yup.number().integer().positive()
 });
 
 const objectMap = yup.object().shape({
@@ -134,10 +135,7 @@ export function errorProcessor(error) {
 
 const baseDefaults = {
   question: [],
-  hint: '',
-  _refs: {
-    leafId: 0
-  }
+  hint: ''
 };
 
 export const defaults = {
