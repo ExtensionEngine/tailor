@@ -68,6 +68,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
 import DragDrop from './DragDrop';
+import { errorProcessor, schemas, typeInfo } from 'utils/assessment';
 import Feedback from './Feedback';
 import FillBlank from './FillBlank';
 import find from 'lodash/find';
@@ -80,13 +81,12 @@ import MultipleChoice from './MultipleChoice';
 import multiselect from '../../../common/Select';
 import NumericalResponse from './NumericalResponse';
 import { OUTLINE_LEVELS } from 'shared/activities';
+import pluralize from 'pluralize';
+import set from 'lodash/set';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
-import { errorProcessor, schemas, typeInfo } from 'utils/assessment';
 import Question from './Question';
-import pluralize from 'pluralize';
-import set from 'lodash/set';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
