@@ -13,7 +13,7 @@
             :trackBy="'id'"
             :label="'name'"
             :placeholder="placeholder"
-            :onChange="onLeafSelected">
+            :onChange="onObjectiveSelected">
           </multiselect>
         </div>
       </div>
@@ -210,7 +210,7 @@ export default {
       Object.assign(element.data.feedback, feedback);
       this.addElement(element);
     },
-    onLeafSelected(objective) {
+    onObjectiveSelected(objective) {
       this.objective = objective;
     }
   },
