@@ -289,8 +289,7 @@ export default {
 <style lang="scss">
 .select-leaf {
   input {
-    height: 36px !important;
-    padding-left: 8px !important;
+    height: 32px;
   }
 }
 </style>
