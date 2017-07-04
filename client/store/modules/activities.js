@@ -1,5 +1,10 @@
 import calculatePosition from '../../utils/calculatePosition.js';
+import filter from 'lodash/filter';
 import find from 'lodash/find';
+import isEmpty from 'lodash/isEmpty';
+import last from 'lodash/last';
+import { OUTLINE_LEVELS } from 'shared/activities';
+import reduce from 'lodash/reduce';
 import VuexCollection from '../helpers/collection.js';
 
 const { getter, action, mutation, build } = new VuexCollection('activities');
@@ -13,6 +18,22 @@ getter(function getParent() {
     const activity = find(this.state.items, { id: activityId });
     return activity ? find(this.state.items, { id: activity.parentId }) : null;
   };
+});
+
+getter(function getExamObjectives() {
+  const getChildren = activity => {
+    let condition = it => it.parentId === activity.id && it.type !== 'EXAM';
+    return filter(this.state.items, condition);
+  };
+
+  const getOutlineLeafs = (items, leafType = last(OUTLINE_LEVELS).type) => {
+    if (isEmpty(items)) return [];
+    if (items[0].type === leafType) return items;
+    items = reduce(items, (acc, it) => acc.concat(getChildren(it)), []);
+    return getOutlineLeafs(items, leafType);
+  };
+
+  return exam => getOutlineLeafs([find(this.state.items, { id: exam.parentId })]);
 });
 
 action(function reorder({ activity, context }) {

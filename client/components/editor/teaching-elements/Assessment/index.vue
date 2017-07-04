@@ -5,13 +5,13 @@
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
         <div class="clearfix"></div>
-        <div v-if="isInExam" class="select-leaf pull-right">
+        <div v-if="exam" class="select-leaf pull-right">
           <multiselect
-            :value="leaf"
-            :options="leafs"
+            :value="objective"
+            :options="examObjectives"
             :searchable="true"
-            :disabled="!isEditing || !hasLeafs"
-            :placeholder="hasLeafs ? 'Select leaf' : 'Error: no leafs'"
+            :disabled="!isEditing || !examObjectives.length"
+            :placeholder="examObjectives.length ? 'Select item' : 'No items'"
             :trackBy="'id'"
             :label="'name'"
             :onChange="onLeafSelected">
@@ -71,9 +71,8 @@ import Controls from './Controls';
 import DragDrop from './DragDrop';
 import Feedback from './Feedback';
 import FillBlank from './FillBlank';
-import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
-import { mapMutations } from 'vuex-module';
+import { mapGetters, mapMutations } from 'vuex-module';
 import MatchingQuestion from './MatchingQuestion';
 import MultipleChoice from './MultipleChoice';
 import multiselect from '../../../common/Select';
@@ -100,7 +99,7 @@ const ASSESSMENT_TYPES = {
 
 export default {
   name: 'te-assessment',
-  props: { element: Object, summative: Boolean, isInExam: Boolean, leafs: Array },
+  props: { element: Object, exam: Object, summative: Boolean },
   data() {
     const isEditing = !this.element.id;
     return {
@@ -108,10 +107,11 @@ export default {
       alert: {},
       errors: [],
       previousVersion: null,
-      leaf: find(this.leafs, { id: this.element.data._refs.leafId })
+      objective: null
     };
   },
   computed: {
+    ...mapGetters(['getExamObjectives'], 'activities'),
     schema() {
       return schemas[this.element.data.type] || {};
     },
@@ -126,8 +126,8 @@ export default {
       const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
       return !this.summative && feedbackSupported;
     },
-    hasLeafs() {
-      return this.leafs && this.leafs.length > 0;
+    examObjectives() {
+      return this.getExamObjectives(this.exam);
     }
   },
   methods: {

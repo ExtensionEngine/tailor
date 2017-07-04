@@ -27,7 +27,7 @@
         v-for="(group, index) in groups"
         :key="group._cid"
         :group="group"
-        :leafs="leafs"
+        :exam="exam"
         :position="index">
       </assessment-group>
       <button @click="createGroup" class="btn btn-primary create-group">
@@ -40,17 +40,11 @@
 
 <script>
 import AssessmentGroup from './AssessmentGroup';
-import concat from 'lodash/concat';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
-import find from 'lodash/find';
-import isEmpty from 'lodash/isEmpty';
-import last from 'lodash/last';
 import { mapActions, mapGetters } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
-import { OUTLINE_LEVELS } from 'shared/activities';
 import pluralize from 'pluralize';
-import reduce from 'lodash/reduce';
 
 const appChannel = EventBus.channel('app');
 
@@ -67,10 +61,6 @@ export default {
     ...mapGetters(['activities']),
     groups() {
       return filter(this.activities, { parentId: this.exam.id });
-    },
-    leafs() {
-      const examContainer = find(this.activities, { id: this.exam.parentId });
-      return this.getOutlineLeafs([examContainer]);
     },
     title() {
       return `Exam ${numberToLetter(this.position)}`;
@@ -96,16 +86,6 @@ export default {
         item,
         action: () => this.remove(item)
       });
-    },
-    getChildren(activity) {
-      let condition = it => it.parentId === activity.id && it.type !== 'EXAM';
-      return filter(this.activities, condition);
-    },
-    getOutlineLeafs(items, leafType = last(OUTLINE_LEVELS).type) {
-      if (isEmpty(items)) return [];
-      if (items[0].type === leafType) return items;
-      items = reduce(items, (acc, it) => concat(acc, this.getChildren(it)), []);
-      return this.getOutlineLeafs(items, leafType);
     }
   },
   created() {
