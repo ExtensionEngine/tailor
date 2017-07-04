@@ -85,5 +85,9 @@ export default {
     font-size: inherit;
     background: none;
   }
+
+  .multiselect__input {
+    padding-right: 25px;
+  }
 }
 </style>
