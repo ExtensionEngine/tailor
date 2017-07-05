@@ -31,27 +31,14 @@
           <div class="title">{{ name }}</div>
         </div>
       </div>
-      <div class="row-a">
-        <label>Description</label>
-        <div
-          v-show="showDescriptionInput"
-          :class="{ 'has-error': vErrors.has('description') }">
-          <textarea
-            v-model="descriptionInput"
-            v-validate="{ rules: { required: false, max: 250 } }"
-            @blur="focusoutDescription"
-            @keyup.enter="focusoutDescription"
-            @keyup.esc="hideDescriptionInput"
-            ref="descriptionInput"
-            placeholder="Click to add..."
-            name="description"
-            class="form-control">
-          </textarea>
-          <span class="help-block">{{ vErrors.first('description') }}</span>
-        </div>
-        <div v-show="!showDescriptionInput" @click.stop="focusDescription">
-          <div class="title">{{ description || 'Click to add...' }}</div>
-        </div>
+      <div class="meta-element">
+        <component
+          v-for="data in metadata"
+          :is="tagname(data.type)"
+          :meta="data"
+          :key="`${activity.id}${data.type}`"
+          @update="updateActivity">
+        </component>
       </div>
     </div>
     <div v-else class="placeholder">
@@ -66,10 +53,23 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import EventBus from 'EventBus';
 import get from 'lodash/get';
+import { getLevel } from 'shared/activities';
+import Input from './Input';
+import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
+import Select from './Select';
+import Textarea from './Textarea';
+
 const noop = Function.prototype;
+
+const META_TYPES = {
+  INPUT: Input,
+  TEXTAREA: Textarea,
+  SELECT: Select
+};
 
 const appChannel = EventBus.channel('app');
 
@@ -77,9 +77,7 @@ export default {
   data() {
     return {
       nameInput: '',
-      descriptionInput: '',
-      showNameInput: false,
-      showDescriptionInput: false
+      showNameInput: false
     };
   },
   computed: {
@@ -87,8 +85,13 @@ export default {
     name() {
       return this.activity.name;
     },
-    description() {
-      return get(this.activity, 'data.description', '');
+    metadata() {
+      if (!this.activity) return [];
+      const properties = getLevel(this.activity.type).meta;
+      return map(properties, it => {
+        let value = get(this.activity, `data.${it.key}`);
+        return { ...it, value };
+      });
     }
   },
   methods: {
@@ -108,23 +111,14 @@ export default {
         this.showNameInput = false;
       }, noop);
     },
-    focusDescription() {
-      this.descriptionInput = get(this.activity, 'data.description', '');
-      this.showDescriptionInput = true;
-      setTimeout(() => this.$refs.descriptionInput.focus(), 0);
+    tagname(type = '') {
+      const component = META_TYPES[type.toUpperCase()] || META_TYPES.INPUT;
+      return component.name;
     },
-    focusoutDescription() {
-      this.$validator.validateAll().then(() => {
-        if (this.descriptionInput === this.description) {
-          this.showDescriptionInput = false;
-          return;
-        }
-        this.update({
-          _cid: this.activity._cid,
-          data: { description: this.descriptionInput }
-        });
-        this.showDescriptionInput = false;
-      }, noop);
+    updateActivity(key, value) {
+      const data = cloneDeep(this.activity.data) || {};
+      data[key] = value;
+      this.update({ _cid: this.activity._cid, data });
     },
     deleteActivity() {
       appChannel.emit('showConfirmationModal', {
@@ -137,10 +131,12 @@ export default {
   watch: {
     name(val) {
       this.nameInput = val;
-    },
-    description(val) {
-      this.descriptionInput = val;
     }
+  },
+  components: {
+    [Input.name]: Input,
+    [Textarea.name]: Textarea,
+    [Select.name]: Select
   }
 };
 </script>

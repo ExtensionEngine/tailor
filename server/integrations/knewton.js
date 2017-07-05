@@ -81,6 +81,7 @@ function createSpreadsheet() {
 
 function getLearningObjective(activities, atom) {
   let parent = find(activities, { id: atom.activityId });
+  if (!parent) return null;
   let loLevel = last(OUTLINE_LEVELS);
   if (parent.type === loLevel.type) return parent;
   if (parent.type === 'PERSPECTIVE') return find(activities, { id: parent.parentId });

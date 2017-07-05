@@ -13,7 +13,12 @@
             </span>
           </span>
         </div>
-        <h2>{{ activity.name }}</h2>
+        <h2>
+          {{ activity.name }}
+          <a :href="previewUrl" class="preview-link" target="_blank">
+            <span class="mdi mdi-eye"></span>
+          </a>
+        </h2>
         <introduction v-if="showIntroduction"></introduction>
         <perspectives v-if="showPerspectives"></perspectives>
         <assessments v-if="showAssessments"></assessments>
@@ -68,6 +73,12 @@ export default {
         if (item) items.unshift(item);
       };
       return items;
+    },
+    previewUrl() {
+      const baseUrl = 'https://cgma.dev.extensionengine.com/admin/#/';
+      const { courseId, activityId } = this.$route.params;
+      const route = `course/${courseId}/activity/${activityId}/preview`;
+      return `${baseUrl}${route}`;
     }
   },
   methods: {
@@ -144,6 +155,10 @@ export default {
     line-height: 30px;
     color: #444;
     text-align: left;
+
+    a {
+      margin-left: 15px;
+    }
   }
 
   .loader {

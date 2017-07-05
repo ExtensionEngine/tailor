@@ -4,6 +4,18 @@
       <div v-if="summative">
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
+        <div v-if="exam" class="select-leaf">
+          <multiselect
+            :value="objective"
+            :options="examObjectives"
+            :searchable="true"
+            :disabled="!isEditing || !examObjectives.length"
+            :trackBy="'id'"
+            :label="'name'"
+            :placeholder="placeholder"
+            @input="onObjectiveSelected">
+          </multiselect>
+        </div>
       </div>
       <question
         :assessment="element"
@@ -56,17 +68,24 @@
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
 import DragDrop from './DragDrop';
+import { errorProcessor, schemas, typeInfo } from 'utils/assessment';
 import Feedback from './Feedback';
 import FillBlank from './FillBlank';
+import find from 'lodash/find';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { mapMutations } from 'vuex-module';
+import last from 'lodash/last';
+import { mapGetters, mapMutations } from 'vuex-module';
 import MatchingQuestion from './MatchingQuestion';
 import MultipleChoice from './MultipleChoice';
+import multiselect from '../../../common/Select';
 import NumericalResponse from './NumericalResponse';
+import { OUTLINE_LEVELS } from 'shared/activities';
+import pluralize from 'pluralize';
+import set from 'lodash/set';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
-import { errorProcessor, schemas, typeInfo } from 'utils/assessment';
 import Question from './Question';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
@@ -85,17 +104,19 @@ const ASSESSMENT_TYPES = {
 
 export default {
   name: 'te-assessment',
-  props: { element: Object, summative: Boolean },
+  props: { element: Object, exam: Object, summative: Boolean },
   data() {
     const isEditing = !this.element.id;
     return {
       isEditing,
       alert: {},
       errors: [],
-      previousVersion: null
+      previousVersion: null,
+      objective: null
     };
   },
   computed: {
+    ...mapGetters(['getExamObjectives'], 'activities'),
     schema() {
       return schemas[this.element.data.type] || {};
     },
@@ -109,6 +130,15 @@ export default {
       const assessmentType = this.element.data.type;
       const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
       return !this.summative && feedbackSupported;
+    },
+    examObjectives() {
+      return this.getExamObjectives(this.exam);
+    },
+    placeholder() {
+      const label = last(OUTLINE_LEVELS).label;
+      return isEmpty(this.examObjectives)
+        ? `No ${pluralize(label)}`
+        : `Link ${label}`;
     }
   },
   methods: {
@@ -145,8 +175,10 @@ export default {
       this.errors = [];
       this.validate(this.element.data)
         .then(() => {
-          const data = this.summative ? this.element : this.element.data;
-          this.$emit('save', cloneDeep(data));
+          let data = this.summative ? this.element : this.element.data;
+          data = cloneDeep(data);
+          if (this.objective) set(data, 'data._refs.objectiveId', this.objective.id);
+          this.$emit('save', data);
           this.isEditing = false;
           this.setAlert(saveAlert);
         })
@@ -177,7 +209,15 @@ export default {
       element.data.feedback = element.data.feedback || {};
       Object.assign(element.data.feedback, feedback);
       this.addElement(element);
+    },
+    onObjectiveSelected(objective) {
+      this.objective = objective;
     }
+  },
+  mounted() {
+    const objectiveId = get(this.element, 'data._refs.objectiveId');
+    if (!objectiveId) return;
+    this.objective = find(this.examObjectives, { id: objectiveId });
   },
   components: {
     MultipleChoice,
@@ -190,7 +230,8 @@ export default {
     Question,
     Controls,
     MatchingQuestion,
-    DragDrop
+    DragDrop,
+    multiselect
   }
 };
 </script>
@@ -201,7 +242,7 @@ export default {
   margin: 10px auto;
   padding: 10px 30px 30px 30px;
   background-color: white;
-  overflow: hidden;
+  overflow: visible;
 
   .alert {
     display: inline-block;
@@ -211,7 +252,7 @@ export default {
   }
 
   .assessment-type {
-    margin: 10px 0 50px 0;
+    margin: 10px 0 20px 0;
     padding: 4px 15px;
     font-size: 13px;
     background-color: #707070;
@@ -232,6 +273,23 @@ export default {
 
   input.form-control {
     padding-left: 10px;
+  }
+
+  .select-leaf {
+    clear: both;
+
+    > {
+      width: 400px;
+      float: right;
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+.select-leaf {
+  input {
+    height: 32px;
   }
 }
 </style>

@@ -2,9 +2,6 @@
   <div class="perspective">
     <div class="actions">
       <span class="pull-right">
-        <a :href="previewUrl" class="action" target="_blank">
-          <span class="mdi mdi-eye"></span>
-        </a>
         <span @click="deletePerspective" class="action">
           <span class="mdi mdi-delete"></span>
         </span>
@@ -74,13 +71,6 @@ export default {
     nextPosition() {
       const element = last(this.teachingElements);
       return element ? element.position + 1 : 1;
-    },
-    previewUrl() {
-      const baseUrl = 'https://cgma.dev.extensionengine.com/admin/#/';
-      const { courseId } = this.$route.params;
-      const perspectiveId = this.perspective.id;
-      const route = `course/${courseId}/activity/${perspectiveId}/preview`;
-      return `${baseUrl}${route}`;
     }
   },
   methods: {

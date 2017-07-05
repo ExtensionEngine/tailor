@@ -27,6 +27,7 @@
         v-for="it in assessments"
         :key="it._cid"
         :assessment="it"
+        :exam="exam"
         :expanded="isSelected(it)"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
@@ -57,7 +58,7 @@ const appChannel = EventBus.channel('app');
 
 export default {
   name: 'assessment-group',
-  props: ['group', 'position'],
+  props: ['group', 'exam', 'position'],
   data() {
     return {
       selected: [],
