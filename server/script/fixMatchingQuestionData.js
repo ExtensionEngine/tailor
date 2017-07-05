@@ -1,12 +1,11 @@
 'use strict';
 
-const forEach = require('lodash/forEach');
+const cloneDeep = require('lodash/cloneDeep');
+const cuid = require('cuid');
 const Promise = require('bluebird');
 const { TeachingElement } = require('../shared/database');
 
-const tesType = 'ASSESSMENT';
-
-TeachingElement.findAll({ where: { type: tesType } })
+TeachingElement.findAll({ where: { type: 'ASSESSMENT' } })
   .then(processComposites)
   .then(() => {
     console.log('Matching question data processed!');
@@ -23,28 +22,19 @@ function processComposites(elements) {
 }
 
 function processMQData(element) {
-  console.log(element.dataValues);
-  let embeds = element.data.embeds || element.data.question;
-  if (!embeds) return element;
+  if (element.data.type !== 'MQ' || element.data.premises) return element;
+  let parsed = cloneDeep(element.data);
+  parsed.correct = {};
+  parsed.premises = [];
+  parsed.responses = [];
 
-  // let hasChanges = false;
-
-  forEach(embeds, it => {
-    console.log(it);
+  element.data.correct.forEach(it => {
+    const premiseKey = cuid();
+    const responseKey = cuid();
+    parsed.correct[premiseKey] = responseKey;
+    parsed.premises.push({ key: premiseKey, value: it.premise });
+    parsed.responses.push({ key: responseKey, value: it.response });
   });
 
-  // forEach(embeds, it => {
-  //   if (it.type === 'IMAGE' && isUrl(it.data.url)) {
-  //     const original = it.data.url;
-  //     const parsed = url.parse(original);
-  //     it.data.url = parsed.pathname.substr(1, parsed.pathname.length);
-  //     console.log(`Processed: ${element.id} - ${element.type}`);
-  //     console.log(`${original} => ${it.data.url}`);
-  //     hasChanges = true;
-  //   }
-  // });
-  //
-  // return hasChanges ? element.update({ data: element.data }) : element;
-
-  return element;
+  return element.update({ data: parsed });
 }
