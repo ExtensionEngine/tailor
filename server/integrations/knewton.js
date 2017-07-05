@@ -15,7 +15,7 @@ function createContentInventory(course, activities, tes) {
     return acc;
   }, {});
 
-  let workbook = createSpreadsheet();
+  let workbook = createSpreadsheet(taxonomy);
   let inventory = workbook.getWorksheet('Content Inventory');
 
   forEach(tes, atom => {
@@ -36,13 +36,10 @@ function createContentInventory(course, activities, tes) {
     inventory.addRow(row).commit();
   });
 
-  let loInventory = workbook.getWorksheet('Learning Objectives');
-  loInventory.addRows(filter(activities, { type: last(OUTLINE_LEVELS).type }));
-
   return workbook;
 }
 
-function createSpreadsheet() {
+function createSpreadsheet(taxonomy) {
   let workbook = new Excel.Workbook();
   workbook.creator = 'Tailor';
   workbook.created = new Date();
@@ -51,7 +48,15 @@ function createSpreadsheet() {
   let inventory = workbook.addWorksheet('Content Inventory');
   inventory.addRow(['Knewton Client ID']);
   inventory.addRow(['Partner Inventory ID']);
-  inventory.addRow(['Atoms in your product']);
+
+  inventory.mergeCells('A3:C3');
+  inventory.mergeCells('D3:E3');
+  inventory.mergeCells('G3:H3');
+  inventory.getCell('A3').value = 'Atoms in your product';
+  inventory.getCell('D3').value = 'Atom Learning Objective';
+  inventory.getCell('F3').value = 'Atom Taxons';
+  inventory.getCell('G3').value = 'Containers in your product';
+
   inventory.addRow(['Identify every Atom in your product.']);
   inventory.addRow([
     'Atom ID',
@@ -59,7 +64,7 @@ function createSpreadsheet() {
     'Atom Type',
     'Learning Objective ID',
     'Learning Objective Description',
-    'Structure',
+    taxonomy,
     'Container ID',
     'Container Name'
   ]);
@@ -67,13 +72,14 @@ function createSpreadsheet() {
   styleInventorySheet(inventory);
 
   // Create 'LO-LO Map' sheet
-  workbook.addWorksheet('LO-LO Map');
-
-  // Create 'Learning Objectives' sheet
-  let loInventory = workbook.addWorksheet('Learning Objectives');
-  loInventory.columns = [
-    { header: 'Learning Objective ID', key: 'id', width: 20 },
-    { header: 'Learning Objective Description', key: 'name', width: 100 }
+  let loMap = workbook.addWorksheet('LO-LO Map');
+  loMap.columns = [
+    { header: 'Prereq Learning Objective ID', key: 'prereqId', width: 20 },
+    { header: 'Prereq Learning Objective Description', key: 'prereqDesc', width: 100 },
+    { header: 'Postreq Learning Objective ID', key: 'postreqId', width: 20 },
+    { header: 'Postreq Learning Objective Description', key: 'postreqDesc', width: 100 },
+    { header: 'Strength', key: 'strength', width: 20 },
+    { header: 'Justification', key: 'justification', width: 20 }
   ];
 
   return workbook;
