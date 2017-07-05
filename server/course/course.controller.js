@@ -12,7 +12,18 @@ const Promise = require('bluebird');
 function index({ query, user }, res) {
   const opts = processListQuery(query);
   if (query.search) opts.where.name = { $iLike: `%${query.search}%` };
-  const courses = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
+  const courses = (user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts))
+    .then(data => {
+      const courseIds = data.map(course => course.id);
+
+      return Course.getStats(courseIds).then(stats => {
+        return data.map(course => {
+          course.stats = stats[course.id]
+          return course;
+        });
+      });
+    });
+
   return courses.then(data => res.json({ data }));
 };
 

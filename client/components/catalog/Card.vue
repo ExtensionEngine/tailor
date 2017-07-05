@@ -7,8 +7,8 @@
       </div>
       <div class="footer">
         <div class="row">
-          <span class="col-xs-4">stats #1</span>
-          <span class="col-xs-4">stats #2</span>
+          <span class="col-xs-4">Topics: {{ course.stats.topics }}</span>
+          <span class="col-xs-4">Assessments: {{ course.stats.assessments }}</span>
           <span class="col-xs-4">stats #3</span>
         </div>
       </div>

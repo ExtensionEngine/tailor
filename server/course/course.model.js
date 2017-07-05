@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+
 /**
  * @swagger
  * definitions:
@@ -55,7 +57,8 @@ module.exports = function (sequelize, DataTypes) {
     deletedAt: {
       type: DataTypes.DATE,
       field: 'deleted_at'
-    }
+    },
+    stats: Sequelize.VIRTUAL
   }, {
     classMethods: {
       associate(models) {
@@ -69,6 +72,40 @@ module.exports = function (sequelize, DataTypes) {
           through: models.CourseUser,
           foreignKey: { name: 'courseId', field: 'course_id' }
         });
+      },
+      getStats(courseIds) {
+        const Activity = sequelize.models.activity;
+        const TeachingElement = sequelize.models.TeachingElement;
+
+        const count = col => sequelize.fn('count', sequelize.col(col));
+
+        const topics = Activity.findAll({
+          attributes: [ 'courseId', [count('id'), /* as */ 'topics'] ],
+          group: ['courseId'],
+          where: { courseId: /* in */ courseIds, type: 'TOPIC' }
+        });
+
+        const assessments = TeachingElement.findAll({
+          attributes: [ 'courseId', [count('id'), /* as */ 'assessments'] ],
+          group: ['courseId'],
+          where: { courseId: /* in */ courseIds, type: 'ASSESSMENT' }
+        });
+
+        return Promise.all([topics, assessments])
+          .then(([ topics, assessments ]) => {
+            let stats = {};
+            topics.forEach(({ dataValues }) => {
+              stats[dataValues.courseId] = { topics: dataValues.topics, assessments: 0 };
+            });
+
+            assessments.forEach(({ dataValues }) => {
+              let topics = 0;
+              if (stats[dataValues.courseId]) topics = stats[dataValues.courseId].topics;
+              stats[dataValues.courseId] = { assessments: dataValues.assessments, topics };
+            });
+
+            return stats;
+          });
       }
     },
     instanceMethods: {
