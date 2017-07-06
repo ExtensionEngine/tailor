@@ -23,6 +23,7 @@
     "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
     "db:seed": "node -r dotenv/config ./server/script/dbSeed.js",
     "db:reset": "node -r dotenv/config ./server/script/dbReset.js",
+    "migrate": "node ./server/script/migrate.js",
     "add:admin": "node -r dotenv/config ./server/script/addAdmin.js",
     "fix:activities": "node -r dotenv/config ./server/script/fixActivities.js",
     "fix:images": "node -r dotenv/config ./server/script/fixImageUrls.js",
