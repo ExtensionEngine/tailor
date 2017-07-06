@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const OUTLINE_LEVELS = require('../../config/shared/activities').OUTLINE_LEVELS;
 
 /**
  * @swagger
@@ -74,34 +75,36 @@ module.exports = function (sequelize, DataTypes) {
         });
       },
       getStats(courseIds) {
+        const lastLevel = OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1];
+
         const Activity = sequelize.models.activity;
         const TeachingElement = sequelize.models.TeachingElement;
 
         const count = col => sequelize.fn('count', sequelize.col(col));
 
-        const topics = Activity.findAll({
-          attributes: [ 'courseId', [count('id'), /* as */ 'topics'] ],
+        const leafs = Activity.findAll({
+          attributes: [ 'courseId', [count('id'), /* as */ 'count'] ],
           group: ['courseId'],
-          where: { courseId: /* in */ courseIds, type: 'TOPIC' }
+          where: { courseId: /* in */ courseIds, type: lastLevel.type }
         });
 
         const assessments = TeachingElement.findAll({
-          attributes: [ 'courseId', [count('id'), /* as */ 'assessments'] ],
+          attributes: [ 'courseId', [count('id'), /* as */ 'count'] ],
           group: ['courseId'],
           where: { courseId: /* in */ courseIds, type: 'ASSESSMENT' }
         });
 
-        return Promise.all([topics, assessments])
-          .then(([ topics, assessments ]) => {
+        return Promise.all([leafs, assessments])
+          .then(([ leafs, assessments ]) => {
             let stats = {};
-            topics.forEach(({ dataValues }) => {
-              stats[dataValues.courseId] = { topics: dataValues.topics, assessments: 0 };
+            leafs.forEach(({ dataValues }) => {
+              stats[dataValues.courseId] = { leafs: dataValues.count, assessments: 0 };
             });
 
             assessments.forEach(({ dataValues }) => {
-              let topics = 0;
-              if (stats[dataValues.courseId]) topics = stats[dataValues.courseId].topics;
-              stats[dataValues.courseId] = { assessments: dataValues.assessments, topics };
+              let leafs = 0;
+              if (stats[dataValues.courseId]) leafs = stats[dataValues.courseId].leafs;
+              stats[dataValues.courseId] = { assessments: dataValues.count, leafs };
             });
 
             return stats;

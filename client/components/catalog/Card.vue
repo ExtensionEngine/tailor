@@ -7,7 +7,7 @@
       </div>
       <div class="footer">
         <div class="row">
-          <span class="col-xs-4">Topics: {{ course.stats.topics }}</span>
+          <span class="col-xs-4">{{ lastLevel }}: {{ course.stats.leafs }}</span>
           <span class="col-xs-4">Assessments: {{ course.stats.assessments }}</span>
           <span class="col-xs-4">stats #3</span>
         </div>
@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { OUTLINE_LEVELS } from '../../../config/shared/activities';
+import pluralize from 'pluralize';
 import truncate from 'truncate';
 
 export default {
@@ -27,6 +29,9 @@ export default {
     },
     description() {
       return truncate(this.course.description, 180);
+    },
+    lastLevel() {
+      return pluralize(OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1].label);
     }
   },
   methods: {
