@@ -31,7 +31,7 @@
           <div class="title">{{ name }}</div>
         </div>
       </div>
-      <prerequisite v-if="level.hasPrerequisite" />
+      <prerequisites v-if="level.hasPrerequisites" />
       <div class="meta-element">
         <component
           v-for="data in metadata"
@@ -61,7 +61,7 @@ import { getLevel } from 'shared/activities';
 import Input from './Input';
 import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
-import Prerequisite from './Prerequisite';
+import Prerequisites from './Prerequisites';
 import Select from './Select';
 import Textarea from './Textarea';
 
@@ -141,7 +141,7 @@ export default {
     [Input.name]: Input,
     [Textarea.name]: Textarea,
     [Select.name]: Select,
-    Prerequisite
+    Prerequisites
   }
 };
 </script>

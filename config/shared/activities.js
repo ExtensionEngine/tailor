@@ -11,7 +11,7 @@ const OUTLINE_LEVELS = [{
   hasPerspectives: false,
   hasAssessments: false,
   hasExams: true,
-  hasPrerequisite: true,
+  hasPrerequisites: true,
   meta: [
     {
       key: 'description',
@@ -30,7 +30,7 @@ const OUTLINE_LEVELS = [{
   hasPerspectives: false,
   hasAssessments: false,
   hasExams: false,
-  hasPrerequisite: true,
+  hasPrerequisites: true,
   meta: [
     {
       key: 'description',
@@ -49,7 +49,7 @@ const OUTLINE_LEVELS = [{
   hasPerspectives: true,
   hasAssessments: true,
   hasExams: false,
-  hasPrerequisite: true,
+  hasPrerequisites: true,
   meta: [
     {
       key: 'description',

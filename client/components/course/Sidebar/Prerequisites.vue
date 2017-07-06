@@ -1,15 +1,16 @@
 <template>
-  <div class="prerequisite">
-    <label>Prerequisite</label>
+  <div class="prerequisites">
+    <label>Prerequisites</label>
     <multiselect
-      :value="prerequisite"
-      :options="prerequisites"
+      :value="prerequisites"
+      :options="options"
       :searchable="true"
-      :disabled="!prerequisites.length"
+      :multiple="true"
+      :disabled="!options.length"
       :trackBy="'id'"
       :label="'name'"
-      :placeholder="prerequisitePlaceholder"
-      @input="onPrerequisiteSelected">
+      :placeholder="placeholder"
+      @input="onPrerequisitesSelected">
     </multiselect>
   </div>
 </template>
@@ -17,49 +18,50 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
-import find from 'lodash/find';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
+import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Select from '../../common/Select';
 import set from 'lodash/set';
+import size from 'lodash/size';
 
 export default {
-  name: 'prerequisite',
+  name: 'prerequisites',
   data() {
-    return { prerequisite: null };
+    return { prerequisites: [] };
   },
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
-    prerequisites() {
+    options() {
       const cond = it => getLevel(it.type) && it.id !== this.activity.id;
       return filter(this.activities, cond);
     },
-    prerequisitePlaceholder() {
-      return isEmpty(this.prerequisites) ? `No activities` : `Select prerequisite`;
+    placeholder() {
+      return isEmpty(this.options) ? 'No activities' : 'Select prerequisites';
     }
   },
   methods: {
     ...mapActions(['update'], 'activities'),
-    onPrerequisiteSelected(prerequisite) {
-      this.prerequisite = prerequisite;
-      const data = cloneDeep(this.activity.data) || {};
-      set(data, '_refs.prerequisiteId', this.prerequisite.id);
-      this.update({ _cid: this.activity._cid, data });
+    onPrerequisitesSelected(prerequisites) {
+      this.prerequisites = prerequisites;
+      const activity = cloneDeep(this.activity) || {};
+      set(activity, 'refs.prerequisiteIds', map(prerequisites, 'id'));
+      this.update(activity);
     }
   },
   mounted() {
-    const prerequisiteId = get(this.activity, 'data._refs.prerequisiteId');
-    if (!prerequisiteId) return;
-    this.prerequisite = find(this.activities, { id: prerequisiteId });
+    const prerequisitesId = get(this.activity, 'refs.prerequisitesId');
+    if (!size(prerequisitesId)) return;
+    this.prerequisites = filter(this.activities, it => prerequisitesId.includes(it.id));
   },
   components: { multiselect: Select }
 };
 </script>
 
 <style lang="scss" scoped>
-.prerequisite {
+.prerequisites {
   height: 96px;
   padding: 3px 8px;
 
@@ -71,7 +73,7 @@ export default {
 </style>
 
 <style lang="scss">
-.prerequisite {
+.prerequisites {
   input {
     height: 32px;
   }

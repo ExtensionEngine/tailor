@@ -6,6 +6,7 @@
     :close-on-select="true"
     :show-labels="false"
     :allow-empty="false"
+    :multiple="multiple"
     :disabled="disabled"
     :placeholder="placeholder || 'Select option'"
     :track-by="trackBy || 'label'"
@@ -27,6 +28,7 @@ export default {
     'value',
     'options',
     'searchable',
+    'multiple',
     'disabled',
     'placeholder',
     'trackBy',
