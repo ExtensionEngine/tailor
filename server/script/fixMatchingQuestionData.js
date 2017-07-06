@@ -3,6 +3,7 @@
 const cloneDeep = require('lodash/cloneDeep');
 const cuid = require('cuid');
 const Promise = require('bluebird');
+const shuffle = require('lodash/shuffle');
 const { TeachingElement } = require('../shared/database');
 
 TeachingElement.findAll({ where: { type: 'ASSESSMENT' } })
@@ -18,23 +19,29 @@ TeachingElement.findAll({ where: { type: 'ASSESSMENT' } })
 
 function processComposites(elements) {
   console.log(`Number of components: ${elements.length}`);
-  return Promise.each(elements, it => processMQData(it));
+  return Promise.each(elements, it => processMatchingQuestions(it));
 }
 
-function processMQData(element) {
-  if (element.data.type !== 'MQ' || element.data.premises) return element;
-  let parsed = cloneDeep(element.data);
-  parsed.correct = {};
-  parsed.premises = [];
-  parsed.responses = [];
+function processMatchingQuestions(element) {
+  const oldVal = element.data;
+  if (oldVal.type !== 'MQ' || oldVal.premises) return element;
 
-  element.data.correct.forEach(it => {
+  let newVal = cloneDeep(oldVal);
+  newVal.correct = {};
+  newVal.premises = [];
+  newVal.responses = [];
+  oldVal.correct.forEach(it => {
     const premiseKey = cuid();
     const responseKey = cuid();
-    parsed.correct[premiseKey] = responseKey;
-    parsed.premises.push({ key: premiseKey, value: it.premise });
-    parsed.responses.push({ key: responseKey, value: it.response });
+    newVal.correct[premiseKey] = responseKey;
+    newVal.premises.push({ key: premiseKey, value: it.premise });
+    newVal.responses.push({ key: responseKey, value: it.response });
   });
+  newVal.premises = shuffle(newVal.premises);
+  newVal.responses = shuffle(newVal.responses);
+  console.log(`Processed: ${element.id} - ${element.type}, ${oldVal.type}`);
+  console.log(`${JSON.stringify(oldVal, null, 2)}\n=>`);
+  console.log(`${JSON.stringify(newVal, null, 2)}`);
 
-  return element.update({ data: parsed });
+  return element.update({ data: newVal });
 }
