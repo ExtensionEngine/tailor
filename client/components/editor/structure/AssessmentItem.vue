@@ -1,5 +1,8 @@
 <template>
   <li class="list-group-item assessment-item">
+    <span class="drag-handle">
+      <span class="mdi mdi-drag-vertical"></span>
+    </span>
     <te-assessment
       v-if="expanded"
       :element="assessment"
@@ -51,12 +54,28 @@ export default {
   padding: 0;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
 
-  div {
-    padding: 15px;
+  &, &:first-child, &:last-child {
+    border-radius: 0;
   }
 
-  .minimized:hover {
+  .drag-handle {
+    position: absolute;
+    top: 0;
+    left: -3px;
+    font-size: 28px;
+    color: #888;
+    opacity: 0;
     cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+      transition: opacity .6s ease-in-out;
+    }
+  }
+
+  .minimized {
+    padding: 12px 20px;
+    &:hover { cursor: pointer; }
   }
 
   .title {
@@ -75,7 +94,7 @@ export default {
   .delete {
     display: block;
     position: absolute;
-    top: 7px;
+    top: 3px;
     right: 15px;
     visibility: hidden;
     color: #707070;
