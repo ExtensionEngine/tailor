@@ -52,8 +52,8 @@
 import AddElement from '../AddElement';
 import AssessmentItem from '../AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
-import Draggable from 'vuedraggable';
 import debounce from 'lodash/debounce';
+import Draggable from 'vuedraggable';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
@@ -95,12 +95,6 @@ export default {
     },
     reorderAssessment({ newIndex: newPosition }) {
       const items = this.assessments;
-      items.forEach((it, i) => {
-        if (it.position) return;
-        it.position = i + 1;
-        this.update(it);
-      });
-
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
