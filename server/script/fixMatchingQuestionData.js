@@ -7,7 +7,7 @@ const shuffle = require('lodash/shuffle');
 const { TeachingElement } = require('../shared/database');
 
 TeachingElement.findAll({ where: { type: 'ASSESSMENT' } })
-  .then(processComposites)
+  .then(processAssessments)
   .then(() => {
     console.log('Matching question data processed!');
     process.exit(0);
@@ -17,7 +17,7 @@ TeachingElement.findAll({ where: { type: 'ASSESSMENT' } })
     process.exit(1);
   });
 
-function processComposites(elements) {
+function processAssessments(elements) {
   console.log(`Number of components: ${elements.length}`);
   return Promise.each(elements, it => processMatchingQuestions(it));
 }
