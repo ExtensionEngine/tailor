@@ -58,11 +58,20 @@ import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
+import last from 'lodash/last';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
+
+function nextPosition(items) {
+  const tail = last(items);
+  if (!tail) return 1;
+  let position = Math.ceil(tail.position);
+  if (tail.position === position) position += 1;
+  return position;
+}
 
 export default {
   name: 'assessment-group',
@@ -91,6 +100,7 @@ export default {
     ...mapActions(['save', 'update', 'reorder', 'remove'], 'tes'),
     ...mapActions({ updateGroup: 'update', removeGroup: 'remove' }, 'activities'),
     addAssessment(assessment) {
+      assessment.position = nextPosition(this.assessments);
       this.add(assessment);
       this.selected.push(assessment._cid);
     },
