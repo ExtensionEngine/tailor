@@ -1,8 +1,12 @@
 require('dotenv').load();
 
+const config = {
+  url: process.env.POSTGRES_URI,
+  dialect: 'postgres'
+};
+
 module.exports = {
-  development: {
-    url: process.env.POSTGRES_URI,
-    dialect: 'postgres'
-  }
+  development: config,
+  test: config,
+  production: config
 };
