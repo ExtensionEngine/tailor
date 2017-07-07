@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const OUTLINE_LEVELS = require('../../config/shared/activities').OUTLINE_LEVELS;
+const hooks = require('./hooks');
 
 /**
  * @swagger
@@ -59,7 +60,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.DATE,
       field: 'deleted_at'
     },
-    stats: Sequelize.VIRTUAL
+    stats: {
+      type: DataTypes.JSON,
+      defaultValue: { topics: 0, assessments: 0 }
+    }
   }, {
     classMethods: {
       associate(models) {
@@ -74,41 +78,8 @@ module.exports = function (sequelize, DataTypes) {
           foreignKey: { name: 'courseId', field: 'course_id' }
         });
       },
-      getStats(courseIds) {
-        const lastLevel = OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1];
-
-        const Activity = sequelize.models.activity;
-        const TeachingElement = sequelize.models.TeachingElement;
-
-        const count = col => sequelize.fn('count', sequelize.col(col));
-
-        const leafs = Activity.findAll({
-          attributes: [ 'courseId', [count('id'), /* as */ 'count'] ],
-          group: ['courseId'],
-          where: { courseId: /* in */ courseIds, type: lastLevel.type }
-        });
-
-        const assessments = TeachingElement.findAll({
-          attributes: [ 'courseId', [count('id'), /* as */ 'count'] ],
-          group: ['courseId'],
-          where: { courseId: /* in */ courseIds, type: 'ASSESSMENT' }
-        });
-
-        return Promise.all([leafs, assessments])
-          .then(([ leafs, assessments ]) => {
-            let stats = {};
-            leafs.forEach(({ dataValues }) => {
-              stats[dataValues.courseId] = { leafs: dataValues.count, assessments: 0 };
-            });
-
-            assessments.forEach(({ dataValues }) => {
-              let leafs = 0;
-              if (stats[dataValues.courseId]) leafs = stats[dataValues.courseId].leafs;
-              stats[dataValues.courseId] = { assessments: dataValues.count, leafs };
-            });
-
-            return stats;
-          });
+      addHooks(models) {
+        hooks.add(models);
       }
     },
     instanceMethods: {

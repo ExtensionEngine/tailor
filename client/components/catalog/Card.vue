@@ -7,7 +7,7 @@
       </div>
       <div class="footer">
         <div class="row">
-          <span class="col-xs-4">{{ lastLevel }}: {{ course.stats.leafs }}</span>
+          <span class="col-xs-4">{{ lastLevel }}: {{ course.stats.topics }}</span>
           <span class="col-xs-4">Assessments: {{ course.stats.assessments }}</span>
           <span class="col-xs-4">stats #3</span>
         </div>
