@@ -18,7 +18,7 @@ import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Promise from 'bluebird';
 import { role } from 'shared';
-import toTitleCase from 'to-title-case';
+import { title as titleCase } from 'to-case';
 import UserList from './UserList';
 
 export default {
@@ -33,7 +33,7 @@ export default {
       return !!this.users.length;
     },
     roles() {
-      return map(role.course, it => ({ title: toTitleCase(it), value: it }));
+      return map(role.course, it => ({ title: titleCase(it), value: it }));
     }
   },
   methods: {

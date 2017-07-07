@@ -72,7 +72,6 @@
     "save-as": "^0.1.8",
     "sequelize": "^3.3.0",
     "to-case": "^2.0.0",
-    "to-title-case": "^1.0.0",
     "truncate": "^2.0.0",
     "url-join": "^1.1.0",
     "vee-validate": "2.0.0-beta.25",

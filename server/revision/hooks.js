@@ -1,4 +1,4 @@
-const to = require('to-case');
+const { pascal } = require('to-case');
 const zip = require('lodash/zip');
 
 const hooks = ['afterCreate', 'afterUpdate', 'afterDestroy'];
@@ -19,7 +19,7 @@ function createHook(models, entity, [name, operation]) {
   if (entity === 'COURSE' && operation === 'REMOVE') return;
 
   const Revision = models.Revision;
-  const Model = models[to.pascal(entity)];
+  const Model = models[pascal(entity)];
 
   Model.hook(name, (instance, { context }) => {
     if (!context || !context.userId) return;
