@@ -49,13 +49,13 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import AddElement from '../AddElement';
 import AssessmentItem from '../AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
 import Draggable from 'vuedraggable';
 import EventBus from 'EventBus';
-import filter from 'lodash/filter';
 import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
@@ -79,7 +79,7 @@ export default {
     },
     assessments() {
       const cond = { activityId: this.group.id, type: 'ASSESSMENT' };
-      return filter(this.tes, cond).sort((a, b) => a.position - b.position);
+      return _.chain(this.tes).filter(cond).sortBy('position').value();
     },
     hasAssessments() {
       return this.assessments && !!this.assessments.length;
