@@ -1,5 +1,9 @@
 <template>
-  <li class="list-group-item assessment-item">
+  <li
+    :class="{ hover }"
+    @mouseenter="hover = true"
+    @mouseleave="hover = false"
+    class="list-group-item assessment-item">
     <span class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
@@ -42,6 +46,9 @@ export default {
       return truncate(question, { length: 50 });
     }
   },
+  data() {
+    return { hover: false };
+  },
   components: {
     TeAssessment
   }
@@ -65,16 +72,16 @@ export default {
     font-size: 28px;
     color: #888;
     opacity: 0;
-    cursor: pointer;
+    cursor: move;
+  }
 
-    &:hover {
-      opacity: 1;
-      transition: opacity .6s ease-in-out;
-    }
+  &.hover .drag-handle {
+    opacity: 1;
+    transition: opacity .6s ease-in-out;
   }
 
   .minimized {
-    padding: 12px 20px;
+    padding: 12px 22px;
     &:hover { cursor: pointer; }
   }
 
@@ -92,23 +99,19 @@ export default {
   }
 
   .delete {
-    display: block;
+    display: inline-block;
     position: absolute;
-    top: 3px;
     right: 15px;
+    font-size: 18px;
+    line-height: 18px;
     visibility: hidden;
     color: #707070;
-    font-size: 26px;
 
-    &:hover {
-      color: #555;
-    }
+    &:hover { color: #555; }
   }
 
-  &:hover {
-    .delete {
-      visibility: visible;
-    }
+  &.hover:not(.sortable-chosen) .delete {
+    visibility: visible;
   }
 }
 </style>
