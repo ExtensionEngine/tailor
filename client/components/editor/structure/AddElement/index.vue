@@ -10,7 +10,7 @@
       <div v-if="selectionOpened" class="selections">
         <select-element
           v-if="selectType"
-          :activity="activity.type"
+          :activity="activity"
           :include="include"
           @selected="setType">
         </select-element>

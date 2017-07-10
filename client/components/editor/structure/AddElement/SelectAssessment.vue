@@ -17,28 +17,31 @@
 import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
-import isArray from 'lodash/isArray';
 import toArray from 'lodash/toArray';
 import { typeInfo } from 'utils/assessment';
 
 const ASSESSMENTS_PER_ROW = 6;
 const assessments = toArray(typeInfo);
-const arrify = arg => isArray(arg) ? arg : [arg];
 
 export default {
   name: 'select-assessment',
-  props: ['exclude'],
+  props: {
+    exclude: { type: Array },
+    rowSize: { type: Number, default: ASSESSMENTS_PER_ROW }
+  },
   computed: {
     rows() {
-      return chunk(this.elements, ASSESSMENTS_PER_ROW);
+      return chunk(this.elements, this.rowSize);
+    },
+    columns() {
+      return Math.min(this.elements.length, this.rowSize);
     },
     elements() {
       if (!this.exclude) return assessments;
-      const exclude = arrify(this.exclude);
-      return filter(assessments, it => !includes(exclude, it.type));
+      return filter(assessments, it => !includes(this.exclude, it.type));
     },
     columnWidth() {
-      return `col-xs-${12 / ASSESSMENTS_PER_ROW}`;
+      return `col-xs-${12 / this.columns}`;
     }
   }
 };

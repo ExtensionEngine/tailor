@@ -50,13 +50,20 @@ const firstType = items => get(first(items), 'type');
 
 export default {
   name: 'select-element',
-  props: ['activity', 'include'],
+  props: {
+    activity: { type: Object, required: true },
+    include: { type: Array },
+    rowSize: { type: Number, default: ELEMENTS_PER_ROW }
+  },
   data() {
     return { type: null };
   },
   computed: {
     rows() {
-      return chunk(this.elements, ELEMENTS_PER_ROW);
+      return chunk(this.elements, this.rowSize);
+    },
+    columns() {
+      return Math.min(this.elements.length, this.rowSize);
     },
     elements() {
       if (!this.include) return TE_TYPES;
@@ -68,15 +75,15 @@ export default {
       return this.type === 'ASSESSMENT';
     },
     assessmentFilter() {
-      return this.activity !== 'PERSPECTIVE' ? ['TR'] : null;
+      return this.activity.type !== 'PERSPECTIVE' ? ['TR'] : null;
     },
     columnWidth() {
-      return `col-xs-${12 / ELEMENTS_PER_ROW}`;
+      return `col-xs-${12 / this.columns}`;
     },
     maxWidth() {
       // Set the maximum width of the select component container in the
       // increments of 150px, with the baseline of 2 elements having 200px width
-      return 200 + (ELEMENTS_PER_ROW - 2) * 150;
+      return 200 + (this.columns - 2) * 150;
     }
   },
   methods: {
