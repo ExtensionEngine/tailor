@@ -23,10 +23,10 @@ function createHook(models, entity, [name, operation]) {
 
   Model.hook(name, (instance, { context }) => {
     if (instance.type === lastLevel.type) {
-      updateStats(instance, to.lower(pluralize(lastLevel.type)));
+      return updateStats(instance, to.lower(pluralize(lastLevel.type)));
     }
     if (instance.type === 'ASSESSMENT') {
-      updateStats(instance, 'assessments');
+      return updateStats(instance, 'assessments');
     }
   });
 
