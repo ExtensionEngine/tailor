@@ -1,5 +1,3 @@
-const Sequelize = require('sequelize');
-const OUTLINE_LEVELS = require('../../config/shared/activities').OUTLINE_LEVELS;
 const hooks = require('./hooks');
 
 /**

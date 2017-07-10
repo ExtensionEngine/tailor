@@ -17,13 +17,13 @@ function add(models) {
 
 function createHook(models, entity, [name, operation]) {
   const Course = models.Course;
-  const lastLevel = OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1];
+  const LEAF = OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1];
   const Model = models[to.pascal(entity)];
   const counter = operation === 'REMOVE' ? -1 : 1;
 
   Model.hook(name, (instance, { context }) => {
-    if (instance.type === lastLevel.type) {
-      return updateStats(instance, to.lower(pluralize(lastLevel.type)));
+    if (instance.type === LEAF.type) {
+      return updateStats(instance, to.lower(pluralize(LEAF.type)));
     }
     if (instance.type === 'ASSESSMENT') {
       return updateStats(instance, 'assessments');
