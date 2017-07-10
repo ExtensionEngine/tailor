@@ -76,7 +76,7 @@ export default {
     padding: 0;
   }
 
-  .multiselect__single {
+  .multiselect__single, .multiselect__tags {
     padding-left: 0;
     margin-bottom: 0;
     line-height: 34px;
@@ -87,6 +87,7 @@ export default {
     border-radius: 0;
     font-size: inherit;
     background: none;
+    height: 100%;
   }
 
   .multiselect__input {

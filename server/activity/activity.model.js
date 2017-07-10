@@ -83,6 +83,9 @@ module.exports = function (sequelize, DataTypes) {
     deletedAt: {
       type: DataTypes.DATE,
       field: 'deleted_at'
+    },
+    refs: {
+      type: DataTypes.JSON
     }
   }, {
     classMethods: {
