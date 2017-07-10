@@ -42,6 +42,7 @@
     </ul>
     <add-element
       :include="['ASSESSMENT']"
+      :position="nextPosition"
       :activity="group"
       @add="addAssessment">
     </add-element>
@@ -85,6 +86,10 @@ export default {
     },
     hasAssessments() {
       return this.assessments && !!this.assessments.length;
+    },
+    nextPosition() {
+      const element = last(this.assessments);
+      return element ? element.position + 1 : 1;
     }
   },
   methods: {
@@ -92,8 +97,6 @@ export default {
     ...mapActions(['save', 'update', 'reorder', 'remove'], 'tes'),
     ...mapActions({ updateGroup: 'update', removeGroup: 'remove' }, 'activities'),
     addAssessment(assessment) {
-      const prev = last(this.assessments);
-      assessment.position = !prev ? 1 : prev.position + 1;
       this.add(assessment);
       this.selected.push(assessment._cid);
     },
