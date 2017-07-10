@@ -3,6 +3,7 @@ const opn = require('opn');
 const path = require('path');
 const proxyMiddleware = require('http-proxy-middleware');
 const webpack = require('webpack');
+const argv = require('minimist')(process.argv.slice(2));
 
 const envSettings = require('../helpers/envSettings');
 const settings = require('./settings');
@@ -71,7 +72,5 @@ module.exports = app.listen(port, err => {
   console.log(`Listening at ${uri}` + '\n');
 
   // when env is testing, don't need open it
-  if (process.env.NODE_ENV !== 'testing') {
-    opn(uri);
-  }
+  if (process.env.NODE_ENV !== 'testing' && argv.open) opn(uri);
 });

@@ -3,6 +3,7 @@
     <te-assessment
       v-if="expanded"
       :element="assessment"
+      :exam="exam"
       :summative="true"
       @selected="$emit('selected')"
       @remove="$emit('remove')"
@@ -29,7 +30,7 @@ const htmlRegex = /<\/?[^>]+(>|$)/g;
 
 export default {
   name: 'assessment-item',
-  props: ['assessment', 'expanded'],
+  props: ['assessment', 'exam', 'expanded'],
   computed: {
     question() {
       let question = filter(this.assessment.data.question, { type: 'HTML' });

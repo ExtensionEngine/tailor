@@ -10,7 +10,16 @@ const OUTLINE_LEVELS = [{
   hasIntroduction: true,
   hasPerspectives: false,
   hasAssessments: false,
-  hasExams: true
+  hasExams: true,
+  meta: [
+    {
+      key: 'description',
+      type: 'TEXTAREA',
+      label: 'Description',
+      placeholder: 'Click to add...',
+      validate: { rules: { required: false, max: 250 } }
+    }
+  ]
 }, {
   type: 'OBJECTIVE',
   label: 'Learning Objective',
@@ -19,7 +28,16 @@ const OUTLINE_LEVELS = [{
   hasIntroduction: false,
   hasPerspectives: false,
   hasAssessments: false,
-  hasExams: false
+  hasExams: false,
+  meta: [
+    {
+      key: 'description',
+      type: 'TEXTAREA',
+      label: 'Description',
+      placeholder: 'Click to add...',
+      validate: { rules: { required: false, max: 250 } }
+    }
+  ]
 }, {
   type: 'TOPIC',
   label: 'Topic',
@@ -28,7 +46,16 @@ const OUTLINE_LEVELS = [{
   hasIntroduction: false,
   hasPerspectives: true,
   hasAssessments: true,
-  hasExams: false
+  hasExams: false,
+  meta: [
+    {
+      key: 'description',
+      type: 'TEXTAREA',
+      label: 'Description',
+      placeholder: 'Click to add...',
+      validate: { rules: { required: false, max: 250 } }
+    }
+  ]
 }];
 
 function getLevel(level) {

@@ -48,6 +48,10 @@ const fbQuestion = yup.array().test(
 
 const hint = yup.string().trim().max(200);
 
+const _refs = yup.object().shape({
+  objectiveId: yup.number().integer().positive()
+});
+
 const objectMap = yup.object().shape({
   key: yup.string().required(),
   value: yup.string().required()
@@ -60,41 +64,42 @@ yup.addMethod(yup.array, 'castMap', function () {
   });
 });
 
+const baseSchema = {
+  question,
+  hint,
+  _refs
+};
+
 export const schemas = {
   MC: yup.object().shape({
-    question,
+    ...baseSchema,
     answers: yup.array().min(2).of(yup.string().trim().min(1).max(500)).required(),
-    correct: yup.array().min(1).of(yup.number()).required(),
-    hint
+    correct: yup.array().min(1).of(yup.number()).required()
   }),
   NR: yup.object().shape({
-    question,
-    correct: yup.string().trim().matches(/^(-?\d+(\.\d+)?)$/).max(200).required(),
-    hint
+    ...baseSchema,
+    correct: yup.string().trim().matches(/^(-?\d+(\.\d+)?)$/).max(200).required()
   }),
   SC: yup.object().shape({
-    question,
+    ...baseSchema,
     answers: yup.array().min(2).of(yup.string().trim().min(1).max(200).required()).required(),
-    correct: yup.number().required(),
-    hint
+    correct: yup.number().required()
   }),
   TR: yup.object().shape({
-    question,
-    correct: yup.string().trim().min(1).max(7000).required(),
-    hint
+    ...baseSchema,
+    correct: yup.string().trim().min(1).max(7000).required()
   }),
   TF: yup.object().shape({
-    question,
-    correct: yup.boolean().required(),
-    hint
+    ...baseSchema,
+    correct: yup.boolean().required()
   }),
   FB: yup.object().shape({
+    ...baseSchema,
     question: fbQuestion,
-    correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).max(200).required())),
-    hint
+    correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).max(200).required()))
   }),
   MQ: yup.object().shape({
-    question,
+    ...baseSchema,
     correct: yup.array().of(yup.object().shape({
       premise: yup.string().trim().notOneOf(['Click to edit']).required(),
       response: yup.string().trim().notOneOf(['Click to edit']).required()
@@ -105,8 +110,7 @@ export const schemas = {
     })
   }),
   DD: yup.object().shape({
-    question,
-    hint,
+    ...baseSchema,
     groups: yup.array().castMap().of(objectMap).min(2),
     answers: yup.array().castMap().of(objectMap),
     correct: yup.array().castMap().of(yup.object().shape({
@@ -129,49 +133,48 @@ export function errorProcessor(error) {
   });
 }
 
+const baseDefaults = {
+  question: [],
+  hint: ''
+};
+
 export const defaults = {
   MC: {
     type: 'MC',
-    question: [],
+    ...baseDefaults,
     answers: ['', '', ''],
-    correct: [],
-    hint: ''
+    correct: []
   },
   NR: {
     type: 'NR',
-    question: [],
-    correct: '',
-    hint: ''
+    ...baseDefaults,
+    correct: ''
   },
   SC: {
     type: 'SC',
-    question: [],
+    ...baseDefaults,
     answers: ['', ''],
-    correct: '',
-    hint: ''
+    correct: ''
   },
   TR: {
     type: 'TR',
-    question: [],
-    correct: '',
-    hint: ''
+    ...baseDefaults,
+    correct: ''
   },
   TF: {
     type: 'TF',
-    question: [],
-    correct: null,
-    hint: ''
+    ...baseDefaults,
+    correct: null
   },
   FB: {
     type: 'FB',
-    question: [],
+    ...baseDefaults,
     correct: []
   },
   MQ: {
     type: 'MQ',
-    question: [],
+    ...baseDefaults,
     correct: [],
-    hint: '',
     headings: {
       premise: 'Premise',
       response: 'Response'
@@ -180,11 +183,10 @@ export const defaults = {
   DD() {
     let element = {
       type: 'DD',
-      question: [],
+      ...baseDefaults,
       groups: {},
       answers: {},
-      correct: {},
-      hint: ''
+      correct: {}
     };
     times(2, () => {
       const groupKey = cuid();
