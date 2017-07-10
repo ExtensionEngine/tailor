@@ -18,7 +18,7 @@
     </div>
     <select-assessment
       v-if="showAssessments"
-      :activity="activity"
+      :exclude="assessmentFilter"
       @selected="setSubtype">
     </select-assessment>
   </div>
@@ -27,6 +27,9 @@
 <script>
 import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
+import first from 'lodash/first';
+import get from 'lodash/get';
+import includes from 'lodash/includes';
 import SelectAssessment from './SelectAssessment';
 
 const TE_TYPES = [
@@ -43,6 +46,7 @@ const TE_TYPES = [
 ];
 
 const ELEMENTS_PER_ROW = 6;
+const firstType = items => get(first(items), 'type');
 
 export default {
   name: 'select-element',
@@ -56,33 +60,33 @@ export default {
     },
     elements() {
       if (!this.include) return TE_TYPES;
-      let items = filter(TE_TYPES, it => this.include.indexOf(it.type) > -1);
-      if (items.length === 1 && items[0].type === 'ASSESSMENT') {
-        this.type = 'ASSESSMENT';
-      }
-
+      let items = filter(TE_TYPES, it => includes(this.include, it.type));
+      if (firstType(items) === 'ASSESSMENT') this.type = 'ASSESSMENT';
       return items;
     },
     showAssessments() {
       return this.type === 'ASSESSMENT';
     },
+    assessmentFilter() {
+      return this.activity !== 'PERSPECTIVE' ? ['TR'] : null;
+    },
     columnWidth() {
-      return `col-xs-${12 / this.rows[0].length}`;
+      return `col-xs-${12 / ELEMENTS_PER_ROW}`;
     },
     maxWidth() {
       // Set the maximum width of the select component container in the
       // increments of 150px, with the baseline of 2 elements having 200px width
-      return 200 + (this.rows[0].length - 2) * 150;
+      return 200 + (ELEMENTS_PER_ROW - 2) * 150;
     }
   },
   methods: {
     setType(type) {
-      if (type !== 'ASSESSMENT') {
-        this.$emit('selected', { type });
-        this.close();
-      } else {
+      if (type === 'ASSESSMENT') {
         this.type = type;
+        return;
       }
+      this.$emit('selected', { type });
+      this.close();
     },
     setSubtype(subtype) {
       this.$emit('selected', { type: this.type, subtype });
@@ -92,9 +96,7 @@ export default {
       this.type = null;
     }
   },
-  components: {
-    SelectAssessment
-  }
+  components: { SelectAssessment }
 };
 </script>
 

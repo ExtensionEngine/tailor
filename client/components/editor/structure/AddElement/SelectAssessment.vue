@@ -15,33 +15,30 @@
 
 <script>
 import chunk from 'lodash/chunk';
+import filter from 'lodash/filter';
+import includes from 'lodash/includes';
+import isArray from 'lodash/isArray';
 import toArray from 'lodash/toArray';
 import { typeInfo } from 'utils/assessment';
 
 const ASSESSMENTS_PER_ROW = 6;
-
-function filterAssessments(data, ignored) {
-  return ignored.length
-    ? data.filter(it => !ignored.includes(it.type))
-    : data;
-}
+const assessments = toArray(typeInfo);
+const arrify = arg => isArray(arg) ? arg : [arg];
 
 export default {
   name: 'select-assessment',
-  props: ['activity'],
-  data() {
-    return { assessments: typeInfo };
-  },
+  props: ['exclude'],
   computed: {
     rows() {
-      const data = filterAssessments(
-        toArray(this.assessments),
-        this.activity !== 'PERSPECTIVE' ? ['TR'] : []
-      );
-      return chunk(data, ASSESSMENTS_PER_ROW);
+      return chunk(this.elements, ASSESSMENTS_PER_ROW);
+    },
+    elements() {
+      if (!this.exclude) return assessments;
+      const exclude = arrify(this.exclude);
+      return filter(assessments, it => !includes(exclude, it.type));
     },
     columnWidth() {
-      return `col-xs-${12 / this.rows[0].length}`;
+      return `col-xs-${12 / ASSESSMENTS_PER_ROW}`;
     }
   }
 };
