@@ -83,11 +83,11 @@ export default {
   }
 
   .multiselect__input, .multiselect__single, .multiselect__tags {
+    height: 100%;
     border: 0;
     border-radius: 0;
     font-size: inherit;
     background: none;
-    height: 100%;
   }
 
   .multiselect__input {
