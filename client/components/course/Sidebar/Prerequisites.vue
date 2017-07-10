@@ -21,18 +21,15 @@ import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
+import intersectionWith from 'lodash/intersectionWith';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Select from '../../common/Select';
 import set from 'lodash/set';
-import size from 'lodash/size';
 
 export default {
   name: 'prerequisites',
-  data() {
-    return { prerequisites: [] };
-  },
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
     options() {
@@ -41,21 +38,20 @@ export default {
     },
     placeholder() {
       return isEmpty(this.options) ? 'No activities' : 'Select prerequisites';
+    },
+    prerequisites() {
+      const ids = get(this.activity, 'refs.prerequisiteIds', []);
+      const comparator = (activity, id) => activity.id === id;
+      return intersectionWith(this.options, ids, comparator);
     }
   },
   methods: {
     ...mapActions(['update'], 'activities'),
     onPrerequisitesChanged(prerequisites) {
-      this.prerequisites = prerequisites;
       const activity = cloneDeep(this.activity) || {};
       set(activity, 'refs.prerequisiteIds', map(prerequisites, 'id'));
       this.update(activity);
     }
-  },
-  mounted() {
-    const prerequisiteIds = get(this.activity, 'refs.prerequisiteIds');
-    if (!size(prerequisiteIds)) return;
-    this.prerequisites = filter(this.activities, it => prerequisiteIds.includes(it.id));
   },
   components: { multiselect: Select }
 };
