@@ -65,14 +65,6 @@ import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
 
-function nextPosition(items) {
-  const tail = last(items);
-  if (!tail) return 1;
-  let position = Math.ceil(tail.position);
-  if (tail.position === position) position += 1;
-  return position;
-}
-
 export default {
   name: 'assessment-group',
   props: ['group', 'exam', 'position'],
@@ -100,7 +92,8 @@ export default {
     ...mapActions(['save', 'update', 'reorder', 'remove'], 'tes'),
     ...mapActions({ updateGroup: 'update', removeGroup: 'remove' }, 'activities'),
     addAssessment(assessment) {
-      assessment.position = nextPosition(this.assessments);
+      const prev = last(this.assessments);
+      assessment.position = !prev ? 1 : prev.position + 1;
       this.add(assessment);
       this.selected.push(assessment._cid);
     },
