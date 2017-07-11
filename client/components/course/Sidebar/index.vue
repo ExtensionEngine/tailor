@@ -31,7 +31,6 @@
           <div class="title">{{ name }}</div>
         </div>
       </div>
-      <prerequisites v-if="level.hasPrerequisites" />
       <div class="meta-element">
         <component
           v-for="data in metadata"
@@ -41,6 +40,7 @@
           @update="updateActivity">
         </component>
       </div>
+      <prerequisites v-if="level.hasPrerequisites"></prerequisites>
     </div>
     <div v-else class="placeholder">
       <h4>Outline Sidebar</h4>
