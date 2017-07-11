@@ -52,16 +52,18 @@ export default {
     transition: box-shadow 0.15s;
   }
 
-  .multiselect__option--selected {
-    background: none;
+  .multiselect__option {
+    &--selected {
+      background: none;
+    }
+
+    &--highlight {
+      color: #444;
+      background-color: #eee;
+    }
   }
 
-  .multiselect__option--highlight {
-    color: #444;
-    background-color: #eee;
-  }
-
-  .multiselect__content {
+  .multiselect__content-wrapper {
     border: 1px solid #999;
     border-radius: 0;
     background-color: #fff;
@@ -70,6 +72,10 @@ export default {
   .multiselect__tags {
     height: 100%;
     padding: 0;
+
+    &-wrap {
+      display: block;
+    }
   }
 
   .multiselect__select {
