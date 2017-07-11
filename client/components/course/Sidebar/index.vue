@@ -148,11 +148,12 @@ export default {
 
 <style lang="scss" scoped>
 .course-sidebar {
-  position: fixed;
+  position: absolute;
   right: 0;
   width: 400px;
   height: 100%;
   padding: 30px 10px;
+  overflow: auto;
   text-align: left;
   border-top: 1px solid #e8e8e8;
   background-color: #fcfcfc;
