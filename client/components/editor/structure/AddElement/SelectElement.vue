@@ -51,7 +51,7 @@ const firstType = items => get(first(items), 'type');
 export default {
   name: 'select-element',
   props: {
-    activity: { type: Object, required: true },
+    activity: { type: Object },
     include: { type: Array },
     rowSize: { type: Number, default: ELEMENTS_PER_ROW }
   },
@@ -75,7 +75,8 @@ export default {
       return this.type === 'ASSESSMENT';
     },
     assessmentFilter() {
-      return this.activity.type !== 'PERSPECTIVE' ? ['TR'] : null;
+      if (!this.activity) return;
+      if (this.activity.type !== 'PERSPECTIVE') return ['TR'];
     },
     columnWidth() {
       return `col-xs-${12 / this.columns}`;
