@@ -11,7 +11,7 @@
     :placeholder="placeholder || 'Select option'"
     :track-by="trackBy || 'label'"
     :label="label || 'label'"
-    :class="{ 'input-tags-parent': inputAboveTags }"
+    :class="{ 'search-top': inputPlacement !== 'bottom' }"
     @input="val => $emit('input', val)"
     @close="id => $emit('close', id)"
     @open="(value, id) => $emit('open', value, id)"
@@ -35,7 +35,7 @@ export default {
     'trackBy',
     'label',
     'allowEmpty',
-    'inputAboveTags'
+    'inputPlacement'
   ],
   components: { multiselect }
 };
@@ -44,7 +44,7 @@ export default {
 <style lang="scss">
 .custom-select.multiselect {
   width: auto;
-  padding-right: 20px;
+  padding-right: 24px;
   font-size: 14px;
   font-family: 'Catamaran', Helvetica, Arial, sans-serif;
   color: #555;
@@ -66,6 +66,7 @@ export default {
   }
 
   .multiselect__content-wrapper {
+    margin-top: -1px;
     border: 1px solid #999;
     border-radius: 0;
     background-color: #fff;
@@ -144,7 +145,6 @@ export default {
   }
 
   .multiselect__input, .multiselect__single, .multiselect__tags {
-    height: 100%;
     border: 0;
     border-radius: 0;
     font-size: inherit;
@@ -152,19 +152,32 @@ export default {
   }
 
   .multiselect__input {
-    padding-right: 25px;
+    width: 100% !important;
+    margin: 0;
+    line-height: 32px;
+  }
+
+  .multiselect__select {
+    top: unset;
+    bottom: 1px;
   }
 }
 
-.input-tags-parent .multiselect__tags {
-  display: table;
+.custom-select.multiselect.search-top {
+  .multiselect__tags {
+    display: table;
+    &-wrap { display: table-footer-group; }
+  }
+
+  .multiselect__input {
+    display: table-header-group;
+    margin-bottom: 8px;
+  }
+
+  .multiselect__select {
+    top: 1px;
+    bottom: unset;
+  }
 }
 
-.input-tags-parent .multiselect__tags-wrap {
-  display: table-footer-group;
-}
-
-.input-tags-parent .multiselect__input {
-  display: table-header-group;
-}
 </style>

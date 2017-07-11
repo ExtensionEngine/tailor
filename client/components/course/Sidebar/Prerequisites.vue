@@ -9,7 +9,6 @@
       :allowEmpty="true"
       :disabled="!options.length"
       :placeholder="placeholder"
-      :inputAboveTags="true"
       @input="onPrerequisitesChanged"
       name="prerequisites"
       trackBy="id"
