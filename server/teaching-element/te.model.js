@@ -57,7 +57,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       reorder(index) {
         return sequelize.transaction(t => {
-          return this.reorderFilter(this)
+          return this.reorderFilter()
             .then(filter => this.siblings(filter))
             .then(siblings => {
               this.position = calculatePosition(this.id, index, siblings);
