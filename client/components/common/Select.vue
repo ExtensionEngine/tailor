@@ -11,6 +11,7 @@
     :placeholder="placeholder || 'Select option'"
     :track-by="trackBy || 'label'"
     :label="label || 'label'"
+    :class="{ 'input-tags-parent': inputAboveTags }"
     @input="val => $emit('input', val)"
     @close="id => $emit('close', id)"
     @open="(value, id) => $emit('open', value, id)"
@@ -33,7 +34,8 @@ export default {
     'placeholder',
     'trackBy',
     'label',
-    'allowEmpty'
+    'allowEmpty',
+    'inputAboveTags'
   ],
   components: { multiselect }
 };
@@ -72,10 +74,6 @@ export default {
   .multiselect__tags {
     height: 100%;
     padding: 0;
-
-    &-wrap {
-      display: block;
-    }
   }
 
   .multiselect__select {
@@ -101,5 +99,17 @@ export default {
   .multiselect__input {
     padding-right: 25px;
   }
+}
+
+.input-tags-parent .multiselect__tags {
+  display: table;
+}
+
+.input-tags-parent .multiselect__tags-wrap {
+  display: table-footer-group;
+}
+
+.input-tags-parent .multiselect__input {
+  display: table-header-group;
 }
 </style>
