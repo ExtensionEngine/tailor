@@ -40,7 +40,8 @@ export default {
 
 <style lang="scss">
 .custom-select.multiselect {
-  height: 34px;
+  width: auto;
+  padding-right: 20px;
   font-size: 14px;
   font-family: 'Catamaran', Helvetica, Arial, sans-serif;
   color: #555;

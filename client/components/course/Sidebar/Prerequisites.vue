@@ -59,7 +59,6 @@ export default {
 
 <style lang="scss" scoped>
 .prerequisites {
-  height: 96px;
   padding: 3px 8px;
 
   &:hover {
