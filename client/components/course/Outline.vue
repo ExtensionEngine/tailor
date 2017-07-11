@@ -41,6 +41,6 @@ export default {
   height: 100%;
   float: left;
   padding: 80px 60px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>
