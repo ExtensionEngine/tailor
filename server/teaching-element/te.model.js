@@ -51,18 +51,25 @@ module.exports = function (sequelize, DataTypes) {
       }
     },
     instanceMethods: {
-      siblings() {
-        return TeachingElement.findAll({
-          where: { activityId: this.activityId },
-          order: 'position ASC'
-        });
+      siblings(filter = {}) {
+        const where = Object.assign({}, filter, { activityId: this.activityId });
+        return TeachingElement.findAll({ where, order: 'position ASC' });
       },
       reorder(index) {
         return sequelize.transaction(t => {
-          return this.siblings().then(siblings => {
-            this.position = calculatePosition(this.id, index, siblings);
-            return this.save({ transaction: t });
-          });
+          return this.getReorderFilter()
+            .then(filter => this.siblings(filter))
+            .then(siblings => {
+              this.position = calculatePosition(this.id, index, siblings);
+              return this.save({ transaction: t });
+            });
+        });
+      },
+      getReorderFilter() {
+        return this.getActivity().then(parent => {
+          if (parent.type !== 'ASSESSMENT_GROUP') return {};
+          if (this.type === 'ASSESSMENT') return { type: 'ASSESSMENT' };
+          return { type: { $not: this.type } };
         });
       }
     },

@@ -23,19 +23,26 @@
       Click the button below to Create first Assessment.
     </div>
     <ul class="list-group">
-      <assessment-item
-        v-for="it in assessments"
-        :key="it._cid"
-        :assessment="it"
-        :exam="exam"
-        :expanded="isSelected(it)"
-        @selected="toggleSelect(it)"
-        @save="saveAssessment"
-        @remove="it.id ? requestDeletion(it) : remove(it)">
-      </assessment-item>
+      <draggable
+        :list="assessments"
+        :options="dragOptions"
+        @update="reorderAssessment"
+        class="row">
+        <assessment-item
+          v-for="it in assessments"
+          :key="it._cid"
+          :assessment="it"
+          :exam="exam"
+          :expanded="isSelected(it)"
+          @selected="toggleSelect(it)"
+          @save="saveAssessment"
+          @remove="it.id ? requestDeletion(it) : remove(it)">
+        </assessment-item>
+      </draggable>
     </ul>
     <add-element
       :include="['ASSESSMENT']"
+      :position="nextPosition"
       :activity="group"
       @add="addAssessment">
     </add-element>
@@ -47,12 +54,15 @@ import AddElement from '../AddElement';
 import AssessmentItem from '../AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
+import Draggable from 'vuedraggable';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
+import last from 'lodash/last';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
+import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
 
@@ -67,20 +77,35 @@ export default {
   },
   computed: {
     ...mapGetters(['tes']),
+    dragOptions() {
+      return { handle: '.drag-handle' };
+    },
     assessments() {
-      return filter(this.tes, { activityId: this.group.id, type: 'ASSESSMENT' });
+      const cond = { activityId: this.group.id, type: 'ASSESSMENT' };
+      return sortBy(filter(this.tes, cond), 'position');
     },
     hasAssessments() {
       return this.assessments && !!this.assessments.length;
+    },
+    nextPosition() {
+      const element = last(this.assessments);
+      return element ? element.position + 1 : 1;
     }
   },
   methods: {
     ...mapMutations(['add'], 'tes'),
-    ...mapActions(['save', 'update', 'remove'], 'tes'),
+    ...mapActions(['save', 'update', 'reorder', 'remove'], 'tes'),
     ...mapActions({ updateGroup: 'update', removeGroup: 'remove' }, 'activities'),
     addAssessment(assessment) {
       this.add(assessment);
       this.selected.push(assessment._cid);
+    },
+    reorderAssessment({ newIndex: newPosition }) {
+      const items = this.assessments;
+      const element = items[newPosition];
+      const isFirstChild = newPosition === 0;
+      const context = { items, newPosition, isFirstChild };
+      this.reorder({ element, context });
     },
     saveAssessment(assessment) {
       assessment.id ? this.update(assessment) : this.save(assessment);
@@ -123,6 +148,7 @@ export default {
   components: {
     AddElement,
     AssessmentItem,
+    Draggable,
     GroupIntroduction
   }
 };

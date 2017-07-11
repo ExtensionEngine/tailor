@@ -26,6 +26,7 @@
     "migrate": "node ./server/script/migrate.js",
     "add:admin": "node -r dotenv/config ./server/script/addAdmin.js",
     "fix:activities": "node -r dotenv/config ./server/script/fixActivities.js",
+    "fix:assessments": "node -r dotenv/config ./server/script/fixAssessments.js",
     "fix:images": "node -r dotenv/config ./server/script/fixImageUrls.js",
     "integration:add": "node -r dotenv/config ./server/script/addIntegration.js",
     "integration:token": "node -r dotenv/config ./server/script/generateIntegrationToken.js",
