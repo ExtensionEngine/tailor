@@ -5,7 +5,7 @@
     :searchable="searchable"
     :close-on-select="true"
     :show-labels="false"
-    :allow-empty="false"
+    :allow-empty="allowEmpty"
     :multiple="multiple"
     :disabled="disabled"
     :placeholder="placeholder || 'Select option'"
@@ -32,7 +32,8 @@ export default {
     'disabled',
     'placeholder',
     'trackBy',
-    'label'
+    'label',
+    'allowEmpty'
   ],
   components: { multiselect }
 };

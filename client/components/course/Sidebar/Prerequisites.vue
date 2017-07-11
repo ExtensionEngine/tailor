@@ -6,6 +6,7 @@
       :options="options"
       :searchable="true"
       :multiple="true"
+      :allowEmpty="true"
       :disabled="!options.length"
       :placeholder="placeholder"
       @input="onPrerequisitesChanged"
