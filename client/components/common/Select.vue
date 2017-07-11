@@ -76,6 +76,61 @@ export default {
     padding: 0;
   }
 
+  .multiselect__tag {
+    height: 32px;
+    padding: 0;
+    padding-left: 12px;
+    border-radius: 32px;
+    line-height: 32px;
+    cursor: default;
+    background: #337ab7;
+    color: #fff;
+
+    &:hover {
+      background: #1a4265;
+      color: #d5d5d5;;
+    }
+
+    span {
+      display: inline-block;
+      position: relative;
+      top: -1px;
+      line-height: 32px;
+    }
+  }
+
+  .multiselect__tag-icon {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    line-height: 32px;
+    overflow: hidden;
+    margin: 0 6px;
+    cursor: pointer;
+
+    &:hover, &:focus { background: none; }
+
+    &::after {
+      content: "\F159"; // close-circle
+      display: inline-block;
+      line-height: 32px;
+      font-size: 20px;
+      font-family: "Material Design Icons";
+      font-weight: normal;
+      font-style: normal;
+      letter-spacing: normal;
+      text-transform: none;
+      text-align: center;
+      color: #fff;
+      cursor: pointer;
+    }
+  }
+
+  .multiselect__tag:hover .multiselect__tag-icon  {
+    &::after { color: #d5d5d5; }
+  }
+
   .multiselect__select {
     width: 20px;
     height: 34px;
