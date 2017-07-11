@@ -19,7 +19,18 @@
       </draggable>
       <add-element :include="['HTML', 'IMAGE']" @add="saveItem"></add-element>
     </div>
-    <preview v-else :title="title" :elements="embeds"></preview>
+    <button
+      v-else
+      @click="showModal = true"
+      class="btn btn-primary btn-open"
+      type="button">
+      {{ title }}
+    </button>
+    <preview
+      v-if="showModal"
+      :elements="embeds"
+      @close="showModal = false">
+    </preview>
   </div>
 </template>
 
@@ -43,7 +54,8 @@ export default {
   data() {
     return {
       isEditing: false,
-      dragOptions: { handle: '.drag-handle' }
+      dragOptions: { handle: '.drag-handle' },
+      showModal: false
     };
   },
   computed: {
@@ -97,3 +109,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.btn-open {
+  max-width: 90%;
+  padding: 9px 20px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+</style>

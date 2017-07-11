@@ -15,22 +15,33 @@
 
 <script>
 import chunk from 'lodash/chunk';
+import filter from 'lodash/filter';
+import includes from 'lodash/includes';
 import toArray from 'lodash/toArray';
 import { typeInfo } from 'utils/assessment';
 
 const ASSESSMENTS_PER_ROW = 6;
+const assessments = toArray(typeInfo);
 
 export default {
   name: 'select-assessment',
-  data() {
-    return { assessments: typeInfo };
+  props: {
+    exclude: { type: Array },
+    rowSize: { type: Number, default: ASSESSMENTS_PER_ROW }
   },
   computed: {
     rows() {
-      return chunk(toArray(this.assessments), ASSESSMENTS_PER_ROW);
+      return chunk(this.elements, this.rowSize);
+    },
+    columns() {
+      return Math.min(this.elements.length, this.rowSize);
+    },
+    elements() {
+      if (!this.exclude) return assessments;
+      return filter(assessments, it => !includes(this.exclude, it.type));
     },
     columnWidth() {
-      return `col-xs-${12 / this.rows[0].length}`;
+      return `col-xs-${12 / this.columns}`;
     }
   }
 };

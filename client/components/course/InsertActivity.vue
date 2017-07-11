@@ -49,11 +49,11 @@
 </template>
 
 <script>
-import calculatePosition from '../../utils/calculatePosition';
+import calculatePosition from 'utils/calculatePosition';
 import findIndex from 'lodash/findIndex';
 import { focus } from 'vue-focus';
 import { getLevel, OUTLINE_LEVELS } from 'shared/activities';
-import { getChildren } from '../../utils/activity';
+import { getChildren } from 'utils/activity';
 import { mapActions, mapGetters } from 'vuex-module';
 import multiselect from '../common/Select';
 

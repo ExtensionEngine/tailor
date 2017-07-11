@@ -1,8 +1,16 @@
 <template>
-  <li class="list-group-item assessment-item">
+  <li
+    :class="{ hover }"
+    @mouseenter="hover = true"
+    @mouseleave="hover = false"
+    class="list-group-item assessment-item">
+    <span v-if="exam" class="drag-handle">
+      <span class="mdi mdi-drag-vertical"></span>
+    </span>
     <te-assessment
       v-if="expanded"
       :element="assessment"
+      :exam="exam"
       :summative="true"
       @selected="$emit('selected')"
       @remove="$emit('remove')"
@@ -29,7 +37,7 @@ const htmlRegex = /<\/?[^>]+(>|$)/g;
 
 export default {
   name: 'assessment-item',
-  props: ['assessment', 'expanded'],
+  props: ['assessment', 'exam', 'expanded'],
   computed: {
     question() {
       let question = filter(this.assessment.data.question, { type: 'HTML' });
@@ -37,6 +45,9 @@ export default {
       question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
       return truncate(question, { length: 50 });
     }
+  },
+  data() {
+    return { hover: false };
   },
   components: {
     TeAssessment
@@ -50,12 +61,28 @@ export default {
   padding: 0;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
 
-  div {
-    padding: 15px;
+  &, &:first-child, &:last-child {
+    border-radius: 0;
   }
 
-  .minimized:hover {
-    cursor: pointer;
+  .drag-handle {
+    position: absolute;
+    top: 0;
+    left: -3px;
+    font-size: 28px;
+    color: #888;
+    opacity: 0;
+    cursor: move;
+  }
+
+  &.hover .drag-handle {
+    opacity: 1;
+    transition: opacity .6s ease-in-out;
+  }
+
+  .minimized {
+    padding: 12px 22px;
+    &:hover { cursor: pointer; }
   }
 
   .title {
@@ -72,23 +99,19 @@ export default {
   }
 
   .delete {
-    display: block;
+    display: inline-block;
     position: absolute;
-    top: 7px;
     right: 15px;
+    font-size: 18px;
+    line-height: 18px;
     visibility: hidden;
     color: #707070;
-    font-size: 26px;
 
-    &:hover {
-      color: #555;
-    }
+    &:hover { color: #555; }
   }
 
-  &:hover {
-    .delete {
-      visibility: visible;
-    }
+  &.hover:not(.sortable-chosen) .delete {
+    visibility: visible;
   }
 }
 </style>
