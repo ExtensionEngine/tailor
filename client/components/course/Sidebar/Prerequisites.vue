@@ -63,6 +63,10 @@ export default {
 .prerequisites {
   padding: 3px 8px;
 
+  label {
+    color: #808080;
+  }
+
   &:hover {
     cursor: pointer;
     background-color: #f5f5f5;
