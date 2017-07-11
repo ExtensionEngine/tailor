@@ -1,4 +1,4 @@
-import calculatePosition from '../../utils/calculatePosition.js';
+import calculatePosition from 'utils/calculatePosition.js';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';

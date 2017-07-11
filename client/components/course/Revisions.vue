@@ -37,7 +37,7 @@ import {
   describeActivityRevision,
   describeElementRevision,
   describeCourseRevision
-} from '../../utils/revision';
+} from 'utils/revision';
 import InfiniteScroll from 'vue-infinite-scroll';
 import Loader from '../common/Loader';
 import Promise from 'bluebird';

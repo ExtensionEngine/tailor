@@ -25,7 +25,7 @@
 
 <script>
 import AddElement from '../../structure/AddElement';
-import calculatePosition from '../../../../utils/calculatePosition.js';
+import calculatePosition from 'utils/calculatePosition.js';
 import cloneDeep from 'lodash/cloneDeep';
 import Draggable from 'vuedraggable';
 import isEmpty from 'lodash/isEmpty';
