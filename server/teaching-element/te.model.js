@@ -57,7 +57,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       reorder(index) {
         return sequelize.transaction(t => {
-          return this.reorderFilter()
+          return this.getReorderFilter()
             .then(filter => this.siblings(filter))
             .then(siblings => {
               this.position = calculatePosition(this.id, index, siblings);
@@ -65,7 +65,7 @@ module.exports = function (sequelize, DataTypes) {
             });
         });
       },
-      reorderFilter() {
+      getReorderFilter() {
         return this.getActivity().then(parent => {
           if (parent.type !== 'ASSESSMENT_GROUP') return {};
           if (this.type === 'ASSESSMENT') return { type: 'ASSESSMENT' };
