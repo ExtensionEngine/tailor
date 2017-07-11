@@ -4,7 +4,7 @@
     @mouseenter="hover = true"
     @mouseleave="hover = false"
     class="list-group-item assessment-item">
-    <span class="drag-handle">
+    <span v-if="exam" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
     <te-assessment
