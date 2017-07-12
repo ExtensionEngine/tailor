@@ -83,11 +83,11 @@ export default {
   }
 
   .multiselect__tag {
-    height: 28px;
+    height: 26px;
     padding: 0;
     padding-left: 12px;
-    border-radius: 28px;
-    line-height: 28px;
+    border-radius: 26px;
+    line-height: 26px;
     cursor: default;
     background: #e0e0e0;
     color: #4a4a4a;
@@ -104,7 +104,7 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-size: 13px;
+      font-size: 12px;
       font-family: "Roboto";
     }
   }
@@ -114,7 +114,7 @@ export default {
     display: inline-block;
     vertical-align: middle;
     width: 20px;
-    line-height: 28px;
+    line-height: 26px;
     overflow: hidden;
     margin: 0 5px;
     cursor: pointer;
@@ -124,7 +124,7 @@ export default {
     &::after {
       content: "\F159"; // close-circle
       display: inline-block;
-      line-height: 28px;
+      line-height: 26px;
       font-size: 18px;
       font-family: "Material Design Icons";
       font-weight: normal;
@@ -163,7 +163,7 @@ export default {
   .multiselect__input {
     width: 100% !important;
     margin: 0;
-    line-height: 28px;
+    line-height: 32px;
   }
 
   .multiselect__select {
