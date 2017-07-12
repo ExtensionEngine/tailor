@@ -6,7 +6,7 @@ const map = require('lodash/map');
 const { TeachingElement } = require('../shared/database');
 
 TeachingElement.findAll({
-  where: { type: 'ASSESSMENT' },
+  where: { type: 'ASSESSMENT', position: { $eq: null } },
   order: [['createdAt', 'ASC']]
 })
 .then(asssessments => groupBy(asssessments, 'activityId'))
