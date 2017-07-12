@@ -89,19 +89,22 @@ export default {
     border-radius: 32px;
     line-height: 32px;
     cursor: default;
-    background: #337ab7;
-    color: #fff;
+    background: #e0e0e0;
+    color: #4a4a4a;
 
     &:hover {
-      background: #1a4265;
-      color: #d5d5d5;;
+      background: #767577;
+      color: #fbfafb;
     }
 
     span {
-      display: inline-block;
-      position: relative;
-      top: -1px;
-      line-height: 32px;
+      display: block;
+      float: left;
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: "Roboto";
     }
   }
 
@@ -128,13 +131,13 @@ export default {
       letter-spacing: normal;
       text-transform: none;
       text-align: center;
-      color: #fff;
+      color: #9c9c9c;
       cursor: pointer;
     }
   }
 
   .multiselect__tag:hover .multiselect__tag-icon  {
-    &::after { color: #d5d5d5; }
+    &::after { color: #fbfafb; }
   }
 
   .multiselect__select {
