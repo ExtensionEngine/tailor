@@ -1,11 +1,11 @@
-const pluralize = require('pluralize');
+const last = require('lodash/last');
 const to = require('to-case');
 const zip = require('lodash/zip');
-
-const hooks = ['afterCreate', 'afterUpdate', 'afterDestroy'];
-const operations = ['CREATE', 'UPDATE', 'REMOVE'];
 const OUTLINE_LEVELS = require('../../config/shared/activities').OUTLINE_LEVELS;
+
 const entities = ['ACTIVITY', 'TEACHING_ELEMENT'];
+const hooks = ['afterCreate', 'afterDestroy'];
+const operations = ['CREATE', 'REMOVE'];
 
 function add(models) {
   zip(hooks, operations).forEach(hook => {
@@ -17,26 +17,29 @@ function add(models) {
 
 function createHook(models, entity, [name, operation]) {
   const Course = models.Course;
-  const LEAF = OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1];
+  const LEAF = last(OUTLINE_LEVELS);
   const Model = models[to.pascal(entity)];
-  const counter = operation === 'REMOVE' ? -1 : 1;
 
   Model.hook(name, (instance, { context }) => {
-    if (instance.type === LEAF.type) {
-      return updateStats(instance, to.lower(pluralize(LEAF.type)));
-    }
+    const { courseId } = instance;
     if (instance.type === 'ASSESSMENT') {
-      return updateStats(instance, 'assessments');
+      return updateStats(courseId, 'assessments');
+    }
+    if (instance.type === LEAF.type) {
+      return updateStats(courseId, 'objectives', { type: LEAF.type });
     }
   });
 
-  function updateStats(instance, property) {
-    return Course.findById(instance.courseId)
-      .then(course => {
-        course.stats[property] += counter;
+  function updateStats(courseId, property, filter) {
+    return Course.findById(courseId).then(course => {
+      const where = Object.assign({ courseId }, filter);
+      return Model.count({ where }).then(total => {
+        course.stats = course.stats || {};
+        course.stats[property] = total;
         course.changed('stats', true);
         return course.save();
       });
+    });
   }
 }
 
