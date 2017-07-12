@@ -13,7 +13,6 @@ function index({ query, user }, res) {
   const opts = processListQuery(query);
   if (query.search) opts.where.name = { $iLike: `%${query.search}%` };
   const courses = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
-
   return courses.then(data => res.json({ data }));
 };
 
