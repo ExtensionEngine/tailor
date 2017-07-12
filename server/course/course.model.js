@@ -60,7 +60,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     stats: {
       type: DataTypes.JSON,
-      defaultValue: { topics: 0, assessments: 0 }
+      defaultValue: { objectives: 0, assessments: 0 }
     }
   }, {
     classMethods: {
