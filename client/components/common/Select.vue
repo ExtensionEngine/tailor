@@ -77,9 +77,7 @@ export default {
     height: 100%;
     padding: 0;
 
-    &-wrap {
-      width: 100%;
-    }
+    &-wrap { width: 100%; }
   }
 
   .multiselect__tag {
@@ -116,7 +114,7 @@ export default {
     width: 20px;
     line-height: 26px;
     overflow: hidden;
-    margin: 0 5px;
+    margin: 0 4px;
     cursor: pointer;
 
     &:hover, &:focus { background: none; }
