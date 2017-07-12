@@ -83,6 +83,10 @@ module.exports = function (sequelize, DataTypes) {
     deletedAt: {
       type: DataTypes.DATE,
       field: 'deleted_at'
+    },
+    detached: {
+      type: DataTypes.BOOLEAN,
+      field: 'detached'
     }
   }, {
     classMethods: {
@@ -112,20 +116,23 @@ module.exports = function (sequelize, DataTypes) {
           order: 'position ASC'
         });
       },
-      remove() {
+      remove(options = {}) {
         return sequelize.transaction(t => {
-          return this.deleteTree()
-            .then(() => this.destroy())
+          return this.deleteTree(options.soft)
+            .then(() => this.destroy(options))
             .then(() => this);
         });
       },
-      deleteTree() {
+      deleteTree(soft = false) {
         return Promise.resolve(this.getChildren())
-          .each(it => it.deleteTree())
-          .then(() => this.deleteChildren());
+          .each(it => it.deleteTree(soft))
+          .then(() => this.deleteChildren(soft));
       },
-      deleteChildren() {
-        return Activity.destroy({ where: { parentId: this.id } });
+      deleteChildren(soft = false) {
+        const query = { where: { parentId: this.id } };
+        if (!soft) return Activity.destroy(query);
+        return Promise.resolve(Activity.findAll(query))
+          .each(it => it.update({ detached: true }));
       },
       reorder(index) {
         return sequelize.transaction(t => {

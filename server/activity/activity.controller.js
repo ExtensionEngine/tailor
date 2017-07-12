@@ -38,7 +38,7 @@ function list({ course, query }, res) {
 function remove({ params, user }, res) {
   return Activity
     .findById(params.activityId)
-    .then(activity => activity.destroy({ context: { userId: user.id } }))
+    .then(activity => activity.remove({ soft: true, context: { userId: user.id } }))
     .then(activity => res.json({ data: pick(activity, ['id']) }));
 }
 
