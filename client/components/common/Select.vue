@@ -116,7 +116,7 @@ export default {
     width: 20px;
     line-height: 28px;
     overflow: hidden;
-    margin: 0 6px;
+    margin: 0 5px;
     cursor: pointer;
 
     &:hover, &:focus { background: none; }
