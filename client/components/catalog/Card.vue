@@ -1,17 +1,20 @@
 <template>
   <div class="col-lg-4">
-    <div class="course-card" @click="navigateTo">
+    <div @click="navigateTo" class="course-card">
       <div class="body">
         <div class="title">{{ name }}</div>
         <div class="description">{{ description }}</div>
       </div>
       <div class="footer">
         <div class="row">
-          <span class="col-xs-4">
-            {{ leafLabel }}: {{ course.stats[leafType] }}
+          <span class="col-xs-6">
+            <span class="mdi mdi-brightness-1"></span>
+            {{ objectives }}
           </span>
-          <span class="col-xs-4">Assessments: {{ course.stats.assessments }}</span>
-          <span class="col-xs-4">stats #3</span>
+          <span class="col-xs-6">
+            <span class="mdi mdi-help"></span>
+            {{ assessments }}
+          </span>
         </div>
       </div>
     </div>
@@ -19,9 +22,7 @@
 </template>
 
 <script>
-import { OUTLINE_LEVELS } from '../../../config/shared/activities';
-import pluralize from 'pluralize';
-import to from 'to-case';
+import get from 'lodash/get';
 import truncate from 'truncate';
 
 export default {
@@ -33,11 +34,11 @@ export default {
     description() {
       return truncate(this.course.description, 180);
     },
-    leafLabel() {
-      return pluralize(OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1].label);
+    assessments() {
+      return get(this.course, 'stats.assessments', 0);
     },
-    leafType() {
-      return to.lower(this.leafLabel);
+    objectives() {
+      return get(this.course, 'stats.objectives', 0);
     }
   },
   methods: {
@@ -57,6 +58,7 @@ export default {
   min-height: 300px;
   margin-top: 30px;
   padding: 30px 30px 20px 30px;
+  color: #555;
   font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background-color: #fff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.54);
@@ -71,7 +73,7 @@ export default {
     height: 220px;
     overflow: hidden;
 
-    @media (min-width: 1200px) and (max-width: 1300px) { 
+    @media (min-width: 1200px) and (max-width: 1300px) {
       height: 250px;
     }
   }
@@ -82,7 +84,7 @@ export default {
     font-size: 18px;
     text-align: left;
 
-    @media (min-width: 1200px) and (max-width: 1300px) { 
+    @media (min-width: 1200px) and (max-width: 1300px) {
       height: 125px;
     }
 
@@ -102,6 +104,16 @@ export default {
     margin-top: 20px;
     padding-top: 15px;
     border-top: 1px solid #ddd;
+    font-size: 16px;
+    color: #555;
+
+    .mdi-brightness-1 {
+      color: #8A7FA8;
+    }
+
+    .mdi-help {
+      color: #22B78D;
+    }
   }
 }
 </style>
