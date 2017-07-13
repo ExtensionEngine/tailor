@@ -1,7 +1,7 @@
 import calculatePosition from 'utils/calculatePosition.js';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import forEach from 'lodash/forEach';
+import { getDescendants as getDeepChildren } from '../../utils/activity.js';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
 import { OUTLINE_LEVELS } from 'shared/activities';
@@ -22,19 +22,7 @@ getter(function getParent() {
 });
 
 getter(function getDescendants() {
-  const getChildren = activity => filter(this.state.items, { parentId: activity.id });
-
-  return activity => {
-    let descendants = [];
-    const getDescendantsRecursively = children => {
-      if (isEmpty(children)) return descendants;
-      descendants = descendants.concat(children);
-      forEach(children, it => getDescendantsRecursively(getChildren(it)));
-      return descendants;
-    };
-
-    return getDescendantsRecursively(getChildren(activity));
-  };
+  return activity => getDeepChildren(this.state.items, activity);
 });
 
 getter(function getExamObjectives() {

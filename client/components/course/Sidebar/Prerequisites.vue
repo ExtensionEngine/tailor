@@ -30,16 +30,19 @@ import { mapActions, mapGetters } from 'vuex-module';
 import Select from '../../common/Select';
 import set from 'lodash/set';
 
+const equals = (a, b) => a.id === b.id;
+
 export default {
   name: 'prerequisites',
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
     ...mapGetters(['getDescendants'], 'activities'),
     options() {
+      const descendants = this.getDescendants(this.activity);
       return filter(this.activities, it => {
         return getLevel(it.type) &&
-          it.id !== this.activity.id &&
-          !includes(this.getDescendants(this.activity), it);
+          !equals(it, this.activity) &&
+          !includes(descendants, it);
       });
     },
     placeholder() {
