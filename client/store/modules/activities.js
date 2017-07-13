@@ -1,6 +1,7 @@
 import calculatePosition from 'utils/calculatePosition.js';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
 import { OUTLINE_LEVELS } from 'shared/activities';
@@ -17,6 +18,22 @@ getter(function getParent() {
   return activityId => {
     const activity = find(this.state.items, { id: activityId });
     return activity ? find(this.state.items, { id: activity.parentId }) : null;
+  };
+});
+
+getter(function getDescendants() {
+  const getChildren = activity => filter(this.state.items, { parentId: activity.id });
+
+  return activity => {
+    let descendants = [];
+    const getDescendantsRecursively = children => {
+      if (isEmpty(children)) return descendants;
+      descendants = descendants.concat(children);
+      forEach(children, it => getDescendantsRecursively(getChildren(it)));
+      return descendants;
+    };
+
+    return getDescendantsRecursively(getChildren(activity));
   };
 });
 
