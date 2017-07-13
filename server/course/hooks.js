@@ -9,9 +9,7 @@ const operations = ['CREATE', 'REMOVE'];
 
 function add(models) {
   zip(hooks, operations).forEach(hook => {
-    entities.forEach(entity => {
-      createHook(models, entity, hook);
-    });
+    entities.forEach(entity => createHook(models, entity, hook));
   });
 }
 
