@@ -41,7 +41,7 @@ export default {
       return isEmpty(this.options) ? 'No activities' : 'Select prerequisites';
     },
     prerequisites() {
-      const ids = get(this.activity, 'refs.prerequisiteIds', []);
+      const ids = get(this.activity, 'refs.prerequisites', []);
       const comparator = (activity, id) => activity.id === id;
       return intersectionWith(this.options, ids, comparator);
     }
@@ -50,7 +50,7 @@ export default {
     ...mapActions(['update'], 'activities'),
     onPrerequisitesChanged(prerequisites) {
       const activity = cloneDeep(this.activity) || {};
-      set(activity, 'refs.prerequisiteIds', map(prerequisites, 'id'));
+      set(activity, 'refs.prerequisites', map(prerequisites, 'id'));
       this.update(activity);
     }
   },
@@ -63,6 +63,7 @@ export default {
   padding: 3px 8px;
 
   label {
+    margin-bottom: 10px;
     color: #808080;
   }
 
