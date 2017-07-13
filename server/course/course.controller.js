@@ -76,7 +76,7 @@ function findOrCreateRole(course, user, role) {
 };
 
 function exportContentInventory({ course }, res) {
-  const activities = course.getActivities();
+  const activities = course.getActivities({ where: { detached: false } });
   const tes = course.getTeachingElements({ order: [['activityId', 'ASC']] });
   return Promise.all([activities, tes]).then(([activities, tes]) => {
     let workbook = createContentInventory(course, activities, tes);
