@@ -3,7 +3,9 @@
     <div @click="navigateTo" class="course-card">
       <div class="body">
         <div class="title">
-          <span :style="{ color }" class="acronym">{{ acronym }}</span>
+          <div :style="{ color }" class="acronym">
+            <span>{{ acronym }}</span>
+          </div>
           {{ name }}
         </div>
         <div class="description">{{ description }}</div>
@@ -103,12 +105,20 @@ export default {
 }
 
 .acronym {
-  width: 30px;
+  display: inline-block;
+  width: 45px;
+  height: 45px;
   margin-right: 8px;
-  padding: 6px 10px;
+  font-size: 18px;
   font-weight: 400;
-  border-radius: 2px;
+  text-align: center;
+  border-radius: 30px;
   background-color: #eee;
+
+  span {
+    display: inline-block;
+    padding-top: 6px;
+  }
 }
 
 .title {
