@@ -84,6 +84,7 @@ export default {
   padding: 30px 30px 20px 30px;
   color: #555;
   font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  border-radius: 3px;
   background-color: #fff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.54);
   transition: box-shadow 0.2s ease;
