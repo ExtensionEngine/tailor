@@ -40,6 +40,7 @@
           @update="updateActivity">
         </component>
       </div>
+      <prerequisites v-if="level.hasPrerequisites"></prerequisites>
     </div>
     <div v-else class="placeholder">
       <h4>Outline Sidebar</h4>
@@ -60,6 +61,7 @@ import { getLevel } from 'shared/activities';
 import Input from './Input';
 import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
+import Prerequisites from './Prerequisites';
 import Select from './Select';
 import Textarea from './Textarea';
 
@@ -85,10 +87,12 @@ export default {
     name() {
       return this.activity.name;
     },
+    level() {
+      return getLevel(this.activity.type);
+    },
     metadata() {
       if (!this.activity) return [];
-      const properties = getLevel(this.activity.type).meta;
-      return map(properties, it => {
+      return map(this.level.meta, it => {
         let value = get(this.activity, `data.${it.key}`);
         return { ...it, value };
       });
@@ -136,18 +140,20 @@ export default {
   components: {
     [Input.name]: Input,
     [Textarea.name]: Textarea,
-    [Select.name]: Select
+    [Select.name]: Select,
+    Prerequisites
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .course-sidebar {
-  position: fixed;
+  position: absolute;
   right: 0;
   width: 400px;
   height: 100%;
   padding: 30px 10px;
+  overflow: auto;
   text-align: left;
   border-top: 1px solid #e8e8e8;
   background-color: #fcfcfc;

@@ -31,8 +31,9 @@ export default {
 }
 
 .activities {
-  padding-right: 400px;
+  position: relative;
   height: 100%;
+  padding-right: 400px;
 }
 
 .outline {
@@ -40,6 +41,6 @@ export default {
   height: 100%;
   float: left;
   padding: 80px 60px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>
