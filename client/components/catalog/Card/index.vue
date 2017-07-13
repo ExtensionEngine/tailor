@@ -10,7 +10,7 @@
       </div>
       <div class="row">
         <span class="col-xs-6">
-          <stat name="Objectives" :value="objectives"></stat>
+          <stat :name="objectiveLabel" :value="objectives"></stat>
         </span>
         <span class="col-xs-6">
           <stat name="Knowledge checks" :value="assessments"></stat>
@@ -22,6 +22,9 @@
 
 <script>
 import get from 'lodash/get';
+import last from 'lodash/last';
+import { OUTLINE_LEVELS } from 'shared/activities';
+import pluralize from 'pluralize';
 import Stat from './Stat';
 import truncate from 'truncate';
 
@@ -46,6 +49,9 @@ export default {
     },
     color() {
       return COURSE_COLORS[(this.course.id || 0) % 3];
+    },
+    objectiveLabel() {
+      return pluralize(last(OUTLINE_LEVELS).label);
     },
     assessments() {
       return get(this.course, 'stats.assessments', 0);
