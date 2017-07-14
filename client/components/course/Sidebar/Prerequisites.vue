@@ -60,6 +60,7 @@ export default {
 
 <style lang="scss" scoped>
 .prerequisites {
+  margin-top: 40px;
   padding: 3px 8px;
 
   label {
