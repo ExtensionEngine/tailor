@@ -109,6 +109,9 @@ export default {
       border: none;
       font: inherit;
       background: inherit;
+      word-break: break-all;
+      word-wrap: break-word;
+      white-space: pre-wrap;
     }
   }
 }
