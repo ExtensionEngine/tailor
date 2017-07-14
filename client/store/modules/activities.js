@@ -1,6 +1,7 @@
 import calculatePosition from 'utils/calculatePosition.js';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import { getDescendants as getDeepChildren } from '../../utils/activity.js';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
 import { OUTLINE_LEVELS } from 'shared/activities';
@@ -18,6 +19,10 @@ getter(function getParent() {
     const activity = find(this.state.items, { id: activityId });
     return activity ? find(this.state.items, { id: activity.parentId }) : null;
   };
+});
+
+getter(function getDescendants() {
+  return activity => getDeepChildren(this.state.items, activity);
 });
 
 getter(function getExamObjectives() {

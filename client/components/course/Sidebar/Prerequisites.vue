@@ -22,6 +22,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
+import includes from 'lodash/includes';
 import intersectionWith from 'lodash/intersectionWith';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
@@ -33,9 +34,14 @@ export default {
   name: 'prerequisites',
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
+    ...mapGetters(['getDescendants'], 'activities'),
     options() {
-      const cond = it => getLevel(it.type) && it.id !== this.activity.id;
-      return filter(this.activities, cond);
+      const descendants = this.getDescendants(this.activity);
+      const isOutlineItem = it => getLevel(it.type);
+      const isSelectedItem = it => it.id === this.activity.id;
+      return filter(this.activities, it => {
+        return isOutlineItem(it) && !isSelectedItem(it) && !includes(descendants, it);
+      });
     },
     placeholder() {
       return isEmpty(this.options) ? 'No activities' : 'Select prerequisites';
