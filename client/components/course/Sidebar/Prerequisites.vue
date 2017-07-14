@@ -34,13 +34,15 @@ export default {
   name: 'prerequisites',
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
-    ...mapGetters(['getDescendants'], 'activities'),
+    ...mapGetters(['getDescendants', 'getAncestors'], 'activities'),
     options() {
       const descendants = this.getDescendants(this.activity);
+      const ancestors = this.getAncestors(this.activity);
+      const lineage = [...descendants, ...ancestors];
       const isOutlineItem = it => getLevel(it.type);
       const isSelectedItem = it => it.id === this.activity.id;
       return filter(this.activities, it => {
-        return isOutlineItem(it) && !isSelectedItem(it) && !includes(descendants, it);
+        return isOutlineItem(it) && !isSelectedItem(it) && !includes(lineage, it);
       });
     },
     placeholder() {
