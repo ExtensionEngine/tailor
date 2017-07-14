@@ -9,7 +9,7 @@ export function getChildren(activities, parentId, courseId) {
 export function getDescendants(activities, activity) {
   const children = filter(activities, { parentId: activity.id });
   if (!children.length) return [];
-  const descendants = children.reduce((acc, it) =>
-    acc.concat(getDescendants(activities, it)), []);
+  const reducer = (acc, it) => acc.concat(getDescendants(activities, it));
+  const descendants = children.reduce(reducer, []);
   return children.concat(descendants);
 }
