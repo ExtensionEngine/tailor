@@ -30,7 +30,7 @@ import pluralize from 'pluralize';
 import Stat from './Stat';
 import truncate from 'truncate';
 
-const COURSE_COLORS = ['#8BC34A', '#FF5722', '#2196F3'];
+const COURSE_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
 function getAcronym(name) {
   const reducer = (acc, it) => it ? `${acc}${it[0].toUpperCase()}` : acc;
