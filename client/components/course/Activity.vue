@@ -87,8 +87,8 @@ export default {
     },
     collapsibleIcon() {
       return {
-        'mdi mdi-chevron-up': this.isCollapsed(this.activity) && this.hasChildren,
-        'mdi mdi-chevron-down': !this.isCollapsed(this.activity) && this.hasChildren
+        'mdi mdi-chevron-down': this.isCollapsed(this.activity) && this.hasChildren,
+        'mdi mdi-chevron-up': !this.isCollapsed(this.activity) && this.hasChildren
       };
     }
   },
