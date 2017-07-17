@@ -1,5 +1,4 @@
 const find = require('lodash/find');
-const isNumber = require('lodash/isNumber');
 
 const ASSET_GROUP = 'PERSPECTIVE';
 const OUTLINE_LEVELS = [{
@@ -65,10 +64,8 @@ const OUTLINE_LEVELS = [{
   ]
 }];
 
-function getLevel(level) {
-  return isNumber(level)
-    ? OUTLINE_LEVELS[level - 1]
-    : find(OUTLINE_LEVELS, { type: level });
+function getLevel(type) {
+  return find(OUTLINE_LEVELS, { type });
 }
 
 module.exports = {
