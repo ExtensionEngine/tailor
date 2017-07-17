@@ -91,7 +91,7 @@ export default {
   cursor: pointer;
 
   &:hover {
-    box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.34);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   }
 
   .body {
