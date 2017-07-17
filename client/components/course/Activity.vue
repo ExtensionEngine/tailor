@@ -3,7 +3,7 @@
     <div v-if="!isRoot" class="activity-wrapper">
       <div
         :class="{ 'selected': isSelected(activity.id) }"
-        @click="select"
+        @click="focusActivity(_cid)"
         class="activity">
         <span :style="{ 'background-color': color }" class="position">
           {{ index + 1 }}
@@ -95,9 +95,6 @@ export default {
   methods: {
     ...mapMutations(['focusActivity', 'toggleActivity'], 'course'),
     ...mapActions({ updatePosition: 'reorder' }, 'activities'),
-    select() {
-      this.focusActivity(this._cid);
-    },
     isSelected(id) {
       return this.focusedActivity.id === id;
     },
