@@ -46,10 +46,13 @@
 
 <script>
 import Draggable from 'vuedraggable';
-import { getLevel, OUTLINE_LEVELS } from 'shared/activities';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
 import InsertActivity from './InsertActivity';
+import map from 'lodash/map';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import NoActivities from './NoActivities';
+import { OUTLINE_LEVELS } from 'shared/activities';
 import values from 'lodash/values';
 
 export default {
@@ -69,17 +72,17 @@ export default {
       return this.level === 0;
     },
     color() {
-      return OUTLINE_LEVELS[this.level - 1].color;
+      return find(OUTLINE_LEVELS, { type: this.activity.type }).color;
     },
     hasChildren() {
       return (this.children.length > 0) && (this.level < OUTLINE_LEVELS.length);
     },
     children() {
-      const childLevel = getLevel(this.level + 1);
-      const childType = childLevel ? childLevel.type : undefined;
+      const level = this.level + 1;
+      const types = map(filter(OUTLINE_LEVELS, { level }), 'type');
       const filterByParent = this.isRoot
-        ? act => !act.parentId && act.type === childType
-        : act => this.id && this.id === act.parentId && act.type === childType;
+        ? act => !act.parentId && types.includes(act.type)
+        : act => this.id && this.id === act.parentId && types.includes(act.type);
 
       return values(this.activities)
         .filter(filterByParent)
