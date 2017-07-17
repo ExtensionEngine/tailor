@@ -50,6 +50,7 @@
 
 <script>
 import calculatePosition from 'utils/calculatePosition';
+import filter from 'lodash/filter';
 import findIndex from 'lodash/findIndex';
 import { focus } from 'vue-focus';
 import { getLevel, OUTLINE_LEVELS } from 'shared/activities';
@@ -72,8 +73,10 @@ export default {
   computed: {
     ...mapGetters(['activities']),
     levels() {
-      let levels = OUTLINE_LEVELS.slice(this.level - 1, this.level + 1);
-      levels.forEach(it => { it.value = it.type; });
+      const nextLevel = this.level + 1;
+      const cond = it => (it.level === nextLevel) || (it.level === this.level);
+      let levels = filter(OUTLINE_LEVELS, cond);
+      levels.forEach(it => (it.value = it.type));
       return levels;
     },
     hasChildren() {
