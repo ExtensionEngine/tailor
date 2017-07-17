@@ -12,7 +12,7 @@
         <span class="actions pull-right">
           <span
             :class="collapsibleIcon"
-            @click.stop="isCollapsed = !isCollapsed"
+            @click.stop="toggleActivity(activity)"
             class="collapsible">
           </span>
         </span>
@@ -20,10 +20,10 @@
       <insert-activity
         :parent="activity"
         :level="level"
-        @expand="isCollapsed = false">
+        @expand="toggleActivity(activity, true)">
       </insert-activity>
     </div>
-    <div v-if="!isCollapsed && hasChildren">
+    <div v-if="!isCollapsed(this.activity) && hasChildren">
       <draggable :list="children" :options="dragOptions" @update="reorder">
         <activity
           v-for="(it, index) in children"
@@ -57,12 +57,14 @@ export default {
   props: ['_cid', 'id', 'name', 'position', 'level', 'activities', 'activity', 'index'],
   data() {
     return {
-      isCollapsed: this.level !== 0,
       dragOptions: { handle: '.activity' }
     };
   },
   computed: {
-    ...mapGetters({ focusedActivity: 'activity' }, 'course'),
+    ...mapGetters({
+      focusedActivity: 'activity',
+      isCollapsed: 'isCollapsed'
+    }, 'course'),
     isRoot() {
       return this.level === 0;
     },
@@ -85,13 +87,13 @@ export default {
     },
     collapsibleIcon() {
       return {
-        'mdi mdi-chevron-up': this.isCollapsed && this.hasChildren,
-        'mdi mdi-chevron-down': !this.isCollapsed && this.hasChildren
+        'mdi mdi-chevron-up': this.isCollapsed(this.activity) && this.hasChildren,
+        'mdi mdi-chevron-down': !this.isCollapsed(this.activity) && this.hasChildren
       };
     }
   },
   methods: {
-    ...mapMutations(['focusActivity'], 'course'),
+    ...mapMutations(['focusActivity', 'toggleActivity'], 'course'),
     ...mapActions({ updatePosition: 'reorder' }, 'activities'),
     select() {
       this.focusActivity(this._cid);
