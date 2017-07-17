@@ -1,4 +1,5 @@
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 
 export function getChildren(activities, parentId, courseId) {
   return filter(activities, it => {
@@ -12,4 +13,11 @@ export function getDescendants(activities, activity) {
   const reducer = (acc, it) => acc.concat(getDescendants(activities, it));
   const descendants = children.reduce(reducer, []);
   return children.concat(descendants);
+}
+
+export function getAncestors(activities, activity) {
+  const parent = find(activities, { id: activity.parentId });
+  if (!parent) return [];
+  const ancestors = getAncestors(activities, parent);
+  return [...ancestors, parent];
 }
