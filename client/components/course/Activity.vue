@@ -1,24 +1,30 @@
 <template>
   <div>
-    <div class="activity-wrapper" v-if="!isRoot">
-      <div class="activity" @click="select">
-        <span class="position" :style="{ 'background-color': color }">
+    <div v-if="!isRoot" class="activity-wrapper">
+      <div
+        :class="{ 'selected': isSelected(activity.id) }"
+        @click="focusActivity(_cid)"
+        class="activity">
+        <span :style="{ 'background-color': color }" class="position">
           {{ index + 1 }}
         </span>
-        <span class="collapsible" :class="collapsibleIcon"></span>
         <span class="activity-name">{{ name }}</span>
-        <span class="actions pull-right" v-if="isEditable">
-          <span @mousedown.stop="edit" class="mdi mdi-pencil"></span>
+        <span class="actions pull-right">
+          <span
+            :class="collapsibleIcon"
+            @click.stop="toggleActivity(activity)"
+            class="collapsible">
+          </span>
         </span>
       </div>
       <insert-activity
         :parent="activity"
         :level="level"
-        @expand="isCollapsed = false">
+        @expand="toggleActivity(activity, true)">
       </insert-activity>
     </div>
-    <div v-if="!isCollapsed && hasChildren">
-      <draggable @update="reorder" :options="dragOptions" :list="children">
+    <div v-if="!isCollapsed(this.activity) && hasChildren">
+      <draggable :list="children" :options="dragOptions" @update="reorder">
         <activity
           v-for="(it, index) in children"
           :key="it._cid"
@@ -40,9 +46,9 @@
 
 <script>
 import Draggable from 'vuedraggable';
-import { getLevel, isEditable, OUTLINE_LEVELS } from 'shared/activities';
+import { getLevel, OUTLINE_LEVELS } from 'shared/activities';
 import InsertActivity from './InsertActivity';
-import { mapActions, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import NoActivities from './NoActivities';
 import values from 'lodash/values';
 
@@ -51,19 +57,19 @@ export default {
   props: ['_cid', 'id', 'name', 'position', 'level', 'activities', 'activity', 'index'],
   data() {
     return {
-      isCollapsed: this.level !== 0,
       dragOptions: { handle: '.activity' }
     };
   },
   computed: {
+    ...mapGetters({
+      focusedActivity: 'activity',
+      isCollapsed: 'isCollapsed'
+    }, 'course'),
     isRoot() {
       return this.level === 0;
     },
     color() {
       return OUTLINE_LEVELS[this.level - 1].color;
-    },
-    isEditable() {
-      return isEditable(this.level);
     },
     hasChildren() {
       return (this.children.length > 0) && (this.level < OUTLINE_LEVELS.length);
@@ -81,24 +87,16 @@ export default {
     },
     collapsibleIcon() {
       return {
-        'fa fa-caret-right': this.isCollapsed && this.hasChildren,
-        'fa fa-caret-down': !this.isCollapsed && this.hasChildren
+        'mdi mdi-chevron-up': this.isCollapsed(this.activity) && this.hasChildren,
+        'mdi mdi-chevron-down': !this.isCollapsed(this.activity) && this.hasChildren
       };
     }
   },
   methods: {
-    ...mapMutations(['focusActivity'], 'course'),
+    ...mapMutations(['focusActivity', 'toggleActivity'], 'course'),
     ...mapActions({ updatePosition: 'reorder' }, 'activities'),
-    select() {
-      this.isCollapsed = !this.isCollapsed;
-      this.focusActivity(this._cid);
-    },
-    edit() {
-      if (!this.isEditable) return;
-      this.$router.push({
-        name: 'editor',
-        params: { activityId: this.activity.id }
-      });
+    isSelected(id) {
+      return this.focusedActivity.id === id;
     },
     reorder({ newIndex: newPosition }) {
       const items = this.children;
@@ -117,52 +115,61 @@ export default {
 </script>
 
 <style lang="scss">
-// TODO: Do proper styling
 .activity {
   position: relative;
-  padding: 10px;
-  font-size: 18px;
-  color: #555;
+  color: #444;
+  font-size: 16px;
   text-align: left;
   cursor: pointer;
   background-color: white;
+  border-radius: 3px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 
+  &.selected {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15), 0 2px 5px rgba(0,0,0,0.30);
+  }
+
   .position {
-    display: inline-block;
-    min-width: 30px;
+    position: absolute;
+    min-width: 40px;
+    height: 40px;
     margin-right: 7px;
-    padding: 0 10px;
+    padding: 6px 10px 0 10px;
     color: white;
+    font-size: 20px;
     text-align: center;
+    border-radius: 3px 0px 0px 3px;
   }
 
   .collapsible {
-    display: inline-block;
-    width: 13px;
     color: #bbb;
-    font-size: 16px;
+    font-size: 26px;
   }
 
   .activity-name {
     display: block;
-    width: 100%;
-    height: 45px;
-    position: absolute;
+    height: 40px;
+    position: relative;
     top: 0;
     left: 0;
-    padding: 10px 60px 0 75px;
+    padding: 10px 60px 0 55px;
+    color: #555;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
   }
 
   .actions {
-    position: relative;
+    position: absolute;
+    right: 0;
+    top: 0;
     padding-right: 5px;
-    font-size: 20px;
-    color: #999;
+
+    .mdi {
+      display: inline-block;
+      padding: 3px 5px;
+    }
 
     .mdi:hover {
       color: #707070;
@@ -200,6 +207,6 @@ export default {
 }
 
 .sub-activity {
-  margin-left: 50px;
+  margin-left: 40px;
 }
 </style>

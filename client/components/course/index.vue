@@ -22,6 +22,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import filter from 'lodash/filter';
+import sortBy from 'lodash/sortBy';
 
 export default {
   data() {
@@ -30,7 +31,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'activities'], 'course'),
+    ...mapGetters(['course', 'activities', 'activity'], 'course'),
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
     showSettings() {
       return this.isAdmin || this.isCourseAdmin;
@@ -47,15 +48,16 @@ export default {
   },
   created() {
     const { courseId } = this.$route.params;
-    this.resetActivityFocus();
+    const existingSelection = this.activity && this.activity.courseId === courseId;
+    if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
     this.setupActivityApi(`/courses/${courseId}/activities`);
     if (!this.course) this.getCourse(courseId);
     this.getActivities().then(() => {
       this.showLoader = false;
-      let activities = filter(this.activities, { parentId: null })
-        .sort((a, b) => a.position - b.position);
-      this.resetActivityFocus(activities[0]._cid);
+      let activities = filter(this.activities, { parentId: null });
+      activities = sortBy(activities, 'position');
+      if (!existingSelection) this.resetActivityFocus(activities[0]._cid);
     });
   }
 };
