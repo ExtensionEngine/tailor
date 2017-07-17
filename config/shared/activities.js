@@ -3,6 +3,7 @@ const isNumber = require('lodash/isNumber');
 
 const ASSET_GROUP = 'PERSPECTIVE';
 const OUTLINE_LEVELS = [{
+  level: 1,
   type: 'GOAL',
   label: 'Goal',
   color: '#42A5F5',
@@ -22,6 +23,7 @@ const OUTLINE_LEVELS = [{
     }
   ]
 }, {
+  level: 2,
   type: 'OBJECTIVE',
   label: 'Learning Objective',
   color: '#66BB6A',
@@ -41,10 +43,12 @@ const OUTLINE_LEVELS = [{
     }
   ]
 }, {
+  level: 3,
   type: 'TOPIC',
   label: 'Topic',
   color: '#EC407A',
   isEditable: true,
+  isObjective: true,
   hasIntroduction: false,
   hasPerspectives: true,
   hasAssessments: true,
