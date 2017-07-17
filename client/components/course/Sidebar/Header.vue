@@ -5,9 +5,9 @@
         <span class="mdi mdi-delete"></span>
       </div>
     </div>
-    <div v-show="isEditable" @click.stop="edit" class="btn btn-fab btn-primary">
+    <button v-show="isEditable" @click.stop="edit" class="btn btn-fab btn-primary">
       <span class="mdi mdi-pencil"></span>
-    </div>
+    </button>
   </div>
 </template>
 
@@ -23,17 +23,17 @@ export default {
     ...mapGetters(['activity'], 'course'),
     isEditable() {
       return isEditable(this.activity.type);
-    },
+    }
+  },
+  methods: {
+    ...mapActions(['remove'], 'activities'),
     edit() {
       if (!this.isEditable) return;
       this.$router.push({
         name: 'editor',
         params: { activityId: this.activity.id }
       });
-    }
-  },
-  methods: {
-    ...mapActions(['remove'], 'activities'),
+    },
     deleteActivity() {
       appChannel.emit('showConfirmationModal', {
         type: 'activity',
