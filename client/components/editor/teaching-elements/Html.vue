@@ -12,7 +12,7 @@
       <quill-editor
         v-if="isFocused"
         v-model="content"
-        :config="config"
+        :options="config"
         @ready="onQuillReady"
         ref="quill">
       </quill-editor>
@@ -41,11 +41,13 @@ export default {
   methods: {
     onQuillReady(quill) {
       quill.focus();
+      if (quill.root) {
+        quill.root.innerHTML = this.content;
+      }
     },
     save() {
-      if (!this.$refs.quill || !this.hasChanges) return;
-      const text = this.$refs.quill.quillEditor.getText().trim();
-      this.$emit('save', { content: text ? this.content : '' });
+      if (!this.hasChanges) return;
+      this.$emit('save', { content: this.content });
     }
   },
   computed: {
