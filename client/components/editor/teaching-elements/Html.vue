@@ -12,7 +12,7 @@
       <quill-editor
         v-if="isFocused"
         v-model="content"
-        :options="config"
+        :options="options"
         @ready="onQuillReady"
         ref="quill">
       </quill-editor>
@@ -35,7 +35,7 @@ export default {
     return {
       content: '',
       ...cloneDeep(this.element.data),
-      config: { modules: { toolbar: '#quillToolbar' } }
+      options: { modules: { toolbar: '#quillToolbar' } }
     };
   },
   methods: {
