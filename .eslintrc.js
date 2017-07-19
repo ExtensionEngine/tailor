@@ -19,6 +19,8 @@ module.exports = {
     'generator-star-spacing': 'off',
     // allow debugger during development
     'no-debugger': isDev ? 'warn' : 'error',
+    // allow dead code during development
+    'no-unreachable': isDev ? 'warn' : 'error',
     // semicolons are necessary
     'semi': ['warn', 'always'],
     // add space before function parameters
@@ -27,4 +29,4 @@ module.exports = {
       named: 'never'
     }]
   }
-}
+};

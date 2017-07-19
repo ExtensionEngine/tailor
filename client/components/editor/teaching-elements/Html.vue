@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
+import get from 'lodash/get';
 import { quillEditor } from 'vue-quill-editor';
 
 export default {
@@ -33,8 +33,7 @@ export default {
   props: ['element', 'isFocused'],
   data() {
     return {
-      content: '',
-      ...cloneDeep(this.element.data),
+      content: get(this.element, 'data.content', ''),
       options: { modules: { toolbar: '#quillToolbar' } }
     };
   },
@@ -52,13 +51,13 @@ export default {
   },
   computed: {
     hasChanges() {
-      const previousValue = this.element.data.content || '';
+      const previousValue = get(this.element, 'data.content', '');
       return previousValue !== this.content;
     }
   },
   watch: {
     element(val) {
-      this.content = val.data.content;
+      this.content = get(val, 'data.content', '');
     },
     isFocused(val, oldVal) {
       if (oldVal && !val) this.save();
