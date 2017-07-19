@@ -13,8 +13,7 @@
         v-if="isFocused"
         v-model="content"
         :options="options"
-        @ready="onQuillReady"
-        ref="quill">
+        @ready="onQuillReady">
       </quill-editor>
       <div v-else class="ql-container ql-snow">
         <div v-html="content" class="ql-editor"></div>
