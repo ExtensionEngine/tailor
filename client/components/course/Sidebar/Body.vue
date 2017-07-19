@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import Checkbox from './Checkbox';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
@@ -48,7 +49,8 @@ const noop = Function.prototype;
 const META_TYPES = {
   INPUT: Input,
   TEXTAREA: Textarea,
-  SELECT: Select
+  SELECT: Select,
+  CHECKBOX: Checkbox
 };
 
 export default {
@@ -110,6 +112,7 @@ export default {
     [Input.name]: Input,
     [Textarea.name]: Textarea,
     [Select.name]: Select,
+    [Checkbox.name]: Checkbox,
     Prerequisites
   }
 };
