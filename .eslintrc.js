@@ -3,14 +3,12 @@ const isDev = process.env.NODE_ENV === 'development';
 module.exports = {
   root: true,
   parser: 'babel-eslint',
-  parserOptions: {
-    sourceType: 'module'
-  },
+  parserOptions: { sourceType: 'module' },
   // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
   extends: 'standard',
   // required to lint *.vue files
-  plugins: [ 'html' ],
-  'rules': {
+  plugins: ['html'],
+  rules: {
     // allow paren-less arrow functions
     'arrow-parens': 'off',
     // warn if there is a trailing comma

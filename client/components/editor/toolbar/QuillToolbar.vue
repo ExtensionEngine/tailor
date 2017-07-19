@@ -1,5 +1,6 @@
 <template>
   <div
+    @mousedown.prevent=""
     id="quillToolbar"
     class="quill-toolbar">
     <span class="ql-formats">
