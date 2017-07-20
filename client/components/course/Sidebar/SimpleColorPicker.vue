@@ -52,11 +52,12 @@ export default {
   data() {
     return {
       colors: this.meta.colors || defaultColors,
-      value: null
+      value: this.meta.value
     };
   },
   methods: {
     select(color) {
+      if (this.value === color) return;
       this.value = color;
       this.$emit('update', this.meta.key, color);
     },
