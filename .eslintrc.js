@@ -3,14 +3,12 @@ const isDev = process.env.NODE_ENV === 'development';
 module.exports = {
   root: true,
   parser: 'babel-eslint',
-  parserOptions: {
-    sourceType: 'module'
-  },
+  parserOptions: { sourceType: 'module' },
   // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
   extends: 'standard',
   // required to lint *.vue files
-  plugins: [ 'html' ],
-  'rules': {
+  plugins: ['html'],
+  rules: {
     // allow paren-less arrow functions
     'arrow-parens': 'off',
     // warn if there is a trailing comma
@@ -19,6 +17,8 @@ module.exports = {
     'generator-star-spacing': 'off',
     // allow debugger during development
     'no-debugger': isDev ? 'warn' : 'error',
+    // allow dead code during development
+    'no-unreachable': isDev ? 'warn' : 'error',
     // semicolons are necessary
     'semi': ['warn', 'always'],
     // add space before function parameters
@@ -27,4 +27,4 @@ module.exports = {
       named: 'never'
     }]
   }
-}
+};

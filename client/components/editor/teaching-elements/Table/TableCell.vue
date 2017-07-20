@@ -4,7 +4,7 @@
       <quill-editor
         v-if="isFocused"
         v-model="content"
-        :config="config"
+        :options="options"
         @ready="onQuillReady">
       </quill-editor>
       <div v-else class="ql-container ql-snow">
@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       content: get(this.element, 'data.content', ''),
-      config: { placeholder: '', modules: { toolbar: '#tableToolbar' } }
+      options: { placeholder: '', modules: { toolbar: '#tableToolbar' } }
     };
   },
   computed: {
@@ -47,6 +47,9 @@ export default {
     ...mapMutations(['focusElement'], 'editor'),
     onQuillReady(quill) {
       quill.focus();
+      if (quill.root) {
+        quill.root.innerHTML = this.content;
+      }
     },
     focus(e) {
       this.focusElement(this.element);
@@ -61,7 +64,7 @@ export default {
   },
   watch: {
     element(val) {
-      this.content = val.data.content;
+      this.content = get(val, 'data.content', '');
     },
     isFocused(val, oldVal) {
       if (oldVal && !val && this.hasChanges) {
