@@ -21,7 +21,6 @@
 
 <script>
 import { Chrome as ColorPicker } from 'vue-color';
-console.log(ColorPicker);
 
 export default {
   props: ['value'],

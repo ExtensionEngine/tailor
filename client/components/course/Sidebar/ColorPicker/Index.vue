@@ -1,36 +1,38 @@
 <template>
   <div class="picker control">
-    <span class="title">{{ meta.label }}</span>
-    <div class="preview">
-      <div
-        @click="showInput = true"
-        :style="{ background: value }"
-        class="selected">
-        <i class="mdi mdi-eyedropper eyedropper"></i>
-      </div>
-    </div>
-    <ul class="colors control-group">
-      <li
-        v-for="group in colors"
-        class="column">
-        <ul>
-          <li
-            v-for="color in group"
-            @click="select(color)"
-            :style="{ background: color }"
-            :class="{ white: equals(color, white) }"
-            class="tile">
-            <div v-if="equals(color, selected)" class="dot"></div>
-          </li>
-        </ul>
-      </li>
-    </ul>
     <color-input
       v-if="showInput"
       :value="value"
       @close="showInput = false"
       @input="color => select(color)">
     </color-input>
+    <div v-else>
+      <span class="title">{{ meta.label }}</span>
+      <div class="preview">
+        <div
+          @click="showInput = true"
+          :style="{ background: value }"
+          class="selected">
+          <i class="mdi mdi-eyedropper eyedropper"></i>
+        </div>
+      </div>
+      <ul class="colors control-group">
+        <li
+          v-for="group in colors"
+          class="column">
+          <ul>
+            <li
+              v-for="color in group"
+              @click="select(color)"
+              :style="{ background: color }"
+              :class="{ white: equals(color, white) }"
+              class="tile">
+              <div v-if="equals(color, selected)" class="dot"></div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
