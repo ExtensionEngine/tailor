@@ -143,6 +143,7 @@ export default {
     width: 20px;
     height: 34px;
     padding: 0;
+    transition: none;
   }
 
   .multiselect__single, .multiselect__tags {

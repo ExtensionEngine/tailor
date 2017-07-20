@@ -9,13 +9,13 @@
           {{ index + 1 }}
         </span>
         <span class="activity-name">{{ name }}</span>
-        <span class="actions pull-right">
-          <span
-            :class="collapsibleIcon"
+        <div class="actions">
+          <button
             @click.stop="toggleActivity(activity)"
             class="collapsible">
-          </span>
-        </span>
+            <span :class="collapsibleIcon"></span>
+          </button>
+        </div>
       </div>
       <insert-activity
         :parent="activity"
@@ -90,8 +90,8 @@ export default {
     },
     collapsibleIcon() {
       return {
-        'mdi mdi-chevron-up': this.isCollapsed(this.activity) && this.hasChildren,
-        'mdi mdi-chevron-down': !this.isCollapsed(this.activity) && this.hasChildren
+        'mdi mdi-chevron-down': this.isCollapsed(this.activity) && this.hasChildren,
+        'mdi mdi-chevron-up': !this.isCollapsed(this.activity) && this.hasChildren
       };
     }
   },
@@ -146,8 +146,13 @@ export default {
   }
 
   .collapsible {
+    padding: 7px 5px 6px 5px;
     color: #bbb;
     font-size: 26px;
+    line-height: 26px;
+    background: none;
+    border: none;
+    outline: none;
   }
 
   .activity-name {
@@ -168,11 +173,6 @@ export default {
     right: 0;
     top: 0;
     padding-right: 5px;
-
-    .mdi {
-      display: inline-block;
-      padding: 3px 5px;
-    }
 
     .mdi:hover {
       color: #707070;

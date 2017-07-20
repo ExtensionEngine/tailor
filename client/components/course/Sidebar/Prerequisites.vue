@@ -29,27 +29,32 @@ import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Select from '../../common/Select';
 import set from 'lodash/set';
+import without from 'lodash/without';
+
+const getPrerequisites = activity => get(activity, 'refs.prerequisites', []);
+const isPrerequisiteOf = (activity, other) => includes(getPrerequisites(other), activity.id);
 
 export default {
   name: 'prerequisites',
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
-    ...mapGetters(['getDescendants', 'getAncestors'], 'activities'),
+    ...mapGetters(['getLineage'], 'activities'),
     options() {
-      const descendants = this.getDescendants(this.activity);
-      const ancestors = this.getAncestors(this.activity);
-      const lineage = [...descendants, ...ancestors];
+      const activities = without(this.activities, this.activity);
+      const lineage = this.getLineage(this.activity);
       const isOutlineItem = it => getLevel(it.type);
-      const isSelectedItem = it => it.id === this.activity.id;
-      return filter(this.activities, it => {
-        return isOutlineItem(it) && !isSelectedItem(it) && !includes(lineage, it);
+      const isInsideLinenage = it => includes(lineage, it);
+      return filter(activities, it => {
+        return isOutlineItem(it) &&
+          !isInsideLinenage(it) &&
+          !isPrerequisiteOf(this.activity, it);
       });
     },
     placeholder() {
       return isEmpty(this.options) ? 'No activities' : 'Select prerequisites';
     },
     prerequisites() {
-      const ids = get(this.activity, 'refs.prerequisites', []);
+      const ids = getPrerequisites(this.activity);
       const comparator = (activity, id) => activity.id === id;
       return intersectionWith(this.options, ids, comparator);
     }
