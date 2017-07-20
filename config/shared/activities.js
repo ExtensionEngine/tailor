@@ -1,3 +1,4 @@
+const filter = require('lodash/filter');
 const find = require('lodash/find');
 
 const ASSET_GROUP = 'PERSPECTIVE';
@@ -70,6 +71,7 @@ function getLevel(type) {
 
 module.exports = {
   OUTLINE_LEVELS,
+  OBJECTIVES: filter(OUTLINE_LEVELS, { isObjective: true }),
   ASSET_GROUP,
   getLevel,
   isEditable: level => getLevel(level).isEditable,
