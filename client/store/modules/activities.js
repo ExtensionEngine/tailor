@@ -32,6 +32,14 @@ getter(function getAncestors() {
   return activity => getParents(this.state.items, activity);
 });
 
+getter(function getLineage() {
+  return activity => {
+    const ancestors = getParents(this.state.items, activity);
+    const descendants = getDeepChildren(this.state.items, activity);
+    return [...ancestors, ...descendants];
+  };
+});
+
 getter(function getExamObjectives() {
   const getChildren = activity => {
     let condition = it => it.parentId === activity.id && it.type !== 'EXAM';
