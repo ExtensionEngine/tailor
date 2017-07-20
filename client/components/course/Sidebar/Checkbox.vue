@@ -1,5 +1,5 @@
 <template>
-  <div class="checkbox">
+  <div class="checkbox control">
     <span class="title">{{ meta.label }}</span>
     <div class="control-group">
       <label
@@ -7,6 +7,7 @@
         :class="{ checked: value }">
         <input
           v-model="value"
+          @change="$emit('update', meta.key, value)"
           :ref="meta.key"
           :id="meta.key"
           :name="meta.key"
@@ -31,7 +32,7 @@ export default {
 $border: #9c9c9c;
 $fill: #337ab7;
 
-.checkbox {
+.control {
   padding: 3px 8px;
   &:hover { background-color: #f5f5f5; };
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="switch">
+  <div class="switch control">
     <span class="title">{{ meta.label }}</span>
     <div class="control-group">
       <label
@@ -7,6 +7,7 @@
         :class="{ checked: value }">
         <input
           v-model="value"
+          @change="$emit('update', meta.key, value)"
           :ref="meta.key"
           :id="meta.key"
           :name="meta.key"
@@ -37,14 +38,9 @@ $unchecked: #949494;
 $lever-checked: lighten($checked, 25%);
 $lever-unchecked: lighten($unchecked, 25%);
 
-.switch {
+.control {
   padding: 3px 8px;
   &:hover { background-color: #f5f5f5; };
-
-  * {
-    tap-highlight-color: transparent;
-    user-select: none;
-  }
 }
 
 .title {
@@ -66,6 +62,11 @@ $lever-unchecked: lighten($unchecked, 25%);
   top: 1px;
   margin-left: 46px;
   font-size: 17px;
+}
+
+.switch * {
+  tap-highlight-color: transparent;
+  user-select: none;
 }
 
 input[type=checkbox] {

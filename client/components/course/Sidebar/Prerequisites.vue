@@ -31,7 +31,7 @@ import Select from '../../common/Select';
 import set from 'lodash/set';
 
 export default {
-  name: 'prerequisites',
+  name: 'Prerequisites',
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
     ...mapGetters(['getDescendants', 'getAncestors'], 'activities'),
