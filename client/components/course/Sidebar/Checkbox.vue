@@ -51,11 +51,11 @@ $fill: #337ab7;
 }
 
 .description {
-  padding-left: 30px;
+  margin-left: 30px;
   font-size: 17px;
 }
 
-input {
+input[type=checkbox] {
   position: absolute;
   left: -9999px;
   opacity: 0;
@@ -73,7 +73,7 @@ label {
 
 label:before,
 label:after {
-  content: '';
+  content: "";
   left: 0;
   position: absolute;
   transition:

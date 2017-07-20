@@ -41,16 +41,18 @@ import Input from './Input';
 import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Prerequisites from './Prerequisites';
+import Switch from './Switch';
 import Select from './Select';
 import Textarea from './Textarea';
 
 const noop = Function.prototype;
 
 const META_TYPES = {
+  CHECKBOX: Checkbox,
   INPUT: Input,
-  TEXTAREA: Textarea,
   SELECT: Select,
-  CHECKBOX: Checkbox
+  SWITCH: Switch,
+  TEXTAREA: Textarea
 };
 
 export default {
@@ -109,10 +111,11 @@ export default {
     }
   },
   components: {
-    [Input.name]: Input,
-    [Textarea.name]: Textarea,
-    [Select.name]: Select,
     [Checkbox.name]: Checkbox,
+    [Input.name]: Input,
+    [Select.name]: Select,
+    [Switch.name]: Switch,
+    [Textarea.name]: Textarea,
     Prerequisites
   }
 };
