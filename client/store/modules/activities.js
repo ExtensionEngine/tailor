@@ -41,7 +41,8 @@ getter(function getLineage() {
 getter(function getExamObjectives() {
   const getObjectives = activity => {
     let children = getDeepChildren(this.state.items, activity);
-    return filter(children, it => map(OBJECTIVES, 'type').includes(it.type));
+    let objectiveTypes = map(OBJECTIVES, 'type');
+    return filter(children, it => objectiveTypes.includes(it.type));
   };
 
   return exam => getObjectives(find(this.state.items, { id: exam.parentId }));
