@@ -42,7 +42,7 @@ import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Prerequisites from './Prerequisites';
 import Select from './Select';
-import SimpleColorPicker from './SimpleColorPicker';
+import ColorPicker from './ColorPicker/';
 import Switch from './Switch';
 import Textarea from './Textarea';
 
@@ -50,7 +50,7 @@ const noop = Function.prototype;
 
 const META_TYPES = {
   CHECKBOX: Checkbox,
-  COLOR: SimpleColorPicker,
+  COLOR: ColorPicker,
   INPUT: Input,
   SELECT: Select,
   SWITCH: Switch,
@@ -118,8 +118,8 @@ export default {
     [Select.name]: Select,
     [Switch.name]: Switch,
     [Textarea.name]: Textarea,
-    Prerequisites,
-    SimpleColorPicker
+    ColorPicker,
+    Prerequisites
   }
 };
 </script>

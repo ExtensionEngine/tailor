@@ -1,6 +1,14 @@
 <template>
   <div class="picker control">
     <span class="title">{{ meta.label }}</span>
+    <div class="preview">
+      <div
+        @click="showInput = true"
+        :style="{ background: value }"
+        class="selected">
+        <i class="mdi mdi-eyedropper eyedropper"></i>
+      </div>
+    </div>
     <ul class="colors control-group">
       <li
         v-for="group in colors"
@@ -17,11 +25,18 @@
         </ul>
       </li>
     </ul>
+    <color-input
+      v-if="showInput"
+      :value="value"
+      @close="showInput = false"
+      @input="color => select(color)">
+    </color-input>
   </div>
 </template>
 
 <script>
 import get from 'lodash/get';
+import ColorInput from './ColorInput';
 
 const defaultColors = [
   ['#4D4D4D', '#333333', '#000000'],
@@ -39,7 +54,7 @@ const defaultColors = [
 ];
 
 export default {
-  name: 'SimpleColorPicker',
+  name: 'ColorPicker',
   props: ['meta'],
   computed: {
     selected() {
@@ -51,6 +66,7 @@ export default {
   },
   data() {
     return {
+      showInput: false,
       colors: this.meta.colors || defaultColors,
       value: this.meta.value
     };
@@ -64,7 +80,8 @@ export default {
     equals(color1 = '', color2 = '') {
       return color1.trim().toLowerCase() === color2.trim().toLowerCase();
     }
-  }
+  },
+  components: { ColorInput }
 };
 
 </script>
@@ -97,6 +114,30 @@ ul {
   padding: 0;
 }
 
+.preview {
+  float: left;
+  margin-right: 10px;
+}
+
+.selected {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
+
+  .eyedropper {
+    font-size: 18px;
+    line-height: 40px;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover .eyedropper { opacity: 1; }
+}
+
 .colors {
   overflow: auto
 }
@@ -112,10 +153,10 @@ ul {
   position: relative;
   list-style: none;
   cursor: pointer;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
   margin: 0 $gutter $gutter 0;
   &:last-child { margin-bottom: 0; }
-
-  &.white { box-shadow: inset 0 0 0 1px #ddd; }
 }
 
 .dot {
@@ -132,5 +173,4 @@ ul {
   background: #fff;
   .white & { background: #000; }
 }
-
 </style>
