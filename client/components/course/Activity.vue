@@ -33,7 +33,7 @@
           :name="it.name"
           :position="it.position"
           :index="index"
-          :level="level + 1"
+          :level="isRoot ? 1 : level + 1"
           :class="{ 'sub-activity': name }"
           :activities="activities"
           :activity="it">

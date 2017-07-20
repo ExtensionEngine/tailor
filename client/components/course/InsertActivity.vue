@@ -51,6 +51,7 @@
 <script>
 import calculatePosition from 'utils/calculatePosition';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import { focus } from 'vue-focus';
 import { getLevel, OUTLINE_LEVELS } from 'shared/activities';
@@ -95,7 +96,8 @@ export default {
     },
     add() {
       this.$validator.validateAll().then(() => {
-        const sameLevel = this.activityType === this.levels[0].type;
+        const OUTLINE_LEVEL = find(OUTLINE_LEVELS, { type: this.activityType });
+        const sameLevel = OUTLINE_LEVEL.level === this.level;
         const parentId = sameLevel ? this.parent.parentId : this.parent.id;
         const courseId = this.parent.courseId;
         const items = getChildren(this.activities, parentId, courseId);
