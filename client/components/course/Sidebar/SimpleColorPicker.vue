@@ -70,7 +70,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$size: 15px;
+$size: 18px;
 $gutter: 5px;
 
 .control {
