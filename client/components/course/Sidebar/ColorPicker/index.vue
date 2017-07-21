@@ -3,6 +3,7 @@
     <span class="title">{{ meta.label }}</span>
     <color-input
       v-if="showInput"
+      ref="picker"
       :value="selected"
       @close="showInput = false"
       @input="color => select(color)"
@@ -11,7 +12,7 @@
     <div v-else>
       <div class="preview">
         <div
-          @click="showInput = true"
+          @click="showPicker()"
           :style="{ background: selected }"
           class="selected">
           <i class="mdi mdi-eyedropper eyedropper"></i>
@@ -75,6 +76,10 @@ export default {
     };
   },
   methods: {
+    showPicker() {
+      this.showInput = true;
+      setTimeout(() => this.$refs.picker.$el.scrollIntoView(), 0);
+    },
     select(color) {
       if (this.value === color) return;
       this.value = color;
