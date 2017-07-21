@@ -82,15 +82,19 @@ export default {
   }
 
   &__active-color {
-    margin-top: 2px;
     width: 24px;
     height: 24px;
+    margin-top: 2px;
     border-radius: 50%;
   }
 }
 
 .vue-color__chrome /deep/ .vue-color__editable-input {
-  &__label { color: #222; }
+  &__label {
+    display: none;
+    color: #222;
+  }
+
   &__input {
     background: #efefef;
     color: #222;
