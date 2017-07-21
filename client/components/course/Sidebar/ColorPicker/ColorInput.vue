@@ -52,7 +52,7 @@ export default {
 
   .actions {
     display: inline-block;
-    padding-top: 10px;
+    padding-top: 8px;
 
     .btn { margin-right: 5px; }
   }
@@ -96,8 +96,11 @@ export default {
   }
 
   &__input {
-    background: #efefef;
+    height: 24px;
+    font-family: "Roboto";
+    font-size: 13px;
     color: #222;
+    background: #fdfdfd;
   }
 }
 </style>
