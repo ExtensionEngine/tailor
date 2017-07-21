@@ -9,13 +9,13 @@
           {{ index + 1 }}
         </span>
         <span class="activity-name">{{ name }}</span>
-        <span class="actions pull-right">
-          <span
-            :class="collapsibleIcon"
+        <div class="actions">
+          <button
             @click.stop="toggleActivity(activity)"
             class="collapsible">
-          </span>
-        </span>
+            <span :class="collapsibleIcon"></span>
+          </button>
+        </div>
       </div>
       <insert-activity
         :parent="activity"
@@ -33,7 +33,7 @@
           :name="it.name"
           :position="it.position"
           :index="index"
-          :level="level + 1"
+          :level="isRoot ? 1 : level + 1"
           :class="{ 'sub-activity': name }"
           :activities="activities"
           :activity="it">
@@ -46,10 +46,13 @@
 
 <script>
 import Draggable from 'vuedraggable';
-import { getLevel, OUTLINE_LEVELS } from 'shared/activities';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
 import InsertActivity from './InsertActivity';
+import map from 'lodash/map';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import NoActivities from './NoActivities';
+import { OUTLINE_LEVELS } from 'shared/activities';
 import values from 'lodash/values';
 
 export default {
@@ -69,17 +72,17 @@ export default {
       return this.level === 0;
     },
     color() {
-      return OUTLINE_LEVELS[this.level - 1].color;
+      return find(OUTLINE_LEVELS, { type: this.activity.type }).color;
     },
     hasChildren() {
       return (this.children.length > 0) && (this.level < OUTLINE_LEVELS.length);
     },
     children() {
-      const childLevel = getLevel(this.level + 1);
-      const childType = childLevel ? childLevel.type : undefined;
+      const level = this.level + 1;
+      const types = map(filter(OUTLINE_LEVELS, { level }), 'type');
       const filterByParent = this.isRoot
-        ? act => !act.parentId && act.type === childType
-        : act => this.id && this.id === act.parentId && act.type === childType;
+        ? act => !act.parentId && types.includes(act.type)
+        : act => this.id && this.id === act.parentId && types.includes(act.type);
 
       return values(this.activities)
         .filter(filterByParent)
@@ -143,8 +146,13 @@ export default {
   }
 
   .collapsible {
+    padding: 7px 5px 6px 5px;
     color: #bbb;
     font-size: 26px;
+    line-height: 26px;
+    background: none;
+    border: none;
+    outline: none;
   }
 
   .activity-name {
@@ -165,11 +173,6 @@ export default {
     right: 0;
     top: 0;
     padding-right: 5px;
-
-    .mdi {
-      display: inline-block;
-      padding: 3px 5px;
-    }
 
     .mdi:hover {
       color: #707070;

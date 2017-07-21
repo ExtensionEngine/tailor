@@ -5,10 +5,8 @@ import {
   getDescendants as getDeepChildren,
   getAncestors as getParents
 } from 'utils/activity.js';
-import isEmpty from 'lodash/isEmpty';
-import last from 'lodash/last';
-import { OUTLINE_LEVELS } from 'shared/activities';
-import reduce from 'lodash/reduce';
+import map from 'lodash/map';
+import { OBJECTIVES } from 'shared/activities';
 import VuexCollection from '../helpers/collection.js';
 
 const { getter, action, mutation, build } = new VuexCollection('activities');
@@ -32,20 +30,22 @@ getter(function getAncestors() {
   return activity => getParents(this.state.items, activity);
 });
 
+getter(function getLineage() {
+  return activity => {
+    const ancestors = getParents(this.state.items, activity);
+    const descendants = getDeepChildren(this.state.items, activity);
+    return [...ancestors, ...descendants];
+  };
+});
+
 getter(function getExamObjectives() {
-  const getChildren = activity => {
-    let condition = it => it.parentId === activity.id && it.type !== 'EXAM';
-    return filter(this.state.items, condition);
+  const getObjectives = activity => {
+    let children = getDeepChildren(this.state.items, activity);
+    let objectiveTypes = map(OBJECTIVES, 'type');
+    return filter(children, it => objectiveTypes.includes(it.type));
   };
 
-  const getOutlineLeafs = (items, leafType = last(OUTLINE_LEVELS).type) => {
-    if (isEmpty(items)) return [];
-    if (items[0].type === leafType) return items;
-    items = reduce(items, (acc, it) => acc.concat(getChildren(it)), []);
-    return getOutlineLeafs(items, leafType);
-  };
-
-  return exam => getOutlineLeafs([find(this.state.items, { id: exam.parentId })]);
+  return exam => getObjectives(find(this.state.items, { id: exam.parentId }));
 });
 
 action(function reorder({ activity, context }) {
