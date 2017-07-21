@@ -1,17 +1,18 @@
 <template>
   <div class="picker control">
+    <span class="title">{{ meta.label }}</span>
     <color-input
       v-if="showInput"
-      :value="value"
+      :value="selected"
       @close="showInput = false"
-      @input="color => select(color)">
+      @input="color => select(color)"
+      class="picker">
     </color-input>
     <div v-else>
-      <span class="title">{{ meta.label }}</span>
       <div class="preview">
         <div
           @click="showInput = true"
-          :style="{ background: value }"
+          :style="{ background: selected }"
           class="selected">
           <i class="mdi mdi-eyedropper eyedropper"></i>
         </div>
@@ -104,11 +105,15 @@ $gutter: 5px;
 }
 
 .control-group {
-  margin: 5px 0px 5px 0;
+  margin: 5px 0 5px 0;
   line-height: 24px;
   word-wrap: break-word;
   font-weight: normal;
   color: #333;
+}
+
+.picker {
+  padding-bottom: 10px;
 }
 
 ul {
@@ -134,7 +139,7 @@ ul {
     line-height: 40px;
     color: #fff;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity .3s ease;
   }
 
   &:hover .eyedropper { opacity: 1; }

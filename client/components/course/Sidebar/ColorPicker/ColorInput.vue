@@ -49,7 +49,6 @@ export default {
 
 .input {
   text-align: center;
-  padding: 10px 0;
 
   .actions {
     display: inline-block;

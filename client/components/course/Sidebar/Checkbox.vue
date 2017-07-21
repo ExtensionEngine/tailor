@@ -44,7 +44,7 @@ $fill: #337ab7;
 }
 
 .control-group {
-  margin: 5px 0px 5px 0;
+  margin: 5px 0 5px 0;
   line-height: 24px;
   word-wrap: break-word;
   font-weight: normal;
