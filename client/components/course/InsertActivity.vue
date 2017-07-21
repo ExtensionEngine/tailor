@@ -74,9 +74,17 @@ export default {
   computed: {
     ...mapGetters(['activities']),
     levels() {
+      const parent = find(OUTLINE_LEVELS, { type: this.parent.type });
       const nextLevel = this.level + 1;
-      const cond = it => (it.level === nextLevel) || (it.level === this.level);
+      let cond = it => (it.level === nextLevel) || (it.level === this.level);
       let levels = filter(OUTLINE_LEVELS, cond);
+
+      if (parent && parent.subLevels) {
+        const subLevels = parent.subLevels;
+        let cond = it => (it.level !== nextLevel) || subLevels.includes(it.type);
+        levels = filter(levels, cond);
+      }
+
       levels.forEach(it => (it.value = it.type));
       return levels;
     },

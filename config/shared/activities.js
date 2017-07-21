@@ -5,6 +5,7 @@ const ASSET_GROUP = 'PERSPECTIVE';
 const OUTLINE_LEVELS = [{
   level: 1,
   type: 'GOAL',
+  subLevels: ['OBJECTIVE'],
   label: 'Goal',
   color: '#42A5F5',
   isEditable: true,
@@ -25,6 +26,7 @@ const OUTLINE_LEVELS = [{
 }, {
   level: 2,
   type: 'OBJECTIVE',
+  subLevels: ['TOPIC'],
   label: 'Learning Objective',
   color: '#66BB6A',
   isEditable: false,
