@@ -66,20 +66,32 @@ export default {
   overflow: hidden;
 }
 
-.vue-color__chrome /deep/ .vue-color {
-  &__chrome__chrome-body { background: transparent; }
+.vue-color__chrome /deep/ .vue-color__chrome {
+  &__chrome-body {
+    padding: 12px 16px 12px;
+    background: transparent;
+  }
 
-  &__chrome__active-color {
+  &__controls { display: block; }
+  &__color-wrap { float: left; }
+  &__sliders { padding: 8px 0 0 40px; }
+
+  &__alpha-wrap,
+  &__toggle-btn {
+    display: none;
+  }
+
+  &__active-color {
     margin-top: 2px;
     width: 24px;
     height: 24px;
     border-radius: 50%;
   }
+}
 
-  &__editable-input__label {
-    color: #222;
-  }
-  &__editable-input__input {
+.vue-color__chrome /deep/ .vue-color__editable-input {
+  &__label { color: #222; }
+  &__input {
     background: #efefef;
     color: #222;
   }
