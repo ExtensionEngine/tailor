@@ -3,7 +3,7 @@
     <span class="title">{{ meta.label }}</span>
     <color-input
       v-if="showInput"
-      :value="value"
+      :value="selected"
       @close="showInput = false"
       @input="color => select(color)"
       class="picker">
@@ -12,7 +12,7 @@
       <div class="preview">
         <div
           @click="showInput = true"
-          :style="{ background: value }"
+          :style="{ background: selected }"
           class="selected">
           <i class="mdi mdi-eyedropper eyedropper"></i>
         </div>
