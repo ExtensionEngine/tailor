@@ -64,10 +64,10 @@ export default {
       return this.activity.name;
     },
     level() {
-      return getLevel(this.activity.type);
+      return getLevel(this.activity.type) || {};
     },
     metadata() {
-      if (!this.activity) return [];
+      if (!get(this.activity, 'name') || !get(this.level, 'meta')) return [];
       return map(this.level.meta, it => {
         let value = get(this.activity, `data.${it.key}`);
         return { ...it, value };

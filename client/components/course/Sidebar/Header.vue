@@ -13,6 +13,7 @@
 
 <script>
 import EventBus from 'EventBus';
+import get from 'lodash/get';
 import { isEditable } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
 
@@ -22,7 +23,8 @@ export default {
   computed: {
     ...mapGetters(['activity'], 'course'),
     isEditable() {
-      return isEditable(this.activity.type);
+      const type = get(this.activity, 'type');
+      return type && isEditable(type);
     }
   },
   methods: {

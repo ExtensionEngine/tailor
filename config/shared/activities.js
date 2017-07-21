@@ -76,7 +76,10 @@ module.exports = {
   OBJECTIVES: filter(OUTLINE_LEVELS, { isObjective: true }),
   ASSET_GROUP,
   getLevel,
-  isEditable: level => getLevel(level).isEditable,
+  isEditable: type => {
+    const level = getLevel(type);
+    return level && level.isEditable;
+  },
   hasIntroduction: level => getLevel(level).hasIntroduction,
   hasPerspectives: level => getLevel(level).hasPerspectives,
   hasAssessments: level => getLevel(level).hasAssessments,
