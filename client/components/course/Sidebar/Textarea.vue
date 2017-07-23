@@ -58,7 +58,7 @@ export default {
       setTimeout(() => this.$refs[this.meta.key].focus(), 0);
     },
     focusoutTextarea() {
-      this.$validator.validate(this.meta.key).then(() => {
+      this.$validator.validateAll().then(() => {
         this.editing = false;
         if (this.value === this.meta.value) return;
         this.$emit('update', this.meta.key, this.value);
