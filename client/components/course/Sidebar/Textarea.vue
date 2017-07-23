@@ -16,10 +16,7 @@
         @keydown.esc="editing = false"
         class="form-control">
       </textarea>
-      <div
-        :style="previewStyle"
-        @mousedown.stop="focusTextarea"
-        class="content">
+      <div :style="previewStyle" @mousedown.stop="focusTextarea" class="content">
         <pre><span>{{ value || meta.placeholder }}</span><br></pre>
       </div>
     </div>
@@ -43,7 +40,7 @@ export default {
     previewStyle() {
       return {
         visibility: this.editing ? 'hidden' : 'visible',
-        'min-height': `${this.minHeight || 100}px`
+        'min-height': `${this.minHeight || 60}px`
       };
     }
   },
