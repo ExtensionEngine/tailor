@@ -2,15 +2,13 @@
   <div class="switch control">
     <span class="title">{{ meta.label }}</span>
     <div class="control-group">
-      <label
-        :for="meta.key"
-        :class="{ checked: value }">
+      <label :for="meta.key" :class="{ checked: value }">
         <input
           v-model="value"
-          @change="$emit('update', meta.key, value)"
           :ref="meta.key"
           :id="meta.key"
           :name="meta.key"
+          @change="$emit('update', meta.key, value)"
           type="checkbox">
         <span class="lever"></span>
       </label>
@@ -31,30 +29,31 @@ export default {
 
 <style lang="scss" scoped>
 $size: 15px;
-
 $checked: #337ab7;
 $unchecked: #949494;
-
 $lever-checked: lighten($checked, 25%);
 $lever-unchecked: lighten($unchecked, 25%);
 
 .control {
   padding: 3px 8px;
-  &:hover { background-color: #f5f5f5; };
+
+  &:hover {
+    background-color: #f5f5f5;
+  };
 }
 
 .title {
   display: block;
-  color: #808080;
   margin-bottom: 10px;
+  color: #808080;
 }
 
 .control-group {
   margin: 5px 0 5px 0;
+  color: #333;
+  font-weight: normal;
   line-height: 24px;
   word-wrap: break-word;
-  font-weight: normal;
-  color: #333;
 }
 
 .description {
@@ -77,22 +76,28 @@ input[type=checkbox] {
 
 label {
   position: relative;
-  cursor: pointer;
   float: left;
+  cursor: pointer;
 
   &.checked .lever {
     background: $lever-checked;
-    &:after { background: $checked }
-    &:before, &:after { left: 18px; }
+
+    &:after {
+      background: $checked
+    }
+
+    &:before, &:after {
+      left: 18px;
+    }
   }
 }
 
 .lever {
   content: "";
   display: inline-block;
-  position: relative;
   width: 36px;
   height: 14px;
+  position: relative;
   vertical-align: middle;
   background-color: $lever-unchecked;
   border-radius: $size;
@@ -100,10 +105,10 @@ label {
 
   &:before, &:after {
     content: "";
-    position: absolute;
     display: inline-block;
     width: 20px;
     height: 20px;
+    position: absolute;
     left: 0;
     top: -3px;
     border-radius: 50%;
@@ -136,5 +141,4 @@ label {
     background-color: transparentize($checked, .85);
   }
 }
-
 </style>
