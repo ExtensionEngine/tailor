@@ -3,33 +3,31 @@
     <span class="title">{{ meta.label }}</span>
     <color-input
       v-if="showInput"
-      ref="picker"
       :value="selected"
       @close="showInput = false"
       @input="color => select(color)"
+      ref="picker"
       class="picker">
     </color-input>
     <div v-else>
       <div class="preview">
         <div
-          @click="showPicker()"
           :style="{ background: selected }"
+          @click="showPicker"
           class="selected">
-          <i class="mdi mdi-eyedropper eyedropper"></i>
+          <span class="mdi mdi-eyedropper eyedropper"></span>
         </div>
       </div>
       <ul class="colors control-group">
-        <li
-          v-for="group in colors"
-          class="column">
+        <li v-for="group in colors" class="column">
           <ul>
             <li
               v-for="color in group"
-              @click="select(color)"
               :style="{ background: color }"
-              :class="{ white: equals(color, white) }"
+              :class="{ white: isEqualColor(color, '#FFFFFF') }"
+              @click="select(color)"
               class="tile">
-              <div v-if="equals(color, selected)" class="dot"></div>
+              <div v-if="isEqualColor(color, selected)" class="dot"></div>
             </li>
           </ul>
         </li>
@@ -39,10 +37,10 @@
 </template>
 
 <script>
-import get from 'lodash/get';
 import ColorInput from './ColorInput';
+import get from 'lodash/get';
 
-const defaultColors = [
+const DEFAULT_COLORS = [
   ['#4D4D4D', '#333333', '#000000'],
   ['#999999', '#808080', '#666666'],
   ['#FFFFFF', '#CCCCCC', '#B3B3B3'],
@@ -60,20 +58,17 @@ const defaultColors = [
 export default {
   name: 'ColorPicker',
   props: ['meta'],
-  computed: {
-    selected() {
-      return this.value || get(this.colors, '[0][0]', '#000000');
-    },
-    white() {
-      return '#FFFFFF';
-    }
-  },
   data() {
     return {
       showInput: false,
-      colors: this.meta.colors || defaultColors,
+      colors: this.meta.colors || DEFAULT_COLORS,
       value: this.meta.value
     };
+  },
+  computed: {
+    selected() {
+      return this.value || get(this.colors, '[0][0]', '#000000');
+    }
   },
   methods: {
     showPicker() {
@@ -85,13 +80,12 @@ export default {
       this.value = color;
       this.$emit('update', this.meta.key, color);
     },
-    equals(color1 = '', color2 = '') {
+    isEqualColor(color1 = '', color2 = '') {
       return color1.trim().toLowerCase() === color2.trim().toLowerCase();
     }
   },
   components: { ColorInput }
 };
-
 </script>
 
 <style lang="scss" scoped>
@@ -100,21 +94,24 @@ $gutter: 5px;
 
 .control {
   padding: 3px 8px;
-  &:hover { background-color: #f5f5f5; };
+
+  &:hover {
+    background-color: #f5f5f5;
+  };
 }
 
 .title {
   display: block;
-  color: #808080;
   margin-bottom: 10px;
+  color: #808080;
 }
 
 .control-group {
   margin: 5px 0 5px 0;
+  color: #333;
+  font-weight: normal;
   line-height: 24px;
   word-wrap: break-word;
-  font-weight: normal;
-  color: #333;
 }
 
 .picker {
@@ -134,9 +131,9 @@ ul {
 .selected {
   width: 40px;
   height: 40px;
+  text-align: center;
   border-radius: 50%;
   cursor: pointer;
-  text-align: center;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
 
   .eyedropper {
@@ -147,7 +144,9 @@ ul {
     transition: opacity .3s ease;
   }
 
-  &:hover .eyedropper { opacity: 1; }
+  &:hover .eyedropper {
+    opacity: 1;
+  }
 }
 
 .colors {
@@ -163,18 +162,21 @@ ul {
   width: $size;
   height: $size;
   position: relative;
+  margin: 0 $gutter $gutter 0;
   list-style: none;
   cursor: pointer;
   border-radius: 2px;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
-  margin: 0 $gutter $gutter 0;
-  &:last-child { margin-bottom: 0; }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .dot {
-  position: absolute;
   width: $size/3;
   height: $size/3;
+  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
@@ -183,6 +185,9 @@ ul {
   border-radius: 50%;
   opacity: 1;
   background: #fff;
-  .white & { background: #000; }
+
+  .white & {
+    background: #000;
+  }
 }
 </style>
