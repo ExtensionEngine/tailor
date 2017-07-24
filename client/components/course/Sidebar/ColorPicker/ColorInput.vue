@@ -52,7 +52,7 @@ export default {
 
   .actions {
     display: inline-block;
-    padding-top: 10px;
+    padding-top: 8px;
 
     .btn { margin-right: 5px; }
   }
@@ -66,22 +66,41 @@ export default {
   overflow: hidden;
 }
 
-.vue-color__chrome /deep/ .vue-color {
-  &__chrome__chrome-body { background: transparent; }
+.vue-color__chrome /deep/ .vue-color__chrome {
+  &__chrome-body {
+    padding: 12px 16px 12px;
+    background: transparent;
+  }
 
-  &__chrome__active-color {
-    margin-top: 2px;
+  &__controls { display: block; }
+  &__color-wrap { float: left; }
+  &__sliders { padding: 8px 0 0 40px; }
+
+  &__alpha-wrap,
+  &__toggle-btn {
+    display: none;
+  }
+
+  &__active-color {
     width: 24px;
     height: 24px;
+    margin-top: 2px;
     border-radius: 50%;
   }
+}
 
-  &__editable-input__label {
+.vue-color__chrome /deep/ .vue-color__editable-input {
+  &__label {
+    display: none;
     color: #222;
   }
-  &__editable-input__input {
-    background: #efefef;
+
+  &__input {
+    height: 24px;
+    font-family: "Roboto";
+    font-size: 13px;
     color: #222;
+    background: #fdfdfd;
   }
 }
 </style>
