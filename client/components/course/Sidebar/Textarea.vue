@@ -1,15 +1,13 @@
 <template>
   <div
-    :class="{ editing }"
+    :class="{ editing, 'has-error': vErrors.has(meta.key) }"
     @focusout="focusoutTextarea"
-    @mousedown="onEdit"
     class="textarea">
     <label :for="meta.key">{{ meta.label }}</label>
-    <div
-      v-show="editing"
-      :class="{ 'has-error': vErrors.has(meta.key) }">
+    <div class="textarea-wrapper">
       <textarea
         v-model="value"
+        v-show="editing"
         v-validate="meta.validate"
         :ref="meta.key"
         :name="meta.key"
@@ -18,11 +16,11 @@
         @keydown.esc="editing = false"
         class="form-control">
       </textarea>
-      <span class="help-block">{{ vErrors.first(meta.key) }}</span>
+      <div :style="previewStyle" @mousedown.stop="focusTextarea" class="content">
+        <pre><span>{{ value || meta.placeholder }}</span><br></pre>
+      </div>
     </div>
-    <div v-show="!editing" @click.stop="focusTextarea">
-      <div class="content"><pre>{{ value || meta.placeholder }}</pre></div>
-    </div>
+    <span class="help-block">{{ vErrors.first(meta.key) }}</span>
   </div>
 </template>
 
@@ -31,21 +29,22 @@ const noop = Function.prototype;
 
 export default {
   name: 'multiline-input',
-  props: ['meta'],
+  props: ['meta', 'min-height'],
   data() {
     return {
       value: this.meta.value,
       editing: false
     };
   },
+  computed: {
+    previewStyle() {
+      return {
+        visibility: this.editing ? 'hidden' : 'visible',
+        'min-height': `${this.minHeight || 60}px`
+      };
+    }
+  },
   methods: {
-    onEdit(e) {
-      if (this.editing) {
-        e.preventDefault();
-        return;
-      }
-      this.focusTextarea();
-    },
     onEnter(e) {
       if (e.shiftKey) return;
       e.preventDefault();
@@ -56,7 +55,7 @@ export default {
       setTimeout(() => this.$refs[this.meta.key].focus(), 0);
     },
     focusoutTextarea() {
-      this.$validator.validate(this.meta.key).then(() => {
+      this.$validator.validateAll().then(() => {
         this.editing = false;
         if (this.value === this.meta.value) return;
         this.$emit('update', this.meta.key, this.value);
@@ -68,6 +67,7 @@ export default {
 
 <style lang="scss" scoped>
 .textarea {
+  position: relative;
   padding: 3px 8px;
   cursor: pointer;
 
@@ -80,13 +80,22 @@ export default {
   }
 
   label {
+    width: 100%;
     color: #808080;
   }
 
-  textarea {
-    height: 100px;
+  &-wrapper {
+    position: relative;
     margin: 5px 0;
-    box-sizing: border-box;
+  }
+
+  textarea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    box-sizing: content-box;
+    overflow: hidden;
     resize: none;
     letter-spacing: inherit;
   }
@@ -96,15 +105,12 @@ export default {
   }
 
   .content {
-    height: 100px;
-    margin: 5px 0 10px 0;
     line-height: 24px;
     color: #333;
-    overflow: auto;
 
     pre {
       height: 100%;
-      padding: 0;
+      padding: 0 4px 8px 0;
       margin: 0;
       border: none;
       font: inherit;
@@ -112,6 +118,7 @@ export default {
       word-break: break-all;
       word-wrap: break-word;
       white-space: pre-wrap;
+      overflow: hidden;
     }
   }
 }
