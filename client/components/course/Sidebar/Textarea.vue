@@ -85,8 +85,8 @@ export default {
   }
 
   &-wrapper {
-    margin: 5px 0;
     position: relative;
+    margin: 5px 0;
   }
 
   textarea {
@@ -110,7 +110,7 @@ export default {
 
     pre {
       height: 100%;
-      padding: 0px 4px 8px 0;
+      padding: 0 4px 8px 0;
       margin: 0;
       border: none;
       font: inherit;
