@@ -35,6 +35,7 @@
 <script>
 import Checkbox from './Checkbox';
 import cloneDeep from 'lodash/cloneDeep';
+import ColorPicker from './ColorPicker/';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import Input from './Input';
@@ -42,7 +43,6 @@ import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Prerequisites from './Prerequisites';
 import Select from './Select';
-import ColorPicker from './ColorPicker/';
 import Switch from './Switch';
 import Textarea from './Textarea';
 
