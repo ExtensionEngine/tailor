@@ -1,7 +1,6 @@
 <template>
   <div class="input">
-    <color-picker v-model="color">
-    </color-picker>
+    <color-picker v-model="color"></color-picker>
     <div class="actions">
       <button
         @click="$emit('close')"
@@ -25,7 +24,9 @@ import { Chrome as ColorPicker } from 'vue-color';
 export default {
   props: ['value'],
   data() {
-    return { color: { hex: this.value || '#ffffff' } };
+    return {
+      color: { hex: this.value || '#ffffff' }
+    };
   },
   methods: {
     submit(color) {
@@ -39,8 +40,8 @@ export default {
 
 <style lang="scss" scoped>
 .btn {
-  padding: 6px 16px;
   margin-right: 5px;
+  padding: 6px 16px;
   font-family: "Roboto";
   font-size: 12.5px;
   font-weight: 500;
@@ -54,7 +55,9 @@ export default {
     display: inline-block;
     padding-top: 8px;
 
-    .btn { margin-right: 5px; }
+    .btn {
+      margin-right: 5px;
+    }
   }
 }
 
@@ -72,12 +75,19 @@ export default {
     background: transparent;
   }
 
-  &__controls { display: block; }
-  &__color-wrap { float: left; }
-  &__sliders { padding: 8px 0 0 40px; }
+  &__controls {
+    display: block;
+  }
 
-  &__alpha-wrap,
-  &__toggle-btn {
+  &__color-wrap {
+    float: left;
+  }
+
+  &__sliders {
+    padding: 8px 0 0 40px;
+  }
+
+  &__alpha-wrap, &__toggle-btn {
     display: none;
   }
 
