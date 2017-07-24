@@ -33,7 +33,9 @@
 </template>
 
 <script>
+import Checkbox from './Checkbox';
 import cloneDeep from 'lodash/cloneDeep';
+import ColorPicker from './ColorPicker/';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import Input from './Input';
@@ -41,14 +43,18 @@ import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Prerequisites from './Prerequisites';
 import Select from './Select';
+import Switch from './Switch';
 import Textarea from './Textarea';
 
 const noop = Function.prototype;
 
 const META_TYPES = {
+  CHECKBOX: Checkbox,
+  COLOR: ColorPicker,
   INPUT: Input,
-  TEXTAREA: Textarea,
-  SELECT: Select
+  SELECT: Select,
+  SWITCH: Switch,
+  TEXTAREA: Textarea
 };
 
 export default {
@@ -107,9 +113,12 @@ export default {
     }
   },
   components: {
+    [Checkbox.name]: Checkbox,
     [Input.name]: Input,
-    [Textarea.name]: Textarea,
     [Select.name]: Select,
+    [Switch.name]: Switch,
+    [Textarea.name]: Textarea,
+    ColorPicker,
     Prerequisites
   }
 };
