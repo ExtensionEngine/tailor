@@ -1,46 +1,39 @@
 const last = require('lodash/last');
-const to = require('to-case');
-const zip = require('lodash/zip');
-const OUTLINE_LEVELS = require('../../config/shared/activities').OUTLINE_LEVELS;
+const logger = require('../shared/logger');
+const { OUTLINE_LEVELS } = require('../../config/shared/activities');
+const LEAF = last(OUTLINE_LEVELS);
 
-const entities = ['ACTIVITY', 'TEACHING_ELEMENT'];
-const hooks = ['afterCreate', 'afterDestroy'];
-const operations = ['CREATE', 'REMOVE'];
+module.exports = { add };
 
-function add(models) {
-  zip(hooks, operations).forEach(hook => {
-    entities.forEach(entity => createHook(models, entity, hook));
-  });
-}
+function add(Course, models) {
+  const { Activity, TeachingElement } = models;
+  const hooks = ['afterCreate', 'afterDestroy'];
 
-function createHook(models, entity, [name, operation]) {
-  const Course = models.Course;
-  const LEAF = last(OUTLINE_LEVELS);
-  const Model = models[to.pascal(entity)];
-
-  Model.hook(name, (instance, { context }) => {
+  // Track leafs.
+  addHooks(Activity, hooks, (hook, instance, options) => {
+    if (instance.type !== LEAF.type) return;
     const { courseId } = instance;
-    if (instance.type === 'ASSESSMENT') {
-      return updateStats(courseId, 'assessments');
-    }
-    if (instance.type === LEAF.type) {
-      return updateStats(courseId, 'objectives', { type: LEAF.type });
-    }
+    logger.info(`Activity#${hook}`, { type: LEAF.type, id: instance.id, courseId });
+    // TODO: Ignore detached leafs!
+    const where = { courseId, type: LEAF.type };
+    return Activity.count({ where })
+      .then(count => Course.updateStats(courseId, 'objectives', count));
   });
 
-  function updateStats(courseId, property, filter) {
-    return Course.findById(courseId).then(course => {
-      const where = Object.assign({ courseId }, filter);
-      return Model.count({ where }).then(total => {
-        course.stats = course.stats || {};
-        course.stats[property] = total;
-        course.changed('stats', true);
-        return course.save();
-      });
-    });
-  }
+  // Track assessments.
+  addHooks(TeachingElement, hooks, (hook, instance, { context }) => {
+    if (instance.type !== 'ASSESSMENT') return;
+    const { courseId } = instance;
+    logger.info(`TeachingElement#${hook}`, { type: instance.type, id: instance.id, courseId });
+    // TODO: Ignore detached assessments!
+    const where = { courseId, type: 'ASSESSMENT' };
+    return TeachingElement.count({ where })
+      .then(count => Course.updateStats(courseId, 'assessments', count));
+  });
 }
 
-module.exports = {
-  add
-};
+function addHooks(Model, hooks, fn) {
+  hooks.forEach(hook => Model.hook(hook, function (instance, options) {
+    return fn.call(this, hook, instance, options);
+  }));
+}
