@@ -1,3 +1,4 @@
+const addHooks = require('../shared/util/addHooks');
 const last = require('lodash/last');
 const logger = require('../shared/logger');
 const { OUTLINE_LEVELS } = require('../../config/shared/activities');
@@ -13,7 +14,7 @@ function add(Course, models) {
   addHooks(Activity, hooks, (hook, instance, options) => {
     if (instance.type !== LEAF.type) return;
     const { courseId } = instance;
-    logger.info(`Activity#${hook}`, { type: LEAF.type, id: instance.id, courseId });
+    logger.info(`[Course] Activity#${hook}`, { type: LEAF.type, id: instance.id, courseId });
     // TODO: Ignore detached leafs!
     const where = { courseId, type: LEAF.type };
     return Activity.count({ where })
@@ -24,16 +25,10 @@ function add(Course, models) {
   addHooks(TeachingElement, hooks, (hook, instance, { context }) => {
     if (instance.type !== 'ASSESSMENT') return;
     const { courseId } = instance;
-    logger.info(`TeachingElement#${hook}`, { type: instance.type, id: instance.id, courseId });
+    logger.info(`[Course] TeachingElement#${hook}`, { type: instance.type, id: instance.id, courseId });
     // TODO: Ignore detached assessments!
     const where = { courseId, type: 'ASSESSMENT' };
     return TeachingElement.count({ where })
       .then(count => Course.updateStats(courseId, 'assessments', count));
   });
-}
-
-function addHooks(Model, hooks, fn) {
-  hooks.forEach(hook => Model.hook(hook, function (instance, options) {
-    return fn.call(this, hook, instance, options);
-  }));
 }
