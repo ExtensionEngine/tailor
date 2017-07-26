@@ -37,7 +37,7 @@ const hooks = require('./hooks');
  *         description: user course roles
  */
 module.exports = function (sequelize, DataTypes) {
-  const Course = sequelize.define('course', {
+  const Course = sequelize.define('Course', {
     name: {
       type: DataTypes.STRING,
       validate: { notEmpty: true, len: [2, 250] }
@@ -89,7 +89,7 @@ module.exports = function (sequelize, DataTypes) {
     underscored: true,
     timestamps: true,
     paranoid: true,
-    freezeTableName: true
+    tableName: 'course'
   });
 
   return Course;

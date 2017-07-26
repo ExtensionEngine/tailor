@@ -1,29 +1,24 @@
 const each = require('lodash/each');
+const glob = require('glob');
+const path = require('path');
 const Sequelize = require('sequelize');
+
+const filename = '*.model.js';
 
 const sequelize = new Sequelize(process.env.POSTGRES_URI);
 let db = { Sequelize, sequelize };
 
-const models = {
-  Activity: '../../activity/activity.model',
-  Course: '../../course/course.model',
-  CourseUser: '../../course/courseUser.model',
-  Revision: '../../revision/revision.model',
-  TeachingElement: '../../teaching-element/te.model',
-  User: '../../user/user.model'
-};
+const pattern = path.join(__dirname, `../../../server/**/${filename}`);
+glob.sync(pattern).forEach(path => sequelize.import(path));
 
-each(models, (path, name) => {
-  db[name] = sequelize.import(path);
+const models = sequelize.models;
+each(models, model => {
+  if (model.associate) model.associate(models);
+  if (model.addHooks) model.addHooks(models);
 });
 
-each(db, (v, modelName) => {
-  if ('associate' in db[modelName]) db[modelName].associate(db);
+module.exports = Object.assign(db, models, {
+  initialize() {
+    return sequelize.sync();
+  }
 });
-
-db['Course'].addHooks(db);
-db['Revision'].addHooks(db);
-
-db.initialize = () => sequelize.sync();
-
-module.exports = db;
