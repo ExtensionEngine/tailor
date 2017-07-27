@@ -14,6 +14,9 @@
       :list="teachingElements"
       :options="dragOptions"
       @update="reorder"
+      @start="dragStart"
+      @end="dragEnd"
+      ref="teachingElements"
       class="row">
       <teaching-element
         v-for="element in teachingElements"
@@ -83,6 +86,18 @@ export default {
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
+    },
+    dragStart({ oldIndex: position }) {
+      const teachingElement = this.elementAt(position);
+      if (teachingElement) teachingElement.$emit('dragstart');
+    },
+    dragEnd({ oldIndex: position }) {
+      const teachingElement = this.elementAt(position);
+      if (teachingElement) teachingElement.$emit('dragend');
+    },
+    elementAt(index) {
+      if (!this.$refs.teachingElements) return;
+      return this.$refs.teachingElements.$children[index];
     },
     addElement(element) {
       this.saveElement(element);

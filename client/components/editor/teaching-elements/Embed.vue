@@ -12,10 +12,12 @@
         <div class="overlay" v-show="!isFocused">
           <div class="message">Click to preview</div>
         </div>
+        <!-- Dragging iframes is not supported inside sortablejs container! -->
         <iframe
+          v-if="!isDragged"
           :src="url"
-          ref="frame"
           class="content"
+          ref="frame"
           frameborder="0">
         </iframe>
       </div>
@@ -27,7 +29,7 @@
 <script>
 export default {
   name: 'te-embed',
-  props: ['element', 'isFocused'],
+  props: ['element', 'isFocused', 'isDragged'],
   computed: {
     url() {
       return this.element.data.url;
