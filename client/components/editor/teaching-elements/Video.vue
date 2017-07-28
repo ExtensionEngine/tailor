@@ -57,11 +57,12 @@ export default {
       return {
         autoplay: false,
         techOrder: ['html5', 'youtube', 'vimeo'],
+        poster: this.poster,
         sources: [this.source]
       };
     },
     showPlaceholder() {
-      return !this.element.data.url;
+      return !this.source;
     },
     showError() {
       if (!this.error) return false;
