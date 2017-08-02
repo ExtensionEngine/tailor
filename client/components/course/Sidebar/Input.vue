@@ -25,10 +25,9 @@
 </template>
 
 <script>
-const noop = Function.prototype;
-
 export default {
   name: 'line-input',
+  inject: ['$validator'],
   props: ['meta'],
   data() {
     return {
@@ -49,11 +48,12 @@ export default {
       setTimeout(() => this.$refs[this.meta.key].focus(), 0);
     },
     focusoutInput() {
-      this.$validator.validate(this.meta.key).then(() => {
+      this.$validator.validate(this.meta.key).then(result => {
+        if (!result) return;
         this.editing = false;
         if (this.value === this.meta.value) return;
         this.$emit('update', this.meta.key, this.value);
-      }, noop);
+      });
     }
   }
 };

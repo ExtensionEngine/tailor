@@ -59,9 +59,8 @@ import { getChildren } from 'utils/activity';
 import { mapActions, mapGetters } from 'vuex-module';
 import multiselect from '../common/Select';
 
-const noop = Function.prototype;
-
 export default {
+  inject: ['$validator'],
   props: ['parent', 'level'],
   data() {
     return {
@@ -103,7 +102,9 @@ export default {
       this.showInput = false;
     },
     add() {
-      this.$validator.validateAll().then(() => {
+      this.$validator.validateAll().then(result => {
+        if (!result) return;
+
         const OUTLINE_LEVEL = find(OUTLINE_LEVELS, { type: this.activityType });
         const sameLevel = OUTLINE_LEVEL.level === this.level;
         const parentId = sameLevel ? this.parent.parentId : this.parent.id;
@@ -123,7 +124,7 @@ export default {
 
         this.hide();
         if (!sameLevel) this.$emit('expand');
-      }, noop);
+      });
     },
     getActivityLevel(type) {
       return getLevel(type);
