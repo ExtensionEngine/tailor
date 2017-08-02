@@ -57,7 +57,7 @@ const Promise = require('bluebird');
  *         description: position within the array of sibling activities
  */
 module.exports = function (sequelize, DataTypes) {
-  const Activity = sequelize.define('Activity', {
+  const Activity = sequelize.define('activity', {
     name: {
       type: DataTypes.STRING
     },
@@ -142,7 +142,7 @@ module.exports = function (sequelize, DataTypes) {
     underscored: true,
     timestamps: true,
     paranoid: true,
-    tableName: 'activity'
+    freezeTableName: true
   });
 
   return Activity;

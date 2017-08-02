@@ -3,7 +3,7 @@
 const hooks = require('./hooks');
 
 module.exports = function (sequelize, DataTypes) {
-  const Revision = sequelize.define('Revision', {
+  const Revision = sequelize.define('revision', {
     entity: {
       type: DataTypes.ENUM,
       values: ['ACTIVITY', 'COURSE', 'TEACHING_ELEMENT'],
@@ -41,7 +41,7 @@ module.exports = function (sequelize, DataTypes) {
         hooks.add(Revision, models);
       }
     },
-    tableName: 'revision'
+    freezeTableName: true
   });
 
   return Revision;

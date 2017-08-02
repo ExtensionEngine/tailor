@@ -46,7 +46,7 @@ const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
  *         description: user role
  */
 module.exports = function (sequelize, DataTypes) {
-  const User = sequelize.define('User', {
+  const User = sequelize.define('user', {
     email: {
       type: DataTypes.STRING,
       validate: { isEmail: true },
@@ -148,7 +148,7 @@ module.exports = function (sequelize, DataTypes) {
     underscored: true,
     timestamps: true,
     paranoid: true,
-    tableName: 'user'
+    freezeTableName: true
   });
 
   return User;
