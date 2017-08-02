@@ -18,6 +18,8 @@ function list({ course, query }, res) {
     opts.include = { model: Activity, attributes: [], where };
   }
 
+  if (!query.detached) opts.where.$and = [{ detached: false }];
+
   const elements = query.integration
     ? course.getTeachingElements(opts)
     : TeachingElement.fetch(opts);
