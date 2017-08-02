@@ -5,7 +5,7 @@ const ASSET_GROUP = 'PERSPECTIVE';
 const OUTLINE_LEVELS = [{
   level: 1,
   type: 'GOAL',
-  subLevels: ['OBJECTIVE'],
+  subLevels: ['OBJECTIVE', 'INTERACTIVE_EXERCISE'],
   label: 'Goal',
   color: '#42A5F5',
   isEditable: true,
@@ -44,6 +44,15 @@ const OUTLINE_LEVELS = [{
       validate: { rules: { required: false, max: 250 } }
     }
   ]
+}, {
+  level: 2,
+  type: 'INTERACTIVE_EXERCISE',
+  subLevels: [],
+  label: 'Interactive Exercise',
+  color: '#78909C',
+  isEditable: true,
+  hasPerspectives: true,
+  hasPrerequisites: true
 }, {
   level: 3,
   type: 'TOPIC',
