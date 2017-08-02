@@ -81,18 +81,17 @@ module.exports = function (sequelize, DataTypes) {
       },
       updateStats(id, key, value) {
         return Course.findById(id)
-          .then(course => course.updateStats(key, value));
+          .then(course => {
+            const stats = course.stats || {};
+            stats[key] = value;
+            return course.update({ stats });
+          });
       }
     },
     instanceMethods: {
       getUser(user) {
         return this.getUsers({ where: { id: user.id } })
           .then(users => users[0]);
-      },
-      updateStats(key, value) {
-        const stats = this.stats || {};
-        stats[key] = value;
-        return this.update({ stats });
       }
     },
     underscored: true,
