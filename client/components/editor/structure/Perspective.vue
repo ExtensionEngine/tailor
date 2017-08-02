@@ -14,9 +14,14 @@
       :list="teachingElements"
       :options="dragOptions"
       @update="reorder"
+      @start="e => dragStart(e.oldIndex)"
+      @end="dragEnd"
       class="row">
       <teaching-element
-        v-for="element in teachingElements"
+        v-for="(element, index) in teachingElements"
+        @dragstart="dragStart(index)"
+        @dragend="dragEnd"
+        :dragged="dragged === index"
         :element="element"
         :key="element._cid">
       </teaching-element>
@@ -47,6 +52,7 @@ export default {
   props: ['perspective'],
   data() {
     return {
+      dragged: -1,
       dragOptions: { handle: '.drag-handle' },
       elementTypes: [
         'HTML',
@@ -83,6 +89,12 @@ export default {
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
+    },
+    dragStart(index) {
+      this.dragged = index;
+    },
+    dragEnd() {
+      this.dragged = -1;
     },
     addElement(element) {
       this.saveElement(element);
