@@ -29,6 +29,7 @@
     "fix:assessments": "node -r dotenv/config ./server/script/fixAssessments.js",
     "fix:images": "node -r dotenv/config ./server/script/fixImageUrls.js",
     "fix:stats": "node -r dotenv/config ./server/script/fixStats.js",
+    "update:description": "node -r dotenv/config ./server/script/updateDescription.js",
     "integration:add": "node -r dotenv/config ./server/script/addIntegration.js",
     "integration:token": "node -r dotenv/config ./server/script/generateIntegrationToken.js",
     "start": "node -r dotenv/config ./server"
@@ -88,7 +89,7 @@
     "vue-router": "^2.0.3",
     "vue-strap": "^1.1.34",
     "vue-video-player": "^3.1.4",
-    "vuedraggable": "^2.8.4",
+    "vuedraggable": "^2.14.1",
     "vuex": "^2.0.0",
     "vuex-module": "^0.3.0",
     "vuex-router-sync": "^3.0.0",
