@@ -4,6 +4,8 @@
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
     @dragover="scrollContainer"
+    @dragstart="dragged = true"
+    @dragend="dragged = false"
     class="te-container">
     <div @click="focus" class="teaching-element">
       <span class="drag-handle">
@@ -13,6 +15,7 @@
         :is="resolveElement(element.type)"
         :element="element"
         :isFocused="isFocused"
+        :isDragged="dragged"
         @save="save">
       </component>
     </div>
@@ -55,7 +58,8 @@ export default {
   },
   data() {
     return {
-      hovered: false
+      hovered: false,
+      dragged: false
     };
   },
   computed: {
