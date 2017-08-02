@@ -27,6 +27,10 @@ module.exports = function (sequelize, DataTypes) {
     deletedAt: {
       type: DataTypes.DATE,
       field: 'deleted_at'
+    },
+    detached: {
+      type: DataTypes.BOOLEAN,
+      field: 'detached'
     }
   }, {
     classMethods: {
@@ -54,6 +58,10 @@ module.exports = function (sequelize, DataTypes) {
       siblings(filter = {}) {
         const where = Object.assign({}, filter, { activityId: this.activityId });
         return TeachingElement.findAll({ where, order: 'position ASC' });
+      },
+      remove(options) {
+        const { soft = false } = options;
+        return soft ? this.update({ detached: true }) : this.destroy(options);
       },
       reorder(index) {
         return sequelize.transaction(t => {

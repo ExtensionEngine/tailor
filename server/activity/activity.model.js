@@ -117,22 +117,26 @@ module.exports = function (sequelize, DataTypes) {
         });
       },
       remove(options = {}) {
+        if (!options.recursive) return this.destroy(options);
         return sequelize.transaction(t => {
-          return this.deleteTree(options.soft)
+          return this.deleteTree(options)
+            .then(() => this.deleteTeachingElements(options))
             .then(() => this.destroy(options))
             .then(() => this);
         });
       },
-      deleteTree(soft = false) {
+      deleteTree(options) {
+        const { soft = false } = options;
         return Promise.resolve(this.getChildren())
-          .each(it => it.deleteTree(soft))
-          .then(() => this.deleteChildren(soft));
+          .map(it => it.deleteTree(options))
+          .map(it => it.deleteTeachingElements(options))
+          .each(it => soft ? it.update({ detached: true }) : it.destroy(options))
+          .then(() => this);
       },
-      deleteChildren(soft = false) {
-        const query = { where: { parentId: this.id } };
-        if (!soft) return Activity.destroy(query);
-        return Promise.resolve(Activity.findAll(query))
-          .each(it => it.update({ detached: true }));
+      deleteTeachingElements(options) {
+        return Promise.resolve(this.getTeachingElements())
+          .each(it => it.remove(options))
+          .then(() => this);
       },
       reorder(index) {
         return sequelize.transaction(t => {

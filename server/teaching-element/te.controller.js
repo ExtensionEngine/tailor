@@ -52,7 +52,7 @@ function patch({ body, params, user }, res) {
 function remove({ params, user }, res) {
   return TeachingElement.findById(params.teId)
     .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
-    .then(asset => asset.destroy({ context: { userId: user.id } }))
+    .then(asset => asset.remove({ context: { userId: user.id } }))
     .then(() => res.end());
 }
 

@@ -10,21 +10,18 @@ function create({ body, params, user }, res) {
   const attrs = ['name', 'type', 'parentId', 'position'];
   const data = Object.assign(pick(body, attrs), { courseId: params.courseId });
   const opts = { context: { userId: user.id } };
-  return Activity
-    .create(data, opts)
+  return Activity.create(data, opts)
     .then(activity => res.json({ data: activity }));
 }
 
 function show({ params }, res) {
-  return Activity
-    .findById(params.activityId)
+  return Activity.findById(params.activityId)
     .then(activity => activity || createError(NOT_FOUND, 'Activity not found'))
     .then(activity => res.json({ data: activity }));
 }
 
 function patch({ body, params, user }, res) {
-  return Activity
-    .findById(params.activityId)
+  return Activity.findById(params.activityId)
     .then(activity => activity || createError(NOT_FOUND, 'Activity not found'))
     .then(activity => activity.update(body, { context: { userId: user.id } }))
     .then(activity => res.json({ data: activity }));
@@ -37,15 +34,18 @@ function list({ course, query }, res) {
 }
 
 function remove({ params, user }, res) {
-  return Activity
-    .findById(params.activityId)
-    .then(activity => activity.remove({ soft: true, context: { userId: user.id } }))
+  const options = {
+    recursive: true,
+    soft: true,
+    context: { userId: user.id }
+  };
+  return Activity.findById(params.activityId)
+    .then(activity => activity.remove(options))
     .then(activity => res.json({ data: pick(activity, ['id']) }));
 }
 
 function reorder({ body, params }, res) {
-  return Activity
-    .findById(params.activityId)
+  return Activity.findById(params.activityId)
     .then(activity => activity.reorder(body.position))
     .then(activity => res.json({ data: activity }));
 }
