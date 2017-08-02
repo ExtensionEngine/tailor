@@ -87,18 +87,6 @@ export default {
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
     },
-    dragStart({ oldIndex: position }) {
-      const teachingElement = this.elementAt(position);
-      if (teachingElement) teachingElement.$emit('dragstart');
-    },
-    dragEnd({ oldIndex: position }) {
-      const teachingElement = this.elementAt(position);
-      if (teachingElement) teachingElement.$emit('dragend');
-    },
-    elementAt(index) {
-      if (!this.$refs.teachingElements) return;
-      return this.$refs.teachingElements.$children[index];
-    },
     addElement(element) {
       this.saveElement(element);
       this.focusElement(element);
