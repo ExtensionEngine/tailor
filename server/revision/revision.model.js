@@ -34,7 +34,6 @@ module.exports = function (sequelize, DataTypes) {
           foreignKey: { name: 'courseId', field: 'course_id' }
         });
         Revision.belongsTo(models.User, {
-          as: 'user',
           foreignKey: { name: 'userId', field: 'user_id' }
         });
       },
