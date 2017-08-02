@@ -1,10 +1,10 @@
 const each = require('lodash/each');
+const reduce = require('lodash/reduce');
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize(process.env.POSTGRES_URI);
-let db = { Sequelize, sequelize };
 
-const models = {
+let models = {
   Activity: '../../activity/activity.model',
   Course: '../../course/course.model',
   CourseUser: '../../course/courseUser.model',
@@ -12,18 +12,20 @@ const models = {
   TeachingElement: '../../teaching-element/te.model',
   User: '../../user/user.model'
 };
+models = reduce(models, (dict, path, name) => {
+  dict[name] = sequelize.import(path);
+  return dict;
+}, {});
 
-each(models, (path, name) => {
-  db[name] = sequelize.import(path);
+each(models, model => {
+  if (model.associate) model.associate(models);
+  if (model.addHooks) model.addHooks(models);
 });
 
-each(db, (v, modelName) => {
-  if ('associate' in db[modelName]) db[modelName].associate(db);
-});
-
-db['Course'].addHooks(db);
-db['Revision'].addHooks(db);
-
-db.initialize = () => sequelize.sync();
+const db = Object.assign({
+  Sequelize,
+  sequelize,
+  initialize() { return sequelize.sync(); }
+}, models);
 
 module.exports = db;
