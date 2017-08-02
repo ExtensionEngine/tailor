@@ -14,8 +14,6 @@
       :list="teachingElements"
       :options="dragOptions"
       @update="reorder"
-      @start="dragStart"
-      @end="dragEnd"
       ref="teachingElements"
       class="row">
       <teaching-element

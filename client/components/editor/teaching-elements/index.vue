@@ -16,8 +16,7 @@
         :element="element"
         :isFocused="isFocused"
         :isDragged="dragged"
-        @save="save"
-        ref="element">
+        @save="save">
       </component>
     </div>
   </div>
