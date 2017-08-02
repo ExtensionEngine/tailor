@@ -3,9 +3,9 @@
     :class="[columnWidth, { hovered, focused: isFocused }]"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
+    @dragstart="$emit('dragstart')"
+    @dragend="$emit('dragend')"
     @dragover="scrollContainer"
-    @dragstart="dragged = true"
-    @dragend="dragged = false"
     class="te-container">
     <div @click="focus" class="teaching-element">
       <span class="drag-handle">
@@ -54,13 +54,11 @@ export default {
   name: 'teaching-element',
   props: {
     element: Object,
-    disabled: Boolean
+    disabled: Boolean,
+    dragged: Boolean
   },
   data() {
-    return {
-      hovered: false,
-      dragged: false
-    };
+    return { hovered: false };
   },
   computed: {
     ...mapGetters(['focusedElement'], 'editor'),
