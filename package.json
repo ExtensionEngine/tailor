@@ -29,6 +29,7 @@
     "fix:assessments": "node -r dotenv/config ./server/script/fixAssessments.js",
     "fix:images": "node -r dotenv/config ./server/script/fixImageUrls.js",
     "fix:stats": "node -r dotenv/config ./server/script/fixStats.js",
+    "update:description": "node -r dotenv/config ./server/script/updateDescription.js",
     "integration:add": "node -r dotenv/config ./server/script/addIntegration.js",
     "integration:token": "node -r dotenv/config ./server/script/generateIntegrationToken.js",
     "start": "node -r dotenv/config ./server"
