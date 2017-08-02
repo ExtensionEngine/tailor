@@ -14,7 +14,6 @@
       :list="teachingElements"
       :options="dragOptions"
       @update="reorder"
-      ref="teachingElements"
       class="row">
       <teaching-element
         v-for="element in teachingElements"
