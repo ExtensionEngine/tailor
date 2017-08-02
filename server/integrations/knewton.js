@@ -94,7 +94,8 @@ function getLearningObjective(activities, atom) {
 }
 
 function getTaxonomyName({ id, name }) {
-  let acronym = name.split(/\s/).reduce((r, it) => `${r}${it[0].toUpperCase()}`, '');
+  const reducer = (acc, it) => it ? `${acc}${it[0].toUpperCase()}` : acc;
+  const acronym = name.split(/\s/).reduce(reducer, '');
   return `${acronym}-${id}`;
 }
 

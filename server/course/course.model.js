@@ -1,3 +1,5 @@
+const hooks = require('./hooks');
+
 /**
  * @swagger
  * definitions:
@@ -44,6 +46,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.TEXT,
       validate: { notEmpty: true, len: [2, 2000] }
     },
+    stats: {
+      type: DataTypes.JSON,
+      defaultValue: { objectives: 0, assessments: 0 }
+    },
     createdAt: {
       type: DataTypes.DATE,
       field: 'created_at'
@@ -69,6 +75,9 @@ module.exports = function (sequelize, DataTypes) {
           through: models.CourseUser,
           foreignKey: { name: 'courseId', field: 'course_id' }
         });
+      },
+      addHooks(models) {
+        hooks.add(models);
       }
     },
     instanceMethods: {

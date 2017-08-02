@@ -10,7 +10,8 @@ const COURSE_ROUTE = /\/course\/\d+/;
 
 state({
   activity: undefined,
-  users: {}
+  users: {},
+  outline: { expanded: {} }
 });
 
 getter(function course() {
@@ -31,6 +32,11 @@ getter(function activities() {
 getter(function activity() {
   const { activities } = this.rootGetters;
   return activities[this.state.activity] || {};
+});
+
+getter(function isCollapsed(activity) {
+  const { outline } = this.state;
+  return activity => activity && !outline.expanded[activity._cid];
 });
 
 getter(function assets() {
@@ -80,6 +86,12 @@ mutation(function removeUser(id) {
 mutation(function setUsers(users) {
   this.state.users = {};
   users.forEach(it => Vue.set(this.state.users, it.id, it));
+});
+
+mutation(function toggleActivity(activity, expanded) {
+  let expandedItems = this.state.outline.expanded;
+  expanded = expanded === undefined ? !expandedItems[activity._cid] : expanded;
+  Vue.set(expandedItems, activity._cid, expanded);
 });
 
 mutation(function focusActivity(_cid) {

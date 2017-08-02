@@ -72,6 +72,9 @@ module.exports = function (sequelize, DataTypes) {
     data: {
       type: DataTypes.JSON
     },
+    refs: {
+      type: DataTypes.JSON
+    },
     createdAt: {
       type: DataTypes.DATE,
       field: 'created_at'

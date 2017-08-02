@@ -11,13 +11,13 @@
         <loader v-show="showLoader"></loader>
         <div v-show="!showLoader">
           <div class="form-group" :class="getErrorClass('name')">
-            <input 
-              v-model="name" 
-              v-focus="focusName" 
-              @focus="focusName = true" 
-              @blur="focusName = false" 
-              type="text" 
-              class="form-control" 
+            <input
+              v-model="name"
+              v-focus="focusName"
+              @focus="focusName = true"
+              @blur="focusName = false"
+              type="text"
+              class="form-control"
               placeholder="Name"/>
             <div v-show="hasError('name')" class="error-message">
               {{ getErrorMessage('name') }}
@@ -158,8 +158,8 @@ export default {
 <style lang="scss" scoped>
 .btn-fab .mdi {
   display: inline-block;
-  font-size: 28px;
-  line-height: 28px;
+  font-size: 18px;
+  line-height: 18px;
   vertical-align: middle;
 }
 

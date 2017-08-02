@@ -21,6 +21,7 @@ each(db, (v, modelName) => {
   if ('associate' in db[modelName]) db[modelName].associate(db);
 });
 
+db['Course'].addHooks(db);
 db['Revision'].addHooks(db);
 
 db.initialize = () => sequelize.sync();

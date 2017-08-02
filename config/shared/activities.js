@@ -1,9 +1,11 @@
+const filter = require('lodash/filter');
 const find = require('lodash/find');
-const isNumber = require('lodash/isNumber');
 
 const ASSET_GROUP = 'PERSPECTIVE';
 const OUTLINE_LEVELS = [{
+  level: 1,
   type: 'GOAL',
+  subLevels: ['OBJECTIVE', 'INTERACTIVE_EXERCISE'],
   label: 'Goal',
   color: '#42A5F5',
   isEditable: true,
@@ -11,6 +13,7 @@ const OUTLINE_LEVELS = [{
   hasPerspectives: false,
   hasAssessments: false,
   hasExams: true,
+  hasPrerequisites: true,
   meta: [
     {
       key: 'description',
@@ -21,7 +24,9 @@ const OUTLINE_LEVELS = [{
     }
   ]
 }, {
+  level: 2,
   type: 'OBJECTIVE',
+  subLevels: ['TOPIC'],
   label: 'Learning Objective',
   color: '#66BB6A',
   isEditable: false,
@@ -29,6 +34,7 @@ const OUTLINE_LEVELS = [{
   hasPerspectives: false,
   hasAssessments: false,
   hasExams: false,
+  hasPrerequisites: true,
   meta: [
     {
       key: 'description',
@@ -39,14 +45,26 @@ const OUTLINE_LEVELS = [{
     }
   ]
 }, {
+  level: 2,
+  type: 'INTERACTIVE_EXERCISE',
+  subLevels: [],
+  label: 'Interactive Exercise',
+  color: '#78909C',
+  isEditable: true,
+  hasPerspectives: true,
+  hasPrerequisites: true
+}, {
+  level: 3,
   type: 'TOPIC',
   label: 'Topic',
   color: '#EC407A',
   isEditable: true,
+  isObjective: true,
   hasIntroduction: false,
   hasPerspectives: true,
   hasAssessments: true,
   hasExams: false,
+  hasPrerequisites: true,
   meta: [
     {
       key: 'description',
@@ -58,17 +76,19 @@ const OUTLINE_LEVELS = [{
   ]
 }];
 
-function getLevel(level) {
-  return isNumber(level)
-    ? OUTLINE_LEVELS[level - 1]
-    : find(OUTLINE_LEVELS, { type: level });
+function getLevel(type) {
+  return find(OUTLINE_LEVELS, { type });
 }
 
 module.exports = {
   OUTLINE_LEVELS,
+  OBJECTIVES: filter(OUTLINE_LEVELS, { isObjective: true }),
   ASSET_GROUP,
   getLevel,
-  isEditable: level => getLevel(level).isEditable,
+  isEditable: type => {
+    const level = getLevel(type);
+    return level && level.isEditable;
+  },
   hasIntroduction: level => getLevel(level).hasIntroduction,
   hasPerspectives: level => getLevel(level).hasPerspectives,
   hasAssessments: level => getLevel(level).hasAssessments,

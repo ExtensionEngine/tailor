@@ -1,45 +1,8 @@
 <template>
   <div class="course-sidebar">
-    <div v-if="name">
-      <div class="dropdown">
-        <button
-          class="btn btn-default btn-options dropdown-toggle"
-          type="button"
-          data-toggle="dropdown">
-          <span class="mdi mdi-dots-vertical"></span>
-        </button>
-        <ul class="dropdown-menu pull-right">
-          <li><a @click.stop="deleteActivity">Delete</a></li>
-        </ul>
-      </div>
-      <div class="row-a">
-        <label>Name</label>
-        <div v-show="showNameInput" :class="{ 'has-error': vErrors.has('name') }">
-          <textarea
-            v-model="nameInput"
-            v-validate="{ rules: { required: true, min: 2, max: 150 } }"
-            @blur="focusoutName"
-            @keyup.enter="focusoutName"
-            @keyup.esc="hideNameInput"
-            ref="nameInput"
-            name="name"
-            class="form-control">
-          </textarea>
-          <span class="help-block">{{ vErrors.first('name') }}</span>
-        </div>
-        <div v-show="!showNameInput" @click.stop="focusName">
-          <div class="title">{{ name }}</div>
-        </div>
-      </div>
-      <div class="meta-element">
-        <component
-          v-for="data in metadata"
-          :is="tagname(data.type)"
-          :meta="data"
-          :key="`${activity.id}${data.type}`"
-          @update="updateActivity">
-        </component>
-      </div>
+    <div v-if="activitySelected">
+      <sidebar-header></sidebar-header>
+      <sidebar-body></sidebar-body>
     </div>
     <div v-else class="placeholder">
       <h4>Outline Sidebar</h4>
@@ -53,176 +16,39 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
-import EventBus from 'EventBus';
-import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
-import Input from './Input';
-import map from 'lodash/map';
-import { mapActions, mapGetters } from 'vuex-module';
-import Select from './Select';
-import Textarea from './Textarea';
-
-const noop = Function.prototype;
-
-const META_TYPES = {
-  INPUT: Input,
-  TEXTAREA: Textarea,
-  SELECT: Select
-};
-
-const appChannel = EventBus.channel('app');
+import { mapGetters } from 'vuex-module';
+import SidebarBody from './Body';
+import SidebarHeader from './Header';
 
 export default {
-  data() {
-    return {
-      nameInput: '',
-      showNameInput: false
-    };
-  },
   computed: {
     ...mapGetters(['activity'], 'course'),
-    name() {
-      return this.activity.name;
-    },
-    metadata() {
-      if (!this.activity) return [];
-      const properties = getLevel(this.activity.type).meta;
-      return map(properties, it => {
-        let value = get(this.activity, `data.${it.key}`);
-        return { ...it, value };
-      });
-    }
-  },
-  methods: {
-    ...mapActions(['remove', 'update'], 'activities'),
-    focusName() {
-      this.nameInput = this.activity.name;
-      this.showNameInput = true;
-      setTimeout(() => this.$refs.nameInput.focus(), 0);
-    },
-    focusoutName() {
-      this.$validator.validateAll().then(() => {
-        if (this.nameInput === this.activity.name) {
-          this.showNameInput = false;
-          return;
-        }
-        this.update({ _cid: this.activity._cid, name: this.nameInput });
-        this.showNameInput = false;
-      }, noop);
-    },
-    tagname(type = '') {
-      const component = META_TYPES[type.toUpperCase()] || META_TYPES.INPUT;
-      return component.name;
-    },
-    updateActivity(key, value) {
-      const data = cloneDeep(this.activity.data) || {};
-      data[key] = value;
-      this.update({ _cid: this.activity._cid, data });
-    },
-    deleteActivity() {
-      appChannel.emit('showConfirmationModal', {
-        type: 'activity',
-        item: this.activity,
-        action: () => this.remove(this.activity)
-      });
-    }
-  },
-  watch: {
-    name(val) {
-      this.nameInput = val;
+    activitySelected() {
+      return !!this.activity.name;
     }
   },
   components: {
-    [Input.name]: Input,
-    [Textarea.name]: Textarea,
-    [Select.name]: Select
+    SidebarBody,
+    SidebarHeader
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .course-sidebar {
-  position: fixed;
+  position: absolute;
   right: 0;
   width: 400px;
   height: 100%;
-  padding: 30px 10px;
+  overflow: auto;
   text-align: left;
   border-top: 1px solid #e8e8e8;
   background-color: #fcfcfc;
-
-  .btn-options {
-    margin: 0 15px;
-    padding: 6px 8px 4px;
-    color: #555;
-    border: 1px #ddd solid;
-    border-radius: 2px;
-    background-color: white;
-    box-shadow: none;
-
-    &:hover {
-      color: #444;
-      border: 1px #555 solid;
-    }
-  }
-
-  .dropdown {
-    margin-bottom: 10px;
-    text-align: right;
-
-    button {
-      padding: 2px;
-      font-size: 18px;
-    }
-
-    .dropdown-menu {
-      margin-right: 15px;
-    }
-  }
-
-  .title {
-    height: 100px;
-    margin: 5px 3px 5px 0;
-    font-size: 17px;
-    line-height: 24px;
-    word-wrap: break-word;
-    font-weight: normal;
-    color: #333;
-   }
-
-  .form-control {
-    font-size: 17px;
-    letter-spacing: 0.1px;
-  }
-
-  textarea {
-    margin: 5px 0;
-    height: 100px;
-    resize: none;
-  }
-
-  .help-block {
-    margin-bottom: 0;
-  }
-
-  label {
-    color: gray;
-  }
-}
-
-.row-a {
-  height: 155px;
-  padding: 3px 8px;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #f5f5f5;
-  }
 }
 
 .placeholder {
-  color: gray;
+  margin-top: 50px;
+  color: #777;
 
   h4 {
     padding: 8px 0 18px;
