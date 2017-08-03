@@ -89,7 +89,9 @@ module.exports = function (sequelize, DataTypes) {
     },
     detached: {
       type: DataTypes.BOOLEAN,
-      field: 'detached'
+      field: 'detached',
+      defaultValue: false,
+      allowNull: false
     }
   }, {
     classMethods: {
