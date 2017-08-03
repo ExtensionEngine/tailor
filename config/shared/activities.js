@@ -1,9 +1,9 @@
 const filter = require('lodash/filter');
 const find = require('lodash/find');
-const mergeConfig = require('../utils/mergeConfig.js');
+const mergeConfig = require('../utils/mergeConfig');
 const config = mergeConfig(
-  require('./activitiesrc.js'),
-  require('./activitiesrc.load.js')()
+  require('./activitiesrc'),
+  require('./activitiesrc.load')()
 );
 const { OUTLINE_LEVELS, ASSET_GROUP } = config;
 

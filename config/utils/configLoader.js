@@ -1,6 +1,6 @@
 const readConfig = require('./readConfig');
 
-module.exports = function configFactory(name) {
+module.exports = function configLoader(name) {
   return () => {
     const isWebpack = !!arguments.length;
     const config = readConfig(name);

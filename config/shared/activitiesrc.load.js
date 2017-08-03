@@ -1,1 +1,1 @@
-module.exports = require('../utils/configFactory.js')('activities');
+module.exports = require('../utils/configLoader')('activities');
