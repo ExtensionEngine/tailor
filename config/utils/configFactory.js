@@ -10,5 +10,5 @@ module.exports = function configFactory(name) {
 };
 
 function createModule(obj) {
-  return `module.exports = function() { return ${JSON.stringify(obj)} };`;
+  return `module.exports = function() { return ${JSON.stringify(obj)}; };`;
 };
