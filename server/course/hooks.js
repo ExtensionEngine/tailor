@@ -1,8 +1,8 @@
 const addHooks = require('../shared/util/addHooks');
-const last = require('lodash/last');
+const includes = require('lodash/includes');
 const logger = require('../shared/logger');
-const { OUTLINE_LEVELS } = require('../../config/shared/activities');
-const LEAF = last(OUTLINE_LEVELS);
+const { OBJECTIVES } = require('../../config/shared/activities');
+const objectiveTypes = OBJECTIVES.map(it => it.type);
 
 module.exports = { add };
 
@@ -10,13 +10,13 @@ function add(Course, models) {
   const { Activity, TeachingElement } = models;
   const hooks = ['afterCreate', 'afterDestroy'];
 
-  // Track leafs.
+  // Track objectives.
   addHooks(Activity, hooks, (hook, instance, options) => {
-    if (instance.type !== LEAF.type) return;
-    const { courseId } = instance;
-    logger.info(`[Course] Activity#${hook}`, { type: LEAF.type, id: instance.id, courseId });
-    // TODO: Ignore detached leafs!
-    const where = { courseId, type: LEAF.type };
+    if (!includes(objectiveTypes, instance.type)) return;
+    const { id, courseId, type } = instance;
+    logger.info(`[Course] Activity#${hook}`, { type, id, courseId });
+    // TODO: Ignore detached objectives!
+    const where = { courseId, type: objectiveTypes };
     return Activity.count({ where })
       .then(count => Course.updateStats(courseId, 'objectives', count));
   });
@@ -24,8 +24,8 @@ function add(Course, models) {
   // Track assessments.
   addHooks(TeachingElement, hooks, (hook, instance, { context }) => {
     if (instance.type !== 'ASSESSMENT') return;
-    const { courseId } = instance;
-    logger.info(`[Course] TeachingElement#${hook}`, { type: instance.type, id: instance.id, courseId });
+    const { id, courseId, type } = instance;
+    logger.info(`[Course] TeachingElement#${hook}`, { type, id, courseId });
     // TODO: Ignore detached assessments!
     const where = { courseId, type: 'ASSESSMENT' };
     return TeachingElement.count({ where })
