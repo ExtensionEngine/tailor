@@ -15,8 +15,7 @@ function add(Course, models) {
     if (!includes(objectiveTypes, instance.type)) return;
     const { id, courseId, type } = instance;
     logger.info(`[Course] Activity#${hook}`, { type, id, courseId });
-    // TODO: Ignore detached objectives!
-    const where = { courseId, type: objectiveTypes };
+    const where = { courseId, type: objectiveTypes, detached: false };
     return Activity.count({ where })
       .then(count => Course.updateStats(courseId, 'objectives', count));
   });
@@ -26,8 +25,7 @@ function add(Course, models) {
     if (instance.type !== 'ASSESSMENT') return;
     const { id, courseId, type } = instance;
     logger.info(`[Course] TeachingElement#${hook}`, { type, id, courseId });
-    // TODO: Ignore detached assessments!
-    const where = { courseId, type: 'ASSESSMENT' };
+    const where = { courseId, type: 'ASSESSMENT', detached: false };
     return TeachingElement.count({ where })
       .then(count => Course.updateStats(courseId, 'assessments', count));
   });
