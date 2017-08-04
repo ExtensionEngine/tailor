@@ -171,6 +171,7 @@ selenium-debug.log
 .env
 ecosystem.config.js
 .*rc.*
+!.*rc.*.example
 
 # Local IJavascript REPL files
 .ipynb_checkpoints
