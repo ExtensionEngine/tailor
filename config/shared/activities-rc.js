@@ -11,15 +11,13 @@ const OUTLINE_LEVELS = [{
   hasAssessments: false,
   hasExams: true,
   hasPrerequisites: true,
-  meta: [
-    {
-      key: 'description',
-      type: 'TEXTAREA',
-      label: 'Description',
-      placeholder: 'Click to add...',
-      validate: { rules: { required: false, max: 250 } }
-    }
-  ]
+  meta: [{
+    key: 'description',
+    type: 'TEXTAREA',
+    label: 'Description',
+    placeholder: 'Click to add...',
+    validate: { rules: { required: false, max: 250 } }
+  }]
 }, {
   level: 2,
   type: 'OBJECTIVE',
@@ -32,15 +30,13 @@ const OUTLINE_LEVELS = [{
   hasAssessments: false,
   hasExams: false,
   hasPrerequisites: true,
-  meta: [
-    {
-      key: 'description',
-      type: 'TEXTAREA',
-      label: 'Description',
-      placeholder: 'Click to add...',
-      validate: { rules: { required: false, max: 250 } }
-    }
-  ]
+  meta: [{
+    key: 'description',
+    type: 'TEXTAREA',
+    label: 'Description',
+    placeholder: 'Click to add...',
+    validate: { rules: { required: false, max: 250 } }
+  }]
 }, {
   level: 2,
   type: 'INTERACTIVE_EXERCISE',
@@ -62,15 +58,13 @@ const OUTLINE_LEVELS = [{
   hasAssessments: true,
   hasExams: false,
   hasPrerequisites: true,
-  meta: [
-    {
-      key: 'description',
-      type: 'TEXTAREA',
-      label: 'Description',
-      placeholder: 'Click to add...',
-      validate: { rules: { required: false, max: 250 } }
-    }
-  ]
+  meta: [{
+    key: 'description',
+    type: 'TEXTAREA',
+    label: 'Description',
+    placeholder: 'Click to add...',
+    validate: { rules: { required: false, max: 250 } }
+  }]
 }];
 
 module.exports = { ASSET_GROUP, OUTLINE_LEVELS };
