@@ -60,57 +60,67 @@ export default {
     }
   }
 }
+</style>
 
-.vue-color__chrome {
+<style lang="scss">
+.c-chrome {
   margin: 0 auto;
-  box-shadow: none;
-  border-radius: 3px;
-  background: transparent;
+  box-shadow: none !important;
+  border-radius: 3px !important;
+  background: transparent !important;
   overflow: hidden;
-}
 
-.vue-color__chrome /deep/ .vue-color__chrome {
-  &__chrome-body {
-    padding: 12px 16px 12px;
+  .chrome-body {
+    padding: 12px 16px 12px !important;
     background: transparent;
-  }
 
-  &__controls {
-    display: block;
-  }
+    .controls {
+      display: block;
 
-  &__color-wrap {
-    float: left;
-  }
+      .color-wrap {
+        float: left;
 
-  &__sliders {
-    padding: 8px 0 0 40px;
-  }
+        .active-color {
+          width: 24px;
+          height: 24px;
+          margin-top: 2px;
+          border-radius: 50%;
+        }
+      }
 
-  &__alpha-wrap, &__toggle-btn {
-    display: none;
-  }
+      .sliders {
+        padding: 8px 0 0 40px;
 
-  &__active-color {
-    width: 24px;
-    height: 24px;
-    margin-top: 2px;
-    border-radius: 50%;
-  }
-}
+        .alpha-wrap {
+          display: none;
+        }
+      }
+    }
 
-.vue-color__chrome /deep/ .vue-color__editable-input {
-  &__label {
-    display: none;
-    color: #222;
-  }
+    .fields-wrap {
+      .fields {
+        .field {
+          .editable-input {
+            .input__label {
+              display: none;
+              color: #222;
+            }
 
-  &__input {
-    height: 24px;
-    font-family: "Roboto";
-    font-size: 13px;
-    color: #222;
-    background: #fdfdfd;
+            .input__input {
+              height: 24px;
+              font-family: "Roboto";
+              font-size: 13px;
+              color: #222;
+              background: #fdfdfd;
+            }
+          }
+        }
+      }
+
+      .toggle-btn {
+        display: none;
+      }
+    }
   }
 }
 </style>
