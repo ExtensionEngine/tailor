@@ -60,67 +60,61 @@ export default {
     }
   }
 }
-</style>
 
-<style lang="scss">
-.c-chrome {
+.input /deep/ .c-chrome {
   margin: 0 auto;
-  box-shadow: none !important;
-  border-radius: 3px !important;
-  background: transparent !important;
+  box-shadow: none;
+  border-radius: 3px;
+  background: transparent;
   overflow: hidden;
 
   .chrome-body {
     padding: 12px 16px 12px !important;
     background: transparent;
+  }
 
-    .controls {
-      display: block;
+  .controls {
+    display: block;
+  }
 
-      .color-wrap {
-        float: left;
+  .color-wrap {
+    float: left;
+  }
 
-        .active-color {
-          width: 24px;
-          height: 24px;
-          margin-top: 2px;
-          border-radius: 50%;
-        }
-      }
+  .active-color {
+    width: 24px;
+    height: 24px;
+    margin-top: 2px;
+    border-radius: 50%;
+  }
 
-      .sliders {
-        padding: 8px 0 0 40px;
+  .sliders {
+    padding: 8px 0 0 40px;
+  }
 
-        .alpha-wrap {
-          display: none;
-        }
-      }
-    }
+  .container {
+    width: 100%
+  }
 
-    .fields-wrap {
-      .fields {
-        .field {
-          .editable-input {
-            .input__label {
-              display: none;
-              color: #222;
-            }
+  .alpha-wrap {
+    display: none;
+  }
 
-            .input__input {
-              height: 24px;
-              font-family: "Roboto";
-              font-size: 13px;
-              color: #222;
-              background: #fdfdfd;
-            }
-          }
-        }
-      }
+  .input__label {
+    display: none;
+    color: #222;
+  }
 
-      .toggle-btn {
-        display: none;
-      }
-    }
+  .input__input {
+    height: 24px;
+    font-family: "Roboto";
+    font-size: 13px;
+    color: #222;
+    background: #fdfdfd;
+  }
+
+  .toggle-btn {
+    display: none;
   }
 }
 </style>
