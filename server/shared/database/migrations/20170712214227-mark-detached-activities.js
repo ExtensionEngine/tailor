@@ -8,7 +8,6 @@ module.exports = {
       defaultValue: false
     });
   },
-
   down(queryInterface, Sequelize) {
     return queryInterface.removeColumn('activity', 'detached');
   }
