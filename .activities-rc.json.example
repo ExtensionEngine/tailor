@@ -1,0 +1,7 @@
+{
+  "OUTLINE_LEVELS": [{
+    // Overrides default goal color.
+    "type": "GOAL",
+    "color": "#ff6590"
+  }]
+}
