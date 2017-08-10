@@ -60,10 +60,6 @@ module.exports = function (sequelize, DataTypes) {
         const where = Object.assign({}, filter, { activityId: this.activityId });
         return TeachingElement.findAll({ where, order: 'position ASC' });
       },
-      remove(options) {
-        const { soft = false } = options;
-        return soft ? this.update({ detached: true }) : this.destroy(options);
-      },
       reorder(index) {
         return sequelize.transaction(t => {
           return this.getReorderFilter()
