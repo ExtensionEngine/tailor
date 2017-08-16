@@ -20,7 +20,7 @@
             placeholder="Prefix..."
             class="form-control">
         </div>
-        <div class="col-xs-5">
+        <div :class="`col-xs-${ answers.length > 1 ? 5 : 6 }`">
           <input
             :disabled="!isEditing"
             :value="correct[index]"
@@ -38,9 +38,10 @@
             placeholder="Suffix..."
             class="form-control">
         </div>
-        <div class="col-xs-1">
+        <div
+          v-if="isEditing && answers.length > 1"
+          class="col-xs-1">
           <span
-            v-if="isEditing && answers.length > 1"
             @click="removeAnswer(index)"
             class="btn-remove mdi mdi-close">
           </span>
