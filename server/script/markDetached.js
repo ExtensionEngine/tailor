@@ -11,8 +11,8 @@ const where = {
     { parentId: null, type: { $ne: GOAL } }
   ]
 };
-Promise.resolve(Activity.findAll({ where }))
-  .map(it => it.remove({ recursive: true }))
+Promise.resolve(Activity.findAll({ where, paranoid: false }))
+  .each(it => it.remove({ recursive: true }))
   .then(() => {
     console.log('Activities and teaching elements detached');
     process.exit(0);
