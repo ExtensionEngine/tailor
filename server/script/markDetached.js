@@ -12,7 +12,7 @@ const where = {
   ]
 };
 Promise.resolve(Activity.findAll({ where, paranoid: false }))
-  .each(it => it.remove({ recursive: true }))
+  .each(it => it.remove({ recursive: true, soft: true }))
   .then(() => {
     console.log('Activities and teaching elements detached');
     process.exit(0);
