@@ -7,8 +7,8 @@ const GOAL = OUTLINE_LEVELS[0].type;
 
 const where = {
   $or: [
-    { deletedAt: { $ne: null } },
-    { parentId: null, type: { $ne: GOAL } }
+    { deletedAt: { $ne: null }, detached: null },
+    { parentId: null, type: { $ne: GOAL }, detached: null }
   ]
 };
 Promise.resolve(Activity.findAll({ where, paranoid: false }))
