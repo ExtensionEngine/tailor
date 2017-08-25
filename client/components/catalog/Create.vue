@@ -46,7 +46,7 @@
       </div>
       <div slot="modal-footer" class="modal-footer">
         <button type="button" @click="hide" class="btn btn-default">Cancel</button>
-        <button type="button" @click="create" class="btn btn-primary">Create</button>
+        <button type="button" @click="submit" class="btn btn-primary">Create</button>
       </div>
     </modal>
   </div>
@@ -57,6 +57,7 @@ import { focus } from 'vue-focus';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters } from 'vuex-module';
 import { modal } from 'vue-strap';
+import pick from 'lodash/pick';
 import Promise from 'bluebird';
 
 export default {
@@ -70,30 +71,28 @@ export default {
       focusName: true
     };
   },
-  directives: {
-    focus
-  },
-  components: {
-    modal,
-    Loader
+  computed: {
+    ...mapGetters(['isAdmin']),
+    showCreateButton() {
+      return this.isAdmin;
+    }
   },
   methods: {
     ...mapActions(['save'], 'courses'),
-    create() {
-      const course = { name: this.name, description: this.description };
-      const save = () => {
-        this.showLoader = true;
-        return Promise.join(this.save(course), Promise.delay(1000)).then(() => {
-          this.showLoader = false;
-          this.hide();
-        });
-      };
-
+    submit() {
       this.$validator.validateAll()
-        .then(save)
-        .catch(() => {
-          this.vErrors.add('default', 'An error has occurred!');
+        .then(result => {
+          if (!result) return;
+          const course = pick(this, ['name', 'description']);
+          return this.create(course);
         });
+    },
+    create(course) {
+      this.showLoader = true;
+      return Promise.join(this.save(course), Promise.delay(1000))
+        .then(() => (this.showLoader = false))
+        .then(() => this.hide())
+        .catch(() => this.vErrors.add('default', 'An error has occurred!'));
     },
     show() {
       this.vErrors.clear();
@@ -106,12 +105,9 @@ export default {
       this.showModal = false;
     }
   },
-  computed: {
-    ...mapGetters(['isAdmin']),
-    showCreateButton() {
-      return this.isAdmin;
-    }
-  }
+  directives: { focus },
+  components: { modal, Loader },
+  inject: ['$validator']
 };
 </script>
 
