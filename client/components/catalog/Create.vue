@@ -60,17 +60,17 @@ import { modal } from 'vue-strap';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
 
+const getDefaultData = () => ({
+  name: '',
+  description: '',
+  showLoader: false,
+  showModal: false,
+  focusName: true
+});
+
 export default {
   name: 'create-course',
-  data() {
-    return {
-      name: '',
-      description: '',
-      showLoader: false,
-      showModal: false,
-      focusName: true
-    };
-  },
+  data: getDefaultData,
   computed: {
     ...mapGetters(['isAdmin']),
     showCreateButton() {
@@ -90,7 +90,6 @@ export default {
     create(course) {
       this.showLoader = true;
       return Promise.join(this.save(course), Promise.delay(1000))
-        .then(() => (this.showLoader = false))
         .then(() => this.hide())
         .catch(() => this.vErrors.add('default', 'An error has occurred!'));
     },
@@ -100,9 +99,7 @@ export default {
       this.focusName = true;
     },
     hide() {
-      this.name = '';
-      this.description = '';
-      this.showModal = false;
+      Object.assign(this, getDefaultData());
     }
   },
   directives: { focus },
