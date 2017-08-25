@@ -143,8 +143,8 @@ export default {
 }
 
 .btn-add-answer {
-  font-size: 20px;
   padding: 4px 10px;
+  font-size: 20px;
   border-radius: 2px;
 }
 
@@ -154,15 +154,15 @@ ul {
 }
 
 .answer {
-  font-size: 16px;
   margin: 20px 0;
+  font-size: 16px;
 
   .btn-remove {
     display: inline-block;
     height: 34px;
     line-height: 34px;
-    cursor: pointer;
     color: #888;
+    cursor: pointer;
 
     &:hover {
       color: darken(#888, 20%);
