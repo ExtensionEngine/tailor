@@ -15,13 +15,13 @@
       </div>
       <div v-if="showError" class="error">
         <div class="message">
-          <i class="mdi mdi-alert"></i>
+          <span class="icon mdi mdi-alert"></span>
           <p>Error loading media!</p>
         </div>
       </div>
       <video-player
-        @ready="onReady"
         :options="options"
+        @ready="onReady"
         ref="video"
         class="player">
       </video-player>
@@ -40,6 +40,9 @@ const MediaError = window.MediaError;
 export default {
   name: 'te-video',
   props: ['element', 'isFocused'],
+  data() {
+    return { error: null };
+  },
   computed: {
     player() {
       return this.$refs.video && this.$refs.video.player;
@@ -68,9 +71,6 @@ export default {
       if (!this.error) return false;
       return this.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED;
     }
-  },
-  data() {
-    return { error: null };
   },
   methods: {
     onReady(player) {
@@ -154,7 +154,8 @@ function getMimetype(url) {
   color: #fff;
   font-size: 18px;
   font-weight: 500;
-  .mdi { font-size: 42px; }
+
+  .icon { font-size: 42px; }
 }
 
 .well {
