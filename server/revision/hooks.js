@@ -1,38 +1,34 @@
-const { pascal } = require('to-case');
-const zip = require('lodash/zip');
+const addHooks = require('../shared/util/addHooks');
+const { constant } = require('to-case');
+const logger = require('../shared/logger');
 
-const hooks = ['afterCreate', 'afterUpdate', 'afterDestroy'];
-const operations = ['CREATE', 'UPDATE', 'REMOVE'];
-const entities = ['COURSE', 'ACTIVITY', 'TEACHING_ELEMENT'];
+module.exports = { add };
 
-function add(models) {
-  zip(hooks, operations).forEach(hook => {
-    entities.forEach(entity => {
-      createHook(models, entity, hook);
-    });
-  });
-}
+function add(Revision, models) {
+  const { Course, Activity, TeachingElement } = models;
+  const hooksDict = {
+    afterCreate: 'CREATE',
+    afterUpdate: 'UPDATE',
+    afterDestroy: 'REMOVE'
+  };
+  const hooks = Object.keys(hooksDict);
 
-function createHook(models, entity, [name, operation]) {
+  // TODO: Courses are soft deleted already?
   // When course is removed, its id is no longer valid and cannot be saved
-  // as a foreign key. Remove this check when courses are soft-deleted:
-  if (entity === 'COURSE' && operation === 'REMOVE') return;
+  // as a foreign key. Remove this when courses are soft-deleted:
+  addHooks(Course, ['afterCreate', 'afterUpdate'], createRevision);
 
-  const Revision = models.Revision;
-  const Model = models[pascal(entity)];
+  addHooks(Activity, hooks, createRevision);
+  addHooks(TeachingElement, hooks, createRevision);
 
-  Model.hook(name, (instance, { context }) => {
+  function createRevision(hook, instance, { context }) {
     if (!context || !context.userId) return;
-    Revision.create({
-      courseId: entity === 'COURSE' ? instance.id : instance.courseId,
-      entity,
-      operation,
-      state: instance.get({ plain: true }),
-      userId: context.userId
-    });
-  });
+    const model = instance.Model;
+    const courseId = model.name === Course.name ? instance.id : instance.courseId;
+    const entity = constant(model.name);
+    const operation = hooksDict[hook];
+    const state = instance.get({ plain: true });
+    logger.info(`[Revision] ${entity}#${hook}`, { entity, operation, id: instance.id, courseId });
+    return Revision.create({ courseId, entity, operation, state, userId: context.userId });
+  }
 }
-
-module.exports = {
-  add
-};

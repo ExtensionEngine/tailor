@@ -77,7 +77,15 @@ module.exports = function (sequelize, DataTypes) {
         });
       },
       addHooks(models) {
-        hooks.add(models);
+        hooks.add(Course, models);
+      },
+      updateStats(id, key, value) {
+        return Course.findById(id)
+          .then(course => {
+            const stats = course.stats || {};
+            stats[key] = value;
+            return course.update({ stats });
+          });
       }
     },
     instanceMethods: {
