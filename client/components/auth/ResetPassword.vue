@@ -48,13 +48,10 @@ export default {
     submit() {
       const token = this.$route.params.token;
       this.$validator.validateAll().then(result => {
-        if (!result) {
-          this.vErrors.add('default', 'An error has occurred!');
-          return;
-        }
-
+        if (!result) return;
         return this.resetPassword({ password: this.password, token })
-          .then(() => this.$router.push('/'));
+          .then(() => this.$router.push('/'))
+          .catch(() => this.vErrors.add('default', 'An error has occurred!'));
       });
     }
   }
