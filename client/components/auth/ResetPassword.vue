@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="message"><span>{{ vErrors.first('default') }}</span></div>
+    <div class="message"><span>{{ error }}</span></div>
     <form @submit.prevent="submit">
       <div :class="{ 'has-error': vErrors.has('password') }" class="form-group">
         <input
@@ -26,7 +26,10 @@
           {{ vErrors.first('passwordConfirmation') }}
         </span>
       </div>
-      <button type="submit" class="btn btn-default btn-block">
+      <button
+        :disabled="!isValid"
+        class="btn btn-default btn-block"
+        type="submit">
         Change password
       </button>
     </form>
@@ -38,8 +41,14 @@ import { mapActions } from 'vuex-module';
 
 export default {
   inject: ['$validator'],
+  computed: {
+    isValid() {
+      return this.password && this.vErrors.count() === 0;
+    }
+  },
   data() {
     return {
+      error: null,
       password: ''
     };
   },
@@ -48,10 +57,9 @@ export default {
     submit() {
       const token = this.$route.params.token;
       this.$validator.validateAll().then(result => {
-        if (!result) return;
         return this.resetPassword({ password: this.password, token })
           .then(() => this.$router.push('/'))
-          .catch(() => this.vErrors.add('default', 'An error has occurred!'));
+          .catch(() => (this.error = 'An error has occurred!'));
       });
     }
   }
