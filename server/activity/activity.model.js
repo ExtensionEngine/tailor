@@ -1,6 +1,9 @@
 'use strict';
 
 const calculatePosition = require('../shared/util/calculatePosition');
+const isEmpty = require('lodash/isEmpty');
+const map = require('lodash/map');
+const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
 /**
@@ -86,6 +89,11 @@ module.exports = function (sequelize, DataTypes) {
     deletedAt: {
       type: DataTypes.DATE,
       field: 'deleted_at'
+    },
+    detached: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   }, {
     classMethods: {
@@ -115,20 +123,42 @@ module.exports = function (sequelize, DataTypes) {
           order: 'position ASC'
         });
       },
-      remove() {
+      descendants(options = {}, nodes = [], leaves = []) {
+        const { attributes = [] } = options;
+        const node = !isEmpty(attributes) ? pick(this, attributes) : this;
+        nodes.push(node);
+        return Promise.resolve(this.getChildren({ attributes }))
+          .map(it => it.descendants(options, nodes, leaves))
+          .then(children => {
+            if (!isEmpty(children)) return { nodes, leaves };
+            const leaf = !isEmpty(attributes) ? pick(this, attributes) : this;
+            leaves.push(leaf);
+            return { nodes, leaves };
+          });
+      },
+      remove(options = {}) {
+        if (!options.recursive) return this.destroy(options);
         return sequelize.transaction(t => {
-          return this.deleteTree()
-            .then(() => this.destroy())
+          return this.descendants({ attributes: ['id'] })
+            .then(descendants => {
+              descendants.all = [...descendants.nodes, ...descendants.leaves];
+              return descendants;
+            })
+            .then(descendants => {
+              const TeachingElement = sequelize.model('TeachingElement');
+              const activities = map(descendants.all, 'id');
+              const where = { activityId: [...activities, this.id] };
+              return removeAll(TeachingElement, where, options.soft)
+                .then(() => descendants);
+            })
+            .then(descendants => {
+              const activities = map(descendants.nodes, 'id');
+              const where = { parentId: [...activities, this.id] };
+              return removeAll(Activity, where, options.soft);
+            })
+            .then(() => this.destroy(options))
             .then(() => this);
         });
-      },
-      deleteTree() {
-        return Promise.resolve(this.getChildren())
-          .each(it => it.deleteTree())
-          .then(() => this.deleteChildren());
-      },
-      deleteChildren() {
-        return Activity.destroy({ where: { parentId: this.id } });
       },
       reorder(index) {
         return sequelize.transaction(t => {
@@ -147,3 +177,8 @@ module.exports = function (sequelize, DataTypes) {
 
   return Activity;
 };
+
+function removeAll(Model, where = {}, soft = false) {
+  if (!soft) return Model.destroy({ where });
+  return Model.update({ detached: true }, { where });
+}

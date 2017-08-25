@@ -25,8 +25,6 @@
 </template>
 
 <script>
-const noop = Function.prototype;
-
 export default {
   name: 'multiline-input',
   props: ['meta', 'min-height'],
@@ -55,13 +53,15 @@ export default {
       setTimeout(() => this.$refs[this.meta.key].focus(), 0);
     },
     focusoutTextarea() {
-      this.$validator.validateAll().then(() => {
+      this.$validator.validateAll().then(result => {
+        if (!result) return;
         this.editing = false;
         if (this.value === this.meta.value) return;
         this.$emit('update', this.meta.key, this.value);
-      }, noop);
+      });
     }
-  }
+  },
+  inject: ['$validator']
 };
 </script>
 

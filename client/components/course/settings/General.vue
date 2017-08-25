@@ -99,17 +99,19 @@ export default {
       if (!this.showNameInput) return;
       this.showNameInput = false;
       if (this.course.name === this.newCourseName) return;
-      this.$validator.validateAll().then(() => {
+      this.$validator.validateAll().then(result => {
+        if (!result) return this.setCourseFields();
         this.update({ ...this.course, name: this.newCourseName });
-      }, () => this.setCourseFields());
+      });
     },
     updateDescription() {
       if (!this.showDescriptionInput) return;
       this.showDescriptionInput = false;
       if (this.course.description === this.newCourseDescription) return;
-      this.$validator.validateAll().then(() => {
+      this.$validator.validateAll().then(result => {
+        if (!result) return this.setCourseFields();
         this.update({ ...this.course, description: this.newCourseDescription });
-      }, () => this.setCourseFields());
+      });
     },
     removeCourse() {
       const payload = {
@@ -133,7 +135,8 @@ export default {
     course() {
       this.setCourseFields();
     }
-  }
+  },
+  inject: ['$validator']
 };
 </script>
 

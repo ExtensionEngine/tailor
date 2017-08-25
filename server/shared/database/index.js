@@ -17,6 +17,11 @@ each(models, (path, name) => {
   db[name] = sequelize.import(path);
 });
 
+// Patch Sequelize#method to support getting models by class name.
+sequelize.model = function (name) {
+  return sequelize.models[name] || db[name];
+};
+
 each(db, (v, modelName) => {
   if ('associate' in db[modelName]) db[modelName].associate(db);
 });
