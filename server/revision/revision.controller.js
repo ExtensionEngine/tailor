@@ -8,7 +8,9 @@ function index(req, res) {
     .findAll({
       where: { courseId },
       include: [{ model: User, attributes: ['id', 'email'] }],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
+      limit: req.query.limit,
+      offset: req.query.offset
     })
     .then(data => res.json({ data }));
 }

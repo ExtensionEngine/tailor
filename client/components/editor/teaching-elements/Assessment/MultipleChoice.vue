@@ -1,50 +1,56 @@
 <template>
-  <div :class="{ 'disabled': disabled }">
+  <div :class="{ disabled }">
     <h5>Answers</h5>
-    <span @click="addAnswer" class="btn btn-link fa fa-plus pull-right"></span>
+    <span @click="addAnswer" class="btn btn-link mdi mdi-plus pull-right"></span>
     <ul>
       <li v-for="(answer, index) in answers">
         <span :class="{ 'has-error': !hasCorrectAnswers }">
           <input
-            v-model="correct"
-            :value="index"
+            :checked="correct.includes(index)"
             :disabled="disabled"
-            @change="update"
+            @change="toggleAnswer(index)"
             type="checkbox">
         </span>
         <span :class="errorClass(index)">
           <input
-            v-model="answers[index]"
+            :ref="`input${index}`"
+            :value="answers[index]"
             :disabled="disabled"
-            @blur="update"
+            @change="updateAnswer(index)"
             class="form-control"
             placeholder="Answer...">
         </span>
-        <span @click="removeAnswer(index)" class="fa fa-times control"></span>
+        <span @click="removeAnswer(index)" class="mdi mdi-close control"></span>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
+import range from 'lodash/range';
+
 const customAlert = {
-  text: 'Please make at least two answers available !',
-  type: 'alert-danger'
+  type: 'alert-danger',
+  text: 'Please make at least two answers available !'
 };
 
 export default {
   props: {
     assessment: Object,
-    errors: Array,
-    isEditing: Boolean
-  },
-  data() {
-    return {
-      answers: this.assessment.answers,
-      correct: this.assessment.correct
-    };
+    isEditing: Boolean,
+    errors: Array
   },
   computed: {
+    answers() {
+      return this.assessment.answers;
+    },
+    correct() {
+      return this.assessment.correct;
+    },
+    feedback() {
+      return this.assessment.feedback;
+    },
     hasCorrectAnswers() {
       return !this.errors.includes('correct');
     },
@@ -53,24 +59,52 @@ export default {
     }
   },
   methods: {
-    update() {
-      this.validate();
-      this.$emit('update', { answers: this.answers, correct: this.correct });
+    update(data) {
+      this.$emit('update', data);
+    },
+    toggleAnswer(index) {
+      let correct = cloneDeep(this.correct);
+      const position = correct.indexOf(index);
+
+      if (position < 0) {
+        correct.push(index);
+      } else {
+        correct.splice(position, 1);
+      }
+
+      this.update({ correct });
+    },
+    updateAnswer(index) {
+      let answers = cloneDeep(this.answers);
+      answers[index] = this.$refs[`input${index}`][0].value;
+      this.update({ answers });
     },
     addAnswer() {
-      this.answers.push('');
-      this.update();
+      let answers = cloneDeep(this.answers);
+      answers.push('');
+      this.update({ answers });
     },
     removeAnswer(answerIndex) {
-      this.answers.splice(answerIndex, 1);
+      let answers = cloneDeep(this.answers);
+      let correct = cloneDeep(this.correct);
+      let feedback = cloneDeep(this.feedback);
 
-      const index = this.correct.indexOf(answerIndex);
-      if (index !== -1) this.correct.splice(index, 1);
-      this.correct.forEach((it, i) => {
-        if (it >= answerIndex) this.correct[i] = it - 1;
+      answers.splice(answerIndex, 1);
+      const index = correct.indexOf(answerIndex);
+      if (index !== -1) correct.splice(index, 1);
+
+      correct.forEach((it, i) => {
+        if (it >= answerIndex) correct[i] = it - 1;
       });
 
-      this.update();
+      if (feedback) {
+        range(answerIndex, answers.length).forEach(it => {
+          feedback[it] = feedback[it + 1];
+        });
+        delete feedback[answers.length];
+      }
+
+      this.update({ answers, correct, feedback });
     },
     validate() {
       this.$emit('alert', this.answers.length < 2 ? customAlert : {});
@@ -82,10 +116,8 @@ export default {
     }
   },
   watch: {
-    isEditing(newVal) {
-      if (newVal) return;
-      this.answers = this.assessment.answers;
-      this.correct = this.assessment.correct;
+    assessment() {
+      this.validate();
     }
   }
 };
@@ -120,7 +152,7 @@ ul {
     }
   }
 
-  .fa-times {
+  .mdi-close {
     position: absolute;
     right: 5px;
     bottom: 5px;

@@ -1,8 +1,10 @@
 <template>
   <div class="perspective">
     <div class="actions">
-      <span @click="deletePerspective" class="pull-right">
-        <span class="mdi mdi-delete"></span>
+      <span class="pull-right">
+        <span @click="deletePerspective" class="action">
+          <span class="mdi mdi-delete"></span>
+        </span>
       </span>
     </div>
     <div v-if="!teachingElements.length" class="well">
@@ -12,16 +14,21 @@
       :list="teachingElements"
       :options="dragOptions"
       @update="reorder"
+      @start="e => dragStart(e.oldIndex)"
+      @end="dragEnd"
       class="row">
       <teaching-element
-        v-for="element in teachingElements"
+        v-for="(element, index) in teachingElements"
+        @dragstart="dragStart(index)"
+        @dragend="dragEnd"
+        :dragged="dragElementIndex === index"
         :element="element"
         :key="element._cid">
       </teaching-element>
     </draggable>
     <add-element
       :activity="perspective"
-      :position="teachingElements.length + 1"
+      :position="nextPosition"
       :include="elementTypes"
       :layout="true"
       @add="addElement">
@@ -34,6 +41,7 @@ import AddElement from './AddElement';
 import Draggable from 'vuedraggable';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
+import last from 'lodash/last';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeachingElement from '../teaching-elements';
 
@@ -44,10 +52,8 @@ export default {
   props: ['perspective'],
   data() {
     return {
-      dragOptions: {
-        handle: '.drag-handle',
-        forceFallback: true
-      },
+      dragElementIndex: -1,
+      dragOptions: { handle: '.drag-handle' },
       elementTypes: [
         'HTML',
         'IMAGE',
@@ -55,7 +61,10 @@ export default {
         'EMBED',
         'ASSESSMENT',
         'BREAK',
-        'ACCORDION'
+        'ACCORDION',
+        'CAROUSEL',
+        'MODAL',
+        'TABLE'
       ]
     };
   },
@@ -64,6 +73,10 @@ export default {
     teachingElements() {
       return filter(this.tes, { activityId: this.perspective.id })
         .sort((a, b) => a.position - b.position);
+    },
+    nextPosition() {
+      const element = last(this.teachingElements);
+      return element ? element.position + 1 : 1;
     }
   },
   methods: {
@@ -76,6 +89,12 @@ export default {
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
+    },
+    dragStart(index) {
+      this.dragElementIndex = index;
+    },
+    dragEnd() {
+      this.dragElementIndex = -1;
     },
     addElement(element) {
       this.saveElement(element);
@@ -111,13 +130,13 @@ export default {
   width: 100%;
   min-height: 36px;
   font-size: 22px;
-  color: #707070;
 
-  > span {
+  .action {
     padding: 0 10px;
+    color: #707070;
   }
 
-  > span:hover {
+  .action:hover {
     cursor: pointer;
     color: #444;
   }

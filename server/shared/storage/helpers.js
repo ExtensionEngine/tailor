@@ -1,10 +1,13 @@
 const crypto = require('crypto');
+const isString = require('lodash/isString');
+const isUrl = require('is-url');
 const mime = require('mime-types');
+const nodeUrl = require('url');
 const Promise = require('bluebird');
 const storage = require('./index');
 const values = require('lodash/values');
 
-const PRIMITIVES = ['HTML', 'IMAGE', 'VIDEO', 'EMBED'];
+const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 
@@ -44,7 +47,17 @@ let processor = {};
 processor.IMAGE = (asset, courseId) => {
   const image = asset.data.url;
   const base64Pattern = /^data:image\/(\w+);base64,/;
-  if (!image || !image.match(base64Pattern)) return Promise.resolve(asset);
+
+  if (!isString(image) || (!isUrl(image) && !image.match(base64Pattern))) {
+    return Promise.resolve(asset);
+  }
+
+  if (isUrl(image)) {
+    let url = nodeUrl.parse(image);
+    asset.data.url = url.pathname.substr(1, image.length);
+    return Promise.resolve(asset);
+  }
+
   const file = Buffer.from(image.replace(base64Pattern, ''), 'base64');
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
   const hashString = `${asset.id}${file}`;

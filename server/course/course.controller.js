@@ -2,6 +2,7 @@
 
 const { createError } = require('../shared/error/helpers');
 const { Course, CourseUser, User } = require('../shared/database');
+const { createContentInventory } = require('../integrations/knewton');
 const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -73,6 +74,16 @@ function findOrCreateRole(course, user, role) {
   .then(() => user);
 };
 
+function exportContentInventory({ course }, res) {
+  return course.getInventoryItems()
+    .then(({ activities, tes }) => {
+      let workbook = createContentInventory(course, activities, tes);
+      res.setHeader('Content-Type', 'application/vnd.ms-excel');
+      res.setHeader('Content-disposition', 'attachment;filename=report.xls');
+      return workbook.xlsx.write(res).then(() => res.end());
+    });
+}
+
 const transform = user => {
   return Object.assign(user.profile, { courseRole: user.courseUser.role });
 };
@@ -85,5 +96,6 @@ module.exports = {
   remove,
   getUsers,
   upsertUser,
-  removeUser
+  removeUser,
+  exportContentInventory
 };

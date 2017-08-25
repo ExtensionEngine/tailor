@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 
-import VeeValidate from 'vee-validate';
+import VeeValidate from './utils/validation';
 import Vue from 'vue';
 import { sync } from 'vuex-router-sync';
 
@@ -11,7 +11,7 @@ import store from './store';
 import router from './router';
 import App from './App';
 
-Vue.use(VeeValidate, { errorBagName: 'vErrors', delay: 700 });
+Vue.use(VeeValidate, { errorBagName: 'vErrors', fieldsBagName: 'vFields', delay: 700 });
 
 sync(store, router);
 

@@ -23,7 +23,12 @@ function insertActivities(Model, course, level, parent) {
     position += 1;
     const type = OUTLINE_LEVELS[level];
     const name = level ? 'Sub' : 'Main';
-    const attrs = { name: `${name} activity ${position}`, type, position };
+    const attrs = {
+      name: `${name} activity ${position}`,
+      type,
+      position,
+      courseId: course.id
+    };
     activities.push(Model.create(attrs)
       .then(activity => {
         let io = [course.addActivity(activity)];

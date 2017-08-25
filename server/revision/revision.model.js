@@ -38,7 +38,7 @@ module.exports = function (sequelize, DataTypes) {
         });
       },
       addHooks(models) {
-        hooks.add(models);
+        hooks.add(Revision, models);
       }
     },
     freezeTableName: true

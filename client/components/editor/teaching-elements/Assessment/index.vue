@@ -4,30 +4,49 @@
       <div v-if="summative">
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
+        <div v-if="exam" class="select-leaf">
+          <multiselect
+            :value="objective"
+            :options="examObjectives"
+            :searchable="true"
+            :disabled="!isEditing || !examObjectives.length"
+            :trackBy="'id'"
+            :label="'name'"
+            :placeholder="placeholder"
+            @input="onObjectiveSelected">
+          </multiselect>
+        </div>
       </div>
       <question
-        :assessment="assessment"
+        :assessment="element"
         :errors="errors"
         :isEditing="isEditing"
         @update="update">
       </question>
       <component
-        :is="getComponentName(assessment)"
-        :assessment="assessment.data"
+        :is="getComponentName(element)"
+        :assessment="element.data"
         :errors="errors"
         :isEditing="isEditing"
         @update="update"
         @alert="setAlert">
       </component>
-      <div class="form-group">
+      <div :class="{ 'has-error': hintError }" class="form-group">
         <span class="form-label">Hint</span>
         <input
-          v-model="assessment.data.hint"
+          v-model="element.data.hint"
           :disabled="!isEditing"
           class="form-control"
           type="text"
           placeholder="Optional hint">
       </div>
+      <feedback
+        v-if="showFeedback"
+        :answers="element.data.answers"
+        :feedback="element.data.feedback"
+        :isEditing="isEditing"
+        @update="updateFeedback">
+      </feedback>
       <div class="alert-container">
         <div v-show="alert.text" :class="alert.type" class="alert">
           <strong>{{ alert.text }}</strong>
@@ -48,13 +67,25 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
+import DragDrop from './DragDrop';
+import { errorProcessor, schemas, typeInfo } from 'utils/assessment';
+import Feedback from './Feedback';
 import FillBlank from './FillBlank';
+import find from 'lodash/find';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import last from 'lodash/last';
+import { mapGetters, mapMutations } from 'vuex-module';
+import MatchingQuestion from './MatchingQuestion';
 import MultipleChoice from './MultipleChoice';
+import multiselect from '../../../common/Select';
 import NumericalResponse from './NumericalResponse';
+import { OUTLINE_LEVELS } from 'shared/activities';
+import pluralize from 'pluralize';
+import set from 'lodash/set';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
-import { typeInfo, schemas } from 'utils/assessment';
 import Question from './Question';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
@@ -66,58 +97,98 @@ const ASSESSMENT_TYPES = {
   TF: 'true-false',
   NR: 'numerical-response',
   TR: 'text-response',
-  FB: 'fill-blank'
+  FB: 'fill-blank',
+  MQ: 'matching-question',
+  DD: 'drag-drop'
 };
 
 export default {
   name: 'te-assessment',
-  props: { element: Object, summative: Boolean },
+  props: { element: Object, exam: Object, summative: Boolean },
   data() {
-    const assessment = cloneDeep(this.element);
+    const isEditing = !this.element.id;
     return {
-      assessment,
-      isEditing: !assessment.id,
+      isEditing,
       alert: {},
-      errors: []
+      errors: [],
+      previousVersion: null,
+      objective: null
     };
   },
   computed: {
+    ...mapGetters(['getExamObjectives'], 'activities'),
     schema() {
-      return schemas[this.assessment.data.type] || {};
+      return schemas[this.element.data.type] || {};
     },
     typeInfo() {
-      return typeInfo[this.assessment.data.type] || {};
+      return typeInfo[this.element.data.type] || {};
+    },
+    hintError() {
+      return this.errors.includes('hint');
+    },
+    showFeedback() {
+      const assessmentType = this.element.data.type;
+      const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
+      return !this.summative && feedbackSupported;
+    },
+    examObjectives() {
+      return this.getExamObjectives(this.exam);
+    },
+    placeholder() {
+      const label = last(OUTLINE_LEVELS).label;
+      return isEmpty(this.examObjectives)
+        ? `No ${pluralize(label)}`
+        : `Link ${label}`;
     }
   },
   methods: {
-    getComponentName(assessment) {
-      return ASSESSMENT_TYPES[assessment.data.type];
+    ...mapMutations({ addElement: 'add' }, 'tes'),
+    getComponentName(element) {
+      return ASSESSMENT_TYPES[element.data.type];
     },
     setAlert(data = {}) {
       this.alert = data;
+      const { type, message } = data;
+      if (type && type !== 'alert-danger') {
+        setTimeout(() => {
+          if (message === this.alert.message) this.setAlert();
+        }, 3000);
+      }
     },
-    validate(question) {
-      return this.schema.validate(question, validationOptions);
+    validate(data) {
+      return this.schema.validate(data, validationOptions);
     },
-    update(data) {
-      Object.assign(this.assessment.data, data);
+    update(data, validate) {
+      let element = cloneDeep(this.element);
+      Object.assign(element.data, data);
+      this.addElement(element);
+
+      if (validate && !isEmpty(this.errors)) {
+        this.errors = [];
+        this.validate(element.data).catch(err => {
+          this.errors = errorProcessor(err);
+        });
+      }
     },
     save() {
+      if (!this.isEditing) return;
       this.errors = [];
-      this.validate(this.assessment.data)
+      this.validate(this.element.data)
         .then(() => {
-          const data = this.summative ? this.assessment : this.assessment.data;
-          this.$emit('save', cloneDeep(data));
+          let data = this.summative ? this.element : this.element.data;
+          data = cloneDeep(data);
+          if (this.objective) set(data, 'data._refs.objectiveId', this.objective.id);
+          this.$emit('save', data);
           this.isEditing = false;
           this.setAlert(saveAlert);
         })
-        .catch(err => err.inner.forEach(it => this.errors.push(it.path)));
+        .catch(err => (this.errors = errorProcessor(err)));
     },
     cancel() {
       if (!this.element.id) {
         this.$emit('remove');
       } else {
-        Object.assign(this.assessment, cloneDeep(this.initAssessment));
+        this.addElement(cloneDeep(this.previousVersion));
         this.isEditing = false;
         this.setAlert();
         this.errors = [];
@@ -127,19 +198,26 @@ export default {
       this.$emit('selected');
     },
     edit() {
+      this.previousVersion = cloneDeep(this.element);
       this.isEditing = true;
     },
     remove() {
       this.$emit('remove');
+    },
+    updateFeedback(feedback) {
+      let element = cloneDeep(this.element);
+      element.data.feedback = element.data.feedback || {};
+      Object.assign(element.data.feedback, feedback);
+      this.addElement(element);
+    },
+    onObjectiveSelected(objective) {
+      this.objective = objective;
     }
   },
-  watch: {
-    element: {
-      deep: true,
-      handler(val) {
-        this.assessment = cloneDeep(val);
-      }
-    }
+  mounted() {
+    const objectiveId = get(this.element, 'data._refs.objectiveId');
+    if (!objectiveId) return;
+    this.objective = find(this.examObjectives, { id: objectiveId });
   },
   components: {
     MultipleChoice,
@@ -147,9 +225,13 @@ export default {
     TrueFalse,
     NumericalResponse,
     TextResponse,
+    Feedback,
     FillBlank,
     Question,
-    Controls
+    Controls,
+    MatchingQuestion,
+    DragDrop,
+    multiselect
   }
 };
 </script>
@@ -160,7 +242,7 @@ export default {
   margin: 10px auto;
   padding: 10px 30px 30px 30px;
   background-color: white;
-  overflow: hidden;
+  overflow: visible;
 
   .alert {
     display: inline-block;
@@ -170,7 +252,7 @@ export default {
   }
 
   .assessment-type {
-    margin: 10px 0 50px 0;
+    margin: 10px 0 20px 0;
     padding: 4px 15px;
     font-size: 13px;
     background-color: #707070;
@@ -191,6 +273,23 @@ export default {
 
   input.form-control {
     padding-left: 10px;
+  }
+
+  .select-leaf {
+    clear: both;
+
+    > div {
+      width: 400px;
+      float: right;
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+.select-leaf {
+  input {
+    height: 32px;
   }
 }
 </style>

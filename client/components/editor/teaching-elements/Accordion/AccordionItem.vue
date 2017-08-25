@@ -7,7 +7,7 @@
         <span @click.stop="deleteItem" class="mdi mdi-delete"></span>
       </div>
       <div v-else class="contents">
-        <input v-model="header" class="form-control" type="text" placeholder="Header"/>
+        <input v-model="header" class="form-control" type="text" placeholder="Header">
         <span @click.stop="saveHeader" class="mdi mdi-content-save"></span>
         <span @click.stop="isEditingHeader = false" class="mdi mdi-close"></span>
       </div>
@@ -42,7 +42,7 @@
 
 <script>
 import AddElement from '../../structure/AddElement';
-import calculatePosition from '../../../../utils/calculatePosition.js';
+import calculatePosition from 'utils/calculatePosition.js';
 import cloneDeep from 'lodash/cloneDeep';
 import Draggable from 'vuedraggable';
 import pick from 'lodash/pick';
@@ -54,9 +54,9 @@ export default {
   props: ['item', 'embeds'],
   data() {
     return {
-      dragOptions: { forceFallback: true, handle: '.drag-handle' },
+      dragOptions: { handle: '.drag-handle' },
       header: this.item.header,
-      isCollapsed: false,
+      isCollapsed: true,
       isEditingHeader: false
     };
   },

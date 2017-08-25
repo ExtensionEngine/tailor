@@ -5,16 +5,12 @@
       <li :class="{ active: $route.name === 'course' }">
         <router-link :to="{ name: 'course' }">Outline</router-link>
       </li>
-      <li v-if="showSettings"
-        :class="{ active: $route.name === 'course-settings' }">
-        <router-link :to="{ name: 'course-settings' }">Settings</router-link>
-      </li>
-      <li v-if="showDetails"
-        :class="{ active: $route.name === 'course-details' }">
-        <router-link :to="{ name: 'course-details' }">Details</router-link>
-      </li>
       <li :class="{ active: $route.name === 'course-revisions' }">
         <router-link :to="{ name: 'course-revisions' }">Revisions</router-link>
+      </li>
+      <li v-if="showSettings"
+        :class="{ active: $route.matched.some(it => it.name === 'course-settings') }">
+        <router-link :to="{ name: 'course-settings' }">Settings</router-link>
       </li>
     </ul>
     <div class="tab-content">
@@ -25,6 +21,8 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import filter from 'lodash/filter';
+import sortBy from 'lodash/sortBy';
 
 export default {
   data() {
@@ -33,7 +31,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course'], 'course'),
+    ...mapGetters(['course', 'activities', 'activity'], 'course'),
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
     showSettings() {
       return this.isAdmin || this.isCourseAdmin;
@@ -50,11 +48,17 @@ export default {
   },
   created() {
     const { courseId } = this.$route.params;
+    const existingSelection = this.activity && this.activity.courseId === courseId;
+    if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
     this.setupActivityApi(`/courses/${courseId}/activities`);
     if (!this.course) this.getCourse(courseId);
-    this.getActivities().then(() => (this.showLoader = false));
-    this.resetActivityFocus();
+    this.getActivities().then(() => {
+      this.showLoader = false;
+      let activities = filter(this.activities, { parentId: null });
+      activities = sortBy(activities, 'position');
+      if (!existingSelection) this.resetActivityFocus(activities[0]._cid);
+    });
   }
 };
 </script>

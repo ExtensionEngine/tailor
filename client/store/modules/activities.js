@@ -1,5 +1,12 @@
-import calculatePosition from '../../utils/calculatePosition.js';
+import calculatePosition from 'utils/calculatePosition.js';
+import filter from 'lodash/filter';
 import find from 'lodash/find';
+import {
+  getDescendants as getDeepChildren,
+  getAncestors as getParents
+} from 'utils/activity.js';
+import map from 'lodash/map';
+import { OBJECTIVES } from 'shared/activities';
 import VuexCollection from '../helpers/collection.js';
 
 const { getter, action, mutation, build } = new VuexCollection('activities');
@@ -13,6 +20,32 @@ getter(function getParent() {
     const activity = find(this.state.items, { id: activityId });
     return activity ? find(this.state.items, { id: activity.parentId }) : null;
   };
+});
+
+getter(function getDescendants() {
+  return activity => getDeepChildren(this.state.items, activity);
+});
+
+getter(function getAncestors() {
+  return activity => getParents(this.state.items, activity);
+});
+
+getter(function getLineage() {
+  return activity => {
+    const ancestors = getParents(this.state.items, activity);
+    const descendants = getDeepChildren(this.state.items, activity);
+    return [...ancestors, ...descendants];
+  };
+});
+
+getter(function getExamObjectives() {
+  const getObjectives = activity => {
+    let children = getDeepChildren(this.state.items, activity);
+    let objectiveTypes = map(OBJECTIVES, 'type');
+    return filter(children, it => objectiveTypes.includes(it.type));
+  };
+
+  return exam => getObjectives(find(this.state.items, { id: exam.parentId }));
 });
 
 action(function reorder({ activity, context }) {

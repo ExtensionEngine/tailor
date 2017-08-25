@@ -16,15 +16,15 @@
             </span>
           </div>
           <div class="form-group" :class="{ 'has-error': vErrors.has('name') }">
-            <input 
-              v-model="name" 
-              v-focus="focusName" 
+            <input
+              v-model="name"
+              v-focus="focusName"
               v-validate="{ rules: { required: true, min: 2, max: 250 } }"
-              @focus="focusName = true" 
-              @blur="focusName = false" 
-              type="text" 
+              @focus="focusName = true"
+              @blur="focusName = false"
+              type="text"
               name="name"
-              class="form-control" 
+              class="form-control"
               placeholder="Name"/>
             <span v-show="vErrors.has('name')" class="help-block">
               {{ vErrors.first('name') }}

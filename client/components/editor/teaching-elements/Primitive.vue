@@ -1,11 +1,11 @@
 <template>
   <div
-    :class="[columnWidth, isDraggable ? 'embedded-hovered' : '']"
+    :class="[columnWidth, elementClass]"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
     class="te-container">
     <div @click="focus" class="teaching-element">
-      <span class="drag-handle">
+      <span v-if="isDraggable" class="drag-handle">
         <span class="mdi mdi-drag-vertical"></span>
       </span>
       <component
@@ -24,7 +24,10 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeHtml from './Html';
 import TeImage from './Image';
 
-const TE_TYPES = { HTML: 'te-html', IMAGE: 'te-image' };
+const TE_TYPES = {
+  HTML: 'te-html',
+  IMAGE: 'te-image'
+};
 
 export default {
   name: 'te-primitive',
@@ -53,6 +56,12 @@ export default {
     },
     isDraggable() {
       return this.drag && this.hovered && !this.disabled;
+    },
+    elementClass() {
+      return {
+        'focused': this.isFocused,
+        'embedded-hovered': this.isDraggable
+      };
     }
   },
   methods: {
@@ -109,6 +118,13 @@ export default {
 
 .teaching-element {
   padding: 10px 20px;
-  border: 1px dashed #ccc;
+  border: 1px dotted #ccc;
+}
+
+.focused {
+  > .teaching-element {
+    border: 1px solid #90a4ae;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+  }
 }
 </style>

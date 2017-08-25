@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="activity-input" v-if="showInput">
+    <div v-if="showInput" class="activity-input">
       <div class="row">
-        <div class="col-lg-8">
-          <span class="form-group" :class="{ 'has-error': vErrors.has('name') }">
+        <div class="col-lg-7">
+          <span :class="{ 'has-error': vErrors.has('name') }" class="form-group">
             <input
               v-model="activityName"
               v-focus.lazy="focusInput"
@@ -11,36 +11,37 @@
               class="form-control"
               name="name"
               type="text"
-              placeholder="Activity name">
-            <span v-show="vErrors.has('name')" class="help-block">
-              {{ vErrors.first('name') }}
-            </span>
+              placeholder="Title">
+            <span class="help-block">{{ vErrors.first('name') }}</span>
           </span>
         </div>
-        <div class="col-lg-2">
-          <select
-            class="form-control"
-            v-if="canCreateSubsection"
-            v-model.number="newActivityLevel">
-            <option value="0">Section</option>
-            <option value="1">Subsection</option>
-          </select>
+        <div class="col-lg-3">
+          <multiselect
+            v-if="hasChildren"
+            :value="activityType ? getActivityLevel(activityType) : levels[0]"
+            :options="levels"
+            :searchable="false"
+            @input="onLevelSelected">
+          </multiselect>
         </div>
         <div class="col-lg-2">
           <button
-            class="btn btn-default"
+            @click.stop="hide"
+            class="btn btn-default btn-sm delete pull-right">X
+          </button>
+          <button
             :disabled="vErrors.any()"
-            @click.stop="add">
+            @click.stop="add"
+            class="btn btn-default btn-sm add pull-right">
             Add
           </button>
-          <button class="btn btn-default" @click.stop="hide">X</button>
         </div>
       </div>
     </div>
-    <div class="divider-wrapper" v-else @click="show">
+    <div v-if="!showInput" @click="show" class="divider-wrapper">
       <div class="divider">
         <div class="action">
-          <span class="fa fa-plus plus"></span>
+          <span class="mdi mdi-plus plus"></span>
         </div>
       </div>
     </div>
@@ -48,29 +49,45 @@
 </template>
 
 <script>
-import { focus } from 'vue-focus';
+import calculatePosition from 'utils/calculatePosition';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
-import { mapGetters, mapActions } from 'vuex-module';
-import { getChildren } from '../../utils/activity.js';
-import calculatePosition from '../../utils/calculatePosition.js';
-const noop = Function.prototype;
+import { focus } from 'vue-focus';
+import { getLevel, OUTLINE_LEVELS } from 'shared/activities';
+import { getChildren } from 'utils/activity';
+import { mapActions, mapGetters } from 'vuex-module';
+import multiselect from '../common/Select';
 
 export default {
-  directives: { focus },
   props: ['parent', 'level'],
   data() {
     return {
       showInput: false,
       focusInput: true,
       activityName: '',
-      newActivityLevel: 0
+      activityType: ''
     };
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['course'], 'course'),
-    canCreateSubsection() {
-      return this.level < 3;
+    levels() {
+      const parent = find(OUTLINE_LEVELS, { type: this.parent.type });
+      const nextLevel = this.level + 1;
+      let cond = it => (it.level === nextLevel) || (it.level === this.level);
+      let levels = filter(OUTLINE_LEVELS, cond);
+
+      if (parent && parent.subLevels) {
+        const subLevels = parent.subLevels;
+        let cond = it => (it.level !== nextLevel) || subLevels.includes(it.type);
+        levels = filter(levels, cond);
+      }
+
+      levels.forEach(it => (it.value = it.type));
+      return levels;
+    },
+    hasChildren() {
+      return this.level < OUTLINE_LEVELS.length;
     }
   },
   methods: {
@@ -84,8 +101,11 @@ export default {
       this.showInput = false;
     },
     add() {
-      this.$validator.validateAll().then(() => {
-        const sameLevel = this.newActivityLevel === 0;
+      this.$validator.validateAll().then(result => {
+        if (!result) return;
+
+        const OUTLINE_LEVEL = find(OUTLINE_LEVELS, { type: this.activityType });
+        const sameLevel = OUTLINE_LEVEL.level === this.level;
         const parentId = sameLevel ? this.parent.parentId : this.parent.id;
         const courseId = this.parent.courseId;
         const items = getChildren(this.activities, parentId, courseId);
@@ -95,6 +115,7 @@ export default {
 
         this.save({
           name: this.activityName,
+          type: this.activityType,
           courseId,
           parentId,
           position: calculatePosition(context)
@@ -102,26 +123,48 @@ export default {
 
         this.hide();
         if (!sameLevel) this.$emit('expand');
-      }, noop);
+      });
+    },
+    getActivityLevel(type) {
+      return getLevel(type);
+    },
+    onLevelSelected(activity) {
+      this.activityType = activity.type;
     }
-  }
+  },
+  mounted() {
+    this.activityType = this.levels[0].type;
+  },
+  directives: { focus },
+  components: { multiselect },
+  inject: ['$validator']
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .activity-input {
   padding: 20px 5px;
 
   input {
     background-color: #e0e0e0;
   }
-
-  select {
-    background-color: #e0e0e0;
-  }
 }
 
 .plus {
-  padding: 0px 7px;
+  padding: 0 5px;
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.btn {
+  &.add {
+    margin-right: 3px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .btn {
+    min-width: 70px;
+  }
 }
 </style>

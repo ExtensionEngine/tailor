@@ -20,7 +20,7 @@
         </td>
         <td class="text-center">
           <button type="button" class="btn btn-link" @click="remove(user)">
-            <span class="fa fa-close"></span>
+            <span class="mdi mdi-close"></span>
           </button>
         </td>
       </tr>

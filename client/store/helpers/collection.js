@@ -53,6 +53,12 @@ export default function (collectionName, baseUrl = '') {
   });
 
   action(function remove(model) {
+    // If added locally; not waiting for id (add)
+    if (!model.id && !model._version) {
+      this.commit('remove', [model]);
+      return Promise.resolve(true);
+    }
+
     return this.api.remove(model)
       .then(removed => this.commit('remove', removed));
   });

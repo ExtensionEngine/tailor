@@ -12,7 +12,8 @@
       <quill-editor
         v-if="isFocused"
         v-model="content"
-        :config="config">
+        :options="options"
+        @ready="onQuillReady">
       </quill-editor>
       <div v-else class="ql-container ql-snow">
         <div v-html="content" class="ql-editor"></div>
@@ -22,8 +23,8 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
+import get from 'lodash/get';
 import { quillEditor } from 'vue-quill-editor';
 
 export default {
@@ -31,26 +32,37 @@ export default {
   props: ['element', 'isFocused'],
   data() {
     return {
-      content: '',
-      ...cloneDeep(this.element.data),
-      config: { modules: { toolbar: '#quillToolbar' } }
+      content: get(this.element, 'data.content', ''),
+      options: { modules: { toolbar: '#quillToolbar' } }
     };
+  },
+  methods: {
+    onQuillReady(quill) {
+      quill.focus();
+      if (quill.root) {
+        quill.root.innerHTML = this.content;
+      }
+    },
+    save() {
+      if (!this.hasChanges) return;
+      this.$emit('save', { content: this.content });
+    }
   },
   computed: {
     hasChanges() {
-      const previousValue = this.element.data.content || '';
+      const previousValue = get(this.element, 'data.content', '');
       return previousValue !== this.content;
     }
   },
   watch: {
+    element(val) {
+      this.content = get(val, 'data.content', '');
+    },
     isFocused(val, oldVal) {
-      if (oldVal && !val && this.hasChanges) {
-        this.$emit('save', { content: this.content });
-      }
+      if (oldVal && !val) this.save();
     },
     content: debounce(function () {
-      if (!this.hasChanges) return;
-      this.$emit('save', { content: this.content });
+      this.save();
     }, 2000)
   },
   components: { quillEditor }
@@ -79,11 +91,17 @@ export default {
 </style>
 
 <style lang="scss">
-.ql-editor {
-  min-height: 117px;
-}
+.te-html {
+  .ql-editor {
+    min-height: 117px;
+  }
 
-.ql-container.ql-snow {
-  border: none !important;
+  .ql-container.ql-snow {
+    border: none !important;
+  }
+
+  .ql-editor.ql-blank:before {
+    width: 100%;
+  }
 }
 </style>

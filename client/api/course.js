@@ -22,8 +22,17 @@ function removeUser(courseId, userId) {
     .then(res => res.data);
 }
 
+function getContentInventory(courseId) {
+  return request({
+    method: 'get',
+    responseType: 'arraybuffer',
+    url: `/courses/${courseId}/contentInventory`
+  }).then(res => res.data);
+};
+
 export default {
   getUsers,
   upsertUser,
-  removeUser
+  removeUser,
+  getContentInventory
 };

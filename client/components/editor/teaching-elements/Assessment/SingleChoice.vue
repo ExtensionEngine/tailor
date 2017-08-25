@@ -4,29 +4,29 @@
     <button
       :disabled="disabled"
       @click="addAnswer"
-      class="btn btn-default answers-add">
-      <span class="fa fa-plus"></span>
+      class="btn btn-link answers-add">
+      <span class="mdi mdi-plus"></span>
     </button>
     <ul>
       <li v-for="(answer, index) in answers">
         <span :class="{ 'has-error': correctError }" class="answers-radio">
           <input
-            v-model="correct"
-            :value="index"
+            :checked="correct === index"
             :disabled="disabled"
-            @change="update"
+            @change="selectAnswer(index)"
             type="radio">
         </span>
-        <span class="answers-input" :class="{ 'has-error': answerError(index) }">
+        <span :class="{ 'has-error': answerError(index) }" class="answers-input">
           <input
-            v-model="answers[index]"
+            :ref="`input${index}`"
+            :value="answer"
             :disabled="disabled"
-            @blur="update"
+            @change="updateAnswer(index)"
             type="text"
             placeholder="Answer...">
         </span>
         <button :disabled="disabled" @click="removeAnswer(index)" class="destroy">
-          <span class="fa fa-times"></span>
+          <span class="mdi mdi-close"></span>
         </button>
       </li>
     </ul>
@@ -34,24 +34,30 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
+import range from 'lodash/range';
+
 const customAlert = {
-  text: 'Please make at least two answers available !',
-  type: 'alert-danger'
+  type: 'alert-danger',
+  text: 'Please make at least two answers available !'
 };
 
 export default {
   props: {
     assessment: Object,
-    errors: Array,
-    isEditing: Boolean
-  },
-  data() {
-    return {
-      answers: this.assessment.answers,
-      correct: this.assessment.correct
-    };
+    isEditing: Boolean,
+    errors: Array
   },
   computed: {
+    answers() {
+      return this.assessment.answers;
+    },
+    correct() {
+      return this.assessment.correct;
+    },
+    feedback() {
+      return this.assessment.feedback;
+    },
     correctError() {
       return this.errors.includes('correct');
     },
@@ -60,34 +66,51 @@ export default {
     }
   },
   methods: {
-    answerError(index) {
-      return this.errors.includes(`answers[${index}]`);
-    },
     addAnswer() {
-      this.answers.push('');
-      this.update();
+      let answers = cloneDeep(this.answers);
+      answers.push('');
+      this.update({ answers });
+    },
+    updateAnswer(index) {
+      let answers = cloneDeep(this.answers);
+      answers[index] = this.$refs[`input${index}`][0].value;
+      this.update({ answers });
     },
     removeAnswer(index) {
-      this.answers.splice(index, 1);
+      let answers = cloneDeep(this.answers);
+      let correct = cloneDeep(this.correct);
+      let feedback = cloneDeep(this.feedback);
 
-      if (this.correct === index) this.correct = null;
-      if (this.correct && this.correct >= index) this.correct -= 1;
+      answers.splice(index, 1);
 
-      this.update();
+      if (correct === index) correct = null;
+      if (correct && correct >= index) correct -= 1;
+
+      if (feedback) {
+        range(index, answers.length).forEach(it => {
+          feedback[it] = feedback[it + 1];
+        });
+        delete feedback[answers.length];
+      }
+
+      this.update({ answers, correct, feedback });
+    },
+    selectAnswer(index) {
+      this.update({ correct: index });
+    },
+    answerError(index) {
+      return this.errors.includes(`answers[${index}]`);
     },
     validate() {
       this.$emit('alert', this.answers.length < 2 ? customAlert : {});
     },
-    update() {
-      this.$emit('update', { answers: this.answers, correct: this.correct });
-      this.validate();
+    update(data) {
+      this.$emit('update', data);
     }
   },
   watch: {
-    isEditing(newVal) {
-      if (newVal) return;
-      this.answers = this.assessment.answers;
-      this.correct = this.assessment.correct;
+    assessment() {
+      this.validate();
     }
   }
 };
@@ -107,10 +130,8 @@ export default {
 }
 
 .answers-add {
-  padding: 7px;
-  height: 28px;
-  width: 50px;
   float: right;
+  font-size: 16px;
 }
 
 .destroy {

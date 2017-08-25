@@ -12,12 +12,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="revision in revisions">
+          <tr v-for="revision in getRevisions">
             <td>{{ formatDate(revision) }}</td>
             <td>{{ formatDescription(revision) }}</td>
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="col-lg-12 loader-wrapper">
+      <loader v-show="paginate"></loader>
+      <div
+        v-infinite-scroll="loadMore"
+        infinite-scroll-disabled="paginate"
+        infinite-scroll-distance="100">
+      </div>
     </div>
   </div>
 </template>
@@ -29,7 +37,10 @@ import {
   describeActivityRevision,
   describeElementRevision,
   describeCourseRevision
-} from '../../utils/revision';
+} from 'utils/revision';
+import InfiniteScroll from 'vue-infinite-scroll';
+import Loader from '../common/Loader';
+import Promise from 'bluebird';
 
 const describe = {
   'COURSE': describeCourseRevision,
@@ -39,13 +50,34 @@ const describe = {
 
 export default {
   name: 'course-revisions',
+  data() {
+    return {
+      paginate: false
+    };
+  },
   computed: {
     ...mapGetters(['getParent'], 'activities'),
-    ...mapGetters(['revisions'], 'course')
+    ...mapGetters(['revisions'], 'course'),
+    ...mapGetters(['hasMoreResults'], 'revisions'),
+    getRevisions() {
+      return this.revisions;
+    }
   },
   methods: {
     ...mapActions(['fetch'], 'revisions'),
-    ...mapMutations(['setBaseUrl'], 'revisions'),
+    ...mapMutations(['setBaseUrl', 'resetPagination'], 'revisions'),
+    fetchRevisions() {
+      this.resetPagination();
+      return Promise.join(this.fetch(), Promise.delay(400));
+    },
+    loadMore() {
+      if (this.hasMoreResults) {
+        this.paginate = true;
+        this.fetch().then(() => {
+          this.paginate = false;
+        });
+      }
+    },
     formatDate(rev) {
       return fecha.format(rev.createdAt, 'M/D/YY HH:mm');
     },
@@ -58,10 +90,16 @@ export default {
       return `User ${user} ${description}`;
     }
   },
-  created() {
+  mounted() {
     const courseId = Number(this.$route.params.courseId);
     this.setBaseUrl(`/courses/${courseId}/revisions`);
-    this.fetch();
+    this.fetchRevisions();
+  },
+  components: {
+    Loader
+  },
+  directives: {
+    InfiniteScroll
   }
 };
 </script>

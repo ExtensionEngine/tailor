@@ -5,6 +5,7 @@
   <ul v-else class="accordion">
     <accordion-item
       v-for="it in items"
+      :key="it.id"
       :item="it"
       :embeds="embeds"
       @save="saveItem"
@@ -31,10 +32,10 @@ export default {
   props: ['element'],
   computed: {
     items() {
-      return this.element.data.items || {};
+      return this.element.data.items;
     },
     embeds() {
-      return this.element.data.embeds || {};
+      return this.element.data.embeds;
     },
     hasItems() {
       return !isEmpty(this.items);
@@ -69,10 +70,6 @@ export default {
   created() {
     teChannel.on(`${this.element._cid}/add`, () => {
       const element = cloneDeep(this.element);
-      if (!element.data.items) {
-        element.data.items = {};
-        element.data.embeds = {};
-      }
       const id = cuid();
       element.data.items[id] = { id, header: 'Header', body: {} };
       this.updateElement(element);

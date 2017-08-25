@@ -3,6 +3,9 @@
     :class="[columnWidth, { hovered, focused: isFocused }]"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
+    @dragstart="$emit('dragstart')"
+    @dragend="$emit('dragend')"
+    @dragover="scrollContainer"
     class="te-container">
     <div @click="focus" class="teaching-element">
       <span class="drag-handle">
@@ -12,6 +15,7 @@
         :is="resolveElement(element.type)"
         :element="element"
         :isFocused="isFocused"
+        :isDragged="dragged"
         @save="save">
       </component>
     </div>
@@ -24,10 +28,14 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeAccordion from './Accordion/Accordion';
 import TeAssessment from './Assessment';
 import TeBreak from './PageBreak';
+import TeCarousel from './Carousel/Carousel';
 import TeEmbed from './Embed';
 import TeHtml from './Html';
 import TeImage from './Image';
+import TeModal from './Modal';
+import TeTable from './Table';
 import TeVideo from './Video';
+import throttle from 'lodash/throttle';
 
 const TE_TYPES = {
   BREAK: 'te-break',
@@ -36,19 +44,21 @@ const TE_TYPES = {
   IMAGE: 'te-image',
   ASSESSMENT: 'te-assessment',
   VIDEO: 'te-video',
-  ACCORDION: 'te-accordion'
+  ACCORDION: 'te-accordion',
+  CAROUSEL: 'te-carousel',
+  MODAL: 'te-modal',
+  TABLE: 'te-table'
 };
 
 export default {
   name: 'teaching-element',
   props: {
     element: Object,
-    disabled: Boolean
+    disabled: Boolean,
+    dragged: Boolean
   },
   data() {
-    return {
-      hovered: false
-    };
+    return { hovered: false };
   },
   computed: {
     ...mapGetters(['focusedElement'], 'editor'),
@@ -64,7 +74,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ updateElement: 'update' }, 'tes'),
+    ...mapActions({ saveElement: 'save' }, 'tes'),
     ...mapMutations(['focusElement'], 'editor'),
     resolveElement(type) {
       return TE_TYPES[type];
@@ -82,17 +92,27 @@ export default {
         this.$emit('save', { ...this.element, data });
       } else {
         Object.assign(this.element.data, elementData);
-        this.updateElement(this.element);
+        this.saveElement(this.element);
       }
-    }
+    },
+    scrollContainer: throttle(function (e) {
+      const scrollUp = e.y < 200;
+      const scrollDown = e.y > (window.innerHeight - 200);
+      if (scrollUp || scrollDown) {
+        window.scrollBy(0, scrollUp ? -30 : 30);
+      }
+    }, 20)
   },
   components: {
     TeAccordion,
     TeAssessment,
     TeBreak,
+    TeCarousel,
     TeEmbed,
     TeHtml,
     TeImage,
+    TeModal,
+    TeTable,
     TeVideo
   }
 };
@@ -123,21 +143,18 @@ export default {
 
 .te-container {
   padding: 7px 0;
-  user-select: none;
-
-  &.focused {
-    user-select: unset;
-  }
 }
 
 .teaching-element {
   position: relative;
   padding: 10px 20px 10px 20px;
-  border: 1px dashed #ccc;
-  user-select: none;
+  border: 1px dotted #ccc;
+}
 
-  .focused & {
-    user-select: unset;
+.focused {
+  > .teaching-element {
+    border: 1px solid #90a4ae;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
   }
 }
 </style>
