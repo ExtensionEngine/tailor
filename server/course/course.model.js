@@ -77,13 +77,29 @@ module.exports = function (sequelize, DataTypes) {
         });
       },
       addHooks(models) {
-        hooks.add(models);
+        hooks.add(Course, models);
+      },
+      updateStats(id, key, value) {
+        return Course.findById(id)
+          .then(course => {
+            const stats = course.stats || {};
+            stats[key] = value;
+            return course.update({ stats });
+          });
       }
     },
     instanceMethods: {
       getUser(user) {
         return this.getUsers({ where: { id: user.id } })
           .then(users => users[0]);
+      },
+      getInventoryItems() {
+        const where = { detached: false };
+        return Promise.all([
+          this.getActivities({ where }),
+          this.getTeachingElements({ where, order: [['activityId', 'ASC']] })
+        ])
+        .then(([activities, tes]) => ({ activities, tes }));
       }
     },
     underscored: true,

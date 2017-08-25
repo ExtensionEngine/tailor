@@ -42,7 +42,6 @@ import multiselect from '../common/Select';
 import { OUTLINE_LEVELS } from 'shared/activities';
 
 const TOP_LEVELS = filter(OUTLINE_LEVELS, { level: 1 });
-const noop = Function.prototype;
 
 export default {
   data() {
@@ -64,19 +63,19 @@ export default {
       this.level = level;
     },
     create() {
-      this.$validator.validateAll().then(() => {
+      this.$validator.validateAll().then(result => {
+        if (!result) return;
         this.save({
           name: this.name,
           type: this.level.type,
           courseId: this.course.id,
           position: 1
         });
-      }, noop);
+      });
     }
   },
-  components: {
-    multiselect
-  }
+  components: { multiselect },
+  inject: ['$validator']
 };
 </script>
 

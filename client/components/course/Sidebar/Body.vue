@@ -46,8 +46,6 @@ import Select from './Select';
 import Switch from './Switch';
 import Textarea from './Textarea';
 
-const noop = Function.prototype;
-
 const META_TYPES = {
   CHECKBOX: Checkbox,
   COLOR: ColorPicker,
@@ -88,14 +86,15 @@ export default {
       setTimeout(() => this.$refs.nameInput.focus(), 0);
     },
     focusoutName() {
-      this.$validator.validateAll().then(() => {
+      this.$validator.validateAll().then(result => {
+        if (!result) return;
         if (this.nameInput === this.activity.name) {
           this.showNameInput = false;
           return;
         }
         this.update({ _cid: this.activity._cid, name: this.nameInput });
         this.showNameInput = false;
-      }, noop);
+      });
     },
     tagname(type = '') {
       const component = META_TYPES[type.toUpperCase()] || META_TYPES.INPUT;
@@ -120,7 +119,8 @@ export default {
     [Textarea.name]: Textarea,
     ColorPicker,
     Prerequisites
-  }
+  },
+  inject: ['$validator']
 };
 </script>
 

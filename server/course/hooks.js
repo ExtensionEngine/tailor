@@ -1,46 +1,32 @@
-const last = require('lodash/last');
-const to = require('to-case');
-const zip = require('lodash/zip');
-const OUTLINE_LEVELS = require('../../config/shared/activities').OUTLINE_LEVELS;
+const addHooks = require('../shared/util/addHooks');
+const includes = require('lodash/includes');
+const logger = require('../shared/logger');
+const { OBJECTIVES } = require('../../config/shared/activities');
+const objectiveTypes = OBJECTIVES.map(it => it.type);
 
-const entities = ['ACTIVITY', 'TEACHING_ELEMENT'];
-const hooks = ['afterCreate', 'afterDestroy'];
-const operations = ['CREATE', 'REMOVE'];
+module.exports = { add };
 
-function add(models) {
-  zip(hooks, operations).forEach(hook => {
-    entities.forEach(entity => createHook(models, entity, hook));
-  });
-}
+function add(Course, models) {
+  const { Activity, TeachingElement } = models;
+  const hooks = ['afterCreate', 'afterDestroy'];
 
-function createHook(models, entity, [name, operation]) {
-  const Course = models.Course;
-  const LEAF = last(OUTLINE_LEVELS);
-  const Model = models[to.pascal(entity)];
-
-  Model.hook(name, (instance, { context }) => {
-    const { courseId } = instance;
-    if (instance.type === 'ASSESSMENT') {
-      return updateStats(courseId, 'assessments');
-    }
-    if (instance.type === LEAF.type) {
-      return updateStats(courseId, 'objectives', { type: LEAF.type });
-    }
+  // Track objectives.
+  addHooks(Activity, hooks, (hook, instance, options) => {
+    if (!includes(objectiveTypes, instance.type)) return;
+    const { id, courseId, type } = instance;
+    logger.info(`[Course] Activity#${hook}`, { type, id, courseId });
+    const where = { courseId, type: objectiveTypes, detached: false };
+    return Activity.count({ where })
+      .then(count => Course.updateStats(courseId, 'objectives', count));
   });
 
-  function updateStats(courseId, property, filter) {
-    return Course.findById(courseId).then(course => {
-      const where = Object.assign({ courseId }, filter);
-      return Model.count({ where }).then(total => {
-        course.stats = course.stats || {};
-        course.stats[property] = total;
-        course.changed('stats', true);
-        return course.save();
-      });
-    });
-  }
+  // Track assessments.
+  addHooks(TeachingElement, hooks, (hook, instance, { context }) => {
+    if (instance.type !== 'ASSESSMENT') return;
+    const { id, courseId, type } = instance;
+    logger.info(`[Course] TeachingElement#${hook}`, { type, id, courseId });
+    const where = { courseId, type: 'ASSESSMENT', detached: false };
+    return TeachingElement.count({ where })
+      .then(count => Course.updateStats(courseId, 'assessments', count));
+  });
 }
-
-module.exports = {
-  add
-};
