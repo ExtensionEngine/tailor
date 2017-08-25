@@ -56,7 +56,6 @@ const META_TYPES = {
 };
 
 export default {
-  inject: ['$validator'],
   data() {
     return {
       nameInput: '',
@@ -120,7 +119,8 @@ export default {
     [Textarea.name]: Textarea,
     ColorPicker,
     Prerequisites
-  }
+  },
+  inject: ['$validator']
 };
 </script>
 

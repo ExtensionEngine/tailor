@@ -27,7 +27,6 @@
 <script>
 export default {
   name: 'multiline-input',
-  inject: ['$validator'],
   props: ['meta', 'min-height'],
   data() {
     return {
@@ -61,7 +60,8 @@ export default {
         this.$emit('update', this.meta.key, this.value);
       });
     }
-  }
+  },
+  inject: ['$validator']
 };
 </script>
 

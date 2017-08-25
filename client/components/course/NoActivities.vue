@@ -44,7 +44,6 @@ import { OUTLINE_LEVELS } from 'shared/activities';
 const TOP_LEVELS = filter(OUTLINE_LEVELS, { level: 1 });
 
 export default {
-  inject: ['$validator'],
   data() {
     return {
       name: '',
@@ -75,9 +74,8 @@ export default {
       });
     }
   },
-  components: {
-    multiselect
-  }
+  components: { multiselect },
+  inject: ['$validator']
 };
 </script>
 

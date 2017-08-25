@@ -60,7 +60,6 @@ import { mapActions, mapGetters } from 'vuex-module';
 import multiselect from '../common/Select';
 
 export default {
-  inject: ['$validator'],
   props: ['parent', 'level'],
   data() {
     return {
@@ -137,7 +136,8 @@ export default {
     this.activityType = this.levels[0].type;
   },
   directives: { focus },
-  components: { multiselect }
+  components: { multiselect },
+  inject: ['$validator']
 };
 </script>
 

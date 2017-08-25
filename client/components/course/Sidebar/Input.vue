@@ -27,7 +27,6 @@
 <script>
 export default {
   name: 'line-input',
-  inject: ['$validator'],
   props: ['meta'],
   data() {
     return {
@@ -55,7 +54,8 @@ export default {
         this.$emit('update', this.meta.key, this.value);
       });
     }
-  }
+  },
+  inject: ['$validator']
 };
 </script>
 

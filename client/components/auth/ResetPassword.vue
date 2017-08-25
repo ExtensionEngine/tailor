@@ -40,7 +40,6 @@
 import { mapActions } from 'vuex-module';
 
 export default {
-  inject: ['$validator'],
   computed: {
     isValid() {
       return this.password && this.vErrors.count() === 0;
@@ -62,6 +61,7 @@ export default {
           .catch(() => (this.error = 'An error has occurred!'));
       });
     }
-  }
+  },
+  inject: ['$validator']
 };
 </script>

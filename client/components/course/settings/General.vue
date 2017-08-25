@@ -75,7 +75,6 @@ import { tooltip } from 'vue-strap';
 const appChannel = EventBus.channel('app');
 
 export default {
-  inject: ['$validator'],
   props: ['showLoader'],
   directives: { focus },
   components: { Loader, tooltip },
@@ -136,7 +135,8 @@ export default {
     course() {
       this.setCourseFields();
     }
-  }
+  },
+  inject: ['$validator']
 };
 </script>
 
