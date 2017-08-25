@@ -10,7 +10,7 @@
       </div>
     </div>
     <div v-else>
-      <div v-if="!isFocused" class="overlay" >
+      <div v-if="!isFocused" class="overlay">
         <div class="message">Double click to preview</div>
       </div>
       <div v-if="showError" class="error">
