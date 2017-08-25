@@ -3,6 +3,8 @@
     :class="[columnWidth, { hovered, focused: isFocused }]"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
+    @dragstart="$emit('dragstart')"
+    @dragend="$emit('dragend')"
     @dragover="scrollContainer"
     class="te-container">
     <div @click="focus" class="teaching-element">
@@ -13,6 +15,7 @@
         :is="resolveElement(element.type)"
         :element="element"
         :isFocused="isFocused"
+        :isDragged="dragged"
         @save="save">
       </component>
     </div>
@@ -51,12 +54,11 @@ export default {
   name: 'teaching-element',
   props: {
     element: Object,
-    disabled: Boolean
+    disabled: Boolean,
+    dragged: Boolean
   },
   data() {
-    return {
-      hovered: false
-    };
+    return { hovered: false };
   },
   computed: {
     ...mapGetters(['focusedElement'], 'editor'),

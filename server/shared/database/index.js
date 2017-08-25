@@ -12,6 +12,7 @@ let models = {
   TeachingElement: '../../teaching-element/te.model',
   User: '../../user/user.model'
 };
+
 models = reduce(models, (dict, path, name) => {
   dict[name] = sequelize.import(path);
   return dict;
@@ -27,5 +28,10 @@ const db = Object.assign({
   sequelize,
   initialize() { return sequelize.sync(); }
 }, models);
+
+// Patch Sequelize#method to support getting models by class name.
+sequelize.model = function (name) {
+  return sequelize.models[name] || db[name];
+};
 
 module.exports = db;

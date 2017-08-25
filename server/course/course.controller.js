@@ -7,7 +7,6 @@ const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const processListQuery = require('../shared/util/processListQuery');
-const Promise = require('bluebird');
 
 function index({ query, user }, res) {
   const opts = processListQuery(query);
@@ -76,14 +75,13 @@ function findOrCreateRole(course, user, role) {
 };
 
 function exportContentInventory({ course }, res) {
-  const activities = course.getActivities();
-  const tes = course.getTeachingElements({ order: [['activityId', 'ASC']] });
-  return Promise.all([activities, tes]).then(([activities, tes]) => {
-    let workbook = createContentInventory(course, activities, tes);
-    res.setHeader('Content-Type', 'application/vnd.ms-excel');
-    res.setHeader('Content-disposition', 'attachment;filename=report.xls');
-    workbook.xlsx.write(res).then(() => res.end());
-  });
+  return course.getInventoryItems()
+    .then(({ activities, tes }) => {
+      let workbook = createContentInventory(course, activities, tes);
+      res.setHeader('Content-Type', 'application/vnd.ms-excel');
+      res.setHeader('Content-disposition', 'attachment;filename=report.xls');
+      return workbook.xlsx.write(res).then(() => res.end());
+    });
 }
 
 const transform = user => {
