@@ -1,7 +1,9 @@
 <template>
-  <div :class="{ 'disabled': !isEditing }">
+  <div :class="{ disabled: !isEditing }">
     <div class="row no-gutters heading">
-      <div class="col-xs-offset-1 col-xs-4 heading-input-wrapper">
+      <div
+        :class="{ error: this.errors.includes('headings.premise') }"
+        class="col-xs-4 col-xs-offset-1 heading-input-wrapper">
         <input
           v-model="premiseHeading"
           @blur="update"
@@ -9,147 +11,187 @@
           type="text"/>
       </div>
       <div class="col-xs-2"></div>
-      <div class="col-xs-4 heading-input-wrapper">
+      <div
+        :class="{ error: this.errors.includes('headings.response') }"
+        class="col-xs-4 heading-input-wrapper">
         <input
           v-model="responseHeading"
           @blur="update"
-          class="col-xs-4 heading-input"
+          class="heading-input"
           type="text"/>
       </div>
     </div>
-    <div v-for="(pair, row) in pairs" class="row no-gutters">
+    <div v-for="(responseKey, premiseKey, index) in correct" class="row no-gutters">
       <div
-        :class="{ 'flip': isFocused(row) }"
-        class="col-xs-offset-1 col-xs-4 premise-container">
-        <div @click="focus(row)" class="premise-view front">
-          <span :class="errorClass(row)">
-            {{ pair.premise || 'Click to edit' }}
+        :class="{ flip: isFocused(premiseKey) }"
+        class="col-xs-4 col-xs-offset-1 premise-container">
+        <div @click="focus(premiseKey)" class="premise-view front">
+          <span :class="hasError(premiseKey, 'premises')">
+            {{ getPremiseContent(premiseKey) || 'Click to edit' }}
           </span>
         </div>
         <input
-          v-model="pair.premise"
-          v-focus="{ row }"
-          @change="update"
-          @keyup.enter="focus(row)"
-          @keyup.esc="focus(row)"
-          @blur="isFocused(row) && focus(row)"
+          v-focus="{ key: premiseKey }"
+          :value="getPremiseContent(premiseKey)"
+          @change="updatePremiseContent(premiseKey, $event)"
+          @keyup.enter="focus(premiseKey)"
+          @keyup.esc="focus(premiseKey)"
+          @blur="isFocused(premiseKey) && focus(premiseKey)"
           class="form-control premise-input back"
           placeholder="Insert text here ...">
       </div>
       <div class="col-xs-2">
         <span class="mdi mdi-arrow-right"></span>
       </div>
-      <div :class="{ 'flip': isFocused(row, 1) }" class="col-xs-4 response-container">
-        <div @click="focus(row, 1)" class="response-view front">
-          <span :class="errorClass(row, 1)">
-            {{ pair.response || 'Click to edit' }}
+      <div
+        :class="{ flip: isFocused(responseKey) }"
+        class="col-xs-4 response-container">
+        <div @click="focus(responseKey)" class="response-view front">
+          <span :class="hasError(responseKey, 'responses')">
+            {{ getResponseContent(responseKey) || 'Click to edit' }}
           </span>
         </div>
         <input
-          v-model="pair.response"
-          v-focus="{ row, col: 1 }"
-          @change="update"
-          @keyup.enter="focus(row, 1)"
-          @keyup.esc="focus(row, 1)"
-          @blur="isFocused(row, 1) && focus(row, 1)"
+          v-focus="{ key: responseKey }"
+          :value="getResponseContent(responseKey)"
+          @change="updateResponseContent(responseKey, $event)"
+          @keyup.enter="focus(responseKey)"
+          @keyup.esc="focus(responseKey)"
+          @blur="isFocused(responseKey) && focus(responseKey)"
           class="form-control response-input back"
           placeholder="Insert text here ...">
       </div>
       <div class="col-xs-1 destroy">
         <span
-          v-show="!minPairsReached && isEditing"
-          @click="removePair(row)"
+          v-show="!minItems && isEditing"
+          @click="removeItems(premiseKey, responseKey)"
           class="mdi mdi-close">
         </span>
       </div>
     </div>
-    <div v-show="!maxPairsReached && isEditing" class="add-pair">
-      <span @click="addPair" class="mdi mdi-plus"></span>
+    <div v-show="!maxItems && isEditing">
+      <span @click="addItems" class="mdi mdi-plus"></span>
     </div>
   </div>
 </template>
 
 <script>
-import debounce from 'lodash/debounce';
-import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
-import times from 'lodash/times';
+import cloneDeep from 'lodash/cloneDeep';
+import cuid from 'cuid';
+import find from 'lodash/find';
+import keys from 'lodash/keys';
+import pull from 'lodash/pull';
+import shuffle from 'lodash/shuffle';
 
 export default {
-  directives: {
-    focus: {
-      update(el, binding, vnode) {
-        const col = vnode.context.focused.col;
-        const row = vnode.context.focused.row;
-        const newCol = binding.value.col;
-        const newRow = binding.value.row;
-        col === newCol && row === newRow ? el.focus() : el.blur();
-      }
-    }
-  },
   props: {
     assessment: Object,
     errors: Array,
     isEditing: Boolean
   },
   data() {
+    const { headings } = this.assessment;
     return {
-      focused: { row: null, col: null },
-      premiseHeading: get(this.assessment, 'headings.premise', 'Premise'),
-      responseHeading: get(this.assessment, 'headings.response', 'Response')
+      focused: { key: null },
+      premiseHeading: headings.premise,
+      responseHeading: headings.response
     };
   },
-  created() {
-    if (this.pairs.length < 2) {
-      times(2, () => this.pairs.push({ premise: '', response: '' }));
-      this.update();
-    }
-  },
   computed: {
-    hasPairsError() {
-      return !isEmpty(this.errors) && this.errors.indexOf('correct') !== -1;
+    premises() {
+      return this.assessment.premises || {};
     },
-    pairs() {
-      return this.assessment.correct;
+    responses() {
+      return this.assessment.responses || {};
     },
-    maxPairsReached() {
-      return this.pairs.length >= 10;
+    correct() {
+      return this.assessment.correct || {};
     },
-    minPairsReached() {
-      return this.pairs.length <= 2;
+    maxItems() {
+      return keys(this.correct).length >= 10;
+    },
+    minItems() {
+      return keys(this.correct).length <= 2;
     }
   },
   methods: {
-    removePair(row) {
-      this.pairs.splice(row, 1);
-      this.update();
+    updatePremiseContent(key, evt) {
+      let premises = cloneDeep(this.premises);
+      this.getPremiseItem(key, premises).value = evt.target.value;
+      this.update({ premises: shuffle(premises) });
     },
-    addPair() {
-      this.pairs.push({ premise: '', response: '' });
-      this.update();
+    updateResponseContent(key, evt) {
+      let responses = cloneDeep(this.responses);
+      this.getResponseItem(key, responses).value = evt.target.value;
+      this.update({ responses: shuffle(responses) });
     },
-    focus(row, col) {
-      this.focused = this.isFocused(row, col) ? {} : { row, col };
+    getResponseContent(key) {
+      return this.getResponseItem(key).value;
     },
-    isFocused(row, col) {
-      return this.focused.col === col && this.focused.row === row;
+    getPremiseContent(key) {
+      return this.getPremiseItem(key).value;
     },
-    update() {
+    getPremiseItem(key, premises = this.premises) {
+      return find(premises, { key });
+    },
+    getResponseItem(key, responses = this.responses) {
+      return find(responses, { key });
+    },
+    removeItems(premiseKey, responseKey) {
+      let premises = cloneDeep(this.premises);
+      let responses = cloneDeep(this.responses);
+      let correct = cloneDeep(this.correct);
+      pull(premises, this.getPremiseItem(premiseKey, premises));
+      pull(responses, this.getResponseItem(responseKey, responses));
+      delete correct[premiseKey];
+      this.update({ premises, responses, correct });
+    },
+    addItems() {
+      let premises = cloneDeep(this.premises);
+      let responses = cloneDeep(this.responses);
+      let correct = cloneDeep(this.correct);
+      const premiseKey = cuid();
+      const responseKey = cuid();
+      premises.push({ key: premiseKey, value: '' });
+      responses.push({ key: responseKey, value: '' });
+      correct[premiseKey] = responseKey;
+      this.update({
+        premises: shuffle(premises),
+        responses: shuffle(responses),
+        correct
+      });
+    },
+    focus(key) {
+      this.focused.key = this.isFocused(key) ? {} : key;
+    },
+    isFocused(key) {
+      return this.focused.key === key;
+    },
+    update(data = {}) {
       const { premiseHeading: premise, responseHeading: response } = this;
-      this.$emit('update', { correct: this.pairs, headings: { premise, response } }, true);
+      data.headings = { premise, response };
+      this.$emit('update', data, true);
     },
-    errorClass(row, col) {
-      const answer = `correct[${row}].${col ? 'response' : 'premise'}`;
+    hasError(key, type) {
+      let index = type === 'premises'
+        ? this.premises.indexOf(this.getPremiseItem(key))
+        : this.responses.indexOf(this.getResponseItem(key));
+      const answer = `${type}[${index}].value`;
       return { 'error': this.errors.includes(answer) };
     }
   },
-  watch: {
-    premiseHeading: debounce(function () {
-      this.update();
-    }, 2000),
-    responseHeading: debounce(function () {
-      this.update();
-    }, 2000)
+  directives: {
+    focus: {
+      update(el, binding, vnode) {
+        const focusedKey = vnode.context.focused.key;
+        const key = binding.value.key;
+        if (key === focusedKey) {
+          el.focus();
+        } else {
+          el.blur();
+        }
+      }
+    }
   }
 };
 </script>
@@ -173,6 +215,10 @@ export default {
   .heading-input-wrapper {
     height: 48px;
     border-bottom: 1px dashed grey;
+
+    &.error {
+      border-bottom: 2px solid #e51c23;
+    }
 
     .heading-input {
       width: 100%;

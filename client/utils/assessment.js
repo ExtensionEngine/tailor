@@ -102,10 +102,8 @@ export const schemas = {
   }),
   MQ: yup.object().shape({
     ...baseSchema,
-    correct: yup.array().of(yup.object().shape({
-      premise: yup.string().trim().notOneOf(['Click to edit']).required(),
-      response: yup.string().trim().notOneOf(['Click to edit']).required()
-    })).min(2).required(),
+    premises: yup.array().of(objectMap),
+    responses: yup.array().of(objectMap),
     headings: yup.object().shape({
       premise: yup.string().trim().min(1).max(200).required(),
       response: yup.string().trim().min(1).max(200).required()
@@ -176,14 +174,26 @@ export const defaults = {
     ...baseDefaults,
     correct: []
   },
-  MQ: {
-    type: 'MQ',
-    ...baseDefaults,
-    correct: [],
-    headings: {
-      premise: 'Premise',
-      response: 'Response'
-    }
+  MQ() {
+    let element = {
+      type: 'MQ',
+      ...baseDefaults,
+      premises: [],
+      responses: [],
+      correct: {},
+      headings: {
+        premise: 'Premise',
+        response: 'Response'
+      }
+    };
+    times(2, () => {
+      const premiseKey = cuid();
+      const responseKey = cuid();
+      element.premises.push({ key: premiseKey, value: '' });
+      element.responses.push({ key: responseKey, value: '' });
+      element.correct[premiseKey] = responseKey;
+    });
+    return element;
   },
   DD() {
     let element = {
