@@ -1,7 +1,7 @@
 <template>
   <div class="well">
     <div class="row">
-      <div class="col-md-10">
+      <div class="col-md-8">
         <span
           :class="{ 'has-error': vErrors.has('name') }"
           class="form-group">
@@ -12,16 +12,22 @@
             type="text"
             name="name"
             autofocus=""
-            placeholder="Create your first Goal">
+            placeholder="Name">
           <span v-show="vErrors.has('name')" class="help-block">
             {{ vErrors.first('name') }}
           </span>
         </span>
       </div>
-      <div class="col-lg-2">
-        <button
-          @click.stop="create"
-          class="btn btn-block btn-primary">
+      <div class="col-md-2">
+        <multiselect
+          :value="level"
+          :options="levels"
+          :allow-empty="false"
+          @input="onLevelSelected">
+        </multiselect>
+      </div>
+      <div class="col-md-2">
+        <button @click.stop="create" class="btn btn-block btn-primary">
           Add
         </button>
       </div>
@@ -30,30 +36,46 @@
 </template>
 
 <script>
+import filter from 'lodash/filter';
 import { mapGetters, mapActions } from 'vuex-module';
+import multiselect from '../common/Select';
 import { OUTLINE_LEVELS } from 'shared/activities';
-const noop = Function.prototype;
+
+const TOP_LEVELS = filter(OUTLINE_LEVELS, { level: 1 });
 
 export default {
   data() {
     return {
-      name: ''
+      name: '',
+      level: TOP_LEVELS[0]
     };
   },
-  computed: mapGetters(['course'], 'course'),
+  computed: {
+    ...mapGetters(['course'], 'course'),
+    levels() {
+      return TOP_LEVELS;
+    }
+  },
   methods: {
     ...mapActions(['save'], 'activities'),
+    onLevelSelected(level) {
+      if (!level) return;
+      this.level = level;
+    },
     create() {
-      this.$validator.validateAll().then(() => {
+      this.$validator.validateAll().then(result => {
+        if (!result) return;
         this.save({
           name: this.name,
-          type: OUTLINE_LEVELS[0].type,
+          type: this.level.type,
           courseId: this.course.id,
           position: 1
         });
-      }, noop);
+      });
     }
-  }
+  },
+  components: { multiselect },
+  inject: ['$validator']
 };
 </script>
 

@@ -1,3 +1,5 @@
+const hooks = require('./hooks');
+
 /**
  * @swagger
  * definitions:
@@ -44,6 +46,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.TEXT,
       validate: { notEmpty: true, len: [2, 2000] }
     },
+    stats: {
+      type: DataTypes.JSON,
+      defaultValue: { objectives: 0, assessments: 0 }
+    },
     createdAt: {
       type: DataTypes.DATE,
       field: 'created_at'
@@ -69,12 +75,31 @@ module.exports = function (sequelize, DataTypes) {
           through: models.CourseUser,
           foreignKey: { name: 'courseId', field: 'course_id' }
         });
+      },
+      addHooks(models) {
+        hooks.add(Course, models);
+      },
+      updateStats(id, key, value) {
+        return Course.findById(id)
+          .then(course => {
+            const stats = course.stats || {};
+            stats[key] = value;
+            return course.update({ stats });
+          });
       }
     },
     instanceMethods: {
       getUser(user) {
         return this.getUsers({ where: { id: user.id } })
           .then(users => users[0]);
+      },
+      getInventoryItems() {
+        const where = { detached: false };
+        return Promise.all([
+          this.getActivities({ where }),
+          this.getTeachingElements({ where, order: [['activityId', 'ASC']] })
+        ])
+        .then(([activities, tes]) => ({ activities, tes }));
       }
     },
     underscored: true,

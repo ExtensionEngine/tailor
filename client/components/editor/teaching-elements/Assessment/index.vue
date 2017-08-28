@@ -278,7 +278,7 @@ export default {
   .select-leaf {
     clear: both;
 
-    > {
+    > div {
       width: 400px;
       float: right;
     }

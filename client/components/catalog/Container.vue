@@ -2,7 +2,7 @@
   <div class="catalog">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <search @change="filterCourses" :showLoader="showLoader"></search>
+        <search @change="filterCourses"></search>
       </div>
       <div class="col-md-3">
         <create-course class="pull-right"></create-course>

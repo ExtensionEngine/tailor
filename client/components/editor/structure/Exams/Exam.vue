@@ -112,7 +112,7 @@ h3 {
   margin-bottom: 13px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30);
 
-  > {
+  > div {
     padding: 15px 25px;
   }
 
@@ -130,7 +130,7 @@ h3 {
 }
 
 .actions {
-  > {
+  > span {
     margin-left: 10px;
   }
 }

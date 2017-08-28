@@ -55,6 +55,9 @@ module.exports = {
       test: /\.vue$/,
       loader: 'vue'
     }, {
+      test: /\.load.js$/,
+      loader: 'val'
+    }, {
       test: /\.js$/,
       loader: 'babel',
       include: projectRoot(),

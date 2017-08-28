@@ -49,15 +49,15 @@
 </template>
 
 <script>
-import calculatePosition from '../../utils/calculatePosition';
+import calculatePosition from 'utils/calculatePosition';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import { focus } from 'vue-focus';
 import { getLevel, OUTLINE_LEVELS } from 'shared/activities';
-import { getChildren } from '../../utils/activity';
+import { getChildren } from 'utils/activity';
 import { mapActions, mapGetters } from 'vuex-module';
 import multiselect from '../common/Select';
-
-const noop = Function.prototype;
 
 export default {
   props: ['parent', 'level'],
@@ -72,8 +72,18 @@ export default {
   computed: {
     ...mapGetters(['activities']),
     levels() {
-      let levels = OUTLINE_LEVELS.slice(this.level - 1, this.level + 1);
-      levels.forEach(it => { it.value = it.type; });
+      const parent = find(OUTLINE_LEVELS, { type: this.parent.type });
+      const nextLevel = this.level + 1;
+      let cond = it => (it.level === nextLevel) || (it.level === this.level);
+      let levels = filter(OUTLINE_LEVELS, cond);
+
+      if (parent && parent.subLevels) {
+        const subLevels = parent.subLevels;
+        let cond = it => (it.level !== nextLevel) || subLevels.includes(it.type);
+        levels = filter(levels, cond);
+      }
+
+      levels.forEach(it => (it.value = it.type));
       return levels;
     },
     hasChildren() {
@@ -91,8 +101,11 @@ export default {
       this.showInput = false;
     },
     add() {
-      this.$validator.validateAll().then(() => {
-        const sameLevel = this.activityType === this.levels[0].type;
+      this.$validator.validateAll().then(result => {
+        if (!result) return;
+
+        const OUTLINE_LEVEL = find(OUTLINE_LEVELS, { type: this.activityType });
+        const sameLevel = OUTLINE_LEVEL.level === this.level;
         const parentId = sameLevel ? this.parent.parentId : this.parent.id;
         const courseId = this.parent.courseId;
         const items = getChildren(this.activities, parentId, courseId);
@@ -110,7 +123,7 @@ export default {
 
         this.hide();
         if (!sameLevel) this.$emit('expand');
-      }, noop);
+      });
     },
     getActivityLevel(type) {
       return getLevel(type);
@@ -123,7 +136,8 @@ export default {
     this.activityType = this.levels[0].type;
   },
   directives: { focus },
-  components: { multiselect }
+  components: { multiselect },
+  inject: ['$validator']
 };
 </script>
 
