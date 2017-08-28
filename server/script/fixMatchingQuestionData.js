@@ -6,8 +6,8 @@ const Promise = require('bluebird');
 const shuffle = require('lodash/shuffle');
 const { TeachingElement } = require('../shared/database');
 
-TeachingElement.findAll({ where: { type: 'ASSESSMENT' } })
-  .then(processAssessments)
+TeachingElement.findAll({ where: { type: 'ASSESSMENT', 'data.type': 'MQ' } })
+  .then(processMatchingQuestions)
   .then(() => {
     console.log('Matching question data processed!');
     process.exit(0);
@@ -17,12 +17,12 @@ TeachingElement.findAll({ where: { type: 'ASSESSMENT' } })
     process.exit(1);
   });
 
-function processAssessments(elements) {
-  console.log(`Number of components: ${elements.length}`);
-  return Promise.each(elements, it => processMatchingQuestions(it));
+function processMatchingQuestions(elements) {
+  console.log(`Number of elements: ${elements.length}`);
+  return Promise.each(elements, it => processMatchingQuestion(it));
 }
 
-function processMatchingQuestions(element) {
+function processMatchingQuestion(element) {
   const oldVal = element.data;
   if (oldVal.type !== 'MQ' || oldVal.premises) return element;
 
