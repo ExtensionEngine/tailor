@@ -1,13 +1,13 @@
 <template>
-  <div class="create-course" v-if="showCreateButton">
-    <button type="button" class="btn btn-primary btn-fab" @click="show">
+  <div v-if="showCreateButton" class="create-course" >
+    <button @click="show" class="btn btn-primary btn-fab" type="button">
       <span class="mdi mdi-plus"></span>
     </button>
     <modal :show="showModal" :backdrop="false" effect="fade">
-      <div slot="modal-header" class="modal-header">
+      <div class="modal-header" slot="modal-header">
         <h4 class="modal-title">Create course</h4>
       </div>
-      <div slot="modal-body" class="modal-body">
+      <div class="modal-body" slot="modal-body">
         <loader v-show="showLoader"></loader>
         <div v-show="!showLoader">
           <div class="error-message">
@@ -15,22 +15,22 @@
               {{ vErrors.first('default') }}
             </span>
           </div>
-          <div class="form-group" :class="{ 'has-error': vErrors.has('name') }">
+          <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
             <input
               v-model="name"
               v-focus="focusName"
               v-validate="{ rules: { required: true, min: 2, max: 250 } }"
               @focus="focusName = true"
               @blur="focusName = false"
-              type="text"
-              name="name"
               class="form-control"
+              name="name"
+              type="text"
               placeholder="Name"/>
             <span v-show="vErrors.has('name')" class="help-block">
               {{ vErrors.first('name') }}
             </span>
           </div>
-          <div class="form-group" :class="{ 'has-error': vErrors.has('description') }">
+          <div :class="{ 'has-error': vErrors.has('description') }" class="form-group">
             <textarea
               v-model="description"
               v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
@@ -44,9 +44,9 @@
           </div>
         </div>
       </div>
-      <div slot="modal-footer" class="modal-footer">
-        <button type="button" @click="hide" class="btn btn-default">Cancel</button>
-        <button type="button" @click="submit" class="btn btn-primary">Create</button>
+      <div class="modal-footer" slot="modal-footer">
+        <button @click="hide" class="btn btn-default" type="button">Cancel</button>
+        <button @click="submit" class="btn btn-primary" type="button">Create</button>
       </div>
     </modal>
   </div>
