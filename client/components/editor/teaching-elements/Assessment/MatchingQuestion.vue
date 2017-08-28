@@ -1,7 +1,9 @@
 <template>
   <div :class="{ disabled: !isEditing }">
     <div class="row no-gutters heading">
-      <div class="col-xs-4 col-xs-offset-1 heading-input-wrapper">
+      <div
+        :class="{ error: this.errors.includes('headings.premise') }"
+        class="col-xs-4 col-xs-offset-1 heading-input-wrapper">
         <input
           v-model="premiseHeading"
           @blur="update"
@@ -9,7 +11,9 @@
           type="text"/>
       </div>
       <div class="col-xs-2"></div>
-      <div class="col-xs-4 heading-input-wrapper">
+      <div
+        :class="{ error: this.errors.includes('headings.response') }"
+        class="col-xs-4 heading-input-wrapper">
         <input
           v-model="responseHeading"
           @blur="update"
@@ -211,6 +215,10 @@ export default {
   .heading-input-wrapper {
     height: 48px;
     border-bottom: 1px dashed grey;
+
+    &.error {
+      border-bottom: 2px solid #e51c23;
+    }
 
     .heading-input {
       width: 100%;
