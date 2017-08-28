@@ -1,7 +1,7 @@
 <template>
-  <div :class="{ 'disabled': !isEditing }">
+  <div :class="{ disabled: !isEditing }">
     <div class="row no-gutters heading">
-      <div class="col-xs-offset-1 col-xs-4 heading-input-wrapper">
+      <div class="col-xs-4 col-xs-offset-1 heading-input-wrapper">
         <input
           v-model="premiseHeading"
           @blur="update"
@@ -13,21 +13,21 @@
         <input
           v-model="responseHeading"
           @blur="update"
-          class="col-xs-4 heading-input"
+          class="heading-input"
           type="text"/>
       </div>
     </div>
     <div v-for="(responseKey, premiseKey, index) in correct" class="row no-gutters">
       <div
-        :class="{ 'flip': isFocused(premiseKey) }"
-        class="col-xs-offset-1 col-xs-4 premise-container">
+        :class="{ flip: isFocused(premiseKey) }"
+        class="col-xs-4 col-xs-offset-1 premise-container">
         <div @click="focus(premiseKey)" class="premise-view front">
           <span :class="hasError(premiseKey, 'premises')">
             {{ getPremiseContent(premiseKey) || 'Click to edit' }}
           </span>
         </div>
         <input
-          v-focus="{ newKey: premiseKey }"
+          v-focus="{ key: premiseKey }"
           :value="getPremiseContent(premiseKey)"
           @change="updatePremiseContent(premiseKey, $event)"
           @keyup.enter="focus(premiseKey)"
@@ -40,7 +40,7 @@
         <span class="mdi mdi-arrow-right"></span>
       </div>
       <div
-        :class="{ 'flip': isFocused(responseKey) }"
+        :class="{ flip: isFocused(responseKey) }"
         class="col-xs-4 response-container">
         <div @click="focus(responseKey)" class="response-view front">
           <span :class="hasError(responseKey, 'responses')">
@@ -48,7 +48,7 @@
           </span>
         </div>
         <input
-          v-focus="{ newKey: responseKey }"
+          v-focus="{ key: responseKey }"
           :value="getResponseContent(responseKey)"
           @change="updateResponseContent(responseKey, $event)"
           @keyup.enter="focus(responseKey)"
@@ -74,34 +74,23 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
+import find from 'lodash/find';
 import keys from 'lodash/keys';
-import shuffle from 'lodash/shuffle';
 import pull from 'lodash/pull';
+import shuffle from 'lodash/shuffle';
 
 export default {
-  directives: {
-    focus: {
-      update(el, binding, vnode) {
-        const key = vnode.context.focused.key;
-        const newKey = binding.value.newKey;
-        if (key === newKey) {
-          el.focus();
-        } else {
-          el.blur();
-        }
-      }
-    }
-  },
   props: {
     assessment: Object,
     errors: Array,
     isEditing: Boolean
   },
   data() {
+    const { headings } = this.assessment;
     return {
       focused: { key: null },
-      premiseHeading: this.assessment.headings.premise,
-      responseHeading: this.assessment.headings.response
+      premiseHeading: headings.premise,
+      responseHeading: headings.response
     };
   },
   computed: {
@@ -139,10 +128,10 @@ export default {
       return this.getPremiseItem(key).value;
     },
     getPremiseItem(key, premises = this.premises) {
-      return premises.find(it => it.key === key);
+      return find(premises, { key });
     },
     getResponseItem(key, responses = this.responses) {
-      return responses.find(it => it.key === key);
+      return find(responses, { key });
     },
     removeItems(premiseKey, responseKey) {
       let premises = cloneDeep(this.premises);
@@ -151,7 +140,7 @@ export default {
       pull(premises, this.getPremiseItem(premiseKey, premises));
       pull(responses, this.getResponseItem(responseKey, responses));
       delete correct[premiseKey];
-      this.update({ premises, responses, correct: correct });
+      this.update({ premises, responses, correct });
     },
     addItems() {
       let premises = cloneDeep(this.premises);
@@ -185,6 +174,19 @@ export default {
         : this.responses.indexOf(this.getResponseItem(key));
       const answer = `${type}[${index}].value`;
       return { 'error': this.errors.includes(answer) };
+    }
+  },
+  directives: {
+    focus: {
+      update(el, binding, vnode) {
+        const focusedKey = vnode.context.focused.key;
+        const key = binding.value.key;
+        if (key === focusedKey) {
+          el.focus();
+        } else {
+          el.blur();
+        }
+      }
     }
   }
 };
