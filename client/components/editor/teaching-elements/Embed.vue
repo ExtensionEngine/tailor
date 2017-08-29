@@ -1,7 +1,7 @@
 <template>
-  <div class="te-embed">
+  <div :style="{ height: height + 'px' }" class="te-embed">
     <div v-if="showPlaceholder">
-      <div class="well placeholder">
+      <div :style="{ height: height + 'px' }" class="well placeholder">
         <span class="heading">Embed placeholder</span>
         <span class="message" v-show="!isFocused">Select to edit</span>
         <span class="message" v-show="isFocused">Please use toolbar to enter url</span>
@@ -31,6 +31,9 @@ export default {
   name: 'te-embed',
   props: ['element', 'isFocused', 'isDragged'],
   computed: {
+    height() {
+      return this.element.data.height;
+    },
     url() {
       return this.element.data.url;
     },
@@ -70,8 +73,7 @@ export default {
   opacity: 0.9;
 
   .message {
-    position: relative;
-    top: 45%;
+    padding-top: 119px;
     color: green;
     font-size: 22px;
   }
