@@ -21,7 +21,6 @@
           frameborder="0">
         </iframe>
       </div>
-      <div class="pusher"></div>
     </div>
   </div>
 </template>
@@ -87,9 +86,5 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-}
-
-.pusher {
-  margin-top: 56.25%;
 }
 </style>
