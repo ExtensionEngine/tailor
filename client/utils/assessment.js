@@ -84,7 +84,7 @@ export const schemas = {
   }),
   SC: yup.object().shape({
     ...baseSchema,
-    answers: yup.array().min(2).of(yup.string().trim().min(1).max(200).required()).required(),
+    answers: yup.array().min(2).of(yup.string().trim().min(1).max(500).required()).required(),
     correct: yup.number().required()
   }),
   TR: yup.object().shape({
