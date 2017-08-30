@@ -5,10 +5,16 @@
         <span class="mdi mdi-arrow-expand"></span>
         Height
       </label>
-      <span :class="{ 'has-error': vErrors.has('height') }" class="input">
+      <span
+        :class="{ 'has-error': vErrors.has('height') }"
+        class="input">
         <input
           v-model="height"
-          v-validate="{ rules: { required: true, min_value: 300, max_value: 3000 } }"
+          v-validate="{ rules:
+            { required: true, numeric: true, min_value: 300, max_value: 3000 }
+          }"
+          @blur="setHeight"
+          data-vv-delay="0"
           id="heightInput"
           class="form-control"
           name="height"
@@ -27,7 +33,9 @@
       <span :class="{ 'has-error': vErrors.has('url') }" class="input url">
         <input
           v-model="url"
-          v-validate="{ rules: { required: true } }"
+          v-validate="{ rules: { required: true, url: true } }"
+          @blur="setUrl"
+          data-vv-delay="0"
           id="urlInput"
           class="form-control"
           name="url"
@@ -52,20 +60,39 @@ export default {
     const { height, url } = this.element.data;
     return {
       height: height || 500,
-      url: url || ''
+      url: url || '',
+      debouncedHeight: null,
+      debouncedUrl: null
     };
   },
   methods: {
     ...mapActions({ updateElement: 'update' }, 'tes'),
-    update() {
-      if (this.vErrors.has('height') || this.vErrors.has('url')) return;
-      const data = { ...this.element.data, height: this.height, url: this.url };
+    setHeight() {
+      const { height } = this.element.data;
+      if (height === this.height || this.vErrors.has('height')) return;
+      const data = { ...this.element.data, height: this.height };
+      this.updateElement({ ...this.element, data });
+    },
+    setUrl() {
+      const { url } = this.element.data;
+      if (url === this.url || this.vErrors.has('url')) return;
+      const data = { ...this.element.data, url: this.url };
       this.updateElement({ ...this.element, data });
     }
   },
+  beforeDestroy() {
+    if (this.debouncedHeight) this.debouncedHeight.cancel();
+    if (this.debouncedUrl) this.debouncedUrl.cancel();
+  },
   watch: {
-    height: debounce(function () { this.update(); }, 2000),
-    url: debounce(function () { this.update(); }, 2000)
+    height: function () {
+      this.debouncedHeight = debounce(this.setHeight, 2000);
+      this.debouncedHeight();
+    },
+    url: function () {
+      this.debouncedUrl = debounce(this.setUrl, 2000);
+      this.debouncedUrl();
+    }
   }
 };
 </script>
