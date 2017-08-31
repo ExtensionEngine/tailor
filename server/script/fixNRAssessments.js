@@ -23,7 +23,7 @@ function processNRQuestion(element) {
   if (oldVal.type !== 'NR' || oldVal.prefixes) return element;
 
   let newVal = {
-    correct: [toNumber(oldVal.correct)],
+    correct: [toNumber(oldVal.correct.replace('.', ','))],
     prefixes: [''],
     suffixes: ['']
   };
