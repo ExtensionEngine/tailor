@@ -15,7 +15,7 @@
         </div>
         <h2>
           {{ activity.name }}
-          <a :href="previewUrl" class="preview-link" target="_blank">
+          <a v-if="previewUrl" :href="previewUrl" class="preview-link" target="_blank">
             <span class="mdi mdi-eye"></span>
           </a>
         </h2>
@@ -33,6 +33,7 @@ import Assessments from './structure/Assessments';
 import * as config from 'shared/activities';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
+import format from 'string-template';
 import Introduction from './structure/Introduction';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
@@ -75,10 +76,9 @@ export default {
       return items;
     },
     previewUrl() {
-      const baseUrl = 'https://cgma.dev.extensionengine.com/admin/#/';
+      if (!config.PREVIEW_URL) return;
       const { courseId, activityId } = this.$route.params;
-      const route = `course/${courseId}/activity/${activityId}/preview`;
-      return `${baseUrl}${route}`;
+      return format(config.PREVIEW_URL, { courseId, activityId });
     }
   },
   methods: {
