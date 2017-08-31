@@ -51,7 +51,7 @@
     <div :class="{ 'has-error': !isValid }">
       <span class="help-block">
         Only numerical input allowed, if decimal number is needed please
-        use '.' to separate numbers (e.g. '3.14').
+        use ',' to separate numbers (e.g. '3,14').
       </span>
     </div>
   </div>
@@ -64,6 +64,7 @@ import get from 'lodash/get';
 import includes from 'lodash/includes';
 import pullAt from 'lodash/pullAt';
 import startsWith from 'lodash/startsWith';
+import toNumber from 'lodash/toNumber';
 
 export default {
   props: {
@@ -98,7 +99,7 @@ export default {
     },
     updateAnswer(name, value, index) {
       let values = cloneDeep(this[name]);
-      if (name === 'correct') value = Number(value) || value;
+      if (name === 'correct') value = toNumber(value);
       values[index] = value;
       this.update({ [name]: values });
     },
