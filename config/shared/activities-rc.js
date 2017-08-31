@@ -1,4 +1,6 @@
 const ASSET_GROUP = 'PERSPECTIVE';
+const PREVIEW_URL = 'https://cgma.dev.extensionengine.com/admin/#/course/{courseId}/activity/{activityId}/preview';
+
 const OUTLINE_LEVELS = [{
   level: 1,
   type: 'GOAL',
@@ -67,4 +69,8 @@ const OUTLINE_LEVELS = [{
   }]
 }];
 
-module.exports = { ASSET_GROUP, OUTLINE_LEVELS };
+module.exports = {
+  ASSET_GROUP,
+  OUTLINE_LEVELS,
+  PREVIEW_URL
+};
