@@ -148,10 +148,9 @@ export const defaults = {
   NR: {
     type: 'NR',
     ...baseDefaults,
-    answers: [''],
     prefixes: [''],
     suffixes: [''],
-    correct: []
+    correct: ['']
   },
   SC: {
     type: 'SC',

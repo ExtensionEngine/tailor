@@ -51,7 +51,7 @@
     <div :class="{ 'has-error': !isValid }">
       <span class="help-block">
         Only numerical input allowed, if decimal number is needed please
-        use ',' to separate numbers (e.g. '3,14').
+        use comma to separate numbers (e.g. '3,14').
       </span>
     </div>
   </div>
