@@ -18,7 +18,8 @@
           :src="url"
           class="content"
           ref="frame"
-          frameborder="0">
+          frameborder="0"
+          sandbox="allow-forms allow-same-origin allow-scripts">
         </iframe>
       </div>
       <div class="pusher"></div>

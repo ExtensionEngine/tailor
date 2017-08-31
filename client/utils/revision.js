@@ -1,12 +1,14 @@
 export function describeActivityRevision(rev) {
-  const name = rev.state.name;
+  const { name, type } = rev.state;
   switch (rev.operation) {
     case 'CREATE':
-      return name === 'perspective'
+      return type === 'PERSPECTIVE'
         ? `created a new perspective`
         : `created a new activity: "${name}"`;
     case 'REMOVE':
-      return `removed the activity "${name}"`;
+      return type === 'PERSPECTIVE'
+        ? `removed a perspective`
+        : `removed the activity "${name}"`;
     default:
       return `changed the activity "${name}"`;
   }

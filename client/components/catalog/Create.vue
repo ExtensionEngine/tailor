@@ -1,43 +1,52 @@
 <template>
-  <div class="create-course" v-if="showCreateButton">
-    <button type="button" class="btn btn-primary btn-fab" @click="show">
+  <div v-if="showCreateButton" class="create-course" >
+    <button @click="show" class="btn btn-primary btn-fab" type="button">
       <span class="mdi mdi-plus"></span>
     </button>
     <modal :show="showModal" :backdrop="false" effect="fade">
-      <div slot="modal-header" class="modal-header">
+      <div class="modal-header" slot="modal-header">
         <h4 class="modal-title">Create course</h4>
       </div>
-      <div slot="modal-body" class="modal-body">
+      <div class="modal-body" slot="modal-body">
         <loader v-show="showLoader"></loader>
         <div v-show="!showLoader">
-          <div class="form-group" :class="getErrorClass('name')">
+          <div class="error-message">
+            <span v-if="vErrors.has('default')">
+              {{ vErrors.first('default') }}
+            </span>
+          </div>
+          <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
             <input
               v-model="name"
               v-focus="focusName"
+              v-validate="{ rules: { required: true, min: 2, max: 250 } }"
               @focus="focusName = true"
               @blur="focusName = false"
-              type="text"
               class="form-control"
+              name="name"
+              type="text"
               placeholder="Name"/>
-            <div v-show="hasError('name')" class="error-message">
-              {{ getErrorMessage('name') }}
-            </div>
+            <span v-show="vErrors.has('name')" class="help-block">
+              {{ vErrors.first('name') }}
+            </span>
           </div>
-          <div class="form-group" :class="getErrorClass('description')">
+          <div :class="{ 'has-error': vErrors.has('description') }" class="form-group">
             <textarea
               v-model="description"
+              v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
               class="form-control"
+              name="description"
               placeholder="Description">
             </textarea>
-            <div v-show="hasError('description')" class="error-message">
-              {{ getErrorMessage('description') }}
-            </div>
+            <span v-show="vErrors.has('description')" class="help-block">
+              {{ vErrors.first('description') }}
+            </span>
           </div>
         </div>
       </div>
-      <div slot="modal-footer" class="modal-footer">
-        <button type="button" @click="hide" class="btn btn-default">Cancel</button>
-        <button type="button" @click="create" class="btn btn-primary">Create</button>
+      <div class="modal-footer" slot="modal-footer">
+        <button @click="hide" class="btn btn-default" type="button">Cancel</button>
+        <button @click="submit" class="btn btn-primary" type="button">Create</button>
       </div>
     </modal>
   </div>
@@ -45,121 +54,65 @@
 
 <script>
 import { focus } from 'vue-focus';
-import { isEmpty } from 'lodash';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters } from 'vuex-module';
 import { modal } from 'vue-strap';
+import pick from 'lodash/pick';
 import Promise from 'bluebird';
-import yup from 'yup';
 
-const bounds = {
-  name: { min: 2, max: 250 },
-  description: { min: 2, max: 2000 }
-};
-
-const schema = yup.object().shape({
-  name: yup.string().trim()
-    .min(bounds.name.min)
-    .max(bounds.name.max)
-    .required(),
-  description: yup.string().trim()
-    .min(bounds.description.min)
-    .max(bounds.description.max)
-    .required()
+const getDefaultData = () => ({
+  name: '',
+  description: '',
+  showLoader: false,
+  showModal: false,
+  focusName: true
 });
 
 export default {
   name: 'create-course',
-  data() {
-    return {
-      name: '',
-      description: '',
-      showLoader: false,
-      showModal: false,
-      errors: this.getDefaultErrors(),
-      focusName: true
-    };
-  },
-  directives: {
-    focus
-  },
-  components: {
-    modal,
-    Loader
-  },
-  methods: {
-    ...mapActions(['save'], 'courses'),
-    create() {
-      const course = { name: this.name, description: this.description };
-      const save = course => {
-        this.showLoader = true;
-        return Promise.join(this.save(course), Promise.delay(1000)).then(() => {
-          this.showLoader = false;
-          this.hide();
-        });
-      };
-
-      this.errors = this.getDefaultErrors();
-      this.validate(course)
-        .then(save)
-        .catch(err => {
-          err.inner.forEach(it => this.errors[it.path].push(it.type));
-        });
-    },
-    show() {
-      this.showModal = true;
-      this.focusName = true;
-    },
-    hide() {
-      this.name = '';
-      this.description = '';
-      this.errors = this.getDefaultErrors();
-      this.showModal = false;
-    },
-    validate(course) {
-      return schema.validate(course, { abortEarly: false });
-    },
-    getDefaultErrors() {
-      // Array of error types for input fields
-      return { name: [], description: [] };
-    },
-    hasError(field) {
-      return !isEmpty(this.errors[field]);
-    },
-    getErrorClass(field) {
-      return { 'has-error': this.hasError(field) };
-    },
-    getErrorMessage(field) {
-      // Helpers
-      const capitalize = word => word.replace(/(^|\s)[a-z]/g, l => l.toUpperCase());
-      const [minValue, maxValue] = [bounds[field].min, bounds[field].max];
-
-      // Error messages
-      const required = `${capitalize(field)} should not be empty`;
-      const min = `${capitalize(field)} field should contain at least ${minValue} characters`;
-      const max = `${capitalize(field)} field should contain at most ${maxValue} characters`;
-
-      // Display message by error priority
-      const types = this.errors[field];
-      if (types.includes('required')) return required;
-      else if (types.includes('min')) return min;
-      else if (types.includes('max')) return max;
-    }
-  },
+  data: getDefaultData,
   computed: {
     ...mapGetters(['isAdmin']),
     showCreateButton() {
       return this.isAdmin;
     }
-  }
+  },
+  methods: {
+    ...mapActions(['save'], 'courses'),
+    submit() {
+      this.$validator.validateAll()
+        .then(result => {
+          if (!result) return;
+          const course = pick(this, ['name', 'description']);
+          return this.create(course);
+        });
+    },
+    create(course) {
+      this.showLoader = true;
+      return Promise.join(this.save(course), Promise.delay(1000))
+        .then(() => this.hide())
+        .catch(() => this.vErrors.add('default', 'An error has occurred!'));
+    },
+    show() {
+      this.vErrors.clear();
+      this.showModal = true;
+      this.focusName = true;
+    },
+    hide() {
+      Object.assign(this, getDefaultData());
+    }
+  },
+  directives: { focus },
+  components: { modal, Loader },
+  inject: ['$validator']
 };
 </script>
 
 <style lang="scss" scoped>
 .btn-fab .mdi {
   display: inline-block;
-  font-size: 18px;
-  line-height: 18px;
+  font-size: 28px;
+  line-height: 28px;
   vertical-align: middle;
 }
 
@@ -189,9 +142,7 @@ export default {
 
   .error-message {
     padding: 3px 0;
-    color: #dd4b39;
-    font-size: 15px;
-    font-weight: 600;
+    color: #a94442;
     text-align: left;
   }
 
