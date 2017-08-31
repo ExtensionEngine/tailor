@@ -92,6 +92,13 @@ export default {
         };
       }
 
+      if (element.type === 'EMBED') {
+        element.data = {
+          height: 500,
+          url: ''
+        };
+      }
+
       this.$emit('add', element);
       this.close();
     },

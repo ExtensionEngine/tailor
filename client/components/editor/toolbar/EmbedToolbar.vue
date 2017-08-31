@@ -59,8 +59,8 @@ export default {
   data() {
     const { height, url } = this.element.data;
     return {
-      height: height || 500,
-      url: url || '',
+      height,
+      url,
       debouncedHeight: null,
       debouncedUrl: null
     };
@@ -72,24 +72,37 @@ export default {
       if (height === this.height || this.vErrors.has('height')) return;
       const data = { ...this.element.data, height: this.height };
       this.updateElement({ ...this.element, data });
+      this.cleanup();
     },
     setUrl() {
       const { url } = this.element.data;
       if (url === this.url || this.vErrors.has('url')) return;
       const data = { ...this.element.data, url: this.url };
       this.updateElement({ ...this.element, data });
+      this.cleanup();
+    },
+    cleanup() {
+      if (this.debouncedHeight) {
+        this.debouncedHeight.cancel();
+        this.debouncedHeight = null;
+      }
+      if (this.debouncedUrl) {
+        this.debouncedUrl.cancel();
+        this.debouncedUrl = null;
+      }
     }
   },
   beforeDestroy() {
-    if (this.debouncedHeight) this.debouncedHeight.cancel();
-    if (this.debouncedUrl) this.debouncedUrl.cancel();
+    this.cleanup();
   },
   watch: {
     height: function () {
+      if (this.debouncedHeight) return;
       this.debouncedHeight = debounce(this.setHeight, 2000);
       this.debouncedHeight();
     },
     url: function () {
+      if (this.debouncedUrl) return;
       this.debouncedUrl = debounce(this.setUrl, 2000);
       this.debouncedUrl();
     }
