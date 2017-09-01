@@ -19,12 +19,15 @@
           <p>Error loading media!</p>
         </div>
       </div>
-      <video-player
-        :options="options"
-        @ready="onReady"
-        ref="video"
-        class="player">
-      </video-player>
+      <div class="player">
+        <video-player
+          v-if="!isDragged"
+          :options="options"
+          @ready="onReady"
+          ref="video"
+          class="player">
+        </video-player>
+      </div>
     </div>
   </div>
 </template>
@@ -39,7 +42,7 @@ const MediaError = window.MediaError;
 
 export default {
   name: 'te-video',
-  props: ['element', 'isFocused'],
+  props: ['element', 'isFocused', 'isDragged'],
   data() {
     return { error: null };
   },
@@ -160,6 +163,11 @@ function getMimetype(url) {
 
 .well {
   margin: 0;
+}
+
+.player {
+  height: 360px;
+  background: #000;
 }
 
 .player /deep/ .video-js .vjs-big-play-button {
