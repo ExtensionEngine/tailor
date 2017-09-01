@@ -118,11 +118,6 @@ export default {
     update(data) {
       this.$emit('update', data, true /* validate */);
     }
-  },
-  watch: {
-    isEditing(newVal) {
-      if (!newVal) this.correct = this.assessment.correct;
-    }
   }
 };
 </script>
