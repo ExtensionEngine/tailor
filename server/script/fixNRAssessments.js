@@ -1,3 +1,4 @@
+const cloneDeep = require('lodash/cloneDeep');
 const Promise = require('bluebird');
 const { TeachingElement } = require('../shared/database');
 const toNumber = require('lodash/toNumber');
@@ -19,14 +20,14 @@ function processNRQuestions(elements) {
 }
 
 function processNRQuestion(element) {
-  const oldVal = element.data;
+  const oldVal = cloneDeep(element.data);
   if (oldVal.type !== 'NR' || oldVal.prefixes) return element;
 
-  let newVal = {
+  let newVal = Object.assign(element.data, {
     correct: [toNumber(oldVal.correct)],
     prefixes: [''],
     suffixes: ['']
-  };
+  });
 
   console.log(`Processed: ${element.id} - ${element.type}, ${oldVal.type}`);
   console.log(`${JSON.stringify(oldVal, null, 2)}\n=>`);
