@@ -42,8 +42,8 @@ export default {
     }
   },
   created() {
-    if (this.element.height) return;
-    this.$emit('save', { height: 500 });
+    if (!this.element.data.height) return;
+    this.$emit('save', { height: 500, url: '' });
   }
 };
 </script>

@@ -68,9 +68,10 @@ export default {
   methods: {
     ...mapActions({ updateElement: 'update' }, 'tes'),
     onChange: debounce(function () {
-      const { height, url } = this.element.data;
       if (this.vErrors.any()) return;
-      this.updateElement({ ...this.element, height, url });
+      const { height, url } = this;
+      const data = { ...this.element.data, height, url };
+      this.updateElement({ ...this.element, data });
     }, 1000)
   }
 };
