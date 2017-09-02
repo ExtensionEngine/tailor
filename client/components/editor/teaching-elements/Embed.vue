@@ -40,6 +40,10 @@ export default {
     showPlaceholder() {
       return !this.element.data.url;
     }
+  },
+  created() {
+    if (this.element.height) return;
+    this.$emit('save', { height: 500 });
   }
 };
 </script>
