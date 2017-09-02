@@ -84,7 +84,7 @@ export const schemas = {
   }),
   SC: yup.object().shape({
     ...baseSchema,
-    answers: yup.array().min(2).of(yup.string().trim().min(1).max(200).required()).required(),
+    answers: yup.array().min(2).of(yup.string().trim().min(1).max(500).required()).required(),
     correct: yup.number().required()
   }),
   TR: yup.object().shape({
@@ -148,10 +148,9 @@ export const defaults = {
   NR: {
     type: 'NR',
     ...baseDefaults,
-    answers: [''],
     prefixes: [''],
     suffixes: [''],
-    correct: []
+    correct: ['']
   },
   SC: {
     type: 'SC',

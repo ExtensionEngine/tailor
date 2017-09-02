@@ -5,12 +5,13 @@ const config = mergeConfig(
   require('./activities-rc'),
   require('./activities-rc.load')()
 );
-const { OUTLINE_LEVELS, ASSET_GROUP } = config;
+const { OUTLINE_LEVELS, ASSET_GROUP, PREVIEW_URL } = config;
 
 module.exports = {
   OUTLINE_LEVELS,
   OBJECTIVES: filter(OUTLINE_LEVELS, { isObjective: true }),
   ASSET_GROUP,
+  PREVIEW_URL,
   getLevel,
   isEditable: type => {
     const level = getLevel(type);

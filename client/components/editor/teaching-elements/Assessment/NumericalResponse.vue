@@ -8,7 +8,7 @@
     </span>
     <ul >
       <li
-        v-for="(answer, index) in answers"
+        v-for="(answer, index) in correct"
         :class="{ 'has-error': isValidAnswer(index) }"
         class="answer row">
         <div class="col-xs-3">
@@ -20,7 +20,7 @@
             placeholder="Prefix..."
             class="form-control">
         </div>
-        <div :class="`col-xs-${ answers.length > 1 ? 5 : 6 }`">
+        <div :class="`col-xs-${ correct.length > 1 ? 5 : 6 }`">
           <input
             :disabled="!isEditing"
             :value="correct[index]"
@@ -39,7 +39,7 @@
             class="form-control">
         </div>
         <div
-          v-if="isEditing && answers.length > 1"
+          v-if="isEditing && correct.length > 1"
           class="col-xs-1">
           <span
             @click="removeAnswer(index)"
@@ -51,7 +51,7 @@
     <div :class="{ 'has-error': !isValid }">
       <span class="help-block">
         Only numerical input allowed, if decimal number is needed please
-        use '.' to separate numbers (e.g. '3.14').
+        use . to separate numbers (e.g. '3.14').
       </span>
     </div>
   </div>
@@ -62,8 +62,10 @@ import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
+import last from 'lodash/last';
 import pullAt from 'lodash/pullAt';
 import startsWith from 'lodash/startsWith';
+import toNumber from 'lodash/toNumber';
 
 export default {
   props: {
@@ -74,9 +76,6 @@ export default {
   computed: {
     isValid() {
       return !find(this.errors, err => startsWith(err, 'correct'));
-    },
-    answers() {
-      return get(this.assessment, 'answers', []);
     },
     correct() {
       return get(this.assessment, 'correct', []);
@@ -93,35 +92,31 @@ export default {
       return includes(this.errors, `correct[${index}]`);
     },
     addAnswer() {
-      let { answers, correct, prefixes, suffixes } = cloneDeep(this.assessment);
-      answers.push('');
+      let { correct, prefixes, suffixes } = cloneDeep(this.assessment);
       prefixes.push('');
       suffixes.push('');
       correct.push('');
-      this.update({ answers, prefixes, suffixes, correct });
+      this.update({ prefixes, suffixes, correct });
     },
     updateAnswer(name, value, index) {
+      if (name === 'correct') {
+        if (last(value) === '.') return;
+        value = toNumber(value) || value;
+      }
       let values = cloneDeep(this[name]);
-      if (name === 'correct') value = Number(value) || value;
       values[index] = value;
       this.update({ [name]: values });
     },
     removeAnswer(index) {
-      if (this.answers.length <= 1) return;
-      let { answers, correct, prefixes, suffixes } = cloneDeep(this.assessment);
-      pullAt(answers, index);
+      if (this.correct.length <= 1) return;
+      let { correct, prefixes, suffixes } = cloneDeep(this.assessment);
       pullAt(prefixes, index);
       pullAt(suffixes, index);
       pullAt(correct, index);
-      this.update({ answers, prefixes, suffixes, correct });
+      this.update({ prefixes, suffixes, correct });
     },
     update(data) {
       this.$emit('update', data, true /* validate */);
-    }
-  },
-  watch: {
-    isEditing(newVal) {
-      if (!newVal) this.correct = this.assessment.correct;
     }
   }
 };
