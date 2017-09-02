@@ -1,7 +1,7 @@
 <template>
-  <div class="te-embed">
+  <div :style="{ height: height + 'px' }" class="te-embed">
     <div v-if="showPlaceholder">
-      <div class="well placeholder">
+      <div :style="{ height: height + 'px' }" class="well placeholder">
         <span class="heading">Embed placeholder</span>
         <span class="message" v-show="!isFocused">Select to edit</span>
         <span class="message" v-show="isFocused">Please use toolbar to enter url</span>
@@ -22,7 +22,6 @@
           sandbox="allow-forms allow-same-origin allow-scripts">
         </iframe>
       </div>
-      <div class="pusher"></div>
     </div>
   </div>
 </template>
@@ -32,12 +31,19 @@ export default {
   name: 'te-embed',
   props: ['element', 'isFocused', 'isDragged'],
   computed: {
+    height() {
+      return this.element.data.height;
+    },
     url() {
       return this.element.data.url;
     },
     showPlaceholder() {
       return !this.element.data.url;
     }
+  },
+  created() {
+    if (this.element.data.height) return;
+    this.$emit('save', { height: 300, url: '' });
   }
 };
 </script>
@@ -71,8 +77,7 @@ export default {
   opacity: 0.9;
 
   .message {
-    position: relative;
-    top: 45%;
+    padding-top: 119px;
     color: green;
     font-size: 22px;
   }
@@ -86,9 +91,5 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-}
-
-.pusher {
-  margin-top: 56.25%;
 }
 </style>

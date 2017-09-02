@@ -16,11 +16,11 @@
         </label>
         <span
           :class="{ 'has-error': vErrors.has('height') }"
-          id="heightInput"
           class="form-group">
           <input
             v-model="height"
             v-validate="{ rules: { required: true, min_value: 300, max_value: 3000 } }"
+            id="heightInput"
             class="form-control"
             name="height"
             type="text"
@@ -57,7 +57,7 @@ export default {
     }
   },
   watch: {
-    height: debounce(function (newHeight) {
+    height: debounce(function () {
       if (!this.vErrors.has('height')) {
         teChannel.emit(`${this.element._cid}/height`, this.height);
       }
