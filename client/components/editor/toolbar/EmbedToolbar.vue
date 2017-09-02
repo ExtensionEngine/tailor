@@ -10,10 +10,12 @@
         class="input">
         <input
           v-model="height"
-          v-validate="{ rules:
-            { required: true, numeric: true, min_value: 300, max_value: 3000 }
+          v-validate="{
+            rules: {
+              required: true, numeric: true, min_value: 300, max_value: 3000
+            }
           }"
-          @blur="setHeight"
+          @input="onChange"
           data-vv-delay="0"
           id="heightInput"
           class="form-control"
@@ -34,7 +36,7 @@
         <input
           v-model="url"
           v-validate="{ rules: { required: true, url: true } }"
-          @blur="setUrl"
+          @input="onChange"
           data-vv-delay="0"
           id="urlInput"
           class="form-control"
@@ -60,52 +62,16 @@ export default {
     const { height, url } = this.element.data;
     return {
       height,
-      url,
-      debouncedHeight: null,
-      debouncedUrl: null
+      url
     };
   },
   methods: {
     ...mapActions({ updateElement: 'update' }, 'tes'),
-    setHeight() {
-      const { height } = this.element.data;
-      if (height === this.height || this.vErrors.has('height')) return;
-      const data = { ...this.element.data, height: this.height };
-      this.updateElement({ ...this.element, data });
-      this.cleanup();
-    },
-    setUrl() {
-      const { url } = this.element.data;
-      if (url === this.url || this.vErrors.has('url')) return;
-      const data = { ...this.element.data, url: this.url };
-      this.updateElement({ ...this.element, data });
-      this.cleanup();
-    },
-    cleanup() {
-      if (this.debouncedHeight) {
-        this.debouncedHeight.cancel();
-        this.debouncedHeight = null;
-      }
-      if (this.debouncedUrl) {
-        this.debouncedUrl.cancel();
-        this.debouncedUrl = null;
-      }
-    }
-  },
-  beforeDestroy() {
-    this.cleanup();
-  },
-  watch: {
-    height: function () {
-      if (this.debouncedHeight) return;
-      this.debouncedHeight = debounce(this.setHeight, 2000);
-      this.debouncedHeight();
-    },
-    url: function () {
-      if (this.debouncedUrl) return;
-      this.debouncedUrl = debounce(this.setUrl, 2000);
-      this.debouncedUrl();
-    }
+    onChange: debounce(function () {
+      const { height, url } = this.element.data;
+      if (this.vErrors.any()) return;
+      this.updateElement({ ...this.element, height, url });
+    }, 1000)
   }
 };
 </script>
