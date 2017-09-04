@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
 import { mapActions } from 'vuex-module';
 
@@ -67,13 +68,20 @@ export default {
   },
   methods: {
     ...mapActions({ updateElement: 'update' }, 'tes'),
-    onChange: debounce(function () {
-      if (this.vErrors.any()) return;
+    onChange() {
       const { height, url } = this;
-      const data = { ...this.element.data, height, url };
-      this.updateElement({ ...this.element, data });
-    }, 1000)
-  }
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
+        const element = cloneDeep(this.element);
+        const data = { ...element.data, height, url };
+        this.save({ ...this.element, data });
+      });
+    },
+    save: debounce(function (element) {
+      this.updateElement(element);
+    }, 700)
+  },
+  inject: ['$validator']
 };
 </script>
 
