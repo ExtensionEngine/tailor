@@ -32,6 +32,7 @@
     "fix:mark-detached": "node -r dotenv/config ./server/script/markDetached.js",
     "fix:mq": "node -r dotenv/config ./server/script/fixMatchingQuestionData.js",
     "fix:nr": "node -r dotenv/config ./server/script/fixNRAssessments.js",
+    "fix:embeds": "node -r dotenv/config ./server/script/fixEmbeds.js",
     "update:description": "node -r dotenv/config ./server/script/updateDescription.js",
     "integration:add": "node -r dotenv/config ./server/script/addIntegration.js",
     "integration:token": "node -r dotenv/config ./server/script/generateIntegrationToken.js",
