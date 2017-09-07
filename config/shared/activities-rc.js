@@ -18,7 +18,13 @@ const OUTLINE_LEVELS = [{
     type: 'TEXTAREA',
     label: 'Description',
     placeholder: 'Click to add...',
-    validate: { rules: { required: false, max: 250 } }
+    validate: { rules: { max: 250 } }
+  }, {
+    key: 'examSeriesCode',
+    type: 'INPUT',
+    label: 'Exam Series Code',
+    placeholder: 'Click to add...',
+    validate: { rules: { max: 30 } }
   }]
 }, {
   level: 2,
