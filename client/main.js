@@ -11,7 +11,12 @@ import store from './store';
 import router from './router';
 import App from './App';
 
-Vue.use(VeeValidate, { errorBagName: 'vErrors', fieldsBagName: 'vFields', delay: 700 });
+Vue.use(VeeValidate, {
+  inject: false,
+  delay: 700,
+  fieldsBagName: 'vFields',
+  errorBagName: 'vErrors'
+});
 
 sync(store, router);
 
