@@ -12,7 +12,6 @@ import router from './router';
 import App from './App';
 
 Vue.use(VeeValidate, {
-  inject: false,
   delay: 700,
   fieldsBagName: 'vFields',
   errorBagName: 'vErrors'
