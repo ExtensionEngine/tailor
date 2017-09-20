@@ -173,4 +173,17 @@ function getMimetype(url) {
 .player /deep/ .video-js .vjs-big-play-button {
   display: none !important;
 }
+
+// Addresses videojs-vimeo plugin issue:
+// https://github.com/videojs/videojs-vimeo/issues/70#issuecomment-196805920
+.player /deep/ .video-js .vimeoFrame {
+  // NOTE: Do not remove !important, overrides inline style!
+  position: absolute !important;
+  height: 100% !important;
+  padding: 0 !important;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 </style>
