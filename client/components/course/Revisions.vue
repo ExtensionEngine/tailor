@@ -4,7 +4,7 @@
       No changes recorded.
     </div>
     <div v-else class="revisions">
-      <table class="table table-striped table-hover">
+      <table class="table table-hover">
         <thead>
           <tr>
             <th>Date</th>
@@ -115,6 +115,35 @@ export default {
   padding: 30px;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
+
+  .table {
+    border-color: grey;
+    font-family: Roboto, sans-serif;
+
+    thead > tr {
+      height: 56px;
+    }
+
+    tbody > tr {
+      height: 48px;
+    }
+
+    th, td {
+      padding: 0 24px;
+      vertical-align: middle;
+      border-color: inherit;
+    }
+
+    th {
+      border-bottom-width: 1px;
+      font-size: 12px;
+    }
+
+    td {
+      border-color: rgba(0, 0, 0, 0.12);
+      font-size: 13px;
+    }
+  }
 }
 
 .table {
