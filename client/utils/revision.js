@@ -1,42 +1,65 @@
-export function describeActivityRevision(rev) {
-  const { name, type } = rev.state;
-  switch (rev.operation) {
+import { getLevel } from 'shared/activities';
+import { lower } from 'to-case';
+import reduce from 'lodash/reduce';
+import { typeInfo } from './assessment';
+
+function getAction(operation) {
+  switch (operation) {
     case 'CREATE':
-      return type === 'PERSPECTIVE'
-        ? `created a new perspective`
-        : `created a new activity: "${name}"`;
+      return 'Created';
     case 'REMOVE':
-      return type === 'PERSPECTIVE'
-        ? `removed a perspective`
-        : `removed the activity "${name}"`;
+      return 'Removed';
+    case 'UPDATE':
+      return 'Changed';
     default:
-      return `changed the activity "${name}"`;
+      return 'Uknown operation';
   }
 }
 
-export function describeElementRevision(rev, topic) {
-  const type = rev.state.type.toLowerCase();
-  switch (rev.operation) {
-    case 'CREATE':
-      return `created a new ${type} element ${topic ? `in topic "${topic.name}"` : ''}`;
-    case 'REMOVE':
-      return `removed an element ${topic ? `from topic "${topic.name}"` : ''}`;
-    default: {
-      const article = type === 'image' ? 'an' : 'a';
-      return `changed ${article} ${type} element ${topic ? `in topic "${topic.name}"` : ''}`;
-    }
-  }
+export function describeActivityRevision(rev) {
+  let { name, type } = rev.state;
+  name = name ? ` "${name}"` : '';
+  const level = getLevel(type);
+  const label = level ? level.label : type;
+  return `${getAction(rev.operation)} ${lower(label)}${name}`;
+}
+
+export function describeElementRevision(rev) {
+  const { type, data } = rev.state;
+  const title = type === 'ASSESSMENT' ? typeInfo[data.type].title : type;
+  return `${getAction(rev.operation)} ${lower(title)} element`;
 }
 
 export function describeCourseRevision(rev) {
-  switch (rev.operation) {
-    case 'CREATE':
-      return `created the course`;
-    case 'REMOVE':
-      return `removed the course`;
-    case 'UPDATE':
-      return `changed the course name/description`;
+  return `${getAction(rev.operation)} course`;
+}
+
+export function getRevisionAcronym(rev) {
+  switch (rev.entity) {
+    case 'ACTIVITY':
+      const typeArray = rev.state.type.split('_', 2);
+      const acronym = reduce(typeArray, (acc, val) => acc + val.charAt(0), '');
+      return acronym;
+    case 'COURSE':
+      return 'C';
+    case 'TEACHING_ELEMENT':
+      return 'TE';
     default:
-      return `changed the course`;
+      return 'N/A';
+  }
+}
+
+export function getRevisionColor(rev) {
+  const DEFAULT_COLOR = '#808080';
+  switch (rev.entity) {
+    case 'ACTIVITY':
+      const level = getLevel(rev.state.type);
+      return level ? level.color : DEFAULT_COLOR;
+    case 'COURSE':
+      return '#00BCD4';
+    case 'TEACHING_ELEMENT':
+      return '#FF5722';
+    default:
+      return DEFAULT_COLOR;
   }
 }

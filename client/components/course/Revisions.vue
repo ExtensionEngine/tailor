@@ -4,20 +4,14 @@
       No changes recorded.
     </div>
     <div v-else class="revisions">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="revision in getRevisions">
-            <td>{{ formatDate(revision) }}</td>
-            <td>{{ formatDescription(revision) }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <ul>
+        <li class="subheader"><span>History</span></li>
+        <revision-item
+          v-for="revision in getRevisions"
+          :key="revision._cid"
+          :revision="revision">
+        </revision-item>
+      </ul>
     </div>
     <div class="col-lg-12 loader-wrapper">
       <loader v-show="paginate"></loader>
@@ -31,22 +25,11 @@
 </template>
 
 <script>
-import fecha from 'fecha';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import {
-  describeActivityRevision,
-  describeElementRevision,
-  describeCourseRevision
-} from 'utils/revision';
 import InfiniteScroll from 'vue-infinite-scroll';
 import Loader from '../common/Loader';
 import Promise from 'bluebird';
-
-const describe = {
-  'COURSE': describeCourseRevision,
-  'ACTIVITY': describeActivityRevision,
-  'TEACHING_ELEMENT': describeElementRevision
-};
+import RevisionItem from './RevisionItem';
 
 export default {
   name: 'course-revisions',
@@ -56,7 +39,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getParent'], 'activities'),
     ...mapGetters(['revisions'], 'course'),
     ...mapGetters(['hasMoreResults'], 'revisions'),
     getRevisions() {
@@ -77,17 +59,6 @@ export default {
           this.paginate = false;
         });
       }
-    },
-    formatDate(rev) {
-      return fecha.format(rev.createdAt, 'M/D/YY HH:mm');
-    },
-    formatDescription(rev) {
-      const user = rev.user.email;
-      const topic = rev.entity === 'ASSET'
-        ? this.getParent(rev.state.activityId)
-        : undefined;
-      const description = describe[rev.entity](rev, topic);
-      return `User ${user} ${description}`;
     }
   },
   mounted() {
@@ -95,9 +66,7 @@ export default {
     this.setBaseUrl(`/courses/${courseId}/revisions`);
     this.fetchRevisions();
   },
-  components: {
-    Loader
-  },
+  components: { Loader, RevisionItem },
   directives: {
     InfiniteScroll
   }
@@ -116,37 +85,27 @@ export default {
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
 
-  .table {
-    border-color: grey;
+  ul {
+    padding: 8px 0;
+    list-style-type: none;
+    text-align: left;
     font-family: Roboto, sans-serif;
 
-    thead > tr {
-      height: 56px;
+    li {
+      width: 100%;
     }
 
-    tbody > tr {
+    .subheader {
       height: 48px;
-    }
+      margin-left: 56px;
+      padding: 0 16px;
+      color: #808080;
 
-    th, td {
-      padding: 0 24px;
-      vertical-align: middle;
-      border-color: inherit;
-    }
-
-    th {
-      border-bottom-width: 1px;
-      font-size: 12px;
-    }
-
-    td {
-      border-color: rgba(0, 0, 0, 0.12);
-      font-size: 13px;
+      span {
+        line-height: 48px;
+        vertical-align: middle;
+      }
     }
   }
-}
-
-.table {
-  text-align: left;
 }
 </style>
