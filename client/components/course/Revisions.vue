@@ -5,7 +5,7 @@
     </div>
     <div v-else class="revisions">
       <ul>
-        <li class="subheader"><span>History</span></li>
+        <div class="subheader"><span>History</span></div>
         <revision-item
           v-for="revision in getRevisions"
           :key="revision._cid"
@@ -96,6 +96,7 @@ export default {
     }
 
     .subheader {
+      width: 100%;
       height: 48px;
       margin-left: 56px;
       padding: 0 16px;
@@ -103,7 +104,6 @@ export default {
 
       span {
         line-height: 48px;
-        vertical-align: middle;
       }
     }
   }

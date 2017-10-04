@@ -1,16 +1,14 @@
 <template>
-<li>
-  <div class="revision">
-    <div :style="{ color }" class="type">
-      <div class="acronym"><span>{{ acronym }}</span></div>
+  <li>
+    <div class="revision">
+      <div :style="{ color }" class="acronym"><span>{{ acronym }}</span></div>
+      <div class="content">
+        <div class="description">{{ formatDescription(revision) }}</div>
+        <div class="name">{{ revision.user.email }}</div>
+      </div>
+      <div class="date">{{ formatDate(revision) }}</div>
     </div>
-    <div class="content">
-      <div class="description">{{ formatDescription(revision) }}</div>
-      <div class="name">{{ revision.user.email }}</div>
-    </div>
-    <div class="date">{{ formatDate(revision) }}</div>
-  </div>
-</li>
+  </li>
 </template>
 
 <script>
@@ -22,7 +20,6 @@ import {
   getRevisionAcronym,
   getRevisionColor
 } from 'utils/revision';
-import { mapGetters } from 'vuex-module';
 
 const describe = {
   'COURSE': describeCourseRevision,
@@ -34,7 +31,6 @@ export default {
   name: 'revision-item',
   props: ['revision'],
   computed: {
-    ...mapGetters(['getParent'], 'activities'),
     color() {
       return getRevisionColor(this.revision);
     },
@@ -55,47 +51,28 @@ export default {
 
 <style lang="scss" scoped>
 .revision {
-  display: table;
-  table-layout: fixed;
   width: 100%;
   height: 72px;
+  display: flex;
+  align-items: center;
   padding: 0 16px;
 
-  &:hover {
-    background-color: #f1f1f1;
+  .acronym {
+    width: 40px;
+    height: 40px;
+    margin-right: 16px;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #eee;
 
-    .acronym {
-      background-color: #fff !important;
-    }
-  }
-
-  .type, .content, .date {
-    display: table-cell;
-    vertical-align: middle;
-  }
-
-  .type {
-    width: 56px;
-    padding-right: 16px;
-
-    .acronym {
-      width: 40px;
-      height: 40px;
-      font-size: 18px;
-      text-align: center;
-      border-radius: 50%;
-      background-color: #eee;
-
-      span {
-        display: inline-block;
-        line-height: 40px;
-        vertical-align: middle;
-      }
+    span {
+      line-height: 40px;
     }
   }
 
   .content {
-    width: 100%;
+    flex-grow: 1;
 
     .description {
       font-size: 16px;
@@ -111,6 +88,14 @@ export default {
     width: 96px;
     font-size: 14px;
     color: #808080;
+  }
+
+  &:hover {
+    background-color: #f1f1f1;
+
+    .acronym {
+      background-color: #fff;
+    }
   }
 }
 </style>
