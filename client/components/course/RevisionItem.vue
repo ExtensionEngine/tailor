@@ -3,10 +3,10 @@
     <div class="revision">
       <div :style="{ color }" class="acronym"><span>{{ acronym }}</span></div>
       <div class="content">
-        <div class="description">{{ formatDescription(revision) }}</div>
+        <div class="description">{{ formatDescription }}</div>
         <div class="name">{{ revision.user.email }}</div>
       </div>
-      <div class="date">{{ formatDate(revision) }}</div>
+      <div class="date">{{ formatDate }}</div>
     </div>
   </li>
 </template>
@@ -14,18 +14,10 @@
 <script>
 import fecha from 'fecha';
 import {
-  describeActivityRevision,
-  describeElementRevision,
-  describeCourseRevision,
+  getFormatDescription,
   getRevisionAcronym,
   getRevisionColor
 } from 'utils/revision';
-
-const describe = {
-  'COURSE': describeCourseRevision,
-  'ACTIVITY': describeActivityRevision,
-  'TEACHING_ELEMENT': describeElementRevision
-};
 
 export default {
   name: 'revision-item',
@@ -36,14 +28,12 @@ export default {
     },
     acronym() {
       return getRevisionAcronym(this.revision);
-    }
-  },
-  methods: {
-    formatDate(rev) {
-      return fecha.format(rev.createdAt, 'M/D/YY HH:mm');
     },
-    formatDescription(rev) {
-      return describe[rev.entity](rev);
+    formatDate() {
+      return fecha.format(this.revision.createdAt, 'M/D/YY HH:mm');
+    },
+    formatDescription() {
+      return getFormatDescription(this.revision);
     }
   }
 };

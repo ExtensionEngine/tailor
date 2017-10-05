@@ -4,10 +4,10 @@
       No changes recorded.
     </div>
     <div v-else class="revisions">
+      <div class="subheader"><span>History</span></div>
       <ul>
-        <div class="subheader"><span>History</span></div>
         <revision-item
-          v-for="revision in getRevisions"
+          v-for="revision in revisions"
           :key="revision._cid"
           :revision="revision">
         </revision-item>
@@ -40,10 +40,7 @@ export default {
   },
   computed: {
     ...mapGetters(['revisions'], 'course'),
-    ...mapGetters(['hasMoreResults'], 'revisions'),
-    getRevisions() {
-      return this.revisions;
-    }
+    ...mapGetters(['hasMoreResults'], 'revisions')
   },
   methods: {
     ...mapActions(['fetch'], 'revisions'),
@@ -82,29 +79,29 @@ export default {
 .revisions {
   margin: 40px 20px;
   padding: 30px;
+  text-align: left;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
 
   ul {
     padding: 8px 0;
     list-style-type: none;
-    text-align: left;
     font-family: Roboto, sans-serif;
 
     li {
       width: 100%;
     }
+  }
 
-    .subheader {
-      width: 100%;
-      height: 48px;
-      margin-left: 56px;
-      padding: 0 16px;
-      color: #808080;
+  .subheader {
+    width: 100%;
+    height: 48px;
+    margin-left: 56px;
+    padding: 0 16px;
+    color: #808080;
 
-      span {
-        line-height: 48px;
-      }
+    span {
+      line-height: 48px;
     }
   }
 }

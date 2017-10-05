@@ -3,6 +3,12 @@ import { lower } from 'to-case';
 import reduce from 'lodash/reduce';
 import { typeInfo } from './assessment';
 
+const describe = {
+  'COURSE': describeCourseRevision,
+  'ACTIVITY': describeActivityRevision,
+  'TEACHING_ELEMENT': describeElementRevision
+};
+
 function getAction(operation) {
   switch (operation) {
     case 'CREATE':
@@ -10,13 +16,12 @@ function getAction(operation) {
     case 'REMOVE':
       return 'Removed';
     case 'UPDATE':
-      return 'Changed';
     default:
-      return 'Uknown operation';
+      return 'Changed';
   }
 }
 
-export function describeActivityRevision(rev) {
+function describeActivityRevision(rev) {
   let { name, type } = rev.state;
   name = name ? ` "${name}"` : '';
   const level = getLevel(type);
@@ -24,14 +29,18 @@ export function describeActivityRevision(rev) {
   return `${getAction(rev.operation)} ${lower(label)}${name}`;
 }
 
-export function describeElementRevision(rev) {
+function describeElementRevision(rev) {
   const { type, data } = rev.state;
   const title = type === 'ASSESSMENT' ? typeInfo[data.type].title : type;
   return `${getAction(rev.operation)} ${lower(title)} element`;
 }
 
-export function describeCourseRevision(rev) {
+function describeCourseRevision(rev) {
   return `${getAction(rev.operation)} course`;
+}
+
+export function getFormatDescription(rev) {
+  return describe[rev.entity](rev);
 }
 
 export function getRevisionAcronym(rev) {
