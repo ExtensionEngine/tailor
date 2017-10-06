@@ -3,37 +3,52 @@
     <div class="revision">
       <div :style="{ color }" class="acronym"><span>{{ acronym }}</span></div>
       <div class="content">
-        <div class="description">{{ formatDescription }}</div>
+        <div class="description">{{ description }}</div>
         <div class="name">{{ revision.user.email }}</div>
       </div>
-      <div class="date">{{ formatDate }}</div>
+      <div class="date">{{ date }}</div>
     </div>
   </li>
 </template>
 
 <script>
 import fecha from 'fecha';
+import find from 'lodash/find';
 import {
   getFormatDescription,
   getRevisionAcronym,
   getRevisionColor
 } from 'utils/revision';
+import { mapGetters } from 'vuex-module';
+import { OUTLINE_LEVELS } from 'shared/activities';
 
 export default {
   name: 'revision-item',
   props: ['revision'],
   computed: {
+    ...mapGetters(['getParent'], 'activities'),
+    activity() {
+      const activityId = this.revision.state.activityId || this.revision.state.id;
+      return this.getActivity(this.getParent(activityId));
+    },
     color() {
       return getRevisionColor(this.revision);
     },
     acronym() {
       return getRevisionAcronym(this.revision);
     },
-    formatDate() {
+    date() {
       return fecha.format(this.revision.createdAt, 'M/D/YY HH:mm');
     },
-    formatDescription() {
-      return getFormatDescription(this.revision);
+    description() {
+      return getFormatDescription(this.revision, this.activity);
+    }
+  },
+  methods: {
+    getActivity(current) {
+      if (!current) return null;
+      if (find(OUTLINE_LEVELS, { type: current.type })) return current;
+      return this.getActivity(this.getParent(current.id));
     }
   }
 };

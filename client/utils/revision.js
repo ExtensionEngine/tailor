@@ -21,34 +21,41 @@ function getAction(operation) {
   }
 }
 
-function describeActivityRevision(rev) {
-  let { name, type } = rev.state;
-  name = name ? ` "${name}"` : '';
-  const level = getLevel(type);
-  const label = level ? level.label : type;
-  return `${getAction(rev.operation)} ${lower(label)}${name}`;
+function getActivityText(activity) {
+  return activity ? ` within "${activity.name}" ${lower(activity.type)}` : '';
 }
 
-function describeElementRevision(rev) {
+function describeActivityRevision(rev, activity) {
+  let { name, type } = rev.state;
+  name = name ? `"${name}" ` : '';
+  const level = getLevel(type);
+  const label = level ? level.label : type;
+  const action = getAction(rev.operation);
+  const activityText = getActivityText(activity);
+  return `${action} ${name}${lower(label)}${activityText}`;
+}
+
+function describeElementRevision(rev, activity) {
   const { type, data } = rev.state;
   const title = type === 'ASSESSMENT' ? typeInfo[data.type].title : type;
-  return `${getAction(rev.operation)} ${lower(title)} element`;
+  const action = getAction(rev.operation);
+  const activityText = getActivityText(activity);
+  return `${action} ${lower(title)} element${activityText}`;
 }
 
 function describeCourseRevision(rev) {
   return `${getAction(rev.operation)} course`;
 }
 
-export function getFormatDescription(rev) {
-  return describe[rev.entity](rev);
+export function getFormatDescription(rev, activity) {
+  return describe[rev.entity](rev, activity);
 }
 
 export function getRevisionAcronym(rev) {
   switch (rev.entity) {
     case 'ACTIVITY':
       const typeArray = rev.state.type.split('_', 2);
-      const acronym = reduce(typeArray, (acc, val) => acc + val.charAt(0), '');
-      return acronym;
+      return reduce(typeArray, (acc, val) => acc + val.charAt(0), '');
     case 'COURSE':
       return 'C';
     case 'TEACHING_ELEMENT':

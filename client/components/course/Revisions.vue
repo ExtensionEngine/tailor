@@ -4,7 +4,7 @@
       No changes recorded.
     </div>
     <div v-else class="revisions">
-      <div class="subheader"><span>History</span></div>
+      <div class="subheader">History</div>
       <ul>
         <revision-item
           v-for="revision in revisions"
@@ -96,13 +96,11 @@ export default {
   .subheader {
     width: 100%;
     height: 48px;
+    display: inline-block;
     margin-left: 56px;
     padding: 0 16px;
+    line-height: 48px;
     color: #808080;
-
-    span {
-      line-height: 48px;
-    }
   }
 }
 </style>
