@@ -29,7 +29,7 @@ export default {
     ...mapGetters(['getParent'], 'activities'),
     activity() {
       const activityId = this.revision.state.activityId || this.revision.state.id;
-      return this.getActivity(this.getParent(activityId));
+      return this.getOutlineLocation(this.getParent(activityId));
     },
     color() {
       return getRevisionColor(this.revision);
@@ -45,10 +45,11 @@ export default {
     }
   },
   methods: {
-    getActivity(current) {
+    getOutlineLocation(current) {
       if (!current) return null;
-      if (find(OUTLINE_LEVELS, { type: current.type })) return current;
-      return this.getActivity(this.getParent(current.id));
+      const level = find(OUTLINE_LEVELS, { type: current.type });
+      if (level) return { ...current, label: level.label };
+      return this.getOutlineLocation(this.getParent(current.id));
     }
   }
 };
