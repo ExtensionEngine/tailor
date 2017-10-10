@@ -77,7 +77,7 @@ export default {
 }
 
 .revisions {
-  margin: 40px 20px;
+  margin: 60px;
   padding: 30px;
   text-align: left;
   background-color: #fff;
@@ -94,7 +94,6 @@ export default {
   }
 
   .subheader {
-    width: 100%;
     height: 48px;
     display: inline-block;
     margin-left: 56px;
