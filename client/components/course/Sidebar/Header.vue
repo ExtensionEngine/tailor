@@ -13,15 +13,19 @@
 
 <script>
 import EventBus from 'EventBus';
+import filter from 'lodash/filter';
+import find from 'lodash/find';
+import first from 'lodash/first';
 import get from 'lodash/get';
 import { isEditable } from 'shared/activities';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
 
 export default {
   computed: {
-    ...mapGetters(['activity'], 'course'),
+    ...mapGetters(['activity', 'activities'], 'course'),
     isEditable() {
       const type = get(this.activity, 'type');
       return type && isEditable(type);
@@ -29,6 +33,7 @@ export default {
   },
   methods: {
     ...mapActions(['remove'], 'activities'),
+    ...mapMutations(['focusActivity'], 'course'),
     edit() {
       if (!this.isEditable) return;
       this.$router.push({
@@ -40,7 +45,16 @@ export default {
       appChannel.emit('showConfirmationModal', {
         type: 'activity',
         item: this.activity,
-        action: () => this.remove(this.activity)
+        action: () => {
+          const { parentId } = this.activity;
+          const rootFilter = it => !it.parentId && (it.id !== this.activity.id);
+          // Focus parent or first root node
+          const focusNode = parentId
+            ? find(this.activities, { id: parentId })
+            : first(sortBy(filter(this.activities, rootFilter), 'position'));
+          this.remove(this.activity);
+          if (focusNode) this.focusActivity(focusNode._cid);
+        }
       });
     }
   }
