@@ -20,7 +20,7 @@
       <insert-activity
         :parent="activity"
         :level="level"
-        @expand="toggleActivity(activity, true)">
+        @expand="toggleActivity({ _cid: activity._cid, expanded: true })">
       </insert-activity>
     </div>
     <div v-if="!isCollapsed(this.activity) && hasChildren">

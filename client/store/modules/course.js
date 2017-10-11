@@ -88,10 +88,10 @@ mutation(function setUsers(users) {
   users.forEach(it => Vue.set(this.state.users, it.id, it));
 });
 
-mutation(function toggleActivity(activity, expanded) {
+mutation(function toggleActivity({ _cid, expanded }) {
   let expandedItems = this.state.outline.expanded;
-  expanded = expanded === undefined ? !expandedItems[activity._cid] : expanded;
-  Vue.set(expandedItems, activity._cid, expanded);
+  expanded = expanded === undefined ? !expandedItems[_cid] : expanded;
+  Vue.set(expandedItems, _cid, expanded);
 });
 
 mutation(function focusActivity(_cid) {
