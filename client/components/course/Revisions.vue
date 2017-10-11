@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-if="revisions.length === 0" class="well">
+    <div v-if="!hasMoreResults && revisions.length === 0" class="well">
       No changes recorded.
     </div>
-    <div v-else class="revisions">
+    <div v-if="revisions.length > 0" class="revisions">
       <div class="subheader">History</div>
       <ul>
         <revision-item
@@ -13,13 +13,11 @@
         </revision-item>
       </ul>
     </div>
-    <div class="col-lg-12 loader-wrapper">
-      <loader v-show="paginate"></loader>
-      <div
-        v-infinite-scroll="loadMore"
-        infinite-scroll-disabled="paginate"
-        infinite-scroll-distance="100">
-      </div>
+    <loader v-show="paginate" class="loader"></loader>
+    <div
+      v-infinite-scroll="loadMore"
+      infinite-scroll-disabled="paginate"
+      infinite-scroll-distance="100">
     </div>
   </div>
 </template>
@@ -76,8 +74,13 @@ export default {
   font-size: 16px;
 }
 
+.loader {
+  margin-top: 16px;
+}
+
 .revisions {
   margin: 60px;
+  margin-bottom: 0px;
   padding: 30px;
   text-align: left;
   background-color: #fff;
