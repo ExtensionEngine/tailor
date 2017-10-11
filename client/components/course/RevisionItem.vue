@@ -91,7 +91,8 @@ export default {
   }
 
   .date {
-    width: 96px;
+    width: 128px;
+    text-align: right;
     font-size: 14px;
     color: #808080;
   }
