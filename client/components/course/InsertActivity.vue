@@ -56,8 +56,10 @@ import findIndex from 'lodash/findIndex';
 import { focus } from 'vue-focus';
 import { getLevel, OUTLINE_LEVELS } from 'shared/activities';
 import { getChildren } from 'utils/activity';
+import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import multiselect from '../common/Select';
+import sortBy from 'lodash/sortBy';
 
 export default {
   props: ['parent', 'level'],
@@ -108,7 +110,9 @@ export default {
         const sameLevel = OUTLINE_LEVEL.level === this.level;
         const parentId = sameLevel ? this.parent.parentId : this.parent.id;
         const courseId = this.parent.courseId;
-        const items = getChildren(this.activities, parentId, courseId);
+        const types = map(filter(OUTLINE_LEVELS, { level: OUTLINE_LEVEL.level }), 'type');
+        const children = getChildren(this.activities, parentId, courseId);
+        const items = sortBy(filter(children, it => types.includes(it.type)), ['position']);
         const newPosition = findIndex(items, it => it.position === this.parent.position);
         const isFirstChild = !sameLevel || newPosition === -1;
         const context = { items, newPosition, isFirstChild, insert: true };
