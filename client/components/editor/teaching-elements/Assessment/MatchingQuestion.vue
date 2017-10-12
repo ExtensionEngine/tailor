@@ -235,10 +235,6 @@ export default {
   }
 }
 
-.arrow-container {
-  text-align: center;
-}
-
 .premise-container, .response-container {
   transition: 0.5s;
   transform-style: preserve-3d;

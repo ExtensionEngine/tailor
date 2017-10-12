@@ -111,10 +111,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.te-modal {
-  text-align: center;
-}
-
 .btn-open {
   max-width: 90%;
   padding: 9px 20px;

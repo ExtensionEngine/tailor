@@ -43,6 +43,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$snapshot-padding: 64px;
+
 .snapshots {
   display: flex;
   padding: 32px 8px;
@@ -56,12 +58,12 @@ export default {
   }
 
   .snapshot {
-    width: (256px + 64px); /* width + padding */
+    width: (256px + $snapshot-padding);
     height: 64px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-left: 64px;
+    padding-left: $snapshot-padding;
     cursor: pointer;
 
     .date {
@@ -82,6 +84,7 @@ export default {
     flex-grow: 1;
     margin-left: 16px;
     padding: 16px;
+    text-align: center;
     box-radius: 2px;
     box-shadow:
       0px 3px 3px -2px rgba(0, 0, 0, 0.2),

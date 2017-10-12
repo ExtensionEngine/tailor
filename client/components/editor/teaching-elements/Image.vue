@@ -145,12 +145,8 @@ export default {
   }
 }
 
-.image-wrapper {
-  text-align: center;
-
-  .preview-image {
-    max-width: 100%;
-  }
+.preview-image {
+  max-width: 100%;
 }
 
 .hide-cropper /deep/ .cropper-container {

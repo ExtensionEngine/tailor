@@ -132,7 +132,6 @@ function getMimetype(url) {
   height: 100%;
   background-color: #333;
   opacity: 0.9;
-  text-align: center;
 
   .message {
     position: relative;
