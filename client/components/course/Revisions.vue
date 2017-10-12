@@ -75,12 +75,11 @@ export default {
 }
 
 .loader {
-  margin-top: 16px;
+  margin-top: 32px;
 }
 
 .revisions {
-  margin: 60px;
-  margin-bottom: 0px;
+  margin: 60px 60px 0 60px;
   padding: 30px;
   text-align: left;
   background-color: #fff;
