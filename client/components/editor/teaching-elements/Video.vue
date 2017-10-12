@@ -132,6 +132,7 @@ function getMimetype(url) {
   height: 100%;
   background-color: #333;
   opacity: 0.9;
+  text-align: center;
 
   .message {
     position: relative;
@@ -185,5 +186,9 @@ function getMimetype(url) {
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+[disabled] .overlay {
+  display: none;
 }
 </style>

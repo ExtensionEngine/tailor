@@ -13,10 +13,10 @@
         </revision-item>
       </ul>
     </div>
-    <loader v-show="paginate" class="loader"></loader>
+    <loader v-show="showLoader" class="loader"></loader>
     <div
       v-infinite-scroll="loadMore"
-      infinite-scroll-disabled="paginate"
+      infinite-scroll-disabled="showLoader"
       infinite-scroll-distance="100">
     </div>
   </div>
@@ -25,41 +25,31 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import InfiniteScroll from 'vue-infinite-scroll';
-import Loader from '../common/Loader';
-import Promise from 'bluebird';
+import Loader from '../../common/Loader';
 import RevisionItem from './RevisionItem';
 
 export default {
   name: 'course-revisions',
   data() {
-    return {
-      paginate: false
-    };
+    return { showLoader: false };
   },
   computed: {
     ...mapGetters(['revisions'], 'course'),
     ...mapGetters(['hasMoreResults'], 'revisions')
   },
   methods: {
-    ...mapActions(['fetch'], 'revisions'),
-    ...mapMutations(['setBaseUrl', 'resetPagination'], 'revisions'),
-    fetchRevisions() {
-      this.resetPagination();
-      return Promise.join(this.fetch(), Promise.delay(400));
-    },
+    ...mapActions(['fetch', 'resetPagination'], 'revisions'),
+    ...mapMutations(['setBaseUrl'], 'revisions'),
     loadMore() {
-      if (this.hasMoreResults) {
-        this.paginate = true;
-        this.fetch().then(() => {
-          this.paginate = false;
-        });
-      }
+      if (!this.hasMoreResults) return;
+      this.showLoader = true;
+      this.fetch().then(() => (this.showLoader = false));
     }
   },
   mounted() {
     const courseId = Number(this.$route.params.courseId);
     this.setBaseUrl(`/courses/${courseId}/revisions`);
-    this.fetchRevisions();
+    this.resetPagination();
   },
   components: { Loader, RevisionItem },
   directives: {

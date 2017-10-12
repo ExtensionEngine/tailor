@@ -7,6 +7,7 @@
         v-for="cell in cells(row)"
         :key="cell.id"
         :element="embeds[cell.id]"
+        :disabled="disabled"
         @save="saveCell">
       </table-cell>
     </div>
@@ -91,7 +92,7 @@ function removeEmbed(embeds, predicate = {}) {
 
 export default {
   name: 'te-table',
-  props: ['element'],
+  props: ['element', 'disabled'],
   computed: {
     table() {
       return sortBy(this.rows, 'position');

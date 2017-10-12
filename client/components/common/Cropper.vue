@@ -1,5 +1,5 @@
 <template>
-  <img ref="img" :src="src" :style="containerStyle" :alt="alt"/>
+  <img ref="img" :src="src" :style="style" :alt="alt"/>
 </template>
 
 <script>
@@ -11,7 +11,7 @@ import Cropper from 'cropperjs';
 export default {
   name: 'cropper',
   props: {
-    style: Object,
+    containerStyle: Object,
     data: Object,
     preview: String,
     src: {
@@ -117,8 +117,8 @@ export default {
     crop: Function
   },
   computed: {
-    containerStyle() {
-      return assign({ 'max-width': '100%' }, this.style);
+    style() {
+      return assign({ 'max-width': '100%' }, this.containerStyle);
     }
   },
   methods: {
@@ -207,7 +207,7 @@ export default {
   },
   mounted() {
     let props = {};
-    const data = omit(this.$options.props, ['style', 'src', 'alt']);
+    const data = omit(this.$options.props, ['containerStyle', 'src', 'alt']);
     for (let key in data) {
       if (this[key] !== undefined) {
         props[key] = this[key];

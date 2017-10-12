@@ -40,7 +40,7 @@
           class="form-control premise-input back"
           placeholder="Insert text here ...">
       </div>
-      <div class="col-xs-2">
+      <div class="col-xs-2 arrow-container">
         <span class="mdi mdi-arrow-right"></span>
       </div>
       <div
@@ -233,6 +233,10 @@ export default {
       }
     }
   }
+}
+
+.arrow-container {
+  text-align: center;
 }
 
 .premise-container, .response-container {

@@ -18,7 +18,8 @@
     <add-element v-if="!hasElements"
       :include="['HTML', 'IMAGE']"
       :layout="false"
-      @add="addElement">
+      @add="addElement"
+      class="add-element">
     </add-element>
   </li>
 </template>
@@ -114,5 +115,9 @@ export default {
 .active {
   opacity: 1;
   z-index: 2;
+}
+
+[disabled] .add-element {
+  display: none;
 }
 </style>
