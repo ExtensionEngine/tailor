@@ -25,13 +25,14 @@
 
 <script>
 import fecha from 'fecha';
+import find from 'lodash/find';
 import TeachingElement from '../../editor/teaching-elements';
 
 export default {
   name: 'revision-snapshots',
   props: ['revision', 'snapshots'],
   data() {
-    return { currentSnapshot: this.snapshots[0] };
+    return { currentSnapshot: find(this.snapshots, { id: this.revision.id }) };
   },
   methods: {
     formatDate(rev) {
