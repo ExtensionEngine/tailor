@@ -13,14 +13,13 @@
       @close="close"
       @open="open">
     </multiselect>
-    <button
+    <span
       v-if="showReset"
       v-show="!selecting && value"
       @click="$emit('input', null)"
       type="button"
-      class="btn">
-      <span class="mdi mdi-close"></span>
-    </button>
+      class="mdi mdi-close">
+    </span>
   </div>
 </template>
 
@@ -60,12 +59,15 @@ export default {
 .custom-select {
   position: relative;
 
-  .btn {
+  .mdi.mdi-close {
     position: absolute;
-    right: 15px;
-    top: 2px;
-    background: none;
+    top: 3px;
+    right: 20px;
+    padding: 5px;
     box-shadow: none;
+    background: none;
+    color: #999;
+    cursor: pointer;
   }
 }
 
