@@ -2,10 +2,10 @@
   <div class="course-search">
     <div class="input-group" :style="{ width: expanded || query ? '100%' : '80%' }">
       <span class="input-group-btn">
-        <button v-if="!query" type="button" class="btn">
+        <button v-if="!query" @mousedown.prevent="expand" type="button" class="btn">
           <span class="mdi mdi-magnify"></span>
         </button>
-        <button v-else @click="query = ''" type="button" class="btn">
+        <button v-else @mousedown.prevent="query = ''" type="button" class="btn">
           <span class="mdi mdi-close"></span>
         </button>
       </span>
@@ -14,7 +14,8 @@
         @focus="expanded = true"
         @blur="expanded = false"
         class="form-control"
-        placeholder="Search..."/>
+        placeholder="Search..."
+        ref="search"/>
     </div>
   </div>
 </template>
@@ -32,6 +33,13 @@ export default {
   computed: {
     emitChange() {
       return debounce(() => { this.$emit('change', this.query); }, 500);
+    }
+  },
+  methods: {
+    expand() {
+      if (this.expanded) return;
+      this.expanded = true;
+      this.$refs.search.focus();
     }
   },
   watch: {
