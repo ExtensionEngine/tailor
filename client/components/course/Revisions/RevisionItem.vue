@@ -1,6 +1,6 @@
 <template>
   <li>
-    <div @click="toggleOpen" :class="{ opened }" class="revision">
+    <div :class="{ expanded }" :style="{ cursor }" @click="toggle" class="revision">
       <div :style="{ color }" class="acronym"><span>{{ acronym }}</span></div>
       <div class="content">
         <div class="description">{{ description }}</div>
@@ -8,17 +8,12 @@
       </div>
       <div class="date">{{ date }}</div>
     </div>
-    <revision-snapshots
-      v-if="opened"
-      :revision="revision"
-      :snapshots="snapshots">
-    </revision-snapshots>
+    <revision-snapshots v-if="expanded" :revision="revision"></revision-snapshots>
   </li>
 </template>
 
 <script>
 import fecha from 'fecha';
-import filter from 'lodash/filter';
 import find from 'lodash/find';
 import {
   getFormatDescription,
@@ -33,14 +28,18 @@ export default {
   name: 'revision-item',
   props: ['revision'],
   data() {
-    return { opened: false };
+    return { expanded: false };
   },
   computed: {
     ...mapGetters(['getParent'], 'activities'),
     ...mapGetters(['revisions'], 'course'),
     activity() {
-      const activityId = this.revision.state.activityId || this.revision.state.id;
+      const state = this.revision.state;
+      const activityId = state.activityId || state.id;
       return this.getOutlineLocation(this.getParent(activityId));
+    },
+    cursor() {
+      return this.isTeachingElement ? 'pointer' : 'auto';
     },
     color() {
       return getRevisionColor(this.revision);
@@ -48,14 +47,14 @@ export default {
     acronym() {
       return getRevisionAcronym(this.revision);
     },
-    snapshots() {
-      return filter(this.revisions, rev => rev.state.id === this.revision.state.id);
-    },
     date() {
       return fecha.format(this.revision.createdAt, 'M/D/YY HH:mm');
     },
     description() {
       return getFormatDescription(this.revision, this.activity);
+    },
+    isTeachingElement() {
+      return this.revision.entity === 'TEACHING_ELEMENT';
     }
   },
   methods: {
@@ -65,9 +64,8 @@ export default {
       if (level) return { ...current, label: level.label };
       return this.getOutlineLocation(this.getParent(current.id));
     },
-    toggleOpen() {
-      if (this.revision.entity !== 'TEACHING_ELEMENT') return;
-      this.opened = !this.opened;
+    toggle() {
+      if (this.isTeachingElement) this.expanded = !this.expanded;
     }
   },
   components: { RevisionSnapshots }
@@ -81,7 +79,6 @@ export default {
   display: flex;
   align-items: center;
   padding: 0 16px;
-  cursor: pointer;
 
   .acronym {
     width: 40px;
@@ -118,7 +115,7 @@ export default {
   }
 }
 
-.opened, .revision:hover {
+.expanded, .revision:hover {
   background-color: #f1f1f1;
 
   .acronym {

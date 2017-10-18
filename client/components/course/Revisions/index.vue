@@ -74,11 +74,11 @@ export default {
   text-align: left;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
+  font-family: Roboto, sans-serif;
 
   ul {
     padding: 8px 0;
     list-style-type: none;
-    font-family: Roboto, sans-serif;
 
     li {
       width: 100%;

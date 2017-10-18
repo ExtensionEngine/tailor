@@ -40,7 +40,7 @@
           class="form-control premise-input back"
           placeholder="Insert text here ...">
       </div>
-      <div class="col-xs-2 arrow-container">
+      <div class="col-xs-2">
         <span class="mdi mdi-arrow-right"></span>
       </div>
       <div

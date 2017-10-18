@@ -20,6 +20,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import get from 'lodash/get';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeHtml from './Html';
 import TeImage from './Image';
@@ -45,7 +46,7 @@ export default {
   computed: {
     ...mapGetters(['focusedElement'], 'editor'),
     isFocused() {
-      if (!(this.focusedElement && this.focusedElement.type)) return false;
+      if (!get(this.focusedElement, 'type')) return false;
       return this.focusedElement.embedded
         ? this.focusedElement.id === this.element.id
         : this.focusedElement._cid === this.element._cid;

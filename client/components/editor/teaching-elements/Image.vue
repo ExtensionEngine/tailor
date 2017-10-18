@@ -55,10 +55,10 @@ export default {
   },
   computed: {
     showPlaceholder() {
-      const empty = isEmpty(this.element.data.url);
-      if (!empty) return empty;
+      const imageAvailable = isEmpty(this.element.data.url);
+      if (!imageAvailable) return imageAvailable;
       if (this.$refs.cropper) this.$refs.cropper.destroy();
-      return empty;
+      return imageAvailable;
     },
     id() {
       return this.element._cid || this.element.id;

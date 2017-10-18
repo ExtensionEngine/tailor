@@ -1,96 +1,180 @@
 <template>
   <transition name="slide-fade">
     <div class="snapshots">
-      <ul>
-        <li
-          v-for="snapshot in snapshots"
-          :key="snapshot._cid"
-          :class="{ opened: snapshot === currentSnapshot }"
-          @click="currentSnapshot = snapshot"
-          class="snapshot">
-          <div class="date">{{ formatDate(snapshot) }}</div>
-          <div class="name">{{ revision.user.email }}</div>
-        </li>
-      </ul>
-      <!-- TODO(marko): Replace this with a Vuetify card component -->
-      <div class="preview">
-        <teaching-element
-          :element="currentSnapshot.state"
-          :disabled="true">
-        </teaching-element>
+      <loader v-if="showLoader" class="loader"></loader>
+      <div v-else class="content">
+        <div class="preview">
+          <teaching-element
+            v-if="selectedSnapshot"
+            :element="selectedSnapshot.state"
+            :disabled="true">
+          </teaching-element>
+        </div>
+        <div>
+          <div class="header">Changes</div>
+          <ul>
+            <li
+              v-for="snapshot in snapshots"
+              :key="snapshot.id"
+              :class="{ selected: snapshot.id === selectedSnapshot.id }"
+              @click="onSnapshotClicked(snapshot)"
+              class="snapshot">
+              <div>{{ formatDate(snapshot) }}</div>
+              <div>{{ revision.user.email }}</div>
+              <div v-if="resolving === snapshot.id" class="resolving-background"></div>
+              <div v-if="resolving === snapshot.id" class="resolving-progress"></div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </transition>
 </template>
 
 <script>
+import axios from 'client/api/request';
 import fecha from 'fecha';
-import find from 'lodash/find';
-import TeachingElement from '../../editor/teaching-elements';
+import findIndex from 'lodash/findIndex';
+import Loader from 'components/common/Loader';
+import Promise from 'bluebird';
+import TeachingElement from 'components/editor/teaching-elements';
 
 export default {
   name: 'revision-snapshots',
-  props: ['revision', 'snapshots'],
+  props: ['revision'],
   data() {
-    return { currentSnapshot: find(this.snapshots, { id: this.revision.id }) };
+    return {
+      snapshots: [],
+      selectedSnapshot: {},
+      resolved: [],
+      showLoader: true,
+      resolving: null
+    };
+  },
+  computed: {
+    courseId() {
+      return Number(this.$route.params.courseId);
+    }
   },
   methods: {
     formatDate(rev) {
-      return fecha.format(rev.createdAt, 'M/D/YY HH:mm');
+      return fecha.format(new Date(rev.createdAt), 'M/D/YY HH:mm');
+    },
+    resolveStatics(snapshot) {
+      return !this.resolved.includes(snapshot.id)
+        ? axios.get(`/courses/${this.courseId}/revisions/${snapshot.id}`)
+        : Promise.resolve({ data: snapshot });
+    },
+    onSnapshotClicked(snapshot) {
+      this.resolving = snapshot.id;
+      this.resolveStatics(snapshot).then(response => this.updateResolved(response));
+    },
+    updateResolved(response) {
+      this.showLoader = false;
+      setTimeout(() => (this.resolving = null), 2000);
+      this.resolved.push(response.data.id);
+      const index = findIndex(this.snapshots, { id: response.data.id });
+      this.snapshots.splice(index, 1, response.data);
+      this.selectedSnapshot = response.data;
     }
   },
-  components: { TeachingElement }
+  mounted() {
+    const params = { entityId: this.revision.state.id };
+    const getRevisions = axios.get(`/courses/${this.courseId}/revisions/`, { params });
+    Promise.join(getRevisions, this.resolveStatics(this.revision), Promise.delay(700))
+      .then(([revisionsResponse, resolveStaticsResponse]) => {
+        this.snapshots = revisionsResponse.data;
+        this.updateResolved(resolveStaticsResponse);
+      });
+  },
+  components: { Loader, TeachingElement }
 };
 </script>
 
 <style lang="scss" scoped>
-$snapshot-padding: 64px;
+$snapshot-padding: 32px;
 
 .snapshots {
-  display: flex;
   padding: 32px 8px;
-  border: 1px solid #ddd;
-  border-top: none;
-  box-sizing: border-box;
+
+  .loader {
+    margin: 32px 0;
+    text-align: center;
+  }
+
+  .header {
+    margin: 8px 0;
+    padding-left: $snapshot-padding;
+    color: #808080;
+  }
+
+  .content {
+    display: flex;
+  }
 
   ul {
+    max-height: 500px;
     padding: 0;
     list-style-type: none;
+    overflow-y: auto;
   }
 
   .snapshot {
     width: (256px + $snapshot-padding);
-    height: 64px;
+    height: 52px;
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding-left: $snapshot-padding;
+    overflow: hidden;
     cursor: pointer;
+    font-size: 14px;
+    color: #656565;
 
-    .date {
-      font-size: 16px;
+    .resolving-background, .resolving-progress {
+      width: 100%;
+      height: 4px;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      background-color: #1a237e;
     }
 
-    .name {
-      font-size: 14px;
-      color: #808080;
+    .resolving-background {
+      opacity: 0.3;
+    }
+
+    .resolving-progress {
+      width: auto;
+      animation: indeterminate 2.2s infinite;
+    }
+
+    @keyframes indeterminate {
+      0% {
+        left: -90%;
+        right: 100%;
+      }
+      100% {
+        left: 100%;
+        right: -35%;
+      }
     }
   }
 
-  .opened, .snapshot:hover {
+  .snapshot:hover {
     background-color: #f1f1f1;
+    color: #333;
+  }
+
+  .selected, .selected.snapshot:hover {
+    background-color: #e3f2fd;
   }
 
   .preview {
     flex-grow: 1;
-    margin-left: 16px;
-    padding: 16px;
+    margin-right: 16px;
     text-align: center;
-    box-radius: 2px;
-    box-shadow:
-      0px 3px 3px -2px rgba(0, 0, 0, 0.2),
-      0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-      0px 1px 5px 0px rgba(0, 0, 0, 0.12);
   }
 }
 

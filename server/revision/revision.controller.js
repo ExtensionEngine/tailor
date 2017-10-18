@@ -5,24 +5,34 @@ const { Revision, User } = require('../shared/database');
 
 function index(req, res) {
   const courseId = req.params.courseId;
+  const { limit, offset, entityId } = req.query;
+  const where = entityId ? { courseId, state: { id: entityId } } : { courseId };
   return Revision
     .findAll({
-      where: { courseId },
+      where,
       include: [{ model: User, attributes: ['id', 'email'] }],
       order: [['createdAt', 'DESC']],
-      limit: req.query.limit,
-      offset: req.query.offset
+      limit,
+      offset
     })
-    .then(revisions => Promise.all(revisions.map(it => {
-      if (it.entity !== 'TEACHING_ELEMENT') return it;
-      return resolveStatics(it.state).then(state => {
-        it.state = state;
-        return it;
+    .then(data => res.json(data));
+}
+
+function resolve(req, res) {
+  const { courseId, revId } = req.params;
+  return Revision
+    .findOne({ where: { courseId, id: revId } })
+    .then(revision => {
+      if (revision.entity !== 'TEACHING_ELEMENT') return revision;
+      return resolveStatics(revision.state).then(state => {
+        revision.state = state;
+        return revision;
       });
-    })))
-    .then(data => res.json({ data }));
+    })
+    .then(data => res.json(data));
 }
 
 module.exports = {
-  index
+  index,
+  resolve
 };
