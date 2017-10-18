@@ -1,22 +1,27 @@
 <template>
-  <multiselect
-    :value="value"
-    :options="options"
-    :searchable="searchable"
-    :close-on-select="true"
-    :show-labels="false"
-    :allow-empty="allowEmpty"
-    :multiple="multiple"
-    :disabled="disabled"
-    :placeholder="placeholder || 'Select option'"
-    :track-by="trackBy || 'label'"
-    :label="label || 'label'"
-    :class="{ 'search-top': inputPlacement !== 'bottom' }"
-    @input="val => $emit('input', val)"
-    @close="id => $emit('close', id)"
-    @open="(value, id) => $emit('open', value, id)"
-    class="custom-select">
-  </multiselect>
+  <div class="custom-select">
+    <multiselect
+      :value="value"
+      :close-on-select="true"
+      :show-labels="false"
+      :placeholder="placeholder || 'Select option'"
+      :track-by="trackBy || 'label'"
+      :label="label || 'label'"
+      :class="{ 'search-top': inputPlacement !== 'bottom' }"
+      v-bind="$attrs"
+      @input="val => $emit('input', val)"
+      @close="close"
+      @open="open">
+    </multiselect>
+    <button
+      v-if="showReset"
+      v-show="!selecting && value"
+      @click="$emit('input', null)"
+      type="button"
+      class="btn">
+      <span class="mdi mdi-close"></span>
+    </button>
+  </div>
 </template>
 
 <script>
@@ -25,24 +30,46 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'select',
+  inheritAttrs: true,
   props: [
     'value',
-    'options',
-    'searchable',
-    'multiple',
-    'disabled',
     'placeholder',
     'trackBy',
     'label',
-    'allowEmpty',
-    'inputPlacement'
+    'inputPlacement',
+    'showReset'
   ],
+  data() {
+    return { selecting: false };
+  },
+  methods: {
+    open(val, id) {
+      this.selecting = true;
+      this.$emit('open', val, id);
+    },
+    close(id) {
+      this.selecting = false;
+      this.$emit('close', id);
+    }
+  },
   components: { multiselect }
 };
 </script>
 
 <style lang="scss">
-.custom-select.multiselect {
+.custom-select {
+  position: relative;
+
+  .btn {
+    position: absolute;
+    right: 15px;
+    top: 2px;
+    background: none;
+    box-shadow: none;
+  }
+}
+
+.custom-select .multiselect {
   width: auto;
   padding-right: 24px;
   font-size: 14px;
@@ -171,7 +198,7 @@ export default {
   }
 }
 
-.custom-select.multiselect.search-top {
+.custom-select .multiselect.search-top {
   .multiselect__tags {
     display: table;
     &-wrap { display: table-footer-group; }
@@ -187,5 +214,4 @@ export default {
     bottom: unset;
   }
 }
-
 </style>
