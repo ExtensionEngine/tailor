@@ -2,20 +2,14 @@
   <div class="custom-select">
     <multiselect
       :value="value"
-      :close-on-select="true"
-      :show-labels="false"
-      :placeholder="placeholder || 'Select option'"
-      :track-by="trackBy || 'label'"
-      :label="label || 'label'"
       :class="{ 'search-top': inputPlacement !== 'bottom' }"
-      v-bind="$attrs"
+      v-bind="options"
       @input="val => $emit('input', val)"
       @close="close"
       @open="open">
     </multiselect>
     <span
-      v-if="showReset"
-      v-show="!selecting && value"
+      v-if="showResetBtn"
       @click="$emit('input', null)"
       type="button"
       class="mdi mdi-close">
@@ -32,14 +26,25 @@ export default {
   inheritAttrs: true,
   props: [
     'value',
-    'placeholder',
-    'trackBy',
-    'label',
     'inputPlacement',
     'showReset'
   ],
   data() {
     return { selecting: false };
+  },
+  computed: {
+    options() {
+      return Object.assign({
+        closeOnSelect: true,
+        showLabels: false,
+        placeholder: 'Select option',
+        trackBy: 'label',
+        label: 'label'
+      }, this.$attrs);
+    },
+    showResetBtn() {
+      return this.showReset && !this.selecting && this.value;
+    }
   },
   methods: {
     open(val, id) {
