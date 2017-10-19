@@ -123,14 +123,14 @@ export default {
   color: #444;
   font-size: 16px;
   text-align: left;
-  cursor: pointer;
   background-color: white;
   border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
 
   &.selected {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15), 0 2px 5px rgba(0,0,0,0.30);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15), 0 2px 5px rgba(0, 0, 0, 0.3);
   }
 
   .position {
@@ -138,15 +138,15 @@ export default {
     min-width: 40px;
     height: 40px;
     margin-right: 7px;
-    padding: 6px 10px 0 10px;
+    padding: 6px 10px 0;
     color: white;
     font-size: 20px;
     text-align: center;
-    border-radius: 3px 0px 0px 3px;
+    border-radius: 3px 0 0 3px;
   }
 
   .collapsible {
-    padding: 7px 5px 6px 5px;
+    padding: 7px 5px 6px;
     color: #bbb;
     font-size: 26px;
     line-height: 26px;
@@ -157,10 +157,10 @@ export default {
 
   .activity-name {
     display: block;
-    height: 40px;
     position: relative;
     top: 0;
     left: 0;
+    height: 40px;
     padding: 10px 60px 0 55px;
     color: #555;
     white-space: nowrap;
@@ -170,8 +170,8 @@ export default {
 
   .actions {
     position: absolute;
-    right: 0;
     top: 0;
+    right: 0;
     padding-right: 5px;
 
     .mdi:hover {
@@ -201,9 +201,9 @@ export default {
       position: absolute;
       top: -8px;
       right: -27px;
-      height: 0; // avoids visual issues while dragging
-      font-size: 16px;
+      height: 0;
       color: #aaa;
+      font-size: 16px;
       text-align: left;
     }
   }
