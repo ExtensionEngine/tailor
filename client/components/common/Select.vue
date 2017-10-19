@@ -66,7 +66,7 @@ export default {
 
   .btn-close {
     position: absolute;
-    top: 3px;
+    top: 10px;
     right: 20px;
     padding: 5px;
     box-shadow: none;
@@ -78,6 +78,7 @@ export default {
 
 .custom-select .multiselect {
   width: auto;
+  padding-top: 8px;
   padding-right: 24px;
   font-size: 14px;
   font-family: 'Catamaran', Helvetica, Arial, sans-serif;
@@ -196,11 +197,12 @@ export default {
   .multiselect__input {
     width: 100% !important;
     margin: 0;
+    padding-left: 10px;
     line-height: 32px;
   }
 
   .multiselect__select {
-    top: unset;
+    top: 8px;
     bottom: 1px;
   }
 }
@@ -216,9 +218,6 @@ export default {
     margin-bottom: 8px;
   }
 
-  .multiselect__select {
-    top: 1px;
-    bottom: unset;
-  }
+  .multiselect__select { bottom: unset; }
 }
 </style>
