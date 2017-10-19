@@ -40,7 +40,7 @@ export default {
   width: 100%;
   height: 100%;
   float: left;
-  padding: 80px 60px;
+  padding: 80px 60px 120px;
   overflow-y: scroll;
 }
 </style>
