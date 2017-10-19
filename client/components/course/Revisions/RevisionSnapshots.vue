@@ -27,8 +27,10 @@
               class="snapshot">
               <div>{{ formatDate(snapshot) }}</div>
               <div>{{ revision.user.email }}</div>
-              <div v-if="resolving === snapshot.id" class="resolving-background"></div>
-              <div v-if="resolving === snapshot.id" class="resolving-progress"></div>
+              <div v-show="resolving === snapshot.id">
+                <div class="progress-background"></div>
+                <div class="progress-indicator"></div>
+              </div>
             </li>
           </ul>
         </div>
@@ -67,17 +69,19 @@ export default {
       return fecha.format(new Date(rev.createdAt), 'M/D/YY HH:mm');
     },
     resolveStatics(snapshot) {
-      return !this.resolved.includes(snapshot.id)
-        ? axios.get(`/courses/${this.courseId}/revisions/${snapshot.id}`)
-        : Promise.resolve({ data: snapshot });
+      this.resolving = snapshot.id;
+      return axios.get(`/courses/${this.courseId}/revisions/${snapshot.id}`);
     },
     onSnapshotClicked(snapshot) {
-      this.resolving = snapshot.id;
-      this.resolveStatics(snapshot).then(response => this.updateResolved(response));
+      if (this.resolved.includes(snapshot.id)) {
+        return this.updateResolved({ data: snapshot });
+      }
+      Promise.join(this.resolveStatics(snapshot), Promise.delay(1000))
+        .then(([response]) => this.updateResolved(response));
     },
     updateResolved(response) {
       this.showLoader = false;
-      setTimeout(() => (this.resolving = null), 1000);
+      this.resolving = null;
       this.resolved.push(response.data.id);
       const index = findIndex(this.snapshots, { id: response.data.id });
       this.snapshots.splice(index, 1, response.data);
@@ -87,8 +91,8 @@ export default {
   mounted() {
     const params = { entityId: this.revision.state.id };
     const getRevisions = axios.get(`/courses/${this.courseId}/revisions/`, { params });
-    Promise.join(getRevisions, this.resolveStatics(this.revision), Promise.delay(700))
-      .then(([revisionsResponse, resolveStaticsResponse]) => {
+    Promise.join(this.resolveStatics(this.revision), getRevisions, Promise.delay(700))
+      .then(([resolveStaticsResponse, revisionsResponse]) => {
         this.snapshots = revisionsResponse.data;
         this.updateResolved(resolveStaticsResponse);
       });
@@ -138,7 +142,7 @@ $snapshot-padding: 32px;
     font-size: 14px;
     color: #656565;
 
-    .resolving-background, .resolving-progress {
+    .progress-background, .progress-indicator {
       width: 100%;
       height: 4px;
       position: absolute;
@@ -147,11 +151,11 @@ $snapshot-padding: 32px;
       background-color: #1a237e;
     }
 
-    .resolving-background {
+    .progress-background {
       opacity: 0.3;
     }
 
-    .resolving-progress {
+    .progress-indicator {
       width: auto;
       animation: indeterminate 2.2s infinite;
     }
