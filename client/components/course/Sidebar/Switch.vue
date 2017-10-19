@@ -39,7 +39,7 @@ $lever-unchecked: lighten($unchecked, 25%);
 
   &:hover {
     background-color: #f5f5f5;
-  };
+  }
 }
 
 .title {
@@ -49,7 +49,7 @@ $lever-unchecked: lighten($unchecked, 25%);
 }
 
 .control-group {
-  margin: 5px 0 5px 0;
+  margin: 5px 0;
   color: #333;
   font-weight: normal;
   line-height: 24px;
@@ -64,7 +64,7 @@ $lever-unchecked: lighten($unchecked, 25%);
 }
 
 .switch * {
-  tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
 
@@ -82,11 +82,11 @@ label {
   &.checked .lever {
     background: $lever-checked;
 
-    &:after {
-      background: $checked
+    &::after {
+      background: $checked;
     }
 
-    &:before, &:after {
+    &::before, &::after {
       left: 18px;
     }
   }
@@ -95,50 +95,50 @@ label {
 .lever {
   content: "";
   display: inline-block;
+  position: relative;
   width: 36px;
   height: 14px;
-  position: relative;
   vertical-align: middle;
   background-color: $lever-unchecked;
   border-radius: $size;
-  transition: background .3s ease;
+  transition: background 0.3s ease;
 
-  &:before, &:after {
+  &::before, &::after {
     content: "";
     display: inline-block;
+    position: absolute;
+    top: -3px;
+    left: 0;
     width: 20px;
     height: 20px;
-    position: absolute;
-    left: 0;
-    top: -3px;
     border-radius: 50%;
     transition:
-      left .3s ease,
-      background .3s ease,
-      box-shadow .1s ease,
-      transform .1s ease;
+      left 0.3s ease,
+      background 0.3s ease,
+      box-shadow 0.1s ease,
+      transform 0.1s ease;
   }
 
-  &:before {
-    background-color: transparentize($checked, .85);
+  &::before {
+    background-color: transparentize($checked, 0.85);
   }
 
-  &:after {
+  &::after {
     background-color: $unchecked;
     box-shadow:
-      0 3px 1px -2px rgba(0,0,0,.2),
-      0 2px 2px 0 rgba(0,0,0,.14),
-      0 1px 5px 0 rgba(0,0,0,.12);
+      0 3px 1px -2px rgba(0, 0, 0, 0.2),
+      0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 1px 5px 0 rgba(0, 0, 0, 0.12);
   }
 }
 
 .lever:active::before {
   transform: scale(2.4);
-  background-color: rgba(0,0,0,.08);
+  background-color: rgba(0, 0, 0, 0.08);
 
   .checked & {
     transform: scale(2.4);
-    background-color: transparentize($checked, .85);
+    background-color: transparentize($checked, 0.85);
   }
 }
 </style>
