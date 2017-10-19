@@ -7,7 +7,7 @@
           v-model="nameInput"
           v-validate="{ rules: { required: true, min: 2, max: 150 } }"
           @blur="focusoutName"
-          @keyup.enter="focusoutName"
+          @keydown.enter.prevent="focusoutName"
           @keyup.esc="hideNameInput"
           ref="nameInput"
           name="name"
