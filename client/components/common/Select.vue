@@ -2,14 +2,14 @@
   <div class="custom-select">
     <multiselect
       :value="value"
-      :class="{ 'search-top': inputPlacement !== 'bottom' }"
+      :class="position"
       v-bind="options"
       @input="val => $emit('input', val)"
       @close="close"
       @open="open">
     </multiselect>
     <span
-      v-if="showResetBtn"
+      v-if="showResetButton"
       @click="$emit('input', null)"
       type="button"
       class="btn-close mdi mdi-close">
@@ -19,7 +19,6 @@
 
 <script>
 import Multiselect from 'vue-multiselect';
-import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'select',
@@ -42,8 +41,11 @@ export default {
         label: 'label'
       }, this.$attrs);
     },
-    showResetBtn() {
-      return !!(this.showReset && !this.selecting && this.value);
+    position() {
+      return this.inputPlacement !== 'bottom' ? 'search-top' : '';
+    },
+    showResetButton() {
+      return this.showReset && !this.selecting && this.value;
     }
   },
   methods: {
@@ -61,6 +63,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '~vue-multiselect/dist/vue-multiselect.min';
+
 .custom-select {
   position: relative;
 
