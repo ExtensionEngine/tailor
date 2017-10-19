@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import multiselect from 'vue-multiselect';
+import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
@@ -43,7 +43,7 @@ export default {
       }, this.$attrs);
     },
     showResetBtn() {
-      return this.showReset && !this.selecting && this.value;
+      return !!(this.showReset && !this.selecting && this.value);
     }
   },
   methods: {
@@ -56,7 +56,7 @@ export default {
       this.$emit('close', id);
     }
   },
-  components: { multiselect }
+  components: { Multiselect }
 };
 </script>
 
