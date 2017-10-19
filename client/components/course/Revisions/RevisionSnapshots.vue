@@ -9,6 +9,12 @@
             :element="selectedSnapshot.state"
             :disabled="true">
           </teaching-element>
+          <button
+            v-if="!isDetached"
+            @click="$emit('rollback', selectedSnapshot.state)"
+            class="btn btn-success">
+            Rollback
+          </button>
         </div>
         <div>
           <div class="header">Changes</div>
@@ -41,7 +47,7 @@ import TeachingElement from 'components/editor/teaching-elements';
 
 export default {
   name: 'revision-snapshots',
-  props: ['revision'],
+  props: ['revision', 'isDetached'],
   data() {
     return {
       snapshots: [],
@@ -71,7 +77,7 @@ export default {
     },
     updateResolved(response) {
       this.showLoader = false;
-      setTimeout(() => (this.resolving = null), 2000);
+      setTimeout(() => (this.resolving = null), 1000);
       this.resolved.push(response.data.id);
       const index = findIndex(this.snapshots, { id: response.data.id });
       this.snapshots.splice(index, 1, response.data);

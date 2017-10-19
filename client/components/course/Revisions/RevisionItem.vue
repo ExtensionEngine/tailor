@@ -8,7 +8,12 @@
       </div>
       <div class="date">{{ date }}</div>
     </div>
-    <revision-snapshots v-if="expanded" :revision="revision"></revision-snapshots>
+    <revision-snapshots
+      v-if="expanded"
+      :revision="revision"
+      :isDetached="!activity"
+      @rollback="snapshotData => rollback(snapshotData)">
+    </revision-snapshots>
   </li>
 </template>
 
@@ -20,7 +25,7 @@ import {
   getRevisionAcronym,
   getRevisionColor
 } from 'utils/revision';
-import { mapGetters } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import { OUTLINE_LEVELS } from 'shared/activities';
 import RevisionSnapshots from './RevisionSnapshots';
 
@@ -58,6 +63,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['save'], 'tes'),
+    ...mapMutations(['setBaseUrl'], 'tes'),
     getOutlineLocation(current) {
       if (!current) return null;
       const level = find(OUTLINE_LEVELS, { type: current.type });
@@ -66,7 +73,14 @@ export default {
     },
     toggle() {
       if (this.isTeachingElement) this.expanded = !this.expanded;
+    },
+    rollback(snapshotData) {
+      this.save(snapshotData);
     }
+  },
+  mounted() {
+    const courseId = this.$route.params.courseId;
+    this.setBaseUrl(`/courses/${courseId}/tes`);
   },
   components: { RevisionSnapshots }
 };
