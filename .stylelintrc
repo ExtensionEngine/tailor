@@ -3,7 +3,7 @@
   extends: 'stylelint-config-standard',
   plugins: ['stylelint-order'],
   rules: {
-    'selector-list-comma-newline-after': 'never',
+    'selector-list-comma-newline-after': 'never-multi-line',
     'order/properties-order': [
       'content',
       'display',
