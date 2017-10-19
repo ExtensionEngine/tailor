@@ -12,7 +12,7 @@
       v-if="showResetBtn"
       @click="$emit('input', null)"
       type="button"
-      class="mdi mdi-close">
+      class="btn-close mdi mdi-close">
     </span>
   </div>
 </template>
@@ -64,7 +64,7 @@ export default {
 .custom-select {
   position: relative;
 
-  .mdi.mdi-close {
+  .btn-close {
     position: absolute;
     top: 3px;
     right: 20px;
