@@ -49,8 +49,14 @@ action(function fetch() {
 
     this.commit('setPagination', { offset: params.offset + params.limit });
     this.commit('allCoursesFetched', courses.length < params.limit);
-    this.commit(params.search ? 'reset' : 'fetch', result);
+    this.commit('fetch', result);
   });
+});
+
+action(function resetSearch(query = '') {
+  this.commit('setSearch', query);
+  this.commit('resetPagination');
+  this.commit('reset', {});
 });
 
 mutation(function resetPagination() {
