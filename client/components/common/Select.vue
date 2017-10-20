@@ -29,7 +29,7 @@ export default {
     'showReset'
   ],
   data() {
-    return { selecting: false };
+    return { open: false };
   },
   computed: {
     options() {
@@ -45,16 +45,16 @@ export default {
       return this.inputPlacement !== 'bottom' ? 'search-top' : '';
     },
     showResetButton() {
-      return this.showReset && !this.selecting && this.value;
+      return this.showReset && !this.open && this.value;
     }
   },
   methods: {
     open(val, id) {
-      this.selecting = true;
+      this.open = true;
       this.$emit('open', val, id);
     },
     close(id) {
-      this.selecting = false;
+      this.open = false;
       this.$emit('close', id);
     }
   },
