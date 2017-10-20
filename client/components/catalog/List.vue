@@ -9,7 +9,7 @@
       :key="course._cid"
       :course="course">
     </course-card>
-    <div v-if="showLoader && !exhausted" class="col-lg-12 loader-wrapper">
+    <div v-if="showLoader && this.hasMoreResults" class="col-lg-12 loader-wrapper">
       <loader></loader>
     </div>
   </div>
@@ -25,12 +25,12 @@ export default {
   name: 'course-list',
   props: {
     courses: { type: Object, required: true },
-    exhausted: { type: Boolean, required: true },
+    hasMoreResults: { type: Boolean, required: true },
     showLoader: { type: Boolean, required: true }
   },
   computed: {
     disabled() {
-      return this.showLoader || this.exhausted;
+      return this.showLoader || !this.hasMoreResults;
     },
     orderedCourses() {
       return orderBy(this.courses, 'updatedAt', 'desc');

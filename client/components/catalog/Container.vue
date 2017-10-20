@@ -12,7 +12,7 @@
       <course-list
         :courses="courses"
         :showLoader="showLoader"
-        :exhausted="!hasMoreResults"
+        :hasMoreResults="hasMoreResults"
         @load="fetchCourses">
       </course-list>
     </div>
