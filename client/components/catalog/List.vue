@@ -1,76 +1,53 @@
 <template>
-  <div class="row course-list">
-    <loader v-if="showLoader"></loader>
-    <card
-      v-else
+  <div
+    v-infinite-scroll="load"
+    infinite-scroll-disabled="disabled"
+    infinite-scroll-distance="100"
+    class="row course-list">
+    <course-card
       v-for="course in orderedCourses"
       :key="course._cid"
       :course="course">
-    </card>
-    <div class="col-lg-12 loader-wrapper">
-      <loader v-show="paginate"></loader>
-      <div
-        v-infinite-scroll="loadMore"
-        infinite-scroll-disabled="paginate"
-        infinite-scroll-distance="100">
-      </div>
+    </course-card>
+    <div v-if="showLoader && !exhausted" class="col-lg-12 loader-wrapper">
+      <loader></loader>
     </div>
   </div>
 </template>
 
 <script>
-import Card from './Card';
+import CourseCard from './Card';
 import InfiniteScroll from 'vue-infinite-scroll';
 import Loader from '../common/Loader';
-import { mapActions, mapGetters } from 'vuex-module';
 import orderBy from 'lodash/orderBy';
 
 export default {
   name: 'course-list',
-  data() {
-    return {
-      paginate: false
-    };
+  props: {
+    courses: { type: Object, required: true },
+    exhausted: { type: Boolean, required: true },
+    showLoader: { type: Boolean, required: true }
   },
   computed: {
-    ...mapGetters(['hasMoreResults'], 'courses'),
+    disabled() {
+      return this.showLoader || this.exhausted;
+    },
     orderedCourses() {
       return orderBy(this.courses, 'updatedAt', 'desc');
     }
   },
   methods: {
-    ...mapActions(['fetch'], 'courses'),
-    loadMore() {
-      if (!this.showLoader && this.hasMoreResults) {
-        this.paginate = true;
-        this.fetch().then(() => {
-          this.paginate = false;
-        });
-      }
+    load() {
+      this.$emit('load');
     }
   },
-  props: {
-    courses: {
-      type: Object,
-      required: true
-    },
-    showLoader: {
-      type: Boolean,
-      required: true
-    }
-  },
-  components: {
-    Card,
-    Loader
-  },
-  directives: {
-    InfiniteScroll
-  }
+  components: { CourseCard, Loader },
+  directives: { InfiniteScroll }
 };
 </script>
 
 <style lang="scss" scoped>
 .loader {
-  margin-top: 150px;
+  margin-top: 100px;
 }
 </style>
