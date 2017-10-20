@@ -42,5 +42,6 @@ export default {
   float: left;
   padding: 80px 60px 120px;
   overflow-y: scroll;
+  overflow-y: overlay;
 }
 </style>
