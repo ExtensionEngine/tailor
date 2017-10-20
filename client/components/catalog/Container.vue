@@ -2,14 +2,19 @@
   <div class="catalog">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <search @change="filterCourses"></search>
+        <search @change="search"></search>
       </div>
       <div class="col-md-3">
         <create-course class="pull-right"></create-course>
       </div>
     </div>
     <div v-if="courseTotal" class="row">
-      <course-list :courses="courses" :showLoader="showLoader"></course-list>
+      <course-list
+        :courses="courses"
+        :showLoader="showLoader"
+        :exhausted="!hasMoreResults"
+        @load="fetchCourses">
+      </course-list>
     </div>
     <div v-if="!courseTotal && !showLoader" class="well well-a">
       No courses found.
@@ -18,7 +23,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import Promise from 'bluebird';
 import CourseList from './List';
 import CreateCourse from './Create';
@@ -32,31 +37,26 @@ export default {
   },
   computed: {
     ...mapGetters(['courses']),
+    ...mapGetters(['hasMoreResults'], 'courses'),
     courseTotal() {
       return Object.keys(this.courses).length;
     }
   },
   methods: {
-    ...mapActions(['fetch'], 'courses'),
-    ...mapMutations(['setSearch', 'resetPagination'], 'courses'),
+    ...mapActions(['fetch', 'resetSearch'], 'courses'),
     fetchCourses() {
       this.showLoader = true;
-      this.resetPagination();
-      return Promise.join(this.fetch(), Promise.delay(400)).then(() => {
-        this.showLoader = false;
-      });
+      return Promise.join(this.fetch(), Promise.delay(400))
+        .then(() => (this.showLoader = false));
     },
-    filterCourses(query) {
+    search(query) {
       this.showLoader = true;
-      this.setSearch(query);
+      this.resetSearch(query);
       this.fetchCourses();
     }
   },
   mounted() {
-    this.fetchCourses();
-  },
-  beforeDestroy() {
-    this.setSearch('');
+    this.search();
   },
   components: {
     CreateCourse,
