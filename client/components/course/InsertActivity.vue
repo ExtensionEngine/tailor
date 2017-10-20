@@ -112,7 +112,7 @@ export default {
         const courseId = this.parent.courseId;
         const types = map(filter(OUTLINE_LEVELS, { level: OUTLINE_LEVEL.level }), 'type');
         const children = getChildren(this.activities, parentId, courseId);
-        const items = sortBy(filter(children, it => types.includes(it.type)), ['position']);
+        const items = sortBy(filter(children, it => types.includes(it.type)), 'position');
         const newPosition = findIndex(items, it => it.position === this.parent.position);
         const isFirstChild = !sameLevel || newPosition === -1;
         const context = { items, newPosition, isFirstChild, insert: true };
