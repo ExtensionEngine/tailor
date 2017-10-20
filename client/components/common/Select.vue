@@ -1,49 +1,88 @@
 <template>
-  <multiselect
-    :value="value"
-    :options="options"
-    :searchable="searchable"
-    :close-on-select="true"
-    :show-labels="false"
-    :allow-empty="allowEmpty"
-    :multiple="multiple"
-    :disabled="disabled"
-    :placeholder="placeholder || 'Select option'"
-    :track-by="trackBy || 'label'"
-    :label="label || 'label'"
-    :class="{ 'search-top': inputPlacement !== 'bottom' }"
-    @input="val => $emit('input', val)"
-    @close="id => $emit('close', id)"
-    @open="(value, id) => $emit('open', value, id)"
-    class="custom-select">
-  </multiselect>
+  <div class="custom-select">
+    <multiselect
+      :value="value"
+      :class="position"
+      v-bind="options"
+      @input="val => $emit('input', val)"
+      @close="close"
+      @open="open">
+    </multiselect>
+    <span
+      v-if="showResetButton"
+      @click="$emit('input', null)"
+      type="button"
+      class="btn-close mdi mdi-close">
+    </span>
+  </div>
 </template>
 
 <script>
-import multiselect from 'vue-multiselect';
-import 'vue-multiselect/dist/vue-multiselect.min.css';
+import Multiselect from 'vue-multiselect';
 
 export default {
   name: 'select',
+  inheritAttrs: true,
   props: [
     'value',
-    'options',
-    'searchable',
-    'multiple',
-    'disabled',
-    'placeholder',
-    'trackBy',
-    'label',
-    'allowEmpty',
-    'inputPlacement'
+    'inputPlacement',
+    'showReset'
   ],
-  components: { multiselect }
+  data() {
+    return { open: false };
+  },
+  computed: {
+    options() {
+      return Object.assign({
+        closeOnSelect: true,
+        showLabels: false,
+        placeholder: 'Select option',
+        trackBy: 'label',
+        label: 'label'
+      }, this.$attrs);
+    },
+    position() {
+      return this.inputPlacement !== 'bottom' ? 'search-top' : '';
+    },
+    showResetButton() {
+      return this.showReset && !this.open && this.value;
+    }
+  },
+  methods: {
+    open(val, id) {
+      this.open = true;
+      this.$emit('open', val, id);
+    },
+    close(id) {
+      this.open = false;
+      this.$emit('close', id);
+    }
+  },
+  components: { Multiselect }
 };
 </script>
 
 <style lang="scss">
-.custom-select.multiselect {
+@import '~vue-multiselect/dist/vue-multiselect.min';
+
+.custom-select {
+  position: relative;
+
+  .btn-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    padding: 5px;
+    box-shadow: none;
+    background: none;
+    color: #999;
+    cursor: pointer;
+  }
+}
+
+.custom-select .multiselect {
   width: auto;
+  padding-top: 8px;
   padding-right: 24px;
   font-size: 14px;
   font-family: 'Catamaran', Helvetica, Arial, sans-serif;
@@ -162,16 +201,17 @@ export default {
   .multiselect__input {
     width: 100% !important;
     margin: 0;
+    padding-left: 10px;
     line-height: 32px;
   }
 
   .multiselect__select {
-    top: unset;
+    top: 8px;
     bottom: 1px;
   }
 }
 
-.custom-select.multiselect.search-top {
+.custom-select .multiselect.search-top {
   .multiselect__tags {
     display: table;
     &-wrap { display: table-footer-group; }
@@ -182,10 +222,6 @@ export default {
     margin-bottom: 8px;
   }
 
-  .multiselect__select {
-    top: 1px;
-    bottom: unset;
-  }
+  .multiselect__select { bottom: unset; }
 }
-
 </style>

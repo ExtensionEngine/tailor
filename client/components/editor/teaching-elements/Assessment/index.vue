@@ -13,6 +13,7 @@
             :trackBy="'id'"
             :label="'name'"
             :placeholder="placeholder"
+            :showReset="isEditing"
             @input="onObjectiveSelected">
           </multiselect>
         </div>
