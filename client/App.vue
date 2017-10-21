@@ -39,7 +39,7 @@ body {
 #app {
   width: 100%;
   height: 100%;
-  color: rgba(0, 0, 0, .87);
+  color: rgba(0,0,0,0.87);
   font-family: 'Catamaran', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
