@@ -97,7 +97,7 @@ $gutter: 5px;
 
   &:hover {
     background-color: #f5f5f5;
-  };
+  }
 }
 
 .title {
@@ -107,7 +107,7 @@ $gutter: 5px;
 }
 
 .control-group {
-  margin: 5px 0 5px 0;
+  margin: 5px 0;
   color: #333;
   font-weight: normal;
   line-height: 24px;
@@ -134,14 +134,14 @@ ul {
   text-align: center;
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
 
   .eyedropper {
+    color: #fff;
     font-size: 18px;
     line-height: 40px;
-    color: #fff;
     opacity: 0;
-    transition: opacity .3s ease;
+    transition: opacity 0.3s ease;
   }
 
   &:hover .eyedropper {
@@ -150,7 +150,7 @@ ul {
 }
 
 .colors {
-  overflow: auto
+  overflow: auto;
 }
 
 .column {
@@ -159,14 +159,14 @@ ul {
 }
 
 .tile {
+  position: relative;
   width: $size;
   height: $size;
-  position: relative;
   margin: 0 $gutter $gutter 0;
   list-style: none;
   cursor: pointer;
   border-radius: 2px;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
 
   &:last-child {
     margin-bottom: 0;
@@ -174,13 +174,13 @@ ul {
 }
 
 .dot {
-  width: $size/3;
-  height: $size/3;
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
+  width: $size/3;
+  height: $size/3;
   margin: auto;
   border-radius: 50%;
   opacity: 1;
