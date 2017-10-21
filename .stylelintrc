@@ -4,6 +4,7 @@
   plugins: ['stylelint-order'],
   rules: {
     'selector-list-comma-newline-after': 'never-multi-line',
+    'function-comma-space-after': null,
     'order/properties-order': [
       'content',
       'display',
