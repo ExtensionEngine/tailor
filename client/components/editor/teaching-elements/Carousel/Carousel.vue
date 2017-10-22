@@ -152,10 +152,10 @@ export default {
 
 .indicators {
   position: absolute;
-  height: 22px;
-  left: 0;
   right: 0;
   bottom: 0;
+  left: 0;
+  height: 22px;
   margin: 0;
   padding-left: 0;
   text-align: center;
@@ -168,7 +168,7 @@ export default {
     height: 16px;
     margin: 0 12px;
     background-color: #ddd;
-    transition: background-color .3s;
+    transition: background-color 0.3s;
     border-radius: 50%;
     cursor: pointer;
 
