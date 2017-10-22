@@ -132,11 +132,11 @@ export default {
 .title {
   height: 100px;
   margin: 5px 3px 5px 0;
+  color: #333;
   font-size: 17px;
+  font-weight: normal;
   line-height: 24px;
   word-wrap: break-word;
-  font-weight: normal;
-  color: #333;
 }
 
 .form-control {
@@ -145,8 +145,8 @@ export default {
 }
 
 textarea {
-  margin: 5px 0;
   height: 100px;
+  margin: 5px 0;
   resize: none;
 }
 
@@ -163,8 +163,8 @@ label {
   padding: 3px 8px;
 
   &:hover {
-    cursor: pointer;
     background-color: #f5f5f5;
+    cursor: pointer;
   }
 }
 </style>
