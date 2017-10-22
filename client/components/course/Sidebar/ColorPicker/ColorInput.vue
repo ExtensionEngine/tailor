@@ -69,7 +69,7 @@ export default {
   overflow: hidden;
 
   .chrome-body {
-    padding: 12px 16px 12px !important;
+    padding: 12px 16px !important;
     background: transparent;
   }
 
@@ -93,7 +93,7 @@ export default {
   }
 
   .container {
-    width: 100%
+    width: 100%;
   }
 
   .alpha-wrap {
@@ -107,9 +107,9 @@ export default {
 
   .input__input {
     height: 24px;
+    color: #222;
     font-family: "Roboto";
     font-size: 13px;
-    color: #222;
     background: #fdfdfd;
   }
 
