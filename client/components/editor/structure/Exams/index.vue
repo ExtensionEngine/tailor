@@ -49,15 +49,15 @@ export default {
 
 <style lang="scss" scoped>
 h2 {
-  margin: 50px 0 20px 0;
+  margin: 50px 0 20px;
   padding: 0;
-  font-size: 18px;
   color: #444;
+  font-size: 18px;
   text-align: left;
 }
 
 .exams {
-  margin: 80px 0 200px 0;
+  margin: 80px 0 200px;
 }
 
 .create-exam {
