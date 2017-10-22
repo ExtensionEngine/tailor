@@ -120,10 +120,10 @@ export default {
 .perspective {
   width: 100%;
   min-height: 245px;
-  margin: 25px 0px;
+  margin: 25px 0;
   padding: 20px 40px;
   background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .actions {
@@ -137,8 +137,8 @@ export default {
   }
 
   .action:hover {
-    cursor: pointer;
     color: #444;
+    cursor: pointer;
   }
 }
 </style>
