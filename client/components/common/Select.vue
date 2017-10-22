@@ -45,12 +45,12 @@ export default {
 .custom-select.multiselect {
   width: auto;
   padding-right: 24px;
+  color: #555;
   font-size: 14px;
   font-family: 'Catamaran', Helvetica, Arial, sans-serif;
-  color: #555;
 
   &:focus {
-    box-shadow: inset 0 -2px 0 #337AB7;
+    box-shadow: inset 0 -2px 0 #337ab7;
     transition: box-shadow 0.15s;
   }
 
@@ -67,9 +67,9 @@ export default {
 
   .multiselect__content-wrapper {
     margin-top: -1px;
+    background-color: #fff;
     border: 1px solid #999;
     border-radius: 0;
-    background-color: #fff;
   }
 
   .multiselect__tags {
@@ -85,14 +85,14 @@ export default {
     padding: 0;
     padding-left: 12px;
     border-radius: 26px;
-    line-height: 26px;
-    cursor: default;
-    background: #e0e0e0;
     color: #4a4a4a;
+    line-height: 26px;
+    background: #e0e0e0;
+    cursor: default;
 
     &:hover {
-      background: #767577;
       color: #fbfafb;
+      background: #767577;
     }
 
     span {
@@ -108,34 +108,34 @@ export default {
   }
 
   .multiselect__tag-icon {
-    position: relative;
     display: inline-block;
+    position: relative;
     vertical-align: middle;
     width: 20px;
+    margin: 0 4px;
     line-height: 26px;
     overflow: hidden;
-    margin: 0 4px;
     cursor: pointer;
 
     &:hover, &:focus { background: none; }
 
     &::after {
-      content: "\F159"; // close-circle
+      content: "\F159";
       display: inline-block;
-      line-height: 26px;
+      color: #9c9c9c;
       font-size: 18px;
       font-family: "Material Design Icons";
       font-weight: normal;
+      line-height: 26px;
       font-style: normal;
       letter-spacing: normal;
       text-transform: none;
       text-align: center;
-      color: #9c9c9c;
       cursor: pointer;
     }
   }
 
-  .multiselect__tag:hover .multiselect__tag-icon  {
+  .multiselect__tag:hover .multiselect__tag-icon {
     &::after { color: #fbfafb; }
   }
 
@@ -147,16 +147,16 @@ export default {
   }
 
   .multiselect__single, .multiselect__tags {
-    padding-left: 0;
     margin-bottom: 0;
+    padding-left: 0;
     line-height: 34px;
   }
 
   .multiselect__input, .multiselect__single, .multiselect__tags {
-    border: 0;
-    border-radius: 0;
     font-size: inherit;
     background: none;
+    border: 0;
+    border-radius: 0;
   }
 
   .multiselect__input {
@@ -187,5 +187,4 @@ export default {
     bottom: unset;
   }
 }
-
 </style>
