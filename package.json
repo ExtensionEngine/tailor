@@ -89,6 +89,7 @@
     "vue": "^2.3.4",
     "vue-color": "^2.3.0",
     "vue-focus": "^2.1.0",
+    "vue-infinite-loading": "^2.2.1",
     "vue-infinite-scroll": "^2.0.0",
     "vue-multiselect": "^2.0.2",
     "vue-quill-editor": "^2.2.4",

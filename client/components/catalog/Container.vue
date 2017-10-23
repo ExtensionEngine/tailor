@@ -8,16 +8,15 @@
         <create-course class="pull-right"></create-course>
       </div>
     </div>
-    <div v-if="courseTotal" class="row">
-      <course-list
-        :courses="courses"
-        :showLoader="showLoader"
-        :hasMoreResults="hasMoreResults"
-        @load="fetchCourses">
-      </course-list>
-    </div>
-    <div v-if="!courseTotal && !showLoader" class="well well-a">
-      No courses found.
+    <div class="row courses">
+      <course-list :courses="courses"></course-list>
+      <infinite-loading @infinite="fetchCourses" ref="infiniteLoading">
+        <span slot="spinner">
+          <div class="col-lg-12 loader-wrapper"><loader></loader></div>
+        </span>
+        <span slot="no-results">No courses found.</span>
+        <span slot="no-more"></span>
+      </infinite-loading>
     </div>
   </div>
 </template>
@@ -27,32 +26,29 @@ import { mapActions, mapGetters } from 'vuex-module';
 import Promise from 'bluebird';
 import CourseList from './List';
 import CreateCourse from './Create';
+import InfiniteLoading from 'vue-infinite-loading';
+import Loader from '../common/Loader';
 import Search from './Search';
 
 export default {
-  data() {
-    return {
-      showLoader: false
-    };
-  },
   computed: {
     ...mapGetters(['courses']),
-    ...mapGetters(['hasMoreResults'], 'courses'),
-    courseTotal() {
-      return Object.keys(this.courses).length;
-    }
+    ...mapGetters(['hasMoreResults'], 'courses')
   },
   methods: {
     ...mapActions(['fetch', 'resetSearch'], 'courses'),
-    fetchCourses() {
-      this.showLoader = true;
+    fetchCourses($state) {
       return Promise.join(this.fetch(), Promise.delay(400))
-        .then(() => (this.showLoader = false));
+        .then(() => {
+          $state.loaded();
+          if (!this.hasMoreResults) $state.complete();
+        });
     },
     search(query) {
-      this.showLoader = true;
       this.resetSearch(query);
-      this.fetchCourses();
+      this.$nextTick(() => {
+        this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
+      });
     }
   },
   mounted() {
@@ -61,7 +57,9 @@ export default {
   components: {
     CreateCourse,
     CourseList,
-    Search
+    InfiniteLoading,
+    Search,
+    Loader
   }
 };
 </script>
@@ -76,6 +74,7 @@ export default {
   }
 }
 
+.loader-wrapper,
 .well-a {
   margin-top: 50px;
 }
