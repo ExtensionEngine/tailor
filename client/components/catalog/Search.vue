@@ -73,7 +73,7 @@ export default {
   }
 
   .btn {
-    padding: 8px 12px 4px 12px;
+    padding: 8px 12px 4px;
     background-color: white;
     box-shadow: none;
 
