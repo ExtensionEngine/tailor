@@ -58,9 +58,9 @@ export default {
   }
 
   .multiselect {
+    color: #333;
     font-size: 17px;
     line-height: 24px;
-    color: #333;
   }
 }
 </style>
