@@ -1,66 +1,63 @@
 <template>
-  <div class="settings">
-    <loader v-if="showLoader"></loader>
-    <div v-else>
-      <div class="form-group">
-        <label for="courseName">Name</label>
-        <span
-          v-show="showNameInput"
-          :class="{ 'has-error': vErrors.has('courseName') }">
-          <textarea
-            v-model="newCourseName"
-            v-focus="true"
-            v-validate="{ rules: { required: true, min: 2, max: 250 } }"
-            @blur="updateName"
-            @keyup.enter="updateName"
-            @keyup.esc="showNameInput = false"
-            name="courseName"
-            data-vv-as="Name"
-            id="courseName"
-            class="form-control name">
-          </textarea>
-          <span class="help-block">{{ vErrors.first('courseName') }}</span>
+  <div v-if="course" class="settings">
+    <div class="form-group">
+      <label for="courseName">Name</label>
+      <span
+        v-show="showNameInput"
+        :class="{ 'has-error': vErrors.has('courseName') }">
+        <textarea
+          v-model="newCourseName"
+          v-focus="true"
+          v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+          @blur="updateName"
+          @keyup.enter="updateName"
+          @keyup.esc="showNameInput = false"
+          name="courseName"
+          data-vv-as="Name"
+          id="courseName"
+          class="form-control name">
+        </textarea>
+        <span class="help-block">{{ vErrors.first('courseName') }}</span>
+      </span>
+      <span v-show="!showNameInput">
+        <h2 @click.stop="showNameInput = true">{{ course.name }}</h2>
+      </span>
+    </div>
+    <div class="form-group">
+      <label for="courseDescription">Description</label>
+      <span
+        v-show="showDescriptionInput"
+        :class="{ 'has-error': vErrors.has('courseDescription') }">
+        <textarea
+          v-model="newCourseDescription"
+          v-focus="true"
+          v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
+          @blur="updateDescription"
+          @keyup.esc="showDescriptionInput = false"
+          name="courseDescription"
+          data-vv-as="Description"
+          id="courseDescription"
+          class="form-control">
+        </textarea>
+        <span class="help-block">
+          {{ vErrors.first('courseDescription') }}
         </span>
-        <span v-show="!showNameInput">
-          <h2 @click.stop="showNameInput = true">{{ course.name }}</h2>
+      </span>
+      <span v-show="!showDescriptionInput">
+        <span @click.stop="showDescriptionInput = true" class="form-display">
+          {{ course.description }}
         </span>
-      </div>
-      <div class="form-group">
-        <label for="courseDescription">Description</label>
-        <span
-          v-show="showDescriptionInput"
-          :class="{ 'has-error': vErrors.has('courseDescription') }">
-          <textarea
-            v-model="newCourseDescription"
-            v-focus="true"
-            v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
-            @blur="updateDescription"
-            @keyup.esc="showDescriptionInput = false"
-            name="courseDescription"
-            data-vv-as="Description"
-            id="courseDescription"
-            class="form-control">
-          </textarea>
-          <span class="help-block">
-            {{ vErrors.first('courseDescription') }}
-          </span>
-        </span>
-        <span v-show="!showDescriptionInput">
-          <span @click.stop="showDescriptionInput = true" class="form-display">
-            {{ course.description }}
-          </span>
-        </span>
-      </div>
-      <div class="course-actions">
-        <button
-          v-if="showRemoveButton"
-          @click.stop="removeCourse"
-          type="button"
-          class="btn btn-danger">
-          <span class="mdi mdi-delete"></span>
-          remove course
-        </button>
-      </div>
+      </span>
+    </div>
+    <div class="course-actions">
+      <button
+        v-if="showRemoveButton"
+        @click.stop="removeCourse"
+        type="button"
+        class="btn btn-danger">
+        <span class="mdi mdi-delete"></span>
+        remove course
+      </button>
     </div>
   </div>
 </template>

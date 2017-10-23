@@ -4,8 +4,8 @@
       <div class="col-md-3">
         <div class="list-group">
           <router-link
-            :to="{ name: 'general' }"
-            :class="{ selected: $route.name === 'general' }"
+            :to="{ name: 'course-info' }"
+            :class="{ selected: $route.name === 'course-info' }"
             class="list-group-item">
             <span class="mdi mdi-wrench"></span>General
           </router-link>

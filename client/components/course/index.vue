@@ -9,8 +9,8 @@
         <router-link :to="{ name: 'course-revisions' }">Revisions</router-link>
       </li>
       <li v-if="showSettings"
-        :class="{ active: $route.matched.some(it => it.name === 'course-settings') }">
-        <router-link :to="{ name: 'course-settings' }">Settings</router-link>
+        :class="{ active: $route.matched.some(it => it.name === 'course-info') }">
+        <router-link :to="{ name: 'course-info' }">Settings</router-link>
       </li>
     </ul>
     <div class="tab-content">

@@ -38,7 +38,7 @@ let router = new Router({
       component: CourseSettings,
       children: [{
         path: '',
-        name: 'general',
+        name: 'course-info',
         component: General
       }, {
         path: 'users',
