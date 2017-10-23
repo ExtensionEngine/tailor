@@ -39,8 +39,8 @@ export default {
 
 h2 {
   margin: 15px 0 30px;
+  color: #444;
   font-size: 18px;
   font-weight: normal;
-  color: #444;
 }
 </style>
