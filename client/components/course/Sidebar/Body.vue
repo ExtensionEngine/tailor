@@ -8,7 +8,7 @@
           v-validate="{ rules: { required: true, min: 2, max: 150 } }"
           @blur="saveName"
           @keydown.enter.prevent="saveName"
-          @keydown.esc="discardName"
+          @keydown.esc="discardNameChange"
           ref="nameInput"
           name="name"
           class="form-control">
@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     ...mapActions(['remove', 'update'], 'activities'),
-    discardName() {
+    discardNameChange() {
       this.nameInput = this.activity.name;
       this.showNameInput = false;
     },
