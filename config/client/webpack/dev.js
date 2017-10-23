@@ -1,6 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('webpack-merge');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
+// const StyleLintPlugin = require('stylelint-webpack-plugin');
 const webpack = require('webpack');
 
 const { DefinePlugin, HotModuleReplacementPlugin, NoErrorsPlugin } = webpack;
@@ -25,8 +25,8 @@ const config = merge(baseConfig, {
       filename: 'index.html',
       template: 'index.html',
       inject: true
-    }),
-    new StyleLintPlugin({ files: ['**/*.vue'] })
+    })
+    // new StyleLintPlugin({ files: ['**/*.vue'] })
   ]
 });
 
