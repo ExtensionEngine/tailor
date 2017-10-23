@@ -157,10 +157,10 @@ h2 {
   display: inline-block;
   height: 40px;
   margin: 15px 0 30px;
-  line-height: 20px;
+  color: #444;
   font-size: 16px;
   font-weight: normal;
-  color: #444;
+  line-height: 20px;
 }
 
 textarea.form-control.name {
@@ -187,8 +187,8 @@ span.form-display {
 label {
   display: block;
   margin-top: 10px;
-  font-size: 14px;
   color: gray;
+  font-size: 14px;
 }
 
 .help-block {

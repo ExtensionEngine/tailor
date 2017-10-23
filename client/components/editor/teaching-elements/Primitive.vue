@@ -106,7 +106,7 @@ export default {
 .embedded-hovered {
   .drag-handle {
     opacity: 1;
-    transition: opacity .6s ease-in-out;
+    transition: opacity 0.6s ease-in-out;
     cursor: pointer;
   }
 }

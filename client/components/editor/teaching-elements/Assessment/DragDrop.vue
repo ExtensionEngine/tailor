@@ -188,17 +188,17 @@ export default {
 }
 
 .add-group {
-  padding: 5px 20px;
   margin-top: 80px;
+  padding: 5px 20px;
 }
 
 .center {
-  padding: 14px 21px 14px 21px;
+  padding: 14px 21px;
 }
 
 .mdi:hover {
-  cursor: pointer;
   color: #42b983;
+  cursor: pointer;
 }
 
 .add-answer {
@@ -228,8 +228,8 @@ export default {
   }
 
   &.flip {
-     transform: rotateX(180deg);
-   }
+    transform: rotateX(180deg);
+  }
 }
 
 .group-view {
@@ -251,8 +251,8 @@ export default {
 }
 
 ul {
-  padding: 0;
   margin: 15px 0;
+  padding: 0;
   list-style: none;
 
   li {
@@ -273,7 +273,7 @@ ul {
   }
 }
 
-.clear  {
+.clear {
   clear: left;
   margin-bottom: 10px;
 }

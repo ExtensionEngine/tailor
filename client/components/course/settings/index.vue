@@ -57,7 +57,7 @@ export default {
     margin-bottom: 2px;
     padding: 10px;
     text-align: left;
-    border: 0px;
+    border: 0;
     cursor: pointer;
 
     &:hover, &.selected {

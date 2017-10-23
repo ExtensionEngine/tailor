@@ -133,7 +133,7 @@ export default {
 <style lang="scss" scoped>
 h5 {
   display: block;
-  margin: 30px 0 10px 0;
+  margin: 30px 0 10px;
   font-size: 18px;
   text-align: left;
 }
@@ -170,8 +170,8 @@ ul {
     right: 5px;
     bottom: 5px;
     padding: 5px;
-    cursor: pointer;
     color: #888;
+    cursor: pointer;
 
     &:hover {
       color: darken(#888, 20%);
@@ -180,6 +180,6 @@ ul {
 }
 
 .disabled {
-  pointer-events:none;
+  pointer-events: none;
 }
 </style>

@@ -108,9 +108,9 @@ h3 {
 }
 
 .exam {
-  padding: 0;
   margin-bottom: 13px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30);
+  padding: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 
   > div {
     padding: 15px 25px;

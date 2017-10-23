@@ -79,7 +79,7 @@ export default {
 }
 
 .revisions {
-  margin: 60px 60px 0 60px;
+  margin: 60px 60px 0;
   padding: 30px;
   text-align: left;
   background-color: #fff;
@@ -96,12 +96,12 @@ export default {
   }
 
   .subheader {
-    height: 48px;
     display: inline-block;
+    height: 48px;
     margin-left: 56px;
     padding: 0 16px;
-    line-height: 48px;
     color: #808080;
+    line-height: 48px;
   }
 }
 </style>

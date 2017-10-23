@@ -1,8 +1,10 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('webpack-merge');
+// const StyleLintPlugin = require('stylelint-webpack-plugin');
 const webpack = require('webpack');
+
 const { DefinePlugin, HotModuleReplacementPlugin, NoErrorsPlugin } = webpack;
 const { OccurenceOrderPlugin } = webpack.optimize;
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const baseConfig = require('./base');
 const { cssSourceMap: sourceMap, env } = require('../helpers/envSettings').dev;
@@ -24,6 +26,7 @@ const config = merge(baseConfig, {
       template: 'index.html',
       inject: true
     })
+    // new StyleLintPlugin({ files: ['**/*.vue'] })
   ]
 });
 
