@@ -8,7 +8,7 @@
         <create-course class="pull-right"></create-course>
       </div>
     </div>
-    <div class="row courses">
+    <div class="row">
       <course-list :courses="courses"></course-list>
       <infinite-loading @infinite="fetchCourses" ref="infiniteLoading">
         <span slot="spinner">
