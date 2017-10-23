@@ -123,7 +123,7 @@ export default {
   margin: 25px 0;
   padding: 20px 40px;
   background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
 .actions {

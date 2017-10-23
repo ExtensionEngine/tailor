@@ -57,7 +57,7 @@ export default {
   height: 60px;
   padding: 13px 45px 0;
   background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.34);
 
   .form-control {
     display: inline-block;
