@@ -62,8 +62,7 @@ export default {
   text-align: left;
 }
 
-.modal-header,
-.modal-footer {
+.modal-header, .modal-footer {
   border: none;
 }
 
