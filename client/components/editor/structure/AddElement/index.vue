@@ -120,7 +120,7 @@ export default {
 
 <style lang="scss" scoped>
 .add-element {
-  margin: 20px 0 30px 0;
+  margin: 20px 0 30px;
   color: #444;
 
   .toggle-selection {
@@ -153,7 +153,7 @@ export default {
   }
 
   .slide-fade-enter-active {
-    transition: all .2s ease-in-out;
+    transition: all 0.2s ease-in-out;
   }
 
   .slide-fade-enter {
