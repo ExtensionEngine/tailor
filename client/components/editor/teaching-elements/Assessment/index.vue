@@ -192,6 +192,7 @@ export default {
         this.$emit('remove');
       } else {
         this.addElement(cloneDeep(this.previousVersion));
+        this.setObjective();
         this.isEditing = false;
         this.setAlert();
         this.errors = [];
@@ -207,6 +208,11 @@ export default {
     remove() {
       this.$emit('remove');
     },
+    setObjective() {
+      const objectiveId = get(this.element, 'data._refs.objectiveId');
+      if (!objectiveId) return;
+      this.objective = find(this.examObjectives, { id: objectiveId });
+    },
     updateFeedback(feedback) {
       let element = cloneDeep(this.element);
       element.data.feedback = element.data.feedback || {};
@@ -218,9 +224,7 @@ export default {
     }
   },
   mounted() {
-    const objectiveId = get(this.element, 'data._refs.objectiveId');
-    if (!objectiveId) return;
-    this.objective = find(this.examObjectives, { id: objectiveId });
+    this.setObjective();
   },
   components: {
     MultipleChoice,
