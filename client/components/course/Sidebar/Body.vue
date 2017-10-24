@@ -6,9 +6,9 @@
         <textarea
           v-model="nameInput"
           v-validate="{ rules: { required: true, min: 2, max: 150 } }"
-          @blur="focusoutName"
-          @keyup.enter="focusoutName"
-          @keyup.esc="hideNameInput"
+          @blur="saveName"
+          @keydown.enter.prevent="saveName"
+          @keydown.esc="discardNameChange"
           ref="nameInput"
           name="name"
           class="form-control">
@@ -80,12 +80,16 @@ export default {
   },
   methods: {
     ...mapActions(['remove', 'update'], 'activities'),
+    discardNameChange() {
+      this.nameInput = this.activity.name;
+      this.showNameInput = false;
+    },
     focusName() {
       this.nameInput = this.activity.name;
       this.showNameInput = true;
       setTimeout(() => this.$refs.nameInput.focus(), 0);
     },
-    focusoutName() {
+    saveName() {
       this.$validator.validateAll().then(result => {
         if (!result) return;
         if (this.nameInput === this.activity.name) {
