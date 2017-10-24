@@ -111,9 +111,9 @@ export default {
 
 .actions {
   position: absolute;
-  left: 15px;
   right: 15px;
   bottom: 20px;
+  left: 15px;
 
   button {
     width: 80%;
