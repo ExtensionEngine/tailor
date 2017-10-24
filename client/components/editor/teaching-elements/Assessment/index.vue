@@ -84,10 +84,11 @@ import NumericalResponse from './NumericalResponse';
 import { OUTLINE_LEVELS } from 'shared/activities';
 import pluralize from 'pluralize';
 import set from 'lodash/set';
+import Question from './Question';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
-import Question from './Question';
+import unset from 'lodash/unset';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
@@ -179,6 +180,7 @@ export default {
           let data = this.summative ? this.element : this.element.data;
           data = cloneDeep(data);
           if (this.objective) set(data, 'data._refs.objectiveId', this.objective.id);
+          if (!this.objective) unset(data, 'data._refs.objectiveId');
           this.$emit('save', data);
           this.isEditing = false;
           this.setAlert(saveAlert);
