@@ -8,11 +8,11 @@
         <create-course class="pull-right"></create-course>
       </div>
     </div>
-    <div class="row">
+    <div class="row courses">
       <course-list :courses="courses"></course-list>
       <infinite-loading @infinite="fetchCourses" ref="infiniteLoading">
-        <span slot="spinner">
-          <div class="col-lg-12 loader-wrapper"><loader></loader></div>
+        <span slot="spinner" class="col-lg-12 spinner-wrapper">
+          <spinner></spinner>
         </span>
         <span slot="no-results">No courses found.</span>
         <span slot="no-more"></span>
@@ -27,7 +27,7 @@ import Promise from 'bluebird';
 import CourseList from './List';
 import CreateCourse from './Create';
 import InfiniteLoading from 'vue-infinite-loading';
-import Loader from '../common/Loader';
+import Spinner from 'components/common/Loader';
 import Search from './Search';
 
 export default {
@@ -59,7 +59,7 @@ export default {
     CourseList,
     InfiniteLoading,
     Search,
-    Loader
+    Spinner
   }
 };
 </script>
@@ -74,7 +74,7 @@ export default {
   }
 }
 
-.loader-wrapper,
+.spinner-wrapper,
 .well-a {
   margin-top: 50px;
 }
