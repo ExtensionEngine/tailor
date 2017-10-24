@@ -44,8 +44,8 @@ export default {
   overflow-y: scroll;
   overflow-y: overlay;
 }
-</style>
 
-<style lang="scss">
-.outline > *:last-child { margin-bottom: 120px; }
+.outline /deep/ {
+  > *:last-child { margin-bottom: 120px; }
+}
 </style>
