@@ -3,8 +3,8 @@
     :width="`${width}px`"
     :height="`${height}px`"
     class="circular-progress"
-    viewBox="0 0 66 66">
-    <circle class="path" cx="33" cy="33" r="30"></circle>
+    viewBox="25 25 50 50">
+    <circle class="path" cx="50" cy="50" r="20"></circle>
   </svg>
 </template>
 
@@ -19,38 +19,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$offset: 187;
-$duration: 1.45s;
-
 .circular-progress {
-  animation: rotator $duration linear infinite;
+  animation: rotate 1.4s linear infinite;
+  stroke-dasharray: 125.664;
+  stroke-dashoffset: 125.664px;
 }
 
 .path {
   fill: none;
   stroke: #888;
-  stroke-dasharray: $offset;
-  stroke-dashoffset: 0;
+  stroke-dasharray: 80,200;
+  stroke-dashoffset: 0px;
   stroke-linecap: round;
-  stroke-width: 6;
+  stroke-width: 5;
   transform-origin: center;
-  animation: dash $duration ease-in-out infinite;
+  animation: dash 1.4s ease-in-out infinite;
 }
 
-@keyframes rotator {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(270deg); }
+@keyframes rotate {
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes dash {
-  0% { stroke-dashoffset: $offset; }
+  0% {
+    stroke-dasharray: 1,200;
+    stroke-dashoffset: 0px;
+  }
   50% {
-    transform: rotate(135deg);
-    stroke-dashoffset: $offset/4;
+    stroke-dasharray: 100,200;
+    stroke-dashoffset: -15px;
   }
   100% {
-    transform: rotate(450deg);
-    stroke-dashoffset: $offset;
+    stroke-dasharray: 100,200;
+    stroke-dashoffset: -125px;
   }
 }
 </style>
