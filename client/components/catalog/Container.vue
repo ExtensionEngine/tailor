@@ -22,33 +22,35 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
-import Promise from 'bluebird';
 import CourseList from './List';
 import CreateCourse from './Create';
+import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
+import { mapActions, mapGetters } from 'vuex-module';
+import Promise from 'bluebird';
 import Spinner from 'components/common/Loader';
 import Search from './Search';
 
 export default {
   computed: {
     ...mapGetters(['courses']),
-    ...mapGetters(['hasMoreResults'], 'courses')
+    ...mapGetters(['hasMoreResults'], 'courses'),
+    loaderState() {
+      return get(this.$refs, 'infiniteLoading.stateChanger', {});
+    }
   },
   methods: {
     ...mapActions(['fetch', 'resetSearch'], 'courses'),
-    fetchCourses($state) {
+    fetchCourses() {
       return Promise.join(this.fetch(), Promise.delay(400))
         .then(() => {
-          $state.loaded();
-          if (!this.hasMoreResults) $state.complete();
+          this.loaderState.loaded();
+          if (!this.hasMoreResults) this.loaderState.complete();
         });
     },
     search(query) {
       this.resetSearch(query);
-      this.$nextTick(() => {
-        this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
-      });
+      this.$nextTick(() => this.loaderState.reset());
     }
   },
   mounted() {
