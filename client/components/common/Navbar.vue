@@ -51,7 +51,7 @@ export default {
 
   .navbar-brand {
     width: 195px;
-    padding: 10px 20px 0 20px;
+    padding: 10px 20px 0;
 
     img {
       float: left;
@@ -61,8 +61,8 @@ export default {
 
     span {
       display: inline-block;
-      line-height: 32px;
       font-size: 18px;
+      line-height: 32px;
     }
   }
 
@@ -86,6 +86,7 @@ export default {
     @media (max-width: 1200px) {
       width: 40%;
     }
+
     @media (max-width: 1000px) {
       width: 25%;
     }

@@ -56,7 +56,7 @@ export default {
 
 <style lang="scss" scoped>
 .options {
-  padding: 5px 0 10px 0;
+  padding: 5px 0 10px;
   text-align: right;
 }
 </style>

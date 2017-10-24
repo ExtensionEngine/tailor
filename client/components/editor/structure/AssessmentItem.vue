@@ -69,15 +69,15 @@ export default {
     position: absolute;
     top: 0;
     left: -3px;
-    font-size: 28px;
     color: #888;
+    font-size: 28px;
     opacity: 0;
     cursor: move;
   }
 
   &.hover .drag-handle {
     opacity: 1;
-    transition: opacity .6s ease-in-out;
+    transition: opacity 0.6s ease-in-out;
   }
 
   .minimized {
@@ -102,10 +102,10 @@ export default {
     display: inline-block;
     position: absolute;
     right: 15px;
+    color: #707070;
     font-size: 18px;
     line-height: 18px;
     visibility: hidden;
-    color: #707070;
 
     &:hover { color: #555; }
   }

@@ -13,6 +13,7 @@
             :trackBy="'id'"
             :label="'name'"
             :placeholder="placeholder"
+            :showReset="isEditing"
             @input="onObjectiveSelected">
           </multiselect>
         </div>
@@ -240,7 +241,7 @@ export default {
 .assessment {
   min-height: 400px;
   margin: 10px auto;
-  padding: 10px 30px 30px 30px;
+  padding: 10px 30px 30px;
   background-color: white;
   overflow: visible;
 
@@ -252,7 +253,7 @@ export default {
   }
 
   .assessment-type {
-    margin: 10px 0 20px 0;
+    margin: 10px 0 20px;
     padding: 4px 15px;
     font-size: 13px;
     background-color: #707070;
@@ -261,9 +262,9 @@ export default {
 
   .form-group {
     text-align: left;
-    margin: 0 auto;
-    padding: 25px 20px 15px 20px;
     width: 100%;
+    margin: 0 auto;
+    padding: 25px 20px 15px;
     overflow: hidden;
   }
 

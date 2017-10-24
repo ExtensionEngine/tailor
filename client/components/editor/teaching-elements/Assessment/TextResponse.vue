@@ -46,10 +46,10 @@ export default {
 
 <style lang="scss" scoped>
 .form-group {
-  text-align: left;
-  margin: 0 auto;
-  padding: 25px 20px 15px 20px;
   width: 100%;
+  margin: 0 auto;
+  padding: 25px 20px 15px;
+  text-align: left;
   overflow: hidden;
 }
 
@@ -58,8 +58,8 @@ export default {
 }
 
 .answer {
+  margin: 10px 0;
   padding: 10px 0 0 50px;
   font-size: 16px;
-  margin: 10px 0;
 }
 </style>

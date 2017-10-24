@@ -38,8 +38,8 @@ export default {
 .perspectives {
   h2 {
     margin-bottom: 20px;
-    font-size: 18px;
     color: #444;
+    font-size: 18px;
   }
 
   .well {

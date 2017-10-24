@@ -81,7 +81,7 @@ export default {
 .course-card {
   min-height: 300px;
   margin-top: 40px;
-  padding: 30px 30px 20px 30px;
+  padding: 30px 30px 20px;
   color: #555;
   font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   border-radius: 3px;
@@ -91,7 +91,7 @@ export default {
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.20), 0 8px 8px rgba(0,0,0,0.18);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18);
   }
 
   .body {
@@ -124,10 +124,10 @@ export default {
 
 .title {
   height: 100px;
-  margin: 20px 0 10px 0;
+  margin: 20px 0 10px;
   font-size: 20px;
-  line-height: 34px;
   font-weight: 300;
+  line-height: 34px;
   text-align: left;
 
   @media (min-width: 1200px) and (max-width: 1300px) {

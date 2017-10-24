@@ -179,7 +179,7 @@ h4 {
 }
 
 .divider {
-  margin: 20px 0 70px 0;
+  margin: 20px 0 70px;
   border-top: 1px solid #e1e1e1;
 }
 

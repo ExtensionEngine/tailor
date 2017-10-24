@@ -35,8 +35,8 @@ export default {
   padding: 10px 20px;
 
   .btn {
-    padding: 7px 15px;
     margin-left: 10px;
+    padding: 7px 15px;
     min-width: 85px;
   }
 }

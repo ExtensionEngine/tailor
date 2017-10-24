@@ -86,9 +86,9 @@ export default {
 
   .content {
     margin: 5px 3px 15px 0;
+    color: #333;
     line-height: 24px;
     word-wrap: break-word;
-    color: #333;
-   }
+  }
 }
 </style>

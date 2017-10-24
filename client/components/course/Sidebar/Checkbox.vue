@@ -35,7 +35,7 @@ $border: #9c9c9c;
 
   &:hover {
     background-color: #f5f5f5;
-  };
+  }
 }
 
 .title {
@@ -45,7 +45,7 @@ $border: #9c9c9c;
 }
 
 .control-group {
-  margin: 5px 0 5px 0;
+  margin: 5px 0;
   color: #333;
   font-weight: normal;
   line-height: 24px;
@@ -65,47 +65,47 @@ input[type=checkbox] {
 
 label {
   display: inline-block;
-  height: 24px;
   position: relative;
   float: left;
+  height: 24px;
   line-height: 24px;
   cursor: pointer;
   user-select: none;
 }
 
-label:before, label:after {
+label::before, label::after {
   content: "";
   position: absolute;
   left: 0;
   z-index: 1;
   transition:
-    width .20s .1s,
-    height .20s .1s,
-    top .20s .1s,
-    left .20s .1s,
-    background-color .25s,
-    border .25s;
+    width 0.2s 0.1s,
+    height 0.2s 0.1s,
+    top 0.2s 0.1s,
+    left 0.2s 0.1s,
+    background-color 0.25s,
+    border 0.25s;
 }
 
-label:after {
+label::after {
   border-radius: 2px;
 }
 
 label:not(.checked) {
-  &:before {
+  &::before {
+    top: 10px;
+    left: 6px;
+    transform: rotateZ(37deg);
     width: 0;
     height: 0;
-    left: 6px;
-    top: 10px;
     border: 3px solid transparent;
-    transform: rotateZ(37deg);
     transform-origin: 100% 100%;
   }
 
-  &:after {
-    height: 20px;
-    width: 20px;
+  &::after {
     top: 1px;
+    width: 20px;
+    height: 20px;
     background-color: transparent;
     border: 2px solid $border;
     z-index: 0;
@@ -113,26 +113,26 @@ label:not(.checked) {
 }
 
 label.checked {
-  &:before {
-    width: 8px;
-    height: 13px;
+  &::before {
     top: 3px;
     left: 1px;
+    transform: rotateZ(37deg);
+    width: 8px;
+    height: 13px;
     border-top: 2px solid transparent;
     border-left: 2px solid transparent;
     border-right: 2px solid #fff;
     border-bottom: 2px solid #fff;
-    transform: rotateZ(37deg);
     backface-visibility: hidden;
     transform-origin: 100% 100%;
   }
 
-  &:after {
+  &::after {
+    top: 1px;
     width: 20px;
     height: 20px;
-    top: 1px;
-    border: 2px solid $fill;
     background-color: $fill;
+    border: 2px solid $fill;
     z-index: 0;
   }
 }

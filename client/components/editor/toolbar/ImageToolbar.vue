@@ -119,7 +119,7 @@ export default {
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 15px 10px 5px 10px;
+    padding: 15px 10px 5px;
     cursor: pointer;
   }
 
@@ -129,7 +129,7 @@ export default {
 
   .tool {
     float: left;
-    padding: 12px 20px 0 20px;
+    padding: 12px 20px 0;
 
     .btn {
       margin-left: 5px;

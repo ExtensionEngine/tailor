@@ -61,10 +61,10 @@ export default {
 
 <style lang="scss" scoped>
 .form-group {
-  text-align: left;
-  margin: 0 auto;
-  padding: 25px 20px 15px 20px;
   width: 100%;
+  margin: 0 auto;
+  padding: 25px 20px 15px;
+  text-align: left;
   overflow: hidden;
 }
 
@@ -76,8 +76,8 @@ ul {
   padding: 10px 0 0 50px;
 
   li {
-    position: relative;
     display: inline-block;
+    position: relative;
     width: 100%;
     margin: 10px 0;
 

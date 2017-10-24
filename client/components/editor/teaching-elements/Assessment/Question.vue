@@ -90,9 +90,9 @@ export default {
 }
 
 .question {
+  padding: 10px;
   font-size: 22px;
   text-align: center;
-  padding: 10px;
 
   &.question-error {
     box-shadow: inset 0 -2px 0 #e51c23;
