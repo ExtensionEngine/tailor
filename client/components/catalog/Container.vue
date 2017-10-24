@@ -31,7 +31,7 @@ import CourseCard from './Card';
 import CreateCourse from './Create';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
 import Search from './Search';
@@ -48,7 +48,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch', 'resetSearch'], 'courses'),
+    ...mapActions(['fetch'], 'courses'),
+    ...mapMutations(['setSearch'], 'courses'),
     fetchCourses() {
       return Promise.join(this.fetch(), Promise.delay(600)).then(() => {
         this.loaderState.loaded();
@@ -56,7 +57,7 @@ export default {
       });
     },
     search(query) {
-      this.resetSearch(query);
+      this.setSearch(query);
       this.$nextTick(() => this.loaderState.reset());
     }
   },

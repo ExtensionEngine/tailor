@@ -53,12 +53,6 @@ action(function fetch() {
   });
 });
 
-action(function resetSearch(query = '') {
-  this.commit('setSearch', query);
-  this.commit('resetPagination');
-  this.commit('reset', {});
-});
-
 mutation(function resetPagination() {
   this.state.$internals.pagination = PAGINATION_DEFAULTS;
 });
@@ -68,8 +62,10 @@ mutation(function setPagination(changes) {
   $internals.pagination = { ...$internals.pagination, ...changes };
 });
 
-mutation(function setSearch(search) {
-  this.state.search = search;
+mutation(function setSearch(query = '') {
+  this.state.items = {};
+  this.state.$internals.pagination = PAGINATION_DEFAULTS;
+  this.state.search = query;
 });
 
 mutation(function allCoursesFetched(allFetched) {
