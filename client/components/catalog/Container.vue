@@ -15,8 +15,8 @@
         :course="course">
       </course-card>
       <infinite-loading @infinite="fetchCourses" ref="infiniteLoading">
-        <span slot="spinner" class="col-lg-12 spinner-wrapper">
-          <spinner></spinner>
+        <span slot="spinner" class="col-lg-12 progress-wrapper">
+          <circular-progress></circular-progress>
         </span>
         <span slot="no-results">No courses found.</span>
         <span slot="no-more"></span>
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import CircularProgress from 'components/common/CircularProgress';
 import CourseCard from './Card';
 import CreateCourse from './Create';
 import get from 'lodash/get';
@@ -33,7 +34,6 @@ import InfiniteLoading from 'vue-infinite-loading';
 import { mapActions, mapGetters } from 'vuex-module';
 import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
-import Spinner from 'components/common/Loader';
 import Search from './Search';
 
 export default {
@@ -69,7 +69,7 @@ export default {
     CreateCourse,
     InfiniteLoading,
     Search,
-    Spinner
+    CircularProgress
   }
 };
 </script>
@@ -84,5 +84,5 @@ export default {
   }
 }
 
-.spinner-wrapper { margin-top: 50px; }
+.progress-wrapper { margin-top: 50px; }
 </style>
