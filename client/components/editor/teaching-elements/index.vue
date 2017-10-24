@@ -33,6 +33,7 @@ import TeEmbed from './Embed';
 import TeHtml from './Html';
 import TeImage from './Image';
 import TeModal from './Modal';
+import TePdf from './Pdf';
 import TeTable from './Table';
 import TeVideo from './Video';
 import throttle from 'lodash/throttle';
@@ -47,6 +48,7 @@ const TE_TYPES = {
   ACCORDION: 'te-accordion',
   CAROUSEL: 'te-carousel',
   MODAL: 'te-modal',
+  PDF: 'te-pdf',
   TABLE: 'te-table'
 };
 
@@ -112,6 +114,7 @@ export default {
     TeHtml,
     TeImage,
     TeModal,
+    TePdf,
     TeTable,
     TeVideo
   }
