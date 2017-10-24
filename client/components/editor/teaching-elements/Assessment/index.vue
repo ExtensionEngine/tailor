@@ -83,8 +83,8 @@ import multiselect from '../../../common/Select';
 import NumericalResponse from './NumericalResponse';
 import { OUTLINE_LEVELS } from 'shared/activities';
 import pluralize from 'pluralize';
-import set from 'lodash/set';
 import Question from './Question';
+import set from 'lodash/set';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
@@ -179,8 +179,9 @@ export default {
         .then(() => {
           let data = this.summative ? this.element : this.element.data;
           data = cloneDeep(data);
-          if (this.objective) set(data, 'data._refs.objectiveId', this.objective.id);
-          if (!this.objective) unset(data, 'data._refs.objectiveId');
+          const { objective } = this;
+          const path = '_refs.objectiveId';
+          objective ? set(data, path, objective.id) : unset(data, path);
           this.$emit('save', data);
           this.isEditing = false;
           this.setAlert(saveAlert);
