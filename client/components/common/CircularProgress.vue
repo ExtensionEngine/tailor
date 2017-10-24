@@ -48,6 +48,7 @@ export default {
   50% {
     stroke-dasharray: 100,200;
     stroke-dashoffset: -15px;
+    stroke: #337ab7;
   }
   100% {
     stroke-dasharray: 100,200;
