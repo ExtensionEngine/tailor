@@ -1,7 +1,7 @@
 import VuexCollection from '../helpers/collection.js';
 
 const { state, getter, action, mutation, build } = new VuexCollection('courses', '/courses');
-const PAGINATION_DEFAULTS = { offset: 0, limit: 9 };
+const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
 
 state({
   search: '',
