@@ -10,7 +10,6 @@ import CourseSettings from './components/course/settings';
 import Editor from './components/editor';
 import ForgotPassword from './components/auth/ForgotPassword';
 import General from './components/course/settings/General';
-import Integrations from './components/course/settings/Integrations';
 import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
@@ -44,10 +43,6 @@ let router = new Router({
         path: 'users',
         name: 'user-management',
         component: UserManagement
-      }, {
-        path: 'integrations',
-        name: 'integrations',
-        component: Integrations
       }]
     }, {
       path: 'revisions',

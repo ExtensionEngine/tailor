@@ -1,29 +1,37 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-3">
-        <div class="list-group">
-          <router-link
-            :to="{ name: 'course-info' }"
+      <div class="col-md-4 col-lg-3">
+        <ul class="list-group">
+          <li
             :class="{ selected: $route.name === 'course-info' }"
+            @click="routeTo('course-info')"
             class="list-group-item">
             <span class="mdi mdi-wrench"></span>General
-          </router-link>
-          <router-link
-            :to="{ name: 'user-management' }"
+          </li>
+          <li
             :class="{ selected: $route.name === 'user-management' }"
+            @click="routeTo('user-management')"
             class="list-group-item">
             <span class="mdi mdi-account"></span>User Management
-          </router-link>
-          <router-link
-            :to="{ name: 'integrations' }"
-            :class="{ selected: $route.name === 'integrations' }"
+          </li>
+          <li
+            @click="downloadContentInventory"
             class="list-group-item">
-            <span class="mdi mdi-asterisk"></span>Integrations
-          </router-link>
+            <span class="mdi mdi-download"></span>Knewton Inventory
+          </li>
+        </ul>
+        <div class="actions">
+          <button
+            @click.stop="removeCourse"
+            type="button"
+            class="btn btn-danger btn-block btn-delete">
+            <span class="mdi mdi-delete"></span>
+            Remove course
+          </button>
         </div>
       </div>
-      <div class="col-md-9">
+      <div class="col-md-8 col-lg-9">
         <router-view></router-view>
       </div>
     </div>
@@ -31,10 +39,39 @@
 </template>
 
 <script>
+import api from '../../../api/course';
+import EventBus from 'EventBus';
 import General from './General';
+import JSZip from 'jszip';
+import { mapGetters } from 'vuex-module';
+import saveAs from 'save-as';
 import UserManagement from './UserManagement';
 
+const appChannel = EventBus.channel('app');
+
 export default {
+  computed: {
+    ...mapGetters(['isAdmin']),
+    ...mapGetters(['course'], 'course')
+  },
+  methods: {
+    downloadContentInventory() {
+      api.getContentInventory(this.$route.params.courseId)
+        .then(response => JSZip.loadAsync(response))
+        .then(zip => zip.generateAsync({ type: 'blob' }))
+        .then(file => saveAs(file, 'Content Inventory.xlsx'));
+    },
+    removeCourse() {
+      appChannel.emit('showConfirmationModal', {
+        type: 'course',
+        item: this.course,
+        action: () => this.remove(this.course) && this.$router.push('/')
+      });
+    },
+    routeTo(name) {
+      this.$router.push({ name });
+    }
+  },
   components: {
     General,
     UserManagement
@@ -48,21 +85,21 @@ export default {
 }
 
 .list-group {
-  padding: 10px 10px 359px;
+  padding: 10px 10px 300px;
   line-height: 32px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
 
-  .list-group-item {
-    margin-bottom: 2px;
-    padding: 10px;
-    text-align: left;
-    border: 0;
-    cursor: pointer;
+.list-group-item {
+  margin-bottom: 2px;
+  padding: 10px;
+  text-align: left;
+  border: 0;
+  cursor: pointer;
 
-    &:hover, &.selected {
-      background-color: #f9f9f9;
-    }
+  &:hover, &.selected {
+    background-color: #efefef;
   }
 }
 
@@ -70,5 +107,22 @@ export default {
   margin-right: 13%;
   margin-left: 5%;
   font-size: 20px;
+}
+
+.actions {
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  bottom: 20px;
+
+  button {
+    width: 80%;
+    margin: 30px 10%;
+
+    .mdi {
+      margin-right: 5px;
+      margin-left: 0;
+    }
+  }
 }
 </style>

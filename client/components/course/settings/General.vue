@@ -49,16 +49,6 @@
         </span>
       </span>
     </div>
-    <div class="course-actions">
-      <button
-        v-if="showRemoveButton"
-        @click.stop="removeCourse"
-        type="button"
-        class="btn btn-danger">
-        <span class="mdi mdi-delete"></span>
-        remove course
-      </button>
-    </div>
   </div>
 </template>
 
@@ -143,11 +133,6 @@ export default {
   text-align: left;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   background-color: white;
-}
-
-.course-actions {
-  margin: 15px 0;
-  text-align: center;
 }
 
 h2 {
