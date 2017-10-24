@@ -21,7 +21,10 @@ function index(req, res) {
 function resolve(req, res) {
   const { courseId, revId } = req.params;
   return Revision
-    .findOne({ where: { courseId, id: revId } })
+    .findOne({
+      where: { courseId, id: revId },
+      include: [{ model: User, attributes: ['id', 'email'] }]
+    })
     .then(revision => {
       if (revision.entity !== 'TEACHING_ELEMENT') return revision;
       return resolveStatics(revision.state).then(state => {
