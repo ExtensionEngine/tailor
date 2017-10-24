@@ -8,8 +8,12 @@
         <create-course class="pull-right"></create-course>
       </div>
     </div>
-    <div class="row courses">
-      <course-list :courses="courses"></course-list>
+    <div class="row course-list">
+      <course-card
+        v-for="course in orderedCourses"
+        :key="course._cid"
+        :course="course">
+      </course-card>
       <infinite-loading @infinite="fetchCourses" ref="infiniteLoading">
         <span slot="spinner" class="col-lg-12 spinner-wrapper">
           <spinner></spinner>
@@ -22,11 +26,12 @@
 </template>
 
 <script>
-import CourseList from './List';
+import CourseCard from './Card';
 import CreateCourse from './Create';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import { mapActions, mapGetters } from 'vuex-module';
+import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
 import Spinner from 'components/common/Loader';
 import Search from './Search';
@@ -37,12 +42,15 @@ export default {
     ...mapGetters(['hasMoreResults'], 'courses'),
     loaderState() {
       return get(this.$refs, 'infiniteLoading.stateChanger', {});
+    },
+    orderedCourses() {
+      return orderBy(this.courses, 'updatedAt', 'desc');
     }
   },
   methods: {
     ...mapActions(['fetch', 'resetSearch'], 'courses'),
     fetchCourses() {
-      return Promise.join(this.fetch(), Promise.delay(400))
+      return Promise.join(this.fetch(), Promise.delay(10000))
         .then(() => {
           this.loaderState.loaded();
           if (!this.hasMoreResults) this.loaderState.complete();
@@ -57,8 +65,8 @@ export default {
     this.search();
   },
   components: {
+    CourseCard,
     CreateCourse,
-    CourseList,
     InfiniteLoading,
     Search,
     Spinner
@@ -76,8 +84,5 @@ export default {
   }
 }
 
-.spinner-wrapper,
-.well-a {
-  margin-top: 50px;
-}
+.spinner-wrapper { margin-top: 50px; }
 </style>
