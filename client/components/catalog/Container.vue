@@ -16,7 +16,7 @@
       </course-card>
       <infinite-loading @infinite="fetchCourses" ref="infiniteLoading">
         <span slot="spinner" class="col-lg-12 progress-wrapper">
-          <circular-progress></circular-progress>
+          <circular-progress/>
         </span>
         <span slot="no-results">No courses found.</span>
         <span slot="no-more"></span>
@@ -50,11 +50,10 @@ export default {
   methods: {
     ...mapActions(['fetch', 'resetSearch'], 'courses'),
     fetchCourses() {
-      return Promise.join(this.fetch(), Promise.delay(10000))
-        .then(() => {
-          this.loaderState.loaded();
-          if (!this.hasMoreResults) this.loaderState.complete();
-        });
+      return Promise.join(this.fetch(), Promise.delay(600)).then(() => {
+        this.loaderState.loaded();
+        if (!this.hasMoreResults) this.loaderState.complete();
+      });
     },
     search(query) {
       this.resetSearch(query);

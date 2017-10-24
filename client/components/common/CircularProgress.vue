@@ -29,10 +29,10 @@ $duration: 1.45s;
 .path {
   fill: none;
   stroke: #888;
-  stroke-width: 6;
-  stroke-linecap: round;
   stroke-dasharray: $offset;
   stroke-dashoffset: 0;
+  stroke-linecap: round;
+  stroke-width: 6;
   transform-origin: center;
   animation: dash $duration ease-in-out infinite;
 }
@@ -45,16 +45,12 @@ $duration: 1.45s;
 @keyframes dash {
   0% { stroke-dashoffset: $offset; }
   50% {
-    stroke-dashoffset: $offset/4;
     transform: rotate(135deg);
+    stroke-dashoffset: $offset/4;
   }
   100% {
-    stroke-dashoffset: $offset;
     transform: rotate(450deg);
+    stroke-dashoffset: $offset;
   }
 }
 </style>
-
-
-
-
