@@ -26,10 +26,10 @@
               <span class="mdi mdi-open-in-new"></span>
             </a>
           </div>
-          
+
         </div>
 
-        <div class="error">
+        <div v-show="showError" class="error">
           <div class="message">
             <span class="icon mdi mdi-alert"></span>
             <p>Error loading PDF file!</p>
@@ -62,6 +62,17 @@ export default {
     },
     showPlaceholder() {
       return !this.source;
+    }
+  },
+  watch: {
+    source: {
+      immediate: true,
+      handler() {
+        this.showError = false;
+        setTimeout(() => {
+          this.showError = !!this.source;
+        }, 1500);
+      }
     }
   }
 };
@@ -154,7 +165,7 @@ export default {
 .new-window {
   background: white;
   width: 100%;
-  
+
   a {
     font-size: 22px;
     color: #444;
