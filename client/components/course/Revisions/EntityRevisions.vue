@@ -56,7 +56,7 @@ export default {
   props: ['revision', 'isDetached'],
   data() {
     return {
-      revisions: {},
+      revisions: [],
       selectedRevision: {},
       showLoader: true
     };
@@ -76,8 +76,7 @@ export default {
     },
     getRevisions() {
       const params = { entityId: this.revision.state.id };
-      const getRevisions = axios.get(this.baseUrl, { params });
-      return Promise.join(getRevisions, Promise.delay(700));
+      return axios.get(this.baseUrl, { params });
     },
     previewRevision(revision) {
       if (revision.isResolving) return;
@@ -88,18 +87,17 @@ export default {
       const index = findIndex(this.revisions, { id: revision.id });
       this.revisions.splice(index, 1, { ...revision, isResolving: true });
       const resolveStatics = axios.get(`${this.baseUrl}${revision.id}`);
-      Promise.join(resolveStatics, Promise.delay(1000))
-        .then(([response]) => {
-          const revision = { ...response.data, isResolving: false, resolved: true };
-          this.revisions.splice(index, 1, revision);
-          this.selectedRevision = revision;
-          this.showLoader = false;
-        });
+      Promise.join(resolveStatics, Promise.delay(1000)).then(([response]) => {
+        const revision = { ...response.data, isResolving: false, resolved: true };
+        this.revisions.splice(index, 1, revision);
+        this.selectedRevision = revision;
+        this.showLoader = false;
+      });
     },
     rollback(revision) {
       this.save(revision.state)
         .then(this.getRevisions)
-        .then(([response]) => {
+        .then(response => {
           this.$refs.revisions.scrollTop = 0;
           const revision = response.data[0];
           this.revisions.splice(0, 0, revision);
@@ -108,7 +106,7 @@ export default {
     }
   },
   mounted() {
-    this.getRevisions().then(([response]) => {
+    Promise.join(this.getRevisions(), Promise.delay(700)).then(([response]) => {
       this.revisions = response.data;
       this.previewRevision(this.revision);
     });
