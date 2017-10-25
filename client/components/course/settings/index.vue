@@ -23,7 +23,7 @@
         </ul>
         <div class="actions">
           <button
-            @click.stop="removeCourse"
+            @click.stop="showDeleteConfirmation"
             type="button"
             class="btn btn-danger btn-block btn-delete">
             <span class="mdi mdi-delete"></span>
@@ -43,7 +43,7 @@ import api from '../../../api/course';
 import EventBus from 'EventBus';
 import General from './General';
 import JSZip from 'jszip';
-import { mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import saveAs from 'save-as';
 import UserManagement from './UserManagement';
 
@@ -55,17 +55,18 @@ export default {
     ...mapGetters(['course'], 'course')
   },
   methods: {
+    ...mapActions({ removeCourse: 'remove' }, 'courses'),
     downloadContentInventory() {
       api.getContentInventory(this.$route.params.courseId)
         .then(response => JSZip.loadAsync(response))
         .then(zip => zip.generateAsync({ type: 'blob' }))
         .then(file => saveAs(file, 'Content Inventory.xlsx'));
     },
-    removeCourse() {
+    showDeleteConfirmation() {
       appChannel.emit('showConfirmationModal', {
         type: 'course',
         item: this.course,
-        action: () => this.remove(this.course) && this.$router.push('/')
+        action: () => this.removeCourse(this.course) && this.$router.push('/')
       });
     },
     routeTo(name) {
