@@ -45,7 +45,7 @@ export default {
   overflow-y: overlay;
 }
 
-.outline /deep/ {
-  > *:last-child { margin-bottom: 120px; }
+.outline /deep/ > :last-child {
+  margin-bottom: 120px;
 }
 </style>
