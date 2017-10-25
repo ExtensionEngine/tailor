@@ -17,7 +17,7 @@
       </course-card>
       <infinite-loading @infinite="loadMore" ref="infiniteLoading">
         <div slot="spinner" class="spinner"><circular-progress/></div>
-        <span slot="no-results">No courses found.</span>
+        <div slot="no-results" class="no-results">No courses found.</div>
         <span slot="no-more"></span>
       </infinite-loading>
     </div>
@@ -30,6 +30,7 @@ import CourseCard from './Card';
 import CreateCourse from './Create';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
+import isEmpty from 'lodash/isEmpty';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
@@ -54,7 +55,7 @@ export default {
     ...mapMutations(['setSearch'], 'courses'),
     loadMore() {
       return this.fetch().then(() => {
-        this.loaderState.loaded();
+        if (!isEmpty(this.courses)) this.loaderState.loaded();
         if (!this.hasMoreResults) this.loaderState.complete();
       });
     },
@@ -63,9 +64,9 @@ export default {
       this.loaderState.complete();
       return Promise.join(this.fetch({ reset: true }), Promise.delay(1000))
         .then(() => {
-          if (!this.hasMoreResults) return;
           this.loaderState.reset();
-          this.loaderState.loaded();
+          if (!isEmpty(this.courses)) this.loaderState.loaded();
+          if (!this.hasMoreResults) this.loaderState.complete();
         });
     },
     search(query) {
@@ -100,7 +101,7 @@ export default {
   margin-top: 48px;
 }
 
-.spinner {
+.spinner, .no-results {
   margin-top: 36px;
 }
 </style>
