@@ -36,7 +36,8 @@ getter(function hasMoreResults() {
   return !this.state.$internals.allCoursesFetched;
 });
 
-action(function fetch() {
+action(function fetch({ reset = false } = {}) {
+  const mutation = reset ? 'reset' : 'fetch';
   const params = this.getters.courseQueryParams;
   return this.api.get('', params).then(response => {
     const { data: courses } = response.data;
@@ -49,7 +50,7 @@ action(function fetch() {
 
     this.commit('setPagination', { offset: params.offset + params.limit });
     this.commit('allCoursesFetched', courses.length < params.limit);
-    this.commit('fetch', result);
+    this.commit(mutation, result);
   });
 });
 
@@ -63,7 +64,6 @@ mutation(function setPagination(changes) {
 });
 
 mutation(function setSearch(query = '') {
-  this.state.items = {};
   this.state.$internals.pagination = PAGINATION_DEFAULTS;
   this.state.search = query;
 });

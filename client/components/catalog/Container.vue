@@ -8,13 +8,16 @@
         <create-course class="pull-right"></create-course>
       </div>
     </div>
-    <div class="row course-list">
+    <span v-show="searching" class="col-lg-12 progress-wrapper">
+      <circular-progress/>
+    </span>
+    <div v-show="!searching" class="row course-list">
       <course-card
         v-for="course in orderedCourses"
         :key="course._cid"
         :course="course">
       </course-card>
-      <infinite-loading @infinite="fetchCourses" ref="infiniteLoading">
+      <infinite-loading @infinite="fetchNext" ref="infiniteLoading">
         <span slot="spinner" class="col-lg-12 progress-wrapper">
           <circular-progress/>
         </span>
@@ -37,6 +40,9 @@ import Promise from 'bluebird';
 import Search from './Search';
 
 export default {
+  data() {
+    return { searching: false };
+  },
   computed: {
     ...mapGetters(['courses']),
     ...mapGetters(['hasMoreResults'], 'courses'),
@@ -50,26 +56,37 @@ export default {
   methods: {
     ...mapActions(['fetch'], 'courses'),
     ...mapMutations(['setSearch'], 'courses'),
-    fetchCourses() {
-      return Promise.join(this.fetch(), Promise.delay(600)).then(() => {
+    fetchNext() {
+      return this.fetch().then(() => {
         this.loaderState.loaded();
         if (!this.hasMoreResults) this.loaderState.complete();
       });
     },
+    fetchFirst(query) {
+      this.loaderState.loaded();
+      this.loaderState.complete();
+      return Promise.join(this.fetch({ reset: true }), Promise.delay(1000))
+        .then(() => {
+          if (!this.hasMoreResults) return;
+          this.loaderState.reset();
+          this.loaderState.loaded();
+        });
+    },
     search(query) {
       this.setSearch(query);
-      this.$nextTick(() => this.loaderState.reset());
+      this.searching = true;
+      return this.fetchFirst().then(() => (this.searching = false));
     }
   },
   mounted() {
     this.search();
   },
   components: {
+    CircularProgress,
     CourseCard,
     CreateCourse,
     InfiniteLoading,
-    Search,
-    CircularProgress
+    Search
   }
 };
 </script>
