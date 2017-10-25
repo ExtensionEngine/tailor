@@ -64,7 +64,8 @@ export default {
         'ACCORDION',
         'CAROUSEL',
         'MODAL',
-        'TABLE'
+        'TABLE',
+        'PDF'
       ]
     };
   },

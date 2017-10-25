@@ -42,7 +42,8 @@ const TE_TYPES = [
   { type: 'ACCORDION', label: 'Accordion', icon: 'mdi-view-sequential' },
   { type: 'CAROUSEL', label: 'Carousel', icon: 'mdi-view-carousel' },
   { type: 'MODAL', label: 'Modal', icon: 'mdi-window-maximize' },
-  { type: 'TABLE', label: 'Table', icon: 'mdi-table' }
+  { type: 'TABLE', label: 'Table', icon: 'mdi-table' },
+  { type: 'PDF', label: 'PDF', icon: 'mdi-file-pdf-box' }
 ];
 
 const ELEMENTS_PER_ROW = 6;
