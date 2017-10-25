@@ -1,5 +1,5 @@
 <template>
-  <div class="catalog">
+  <div class="catalog" infinite-wrapper>
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <search @change="search"></search>
@@ -96,7 +96,11 @@ export default {
   }
 }
 
-.search-spinner, .spinner {
+.search-spinner {
+  margin-top: 48px;
+}
+
+.spinner {
   margin-top: 36px;
 }
 </style>
