@@ -8,9 +8,7 @@
         <create-course class="pull-right"></create-course>
       </div>
     </div>
-    <span v-show="searching" class="col-lg-12 progress-wrapper">
-      <circular-progress/>
-    </span>
+    <div v-show="searching" class="search-spinner"><circular-progress/></div>
     <div v-show="!searching" class="row course-list">
       <course-card
         v-for="course in orderedCourses"
@@ -18,9 +16,7 @@
         :course="course">
       </course-card>
       <infinite-loading @infinite="fetchNext" ref="infiniteLoading">
-        <span slot="spinner" class="col-lg-12 progress-wrapper">
-          <circular-progress/>
-        </span>
+        <div slot="spinner" class="spinner"><circular-progress/></div>
         <span slot="no-results">No courses found.</span>
         <span slot="no-more"></span>
       </infinite-loading>
@@ -93,7 +89,6 @@ export default {
 
 <style lang="scss" scoped>
 .catalog {
-  min-height: 101%;
   padding: 20px 100px 100px;
 
   @media (min-width: 1700px) {
@@ -101,5 +96,7 @@ export default {
   }
 }
 
-.progress-wrapper { margin-top: 50px; }
+.search-spinner, .spinner {
+  margin-top: 36px;
+}
 </style>
