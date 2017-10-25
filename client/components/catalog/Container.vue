@@ -15,7 +15,7 @@
         :key="course._cid"
         :course="course">
       </course-card>
-      <infinite-loading @infinite="fetchNext" ref="infiniteLoading">
+      <infinite-loading @infinite="loadMore" ref="infiniteLoading">
         <div slot="spinner" class="spinner"><circular-progress/></div>
         <span slot="no-results">No courses found.</span>
         <span slot="no-more"></span>
@@ -52,13 +52,13 @@ export default {
   methods: {
     ...mapActions(['fetch'], 'courses'),
     ...mapMutations(['setSearch'], 'courses'),
-    fetchNext() {
+    loadMore() {
       return this.fetch().then(() => {
         this.loaderState.loaded();
         if (!this.hasMoreResults) this.loaderState.complete();
       });
     },
-    fetchFirst(query) {
+    load(query) {
       this.loaderState.loaded();
       this.loaderState.complete();
       return Promise.join(this.fetch({ reset: true }), Promise.delay(1000))
@@ -71,7 +71,7 @@ export default {
     search(query) {
       this.setSearch(query);
       this.searching = true;
-      return this.fetchFirst().then(() => (this.searching = false));
+      return this.load().then(() => (this.searching = false));
     }
   },
   mounted() {
