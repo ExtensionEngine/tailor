@@ -13,34 +13,37 @@
       <div v-if="!isFocused" class="overlay">
         <div class="message">Click to preview</div>
       </div>
-      <div v-if="showError" class="error">
-        <div class="message">
-          <span class="icon mdi mdi-alert"></span>
-          <p>Error loading PDF file!</p>
+
+      <div id="pdfcontainer">
+        <div id="pdf">
+          <object
+            :data="source.src"
+            :type="source.type"
+            id="doc">
+          </object>
+          <div class="new-window">
+            <a :href="source.src" target="_blank">
+              <span class="mdi mdi-open-in-new"></span>
+            </a>
+          </div>
+          
         </div>
+
+        <div class="error">
+          <div class="message">
+            <span class="icon mdi mdi-alert"></span>
+            <p>Error loading PDF file!</p>
+          </div>
+        </div>
+
       </div>
-      <div class="pdf">
-        <object
-          :data="source.src"
-          :type="source.type"
-          @error="onError"
-          @load="onLoad"
-          id="doc">
-        </object>
-        <a :href="source.src" class="new-window" target="_blank">
-          <span class="mdi mdi-open-in-new"></span>
-        </a>
-      </div>
+
     </div>
   </div>
 </template>
 
 <script>
 import get from 'lodash/get';
-const isFirefox = typeof navigator !== 'undefined' && /^(?!.*Seamonkey)(?=.*Firefox).*/i.test(navigator.userAgent);
-// const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-// const isIe = /MSIE (\d+\.\d+);/.test(navigator.userAgent) || navigator.userAgent.indexOf('Trident/') > -1;
-// const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 export default {
   name: 'te-pdf',
@@ -60,37 +63,8 @@ export default {
     showPlaceholder() {
       return !this.source;
     }
-  },
-  mounted() {
-    this.setupLoader(this.source);
-  },
-  methods: {
-    onError() {
-      this.showError = true;
-    },
-    onLoad() {
-      this.showError = false;
-    },
-    setupLoader({ src } = {}) {
-      if (this.loader) this.loader.parentNode.removeChild(this.loader);
-      if (!src) return;
-      if (isFirefox) return;
-      const loader = document.createElement('link');
-      loader.rel = 'stylesheet';
-      loader.href = src;
-      loader.onerror = this.onError;
-      loader.onload = this.onLoad;
-      this.loader = loader;
-      this.$el.appendChild(loader);
-    }
-  },
-  watch: {
-    source(val) {
-      this.setupLoader(val);
-    }
   }
 };
-
 </script>
 
 <style lang="scss" scoped>
@@ -131,7 +105,8 @@ export default {
 
 .error {
   position: absolute;
-  z-index: 98;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,.9);
@@ -153,20 +128,40 @@ export default {
   margin: 0;
 }
 
-.pdf {
+#pdfcontainer {
+  width: 100%;
+  height: 360px;
+  position: relative;
+}
+
+#pdf {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: none;
+  z-index: 10;
+  padding-bottom: 30px;
+
   #doc {
     width: 100%;
-    height: 360px;
+    height: 100%;
     display: block;
   }
 }
 
 .new-window {
-  font-size: 22px;
-  color: #444;
+  background: white;
+  width: 100%;
+  
+  a {
+    font-size: 22px;
+    color: #444;
 
-  &:hover {
-    color: #42b983;
+    &:hover {
+      color: #42b983;
+    }
   }
 }
 
