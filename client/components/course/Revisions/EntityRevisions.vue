@@ -11,28 +11,30 @@
         </teaching-element>
         <div>
           <div class="header">Changes</div>
-          <ul>
-            <li
-              v-for="(revision, index) in revisions"
-              :key="revision.id"
-              :class="{ selected: revision.id === selectedRevision.id }"
-              @click="previewRevision(revision)"
-              class="revision">
-              <div class="description">
-                <div>{{ formatDate(revision) }}</div>
-                <div>{{ revision.user.email }}</div>
-              </div>
-              <div
-                v-show="!isDetached && index > 0"
-                @click.stop="rollback(revision)"
-                class="rollback">
-                <span class="mdi mdi-loop"></span>
-              </div>
-              <div v-show="revision.isResolving">
-                <div class="progress-background"></div>
-                <div class="progress-indicator"></div>
-              </div>
-            </li>
+          <ul ref="revisions">
+            <transition-group name="fade-in">
+              <li
+                v-for="(revision, index) in revisions"
+                :key="revision.id"
+                :class="{ selected: revision.id === selectedRevision.id }"
+                @click="previewRevision(revision)"
+                class="revision">
+                <div class="description">
+                  <div>{{ formatDate(revision) }}</div>
+                  <div>{{ revision.user.email }}</div>
+                </div>
+                <div
+                  v-show="!isDetached && index > 0"
+                  @click.stop="rollback(revision)"
+                  class="rollback">
+                  <span class="mdi mdi-loop"></span>
+                </div>
+                <div v-show="revision.isResolving">
+                  <div class="progress-background"></div>
+                  <div class="progress-indicator"></div>
+                </div>
+              </li>
+            </transition-group>
           </ul>
         </div>
       </div>
@@ -97,7 +99,12 @@ export default {
     rollback(revision) {
       this.save(revision.state)
         .then(this.getRevisions)
-        .then(([response]) => this.revisions.splice(0, 0, response.data[0]));
+        .then(([response]) => {
+          this.$refs.revisions.scrollTop = 0;
+          const revision = response.data[0];
+          this.revisions.splice(0, 0, revision);
+          this.selectedRevision = revision;
+        });
     }
   },
   mounted() {
@@ -194,21 +201,30 @@ $revision-padding: 32px;
     }
   }
 
+  .fade-in-enter {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  .fade-in-enter-active {
+    transition: all 350ms cubic-bezier(0, 0.8, 0.32, 1.07);
+  }
+
   .progress-background, .progress-indicator {
     width: 100%;
-    height: 4px;
+    height: 2px;
     position: absolute;
     left: 0;
     bottom: 0;
-    background-color: #1e88e5;
+    background-color: #757575;
   }
 
   .progress-background {
-    opacity: 0.3;
+    opacity: 0.2;
   }
 
   .progress-indicator {
-    width: auto;
+    width: 80px;
     animation: indeterminate 2.2s infinite;
   }
 
@@ -217,6 +233,7 @@ $revision-padding: 32px;
       left: -90%;
       right: 100%;
     }
+
     100% {
       left: 100%;
       right: -35%;
