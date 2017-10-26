@@ -35,13 +35,6 @@ module.exports = (options, req) => ({
   html: {
     template: 'index.html'
   },
-  filename: {
-    js: '[name].[hash].js',
-    css: '[name].[hash].css',
-    images: 'assets/images/[name].[ext]',
-    fonts: 'assets/fonts/[name].[ext]',
-    chunk: '[id].chunk.js'
-  },
   webpack(config) {
     config.module.rules.push(...rules);
     return config;
