@@ -28,8 +28,7 @@ module.exports = {
     }],
     'sort-imports': ['error', {
       'ignoreCase': true,
-      'ignoreMemberSort': false,
-      'memberSyntaxSortOrder': null
+      'ignoreMemberSort': false
     }]
   }
 };
