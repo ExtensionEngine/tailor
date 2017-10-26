@@ -46,10 +46,13 @@
 import axios from 'client/api/request';
 import fecha from 'fecha';
 import findIndex from 'lodash/findIndex';
+import includes from 'lodash/includes';
 import Loader from 'components/common/Loader';
 import { mapActions } from 'vuex-module';
 import Promise from 'bluebird';
 import TeachingElement from 'components/editor/teaching-elements';
+
+const withoutStatics = ['HTML', 'VIDEO', 'EMBED', 'BREAK'];
 
 export default {
   name: 'entity-revisions',
@@ -80,8 +83,9 @@ export default {
     },
     previewRevision(revision) {
       if (revision.isResolving) return;
-      if (revision.resolved) {
+      if (revision.resolved || includes(withoutStatics, revision.state.type)) {
         this.selectedRevision = revision;
+        this.showLoader = false;
         return;
       }
       const index = findIndex(this.revisions, { id: revision.id });

@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import EntityRevisions from './EntityRevisions';
 import fecha from 'fecha';
 import find from 'lodash/find';
 import {
@@ -26,7 +27,6 @@ import {
 } from 'utils/revision';
 import { mapGetters, mapMutations } from 'vuex-module';
 import { OUTLINE_LEVELS } from 'shared/activities';
-import EntityRevisions from './EntityRevisions';
 
 export default {
   name: 'revision-item',
