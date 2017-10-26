@@ -48,11 +48,13 @@ module.exports = (options, req) => ({
   },
   extendWebpack(config) {
     config.resolve.alias.merge(aliases);
+    if (options.mode !== 'production') return;
     config.plugin('minimize').tap(args => [merge(...args, {
       compressor: { warnings: false, keep_fnames: true },
       mangle: { keep_fnames: true }
     })]);
   },
+  sourceMap: options.mode === 'development',
   generateStats: true,
   port: 8080,
   devServer: {
