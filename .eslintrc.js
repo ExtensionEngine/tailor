@@ -26,9 +26,9 @@ module.exports = {
       anonymous: 'always',
       named: 'never'
     }],
-    'sort-imports': ['error', {
-      'ignoreCase': true,
-      'ignoreMemberSort': false
-    }]
+    // 'sort-imports': ['error', {
+    //   'ignoreCase': true,
+    //   'ignoreMemberSort': false
+    // }]
   }
 };
