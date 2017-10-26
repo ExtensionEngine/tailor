@@ -13,9 +13,8 @@
       <div v-if="!isFocused" class="overlay">
         <div class="message">Click to preview</div>
       </div>
-
       <div id="pdfcontainer">
-        <div id="pdf">
+        <div v-if="showViewer" id="pdf">
           <object
             :data="source.src"
             :type="source.type"
@@ -26,31 +25,34 @@
               <span class="mdi mdi-open-in-new"></span>
             </a>
           </div>
-
         </div>
-
+        <img
+          v-if="safari"
+          v-show="false"
+          :src="source.src"
+          @error="showViewer = false">
         <div v-show="showError" class="error">
           <div class="message">
             <span class="icon mdi mdi-alert"></span>
             <p>Error loading PDF file!</p>
           </div>
         </div>
-
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
 import get from 'lodash/get';
+import isSafari from 'is-safari';
 
 export default {
   name: 'te-pdf',
   props: ['element', 'isFocused'],
   data() {
     return {
-      showError: false
+      showError: false,
+      showViewer: true
     };
   },
   computed: {
@@ -62,16 +64,18 @@ export default {
     },
     showPlaceholder() {
       return !this.source;
+    },
+    safari() {
+      return isSafari;
     }
   },
   watch: {
     source: {
       immediate: true,
       handler() {
+        this.showViewer = true;
         this.showError = false;
-        setTimeout(() => {
-          this.showError = !!this.source;
-        }, 1500);
+        setTimeout(() => (this.showError = true), 1500);
       }
     }
   }
