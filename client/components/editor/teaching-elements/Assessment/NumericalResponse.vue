@@ -124,10 +124,10 @@ export default {
 
 <style lang="scss" scoped>
 .form-group {
-  text-align: left;
-  margin: 0 auto;
-  padding: 25px 20px 15px 20px;
   width: 100%;
+  margin: 0 auto;
+  padding: 25px 20px 15px;
+  text-align: left;
   overflow: hidden;
 }
 
@@ -155,8 +155,8 @@ ul {
   .btn-remove {
     display: inline-block;
     height: 34px;
-    line-height: 34px;
     color: #888;
+    line-height: 34px;
     cursor: pointer;
 
     &:hover {

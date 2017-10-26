@@ -201,14 +201,14 @@ export default {
   margin: 40px 0;
 
   [class*="col-"] {
-    padding-left: 0;
     padding-right: 0;
+    padding-left: 0;
   }
 }
 
 .heading > span, .front, .mdi {
-  padding: 14px 5px;
   display: block;
+  padding: 14px 5px;
 }
 
 .heading {
@@ -252,8 +252,8 @@ export default {
   }
 
   &.flip {
-     transform: rotateX(180deg);
-   }
+    transform: rotateX(180deg);
+  }
 }
 
 .premise-view {
@@ -273,17 +273,17 @@ export default {
 }
 
 .mdi-plus {
-  font-size: 28px;
   display: inline;
+  font-size: 28px;
 }
 
 .destroy {
-  font-size: 15px
+  font-size: 15px;
 }
 
 .mdi-plus:hover, .mdi-close:hover {
-  cursor: pointer;
   color: #42b983;
+  cursor: pointer;
 }
 
 .error {

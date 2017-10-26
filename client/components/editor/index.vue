@@ -137,23 +137,22 @@ export default {
 
 <style lang="scss" scoped>
 .editor {
-  // Force scroll
   min-height: 101%;
 
   .breadcrumbs {
-    margin: 70px 0 10px 0;
+    margin: 70px 0 10px;
+    color: #555;
     font-family: Arial, sans-serif;
     font-size: 14px;
     line-height: 20px;
-    color: #555;
     text-align: left;
   }
 
   h2 {
-    margin: 20px 0 30px 0;
+    margin: 20px 0 30px;
+    color: #444;
     font-size: 20px;
     line-height: 30px;
-    color: #444;
     text-align: left;
 
     a {

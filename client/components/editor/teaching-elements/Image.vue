@@ -130,8 +130,8 @@ export default {
 
 <style lang="scss" scoped>
 .image-placeholder {
-  padding: 100px;
   margin-bottom: 0;
+  padding: 100px;
 
   .message {
     .heading {

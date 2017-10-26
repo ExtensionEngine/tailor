@@ -98,16 +98,15 @@ export default {
   opacity: 0;
   z-index: 1;
   overflow-y: auto;
-
   transition: opacity 300ms cubic-bezier(0.165, 0.84, 0.44, 1);
 
   .mdi {
-    font-size: 22px;
     color: #707070;
+    font-size: 22px;
 
     &:hover {
-      cursor: pointer;
       color: #444;
+      cursor: pointer;
     }
   }
 }

@@ -123,7 +123,7 @@ export default {
 <style lang="scss" scoped>
 .drag-handle {
   position: absolute;
-  top: 0px;
+  top: 0;
   left: -3px;
   z-index: 2;
   width: 26px;
@@ -138,7 +138,7 @@ export default {
 .hovered {
   .drag-handle {
     opacity: 1;
-    transition: opacity .6s ease-in-out;
+    transition: opacity 0.6s ease-in-out;
     cursor: pointer;
   }
 }
@@ -149,7 +149,7 @@ export default {
 
 .teaching-element {
   position: relative;
-  padding: 10px 20px 10px 20px;
+  padding: 10px 20px;
   border: 1px dotted #ccc;
 }
 

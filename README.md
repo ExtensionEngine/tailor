@@ -3,8 +3,8 @@
 Adaptive course authoring platform.
 
 ## :blue_book: Dependencies
-* Node.js (>= 7.0)
-* npm (>= 4.0)
+* Node.js (>= 8.8.0)
+* npm (>= 5.4.2)
 * PostgreSQL (>= 9.6)
 
 ## :coffee: Installation

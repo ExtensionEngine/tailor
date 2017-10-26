@@ -71,8 +71,8 @@ export default {
 
   .btn-fab {
     position: absolute;
-    left: 30px;
     bottom: -22px;
+    left: 30px;
     padding: 6px;
     color: #fff;
     font-size: 23px;

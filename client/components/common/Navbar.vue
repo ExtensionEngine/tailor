@@ -17,7 +17,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             Welcome {{ user.email }}
-            <span class="fa fa-caret-down"></span>
+            <span class="icon mdi mdi-menu-down"></span>
           </a>
           <ul class="dropdown-menu">
             <li><a href="#" @click="logout">Log out</a></li>
@@ -45,13 +45,21 @@ export default {
 .navbar {
   background-color: white;
 
-  .fa {
+  .dropdown-toggle .icon {
     padding: 0 5px;
+
+    &::before {
+      position: relative;
+      top: -2px;
+      font-size: 24px;
+      line-height: 24px;
+      vertical-align: middle;
+    }
   }
 
   .navbar-brand {
     width: 195px;
-    padding: 10px 20px 0 20px;
+    padding: 10px 20px 0;
 
     img {
       float: left;
@@ -61,8 +69,8 @@ export default {
 
     span {
       display: inline-block;
-      line-height: 32px;
       font-size: 18px;
+      line-height: 32px;
     }
   }
 
@@ -86,6 +94,7 @@ export default {
     @media (max-width: 1200px) {
       width: 40%;
     }
+
     @media (max-width: 1000px) {
       width: 25%;
     }

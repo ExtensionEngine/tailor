@@ -94,35 +94,35 @@ export default {
 
 <style lang="scss" scoped>
 h2 {
-  margin: 50px 0 20px 0;
+  margin: 50px 0 20px;
   padding: 0;
-  font-size: 18px;
   color: #444;
+  font-size: 18px;
   text-align: left;
 }
 
 .introduction {
   width: 100%;
   min-height: 245px;
-  margin: 25px 0px;
+  margin: 25px 0;
   padding: 20px 40px;
   background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
 .actions {
   width: 100%;
   min-height: 36px;
-  font-size: 22px;
   color: #707070;
+  font-size: 22px;
 
   > span {
     padding: 0 10px;
   }
 
   > span:hover {
-    cursor: pointer;
     color: #444;
+    cursor: pointer;
   }
 }
 </style>

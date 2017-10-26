@@ -12,7 +12,7 @@ export default {
 
 <style lang="scss" scoped>
 .btn {
-  margin: 30px 0 0 0;
+  margin: 30px 0 0;
   padding: 10px 15px;
   font-size: 16px;
   line-height: 16px;

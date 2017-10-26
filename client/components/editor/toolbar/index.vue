@@ -8,7 +8,7 @@
       </component>
       <div class="delete-element">
         <span @click="requestDeleteConfirmation" class="btn btn-fab btn-danger">
-          <span class="fa fa-trash"></span>
+          <span class="mdi mdi-delete"></span>
         </span>
       </div>
     </div>
@@ -117,5 +117,11 @@ export default {
   z-index: 999;
   right: 0;
   transform: translate(-90%, -55%);
+
+  .btn {
+    font-size: 26px;
+    line-height: 48px;
+    vertical-align: middle;
+  }
 }
 </style>

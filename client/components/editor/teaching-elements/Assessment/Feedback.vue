@@ -66,7 +66,7 @@ export default {
 .feedback {
   width: 100%;
   margin: 0 auto;
-  padding: 30px 20px 15px 20px;
+  padding: 30px 20px 15px;
   text-align: left;
 }
 
@@ -102,11 +102,11 @@ li {
 }
 
 .fade-enter-active {
-  transition: opacity .5s
+  transition: opacity 0.5s;
 }
 
 .fade-enter {
-  opacity: 0
+  opacity: 0;
 }
 
 .fade-leave, .fade-leave-active, .fade-leave-to {

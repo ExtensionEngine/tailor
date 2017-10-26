@@ -83,10 +83,10 @@ export default {
 
 <style lang="scss" scoped>
 .revision {
-  width: 100%;
-  height: 72px;
   display: flex;
   align-items: center;
+  width: 100%;
+  height: 72px;
   padding: 0 16px;
 
   .acronym {
@@ -111,16 +111,16 @@ export default {
     }
 
     .name {
-      font-size: 14px;
       color: #808080;
+      font-size: 14px;
     }
   }
 
   .date {
     width: 128px;
+    color: #808080;
     text-align: right;
     font-size: 14px;
-    color: #808080;
   }
 }
 

@@ -57,11 +57,11 @@ export default {
 
 .options {
   padding-top: 16px;
-  
+
   a {
     display: inline-block;
-    line-height: 14px;
     font-size: 14px;
+    line-height: 14px;
     vertical-align: bottom;
     cursor: pointer;
   }

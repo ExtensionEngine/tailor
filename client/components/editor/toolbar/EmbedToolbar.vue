@@ -126,8 +126,8 @@ export default {
 
     .help-block {
       display: inline-block;
-      padding-left: 10px;
       margin: 0;
+      padding-left: 10px;
     }
 
     .mdi {

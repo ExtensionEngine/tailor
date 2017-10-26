@@ -106,8 +106,8 @@ export default {
   }
 
   .quill-options {
-    padding-top: 13px;
     height: 100%;
+    padding-top: 13px;
   }
 
   .quill-group {

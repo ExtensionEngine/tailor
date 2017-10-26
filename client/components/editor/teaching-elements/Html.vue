@@ -100,7 +100,7 @@ export default {
     border: none !important;
   }
 
-  .ql-editor.ql-blank:before {
+  .ql-editor.ql-blank::before {
     width: 100%;
   }
 }

@@ -105,16 +105,16 @@ export default {
   }
 
   .content {
-    line-height: 24px;
     color: #333;
+    line-height: 24px;
 
     pre {
       height: 100%;
-      padding: 0 4px 8px 0;
       margin: 0;
-      border: none;
+      padding: 0 4px 8px 0;
       font: inherit;
       background: inherit;
+      border: none;
       word-break: break-all;
       word-wrap: break-word;
       white-space: pre-wrap;

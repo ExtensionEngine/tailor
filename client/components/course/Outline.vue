@@ -40,7 +40,12 @@ export default {
   width: 100%;
   height: 100%;
   float: left;
-  padding: 80px 60px;
-  overflow-y: auto;
+  padding: 80px 60px 0;
+  overflow-y: scroll;
+  overflow-y: overlay;
+}
+
+.outline /deep/ > :last-child {
+  margin-bottom: 120px;
 }
 </style>
