@@ -14,6 +14,7 @@
         <div class="message">Click to preview</div>
       </div>
       <div id="pdfcontainer">
+        <loader v-show="!showError" class="loader"></loader>
         <div v-if="showViewer" id="pdf">
           <object
             :data="source.src"
@@ -45,6 +46,7 @@
 <script>
 import get from 'lodash/get';
 import isSafari from 'is-safari';
+import Loader from '../../common/Loader';
 
 export default {
   name: 'te-pdf',
@@ -78,6 +80,9 @@ export default {
         setTimeout(() => (this.showError = true), 1500);
       }
     }
+  },
+  components: {
+    Loader
   }
 };
 </script>
@@ -164,6 +169,11 @@ export default {
     height: 100%;
     display: block;
   }
+}
+
+.loader {
+  position: relative;
+  top: 50%;
 }
 
 .new-window {
