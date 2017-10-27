@@ -179,9 +179,11 @@ export default {
         .then(() => {
           let data = this.summative ? this.element : this.element.data;
           data = cloneDeep(data);
-          const { objective } = this;
-          const path = '_refs.objectiveId';
-          objective ? set(data, path, objective.id) : unset(data, path);
+          if (this.objective) {
+            set(data, '_refs.objectiveId', this.objective.id);
+          } else {
+            unset(data, '_refs.objectiveId');
+          }
           this.$emit('save', data);
           this.isEditing = false;
           this.setAlert(saveAlert);
