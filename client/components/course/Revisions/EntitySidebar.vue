@@ -63,21 +63,21 @@ ul {
 }
 
 .revision {
+  display: flex;
+  position: relative;
   width: (256px + $revision-padding);
   height: 52px;
-  position: relative;
-  display: flex;
   flex-direction: row;
   align-items: center;
   padding-left: $revision-padding;
   overflow: hidden;
-  cursor: pointer;
-  font-size: 14px;
   color: #656565;
+  font-size: 14px;
+  cursor: pointer;
 
   &:hover {
-    background-color: #f1f1f1;
     color: #333;
+    background-color: #f1f1f1;
   }
 
   .description {
@@ -91,16 +91,16 @@ ul {
 
 .revision:hover, .selected {
   .rollback {
+    display: flex;
     width: 32px;
     height: 32px;
-    display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
 
     &:hover {
-      background-color: #888;
       color: #fff;
+      background-color: #888;
     }
 
     .mdi {
@@ -110,8 +110,8 @@ ul {
 }
 
 .selected, .selected.revision:hover {
-  background-color: #1e88e5;
   color: #fff;
+  background-color: #1e88e5;
 
   .rollback:hover {
     background-color: #42a5f5;
@@ -128,11 +128,11 @@ ul {
 }
 
 .progress-background, .progress-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
   height: 2px;
-  position: absolute;
-  left: 0;
-  bottom: 0;
   background-color: #757575;
 }
 
@@ -147,13 +147,13 @@ ul {
 
 @keyframes indeterminate {
   0% {
-    left: -90%;
     right: 100%;
+    left: -90%;
   }
 
   100% {
-    left: 100%;
     right: -35%;
+    left: 100%;
   }
 }
 </style>
