@@ -1,6 +1,7 @@
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const merge = require('lodash/merge');
 const path = require('path');
+const serverPort = require('../server').port;
 
 const rootPath = path.resolve(__dirname, '../../');
 
@@ -61,7 +62,7 @@ module.exports = (options, req) => ({
   devServer: {
     proxy: {
       '/api/v1': {
-        target: 'http://127.0.0.1:3000'
+        target: `http://127.0.0.1:${serverPort}`
       }
     }
   }
