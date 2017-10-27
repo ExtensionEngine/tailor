@@ -1,11 +1,11 @@
 <template>
   <div @mousedown="onMousedown" @click="onClick" class="editor">
-    <loader v-if="showLoader"></loader>
+    <circular-progress v-if="showLoader"></circular-progress>
     <div v-else>
       <toolbar></toolbar>
       <div class="container">
         <div class="breadcrumbs">
-          <span v-for="(item, index) in breadcrumbs">
+          <span v-for="(item, index) in breadcrumbs" :key="item.id">
             {{ truncate(item.name) }}
             <span
               v-if="index !== (breadcrumbs.length - 1)"
@@ -29,14 +29,14 @@
 </template>
 
 <script>
-import Assessments from './structure/Assessments';
 import * as config from 'shared/activities';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import Assessments from './structure/Assessments';
+import CircularProgress from 'components/common/CircularProgress';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import format from 'string-template';
 import Introduction from './structure/Introduction';
-import Loader from '../common/Loader';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Perspectives from './structure/Perspectives';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
@@ -121,14 +121,14 @@ export default {
     Promise.join(
       this.getActivities(),
       this.getTeachingElements({ activityId, parentId: activityId }),
-      Promise.delay(500)
+      Promise.delay(700)
     ).then(() => (this.showLoader = false));
   },
   components: {
     Assessments,
+    CircularProgress,
     Exams,
     Introduction,
-    Loader,
     Perspectives,
     Toolbar
   }
@@ -160,7 +160,7 @@ export default {
     }
   }
 
-  .loader {
+  .circular-progress {
     margin-top: 150px;
   }
 

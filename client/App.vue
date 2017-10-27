@@ -7,14 +7,14 @@
 </template>
 
 <script>
-import Navbar from './components/common/Navbar';
-import ConfirmationModal from './components/common/ConfirmationModal';
+import ConfirmationModal from 'components/common/ConfirmationModal';
+import Navbar from 'components/common/Navbar';
 
 export default {
   name: 'app',
   components: {
-    Navbar,
-    ConfirmationModal
+    ConfirmationModal,
+    Navbar
   }
 };
 </script>
@@ -28,12 +28,12 @@ html, body {
 }
 
 body {
-  padding-top: 50px;
   background-color: #e0e0e0;
 }
 
 #app {
   height: 100%;
+  padding-top: 55px;
   color: rgba(0,0,0,0.87);
   font-family: 'Catamaran', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
