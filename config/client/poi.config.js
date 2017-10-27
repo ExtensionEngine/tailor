@@ -46,10 +46,7 @@ module.exports = (options, req) => ({
     config.resolve.alias.merge(aliases);
     if (options.mode !== 'production') return;
     config.plugin('minimize').tap(args => [merge(...args, uglifyJsOptions)]);
-    if (options.analyze) {
-      config.plugin('analyzer')
-        .use(BundleAnalyzerPlugin);
-    }
+    if (options.analyze) config.plugin('analyzer').use(BundleAnalyzerPlugin);
   },
   // TODO: Remove this option once vue-strap is removed
   templateCompiler: true,
