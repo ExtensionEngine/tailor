@@ -4,8 +4,8 @@
 
 <script>
 import assign from 'lodash/assign';
-import omit from 'lodash/omit';
 import Cropper from 'cropperjs';
+import omit from 'lodash/omit';
 
 // Forked from https://github.com/Agontuk/vue-cropperjs/blob/master/VueCropper.js
 // Cropperjs docs: https://github.com/fengyuanchen/cropperjs
