@@ -46,7 +46,7 @@
 <script>
 import get from 'lodash/get';
 import isSafari from 'is-safari';
-import Loader from '../../common/Loader';
+import Loader from 'components/common/Loader';
 
 export default {
   name: 'te-pdf',
