@@ -23,6 +23,11 @@ const rules = [{
   use: 'val-loader'
 }];
 
+const uglifyJsOptions = {
+  compressor: { warnings: false, keep_fnames: true },
+  mangle: { keep_fnames: true }
+};
+
 module.exports = (options, req) => ({
   presets: [
     require('poi-preset-eslint')({ mode: '*' })
@@ -44,10 +49,7 @@ module.exports = (options, req) => ({
   extendWebpack(config) {
     config.resolve.alias.merge(aliases);
     if (options.mode !== 'production') return;
-    config.plugin('minimize').tap(args => [merge(...args, {
-      compressor: { warnings: false, keep_fnames: true },
-      mangle: { keep_fnames: true }
-    })]);
+    config.plugin('minimize').tap(args => [merge(...args, uglifyJsOptions)]);
     if (options.analyze) {
       config.plugin('analyzer')
         .use(BundleAnalyzerPlugin);
