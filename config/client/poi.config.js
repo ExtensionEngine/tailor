@@ -4,9 +4,7 @@ const path = require('path');
 
 const rootPath = path.resolve(__dirname, '../../');
 
-// TODO: Remove alias to vue+compiler once vue-strap is removed
 const aliases = {
-  vue$: 'vue/dist/vue.common.js',
   client: path.join(rootPath, 'client'),
   assets: path.join(rootPath, 'client/assets'),
   components: path.join(rootPath, 'client/components'),
@@ -55,6 +53,8 @@ module.exports = (options, req) => ({
         .use(BundleAnalyzerPlugin);
     }
   },
+  // TODO: Remove this option once vue-strap is removed
+  templateCompiler: true,
   sourceMap: options.mode === 'development',
   generateStats: true,
   port: 8080,
