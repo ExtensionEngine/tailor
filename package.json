@@ -8,7 +8,7 @@
     "dev:client": "poi --config config/client/poi.config.js",
     "build": "poi build --config config/client/poi.config.js",
     "e2e": "node client/test/e2e/runner.js",
-    "unit:client": "karma start karma.conf.js",
+    "unit:client": "echo \"Error: no unit tests specified\" && exit 0",
     "test:client": "npm run unit:client && npm run e2e",
     "clean": "rimraf dist",
     "lint:client": "eslint --ext .js,.vue config/client client/test/e2e/specs client/test/unit/specs client/components client/store",
