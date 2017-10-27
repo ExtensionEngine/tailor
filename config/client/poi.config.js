@@ -4,6 +4,7 @@ const path = require('path');
 
 const rootPath = path.resolve(__dirname, '../../');
 
+// TODO: Remove alias to vue+compiler once vue-strap is removed
 const aliases = {
   vue$: 'vue/dist/vue.common.js',
   client: path.join(rootPath, 'client'),
