@@ -35,9 +35,6 @@ module.exports = (options, req) => ({
     app: 'client/main.js'
   },
   dist: 'dist',
-  autoprefixer: {
-    browsers: ['ie >= 10', 'last 4 versions']
-  },
   html: {
     template: 'index.html'
   },
