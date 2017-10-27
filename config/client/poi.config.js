@@ -1,3 +1,4 @@
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const merge = require('lodash/merge');
 const path = require('path');
 
@@ -46,6 +47,10 @@ module.exports = (options, req) => ({
       compressor: { warnings: false, keep_fnames: true },
       mangle: { keep_fnames: true }
     })]);
+    if (options.analyze) {
+      config.plugin('analyzer')
+        .use(BundleAnalyzerPlugin);
+    }
   },
   sourceMap: options.mode === 'development',
   generateStats: true,

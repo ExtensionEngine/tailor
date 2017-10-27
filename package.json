@@ -113,8 +113,8 @@
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
     "imports-loader": "^0.7.1",
-    "nodemon": "^1.12.1",
     "node-sass": "^4.5.3",
+    "nodemon": "^1.12.1",
     "poi": "^9.4.3",
     "poi-preset-eslint": "^9.0.1",
     "sass-loader": "^6.0.6",
@@ -126,7 +126,8 @@
     "swagger-jsdoc": "^1.8.2",
     "swagger-ui": "^2.2.10",
     "val-loader": "^1.0.2",
-    "vue-template-compiler": "^2.5.2"
+    "vue-template-compiler": "^2.5.2",
+    "webpack-bundle-analyzer": "^2.9.0"
   },
   "engines": {
     "node": ">= 8.8.0",
