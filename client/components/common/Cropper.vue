@@ -3,7 +3,8 @@
 </template>
 
 <script>
-import { assign, omit } from 'lodash';
+import assign from 'lodash/assign';
+import omit from 'lodash/omit';
 import Cropper from 'cropperjs';
 
 // Forked from https://github.com/Agontuk/vue-cropperjs/blob/master/VueCropper.js
