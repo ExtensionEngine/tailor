@@ -32,7 +32,7 @@
 import * as config from 'shared/activities';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
-import CircularProgress from '../common/CircularProgress';
+import CircularProgress from 'components/common/CircularProgress';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import format from 'string-template';

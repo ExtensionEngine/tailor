@@ -10,7 +10,7 @@
 
 <script>
 import Activity from './Activity';
-import CircularProgress from '../common/CircularProgress';
+import CircularProgress from 'components/common/CircularProgress';
 import { mapGetters } from 'vuex-module';
 import Sidebar from './Sidebar';
 
