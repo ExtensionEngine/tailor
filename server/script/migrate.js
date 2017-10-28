@@ -1,52 +1,48 @@
-'use strict';
-
 const { exec } = require('child_process');
-const map = require('lodash/map');
 const { slug } = require('to-case');
 
-const argv = process.argv.slice(2);
+const map = require('lodash/map');
+const migrate = require('../shared/database/migrate');
 
-const options = {
-  config: './config/server/database.js',
-  migrationsPath: './server/shared/database/migrations'
-};
+run(process.argv.slice(2), {
+  migrationsPath: './server/shared/database/migrations',
+  config: './config/server/database.js'
+});
 
-let command = getCommand(argv, options);
-if (!command) {
+function run([command, arg], options) {
+  if (command === 'create') {
+    if (arg) options.name = arg;
+    let cmd = ['sequelize migration:create', ...getFlags(options)];
+    return execCli(cmd.join(' '));
+  }
+
+  if (command === 'to') {
+    return migrate(arg).then(() => process.exit(0));
+  }
+
   printUsage();
   process.exit(0);
 }
 
-command.unshift('sequelize');
-const str = command.join(' ');
-
-exec(str, (err, stdout, stderr) => {
-  if (!err) {
-    process.stdout.write(stdout);
-    process.stderr.write(stderr);
-    return;
-  }
-  console.error(err.message);
-  console.error(err.stack);
-  process.exit(1);
-});
-
-function printUsage() {
-  console.log(`Invalid usage. Valid commands are:\n
-  migrate create [migration-name]
-  migrate up
-  migrate down`);
-}
-
-function getCommand([command, arg], options) {
-  if (command === 'up') return ['db:migrate', ...getFlags(options)];
-  if (command === 'down') return ['db:migrate:undo', ...getFlags(options)];
-  if (command === 'create') {
-    if (arg) options.name = arg;
-    return ['migration:create', ...getFlags(options)];
-  }
+function execCli(cmd) {
+  return exec(cmd, (err, stdout, stderr) => {
+    if (!err) {
+      process.stdout.write(stdout);
+      process.stderr.write(stderr);
+      process.exit(0);
+    }
+    console.error(err.message);
+    console.error(err.stack);
+    process.exit(1);
+  });
 }
 
 function getFlags(options) {
   return map(options, (value, name) => `--${slug(name)}="${value}"`);
+}
+
+function printUsage() {
+  console.log(`Invalid usage. Valid commands are:\n
+  migrate create [migration-name]
+  migrate to [version]`);
 }

@@ -30,7 +30,7 @@ module.exports = function migrate(to, from, method = 'up') {
   const fromIndex = from ? findIndex(changelog, { name: from }) : (toIndex - 1);
   const versions = changelog.slice(fromIndex, toIndex);
   const migrations = flatten(map(versions, 'migrations'));
-  umzug.execute({ migrations, method }).then(migrations => {
+  return umzug.execute({ migrations, method }).then(migrations => {
     console.log(`DB migrated to ${to} version`);
   });
 };
