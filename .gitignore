@@ -179,3 +179,6 @@ ecosystem.config.js
 
 # Vscode
 .vscode/
+
+# DB migrations
+umzug.json
