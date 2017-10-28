@@ -1,6 +1,6 @@
 <template>
   <div class="activities-container">
-    <loader v-if="showLoader"></loader>
+    <circular-progress v-if="showLoader"></circular-progress>
     <div v-else class="activities">
       <activity :level="0" :activities="activities" class="outline"></activity>
       <sidebar></sidebar>
@@ -10,7 +10,7 @@
 
 <script>
 import Activity from './Activity';
-import Loader from '../common/Loader';
+import CircularProgress from 'components/common/CircularProgress';
 import { mapGetters } from 'vuex-module';
 import Sidebar from './Sidebar';
 
@@ -19,7 +19,7 @@ export default {
   computed: mapGetters(['activities'], 'course'),
   components: {
     Activity,
-    Loader,
+    CircularProgress,
     Sidebar
   }
 };
@@ -28,6 +28,8 @@ export default {
 <style lang="scss" scoped>
 .activities-container {
   height: 100%;
+
+  .circular-progress { margin-top: 48px; }
 }
 
 .activities {
