@@ -33,6 +33,41 @@ $fab-font-size: 18px;
   }
 }
 
+.btn.btn-material {
+  position: relative;
+  min-width: 88px;
+  padding: 10px 16px;
+  border-radius: 2px;
+  font-weight: 500;
+  overflow: hidden;
+  box-shadow: none;
+  outline: none;
+
+  + .btn {
+    margin-left: 8px;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: 150%;
+    left: 150%;
+    transform: translate(-100%,-100%);
+    background: rgba(255,255,255,0.08);
+  }
+
+  &.btn-default:focus::before {
+    background: rgba(33,33,33,0.16);
+  }
+}
+
 .btn-link {
   &:focus {
     border: 0;

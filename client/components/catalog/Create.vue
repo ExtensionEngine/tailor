@@ -3,11 +3,11 @@
     <button @click="show" class="btn btn-primary btn-fab" type="button">
       <span class="mdi mdi-plus"></span>
     </button>
-    <modal :show="showModal" :backdrop="false" effect="fade">
-      <div class="modal-header" slot="modal-header">
+    <modal :show="showModal">
+      <div slot="header">
         <h4 class="modal-title">Create course</h4>
       </div>
-      <div class="modal-body" slot="modal-body">
+      <div slot="body">
         <loader v-show="showLoader"></loader>
         <div v-show="!showLoader">
           <div class="error-message">
@@ -44,9 +44,19 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer" slot="modal-footer">
-        <button @click="hide" class="btn btn-default" type="button">Cancel</button>
-        <button @click="submit" class="btn btn-primary" type="button">Create</button>
+      <div slot="footer">
+        <button
+          @click="hide"
+          class="btn btn-material btn-default"
+          type="button">
+          Cancel
+        </button>
+        <button
+          @click="submit"
+          class="btn btn-material btn-primary"
+          type="button">
+          Create
+        </button>
       </div>
     </modal>
   </div>
@@ -56,7 +66,7 @@
 import { focus } from 'vue-focus';
 import Loader from '../common/Loader';
 import { mapActions, mapGetters } from 'vuex-module';
-import { modal } from 'vue-strap';
+import Modal from 'components/common/Modal';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
 
@@ -103,7 +113,10 @@ export default {
     }
   },
   directives: { focus },
-  components: { modal, Loader },
+  components: {
+    Modal,
+    Loader
+  },
   inject: ['$validator']
 };
 </script>
@@ -119,20 +132,6 @@ export default {
 .create-course {
   textarea {
     resize: none;
-  }
-
-  .modal-content {
-    padding: 10px;
-    border-radius: 0;
-  }
-
-  .modal-header {
-    border: 0;
-    text-align: left;
-  }
-
-  .modal-footer {
-    border: 0;
   }
 
   .form-group {
