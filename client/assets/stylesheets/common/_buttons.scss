@@ -37,8 +37,8 @@ $fab-font-size: 18px;
   position: relative;
   min-width: 88px;
   padding: 10px 16px;
-  border-radius: 2px;
   font-weight: 500;
+  border-radius: 2px;
   overflow: hidden;
   box-shadow: none;
   outline: none;
@@ -55,11 +55,11 @@ $fab-font-size: 18px;
     content: "";
     display: block;
     position: absolute;
-    width: 200%;
-    height: 200%;
     top: 150%;
     left: 150%;
     transform: translate(-100%,-100%);
+    width: 200%;
+    height: 200%;
     background: rgba(255,255,255,0.08);
   }
 
