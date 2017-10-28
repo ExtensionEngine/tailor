@@ -4,10 +4,7 @@
   "description": "Authoring platform",
   "author": "Damir Perisic <dperisic@extensionengine.com>",
   "private": true,
-  "browserslist": [
-    "last 2 versions",
-    "ie 11"
-  ],
+  "browserslist": ["last 2 versions", "ie 11"],
   "scripts": {
     "dev:client": "poi --config config/client/poi.config.js",
     "build": "poi build --config config/client/poi.config.js",
