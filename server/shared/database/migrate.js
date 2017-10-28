@@ -8,7 +8,8 @@ const changelog = [{
   name: '2.0',
   migrations: [
     '20171026141155-clone-support',
-    '20171026141409-remove-activity-name'
+    '20171026141409-remove-activity-name',
+    '20171028170417-course-schema'
   ]
 }];
 

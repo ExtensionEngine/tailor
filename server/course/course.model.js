@@ -1,43 +1,11 @@
 const hooks = require('./hooks');
 
-/**
- * @swagger
- * definitions:
- *   CourseInput:
- *     type: object
- *     required:
- *     - name
- *     - description
- *     properties:
- *       name:
- *         type: string
- *         description: course title
- *       description:
- *         type: string
- *         description: short course description
- *   CourseOutput:
- *     type: object
- *     required:
- *     - id
- *     - name
- *     - description
- *     - users
- *     properties:
- *       id:
- *         type: number
- *         description: unique course identifier
- *       name:
- *         type: string
- *         description: course title
- *       description:
- *         type: string
- *         description: short course description
- *       users:
- *         type: array
- *         description: user course roles
- */
 module.exports = function (sequelize, DataTypes) {
   const Course = sequelize.define('course', {
+    schema: {
+      type: DataTypes.STRING,
+      validate: { notEmpty: true, len: [2, 20] }
+    },
     name: {
       type: DataTypes.STRING,
       validate: { notEmpty: true, len: [2, 250] }
