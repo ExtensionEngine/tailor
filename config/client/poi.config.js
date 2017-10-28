@@ -48,8 +48,6 @@ module.exports = (options, req) => ({
     config.plugin('minimize').tap(args => [merge(...args, uglifyJsOptions)]);
     if (options.analyze) config.plugin('analyzer').use(BundleAnalyzerPlugin);
   },
-  // TODO: Remove this option once vue-strap is removed
-  templateCompiler: true,
   sourceMap: options.mode === 'development',
   generateStats: true,
   port: 8080,
