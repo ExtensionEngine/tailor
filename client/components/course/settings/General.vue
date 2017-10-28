@@ -57,14 +57,13 @@ import EventBus from 'EventBus';
 import { focus } from 'vue-focus';
 import Loader from '../../common/Loader';
 import { mapGetters, mapActions } from 'vuex-module';
-import { tooltip } from 'vue-strap';
 
 const appChannel = EventBus.channel('app');
 
 export default {
   props: ['showLoader'],
   directives: { focus },
-  components: { Loader, tooltip },
+  components: { Loader },
   data() {
     return {
       showNameInput: false,
