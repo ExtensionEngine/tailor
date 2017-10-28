@@ -2,11 +2,11 @@
   <transition name="modal">
     <div
       v-show="show"
-      role="alertdialog"
-      aria-hidden="true"
       :backdrop="backdrop"
       :class="{ in: show, out: !show }"
-      class="modal">
+      class="modal"
+      role="alertdialog"
+      aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header"><slot name="header"></slot></div>
@@ -66,13 +66,11 @@ function toggleFocusTrap(focusTrap, condition) {
   margin-bottom: 0;
 }
 
-.modal-enter,
-.modal-leave-active {
+.modal-enter, .modal-leave-active {
   opacity: 0;
 }
 
-.modal-enter .modal-content,
-.modal-leave-active .modal-content {
+.modal-enter .modal-content, .modal-leave-active .modal-content {
   transform: scale(1.1);
 }
 </style>
@@ -87,8 +85,8 @@ function toggleFocusTrap(focusTrap, condition) {
 }
 
 .modal-content {
-  max-width: 640px;
   top: 96px;
+  max-width: 640px;
   margin: 0 auto;
   padding: 4px;
   font: 14px Roboto, Helvetica, Arial;
