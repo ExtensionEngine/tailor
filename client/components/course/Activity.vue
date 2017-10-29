@@ -30,7 +30,6 @@
           :key="it._cid"
           :id="it.id"
           :_cid="it._cid"
-          :name="it.name"
           :position="it.position"
           :index="index"
           :level="isRoot ? 1 : level + 1"
@@ -48,6 +47,7 @@
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import InsertActivity from './InsertActivity';
 import map from 'lodash/map';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
@@ -57,7 +57,7 @@ import values from 'lodash/values';
 
 export default {
   name: 'activity',
-  props: ['_cid', 'id', 'name', 'position', 'level', 'activities', 'activity', 'index'],
+  props: ['_cid', 'id', 'position', 'level', 'activities', 'activity', 'index'],
   data() {
     return {
       dragOptions: { handle: '.activity' }
@@ -70,6 +70,9 @@ export default {
     }, 'course'),
     isRoot() {
       return this.level === 0;
+    },
+    name() {
+      return get(this.activity, 'data.name', '');
     },
     color() {
       return find(OUTLINE_LEVELS, { type: this.activity.type }).color;
