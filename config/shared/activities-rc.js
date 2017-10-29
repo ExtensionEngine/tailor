@@ -14,6 +14,12 @@ const OUTLINE_LEVELS = [{
   hasExams: true,
   hasPrerequisites: true,
   meta: [{
+    key: 'name',
+    type: 'TEXTAREA',
+    label: 'Name',
+    placeholder: 'Click to add...',
+    validate: { rules: { max: 250 } }
+  }, {
     key: 'description',
     type: 'TEXTAREA',
     label: 'Description',
@@ -39,6 +45,12 @@ const OUTLINE_LEVELS = [{
   hasExams: false,
   hasPrerequisites: true,
   meta: [{
+    key: 'name',
+    type: 'TEXTAREA',
+    label: 'Name',
+    placeholder: 'Click to add...',
+    validate: { rules: { max: 250 } }
+  }, {
     key: 'description',
     type: 'TEXTAREA',
     label: 'Description',
@@ -53,7 +65,14 @@ const OUTLINE_LEVELS = [{
   color: '#78909C',
   isEditable: true,
   hasPerspectives: true,
-  hasPrerequisites: true
+  hasPrerequisites: true,
+  meta: [{
+    key: 'name',
+    type: 'TEXTAREA',
+    label: 'Name',
+    placeholder: 'Click to add...',
+    validate: { rules: { max: 250 } }
+  }]
 }, {
   level: 3,
   type: 'TOPIC',
@@ -67,6 +86,12 @@ const OUTLINE_LEVELS = [{
   hasExams: false,
   hasPrerequisites: true,
   meta: [{
+    key: 'name',
+    type: 'TEXTAREA',
+    label: 'Name',
+    placeholder: 'Click to add...',
+    validate: { rules: { max: 250 } }
+  }, {
     key: 'description',
     type: 'TEXTAREA',
     label: 'Description',
