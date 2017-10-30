@@ -12,6 +12,9 @@
         :class="{ active: $route.matched.some(it => it.name === 'course-info') }">
         <router-link :to="{ name: 'course-info' }">Settings</router-link>
       </li>
+      <li :class="{ active: $route.name === 'tree-views' }">
+        <router-link :to="{ name: 'tree-view' }">Tree View</router-link>
+      </li>
     </ul>
     <div class="tab-content">
       <router-view :showLoader="showLoader"></router-view>

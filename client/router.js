@@ -13,6 +13,7 @@ import General from './components/course/settings/General';
 import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
+import TreeView from './components/course/TreeView';
 import UserManagement from './components/course/settings/UserManagement';
 
 Vue.use(Router);
@@ -48,6 +49,10 @@ let router = new Router({
       path: 'revisions',
       name: 'course-revisions',
       component: CourseRevisions
+    }, {
+      path: 'tree',
+      name: 'tree-view',
+      component: TreeView
     }]
   }, {
     path: '/course/:courseId/editor/:activityId',
