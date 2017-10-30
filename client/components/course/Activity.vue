@@ -52,7 +52,6 @@ import InsertActivity from './InsertActivity';
 import map from 'lodash/map';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import NoActivities from './NoActivities';
-import { OUTLINE_LEVELS } from 'shared/activities';
 import values from 'lodash/values';
 
 export default {
@@ -65,6 +64,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      structure: 'structure',
       focusedActivity: 'activity',
       isCollapsed: 'isCollapsed'
     }, 'course'),
@@ -75,14 +75,14 @@ export default {
       return get(this.activity, 'data.name', '');
     },
     color() {
-      return find(OUTLINE_LEVELS, { type: this.activity.type }).color;
+      return find(this.structure, { type: this.activity.type }).color;
     },
     hasChildren() {
-      return (this.children.length > 0) && (this.level < OUTLINE_LEVELS.length);
+      return (this.children.length > 0) && (this.level < this.structure.length);
     },
     children() {
       const level = this.level + 1;
-      const types = map(filter(OUTLINE_LEVELS, { level }), 'type');
+      const types = map(filter(this.structure, { level }), 'type');
       const filterByParent = this.isRoot
         ? act => !act.parentId && types.includes(act.type)
         : act => this.id && this.id === act.parentId && types.includes(act.type);

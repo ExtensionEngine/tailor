@@ -54,8 +54,8 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import { focus } from 'vue-focus';
-import { getLevel, OUTLINE_LEVELS } from 'shared/activities';
 import { getChildren } from 'utils/activity';
+import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import multiselect from '../common/Select';
@@ -73,11 +73,12 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
+    ...mapGetters(['structure'], 'course'),
     levels() {
-      const parent = find(OUTLINE_LEVELS, { type: this.parent.type });
+      const parent = find(this.structure, { type: this.parent.type });
       const nextLevel = this.level + 1;
       let cond = it => (it.level === nextLevel) || (it.level === this.level);
-      let levels = filter(OUTLINE_LEVELS, cond);
+      let levels = filter(this.structure, cond);
 
       if (parent && parent.subLevels) {
         const subLevels = parent.subLevels;
@@ -89,7 +90,7 @@ export default {
       return levels;
     },
     hasChildren() {
-      return this.level < OUTLINE_LEVELS.length;
+      return this.level < this.structure.length;
     }
   },
   methods: {
@@ -106,11 +107,11 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return;
 
-        const OUTLINE_LEVEL = find(OUTLINE_LEVELS, { type: this.activityType });
+        const OUTLINE_LEVEL = find(this.structure, { type: this.activityType });
         const sameLevel = OUTLINE_LEVEL.level === this.level;
         const parentId = sameLevel ? this.parent.parentId : this.parent.id;
         const courseId = this.parent.courseId;
-        const types = map(filter(OUTLINE_LEVELS, { level: OUTLINE_LEVEL.level }), 'type');
+        const types = map(filter(this.structure, { level: OUTLINE_LEVEL.level }), 'type');
         const children = getChildren(this.activities, parentId, courseId);
         const items = sortBy(filter(children, it => types.includes(it.type)), 'position');
         const newPosition = findIndex(items, it => it.position === this.parent.position);
