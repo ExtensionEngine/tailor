@@ -10,6 +10,7 @@ const config = mergeConfig(
 const { SCHEMAS, ASSET_GROUP, PREVIEW_URL } = config;
 
 module.exports = {
+  SCHEMAS,
   OUTLINE_LEVELS: SCHEMAS[0].structure,
   OBJECTIVES: filter(SCHEMAS[0].structure, { isObjective: true }),
   ASSET_GROUP,
