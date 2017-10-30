@@ -1,4 +1,3 @@
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const merge = require('lodash/merge');
 const path = require('path');
 const serverPort = require('../server').port;
@@ -22,6 +21,10 @@ const rules = [{
   use: 'val-loader'
 }];
 
+const autoprefixer = {
+  browsers: [ 'last 2 versions', 'ie 11' ]
+};
+
 const uglifyJsOptions = {
   compressor: { warnings: false, keep_fnames: true },
   mangle: { keep_fnames: true }
@@ -29,7 +32,8 @@ const uglifyJsOptions = {
 
 module.exports = (options, req) => ({
   presets: [
-    require('poi-preset-eslint')({ mode: '*' })
+    require('poi-preset-eslint')({ mode: '*' }),
+    require('poi-preset-bundle-report')()
   ],
   entry: {
     app: 'client/main.js'
@@ -38,6 +42,7 @@ module.exports = (options, req) => ({
   html: {
     template: 'index.html'
   },
+  autoprefixer,
   webpack(config) {
     config.module.rules.push(...rules);
     return config;
@@ -46,7 +51,6 @@ module.exports = (options, req) => ({
     config.resolve.alias.merge(aliases);
     if (options.mode !== 'production') return;
     config.plugin('minimize').tap(args => [merge(...args, uglifyJsOptions)]);
-    if (options.analyze) config.plugin('analyzer').use(BundleAnalyzerPlugin);
   },
   sourceMap: options.mode === 'development',
   generateStats: true,
