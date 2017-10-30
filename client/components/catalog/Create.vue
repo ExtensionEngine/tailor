@@ -1,11 +1,11 @@
 <template>
-  <div v-if="showCreateButton" class="create-course" >
+  <div v-if="showCreateButton" class="create-course">
     <button @click="show" class="btn btn-primary btn-fab" type="button">
       <span class="mdi mdi-plus"></span>
     </button>
     <modal :show="showModal">
       <div slot="header">
-        <h4 class="modal-title">Create course</h4>
+        <h4 class="modal-title">Create content repository</h4>
       </div>
       <div slot="body">
         <loader v-show="showLoader"></loader>
@@ -13,6 +13,18 @@
           <div class="error-message">
             <span v-if="vErrors.has('default')">
               {{ vErrors.first('default') }}
+            </span>
+          </div>
+          <div :class="{ 'has-error': vErrors.has('type') }" class="form-group">
+            <multiselect
+              v-model="schema"
+              :options="schemas"
+              :searchable="false"
+              label="name"
+              value="id">
+            </multiselect>
+            <span v-show="vErrors.has('type')" class="help-block">
+              {{ vErrors.first('type') }}
             </span>
           </div>
           <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
@@ -64,13 +76,17 @@
 
 <script>
 import { focus } from 'vue-focus';
-import Loader from '../common/Loader';
 import { mapActions, mapGetters } from 'vuex-module';
+import { SCHEMAS } from 'shared/activities';
+
+import Loader from '../common/Loader';
 import Modal from 'components/common/Modal';
+import Multiselect from 'components/common/Select';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
 
 const getDefaultData = () => ({
+  schema: SCHEMAS[0],
   name: '',
   description: '',
   showLoader: false,
@@ -85,6 +101,9 @@ export default {
     ...mapGetters(['isAdmin']),
     showCreateButton() {
       return this.isAdmin;
+    },
+    schemas() {
+      return SCHEMAS;
     }
   },
   methods: {
@@ -93,8 +112,11 @@ export default {
       this.$validator.validateAll()
         .then(result => {
           if (!result) return;
-          const course = pick(this, ['name', 'description']);
-          return this.create(course);
+          const data = {
+            schema: this.schema.id,
+            ...pick(this, ['name', 'description'])
+          };
+          return this.create(data);
         });
     },
     create(course) {
@@ -115,7 +137,8 @@ export default {
   directives: { focus },
   components: {
     Modal,
-    Loader
+    Loader,
+    Multiselect
   },
   inject: ['$validator']
 };

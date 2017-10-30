@@ -75,11 +75,25 @@ export default {
     ...mapGetters(['activities']),
     ...mapGetters(['structure'], 'course'),
     levels() {
+<<<<<<< HEAD
       if (!this.parent) return filter(this.structure, { level: 1 });
       const parentType = find(this.structure, { type: this.parent.type });
       const { level, subLevels = [] } = parentType;
       const cond = it => subLevels.includes(it.type) || (it.level === level);
       let levels = filter(this.structure, cond);
+=======
+      const parent = find(this.structure, { type: this.parent.type });
+      const nextLevel = this.level + 1;
+      let cond = it => (it.level === nextLevel) || (it.level === this.level);
+      let levels = filter(this.structure, cond);
+
+      if (parent && parent.subLevels) {
+        const subLevels = parent.subLevels;
+        let cond = it => (it.level !== nextLevel) || subLevels.includes(it.type);
+        levels = filter(levels, cond);
+      }
+
+>>>>>>> 72850f0f899a7be869e133613d81b2f3caa70292
       levels.forEach(it => (it.value = it.type));
       return levels;
     },

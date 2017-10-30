@@ -130,6 +130,10 @@
     "swagger-jsdoc": "^1.8.2",
     "swagger-ui": "^2.2.10",
     "umzug": "^2.1.0",
+<<<<<<< HEAD
+=======
+    "url-loader": "^0.5.7",
+>>>>>>> 72850f0f899a7be869e133613d81b2f3caa70292
     "val-loader": "^1.0.2",
     "vue-template-compiler": "^2.5.2",
     "webpack-bundle-analyzer": "^2.9.0"

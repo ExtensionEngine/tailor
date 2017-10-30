@@ -9,7 +9,7 @@
       :allowEmpty="true"
       :disabled="!options.length"
       :placeholder="placeholder"
-      :customLabel="it => it.data.name"
+      :customLabel="it => it.data ? it.data.name : ''"
       @input="onPrerequisitesChanged"
       name="prerequisites"
       trackBy="id">
