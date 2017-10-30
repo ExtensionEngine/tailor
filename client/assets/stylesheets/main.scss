@@ -1,6 +1,12 @@
+// Google Web Fonts
+@import '~sass-web-fonts';
+$web-font-path: web-fonts-url(
+  (Catamaran: (300, 400, 500, 600, 700)),
+  (Roboto: (300, 400, 500, 700))
+);
+
 // Bootstrap files
-$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
-@import '~bootstrap-sass/assets/stylesheets/bootstrap';
+@import 'vendor/bootstrap';
 @import '~bootswatch/paper/variables';
 @import '~bootswatch/paper/bootswatch';
 @import '~loaders.css/loaders';
