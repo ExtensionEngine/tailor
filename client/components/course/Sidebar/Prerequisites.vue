@@ -9,10 +9,10 @@
       :allowEmpty="true"
       :disabled="!options.length"
       :placeholder="placeholder"
+      :customLabel="it => it.data.name"
       @input="onPrerequisitesChanged"
       name="prerequisites"
-      trackBy="id"
-      label="name">
+      trackBy="id">
     </multiselect>
   </div>
 </template>
