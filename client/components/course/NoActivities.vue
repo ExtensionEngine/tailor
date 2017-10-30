@@ -63,8 +63,8 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return;
         this.save({
-          name: this.name,
           type: this.level.type,
+          data: { name: this.name },
           courseId: this.course.id,
           position: 1
         });
