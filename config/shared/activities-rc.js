@@ -102,7 +102,6 @@ const COURSE_OUTLINE = [{
   }]
 }];
 
-<<<<<<< HEAD
 const REPOSITORY_OUTLINE = [{
   level: 1,
   type: 'GROUP',
@@ -133,13 +132,6 @@ SCHEMAS.forEach(schema => {
     it.type = `${schema.id}/${it.type}`;
     it.subLevels = map(it.subLevels, type => `${schema.id}/${type}`);
   });
-=======
-const SCHEMAS = [{ id: 'COURSE', name: 'Course', structure: COURSE_OUTLINE }];
-
-// Prefix activity types with schema id. Format: SCHEMA_ID/TYPE
-SCHEMAS.forEach(schema => {
-  return schema.structure.forEach(it => (it.type = `${schema.id}/${it.type}`));
->>>>>>> 72850f0f899a7be869e133613d81b2f3caa70292
 });
 
 module.exports = {
