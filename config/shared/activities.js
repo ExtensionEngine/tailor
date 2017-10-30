@@ -14,6 +14,7 @@ module.exports = {
   OBJECTIVES: filter(SCHEMAS[0].structure, { isObjective: true }),
   ASSET_GROUP,
   PREVIEW_URL,
+  getOutlineLevels,
   getLevel,
   isEditable: type => {
     const level = getLevel(type);
@@ -22,13 +23,19 @@ module.exports = {
   hasIntroduction: level => getLevel(level).hasIntroduction,
   hasPerspectives: level => getLevel(level).hasPerspectives,
   hasAssessments: level => getLevel(level).hasAssessments,
-  hasExams: level => getLevel(level).hasExams,
-  getOutlineLevels(schemaId) {
-    const schema = schemaId ? find(SCHEMAS, { id: schemaId }) : first(SCHEMAS);
-    return schema.structure;
-  }
+  hasExams: level => getLevel(level).hasExams
 };
 
+function getOutlineLevels(schemaId) {
+  // If schema is not provided, assume legacy structure (single schema)
+  // and pick first
+  const schema = schemaId ? find(SCHEMAS, { id: schemaId }) : first(SCHEMAS);
+  return schema.structure;
+}
+
 function getLevel(type) {
-  return find(SCHEMAS[0].structure, { type });
+  // If schema is not provided, assume legacy structure (single schema)
+  // and pick first
+  const schemaId = type.includes('/') ? first(type.split('/')) : first(SCHEMAS).id;
+  return find(getOutlineLevels(schemaId), { type });
 }
