@@ -102,6 +102,11 @@ const COURSE_OUTLINE = [{
 
 const SCHEMAS = [{ id: 'COURSE', name: 'Course', structure: COURSE_OUTLINE }];
 
+// Prefix activity types with schema id. Format: SCHEMA_ID/TYPE
+SCHEMAS.forEach(schema => {
+  return schema.structure.forEach(it => (it.type = `${schema.id}/${it.type}`));
+});
+
 module.exports = {
   ASSET_GROUP,
   SCHEMAS,
