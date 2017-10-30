@@ -129,7 +129,7 @@ const SCHEMAS = [
 // Prefix activity types with schema id. Format: SCHEMA_ID/TYPE
 SCHEMAS.forEach(schema => {
   return schema.structure.forEach(it => {
-    it.type = `${schema.id}/${it.type}`
+    it.type = `${schema.id}/${it.type}`;
     it.subLevels = map(it.subLevels, type => `${schema.id}/${type}`);
   });
 });

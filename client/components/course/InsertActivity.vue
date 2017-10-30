@@ -75,17 +75,11 @@ export default {
     ...mapGetters(['activities']),
     ...mapGetters(['structure'], 'course'),
     levels() {
-      const parent = find(this.structure, { type: this.parent.type });
-      const nextLevel = this.level + 1;
-      let cond = it => (it.level === nextLevel) || (it.level === this.level);
+      if (!this.parent) return filter(this.structure, { level: 1 });
+      const parentType = find(this.structure, { type: this.parent.type });
+      const { level, subLevels = [] } = parentType;
+      const cond = it => subLevels.includes(it.type) || (it.level === level);
       let levels = filter(this.structure, cond);
-
-      if (parent && parent.subLevels) {
-        const subLevels = parent.subLevels;
-        let cond = it => (it.level !== nextLevel) || subLevels.includes(it.type);
-        levels = filter(levels, cond);
-      }
-
       levels.forEach(it => (it.value = it.type));
       return levels;
     },
@@ -119,8 +113,8 @@ export default {
         const context = { items, newPosition, isFirstChild, insert: true };
 
         this.save({
-          name: this.activityName,
           type: this.activityType,
+          data: { name: this.activityName },
           courseId,
           parentId,
           position: calculatePosition(context)
