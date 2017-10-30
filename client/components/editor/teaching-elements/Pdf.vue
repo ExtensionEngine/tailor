@@ -13,13 +13,12 @@
       <div v-if="!isFocused" class="overlay">
         <div class="message">Click to preview</div>
       </div>
-      <div id="pdfcontainer">
+      <div class="pdf-container">
         <loader v-show="!showError" class="loader"></loader>
-        <div v-if="showViewer" id="pdf">
+        <div v-if="showViewer" class="pdf">
           <object
             :data="source.src"
-            :type="source.type"
-            id="doc">
+            :type="source.type">
           </object>
           <div class="new-window">
             <a :href="source.src" target="_blank">
@@ -148,26 +147,26 @@ export default {
   margin: 0;
 }
 
-#pdfcontainer {
+.pdf-container {
+  position: relative;
   width: 100%;
   height: 360px;
-  position: relative;
 }
 
-#pdf {
-  width: 100%;
-  height: 100%;
+.pdf {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 30px;
   background: none;
   z-index: 10;
-  padding-bottom: 30px;
 
-  #doc {
+  object {
+    display: block;
     width: 100%;
     height: 100%;
-    display: block;
   }
 }
 
@@ -177,12 +176,12 @@ export default {
 }
 
 .new-window {
-  background: white;
   width: 100%;
+  background: #fff;
 
   a {
-    font-size: 22px;
     color: #444;
+    font-size: 22px;
 
     &:hover {
       color: #42b983;

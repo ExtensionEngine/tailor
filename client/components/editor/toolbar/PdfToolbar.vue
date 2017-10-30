@@ -2,19 +2,19 @@
   <div class="pdf-toolbar">
     <input
       v-model="url"
-      :disabled="!edit"
+      :disabled="!editing"
       class="form-control"
       type="text"
       placeholder="URL">
     <button
-      v-if="!edit"
-      @click="edit = true"
+      v-if="!editing"
+      @click="editing = true"
       class="btn btn-default"
       type="button">
       Edit
     </button>
     <button
-      v-if="edit"
+      v-else
       @click="save"
       class="btn btn-success"
       type="button">
@@ -29,10 +29,12 @@ import { mapActions } from 'vuex-module';
 
 export default {
   name: 'pdf-toolbar',
-  props: ['element'],
+  props: {
+    element: { type: Object, required: true }
+  },
   data() {
     return {
-      edit: !this.element.data.url,
+      editing: !this.element.data.url,
       url: '',
       ...cloneDeep(this.element.data)
     };
@@ -40,7 +42,7 @@ export default {
   methods: {
     ...mapActions({ updateElement: 'update' }, 'tes'),
     save() {
-      this.edit = false;
+      this.editing = false;
       let element = cloneDeep(this.element);
       element.data.url = this.url;
       this.updateElement(element);
@@ -52,12 +54,12 @@ export default {
 <style lang="scss" scoped>
 .pdf-toolbar {
   position: relative;
-  z-index: 999;
   width: 100%;
   height: 60px;
   padding: 13px 45px 0 45px;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
+  z-index: 999;
 
   .form-control {
     display: inline-block;
