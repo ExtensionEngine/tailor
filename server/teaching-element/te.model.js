@@ -16,7 +16,8 @@ module.exports = function (sequelize, DataTypes) {
       validate: { min: 0, max: 1000000 }
     },
     refs: {
-      type: DataTypes.JSON
+      type: DataTypes.JSON,
+      defaultValue: {}
     },
     detached: {
       type: DataTypes.BOOLEAN,
