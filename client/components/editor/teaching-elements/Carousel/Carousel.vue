@@ -6,6 +6,7 @@
     <ul :style="{ height: height - 40 + 'px' }" class="carousel-items">
       <carousel-item
         v-for="it in items"
+        :key="it.id"
         :item="it"
         :embeds="embeds"
         :activeItem="activeItem"
@@ -16,6 +17,7 @@
     <ul class="indicators">
       <li
         v-for="it in items"
+        :key="it.id"
         :class="{ 'active': activeItem === it.id }"
         @click="activateItem(it)"
         class="indicator-item"/>

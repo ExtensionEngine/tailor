@@ -3,16 +3,18 @@
     <h5>Answers</h5>
     <draggable :list="answerGroups" :options="dragOptions" @update="update">
       <div v-for="(answers, i) in answerGroups" :key="i" class="answer-group">
-        <span class="fa fa-bars"></span>
+        <span class="drag-handle">
+          <span class="mdi mdi-drag-vertical"></span>
+        </span>
         <span class="label">{{ i + 1 }}</span>
         <span
           @click="addAnswer(i)"
-          class="fa fa-plus btn btn-link pull-right">
+          class="mdi mdi-plus btn btn-link pull-right">
         </span>
         <span
           v-if="hasExtraAnswers"
           @click="removeAnswerGroup(i)"
-          class="fa fa-trash-o btn btn-link pull-right">
+          class="mdi mdi-delete btn btn-link pull-right">
         </span>
         <ul>
           <li v-for="(answer, j) in answers" :class="errorClass(i, j)">
@@ -22,7 +24,7 @@
               type="text"
               class="form-control"
               placeholder="Answer...">
-            <span @click="removeAnswer(i, j)" class="fa fa-times"></span>
+            <span @click="removeAnswer(i, j)" class="btn-remove mdi mdi-close"></span>
           </li>
         </ul>
       </div>
@@ -77,7 +79,7 @@ export default {
     dragOptions() {
       return {
         disabled: this.disabled || !(this.answerGroups.length > 1),
-        handle: '.fa-bars'
+        handle: '.drag-handle'
       };
     }
   },
@@ -142,15 +144,21 @@ h5 {
   padding: 10px;
   text-align: left;
 
-  .fa-bars {
+  .drag-handle {
     float: left;
-    margin: 1px 15px 0 0;
-    font-size: 18px;
+    cursor: pointer;
+
+    .mdi {
+      color: #888;
+      font-size: 22px;
+      line-height: 24px;
+    }
   }
 
   .label {
     padding: 1px 10px;
     font-size: 12px;
+    line-height: 24px;
     border-radius: 1px;
     background-color: #aaa;
   }
@@ -165,7 +173,7 @@ ul {
     margin: 20px 0;
   }
 
-  .fa-times {
+  .btn-remove {
     position: absolute;
     right: 5px;
     bottom: 5px;
