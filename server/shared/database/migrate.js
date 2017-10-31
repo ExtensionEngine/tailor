@@ -26,12 +26,13 @@ const umzug = new Umzug({
   }
 });
 
-module.exports = function migrate(to, from, method = 'up') {
+// TODO: Implement migration down
+module.exports = function migrate(to, from) {
   const toIndex = findIndex(changelog, { name: to }) + 1;
   const fromIndex = from ? findIndex(changelog, { name: from }) : (toIndex - 1);
   const versions = changelog.slice(fromIndex, toIndex);
   const migrations = flatten(map(versions, 'migrations'));
-  return umzug.execute({ migrations, method }).then(migrations => {
+  return umzug.execute({ migrations, method: 'up' }).then(migrations => {
     console.log(`DB migrated to ${to} version`);
   });
 };
