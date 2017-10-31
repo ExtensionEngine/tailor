@@ -18,8 +18,8 @@
   // Style constants
   "style": {
     // Primary brand color
-    "brandColor": "",
+    "brandColor": "#3949AB",
     // Secondary brand color
-    "altBrandColor": ""
+    "altBrandColor": "#5C6BC0"
   }
 }
