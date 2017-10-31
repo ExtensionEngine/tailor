@@ -1,5 +1,3 @@
-const map = require('lodash/map');
-
 const ASSET_GROUP = 'PERSPECTIVE';
 const PREVIEW_URL = 'https://cgma.dev.extensionengine.com/admin/#/course/{courseId}/activity/{activityId}/preview';
 
@@ -16,12 +14,6 @@ const COURSE_OUTLINE = [{
   hasExams: true,
   hasPrerequisites: true,
   meta: [{
-    key: 'name',
-    type: 'TEXTAREA',
-    label: 'Name',
-    placeholder: 'Click to add...',
-    validate: { rules: { max: 250 } }
-  }, {
     key: 'description',
     type: 'TEXTAREA',
     label: 'Description',
@@ -47,12 +39,6 @@ const COURSE_OUTLINE = [{
   hasExams: false,
   hasPrerequisites: true,
   meta: [{
-    key: 'name',
-    type: 'TEXTAREA',
-    label: 'Name',
-    placeholder: 'Click to add...',
-    validate: { rules: { max: 250 } }
-  }, {
     key: 'description',
     type: 'TEXTAREA',
     label: 'Description',
@@ -68,13 +54,7 @@ const COURSE_OUTLINE = [{
   isEditable: true,
   hasPerspectives: true,
   hasPrerequisites: true,
-  meta: [{
-    key: 'name',
-    type: 'TEXTAREA',
-    label: 'Name',
-    placeholder: 'Click to add...',
-    validate: { rules: { max: 250 } }
-  }]
+  meta: []
 }, {
   level: 3,
   type: 'TOPIC',
@@ -88,12 +68,6 @@ const COURSE_OUTLINE = [{
   hasExams: false,
   hasPrerequisites: true,
   meta: [{
-    key: 'name',
-    type: 'TEXTAREA',
-    label: 'Name',
-    placeholder: 'Click to add...',
-    validate: { rules: { max: 250 } }
-  }, {
     key: 'description',
     type: 'TEXTAREA',
     label: 'Description',
@@ -112,27 +86,13 @@ const REPOSITORY_OUTLINE = [{
   hasPerspectives: false,
   hasAssessments: false,
   hasExams: true,
-  meta: [{
-    key: 'name',
-    type: 'TEXTAREA',
-    label: 'Name',
-    placeholder: 'Click to add...',
-    validate: { rules: { max: 250 } }
-  }]
+  meta: []
 }];
 
 const SCHEMAS = [
   { id: 'COURSE', name: 'Course', structure: COURSE_OUTLINE },
   { id: 'REPOSITORY', name: 'Repository', structure: REPOSITORY_OUTLINE }
 ];
-
-// Prefix activity types with schema id. Format: SCHEMA_ID/TYPE
-SCHEMAS.forEach(schema => {
-  return schema.structure.forEach(it => {
-    it.type = `${schema.id}/${it.type}`;
-    it.subLevels = map(it.subLevels, type => `${schema.id}/${type}`);
-  });
-});
 
 module.exports = {
   ASSET_GROUP,

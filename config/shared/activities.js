@@ -1,6 +1,8 @@
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const first = require('lodash/first');
+const isEmpty = require('lodash/isEmpty');
+const map = require('lodash/map');
 const mergeConfig = require('../utils/mergeConfig');
 const config = mergeConfig(
   require('./activities-rc'),
@@ -8,6 +10,28 @@ const config = mergeConfig(
 );
 
 const { SCHEMAS, ASSET_GROUP, PREVIEW_URL } = config;
+
+// Validate schemas
+// Prefix activity types with schema id; SCHEMA_ID/TYPE
+// Add name meta to each activity config
+SCHEMAS.forEach(schema => {
+  validateSchema(schema);
+  return schema.structure.forEach(it => {
+    it.type = `${schema.id}/${it.type}`;
+    it.subLevels = map(it.subLevels, type => `${schema.id}/${type}`);
+    it.meta = it.meta || [];
+    const hasNameMeta = find(it.meta, { key: 'name' });
+    if (!hasNameMeta) {
+      it.meta.unshift({
+        key: 'name',
+        type: 'TEXTAREA',
+        label: 'Name',
+        placeholder: 'Click to add...',
+        validate: { rules: { max: 250 } }
+      });
+    }
+  });
+});
 
 module.exports = {
   SCHEMAS,
@@ -39,4 +63,18 @@ function getLevel(type) {
   // and pick first
   const schemaId = type.includes('/') ? first(type.split('/')) : first(SCHEMAS).id;
   return find(getOutlineLevels(schemaId), { type });
+}
+
+function validateSchema(schema) {
+  const schemaMandatoryProps = ['id', 'name'];
+  schemaMandatoryProps.forEach(prop => {
+    if (!schema[prop]) throw new Error(`Schema must have ${prop}!`);
+  });
+  if (isEmpty(schema.structure)) throw new Error('Schema structure missing!');
+  const activityMandatoryProps = ['level', 'type', 'label', 'color'];
+  schema.structure.forEach(it => {
+    activityMandatoryProps.forEach(prop => {
+      if (!it[prop]) throw new Error(`Activity config must have ${prop}!`);
+    });
+  });
 }
