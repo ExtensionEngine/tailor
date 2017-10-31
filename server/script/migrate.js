@@ -10,21 +10,18 @@ run(process.argv.slice(2), {
 });
 
 function run([command, arg], options) {
+  if (command === 'to') return migrate(arg).then(() => process.exit(0));
   if (command === 'create') {
     if (arg) options.name = arg;
     let cmd = ['sequelize migration:create', ...getFlags(options)];
-    return execCli(cmd.join(' '));
-  }
-
-  if (command === 'to') {
-    return migrate(arg).then(() => process.exit(0));
+    return execCmd(cmd.join(' '));
   }
 
   printUsage();
   process.exit(0);
 }
 
-function execCli(cmd) {
+function execCmd(cmd) {
   return exec(cmd, (err, stdout, stderr) => {
     if (!err) {
       process.stdout.write(stdout);
