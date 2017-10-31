@@ -21,10 +21,6 @@ const rules = [{
   use: 'val-loader'
 }];
 
-const autoprefixer = {
-  browsers: [ 'last 2 versions', 'ie 11' ]
-};
-
 const uglifyJsOptions = {
   compressor: { warnings: false, keep_fnames: true },
   mangle: { keep_fnames: true }
@@ -42,7 +38,6 @@ module.exports = (options, req) => ({
   html: {
     template: 'index.html'
   },
-  autoprefixer,
   webpack(config) {
     config.module.rules.push(...rules);
     return config;
