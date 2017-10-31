@@ -1,20 +1,23 @@
 {
   "title": {
     // Full title
-    "full": "Tailor Content Authoring",
+    "full": "Tailor Author",
     // Short title
     "short": "Tailor",
     // Sub title
     "sub": "Content Authoring"
   },
-  "logo": { // Logo paths absolute from /client
+  // Logo files in /client/assets/img
+  // Filenames must contain 'logo' verbiage
+  "logo": {
     // Compact, navbar logo
-    "compact": "/assets/img/tailor-logo-compact.svg",
+    "compact": "my-logo-compact.svg",
     // Full, login screen logo
-    "full": "/assets/img/tailor.svg"
+    "full": "my-logo-full.svg"
   },
-  // App favicon path absolute from /client
-  "favicon": "/assets/favicon.ico",
+  // Favicon file in /client/assets/img
+  // Filename must contain 'favicon' verbiage
+  "favicon": "my-favicon.ico",
   // Style constants
   "style": {
     // Primary brand color
