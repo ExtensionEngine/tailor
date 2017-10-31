@@ -3,8 +3,8 @@
     <div class="container-fluid">
       <div class="navbar-header">
         <router-link :to="{ name: 'catalog' }" class="navbar-brand">
-          <img src="../../assets/img/logo-b.svg" alt="Logo"/>
-          <span>CGMA Author</span>
+          <img :src="logo" alt="Logo"/>
+          <span>{{ title }}</span>
         </router-link>
       </div>
       <router-link
@@ -33,6 +33,12 @@ import { mapGetters, mapActions } from 'vuex-module';
 
 export default {
   name: 'navbar',
+  data() {
+    return {
+      logo: LOGO_COMPACT,
+      title: TITLE_FULL
+    };
+  },
   computed: {
     ...mapGetters(['user']),
     ...mapGetters(['course'], 'course')
