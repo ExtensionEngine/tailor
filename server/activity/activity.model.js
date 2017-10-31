@@ -18,7 +18,8 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.JSON
     },
     refs: {
-      type: DataTypes.JSON
+      type: DataTypes.JSON,
+      defaultValue: {}
     },
     detached: {
       type: DataTypes.BOOLEAN,

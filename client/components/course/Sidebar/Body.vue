@@ -71,11 +71,6 @@ export default {
       this.update({ _cid: this.activity._cid, data });
     }
   },
-  watch: {
-    name(val) {
-      this.nameInput = val;
-    }
-  },
   components: {
     [Checkbox.name]: Checkbox,
     [Input.name]: Input,
@@ -121,15 +116,5 @@ textarea {
 
 label {
   color: gray;
-}
-
-.row-a {
-  height: 155px;
-  padding: 3px 8px;
-
-  &:hover {
-    background-color: #f5f5f5;
-    cursor: pointer;
-  }
 }
 </style>

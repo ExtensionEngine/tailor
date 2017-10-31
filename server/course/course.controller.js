@@ -16,13 +16,11 @@ function index({ query, user }, res) {
 };
 
 function create({ body, user }, res) {
-  return Course
-    .create(body, {
-      isNewRecord: true,
-      returning: true,
-      context: { userId: user.id }
-    })
-    .then(course => res.json({ data: course }));
+  return Course.create(body, {
+    isNewRecord: true,
+    returning: true,
+    context: { userId: user.id }
+  }).then(course => res.json({ data: course }));
 }
 
 function get(req, res) {
@@ -30,7 +28,7 @@ function get(req, res) {
 }
 
 function patch({ body, course, user }, res) {
-  const data = pick(body, ['name', 'description', 'schema']);
+  const data = pick(body, ['name', 'description']);
   return course.update(data, { context: { userId: user.id } })
     .then(course => res.json({ data: course }));
 };
