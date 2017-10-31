@@ -14,6 +14,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.TEXT,
       validate: { notEmpty: true, len: [2, 2000] }
     },
+    data: {
+      type: DataTypes.JSON,
+      defaultValue: {}
+    },
     stats: {
       type: DataTypes.JSON,
       defaultValue: { objectives: 0, assessments: 0 }
