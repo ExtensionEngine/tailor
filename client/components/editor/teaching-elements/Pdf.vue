@@ -1,6 +1,6 @@
 <template>
   <div class="te-pdf">
-    <div v-if="showPlaceholder">
+    <div v-show="showPlaceholder">
       <div class="well pdf-placeholder">
         <div class="message">
           <span class="heading">Pdf placeholder</span>
@@ -9,22 +9,21 @@
         </div>
       </div>
     </div>
-    <div v-else>
+    <div v-show="!showPlaceholder">
       <div v-if="!isFocused" class="overlay">
         <div class="message">Click to preview</div>
       </div>
       <div class="pdf-container">
         <loader v-show="!showError" class="loader"></loader>
-        <div v-show="showViewer && (!ie || isFocused)" class="pdf">
-          <div class="new-window">
+        <div 
+          v-show="showViewer && (!ie || isFocused)"
+          class="pdf"
+          ref="pdf">
+          <div v-if="source" class="new-window">
             <a :href="source.src" target="_blank">
               <span class="mdi mdi-open-in-new"></span>
             </a>
           </div>
-          <object
-            :data="source.src"
-            :type="source.type">
-          </object>
         </div>
         <img
           v-if="safari"
@@ -57,6 +56,20 @@ export default {
       showViewer: true
     };
   },
+  mounted() {
+    this.embedPdf();
+  },
+  methods: {
+    embedPdf() {
+      if(!this.$refs.pdf || !this.$el || !this.source) return;
+      const el = this.$el.querySelector('object');
+      if(el) el.parentNode.removeChild(el);
+      let pdfObject = document.createElement('object');
+      pdfObject.data = this.source.src;
+      pdfObject.type = this.source.type;
+      this.$refs.pdf.appendChild(pdfObject);
+    }
+  },
   computed: {
     source() {
       const src = get(this.element, 'data.url');
@@ -80,6 +93,7 @@ export default {
       handler() {
         this.showViewer = true;
         this.showError = false;
+        this.embedPdf();
         setTimeout(() => (this.showError = true), 1500);
       }
     }
@@ -91,109 +105,111 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.te-pdf {
-  position: relative;
-}
-
-.pdf-placeholder {
-  .message {
-    padding: 100px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
-}
-
-.overlay {
-  position: absolute;
-  z-index: 99;
-  width: 100%;
-  height: 100%;
-  background-color: #333;
-  opacity: 0.9;
-  z-index: 10;
-
-  .message {
+/deep/ {
+  .te-pdf {
     position: relative;
-    top: 45%;
-    color: green;
-    font-size: 22px;
   }
-}
 
-.error {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,.9);
-  z-index: 1;
-}
+  .pdf-placeholder {
+    .message {
+      padding: 100px;
 
-.error .message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  font-size: 18px;
-  font-weight: 500;
+      .heading {
+        font-size: 24px;
+      }
 
-  .icon { font-size: 42px; }
-}
+      span {
+        display: block;
+        font-size: 18px;
+      }
+    }
+  }
 
-.well {
-  margin: 0;
-}
-
-.pdf-container {
-  position: relative;
-  width: 100%;
-  height: 360px;
-}
-
-.pdf {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding-bottom: 30px;
-  z-index: 2;
-
-  object {
-    display: block;
+  .overlay {
+    position: absolute;
+    z-index: 99;
     width: 100%;
     height: 100%;
+    background-color: #333;
+    opacity: 0.9;
+    z-index: 10;
+
+    .message {
+      position: relative;
+      top: 45%;
+      color: green;
+      font-size: 22px;
+    }
   }
-}
 
-.loader {
-  position: relative;
-  top: 50%;
-}
+  .error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.9);
+    z-index: 1;
+  }
 
-.new-window {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: #fff;
+  .error .message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
 
-  a {
-    color: #444;
-    font-size: 22px;
+    .icon { font-size: 42px; }
+  }
 
-    &:hover {
-      color: #42b983;
+  .well {
+    margin: 0;
+  }
+
+  .pdf-container {
+    position: relative;
+    width: 100%;
+    height: 360px;
+  }
+
+  .pdf {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 30px;
+    z-index: 2;
+
+    object {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .loader {
+    position: relative;
+    top: 50%;
+  }
+
+  .new-window {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+
+    a {
+      color: #444;
+      font-size: 22px;
+
+      &:hover {
+        color: #42b983;
+      }
     }
   }
 }
-
 </style>
