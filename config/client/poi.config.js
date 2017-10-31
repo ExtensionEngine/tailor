@@ -48,6 +48,7 @@ module.exports = (options, req) => ({
     config.plugin('minimize').tap(args => [merge(...args, uglifyJsOptions)]);
   },
   sourceMap: options.mode === 'development',
+  hotEntry: 'app',
   generateStats: true,
   port: 8080,
   devServer: {
