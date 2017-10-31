@@ -1,4 +1,3 @@
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const merge = require('lodash/merge');
 const path = require('path');
 const serverPort = require('../server').port;
@@ -29,7 +28,8 @@ const uglifyJsOptions = {
 
 module.exports = (options, req) => ({
   presets: [
-    require('poi-preset-eslint')({ mode: '*' })
+    require('poi-preset-eslint')({ mode: '*' }),
+    require('poi-preset-bundle-report')()
   ],
   entry: {
     app: 'client/main.js'
@@ -46,9 +46,9 @@ module.exports = (options, req) => ({
     config.resolve.alias.merge(aliases);
     if (options.mode !== 'production') return;
     config.plugin('minimize').tap(args => [merge(...args, uglifyJsOptions)]);
-    if (options.analyze) config.plugin('analyzer').use(BundleAnalyzerPlugin);
   },
   sourceMap: options.mode === 'development',
+  hotEntry: 'app',
   generateStats: true,
   port: 8080,
   devServer: {
