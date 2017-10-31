@@ -9,42 +9,6 @@ const { user: role } = require('../../config/shared').role;
 
 const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
 
-/**
- * @swagger
- * definitions:
- *   UserInput:
- *     type: object
- *     required:
- *     - email
- *     - password
- *     - role
- *     properties:
- *       email:
- *         type: string
- *         description: user email
- *       password:
- *         type: string
- *         description: user password
- *       role:
- *         type: string
- *         description: user role
- *   UserOutput:
- *     type: object
- *     required:
- *     - id
- *     - email
- *     - role
- *     properties:
- *       id:
- *         type: number
- *         description: unique user identifier
- *       email:
- *         type: string
- *         description: user email
- *       role:
- *         type: string
- *         description: user role
- */
 module.exports = function (sequelize, DataTypes) {
   const User = sequelize.define('user', {
     email: {
