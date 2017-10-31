@@ -14,7 +14,7 @@
           </span>
         </div>
         <h2>
-          {{ activity.name }}
+          {{ activity.data.name }}
           <a v-if="previewUrl" :href="previewUrl" class="preview-link" target="_blank">
             <span class="mdi mdi-eye"></span>
           </a>
