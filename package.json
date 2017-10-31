@@ -81,6 +81,7 @@
     "pluralize": "^7.0.0",
     "promise-queue": "^2.2.3",
     "rcfile": "^1.0.3",
+    "sass-web-fonts": "^2.0.2",
     "save-as": "^0.1.8",
     "sequelize": "^3.3.0",
     "string-template": "^1.0.0",
