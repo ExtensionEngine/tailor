@@ -4,7 +4,10 @@
   "description": "Authoring platform",
   "author": "Damir Perisic <dperisic@extensionengine.com>",
   "private": true,
-  "browserslist": ["last 2 versions", "ie 11"],
+  "browserslist": [
+    "last 2 versions",
+    "ie 11"
+  ],
   "scripts": {
     "dev:client": "poi --config config/client/poi.config.js",
     "build": "poi build --config config/client/poi.config.js",
@@ -23,7 +26,7 @@
     "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
     "db:seed": "node -r dotenv/config ./server/script/dbSeed.js",
     "db:reset": "node -r dotenv/config ./server/script/dbReset.js",
-    "migrate": "node ./server/script/migrate.js",
+    "migrate": "node -r dotenv/config ./server/script/migrate.js",
     "add:admin": "node -r dotenv/config ./server/script/addAdmin.js",
     "fix:activities": "node -r dotenv/config ./server/script/fixActivities.js",
     "fix:assessments": "node -r dotenv/config ./server/script/fixAssessments.js",
@@ -116,9 +119,11 @@
     "imports-loader": "^0.7.1",
     "node-sass": "^4.5.3",
     "nodemon": "^1.12.1",
-    "poi": "^9.4.3",
+    "poi": "^9.4.4",
+    "poi-preset-bundle-report": "^2.0.2",
     "poi-preset-eslint": "^9.0.1",
     "sass-loader": "^6.0.6",
+    "sequelize-cli": "^3.0.0",
     "stylelint": "^8.2.0",
     "stylelint-config-standard": "^17.0.0",
     "stylelint-order": "^0.7.0",
@@ -126,9 +131,9 @@
     "stylelint-webpack-plugin": "^0.9.0",
     "swagger-jsdoc": "^1.8.2",
     "swagger-ui": "^2.2.10",
+    "umzug": "^2.1.0",
     "val-loader": "^1.0.2",
-    "vue-template-compiler": "^2.5.2",
-    "webpack-bundle-analyzer": "^2.9.0"
+    "vue-template-compiler": "^2.5.2"
   },
   "engines": {
     "node": ">= 8.8.0",

@@ -1,5 +1,4 @@
 const brand = require('./brand');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const find = require('lodash/find');
 const merge = require('lodash/merge');
 const path = require('path');
@@ -45,7 +44,8 @@ const setStyleGlobals = (config) => {
 
 module.exports = (options, req) => ({
   presets: [
-    require('poi-preset-eslint')({ mode: '*' })
+    require('poi-preset-eslint')({ mode: '*' }),
+    require('poi-preset-bundle-report')()
   ],
   entry: {
     app: 'client/main.js'
@@ -65,10 +65,10 @@ module.exports = (options, req) => ({
     setStyleGlobals(config);
     if (options.mode !== 'production') return;
     config.plugin('minimize').tap(args => [merge(...args, uglifyJsOptions)]);
-    if (options.analyze) config.plugin('analyzer').use(BundleAnalyzerPlugin);
   },
   copy: { from: 'client/assets/img', to: 'assets/img' },
   sourceMap: options.mode === 'development',
+  hotEntry: 'app',
   generateStats: true,
   port: 8080,
   devServer: {

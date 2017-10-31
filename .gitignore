@@ -186,3 +186,6 @@ client/assets/img/*favicon.ico
 
 # Vscode
 .vscode/
+
+# DB migrations
+umzug.json

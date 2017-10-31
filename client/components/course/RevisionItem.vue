@@ -20,13 +20,13 @@ import {
   getRevisionColor
 } from 'utils/revision';
 import { mapGetters } from 'vuex-module';
-import { OUTLINE_LEVELS } from 'shared/activities';
 
 export default {
   name: 'revision-item',
   props: ['revision'],
   computed: {
     ...mapGetters(['getParent'], 'activities'),
+    ...mapGetters(['structure'], 'course'),
     activity() {
       const activityId = this.revision.state.activityId || this.revision.state.id;
       return this.getOutlineLocation(this.getParent(activityId));
@@ -47,7 +47,7 @@ export default {
   methods: {
     getOutlineLocation(current) {
       if (!current) return null;
-      const level = find(OUTLINE_LEVELS, { type: current.type });
+      const level = find(this.structure, { type: current.type });
       if (level) return { ...current, label: level.label };
       return this.getOutlineLocation(this.getParent(current.id));
     }

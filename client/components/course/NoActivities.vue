@@ -39,21 +39,18 @@
 import filter from 'lodash/filter';
 import { mapGetters, mapActions } from 'vuex-module';
 import multiselect from '../common/Select';
-import { OUTLINE_LEVELS } from 'shared/activities';
-
-const TOP_LEVELS = filter(OUTLINE_LEVELS, { level: 1 });
 
 export default {
   data() {
     return {
       name: '',
-      level: TOP_LEVELS[0]
+      level: null
     };
   },
   computed: {
-    ...mapGetters(['course'], 'course'),
+    ...mapGetters(['course', 'structure'], 'course'),
     levels() {
-      return TOP_LEVELS;
+      return filter(this.structure, { level: 1 });
     }
   },
   methods: {
@@ -66,13 +63,16 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return;
         this.save({
-          name: this.name,
           type: this.level.type,
+          data: { name: this.name },
           courseId: this.course.id,
           position: 1
         });
       });
     }
+  },
+  mounted() {
+    this.level = this.levels[0];
   },
   components: { multiselect },
   inject: ['$validator']
