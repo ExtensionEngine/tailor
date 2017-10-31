@@ -60,8 +60,8 @@ mutation(function resetPagination() {
 });
 
 mutation(function save(course) {
-  let search = this.state.search.toLowerCase();
-  let name = course.name.toLowerCase();
+  const search = this.state.search.toLowerCase();
+  const name = course.name.toLowerCase();
   if (search && !name.includes(search)) return;
   Vue.set(this.state.items, course._cid, course);
 });
