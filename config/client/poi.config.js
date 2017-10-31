@@ -1,8 +1,9 @@
+const brand = require('./brand');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const find = require('lodash/find');
 const merge = require('lodash/merge');
 const path = require('path');
 const serverPort = require('../server').port;
-
 const rootPath = path.resolve(__dirname, '../../');
 
 const aliases = {
@@ -27,6 +28,21 @@ const uglifyJsOptions = {
   mangle: { keep_fnames: true }
 };
 
+const extendSassLoader = options => merge(options, { data: brand.style });
+
+const setStyleGlobals = (config) => {
+  config.module.rule('scss')
+    .use('sass-loader')
+    .tap(extendSassLoader);
+  config.module.rule('vue').use('vue-loader')
+    .tap(config => {
+      const sassLoader = find(config.loaders.scss, { loader: 'sass-loader' });
+      if (!sassLoader) return config;
+      extendSassLoader(sassLoader.options);
+      return config;
+    });
+};
+
 module.exports = (options, req) => ({
   presets: [
     require('poi-preset-eslint')({ mode: '*' })
@@ -36,18 +52,22 @@ module.exports = (options, req) => ({
   },
   dist: 'dist',
   html: {
-    template: 'index.html'
+    title: brand.globals.TITLE_SHORT,
+    favicon: `client/${brand.globals.FAVICON}`
   },
+  define: Object.assign({}, brand.globals),
   webpack(config) {
     config.module.rules.push(...rules);
     return config;
   },
   extendWebpack(config) {
     config.resolve.alias.merge(aliases);
+    setStyleGlobals(config);
     if (options.mode !== 'production') return;
     config.plugin('minimize').tap(args => [merge(...args, uglifyJsOptions)]);
     if (options.analyze) config.plugin('analyzer').use(BundleAnalyzerPlugin);
   },
+  copy: { from: 'client/assets/img', to: 'assets/img' },
   sourceMap: options.mode === 'development',
   generateStats: true,
   port: 8080,
