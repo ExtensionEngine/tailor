@@ -8,4 +8,3 @@ module.exports = {
     return queryInterface.removeColumn('course', 'schema');
   }
 };
-

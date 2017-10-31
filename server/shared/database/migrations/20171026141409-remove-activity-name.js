@@ -11,8 +11,10 @@ module.exports = {
       return Promise.map(activities, it => {
         it.data = it.data || {};
         const name = find(query, { id: it.id }).name;
-        if (name) it.data.name = name;
-        it.changed('data', true);
+        if (name) {
+          it.data.name = name;
+          it.changed('data', true);
+        }
         return it.save();
       });
     }).then(() => queryInterface.removeColumn('activity', 'name'));

@@ -15,7 +15,7 @@
               {{ vErrors.first('default') }}
             </span>
           </div>
-          <div :class="{ 'has-error': vErrors.has('type') }" class="form-group">
+          <div class="form-group">
             <multiselect
               v-model="schema"
               :options="schemas"
@@ -23,9 +23,6 @@
               label="name"
               value="id">
             </multiselect>
-            <span v-show="vErrors.has('type')" class="help-block">
-              {{ vErrors.first('type') }}
-            </span>
           </div>
           <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
             <input
@@ -109,15 +106,13 @@ export default {
   methods: {
     ...mapActions(['save'], 'courses'),
     submit() {
-      this.$validator.validateAll()
-        .then(result => {
-          if (!result) return;
-          const data = {
-            schema: this.schema.id,
-            ...pick(this, ['name', 'description'])
-          };
-          return this.create(data);
+      this.$validator.validateAll().then(result => {
+        if (!result) return;
+        return this.create({
+          schema: this.schema.id,
+          ...pick(this, ['name', 'description'])
         });
+      });
     },
     create(course) {
       this.showLoader = true;
@@ -136,8 +131,8 @@ export default {
   },
   directives: { focus },
   components: {
-    Modal,
     Loader,
+    Modal,
     Multiselect
   },
   inject: ['$validator']
