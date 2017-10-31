@@ -1,12 +1,14 @@
 const Promise = require('bluebird');
 
 const DEFAULT_SCHEMA = 'COURSE';
+const ACTIVITY_TYPES = ['GOAL', 'OBJECTIVE', 'TOPIC', 'INTERACTIVE_EXERCISE'];
 
 module.exports = {
   up(queryInterface, Sequelize, { Course, Activity }) {
     return Activity.findAll()
       .then(activities => {
         return Promise.map(activities, it => {
+          if (!ACTIVITY_TYPES.includes(it.type)) return it;
           it.type = `${DEFAULT_SCHEMA}/${it.type}`;
           return it.save();
         });
