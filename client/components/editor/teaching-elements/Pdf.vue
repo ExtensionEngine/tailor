@@ -15,23 +15,23 @@
       </div>
       <div class="pdf-container">
         <loader v-show="!showError" class="loader"></loader>
-        <div v-if="showViewer" class="pdf">
-          <object
-            :data="source.src"
-            :type="source.type">
-          </object>
+        <div v-show="showViewer && (!ie || isFocused)" class="pdf">
           <div class="new-window">
             <a :href="source.src" target="_blank">
               <span class="mdi mdi-open-in-new"></span>
             </a>
           </div>
+          <object
+            :data="source.src"
+            :type="source.type">
+          </object>
         </div>
         <img
           v-if="safari"
           v-show="false"
           :src="source.src"
           @error="showViewer = false">
-        <div v-show="showError" class="error">
+        <div v-show="showError && (!ie || isFocused)" class="error">
           <div class="message">
             <span class="icon mdi mdi-alert"></span>
             <p>Error loading PDF file!</p>
@@ -44,6 +44,7 @@
 
 <script>
 import get from 'lodash/get';
+import isIexplorer from 'is-iexplorer';
 import isSafari from 'is-safari';
 import Loader from 'components/common/Loader';
 
@@ -68,6 +69,9 @@ export default {
     },
     safari() {
       return isSafari;
+    },
+    ie() {
+      return isIexplorer;
     }
   },
   watch: {
@@ -113,6 +117,7 @@ export default {
   height: 100%;
   background-color: #333;
   opacity: 0.9;
+  z-index: 10;
 
   .message {
     position: relative;
@@ -129,6 +134,7 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,.9);
+  z-index: 1;
 }
 
 .error .message {
@@ -160,8 +166,7 @@ export default {
   width: 100%;
   height: 100%;
   padding-bottom: 30px;
-  background: none;
-  z-index: 10;
+  z-index: 2;
 
   object {
     display: block;
@@ -176,6 +181,8 @@ export default {
 }
 
 .new-window {
+  position: absolute;
+  bottom: 0;
   width: 100%;
   background: #fff;
 
