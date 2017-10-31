@@ -1,69 +1,11 @@
-'use strict';
-
 const calculatePosition = require('../shared/util/calculatePosition');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
-/**
- * @swagger
- * definitions:
- *   ActivityInput:
- *     type: object
- *     required:
- *     - type
- *     properties:
- *       name:
- *         type: string
- *         description: activity title
- *       type:
- *         type: string
- *         description: activity type
- *       parentId:
- *         type: integer
- *         description: id of parent activity, null for root activities
- *       position:
- *         type: float
- *         description: position within the array of sibling activities.
- *   ActivityReorderInput:
- *     type: object
- *     required:
- *     - position
- *     properties:
- *       position:
- *         type: integer
- *         description: non-negative integer representing the new position
- *   ActivityOutput:
- *     type: object
- *     required:
- *     - id
- *     - courseId
- *     - parentId
- *     - type
- *     - position
- *     properties:
- *       id:
- *         type: integer
- *         description: unique activity identifier
- *       courseId:
- *         type: integer
- *         description: id of the course containing this activity
- *       parentId:
- *         type: integer
- *         description: id of parent activity, null for root activities
- *       name:
- *         type: string
- *         description: activity title
- *       position:
- *         type: float
- *         description: position within the array of sibling activities
- */
 module.exports = function (sequelize, DataTypes) {
   const Activity = sequelize.define('activity', {
-    name: {
-      type: DataTypes.STRING
-    },
     type: {
       type: DataTypes.STRING
     },
@@ -76,7 +18,13 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.JSON
     },
     refs: {
-      type: DataTypes.JSON
+      type: DataTypes.JSON,
+      defaultValue: {}
+    },
+    detached: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -89,11 +37,6 @@ module.exports = function (sequelize, DataTypes) {
     deletedAt: {
       type: DataTypes.DATE,
       field: 'deleted_at'
-    },
-    detached: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      allowNull: false
     }
   }, {
     classMethods: {

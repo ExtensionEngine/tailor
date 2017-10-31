@@ -22,11 +22,11 @@ function getAction(operation) {
 }
 
 function getActivityText(activity) {
-  return activity ? ` within '${activity.name}' ${lower(activity.label)}` : '';
+  return activity ? ` within '${activity.data.name}' ${lower(activity.label)}` : '';
 }
 
 function describeActivityRevision(rev, activity) {
-  let { name, type } = rev.state;
+  let { data: { name }, type } = rev.state;
   name = name ? `'${name}' ` : '';
   const level = getLevel(type);
   const label = level ? level.label : type;

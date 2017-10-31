@@ -23,9 +23,10 @@
 </template>
 
 <script>
+import { getOutlineLevels } from 'shared/activities';
+
 import get from 'lodash/get';
 import last from 'lodash/last';
-import { OUTLINE_LEVELS } from 'shared/activities';
 import pluralize from 'pluralize';
 import Stat from './Stat';
 import truncate from 'truncate';
@@ -53,7 +54,7 @@ export default {
       return COURSE_COLORS[(this.course.id || 0) % 3];
     },
     objectiveLabel() {
-      return pluralize(last(OUTLINE_LEVELS).label);
+      return pluralize(last(getOutlineLevels(this.course.schema)).label);
     },
     assessments() {
       return get(this.course, 'stats.assessments', 0);

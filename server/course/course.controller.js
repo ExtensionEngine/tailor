@@ -16,13 +16,11 @@ function index({ query, user }, res) {
 };
 
 function create({ body, user }, res) {
-  return Course
-    .create(body, {
-      isNewRecord: true,
-      returning: true,
-      context: { userId: user.id }
-    })
-    .then(course => res.json({ data: course }));
+  return Course.create(body, {
+    isNewRecord: true,
+    returning: true,
+    context: { userId: user.id }
+  }).then(course => res.json({ data: course }));
 }
 
 function get(req, res) {
