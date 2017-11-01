@@ -1,8 +1,6 @@
-'use strict';
-
-const router = require('express-promise-router')();
 const ctrl = require('./course.controller');
 const mw = require('./middleware');
+const router = require('express-promise-router')();
 
 // Course access middleware
 router.use('/courses/:courseId*', mw.getCourse);

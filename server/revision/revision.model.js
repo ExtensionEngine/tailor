@@ -1,5 +1,3 @@
-'use strict';
-
 const hooks = require('./hooks');
 
 module.exports = function (sequelize, DataTypes) {

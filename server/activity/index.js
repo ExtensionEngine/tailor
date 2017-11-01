@@ -1,5 +1,3 @@
-'use strict';
-
 const ctrl = require('./activity.controller');
 const model = require('./activity.model');
 const router = require('express-promise-router')();

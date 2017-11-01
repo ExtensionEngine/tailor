@@ -1,5 +1,4 @@
 const { processStatics, resolveStatics } = require('../shared/storage/helpers');
-
 const calculatePosition = require('../shared/util/calculatePosition');
 const isNumber = require('lodash/isNumber');
 
