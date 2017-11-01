@@ -1,23 +1,43 @@
+const { Course } = require('../shared/database');
+const { createError } = require('../shared/error/helpers');
+const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const ctrl = require('./course.controller');
-const mw = require('./middleware');
 const router = require('express-promise-router')();
 
-// Course access middleware
-router.use('/courses/:courseId*', mw.getCourse);
-router.use('/courses/:courseId*', mw.hasCourseAccess);
+router
+  .use('/courses/:id*', getCourse)
+  .use('/courses/:id*', hasAccess)
+  .get('/courses', ctrl.index)
+  .post('/courses', ctrl.create)
+  .get('/courses/:id', ctrl.get)
+  .patch('/courses/:id', ctrl.patch)
+  .delete('/courses/:id', ctrl.remove)
+  .get('/courses/:id/users', ctrl.getUsers)
+  .post('/courses/:id/users', ctrl.upsertUser)
+  .delete('/courses/:id/users/:userId', ctrl.removeUser)
+  .get('/courses/:id/contentInventory', ctrl.exportContentInventory);
 
-router.get('/courses', ctrl.index);
-router.post('/courses', ctrl.create);
-router.get('/courses/:id', ctrl.get);
-router.patch('/courses/:id', ctrl.patch);
-router.delete('/courses/:id', ctrl.remove);
-router.get('/courses/:courseId/users', ctrl.getUsers);
-router.post('/courses/:courseId/users', ctrl.upsertUser);
-router.delete('/courses/:courseId/users/:userId', ctrl.removeUser);
-router.get('/courses/:courseId/contentInventory', ctrl.exportContentInventory);
+function getCourse(req, res) {
+  return Course.findById(req.params.id, { paranoid: false })
+    .then(course => course || createError(NOT_FOUND, 'Course not found'))
+    .then(course => {
+      req.course = course;
+      return Promise.resolve('next');
+    });
+};
+
+function hasAccess(req, res) {
+  const { user, course } = req;
+  if (user.isAdmin()) return Promise.resolve('next');
+  return course.getUser(user)
+    .then(user => user || createError(UNAUTHORIZED, 'Access restricted'))
+    .then(user => {
+      req.courseRole = user.courseUser.role;
+      return Promise.resolve('next');
+    });
+};
 
 module.exports = {
-  controller: ctrl,
-  middleware: mw,
+  ctrl,
   router
 };
