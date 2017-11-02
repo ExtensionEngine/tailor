@@ -13,10 +13,14 @@
       <div v-if="!isFocused" class="overlay">
         <div class="message">Click to preview</div>
       </div>
-      <div class="pdf-container">
-        <loader v-show="!showError" class="loader"></loader>
+      <div class="loader-outer">
+        <div class="loader-inner">
+          <circular-progress v-show="!showError"></circular-progress>
+        </div>
+      </div>
+      <div v-show="!this.ie || this.isFocused" class="pdf-container">
         <div 
-          v-show="showViewer && (!ie || isFocused)"
+          v-show="showViewer"
           class="pdf"
           ref="pdf">
           <div v-if="source" class="new-window">
@@ -30,7 +34,7 @@
           v-show="false"
           :src="source.src"
           @error="showViewer = false">
-        <div v-show="showError && (!ie || isFocused)" class="error">
+        <div v-show="showError" class="error">
           <div class="message">
             <span class="icon mdi mdi-alert"></span>
             <p>Error loading PDF file!</p>
@@ -45,7 +49,7 @@
 import get from 'lodash/get';
 import isIexplorer from 'is-iexplorer';
 import isSafari from 'is-safari';
-import Loader from 'components/common/Loader';
+import CircularProgress from 'components/common/CircularProgress';
 
 export default {
   name: 'te-pdf',
@@ -61,13 +65,14 @@ export default {
   },
   methods: {
     embedPdf() {
-      if(!this.$refs.pdf || !this.$el || !this.source) return;
+      if (!this.source) return;
       const el = this.$el.querySelector('object');
-      if(el) el.parentNode.removeChild(el);
-      let pdfObject = document.createElement('object');
+      if (el) el.parentNode.removeChild(el);
+      const pdfObject = document.createElement('object');
       pdfObject.data = this.source.src;
       pdfObject.type = this.source.type;
       this.$refs.pdf.appendChild(pdfObject);
+      setTimeout(() => (this.showError = true), 2500);
     }
   },
   computed: {
@@ -88,18 +93,14 @@ export default {
     }
   },
   watch: {
-    source: {
-      immediate: true,
-      handler() {
-        this.showViewer = true;
-        this.showError = false;
-        this.embedPdf();
-        setTimeout(() => (this.showError = true), 1500);
-      }
+    source() {
+      this.showViewer = true;
+      this.showError = false;
+      this.embedPdf();
     }
   },
   components: {
-    Loader
+    CircularProgress
   }
 };
 </script>
@@ -191,9 +192,19 @@ export default {
     }
   }
 
-  .loader {
-    position: relative;
-    top: 50%;
+  .loader-outer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    .loader-inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 
   .new-window {
