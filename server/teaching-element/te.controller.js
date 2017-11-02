@@ -1,15 +1,12 @@
-'use strict';
-
-const { TeachingElement, Activity } = require('../shared/database');
+const { Activity, TeachingElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
+const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
 const processListQuery = require('../shared/util/processListQuery');
-const { resolveStatics } = require('../shared/storage/helpers');
 
 function list({ course, query }, res) {
   const opts = processListQuery(query);
-
   if (query.activityId || query.parentId) {
     const { activityId, parentId } = query;
     const where = { $or: [] };
@@ -17,13 +14,11 @@ function list({ course, query }, res) {
     if (parentId) where.$or.push({ parentId: parseInt(parentId, 10) });
     opts.include = { model: Activity, attributes: [], where };
   }
-
   if (!query.detached) opts.where.$and = [{ detached: false }];
 
   const elements = query.integration
     ? course.getTeachingElements(opts)
     : TeachingElement.fetch(opts);
-
   return elements.then(data => res.json({ data }));
 }
 

@@ -1,8 +1,6 @@
-'use strict';
-
+const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isNumber = require('lodash/isNumber');
-const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 
 module.exports = function (sequelize, DataTypes) {
   const TeachingElement = sequelize.define('TeachingElement', {
@@ -16,6 +14,15 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       validate: { min: 0, max: 1000000 }
     },
+    refs: {
+      type: DataTypes.JSON,
+      defaultValue: {}
+    },
+    detached: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
     createdAt: {
       type: DataTypes.DATE,
       field: 'created_at'
@@ -27,11 +34,6 @@ module.exports = function (sequelize, DataTypes) {
     deletedAt: {
       type: DataTypes.DATE,
       field: 'deleted_at'
-    },
-    detached: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      allowNull: false
     }
   }, {
     classMethods: {

@@ -1,24 +1,5 @@
 <template>
   <div class="body">
-    <div class="row-a">
-      <label>Name</label>
-      <div v-show="showNameInput" :class="{ 'has-error': vErrors.has('name') }">
-        <textarea
-          v-model="nameInput"
-          v-validate="{ rules: { required: true, min: 2, max: 150 } }"
-          @blur="saveName"
-          @keydown.enter.prevent="saveName"
-          @keydown.esc="discardNameChange"
-          ref="nameInput"
-          name="name"
-          class="form-control">
-        </textarea>
-        <span class="help-block">{{ vErrors.first('name') }}</span>
-      </div>
-      <div v-show="!showNameInput" @click.stop="focusName">
-        <div class="title">{{ name }}</div>
-      </div>
-    </div>
     <div class="meta-element">
       <component
         v-for="data in metadata"
@@ -71,7 +52,7 @@ export default {
       return getLevel(this.activity.type) || {};
     },
     metadata() {
-      if (!get(this.activity, 'name') || !get(this.level, 'meta')) return [];
+      if (!get(this.level, 'meta')) return [];
       return map(this.level.meta, it => {
         let value = get(this.activity, `data.${it.key}`);
         return { ...it, value };
@@ -80,26 +61,6 @@ export default {
   },
   methods: {
     ...mapActions(['remove', 'update'], 'activities'),
-    discardNameChange() {
-      this.nameInput = this.activity.name;
-      this.showNameInput = false;
-    },
-    focusName() {
-      this.nameInput = this.activity.name;
-      this.showNameInput = true;
-      setTimeout(() => this.$refs.nameInput.focus(), 0);
-    },
-    saveName() {
-      this.$validator.validateAll().then(result => {
-        if (!result) return;
-        if (this.nameInput === this.activity.name) {
-          this.showNameInput = false;
-          return;
-        }
-        this.update({ _cid: this.activity._cid, name: this.nameInput });
-        this.showNameInput = false;
-      });
-    },
     tagname(type = '') {
       const component = META_TYPES[type.toUpperCase()] || META_TYPES.INPUT;
       return component.name;
@@ -108,11 +69,6 @@ export default {
       const data = cloneDeep(this.activity.data) || {};
       data[key] = value;
       this.update({ _cid: this.activity._cid, data });
-    }
-  },
-  watch: {
-    name(val) {
-      this.nameInput = val;
     }
   },
   components: {
@@ -160,15 +116,5 @@ textarea {
 
 label {
   color: gray;
-}
-
-.row-a {
-  height: 155px;
-  padding: 3px 8px;
-
-  &:hover {
-    background-color: #f5f5f5;
-    cursor: pointer;
-  }
 }
 </style>
