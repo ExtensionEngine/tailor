@@ -84,11 +84,12 @@ import multiselect from '../../../common/Select';
 import NumericalResponse from './NumericalResponse';
 import { OUTLINE_LEVELS } from 'shared/activities';
 import pluralize from 'pluralize';
+import Question from './Question';
 import set from 'lodash/set';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
-import Question from './Question';
+import unset from 'lodash/unset';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
@@ -179,7 +180,11 @@ export default {
         .then(() => {
           let data = this.summative ? this.element : this.element.data;
           data = cloneDeep(data);
-          if (this.objective) set(data, 'data._refs.objectiveId', this.objective.id);
+          if (this.objective) {
+            set(data, '_refs.objectiveId', this.objective.id);
+          } else {
+            unset(data, '_refs.objectiveId');
+          }
           this.$emit('save', data);
           this.isEditing = false;
           this.setAlert(saveAlert);
@@ -191,6 +196,7 @@ export default {
         this.$emit('remove');
       } else {
         this.addElement(cloneDeep(this.previousVersion));
+        this.setObjective();
         this.isEditing = false;
         this.setAlert();
         this.errors = [];
@@ -206,6 +212,11 @@ export default {
     remove() {
       this.$emit('remove');
     },
+    setObjective() {
+      const objectiveId = get(this.element, 'data._refs.objectiveId');
+      if (!objectiveId) return;
+      this.objective = find(this.examObjectives, { id: objectiveId });
+    },
     updateFeedback(feedback) {
       let element = cloneDeep(this.element);
       element.data.feedback = element.data.feedback || {};
@@ -217,9 +228,7 @@ export default {
     }
   },
   mounted() {
-    const objectiveId = get(this.element, 'data._refs.objectiveId');
-    if (!objectiveId) return;
-    this.objective = find(this.examObjectives, { id: objectiveId });
+    this.setObjective();
   },
   components: {
     MultipleChoice,

@@ -158,6 +158,7 @@ fabric.properties
 ### Client ###
 # Build
 dist/
+stats.json
 
 # Debug
 npm-debug.log
@@ -179,3 +180,6 @@ ecosystem.config.js
 
 # Vscode
 .vscode/
+
+# DB migrations
+umzug.json

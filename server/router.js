@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require('express');
 const activityRouter = require('./activity').router;
 const courseRouter = require('./course').router;

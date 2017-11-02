@@ -7,7 +7,7 @@ const courseData = require('./courses.json').data;
 const userData = require('./users.json').data;
 const questionData = require('./questions.json').data;
 
-const OUTLINE_LEVELS = ['GOAL', 'OBJECTIVE', 'TOPIC'];
+const OUTLINE_LEVELS = ['COURSE/GOAL', 'COURSE/OBJECTIVE', 'COURSE/TOPIC'];
 const LEAF = OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1];
 const ACTIVITIES_PER_LEVEL = 4;
 
@@ -24,8 +24,8 @@ function insertActivities(Model, course, level, parent) {
     const type = OUTLINE_LEVELS[level];
     const name = level ? 'Sub' : 'Main';
     const attrs = {
-      name: `${name} activity ${position}`,
       type,
+      data: { name: `${name} activity ${position}` },
       position,
       courseId: course.id
     };

@@ -24,7 +24,7 @@ export default {
   computed: {
     ...mapGetters(['activity'], 'course'),
     activitySelected() {
-      return !!this.activity.name;
+      return !!this.activity._cid;
     }
   },
   components: {

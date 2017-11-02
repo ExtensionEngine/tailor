@@ -1,19 +1,28 @@
 <template>
-  <div v-if="showCreateButton" class="create-course" >
+  <div v-if="showCreateButton" class="create-course">
     <button @click="show" class="btn btn-primary btn-fab" type="button">
       <span class="mdi mdi-plus"></span>
     </button>
-    <modal :show="showModal" :backdrop="false" effect="fade">
-      <div class="modal-header" slot="modal-header">
-        <h4 class="modal-title">Create course</h4>
+    <modal :show="showModal">
+      <div slot="header">
+        <h4 class="modal-title">Create content repository</h4>
       </div>
-      <div class="modal-body" slot="modal-body">
+      <div slot="body">
         <loader v-show="showLoader"></loader>
         <div v-show="!showLoader">
           <div class="error-message">
             <span v-if="vErrors.has('default')">
               {{ vErrors.first('default') }}
             </span>
+          </div>
+          <div class="form-group">
+            <multiselect
+              v-model="schema"
+              :options="schemas"
+              :searchable="false"
+              label="name"
+              value="id">
+            </multiselect>
           </div>
           <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
             <input
@@ -44,9 +53,19 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer" slot="modal-footer">
-        <button @click="hide" class="btn btn-default" type="button">Cancel</button>
-        <button @click="submit" class="btn btn-primary" type="button">Create</button>
+      <div slot="footer">
+        <button
+          @click="hide"
+          class="btn btn-material btn-default"
+          type="button">
+          Cancel
+        </button>
+        <button
+          @click="submit"
+          class="btn btn-material btn-primary"
+          type="button">
+          Create
+        </button>
       </div>
     </modal>
   </div>
@@ -54,13 +73,17 @@
 
 <script>
 import { focus } from 'vue-focus';
-import Loader from '../common/Loader';
 import { mapActions, mapGetters } from 'vuex-module';
-import { modal } from 'vue-strap';
+import { SCHEMAS } from 'shared/activities';
+
+import Loader from '../common/Loader';
+import Modal from 'components/common/Modal';
+import Multiselect from 'components/common/Select';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
 
 const getDefaultData = () => ({
+  schema: SCHEMAS[0],
   name: '',
   description: '',
   showLoader: false,
@@ -75,17 +98,21 @@ export default {
     ...mapGetters(['isAdmin']),
     showCreateButton() {
       return this.isAdmin;
+    },
+    schemas() {
+      return SCHEMAS;
     }
   },
   methods: {
     ...mapActions(['save'], 'courses'),
     submit() {
-      this.$validator.validateAll()
-        .then(result => {
-          if (!result) return;
-          const course = pick(this, ['name', 'description']);
-          return this.create(course);
+      this.$validator.validateAll().then(result => {
+        if (!result) return;
+        return this.create({
+          schema: this.schema.id,
+          ...pick(this, ['name', 'description'])
         });
+      });
     },
     create(course) {
       this.showLoader = true;
@@ -103,7 +130,11 @@ export default {
     }
   },
   directives: { focus },
-  components: { modal, Loader },
+  components: {
+    Loader,
+    Modal,
+    Multiselect
+  },
   inject: ['$validator']
 };
 </script>
@@ -119,20 +150,6 @@ export default {
 .create-course {
   textarea {
     resize: none;
-  }
-
-  .modal-content {
-    padding: 10px;
-    border-radius: 0;
-  }
-
-  .modal-header {
-    border: 0;
-    text-align: left;
-  }
-
-  .modal-footer {
-    border: 0;
   }
 
   .form-group {

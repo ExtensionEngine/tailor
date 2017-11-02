@@ -22,6 +22,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import filter from 'lodash/filter';
+import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
 export default {
@@ -53,7 +54,7 @@ export default {
     // TODO: Do this better!
     this.setupActivityApi(`/courses/${courseId}/activities`);
     if (!this.course) this.getCourse(courseId);
-    this.getActivities().then(() => {
+    return Promise.join(this.getActivities(), Promise.delay(800)).then(() => {
       this.showLoader = false;
       let activities = filter(this.activities, { parentId: null });
       activities = sortBy(activities, 'position');

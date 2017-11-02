@@ -1,5 +1,3 @@
-'use strict';
-
 const { Activity } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
@@ -7,7 +5,7 @@ const pick = require('lodash/pick');
 const processQuery = require('../shared/util/processListQuery');
 
 function create({ body, params, user }, res) {
-  const attrs = ['name', 'type', 'parentId', 'position'];
+  const attrs = ['type', 'parentId', 'position', 'data'];
   const data = Object.assign(pick(body, attrs), { courseId: params.courseId });
   const opts = { context: { userId: user.id } };
   return Activity.create(data, opts)

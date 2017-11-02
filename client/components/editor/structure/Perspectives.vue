@@ -3,7 +3,11 @@
     <div v-if="!perspectives.length" class="well">
       Click the button below to Create first Perspective.
     </div>
-    <perspective v-for="it in perspectives" :perspective="it"></perspective>
+    <perspective
+      v-for="it in perspectives"
+      :key="it._cid"
+      :perspective="it">
+    </perspective>
     <create-perspective @create="add"></create-perspective>
   </div>
 </template>

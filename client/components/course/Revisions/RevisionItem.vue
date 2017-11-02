@@ -26,7 +26,6 @@ import {
   getRevisionColor
 } from 'utils/revision';
 import { mapGetters, mapMutations } from 'vuex-module';
-import { OUTLINE_LEVELS } from 'shared/activities';
 
 export default {
   name: 'revision-item',
@@ -36,7 +35,7 @@ export default {
   },
   computed: {
     ...mapGetters(['getParent'], 'activities'),
-    ...mapGetters(['revisions'], 'course'),
+    ...mapGetters(['structure'], 'course'),
     activity() {
       const state = this.revision.state;
       const activityId = state.activityId || state.id;
@@ -65,7 +64,7 @@ export default {
     ...mapMutations(['setBaseUrl'], 'tes'),
     getOutlineLocation(current) {
       if (!current) return null;
-      const level = find(OUTLINE_LEVELS, { type: current.type });
+      const level = find(this.structure, { type: current.type });
       if (level) return { ...current, label: level.label };
       return this.getOutlineLocation(this.getParent(current.id));
     },

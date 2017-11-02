@@ -7,6 +7,7 @@
       <div class="row">
         <primitive
           v-for="element in assessment.data.question"
+          :key="element.id"
           :initialElement="element"
           :disabled="!isEditing"
           @save="elementChanged">
