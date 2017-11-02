@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="pdf-container">
-        <div 
+        <div
           v-show="showViewer"
           class="pdf"
           ref="pdf">
