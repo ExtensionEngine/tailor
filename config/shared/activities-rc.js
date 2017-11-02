@@ -1,7 +1,7 @@
 const ASSET_GROUP = 'PERSPECTIVE';
 const PREVIEW_URL = 'https://cgma.dev.extensionengine.com/admin/#/course/{courseId}/activity/{activityId}/preview';
 
-const OUTLINE_LEVELS = [{
+const COURSE_OUTLINE = [{
   level: 1,
   type: 'GOAL',
   subLevels: ['OBJECTIVE', 'INTERACTIVE_EXERCISE'],
@@ -53,7 +53,8 @@ const OUTLINE_LEVELS = [{
   color: '#78909C',
   isEditable: true,
   hasPerspectives: true,
-  hasPrerequisites: true
+  hasPrerequisites: true,
+  meta: []
 }, {
   level: 3,
   type: 'TOPIC',
@@ -75,8 +76,26 @@ const OUTLINE_LEVELS = [{
   }]
 }];
 
+const REPOSITORY_OUTLINE = [{
+  level: 1,
+  type: 'GROUP',
+  label: 'Group',
+  color: '#42A5F5',
+  isEditable: true,
+  hasIntroduction: true,
+  hasPerspectives: false,
+  hasAssessments: false,
+  hasExams: true,
+  meta: []
+}];
+
+const SCHEMAS = [
+  { id: 'COURSE', name: 'Course', structure: COURSE_OUTLINE },
+  { id: 'REPOSITORY', name: 'Repository', structure: REPOSITORY_OUTLINE }
+];
+
 module.exports = {
   ASSET_GROUP,
-  OUTLINE_LEVELS,
+  SCHEMAS,
   PREVIEW_URL
 };

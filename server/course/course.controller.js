@@ -1,5 +1,3 @@
-'use strict';
-
 const { createError } = require('../shared/error/helpers');
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
@@ -16,13 +14,11 @@ function index({ query, user }, res) {
 };
 
 function create({ body, user }, res) {
-  return Course
-    .create(body, {
-      isNewRecord: true,
-      returning: true,
-      context: { userId: user.id }
-    })
-    .then(course => res.json({ data: course }));
+  return Course.create(body, {
+    isNewRecord: true,
+    returning: true,
+    context: { userId: user.id }
+  }).then(course => res.json({ data: course }));
 }
 
 function get(req, res) {
