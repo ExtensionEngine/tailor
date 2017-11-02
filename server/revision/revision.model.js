@@ -1,46 +1,52 @@
 const hooks = require('./hooks');
+const { Model } = require('sequelize');
 
-module.exports = function (sequelize, DataTypes) {
-  const Revision = sequelize.define('revision', {
-    entity: {
-      type: DataTypes.ENUM,
-      values: ['ACTIVITY', 'COURSE', 'TEACHING_ELEMENT'],
-      allowNull: false
-    },
-    operation: {
-      type: DataTypes.ENUM,
-      values: ['CREATE', 'UPDATE', 'REMOVE'],
-      allowNull: false
-    },
-    state: {
-      type: DataTypes.JSON,
-      allowNull: true,
-      validate: { notEmpty: true }
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      field: 'created_at'
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      field: 'updated_at'
-    }
-  }, {
-    classMethods: {
-      associate(models) {
-        Revision.belongsTo(models.Course, {
-          foreignKey: { name: 'courseId', field: 'course_id' }
-        });
-        Revision.belongsTo(models.User, {
-          foreignKey: { name: 'userId', field: 'user_id' }
-        });
+class Revision extends Model {
+  static fields(DataTypes) {
+    const { DATE, ENUM, JSON } = DataTypes;
+    return {
+      entity: {
+        type: ENUM,
+        values: ['ACTIVITY', 'COURSE', 'TEACHING_ELEMENT'],
+        allowNull: false
       },
-      addHooks(models) {
-        hooks.add(Revision, models);
+      operation: {
+        type: ENUM,
+        values: ['CREATE', 'UPDATE', 'REMOVE'],
+        allowNull: false
+      },
+      state: {
+        type: JSON,
+        allowNull: true,
+        validate: { notEmpty: true }
+      },
+      createdAt: {
+        type: DATE,
+        field: 'created_at'
+      },
+      updatedAt: {
+        type: DATE,
+        field: 'updated_at'
       }
-    },
-    freezeTableName: true
-  });
+    };
+  }
 
-  return Revision;
-};
+  static associate({ Course, User }) {
+    Revision.belongsTo(Course, {
+      foreignKey: { name: 'courseId', field: 'course_id' }
+    });
+    Revision.belongsTo(User, {
+      foreignKey: { name: 'userId', field: 'user_id' }
+    });
+  }
+
+  static hooks(models) {
+    hooks.add(Revision, models);
+  }
+
+  static options() {
+    return { freezeTableName: true };
+  }
+}
+
+module.exports = Revision;
