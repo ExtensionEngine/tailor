@@ -10,7 +10,7 @@ const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
 
 class User extends Model {
   static fields(DataTypes) {
-    const { DATE, ENUM, STRING } = DataTypes;
+    const { DATE, ENUM, STRING, VIRTUAL } = DataTypes;
     return {
       email: {
         type: STRING,
@@ -24,6 +24,16 @@ class User extends Model {
       role: {
         type: ENUM(role.ADMIN, role.USER, role.INTEGRATION),
         defaultValue: role.USER
+      },
+      profile: {
+        type: VIRTUAL,
+        get() {
+          return {
+            id: this.id,
+            email: this.email,
+            role: this.role
+          };
+        }
       },
       token: {
         type: STRING,
@@ -118,14 +128,6 @@ class User extends Model {
     this.token = this.createToken({ expiresIn: '5 days' });
     mail.resetPassword(this);
     return this.save();
-  }
-
-  profile() {
-    return {
-      id: this.id,
-      email: this.email,
-      role: this.role
-    };
   }
 }
 
