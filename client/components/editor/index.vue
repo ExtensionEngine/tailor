@@ -104,9 +104,8 @@ export default {
       this.mousedownCaptured = false;
       if (!this.focusedElement) return;
       if (!e.component ||
-        ((e.component.name !== 'toolbar') &&
         ((e.component.data._cid !== this.focusedElement._cid) &&
-        (e.component.data.id !== this.focusedElement.id)))) {
+        (e.component.data.id !== this.focusedElement.id))) {
         this.focusoutElement();
       }
     }
