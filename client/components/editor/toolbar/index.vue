@@ -102,12 +102,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.toolbar {
-  position: fixed;
-  width: 100%;
-  z-index: 999;
-}
-
 .toolbar-container {
   position: relative;
 }

@@ -1,28 +1,32 @@
 <template>
-  <div @mousedown="onMousedown" @click="onClick" class="editor">
-    <circular-progress v-if="showLoader"></circular-progress>
-    <div v-else>
-      <toolbar></toolbar>
-      <div class="container">
-        <div class="breadcrumbs">
-          <span v-for="(item, index) in breadcrumbs" :key="item.id">
-            {{ truncate(item.data.name) }}
-            <span
-              v-if="index !== (breadcrumbs.length - 1)"
-              class="mdi mdi-chevron-right">
-            </span>
-          </span>
+  <div>
+    <toolbar ref="toolbar"></toolbar>
+    <div :style="editorWrapperDynamicStyle" class="editor-wrapper">
+      <div @mousedown="onMousedown" @click="onClick" class="editor">
+        <circular-progress v-if="showLoader"></circular-progress>
+        <div v-else>
+          <div class="container">
+            <div class="breadcrumbs">
+              <span v-for="(item, index) in breadcrumbs" :key="item.id">
+                {{ truncate(item.data.name) }}
+                <span
+                  v-if="index !== (breadcrumbs.length - 1)"
+                  class="mdi mdi-chevron-right">
+                </span>
+              </span>
+            </div>
+            <h2>
+              {{ activity.data.name }}
+              <a v-if="previewUrl" :href="previewUrl" class="preview-link" target="_blank">
+                <span class="mdi mdi-eye"></span>
+              </a>
+            </h2>
+            <introduction v-if="showIntroduction"></introduction>
+            <perspectives v-if="showPerspectives"></perspectives>
+            <assessments v-if="showAssessments"></assessments>
+            <exams v-if="showExams"></exams>
+          </div>
         </div>
-        <h2>
-          {{ activity.data.name }}
-          <a v-if="previewUrl" :href="previewUrl" class="preview-link" target="_blank">
-            <span class="mdi mdi-eye"></span>
-          </a>
-        </h2>
-        <introduction v-if="showIntroduction"></introduction>
-        <perspectives v-if="showPerspectives"></perspectives>
-        <assessments v-if="showAssessments"></assessments>
-        <exams v-if="showExams"></exams>
       </div>
     </div>
   </div>
@@ -47,7 +51,8 @@ export default {
   data() {
     return {
       showLoader: true,
-      mousedownCaptured: false
+      mousedownCaptured: false,
+      toolbarHeight: 0
     };
   },
   computed: {
@@ -79,6 +84,16 @@ export default {
       if (!config.PREVIEW_URL) return;
       const { courseId, activityId } = this.$route.params;
       return format(config.PREVIEW_URL, { courseId, activityId });
+    },
+    editorWrapperDynamicStyle() {
+      const toolbarHeight = this.toolbarHeight;
+      return { marginTop: -toolbarHeight + 'px', paddingTop: toolbarHeight + 'px' };
+    }
+  },
+  watch: {
+    'focusedElement.type'(type) {
+      const toolbar = this.$refs.toolbar;
+      this.$nextTick(() => (this.toolbarHeight = type ? toolbar.$el.clientHeight : 0));
     }
   },
   methods: {
@@ -136,8 +151,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.editor-wrapper {
+  height: 100%;
+}
+
 .editor {
-  min-height: 101%;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-y: overlay;
 
   .breadcrumbs {
     margin: 70px 0 10px;
