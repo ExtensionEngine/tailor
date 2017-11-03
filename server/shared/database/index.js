@@ -3,7 +3,7 @@ const invoke = require('lodash/invoke');
 const reduce = require('lodash/reduce');
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize(process.env.POSTGRES_URI);
+const sequelize = new Sequelize(process.env.POSTGRES_URI, { logging: false });
 const { DataTypes } = sequelize.Sequelize;
 
 function defineModel(Model) {
