@@ -53,10 +53,6 @@ class Course extends Model {
     });
   }
 
-  static hooks(models) {
-    hooks.add(Course, models);
-  }
-
   static options() {
     return {
       underscored: true,
@@ -64,6 +60,10 @@ class Course extends Model {
       paranoid: true,
       freezeTableName: true
     };
+  }
+
+  static addHooks(models) {
+    hooks.add(Course, models);
   }
 
   static updateStats(id, key, value) {

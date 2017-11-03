@@ -40,12 +40,12 @@ class Revision extends Model {
     });
   }
 
-  static hooks(models) {
-    hooks.add(Revision, models);
-  }
-
   static options() {
     return { freezeTableName: true };
+  }
+
+  static addHooks(models) {
+    hooks.add(Revision, models);
   }
 }
 
