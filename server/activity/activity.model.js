@@ -63,6 +63,7 @@ class Activity extends Model {
 
   static options() {
     return {
+      tableName: 'activity',
       underscored: true,
       timestamps: true,
       paranoid: true,

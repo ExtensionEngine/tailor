@@ -41,7 +41,10 @@ class Revision extends Model {
   }
 
   static options() {
-    return { freezeTableName: true };
+    return {
+      tableName: 'revision',
+      freezeTableName: true
+    };
   }
 
   static addHooks(models) {

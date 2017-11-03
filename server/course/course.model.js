@@ -55,6 +55,7 @@ class Course extends Model {
 
   static options() {
     return {
+      tableName: 'course',
       underscored: true,
       timestamps: true,
       paranoid: true,

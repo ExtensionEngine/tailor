@@ -64,10 +64,10 @@ class TeachingElement extends Model {
 
   static options() {
     return {
+      tableName: 'teaching_element',
       underscored: true,
       timestamps: true,
-      paranoid: true,
-      tableName: 'teaching_element'
+      paranoid: true
     };
   }
 
