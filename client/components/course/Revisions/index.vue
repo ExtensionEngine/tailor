@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div v-if="!hasMoreResults && revisions.length === 0" class="well">
-      No changes recorded.
-    </div>
     <div v-if="revisions.length > 0" class="revisions">
       <div class="subheader">History</div>
       <ul>
@@ -13,26 +10,24 @@
         </revision-item>
       </ul>
     </div>
-    <loader v-show="showLoader" class="loader"></loader>
-    <div
-      v-infinite-scroll="loadMore"
-      infinite-scroll-disabled="showLoader"
-      infinite-scroll-distance="100">
-    </div>
+    <infinite-loading @infinite="fetchRevisions">
+      <span slot="spinner">
+        <div class="col-lg-12 loader-wrapper"><loader></loader></div>
+      </span>
+      <span slot="no-results">No changes recorded.</span>
+      <span slot="no-more"></span>
+    </infinite-loading>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import InfiniteScroll from 'vue-infinite-scroll';
+import InfiniteLoading from 'vue-infinite-loading';
 import Loader from '../../common/Loader';
 import RevisionItem from './RevisionItem';
 
 export default {
   name: 'course-revisions',
-  data() {
-    return { showLoader: false };
-  },
   computed: {
     ...mapGetters(['revisions'], 'course'),
     ...mapGetters(['hasMoreResults'], 'revisions')
@@ -40,10 +35,11 @@ export default {
   methods: {
     ...mapActions(['fetch', 'resetPagination'], 'revisions'),
     ...mapMutations(['setBaseUrl'], 'revisions'),
-    loadMore() {
-      if (!this.hasMoreResults) return;
-      this.showLoader = true;
-      this.fetch().then(() => (this.showLoader = false));
+    fetchRevisions($state) {
+      return this.fetch().then(() => {
+        $state.loaded();
+        if (!this.hasMoreResults) $state.complete();
+      });
     }
   },
   mounted() {
@@ -51,20 +47,12 @@ export default {
     this.setBaseUrl(`/courses/${courseId}/revisions`);
     this.resetPagination();
   },
-  components: { Loader, RevisionItem },
-  directives: {
-    InfiniteScroll
-  }
+  components: { InfiniteLoading, Loader, RevisionItem }
 };
 </script>
 
 <style lang="scss" scoped>
-.well {
-  margin: 40px;
-  font-size: 16px;
-}
-
-.loader {
+.loader-wrapper {
   margin-top: 32px;
 }
 

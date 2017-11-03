@@ -138,6 +138,8 @@ export default {
 <style lang="scss" scoped>
 .editor {
   min-height: 101%;
+  overflow-y: scroll;
+  overflow-y: overlay;
 
   .breadcrumbs {
     margin: 70px 0 10px;

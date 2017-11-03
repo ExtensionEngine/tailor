@@ -13,7 +13,7 @@
         <router-link :to="{ name: 'course-info' }">Settings</router-link>
       </li>
     </ul>
-    <div class="tab-content">
+    <div class="tab-content" infinite-wrapper>
       <router-view :showLoader="showLoader"></router-view>
     </div>
   </div>
@@ -71,8 +71,10 @@ export default {
 }
 
 .course-container {
+  display: flex;
+  flex-direction: column;
+
   .nav-tabs {
-    position: fixed;
     width: 100%;
     background-color: white;
     z-index: 1;
@@ -83,7 +85,8 @@ export default {
   }
 
   .tab-content {
-    padding-top: 41px;
+    overflow-y: scroll;
+    overflow-y: overlay;
   }
 }
 </style>
