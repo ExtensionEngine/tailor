@@ -73,9 +73,9 @@ class TeachingElement extends Model {
   }
 
   static initialize() {
-    const { QueryTypes, query } = this.sequelize;
-    const opts = { type: QueryTypes.SELECT };
-    return query('SELECT NEXTVAL(\'teaching_element_id_seq\')', opts)
+    const opts = { type: this.sequelize.QueryTypes.SELECT };
+    return this.sequelize
+      .query('SELECT NEXTVAL(\'teaching_element_id_seq\')', opts)
       .then(result => new TeachingElement({ id: result[0].nextval }));
   }
 
@@ -92,8 +92,7 @@ class TeachingElement extends Model {
   }
 
   reorder(index) {
-    const { transaction } = this.sequelize;
-    return transaction(t => {
+    return this.sequelize.transaction(t => {
       return this.getReorderFilter()
         .then(filter => this.siblings(filter))
         .then(siblings => {

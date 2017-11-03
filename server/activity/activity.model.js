@@ -96,15 +96,14 @@ class Activity extends Model {
 
   remove(options = {}) {
     if (!options.recursive) return this.destroy(options);
-    const { transaction, model } = this.sequelize;
-    return transaction(t => {
+    return this.sequelize.transaction(t => {
       return this.descendants({ attributes: ['id'] })
         .then(descendants => {
           descendants.all = [...descendants.nodes, ...descendants.leaves];
           return descendants;
         })
         .then(descendants => {
-          const TeachingElement = model('TeachingElement');
+          const TeachingElement = this.sequelize.model('TeachingElement');
           const activities = map(descendants.all, 'id');
           const where = { activityId: [...activities, this.id] };
           return removeAll(TeachingElement, where, options.soft)
@@ -121,8 +120,7 @@ class Activity extends Model {
   }
 
   reorder(index) {
-    const { transaction } = this.sequelize;
-    return transaction(t => {
+    return this.sequelize.transaction(t => {
       return this.siblings().then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
         return this.save({ transaction: t });
