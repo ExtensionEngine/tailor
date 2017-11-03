@@ -138,7 +138,6 @@ export default {
   height: 100%;
   background-color: #333;
   opacity: 0.9;
-  z-index: 10;
 
   .message {
     position: relative;
@@ -154,7 +153,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,.9);
+  background: rgba(0,0,0,0.9);
   z-index: 1;
 }
 
@@ -186,8 +185,8 @@ export default {
 }
 
 .pdf {
-  position: absolute;
   display: block;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
