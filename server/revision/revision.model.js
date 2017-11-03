@@ -42,7 +42,7 @@ class Revision extends Model {
 
   static options() {
     return {
-      tableName: 'revision',
+      modelName: 'revision',
       freezeTableName: true
     };
   }

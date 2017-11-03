@@ -64,6 +64,7 @@ class TeachingElement extends Model {
 
   static options() {
     return {
+      modelName: 'TeachingElement',
       tableName: 'teaching_element',
       underscored: true,
       timestamps: true,
@@ -75,7 +76,7 @@ class TeachingElement extends Model {
     const { QueryTypes, query } = this.sequelize;
     const opts = { type: QueryTypes.SELECT };
     return query('SELECT NEXTVAL(\'teaching_element_id_seq\')', opts)
-      .then(result => TeachingElement.build({ id: result[0].nextval }));
+      .then(result => new TeachingElement({ id: result[0].nextval }));
   }
 
   static fetch(opt) {

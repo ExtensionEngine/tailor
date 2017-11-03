@@ -81,7 +81,7 @@ class User extends Model {
 
   static options() {
     return {
-      tableName: 'user',
+      modelName: 'user',
       underscored: true,
       timestamps: true,
       paranoid: true,

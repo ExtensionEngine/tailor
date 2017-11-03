@@ -25,6 +25,7 @@ class CourseUser extends Model {
 
   static options() {
     return {
+      modelName: 'courseUser',
       tableName: 'course_user',
       underscored: true,
       timestamps: true,
