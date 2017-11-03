@@ -55,7 +55,10 @@ if (isIexplorer) document.body.classList.add('ie');
 
 export default {
   name: 'te-pdf',
-  props: ['element', 'isFocused'],
+  props: {
+    element: { type: Object, required: true },
+    isFocused: { type: Boolean, required: true }
+  },
   data() {
     return {
       showError: false,
