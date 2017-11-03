@@ -1,27 +1,36 @@
 const { course: role } = require('../../config/shared').role;
+const { Model } = require('sequelize');
 
-module.exports = function (sequelize, DataTypes) {
-  return sequelize.define('courseUser', {
-    role: {
-      type: DataTypes.ENUM(role.ADMIN, role.AUTHOR),
-      defaultValue: role.AUTHOR
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      field: 'created_at'
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      field: 'updated_at'
-    },
-    deletedAt: {
-      type: DataTypes.DATE,
-      field: 'deleted_at'
-    }
-  }, {
-    tableName: 'course_user',
-    underscored: true,
-    timestamps: true,
-    paranoid: true
-  });
-};
+class CourseUser extends Model {
+  static fields({ DATE, ENUM }) {
+    return {
+      role: {
+        type: ENUM(role.ADMIN, role.AUTHOR),
+        defaultValue: role.AUTHOR
+      },
+      createdAt: {
+        type: DATE,
+        field: 'created_at'
+      },
+      updatedAt: {
+        type: DATE,
+        field: 'updated_at'
+      },
+      deletedAt: {
+        type: DATE,
+        field: 'deleted_at'
+      }
+    };
+  }
+
+  static options() {
+    return {
+      tableName: 'course_user',
+      underscored: true,
+      timestamps: true,
+      paranoid: true
+    };
+  }
+}
+
+module.exports = CourseUser;
