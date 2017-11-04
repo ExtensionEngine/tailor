@@ -1,5 +1,5 @@
 <template>
-  <div @click="onClick" class="toolbar">
+  <div class="toolbar">
     <div v-if="focusedElement.type" class="toolbar-container">
       <component
         :is="getComponentName(focusedElement.type)"
@@ -81,10 +81,6 @@ export default {
     },
     getComponentName(type) {
       return TOOLBAR_TYPES[type] || 'default-toolbar';
-    },
-    onClick(e) {
-      // Attach component data
-      e.component = { name: 'toolbar', data: {} };
     }
   },
   components: {
@@ -102,12 +98,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.toolbar {
-  position: fixed;
-  width: 100%;
-  z-index: 999;
-}
-
 .toolbar-container {
   position: relative;
 }
