@@ -174,7 +174,7 @@ ecosystem.config.js
 .*rc.*
 !.*rc.*.example
 
-#Branding
+# Branding
 client/assets/img/*logo*
 !client/assets/img/default-logo*
 client/assets/img/*favicon.ico

@@ -3,7 +3,7 @@
     <div class="auth-panel">
       <div class="auth-header">
         <img :src="logo" alt="Logo"/>
-        <h1>{{ subTitle }}</h1>
+        <h1>Course Authoring</h1>
       </div>
       <div class="auth-body">
         <router-view></router-view>
@@ -16,8 +16,7 @@
 export default {
   data() {
     return {
-      logo: LOGO_FULL,
-      subTitle: TITLE_SUB
+      logo: BRAND_CONFIG.LOGO_FULL
     };
   }
 };

@@ -1,12 +1,5 @@
 {
-  "title": {
-    // Full title
-    "full": "Tailor Author",
-    // Short title
-    "short": "Tailor",
-    // Sub title
-    "sub": "Content Authoring"
-  },
+  "title": "Tailor Author",
   // Logo files in /client/assets/img
   // Filenames must contain 'logo' verbiage
   "logo": {

@@ -35,8 +35,8 @@ export default {
   name: 'navbar',
   data() {
     return {
-      logo: LOGO_COMPACT,
-      title: TITLE_FULL
+      logo: BRAND_CONFIG.LOGO_COMPACT,
+      title: BRAND_CONFIG.TITLE
     };
   },
   computed: {

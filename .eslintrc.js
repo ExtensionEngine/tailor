@@ -32,11 +32,6 @@ module.exports = {
     // }]
   },
   globals: {
-    TITLE_FULL: true,
-    TITLE_SHORT: true,
-    TITLE_SUB: true,
-    LOGO_COMPACT: true,
-    LOGO_FULL: true,
-    FAVICON: true
+    BRAND_CONFIG: true
   }
 };

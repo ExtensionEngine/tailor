@@ -3,8 +3,8 @@ const find = require('lodash/find');
 const merge = require('lodash/merge');
 const path = require('path');
 const serverPort = require('../server').port;
-const rootPath = path.resolve(__dirname, '../../');
 
+const rootPath = path.resolve(__dirname, '../../');
 const aliases = {
   client: path.join(rootPath, 'client'),
   assets: path.join(rootPath, 'client/assets'),
@@ -27,19 +27,14 @@ const uglifyJsOptions = {
   mangle: { keep_fnames: true }
 };
 
-const extendSassLoader = options => merge(options, { data: brand.style });
-
-const setStyleGlobals = (config) => {
-  config.module.rule('scss')
-    .use('sass-loader')
-    .tap(extendSassLoader);
-  config.module.rule('vue').use('vue-loader')
-    .tap(config => {
-      const sassLoader = find(config.loaders.scss, { loader: 'sass-loader' });
-      if (!sassLoader) return config;
-      extendSassLoader(sassLoader.options);
-      return config;
-    });
+const applyBrandConfig = config => {
+  const exposeBrandStyle = options => merge(options, { data: brand.style });
+  config.module.rule('scss').use('sass-loader').tap(exposeBrandStyle);
+  config.module.rule('vue').use('vue-loader').tap(config => {
+    const sassLoader = find(config.loaders.scss, { loader: 'sass-loader' });
+    if (sassLoader) exposeBrandStyle(sassLoader.options);
+    return config;
+  });
 };
 
 module.exports = (options, req) => ({
@@ -52,17 +47,17 @@ module.exports = (options, req) => ({
   },
   dist: 'dist',
   html: {
-    title: brand.globals.TITLE_SHORT,
+    title: brand.globals.TITLE,
     favicon: `client/${brand.globals.FAVICON}`
   },
-  define: Object.assign({}, brand.globals),
+  define: { BRAND_CONFIG: brand.globals },
   webpack(config) {
     config.module.rules.push(...rules);
     return config;
   },
   extendWebpack(config) {
     config.resolve.alias.merge(aliases);
-    setStyleGlobals(config);
+    applyBrandConfig(config);
     if (options.mode !== 'production') return;
     config.plugin('minimize').tap(args => [merge(...args, uglifyJsOptions)]);
   },
