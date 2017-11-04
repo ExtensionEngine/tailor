@@ -1,0 +1,21 @@
+{
+  "title": "Tailor Author",
+  // Logo files in /client/assets/img
+  // Filenames must contain 'logo' verbiage
+  "logo": {
+    // Compact, navbar logo
+    "compact": "my-logo-compact.svg",
+    // Full, login screen logo
+    "full": "my-logo-full.svg"
+  },
+  // Favicon file in /client/assets/img
+  // Filename must contain 'favicon' verbiage
+  "favicon": "my-favicon.ico",
+  // Style constants
+  "style": {
+    // Primary brand color
+    "brandColor": "#3949AB",
+    // Secondary brand color
+    "altBrandColor": "#5C6BC0"
+  }
+}
