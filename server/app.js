@@ -54,20 +54,6 @@ app.use((err, req, res, next) => {
   res.status(err.status).json({ error: { status, message } });
 });
 
-// Serve swagger API spec in development environment.
-if (config.swagger.serveDocs) {
-  const path = require('path');
-  const swaggerJsDoc = require('swagger-jsdoc');
-  const spec = swaggerJsDoc({
-    swaggerDefinition: config.swagger.swaggerDefinition,
-    apis: ['./server/**/*.js']
-  });
-
-  app.get('/api/v1/swagger.json', (req, res, next) => res.json(spec));
-  const dir = path.join(__dirname, '../node_modules/swagger-ui/dist');
-  app.use('/swagger', express.static(dir));
-}
-
 // Handle non-existing routes.
 app.use((req, res, next) => res.status(404).end());
 
