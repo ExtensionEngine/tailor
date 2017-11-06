@@ -72,13 +72,6 @@ class TeachingElement extends Model {
     };
   }
 
-  static initialize() {
-    const opts = { type: this.sequelize.QueryTypes.SELECT };
-    return this.sequelize
-      .query('SELECT NEXTVAL(\'teaching_element_id_seq\')', opts)
-      .then(result => new TeachingElement({ id: result[0].nextval }));
-  }
-
   static fetch(opt) {
     return isNumber(opt)
       ? TeachingElement.findById(opt).then(it => it && resolveStatics(it))
