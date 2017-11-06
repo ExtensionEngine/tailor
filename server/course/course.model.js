@@ -41,13 +41,13 @@ class Course extends Model {
   }
 
   static associate({ Activity, CourseUser, TeachingElement, User }) {
-    Course.hasMany(Activity, {
+    this.hasMany(Activity, {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
-    Course.hasMany(TeachingElement, {
+    this.hasMany(TeachingElement, {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
-    Course.belongsToMany(User, {
+    this.belongsToMany(User, {
       through: CourseUser,
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
@@ -64,11 +64,11 @@ class Course extends Model {
   }
 
   static addHooks(models) {
-    hooks.add(Course, models);
+    hooks.add(this, models);
   }
 
   static updateStats(id, key, value) {
-    return Course.findById(id).then(course => {
+    return this.findById(id).then(course => {
       const stats = course.stats || {};
       stats[key] = value;
       return course.update({ stats });

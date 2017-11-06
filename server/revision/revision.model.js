@@ -32,10 +32,10 @@ class Revision extends Model {
   }
 
   static associate({ Course, User }) {
-    Revision.belongsTo(Course, {
+    this.belongsTo(Course, {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
-    Revision.belongsTo(User, {
+    this.belongsTo(User, {
       foreignKey: { name: 'userId', field: 'user_id' }
     });
   }
@@ -48,7 +48,7 @@ class Revision extends Model {
   }
 
   static addHooks(models) {
-    hooks.add(Revision, models);
+    hooks.add(this, models);
   }
 }
 

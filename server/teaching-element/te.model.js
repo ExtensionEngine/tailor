@@ -42,10 +42,10 @@ class TeachingElement extends Model {
   }
 
   static associate({ Activity, Course }) {
-    TeachingElement.belongsTo(Activity, {
+    this.belongsTo(Activity, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
-    TeachingElement.belongsTo(Course, {
+    this.belongsTo(Course, {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
   }

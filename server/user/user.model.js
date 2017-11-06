@@ -55,7 +55,7 @@ class User extends Model {
   }
 
   static associate({ Course, CourseUser }) {
-    User.belongsToMany(Course, {
+    this.belongsToMany(Course, {
       through: CourseUser,
       foreignKey: { name: 'userId', field: 'user_id' }
     });
@@ -90,7 +90,7 @@ class User extends Model {
   }
 
   static invite(user) {
-    return User.create(user).then(user => {
+    return this.create(user).then(user => {
       user.token = user.createToken({ expiresIn: '5 days' });
       mail.invite(user);
       return user.save();
