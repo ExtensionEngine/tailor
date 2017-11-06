@@ -1,9 +1,9 @@
-const { user: Role } = require('../../config/shared').role;
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
 const { Model } = require('sequelize');
 const Promise = require('bluebird');
+const { user: Role } = require('../../config/shared').role;
 
 const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const AUTH_SECRET = process.env.AUTH_JWT_SECRET;

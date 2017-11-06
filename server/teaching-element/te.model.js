@@ -1,7 +1,7 @@
-const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isNumber = require('lodash/isNumber');
 const { Model } = require('sequelize');
+const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 
 class TeachingElement extends Model {
   static fields(DataTypes) {
