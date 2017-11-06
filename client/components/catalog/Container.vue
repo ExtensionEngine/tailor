@@ -91,8 +91,6 @@ export default {
 <style lang="scss" scoped>
 .catalog {
   padding: 20px 100px 100px;
-  overflow-y: scroll;
-  overflow-y: overlay;
 
   @media (min-width: 1700px) {
     padding: 20px 300px 100px;

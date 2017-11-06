@@ -40,6 +40,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   overflow: hidden;
+
+  > .view {
+    overflow-y: scroll;
+    overflow-y: overlay;
+  }
 }
 
 // TODO: Remove global override of Bootstrap class
