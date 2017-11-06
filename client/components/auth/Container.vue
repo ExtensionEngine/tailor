@@ -52,7 +52,7 @@ export default {
 
   .auth-header {
     padding-bottom: 15px;
-    background: linear-gradient(90deg, #672d89 60%, #b94164);
+    background: linear-gradient(90deg, $brandColor 60%, $altBrandColor);
   }
 
   .auth-body {
