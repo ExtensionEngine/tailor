@@ -121,8 +121,6 @@
     "stylelint-order": "^0.7.0",
     "stylelint-processor-html": "^1.0.0",
     "stylelint-webpack-plugin": "^0.9.0",
-    "swagger-jsdoc": "^1.8.2",
-    "swagger-ui": "^2.2.10",
     "umzug": "^2.1.0",
     "val-loader": "^1.0.2",
     "vue-template-compiler": "^2.5.2"

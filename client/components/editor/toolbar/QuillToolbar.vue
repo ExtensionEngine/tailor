@@ -103,4 +103,8 @@ export default {
 .quill-toolbar.ql-toolbar {
   display: block;
 }
+
+.quill-toolbar.ql-toolbar.ql-snow {
+  border: none;
+}
 </style>
