@@ -1,4 +1,4 @@
-const { user: role } = require('../../config/shared').role;
+const { user: Role } = require('../../config/shared').role;
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
@@ -22,8 +22,8 @@ class User extends Model {
         validate: { notEmpty: true, len: [5, 100] }
       },
       role: {
-        type: ENUM(role.ADMIN, role.USER, role.INTEGRATION),
-        defaultValue: role.USER
+        type: ENUM(Role.ADMIN, Role.USER, Role.INTEGRATION),
+        defaultValue: Role.USER
       },
       profile: {
         type: VIRTUAL,
@@ -98,7 +98,7 @@ class User extends Model {
   }
 
   isAdmin() {
-    return this.role === role.ADMIN || this.role === role.INTEGRATION;
+    return this.role === Role.ADMIN || this.role === Role.INTEGRATION;
   }
 
   authenticate(password) {

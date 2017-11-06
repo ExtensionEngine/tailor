@@ -6,14 +6,6 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(process.env.POSTGRES_URI);
 const { DataTypes } = sequelize.Sequelize;
 
-function defineModel(Model) {
-  const fields = invoke(Model, 'fields', DataTypes, sequelize) || {};
-  const hooks = invoke(Model, 'hooks') || {};
-  const options = invoke(Model, 'options') || {};
-  const model = Model.init(fields, { sequelize, hooks, ...options });
-  return model;
-}
-
 let models = {
   Activity: '../../activity/activity.model',
   Course: '../../course/course.model',
@@ -45,3 +37,11 @@ sequelize.model = function (name) {
 };
 
 module.exports = db;
+
+function defineModel(Model) {
+  const fields = invoke(Model, 'fields', DataTypes, sequelize) || {};
+  const hooks = invoke(Model, 'hooks') || {};
+  const options = invoke(Model, 'options') || {};
+  const model = Model.init(fields, { sequelize, hooks, ...options });
+  return model;
+}
