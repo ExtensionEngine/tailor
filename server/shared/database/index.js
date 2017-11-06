@@ -3,6 +3,8 @@ const invoke = require('lodash/invoke');
 const reduce = require('lodash/reduce');
 const Sequelize = require('sequelize');
 
+Sequelize.Promise.config({ longStackTraces: true });
+
 const sequelize = new Sequelize(process.env.POSTGRES_URI);
 const { DataTypes } = sequelize.Sequelize;
 
