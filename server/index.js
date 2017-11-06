@@ -1,9 +1,16 @@
 'use strict';
 
 const app = require('./app');
+const bluebird = require('bluebird');
 const config = require('../config/server');
-const logger = require('./shared/logger');
 const database = require('./shared/database');
+const logger = require('./shared/logger');
+const sequelize = require('sequelize');
+
+if (process.env.NODE_ENV !== 'production') {
+  sequelize.Promise.config({ longStackTraces: true });
+  bluebird.config({ longStackTraces: true });
+}
 
 function runApp() {
   return new Promise((resolve, reject) => {

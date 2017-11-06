@@ -23,9 +23,9 @@ function add(Revision, models) {
 
   function createRevision(hook, instance, { context }) {
     if (!context || !context.userId) return;
-    const model = instance.Model;
-    const courseId = model.name === Course.name ? instance.id : instance.courseId;
-    const entity = constant(model.name);
+    const Model = instance.constructor;
+    const courseId = Model.name === Course.name ? instance.id : instance.courseId;
+    const entity = constant(Model.name);
     const operation = hooksDict[hook];
     const state = instance.get({ plain: true });
     logger.info(`[Revision] ${entity}#${hook}`, { entity, operation, id: instance.id, courseId });
