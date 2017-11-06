@@ -23,7 +23,7 @@ configuration details.
 * You can init the db (for development) by running `npm run db:seed`
 * You can create admin user by running `npm run add:admin <email> <password>`
 * App branding is configured via values set in a file named `.brand-rc.json`.
-Use the `.brand-rc.example.json` file as a template: `cp .brand-rc.example.json .brand-rc.json` and enter
+Use the `.brand-rc.json.example` file as a template: `cp .brand-rc.json.example .brand-rc.json` and enter
 configuration details.
 
 ## :rocket: Launch
