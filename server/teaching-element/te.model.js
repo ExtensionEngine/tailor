@@ -81,7 +81,7 @@ class TeachingElement extends Model {
 
   siblings(filter = {}) {
     const where = Object.assign({}, filter, { activityId: this.activityId });
-    return TeachingElement.findAll({ where, order: 'position ASC' });
+    return TeachingElement.findAll({ where, order: [['position', 'ASC']] });
   }
 
   reorder(index) {
