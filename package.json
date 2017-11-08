@@ -67,7 +67,7 @@
     "minimist": "^1.2.0",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
-    "pg": "^7.3.0",
+    "pg": "6.4.1",
     "pg-hstore": "^2.3.2",
     "pluralize": "^7.0.0",
     "promise-queue": "^2.2.3",
