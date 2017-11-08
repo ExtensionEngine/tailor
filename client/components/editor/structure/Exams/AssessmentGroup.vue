@@ -22,30 +22,23 @@
     <div v-if="!hasAssessments" class="well">
       Click the button below to Create first Assessment.
     </div>
-    <ul class="list-group">
-      <draggable
-        :list="assessments"
-        :options="dragOptions"
-        @update="reorderAssessment"
-        class="row">
-        <assessment-item
-          v-for="it in assessments"
-          :key="it._cid"
-          :assessment="it"
-          :exam="exam"
-          :expanded="isSelected(it)"
-          @selected="toggleSelect(it)"
-          @save="saveAssessment"
-          @remove="it.id ? requestDeletion(it) : remove(it)">
-        </assessment-item>
-      </draggable>
-    </ul>
-    <add-element
-      :include="['ASSESSMENT']"
-      :position="nextPosition"
+    <draggable-list
+      :list="assessments"
       :activity="group"
-      @add="addAssessment">
-    </add-element>
+      :include="['ASSESSMENT']"
+      @add="addAssessment"
+      @update="reorderAssessment">
+      <assessment-item
+        slot="list-item"
+        slot-scope="{ item }"
+        :exam="exam"
+        :assessment="item"
+        :expanded="isSelected(item)"
+        @selected="toggleSelect(item)"
+        @save="saveAssessment"
+        @remove="item.id ? requestDeletion(item) : remove(item)">
+      </assessment-item>
+    </draggable-list>
   </div>
 </template>
 
@@ -54,12 +47,11 @@ import AddElement from '../AddElement';
 import AssessmentItem from '../AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import Draggable from 'vuedraggable';
+import DraggableList from '../DraggableList';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
-import last from 'lodash/last';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
 import sortBy from 'lodash/sortBy';
@@ -77,19 +69,12 @@ export default {
   },
   computed: {
     ...mapGetters(['tes']),
-    dragOptions() {
-      return { handle: '.drag-handle' };
-    },
     assessments() {
       const cond = { activityId: this.group.id, type: 'ASSESSMENT' };
       return sortBy(filter(this.tes, cond), 'position');
     },
     hasAssessments() {
       return this.assessments && !!this.assessments.length;
-    },
-    nextPosition() {
-      const element = last(this.assessments);
-      return element ? element.position + 1 : 1;
     }
   },
   methods: {
@@ -148,7 +133,7 @@ export default {
   components: {
     AddElement,
     AssessmentItem,
-    Draggable,
+    DraggableList,
     GroupIntroduction
   }
 };
