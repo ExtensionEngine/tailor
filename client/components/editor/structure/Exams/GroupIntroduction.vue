@@ -1,29 +1,24 @@
 <template>
   <div class="group-introduction">
-    <draggable
+    <draggable-list
       :list="introductionElements"
-      :options="dragOptions"
-      @update="reorder"
-      class="row">
-      <teaching-element
-        v-for="element in introductionElements"
-        :element="element"
-        :key="element._cid">
-      </teaching-element>
-    </draggable>
-    <add-element
       :activity="group"
-      :position="introductionElements.length + 1"
       :include="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true"
-      @add="saveElement">
-    </add-element>
+      @add="saveElement"
+      @update="reorder">
+      <teaching-element
+        slot="list-item"
+        slot-scope="{ item, dragged }"
+        :dragged="dragged"
+        :element="item">
+      </teaching-element>
+    </draggable-list>
   </div>
 </template>
 
 <script>
-import AddElement from '../AddElement';
-import Draggable from 'vuedraggable';
+import DraggableList from '../DraggableList';
 import filter from 'lodash/filter';
 import { mapActions, mapGetters } from 'vuex-module';
 import TeachingElement from '../../teaching-elements';
@@ -31,11 +26,6 @@ import TeachingElement from '../../teaching-elements';
 export default {
   name: 'group-introduction',
   props: ['group'],
-  data() {
-    return {
-      dragOptions: { handle: '.drag-handle' }
-    };
-  },
   computed: {
     ...mapGetters(['tes']),
     introductionElements() {
@@ -54,8 +44,7 @@ export default {
     }
   },
   components: {
-    AddElement,
-    Draggable,
+    DraggableList,
     TeachingElement
   }
 };
