@@ -73,8 +73,8 @@ class Activity extends Model {
 
   siblings() {
     return Activity.findAll({
-      where: [{ parentId: this.parentId }, { courseId: this.courseId }],
-      order: 'position ASC'
+      where: { parentId: this.parentId, courseId: this.courseId },
+      order: [['position', 'ASC']]
     });
   }
 
