@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import AddElement from './AddElement';
 import DraggableList from './DraggableList';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
@@ -76,7 +75,6 @@ export default {
     }
   },
   components: {
-    AddElement,
     DraggableList,
     TeachingElement
   }

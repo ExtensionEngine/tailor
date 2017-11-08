@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import AddElement from '../AddElement';
 import AssessmentItem from '../AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
@@ -131,7 +130,6 @@ export default {
     }, 1500)
   },
   components: {
-    AddElement,
     AssessmentItem,
     DraggableList,
     GroupIntroduction
