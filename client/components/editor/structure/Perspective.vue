@@ -10,38 +10,28 @@
     <div v-if="!teachingElements.length" class="well">
       Click the button below to Create your first teaching element.
     </div>
-    <draggable
+    <draggable-list
       :list="teachingElements"
-      :options="dragOptions"
-      @update="reorder"
-      @start="e => dragStart(e.oldIndex)"
-      @end="dragEnd"
-      class="row">
-      <teaching-element
-        v-for="(element, index) in teachingElements"
-        @dragstart="dragStart(index)"
-        @dragend="dragEnd"
-        :dragged="dragElementIndex === index"
-        :element="element"
-        :key="element._cid">
-      </teaching-element>
-    </draggable>
-    <add-element
       :activity="perspective"
-      :position="nextPosition"
       :include="elementTypes"
       :layout="true"
-      @add="addElement">
-    </add-element>
+      @add="addElement"
+      @update="reorder">
+      <teaching-element
+        slot="list-item"
+        slot-scope="{ item, dragged }"
+        :dragged="dragged"
+        :element="item">
+      </teaching-element>
+    </draggable-list>
   </div>
 </template>
 
 <script>
 import AddElement from './AddElement';
-import Draggable from 'vuedraggable';
+import DraggableList from './DraggableList';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
-import last from 'lodash/last';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeachingElement from '../teaching-elements';
 
@@ -52,8 +42,6 @@ export default {
   props: ['perspective'],
   data() {
     return {
-      dragElementIndex: -1,
-      dragOptions: { handle: '.drag-handle' },
       elementTypes: [
         'HTML',
         'IMAGE',
@@ -73,10 +61,6 @@ export default {
     teachingElements() {
       return filter(this.tes, { activityId: this.perspective.id })
         .sort((a, b) => a.position - b.position);
-    },
-    nextPosition() {
-      const element = last(this.teachingElements);
-      return element ? element.position + 1 : 1;
     }
   },
   methods: {
@@ -89,12 +73,6 @@ export default {
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
-    },
-    dragStart(index) {
-      this.dragElementIndex = index;
-    },
-    dragEnd() {
-      this.dragElementIndex = -1;
     },
     addElement(element) {
       this.saveElement(element);
@@ -110,7 +88,7 @@ export default {
   },
   components: {
     AddElement,
-    Draggable,
+    DraggableList,
     TeachingElement
   }
 };
