@@ -3,9 +3,9 @@
     <draggable
       :list="list"
       :options="dragOptions"
-      @update="update($event)"
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
+      @update="$emit($event)"
       class="row">
       <div v-for="(it, index) in list"
         @dragstart="dragElementIndex = index"
@@ -22,7 +22,7 @@
       :activity="activity"
       :position="nextPosition"
       :layout="layout"
-      @add="add">
+      @add="el => $emit('add', el)">
     </add-element>
   </div>
 </template>
@@ -43,9 +43,7 @@ export default {
     layout: { type: Boolean, default: false }
   },
   data() {
-    return {
-      dragElementIndex: null
-    };
+    return { dragElementIndex: null };
   },
   computed: {
     nextPosition() {
@@ -53,15 +51,6 @@ export default {
       return lastItem ? lastItem.position + 1 : 1;
     }
   },
-  methods: {
-    add(element) {
-      this.$emit('add', element);
-    },
-    update(e) {
-      this.$emit('update', e);
-    }
-  },
   components: { AddElement, Draggable }
 };
 </script>
-
