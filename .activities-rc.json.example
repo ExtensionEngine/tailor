@@ -1,7 +1,22 @@
 {
-  "OUTLINE_LEVELS": [{
-    // Overrides default goal color.
-    "type": "GOAL",
-    "color": "#ff6590"
+  "SCHEMAS": [{
+    "id": "COURSE",
+    "name": "Course",
+    "structure": [
+      {
+        // Overrides default goal color.
+        "type": "GOAL",
+        "color": "#ff6590",
+        "meta":[
+          {
+            "key": "description (input)",
+            "type": "INPUT",
+            "label": "Description (input)",
+            "placeholder": "Click to add...",
+            "validate": { "rules": { "required": false, "max": 23 } }
+          }
+        ]
+      }
+    ]
   }]
 }
