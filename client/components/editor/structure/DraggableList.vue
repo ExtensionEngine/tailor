@@ -5,7 +5,7 @@
       :options="dragOptions"
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
-      @update="$emit($event)"
+      @update="$emit('update', $event)"
       class="row">
       <div v-for="(it, index) in list"
         @dragstart="dragElementIndex = index"
