@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="sidebar">
     <div class="header">Changes</div>
-    <ul ref="revisions">
+    <div ref="revisions" class="revision-list">
       <transition-group name="fade-in">
-        <li
+        <span
           v-for="(revision, index) in revisions"
           :key="revision.id"
-          :class="{ selected: revision.id === selected.id }"
+          :class="{ selected: isSelected(revision) }"
           @click="$emit('preview', revision)"
           class="revision">
           <div class="description">
@@ -14,18 +14,18 @@
             <div>{{ revision.user.email }}</div>
           </div>
           <div
-            v-show="!isDetached && index > 0"
+            v-show="!isDetached && index > 0 && !revision.loading"
             @click.stop="$emit('rollback', revision)"
             class="rollback">
             <span class="mdi mdi-loop"></span>
           </div>
-          <div v-show="revision.isResolving">
+          <div v-show="revision.loading">
             <div class="progress-background"></div>
             <div class="progress-indicator"></div>
           </div>
-        </li>
+        </span>
       </transition-group>
-    </ul>
+    </div>
   </div>
 </template>
 
@@ -36,6 +36,9 @@ export default {
   name: 'entity-sidebar',
   props: ['revisions', 'selected', 'isDetached'],
   methods: {
+    isSelected(revision) {
+      return revision.id === this.selected.id;
+    },
     formatDate(rev) {
       return fecha.format(new Date(rev.createdAt), 'M/D/YY HH:mm');
     },
@@ -55,24 +58,23 @@ $revision-padding: 32px;
   color: #808080;
 }
 
-ul {
+.revision-list {
   max-height: 500px;
   padding: 0;
-  list-style-type: none;
   overflow-y: auto;
 }
 
 .revision {
   display: flex;
+  flex-direction: row;
+  align-items: center;
   position: relative;
   width: (256px + $revision-padding);
   height: 52px;
-  flex-direction: row;
-  align-items: center;
   padding-left: $revision-padding;
-  overflow: hidden;
   color: #656565;
   font-size: 14px;
+  overflow: hidden;
   cursor: pointer;
 
   &:hover {
@@ -92,10 +94,10 @@ ul {
 .revision:hover, .selected {
   .rollback {
     display: flex;
-    width: 32px;
-    height: 32px;
     justify-content: center;
     align-items: center;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
 
     &:hover {
@@ -120,11 +122,11 @@ ul {
 
 .fade-in-enter {
   opacity: 0;
-  transform: scale(0);
+  transform: scale(0.8);
 }
 
 .fade-in-enter-active {
-  transition: all 350ms cubic-bezier(0, 0.8, 0.32, 1.07);
+  transition: all 250ms cubic-bezier(0, 0.8, 0.32, 1.07);
 }
 
 .progress-background, .progress-indicator {
@@ -142,7 +144,17 @@ ul {
 
 .progress-indicator {
   width: 80px;
-  animation: indeterminate 2.2s infinite;
+  animation: indeterminate 1.2s infinite;
+}
+
+.selected {
+  .progress-background {
+    opacity: 1;
+  }
+
+  .progress-indicator {
+    background-color: #E91E63;
+  }
 }
 
 @keyframes indeterminate {

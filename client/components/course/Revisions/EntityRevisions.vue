@@ -1,23 +1,22 @@
 <template>
   <transition name="slide-fade">
     <div class="revisions">
-      <loader v-if="showLoader" class="loader"></loader>
-      <div v-else class="content">
+      <div class="preview">
         <teaching-element
-          v-if="selectedRevision"
+          v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
-          :disabled="true"
-          class="preview">
+          :disabled="true">
         </teaching-element>
-        <entity-sidebar
-          :revisions="revisions"
-          :selected="selectedRevision"
-          :isDetached="isDetached"
-          @preview="revision => previewRevision(revision)"
-          @rollback="revision => rollback(revision)"
-          ref="sidebar">
-        </entity-sidebar>
       </div>
+      <entity-sidebar
+        v-show="expanded"
+        :revisions="revisions"
+        :selected="selectedRevision"
+        :isDetached="isDetached"
+        @preview="revision => previewRevision(revision)"
+        @rollback="revision => rollback(revision)"
+        ref="sidebar">
+      </entity-sidebar>
     </div>
   </transition>
 </template>
@@ -25,23 +24,24 @@
 <script>
 import axios from 'client/api/request';
 import EntitySidebar from './EntitySidebar';
-import findIndex from 'lodash/findIndex';
+import first from 'lodash/first';
+import get from 'lodash/get';
 import includes from 'lodash/includes';
 import Loader from 'components/common/Loader';
 import { mapActions } from 'vuex-module';
 import Promise from 'bluebird';
 import TeachingElement from 'components/editor/teaching-elements';
 
-const withoutStatics = ['HTML', 'VIDEO', 'EMBED', 'BREAK'];
+const WITHOUT_STATICS = ['HTML', 'VIDEO', 'EMBED', 'BREAK'];
 
 export default {
   name: 'entity-revisions',
   props: ['revision', 'isDetached'],
   data() {
     return {
+      expanded: false,
       revisions: [],
-      selectedRevision: {},
-      showLoader: true
+      selectedRevision: {}
     };
   },
   computed: {
@@ -56,41 +56,44 @@ export default {
     ...mapActions(['save'], 'tes'),
     getRevisions() {
       const params = { entityId: this.revision.state.id };
-      return axios.get(this.baseUrl, { params });
-    },
-    previewRevision(revision) {
-      if (revision.isResolving) return;
-      if (revision.resolved || includes(withoutStatics, revision.state.type)) {
-        this.selectedRevision = revision;
-        this.showLoader = false;
-        return;
-      }
-      const index = findIndex(this.revisions, { id: revision.id });
-      this.revisions.splice(index, 1, { ...revision, isResolving: true });
-      const resolveStatics = axios.get(`${this.baseUrl}${revision.id}`);
-      Promise.join(resolveStatics, Promise.delay(1000)).then(([response]) => {
-        const revision = { ...response.data, isResolving: false, resolved: true };
-        this.revisions.splice(index, 1, revision);
-        this.selectedRevision = revision;
-        this.showLoader = false;
+      return axios.get(this.baseUrl, { params }).then(({ data: revisions }) => {
+        revisions.forEach(it => {
+          if (includes(WITHOUT_STATICS, it.state.type)) it.resolved = true;
+        });
+        return revisions;
       });
     },
+    previewRevision(revision) {
+      if (get(this.selectedRevision, 'id') === revision.id) return;
+      this.selectedRevision = revision;
+      if (revision.resolved) return;
+      this.$set(revision, 'loading', true);
+      return axios.get(`${this.baseUrl}${revision.id}`).then(({ data }) => {
+        Object.assign(revision, { ...data, resolved: true });
+        this.$set(this.selectedRevision, revision);
+        return Promise.delay(600);
+      }).then(() => this.$set(revision, 'loading', false));
+    },
     rollback(revision) {
+      this.$set(revision, 'loading', true);
       this.save(revision.state)
         .then(this.getRevisions)
-        .then(response => {
+        .then(revisions => {
+          const newRevision = first(revisions);
+          this.revisions.unshift(newRevision);
+          this.previewRevision(newRevision);
+          return Promise.delay(300);
+        })
+        .then(() => {
+          this.$set(revision, 'loading', false);
           this.$refs.sidebar.scrollTop();
-          const revision = response.data[0];
-          this.revisions.splice(0, 0, revision);
-          this.selectedRevision = revision;
         });
     }
   },
   mounted() {
-    Promise.join(this.getRevisions(), Promise.delay(700)).then(([response]) => {
-      this.revisions = response.data;
-      this.previewRevision(this.revision);
-    });
+    this.getRevisions().then(revisions => (this.revisions = revisions));
+    this.previewRevision(this.revision);
+    Promise.delay(700).then(() => (this.expanded = true));
   },
   components: { EntitySidebar, Loader, TeachingElement }
 };
@@ -98,19 +101,12 @@ export default {
 
 <style lang="scss" scoped>
 .revisions {
+  display: flex;
   padding: 32px 8px;
-
-  .loader {
-    margin: 32px 0;
-    text-align: center;
-  }
-
-  .content {
-    display: flex;
-  }
 
   .preview {
     flex-grow: 1;
+    min-height: 500px;
     margin-right: 16px;
     text-align: center;
   }
@@ -120,7 +116,7 @@ export default {
   overflow: hidden;
   margin-top: 0;
   margin-bottom: 0;
-  transition: all 350ms cubic-bezier(0.165, 0.84, 0.44, 1); // "easeOutQuart"
+  transition: all 350ms cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .slide-fade-enter, .slide-fade-leave-to {
