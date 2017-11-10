@@ -25,8 +25,21 @@ configuration details.
 * App branding is configured via values set in a file named `.brand-rc.json`.
 Use the `.brand-rc.json.example` file as a template: `cp .brand-rc.json.example .brand-rc.json` and enter configuration details.
 
+## :rocket: Launch
+
+### Development
+* Server: `npm run dev:server`
+* Client (webpack dev server): `npm run dev:client`
+
+### Production
+* Bundle client by issuing `npm run build`
+* `npm run start`
+
 ## :books: Activities' structure
-Activities' stucture can be altered through `.activities-rc.json` file. Use the `.activities-rc.json.example` file as a template: `cp .activities-rc.json.example .activities-rc.json` and enter configuration details.
+Activities' stucture can be altered through `.activities-rc.json` file. Use the `.activities-rc.json.example` file as a template: `cp .activities-rc.json.example .activities-rc.json` and enter configuration details. It's also possible to use `.activities-rc.js`, by using `module.exports` to export the structure.
+By default, the file is searched for in the root of the project. If a custom location or a custom name is needed, it can be provided through the `activitiesConfig` param to any of the build scripts (without the extension), for example:
+`npm run dev:client -- --activitiesConfig=server/.custom-activities-rc`
+
 Activities' structure is defined by the following properties:
 
 ### `ASSET_GROUP`
@@ -73,12 +86,4 @@ Defines validation rules on an activity metadata field.
   * max `Number` - Maximum character count.
   * required `Boolean` - Defines if the field is required.
 
-## :rocket: Launch
 
-### Development
-* Server: `npm run dev:server`
-* Client (webpack dev server): `npm run dev:client`
-
-### Production
-* Bundle client by issuing `npm run build`
-* `npm run start`
