@@ -1,10 +1,10 @@
 <template>
-  <div class="activities-container">
-    <circular-progress v-if="showLoader"></circular-progress>
-    <!-- <div v-else class="activities">
-      <activity :level="0" :activities="activities" class="outline"></activity>
+  <div class='activities-container'>
+    <circular-progress v-if='showLoader'></circular-progress>
+    <div class="activities">
+      <div id='tree'></div>
       <sidebar></sidebar>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -13,150 +13,127 @@ import * as d3 from 'd3';
 
 import Activity from './Activity';
 import CircularProgress from 'components/common/CircularProgress';
-import { mapGetters } from 'vuex-module';
+import filter from 'lodash/filter';
+import forEach from 'lodash/forEach';
+import groupBy from 'lodash/groupBy';
+import includes from 'lodash/includes';
+import { mapGetters, mapMutations } from 'vuex-module';
+import reject from 'lodash/reject';
 import Sidebar from './Sidebar';
+
+function initializeTree() {
+  if (this.activities.length === 0) return;
+
+  var zoom = d3.zoom()
+    .scaleExtent([0.2, 10])
+    .on('zoom', zoomed);
+
+  var svg = d3.select('#tree').append('svg')
+    .attr('width', '100%')
+    .attr('height', '100%')
+    .call(zoom);
+
+  var g = svg.append('g');
+
+  function zoomed() {
+    g.attr('transform', d3.event.transform);
+  }
+
+  var width = document.getElementById('tree').clientWidth;
+  var height = document.getElementById('tree').clientHeight;
+
+  // declares a tree layout and assigns the size
+  const treemap = d3.tree()
+    // .nodeSize([60, 180]);
+    .size([width, height]);
+
+  //  assigns the data to a hierarchy using parent-child relationships
+  let nodes = d3.hierarchy(this.treeData);
+
+  // maps the node data to the tree layout
+  nodes = treemap(nodes);
+
+  // adds the links between the nodes
+  g.selectAll('.link')
+    .data(nodes.descendants().slice(1))
+    .enter().append('path')
+    .attr('class', 'link')
+    .attr('d', function (d) {
+      return 'M' + d.x + ',' + d.y + ' ' + d.parent.x + ',' + d.parent.y;
+    });
+
+  // adds each node as a group
+  const node = g.selectAll('.node')
+    .data(nodes.descendants())
+    .enter().append('g')
+    .attr('class', function (d) {
+      return `node depth${d.depth}`;
+    })
+    .attr('transform', function (d) {
+      return 'translate(' + d.x + ',' + d.y + ')';
+    });
+
+  // adds the circle to the node
+  node.append('circle')
+    .attr('r', 8);
+
+  // adds the text to the node
+  node.append('text')
+    .attr('dy', '.35em')
+    .attr('y', function (d) { return d.children ? -20 : 20; })
+    .style('text-anchor', 'middle')
+    .text(function (d) { return d.data.name; });
+
+  node.on('click', d => this.onClick(d.data.id));
+
+  zoom.scaleTo(svg, 0.9); // fit to svg
+}
+
+function buildTree(course, activities) {
+  const nodes = activities.map(activity => {
+    return { name: activity.id, id: activity.id, parentId: activity.parentId };
+  });
+  const groups = groupBy(reject(nodes, { 'parentId': null }), 'parentId');
+  const rootActivities = filter(nodes, { 'parentId': null });
+  forEach(rootActivities, rootActivity => {
+    addChildren(rootActivity, groups);
+  });
+
+  return { name: course.name, children: rootActivities };
+}
+
+function addChildren(activity, source) {
+  const ids = Object.keys(source);
+  if (includes(ids, activity.id.toString())) {
+    activity.children = source[activity.id.toString()];
+    forEach(activity.children, activity => {
+      addChildren(activity, source);
+    });
+  }
+  return activity;
+}
 
 export default {
   props: ['showLoader'],
-  computed: mapGetters(['activities'], 'course'),
-  mounted () {
-    var treeData = {
-      "name": "Top Level",
-      "children": [
-        { 
-      "name": "Level 2: A",
-          "children": [
-            {
-              "name": "Son of A",
-              "children": [
-                { "name": 'level 3 C' }
-              ]
-            },
-            { "name": "Daughter of A" },
-            { "name": "Daughter of A" },
-            { "name": "Daughter of A" },
-            { "name": "Daughter of A" }
-          ]
-        },
-        { "name": "Level 2: B" }
-      ]
-    };
-
-    // set the dimensions and margins of the diagram
-    var margin = {top: 40, right: 90, bottom: 50, left: 90},
-      width = 660 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
-
-    // declares a tree layout and assigns the size
-    var treemap = d3.tree()
-      .size([width, height]);
-
-    //  assigns the data to a hierarchy using parent-child relationships
-    var nodes = d3.hierarchy(treeData);
-
-    // maps the node data to the tree layout
-    nodes = treemap(nodes);
-
-    // append the svg obgect to the body of the page
-    // appends a 'group' element to 'svg'
-    // moves the 'group' element to the top left margin
-    var svg = d3.select(".activities-container").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom);
-    
-    var g = svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    // adds the links between the nodes
-    var link = g.selectAll(".link")
-      .data( nodes.descendants().slice(1))
-      .enter().append("path")
-      .attr("class", "link")
-      .attr("d", function(d) {
-        return "M" + d.x + "," + d.y
-          + "C" + d.x + "," + (d.y + d.parent.y) / 2
-          + " " + d.parent.x + "," +  (d.y + d.parent.y) / 2
-          + " " + d.parent.x + "," + d.parent.y;
-      });
-
-    // adds each node as a group
-    var node = g.selectAll(".node")
-      .data(nodes.descendants())
-      .enter().append("g")
-      .attr("class", function(d) { 
-        return "node" + 
-          (d.children ? " node--internal" : " node--leaf"); })
-      .attr("transform", function(d) { 
-        return "translate(" + d.x + "," + d.y + ")"; });
-
-    // adds the circle to the node
-    node.append("circle")
-      .attr("r", 10);
-
-    // adds the text to the node
-    node.append("text")
-      .attr("dy", ".35em")
-      .attr("y", function(d) { return d.children ? -20 : 20; })
-      .style("text-anchor", "middle")
-      .text(function(d) { return d.data.name; });
-
-    // let canvas = d3.select("body").append('svg')
-    //   .attr("width", 500)
-    //   .attr("height", 500);
-      
-    // let diagonal = d3.svg.diagonal()
-    //   .source({ x:10, y:10 })
-    //   .target({ x:300, y:200 });
-
-    // canvas.append("path")
-    //   .attr("fill", 'none')
-    //   .attr("stroke", 'black')
-    //   .attr("d", diagonal);
-
-    // --------------
-
-    // d3.select("body").style("background-color", "black");
-
-    // var svg = d3.select("svg"),
-    //   width = +svg.attr("width"),
-    //   height = +svg.attr("height"),
-    //   g = svg.append("g").attr("transform", "translate(40,0)");
-
-    // var tree = d3.tree()
-    //   .size([height, width - 160]);
-
-    // var stratify = d3.stratify()
-    //   .parentId(function(d) { return d.id.substring(0, d.id.lastIndexOf(".")); });
-
-    // d3.csv("flare.csv", function(error, data) {
-    //   if (error) throw error;
-
-    //   var root = stratify(data)
-    //       .sort(function(a, b) { return (a.height - b.height) || a.id.localeCompare(b.id); });
-
-    //   var link = g.selectAll(".link")
-    //     .data(tree(root).links())
-    //     .enter().append("path")
-    //       .attr("class", "link")
-    //       .attr("d", d3.linkHorizontal()
-    //           .x(function(d) { return d.y; })
-    //           .y(function(d) { return d.x; }));
-
-    //   var node = g.selectAll(".node")
-    //     .data(root.descendants())
-    //     .enter().append("g")
-    //       .attr("class", function(d) { return "node" + (d.children ? " node--internal" : " node--leaf"); })
-    //       .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
-
-    //   node.append("circle")
-    //       .attr("r", 2.5);
-
-    //   node.append("text")
-    //       .attr("dy", 3)
-    //       .attr("x", function(d) { return d.children ? -8 : 8; })
-    //       .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
-    //       .text(function(d) { return d.id.substring(d.id.lastIndexOf(".") + 1); });
-    // });
+  computed: {
+    ...mapGetters(['activities', 'course'], 'course'),
+    treeData() {
+      if (!this.course || !this.activities) return;
+      return this.buildTree(this.course, this.activities);
+    }
+  },
+  mounted() {
+    this.$watch('treeData', treeData => {
+      if (treeData) this.initializeTree();
+    }, { immediate: true });
+  },
+  methods: {
+    ...mapMutations(['focusActivity'], 'course'),
+    buildTree: buildTree,
+    initializeTree: initializeTree,
+    onClick(id) {
+      this.focusActivity(id);
+    }
   },
   components: {
     Activity,
@@ -166,30 +143,88 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.activities-container /deep/ {
-  .node circle {
-    fill: #fff;
-    stroke: steelblue;
-    stroke-width: 3px;
+<style lang='scss' scoped>
+.activities-container {
+  width: 100%;
+  height: 100%;
+}
 
-    &:hover {
-      stroke: red;
-      fill: #ffbbff;
-      cursor: pointer;
+.activities {
+  position: relative;
+  height: 100%;
+  padding-right: 400px;
+}
+
+#tree {
+  width: 100%;
+  height: 100%;
+  float: left;
+
+  /deep/ {
+    svg {
+      width: 100%;
+      height: 100%;
     }
-  }
 
-  .node text { font: 12px sans-serif; }
+    .node circle {
+      pointer-events: all;
 
-  .node--internal text {
-    text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
-  }
+      &:hover {
+        cursor: pointer;
+      }
+    }
 
-  .link {
-    fill: none;
-    stroke: #ccc;
-    stroke-width: 1px;
+    .node.depth0 circle {
+      fill: #fff;
+
+      &:hover {
+        fill: #ccc;
+      }
+    }
+
+    .node.depth1 circle {
+      fill: #399bf3;
+
+      &:hover {
+        fill: #2e81ca;
+      }
+    }
+
+    .node.depth2 circle {
+      fill: #7cce77;
+
+      &:hover {
+        fill: #5e9a5a;
+      }
+    }
+
+    .node.depth3 circle {
+      fill: #ef6790;
+
+      &:hover {
+        fill: #b34d6c;
+      }
+    }
+
+    .node.depth4 circle {
+      fill: #d5d03e;
+
+      &:hover {
+        fill: #b1ad32;
+      }
+    }
+
+    .node text { font: 12px sans-serif; }
+
+    .node--internal text {
+      text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+    }
+
+    .link {
+      fill: none;
+      stroke: #ccc;
+      stroke-width: 2px;
+    }
   }
 }
 </style>
