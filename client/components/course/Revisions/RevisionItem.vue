@@ -61,7 +61,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setBaseUrl'], 'tes'),
     getOutlineLocation(current) {
       if (!current) return null;
       const level = find(this.structure, { type: current.type });
@@ -71,10 +70,6 @@ export default {
     toggle() {
       if (this.isTeachingElement) this.expanded = !this.expanded;
     }
-  },
-  mounted() {
-    const courseId = this.$route.params.courseId;
-    this.setBaseUrl(`/courses/${courseId}/tes`);
   },
   components: { EntityRevisions }
 };

@@ -34,7 +34,6 @@ export default {
   },
   methods: {
     ...mapActions(['fetch', 'resetPagination'], 'revisions'),
-    ...mapMutations(['setBaseUrl'], 'revisions'),
     fetchRevisions($state) {
       return this.fetch().then(() => {
         $state.loaded();
@@ -43,8 +42,6 @@ export default {
     }
   },
   mounted() {
-    const courseId = Number(this.$route.params.courseId);
-    this.setBaseUrl(`/courses/${courseId}/revisions`);
     this.resetPagination();
   },
   components: { InfiniteLoading, Loader, RevisionItem }

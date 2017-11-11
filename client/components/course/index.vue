@@ -44,8 +44,10 @@ export default {
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
+    ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activities'),
-    ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course')
+    ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
+    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
   },
   created() {
     const { courseId } = this.$route.params;
@@ -53,6 +55,8 @@ export default {
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
     this.setupActivityApi(`/courses/${courseId}/activities`);
+    this.setupRevisionApi(`/courses/${courseId}/revisions`);
+    this.setupTesApi(`/courses/${courseId}/tes`);
     if (!this.course) this.getCourse(courseId);
     return Promise.join(this.getActivities(), Promise.delay(800)).then(() => {
       this.showLoader = false;
