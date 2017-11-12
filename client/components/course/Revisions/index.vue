@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import InfiniteLoading from 'vue-infinite-loading';
 import Loader from '../../common/Loader';
 import RevisionItem from './RevisionItem';
@@ -56,10 +56,10 @@ export default {
 .revisions {
   margin: 60px 60px 0;
   padding: 30px;
+  font-family: Roboto, sans-serif;
   text-align: left;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
-  font-family: Roboto, sans-serif;
 
   ul {
     padding: 8px 0;
