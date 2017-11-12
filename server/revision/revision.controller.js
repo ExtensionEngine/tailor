@@ -7,7 +7,7 @@ function index({ course, query }, res) {
   if (entityId) where.state = { id: entityId };
   const include = [{ model: User, attributes: ['id', 'email'] }];
   const opts = { where, include, order: [['createdAt', 'DESC']], limit, offset };
-  return Revision.findAll(opts).then(data => res.json(data));
+  return Revision.findAll(opts).then(data => res.json({ data }));
 }
 
 function resolve({ revision }, res) {

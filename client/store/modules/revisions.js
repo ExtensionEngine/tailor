@@ -26,7 +26,7 @@ getter(function hasMoreResults() {
 action(function fetch() {
   const params = this.getters.revisionQueryParams;
   return this.api.get('', params).then(response => {
-    const revisions = response.data;
+    const { data: revisions } = response.data;
 
     let result = {};
     revisions.forEach(it => {

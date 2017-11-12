@@ -13,8 +13,8 @@
         :revisions="revisions"
         :selected="selectedRevision"
         :isDetached="isDetached"
-        @preview="revision => previewRevision(revision)"
-        @rollback="revision => rollback(revision)"
+        @preview="previewRevision"
+        @rollback="rollback"
         ref="sidebar">
       </entity-sidebar>
     </div>
@@ -56,11 +56,11 @@ export default {
     ...mapActions(['save'], 'tes'),
     getRevisions() {
       const params = { entityId: this.revision.state.id };
-      return axios.get(this.baseUrl, { params }).then(({ data: revisions }) => {
-        revisions.forEach(it => {
+      return axios.get(this.baseUrl, { params }).then(({ data: { data } }) => {
+        data.forEach(it => {
           if (includes(WITHOUT_STATICS, it.state.type)) it.resolved = true;
         });
-        return revisions;
+        return data;
       });
     },
     previewRevision(revision) {
