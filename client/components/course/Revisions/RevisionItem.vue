@@ -1,6 +1,10 @@
 <template>
   <li>
-    <div :class="{ expanded }" :style="{ cursor }" @click="toggle" class="revision">
+    <div
+      :class="{ expanded }"
+      :style="{ cursor: isTeachingElement ? 'pointer' : 'auto' }"
+      @click="toggle"
+      class="revision">
       <div :style="{ color }" class="acronym"><span>{{ acronym }}</span></div>
       <div class="content">
         <div class="description">{{ description }}</div>
@@ -17,15 +21,15 @@
 </template>
 
 <script>
-import EntityRevisions from './EntityRevisions';
-import fecha from 'fecha';
-import find from 'lodash/find';
 import {
   getFormatDescription,
   getRevisionAcronym,
   getRevisionColor
 } from 'utils/revision';
-import { mapGetters, mapMutations } from 'vuex-module';
+import { mapGetters } from 'vuex-module';
+import EntityRevisions from './EntityRevisions';
+import fecha from 'fecha';
+import find from 'lodash/find';
 
 export default {
   name: 'revision-item',
@@ -34,15 +38,12 @@ export default {
     return { expanded: false };
   },
   computed: {
-    ...mapGetters(['getParent'], 'activities'),
     ...mapGetters(['structure'], 'course'),
+    ...mapGetters(['getParent'], 'activities'),
     activity() {
-      const state = this.revision.state;
+      const { state } = this.revision;
       const activityId = state.activityId || state.id;
       return this.getOutlineLocation(this.getParent(activityId));
-    },
-    cursor() {
-      return this.isTeachingElement ? 'pointer' : 'auto';
     },
     color() {
       return getRevisionColor(this.revision);
