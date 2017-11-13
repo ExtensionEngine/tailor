@@ -1,6 +1,7 @@
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const first = require('lodash/first');
+const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const mergeConfig = require('../utils/mergeConfig');
@@ -16,6 +17,11 @@ const { SCHEMAS, ASSET_GROUP, PREVIEW_URL } = config;
 // Add name meta to each activity config
 SCHEMAS.forEach(schema => {
   validateSchema(schema);
+  schema.meta = schema.meta || [];
+  const hasColorMeta = find(schema.meta, { key: 'color' });
+  if (!hasColorMeta) {
+    schema.meta.push({ type: 'COLOR', key: 'color', label: 'Color' });
+  }
   return schema.structure.forEach(it => {
     it.type = `${schema.id}/${it.type}`;
     it.subLevels = map(it.subLevels, type => `${schema.id}/${type}`);
@@ -39,6 +45,8 @@ module.exports = {
   OBJECTIVES: filter(SCHEMAS[0].structure, { isObjective: true }),
   ASSET_GROUP,
   PREVIEW_URL,
+  getSchema,
+  getRepositoryMeta,
   getOutlineLevels,
   getLevel,
   isEditable: type => {
@@ -57,6 +65,18 @@ function getOutlineLevels(schemaId) {
   const schema = schemaId ? find(SCHEMAS, { id: schemaId }) : first(SCHEMAS);
   return schema.structure;
 }
+
+function getSchema(id) {
+  return find(SCHEMAS, { id });
+};
+
+function getRepositoryMeta(repository) {
+  const config = get(getSchema(repository.schema), 'meta', []);
+  return map(config, it => {
+    let value = get(repository, `data.${it.key}`);
+    return { ...it, value };
+  });
+};
 
 function getLevel(type) {
   // If schema is not provided, assume legacy structure (single schema)

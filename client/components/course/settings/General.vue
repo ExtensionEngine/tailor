@@ -49,21 +49,32 @@
         </span>
       </span>
     </div>
+    <div class="meta-container">
+      <meta-input
+        v-for="it in metadata"
+        :meta="it"
+        :key="it.key"
+        @update="updateMeta">
+      </meta-input>
+    </div>
   </div>
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import EventBus from 'EventBus';
 import { focus } from 'vue-focus';
+import { getRepositoryMeta } from 'shared/activities';
 import Loader from '../../common/Loader';
 import { mapGetters, mapActions } from 'vuex-module';
+import Meta from 'components/common/Meta';
 
 const appChannel = EventBus.channel('app');
 
 export default {
   props: ['showLoader'],
   directives: { focus },
-  components: { Loader },
+  components: { Loader, MetaInput: Meta },
   data() {
     return {
       showNameInput: false,
@@ -73,10 +84,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['isAdmin']),
     ...mapGetters(['course'], 'course'),
-    showRemoveButton() {
-      return this.isAdmin;
+    metadata() {
+      return getRepositoryMeta(this.course);
     }
   },
   methods: {
@@ -98,6 +108,11 @@ export default {
         if (!result) return this.setCourseFields();
         this.update({ ...this.course, description: this.newCourseDescription });
       });
+    },
+    updateMeta(key, value) {
+      const data = cloneDeep(this.course.data) || {};
+      data[key] = value;
+      this.update({ ...this.course, data });
     },
     removeCourse() {
       const payload = {
