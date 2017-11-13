@@ -296,7 +296,7 @@ export default {
   }
 }
 
-[disabled] .controls {
+.disabled .controls {
   display: none;
 }
 </style>

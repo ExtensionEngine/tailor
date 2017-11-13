@@ -129,7 +129,7 @@ export default {
   }
 }
 
-[disabled] .drag-handle {
+.disabled .drag-handle {
   display: none;
 }
 </style>

@@ -116,7 +116,7 @@ export default {
   z-index: 2;
 }
 
-[disabled] .add-element {
+.disabled .add-element {
   display: none;
 }
 </style>

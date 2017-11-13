@@ -194,7 +194,7 @@ export default {
   padding-bottom: 0;
 }
 
-[disabled] {
+.disabled {
   .accordion-header {
     .edit-header, .delete-item {
       display: none;

@@ -1,7 +1,6 @@
 <template>
   <div
-    :disabled="disabled"
-    :class="[columnWidth, { hovered, focused: isFocused }]"
+    :class="[columnWidth, { disabled, hovered, focused: isFocused }]"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
     @dragstart="$emit('dragstart')"
@@ -160,7 +159,7 @@ export default {
   }
 }
 
-[disabled] .drag-handle {
+.disabled .drag-handle {
   display: none;
 }
 </style>

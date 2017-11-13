@@ -187,7 +187,7 @@ function getMimetype(url) {
   right: 0;
 }
 
-[disabled] .overlay {
+.disabled .overlay {
   display: none;
 }
 </style>
