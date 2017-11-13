@@ -35,15 +35,15 @@ Use the `.brand-rc.json.example` file as a template: `cp .brand-rc.json.example 
 * Bundle client by issuing `npm run build`
 * `npm run start`
 
-## :books: Activities' structure
-Activities' stucture can be altered through `.activities-rc.json` file. Use the `.activities-rc.json.example` file as a template: `cp .activities-rc.json.example .activities-rc.json` and enter configuration details. It's also possible to use `.activities-rc.js`, by using `module.exports` to export the structure.
+## :books: Content repository structure
+Repository stucture can be altered through `.activities-rc.json` file. Use the `.activities-rc.json.example` file as a template: `cp .activities-rc.json.example .activities-rc.json` and enter configuration details. It's also possible to use `.activities-rc.js`, by using `module.exports` to export the structure.
 By default, the file is searched for in the root of the project. If a custom location or a custom name is needed, it can be provided through the `activitiesConfig` param to any of the build scripts (without the extension), for example:
 `npm run dev:client -- --activitiesConfig=server/.custom-activities-rc`
 
 Activities' structure is defined by the following properties:
 
 ### `ASSET_GROUP`
-???
+Key for base content group
 
 ### `PREVIEW_URL`
 A string template that will be interpolated on the client using two route params, `courseId` and `activityId`, into a preview URL for each activiy. Example:
@@ -55,7 +55,7 @@ An array of Schema objects.
 #### Schema
 * **id** `String` - Schema identifier.
 * **name** `String` - Schema display name.
-* **structure** `Array<Outline>` - An array of objects containing schema outlines.
+* **structure** `Array<Outline>` - An array of objects containing schema structure.
 
 #### Outline
 Defines activities' structure format. Contains the following properties:
