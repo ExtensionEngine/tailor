@@ -48,9 +48,9 @@ An array of Schema objects.
 #### Schema
 * **id** `String` - Schema identifier.
 * **name** `String` - Schema display name.
-* **structure** `Array<Outline>` - An array of objects which define schema structure.
+* **structure** `Array<ActivityConfig>` - An array of objects which define schema structure.
 
-#### Schema structure elements
+#### ActivityConfig - Schema structure elements
 Configuration for schema structure nodes (activities). Contains the following properties:
 * **level** `Number` - The hierarchy level for that particular activity type.
 * **type** `String` - Const for marking activity type.
