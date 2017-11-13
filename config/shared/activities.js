@@ -27,7 +27,7 @@ SCHEMAS.forEach(schema => {
         type: 'TEXTAREA',
         label: 'Name',
         placeholder: 'Click to add...',
-        validate: { rules: { max: 250 } }
+        validate: { rules: { max: 250, required: true } }
       });
     }
   });
