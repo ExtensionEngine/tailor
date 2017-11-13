@@ -40,14 +40,7 @@ Repository stucture can be altered through `.activities-rc.json` file. Use the `
 By default, the file is searched for in the root of the project. If a custom location or a custom name is needed, it can be provided through the `activitiesConfig` param to any of the build scripts (without the extension), for example:
 `npm run dev:client -- --activitiesConfig=server/.custom-activities-rc`
 
-Activities' structure is defined by the following properties:
-
-### `ASSET_GROUP`
-Key for base content group
-
-### `PREVIEW_URL`
-A string template that will be interpolated on the client using two route params, `courseId` and `activityId`, into a preview URL for each activiy. Example:
-`https://my.url.com/#/course/{courseId}/activity/{activityId}/preview`
+Content repository structures are defined using following properties:
 
 ### `SCHEMAS`
 An array of Schema objects.
@@ -55,13 +48,13 @@ An array of Schema objects.
 #### Schema
 * **id** `String` - Schema identifier.
 * **name** `String` - Schema display name.
-* **structure** `Array<Outline>` - An array of objects containing schema structure.
+* **structure** `Array<Outline>` - An array of objects which define schema structure.
 
-#### Outline
-Defines activities' structure format. Contains the following properties:
+#### Schema structure elements
+Configuration for schema structure nodes (activities). Contains the following properties:
 * **level** `Number` - The hierarchy level for that particular activity type.
-* **type** `String` - Name for this activity type.
-* **subLevels** `Array<String>` - An array of strings that correspond to another activity's type.
+* **type** `String` - Const for marking activity type.
+* **subLevels** `Array<String>` - An array of sub-types.
 * **label** `String` - Display label.
 * **color** `String` - Display color in hexadecimal notation.
 * **isEditable** `Boolean` - Activity allows adding activities/teaching elements to it.
@@ -70,7 +63,7 @@ Defines activities' structure format. Contains the following properties:
 * **hasAssessments** `Boolean` - Activity allows adding assessments activities to it.
 * **hasExams** `Boolean` - Activity allows adding exam activities to it.
 * **hasPrerequisites** `Boolean` - Defines if this activity should offer other activities as prerequisites.
-* **meta** `Array<ActivityMetadata>` - An array of objects containing activities' metadata.
+* **meta** `Array<ActivityMetadata>` - An array of objects defining activity metadata.
 
 #### ActivityMetadata
 Defines the structure of an activity metadata field.
@@ -86,4 +79,9 @@ Defines validation rules on an activity metadata field.
   * max `Number` - Maximum character count.
   * required `Boolean` - Defines if the field is required.
 
+### `ASSET_GROUP`
+Key for base content group
 
+### `PREVIEW_URL`
+A string template that will be interpolated on the client using two route params, `courseId` and `activityId`, into a preview URL for each activiy. Example:
+`https://my.url.com/#/course/{courseId}/activity/{activityId}/preview`
