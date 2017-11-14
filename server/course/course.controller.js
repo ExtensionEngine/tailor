@@ -26,7 +26,7 @@ function get(req, res) {
 }
 
 function patch({ body, course, user }, res) {
-  const data = pick(body, ['name', 'description']);
+  const data = pick(body, ['name', 'description', 'data']);
   return course.update(data, { context: { userId: user.id } })
     .then(course => res.json({ data: course }));
 };

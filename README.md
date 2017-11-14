@@ -22,6 +22,8 @@ Use the `.env.example` file as a template: `cp .env.example .env` and enter
 configuration details.
 * You can init the db (for development) by running `npm run db:seed`
 * You can create admin user by running `npm run add:admin <email> <password>`
+* App branding is configured via values set in a file named `.brand-rc.json`.
+Use the `.brand-rc.json.example` file as a template: `cp .brand-rc.json.example .brand-rc.json` and enter configuration details.
 
 ## :rocket: Launch
 
@@ -32,3 +34,54 @@ configuration details.
 ### Production
 * Bundle client by issuing `npm run build`
 * `npm run start`
+
+## :books: Content repository structure
+Repository stucture can be altered through `.activities-rc.json` file. Use the `.activities-rc.json.example` file as a template: `cp .activities-rc.json.example .activities-rc.json` and enter configuration details. It's also possible to use `.activities-rc.js`, by using `module.exports` to export the structure.
+By default, the file is searched for in the root of the project. If a custom location or a custom name is needed, it can be provided through the `activitiesConfig` param to any of the build scripts (without the extension), for example:
+`npm run dev:client -- --activitiesConfig=server/.custom-activities-rc`
+
+Content repository structures are defined using following properties:
+
+### `SCHEMAS`
+An array of Schema objects.
+
+#### Schema
+* **id** `String` - Schema identifier.
+* **name** `String` - Schema display name.
+* **structure** `Array<ActivityConfig>` - An array of objects which define schema structure.
+
+#### ActivityConfig - Schema structure elements
+Configuration for schema structure nodes (activities). Contains the following properties:
+* **level** `Number` - The hierarchy level for that particular activity type.
+* **type** `String` - Const for marking activity type.
+* **subLevels** `Array<String>` - An array of sub-types.
+* **label** `String` - Display label.
+* **color** `String` - Display color in hexadecimal notation.
+* **isEditable** `Boolean` - Activity allows adding activities/teaching elements to it.
+* **hasIntroduction** `Boolean` - Activity allows adding introduction activity to it.
+* **hasPerspectives** `Boolean` - Activity allows adding perspective activities to it.
+* **hasAssessments** `Boolean` - Activity allows adding assessments activities to it.
+* **hasExams** `Boolean` - Activity allows adding exam activities to it.
+* **hasPrerequisites** `Boolean` - Defines if this activity should offer other activities as prerequisites.
+* **meta** `Array<ActivityMetadata>` - An array of objects defining activity metadata.
+
+#### ActivityMetadata
+Defines the structure of an activity metadata field.
+* **key** `String`- Unique key for the field.
+* **type** `String`- Type of the input component used on the client.
+* **label** `String`- Display label.
+* **placeholder** `String`- Input component placeholder.
+* **validate** `MetadataValidator`- Validator object.
+
+#### MetadataValidator
+Defines validation rules on an activity metadata field.
+* **rules** `Object`- Contains the following properties:
+  * max `Number` - Maximum character count.
+  * required `Boolean` - Defines if the field is required.
+
+### `ASSET_GROUP`
+Key for base content group
+
+### `PREVIEW_URL`
+A string template that will be interpolated on the client using two route params, `courseId` and `activityId`, into a preview URL for each activiy. Example:
+`https://my.url.com/#/course/{courseId}/activity/{activityId}/preview`

@@ -177,7 +177,7 @@ ecosystem.config.js
 # Branding
 client/assets/img/*logo*
 !client/assets/img/default-logo*
-client/assets/img/*favicon.ico
+client/assets/img/*favicon*
 !client/assets/img/default-favicon.ico
 
 # Local IJavascript REPL files

@@ -89,10 +89,16 @@ const REPOSITORY_OUTLINE = [{
   meta: []
 }];
 
-const SCHEMAS = [
-  { id: 'COURSE', name: 'Course', structure: COURSE_OUTLINE },
-  { id: 'REPOSITORY', name: 'Repository', structure: REPOSITORY_OUTLINE }
-];
+const SCHEMAS = [{
+  id: 'COURSE',
+  name: 'Course',
+  structure: COURSE_OUTLINE,
+  meta: []
+}, {
+  id: 'REPOSITORY',
+  name: 'Repository',
+  structure: REPOSITORY_OUTLINE
+}];
 
 module.exports = {
   ASSET_GROUP,
