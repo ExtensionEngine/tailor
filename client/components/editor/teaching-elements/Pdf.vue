@@ -144,7 +144,7 @@ export default {
   .message {
     position: relative;
     top: 45%;
-    color: green;
+    color: #008000;
     font-size: 22px;
   }
 }
