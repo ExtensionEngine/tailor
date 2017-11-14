@@ -55,10 +55,10 @@ export default {
   },
   computed: {
     showPlaceholder() {
-      const imageAvailable = isEmpty(this.element.data.url);
-      if (!imageAvailable) return imageAvailable;
+      const imageAvailable = !isEmpty(this.element.data.url);
+      if (imageAvailable) return false;
       if (this.$refs.cropper) this.$refs.cropper.destroy();
-      return imageAvailable;
+      return true;
     },
     id() {
       return this.element._cid || this.element.id;
@@ -143,10 +143,6 @@ export default {
       font-size: 18px;
     }
   }
-}
-
-.preview-image {
-  max-width: 100%;
 }
 
 .hide-cropper /deep/ .cropper-container {
