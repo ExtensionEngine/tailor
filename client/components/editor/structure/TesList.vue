@@ -20,6 +20,7 @@
       </div>
     </draggable>
     <add-element
+      v-if="addElement"
       :include="types"
       :activity="activity"
       :position="nextPosition"
@@ -41,6 +42,7 @@ export default {
       type: Object,
       default() { return { handle: '.drag-handle' }; }
     },
+    addElement: { type: Boolean, default: true },
     types: { type: Array, required: true },
     activity: { type: Object, required: true },
     layout: { type: Boolean, default: false }
