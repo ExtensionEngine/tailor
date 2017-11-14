@@ -46,6 +46,16 @@ import isIexplorer from 'is-iexplorer';
 import isSafari from 'is-safari';
 import CircularProgress from 'components/common/CircularProgress';
 
+const ERR_TIMEOUT = 2500;
+
+function createObject() {
+  const pdfObject = document.createElement('object');
+  pdfObject.data = this.source.src;
+  pdfObject.type = this.source.type;
+  this.pdfObject = this.$refs.pdf.appendChild(pdfObject);
+  setTimeout(() => (this.showError = true), ERR_TIMEOUT);
+}
+
 export default {
   name: 'te-pdf',
   props: {
@@ -62,15 +72,11 @@ export default {
     this.embedPdf();
   },
   methods: {
+    createObject: createObject,
     embedPdf() {
       if (!this.source) return;
       if (this.pdfObject) this.pdfObject.remove();
-      const pdfObject = document.createElement('object');
-      pdfObject.data = this.source.src;
-      pdfObject.type = this.source.type;
-      this.$refs.pdf.appendChild(pdfObject);
-      this.pdfObject = pdfObject;
-      setTimeout(() => (this.showError = true), 2500);
+      this.createObject();
     }
   },
   computed: {
@@ -171,7 +177,6 @@ export default {
 
 .pdf-container {
   position: relative;
-  width: 100%;
   height: 360px;
 }
 
