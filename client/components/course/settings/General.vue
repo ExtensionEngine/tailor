@@ -63,7 +63,9 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import EventBus from 'EventBus';
+import find from 'lodash/find';
 import { focus } from 'vue-focus';
+import { getColor } from 'utils/course';
 import { getRepositoryMeta } from 'shared/activities';
 import Loader from '../../common/Loader';
 import { mapGetters, mapActions } from 'vuex-module';
@@ -86,7 +88,10 @@ export default {
   computed: {
     ...mapGetters(['course'], 'course'),
     metadata() {
-      return getRepositoryMeta(this.course);
+      let metadata = getRepositoryMeta(this.course);
+      let color = find(metadata, { key: 'color' });
+      if (!color.value) color.value = getColor(this.course);
+      return metadata;
     }
   },
   methods: {
