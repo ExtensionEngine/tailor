@@ -46,8 +46,6 @@ import isIexplorer from 'is-iexplorer';
 import isSafari from 'is-safari';
 import CircularProgress from 'components/common/CircularProgress';
 
-if (isIexplorer) document.body.classList.add('ie');
-
 export default {
   name: 'te-pdf',
   props: {
