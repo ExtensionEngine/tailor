@@ -50,7 +50,7 @@ export default {
   name: 'te-pdf',
   props: {
     element: { type: Object, required: true },
-    isFocused: { type: Boolean, required: true }
+    isFocused: { type: Boolean, default: false }
   },
   data() {
     return {
