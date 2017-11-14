@@ -1,8 +1,12 @@
 <template>
-  <div class='activities-container'>
-    <circular-progress v-if='showLoader'></circular-progress>
+  <div class="activities-container">
+    <div class="loader-outer">
+      <div class="loader-inner">
+        <circular-progress v-if="showLoader"></circular-progress>
+      </div>
+    </div>
     <div class="activities">
-      <div id='tree'></div>
+      <div :class="{ visible }" id="tree"></div>
       <sidebar></sidebar>
     </div>
   </div>
@@ -17,14 +21,19 @@ import forEach from 'lodash/forEach';
 import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import { mapGetters, mapMutations } from 'vuex-module';
+import max from 'lodash/max';
+import min from 'lodash/min';
 import reject from 'lodash/reject';
 import Sidebar from './Sidebar';
+
+const MIN_SCALE_RATIO = 0.4;
+const SCALE_TRESHOLD = [0.2, 1];
 
 function initializeTree() {
   if (this.activities.length === 0) return;
 
   var zoom = d3.zoom()
-    .scaleExtent([0.2, 10])
+    .scaleExtent(SCALE_TRESHOLD)
     .on('zoom', zoomed);
 
   var svg = d3.select('#tree').append('svg')
@@ -38,13 +47,9 @@ function initializeTree() {
     g.attr('transform', d3.event.transform);
   }
 
-  // var width = document.getElementById('tree').clientWidth;
-  // var height = document.getElementById('tree').clientHeight;
-
   // declares a tree layout and assigns the size
   const treemap = d3.tree()
     .nodeSize([60, 180]);
-    // .size([width, height]);
 
   //  assigns the data to a hierarchy using parent-child relationships
   let nodes = d3.hierarchy(this.treeData);
@@ -83,13 +88,12 @@ function initializeTree() {
     .style('text-anchor', 'middle')
     .text(function (d) { return d.data.name; });
 
-  node.on('click', d => this.onClick(d.data._cid));
+  node.on('click', d => this.onClick(d.data));
 
-  var width = document.getElementById('tree').clientWidth;
-  zoom.translateBy(svg, width / 2, 40); // center
-  // zoom.scaleTo(svg, 0.9); // fit to svg
+  var viewportWidth = document.getElementById('tree').clientWidth;
+  zoom.translateBy(svg, viewportWidth / 2, 40); // center
 
-  console.log(nodes.children);
+  zoom.scaleTo(svg, calculateScaleRatio(nodes.children, viewportWidth));
 }
 
 function buildTree(course, activities) {
@@ -121,6 +125,25 @@ function addChildren(activity, source) {
   return activity;
 }
 
+function calculateScaleRatio(nodes, viewportWidth) {
+  const xCoordinates = [];
+  function scanNodes(nodes) {
+    forEach(nodes, node => {
+      if (node.x) xCoordinates.push(node.x)
+      if (node.children) scanNodes(node.children);
+    });
+  }
+
+  scanNodes(nodes);
+  const xMax = max(xCoordinates);
+  const xMin = min(xCoordinates);
+
+  const treeWidth = xMax - xMin;
+  if (treeWidth < viewportWidth) return 1;
+  const scaleRatio = viewportWidth / treeWidth;
+  return scaleRatio <= MIN_SCALE_RATIO ? MIN_SCALE_RATIO : scaleRatio;
+}
+
 export default {
   props: ['showLoader'],
   computed: {
@@ -128,6 +151,9 @@ export default {
     treeData() {
       if (!this.course || !this.activities) return;
       return this.buildTree(this.course, this.activities);
+    },
+    visible() {
+      return !this.showLoader || false;
     }
   },
   mounted() {
@@ -139,8 +165,9 @@ export default {
     ...mapMutations(['focusActivity'], 'course'),
     buildTree: buildTree,
     initializeTree: initializeTree,
-    onClick(_cid) {
-      this.focusActivity(_cid);
+    onClick(node) {
+      if (!node.id) return; // ignore click on root node (course)
+      this.focusActivity(node._cid);
     }
   },
   components: {
@@ -152,7 +179,25 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.loader-outer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding-right: 400px;
+
+  .loader-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: inherit;
+    transform: translate(-50%, -50%);
+  }
+}
+
 .activities-container {
+  position: relative;
   width: 100%;
   height: 100%;
 }
@@ -161,12 +206,18 @@ export default {
   position: relative;
   height: 100%;
   padding-right: 400px;
+
 }
 
 #tree {
   width: 100%;
   height: 100%;
   float: left;
+  visibility: hidden;
+
+  &.visible {
+    visibility: visible;
+  }
 
   /deep/ {
     svg {
