@@ -195,4 +195,11 @@ label {
 .help-block {
   min-height: 20px;
 }
+
+.picker {
+  /deep/ .actions {
+    margin: 20px 0 0;
+    text-align: left;
+  }
+}
 </style>
