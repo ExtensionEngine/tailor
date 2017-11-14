@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import VuexCollection from '../helpers/collection.js';
 
 const { state, getter, action, mutation, build } = new VuexCollection('courses', '/courses');
@@ -56,6 +57,13 @@ action(function fetch({ reset = false } = {}) {
 
 mutation(function resetPagination() {
   this.state.$internals.pagination = PAGINATION_DEFAULTS;
+});
+
+mutation(function save(course) {
+  const search = this.state.search.toLowerCase();
+  const name = course.name.toLowerCase();
+  if (search && !name.includes(search)) return;
+  Vue.set(this.state.items, course._cid, course);
 });
 
 mutation(function setPagination(changes) {

@@ -16,7 +16,7 @@
         <router-link :to="{ name: 'tree-view' }">Tree View</router-link>
       </li>
     </ul>
-    <div class="tab-content">
+    <div class="tab-content" infinite-wrapper>
       <router-view :showLoader="showLoader"></router-view>
     </div>
   </div>
@@ -47,8 +47,10 @@ export default {
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
+    ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activities'),
-    ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course')
+    ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
+    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
   },
   created() {
     const { courseId } = this.$route.params;
@@ -56,6 +58,8 @@ export default {
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
     this.setupActivityApi(`/courses/${courseId}/activities`);
+    this.setupRevisionApi(`/courses/${courseId}/revisions`);
+    this.setupTesApi(`/courses/${courseId}/tes`);
     if (!this.course) this.getCourse(courseId);
     return Promise.join(this.getActivities(), Promise.delay(800)).then(() => {
       this.showLoader = false;
@@ -74,8 +78,10 @@ export default {
 }
 
 .course-container {
+  display: flex;
+  flex-direction: column;
+
   .nav-tabs {
-    position: fixed;
     width: 100%;
     background-color: white;
     z-index: 1;
@@ -86,7 +92,8 @@ export default {
   }
 
   .tab-content {
-    padding-top: 41px;
+    overflow-y: scroll;
+    overflow-y: overlay;
   }
 }
 </style>

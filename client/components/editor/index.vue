@@ -1,28 +1,30 @@
 <template>
-  <div @mousedown="onMousedown" @click="onClick" class="editor">
-    <circular-progress v-if="showLoader"></circular-progress>
-    <div v-else>
-      <toolbar></toolbar>
-      <div class="container">
-        <div class="breadcrumbs">
-          <span v-for="(item, index) in breadcrumbs" :key="item.id">
-            {{ truncate(item.data.name) }}
-            <span
-              v-if="index !== (breadcrumbs.length - 1)"
-              class="mdi mdi-chevron-right">
+  <div class="editor-wrapper">
+    <toolbar></toolbar>
+    <div @mousedown="onMousedown" @click="onClick" class="editor">
+      <circular-progress v-if="showLoader"></circular-progress>
+      <div v-else>
+        <div class="container">
+          <div class="breadcrumbs">
+            <span v-for="(item, index) in breadcrumbs" :key="item.id">
+              {{ truncate(item.data.name) }}
+              <span
+                v-if="index !== (breadcrumbs.length - 1)"
+                class="mdi mdi-chevron-right">
+              </span>
             </span>
-          </span>
+          </div>
+          <h2>
+            {{ activity.data.name }}
+            <a v-if="previewUrl" :href="previewUrl" class="preview-link" target="_blank">
+              <span class="mdi mdi-eye"></span>
+            </a>
+          </h2>
+          <introduction v-if="showIntroduction"></introduction>
+          <perspectives v-if="showPerspectives"></perspectives>
+          <assessments v-if="showAssessments"></assessments>
+          <exams v-if="showExams"></exams>
         </div>
-        <h2>
-          {{ activity.data.name }}
-          <a v-if="previewUrl" :href="previewUrl" class="preview-link" target="_blank">
-            <span class="mdi mdi-eye"></span>
-          </a>
-        </h2>
-        <introduction v-if="showIntroduction"></introduction>
-        <perspectives v-if="showPerspectives"></perspectives>
-        <assessments v-if="showAssessments"></assessments>
-        <exams v-if="showExams"></exams>
       </div>
     </div>
   </div>
@@ -102,9 +104,8 @@ export default {
       this.mousedownCaptured = false;
       if (!this.focusedElement) return;
       if (!e.component ||
-        ((e.component.name !== 'toolbar') &&
         ((e.component.data._cid !== this.focusedElement._cid) &&
-        (e.component.data.id !== this.focusedElement.id)))) {
+        (e.component.data.id !== this.focusedElement.id))) {
         this.focusoutElement();
       }
     }
@@ -136,8 +137,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.editor-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .editor {
-  min-height: 101%;
+  overflow-y: scroll;
+  overflow-y: overlay;
 
   .breadcrumbs {
     margin: 70px 0 10px;

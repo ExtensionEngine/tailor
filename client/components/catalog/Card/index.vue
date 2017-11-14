@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { getAcronym, getColor } from 'utils/course';
 import { getOutlineLevels } from 'shared/activities';
 
 import get from 'lodash/get';
@@ -30,13 +31,6 @@ import last from 'lodash/last';
 import pluralize from 'pluralize';
 import Stat from './Stat';
 import truncate from 'truncate';
-
-const COURSE_COLORS = ['#689F38', '#FF5722', '#2196F3'];
-
-function getAcronym(name) {
-  const reducer = (acc, it) => it ? `${acc}${it[0].toUpperCase()}` : acc;
-  return name.split(/\s/).reduce(reducer, '').substr(0, 2);
-}
 
 export default {
   props: ['course'],
@@ -51,7 +45,7 @@ export default {
       return truncate(this.course.description, 180);
     },
     color() {
-      return COURSE_COLORS[(this.course.id || 0) % 3];
+      return getColor(this.course);
     },
     objectiveLabel() {
       return pluralize(last(getOutlineLevels(this.course.schema)).label);

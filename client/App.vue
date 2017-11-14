@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import './assets/stylesheets/main';
+@import '~assets/stylesheets/main';
 
 html, body {
   width: 100%;

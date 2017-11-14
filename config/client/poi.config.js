@@ -1,9 +1,10 @@
+const brand = require('./brand');
+const find = require('lodash/find');
 const merge = require('lodash/merge');
 const path = require('path');
 const serverPort = require('../server').port;
 
 const rootPath = path.resolve(__dirname, '../../');
-
 const aliases = {
   client: path.join(rootPath, 'client'),
   assets: path.join(rootPath, 'client/assets'),
@@ -26,6 +27,16 @@ const uglifyJsOptions = {
   mangle: { keep_fnames: true }
 };
 
+const applyBrandConfig = config => {
+  const exposeBrandStyle = options => merge(options, { data: brand.style });
+  config.module.rule('scss').use('sass-loader').tap(exposeBrandStyle);
+  config.module.rule('vue').use('vue-loader').tap(config => {
+    const sassLoader = find(config.loaders.scss, { loader: 'sass-loader' });
+    if (sassLoader) exposeBrandStyle(sassLoader.options);
+    return config;
+  });
+};
+
 module.exports = (options, req) => ({
   presets: [
     require('poi-preset-eslint')({ mode: '*' }),
@@ -36,17 +47,21 @@ module.exports = (options, req) => ({
   },
   dist: 'dist',
   html: {
-    template: 'index.html'
+    title: brand.globals.TITLE,
+    favicon: `client/${brand.globals.FAVICON}`
   },
+  define: { BRAND_CONFIG: brand.globals },
   webpack(config) {
     config.module.rules.push(...rules);
     return config;
   },
   extendWebpack(config) {
     config.resolve.alias.merge(aliases);
+    applyBrandConfig(config);
     if (options.mode !== 'production') return;
     config.plugin('minimize').tap(args => [merge(...args, uglifyJsOptions)]);
   },
+  copy: { from: 'client/assets/img', to: 'assets/img' },
   sourceMap: options.mode === 'development',
   hotEntry: 'app',
   generateStats: true,

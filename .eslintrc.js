@@ -30,5 +30,8 @@ module.exports = {
     //   'ignoreCase': true,
     //   'ignoreMemberSort': false
     // }]
+  },
+  globals: {
+    BRAND_CONFIG: true
   }
 };

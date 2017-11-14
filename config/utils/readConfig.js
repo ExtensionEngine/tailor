@@ -3,7 +3,7 @@ const path = require('path');
 const rcfile = require('rcfile');
 
 module.exports = function readConfig(name) {
-  const configPath = argv.config || process.env.config;
+  const configPath = argv.activitiesConfig || process.env.activitiesConfig;
   try {
     const cwd = path.join(__dirname, '../../');
     return rcfile(`${name}-`, { cwd, configFileName: configPath });
