@@ -10,10 +10,10 @@
     <div v-if="!teachingElements.length" class="well">
       Click the button below to Create your first teaching element.
     </div>
-    <draggable-list
+    <tes-list
       :list="teachingElements"
       :activity="perspective"
-      :include="elementTypes"
+      :types="elementTypes"
       :layout="true"
       @add="addElement"
       @update="reorder">
@@ -23,12 +23,12 @@
         :dragged="dragged"
         :element="item">
       </teaching-element>
-    </draggable-list>
+    </tes-list>
   </div>
 </template>
 
 <script>
-import DraggableList from './DraggableList';
+import TesList from './TesList';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
@@ -86,7 +86,7 @@ export default {
     }
   },
   components: {
-    DraggableList,
+    TesList,
     TeachingElement
   }
 };

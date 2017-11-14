@@ -16,10 +16,10 @@
       <div v-if="!teachingElements.length" class="well">
         Click the button below to Create introductory content.
       </div>
-      <draggable-list
+      <tes-list
         :list="teachingElements"
         :activity="introduction"
-        :include="['HTML', 'IMAGE', 'VIDEO']"
+        :types="['HTML', 'IMAGE', 'VIDEO']"
         :layout="true"
         @add="saveElement"
         @update="reorder">
@@ -29,13 +29,13 @@
           :dragged="dragged"
           :element="item">
         </teaching-element>
-      </draggable-list>
+      </tes-list>
     </div>
   </div>
 </template>
 
 <script>
-import DraggableList from './DraggableList';
+import TesList from './TesList';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import { mapActions, mapGetters } from 'vuex-module';
@@ -75,7 +75,7 @@ export default {
     }
   },
   components: {
-    DraggableList,
+    TesList,
     TeachingElement
   }
 };

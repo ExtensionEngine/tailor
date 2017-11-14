@@ -7,18 +7,20 @@
       @end="dragElementIndex = -1"
       @update="$emit('update', $event)"
       class="row">
-      <div v-for="(it, index) in list"
+      <div
+        v-for="(it, index) in list"
+        :key="index"
         @dragstart="dragElementIndex = index"
-        @dragend="dragElementIndex = -1"
-        :key="index">
-        <slot name="list-item"
+        @dragend="dragElementIndex = -1">
+        <slot
+          name="list-item"
           :item="it"
           :dragged="dragElementIndex === index">
         </slot>
       </div>
     </draggable>
     <add-element
-      :include="include"
+      :include="types"
       :activity="activity"
       :position="nextPosition"
       :layout="layout"
@@ -32,13 +34,14 @@ import AddElement from './AddElement';
 import Draggable from 'vuedraggable';
 import last from 'lodash/last';
 
-const dragOptions = { handle: '.drag-handle' };
-
 export default {
   props: {
     list: { type: Array, default() { return []; } },
-    dragOptions: { type: Object, default() { return dragOptions; } },
-    include: { type: Array, required: true },
+    dragOptions: {
+      type: Object,
+      default() { return { handle: '.drag-handle' }; }
+    },
+    types: { type: Array, required: true },
     activity: { type: Object, required: true },
     layout: { type: Boolean, default: false }
   },

@@ -1,9 +1,9 @@
 <template>
   <div class="group-introduction">
-    <draggable-list
+    <tes-list
       :list="introductionElements"
       :activity="group"
-      :include="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
+      :types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true"
       @add="saveElement"
       @update="reorder">
@@ -13,12 +13,12 @@
         :dragged="dragged"
         :element="item">
       </teaching-element>
-    </draggable-list>
+    </tes-list>
   </div>
 </template>
 
 <script>
-import DraggableList from '../DraggableList';
+import TesList from '../TesList';
 import filter from 'lodash/filter';
 import { mapActions, mapGetters } from 'vuex-module';
 import TeachingElement from '../../teaching-elements';
@@ -44,7 +44,7 @@ export default {
     }
   },
   components: {
-    DraggableList,
+    TesList,
     TeachingElement
   }
 };

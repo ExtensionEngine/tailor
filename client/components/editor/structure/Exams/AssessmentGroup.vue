@@ -22,10 +22,10 @@
     <div v-if="!hasAssessments" class="well">
       Click the button below to Create first Assessment.
     </div>
-    <draggable-list
+    <tes-list
       :list="assessments"
       :activity="group"
-      :include="['ASSESSMENT']"
+      :types="['ASSESSMENT']"
       @add="addAssessment"
       @update="reorderAssessment">
       <assessment-item
@@ -38,7 +38,7 @@
         @save="saveAssessment"
         @remove="item.id ? requestDeletion(item) : remove(item)">
       </assessment-item>
-    </draggable-list>
+    </tes-list>
   </div>
 </template>
 
@@ -46,7 +46,7 @@
 import AssessmentItem from '../AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import DraggableList from '../DraggableList';
+import TesList from '../TesList';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
@@ -131,7 +131,7 @@ export default {
   },
   components: {
     AssessmentItem,
-    DraggableList,
+    TesList,
     GroupIntroduction
   }
 };
