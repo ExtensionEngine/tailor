@@ -28,11 +28,11 @@
 </template>
 
 <script>
-import TesList from './TesList';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeachingElement from '../teaching-elements';
+import TesList from './TesList';
 
 const appChannel = EventBus.channel('app');
 

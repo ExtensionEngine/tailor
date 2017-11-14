@@ -18,10 +18,10 @@
 </template>
 
 <script>
-import TesList from '../TesList';
 import filter from 'lodash/filter';
 import { mapActions, mapGetters } from 'vuex-module';
 import TeachingElement from '../../teaching-elements';
+import TesList from '../TesList';
 
 export default {
   name: 'group-introduction',

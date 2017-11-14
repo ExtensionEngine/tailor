@@ -9,7 +9,7 @@
       class="row">
       <div
         v-for="(it, index) in list"
-        :key="index"
+        :key="it._cid || it.id"
         @dragstart="dragElementIndex = index"
         @dragend="dragElementIndex = -1">
         <slot
@@ -20,7 +20,7 @@
       </div>
     </draggable>
     <add-element
-      v-if="addElement"
+      v-if="enableAdd"
       :include="types"
       :activity="activity"
       :position="nextPosition"
@@ -42,7 +42,7 @@ export default {
       type: Object,
       default() { return { handle: '.drag-handle' }; }
     },
-    addElement: { type: Boolean, default: true },
+    enableAdd: { type: Boolean, default: true },
     types: { type: Array, required: true },
     activity: { type: Object, required: true },
     layout: { type: Boolean, default: false }
