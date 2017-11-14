@@ -45,9 +45,7 @@ export default {
     };
   },
   computed: {
-    visible() {
-      return this.url || false;
-    }
+    visible() { return this.url || false; }
   },
   methods: {
     ...mapActions({ updateElement: 'update' }, 'tes'),
@@ -98,7 +96,6 @@ export default {
 
     a {
       color: #444;
-      font-size: 22px;
 
       &:hover {
         color: #42b983;
