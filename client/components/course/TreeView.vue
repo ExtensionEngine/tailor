@@ -10,7 +10,6 @@
 
 <script>
 import * as d3 from 'd3';
-
 import Activity from './Activity';
 import CircularProgress from 'components/common/CircularProgress';
 import filter from 'lodash/filter';
@@ -39,13 +38,13 @@ function initializeTree() {
     g.attr('transform', d3.event.transform);
   }
 
-  var width = document.getElementById('tree').clientWidth;
-  var height = document.getElementById('tree').clientHeight;
+  // var width = document.getElementById('tree').clientWidth;
+  // var height = document.getElementById('tree').clientHeight;
 
   // declares a tree layout and assigns the size
   const treemap = d3.tree()
-    // .nodeSize([60, 180]);
-    .size([width, height]);
+    .nodeSize([60, 180]);
+    // .size([width, height]);
 
   //  assigns the data to a hierarchy using parent-child relationships
   let nodes = d3.hierarchy(this.treeData);
@@ -84,14 +83,23 @@ function initializeTree() {
     .style('text-anchor', 'middle')
     .text(function (d) { return d.data.name; });
 
-  node.on('click', d => this.onClick(d.data.id));
+  node.on('click', d => this.onClick(d.data._cid));
 
-  zoom.scaleTo(svg, 0.9); // fit to svg
+  var width = document.getElementById('tree').clientWidth;
+  zoom.translateBy(svg, width / 2, 40); // center
+  // zoom.scaleTo(svg, 0.9); // fit to svg
+
+  console.log(nodes.children);
 }
 
 function buildTree(course, activities) {
   const nodes = activities.map(activity => {
-    return { name: activity.id, id: activity.id, parentId: activity.parentId };
+    return {
+      _cid: activity._cid,
+      name: activity.id,
+      id: activity.id,
+      parentId: activity.parentId
+    };
   });
   const groups = groupBy(reject(nodes, { 'parentId': null }), 'parentId');
   const rootActivities = filter(nodes, { 'parentId': null });
@@ -131,8 +139,8 @@ export default {
     ...mapMutations(['focusActivity'], 'course'),
     buildTree: buildTree,
     initializeTree: initializeTree,
-    onClick(id) {
-      this.focusActivity(id);
+    onClick(_cid) {
+      this.focusActivity(_cid);
     }
   },
   components: {
