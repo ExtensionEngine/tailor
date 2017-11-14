@@ -26,8 +26,8 @@ import min from 'lodash/min';
 import reject from 'lodash/reject';
 import Sidebar from './Sidebar';
 
-const MIN_SCALE_RATIO = 0.4;
-const SCALE_TRESHOLD = [0.2, 1];
+const MIN_SCALE_RATIO = 0.6;
+const SCALE_TRESHOLD = [0.3, 1];
 
 function initializeTree() {
   if (this.activities.length === 0) return;
@@ -47,53 +47,47 @@ function initializeTree() {
     g.attr('transform', d3.event.transform);
   }
 
-  // declares a tree layout and assigns the size
-  const treemap = d3.tree()
-    .nodeSize([60, 180]);
+  // Declares a tree layout and assigns the node size
+  const treemap = d3.tree().nodeSize([60, 180]);
 
-  //  assigns the data to a hierarchy using parent-child relationships
+  //  Assigns the data to a hierarchy using parent-child relationships
   let nodes = d3.hierarchy(this.treeData);
 
-  // maps the node data to the tree layout
+  // Maps the node data to the tree layout
   nodes = treemap(nodes);
 
-  // adds the links between the nodes
+  // Adds the links between the nodes
   g.selectAll('.link')
     .data(nodes.descendants().slice(1))
     .enter().append('path')
     .attr('class', 'link')
-    .attr('d', function (d) {
-      return 'M' + d.x + ',' + d.y + ' ' + d.parent.x + ',' + d.parent.y;
-    });
+    .attr('d', d => `M${d.x}, ${d.y} ${d.parent.x},${d.parent.y}`);
 
-  // adds each node as a group
+  // Adds each node as a group
   const node = g.selectAll('.node')
     .data(nodes.descendants())
     .enter().append('g')
-    .attr('class', function (d) {
-      return `node depth${d.depth}`;
-    })
-    .attr('transform', function (d) {
-      return 'translate(' + d.x + ',' + d.y + ')';
-    });
+    .attr('class', d => `node depth${d.depth}`)
+    .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
-  // adds the circle to the node
-  node.append('circle')
-    .attr('r', 8);
+  // Adds the circle to the node
+  node.append('circle').attr('r', 8);
 
-  // adds the text to the node
+  // Adds the text to the node
   node.append('text')
     .attr('dy', '.35em')
-    .attr('y', function (d) { return d.children ? -20 : 20; })
+    .attr('y', d => d.children ? -20 : 20)
     .style('text-anchor', 'middle')
-    .text(function (d) { return d.data.name; });
+    .text(d => d.data.name);
 
   node.on('click', d => this.onClick(d.data));
 
-  var viewportWidth = document.getElementById('tree').clientWidth;
-  zoom.translateBy(svg, viewportWidth / 2, 40); // center
-
-  zoom.scaleTo(svg, calculateScaleRatio(nodes.children, viewportWidth));
+  const viewportWidth = document.getElementById('tree').clientWidth;
+  const treeCoordinates = getTreeCoordinates(nodes.children);
+  const treeOffset = getTreeOffest(treeCoordinates, viewportWidth);
+  const treeWidth = getTreeWidth(treeCoordinates);
+  zoom.translateBy(svg, treeOffset, 40); // center
+  zoom.scaleTo(svg, getScaleRatio(treeWidth, viewportWidth));
 }
 
 function buildTree(course, activities) {
@@ -125,20 +119,33 @@ function addChildren(activity, source) {
   return activity;
 }
 
-function calculateScaleRatio(nodes, viewportWidth) {
+function getTreeCoordinates(nodes) {
   const xCoordinates = [];
   function scanNodes(nodes) {
     forEach(nodes, node => {
-      if (node.x) xCoordinates.push(node.x)
+      if (node.x) xCoordinates.push(node.x);
       if (node.children) scanNodes(node.children);
     });
   }
 
   scanNodes(nodes);
+
   const xMax = max(xCoordinates);
   const xMin = min(xCoordinates);
+  return { xMin, xMax };
+}
 
-  const treeWidth = xMax - xMin;
+function getTreeOffest(treeCoordinates, viewportWidth) {
+  return (viewportWidth / 2) - ((treeCoordinates.xMin + treeCoordinates.xMax) / 2);
+}
+
+function getTreeWidth(treeCoordinates) {
+  return treeCoordinates.xMax - treeCoordinates.xMin;
+}
+
+function getScaleRatio(treeWidth, viewportWidth) {
+  const PADDING = 40;
+  treeWidth += PADDING;
   if (treeWidth < viewportWidth) return 1;
   const scaleRatio = viewportWidth / treeWidth;
   return scaleRatio <= MIN_SCALE_RATIO ? MIN_SCALE_RATIO : scaleRatio;
@@ -150,7 +157,10 @@ export default {
     ...mapGetters(['activities', 'course'], 'course'),
     treeData() {
       if (!this.course || !this.activities) return;
-      return this.buildTree(this.course, this.activities);
+      const nodes = reject(this.activities, activity => {
+        return includes(['PERSPECTIVE', 'COURSE/INTERACTIVE_EXERCISE'], activity.type);
+      });
+      return this.buildTree(this.course, nodes);
     },
     visible() {
       return !this.showLoader || false;
@@ -206,7 +216,6 @@ export default {
   position: relative;
   height: 100%;
   padding-right: 400px;
-
 }
 
 #tree {
