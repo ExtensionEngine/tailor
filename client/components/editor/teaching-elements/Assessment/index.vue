@@ -59,7 +59,8 @@
         @cancel="cancel"
         @save="save"
         @remove="remove"
-        @edit="edit">
+        @edit="edit"
+        class="controls">
       </controls>
     </div>
   </div>
@@ -293,6 +294,10 @@ export default {
       float: right;
     }
   }
+}
+
+.disabled .controls {
+  display: none;
 }
 </style>
 

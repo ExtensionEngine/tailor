@@ -23,7 +23,7 @@ import { quillEditor } from 'vue-quill-editor';
 
 export default {
   name: 'table-cell',
-  props: ['element'],
+  props: ['element', 'disabled'],
   data() {
     return {
       content: get(this.element, 'data.content', ''),
@@ -33,7 +33,7 @@ export default {
   computed: {
     ...mapGetters(['focusedElement'], 'editor'),
     isFocused() {
-      if (!this.focusedElement.type) return false;
+      if (this.disabled || !this.focusedElement.type) return false;
       return this.focusedElement.embedded
         ? this.focusedElement.id === this.element.id
         : this.focusedElement._cid === this.element._cid;
@@ -52,6 +52,7 @@ export default {
       }
     },
     focus(e) {
+      if (this.disabled) return;
       this.focusElement(this.element);
       // Attach component meta
       e.component = { name: 'table-cell', data: this.element };

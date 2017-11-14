@@ -40,8 +40,9 @@ action(function fetch() {
   });
 });
 
-mutation(function resetPagination() {
-  this.state.$internals.pagination = PAGINATION_DEFAULTS;
+action(function resetPagination() {
+  this.commit('setPagination', PAGINATION_DEFAULTS);
+  this.commit('reset', {});
 });
 
 mutation(function setPagination(changes) {

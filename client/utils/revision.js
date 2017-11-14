@@ -1,3 +1,4 @@
+import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import { lower } from 'to-case';
 import reduce from 'lodash/reduce';
@@ -26,7 +27,8 @@ function getActivityText(activity) {
 }
 
 function describeActivityRevision(rev, activity) {
-  let { data: { name }, type } = rev.state;
+  let { type } = rev.state;
+  let name = get(rev, 'state.data.name');
   name = name ? `'${name}' ` : '';
   const level = getLevel(type);
   const label = level ? level.label : type;

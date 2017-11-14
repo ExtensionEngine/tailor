@@ -1,6 +1,10 @@
 <template>
   <li>
-    <div class="revision">
+    <div
+      :class="{ expanded }"
+      :style="{ cursor: isTeachingElement ? 'pointer' : 'auto' }"
+      @click="toggle"
+      class="revision">
       <div :style="{ color }" class="acronym"><span>{{ acronym }}</span></div>
       <div class="content">
         <div class="description">{{ description }}</div>
@@ -8,27 +12,37 @@
       </div>
       <div class="date">{{ date }}</div>
     </div>
+    <entity-revisions
+      v-if="expanded"
+      :revision="revision"
+      :isDetached="!activity">
+    </entity-revisions>
   </li>
 </template>
 
 <script>
-import fecha from 'fecha';
-import find from 'lodash/find';
 import {
   getFormatDescription,
   getRevisionAcronym,
   getRevisionColor
 } from 'utils/revision';
 import { mapGetters } from 'vuex-module';
+import EntityRevisions from './EntityRevisions';
+import fecha from 'fecha';
+import find from 'lodash/find';
 
 export default {
   name: 'revision-item',
   props: ['revision'],
+  data() {
+    return { expanded: false };
+  },
   computed: {
-    ...mapGetters(['getParent'], 'activities'),
     ...mapGetters(['structure'], 'course'),
+    ...mapGetters(['getParent'], 'activities'),
     activity() {
-      const activityId = this.revision.state.activityId || this.revision.state.id;
+      const { state } = this.revision;
+      const activityId = state.activityId || state.id;
       return this.getOutlineLocation(this.getParent(activityId));
     },
     color() {
@@ -42,6 +56,9 @@ export default {
     },
     description() {
       return getFormatDescription(this.revision, this.activity);
+    },
+    isTeachingElement() {
+      return this.revision.entity === 'TEACHING_ELEMENT';
     }
   },
   methods: {
@@ -50,8 +67,12 @@ export default {
       const level = find(this.structure, { type: current.type });
       if (level) return { ...current, label: level.label };
       return this.getOutlineLocation(this.getParent(current.id));
+    },
+    toggle() {
+      if (this.isTeachingElement) this.expanded = !this.expanded;
     }
-  }
+  },
+  components: { EntityRevisions }
 };
 </script>
 
@@ -96,13 +117,13 @@ export default {
     text-align: right;
     font-size: 14px;
   }
+}
 
-  &:hover {
-    background-color: #f1f1f1;
+.expanded, .revision:hover {
+  background-color: #f1f1f1;
 
-    .acronym {
-      background-color: #fff;
-    }
+  .acronym {
+    background-color: #fff;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[columnWidth, { hovered, focused: isFocused }]"
+    :class="[columnWidth, { disabled, hovered, focused: isFocused }]"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
     @dragstart="$emit('dragstart')"
@@ -16,6 +16,7 @@
         :element="element"
         :isFocused="isFocused"
         :isDragged="dragged"
+        :disabled="disabled"
         @save="save">
       </component>
     </div>
@@ -63,7 +64,7 @@ export default {
   computed: {
     ...mapGetters(['focusedElement'], 'editor'),
     isFocused() {
-      if (!this.focusedElement) return false;
+      if (this.disabled || !this.focusedElement) return false;
       return this.focusedElement.embedded
         ? this.focusedElement.id === this.element.id
         : this.focusedElement._cid === this.element._cid;
@@ -156,5 +157,9 @@ export default {
     border: 1px solid #90a4ae;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
   }
+}
+
+.disabled .drag-handle {
+  display: none;
 }
 </style>
