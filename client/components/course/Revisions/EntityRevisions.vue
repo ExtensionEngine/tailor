@@ -45,11 +45,9 @@ export default {
     };
   },
   computed: {
-    courseId() {
-      return Number(this.$route.params.courseId);
-    },
     baseUrl() {
-      return `/courses/${this.courseId}/revisions/`;
+      const courseId = Number(this.$route.params.courseId);
+      return `/courses/${courseId}/revisions/`;
     }
   },
   methods: {
