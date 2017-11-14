@@ -1,5 +1,10 @@
 <template>
   <div class="pdf-toolbar">
+    <div :class="{ visible }" class="new-window">
+      <a :href="url" target="_blank">
+        <span class="mdi mdi-open-in-new"></span>
+      </a>
+    </div>
     <input
       v-model="url"
       :disabled="!editing"
@@ -39,6 +44,11 @@ export default {
       ...cloneDeep(this.element.data)
     };
   },
+  computed: {
+    visible() {
+      return this.url || false;
+    }
+  },
   methods: {
     ...mapActions({ updateElement: 'update' }, 'tes'),
     save() {
@@ -74,6 +84,25 @@ export default {
 
     &:active {
       outline: none;
+    }
+  }
+
+  .new-window {
+    display: inline-block;
+    background: #fff;
+    visibility: hidden;
+
+    &.visible {
+      visibility: visible;
+    }
+
+    a {
+      color: #444;
+      font-size: 22px;
+
+      &:hover {
+        color: #42b983;
+      }
     }
   }
 }

@@ -23,11 +23,6 @@
           v-show="showViewer"
           class="pdf"
           ref="pdf">
-          <div v-if="source" class="new-window">
-            <a :href="source.src" target="_blank">
-              <span class="mdi mdi-open-in-new"></span>
-            </a>
-          </div>
         </div>
         <img
           v-if="safari"
@@ -136,7 +131,7 @@ export default {
 
 .overlay {
   position: absolute;
-  z-index: 99;
+  z-index: 3;
   width: 100%;
   height: 100%;
   background-color: #333;
@@ -180,11 +175,6 @@ export default {
   position: relative;
   width: 100%;
   height: 360px;
-
-  .wrapper {
-    width: 100%;
-    height: 100%;
-  }
 }
 
 .pdf {
@@ -220,22 +210,6 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
-}
-
-.new-window {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: #fff;
-
-  a {
-    color: #444;
-    font-size: 22px;
-
-    &:hover {
-      color: #42b983;
-    }
   }
 }
 </style>
