@@ -20,7 +20,7 @@ SCHEMAS.forEach(schema => {
   schema.meta = schema.meta || [];
   const hasColorMeta = find(schema.meta, { key: 'color' });
   if (!hasColorMeta) {
-    schema.meta.push({ type: 'COLOR', key: 'color', label: 'Color' });
+    schema.meta.push({ type: 'COLOR', key: 'color', label: 'Label color' });
   }
   return schema.structure.forEach(it => {
     it.type = `${schema.id}/${it.type}`;
