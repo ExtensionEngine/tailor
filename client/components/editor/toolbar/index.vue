@@ -99,7 +99,9 @@ export default {
 
 <style lang="scss" scoped>
 .toolbar-container {
-  position: relative;
+  position: absolute;
+  width: 100%;
+  z-index: 999;
 }
 
 .delete-element {
