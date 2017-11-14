@@ -16,45 +16,35 @@
       <div v-if="!teachingElements.length" class="well">
         Click the button below to Create introductory content.
       </div>
-      <draggable
+      <tes-list
         :list="teachingElements"
-        :options="dragOptions"
-        @update="reorder"
-        class="row">
-        <teaching-element
-          v-for="element in teachingElements"
-          :element="element"
-          :key="element._cid">
-        </teaching-element>
-      </draggable>
-      <add-element
         :activity="introduction"
-        :position="teachingElements.length + 1"
-        :include="['HTML', 'IMAGE', 'VIDEO']"
+        :types="['HTML', 'IMAGE', 'VIDEO']"
         :layout="true"
-        @add="saveElement">
-      </add-element>
+        @add="saveElement"
+        @update="reorder">
+        <teaching-element
+          slot="list-item"
+          slot-scope="{ item, dragged }"
+          :dragged="dragged"
+          :element="item">
+        </teaching-element>
+      </tes-list>
     </div>
   </div>
 </template>
 
 <script>
-import AddElement from './AddElement';
-import Draggable from 'vuedraggable';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import { mapActions, mapGetters } from 'vuex-module';
 import TeachingElement from '../teaching-elements';
+import TesList from './TesList';
 
 const appChannel = EventBus.channel('app');
 
 export default {
   name: 'introduction',
-  data() {
-    return {
-      dragOptions: { handle: '.drag-handle' }
-    };
-  },
   computed: {
     ...mapGetters(['tes']),
     ...mapGetters(['activity', 'introduction'], 'editor'),
@@ -85,8 +75,7 @@ export default {
     }
   },
   components: {
-    AddElement,
-    Draggable,
+    TesList,
     TeachingElement
   }
 };
