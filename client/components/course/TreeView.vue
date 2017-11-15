@@ -28,6 +28,7 @@ import Sidebar from './Sidebar';
 
 const MIN_SCALE_RATIO = 0.6;
 const SCALE_TRESHOLD = [0.3, 1];
+const PADDING = 40;
 const REJECTING_ACTIVITIES = ['PERSPECTIVE', 'COURSE/INTERACTIVE_EXERCISE']; // better name?
 
 function initializeTree() {
@@ -145,7 +146,6 @@ function getTreeWidth(treeCoordinates) {
 }
 
 function getScaleRatio(treeWidth, viewportWidth) {
-  const PADDING = 40;
   treeWidth += PADDING;
   if (treeWidth < viewportWidth) return 1;
   const scaleRatio = viewportWidth / treeWidth;
