@@ -77,7 +77,7 @@ const COURSE_OUTLINE = [{
   color: '#EC407A',
   isEditable: true,
   isObjective: true,
-  contentContainers: ['INTRO', 'PAGE', 'PERSPECTIVE'],
+  contentContainers: ['PAGE', 'PERSPECTIVE'],
   hasAssessments: true,
   hasExams: false,
   hasPrerequisites: true,
