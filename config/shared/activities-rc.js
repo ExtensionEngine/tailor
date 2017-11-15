@@ -3,18 +3,18 @@ const PREVIEW_URL = 'https://cgma.dev.extensionengine.com/admin/#/course/{course
 const CONTENT_CONTAINERS = [{
   type: 'INTRO',
   label: 'Introduction',
-  single: true,
+  multiple: false,
   types: ['HTML', 'IMAGE', 'VIDEO'],
   displayHeading: true
 }, {
   type: 'PAGE',
   label: 'Page',
-  single: false,
+  multiple: false,
   displayHeading: false
 }, {
   type: 'PERSPECTIVE',
   label: 'Perspective',
-  single: false,
+  multiple: true,
   displayHeading: false
 }];
 
@@ -77,7 +77,7 @@ const COURSE_OUTLINE = [{
   color: '#EC407A',
   isEditable: true,
   isObjective: true,
-  contentContainers: ['PAGE', 'PERSPECTIVE'],
+  contentContainers: ['INTRO', 'PAGE', 'PERSPECTIVE'],
   hasAssessments: true,
   hasExams: false,
   hasPrerequisites: true,

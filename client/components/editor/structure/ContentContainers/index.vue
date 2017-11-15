@@ -40,7 +40,7 @@ export default {
     displayHeading: { type: Number, default: false },
     type: { type: String, required: true },
     label: { type: String, required: true },
-    single: { type: Boolean, default: false }
+    multiple: { type: Boolean, default: true }
   },
   computed: {
     heading() {
@@ -50,7 +50,7 @@ export default {
       return this.label.toLowerCase();
     },
     addBtnEnabled() {
-      return !(this.single && this.activities.length);
+      return !(!this.multiple && this.activities.length);
     },
     nextPosition() {
       const max = reduce(this.activities, (max, { position }) => {
