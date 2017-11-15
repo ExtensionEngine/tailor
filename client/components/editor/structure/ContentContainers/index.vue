@@ -9,6 +9,7 @@
       :key="activity.id"
       :activity="activity"
       :types="types"
+      :name="name"
       :class="`${name}-container`"
       @delete="deleteContainer(activity)"
       class="content-container">

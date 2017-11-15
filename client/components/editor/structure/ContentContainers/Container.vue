@@ -1,11 +1,13 @@
 <template>
   <div>
     <div class="actions">
-      <span class="pull-right">
-        <span @click="deleteContainer" class="action">
-          <span class="mdi mdi-delete"></span>
-        </span>
-      </span>
+      <button
+        @click="deleteContainer"
+        class="btn btn-default pull-right"
+        type="button">
+         <span class="mdi mdi-delete"></span>
+         Delete {{ name }}
+      </button>
     </div>
     <div v-if="!teachingElements.length" class="well">
       Click the button below to create content.
@@ -38,7 +40,8 @@ export default {
   name: 'content-container',
   props: {
     activity: { type: Object, required: true },
-    types: { type: Array, required: false }
+    types: { type: Array, required: false },
+    name: { type: String, required: true }
   },
   computed: {
     ...mapGetters(['tes']),
@@ -71,16 +74,16 @@ export default {
 .actions {
   width: 100%;
   min-height: 36px;
+  margin-bottom: 5px;
   color: #707070;
   font-size: 22px;
 
-  .action {
-    padding: 0 10px;
-  }
-
-  .action:hover {
-    color: #444;
-    cursor: pointer;
+  .btn {
+    color: #707070;
+    border: 1px solid #f0f0f0;
+    border-radius: 2px;
+    outline: none;
+    box-shadow: none;
   }
 }
 </style>
