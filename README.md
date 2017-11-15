@@ -86,7 +86,7 @@ Configuration for content containers. Contains the following properties:
 * **type** `String` - Const for marking container type.
 * **label** `String` - Content container label.
 * **single** `Boolean` - Defines if there can be just a single instance of the ContentContainer inside one activity.
-* **types** `Array<String>` - An array of possible teaching element types that can exist inside ContentContainer.
+* **types** `Array<String>` - An array of possible teaching element types that can exist inside ContentContainer. If not specified all types of elements are allowed.
 * **displayHeading** `Boolean` - Defines if a heading is displayed on top of the ContentContainer
 
 ### `PREVIEW_URL`
