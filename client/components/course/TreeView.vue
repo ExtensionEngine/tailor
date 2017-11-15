@@ -28,6 +28,7 @@ import Sidebar from './Sidebar';
 
 const MIN_SCALE_RATIO = 0.6;
 const SCALE_TRESHOLD = [0.3, 1];
+const REJECTING_ACTIVITIES = ['PERSPECTIVE', 'COURSE/INTERACTIVE_EXERCISE']; // better name?
 
 function initializeTree() {
   if (this.activities.length === 0) return;
@@ -158,7 +159,7 @@ export default {
     treeData() {
       if (!this.course || !this.activities) return;
       const nodes = reject(this.activities, activity => {
-        return includes(['PERSPECTIVE', 'COURSE/INTERACTIVE_EXERCISE'], activity.type);
+        return includes(REJECTING_ACTIVITIES, activity.type);
       });
       return this.buildTree(this.course, nodes);
     },
@@ -208,7 +209,6 @@ export default {
 
 .activities-container {
   position: relative;
-  width: 100%;
   height: 100%;
 }
 
@@ -234,12 +234,8 @@ export default {
       height: 100%;
     }
 
-    .node circle {
-      pointer-events: all;
-
-      &:hover {
-        cursor: pointer;
-      }
+    .node circle:hover {
+      cursor: pointer;
     }
 
     .node.depth0 circle {
@@ -282,10 +278,8 @@ export default {
       }
     }
 
-    .node text { font: 12px sans-serif; }
-
-    .node--internal text {
-      text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+    .node text {
+      font: 14px sans-serif;
     }
 
     .link {
