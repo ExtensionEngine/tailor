@@ -58,7 +58,7 @@ Configuration for schema structure nodes (activities). Contains the following pr
 * **label** `String` - Display label.
 * **color** `String` - Display color in hexadecimal notation.
 * **isEditable** `Boolean` - Activity allows adding activities/teaching elements to it.
-* **contentContainers** `Array<String>` - Array of content container labels that define which content containers can be added.
+* **contentContainers** `Array<String>` - Array of content container types that define which content containers can be added.
 * **hasAssessments** `Boolean` - Activity allows adding assessments activities to it.
 * **hasExams** `Boolean` - Activity allows adding exam activities to it.
 * **hasPrerequisites** `Boolean` - Defines if this activity should offer other activities as prerequisites.
@@ -83,6 +83,7 @@ An array of ContentContainer objects.
 
 #### ContentContainer
 Configuration for content containers. Contains the following properties:
+* **type** `String` - Const for marking container type.
 * **label** `String` - Content container label.
 * **single** `Boolean` - Defines if there can be just a single instance of the ContentContainer inside one activity.
 * **types** `Array<String>` - An array of possible teaching element types that can exist inside ContentContainer.

@@ -1,16 +1,19 @@
 const PREVIEW_URL = 'https://cgma.dev.extensionengine.com/admin/#/course/{courseId}/activity/{activityId}/preview';
 
 const CONTENT_CONTAINERS = [{
-  label: 'INTRODUCTION',
+  type: 'INTRO',
+  label: 'Introduction',
   single: true,
   types: ['HTML', 'IMAGE', 'VIDEO'],
   displayHeading: true
 }, {
-  label: 'PAGE',
+  type: 'PAGE',
+  label: 'Page',
   single: false,
   displayHeading: false
 }, {
-  label: 'PERSPECTIVE',
+  type: 'PERSPECTIVE',
+  label: 'Perspective',
   single: false,
   displayHeading: false
 }];
@@ -22,7 +25,7 @@ const COURSE_OUTLINE = [{
   label: 'Goal',
   color: '#42A5F5',
   isEditable: true,
-  contentContainers: ['INTRODUCTION'],
+  contentContainers: ['INTRO'],
   hasAssessments: false,
   hasExams: true,
   hasPrerequisites: true,
@@ -93,7 +96,7 @@ const REPOSITORY_OUTLINE = [{
   label: 'Group',
   color: '#42A5F5',
   isEditable: true,
-  contentContainers: ['INTRODUCTION'],
+  contentContainers: ['INTRO'],
   hasAssessments: false,
   hasExams: true,
   meta: []
