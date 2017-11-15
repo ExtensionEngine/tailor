@@ -3,9 +3,7 @@
     <div @click="navigateTo" class="course-card">
       <div class="body">
         <div class="title">
-          <div :style="{ color }" class="acronym">
-            <span>{{ acronym }}</span>
-          </div>
+          <acronym :course="course"></acronym>
           {{ name }}
         </div>
         <div class="description">{{ description }}</div>
@@ -23,9 +21,9 @@
 </template>
 
 <script>
-import { getAcronym, getColor } from 'utils/course';
 import { getOutlineLevels } from 'shared/activities';
 
+import Acronym from 'components/common/Acronym';
 import get from 'lodash/get';
 import last from 'lodash/last';
 import pluralize from 'pluralize';
@@ -35,17 +33,11 @@ import truncate from 'truncate';
 export default {
   props: ['course'],
   computed: {
-    acronym() {
-      return getAcronym(this.course.name);
-    },
     name() {
       return truncate(this.course.name, 75);
     },
     description() {
       return truncate(this.course.description, 180);
-    },
-    color() {
-      return getColor(this.course);
     },
     objectiveLabel() {
       return pluralize(last(getOutlineLevels(this.course.schema)).label);
@@ -67,6 +59,7 @@ export default {
     }
   },
   components: {
+    Acronym,
     Stat
   }
 };
@@ -97,23 +90,6 @@ export default {
     @media (min-width: 1200px) and (max-width: 1300px) {
       height: 250px;
     }
-  }
-}
-
-.acronym {
-  display: inline-block;
-  width: 45px;
-  height: 45px;
-  margin-right: 8px;
-  font-size: 18px;
-  font-weight: 400;
-  text-align: center;
-  border-radius: 30px;
-  background-color: #eee;
-
-  span {
-    display: inline-block;
-    padding-top: 6px;
   }
 }
 
