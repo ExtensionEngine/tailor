@@ -20,8 +20,13 @@
               <span class="mdi mdi-eye"></span>
             </a>
           </h2>
-          <introduction v-if="showIntroduction"></introduction>
-          <perspectives v-if="showPerspectives"></perspectives>
+          <content-containers
+            v-for="(activities, name) in contentContainers"
+            :key="name"
+            :activities="activities"
+            :parentId="activity.id"
+            v-bind="getContainerConfig(name)">
+          </content-containers>
           <assessments v-if="showAssessments"></assessments>
           <exams v-if="showExams"></exams>
         </div>
@@ -35,11 +40,10 @@ import * as config from 'shared/activities';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import CircularProgress from 'components/common/CircularProgress';
+import ContentContainers from './structure/ContentContainers';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import format from 'string-template';
-import Introduction from './structure/Introduction';
-import Perspectives from './structure/Perspectives';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
 import truncate from 'truncate';
@@ -54,14 +58,8 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['focusedElement', 'activity'], 'editor'),
+    ...mapGetters(['focusedElement', 'activity', 'contentContainers'], 'editor'),
     ...mapGetters(['course'], 'course'),
-    showIntroduction() {
-      return config.hasIntroduction(this.activity.type);
-    },
-    showPerspectives() {
-      return config.hasPerspectives(this.activity.type);
-    },
     showAssessments() {
       return config.hasAssessments(this.activity.type);
     },
@@ -90,6 +88,10 @@ export default {
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
     ...mapMutations({ setupActivitiesApi: 'setBaseUrl' }, 'activities'),
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
+    getContainerConfig(name) {
+      const type = name.toUpperCase();
+      return find(config.CONTENT_CONTAINERS, { type });
+    },
     truncate(str, len = 50) {
       return truncate(str, len);
     },
@@ -128,9 +130,8 @@ export default {
   components: {
     Assessments,
     CircularProgress,
+    ContentContainers,
     Exams,
-    Introduction,
-    Perspectives,
     Toolbar
   }
 };
