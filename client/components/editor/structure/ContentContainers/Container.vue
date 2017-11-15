@@ -8,7 +8,7 @@
       </span>
     </div>
     <div v-if="!teachingElements.length" class="well">
-      Click the button below to Create content.
+      Click the button below to create content.
     </div>
     <tes-list
       :list="teachingElements"

@@ -1,6 +1,9 @@
 <template>
   <div class="content-containers">
     <h2 v-if="displayHeading">{{ heading }}</h2>
+    <div v-if="!activities.length" class="well">
+      Click the button below to create first {{ heading }}.
+    </div>
     <content-container
       v-for="activity in activities"
       :key="activity.id"
@@ -11,8 +14,8 @@
       class="content-container">
     </content-container>
     <div v-if="addBtnEnabled">
-      <button @click="addContainer" class="btn btn-primary">
-        <span class="mdi mdi-plus"></span>
+      <button @click="addContainer" class="add-btn btn btn-primary">
+        <span class="add-icon mdi mdi-plus"></span>
         Create {{ name }}
       </button>
     </div>
@@ -94,5 +97,16 @@ h2 {
   padding: 20px 40px;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.add-btn {
+  margin: 30px 0 0;
+  padding: 10px 15px;
+  font-size: 16px;
+  line-height: 16px;
+}
+
+.add-icon {
+  padding-right: 3px;
 }
 </style>
