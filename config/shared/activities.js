@@ -53,7 +53,7 @@ module.exports = {
     const level = getLevel(type);
     return level && level.isEditable;
   },
-  contentContainers: level => getLevel(level).contentContainers,
+  supportedContainers: level => getLevel(level).contentContainers,
   hasAssessments: level => getLevel(level).hasAssessments,
   hasExams: level => getLevel(level).hasExams
 };
