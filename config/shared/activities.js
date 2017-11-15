@@ -10,7 +10,7 @@ const config = mergeConfig(
   require('./activities-rc.load')()
 );
 
-const { SCHEMAS, ASSET_GROUP, PREVIEW_URL } = config;
+const { SCHEMAS, CONTENT_CONTAINERS, PREVIEW_URL } = config;
 
 // Validate schemas
 // Prefix activity types with schema id; SCHEMA_ID/TYPE
@@ -43,7 +43,7 @@ module.exports = {
   SCHEMAS,
   OUTLINE_LEVELS: SCHEMAS[0].structure,
   OBJECTIVES: filter(SCHEMAS[0].structure, { isObjective: true }),
-  ASSET_GROUP,
+  CONTENT_CONTAINERS,
   PREVIEW_URL,
   getSchema,
   getRepositoryMeta,
@@ -53,8 +53,7 @@ module.exports = {
     const level = getLevel(type);
     return level && level.isEditable;
   },
-  hasIntroduction: level => getLevel(level).hasIntroduction,
-  hasPerspectives: level => getLevel(level).hasPerspectives,
+  contentContainers: level => getLevel(level).contentContainers,
   hasAssessments: level => getLevel(level).hasAssessments,
   hasExams: level => getLevel(level).hasExams
 };

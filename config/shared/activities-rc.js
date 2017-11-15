@@ -1,5 +1,19 @@
-const ASSET_GROUP = 'PERSPECTIVE';
 const PREVIEW_URL = 'https://cgma.dev.extensionengine.com/admin/#/course/{courseId}/activity/{activityId}/preview';
+
+const CONTENT_CONTAINERS = [{
+  label: 'INTRODUCTION',
+  single: true,
+  types: ['HTML', 'IMAGE', 'VIDEO'],
+  displayHeading: true
+}, {
+  label: 'PAGE',
+  single: false,
+  displayHeading: false
+}, {
+  label: 'PERSPECTIVE',
+  single: false,
+  displayHeading: false
+}];
 
 const COURSE_OUTLINE = [{
   level: 1,
@@ -8,8 +22,7 @@ const COURSE_OUTLINE = [{
   label: 'Goal',
   color: '#42A5F5',
   isEditable: true,
-  hasIntroduction: true,
-  hasPerspectives: false,
+  contentContainers: ['INTRODUCTION'],
   hasAssessments: false,
   hasExams: true,
   hasPrerequisites: true,
@@ -33,8 +46,7 @@ const COURSE_OUTLINE = [{
   label: 'Learning Objective',
   color: '#66BB6A',
   isEditable: false,
-  hasIntroduction: false,
-  hasPerspectives: false,
+  contentContainers: [],
   hasAssessments: false,
   hasExams: false,
   hasPrerequisites: true,
@@ -52,7 +64,7 @@ const COURSE_OUTLINE = [{
   label: 'Interactive Exercise',
   color: '#78909C',
   isEditable: true,
-  hasPerspectives: true,
+  contentContainers: ['PAGE', 'PERSPECTIVE'],
   hasPrerequisites: true,
   meta: []
 }, {
@@ -62,8 +74,7 @@ const COURSE_OUTLINE = [{
   color: '#EC407A',
   isEditable: true,
   isObjective: true,
-  hasIntroduction: false,
-  hasPerspectives: true,
+  contentContainers: ['PAGE', 'PERSPECTIVE'],
   hasAssessments: true,
   hasExams: false,
   hasPrerequisites: true,
@@ -82,8 +93,7 @@ const REPOSITORY_OUTLINE = [{
   label: 'Group',
   color: '#42A5F5',
   isEditable: true,
-  hasIntroduction: true,
-  hasPerspectives: false,
+  contentContainers: ['INTRODUCTION'],
   hasAssessments: false,
   hasExams: true,
   meta: []
@@ -101,7 +111,7 @@ const SCHEMAS = [{
 }];
 
 module.exports = {
-  ASSET_GROUP,
+  CONTENT_CONTAINERS,
   SCHEMAS,
   PREVIEW_URL
 };
