@@ -16,28 +16,30 @@
             </span>
           </div>
           <div class="form-group">
-            <multiselect
-              v-model="schema"
-              :options="schemas"
-              :searchable="false"
-              label="name"
-              value="id">
-            </multiselect>
+            <div :class="{ 'has-error': vErrors.has('schema') }" class="form-group">
+              <multiselect
+                v-model="schema"
+                v-validate="'required'"
+                :options="schemas"
+                :searchable="false"
+                label="name"
+                value="id"
+                trackBy="id"
+                data-vv-value-path="id"
+                name="schema">
+              </multiselect>
+              <span class="help-block">{{ vErrors.first('schema') }}</span>
+            </div>
           </div>
           <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
             <input
               v-model="name"
-              v-focus="focusName"
               v-validate="{ rules: { required: true, min: 2, max: 250 } }"
-              @focus="focusName = true"
-              @blur="focusName = false"
               class="form-control"
               name="name"
               type="text"
               placeholder="Name"/>
-            <span v-show="vErrors.has('name')" class="help-block">
-              {{ vErrors.first('name') }}
-            </span>
+            <span class="help-block">{{ vErrors.first('name') }}</span>
           </div>
           <div :class="{ 'has-error': vErrors.has('description') }" class="form-group">
             <textarea
@@ -47,9 +49,7 @@
               name="description"
               placeholder="Description">
             </textarea>
-            <span v-show="vErrors.has('description')" class="help-block">
-              {{ vErrors.first('description') }}
-            </span>
+            <span class="help-block">{{ vErrors.first('description') }}</span>
           </div>
         </div>
       </div>
@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import { focus } from 'vue-focus';
 import { mapActions, mapGetters } from 'vuex-module';
 import { SCHEMAS } from 'shared/activities';
 
@@ -85,12 +84,11 @@ import pick from 'lodash/pick';
 import Promise from 'bluebird';
 
 const getDefaultData = () => ({
-  schema: SCHEMAS[0],
+  schema: null,
   name: '',
   description: '',
   showLoader: false,
-  showModal: false,
-  focusName: true
+  showModal: false
 });
 
 export default {
@@ -121,13 +119,11 @@ export default {
     show() {
       this.vErrors.clear();
       this.showModal = true;
-      this.focusName = true;
     },
     hide() {
       Object.assign(this, getDefaultData());
     }
   },
-  directives: { focus },
   components: {
     CircularProgress,
     Modal,
