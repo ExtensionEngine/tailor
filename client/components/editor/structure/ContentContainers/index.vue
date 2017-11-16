@@ -103,10 +103,8 @@ h2 {
 }
 
 .add-btn {
+  min-width: 300px;
   margin: 30px 0 0;
-  padding: 10px 15px;
-  font-size: 16px;
-  line-height: 16px;
 }
 
 .add-icon {

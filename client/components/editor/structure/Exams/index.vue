@@ -9,7 +9,7 @@
         :position="index">
       </exam>
     </ul>
-    <button @click="create" class="btn btn-primary create-exam">
+    <button @click="create" class="btn btn-primary btn-material create-exam">
       <span class="mdi mdi-plus"></span>
       Create Exam Version
     </button>
@@ -61,7 +61,7 @@ h2 {
 }
 
 .create-exam {
-  min-width: 210px;
+  min-width: 300px;
   margin: 40px 0;
 }
 </style>
