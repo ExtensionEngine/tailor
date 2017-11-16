@@ -8,7 +8,7 @@
         <h4 class="modal-title">Create content repository</h4>
       </div>
       <div slot="body">
-        <loader v-show="showLoader"></loader>
+        <circular-progress v-show="showLoader" class="loader"></circular-progress>
         <div v-show="!showLoader">
           <div class="error-message">
             <span v-if="vErrors.has('default')">
@@ -76,7 +76,7 @@ import { focus } from 'vue-focus';
 import { mapActions, mapGetters } from 'vuex-module';
 import { SCHEMAS } from 'shared/activities';
 
-import Loader from '../common/Loader';
+import CircularProgress from 'components/common/CircularProgress';
 import Modal from 'components/common/Modal';
 import Multiselect from 'components/common/Select';
 import pick from 'lodash/pick';
@@ -106,19 +106,15 @@ export default {
   methods: {
     ...mapActions(['save'], 'courses'),
     submit() {
-      this.$validator.validateAll().then(result => {
-        if (!result) return;
-        return this.create({
-          schema: this.schema.id,
-          ...pick(this, ['name', 'description'])
-        });
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
+        this.showLoader = true;
+        const schema = this.schema.id;
+        const course = { schema, ...pick(this, ['name', 'description']) };
+        return Promise.join(this.save(course), Promise.delay(1000))
+          .then(() => this.hide())
+          .catch(() => this.vErrors.add('default', 'An error has occurred!'));
       });
-    },
-    create(course) {
-      this.showLoader = true;
-      return Promise.join(this.save(course), Promise.delay(1000))
-        .then(() => this.hide())
-        .catch(() => this.vErrors.add('default', 'An error has occurred!'));
     },
     show() {
       this.vErrors.clear();
@@ -131,7 +127,7 @@ export default {
   },
   directives: { focus },
   components: {
-    Loader,
+    CircularProgress,
     Modal,
     Multiselect
   },
@@ -163,8 +159,17 @@ export default {
     text-align: left;
   }
 
+  /deep/ .modal-body {
+    min-height: 300px;
+  }
+
   .loader {
-    margin: 50px 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
   }
 }
 </style>
