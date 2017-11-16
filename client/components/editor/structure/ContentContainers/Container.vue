@@ -16,7 +16,7 @@
       :list="teachingElements"
       :activity="activity"
       :types="types"
-      :layout="true"
+      :layout="layout"
       @add="saveElement"
       @update="reorder">
       <teaching-element
@@ -41,7 +41,8 @@ export default {
   props: {
     activity: { type: Object, required: true },
     types: { type: Array, required: false },
-    name: { type: String, required: true }
+    name: { type: String, required: true },
+    layout: { type: Boolean, required: true }
   },
   computed: {
     ...mapGetters(['tes']),

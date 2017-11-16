@@ -85,9 +85,10 @@ An array of ContentContainer objects.
 Configuration for content containers. Contains the following properties:
 * **type** `String` - Const for marking container type.
 * **label** `String` - Content container label.
-* **multiple** `Boolean` - Defines if there can be multiple instances of the ContentContainer inside one activity.
+* **multiple** `Boolean` - Defines if there can be multiple instances of the ContentContainer inside one activity. False by default.
 * **types** `Array<String>` - An array of possible teaching element types that can exist inside ContentContainer. If not specified all types of elements are allowed.
-* **displayHeading** `Boolean` - Defines if a heading is displayed on top of the ContentContainer
+* **displayHeading** `Boolean` - Defines if a heading is displayed on top of the ContentContainer. False by default.
+* **layout** `Boolean` - Defines if elements inside container can be placed two in a row. True by default.
 
 ### `PREVIEW_URL`
 A string template that will be interpolated on the client using two route params, `courseId` and `activityId`, into a preview URL for each activiy. Example:

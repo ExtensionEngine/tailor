@@ -10,6 +10,7 @@
       :activity="activity"
       :types="types"
       :name="name"
+      :layout="layout"
       :class="`${name}-container`"
       @delete="deleteContainer(activity)"
       class="content-container">
@@ -41,7 +42,8 @@ export default {
     displayHeading: { type: Number, default: false },
     type: { type: String, required: true },
     label: { type: String, required: true },
-    multiple: { type: Boolean, default: true }
+    multiple: { type: Boolean, default: false },
+    layout: { type: Boolean, default: true }
   },
   computed: {
     heading() {

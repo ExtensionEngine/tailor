@@ -3,19 +3,15 @@ const PREVIEW_URL = 'https://cgma.dev.extensionengine.com/admin/#/course/{course
 const CONTENT_CONTAINERS = [{
   type: 'INTRO',
   label: 'Introduction',
-  multiple: false,
   types: ['HTML', 'IMAGE', 'VIDEO'],
   displayHeading: true
 }, {
   type: 'PAGE',
-  label: 'Page',
-  multiple: false,
-  displayHeading: false
+  label: 'Page'
 }, {
   type: 'PERSPECTIVE',
   label: 'Perspective',
-  multiple: true,
-  displayHeading: false
+  multiple: true
 }];
 
 const COURSE_OUTLINE = [{
@@ -67,7 +63,7 @@ const COURSE_OUTLINE = [{
   label: 'Interactive Exercise',
   color: '#78909C',
   isEditable: true,
-  contentContainers: ['PAGE', 'PERSPECTIVE'],
+  contentContainers: ['PAGE'],
   hasPrerequisites: true,
   meta: []
 }, {
@@ -77,7 +73,7 @@ const COURSE_OUTLINE = [{
   color: '#EC407A',
   isEditable: true,
   isObjective: true,
-  contentContainers: ['PAGE', 'PERSPECTIVE'],
+  contentContainers: ['PERSPECTIVE'],
   hasAssessments: true,
   hasExams: false,
   hasPrerequisites: true,
