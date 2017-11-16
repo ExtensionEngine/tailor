@@ -3,10 +3,10 @@
     <div class="actions">
       <button
         @click="deleteContainer"
-        class="btn btn-default pull-right"
+        class="btn btn-default btn-material pull-right"
         type="button">
-          <span class="mdi mdi-delete"></span>
-          Delete {{ name }}
+        <span class="mdi mdi-delete"></span>
+        Delete {{ name }}
       </button>
     </div>
     <div v-if="!teachingElements.length" class="well">
@@ -75,7 +75,7 @@ export default {
 .actions {
   width: 100%;
   min-height: 36px;
-  margin-bottom: 5px;
+  margin-bottom: 25px;
   color: #707070;
   font-size: 22px;
 
