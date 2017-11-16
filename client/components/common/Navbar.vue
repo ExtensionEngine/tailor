@@ -11,8 +11,8 @@
         v-if="course"
         :to="{ name: 'course', params: { courseId: course.id }}"
         class="course-title">
-        <span :style="{ color: courseColor }" class="navbar-acronym">
-          <span>{{ courseAcronym }}-{{ course.id }}</span>
+        <span class="navbar-acronym">
+          <span>{{ courseAcronym }}</span>
         </span>
         {{ course.name }}
       </router-link>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { getAcronym, getColor } from 'utils/course';
+import { getAcronym } from 'utils/course';
 import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
@@ -46,9 +46,6 @@ export default {
   computed: {
     ...mapGetters(['user']),
     ...mapGetters(['course'], 'course'),
-    courseColor() {
-      return this.course ? getColor(this.course) : null;
-    },
     courseAcronym() {
       return this.course ? getAcronym(this.course.name) : null;
     }
@@ -89,7 +86,7 @@ $bg-color: #fff;
     .logo {
       float: left;
       height: 36px;
-      margin: 12px 20px 0;
+      margin: 12px 25px 0 20px;
     }
 
     .title {
@@ -103,7 +100,7 @@ $bg-color: #fff;
   .course-title {
     float: left;
     width: 50%;
-    margin-left: 25px;
+    margin-left: 38px;
     color: $font-color;
     font-size: 16px;
     line-height: $nav-height;
@@ -129,6 +126,7 @@ $bg-color: #fff;
 
   .navbar-acronym {
     padding-right: 4px;
+    color: #777;
     font-weight: bold;
   }
 
