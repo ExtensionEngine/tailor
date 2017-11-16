@@ -16,7 +16,7 @@
       class="content-container">
     </content-container>
     <div v-if="addBtnEnabled">
-      <button @click="addContainer" class="add-btn btn btn-primary">
+      <button @click="addContainer" class="add-btn btn btn-primary btn-material">
         <span class="add-icon mdi mdi-plus"></span>
         Create {{ name }}
       </button>
@@ -29,7 +29,7 @@ import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
 import { mapActions } from 'vuex-module';
-import reduce from 'lodash/reduce';
+import maxBy from 'lodash/maxBy';
 
 const appChannel = EventBus.channel('app');
 
@@ -53,10 +53,8 @@ export default {
       return !(!this.multiple && this.containerGroup.length);
     },
     nextPosition() {
-      const max = reduce(this.containerGroup, (max, { position }) => {
-        return position > max ? position : max;
-      }, 0);
-      return max + 1;
+      const last = maxBy(this.containerGroup, 'position') || 0;
+      return last + 1;
     }
   },
   filters: {
