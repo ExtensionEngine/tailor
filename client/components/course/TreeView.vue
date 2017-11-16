@@ -34,16 +34,16 @@ const REJECTING_ACTIVITIES = ['PERSPECTIVE', 'COURSE/INTERACTIVE_EXERCISE']; // 
 function initializeTree() {
   if (this.activities.length === 0) return;
 
-  var zoom = d3.zoom()
+  const zoom = d3.zoom()
     .scaleExtent(SCALE_TRESHOLD)
     .on('zoom', zoomed);
 
-  var svg = d3.select('#tree').append('svg')
+  const svg = d3.select('#tree').append('svg')
     .attr('width', '100%')
     .attr('height', '100%')
     .call(zoom);
 
-  var g = svg.append('g');
+  const g = svg.append('g');
 
   function zoomed() {
     g.attr('transform', d3.event.transform);
