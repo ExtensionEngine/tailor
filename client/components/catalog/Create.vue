@@ -55,12 +55,14 @@
       </div>
       <div slot="footer">
         <button
+          :disabled="showLoader"
           @click="hide"
           class="btn btn-material btn-default"
           type="button">
           Cancel
         </button>
         <button
+          :disabled="showLoader"
           @click="submit"
           class="btn btn-material btn-primary"
           type="button">
