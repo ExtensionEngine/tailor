@@ -29,7 +29,9 @@ export default {
 .activities-container {
   height: 100%;
 
-  .circular-progress { margin-top: 48px; }
+  .circular-progress {
+    margin-top: 115px;
+  }
 }
 
 .activities {

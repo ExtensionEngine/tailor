@@ -43,7 +43,7 @@ export default {
       default() { return { handle: '.drag-handle' }; }
     },
     enableAdd: { type: Boolean, default: true },
-    types: { type: Array, required: true },
+    types: { type: Array, required: false },
     activity: { type: Object, required: true },
     layout: { type: Boolean, default: false }
   },

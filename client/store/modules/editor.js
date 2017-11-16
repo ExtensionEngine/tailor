@@ -1,7 +1,8 @@
-import { ASSET_GROUP } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import { getSupportedContainers } from 'shared/activities';
+import reduce from 'lodash/reduce';
 import { VuexModule } from 'vuex-module';
 
 const { state, getter, action, mutation, build } = new VuexModule('editor');
@@ -35,18 +36,18 @@ getter(function activity() {
   return find(activities, { id });
 });
 
-getter(function introduction() {
+getter(function contentContainers() {
   const { route } = this.rootState;
   const { activities } = this.rootGetters;
-  const parentId = Number(route.params.activityId);
-  return find(activities, { parentId, type: 'INTRO' });
-});
+  const activityId = Number(route.params.activityId);
+  const activity = find(activities, { id: activityId });
 
-getter(function perspectives() {
-  const { route } = this.rootState;
-  const { activities } = this.rootGetters;
-  const parentId = Number(route.params.activityId);
-  return filter(activities, { parentId, type: ASSET_GROUP });
+  if (!activity) return;
+  const containers = getSupportedContainers(activity.type);
+  return reduce(containers, (acc, type) => {
+    acc[type] = filter(activities, { parentId: activityId, type });
+    return acc;
+  }, {});
 });
 
 getter(function assessments() {

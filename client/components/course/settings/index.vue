@@ -25,7 +25,7 @@
           <button
             @click.stop="showDeleteConfirmation"
             type="button"
-            class="btn btn-danger btn-block btn-delete">
+            class="btn btn-danger btn-material btn-block btn-delete">
             <span class="mdi mdi-delete"></span>
             Remove course
           </button>

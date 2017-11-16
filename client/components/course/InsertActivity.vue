@@ -27,12 +27,12 @@
         <div class="col-lg-2">
           <button
             @click.stop="hide"
-            class="btn btn-default btn-sm delete pull-right">X
+            class="btn btn-default btn-sm btn-material delete pull-right">X
           </button>
           <button
             :disabled="vErrors.any()"
             @click.stop="add"
-            class="btn btn-default btn-sm add pull-right">
+            class="btn btn-default btn-sm btn-material add pull-right">
             Add
           </button>
         </div>

@@ -12,7 +12,9 @@
     </div>
     <infinite-loading @infinite="fetchRevisions">
       <span slot="spinner">
-        <div class="col-lg-12 loader-wrapper"><loader></loader></div>
+        <div class="col-lg-12 loader-wrapper">
+          <circular-progress></circular-progress>
+        </div>
       </span>
       <span slot="no-results">No changes recorded.</span>
       <span slot="no-more"></span>
@@ -22,8 +24,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
+import CircularProgress from 'components/common/CircularProgress';
 import InfiniteLoading from 'vue-infinite-loading';
-import Loader from '../../common/Loader';
 import RevisionItem from './RevisionItem';
 
 export default {
@@ -44,13 +46,13 @@ export default {
   mounted() {
     this.resetPagination();
   },
-  components: { InfiniteLoading, Loader, RevisionItem }
+  components: { CircularProgress, InfiniteLoading, RevisionItem }
 };
 </script>
 
 <style lang="scss" scoped>
 .loader-wrapper {
-  margin-top: 32px;
+  margin: 50px 0;
 }
 
 .revisions {
