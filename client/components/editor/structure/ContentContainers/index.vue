@@ -1,18 +1,18 @@
 <template>
   <div class="content-containers">
-    <h2 v-if="displayHeading">{{ heading }}</h2>
-    <div v-if="!activities.length" class="well">
-      Click the button below to create first {{ heading }}.
+    <h2 v-if="displayHeading">{{ name | capitalize }}</h2>
+    <div v-if="!containerGroup.length" class="well">
+      Click the button below to create first {{ name | capitalize }}.
     </div>
     <content-container
-      v-for="activity in activities"
-      :key="activity.id"
-      :activity="activity"
+      v-for="container in containerGroup"
+      :key="container._cid || container.id"
+      :container="container"
       :types="types"
       :name="name"
       :layout="layout"
       :class="`${name}-container`"
-      @delete="deleteContainer(activity)"
+      @delete="deleteContainer(container)"
       class="content-container">
     </content-container>
     <div v-if="addBtnEnabled">
@@ -36,7 +36,7 @@ const appChannel = EventBus.channel('app');
 export default {
   name: 'content-containers',
   props: {
-    activities: { type: Array, default() { return []; } },
+    containerGroup: { type: Array, default() { return []; } },
     parentId: { type: Number, required: true },
     types: { type: Array, required: false },
     displayHeading: { type: Number, default: false },
@@ -46,20 +46,22 @@ export default {
     layout: { type: Boolean, default: true }
   },
   computed: {
-    heading() {
-      return capitalize(this.label);
-    },
     name() {
       return this.label.toLowerCase();
     },
     addBtnEnabled() {
-      return !(!this.multiple && this.activities.length);
+      return !(!this.multiple && this.containerGroup.length);
     },
     nextPosition() {
-      const max = reduce(this.activities, (max, { position }) => {
+      const max = reduce(this.containerGroup, (max, { position }) => {
         return position > max ? position : max;
       }, 0);
       return max + 1;
+    }
+  },
+  filters: {
+    capitalize(val) {
+      return capitalize(val);
     }
   },
   methods: {
@@ -68,11 +70,11 @@ export default {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
-    deleteContainer(activity) {
+    deleteContainer(container) {
       appChannel.emit('showConfirmationModal', {
         type: this.name,
-        item: activity,
-        action: () => this.remove(activity)
+        item: container,
+        action: () => this.remove(container)
       });
     }
   },

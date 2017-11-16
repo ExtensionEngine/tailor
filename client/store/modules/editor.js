@@ -1,7 +1,7 @@
-import { supportedContainers } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import { getSupportedContainers } from 'shared/activities';
 import reduce from 'lodash/reduce';
 import { VuexModule } from 'vuex-module';
 
@@ -43,7 +43,7 @@ getter(function contentContainers() {
   const activity = find(activities, { id: activityId });
 
   if (!activity) return;
-  const containers = supportedContainers(activity.type);
+  const containers = getSupportedContainers(activity.type);
   return reduce(containers, (acc, type) => {
     acc[type] = filter(activities, { parentId: activityId, type });
     return acc;

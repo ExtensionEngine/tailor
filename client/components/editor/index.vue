@@ -21,9 +21,9 @@
             </a>
           </h2>
           <content-containers
-            v-for="(activities, name) in contentContainers"
+            v-for="(containerGroup, name) in contentContainers"
             :key="name"
-            :activities="activities"
+            :containerGroup="containerGroup"
             :parentId="activity.id"
             v-bind="getContainerConfig(name)">
           </content-containers>

@@ -5,8 +5,8 @@
         @click="deleteContainer"
         class="btn btn-default pull-right"
         type="button">
-         <span class="mdi mdi-delete"></span>
-         Delete {{ name }}
+          <span class="mdi mdi-delete"></span>
+          Delete {{ name }}
       </button>
     </div>
     <div v-if="!teachingElements.length" class="well">
@@ -14,7 +14,7 @@
     </div>
     <tes-list
       :list="teachingElements"
-      :activity="activity"
+      :activity="container"
       :types="types"
       :layout="layout"
       @add="saveElement"
@@ -39,7 +39,7 @@ import TesList from '../TesList';
 export default {
   name: 'content-container',
   props: {
-    activity: { type: Object, required: true },
+    container: { type: Object, required: true },
     types: { type: Array, required: false },
     name: { type: String, required: true },
     layout: { type: Boolean, required: true }
@@ -47,7 +47,7 @@ export default {
   computed: {
     ...mapGetters(['tes']),
     teachingElements() {
-      const activityId = this.activity.id;
+      const activityId = this.container.id;
       return sortBy(filter(this.tes, { activityId }), 'position');
     }
   },
