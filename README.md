@@ -58,8 +58,7 @@ Configuration for schema structure nodes (activities). Contains the following pr
 * **label** `String` - Display label.
 * **color** `String` - Display color in hexadecimal notation.
 * **isEditable** `Boolean` - Activity allows adding activities/teaching elements to it.
-* **hasIntroduction** `Boolean` - Activity allows adding introduction activity to it.
-* **hasPerspectives** `Boolean` - Activity allows adding perspective activities to it.
+* **contentContainers** `Array<String>` - Array of content container types that define which content containers can be added.
 * **hasAssessments** `Boolean` - Activity allows adding assessments activities to it.
 * **hasExams** `Boolean` - Activity allows adding exam activities to it.
 * **hasPrerequisites** `Boolean` - Defines if this activity should offer other activities as prerequisites.
@@ -79,8 +78,17 @@ Defines validation rules on an activity metadata field.
   * max `Number` - Maximum character count.
   * required `Boolean` - Defines if the field is required.
 
-### `ASSET_GROUP`
-Key for base content group
+### `CONTENT_CONTAINERS`
+An array of ContentContainer objects.
+
+#### ContentContainer
+Configuration for content containers. Contains the following properties:
+* **type** `String` - Const for marking container type.
+* **label** `String` - Content container label.
+* **multiple** `Boolean` - Defines if there can be multiple instances of the ContentContainer inside one activity. False by default.
+* **types** `Array<String>` - An array of possible teaching element types that can exist inside ContentContainer. If not specified all types of elements are allowed.
+* **displayHeading** `Boolean` - Defines if a heading is displayed on top of the ContentContainer. False by default.
+* **layout** `Boolean` - Defines if elements inside container can be placed two in a row. True by default.
 
 ### `PREVIEW_URL`
 A string template that will be interpolated on the client using two route params, `courseId` and `activityId`, into a preview URL for each activiy. Example:
