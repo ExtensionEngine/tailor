@@ -98,7 +98,7 @@ export default {
 }
 
 .search-spinner {
-  margin-top: 48px;
+  margin-top: 80px;
 }
 
 .spinner, .no-results {
