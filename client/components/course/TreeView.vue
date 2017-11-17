@@ -234,6 +234,7 @@ export default {
     }
 
     .node text {
+      fill: #626262;
       font: 14px sans-serif;
     }
 

@@ -5,15 +5,15 @@
       <li :class="{ active: $route.name === 'course' }">
         <router-link :to="{ name: 'course' }">Outline</router-link>
       </li>
+      <li :class="{ active: $route.name === 'tree-views' }">
+        <router-link :to="{ name: 'tree-view' }">Tree View</router-link>
+      </li>
       <li :class="{ active: $route.name === 'course-revisions' }">
         <router-link :to="{ name: 'course-revisions' }">Revisions</router-link>
       </li>
       <li v-if="showSettings"
         :class="{ active: $route.matched.some(it => it.name === 'course-info') }">
         <router-link :to="{ name: 'course-info' }">Settings</router-link>
-      </li>
-      <li :class="{ active: $route.name === 'tree-views' }">
-        <router-link :to="{ name: 'tree-view' }">Tree View</router-link>
       </li>
     </ul>
     <div class="tab-content" infinite-wrapper>
