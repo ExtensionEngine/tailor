@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="revisions.length > 0" class="revisions">
-      <div class="subheader">History</div>
       <ul>
         <revision-item
           v-for="revision in revisions"
@@ -70,15 +69,6 @@ export default {
     li {
       width: 100%;
     }
-  }
-
-  .subheader {
-    display: inline-block;
-    height: 48px;
-    margin-left: 56px;
-    padding: 0 16px;
-    color: #808080;
-    line-height: 48px;
   }
 }
 </style>
