@@ -6,7 +6,7 @@
       </div>
     </div>
     <div class="activities">
-      <div :class="{ visible }" id="tree"></div>
+      <div ref="tree" :class="{ visible }" class="tree"></div>
       <sidebar></sidebar>
     </div>
   </div>
@@ -17,43 +17,34 @@ import * as d3 from 'd3';
 import Activity from './Activity';
 import CircularProgress from 'components/common/CircularProgress';
 import filter from 'lodash/filter';
-import forEach from 'lodash/forEach';
-import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
+import map from 'lodash/map';
 import { mapGetters, mapMutations } from 'vuex-module';
-import max from 'lodash/max';
-import min from 'lodash/min';
-import reject from 'lodash/reject';
 import Sidebar from './Sidebar';
 
 const MIN_SCALE_RATIO = 0.6;
 const SCALE_TRESHOLD = [0.3, 1];
 const PADDING = 40;
-const REJECTING_ACTIVITIES = ['PERSPECTIVE', 'COURSE/INTERACTIVE_EXERCISE']; // better name?
 
-function initializeTree() {
-  if (this.activities.length === 0) return;
+function initializeTree($tree, treeData) {
+  if (treeData.children.length === 0) return;
 
   const zoom = d3.zoom()
     .scaleExtent(SCALE_TRESHOLD)
-    .on('zoom', zoomed);
+    .on('zoom', () => g.attr('transform', d3.event.transform));
 
-  const svg = d3.select('#tree').append('svg')
+  const svg = d3.select($tree).append('svg')
     .attr('width', '100%')
     .attr('height', '100%')
     .call(zoom);
 
   const g = svg.append('g');
 
-  function zoomed() {
-    g.attr('transform', d3.event.transform);
-  }
-
   // Declares a tree layout and assigns the node size
   const treemap = d3.tree().nodeSize([60, 180]);
 
   //  Assigns the data to a hierarchy using parent-child relationships
-  let nodes = d3.hierarchy(this.treeData);
+  let nodes = d3.hierarchy(treeData);
 
   // Maps the node data to the tree layout
   nodes = treemap(nodes);
@@ -62,14 +53,14 @@ function initializeTree() {
   g.selectAll('.link')
     .data(nodes.descendants().slice(1))
     .enter().append('path')
-    .attr('class', 'link')
+    .classed('link', true)
     .attr('d', d => `M${d.x}, ${d.y} ${d.parent.x},${d.parent.y}`);
 
   // Adds each node as a group
   const node = g.selectAll('.node')
     .data(nodes.descendants())
     .enter().append('g')
-    .attr('class', d => `node depth${d.depth}`)
+    .attr('class', d => `node depth-${d.depth}`)
     .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
   // Adds the circle to the node
@@ -82,67 +73,27 @@ function initializeTree() {
     .style('text-anchor', 'middle')
     .text(d => d.data.name);
 
-  node.on('click', d => this.onClick(d.data));
+  const treeRect = $tree.firstChild.firstChild.getBoundingClientRect();
+  const treeOffset = getTreeOffest(treeRect, $tree.clientWidth);
+  zoom.translateBy(svg, treeOffset, PADDING); // center
+  zoom.scaleTo(svg, getScaleRatio(treeRect.width, $tree.clientWidth));
 
-  const viewportWidth = document.getElementById('tree').clientWidth;
-  const treeCoordinates = getTreeCoordinates(nodes.children);
-  const treeOffset = getTreeOffest(treeCoordinates, viewportWidth);
-  const treeWidth = getTreeWidth(treeCoordinates);
-  zoom.translateBy(svg, treeOffset, 40); // center
-  zoom.scaleTo(svg, getScaleRatio(treeWidth, viewportWidth));
+  return node;
 }
 
-function buildTree(course, activities) {
-  const nodes = activities.map(activity => {
-    return {
-      _cid: activity._cid,
-      name: activity.id,
-      id: activity.id,
-      parentId: activity.parentId
-    };
-  });
-  const groups = groupBy(reject(nodes, { 'parentId': null }), 'parentId');
-  const rootActivities = filter(nodes, { 'parentId': null });
-  forEach(rootActivities, rootActivity => {
-    addChildren(rootActivity, groups);
-  });
-
-  return { name: course.name, children: rootActivities };
-}
-
-function addChildren(activity, source) {
-  const ids = Object.keys(source);
-  if (includes(ids, activity.id.toString())) {
-    activity.children = source[activity.id.toString()];
-    forEach(activity.children, activity => {
-      addChildren(activity, source);
+function buildTree(parent, activities, parentId = null) {
+  const children = filter(activities, { parentId })
+    .map(it => {
+      it.name = it.id;
+      return buildTree(it, activities, it.id);
     });
-  }
-  return activity;
+  parent.children = children;
+  return parent;
 }
 
-function getTreeCoordinates(nodes) {
-  const xCoordinates = [];
-  function scanNodes(nodes) {
-    forEach(nodes, node => {
-      if (node.x) xCoordinates.push(node.x);
-      if (node.children) scanNodes(node.children);
-    });
-  }
-
-  scanNodes(nodes);
-
-  const xMax = max(xCoordinates);
-  const xMin = min(xCoordinates);
-  return { xMin, xMax };
-}
-
-function getTreeOffest(treeCoordinates, viewportWidth) {
-  return (viewportWidth / 2) - ((treeCoordinates.xMin + treeCoordinates.xMax) / 2);
-}
-
-function getTreeWidth(treeCoordinates) {
-  return treeCoordinates.xMax - treeCoordinates.xMin;
+function getTreeOffest(treeData, viewportWidth) {
+  const treeCenterX = (treeData.width / 2) + treeData.x;
+  return (viewportWidth / 2) - treeCenterX;
 }
 
 function getScaleRatio(treeWidth, viewportWidth) {
@@ -155,13 +106,17 @@ function getScaleRatio(treeWidth, viewportWidth) {
 export default {
   props: ['showLoader'],
   computed: {
-    ...mapGetters(['activities', 'course'], 'course'),
+    ...mapGetters(['activities', 'course', 'structure'], 'course'),
+    nodeTypes() {
+      return map(this.structure, 'type');
+    },
     treeData() {
       if (!this.course || !this.activities) return;
-      const nodes = reject(this.activities, activity => {
-        return includes(REJECTING_ACTIVITIES, activity.type);
+      const activities = filter(this.activities, activity => {
+        return includes(this.nodeTypes, activity.type);
       });
-      return this.buildTree(this.course, nodes);
+
+      return buildTree(this.course, activities);
     },
     visible() {
       return !this.showLoader || false;
@@ -169,17 +124,17 @@ export default {
   },
   mounted() {
     this.$watch('treeData', treeData => {
-      if (treeData) this.initializeTree();
+      if (!treeData) return;
+      const $nodes = initializeTree(this.$refs.tree, treeData);
+      if (!$nodes) return;
+      $nodes.on('click', ({ data: node }) => {
+        if (!node.courseId) return; // ignore click on root node (course)
+        this.focusActivity(node._cid);
+      });
     }, { immediate: true });
   },
   methods: {
-    ...mapMutations(['focusActivity'], 'course'),
-    buildTree: buildTree,
-    initializeTree: initializeTree,
-    onClick(node) {
-      if (!node.id) return; // ignore click on root node (course)
-      this.focusActivity(node._cid);
-    }
+    ...mapMutations(['focusActivity'], 'course')
   },
   components: {
     Activity,
@@ -202,8 +157,8 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
-    padding: inherit;
     transform: translate(-50%, -50%);
+    padding: inherit;
   }
 }
 
@@ -218,7 +173,7 @@ export default {
   padding-right: 400px;
 }
 
-#tree {
+.tree {
   width: 100%;
   height: 100%;
   float: left;
@@ -238,7 +193,7 @@ export default {
       cursor: pointer;
     }
 
-    .node.depth0 circle {
+    .node.depth-0 circle {
       fill: #fff;
 
       &:hover {
@@ -246,7 +201,7 @@ export default {
       }
     }
 
-    .node.depth1 circle {
+    .node.depth-1 circle {
       fill: #399bf3;
 
       &:hover {
@@ -254,7 +209,7 @@ export default {
       }
     }
 
-    .node.depth2 circle {
+    .node.depth-2 circle {
       fill: #7cce77;
 
       &:hover {
@@ -262,7 +217,7 @@ export default {
       }
     }
 
-    .node.depth3 circle {
+    .node.depth-3 circle {
       fill: #ef6790;
 
       &:hover {
@@ -270,7 +225,7 @@ export default {
       }
     }
 
-    .node.depth4 circle {
+    .node.depth-4 circle {
       fill: #d5d03e;
 
       &:hover {
