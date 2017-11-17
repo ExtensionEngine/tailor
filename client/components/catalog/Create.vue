@@ -3,7 +3,7 @@
     <button @click="show" class="btn btn-primary btn-fab" type="button">
       <span class="mdi mdi-plus"></span>
     </button>
-    <modal :show="showModal">
+    <modal :show="showModal" :focus="false">
       <div slot="header">
         <h4 class="modal-title">Create content repository</h4>
       </div>
