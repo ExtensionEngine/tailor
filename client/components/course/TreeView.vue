@@ -18,13 +18,16 @@ import Activity from './Activity';
 import CircularProgress from 'components/common/CircularProgress';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
+import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { mapGetters, mapMutations } from 'vuex-module';
 import Sidebar from './Sidebar';
 
 const MIN_SCALE_RATIO = 0.6;
+const NODE_DIAMETER = { MIN: 6, MAX: 12 };
 const SCALE_TRESHOLD = [0.3, 1];
 const PADDING = 40;
+let diameterRanges = [];
 
 function initializeTree($tree, treeData) {
   if (treeData.children.length === 0) return;
@@ -63,8 +66,13 @@ function initializeTree($tree, treeData) {
     .attr('class', d => `node depth-${d.depth}`)
     .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
+  setDiameterRanges(treeData.maxDepth + 1);
+
   // Adds the circle to the node
-  node.append('circle').attr('r', 8);
+  node.append('circle')
+  .attr('r', d => {
+    return diameterRanges[d.depth];
+  });
 
   // Adds the text to the node
   node.append('text')
@@ -81,11 +89,16 @@ function initializeTree($tree, treeData) {
   return node;
 }
 
-function buildTree(parent, activities, parentId = null) {
+function buildTree(parent, activities, root, parentId = null, depth = 0) {
+  if (!parentId) {
+    parent = Object.assign({}, parent, { maxDepth: 0 });
+    root = parent;
+  }
+  if (depth > root.maxDepth) root.maxDepth = depth;
   const children = filter(activities, { parentId })
     .map(it => {
       it.name = it.id;
-      return buildTree(it, activities, it.id);
+      return buildTree(it, activities, root, it.id, depth + 1);
     });
   parent.children = children;
   return parent;
@@ -103,19 +116,32 @@ function getScaleRatio(treeWidth, viewportWidth) {
   return scaleRatio <= MIN_SCALE_RATIO ? MIN_SCALE_RATIO : scaleRatio;
 }
 
+function setDiameterRanges(depths) {
+  diameterRanges = [];
+  const step = (NODE_DIAMETER.MAX - NODE_DIAMETER.MIN) / (depths - 1);
+  for (let i = 0; i < depths; i++) {
+    diameterRanges.push(NODE_DIAMETER.MAX - (step * i));
+  }
+}
+
 export default {
   props: ['showLoader'],
+  data() {
+    return {
+      maxDepth: 0,
+      tempDepth: 0
+    };
+  },
   computed: {
     ...mapGetters(['activities', 'course', 'structure'], 'course'),
     nodeTypes() {
       return map(this.structure, 'type');
     },
     treeData() {
-      if (!this.course || !this.activities) return;
+      if (isEmpty(this.course) || isEmpty(this.activities)) return;
       const activities = filter(this.activities, activity => {
         return includes(this.nodeTypes, activity.type);
       });
-
       return buildTree(this.course, activities);
     },
     visible() {
@@ -127,9 +153,9 @@ export default {
       if (!treeData) return;
       const $nodes = initializeTree(this.$refs.tree, treeData);
       if (!$nodes) return;
-      $nodes.on('click', ({ data: node }) => {
-        if (!node.courseId) return; // ignore click on root node (course)
-        this.focusActivity(node._cid);
+      $nodes.on('click', node => {
+        if (node.depth === 0) return;
+        this.focusActivity(node.data._cid);
       });
     }, { immediate: true });
   },
