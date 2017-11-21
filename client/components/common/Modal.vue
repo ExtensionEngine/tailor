@@ -24,7 +24,8 @@ import focusTrap from 'focus-trap';
 export default {
   props: {
     show: { type: Boolean, default: false },
-    backdrop: { type: Boolean, default: true }
+    backdrop: { type: Boolean, default: true },
+    focus: { type: Boolean, default: true }
   },
   mounted() {
     this.focusTrap = focusTrap(this.$el, { escapeDeactivates: false });
@@ -35,7 +36,8 @@ export default {
   watch: {
     show(isOpen) {
       toggleClass(document.body, 'modal-open', isOpen);
-      this.$nextTick(() => toggleFocusTrap(this.focusTrap, isOpen));
+      const focus = isOpen && this.focus;
+      this.$nextTick(() => toggleFocusTrap(this.focusTrap, focus));
     }
   }
 };

@@ -148,4 +148,8 @@ export default {
 .hide-cropper /deep/ .cropper-container {
   display: none;
 }
+
+img {
+  width: 100%;
+}
 </style>

@@ -39,7 +39,7 @@ export default {
     containerGroup: { type: Array, default() { return []; } },
     parentId: { type: Number, required: true },
     types: { type: Array, required: false },
-    displayHeading: { type: Number, default: false },
+    displayHeading: { type: Boolean, default: false },
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: false },
