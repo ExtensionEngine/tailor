@@ -24,9 +24,9 @@ import { mapGetters, mapMutations } from 'vuex-module';
 import Sidebar from './Sidebar';
 
 const MIN_SCALE_RATIO = 0.6;
-const NODE_DIAMETER = { MIN: 6, MAX: 12 };
+const NODE_DIAMETER = { MIN: 8, MAX: 14 };
 const SCALE_TRESHOLD = [0.3, 1];
-const PADDING = 40;
+const PADDING = 60;
 let diameterRanges = [];
 
 function initializeTree($tree, treeData) {
@@ -77,7 +77,10 @@ function initializeTree($tree, treeData) {
   // Adds the text to the node
   node.append('text')
     .attr('dy', '.35em')
-    .attr('y', d => d.children ? -20 : 20)
+    .attr('y', d => {
+      if (d.depth === 0) return -30;
+      return d.children ? -25 : 25;
+    })
     .style('text-anchor', 'middle')
     .text(d => d.data.name);
 
