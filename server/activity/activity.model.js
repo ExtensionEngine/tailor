@@ -4,6 +4,7 @@ const map = require('lodash/map');
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
+const { publishActivity } = require('./publishing');
 
 class Activity extends Model {
   static fields(DataTypes) {
@@ -78,8 +79,15 @@ class Activity extends Model {
     });
   }
 
+  predecessors() {
+    if (!this.parentId) return Promise.resolve([]);
+    return this.getParent().then(parent => {
+      return parent.predecessors().then(acc => acc.concat(parent));
+    });
+  }
+
   descendants(options = {}, nodes = [], leaves = []) {
-    const { attributes = [] } = options;
+    const { attributes } = options;
     const node = !isEmpty(attributes) ? pick(this, attributes) : this;
     nodes.push(node);
     return Promise.resolve(this.getChildren({ attributes }))
@@ -124,6 +132,10 @@ class Activity extends Model {
         return this.save({ transaction: t });
       });
     });
+  }
+
+  publish() {
+    return publishActivity(this);
   }
 }
 
