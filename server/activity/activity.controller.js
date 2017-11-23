@@ -1,6 +1,4 @@
 const { Activity } = require('../shared/database');
-const { createError } = require('../shared/error/helpers');
-const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
 const processQuery = require('../shared/util/processListQuery');
 
@@ -8,21 +6,16 @@ function create({ body, params, user }, res) {
   const attrs = ['type', 'parentId', 'position', 'data'];
   const data = Object.assign(pick(body, attrs), { courseId: params.courseId });
   const opts = { context: { userId: user.id } };
-  return Activity.create(data, opts)
-    .then(activity => res.json({ data: activity }));
+  return Activity.create(data, opts).then(data => res.json({ data }));
 }
 
-function show({ params }, res) {
-  return Activity.findById(params.activityId)
-    .then(activity => activity || createError(NOT_FOUND, 'Activity not found'))
-    .then(activity => res.json({ data: activity }));
+function show({ activity }, res) {
+  return res.json({ data: activity });
 }
 
-function patch({ body, params, user }, res) {
-  return Activity.findById(params.activityId)
-    .then(activity => activity || createError(NOT_FOUND, 'Activity not found'))
-    .then(activity => activity.update(body, { context: { userId: user.id } }))
-    .then(activity => res.json({ data: activity }));
+function patch({ activity, body, user }, res) {
+  return activity.update(body, { context: { userId: user.id } })
+    .then(data => res.json({ data }));
 }
 
 function list({ course, query }, res) {
@@ -31,21 +24,18 @@ function list({ course, query }, res) {
   return course.getActivities(opts).then(data => res.json({ data }));
 }
 
-function remove({ params, user }, res) {
-  const options = {
-    recursive: true,
-    soft: true,
-    context: { userId: user.id }
-  };
-  return Activity.findById(params.activityId)
-    .then(activity => activity.remove(options))
-    .then(activity => res.json({ data: pick(activity, ['id']) }));
+function remove({ activity, user }, res) {
+  const options = { recursive: true, soft: true, context: { userId: user.id } };
+  return activity.remove(options)
+    .then(data => res.json({ data: pick(data, ['id']) }));
 }
 
-function reorder({ body, params }, res) {
-  return Activity.findById(params.activityId)
-    .then(activity => activity.reorder(body.position))
-    .then(activity => res.json({ data: activity }));
+function reorder({ activity, body }, res) {
+  return activity.reorder(body.position).then(data => res.json({ data }));
+}
+
+function publish({ activity }, res) {
+  return activity.publish().then(data => res.json({ data }));
 }
 
 module.exports = {
@@ -54,5 +44,6 @@ module.exports = {
   list,
   patch,
   remove,
-  reorder
+  reorder,
+  publish
 };
