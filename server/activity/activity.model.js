@@ -30,6 +30,10 @@ class Activity extends Model {
         defaultValue: false,
         allowNull: false
       },
+      publishedAt: {
+        type: DATE,
+        field: 'published_at'
+      },
       createdAt: {
         type: DATE,
         field: 'created_at'
