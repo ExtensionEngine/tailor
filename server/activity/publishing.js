@@ -19,7 +19,10 @@ function publishActivity(activity) {
     return publishContent(repository, activity).then(content => {
       const spineData = Buffer.from(JSON.stringify(spine), 'utf8');
       const key = `repository/${repository.id}/index.json`;
-      return storage.saveFile(key, spineData);
+      return storage.saveFile(key, spineData).then(() => {
+        activity.publishedAt = new Date();
+        return activity.save();
+      });
     });
   });
 }
