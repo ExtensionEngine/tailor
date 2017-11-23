@@ -22,12 +22,18 @@ import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { mapGetters, mapMutations } from 'vuex-module';
 import Sidebar from './Sidebar';
+const line = d3.line();
 
 const MIN_SCALE_RATIO = 0.6;
 const NODE_DIAMETER = { MIN: 8, MAX: 14 };
 const SCALE_TRESHOLD = [0.3, 1];
 const PADDING = 60;
 let diameterRanges = [];
+
+function link(data = {}) {
+  const { x, y, parent } = data;
+  return line([[x, y], [parent.x, parent.y]]);
+}
 
 function initializeTree($tree, treeData) {
   if (treeData.children.length === 0) return;
@@ -57,7 +63,7 @@ function initializeTree($tree, treeData) {
     .data(nodes.descendants().slice(1))
     .enter().append('path')
     .classed('link', true)
-    .attr('d', d => `M${d.x}, ${d.y} ${d.parent.x},${d.parent.y}`);
+    .attr('d', link);
 
   // Adds each node as a group
   const node = g.selectAll('.node')
