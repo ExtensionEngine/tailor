@@ -39,7 +39,7 @@ function getStructureData(activity) {
 }
 
 function publishContent(repository, activity) {
-  const config = find(repository.getSchema().structure, pick(activity, 'type'));
+  const config = find(repository.getSchemaConfig().structure, pick(activity, 'type'));
   const containerTypes = get(config, 'contentContainers', []);
   return Promise.all([
     publishContainers(activity, containerTypes),
