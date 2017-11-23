@@ -21,6 +21,7 @@ import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { mapGetters, mapMutations } from 'vuex-module';
+import reduce from 'lodash/reduce';
 import Sidebar from './Sidebar';
 const line = d3.line();
 
@@ -98,18 +99,16 @@ function initializeTree($tree, treeData) {
   return node;
 }
 
-function buildTree(parent, activities, root, parentId = null, depth = 0) {
-  if (!parentId) {
-    parent = Object.assign({}, parent, { maxDepth: 0 });
-    root = parent;
-  }
+function buildTree(activities, root = { maxDepth: 0 }, parent = root, depth = 0) {
   if (depth > root.maxDepth) root.maxDepth = depth;
-  const children = filter(activities, { parentId })
-    .map(it => {
-      it.name = it.id;
-      return buildTree(it, activities, root, it.id, depth + 1);
-    });
-  parent.children = children;
+  parent.children = reduce(activities, (acc, it) => {
+    const parentId = parent.id || null;
+    if (it.parentId !== parentId) return acc;
+    it.name = it.id;
+    const subtree = buildTree(activities, root, { ...it }, depth + 1);
+    acc.push(subtree);
+    return acc;
+  }, []);
   return parent;
 }
 
@@ -151,7 +150,7 @@ export default {
       const activities = filter(this.activities, activity => {
         return includes(this.nodeTypes, activity.type);
       });
-      return buildTree(this.course, activities);
+      return Object.assign({}, this.course, buildTree(activities));
     },
     visible() {
       return !this.showLoader || false;
