@@ -1,6 +1,7 @@
 const { Activity } = require('../shared/database');
 const pick = require('lodash/pick');
 const processQuery = require('../shared/util/processListQuery');
+const { unpublishActivity } = require('./publishing');
 
 function create({ body, params, user }, res) {
   const attrs = ['type', 'parentId', 'position', 'data'];
@@ -24,9 +25,13 @@ function list({ course, query }, res) {
   return course.getActivities(opts).then(data => res.json({ data }));
 }
 
-function remove({ activity, user }, res) {
+function remove({ course, activity, user }, res) {
   const options = { recursive: true, soft: true, context: { userId: user.id } };
-  return activity.remove(options)
+  const unpublish = activity.publishedAt
+    ? unpublishActivity(course, activity)
+    : Promise.resolve();
+  return unpublish
+    .then(() => activity.remove(options))
     .then(data => res.json({ data: pick(data, ['id']) }));
 }
 

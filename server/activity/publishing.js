@@ -5,6 +5,7 @@ const get = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
+const reduce = require('lodash/reduce');
 const storage = require('../shared/storage');
 
 function publishActivity(activity) {
@@ -15,14 +16,10 @@ function publishActivity(activity) {
       if (!exists) spine.structure.push(it);
     });
     descendants.forEach(it => addToSpine(spine, it));
-    addToSpine(spine, activity.dataValues);
+    addToSpine(spine, activity);
     return publishContent(repository, activity).then(content => {
-      const spineData = Buffer.from(JSON.stringify(spine), 'utf8');
-      const key = `repository/${repository.id}/index.json`;
-      return storage.saveFile(key, spineData).then(() => {
-        activity.publishedAt = new Date();
-        return activity.save();
-      });
+      attachContentSummary(find(spine.structure, { id: activity.id }), content);
+      return saveSpine(spine, activity);
     });
   });
 }
@@ -68,6 +65,7 @@ function publishExams(parent) {
 function publishAssessments(parent) {
   const options = { where: { type: 'ASSESSMENT' } };
   return parent.getTeachingElements(options).then(assessments => {
+    if (!assessments.length) return Promise.resolve([]);
     return saveFile(parent, 'assessments', assessments).then(() => assessments);
   });
 }
@@ -107,7 +105,18 @@ function saveFile(parent, key, data) {
   return storage.saveFile(`repository/${courseId}/${id}/${key}.json`, buffer);
 }
 
+function saveSpine(spine, activity) {
+  const spineData = Buffer.from(JSON.stringify(spine), 'utf8');
+  const key = `repository/${activity.courseId}/index.json`;
+  return storage.saveFile(key, spineData).then(() => {
+    activity.publishedAt = new Date();
+    return activity.save();
+  });
+}
+
 function addToSpine(spine, activity) {
+  const attributes = ['id', 'type', 'position', 'data', 'createdAt', 'updatedAt'];
+  activity = pick(activity, attributes);
   let index = findIndex(spine.structure, { id: activity.id });
   if (index < 0) {
     spine.structure.push(activity);
@@ -116,6 +125,47 @@ function addToSpine(spine, activity) {
   }
 }
 
+function unpublishActivity(repository, activity) {
+  return repository.getPublishedStructure().then(spine => {
+    const spineActivity = find(spine.structure, { id: activity.id });
+    const deleted = getSpineChildren(spine, activity).concat(spineActivity);
+    return Promise.map(deleted, it => {
+      const filenames = getActivityFilenames(it);
+      return Promise.map(filenames, filename => {
+        let key = `repository/${repository.id}/${it.id}/${filename}.json`;
+        return storage.deleteFile(key);
+      });
+    }).then(() => {
+      spine.structure = filter(spine.structure, ({ id }) => !find(deleted, { id }));
+      return saveSpine(spine, activity);
+    });
+  });
+}
+
+function getSpineChildren(spine, parent) {
+  let children = filter(spine.structure, { parentId: parent.id });
+  if (!children.length) return [];
+  return children.concat(reduce(children, (acc, it) => {
+    return acc.concat(getSpineChildren(spine, it));
+  }, []));
+}
+
+function attachContentSummary(obj, { containers, exams, assessments }) {
+  obj.contentContainers = map(containers, it => pick(it, ['id']));
+  obj.exams = map(exams, it => pick(it, ['id']));
+  obj.assessments = map(assessments, it => pick(it, ['id']));
+}
+
+function getActivityFilenames(spineActivity) {
+  const { contentContainers = [], exams = [], assessments = [] } = spineActivity;
+  let filenames = [];
+  if (assessments.length) filenames.push('assessments');
+  filenames.concat(map(exams, it => `${it.id}.exam`));
+  filenames.concat(map(contentContainers, it => `${it.id}.container`));
+  return filenames;
+}
+
 module.exports = {
-  publishActivity
+  publishActivity,
+  unpublishActivity
 };
