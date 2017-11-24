@@ -10,12 +10,11 @@ const storage = require('../shared/storage');
 
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
-    let { repository, predecessors, descendants, spine } = data;
+    let { repository, predecessors, spine } = data;
     predecessors.forEach(it => {
       const exists = find(spine.structure, { id: it.id });
       if (!exists) spine.structure.push(it);
     });
-    descendants.forEach(it => addToSpine(spine, it));
     addToSpine(spine, activity);
     return publishContent(repository, activity).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
@@ -29,13 +28,8 @@ function getStructureData(activity) {
     return repository.getPublishedStructure()
       .then(spine => ({ repository, spine }));
   });
-  return Promise.all([repoData, activity.predecessors(), activity.descendants()])
-    .spread(({ repository, spine }, predecessors, descendants) => ({
-      repository,
-      predecessors,
-      descendants: filter(descendants.leaves, it => it.id !== activity.id),
-      spine
-    }));
+  return Promise.all([repoData, activity.predecessors()])
+    .spread((repoData, predecessors) => Object.assign(repoData, { predecessors }));
 }
 
 function publishContent(repository, activity) {
@@ -115,7 +109,9 @@ function saveSpine(spine, activity) {
 }
 
 function addToSpine(spine, activity) {
-  const attributes = ['id', 'type', 'position', 'data', 'createdAt', 'updatedAt'];
+  const attributes = [
+    'id', 'parentId', 'type', 'position', 'data', 'createdAt', 'updatedAt'
+  ];
   activity = pick(activity, attributes);
   let index = findIndex(spine.structure, { id: activity.id });
   if (index < 0) {
