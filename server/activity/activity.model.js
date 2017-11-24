@@ -137,10 +137,6 @@ class Activity extends Model {
       });
     });
   }
-
-  publish() {
-    return publishActivity(this);
-  }
 }
 
 function removeAll(Model, where = {}, soft = false) {
