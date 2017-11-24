@@ -15,6 +15,7 @@ function publishActivity(activity) {
       const exists = find(spine.structure, { id: it.id });
       if (!exists) spine.structure.push(it);
     });
+    activity.publishedAt = new Date();
     addToSpine(spine, activity);
     return publishContent(repository, activity).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
@@ -103,14 +104,14 @@ function saveSpine(spine, activity) {
   const spineData = Buffer.from(JSON.stringify(spine), 'utf8');
   const key = `repository/${activity.courseId}/index.json`;
   return storage.saveFile(key, spineData).then(() => {
-    activity.publishedAt = new Date();
     return activity.save();
   });
 }
 
 function addToSpine(spine, activity) {
   const attributes = [
-    'id', 'parentId', 'type', 'position', 'data', 'createdAt', 'updatedAt'
+    'id', 'parentId', 'type', 'position', 'data',
+    'createdAt', 'updatedAt', 'publishedAt'
   ];
   activity = pick(activity, attributes);
   let index = findIndex(spine.structure, { id: activity.id });
