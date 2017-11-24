@@ -48,9 +48,9 @@ export default {
       return getLevel(this.activity.type) || {};
     },
     publishStatus() {
-      const publishedAt = new Date(this.activity.publishedAt);
+      let { publishedAt } = this.activity;
       return publishedAt
-        ? `Published on ${fecha.format(publishedAt, 'M/D/YY HH:mm')}`
+        ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
     },
     metadata() {
