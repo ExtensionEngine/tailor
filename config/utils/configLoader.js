@@ -1,9 +1,9 @@
 const readConfig = require('./readConfig');
 
 module.exports = function configLoader(name) {
-  return () => {
-    const isWebpack = !!arguments.length;
+  return function () {
     const config = readConfig(name);
+    const isWebpack = !!arguments.length;
     if (!isWebpack) return config;
     return { code: createModule(config) };
   };
