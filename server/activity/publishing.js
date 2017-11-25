@@ -111,9 +111,10 @@ function saveSpine(spine, activity) {
 function addToSpine(spine, activity) {
   const attributes = [
     'id', 'parentId', 'type', 'position', 'data',
-    'createdAt', 'updatedAt', 'publishedAt'
+    'publishedAt', 'updatedAt', 'createdAt'
   ];
   activity = pick(activity, attributes);
+  renameKey(activity, 'data', 'meta');
   let index = findIndex(spine.structure, { id: activity.id });
   if (index < 0) {
     spine.structure.push(activity);
@@ -160,6 +161,11 @@ function getActivityFilenames(spineActivity) {
   filenames.concat(map(exams, it => `${it.id}.exam`));
   filenames.concat(map(contentContainers, it => `${it.id}.container`));
   return filenames;
+}
+
+function renameKey(obj, key, newKey) {
+  obj[newKey] = obj[key];
+  delete obj[key];
 }
 
 module.exports = {
