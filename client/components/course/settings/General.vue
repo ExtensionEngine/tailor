@@ -1,10 +1,13 @@
 <template>
   <div v-if="course" class="settings">
-    <button
-      @click="publish"
-      class="btn btn-primary btn-material pull-right">
-      <span class="mdi mdi-publish"></span> Publish info
-    </button>
+    <div class="actions">
+      <button
+        :disabled="publishing"
+        @click="publish"
+        class="btn btn-primary btn-material btn-sm pull-right">
+        <span class="mdi mdi-publish"></span> Publish info
+      </button>
+    </div>
     <div class="form-group">
       <label for="courseName">Name</label>
       <span
@@ -88,7 +91,8 @@ export default {
       showNameInput: false,
       showDescriptionInput: false,
       newCourseName: '',
-      newCourseDescription: ''
+      newCourseDescription: '',
+      publishing: false
     };
   },
   computed: {
@@ -139,7 +143,9 @@ export default {
       this.newCourseDescription = this.course.description;
     },
     publish() {
-      api.publishRepositoryMeta(this.$route.params.courseId);
+      this.publishing = true;
+      return api.publishRepositoryMeta(this.$route.params.courseId)
+        .then(() => (this.publishing = false));
     }
   },
   mounted() {
@@ -161,6 +167,14 @@ export default {
   text-align: left;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   background-color: white;
+}
+
+.actions {
+  min-height: 36px;
+
+  .btn {
+    padding: 8px 12px;
+  }
 }
 
 h2 {
