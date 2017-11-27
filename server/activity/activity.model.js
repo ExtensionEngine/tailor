@@ -4,7 +4,6 @@ const map = require('lodash/map');
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
-const { publishActivity } = require('./publishing');
 
 class Activity extends Model {
   static fields(DataTypes) {

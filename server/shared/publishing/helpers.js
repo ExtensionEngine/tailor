@@ -6,7 +6,7 @@ const map = require('lodash/map');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
-const storage = require('../shared/storage');
+const storage = require('../storage');
 
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
@@ -19,7 +19,7 @@ function publishActivity(activity) {
     addToSpine(spine, activity);
     return publishContent(repository, activity).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
-      return saveSpine(spine, activity);
+      return saveSpine(spine).then(() => activity.save());
     });
   });
 }
@@ -100,12 +100,10 @@ function saveFile(parent, key, data) {
   return storage.saveFile(`repository/${courseId}/${id}/${key}.json`, buffer);
 }
 
-function saveSpine(spine, activity) {
+function saveSpine(spine) {
   const spineData = Buffer.from(JSON.stringify(spine), 'utf8');
-  const key = `repository/${activity.courseId}/index.json`;
-  return storage.saveFile(key, spineData).then(() => {
-    return activity.save();
-  });
+  const key = `repository/${spine.id}/index.json`;
+  return storage.saveFile(key, spineData);
 }
 
 function addToSpine(spine, activity) {
@@ -135,7 +133,7 @@ function unpublishActivity(repository, activity) {
       });
     }).then(() => {
       spine.structure = filter(spine.structure, ({ id }) => !find(deleted, { id }));
-      return saveSpine(spine, activity);
+      return saveSpine(spine).then(() => activity.save());
     });
   });
 }
@@ -168,7 +166,16 @@ function renameKey(obj, key, newKey) {
   delete obj[key];
 }
 
+function publishRepositoryDetails(repository) {
+  return repository.getPublishedStructure().then(spine => {
+    Object.assign(spine, pick(repository, ['name', 'description', 'data']));
+    renameKey(spine, 'data', 'meta');
+    return saveSpine(spine);
+  });
+}
+
 module.exports = {
   publishActivity,
-  unpublishActivity
+  unpublishActivity,
+  publishRepositoryDetails
 };
