@@ -37,8 +37,9 @@ function remove({ course, user }, res) {
     .then(() => res.status(204).send());
 };
 
-function publish({ course }, res) {
-  return publishingService.publishRepoDetails(course);
+function publishRepoInfo({ course }, res) {
+  return publishingService.publishRepoDetails(course)
+    .then(data => res.json({ data }));
 };
 
 function getUsers(req, res) {
@@ -99,5 +100,5 @@ module.exports = {
   upsertUser,
   removeUser,
   exportContentInventory,
-  publish
+  publishRepoInfo
 };

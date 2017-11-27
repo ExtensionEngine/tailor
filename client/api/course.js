@@ -31,7 +31,7 @@ function getContentInventory(courseId) {
 };
 
 function publishRepositoryMeta(id) {
-  return request.get(`/courses/${id}/publish`).then(res => res.data);
+  return request.post(`/courses/${id}/publish`).then(res => res.data);
 };
 
 export default {
