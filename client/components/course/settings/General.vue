@@ -1,5 +1,10 @@
 <template>
   <div v-if="course" class="settings">
+    <button
+      @click="publish"
+      class="btn btn-primary btn-material pull-right">
+      <span class="mdi mdi-publish"></span> Publish info
+    </button>
     <div class="form-group">
       <label for="courseName">Name</label>
       <span
@@ -61,6 +66,7 @@
 </template>
 
 <script>
+import api from '../../../api/course';
 import cloneDeep from 'lodash/cloneDeep';
 import EventBus from 'EventBus';
 import find from 'lodash/find';
@@ -131,6 +137,9 @@ export default {
     setCourseFields() {
       this.newCourseName = this.course.name;
       this.newCourseDescription = this.course.description;
+    },
+    publish() {
+      api.publishRepositoryMeta(this.$route.params.courseId);
     }
   },
   mounted() {
