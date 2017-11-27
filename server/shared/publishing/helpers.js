@@ -13,12 +13,37 @@ function publishActivity(activity) {
     let { repository, predecessors, spine } = data;
     predecessors.forEach(it => {
       const exists = find(spine.structure, { id: it.id });
-      if (!exists) spine.structure.push(it);
+      if (!exists) addToSpine(spine, it);
     });
-    activity.publishedAt = new Date();
     addToSpine(spine, activity);
+    activity.publishedAt = new Date();
     return publishContent(repository, activity).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
+      return saveSpine(spine).then(() => activity.save());
+    });
+  });
+}
+
+function publishRepositoryDetails(repository) {
+  return repository.getPublishedStructure().then(spine => {
+    Object.assign(spine, pick(repository, ['name', 'description', 'data']));
+    renameKey(spine, 'data', 'meta');
+    return saveSpine(spine);
+  });
+}
+
+function unpublishActivity(repository, activity) {
+  return repository.getPublishedStructure().then(spine => {
+    const spineActivity = find(spine.structure, { id: activity.id });
+    const deleted = getSpineChildren(spine, activity).concat(spineActivity);
+    return Promise.map(deleted, it => {
+      const filenames = getActivityFilenames(it);
+      return Promise.map(filenames, filename => {
+        let key = `repository/${repository.id}/${it.id}/${filename}.json`;
+        return storage.deleteFile(key);
+      });
+    }).then(() => {
+      spine.structure = filter(spine.structure, ({ id }) => !find(deleted, { id }));
       return saveSpine(spine).then(() => activity.save());
     });
   });
@@ -121,23 +146,6 @@ function addToSpine(spine, activity) {
   }
 }
 
-function unpublishActivity(repository, activity) {
-  return repository.getPublishedStructure().then(spine => {
-    const spineActivity = find(spine.structure, { id: activity.id });
-    const deleted = getSpineChildren(spine, activity).concat(spineActivity);
-    return Promise.map(deleted, it => {
-      const filenames = getActivityFilenames(it);
-      return Promise.map(filenames, filename => {
-        let key = `repository/${repository.id}/${it.id}/${filename}.json`;
-        return storage.deleteFile(key);
-      });
-    }).then(() => {
-      spine.structure = filter(spine.structure, ({ id }) => !find(deleted, { id }));
-      return saveSpine(spine).then(() => activity.save());
-    });
-  });
-}
-
 function getSpineChildren(spine, parent) {
   let children = filter(spine.structure, { parentId: parent.id });
   if (!children.length) return [];
@@ -164,14 +172,6 @@ function getActivityFilenames(spineActivity) {
 function renameKey(obj, key, newKey) {
   obj[newKey] = obj[key];
   delete obj[key];
-}
-
-function publishRepositoryDetails(repository) {
-  return repository.getPublishedStructure().then(spine => {
-    Object.assign(spine, pick(repository, ['name', 'description', 'data']));
-    renameKey(spine, 'data', 'meta');
-    return saveSpine(spine);
-  });
 }
 
 module.exports = {
