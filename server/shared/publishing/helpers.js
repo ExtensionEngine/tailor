@@ -155,7 +155,7 @@ function getSpineChildren(spine, parent) {
 }
 
 function attachContentSummary(obj, { containers, exams, assessments }) {
-  obj.contentContainers = map(containers, it => pick(it, ['id']));
+  obj.contentContainers = map(containers, it => pick(it, ['id', 'type']));
   obj.exams = map(exams, it => pick(it, ['id']));
   obj.assessments = map(assessments, it => pick(it, ['id']));
 }
