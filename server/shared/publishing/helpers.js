@@ -35,6 +35,7 @@ function publishRepositoryDetails(repository) {
 function unpublishActivity(repository, activity) {
   return repository.getPublishedStructure().then(spine => {
     const spineActivity = find(spine.structure, { id: activity.id });
+    if (!spineActivity) return;
     const deleted = getSpineChildren(spine, activity).concat(spineActivity);
     return Promise.map(deleted, it => {
       const filenames = getActivityFilenames(it);
