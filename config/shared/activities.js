@@ -36,6 +36,9 @@ SCHEMAS.forEach(schema => {
         validate: { rules: { max: 250, required: true } }
       });
     }
+    if (it.hasExams && get(it, 'exams.objectives')) {
+      it.exams.objectives = map(it.exams.objectives, it => `${schema.id}/${it}`);
+    }
   });
 });
 

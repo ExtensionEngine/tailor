@@ -1,6 +1,6 @@
 <template>
   <div class="toolbar">
-    <div v-if="focusedElement.type" class="toolbar-container">
+    <div v-if="elementSelected" class="toolbar-container">
       <component
         :is="getComponentName(focusedElement.type)"
         :key="focusedElement._cid || focusedElement.id"
@@ -48,7 +48,10 @@ export default {
   name: 'toolbar',
   computed: {
     ...mapGetters(['focusedElement'], 'editor'),
-    ...mapGetters(['tes'])
+    ...mapGetters(['tes']),
+    elementSelected() {
+      return get(this, 'focusedElement.type');
+    }
   },
   methods: {
     ...mapActions({ removeElement: 'remove' }, 'tes'),

@@ -1,5 +1,8 @@
+const { getSchema } = require('../../config/shared/activities');
 const hooks = require('./hooks');
 const { Model } = require('sequelize');
+const pick = require('lodash/pick');
+const storage = require('../shared/storage');
 
 class Course extends Model {
   static fields(DataTypes) {
@@ -87,6 +90,17 @@ class Course extends Model {
       this.getTeachingElements({ where, order: [['activityId', 'ASC']] })
     ])
     .then(([activities, tes]) => ({ activities, tes }));
+  }
+
+  getSchemaConfig() {
+    return getSchema(this.schema);
+  }
+
+  getPublishedStructure() {
+    return storage.getFile(`repository/${this.id}/index.json`).then(buffer => {
+      const data = buffer && JSON.parse(buffer.toString('utf8'));
+      return data || { ...pick(this, ['id', 'name', 'description']), structure: [] };
+    });
   }
 }
 

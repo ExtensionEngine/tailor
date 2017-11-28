@@ -24,6 +24,7 @@ const COURSE_OUTLINE = [{
   contentContainers: ['INTRO'],
   hasAssessments: false,
   hasExams: true,
+  exams: { objectives: ['TOPIC'] },
   hasPrerequisites: true,
   meta: [{
     key: 'description',

@@ -29,6 +29,10 @@ class Activity extends Model {
         defaultValue: false,
         allowNull: false
       },
+      publishedAt: {
+        type: DATE,
+        field: 'published_at'
+      },
       createdAt: {
         type: DATE,
         field: 'created_at'
@@ -78,8 +82,15 @@ class Activity extends Model {
     });
   }
 
+  predecessors() {
+    if (!this.parentId) return Promise.resolve([]);
+    return this.getParent().then(parent => {
+      return parent.predecessors().then(acc => acc.concat(parent));
+    });
+  }
+
   descendants(options = {}, nodes = [], leaves = []) {
-    const { attributes = [] } = options;
+    const { attributes } = options;
     const node = !isEmpty(attributes) ? pick(this, attributes) : this;
     nodes.push(node);
     return Promise.resolve(this.getChildren({ attributes }))

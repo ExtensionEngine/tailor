@@ -1,41 +1,38 @@
 <template>
   <div>
     <div v-if="showInput" class="activity-input">
-      <div class="row">
-        <div class="col-lg-7">
-          <span :class="{ 'has-error': vErrors.has('name') }" class="form-group">
-            <input
-              v-model="activityName"
-              v-focus.lazy="focusInput"
-              v-validate="{ rules: { required: true, min: 2, max: 250 } }"
-              class="form-control"
-              name="name"
-              type="text"
-              placeholder="Title">
-            <span class="help-block">{{ vErrors.first('name') }}</span>
-          </span>
-        </div>
-        <div class="col-lg-3">
-          <multiselect
-            v-if="hasChildren"
-            :value="activityType ? getActivityLevel(activityType) : levels[0]"
-            :options="levels"
-            :searchable="false"
-            @input="onLevelSelected">
-          </multiselect>
-        </div>
-        <div class="col-lg-2">
-          <button
-            @click.stop="hide"
-            class="btn btn-default btn-sm btn-material delete pull-right">X
-          </button>
-          <button
-            :disabled="vErrors.any()"
-            @click.stop="add"
-            class="btn btn-default btn-sm btn-material add pull-right">
-            Add
-          </button>
-        </div>
+      <span
+        :class="{ 'has-error': vErrors.has('name') }"
+        class="form-group name-input">
+        <input
+          v-model="activityName"
+          v-focus.lazy="focusInput"
+          v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+          class="form-control"
+          name="name"
+          type="text"
+          placeholder="Title">
+        <span class="help-block">{{ vErrors.first('name') }}</span>
+      </span>
+      <multiselect
+        v-if="hasChildren"
+        :value="activityType ? getActivityLevel(activityType) : levels[0]"
+        :options="levels"
+        :searchable="false"
+        @input="onLevelSelected"
+        class="type-select">
+      </multiselect>
+      <div class="actions">
+        <button
+          @click.stop="hide"
+          class="btn btn-default btn-sm btn-material delete pull-right">X
+        </button>
+        <button
+          :disabled="vErrors.any()"
+          @click.stop="add"
+          class="btn btn-default btn-sm btn-material add pull-right">
+          Add
+        </button>
       </div>
     </div>
     <div v-if="!showInput" @click="show" class="divider-wrapper">
@@ -142,10 +139,35 @@ export default {
 
 <style lang="scss" scoped>
 .activity-input {
+  display: flex;
+  align-items: stretch;
+  flex-flow: row nowrap;
+  justify-content: space-between;
   padding: 20px 5px;
 
   input {
     background-color: #e0e0e0;
+  }
+
+  .btn-sm.btn-material {
+    min-width: 68px;
+    padding: 8px 0;
+  }
+
+  .type-select {
+    min-width: 170px;
+    width: 170px;
+    margin-left: 25px;
+  }
+
+  .actions {
+    min-width: 150px;
+    width: 150px;
+    margin-left: 10px;
+  }
+
+  .name-input {
+    width: 100%;
   }
 }
 
@@ -158,12 +180,6 @@ export default {
 .btn {
   &.add {
     margin-right: 3px;
-  }
-}
-
-@media (min-width: 1600px) {
-  .btn {
-    min-width: 70px;
   }
 }
 </style>

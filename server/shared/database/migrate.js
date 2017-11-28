@@ -12,6 +12,11 @@ const changelog = [{
     '20171028170417-course-meta',
     '20171031134132-course-schema'
   ]
+}, {
+  name: '2.1',
+  migrations: [
+    '20171123134135-publish-timestamp'
+  ]
 }];
 
 const umzug = new Umzug({

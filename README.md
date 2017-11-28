@@ -61,6 +61,7 @@ Configuration for schema structure nodes (activities). Contains the following pr
 * **contentContainers** `Array<String>` - Array of content container types that define which content containers can be added.
 * **hasAssessments** `Boolean` - Activity allows adding assessments activities to it.
 * **hasExams** `Boolean` - Activity allows adding exam activities to it.
+* **exams** `Object` - Configuration for activity exams.
 * **hasPrerequisites** `Boolean` - Defines if this activity should offer other activities as prerequisites.
 * **meta** `Array<ActivityMetadata>` - An array of objects defining activity metadata.
 

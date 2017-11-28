@@ -19,7 +19,7 @@ class Storage {
 
     this.provider = new ProviderClass(providerConfig);
 
-    this.loadFile = this.loadFile.bind(this);
+    this.getFile = this.getFile.bind(this);
     this.saveFile = this.saveFile.bind(this);
     this.deleteFile = this.deleteFile.bind(this);
     this.listFiles = this.listFiles.bind(this);
@@ -49,8 +49,8 @@ class Storage {
     return { client, config };
   }
 
-  loadFile(key, location, options = {}) {
-    return this.provider.loadFile(key, location, options);
+  getFile(key, options = {}) {
+    return this.provider.getFile(key, options);
   }
 
   saveFile(key, file, options = {}) {

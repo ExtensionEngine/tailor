@@ -12,6 +12,7 @@ router
   .get('/courses/:id', ctrl.get)
   .patch('/courses/:id', ctrl.patch)
   .delete('/courses/:id', ctrl.remove)
+  .post('/courses/:id/publish', ctrl.publishRepoInfo)
   .get('/courses/:id/users', ctrl.getUsers)
   .post('/courses/:id/users', ctrl.upsertUser)
   .delete('/courses/:id/users/:userId', ctrl.removeUser)

@@ -4,14 +4,14 @@
       <div v-if="summative">
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
-        <div v-if="exam" class="select-leaf">
+        <div v-if="exam && examObjectives.length" class="select-leaf">
           <multiselect
             :value="objective"
             :options="examObjectives"
             :searchable="true"
             :disabled="!isEditing || !examObjectives.length"
             :trackBy="'id'"
-            :label="'name'"
+            :customLabel="it => it.data ? it.data.name : ''"
             :placeholder="placeholder"
             :showReset="isEditing"
             @input="onObjectiveSelected">
@@ -192,7 +192,7 @@ export default {
         .catch(err => (this.errors = errorProcessor(err)));
     },
     cancel() {
-      if (!this.element.id) {
+      if (!this.previousVersion) {
         this.$emit('remove');
       } else {
         this.addElement(cloneDeep(this.previousVersion));
