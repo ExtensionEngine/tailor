@@ -135,6 +135,7 @@ export default {
       return !this.summative && feedbackSupported;
     },
     examObjectives() {
+      if (!this.exam) return [];
       return this.getExamObjectives(this.exam);
     },
     placeholder() {
