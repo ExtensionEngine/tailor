@@ -17,6 +17,7 @@
         :isFocused="isFocused"
         :isDragged="dragged"
         :disabled="disabled"
+        @remove="removeElement(element)"
         @save="save">
       </component>
     </div>
@@ -75,7 +76,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ saveElement: 'save' }, 'tes'),
+    ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
     ...mapMutations(['focusElement'], 'editor'),
     resolveElement(type) {
       return TE_TYPES[type];

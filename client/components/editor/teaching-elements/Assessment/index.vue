@@ -192,7 +192,7 @@ export default {
         .catch(err => (this.errors = errorProcessor(err)));
     },
     cancel() {
-      if (!this.element.id) {
+      if (!this.previousVersion) {
         this.$emit('remove');
       } else {
         this.addElement(cloneDeep(this.previousVersion));
