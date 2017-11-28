@@ -4,7 +4,7 @@
       <div v-if="summative">
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
-        <div v-if="exam" class="select-leaf">
+        <div v-if="exam && examObjectives.length" class="select-leaf">
           <multiselect
             :value="objective"
             :options="examObjectives"

@@ -5,8 +5,8 @@ import {
   getDescendants as getDeepChildren,
   getAncestors as getParents
 } from 'utils/activity.js';
-import map from 'lodash/map';
-import { OBJECTIVES } from 'shared/activities';
+import get from 'lodash/get';
+import { getLevel } from 'shared/activities';
 import VuexCollection from '../helpers/collection.js';
 
 const { getter, action, mutation, build } = new VuexCollection('activities');
@@ -40,8 +40,10 @@ getter(function getLineage() {
 
 getter(function getExamObjectives() {
   const getObjectives = activity => {
+    const config = getLevel(activity.type);
+    const objectiveTypes = get(config, 'exams.objectives');
+    if (!objectiveTypes) return [];
     let children = getDeepChildren(this.state.items, activity);
-    let objectiveTypes = map(OBJECTIVES, 'type');
     return filter(children, it => objectiveTypes.includes(it.type));
   };
 
