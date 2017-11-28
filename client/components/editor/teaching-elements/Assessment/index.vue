@@ -11,7 +11,7 @@
             :searchable="true"
             :disabled="!isEditing || !examObjectives.length"
             :trackBy="'id'"
-            :label="'name'"
+            :customLabel="it => it.data ? it.data.name : ''"
             :placeholder="placeholder"
             :showReset="isEditing"
             @input="onObjectiveSelected">
