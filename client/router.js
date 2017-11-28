@@ -50,7 +50,7 @@ let router = new Router({
       name: 'course-revisions',
       component: CourseRevisions
     }, {
-      path: 'tree',
+      path: 'tree-view',
       name: 'tree-view',
       component: TreeView
     }]
