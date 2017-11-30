@@ -28,9 +28,8 @@
       </div>
       <div class="spacer"></div>
       <comment-thread
+        v-bind="$attrs"
         :comments="comments"
-        :avatars="true"
-        :sort="sort"
         class="comment-thread">
       </comment-thread>
     </div>
@@ -46,9 +45,9 @@ const createComment = () => ({ content: '' });
 
 export default {
   name: 'discussion',
+  inheritAttrs: true,
   props: {
-    editorPosition: { type: String, default: 'top' },
-    sort: { type: String, default: 'desc' }
+    editorPosition: { type: String, default: 'top' }
   },
   data() {
     return {
