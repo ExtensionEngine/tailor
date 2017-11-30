@@ -70,7 +70,8 @@ export default {
   .content pre {
     height: 100%;
     margin: 0;
-    padding: 0;
+    //NOTE: Preventing glitches (height changes, vertical scrollbar)
+    padding: 0 4px 8px 0;
     font: inherit;
     background: inherit;
     border: none;
