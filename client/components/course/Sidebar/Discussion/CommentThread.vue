@@ -10,12 +10,11 @@
       <div class="content-wrapper">
         <span class="header">
           <span class="author">{{ comment.author.email }}</span>
-          <span class="pull-right time">
-            <timeago
-              :since="comment.createdAt"
-              :auto-update="60">
-            </timeago>
-          </span>
+          <timeago
+            :since="comment.createdAt"
+            :auto-update="60"
+            class="pull-right time">
+          </timeago>
         </span>
         <span class="content">{{ comment.content }}</span>
       </div>

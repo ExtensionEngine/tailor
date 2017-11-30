@@ -9,17 +9,12 @@
         {{ comments.length }}
       </span>
     </h4>
-    <div class="form-group editor">
-      <textarea
-        v-model="comment.content"
-        @keydown.enter="onEnter"
-        placeholder="Add a comment"
-        class="form-control">
-      </textarea>
-      <div class="content">
-        <pre><span>{{ comment.content }}</span><br></pre>
-      </div>
-    </div>
+    <text-editor
+      v-model.trim="comment.content"
+      @change="post(comment)"
+      placeholder="Add a comment"
+      class="editor">
+    </text-editor>
     <div class="clearfix controls">
       <button
         @click="post(comment)"
@@ -39,7 +34,7 @@
 <script>
 import { mapGetters } from 'vuex-module';
 import CommentThread from './CommentThread';
-import trim from 'lodash/trim';
+import TextEditor from 'components/common/TextEditor';
 
 const createComment = () => ({ content: '' });
 
@@ -61,7 +56,6 @@ export default {
       this.post(this.comment);
     },
     post(comment = {}) {
-      comment.content = trim(comment.content);
       if (!comment.content) return;
       comment.author = this.user;
       comment.createdAt = Date.now();
@@ -69,7 +63,10 @@ export default {
       this.comment = createComment();
     }
   },
-  components: { CommentThread }
+  components: {
+    CommentThread,
+    TextEditor
+  }
 };
 </script>
 
@@ -77,8 +74,6 @@ export default {
 $font-size: 16px;
 $line-size: 22px;
 $title-color: #454545;
-$color: #333;
-$editor-height: 60px;
 
 .discussion {
   padding: 3px 8px;
@@ -107,46 +102,9 @@ $editor-height: 60px;
 }
 
 .editor {
-  position: relative;
   margin-bottom: 10px;
-  color: $color;
   font-size: $font-size;
   line-height: $line-size;
-
-  textarea {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    font: inherit;
-    box-sizing: content-box;
-    overflow: hidden;
-    resize: none;
-    letter-spacing: inherit;
-    outline: none;
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-  .content {
-    min-height: $editor-height;
-    visibility: hidden;
-  }
-
-  .content pre {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    font: inherit;
-    background: inherit;
-    border: none;
-    word-break: break-all;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    overflow: hidden;
-  }
 }
 
 .controls {
