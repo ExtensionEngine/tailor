@@ -23,16 +23,14 @@
 </template>
 
 <script>
-import includes from 'lodash/includes';
 import orderBy from 'lodash/orderBy';
-import toLower from 'lodash/toLower';
 
 export default {
   name: 'comment-thread',
   props: {
     comments: { type: Array, required: true },
     avatars: { type: Boolean, default: true },
-    sort: { ...enumOf('asc', 'desc'), default: 'desc' }
+    sort: { type: String, default: 'desc' }
   },
   computed: {
     thread() {
@@ -40,14 +38,6 @@ export default {
     }
   }
 };
-
-function enumOf(...keys) {
-  const values = keys.map(it => toLower(it).trim());
-  return {
-    type: String,
-    validator: val => includes(values, val)
-  };
-}
 </script>
 
 <style lang="scss" scoped>
@@ -75,6 +65,7 @@ $line-size: 20px;
     background: #e0e0e0;
     text-align: center;
     vertical-align: middle;
+    overflow: hidden;
 
     .icon {
       color: #aaa;

@@ -9,25 +9,31 @@
         {{ comments.length }}
       </span>
     </h4>
-    <text-editor
-      v-model.trim="comment.content"
-      @change="post(comment)"
-      placeholder="Add a comment"
-      class="editor">
-    </text-editor>
-    <div class="clearfix controls">
-      <button
-        @click="post(comment)"
-        type="button"
-        class="btn btn-default btn-material pull-right btn-post">
-        Post
-      </button>
+    <div :direction="direction" class="vertical-layout">
+      <div class="editor-wrapper">
+        <text-editor
+          v-model.trim="comment.content"
+          @change="post(comment)"
+          placeholder="Add a comment"
+          class="editor">
+        </text-editor>
+        <div class="clearfix controls">
+          <button
+            @click="post(comment)"
+            type="button"
+            class="btn btn-default btn-material pull-right btn-post">
+            Post
+          </button>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <comment-thread
+        :comments="comments"
+        :avatars="true"
+        :sort="sort"
+        class="comment-thread">
+      </comment-thread>
     </div>
-    <comment-thread
-      :comments="comments"
-      :avatars="true"
-      sort="desc">
-    </comment-thread>
   </div>
 </template>
 
@@ -40,6 +46,10 @@ const createComment = () => ({ content: '' });
 
 export default {
   name: 'discussion',
+  props: {
+    editorPosition: { type: String, default: 'top' },
+    sort: { type: String, default: 'desc' }
+  },
   data() {
     return {
       comment: createComment(),
@@ -47,7 +57,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+    direction() {
+      return this.editorPosition === 'bottom' ? 'reverse' : '';
+    }
   },
   methods: {
     onEnter(e) {
@@ -101,22 +114,22 @@ $title-color: #454545;
   }
 }
 
+.spacer {
+  height: 16px;
+}
+
 .editor {
   margin-bottom: 10px;
   font-size: $font-size;
   line-height: $line-size;
 }
 
-.controls {
-  margin-bottom: 16px;
+.btn-post {
+  padding: 6px 8px;
+  background: darken(#fff, 8%);
 
-  .btn-post {
-    padding: 6px 8px;
-    background: darken(#fff, 8%);
-
-    &:hover {
-      background: darken(#fff, 16%);
-    }
+  &:hover {
+    background: darken(#fff, 16%);
   }
 }
 </style>

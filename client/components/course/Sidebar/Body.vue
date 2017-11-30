@@ -21,7 +21,11 @@
       </meta-input>
     </div>
     <prerequisites v-if="config.hasPrerequisites"></prerequisites>
-    <discussion class="discussion"></discussion>
+    <discussion
+      sort="asc"
+      editor-position="bottom"
+      class="discussion">
+    </discussion>
   </div>
 </template>
 
@@ -120,5 +124,6 @@ export default {
 
 .discussion {
   margin-top: 32px;
+  margin-bottom: 8px;
 }
 </style>
