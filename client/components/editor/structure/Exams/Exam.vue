@@ -30,7 +30,10 @@
         :exam="exam"
         :position="index">
       </assessment-group>
-      <button @click="createGroup" class="btn btn-primary btn-material create-group">
+      <button
+        :disabled="!exam.id"
+        @click="createGroup"
+        class="btn btn-primary btn-material create-group">
         <span class="mdi mdi-plus"></span>
         Create Question Group
       </button>
