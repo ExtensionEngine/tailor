@@ -38,7 +38,7 @@ function create({ body, params, user }, res) {
 }
 
 function patch({ body, params, user }, res) {
-  return TeachingElement.findById(params.teId)
+  return TeachingElement.findById(params.teId, { paranoid: !body.fromRevision })
     .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
     .then(asset => asset.update(body, { context: { userId: user.id } }))
     .then(asset => resolveStatics(asset))

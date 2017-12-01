@@ -74,7 +74,7 @@ export default {
     },
     rollback(revision) {
       this.$set(revision, 'loading', true);
-      this.save(revision.state)
+      this.save({ ...revision.state, fromRevision: true })
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);
