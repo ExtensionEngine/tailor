@@ -15,8 +15,8 @@ function publishActivity(activity) {
       const exists = find(spine.structure, { id: it.id });
       if (!exists) addToSpine(spine, it);
     });
-    addToSpine(spine, activity);
     activity.publishedAt = new Date();
+    addToSpine(spine, activity);
     return publishContent(repository, activity).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
       return saveSpine(spine).then(() => activity.save());
