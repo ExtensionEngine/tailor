@@ -42,7 +42,7 @@ export default {
 <style lang="scss">
 .text-editor {
   position: relative;
-  margin-bottom: 10px;
+  margin: 0;
 
   textarea {
     position: absolute;
