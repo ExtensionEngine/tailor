@@ -5,8 +5,8 @@
       v-focus.lazy="focused"
       :placeholder="placeholder"
       @keydown.enter="onEnter"
+      @blur="onBlur"
       @input="$emit('input', content)"
-      @blur="$emit('change', content)"
       class="form-control">
     </textarea>
     <div class="content">
@@ -34,6 +34,9 @@ export default {
       if (e.shiftKey) return;
       e.preventDefault();
       this.$emit('change', this.content);
+    },
+    onBlur(e, content) {
+      this.$emit('blur', this.content, e);
     }
   },
   watch: {
@@ -83,9 +86,10 @@ export default {
     font: inherit;
     background: inherit;
     border: none;
-    word-break: break-all;
-    word-wrap: break-word;
     white-space: pre-wrap;
+    word-break: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     overflow: hidden;
   }
 }

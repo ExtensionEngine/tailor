@@ -15,6 +15,7 @@
             :class="{ active: isEditing(comment) }"
             @click="toggleEdit(comment)"
             class="pull-right btn btn-material-icon btn-edit"
+            ref="btnEdit"
             type="button">
             <span class="icon mdi mdi-pencil"></span>
           </button>
@@ -28,7 +29,8 @@
           :value="comment.content"
           :focused="isEditing(comment)"
           :preview="!isEditing(comment)"
-          @change="content => update(comment, content.trim())"
+          @blur="(content, e) => onUpdate(comment, content, e)"
+          @change="content => onUpdate(comment, content)"
           class="content">
         </text-editor>
       </div>
@@ -38,6 +40,7 @@
 
 <script>
 import { focus } from 'vue-focus';
+import includes from 'lodash/includes';
 import { mapGetters } from 'vuex-module';
 import orderBy from 'lodash/orderBy';
 import TextEditor from 'components/common/TextEditor';
@@ -66,11 +69,13 @@ export default {
     toggleEdit(comment) {
       this.editing = (this.editing !== comment) ? comment : null;
     },
-    update(comment, content) {
-      this.editing = null;
-      if (!content || content === comment.content) return;
-      comment.content = content;
-      this.$emit('update:comment', comment.id, comment);
+    onUpdate(comment, content, e = {}) {
+      if (update(comment, content)) {
+        this.$emit('update:comment', comment.id, comment);
+      }
+      const preserveState = e.type === 'blur' &&
+        includes(this.$refs.btnEdit, e.relatedTarget);
+      if (!preserveState) this.editing = null;
     }
   },
   components: { TextEditor },
@@ -79,6 +84,13 @@ export default {
 
 function canEdit(comment, user) {
   return comment.author.id === user.id;
+}
+
+function update(comment, content) {
+  content = content.trim();
+  if (!content || content === comment.content) return false;
+  comment.content = content;
+  return true;
 }
 </script>
 

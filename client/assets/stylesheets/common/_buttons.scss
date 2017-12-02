@@ -102,7 +102,7 @@ $fab-font-size: 18px;
     outline: none;
   }
 
-  &:hover {
+  &:hover, &.active {
     background: darken(#fff, 10%);
   }
 }
