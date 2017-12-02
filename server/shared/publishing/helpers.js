@@ -6,6 +6,7 @@ const map = require('lodash/map');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
+const sortBy = require('lodash/sortBy');
 const storage = require('../storage');
 
 function publishActivity(activity) {
@@ -92,9 +93,10 @@ function publishAssessments(parent) {
 }
 
 function fetchContainer(container) {
-  return container.getTeachingElements().then(tes => ({
+  let attributes = ['id', 'type', 'position', 'data', 'createdAt', 'updatedAt'];
+  return container.getTeachingElements({ attributes }).then(tes => ({
     ...pick(container, ['id', 'type', 'position', 'createdAt', 'updatedAt']),
-    elements: tes
+    elements: sortBy(tes, 'position')
   }));
 }
 
