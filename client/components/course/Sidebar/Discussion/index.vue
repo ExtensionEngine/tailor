@@ -12,7 +12,7 @@
     <div :direction="direction" class="vertical-layout">
       <div class="editor-wrapper">
         <text-editor
-          v-model.trim="comment.content"
+          v-model="comment.content"
           @change="post(comment)"
           placeholder="Add a comment"
           class="editor">
@@ -40,6 +40,7 @@
 import { mapGetters } from 'vuex-module';
 import CommentThread from './CommentThread';
 import TextEditor from 'components/common/TextEditor';
+import trim from 'lodash/trim';
 
 const createComment = () => ({ content: '' });
 
@@ -68,6 +69,7 @@ export default {
       this.post(this.comment);
     },
     post(comment = {}) {
+      comment.content = trim(comment.content);
       if (!comment.content) return;
       comment.author = this.user;
       comment.createdAt = Date.now();

@@ -4,9 +4,9 @@
       v-model="content"
       v-focus.lazy="focused"
       :placeholder="placeholder"
-      @blur="$emit('blur')"
       @keydown.enter="onEnter"
       @input="$emit('input', content)"
+      @blur="$emit('change', content)"
       class="form-control">
     </textarea>
     <div class="content">
@@ -33,11 +33,14 @@ export default {
     onEnter(e) {
       if (e.shiftKey) return;
       e.preventDefault();
-      if (this.content) this.$emit('change', this.content);
+      this.$emit('change', this.content);
     }
   },
   watch: {
     value() {
+      this.content = this.value;
+    },
+    preview() {
       this.content = this.value;
     }
   },

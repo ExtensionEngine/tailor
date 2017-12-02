@@ -25,11 +25,10 @@
           </timeago>
         </span>
         <text-editor
-          v-model="comment.content"
+          :value="comment.content"
           :focused="isEditing(comment)"
           :preview="!isEditing(comment)"
-          @blur="toggleEdit(null)"
-          @change="toggleEdit(null)"
+          @change="content => update(comment, content.trim())"
           class="content">
         </text-editor>
       </div>
@@ -66,6 +65,10 @@ export default {
     },
     toggleEdit(comment) {
       this.editing = (this.editing !== comment) ? comment : null;
+    },
+    update(comment, content) {
+      this.editing = null;
+      if (content) comment.content = content;
     }
   },
   components: { TextEditor },
