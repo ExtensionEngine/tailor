@@ -86,6 +86,7 @@ export default {
 $font-size: 16px;
 $line-size: 22px;
 $title-color: #454545;
+$editor-size: 60px;
 
 .discussion {
   padding: 3px 8px;
@@ -118,6 +119,7 @@ $title-color: #454545;
 }
 
 .editor {
+  min-height: $editor-size;
   margin-bottom: 10px;
   font-size: $font-size;
   line-height: $line-size;

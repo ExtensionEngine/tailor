@@ -74,8 +74,11 @@ $line-size: 20px;
     }
   }
 
+  .content-wrapper {
+    overflow: hidden;
+  }
+
   .content {
-    display: inline-block;
     font-size: $font-size;
     line-height: $line-size;
     white-space: pre;

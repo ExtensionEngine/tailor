@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group text-editor">
+  <div :class="{ preview }" class="form-group text-editor">
     <textarea
       v-model="content"
       :placeholder="placeholder"
@@ -7,7 +7,7 @@
       @input="$emit('input', content)"
       class="form-control">
     </textarea>
-    <div :style="{ minHeight: `${this.height}px` }" class="content">
+    <div class="content">
       <pre><span>{{ content }}</span><br></pre>
     </div>
   </div>
@@ -19,7 +19,7 @@ export default {
   props: {
     value: { type: String, required: true },
     placeholder: { type: String, default: '' },
-    height: { type: Number, default: 60 }
+    preview: { type: Boolean, default: false }
   },
   data() {
     return { content: this.value };
@@ -43,19 +43,18 @@ export default {
 .text-editor {
   position: relative;
   margin-bottom: 10px;
-  font-size: inherit;
-  line-height: inherit;
 
   textarea {
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
+    background: transparent;
     font: inherit;
+    letter-spacing: inherit;
     box-sizing: content-box;
     overflow: hidden;
     resize: none;
-    letter-spacing: inherit;
     outline: none;
 
     &:focus {
@@ -79,6 +78,16 @@ export default {
     word-wrap: break-word;
     white-space: pre-wrap;
     overflow: hidden;
+  }
+}
+
+.text-editor.preview {
+  textarea {
+    display: none;
+  }
+
+  .content {
+    visibility: visible;
   }
 }
 </style>
