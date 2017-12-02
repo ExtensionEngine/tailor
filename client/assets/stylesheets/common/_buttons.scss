@@ -74,6 +74,39 @@ $fab-font-size: 18px;
   }
 }
 
+.btn.btn-material-icon {
+  position: relative;
+  padding: 8px;
+  color: #717171;
+  line-height: 24px;
+  min-width: 24px;
+  border-radius: 50%;
+  background: none;
+  box-shadow: none;
+  outline: none;
+
+  .mdi {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &::before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    background: darken(#fff, 10%);
+  }
+}
+
 .btn-link {
   &:focus {
     border: 0;

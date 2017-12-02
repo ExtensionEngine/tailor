@@ -10,20 +10,38 @@
       <div class="content-wrapper">
         <span class="header">
           <span class="author">{{ comment.author.email }}</span>
+          <button
+            v-if="canEdit(comment, user)"
+            :class="{ active: isEditing(comment) }"
+            @click="toggleEdit(comment)"
+            class="pull-right btn btn-material-icon btn-edit"
+            type="button">
+            <span class="icon mdi mdi-pencil"></span>
+          </button>
           <timeago
             :since="comment.createdAt"
             :auto-update="60"
             class="pull-right time">
           </timeago>
         </span>
-        <span class="content">{{ comment.content }}</span>
+        <text-editor
+          v-model="comment.content"
+          :focused="isEditing(comment)"
+          :preview="!isEditing(comment)"
+          @blur="toggleEdit(null)"
+          @change="toggleEdit(null)"
+          class="content">
+        </text-editor>
       </div>
     </li>
   </ul>
 </template>
 
 <script>
+import { focus } from 'vue-focus';
+import { mapGetters } from 'vuex-module';
 import orderBy from 'lodash/orderBy';
+import TextEditor from 'components/common/TextEditor';
 
 export default {
   name: 'comment-thread',
@@ -33,11 +51,30 @@ export default {
     sort: { type: String, default: 'desc' }
   },
   computed: {
+    ...mapGetters(['user']),
     thread() {
       return orderBy(this.comments, ['createdAt'], [this.sort]);
     }
-  }
+  },
+  data() {
+    return { editing: null };
+  },
+  methods: {
+    canEdit,
+    isEditing(comment) {
+      return comment === this.editing;
+    },
+    toggleEdit(comment) {
+      this.editing = (this.editing !== comment) ? comment : null;
+    }
+  },
+  components: { TextEditor },
+  directives: { focus }
 };
+
+function canEdit(comment, user) {
+  return comment.author.id === user.id;
+}
 </script>
 
 <style lang="scss" scoped>
@@ -81,7 +118,6 @@ $line-size: 20px;
   .content {
     font-size: $font-size;
     line-height: $line-size;
-    white-space: pre;
   }
 
   .header {
@@ -90,9 +126,20 @@ $line-size: 20px;
     color: lighten($color, 25%);
     font-size: 14px;
     font-weight: 500;
+    line-height: 24px;
 
     .time {
       font-size: 12px;
+    }
+
+    .btn-edit {
+      width: 24px;
+      margin-left: 4px;
+      line-height: 24px;
+
+      &.active {
+        color: #337ab7;
+      }
     }
   }
 }

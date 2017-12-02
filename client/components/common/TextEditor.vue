@@ -2,7 +2,9 @@
   <div :class="{ preview }" class="form-group text-editor">
     <textarea
       v-model="content"
+      v-focus.lazy="focused"
       :placeholder="placeholder"
+      @blur="$emit('blur')"
       @keydown.enter="onEnter"
       @input="$emit('input', content)"
       class="form-control">
@@ -14,12 +16,15 @@
 </template>
 
 <script>
+import { focus } from 'vue-focus';
+
 export default {
   name: 'text-editor',
   props: {
     value: { type: String, required: true },
     placeholder: { type: String, default: '' },
-    preview: { type: Boolean, default: false }
+    preview: { type: Boolean, default: false },
+    focused: { type: Boolean, default: false }
   },
   data() {
     return { content: this.value };
@@ -35,7 +40,8 @@ export default {
     value() {
       this.content = this.value;
     }
-  }
+  },
+  directives: { focus }
 };
 </script>
 
