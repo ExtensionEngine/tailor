@@ -68,7 +68,9 @@ export default {
     },
     update(comment, content) {
       this.editing = null;
-      if (content) comment.content = content;
+      if (!content || content === comment.content) return;
+      comment.content = content;
+      this.$emit('update:comment', comment.id, comment);
     }
   },
   components: { TextEditor },

@@ -30,6 +30,7 @@
       <comment-thread
         v-bind="$attrs"
         :comments="comments"
+        @update:comment="update"
         class="comment-thread">
       </comment-thread>
     </div>
@@ -75,6 +76,9 @@ export default {
       comment.createdAt = Date.now();
       this.comments.push(comment);
       this.comment = createComment();
+    },
+    update(id, comment) {
+      // TODO: Implement comment update logic.
     }
   },
   components: {
