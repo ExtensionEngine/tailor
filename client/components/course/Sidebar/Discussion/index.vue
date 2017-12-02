@@ -15,6 +15,7 @@
           v-model="comment.content"
           @change="post(comment)"
           placeholder="Add a comment"
+          ref="editor"
           class="editor">
         </text-editor>
         <div class="clearfix controls">
@@ -61,6 +62,9 @@ export default {
     ...mapGetters(['user']),
     direction() {
       return this.editorPosition === 'bottom' ? 'reverse' : '';
+    },
+    editor() {
+      return this.$refs.editor.$el;
     }
   },
   methods: {
@@ -76,6 +80,10 @@ export default {
       comment.createdAt = Date.now();
       this.comments.push(comment);
       this.comment = createComment();
+      // Keep editor inside viewport.
+      if (this.editorPosition === 'bottom') {
+        this.$nextTick(() => this.editor.scrollIntoView());
+      }
     },
     update(id, comment) {
       // TODO: Implement comment update logic.
