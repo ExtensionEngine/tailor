@@ -30,7 +30,7 @@ function show({ params }, res) {
 }
 
 function create({ body, params, user }, res) {
-  const attr = ['activityId', 'type', 'data', 'position'];
+  const attr = ['activityId', 'type', 'data', 'position', 'refs'];
   const data = Object.assign(pick(body, attr), { courseId: params.courseId });
   return TeachingElement.create(data, { context: { userId: user.id } })
     .then(asset => resolveStatics(asset))

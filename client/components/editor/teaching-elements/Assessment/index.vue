@@ -135,6 +135,7 @@ export default {
       return !this.summative && feedbackSupported;
     },
     examObjectives() {
+      if (!this.exam) return [];
       return this.getExamObjectives(this.exam);
     },
     placeholder() {
@@ -181,9 +182,9 @@ export default {
           let data = this.summative ? this.element : this.element.data;
           data = cloneDeep(data);
           if (this.objective) {
-            set(data, '_refs.objectiveId', this.objective.id);
+            set(data, 'refs.objectiveId', this.objective.id);
           } else {
-            unset(data, '_refs.objectiveId');
+            unset(data, 'refs.objectiveId');
           }
           this.$emit('save', data);
           this.isEditing = false;
@@ -213,7 +214,7 @@ export default {
       this.$emit('remove');
     },
     setObjective() {
-      const objectiveId = get(this.element, 'data._refs.objectiveId');
+      const objectiveId = get(this.element, 'refs.objectiveId');
       if (!objectiveId) return;
       this.objective = find(this.examObjectives, { id: objectiveId });
     },
