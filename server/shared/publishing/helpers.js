@@ -92,9 +92,14 @@ function publishAssessments(parent) {
 }
 
 function fetchContainer(container) {
-  return container.getTeachingElements().then(tes => ({
+  const attributes = ['id', 'type', 'position', 'data', 'createdAt', 'updatedAt'];
+  const order = [['position', 'ASC']];
+  return container.getTeachingElements({ attributes, order }).then(tes => ({
     ...pick(container, ['id', 'type', 'position', 'createdAt', 'updatedAt']),
-    elements: tes
+    elements: map(tes, (it, index) => {
+      it.position = index + 1;
+      return it;
+    })
   }));
 }
 
