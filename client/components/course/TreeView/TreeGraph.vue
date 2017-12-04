@@ -3,11 +3,13 @@
 </template>
 
 <script>
-import * as d3 from 'd3';
+import * as d3 from 'd3-selection';
 import clamp from 'lodash/clamp';
+import { hierarchy, tree } from 'd3-hierarchy';
 import range from 'lodash/range';
+import { zoom } from 'd3-zoom';
 const clear = el => (el.innerHTML = '');
-const line = d3.line();
+const line = require('d3-shape').line();
 
 const zoomOptions = {
   min: 0.3,
@@ -27,9 +29,9 @@ export default {
   computed: {
     nodes() {
       if (!this.data) return;
-      const nodes = d3.hierarchy(this.data);
+      const nodes = hierarchy(this.data);
       const { width, height } = this.nodeSize;
-      const treemap = d3.tree().nodeSize([width, height]);
+      const treemap = tree().nodeSize([width, height]);
       return treemap(nodes);
     },
     nodeDiameters() {
@@ -39,7 +41,7 @@ export default {
     },
     zoomHandler() {
       const { min: start, max: end } = this.zoomRange;
-      return d3.zoom().scaleExtent([start, end]);
+      return zoom().scaleExtent([start, end]);
     }
   },
   mounted() {
