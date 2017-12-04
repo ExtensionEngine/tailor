@@ -91,7 +91,9 @@ export default {
       // Append text & label.
       node.append('circle')
         .on('click', node => this.$emit('node:select', node, node.data))
+        .style('fill', d => d.data.color)
         .attr('r', d => this.nodeDiameters[d.depth]);
+
       node.append('text')
         .text(d => d.data.name)
         .style('text-anchor', 'middle')
@@ -148,7 +150,7 @@ $link-color: #ababab;
     fill: $node-color;
   }
 
-  .node:hover circle {
+  .node circle:hover {
     cursor: pointer;
     fill: darken($node-color, 10%);
   }
