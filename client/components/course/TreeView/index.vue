@@ -36,6 +36,7 @@ const graphOptions = {
 };
 
 export default {
+  name: 'tree-view',
   props: ['showLoader'],
   data() {
     return { graphOptions };
