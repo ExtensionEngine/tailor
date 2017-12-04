@@ -15,8 +15,8 @@ function publishActivity(activity) {
       const exists = find(spine.structure, { id: it.id });
       if (!exists) addToSpine(spine, it);
     });
-    addToSpine(spine, activity);
     activity.publishedAt = new Date();
+    addToSpine(spine, activity);
     return publishContent(repository, activity).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
       return saveSpine(spine).then(() => activity.save());
@@ -92,9 +92,14 @@ function publishAssessments(parent) {
 }
 
 function fetchContainer(container) {
-  return container.getTeachingElements().then(tes => ({
+  const attributes = ['id', 'type', 'position', 'data', 'createdAt', 'updatedAt'];
+  const order = [['position', 'ASC']];
+  return container.getTeachingElements({ attributes, order }).then(tes => ({
     ...pick(container, ['id', 'type', 'position', 'createdAt', 'updatedAt']),
-    elements: tes
+    elements: map(tes, (it, index) => {
+      it.position = index + 1;
+      return it;
+    })
   }));
 }
 
