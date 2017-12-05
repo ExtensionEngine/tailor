@@ -125,6 +125,18 @@ export default {
         .attr('class', d => `node depth-${d.depth}`)
         .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
+      // Append label.
+      node.append('text')
+        .classed('label', true)
+        .text(d => d.data.name)
+        .style('text-anchor', 'middle')
+        .attr('dy', '.35em')
+        .attr('y', d => {
+          // Calculate text padding.
+          if (d.depth === 0) return -30;
+          return d.children ? -25 : 25;
+        });
+
       // Create node wrapper.
       const self = this;
       const group = node.append('g')
@@ -132,7 +144,7 @@ export default {
         //       accepts only one filter at time.
         .classed('circle-wrapper', true)
         .on('click', function (node) {
-          self.$emit('node:select', node, node.data, this);
+          self.$emit('node:select', node, node.data, this.parentNode);
         });
 
       // Extend node area.
@@ -145,18 +157,6 @@ export default {
         .classed('circle', true)
         .style('fill', d => d.data.color)
         .attr('r', d => this.nodeDiameters[d.depth]);
-
-      // Append label.
-      node.append('text')
-        .classed('label', true)
-        .text(d => d.data.name)
-        .style('text-anchor', 'middle')
-        .attr('dy', '.35em')
-        .attr('y', d => {
-          // Calculate text padding.
-          if (d.depth === 0) return -30;
-          return d.children ? -25 : 25;
-        });
 
       return node;
     },

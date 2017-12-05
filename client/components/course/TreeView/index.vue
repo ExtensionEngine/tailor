@@ -148,13 +148,15 @@ $accent: #337AB7;
   }
 
   .selected {
-    filter: url(#lighten);
+    .circle-wrapper {
+      filter: url(#lighten);
+    }
 
     .circle {
       filter: url(#drop-shadow);
     }
 
-    + .label {
+    .label {
       fill: $accent;
       font-weight: bold;
     }
