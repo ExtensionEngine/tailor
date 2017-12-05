@@ -5,6 +5,7 @@
 <script>
 import * as d3 from 'd3-selection';
 import clamp from 'lodash/clamp';
+import flatten from 'lodash/flatten';
 import get from 'lodash/get';
 import { hierarchy, tree } from 'd3-hierarchy';
 import range from 'lodash/range';
@@ -29,6 +30,8 @@ const dropShadowOptions = {
   slope: 0.5,
   type: 'linear'
 };
+
+const lightenFactor = 1.5;
 
 export default {
   name: 'tree-graph',
@@ -72,8 +75,10 @@ export default {
       const svg = d3.select(this.$el).append('svg')
         .call(this.zoomHandler);
 
-      // Add drop-shadow filter.
-      addDropShadow(svg, dropShadowOptions);
+      // Add filters.
+      const defs = svg.append('defs');
+      addDropShadow(defs, dropShadowOptions);
+      addLighten(defs, lightenFactor);
 
       const g = svg.append('g');
       this.zoomHandler.on('zoom', () => {
@@ -122,10 +127,14 @@ export default {
 
       // Append text & label.
       const self = this;
-      node.append('circle')
+      node.append('g')
+        // NOTE: Sadly we need wrapper because svg element
+        //       accepts only one filter at time.
+        .classed('circle-wrapper', true)
         .on('click', function (node) {
           self.$emit('node:select', node, node.data, this);
         })
+        .append('circle')
         .style('fill', d => d.data.color)
         .attr('r', d => this.nodeDiameters[d.depth]);
 
@@ -157,10 +166,8 @@ export default {
 
 // Adapted from following bl.ocks.org example:
 // http://bl.ocks.org/dimitardanailov/240cc0689604e22570e8ce22aa8a7e7e
-function addDropShadow(svg, dropShadow, filterId = 'drop-shadow') {
-  const filter = svg.append('defs')
-    .append('filter')
-    .attr('id', filterId)
+function addDropShadow(defs, dropShadow, filterId = 'drop-shadow') {
+  const filter = defs.append('filter').attr('id', filterId)
     .attr('filterUnits', 'userSpaceOnUse');
 
   filter.append('feGaussianBlur')
@@ -179,6 +186,23 @@ function addDropShadow(svg, dropShadow, filterId = 'drop-shadow') {
   const feMerge = filter.append('feMerge');
   feMerge.append('feMergeNode');
   feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+}
+
+// All you need to know about `feColorMatrix`:
+// https://alistapart.com/article/finessing-fecolormatrix#section10
+function addLighten(defs, amount, filterId = 'lighten') {
+  const filter = defs.append('filter').attr('id', filterId);
+
+  const values = [
+    [amount, 0, 0, 0, 0],
+    [0, amount, 0, 0, 0],
+    [0, 0, amount, 0, 0],
+    [0, 0, 0, 1, 0]
+  ];
+
+  filter.append('feColorMatrix')
+    .attr('type', 'matrix')
+    .attr('values', flatten(values).join(' '));
 }
 
 function link(data = {}) {
@@ -201,10 +225,6 @@ $node-color: #b9b9b9;
 $link-color: #ababab;
 
 .graph {
-  .shadow {
-    filter: url(#drop-shadow);
-  }
-
   svg {
     display: block;
     width: 100%;
@@ -237,4 +257,3 @@ $link-color: #ababab;
   }
 }
 </style>
-

@@ -145,8 +145,12 @@ function getColor(type, structure) {
     filter: url(#drop-shadow);
   }
 
-  circle.selected {
-    filter: url(#drop-shadow);
+  .selected {
+    filter: url(#lighten);
+
+    circle {
+      filter: url(#drop-shadow);
+    }
   }
 
   // Disable all effects on root/course node.
