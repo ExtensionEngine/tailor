@@ -118,27 +118,37 @@ export default {
         .classed('link', true)
         .attr('d', link);
     },
-    renderNodes(data, graph) {
+    renderNodes(data, graph, { padding = 24 } = {}) {
       // Create node group.
       const node = graph.selectAll('.node')
         .data(data).enter().append('g')
         .attr('class', d => `node depth-${d.depth}`)
         .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
-      // Append text & label.
+      // Create node wrapper.
       const self = this;
-      node.append('g')
+      const group = node.append('g')
         // NOTE: Sadly we need wrapper because svg element
         //       accepts only one filter at time.
         .classed('circle-wrapper', true)
         .on('click', function (node) {
           self.$emit('node:select', node, node.data, this);
-        })
-        .append('circle')
+        });
+
+      // Extend node area.
+      group.append('circle')
+        .classed('padding', true)
+        .attr('r', d => this.nodeDiameters[d.depth] + padding);
+
+      // Append node circle.
+      group.append('circle')
+        .classed('circle', true)
         .style('fill', d => d.data.color)
         .attr('r', d => this.nodeDiameters[d.depth]);
 
+      // Append label.
       node.append('text')
+        .classed('label', true)
         .text(d => d.data.name)
         .style('text-anchor', 'middle')
         .attr('dy', '.35em')
@@ -236,16 +246,23 @@ $link-color: #ababab;
     cursor: grabbing;
   }
 
-  .node circle {
-    fill: $node-color;
-  }
-
-  .node circle:hover {
+  .node .circle-wrapper * {
     cursor: pointer;
-    fill: darken($node-color, 10%);
   }
 
-  .node text {
+  .node .padding {
+    fill: transparent;
+  }
+
+  .node .circle {
+    fill: $node-color;
+
+    &:hover {
+      fill: darken($node-color, 10%);
+    }
+  }
+
+  .node .label {
     fill: $text-color;
     font: $font;
   }

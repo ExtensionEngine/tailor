@@ -141,22 +141,27 @@ function getColor(type, structure) {
 }
 
 .tree /deep/ {
-  circle:hover {
+  .node .circle-wrapper:hover .circle {
     filter: url(#drop-shadow);
   }
 
   .selected {
     filter: url(#lighten);
 
-    circle {
+    .circle {
       filter: url(#drop-shadow);
     }
   }
 
   // Disable all effects on root/course node.
-  .depth-0 circle:hover {
-    cursor: auto;
-    filter: none;
+  .depth-0 .circle-wrapper {
+    * {
+      cursor: auto;
+    }
+
+    &:hover .circle {
+      filter: none;
+    }
   }
 }
 </style>
