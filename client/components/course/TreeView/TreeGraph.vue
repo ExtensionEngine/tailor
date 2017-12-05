@@ -10,6 +10,8 @@ import get from 'lodash/get';
 import { hierarchy, tree } from 'd3-hierarchy';
 import range from 'lodash/range';
 import { zoom } from 'd3-zoom';
+
+const isEmpty = tree => !tree.children || !tree.children.length;
 const clear = el => (el.innerHTML = '');
 const line = require('d3-shape').line();
 
@@ -47,7 +49,7 @@ export default {
   },
   computed: {
     nodes() {
-      if (!this.data) return;
+      if (isEmpty(this.data)) return;
       const nodes = hierarchy(this.data);
       const { width, height } = this.nodeSize;
       const treemap = tree().nodeSize([width, height]);
