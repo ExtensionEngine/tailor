@@ -22,6 +22,14 @@ const zoomOptions = {
   default: 0.6
 };
 
+const dropShadowOptions = {
+  stdDeviation: 1,
+  dx: 1,
+  dy: 1,
+  slope: 0.5,
+  type: 'linear'
+};
+
 export default {
   name: 'tree-graph',
   props: {
@@ -63,6 +71,9 @@ export default {
       // Setup chart.
       const svg = d3.select(this.$el).append('svg')
         .call(this.zoomHandler);
+
+      // Add drop-shadow filter.
+      addDropShadow(svg, dropShadowOptions);
 
       const g = svg.append('g');
       this.zoomHandler.on('zoom', () => {
@@ -144,6 +155,32 @@ export default {
   }
 };
 
+// Adapted from following bl.ocks.org example:
+// http://bl.ocks.org/dimitardanailov/240cc0689604e22570e8ce22aa8a7e7e
+function addDropShadow(svg, dropShadow, filterId = 'drop-shadow') {
+  const filter = svg.append('defs')
+    .append('filter')
+    .attr('id', filterId)
+    .attr('filterUnits', 'userSpaceOnUse');
+
+  filter.append('feGaussianBlur')
+    .attr('in', 'SourceAlpha')
+    .attr('stdDeviation', parseInt(dropShadow.stdDeviation));
+
+  filter.append('feOffset')
+    .attr('dx', parseInt(dropShadow.dx, 10))
+    .attr('dy', parseInt(dropShadow.dy, 10));
+
+  const feComponentTransfer = filter.append('feComponentTransfer');
+  feComponentTransfer.append('feFuncA')
+    .attr('type', dropShadow.type)
+    .attr('slope', parseFloat(dropShadow.slope));
+
+  const feMerge = filter.append('feMerge');
+  feMerge.append('feMergeNode');
+  feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+}
+
 function link(data = {}) {
   const { x, y, parent } = data;
   return line([[x, y], [parent.x, parent.y]]);
@@ -164,6 +201,10 @@ $node-color: #b9b9b9;
 $link-color: #ababab;
 
 .graph {
+  .shadow {
+    filter: url(#drop-shadow);
+  }
+
   svg {
     display: block;
     width: 100%;

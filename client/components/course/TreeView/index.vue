@@ -139,4 +139,20 @@ function getColor(type, structure) {
   height: 100%;
   float: left;
 }
+
+.tree /deep/ {
+  circle:hover {
+    filter: url(#drop-shadow);
+  }
+
+  circle.selected {
+    filter: url(#drop-shadow);
+  }
+
+  // Disable all effects on root/course node.
+  .depth-0 circle:hover {
+    cursor: auto;
+    filter: none;
+  }
+}
 </style>
