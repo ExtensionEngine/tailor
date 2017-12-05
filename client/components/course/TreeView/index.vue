@@ -106,6 +106,8 @@ function getColor(type, structure) {
 </script>
 
 <style lang='scss' scoped>
+$accent: #337AB7;
+
 .loader-outer {
   position: absolute;
   top: 0;
@@ -150,6 +152,11 @@ function getColor(type, structure) {
 
     .circle {
       filter: url(#drop-shadow);
+    }
+
+    + .label {
+      fill: $accent;
+      font-weight: bold;
     }
   }
 
