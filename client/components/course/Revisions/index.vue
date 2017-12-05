@@ -3,7 +3,7 @@
     <div v-if="revisions.length > 0" class="revisions">
       <ul>
         <revision-item
-          v-for="revision in revisions"
+          v-for="revision in bundledRevisions"
           :key="revision._cid"
           :revision="revision">
         </revision-item>
@@ -25,13 +25,25 @@
 import { mapActions, mapGetters } from 'vuex-module';
 import CircularProgress from 'components/common/CircularProgress';
 import InfiniteLoading from 'vue-infinite-loading';
+import last from 'lodash/last';
+import reduce from 'lodash/reduce';
 import RevisionItem from './RevisionItem';
 
 export default {
   name: 'course-revisions',
   computed: {
     ...mapGetters(['revisions'], 'course'),
-    ...mapGetters(['hasMoreResults'], 'revisions')
+    ...mapGetters(['hasMoreResults'], 'revisions'),
+    bundledRevisions() {
+      return reduce(this.revisions, (bundle, rev) => {
+        const lastRev = last(bundle);
+        if (lastRev.operation === rev.operation &&
+            lastRev.state.id === rev.state.id) return bundle;
+
+        bundle.push(rev);
+        return bundle;
+      }, [this.revisions[0]]);
+    }
   },
   methods: {
     ...mapActions(['fetch', 'resetPagination'], 'revisions'),
