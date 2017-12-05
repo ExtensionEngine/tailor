@@ -1,15 +1,20 @@
 <template>
-  <div class="graph"></div>
+  <div :class="{ grabbing }" class="graph"></div>
 </template>
 
 <script>
 import * as d3 from 'd3-selection';
 import clamp from 'lodash/clamp';
+import get from 'lodash/get';
 import { hierarchy, tree } from 'd3-hierarchy';
 import range from 'lodash/range';
 import { zoom } from 'd3-zoom';
 const clear = el => (el.innerHTML = '');
 const line = require('d3-shape').line();
+
+const isNativeEvent = (e, type) => get(e.sourceEvent, 'type') === type;
+const isDragStart = e => e.type === 'start' && isNativeEvent(e, 'mousedown');
+const isDragEnd = e => e.type === 'end' && isNativeEvent(e, 'mouseup');
 
 const zoomOptions = {
   min: 0.3,
@@ -25,6 +30,9 @@ export default {
     nodeDiameterRange: { type: Object, required: true },
     zoomRange: { type: Object, default: () => zoomOptions },
     padding: { type: Number, default: 60 }
+  },
+  data() {
+    return { grabbing: false };
   },
   computed: {
     nodes() {
@@ -58,7 +66,20 @@ export default {
 
       const g = svg.append('g');
       this.zoomHandler.on('zoom', () => {
-        g.attr('transform', d3.event.transform);
+        const e = d3.event;
+        // Apply translate & scale transformation.
+        g.attr('transform', e.transform);
+      })
+      .on('start end', () => {
+        const e = d3.event;
+        // Hanlde pan.
+        if (isDragStart(e)) {
+          this.grabbing = true;
+          this.$emit('pan:start');
+        } else if (isDragEnd(e)) {
+          this.grabbing = false;
+          this.$emit('pan:end');
+        }
       });
 
       // Render nodes & links.
@@ -89,8 +110,11 @@ export default {
         .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
       // Append text & label.
+      const self = this;
       node.append('circle')
-        .on('click', node => this.$emit('node:select', node, node.data))
+        .on('click', function (node) {
+          self.$emit('node:select', node, node.data, this);
+        })
         .style('fill', d => d.data.color)
         .attr('r', d => this.nodeDiameters[d.depth]);
 
@@ -144,6 +168,11 @@ $link-color: #ababab;
     display: block;
     width: 100%;
     height: 100%;
+    cursor: grab;
+  }
+
+  &.grabbing svg {
+    cursor: grabbing;
   }
 
   .node circle {

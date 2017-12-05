@@ -41,7 +41,10 @@ export default {
   name: 'tree-view',
   props: ['showLoader'],
   data() {
-    return { graphOptions };
+    return {
+      graphOptions,
+      selectedNode: null
+    };
   },
   computed: {
     ...mapGetters(['activities', 'course', 'structure'], 'course'),
@@ -57,14 +60,20 @@ export default {
         return includes(allowedTypes, it.type);
       });
       const courseTree = tree(activities, this.structure);
-      const courseColor = get(this.course, 'data.color');
+      const courseColor = get(this.course, 'data.color', '#FFFFFF');
       return Object.assign({}, this.course, { color: courseColor }, courseTree);
     }
   },
   methods: {
     ...mapMutations(['focusActivity'], 'course'),
-    onNodeSelect(node, activity) {
+    setSelected(node) {
+      if (this.selectedNode) this.selectedNode.classList.remove('selected');
+      this.selectedNode = node;
+      this.selectedNode.classList.add('selected');
+    },
+    onNodeSelect(node, activity, circle) {
       if (!isActivityNode(node)) return;
+      this.setSelected(circle);
       this.focusActivity(activity._cid);
     }
   },
