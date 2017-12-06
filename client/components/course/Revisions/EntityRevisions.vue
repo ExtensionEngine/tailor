@@ -105,7 +105,7 @@ export default {
 
   .preview {
     flex-grow: 1;
-    width: calc(100% - 320px - 16px); /* sidebar width + margin */
+    min-width: 300px;
     min-height: 500px;
     margin-right: 16px;
     text-align: center;
