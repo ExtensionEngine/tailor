@@ -45,7 +45,10 @@ export default {
     padding: { type: Number, default: 60 }
   },
   data() {
-    return { grabbing: false };
+    return {
+      grabbing: false,
+      hovered: null
+    };
   },
   computed: {
     nodes() {
@@ -65,6 +68,12 @@ export default {
       return zoom().scaleExtent([start, end]);
     }
   },
+  watch: {
+    hovered(node) {
+      if (!node) return this.$emit('node:focusout');
+      if (node.depth > 0) this.$emit('node:focus', node, node.data);
+    }
+  },
   mounted() {
     // Re-render chart when data changes.
     this.$watch('nodes', nodes => {
@@ -75,6 +84,7 @@ export default {
     renderTree() {
       // Setup chart.
       const svg = d3.select(this.$el).append('svg')
+        .on('mouseleave', () => (this.hovered = null))
         .call(this.zoomHandler);
 
       // Add filters.
@@ -152,6 +162,8 @@ export default {
       // Extend node area.
       group.append('circle')
         .classed('padding', true)
+        .on('mouseenter', node => (this.hovered = node))
+        .on('mouseleave', () => (this.hovered = null))
         .attr('r', d => this.nodeDiameters[d.depth] + padding);
 
       // Append node circle.
@@ -248,19 +260,31 @@ $link-color: #ababab;
     cursor: grabbing;
   }
 
-  .node .circle-wrapper * {
-    cursor: pointer;
-  }
-
-  .node .padding {
+  .padding {
     fill: transparent;
   }
 
-  .node .circle {
-    fill: $node-color;
+  // Set default node (normal & hover mode) colors.
+  .node .circle-wrapper {
+    .circle {
+      fill: $node-color;
+    }
 
-    &:hover {
+    &:hover .circle {
       fill: darken($node-color, 10%);
+    }
+  }
+
+  // Capture all mouse events on circle wrapper.
+  .node .circle-wrapper {
+    * {
+      cursor: pointer;
+      pointer-events: none;
+    }
+
+    .padding {
+      fill: transparent;
+      pointer-events: all;
     }
   }
 
