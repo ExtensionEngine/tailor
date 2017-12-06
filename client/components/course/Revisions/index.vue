@@ -31,25 +31,33 @@ import RevisionItem from './RevisionItem';
 
 export default {
   name: 'course-revisions',
+  data() {
+    return {
+      bundledRevisionCount: 0
+    };
+  },
   computed: {
     ...mapGetters(['revisions'], 'course'),
     ...mapGetters(['hasMoreResults'], 'revisions'),
     bundledRevisions() {
-      return reduce(this.revisions, (bundle, rev) => {
-        const lastRev = last(bundle);
-        if (lastRev.operation === rev.operation &&
-            lastRev.state.id === rev.state.id) return bundle;
-
-        bundle.push(rev);
-        return bundle;
+      return reduce(this.revisions, (acc, it) => {
+        const previousRevision = last(acc);
+        const isSameEntity = previousRevision.state.id === it.state.id;
+        const isSameOperation = previousRevision.operation === it.operation;
+        if (isSameEntity && isSameOperation) return acc;
+        acc.push(it);
+        return acc;
       }, [this.revisions[0]]);
     }
   },
   methods: {
     ...mapActions(['fetch', 'resetPagination'], 'revisions'),
     fetchRevisions($state) {
-      return this.fetch().then(() => {
-        $state.loaded();
+      this.fetch().then(() => {
+        const diff = this.bundledRevisions.length - this.bundledRevisionCount;
+        this.bundledRevisionCount += diff;
+        if (diff < 10 && this.hasMoreResults) this.fetchRevisions($state);
+        else $state.loaded();
         if (!this.hasMoreResults) $state.complete();
       });
     }
