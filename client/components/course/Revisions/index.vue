@@ -44,8 +44,7 @@ export default {
         const previousRevision = last(acc);
         const isSameEntity = previousRevision.state.id === it.state.id;
         const isSameOperation = previousRevision.operation === it.operation;
-        if (isSameEntity && isSameOperation) return acc;
-        acc.push(it);
+        if (!isSameEntity || !isSameOperation) acc.push(it);
         return acc;
       }, [this.revisions[0]]);
     }
@@ -56,8 +55,11 @@ export default {
       this.fetch().then(() => {
         const diff = this.bundledRevisions.length - this.bundledRevisionCount;
         this.bundledRevisionCount += diff;
-        if (diff < 10 && this.hasMoreResults) this.fetchRevisions($state);
-        else $state.loaded();
+        if (diff < 10 && this.hasMoreResults) {
+          this.fetchRevisions($state);
+        } else {
+          $state.loaded();
+        }
         if (!this.hasMoreResults) $state.complete();
       });
     }
