@@ -42,19 +42,11 @@
 
 <script>
 import get from 'lodash/get';
-import isIexplorer from 'is-iexplorer';
-import isSafari from 'is-safari';
 import CircularProgress from 'components/common/CircularProgress';
+import isIE from 'is-iexplorer';
+import isSafari from 'is-safari';
 
 const ERR_TIMEOUT = 2500;
-
-function createObject() {
-  const pdfObject = document.createElement('object');
-  pdfObject.data = this.source.src;
-  pdfObject.type = this.source.type;
-  this.pdfObject = this.$refs.pdf.appendChild(pdfObject);
-  setTimeout(() => (this.showError = true), ERR_TIMEOUT);
-}
 
 export default {
   name: 'te-pdf',
@@ -67,17 +59,6 @@ export default {
       showError: false,
       showViewer: true
     };
-  },
-  mounted() {
-    this.embedPdf();
-  },
-  methods: {
-    createObject: createObject,
-    embedPdf() {
-      if (!this.source) return;
-      if (this.pdfObject) this.pdfObject.remove();
-      this.createObject();
-    }
   },
   computed: {
     source() {
@@ -92,15 +73,23 @@ export default {
     safari() {
       return isSafari;
     },
-    ie() {
-      return isIexplorer;
-    },
     showElement() {
-      return !this.ie || this.isFocused;
+      return !isIE || this.isFocused;
     }
   },
-  beforeDestroy() {
-    this.pdfObject = null;
+  methods: {
+    createObject() {
+      const pdfObject = document.createElement('object');
+      pdfObject.data = this.source.src;
+      pdfObject.type = this.source.type;
+      this.pdfObject = this.$refs.pdf.appendChild(pdfObject);
+      setTimeout(() => (this.showError = true), ERR_TIMEOUT);
+    },
+    embedPdf() {
+      if (!this.source) return;
+      if (this.pdfObject) this.pdfObject.remove();
+      this.createObject();
+    }
   },
   watch: {
     source() {
@@ -108,6 +97,12 @@ export default {
       this.showError = false;
       this.embedPdf();
     }
+  },
+  mounted() {
+    this.embedPdf();
+  },
+  beforeDestroy() {
+    this.pdfObject = null;
   },
   components: { CircularProgress }
 };
