@@ -30,9 +30,14 @@ function getContentInventory(courseId) {
   }).then(res => res.data);
 };
 
+function publishRepositoryMeta(id) {
+  return request.post(`/courses/${id}/publish`).then(res => res.data);
+};
+
 export default {
   getUsers,
   upsertUser,
   removeUser,
-  getContentInventory
+  getContentInventory,
+  publishRepositoryMeta
 };

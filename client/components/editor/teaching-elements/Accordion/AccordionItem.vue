@@ -3,8 +3,8 @@
     <div class="accordion-header">
       <div v-if="!isEditingHeader" @click="toggle" class="contents">
         <span class="title">{{ item.header }}</span>
-        <span @click.stop="editHeader" class="mdi mdi-pencil"></span>
-        <span @click.stop="deleteItem" class="mdi mdi-delete"></span>
+        <span @click.stop="editHeader" class="mdi mdi-pencil edit-header"></span>
+        <span @click.stop="deleteItem" class="mdi mdi-delete delete-item"></span>
       </div>
       <div v-else class="contents">
         <input v-model="header" class="form-control" type="text" placeholder="Header">
@@ -33,7 +33,8 @@
         <add-element
           :include="['HTML', 'IMAGE']"
           :layout="true"
-          @add="addElement">
+          @add="addElement"
+          class="add-element">
         </add-element>
       </div>
     </transition>
@@ -191,5 +192,17 @@ export default {
   height: 0;
   padding-top: 0;
   padding-bottom: 0;
+}
+
+.disabled {
+  .accordion-header {
+    .edit-header, .delete-item {
+      display: none;
+    }
+  }
+
+  .add-element {
+    display: none;
+  }
 }
 </style>

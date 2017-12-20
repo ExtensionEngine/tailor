@@ -5,6 +5,7 @@ const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const processListQuery = require('../shared/util/processListQuery');
+const publishingService = require('../shared/publishing/publishing.service');
 
 function index({ query, user }, res) {
   const opts = processListQuery(query);
@@ -26,7 +27,7 @@ function get(req, res) {
 }
 
 function patch({ body, course, user }, res) {
-  const data = pick(body, ['name', 'description']);
+  const data = pick(body, ['name', 'description', 'data']);
   return course.update(data, { context: { userId: user.id } })
     .then(course => res.json({ data: course }));
 };
@@ -34,6 +35,11 @@ function patch({ body, course, user }, res) {
 function remove({ course, user }, res) {
   return course.destroy({ context: { userId: user.id } })
     .then(() => res.status(204).send());
+};
+
+function publishRepoInfo({ course }, res) {
+  return publishingService.publishRepoDetails(course)
+    .then(data => res.json({ data }));
 };
 
 function getUsers(req, res) {
@@ -93,5 +99,6 @@ module.exports = {
   getUsers,
   upsertUser,
   removeUser,
-  exportContentInventory
+  exportContentInventory,
+  publishRepoInfo
 };

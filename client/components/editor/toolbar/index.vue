@@ -1,6 +1,6 @@
 <template>
-  <div @click="onClick" class="toolbar">
-    <div v-if="focusedElement.type" class="toolbar-container">
+  <div class="toolbar">
+    <div v-if="elementSelected" class="toolbar-container">
       <component
         :is="getComponentName(focusedElement.type)"
         :key="focusedElement._cid || focusedElement.id"
@@ -50,7 +50,10 @@ export default {
   name: 'toolbar',
   computed: {
     ...mapGetters(['focusedElement'], 'editor'),
-    ...mapGetters(['tes'])
+    ...mapGetters(['tes']),
+    elementSelected() {
+      return get(this, 'focusedElement.type');
+    }
   },
   methods: {
     ...mapActions({ removeElement: 'remove' }, 'tes'),
@@ -83,10 +86,6 @@ export default {
     },
     getComponentName(type) {
       return TOOLBAR_TYPES[type] || 'default-toolbar';
-    },
-    onClick(e) {
-      // Attach component data
-      e.component = { name: 'toolbar', data: {} };
     }
   },
   components: {
@@ -105,14 +104,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.toolbar {
-  position: fixed;
+.toolbar-container {
+  position: absolute;
   width: 100%;
   z-index: 999;
-}
-
-.toolbar-container {
-  position: relative;
 }
 
 .delete-element {

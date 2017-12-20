@@ -131,8 +131,8 @@ export default {
 }
 
 .table-toolbar.ql-toolbar.ql-snow {
-  padding: 0 !important;
-  border: none !important;
-  font-family: Catamaran, Helvetica, Arial, sans-serif !important;
+  padding: 0;
+  border: none;
+  font-family: inherit;
 }
 </style>

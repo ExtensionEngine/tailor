@@ -1,4 +1,3 @@
-const fs = require('fs');
 const Joi = require('joi');
 const last = require('lodash/last');
 const path = require('path');
@@ -35,26 +34,19 @@ class Amazon {
     return path.join(localDir, filename);
   }
 
-  static streamToPromise(stream) {
-    return new Promise((resolve, reject) => {
-      stream.on('end', resolve);
-      stream.on('error', reject);
-      stream.resume();
-    });
-  }
-
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
-  loadFile(key, location, options) {
-    const s3Params = Object.assign(options, { Bucket: this.bucket, Key: key });
-    const localPath = Amazon.getLocalPath(key, location);
-
-    const input = this.client.getObject(s3Params).createReadStream();
-    const output = fs.createWriteStream(localPath);
-    input.pipe(output);
-
-    return Amazon
-      .streamToPromise(input)
-      .then(() => output.path);
+  getFile(key, options) {
+    return this.fileExists(key).then(exists => {
+      if (!exists) return null;
+      const s3Params = Object.assign(options, { Bucket: this.bucket, Key: key });
+      const input = this.client.getObject(s3Params).createReadStream();
+      return new Promise((resolve, reject) => {
+        const chunks = [];
+        input.on('end', () => resolve(Buffer.concat(chunks)));
+        input.on('data', data => chunks.push(data));
+        input.on('error', reject);
+      });
+    });
   }
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property

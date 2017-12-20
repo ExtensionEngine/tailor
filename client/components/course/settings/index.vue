@@ -25,9 +25,9 @@
           <button
             @click.stop="showDeleteConfirmation"
             type="button"
-            class="btn btn-danger btn-block btn-delete">
+            class="btn btn-danger btn-material btn-block btn-delete">
             <span class="mdi mdi-delete"></span>
-            Remove course
+            Delete repository
           </button>
         </div>
       </div>
@@ -96,6 +96,7 @@ export default {
   margin-bottom: 2px;
   padding: 10px;
   text-align: left;
+  text-transform: uppercase;
   border: 0;
   cursor: pointer;
 

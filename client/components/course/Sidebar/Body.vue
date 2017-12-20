@@ -1,120 +1,117 @@
 <template>
   <div class="body">
-    <div class="meta-element">
-      <component
-        v-for="data in metadata"
-        :is="tagname(data.type)"
-        :meta="data"
-        :key="`${activity.id}${data.type}`"
-        @update="updateActivity">
-      </component>
+    <div class="publish-container">
+      <div class="publish-date">
+        <circular-progress v-if="publishing"></circular-progress>
+        <span v-else>{{ publishStatus }}</span>
+      </div>
+      <button
+        :disabled="publishing"
+        @click="publish"
+        class="btn btn-primary btn-material">
+        Publish
+      </button>
     </div>
-    <prerequisites v-if="level.hasPrerequisites"></prerequisites>
+    <div class="meta-element">
+      <meta-input
+        v-for="it in metadata"
+        :meta="it"
+        :key="`${activity.id}${it.type}`"
+        @update="updateActivity">
+      </meta-input>
+    </div>
+    <prerequisites v-if="config.hasPrerequisites"></prerequisites>
   </div>
 </template>
 
 <script>
-import Checkbox from './Checkbox';
+import axios from 'client/api/request';
+import CircularProgress from 'components/common/CircularProgress';
 import cloneDeep from 'lodash/cloneDeep';
-import ColorPicker from './ColorPicker/';
+import fecha from 'fecha';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
-import Input from './Input';
 import map from 'lodash/map';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import Meta from 'components/common/Meta';
 import Prerequisites from './Prerequisites';
-import Select from './Select';
-import Switch from './Switch';
-import Textarea from './Textarea';
-
-const META_TYPES = {
-  CHECKBOX: Checkbox,
-  COLOR: ColorPicker,
-  INPUT: Input,
-  SELECT: Select,
-  SWITCH: Switch,
-  TEXTAREA: Textarea
-};
 
 export default {
   data() {
     return {
-      nameInput: '',
-      showNameInput: false
+      publishing: false
     };
   },
   computed: {
     ...mapGetters(['activity'], 'course'),
-    name() {
-      return this.activity.name;
-    },
-    level() {
+    config() {
       return getLevel(this.activity.type) || {};
     },
+    publishStatus() {
+      let { publishedAt } = this.activity;
+      return publishedAt
+        ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
+        : 'Not published';
+    },
     metadata() {
-      if (!get(this.level, 'meta')) return [];
-      return map(this.level.meta, it => {
+      if (!get(this.config, 'meta')) return [];
+      return map(this.config.meta, it => {
         let value = get(this.activity, `data.${it.key}`);
         return { ...it, value };
       });
     }
   },
   methods: {
-    ...mapActions(['remove', 'update'], 'activities'),
-    tagname(type = '') {
-      const component = META_TYPES[type.toUpperCase()] || META_TYPES.INPUT;
-      return component.name;
-    },
+    ...mapActions(['update'], 'activities'),
+    ...mapMutations({ localUpdate: 'save' }, 'activities'),
     updateActivity(key, value) {
       const data = cloneDeep(this.activity.data) || {};
       data[key] = value;
       this.update({ _cid: this.activity._cid, data });
+    },
+    publish() {
+      this.publishing = true;
+      const { id, courseId } = this.activity;
+      const url = `/courses/${courseId}/activities/${id}/publish`;
+      return axios.get(url).then(({ data: { data } }) => {
+        this.localUpdate({ ...this.activity, publishedAt: data.publishedAt });
+        this.publishing = false;
+      });
     }
   },
   components: {
-    [Checkbox.name]: Checkbox,
-    [Input.name]: Input,
-    [Select.name]: Select,
-    [Switch.name]: Switch,
-    [Textarea.name]: Textarea,
-    ColorPicker,
-    Prerequisites
-  },
-  inject: ['$validator']
+    CircularProgress,
+    Prerequisites,
+    MetaInput: Meta
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .body {
+  position: relative;
   padding: 6px;
 }
 
-.title {
-  height: 100px;
-  margin: 5px 3px 5px 0;
-  color: #333;
-  font-size: 17px;
-  font-weight: normal;
-  line-height: 24px;
-  word-wrap: break-word;
-}
+.publish-container {
+  min-height: 70px;
+  padding: 0 10px;
 
-.form-control {
-  font-size: 17px;
-  letter-spacing: 0.1px;
-}
+  .publish-date {
+    width: 170px;
+    line-height: 44px;
+  }
 
-textarea {
-  height: 100px;
-  margin: 5px 0;
-  resize: none;
-}
+  .btn {
+    position: absolute;
+    top: 10px;
+    right: 24px;
+    padding: 6px 6px;
+  }
 
-.help-block {
-  margin-bottom: 0;
-}
-
-label {
-  color: gray;
+  .circular-progress {
+    width: 24px;
+    margin: 0 25px;
+  }
 }
 </style>

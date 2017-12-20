@@ -1,28 +1,35 @@
 <template>
-  <div @mousedown="onMousedown" @click="onClick" class="editor">
-    <circular-progress v-if="showLoader"></circular-progress>
-    <div v-else>
-      <toolbar></toolbar>
-      <div class="container">
-        <div class="breadcrumbs">
-          <span v-for="(item, index) in breadcrumbs" :key="item.id">
-            {{ truncate(item.data.name) }}
-            <span
-              v-if="index !== (breadcrumbs.length - 1)"
-              class="mdi mdi-chevron-right">
+  <div class="editor-wrapper">
+    <toolbar></toolbar>
+    <div @mousedown="onMousedown" @click="onClick" class="editor">
+      <circular-progress v-if="showLoader"></circular-progress>
+      <div v-else>
+        <div class="container">
+          <div class="breadcrumbs">
+            <span v-for="(item, index) in breadcrumbs" :key="item.id">
+              {{ truncate(item.data.name) }}
+              <span
+                v-if="index !== (breadcrumbs.length - 1)"
+                class="mdi mdi-chevron-right">
+              </span>
             </span>
-          </span>
+          </div>
+          <h2>
+            {{ activity.data.name }}
+            <a v-if="previewUrl" :href="previewUrl" class="preview-link" target="_blank">
+              <span class="mdi mdi-eye"></span>
+            </a>
+          </h2>
+          <content-containers
+            v-for="(containerGroup, name) in contentContainers"
+            :key="name"
+            :containerGroup="containerGroup"
+            :parentId="activity.id"
+            v-bind="getContainerConfig(name)">
+          </content-containers>
+          <assessments v-if="showAssessments"></assessments>
+          <exams v-if="showExams"></exams>
         </div>
-        <h2>
-          {{ activity.data.name }}
-          <a v-if="previewUrl" :href="previewUrl" class="preview-link" target="_blank">
-            <span class="mdi mdi-eye"></span>
-          </a>
-        </h2>
-        <introduction v-if="showIntroduction"></introduction>
-        <perspectives v-if="showPerspectives"></perspectives>
-        <assessments v-if="showAssessments"></assessments>
-        <exams v-if="showExams"></exams>
       </div>
     </div>
   </div>
@@ -33,11 +40,10 @@ import * as config from 'shared/activities';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import CircularProgress from 'components/common/CircularProgress';
+import ContentContainers from './structure/ContentContainers';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import format from 'string-template';
-import Introduction from './structure/Introduction';
-import Perspectives from './structure/Perspectives';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
 import truncate from 'truncate';
@@ -52,14 +58,8 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['focusedElement', 'activity'], 'editor'),
+    ...mapGetters(['focusedElement', 'activity', 'contentContainers'], 'editor'),
     ...mapGetters(['course'], 'course'),
-    showIntroduction() {
-      return config.hasIntroduction(this.activity.type);
-    },
-    showPerspectives() {
-      return config.hasPerspectives(this.activity.type);
-    },
     showAssessments() {
       return config.hasAssessments(this.activity.type);
     },
@@ -88,6 +88,10 @@ export default {
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
     ...mapMutations({ setupActivitiesApi: 'setBaseUrl' }, 'activities'),
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
+    getContainerConfig(name) {
+      const type = name.toUpperCase();
+      return find(config.CONTENT_CONTAINERS, { type });
+    },
     truncate(str, len = 50) {
       return truncate(str, len);
     },
@@ -102,9 +106,8 @@ export default {
       this.mousedownCaptured = false;
       if (!this.focusedElement) return;
       if (!e.component ||
-        ((e.component.name !== 'toolbar') &&
         ((e.component.data._cid !== this.focusedElement._cid) &&
-        (e.component.data.id !== this.focusedElement.id)))) {
+        (e.component.data.id !== this.focusedElement.id))) {
         this.focusoutElement();
       }
     }
@@ -127,17 +130,22 @@ export default {
   components: {
     Assessments,
     CircularProgress,
+    ContentContainers,
     Exams,
-    Introduction,
-    Perspectives,
     Toolbar
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.editor-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .editor {
-  min-height: 101%;
+  overflow-y: scroll;
+  overflow-y: overlay;
 
   .breadcrumbs {
     margin: 70px 0 10px;

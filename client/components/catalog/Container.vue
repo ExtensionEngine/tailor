@@ -90,15 +90,15 @@ export default {
 
 <style lang="scss" scoped>
 .catalog {
-  padding: 20px 100px 100px;
+  padding: 30px 100px 100px;
 
   @media (min-width: 1700px) {
-    padding: 20px 300px 100px;
+    padding: 30px 300px 100px;
   }
 }
 
 .search-spinner {
-  margin-top: 48px;
+  margin-top: 80px;
 }
 
 .spinner, .no-results {

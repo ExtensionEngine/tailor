@@ -4,14 +4,14 @@
       <div v-if="summative">
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
-        <div v-if="exam" class="select-leaf">
+        <div v-if="exam && examObjectives.length" class="select-leaf">
           <multiselect
             :value="objective"
             :options="examObjectives"
             :searchable="true"
             :disabled="!isEditing || !examObjectives.length"
             :trackBy="'id'"
-            :label="'name'"
+            :customLabel="it => it.data ? it.data.name : ''"
             :placeholder="placeholder"
             :showReset="isEditing"
             @input="onObjectiveSelected">
@@ -59,7 +59,8 @@
         @cancel="cancel"
         @save="save"
         @remove="remove"
-        @edit="edit">
+        @edit="edit"
+        class="controls">
       </controls>
     </div>
   </div>
@@ -134,6 +135,7 @@ export default {
       return !this.summative && feedbackSupported;
     },
     examObjectives() {
+      if (!this.exam) return [];
       return this.getExamObjectives(this.exam);
     },
     placeholder() {
@@ -180,9 +182,9 @@ export default {
           let data = this.summative ? this.element : this.element.data;
           data = cloneDeep(data);
           if (this.objective) {
-            set(data, '_refs.objectiveId', this.objective.id);
+            set(data, 'refs.objectiveId', this.objective.id);
           } else {
-            unset(data, '_refs.objectiveId');
+            unset(data, 'refs.objectiveId');
           }
           this.$emit('save', data);
           this.isEditing = false;
@@ -191,7 +193,7 @@ export default {
         .catch(err => (this.errors = errorProcessor(err)));
     },
     cancel() {
-      if (!this.element.id) {
+      if (!this.previousVersion) {
         this.$emit('remove');
       } else {
         this.addElement(cloneDeep(this.previousVersion));
@@ -212,7 +214,7 @@ export default {
       this.$emit('remove');
     },
     setObjective() {
-      const objectiveId = get(this.element, 'data._refs.objectiveId');
+      const objectiveId = get(this.element, 'refs.objectiveId');
       if (!objectiveId) return;
       this.objective = find(this.examObjectives, { id: objectiveId });
     },
@@ -293,6 +295,10 @@ export default {
       float: right;
     }
   }
+}
+
+.disabled .controls {
+  display: none;
 }
 </style>
 

@@ -23,7 +23,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import './assets/stylesheets/main';
+@import '~assets/stylesheets/main';
 
 html, body {
   width: 100%;
@@ -36,7 +36,7 @@ body {
 
 #app {
   height: 100%;
-  padding-top: 55px;
+  padding-top: 64px;
   color: rgba(0,0,0,0.87);
   font-family: 'Catamaran', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

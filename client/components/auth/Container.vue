@@ -2,7 +2,7 @@
   <div class="auth-container">
     <div class="auth-panel">
       <div class="auth-header">
-        <img src="../../assets/img/logo-a.svg" alt="Logo"/>
+        <img :src="logo" alt="Logo"/>
         <h1>Course Authoring</h1>
       </div>
       <div class="auth-body">
@@ -11,6 +11,16 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      logo: BRAND_CONFIG.LOGO_FULL
+    };
+  }
+};
+</script>
 
 <style lang="scss">
 .auth-container {
@@ -42,7 +52,7 @@
 
   .auth-header {
     padding-bottom: 15px;
-    background: linear-gradient(90deg, #672d89 60%, #b94164);
+    background: linear-gradient(90deg, $brandColor 60%, $altBrandColor);
   }
 
   .auth-body {
