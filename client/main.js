@@ -1,4 +1,6 @@
 import 'babel-polyfill';
+import 'dom-shims/shim/Element.classList';
+import 'dom-shims/shim/Element.mutation';
 
 import VeeValidate from './utils/validation';
 import Vue from 'vue';
