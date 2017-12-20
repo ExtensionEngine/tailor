@@ -10,8 +10,6 @@
         v-bind="graphOptions"
         :data="graphData"
         @node:select="onNodeSelect"
-        @node:focus="(_, activity) => (focusedActivity = activity)"
-        @node:focusout="() => (focusedActivity = null)"
         class="tree">
       </tree-graph>
       <sidebar></sidebar>
@@ -45,8 +43,7 @@ export default {
   data() {
     return {
       graphOptions,
-      selectedNode: null,
-      focusedActivity: null
+      selectedNode: null
     };
   },
   computed: {

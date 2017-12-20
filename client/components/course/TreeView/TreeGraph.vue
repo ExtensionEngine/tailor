@@ -11,8 +11,7 @@ import { hierarchy, tree } from 'd3-hierarchy';
 import range from 'lodash/range';
 import { zoom } from 'd3-zoom';
 
-const isEmpty = tree => !tree.children || !tree.children.length;
-const clear = el => (el.innerHTML = '');
+const hasNodes = tree => !tree.children || !tree.children.length;
 const line = require('d3-shape').line();
 
 const isNativeEvent = (e, type) => get(e.sourceEvent, 'type') === type;
@@ -52,7 +51,7 @@ export default {
   },
   computed: {
     nodes() {
-      if (isEmpty(this.data)) return;
+      if (hasNodes(this.data)) return;
       const nodes = hierarchy(this.data);
       const { width, height } = this.nodeSize;
       const treemap = tree().nodeSize([width, height]);
@@ -121,7 +120,7 @@ export default {
       this.setScale(svg, graphRect);
 
       // Append graph to root element.
-      clear(this.$el);
+      this.$el.innerHTML = '';
       return this.$el.appendChild(svg.node());
     },
     renderLinks(data, graph) {
