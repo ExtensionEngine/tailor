@@ -26,6 +26,7 @@ import get from 'lodash/get';
 import ImageToolbar from './ImageToolbar';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ModalToolbar from './ModalToolbar';
+import PdfToolbar from './PdfToolbar';
 import QuillToolbar from './QuillToolbar';
 import TableToolbar from './TableToolbar';
 import VideoToolbar from './VideoToolbar';
@@ -41,6 +42,7 @@ const TOOLBAR_TYPES = {
   CAROUSEL: 'carousel-toolbar',
   MODAL: 'modal-toolbar',
   TABLE: 'table-toolbar',
+  PDF: 'pdf-toolbar',
   'TABLE-CELL': 'table-toolbar'
 };
 
@@ -93,6 +95,7 @@ export default {
     EmbedToolbar,
     ImageToolbar,
     ModalToolbar,
+    PdfToolbar,
     QuillToolbar,
     TableToolbar,
     VideoToolbar
