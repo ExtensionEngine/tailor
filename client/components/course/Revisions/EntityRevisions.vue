@@ -27,7 +27,6 @@ import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
-import Loader from 'components/common/Loader';
 import Promise from 'bluebird';
 import TeachingElement from 'components/editor/teaching-elements';
 
@@ -94,7 +93,7 @@ export default {
     this.previewRevision(this.revision);
     Promise.delay(700).then(() => (this.expanded = true));
   },
-  components: { EntitySidebar, Loader, TeachingElement }
+  components: { EntitySidebar, TeachingElement }
 };
 </script>
 

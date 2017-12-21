@@ -4,6 +4,10 @@
     id="quillToolbar"
     class="quill-toolbar">
     <span class="ql-formats">
+      <button class="ql-undo"><span class="icon mdi mdi-undo"></span></button>
+      <button class="ql-redo"><span class="icon mdi mdi-redo"></span></button>
+    </span>
+    <span class="ql-formats">
       <select class="ql-font"></select>
       <select class="ql-header"></select>
     </span>
@@ -98,6 +102,13 @@ export default {
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
   text-align: left;
+
+  .icon {
+    display: inline-block;
+    font-size: 16px;
+    line-height: 16px;
+    vertical-align: middle;
+  }
 }
 
 .quill-toolbar.ql-toolbar {
