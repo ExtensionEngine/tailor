@@ -24,11 +24,25 @@ function publishActivity(activity) {
   });
 }
 
+function updateRepositoryCatalog(repository) {
+  return storage.getFile('repository/index.json').then(buffer => {
+    let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
+    let existing = find(catalog, { id: repository.id });
+    if (existing) {
+      Object.assign(existing, pick(['name', 'description']));
+    } else {
+      catalog.push(pick(repository, ['id', 'name', 'description']));
+    }
+    const data = Buffer.from(JSON.stringify(catalog), 'utf8');
+    return storage.saveFile('repository/index.json', data);
+  });
+}
+
 function publishRepositoryDetails(repository) {
   return repository.getPublishedStructure().then(spine => {
     Object.assign(spine, pick(repository, ['name', 'description', 'data']));
     renameKey(spine, 'data', 'meta');
-    return saveSpine(spine);
+    return saveSpine(spine).then(() => updateRepositoryCatalog(repository));
   });
 }
 
@@ -52,8 +66,12 @@ function unpublishActivity(repository, activity) {
 
 function getStructureData(activity) {
   const repoData = activity.getCourse().then(repository => {
-    return repository.getPublishedStructure()
-      .then(spine => ({ repository, spine }));
+    return repository.getPublishedStructure().then(spine => {
+      const updateCatalog = spine.structure.length
+        ? Promise.resolve()
+        : updateRepositoryCatalog(repository);
+      return updateCatalog.then(() => ({ repository, spine }));
+    });
   });
   return Promise.all([repoData, activity.predecessors()])
     .spread((repoData, predecessors) => Object.assign(repoData, { predecessors }));
