@@ -7,6 +7,7 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const storage = require('../storage');
+const { TeachingElement } = require('../database');
 
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
@@ -130,17 +131,22 @@ function fetchExams(parent) {
     }));
 }
 
-function fetchQuestionGroups(exam) {
-  return exam.getChildren().then(groups => {
-    let attributes = ['id', 'type', 'position', 'data', 'createdAt', 'updatedAt'];
-    return Promise.map(groups, group => {
-      return group.getTeachingElements({ attributes }).then(elements => ({
-        ...pick(group, ['id', 'position', 'data', 'createdAt']),
-        elements
-      }));
-    });
-  })
-  .then(groups => ({ exam, groups }));
+async function fetchQuestionGroups(exam) {
+  // TODO: Name relationship in order to avoid PascalCase
+  const groups = await exam.getChildren({
+    include: [{
+      model: TeachingElement,
+      attributes: ['id', 'type', 'position', 'data', 'createdAt', 'updatedAt']
+    }]
+  });
+  return {
+    exam,
+    groups: map(groups, it => ({
+      ...pick(it, ['id', 'position', 'data', 'createdAt']),
+      intro: filter(it.TeachingElements, it => it.type !== 'ASSESSMENT'),
+      assessments: filter(it.TeachingElements, { type: 'ASSESSMENT' })
+    }))
+  };
 }
 
 function saveFile(parent, key, data) {
