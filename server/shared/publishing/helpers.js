@@ -126,7 +126,7 @@ function fetchExams(parent) {
   return parent.getChildren({ where: { type: 'EXAM' } })
     .then(exams => Promise.map(exams, fetchQuestionGroups))
     .then(exams => map(exams, ({ exam, groups }) => {
-      const attrs = ['id', 'parentId', 'createdAt', 'updatedAt'];
+      const attrs = ['id', 'type', 'parentId', 'createdAt', 'updatedAt'];
       return { ...pick(exam, attrs), groups };
     }));
 }
@@ -142,7 +142,7 @@ async function fetchQuestionGroups(exam) {
   return {
     exam,
     groups: map(groups, it => ({
-      ...pick(it, ['id', 'position', 'data', 'createdAt']),
+      ...pick(it, ['id', 'type', 'position', 'data', 'createdAt']),
       intro: filter(it.TeachingElements, it => it.type !== 'ASSESSMENT'),
       assessments: filter(it.TeachingElements, { type: 'ASSESSMENT' })
     }))
