@@ -126,7 +126,9 @@ function fetchExams(parent) {
   return parent.getChildren({ where: { type: 'EXAM' } })
     .then(exams => Promise.map(exams, fetchQuestionGroups))
     .then(exams => map(exams, ({ exam, groups }) => {
-      const attrs = ['id', 'type', 'parentId', 'createdAt', 'updatedAt'];
+      const attrs = [
+        'id', 'type', 'position', 'parentId', 'createdAt', 'updatedAt'
+      ];
       return { ...pick(exam, attrs), groups };
     }));
 }
