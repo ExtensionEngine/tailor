@@ -11,7 +11,8 @@
         v-for="(it, index) in list"
         :key="it._cid || it.id"
         @dragstart="dragElementIndex = index"
-        @dragend="dragElementIndex = -1">
+        @dragend="dragElementIndex = -1"
+        class="col-xs-12">
         <slot
           name="list-item"
           :item="it"
