@@ -3,6 +3,7 @@ const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
 const get = require('lodash/get');
 const map = require('lodash/map');
+const omit = require('lodash/omit');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
@@ -29,10 +30,12 @@ function updateRepositoryCatalog(repository) {
   return storage.getFile('repository/index.json').then(buffer => {
     let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
     let existing = find(catalog, { id: repository.id });
+    let repositoryData = ['id', 'name', 'description', 'data'];
+    renameKey(repositoryData, 'data', 'meta');
     if (existing) {
-      Object.assign(existing, pick(['name', 'description']));
+      Object.assign(existing, omit(repositoryData, ['id']));
     } else {
-      catalog.push(pick(repository, ['id', 'name', 'description']));
+      catalog.push(repositoryData);
     }
     const data = Buffer.from(JSON.stringify(catalog), 'utf8');
     return storage.saveFile('repository/index.json', data);
