@@ -67,6 +67,7 @@ export default {
 
 
 <style lang="scss" scoped>
+// TODO: Find proper way to handle this
 // DO NOT REMOVE! Makes sure vuedraggable detects correct scrollable parent
 .list-group {
   padding: 10px 15px;
