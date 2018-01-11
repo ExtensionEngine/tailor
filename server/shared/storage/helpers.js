@@ -62,7 +62,7 @@ processor.IMAGE = (asset, courseId) => {
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
   const hashString = `${asset.id}${file}`;
   const hash = crypto.createHash('md5').update(hashString).digest('hex');
-  const key = `course/${courseId}/asset/${asset.id}/${hash}.${extension}`;
+  const key = `repository/${courseId}/asset/${asset.id}/${hash}.${extension}`;
   asset.data.url = key;
   return saveFile(key, file).then(() => asset);
 };
