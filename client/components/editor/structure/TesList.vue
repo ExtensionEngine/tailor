@@ -12,9 +12,10 @@
         :key="it._cid || it.id"
         @dragstart="dragElementIndex = index"
         @dragend="dragElementIndex = -1"
-        class="list-item">
+        :class="`col-xs-${it.data.width}`">
         <slot
           name="list-item"
+          :setWidth="false"
           :item="it"
           :dragged="dragElementIndex === index">
         </slot>
@@ -52,8 +53,8 @@ export default {
     options() {
       return Object.assign(this.dragOptions, {
         handle: '.drag-handle',
-        scrollSpeed: 25,
-        scrollSensitivity: 150
+        scrollSpeed: 15,
+        scrollSensitivity: 125
       });
     },
     nextPosition() {
@@ -67,11 +68,6 @@ export default {
 
 
 <style lang="scss" scoped>
-.list-item {
-  width: 100%;
-  float: left;
-}
-
 // TODO: Find proper way to handle this
 // DO NOT REMOVE! Makes sure vuedraggable detects correct scrollable parent
 .list-group {
