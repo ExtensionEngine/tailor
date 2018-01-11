@@ -2,7 +2,7 @@
   <div class="list-group">
     <draggable
       :list="list"
-      :options="dragOptions"
+      :options="options"
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
       @update="$emit('update', $event)"
@@ -39,10 +39,7 @@ import last from 'lodash/last';
 export default {
   props: {
     list: { type: Array, default() { return []; } },
-    dragOptions: {
-      type: Object,
-      default() { return { handle: '.drag-handle' }; }
-    },
+    dragOptions: { type: Object, default() { return {}; } },
     enableAdd: { type: Boolean, default: true },
     types: { type: Array, required: false },
     activity: { type: Object, required: true },
@@ -52,6 +49,13 @@ export default {
     return { dragElementIndex: null };
   },
   computed: {
+    options() {
+      return Object.assign(this.dragOptions, {
+        handle: '.drag-handle',
+        scrollSpeed: 25,
+        scrollSensitivity: 150
+      });
+    },
     nextPosition() {
       const lastItem = last(this.list);
       return lastItem ? lastItem.position + 1 : 1;
@@ -60,3 +64,11 @@ export default {
   components: { AddElement, Draggable }
 };
 </script>
+
+
+<style lang="scss" scoped>
+// DO NOT REMOVE! Makes sure vuedraggable detects correct scrollable parent
+.list-group {
+  padding: 10px 15px;
+}
+</style>
