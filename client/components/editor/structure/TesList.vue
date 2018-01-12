@@ -10,13 +10,13 @@
       <div
         v-for="(it, index) in list"
         :key="it._cid || it.id"
+        :class="`col-xs-${it.data.width}`"
         @dragstart="dragElementIndex = index"
-        @dragend="dragElementIndex = -1"
-        :class="`col-xs-${it.data.width}`">
+        @dragend="dragElementIndex = -1">
         <slot
           name="list-item"
-          :setWidth="false"
           :item="it"
+          :setWidth="false"
           :dragged="dragElementIndex === index">
         </slot>
       </div>
