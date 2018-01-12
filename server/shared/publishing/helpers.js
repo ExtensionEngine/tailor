@@ -30,8 +30,7 @@ function updateRepositoryCatalog(repository) {
   return storage.getFile('repository/index.json').then(buffer => {
     let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
     let existing = find(catalog, { id: repository.id });
-    let repositoryData = ['id', 'name', 'description', 'data'];
-    renameKey(repositoryData, 'data', 'meta');
+    let repositoryData = pick(repository, ['id', 'name', 'description']);
     if (existing) {
       Object.assign(existing, omit(repositoryData, ['id']));
     } else {
