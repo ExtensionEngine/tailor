@@ -43,8 +43,9 @@ function updateRepositoryCatalog(repository) {
 
 function publishRepositoryDetails(repository) {
   return repository.getPublishedStructure().then(spine => {
-    Object.assign(spine, pick(repository, ['name', 'description', 'data']));
-    renameKey(spine, 'data', 'meta');
+    let repoDetails = pick(repository, ['name', 'description', 'data']);
+    renameKey(repoDetails, 'data', 'meta');
+    Object.assign(spine, repoDetails);
     return saveSpine(spine).then(() => updateRepositoryCatalog(repository));
   });
 }
