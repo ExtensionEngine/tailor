@@ -6,7 +6,8 @@ class Comment extends Model {
     return {
       content: {
         type: TEXT,
-        validate: { allowNull: false, len: [1, 2000] }
+        allowNull: false,
+        validate: { len: [1, 2000] }
       },
       createdAt: {
         type: DATE,
