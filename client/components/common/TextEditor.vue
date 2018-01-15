@@ -1,7 +1,7 @@
 <template>
   <div :class="{ preview }" class="form-group text-editor">
     <textarea
-      v-model="content"
+      v-model.trim="content"
       v-focus.lazy="focused"
       :placeholder="placeholder"
       @keydown.enter="onEnter"
