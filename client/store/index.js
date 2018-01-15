@@ -4,6 +4,7 @@ import createLogger from 'vuex/dist/logger';
 
 import activities from './modules/activities';
 import auth from './modules/auth';
+import comments from './modules/comments';
 import course from './modules/course';
 import courses from './modules/courses';
 import editor from './modules/editor';
@@ -21,6 +22,7 @@ const middlewares = settings.debug.state && isDevEnv ? [createLogger()] : [];
 const modules = {
   activities,
   auth,
+  comments,
   course,
   courses,
   editor,

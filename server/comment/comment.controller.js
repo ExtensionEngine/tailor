@@ -10,7 +10,7 @@ function sanitizeDeleted(comments) {
 }
 
 function list({ activity, opts }, res) {
-  const include = [{ model: User, attributes: ['email'] }];
+  const include = [{ model: User, attributes: ['id', 'email'] }];
   return activity.getComments({ ...opts, include })
     .then(sanitizeDeleted)
     .then(data => res.json({ data }));

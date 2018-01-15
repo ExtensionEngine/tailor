@@ -25,7 +25,7 @@ router
   .delete(canEdit, ctrl.remove);
 
 function getComment(req, res) {
-  const include = [{ model: User, attributes: ['email'] }];
+  const include = [{ model: User, attributes: ['id', 'email'] }];
   return Comment.findById(req.params.commentId, { paranoid: false, include })
     .then(comment => comment || createError(NOT_FOUND, 'Comment not found'))
     .then(comment => {
