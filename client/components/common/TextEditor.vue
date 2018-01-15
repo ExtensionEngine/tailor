@@ -4,7 +4,8 @@
       v-model.trim="content"
       v-focus.lazy="focused"
       :placeholder="placeholder"
-      @keydown.enter="onEnter"
+      @keydown.shift.enter.exact="() => {}"
+      @keydown.enter.exact.prevent="onEnter"
       @blur="onBlur"
       @input="$emit('input', content)"
       class="form-control">
@@ -31,8 +32,6 @@ export default {
   },
   methods: {
     onEnter(e) {
-      if (e.shiftKey) return;
-      e.preventDefault();
       this.$emit('change', this.content);
     },
     onBlur(e, content) {
