@@ -12,6 +12,29 @@
         </span>
       </div>
     </div>
+    <div v-else class="toolbar-container editor-toolbar">
+      <div class="toolbar-btn">
+        <span class="mdi mdi-arrow-left"></span>
+      </div>
+      <div class="toolbar-btn btn-alt">
+        <span class="mdi mdi-eye"></span>
+      </div>
+      <div class="toolbar-btn btn-alt">
+        <span class="mdi mdi-publish"></span>
+      </div>
+      <div class="editor-heading">
+        <h1>{{ activity.data.name }}</h1>
+        <div class="breadcrumbs">
+          <span v-for="(item, index) in breadcrumbs" :key="item.id">
+            {{ truncate(item.data.name) }}
+            <span
+              v-if="index !== (breadcrumbs.length - 1)"
+              class="mdi mdi-chevron-right">
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -29,6 +52,7 @@ import ModalToolbar from './ModalToolbar';
 import PdfToolbar from './PdfToolbar';
 import QuillToolbar from './QuillToolbar';
 import TableToolbar from './TableToolbar';
+import truncate from 'truncate';
 import VideoToolbar from './VideoToolbar';
 
 const appChannel = EventBus.channel('app');
@@ -49,10 +73,19 @@ const TOOLBAR_TYPES = {
 export default {
   name: 'toolbar',
   computed: {
-    ...mapGetters(['focusedElement'], 'editor'),
-    ...mapGetters(['tes']),
+    ...mapGetters(['focusedElement', 'activity'], 'editor'),
+    ...mapGetters(['tes', 'activities']),
     elementSelected() {
       return get(this, 'focusedElement.type');
+    },
+    breadcrumbs() {
+      let items = [];
+      let item = this.activity;
+      while (item) {
+        item = find(this.activities, { id: item.parentId });
+        if (item) items.unshift(item);
+      };
+      return items;
     }
   },
   methods: {
@@ -86,6 +119,9 @@ export default {
     },
     getComponentName(type) {
       return TOOLBAR_TYPES[type] || 'default-toolbar';
+    },
+    truncate(str, len = 50) {
+      return truncate(str, len);
     }
   },
   components: {
@@ -120,6 +156,62 @@ export default {
     font-size: 26px;
     line-height: 48px;
     vertical-align: middle;
+  }
+}
+
+.editor-toolbar {
+  display: flex;
+  height: 52px;
+  background-color: white;
+
+  .editor-heading {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 30px 0 20px;
+  }
+
+  h1 {
+    width: 100%;
+    margin: 0 0 3px 0;
+    font-size: 18px;
+    text-align: left;
+    color: #555;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .breadcrumbs {
+    display: inline-block;
+    width: 100%;
+    font-size: 12px;
+    text-align: left;
+  }
+}
+
+.toolbar-btn {
+  flex-basis: 0;
+  background-color: #144ACC;
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken(#144ACC, 10%);
+  }
+
+  .mdi {
+    display: inline-block;
+    padding: 4px 20px 1px;
+    font-size: 30px;
+    color: white;
+  }
+}
+
+.toolbar-btn.btn-alt {
+  background-color: #2F73E9;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+
+  &:hover {
+    background-color: darken(#2F73E9, 10%);
   }
 }
 </style>

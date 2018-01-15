@@ -5,21 +5,6 @@
       <circular-progress v-if="showLoader"></circular-progress>
       <div v-else>
         <div class="container">
-          <div class="breadcrumbs">
-            <span v-for="(item, index) in breadcrumbs" :key="item.id">
-              {{ truncate(item.data.name) }}
-              <span
-                v-if="index !== (breadcrumbs.length - 1)"
-                class="mdi mdi-chevron-right">
-              </span>
-            </span>
-          </div>
-          <h2>
-            {{ activity.data.name }}
-            <a v-if="previewUrl" :href="previewUrl" class="preview-link" target="_blank">
-              <span class="mdi mdi-eye"></span>
-            </a>
-          </h2>
           <content-containers
             v-for="(containerGroup, name) in contentContainers"
             :key="name"
