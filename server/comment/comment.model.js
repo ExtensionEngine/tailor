@@ -36,7 +36,6 @@ class Comment extends Model {
   static options() {
     return {
       modelName: 'comment',
-      underscored: true,
       timestamps: true,
       paranoid: true,
       freezeTableName: true
