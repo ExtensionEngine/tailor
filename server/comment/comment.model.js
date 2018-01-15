@@ -29,7 +29,8 @@ class Comment extends Model {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
     this.belongsTo(User, {
-      foreignKey: { name: 'userId', field: 'user_id' }
+      as: 'author',
+      foreignKey: { name: 'authorId', field: 'author_id' }
     });
   }
 

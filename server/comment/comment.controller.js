@@ -10,7 +10,7 @@ function sanitizeDeleted(comments) {
 }
 
 function list({ activity, opts }, res) {
-  const include = [{ model: User, attributes: ['id', 'email'] }];
+  const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
   return activity.getComments({ ...opts, include })
     .then(sanitizeDeleted)
     .then(data => res.json({ data }));
@@ -23,8 +23,8 @@ function show({ comment }, res) {
 function create({ body, params, user }, res) {
   const { content } = body;
   const { activityId } = params;
-  const userId = user.id;
-  return Comment.create({ content, activityId, userId })
+  const authorId = user.id;
+  return Comment.create({ content, activityId, authorId })
     .then(comment => res.json({ data: comment }));
 }
 

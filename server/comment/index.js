@@ -25,7 +25,7 @@ router
   .delete(canEdit, ctrl.remove);
 
 function getComment(req, res) {
-  const include = [{ model: User, attributes: ['id', 'email'] }];
+  const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
   return Comment.findById(req.params.commentId, { paranoid: false, include })
     .then(comment => comment || createError(NOT_FOUND, 'Comment not found'))
     .then(comment => {
@@ -35,7 +35,7 @@ function getComment(req, res) {
 }
 
 function canEdit({ user, comment }) {
-  if (user.id !== comment.userId) return createError(FORBIDDEN, 'Forbidden');
+  if (user.id !== comment.authorId) return createError(FORBIDDEN, 'Forbidden');
   return Promise.resolve('next');
 }
 
