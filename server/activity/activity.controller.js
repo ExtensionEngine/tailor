@@ -1,6 +1,5 @@
 const { Activity } = require('../shared/database');
 const pick = require('lodash/pick');
-const processQuery = require('../shared/util/processListQuery');
 const publishingService = require('../shared/publishing/publishing.service');
 
 function create({ body, params, user }, res) {
@@ -19,8 +18,7 @@ function patch({ activity, body, user }, res) {
     .then(data => res.json({ data }));
 }
 
-function list({ course, query }, res) {
-  const opts = processQuery(query.integration ? query : { sortBy: 'position' });
+function list({ course, query, opts }, res) {
   if (!query.detached) opts.where.$and = [{ detached: false }];
   return course.getActivities(opts).then(data => res.json({ data }));
 }

@@ -4,11 +4,9 @@ const { createContentInventory } = require('../integrations/knewton');
 const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
-const processListQuery = require('../shared/util/processListQuery');
 const publishingService = require('../shared/publishing/publishing.service');
 
-function index({ query, user }, res) {
-  const opts = processListQuery(query);
+function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { $iLike: `%${query.search}%` };
   const courses = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return courses.then(data => res.json({ data }));
