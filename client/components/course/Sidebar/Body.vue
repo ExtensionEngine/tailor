@@ -22,7 +22,6 @@
     </div>
     <prerequisites v-if="config.hasPrerequisites"></prerequisites>
     <discussion
-      sort="asc"
       editor-position="bottom"
       class="discussion">
     </discussion>
