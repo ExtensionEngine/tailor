@@ -21,7 +21,7 @@ Vue.use(VeeValidate, {
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {
-    'en-US': require('vue-timeago/locales/en-US.json')
+    'en-US': require('assets/locales/timeago-en-US-short.json')
   }
 });
 
