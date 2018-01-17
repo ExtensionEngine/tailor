@@ -1,4 +1,5 @@
 import filter from 'lodash/filter';
+import Vue from 'vue';
 import VuexCollection from '../helpers/collection';
 
 const { action, getter, state, mutation, build } = new VuexCollection('comments');
@@ -19,7 +20,7 @@ getter(function commentsCount() {
 
 getter(function commentsFetched() {
   const activityId = this.rootGetters['course/activity'].id;
-  return this.state.commentsFetched[activityId];
+  return !!this.state.commentsFetched[activityId];
 });
 
 action(function fetch() {
@@ -42,7 +43,7 @@ mutation(function setCourseId(courseId) {
 });
 
 mutation(function setCommentsFetched(activityId) {
-  this.state.commentsFetched[activityId] = true;
+  Vue.set(this.state.commentsFetched, activityId, true);
 });
 
 export default build();
