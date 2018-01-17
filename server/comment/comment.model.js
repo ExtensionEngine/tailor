@@ -24,9 +24,12 @@ class Comment extends Model {
     };
   }
 
-  static associate({ User, Activity }) {
+  static associate({ Activity, Course, User }) {
     this.belongsTo(Activity, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
+    });
+    this.belongsTo(Course, {
+      foreignKey: { name: 'courseId', field: 'course_id' }
     });
     this.belongsTo(User, {
       as: 'author',

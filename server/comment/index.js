@@ -12,6 +12,8 @@ const defaultListQuery = {
   paranoid: false
 };
 
+router.get('/courses/:courseId/comments', ctrl.listByCourse);
+
 router
   .route('/courses/:courseId/activities/:activityId/comments')
   .get(processQuery(defaultListQuery), ctrl.list)

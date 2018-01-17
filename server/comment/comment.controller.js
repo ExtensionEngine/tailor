@@ -9,6 +9,13 @@ function sanitizeDeleted(comments) {
   });
 }
 
+function listByCourse({ course }, res) {
+  const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
+  course.getComments({ include })
+    .then(sanitizeDeleted)
+    .then(data => res.json({ data }));
+}
+
 function list({ activity, opts }, res) {
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
   return activity.getComments({ ...opts, include })
@@ -23,8 +30,9 @@ function show({ comment }, res) {
 function create({ body, params, user }, res) {
   const { content } = body;
   const { activityId } = params;
+  const { courseId } = params;
   const authorId = user.id;
-  return Comment.create({ content, activityId, authorId })
+  return Comment.create({ content, activityId, courseId, authorId })
     .then(comment => res.json({ data: comment }));
 }
 
@@ -40,6 +48,7 @@ function remove({ comment }, res) {
 }
 
 module.exports = {
+  listByCourse,
   list,
   show,
   create,
