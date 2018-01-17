@@ -137,19 +137,24 @@ function fetchExams(parent) {
 }
 
 async function fetchQuestionGroups(exam) {
-  // TODO: Name relationship in order to avoid PascalCase
   const groups = await exam.getChildren({
     include: [{
       model: TeachingElement,
-      attributes: ['id', 'type', 'position', 'data', 'createdAt', 'updatedAt']
+      attributes: [
+        'id', 'type', 'position', 'data', 'refs', 'createdAt', 'updatedAt'
+      ]
     }]
   });
+  // TODO: Name relationship in order to avoid PascalCase
   return {
     exam,
-    groups: map(groups, it => ({
-      ...pick(it, ['id', 'type', 'position', 'data', 'createdAt']),
-      intro: filter(it.TeachingElements, it => it.type !== 'ASSESSMENT'),
-      assessments: filter(it.TeachingElements, { type: 'ASSESSMENT' })
+    groups: map(groups, group => ({
+      ...pick(group, ['id', 'type', 'position', 'data', 'createdAt']),
+      intro: map(
+        filter(group.TeachingElements, it => it.type !== 'ASSESSMENT'),
+        it => pick(it, ['id', 'type', 'position', 'data', 'createdAt', 'updatedAt'])
+      ),
+      assessments: filter(group.TeachingElements, { type: 'ASSESSMENT' })
     }))
   };
 }
