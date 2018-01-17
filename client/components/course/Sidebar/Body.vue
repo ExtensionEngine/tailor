@@ -7,7 +7,7 @@
       </div>
       <button
         :disabled="publishing"
-        @click="publish"
+        @click="publishActivity"
         class="btn btn-primary btn-material">
         Publish
       </button>
@@ -25,14 +25,13 @@
 </template>
 
 <script>
-import axios from 'client/api/request';
 import CircularProgress from 'components/common/CircularProgress';
 import cloneDeep from 'lodash/cloneDeep';
 import fecha from 'fecha';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import Meta from 'components/common/Meta';
 import Prerequisites from './Prerequisites';
 
@@ -62,21 +61,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update'], 'activities'),
-    ...mapMutations({ localUpdate: 'save' }, 'activities'),
+    ...mapActions(['update', 'publish'], 'activities'),
     updateActivity(key, value) {
       const data = cloneDeep(this.activity.data) || {};
       data[key] = value;
       this.update({ _cid: this.activity._cid, data });
     },
-    publish() {
+    publishActivity() {
       this.publishing = true;
-      const { id, courseId } = this.activity;
-      const url = `/courses/${courseId}/activities/${id}/publish`;
-      return axios.get(url).then(({ data: { data } }) => {
-        this.localUpdate({ ...this.activity, publishedAt: data.publishedAt });
-        this.publishing = false;
-      });
+      this.publish(this.activity).then(() => (this.publishing = false));
     }
   },
   components: {

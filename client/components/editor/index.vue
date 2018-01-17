@@ -28,7 +28,6 @@ import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
-import format from 'string-template';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
 import truncate from 'truncate';
@@ -50,20 +49,6 @@ export default {
     },
     showExams() {
       return config.hasExams(this.activity.type);
-    },
-    breadcrumbs() {
-      let items = [];
-      let item = this.activity;
-      while (item) {
-        item = find(this.activities, { id: item.parentId });
-        if (item) items.unshift(item);
-      };
-      return items;
-    },
-    previewUrl() {
-      if (!config.PREVIEW_URL) return;
-      const { courseId, activityId } = this.$route.params;
-      return format(config.PREVIEW_URL, { courseId, activityId });
     }
   },
   methods: {

@@ -13,17 +13,28 @@
       </div>
     </div>
     <div v-else class="toolbar-container editor-toolbar">
-      <div class="toolbar-btn">
+      <router-link
+        :to="{ name: 'course', params: { courseId: activity.courseId } }"
+        class="toolbar-btn">
         <span class="mdi mdi-arrow-left"></span>
-      </div>
-      <div class="toolbar-btn btn-alt">
+      </router-link>
+      <a
+        v-if="previewUrl"
+        :href="previewUrl"
+        class="toolbar-btn btn-alt"
+        target="_blank">
         <span class="mdi mdi-eye"></span>
-      </div>
-      <div class="toolbar-btn btn-alt">
+      </a>
+      <div
+        :class="{ disabled: publishing }"
+        @click="publishActivity"
+        class="toolbar-btn btn-alt">
         <span class="mdi mdi-publish"></span>
       </div>
       <div class="editor-heading">
-        <h1>{{ activity.data.name }}</h1>
+        <h1 :style="{ 'margin-top': breadcrumbs.length ? 0 : '10px' }">
+          {{ activity.data.name }}
+        </h1>
         <div class="breadcrumbs">
           <span v-for="(item, index) in breadcrumbs" :key="item.id">
             {{ truncate(item.data.name) }}
@@ -39,12 +50,14 @@
 </template>
 
 <script>
+import * as config from 'shared/activities';
 import AccordionToolbar from './AccordionToolbar';
 import CarouselToolbar from './CarouselToolbar';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import EmbedToolbar from './EmbedToolbar';
 import find from 'lodash/find';
+import format from 'string-template';
 import get from 'lodash/get';
 import ImageToolbar from './ImageToolbar';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
@@ -72,11 +85,19 @@ const TOOLBAR_TYPES = {
 
 export default {
   name: 'toolbar',
+  data() {
+    return { publishing: false };
+  },
   computed: {
     ...mapGetters(['focusedElement', 'activity'], 'editor'),
     ...mapGetters(['tes', 'activities']),
     elementSelected() {
       return get(this, 'focusedElement.type');
+    },
+    previewUrl() {
+      if (!config.PREVIEW_URL) return;
+      const { courseId, activityId } = this.$route.params;
+      return format(config.PREVIEW_URL, { courseId, activityId });
     },
     breadcrumbs() {
       let items = [];
@@ -89,6 +110,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['publish'], 'activities'),
     ...mapActions({ removeElement: 'remove' }, 'tes'),
     ...mapActions(['focusoutElement'], 'editor'),
     ...mapMutations(['focusElement'], 'editor'),
@@ -109,6 +131,10 @@ export default {
       }
 
       this.focusoutElement();
+    },
+    publishActivity() {
+      this.publishing = true;
+      this.publish(this.activity).then(() => (this.publishing = false));
     },
     requestDeleteConfirmation() {
       appChannel.emit('showConfirmationModal', {
@@ -191,6 +217,7 @@ export default {
 
 .toolbar-btn {
   flex-basis: 0;
+  color: white;
   background-color: #144ACC;
   cursor: pointer;
 
@@ -202,7 +229,6 @@ export default {
     display: inline-block;
     padding: 4px 20px 1px;
     font-size: 30px;
-    color: white;
   }
 }
 
@@ -213,5 +239,10 @@ export default {
   &:hover {
     background-color: darken(#2F73E9, 10%);
   }
+}
+
+.toolbar-btn.disabled {
+  pointer-events: none;
+  opacity: 0.89;
 }
 </style>
