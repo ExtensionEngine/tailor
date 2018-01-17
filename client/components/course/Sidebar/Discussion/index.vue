@@ -1,26 +1,42 @@
 <template>
   <div class="discussion">
     <h4 class="title">
-      Comments
+      <span v-if="!showComments">
+        Comments
+        <span
+          v-if="commentsCount"
+          @click="showComments = true"
+          role="button"
+          class="icon mdi mdi-chevron-down">
+        </span>
+      </span>
+      <span v-else>
+        Hide comments
+        <span
+          @click="showComments = false"
+          role="button"
+          class="icon mdi mdi-chevron-up">
+        </span>
+      </span>
       <span
-        v-if="comments.length"
+        v-if="commentsCount"
         class="pull-right count">
         <span class="icon mdi mdi-message-reply"></span>
-        {{ comments.length }}
+        {{ commentsCount }}
       </span>
     </h4>
     <div :direction="direction" class="vertical-layout">
       <div class="editor-wrapper">
         <text-editor
           v-model="comment.content"
-          @change="post(comment)"
+          @change="post"
           placeholder="Add a comment"
           ref="editor"
           class="editor">
         </text-editor>
         <div class="clearfix controls">
           <button
-            @click="post(comment)"
+            @click="post"
             type="button"
             class="btn btn-default btn-material pull-right btn-post">
             Post
@@ -28,21 +44,21 @@
         </div>
       </div>
       <div class="spacer"></div>
-      <comment-thread
+      <discussion-thread
+        v-show="showComments"
         v-bind="$attrs"
-        :comments="comments"
+        :sort="sortOrder"
         @update:comment="update"
-        class="comment-thread">
-      </comment-thread>
+        class="discussion-thread">
+      </discussion-thread>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
-import CommentThread from './CommentThread';
+import { mapActions, mapGetters } from 'vuex-module';
+import DiscussionThread from './Thread';
 import TextEditor from 'components/common/TextEditor';
-import trim from 'lodash/trim';
 
 const createComment = () => ({ content: '' });
 
@@ -54,43 +70,51 @@ export default {
   },
   data() {
     return {
-      comment: createComment(),
-      comments: []
+      showComments: false,
+      comment: createComment()
     };
   },
   computed: {
     ...mapGetters(['user']),
+    ...mapGetters(['commentsCount', 'commentsFetched'], 'comments'),
     direction() {
       return this.editorPosition === 'bottom' ? 'reverse' : '';
+    },
+    sortOrder() {
+      return this.editorPosition === 'bottom' ? 'ASC' : 'DESC';
     },
     editor() {
       return this.$refs.editor.$el;
     }
   },
   methods: {
-    onEnter(e) {
-      if (e.shiftKey) return;
-      e.preventDefault();
-      this.post(this.comment);
-    },
-    post(comment = {}) {
-      comment.content = trim(comment.content);
-      if (!comment.content) return;
-      comment.author = this.user;
-      comment.createdAt = Date.now();
-      this.comments.push(comment);
-      this.comment = createComment();
-      // Keep editor inside viewport.
-      if (this.editorPosition === 'bottom') {
-        this.$nextTick(() => this.editor.scrollIntoView());
-      }
-    },
-    update(id, comment) {
-      // TODO: Implement comment update logic.
+    ...mapActions(['fetch', 'update', 'save'], 'comments'),
+    post() {
+      if (!this.comment.content) return;
+      const author = this.user;
+      const createdAt = Date.now();
+      const comment = Object.assign({}, this.comment, { author, createdAt });
+      this.save(comment)
+        .then(() => {
+          this.comment = createComment();
+          // Keep editor inside viewport.
+          if (this.editorPosition === 'bottom') {
+            this.$nextTick(() => this.editor.scrollIntoView());
+          }
+        });
     }
   },
+  watch: {
+    activity() {
+      if (this.commentsFetched) return;
+      this.fetch();
+    }
+  },
+  mounted() {
+    this.fetch();
+  },
   components: {
-    CommentThread,
+    DiscussionThread,
     TextEditor
   }
 };
@@ -104,6 +128,7 @@ $editor-size: 60px;
 
 .discussion {
   padding: 3px 8px;
+  padding-right: 12px;
 }
 
 .title {
