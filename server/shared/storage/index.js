@@ -25,6 +25,7 @@ class Storage {
     this.listFiles = this.listFiles.bind(this);
     this.getFileUrl = this.getFileUrl.bind(this);
     this.fileExists = this.fileExists.bind(this);
+    this.moveFile = this.moveFile.bind(this);
   }
 
   static validateProvider(provider) {
@@ -71,6 +72,10 @@ class Storage {
 
   fileExists(key, options = {}) {
     return this.provider.fileExists(key, options);
+  }
+
+  moveFile(key, newKey, options = {}) {
+    return this.provider.moveFile(key, newKey, options);
   }
 }
 
