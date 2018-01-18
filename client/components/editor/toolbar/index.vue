@@ -38,10 +38,7 @@
         <div class="breadcrumbs">
           <span v-for="(item, index) in breadcrumbs" :key="item.id">
             {{ truncate(item.data.name) }}
-            <span
-              v-if="index !== (breadcrumbs.length - 1)"
-              class="mdi mdi-chevron-right">
-            </span>
+            <span v-if="index !== (breadcrumbs.length - 1)"> / </span>
           </span>
         </div>
       </div>
@@ -189,6 +186,10 @@ export default {
   display: flex;
   height: 52px;
   background-color: white;
+  box-shadow:
+    0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2);
 
   .editor-heading {
     flex: 1;
@@ -198,7 +199,7 @@ export default {
 
   h1 {
     width: 100%;
-    margin: 0 0 3px 0;
+    margin: 0 0 1px 0;
     font-size: 18px;
     text-align: left;
     color: #555;
@@ -219,6 +220,7 @@ export default {
   flex-basis: 0;
   color: white;
   background-color: #144ACC;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   cursor: pointer;
 
   &:hover {
@@ -234,7 +236,6 @@ export default {
 
 .toolbar-btn.btn-alt {
   background-color: #2F73E9;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 
   &:hover {
     background-color: darken(#2F73E9, 10%);
