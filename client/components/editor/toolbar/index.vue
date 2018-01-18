@@ -14,11 +14,12 @@
     </div>
     <div v-else class="toolbar-container editor-toolbar">
       <router-link
-        :to="{ name: 'course', params: { courseId: activity.courseId } }"
+        :to="{ name: 'course', params: { courseId } }"
         class="toolbar-btn">
         <span class="mdi mdi-arrow-left"></span>
       </router-link>
       <a
+        v-tooltip="'Preview in LMS'"
         v-if="previewUrl"
         :href="previewUrl"
         class="toolbar-btn btn-alt"
@@ -26,12 +27,13 @@
         <span class="mdi mdi-eye"></span>
       </a>
       <div
+        v-tooltip="`${publishTooltip}`"
         :class="{ disabled: publishing }"
         @click="publishActivity"
         class="toolbar-btn btn-alt">
         <span class="mdi mdi-publish"></span>
       </div>
-      <div class="editor-heading">
+      <div v-if="activity" class="editor-heading">
         <h1 :style="{ 'margin-top': breadcrumbs.length ? 0 : '10px' }">
           {{ activity.data.name }}
         </h1>
@@ -54,6 +56,7 @@ import DefaultToolbar from './DefaultToolbar';
 import drop from 'lodash/drop';
 import EventBus from 'EventBus';
 import EmbedToolbar from './EmbedToolbar';
+import fecha from 'fecha';
 import find from 'lodash/find';
 import format from 'string-template';
 import get from 'lodash/get';
@@ -89,6 +92,18 @@ export default {
   computed: {
     ...mapGetters(['focusedElement', 'activity'], 'editor'),
     ...mapGetters(['tes', 'activities']),
+    courseId() {
+      return get(this.activity, 'courseId');
+    },
+    publishTooltip() {
+      if (!this.activity) return;
+      const name = get(this.activity, 'data.name', '');
+      const { publishedAt } = this.activity;
+      const status = publishedAt
+        ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
+        : '';
+      return `Publish '${truncate(name, 30)}'. ${status}`;
+    },
     elementSelected() {
       return get(this, 'focusedElement.type');
     },
