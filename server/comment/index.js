@@ -1,9 +1,11 @@
+const channel = require('./channel');
 const { Comment } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const ctrl = require('./comment.controller');
 const model = require('./comment.model');
 const { FORBIDDEN, NOT_FOUND } = require('http-status-codes');
 const processQuery = require('../shared/util/processListQuery');
+const { middleware: sse } = require('../shared/util/sse');
 const router = require('express-promise-router')();
 const { User } = require('../shared/database');
 
@@ -11,6 +13,8 @@ const defaultListQuery = {
   order: [['createdAt', 'DESC']],
   paranoid: false
 };
+
+router.get('/courses/:courseId/comments/subscribe', sse, channel.subscribe);
 
 router.get('/courses/:courseId/comments', ctrl.listByCourse);
 
