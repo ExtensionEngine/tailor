@@ -37,7 +37,7 @@
         </h1>
         <div class="breadcrumbs">
           <span v-for="(item, index) in breadcrumbs" :key="item.id">
-            {{ truncate(item.data.name) }}
+            {{ truncate(item.data.name, breadcrumbs.length < 3 ? 80 : 40) }}
             <span v-if="index !== (breadcrumbs.length - 1)"> / </span>
           </span>
         </div>
@@ -51,6 +51,7 @@ import * as config from 'shared/activities';
 import AccordionToolbar from './AccordionToolbar';
 import CarouselToolbar from './CarouselToolbar';
 import DefaultToolbar from './DefaultToolbar';
+import drop from 'lodash/drop';
 import EventBus from 'EventBus';
 import EmbedToolbar from './EmbedToolbar';
 import find from 'lodash/find';
@@ -103,7 +104,7 @@ export default {
         item = find(this.activities, { id: item.parentId });
         if (item) items.unshift(item);
       };
-      return items;
+      return items.length > 3 ? drop(items, items.length - 3) : items;
     }
   },
   methods: {
@@ -213,6 +214,9 @@ export default {
     width: 100%;
     font-size: 12px;
     text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 }
 
