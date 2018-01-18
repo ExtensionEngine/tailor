@@ -124,10 +124,10 @@ export default {
 .activity {
   position: relative;
   color: #444;
-  font-size: 16px;
+  font-size: 17px;
   text-align: left;
   background-color: white;
-  border-radius: 3px;
+  border-radius: 2px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
@@ -138,18 +138,18 @@ export default {
 
   .position {
     position: absolute;
-    min-width: 40px;
-    height: 40px;
+    min-width: 44px;
+    height: 42px;
     margin-right: 7px;
-    padding: 6px 10px 0;
+    padding: 8px 10px 0;
     color: white;
     font-size: 20px;
     text-align: center;
-    border-radius: 3px 0 0 3px;
+    border-radius: 2px 0 0 2px;
   }
 
   .collapsible {
-    padding: 7px 5px 6px;
+    padding: 8px 5px 6px;
     color: #bbb;
     font-size: 26px;
     line-height: 26px;
@@ -163,8 +163,8 @@ export default {
     position: relative;
     top: 0;
     left: 0;
-    height: 40px;
-    padding: 10px 60px 0 55px;
+    height: 42px;
+    padding: 10px 60px 0 60px;
     color: #555;
     white-space: nowrap;
     text-overflow: ellipsis;
