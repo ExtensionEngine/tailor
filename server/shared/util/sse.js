@@ -1,12 +1,12 @@
 const cuid = require('cuid');
 
-class SSE {
+class SSEConnection {
   constructor(req, res) {
+    this.id = cuid();
     this.req = req;
     this.res = res;
     this.nextEventId = 0;
-    this.id = cuid();
-    SSE.initialize(req, res);
+    SSEConnection.initialize(req, res);
   }
 
   send(event, data) {
@@ -32,9 +32,9 @@ class SSE {
 };
 
 function middleware(req, res, next) {
-  res.sse = new SSE(req, res);
+  res.sse = new SSEConnection(req, res);
   next();
 }
 
-module.exports = SSE;
+module.exports = SSEConnection;
 module.exports.middleware = middleware;
