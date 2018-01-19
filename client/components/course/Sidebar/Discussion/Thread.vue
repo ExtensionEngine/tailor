@@ -24,7 +24,7 @@ export default {
     sort: { type: String, default: 'desc' }
   },
   computed: {
-    ...mapGetters(['comments', 'user']),
+    ...mapGetters(['comments']),
     thread() {
       return orderBy(this.comments, ['createdAt'], [this.sort]);
     }

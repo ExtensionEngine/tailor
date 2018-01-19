@@ -23,17 +23,14 @@ getter(function commentsFetched() {
   return !!this.state.commentsFetched[activityId];
 });
 
-action(function fetch() {
+action(function fetch({ activityId }) {
   const { courseId } = this.rootState.route.params;
   let action = 'fetch';
   if (this.state.courseId !== courseId) {
     this.commit('setCourseId', courseId);
     action = 'reset';
   };
-  const activityId = this.rootGetters['course/activity'].id;
-  const baseUrl = `/courses/${courseId}/activities/${activityId}/comments`;
-  this.commit('setBaseUrl', baseUrl);
-  this.api.fetch()
+  this.api.fetch({ activityId })
     .then(result => this.commit(action, result))
     .then(result => this.commit('setCommentsFetched', activityId));
 });

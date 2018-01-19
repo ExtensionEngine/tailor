@@ -48,7 +48,6 @@
         v-show="showComments"
         v-bind="$attrs"
         :sort="sortOrder"
-        @update:comment="update"
         class="discussion-thread">
       </discussion-thread>
     </div>
@@ -76,6 +75,7 @@ export default {
   },
   computed: {
     ...mapGetters(['user']),
+    ...mapGetters(['activity'], 'course'),
     ...mapGetters(['commentsCount', 'commentsFetched'], 'comments'),
     direction() {
       return this.editorPosition === 'bottom' ? 'reverse' : '';
@@ -88,12 +88,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch', 'update', 'save'], 'comments'),
+    ...mapActions(['fetch', 'save'], 'comments'),
+    fetchComments() {
+      if (this.commentsFetched) return;
+      this.fetch({ activityId: this.activity.id });
+    },
     post() {
       if (!this.comment.content) return;
       const author = this.user;
+      const activityId = this.activity.id;
       const createdAt = Date.now();
-      const comment = Object.assign({}, this.comment, { author, createdAt });
+      const updatedAt = Date.now();
+      const { content } = this.comment;
+      const comment = { content, author, activityId, createdAt, updatedAt };
       this.save(comment)
         .then(() => {
           this.comment = createComment();
@@ -106,12 +113,11 @@ export default {
   },
   watch: {
     activity() {
-      if (this.commentsFetched) return;
-      this.fetch();
+      this.fetchComments();
     }
   },
   mounted() {
-    this.fetch();
+    this.fetchComments();
   },
   components: {
     DiscussionThread,
