@@ -5,14 +5,16 @@ import 'dom-shims/shim/Element.mutation';
 import VeeValidate from './utils/validation';
 import Vue from 'vue';
 import { sync } from 'vuex-router-sync';
+import Tooltip from 'vue-directive-tooltip';
 
-// NOTE: Is there another way?
-import '../node_modules/bootstrap-sass/assets/javascripts/bootstrap';
+import 'bootstrap-sass/assets/javascripts/bootstrap';
+import 'vue-directive-tooltip/css/index.css';
 
 import store from './store';
 import router from './router';
 import App from './App';
 
+Vue.use(Tooltip, { delay: 50 });
 Vue.use(VeeValidate, {
   delay: 700,
   fieldsBagName: 'vFields',
