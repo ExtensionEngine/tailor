@@ -5,6 +5,9 @@
       <li :class="{ active: $route.name === 'course' }">
         <router-link :to="{ name: 'course' }">Outline</router-link>
       </li>
+      <li :class="{ active: $route.name === 'tree-view' }">
+        <router-link :to="{ name: 'tree-view' }">Tree View</router-link>
+      </li>
       <li :class="{ active: $route.name === 'course-revisions' }">
         <router-link :to="{ name: 'course-revisions' }">Revisions</router-link>
       </li>

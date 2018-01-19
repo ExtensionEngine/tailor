@@ -27,8 +27,6 @@ import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
-import Loader from 'components/common/Loader';
-import { mapActions } from 'vuex-module';
 import Promise from 'bluebird';
 import TeachingElement from 'components/editor/teaching-elements';
 
@@ -45,13 +43,14 @@ export default {
     };
   },
   computed: {
+    courseId() {
+      return Number(this.$route.params.courseId);
+    },
     baseUrl() {
-      const courseId = Number(this.$route.params.courseId);
-      return `/courses/${courseId}/revisions/`;
+      return `/courses/${this.courseId}/revisions/`;
     }
   },
   methods: {
-    ...mapActions(['save'], 'tes'),
     getRevisions() {
       const params = { entityId: this.revision.state.id };
       return axios.get(this.baseUrl, { params }).then(({ data: { data } }) => {
@@ -74,7 +73,8 @@ export default {
     },
     rollback(revision) {
       this.$set(revision, 'loading', true);
-      this.save(revision.state)
+      const { id: entityId } = revision.state;
+      axios.patch(`/courses/${this.courseId}/tes/${entityId}`, revision.state)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);
@@ -93,7 +93,7 @@ export default {
     this.previewRevision(this.revision);
     Promise.delay(700).then(() => (this.expanded = true));
   },
-  components: { EntitySidebar, Loader, TeachingElement }
+  components: { EntitySidebar, TeachingElement }
 };
 </script>
 
