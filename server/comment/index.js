@@ -16,15 +16,13 @@ const defaultListQuery = {
 
 router.get('/courses/:courseId/comments/subscribe', sse, channel.subscribe);
 
-router.get('/courses/:courseId/comments', ctrl.listByCourse);
-
 router
-  .route('/courses/:courseId/activities/:activityId/comments')
+  .route('/courses/:courseId/comments')
   .get(processQuery(defaultListQuery), ctrl.list)
   .post(ctrl.create);
 
 router
-  .route('/courses/:courseId/activities/:activityId/comments/:commentId')
+  .route('/courses/:courseId/comments/:commentId')
   .all(getComment)
   .get(ctrl.show)
   .patch(canEdit, ctrl.patch)
