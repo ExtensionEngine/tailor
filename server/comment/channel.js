@@ -6,9 +6,9 @@ const unset = require('lodash/unset');
 const clients = {};
 
 const events = {
-  NEW: 'comment_new',
-  MODIFY: 'comment_modify',
-  REMOVE: 'comment_remove'
+  CREATE: 'comment_create',
+  UPDATE: 'comment_update',
+  DELETE: 'comment_delete'
 };
 
 function unsubscribe(courseId, client) {

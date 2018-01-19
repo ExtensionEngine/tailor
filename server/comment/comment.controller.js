@@ -29,21 +29,21 @@ function create({ body, params, user }, res) {
   const { courseId } = params;
   const authorId = user.id;
   return Comment.create({ content, activityId, courseId, authorId })
-    .then(comment => broadcast(events.NEW, comment))
+    .then(comment => broadcast(events.CREATE, comment))
     .then(data => res.json({ data }));
 }
 
 function patch({ comment, body }, res) {
   const { content } = body;
   return comment.update({ content })
-    .then(comment => broadcast(events.MODIFY, comment))
+    .then(comment => broadcast(events.UPDATE, comment))
     .then(data => res.json({ data }));
 }
 
 function remove({ comment }, res) {
   return comment.destroy()
     .then(comment => sanitizeDeleted([comment]))
-    .then(([comment]) => broadcast(events.REMOVE, comment))
+    .then(([comment]) => broadcast(events.DELETE, comment))
     .then(data => res.json({ data }));
 }
 
