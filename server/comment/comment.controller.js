@@ -29,7 +29,12 @@ function create({ body, params, user }, res) {
   const { courseId } = params;
   const authorId = user.id;
   return Comment.create({ content, activityId, courseId, authorId })
-    .then(comment => broadcast(events.CREATE, comment))
+    .then(comment => {
+      const { id, email } = user;
+      const message = Object.assign({}, comment.dataValues, { author: { id, email } });
+      broadcast(events.CREATE, message);
+      return comment;
+    })
     .then(data => res.json({ data }));
 }
 
