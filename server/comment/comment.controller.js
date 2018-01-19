@@ -1,3 +1,4 @@
+const { broadcast, events } = require('./channel');
 const { Comment } = require('../shared/database');
 const { User } = require('../shared/database');
 
@@ -28,17 +29,21 @@ function create({ body, params, user }, res) {
   const { courseId } = params;
   const authorId = user.id;
   return Comment.create({ content, activityId, courseId, authorId })
-    .then(comment => res.json({ data: comment }));
+    .then(comment => broadcast(events.NEW, comment))
+    .then(data => res.json({ data }));
 }
 
 function patch({ comment, body }, res) {
   const { content } = body;
   return comment.update({ content })
+    .then(comment => broadcast(events.MODIFY, comment))
     .then(data => res.json({ data }));
 }
 
 function remove({ comment }, res) {
   return comment.destroy()
+    .then(comment => sanitizeDeleted([comment]))
+    .then(([comment]) => broadcast(events.REMOVE, comment))
     .then(data => res.json({ data }));
 }
 

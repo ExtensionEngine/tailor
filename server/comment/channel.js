@@ -6,9 +6,9 @@ const unset = require('lodash/unset');
 const clients = {};
 
 const events = {
-  COMMENT_NEW: 'comment_new',
-  COMMENT_MODIFY: 'comment_modify',
-  COMMENT_REMOVE: 'comment_remove'
+  NEW: 'comment_new',
+  MODIFY: 'comment_modify',
+  REMOVE: 'comment_remove'
 };
 
 function unsubscribe(courseId, client) {
@@ -25,9 +25,11 @@ function subscribe(req, res) {
   req.on('close', unsubscribe(courseId, client));
 };
 
-function broadcast(courseId, event, comment) {
+function broadcast(event, comment) {
+  const { courseId } = comment;
   const recipients = get(clients, courseId, {});
   each(recipients, r => r.send(event, comment));
+  return comment;
 }
 
 module.exports = { subscribe, broadcast, events };
