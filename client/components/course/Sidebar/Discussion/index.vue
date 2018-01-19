@@ -88,7 +88,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch', 'save'], 'comments'),
+    ...mapActions(['fetch', 'save', 'subscribe', 'unsubscribe'], 'comments'),
     fetchComments() {
       if (this.commentsFetched) return;
       this.fetch({ activityId: this.activity.id });
@@ -118,6 +118,10 @@ export default {
   },
   mounted() {
     this.fetchComments();
+    this.subscribe();
+  },
+  beforeDestroy() {
+    this.unsubscribe();
   },
   components: {
     DiscussionThread,
