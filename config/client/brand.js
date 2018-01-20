@@ -14,7 +14,7 @@ const APP_CONFIG = merge({
 }, brandConfig);
 
 const STYLE_CONFIG = merge({
-  brandColor: '#3949AB',
+  brandColor: '#0D47A0',
   altBrandColor: '#5C6BC0'
 }, brandConfig.style);
 
