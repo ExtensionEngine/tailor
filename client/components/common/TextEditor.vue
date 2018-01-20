@@ -60,10 +60,10 @@ export default {
     top: 0;
     left: 0;
     height: 100%;
-    background: transparent;
     font: inherit;
     letter-spacing: inherit;
     box-sizing: content-box;
+    background: transparent;
     overflow: hidden;
     resize: none;
     outline: none;
@@ -83,12 +83,12 @@ export default {
     //NOTE: Preventing glitches (height changes, vertical scrollbar)
     padding: 0 4px 8px 0;
     font: inherit;
-    background: inherit;
-    border: none;
     white-space: pre-wrap;
     word-break: normal;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    background: inherit;
+    border: none;
     overflow: hidden;
   }
 }

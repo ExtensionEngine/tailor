@@ -11,11 +11,11 @@ $fab-font-size: 18px;
 
   &.btn-fab {
     position: relative;
+    width: $fab-size;
+    min-width: $fab-size;
+    height: $fab-size;
     margin: auto;
     padding: 0;
-    min-width: $fab-size;
-    width: $fab-size;
-    height: $fab-size;
     font-size: $fab-font-size;
     line-height: normal;
     overflow: hidden;
@@ -76,10 +76,10 @@ $fab-font-size: 18px;
 
 .btn.btn-material-icon {
   position: relative;
+  min-width: 24px;
   padding: 8px;
   color: #717171;
   line-height: 24px;
-  min-width: 24px;
   border-radius: 50%;
   background: none;
   box-shadow: none;

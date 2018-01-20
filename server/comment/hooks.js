@@ -1,6 +1,6 @@
-const pick = require('lodash/pick');
-const addHooks = require('../shared/util/addHooks');
 const { broadcast, events } = require('./channel');
+const addHooks = require('../shared/util/addHooks');
+const pick = require('lodash/pick');
 
 module.exports = { add };
 

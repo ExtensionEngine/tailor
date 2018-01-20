@@ -137,8 +137,7 @@ $title-color: #454545;
 $editor-size: 60px;
 
 .discussion {
-  padding: 3px 8px;
-  padding-right: 12px;
+  padding: 3px 12px 3px 8px;
 }
 
 .title {

@@ -12,7 +12,11 @@
     </span>
     <div class="content-wrapper">
       <span class="header">
-        <span :class="{ me: isAuthor }" class="author">{{ comment.author.email }}</span>
+        <span
+          :class="{ 'current-user': isAuthor }"
+          class="author">
+          {{ comment.author.email }}
+        </span>
         <span v-if="isEdited" class="edited-icon icon mdi mdi-pencil"></span>
         <button
           v-if="showActions"
@@ -157,13 +161,13 @@ $line-size: 20px;
       font-size: 12px;
     }
 
-    .me {
+    .current-user {
       color: #0f47a1;
     }
 
     .time {
-      font-size: 12px;
       margin-right: 5px;
+      font-size: 12px;
     }
 
     .btn-actions {
@@ -176,15 +180,15 @@ $line-size: 20px;
     }
 
     .actions {
-      font-size: 12px;
       z-index: 1000;
       position: absolute;
       right: 18px;
+      padding: 3px 0;
+      font-size: 12px;
       list-style: none;
       background: #fff;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
       border-radius: 2px;
-      padding: 3px 0;
     }
 
     .action {
