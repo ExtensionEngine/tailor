@@ -67,7 +67,9 @@ export default {
       this.showLoader = false;
       let activities = filter(this.activities, { parentId: null });
       activities = sortBy(activities, 'position');
-      if (!existingSelection) this.resetActivityFocus(activities[0]._cid);
+      if (!existingSelection && activities.length) {
+        this.resetActivityFocus(activities[0]._cid);
+      }
     });
   }
 };
