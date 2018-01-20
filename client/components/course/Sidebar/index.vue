@@ -8,7 +8,7 @@
       <h4>Outline Sidebar</h4>
       <div class="mdi mdi-arrow-left"></div>
       <div class="helper">
-        Please create your first Goal on the left to view and edit its details
+        Please create your first Item on the left to view and edit its details
         here.
       </div>
     </div>
