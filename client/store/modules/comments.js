@@ -6,6 +6,7 @@ import Vue from 'vue';
 import VuexCollection from '../helpers/collection';
 
 const { action, getter, state, mutation, build } = new VuexCollection('comments');
+let SSE_CLIENT;
 
 state({
   courseId: '',
@@ -55,6 +56,13 @@ mutation(function updateComment(comment) {
   Vue.set(this.state.items, updated._cid, updated);
 });
 
+action(function remove(comment) {
+  // Update locally and let real data update be pushed from server after soft delete
+  comment.deletedAt = new Date();
+  this.commit('update', comment);
+  return this.api.remove(comment);
+});
+
 action(function fetch({ activityId }) {
   const { courseId } = this.rootState.route.params;
   let action = 'fetch';
@@ -68,14 +76,11 @@ action(function fetch({ activityId }) {
 });
 
 action(function subscribe() {
-  const sseClient = new SSEClient(`/api/v1${this.state.$baseUrl}/subscribe`);
-  if (this.state.sseClient) {
-    this.state.sseClient.disconnect();
-  }
-  this.commit('setSSEClient', sseClient);
-  sseClient.subscribe('comment_create', (comment) => this.commit('addComment', comment));
-  sseClient.subscribe('comment_update', (comment) => this.commit('updateComment', comment));
-  sseClient.subscribe('comment_delete', (comment) => this.commit('updateComment', comment));
+  if (SSE_CLIENT) SSE_CLIENT.disconnect();
+  SSE_CLIENT = new SSEClient(`/api/v1${this.state.$baseUrl}/subscribe`);
+  SSE_CLIENT.subscribe('comment_create', comment => this.commit('addComment', comment));
+  SSE_CLIENT.subscribe('comment_update', comment => this.commit('updateComment', comment));
+  SSE_CLIENT.subscribe('comment_delete', comment => this.commit('updateComment', comment));
 });
 
 action(function unsubscribe() {
