@@ -1,3 +1,4 @@
+const hooks = require('./hooks');
 const { Model } = require('sequelize');
 
 class Comment extends Model {
@@ -27,6 +28,10 @@ class Comment extends Model {
         field: 'deleted_at'
       }
     };
+  }
+
+  static addHooks(models) {
+    hooks.add(this, models);
   }
 
   static associate({ Activity, Course, User }) {
