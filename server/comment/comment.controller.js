@@ -2,21 +2,12 @@ const { broadcast, events } = require('./channel');
 const { Comment } = require('../shared/database');
 const { User } = require('../shared/database');
 
-function sanitizeDeleted(comments) {
-  const deletedMsg = 'This comment has been deleted';
-  return comments.map(comment => {
-    if (!comment.deletedAt) return comment;
-    return Object.assign(comment, { content: deletedMsg });
-  });
-}
-
 function list({ course, opts, query }, res) {
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
   if (query.activityId) {
     opts.where.activityId = query.activityId;
   }
   return course.getComments({ ...opts, include })
-    .then(sanitizeDeleted)
     .then(data => res.json({ data }));
 }
 
@@ -47,9 +38,8 @@ function patch({ comment, body }, res) {
 
 function remove({ comment }, res) {
   return comment.destroy()
-    .then(comment => sanitizeDeleted([comment]))
-    .then(([comment]) => broadcast(events.DELETE, comment))
-    .then(data => res.json({ data }));
+  .then(([comment]) => broadcast(events.DELETE, comment))
+  .then(data => res.json({ data }));
 }
 
 module.exports = {

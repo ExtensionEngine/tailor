@@ -7,7 +7,12 @@ class Comment extends Model {
       content: {
         type: TEXT,
         allowNull: false,
-        validate: { len: [1, 2000] }
+        validate: { len: [1, 2000] },
+        get() {
+          const deletedAt = this.getDataValue('deletedAt');
+          if (deletedAt) return 'This comment has been deleted';
+          return this.getDataValue('content');
+        }
       },
       createdAt: {
         type: DATE,
