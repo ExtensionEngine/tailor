@@ -4,23 +4,23 @@ import set from 'lodash/set';
 import unset from 'lodash/unset';
 
 function listenerFactory(method) {
-  return ({data}) => {
+  return ({ data }) => {
     const message = JSON.parse(data);
     method(message);
   };
 }
 
 class SSEClient {
-  constructor(path) {
-    this.path = path;
-    this.connection = SSEClient.initConnection(path);
+  constructor(url) {
+    this.url = url;
+    this.connection = SSEClient.initConnection(url);
     this.listeners = {};
   }
 
-  static initConnection(path) {
+  static initConnection(url) {
     const token = window.localStorage.getItem('JWT_TOKEN');
     const headers = { Authorization: `JWT ${token}` };
-    return new EventSource(path, { headers });
+    return new EventSource(url, { headers });
   }
 
   disconnect() {

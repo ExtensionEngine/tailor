@@ -51,8 +51,8 @@ mutation(function addComment(comment) {
 mutation(function updateComment(comment) {
   const existing = find(this.state.items, { id: comment.id });
   if (!existing) return;
-  const { content, createdAt, updatedAt } = comment;
-  const updated = Object.assign({}, existing, { content, createdAt, updatedAt });
+  const { content, createdAt, updatedAt, deletedAt } = comment;
+  const updated = Object.assign({}, existing, { content, createdAt, updatedAt, deletedAt });
   Vue.set(this.state.items, updated._cid, updated);
 });
 
