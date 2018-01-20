@@ -47,7 +47,7 @@ action(function subscribe() {
 
 action(function unsubscribe() {
   if (!SSE_CLIENT) return;
-  SSE_CLIENT.close();
+  SSE_CLIENT.disconnect();
 });
 
 action(function remove(comment) {
