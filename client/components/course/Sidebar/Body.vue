@@ -21,12 +21,17 @@
       </meta-input>
     </div>
     <prerequisites v-if="config.hasPrerequisites"></prerequisites>
+    <discussion
+      editor-position="bottom"
+      class="discussion">
+    </discussion>
   </div>
 </template>
 
 <script>
 import CircularProgress from 'components/common/CircularProgress';
 import cloneDeep from 'lodash/cloneDeep';
+import Discussion from './Discussion';
 import fecha from 'fecha';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
@@ -74,6 +79,7 @@ export default {
   },
   components: {
     CircularProgress,
+    Discussion,
     Prerequisites,
     MetaInput: Meta
   }
@@ -99,12 +105,17 @@ export default {
     position: absolute;
     top: 10px;
     right: 24px;
-    padding: 6px 6px;
+    padding: 6px;
   }
 
   .circular-progress {
     width: 24px;
     margin: 0 25px;
   }
+}
+
+.discussion {
+  margin-top: 32px;
+  margin-bottom: 8px;
 }
 </style>

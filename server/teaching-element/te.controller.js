@@ -3,10 +3,8 @@ const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
-const processListQuery = require('../shared/util/processListQuery');
 
-function list({ course, query }, res) {
-  const opts = processListQuery(query);
+function list({ course, query, opts }, res) {
   if (query.activityId || query.parentId) {
     const { activityId, parentId } = query;
     const where = { $or: [] };
