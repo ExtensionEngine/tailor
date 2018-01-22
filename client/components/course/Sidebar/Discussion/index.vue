@@ -1,23 +1,7 @@
 <template>
   <div class="discussion">
     <h4 class="title">
-      <span v-if="!showComments">
         Comments
-        <span
-          v-if="commentsCount"
-          @click="showComments = true"
-          role="button"
-          class="icon mdi mdi-chevron-down">
-        </span>
-      </span>
-      <span v-else>
-        Hide comments
-        <span
-          @click="showComments = false"
-          role="button"
-          class="icon mdi mdi-chevron-up">
-        </span>
-      </span>
       <span
         v-if="commentsCount"
         class="pull-right count">
@@ -45,11 +29,16 @@
       </div>
       <div class="spacer"></div>
       <discussion-thread
-        v-show="showComments"
         v-bind="$attrs"
         :sort="sortOrder"
+        :showMore="showMore"
         class="discussion-thread">
       </discussion-thread>
+      <button
+        @click="showMore=!showMore"
+        class="btn btn-material btn-show">
+        Show {{ showMore ? 'less' : 'more' }}
+      </button>
     </div>
   </div>
 </template>
@@ -69,7 +58,7 @@ export default {
   },
   data() {
     return {
-      showComments: false,
+      showMore: false,
       comment: createComment()
     };
   },
@@ -81,7 +70,7 @@ export default {
       return this.editorPosition === 'bottom' ? 'reverse' : '';
     },
     sortOrder() {
-      return this.editorPosition === 'bottom' ? 'ASC' : 'DESC';
+      return this.editorPosition === 'bottom' ? 'asc' : 'desc';
     },
     editor() {
       return this.$refs.editor.$el;
@@ -171,6 +160,13 @@ $editor-size: 60px;
   margin-bottom: 10px;
   font-size: $font-size;
   line-height: $line-size;
+}
+
+.btn-show {
+  padding: 4px 8px;
+  color: #737373;
+  background: darken(#fff, 4%);
+  text-transform: none;
 }
 
 .btn-post {
