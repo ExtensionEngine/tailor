@@ -32,9 +32,12 @@
         v-bind="$attrs"
         :sort="sortOrder"
         :showMore="showMore"
+        :minDisplayed="minDisplayedComments"
         class="discussion-thread">
       </discussion-thread>
-      <span class="btn-show">
+      <span
+        v-if="commentsCount > minDisplayedComments"
+        class="btn-show">
         <span @click="showMore=!showMore" role="button">
           Show {{ showMore ? 'less' : 'more' }}
           <span class="icon mdi" :class="showIconClass"></span>
@@ -49,6 +52,7 @@ import { mapActions, mapGetters } from 'vuex-module';
 import DiscussionThread from './Thread';
 import TextEditor from 'components/common/TextEditor';
 
+const MIN_DISPLAYED_COMMENTS = 3;
 const createComment = () => ({ content: '' });
 
 export default {
@@ -60,7 +64,8 @@ export default {
   data() {
     return {
       showMore: false,
-      comment: createComment()
+      comment: createComment(),
+      minDisplayedComments: MIN_DISPLAYED_COMMENTS
     };
   },
   computed: {

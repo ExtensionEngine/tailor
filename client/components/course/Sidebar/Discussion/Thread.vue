@@ -17,20 +17,19 @@ import { mapGetters, mapActions } from 'vuex-module';
 import orderBy from 'lodash/orderBy';
 import ThreadComment from './Comment';
 
-const MIN_COMMENTS_DISPLAYED = 3;
-
 export default {
   name: 'discussion-thread',
   props: {
     sort: { type: String, default: 'desc' },
     showMore: { type: Boolean, default: false },
-    avatars: { type: Boolean, default: true }
+    avatars: { type: Boolean, default: true },
+    minDisplayed: { type: Number, required: true }
   },
   computed: {
     ...mapGetters(['comments']),
     displayedComments() {
       if (this.showMore) return this.comments;
-      return this.comments.slice(0, MIN_COMMENTS_DISPLAYED);
+      return this.comments.slice(0, this.minDisplayed);
     },
     thread() {
       return orderBy(this.displayedComments, ['createdAt'], [this.sort]);
