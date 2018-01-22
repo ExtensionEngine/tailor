@@ -2,7 +2,7 @@ import cuid from 'cuid';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import pick from 'lodash/pick';
-// import SSEClient from '../../SSEClient';
+import SSEClient from '../../SSEClient';
 import Vue from 'vue';
 import VuexCollection from '../helpers/collection';
 
@@ -38,11 +38,11 @@ action(function fetch({ activityId }) {
 });
 
 action(function subscribe() {
-  // if (SSE_CLIENT) SSE_CLIENT.disconnect();
-  // SSE_CLIENT = new SSEClient(`/api/v1${this.state.$baseUrl}/subscribe`);
-  // SSE_CLIENT.subscribe('comment_create', item => this.commit('sseAdd', item));
-  // SSE_CLIENT.subscribe('comment_update', item => this.commit('sseUpdate', item));
-  // SSE_CLIENT.subscribe('comment_delete', item => this.commit('sseUpdate', item));
+  if (SSE_CLIENT) SSE_CLIENT.disconnect();
+  SSE_CLIENT = new SSEClient(`/api/v1${this.state.$baseUrl}/subscribe`);
+  SSE_CLIENT.subscribe('comment_create', item => this.commit('sseAdd', item));
+  SSE_CLIENT.subscribe('comment_update', item => this.commit('sseUpdate', item));
+  SSE_CLIENT.subscribe('comment_delete', item => this.commit('sseUpdate', item));
 });
 
 action(function unsubscribe() {

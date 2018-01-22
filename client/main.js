@@ -1,6 +1,7 @@
 import 'babel-polyfill';
 import 'dom-shims/shim/Element.classList';
 import 'dom-shims/shim/Element.mutation';
+import 'event-source-polyfill';
 
 import Timeago from 'vue-timeago';
 import VeeValidate from './utils/validation';

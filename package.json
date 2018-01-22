@@ -53,7 +53,7 @@
     "dotenv": "^2.0.0",
     "email-regex": "^1.0.0",
     "emailjs": "^1.0.8",
-    "eventsource": "^1.0.5",
+    "event-source-polyfill": "0.0.12",
     "exceljs": "^0.4.10",
     "express": "^4.14.0",
     "express-promise-router": "^1.1.1",
