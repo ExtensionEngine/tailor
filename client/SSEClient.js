@@ -1,4 +1,3 @@
-import EventSource from 'eventsource';
 import get from 'lodash/get';
 import set from 'lodash/set';
 import unset from 'lodash/unset';
@@ -20,7 +19,7 @@ class SSEClient {
   static initConnection(url) {
     const token = window.localStorage.getItem('JWT_TOKEN');
     const headers = { Authorization: `JWT ${token}` };
-    return new EventSource(url, { headers });
+    return new window.EventSourcePolyfill(url, { headers });
   }
 
   disconnect() {
