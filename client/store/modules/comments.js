@@ -1,6 +1,7 @@
 import cuid from 'cuid';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import orderBy from 'lodash/orderBy';
 import pick from 'lodash/pick';
 import SSEClient from '../../SSEClient';
 import Vue from 'vue';
@@ -16,7 +17,8 @@ state({
 
 getter(function comments() {
   const activityId = this.rootGetters['course/activity'].id;
-  return filter(this.state.items, { activityId });
+  const activityComments = filter(this.state.items, { activityId });
+  return orderBy(activityComments, 'createdAt', 'desc');
 }, { global: true });
 
 getter(function commentsCount() {
