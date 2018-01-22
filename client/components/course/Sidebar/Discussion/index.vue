@@ -34,11 +34,12 @@
         :showMore="showMore"
         class="discussion-thread">
       </discussion-thread>
-      <button
-        @click="showMore=!showMore"
-        class="btn btn-material btn-show">
-        Show {{ showMore ? 'less' : 'more' }}
-      </button>
+      <span class="btn-show">
+        <span @click="showMore=!showMore" role="button">
+          Show {{ showMore ? 'less' : 'more' }}
+          <span class="icon mdi" :class="showIconClass"></span>
+        </span>
+      </span>
     </div>
   </div>
 </template>
@@ -74,6 +75,11 @@ export default {
     },
     editor() {
       return this.$refs.editor.$el;
+    },
+    showIconClass() {
+      let direction = this.editorPosition === 'bottom';
+      if (this.showMore) direction = !direction;
+      return `mdi-chevron-${direction ? 'up' : 'down'}`;
     }
   },
   methods: {
@@ -163,9 +169,8 @@ $editor-size: 60px;
 }
 
 .btn-show {
-  padding: 4px 8px;
-  color: #737373;
-  background: darken(#fff, 4%);
+  color: #0f47a1;
+  text-align: center;
   text-transform: none;
 }
 
