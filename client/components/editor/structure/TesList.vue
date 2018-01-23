@@ -10,7 +10,7 @@
       <div
         v-for="(it, index) in list"
         :key="it._cid || it.id"
-        :class="`col-xs-${it.data.width}`"
+        :class="`col-xs-${it.data.width || 12}`"
         @dragstart="dragElementIndex = index"
         @dragend="dragElementIndex = -1">
         <slot
