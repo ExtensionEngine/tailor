@@ -87,7 +87,6 @@ $revision-padding: 32px;
 
   .description {
     width: 220px;
-    flex-grow: 1;
   }
 
   .rollback {
