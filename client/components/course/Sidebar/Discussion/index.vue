@@ -1,7 +1,13 @@
 <template>
   <div class="discussion">
-    <h4 class="title">
-        Comments
+    <h4 class="header">
+      <span class="pull-left">Comments</span>
+      <span v-show="showBtnPosition === 'top'"
+        @click="showMore=!showMore"
+        class="pull-left btn-show"
+        role="button">
+        Show {{ showMore ? 'less' : 'more' }}
+      </span>
       <span
         v-if="commentsCount"
         class="pull-right count">
@@ -14,7 +20,7 @@
         <text-editor
           v-model="comment.content"
           @change="post"
-          placeholder="Add a comment"
+          placeholder="Add a comment..."
           ref="editor"
           class="editor">
         </text-editor>
@@ -35,12 +41,9 @@
         :minDisplayed="minDisplayedComments"
         class="discussion-thread">
       </discussion-thread>
-      <span
-        v-if="commentsCount > minDisplayedComments"
-        class="btn-show">
-        <span @click="showMore=!showMore" role="button">
-          Show {{ showMore ? 'less' : 'more' }}
-          <span class="icon mdi" :class="showIconClass"></span>
+      <span v-if="showBtnPosition === 'bottom'" class="btn-show">
+        <span @click="showMore=true" class="btn" role="button">
+          Show more
         </span>
       </span>
     </div>
@@ -81,10 +84,10 @@ export default {
     editor() {
       return this.$refs.editor.$el;
     },
-    showIconClass() {
-      let direction = this.editorPosition === 'bottom';
-      if (this.showMore) direction = !direction;
-      return `mdi-chevron-${direction ? 'up' : 'down'}`;
+    showBtnPosition() {
+      if (this.commentsCount <= this.minDisplayedComments) return '';
+      if (this.editorPosition === 'top' && !this.showMore) return 'bottom';
+      return 'top';
     }
   },
   methods: {
@@ -140,25 +143,26 @@ $editor-size: 60px;
   padding: 3px 12px 3px 8px;
 }
 
-.title {
-  margin-bottom: 16px;
+.header {
   color: $title-color;
   font-size: 18px;
   font-weight: 400;
+  line-height: 18px;
+  height: 18px;
+  margin-bottom: 16px;
 }
 
 .count {
   display: inline-block;
   vertical-align: middle;
-  color: lighten($title-color, 15%);
+  color: lighten($title-color, 20%);
   font-size: 16px;
   font-weight: 500;
-  line-height: 18px;
 
   .icon {
     display: inline-block;
     vertical-align: top;
-    line-height: inherit;
+    color: #e91e63;
   }
 }
 
@@ -177,6 +181,12 @@ $editor-size: 60px;
   color: #0f47a1;
   text-align: center;
   text-transform: none;
+  font-size: 14px;
+
+  .header & {
+    line-height: 20px;
+    margin-left: 25px;
+  }
 }
 
 .btn-post {
