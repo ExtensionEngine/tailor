@@ -84,13 +84,12 @@ export default {
 
       if (element.type === 'ACCORDION') {
         const id = cuid();
-        element.data = {
-          ...element.data,
+        Object.assign(element.data, {
           embeds: {},
           items: {
             [id]: { id, header: 'Header', body: {} }
           }
-        };
+        });
       }
 
       this.$emit('add', element);
