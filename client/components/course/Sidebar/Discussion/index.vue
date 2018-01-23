@@ -3,7 +3,7 @@
     <h4 class="header">
       <span class="pull-left">Comments</span>
       <span v-show="showBtnPosition === 'top'"
-        @click="showMore=!showMore"
+        @click="showMore = !showMore"
         class="pull-left btn-show"
         role="button">
         Show {{ showMore ? 'less' : 'more' }}
@@ -42,7 +42,7 @@
         class="discussion-thread">
       </discussion-thread>
       <span v-if="showBtnPosition === 'bottom'" class="btn-show">
-        <span @click="showMore=true" class="btn" role="button">
+        <span @click="showMore = true" class="btn" role="button">
           Show more
         </span>
       </span>
@@ -117,6 +117,7 @@ export default {
   watch: {
     activity() {
       this.fetchComments();
+      this.showMore = false;
     }
   },
   mounted() {
@@ -144,12 +145,12 @@ $editor-size: 60px;
 }
 
 .header {
+  height: 18px;
+  margin-bottom: 16px;
   color: $title-color;
   font-size: 18px;
   font-weight: 400;
   line-height: 18px;
-  height: 18px;
-  margin-bottom: 16px;
 }
 
 .count {
@@ -179,13 +180,13 @@ $editor-size: 60px;
 
 .btn-show {
   color: #0f47a1;
+  font-size: 14px;
   text-align: center;
   text-transform: none;
-  font-size: 14px;
 
   .header & {
-    line-height: 20px;
     margin-left: 25px;
+    line-height: 20px;
   }
 }
 
