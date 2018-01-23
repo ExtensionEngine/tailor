@@ -73,8 +73,8 @@ export default {
     },
     rollback(revision) {
       this.$set(revision, 'loading', true);
-      const { id: entityId } = revision.state;
-      axios.patch(`/courses/${this.courseId}/tes/${entityId}`, revision.state)
+      const entity = { ...revision.state, paranoid: false };
+      axios.patch(`/courses/${this.courseId}/tes/${entity.id}`, entity)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);

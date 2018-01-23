@@ -36,9 +36,12 @@ function create({ body, params, user }, res) {
 }
 
 function patch({ body, params, user }, res) {
-  return TeachingElement.findById(params.teId)
+  const attrs = ['refs', 'type', 'data', 'position', 'courseId', 'deletedAt'];
+  const data = pick(body, attrs);
+  const paranoid = body.paranoid !== false;
+  return TeachingElement.findById(params.teId, { paranoid })
     .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
-    .then(asset => asset.update(body, { context: { userId: user.id } }))
+    .then(asset => asset.update(data, { context: { userId: user.id } }))
     .then(asset => resolveStatics(asset))
     .then(asset => res.json({ data: asset }));
 }
