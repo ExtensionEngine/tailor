@@ -25,7 +25,26 @@
 <script>
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
-import { quillEditor } from 'vue-quill-editor';
+import { quillEditor as QuillEditor } from 'vue-quill-editor';
+
+const toolbar = {
+  container: '#quillToolbar',
+  handlers: {
+    redo() {
+      this.quill.history.redo();
+    },
+    undo() {
+      this.quill.history.undo();
+    }
+  }
+};
+
+const options = {
+  modules: {
+    toolbar,
+    history: { userOnly: true }
+  }
+};
 
 export default {
   name: 'te-html',
@@ -33,7 +52,7 @@ export default {
   data() {
     return {
       content: get(this.element, 'data.content', ''),
-      options: { modules: { toolbar: '#quillToolbar' } }
+      options
     };
   },
   methods: {
@@ -65,7 +84,7 @@ export default {
       this.save();
     }, 2000)
   },
-  components: { quillEditor }
+  components: { QuillEditor }
 };
 </script>
 

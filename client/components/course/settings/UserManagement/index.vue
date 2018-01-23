@@ -7,7 +7,7 @@
     </div>
     <loader v-if="showLoader"></loader>
     <user-list v-else-if="hasUsers" :users="users" :roles="roles"></user-list>
-    <div v-else class="well">There are no users assigned with this course.</div>
+    <div v-else class="well">There are no users assigned with this repository.</div>
   </div>
 </template>
 
@@ -33,7 +33,10 @@ export default {
       return !!this.users.length;
     },
     roles() {
-      return map(role.course, it => ({ title: titleCase(it), value: it }));
+      return map(role.course, it => ({
+        title: titleCase(it.replace('COURSE', 'REPOSITORY')),
+        value: it
+      }));
     }
   },
   methods: {

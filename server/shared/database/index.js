@@ -8,6 +8,7 @@ const { DataTypes } = sequelize.Sequelize;
 
 let models = {
   Activity: '../../activity/activity.model',
+  Comment: '../../comment/comment.model',
   Course: '../../course/course.model',
   CourseUser: '../../course/courseUser.model',
   Revision: '../../revision/revision.model',

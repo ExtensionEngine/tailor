@@ -5,6 +5,9 @@
       <li :class="{ active: $route.name === 'course' }">
         <router-link :to="{ name: 'course' }">Outline</router-link>
       </li>
+      <li :class="{ active: $route.name === 'tree-view' }">
+        <router-link :to="{ name: 'tree-view' }">Tree View</router-link>
+      </li>
       <li :class="{ active: $route.name === 'course-revisions' }">
         <router-link :to="{ name: 'course-revisions' }">Revisions</router-link>
       </li>
@@ -46,6 +49,7 @@ export default {
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activities'),
+    ...mapMutations({ setupCommentsApi: 'setBaseUrl' }, 'comments'),
     ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
   },
@@ -55,6 +59,7 @@ export default {
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
     this.setupActivityApi(`/courses/${courseId}/activities`);
+    this.setupCommentsApi(`/courses/${courseId}/comments`);
     this.setupRevisionApi(`/courses/${courseId}/revisions`);
     this.setupTesApi(`/courses/${courseId}/tes`);
     if (!this.course) this.getCourse(courseId);
@@ -62,7 +67,9 @@ export default {
       this.showLoader = false;
       let activities = filter(this.activities, { parentId: null });
       activities = sortBy(activities, 'position');
-      if (!existingSelection) this.resetActivityFocus(activities[0]._cid);
+      if (!existingSelection && activities.length) {
+        this.resetActivityFocus(activities[0]._cid);
+      }
     });
   }
 };

@@ -21,7 +21,8 @@
       @update="reorder">
       <teaching-element
         slot="list-item"
-        slot-scope="{ item, dragged }"
+        slot-scope="{ item, dragged, setWidth }"
+        :setWidth="setWidth"
         :dragged="dragged"
         :element="item">
       </teaching-element>
