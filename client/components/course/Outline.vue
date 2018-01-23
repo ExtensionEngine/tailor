@@ -37,7 +37,7 @@ export default {
 .activities {
   position: relative;
   height: 100%;
-  padding-right: 400px;
+  padding-right: 420px;
 }
 
 .outline {

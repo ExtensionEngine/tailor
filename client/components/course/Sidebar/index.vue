@@ -38,7 +38,7 @@ export default {
 .course-sidebar {
   position: absolute;
   right: 0;
-  width: 400px;
+  width: 420px;
   height: 100%;
   overflow: auto;
   text-align: left;

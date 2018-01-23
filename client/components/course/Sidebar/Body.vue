@@ -89,7 +89,7 @@ export default {
 <style lang="scss" scoped>
 .body {
   position: relative;
-  padding: 6px;
+  padding: 6px 15px;
 }
 
 .publish-container {
