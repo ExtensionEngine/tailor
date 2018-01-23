@@ -8,12 +8,6 @@
         role="button">
         Show {{ showMore ? 'less' : 'more' }}
       </span>
-      <span
-        v-if="commentsCount"
-        class="pull-right count">
-        <span class="icon mdi mdi-message-reply"></span>
-        {{ commentsCount }}
-      </span>
     </h4>
     <div :direction="direction" class="vertical-layout">
       <div class="editor-wrapper">
@@ -55,7 +49,7 @@ import { mapActions, mapGetters } from 'vuex-module';
 import DiscussionThread from './Thread';
 import TextEditor from 'components/common/TextEditor';
 
-const MIN_DISPLAYED_COMMENTS = 3;
+const MIN_DISPLAYED_COMMENTS = 4;
 const createComment = () => ({ content: '' });
 
 export default {
@@ -151,20 +145,6 @@ $editor-size: 60px;
   font-size: 18px;
   font-weight: 400;
   line-height: 18px;
-}
-
-.count {
-  display: inline-block;
-  vertical-align: middle;
-  color: lighten($title-color, 20%);
-  font-size: 16px;
-  font-weight: 500;
-
-  .icon {
-    display: inline-block;
-    vertical-align: top;
-    color: #e91e63;
-  }
 }
 
 .spacer {
