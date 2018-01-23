@@ -7,6 +7,7 @@ import {
 } from 'utils/activity.js';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
+import request from '../../api/request';
 import VuexCollection from '../helpers/collection.js';
 
 const { getter, action, mutation, build } = new VuexCollection('activities');
@@ -59,6 +60,14 @@ action(function reorder({ activity, context }) {
       this.api.setCid(activity);
       this.commit('save', activity);
     });
+});
+
+action(function publish(activity) {
+  const { id, courseId } = activity;
+  const url = `/courses/${courseId}/activities/${id}/publish`;
+  return request.get(url).then(({ data: { data } }) => {
+    this.commit('save', { ...activity, publishedAt: data.publishedAt });
+  });
 });
 
 mutation(function reorder({ activity, position }) {

@@ -1,0 +1,8 @@
+.vertical-layout {
+  display: flex;
+  flex-direction: column;
+
+  &[direction=reverse] {
+    flex-direction: column-reverse;
+  }
+}

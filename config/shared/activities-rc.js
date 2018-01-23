@@ -64,7 +64,7 @@ const COURSE_OUTLINE = [{
   label: 'Interactive Exercise',
   color: '#78909C',
   isEditable: true,
-  contentContainers: ['PAGE'],
+  contentContainers: ['PERSPECTIVE'],
   hasPrerequisites: true,
   meta: []
 }, {
