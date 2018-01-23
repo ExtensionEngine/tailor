@@ -52,6 +52,10 @@ export default {
 <style lang="scss" scoped>
 $revision-padding: 32px;
 
+.sidebar {
+  flex: 0 0 320px;
+}
+
 .header {
   margin: 8px 0;
   padding-left: $revision-padding;
@@ -69,7 +73,6 @@ $revision-padding: 32px;
   flex-direction: row;
   align-items: center;
   position: relative;
-  width: (256px + $revision-padding);
   height: 52px;
   padding-left: $revision-padding;
   color: #656565;
@@ -98,6 +101,7 @@ $revision-padding: 32px;
     align-items: center;
     width: 32px;
     height: 32px;
+    margin-right: 8px;
     border-radius: 50%;
 
     &:hover {
@@ -153,7 +157,7 @@ $revision-padding: 32px;
   }
 
   .progress-indicator {
-    background-color: #E91E63;
+    background-color: #e91e63;
   }
 }
 

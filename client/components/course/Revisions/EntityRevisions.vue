@@ -104,6 +104,7 @@ export default {
 
   .preview {
     flex-grow: 1;
+    min-width: 300px;
     min-height: 500px;
     margin-right: 16px;
     text-align: center;
