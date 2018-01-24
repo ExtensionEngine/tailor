@@ -163,6 +163,7 @@ $editor-size: 60px;
   font-size: 14px;
   text-align: center;
   text-transform: none;
+  user-select: none;
 
   .header & {
     margin-left: 25px;
