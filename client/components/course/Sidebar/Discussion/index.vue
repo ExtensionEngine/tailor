@@ -1,28 +1,12 @@
 <template>
   <div class="discussion">
-    <h4 class="title">
-      <span v-if="!showComments">
-        Comments
-        <span
-          v-if="commentsCount"
-          @click="showComments = true"
-          role="button"
-          class="icon mdi mdi-chevron-down">
-        </span>
-      </span>
-      <span v-else>
-        Hide comments
-        <span
-          @click="showComments = false"
-          role="button"
-          class="icon mdi mdi-chevron-up">
-        </span>
-      </span>
-      <span
-        v-if="commentsCount"
-        class="pull-right count">
-        <span class="icon mdi mdi-message-reply"></span>
-        {{ commentsCount }}
+    <h4 class="header">
+      <span class="pull-left">Comments</span>
+      <span v-show="showBtnPosition === 'top'"
+        @click="showMore = !showMore"
+        class="pull-left btn-show"
+        role="button">
+        Show {{ showMore ? 'less' : 'more' }}
       </span>
     </h4>
     <div :direction="direction" class="vertical-layout">
@@ -30,7 +14,7 @@
         <text-editor
           v-model="comment.content"
           @change="post"
-          placeholder="Add a comment"
+          placeholder="Add a comment..."
           ref="editor"
           class="editor">
         </text-editor>
@@ -45,11 +29,17 @@
       </div>
       <div class="spacer"></div>
       <discussion-thread
-        v-show="showComments"
         v-bind="$attrs"
         :sort="sortOrder"
+        :showMore="showMore"
+        :minDisplayed="minDisplayedComments"
         class="discussion-thread">
       </discussion-thread>
+      <span v-if="showBtnPosition === 'bottom'" class="btn-show">
+        <span @click="showMore = true" class="btn" role="button">
+          Show more
+        </span>
+      </span>
     </div>
   </div>
 </template>
@@ -59,6 +49,7 @@ import { mapActions, mapGetters } from 'vuex-module';
 import DiscussionThread from './Thread';
 import TextEditor from 'components/common/TextEditor';
 
+const MIN_DISPLAYED_COMMENTS = 4;
 const createComment = () => ({ content: '' });
 
 export default {
@@ -69,8 +60,9 @@ export default {
   },
   data() {
     return {
-      showComments: false,
-      comment: createComment()
+      showMore: false,
+      comment: createComment(),
+      minDisplayedComments: MIN_DISPLAYED_COMMENTS
     };
   },
   computed: {
@@ -81,10 +73,15 @@ export default {
       return this.editorPosition === 'bottom' ? 'reverse' : '';
     },
     sortOrder() {
-      return this.editorPosition === 'bottom' ? 'ASC' : 'DESC';
+      return this.editorPosition === 'bottom' ? 'asc' : 'desc';
     },
     editor() {
       return this.$refs.editor.$el;
+    },
+    showBtnPosition() {
+      if (this.commentsCount <= this.minDisplayedComments) return '';
+      if (this.editorPosition === 'top' && !this.showMore) return 'bottom';
+      return 'top';
     }
   },
   methods: {
@@ -114,6 +111,7 @@ export default {
   watch: {
     activity() {
       this.fetchComments();
+      this.showMore = false;
     }
   },
   mounted() {
@@ -140,26 +138,13 @@ $editor-size: 60px;
   padding: 3px 12px 3px 8px;
 }
 
-.title {
+.header {
+  height: 18px;
   margin-bottom: 16px;
   color: $title-color;
   font-size: 18px;
   font-weight: 400;
-}
-
-.count {
-  display: inline-block;
-  vertical-align: middle;
-  color: lighten($title-color, 15%);
-  font-size: 16px;
-  font-weight: 500;
   line-height: 18px;
-
-  .icon {
-    display: inline-block;
-    vertical-align: top;
-    line-height: inherit;
-  }
 }
 
 .spacer {
@@ -171,6 +156,19 @@ $editor-size: 60px;
   margin-bottom: 10px;
   font-size: $font-size;
   line-height: $line-size;
+}
+
+.btn-show {
+  color: #0f47a1;
+  font-size: 14px;
+  text-align: center;
+  text-transform: none;
+  user-select: none;
+
+  .header & {
+    margin-left: 25px;
+    line-height: 20px;
+  }
 }
 
 .btn-post {

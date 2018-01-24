@@ -20,13 +20,19 @@ import ThreadComment from './Comment';
 export default {
   name: 'discussion-thread',
   props: {
+    sort: { type: String, default: 'desc' },
+    showMore: { type: Boolean, default: false },
     avatars: { type: Boolean, default: true },
-    sort: { type: String, default: 'desc' }
+    minDisplayed: { type: Number, required: true }
   },
   computed: {
     ...mapGetters(['comments']),
+    displayedComments() {
+      if (this.showMore) return this.comments;
+      return this.comments.slice(0, this.minDisplayed);
+    },
     thread() {
-      return orderBy(this.comments, ['createdAt'], [this.sort]);
+      return orderBy(this.displayedComments, ['createdAt'], [this.sort]);
     }
   },
   methods: {
