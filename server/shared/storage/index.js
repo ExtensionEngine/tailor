@@ -25,6 +25,7 @@ class Storage {
     this.listFiles = this.listFiles.bind(this);
     this.getFileUrl = this.getFileUrl.bind(this);
     this.fileExists = this.fileExists.bind(this);
+    this.copyFile = this.copyFile.bind(this);
     this.moveFile = this.moveFile.bind(this);
   }
 
@@ -76,6 +77,10 @@ class Storage {
 
   moveFile(key, newKey, options = {}) {
     return this.provider.moveFile(key, newKey, options);
+  }
+
+  copyFile(key, newKey, options = {}) {
+    return this.provider.copyFile(key, newKey, options);
   }
 }
 
