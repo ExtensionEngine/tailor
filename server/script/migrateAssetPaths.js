@@ -42,7 +42,7 @@ async function updateImagePath(image) {
   const url = get(image, 'data.url');
   if (!url || (url.indexOf(LEGACY_IMAGE_PATH) === -1)) return false;
   let newUrl = url.replace(LEGACY_IMAGE_PATH, 'repository/assets/');
-  await storage.moveFile(url, newUrl);
+  await storage.copyFile(url, newUrl);
   image.data.url = newUrl;
   return true;
 }
