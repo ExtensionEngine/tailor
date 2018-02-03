@@ -5,21 +5,6 @@
       <circular-progress v-if="showLoader"></circular-progress>
       <div v-else>
         <div class="container">
-          <div class="breadcrumbs">
-            <span v-for="(item, index) in breadcrumbs" :key="item.id">
-              {{ truncate(item.data.name) }}
-              <span
-                v-if="index !== (breadcrumbs.length - 1)"
-                class="mdi mdi-chevron-right">
-              </span>
-            </span>
-          </div>
-          <h2>
-            {{ activity.data.name }}
-            <a v-if="previewUrl" :href="previewUrl" class="preview-link" target="_blank">
-              <span class="mdi mdi-eye"></span>
-            </a>
-          </h2>
           <content-containers
             v-for="(containerGroup, name) in contentContainers"
             :key="name"
@@ -43,7 +28,6 @@ import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
-import format from 'string-template';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
 import truncate from 'truncate';
@@ -65,20 +49,6 @@ export default {
     },
     showExams() {
       return config.hasExams(this.activity.type);
-    },
-    breadcrumbs() {
-      let items = [];
-      let item = this.activity;
-      while (item) {
-        item = find(this.activities, { id: item.parentId });
-        if (item) items.unshift(item);
-      };
-      return items;
-    },
-    previewUrl() {
-      if (!config.PREVIEW_URL) return;
-      const { courseId, activityId } = this.$route.params;
-      return format(config.PREVIEW_URL, { courseId, activityId });
     }
   },
   methods: {
@@ -144,6 +114,7 @@ export default {
 }
 
 .editor {
+  padding-top: 110px;
   overflow-y: scroll;
   overflow-y: overlay;
 

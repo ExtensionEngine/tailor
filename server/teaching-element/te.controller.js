@@ -3,10 +3,8 @@ const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
-const processListQuery = require('../shared/util/processListQuery');
 
-function list({ course, query }, res) {
-  const opts = processListQuery(query);
+function list({ course, query, opts }, res) {
   if (query.activityId || query.parentId) {
     const { activityId, parentId } = query;
     const where = { $or: [] };
@@ -38,9 +36,12 @@ function create({ body, params, user }, res) {
 }
 
 function patch({ body, params, user }, res) {
-  return TeachingElement.findById(params.teId)
+  const attrs = ['refs', 'type', 'data', 'position', 'courseId', 'deletedAt'];
+  const data = pick(body, attrs);
+  const paranoid = body.paranoid !== false;
+  return TeachingElement.findById(params.teId, { paranoid })
     .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
-    .then(asset => asset.update(body, { context: { userId: user.id } }))
+    .then(asset => asset.update(data, { context: { userId: user.id } }))
     .then(asset => resolveStatics(asset))
     .then(asset => res.json({ data: asset }));
 }

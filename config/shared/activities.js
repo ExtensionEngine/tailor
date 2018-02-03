@@ -64,7 +64,9 @@ module.exports = {
 function getOutlineLevels(schemaId) {
   // If schema is not provided, assume legacy structure (single schema)
   // and pick first
-  const schema = schemaId ? find(SCHEMAS, { id: schemaId }) : first(SCHEMAS);
+  const schema = schemaId
+    ? find(SCHEMAS, { id: schemaId }) || first(SCHEMAS)
+    : first(SCHEMAS);
   return schema.structure;
 }
 

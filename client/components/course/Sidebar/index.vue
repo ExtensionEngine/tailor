@@ -8,7 +8,7 @@
       <h4>Outline Sidebar</h4>
       <div class="mdi mdi-arrow-left"></div>
       <div class="helper">
-        Please create your first Goal on the left to view and edit its details
+        Please create your first Item on the left to view and edit its details
         here.
       </div>
     </div>
@@ -38,7 +38,7 @@ export default {
 .course-sidebar {
   position: absolute;
   right: 0;
-  width: 400px;
+  width: 420px;
   height: 100%;
   overflow: auto;
   text-align: left;

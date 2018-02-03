@@ -3,11 +3,14 @@ const { createError } = require('../shared/error/helpers');
 const ctrl = require('./activity.controller');
 const model = require('./activity.model');
 const { NOT_FOUND } = require('http-status-codes');
+const processListQuery = require('../shared/util/processListQuery');
 const router = require('express-promise-router')();
+
+const processQuery = processListQuery({ order: [['position']] });
 
 router
   .use('/courses/:courseId/activities/:activityId*', getActivity)
-  .get('/courses/:courseId/activities', ctrl.list)
+  .get('/courses/:courseId/activities', processQuery, ctrl.list)
   .post('/courses/:courseId/activities', ctrl.create)
   .get('/courses/:courseId/activities/:activityId', ctrl.show)
   .patch('/courses/:courseId/activities/:activityId', ctrl.patch)

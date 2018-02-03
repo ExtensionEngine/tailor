@@ -7,7 +7,7 @@
       </div>
       <button
         :disabled="publishing"
-        @click="publish"
+        @click="publishActivity"
         class="btn btn-primary btn-material">
         Publish
       </button>
@@ -21,18 +21,22 @@
       </meta-input>
     </div>
     <prerequisites v-if="config.hasPrerequisites"></prerequisites>
+    <discussion
+      editor-position="bottom"
+      class="discussion">
+    </discussion>
   </div>
 </template>
 
 <script>
-import axios from 'client/api/request';
 import CircularProgress from 'components/common/CircularProgress';
 import cloneDeep from 'lodash/cloneDeep';
+import Discussion from './Discussion';
 import fecha from 'fecha';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import Meta from 'components/common/Meta';
 import Prerequisites from './Prerequisites';
 
@@ -62,25 +66,20 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update'], 'activities'),
-    ...mapMutations({ localUpdate: 'save' }, 'activities'),
+    ...mapActions(['update', 'publish'], 'activities'),
     updateActivity(key, value) {
       const data = cloneDeep(this.activity.data) || {};
       data[key] = value;
       this.update({ _cid: this.activity._cid, data });
     },
-    publish() {
+    publishActivity() {
       this.publishing = true;
-      const { id, courseId } = this.activity;
-      const url = `/courses/${courseId}/activities/${id}/publish`;
-      return axios.get(url).then(({ data: { data } }) => {
-        this.localUpdate({ ...this.activity, publishedAt: data.publishedAt });
-        this.publishing = false;
-      });
+      this.publish(this.activity).then(() => (this.publishing = false));
     }
   },
   components: {
     CircularProgress,
+    Discussion,
     Prerequisites,
     MetaInput: Meta
   }
@@ -90,7 +89,7 @@ export default {
 <style lang="scss" scoped>
 .body {
   position: relative;
-  padding: 6px;
+  padding: 6px 15px;
 }
 
 .publish-container {
@@ -106,12 +105,17 @@ export default {
     position: absolute;
     top: 10px;
     right: 24px;
-    padding: 6px 6px;
+    padding: 6px;
   }
 
   .circular-progress {
     width: 24px;
     margin: 0 25px;
   }
+}
+
+.discussion {
+  margin-top: 32px;
+  margin-bottom: 8px;
 }
 </style>
