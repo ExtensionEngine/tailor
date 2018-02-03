@@ -1,3 +1,5 @@
+'use strict';
+
 const filter = require('lodash/filter');
 const get = require('lodash/get');
 const Promise = require('bluebird');
@@ -14,19 +16,20 @@ async function migrateImages() {
 async function migrateComposites() {
   const opts = { where: { type: { $in: ['CAROUSEL', 'ACCORDION', 'MODAL'] } } };
   const composites = await TeachingElement.findAll(opts);
-  return Promise.map(composites, migrateComposite);
+  return Promise.map(composites, it => migrateComposite(it));
 }
 
 async function migrateAssessments() {
   const opts = { where: { type: 'ASSESSMENT' } };
   const assessments = await TeachingElement.findAll(opts);
-  await Promise.map(assessments, it => migrateComposite(it, 'question'));
+  return Promise.map(assessments, it => migrateComposite(it, 'question'));
 }
 
 async function migrateComposite(item, key = 'embeds') {
-  const embeds = filter(get(item, `data.${key}`, []), { type: 'IMAGE' });
-  if (!embeds.length) return item;
-  await Promise.each(embeds, updateImagePath);
+  const embeds = get(item, `data.${key}`, []);
+  const images = filter(embeds, { type: 'IMAGE' });
+  if (!images.length) return item;
+  await Promise.each(images, updateImagePath);
   item.changed('data', true);
   return item.save();
 }
@@ -40,7 +43,7 @@ async function updateImageComponent(component) {
 
 async function updateImagePath(image) {
   const url = get(image, 'data.url');
-  if (!url || (url.indexOf(LEGACY_IMAGE_PATH) === -1)) return false;
+  if (!url || (!LEGACY_IMAGE_PATH.test(url))) return false;
   let newUrl = url.replace(LEGACY_IMAGE_PATH, 'repository/assets/');
   await storage.copyFile(url, newUrl);
   image.data.url = newUrl;
@@ -51,9 +54,7 @@ async function migrateAssetPaths() {
   await migrateImages();
   await migrateComposites();
   await migrateAssessments();
-  return true;
+  process.exit(0);
 };
 
-module.exports = {
-  migrateAssetPaths
-};
+migrateAssetPaths();
