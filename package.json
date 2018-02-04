@@ -1,8 +1,8 @@
 {
   "name": "tailor",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0",
   "description": "Authoring platform",
-  "author": "Damir Perisic <dperisic@extensionengine.com>",
+  "author": "ExtensionEngine <info@extensionengine.com>",
   "private": true,
   "browserslist": [
     "last 2 versions",
