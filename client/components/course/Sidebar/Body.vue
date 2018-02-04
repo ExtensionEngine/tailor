@@ -12,6 +12,7 @@
         Publish
       </button>
     </div>
+    <span class="type-label">{{ config.label }}</span>
     <div class="meta-element">
       <meta-input
         v-for="it in metadata"
@@ -94,7 +95,7 @@ export default {
 
 .publish-container {
   min-height: 70px;
-  padding: 0 10px;
+  padding: 0 7px;
 
   .publish-date {
     width: 170px;
@@ -110,12 +111,17 @@ export default {
 
   .circular-progress {
     width: 24px;
-    margin: 0 25px;
+    margin: 0 20px;
   }
 }
 
 .discussion {
   margin-top: 32px;
   margin-bottom: 8px;
+}
+
+.type-label {
+  display: inline-block;
+  margin: 5px 0 25px 7px;
 }
 </style>
