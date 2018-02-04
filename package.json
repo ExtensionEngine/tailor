@@ -27,6 +27,7 @@
     "db:seed": "node -r dotenv/config ./server/script/dbSeed.js",
     "db:reset": "node -r dotenv/config ./server/script/dbReset.js",
     "migrate": "node -r dotenv/config ./server/script/migrate.js",
+    "migrateAssetPaths": "node -r dotenv/config ./server/script/migrateAssetPaths.js",
     "fixExamRefs": "node -r dotenv/config ./server/script/fixExamReferences.js",
     "add:admin": "node -r dotenv/config ./server/script/addAdmin.js",
     "integration:add": "node -r dotenv/config ./server/script/addIntegration.js",

@@ -55,6 +55,22 @@ class Amazon {
     return this.client.putObject(s3Params).promise();
   }
 
+  // API docs: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#copyObject-property
+  copyFile(key, newKey, options) {
+    const params = {
+      CopySource: `${this.bucket}/${key}`,
+      Bucket: this.bucket,
+      Key: newKey
+    };
+    const s3Params = Object.assign(options, params);
+    return this.client.copyObject(s3Params).promise();
+  }
+
+  moveFile(key, newKey, options) {
+    this.copyFile(key, newKey, options)
+      .then(() => this.deleteFile(key));
+  }
+
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObject-property
   deleteFile(key, options) {
     const s3Params = Object.assign(options, { Key: key, Bucket: this.bucket });
