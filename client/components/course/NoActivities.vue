@@ -27,7 +27,9 @@
         </multiselect>
       </div>
       <div class="col-md-2">
-        <button @click.stop="create" class="btn btn-block btn-primary">
+        <button
+          @click.stop="create"
+          class="btn btn-block btn-primary btn-material">
           Add
         </button>
       </div>
@@ -85,6 +87,7 @@ export default {
   border: 1px solid #ccc;
 
   input {
+    margin: 6px;
     padding-left: 5px;
   }
 }

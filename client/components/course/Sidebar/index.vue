@@ -48,6 +48,7 @@ export default {
 
 .placeholder {
   margin-top: 50px;
+  padding: 0 15px;
   color: #777;
 
   h4 {
