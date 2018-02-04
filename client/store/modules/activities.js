@@ -5,8 +5,9 @@ import {
   getDescendants as getDeepChildren,
   getAncestors as getParents
 } from 'utils/activity.js';
-import map from 'lodash/map';
-import { OBJECTIVES } from 'shared/activities';
+import get from 'lodash/get';
+import { getLevel } from 'shared/activities';
+import request from '../../api/request';
 import VuexCollection from '../helpers/collection.js';
 
 const { getter, action, mutation, build } = new VuexCollection('activities');
@@ -40,8 +41,10 @@ getter(function getLineage() {
 
 getter(function getExamObjectives() {
   const getObjectives = activity => {
+    const config = getLevel(activity.type);
+    const objectiveTypes = get(config, 'exams.objectives');
+    if (!objectiveTypes) return [];
     let children = getDeepChildren(this.state.items, activity);
-    let objectiveTypes = map(OBJECTIVES, 'type');
     return filter(children, it => objectiveTypes.includes(it.type));
   };
 
@@ -57,6 +60,14 @@ action(function reorder({ activity, context }) {
       this.api.setCid(activity);
       this.commit('save', activity);
     });
+});
+
+action(function publish(activity) {
+  const { id, courseId } = activity;
+  const url = `/courses/${courseId}/activities/${id}/publish`;
+  return request.get(url).then(({ data: { data } }) => {
+    this.commit('save', { ...activity, publishedAt: data.publishedAt });
+  });
 });
 
 mutation(function reorder({ activity, position }) {

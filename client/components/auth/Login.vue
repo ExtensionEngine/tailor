@@ -23,7 +23,9 @@
           Forgot password ?
         </router-link>
       </div>
-      <button type="submit" class="btn btn-default btn-block">Log in</button>
+      <button type="submit" class="btn btn-default btn-material btn-block">
+        Log in
+      </button>
     </form>
   </div>
 </template>
@@ -56,7 +58,7 @@ export default {
 
 <style lang="scss" scoped>
 .options {
-  padding: 5px 0 10px 0;
+  padding: 5px 0 10px;
   text-align: right;
 }
 </style>

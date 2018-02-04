@@ -1,43 +1,33 @@
 <template>
-  <div @mousedown="onMousedown" @click="onClick" class="editor">
-    <loader v-if="showLoader"></loader>
-    <div v-else>
-      <toolbar></toolbar>
-      <div class="container">
-        <div class="breadcrumbs">
-          <span v-for="(item, index) in breadcrumbs">
-            {{ truncate(item.name) }}
-            <span
-              v-if="index !== (breadcrumbs.length - 1)"
-              class="mdi mdi-chevron-right">
-            </span>
-          </span>
+  <div class="editor-wrapper">
+    <toolbar></toolbar>
+    <div @mousedown="onMousedown" @click="onClick" class="editor">
+      <circular-progress v-if="showLoader"></circular-progress>
+      <div v-else>
+        <div class="container">
+          <content-containers
+            v-for="(containerGroup, name) in contentContainers"
+            :key="name"
+            :containerGroup="containerGroup"
+            :parentId="activity.id"
+            v-bind="getContainerConfig(name)">
+          </content-containers>
+          <assessments v-if="showAssessments"></assessments>
+          <exams v-if="showExams"></exams>
         </div>
-        <h2>
-          {{ activity.name }}
-          <a v-if="previewUrl" :href="previewUrl" class="preview-link" target="_blank">
-            <span class="mdi mdi-eye"></span>
-          </a>
-        </h2>
-        <introduction v-if="showIntroduction"></introduction>
-        <perspectives v-if="showPerspectives"></perspectives>
-        <assessments v-if="showAssessments"></assessments>
-        <exams v-if="showExams"></exams>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Assessments from './structure/Assessments';
 import * as config from 'shared/activities';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import Assessments from './structure/Assessments';
+import CircularProgress from 'components/common/CircularProgress';
+import ContentContainers from './structure/ContentContainers';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
-import format from 'string-template';
-import Introduction from './structure/Introduction';
-import Loader from '../common/Loader';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import Perspectives from './structure/Perspectives';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
 import truncate from 'truncate';
@@ -52,33 +42,13 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['focusedElement', 'activity'], 'editor'),
+    ...mapGetters(['focusedElement', 'activity', 'contentContainers'], 'editor'),
     ...mapGetters(['course'], 'course'),
-    showIntroduction() {
-      return config.hasIntroduction(this.activity.type);
-    },
-    showPerspectives() {
-      return config.hasPerspectives(this.activity.type);
-    },
     showAssessments() {
       return config.hasAssessments(this.activity.type);
     },
     showExams() {
       return config.hasExams(this.activity.type);
-    },
-    breadcrumbs() {
-      let items = [];
-      let item = this.activity;
-      while (item) {
-        item = find(this.activities, { id: item.parentId });
-        if (item) items.unshift(item);
-      };
-      return items;
-    },
-    previewUrl() {
-      if (!config.PREVIEW_URL) return;
-      const { courseId, activityId } = this.$route.params;
-      return format(config.PREVIEW_URL, { courseId, activityId });
     }
   },
   methods: {
@@ -88,6 +58,10 @@ export default {
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
     ...mapMutations({ setupActivitiesApi: 'setBaseUrl' }, 'activities'),
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
+    getContainerConfig(name) {
+      const type = name.toUpperCase();
+      return find(config.CONTENT_CONTAINERS, { type });
+    },
     truncate(str, len = 50) {
       return truncate(str, len);
     },
@@ -102,9 +76,8 @@ export default {
       this.mousedownCaptured = false;
       if (!this.focusedElement) return;
       if (!e.component ||
-        ((e.component.name !== 'toolbar') &&
         ((e.component.data._cid !== this.focusedElement._cid) &&
-        (e.component.data.id !== this.focusedElement.id)))) {
+        (e.component.data.id !== this.focusedElement.id))) {
         this.focusoutElement();
       }
     }
@@ -121,39 +94,44 @@ export default {
     Promise.join(
       this.getActivities(),
       this.getTeachingElements({ activityId, parentId: activityId }),
-      Promise.delay(500)
+      Promise.delay(700)
     ).then(() => (this.showLoader = false));
   },
   components: {
     Assessments,
+    CircularProgress,
+    ContentContainers,
     Exams,
-    Introduction,
-    Loader,
-    Perspectives,
     Toolbar
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.editor-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .editor {
-  // Force scroll
-  min-height: 101%;
+  padding-top: 110px;
+  overflow-y: scroll;
+  overflow-y: overlay;
 
   .breadcrumbs {
-    margin: 70px 0 10px 0;
+    margin: 70px 0 10px;
+    color: #555;
     font-family: Arial, sans-serif;
     font-size: 14px;
     line-height: 20px;
-    color: #555;
     text-align: left;
   }
 
   h2 {
-    margin: 20px 0 30px 0;
+    margin: 20px 0 30px;
+    color: #444;
     font-size: 20px;
     line-height: 30px;
-    color: #444;
     text-align: left;
 
     a {
@@ -161,7 +139,7 @@ export default {
     }
   }
 
-  .loader {
+  .circular-progress {
     margin-top: 150px;
   }
 

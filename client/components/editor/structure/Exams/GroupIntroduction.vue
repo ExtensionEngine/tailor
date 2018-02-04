@@ -1,41 +1,32 @@
 <template>
   <div class="group-introduction">
-    <draggable
+    <tes-list
       :list="introductionElements"
-      :options="dragOptions"
-      @update="reorder"
-      class="row">
-      <teaching-element
-        v-for="element in introductionElements"
-        :element="element"
-        :key="element._cid">
-      </teaching-element>
-    </draggable>
-    <add-element
       :activity="group"
-      :position="introductionElements.length + 1"
-      :include="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
+      :types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true"
-      @add="saveElement">
-    </add-element>
+      @add="saveElement"
+      @update="reorder">
+      <teaching-element
+        slot="list-item"
+        slot-scope="{ item, dragged, setWidth }"
+        :setWidth="setWidth"
+        :dragged="dragged"
+        :element="item">
+      </teaching-element>
+    </tes-list>
   </div>
 </template>
 
 <script>
-import AddElement from '../AddElement';
-import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import { mapActions, mapGetters } from 'vuex-module';
 import TeachingElement from '../../teaching-elements';
+import TesList from '../TesList';
 
 export default {
   name: 'group-introduction',
   props: ['group'],
-  data() {
-    return {
-      dragOptions: { handle: '.drag-handle' }
-    };
-  },
   computed: {
     ...mapGetters(['tes']),
     introductionElements() {
@@ -54,8 +45,7 @@ export default {
     }
   },
   components: {
-    AddElement,
-    Draggable,
+    TesList,
     TeachingElement
   }
 };
@@ -64,7 +54,7 @@ export default {
 <style lang="scss" scoped>
 .group-introduction {
   min-height: 150px;
-  margin: 30px 0 30px 0;
+  margin: 30px 0;
   padding: 5px 15px;
 }
 </style>

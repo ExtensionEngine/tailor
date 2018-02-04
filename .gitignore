@@ -158,6 +158,7 @@ fabric.properties
 ### Client ###
 # Build
 dist/
+stats.json
 
 # Debug
 npm-debug.log
@@ -173,9 +174,18 @@ ecosystem.config.js
 .*rc.*
 !.*rc.*.example
 
+# Branding
+client/assets/img/*logo*
+!client/assets/img/default-logo*
+client/assets/img/*favicon*
+!client/assets/img/default-favicon.ico
+
 # Local IJavascript REPL files
 .ipynb_checkpoints
 *.ipynb
 
 # Vscode
 .vscode/
+
+# DB migrations
+umzug.json

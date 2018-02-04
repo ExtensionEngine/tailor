@@ -5,15 +5,18 @@
       <li :class="{ active: $route.name === 'course' }">
         <router-link :to="{ name: 'course' }">Outline</router-link>
       </li>
+      <li :class="{ active: $route.name === 'tree-view' }">
+        <router-link :to="{ name: 'tree-view' }">Tree View</router-link>
+      </li>
       <li :class="{ active: $route.name === 'course-revisions' }">
         <router-link :to="{ name: 'course-revisions' }">Revisions</router-link>
       </li>
       <li v-if="showSettings"
-        :class="{ active: $route.matched.some(it => it.name === 'course-settings') }">
-        <router-link :to="{ name: 'course-settings' }">Settings</router-link>
+        :class="{ active: $route.matched.some(it => it.name === 'course-info') }">
+        <router-link :to="{ name: 'course-info' }">Settings</router-link>
       </li>
     </ul>
-    <div class="tab-content">
+    <div class="tab-content" infinite-wrapper>
       <router-view :showLoader="showLoader"></router-view>
     </div>
   </div>
@@ -22,6 +25,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import filter from 'lodash/filter';
+import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
 export default {
@@ -43,8 +47,11 @@ export default {
   methods: {
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
+    ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activities'),
-    ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course')
+    ...mapMutations({ setupCommentsApi: 'setBaseUrl' }, 'comments'),
+    ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
+    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
   },
   created() {
     const { courseId } = this.$route.params;
@@ -52,12 +59,17 @@ export default {
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
     this.setupActivityApi(`/courses/${courseId}/activities`);
+    this.setupCommentsApi(`/courses/${courseId}/comments`);
+    this.setupRevisionApi(`/courses/${courseId}/revisions`);
+    this.setupTesApi(`/courses/${courseId}/tes`);
     if (!this.course) this.getCourse(courseId);
-    this.getActivities().then(() => {
+    return Promise.join(this.getActivities(), Promise.delay(500)).then(() => {
       this.showLoader = false;
       let activities = filter(this.activities, { parentId: null });
       activities = sortBy(activities, 'position');
-      if (!existingSelection) this.resetActivityFocus(activities[0]._cid);
+      if (!existingSelection && activities.length) {
+        this.resetActivityFocus(activities[0]._cid);
+      }
     });
   }
 };
@@ -70,8 +82,10 @@ export default {
 }
 
 .course-container {
+  display: flex;
+  flex-direction: column;
+
   .nav-tabs {
-    position: fixed;
     width: 100%;
     background-color: white;
     z-index: 1;
@@ -82,7 +96,8 @@ export default {
   }
 
   .tab-content {
-    padding-top: 41px;
+    overflow-y: scroll;
+    overflow-y: overlay;
   }
 }
 </style>

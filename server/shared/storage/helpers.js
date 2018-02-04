@@ -11,40 +11,37 @@ const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 
-function processStatics(item, courseId) {
+function processStatics(item) {
   return item.type === 'ASSESSMENT'
     ? processAssessment(item)
-    : processAsset(item, courseId);
+    : processAsset(item);
 }
 
-function processAsset(asset, courseId) {
-  courseId = courseId || asset.courseId;
-  return isPrimitive(asset)
-    ? processPrimitive(asset, courseId)
-    : processComposite(asset, courseId);
+function processAsset(asset) {
+  return isPrimitive(asset) ? processPrimitive(asset) : processComposite(asset);
 }
 
 function processAssessment(assessment) {
   let question = assessment.data.question;
   if (!question || question.length < 1) return Promise.resolve(assessment);
-  return Promise.each(question, it => processAsset(it, assessment.courseId));
+  return Promise.each(question, it => processAsset(it));
 }
 
-function processPrimitive(primitive, courseId) {
+function processPrimitive(primitive) {
   if (!isPrimitive(primitive)) throw new Error('Invalid primitive');
   if (!processor[primitive.type]) return Promise.resolve(primitive);
-  return processor[primitive.type](primitive, courseId);
+  return processor[primitive.type](primitive);
 }
 
-function processComposite(composite, courseId) {
+function processComposite(composite) {
   if (!composite.data.embeds) Promise.resolve(composite);
-  return Promise.each(values(composite.data.embeds), it => processPrimitive(it, courseId))
+  return Promise.each(values(composite.data.embeds), it => processPrimitive(it))
     .then(() => composite);
 }
 
 let processor = {};
 
-processor.IMAGE = (asset, courseId) => {
+processor.IMAGE = asset => {
   const image = asset.data.url;
   const base64Pattern = /^data:image\/(\w+);base64,/;
 
@@ -62,7 +59,7 @@ processor.IMAGE = (asset, courseId) => {
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
   const hashString = `${asset.id}${file}`;
   const hash = crypto.createHash('md5').update(hashString).digest('hex');
-  const key = `course/${courseId}/asset/${asset.id}/${hash}.${extension}`;
+  const key = `repository/assets/${asset.id}/${hash}.${extension}`;
   asset.data.url = key;
   return saveFile(key, file).then(() => asset);
 };

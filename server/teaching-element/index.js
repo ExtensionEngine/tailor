@@ -1,12 +1,11 @@
-'use strict';
-
 const ctrl = require('./te.controller');
 const model = require('./te.model');
+const processQuery = require('../shared/util/processListQuery')();
 const router = require('express-promise-router')();
 
 router
   .route('/courses/:courseId/tes')
-  .get(ctrl.list)
+  .get(processQuery, ctrl.list)
   .post(ctrl.create);
 
 router

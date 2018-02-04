@@ -1,34 +1,45 @@
 <template>
-  <div v-if="showCreateButton" class="create-course" >
+  <div v-if="showCreateButton" class="create-course">
     <button @click="show" class="btn btn-primary btn-fab" type="button">
       <span class="mdi mdi-plus"></span>
     </button>
-    <modal :show="showModal" :backdrop="false" effect="fade">
-      <div class="modal-header" slot="modal-header">
-        <h4 class="modal-title">Create course</h4>
+    <modal :show="showModal" :focus="false">
+      <div slot="header">
+        <h4 class="modal-title">Create content repository</h4>
       </div>
-      <div class="modal-body" slot="modal-body">
-        <loader v-show="showLoader"></loader>
+      <div slot="body">
+        <circular-progress v-show="showLoader" class="loader"></circular-progress>
         <div v-show="!showLoader">
           <div class="error-message">
             <span v-if="vErrors.has('default')">
               {{ vErrors.first('default') }}
             </span>
           </div>
+          <div class="form-group">
+            <div :class="{ 'has-error': vErrors.has('schema') }" class="form-group">
+              <multiselect
+                v-model="schema"
+                v-validate="'required'"
+                :options="schemas"
+                :searchable="false"
+                label="name"
+                value="id"
+                trackBy="id"
+                data-vv-value-path="id"
+                name="schema">
+              </multiselect>
+              <span class="help-block">{{ vErrors.first('schema') }}</span>
+            </div>
+          </div>
           <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
             <input
               v-model="name"
-              v-focus="focusName"
               v-validate="{ rules: { required: true, min: 2, max: 250 } }"
-              @focus="focusName = true"
-              @blur="focusName = false"
               class="form-control"
               name="name"
               type="text"
               placeholder="Name"/>
-            <span v-show="vErrors.has('name')" class="help-block">
-              {{ vErrors.first('name') }}
-            </span>
+            <span class="help-block">{{ vErrors.first('name') }}</span>
           </div>
           <div :class="{ 'has-error': vErrors.has('description') }" class="form-group">
             <textarea
@@ -38,34 +49,46 @@
               name="description"
               placeholder="Description">
             </textarea>
-            <span v-show="vErrors.has('description')" class="help-block">
-              {{ vErrors.first('description') }}
-            </span>
+            <span class="help-block">{{ vErrors.first('description') }}</span>
           </div>
         </div>
       </div>
-      <div class="modal-footer" slot="modal-footer">
-        <button @click="hide" class="btn btn-default" type="button">Cancel</button>
-        <button @click="submit" class="btn btn-primary" type="button">Create</button>
+      <div slot="footer">
+        <button
+          :disabled="showLoader"
+          @click="hide"
+          class="btn btn-material btn-default"
+          type="button">
+          Cancel
+        </button>
+        <button
+          :disabled="showLoader"
+          @click="submit"
+          class="btn btn-material btn-primary"
+          type="button">
+          Create
+        </button>
       </div>
     </modal>
   </div>
 </template>
 
 <script>
-import { focus } from 'vue-focus';
-import Loader from '../common/Loader';
 import { mapActions, mapGetters } from 'vuex-module';
-import { modal } from 'vue-strap';
+import { SCHEMAS } from 'shared/activities';
+
+import CircularProgress from 'components/common/CircularProgress';
+import Modal from 'components/common/Modal';
+import Multiselect from 'components/common/Select';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
 
 const getDefaultData = () => ({
+  schema: null,
   name: '',
   description: '',
   showLoader: false,
-  showModal: false,
-  focusName: true
+  showModal: false
 });
 
 export default {
@@ -75,35 +98,37 @@ export default {
     ...mapGetters(['isAdmin']),
     showCreateButton() {
       return this.isAdmin;
+    },
+    schemas() {
+      return SCHEMAS;
     }
   },
   methods: {
     ...mapActions(['save'], 'courses'),
     submit() {
-      this.$validator.validateAll()
-        .then(result => {
-          if (!result) return;
-          const course = pick(this, ['name', 'description']);
-          return this.create(course);
-        });
-    },
-    create(course) {
-      this.showLoader = true;
-      return Promise.join(this.save(course), Promise.delay(1000))
-        .then(() => this.hide())
-        .catch(() => this.vErrors.add('default', 'An error has occurred!'));
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
+        this.showLoader = true;
+        const schema = this.schema.id;
+        const course = { schema, ...pick(this, ['name', 'description']) };
+        return Promise.join(this.save(course), Promise.delay(1000))
+          .then(() => this.hide())
+          .catch(() => this.vErrors.add('default', 'An error has occurred!'));
+      });
     },
     show() {
       this.vErrors.clear();
       this.showModal = true;
-      this.focusName = true;
     },
     hide() {
       Object.assign(this, getDefaultData());
     }
   },
-  directives: { focus },
-  components: { modal, Loader },
+  components: {
+    CircularProgress,
+    Modal,
+    Multiselect
+  },
   inject: ['$validator']
 };
 </script>
@@ -121,20 +146,6 @@ export default {
     resize: none;
   }
 
-  .modal-content {
-    padding: 10px;
-    border-radius: 0;
-  }
-
-  .modal-header {
-    border: 0;
-    text-align: left;
-  }
-
-  .modal-footer {
-    border: 0;
-  }
-
   .form-group {
     margin: 0;
     min-height: 80px;
@@ -146,8 +157,17 @@ export default {
     text-align: left;
   }
 
+  /deep/ .modal-body {
+    min-height: 300px;
+  }
+
   .loader {
-    margin: 50px 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
   }
 }
 </style>

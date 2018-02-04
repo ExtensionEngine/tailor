@@ -9,10 +9,10 @@
       :allowEmpty="true"
       :disabled="!options.length"
       :placeholder="placeholder"
+      :customLabel="it => it.data ? it.data.name : ''"
       @input="onPrerequisitesChanged"
       name="prerequisites"
-      trackBy="id"
-      label="name">
+      trackBy="id">
     </multiselect>
   </div>
 </template>
@@ -82,8 +82,8 @@ export default {
   }
 
   &:hover {
-    cursor: pointer;
     background-color: #f5f5f5;
+    cursor: pointer;
   }
 }
 </style>

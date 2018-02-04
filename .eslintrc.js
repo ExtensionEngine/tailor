@@ -25,6 +25,13 @@ module.exports = {
     'space-before-function-paren': ['error', {
       anonymous: 'always',
       named: 'never'
-    }]
+    }],
+    // 'sort-imports': ['error', {
+    //   'ignoreCase': true,
+    //   'ignoreMemberSort': false
+    // }]
+  },
+  globals: {
+    BRAND_CONFIG: true
   }
 };

@@ -4,15 +4,16 @@
       <div v-if="summative">
         <div class="label assessment-type pull-left">{{ typeInfo.title }}</div>
         <span @click="close" class="btn btn-link pull-right">Collapse</span>
-        <div v-if="exam" class="select-leaf">
+        <div v-if="exam && examObjectives.length" class="select-leaf">
           <multiselect
             :value="objective"
             :options="examObjectives"
             :searchable="true"
             :disabled="!isEditing || !examObjectives.length"
             :trackBy="'id'"
-            :label="'name'"
+            :customLabel="it => it.data ? it.data.name : ''"
             :placeholder="placeholder"
+            :showReset="isEditing"
             @input="onObjectiveSelected">
           </multiselect>
         </div>
@@ -58,7 +59,8 @@
         @cancel="cancel"
         @save="save"
         @remove="remove"
-        @edit="edit">
+        @edit="edit"
+        class="controls">
       </controls>
     </div>
   </div>
@@ -82,11 +84,12 @@ import multiselect from '../../../common/Select';
 import NumericalResponse from './NumericalResponse';
 import { OUTLINE_LEVELS } from 'shared/activities';
 import pluralize from 'pluralize';
+import Question from './Question';
 import set from 'lodash/set';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
-import Question from './Question';
+import unset from 'lodash/unset';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
@@ -132,6 +135,7 @@ export default {
       return !this.summative && feedbackSupported;
     },
     examObjectives() {
+      if (!this.exam) return [];
       return this.getExamObjectives(this.exam);
     },
     placeholder() {
@@ -177,7 +181,11 @@ export default {
         .then(() => {
           let data = this.summative ? this.element : this.element.data;
           data = cloneDeep(data);
-          if (this.objective) set(data, 'data._refs.objectiveId', this.objective.id);
+          if (this.objective) {
+            set(data, 'refs.objectiveId', this.objective.id);
+          } else {
+            unset(data, 'refs.objectiveId');
+          }
           this.$emit('save', data);
           this.isEditing = false;
           this.setAlert(saveAlert);
@@ -185,10 +193,11 @@ export default {
         .catch(err => (this.errors = errorProcessor(err)));
     },
     cancel() {
-      if (!this.element.id) {
+      if (!this.previousVersion) {
         this.$emit('remove');
       } else {
         this.addElement(cloneDeep(this.previousVersion));
+        this.setObjective();
         this.isEditing = false;
         this.setAlert();
         this.errors = [];
@@ -204,6 +213,11 @@ export default {
     remove() {
       this.$emit('remove');
     },
+    setObjective() {
+      const objectiveId = get(this.element, 'refs.objectiveId');
+      if (!objectiveId) return;
+      this.objective = find(this.examObjectives, { id: objectiveId });
+    },
     updateFeedback(feedback) {
       let element = cloneDeep(this.element);
       element.data.feedback = element.data.feedback || {};
@@ -215,9 +229,7 @@ export default {
     }
   },
   mounted() {
-    const objectiveId = get(this.element, 'data._refs.objectiveId');
-    if (!objectiveId) return;
-    this.objective = find(this.examObjectives, { id: objectiveId });
+    this.setObjective();
   },
   components: {
     MultipleChoice,
@@ -240,7 +252,7 @@ export default {
 .assessment {
   min-height: 400px;
   margin: 10px auto;
-  padding: 10px 30px 30px 30px;
+  padding: 10px 30px 30px;
   background-color: white;
   overflow: visible;
 
@@ -252,7 +264,7 @@ export default {
   }
 
   .assessment-type {
-    margin: 10px 0 20px 0;
+    margin: 10px 0 20px;
     padding: 4px 15px;
     font-size: 13px;
     background-color: #707070;
@@ -261,9 +273,9 @@ export default {
 
   .form-group {
     text-align: left;
-    margin: 0 auto;
-    padding: 25px 20px 15px 20px;
     width: 100%;
+    margin: 0 auto;
+    padding: 25px 20px 15px;
     overflow: hidden;
   }
 
@@ -283,6 +295,10 @@ export default {
       float: right;
     }
   }
+}
+
+.disabled .controls {
+  display: none;
 }
 </style>
 

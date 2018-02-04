@@ -119,9 +119,9 @@ export default {
 <style lang="scss" scoped>
 .form-group {
   text-align: left;
-  margin: 0 auto;
-  padding: 25px 20px 15px 20px;
   width: 100%;
+  margin: 0 auto;
+  padding: 25px 20px 15px;
   overflow: hidden;
 }
 
@@ -137,13 +137,13 @@ export default {
 .destroy {
   display: none;
   position: absolute;
+  right: 10px;
+  bottom: 8px;
+  padding: 0;
+  background-color: transparent;
   opacity: 0.6;
   transition: all 0.2s;
   border: 0;
-  background-color: transparent;
-  padding: 0;
-  bottom: 8px;
-  right: 10px;
 
   span {
     font-size: 16px;
@@ -158,15 +158,15 @@ ul {
   padding: 10px 0 0 50px;
 
   li {
-    position: relative;
     display: inline-block;
+    position: relative;
     width: 100%;
     margin: 10px 0;
 
     .answers-radio {
       float: left;
-      margin-top: 7px;
       width: 19px;
+      margin-top: 7px;
 
       input {
         padding-bottom: 9px;
@@ -178,8 +178,8 @@ ul {
       overflow: hidden;
 
       input {
-        height: 40px;
         width: 100%;
+        height: 40px;
         margin-left: 3px;
         padding: 0 33px 0 10px;
       }

@@ -22,47 +22,38 @@
     <div v-if="!hasAssessments" class="well">
       Click the button below to Create first Assessment.
     </div>
-    <ul class="list-group">
-      <draggable
-        :list="assessments"
-        :options="dragOptions"
-        @update="reorderAssessment"
-        class="row">
-        <assessment-item
-          v-for="it in assessments"
-          :key="it._cid"
-          :assessment="it"
-          :exam="exam"
-          :expanded="isSelected(it)"
-          @selected="toggleSelect(it)"
-          @save="saveAssessment"
-          @remove="it.id ? requestDeletion(it) : remove(it)">
-        </assessment-item>
-      </draggable>
-    </ul>
-    <add-element
-      :include="['ASSESSMENT']"
-      :position="nextPosition"
+    <tes-list
+      :list="assessments"
       :activity="group"
-      @add="addAssessment">
-    </add-element>
+      :types="['ASSESSMENT']"
+      @add="addAssessment"
+      @update="reorderAssessment">
+      <assessment-item
+        slot="list-item"
+        slot-scope="{ item }"
+        :exam="exam"
+        :assessment="item"
+        :expanded="isSelected(item)"
+        @selected="toggleSelect(item)"
+        @save="saveAssessment"
+        @remove="item.id ? requestDeletion(item) : remove(item)">
+      </assessment-item>
+    </tes-list>
   </div>
 </template>
 
 <script>
-import AddElement from '../AddElement';
 import AssessmentItem from '../AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import Draggable from 'vuedraggable';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
-import last from 'lodash/last';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
 import sortBy from 'lodash/sortBy';
+import TesList from '../TesList';
 
 const appChannel = EventBus.channel('app');
 
@@ -77,19 +68,12 @@ export default {
   },
   computed: {
     ...mapGetters(['tes']),
-    dragOptions() {
-      return { handle: '.drag-handle' };
-    },
     assessments() {
       const cond = { activityId: this.group.id, type: 'ASSESSMENT' };
       return sortBy(filter(this.tes, cond), 'position');
     },
     hasAssessments() {
       return this.assessments && !!this.assessments.length;
-    },
-    nextPosition() {
-      const element = last(this.assessments);
-      return element ? element.position + 1 : 1;
     }
   },
   methods: {
@@ -146,9 +130,8 @@ export default {
     }, 1500)
   },
   components: {
-    AddElement,
     AssessmentItem,
-    Draggable,
+    TesList,
     GroupIntroduction
   }
 };
@@ -179,7 +162,7 @@ h4 {
 }
 
 .divider {
-  margin: 20px 0 70px 0;
+  margin: 20px 0 70px;
   border-top: 1px solid #e1e1e1;
 }
 

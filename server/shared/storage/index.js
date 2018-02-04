@@ -19,12 +19,14 @@ class Storage {
 
     this.provider = new ProviderClass(providerConfig);
 
-    this.loadFile = this.loadFile.bind(this);
+    this.getFile = this.getFile.bind(this);
     this.saveFile = this.saveFile.bind(this);
     this.deleteFile = this.deleteFile.bind(this);
     this.listFiles = this.listFiles.bind(this);
     this.getFileUrl = this.getFileUrl.bind(this);
     this.fileExists = this.fileExists.bind(this);
+    this.copyFile = this.copyFile.bind(this);
+    this.moveFile = this.moveFile.bind(this);
   }
 
   static validateProvider(provider) {
@@ -49,8 +51,8 @@ class Storage {
     return { client, config };
   }
 
-  loadFile(key, location, options = {}) {
-    return this.provider.loadFile(key, location, options);
+  getFile(key, options = {}) {
+    return this.provider.getFile(key, options);
   }
 
   saveFile(key, file, options = {}) {
@@ -71,6 +73,14 @@ class Storage {
 
   fileExists(key, options = {}) {
     return this.provider.fileExists(key, options);
+  }
+
+  moveFile(key, newKey, options = {}) {
+    return this.provider.moveFile(key, newKey, options);
+  }
+
+  copyFile(key, newKey, options = {}) {
+    return this.provider.copyFile(key, newKey, options);
   }
 }
 

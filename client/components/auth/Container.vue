@@ -2,8 +2,8 @@
   <div class="auth-container">
     <div class="auth-panel">
       <div class="auth-header">
-        <img src="../../assets/img/logo-a.svg" alt="Logo"/>
-        <h1>Course Authoring</h1>
+        <img :src="logo" alt="Logo"/>
+        <h1>{{ title }}</h1>
       </div>
       <div class="auth-body">
         <router-view></router-view>
@@ -12,37 +12,50 @@
   </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      title: BRAND_CONFIG.TITLE,
+      logo: BRAND_CONFIG.LOGO_FULL
+    };
+  }
+};
+</script>
+
 <style lang="scss">
 .auth-container {
   padding-top: 5%;
 }
 
 .auth-panel {
-  width: 500px;
+  width: 440px;
   margin: auto;
   background-color: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1);
 
   &:hover {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.20), 0 6px 8px rgba(0,0,0,0.22);
   }
 
   img {
-    margin: 15px 0 10px 0;
     width: 130px;
+    margin: 15px 0 10px;
   }
 
   h1 {
     margin: 0;
     color: white;
-    font-size: 18px;
+    font-size: 22px;
     line-height: 18px;
   }
 
   .auth-header {
-    background: linear-gradient(90deg, #672D89 60%, #B94164);
-    padding-bottom: 15px;
+    padding-bottom: 20px;
+    background: linear-gradient(90deg, $brandColor 65%, $altBrandColor);
+    border-radius: 4px 4px 0 0;
   }
 
   .auth-body {

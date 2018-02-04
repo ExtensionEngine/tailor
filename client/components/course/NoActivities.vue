@@ -27,7 +27,9 @@
         </multiselect>
       </div>
       <div class="col-md-2">
-        <button @click.stop="create" class="btn btn-block btn-primary">
+        <button
+          @click.stop="create"
+          class="btn btn-block btn-primary btn-material">
           Add
         </button>
       </div>
@@ -37,27 +39,26 @@
 
 <script>
 import filter from 'lodash/filter';
-import { mapGetters, mapActions } from 'vuex-module';
+import first from 'lodash/first';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import multiselect from '../common/Select';
-import { OUTLINE_LEVELS } from 'shared/activities';
-
-const TOP_LEVELS = filter(OUTLINE_LEVELS, { level: 1 });
 
 export default {
   data() {
     return {
       name: '',
-      level: TOP_LEVELS[0]
+      level: null
     };
   },
   computed: {
-    ...mapGetters(['course'], 'course'),
+    ...mapGetters(['course', 'structure', 'activities'], 'course'),
     levels() {
-      return TOP_LEVELS;
+      return filter(this.structure, { level: 1 });
     }
   },
   methods: {
     ...mapActions(['save'], 'activities'),
+    ...mapMutations(['focusActivity'], 'course'),
     onLevelSelected(level) {
       if (!level) return;
       this.level = level;
@@ -66,13 +67,20 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return;
         this.save({
-          name: this.name,
           type: this.level.type,
+          data: { name: this.name },
           courseId: this.course.id,
           position: 1
+        })
+        .then(() => {
+          const activity = first(this.activities);
+          if (activity) this.focusActivity(activity._cid);
         });
       });
     }
+  },
+  mounted() {
+    this.level = this.levels[0];
   },
   components: { multiselect },
   inject: ['$validator']
@@ -85,6 +93,7 @@ export default {
   border: 1px solid #ccc;
 
   input {
+    margin: 6px;
     padding-left: 5px;
   }
 }

@@ -1,23 +1,35 @@
 <template>
-  <modal :show.sync="show" :backdrop="false">
-    <div slot="modal-header" class="modal-header">
+  <modal :show="show">
+    <div slot="header">
       <h3 class="modal-title">Delete {{ context.type }}?</h3>
     </div>
-    <div slot="modal-body" class="modal-body">
+    <div slot="body">
       Are you sure you want to delete
-      <span v-if="info">{{ context.type }} <b>"{{ info }}"</b></span>
+      <span v-if="info">{{ context.type }} <b>{{ info }}</b></span>
       <span v-else>this {{ context.type }}</span>?
     </div>
-    <div slot="modal-footer" class="modal-footer">
-      <button type="button" class="btn btn-default" @click="close">Close</button>
-      <button type="button" class="btn btn-danger" @click="confirm">Confirm</button>
+    <div slot="footer">
+      <button
+        @click="close"
+        class="btn btn-material btn-default"
+        type="button">
+        Close
+      </button>
+      <button
+        v-focus="show"
+        @click="confirm"
+        class="btn btn-material btn-danger"
+        type="button">
+        Confirm
+      </button>
     </div>
   </modal>
 </template>
 
 <script>
 import EventBus from 'EventBus';
-import { modal } from 'vue-strap';
+import { focus } from 'vue-focus';
+import Modal from './Modal';
 
 const appChannel = EventBus.channel('app');
 const defaultData = { item: {}, type: '' };
@@ -51,29 +63,13 @@ export default {
   created() {
     appChannel.on('showConfirmationModal', this.open);
   },
-  components: {
-    modal
-  }
+  directives: { focus },
+  components: { Modal }
 };
 </script>
 
 <style lang="scss" scoped>
-.modal {
-  text-align: left;
-}
-
-.modal-header,
-.modal-footer {
-  border: none;
-}
-
-.modal-body {
-  padding-top: 0;
-  padding-bottom: 5px;
-  font-size: 16px;
-
-  b {
-    text-transform: uppercase;
-  }
+.modal-body b {
+  text-transform: uppercase;
 }
 </style>

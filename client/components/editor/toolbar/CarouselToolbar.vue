@@ -62,7 +62,8 @@ export default {
         teChannel.emit(`${this.element._cid}/height`, this.height);
       }
     }, 2000)
-  }
+  },
+  inject: ['$validator']
 };
 </script>
 

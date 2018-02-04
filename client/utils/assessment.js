@@ -46,7 +46,7 @@ const fbQuestion = yup.array().test(
   }
 );
 
-const hint = yup.string().trim().max(200);
+const hint = yup.string().trim().max(500);
 
 const _refs = yup.object().shape({
   objectiveId: yup.number().integer().positive()

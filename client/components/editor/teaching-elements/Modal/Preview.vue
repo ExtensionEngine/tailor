@@ -1,7 +1,7 @@
 <template>
-  <modal :show.sync="visible" :backdrop="false">
-    <div slot="modal-header"></div>
-    <div slot="modal-body" class="modal-body">
+  <modal :show="visible" class="modal">
+    <div slot="header"></div>
+    <div slot="body">
       <div class="row">
         <primitive
           v-for="it in elements"
@@ -11,8 +11,8 @@
         </primitive>
       </div>
     </div>
-    <div slot="modal-footer" class="modal-footer">
-      <button @click="visible = false" class="btn btn-default" type="button">
+    <div slot="footer">
+      <button @click="visible = false" class="btn btn-primary" type="button">
         Close
       </button>
     </div>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { modal } from 'vue-strap';
+import Modal from 'components/common/Modal';
 import Primitive from '../Primitive';
 
 export default {
@@ -38,8 +38,22 @@ export default {
     }
   },
   components: {
-    modal,
+    Modal,
     Primitive
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.modal /deep/ .modal-header {
+  display: none;
+}
+
+.modal /deep/ .modal-body {
+  padding: 0 8px;
+}
+
+.modal.in[backdrop] {
+  background-color: rgba(0,0,0,0.4);
+}
+</style>

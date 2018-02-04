@@ -126,7 +126,7 @@ export default {
 <style lang="scss" scoped>
 h5 {
   display: block;
-  margin: 30px 0 10px 0;
+  margin: 30px 0 10px;
   font-size: 18px;
   text-align: left;
 }
@@ -145,10 +145,10 @@ ul {
       padding-left: 10px;
     }
 
-    input[type=checkbox]{
+    input[type=checkbox] {
       position: absolute;
-      left: 0;
       top: 5px;
+      left: 0;
     }
   }
 
@@ -157,8 +157,8 @@ ul {
     right: 5px;
     bottom: 5px;
     padding: 5px;
-    cursor: pointer;
     color: #888;
+    cursor: pointer;
 
     &:hover {
       color: darken(#888, 20%);
@@ -167,11 +167,11 @@ ul {
 }
 
 .has-error {
-  input[type="checkbox"]:after {
+  input[type="checkbox"]::after {
     border-color: #d9534f;
   }
 
-  input[type="checkbox"]:checked:after  {
+  input[type="checkbox"]:checked::after {
     border-color: #337ab7;
   }
 }

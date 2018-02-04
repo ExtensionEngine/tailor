@@ -9,7 +9,7 @@
         :position="index">
       </exam>
     </ul>
-    <button @click="create" class="btn btn-primary create-exam">
+    <button @click="create" class="btn btn-primary btn-material create-exam">
       <span class="mdi mdi-plus"></span>
       Create Exam Version
     </button>
@@ -49,19 +49,19 @@ export default {
 
 <style lang="scss" scoped>
 h2 {
-  margin: 50px 0 20px 0;
+  margin: 50px 0 20px;
   padding: 0;
-  font-size: 18px;
   color: #444;
+  font-size: 18px;
   text-align: left;
 }
 
 .exams {
-  margin: 80px 0 200px 0;
+  margin: 80px 0 200px;
 }
 
 .create-exam {
-  min-width: 210px;
+  min-width: 300px;
   margin: 40px 0;
 }
 </style>

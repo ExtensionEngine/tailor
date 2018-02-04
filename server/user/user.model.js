@@ -1,136 +1,71 @@
-'use strict';
-
-const Promise = require('bluebird');
-const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
-const { user: role } = require('../../config/shared').role;
+const { Model } = require('sequelize');
+const Promise = require('bluebird');
+const { user: Role } = require('../../config/shared').role;
 
+const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
 
-/**
- * @swagger
- * definitions:
- *   UserInput:
- *     type: object
- *     required:
- *     - email
- *     - password
- *     - role
- *     properties:
- *       email:
- *         type: string
- *         description: user email
- *       password:
- *         type: string
- *         description: user password
- *       role:
- *         type: string
- *         description: user role
- *   UserOutput:
- *     type: object
- *     required:
- *     - id
- *     - email
- *     - role
- *     properties:
- *       id:
- *         type: number
- *         description: unique user identifier
- *       email:
- *         type: string
- *         description: user email
- *       role:
- *         type: string
- *         description: user role
- */
-module.exports = function (sequelize, DataTypes) {
-  const User = sequelize.define('user', {
-    email: {
-      type: DataTypes.STRING,
-      validate: { isEmail: true },
-      unique: { msg: 'The specified email address is already in use.' }
-    },
-    password: {
-      type: DataTypes.STRING,
-      validate: { notEmpty: true, len: [5, 100] }
-    },
-    role: {
-      type: DataTypes.ENUM(role.ADMIN, role.USER, role.INTEGRATION),
-      defaultValue: role.USER
-    },
-    token: {
-      type: DataTypes.STRING,
-      unique: true
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      field: 'created_at'
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      field: 'updated_at'
-    },
-    deletedAt: {
-      type: DataTypes.DATE,
-      field: 'deleted_at'
-    }
-  }, {
-    getterMethods: {
-      profile() {
-        return {
-          id: this.id,
-          email: this.email,
-          role: this.role
-        };
+class User extends Model {
+  static fields(DataTypes) {
+    const { DATE, ENUM, STRING, VIRTUAL } = DataTypes;
+    return {
+      email: {
+        type: STRING,
+        validate: { isEmail: true },
+        unique: { msg: 'The specified email address is already in use.' }
+      },
+      password: {
+        type: STRING,
+        validate: { notEmpty: true, len: [5, 100] }
+      },
+      role: {
+        type: ENUM(Role.ADMIN, Role.USER, Role.INTEGRATION),
+        defaultValue: Role.USER
+      },
+      profile: {
+        type: VIRTUAL,
+        get() {
+          return {
+            id: this.id,
+            email: this.email,
+            role: this.role
+          };
+        }
+      },
+      token: {
+        type: STRING,
+        unique: true
+      },
+      createdAt: {
+        type: DATE,
+        field: 'created_at'
+      },
+      updatedAt: {
+        type: DATE,
+        field: 'updated_at'
+      },
+      deletedAt: {
+        type: DATE,
+        field: 'deleted_at'
       }
-    },
-    classMethods: {
-      associate(models) {
-        User.belongsToMany(models.Course, {
-          through: models.CourseUser,
-          foreignKey: { name: 'userId', field: 'user_id' }
-        });
-      },
-      invite(user) {
-        return User.create(user).then(user => {
-          user.token = user.createToken({ expiresIn: '5 days' });
-          mail.invite(user);
-          return user.save();
-        });
-      }
-    },
-    instanceMethods: {
-      isAdmin() {
-        return this.role === role.ADMIN || this.role === role.INTEGRATION;
-      },
-      authenticate(password) {
-        if (!this.password) return Promise.resolve(false);
-        return bcrypt
-          .compare(password, this.password)
-          .then(match => match ? this : false);
-      },
-      encrypt(val) {
-        return bcrypt.hash(val, config.auth.saltRounds);
-      },
-      encryptPassword() {
-        if (!this.password) return Promise.resolve(false);
-        return this
-          .encrypt(this.password)
-          .then(pw => (this.password = pw));
-      },
-      createToken(options = {}) {
-        const payload = { id: this.id, email: this.email };
-        return jwt.sign(payload, AUTH_SECRET, options);
-      },
-      sendResetToken() {
-        this.token = this.createToken({ expiresIn: '5 days' });
-        mail.resetPassword(this);
-        return this.save();
-      }
-    },
-    hooks: {
+    };
+  }
+
+  static associate({ Comment, Course, CourseUser }) {
+    this.hasMany(Comment, {
+      foreignKey: { name: 'authorId', field: 'author_id' }
+    });
+    this.belongsToMany(Course, {
+      through: CourseUser,
+      foreignKey: { name: 'userId', field: 'user_id' }
+    });
+  }
+
+  static hooks() {
+    return {
       beforeCreate(user) {
         return user.encryptPassword();
       },
@@ -144,12 +79,59 @@ module.exports = function (sequelize, DataTypes) {
         users.forEach(user => updates.push(user.encryptPassword()));
         return Promise.all(updates);
       }
-    },
-    underscored: true,
-    timestamps: true,
-    paranoid: true,
-    freezeTableName: true
-  });
+    };
+  }
 
-  return User;
-};
+  static options() {
+    return {
+      modelName: 'user',
+      underscored: true,
+      timestamps: true,
+      paranoid: true,
+      freezeTableName: true
+    };
+  }
+
+  static invite(user) {
+    return this.create(user).then(user => {
+      user.token = user.createToken({ expiresIn: '5 days' });
+      mail.invite(user);
+      return user.save();
+    });
+  }
+
+  isAdmin() {
+    return this.role === Role.ADMIN || this.role === Role.INTEGRATION;
+  }
+
+  authenticate(password) {
+    if (!this.password) return Promise.resolve(false);
+    return bcrypt
+      .compare(password, this.password)
+      .then(match => match ? this : false);
+  }
+
+  encrypt(val) {
+    return bcrypt.hash(val, config.auth.saltRounds);
+  }
+
+  encryptPassword() {
+    if (!this.password) return Promise.resolve(false);
+    return this
+      .encrypt(this.password)
+      .then(pw => (this.password = pw));
+  }
+
+  createToken(options = {}) {
+    const payload = { id: this.id, email: this.email };
+    return jwt.sign(payload, AUTH_SECRET, options);
+  }
+
+  sendResetToken() {
+    this.token = this.createToken({ expiresIn: '5 days' });
+    mail.resetPassword(this);
+    return this.save();
+  }
+}
+
+module.exports = User;

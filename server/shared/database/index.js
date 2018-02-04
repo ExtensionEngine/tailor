@@ -1,11 +1,14 @@
 const each = require('lodash/each');
+const invoke = require('lodash/invoke');
 const reduce = require('lodash/reduce');
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize(process.env.POSTGRES_URI);
+const { DataTypes } = sequelize.Sequelize;
 
 let models = {
   Activity: '../../activity/activity.model',
+  Comment: '../../comment/comment.model',
   Course: '../../course/course.model',
   CourseUser: '../../course/courseUser.model',
   Revision: '../../revision/revision.model',
@@ -13,14 +16,14 @@ let models = {
   User: '../../user/user.model'
 };
 
-models = reduce(models, (dict, path, name) => {
-  dict[name] = sequelize.import(path);
-  return dict;
+models = reduce(models, (acc, path, name) => {
+  acc[name] = defineModel(require(path));
+  return acc;
 }, {});
 
 each(models, model => {
-  if (model.associate) model.associate(models);
-  if (model.addHooks) model.addHooks(models);
+  invoke(model, 'associate', models);
+  invoke(model, 'addHooks', models);
 });
 
 const db = Object.assign({
@@ -35,3 +38,11 @@ sequelize.model = function (name) {
 };
 
 module.exports = db;
+
+function defineModel(Model) {
+  const fields = invoke(Model, 'fields', DataTypes, sequelize) || {};
+  const hooks = invoke(Model, 'hooks') || {};
+  const options = invoke(Model, 'options') || {};
+  const model = Model.init(fields, { sequelize, hooks, ...options });
+  return model;
+}

@@ -1,96 +1,107 @@
 <template>
-  <div class="settings">
-    <loader v-if="showLoader"></loader>
-    <div v-else>
-      <div class="form-group">
-        <label for="courseName">Name</label>
-        <span
-          v-show="showNameInput"
-          :class="{ 'has-error': vErrors.has('courseName') }">
-          <textarea
-            v-model="newCourseName"
-            v-focus="true"
-            v-validate="{ rules: { required: true, min: 2, max: 250 } }"
-            @blur="updateName"
-            @keyup.enter="updateName"
-            @keyup.esc="showNameInput = false"
-            name="courseName"
-            data-vv-as="Name"
-            id="courseName"
-            class="form-control name">
-          </textarea>
-          <span class="help-block">{{ vErrors.first('courseName') }}</span>
+  <div v-if="course" class="settings">
+    <div class="actions">
+      <button
+        :disabled="publishing"
+        @click="publish"
+        class="btn btn-primary btn-material btn-sm pull-right">
+        <span class="mdi mdi-publish"></span> Publish info
+      </button>
+    </div>
+    <div class="form-group">
+      <label for="courseName">Name</label>
+      <span
+        v-show="showNameInput"
+        :class="{ 'has-error': vErrors.has('courseName') }">
+        <textarea
+          v-model="newCourseName"
+          v-focus="true"
+          v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+          @blur="updateName"
+          @keyup.enter="updateName"
+          @keyup.esc="showNameInput = false"
+          name="courseName"
+          data-vv-as="Name"
+          id="courseName"
+          class="form-control name">
+        </textarea>
+        <span class="help-block">{{ vErrors.first('courseName') }}</span>
+      </span>
+      <span v-show="!showNameInput">
+        <h2 @click.stop="showNameInput = true">{{ course.name }}</h2>
+      </span>
+    </div>
+    <div class="form-group">
+      <label for="courseDescription">Description</label>
+      <span
+        v-show="showDescriptionInput"
+        :class="{ 'has-error': vErrors.has('courseDescription') }">
+        <textarea
+          v-model="newCourseDescription"
+          v-focus="true"
+          v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
+          @blur="updateDescription"
+          @keyup.esc="showDescriptionInput = false"
+          name="courseDescription"
+          data-vv-as="Description"
+          id="courseDescription"
+          class="form-control">
+        </textarea>
+        <span class="help-block">
+          {{ vErrors.first('courseDescription') }}
         </span>
-        <span v-show="!showNameInput">
-          <h2 @click.stop="showNameInput = true">{{ course.name }}</h2>
+      </span>
+      <span v-show="!showDescriptionInput">
+        <span @click.stop="showDescriptionInput = true" class="form-display">
+          {{ course.description }}
         </span>
-      </div>
-      <div class="form-group">
-        <label for="courseDescription">Description</label>
-        <span
-          v-show="showDescriptionInput"
-          :class="{ 'has-error': vErrors.has('courseDescription') }">
-          <textarea
-            v-model="newCourseDescription"
-            v-focus="true"
-            v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
-            @blur="updateDescription"
-            @keyup.esc="showDescriptionInput = false"
-            name="courseDescription"
-            data-vv-as="Description"
-            id="courseDescription"
-            class="form-control">
-          </textarea>
-          <span class="help-block">
-            {{ vErrors.first('courseDescription') }}
-          </span>
-        </span>
-        <span v-show="!showDescriptionInput">
-          <span @click.stop="showDescriptionInput = true" class="form-display">
-            {{ course.description }}
-          </span>
-        </span>
-      </div>
-      <div class="course-actions">
-        <button
-          v-if="showRemoveButton"
-          @click.stop="removeCourse"
-          type="button"
-          class="btn btn-danger">
-          <span class="mdi mdi-delete"></span>
-          remove course
-        </button>
-      </div>
+      </span>
+    </div>
+    <div class="meta-container">
+      <meta-input
+        v-for="it in metadata"
+        :meta="it"
+        :key="it.key"
+        @update="updateMeta">
+      </meta-input>
     </div>
   </div>
 </template>
 
 <script>
+import api from '../../../api/course';
+import cloneDeep from 'lodash/cloneDeep';
 import EventBus from 'EventBus';
+import find from 'lodash/find';
 import { focus } from 'vue-focus';
+import { getColor } from 'utils/course';
+import { getRepositoryMeta } from 'shared/activities';
 import Loader from '../../common/Loader';
 import { mapGetters, mapActions } from 'vuex-module';
-import { tooltip } from 'vue-strap';
+import Meta from 'components/common/Meta';
 
 const appChannel = EventBus.channel('app');
 
 export default {
   props: ['showLoader'],
   directives: { focus },
-  components: { Loader, tooltip },
+  components: { Loader, MetaInput: Meta },
   data() {
     return {
       showNameInput: false,
       showDescriptionInput: false,
       newCourseName: '',
-      newCourseDescription: ''
+      newCourseDescription: '',
+      publishing: false
     };
   },
   computed: {
-    ...mapGetters(['isAdmin']),
     ...mapGetters(['course'], 'course'),
-    showRemoveButton() {
-      return this.isAdmin;
+    metadata() {
+      let metadata = getRepositoryMeta(this.course);
+      let color = find(metadata, { key: 'color' });
+      if (!color.value) color.value = getColor(this.course);
+      return metadata;
     }
   },
   methods: {
@@ -113,6 +124,11 @@ export default {
         this.update({ ...this.course, description: this.newCourseDescription });
       });
     },
+    updateMeta(key, value) {
+      const data = cloneDeep(this.course.data) || {};
+      data[key] = value;
+      this.update({ ...this.course, data });
+    },
     removeCourse() {
       const payload = {
         type: 'course',
@@ -125,6 +141,11 @@ export default {
     setCourseFields() {
       this.newCourseName = this.course.name;
       this.newCourseDescription = this.course.description;
+    },
+    publish() {
+      this.publishing = true;
+      return api.publishRepositoryMeta(this.$route.params.courseId)
+        .then(() => (this.publishing = false));
     }
   },
   mounted() {
@@ -148,19 +169,22 @@ export default {
   background-color: white;
 }
 
-.course-actions {
-  margin: 15px 0;
-  text-align: center;
+.actions {
+  min-height: 36px;
+
+  .btn {
+    padding: 8px 12px;
+  }
 }
 
 h2 {
   display: inline-block;
   height: 40px;
   margin: 15px 0 30px;
-  line-height: 20px;
+  color: #444;
   font-size: 16px;
   font-weight: normal;
-  color: #444;
+  line-height: 20px;
 }
 
 textarea.form-control.name {
@@ -187,11 +211,18 @@ span.form-display {
 label {
   display: block;
   margin-top: 10px;
-  font-size: 14px;
   color: gray;
+  font-size: 14px;
 }
 
 .help-block {
   min-height: 20px;
+}
+
+.picker {
+  /deep/ .actions {
+    margin: 20px 0 0;
+    text-align: left;
+  }
 }
 </style>

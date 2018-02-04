@@ -1,8 +1,12 @@
 <template>
   <div class="controls">
     <div v-if="isEditing" class="pull-right">
-      <button @click="$emit('cancel')" class="btn btn-default">Cancel</button>
-      <button @click="save" class="btn btn-success">Save</button>
+      <button @click="$emit('cancel')" class="btn btn-material btn-default">
+        Cancel
+      </button>
+      <button @click="save" class="btn btn-material btn-success">
+        Save
+      </button>
     </div>
     <div v-else class="pull-right">
       <button
@@ -10,7 +14,9 @@
         @click="$emit('remove')"
         class="btn btn-default"> Remove
       </button>
-      <button @click="$emit('edit')" class="btn btn-success">Edit</button>
+      <button @click="$emit('edit')" class="btn btn-success btn-material">
+        Edit
+      </button>
     </div>
   </div>
 </template>
@@ -35,8 +41,8 @@ export default {
   padding: 10px 20px;
 
   .btn {
-    padding: 7px 15px;
     margin-left: 10px;
+    padding: 7px 15px;
     min-width: 85px;
   }
 }

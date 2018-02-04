@@ -11,11 +11,11 @@ $fab-font-size: 18px;
 
   &.btn-fab {
     position: relative;
+    width: $fab-size;
+    min-width: $fab-size;
+    height: $fab-size;
     margin: auto;
     padding: 0;
-    min-width: $fab-size;
-    width: $fab-size;
-    height: $fab-size;
     font-size: $fab-font-size;
     line-height: normal;
     overflow: hidden;
@@ -30,6 +30,80 @@ $fab-font-size: 18px;
       width: $fab-font-size;
       line-height: $fab-font-size;
     }
+  }
+}
+
+.btn.btn-material {
+  position: relative;
+  min-width: 88px;
+  padding: 10px 16px;
+  font-weight: 500;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: none;
+  outline: none;
+
+  + .btn {
+    margin-left: 8px;
+  }
+
+  &.stroked {
+    border: 1px solid lighten(#333, 25%);
+    border-width: 2px;
+    border-radius: 2px;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 150%;
+    left: 150%;
+    transform: translate(-100%,-100%);
+    width: 200%;
+    height: 200%;
+    background: rgba(255,255,255,0.08);
+  }
+
+  &.btn-default:focus::before {
+    background: rgba(33,33,33,0.16);
+  }
+}
+
+.btn.btn-material-icon {
+  position: relative;
+  min-width: 24px;
+  padding: 8px;
+  color: #717171;
+  line-height: 24px;
+  border-radius: 50%;
+  background: none;
+  box-shadow: none;
+  outline: none;
+
+  .mdi {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &::before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover, &.active {
+    background: darken(#fff, 10%);
   }
 }
 

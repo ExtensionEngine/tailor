@@ -20,7 +20,7 @@
       <insert-activity
         :parent="activity"
         :level="level"
-        @expand="toggleActivity(activity, true)">
+        @expand="toggleActivity({ _cid: activity._cid, expanded: true })">
       </insert-activity>
     </div>
     <div v-if="!isCollapsed(this.activity) && hasChildren">
@@ -30,7 +30,6 @@
           :key="it._cid"
           :id="it.id"
           :_cid="it._cid"
-          :name="it.name"
           :position="it.position"
           :index="index"
           :level="isRoot ? 1 : level + 1"
@@ -48,16 +47,16 @@
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import InsertActivity from './InsertActivity';
 import map from 'lodash/map';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import NoActivities from './NoActivities';
-import { OUTLINE_LEVELS } from 'shared/activities';
 import values from 'lodash/values';
 
 export default {
   name: 'activity',
-  props: ['_cid', 'id', 'name', 'position', 'level', 'activities', 'activity', 'index'],
+  props: ['_cid', 'id', 'position', 'level', 'activities', 'activity', 'index'],
   data() {
     return {
       dragOptions: { handle: '.activity' }
@@ -65,21 +64,25 @@ export default {
   },
   computed: {
     ...mapGetters({
+      structure: 'structure',
       focusedActivity: 'activity',
       isCollapsed: 'isCollapsed'
     }, 'course'),
     isRoot() {
       return this.level === 0;
     },
+    name() {
+      return get(this.activity, 'data.name', '');
+    },
     color() {
-      return find(OUTLINE_LEVELS, { type: this.activity.type }).color;
+      return find(this.structure, { type: this.activity.type }).color;
     },
     hasChildren() {
-      return (this.children.length > 0) && (this.level < OUTLINE_LEVELS.length);
+      return (this.children.length > 0) && (this.level < this.structure.length);
     },
     children() {
       const level = this.level + 1;
-      const types = map(filter(OUTLINE_LEVELS, { level }), 'type');
+      const types = map(filter(this.structure, { level }), 'type');
       const filterByParent = this.isRoot
         ? act => !act.parentId && types.includes(act.type)
         : act => this.id && this.id === act.parentId && types.includes(act.type);
@@ -121,32 +124,32 @@ export default {
 .activity {
   position: relative;
   color: #444;
-  font-size: 16px;
+  font-size: 17px;
   text-align: left;
-  cursor: pointer;
   background-color: white;
-  border-radius: 3px;
+  border-radius: 2px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
 
   &.selected {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15), 0 2px 5px rgba(0,0,0,0.30);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15), 0 2px 5px rgba(0,0,0,0.3);
   }
 
   .position {
     position: absolute;
-    min-width: 40px;
-    height: 40px;
+    min-width: 44px;
+    height: 42px;
     margin-right: 7px;
-    padding: 6px 10px 0 10px;
+    padding: 8px 10px 0;
     color: white;
     font-size: 20px;
     text-align: center;
-    border-radius: 3px 0px 0px 3px;
+    border-radius: 2px 0 0 2px;
   }
 
   .collapsible {
-    padding: 7px 5px 6px 5px;
+    padding: 8px 5px 6px;
     color: #bbb;
     font-size: 26px;
     line-height: 26px;
@@ -157,11 +160,11 @@ export default {
 
   .activity-name {
     display: block;
-    height: 40px;
     position: relative;
     top: 0;
     left: 0;
-    padding: 10px 60px 0 55px;
+    height: 42px;
+    padding: 10px 60px 0 60px;
     color: #555;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -170,8 +173,8 @@ export default {
 
   .actions {
     position: absolute;
-    right: 0;
     top: 0;
+    right: 0;
     padding-right: 5px;
 
     .mdi:hover {
@@ -201,9 +204,9 @@ export default {
       position: absolute;
       top: -8px;
       right: -27px;
-      height: 0; // avoids visual issues while dragging
-      font-size: 16px;
+      height: 0;
       color: #aaa;
+      font-size: 16px;
       text-align: left;
     }
   }

@@ -6,8 +6,9 @@
         <span>Click to edit</span>
       </div>
     </div>
-    <div v-else class="image-wrapper">
+    <div v-else :class="{ 'hide-cropper': !showCropper }" class="image-wrapper">
       <cropper
+        v-show="showCropper"
         ref="cropper"
         drag-mode="none"
         :view-mode="2"
@@ -24,6 +25,7 @@
         :modal="false"
         :src="currentImage">
       </cropper>
+      <img v-show="!showCropper" :src="currentImage" class="preview-image">
     </div>
   </div>
 </template>
@@ -36,6 +38,11 @@ import isEmpty from 'lodash/isEmpty';
 
 const teChannel = EventBus.channel('te');
 
+function toDataUrl(imageUrl) {
+  if (!imageUrl) return Promise.resolve(imageUrl);
+  return imgSrcToDataURL(imageUrl, 'image/png', 'Anonymous');
+}
+
 export default {
   name: 'te-image',
   props: ['element', 'isFocused'],
@@ -46,29 +53,30 @@ export default {
       showCropper: false
     };
   },
-  methods: {
-    ready() {
-      if (!this.showCropper || !this.$refs.cropper) return;
-      this.$refs.cropper.show();
-    }
-  },
   computed: {
     showPlaceholder() {
-      return isEmpty(this.element.data.url);
+      const imageAvailable = !isEmpty(this.element.data.url);
+      if (imageAvailable) return false;
+      if (this.$refs.cropper) this.$refs.cropper.destroy();
+      return true;
     },
     id() {
       return this.element._cid || this.element.id;
     }
   },
-  mounted() {
-    const imageUrl = this.element.data.url;
-    if (imageUrl) {
-      imgSrcToDataURL(imageUrl, 'image/png', 'Anonymous').then(dataUrl => {
-        this.currentImage = dataUrl;
-        this.persistedImage = dataUrl;
-        this.$refs.cropper.replace(this.currentImage);
-      });
+  methods: {
+    ready() {
+      if (!this.showCropper || !this.$refs.cropper) return;
+      this.$refs.cropper.show();
+    },
+    loadImage(dataUrl) {
+      this.currentImage = dataUrl;
+      this.persistedImage = dataUrl;
+      if (dataUrl) this.$refs.cropper.replace(dataUrl);
     }
+  },
+  mounted() {
+    toDataUrl(this.element.data.url).then(dataUrl => this.loadImage(dataUrl));
 
     teChannel.on(`${this.id}/upload`, dataUrl => {
       if (this.currentImage) this.$refs.cropper.replace(dataUrl);
@@ -106,7 +114,13 @@ export default {
       }
 
       if (this.currentImage) this.$refs.cropper.clear();
+    },
+    'element.data.url'(imageUrl) {
+      toDataUrl(imageUrl).then(dataUrl => this.loadImage(dataUrl));
     }
+  },
+  beforeDestroy() {
+    if (this.$refs.cropper) this.$refs.cropper.destroy();
   },
   components: {
     Cropper
@@ -116,8 +130,8 @@ export default {
 
 <style lang="scss" scoped>
 .image-placeholder {
-  padding: 100px;
   margin-bottom: 0;
+  padding: 100px;
 
   .message {
     .heading {
@@ -129,5 +143,13 @@ export default {
       font-size: 18px;
     }
   }
+}
+
+.hide-cropper /deep/ .cropper-container {
+  display: none;
+}
+
+img {
+  max-width: 100%;
 }
 </style>

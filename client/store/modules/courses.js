@@ -1,7 +1,8 @@
+import Vue from 'vue';
 import VuexCollection from '../helpers/collection.js';
 
 const { state, getter, action, mutation, build } = new VuexCollection('courses', '/courses');
-const PAGINATION_DEFAULTS = { offset: 0, limit: 9 };
+const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
 
 state({
   search: '',
@@ -36,7 +37,8 @@ getter(function hasMoreResults() {
   return !this.state.$internals.allCoursesFetched;
 });
 
-action(function fetch() {
+action(function fetch({ reset = false } = {}) {
+  const mutation = reset ? 'reset' : 'fetch';
   const params = this.getters.courseQueryParams;
   return this.api.get('', params).then(response => {
     const { data: courses } = response.data;
@@ -49,7 +51,7 @@ action(function fetch() {
 
     this.commit('setPagination', { offset: params.offset + params.limit });
     this.commit('allCoursesFetched', courses.length < params.limit);
-    this.commit(params.search ? 'reset' : 'fetch', result);
+    this.commit(mutation, result);
   });
 });
 
@@ -57,13 +59,21 @@ mutation(function resetPagination() {
   this.state.$internals.pagination = PAGINATION_DEFAULTS;
 });
 
+mutation(function save(course) {
+  const search = this.state.search.toLowerCase();
+  const name = course.name.toLowerCase();
+  if (search && !name.includes(search)) return;
+  Vue.set(this.state.items, course._cid, course);
+});
+
 mutation(function setPagination(changes) {
   let $internals = this.state.$internals;
   $internals.pagination = { ...$internals.pagination, ...changes };
 });
 
-mutation(function setSearch(search) {
-  this.state.search = search;
+mutation(function setSearch(query = '') {
+  this.state.$internals.pagination = PAGINATION_DEFAULTS;
+  this.state.search = query;
 });
 
 mutation(function allCoursesFetched(allFetched) {

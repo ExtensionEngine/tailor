@@ -1,5 +1,4 @@
 const addHooks = require('../shared/util/addHooks');
-const includes = require('lodash/includes');
 const logger = require('../shared/logger');
 const { OBJECTIVES } = require('../../config/shared/activities');
 const objectiveTypes = OBJECTIVES.map(it => it.type);
@@ -12,7 +11,6 @@ function add(Course, models) {
 
   // Track objectives.
   addHooks(Activity, hooks, (hook, instance, options) => {
-    if (!includes(objectiveTypes, instance.type)) return;
     const { id, courseId, type } = instance;
     logger.info(`[Course] Activity#${hook}`, { type, id, courseId });
     const where = { courseId, type: objectiveTypes, detached: false };

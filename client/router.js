@@ -10,10 +10,10 @@ import CourseSettings from './components/course/settings';
 import Editor from './components/editor';
 import ForgotPassword from './components/auth/ForgotPassword';
 import General from './components/course/settings/General';
-import Integrations from './components/course/settings/Integrations';
 import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
+import TreeView from './components/course/TreeView';
 import UserManagement from './components/course/settings/UserManagement';
 
 Vue.use(Router);
@@ -38,21 +38,21 @@ let router = new Router({
       component: CourseSettings,
       children: [{
         path: '',
-        name: 'general',
+        name: 'course-info',
         component: General
       }, {
         path: 'users',
         name: 'user-management',
         component: UserManagement
-      }, {
-        path: 'integrations',
-        name: 'integrations',
-        component: Integrations
       }]
     }, {
       path: 'revisions',
       name: 'course-revisions',
       component: CourseRevisions
+    }, {
+      path: 'tree-view',
+      name: 'tree-view',
+      component: TreeView
     }]
   }, {
     path: '/course/:courseId/editor/:activityId',

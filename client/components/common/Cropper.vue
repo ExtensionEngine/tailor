@@ -1,17 +1,18 @@
 <template>
-  <img ref="img" :src="src" :style="containerStyle" :alt="alt"/>
+  <img ref="img" :src="src" :style="style" :alt="alt"/>
 </template>
 
 <script>
-import { assign, omit } from 'lodash';
+import assign from 'lodash/assign';
 import Cropper from 'cropperjs';
+import omit from 'lodash/omit';
 
 // Forked from https://github.com/Agontuk/vue-cropperjs/blob/master/VueCropper.js
 // Cropperjs docs: https://github.com/fengyuanchen/cropperjs
 export default {
   name: 'cropper',
   props: {
-    style: Object,
+    containerStyle: Object,
     data: Object,
     preview: String,
     src: {
@@ -117,8 +118,8 @@ export default {
     crop: Function
   },
   computed: {
-    containerStyle() {
-      return assign({ 'max-width': '100%' }, this.style);
+    style() {
+      return assign({ 'max-width': '100%' }, this.containerStyle);
     }
   },
   methods: {
@@ -207,7 +208,7 @@ export default {
   },
   mounted() {
     let props = {};
-    const data = omit(this.$options.props, ['style', 'src', 'alt']);
+    const data = omit(this.$options.props, ['containerStyle', 'src', 'alt']);
     for (let key in data) {
       if (this[key] !== undefined) {
         props[key] = this[key];

@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[columnWidth, { hovered, focused: isFocused }]"
+    :class="[columnClass, { disabled, hovered, focused: isFocused }]"
     @mouseover="hovered = true"
     @mouseleave="hovered = false"
     @dragstart="$emit('dragstart')"
@@ -16,6 +16,8 @@
         :element="element"
         :isFocused="isFocused"
         :isDragged="dragged"
+        :disabled="disabled"
+        @remove="removeElement(element)"
         @save="save">
       </component>
     </div>
@@ -24,6 +26,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import get from 'lodash/get';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeAccordion from './Accordion/Accordion';
 import TeAssessment from './Assessment';
@@ -33,6 +36,7 @@ import TeEmbed from './Embed';
 import TeHtml from './Html';
 import TeImage from './Image';
 import TeModal from './Modal';
+import TePdf from './Pdf';
 import TeTable from './Table';
 import TeVideo from './Video';
 import throttle from 'lodash/throttle';
@@ -47,15 +51,18 @@ const TE_TYPES = {
   ACCORDION: 'te-accordion',
   CAROUSEL: 'te-carousel',
   MODAL: 'te-modal',
+  PDF: 'te-pdf',
   TABLE: 'te-table'
 };
 
 export default {
   name: 'teaching-element',
   props: {
-    element: Object,
-    disabled: Boolean,
-    dragged: Boolean
+    element: { type: Object, required: false },
+    disabled: { type: Boolean, default: false },
+    // Set `setWidth` to false to control element width externally
+    setWidth: { type: Boolean, default: true },
+    dragged: { type: Boolean, default: false }
   },
   data() {
     return { hovered: false };
@@ -63,18 +70,19 @@ export default {
   computed: {
     ...mapGetters(['focusedElement'], 'editor'),
     isFocused() {
-      if (!this.focusedElement) return false;
+      if (this.disabled || !this.focusedElement) return false;
       return this.focusedElement.embedded
         ? this.focusedElement.id === this.element.id
         : this.focusedElement._cid === this.element._cid;
     },
-    columnWidth() {
-      const data = this.element.data;
-      return data && data.width ? `col-xs-${data.width}` : 'col-xs-12';
+    columnClass() {
+      if (!this.setWidth) return '';
+      const width = get(this.element.data, 'width');
+      return width ? `col-xs-${width}` : 'col-xs-12';
     }
   },
   methods: {
-    ...mapActions({ saveElement: 'save' }, 'tes'),
+    ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
     ...mapMutations(['focusElement'], 'editor'),
     resolveElement(type) {
       return TE_TYPES[type];
@@ -112,6 +120,7 @@ export default {
     TeHtml,
     TeImage,
     TeModal,
+    TePdf,
     TeTable,
     TeVideo
   }
@@ -121,7 +130,7 @@ export default {
 <style lang="scss" scoped>
 .drag-handle {
   position: absolute;
-  top: 0px;
+  top: 0;
   left: -3px;
   z-index: 2;
   width: 26px;
@@ -136,7 +145,7 @@ export default {
 .hovered {
   .drag-handle {
     opacity: 1;
-    transition: opacity .6s ease-in-out;
+    transition: opacity 0.6s ease-in-out;
     cursor: pointer;
   }
 }
@@ -147,7 +156,7 @@ export default {
 
 .teaching-element {
   position: relative;
-  padding: 10px 20px 10px 20px;
+  padding: 10px 20px;
   border: 1px dotted #ccc;
 }
 
@@ -156,5 +165,9 @@ export default {
     border: 1px solid #90a4ae;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
   }
+}
+
+.disabled .drag-handle {
+  display: none;
 }
 </style>
