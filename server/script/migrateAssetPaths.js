@@ -4,7 +4,7 @@ const filter = require('lodash/filter');
 const get = require('lodash/get');
 const Promise = require('bluebird');
 const storage = require('../shared/storage');
-const { TeachingElement } = require('../shared/database');
+const { Revision, TeachingElement } = require('../shared/database');
 
 const LEGACY_IMAGE_PATH = /course\/\d+\/asset\//;
 
@@ -54,6 +54,9 @@ async function migrateAssetPaths() {
   await migrateImages();
   await migrateComposites();
   await migrateAssessments();
+  await Revision.destroy({
+    where: { entity: { $in: ['ACTIVITY', 'TEACHING_ELEMENT'] } }
+  });
   process.exit(0);
 };
 
