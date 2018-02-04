@@ -62,7 +62,7 @@ export default {
     load(query) {
       this.loaderState.loaded();
       this.loaderState.complete();
-      return Promise.join(this.fetch({ reset: true }), Promise.delay(1000))
+      return Promise.join(this.fetch({ reset: true }), Promise.delay(500))
         .then(() => {
           this.loaderState.reset();
           if (!isEmpty(this.courses)) this.loaderState.loaded();

@@ -63,7 +63,7 @@ export default {
     this.setupRevisionApi(`/courses/${courseId}/revisions`);
     this.setupTesApi(`/courses/${courseId}/tes`);
     if (!this.course) this.getCourse(courseId);
-    return Promise.join(this.getActivities(), Promise.delay(800)).then(() => {
+    return Promise.join(this.getActivities(), Promise.delay(500)).then(() => {
       this.showLoader = false;
       let activities = filter(this.activities, { parentId: null });
       activities = sortBy(activities, 'position');
