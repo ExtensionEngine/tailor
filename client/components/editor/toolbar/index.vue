@@ -34,7 +34,7 @@
         <span class="mdi mdi-publish"></span>
       </div>
       <div v-if="activity" class="editor-heading">
-        <h1 :style="{ 'margin-top': breadcrumbs.length ? 0 : '10px' }">
+        <h1 :style="{ 'margin-top': breadcrumbs.length ? '1px' : '9px' }">
           {{ activity.data.name }}
         </h1>
         <div class="breadcrumbs">
