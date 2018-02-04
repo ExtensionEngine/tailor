@@ -39,7 +39,8 @@
 
 <script>
 import filter from 'lodash/filter';
-import { mapGetters, mapActions } from 'vuex-module';
+import first from 'lodash/first';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import multiselect from '../common/Select';
 
 export default {
@@ -50,13 +51,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'structure'], 'course'),
+    ...mapGetters(['course', 'structure', 'activities'], 'course'),
     levels() {
       return filter(this.structure, { level: 1 });
     }
   },
   methods: {
     ...mapActions(['save'], 'activities'),
+    ...mapMutations(['focusActivity'], 'course'),
     onLevelSelected(level) {
       if (!level) return;
       this.level = level;
@@ -69,6 +71,10 @@ export default {
           data: { name: this.name },
           courseId: this.course.id,
           position: 1
+        })
+        .then(() => {
+          const activity = first(this.activities);
+          if (activity) this.focusActivity(activity._cid);
         });
       });
     }
