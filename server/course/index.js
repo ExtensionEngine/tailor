@@ -2,12 +2,13 @@ const { Course } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const ctrl = require('./course.controller');
+const processQuery = require('../shared/util/processListQuery')();
 const router = require('express-promise-router')();
 
 router
   .use('/courses/:id*', getCourse)
   .use('/courses/:id*', hasAccess)
-  .get('/courses', ctrl.index)
+  .get('/courses', processQuery, ctrl.index)
   .post('/courses', ctrl.create)
   .get('/courses/:id', ctrl.get)
   .patch('/courses/:id', ctrl.patch)

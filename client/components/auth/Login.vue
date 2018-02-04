@@ -23,7 +23,9 @@
           Forgot password ?
         </router-link>
       </div>
-      <button type="submit" class="btn btn-default btn-block">Log in</button>
+      <button type="submit" class="btn btn-default btn-material btn-block">
+        Log in
+      </button>
     </form>
   </div>
 </template>

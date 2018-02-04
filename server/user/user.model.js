@@ -54,7 +54,10 @@ class User extends Model {
     };
   }
 
-  static associate({ Course, CourseUser }) {
+  static associate({ Comment, Course, CourseUser }) {
+    this.hasMany(Comment, {
+      foreignKey: { name: 'authorId', field: 'author_id' }
+    });
     this.belongsToMany(Course, {
       through: CourseUser,
       foreignKey: { name: 'userId', field: 'user_id' }

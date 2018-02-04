@@ -81,7 +81,7 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
-  height: 72px;
+  min-height: 72px;
   padding: 0 16px;
 
   .acronym {
@@ -99,7 +99,7 @@ export default {
   }
 
   .content {
-    flex-grow: 1;
+    flex: 1;
 
     .description {
       font-size: 16px;

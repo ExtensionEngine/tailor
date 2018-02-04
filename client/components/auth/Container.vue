@@ -3,7 +3,7 @@
     <div class="auth-panel">
       <div class="auth-header">
         <img :src="logo" alt="Logo"/>
-        <h1>Course Authoring</h1>
+        <h1>{{ title }}</h1>
       </div>
       <div class="auth-body">
         <router-view></router-view>
@@ -16,6 +16,7 @@
 export default {
   data() {
     return {
+      title: BRAND_CONFIG.TITLE,
       logo: BRAND_CONFIG.LOGO_FULL
     };
   }
@@ -28,14 +29,15 @@ export default {
 }
 
 .auth-panel {
-  width: 500px;
+  width: 440px;
   margin: auto;
   background-color: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  border-radius: 4px;
   transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1);
 
   &:hover {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.20), 0 6px 8px rgba(0,0,0,0.22);
   }
 
   img {
@@ -46,13 +48,14 @@ export default {
   h1 {
     margin: 0;
     color: white;
-    font-size: 18px;
+    font-size: 22px;
     line-height: 18px;
   }
 
   .auth-header {
-    padding-bottom: 15px;
-    background: linear-gradient(90deg, $brandColor 60%, $altBrandColor);
+    padding-bottom: 20px;
+    background: linear-gradient(90deg, $brandColor 65%, $altBrandColor);
+    border-radius: 4px 4px 0 0;
   }
 
   .auth-body {

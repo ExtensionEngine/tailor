@@ -10,6 +10,8 @@ const reduce = require('lodash/reduce');
 const storage = require('../storage');
 const { TeachingElement } = require('../database');
 
+const { FLAT_REPO_STRUCTURE } = process.env;
+
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
     let { repository, predecessors, spine } = data;
@@ -58,7 +60,7 @@ function unpublishActivity(repository, activity) {
     return Promise.map(deleted, it => {
       const filenames = getActivityFilenames(it);
       return Promise.map(filenames, filename => {
-        let key = `repository/${repository.id}/${it.id}/${filename}.json`;
+        const key = `${getBaseUrl(repository.id, it.id)}/${filename}.json`;
         return storage.deleteFile(key);
       });
     }).then(() => {
@@ -109,7 +111,8 @@ function publishAssessments(parent) {
   const options = { where: { type: 'ASSESSMENT' } };
   return parent.getTeachingElements(options).then(assessments => {
     if (!assessments.length) return Promise.resolve([]);
-    return saveFile(parent, 'assessments', assessments).then(() => assessments);
+    const key = getAssessmentsKey(parent);
+    return saveFile(parent, key, assessments).then(() => assessments);
   });
 }
 
@@ -137,27 +140,32 @@ function fetchExams(parent) {
 }
 
 async function fetchQuestionGroups(exam) {
-  // TODO: Name relationship in order to avoid PascalCase
   const groups = await exam.getChildren({
     include: [{
       model: TeachingElement,
-      attributes: ['id', 'type', 'position', 'data', 'createdAt', 'updatedAt']
+      attributes: [
+        'id', 'type', 'position', 'data', 'refs', 'createdAt', 'updatedAt'
+      ]
     }]
   });
+  // TODO: Name relationship in order to avoid PascalCase
   return {
     exam,
-    groups: map(groups, it => ({
-      ...pick(it, ['id', 'type', 'position', 'data', 'createdAt']),
-      intro: filter(it.TeachingElements, it => it.type !== 'ASSESSMENT'),
-      assessments: filter(it.TeachingElements, { type: 'ASSESSMENT' })
+    groups: map(groups, group => ({
+      ...pick(group, ['id', 'type', 'position', 'data', 'createdAt']),
+      intro: map(
+        filter(group.TeachingElements, it => it.type !== 'ASSESSMENT'),
+        it => pick(it, ['id', 'type', 'position', 'data', 'createdAt', 'updatedAt'])
+      ),
+      assessments: filter(group.TeachingElements, { type: 'ASSESSMENT' })
     }))
   };
 }
 
 function saveFile(parent, key, data) {
-  const { id, courseId } = parent;
   const buffer = Buffer.from(JSON.stringify(data), 'utf8');
-  return storage.saveFile(`repository/${courseId}/${id}/${key}.json`, buffer);
+  const baseUrl = getBaseUrl(parent.courseId, parent.id);
+  return storage.saveFile(`${baseUrl}/${key}.json`, buffer);
 }
 
 function saveSpine(spine) {
@@ -201,15 +209,25 @@ function attachContentSummary(obj, { containers, exams, assessments }) {
 function getActivityFilenames(spineActivity) {
   const { contentContainers = [], exams = [], assessments = [] } = spineActivity;
   let filenames = [];
-  if (assessments.length) filenames.push('assessments');
-  filenames.concat(map(exams, it => `${it.id}.exam`));
-  filenames.concat(map(contentContainers, it => `${it.id}.container`));
+  if (assessments.length) filenames.push(getAssessmentsKey(spineActivity));
+  filenames.push(...map(exams, it => `${it.id}.exam`));
+  filenames.push(...map(contentContainers, it => `${it.id}.container`));
   return filenames;
 }
 
 function renameKey(obj, key, newKey) {
   obj[newKey] = obj[key];
   delete obj[key];
+}
+
+function getAssessmentsKey(parent) {
+  return FLAT_REPO_STRUCTURE ? `${parent.id}.assessments` : 'assessments';
+}
+
+function getBaseUrl(repoId, parentId) {
+  return FLAT_REPO_STRUCTURE
+    ? `repository/${repoId}`
+    : `repository/${repoId}/${parentId}`;
 }
 
 module.exports = {
