@@ -17,7 +17,9 @@
       </course-card>
       <infinite-loading @infinite="loadMore" ref="infiniteLoading">
         <div slot="spinner" class="spinner"><circular-progress/></div>
-        <div slot="no-results" class="no-results">No courses found.</div>
+        <div slot="no-results" class="no-results">
+          {{ orderedCourses.length ? '' : 'No courses found.' }}
+        </div>
         <span slot="no-more"></span>
       </infinite-loading>
     </div>
