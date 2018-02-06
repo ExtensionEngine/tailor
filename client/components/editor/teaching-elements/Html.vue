@@ -75,7 +75,11 @@ export default {
   },
   watch: {
     element(val) {
-      this.content = get(val, 'data.content', '');
+      // Make sure that component state is kept
+      // until events (i.e. focusout => save) are triggered
+      setTimeout(() => {
+        this.content = get(val, 'data.content', '');
+      }, 0);
     },
     isFocused(val, oldVal) {
       if (oldVal && !val) this.save();
