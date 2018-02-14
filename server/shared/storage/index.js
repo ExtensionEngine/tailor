@@ -1,3 +1,4 @@
+const autobind = require('auto-bind');
 const isEmpty = require('lodash/isEmpty');
 const isString = require('lodash/isString');
 const Amazon = require('./providers/amazon').provider;
@@ -18,15 +19,7 @@ class Storage {
     const { client: ProviderClass, config: providerConfig } = providerData;
 
     this.provider = new ProviderClass(providerConfig);
-
-    this.getFile = this.getFile.bind(this);
-    this.saveFile = this.saveFile.bind(this);
-    this.deleteFile = this.deleteFile.bind(this);
-    this.listFiles = this.listFiles.bind(this);
-    this.getFileUrl = this.getFileUrl.bind(this);
-    this.fileExists = this.fileExists.bind(this);
-    this.copyFile = this.copyFile.bind(this);
-    this.moveFile = this.moveFile.bind(this);
+    autobind(this);
   }
 
   static validateProvider(provider) {
@@ -55,8 +48,8 @@ class Storage {
     return this.provider.getFile(key, options);
   }
 
-  saveFile(key, file, options = {}) {
-    return this.provider.saveFile(key, file, options);
+  saveFile(key, data, options = {}) {
+    return this.provider.saveFile(key, data, options);
   }
 
   deleteFile(key, options = {}) {
@@ -67,12 +60,12 @@ class Storage {
     return this.provider.listFiles(options);
   }
 
-  getFileUrl(key, options = {}) {
-    return this.provider.getFileUrl(key, options);
-  }
-
   fileExists(key, options = {}) {
     return this.provider.fileExists(key, options);
+  }
+
+  getFileUrl(key, options = {}) {
+    return this.provider.getFileUrl(key, options);
   }
 
   moveFile(key, newKey, options = {}) {

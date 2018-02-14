@@ -96,5 +96,6 @@ class Amazon {
 };
 
 module.exports = {
+  schema,
   provider: Amazon
 };
