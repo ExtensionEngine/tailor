@@ -1,47 +1,11 @@
 const autobind = require('auto-bind');
-const isEmpty = require('lodash/isEmpty');
-const isString = require('lodash/isString');
-const Amazon = require('./providers/amazon').provider;
 const config = require('../../../config/server').storage;
+const path = require('path');
 
-const providerMapping = {
-  amazon: {
-    client: Amazon,
-    config: config.amazon
-  }
-};
-
-// TODO(marko): Write tests. Move to separate module and expose via index.js?
 class Storage {
   constructor(config) {
-    const providerName = Storage.validateProvider(config.provider);
-    const providerData = Storage.getProviderData(providerName, providerMapping);
-    const { client: ProviderClass, config: providerConfig } = providerData;
-
-    this.provider = new ProviderClass(providerConfig);
+    this.provider = Storage.createProvider(config);
     autobind(this);
-  }
-
-  static validateProvider(provider) {
-    if (!isString(provider || !isEmpty(provider))) {
-      throw Error('Provider should be defined in config');
-    }
-
-    return provider;
-  }
-
-  /**
-   * @description Validates wether provider data exists in provider mapping,
-   * based on provider name. Throws error if not.
-   *
-   * @param {string} name Name of the storage provider.
-   * @param {object} mapping Object containing provider config and class.
-   * @return {object} Return provider class and provider config.
-   */
-  static getProviderData(name, mapping) {
-    const { config, client } = mapping[name];
-    if (!config || !client) throw Error('Provider is not supported');
-    return { client, config };
   }
 
   getFile(key, options = {}) {
@@ -75,6 +39,28 @@ class Storage {
   copyFile(key, newKey, options = {}) {
     return this.provider.copyFile(key, newKey, options);
   }
+
+  static createProvider(options) {
+    // Validate provider name.
+    const providerName = options.provider;
+    if (!options[providerName]) {
+      throw new Error('Provider should be defined in config');
+    }
+
+    // Load provider and create instance.
+    const config = options[providerName];
+    const provider = loadProvider(providerName);
+    return provider.create(config);
+  }
 }
 
 module.exports = new Storage(config);
+
+function loadProvider(name) {
+  try {
+    return require(path.join(__dirname, './providers/', name));
+  } catch (err) {
+    if (err.code === 'MODULE_NOT_FOUND') throw new Error('Unsupported provider');
+    throw err;
+  }
+}

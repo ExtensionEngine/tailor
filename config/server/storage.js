@@ -1,4 +1,3 @@
-// TODO(marko): Default to local upload? Add other keys if necessary.
 module.exports = {
   amazon: {
     key: process.env.STORAGE_KEY,

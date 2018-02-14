@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const path = require('path');
 const S3 = require('aws-sdk/clients/s3');
-const validateConfig = require('../validation').validateConfig;
+const { validateConfig } = require('../validation');
 
 const DEFAULT_EXPIRATION_TIME = 3600;  // seconds
 
@@ -27,6 +27,10 @@ class Amazon {
     this.bucket = config.bucket;
     this.region = config.region;
     this.client = new S3(s3Config);
+  }
+
+  static create(config) {
+    return new Amazon(config);
   }
 
   path(...segments) {
@@ -97,5 +101,5 @@ class Amazon {
 
 module.exports = {
   schema,
-  provider: Amazon
+  create: Amazon.create
 };
