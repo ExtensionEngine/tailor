@@ -180,6 +180,7 @@ function addToSpine(spine, activity) {
     'publishedAt', 'updatedAt', 'createdAt'
   ];
   activity = pick(activity, attributes);
+  activity.prerequisites = get(activity, 'refs.prerequisites', []);
   renameKey(activity, 'data', 'meta');
   let index = findIndex(spine.structure, { id: activity.id });
   if (index < 0) {
