@@ -3,6 +3,7 @@ const path = require('path');
 const S3 = require('aws-sdk/clients/s3');
 const { validateConfig } = require('../validation');
 
+const isNotFound = err => err.code === 'NoSuchKey';
 const DEFAULT_EXPIRATION_TIME = 3600;  // seconds
 
 const schema = Joi.object().keys({
@@ -41,7 +42,12 @@ class Amazon {
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
   getFile(key, options = {}) {
     const params = Object.assign(options, { Bucket: this.bucket, Key: key });
-    return this.client.getObject(params).promise();
+    return this.client.getObject(params).promise()
+      .then(({ Body: data }) => data)
+      .catch(err => {
+        if (isNotFound(err)) return null;
+        return Promise.reject(err);
+      });
   }
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
@@ -61,7 +67,7 @@ class Amazon {
 
   moveFile(key, newKey, options = {}) {
     return this.copyFile(key, newKey, options)
-      .then(file => this.deleteFile(key).then(() => file));
+      .then(result => this.deleteFile(key).then(() => result));
   }
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObject-property
