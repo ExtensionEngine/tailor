@@ -67,6 +67,7 @@ class FilesystemStorage {
     return exists(this.path(key));
   }
 
+  // Uses dataURIs that are permanent by definition.
   getFileUrl(key, options = {}) {
     return this.getFile(key, options)
       .then(data => getDataUrl(data));
