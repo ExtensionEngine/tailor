@@ -175,11 +175,13 @@ function saveSpine(spine) {
 }
 
 function addToSpine(spine, activity) {
-  const attributes = [
-    'id', 'parentId', 'type', 'position', 'data',
-    'publishedAt', 'updatedAt', 'createdAt'
-  ];
-  activity = pick(activity, attributes);
+  activity = Object.assign(
+    pick(activity, [
+      'id', 'parentId', 'type', 'position', 'data',
+      'publishedAt', 'updatedAt', 'createdAt'
+    ]),
+    { prerequisites: get(activity, 'refs.prerequisites', []) }
+  );
   renameKey(activity, 'data', 'meta');
   let index = findIndex(spine.structure, { id: activity.id });
   if (index < 0) {
