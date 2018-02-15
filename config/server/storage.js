@@ -5,6 +5,8 @@ module.exports = {
     region: process.env.STORAGE_REGION,
     bucket: process.env.STORAGE_BUCKET
   },
-  local: {},
+  filesystem: {
+    path: process.env.STORAGE_PATH
+  },
   provider: process.env.STORAGE_PROVIDER
 };

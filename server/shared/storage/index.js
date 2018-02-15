@@ -47,10 +47,9 @@ class Storage {
       throw new Error('Provider should be defined in config');
     }
 
-    // Load provider and create instance.
+    // Load provider module & create provider instance.
     const config = options[providerName];
-    const provider = loadProvider(providerName);
-    return provider.create(config);
+    return loadProvider(providerName).create(config);
   }
 }
 
