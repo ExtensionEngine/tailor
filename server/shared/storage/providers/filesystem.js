@@ -47,7 +47,8 @@ class FilesystemStorage {
   copyFile(key, newKey) {
     const src = this.path(key);
     const dest = this.path(newKey);
-    return fs.copyFileAsync(src, dest);
+    return mkdirp(path.dirname(dest))
+      .then(() => fs.copyFileAsync(src, dest));
   }
 
   moveFile(key, newKey) {
