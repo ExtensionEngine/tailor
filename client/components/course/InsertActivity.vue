@@ -16,10 +16,12 @@
       </span>
       <multiselect
         v-if="hasChildren"
+        v-validate="'required'"
         :value="activityType ? getActivityLevel(activityType) : levels[0]"
         :options="levels"
         :searchable="false"
         @input="onLevelSelected"
+        data-vv-delay="0"
         class="type-select">
       </multiselect>
       <div class="actions">
