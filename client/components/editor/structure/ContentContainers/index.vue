@@ -28,6 +28,7 @@
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
+import get from 'lodash/get';
 import { mapActions } from 'vuex-module';
 import maxBy from 'lodash/maxBy';
 
@@ -53,7 +54,7 @@ export default {
       return !(!this.multiple && this.containerGroup.length);
     },
     nextPosition() {
-      const last = maxBy(this.containerGroup, 'position') || 0;
+      const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);
       return last + 1;
     }
   },
