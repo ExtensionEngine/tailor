@@ -51,6 +51,7 @@
 <script>
 import * as config from 'shared/activities';
 import AccordionToolbar from './AccordionToolbar';
+import BrightcoveVideoToolbar from './BrightcoveVideoToolbar.vue';
 import CarouselToolbar from './CarouselToolbar';
 import DefaultToolbar from './DefaultToolbar';
 import drop from 'lodash/drop';
@@ -74,6 +75,7 @@ const appChannel = EventBus.channel('app');
 const TOOLBAR_TYPES = {
   IMAGE: 'image-toolbar',
   VIDEO: 'video-toolbar',
+  BRIGHTCOVE_VIDEO: 'brightcove-video-toolbar',
   EMBED: 'embed-toolbar',
   HTML: 'quill-toolbar',
   ACCORDION: 'accordion-toolbar',
@@ -166,6 +168,7 @@ export default {
   components: {
     AccordionToolbar,
     CarouselToolbar,
+    BrightcoveVideoToolbar,
     DefaultToolbar,
     EmbedToolbar,
     ImageToolbar,

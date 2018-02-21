@@ -36,6 +36,7 @@ const TE_TYPES = [
   { type: 'HTML', label: 'Text', icon: 'mdi-format-text' },
   { type: 'IMAGE', label: 'Image', icon: 'mdi-image' },
   { type: 'VIDEO', label: 'Video', icon: 'mdi-video' },
+  { type: 'BRIGHTCOVE_VIDEO', label: 'Brightcove Video', icon: 'mdi-video' },
   { type: 'ASSESSMENT', label: 'Question', icon: 'mdi-help' },
   { type: 'EMBED', label: 'Embed', icon: 'mdi-arrange-bring-forward' },
   { type: 'BREAK', label: 'Page Break', icon: 'mdi-format-page-break' },

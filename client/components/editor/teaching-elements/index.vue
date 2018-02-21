@@ -31,6 +31,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeAccordion from './Accordion/Accordion';
 import TeAssessment from './Assessment';
 import TeBreak from './PageBreak';
+import TeBrightcoveVideo from './BrightcoveVideo/index.vue';
 import TeCarousel from './Carousel/Carousel';
 import TeEmbed from './Embed';
 import TeHtml from './Html';
@@ -43,6 +44,7 @@ import throttle from 'lodash/throttle';
 
 const TE_TYPES = {
   BREAK: 'te-break',
+  BRIGHTCOVE_VIDEO: 'te-brightcove-video',
   EMBED: 'te-embed',
   HTML: 'te-html',
   IMAGE: 'te-image',
@@ -115,6 +117,7 @@ export default {
     TeAccordion,
     TeAssessment,
     TeBreak,
+    TeBrightcoveVideo,
     TeCarousel,
     TeEmbed,
     TeHtml,

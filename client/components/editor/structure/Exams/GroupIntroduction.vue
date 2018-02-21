@@ -3,7 +3,7 @@
     <tes-list
       :list="introductionElements"
       :activity="group"
-      :types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
+      :types="['HTML', 'IMAGE', /* 'BRIGHTCOVE_VIDEO, */ 'VIDEO', 'EMBED']"
       :layout="true"
       @add="saveElement"
       @update="reorder">
