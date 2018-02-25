@@ -22,11 +22,11 @@ class NpmClient {
   }
 
   install(packages = []) {
-    return this.run('install', packages, null);
+    return this.run('install', packages, {});
   }
 
   remove(packages = []) {
-    return this.run('remove', packages, null);
+    return this.run('remove', packages, {});
   }
 
   prune() {

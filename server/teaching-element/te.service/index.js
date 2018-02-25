@@ -4,8 +4,8 @@ const NpmClient = require('./npm');
 const path = require('path');
 const Promise = require('bluebird');
 const PromiseQueue = require('promise-queue');
-const fs = Promise.promisifyAll(require('fs'));
 
+const fs = Promise.promisifyAll(require('fs'));
 const resolvePath = str => path.resolve(expandPath(str));
 
 class TeachingElementService {
