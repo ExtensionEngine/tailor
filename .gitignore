@@ -32,6 +32,10 @@ client/assets/img/*favicon*
 # DB migrations
 umzug.json
 
+# Extensions
+tailor_modules/**
+!/tailor_modules/.gitkeep
+
 # Build artifacts
 dist/
 stats.json
