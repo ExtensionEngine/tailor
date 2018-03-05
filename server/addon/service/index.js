@@ -1,7 +1,10 @@
 const config = require('../../../config/server');
 const expandPath = require('untildify');
+const logger = require('../../shared/logger');
+const npa = require('npm-package-arg')
 const NpmClient = require('./npm');
 const path = require('path');
+const pluralize = require('pluralize');
 const Promise = require('bluebird');
 const PromiseQueue = require('promise-queue');
 
@@ -28,10 +31,16 @@ class AddonService {
   }
 
   install(packages = [], options = {}) {
+    packages = sanitize(packages);
+    const count = packages.length;
+    logger.info(`[PackageManager] installing ${count} ${pluralize('package', count)}:`, packages);
     return this.queue.add(() => this.packageManager.install(packages, options));
   }
 
   remove(packages = [], options = {}) {
+    packages = sanitize(packages);
+    const count = packages.length;
+    logger.info(`[PackageManager] uninstalling ${count} ${pluralize('package', count)}:`, packages);
     return this.queue.add(() => this.packageManager.remove(packages, options));
   }
 }
@@ -43,4 +52,21 @@ function createPackagefile(dest, contents) {
   return fs.openAsync(file, 'wx')
     .then(fd => fs.writeAsync(fd, Buffer.from(contents)))
     .catch(err => (err.code !== 'EEXIST') ? Promise.reject(err) : true);
+}
+
+function sanitize(packages = []) {
+  return packages.reduce((acc, it) => {
+    const [err, desc] = parsePkgDesc(it);
+    if (err) return acc;
+    acc.push(desc.raw);
+    return acc;
+  }, []);
+}
+
+function parsePkgDesc(str) {
+  try {
+    return [null, npa(str)];
+  } catch (err) {
+    return [err];
+  }
 }

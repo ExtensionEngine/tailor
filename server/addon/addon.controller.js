@@ -6,7 +6,7 @@ function list(_, res) {
 
 module.exports = {
   install: update(addons, addons.install),
-  uninstall: update(addons, addons.uninstall),
+  uninstall: update(addons, addons.remove),
   list
 };
 
