@@ -13,7 +13,7 @@ const template = JSON.stringify({
   private: true
 });
 
-class TeachingElementService {
+class AddonService {
   constructor(options = {}) {
     const path = resolvePath(options.modulesPath);
     this.packageManager = new NpmClient({ path });
@@ -36,7 +36,7 @@ class TeachingElementService {
   }
 }
 
-module.exports = new TeachingElementService({ modulesPath: config.modulesPath });
+module.exports = new AddonService({ modulesPath: config.modulesPath });
 
 function createPackagefile(dest, contents) {
   const file = path.join(dest, '/package.json');
