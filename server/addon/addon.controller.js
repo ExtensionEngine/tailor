@@ -11,13 +11,11 @@ module.exports = {
 };
 
 function update(addons, action) {
-  return function ({ body }, res) {
+  return async function ({ body }, res) {
     const { packages, loglevel } = body;
-    return action.call(addons, packages, { loglevel })
-      .then(proc => {
-        proc.stdout.pipe(res);
-        proc.stderr.pipe(res);
-        return proc.promise();
-      });
+    const proc = await action.call(addons, packages, { loglevel });
+    proc.stdout.pipe(res);
+    proc.stderr.pipe(res);
+    return proc.promise();
   };
 }
