@@ -34,10 +34,6 @@ class TeachingElementService {
   remove(packages = [], options = {}) {
     return this.queue.add(() => this.packageManager.remove(packages, options));
   }
-
-  prune() {
-    return this.queue.add(() => this.packageManager.prune());
-  }
 }
 
 module.exports = new TeachingElementService({ modulesPath: config.modulesPath });

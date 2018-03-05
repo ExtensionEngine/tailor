@@ -30,10 +30,6 @@ class NpmClient {
   remove(packages = [], { loglevel = DEFAULT_LOGLEVEL } = {}) {
     return this.run('remove', packages, { loglevel });
   }
-
-  prune() {
-    return this.run('prune');
-  }
 }
 
 module.exports = NpmClient;
