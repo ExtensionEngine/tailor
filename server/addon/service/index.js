@@ -1,6 +1,7 @@
 const config = require('../../../config/server');
 const expandPath = require('untildify');
 const logger = require('../../shared/logger');
+const logstream = require('./logstream');
 const npa = require('npm-package-arg')
 const NpmClient = require('./npm');
 const path = require('path');
@@ -34,14 +35,16 @@ class AddonService {
     packages = sanitize(packages);
     const count = packages.length;
     logger.info(`[PackageManager] installing ${count} ${pluralize('package', count)}:`, packages);
-    return this.queue.add(() => this.packageManager.install(packages, options));
+    return this.queue.add(() => this.packageManager.install(packages, options))
+      .then(proc => Object.assign(proc, { jsonl: logstream(proc) }));
   }
 
   remove(packages = [], options = {}) {
     packages = sanitize(packages);
     const count = packages.length;
     logger.info(`[PackageManager] uninstalling ${count} ${pluralize('package', count)}:`, packages);
-    return this.queue.add(() => this.packageManager.remove(packages, options));
+    return this.queue.add(() => this.packageManager.remove(packages, options))
+      .then(proc => Object.assign(proc, { jsonl: logstream(proc) }));
   }
 }
 
