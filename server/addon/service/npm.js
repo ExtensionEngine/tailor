@@ -1,6 +1,8 @@
 const { run } = require('./shell');
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
+const DEFAULT_LOGLEVEL = 'info';
+
 class NpmClient {
   constructor(options = {}) {
     this.path = options.path;
@@ -16,17 +18,17 @@ class NpmClient {
     return run(npm, command, args, options);
   }
 
-  list() {
-    const options = { depth: 0, json: true, long: true };
+  list({ verbose = false } = {}) {
+    const options = { depth: 0, json: true, long: verbose };
     return this.run('list', options);
   }
 
-  install(packages = []) {
-    return this.run('install', packages, {});
+  install(packages = [], { loglevel = DEFAULT_LOGLEVEL } = {}) {
+    return this.run('install', packages, { loglevel });
   }
 
-  remove(packages = []) {
-    return this.run('remove', packages, {});
+  remove(packages = [], { loglevel = DEFAULT_LOGLEVEL } = {}) {
+    return this.run('remove', packages, { loglevel });
   }
 
   prune() {

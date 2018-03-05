@@ -21,18 +21,18 @@ class TeachingElementService {
     this.queue.add(() => createPackagefile(path, template));
   }
 
-  list() {
-    return this.queue.add(() => this.packageManager.list())
+  list(options = {}) {
+    return this.queue.add(() => this.packageManager.list(options))
       .then(proc => proc.promise())
       .then(({ stdout }) => JSON.parse(stdout));
   }
 
-  install(packages = []) {
-    return this.queue.add(() => this.packageManager.install(packages));
+  install(packages = [], options = {}) {
+    return this.queue.add(() => this.packageManager.install(packages, options));
   }
 
-  remove(packages = []) {
-    return this.queue.add(() => this.packageManager.remove(packages));
+  remove(packages = [], options = {}) {
+    return this.queue.add(() => this.packageManager.remove(packages, options));
   }
 
   prune() {
