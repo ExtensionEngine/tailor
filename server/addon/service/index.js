@@ -9,6 +9,7 @@ const pluralize = require('pluralize');
 const Promise = require('bluebird');
 const PromiseQueue = require('promise-queue');
 const task = require('./task');
+const toArray = require('lodash/toArray');
 
 const fs = Promise.promisifyAll(require('fs'));
 const resolvePath = str => path.resolve(expandPath(str));
@@ -22,6 +23,7 @@ const template = jsonify({
 
 class AddonService {
   constructor(options = {}) {
+    this._addons = [];
     const path = resolvePath(options.modulesPath);
     this.packageManager = new NpmClient({ path });
     this.queue = new PromiseQueue(1, Infinity);
@@ -41,7 +43,7 @@ class AddonService {
     const count = packages.length;
     const install = task(() => this.packageManager.install(packages, options));
     logger.info(`[PackageManager] installing ${count} ${pluralize('package', count)}:`, packages);
-    this.queue.add(() => install.run());
+    this.queue.add(() => install.run()).then(() => this._collect());
     return install.getProcess()
       .then(proc => Object.assign(proc, { jsonl: logstream(proc) }));
   }
@@ -51,9 +53,14 @@ class AddonService {
     const count = packages.length;
     const uninstall = task(() => this.packageManager.remove(packages, options));
     logger.info(`[PackageManager] uninstalling ${count} ${pluralize('package', count)}:`, packages);
-    this.queue.add(() => uninstall.run());
+    this.queue.add(() => uninstall.run()).then(() => this._collect());
     return uninstall.getProcess()
       .then(proc => Object.assign(proc, { jsonl: logstream(proc) }));
+  }
+
+  _collect() {
+    return this.list({ verbose: true })
+      .then(({ dependencies }) => (this._addons = toArray(dependencies)));
   }
 }
 
