@@ -8,6 +8,7 @@ const path = require('path');
 const pluralize = require('pluralize');
 const Promise = require('bluebird');
 const PromiseQueue = require('promise-queue');
+const task = require('./task');
 
 const fs = Promise.promisifyAll(require('fs'));
 const resolvePath = str => path.resolve(expandPath(str));
@@ -28,7 +29,9 @@ class AddonService {
   }
 
   list(options = {}) {
-    return this.queue.add(() => this.packageManager.list(options))
+    const list = task(() => this.packageManager.list(options));
+    this.queue.add(() => list.run());
+    return list.getProcess()
       .then(proc => proc.promise())
       .then(({ stdout }) => JSON.parse(stdout));
   }
@@ -36,16 +39,20 @@ class AddonService {
   install(packages = [], options = {}) {
     packages = sanitize(packages);
     const count = packages.length;
+    const install = task(() => this.packageManager.install(packages, options));
     logger.info(`[PackageManager] installing ${count} ${pluralize('package', count)}:`, packages);
-    return this.queue.add(() => this.packageManager.install(packages, options))
+    this.queue.add(() => install.run());
+    return install.getProcess()
       .then(proc => Object.assign(proc, { jsonl: logstream(proc) }));
   }
 
   remove(packages = [], options = {}) {
     packages = sanitize(packages);
     const count = packages.length;
+    const uninstall = task(() => this.packageManager.remove(packages, options));
     logger.info(`[PackageManager] uninstalling ${count} ${pluralize('package', count)}:`, packages);
-    return this.queue.add(() => this.packageManager.remove(packages, options))
+    this.queue.add(() => uninstall.run());
+    return uninstall.getProcess()
       .then(proc => Object.assign(proc, { jsonl: logstream(proc) }));
   }
 }
