@@ -12,8 +12,8 @@ module.exports = {
 
 function update(addons, action) {
   return async function ({ body, query }, res) {
-    const { packages, loglevel } = body;
-    const proc = await action.call(addons, packages, { loglevel });
+    const { packages, loglevel, scripts } = body;
+    const proc = await action.call(addons, packages, { loglevel, scripts });
     if (query.format === 'raw') {
       proc.stdout.pipe(res);
       proc.stderr.pipe(res);

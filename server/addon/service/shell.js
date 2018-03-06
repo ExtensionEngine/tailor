@@ -16,7 +16,7 @@ function run(program, command, args, options) {
     env: options.env || process.env,
     stdio: ['ignore', 'pipe', 'pipe']
   };
-  const flags = dargs(options, { excludes: Object.keys(opts) });
+  const flags = dargs(options, { excludes: Object.keys(opts), ignoreFalse: true });
   const proc = spawn(program, [command, ...flags, ...args], opts);
   proc.promise = () => toPromise(proc);
   return proc;

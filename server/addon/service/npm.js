@@ -23,12 +23,14 @@ class NpmClient {
     return this.run('list', options);
   }
 
-  install(packages = [], { loglevel = DEFAULT_LOGLEVEL } = {}) {
-    return this.run('install', packages, { loglevel });
+  install(packages = [], options = {}) {
+    const { loglevel = DEFAULT_LOGLEVEL, scripts = false } = options;
+    return this.run('install', packages, { loglevel, ignoreScripts: !scripts });
   }
 
-  remove(packages = [], { loglevel = DEFAULT_LOGLEVEL } = {}) {
-    return this.run('remove', packages, { loglevel });
+  remove(packages = [], options = {}) {
+    const { loglevel = DEFAULT_LOGLEVEL, scripts = false } = options;
+    return this.run('remove', packages, { loglevel, ignoreScripts: !scripts });
   }
 }
 

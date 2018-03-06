@@ -11,9 +11,11 @@ const PromiseQueue = require('promise-queue');
 
 const fs = Promise.promisifyAll(require('fs'));
 const resolvePath = str => path.resolve(expandPath(str));
+const jsonify = obj => JSON.stringify(obj, null, 2);
 
-const template = JSON.stringify({
+const template = jsonify({
   '//NOTE': 'Do NOT remove this file!',
+  name: 'tailor-addons',
   private: true
 });
 
