@@ -1,4 +1,4 @@
-const split = require('split');
+const split = require('split2');
 
 const reLine = /\r?\n/;
 const write = obj => `${JSON.stringify(obj)}\n`;
