@@ -1,0 +1,40 @@
+# Dependencies
+node_modules
+
+# Editors
+.vscode
+*.sublime-*
+.idea
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Test reports
+client/test/unit/coverage
+client/test/e2e/reports
+selenium-debug.log
+
+# Configuration
+.env
+ecosystem.config.js
+.*rc.*
+!.eslintrc*
+!.*rc.*.example
+
+# Branding
+client/assets/img/*logo*
+!client/assets/img/default-logo*
+client/assets/img/*favicon*
+!client/assets/img/default-favicon.ico
+
+# DB migrations
+umzug.json
+
+# Build artifacts
+dist/
+stats.json
+
+# General
+.DS_Store
