@@ -57,7 +57,7 @@ import { getChildren } from 'utils/activity';
 import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
-import multiselect from '../common/Select';
+import multiselect from 'components/common/Select';
 import sortBy from 'lodash/sortBy';
 import { withValidation } from 'utils/validation';
 
