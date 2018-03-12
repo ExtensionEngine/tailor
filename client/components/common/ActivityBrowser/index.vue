@@ -7,7 +7,7 @@
     <select-activity
       v-else
       :repository="repository"
-      :levels="levels"
+      :selectableLevels="selectableLevels"
       @reset="repository = null"
       @selected="activity => $emit('selected', activity)">
     </select-activity>
@@ -19,7 +19,7 @@ import SelectActivity from './SelectActivity';
 import SelectRepository from './SelectRepository';
 
 export default {
-  props: ['levels'],
+  props: ['selectableLevels'],
   data() {
     return {
       repository: null,

@@ -34,7 +34,7 @@ import reduce from 'lodash/reduce';
 import uniqBy from 'lodash/uniqBy';
 
 export default {
-  props: ['repository', 'levels'],
+  props: ['repository', 'selectableLevels'],
   data() {
     return {
       showLoader: true,
@@ -56,8 +56,8 @@ export default {
       }
     },
     isSelectable({ type }) {
-      if (!this.levels) return true;
-      return !!find(this.levels, { type });
+      if (!this.selectableLevels) return true;
+      return !!find(this.selectableLevels, { type });
     },
     hasChildren(activity) {
       return !!this.getChildren(activity).length;
@@ -79,7 +79,7 @@ export default {
     activityApi.getActivities(this.repository.id).then(activities => {
       // Make sure that only selectable activities and their parents
       // are included
-      const types = map(this.levels, 'type');
+      const types = map(this.selectableLevels, 'type');
       const targets = filter(activities, it => types.includes(it.type));
       activities = reduce(targets,
         (acc, it) => acc.concat([it, ...getAncestors(activities, it)]), []);
