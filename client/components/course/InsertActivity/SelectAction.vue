@@ -3,7 +3,7 @@
     <div
       v-for="action in actions"
       :key="action.name"
-      @click="$emit(action.name)"
+      @click="$emit('selected', action.name)"
       class="action">
       <span :class="action.icon" class="mdi"></span>
       <span>{{ action.label }}</span>
@@ -14,8 +14,7 @@
 <script>
 const ACTIONS = [
   { name: 'create', label: 'Create', icon: 'mdi-plus' },
-  { name: 'link', label: 'Link', icon: 'mdi-link' },
-  { name: 'copy', label: 'Copy', icon: 'mdi-content-copy' }
+  { name: 'clone', label: 'Copy', icon: 'mdi-content-copy' }
 ];
 
 export default {
