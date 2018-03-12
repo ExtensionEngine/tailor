@@ -10,7 +10,9 @@
         :key="activity.id"
         :class="{ 'leaf': !hasChildren(activity) }"
         class="activity-item">
-        <span @click="show(activity)">{{ getName(activity) }}</span>
+        <span @click="show(activity)" class="name">
+          {{ getName(activity) }}
+        </span>
         <button
           v-show="isSelectable(activity)"
           @click="$emit('selected', activity)"
@@ -94,5 +96,9 @@ export default {
 <style lang="scss" scoped>
 .activity-item {
   padding: 5px 20px;
+}
+
+.leaf .name {
+  pointer-events: none;
 }
 </style>
