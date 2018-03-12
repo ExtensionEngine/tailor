@@ -16,6 +16,7 @@ router
   .patch('/courses/:courseId/activities/:activityId', ctrl.patch)
   .delete('/courses/:courseId/activities/:activityId', ctrl.remove)
   .post('/courses/:courseId/activities/:activityId/reorder', ctrl.reorder)
+  .post('/courses/:courseId/activities/:activityId/clone', ctrl.clone)
   .get('/courses/:courseId/activities/:activityId/publish', ctrl.publish);
 
 function getActivity(req, res) {

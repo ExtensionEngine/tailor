@@ -42,6 +42,14 @@ function publish({ activity }, res) {
     .then(data => res.json({ data }));
 }
 
+function clone({ activity, body }, res) {
+  const { dstRepositoryId, dstParentId } = body;
+  return activity.clone(dstRepositoryId, dstParentId).then(mappings => {
+    const opts = { where: { id: { $in: Object.values(mappings) } } };
+    return Activity.findAll(opts).then(data => res.json({ data }));
+  });
+}
+
 module.exports = {
   create,
   show,
@@ -49,5 +57,6 @@ module.exports = {
   patch,
   remove,
   reorder,
+  clone,
   publish
 };
