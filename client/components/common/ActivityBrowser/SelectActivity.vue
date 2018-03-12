@@ -47,7 +47,13 @@ export default {
       this.parent = activity;
     },
     back() {
-      this.parent ? this.show(this.parent.id) : this.$emit('reset');
+      if (get(this.parent, 'parentId')) {
+        this.show(find(this.activities, { id: this.parent.parentId }));
+      } else if (this.parent) {
+        this.parent = null;
+      } else {
+        this.$emit('reset');
+      }
     },
     isSelectable({ type }) {
       if (!this.levels) return true;
@@ -71,6 +77,8 @@ export default {
   },
   created() {
     activityApi.getActivities(this.repository.id).then(activities => {
+      // Make sure that only selectable activities and their parents
+      // are included
       const types = map(this.levels, 'type');
       const targets = filter(activities, it => types.includes(it.type));
       activities = reduce(targets,
