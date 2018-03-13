@@ -1,42 +1,5 @@
 <template>
   <div>
-    <div v-if="showInput" class="activity-input">
-      <span
-        :class="{ 'has-error': vErrors.has('name') }"
-        class="form-group name-input">
-        <input
-          v-model="activityName"
-          v-focus.lazy="focusInput"
-          v-validate="{ rules: { required: true, min: 2, max: 250 } }"
-          class="form-control"
-          name="name"
-          type="text"
-          placeholder="Title">
-        <span class="help-block">{{ vErrors.first('name') }}</span>
-      </span>
-      <multiselect
-        v-if="hasChildren"
-        v-validate="'required'"
-        :value="activityType ? getActivityLevel(activityType) : levels[0]"
-        :options="levels"
-        :searchable="false"
-        @input="onLevelSelected"
-        data-vv-delay="0"
-        class="type-select">
-      </multiselect>
-      <div class="actions">
-        <button
-          @click.stop="hide"
-          class="btn btn-default btn-sm btn-material delete pull-right">X
-        </button>
-        <button
-          :disabled="vErrors.any()"
-          @click.stop="add"
-          class="btn btn-default btn-sm btn-material add pull-right">
-          Add
-        </button>
-      </div>
-    </div>
     <div v-if="!showInput" @click="show" class="divider-wrapper">
       <div class="divider">
         <div class="action">
@@ -44,38 +7,49 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      <select-action
+        v-if="!action"
+        @selected="action => (this.action = action)"
+        @close="hide">
+      </select-action>
+      <activity-browser
+        v-else-if="action !== 'create'"
+        :selectableLevels="supportedLevels"
+        @selected="executeAction"
+        @close="hide">
+      </activity-browser>
+      <create-activity
+        v-else
+        :parent="parent"
+        :supportedLevels="supportedLevels"
+        @save="executeAction"
+        @close="hide">
+      </create-activity>
+    </div>
   </div>
 </template>
 
 <script>
-import calculatePosition from 'utils/calculatePosition';
+import { mapActions, mapGetters } from 'vuex-module';
+import ActivityBrowser from 'components/common/ActivityBrowser';
+import CreateActivity from './CreateActivity';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
-import { focus } from 'vue-focus';
-import { getChildren } from 'utils/activity';
-import { getLevel } from 'shared/activities';
-import map from 'lodash/map';
-import { mapActions, mapGetters } from 'vuex-module';
-import multiselect from 'components/common/Select';
-import sortBy from 'lodash/sortBy';
-import { withValidation } from 'utils/validation';
+import get from 'lodash/get';
+import SelectAction from './SelectAction';
 
 export default {
-  mixins: [withValidation()],
-  props: ['parent', 'level'],
+  props: ['parent'],
   data() {
     return {
       showInput: false,
-      focusInput: true,
-      activityName: '',
-      activityType: ''
+      action: null
     };
   },
   computed: {
-    ...mapGetters(['activities']),
-    ...mapGetters(['structure'], 'course'),
-    levels() {
+    ...mapGetters(['course', 'structure'], 'course'),
+    supportedLevels() {
       if (!this.parent) return filter(this.structure, { level: 1 });
       const parentType = find(this.structure, { type: this.parent.type });
       const { level, subLevels = [] } = parentType;
@@ -83,97 +57,37 @@ export default {
       let levels = filter(this.structure, cond);
       levels.forEach(it => (it.value = it.type));
       return levels;
-    },
-    hasChildren() {
-      return this.level < this.structure.length;
     }
   },
   methods: {
-    ...mapActions(['save'], 'activities'),
+    ...mapActions(['save', 'clone'], 'activities'),
     show() {
       this.showInput = true;
-      this.focusInput = true;
     },
     hide() {
-      this.activityName = '';
       this.showInput = false;
+      this.action = null;
     },
-    add() {
-      this.$validator.validateAll().then(result => {
-        if (!result) return;
-
-        const OUTLINE_LEVEL = find(this.structure, { type: this.activityType });
-        const sameLevel = OUTLINE_LEVEL.level === this.level;
-        const parentId = sameLevel ? this.parent.parentId : this.parent.id;
-        const courseId = this.parent.courseId;
-        const types = map(filter(this.structure, { level: OUTLINE_LEVEL.level }), 'type');
-        const children = getChildren(this.activities, parentId, courseId);
-        const items = sortBy(filter(children, it => types.includes(it.type)), 'position');
-        const newPosition = findIndex(items, it => it.position === this.parent.position);
-        const isFirstChild = !sameLevel || newPosition === -1;
-        const context = { items, newPosition, isFirstChild, insert: true };
-
-        this.save({
-          type: this.activityType,
-          data: { name: this.activityName },
-          courseId,
-          parentId,
-          position: calculatePosition(context)
-        });
-
-        this.hide();
-        if (!sameLevel) this.$emit('expand');
-      });
-    },
-    getActivityLevel(type) {
-      return getLevel(type);
-    },
-    onLevelSelected(activity) {
-      this.activityType = activity.type;
+    executeAction(activity) {
+      if (this.action === 'clone') {
+        const dstParentId = activity.type === get(this.parent, 'type')
+          ? this.parent.parentId
+          : this.parent.id;
+        activity = {
+          ...activity,
+          dstRepositoryId: this.course.id,
+          dstParentId
+        }
+      }
+      this[this.action](activity);
+      this.hide();
     }
   },
-  mounted() {
-    this.activityType = this.levels[0].type;
-  },
-  directives: { focus },
-  components: { multiselect }
+  components: { ActivityBrowser, CreateActivity, SelectAction }
 };
 </script>
 
 <style lang="scss" scoped>
-.activity-input {
-  display: flex;
-  align-items: stretch;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  padding: 20px 5px;
-
-  input {
-    background-color: #e0e0e0;
-  }
-
-  .btn-sm.btn-material {
-    min-width: 68px;
-    padding: 8px 0;
-  }
-
-  .type-select {
-    min-width: 170px;
-    width: 170px;
-    margin-left: 25px;
-  }
-
-  .actions {
-    min-width: 150px;
-    width: 150px;
-    margin-left: 10px;
-  }
-
-  .name-input {
-    width: 100%;
-  }
-}
-
 .plus {
   padding: 0 5px;
   font-size: 20px;
