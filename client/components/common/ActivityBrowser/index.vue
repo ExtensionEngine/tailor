@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="activity-browser">
+    <button
+      @click="$emit('close')"
+      class="btn btn-default btn-fab">
+      <span class="mdi mdi-close"></span>
+    </button>
     <select-repository
       v-if="!repository"
       @selected="repository => (this.repository = repository)">
@@ -32,3 +37,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.activity-browser {
+  width: 500px;
+  margin: 25px auto;
+}
+</style>
