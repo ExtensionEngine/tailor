@@ -1,5 +1,6 @@
 import cuid from 'cuid';
 import each from 'lodash/each';
+import find from 'lodash/find';
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
 
@@ -73,7 +74,11 @@ export default function (collectionName, baseUrl = '') {
 
   // TODO: Do the proper syncing
   mutation(function fetch(result) {
-    each(result, it => Vue.set(this.state.items, it._cid, it));
+    each(result, it => {
+      const existing = find(this.state.items, { id: it.id });
+      it._cid = existing ? existing._cid : cuid();
+      Vue.set(this.state.items, it._cid, it);
+    });
   });
 
   mutation(function reset(result) {
