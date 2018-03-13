@@ -164,7 +164,7 @@ export default {
     top: 0;
     left: 0;
     height: 42px;
-    padding: 10px 60px 0 60px;
+    padding: 10px 60px 0;
     color: #555;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -179,35 +179,6 @@ export default {
 
     .mdi:hover {
       color: #707070;
-    }
-  }
-}
-
-.divider-wrapper {
-  width: 100%;
-  padding: 7px 0;
-  cursor: pointer;
-  opacity: 0;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  .divider {
-    position: relative;
-    width: 100%;
-    height: 2px;
-    background-color: #aaa;
-    opacity: inherit;
-
-    .action {
-      position: absolute;
-      top: -8px;
-      right: -27px;
-      height: 0;
-      color: #aaa;
-      font-size: 16px;
-      text-align: left;
     }
   }
 }

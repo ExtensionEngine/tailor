@@ -80,6 +80,7 @@ export default {
         };
       }
       this[this.action](activity);
+      if (this.parent.type !== activity.type) this.$emit('expand');
       this.hide();
     }
   },
@@ -88,15 +89,38 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.plus {
-  padding: 0 5px;
-  font-size: 20px;
-  line-height: 20px;
-}
+.divider-wrapper {
+  width: 100%;
+  padding: 7px 0;
+  cursor: pointer;
+  opacity: 0;
 
-.btn {
-  &.add {
-    margin-right: 3px;
+  &:hover {
+    opacity: 1;
+  }
+
+  .divider {
+    position: relative;
+    width: 100%;
+    height: 2px;
+    background-color: #aaa;
+    opacity: inherit;
+
+    .action {
+      position: absolute;
+      top: -8px;
+      right: -27px;
+      height: 0;
+      color: #aaa;
+      font-size: 16px;
+      text-align: left;
+    }
+  }
+
+  .plus {
+    padding: 0 5px;
+    font-size: 20px;
+    line-height: 20px;
   }
 }
 </style>
