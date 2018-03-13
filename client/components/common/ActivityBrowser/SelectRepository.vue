@@ -1,7 +1,7 @@
 <template>
   <div>
     <circular-progress v-if="showLoader"></circular-progress>
-    <div v-else>
+    <div v-else class="repository-list">
       <div
         v-for="repository in repositories"
         :key="repository.id"
@@ -35,7 +35,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.repository-list {
+  margin: 25px 20px 20px;
+}
+
 .repository-item {
-  padding: 5px 20px;
+  padding: 6px 20px;
+  font-size: 14px;
+
+  &:hover {
+    color: #42b983;
+    cursor: pointer;
+  }
 }
 </style>
