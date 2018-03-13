@@ -62,6 +62,13 @@ action(function reorder({ activity, context }) {
     });
 });
 
+action(function clone(activity) {
+  const { id, courseId } = activity;
+  const url = `/courses/${courseId}/activities/${id}/clone`;
+  return request.post(url, activity)
+    .then(({ data: { data } }) => this.commit('fetch', data));
+});
+
 action(function publish(activity) {
   const { id, courseId } = activity;
   const url = `/courses/${courseId}/activities/${id}/publish`;
