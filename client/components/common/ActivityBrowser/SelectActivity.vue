@@ -1,23 +1,23 @@
 <template>
-  <div>
+  <div class="select-activity">
     <circular-progress v-if="showLoader"></circular-progress>
     <div v-else>
-      <button @click="back" class="btn btn-default btn-fab">
-        <span class="mdi mdi-chevron-left"></span>
-      </button>
+      <span @click="back" class="btn-back">
+        <span class="mdi mdi-chevron-left"></span> Back
+      </span>
       <div
         v-for="activity in currentLevel"
         :key="activity.id"
-        :class="{ 'leaf': !hasChildren(activity) }"
+        :class="{ leaf: !hasChildren(activity), selectable: isSelectable(activity) }"
         class="activity-item">
         <span @click="show(activity)" class="name">
           {{ getName(activity) }}
+          <span class="mdi mdi-chevron-right subitems-indicator"></span>
         </span>
         <button
-          v-show="isSelectable(activity)"
           @click="$emit('selected', activity)"
-          class="btn btn-fab btn-default">
-          <span class="mdi mdi-upload"></span>
+          class="btn btn-default btn-fab btn-select">
+          <span class="mdi mdi-content-duplicate"></span>
         </button>
       </div>
     </div>
@@ -94,11 +94,48 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.activity-item {
-  padding: 5px 20px;
+$highlight: #42b983;
+
+.select-activity {
+  padding: 20px 0;
 }
 
-.leaf .name {
-  pointer-events: none;
+.btn-back {
+  display: inline-block;
+  margin: 0 0 10px;
+}
+
+.activity-item, .btn-back {
+  position: relative;
+  padding: 8px 40px;
+  font-size: 14px;
+
+  &:hover {
+    color: $highlight;
+    cursor: pointer;
+  }
+}
+
+.leaf {
+  .name {
+    pointer-events: none;
+  }
+
+  .subitems-indicator {
+    display: none;
+  }
+}
+
+.btn-select {
+  display: none;
+  position: absolute;
+  right: -20px;
+  transform: translate(0, -50%);
+}
+
+.selectable:hover {
+  .btn-select {
+    display: inline-block;
+  }
 }
 </style>
