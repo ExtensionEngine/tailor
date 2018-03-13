@@ -32,6 +32,7 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import map from 'lodash/map';
+import Promise from 'bluebird';
 import reduce from 'lodash/reduce';
 import uniqBy from 'lodash/uniqBy';
 
@@ -78,7 +79,8 @@ export default {
     }
   },
   created() {
-    activityApi.getActivities(this.repository.id).then(activities => {
+    const activitiesFetch = activityApi.getActivities(this.repository.id);
+    return Promise.join(activitiesFetch, Promise.delay(700), activities => {
       // Make sure that only selectable activities and their parents
       // are included
       const types = map(this.selectableLevels, 'type');
@@ -137,5 +139,9 @@ $highlight: #42b983;
   .btn-select {
     display: inline-block;
   }
+}
+
+.circular-progress {
+  margin: 20px 0;
 }
 </style>

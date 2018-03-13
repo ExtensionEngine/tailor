@@ -77,7 +77,7 @@ export default {
           ...activity,
           dstRepositoryId: this.course.id,
           dstParentId
-        }
+        };
       }
       this[this.action](activity);
       this.hide();

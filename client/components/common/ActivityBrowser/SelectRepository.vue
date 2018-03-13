@@ -16,6 +16,7 @@
 <script>
 import CircularProgress from 'components/common/CircularProgress';
 import courseApi from 'client/api/course';
+import Promise from 'bluebird';
 
 export default {
   data() {
@@ -25,7 +26,7 @@ export default {
     };
   },
   created() {
-    courseApi.getCourses().then(repositories => {
+    return Promise.join(courseApi.getCourses(), Promise.delay(700), repositories => {
       this.repositories = repositories;
       this.showLoader = false;
     });
@@ -47,5 +48,9 @@ export default {
     color: #42b983;
     cursor: pointer;
   }
+}
+
+.circular-progress {
+  margin: 30px 0;
 }
 </style>
