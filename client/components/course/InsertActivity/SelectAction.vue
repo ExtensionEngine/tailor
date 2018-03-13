@@ -8,6 +8,10 @@
       <span :class="action.icon" class="mdi"></span>
       <span>{{ action.label }}</span>
     </div>
+    <div @click="$emit('close')" class="action">
+      <span class="mdi mdi-close"></span>
+      <span>Cancel</span>
+    </div>
   </div>
 </template>
 
@@ -33,7 +37,7 @@ export default {
 
 .action {
   display: inline-block;
-  margin: 10px 25px;
+  margin: 20px 25px;
 
   &:hover {
     color: #42b983;
@@ -47,7 +51,7 @@ export default {
 
   .mdi {
     padding-bottom: 7px;
-    font-size: 30px;
+    font-size: 26px;
   }
 }
 </style>
