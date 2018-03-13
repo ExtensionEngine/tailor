@@ -50,6 +50,7 @@ import calculatePosition from 'utils/calculatePosition';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
+import get from 'lodash/get';
 import map from 'lodash/map';
 import multiselect from 'components/common/Select';
 import SelectAction from './SelectAction';
@@ -101,7 +102,7 @@ export default {
       return getLevel(type);
     },
     onLevelSelected(activity) {
-      this.type = activity.type;
+      this.type = get(activity, 'type', null);
     }
   },
   mounted() {
