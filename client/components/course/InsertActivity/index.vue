@@ -23,7 +23,7 @@
         v-else
         :parent="parent"
         :supportedLevels="supportedLevels"
-        @save="executeAction"
+        @create="executeAction"
         @close="hide">
       </create-activity>
     </div>
@@ -60,7 +60,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save', 'clone'], 'activities'),
+    ...mapActions({ clone: 'clone', create: 'save' }, 'activities'),
     show() {
       this.showInput = true;
     },
