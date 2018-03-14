@@ -42,5 +42,7 @@ export default {
 .activity-browser {
   width: 500px;
   margin: 25px auto;
+  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #333;
 }
 </style>
