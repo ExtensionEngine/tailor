@@ -34,6 +34,7 @@ import get from 'lodash/get';
 import map from 'lodash/map';
 import Promise from 'bluebird';
 import reduce from 'lodash/reduce';
+import truncate from 'truncate';
 import uniqBy from 'lodash/uniqBy';
 
 export default {
@@ -70,7 +71,7 @@ export default {
       return filter(this.activities, { parentId });
     },
     getName(activity) {
-      return get(activity, 'data.name', activity.type);
+      return truncate(get(activity, 'data.name', activity.type), 100);
     }
   },
   computed: {
@@ -109,7 +110,7 @@ $highlight: #42b983;
 
 .activity-item, .btn-back {
   position: relative;
-  padding: 8px 40px;
+  padding: 8px 50px;
   font-size: 14px;
 
   &:hover {
@@ -132,7 +133,7 @@ $highlight: #42b983;
   display: none;
   position: absolute;
   right: -20px;
-  transform: translate(0, -50%);
+  transform: translate(0, -40%);
 }
 
 .selectable:hover {

@@ -40,7 +40,7 @@ export default {
 
 <style lang="scss" scoped>
 .activity-browser {
-  width: 500px;
+  width: 550px;
   margin: 25px auto;
   font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #333;
