@@ -4,6 +4,8 @@ Adaptive course authoring platform.
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d6d198f9c56b4ca799b4624c5bb3e16c)](https://www.codacy.com/app/underscope/tailor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ExtensionEngine/tailor&amp;utm_campaign=Badge_Grade)
 
+[![codebeat badge](https://codebeat.co/badges/d2af4ef3-000e-43e0-8215-9067484afa74)](https://codebeat.co/projects/github-com-extensionengine-tailor-master)
+
 ## :blue_book: Dependencies
 * Node.js (>= 8.8.0)
 * npm (>= 5.4.2)
