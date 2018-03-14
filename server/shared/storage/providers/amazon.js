@@ -4,7 +4,7 @@ const S3 = require('aws-sdk/clients/s3');
 const { validateConfig } = require('../validation');
 
 const isNotFound = err => err.code === 'NoSuchKey';
-const DEFAULT_EXPIRATION_TIME = 3600;  // seconds
+const DEFAULT_EXPIRATION_TIME = 3600; // seconds
 
 const schema = Joi.object().keys({
   region: Joi.string().required(),
