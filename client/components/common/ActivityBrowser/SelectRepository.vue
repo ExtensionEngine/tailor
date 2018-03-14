@@ -17,6 +17,7 @@
 import CircularProgress from 'components/common/CircularProgress';
 import courseApi from 'client/api/course';
 import Promise from 'bluebird';
+import sortBy from 'lodash/sortBy';
 
 export default {
   data() {
@@ -27,7 +28,7 @@ export default {
   },
   created() {
     return Promise.join(courseApi.getCourses(), Promise.delay(700), repositories => {
-      this.repositories = repositories;
+      this.repositories = sortBy(repositories, 'name');
       this.showLoader = false;
     });
   },
