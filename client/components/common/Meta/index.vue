@@ -9,6 +9,7 @@
 <script>
 import Checkbox from './Checkbox';
 import ColorPicker from './ColorPicker';
+import DatePicker from './DatePicker';
 import Input from './Input';
 import mapKeys from 'lodash/mapKeys';
 import Select from './Select';
@@ -18,6 +19,7 @@ import Textarea from './Textarea';
 const META_TYPES = {
   CHECKBOX: Checkbox,
   COLOR: ColorPicker,
+  DATEPICKER: DatePicker,
   INPUT: Input,
   SELECT: Select,
   SWITCH: Switch,
