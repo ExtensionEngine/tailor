@@ -134,6 +134,7 @@ label {
     background: none;
     border: none;
     box-shadow: none;
+    cursor: pointer;
 
     .editing & {
       box-shadow: inset 0 -2px 0 #337ab7;
