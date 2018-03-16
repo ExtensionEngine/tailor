@@ -103,7 +103,7 @@ class Amazon {
       });
     });
   }
-};
+}
 
 module.exports = {
   schema,

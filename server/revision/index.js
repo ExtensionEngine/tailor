@@ -16,7 +16,7 @@ function getRevision(req, res) {
       req.revision = revision;
       return Promise.resolve('next');
     });
-};
+}
 
 module.exports = {
   controller: ctrl,
