@@ -2,26 +2,23 @@ const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
   parserOptions: { sourceType: 'module' },
-  // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
-  extends: 'standard',
+  // https://github.com/Flet/eslint-config-semistandard
+  extends: 'semistandard',
   // required to lint *.vue files
   plugins: ['html'],
   rules: {
-    // allow paren-less arrow functions
+    indent: ['error', 2, {
+      SwitchCase: 1,
+      // NOTE: Consistent indentation IS enforced;
+      //       ESlint calculated indentation start IS NOT!
+      // https://eslint.org/docs/rules/indent#memberexpression
+      MemberExpression: 'off'
+    }],
     'arrow-parens': 'off',
-    // warn if there is a trailing comma
     'comma-dangle': ['warn', 'never'],
-    // allow async-await
-    'generator-star-spacing': 'off',
-    // allow debugger during development
     'no-debugger': isDev ? 'warn' : 'error',
-    // allow dead code during development
     'no-unreachable': isDev ? 'warn' : 'error',
-    // semicolons are necessary
-    'semi': ['warn', 'always'],
-    // add space before function parameters
     'space-before-function-paren': ['error', {
       anonymous: 'always',
       named: 'never'
