@@ -104,7 +104,7 @@ class Amazon {
       });
     });
   }
-};
+}
 
 module.exports = {
   provider: Amazon

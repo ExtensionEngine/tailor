@@ -25,7 +25,7 @@ function getActivity(req, res) {
       req.activity = activity;
       return Promise.resolve('next');
     });
-};
+}
 
 module.exports = {
   model,

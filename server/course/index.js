@@ -28,7 +28,7 @@ function getCourse(req, res) {
       req.course = course;
       return Promise.resolve('next');
     });
-};
+}
 
 function hasAccess(req, res) {
   const { user, course } = req;
@@ -39,7 +39,7 @@ function hasAccess(req, res) {
       req.courseRole = user.courseUser.role;
       return Promise.resolve('next');
     });
-};
+}
 
 module.exports = {
   ctrl,

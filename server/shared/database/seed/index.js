@@ -64,7 +64,7 @@ function insertAll(db) {
         .then(() => course.setUsers(users));
     });
   });
-};
+}
 
 module.exports = db => {
   return insertAll(db);

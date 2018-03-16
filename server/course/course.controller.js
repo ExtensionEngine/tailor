@@ -10,7 +10,7 @@ function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { $iLike: `%${query.search}%` };
   const courses = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return courses.then(data => res.json({ data }));
-};
+}
 
 function create({ body, user }, res) {
   return Course.create(body, {
@@ -28,24 +28,24 @@ function patch({ body, course, user }, res) {
   const data = pick(body, ['name', 'description', 'data']);
   return course.update(data, { context: { userId: user.id } })
     .then(course => res.json({ data: course }));
-};
+}
 
 function remove({ course, user }, res) {
   return course.destroy({ context: { userId: user.id } })
     .then(() => res.status(204).send());
-};
+}
 
 function clone({ user, course, body }, res) {
   const { name, description } = body;
   const context = { userId: user.id };
   return course.clone(name, description, context)
     .then(course => res.json({ data: course }));
-};
+}
 
 function publishRepoInfo({ course }, res) {
   return publishingService.publishRepoDetails(course)
     .then(data => res.json({ data }));
-};
+}
 
 function getUsers(req, res) {
   return req.course.getUsers()
@@ -79,7 +79,7 @@ function findOrCreateRole(course, user, role) {
   .then(([cu, created]) => created ? cu : cu.update({ role }))
   .then(cu => cu.deletedAt ? cu.restore() : cu)
   .then(() => user);
-};
+}
 
 function exportContentInventory({ course }, res) {
   return course.getInventoryItems()
