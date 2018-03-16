@@ -119,7 +119,7 @@ function publishExams(parent) {
 }
 
 function publishAssessments(parent) {
-  const options = { where: { type: 'ASSESSMENT' } };
+  const options = { where: { type: 'ASSESSMENT' }, attributes: TES_ATTRS };
   return parent.getTeachingElements(options).then(assessments => {
     if (!assessments.length) return Promise.resolve([]);
     const key = getAssessmentsKey(parent);
