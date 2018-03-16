@@ -118,7 +118,7 @@ export default {
       while (item) {
         item = find(this.activities, { id: item.parentId });
         if (item) items.unshift(item);
-      };
+      }
       return items.length > 3 ? drop(items, items.length - 3) : items;
     }
   },
