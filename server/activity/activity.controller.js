@@ -43,8 +43,8 @@ function publish({ activity }, res) {
 }
 
 function clone({ activity, body }, res) {
-  const { dstRepositoryId, dstParentId } = body;
-  return activity.clone(dstRepositoryId, dstParentId).then(mappings => {
+  const { courseId, parentId, position } = body;
+  return activity.clone(courseId, parentId, position).then(mappings => {
     const opts = { where: { id: { $in: Object.values(mappings) } } };
     return Activity.findAll(opts).then(data => res.json({ data }));
   });

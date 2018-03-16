@@ -40,21 +40,14 @@
 
 <script>
 import { focus } from 'vue-focus';
-import { getChildren } from 'utils/activity';
 import { getLevel } from 'shared/activities';
 import { mapGetters } from 'vuex-module';
 import { withValidation } from 'utils/validation';
 
 import ActivityBrowser from 'components/common/ActivityBrowser';
-import calculatePosition from 'utils/calculatePosition';
-import filter from 'lodash/filter';
-import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
-import map from 'lodash/map';
 import multiselect from 'components/common/Select';
 import SelectAction from './SelectAction';
-import sortBy from 'lodash/sortBy';
 
 export default {
   mixins: [withValidation()],
@@ -79,23 +72,7 @@ export default {
     create() {
       this.$validator.validateAll().then(result => {
         if (!result) return;
-        const OUTLINE_LEVEL = find(this.structure, { type: this.type });
-        const sameLevel = OUTLINE_LEVEL.level === this.levelPosition;
-        const parentId = sameLevel ? this.parent.parentId : this.parent.id;
-        const courseId = this.parent.courseId;
-        const types = map(filter(this.structure, { level: OUTLINE_LEVEL.level }), 'type');
-        const children = getChildren(this.activities, parentId, courseId);
-        const items = sortBy(filter(children, it => types.includes(it.type)), 'position');
-        const newPosition = findIndex(items, it => it.position === this.parent.position);
-        const isFirstChild = !sameLevel || newPosition === -1;
-        const context = { items, newPosition, isFirstChild, insert: true };
-        this.$emit('create', {
-          type: this.type,
-          data: { name: this.name },
-          courseId,
-          parentId,
-          position: calculatePosition(context)
-        });
+        this.$emit('create', { type: this.type, data: { name: this.name } });
       });
     },
     getActivityLevel(type) {

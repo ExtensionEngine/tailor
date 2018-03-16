@@ -63,8 +63,8 @@ action(function reorder({ activity, context }) {
 });
 
 action(function clone(activity) {
-  const { id, courseId } = activity;
-  const url = `/courses/${courseId}/activities/${id}/clone`;
+  const { srcId, srcCourseId } = activity;
+  const url = `/courses/${srcCourseId}/activities/${srcId}/clone`;
   return request.post(url, activity)
     .then(({ data: { data } }) => this.commit('fetch', data));
 });

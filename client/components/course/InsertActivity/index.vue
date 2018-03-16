@@ -31,12 +31,16 @@
 </template>
 
 <script>
+import { getLevel } from 'shared/activities';
+import { getOutlineChildren } from 'utils/activity';
 import { mapActions, mapGetters } from 'vuex-module';
+
 import ActivityBrowser from 'components/common/ActivityBrowser';
+import calculatePosition from 'utils/calculatePosition';
 import CreateActivity from './CreateActivity';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import get from 'lodash/get';
+import findIndex from 'lodash/findIndex';
 import SelectAction from './SelectAction';
 
 export default {
@@ -48,7 +52,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'structure'], 'course'),
+    ...mapGetters(['activities']),
+    ...mapGetters(['structure'], 'course'),
     supportedLevels() {
       if (!this.parent) return filter(this.structure, { level: 1 });
       const parentType = find(this.structure, { type: this.parent.type });
@@ -70,18 +75,31 @@ export default {
     },
     executeAction(activity) {
       if (this.action === 'clone') {
-        const dstParentId = activity.type === get(this.parent, 'type')
-          ? this.parent.parentId
-          : this.parent.id;
         activity = {
-          ...activity,
-          dstRepositoryId: this.course.id,
-          dstParentId
+          srcId: activity.id,
+          srcCourseId: activity.courseId,
+          type: activity.type
         };
       }
+      activity.courseId = this.parent.courseId;
+      activity.parentId = this.resolveParent(activity);
+      activity.position = this.calculatePosition(activity);
       this[this.action](activity);
       if (this.parent.type !== activity.type) this.$emit('expand');
       this.hide();
+    },
+    isSameLevel(activity) {
+      return getLevel(activity.type).level === getLevel(this.parent.type).level;
+    },
+    resolveParent(activity) {
+      return this.isSameLevel(activity) ? this.parent.parentId : this.parent.id;
+    },
+    calculatePosition(activity) {
+      const items = getOutlineChildren(this.activities, activity.parentId);
+      const newPosition = findIndex(items, { id: this.parent.id });
+      const isFirstChild = !this.isSameLevel(activity) || newPosition === -1;
+      const context = { items, newPosition, isFirstChild, insert: true };
+      return calculatePosition(context);
     }
   },
   components: { ActivityBrowser, CreateActivity, SelectAction }
