@@ -7,7 +7,7 @@ const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
-const random = require('lodash/random');
+const sample = require('lodash/sample');
 
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
@@ -20,7 +20,7 @@ function index({ query, user, opts }, res) {
 function create({ body, user }, res) {
   const defaultMeta = getVal(getSchema(body.schema), 'defaultMeta', {});
   body.data = Object.assign(defaultMeta, body.data);
-  body.data.color = getVal(body, 'data.color', DEFAULT_COLORS[random(2)]);
+  body.data.color = getVal(body, 'data.color', sample(DEFAULT_COLORS));
   return Course.create(body, {
     isNewRecord: true,
     returning: true,

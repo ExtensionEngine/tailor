@@ -9,7 +9,7 @@ function create({ body, params, user }, res) {
   const defaultMeta = get(getLevel(body.type), 'defaultMeta', {});
   const data = Object.assign(
     pick(body, ['type', 'parentId', 'position']),
-    { data: Object.assign(defaultMeta, body.data) },
+    { data: Object.assign({}, defaultMeta, body.data) },
     { courseId: params.courseId });
   const opts = { context: { userId: user.id } };
   return Activity.create(data, opts).then(data => res.json({ data }));
