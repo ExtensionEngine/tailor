@@ -6,7 +6,9 @@
         <span class="mdi mdi-chevron-left"></span> Back
       </span>
       <div v-if="!currentLevel.length" class="well">
-        Not compatible with current repository schema.
+        {{ isCompatibleSchema
+          ? 'There are no items within this repository.'
+          : 'Not compatible with current repository schema.' }}
       </div>
       <div
         v-for="activity in currentLevel"
@@ -29,10 +31,12 @@
 
 <script>
 import { getAncestors } from 'client/utils/activity';
+import { getSchemaId } from 'shared/activities';
 import activityApi from 'client/api/activity';
 import CircularProgress from 'components/common/CircularProgress';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import first from 'lodash/first';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import Promise from 'bluebird';
@@ -80,6 +84,11 @@ export default {
   computed: {
     currentLevel() {
       return this.getChildren(this.parent);
+    },
+    isCompatibleSchema() {
+      if (!this.selectableLevels.length) return true;
+      const schema = getSchemaId(first(this.selectableLevels).type);
+      return schema === this.repository.schema;
     }
   },
   created() {
