@@ -73,7 +73,7 @@ class FilesystemStorage {
     return this.getFile(key, options)
       .then(data => getDataUrl(data));
   }
-};
+}
 
 module.exports = {
   schema,
