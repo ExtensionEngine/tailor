@@ -11,4 +11,4 @@ module.exports = function configLoader(name) {
 
 function createModule(obj) {
   return `module.exports = function() { return ${JSON.stringify(obj)}; };`;
-};
+}

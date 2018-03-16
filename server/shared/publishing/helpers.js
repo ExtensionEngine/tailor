@@ -49,14 +49,14 @@ function updateRepositoryCatalog(repository) {
 }
 
 function publishRepositoryDetails(repository) {
-  return repository.getPublishedStructure().then(spine => {
+  return getPublishedStructure(repository).then(spine => {
     Object.assign(spine, getRepositoryAttrs(repository));
     return saveSpine(spine).then(() => updateRepositoryCatalog(repository));
   });
 }
 
 function unpublishActivity(repository, activity) {
-  return repository.getPublishedStructure().then(spine => {
+  return getPublishedStructure(repository).then(spine => {
     const spineActivity = find(spine.structure, { id: activity.id });
     if (!spineActivity) return;
     const deleted = getSpineChildren(spine, activity).concat(spineActivity);
@@ -75,7 +75,7 @@ function unpublishActivity(repository, activity) {
 
 function getStructureData(activity) {
   const repoData = activity.getCourse().then(repository => {
-    return repository.getPublishedStructure().then(spine => {
+    return getPublishedStructure(repository).then(spine => {
       const updateCatalog = spine.structure.length
         ? Promise.resolve()
         : updateRepositoryCatalog(repository);
@@ -84,6 +84,14 @@ function getStructureData(activity) {
   });
   return Promise.all([repoData, activity.predecessors()])
     .spread((repoData, predecessors) => Object.assign(repoData, { predecessors }));
+}
+
+function getPublishedStructure(repository) {
+  const storageKey = `repository/${repository.id}/index.json`;
+  return storage.getFile(storageKey).then(buffer => {
+    const data = buffer && JSON.parse(buffer.toString('utf8'));
+    return data || { ...getRepositoryAttrs(repository), structure: [] };
+  });
 }
 
 function publishContent(repository, activity) {
@@ -111,7 +119,7 @@ function publishExams(parent) {
 }
 
 function publishAssessments(parent) {
-  const options = { where: { type: 'ASSESSMENT' } };
+  const options = { where: { type: 'ASSESSMENT' }, attributes: TES_ATTRS };
   return parent.getTeachingElements(options).then(assessments => {
     if (!assessments.length) return Promise.resolve([]);
     const key = getAssessmentsKey(parent);

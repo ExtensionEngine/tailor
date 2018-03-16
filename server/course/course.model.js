@@ -3,7 +3,6 @@ const hooks = require('./hooks');
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
-const storage = require('../shared/storage');
 
 class Course extends Model {
   static fields(DataTypes) {
@@ -138,13 +137,6 @@ class Course extends Model {
 
   getSchemaConfig() {
     return getSchema(this.schema);
-  }
-
-  getPublishedStructure() {
-    return storage.getFile(`repository/${this.id}/index.json`).then(buffer => {
-      const data = buffer && JSON.parse(buffer.toString('utf8'));
-      return data || { ...pick(this, ['id', 'uid', 'name', 'description']), structure: [] };
-    });
   }
 }
 

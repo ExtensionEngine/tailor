@@ -107,4 +107,4 @@ export default function (collectionName, baseUrl = '') {
   });
 
   return module;
-};
+}

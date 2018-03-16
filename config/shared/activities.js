@@ -73,7 +73,7 @@ function getOutlineLevels(schemaId) {
 
 function getSchema(id) {
   return find(SCHEMAS, { id });
-};
+}
 
 function getRepositoryMeta(repository) {
   const config = get(getSchema(repository.schema), 'meta', []);
@@ -81,7 +81,7 @@ function getRepositoryMeta(repository) {
     let value = get(repository, `data.${it.key}`);
     return { ...it, value };
   });
-};
+}
 
 function getLevel(type) {
   return find(getOutlineLevels(getSchemaId(type)), { type });

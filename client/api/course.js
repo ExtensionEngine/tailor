@@ -12,7 +12,7 @@ function getUsers(courseId, params) {
   return request
     .get(url.users(courseId), { params })
     .then(res => res.data.data);
-};
+}
 
 function upsertUser(courseId, data) {
   return request
@@ -32,11 +32,11 @@ function getContentInventory(courseId) {
     responseType: 'arraybuffer',
     url: `/courses/${courseId}/contentInventory`
   }).then(res => res.data);
-};
+}
 
 function publishRepositoryMeta(id) {
   return request.post(`/courses/${id}/publish`).then(res => res.data);
-};
+}
 
 export default {
   getCourses,

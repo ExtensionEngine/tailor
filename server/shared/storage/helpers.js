@@ -101,7 +101,7 @@ resolver.IMAGE = asset => {
     return storage.getFileUrl(key, { Expires: 3600 })
       .then(url => (asset.data.url = url))
       .then(() => asset);
-  };
+  }
 
   return storage.fileExists(asset.data.url)
     .then(exists => exists ? getUrl(asset.data.url) : asset);
