@@ -5,6 +5,9 @@
       <span @click="back" class="btn-back">
         <span class="mdi mdi-chevron-left"></span> Back
       </span>
+      <div v-if="!currentLevel.length" class="well">
+        Not compatible with current repository schema.
+      </div>
       <div
         v-for="activity in currentLevel"
         :key="activity.id"
