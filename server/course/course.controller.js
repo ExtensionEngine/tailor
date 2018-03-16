@@ -3,6 +3,7 @@ const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
+const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
@@ -17,9 +18,9 @@ function index({ query, user, opts }, res) {
 };
 
 function create({ body, user }, res) {
-  const defaultMeta = get(getSchema(body.type), 'defaultMeta', {});
+  const defaultMeta = getVal(getSchema(body.schema), 'defaultMeta', {});
   body.data = Object.assign(defaultMeta, body.data);
-  body.data.color = get(body, 'data.color', DEFAULT_COLORS[random(2)]);
+  body.data.color = getVal(body, 'data.color', DEFAULT_COLORS[random(2)]);
   return Course.create(body, {
     isNewRecord: true,
     returning: true,
