@@ -1,10 +1,14 @@
-const { createError } = require('../shared/error/helpers');
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
+const { createError } = require('../shared/error/helpers');
+const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
+const random = require('lodash/random');
+
+const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
 function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { $iLike: `%${query.search}%` };
@@ -13,6 +17,9 @@ function index({ query, user, opts }, res) {
 };
 
 function create({ body, user }, res) {
+  const defaultMeta = get(getSchema(body.type), 'defaultMeta', {});
+  body.data = Object.assign(defaultMeta, body.data);
+  body.data.color = get(body, 'data.color', DEFAULT_COLORS[random(2)]);
   return Course.create(body, {
     isNewRecord: true,
     returning: true,
