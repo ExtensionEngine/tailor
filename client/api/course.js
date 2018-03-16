@@ -6,7 +6,7 @@ const url = {
 
 function getCourses(params) {
   return request.get('/courses', { params }).then(res => res.data.data);
-};
+}
 
 function getUsers(courseId, params) {
   return request

@@ -59,9 +59,7 @@ export default {
       const parentType = find(this.structure, { type: this.parent.type });
       const { level, subLevels = [] } = parentType;
       const cond = it => subLevels.includes(it.type) || (it.level === level);
-      let levels = filter(this.structure, cond);
-      levels.forEach(it => (it.value = it.type));
-      return levels;
+      return filter(this.structure, cond);
     }
   },
   methods: {

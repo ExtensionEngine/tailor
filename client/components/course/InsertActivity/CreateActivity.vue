@@ -1,5 +1,5 @@
 <template>
-  <div class="activity-input">
+  <div class="create-activity">
     <span
       :class="{ 'has-error': vErrors.has('name') }"
       class="form-group name-input">
@@ -9,17 +9,17 @@
         v-validate="{ rules: { required: true, min: 2, max: 250 } }"
         class="form-control"
         name="name"
-        type="text"
         placeholder="Title">
       <span class="help-block">{{ vErrors.first('name') }}</span>
     </span>
     <multiselect
       v-if="hasChildren"
+      v-model="level"
       v-validate="'required'"
-      :value="type ? getActivityLevel(type) : supportedLevels[0]"
       :options="supportedLevels"
       :searchable="false"
-      @input="onLevelSelected"
+      trackBy="type"
+      data-vv-value-path="type"
       data-vv-delay="0"
       class="type-select">
     </multiselect>
@@ -43,9 +43,9 @@ import { focus } from 'vue-focus';
 import { getLevel } from 'shared/activities';
 import { mapGetters } from 'vuex-module';
 import { withValidation } from 'utils/validation';
-
 import ActivityBrowser from 'components/common/ActivityBrowser';
-import get from 'lodash/get';
+import find from 'lodash/find';
+import first from 'lodash/first';
 import multiselect from 'components/common/Select';
 import SelectAction from './SelectAction';
 
@@ -55,35 +55,26 @@ export default {
   data() {
     return {
       name: '',
-      type: ''
+      level: null
     };
   },
   computed: {
-    ...mapGetters(['activities']),
     ...mapGetters(['structure'], 'course'),
     hasChildren() {
-      return this.levelPosition < this.structure.length;
-    },
-    levelPosition() {
-      return this.parent ? getLevel(this.parent.type).level : 1;
+      const parentLevel = getLevel(this.parent.type).level;
+      return !!find(this.supportedLevels, { level: parentLevel + 1 });
     }
   },
   methods: {
     create() {
-      this.$validator.validateAll().then(result => {
-        if (!result) return;
-        this.$emit('create', { type: this.type, data: { name: this.name } });
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
+        this.$emit('create', { type: this.level.type, data: { name: this.name } });
       });
-    },
-    getActivityLevel(type) {
-      return getLevel(type);
-    },
-    onLevelSelected(activity) {
-      this.type = get(activity, 'type', null);
     }
   },
-  mounted() {
-    this.type = this.supportedLevels[0].type;
+  created() {
+    this.level = first(this.supportedLevels);
   },
   directives: { focus },
   components: { multiselect, SelectAction, ActivityBrowser }
@@ -91,7 +82,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.activity-input {
+.create-activity {
   display: flex;
   align-items: stretch;
   flex-flow: row nowrap;
@@ -109,7 +100,6 @@ export default {
 
   .type-select {
     width: 170px;
-    min-width: 170px;
     margin-left: 25px;
   }
 

@@ -62,10 +62,10 @@ action(function reorder({ activity, context }) {
     });
 });
 
-action(function clone(activity) {
-  const { srcId, srcCourseId } = activity;
+action(function clone(mapping) {
+  const { srcId, srcCourseId } = mapping;
   const url = `/courses/${srcCourseId}/activities/${srcId}/clone`;
-  return request.post(url, activity)
+  return request.post(url, mapping)
     .then(({ data: { data } }) => this.commit('fetch', data));
 });
 
