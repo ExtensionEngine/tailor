@@ -2,6 +2,8 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d6d198f9c56b4ca799b4624c5bb3e16c)](https://www.codacy.com/app/underscope/tailor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ExtensionEngine/tailor&amp;utm_campaign=Badge_Grade)
 [![codebeat badge](https://codebeat.co/badges/d2af4ef3-000e-43e0-8215-9067484afa74)](https://codebeat.co/projects/github-com-extensionengine-tailor-master)
+[![bitHound Overall Score](https://www.bithound.io/github/ExtensionEngine/tailor/badges/score.svg)](https://www.bithound.io/github/ExtensionEngine/tailor)
+[![bitHound Code](https://www.bithound.io/github/ExtensionEngine/tailor/badges/code.svg)](https://www.bithound.io/github/ExtensionEngine/tailor)
 [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
 [![GitHub license](https://img.shields.io/github/license/ExtensionEngine/tailor.svg)](https://github.com/ExtensionEngine/tailor/blob/develop/LICENSE)
 
