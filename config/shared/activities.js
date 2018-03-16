@@ -5,6 +5,8 @@ const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const mergeConfig = require('../utils/mergeConfig');
+const transform = require('lodash/transform');
+
 const config = mergeConfig(
   require('./activities-rc'),
   require('./activities-rc.load')()
@@ -22,6 +24,7 @@ SCHEMAS.forEach(schema => {
   if (!hasColorMeta) {
     schema.meta.push({ type: 'COLOR', key: 'color', label: 'Label color' });
   }
+  schema.defaultMeta = getMetaDefaults(schema.meta);
   return schema.structure.forEach(it => {
     it.type = `${schema.id}/${it.type}`;
     it.subLevels = map(it.subLevels, type => `${schema.id}/${type}`);
@@ -36,6 +39,7 @@ SCHEMAS.forEach(schema => {
         validate: { rules: { max: 250, required: true } }
       });
     }
+    it.defaultMeta = getMetaDefaults(it.meta);
     if (it.hasExams && get(it, 'exams.objectives')) {
       it.exams.objectives = map(it.exams.objectives, it => `${schema.id}/${it}`);
     }
@@ -101,4 +105,10 @@ function validateSchema(schema) {
       if (!it[prop]) throw new Error(`Activity config must have ${prop}!`);
     });
   });
+}
+
+function getMetaDefaults(meta) {
+  return transform(meta, (acc, it) => {
+    if (it.defaultValue) acc[it.key] = it.defaultValue;
+  }, {});
 }
