@@ -111,9 +111,11 @@ class Activity extends Model {
     }, idMappings);
   }
 
-  clone(courseId, parentId) {
-    return this.sequelize.transaction(t =>
-      Activity.cloneActivities([this], courseId, parentId, t));
+  clone(courseId, parentId, position) {
+    return this.sequelize.transaction(t => {
+      if (position) this.position = position;
+      return Activity.cloneActivities([this], courseId, parentId, t);
+    });
   }
 
   /**

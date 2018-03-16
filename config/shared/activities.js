@@ -49,6 +49,7 @@ module.exports = {
   CONTENT_CONTAINERS,
   PREVIEW_URL,
   getSchema,
+  getSchemaId,
   getRepositoryMeta,
   getOutlineLevels,
   getLevel,
@@ -83,10 +84,11 @@ function getRepositoryMeta(repository) {
 }
 
 function getLevel(type) {
-  // If schema is not provided, assume legacy structure (single schema)
-  // and pick first
-  const schemaId = type.includes('/') ? first(type.split('/')) : first(SCHEMAS).id;
-  return find(getOutlineLevels(schemaId), { type });
+  return find(getOutlineLevels(getSchemaId(type)), { type });
+}
+
+function getSchemaId(type) {
+  return type.includes('/') && first(type.split('/'));
 }
 
 function validateSchema(schema) {
