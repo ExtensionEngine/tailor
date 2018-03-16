@@ -22,4 +22,4 @@ export default function ({ newPosition, items, isFirstChild, insert = false }) {
   }
 
   return position;
-};
+}

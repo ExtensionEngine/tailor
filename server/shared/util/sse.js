@@ -29,7 +29,7 @@ class SSEConnection {
     });
     res.write(':ok\n\n');
   }
-};
+}
 
 function middleware(req, res, next) {
   res.sse = new SSEConnection(req, res);

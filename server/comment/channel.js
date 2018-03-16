@@ -16,14 +16,14 @@ function unsubscribe(courseId, client) {
     unset(clients, [courseId, client.id]);
     client.close();
   };
-};
+}
 
 function subscribe(req, res) {
   const { courseId } = req.params;
   const client = res.sse;
   set(clients, [courseId, client.id], client);
   req.on('close', unsubscribe(courseId, client));
-};
+}
 
 function broadcast(event, comment) {
   const { courseId } = comment;
