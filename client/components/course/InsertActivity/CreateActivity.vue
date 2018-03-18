@@ -99,7 +99,7 @@ export default {
   }
 
   .type-select {
-    width: 170px;
+    min-width: 170px;
     margin-left: 25px;
   }
 
