@@ -18,7 +18,7 @@ const ERROR_NOT_FOUND = 'VIDEO_CLOUD_ERR_VIDEO_NOT_FOUND';
 const ERROR_INVALID_CONFIG = 'ERR_INVALID_CONFIGURATION';
 
 export default {
-  name: 'te-brightcove-player',
+  name: 'brightcove-player',
   props: {
     accountId: String,
     playerId: String,
