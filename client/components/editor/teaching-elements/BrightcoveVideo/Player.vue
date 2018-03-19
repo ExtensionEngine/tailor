@@ -2,28 +2,36 @@
   <div class="brightcove-player">
     <div v-if="showError" class="error">
       <div class="message">
-        <i class="mdi mdi-alert"></i>
+        <span class="mdi mdi-alert"></span>
         <p>Error loading media!</p>
       </div>
     </div>
-    <div v-show="!showError" class="wrapper" ref="videoWrapper"></div>
+    <div v-show="!showError" ref="videoWrapper" class="wrapper"></div>
   </div>
 </template>
 
 <script>
 import join from 'url-join';
+
 const BASE_URL = '//players.brightcove.net/';
-const E_NOT_FOUND = 'VIDEO_CLOUD_ERR_VIDEO_NOT_FOUND';
-const E_INVALID_CONFIG = 'ERR_INVALID_CONFIGURATION';
+const ERROR_NOT_FOUND = 'VIDEO_CLOUD_ERR_VIDEO_NOT_FOUND';
+const ERROR_INVALID_CONFIG = 'ERR_INVALID_CONFIGURATION';
 
 export default {
-  name: 'BrightcovePlayer',
+  name: 'te-brightcove-player',
   props: {
     accountId: String,
     playerId: String,
     videoId: String,
     debug: { type: Boolean, default: false },
     analytics: { type: Boolean, default: false }
+  },
+  data() {
+    return {
+      error: null,
+      style: null,
+      script: null
+    };
   },
   computed: {
     playerUrl() {
@@ -33,11 +41,8 @@ export default {
     showError() {
       if (!this.error) return false;
       const code = this.error.code;
-      return code === E_NOT_FOUND || code === E_INVALID_CONFIG;
+      return code === ERROR_NOT_FOUND || code === ERROR_INVALID_CONFIG;
     }
-  },
-  data() {
-    return { error: null };
   },
   methods: {
     createPlayer() {
@@ -75,7 +80,7 @@ export default {
       this.script = loadScript(playerUrl, this.$el, err => {
         if (err) {
           this.onError({
-            code: E_INVALID_CONFIG,
+            code: ERROR_INVALID_CONFIG,
             accountId: this.accountId,
             playerId: this.playerId
           });
@@ -104,10 +109,6 @@ export default {
     onError(err) {
       this.error = err;
     }
-  },
-  created() {
-    this.style = null;
-    this.script = null;
   },
   mounted() {
     this.initPlayer();

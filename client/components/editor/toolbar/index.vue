@@ -167,8 +167,8 @@ export default {
   },
   components: {
     AccordionToolbar,
-    CarouselToolbar,
     BrightcoveVideoToolbar,
+    CarouselToolbar,
     DefaultToolbar,
     EmbedToolbar,
     ImageToolbar,
