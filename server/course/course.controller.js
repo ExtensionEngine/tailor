@@ -19,9 +19,8 @@ function index({ query, user, opts }, res) {
 
 function create({ body, user }, res) {
   const defaultMeta = getVal(getSchema(body.schema), 'defaultMeta', {});
-  body.data = Object.assign({}, defaultMeta, body.data);
-  body.data.color = getVal(body, 'data.color', sample(DEFAULT_COLORS));
-  return Course.create(body, {
+  const data = { color: sample(DEFAULT_COLORS), ...defaultMeta, ...body.data };
+  return Course.create({ ...body, data }, {
     isNewRecord: true,
     returning: true,
     context: { userId: user.id }
