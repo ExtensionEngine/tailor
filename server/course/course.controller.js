@@ -1,10 +1,15 @@
-const { createError } = require('../shared/error/helpers');
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
+const { createError } = require('../shared/error/helpers');
+const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
+const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
+const sample = require('lodash/sample');
+
+const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
 function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { $iLike: `%${query.search}%` };
@@ -13,7 +18,9 @@ function index({ query, user, opts }, res) {
 }
 
 function create({ body, user }, res) {
-  return Course.create(body, {
+  const defaultMeta = getVal(getSchema(body.schema), 'defaultMeta', {});
+  const data = { color: sample(DEFAULT_COLORS), ...defaultMeta, ...body.data };
+  return Course.create({ ...body, data }, {
     isNewRecord: true,
     returning: true,
     context: { userId: user.id }

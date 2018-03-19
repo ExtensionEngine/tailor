@@ -56,6 +56,7 @@ An array of Schema objects.
 #### Schema
 * **id** `String` - Schema identifier.
 * **name** `String` - Schema display name.
+* **meta** `Array<Metadata>` - An array of objects defining repository metadata.
 * **structure** `Array<ActivityConfig>` - An array of objects which define schema structure.
 
 #### ActivityConfig - Schema structure elements
@@ -71,15 +72,16 @@ Configuration for schema structure nodes (activities). Contains the following pr
 * **hasExams** `Boolean` - Activity allows adding exam activities to it.
 * **exams** `Object` - Configuration for activity exams.
 * **hasPrerequisites** `Boolean` - Defines if this activity should offer other activities as prerequisites.
-* **meta** `Array<ActivityMetadata>` - An array of objects defining activity metadata.
+* **meta** `Array<Metadata>` - An array of objects defining activity metadata.
 
-#### ActivityMetadata
+#### Metadata
 Defines the structure of an activity metadata field.
 * **key** `String`- Unique key for the field.
 * **type** `String`- Type of the input component used on the client.
 * **label** `String`- Display label.
 * **placeholder** `String`- Input component placeholder.
 * **validate** `MetadataValidator`- Validator object.
+* **defaultValue** `*`- Default field value.
 
 #### MetadataValidator
 Defines validation rules on an activity metadata field.
