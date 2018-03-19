@@ -51,6 +51,8 @@ module.exports = (options, req) => ({
     favicon: `client/${brand.globals.FAVICON}`
   },
   define: { BRAND_CONFIG: brand.globals },
+  // ESnext modules that require compilation
+  transformModules: ['auto-bind'],
   webpack(config) {
     config.module.rules.push(...rules);
     return config;
