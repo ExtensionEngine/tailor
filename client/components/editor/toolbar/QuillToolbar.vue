@@ -61,8 +61,8 @@
     </span>
     <span class="ql-formats">
       <button class="ql-link" type="button"></button>
-      <!--
       <button class="ql-image" type="button"></button>
+      <!--
       <button class="ql-video" type="button"></button>
       -->
     </span>

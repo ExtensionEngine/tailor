@@ -25,7 +25,7 @@
 <script>
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
-import { quillEditor as QuillEditor } from 'vue-quill-editor';
+import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
 
 const toolbar = {
   container: '#quillToolbar',
@@ -35,6 +35,11 @@ const toolbar = {
     },
     undo() {
       this.quill.history.undo();
+    },
+    image() {
+      const range = this.quill.getSelection();
+      const url = window.prompt('Enter image URL');
+      this.quill.insertEmbed(range.index, 'image', url, Quill.sources.USER);
     }
   }
 };
