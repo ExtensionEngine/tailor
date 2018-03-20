@@ -51,13 +51,12 @@ module.exports = (options, req) => ({
     favicon: `client/${brand.globals.FAVICON}`
   },
   define: { BRAND_CONFIG: brand.globals },
-  // ESnext modules that require compilation
-  transformModules: ['auto-bind'],
   webpack(config) {
     config.module.rules.push(...rules);
     return config;
   },
   extendWebpack(config) {
+    configureModuleResolution(config);
     config.resolve.alias.merge(aliases);
     applyBrandConfig(config);
     if (options.mode !== 'production') return;
@@ -76,3 +75,11 @@ module.exports = (options, req) => ({
     }
   }
 });
+
+// NOTE: Remove absolute path to local `node_modules` from configuration
+// https://github.com/webpack/webpack/issues/6538#issuecomment-367324775
+function configureModuleResolution(config) {
+  const localModules = path.join(rootPath, 'node_modules');
+  config.resolve.modules.delete(localModules);
+  config.resolveLoader.modules.delete(localModules);
+}
