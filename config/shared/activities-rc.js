@@ -3,7 +3,7 @@ const PREVIEW_URL = null;
 const CONTENT_CONTAINERS = [{
   type: 'INTRO',
   label: 'Introduction',
-  types: ['HTML', 'IMAGE', /* 'BRIGHTCOVE_VIDEO, */ 'VIDEO'],
+  types: ['HTML', 'IMAGE', 'VIDEO'],
   displayHeading: true
 }, {
   type: 'PAGE',

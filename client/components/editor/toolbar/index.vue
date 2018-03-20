@@ -51,7 +51,7 @@
 <script>
 import * as config from 'shared/activities';
 import AccordionToolbar from './AccordionToolbar';
-import BrightcoveVideoToolbar from './BrightcoveVideoToolbar.vue';
+import BrightcoveVideoToolbar from './BrightcoveVideoToolbar';
 import CarouselToolbar from './CarouselToolbar';
 import DefaultToolbar from './DefaultToolbar';
 import drop from 'lodash/drop';

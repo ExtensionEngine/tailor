@@ -31,7 +31,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeAccordion from './Accordion/Accordion';
 import TeAssessment from './Assessment';
 import TeBreak from './PageBreak';
-import TeBrightcoveVideo from './BrightcoveVideo/index.vue';
+import TeBrightcoveVideo from './BrightcoveVideo';
 import TeCarousel from './Carousel/Carousel';
 import TeEmbed from './Embed';
 import TeHtml from './Html';

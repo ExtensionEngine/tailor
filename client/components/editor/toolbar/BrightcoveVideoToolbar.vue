@@ -90,9 +90,9 @@ export default {
 .input-group {
   display: block;
   width: 100%;
+  float: left;
   padding-right: 200px;
   margin-right: -200px;
-  float: left;
 }
 
 .form-control {
@@ -102,8 +102,8 @@ export default {
 
 .btn {
   position: relative;
-  padding: 6px 15px;
   z-index: 1;
+  padding: 6px 15px;
   font-size: 11px;
 
   &:active {
