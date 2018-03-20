@@ -8,141 +8,71 @@
         <span class="mdi mdi-publish"></span> Publish info
       </button>
     </div>
-    <div class="form-group">
-      <label for="courseName">Name</label>
-      <span
-        v-show="showNameInput"
-        :class="{ 'has-error': vErrors.has('courseName') }">
-        <textarea
-          v-model="newCourseName"
-          v-focus="true"
-          v-validate="{ rules: { required: true, min: 2, max: 250 } }"
-          @blur="updateName"
-          @keyup.enter="updateName"
-          @keyup.esc="showNameInput = false"
-          name="courseName"
-          data-vv-as="Name"
-          id="courseName"
-          class="form-control name">
-        </textarea>
-        <span class="help-block">{{ vErrors.first('courseName') }}</span>
-      </span>
-      <span v-show="!showNameInput">
-        <h2 @click.stop="showNameInput = true">{{ course.name }}</h2>
-      </span>
-    </div>
-    <div class="form-group">
-      <label for="courseDescription">Description</label>
-      <span
-        v-show="showDescriptionInput"
-        :class="{ 'has-error': vErrors.has('courseDescription') }">
-        <textarea
-          v-model="newCourseDescription"
-          v-focus="true"
-          v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
-          @blur="updateDescription"
-          @keyup.esc="showDescriptionInput = false"
-          name="courseDescription"
-          data-vv-as="Description"
-          id="courseDescription"
-          class="form-control">
-        </textarea>
-        <span class="help-block">
-          {{ vErrors.first('courseDescription') }}
-        </span>
-      </span>
-      <span v-show="!showDescriptionInput">
-        <span @click.stop="showDescriptionInput = true" class="form-display">
-          {{ course.description }}
-        </span>
-      </span>
-    </div>
-    <div class="meta-container">
-      <meta-input
-        v-for="it in metadata"
-        :meta="it"
-        :key="it.key"
-        @update="updateMeta">
-      </meta-input>
-    </div>
+    <meta-input
+      v-for="it in requiredData"
+      :meta="it"
+      :key="it.key"
+      @update="updateKey">
+    </meta-input>
+    <meta-input
+      v-for="it in metadata"
+      :meta="it"
+      :key="it.key"
+      @update="updateKey">
+    </meta-input>
   </div>
 </template>
 
 <script>
+import { getRepositoryMeta } from 'shared/activities';
+import { mapActions, mapGetters } from 'vuex-module';
 import api from '../../../api/course';
 import cloneDeep from 'lodash/cloneDeep';
 import EventBus from 'EventBus';
 import find from 'lodash/find';
-import { focus } from 'vue-focus';
-import { getColor } from 'utils/course';
-import { getRepositoryMeta } from 'shared/activities';
-import Loader from '../../common/Loader';
-import { mapGetters, mapActions } from 'vuex-module';
 import Meta from 'components/common/Meta';
-import { withValidation } from 'utils/validation';
+import set from 'lodash/set';
 
 const appChannel = EventBus.channel('app');
 
 export default {
-  mixins: [withValidation()],
-  props: ['showLoader'],
-  directives: { focus },
-  components: { Loader, MetaInput: Meta },
   data() {
-    return {
-      showNameInput: false,
-      showDescriptionInput: false,
-      newCourseName: '',
-      newCourseDescription: '',
-      publishing: false
-    };
+    return { publishing: false };
   },
   computed: {
     ...mapGetters(['course'], 'course'),
+    requiredData() {
+      return [{
+        key: 'name',
+        value: this.course.name,
+        type: 'INPUT',
+        label: 'Name',
+        validate: { rules: { required: true, min: 2, max: 250 } }
+      }, {
+        key: 'description',
+        value: this.course.description,
+        type: 'TEXTAREA',
+        label: 'Description',
+        validate: { rules: { required: true, min: 2, max: 2000 } }
+      }];
+    },
     metadata() {
-      let metadata = getRepositoryMeta(this.course);
-      let color = find(metadata, { key: 'color' });
-      if (!color.value) color.value = getColor(this.course);
-      return metadata;
+      return getRepositoryMeta(this.course);
     }
   },
   methods: {
     ...mapActions(['update', 'remove'], 'courses'),
-    updateName() {
-      if (!this.showNameInput) return;
-      this.showNameInput = false;
-      if (this.course.name === this.newCourseName) return;
-      this.$validator.validateAll().then(result => {
-        if (!result) return this.setCourseFields();
-        this.update({ ...this.course, name: this.newCourseName });
-      });
-    },
-    updateDescription() {
-      if (!this.showDescriptionInput) return;
-      this.showDescriptionInput = false;
-      if (this.course.description === this.newCourseDescription) return;
-      this.$validator.validateAll().then(result => {
-        if (!result) return this.setCourseFields();
-        this.update({ ...this.course, description: this.newCourseDescription });
-      });
-    },
-    updateMeta(key, value) {
-      const data = cloneDeep(this.course.data) || {};
-      data[key] = value;
-      this.update({ ...this.course, data });
+    updateKey(key, value) {
+      if (find(this.metadata, { key })) key = `data.${key}`;
+      const data = cloneDeep(this.course);
+      this.update(set(data, key, value));
     },
     removeCourse() {
-      const payload = {
+      appChannel.emit('showConfirmationModal', {
         type: 'course',
         item: this.course,
         action: () => this.remove(this.course) && this.$router.push('/')
-      };
-
-      appChannel.emit('showConfirmationModal', payload);
-    },
-    setCourseFields() {
-      this.newCourseName = this.course.name;
-      this.newCourseDescription = this.course.description;
+      });
     },
     publish() {
       this.publishing = true;
@@ -150,15 +80,7 @@ export default {
         .then(() => (this.publishing = false));
     }
   },
-  mounted() {
-    if (!this.course) return;
-    this.setCourseFields();
-  },
-  watch: {
-    course() {
-      this.setCourseFields();
-    }
-  }
+  components: { MetaInput: Meta }
 };
 </script>
 
@@ -166,8 +88,8 @@ export default {
 .settings {
   padding: 30px 30px 10px;
   text-align: left;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .actions {
@@ -176,48 +98,6 @@ export default {
   .btn {
     padding: 8px 12px;
   }
-}
-
-h2 {
-  display: inline-block;
-  height: 40px;
-  margin: 15px 0 30px;
-  color: #444;
-  font-size: 16px;
-  font-weight: normal;
-  line-height: 20px;
-}
-
-textarea.form-control.name {
-  height: 50px;
-  margin-top: 15px;
-  padding-top: 5px;
-  line-height: 20px;
-  letter-spacing: 0.1px;
-}
-
-textarea.form-control {
-  height: 200px;
-  padding-top: 22px;
-  letter-spacing: 0.1px;
-}
-
-span.form-display {
-  display: inline-block;
-  height: 225px;
-  white-space: pre-line;
-  font-size: 16px;
-}
-
-label {
-  display: block;
-  margin-top: 10px;
-  color: gray;
-  font-size: 14px;
-}
-
-.help-block {
-  min-height: 20px;
 }
 
 .picker {
