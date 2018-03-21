@@ -2,6 +2,7 @@ const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
 const get = require('lodash/get');
+const hasha = require('hasha');
 const map = require('lodash/map');
 const omit = require('lodash/omit');
 const pick = require('lodash/pick');
@@ -171,6 +172,8 @@ function saveFile(parent, key, data) {
 }
 
 function saveSpine(spine) {
+  if (spine.version) delete spine.version;
+  spine.version = hasha(JSON.stringify(spine), { algorithm: 'sha1' });
   const spineData = Buffer.from(JSON.stringify(spine), 'utf8');
   const key = `repository/${spine.id}/index.json`;
   return storage.saveFile(key, spineData);
