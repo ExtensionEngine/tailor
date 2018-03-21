@@ -52,6 +52,7 @@
     "d3-zoom": "^1.7.1",
     "dom-shims": "^0.1.4",
     "dotenv": "^2.0.0",
+    "dotenv-webpack": "^1.5.5",
     "email-regex": "^1.0.0",
     "emailjs": "^1.0.8",
     "event-source-polyfill": "0.0.12",
