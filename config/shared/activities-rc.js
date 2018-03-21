@@ -83,16 +83,19 @@ const REPOSITORY_OUTLINE = [{
   meta: []
 }];
 
-const SCHEMAS = [{
-  id: 'EXAMPLE_SCHEMA',
-  name: 'Example Schema 1',
-  structure: COURSE_OUTLINE,
-  meta: []
-}, {
-  id: 'EXAMPLE_SCHEMA_2',
-  name: 'Example Schema 2',
-  structure: REPOSITORY_OUTLINE
-}];
+const SCHEMAS = [];
+if (process.env.ENABLE_SEED_SCHEMA) {
+  SCHEMAS.push({
+    id: 'EXAMPLE_SCHEMA',
+    name: 'Example Schema 1',
+    structure: COURSE_OUTLINE,
+    meta: []
+  }, {
+    id: 'EXAMPLE_SCHEMA_2',
+    name: 'Example Schema 2',
+    structure: REPOSITORY_OUTLINE
+  });
+}
 
 module.exports = {
   CONTENT_CONTAINERS,
