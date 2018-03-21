@@ -29,7 +29,7 @@ Adaptive course authoring platform.
 Use the `.env.example` file as a template: `cp .env.example .env` and enter
 configuration details.
 * You can init the db (for development) by setting ENABLE_SEED_SCHEMA=1
-(.env) and running `npm run db:seed`.
+and running `npm run db:seed`.
 * You can create admin user by running `npm run add:admin <email> <password>`
 * App branding is configured via values set in a file named `.brand-rc.json`.
 Use the `.brand-rc.json.example` file as a template: `cp .brand-rc.json.example .brand-rc.json` and enter configuration details.
