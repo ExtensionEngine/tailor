@@ -1,5 +1,6 @@
 const fileType = require('file-type');
 const hasha = require('hasha');
+const logger = require('../logger');
 const mime = require('mime-types');
 const storage = require('./index');
 
@@ -15,11 +16,13 @@ class StorageService {
     const extension = mime.extension(mimetype);
     const key = `repository/assets/${id}/${hash}.${extension}`;
     const options = { ACL: 'public-read', ContentType: mimetype };
+    logger.info(`Storing item: ${key}\nusing provider:`, storage.provider);
     await storage.saveFile(key, buffer, options);
     return key;
   }
 
   async getItemUrl(key, { expires = 3600 } = {}) {
+    logger.info(`Requesting public url for item: ${key}\nusing provider:`, storage.provider);
     const exists = await storage.fileExists(key);
     return exists && storage.getFileUrl(key, { expires });
   }

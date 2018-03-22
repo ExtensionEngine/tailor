@@ -34,6 +34,14 @@ class Amazon {
     return new Amazon(config);
   }
 
+  inspect() {
+    return {
+      name: 'amazon',
+      bucket: this.bucket,
+      region: this.region
+    };
+  }
+
   path(...segments) {
     segments = [this.bucket, ...segments];
     return path.join(...segments);

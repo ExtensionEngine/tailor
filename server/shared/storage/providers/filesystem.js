@@ -25,6 +25,13 @@ class FilesystemStorage {
     return new FilesystemStorage(config);
   }
 
+  inspect() {
+    return {
+      name: 'filesystem',
+      path: this.path
+    };
+  }
+
   path(...segments) {
     segments = [this.root, ...segments];
     return path.join(...segments);
