@@ -60,11 +60,12 @@ module.exports = {
   getRepositoryMeta,
   getOutlineLevels,
   getLevel,
-  isEditable: type => {
-    const level = getLevel(type);
-    return level && level.isEditable;
+  isEditable: activityType => {
+    const config = getLevel(activityType);
+    const hasContainers = !!getSupportedContainers(activityType).length;
+    return hasContainers || config.hasExams || config.hasAssessments;
   },
-  getSupportedContainers: level => getLevel(level).contentContainers,
+  getSupportedContainers,
   hasAssessments: level => getLevel(level).hasAssessments,
   hasExams: level => getLevel(level).hasExams
 };
@@ -80,6 +81,16 @@ function getOutlineLevels(schemaId) {
 
 function getSchema(id) {
   return find(SCHEMAS, { id });
+}
+
+function getSupportedContainers(type) {
+  const schema = getSchema(getSchemaId(type));
+  const defaultConfig = get(defaultConfiguration, 'CONTENT_CONTAINERS', []);
+  const schemaConfig = get(schema, 'contentContainers', []);
+  const activityConfig = get(getLevel(type), 'contentContainers', []);
+  return map(activityConfig, type =>
+    find(schemaConfig, { type }) || find(defaultConfig, { type })
+  );
 }
 
 function getRepositoryMeta(repository) {

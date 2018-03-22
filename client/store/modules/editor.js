@@ -44,7 +44,7 @@ getter(function contentContainers() {
 
   if (!activity) return;
   const containers = getSupportedContainers(activity.type);
-  return reduce(containers, (acc, type) => {
+  return reduce(containers, (acc, { type }) => {
     acc[type] = filter(activities, { parentId: activityId, type });
     return acc;
   }, {});
