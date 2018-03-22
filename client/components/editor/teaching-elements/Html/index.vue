@@ -25,7 +25,10 @@
 <script>
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
+import ImageEmbed from './image-embed';
 import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
+
+Quill.register('modules/imageEmbed', ImageEmbed);
 
 const toolbar = {
   container: '#quillToolbar',
@@ -37,9 +40,7 @@ const toolbar = {
       this.quill.history.undo();
     },
     image() {
-      const range = this.quill.getSelection();
-      const url = window.prompt('Enter image URL');
-      this.quill.insertEmbed(range.index, 'image', url, Quill.sources.USER);
+      this.quill.tooltips.imageEmbed.show();
     }
   }
 };
@@ -47,6 +48,7 @@ const toolbar = {
 const options = {
   modules: {
     toolbar,
+    imageEmbed: true,
     history: { userOnly: true }
   }
 };
@@ -122,6 +124,10 @@ export default {
 .te-html {
   .ql-editor {
     min-height: 117px;
+
+    img {
+      vertical-align: initial;
+    }
   }
 
   .ql-container.ql-snow {
