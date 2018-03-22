@@ -91,6 +91,8 @@ class Amazon {
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getSignedUrl-property
   getFileUrl(key, options = {}) {
     const expires = options.expires || DEFAULT_EXPIRATION_TIME;
+    // NOTE: Remove due to S3 client strict params filtering.
+    delete options.expires;
     const params = Object.assign(options, { Bucket: this.bucket, Key: key, Expires: expires });
     return this._getSignedUrl('getObject', params);
   }

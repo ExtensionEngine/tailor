@@ -1,14 +1,11 @@
-const crypto = require('crypto');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
-const mime = require('mime-types');
-const nodeUrl = require('url');
+const parseUrl = require('url').parse;
 const Promise = require('bluebird');
-const storage = require('./index');
+const storage = require('./storage.service');
 const values = require('lodash/values');
 
 const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
-const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 
 function processStatics(item) {
@@ -50,18 +47,15 @@ processor.IMAGE = asset => {
   }
 
   if (isUrl(image)) {
-    let url = nodeUrl.parse(image);
+    const url = parseUrl(image);
     asset.data.url = url.pathname.substr(1, image.length);
     return Promise.resolve(asset);
   }
 
   const file = Buffer.from(image.replace(base64Pattern, ''), 'base64');
-  const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
-  const hashString = `${asset.id}${file}`;
-  const hash = crypto.createHash('md5').update(hashString).digest('hex');
-  const key = `repository/assets/${asset.id}/${hash}.${extension}`;
-  asset.data.url = key;
-  return saveFile(key, file).then(() => asset);
+  return storage.saveItem(asset.id, file)
+    .then(key => key && (asset.data.url = key))
+    .then(() => asset);
 };
 
 function resolveStatics(item) {
@@ -97,20 +91,10 @@ let resolver = {};
 resolver.IMAGE = asset => {
   if (!asset.data || !asset.data.url) return Promise.resolve(asset);
 
-  function getUrl(key) {
-    return storage.getFileUrl(key, { Expires: 3600 })
-      .then(url => (asset.data.url = url))
-      .then(() => asset);
-  }
-
-  return storage.fileExists(asset.data.url)
-    .then(exists => exists ? getUrl(asset.data.url) : asset);
+  return storage.getItemUrl(asset.data.url)
+    .then(url => url && (asset.data.url = url))
+    .then(() => asset);
 };
-
-function saveFile(key, file) {
-  const options = { ACL: 'public-read', ContentType: mime.lookup(key) };
-  return storage.saveFile(key, file, options);
-}
 
 module.exports = {
   processStatics,
