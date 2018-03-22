@@ -7,11 +7,14 @@ const map = require('lodash/map');
 const mergeConfig = require('../utils/mergeConfig');
 const transform = require('lodash/transform');
 
-const config = mergeConfig(
-  require('./activities-rc'),
-  require('./activities-rc.load')()
-);
+const defaultConfiguration = require('./activities-rc');
+const customConfiguration = require('./activities-rc.load')();
 
+if (!process.env.ENABLE_SEED_SCHEMA && !isEmpty(customConfiguration)) {
+  defaultConfiguration.SCHEMAS = [];
+}
+
+const config = mergeConfig(defaultConfiguration, customConfiguration);
 const { SCHEMAS, CONTENT_CONTAINERS, PREVIEW_URL } = config;
 
 // Validate schemas
