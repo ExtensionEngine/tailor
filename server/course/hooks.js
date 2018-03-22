@@ -1,7 +1,7 @@
 const addHooks = require('../shared/util/addHooks');
+const { getObjectives, getSchemaId } = require('../../config/shared/activities');
 const logger = require('../shared/logger');
-const { OBJECTIVES } = require('../../config/shared/activities');
-const objectiveTypes = OBJECTIVES.map(it => it.type);
+const map = require('lodash/map');
 
 module.exports = { add };
 
@@ -13,7 +13,8 @@ function add(Course, models) {
   addHooks(Activity, hooks, (hook, instance, options) => {
     const { id, courseId, type } = instance;
     logger.info(`[Course] Activity#${hook}`, { type, id, courseId });
-    const where = { courseId, type: objectiveTypes, detached: false };
+    const objectiveTypes = map(getObjectives(getSchemaId(type)), 'type');
+    const where = { courseId, type: { $in: objectiveTypes }, detached: false };
     return Activity.count({ where })
       .then(count => Course.updateStats(courseId, 'objectives', count));
   });

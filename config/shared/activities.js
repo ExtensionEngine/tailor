@@ -52,13 +52,13 @@ SCHEMAS.forEach(schema => {
 module.exports = {
   SCHEMAS,
   OUTLINE_LEVELS: SCHEMAS[0].structure,
-  OBJECTIVES: filter(SCHEMAS[0].structure, { isObjective: true }),
   CONTENT_CONTAINERS,
   PREVIEW_URL,
   getSchema,
   getSchemaId,
   getRepositoryMeta,
   getOutlineLevels,
+  getObjectives,
   getLevel,
   isEditable: activityType => {
     const config = getLevel(activityType);
@@ -91,6 +91,10 @@ function getSupportedContainers(type) {
   return map(activityConfig, type =>
     find(schemaConfig, { type }) || find(defaultConfig, { type })
   );
+}
+
+function getObjectives(schemaId) {
+  return filter(getSchema(schemaId).structure, { isObjective: true });
 }
 
 function getRepositoryMeta(repository) {
