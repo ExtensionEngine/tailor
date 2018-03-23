@@ -5,6 +5,7 @@
 [![codebeat badge](https://codebeat.co/badges/f577cd02-ad4f-464d-8afc-be153929703d)](https://codebeat.co/projects/github-com-extensionengine-tailor-develop)
 [![bitHound Overall Score](https://www.bithound.io/github/ExtensionEngine/tailor/badges/score.svg)](https://www.bithound.io/github/ExtensionEngine/tailor)
 [![bitHound Code](https://www.bithound.io/github/ExtensionEngine/tailor/badges/code.svg)](https://www.bithound.io/github/ExtensionEngine/tailor)
+[![Known Vulnerabilities](https://snyk.io/test/github/ExtensionEngine/tailor/badge.svg)](https://snyk.io/test/github/ExtensionEngine/tailor)
 [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg)](https://github.com/Flet/semistandard)
 [![GitHub license](https://img.shields.io/github/license/ExtensionEngine/tailor.svg)](https://github.com/ExtensionEngine/tailor/blob/develop/LICENSE)
 [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
