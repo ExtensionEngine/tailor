@@ -1,5 +1,5 @@
 const calculatePosition = require('../shared/util/calculatePosition');
-const hasha = require('hasha');
+const hash = require('hash-obj');
 const isNumber = require('lodash/isNumber');
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
@@ -75,12 +75,12 @@ class TeachingElement extends Model {
   static hooks() {
     return {
       beforeCreate(te) {
-        te.contentSignature = hasha(JSON.stringify(te.data), { algorithm: 'sha1' });
+        te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
       },
       beforeUpdate(te) {
         if (!te.changed('data')) return Promise.resolve();
-        te.contentSignature = hasha(JSON.stringify(te.data), { algorithm: 'sha1' });
+        te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
       }
     };
