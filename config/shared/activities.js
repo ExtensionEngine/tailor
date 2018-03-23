@@ -68,16 +68,13 @@ module.exports = {
 };
 
 function getOutlineLevels(schemaId) {
-  // If schema is not provided, assume legacy structure (single schema)
-  // and pick first
-  const schema = schemaId
-    ? find(SCHEMAS, { id: schemaId }) || first(SCHEMAS)
-    : first(SCHEMAS);
-  return schema.structure;
+  return getSchema(schemaId).structure;
 }
 
 function getSchema(id) {
-  return find(SCHEMAS, { id });
+  const schema = find(SCHEMAS, { id });
+  if (!schema) throw new Error('Schema does not exist!');
+  return schema;
 }
 
 function getSupportedContainers(type) {
