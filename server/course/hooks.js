@@ -12,8 +12,10 @@ function add(Course, models) {
   // Track objectives.
   addHooks(Activity, hooks, (hook, instance, options) => {
     const { id, courseId, type } = instance;
+    const schemaId = getSchemaId(type);
+    if (!schemaId) return;
     logger.info(`[Course] Activity#${hook}`, { type, id, courseId });
-    const objectiveTypes = map(getObjectives(getSchemaId(type)), 'type');
+    const objectiveTypes = map(getObjectives(schemaId), 'type');
     const where = { courseId, type: { $in: objectiveTypes }, detached: false };
     return Activity.count({ where })
       .then(count => Course.updateStats(courseId, 'objectives', count));
