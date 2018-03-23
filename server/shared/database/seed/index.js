@@ -39,6 +39,6 @@ async function insertAll() {
   await Promise.map(courses, it => it.setUsers(users));
 }
 
-module.exports = db => {
+module.exports = () => {
   return insertAll();
 };
