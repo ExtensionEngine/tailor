@@ -19,7 +19,7 @@ async function insertActivities(config, course, level, parent) {
       data: { name: `${name} activity ${position}` },
       position,
       courseId: course.id,
-      activityId: get(parent, 'id', null)
+      parentId: get(parent, 'id', null)
     });
   });
   const nextLevel = level + 1;
