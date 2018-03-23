@@ -104,5 +104,5 @@ Configuration for content containers. Contains the following properties:
 * **layout** `Boolean` - Defines if elements inside container can be placed two in a row. True by default.
 
 ### `PREVIEW_URL`
-A string template that will be interpolated on the client using two route params, `courseId` and `activityId`, into a preview URL for each activiy. Example:
-`https://my.url.com/#/course/{courseId}/activity/{activityId}/preview`
+A string template that will be interpolated on the client using two route params, `repositoryId` and `activityId`, into a preview URL for each activiy. Example:
+`https://my.url.com/#/repository/{repositoryId}/activity/{activityId}/preview`

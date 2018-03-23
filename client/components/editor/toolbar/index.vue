@@ -49,7 +49,6 @@
 </template>
 
 <script>
-import * as config from 'shared/activities';
 import AccordionToolbar from './AccordionToolbar';
 import BrightcoveVideoToolbar from './BrightcoveVideoToolbar';
 import CarouselToolbar from './CarouselToolbar';
@@ -70,6 +69,7 @@ import TableToolbar from './TableToolbar';
 import truncate from 'truncate';
 import VideoToolbar from './VideoToolbar';
 
+const PREVIEW_URL = process.env.PREVIEW_URL;
 const appChannel = EventBus.channel('app');
 
 const TOOLBAR_TYPES = {
@@ -110,9 +110,9 @@ export default {
       return get(this, 'focusedElement.type');
     },
     previewUrl() {
-      if (!config.PREVIEW_URL) return;
+      if (!PREVIEW_URL) return;
       const { courseId, activityId } = this.$route.params;
-      return format(config.PREVIEW_URL, { courseId, activityId });
+      return format(PREVIEW_URL, { repositoryId: courseId, activityId });
     },
     breadcrumbs() {
       let items = [];

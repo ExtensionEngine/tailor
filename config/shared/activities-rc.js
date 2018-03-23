@@ -1,5 +1,3 @@
-const PREVIEW_URL = null;
-
 const CONTENT_CONTAINERS = [{
   type: 'INTRO',
   label: 'Introduction',
@@ -75,6 +73,5 @@ const SCHEMAS = [{
 
 module.exports = {
   CONTENT_CONTAINERS,
-  PREVIEW_URL,
   SCHEMAS
 };
