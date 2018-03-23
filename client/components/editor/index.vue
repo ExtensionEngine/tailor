@@ -6,11 +6,11 @@
       <div v-else>
         <div class="container">
           <content-containers
-            v-for="(containerGroup, name) in contentContainers"
-            :key="name"
+            v-for="(containerGroup, type) in contentContainers"
+            :key="type"
             :containerGroup="containerGroup"
             :parentId="activity.id"
-            v-bind="getContainerConfig(name)">
+            v-bind="getContainerConfig(type)">
           </content-containers>
           <assessments v-if="showAssessments"></assessments>
           <exams v-if="showExams"></exams>
@@ -28,6 +28,8 @@ import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
+import get from 'lodash/get';
+import map from 'lodash/map';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
 import truncate from 'truncate';
@@ -49,6 +51,17 @@ export default {
     },
     showExams() {
       return config.hasExams(this.activity.type);
+    },
+    containerConfigs() {
+      if (!this.course || !this.activity) return [];
+      const schema = config.getSchema(this.course.schema);
+      const activityConfig = config.getLevel(this.activity.type);
+      const defaultConfig = get(config, 'CONTENT_CONTAINERS', []);
+      const schemaConfig = get(schema, 'contentContainers', []);
+      const activityContainers = get(activityConfig, 'contentContainers', []);
+      return map(activityContainers, type =>
+        find(schemaConfig, { type }) || find(defaultConfig, { type })
+      );
     }
   },
   methods: {
@@ -58,9 +71,8 @@ export default {
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
     ...mapMutations({ setupActivitiesApi: 'setBaseUrl' }, 'activities'),
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
-    getContainerConfig(name) {
-      const type = name.toUpperCase();
-      return find(config.CONTENT_CONTAINERS, { type });
+    getContainerConfig(type) {
+      return find(this.containerConfigs, { type });
     },
     truncate(str, len = 50) {
       return truncate(str, len);
