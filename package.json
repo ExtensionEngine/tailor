@@ -62,7 +62,7 @@
     "fecha": "^2.3.0",
     "file-type": "^7.5.0",
     "focus-trap": "^2.3.1",
-    "hasha": "^3.0.0",
+    "hash-obj": "^1.0.0",
     "http-errors": "^1.5.1",
     "http-status-codes": "^1.1.6",
     "is-iexplorer": "^1.0.0",
