@@ -67,14 +67,22 @@ module.exports = {
   hasExams: level => getLevel(level).hasExams
 };
 
-function getOutlineLevels(schemaId) {
-  return getSchema(schemaId).structure;
-}
-
 function getSchema(id) {
   const schema = find(SCHEMAS, { id });
   if (!schema) throw new Error('Schema does not exist!');
   return schema;
+}
+
+function getSchemaId(type) {
+  return type.includes('/') && first(type.split('/'));
+}
+
+function getOutlineLevels(schemaId) {
+  return getSchema(schemaId).structure;
+}
+
+function getLevel(type) {
+  return find(getOutlineLevels(getSchemaId(type)), { type });
 }
 
 function getSupportedContainers(type) {
@@ -97,14 +105,6 @@ function getRepositoryMeta(repository) {
     let value = get(repository, `data.${it.key}`);
     return { ...it, value };
   });
-}
-
-function getLevel(type) {
-  return find(getOutlineLevels(getSchemaId(type)), { type });
-}
-
-function getSchemaId(type) {
-  return type.includes('/') && first(type.split('/'));
 }
 
 function validateSchema(schema) {
