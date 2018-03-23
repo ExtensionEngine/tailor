@@ -51,7 +51,6 @@ SCHEMAS.forEach(schema => {
 
 module.exports = {
   SCHEMAS,
-  OUTLINE_LEVELS: SCHEMAS[0].structure,
   CONTENT_CONTAINERS,
   PREVIEW_URL,
   getSchema,
