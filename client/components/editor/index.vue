@@ -28,8 +28,6 @@ import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
-import get from 'lodash/get';
-import map from 'lodash/map';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
 import truncate from 'truncate';
@@ -53,15 +51,8 @@ export default {
       return config.hasExams(this.activity.type);
     },
     containerConfigs() {
-      if (!this.course || !this.activity) return [];
-      const schema = config.getSchema(this.course.schema);
-      const activityConfig = config.getLevel(this.activity.type);
-      const defaultConfig = get(config, 'CONTENT_CONTAINERS', []);
-      const schemaConfig = get(schema, 'contentContainers', []);
-      const activityContainers = get(activityConfig, 'contentContainers', []);
-      return map(activityContainers, type =>
-        find(schemaConfig, { type }) || find(defaultConfig, { type })
-      );
+      if (!this.activity) return [];
+      return config.getSupportedContainers(this.activity.type);
     }
   },
   methods: {

@@ -15,7 +15,7 @@ if (!process.env.ENABLE_SEED_SCHEMA && !isEmpty(customConfiguration)) {
 }
 
 const config = mergeConfig(defaultConfiguration, customConfiguration);
-const { SCHEMAS, CONTENT_CONTAINERS, PREVIEW_URL } = config;
+const { SCHEMAS, PREVIEW_URL } = config;
 
 // Validate schemas
 // Prefix activity types with schema id; SCHEMA_ID/TYPE
@@ -51,7 +51,6 @@ SCHEMAS.forEach(schema => {
 
 module.exports = {
   SCHEMAS,
-  CONTENT_CONTAINERS,
   PREVIEW_URL,
   getSchema,
   getSchemaId,
