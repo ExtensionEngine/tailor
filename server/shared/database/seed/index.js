@@ -1,71 +1,44 @@
-const assign = require('lodash/assign');
-const flattenDeep = require('lodash/flattenDeep');
+const { Activity, Course, User } = require('../index');
+const { getSchema } = require('../../../../config/shared/activities');
+const find = require('lodash/find');
+const get = require('lodash/get');
+const map = require('lodash/map');
 const Promise = require('bluebird');
-const times = require('lodash/times');
+const random = require('lodash/random');
+const range = require('lodash/range');
 
 const courseData = require('./courses.json').data;
 const userData = require('./users.json').data;
-const questionData = require('./questions.json').data;
 
-const OUTLINE_LEVELS = ['EXAMPLE_SCHEMA/COMPETENCY', 'EXAMPLE_SCHEMA/OBJECTIVE', 'EXAMPLE_SCHEMA/TOPIC'];
-const LEAF = OUTLINE_LEVELS[OUTLINE_LEVELS.length - 1];
-const ACTIVITIES_PER_LEVEL = 4;
-
-function initializeModel(Model, records) {
-  const result = [];
-  records.forEach(it => result.push(Model.create(it)));
-  return Promise.all(result);
-}
-
-function insertActivities(Model, course, level, parent) {
-  let activities = [];
-  times(ACTIVITIES_PER_LEVEL, position => {
-    position += 1;
-    const type = OUTLINE_LEVELS[level];
-    const name = level ? 'Sub' : 'Main';
-    const attrs = {
+async function insertActivities(config, course, level, parent) {
+  const { type } = find(config, { level });
+  const items = await Promise.map(range(1, random(2, 7)), position => {
+    const name = level > 1 ? 'Sub' : 'Main';
+    return Activity.create({
       type,
       data: { name: `${name} activity ${position}` },
       position,
-      courseId: course.id
-    };
-    activities.push(Model.create(attrs)
-      .then(activity => {
-        let io = [course.addActivity(activity)];
-        if (parent) io.push(parent.addChild(activity));
-        return Promise.all(io).then(() => activity);
-      })
-      .then(item => {
-        const nextLevel = level + 1;
-        const isLeaf = nextLevel === OUTLINE_LEVELS.length;
-        return isLeaf ? item : insertActivities(Model, course, nextLevel, item);
-      }));
-  });
-  return Promise.all(flattenDeep(activities));
-}
-
-function insertQuestions(activity) {
-  questionData.forEach(assessment => {
-    assign(assessment, { courseId: activity.courseId });
-    activity.createTeachingElement(assessment);
-  });
-}
-
-function insertAll(db) {
-  const { User, Course, Activity } = db;
-  const users = initializeModel(User, userData);
-  const courses = initializeModel(Course, courseData);
-
-  return Promise.join(users, courses).spread((users, courses) => {
-    return Promise.each(courses, course => {
-      return insertActivities(Activity, course, 0, null)
-        .then(() => Activity.findAll({ where: { courseId: course.id, type: LEAF } }))
-        .then(leafs => Promise.each(leafs, it => insertQuestions(it)))
-        .then(() => course.setUsers(users));
+      courseId: course.id,
+      activityId: get(parent, 'id', null)
     });
   });
+  const nextLevel = level + 1;
+  const hasChildren = !!find(config, { level: nextLevel });
+  return !hasChildren
+    ? items
+    : Promise.map(items, it => insertActivities(config, course, nextLevel, it));
+}
+
+async function insertAll() {
+  const schema = getSchema('DEFAULT_SCHEMA');
+  const courseSeed = map(courseData, it => ({ ...it, schema: schema.id }));
+  const initCourses = Promise.map(courseSeed, it => Course.create(it));
+  const initUsers = Promise.map(userData, it => User.create(it));
+  const [users, courses] = await Promise.all([initUsers, initCourses]);
+  await Promise.map(courses, it => insertActivities(schema.structure, it, 1));
+  await Promise.map(courses, it => it.setUsers(users));
 }
 
 module.exports = db => {
-  return insertAll(db);
+  return insertAll();
 };
