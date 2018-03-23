@@ -1,3 +1,4 @@
+import repeat from 'lodash/repeat';
 import { Quill } from 'vue-quill-editor';
 import Tooltip from './tooltip';
 
@@ -5,8 +6,9 @@ import './image-embed.scss';
 const Keyboard = Quill.import('modules/keyboard');
 
 class EmbedTooltip extends Tooltip {
-  constructor(quill, bounds) {
+  constructor(quill, bounds, { spacing = 0 } = {}) {
     super(quill, bounds);
+    this.padding = repeat(' ', spacing);
     this.textbox = this.root.querySelector('input.url');
     this.btnAction = this.root.querySelector('a.action');
     this.listen();
@@ -37,11 +39,16 @@ class EmbedTooltip extends Tooltip {
     const { quill } = this;
     const range = quill.getSelection(true);
     if (range) {
-      const index = range.index + range.length;
+      const { padding } = this;
       const source = Quill.sources.USER;
-      quill.insertEmbed(index, 'image', url, source);
-      quill.insertText(index + 1, ' ', source);
-      quill.setSelection(index + 2, source);
+      let offset = range.index + range.length;
+      quill.insertText(offset, padding, source);
+      offset += padding.length;
+      quill.insertEmbed(offset, 'image', url, source);
+      offset += 1;
+      quill.insertText(offset, padding, source);
+      offset += padding.length;
+      quill.setSelection(offset, source);
     }
     this.textbox.value = '';
     this.hide();
@@ -56,9 +63,10 @@ EmbedTooltip.TEMPLATE = `
   </div>`;
 
 export default class ImageEmbed {
-  constructor(quill) {
+  constructor(quill, options = {}) {
     this.quill = quill;
     quill.tooltips = quill.tooltips = {};
-    quill.tooltips.imageEmbed = new EmbedTooltip(quill, quill.options.bounds);
+    const bounds = quill.options.bounds;
+    quill.tooltips.imageEmbed = new EmbedTooltip(quill, bounds, options);
   }
 }

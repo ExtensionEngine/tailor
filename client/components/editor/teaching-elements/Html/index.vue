@@ -48,7 +48,7 @@ const toolbar = {
 const options = {
   modules: {
     toolbar,
-    imageEmbed: true,
+    imageEmbed: { spacing: 1 },
     history: { userOnly: true }
   }
 };
