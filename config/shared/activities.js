@@ -10,7 +10,7 @@ const transform = require('lodash/transform');
 const defaultConfiguration = require('./activities-rc');
 const customConfiguration = require('./activities-rc.load')();
 
-if (!process.env.ENABLE_SEED_SCHEMA && !isEmpty(customConfiguration)) {
+if (!process.env.ENABLE_DEFAULT_SCHEMA && !isEmpty(customConfiguration)) {
   defaultConfiguration.SCHEMAS = [];
 }
 

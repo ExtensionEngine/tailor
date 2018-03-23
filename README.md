@@ -29,7 +29,7 @@ Adaptive course authoring platform.
 * App is configured via environment variables contained in a file named `.env`.
 Use the `.env.example` file as a template: `cp .env.example .env` and enter
 configuration details.
-* You can init the db (for development) by setting ENABLE_SEED_SCHEMA=1
+* You can init the db (for development) by setting `ENABLE_DEFAULT_SCHEMA=1`
 and running `npm run db:seed`.
 * You can create admin user by running `npm run add:admin <email> <password>`
 * App branding is configured via values set in a file named `.brand-rc.json`.
