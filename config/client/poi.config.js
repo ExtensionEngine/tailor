@@ -4,7 +4,6 @@ const find = require('lodash/find');
 const merge = require('lodash/merge');
 const path = require('path');
 const serverPort = require('../server').port;
-const set = require('lodash/set');
 
 const rootPath = path.resolve(__dirname, '../../');
 const aliases = {
