@@ -4,6 +4,7 @@ const find = require('lodash/find');
 const merge = require('lodash/merge');
 const path = require('path');
 const serverPort = require('../server').port;
+const set = require('lodash/set');
 
 const rootPath = path.resolve(__dirname, '../../');
 const aliases = {
@@ -55,6 +56,9 @@ module.exports = (options, req) => ({
   webpack(config) {
     config.module.rules.push(...rules);
     config.plugins.push(new Dotenv());
+    // Mock node globals due to: https://github.com/hapijs/joi/issues/748
+    set(config, 'node.dns', 'mock');
+    set(config, 'node.net', 'mock');
     return config;
   },
   extendWebpack(config) {
