@@ -56,9 +56,6 @@ module.exports = (options, req) => ({
   webpack(config) {
     config.module.rules.push(...rules);
     config.plugins.push(new Dotenv());
-    // Mock node globals due to: https://github.com/hapijs/joi/issues/748
-    set(config, 'node.dns', 'mock');
-    set(config, 'node.net', 'mock');
     return config;
   },
   extendWebpack(config) {
