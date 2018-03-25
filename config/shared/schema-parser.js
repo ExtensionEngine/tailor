@@ -7,8 +7,8 @@ const validate = require('./schema-validation');
 // Validate schemas
 // Prefix activity types with schema id; SCHEMA_ID/TYPE
 // Process meta
-module.exports = async function parse(schemas = []) {
-  await validate(schemas);
+module.exports = function parse(schemas = []) {
+  validate(schemas);
   schemas.forEach(schema => {
     processRepositoryConfig(schema);
     schema.structure.forEach(it => processActivityConfig(schema, it));

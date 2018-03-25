@@ -33,5 +33,10 @@ const schema = yup.object().shape({
 const schemas = yup.array().of(schema).min(1);
 
 module.exports = function (config) {
-  return schemas.validate(config);
+  try {
+    schemas.validateSync(config);
+  } catch (err) {
+    console.error('Invalid schema config!', err.message);
+    throw err;
+  }
 };
