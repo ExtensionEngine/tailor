@@ -13,7 +13,6 @@
         "placeholder": "Click to add...",
         "validate": { "rules": { "required": false, "max": 23 } }
       }],
-      "isEditable": true,
       "contentContainers": ["PAGE"]
     }],
     "contentContainers": [{
