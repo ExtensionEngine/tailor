@@ -1,5 +1,5 @@
-const addHooks = require('../shared/util/addHooks');
 const { getObjectives, getSchemaId } = require('../../config/shared/activities');
+const addHooks = require('../shared/util/addHooks');
 const logger = require('../shared/logger');
 const map = require('lodash/map');
 

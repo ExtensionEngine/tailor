@@ -40,7 +40,7 @@ export default {
     },
     objectiveLabel() {
       const objectives = map(getObjectives(this.course.schema), 'label');
-      return objectives.lenght > 1 ? 'Objectives' : pluralize(objectives[0]);
+      return objectives.length > 1 ? 'Objectives' : pluralize(objectives[0]);
     },
     assessments() {
       return get(this.course, 'stats.assessments', 0);
