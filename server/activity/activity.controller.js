@@ -1,12 +1,13 @@
 const { Activity } = require('../shared/database');
-const { getLevel } = require('../../config/shared/activities');
-
+const { getOutlineLevels } = require('../../config/shared/activities');
+const find = require('lodash/find');
 const get = require('lodash/get');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
 
-function create({ body, params, user }, res) {
-  const defaultMeta = get(getLevel(body.type), 'defaultMeta', {});
+function create({ course, body, params, user }, res) {
+  const outlineConfig = find(getOutlineLevels(course.schema), { type: body.type });
+  const defaultMeta = !outlineConfig ? {} : get(outlineConfig, 'defaultMeta', {});
   const data = Object.assign(
     pick(body, ['type', 'parentId', 'position']),
     { data: Object.assign({}, defaultMeta, body.data) },
