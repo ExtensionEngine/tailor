@@ -21,11 +21,10 @@
 </template>
 
 <script>
-import { getOutlineLevels } from 'shared/activities';
-
+import { getObjectives } from 'shared/activities';
 import Acronym from 'components/common/Acronym';
 import get from 'lodash/get';
-import last from 'lodash/last';
+import map from 'lodash/map';
 import pluralize from 'pluralize';
 import Stat from './Stat';
 import truncate from 'truncate';
@@ -40,7 +39,8 @@ export default {
       return truncate(this.course.description, 180);
     },
     objectiveLabel() {
-      return pluralize(last(getOutlineLevels(this.course.schema)).label);
+      const objectives = map(getObjectives(this.course.schema), 'label');
+      return objectives.lenght > 1 ? 'Objectives' : pluralize(objectives[0]);
     },
     assessments() {
       return get(this.course, 'stats.assessments', 0);
