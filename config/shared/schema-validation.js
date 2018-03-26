@@ -27,7 +27,13 @@ const schema = yup.object().shape({
     hasExams: yup.boolean(),
     exams: yup.object().shape({ objectives: yup.array().of(activityType) }),
     meta
-  })).min(1)
+  })).min(1),
+  contentContainers: yup.array().of(yup.object().shape({
+    type: yup.string().min(2).max(50).required(),
+    label: yup.string().min(2).max(100).required(),
+    types: yup.array().of(yup.string().min(2).max(20)),
+    displayHeading: yup.boolean()
+  }))
 });
 
 const schemas = yup.array().of(schema).min(1);
