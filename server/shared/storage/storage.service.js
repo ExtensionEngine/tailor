@@ -1,5 +1,5 @@
+const crypto = require('crypto');
 const fileType = require('file-type');
-const hasha = require('hasha');
 const logger = require('../logger');
 const mime = require('mime-types');
 const storage = require('./index');
@@ -7,7 +7,7 @@ const storage = require('./index');
 class StorageService {
   createHash(id, buffer) {
     const content = `${id}${buffer}`;
-    return hasha(content, { algorithm: 'md5' });
+    return hash(content);
   }
 
   async saveItem(id, buffer, { mimetype } = {}) {
@@ -29,3 +29,7 @@ class StorageService {
 }
 
 module.exports = new StorageService();
+
+function hash(str, { algorithm = 'md5' } = {}) {
+  return crypto.createHash(algorithm).update(str).digest('hex');
+}
