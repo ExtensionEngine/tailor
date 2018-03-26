@@ -42,6 +42,7 @@
     "body-parser": "^1.15.2",
     "bootstrap-sass": "^3.3.7",
     "bootswatch": "^3.3.7",
+    "boxen": "^1.3.0",
     "bunyan": "^1.8.5",
     "cors": "^2.8.1",
     "cropperjs": "^1.0.0-beta.1",
@@ -114,7 +115,7 @@
     "vuex": "^2.0.0",
     "vuex-module": "^0.4.0",
     "vuex-router-sync": "^3.0.0",
-    "yup": "^0.21.2"
+    "yup": "^0.24.1"
   },
   "devDependencies": {
     "babel-polyfill": "^6.26.0",
