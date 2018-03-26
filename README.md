@@ -29,7 +29,7 @@ Adaptive course authoring platform.
 * App is configured via environment variables contained in a file named `.env`.
 Use the `.env.example` file as a template: `cp .env.example .env` and enter
 configuration details.
-* You can init the db (for development) by setting ENABLE_SEED_SCHEMA=1
+* You can init the db (for development) by setting `ENABLE_DEFAULT_SCHEMA=1`
 and running `npm run db:seed`.
 * You can create admin user by running `npm run add:admin <email> <password>`
 * App branding is configured via values set in a file named `.brand-rc.json`.
@@ -104,5 +104,5 @@ Configuration for content containers. Contains the following properties:
 * **layout** `Boolean` - Defines if elements inside container can be placed two in a row. True by default.
 
 ### `PREVIEW_URL`
-A string template that will be interpolated on the client using two route params, `courseId` and `activityId`, into a preview URL for each activiy. Example:
-`https://my.url.com/#/course/{courseId}/activity/{activityId}/preview`
+A string template that will be interpolated on the client using two route params, `repositoryId` and `activityId`, into a preview URL for each activiy. Example:
+`https://my.url.com/#/repository/{repositoryId}/activity/{activityId}/preview`

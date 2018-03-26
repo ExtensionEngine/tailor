@@ -12,7 +12,7 @@
             :disabled="!isEditing || !examObjectives.length"
             :trackBy="'id'"
             :customLabel="it => it.data ? it.data.name : ''"
-            :placeholder="placeholder"
+            :placeholder="examObjectiveLabel"
             :showReset="isEditing"
             @input="onObjectiveSelected">
           </multiselect>
@@ -67,28 +67,28 @@
 </template>
 
 <script>
+import { errorProcessor, schemas, typeInfo } from 'utils/assessment';
+import { getLevel } from 'shared/activities';
+import { mapGetters, mapMutations } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
 import DragDrop from './DragDrop';
-import { errorProcessor, schemas, typeInfo } from 'utils/assessment';
 import Feedback from './Feedback';
 import FillBlank from './FillBlank';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import last from 'lodash/last';
-import { mapGetters, mapMutations } from 'vuex-module';
+import map from 'lodash/map';
 import MatchingQuestion from './MatchingQuestion';
 import MultipleChoice from './MultipleChoice';
 import multiselect from '../../../common/Select';
 import NumericalResponse from './NumericalResponse';
-import { OUTLINE_LEVELS } from 'shared/activities';
-import pluralize from 'pluralize';
 import Question from './Question';
 import set from 'lodash/set';
 import SingleChoice from './SingleChoice';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
+import uniq from 'lodash/uniq';
 import unset from 'lodash/unset';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
@@ -138,11 +138,11 @@ export default {
       if (!this.exam) return [];
       return this.getExamObjectives(this.exam);
     },
-    placeholder() {
-      const label = last(OUTLINE_LEVELS).label;
-      return isEmpty(this.examObjectives)
-        ? `No ${pluralize(label)}`
-        : `Link ${label}`;
+    examObjectiveLabel() {
+      if (isEmpty(this.examObjectives)) return '';
+      const types = uniq(map(this.examObjectives, 'type'));
+      const label = types.length > 1 ? 'Objective' : getLevel(types[0]).label;
+      return `Link ${label}`;
     }
   },
   methods: {

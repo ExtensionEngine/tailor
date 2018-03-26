@@ -1,10 +1,10 @@
+const { getObjectives } = require('../../config/shared/activities');
 const Excel = require('exceljs');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const forEach = require('lodash/forEach');
 const keyBy = require('lodash/keyBy');
-const last = require('lodash/last');
-const { OUTLINE_LEVELS } = require('../../config/shared/activities');
+const map = require('lodash/map');
 
 function createContentInventory(course, activities, tes) {
   tes = filter(tes, it => it.type !== 'BREAK');
@@ -15,12 +15,13 @@ function createContentInventory(course, activities, tes) {
     return acc;
   }, {});
 
-  let workbook = createSpreadsheet(taxonomy);
-  let inventory = workbook.getWorksheet('Content Inventory');
+  const workbook = createSpreadsheet(taxonomy);
+  const inventory = workbook.getWorksheet('Content Inventory');
+  const objectiveTypes = map(getObjectives(course.schema), 'type');
 
   forEach(tes, atom => {
     const container = containers[atom.activityId];
-    const lo = getLearningObjective(activities, atom);
+    const lo = getLearningObjective(objectiveTypes, activities, atom);
     if (!lo) return;
 
     let row = [
@@ -85,12 +86,13 @@ function createSpreadsheet(taxonomy) {
   return workbook;
 }
 
-function getLearningObjective(activities, atom) {
-  let parent = find(activities, { id: atom.activityId });
-  if (!parent) return null;
-  let loLevel = last(OUTLINE_LEVELS);
-  if (parent.type === loLevel.type) return parent;
-  if (parent.type === 'PERSPECTIVE') return find(activities, { id: parent.parentId });
+function getLearningObjective(objectiveTypes, activities, atom) {
+  const activity = find(activities, { id: atom.activityId });
+  if (!activity) return null;
+  if (objectiveTypes.includes(activity.type)) return activity;
+  if (!activity.parentId) return null;
+  const parent = find(activities, { id: activity.parentId });
+  return objectiveTypes.includes(parent.type) ? parent : null;
 }
 
 function getTaxonomyName({ id, name }) {
