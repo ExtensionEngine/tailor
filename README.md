@@ -60,6 +60,7 @@ An array of Schema objects.
 * **name** `String` - Schema display name.
 * **meta** `Array<Metadata>` - An array of objects defining repository metadata.
 * **structure** `Array<ActivityConfig>` - An array of objects which define schema structure.
+* **contentContainers** `Array<ContentContainer>` - Array of content container configs
 
 #### ActivityConfig - Schema structure elements
 Configuration for schema structure nodes (activities). Contains the following properties:
@@ -68,7 +69,6 @@ Configuration for schema structure nodes (activities). Contains the following pr
 * **subLevels** `Array<String>` - An array of sub-types.
 * **label** `String` - Display label.
 * **color** `String` - Display color in hexadecimal notation.
-* **isEditable** `Boolean` - Activity allows adding activities/teaching elements to it.
 * **contentContainers** `Array<String>` - Array of content container types that define which content containers can be added.
 * **hasAssessments** `Boolean` - Activity allows adding assessments activities to it.
 * **hasExams** `Boolean` - Activity allows adding exam activities to it.
