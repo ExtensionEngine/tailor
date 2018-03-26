@@ -19,7 +19,7 @@ import Textarea from './Textarea';
 const META_TYPES = {
   CHECKBOX: Checkbox,
   COLOR: ColorPicker,
-  DATEPICKER: DatePicker,
+  DATE: DatePicker,
   INPUT: Input,
   SELECT: Select,
   SWITCH: Switch,
