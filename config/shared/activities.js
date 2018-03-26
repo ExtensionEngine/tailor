@@ -3,9 +3,11 @@ const find = require('lodash/find');
 const first = require('lodash/first');
 const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
+const last = require('lodash/last');
 const map = require('lodash/map');
 const mergeConfig = require('../utils/mergeConfig');
 const parseSchemas = require('./schema-parser');
+const sortBy = require('lodash/sortBy');
 
 const defaultConfiguration = require('./activities-rc');
 const customConfiguration = require('./activities-rc.load')();
@@ -63,7 +65,11 @@ function getSupportedContainers(type) {
 }
 
 function getObjectives(schemaId) {
-  return filter(getSchema(schemaId).structure, { isObjective: true });
+  const schema = getSchema(schemaId);
+  const objectives = filter(schema.structure, { isObjective: true });
+  return objectives.length
+    ? objectives
+    : [last(sortBy(schema.structure, 'level'))];
 }
 
 function getRepositoryMeta(repository) {
