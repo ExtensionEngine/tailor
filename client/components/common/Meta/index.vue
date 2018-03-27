@@ -20,6 +20,7 @@ const META_TYPES = {
   CHECKBOX: Checkbox,
   COLOR: ColorPicker,
   DATE: DatePicker,
+  DATETIME: DatePicker,
   INPUT: Input,
   SELECT: Select,
   SWITCH: Switch,
