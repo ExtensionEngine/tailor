@@ -2,7 +2,11 @@
   <div class="datepicker control">
     <span class="title">{{ meta.label }}</span>
     <div class="form-group">
-      <datetime :value="value" :input-class="'form-control'"></datetime>
+      <datetime
+        :type="type"
+        :value="value"
+        :input-class="'form-control'">
+      </datetime>
     </div>
   </div>
 </template>
@@ -15,6 +19,11 @@ export default {
   props: ['meta'],
   data() {
     return { value: this.meta.value };
+  },
+  computed: {
+    type() {
+      return this.meta.type.toLowerCase();
+    }
   },
   components: { Datetime }
 };
