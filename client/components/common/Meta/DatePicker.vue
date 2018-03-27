@@ -3,9 +3,10 @@
     <span class="title">{{ meta.label }}</span>
     <div class="form-group">
       <datetime
+        v-model="value"
         :type="type"
-        :value="value"
-        :input-class="'form-control'">
+        :input-class="'form-control'"
+        @input="value => $emit('update', meta.key, value)">
       </datetime>
     </div>
   </div>
