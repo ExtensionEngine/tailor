@@ -11,9 +11,9 @@
           @change="$emit('update', meta.key, value)"
           type="checkbox">
         <span class="lever"></span>
+        <p class="description">{{ meta.description }}</p>
       </label>
     </div>
-    <p class="description">{{ meta.description }}</p>
   </div>
 </template>
 
@@ -57,8 +57,7 @@ $lever-unchecked: lighten($unchecked, 25%);
 }
 
 .description {
-  position: relative;
-  top: 1px;
+  display: inline-block;
   margin-left: 46px;
   font-size: 17px;
 }
@@ -76,7 +75,6 @@ input[type=checkbox] {
 
 label {
   position: relative;
-  float: left;
   cursor: pointer;
 
   &.checked .lever {
