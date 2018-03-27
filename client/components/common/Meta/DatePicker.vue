@@ -30,12 +30,22 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .control {
   padding: 7px 8px;
 
   &:hover {
     background-color: #f5f5f5;
+  }
+
+  /deep/ {
+    .vdatetime-input {
+      cursor: pointer;
+    }
+
+    .form-control {
+      background-color: inherit
+    }
   }
 }
 
@@ -43,9 +53,5 @@ export default {
   display: block;
   margin-bottom: 10px;
   color: #808080;
-}
-
-.form-control {
-  background-color: inherit
 }
 </style>
