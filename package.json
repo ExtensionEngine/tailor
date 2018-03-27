@@ -76,7 +76,6 @@
     "loaders.css": "^0.1.2",
     "lodash": "^4.17.2",
     "luxon": "^1.0.0",
-    "md-date-time-picker": "^2.3.0",
     "mdi": "^1.8.36",
     "mime-types": "^2.1.14",
     "minimist": "^1.2.0",
