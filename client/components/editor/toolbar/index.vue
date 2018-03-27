@@ -49,8 +49,8 @@
 </template>
 
 <script>
-import * as config from 'shared/activities';
 import AccordionToolbar from './AccordionToolbar';
+import BrightcoveVideoToolbar from './BrightcoveVideoToolbar';
 import CarouselToolbar from './CarouselToolbar';
 import DefaultToolbar from './DefaultToolbar';
 import drop from 'lodash/drop';
@@ -69,11 +69,13 @@ import TableToolbar from './TableToolbar';
 import truncate from 'truncate';
 import VideoToolbar from './VideoToolbar';
 
+const PREVIEW_URL = process.env.PREVIEW_URL;
 const appChannel = EventBus.channel('app');
 
 const TOOLBAR_TYPES = {
   IMAGE: 'image-toolbar',
   VIDEO: 'video-toolbar',
+  BRIGHTCOVE_VIDEO: 'brightcove-video-toolbar',
   EMBED: 'embed-toolbar',
   HTML: 'quill-toolbar',
   ACCORDION: 'accordion-toolbar',
@@ -108,9 +110,9 @@ export default {
       return get(this, 'focusedElement.type');
     },
     previewUrl() {
-      if (!config.PREVIEW_URL) return;
+      if (!PREVIEW_URL) return;
       const { courseId, activityId } = this.$route.params;
-      return format(config.PREVIEW_URL, { courseId, activityId });
+      return format(PREVIEW_URL, { repositoryId: courseId, activityId });
     },
     breadcrumbs() {
       let items = [];
@@ -165,6 +167,7 @@ export default {
   },
   components: {
     AccordionToolbar,
+    BrightcoveVideoToolbar,
     CarouselToolbar,
     DefaultToolbar,
     EmbedToolbar,

@@ -1,4 +1,5 @@
 const brand = require('./brand');
+const Dotenv = require('dotenv-webpack');
 const find = require('lodash/find');
 const merge = require('lodash/merge');
 const path = require('path');
@@ -53,9 +54,11 @@ module.exports = (options, req) => ({
   define: { BRAND_CONFIG: brand.globals },
   webpack(config) {
     config.module.rules.push(...rules);
+    config.plugins.push(new Dotenv());
     return config;
   },
   extendWebpack(config) {
+    configureModuleResolution(config);
     config.resolve.alias.merge(aliases);
     applyBrandConfig(config);
     if (options.mode !== 'production') return;
@@ -74,3 +77,11 @@ module.exports = (options, req) => ({
     }
   }
 });
+
+// NOTE: Remove absolute path to local `node_modules` from configuration
+// https://github.com/webpack/webpack/issues/6538#issuecomment-367324775
+function configureModuleResolution(config) {
+  const localModules = path.join(rootPath, 'node_modules');
+  config.resolve.modules.delete(localModules);
+  config.resolveLoader.modules.delete(localModules);
+}

@@ -12,7 +12,13 @@
         "label": "Description",
         "placeholder": "Click to add...",
         "validate": { "rules": { "required": false, "max": 23 } }
-      }]
+      }],
+      "contentContainers": ["PAGE"]
+    }],
+    "contentContainers": [{
+      "type": "PAGE",
+      "label": "Page",
+      "multiple": false
     }]
   }]
 }

@@ -4,6 +4,10 @@ const url = {
   users: (courseId, userId = '') => `/courses/${courseId}/users/${userId}`
 };
 
+function getCourses(params) {
+  return request.get('/courses', { params }).then(res => res.data.data);
+}
+
 function getUsers(courseId, params) {
   return request
     .get(url.users(courseId), { params })
@@ -35,6 +39,7 @@ function publishRepositoryMeta(id) {
 }
 
 export default {
+  getCourses,
   getUsers,
   upsertUser,
   removeUser,

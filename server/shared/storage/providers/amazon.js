@@ -1,9 +1,10 @@
 const Joi = require('joi');
-const last = require('lodash/last');
 const path = require('path');
-const Promise = require('bluebird');
 const S3 = require('aws-sdk/clients/s3');
-const validateConfig = require('../validation').validateConfig;
+const { validateConfig } = require('../validation');
+
+const isNotFound = err => err.code === 'NoSuchKey';
+const DEFAULT_EXPIRATION_TIME = 3600; // seconds
 
 const schema = Joi.object().keys({
   region: Joi.string().required(),
@@ -29,83 +30,82 @@ class Amazon {
     this.client = new S3(s3Config);
   }
 
-  static getLocalPath(s3Path, localDir) {
-    const filename = last(s3Path.split('/'));
-    return path.join(localDir, filename);
+  static create(config) {
+    return new Amazon(config);
+  }
+
+  path(...segments) {
+    segments = [this.bucket, ...segments];
+    return path.join(...segments);
   }
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
-  getFile(key, options) {
-    return this.fileExists(key).then(exists => {
-      if (!exists) return null;
-      const s3Params = Object.assign(options, { Bucket: this.bucket, Key: key });
-      const input = this.client.getObject(s3Params).createReadStream();
-      return new Promise((resolve, reject) => {
-        const chunks = [];
-        input.on('end', () => resolve(Buffer.concat(chunks)));
-        input.on('data', data => chunks.push(data));
-        input.on('error', reject);
+  getFile(key, options = {}) {
+    const params = Object.assign(options, { Bucket: this.bucket, Key: key });
+    return this.client.getObject(params).promise()
+      .then(({ Body: data }) => data)
+      .catch(err => {
+        if (isNotFound(err)) return null;
+        return Promise.reject(err);
       });
-    });
   }
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
-  saveFile(key, file, options) {
-    const s3Params = Object.assign(options, { Key: key, Bucket: this.bucket, Body: file });
-    return this.client.putObject(s3Params).promise();
+  saveFile(key, data, options = {}) {
+    const params = Object.assign(options, { Bucket: this.bucket, Key: key, Body: data });
+    return this.client.putObject(params).promise();
   }
 
   // API docs: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#copyObject-property
-  copyFile(key, newKey, options) {
-    const params = {
-      CopySource: `${this.bucket}/${key}`,
-      Bucket: this.bucket,
+  copyFile(key, newKey, options = {}) {
+    const params = Object.assign(options, { Bucket: this.bucket }, {
+      CopySource: this.path(`/${key}`),
       Key: newKey
-    };
-    const s3Params = Object.assign(options, params);
-    return this.client.copyObject(s3Params).promise();
+    });
+    return this.client.copyObject(params).promise();
   }
 
-  moveFile(key, newKey, options) {
-    this.copyFile(key, newKey, options)
-      .then(() => this.deleteFile(key));
+  moveFile(key, newKey, options = {}) {
+    return this.copyFile(key, newKey, options)
+      .then(result => this.deleteFile(key).then(() => result));
   }
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObject-property
-  deleteFile(key, options) {
-    const s3Params = Object.assign(options, { Key: key, Bucket: this.bucket });
-    return this.client.deleteObject(s3Params).promise();
+  deleteFile(key, options = {}) {
+    const params = Object.assign(options, { Bucket: this.bucket, Key: key });
+    return this.client.deleteObject(params).promise();
   }
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#listObjects-property
-  listFiles(options) {
-    const s3Params = Object.assign(options, { Bucket: this.bucket });
-    return this.client.listObjects(s3Params).promise();
-  }
-
-  // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getSignedUrl-property
-  getFileUrl(key, options) {
-    const s3Params = Object.assign(options, { Key: key, Bucket: this.bucket, Expires: 3600 });
-    return new Promise((resolve, reject) => {
-      this.client.getSignedUrl('getObject', s3Params, (err, url) => {
-        if (err) reject(err);
-        resolve(url);
-      });
-    });
+  listFiles(options = {}) {
+    const params = Object.assign(options, { Bucket: this.bucket });
+    return this.client.listObjects(params).promise();
   }
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#headObject-property
-  fileExists(key, options) {
-    const s3Params = { Key: key, Bucket: this.bucket };
+  fileExists(key, options = {}) {
+    const params = { Bucket: this.bucket, Key: key };
+    return this.client.headObject(params).promise();
+  }
+
+  // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getSignedUrl-property
+  getFileUrl(key, options = {}) {
+    const expires = options.expires || DEFAULT_EXPIRATION_TIME;
+    const params = Object.assign(options, { Bucket: this.bucket, Key: key, Expires: expires });
+    return this._getSignedUrl('getObject', params);
+  }
+
+  _getSignedUrl(operation, params) {
     return new Promise((resolve, reject) => {
-      this.client.headObject(s3Params, (err, data) => {
-        if (err) resolve(false);
-        resolve(true);
+      this.client.getSignedUrl(operation, params, (err, url) => {
+        if (err) return reject(err);
+        resolve(url);
       });
     });
   }
 }
 
 module.exports = {
-  provider: Amazon
+  schema,
+  create: Amazon.create
 };

@@ -6,11 +6,11 @@
       <div v-else>
         <div class="container">
           <content-containers
-            v-for="(containerGroup, name) in contentContainers"
-            :key="name"
+            v-for="(containerGroup, type) in contentContainers"
+            :key="type"
             :containerGroup="containerGroup"
             :parentId="activity.id"
-            v-bind="getContainerConfig(name)">
+            v-bind="getContainerConfig(type)">
           </content-containers>
           <assessments v-if="showAssessments"></assessments>
           <exams v-if="showExams"></exams>
@@ -49,6 +49,10 @@ export default {
     },
     showExams() {
       return config.hasExams(this.activity.type);
+    },
+    containerConfigs() {
+      if (!this.activity) return [];
+      return config.getSupportedContainers(this.activity.type);
     }
   },
   methods: {
@@ -58,9 +62,8 @@ export default {
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
     ...mapMutations({ setupActivitiesApi: 'setBaseUrl' }, 'activities'),
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
-    getContainerConfig(name) {
-      const type = name.toUpperCase();
-      return find(config.CONTENT_CONTAINERS, { type });
+    getContainerConfig(type) {
+      return find(this.containerConfigs, { type });
     },
     truncate(str, len = 50) {
       return truncate(str, len);
