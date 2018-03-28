@@ -51,7 +51,8 @@ function getOutlineLevels(schemaId) {
 }
 
 function getLevel(type) {
-  return find(getOutlineLevels(getSchemaId(type)), { type });
+  const schemaId = getSchemaId(type);
+  return schemaId && find(getOutlineLevels(schemaId), { type });
 }
 
 function getSupportedContainers(type) {
