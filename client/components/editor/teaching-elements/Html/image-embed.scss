@@ -1,0 +1,24 @@
+.ql-tooltip.ql-image-embed {
+  &::before {
+    content: none;
+  }
+
+  label {
+    margin: 0 8px 0 0;
+    line-height: 26px;
+  }
+
+  input[type=text] {
+    display: initial;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .action {
+    margin-left: 16px;
+    padding-right: 8px;
+    transition: none;
+  }
+}
