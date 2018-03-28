@@ -13,7 +13,7 @@
       <span class="help-block">{{ vErrors.first('name') }}</span>
     </span>
     <multiselect
-      v-if="hasChildren"
+      v-if="supportedLevels.length > 1"
       v-model="level"
       v-validate="'required'"
       :options="supportedLevels"
@@ -40,11 +40,9 @@
 
 <script>
 import { focus } from 'vue-focus';
-import { getLevel } from 'shared/activities';
 import { mapGetters } from 'vuex-module';
 import { withValidation } from 'utils/validation';
 import ActivityBrowser from 'components/common/ActivityBrowser';
-import find from 'lodash/find';
 import first from 'lodash/first';
 import multiselect from 'components/common/Select';
 import SelectAction from './SelectAction';
@@ -53,18 +51,9 @@ export default {
   mixins: [withValidation()],
   props: ['parent', 'supportedLevels'],
   data() {
-    return {
-      name: '',
-      level: null
-    };
+    return { name: '', level: null };
   },
-  computed: {
-    ...mapGetters(['structure'], 'course'),
-    hasChildren() {
-      const parentLevel = getLevel(this.parent.type).level;
-      return !!find(this.supportedLevels, { level: parentLevel + 1 });
-    }
-  },
+  computed: mapGetters(['structure'], 'course'),
   methods: {
     create() {
       this.$validator.validateAll().then(isValid => {
