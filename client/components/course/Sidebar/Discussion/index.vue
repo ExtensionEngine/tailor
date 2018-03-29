@@ -110,6 +110,7 @@ export default {
   },
   watch: {
     activity() {
+      this.comment = createComment();
       this.fetchComments();
       this.showMore = false;
     }
