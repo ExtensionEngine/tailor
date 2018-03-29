@@ -1,6 +1,6 @@
 {
   "name": "tailor",
-  "version": "2.4",
+  "version": "2.4.0",
   "description": "Course authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "private": true,
