@@ -18,8 +18,8 @@
     "lint:client": "eslint --ext .js,.vue config/client client/test/e2e/specs client/test/unit/specs client/components client/store",
     "lint:server": "eslint --ext .js server config/server",
     "lint": "npm run lint:client; npm run lint:server",
-    "dev:server": "nodemon --ignore client/ --exec \"node -r dotenv/config\" ./server/script/preflight ./server | bunyan",
-    "debug:server": "node --inspect-brk -r dotenv/config ./server/script/preflight ./server",
+    "dev:server": "nodemon --ignore client/ --exec \"node -r ./server/script/preflight\" ./server | bunyan",
+    "debug:server": "node --inspect-brk -r ./server/script/preflight ./server",
     "doc:server": "jsdoc --pedantic --destination ./server/_doc_ --recurse ./server",
     "unit:server": "mocha --recursive \"./server/**/*.spec.js\"",
     "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server",
@@ -30,7 +30,7 @@
     "add:admin": "node -r dotenv/config ./server/script/addAdmin.js",
     "integration:add": "node -r dotenv/config ./server/script/addIntegration.js",
     "integration:token": "node -r dotenv/config ./server/script/generateIntegrationToken.js",
-    "start": "node -r dotenv/config ./server/script/preflight ./server"
+    "start": "node -r ./server/script/preflight ./server"
   },
   "dependencies": {
     "auto-bind": "^1.2.0",

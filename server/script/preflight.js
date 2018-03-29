@@ -1,27 +1,18 @@
-const argv = require('minimist')(process.argv.slice(2));
 const boxen = require('boxen');
-const path = require('path');
 const pkg = require('read-pkg-up').sync().pkg;
 const semver = require('semver');
 
-const engines = pkg.engines || {};
-const script = argv._[0];
+require('dotenv').load();
 
 (function preflight() {
-  if (!engines.node) return run(script);
+  const engines = pkg.engines || {};
+  if (!engines.node) return;
   const checkPassed = semver.satisfies(process.versions.node, engines.node);
-  if (checkPassed) return run(script);
+  if (checkPassed) return;
   warn(engines.node);
   console.error(' ✋  Exiting due to engine requirement check failure...\n');
   process.exit(1);
 }());
-
-function run(script) {
-  if (!script) return;
-  const cwd = process.cwd();
-  const target = path.resolve(cwd, script);
-  return require(target);
-}
 
 function warn(range, current = process.version, name = pkg.name) {
   const options = {
