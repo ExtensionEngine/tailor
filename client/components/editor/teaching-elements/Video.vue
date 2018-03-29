@@ -112,7 +112,7 @@ function getMimetype(url) {
 
 .video-placeholder {
   .message {
-    padding: 100px;
+    padding: 100px 20px;
 
     .heading {
       font-size: 24px;
