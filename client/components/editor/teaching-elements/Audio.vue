@@ -17,8 +17,8 @@
         <audio
           v-show="!hasError"
           :src="source"
-          controls
-        >
+          ref="audio"
+          controls>
           This browser does not support HTML5 audio element.
         </audio>
         <div v-if="hasError" class="error">
@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     audioElement() {
-      return this.$el.querySelector('audio');
+      return this.$refs.audio;
     },
     source() {
       return this.element.data.url;
