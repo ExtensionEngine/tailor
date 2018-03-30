@@ -44,7 +44,8 @@ const TE_TYPES = [
   { type: 'CAROUSEL', label: 'Carousel', icon: 'mdi-view-carousel' },
   { type: 'MODAL', label: 'Modal', icon: 'mdi-window-maximize' },
   { type: 'TABLE', label: 'Table', icon: 'mdi-table' },
-  { type: 'PDF', label: 'PDF', icon: 'mdi-file-pdf-box' }
+  { type: 'PDF', label: 'PDF', icon: 'mdi-file-pdf-box' },
+  { type: 'AUDIO', label: 'Audio', icon: 'mdi-volume-high' }
 ];
 
 const ELEMENTS_PER_ROW = 6;
