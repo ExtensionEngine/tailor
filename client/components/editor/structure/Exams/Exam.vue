@@ -55,7 +55,7 @@ export default {
   name: 'exam',
   props: ['exam', 'position'],
   data() {
-    let collapsed = this.exam.id;
+    const collapsed = this.exam.id;
     return {
       collapsed
     };

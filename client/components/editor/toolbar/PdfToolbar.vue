@@ -51,7 +51,7 @@ export default {
     ...mapActions({ updateElement: 'update' }, 'tes'),
     save() {
       this.editing = false;
-      let element = cloneDeep(this.element);
+      const element = cloneDeep(this.element);
       element.data.url = this.url;
       this.updateElement(element);
     }

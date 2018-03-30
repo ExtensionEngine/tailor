@@ -8,6 +8,8 @@ module.exports = {
   // required to lint *.vue files
   plugins: ['html'],
   rules: {
+    'arrow-parens': 'off',
+    'comma-dangle': ['warn', 'never'],
     indent: ['error', 2, {
       SwitchCase: 1,
       // NOTE: Consistent indentation IS enforced;
@@ -15,10 +17,9 @@ module.exports = {
       // https://eslint.org/docs/rules/indent#memberexpression
       MemberExpression: 'off'
     }],
-    'arrow-parens': 'off',
-    'comma-dangle': ['warn', 'never'],
     'no-debugger': isDev ? 'warn' : 'error',
     'no-unreachable': isDev ? 'warn' : 'error',
+    'prefer-const': 'error',
     'space-before-function-paren': ['error', {
       anonymous: 'always',
       named: 'never'

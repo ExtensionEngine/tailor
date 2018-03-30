@@ -163,7 +163,7 @@ export default {
       return this.schema.validate(data, validationOptions);
     },
     update(data, validate) {
-      let element = cloneDeep(this.element);
+      const element = cloneDeep(this.element);
       Object.assign(element.data, data);
       this.addElement(element);
 
@@ -219,7 +219,7 @@ export default {
       this.objective = find(this.examObjectives, { id: objectiveId });
     },
     updateFeedback(feedback) {
-      let element = cloneDeep(this.element);
+      const element = cloneDeep(this.element);
       element.data.feedback = element.data.feedback || {};
       Object.assign(element.data.feedback, feedback);
       this.addElement(element);

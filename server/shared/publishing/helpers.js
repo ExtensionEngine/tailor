@@ -20,7 +20,7 @@ const TES_ATTRS = [
 
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
-    let { repository, predecessors, spine } = data;
+    const { repository, predecessors, spine } = data;
     predecessors.forEach(it => {
       const exists = find(spine.structure, { id: it.id });
       if (!exists) addToSpine(spine, it);
@@ -36,9 +36,9 @@ function publishActivity(activity) {
 
 function updateRepositoryCatalog(repository) {
   return storage.getFile('repository/index.json').then(buffer => {
-    let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
-    let existing = find(catalog, { id: repository.id });
-    let repositoryData = getRepositoryAttrs(repository);
+    const catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
+    const existing = find(catalog, { id: repository.id });
+    const repositoryData = getRepositoryAttrs(repository);
     if (existing) {
       Object.assign(existing, omit(repositoryData, ['id']));
     } else {
@@ -188,7 +188,7 @@ function addToSpine(spine, activity) {
     { prerequisites: get(activity, 'refs.prerequisites', []) }
   );
   renameKey(activity, 'data', 'meta');
-  let index = findIndex(spine.structure, { id: activity.id });
+  const index = findIndex(spine.structure, { id: activity.id });
   if (index < 0) {
     spine.structure.push(activity);
   } else {
@@ -197,7 +197,7 @@ function addToSpine(spine, activity) {
 }
 
 function getSpineChildren(spine, parent) {
-  let children = filter(spine.structure, { parentId: parent.id });
+  const children = filter(spine.structure, { parentId: parent.id });
   if (!children.length) return [];
   return children.concat(reduce(children, (acc, it) => {
     return acc.concat(getSpineChildren(spine, it));
@@ -206,7 +206,7 @@ function getSpineChildren(spine, parent) {
 
 function getRepositoryAttrs(repository) {
   const attrs = ['id', 'uid', 'schema', 'name', 'description', 'data'];
-  let temp = pick(repository, attrs);
+  const temp = pick(repository, attrs);
   renameKey(temp, 'data', 'meta');
   return temp;
 }
@@ -222,7 +222,7 @@ function attachContentSummary(obj, { containers, exams, assessments }) {
 
 function getActivityFilenames(spineActivity) {
   const { contentContainers = [], exams = [], assessments = [] } = spineActivity;
-  let filenames = [];
+  const filenames = [];
   if (assessments.length) filenames.push(getAssessmentsKey(spineActivity));
   filenames.push(...map(exams, it => `${it.id}.exam`));
   filenames.push(...map(contentContainers, it => `${it.id}.container`));

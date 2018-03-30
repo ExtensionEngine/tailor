@@ -10,7 +10,7 @@ state({
 });
 
 getter(function user() {
-  let res = this.state.user;
+  const res = this.state.user;
   return res.email ? res : null;
 });
 

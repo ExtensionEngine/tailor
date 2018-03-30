@@ -29,7 +29,7 @@ function resetPassword({ body, params }, res) {
 }
 
 function login({ body }, res) {
-  let { email, password } = body;
+  const { email, password } = body;
   if (!email || !password) {
     createError(400, 'Please enter email and password');
   }

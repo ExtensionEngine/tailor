@@ -40,13 +40,13 @@ const appChannel = EventBus.channel('app');
 const teChannel = EventBus.channel('te');
 const DEFAULT_HEIGHT = 500;
 
-let getIndices = obj => map(Object.keys(obj), it => parseInt(it)).sort().reverse();
+const getIndices = obj => map(Object.keys(obj), it => parseInt(it)).sort().reverse();
 
 export default {
   name: 'te-carousel',
   props: ['element'],
   data() {
-    let indices = getIndices(this.element.data.items || {});
+    const indices = getIndices(this.element.data.items || {});
     return {
       activeItem: indices.length ? indices[indices.length - 1] : null
     };
@@ -85,13 +85,13 @@ export default {
     },
     deleteItem(itemId) {
       let embeds = cloneDeep(this.embeds);
-      let items = cloneDeep(this.items);
+      const items = cloneDeep(this.items);
       embeds = omit(embeds, Object.keys(items[itemId].body));
       delete items[itemId];
       this.$emit('save', { embeds, items });
 
-      let indices = getIndices(items);
-      let previousId = indices.length
+      const indices = getIndices(items);
+      const previousId = indices.length
         ? find(indices, it => it < itemId) || indices[indices.length - 1]
         : null;
       if (previousId) this.activateItem({ id: previousId });
@@ -131,8 +131,8 @@ export default {
 
     appChannel.on('deleteElement', element => {
       if (!element.embedded || !this.embeds[element.id]) return;
-      let embeds = cloneDeep(this.embeds);
-      let items = cloneDeep(this.items);
+      const embeds = cloneDeep(this.embeds);
+      const items = cloneDeep(this.items);
       delete embeds[element.id];
       forEach(items, it => delete it.body[element.id]);
       this.$emit('save', { embeds, items });

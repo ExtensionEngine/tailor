@@ -53,7 +53,7 @@ export default {
       return getLevel(this.activity.type) || {};
     },
     publishStatus() {
-      let { publishedAt } = this.activity;
+      const { publishedAt } = this.activity;
       return publishedAt
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
@@ -61,7 +61,7 @@ export default {
     metadata() {
       if (!get(this.config, 'meta')) return [];
       return map(this.config.meta, it => {
-        let value = get(this.activity, `data.${it.key}`);
+        const value = get(this.activity, `data.${it.key}`);
         return { ...it, value };
       });
     }

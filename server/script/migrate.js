@@ -13,7 +13,7 @@ function run([command, arg], options) {
   if (command === 'to') return migrate(arg).then(() => process.exit(0));
   if (command === 'create') {
     if (arg) options.name = arg;
-    let cmd = ['sequelize migration:create', ...getFlags(options)];
+    const cmd = ['sequelize migration:create', ...getFlags(options)];
     return execCmd(cmd.join(' '));
   }
 

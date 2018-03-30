@@ -73,7 +73,7 @@ export default {
       this.$emit('save', { element });
     },
     addElement(element) {
-      let item = cloneDeep(this.item);
+      const item = cloneDeep(this.item);
       item.body[element.id] = true;
       element = cloneDeep(element);
       element.position = Object.keys(item.body).length;

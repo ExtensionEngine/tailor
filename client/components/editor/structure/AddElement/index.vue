@@ -62,7 +62,7 @@ export default {
       }
     },
     create() {
-      let element = { type: this.type, data: {} };
+      const element = { type: this.type, data: {} };
       if (this.activity) {
         element.activityId = this.activity.id;
         element.position = this.position;
