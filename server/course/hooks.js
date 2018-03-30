@@ -1,3 +1,5 @@
+'use strict';
+
 const { getObjectives, getSchemaId } = require('../../config/shared/activities');
 const addHooks = require('../shared/util/addHooks');
 const find = require('lodash/find');

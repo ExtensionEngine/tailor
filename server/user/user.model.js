@@ -1,3 +1,5 @@
+'use strict';
+
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');

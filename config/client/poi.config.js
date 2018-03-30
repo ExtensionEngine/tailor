@@ -1,3 +1,5 @@
+'use strict';
+
 const brand = require('./brand');
 const Dotenv = require('dotenv-webpack');
 const find = require('lodash/find');

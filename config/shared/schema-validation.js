@@ -1,3 +1,5 @@
+'use strict';
+
 const yup = require('yup');
 
 const activityType = yup.string().min(2).max(50);

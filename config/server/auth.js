@@ -1,3 +1,5 @@
+'use strict';
+
 const corsAllowedOrigins = (process.env.CORS_ALLOWED_ORIGINS || '')
   .split(',')
   .filter(s => s)

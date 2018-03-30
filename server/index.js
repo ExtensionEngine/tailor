@@ -1,3 +1,5 @@
+'use strict';
+
 const app = require('./app');
 const bluebird = require('bluebird');
 const boxen = require('boxen');

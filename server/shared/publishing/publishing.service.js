@@ -1,3 +1,5 @@
+'use strict';
+
 const PromiseQueue = require('promise-queue');
 const {
   publishActivity,

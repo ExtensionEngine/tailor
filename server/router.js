@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const activityRouter = require('./activity').router;
 const commentRouter = require('./comment').router;

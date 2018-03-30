@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   amazon: {
     key: process.env.STORAGE_KEY,

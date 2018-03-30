@@ -1,3 +1,5 @@
+'use strict';
+
 const addHooks = require('../shared/util/addHooks');
 const { constant } = require('to-case');
 const logger = require('../shared/logger');

@@ -1,3 +1,5 @@
+'use strict';
+
 const { resolveStatics } = require('../shared/storage/helpers');
 const { Revision, User } = require('../shared/database');
 

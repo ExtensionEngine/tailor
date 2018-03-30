@@ -1,3 +1,5 @@
+'use strict';
+
 const { getSchema } = require('../../config/shared/activities');
 const hooks = require('./hooks');
 const { Model } = require('sequelize');

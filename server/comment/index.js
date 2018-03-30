@@ -1,3 +1,5 @@
+'use strict';
+
 const channel = require('./channel');
 const { Comment } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');

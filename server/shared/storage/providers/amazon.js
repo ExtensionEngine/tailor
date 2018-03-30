@@ -1,3 +1,5 @@
+'use strict';
+
 const Joi = require('joi');
 const path = require('path');
 const S3 = require('aws-sdk/clients/s3');

@@ -1,3 +1,5 @@
+'use strict';
+
 const values = require('lodash/values');
 
 const userRoles = { USER: 'USER', ADMIN: 'ADMIN', INTEGRATION: 'INTEGRATION' };
