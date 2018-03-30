@@ -19,7 +19,7 @@ const rules = [{
   test: /bootstrap-sass[/\\]assets[/\\]javascripts[/\\]/,
   use: 'imports-loader?jQuery=jquery'
 }, {
-  test: /\.load.js$/,
+  test: /\.load\.js$/,
   use: 'val-loader'
 }];
 
@@ -68,10 +68,11 @@ module.exports = (options, req) => ({
   sourceMap: options.mode === 'development',
   hotEntry: 'app',
   generateStats: true,
+  // Override using: `npm run dev:server -- --port <number>`
   port: 8080,
   devServer: {
     proxy: {
-      '/api/v1': {
+      '/api': {
         target: `http://127.0.0.1:${serverPort}`
       }
     }
