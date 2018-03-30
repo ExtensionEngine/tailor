@@ -6,7 +6,7 @@ const pkg = require('../package.json');
 const { promisify } = require('util');
 const sequelize = require('sequelize');
 
-// NOTE: This needs to be done before db gets load!
+// NOTE: This needs to be done before db models get loaded!
 if (process.env.NODE_ENV !== 'production') {
   sequelize.Promise.config({ longStackTraces: true });
   bluebird.config({ longStackTraces: true });
