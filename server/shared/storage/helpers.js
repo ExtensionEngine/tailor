@@ -7,7 +7,7 @@ const Promise = require('bluebird');
 const storage = require('./index');
 const values = require('lodash/values');
 
-const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'VIDEO', 'EMBED'];
+const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 
@@ -101,7 +101,7 @@ resolver.IMAGE = asset => {
     return storage.getFileUrl(key, { Expires: 3600 })
       .then(url => (asset.data.url = url))
       .then(() => asset);
-  };
+  }
 
   return storage.fileExists(asset.data.url)
     .then(exists => exists ? getUrl(asset.data.url) : asset);

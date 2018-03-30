@@ -1,19 +1,26 @@
-const { createError } = require('../shared/error/helpers');
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
+const { createError } = require('../shared/error/helpers');
+const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
+const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
+const sample = require('lodash/sample');
+
+const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
 function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { $iLike: `%${query.search}%` };
   const courses = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return courses.then(data => res.json({ data }));
-};
+}
 
 function create({ body, user }, res) {
-  return Course.create(body, {
+  const defaultMeta = getVal(getSchema(body.schema), 'defaultMeta', {});
+  const data = { color: sample(DEFAULT_COLORS), ...defaultMeta, ...body.data };
+  return Course.create({ ...body, data }, {
     isNewRecord: true,
     returning: true,
     context: { userId: user.id }
@@ -28,24 +35,24 @@ function patch({ body, course, user }, res) {
   const data = pick(body, ['name', 'description', 'data']);
   return course.update(data, { context: { userId: user.id } })
     .then(course => res.json({ data: course }));
-};
+}
 
 function remove({ course, user }, res) {
   return course.destroy({ context: { userId: user.id } })
     .then(() => res.status(204).send());
-};
+}
 
 function clone({ user, course, body }, res) {
   const { name, description } = body;
   const context = { userId: user.id };
   return course.clone(name, description, context)
     .then(course => res.json({ data: course }));
-};
+}
 
 function publishRepoInfo({ course }, res) {
   return publishingService.publishRepoDetails(course)
     .then(data => res.json({ data }));
-};
+}
 
 function getUsers(req, res) {
   return req.course.getUsers()
@@ -79,7 +86,7 @@ function findOrCreateRole(course, user, role) {
   .then(([cu, created]) => created ? cu : cu.update({ role }))
   .then(cu => cu.deletedAt ? cu.restore() : cu)
   .then(() => user);
-};
+}
 
 function exportContentInventory({ course }, res) {
   return course.getInventoryItems()

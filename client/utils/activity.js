@@ -1,10 +1,17 @@
+import { getLevel } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import sortBy from 'lodash/sortBy';
 
-export function getChildren(activities, parentId, courseId) {
-  return filter(activities, it => {
-    return it.parentId === parentId && it.courseId === courseId;
-  }).sort((a, b) => a.position > b.position);
+export function getChildren(activities, parentId) {
+  return sortBy(filter(activities, { parentId }), 'position');
+}
+
+export function getOutlineChildren(activities, parentId) {
+  const children = getChildren(activities, parentId);
+  if (!parentId || !children.length) return children;
+  const types = getLevel(find(activities, { id: parentId }).type).subLevels;
+  return filter(children, it => types.includes(it.type));
 }
 
 export function getDescendants(activities, activity) {

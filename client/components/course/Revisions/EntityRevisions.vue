@@ -30,7 +30,7 @@ import includes from 'lodash/includes';
 import Promise from 'bluebird';
 import TeachingElement from 'components/editor/teaching-elements';
 
-const WITHOUT_STATICS = ['HTML', 'VIDEO', 'EMBED', 'BREAK'];
+const WITHOUT_STATICS = ['HTML', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED', 'BREAK'];
 
 export default {
   name: 'entity-revisions',

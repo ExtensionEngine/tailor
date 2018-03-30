@@ -1,10 +1,17 @@
 const { Activity } = require('../shared/database');
+const { getOutlineLevels } = require('../../config/shared/activities');
+const find = require('lodash/find');
+const get = require('lodash/get');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
 
-function create({ body, params, user }, res) {
-  const attrs = ['type', 'parentId', 'position', 'data'];
-  const data = Object.assign(pick(body, attrs), { courseId: params.courseId });
+function create({ course, body, params, user }, res) {
+  const outlineConfig = find(getOutlineLevels(course.schema), { type: body.type });
+  const defaultMeta = !outlineConfig ? {} : get(outlineConfig, 'defaultMeta', {});
+  const data = Object.assign(
+    pick(body, ['type', 'parentId', 'position']),
+    { data: Object.assign({}, defaultMeta, body.data) },
+    { courseId: params.courseId });
   const opts = { context: { userId: user.id } };
   return Activity.create(data, opts).then(data => res.json({ data }));
 }
@@ -42,6 +49,14 @@ function publish({ activity }, res) {
     .then(data => res.json({ data }));
 }
 
+function clone({ activity, body }, res) {
+  const { courseId, parentId, position } = body;
+  return activity.clone(courseId, parentId, position).then(mappings => {
+    const opts = { where: { id: { $in: Object.values(mappings) } } };
+    return Activity.findAll(opts).then(data => res.json({ data }));
+  });
+}
+
 module.exports = {
   create,
   show,
@@ -49,5 +64,6 @@ module.exports = {
   patch,
   remove,
   reorder,
+  clone,
   publish
 };

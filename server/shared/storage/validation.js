@@ -1,13 +1,11 @@
-const Joi = require('joi');
-
-function validateConfig(config, schema) {
-  const options = { stripUnknown: true };
-  return Joi.validate(config, schema, options, (err, value) => {
-    if (err) throw Error('Unsupported config structure');
-    return value;
-  });
-}
-
 module.exports = {
   validateConfig
 };
+
+function validateConfig(config, schema) {
+  const { error, value } = schema.validate(config, { stripUnknown: true });
+  if (!error) return value;
+  const err = new Error('Unsupported config structure');
+  err.cause = error;
+  throw err;
+}
