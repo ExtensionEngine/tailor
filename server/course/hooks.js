@@ -2,6 +2,7 @@ const { getObjectives, getSchemaId } = require('../../config/shared/activities')
 const addHooks = require('../shared/util/addHooks');
 const find = require('lodash/find');
 const first = require('lodash/first');
+const get = require('lodash/get');
 const logger = require('../shared/logger');
 const map = require('lodash/map');
 
@@ -29,7 +30,7 @@ function add(Course, models) {
     const instance = Array.isArray(data)
       ? find(data, { type: 'ASSESSMENT' })
       : data;
-    if (instance.type !== 'ASSESSMENT') return;
+    if (get(instance, 'type') !== 'ASSESSMENT') return;
     const { id, courseId, type } = instance;
     logger.info(`[Course] TeachingElement#${hook}`, { type, id, courseId });
     const where = { courseId, type: 'ASSESSMENT', detached: false };
