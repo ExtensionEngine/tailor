@@ -18,13 +18,14 @@
           v-show="!hasError"
           :src="source"
           ref="audio"
-          controls>
+          controls
+          preload="metadata">
           This browser does not support HTML5 audio element.
         </audio>
         <div v-if="hasError" class="error">
           <div class="message">
             <span class="icon mdi mdi-alert"></span>
-            <p>Error loading audio file!</p>
+            <p>Error: {{ errorMessage }}</p>
           </div>
         </div>
       </div>
@@ -41,11 +42,12 @@ export default {
   },
   data() {
     return {
-      hasError: false
+      hasError: false,
+      errorMessage: ''
     };
   },
   computed: {
-    audioElement() {
+    player() {
       return this.$refs.audio;
     },
     source() {
@@ -57,14 +59,17 @@ export default {
   },
   methods: {
     playAudio() {
-      this.audioElement.play();
+      this.player.play()
+        .catch(() => (this.hasError = true));
     },
     pauseAudio() {
-      this.audioElement.pause();
+      this.player.pause();
     },
     checkError() {
-      const { error } = this.audioElement;
+      const { error } = this.player;
+
       this.hasError = !!error;
+      this.errorMessage = error.message || 'audio cannot be played.';
     }
   },
   watch: {
@@ -79,7 +84,7 @@ export default {
     }
   },
   mounted() {
-    this.checkError();
+    this.player.onerror = this.checkError;
   }
 };
 </script>
@@ -104,7 +109,6 @@ export default {
 
   audio {
     width: 100%;
-    // height: 100%;
   }
 
   .overlay {
