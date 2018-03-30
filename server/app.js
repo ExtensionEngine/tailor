@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const express = require('express');
+const helmet = require('helmet');
 const includes = require('lodash/includes');
 const morgan = require('morgan');
 const passport = require('passport');
@@ -14,7 +15,7 @@ const logger = require('./shared/logger');
 const router = require('./router');
 
 const app = express();
-app.disable('x-powered-by');
+app.use(helmet());
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(passport.initialize());
