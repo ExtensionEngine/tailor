@@ -117,8 +117,8 @@ export default {
       const row = this.findRow(cellId);
       if (!row) return;
 
-      let element = cloneDeep(this.element);
-      let { tableId, rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { tableId, rows, embeds } = element.data;
       const position = calculateInsertPosition(rows, row, direction);
       const newRow = { id: cuid(), position, cells: {} };
       forEach(row.cells, ({ position }) => {
@@ -135,8 +135,8 @@ export default {
       const cell = row.cells[cellId];
       if (!cell) return;
 
-      let element = cloneDeep(this.element);
-      let { tableId, rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { tableId, rows, embeds } = element.data;
 
       const position = calculateInsertPosition(row.cells, cell, direction);
       forEach(rows, row => {
@@ -151,8 +151,8 @@ export default {
       const row = this.findRow(cellId);
       if (!row || size(this.rows) <= MIN_ROWS) return;
 
-      let element = cloneDeep(this.element);
-      let { rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { rows, embeds } = element.data;
       forEach(row.cells, cell => removeEmbed(embeds, { id: cell.id }));
       delete rows[row.id];
 
@@ -170,8 +170,8 @@ export default {
       const cell = row.cells[cellId];
       if (!cell) return;
 
-      let element = cloneDeep(this.element);
-      let { rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { rows, embeds } = element.data;
 
       forEach(rows, row => {
         const deletedCell = removeCell(row, { position: cell.position });
@@ -195,8 +195,8 @@ export default {
   created() {
     if (this.element.data.rows) return;
     const tableId = cuid();
-    let embeds = {};
-    let rows = {};
+    const embeds = {};
+    const rows = {};
     times(2, position => {
       const rowId = cuid();
       const row = { id: rowId, position, cells: {} };

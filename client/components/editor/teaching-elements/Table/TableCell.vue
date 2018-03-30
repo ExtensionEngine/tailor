@@ -58,7 +58,7 @@ export default {
       e.component = { name: 'table-cell', data: this.element };
     },
     saveElement(data) {
-      let element = cloneDeep(this.element);
+      const element = cloneDeep(this.element);
       Object.assign(element.data, data);
       this.$emit('save', element);
     }

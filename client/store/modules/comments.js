@@ -32,7 +32,7 @@ getter(function commentsFetched() {
 
 action(function fetch({ activityId }) {
   const { courseId } = this.rootState.route.params;
-  let action = this.state.courseId === courseId ? 'fetch' : 'reset';
+  const action = this.state.courseId === courseId ? 'fetch' : 'reset';
   if (action === 'reset') this.commit('setCourse', courseId);
   this.api.fetch({ activityId })
     .then(result => this.commit(action, result))

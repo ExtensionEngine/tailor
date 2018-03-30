@@ -44,7 +44,7 @@ getter(function getExamObjectives() {
     const config = getLevel(activity.type);
     const objectiveTypes = get(config, 'exams.objectives');
     if (!objectiveTypes) return [];
-    let children = getDeepChildren(this.state.items, activity);
+    const children = getDeepChildren(this.state.items, activity);
     return filter(children, it => objectiveTypes.includes(it.type));
   };
 
@@ -56,7 +56,7 @@ action(function reorder({ activity, context }) {
   const data = { position: context.newPosition };
   return this.api.post(`${activity.id}/reorder`, data)
     .then(res => {
-      let activity = res.data.data;
+      const activity = res.data.data;
       this.api.setCid(activity);
       this.commit('save', activity);
     });

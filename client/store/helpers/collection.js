@@ -6,9 +6,9 @@ import { VuexModule } from 'vuex-module';
 import Resource from '../../api/resource';
 
 export default function (collectionName, baseUrl = '') {
-  let module = new VuexModule(collectionName);
+  const module = new VuexModule(collectionName);
 
-  let { state, action, mutation } = module;
+  const { state, action, mutation } = module;
 
   state({
     items: {},

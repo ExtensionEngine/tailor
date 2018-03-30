@@ -69,7 +69,7 @@ export default {
     },
     elements() {
       if (!this.include) return TE_TYPES;
-      let items = filter(TE_TYPES, it => includes(this.include, it.type));
+      const items = filter(TE_TYPES, it => includes(this.include, it.type));
       if (firstType(items) === 'ASSESSMENT') this.type = 'ASSESSMENT';
       return items;
     },

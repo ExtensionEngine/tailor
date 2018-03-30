@@ -98,7 +98,7 @@ mutation(function setUsers(users) {
 });
 
 mutation(function toggleActivity({ _cid, expanded }) {
-  let expandedItems = this.state.outline.expanded;
+  const expandedItems = this.state.outline.expanded;
   expanded = expanded === undefined ? !expandedItems[_cid] : expanded;
   Vue.set(expandedItems, _cid, expanded);
 });

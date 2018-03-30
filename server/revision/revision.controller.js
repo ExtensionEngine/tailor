@@ -3,7 +3,7 @@ const { Revision, User } = require('../shared/database');
 
 function index({ course, query }, res) {
   const { limit, offset, entityId } = query;
-  let where = { courseId: course.id };
+  const where = { courseId: course.id };
   if (entityId) where.state = { id: entityId };
   const include = [{ model: User, attributes: ['id', 'email'] }];
   const opts = { where, include, order: [['createdAt', 'DESC']], limit, offset };

@@ -46,7 +46,7 @@ export default {
   },
   watch: {
     title: debounce(function () {
-      let element = cloneDeep(this.element);
+      const element = cloneDeep(this.element);
       element.data.title = this.title;
       this.save(element);
     }, 500)

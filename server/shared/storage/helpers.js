@@ -22,7 +22,7 @@ function processAsset(asset) {
 }
 
 function processAssessment(assessment) {
-  let question = assessment.data.question;
+  const question = assessment.data.question;
   if (!question || question.length < 1) return Promise.resolve(assessment);
   return Promise.each(question, it => processAsset(it));
 }
@@ -39,7 +39,7 @@ function processComposite(composite) {
     .then(() => composite);
 }
 
-let processor = {};
+const processor = {};
 
 processor.IMAGE = asset => {
   const image = asset.data.url;
@@ -50,7 +50,7 @@ processor.IMAGE = asset => {
   }
 
   if (isUrl(image)) {
-    let url = nodeUrl.parse(image);
+    const url = nodeUrl.parse(image);
     asset.data.url = url.pathname.substr(1, image.length);
     return Promise.resolve(asset);
   }
@@ -71,7 +71,7 @@ function resolveStatics(item) {
 }
 
 function resolveAssessment(assessment) {
-  let question = assessment.data.question;
+  const question = assessment.data.question;
   if (!question || question.length < 1) return Promise.resolve(assessment);
   return Promise.each(question, it => resolveAsset(it)).then(() => assessment);
 }
@@ -92,7 +92,7 @@ function resolveComposite(composite) {
     .then(() => composite);
 }
 
-let resolver = {};
+const resolver = {};
 
 resolver.IMAGE = asset => {
   if (!asset.data || !asset.data.url) return Promise.resolve(asset);

@@ -76,12 +76,12 @@ export default {
       const isFirstChild = newPosition === 0;
       const context = { items: this.embeds, newPosition, isFirstChild };
       const element = cloneDeep(this.element);
-      let reordered = element.data.embeds[this.embeds[newPosition].id];
+      const reordered = element.data.embeds[this.embeds[newPosition].id];
       reordered.position = calculatePosition(context);
       this.save(element);
     },
     saveItem(item) {
-      let element = cloneDeep(this.element);
+      const element = cloneDeep(this.element);
       if (!item.position) item.position = this.embeds.length;
       element.data.embeds = element.data.embeds || {};
       element.data.embeds[item.id] = item;
@@ -96,7 +96,7 @@ export default {
     appChannel.on('deleteElement', item => {
       if (!item.embedded) return;
       if (!this.hasElements || !this.element.data.embeds[item.id]) return;
-      let element = cloneDeep(this.element);
+      const element = cloneDeep(this.element);
       delete element.data.embeds[item.id];
       this.save(element);
     });

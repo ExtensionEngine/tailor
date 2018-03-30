@@ -97,7 +97,7 @@ export default {
     },
     save(elementData) {
       if (this.element.embedded) {
-        let data = cloneDeep(this.element.data);
+        const data = cloneDeep(this.element.data);
         Object.assign(data, elementData);
         this.$emit('save', { ...this.element, data });
       } else {

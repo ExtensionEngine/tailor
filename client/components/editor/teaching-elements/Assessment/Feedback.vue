@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     update(index) {
-      let data = { [index]: this.$refs[`option${index}`][0].value };
+      const data = { [index]: this.$refs[`option${index}`][0].value };
       this.$emit('update', data);
     }
   },

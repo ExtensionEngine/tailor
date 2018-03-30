@@ -115,7 +115,7 @@ export default {
       return format(PREVIEW_URL, { repositoryId: courseId, activityId });
     },
     breadcrumbs() {
-      let items = [];
+      const items = [];
       let item = this.activity;
       while (item) {
         item = find(this.activities, { id: item.parentId });

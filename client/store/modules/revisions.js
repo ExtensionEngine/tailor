@@ -28,7 +28,7 @@ action(function fetch() {
   return this.api.get('', params).then(response => {
     const { data: revisions } = response.data;
 
-    let result = {};
+    const result = {};
     revisions.forEach(it => {
       this.api.setCid(it);
       result[it._cid] = it;
@@ -46,7 +46,7 @@ action(function resetPagination() {
 });
 
 mutation(function setPagination(changes) {
-  let $internals = this.state.$internals;
+  const $internals = this.state.$internals;
   $internals.pagination = { ...$internals.pagination, ...changes };
 });
 

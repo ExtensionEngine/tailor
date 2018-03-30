@@ -12,7 +12,7 @@ action(function reorder({ element, context }) {
   const data = { position: context.newPosition };
   return this.api.post(`${element.id}/reorder`, data)
     .then(res => {
-      let element = res.data.data;
+      const element = res.data.data;
       this.api.setCid(element);
       this.commit('save', element);
     });

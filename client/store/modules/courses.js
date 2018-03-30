@@ -43,7 +43,7 @@ action(function fetch({ reset = false } = {}) {
   return this.api.get('', params).then(response => {
     const { data: courses } = response.data;
 
-    let result = {};
+    const result = {};
     courses.forEach(it => {
       this.api.setCid(it);
       result[it._cid] = it;
@@ -75,7 +75,7 @@ mutation(function save(course) {
 });
 
 mutation(function setPagination(changes) {
-  let $internals = this.state.$internals;
+  const $internals = this.state.$internals;
   $internals.pagination = { ...$internals.pagination, ...changes };
 });
 

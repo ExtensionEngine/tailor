@@ -30,7 +30,7 @@ export default {
   computed: {
     ...mapGetters(['tes']),
     introductionElements() {
-      let cond = it => it.activityId === this.group.id && it.type !== 'ASSESSMENT';
+      const cond = it => it.activityId === this.group.id && it.type !== 'ASSESSMENT';
       return filter(this.tes, cond).sort((a, b) => a.position - b.position);
     }
   },
