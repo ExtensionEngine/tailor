@@ -1,38 +1,48 @@
-'use strict';
-
 const app = require('./app');
 const bluebird = require('bluebird');
 const boxen = require('boxen');
-const config = require('../config/server');
-const database = require('./shared/database');
-const logger = require('./shared/logger');
+const capitalize = require('to-case').capital;
+const pkg = require('../package.json');
+const { promisify } = require('util');
 const sequelize = require('sequelize');
 
+// NOTE: This needs to be done before db gets load!
 if (process.env.NODE_ENV !== 'production') {
   sequelize.Promise.config({ longStackTraces: true });
   bluebird.config({ longStackTraces: true });
 }
 
-function runApp() {
-  return new Promise((resolve, reject) => {
-    app.listen(config.port, err => err ? reject(err) : resolve());
-  });
-}
-
-const boxenConfig = {
-  padding: 4,
-  margin: 2,
-  borderStyle: 'double',
-  borderColor: 'blue',
-  align: 'center'
-};
+const config = require('../config/server');
+const database = require('./shared/database');
+const logger = require('./shared/logger');
+const runApp = promisify(app.listen.bind(app));
 
 database.initialize()
   .then(() => logger.info(`Database initialized`))
   .then(() => require('../config/shared/activities'))
-  .then(runApp)
+  .then(() => runApp)
   .then(() => {
     logger.info(`Server listening on port ${config.port}`);
-    logger.info(boxen("Tailor 🚀\nIt's aliveeeee", boxenConfig));
+    welcome();
   })
   .catch(err => logger.error({ err }));
+
+const message = (name, version) => `
+${capitalize(name)} v${version}
+
+It's aliveeeee 🚀
+
+📘  Readme: https://git.io/vxrlj
+🐛  Report bugs: https://git.io/vxr8U
+`.trim();
+
+function welcome(name = pkg.name, version = pkg.version) {
+  const options = {
+    padding: 2,
+    margin: 1,
+    borderStyle: 'double',
+    borderColor: 'blue',
+    align: 'left'
+  };
+  console.log(boxen(message(name, version), options));
+}
