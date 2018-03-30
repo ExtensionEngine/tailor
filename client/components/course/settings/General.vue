@@ -12,13 +12,15 @@
       v-for="it in requiredData"
       :meta="it"
       :key="it.key"
-      @update="updateKey">
+      @update="updateKey"
+      class="meta-input">
     </meta-input>
     <meta-input
       v-for="it in metadata"
       :meta="it"
       :key="it.key"
-      @update="updateKey">
+      @update="updateKey"
+      class="meta-input">
     </meta-input>
   </div>
 </template>
@@ -90,6 +92,10 @@ export default {
   text-align: left;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+
+  .meta-input {
+    margin: 20px 0;
+  }
 }
 
 .actions {
