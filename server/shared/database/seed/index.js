@@ -1,5 +1,5 @@
 const { Activity, Course, User } = require('../index');
-const { getSchema } = require('../../../../config/shared/activities');
+const { SCHEMAS } = require('../../../../config/shared/activities');
 const find = require('lodash/find');
 const get = require('lodash/get');
 const map = require('lodash/map');
@@ -30,7 +30,8 @@ async function insertActivities(config, course, level, parent) {
 }
 
 async function insertAll() {
-  const schema = getSchema('DEFAULT_SCHEMA');
+  if (!SCHEMAS.length) throw new Error('Please create repo schema!');
+  const schema = find(SCHEMAS, { id: 'DEFAULT_SCHEMA' }) || SCHEMAS[0];
   const courseSeed = map(courseData, it => ({ ...it, schema: schema.id }));
   const initCourses = Promise.map(courseSeed, it => Course.create(it));
   const initUsers = Promise.map(userData, it => User.create(it));
