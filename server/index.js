@@ -20,7 +20,7 @@ const runApp = promisify(app.listen.bind(app));
 database.initialize()
   .then(() => logger.info(`Database initialized`))
   .then(() => require('../config/shared/activities'))
-  .then(() => runApp)
+  .then(() => runApp(config.port))
   .then(() => {
     logger.info(`Server listening on port ${config.port}`);
     welcome();
