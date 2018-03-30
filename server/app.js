@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const express = require('express');
 const includes = require('lodash/includes');
+const morgan = require('morgan');
 const passport = require('passport');
 const path = require('path');
 
@@ -19,11 +20,17 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, '../dist/')));
 
-// Log all incoming requests.
-app.use('/api/v1', (req, res, next) => {
-  logger.info({ req });
-  next();
-});
+// Log http requests
+const isSuccessful = res => res.statusCode <= 400;
+const format = process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
+app.use(morgan(format, {
+  skip: (req, res) => isSuccessful(res),
+  stream: process.stderr
+}));
+app.use(morgan(format, {
+  skip: (req, res) => !isSuccessful(res),
+  stream: process.stdout
+}));
 
 // Apply auth for all routes except whitelisted.
 app.use('*', (req, res, next) => {

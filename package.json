@@ -80,6 +80,7 @@
     "mime-types": "^2.1.14",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
+    "morgan": "^1.9.0",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
     "path-exists": "^3.0.0",
