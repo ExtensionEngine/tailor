@@ -24,12 +24,12 @@
     "unit:server": "mocha --recursive \"./server/**/*.spec.js\"",
     "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server",
     "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
-    "db:seed": "node -r dotenv/config ./server/script/dbSeed.js",
-    "db:reset": "node -r dotenv/config ./server/script/dbReset.js",
-    "migrate": "node -r dotenv/config ./server/script/migrate.js",
-    "add:admin": "node -r dotenv/config ./server/script/addAdmin.js",
-    "integration:add": "node -r dotenv/config ./server/script/addIntegration.js",
-    "integration:token": "node -r dotenv/config ./server/script/generateIntegrationToken.js",
+    "db:seed": "node -r ./server/script/preflight ./server/script/dbSeed.js",
+    "db:reset": "node -r ./server/script/preflight ./server/script/dbReset.js",
+    "migrate": "node -r ./server/script/preflight ./server/script/migrate.js",
+    "add:admin": "node -r ./server/script/preflight ./server/script/addAdmin.js",
+    "integration:add": "node -r ./server/script/preflight ./server/script/addIntegration.js",
+    "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
     "start": "node -r ./server/script/preflight ./server"
   },
   "dependencies": {

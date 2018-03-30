@@ -23,7 +23,7 @@ database.initialize()
   .then(() => runApp(config.port))
   .then(() => {
     logger.info(`Server listening on port ${config.port}`);
-    welcome();
+    welcome(pkg.name, pkg.version);
   })
   .catch(err => logger.error({ err }));
 
@@ -36,7 +36,7 @@ It's aliveeeee 🚀
 🐛  Report bugs: https://git.io/vxr8U
 `.trim();
 
-function welcome(name = pkg.name, version = pkg.version) {
+function welcome(name, version) {
   const options = {
     padding: 2,
     margin: 1,
@@ -44,5 +44,5 @@ function welcome(name = pkg.name, version = pkg.version) {
     borderColor: 'blue',
     align: 'left'
   };
-  console.log(boxen(message(name, version), options));
+  console.error(boxen(message(name, version), options));
 }
