@@ -10,22 +10,19 @@
       </div>
     </div>
     <div v-show="!showPlaceholder">
-      <div v-if="!isFocused && !hasError" class="overlay">
+      <div v-if="!isFocused && !error" class="overlay">
         <div class="message">Click to preview</div>
       </div>
       <div class="audio-container">
-        <audio
-          v-show="!hasError"
-          :src="source"
-          ref="audio"
-          controls
-          preload="metadata">
-          This browser does not support HTML5 audio element.
-        </audio>
-        <div v-if="hasError" class="error">
+        <aplayer
+          v-show="!error"
+          :music="mediaOptions"
+          mode="order"/>
+
+        <div v-if="error" class="error">
           <div class="message">
             <span class="icon mdi mdi-alert"></span>
-            <p>Error: {{ errorMessage }}</p>
+            <p>Error: {{ error }}</p>
           </div>
         </div>
       </div>
@@ -34,6 +31,8 @@
 </template>
 
 <script>
+import Aplayer from 'vue-aplayer';
+
 export default {
   name: 'te-audio',
   props: {
@@ -42,13 +41,20 @@ export default {
   },
   data() {
     return {
-      hasError: false,
-      errorMessage: ''
+      error: null
     };
   },
   computed: {
+    mediaOptions() {
+      return {
+        src: this.source,
+        title: 'Audio Track',
+        artist: ' ',
+        pic: ' '
+      };
+    },
     player() {
-      return this.$refs.audio;
+      return this.$el.querySelector('audio');
     },
     source() {
       return this.element.data.url;
@@ -60,16 +66,14 @@ export default {
   methods: {
     playAudio() {
       this.player.play()
-        .catch(() => (this.hasError = true));
+        .catch(this.checkError);
     },
     pauseAudio() {
       this.player.pause();
     },
     checkError() {
       const { error } = this.player;
-
-      this.hasError = !!error;
-      this.errorMessage = error.message || 'audio cannot be played.';
+      this.error = error.message || 'Audio cannot be played.';
     }
   },
   watch: {
@@ -79,12 +83,15 @@ export default {
       }
       return this.pauseAudio();
     },
-    source() {
+    'element.data.url'() {
       this.checkError();
     }
   },
   mounted() {
     this.player.onerror = this.checkError;
+  },
+  components: {
+    Aplayer
   }
 };
 </script>
@@ -92,9 +99,15 @@ export default {
 <style lang="scss">
 .te-audio {
   position: relative;
-  min-height: 50px;
+  min-height: 70px;
+
+  .aplayer {
+    margin: 0;
+  }
 
   .audio-placeholder {
+    padding-top: 1rem;
+
     .message {
       .heading {
         font-size: 1.8rem;
@@ -107,19 +120,25 @@ export default {
     }
   }
 
-  audio {
+  .overlay, .error {
+    position: absolute;
     width: 100%;
+    height: 100%;
+    background-color: #333;
+    opacity: .98;
+
+    .message {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 
   .overlay {
-    position: absolute;
     z-index: 3;
-    width: 100%;
-    background-color: #333;
-    opacity: 0.9;
 
     .message {
-      position: relative;
       color: #008000;
       line-height: 40px;
       font-size: 1.8rem;
@@ -127,11 +146,6 @@ export default {
   }
 
   .error {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,.9);
-
     .message {
       color: white;
 
