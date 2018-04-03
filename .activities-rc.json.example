@@ -4,6 +4,7 @@
     "name": "Example Course",
     "structure": [{
       "type": "GOAL",
+      "label": "Goal",
       "color": "#ff6590",
       "level": 1,
       "meta":[{
