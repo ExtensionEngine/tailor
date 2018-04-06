@@ -47,7 +47,7 @@ export default {
   computed: {
     mediaOptions() {
       return {
-        src: this.source,
+        src: this.source || ' ',
         title: 'Audio Track',
         artist: ' ',
         pic: ' '
