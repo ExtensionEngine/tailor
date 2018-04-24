@@ -31,22 +31,18 @@ function publishActivity(activity) {
     addToSpine(spine, activity);
     return publishContent(repository, activity).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
-      return saveSpine(spine).then(savedSpine => {
-        return Promise.all([
-          updateRepositoryCatalog(repository, savedSpine),
-          activity.save()
-        ]);
-      });
+      return saveSpine(spine)
+        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+        .then(() => activity.save());
     });
   });
 }
 
-function updateRepositoryCatalog(repository, spine) {
+function updateRepositoryCatalog(repository, publishedAt) {
   return storage.getFile('repository/index.json').then(buffer => {
     let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
     let existing = find(catalog, { id: repository.id });
-    const { versionedAt } = spine;
-    const repositoryData = { ...getRepositoryAttrs(repository), versionedAt };
+    const repositoryData = { ...getRepositoryAttrs(repository), publishedAt };
     if (existing) {
       Object.assign(existing, omit(repositoryData, ['id']));
     } else {
@@ -60,7 +56,8 @@ function updateRepositoryCatalog(repository, spine) {
 function publishRepositoryDetails(repository) {
   return getPublishedStructure(repository).then(spine => {
     Object.assign(spine, getRepositoryAttrs(repository));
-    return saveSpine(spine).then(data => updateRepositoryCatalog(repository, data));
+    return saveSpine(spine)
+      .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt));
   });
 }
 
@@ -77,7 +74,9 @@ function unpublishActivity(repository, activity) {
       });
     }).then(() => {
       spine.structure = filter(spine.structure, ({ id }) => !find(deleted, { id }));
-      return saveSpine(spine).then(() => activity.save());
+      return saveSpine(spine)
+        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+        .then(() => activity.save());
     });
   });
 }
@@ -175,9 +174,9 @@ function saveFile(parent, key, data) {
 }
 
 function saveSpine(spine) {
-  const hashProperties = pick(spine, without(keys(spine), ['version', 'versionedAt']));
+  const hashProperties = pick(spine, without(keys(spine), ['version', 'publishedAt']));
   const version = hash(hashProperties, { algorithm: 'sha1' });
-  const updatedSpine = { ...spine, version, versionedAt: new Date() };
+  const updatedSpine = { ...spine, version, publishedAt: new Date() };
   const spineData = Buffer.from(JSON.stringify(updatedSpine), 'utf8');
   const key = `repository/${spine.id}/index.json`;
   return storage.saveFile(key, spineData).then(() => updatedSpine);
