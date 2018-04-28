@@ -3,12 +3,14 @@ const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
 const get = require('lodash/get');
 const hash = require('hash-obj');
+const keys = require('lodash/keys');
 const map = require('lodash/map');
 const omit = require('lodash/omit');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const storage = require('../storage');
+const without = require('lodash/without');
 const { TeachingElement } = require('../database');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
@@ -29,16 +31,18 @@ function publishActivity(activity) {
     addToSpine(spine, activity);
     return publishContent(repository, activity).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
-      return saveSpine(spine).then(() => activity.save());
+      return saveSpine(spine)
+        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+        .then(() => activity.save());
     });
   });
 }
 
-function updateRepositoryCatalog(repository) {
+function updateRepositoryCatalog(repository, publishedAt) {
   return storage.getFile('repository/index.json').then(buffer => {
     let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
     let existing = find(catalog, { id: repository.id });
-    let repositoryData = getRepositoryAttrs(repository);
+    const repositoryData = { ...getRepositoryAttrs(repository), publishedAt };
     if (existing) {
       Object.assign(existing, omit(repositoryData, ['id']));
     } else {
@@ -52,7 +56,8 @@ function updateRepositoryCatalog(repository) {
 function publishRepositoryDetails(repository) {
   return getPublishedStructure(repository).then(spine => {
     Object.assign(spine, getRepositoryAttrs(repository));
-    return saveSpine(spine).then(() => updateRepositoryCatalog(repository));
+    return saveSpine(spine)
+      .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt));
   });
 }
 
@@ -69,19 +74,16 @@ function unpublishActivity(repository, activity) {
       });
     }).then(() => {
       spine.structure = filter(spine.structure, ({ id }) => !find(deleted, { id }));
-      return saveSpine(spine).then(() => activity.save());
+      return saveSpine(spine)
+        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+        .then(() => activity.save());
     });
   });
 }
 
 function getStructureData(activity) {
   const repoData = activity.getCourse().then(repository => {
-    return getPublishedStructure(repository).then(spine => {
-      const updateCatalog = spine.structure.length
-        ? Promise.resolve()
-        : updateRepositoryCatalog(repository);
-      return updateCatalog.then(() => ({ repository, spine }));
-    });
+    return getPublishedStructure(repository).then(spine => ({ repository, spine }));
   });
   return Promise.all([repoData, activity.predecessors()])
     .spread((repoData, predecessors) => Object.assign(repoData, { predecessors }));
@@ -172,11 +174,12 @@ function saveFile(parent, key, data) {
 }
 
 function saveSpine(spine) {
-  if (spine.version) delete spine.version;
-  spine.version = hash(spine, { algorithm: 'sha1' });
-  const spineData = Buffer.from(JSON.stringify(spine), 'utf8');
+  const hashProperties = pick(spine, without(keys(spine), ['version', 'publishedAt']));
+  const version = hash(hashProperties, { algorithm: 'sha1' });
+  const updatedSpine = { ...spine, version, publishedAt: new Date() };
+  const spineData = Buffer.from(JSON.stringify(updatedSpine), 'utf8');
   const key = `repository/${spine.id}/index.json`;
-  return storage.saveFile(key, spineData);
+  return storage.saveFile(key, spineData).then(() => updatedSpine);
 }
 
 function addToSpine(spine, activity) {
