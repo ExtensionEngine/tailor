@@ -14,7 +14,7 @@ module.exports = {
     indent: ['error', 2, {
       SwitchCase: 1,
       // NOTE: Consistent indentation IS enforced;
-      //       ESlint calculated indentation start IS NOT!
+      //       ESLint calculated indentation start IS NOT!
       // https://eslint.org/docs/rules/indent#memberexpression
       MemberExpression: 'off'
     }],
@@ -31,12 +31,12 @@ module.exports = {
     //   'ignoreMemberSort': false
     // }]
     // Vue rules
-    'vue/html-self-closing': 0,
-    'vue/attribute-hyphenation': 0,
-    'vue/max-attributes-per-line': [2, { singleline: 5 }],
-    'vue/name-property-casing': [2, 'kebab-case'],
+    'vue/html-self-closing': 'off',
+    'vue/attribute-hyphenation': 'off',
+    'vue/max-attributes-per-line': ['error', { singleline: 5 }],
+    'vue/name-property-casing': ['error', 'kebab-case'],
     // TODO: Add order for custom directives once supported
-    'vue/attributes-order': [2, {
+    'vue/attributes-order': ['error', {
       order: [
         'DEFINITION',
         'LIST_RENDERING',
@@ -50,7 +50,7 @@ module.exports = {
         'OTHER_ATTR'
       ]
     }],
-    'vue/order-in-components': [2, {
+    'vue/order-in-components': ['error', {
       order: [
         'el',
         'name',
