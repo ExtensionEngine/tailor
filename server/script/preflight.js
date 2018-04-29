@@ -1,3 +1,5 @@
+'use strict';
+
 const boxen = require('boxen');
 const pkg = require('read-pkg-up').sync().pkg;
 const semver = require('semver');

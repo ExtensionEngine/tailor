@@ -1,3 +1,5 @@
+'use strict';
+
 const calculatePosition = require('../shared/util/calculatePosition');
 const hash = require('hash-obj');
 const isNumber = require('lodash/isNumber');

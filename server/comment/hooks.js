@@ -1,3 +1,5 @@
+'use strict';
+
 const { broadcast, events } = require('./channel');
 const addHooks = require('../shared/util/addHooks');
 const pick = require('lodash/pick');

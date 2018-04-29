@@ -1,3 +1,5 @@
+'use strict';
+
 const { Activity } = require('../shared/database');
 const { getOutlineLevels } = require('../../config/shared/activities');
 const find = require('lodash/find');

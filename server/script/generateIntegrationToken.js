@@ -1,3 +1,5 @@
+'use strict';
+
 const { User } = require('../shared/database');
 
 User.findOne({ where: { role: 'INTEGRATION' } })

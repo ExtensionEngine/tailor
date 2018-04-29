@@ -1,3 +1,5 @@
+'use strict';
+
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');

@@ -1,3 +1,5 @@
+'use strict';
+
 const Promise = require('bluebird');
 const exists = require('path-exists');
 const expandPath = require('untildify');
