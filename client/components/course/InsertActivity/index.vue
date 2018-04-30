@@ -32,7 +32,7 @@
 
 <script>
 import { getLevel } from 'shared/activities';
-import { getOutlineChildren } from 'utils/activity';
+import { getOutlineChildren, getParent } from 'utils/activity';
 import { mapActions, mapGetters } from 'vuex-module';
 
 import ActivityBrowser from 'components/common/ActivityBrowser';
@@ -41,6 +41,8 @@ import CreateActivity from './CreateActivity';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
+import get from 'lodash/get';
+import map from 'lodash/map';
 import SelectAction from './SelectAction';
 
 export default {
@@ -56,9 +58,13 @@ export default {
     ...mapGetters(['structure'], 'course'),
     supportedLevels() {
       if (!this.parent) return filter(this.structure, { level: 1 });
-      const parentType = find(this.structure, { type: this.parent.type });
-      const { level, subLevels = [] } = parentType;
-      const cond = it => subLevels.includes(it.type) || (it.level === level);
+      const grandParent = getParent(this.activities, this.parent);
+      const parentConfig = find(this.structure, { type: this.parent.type });
+      const { subLevels = [] } = parentConfig;
+      const sameLevel = grandParent
+        ? get(find(this.structure, { type: grandParent.type }), 'subLevels', [])
+        : map(filter(this.structure, { level: 1 }), 'type');
+      const cond = l => subLevels.includes(l.type) || sameLevel.includes(l.type);
       return filter(this.structure, cond);
     }
   },
