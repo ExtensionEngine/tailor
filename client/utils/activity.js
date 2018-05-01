@@ -3,6 +3,12 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import sortBy from 'lodash/sortBy';
 
+export function getParent(activities, activity) {
+  return activity && activity.parentId
+    ? find(activities, { id: activity.parentId })
+    : null;
+}
+
 export function getChildren(activities, parentId) {
   return sortBy(filter(activities, { parentId }), 'position');
 }
