@@ -1,12 +1,12 @@
 import { getLevel } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 
 export function getParent(activities, activity) {
-  return activity && activity.parentId
-    ? find(activities, { id: activity.parentId })
-    : null;
+  const id = get(activity, 'parentId', null);
+  return id && find(activities, { id });
 }
 
 export function getChildren(activities, parentId) {
