@@ -34,7 +34,6 @@
 import { getLevel } from 'shared/activities';
 import { getOutlineChildren, getParent } from 'utils/activity';
 import { mapActions, mapGetters } from 'vuex-module';
-
 import ActivityBrowser from 'components/common/ActivityBrowser';
 import calculatePosition from 'utils/calculatePosition';
 import CreateActivity from './CreateActivity';
@@ -59,8 +58,7 @@ export default {
     supportedLevels() {
       if (!this.parent) return filter(this.structure, { level: 1 });
       const grandParent = getParent(this.activities, this.parent);
-      const parentConfig = find(this.structure, { type: this.parent.type });
-      const { subLevels = [] } = parentConfig;
+      const { subLevels = [] } = find(this.structure, { type: this.parent.type });
       const sameLevel = grandParent
         ? get(find(this.structure, { type: grandParent.type }), 'subLevels', [])
         : map(filter(this.structure, { level: 1 }), 'type');
