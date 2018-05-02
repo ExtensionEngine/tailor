@@ -1,5 +1,5 @@
 <template>
-  <div class="assessment-group">
+  <div v-show="group.id" class="assessment-group">
     <div :class="{ 'divider': position }"></div>
     <span @click="requestDeletion(group)" class="remove">
       <span class="mdi mdi-delete"></span>
@@ -44,6 +44,7 @@
 
 <script>
 import AssessmentItem from '../AssessmentItem';
+import CircularProgress from 'components/common/CircularProgress';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
@@ -131,8 +132,9 @@ export default {
   },
   components: {
     AssessmentItem,
-    TesList,
-    GroupIntroduction
+    CircularProgress,
+    GroupIntroduction,
+    TesList
   }
 };
 </script>

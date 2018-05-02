@@ -31,7 +31,7 @@
         :position="index">
       </assessment-group>
       <button
-        :disabled="!exam.id"
+        :disabled="!exam.id || !groupCreationEnabled"
         @click="createGroup"
         class="btn btn-primary btn-material create-group">
         <span class="mdi mdi-plus"></span>
@@ -55,9 +55,9 @@ export default {
   name: 'exam',
   props: ['exam', 'position'],
   data() {
-    let collapsed = this.exam.id;
     return {
-      collapsed
+      collapsed: !!this.exam.id,
+      groupCreationEnabled: true
     };
   },
   computed: {
@@ -77,11 +77,12 @@ export default {
     ...mapActions(['save', 'remove'], 'activities'),
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
     createGroup() {
+      this.groupCreationEnabled = false;
       this.save({
         type: 'ASSESSMENT_GROUP',
         parentId: this.exam.id,
         position: this.groups.length + 1
-      });
+      }).then(() => (this.groupCreationEnabled = true));
     },
     requestDeletion(item) {
       appChannel.emit('showConfirmationModal', {
