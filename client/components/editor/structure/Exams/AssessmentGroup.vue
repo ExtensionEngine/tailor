@@ -44,7 +44,6 @@
 
 <script>
 import AssessmentItem from '../AssessmentItem';
-import CircularProgress from 'components/common/CircularProgress';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
@@ -132,7 +131,6 @@ export default {
   },
   components: {
     AssessmentItem,
-    CircularProgress,
     GroupIntroduction,
     TesList
   }
