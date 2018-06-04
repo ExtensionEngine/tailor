@@ -12,7 +12,7 @@
           v-model="height"
           v-validate="{
             rules: {
-              required: true, numeric: true, min_value: 300, max_value: 3000
+              required: true, numeric: true, min_value: 50, max_value: 3000
             }
           }"
           @input="onChange"
