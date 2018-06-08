@@ -52,7 +52,8 @@ export default {
   },
   methods: {
     getRevisions() {
-      const params = { entityId: this.revision.state.id };
+      const { entity, state } = this.revision;
+      const params = { entity, entityId: state.id };
       return axios.get(this.baseUrl, { params }).then(({ data: { data } }) => {
         data.forEach(it => {
           if (includes(WITHOUT_STATICS, it.state.type)) it.resolved = true;
