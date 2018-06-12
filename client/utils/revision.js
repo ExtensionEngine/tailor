@@ -50,7 +50,7 @@ function describeCourseRevision(rev) {
 }
 
 export function isSameInstance(a, b) {
-  return (a.type === b.type) && (a.state.id === b.state.id);
+  return (a.entity === b.entity) && (a.state.id === b.state.id);
 }
 
 export function getFormatDescription(rev, activity) {
