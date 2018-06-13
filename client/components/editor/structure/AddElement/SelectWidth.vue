@@ -2,9 +2,11 @@
   <div class="select-width">
     <div
       v-for="width in widths"
+      :key="width.value"
       @click="$emit('selected', width.value)"
       class="content-width">
       <span :class="width.icon" class="mdi"></span>
+      <span>{{ width.label }} width</span>
     </div>
   </div>
 </template>
@@ -15,8 +17,8 @@ export default {
   data() {
     return {
       widths: [
-        { value: 6, icon: 'mdi-view-agenda mdi-rotate-90' },
-        { value: 12, icon: 'mdi-checkbox-blank' }
+        { label: 'Half', value: 6, icon: 'mdi-page-layout-sidebar-left' },
+        { label: 'Full', value: 12, icon: 'mdi-page-layout-body' }
       ]
     };
   }
@@ -44,7 +46,7 @@ export default {
   }
 
   .mdi {
-    font-size: 26px;
+    font-size: 36px;
   }
 }
 </style>

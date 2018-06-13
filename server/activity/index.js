@@ -1,3 +1,5 @@
+'use strict';
+
 const { Activity } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const ctrl = require('./activity.controller');

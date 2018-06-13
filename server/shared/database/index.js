@@ -1,3 +1,5 @@
+'use strict';
+
 const each = require('lodash/each');
 const invoke = require('lodash/invoke');
 const reduce = require('lodash/reduce');

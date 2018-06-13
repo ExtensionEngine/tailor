@@ -1,3 +1,5 @@
+'use strict';
+
 const db = require('./index');
 const findIndex = require('lodash/findIndex');
 const flatten = require('lodash/flatten');

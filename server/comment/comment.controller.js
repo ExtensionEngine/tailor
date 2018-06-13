@@ -1,3 +1,5 @@
+'use strict';
+
 const { Comment } = require('../shared/database');
 const { User } = require('../shared/database');
 

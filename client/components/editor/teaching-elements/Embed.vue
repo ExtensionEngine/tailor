@@ -69,6 +69,10 @@ export default {
 }
 
 .overlay {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   z-index: 99;
   width: 100%;
@@ -77,7 +81,6 @@ export default {
   opacity: 0.9;
 
   .message {
-    padding-top: 119px;
     color: green;
     font-size: 22px;
   }

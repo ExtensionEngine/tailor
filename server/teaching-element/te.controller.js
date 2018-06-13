@@ -1,3 +1,5 @@
+'use strict';
+
 const { Activity, TeachingElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');

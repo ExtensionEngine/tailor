@@ -1,3 +1,5 @@
+'use strict';
+
 const readConfig = require('./readConfig');
 
 module.exports = function configLoader(name) {

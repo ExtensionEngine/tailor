@@ -1,3 +1,5 @@
+'use strict';
+
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');

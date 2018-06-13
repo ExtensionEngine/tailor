@@ -1,3 +1,5 @@
+'use strict';
+
 const flatMap = require('lodash/flatMap');
 const groupBy = require('lodash/groupBy');
 const keyBy = require('lodash/keyBy');

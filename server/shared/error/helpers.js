@@ -1,3 +1,5 @@
+'use strict';
+
 const httpError = require('http-errors');
 
 function validationError(err) {

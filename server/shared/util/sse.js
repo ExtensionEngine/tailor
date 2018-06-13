@@ -1,3 +1,5 @@
+'use strict';
+
 const cuid = require('cuid');
 
 class SSEConnection {

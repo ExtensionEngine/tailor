@@ -1,3 +1,5 @@
+'use strict';
+
 const brandConfig = require('rcfile')('brand-');
 const map = require('lodash/map');
 const merge = require('lodash/merge');

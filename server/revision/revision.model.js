@@ -1,3 +1,5 @@
+'use strict';
+
 const hooks = require('./hooks');
 const { Model } = require('sequelize');
 

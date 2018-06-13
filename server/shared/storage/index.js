@@ -1,3 +1,5 @@
+'use strict';
+
 const autobind = require('auto-bind');
 const config = require('../../../config/server').storage;
 const path = require('path');
