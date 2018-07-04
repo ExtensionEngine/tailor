@@ -113,7 +113,7 @@ export default {
 
 .video-placeholder {
   .message {
-    padding: 100px 20px;
+    padding: 150px 20px;
 
     .heading {
       font-size: 24px;
