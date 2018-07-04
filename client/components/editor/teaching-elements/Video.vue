@@ -92,7 +92,7 @@ export default {
     isFocused(val, oldVal) {
       if (oldVal && !val && this.player) this.player.pause();
     },
-    url(val, oldVal) {
+    url() {
       this.switchingVideo = true;
       this.$nextTick(() => { this.switchingVideo = false; });
     }
