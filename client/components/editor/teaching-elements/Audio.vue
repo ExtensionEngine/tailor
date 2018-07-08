@@ -15,10 +15,11 @@
       </div>
       <div class="audio-container">
         <aplayer
+          v-if="source"
           v-show="!error"
-          :music="mediaOptions"
+          :music="playerOptions"
+          @error="error = 'Audio cannot be played.'"
           mode="order"/>
-
         <div v-if="error" class="error">
           <div class="message">
             <span class="icon mdi mdi-alert"></span>
@@ -32,6 +33,7 @@
 
 <script>
 import Aplayer from 'vue-aplayer';
+import get from 'lodash/get';
 
 export default {
   name: 'te-audio',
@@ -45,50 +47,50 @@ export default {
     };
   },
   computed: {
-    mediaOptions() {
+    source() {
+      return this.element.data.url;
+    },
+    playerOptions() {
       return {
-        src: this.source || ' ',
+        src: this.source,
         title: 'Audio Track',
         artist: ' ',
         pic: ' '
       };
-    },
-    player() {
-      return this.$el.querySelector('audio');
-    },
-    source() {
-      return this.element.data.url;
     },
     showPlaceholder() {
       return !this.source;
     }
   },
   methods: {
+    getPlayer() {
+      return this.$el.querySelector('audio');
+    },
     playAudio() {
-      this.player.play()
-        .catch(this.checkError);
+      this.getPlayer().play();
     },
     pauseAudio() {
-      this.player.pause();
+      this.getPlayer().pause();
     },
     checkError() {
-      const { error } = this.player;
-      this.error = error.message || 'Audio cannot be played.';
+      this.$nextTick(() => {
+        const player = this.getPlayer();
+        if (!player || !player.error) return;
+        this.error = get(player, 'error.message', 'Audio cannot be played.');
+      });
     }
   },
   watch: {
-    isFocused() {
-      if (this.isFocused) {
-        return this.playAudio();
-      }
-      return this.pauseAudio();
-    },
-    'element.data.url'() {
+    source(val) {
+      this.error = null;
       this.checkError();
+    },
+    isFocused(val) {
+      this.$nextTick(() => {
+        if (!this.getPlayer()) return;
+        return val ? this.playAudio() : this.pauseAudio();
+      });
     }
-  },
-  mounted() {
-    this.player.onerror = this.checkError;
   },
   components: {
     Aplayer
@@ -96,7 +98,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .te-audio {
   position: relative;
   min-height: 70px;
@@ -114,7 +116,7 @@ export default {
       }
 
       p {
-        margin: 0; // override bootswatch bottom margin
+        margin: 0;
         font-size: 1.4rem;
       }
     }
@@ -125,12 +127,12 @@ export default {
     width: 100%;
     height: 100%;
     background-color: #333;
-    opacity: .98;
+    opacity: 0.98;
 
     .message {
       position: absolute;
-      left: 50%;
       top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
     }
   }
@@ -140,8 +142,8 @@ export default {
 
     .message {
       color: #008000;
-      line-height: 40px;
       font-size: 1.8rem;
+      line-height: 40px;
     }
   }
 
