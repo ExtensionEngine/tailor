@@ -30,6 +30,7 @@ import get from 'lodash/get';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import TeAccordion from './Accordion/Accordion';
 import TeAssessment from './Assessment';
+import TeAudio from './Audio';
 import TeBreak from './PageBreak';
 import TeBrightcoveVideo from './BrightcoveVideo';
 import TeCarousel from './Carousel/Carousel';
@@ -54,6 +55,7 @@ const TE_TYPES = {
   CAROUSEL: 'te-carousel',
   MODAL: 'te-modal',
   PDF: 'te-pdf',
+  AUDIO: 'te-audio',
   TABLE: 'te-table'
 };
 
@@ -116,6 +118,7 @@ export default {
   components: {
     TeAccordion,
     TeAssessment,
+    TeAudio,
     TeBreak,
     TeBrightcoveVideo,
     TeCarousel,

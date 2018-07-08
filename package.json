@@ -103,6 +103,7 @@
     "videojs-vimeo": "^2.0.2",
     "videojs-youtube": "^2.4.0",
     "vue": "^2.5.2",
+    "vue-aplayer": "^1.4.1",
     "vue-avatar": "^2.1.1",
     "vue-color": "^2.3.0",
     "vue-datetime": "^1.0.0-beta.3",
