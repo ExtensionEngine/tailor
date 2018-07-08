@@ -1,3 +1,5 @@
+'use strict';
+
 const { createError, validationError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { User } = require('../shared/database');
@@ -9,8 +11,7 @@ function index(req, res) {
 }
 
 function forgotPassword({ body }, res) {
-  let { email } = body;
-  email = email.toLowerCase();
+  const { email } = body;
   return User.find({ where: { email } })
     .then(user => user || createError(NOT_FOUND, 'User not found'))
     .then(user => user.sendResetToken())
@@ -29,11 +30,10 @@ function resetPassword({ body, params }, res) {
 }
 
 function login({ body }, res) {
-  let { email, password } = body;
+  const { email, password } = body;
   if (!email || !password) {
     createError(400, 'Please enter email and password');
   }
-
   return User.find({ where: { email } })
     .then(user => user || createError(NOT_FOUND, 'User does not exist'))
     .then(user => user.authenticate(password))

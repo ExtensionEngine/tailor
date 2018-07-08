@@ -100,9 +100,11 @@ export default {
 
   .content {
     flex: 1;
+    overflow: hidden;
 
     .description {
       font-size: 16px;
+      word-wrap: break-word;
     }
 
     .name {

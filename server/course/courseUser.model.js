@@ -1,3 +1,5 @@
+'use strict';
+
 const { course: role } = require('../../config/shared').role;
 const { Model } = require('sequelize');
 

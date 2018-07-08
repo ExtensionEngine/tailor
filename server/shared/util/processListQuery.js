@@ -1,3 +1,5 @@
+'use strict';
+
 const assign = require('lodash/assign');
 const defaultsDeep = require('lodash/defaultsDeep');
 const pick = require('lodash/pick');

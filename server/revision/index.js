@@ -1,3 +1,5 @@
+'use strict';
+
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { Revision, User } = require('../shared/database');

@@ -156,6 +156,10 @@ h4 {
   margin: 30px 0;
   padding: 15px 20px;
 
+  .assessment-item {
+    margin-bottom: 12px;
+  }
+
   .well {
     font-size: 16px;
   }

@@ -1,3 +1,5 @@
+'use strict';
+
 const { createError } = require('../error/helpers');
 const { UNAUTHORIZED } = require('http-status-codes');
 const { user: role } = require('../../../config/shared/role');

@@ -1,3 +1,5 @@
+'use strict';
+
 const CONTENT_CONTAINERS = [{
   type: 'INTRO',
   label: 'Introduction',

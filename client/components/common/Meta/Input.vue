@@ -2,7 +2,7 @@
   <div
     :class="{ editing }"
     @focusout="focusoutInput"
-    @mousedown="onEdit"
+    @mousedown.stop="focusInput"
     class="input">
     <label :for="meta.key">{{ meta.label }}</label>
     <div
@@ -38,13 +38,6 @@ export default {
     };
   },
   methods: {
-    onEdit(e) {
-      if (this.editing) {
-        e.preventDefault();
-        return;
-      }
-      this.focusInput();
-    },
     focusInput() {
       this.editing = true;
       setTimeout(() => this.$refs[this.meta.key].focus(), 0);
