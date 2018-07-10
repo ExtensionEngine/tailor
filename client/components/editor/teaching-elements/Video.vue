@@ -193,6 +193,10 @@ function handlePlyrErrors(Plyr) {
       height: 100%;
     }
 
+    .plyr.plyr--vimeo:fullscreen {
+      padding-bottom: 56.25%;
+    }
+
     .plyr__video-wrapper {
       padding-bottom: 0 !important;
     }
