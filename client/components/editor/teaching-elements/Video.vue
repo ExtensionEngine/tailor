@@ -21,7 +21,7 @@
       </div>
       <div class="player">
         <plyr
-          v-if="!switchingVideo"
+          v-if="showVideo"
           :emit="['error']"
           @ready="onError"
           ref="video">
@@ -42,10 +42,12 @@ import { extname } from 'path';
 import get from 'lodash/get';
 import { Plyr } from 'vue-plyr';
 
+handlePlyrErrors(Plyr);
+
 const MediaError = window.MediaError;
 
 const NOT_NATIVE = /youtu\.?be|vimeo/;
-const CUSTOM_TYPE_MAPPING = {
+const CUSTOM_SUBTYPE_MAPPING = {
   ogv: 'ogg'
 };
 
@@ -72,11 +74,14 @@ export default {
     type() {
       if (NOT_NATIVE.test(this.url)) return { isNative: false };
       const ext = extname(this.url).substring(1);
-      const name = `video/${CUSTOM_TYPE_MAPPING[ext] || ext}`;
+      const name = `video/${CUSTOM_SUBTYPE_MAPPING[ext] || ext}`;
       return { isNative: true, name };
     },
     showPlaceholder() {
       return !this.url;
+    },
+    showVideo() {
+      return !(this.switchingVideo || this.isDragged);
     },
     showError() {
       if (!this.error) return false;
@@ -94,16 +99,27 @@ export default {
     },
     url() {
       this.switchingVideo = true;
-      this.$nextTick(() => { this.switchingVideo = false; });
+      this.$nextTick(() => (this.switchingVideo = false));
     }
   },
   beforeDestroy() {
     if (this.player) this.player.pause();
   },
-  components: {
-    Plyr
-  }
+  components: { Plyr }
 };
+
+// Workaround for https://github.com/sampotts/plyr/issues/1001
+const ytDestroyError = 'The YouTube player is not attached to the DOM.';
+function handlePlyrErrors(Plyr) {
+  const beforeDestroy = Plyr.beforeDestroy;
+  Plyr.beforeDestroy = function () {
+    try {
+      return beforeDestroy.call(this, arguments);
+    } catch (err) {
+      if (err.message !== ytDestroyError) throw err;
+    }
+  };
+}
 </script>
 
 <style lang="scss" scoped>
