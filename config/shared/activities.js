@@ -28,6 +28,7 @@ module.exports = {
   getOutlineLevels,
   getObjectives,
   getLevel,
+  getContentContainer,
   isEditable: activityType => {
     const config = getLevel(activityType);
     const hasContainers = !!getSupportedContainers(activityType).length;
@@ -81,4 +82,12 @@ function getRepositoryMeta(repository) {
     let value = get(repository, `data.${it.key}`);
     return { ...it, value };
   });
+}
+
+function getContentContainer(schemaId, containerType) {
+  const schema = getSchema(schemaId);
+  const defaultConfig = get(defaultConfiguration, 'CONTENT_CONTAINERS', []);
+  const schemaConfig = get(schema, 'contentContainers', []);
+  return find(schemaConfig, { type: containerType }) ||
+         find(defaultConfig, { type: containerType });
 }

@@ -34,6 +34,7 @@ const schema = yup.object().shape({
     type: yup.string().min(2).max(50).required(),
     label: yup.string().min(2).max(100).required(),
     types: yup.array().of(yup.string().min(2).max(20)),
+    elementsLimit: yup.number().integer().min(1),
     multiple: yup.boolean(),
     displayHeading: yup.boolean()
   }))
