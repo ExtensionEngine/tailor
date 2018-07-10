@@ -50,6 +50,7 @@
 
 <script>
 import AccordionToolbar from './AccordionToolbar';
+import AudioToolbar from './AudioToolbar';
 import BrightcoveVideoToolbar from './BrightcoveVideoToolbar';
 import CarouselToolbar from './CarouselToolbar';
 import DefaultToolbar from './DefaultToolbar';
@@ -83,6 +84,7 @@ const TOOLBAR_TYPES = {
   MODAL: 'modal-toolbar',
   TABLE: 'table-toolbar',
   PDF: 'pdf-toolbar',
+  AUDIO: 'audio-toolbar',
   'TABLE-CELL': 'table-toolbar'
 };
 
@@ -167,6 +169,7 @@ export default {
   },
   components: {
     AccordionToolbar,
+    AudioToolbar,
     BrightcoveVideoToolbar,
     CarouselToolbar,
     DefaultToolbar,
