@@ -65,6 +65,7 @@
     "focus-trap": "^2.3.1",
     "hash-obj": "^1.0.0",
     "helmet": "^3.12.0",
+    "hls.js": "^0.10.1",
     "http-errors": "^1.5.1",
     "http-status-codes": "^1.1.6",
     "is-iexplorer": "^1.0.0",
