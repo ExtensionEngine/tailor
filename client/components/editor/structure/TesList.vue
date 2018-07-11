@@ -27,6 +27,8 @@
       :activity="activity"
       :position="nextPosition"
       :layout="layout"
+      :locked="elementCreationLocked"
+      :elementsLimit="elementsLimit"
       @add="el => $emit('add', el)">
     </add-element>
   </div>
@@ -44,7 +46,8 @@ export default {
     enableAdd: { type: Boolean, default: true },
     types: { type: Array, required: false },
     activity: { type: Object, required: true },
-    layout: { type: Boolean, default: false }
+    layout: { type: Boolean, default: false },
+    elementsLimit: { type: Number, default: Infinity }
   },
   data() {
     return { dragElementIndex: null };
@@ -56,6 +59,9 @@ export default {
         scrollSpeed: 15,
         scrollSensitivity: 125
       });
+    },
+    elementCreationLocked() {
+      return this.elementsLimit === this.list.length;
     },
     nextPosition() {
       const lastItem = last(this.list);

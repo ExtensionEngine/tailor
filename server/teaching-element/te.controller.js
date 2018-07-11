@@ -1,12 +1,10 @@
 'use strict';
 
-const { Activity, Course, TeachingElement, Sequelize } = require('../shared/database');
+const { Activity, TeachingElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND, BAD_REQUEST } = require('http-status-codes');
 const { resolveStatics } = require('../shared/storage/helpers');
-const { getContentContainer } = require('../../config/shared/activities');
 const pick = require('lodash/pick');
-const get = require('lodash/get');
 
 function list({ course, query, opts }, res) {
   if (query.activityId || query.parentId) {
@@ -34,10 +32,11 @@ function show({ params }, res) {
 function create({ body, params, user }, res) {
   const attr = ['activityId', 'type', 'data', 'position', 'refs'];
   const data = Object.assign(pick(body, attr), { courseId: params.courseId });
-  return validateElementQuantity(data.activityId)
-    .then(() => TeachingElement.create(data, { context: { userId: user.id } }))
+  const config = { verifyElemLimit: true };
+  return TeachingElement.create(data, { context: { userId: user.id } }, config)
     .then(asset => resolveStatics(asset))
-    .then(asset => res.json({ data: asset }));
+    .then(asset => res.json({ data: asset }))
+    .catch(error => createError(BAD_REQUEST, error.message));
 }
 
 function patch({ body, params, user }, res) {
@@ -72,28 +71,3 @@ module.exports = {
   remove,
   reorder
 };
-
-function validateElementQuantity(activityId) {
-  return Activity.findById(activityId, {
-    attributes: {
-      include: [[
-        Sequelize.fn('COUNT', Sequelize.col('TeachingElements.id')),
-        'elementsCount'
-      ]]},
-    include: [{
-      model: Course, attributes: ['schema']}, {
-      model: TeachingElement, attributes: []
-    }],
-    group: ['activity.id', 'course.id']
-  })
-  .then(
-    (activity) => {
-      const elementsCount = Number(get(activity, 'dataValues.elementsCount', 0));
-      const schema = get(activity, 'course.schema');
-      const containerType = get(activity, 'type');
-      return (elementsCount === get(getContentContainer(schema, containerType), 'elementsLimit'))
-        ? createError(BAD_REQUEST, 'TEL limit reached')
-        : true;
-    }
-  );
-}

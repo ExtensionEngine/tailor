@@ -4,7 +4,7 @@
       v-if="!showAssessments"
       :style="{ 'max-width': maxWidth + 'px' }"
       class="elements">
-      <div v-for="row in rows" class="row">
+      <div v-for="(row, index) in rows" :key="index" class="row">
         <div
           v-for="element in row"
           :key="element.type"
@@ -28,6 +28,7 @@
 import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
+import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import SelectAssessment from './SelectAssessment';
@@ -55,7 +56,7 @@ export default {
   name: 'select-element',
   props: {
     activity: { type: Object },
-    include: { type: Array },
+    include: { type: Array, default: [] },
     rowSize: { type: Number, default: ELEMENTS_PER_ROW }
   },
   data() {
@@ -69,7 +70,7 @@ export default {
       return Math.min(this.elements.length, this.rowSize);
     },
     elements() {
-      if (!this.include) return TE_TYPES;
+      if (isEmpty(this.include)) return TE_TYPES;
       let items = filter(TE_TYPES, it => includes(this.include, it.type));
       if (firstType(items) === 'ASSESSMENT') this.type = 'ASSESSMENT';
       return items;

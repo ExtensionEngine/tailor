@@ -17,6 +17,7 @@
       :activity="container"
       :types="types"
       :layout="layout"
+      :elementsLimit="elementsLimit"
       @add="saveElement"
       @update="reorder">
       <teaching-element
@@ -43,7 +44,8 @@ export default {
     container: { type: Object, required: true },
     types: { type: Array, required: false },
     name: { type: String, required: true },
-    layout: { type: Boolean, required: true }
+    layout: { type: Boolean, required: true },
+    elementsLimit: { type: Number, default: Infinity }
   },
   computed: {
     ...mapGetters(['tes']),

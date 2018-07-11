@@ -12,6 +12,7 @@
       :name="name"
       :layout="layout"
       :class="`${name}-container`"
+      :elementsLimit="elementsLimit"
       @delete="deleteContainer(container)"
       class="content-container">
     </content-container>
@@ -44,7 +45,8 @@ export default {
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: false },
-    layout: { type: Boolean, default: true }
+    layout: { type: Boolean, default: true },
+    elementsLimit: { type: Number, default: Infinity }
   },
   computed: {
     name() {

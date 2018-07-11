@@ -1,10 +1,12 @@
 'use strict';
 
 const calculatePosition = require('../shared/util/calculatePosition');
+const { getContentContainer } = require('../../config/shared/activities');
 const hash = require('hash-obj');
 const isNumber = require('lodash/isNumber');
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
+const get = require('lodash/get');
 const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 
 class TeachingElement extends Model {
@@ -72,6 +74,24 @@ class TeachingElement extends Model {
     this.belongsTo(Course, {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
+  }
+
+  static create(data, options, { verifyElemLimit = false } = {}) {
+    const Activity = this.sequelize.model('activity');
+    const Course = this.sequelize.model('course');
+    return Promise.all([
+      TeachingElement.count({ where: { activityId: data.activityId } }),
+      Activity.findById(data.activityId),
+      Course.findById(data.courseId)
+    ])
+    .then(([elementsCount, { type: containerType }, { schema }]) => {
+      if (!verifyElemLimit) return;
+      const container = getContentContainer(schema, containerType);
+      const elementLimit = get(container, 'elementsLimit', Infinity);
+      if (elementsCount < elementLimit) return;
+      return Promise.reject(Error('TEL limit reached'));
+    })
+    .then(() => super.create(data, options));
   }
 
   static hooks() {

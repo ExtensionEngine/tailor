@@ -1,6 +1,10 @@
 <template>
   <div class="add-element">
-    <div @click="toggleSelection" class="btn-base">
+    <div @click="toggleSelection"
+        :class="[locked ? 'locked' : 'unlocked']"
+        class="btn-base"
+        v-tooltip="tooltipConfig"
+    >
       <span
         :class="[selectionOpened ? 'btn-close' : 'btn-open']"
         class="mdi mdi-plus toggle-selection">
@@ -30,7 +34,14 @@ import SelectWidth from './SelectWidth';
 
 export default {
   name: 'add-element',
-  props: ['include', 'activity', 'position', 'layout'],
+  props: {
+    include: { type: Array, default() { return []; } },
+    activity: { type: Object, required: true },
+    position: { type: Number, default: 1 },
+    layout: { type: Boolean, default: false },
+    locked: { type: Boolean, default: false },
+    elementsLimit: { type: Number, default: Infinity }
+  },
   data() {
     return {
       type: null,
@@ -51,13 +62,21 @@ export default {
         (this.type !== 'BREAK') &&
         (this.type !== 'CAROUSEL') &&
         (this.type !== 'TABLE');
+    },
+    tooltipConfig() {
+      return {
+        content:
+          `${this.activity.type} has reached it's elements 
+          limit of ${this.elementsLimit}`,
+        class: 'warning-tooltip' + (!this.locked ? ' hidden' : '')
+      };
     }
   },
   methods: {
     toggleSelection() {
       if (this.selectionOpened) {
         this.close();
-      } else {
+      } else if (!this.locked) {
         this.selectionOpened = true;
       }
     },
@@ -145,11 +164,17 @@ export default {
     font-size: 28px;
     line-height: 28px;
     vertical-align: top;
+  }
 
+  .btn-base.unlocked {
     &:hover {
       color: #42b983;
       cursor: pointer;
     }
+  }
+
+  .btn-base.locked {
+    color: #cccccc;
   }
 
   .slide-fade-enter-active {
@@ -165,4 +190,21 @@ export default {
     display: none;
   }
 }
+</style>
+
+<style>
+  .vue-tooltip.warning-tooltip {
+    color: #737373;
+    background-color: white;
+    font-family: 'Catamaran';
+    overflow: hidden;
+    white-space: nowrap;
+    -webkit-box-shadow: none;
+	  -moz-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .vue-tooltip.warning-tooltip.hidden {
+    visibility: hidden;
+  }
 </style>
