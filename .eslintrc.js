@@ -30,5 +30,8 @@ module.exports = {
   },
   globals: {
     BRAND_CONFIG: true
+  },
+  env: {
+    browser: true,
   }
 };

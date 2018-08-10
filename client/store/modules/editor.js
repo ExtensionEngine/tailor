@@ -26,7 +26,8 @@ getter(function focusedElement() {
 
   return !focused.embedded
     ? find(tes, { id })
-    : findEmbeddedElement(tes, id);
+    : findEmbeddedElement(tes, id) ||
+    focused;
 });
 
 getter(function activity() {

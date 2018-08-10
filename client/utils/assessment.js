@@ -17,7 +17,8 @@ export const typeInfo = {
   TF: { type: 'TF', title: 'True - false', class: 'true-false' },
   FB: { type: 'FB', title: 'Fill in the blank', class: 'fill-blank' },
   MQ: { type: 'MQ', title: 'Matching question', class: 'matching-question' },
-  DD: { type: 'DD', title: 'Drag & Drop', class: 'drag-drop' }
+  DD: { type: 'DD', title: 'Drag & Drop', class: 'drag-drop' },
+  TS: { type: 'TS', title: 'Text selection', class: 'text-selection' }
 };
 
 export const helperText = {
@@ -109,6 +110,10 @@ export const schemas = {
       response: yup.string().trim().min(1).max(200).required()
     })
   }),
+  TS: yup.object().shape({
+    text: yup.string().trim().min(1).required(),
+    correct: yup.array().of(yup.mixed().required()).min(1)
+  }),
   DD: yup.object().shape({
     ...baseSchema,
     groups: yup.array().castMap().of(objectMap).min(2),
@@ -171,6 +176,12 @@ export const defaults = {
   FB: {
     type: 'FB',
     ...baseDefaults,
+    correct: []
+  },
+  TS: {
+    type: 'TS',
+    ...baseDefaults,
+    text: '',
     correct: []
   },
   MQ() {

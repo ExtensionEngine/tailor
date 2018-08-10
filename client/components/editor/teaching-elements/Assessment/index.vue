@@ -86,6 +86,7 @@ import NumericalResponse from './NumericalResponse';
 import Question from './Question';
 import set from 'lodash/set';
 import SingleChoice from './SingleChoice';
+import TextSelection from './TextSelection';
 import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
 import uniq from 'lodash/uniq';
@@ -102,7 +103,8 @@ const ASSESSMENT_TYPES = {
   TR: 'text-response',
   FB: 'fill-blank',
   MQ: 'matching-question',
-  DD: 'drag-drop'
+  DD: 'drag-drop',
+  TS: 'text-selection'
 };
 
 export default {
@@ -243,6 +245,7 @@ export default {
     Controls,
     MatchingQuestion,
     DragDrop,
+    TextSelection,
     multiselect
   }
 };
