@@ -10,7 +10,8 @@ import toPath from 'lodash/toPath';
 import yup from 'yup';
 
 export const typeInfo = {
-  MC: { type: 'MC', title: 'Multiple choice', class: 'multiple-choice' },
+  MC: { type: 'MC', title: 'Multiple choice - text', class: 'multiple-choice' },
+  IMC: { type: 'IMC', title: 'Multiple choice - images', class: 'image-multiple-choice' },
   SC: { type: 'SC', title: 'Single choice', class: 'single-choice' },
   TR: { type: 'TR', title: 'Text response', class: 'text-response' },
   NR: { type: 'NR', title: 'Numerical response', class: 'numerical-response' },
@@ -74,6 +75,11 @@ export const schemas = {
   MC: yup.object().shape({
     ...baseSchema,
     answers: yup.array().min(2).of(yup.string().trim().min(1).max(500)).required(),
+    correct: yup.array().min(1).of(yup.number()).required()
+  }),
+  IMC: yup.object().shape({
+    ...baseSchema,
+    answers: yup.array().min(2).of(yup.string().trim().min(1)).required(),
     correct: yup.array().min(1).of(yup.number()).required()
   }),
   NR: yup.object().shape({
@@ -141,6 +147,12 @@ const baseDefaults = {
 export const defaults = {
   MC: {
     type: 'MC',
+    ...baseDefaults,
+    answers: ['', '', ''],
+    correct: []
+  },
+  IMC: {
+    type: 'IMC',
     ...baseDefaults,
     answers: ['', '', ''],
     correct: []

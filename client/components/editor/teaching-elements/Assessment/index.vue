@@ -78,6 +78,7 @@ import FillBlank from './FillBlank';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
+import ImageMultipleChoice from './ImageMultipleChoice';
 import map from 'lodash/map';
 import MatchingQuestion from './MatchingQuestion';
 import MultipleChoice from './MultipleChoice';
@@ -96,6 +97,7 @@ const validationOptions = { recursive: true, abortEarly: false };
 
 const ASSESSMENT_TYPES = {
   MC: 'multiple-choice',
+  IMC: 'image-multiple-choice',
   SC: 'single-choice',
   TF: 'true-false',
   NR: 'numerical-response',
@@ -131,7 +133,7 @@ export default {
     },
     showFeedback() {
       const assessmentType = this.element.data.type;
-      const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
+      const feedbackSupported = ['MC', 'IMC', 'SC', 'TF'].indexOf(assessmentType) > -1;
       return !this.summative && feedbackSupported;
     },
     examObjectives() {
@@ -233,6 +235,7 @@ export default {
   },
   components: {
     MultipleChoice,
+    ImageMultipleChoice,
     SingleChoice,
     TrueFalse,
     NumericalResponse,
