@@ -41,7 +41,7 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import range from 'lodash/range';
-import { blobToBase64String } from 'blob-util';
+import { blobToDataURL } from 'blob-util';
 
 const maxImageDimension = 256;
 
@@ -52,11 +52,12 @@ const formAlert = (message) => {
   };
 };
 
-const extractImageDimensions = (imageDataUrl, cb) => {
-  let i = document.createElement('img');
-  // eslint-disable-next-line standard/no-callback-literal
-  i.onload = () => cb({ width: i.width, height: i.height });
-  i.src = imageDataUrl;
+const getImageDimensions = function (imageDataUrl) {
+  return new Promise(resolve => {
+    let i = document.createElement('img');
+    i.onload = () => resolve({ width: i.width, height: i.height });
+    i.src = imageDataUrl;
+  });
 };
 
 class ImageValidationError extends Error {
@@ -126,11 +127,10 @@ export default {
         }
         return resolve(imageFile);
       })
-        .then(() => blobToBase64String(imageFile))
-        .then(base64String => {
-          let imageDataUrl = `data:${imageFile.type};base64,${base64String}`;
+        .then(() => blobToDataURL(imageFile))
+        .then(imageDataUrl => {
           answers[dataset.index] = imageDataUrl;
-          return this.getImageDimensions(imageDataUrl);
+          return getImageDimensions(imageDataUrl);
         })
         .then(({ width, height }) => {
           if (width > maxImageDimension || height > maxImageDimension) {
@@ -148,13 +148,7 @@ export default {
             throw error;
           }
         })
-        .then(() => { this.update({ answers }); });
-    },
-    getImageDimensions(imageDataUrl) {
-      return new Promise((resolve, reject) => extractImageDimensions(
-        imageDataUrl,
-        resolve
-      ));
+        .then(() => this.update({ answers }));
     },
     addAnswer() {
       let answers = cloneDeep(this.answers);
