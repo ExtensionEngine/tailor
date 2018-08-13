@@ -59,6 +59,13 @@ const extractImageDimensions = (imageDataUrl, cb) => {
   i.src = imageDataUrl;
 };
 
+class ImageValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ImageValidationError';
+  }
+}
+
 export default {
   props: {
     assessment: Object,
@@ -113,7 +120,9 @@ export default {
       return new Promise((resolve, reject) => {
         this.resetErrorMessages(dataset.index);
         if (imageFile.size > 100000) {
-          return reject(new Error('The image is too large. Maximum allowed image size: 100 kB'));
+          return reject(new ImageValidationError(
+            'The image is too large. Maximum allowed image size: 100 kB'
+          ));
         }
         return resolve(imageFile);
       })
@@ -125,15 +134,19 @@ export default {
         })
         .then(({ width, height }) => {
           if (width > maxImageDimension || height > maxImageDimension) {
-            return Promise.reject(new Error(
+            return Promise.reject(new ImageValidationError(
               `Incorrect image width and/or height. Maximum allowed image dimensions:
-               ${maxImageDimension}x${maxImageDimension}`
+              ${maxImageDimension}x${maxImageDimension}`
             ));
           }
         })
         .catch(error => {
           answers[dataset.index] = '';
-          this.addErrorMessage(dataset.index, error.message);
+          if (error.name === 'ImageValidationError') {
+            this.addErrorMessage(dataset.index, error.message);
+          } else {
+            throw error;
+          }
         })
         .then(() => { this.update({ answers }); });
     },
