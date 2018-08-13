@@ -52,13 +52,11 @@ const formAlert = (message) => {
   };
 };
 
-const getImageDataUrl = (base64String, mimeType) => `data:${mimeType};base64,${base64String}`;
-
-const extractImageDimensions = (base64String, mimeType, cb) => {
+const extractImageDimensions = (imageDataUrl, cb) => {
   let i = document.createElement('img');
   // eslint-disable-next-line standard/no-callback-literal
   i.onload = () => cb({ width: i.width, height: i.height });
-  i.src = getImageDataUrl(base64String, mimeType);
+  i.src = imageDataUrl;
 };
 
 export default {
@@ -121,9 +119,9 @@ export default {
       })
         .then(() => blobToBase64String(imageFile))
         .then(base64String => {
-          let imageMimeType = imageFile.type;
-          answers[dataset.index] = getImageDataUrl(base64String, imageMimeType);
-          return this.getImageDimensions(base64String, imageMimeType);
+          let imageDataUrl = `data:${imageFile.type};base64,${base64String}`;
+          answers[dataset.index] = imageDataUrl;
+          return this.getImageDimensions(imageDataUrl);
         })
         .then(({ width, height }) => {
           if (width > maxImageDimension || height > maxImageDimension) {
@@ -139,10 +137,9 @@ export default {
         })
         .then(() => { this.update({ answers }); });
     },
-    getImageDimensions(base64String, mimeType) {
+    getImageDimensions(imageDataUrl) {
       return new Promise((resolve, reject) => extractImageDimensions(
-        base64String,
-        mimeType,
+        imageDataUrl,
         resolve
       ));
     },
@@ -171,7 +168,7 @@ export default {
         delete feedback[answers.length];
       }
 
-      this.resetErrorMessages(answerIndex);
+      this.fieldErrors.splice(answerIndex, 1);
 
       this.update({ answers, correct, feedback });
     },
@@ -205,7 +202,7 @@ export default {
       return this.fieldErrors[index] || [];
     },
     resetErrorMessages(index) {
-      this.fieldErrors.splice(index, 1);
+      this.fieldErrors[index] = [];
     },
     getUniqueIndex(index) {
       return `imc_${Date.now()}_${index}`;
