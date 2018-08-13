@@ -224,6 +224,9 @@ export default {
   watch: {
     assessment() {
       this.validate();
+    },
+    isEditing() {
+      if (!this.isEditing) this.fieldErrors = [];
     }
   }
 };
