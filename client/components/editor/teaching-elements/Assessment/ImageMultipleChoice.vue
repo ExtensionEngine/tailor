@@ -16,7 +16,7 @@
         </span>
         <span :class="{ 'has-error': getErrorMessages(index).length > 0 }">
           <div class="image-container">
-            <img :src="getSrc(answer)" class="image-content">
+            <img :src="answer || './assets/img/no-image.png'" class="image-content">
           </div>
           <input
             :data-index="index"
@@ -50,6 +50,15 @@ const formAlert = (message) => {
     type: 'alert-danger',
     text: message
   };
+};
+
+const getImageDataUrl = (base64String, mimeType) => `data:${mimeType};base64,${base64String}`;
+
+const extractImageDimensions = (base64String, mimeType, cb) => {
+  let i = document.createElement('img');
+  // eslint-disable-next-line standard/no-callback-literal
+  i.onload = () => cb({ width: i.width, height: i.height });
+  i.src = getImageDataUrl(base64String, mimeType);
 };
 
 export default {
@@ -106,45 +115,36 @@ export default {
       return new Promise((resolve, reject) => {
         this.resetErrorMessages(dataset.index);
         if (imageFile.size > 100000) {
-          // eslint-disable-next-line prefer-promise-reject-errors
-          return reject('The image is too large. Maximum allowed image size: 100 kB');
+          return reject(new Error('The image is too large. Maximum allowed image size: 100 kB'));
         }
         return resolve(imageFile);
       })
         .then(() => blobToBase64String(imageFile))
         .then(base64String => {
-          answers[dataset.index] = base64String;
-          return this.getImageDimensions(base64String);
+          let imageMimeType = imageFile.type;
+          answers[dataset.index] = getImageDataUrl(base64String, imageMimeType);
+          return this.getImageDimensions(base64String, imageMimeType);
         })
         .then(({ width, height }) => {
           if (width > maxImageDimension || height > maxImageDimension) {
-            // eslint-disable-next-line prefer-promise-reject-errors
-            return Promise.reject(
+            return Promise.reject(new Error(
               `Incorrect image width and/or height. Maximum allowed image dimensions:
                ${maxImageDimension}x${maxImageDimension}`
-            );
+            ));
           }
         })
-        .catch(errorMsg => {
-          this.addErrorMessage(dataset.index, errorMsg);
+        .catch(error => {
           answers[dataset.index] = '';
+          this.addErrorMessage(dataset.index, error.message);
         })
-        .then(() => {
-          this.update({ answers });
-        });
+        .then(() => { this.update({ answers }); });
     },
-    getImageDimensions(base64String) {
-      return new Promise((resolve, reject) => {
-        let i = document.createElement('img');
-        i.onload = () => {
-          resolve({ width: i.width, height: i.height });
-        };
-        i.src = this.getSrc(base64String);
-      });
-    },
-    getSrc(base64String) {
-      if (base64String === '') return './assets/img/no-image.png';
-      return `data:image/jpg;base64,${base64String}`;
+    getImageDimensions(base64String, mimeType) {
+      return new Promise((resolve, reject) => extractImageDimensions(
+        base64String,
+        mimeType,
+        resolve
+      ));
     },
     addAnswer() {
       let answers = cloneDeep(this.answers);
