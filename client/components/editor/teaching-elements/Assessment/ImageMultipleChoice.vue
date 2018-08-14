@@ -252,15 +252,15 @@ ul {
 
     input[type=checkbox] {
       position: absolute;
-      top: 5px;
+      top: 30%;
       left: 0;
     }
   }
 
   .mdi-close {
     position: absolute;
-    right: 5px;
-    bottom: 5px;
+    right: 1%;
+    bottom: 50%;
     padding: 5px;
     color: #888;
     cursor: pointer;
