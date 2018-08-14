@@ -5,34 +5,35 @@
     <ul>
       <li
         v-for="(answer, index) in answers"
-        :key="getUniqueIndex(index)"
-        style="text-align: start;">
-        <span>
+        :key="index">
+        <span
+          :class="{ 'has-error': getErrorMessages(index).length > 0 }"
+          class="row-content">
           <input
             :checked="correct.includes(index)"
             :disabled="disabled"
             @change="toggleAnswer(index)"
             type="checkbox">
-        </span>
-        <span :class="{ 'has-error': getErrorMessages(index).length > 0 }">
           <div class="image-container">
             <img :src="answer || './assets/img/no-image.png'" class="image-content">
           </div>
-          <input
-            :data-index="index"
-            type="file"
-            :disabled="disabled"
-            @change="updateAnswer"
-            class="form-control image-input"
-            :accept="imageInputType">
-          <span
-            v-for="(message, index) in getErrorMessages(index)"
-            :key="index"
-            class="error-msg">
-            {{ message }}
-          </span>
+          <div class="image-input-err">
+            <input
+              :data-index="index"
+              :disabled="disabled"
+              :accept="imageInputType"
+              @change="updateAnswer"
+              class="form-control image-input"
+              type="file">
+            <span
+              v-for="(message, index) in getErrorMessages(index)"
+              :key="index"
+              class="error-msg">
+              {{ message }}
+            </span>
+            <span @click="removeAnswer(index)" class="mdi mdi-close control"></span>
+          </div>
         </span>
-        <span @click="removeAnswer(index)" class="mdi mdi-close control"></span>
       </li>
     </ul>
   </div>
@@ -45,26 +46,48 @@ import { blobToDataURL } from 'blob-util';
 
 const maxImageDimension = 256;
 
-const formAlert = (message) => {
-  return {
-    type: 'alert-danger',
-    text: message
-  };
-};
-
-const getImageDimensions = function (imageDataUrl) {
+function getImageDimensions(imageSrc) {
   return new Promise(resolve => {
     let i = document.createElement('img');
     i.onload = () => resolve({ width: i.width, height: i.height });
-    i.src = imageDataUrl;
+    i.src = imageSrc;
   });
-};
+}
 
-class ImageValidationError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'ImageValidationError';
-  }
+function imageValidationError(message) {
+  const err = new Error(message);
+  err[Symbol.for('error:image-validation')] = true;
+  return err;
+}
+
+const isImageValidatonError = err => !!err[Symbol.for('error:image-validation')];
+
+function validateImage(image) {
+  let imageDataUrl = '';
+  return new Promise((resolve, reject) => {
+    if (image.size > 100000) {
+      const err = imageValidationError(
+        'The image is too large. Maximum allowed image size: 100 kB'
+      );
+      return reject(err);
+    }
+    return resolve(image);
+  })
+    .then(() => blobToDataURL(image))
+    .then(dataUrl => {
+      imageDataUrl = dataUrl;
+      return getImageDimensions(dataUrl);
+    })
+    .then(({ width, height }) => {
+      if (width > maxImageDimension || height > maxImageDimension) {
+        const err = imageValidationError(`
+          Incorrect image width and/or height. Maximum allowed image dimensions:
+          ${maxImageDimension}x${maxImageDimension}
+        `);
+        return Promise.reject(err);
+      }
+    })
+    .then(() => Promise.resolve(imageDataUrl));
 }
 
 export default {
@@ -116,37 +139,15 @@ export default {
       let answers = cloneDeep(this.answers);
       const { target: input } = evt;
       const { dataset, files = [] } = input;
-      const imageFile = files[0];
+      const image = files[0];
 
-      return new Promise((resolve, reject) => {
-        this.resetErrorMessages(dataset.index);
-        if (imageFile.size > 100000) {
-          return reject(new ImageValidationError(
-            'The image is too large. Maximum allowed image size: 100 kB'
-          ));
-        }
-        return resolve(imageFile);
-      })
-        .then(() => blobToDataURL(imageFile))
-        .then(imageDataUrl => {
-          answers[dataset.index] = imageDataUrl;
-          return getImageDimensions(imageDataUrl);
-        })
-        .then(({ width, height }) => {
-          if (width > maxImageDimension || height > maxImageDimension) {
-            return Promise.reject(new ImageValidationError(
-              `Incorrect image width and/or height. Maximum allowed image dimensions:
-              ${maxImageDimension}x${maxImageDimension}`
-            ));
-          }
-        })
+      this.resetErrorMessages(dataset.index);
+
+      return validateImage(image)
+        .then(imageSrc => { answers[dataset.index] = imageSrc; })
         .catch(error => {
-          answers[dataset.index] = '';
-          if (error.name === 'ImageValidationError') {
-            this.addErrorMessage(dataset.index, error.message);
-          } else {
-            throw error;
-          }
+          if (!isImageValidatonError(error)) throw error;
+          this.addErrorMessage(dataset.index, error.message);
         })
         .then(() => this.update({ answers }));
     },
@@ -179,21 +180,21 @@ export default {
 
       this.update({ answers, correct, feedback });
     },
-    hasQuestionText() {
-      let questionContent = this.assessment.question[0].data.content || '';
-      return questionContent !== '';
-    },
     hasCorrectAnswers() {
       return this.correct.length > 0;
     },
     validate() {
       let error = {};
-      if (!this.hasQuestionText()) {
-        error = formAlert('The question field may not be empty.');
-      } else if (this.answers.length < 2) {
-        error = formAlert('Please make at least two answers available.');
+      if (this.answers.length < 2) {
+        error = {
+          type: 'alert-danger',
+          text: 'Please make at least two answers available.'
+        };
       } else if (!this.hasCorrectAnswers()) {
-        error = formAlert('There needs to be at least one correct answer.');
+        error = {
+          type: 'alert-danger',
+          text: 'There needs to be at least one correct answer.'
+        };
       }
       this.$emit('alert', error);
     },
@@ -210,9 +211,6 @@ export default {
     },
     resetErrorMessages(index) {
       this.fieldErrors[index] = [];
-    },
-    getUniqueIndex(index) {
-      return `imc_${Date.now()}_${index}`;
     }
   },
   watch: {
@@ -228,6 +226,7 @@ export default {
 
 <style lang="scss" scoped>
 $errorRed: #d9534f;
+$imageContainerDimension: 128px;
 
 h5 {
   display: block;
@@ -245,6 +244,7 @@ ul {
     position: relative;
     margin: 20px 0;
     padding-left: 40px;
+    text-align: start;
 
     .form-control {
       padding-left: 10px;
@@ -273,12 +273,9 @@ ul {
 
 .image {
   &-container {
-    display: inline-block;
     position: relative;
-    min-width: 128px;
-    max-width: 128px;
-    min-height: 128px;
-    max-height: 128px;
+    min-width: $imageContainerDimension;
+    min-height: $imageContainerDimension;
     margin-right: 5%;
     border: 1px solid #ccc;
     vertical-align: middle;
@@ -286,7 +283,10 @@ ul {
 
   &-input {
     display: inline-block;
-    width: 70%;
+
+    &-err {
+      vertical-align: middle;
+    }
   }
 
   &-content {
@@ -296,23 +296,25 @@ ul {
     transform: translateX(-50%) translateY(-50%);
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain;
+  }
+}
+
+.row-content {
+  div {
+    display: inline-block;
   }
 }
 
 .has-error {
-  input[type="checkbox"]::after {
+  .image-container {
     border-color: $errorRed;
-  }
-
-  input[type="checkbox"]:checked::after {
-    border-color: #337ab7;
   }
 }
 
 .error-msg {
   display: block;
   text-align: center;
+  margin-top: 2%;
   color: $errorRed;
 }
 
