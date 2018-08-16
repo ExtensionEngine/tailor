@@ -45,50 +45,8 @@ import range from 'lodash/range';
 import { blobToDataURL } from 'blob-util';
 
 const maxImageDimension = 256;
-
-function getImageDimensions(imageSrc) {
-  return new Promise(resolve => {
-    let i = document.createElement('img');
-    i.onload = () => resolve({ width: i.width, height: i.height });
-    i.src = imageSrc;
-  });
-}
-
-function imageValidationError(message) {
-  const err = new Error(message);
-  err[Symbol.for('error:image-validation')] = true;
-  return err;
-}
-
 const isImageValidatonError = err => !!err[Symbol.for('error:image-validation')];
-
-function validateImage(image) {
-  let imageDataUrl = '';
-  return new Promise((resolve, reject) => {
-    if (image.size > 100000) {
-      const err = imageValidationError(
-        'The image is too large. Maximum allowed image size: 100 kB'
-      );
-      return reject(err);
-    }
-    return resolve(image);
-  })
-    .then(() => blobToDataURL(image))
-    .then(dataUrl => {
-      imageDataUrl = dataUrl;
-      return getImageDimensions(dataUrl);
-    })
-    .then(({ width, height }) => {
-      if (width > maxImageDimension || height > maxImageDimension) {
-        const err = imageValidationError(`
-          Incorrect image width and/or height. Maximum allowed image dimensions:
-          ${maxImageDimension}x${maxImageDimension}
-        `);
-        return Promise.reject(err);
-      }
-    })
-    .then(() => Promise.resolve(imageDataUrl));
-}
+const fieldErrorProperty = index => `answer${index}`;
 
 export default {
   props: {
@@ -99,7 +57,7 @@ export default {
   },
   data() {
     return {
-      fieldErrors: []
+      fieldErrors: {}
     };
   },
   computed: {
@@ -141,15 +99,19 @@ export default {
       const { dataset, files = [] } = input;
       const image = files[0];
 
-      this.resetErrorMessages(dataset.index);
+      this.deleteErrorMessages(dataset.index);
 
-      return validateImage(image)
-        .then(imageSrc => { answers[dataset.index] = imageSrc; })
+      if (!image) return;
+
+      return blobToDataURL(image)
+        .then(dataUrl => (image.dataUrl = dataUrl))
+        .then(() => validateImage(image))
+        .then(() => (answers[dataset.index] = image.dataUrl))
+        .then(() => this.update({ answers }))
         .catch(error => {
           if (!isImageValidatonError(error)) throw error;
           this.addErrorMessage(dataset.index, error.message);
-        })
-        .then(() => this.update({ answers }));
+        });
     },
     addAnswer() {
       let answers = cloneDeep(this.answers);
@@ -176,7 +138,8 @@ export default {
         delete feedback[answers.length];
       }
 
-      this.fieldErrors.splice(answerIndex, 1);
+      this.deleteErrorMessages(answerIndex);
+      this.rearrangeErrorMessagesAfterIndex(answerIndex);
 
       this.update({ answers, correct, feedback });
     },
@@ -199,18 +162,38 @@ export default {
       this.$emit('alert', error);
     },
     addErrorMessage(index, message) {
-      if (!this.fieldErrors[index]) {
-        this.fieldErrors[index] = [];
+      let property = fieldErrorProperty(index);
+      if (!this.fieldErrors[property]) {
+        this.$set(this.fieldErrors, property, []);
       }
-      if (!this.fieldErrors[index].includes(message)) {
-        this.fieldErrors[index].push(message);
+      if (!this.fieldErrors[property].includes(message)) {
+        this.fieldErrors[property].push(message);
       }
     },
     getErrorMessages(index) {
-      return this.fieldErrors[index] || [];
+      return this.fieldErrors[fieldErrorProperty(index)] || [];
     },
-    resetErrorMessages(index) {
-      this.fieldErrors[index] = [];
+    deleteErrorMessages(index) {
+      let property = fieldErrorProperty(index);
+      if (this.fieldErrors[property]) {
+        this.$delete(this.fieldErrors, fieldErrorProperty(index));
+      }
+    },
+    decrementErrorMessagesIndex(index) {
+      let errorMessages = this.fieldErrors[fieldErrorProperty(index)];
+      this.fieldErrors[fieldErrorProperty(index - 1)] = errorMessages.slice(0);
+      this.deleteErrorMessages(index);
+    },
+    rearrangeErrorMessagesAfterIndex(index) {
+      let fieldErrorKeys = Object.keys(this.fieldErrors);
+      let fieldErrorIndices = fieldErrorKeys.map(extractFieldErrorPropertyIndex);
+      let ascendingFieldErrorIndices = fieldErrorIndices.sort();
+
+      ascendingFieldErrorIndices.forEach(propertyIndex => {
+        if (!isNaN(propertyIndex) && propertyIndex > index) {
+          this.decrementErrorMessagesIndex(propertyIndex);
+        }
+      });
     }
   },
   watch: {
@@ -222,6 +205,49 @@ export default {
     }
   }
 };
+
+function getImageDimensions(imageSrc) {
+  return new Promise(resolve => {
+    let i = document.createElement('img');
+    i.onload = () => resolve({ width: i.width, height: i.height });
+    i.src = imageSrc;
+  });
+}
+
+function imageValidationError(message) {
+  const err = new Error(message);
+  err[Symbol.for('error:image-validation')] = true;
+  return err;
+}
+
+function validateImage(image) {
+  return new Promise((resolve, reject) => {
+    if (image.size > 100000) {
+      const err = imageValidationError(
+        'The image is too large. Maximum allowed image size: 100 kB'
+      );
+      return reject(err);
+    }
+    return resolve();
+  })
+    .then(() => getImageDimensions(image.dataUrl))
+    .then(({ width, height }) => {
+      if (width > maxImageDimension || height > maxImageDimension) {
+        const err = imageValidationError(`
+          Incorrect image width and/or height. Maximum allowed image dimensions:
+          ${maxImageDimension}x${maxImageDimension}
+        `);
+        return Promise.reject(err);
+      }
+    })
+    .then(() => Promise.resolve());
+}
+
+function extractFieldErrorPropertyIndex(fieldErrorProperty) {
+  let regExp = /answer(.?)/;
+  let match = regExp.exec(fieldErrorProperty);
+  return match ? parseInt(match[1], 10) : NaN;
+}
 </script>
 
 <style lang="scss" scoped>
