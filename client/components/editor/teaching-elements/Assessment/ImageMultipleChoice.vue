@@ -5,7 +5,7 @@
     <ul>
       <li v-for="answer in answers" :key="answer.key">
         <span
-          :class="{ 'has-error': getErrorMessages(answer.key).length > 0 }"
+          :class="{ 'has-error': !!vErrors.first(answer.key) }"
           class="row-content">
           <input
             :checked="correct.includes(answer.key)"
@@ -19,17 +19,18 @@
           </div>
           <div class="image-input-err">
             <input
+              v-validate
+              data-vv-as="image"
+              :data-vv-rules="imageValidationRules"
+              :accept="imageInputType"
               :data-key="answer.key"
               :disabled="disabled"
-              :accept="imageInputType"
+              :name="answer.key"
               @change="updateAnswer"
               class="form-control image-input"
               type="file">
-            <span
-              v-for="(message, index) in getErrorMessages(answer.key)"
-              :key="index"
-              class="error-msg">
-              {{ message }}
+            <span v-if="vErrors.first(answer.key)" class="error-msg">
+              {{ vErrors.first(answer.key) }}
             </span>
             <span @click="removeAnswer(answer.key)" class="mdi mdi-close control"></span>
           </div>
@@ -40,27 +41,45 @@
 </template>
 
 <script>
+import { blobToDataURL } from 'blob-util';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import find from 'lodash/find';
 import pull from 'lodash/pull';
-import { blobToDataURL } from 'blob-util';
+import { withValidation } from 'utils/validation';
 
 const maxImageDimension = 256;
-const isImageValidatonError = err => !!err[Symbol.for('error:image-validation')];
+const isImageValidationError = err => !!err[Symbol.for('error:image-validation')];
 const findByKey = (collection, key) => find(collection, { key });
 
+const maxDimensionsValidationRule = {
+  getMessage(field, [width, height], data) {
+    return (data && data.message) ||
+      `Incorrect image width and/or height. Maximum allowed image dimensions:
+      ${maxImageDimension}x${maxImageDimension}`;
+  },
+  validate(files, [width, height]) {
+    if (!files || !files[0]) {
+      return Promise.resolve(true);
+    }
+    return getImageDimensions(files[0].dataUrl)
+      .then(({ width, height }) => {
+        let valid = true;
+        if (width > maxImageDimension || height > maxImageDimension) {
+          valid = false;
+        }
+        return Promise.resolve(valid);
+      });
+  }
+};
+
 export default {
+  mixins: [withValidation()],
   props: {
     assessment: Object,
     isEditing: Boolean,
     errors: Array,
     fileInputTypes: { type: Array, default: () => ['image/jpeg', 'image/png'] }
-  },
-  data() {
-    return {
-      fieldErrors: {}
-    };
   },
   computed: {
     answers() {
@@ -77,6 +96,9 @@ export default {
     },
     imageInputType() {
       return this.fileInputTypes.join(',');
+    },
+    imageValidationRules() {
+      return `size:100|maxdimensions:${maxImageDimension},${maxImageDimension}`;
     }
   },
   methods: {
@@ -103,15 +125,17 @@ export default {
 
       return blobToDataURL(image)
         .then(dataUrl => (image.dataUrl = dataUrl))
-        .then(() => validateImage(image))
+        .then(() => this.$validator.validate(dataset.key, [image]))
+        .then(isValid => {
+          if (!isValid) return Promise.reject(imageValidationError());
+        })
         .then(() => {
           let answer = findByKey(answers, dataset.key);
           if (answer) answer.value = image.dataUrl;
         })
         .then(() => this.update({ answers }))
         .catch(error => {
-          if (!isImageValidatonError(error)) throw error;
-          this.addErrorMessage(dataset.key, error.message);
+          if (!isImageValidationError(error)) throw error;
         });
     },
     addAnswer() {
@@ -122,7 +146,7 @@ export default {
     removeAnswer(key) {
       let answers = cloneDeep(this.answers);
       let correct = cloneDeep(this.correct);
-      let feedback = cloneDeep(this.feedback);
+      let feedback = cloneDeep(this.feedback || []);
 
       pull(answers, findByKey(answers, key));
 
@@ -151,28 +175,26 @@ export default {
         };
       }
       this.$emit('alert', error);
-    },
-    addErrorMessage(answerKey, message) {
-      if (!this.fieldErrors[answerKey]) {
-        this.$set(this.fieldErrors, answerKey, []);
-      }
-      if (!this.fieldErrors[answerKey].includes(message)) {
-        this.fieldErrors[answerKey].push(message);
-      }
-    },
-    getErrorMessages(answerKey) {
-      return this.fieldErrors[answerKey] || [];
+
+      this.$validator.validateAll();
     },
     deleteErrorMessages(answerKey) {
-      if (this.fieldErrors[answerKey]) this.$delete(this.fieldErrors, answerKey);
+      const errorField = this.$validator.fields.find({ name: answerKey });
+      if (errorField) {
+        errorField.reset();
+        this.$validator.errors.remove(errorField.name, errorField.scope);
+      }
     }
+  },
+  created() {
+    this.$validator.extend('maxdimensions', maxDimensionsValidationRule);
   },
   watch: {
     assessment() {
       this.validate();
     },
     isEditing() {
-      if (!this.isEditing) this.fieldErrors = [];
+      if (!this.isEditing) this.$validator.reset();
     }
   }
 };
@@ -185,33 +207,10 @@ function getImageDimensions(imageSrc) {
   });
 }
 
-function imageValidationError(message) {
+function imageValidationError(message = '') {
   const err = new Error(message);
   err[Symbol.for('error:image-validation')] = true;
   return err;
-}
-
-function validateImage(image) {
-  return new Promise((resolve, reject) => {
-    if (image.size > 100000) {
-      const err = imageValidationError(
-        'The image is too large. Maximum allowed image size: 100 kB'
-      );
-      return reject(err);
-    }
-    return resolve();
-  })
-    .then(() => getImageDimensions(image.dataUrl))
-    .then(({ width, height }) => {
-      if (width > maxImageDimension || height > maxImageDimension) {
-        const err = imageValidationError(`
-          Incorrect image width and/or height. Maximum allowed image dimensions:
-          ${maxImageDimension}x${maxImageDimension}
-        `);
-        return Promise.reject(err);
-      }
-    })
-    .then(() => Promise.resolve());
 }
 </script>
 
@@ -307,6 +306,7 @@ ul {
   text-align: center;
   margin-top: 2%;
   color: $errorRed;
+  font-size: 1.1em;
 }
 
 .disabled {
