@@ -64,8 +64,8 @@ module.exports = {
         'data',
         'computed',
         'methods',
-        'LIFECYCLE_HOOKS',
         'watch',
+        'LIFECYCLE_HOOKS',
         ['directives', 'filters'],
         'components'
       ]
