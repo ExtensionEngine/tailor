@@ -3,35 +3,35 @@
     <h5>Answers</h5>
     <span @click="addAnswer" class="btn btn-link mdi mdi-plus pull-right"></span>
     <ul>
-      <li
-        v-for="(answer, index) in answers"
-        :key="index">
+      <li v-for="answer in answers" :key="answer.key">
         <span
-          :class="{ 'has-error': getErrorMessages(index).length > 0 }"
+          :class="{ 'has-error': getErrorMessages(answer.key).length > 0 }"
           class="row-content">
           <input
-            :checked="correct.includes(index)"
+            :checked="correct.includes(answer.key)"
             :disabled="disabled"
-            @change="toggleAnswer(index)"
+            @change="toggleAnswer(answer.key)"
             type="checkbox">
           <div class="image-container">
-            <img :src="answer || './assets/img/no-image.png'" class="image-content">
+            <img
+              :src="answer.value || './assets/img/no-image.png'"
+              class="image-content">
           </div>
           <div class="image-input-err">
             <input
-              :data-index="index"
+              :data-key="answer.key"
               :disabled="disabled"
               :accept="imageInputType"
               @change="updateAnswer"
               class="form-control image-input"
               type="file">
             <span
-              v-for="(message, index) in getErrorMessages(index)"
+              v-for="(message, index) in getErrorMessages(answer.key)"
               :key="index"
               class="error-msg">
               {{ message }}
             </span>
-            <span @click="removeAnswer(index)" class="mdi mdi-close control"></span>
+            <span @click="removeAnswer(answer.key)" class="mdi mdi-close control"></span>
           </div>
         </span>
       </li>
@@ -41,12 +41,14 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import range from 'lodash/range';
+import cuid from 'cuid';
+import find from 'lodash/find';
+import pull from 'lodash/pull';
 import { blobToDataURL } from 'blob-util';
 
 const maxImageDimension = 256;
 const isImageValidatonError = err => !!err[Symbol.for('error:image-validation')];
-const fieldErrorProperty = index => `answer${index}`;
+const findByKey = (collection, key) => find(collection, { key });
 
 export default {
   props: {
@@ -81,15 +83,11 @@ export default {
     update(data) {
       this.$emit('update', data);
     },
-    toggleAnswer(index) {
+    toggleAnswer(key) {
       let correct = cloneDeep(this.correct);
-      const position = correct.indexOf(index);
+      const position = correct.indexOf(key);
 
-      if (position < 0) {
-        correct.push(index);
-      } else {
-        correct.splice(position, 1);
-      }
+      position < 0 ? correct.push(key) : correct.splice(position, 1);
 
       this.update({ correct });
     },
@@ -99,48 +97,41 @@ export default {
       const { dataset, files = [] } = input;
       const image = files[0];
 
-      this.deleteErrorMessages(dataset.index);
+      this.deleteErrorMessages(dataset.key);
 
       if (!image) return;
 
       return blobToDataURL(image)
         .then(dataUrl => (image.dataUrl = dataUrl))
         .then(() => validateImage(image))
-        .then(() => (answers[dataset.index] = image.dataUrl))
+        .then(() => {
+          let answer = findByKey(answers, dataset.key);
+          if (answer) answer.value = image.dataUrl;
+        })
         .then(() => this.update({ answers }))
         .catch(error => {
           if (!isImageValidatonError(error)) throw error;
-          this.addErrorMessage(dataset.index, error.message);
+          this.addErrorMessage(dataset.key, error.message);
         });
     },
     addAnswer() {
       let answers = cloneDeep(this.answers);
-      answers.push('');
+      answers.push({ key: cuid(), value: '' });
       this.update({ answers });
     },
-    removeAnswer(answerIndex) {
+    removeAnswer(key) {
       let answers = cloneDeep(this.answers);
       let correct = cloneDeep(this.correct);
       let feedback = cloneDeep(this.feedback);
 
-      answers.splice(answerIndex, 1);
-      const index = correct.indexOf(answerIndex);
+      pull(answers, findByKey(answers, key));
+
+      const index = correct.indexOf(key);
       if (index !== -1) correct.splice(index, 1);
 
-      correct.forEach((it, i) => {
-        if (it >= answerIndex) correct[i] = it - 1;
-      });
+      if (feedback) pull(feedback, findByKey(feedback, key));
 
-      if (feedback) {
-        range(answerIndex, answers.length).forEach(it => {
-          feedback[it] = feedback[it + 1];
-        });
-        delete feedback[answers.length];
-      }
-
-      this.deleteErrorMessages(answerIndex);
-      this.rearrangeErrorMessagesAfterIndex(answerIndex);
-
+      this.deleteErrorMessages(key);
       this.update({ answers, correct, feedback });
     },
     hasCorrectAnswers() {
@@ -148,7 +139,7 @@ export default {
     },
     validate() {
       let error = {};
-      if (this.answers.length < 2) {
+      if (Object.keys(this.answers).length < 2) {
         error = {
           type: 'alert-danger',
           text: 'Please make at least two answers available.'
@@ -161,39 +152,19 @@ export default {
       }
       this.$emit('alert', error);
     },
-    addErrorMessage(index, message) {
-      let property = fieldErrorProperty(index);
-      if (!this.fieldErrors[property]) {
-        this.$set(this.fieldErrors, property, []);
+    addErrorMessage(answerKey, message) {
+      if (!this.fieldErrors[answerKey]) {
+        this.$set(this.fieldErrors, answerKey, []);
       }
-      if (!this.fieldErrors[property].includes(message)) {
-        this.fieldErrors[property].push(message);
-      }
-    },
-    getErrorMessages(index) {
-      return this.fieldErrors[fieldErrorProperty(index)] || [];
-    },
-    deleteErrorMessages(index) {
-      let property = fieldErrorProperty(index);
-      if (this.fieldErrors[property]) {
-        this.$delete(this.fieldErrors, fieldErrorProperty(index));
+      if (!this.fieldErrors[answerKey].includes(message)) {
+        this.fieldErrors[answerKey].push(message);
       }
     },
-    decrementErrorMessagesIndex(index) {
-      let errorMessages = this.fieldErrors[fieldErrorProperty(index)];
-      this.fieldErrors[fieldErrorProperty(index - 1)] = errorMessages.slice(0);
-      this.deleteErrorMessages(index);
+    getErrorMessages(answerKey) {
+      return this.fieldErrors[answerKey] || [];
     },
-    rearrangeErrorMessagesAfterIndex(index) {
-      let fieldErrorKeys = Object.keys(this.fieldErrors);
-      let fieldErrorIndices = fieldErrorKeys.map(extractFieldErrorPropertyIndex);
-      let ascendingFieldErrorIndices = fieldErrorIndices.sort();
-
-      ascendingFieldErrorIndices.forEach(propertyIndex => {
-        if (!isNaN(propertyIndex) && propertyIndex > index) {
-          this.decrementErrorMessagesIndex(propertyIndex);
-        }
-      });
+    deleteErrorMessages(answerKey) {
+      if (this.fieldErrors[answerKey]) this.$delete(this.fieldErrors, answerKey);
     }
   },
   watch: {
@@ -241,12 +212,6 @@ function validateImage(image) {
       }
     })
     .then(() => Promise.resolve());
-}
-
-function extractFieldErrorPropertyIndex(fieldErrorProperty) {
-  let regExp = /answer(.?)/;
-  let match = regExp.exec(fieldErrorProperty);
-  return match ? parseInt(match[1], 10) : NaN;
 }
 </script>
 

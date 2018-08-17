@@ -79,8 +79,8 @@ export const schemas = {
   }),
   IMC: yup.object().shape({
     ...baseSchema,
-    answers: yup.array().min(2).of(yup.string().trim().min(1)).required(),
-    correct: yup.array().min(1).of(yup.number()).required()
+    answers: yup.array().min(2).of(objectMap).required(),
+    correct: yup.array().min(1).of(yup.string()).required()
   }),
   NR: yup.object().shape({
     ...baseSchema,
@@ -151,11 +151,15 @@ export const defaults = {
     answers: ['', '', ''],
     correct: []
   },
-  IMC: {
-    type: 'IMC',
-    ...baseDefaults,
-    answers: ['', '', ''],
-    correct: []
+  IMC() {
+    let element = {
+      type: 'IMC',
+      ...baseDefaults,
+      answers: [],
+      correct: []
+    };
+    times(3, () => element.answers.push({ key: cuid(), value: '' }));
+    return element;
   },
   NR: {
     type: 'NR',
