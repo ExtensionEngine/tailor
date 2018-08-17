@@ -1,3 +1,5 @@
+'use strict';
+
 const { Activity, Course, User } = require('../index');
 const { SCHEMAS } = require('../../../../config/shared/activities');
 const find = require('lodash/find');

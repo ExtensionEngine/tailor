@@ -1,3 +1,5 @@
+'use strict';
+
 const crypto = require('crypto');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');

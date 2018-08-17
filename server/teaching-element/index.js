@@ -1,3 +1,5 @@
+'use strict';
+
 const ctrl = require('./te.controller');
 const model = require('./te.model');
 const processQuery = require('../shared/util/processListQuery')();

@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { isSameInstance } from 'utils/revision';
 import { mapActions, mapGetters } from 'vuex-module';
 import CircularProgress from 'components/common/CircularProgress';
 import InfiniteLoading from 'vue-infinite-loading';
@@ -41,10 +42,9 @@ export default {
     ...mapGetters(['hasMoreResults'], 'revisions'),
     bundledRevisions() {
       return reduce(this.revisions, (acc, it) => {
-        const previousRevision = last(acc);
-        const isSameEntity = previousRevision.state.id === it.state.id;
-        const isSameOperation = previousRevision.operation === it.operation;
-        if (!isSameEntity || !isSameOperation) acc.push(it);
+        const prevRevision = last(acc);
+        const isSameOperation = prevRevision.operation === it.operation;
+        if (!isSameInstance(prevRevision, it) || !isSameOperation) acc.push(it);
         return acc;
       }, [this.revisions[0]]);
     }

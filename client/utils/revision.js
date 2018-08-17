@@ -49,6 +49,10 @@ function describeCourseRevision(rev) {
   return `${getAction(rev.operation)} course`;
 }
 
+export function isSameInstance(a, b) {
+  return (a.entity === b.entity) && (a.state.id === b.state.id);
+}
+
 export function getFormatDescription(rev, activity) {
   return describe[rev.entity](rev, activity);
 }

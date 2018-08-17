@@ -1,3 +1,5 @@
+'use strict';
+
 const argv = require('minimist')(process.argv.slice(2));
 const path = require('path');
 const rcfile = require('rcfile');

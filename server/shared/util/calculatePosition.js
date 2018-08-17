@@ -1,3 +1,5 @@
+'use strict';
+
 const findIndex = require('lodash/findIndex');
 
 module.exports = function (id, index, siblings) {

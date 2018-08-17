@@ -1,3 +1,5 @@
+'use strict';
+
 const find = require('lodash/find');
 const get = require('lodash/get');
 const map = require('lodash/map');

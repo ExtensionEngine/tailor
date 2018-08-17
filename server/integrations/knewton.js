@@ -1,3 +1,5 @@
+'use strict';
+
 const { getObjectives } = require('../../config/shared/activities');
 const Excel = require('exceljs');
 const filter = require('lodash/filter');
