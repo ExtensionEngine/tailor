@@ -90,6 +90,7 @@ import TextResponse from './TextResponse';
 import TrueFalse from './TrueFalse';
 import uniq from 'lodash/uniq';
 import unset from 'lodash/unset';
+import RangeSlider from './RangeSlider';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
@@ -102,7 +103,8 @@ const ASSESSMENT_TYPES = {
   TR: 'text-response',
   FB: 'fill-blank',
   MQ: 'matching-question',
-  DD: 'drag-drop'
+  DD: 'drag-drop',
+  RS: 'range-slider'
 };
 
 export default {
@@ -243,7 +245,8 @@ export default {
     Controls,
     MatchingQuestion,
     DragDrop,
-    multiselect
+    multiselect,
+    RangeSlider
   }
 };
 </script>

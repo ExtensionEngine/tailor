@@ -17,7 +17,8 @@ export const typeInfo = {
   TF: { type: 'TF', title: 'True - false', class: 'true-false' },
   FB: { type: 'FB', title: 'Fill in the blank', class: 'fill-blank' },
   MQ: { type: 'MQ', title: 'Matching question', class: 'matching-question' },
-  DD: { type: 'DD', title: 'Drag & Drop', class: 'drag-drop' }
+  DD: { type: 'DD', title: 'Drag & Drop', class: 'drag-drop' },
+  RS: { type: 'RS', title: 'Range Slider', class: 'range-slider' }
 };
 
 export const helperText = {
@@ -117,6 +118,15 @@ export const schemas = {
       key: yup.string().required(),
       value: yup.array().of(yup.string().required()).min(1)
     })).min(1)
+  }),
+  RS: yup.object().shape({
+    ...baseSchema,
+    range: yup.object().shape({
+      min: yup.number().required(),
+      max: yup.number().required(),
+      interval: yup.number().required()
+    }),
+    correct: yup.array().of(yup.number().min(2)).required()
   })
 };
 
@@ -172,6 +182,12 @@ export const defaults = {
     type: 'FB',
     ...baseDefaults,
     correct: []
+  },
+  RS: {
+    type: 'RS',
+    ...baseDefaults,
+    range: {min: 0, max: 100, interval: 1},
+    correct: [0, 100]
   },
   MQ() {
     let element = {
