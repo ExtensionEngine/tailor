@@ -3,7 +3,7 @@
     <h5>Answers</h5>
     <span @click="addAnswer" class="btn btn-link mdi mdi-plus pull-right"></span>
     <ul>
-      <li v-for="answer in answers" :key="answer.key">
+      <li v-for="answer in answers" :key="answer.key" class="answer-row">
         <span
           :class="{ 'has-error': !!vErrors.first(answer.key) }"
           class="row-content">
@@ -11,11 +11,11 @@
             :checked="correct.includes(answer.key)"
             :disabled="disabled"
             @change="toggleAnswer(answer.key)"
-            type="checkbox">
+            type="checkbox"/>
           <div class="image-container">
             <img
               :src="answer.value || './assets/img/no-image.png'"
-              class="image-content">
+              class="image-content"/>
           </div>
           <div class="image-input-err">
             <input
@@ -26,14 +26,21 @@
               :data-key="answer.key"
               :disabled="disabled"
               :name="answer.key"
+              :ref="`${answer.key}_file_input`"
               @change="updateAnswer"
-              class="form-control image-input"
-              type="file">
-            <span v-if="vErrors.first(answer.key)" class="error-msg">
-              {{ vErrors.first(answer.key) }}
-            </span>
-            <span @click="removeAnswer(answer.key)" class="mdi mdi-close control"></span>
+              class="image-input"
+              type="file"/>
+            <button
+              @click="$refs[`${answer.key}_file_input`][0].click();"
+              class="btn btn-material btn-primary"
+              type="button">
+              Upload image...
+            </button>
+              <span v-if="vErrors.first(answer.key)" class="error-msg">
+                {{ vErrors.first(answer.key) }}
+              </span>
           </div>
+          <span @click="removeAnswer(answer.key)" class="mdi mdi-close control"></span>
         </span>
       </li>
     </ul>
@@ -265,15 +272,16 @@ ul {
     min-width: $imageContainerDimension;
     min-height: $imageContainerDimension;
     margin-right: 5%;
+    margin-bottom: 5px;
     border: 1px solid #ccc;
     vertical-align: middle;
   }
 
   &-input {
-    display: inline-block;
+    display: none;
 
     &-err {
-      vertical-align: middle;
+      vertical-align: text-top;
     }
   }
 
@@ -285,6 +293,10 @@ ul {
     max-width: 100%;
     max-height: 100%;
   }
+}
+
+.answer-row {
+  text-align: left;
 }
 
 .row-content {
