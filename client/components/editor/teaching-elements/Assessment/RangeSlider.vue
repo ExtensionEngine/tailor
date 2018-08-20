@@ -1,10 +1,10 @@
 <template>
-<div id="main">
-  <div id="settings">
+<div class="main">
+  <div class="settings">
     <div class="col-xs-4">
       <input
         :disabled="!isEditing"
-        @focusout="setValues('min', $event.target.value)"
+        @focusout="setValues('min', $event.target)"
         type="text"
         name="min"
         placeholder="Min..."
@@ -14,7 +14,7 @@
     <div class="col-xs-4">
       <input
         :disabled="!isEditing"
-        @focusout="setValues('max', $event.target.value)"
+        @focusout="setValues('max', $event.target)"
         type="text"
         name="max"
         placeholder="Max..."
@@ -24,7 +24,7 @@
     <div class="col-xs-4">
       <input
         :disabled="!isEditing"
-        @focusout="setValues('interval', $event.target.value)"
+        @focusout="setValues('interval', $event.target)"
         type="text"
         name="interval"
         placeholder="Interval..."
@@ -32,7 +32,7 @@
         class="form-control">
     </div>
   </div>
-  <div id="slider">
+  <div class="slider-container">
     <input
       :disabled="!isEditing"
       v-model="includeMin"
@@ -45,7 +45,8 @@
       v-model="value"
       v-bind="options"
       @input="update()"
-      ref="slider">
+      ref="slider"
+      class="slider">
       <div slot="label" slot-scope="{ label }" class="custom-label">
         <span v-if="(label === options.min || label === options.max)">
           {{ label }}
@@ -75,7 +76,12 @@ import toNumber from 'lodash/toNumber';
 
 // JS native modulo returns wrong result for decimal divisors
 const modulo = (c, m) => ((100 * c) % (100 * m)) / 100;
-const focus = (name) => document.getElementsByName(name)[0].focus();
+
+const sliderConfig = {
+  width: '90%',
+  useKeyboard: true,
+  piecewiseLabel: true
+};
 
 export default {
   props: {
@@ -83,114 +89,108 @@ export default {
     isEditing: Boolean
   },
   data() {
+    const range = get(this.assessment, 'range', {});
+    const correct = get(this.assessment, 'correct', []);
     return {
-      value: [],
+      value: [correct[0], correct[1]],
       options: {
-        processStyle: {
-          backgroundImage: '-webkit-linear-gradient(left, #5cb85c, #3498db)'
-        },
-        width: '90%',
-        useKeyboard: true,
-        min: null,
-        max: null,
-        piecewiseLabel: true
+        ...sliderConfig,
+        min: range.min,
+        max: range.max,
+        interval: range.interval
       },
       includeMin: true,
       includeMax: true,
       feedback: []
     };
   },
-  created() {
-    this.value = [this.correct[0], this.correct[1]];
-    this.options.min = this.range.min;
-    this.options.max = this.range.max;
-    this.options.interval = this.range.interval;
-  },
   computed: {
-    correct() {
-      return get(this.assessment, 'correct', []);
+    correctMin() {
+      return this.value[0];
     },
-    range() {
-      return get(this.assessment, 'range', {});
+    correctMax() {
+      return this.value[1];
     }
   },
   methods: {
-    setValues(name, value) {
+    setValues(name, el) {
       this.feedback = [];
+      let value = el.value;
       if (!value) return;
       value = toNumber(value);
       if (isNaN(value)) {
         this.feedback.push('Invalid input.');
-        return focus(name);
+        return el.focus();
       }
       switch (name) {
         case 'min':
-          this.setMin(value);
+          this.setMin(value, el);
           break;
         case 'max':
-          this.setMax(value);
+          this.setMax(value, el);
           break;
         case 'interval':
-          this.setInterval(value);
+          this.setInterval(value, el);
           break;
       }
       this.update();
     },
-    setMin(value) {
-      let slider = this.$refs.slider;
-      if (modulo(value - this.options.min, this.options.interval)) {
+    setMin(value, el) {
+      // TODO: move interval check into separate function
+      if (modulo(this.options.max - value, this.options.interval)) {
         this.feedback.push('Invalid minimum for specified interval.');
-        return focus('min');
+        return el.focus();
       }
       if (value >= this.options.max) {
         this.feedback.push('Minimum value cannot be equal to or greater than the maximum value.');
-        return focus('min');
+        return el.focus();
       }
-      if (value > this.value[0]) {
-        if (value > this.value[1]) {
-          slider.setValue([value, this.options.max]);
-        } else {
-          slider.setValue([value, this.value[1]]);
-        }
+      if (value <= this.correctMin) {
         this.options.min = value;
+        return;
+      }
+      if (value > this.correctMax) {
+        this.value = [value, this.options.max];
       } else {
-        this.options.min = value;
+        this.value = [value, this.correctMax];
       }
+      this.options.min = value;
     },
-    setMax(value) {
-      let slider = this.$refs.slider;
+    setMax(value, el) {
+      // interval check
       if (modulo(value - this.options.min, this.options.interval)) {
         this.feedback.push('Invalid maximum for specified interval.');
-        return focus('max');
+        return el.focus();
       }
       if (value <= this.options.min) {
         this.feedback.push('Maximum value cannot be equal to or less than the minimum value.');
-        return focus('max');
+        return el.focus();
       }
-      if (value < this.value[1]) {
-        if (value < this.value[0]) {
-          slider.setValue([this.options.min, value]);
-        } else {
-          slider.setValue([this.value[0], value]);
-        }
+      if (value >= this.correctMax) {
         this.options.max = value;
+        return;
+      }
+      if (value < this.correctMin) {
+        this.value = [this.options.min, value];
       } else {
-        this.options.max = value;
+        this.value = [this.correctMin, value];
       }
+      this.options.max = value;
     },
-    setInterval(value) {
+    setInterval(value, el) {
+      // interval check
       if (modulo(this.options.max - this.options.min, value) !== 0) {
         this.feedback.push('Invalid interval for specified range.');
-        return focus('interval');
+        return el.focus();
       }
       this.options.interval = value;
     },
     update() {
-      let {min, max, interval} = this.options;
-      let range = {min, max, interval};
-      let correct = [
-        (this.includeMin) ? this.value[0] : (this.value[0] + 1),
-        (this.includeMax) ? this.value[1] : (this.value[1] - 1)
+      const {min, max, interval} = this.options;
+      const range = {min, max, interval};
+      const correct = [
+        (this.includeMin) ? this.correctMin : (this.correctMin + 1),
+        (this.includeMax) ? this.correctMax : (this.correctMax - 1)
       ];
       this.$emit('update', {range, correct});
     }
@@ -202,27 +202,37 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#main {
+.main {
   margin-bottom: 10px;
 }
-#settings {
+
+.settings {
   margin-bottom: 10px;
   height: 75px;
 }
-#slider {
+
+.slider-container {
   display: flex;
 }
+
 .vue-slider-component {
   margin: 0 auto;
 }
+
 .include-flag {
   transform: scale(0.9);
 }
+
 .custom-label {
   margin-top: 15px;
 }
+
 .has-error {
   margin-top: 30px;
   padding: 0 15px;
+}
+
+.slider /deep/ .vue-slider-process {
+  background: linear-gradient(left, #5cb85c, #3498db);
 }
 </style>
