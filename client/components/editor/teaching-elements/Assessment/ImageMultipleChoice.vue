@@ -136,7 +136,8 @@ export default {
         .then(() => this.update({ answers }))
         .catch(error => {
           if (!isImageValidationError(error)) throw error;
-        });
+        })
+        .then(() => (input.value = null));
     },
     addAnswer() {
       let answers = cloneDeep(this.answers);
@@ -192,9 +193,6 @@ export default {
   watch: {
     assessment() {
       this.validate();
-    },
-    isEditing() {
-      if (!this.isEditing) this.$validator.reset();
     }
   }
 };
