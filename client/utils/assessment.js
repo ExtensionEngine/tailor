@@ -186,7 +186,7 @@ export const defaults = {
   RS: {
     type: 'RS',
     ...baseDefaults,
-    range: {min: 0, max: 100, interval: 1},
+    range: {min: 0, max: 100, step: 1},
     correct: [0, 100]
   },
   MQ() {
