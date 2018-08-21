@@ -73,6 +73,15 @@ const getIndex = ({id}) => Number(invoke(id, 'substring', idPrefix.length));
 const firstOrRef = (col) => (first(col) || col);
 const lastOrRef = (col) => (last(col) || col);
 
+const STATUS = {
+  NOT_WORD: 'not-word',
+  LAST: 'last',
+  UNSELECTED: 'unselected',
+  SINGLE_SELECTED: 'single-selected',
+  FIRST_SELECTED: 'first-selected',
+  SELECTED: 'selected'
+};
+
 export default {
   name: 'SelectionNode',
   props: {
@@ -90,45 +99,40 @@ export default {
       }, []);
     },
     nodeGroups() {
-      let group = { type: '', nodes: [] };
       return reduce(this.nodes, (groups, node) => {
         const status = this.getNodeSelectionStatus(node);
         const selection = this.getNodeSelection(node);
+        const group = last(groups);
         switch (status) {
-          case 'not-word':
+          case STATUS.NOT_WORD:
             group.nodes.push(node);
-            break;
-          case 'last':
-            group.nodes.push(node);
-            group.type = 'unselected';
-            groups.push(group);
-            break;
-          case 'unselected':
+            return groups;
+          case STATUS.LAST:
             group.nodes.push(node);
             group.type = 'unselected';
-            groups.push(group);
-            group = { type: '', nodes: [] };
-            break;
-          case 'single-selected':
+            return groups;
+          case STATUS.UNSELECTED:
+            group.nodes.push(node);
             group.type = 'unselected';
-            groups.push(group);
+            groups.push({ nodes: [] });
+            return groups;
+          case STATUS.SINGLE_SELECTED:
+            group.type = 'unselected';
             groups.push({ type: 'selected', nodes: [node], selection });
-            group = { type: '', nodes: [] };
-            break;
-          case 'first-selected':
+            groups.push({ nodes: [] });
+            return groups;
+          case STATUS.FIRST_SELECTED:
             group.type = 'unselected';
-            groups.push(group);
-            group = { type: '', nodes: [node] };
-            break;
+            groups.push({ nodes: [node] });
+            return groups;
           default:
-            group.type = 'selected';
             group.nodes.push(node);
-            groups.push({ ...group, selection });
-            group = { type: '', nodes: [] };
-            break;
+            group.type = 'selected';
+            group.selection = selection;
+            groups.push({ nodes: [] });
+            return groups;
         }
-        return groups;
-      }, []);
+      }, [{ nodes: [] }]);
     }
   },
   methods: {
@@ -162,19 +166,19 @@ export default {
     },
     getNodeSelectionStatus(node) {
       const {id} = node;
-      const isLast = node === last(this.nodes);
+      const isLastNode = node === last(this.nodes);
       const index = getIndex(node);
       const selection = this.getNodeSelection(node);
       const isFirst = index === firstOrRef(selection);
-      if (!id && !isLast) return 'not-word';
-      if (!id && isLast) return 'last';
-      if (isUndefined(selection) && !isLast) return 'unselected';
-      if (isUndefined(selection) && isLast) return 'last';
-      if (isNumber(selection)) return 'single-selected';
-      if (isFirst && last(this.wordIndexes) === index) return 'single-selected';
-      if (isFirst) return 'first-selected';
-      if (index === last(selection)) return 'last-selected';
-      return 'selected';
+      const isLastWord = last(this.wordIndexes) === index;
+      if (!id && !isLastNode) return STATUS.NOT_WORD;
+      if (!id && isLastNode) return STATUS.LAST;
+      if (isUndefined(selection) && !isLastNode) return STATUS.UNSELECTED;
+      if (isUndefined(selection) && isLastNode) return STATUS.LAST;
+      if (isNumber(selection)) return STATUS.SINGLE_SELECTED;
+      if (isFirst && isLastWord) return STATUS.SINGLE_SELECTED;
+      if (isFirst) return STATUS.FIRST_SELECTED;
+      return STATUS.SELECTED;
     },
     addSelection(node, selection) {
       const selectionExists = !isUndefined(selection);

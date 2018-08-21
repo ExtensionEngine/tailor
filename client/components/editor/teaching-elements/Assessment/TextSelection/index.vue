@@ -85,18 +85,13 @@ export default {
     blastedContent() {
       if (isEmpty(this.text)) return null;
       const $ = window.jQuery;
-      const id = 'textContent';
       const container = document.createElement('div');
       const options = {
         customClass: 'text-content',
         generateIndexID: true
       };
-      container.setAttribute('hidden', '');
-      container.setAttribute('id', id);
       container.innerHTML = this.text;
-      document.body.appendChild(container);
-      $(`div#${id}`).blast(options);
-      document.body.removeChild(container);
+      $(container).blast(options);
       return container;
     }
   },
