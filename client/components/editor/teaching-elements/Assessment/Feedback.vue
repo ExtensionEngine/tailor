@@ -10,16 +10,23 @@
     </span>
     <transition name="fade">
       <ul v-if="isExpanded">
-        <li v-for="(answer, index) in processedAnswers">
+        <li
+          v-for="(answer, index) in processedAnswers"
+          :key="getAnswerIndex(answer, index)">
           <div>
-            <span class="answer-index">Answer {{ index + 1 }}:</span>
-            {{ answer }}
+            <div v-if="answer.value" class="dead-center-img-container">
+              <img :src="answer.value" class="dead-center-img"/>
+            </div>
+            <span v-else>
+              <span class="answer-index">Answer {{ index + 1 }}:</span>
+              {{ answer }}
+            </span>
           </div>
           <textarea
-            :ref="'option' + index"
-            :value="feedback ? feedback[index] : ''"
+            :ref="getAnswerRef(answer, index)"
+            :value="feedback ? feedback[getAnswerIndex(answer, index)] : ''"
             :disabled="!isEditing"
-            @change="update(index)"
+            @change="update(answer, index)"
             class="form-control">
           </textarea>
         </li>
@@ -49,9 +56,17 @@ export default {
     }
   },
   methods: {
-    update(index) {
-      let data = { [index]: this.$refs[`option${index}`][0].value };
+    update(answer, index) {
+      let answerIndex = this.getAnswerIndex(answer, index);
+      let answerRef = this.getAnswerRef(answer, index);
+      let data = { [answerIndex]: this.$refs[answerRef][0].value };
       this.$emit('update', data);
+    },
+    getAnswerRef(answer, index) {
+      return answer.key || `option${index}`;
+    },
+    getAnswerIndex(answer, index) {
+      return answer.key || index;
     }
   },
   watch: {
@@ -99,6 +114,12 @@ li {
     margin: 10px 0;
     resize: none;
   }
+}
+
+.dead-center-img-container {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #ccc;
 }
 
 .fade-enter-active {

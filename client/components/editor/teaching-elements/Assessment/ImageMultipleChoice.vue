@@ -12,10 +12,10 @@
             :disabled="disabled"
             @change="toggleAnswer(answer.key)"
             type="checkbox"/>
-          <div class="image-container">
+          <div class="dead-center-img-container">
             <img
               :src="answer.value || './assets/img/no-image.png'"
-              class="image-content"/>
+              class="dead-center-img"/>
           </div>
           <div class="image-input-err">
             <input
@@ -40,7 +40,8 @@
                 {{ vErrors.first(answer.key) }}
               </span>
           </div>
-          <span @click="removeAnswer(answer.key)" class="mdi mdi-close control"></span>
+          <span @click="removeAnswer(answer.key)" class="mdi mdi-close control">
+          </span>
         </span>
       </li>
     </ul>
@@ -154,7 +155,7 @@ export default {
     removeAnswer(key) {
       let answers = cloneDeep(this.answers);
       let correct = cloneDeep(this.correct);
-      let feedback = cloneDeep(this.feedback || []);
+      let feedback = cloneDeep(this.feedback);
 
       pull(answers, findByKey(answers, key));
 
@@ -266,32 +267,19 @@ ul {
   }
 }
 
-.image {
-  &-container {
-    position: relative;
-    min-width: $imageContainerDimension;
-    min-height: $imageContainerDimension;
-    margin-right: 5%;
-    margin-bottom: 5px;
-    border: 1px solid #ccc;
-    vertical-align: middle;
-  }
+.dead-center-img-container {
+  margin-right: 5%;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+}
 
+.image {
   &-input {
     display: none;
 
     &-err {
       vertical-align: text-top;
     }
-  }
-
-  &-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    max-width: 100%;
-    max-height: 100%;
   }
 }
 

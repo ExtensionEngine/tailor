@@ -133,7 +133,7 @@ export default {
     },
     showFeedback() {
       const assessmentType = this.element.data.type;
-      const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
+      const feedbackSupported = ['MC', 'IMC', 'SC', 'TF'].includes(assessmentType);
       return !this.summative && feedbackSupported;
     },
     examObjectives() {
