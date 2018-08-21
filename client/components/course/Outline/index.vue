@@ -1,8 +1,8 @@
 <template>
-  <div class="outline">
+  <div class="outline-page">
     <circular-progress v-if="showLoader"/>
-    <div v-else class="activities-container">
-      <div class="activity-list">
+    <div v-else class="outline">
+      <div class="activity-container">
         <activity
           v-for="(activity, index) in topLevelActivities"
           v-bind="activity"
@@ -10,8 +10,8 @@
           :index="index + 1"
           :level="1"
           :activities="activities"/>
+        <no-activities v-if="!topLevelActivities.length"/>
       </div>
-      <no-activities v-if="!topLevelActivities.length"/>
       <sidebar/>
     </div>
   </div>
@@ -43,7 +43,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.outline {
+.outline-page {
   height: 100%;
 
   .circular-progress {
@@ -51,13 +51,13 @@ export default {
   }
 }
 
-.activities-container {
+.outline {
   position: relative;
   height: 100%;
   padding-right: 420px;
 }
 
-.activity-list {
+.activity-container {
   width: 100%;
   height: 100%;
   float: left;

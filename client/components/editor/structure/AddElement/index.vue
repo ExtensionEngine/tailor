@@ -32,7 +32,7 @@ export default {
   name: 'add-element',
   props: {
     activity: { type: Object, required: true },
-    position: { type: Number, required: true },
+    position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
     include: { type: Array, default: null }
   },

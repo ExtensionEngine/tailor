@@ -22,8 +22,7 @@
     <select-assessment
       v-if="showAssessments"
       :exclude="assessmentFilter"
-      @selected="setSubtype">
-    </select-assessment>
+      @selected="setSubtype"/>
   </div>
 </template>
 
@@ -52,7 +51,6 @@ const TE_TYPES = [
 ];
 
 const ELEMENTS_PER_ROW = 6;
-const firstType = items => get(first(items), 'type');
 
 export default {
   name: 'select-element',
@@ -73,9 +71,7 @@ export default {
     },
     elements() {
       if (!this.include) return TE_TYPES;
-      let items = filter(TE_TYPES, it => includes(this.include, it.type));
-      if (firstType(items) === 'ASSESSMENT') this.type = 'ASSESSMENT';
-      return items;
+      return filter(TE_TYPES, it => includes(this.include, it.type));
     },
     showAssessments() {
       return this.type === 'ASSESSMENT';
@@ -108,6 +104,11 @@ export default {
     },
     close() {
       this.type = null;
+    }
+  },
+  created() {
+    if (get(first(this.elements), 'type') === 'ASSESSMENT') {
+      this.type = 'ASSESSMENT';
     }
   },
   components: { SelectAssessment }
