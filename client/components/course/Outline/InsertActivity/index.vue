@@ -21,7 +21,7 @@
       </activity-browser>
       <create-activity
         v-else
-        :parent="parent"
+        :parent="anchor"
         :supportedLevels="supportedLevels"
         @create="executeAction"
         @close="hide">
@@ -46,7 +46,7 @@ import SelectAction from './SelectAction';
 
 export default {
   props: {
-    parent: { type: Object, default: null }
+    anchor: { type: Object, required: true }
   },
   data() {
     return {
@@ -58,9 +58,8 @@ export default {
     ...mapGetters(['activities']),
     ...mapGetters(['structure'], 'course'),
     supportedLevels() {
-      if (!this.parent) return filter(this.structure, { level: 1 });
-      const grandParent = getParent(this.activities, this.parent);
-      const { subLevels = [] } = find(this.structure, { type: this.parent.type });
+      const grandParent = getParent(this.activities, this.anchor);
+      const { subLevels = [] } = find(this.structure, { type: this.anchor.type });
       const sameLevel = grandParent
         ? get(find(this.structure, { type: grandParent.type }), 'subLevels', [])
         : map(filter(this.structure, { level: 1 }), 'type');
@@ -85,22 +84,22 @@ export default {
           type: activity.type
         };
       }
-      activity.courseId = this.parent.courseId;
+      activity.courseId = this.anchor.courseId;
       activity.parentId = this.resolveParent(activity);
       activity.position = this.calculatePosition(activity);
       this[this.action](activity);
-      if (this.parent.type !== activity.type) this.$emit('expand');
+      if (this.anchor.type !== activity.type) this.$emit('expand');
       this.hide();
     },
     isSameLevel(activity) {
-      return getLevel(activity.type).level === getLevel(this.parent.type).level;
+      return getLevel(activity.type).level === getLevel(this.anchor.type).level;
     },
     resolveParent(activity) {
-      return this.isSameLevel(activity) ? this.parent.parentId : this.parent.id;
+      return this.isSameLevel(activity) ? this.anchor.parentId : this.anchor.id;
     },
     calculatePosition(activity) {
       const items = getOutlineChildren(this.activities, activity.parentId);
-      const newPosition = findIndex(items, { id: this.parent.id });
+      const newPosition = findIndex(items, { id: this.anchor.id });
       const isFirstChild = !this.isSameLevel(activity) || newPosition === -1;
       const context = { items, newPosition, isFirstChild, insert: true };
       return calculatePosition(context);

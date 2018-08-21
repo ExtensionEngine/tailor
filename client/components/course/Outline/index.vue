@@ -1,9 +1,18 @@
 <template>
-  <div class="activities-container">
-    <circular-progress v-if="showLoader"></circular-progress>
-    <div v-else class="activities">
-      <activity :level="0" :activities="activities" class="outline"></activity>
-      <sidebar></sidebar>
+  <div class="outline">
+    <circular-progress v-if="showLoader"/>
+    <div v-else class="activities-container">
+      <div class="activity-list">
+        <activity
+          v-for="(activity, index) in topLevelActivities"
+          v-bind="activity"
+          :key="activity._cid"
+          :index="index + 1"
+          :level="1"
+          :activities="activities"/>
+      </div>
+      <no-activities v-if="!topLevelActivities.length"/>
+      <sidebar/>
     </div>
   </div>
 </template>
@@ -12,23 +21,29 @@
 import { mapGetters } from 'vuex-module';
 import Activity from './Activity';
 import CircularProgress from 'components/common/CircularProgress';
+import filter from 'lodash/filter';
+import map from 'lodash/map';
+import NoActivities from './NoActivities';
 import Sidebar from '../Sidebar';
 
 export default {
   props: {
     showLoader: { type: Boolean, default: false }
   },
-  computed: mapGetters(['activities'], 'course'),
-  components: {
-    Activity,
-    CircularProgress,
-    Sidebar
-  }
+  computed: {
+    ...mapGetters(['activities', 'structure'], 'course'),
+    topLevelActivities() {
+      const types = map(filter(this.structure, { level: 1 }), 'type');
+      return filter(this.activities, it => types.includes(it.type))
+        .sort((x, y) => x.position - y.position);
+    }
+  },
+  components: { Activity, CircularProgress, NoActivities, Sidebar }
 };
 </script>
 
 <style lang="scss" scoped>
-.activities-container {
+.outline {
   height: 100%;
 
   .circular-progress {
@@ -36,22 +51,24 @@ export default {
   }
 }
 
-.activities {
+.activities-container {
   position: relative;
   height: 100%;
   padding-right: 420px;
 }
 
-.outline {
+.activity-list {
   width: 100%;
   height: 100%;
   float: left;
   padding: 80px 60px 0;
   overflow-y: scroll;
   overflow-y: overlay;
-}
 
-.outline /deep/ > :last-child {
-  margin-bottom: 120px;
+  /deep/ {
+    > :last-child {
+      margin-bottom: 120px;
+    }
+  }
 }
 </style>
