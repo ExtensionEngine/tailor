@@ -31,7 +31,7 @@ import SelectWidth from './SelectWidth';
 export default {
   name: 'add-element',
   props: {
-    activity: { type: Object, required: true },
+    activity: { type: Object, default: null },
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
     include: { type: Array, default: null }
