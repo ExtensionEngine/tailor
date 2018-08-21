@@ -1,8 +1,8 @@
 <template>
   <div :class="{ preview }" class="form-group text-editor">
     <textarea
-      v-model.trim="content"
       v-focus.lazy="focused"
+      v-model.trim="content"
       :placeholder="placeholder"
       @keydown.shift.enter.exact="() => {}"
       @keydown.enter.exact.prevent="onEnter"

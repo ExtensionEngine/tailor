@@ -139,40 +139,40 @@ const baseDefaults = {
 };
 
 export const defaults = {
-  MC: {
+  MC: () => ({
     type: 'MC',
     ...baseDefaults,
     answers: ['', '', ''],
     correct: []
-  },
-  NR: {
+  }),
+  NR: () => ({
     type: 'NR',
     ...baseDefaults,
     prefixes: [''],
     suffixes: [''],
     correct: ['']
-  },
-  SC: {
+  }),
+  SC: () => ({
     type: 'SC',
     ...baseDefaults,
     answers: ['', ''],
     correct: ''
-  },
-  TR: {
+  }),
+  TR: () => ({
     type: 'TR',
     ...baseDefaults,
     correct: ''
-  },
-  TF: {
+  }),
+  TF: () => ({
     type: 'TF',
     ...baseDefaults,
     correct: null
-  },
-  FB: {
+  }),
+  FB: () => ({
     type: 'FB',
     ...baseDefaults,
     correct: []
-  },
+  }),
   MQ() {
     let element = {
       type: 'MQ',

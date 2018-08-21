@@ -10,7 +10,7 @@
     <div v-else>
       <select-action
         v-if="!action"
-        @selected="action => (this.action = action)"
+        @selected="selected => (action = selected)"
         @close="hide">
       </select-action>
       <activity-browser
@@ -45,7 +45,9 @@ import map from 'lodash/map';
 import SelectAction from './SelectAction';
 
 export default {
-  props: ['parent'],
+  props: {
+    parent: { type: Object, default: null }
+  },
   data() {
     return {
       showInput: false,

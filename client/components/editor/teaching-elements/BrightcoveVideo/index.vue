@@ -14,8 +14,8 @@
         <div class="message">Double click to preview</div>
       </div>
       <brightcove-player
-        v-bind="config"
         ref="player"
+        v-bind="config"
         class="player">
       </brightcove-player>
     </div>
@@ -28,7 +28,10 @@ import get from 'lodash/get';
 
 export default {
   name: 'te-brightcove-video',
-  props: ['element', 'isFocused'],
+  props: {
+    element: { type: Object, required: true },
+    isFocused: { type: Boolean, default: false }
+  },
   computed: {
     showPlaceholder() {
       const config = this.config;

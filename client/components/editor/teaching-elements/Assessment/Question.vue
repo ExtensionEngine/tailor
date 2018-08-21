@@ -39,9 +39,9 @@ const appChannel = EventBus.channel('app');
 export default {
   name: 'question',
   props: {
-    assessment: Object,
-    isEditing: Boolean,
-    errors: Array
+    assessment: { type: Object, required: true },
+    errors: { type: Array, default: () => ([]) },
+    isEditing: { type: Boolean, default: false }
   },
   computed: {
     helperText() {

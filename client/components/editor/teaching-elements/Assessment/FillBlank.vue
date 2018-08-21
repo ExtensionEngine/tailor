@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasAnswers" :class="{ 'disabled': disabled }">
+  <div v-if="hasAnswers" :class="{ disabled }">
     <h5>Answers</h5>
     <draggable :list="answerGroups" :options="dragOptions" @update="update">
       <div v-for="(answers, i) in answerGroups" :key="i" class="answer-group">
@@ -17,7 +17,10 @@
           class="mdi mdi-delete btn btn-link pull-right">
         </span>
         <ul>
-          <li v-for="(answer, j) in answers" :class="errorClass(i, j)">
+          <li
+            v-for="(answer, j) in answers"
+            :key="`${i}.${j}`"
+            :class="errorClass(i, j)">
             <input
               v-model="answers[j]"
               :disabled="disabled"
@@ -33,6 +36,7 @@
 </template>
 
 <script>
+import { defaults } from 'utils/assessment';
 import debounce from 'lodash/debounce';
 import draggable from 'vuedraggable';
 import filter from 'lodash/filter';
@@ -49,9 +53,9 @@ const ALERT = {
 
 export default {
   props: {
-    assessment: Object,
-    errors: Array,
-    isEditing: Boolean
+    assessment: { type: Object, default: defaults.FB },
+    errors: { type: Array, default: () => ([]) },
+    isEditing: { type: Boolean, default: false }
   },
   computed: {
     question() {

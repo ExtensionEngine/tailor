@@ -23,14 +23,13 @@
         @expand="toggleActivity({ _cid: activity._cid, expanded: true })">
       </insert-activity>
     </div>
-    <div v-if="!isCollapsed(this.activity) && hasChildren">
+    <div v-if="!isCollapsed(activity) && hasChildren">
       <draggable :list="children" :options="dragOptions" @update="reorder">
         <activity
           v-for="(it, index) in children"
           :key="it._cid"
           :id="it.id"
           :_cid="it._cid"
-          :position="it.position"
           :index="index"
           :level="isRoot ? 1 : level + 1"
           :class="{ 'sub-activity': name }"
@@ -56,7 +55,14 @@ import values from 'lodash/values';
 
 export default {
   name: 'activity',
-  props: ['_cid', 'id', 'position', 'level', 'activities', 'activity', 'index'],
+  props: {
+    activity: { type: Object, default: null },
+    index: { type: Number, default: null },
+    _cid: { type: String, default: null },
+    id: { type: Number, default: null },
+    level: { type: Number, required: true },
+    activities: { type: Array, default: () => ([]) }
+  },
   data() {
     return {
       dragOptions: { handle: '.activity' }

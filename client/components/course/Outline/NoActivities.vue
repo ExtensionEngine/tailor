@@ -6,8 +6,8 @@
           :class="{ 'has-error': vErrors.has('name') }"
           class="form-group">
           <input
-            v-model="name"
             v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+            v-model="name"
             class="form-control"
             type="text"
             name="name"
@@ -38,11 +38,11 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { withValidation } from 'utils/validation';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import multiselect from '../common/Select';
-import { withValidation } from 'utils/validation';
+import multiselect from '../../common/Select';
 
 export default {
   mixins: [withValidation()],

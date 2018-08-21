@@ -23,7 +23,10 @@ import { quillEditor } from 'vue-quill-editor';
 
 export default {
   name: 'table-cell',
-  props: ['element', 'disabled'],
+  props: {
+    element: { type: Object, required: true },
+    disabled: { type: Boolean, default: false }
+  },
   data() {
     return {
       content: get(this.element, 'data.content', ''),

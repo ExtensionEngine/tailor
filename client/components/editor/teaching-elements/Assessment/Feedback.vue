@@ -10,7 +10,9 @@
     </span>
     <transition name="fade">
       <ul v-if="isExpanded">
-        <li v-for="(answer, index) in processedAnswers">
+        <li
+          v-for="(answer, index) in processedAnswers"
+          :key="index">
           <div>
             <span class="answer-index">Answer {{ index + 1 }}:</span>
             {{ answer }}
@@ -34,9 +36,9 @@ import isArray from 'lodash/isArray';
 export default {
   name: 'feedback',
   props: {
-    answers: [Array, Boolean],
-    feedback: Object,
-    isEditing: Boolean
+    answers: { type: [Array, Boolean], default: null },
+    feedback: { type: Object, default: () => ({}) },
+    isEditing: { type: Boolean, default: false }
   },
   data() {
     return {

@@ -55,12 +55,21 @@ const options = {
 
 export default {
   name: 'te-html',
-  props: ['element', 'isFocused'],
+  props: {
+    element: { type: Object, required: true },
+    isFocused: { type: Boolean, default: false }
+  },
   data() {
     return {
       content: get(this.element, 'data.content', ''),
       options
     };
+  },
+  computed: {
+    hasChanges() {
+      const previousValue = get(this.element, 'data.content', '');
+      return previousValue !== this.content;
+    }
   },
   methods: {
     onQuillReady(quill) {
@@ -72,12 +81,6 @@ export default {
     save() {
       if (!this.hasChanges) return;
       this.$emit('save', { content: this.content });
-    }
-  },
-  computed: {
-    hasChanges() {
-      const previousValue = get(this.element, 'data.content', '');
-      return previousValue !== this.content;
     }
   },
   watch: {

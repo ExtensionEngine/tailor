@@ -3,7 +3,9 @@
     <h5>Answers</h5>
     <span @click="addAnswer" class="btn btn-link mdi mdi-plus pull-right"></span>
     <ul>
-      <li v-for="(answer, index) in answers">
+      <li
+        v-for="(answer, index) in answers"
+        :key="index">
         <span :class="{ 'has-error': !hasCorrectAnswers }">
           <input
             :checked="correct.includes(index)"
@@ -27,6 +29,7 @@
 </template>
 
 <script>
+import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import range from 'lodash/range';
 
@@ -37,9 +40,9 @@ const customAlert = {
 
 export default {
   props: {
-    assessment: Object,
-    isEditing: Boolean,
-    errors: Array
+    assessment: { type: Object, default: defaults.MC },
+    errors: { type: Array, default: () => ([]) },
+    isEditing: { type: Boolean, default: false }
   },
   computed: {
     answers() {

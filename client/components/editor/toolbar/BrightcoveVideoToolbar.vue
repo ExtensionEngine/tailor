@@ -54,7 +54,9 @@ import pick from 'lodash/pick';
 const props = ['accountId', 'playerId', 'videoId'];
 
 export default {
-  props: ['element'],
+  props: {
+    element: { type: Object, required: true }
+  },
   data() {
     return {
       edit: isEmpty(pick(this.element.data, props)),
@@ -82,17 +84,17 @@ export default {
   z-index: 999;
   width: 100%;
   height: 60px;
-  padding: 13px 45px 0 45px;
+  padding: 13px 45px 0;
   background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,.34);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.34);
 }
 
 .input-group {
   display: block;
   width: 100%;
   float: left;
-  padding-right: 200px;
   margin-right: -200px;
+  padding-right: 200px;
 }
 
 .form-control {

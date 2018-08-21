@@ -50,7 +50,9 @@ const teChannel = EventBus.channel('te');
 
 export default {
   name: 'te-modal',
-  props: ['element'],
+  props: {
+    element: { type: Object, required: true }
+  },
   data() {
     return {
       isEditing: false,

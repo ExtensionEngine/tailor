@@ -18,8 +18,8 @@
           <div class="form-group">
             <div :class="{ 'has-error': vErrors.has('schema') }" class="form-group">
               <multiselect
-                v-model="schema"
                 v-validate="'required'"
+                v-model="schema"
                 :options="schemas"
                 :searchable="false"
                 label="name"
@@ -33,8 +33,8 @@
           </div>
           <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
             <input
-              v-model="name"
               v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+              v-model="name"
               class="form-control"
               name="name"
               type="text"
@@ -43,8 +43,8 @@
           </div>
           <div :class="{ 'has-error': vErrors.has('description') }" class="form-group">
             <textarea
-              v-model="description"
               v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
+              v-model="description"
               class="form-control"
               name="description"
               placeholder="Description">
@@ -93,8 +93,8 @@ const getDefaultData = () => ({
 });
 
 export default {
-  mixins: [withValidation()],
   name: 'create-course',
+  mixins: [withValidation()],
   data: getDefaultData,
   computed: {
     ...mapGetters(['isAdmin']),
@@ -148,8 +148,8 @@ export default {
   }
 
   .form-group {
-    margin: 0;
     min-height: 80px;
+    margin: 0;
   }
 
   .error-message {

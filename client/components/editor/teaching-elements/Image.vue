@@ -10,7 +10,6 @@
       <cropper
         v-show="showCropper"
         ref="cropper"
-        drag-mode="none"
         :view-mode="2"
         :auto-crop-area="0.5"
         :autoCrop="false"
@@ -23,7 +22,8 @@
         :scalable="false"
         :movable="false"
         :modal="false"
-        :src="currentImage">
+        :src="currentImage"
+        drag-mode="none">
       </cropper>
       <img v-show="!showCropper" :src="currentImage" class="preview-image">
     </div>
@@ -45,7 +45,10 @@ function toDataUrl(imageUrl) {
 
 export default {
   name: 'te-image',
-  props: ['element', 'isFocused'],
+  props: {
+    element: { type: Object, required: true },
+    isFocused: { type: Boolean, default: false }
+  },
   data() {
     return {
       currentImage: null,
@@ -73,6 +76,20 @@ export default {
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
       if (dataUrl) this.$refs.cropper.replace(dataUrl);
+    }
+  },
+  watch: {
+    isFocused(focused) {
+      if (focused) return;
+
+      if (this.persistedImage !== this.currentImage) {
+        this.$emit('save', { url: this.currentImage });
+      }
+
+      if (this.currentImage) this.$refs.cropper.clear();
+    },
+    'element.data.url'(imageUrl) {
+      toDataUrl(imageUrl).then(dataUrl => this.loadImage(dataUrl));
     }
   },
   mounted() {
@@ -104,20 +121,6 @@ export default {
       this.currentImage = this.persistedImage;
       this.$refs.cropper.replace(this.persistedImage);
     });
-  },
-  watch: {
-    isFocused(focused) {
-      if (focused) return;
-
-      if (this.persistedImage !== this.currentImage) {
-        this.$emit('save', { url: this.currentImage });
-      }
-
-      if (this.currentImage) this.$refs.cropper.clear();
-    },
-    'element.data.url'(imageUrl) {
-      toDataUrl(imageUrl).then(dataUrl => this.loadImage(dataUrl));
-    }
   },
   beforeDestroy() {
     if (this.$refs.cropper) this.$refs.cropper.destroy();

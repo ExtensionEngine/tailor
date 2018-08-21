@@ -9,13 +9,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex-module';
 import Activity from './Activity';
 import CircularProgress from 'components/common/CircularProgress';
-import { mapGetters } from 'vuex-module';
-import Sidebar from './Sidebar';
+import Sidebar from '../Sidebar';
 
 export default {
-  props: ['showLoader'],
+  props: {
+    showLoader: { type: Boolean, default: false }
+  },
   computed: mapGetters(['activities'], 'course'),
   components: {
     Activity,

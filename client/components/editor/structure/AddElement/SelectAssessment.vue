@@ -1,6 +1,9 @@
 <template>
   <div class="select-assessment">
-    <div v-for="row in rows" class="row">
+    <div
+      v-for="(row, index) in rows"
+      :key="index"
+      class="row">
       <div
         v-for="assessment in row"
         :key="assessment.type"
@@ -26,7 +29,7 @@ const assessments = toArray(typeInfo);
 export default {
   name: 'select-assessment',
   props: {
-    exclude: { type: Array },
+    exclude: { type: Array, default: () => ([]) },
     rowSize: { type: Number, default: ASSESSMENTS_PER_ROW }
   },
   computed: {

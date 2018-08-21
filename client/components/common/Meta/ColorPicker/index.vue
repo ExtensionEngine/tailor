@@ -3,10 +3,10 @@
     <span class="title">{{ meta.label }}</span>
     <color-input
       v-if="showInput"
+      ref="picker"
       :value="selected"
       @close="showInput = false"
       @input="color => select(color)"
-      ref="picker"
       class="picker">
     </color-input>
     <div v-else>
@@ -19,10 +19,14 @@
         </div>
       </div>
       <ul class="colors control-group">
-        <li v-for="group in colors" class="column">
+        <li
+          v-for="(group, index) in colors"
+          :key="index"
+          class="column">
           <ul>
             <li
               v-for="color in group"
+              :key="color"
               :style="{ background: color }"
               :class="{ white: isEqualColor(color, '#FFFFFF') }"
               @click="select(color)"
@@ -56,8 +60,10 @@ const DEFAULT_COLORS = [
 ];
 
 export default {
-  name: 'ColorPicker',
-  props: ['meta'],
+  name: 'color-picker',
+  props: {
+    meta: { type: Object, default: () => ({ value: null }) }
+  },
   data() {
     return {
       showInput: false,

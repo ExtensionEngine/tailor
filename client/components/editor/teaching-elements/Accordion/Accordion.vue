@@ -29,7 +29,9 @@ const teChannel = EventBus.channel('te');
 
 export default {
   name: 'te-accordion',
-  props: ['element'],
+  props: {
+    element: { type: Object, required: true }
+  },
   computed: {
     items() {
       return this.element.data.items;

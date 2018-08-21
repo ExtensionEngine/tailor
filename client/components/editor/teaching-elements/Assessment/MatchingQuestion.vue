@@ -2,7 +2,7 @@
   <div :class="{ disabled: !isEditing }">
     <div class="row no-gutters heading">
       <div
-        :class="{ error: this.errors.includes('headings.premise') }"
+        :class="{ error: errors.includes('headings.premise') }"
         class="col-xs-4 col-xs-offset-1 heading-input-wrapper">
         <input
           v-model="premiseHeading"
@@ -12,7 +12,7 @@
       </div>
       <div class="col-xs-2"></div>
       <div
-        :class="{ error: this.errors.includes('headings.response') }"
+        :class="{ error: errors.includes('headings.response') }"
         class="col-xs-4 heading-input-wrapper">
         <input
           v-model="responseHeading"
@@ -21,7 +21,10 @@
           type="text"/>
       </div>
     </div>
-    <div v-for="(responseKey, premiseKey, index) in correct" class="row no-gutters">
+    <div
+      v-for="(responseKey, premiseKey) in correct"
+      :key="responseKey"
+      class="row no-gutters">
       <div
         :class="{ flip: isFocused(premiseKey) }"
         class="col-xs-4 col-xs-offset-1 premise-container">
@@ -76,6 +79,7 @@
 </template>
 
 <script>
+import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import find from 'lodash/find';
@@ -85,9 +89,9 @@ import shuffle from 'lodash/shuffle';
 
 export default {
   props: {
-    assessment: Object,
-    errors: Array,
-    isEditing: Boolean
+    assessment: { type: Object, default: defaults.MQ },
+    errors: { type: Array, default: () => ([]) },
+    isEditing: { type: Boolean, default: false }
   },
   data() {
     const { headings } = this.assessment;

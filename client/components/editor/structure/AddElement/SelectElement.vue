@@ -4,7 +4,10 @@
       v-if="!showAssessments"
       :style="{ 'max-width': maxWidth + 'px' }"
       class="elements">
-      <div v-for="row in rows" class="row">
+      <div
+        v-for="(row, index) in rows"
+        :key="index"
+        class="row">
         <div
           v-for="element in row"
           :key="element.type"
@@ -54,8 +57,8 @@ const firstType = items => get(first(items), 'type');
 export default {
   name: 'select-element',
   props: {
-    activity: { type: Object },
-    include: { type: Array },
+    activity: { type: Object, required: true },
+    include: { type: Array, default: null },
     rowSize: { type: Number, default: ELEMENTS_PER_ROW }
   },
   data() {
