@@ -55,7 +55,7 @@ const ELEMENTS_PER_ROW = 6;
 export default {
   name: 'select-element',
   props: {
-    activity: { type: Object, required: true },
+    activity: { type: Object, default: null },
     include: { type: Array, default: null },
     rowSize: { type: Number, default: ELEMENTS_PER_ROW }
   },
