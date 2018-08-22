@@ -26,7 +26,7 @@ import Primitive from '../Primitive';
 export default {
   name: 'te-modal-preview',
   props: {
-    elements: { type: Object, default: () => ({}) }
+    elements: { type: Array, default: () => ([]) }
   },
   data() {
     return { visible: false };

@@ -40,7 +40,7 @@ export default {
   props: {
     item: { type: Object, required: true },
     embeds: { type: Object, default: () => ({}) },
-    activeItem: { type: String, default: null }
+    activeItem: { type: Number, default: null }
   },
   data() {
     return {

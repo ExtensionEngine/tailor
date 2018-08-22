@@ -17,7 +17,10 @@
           @save="saveItem">
         </primitive>
       </draggable>
-      <add-element :include="['HTML', 'IMAGE']" @add="saveItem"></add-element>
+      <add-element
+        :include="['HTML', 'IMAGE']"
+        :layout="false"
+        @add="saveItem"/>
     </div>
     <button
       v-else
