@@ -21,8 +21,8 @@
       <div class="pdf-container">
         <div
           v-show="showViewer"
-          class="pdf"
-          ref="pdf">
+          ref="pdf"
+          class="pdf">
         </div>
         <img
           v-if="safari"

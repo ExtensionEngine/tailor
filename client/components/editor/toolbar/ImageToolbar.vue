@@ -4,7 +4,7 @@
       <li class="btn btn-link btn-sm upload-button">
         <label for="upload" class="upload-label">
           <span class="mdi mdi-image"></span> Upload
-          <input @change="upload" type="file" id="upload" class="upload-input"/>
+          <input @change="upload" id="upload" type="file" class="upload-input"/>
         </label>
       </li>
       <li
@@ -30,7 +30,9 @@ import isEmpty from 'lodash/isEmpty';
 const teChannel = EventBus.channel('te');
 
 export default {
-  props: ['element'],
+  props: {
+    element: { type: Object, required: true }
+  },
   data() {
     return {
       currentTool: null

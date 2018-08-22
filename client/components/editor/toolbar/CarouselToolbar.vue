@@ -18,8 +18,8 @@
           :class="{ 'has-error': vErrors.has('height') }"
           class="form-group">
           <input
-            v-model="height"
             v-validate="{ rules: { required: true, min_value: 300, max_value: 3000 } }"
+            v-model="height"
             id="heightInput"
             class="form-control"
             name="height"
@@ -42,9 +42,11 @@ import { withValidation } from 'utils/validation';
 const teChannel = EventBus.channel('te');
 
 export default {
-  mixins: [withValidation()],
   name: 'carousel-toolbar',
-  props: ['element'],
+  mixins: [withValidation()],
+  props: {
+    element: { type: Object, required: true }
+  },
   data() {
     return {
       height: this.element.data.height || 500

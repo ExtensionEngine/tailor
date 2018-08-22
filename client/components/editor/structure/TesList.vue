@@ -14,10 +14,10 @@
         @dragstart="dragElementIndex = index"
         @dragend="dragElementIndex = -1">
         <slot
-          name="list-item"
           :item="it"
           :setWidth="false"
-          :dragged="dragElementIndex === index">
+          :dragged="dragElementIndex === index"
+          name="list-item">
         </slot>
       </div>
     </draggable>
@@ -42,7 +42,7 @@ export default {
     list: { type: Array, default() { return []; } },
     dragOptions: { type: Object, default() { return {}; } },
     enableAdd: { type: Boolean, default: true },
-    types: { type: Array, required: false },
+    types: { type: Array, default: null },
     activity: { type: Object, required: true },
     layout: { type: Boolean, default: false }
   },
@@ -66,10 +66,8 @@ export default {
 };
 </script>
 
-
 <style lang="scss" scoped>
-// TODO: Find proper way to handle this
-// DO NOT REMOVE! Makes sure vuedraggable detects correct scrollable parent
+/* Do not remove! Makes sure vuedraggable detects correct scrollable parent */
 .list-group {
   padding: 10px 15px;
 }

@@ -4,18 +4,18 @@
       :class="{ 'has-error': vErrors.has('name') }"
       class="form-group name-input">
       <input
-        v-model="name"
-        v-focus.lazy="true"
         v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+        v-focus.lazy="true"
+        v-model="name"
         class="form-control"
         name="name"
         placeholder="Title">
       <span class="help-block">{{ vErrors.first('name') }}</span>
     </span>
     <multiselect
+      v-validate="'required'"
       v-if="supportedLevels.length > 1"
       v-model="level"
-      v-validate="'required'"
       :options="supportedLevels"
       :searchable="false"
       trackBy="type"
@@ -49,7 +49,10 @@ import SelectAction from './SelectAction';
 
 export default {
   mixins: [withValidation()],
-  props: ['parent', 'supportedLevels'],
+  props: {
+    parent: { type: Object, required: true },
+    supportedLevels: { type: Array, required: true }
+  },
   data() {
     return { name: '', level: null };
   },

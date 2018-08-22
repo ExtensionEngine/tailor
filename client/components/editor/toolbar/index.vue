@@ -39,7 +39,7 @@
         </h1>
         <div class="breadcrumbs">
           <span v-for="(item, index) in breadcrumbs" :key="item.id">
-            {{ truncate(item.data.name, breadcrumbs.length < 3 ? 80 : 40) }}
+            {{ truncate(item.data.name, breadcrumbs.length > 2 ? 40 : 80) }}
             <span v-if="index !== (breadcrumbs.length - 1)"> / </span>
           </span>
         </div>
@@ -221,10 +221,10 @@ export default {
 
   h1 {
     width: 100%;
-    margin: 0 0 1px 0;
+    margin: 0 0 1px;
+    color: #555;
     font-size: 18px;
     text-align: left;
-    color: #555;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -244,12 +244,12 @@ export default {
 .toolbar-btn {
   flex-basis: 0;
   color: white;
-  background-color: #144ACC;
+  background-color: #144acc;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   cursor: pointer;
 
   &:hover {
-    background-color: darken(#144ACC, 10%);
+    background-color: darken(#144acc, 10%);
   }
 
   .mdi {
@@ -260,10 +260,10 @@ export default {
 }
 
 .toolbar-btn.btn-alt {
-  background-color: #2F73E9;
+  background-color: #2f73e9;
 
   &:hover {
-    background-color: darken(#2F73E9, 10%);
+    background-color: darken(#2f73e9, 10%);
   }
 }
 

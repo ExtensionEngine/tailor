@@ -21,16 +21,21 @@
 </template>
 
 <script>
+import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import { defaults } from 'utils/assessment';
 import isFunction from 'lodash/isFunction';
 import SelectElement from './SelectElement';
 import SelectWidth from './SelectWidth';
 
 export default {
   name: 'add-element',
-  props: ['include', 'activity', 'position', 'layout'],
+  props: {
+    activity: { type: Object, default: null },
+    position: { type: Number, default: null },
+    layout: { type: Boolean, default: true },
+    include: { type: Array, default: null }
+  },
   data() {
     return {
       type: null,

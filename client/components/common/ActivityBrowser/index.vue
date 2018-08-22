@@ -7,7 +7,7 @@
     </button>
     <select-repository
       v-if="!repository"
-      @selected="repository => (this.repository = repository)">
+      @selected="selected => (repository = selected)">
     </select-repository>
     <select-activity
       v-else
@@ -24,7 +24,9 @@ import SelectActivity from './SelectActivity';
 import SelectRepository from './SelectRepository';
 
 export default {
-  props: ['selectableLevels'],
+  props: {
+    selectableLevels: { type: Array, default: () => ([]) }
+  },
   data() {
     return {
       repository: null,

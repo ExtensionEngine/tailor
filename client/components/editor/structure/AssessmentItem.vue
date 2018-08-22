@@ -37,7 +37,14 @@ const htmlRegex = /<\/?[^>]+(>|$)/g;
 
 export default {
   name: 'assessment-item',
-  props: ['assessment', 'exam', 'expanded'],
+  props: {
+    assessment: { type: Object, required: true },
+    exam: { type: Object, default: null },
+    expanded: { type: Boolean, default: false }
+  },
+  data() {
+    return { hover: false };
+  },
   computed: {
     question() {
       let question = filter(this.assessment.data.question, { type: 'HTML' });
@@ -45,9 +52,6 @@ export default {
       question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
       return truncate(question, { length: 50 });
     }
-  },
-  data() {
-    return { hover: false };
   },
   components: {
     TeAssessment

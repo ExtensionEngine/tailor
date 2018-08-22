@@ -107,7 +107,11 @@ const ASSESSMENT_TYPES = {
 
 export default {
   name: 'te-assessment',
-  props: { element: Object, exam: Object, summative: Boolean },
+  props: {
+    element: { type: Object, required: true },
+    exam: { type: Object, default: null },
+    summative: { type: Boolean, default: false }
+  },
   data() {
     const isEditing = !this.element.id;
     return {

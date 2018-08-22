@@ -23,7 +23,10 @@
 
 <script>
 export default {
-  props: { isEditing: Boolean, summative: Boolean },
+  props: {
+    isEditing: { type: Boolean, default: false },
+    summative: { type: Boolean, default: false }
+  },
   methods: {
     save() {
       // Make sure all other handlers are executed prior to save
@@ -41,9 +44,9 @@ export default {
   padding: 10px 20px;
 
   .btn {
+    min-width: 85px;
     margin-left: 10px;
     padding: 7px 15px;
-    min-width: 85px;
   }
 }
 </style>

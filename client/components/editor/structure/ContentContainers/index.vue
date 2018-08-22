@@ -39,7 +39,7 @@ export default {
   props: {
     containerGroup: { type: Array, default() { return []; } },
     parentId: { type: Number, required: true },
-    types: { type: Array, required: false },
+    types: { type: Array, default: null },
     displayHeading: { type: Boolean, default: false },
     type: { type: String, required: true },
     label: { type: String, required: true },
@@ -58,11 +58,6 @@ export default {
       return last + 1;
     }
   },
-  filters: {
-    capitalize(val) {
-      return capitalize(val);
-    }
-  },
   methods: {
     ...mapActions(['save', 'remove'], 'activities'),
     addContainer() {
@@ -75,6 +70,11 @@ export default {
         item: container,
         action: () => this.remove(container)
       });
+    }
+  },
+  filters: {
+    capitalize(val) {
+      return capitalize(val);
     }
   },
   components: { ContentContainer }

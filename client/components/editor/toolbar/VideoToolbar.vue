@@ -29,7 +29,9 @@ import { mapActions } from 'vuex-module';
 
 export default {
   name: 'video-toolbar',
-  props: ['element'],
+  props: {
+    element: { type: Object, required: true }
+  },
   data() {
     return {
       edit: !this.element.data.url,
