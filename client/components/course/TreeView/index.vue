@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import Activity from 'components/course/Activity';
 import CircularProgress from 'components/common/CircularProgress';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -39,7 +38,9 @@ const graphOptions = {
 
 export default {
   name: 'tree-view',
-  props: ['showLoader'],
+  props: {
+    showLoader: { type: Boolean, default: false }
+  },
   data() {
     return {
       graphOptions,
@@ -78,7 +79,6 @@ export default {
     }
   },
   components: {
-    Activity,
     CircularProgress,
     Sidebar,
     TreeGraph

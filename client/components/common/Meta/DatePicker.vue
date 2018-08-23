@@ -17,7 +17,9 @@ import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
 
 export default {
-  props: ['meta'],
+  props: {
+    meta: { type: Object, default: () => ({ value: null }) }
+  },
   data() {
     return { value: this.meta.value };
   },
@@ -44,7 +46,7 @@ export default {
     }
 
     .form-control {
-      background-color: inherit
+      background-color: inherit;
     }
   }
 }

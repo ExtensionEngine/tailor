@@ -15,7 +15,9 @@ const teChannel = EventBus.channel('te');
 
 export default {
   name: 'accordion-toolbar',
-  props: ['element'],
+  props: {
+    element: { type: Object, required: true }
+  },
   methods: {
     add() {
       teChannel.emit(`${this.element._cid}/add`);

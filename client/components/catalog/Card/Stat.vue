@@ -7,7 +7,10 @@
 
 <script>
 export default {
-  props: ['name', 'value']
+  props: {
+    name: { type: String, required: true },
+    value: { type: Number, default: 0 }
+  }
 };
 </script>
 

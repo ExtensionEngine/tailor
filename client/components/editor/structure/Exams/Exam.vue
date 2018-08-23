@@ -42,10 +42,10 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex-module';
 import AssessmentGroup from './AssessmentGroup';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
-import { mapActions, mapGetters } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
 import pluralize from 'pluralize';
 
@@ -53,7 +53,10 @@ const appChannel = EventBus.channel('app');
 
 export default {
   name: 'exam',
-  props: ['exam', 'position'],
+  props: {
+    exam: { type: Object, required: true },
+    position: { type: Number, required: true }
+  },
   data() {
     let collapsed = this.exam.id;
     return {

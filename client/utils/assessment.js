@@ -149,46 +149,46 @@ const baseDefaults = {
 };
 
 export const defaults = {
-  MC: {
+  MC: () => ({
     type: 'MC',
     ...baseDefaults,
     answers: ['', '', ''],
     correct: []
-  },
-  NR: {
+  }),
+  NR: () => ({
     type: 'NR',
     ...baseDefaults,
     prefixes: [''],
     suffixes: [''],
     correct: ['']
-  },
-  SC: {
+  }),
+  SC: () => ({
     type: 'SC',
     ...baseDefaults,
     answers: ['', ''],
     correct: ''
-  },
-  TR: {
+  }),
+  TR: () => ({
     type: 'TR',
     ...baseDefaults,
     correct: ''
-  },
-  TF: {
+  }),
+  TF: () => ({
     type: 'TF',
     ...baseDefaults,
     correct: null
-  },
-  FB: {
+  }),
+  FB: () => ({
     type: 'FB',
     ...baseDefaults,
     correct: []
-  },
-  RS: {
+  }),
+  RS: () => ({
     type: 'RS',
     ...baseDefaults,
-    range: {min: 0, max: 100, interval: 1},
+    range: { min: 0, max: 100, interval: 1 },
     correct: [0, 100]
-  },
+  }),
   MQ() {
     let element = {
       type: 'MQ',

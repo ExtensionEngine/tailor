@@ -1,66 +1,63 @@
 <template>
   <div>
-    <div v-if="!isRoot" class="activity-wrapper">
+    <div class="activity-wrapper">
       <div
-        :class="{ 'selected': isSelected(activity.id) }"
+        :class="{ selected: isSelected(_cid) }"
         @click="focusActivity(_cid)"
         class="activity">
         <span :style="{ 'background-color': color }" class="position">
-          {{ index + 1 }}
+          {{ index }}
         </span>
-        <span class="activity-name">{{ name }}</span>
+        <span class="activity-name">{{ data.name }}</span>
         <div class="actions">
-          <button
-            @click.stop="toggleActivity(activity)"
-            class="collapsible">
-            <span :class="collapsibleIcon"></span>
+          <button @click.stop="toggleActivity({ _cid })" class="collapsible">
+            <span :class="toggleIcon"></span>
           </button>
         </div>
       </div>
       <insert-activity
-        :parent="activity"
-        :level="level"
-        @expand="toggleActivity({ _cid: activity._cid, expanded: true })">
-      </insert-activity>
+        :anchor="{ id, courseId, parentId, type, position }"
+        @expand="toggleActivity({ _cid, expanded: true })"/>
     </div>
-    <div v-if="!isCollapsed(this.activity) && hasChildren">
-      <draggable :list="children" :options="dragOptions" @update="reorder">
+    <div v-if="!isCollapsed({ _cid }) && hasChildren">
+      <draggable
+        :list="children"
+        :options="{ handle: '.activity' }"
+        @update="reorder">
         <activity
-          v-for="(it, index) in children"
-          :key="it._cid"
-          :id="it.id"
-          :_cid="it._cid"
-          :position="it.position"
-          :index="index"
-          :level="isRoot ? 1 : level + 1"
-          :class="{ 'sub-activity': name }"
+          v-for="(subActivity, index) in children"
+          v-bind="subActivity"
+          :key="subActivity._cid"
+          :index="index + 1"
+          :level="level + 1"
           :activities="activities"
-          :activity="it">
-        </activity>
+          class="sub-activity"/>
       </draggable>
     </div>
-    <no-activities v-if="isRoot && !hasChildren"></no-activities>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import get from 'lodash/get';
 import InsertActivity from './InsertActivity';
 import map from 'lodash/map';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import NoActivities from './NoActivities';
-import values from 'lodash/values';
 
 export default {
   name: 'activity',
-  props: ['_cid', 'id', 'position', 'level', 'activities', 'activity', 'index'],
-  data() {
-    return {
-      dragOptions: { handle: '.activity' }
-    };
+  props: {
+    _cid: { type: String, required: true },
+    id: { type: Number, default: null },
+    courseId: { type: Number, required: true },
+    parentId: { type: Number, default: null },
+    level: { type: Number, required: true },
+    index: { type: Number, required: true },
+    position: { type: Number, required: true },
+    type: { type: String, required: true },
+    data: { type: Object, required: true },
+    activities: { type: Array, default: () => ([]) }
   },
   computed: {
     ...mapGetters({
@@ -68,14 +65,8 @@ export default {
       focusedActivity: 'activity',
       isCollapsed: 'isCollapsed'
     }, 'course'),
-    isRoot() {
-      return this.level === 0;
-    },
-    name() {
-      return get(this.activity, 'data.name', '');
-    },
     color() {
-      return find(this.structure, { type: this.activity.type }).color;
+      return find(this.structure, { type: this.type }).color;
     },
     hasChildren() {
       return (this.children.length > 0) && (this.level < this.structure.length);
@@ -83,26 +74,21 @@ export default {
     children() {
       const level = this.level + 1;
       const types = map(filter(this.structure, { level }), 'type');
-      const filterByParent = this.isRoot
-        ? act => !act.parentId && types.includes(act.type)
-        : act => this.id && this.id === act.parentId && types.includes(act.type);
-
-      return values(this.activities)
-        .filter(filterByParent)
-        .sort((x, y) => x.position - y.position);
+      return filter(this.activities, it => {
+        return this.id && (this.id === it.parentId) && types.includes(it.type);
+      }).sort((x, y) => x.position - y.position);
     },
-    collapsibleIcon() {
-      return {
-        'mdi mdi-chevron-down': this.isCollapsed(this.activity) && this.hasChildren,
-        'mdi mdi-chevron-up': !this.isCollapsed(this.activity) && this.hasChildren
-      };
+    toggleIcon() {
+      if (!this.hasChildren) return '';
+      const isCollapsed = this.isCollapsed({ _cid: this._cid });
+      return isCollapsed ? 'mdi mdi-chevron-down' : 'mdi mdi-chevron-up';
     }
   },
   methods: {
     ...mapMutations(['focusActivity', 'toggleActivity'], 'course'),
     ...mapActions({ updatePosition: 'reorder' }, 'activities'),
-    isSelected(id) {
-      return this.focusedActivity.id === id;
+    isSelected(_cid) {
+      return this.focusedActivity._cid === _cid;
     },
     reorder({ newIndex: newPosition }) {
       const items = this.children;
@@ -112,11 +98,7 @@ export default {
       this.updatePosition({ activity, context });
     }
   },
-  components: {
-    Draggable,
-    InsertActivity,
-    NoActivities
-  }
+  components: { Draggable, InsertActivity }
 };
 </script>
 

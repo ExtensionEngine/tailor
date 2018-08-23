@@ -62,7 +62,7 @@ const TE_TYPES = {
 export default {
   name: 'teaching-element',
   props: {
-    element: { type: Object, required: false },
+    element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
     // Set `setWidth` to false to control element width externally
     setWidth: { type: Boolean, default: true },

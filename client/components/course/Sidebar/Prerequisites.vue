@@ -35,7 +35,7 @@ const getPrerequisites = activity => get(activity, 'refs.prerequisites', []);
 const isPrerequisiteOf = (activity, other) => includes(getPrerequisites(other), activity.id);
 
 export default {
-  name: 'Prerequisites',
+  name: 'prerequisites',
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
     ...mapGetters(['getLineage'], 'activities'),

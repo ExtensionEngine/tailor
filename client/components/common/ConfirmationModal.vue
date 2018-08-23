@@ -41,6 +41,11 @@ export default {
       context: defaultData
     };
   },
+  computed: {
+    info() {
+      return this.context.item.name;
+    }
+  },
   methods: {
     open(context) {
       this.context = context;
@@ -53,11 +58,6 @@ export default {
     confirm() {
       this.context.action();
       this.close();
-    }
-  },
-  computed: {
-    info() {
-      return this.context.item.name;
     }
   },
   created() {

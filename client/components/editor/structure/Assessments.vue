@@ -6,7 +6,7 @@
         {{ allSelected ? 'hide all' : 'show all' }}
       </span>
     </div>
-    <div class="well" v-if="!hasAssessments">
+    <div v-if="!hasAssessments" class="well">
       Click the button below to Create first Assessment.
     </div>
     <ul class="list-group">

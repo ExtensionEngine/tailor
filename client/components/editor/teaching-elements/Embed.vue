@@ -3,21 +3,21 @@
     <div v-if="showPlaceholder">
       <div :style="{ height: height + 'px' }" class="well placeholder">
         <span class="heading">Embed placeholder</span>
-        <span class="message" v-show="!isFocused">Select to edit</span>
-        <span class="message" v-show="isFocused">Please use toolbar to enter url</span>
+        <span v-show="!isFocused" class="message">Select to edit</span>
+        <span v-show="isFocused" class="message">Please use toolbar to enter url</span>
       </div>
     </div>
     <div v-else>
       <div class="content">
-        <div class="overlay" v-show="!isFocused">
+        <div v-show="!isFocused" class="overlay">
           <div class="message">Click to preview</div>
         </div>
         <!-- Dragging iframes is not supported inside sortablejs container! -->
         <iframe
           v-if="!isDragged"
+          ref="frame"
           :src="url"
           class="content"
-          ref="frame"
           frameborder="0"
           sandbox="allow-forms allow-same-origin allow-scripts">
         </iframe>
@@ -29,7 +29,11 @@
 <script>
 export default {
   name: 'te-embed',
-  props: ['element', 'isFocused', 'isDragged'],
+  props: {
+    element: { type: Object, required: true },
+    isFocused: { type: Boolean, default: false },
+    isDragged: { type: Boolean, default: false }
+  },
   computed: {
     height() {
       return this.element.data.height;
