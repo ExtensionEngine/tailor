@@ -1,69 +1,77 @@
 <template>
-<div class="main">
-  <div class="settings">
-    <div class="col-xs-4">
-      <input
-        :disabled="!isEditing"
-        @focusout="setValues('min', $event.target)"
-        type="text"
-        name="min"
-        placeholder="Min..."
-        title="Minimum"
-        class="form-control">
+<div class="">
+  <form>
+  <div class="settings row">
+    <div :class="[col, {'has-error': vErrors.has('min')}]">
+      <div class="form-group">
+        <span class="form-label">Minimum</span>
+        <input
+          v-model.lazy.number="min"
+          v-validate.disable="setValidation('min')"
+          :disabled="!isEditing"
+          :placeholder="options.min"
+          @focusout="setValues($event.target.name)"
+          type="text"
+          name="min"
+          class="form-control">
+      </div>
     </div>
-    <div class="col-xs-4">
-      <input
-        :disabled="!isEditing"
-        @focusout="setValues('max', $event.target)"
-        type="text"
-        name="max"
-        placeholder="Max..."
-        title="Maximum"
-        class="form-control">
+    <div :class="[col, {'has-error': vErrors.has('max')}]">
+      <div class="form-group">
+        <span class="form-label">Maximum</span>
+        <input
+          v-model.lazy.number="max"
+          v-validate.disable="setValidation('max')"
+          :disabled="!isEditing"
+          :placeholder="options.max"
+          @focusout="setValues($event.target.name)"
+          type="text"
+          name="max"
+          class="form-control">
+      </div>
     </div>
-    <div class="col-xs-4">
+    <div :class="[col, {'has-error': vErrors.has('interval')}]">
+     <div class="form-group">
+      <span class="form-label">Step</span>
       <input
+        v-model.lazy.number="interval"
+        v-validate.disable="setValidation('interval')"
         :disabled="!isEditing"
-        @focusout="setValues('interval', $event.target)"
+        :placeholder="options.interval"
+        @focusout="setValues($event.target.name)"
         type="text"
         name="interval"
-        placeholder="Interval..."
-        title="Interval"
         class="form-control">
+      </div>
+    </div>
+    <div v-if="isEditing" class="col-xs-3">
+      <button
+        @click="reset()"
+        type="button"
+        class="btn btn-danger reset">
+        Reset
+      </button>
     </div>
   </div>
+  </form>
   <div class="slider-container">
-    <input
-      :disabled="!isEditing"
-      v-model="includeMin"
-      @change="update()"
-      title="Include Min"
-      type="checkbox"
-      class="include-flag">
     <vue-slider
-      :disabled="!isEditing"
+      v-if="showSlider"
       v-model="value"
       v-bind="options"
-      @input="update()"
-      ref="slider"
-      class="slider">
-      <div slot="label" slot-scope="{ label }" class="custom-label">
-        <span v-if="(label === options.min || label === options.max)">
-          {{ label }}
-        </span>
-      </div>
-    </vue-slider>
-    <input
+      v-validate.disable="'different'"
+      data-vv-name="value"
       :disabled="!isEditing"
-      v-model="includeMax"
-      @change="update()"
-      title="Include Max"
-      type="checkbox"
-      class="include-flag">
+      :class="{ 'correct-error': (correctMin == correctMax) }"
+      @drag-end="setValues('value')"
+      class="slider">
+    </vue-slider>
+    <div class="slider-edge-label slider-first"> {{ options.min }} </div>
+    <div class="slider-edge-label slider-last"> {{ options.max }} </div>
   </div>
-  <div :class="{ 'has-error': feedback.length > 0 }">
-    <span v-for="msg in feedback" :key="msg" class="help-block">
-      {{ msg }}
+  <div :class="{ 'has-error': vErrors.any() }" class="feedback">
+    <span v-for="(error, index) in vErrors.all()" :key="index" class="help-block">
+      {{ error }}
     </span>
   </div>
 </div>
@@ -72,18 +80,15 @@
 <script>
 import vueSlider from 'vue-slider-component';
 import get from 'lodash/get';
-import toNumber from 'lodash/toNumber';
+import { withValidation } from 'utils/validation';
 
+// Specify the allowed number of decimal places
+const DEC = 3;
 // JS native modulo returns wrong result for decimal divisors
-const modulo = (c, m) => ((100 * c) % (100 * m)) / 100;
-
-const sliderConfig = {
-  width: '90%',
-  useKeyboard: true,
-  piecewiseLabel: true
-};
+const modulo = (c, m) => ((10 ** DEC * c) % (10 ** DEC * m)) / 10 ** DEC;
 
 export default {
+  mixins: [withValidation()],
   props: {
     assessment: Object,
     isEditing: Boolean
@@ -92,16 +97,15 @@ export default {
     const range = get(this.assessment, 'range', {});
     const correct = get(this.assessment, 'correct', []);
     return {
-      value: [correct[0], correct[1]],
+      value: correct,
       options: {
-        ...sliderConfig,
-        min: range.min,
-        max: range.max,
-        interval: range.interval
+        ...range
       },
-      includeMin: true,
-      includeMax: true,
-      feedback: []
+      initialRange: range,
+      initialCorrect: correct,
+      ...range,
+      DEC,
+      showSlider: true
     };
   },
   computed: {
@@ -110,62 +114,65 @@ export default {
     },
     correctMax() {
       return this.value[1];
+    },
+    col() {
+      return `col-xs-${(this.isEditing) ? 3 : 4}`;
     }
   },
+  created() {
+    this.$validator.extend('interval', {
+      getMessage(field) {
+        const targetField = (field === 'interval') ? 'range' : 'interval';
+        return `Invalid ${field} for specified ${targetField}.`;
+      },
+      validate: (value, args) => {
+        let { min, max, interval } = {
+          ...this.options, [args]: value
+        };
+        return !modulo(+parseFloat(max - min).toFixed(DEC), interval);
+      }
+    });
+    this.$validator.extend('different', {
+      getMessage: () => 'Correct interval values must differ.',
+      validate: () => (this.correctMin !== this.correctMax)
+    });
+  },
   methods: {
-    setValues(name, el) {
-      this.feedback = [];
-      let value = el.value;
-      if (!value) return;
-      value = toNumber(value);
-      if (isNaN(value)) {
-        this.feedback.push('Invalid input.');
-        return el.focus();
-      }
-      switch (name) {
-        case 'min':
-          this.setMin(value, el);
-          break;
-        case 'max':
-          this.setMax(value, el);
-          break;
-        case 'interval':
-          this.setInterval(value, el);
-          break;
-      }
-      this.update();
+    setValues(field) {
+      console.log('triggered');
+      let value = this[field];
+      if (value === '') value = this.options[field];
+      this.$validator.validate(field)
+      .then(valid => {
+        if (valid) {
+          switch (field) {
+            case 'min':
+              this.setMin(value);
+              break;
+            case 'max':
+              this.setMax(value);
+              break;
+            case 'interval':
+              this.setInterval(value);
+              break;
+          }
+          this.update();
+        }
+      });
     },
-    setMin(value, el) {
-      // TODO: move interval check into separate function
-      if (modulo(this.options.max - value, this.options.interval)) {
-        this.feedback.push('Invalid minimum for specified interval.');
-        return el.focus();
-      }
-      if (value >= this.options.max) {
-        this.feedback.push('Minimum value cannot be equal to or greater than the maximum value.');
-        return el.focus();
-      }
-      if (value <= this.correctMin) {
-        this.options.min = value;
+    setMin(newMin) {
+      if (newMin <= this.correctMin) {
+        this.options.min = newMin;
         return;
       }
-      if (value > this.correctMax) {
-        this.value = [value, this.options.max];
+      if (newMin > this.correctMax) {
+        this.value = [newMin, this.options.max];
       } else {
-        this.value = [value, this.correctMax];
+        this.value = [newMin, this.correctMax];
       }
-      this.options.min = value;
+      this.options.min = newMin;
     },
-    setMax(value, el) {
-      // interval check
-      if (modulo(value - this.options.min, this.options.interval)) {
-        this.feedback.push('Invalid maximum for specified interval.');
-        return el.focus();
-      }
-      if (value <= this.options.min) {
-        this.feedback.push('Maximum value cannot be equal to or less than the minimum value.');
-        return el.focus();
-      }
+    setMax(value) {
       if (value >= this.correctMax) {
         this.options.max = value;
         return;
@@ -177,22 +184,33 @@ export default {
       }
       this.options.max = value;
     },
-    setInterval(value, el) {
-      // interval check
-      if (modulo(this.options.max - this.options.min, value) !== 0) {
-        this.feedback.push('Invalid interval for specified range.');
-        return el.focus();
-      }
+    setInterval(value) {
       this.options.interval = value;
     },
+    reset() {
+      this.showSlider = false;
+      this.$nextTick(() => {
+        Object.assign(this.options, this.initialRange);
+        Object.assign(this, this.initialRange);
+        this.value = this.initialCorrect;
+        this.showSlider = true;
+      });
+      this.update();
+    },
     update() {
-      const {min, max, interval} = this.options;
-      const range = {min, max, interval};
-      const correct = [
-        (this.includeMin) ? this.correctMin : (this.correctMin + 1),
-        (this.includeMax) ? this.correctMax : (this.correctMax - 1)
-      ];
-      this.$emit('update', {range, correct});
+      const { min, max, interval } = this.options;
+      const range = { min, max, interval };
+      const correct = this.value;
+      this.$emit('update', { range, correct });
+    },
+    setValidation(field) {
+      const rules = { decimal: DEC, interval: field };
+      const limitField = (field === 'min') ? 'max' : 'min';
+      const limit = Math.abs(this.options.interval - this.options[limitField]);
+      if (field !== 'interval') {
+        Object.assign(rules, {[`${limitField}_value`]: limit});
+      }
+      return rules;
     }
   },
   components: {
@@ -202,17 +220,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main {
-  margin-bottom: 10px;
-}
-
 .settings {
   margin-bottom: 10px;
   height: 75px;
-}
-
-.slider-container {
-  display: flex;
 }
 
 .vue-slider-component {
@@ -227,12 +237,37 @@ export default {
   margin-top: 15px;
 }
 
-.has-error {
+.reset {
+  margin-top: 15px;
+}
+
+.feedback {
+  margin-top: 40px;
+}
+
+.slider-container {
   margin-top: 30px;
-  padding: 0 15px;
+}
+
+.slider-edge-label {
+  display: inline;
+}
+
+.slider-first {
+  float: left;
+}
+
+.slider-last {
+  float: right;
+}
+
+.correct-error /deep/ .vue-slider-tooltip {
+   background-color: #d43f3a;
+   border-color: #d9534f;
 }
 
 .slider /deep/ .vue-slider-process {
   background: linear-gradient(left, #5cb85c, #3498db);
 }
+
 </style>

@@ -126,7 +126,7 @@ export const schemas = {
       max: yup.number().required(),
       interval: yup.number().required()
     }),
-    correct: yup.array().of(yup.number().min(2)).required()
+    correct: yup.array().min(2).of(yup.number()).required()
   })
 };
 
@@ -186,7 +186,7 @@ export const defaults = {
   RS: {
     type: 'RS',
     ...baseDefaults,
-    range: {min: 0, max: 100, interval: 1},
+    range: {min: 0, max: 100, interval: 10},
     correct: [0, 100]
   },
   MQ() {
