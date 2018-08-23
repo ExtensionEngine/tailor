@@ -33,9 +33,9 @@ const TE_TYPES = {
 export default {
   name: 'te-primitive',
   props: {
-    initialElement: Object,
-    disabled: Boolean,
-    drag: Boolean
+    initialElement: { type: Object, required: true },
+    disabled: { type: Boolean, default: false },
+    drag: { type: Boolean, default: false }
   },
   data() {
     return {

@@ -19,7 +19,9 @@
 <script>
 export default {
   name: 'checkbox-input',
-  props: ['meta'],
+  props: {
+    meta: { type: Object, default: () => ({ value: null }) }
+  },
   data() {
     return { value: this.meta.value };
   }

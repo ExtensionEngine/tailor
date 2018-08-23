@@ -29,7 +29,9 @@ const META_TYPES = {
 const components = mapKeys(META_TYPES, 'name');
 
 export default {
-  props: ['meta'],
+  props: {
+    meta: { type: Object, required: true }
+  },
   methods: {
     resolveComponent(type = '') {
       return META_TYPES[type.toUpperCase()] || META_TYPES.INPUT;

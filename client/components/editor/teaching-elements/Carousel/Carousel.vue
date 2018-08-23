@@ -44,7 +44,9 @@ let getIndices = obj => map(Object.keys(obj), it => parseInt(it)).sort().reverse
 
 export default {
   name: 'te-carousel',
-  props: ['element'],
+  props: {
+    element: { type: Object, required: true }
+  },
   data() {
     let indices = getIndices(this.element.data.items || {});
     return {

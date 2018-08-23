@@ -17,7 +17,10 @@
           @save="saveItem">
         </primitive>
       </draggable>
-      <add-element :include="['HTML', 'IMAGE']" @add="saveItem"></add-element>
+      <add-element
+        :include="['HTML', 'IMAGE']"
+        :layout="false"
+        @add="saveItem"/>
     </div>
     <button
       v-else
@@ -50,7 +53,9 @@ const teChannel = EventBus.channel('te');
 
 export default {
   name: 'te-modal',
-  props: ['element'],
+  props: {
+    element: { type: Object, required: true }
+  },
   data() {
     return {
       isEditing: false,

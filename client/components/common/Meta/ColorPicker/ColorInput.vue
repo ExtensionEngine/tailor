@@ -22,7 +22,9 @@
 import { Chrome as ColorPicker } from 'vue-color';
 
 export default {
-  props: ['value'],
+  props: {
+    value: { type: String, required: true }
+  },
   data() {
     return {
       color: { hex: this.value || '#ffffff' }

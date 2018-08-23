@@ -13,7 +13,7 @@
           <stat :name="objectiveLabel" :value="objectives"></stat>
         </span>
         <span class="col-xs-6">
-          <stat name="Knowledge checks" :value="assessments"></stat>
+          <stat :value="assessments" name="Knowledge checks"></stat>
         </span>
       </div>
     </div>
@@ -30,7 +30,9 @@ import Stat from './Stat';
 import truncate from 'truncate';
 
 export default {
-  props: ['course'],
+  props: {
+    course: { type: Object, required: true }
+  },
   computed: {
     name() {
       return truncate(this.course.name, 75);

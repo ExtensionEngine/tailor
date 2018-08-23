@@ -27,18 +27,18 @@ export default {
     backdrop: { type: Boolean, default: true },
     focus: { type: Boolean, default: true }
   },
-  mounted() {
-    this.focusTrap = focusTrap(this.$el, { escapeDeactivates: false });
-  },
-  beforeDestroy() {
-    this.focusTrap = null;
-  },
   watch: {
     show(isOpen) {
       toggleClass(document.body, 'modal-open', isOpen);
       const focus = isOpen && this.focus;
       this.$nextTick(() => toggleFocusTrap(this.focusTrap, focus));
     }
+  },
+  mounted() {
+    this.focusTrap = focusTrap(this.$el, { escapeDeactivates: false });
+  },
+  beforeDestroy() {
+    this.focusTrap = null;
   }
 };
 

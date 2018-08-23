@@ -23,7 +23,7 @@
             <span class="icon mdi mdi-menu-down"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#" @click="logout">Log out</a></li>
+            <li><a @click="logout" href="#">Log out</a></li>
           </ul>
         </li>
       </ul>

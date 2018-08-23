@@ -1,7 +1,9 @@
 <template>
   <form @submit.prevent="addUser" novalidate>
     <div class="row">
-      <div class="col-md-7" :class="{ 'has-error': hasError('email') }">
+      <div
+        :class="{ 'has-error': hasError('email') }"
+        class="col-md-7">
         <input
           v-model="email"
           class="form-control"
@@ -13,7 +15,10 @@
       </div>
       <div class="col-md-3">
         <select v-model="role" class="form-control">
-          <option v-for="role in roles" :value="role.value">
+          <option
+            v-for="role in roles"
+            :key="role.value"
+            :value="role.value">
             {{ role.title }}
           </option>
         </select>
@@ -36,6 +41,9 @@ const schema = yup.object().shape({
 });
 
 export default {
+  props: {
+    roles: { type: Array, required: true }
+  },
   data() {
     return {
       email: '',
@@ -65,9 +73,6 @@ export default {
       this.errors = [];
       return schema.validate(user, { abortEarly: false });
     }
-  },
-  props: {
-    roles: { type: Array, required: true }
   }
 };
 </script>

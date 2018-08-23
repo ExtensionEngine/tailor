@@ -8,7 +8,8 @@
       <div v-if="!currentLevel.length" class="well">
         {{ isCompatibleSchema
           ? 'There are no items within this repository.'
-          : 'Not compatible with current repository schema.' }}
+          : 'Not compatible with current repository schema.'
+        }}
       </div>
       <div
         v-for="activity in currentLevel"
@@ -45,13 +46,26 @@ import truncate from 'truncate';
 import uniqBy from 'lodash/uniqBy';
 
 export default {
-  props: ['repository', 'selectableLevels'],
+  props: {
+    repository: { type: Object, required: true },
+    selectableLevels: { type: Array, default: () => ([]) }
+  },
   data() {
     return {
       showLoader: true,
       activities: [],
       parent: null
     };
+  },
+  computed: {
+    currentLevel() {
+      return this.getChildren(this.parent);
+    },
+    isCompatibleSchema() {
+      if (!this.selectableLevels.length) return true;
+      const schema = getSchemaId(first(this.selectableLevels).type);
+      return schema === this.repository.schema;
+    }
   },
   methods: {
     show(activity) {
@@ -67,7 +81,7 @@ export default {
       }
     },
     isSelectable({ type }) {
-      if (!this.selectableLevels) return true;
+      if (!this.selectableLevels.length) return true;
       return !!find(this.selectableLevels, { type });
     },
     hasChildren(activity) {
@@ -79,16 +93,6 @@ export default {
     },
     getName(activity) {
       return truncate(get(activity, 'data.name', activity.type), 100);
-    }
-  },
-  computed: {
-    currentLevel() {
-      return this.getChildren(this.parent);
-    },
-    isCompatibleSchema() {
-      if (!this.selectableLevels.length) return true;
-      const schema = getSchemaId(first(this.selectableLevels).type);
-      return schema === this.repository.schema;
     }
   },
   created() {

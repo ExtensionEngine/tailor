@@ -6,9 +6,9 @@
     <label :for="meta.key">{{ meta.label }}</label>
     <div class="textarea-wrapper">
       <textarea
-        v-model="value"
-        v-show="editing"
         v-validate="meta.validate"
+        v-show="editing"
+        v-model="value"
         :ref="meta.key"
         :name="meta.key"
         :placeholder="meta.placeholder"
@@ -28,9 +28,12 @@
 import { withValidation } from 'utils/validation';
 
 export default {
-  mixins: [withValidation()],
   name: 'multiline-input',
-  props: ['meta', 'min-height'],
+  mixins: [withValidation()],
+  props: {
+    meta: { type: Object, default: () => ({ value: null }) },
+    minHeight: { type: Number, default: 60 }
+  },
   data() {
     return {
       value: this.meta.value,
@@ -41,7 +44,7 @@ export default {
     previewStyle() {
       return {
         visibility: this.editing ? 'hidden' : 'visible',
-        'min-height': `${this.minHeight || 60}px`
+        'min-height': `${this.minHeight}px`
       };
     }
   },

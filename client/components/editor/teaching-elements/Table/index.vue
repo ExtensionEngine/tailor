@@ -1,8 +1,9 @@
 <template>
   <div class="table">
-    <div class="table-row"
+    <div
       v-for="row in table"
-      :key="row.id">
+      :key="row.id"
+      class="table-row">
       <table-cell
         v-for="cell in cells(row)"
         :key="cell.id"
@@ -92,7 +93,10 @@ function removeEmbed(embeds, predicate = {}) {
 
 export default {
   name: 'te-table',
-  props: ['element', 'disabled'],
+  props: {
+    element: { type: Object, required: true },
+    disabled: { type: Boolean, default: false }
+  },
   computed: {
     table() {
       return sortBy(this.rows, 'position');

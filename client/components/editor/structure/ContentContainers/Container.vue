@@ -41,7 +41,7 @@ export default {
   name: 'content-container',
   props: {
     container: { type: Object, required: true },
-    types: { type: Array, required: false },
+    types: { type: Array, default: null },
     name: { type: String, required: true },
     layout: { type: Boolean, required: true }
   },

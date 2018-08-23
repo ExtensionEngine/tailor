@@ -12,110 +12,48 @@ import omit from 'lodash/omit';
 export default {
   name: 'cropper',
   props: {
-    containerStyle: Object,
-    data: Object,
-    preview: String,
-    src: {
-      type: String,
-      default: ''
-    },
-    alt: String,
-    dragMode: String,
-    responsive: {
-      type: Boolean,
-      default: true
-    },
-    restore: {
-      type: Boolean,
-      default: true
-    },
-    checkCrossOrigin: {
-      type: Boolean,
-      default: true
-    },
-    checkOrientation: {
-      type: Boolean,
-      default: true
-    },
-    cropBoxMovable: {
-      type: Boolean,
-      default: true
-    },
-    cropBoxResizable: {
-      type: Boolean,
-      default: true
-    },
-    toggleDragModeOnDblclick: {
-      type: Boolean,
-      default: true
-    },
-    modal: {
-      type: Boolean,
-      default: true
-    },
-    center: {
-      type: Boolean,
-      default: true
-    },
-    highlight: {
-      type: Boolean,
-      default: true
-    },
-    zoomOnTouch: {
-      type: Boolean,
-      default: true
-    },
-    zoomOnWheel: {
-      type: Boolean,
-      default: true
-    },
-    scalable: {
-      type: Boolean,
-      default: true
-    },
-    zoomable: {
-      type: Boolean,
-      default: true
-    },
-    guides: {
-      type: Boolean,
-      default: true
-    },
-    background: {
-      type: Boolean,
-      default: true
-    },
-    autoCrop: {
-      type: Boolean,
-      default: true
-    },
-    movable: {
-      type: Boolean,
-      default: true
-    },
-    rotatable: {
-      type: Boolean,
-      default: true
-    },
-    viewMode: Number,
-    aspectRatio: Number,
-    autoCropArea: Number,
-    wheelZoomRatio: Number,
-
+    containerStyle: { type: Object, default: null },
+    data: { type: Object, default: null },
+    preview: { type: String, default: null },
+    src: { type: String, default: '' },
+    alt: { type: String, default: null },
+    dragMode: { type: String, default: null },
+    responsive: { type: Boolean, default: true },
+    restore: { type: Boolean, default: true },
+    checkCrossOrigin: { type: Boolean, default: true },
+    checkOrientation: { type: Boolean, default: true },
+    cropBoxMovable: { type: Boolean, default: true },
+    cropBoxResizable: { type: Boolean, default: true },
+    toggleDragModeOnDblclick: { type: Boolean, default: true },
+    modal: { type: Boolean, default: true },
+    center: { type: Boolean, default: true },
+    highlight: { type: Boolean, default: true },
+    zoomOnTouch: { type: Boolean, default: true },
+    zoomOnWheel: { type: Boolean, default: true },
+    scalable: { type: Boolean, default: true },
+    zoomable: { type: Boolean, default: true },
+    guides: { type: Boolean, default: true },
+    background: { type: Boolean, default: true },
+    autoCrop: { type: Boolean, default: true },
+    movable: { type: Boolean, default: true },
+    rotatable: { type: Boolean, default: true },
+    viewMode: { type: Number, default: null },
+    aspectRatio: { type: Number, default: null },
+    autoCropArea: { type: Number, default: null },
+    wheelZoomRatio: { type: Number, default: null },
     // Size limitation
-    minCanvasWidth: Number,
-    minCanvasHeight: Number,
-    minCropBoxWidth: Number,
-    minCropBoxHeight: Number,
-    minContainerWidth: Number,
-    minContainerHeight: Number,
-
+    minCanvasWidth: { type: Number, default: null },
+    minCanvasHeight: { type: Number, default: null },
+    minCropBoxWidth: { type: Number, default: null },
+    minCropBoxHeight: { type: Number, default: null },
+    minContainerWidth: { type: Number, default: null },
+    minContainerHeight: { type: Number, default: null },
     // Callbacks
-    ready: Function,
-    cropstart: Function,
-    cropmove: Function,
-    cropend: Function,
-    crop: Function
+    ready: { type: Function, default: null },
+    cropstart: { type: Function, default: null },
+    cropmove: { type: Function, default: null },
+    cropend: { type: Function, default: null },
+    crop: { type: Function, default: null }
   },
   computed: {
     style() {

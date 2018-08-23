@@ -9,6 +9,7 @@
     <ul >
       <li
         v-for="(answer, index) in correct"
+        :key="index"
         :class="{ 'has-error': isValidAnswer(index) }"
         class="answer row">
         <div class="col-xs-3">
@@ -58,6 +59,7 @@
 </template>
 
 <script>
+import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import get from 'lodash/get';
@@ -69,9 +71,9 @@ import toNumber from 'lodash/toNumber';
 
 export default {
   props: {
-    assessment: Object,
-    errors: Array,
-    isEditing: Boolean
+    assessment: { type: Object, default: defaults.NR },
+    errors: { type: Array, default: () => ([]) },
+    isEditing: { type: Boolean, default: false }
   },
   computed: {
     isValid() {

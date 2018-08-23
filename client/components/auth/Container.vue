@@ -37,7 +37,7 @@ export default {
   transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1);
 
   &:hover {
-    box-shadow: 0 6px 10px rgba(0,0,0,0.20), 0 6px 8px rgba(0,0,0,0.22);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.2), 0 6px 8px rgba(0,0,0,0.22);
   }
 
   img {

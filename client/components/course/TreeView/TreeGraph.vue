@@ -67,18 +67,6 @@ export default {
       return zoom().scaleExtent([start, end]);
     }
   },
-  watch: {
-    hovered(node) {
-      if (!node) return this.$emit('node:focusout');
-      if (node.depth > 0) this.$emit('node:focus', node, node.data);
-    }
-  },
-  mounted() {
-    // Re-render chart when data changes.
-    this.$watch('nodes', nodes => {
-      if (nodes) this.renderTree();
-    }, { immediate: true });
-  },
   methods: {
     renderTree() {
       // Setup chart.
@@ -184,6 +172,18 @@ export default {
       const scale = clamp(ratio, defScale, maxScale);
       this.zoomHandler.scaleTo(svg, scale);
     }
+  },
+  watch: {
+    hovered(node) {
+      if (!node) return this.$emit('node:focusout');
+      if (node.depth > 0) this.$emit('node:focus', node, node.data);
+    }
+  },
+  mounted() {
+    // Re-render chart when data changes.
+    this.$watch('nodes', nodes => {
+      if (nodes) this.renderTree();
+    }, { immediate: true });
   }
 };
 
