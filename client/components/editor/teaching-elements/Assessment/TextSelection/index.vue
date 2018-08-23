@@ -1,25 +1,21 @@
 <template>
-  <div :class="{disabled: !isEditing}">
+  <div :class="{ disabled: !isEditing }">
     <h5 class="title">Text and selection</h5>
     <div
       @click="focus"
-      class="container"
-    >
+      class="container">
       <te-html
         v-if="!isSelecting && isEditing"
         :element="textElement"
         :is-focused="isFocused"
-        @save="saveContent"
-        ref="editor"
-      />
+        @save="saveContent"/>
       <selector
         v-else
         :rootNode="blastedContent"
-        :selection="correct"
+        :correct="correct"
         :isEditing="isEditing"
         @save="saveSelection"
-        class="htmlContent ql-container ql-snow"
-      />
+        class="htmlContent ql-container ql-snow"/>
     </div>
     <div v-if="isEditing">
       <button
@@ -41,19 +37,20 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import 'blast-text';
+import { blastContent } from './helpers';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import cuid from 'cuid';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import cuid from 'cuid';
-import TeHtml from '../../Html';
 import Selector from './Selector';
+import TeHtml from '../../Html';
 
 export default {
   props: {
-    assessment: Object,
-    isEditing: Boolean,
-    errors: Array
+    assessment: { type: Object, required: true },
+    isEditing: { type: Boolean, required: true },
+    errors: { type: Array, required: true }
   },
   data() {
     return {
@@ -84,15 +81,7 @@ export default {
     },
     blastedContent() {
       if (isEmpty(this.text)) return null;
-      const $ = window.jQuery;
-      const container = document.createElement('div');
-      const options = {
-        customClass: 'text-content',
-        generateIndexID: true
-      };
-      container.innerHTML = this.text;
-      $(container).blast(options);
-      return container;
+      return blastContent(this.text);
     }
   },
   methods: {
@@ -108,12 +97,13 @@ export default {
     },
     select() {
       if (this.isFocused) {
-        this.$refs.editor.save();
         this.focusElement();
       }
-      this.correct = [];
-      this.isSelecting = true;
-      this.update();
+      this.$nextTick(() => {
+        this.correct = [];
+        this.isSelecting = true;
+        this.update();
+      });
     },
     edit() {
       this.correct = [];
