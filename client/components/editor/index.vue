@@ -5,6 +5,10 @@
       <circular-progress v-if="showLoader"></circular-progress>
       <div v-else>
         <div class="container">
+          <active-editors
+            :courseId="this.course.id"
+            :activityId="this.activity.id">
+          </active-editors>
           <content-containers
             v-for="(containerGroup, type) in contentContainers"
             :key="type"
@@ -23,6 +27,7 @@
 <script>
 import * as config from 'shared/activities';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import ActiveEditors from 'components/common/ActiveEditors';
 import Assessments from './structure/Assessments';
 import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
@@ -101,6 +106,7 @@ export default {
     ).then(() => (this.showLoader = false));
   },
   components: {
+    ActiveEditors,
     Assessments,
     CircularProgress,
     ContentContainers,
