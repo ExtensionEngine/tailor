@@ -20,14 +20,14 @@
           <div class="image-input-err">
             <input
               v-validate
-              data-vv-as="image"
+              :ref="`${answer.key}_file_input`"
               :data-vv-rules="imageValidationRules"
               :accept="imageInputType"
               :data-key="answer.key"
               :disabled="disabled"
               :name="answer.key"
-              :ref="`${answer.key}_file_input`"
               @change="updateAnswer"
+              data-vv-as="image"
               class="image-input"
               type="file"/>
             <button
@@ -36,9 +36,9 @@
               type="button">
               Upload image...
             </button>
-              <span v-if="vErrors.first(answer.key)" class="error-msg">
-                {{ vErrors.first(answer.key) }}
-              </span>
+            <span v-if="vErrors.first(answer.key)" class="error-msg">
+              {{ vErrors.first(answer.key) }}
+            </span>
           </div>
           <span @click="removeAnswer(answer.key)" class="mdi mdi-close control">
           </span>
@@ -52,6 +52,7 @@
 import { blobToDataURL } from 'blob-util';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
+import { defaults } from 'utils/assessment';
 import find from 'lodash/find';
 import pull from 'lodash/pull';
 import { withValidation } from 'utils/validation';
@@ -84,9 +85,9 @@ const maxDimensionsValidationRule = {
 export default {
   mixins: [withValidation()],
   props: {
-    assessment: Object,
-    isEditing: Boolean,
-    errors: Array,
+    assessment: { type: Object, default: defaults.IMC },
+    isEditing: { type: Boolean, default: false },
+    errors: { type: Array, default: () => [] },
     fileInputTypes: { type: Array, default: () => ['image/jpeg', 'image/png'] }
   },
   computed: {
@@ -195,13 +196,13 @@ export default {
       }
     }
   },
-  created() {
-    this.$validator.extend('maxdimensions', maxDimensionsValidationRule);
-  },
   watch: {
     assessment() {
       this.validate();
     }
+  },
+  created() {
+    this.$validator.extend('maxdimensions', maxDimensionsValidationRule);
   }
 };
 

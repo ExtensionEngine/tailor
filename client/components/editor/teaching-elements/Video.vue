@@ -22,9 +22,9 @@
       <div class="player">
         <plyr
           v-if="showVideo"
+          ref="video"
           :emit="['error']"
-          @ready="onError"
-          ref="video">
+          @ready="onError">
           <video v-if="type.isNative">
             <source :src="url" :type="type.name"/>
           </video>
@@ -163,7 +163,7 @@ function handlePlyrErrors(Plyr) {
   z-index: 98;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, .9);
+  background: rgba(0, 0, 0, 0.9);
 }
 
 .error .message {

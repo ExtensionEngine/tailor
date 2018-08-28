@@ -41,9 +41,9 @@ import isArray from 'lodash/isArray';
 export default {
   name: 'feedback',
   props: {
-    answers: [Array, Boolean],
-    feedback: Object,
-    isEditing: Boolean
+    answers: { type: [Array, Boolean], default: null },
+    feedback: { type: Object, default: () => ({}) },
+    isEditing: { type: Boolean, default: false }
   },
   data() {
     return {

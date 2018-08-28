@@ -6,15 +6,15 @@ import Auth from './components/auth/Container';
 import Catalog from './components/catalog/Container';
 import Course from './components/course';
 import CourseRevisions from './components/course/Revisions';
-import CourseSettings from './components/course/settings';
+import CourseSettings from './components/course/Settings';
 import Editor from './components/editor';
 import ForgotPassword from './components/auth/ForgotPassword';
-import General from './components/course/settings/General';
+import General from './components/course/Settings/General';
 import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
 import TreeView from './components/course/TreeView';
-import UserManagement from './components/course/settings/UserManagement';
+import UserManagement from './components/course/Settings/UserManagement';
 
 Vue.use(Router);
 

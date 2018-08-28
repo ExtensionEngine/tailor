@@ -33,7 +33,9 @@ import find from 'lodash/find';
 
 export default {
   name: 'revision-item',
-  props: ['revision'],
+  props: {
+    revision: { type: Object, required: true }
+  },
   data() {
     return { expanded: false };
   },

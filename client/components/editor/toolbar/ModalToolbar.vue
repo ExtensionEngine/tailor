@@ -27,7 +27,9 @@ import { mapActions } from 'vuex-module';
 const teChannel = EventBus.channel('te');
 
 export default {
-  props: ['element'],
+  props: {
+    element: { type: Object, required: true }
+  },
   data() {
     return {
       title: this.element.data.title
@@ -94,8 +96,8 @@ export default {
   padding: 0;
 
   input {
-    height: 20px;
     min-width: 250px;
+    height: 20px;
     font-size: 14px;
     line-height: 14px;
   }

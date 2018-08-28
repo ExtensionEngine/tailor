@@ -9,15 +9,15 @@
         :class="{ 'has-error': vErrors.has('height') }"
         class="input">
         <input
-          v-model="height"
           v-validate="{
             rules: {
               required: true, numeric: true, min_value: 50, max_value: 3000
             }
           }"
+          v-model="height"
           @input="onChange"
-          data-vv-delay="0"
           id="heightInput"
+          data-vv-delay="0"
           class="form-control"
           name="height"
           type="text"
@@ -34,11 +34,11 @@
       </label>
       <span :class="{ 'has-error': vErrors.has('url') }" class="input url">
         <input
-          v-model="url"
           v-validate="{ rules: { required: true, url: true } }"
+          v-model="url"
           @input="onChange"
-          data-vv-delay="0"
           id="urlInput"
+          data-vv-delay="0"
           class="form-control"
           name="url"
           type="text"
@@ -58,9 +58,11 @@ import { mapActions } from 'vuex-module';
 import { withValidation } from 'utils/validation';
 
 export default {
-  mixins: [withValidation()],
   name: 'embed-toolbar',
-  props: ['element'],
+  mixins: [withValidation()],
+  props: {
+    element: { type: Object, required: true }
+  },
   data() {
     const { height, url } = this.element.data;
     return {

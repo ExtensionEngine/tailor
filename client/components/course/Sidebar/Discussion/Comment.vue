@@ -114,8 +114,8 @@ export default {
       this.$emit('remove', this.comment);
     }
   },
-  components: { Avatar, TextEditor, ThreadComment },
-  directives: { focus }
+  directives: { focus },
+  components: { Avatar, TextEditor, ThreadComment }
 };
 </script>
 

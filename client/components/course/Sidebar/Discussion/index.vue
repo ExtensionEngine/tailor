@@ -2,7 +2,8 @@
   <div class="discussion">
     <h4 class="header">
       <span class="pull-left">Comments</span>
-      <span v-show="showBtnPosition === 'top'"
+      <span
+        v-show="showBtnPosition === 'top'"
         @click="showMore = !showMore"
         class="pull-left btn-show"
         role="button">
@@ -12,10 +13,10 @@
     <div :direction="direction" class="vertical-layout">
       <div class="editor-wrapper">
         <text-editor
+          ref="editor"
           v-model="comment.content"
           @change="post"
           placeholder="Add a comment..."
-          ref="editor"
           class="editor">
         </text-editor>
         <div class="clearfix controls">
