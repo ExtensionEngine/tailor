@@ -20,9 +20,7 @@ import {
   removeSelection
 } from './helpers';
 import cloneDeep from 'lodash/cloneDeep';
-import first from 'lodash/first';
 import isEmpty from 'lodash/isEmpty';
-import last from 'lodash/last';
 import SelectionNode from './SelectionNode';
 
 export default {
@@ -42,7 +40,6 @@ export default {
       const selections = cloneDeep(this.selection);
       const selection = getSelectedWords();
       if (isEmpty(selection)) return;
-      if (last(selection) - first(selection) === 1) return;
       this.selection = mergeSelection(selections, selection);
       this.save();
       document.getSelection().removeAllRanges();

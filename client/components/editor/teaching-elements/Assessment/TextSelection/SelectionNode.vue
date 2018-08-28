@@ -1,63 +1,40 @@
 <template>
   <component
     :is="node.tagName || 'SPAN'"
-    v-bind="getAttributes(node)"
-    :class="{ 'separator': !node.tagName }">
-    <template v-if="!node.tagName">{{ node.textContent }}</template>
-    <template
-      v-else
-      v-for="(item, itemIndex) in groupNodes(rootNode, node, selection)">
-      <template v-if="isNode(item)">
+    v-bind="getAttributes(node)">
+    <template v-for="(element, elementIndex) in node.children">
+      <template>
         <component
-          v-if="isBlast(item)"
-          v-html="item.innerHTML"
-          v-bind="getAttributes(item)"
-          :key="`${level}.${itemIndex}`"
-          :is="item.tagName"
-          @click.stop="addSelection(item)"/> 
+          v-if="isBlast(element)"
+          v-html="element.innerHTML"
+          v-bind="getAttributes(element)"
+          :key="`${level}.${elementIndex}`"
+          :is="element.tagName"
+          :class="getClass(element)"
+          @click.stop="addSelection(element)"/>
         <selection-node
           v-else
-          :key="`${level}.${itemIndex}`"
-          :node="item"
+          :key="`${level}.${elementIndex}`"
+          :node="element"
           :rootNode="rootNode"
           :selection="selection"
-          :level="`[${level},${itemIndex}]`"
+          :level="`[${level},${elementIndex}]`"
           @addSelection="addSelection"
           @removeSelection="removeSelection">
         </selection-node>
       </template>
-      <span
-        v-else
-        :key="`${level}.${itemIndex}`"
-        @click.stop="removeSelection(item.selection)"
-        class="selected">
-        <template
-          v-for="(node, nodeIndex) in item.nodes">
-          <component
-            v-if="isBlast(node)"
-            :key="`${level}.${itemIndex}.${nodeIndex}`"
-            :is="node.tagName"
-            v-html="node.innerHTML"
-            v-bind="getAttributes(node)"/>
-          <selection-node
-            v-else
-            :key="`${level}.${itemIndex}.${nodeIndex}`"
-            :node="node"
-            :rootNode="rootNode"
-            :selection="selection"
-            :level="`[${level},${itemIndex}, ${nodeIndex}]`"
-            @addSelection="addSelection"
-            @removeSelection="removeSelection">
-          </selection-node>
-        </template>
-      </span>
     </template>
   </component>
 </template>
 
 <script>
-import { getAttributes, groupNodes, isBlast, isNode } from './helpers';
-import isUndefined from 'lodash/isUndefined';
+import {
+  getAttributes,
+  getNodeSelection,
+  isBlast,
+  isBlastWord,
+  isSelected
+} from './helpers';
 
 export default {
   name: 'SelectionNode',
@@ -69,14 +46,22 @@ export default {
   },
   methods: {
     getAttributes,
-    isNode,
     isBlast,
-    groupNodes,
+    getClass(node) {
+      return {
+        selected: isSelected(node, this.selection),
+        blast: true,
+        word: isBlastWord(node)
+      };
+    },
     addSelection(node) {
+      if (isSelected(node, this.selection)) {
+        const selection = getNodeSelection(node, this.selection);
+        return this.removeSelection(selection);
+      }
       this.$emit('addSelection', node);
     },
     removeSelection(selection) {
-      if (isUndefined(selection)) return;
       this.$emit('removeSelection', selection);
     }
   }
