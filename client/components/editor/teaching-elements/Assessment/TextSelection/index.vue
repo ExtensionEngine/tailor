@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import 'blast-text';
 import { blastContent } from './helpers';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import cuid from 'cuid';
@@ -49,15 +48,15 @@ import TeHtml from '../../Html';
 export default {
   props: {
     assessment: { type: Object, required: true },
-    isEditing: { type: Boolean, required: true },
-    errors: { type: Array, required: true }
+    errors: { type: Array, required: true },
+    isEditing: { type: Boolean, required: true }
   },
   data() {
     return {
       id: cuid(),
       text: this.assessment.text,
       correct: this.assessment.correct,
-      isSelecting: false,
+      isSelecting: false
     };
   },
   computed: {
@@ -81,7 +80,7 @@ export default {
     },
     blastedContent() {
       if (isEmpty(this.text)) return null;
-      return blastContent(this.text);
+      return blastContent(this.text, this.correct);
     }
   },
   methods: {
@@ -120,7 +119,7 @@ export default {
         correct: this.correct
       };
       this.$emit('update', data);
-    },
+    }
   },
   watch: {
     errors() {

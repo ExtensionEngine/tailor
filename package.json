@@ -37,7 +37,7 @@
     "aws-sdk": "^2.178.0",
     "axios": "^0.15.2",
     "bcryptjs": "^2.3.0",
-    "blast-text": "^2.0.0",
+    "blast-vanilla": "^2.1.6",
     "blob-util": "^1.2.1",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",

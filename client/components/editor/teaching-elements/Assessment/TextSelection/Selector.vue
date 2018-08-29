@@ -1,81 +1,95 @@
 <template>
-  <div>
-    <div class="selector ql-editor">
-      <selection-node
-        :node="rootNode"
-        :rootNode="rootNode"
-        :selection="selection"
-        :level="'0'"
-        @addSelection="addSelection"
-        @removeSelection="removeRange"/>
-    </div>
+  <div
+    @mouseup="onMouseup">
+    <div
+      v-html="rootNode.innerHTML"
+      :class="{ editing: this.isEditing }"
+      class="selector ql-editor"/>
   </div>
 </template>
 
 <script>
 import {
-  getIndex,
   getSelectedWords,
-  mergeSelection,
-  removeSelection
+  getSelection,
+  isBlast,
+  isSelected,
+  modifySelectionNodes,
+  Selection
 } from './helpers';
 import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
-import SelectionNode from './SelectionNode';
 
 export default {
   props: {
-    rootNode: { type: HTMLElement, required: true },
     correct: { type: Array, required: true },
-    isEditing: { type: Boolean, required: true }
+    isEditing: { type: Boolean, required: true },
+    rootNode: { type: HTMLElement, required: true }
   },
   data() {
     return {
-      selection: cloneDeep(this.correct)
+      selections: cloneDeep(this.correct),
+      protected: []
     };
   },
   methods: {
-    selectionEnd() {
+    onMouseup(event) {
       if (!this.isEditing) return;
-      const selections = cloneDeep(this.selection);
+      const node = event.target;
+      const domSelection = document.getSelection();
       const selection = getSelectedWords();
-      if (isEmpty(selection)) return;
-      this.selection = mergeSelection(selections, selection);
+      if (!isEmpty(selection) && !domSelection.isCollapsed) {
+        this.addSelection(selection);
+      } else if (isSelected(node) && isBlast(node)) {
+        const range = getSelection(node);
+        this.removeSelection(range);
+      }
+    },
+    addSelection(selection) {
+      if (!this.isEditing) return;
+      const merge = Selection.merge(this.selections, selection);
+      const { selections, range } = merge;
+      const options = {
+        addClass: 'selected',
+        setAttribute: { name: 'range', value: range }
+      };
+      this.selections = selections;
+      modifySelectionNodes(this.$el, range, options);
       this.save();
       document.getSelection().removeAllRanges();
     },
-    addSelection(node) {
-      if (!this.isEditing) return;
-      const index = getIndex(node);
-      const selections = cloneDeep(this.selection);
-      this.selection = mergeSelection(selections, [index, index + 1]);
-      this.save();
-      document.getSelection().removeAllRanges();
-    },
-    removeRange(selection) {
-      if (!this.isEditing) return;
-      const selections = cloneDeep(this.selection);
-      this.selection = removeSelection(selections, selection);
+    removeSelection(range) {
+      this.selections = Selection.remove(this.selections, range);
+      const options = {
+        removeClass: 'selected',
+        removeAttribute: 'range'
+      };
+      modifySelectionNodes(this.$el, range, options);
       this.save();
     },
     save() {
-      this.$emit('save', this.selection);
+      this.$emit('save', this.selections);
     }
-  },
-  created() {
-    document.addEventListener('mouseup', this.selectionEnd);
-  },
-  beforeDestroy() {
-    document.removeEventListener('mouseup', this.selectionEnd);
-  },
-  components: {
-    SelectionNode
   }
 };
 </script>
 
 <style lang="scss" scoped>
+$selectionBackground: rgb(181, 197, 136);
+$selectionColor: rgb(13, 60, 85);
+
 .selector {
+  &.editing {
+    ::selection {
+      background: lighten($selectionBackground, 20%);
+    }
+  }
+
+  /deep/ .selected {
+    background: $selectionBackground;
+    color: $selectionColor;
+  }
+
   .separator {
     white-space: pre;
   }

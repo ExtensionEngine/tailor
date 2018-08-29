@@ -55,10 +55,7 @@ const options = {
 
 export default {
   name: 'te-html',
-  props: {
-    element: { type: Object, required: true },
-    isFocused: { type: Boolean, required: true }
-  },
+  props: ['element', 'isFocused'],
   data() {
     return {
       content: get(this.element, 'data.content', ''),

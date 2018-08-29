@@ -5,7 +5,6 @@ const Dotenv = require('dotenv-webpack');
 const find = require('lodash/find');
 const merge = require('lodash/merge');
 const path = require('path');
-const wp = require('webpack');
 const serverPort = require('../server').port;
 
 const rootPath = path.resolve(__dirname, '../../');
@@ -58,9 +57,6 @@ module.exports = (options, req) => ({
   webpack(config) {
     config.module.rules.push(...rules);
     config.plugins.push(new Dotenv());
-    config.plugins.push(new wp.ProvidePlugin({
-      'window.jQuery': 'jquery'
-    }));
     return config;
   },
   extendWebpack(config) {

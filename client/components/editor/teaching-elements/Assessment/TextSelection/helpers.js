@@ -1,126 +1,147 @@
+import Blast from 'blast-vanilla';
+import cloneDeep from 'lodash/cloneDeep';
 import curry from 'lodash/curry';
 import curryRight from 'lodash/curryRight';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
-import fromPairs from 'lodash/fromPairs';
-import includes from 'lodash/includes';
+import generateRange from 'lodash/range';
 import inRange from 'lodash/inRange';
-import invoke from 'lodash/invoke';
 import isEmpty from 'lodash/isEmpty';
-import isUndefined from 'lodash/isUndefined';
 import last from 'lodash/last';
-import map from 'lodash/map';
 import sortedIndexBy from 'lodash/sortedIndexBy';
 
 const blastClass = 'blast';
+const blastSelector = 'span.blast';
+const blastWordSelector = 'span.blast.word';
 const wordClass = 'word';
-const blastWordSelector = `span.blast.word`;
-const idPrefix = 'text-content-';
 
-const isNode = node => node instanceof Node;
+const NodeType = { TEXT: 3 };
+const getIndex = (node) => Number(node.id);
+const isText = node => node.nodeType === NodeType.TEXT;
 
-export function getIndex(node) {
-  const { id } = node;
-  if (isEmpty(id)) return NaN;
-  return Number(invoke(id, 'substring', idPrefix.length));
-}
+export const isSelected = (node) => node.hasAttribute('range');
 
-export function isBlastWord(node) {
-  if (!isBlast(node)) return false;
-  return invoke(node.classList, 'contains', wordClass);
-}
-
-export function blastContent(html) {
-  const $ = window.jQuery;
+export function blastContent(html, selections) {
   const container = document.createElement('div');
   container.innerHTML = html;
-  $(container).blast();
+  // eslint-disable-next-line no-new
+  new Blast(container);
   const iterator = document.createNodeIterator(container, NodeFilter.SHOW_TEXT);
   const nodes = [];
   while (iterator.nextNode()) { nodes.push(iterator.referenceNode); }
-  let index = 0;
-  nodes.forEach(node => {
-    let span = document.createElement('span');
+  nodes.forEach((node, index) => {
+    let span;
     if (isBlast(node.parentElement)) {
       span = node.parentElement;
       span.classList.add('word');
     } else {
+      span = document.createElement('span');
       span.textContent = node.textContent;
       node.replaceWith(span);
       span.classList.add('blast');
     }
-    span.id = `${idPrefix}${index++}`;
+    const selection = getSelectionByIndex(index, selections);
+    if (selection) {
+      span.classList.add('selected');
+      span.setAttribute('range', selection);
+    }
+    span.id = `${index}`;
   });
   return container;
 }
 
-export function getAttributes(node) {
-  const { attributes } = node;
-  if (!isNode(node) || isUndefined(attributes)) return {};
-  const attributesMap = map(attributes, ({ name, value }) => ([ name, value ]));
-  return fromPairs(attributesMap);
-}
-
-export function isSelected(node, selection) {
-  return !!getNodeSelection(node, selection);
-}
-
 export function getSelectedWords() {
   const domSelection = document.getSelection();
-  if (domSelection.rangeCount === 0) return [];
+  if (!domSelection.rangeCount) return [];
   const range = domSelection.getRangeAt(0);
-  if (range.startContainer === range.endContainer) return [];
-  const root = range.commonAncestorContainer;
-  let selection = invoke(root, 'querySelectorAll', blastWordSelector);
-  selection = filter(selection, item => domSelection.containsNode(item));
+  const start = range.startContainer;
+  const end = range.endContainer;
+  let selection;
+  if (start === end && isText(start)) {
+    const word = range.startContainer.parentElement;
+    selection = isBlastWord(word) ? [word] : [];
+  } else {
+    const root = range.commonAncestorContainer;
+    selection = Array.from(root.querySelectorAll(blastWordSelector));
+    selection = selection.filter(item => domSelection.containsNode(item));
+  }
   const startWord = range.startContainer.parentElement;
-  const startIncluded = includes(selection, startWord);
-  if (isBlastWord(startWord) && !startIncluded) selection = [startWord, ...selection];
   const endWord = range.endContainer.parentElement;
-  const endIncluded = includes(selection, endWord);
-  if (isBlastWord(endWord) && !endIncluded) selection = [...selection, endWord];
+  if (wordIsTarget(selection, startWord)) selection = [startWord, ...selection];
+  if (wordIsTarget(selection, endWord)) selection = [...selection, endWord];
   if (isEmpty(selection)) return [];
   return [getIndex(first(selection)), getIndex(last(selection)) + 1];
 }
 
+export function getSelection(node) {
+  const range = node.getAttribute('range');
+  return range.split(',').map(Number);
+}
+
 export function isBlast(node) {
-  if (!isNode(node)) return false;
-  return invoke(node.classList, 'contains', blastClass);
+  if (!(node instanceof HTMLSpanElement)) return false;
+  return node.classList.contains(blastClass);
 }
 
-export function mergeSelection(selections, selection) {
-  if (isUndefined(selection)) return selections;
-  const begin = first(selection);
-  const end = last(selection);
-  const final = end - 1;
-  const check = curry(isOverlaped);
-  const beginOverlap = find(selections, check(begin));
-  const endOverlap = find(selections, check(final));
-  const range = [first(beginOverlap) || begin, last(endOverlap) || end];
-  selections = removeSelection(selections, range);
-  const index = sortedIndexBy(selections, range, first);
-  selections.splice(index, 0, range);
-  return selections;
+export function modifySelectionNodes(element, range, options) {
+  const query = index => `${blastSelector}[id="${index}"]`;
+  const indexes = generateRange(...range);
+  const nodes = indexes.map(index => element.querySelector(query(index)));
+  nodes.forEach(node => {
+    if (options.addClass) node.classList.add(options.addClass);
+    if (options.removeClass) node.classList.remove(options.removeClass);
+    if (options.setAttribute) {
+      const { name, value } = options.setAttribute;
+      node.setAttribute(name, value);
+    }
+    if (options.removeAttribute) node.removeAttribute(options.removeAttribute);
+  });
 }
 
-export function removeSelection(selections, selection) {
-  const check = curryRight(isOverlaped)(selection);
-  return filter(selections, range => (
-    !check(first(range)) &&
-    !check(last(range) - 1)
-  ));
-}
+export const Selection = {
+  merge(selections, selection) {
+    selections = cloneDeep(selections);
+    const begin = first(selection);
+    const end = last(selection);
+    const final = end - 1;
+    const check = curry(isOverlaped);
+    const beginOverlap = find(selections, check(begin));
+    const endOverlap = find(selections, check(final));
+    const range = [first(beginOverlap) || begin, last(endOverlap) || end];
+    selections = this.remove(selections, range);
+    const index = sortedIndexBy(selections, range, first);
+    selections.splice(index, 0, range);
+    return { selections, range };
+  },
+  remove(selections, selection) {
+    selections = cloneDeep(selections);
+    const check = curryRight(isOverlaped)(selection);
+    return filter(selections, range => (
+      !check(first(range)) &&
+      !check(last(range) - 1)
+    ));
+  }
+};
 
-export function getNodeSelection(node, selections) {
-  if (!isNode(node)) return false;
-  const index = getIndex(node);
-  const check = curry(isOverlaped)(index);
-  return find(selections, check);
+function isBlastWord(node) {
+  if (!isBlast(node)) return false;
+  return node.classList.contains(wordClass);
 }
 
 function isOverlaped(index, selection) {
   const start = first(selection);
   const end = last(selection);
   return inRange(index, start, end);
+}
+
+function getSelectionByIndex(index, selections) {
+  const check = curry(isOverlaped)(index);
+  return selections.find(check);
+}
+
+function wordIsTarget(selection, word) {
+  const included = selection.includes(word);
+  const isBlast = isBlastWord(word);
+  return isBlast && !included;
 }
