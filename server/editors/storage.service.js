@@ -1,50 +1,41 @@
 'use strict';
 
 const get = require('lodash/get');
+const pull = require('lodash/pull');
 const set = require('lodash/set');
-const PromiseQueue = require('promise-queue');
 
 // TODO: refactor + add entry expiration
 class StorageService {
   constructor() {
-    this.queue = new PromiseQueue(1, Infinity);
-    const editors = {};
-    this.addEditor = function (editorId, courseId, activityId) {
-      if (!get(editors, [courseId, activityId])) {
-        set(editors, [courseId, activityId], []);
-      }
-      let activityEditorIds = get(editors, [courseId, activityId]);
-      if (!activityEditorIds.includes(editorId)) activityEditorIds.push(editorId);
-    };
-    this.removeEditor = function (editorId, courseId, activityId) {
-      let activityEditorIds = get(editors, [courseId, activityId]) || [];
-      if (activityEditorIds.includes(editorId)) {
-        let index = activityEditorIds.indexOf(editorId);
-        if (index > -1) activityEditorIds.splice(index, 1);
-        set(editors, [courseId, activityId], activityEditorIds);
-      }
-    };
-    this.getEditors = function (courseId, activityId) {
-      return get(editors, [courseId, activityId]) || [];
-    };
+    this.editors = {};
+  }
+
+  getKey(courseId, activityId) {
+    return `c${courseId}a${activityId}`;
   }
 
   storeEditorId(editorId, courseId, activityId) {
-    return this.queue.add(() => Promise.resolve(
-      this.addEditor(editorId, '' + courseId, '' + activityId)
-    ));
+    return this.getEditorIds(courseId, activityId)
+      .then(editorIds => {
+        let key = this.getKey(courseId, activityId);
+        if (!editorIds.length) {
+          set(this.editors, key, [ editorId ]);
+        } else if (!editorIds.includes(editorId)) {
+          editorIds.push(editorId);
+        }
+      });
   }
 
   removeEditorId(editorId, courseId, activityId) {
-    return this.queue.add(() => Promise.resolve(
-      this.removeEditor(editorId, '' + courseId, '' + activityId)
-    ));
+    return this.getEditorIds(courseId, activityId)
+      .then(editorIds => {
+        if (editorIds.includes(editorId)) pull(editorIds, editorId);
+      });
   }
 
   getEditorIds(courseId, activityId) {
-    return this.queue.add(() => Promise.resolve(
-      this.getEditors('' + courseId, '' + activityId)
-    ));
+    let editorIds = get(this.editors, this.getKey(courseId, activityId), []);
+    return Promise.resolve(editorIds);
   }
 }
 

@@ -1,36 +1,55 @@
 <template>
   <div>
-    <div v-if="editorCount" style="text-align: right;">
-      <div class="editor-avatar-container">
-        <span class="editor-label">
-          Active editors:
+    <div class="editor-avatar-container">
+      <span class="editor-label">
+        Active editors:
+      </span>
+      <transition-group name="editor-avatars">
+        <span
+          v-for="(editor, index) in editorsToDisplay"
+          :key="index"
+          :style="`
+            ${getEditorColorsStyle()}
+            z-index: ${editorsToDisplay.length - index};
+          `"
+          v-tooltip="{
+            content: `${editor.email}${editor.email === user.email ? ' (you)' : ''}`,
+            class: 'editor-tooltip'
+          }"
+          class="editor-initial">
+          {{ editorInitial(editor.email) }}
         </span>
-        <transition-group name="editor-avatars">
-          <span
-            v-for="(editor, index) in processedEditors"
-            :key="index"
-            :style="`background: ${getRandomColor()};`"
-            :title="`${editor.email}${editor.email === user.email ? ' (you)' : ''}`"
-            class="editor-initial">
-            {{ editorInitial(editor.email) }}
-          </span>
-          <span
-            v-if="additionalEditors"
-            :key="editors.length"
-            :title="`+${additionalEditors} more`"
-            class="editor-initial additional-editors">
-            . . .
-          </span>
-        </transition-group>
+        <span
+          v-if="additionalEditors.length"
+          v-tooltip="{
+            html: 'additionalEditorsTooltipContent',
+            class: 'editor-tooltip'
+          }"
+          :key="editors.length"
+          class="editor-initial additional-editors">
+          {{ `${additionalEditors.length > 99 ? '99+' : '+' + additionalEditors.length}` }}
+        </span>
+      </transition-group>
+      <div id="additionalEditorsTooltipContent">
+        <p
+          v-for="(editor, index) in additionalEditors"
+          :key="index"
+          style="margin: 0;">
+          {{ editor.email }}
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
+import differenceWith from 'lodash/differenceWith';
+import findIndex from 'lodash/findIndex';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 
-const color = require('color');
+const invert = require('invert-color');
+
 const MAX_EDITORS = 4;
 
 export default {
@@ -43,15 +62,24 @@ export default {
     ...mapGetters(['editorCount', 'editorsFetched'], 'editors'),
     ...mapGetters(['editors']),
     ...mapGetters(['user']),
-    processedEditors() {
-      return this.editors.length <= MAX_EDITORS
-        ? this.editors
-        : this.editors.slice(0, MAX_EDITORS);
+    editorsToDisplay() {
+      if (!this.editors.length) return [];
+
+      let editors = cloneDeep(this.editors);
+      let editorIndex = findIndex(editors, { id: this.user.id });
+
+      if (editorIndex !== 0) {
+        [ editors[0], editors[editorIndex] ] = [ editors[editorIndex], editors[0] ];
+      }
+
+      return editors.slice(0, MAX_EDITORS);
     },
     additionalEditors() {
-      return this.editors.length > MAX_EDITORS
-        ? this.editors.length - MAX_EDITORS
-        : 0;
+      return differenceWith(
+        this.editors,
+        this.editorsToDisplay,
+        (first, second) => (first.id === second.id)
+      );
     }
   },
   methods: {
@@ -64,9 +92,13 @@ export default {
     editorInitial(editorEmail) {
       return editorEmail.charAt(0).toUpperCase();
     },
-    getRandomColor() {
+    getEditorColorsStyle() {
+      // TODO: replace custom avatars with vue-avatar
       let hue = (Math.random() * 0.618034) % 1;
-      return color({ h: hue * 360, s: 50, v: 95 }).hexString();
+      let rgb = hsvToRgb(hue, 0.5, 0.95);
+      let inverse = invert(rgb, false);
+
+      return `background: rgb(${rgb.r}, ${rgb.g}, ${rgb.b}); color: ${inverse};`;
     }
   },
   watch: {
@@ -90,23 +122,49 @@ export default {
     this.unsubscribe(this.user.id);
   }
 };
+
+function hsvToRgb(h, s, v) {
+  let r, g, b;
+  let i = Math.floor(h * 6);
+  let f = h * 6 - i;
+  let p = v * (1 - s);
+  let q = v * (1 - f * s);
+  let t = v * (1 - (1 - f) * s);
+  switch (i % 6) {
+    case 0: r = v; g = t; b = p; break;
+    case 1: r = q; g = v; b = p; break;
+    case 2: r = p; g = v; b = t; break;
+    case 3: r = p; g = q; b = v; break;
+    case 4: r = t; g = p; b = v; break;
+    case 5: r = v; g = p; b = q; break;
+  }
+  return {
+    r: Math.round(r * 255),
+    g: Math.round(g * 255),
+    b: Math.round(b * 255)
+  };
+}
 </script>
 
 <style lang="scss" scoped>
+$white: #fff;
+$paleGray: #ccc;
+$darkGray: #333;
+
 .editor {
   &-initial {
     display: inline-block;
+    position: relative;
     width: 2.5em;
     height: 2.5em;
     margin-right: -0.7em;
-    color: #fff;
     font-size: 1.2em;
     font-weight: bold;
     line-height: 2.5em;
     text-align: center;
     border-radius: 50%;
     vertical-align: middle;
-    border: 1px solid #fff;
+    border: 1px solid $white;
   }
 
   &-label {
@@ -121,7 +179,7 @@ export default {
     width: fit-content;
     padding: 5px;
     padding-right: 1.2em;
-    background: #fff;
+    background: $white;
     border-radius: 30px;
   }
 }
@@ -137,6 +195,23 @@ export default {
 }
 
 .additional-editors {
-  background: #ccc;
+  padding-left: 0.4em;
+  color: #333;
+  background: $paleGray;
+  z-index: 0;
+}
+</style>
+
+<style lang="scss">
+$tooltipBackground: #e8e8e8;
+
+.vue-tooltip.editor-tooltip {
+  background: $tooltipBackground;
+
+  .tooltip-content {
+    color: #171717;
+    font-weight: bold;
+    background: $tooltipBackground;
+  }
 }
 </style>
