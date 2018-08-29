@@ -5,20 +5,20 @@
         Active editors:
       </span>
       <transition-group name="editor-avatars">
-        <span
+        <avatar
           v-for="(editor, index) in editorsToDisplay"
-          :key="index"
-          :style="`
-            ${getEditorColorsStyle()}
-            z-index: ${editorsToDisplay.length - index};
-          `"
           v-tooltip="{
             content: `${editor.email}${editor.email === user.email ? ' (you)' : ''}`,
             class: 'editor-tooltip'
           }"
-          class="editor-initial">
-          {{ editorInitial(editor.email) }}
-        </span>
+          :key="index"
+          :style="`z-index: ${editorsToDisplay.length - index}`"
+          :size="40"
+          :username="editor.email"
+          :initials="editor.email.charAt(0).toUpperCase()"
+          class="editor-initial"
+          color="#ffffffd9">
+      </avatar>
         <span
           v-if="additionalEditors.length"
           v-tooltip="{
@@ -43,12 +43,11 @@
 </template>
 
 <script>
+import Avatar from 'vue-avatar';
 import cloneDeep from 'lodash/cloneDeep';
 import differenceWith from 'lodash/differenceWith';
 import findIndex from 'lodash/findIndex';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-
-const invert = require('invert-color');
 
 const MAX_EDITORS = 4;
 
@@ -88,17 +87,6 @@ export default {
     fetchEditors() {
       if (this.editorsFetched) return;
       this.fetch({ activityId: this.activityId });
-    },
-    editorInitial(editorEmail) {
-      return editorEmail.charAt(0).toUpperCase();
-    },
-    getEditorColorsStyle() {
-      // TODO: replace custom avatars with vue-avatar
-      let hue = (Math.random() * 0.618034) % 1;
-      let rgb = hsvToRgb(hue, 0.5, 0.95);
-      let inverse = invert(rgb, false);
-
-      return `background: rgb(${rgb.r}, ${rgb.g}, ${rgb.b}); color: ${inverse};`;
     }
   },
   watch: {
@@ -120,40 +108,17 @@ export default {
   },
   beforeDestroy() {
     this.unsubscribe(this.user.id);
-  }
+  },
+  components: { Avatar }
 };
-
-function hsvToRgb(h, s, v) {
-  let r, g, b;
-  let i = Math.floor(h * 6);
-  let f = h * 6 - i;
-  let p = v * (1 - s);
-  let q = v * (1 - f * s);
-  let t = v * (1 - (1 - f) * s);
-  switch (i % 6) {
-    case 0: r = v; g = t; b = p; break;
-    case 1: r = q; g = v; b = p; break;
-    case 2: r = p; g = v; b = t; break;
-    case 3: r = p; g = q; b = v; break;
-    case 4: r = t; g = p; b = v; break;
-    case 5: r = v; g = p; b = q; break;
-  }
-  return {
-    r: Math.round(r * 255),
-    g: Math.round(g * 255),
-    b: Math.round(b * 255)
-  };
-}
 </script>
 
 <style lang="scss" scoped>
-$white: #fff;
-$paleGray: #ccc;
-$darkGray: #333;
+$avatarContainerBackground: #fff;
 
 .editor {
   &-initial {
-    display: inline-block;
+    display: inline-block !important;
     position: relative;
     width: 2.5em;
     height: 2.5em;
@@ -164,7 +129,7 @@ $darkGray: #333;
     text-align: center;
     border-radius: 50%;
     vertical-align: middle;
-    border: 1px solid $white;
+    border: 1px solid $avatarContainerBackground;
   }
 
   &-label {
@@ -179,7 +144,7 @@ $darkGray: #333;
     width: fit-content;
     padding: 5px;
     padding-right: 1.2em;
-    background: $white;
+    background: $avatarContainerBackground;
     border-radius: 30px;
   }
 }
@@ -197,7 +162,7 @@ $darkGray: #333;
 .additional-editors {
   padding-left: 0.4em;
   color: #333;
-  background: $paleGray;
+  background: #ccc;
   z-index: 0;
 }
 </style>

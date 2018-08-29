@@ -5,12 +5,12 @@
       <circular-progress v-if="showLoader"></circular-progress>
       <div v-else>
         <div class="container">
-          <div style="text-align: right;">
-          <active-editors
-            :courseId="this.course.id"
-            :activityId="this.activity.id">
-          </active-editors>
-          </div>
+          <span class="pull-right">
+            <active-editors
+              :courseId="this.course.id"
+              :activityId="this.activity.id">
+            </active-editors>
+          </span>
           <content-containers
             v-for="(containerGroup, type) in contentContainers"
             :key="type"
