@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <form>
       <div class="settings row">
         <div :class="[col, {'has-error': vErrors.has('min')}]">
@@ -61,6 +61,7 @@
         :disabled="!isEditing"
         :class="{ 'correct-error': (correctMin == correctMax) }"
         @drag-end="setValues('value')"
+        @on-keypress="setValues('value')"
         data-vv-name="value"
         class="slider">
       </vue-slider>
@@ -103,11 +104,12 @@ export default {
     return {
       value: correct,
       options: {
-        ...range
+        ...range,
+        useKeyboard: true
       },
+      ...range,
       initialRange: range,
       initialCorrect: correct,
-      ...range,
       DEC,
       showSlider: true
     };
@@ -138,7 +140,7 @@ export default {
               this.setMax(value);
               break;
             case 'interval':
-              this.setInterval(value);
+              this.options.interval = value;
               break;
           }
           this.update();
@@ -158,9 +160,6 @@ export default {
         ? [this.options.min, newMax]
         : [this.correctMin, newMax];
       this.options.max = newMax;
-    },
-    setInterval(value) {
-      this.options.interval = value;
     },
     reset() {
       this.showSlider = false;
@@ -197,14 +196,8 @@ export default {
         return `Invalid ${field} for specified ${targetField}.`;
       },
       validate: (value, field) => {
-        let { min, max, interval } = {
-          ...this.options, [field]: value
-        };
-        const valid = (min >= 0)
-          ? interval <= max
-          : interval <= Math.abs(min);
-        return (!modulo(round(max - min, DEC), interval) &&
-          interval > 0 && valid);
+        let { min, max, interval } = { ...this.options, [field]: value };
+        return (!modulo(round(max - min, DEC), interval) && interval > 0);
       }
     });
     this.$validator.extend('different', {
