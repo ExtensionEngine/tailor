@@ -16,7 +16,7 @@
     <div class="meta-element">
       <meta-input
         v-for="it in metadata"
-        :key="it.key"
+        :key="`${activity._cid}.${it.key}`"
         :meta="it"
         @update="updateActivity">
       </meta-input>
