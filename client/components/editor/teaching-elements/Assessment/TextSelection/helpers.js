@@ -1,54 +1,34 @@
 import Blast from 'blast-vanilla';
-import cloneDeep from 'lodash/cloneDeep';
-import curry from 'lodash/curry';
-import curryRight from 'lodash/curryRight';
-import filter from 'lodash/filter';
-import find from 'lodash/find';
 import first from 'lodash/first';
 import generateRange from 'lodash/range';
-import inRange from 'lodash/inRange';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
-import sortedIndexBy from 'lodash/sortedIndexBy';
 
 const blastClass = 'blast';
-const blastSelector = 'span.blast';
-const blastWordSelector = 'span.blast.word';
 const wordClass = 'word';
+const blastWordSelector = `span.${blastClass}.${wordClass}`;
+const idPrefix = 'text-';
 
-const NodeType = { TEXT: 3 };
-const getIndex = (node) => Number(node.id);
-const isText = node => node.nodeType === NodeType.TEXT;
+const isText = node => node.nodeType === Node.TEXT_NODE;
 
-export const isSelected = (node) => node.hasAttribute('range');
+export const isSelected = node => node.hasAttribute('range');
 
-export function blastContent(html, selections) {
+export function extractIndex(node) {
+  const index = node.id.substr(idPrefix.length);
+  return parseInt(index, 10);
+}
+
+export function generateStructure(content, mapper) {
+  if (!content) return '';
   const container = document.createElement('div');
-  container.innerHTML = html;
+  container.innerHTML = content;
   // eslint-disable-next-line no-new
   new Blast(container);
   const iterator = document.createNodeIterator(container, NodeFilter.SHOW_TEXT);
   const nodes = [];
   while (iterator.nextNode()) { nodes.push(iterator.referenceNode); }
-  nodes.forEach((node, index) => {
-    let span;
-    if (isBlast(node.parentElement)) {
-      span = node.parentElement;
-      span.classList.add('word');
-    } else {
-      span = document.createElement('span');
-      span.textContent = node.textContent;
-      node.replaceWith(span);
-      span.classList.add('blast');
-    }
-    const selection = getSelectionByIndex(index, selections);
-    if (selection) {
-      span.classList.add('selected');
-      span.setAttribute('range', selection);
-    }
-    span.id = `${index}`;
-  });
-  return container;
+  nodes.forEach(mapper);
+  return container.innerHTML;
 }
 
 export function getSelectedWords() {
@@ -71,12 +51,7 @@ export function getSelectedWords() {
   if (wordIsTarget(selection, startWord)) selection = [startWord, ...selection];
   if (wordIsTarget(selection, endWord)) selection = [...selection, endWord];
   if (isEmpty(selection)) return [];
-  return [getIndex(first(selection)), getIndex(last(selection)) + 1];
-}
-
-export function getSelection(node) {
-  const range = node.getAttribute('range');
-  return range.split(',').map(Number);
+  return [extractIndex(first(selection)), extractIndex(last(selection)) + 1];
 }
 
 export function isBlast(node) {
@@ -85,7 +60,7 @@ export function isBlast(node) {
 }
 
 export function modifySelectionNodes(element, range, options) {
-  const query = index => `${blastSelector}[id="${index}"]`;
+  const query = index => `span#${idPrefix}${index}.${blastClass}`;
   const indexes = generateRange(...range);
   const nodes = indexes.map(index => element.querySelector(query(index)));
   nodes.forEach(node => {
@@ -99,45 +74,24 @@ export function modifySelectionNodes(element, range, options) {
   });
 }
 
-export const Selection = {
-  merge(selections, selection) {
-    selections = cloneDeep(selections);
-    const begin = first(selection);
-    const end = last(selection);
-    const final = end - 1;
-    const check = curry(isOverlaped);
-    const beginOverlap = find(selections, check(begin));
-    const endOverlap = find(selections, check(final));
-    const range = [first(beginOverlap) || begin, last(endOverlap) || end];
-    selections = this.remove(selections, range);
-    const index = sortedIndexBy(selections, range, first);
-    selections.splice(index, 0, range);
-    return { selections, range };
-  },
-  remove(selections, selection) {
-    selections = cloneDeep(selections);
-    const check = curryRight(isOverlaped)(selection);
-    return filter(selections, range => (
-      !check(first(range)) &&
-      !check(last(range) - 1)
-    ));
+export function nodeMapper(chain, node, index) {
+  let span;
+  if (isBlast(node.parentElement)) {
+    span = node.parentElement;
+    span.classList.add(wordClass);
+  } else {
+    span = document.createElement('span');
+    span.textContent = node.textContent;
+    node.replaceWith(span);
+    span.classList.add(blastClass);
   }
-};
+  span.id = `${idPrefix}${index}`;
+  chain(span);
+}
 
 function isBlastWord(node) {
   if (!isBlast(node)) return false;
   return node.classList.contains(wordClass);
-}
-
-function isOverlaped(index, selection) {
-  const start = first(selection);
-  const end = last(selection);
-  return inRange(index, start, end);
-}
-
-function getSelectionByIndex(index, selections) {
-  const check = curry(isOverlaped)(index);
-  return selections.find(check);
 }
 
 function wordIsTarget(selection, word) {

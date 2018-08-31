@@ -2,7 +2,7 @@
   <div
     @mouseup="onMouseup">
     <div
-      v-html="rootNode.innerHTML"
+      v-html="structure"
       :class="{ editing: this.isEditing }"
       class="selector ql-editor"/>
   </div>
@@ -10,26 +10,30 @@
 
 <script>
 import {
+  generateStructure,
   getSelectedWords,
-  getSelection,
   isBlast,
   isSelected,
-  modifySelectionNodes,
-  Selection
+  nodeMapper,
+  modifySelectionNodes
 } from './helpers';
-import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
+import Selections from './Selections';
+import curry from 'lodash/curry';
 
 export default {
   props: {
     correct: { type: Array, required: true },
     isEditing: { type: Boolean, required: true },
-    rootNode: { type: HTMLElement, required: true }
+    content: { type: String, required: true }
   },
   data() {
+    const selections = new Selections(this.correct);
+    const processNode = selections.processNode.bind(selections);
+    const mapper = curry(nodeMapper)(processNode);
     return {
-      selections: cloneDeep(this.correct),
-      protected: []
+      selections,
+      structure: generateStructure(this.content, mapper)
     };
   },
   methods: {
@@ -41,25 +45,23 @@ export default {
       if (!isEmpty(selection) && !domSelection.isCollapsed) {
         this.addSelection(selection);
       } else if (isSelected(node) && isBlast(node)) {
-        const range = getSelection(node);
+        const range = Selections.extract(node);
         this.removeSelection(range);
       }
     },
     addSelection(selection) {
       if (!this.isEditing) return;
-      const merge = Selection.merge(this.selections, selection);
-      const { selections, range } = merge;
+      const range = this.selections.merge(selection);
       const options = {
         addClass: 'selected',
         setAttribute: { name: 'range', value: range }
       };
-      this.selections = selections;
       modifySelectionNodes(this.$el, range, options);
       this.save();
       document.getSelection().removeAllRanges();
     },
     removeSelection(range) {
-      this.selections = Selection.remove(this.selections, range);
+      this.selections.remove(range);
       const options = {
         removeClass: 'selected',
         removeAttribute: 'range'
@@ -68,7 +70,7 @@ export default {
       this.save();
     },
     save() {
-      this.$emit('save', this.selections);
+      this.$emit('save', this.selections.ranges);
     }
   }
 };

@@ -11,7 +11,7 @@
         @save="saveContent"/>
       <selector
         v-else
-        :rootNode="blastedContent"
+        :content="this.text"
         :correct="correct"
         :isEditing="isEditing"
         @save="saveSelection"
@@ -37,11 +37,9 @@
 </template>
 
 <script>
-import { blastContent } from './helpers';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import cuid from 'cuid';
 import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
 import Selector from './Selector';
 import TeHtml from '../../Html';
 
@@ -77,10 +75,6 @@ export default {
       const isEmbedded = this.focusedElement.embedded;
       const isSameId = this.focusedElement.id === this.id;
       return isEmbedded && isSameId;
-    },
-    blastedContent() {
-      if (isEmpty(this.text)) return null;
-      return blastContent(this.text, this.correct);
     }
   },
   methods: {
