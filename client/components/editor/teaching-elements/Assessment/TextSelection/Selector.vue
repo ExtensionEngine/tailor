@@ -1,25 +1,26 @@
 <template>
   <div
-    @mouseup="onMouseup">
-    <div
-      v-html="structure"
-      :class="{ editing: this.isEditing }"
-      class="selector ql-editor"/>
+    v-html="html"
+    :class="{ editing: this.isEditing }"
+    @mouseup="e => isEditing && onMouseup(e)"
+    class="selector ql-editor">
   </div>
 </template>
 
 <script>
 import {
-  generateStructure,
-  getSelectedWords,
+  generateHtml,
+  getSelectionRange,
+  getText,
   isBlast,
-  isSelected,
+  toggleAttributes,
+  toggleClasses,
   nodeMapper,
-  modifySelectionNodes
+  processNode,
+  isSelected,
+  extractRange
 } from './helpers';
-import isEmpty from 'lodash/isEmpty';
 import Selections from './Selections';
-import curry from 'lodash/curry';
 
 export default {
   props: {
@@ -29,79 +30,59 @@ export default {
   },
   data() {
     const selections = new Selections(this.correct);
-    const processNode = selections.processNode.bind(selections);
-    const mapper = curry(nodeMapper)(processNode);
-    return {
-      selections,
-      structure: generateStructure(this.content, mapper)
-    };
+    const prepare = node => processNode(node, selections);
+    const html = generateHtml(this.content,
+      (node, index) => nodeMapper(prepare, node, index)
+    );
+    return { selections, html };
   },
   methods: {
     onMouseup(event) {
-      if (!this.isEditing) return;
       const node = event.target;
-      const domSelection = document.getSelection();
-      const selection = getSelectedWords();
-      if (!isEmpty(selection) && !domSelection.isCollapsed) {
-        this.addSelection(selection);
+      let range = getSelectionRange();
+      if (range && !range.isCollapsed) {
+        this.addRange(range);
       } else if (isSelected(node) && isBlast(node)) {
-        const range = Selections.extract(node);
-        this.removeSelection(range);
+        range = extractRange(node);
+        this.removeRange(range);
       }
     },
-    addSelection(selection) {
-      if (!this.isEditing) return;
+    addRange(selection) {
       const range = this.selections.merge(selection);
-      const options = {
-        addClass: 'selected',
-        setAttribute: { name: 'range', value: range }
-      };
-      modifySelectionNodes(this.$el, range, options);
+      getText(this.$el, range).forEach(el => {
+        toggleClasses(el, { selected: true });
+        toggleAttributes(el, { range });
+      });
       this.save();
       document.getSelection().removeAllRanges();
     },
-    removeSelection(range) {
+    removeRange(range) {
       this.selections.remove(range);
-      const options = {
-        removeClass: 'selected',
-        removeAttribute: 'range'
-      };
-      modifySelectionNodes(this.$el, range, options);
+      getText(this.$el, range).forEach(el => {
+        toggleClasses(el, { selected: false });
+        toggleAttributes(el, { range: null });
+      });
       this.save();
     },
     save() {
-      this.$emit('save', this.selections.ranges);
+      this.$emit('save', { selection: this.selections.ranges });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-$selectionBackground: rgb(181, 197, 136);
-$selectionColor: rgb(13, 60, 85);
+$selectionBackground: #b5c588;
+$selectionColor: #0d3c55;
 
 .selector {
-  &.editing {
-    ::selection {
-      background: lighten($selectionBackground, 20%);
-    }
+  &.editing ::selection {
+    background: lighten($selectionBackground, 20%);
   }
 
   /deep/ .selected {
     background: $selectionBackground;
     color: $selectionColor;
   }
-
-  .separator {
-    white-space: pre;
-  }
-
-  .targeted {
-    background-color: #42b983;
-  }
-}
-
-.ql-editor{
-  height: 0%;
 }
 </style>

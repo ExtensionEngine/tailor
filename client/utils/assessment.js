@@ -47,6 +47,8 @@ const fbQuestion = yup.array().test(
   }
 );
 
+const range = yup.array().of(yup.number()).min(2).max(2);
+
 const hint = yup.string().trim().max(500);
 
 const _refs = yup.object().shape({
@@ -111,8 +113,9 @@ export const schemas = {
     })
   }),
   TS: yup.object().shape({
-    text: yup.string().trim().min(1).required(),
-    correct: yup.array().of(yup.mixed().required()).min(1)
+    ...baseSchema,
+    content: yup.string().trim().min(1).required(),
+    correct: yup.array().of(range).min(1)
   }),
   DD: yup.object().shape({
     ...baseSchema,
@@ -181,7 +184,7 @@ export const defaults = {
   TS: {
     type: 'TS',
     ...baseDefaults,
-    text: '',
+    content: '',
     correct: []
   },
   MQ() {

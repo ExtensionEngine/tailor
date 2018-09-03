@@ -1,36 +1,30 @@
 <template>
   <div :class="{ disabled: !isEditing }">
     <h5 class="title">Text and selection</h5>
-    <div
-      @click="focus"
-      class="container">
+    <div @click="focus" class="container">
       <te-html
         v-if="!isSelecting && isEditing"
         :element="textElement"
-        :is-focused="isFocused"
-        @save="saveContent"/>
+        :isFocused="isFocused"
+        @save="save"/>
       <selector
         v-else
-        :content="this.text"
+        :content="this.content"
         :correct="correct"
         :isEditing="isEditing"
-        @save="saveSelection"
+        @save="save"
         class="htmlContent ql-container ql-snow"/>
     </div>
     <div v-if="isEditing">
       <button
-        v-if="isSelecting"
-        @click="edit"
-        class="btn btn-primary btn-material">
-        <span class="mdi mdi-stop-circle-outline"/>
-          Edit content
-      </button>
-      <button
-        v-else
-        @click="select"
-        class="btn btn-primary btn-material">
-        <span class="mdi mdi-marker"/>
-          Select solutions
+        @click="isSelecting ? edit() : select()"
+        class="btn btn-primary btn-material"
+        type="button">
+        <span
+          :class="isSelecting ? 'mdi-stop-circle-outline' : 'mdi-marker'"
+          class="mdi">
+        </span>
+        {{ isSelecting ? 'Edit content' : 'Select solutions' }}
       </button>
     </div>
   </div>
@@ -39,7 +33,6 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import cuid from 'cuid';
-import get from 'lodash/get';
 import Selector from './Selector';
 import TeHtml from '../../Html';
 
@@ -52,7 +45,7 @@ export default {
   data() {
     return {
       id: cuid(),
-      text: this.assessment.text,
+      content: this.assessment.content,
       correct: this.assessment.correct,
       isSelecting: false
     };
@@ -65,33 +58,26 @@ export default {
         id: this.id,
         type: 'HTML',
         data: {
-          content: this.text,
+          content: this.content,
           width: this.assessment.width
         }
       };
     },
     isFocused() {
-      if (!get(this.focusedElement, 'type')) return false;
-      const isEmbedded = this.focusedElement.embedded;
-      const isSameId = this.focusedElement.id === this.id;
-      return isEmbedded && isSameId;
+      const { focusedElement = {} } = this;
+      return focusedElement.embedded && focusedElement.id === this.id;
     }
   },
   methods: {
     ...mapMutations(['focusElement'], 'editor'),
     ...mapActions({ updateElement: 'update' }, 'tes'),
-    saveContent({ content }) {
-      this.text = content;
-      this.update();
-    },
-    saveSelection(selection) {
-      this.correct = selection;
+    save({ selection, content }) {
+      if (content) this.content = content;
+      if (selection) this.correct = selection;
       this.update();
     },
     select() {
-      if (this.isFocused) {
-        this.focusElement();
-      }
+      if (this.isFocused) this.focusElement();
       this.$nextTick(() => {
         this.correct = [];
         this.isSelecting = true;
@@ -108,21 +94,18 @@ export default {
       e.component = { name: 'selection-assesment', data: this.textElement };
     },
     update() {
-      const data = {
-        text: this.text,
-        correct: this.correct
-      };
-      this.$emit('update', data);
+      const { content, correct } = this;
+      this.$emit('update', { content, correct });
     }
   },
   watch: {
     errors() {
-      const notSelected = this.errors.includes('correct');
+      const noCorrectAnswers = this.errors.includes('correct');
       const alert = {
         text: 'Select at least one answer',
         type: 'alert-danger'
       };
-      if (notSelected) this.$emit('alert', alert);
+      if (noCorrectAnswers) this.$emit('alert', alert);
     },
     isEditing() {
       this.isSelecting = true;
@@ -149,7 +132,7 @@ export default {
 }
 
 .ql-container.ql-snow {
-  border-style: none;
+  border: none;
 }
 
 .disabled {
