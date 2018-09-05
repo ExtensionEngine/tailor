@@ -1,14 +1,15 @@
 <template>
-  <div>
-    <div class="editor-avatar-container">
-      <span class="editor-label">
-        Active editors:
-      </span>
+  <div class="editor-avatar-container">
+    <span class="editor-label">
+      Active editors:
+    </span>
+    <span v-if="!editorCount" class="editor-label">None</span>
+    <span v-else>
       <transition-group name="editor-avatars">
         <avatar
           v-for="(editor, index) in editorsToDisplay"
           v-tooltip="{
-            content: `${editor.email}${editor.email === user.email ? ' (you)' : ''}`,
+            content: `${editor.email}${isCurrentUser(editor) ? ' (you)' : ''}`,
             class: 'editor-tooltip'
           }"
           :key="index"
@@ -22,23 +23,15 @@
         <span
           v-if="additionalEditors.length"
           v-tooltip="{
-            html: 'additionalEditorsTooltipContent',
+            content: additionalEditorsTooltipContent,
             class: 'editor-tooltip'
           }"
           :key="editors.length"
           class="editor-initial additional-editors">
-          {{ `${additionalEditors.length > 99 ? '99+' : '+' + additionalEditors.length}` }}
+          {{ additionalEditorsText }}
         </span>
       </transition-group>
-      <div id="additionalEditorsTooltipContent">
-        <p
-          v-for="(editor, index) in additionalEditors"
-          :key="index"
-          style="margin: 0;">
-          {{ editor.email }}
-        </p>
-      </div>
-    </div>
+    </span>
   </div>
 </template>
 
@@ -48,6 +41,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import differenceWith from 'lodash/differenceWith';
 import findIndex from 'lodash/findIndex';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import reduce from 'lodash/reduce';
 
 const MAX_EDITORS = 4;
 
@@ -55,30 +49,42 @@ export default {
   name: 'active-editors',
   props: {
     courseId: Number,
-    activityId: Number
+    activityId: Number,
+    editorId: undefined
   },
   computed: {
     ...mapGetters(['editorCount', 'editorsFetched'], 'editors'),
     ...mapGetters(['editors']),
-    ...mapGetters(['user']),
     editorsToDisplay() {
-      if (!this.editors.length) return [];
-
       let editors = cloneDeep(this.editors);
-      let editorIndex = findIndex(editors, { id: this.user.id });
 
-      if (editorIndex !== 0) {
-        [ editors[0], editors[editorIndex] ] = [ editors[editorIndex], editors[0] ];
+      if (this.editorId) {
+        let editorIndex = findIndex(editors, { id: this.editorId });
+        if (editorIndex > 0) {
+          [ editors[0], editors[editorIndex] ] = [ editors[editorIndex], editors[0] ];
+        }
       }
 
       return editors.slice(0, MAX_EDITORS);
     },
     additionalEditors() {
+      let editors = cloneDeep(this.editors);
+
       return differenceWith(
-        this.editors,
+        editors,
         this.editorsToDisplay,
         (first, second) => (first.id === second.id)
       );
+    },
+    additionalEditorsText() {
+      if (this.additionalEditors.length > 99) return '99+';
+      return `+${this.additionalEditors.length}`;
+    },
+    additionalEditorsTooltipContent() {
+      // TODO: improve this
+      return reduce(this.additionalEditors, (result, editor) => {
+        return result + editor.email + '\n';
+      }, '');
     }
   },
   methods: {
@@ -87,27 +93,43 @@ export default {
     fetchEditors() {
       if (this.editorsFetched) return;
       this.fetch({ activityId: this.activityId });
+    },
+    isCurrentUser(editor) {
+      return editor.id === this.editorId;
     }
   },
   watch: {
-    editors: {
-      handler(value) {
-        this.fetchEditors();
-      },
-      deep: true
+    activityId() {
+      this.unsubscribe({
+        activityId: this.activityId,
+        editorId: this.editorId
+      });
+
+      this.subscribe({
+        activityId: this.activityId,
+        editorId: this.editorId
+      });
+
+      this.fetchEditors();
     }
   },
   created() {
     this.setupEditorsApi(
-      `/courses/${this.courseId}/activities/${this.activityId}/editors`
+      `/courses/${this.courseId}/editors`
     );
   },
   mounted() {
+    this.subscribe({
+      activityId: this.activityId,
+      editorId: this.editorId
+    });
     this.fetchEditors();
-    this.subscribe(this.user.id);
   },
   beforeDestroy() {
-    this.unsubscribe(this.user.id);
+    this.unsubscribe({
+      activityId: this.activityId,
+      editorId: this.editorId
+    });
   },
   components: { Avatar }
 };
@@ -123,6 +145,7 @@ $avatarContainerBackground: #fff;
     width: 2.5em;
     height: 2.5em;
     margin-right: -0.7em;
+    color: $avatarContainerBackground;
     font-size: 1.2em;
     font-weight: bold;
     line-height: 2.5em;
@@ -136,6 +159,7 @@ $avatarContainerBackground: #fff;
     margin: 0 5px;
     color: #707070;
     font-weight: bold;
+    line-height: 40px;
   }
 
   &-avatar-container {

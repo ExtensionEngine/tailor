@@ -7,6 +7,7 @@
         <div class="container">
           <span class="pull-right">
             <active-editors
+              :editorId="this.user.id"
               :courseId="this.course.id"
               :activityId="this.activity.id">
             </active-editors>
@@ -51,6 +52,7 @@ export default {
     ...mapGetters(['activities']),
     ...mapGetters(['focusedElement', 'activity', 'contentContainers'], 'editor'),
     ...mapGetters(['course'], 'course'),
+    ...mapGetters(['user']),
     showAssessments() {
       return config.hasAssessments(this.activity.type);
     },

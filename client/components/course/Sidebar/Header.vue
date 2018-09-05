@@ -8,10 +8,17 @@
     <button v-show="isEditable" @click.stop="edit" class="btn btn-fab btn-primary">
       <span class="mdi mdi-pencil"></span>
     </button>
+    <div v-if="isEditable" class="pull-right">
+      <active-editors
+        :courseId="this.course.id"
+        :activityId="this.activity.id">
+      </active-editors>
+    </div>
   </div>
 </template>
 
 <script>
+import ActiveEditors from 'components/common/ActiveEditors';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -25,7 +32,7 @@ const appChannel = EventBus.channel('app');
 
 export default {
   computed: {
-    ...mapGetters(['activity', 'activities'], 'course'),
+    ...mapGetters(['activity', 'activities', 'course'], 'course'),
     isEditable() {
       const type = get(this.activity, 'type');
       return type && isEditable(type);
@@ -57,6 +64,9 @@ export default {
         }
       });
     }
+  },
+  components: {
+    ActiveEditors
   }
 };
 </script>

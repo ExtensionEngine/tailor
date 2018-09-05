@@ -5,7 +5,7 @@ const get = require('lodash/get');
 const set = require('lodash/set');
 const unset = require('lodash/unset');
 
-const getKey = (courseId, activityId) => `c${courseId}a${activityId}`;
+const getKey = courseId => `c${courseId}`;
 
 const events = {
   ADD: 'editors_add',
@@ -14,28 +14,23 @@ const events = {
 
 const clients = {};
 
-function unsubscribe(client, data) {
-  const { courseId, activityId, editor } = data;
-
+function unsubscribe(client, courseId) {
   return () => {
-    unset(clients, [getKey(courseId, activityId), client.id]);
-    broadcast(events.REMOVE, { courseId, activityId, editor });
+    unset(clients, [getKey(courseId), client.id]);
     client.close();
   };
 }
 
 function subscribe(req, res) {
-  const { courseId, activityId, editor } = req;
+  const { courseId } = req;
   const client = res.sse;
-
-  set(clients, [getKey(courseId, activityId), client.id], client);
-  req.on('close', unsubscribe(client, { courseId, activityId, editor }));
-  broadcast(events.ADD, { courseId, activityId, editor });
+  set(clients, [getKey(courseId), client.id], client);
+  req.on('close', unsubscribe(client, courseId));
 }
 
 function broadcast(event, data) {
-  const { courseId, activityId, editor } = data;
-  const recipients = get(clients, getKey(courseId, activityId), {});
+  const { courseId, editor } = data;
+  const recipients = get(clients, getKey(courseId), {});
   each(recipients, r => r.send(event, editor));
   return data;
 }
