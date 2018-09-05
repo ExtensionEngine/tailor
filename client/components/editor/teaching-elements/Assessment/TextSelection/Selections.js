@@ -1,43 +1,32 @@
-import cloneDeep from 'lodash/cloneDeep';
-import curry from 'lodash/curry';
-import curryRight from 'lodash/curryRight';
-import first from 'lodash/first';
-import inRange from 'lodash/inRange';
-import last from 'lodash/last';
+import min from 'lodash/min';
+import max from 'lodash/max';
+import Range from './Range';
 import reject from 'lodash/reject';
 
 export default class Selections {
-  constructor(selection = []) {
-    this.ranges = cloneDeep(selection);
+  constructor(selections = []) {
+    this.ranges = selections.map(it => new Range(...it));
   }
 
-  merge(selection) {
-    const begin = first(selection);
-    const final = last(selection);
-    const check = curry(isOverlaped);
-    const beginOverlap = this.ranges.find(check(begin));
-    const endOverlap = this.ranges.find(check(final - 1));
-    const range = [first(beginOverlap) || begin, last(endOverlap) || final];
+  merge(range) {
+    const overlapses = this.ranges.filter(it => it.intersectsWith(range));
+    range.start = min([...overlapses.map(it => it.start), range.start]);
+    range.end = max([...overlapses.map(it => it.end), range.end]);
     this.remove(range);
     this.ranges.push(range);
     return range;
   }
 
+  export() {
+    return this.ranges.map(it => [...it]);
+  }
+
   remove(range) {
-    const check = curryRight(isOverlaped)(range);
-    this.ranges = reject(this.ranges, range => (
-      check(first(range)) || check(last(range) - 1)
-    ));
+    this.ranges = reject(this.ranges, it => range.intersectsWith(it));
   }
 
   getByIndex(index) {
-    const check = curry(isOverlaped)(index);
-    return this.ranges.find(check);
+    const range = new Range(index, index + 1);
+    return this.ranges.find(it => it.intersectsWith(range));
   }
-}
-
-function isOverlaped(index, selection) {
-  const start = first(selection);
-  const end = last(selection);
-  return inRange(index, start, end);
 }

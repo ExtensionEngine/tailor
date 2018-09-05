@@ -22,7 +22,7 @@
         type="button">
         <span
           :class="isSelecting ? 'mdi-stop-circle-outline' : 'mdi-marker'"
-          class="mdi">
+          class="icon mdi">
         </span>
         {{ isSelecting ? 'Edit content' : 'Select solutions' }}
       </button>
@@ -100,12 +100,12 @@ export default {
   },
   watch: {
     errors() {
-      const noCorrectAnswers = this.errors.includes('correct');
+      const correctEmpty = this.errors.includes('correct');
       const alert = {
         text: 'Select at least one answer',
         type: 'alert-danger'
       };
-      if (noCorrectAnswers) this.$emit('alert', alert);
+      if (correctEmpty) this.$emit('alert', alert);
     },
     isEditing() {
       this.isSelecting = true;

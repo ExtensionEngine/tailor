@@ -10,17 +10,16 @@
 <script>
 import {
   generateHtml,
-  getSelectionRange,
   getText,
   isBlast,
   toggleAttributes,
   toggleClasses,
   nodeMapper,
   processNode,
-  isSelected,
-  extractRange
+  isSelected
 } from './helpers';
 import Selections from './Selections';
+import Range from './Range';
 
 export default {
   props: {
@@ -38,12 +37,13 @@ export default {
   },
   methods: {
     onMouseup(event) {
+      const selection = document.getSelection();
       const node = event.target;
-      let range = getSelectionRange();
-      if (range && !range.isCollapsed) {
+      let range = Range.getFromDomSelection(selection);
+      if (range && !selection.isCollapsed) {
         this.addRange(range);
       } else if (isSelected(node) && isBlast(node)) {
-        range = extractRange(node);
+        range = Range.extract(node);
         this.removeRange(range);
       }
     },
@@ -51,7 +51,7 @@ export default {
       const range = this.selections.merge(selection);
       getText(this.$el, range).forEach(el => {
         toggleClasses(el, { selected: true });
-        toggleAttributes(el, { range });
+        toggleAttributes(el, { range: [...range] });
       });
       this.save();
       document.getSelection().removeAllRanges();
@@ -65,7 +65,7 @@ export default {
       this.save();
     },
     save() {
-      this.$emit('save', { selection: this.selections.ranges });
+      this.$emit('save', { selection: this.selections.export() });
     }
   }
 };
