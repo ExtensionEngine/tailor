@@ -43,9 +43,8 @@ function mapEditor(req, res) {
 
   return User.findById(editorId)
     .then(user => user || createError(NOT_FOUND, 'User not found'))
-    .then(user => Promise.resolve({ id: user.id, email: user.email, activityId }))
-    .then(editor => {
-      req.editor = editor;
+    .then(user => {
+      req.editor = { id: user.id, email: user.email, activityId };
       return Promise.resolve('next');
     });
 }
@@ -57,14 +56,18 @@ function show({courseId, activityId}, res) {
 
 function add({ editor, courseId, activityId }, res) {
   return storageService.storeEditorId(editor.id, courseId, activityId)
-    .then(() => broadcast(events.ADD, { courseId, activityId, editor }))
-    .then(() => res.status(200).end());
+    .then(() => {
+      broadcast(events.ADD, { courseId, activityId, editor });
+      res.status(200).end();
+    });
 }
 
 function remove({ editor, courseId, activityId }, res) {
   return storageService.removeEditorId(editor.id, courseId, activityId)
-    .then(() => broadcast(events.REMOVE, { courseId, activityId, editor }))
-    .then(() => res.status(200).end());
+    .then(() => {
+      broadcast(events.REMOVE, { courseId, activityId, editor });
+      res.status(200).end();
+    });
 }
 
 function getCurrentEditors(courseId, activityId) {

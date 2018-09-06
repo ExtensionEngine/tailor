@@ -17,12 +17,8 @@ class StorageService {
   storeEditorId(editorId, courseId, activityId) {
     return this.getEditorIds(courseId, activityId)
       .then(editorIds => {
-        let key = this.getKey(courseId, activityId);
-        if (!editorIds.length) {
-          set(this.editors, key, [ editorId ]);
-        } else if (!editorIds.includes(editorId)) {
-          editorIds.push(editorId);
-        }
+        if (!editorIds.includes(editorId)) editorIds.push(editorId);
+        set(this.editors, this.getKey(courseId, activityId), editorIds);
       });
   }
 
