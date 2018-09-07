@@ -1,9 +1,9 @@
 import Blast from 'blast-vanilla';
 import forEach from 'lodash/forEach';
-import generateRange from 'lodash/range';
 
 const blastClass = 'blast';
-const idPrefix = 'text-';
+
+export const isSelected = node => node.hasAttribute('range');
 
 export function generateHtml(content, iteratee) {
   if (!content) return '';
@@ -21,10 +21,13 @@ export function isBlast(node) {
   return node.classList.contains(blastClass);
 }
 
-export function getText(element, range) {
-  const query = index => `span#${idPrefix}${index}.${blastClass}`;
-  const indexes = generateRange(...range);
-  return indexes.map(index => element.querySelector(query(index)));
+export function getText(container, range) {
+  const length = range.end - range.start;
+  const selectors = Array.from({ length }, (_, offset) => {
+    const index = range.start + offset;
+    return `span.${blastClass}[id$="-${index}"]`;
+  });
+  return Array.from(container.querySelectorAll(selectors.join(',')));
 }
 
 export function toggleAttributes(element, config) {
@@ -42,15 +45,11 @@ export function toggleClasses(element, config) {
 
 export function processNode(node, selections) {
   const index = extractIndex(node);
-  const selection = selections.getByIndex(index);
-  if (!selection) return node;
+  const range = selections.getByIndex(index);
+  if (!range) return node;
   node.classList.add('selected');
-  node.setAttribute('range', [...selection]);
+  node.setAttribute('range', [range.start, range.end]);
   return node;
-}
-
-export function isSelected(node) {
-  return node.hasAttribute('range');
 }
 
 export function nodeMapper(chain, node, index) {
@@ -64,7 +63,7 @@ export function nodeMapper(chain, node, index) {
     node.replaceWith(span);
     span.classList.add(blastClass);
   }
-  span.id = `${idPrefix}${index}`;
+  span.id = `text-${index}`;
   chain(span);
 }
 

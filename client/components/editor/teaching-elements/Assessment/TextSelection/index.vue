@@ -100,12 +100,12 @@ export default {
   },
   watch: {
     errors() {
-      const correctEmpty = this.errors.includes('correct');
+      const hasCorrectAnswers = !this.errors.includes('correct');
       const alert = {
         text: 'Select at least one answer',
         type: 'alert-danger'
       };
-      if (correctEmpty) this.$emit('alert', alert);
+      if (!hasCorrectAnswers) this.$emit('alert', alert);
     },
     isEditing() {
       this.isSelecting = true;

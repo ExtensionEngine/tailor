@@ -47,11 +47,11 @@ export default {
         this.removeRange(range);
       }
     },
-    addRange(selection) {
-      const range = this.selections.merge(selection);
+    addRange(range) {
+      range = this.selections.merge(range);
       getText(this.$el, range).forEach(el => {
         toggleClasses(el, { selected: true });
-        toggleAttributes(el, { range: [...range] });
+        toggleAttributes(el, { range: [range.start, range.end] });
       });
       this.save();
       document.getSelection().removeAllRanges();
