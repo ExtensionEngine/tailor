@@ -7,7 +7,7 @@
         <div class="container">
           <span class="pull-right">
             <active-editors
-              :editorId="this.user.id"
+              :editor="this.user"
               :courseId="this.course.id"
               :activityId="this.activity.id">
             </active-editors>

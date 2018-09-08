@@ -8,7 +8,6 @@ import comments from './modules/comments';
 import course from './modules/course';
 import courses from './modules/courses';
 import editor from './modules/editor';
-import editors from './modules/editors';
 import revisions from './modules/revisions';
 import tes from './modules/tes';
 
@@ -27,7 +26,6 @@ const modules = {
   course,
   courses,
   editor,
-  editors,
   revisions,
   tes
 };

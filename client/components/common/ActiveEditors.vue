@@ -3,32 +3,36 @@
     <span class="editor-label">
       Active editors:
     </span>
-    <span v-if="!editorCount" class="editor-label">None</span>
+    <span v-if="!editors.visible.length" class="editor-label">None</span>
     <span v-else>
       <transition-group name="editor-avatars">
+        <!-- TODO: remove z-index and use "float: right" instead -->
         <avatar
-          v-for="(editor, index) in editorsToDisplay"
+          v-for="(editor, index) in editors.visible"
           v-tooltip="{
-            content: `${editor.email}${isCurrentUser(editor) ? ' (you)' : ''}`,
+            content: getEditorTooltipText(editor),
             class: 'editor-tooltip'
           }"
           :key="index"
-          :style="`z-index: ${editorsToDisplay.length - index}`"
+          :style="`z-index: ${editors.visible.length - index}`"
           :size="40"
           :username="editor.email"
-          :initials="editor.email.charAt(0).toUpperCase()"
+          :initials="getEditorInitial(editor)"
           class="editor-initial"
           color="#ffffffd9">
-      </avatar>
+        </avatar>
         <span
-          v-if="additionalEditors.length"
+          v-if="additionalEditors.display"
           v-tooltip="{
-            content: additionalEditorsTooltipContent,
+            content: additionalEditors.tooltip,
             class: 'editor-tooltip'
           }"
-          :key="editors.length"
+          :key="allEditors.length"
           class="editor-initial additional-editors">
-          {{ additionalEditorsText }}
+          <span v-if="additionalEditors.length < 99">
+            +{{ additionalEditors.length }}
+          </span>
+          <span v-else>99+</span>
         </span>
       </transition-group>
     </span>
@@ -36,100 +40,86 @@
 </template>
 
 <script>
+import api from '../../api/editors';
 import Avatar from 'vue-avatar';
-import cloneDeep from 'lodash/cloneDeep';
-import differenceWith from 'lodash/differenceWith';
-import findIndex from 'lodash/findIndex';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import reduce from 'lodash/reduce';
+import filter from 'lodash/filter';
+import pick from 'lodash/pick';
 
-const MAX_EDITORS = 4;
+const VISIBLE_EDITORS = 4;
 
 export default {
   name: 'active-editors',
+  data() {
+    return {
+      allEditors: []
+    };
+  },
   props: {
     courseId: Number,
     activityId: Number,
-    editorId: undefined
+    editor: { type: Object, default: null }
   },
   computed: {
-    ...mapGetters(['editorCount', 'editorsFetched'], 'editors'),
-    ...mapGetters(['editors']),
-    editorsToDisplay() {
-      let editors = cloneDeep(this.editors);
+    currentEditor() {
+      return this.editor ? pick(this.editor, ['id', 'email']) : null;
+    },
+    editors() {
+      let filteredEditors = !this.currentEditor ? this.allEditors
+        : filter(this.allEditors, editor => editor.id !== this.currentEditor.id);
+      let maxEditors = !this.currentEditor ? VISIBLE_EDITORS : VISIBLE_EDITORS - 1;
 
-      if (this.editorId) {
-        let editorIndex = findIndex(editors, { id: this.editorId });
-        if (editorIndex > 0) {
-          [ editors[0], editors[editorIndex] ] = [ editors[editorIndex], editors[0] ];
-        }
-      }
+      let visibleEditors = filteredEditors.slice(0, maxEditors);
+      if (this.currentEditor) visibleEditors.unshift(this.currentEditor);
 
-      return editors.slice(0, MAX_EDITORS);
+      return {
+        visible: visibleEditors,
+        additional: filteredEditors.slice(maxEditors)
+      };
     },
     additionalEditors() {
-      let editors = cloneDeep(this.editors);
+      let additionalEditors = this.editors.additional;
 
-      return differenceWith(
-        editors,
-        this.editorsToDisplay,
-        (first, second) => (first.id === second.id)
-      );
-    },
-    additionalEditorsText() {
-      if (this.additionalEditors.length > 99) return '99+';
-      return `+${this.additionalEditors.length}`;
-    },
-    additionalEditorsTooltipContent() {
-      // TODO: improve this
-      return reduce(this.additionalEditors, (result, editor) => {
-        return result + editor.email + '\n';
-      }, '');
+      return {
+        display: additionalEditors.length > 0,
+        length: additionalEditors.length,
+        tooltip: additionalEditors.map(it => it.email).join('\n')
+      };
     }
   },
   methods: {
-    ...mapActions(['fetch', 'subscribe', 'unsubscribe'], 'editors'),
-    ...mapMutations({ setupEditorsApi: 'setBaseUrl' }, 'editors'),
-    fetchEditors() {
-      if (this.editorsFetched) return;
-      this.fetch({ activityId: this.activityId });
+    getEditorInitial(editor) {
+      return editor.email.charAt(0).toUpperCase();
     },
-    isCurrentUser(editor) {
-      return editor.id === this.editorId;
+    getEditorTooltipText(editor) {
+      if (!editor) return;
+      let isCurrentEditor = editor.id === this.currentEditor && this.currentEditor.id;
+      return `${editor.email}${isCurrentEditor ? ' (you)' : ''}`;
+    },
+    subscribe(activityId) {
+      api.subscribe(
+        { courseId: this.courseId, activityId, editor: this.currentEditor },
+        editors => (this.allEditors = editors)
+      );
+    },
+    unsubscribe(activityId) {
+      api.unsubscribe(
+        { courseId: this.courseId, activityId, editor: this.currentEditor }
+      );
     }
   },
   watch: {
-    activityId() {
-      this.unsubscribe({
-        activityId: this.activityId,
-        editorId: this.editorId
-      });
-
-      this.subscribe({
-        activityId: this.activityId,
-        editorId: this.editorId
-      });
-
-      this.fetchEditors();
+    activityId: {
+      handler: function (newVal, oldVal) {
+        this.unsubscribe(oldVal);
+        this.subscribe(newVal);
+      }
     }
   },
-  created() {
-    this.setupEditorsApi(
-      `/courses/${this.courseId}/editors`
-    );
-  },
   mounted() {
-    this.subscribe({
-      activityId: this.activityId,
-      editorId: this.editorId
-    });
-    this.fetchEditors();
+    this.subscribe(this.activityId);
   },
   beforeDestroy() {
-    this.unsubscribe({
-      activityId: this.activityId,
-      editorId: this.editorId
-    });
+    this.unsubscribe(this.activityId);
   },
   components: { Avatar }
 };
