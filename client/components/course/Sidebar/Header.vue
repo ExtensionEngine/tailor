@@ -65,9 +65,7 @@ export default {
       });
     }
   },
-  components: {
-    ActiveEditors
-  }
+  components: { ActiveEditors }
 };
 </script>
 

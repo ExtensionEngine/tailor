@@ -5,32 +5,26 @@
     </span>
     <span v-if="!editors.visible.length" class="editor-label">None</span>
     <span v-else>
-      <transition-group name="editor-avatars">
-        <!-- TODO: remove z-index and use "float: right" instead -->
+      <transition-group name="editor-avatars" class="editor-avatars">
         <avatar
           v-for="(editor, index) in editors.visible"
-          v-tooltip="{
-            content: getEditorTooltipText(editor),
-            class: 'editor-tooltip'
-          }"
+          v-tooltip="getTooltipContent(editor)"
           :key="index"
-          :style="`z-index: ${editors.visible.length - index}`"
           :size="40"
+          :style="`z-index: ${-index};`"
           :username="editor.email"
           :initials="getEditorInitial(editor)"
           class="editor-initial"
           color="#ffffffd9">
         </avatar>
         <span
-          v-if="additionalEditors.display"
-          v-tooltip="{
-            content: additionalEditors.tooltip,
-            class: 'editor-tooltip'
-          }"
+          v-if="editors.additional.display"
+          v-tooltip="getTooltipContent()"
           :key="allEditors.length"
+          :style="`z-index: ${-allEditors.length};`"
           class="editor-initial additional-editors">
-          <span v-if="additionalEditors.length < 99">
-            +{{ additionalEditors.length }}
+          <span v-if="editors.additional.length < 99">
+            +{{ editors.additional.length }}
           </span>
           <span v-else>99+</span>
         </span>
@@ -71,18 +65,15 @@ export default {
       let visibleEditors = filteredEditors.slice(0, maxEditors);
       if (this.currentEditor) visibleEditors.unshift(this.currentEditor);
 
-      return {
-        visible: visibleEditors,
-        additional: filteredEditors.slice(maxEditors)
-      };
-    },
-    additionalEditors() {
-      let additionalEditors = this.editors.additional;
+      let additionalEditors = filteredEditors.slice(maxEditors);
 
       return {
-        display: additionalEditors.length > 0,
-        length: additionalEditors.length,
-        tooltip: additionalEditors.map(it => it.email).join('\n')
+        visible: visibleEditors,
+        additional: {
+          display: additionalEditors.length > 0,
+          length: additionalEditors.length,
+          tooltip: additionalEditors.map(it => it.email).join('\n')
+        }
       };
     }
   },
@@ -90,26 +81,36 @@ export default {
     getEditorInitial(editor) {
       return editor.email.charAt(0).toUpperCase();
     },
-    getEditorTooltipText(editor) {
-      if (!editor) return;
-      let isCurrentEditor = editor.id === this.currentEditor && this.currentEditor.id;
-      return `${editor.email}${isCurrentEditor ? ' (you)' : ''}`;
+    getTooltipContent(editor = null) {
+      let content = '';
+
+      if (editor) {
+        let isCurrentEditor = editor.id === this.currentEditor && this.currentEditor.id;
+        content = `${editor.email}${isCurrentEditor ? ' (you)' : ''}`;
+      } else {
+        content = this.editors.additional.tooltip;
+      }
+
+      return { content, class: 'editor-tooltip' };
     },
     subscribe(activityId) {
-      api.subscribe(
-        { courseId: this.courseId, activityId, editor: this.currentEditor },
-        editors => (this.allEditors = editors)
-      );
+      api.subscribe({
+        courseId: this.courseId,
+        activityId,
+        editor: this.currentEditor
+      }, editors => (this.allEditors = editors));
     },
     unsubscribe(activityId) {
-      api.unsubscribe(
-        { courseId: this.courseId, activityId, editor: this.currentEditor }
-      );
+      api.unsubscribe({
+        courseId: this.courseId,
+        activityId,
+        editor: this.currentEditor
+      });
     }
   },
   watch: {
     activityId: {
-      handler: function (newVal, oldVal) {
+      handler: (newVal, oldVal) => {
         this.unsubscribe(oldVal);
         this.subscribe(newVal);
       }
@@ -127,18 +128,19 @@ export default {
 
 <style lang="scss" scoped>
 $avatarContainerBackground: #fff;
+$avatarDimension: 2.5em;
 
 .editor {
   &-initial {
     display: inline-block !important;
     position: relative;
-    width: 2.5em;
-    height: 2.5em;
+    width: $avatarDimension;
+    height: $avatarDimension;
     margin-right: -0.7em;
     color: $avatarContainerBackground;
     font-size: 1.2em;
     font-weight: bold;
-    line-height: 2.5em;
+    line-height: $avatarDimension;
     text-align: center;
     border-radius: 50%;
     vertical-align: middle;
@@ -164,6 +166,9 @@ $avatarContainerBackground: #fff;
 }
 
 .editor-avatars {
+  z-index: 0;
+  position: relative;
+
   &-enter-active, &-leave-active {
     transition: opacity 1.5s;
   }
@@ -177,7 +182,6 @@ $avatarContainerBackground: #fff;
   padding-left: 0.4em;
   color: #333;
   background: #ccc;
-  z-index: 0;
 }
 </style>
 

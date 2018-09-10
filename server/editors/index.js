@@ -9,14 +9,16 @@ const pick = require('lodash/pick');
 const router = require('express-promise-router')();
 const { User } = require('../shared/database');
 
+const baseRoute = '/courses/:courseId/activities/:activityId/editors';
+
 router
-  .route('/courses/:courseId/activities/:activityId/editors/subscribe')
+  .route(`${baseRoute}/subscribe`)
   .all(mapParameters)
   .get(sse, mapEditors, subscribe)
   .post(mapEditor, add, broadcastUpdate);
 
 router.post(
-  '/courses/:courseId/activities/:activityId/editors/unsubscribe',
+  `${baseRoute}/unsubscribe`,
   mapParameters,
   mapEditor,
   remove,
@@ -25,8 +27,8 @@ router.post(
 
 function mapParameters(req, res, next) {
   const { courseId, activityId } = req.params;
-  req.courseId = Number(courseId);
-  req.activityId = Number(activityId);
+  req.courseId = parseInt(courseId);
+  req.activityId = parseInt(activityId);
   next();
 }
 
