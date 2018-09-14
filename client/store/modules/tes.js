@@ -1,4 +1,5 @@
 import calculatePosition from 'utils/calculatePosition.js';
+import findKey from 'lodash/findKey';
 import VuexCollection from '../helpers/collection.js';
 
 const { action, build, getter, mutation } = new VuexCollection('tes', '/tes');
@@ -15,6 +16,19 @@ action(function reorder({ element, context }) {
       let element = res.data.data;
       this.api.setCid(element);
       this.commit('save', element);
+    });
+});
+
+action(function saveAtIndex({ element, context }) {
+  return this.context.dispatch('tes/save', element)
+    .then(() => {
+      let key = findKey(this.state.items, { '_cid': element._cid });
+      if (key) {
+        this.context.dispatch('tes/reorder', {
+          element: this.state.items[key],
+          context
+        });
+      }
     });
 });
 

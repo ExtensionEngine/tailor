@@ -1,6 +1,6 @@
 <template>
   <div class="add-element">
-    <div @click="toggleSelection" class="btn-base">
+    <div v-if="!alwaysDisplayed" @click="toggleSelection" class="btn-base">
       <span
         :class="[selectionOpened ? 'btn-close' : 'btn-open']"
         class="mdi mdi-plus toggle-selection">
@@ -34,14 +34,15 @@ export default {
     activity: { type: Object, default: null },
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
-    include: { type: Array, default: null }
+    include: { type: Array, default: null },
+    alwaysDisplayed: { type: Boolean, default: false }
   },
   data() {
     return {
       type: null,
       subtype: null,
       width: null,
-      selectionOpened: false
+      selectionOpened: false || this.alwaysDisplayed
     };
   },
   computed: {
@@ -142,8 +143,8 @@ export default {
   }
 
   .selections {
-    margin-top: 10px;
     min-height: 85px;
+    margin-top: 10px;
   }
 
   .btn-base {
