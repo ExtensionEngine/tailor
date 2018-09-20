@@ -17,7 +17,8 @@ export const typeInfo = {
   TF: { type: 'TF', title: 'True - false', class: 'true-false' },
   FB: { type: 'FB', title: 'Fill in the blank', class: 'fill-blank' },
   MQ: { type: 'MQ', title: 'Matching question', class: 'matching-question' },
-  DD: { type: 'DD', title: 'Drag & Drop', class: 'drag-drop' }
+  DD: { type: 'DD', title: 'Drag & Drop', class: 'drag-drop' },
+  TH: { type: 'TH', title: 'Text highlight', class: 'text-highlight' }
 };
 
 export const helperText = {
@@ -117,6 +118,14 @@ export const schemas = {
       key: yup.string().required(),
       value: yup.array().of(yup.string().required()).min(1)
     })).min(1)
+  }),
+  TH: yup.object().shape({
+    ...baseSchema,
+    text: yup.string().trim().min(1).required(),
+    answers: yup.array().castMap().of(yup.object().shape({
+      start: yup.number().required(),
+      text: yup.string().min(1).required()
+    })).min(1)
   })
 };
 
@@ -210,5 +219,11 @@ export const defaults = {
       element.correct[groupKey] = [answerKey];
     });
     return element;
-  }
+  },
+  TH: () => ({
+    type: 'TH',
+    ...baseDefaults,
+    text: '',
+    answers: []
+  })
 };
