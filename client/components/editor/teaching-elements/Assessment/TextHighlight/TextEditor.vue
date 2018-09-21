@@ -54,6 +54,9 @@ export default {
       forEach(highlights, ({ start, length }) => {
         this.textEditor.formatText(start, length, { highlight: true }, noUpdate);
       });
+    },
+    defocus() {
+      this.textEditor.blur();
     }
   },
   created() {

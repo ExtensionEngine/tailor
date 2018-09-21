@@ -82,6 +82,9 @@ export default {
       });
     },
     onSelectionChanged(startIndex, selectedText) {
+      // prevent current selection from obscuring the new highlight
+      if (this.isHighlighting) this.textEditor.defocus();
+
       const h = new Highlight(startIndex, selectedText);
       this.isHighlighting ? this.addHighlight(h) : this.removeHighlight(h);
       this.highlights = sortBy(this.highlights, h => h.start);
