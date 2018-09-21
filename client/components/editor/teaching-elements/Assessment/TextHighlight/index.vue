@@ -4,36 +4,46 @@
     <span :class="{ 'has-error': correctError }" class="answer">
       <span class="highlight-container">
         <!-- TODO: remove button, add 'highlight' option to toolbar instead -->
-        <button
-          :class="isHighlighting ? 'highlight-add' : 'highlight-remove'"
-          @click="isHighlighting = !isHighlighting"
-          class="highlight-btn"
-          type="button">
-          <span class="icon mdi mdi-pencil"></span>
-        </button>
-        Highlighting mode: {{ isHighlighting ? 'ADD' : 'SUBTRACT' }}
+        <div v-if="isEditing">
+          <button
+            :class="isHighlighting ? 'highlight-add' : 'highlight-remove'"
+            @click="isHighlighting = !isHighlighting"
+            class="highlight-btn"
+            type="button">
+            <span class="icon mdi mdi-pencil"></span>
+          </button>
+          Highlighting mode: {{ isHighlighting ? 'ADD' : 'SUBTRACT' }}
+        </div>
       </span>
-      <quill-editor
-        ref="quillEditor"
-        :content="content"
-        :options="options">
-      </quill-editor>
-      <!-- TODO: display current highlights here -->
+      <text-editor
+        ref="textEditor"
+        :text="text"
+        :enabled="isEditing"
+        @selectionChange="onSelectionChanged"
+        @contentChange="update">
+      </text-editor>
+      <div v-if="isEditing && highlights.length" class="highlighted">
+        Highlights (click on an item to remove it from the list):
+        <span
+          v-for="(highlight, index) in highlights"
+          :key="index"
+          @click="removeHighlight(highlight)">
+          {{ highlight.text }}
+        </span>
+      </div>
     </span>
   </div>
 </template>
 
 <script>
 import { defaults } from 'utils/assessment';
+import findIndex from 'lodash/findIndex';
 import forEach from 'lodash/forEach';
 import forEachRight from 'lodash/forEachRight';
 import Highlight from './Highlight';
-import HighlightTag from './ql-highlight';
 import isEmpty from 'lodash/isEmpty';
-import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
 import sortBy from 'lodash/sortBy';
-
-Quill.register('formats/highlight', HighlightTag);
+import TextEditor from './TextEditor';
 
 export default {
   name: 'text-highlight',
@@ -51,137 +61,109 @@ export default {
     };
   },
   computed: {
+    text() {
+      return this.assessment.text;
+    },
+    answers() {
+      return this.assessment.answers;
+    },
     correctError() {
       return this.errors.includes('correct');
     },
     textEditor() {
-      return this.$refs.quillEditor.quill;
+      return this.$refs.textEditor;
     }
   },
   methods: {
     update() {
       this.$emit('update', {
-        text: this.getFormattedContentWithoutHighlightTags(),
+        text: this.textEditor.getFormattedContent(),
         answers: Highlight.toPlainObjects(this.highlights)
       });
     },
-    getContent(includeFormatting) {
-      if (includeFormatting) return this.content;
-
-      const temp = document.createElement('div');
-      temp.innerHTML = this.content;
-      return temp.innerText;
+    onSelectionChanged(startIndex, selectedText) {
+      const h = new Highlight(startIndex, selectedText);
+      this.isHighlighting ? this.addHighlight(h) : this.removeHighlight(h);
+      this.highlights = sortBy(this.highlights, h => h.start);
+      this.update();
     },
-    getFormattedContentWithoutHighlightTags() {
-      // TODO: this method could be merged with getContent()
-      const tempEditor = new Quill(document.createElement('div'));
-      tempEditor.setContents(this.textEditor.getContents());
-      tempEditor.formatText(0, tempEditor.getLength(), { highlight: false });
-      const children = tempEditor.container.getElementsByClassName('ql-editor');
-
-      return children[0].innerHTML;
-    },
-    onSelectionChanged(range, oldRange, source) {
-      if (range && range.length) {
-        const selectedText = this.textEditor.getText(range.index, range.length);
-        const highlight = new Highlight(range.index, selectedText);
-
-        // stop current selection from obscuring the new highlight
-        if (this.isHighlighting) this.textEditor.blur();
-
-        return this.isHighlighting
-          ? this.addHighlight(highlight)
-          : this.removeHighlight(highlight);
-      }
+    getText(startIndex, endIndex) {
+      return this.textEditor.getPlainContent(startIndex, endIndex);
     },
     addHighlight(highlight) {
       // TODO: simplify code and/or extract parts of it into a helper
-      const { innerIndices, outerIndices, outerLeft, outerRight, containing } =
-        getRelatedHighlights(highlight, this.highlights);
+      const existingIndex = findIndex(this.highlights, highlight);
+      if (existingIndex !== -1) return;
+
+      const { inner, outer, containing } = getNearby(highlight, this.highlights);
 
       if (containing) return;
 
-      if (isEmpty(innerIndices) && isEmpty(outerIndices)) {
+      if (isEmpty(inner) && isEmpty(outer)) {
         return this.highlights.push(highlight);
       }
 
-      const text = this.getContent(false);
+      const { left, right } = outer;
 
-      if (outerLeft && outerLeft.start < highlight.start) {
+      if (left && left.start < highlight.start) {
         const endIndex = highlight.end;
-        highlight.start = outerLeft.start;
-        highlight.text = text.substring(highlight.start, endIndex + 1);
+        highlight.start = left.start;
+        highlight.text = this.getText(highlight.start, endIndex);
       }
 
-      if (outerRight && outerRight.end > highlight.end) {
-        highlight.text = text.substring(highlight.start, outerRight.end + 1);
+      if (right && right.end > highlight.end) {
+        highlight.text = this.getText(highlight.start, right.end);
       }
 
-      this.removeHighlightsByIndices(innerIndices.concat(outerIndices));
+      const outerHighlights = isEmpty(outer) ? [] : outer.values();
+      this.removeHighlights(inner.concat(outerHighlights));
       this.highlights.push(highlight);
     },
     removeHighlight(highlight) {
       // TODO: simplify code and/or extract parts of it into a helper
-      const { innerIndices, outerIndices, outerLeft, outerRight, containing } =
-        getRelatedHighlights(highlight, this.highlights);
+      const existingIndex = findIndex(this.highlights, highlight);
+      if (existingIndex !== -1) return this.highlights.splice(existingIndex, 1);
 
-      const text = this.getContent(false);
+      const { inner, outer, containing } = getNearby(highlight, this.highlights);
 
       if (containing) {
         const endIndex = containing.end;
-        containing.text = text.substring(containing.start, highlight.start);
+        containing.text = this.getText(containing.start, highlight.start - 1);
         highlight.start = highlight.end + 1;
-        highlight.text = text.substring(highlight.start, endIndex + 1);
+        highlight.text = this.getText(highlight.start, endIndex);
 
         return this.highlights.push(highlight);
       }
 
-      if (isEmpty(innerIndices) && isEmpty(outerIndices)) return;
+      if (isEmpty(inner) && isEmpty(outer)) return;
 
-      if (outerLeft && outerLeft.end >= highlight.start) {
-        outerLeft.text = text.substring(outerLeft.start, highlight.start);
+      const { left, right } = outer;
+
+      if (left && left.end >= highlight.start) {
+        left.text = this.getText(left.start, highlight.start - 1);
       }
 
-      if (outerRight && outerRight.start <= highlight.end) {
-        const endIndex = outerRight.end;
-        outerRight.start = highlight.end + 1;
-        outerRight.text = text.substring(outerRight.start, endIndex + 1);
+      if (right && right.start <= highlight.end) {
+        const endIndex = right.end;
+        right.start = highlight.end + 1;
+        right.text = this.getText(right.start, endIndex);
       }
 
-      this.removeHighlightsByIndices(innerIndices);
+      this.removeHighlights(inner);
 
       // TODO: highlights are not redrawn automatically if no highlights
       // have been added or removed; temporary explicit call added
       this.refreshEditorHighlights();
     },
-    removeHighlightsByIndices(indices) {
-      forEach(sortBy(indices, index => -index), index => {
-        this.highlights.splice(index, 1);
-      });
-    },
-    clearEditorHighlights() {
-      const textLength = this.textEditor.getLength();
-      this.textEditor.formatText(0, textLength, { highlight: false });
+    removeHighlights(highlights) {
+      forEach(highlights, h => this.removeHighlight(h));
     },
     refreshEditorHighlights() {
-      // TODO: each reformat triggers text-change and, in turn, update;
-      // perform formatting in temp editor and set this.content to its innerHTML?
-      this.clearEditorHighlights();
-      forEach(this.highlights, h => {
-        this.textEditor.formatText(h.start, h.text.length, { highlight: true });
-      });
+      const getData = h => ({ start: h.start, length: h.text.length });
+      this.textEditor.renderHighlights(this.highlights.map(h => getData(h)));
     }
   },
   watch: {
-    isEditing(newVal) {
-      if (!newVal) {
-        // TODO: make text editor read-only when not in edit mode
-        this.textEditor.disable();
-        this.options = { modules: { toolbar: false } };
-      } else {
-        this.textEditor.enable();
-      }
-    },
     highlights() {
       this.refreshEditorHighlights();
     },
@@ -195,43 +177,23 @@ export default {
     }
   },
   created() {
-    this.content = this.assessment.text;
-    this.highlights = Highlight.fromPlainObjects(this.assessment.answers);
+    this.highlights = Highlight.fromPlainObjects(this.answers);
   },
-  mounted() {
-    this.textEditor.on('selection-change', this.onSelectionChanged);
-    this.textEditor.on('text-change', (delta, oldContent, source) => {
-      this.content = this.textEditor.root.innerHTML;
-      // TODO: update seems to get triggered too frequently; investigate
-      this.update();
-    });
-  },
-  components: { QuillEditor }
+  components: { TextEditor }
 };
 
-function getRelatedHighlights(highlight, highlights) {
+function getNearby(highlight, highlights) {
   const related = {
-    innerIndices: [],
-    outerIndices: [],
-    outerLeft: null,
-    outerRight: null,
+    inner: [],
+    outer: {},
     containing: null
   };
 
-  forEach(highlights, (h, index) => {
+  forEach(highlights, h => {
     if (highlight.isContainedBy(h)) return (related.containing = h);
-
-    if (highlight.contains(h)) return related.innerIndices.push(index);
-
-    if (highlight.bordersFromLeft(h)) {
-      related.outerLeft = h;
-      return related.outerIndices.push(index);
-    }
-
-    if (highlight.bordersFromRight(h)) {
-      related.outerRight = h;
-      return related.outerIndices.push(index);
-    }
+    if (highlight.contains(h)) return related.inner.push(h);
+    if (highlight.bordersFromLeft(h)) related.outer.left = h;
+    if (highlight.bordersFromRight(h)) related.outer.right = h;
   });
 
   return related;
@@ -285,8 +247,18 @@ $highlightTextColor: #fff;
   }
 }
 
-.quill-editor /deep/ .ql-highlight {
-  color: $highlightTextColor;
-  background: $highlightBackground;
+.highlighted {
+  margin-top: 10px;
+
+  span {
+    display: inline-block;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    padding: 0 5px;
+    color: $highlightTextColor;
+    font-size: smaller;
+    background: $highlightBackground;
+  }
 }
 </style>
