@@ -20,7 +20,7 @@
         :text="text"
         :enabled="isEditing"
         @selectionChange="onSelectionChanged"
-        @contentChange="update">
+        @contentChange="onContentChanged">
       </text-editor>
       <div v-if="isEditing && highlights.length" class="highlighted">
         Highlights (click on an item to remove it from the list):
@@ -37,12 +37,7 @@
 
 <script>
 import { defaults } from 'utils/assessment';
-import findIndex from 'lodash/findIndex';
-import forEach from 'lodash/forEach';
-import forEachRight from 'lodash/forEachRight';
-import Highlight from './Highlight';
-import isEmpty from 'lodash/isEmpty';
-import sortBy from 'lodash/sortBy';
+import HighlightCollection from './HighlightCollection';
 import TextEditor from './TextEditor';
 
 export default {
@@ -56,7 +51,7 @@ export default {
     return {
       content: '',
       options: {},
-      highlights: [],
+      highlights: new HighlightCollection(),
       isHighlighting: true
     };
   },
@@ -76,131 +71,42 @@ export default {
   },
   methods: {
     update() {
+      this.refreshEditorHighlights();
+
       this.$emit('update', {
         text: this.textEditor.getFormattedContent(),
-        answers: Highlight.toPlainObjects(this.highlights)
+        answers: this.highlights.toPlainObjects()
       });
     },
     onSelectionChanged(startIndex, selectedText) {
       // prevent current selection from obscuring the new highlight
       if (this.isHighlighting) this.textEditor.defocus();
 
-      const h = new Highlight(startIndex, selectedText);
-      this.isHighlighting ? this.addHighlight(h) : this.removeHighlight(h);
-      this.highlights = sortBy(this.highlights, h => h.start);
+      this.isHighlighting
+        ? this.highlights.addHighlight(startIndex, selectedText)
+        : this.highlights.removeHighlight(startIndex, selectedText);
+
       this.update();
     },
-    getText(startIndex, endIndex) {
-      return this.textEditor.getPlainContent(startIndex, endIndex);
-    },
-    addHighlight(highlight) {
-      // TODO: simplify code and/or extract parts of it into a helper
-      const existingIndex = findIndex(this.highlights, highlight);
-      if (existingIndex !== -1) return;
+    onContentChanged() {
+      this.highlights.updateForText(this.textEditor.getPlainContent());
 
-      const { inner, outer, containing } = getNearby(highlight, this.highlights);
-
-      if (containing) return;
-
-      if (isEmpty(inner) && isEmpty(outer)) {
-        return this.highlights.push(highlight);
-      }
-
-      const { left, right } = outer;
-
-      if (left && left.start < highlight.start) {
-        const endIndex = highlight.end;
-        highlight.start = left.start;
-        highlight.text = this.getText(highlight.start, endIndex);
-      }
-
-      if (right && right.end > highlight.end) {
-        highlight.text = this.getText(highlight.start, right.end);
-      }
-
-      const outerHighlights = isEmpty(outer) ? [] : outer.values();
-      this.removeHighlights(inner.concat(outerHighlights));
-      this.highlights.push(highlight);
-    },
-    removeHighlight(highlight) {
-      // TODO: simplify code and/or extract parts of it into a helper
-      const existingIndex = findIndex(this.highlights, highlight);
-      if (existingIndex !== -1) return this.highlights.splice(existingIndex, 1);
-
-      const { inner, outer, containing } = getNearby(highlight, this.highlights);
-
-      if (containing) {
-        const endIndex = containing.end;
-        containing.text = this.getText(containing.start, highlight.start - 1);
-        highlight.start = highlight.end + 1;
-        highlight.text = this.getText(highlight.start, endIndex);
-
-        return this.highlights.push(highlight);
-      }
-
-      if (isEmpty(inner) && isEmpty(outer)) return;
-
-      const { left, right } = outer;
-
-      if (left && left.end >= highlight.start) {
-        left.text = this.getText(left.start, highlight.start - 1);
-      }
-
-      if (right && right.start <= highlight.end) {
-        const endIndex = right.end;
-        right.start = highlight.end + 1;
-        right.text = this.getText(right.start, endIndex);
-      }
-
-      this.removeHighlights(inner);
-
-      // TODO: highlights are not redrawn automatically if no highlights
-      // have been added or removed; temporary explicit call added
-      this.refreshEditorHighlights();
-    },
-    removeHighlights(highlights) {
-      forEach(highlights, h => this.removeHighlight(h));
+      this.update();
     },
     refreshEditorHighlights() {
       const getData = h => ({ start: h.start, length: h.text.length });
-      this.textEditor.renderHighlights(this.highlights.map(h => getData(h)));
-    }
-  },
-  watch: {
-    highlights() {
-      this.refreshEditorHighlights();
-    },
-    content() {
-      const text = this.getContent(false);
-      forEachRight(this.highlights, (h, index) => {
-        if (h.text !== text.substring(h.start, h.end + 1)) {
-          this.highlights.splice(index, 1);
-        }
-      });
+      const highlights = this.highlights.toPlainObjects();
+      this.textEditor.renderHighlights(highlights.map(h => getData(h)));
     }
   },
   created() {
-    this.highlights = Highlight.fromPlainObjects(this.answers);
+    this.highlights = HighlightCollection.fromPlainObjects(this.answers);
+  },
+  mounted() {
+    this.refreshEditorHighlights();
   },
   components: { TextEditor }
 };
-
-function getNearby(highlight, highlights) {
-  const related = {
-    inner: [],
-    outer: {},
-    containing: null
-  };
-
-  forEach(highlights, h => {
-    if (highlight.isContainedBy(h)) return (related.containing = h);
-    if (highlight.contains(h)) return related.inner.push(h);
-    if (highlight.bordersFromLeft(h)) related.outer.left = h;
-    if (highlight.bordersFromRight(h)) related.outer.right = h;
-  });
-
-  return related;
-}
 </script>
 
 <style lang="scss" scoped>

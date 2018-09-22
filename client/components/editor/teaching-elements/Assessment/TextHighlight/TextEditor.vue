@@ -31,11 +31,10 @@ export default {
     }
   },
   methods: {
-    getPlainContent(startIndex, endIndex) {
+    getPlainContent() {
       const temp = document.createElement('div');
       temp.innerHTML = this.content;
-
-      return temp.innerText.substring(startIndex, endIndex + 1);
+      return temp.innerText;
     },
     getFormattedContent() {
       const tempEditor = new Quill(document.createElement('div'));

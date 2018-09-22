@@ -1,40 +1,22 @@
-import map from 'lodash/map';
-
 export default class Highlight {
   constructor(start, text) {
-    this._start = start;
-    this._text = text;
-  }
-
-  get start() {
-    return this._start;
-  }
-
-  set start(value) {
-    this._start = value;
-  }
-
-  get text() {
-    return this._text;
-  }
-
-  set text(value) {
-    this._text = value;
+    this.start = start;
+    this.text = text;
   }
 
   get end() {
     return this.start + this.text.length - 1;
   }
 
-  static fromPlainObjects(objects) {
-    return map(objects, o => new Highlight(o.start, o.text));
+  static fromPlainObject(object) {
+    return new Highlight(object.start, object.text);
   }
 
-  static toPlainObjects(highlights) {
-    return map(highlights, h => ({ start: h.start, text: h.text }));
+  toPlainObject() {
+    return { start: this.start, text: this.text };
   }
 
-  contains(other) {
+  containsOrEquals(other) {
     return this.start <= other.start && this.end >= other.end;
   }
 
@@ -44,12 +26,48 @@ export default class Highlight {
   }
 
   bordersFromLeft(other) {
-    if (this.contains(other)) return false;
+    if (this.containsOrEquals(other)) return false;
     return (other.end >= this.start - 1 && other.end < this.end);
   }
 
   bordersFromRight(other) {
-    if (this.contains(other)) return false;
+    if (this.containsOrEquals(other)) return false;
     return other.start <= this.end + 1 && other.start > this.start;
+  }
+
+  absorb({ left, right }) {
+    if (left && left.start < this.start) {
+      const highlightStartIndex = left.end - this.start + 1;
+      this.start = left.start;
+      this.text = left.text + this.text.substring(highlightStartIndex);
+    }
+
+    if (right && right.end > this.end) {
+      const rightStartIndex = this.end - right.start + 1;
+      this.text += right.text.substring(rightStartIndex);
+    }
+  }
+
+  shrinkFromLeftBy(other) {
+    if (!this.bordersFromLeft(other)) return;
+
+    if (this.start <= other.end) {
+      const startIndex = other.end - this.start + 1;
+      this.text = this.text.substring(startIndex);
+      this.start = other.end + 1;
+    }
+  }
+
+  shrinkFromRightBy(other) {
+    if (!this.bordersFromRight(other)) return;
+
+    if (this.end >= other.start) {
+      const endIndex = this.text.length - (this.end - other.start) - 1;
+      this.text = this.text.substring(0, endIndex);
+    }
+  }
+
+  isValidInText(text) {
+    return this.text === text.substring(this.start, this.end + 1);
   }
 }
