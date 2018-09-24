@@ -67,6 +67,16 @@ export default class Highlight {
     }
   }
 
+  splitBy(other) {
+    const endIndex = other.start - this.start;
+    const otherStartIndex = endIndex + other.text.length;
+
+    return [
+      new Highlight(this.start, this.text.substring(0, endIndex)),
+      new Highlight(other.end + 1, this.text.substring(otherStartIndex))
+    ];
+  }
+
   isValidInText(text) {
     return this.text === text.substring(this.start, this.end + 1);
   }

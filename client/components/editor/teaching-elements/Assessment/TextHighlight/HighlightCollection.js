@@ -26,6 +26,10 @@ export default class HighlightCollection {
     const existingIndex = findIndex(this.highlights, highlight);
     if (existingIndex !== -1) return;
 
+    this.add(highlight);
+  }
+
+  add(highlight) {
     const { inner, outer, containing } = this.getNearby(highlight);
 
     if (containing) return;
@@ -36,6 +40,7 @@ export default class HighlightCollection {
 
     const outerHighlights = isEmpty(outer) ? [] : Object.values(outer);
     this.removeHighlights(inner.concat(outerHighlights));
+
     this.highlights.push(highlight);
   }
 
@@ -50,15 +55,10 @@ export default class HighlightCollection {
     const { inner, outer, containing } = this.getNearby(highlight);
 
     if (containing) {
-      // TODO: add split() method to Highlight
-      const containingEndIndex = highlight.start - containing.start;
-      const highlightStartIndex = containingEndIndex + highlight.text.length;
+      const split = containing.splitBy(highlight);
+      this.removeHighlights([containing, highlight]);
 
-      highlight.start = highlight.end + 1;
-      highlight.text = containing.text.substring(highlightStartIndex);
-      containing.text = containing.text.substring(0, containingEndIndex);
-
-      return this.highlights.push(highlight);
+      return this.highlights.push(...split);
     }
 
     if (isEmpty(inner) && isEmpty(outer)) return;
