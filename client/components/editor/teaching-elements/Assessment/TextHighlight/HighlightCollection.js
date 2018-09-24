@@ -34,9 +34,7 @@ export default class HighlightCollection {
 
     if (containing) return;
 
-    if (isEmpty(inner) && isEmpty(outer)) return this.highlights.push(highlight);
-
-    if (!isEmpty(outer)) highlight.absorb(outer);
+    this.handleInnerAndOuter(highlight, { inner, outer }, true);
 
     const outerHighlights = isEmpty(outer) ? [] : Object.values(outer);
     this.removeHighlights(inner.concat(outerHighlights));
@@ -61,17 +59,25 @@ export default class HighlightCollection {
       return this.highlights.push(...split);
     }
 
-    if (isEmpty(inner) && isEmpty(outer)) return;
-
-    const { left, right } = outer;
-    if (left) left.shrinkFromRightBy(highlight);
-    if (right) right.shrinkFromLeftBy(highlight);
+    this.handleInnerAndOuter(highlight, { inner, outer }, false);
 
     this.removeHighlights(inner);
   }
 
   removeHighlights(highlights) {
     forEach(highlights, h => this.remove(h));
+  }
+
+  handleInnerAndOuter(highlight, { inner, outer }, isAdding) {
+    if (isEmpty(inner) && isEmpty(outer)) return;
+
+    if (!isEmpty(outer)) {
+      if (isAdding) return highlight.absorb(outer);
+
+      const { left, right } = outer;
+      if (left) left.shrinkFromRightBy(highlight);
+      if (right) right.shrinkFromLeftBy(highlight);
+    }
   }
 
   updateForText(text) {
