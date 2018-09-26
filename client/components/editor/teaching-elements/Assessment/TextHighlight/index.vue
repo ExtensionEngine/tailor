@@ -12,16 +12,18 @@
       </text-editor>
       <div v-if="isEditing">
         <div v-if="answers.length" class="highlighted">
-          Highlights (click on an item to remove it from the list):
+          <span class="instructions-title">Highlights:</span>
           <span
             v-for="(highlight, index) in answers"
             :key="index"
-            @click="removeHighlight(highlight)">
+            @click="removeHighlight(highlight)"
+            class="item">
             {{ highlight.text }}
           </span>
+          (click on an item to remove it from the list)
         </div>
         <div>
-          Add a wildcard:
+          <span class="instructions-title">Add a wildcard:</span>
           <input ref="wildcardInput" type="text"/>
           <button
             @click="addWildcard($refs.wildcardInput.value)"
@@ -31,13 +33,15 @@
           </button>
         </div>
         <div v-if="wildcards.length" class="highlighted">
-          Wildcards (click on an item to remove it from the list):
+          <span class="instructions-title">Wildcards:</span>
           <span
             v-for="(wildcard, index) in wildcards"
             :key="index"
-            @click="removeWildcard(wildcard)">
+            @click="removeWildcard(wildcard)"
+            class="item">
             {{ wildcard }}
           </span>
+          (click on an item to remove it from the list)
         </div>
       </div>
     </span>
@@ -148,7 +152,7 @@ $error: #d9534f;
 .highlighted {
   margin-top: 10px;
 
-  span {
+  .item {
     display: inline-block;
     border-radius: 5px;
     margin-right: 5px;
@@ -159,6 +163,11 @@ $error: #d9534f;
     background: $highlightBackground;
     cursor: pointer;
   }
+}
+
+.instructions-title {
+  margin-top: 5px;
+  font-weight: 600;
 }
 
 .has-error .quill-editor {
