@@ -2,34 +2,43 @@
   <div class="form-group">
     <span class="form-label">Answer</span>
     <span :class="{ 'has-error': correctError }" class="answer">
-      <span class="highlight-container">
-        <!-- TODO: remove button, add 'highlight' option to toolbar instead -->
-        <div v-if="isEditing">
-          <button
-            :class="isHighlighting ? 'highlight-add' : 'highlight-remove'"
-            @click="isHighlighting = !isHighlighting"
-            class="highlight-btn"
-            type="button">
-            <span class="icon mdi mdi-pencil"></span>
-          </button>
-          Highlighting mode: {{ isHighlighting ? 'ADD' : 'SUBTRACT' }}
-        </div>
-      </span>
       <text-editor
         ref="textEditor"
         :text="text"
+        :answers="answers"
+        :highlightWildcards="wildcards"
         :enabled="isEditing"
-        @selectionChange="onSelectionChanged"
-        @contentChange="onContentChanged">
+        @change="update">
       </text-editor>
-      <div v-if="isEditing && highlights.length" class="highlighted">
-        Highlights (click on an item to remove it from the list):
-        <span
-          v-for="(highlight, index) in highlights"
-          :key="index"
-          @click="removeHighlight(highlight)">
-          {{ highlight.text }}
-        </span>
+      <div v-if="isEditing">
+        <div v-if="answers.length" class="highlighted">
+          Highlights (click on an item to remove it from the list):
+          <span
+            v-for="(highlight, index) in answers"
+            :key="index"
+            @click="removeHighlight(highlight)">
+            {{ highlight.text }}
+          </span>
+        </div>
+        <div>
+          Add a wildcard:
+          <input ref="wildcardInput" type="text"/>
+          <button
+            @click="addWildcard($refs.wildcardInput.value)"
+            type="button"
+            class="btn btn-default btn-material">
+            Add
+          </button>
+        </div>
+        <div v-if="wildcards.length" class="highlighted">
+          Wildcards (click on an item to remove it from the list):
+          <span
+            v-for="(wildcard, index) in wildcards"
+            :key="index"
+            @click="removeWildcard(wildcard)">
+            {{ wildcard }}
+          </span>
+        </div>
       </div>
     </span>
   </div>
@@ -37,7 +46,8 @@
 
 <script>
 import { defaults } from 'utils/assessment';
-import HighlightCollection from './HighlightCollection';
+import filter from 'lodash/filter';
+import indexOf from 'lodash/indexOf';
 import TextEditor from './TextEditor';
 
 export default {
@@ -49,10 +59,7 @@ export default {
   },
   data() {
     return {
-      content: '',
-      options: {},
-      highlights: new HighlightCollection(),
-      isHighlighting: true
+      wildcards: []
     };
   },
   computed: {
@@ -60,7 +67,7 @@ export default {
       return this.assessment.text;
     },
     answers() {
-      return this.assessment.answers;
+      return filter(this.assessment.answers, h => h.start !== -1);
     },
     correctError() {
       return this.errors.includes('correct');
@@ -71,46 +78,40 @@ export default {
   },
   methods: {
     update() {
-      this.refreshEditorHighlights();
+      const text = this.textEditor.getText();
+      const answers = this.textEditor.getAnswers();
+      const wildcards = this.wildcards.map(w => ({ start: -1, text: w }));
 
-      this.$emit('update', {
-        text: this.textEditor.getFormattedContent(),
-        answers: this.highlights.toPlainObjects()
-      });
+      this.$emit('update', { text, answers: answers.concat(wildcards) });
     },
-    onSelectionChanged(startIndex, selectedText) {
-      // prevent current selection from obscuring the new highlight
-      if (this.isHighlighting) this.textEditor.defocus();
-
-      this.isHighlighting
-        ? this.highlights.addHighlight(startIndex, selectedText)
-        : this.highlights.removeHighlight(startIndex, selectedText);
-
+    removeHighlight(highlight) {
+      this.textEditor.removeHighlight(highlight);
+    },
+    addWildcard(text) {
+      if (!text.length) return;
+      if (!this.wildcards.includes(text)) this.wildcards.push(text);
+      this.$refs.wildcardInput.value = '';
+    },
+    removeWildcard(text) {
+      const index = indexOf(this.wildcards, text);
+      if (index !== -1) this.wildcards.splice(index, 1);
+    }
+  },
+  watch: {
+    wildcards() {
       this.update();
-    },
-    onContentChanged() {
-      this.highlights.updateForText(this.textEditor.getPlainContent());
-
-      this.update();
-    },
-    refreshEditorHighlights() {
-      const getData = h => ({ start: h.start, length: h.text.length });
-      const highlights = this.highlights.toPlainObjects();
-      this.textEditor.renderHighlights(highlights.map(h => getData(h)));
     }
   },
   created() {
-    this.highlights = HighlightCollection.fromPlainObjects(this.answers);
-  },
-  mounted() {
-    this.refreshEditorHighlights();
+    const wildcards = filter(this.assessment.answers, h => h.start === -1);
+    this.wildcards = wildcards.map(w => w.text);
   },
   components: { TextEditor }
 };
 </script>
 
 <style lang="scss" scoped>
-$highlightBackground: #144acc;
+$highlightBackground: #2f73e9;
 $highlightTextColor: #fff;
 
 #answer-text {
@@ -135,25 +136,9 @@ $highlightTextColor: #fff;
   font-size: 16px;
 }
 
-.highlight {
-  &-container {
-    display: block;
-    margin: 10px 0;
-  }
-
-  &-btn {
-    padding: 5px 10px;
-  }
-
-  &-add {
-    color: $highlightTextColor;
-    background: $highlightBackground;
-  }
-
-  &-remove {
-    color: #000;
-    background: #b11;
-  }
+.btn {
+  padding: 5px;
+  background: #aaa;
 }
 
 .highlighted {
@@ -168,6 +153,7 @@ $highlightTextColor: #fff;
     color: $highlightTextColor;
     font-size: smaller;
     background: $highlightBackground;
+    cursor: pointer;
   }
 }
 </style>
