@@ -22,16 +22,6 @@
           </span>
           (click on an item to remove it from the list)
         </div>
-        <div>
-          <span class="instructions-title">Add a wildcard:</span>
-          <input ref="wildcardInput" type="text"/>
-          <button
-            @click="addWildcard($refs.wildcardInput.value)"
-            type="button"
-            class="btn btn-default btn-material">
-            Add
-          </button>
-        </div>
         <div v-if="wildcards.length" class="highlighted">
           <span class="instructions-title">Wildcards:</span>
           <span
@@ -42,6 +32,16 @@
             {{ wildcard }}
           </span>
           (click on an item to remove it from the list)
+        </div>
+        <div>
+          <span class="instructions-title">Add a wildcard:</span>
+          <input ref="wildcardInput" type="text"/>
+          <button
+            @click="addWildcard($refs.wildcardInput.value)"
+            type="button"
+            class="btn btn-default btn-material">
+            Add
+          </button>
         </div>
       </div>
     </span>
