@@ -1,7 +1,7 @@
 <template>
   <div class="form-group">
     <span class="form-label">Answer</span>
-    <span :class="{ 'has-error': correctError }" class="answer">
+    <span :class="{ 'has-error': hasErrors }" class="answer">
       <text-editor
         ref="textEditor"
         :text="text"
@@ -69,8 +69,8 @@ export default {
     answers() {
       return filter(this.assessment.answers, h => h.start !== -1);
     },
-    correctError() {
-      return this.errors.includes('correct');
+    hasErrors() {
+      return this.errors.length > 0;
     },
     textEditor() {
       return this.$refs.textEditor;
@@ -155,5 +155,9 @@ $highlightTextColor: #fff;
     background: $highlightBackground;
     cursor: pointer;
   }
+}
+
+.has-error .quill-editor {
+  border: 1px solid #b11;
 }
 </style>
