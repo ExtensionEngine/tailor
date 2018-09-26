@@ -41,6 +41,9 @@
         </div>
       </div>
     </span>
+    <span v-if="errors.includes('answers')" class="error-message">
+      Please add at least one correct answer by highlighting a text snippet or choosing a wildcard.
+    </span>
   </div>
 </template>
 
@@ -113,6 +116,7 @@ export default {
 <style lang="scss" scoped>
 $highlightBackground: #2f73e9;
 $highlightTextColor: #fff;
+$error: #d9534f;
 
 #answer-text {
   min-height: 120px;
@@ -158,6 +162,13 @@ $highlightTextColor: #fff;
 }
 
 .has-error .quill-editor {
-  border: 1px solid #b11;
+  border: 1px solid $error;
+}
+
+.error-message {
+  display: block;
+  color: $error;
+  font-weight: bold;
+  text-align: center;
 }
 </style>

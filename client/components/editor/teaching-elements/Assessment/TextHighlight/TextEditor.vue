@@ -156,20 +156,18 @@ export default {
       this.renderHighlights(highlights.map(h => getData(h)));
     },
     recalculateWildcards() {
-      if (this.highlightWildcards.length) {
-        let wildcardHighlights = [];
-        forEach(this.highlightWildcards, text => {
-          const wildcardIndices = getOccurrenceIndices(
-            getPlainContent(this.content),
-            text
-          );
+      let wildcardHighlights = [];
 
-          const wildcards = wildcardIndices.map(index => ({ start: index, text }));
-          wildcardHighlights = wildcardHighlights.concat(wildcards);
-        });
+      forEach(this.highlightWildcards, text => {
+        const wildcardIndices = getOccurrenceIndices(
+          getPlainContent(this.content),
+          text
+        );
+        const wildcards = wildcardIndices.map(index => ({ start: index, text }));
+        wildcardHighlights = wildcardHighlights.concat(wildcards);
+      });
 
-        this.wildcards = HighlightCollection.fromPlainObjects(wildcardHighlights);
-      }
+      this.wildcards = HighlightCollection.fromPlainObjects(wildcardHighlights);
     }
   },
   watch: {
