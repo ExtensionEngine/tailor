@@ -17,12 +17,11 @@ import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
 Quill.register('formats/highlight', Highlight);
 
 const icons = Quill.import('ui/icons');
-icons['highlight-add'] = '<span class="icon mdi mdi-marker"></span>';
-icons['highlight-subtract'] = '<span class="icon mdi mdi-marker"></span>';
+icons['highlight'] = '<span class="icon mdi mdi-marker"></span>';
 
 const noUpdate = 'other';
 
-const toolbarContainerOptions = [
+const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'],
   ['blockquote', 'code-block'],
   [{ 'header': 1 }, { 'header': 2 }],
@@ -37,8 +36,19 @@ const toolbarContainerOptions = [
   [{ 'align': [] }],
   ['clean'],
   ['link', 'image', 'video'],
-  ['highlight-add', 'highlight-subtract']
+  ['highlight']
 ];
+
+const options = highlightHandler => ({
+  modules: {
+    toolbar: {
+      container: toolbarOptions,
+      handlers: {
+        'highlight': highlightHandler
+      }
+    }
+  }
+});
 
 export default {
   props: {
@@ -49,20 +59,10 @@ export default {
   },
   data() {
     return {
-      options: {
-        modules: {
-          toolbar: {
-            container: toolbarContainerOptions,
-            handlers: {
-              'highlight-add': this.onHighlightAdd,
-              'highlight-subtract': this.onHighlightSubtract
-            }
-          }
-        }
-      },
+      options: options(this.onHighlight),
       isHighlighting: null,
-      content: '',
-      highlights: new HighlightCollection(),
+      content: this.text,
+      highlights: HighlightCollection.fromPlainObjects(this.answers),
       wildcards: new HighlightCollection()
     };
   },
@@ -92,42 +92,16 @@ export default {
         this.textEditor.formatText(start, length, { highlight: true }, noUpdate);
       });
     },
-    onHighlightAdd() {
-      this.isHighlighting = this.isHighlighting ? null : true;
-      if (this.isHighlighting) {
-        const highlight = this.getCurrentSelection();
-        if (!isEmpty(highlight)) this.addHighlight(highlight);
-      }
-    },
-    onHighlightSubtract() {
-      this.isHighlighting = this.isHighlighting === false ? null : false;
-      if (this.isHighlighting === false) {
-        const highlight = this.getCurrentSelection();
-        if (!isEmpty(highlight)) this.removeHighlight(highlight);
-      }
+    onHighlight(isApplicable) {
+      const highlight = this.getCurrentSelection();
+      if (isEmpty(highlight)) return;
+      isApplicable ? this.addHighlight(highlight) : this.removeHighlight(highlight);
     },
     getCurrentSelection() {
       const range = this.textEditor.getSelection(true);
       if (!range.length) return {};
       const selectedText = this.textEditor.getText(range.index, range.length);
       return { start: range.index, text: selectedText };
-    },
-    onSelectionChanged(range, oldRange, source) {
-      if (this.isHighlighting === null) return;
-
-      if (range && range.length) {
-        const selectedText = this.textEditor.getText(range.index, range.length);
-
-        // prevent current selection from obscuring the new highlight
-        if (this.isHighlighting) this.textEditor.blur();
-
-        const highlight = { start: range.index, text: selectedText };
-        this.isHighlighting
-          ? this.addHighlight(highlight)
-          : this.removeHighlight(highlight);
-      }
-
-      this.update();
     },
     onContentChanged(delta, oldContent, source) {
       this.content = this.textEditor.root.innerHTML;
@@ -139,12 +113,10 @@ export default {
     },
     addHighlight(highlight) {
       this.highlights.addHighlight(highlight.start, highlight.text);
-      this.refreshEditorHighlights();
       this.update();
     },
     removeHighlight(highlight) {
       this.highlights.removeHighlight(highlight.start, highlight.text);
-      this.refreshEditorHighlights();
       this.update();
     },
     refreshEditorHighlights() {
@@ -168,52 +140,20 @@ export default {
       });
 
       this.wildcards = HighlightCollection.fromPlainObjects(wildcardHighlights);
-    }
-  },
-  watch: {
-    isHighlighting() {
-      if (this.isHighlighting === null) return setHighlightToolbarLabelText('OFF');
-      const label = this.isHighlighting ? 'ADD' : 'SUBTRACT';
-      setHighlightToolbarLabelText(label);
-    },
-    highlightWildcards() {
-      this.recalculateWildcards();
       this.refreshEditorHighlights();
     }
   },
-  created() {
-    this.content = this.text;
-    this.highlights = HighlightCollection.fromPlainObjects(this.answers);
+  watch: {
+    highlightWildcards() {
+      this.recalculateWildcards();
+    }
   },
   mounted() {
-    addHighlightToolbarLabel();
-
-    this.textEditor.on('selection-change', this.onSelectionChanged);
     this.textEditor.on('text-change', this.onContentChanged);
-
     this.recalculateWildcards();
-    this.refreshEditorHighlights();
   },
   components: { QuillEditor }
 };
-
-function addHighlightToolbarLabel() {
-  const addButton = document.getElementsByClassName('ql-highlight-add')[0];
-  const buttonsParent = addButton.parentElement;
-
-  const label = document.createElement('span');
-  label.classList.add('highlight-mode');
-  label.innerHTML = `
-    Highlight mode: <span id="highlight-mode-toolbar-label" class="label">OFF</span>
-  `;
-
-  buttonsParent.appendChild(label);
-}
-
-function setHighlightToolbarLabelText(text) {
-  const label = document.getElementById('highlight-mode-toolbar-label');
-  if (label) label.innerHTML = text;
-}
 
 function getFormattedContent(quillContents) {
   const tempEditor = new Quill(document.createElement('div'));
@@ -249,36 +189,10 @@ function getOccurrenceIndices(string, substring, lastIndex = 0) {
 $highlight: #2f73e9;
 
 .quill-editor /deep/ {
-  .ql-highlight {
+  span.ql-highlight {
+    padding: 1px;
     color: #fff;
     background: $highlight;
-
-    &-add, &-subtract {
-      margin: 0 1px;
-      padding: 1px;
-      color: #fff;
-    }
-
-    &-add {
-      background: #1b1;
-    }
-
-    &-subtract {
-      background: #b11;
-    }
-  }
-
-  .highlight-mode {
-    width: auto;
-    padding: 5px;
-    font-size: 10px;
-
-    .label {
-      padding: 0;
-      color: $highlight;
-      font-size: 10px;
-      font-weight: bold;
-    }
   }
 }
 

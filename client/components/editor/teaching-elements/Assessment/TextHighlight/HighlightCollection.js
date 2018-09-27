@@ -34,7 +34,7 @@ export default class HighlightCollection {
 
     if (containing) return;
 
-    this.handleInnerAndOuter(highlight, { inner, outer }, true);
+    this.trimHighlight(highlight, outer, true);
 
     const outerHighlights = isEmpty(outer) ? [] : Object.values(outer);
     this.removeHighlights(inner.concat(outerHighlights));
@@ -59,8 +59,7 @@ export default class HighlightCollection {
       return this.highlights.push(...split);
     }
 
-    this.handleInnerAndOuter(highlight, { inner, outer }, false);
-
+    this.trimHighlight(highlight, outer, false);
     this.removeHighlights(inner);
   }
 
@@ -68,21 +67,19 @@ export default class HighlightCollection {
     forEach(highlights, h => this.remove(h));
   }
 
-  handleInnerAndOuter(highlight, { inner, outer }, isAdding) {
-    if (isEmpty(inner) && isEmpty(outer)) return;
+  trimHighlight(highlight, neighbors, isAdding) {
+    if (isEmpty(neighbors)) return;
 
-    if (!isEmpty(outer)) {
-      if (isAdding) return highlight.absorb(outer);
+    if (isAdding) return highlight.absorb(neighbors);
 
-      const { left, right } = outer;
-      if (left) left.shrinkFromRightBy(highlight);
-      if (right) right.shrinkFromLeftBy(highlight);
-    }
+    const { left, right } = neighbors;
+    if (left) left.rightTrim(highlight);
+    if (right) right.leftTrim(highlight);
   }
 
   updateForText(text) {
-    forEachRight(this.highlights, h => {
-      if (!h.isValidInText(text)) this.remove(h);
+    forEachRight(this.highlights, it => {
+      if (!it.isAppropriate(text)) this.remove(it);
     });
   }
 

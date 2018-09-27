@@ -8,6 +8,10 @@ export default class Highlight {
     return this.start + this.text.length - 1;
   }
 
+  get isWildcard() {
+    return this.start === -1;
+  }
+
   static fromPlainObject(object) {
     return new Highlight(object.start, object.text);
   }
@@ -48,7 +52,7 @@ export default class Highlight {
     }
   }
 
-  shrinkFromLeftBy(other) {
+  leftTrim(other) {
     if (!this.bordersFromLeft(other)) return;
 
     if (this.start <= other.end) {
@@ -58,7 +62,7 @@ export default class Highlight {
     }
   }
 
-  shrinkFromRightBy(other) {
+  rightTrim(other) {
     if (!this.bordersFromRight(other)) return;
 
     if (this.end >= other.start) {
@@ -77,7 +81,7 @@ export default class Highlight {
     ];
   }
 
-  isValidInText(text) {
+  isAppropriate(text) {
     return this.text === text.substring(this.start, this.end + 1);
   }
 }

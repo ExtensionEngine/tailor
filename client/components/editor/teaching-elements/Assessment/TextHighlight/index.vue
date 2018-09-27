@@ -54,19 +54,23 @@
 <script>
 import { defaults } from 'utils/assessment';
 import filter from 'lodash/filter';
+import Highlight from './Highlight';
 import indexOf from 'lodash/indexOf';
 import TextEditor from './TextEditor';
+
+const isWildcard = object => Highlight.fromPlainObject(object).isWildcard;
 
 export default {
   name: 'text-highlight',
   props: {
-    assessment: { type: Object, default: defaults.TR },
+    assessment: { type: Object, default: defaults.TH },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
   data() {
+    const wildcards = filter(this.assessment.answers, it => isWildcard(it));
     return {
-      wildcards: []
+      wildcards: wildcards.map(it => it.text)
     };
   },
   computed: {
@@ -74,7 +78,7 @@ export default {
       return this.assessment.text;
     },
     answers() {
-      return filter(this.assessment.answers, h => h.start !== -1);
+      return filter(this.assessment.answers, it => !isWildcard(it));
     },
     hasErrors() {
       return this.errors.length > 0;
@@ -87,7 +91,7 @@ export default {
     update() {
       const text = this.textEditor.getText();
       const answers = this.textEditor.getAnswers();
-      const wildcards = this.wildcards.map(w => ({ start: -1, text: w }));
+      const wildcards = this.wildcards.map(text => ({ start: -1, text }));
 
       this.$emit('update', { text, answers: answers.concat(wildcards) });
     },
@@ -108,10 +112,6 @@ export default {
     wildcards() {
       this.update();
     }
-  },
-  created() {
-    const wildcards = filter(this.assessment.answers, h => h.start === -1);
-    this.wildcards = wildcards.map(w => w.text);
   },
   components: { TextEditor }
 };

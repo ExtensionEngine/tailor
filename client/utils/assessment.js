@@ -58,6 +58,11 @@ const objectMap = yup.object().shape({
   value: yup.string().required()
 });
 
+const highlightMap = yup.object().shape({
+  start: yup.number().required(),
+  text: yup.string().min(1).required()
+});
+
 yup.addMethod(yup.array, 'castMap', function () {
   return this.transform(function (value, originalValue) {
     if (this.isType(value)) return value;
@@ -122,10 +127,7 @@ export const schemas = {
   TH: yup.object().shape({
     ...baseSchema,
     text: yup.string().trim().min(1).required(),
-    answers: yup.array().castMap().of(yup.object().shape({
-      start: yup.number().required(),
-      text: yup.string().min(1).required()
-    })).min(1)
+    answers: yup.array().of(highlightMap).min(1)
   })
 };
 
