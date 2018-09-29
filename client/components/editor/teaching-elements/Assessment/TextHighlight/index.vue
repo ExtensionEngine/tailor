@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group">
+  <div @click.stop="spawnToolbar" class="form-group">
     <span class="form-label">Answer</span>
     <span :class="{ 'has-error': hasErrors }" class="answer">
       <text-editor
@@ -7,7 +7,7 @@
         :text="text"
         :answers="answers"
         :highlightWildcards="wildcards"
-        :enabled="isEditing"
+        :enabled="isEditing && isFocused"
         @change="update">
       </text-editor>
       <div v-if="isEditing">
@@ -56,6 +56,7 @@ import { defaults } from 'utils/assessment';
 import filter from 'lodash/filter';
 import Highlight from './Highlight';
 import indexOf from 'lodash/indexOf';
+import { mapGetters, mapMutations } from 'vuex-module';
 import TextEditor from './TextEditor';
 
 const isWildcard = object => Highlight.fromPlainObject(object).isWildcard;
@@ -85,9 +86,16 @@ export default {
     },
     textEditor() {
       return this.$refs.textEditor;
+    },
+    isFocused() {
+      const focused = this.focusedElement();
+      if (!focused.type) return false;
+      return focused._cid === this.$parent.element._cid;
     }
   },
   methods: {
+    ...mapMutations(['focusElement'], 'editor'),
+    ...mapGetters(['focusedElement'], 'editor'),
     update() {
       const text = this.textEditor.getText();
       const answers = this.textEditor.getAnswers();
@@ -106,6 +114,9 @@ export default {
     removeWildcard(text) {
       const index = indexOf(this.wildcards, text);
       if (index !== -1) this.wildcards.splice(index, 1);
+    },
+    spawnToolbar() {
+      if (this.isEditing) this.focusElement(this.$parent.element);
     }
   },
   watch: {

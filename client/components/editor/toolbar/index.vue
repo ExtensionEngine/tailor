@@ -61,6 +61,7 @@ import fecha from 'fecha';
 import find from 'lodash/find';
 import format from 'string-template';
 import get from 'lodash/get';
+import HighlightQuillToolbar from './HighlightQuillToolbar';
 import ImageToolbar from './ImageToolbar';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ModalToolbar from './ModalToolbar';
@@ -85,7 +86,8 @@ const TOOLBAR_TYPES = {
   TABLE: 'table-toolbar',
   PDF: 'pdf-toolbar',
   AUDIO: 'audio-toolbar',
-  'TABLE-CELL': 'table-toolbar'
+  'TABLE-CELL': 'table-toolbar',
+  ASSESSMENT: 'highlight-quill-toolbar'
 };
 
 export default {
@@ -174,6 +176,7 @@ export default {
     CarouselToolbar,
     DefaultToolbar,
     EmbedToolbar,
+    HighlightQuillToolbar,
     ImageToolbar,
     ModalToolbar,
     PdfToolbar,

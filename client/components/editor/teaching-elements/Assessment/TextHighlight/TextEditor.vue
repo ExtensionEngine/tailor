@@ -1,52 +1,52 @@
 <template>
-  <quill-editor
-    ref="quillEditor"
-    :class="enabled ? '' : 'disabled'"
-    :options="options"
-    :content="content">
-  </quill-editor>
+  <div class="te-html">
+    <div v-if="!enabled && !content">
+      if
+      <div class="well text-placeholder">
+        <div class="message">
+          <span v-if="!content">
+            <span class="heading">Text placeholder</span>
+            <span>Click to edit</span>
+          </span>
+          <span v-else>{{ content }}</span>
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <quill-editor
+        v-if="enabled"
+        ref="quillEditor"
+        :options="options"
+        :content="content"
+        @ready="onQuillReady">
+      </quill-editor>
+      <div v-else class="ql-container ql-snow">
+        <div v-html="content" class="ql-editor"></div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import forEach from 'lodash/forEach';
-import Highlight from './ql-highlight';
+import Highlight from './highlight.format';
 import HighlightCollection from './HighlightCollection';
 import isEmpty from 'lodash/isEmpty';
 import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
 
 Quill.register('formats/highlight', Highlight);
 
-const icons = Quill.import('ui/icons');
-icons['highlight'] = '<span class="icon mdi mdi-marker"></span>';
-
 const noUpdate = 'other';
 
-const toolbarOptions = [
-  ['bold', 'italic', 'underline', 'strike'],
-  ['blockquote', 'code-block'],
-  [{ 'header': 1 }, { 'header': 2 }],
-  [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-  [{ 'script': 'sub' }, { 'script': 'super' }],
-  [{ 'indent': '-1' }, { 'indent': '+1' }],
-  [{ 'direction': 'rtl' }],
-  [{ 'size': ['small', false, 'large', 'huge'] }],
-  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-  [{ 'color': [] }, { 'background': [] }],
-  [{ 'font': [] }],
-  [{ 'align': [] }],
-  ['clean'],
-  ['link', 'image', 'video'],
-  ['highlight']
-];
+const toolbar = handlers => ({
+  container: '#highlightQuillToolbar',
+  handlers
+});
 
-const options = highlightHandler => ({
+const options = eventHandlers => ({
   modules: {
-    toolbar: {
-      container: toolbarOptions,
-      handlers: {
-        'highlight': highlightHandler
-      }
-    }
+    toolbar: toolbar(eventHandlers),
+    imageEmbed: { spacing: 1 },
+    history: { userOnly: true }
   }
 });
 
@@ -59,8 +59,7 @@ export default {
   },
   data() {
     return {
-      options: options(this.onHighlight),
-      isHighlighting: null,
+      options: options({ highlight: this.onHighlight }),
       content: this.text,
       highlights: HighlightCollection.fromPlainObjects(this.answers),
       wildcards: new HighlightCollection()
@@ -88,7 +87,7 @@ export default {
     },
     renderHighlights(highlights) {
       this.clearHighlights();
-      forEach(highlights, ({ start, length }) => {
+      highlights.forEach(({ start, length }) => {
         this.textEditor.formatText(start, length, { highlight: true }, noUpdate);
       });
     },
@@ -120,17 +119,17 @@ export default {
       this.update();
     },
     refreshEditorHighlights() {
-      const getData = h => ({ start: h.start, length: h.text.length });
+      const getData = it => ({ start: it.start, length: it.text.length });
       let highlights = this.highlights.toPlainObjects();
       const wildcards = this.wildcards.toPlainObjects();
       highlights = highlights.concat(wildcards);
 
-      this.renderHighlights(highlights.map(h => getData(h)));
+      this.renderHighlights(highlights.map(it => getData(it)));
     },
     recalculateWildcards() {
       let wildcardHighlights = [];
 
-      forEach(this.highlightWildcards, text => {
+      this.highlightWildcards.forEach(text => {
         const wildcardIndices = getOccurrenceIndices(
           getPlainContent(this.content),
           text
@@ -141,16 +140,16 @@ export default {
 
       this.wildcards = HighlightCollection.fromPlainObjects(wildcardHighlights);
       this.refreshEditorHighlights();
+    },
+    onQuillReady(quill) {
+      this.recalculateWildcards();
+      this.textEditor.on('text-change', this.onContentChanged);
     }
   },
   watch: {
     highlightWildcards() {
       this.recalculateWildcards();
     }
-  },
-  mounted() {
-    this.textEditor.on('text-change', this.onContentChanged);
-    this.recalculateWildcards();
   },
   components: { QuillEditor }
 };
@@ -196,14 +195,42 @@ $highlight: #2f73e9;
   }
 }
 
-.quill-editor.disabled /deep/ {
-  .ql-toolbar {
-    display: none;
+.text-placeholder {
+  .message {
+    padding: 9px;
+
+    .heading {
+      font-size: 24px;
+    }
+
+    span {
+      display: block;
+      font-size: 18px;
+    }
+  }
+}
+
+.well {
+  margin-bottom: 0;
+}
+</style>
+
+<style lang="scss">
+.te-html {
+  .ql-editor {
+    min-height: 117px;
+
+    img {
+      vertical-align: initial;
+    }
   }
 
-  .ql-container {
-    pointer-events: none;
-    border: 1px solid #ccc;
+  .ql-container.ql-snow {
+    border: none !important;
+  }
+
+  .ql-editor.ql-blank::before {
+    width: 100%;
   }
 }
 </style>
