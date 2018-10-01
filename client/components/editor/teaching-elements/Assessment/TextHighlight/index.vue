@@ -104,14 +104,16 @@ export default {
       this.$emit('update', { text, answers: answers.concat(wildcards) });
     },
     removeHighlight(highlight) {
+      if (!this.isFocused) return;
       this.textEditor.removeHighlight(highlight);
     },
     addWildcard(text) {
-      if (!text.length) return;
+      if (!this.isFocused || !text.length) return;
       if (!this.wildcards.includes(text)) this.wildcards.push(text);
       this.$refs.wildcardInput.value = '';
     },
     removeWildcard(text) {
+      if (!this.isFocused) return;
       const index = indexOf(this.wildcards, text);
       if (index !== -1) this.wildcards.splice(index, 1);
     },

@@ -65,30 +65,30 @@ export default {
       wildcards: new HighlightCollection()
     };
   },
-  computed: {
-    textEditor() {
-      return this.$refs.quillEditor.quill;
-    }
-  },
   methods: {
     update() {
       this.refreshEditorHighlights();
       this.$emit('change');
     },
+    getTextEditor() {
+      return this.$refs.quillEditor.quill;
+    },
     getText() {
-      return getFormattedContent(this.textEditor.getContents());
+      return getFormattedContent(this.getTextEditor().getContents());
     },
     getAnswers() {
       return this.highlights.toPlainObjects();
     },
     clearHighlights() {
-      const textLength = this.textEditor.getLength();
-      this.textEditor.formatText(0, textLength, { highlight: false }, noUpdate);
+      const textEditor = this.getTextEditor();
+      const textLength = textEditor.getLength();
+      textEditor.formatText(0, textLength, { highlight: false }, noUpdate);
     },
     renderHighlights(highlights) {
       this.clearHighlights();
       highlights.forEach(({ start, length }) => {
-        this.textEditor.formatText(start, length, { highlight: true }, noUpdate);
+        const textEditor = this.getTextEditor();
+        textEditor.formatText(start, length, { highlight: true }, noUpdate);
       });
     },
     onHighlight(isApplicable) {
@@ -97,13 +97,14 @@ export default {
       isApplicable ? this.addHighlight(highlight) : this.removeHighlight(highlight);
     },
     getCurrentSelection() {
-      const range = this.textEditor.getSelection(true);
+      const textEditor = this.getTextEditor();
+      const range = textEditor.getSelection(true);
       if (!range.length) return {};
-      const selectedText = this.textEditor.getText(range.index, range.length);
+      const selectedText = textEditor.getText(range.index, range.length);
       return { start: range.index, text: selectedText };
     },
     onContentChanged(delta, oldContent, source) {
-      this.content = this.textEditor.root.innerHTML;
+      this.content = this.getTextEditor().root.innerHTML;
       const text = getPlainContent(this.content);
       this.highlights.updateForText(text);
       this.wildcards.updateForText(text);
@@ -143,7 +144,7 @@ export default {
     },
     onQuillReady(quill) {
       this.recalculateWildcards();
-      this.textEditor.on('text-change', this.onContentChanged);
+      this.getTextEditor().on('text-change', this.onContentChanged);
     }
   },
   watch: {
