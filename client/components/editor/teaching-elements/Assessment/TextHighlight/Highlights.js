@@ -6,14 +6,14 @@ import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import sortBy from 'lodash/sortBy';
 
-export default class HighlightCollection {
+export default class Highlights {
   constructor(highlights = []) {
     this.highlights = highlights;
   }
 
   static fromPlainObjects(objects) {
     const highlights = map(objects, o => Highlight.fromPlainObject(o));
-    return new HighlightCollection(highlights);
+    return new Highlights(highlights);
   }
 
   toPlainObjects() {
@@ -86,11 +86,11 @@ export default class HighlightCollection {
   getNearby(highlight) {
     const related = { inner: [], outer: {}, containing: null };
 
-    forEach(this.highlights, h => {
-      if (highlight.isContainedBy(h)) return (related.containing = h);
-      if (highlight.containsOrEquals(h)) return related.inner.push(h);
-      if (highlight.bordersFromLeft(h)) related.outer.left = h;
-      if (highlight.bordersFromRight(h)) related.outer.right = h;
+    forEach(this.highlights, it => {
+      if (highlight.isContainedBy(it)) return (related.containing = it);
+      if (highlight.containsOrEquals(it)) return related.inner.push(it);
+      if (highlight.bordersFromLeft(it)) related.outer.left = it;
+      if (highlight.bordersFromRight(it)) related.outer.right = it;
     });
 
     return related;

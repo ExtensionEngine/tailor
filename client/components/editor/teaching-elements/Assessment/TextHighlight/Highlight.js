@@ -8,8 +8,16 @@ export default class Highlight {
     return this.start + this.text.length - 1;
   }
 
-  get isWildcard() {
-    return this.start === -1;
+  static get wildcardIndex() {
+    return -1;
+  }
+
+  static isWildcardObject(object) {
+    return object.start === Highlight.wildcardIndex;
+  }
+
+  static toWildcardObject(text) {
+    return { start: Highlight.wildcardIndex, text };
   }
 
   static fromPlainObject(object) {

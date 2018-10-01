@@ -1,7 +1,6 @@
 <template>
   <div class="te-html">
     <div v-if="!enabled && !content">
-      if
       <div class="well text-placeholder">
         <div class="message">
           <span v-if="!content">
@@ -28,8 +27,9 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import Highlight from './highlight.format';
-import HighlightCollection from './HighlightCollection';
+import { getPlainContent } from './helpers';
 import isEmpty from 'lodash/isEmpty';
 import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
 
@@ -53,16 +53,15 @@ const options = eventHandlers => ({
 export default {
   props: {
     text: { type: String, required: true },
-    answers: { type: Array, required: true },
-    highlightWildcards: { type: Array, default: () => [] },
+    answers: { type: Object, required: true },
+    wildcards: { type: Object, default: () => {} },
     enabled: { type: Boolean, default: true }
   },
   data() {
     return {
       options: options({ highlight: this.onHighlight }),
       content: this.text,
-      highlights: HighlightCollection.fromPlainObjects(this.answers),
-      wildcards: new HighlightCollection()
+      highlights: cloneDeep(this.answers)
     };
   },
   methods: {
@@ -77,7 +76,7 @@ export default {
       return getFormattedContent(this.getTextEditor().getContents());
     },
     getAnswers() {
-      return this.highlights.toPlainObjects();
+      return this.highlights;
     },
     clearHighlights() {
       const textEditor = this.getTextEditor();
@@ -127,29 +126,14 @@ export default {
 
       this.renderHighlights(highlights.map(it => getData(it)));
     },
-    recalculateWildcards() {
-      let wildcardHighlights = [];
-
-      this.highlightWildcards.forEach(text => {
-        const wildcardIndices = getOccurrenceIndices(
-          getPlainContent(this.content),
-          text
-        );
-        const wildcards = wildcardIndices.map(index => ({ start: index, text }));
-        wildcardHighlights = wildcardHighlights.concat(wildcards);
-      });
-
-      this.wildcards = HighlightCollection.fromPlainObjects(wildcardHighlights);
-      this.refreshEditorHighlights();
-    },
     onQuillReady(quill) {
-      this.recalculateWildcards();
       this.getTextEditor().on('text-change', this.onContentChanged);
+      this.refreshEditorHighlights();
     }
   },
   watch: {
-    highlightWildcards() {
-      this.recalculateWildcards();
+    wildcards() {
+      this.refreshEditorHighlights();
     }
   },
   components: { QuillEditor }
@@ -162,26 +146,6 @@ function getFormattedContent(quillContents) {
   const children = tempEditor.container.getElementsByClassName('ql-editor');
 
   return children[0].innerHTML;
-}
-
-function getPlainContent(text) {
-  const temp = document.createElement('div');
-  temp.innerHTML = text;
-
-  return temp.innerText;
-}
-
-function getOccurrenceIndices(string, substring, lastIndex = 0) {
-  if (!string.length) return [];
-
-  const currentIndex = string.indexOf(substring);
-  if (currentIndex === -1 || currentIndex + 1 > string.length) return [];
-
-  const newString = string.substring(currentIndex + 1);
-  const index = currentIndex + lastIndex;
-  const oldIndex = index + 1;
-
-  return [index].concat(getOccurrenceIndices(newString, substring, oldIndex));
 }
 </script>
 

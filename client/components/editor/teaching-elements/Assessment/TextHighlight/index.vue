@@ -4,9 +4,9 @@
     <span :class="{ 'has-error': hasErrors }" class="answer">
       <text-editor
         ref="textEditor"
-        :text="text"
-        :answers="answers"
-        :highlightWildcards="wildcards"
+        :text="assessment.text"
+        :answers="answerHighlights"
+        :wildcards="wildcardHighlights"
         :enabled="isEditing && isFocused"
         @change="update">
       </text-editor>
@@ -22,10 +22,10 @@
           </span>
           (click on an item to remove it from the list)
         </div>
-        <div v-if="wildcards.length" class="highlighted">
+        <div v-if="wildcardKeywords.length" class="highlighted">
           <span class="instructions-title">Wildcards:</span>
           <span
-            v-for="(wildcard, index) in wildcards"
+            v-for="(wildcard, index) in wildcardKeywords"
             :key="index"
             @click="removeWildcard(wildcard)"
             class="item">
@@ -55,11 +55,13 @@
 import { defaults } from 'utils/assessment';
 import filter from 'lodash/filter';
 import Highlight from './Highlight';
-import indexOf from 'lodash/indexOf';
+import Highlights from './Highlights';
+import { getPlainContent } from './helpers';
 import { mapGetters, mapMutations } from 'vuex-module';
 import TextEditor from './TextEditor';
+import Wildcards from './Wildcards';
 
-const isWildcard = object => Highlight.fromPlainObject(object).isWildcard;
+const isWildcard = object => Highlight.isWildcardObject(object);
 
 export default {
   name: 'text-highlight',
@@ -71,15 +73,15 @@ export default {
   data() {
     const wildcards = filter(this.assessment.answers, it => isWildcard(it));
     return {
-      wildcards: wildcards.map(it => it.text)
+      wildcards: new Wildcards(wildcards.map(it => it.text), this.getText())
     };
   },
   computed: {
-    text() {
-      return this.assessment.text;
-    },
     answers() {
       return filter(this.assessment.answers, it => !isWildcard(it));
+    },
+    answerHighlights() {
+      return Highlights.fromPlainObjects(this.answers);
     },
     hasErrors() {
       return this.errors.length > 0;
@@ -91,6 +93,12 @@ export default {
       const focused = this.focusedElement();
       if (!focused.type) return false;
       return focused._cid === this.$parent.element._cid;
+    },
+    wildcardKeywords() {
+      return this.wildcards.getKeywords();
+    },
+    wildcardHighlights() {
+      return this.wildcards.getHighlights();
     }
   },
   methods: {
@@ -98,10 +106,13 @@ export default {
     ...mapGetters(['focusedElement'], 'editor'),
     update() {
       const text = this.textEditor.getText();
-      const answers = this.textEditor.getAnswers();
-      const wildcards = this.wildcards.map(text => ({ start: -1, text }));
+      const answers = this.textEditor.getAnswers().toPlainObjects();
+      const wildcards = this.wildcards.toPlainObjects();
 
       this.$emit('update', { text, answers: answers.concat(wildcards) });
+    },
+    getText() {
+      return getPlainContent(this.assessment.text);
     },
     removeHighlight(highlight) {
       if (!this.isFocused) return;
@@ -109,13 +120,12 @@ export default {
     },
     addWildcard(text) {
       if (!this.isFocused || !text.length) return;
-      if (!this.wildcards.includes(text)) this.wildcards.push(text);
+      this.wildcards.addWildcard(text, this.getText());
       this.$refs.wildcardInput.value = '';
     },
     removeWildcard(text) {
       if (!this.isFocused) return;
-      const index = indexOf(this.wildcards, text);
-      if (index !== -1) this.wildcards.splice(index, 1);
+      this.wildcards.removeWildcard(text, this.getText());
     },
     spawnToolbar() {
       if (this.isEditing) this.focusElement(this.$parent.element);
