@@ -37,10 +37,7 @@ Quill.register('formats/highlight', Highlight);
 
 const noUpdate = 'other';
 
-const toolbar = handlers => ({
-  container: '#highlightQuillToolbar',
-  handlers
-});
+const toolbar = handlers => ({ container: '#highlightQuillToolbar', handlers });
 
 const options = eventHandlers => ({
   modules: {
@@ -85,20 +82,25 @@ export default {
     },
     renderHighlights(highlights) {
       this.clearHighlights();
+      const textEditor = this.getTextEditor();
       highlights.forEach(({ start, length }) => {
-        const textEditor = this.getTextEditor();
         textEditor.formatText(start, length, { highlight: true }, noUpdate);
       });
     },
     onHighlight(isApplicable) {
       const highlight = this.getCurrentSelection();
       if (isEmpty(highlight)) return;
-      isApplicable ? this.addHighlight(highlight) : this.removeHighlight(highlight);
+
+      isApplicable
+        ? this.addHighlight(highlight)
+        : this.removeHighlight(highlight);
     },
     getCurrentSelection() {
       const textEditor = this.getTextEditor();
       const range = textEditor.getSelection(true);
+
       if (!range.length) return {};
+
       const selectedText = textEditor.getText(range.index, range.length);
       return { start: range.index, text: selectedText };
     },

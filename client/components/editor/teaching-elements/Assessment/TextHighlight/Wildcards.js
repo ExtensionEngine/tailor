@@ -5,39 +5,30 @@ import indexOf from 'lodash/indexOf';
 
 export default class Wildcards {
   constructor(wildcards, text) {
-    this.wildcards = wildcards;
+    this.keywords = wildcards;
     this.highlights = null;
     this.recalculateHighlights(text);
   }
 
   toPlainObjects() {
-    const wildcards = this.getKeywords();
-    return wildcards.map(wildcard => Highlight.toWildcardObject(wildcard));
-  }
-
-  getKeywords() {
-    return this.wildcards;
-  }
-
-  getHighlights() {
-    return this.highlights;
+    return this.keywords.map(wildcard => Highlight.toWildcardObject(wildcard));
   }
 
   addWildcard(wildcard, text) {
-    if (!this.wildcards.includes(wildcard)) this.wildcards.push(wildcard);
+    if (!this.keywords.includes(wildcard)) this.keywords.push(wildcard);
     this.recalculateHighlights(text);
   }
 
   removeWildcard(wildcard, text) {
-    const index = indexOf(this.wildcards, wildcard);
-    if (index !== -1) this.wildcards.splice(index, 1);
+    const index = indexOf(this.keywords, wildcard);
+    if (index !== -1) this.keywords.splice(index, 1);
     this.recalculateHighlights(text);
   }
 
   recalculateHighlights(text) {
     let highlights = [];
 
-    this.wildcards.forEach(wildcard => {
+    this.keywords.forEach(wildcard => {
       const startIndices = getOccurrenceIndices(text, wildcard);
       startIndices.forEach(index => {
         highlights.push(new Highlight(index, wildcard));

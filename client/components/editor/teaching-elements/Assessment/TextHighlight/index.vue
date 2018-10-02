@@ -95,10 +95,10 @@ export default {
       return focused._cid === this.$parent.element._cid;
     },
     wildcardKeywords() {
-      return this.wildcards.getKeywords();
+      return this.wildcards.keywords;
     },
     wildcardHighlights() {
-      return this.wildcards.getHighlights();
+      return this.wildcards.highlights;
     }
   },
   methods: {
