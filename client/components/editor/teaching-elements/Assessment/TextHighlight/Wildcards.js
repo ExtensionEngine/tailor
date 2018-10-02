@@ -29,8 +29,7 @@ export default class Wildcards {
     let highlights = [];
 
     this.keywords.forEach(wildcard => {
-      const startIndices = getOccurrenceIndices(text, wildcard);
-      startIndices.forEach(index => {
+      getOccurrenceIndices(text, wildcard).forEach(index => {
         highlights.push(new Highlight(index, wildcard));
       });
     });

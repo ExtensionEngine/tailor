@@ -26,22 +26,27 @@ export default class Highlight {
     return { start: this.start, text: this.text };
   }
 
-  containsOrEquals(other) {
-    return this.start <= other.start && this.end >= other.end;
+  equals(other) {
+    return this.start === other.start && this.end === other.end;
   }
 
-  isContainedBy(other) {
-    return (this.start >= other.start && this.end < other.end) ||
-      (this.start > other.start && this.end <= other.end);
+  contains(other) {
+    if (this.equals(other)) return false;
+    return (this.start <= other.start && this.end > other.end) ||
+      (this.start < other.start && this.end >= other.end);
   }
 
   bordersFromLeft(other) {
-    if (this.containsOrEquals(other)) return false;
+    if (this.equals(other)) return false;
+    if (this.contains(other)) return false;
+
     return (other.end >= this.start - 1 && other.end < this.end);
   }
 
   bordersFromRight(other) {
-    if (this.containsOrEquals(other)) return false;
+    if (this.equals(other)) return false;
+    if (this.contains(other)) return false;
+
     return other.start <= this.end + 1 && other.start > this.start;
   }
 

@@ -23,10 +23,7 @@ export default class Highlights {
 
   addHighlight(startIndex, text) {
     const highlight = new Highlight(startIndex, text);
-    const existingIndex = findIndex(this.highlights, highlight);
-    if (existingIndex !== -1) return;
-
-    this.add(highlight);
+    if (findIndex(this.highlights, highlight) === -1) this.add(highlight);
   }
 
   add(highlight) {
@@ -87,8 +84,10 @@ export default class Highlights {
     const related = { inner: [], outer: {}, containing: null };
 
     forEach(this.highlights, it => {
-      if (highlight.isContainedBy(it)) return (related.containing = it);
-      if (highlight.containsOrEquals(it)) return related.inner.push(it);
+      if (it.contains(highlight)) return (related.containing = it);
+      if (highlight.equals(it) || highlight.contains(it)) {
+        return related.inner.push(it);
+      }
       if (highlight.bordersFromLeft(it)) related.outer.left = it;
       if (highlight.bordersFromRight(it)) related.outer.right = it;
     });

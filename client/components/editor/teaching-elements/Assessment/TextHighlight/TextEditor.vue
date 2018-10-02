@@ -38,12 +38,10 @@ Quill.register('formats/highlight', Highlight);
 const noUpdate = 'other';
 
 const toolbar = handlers => ({ container: '#highlightQuillToolbar', handlers });
-
 const options = eventHandlers => ({
   modules: {
     toolbar: toolbar(eventHandlers),
-    imageEmbed: { spacing: 1 },
-    history: { userOnly: true }
+    imageEmbed: { spacing: 1 }
   }
 });
 
@@ -122,9 +120,8 @@ export default {
     },
     refreshEditorHighlights() {
       const getData = it => ({ start: it.start, length: it.text.length });
-      let highlights = this.highlights.toPlainObjects();
       const wildcards = this.wildcards.toPlainObjects();
-      highlights = highlights.concat(wildcards);
+      const highlights = this.highlights.toPlainObjects().concat(wildcards);
 
       this.renderHighlights(highlights.map(it => getData(it)));
     },
@@ -156,7 +153,6 @@ $highlight: #2f73e9;
 
 .quill-editor /deep/ {
   span.ql-highlight {
-    padding: 1px;
     color: #fff;
     background: $highlight;
   }
