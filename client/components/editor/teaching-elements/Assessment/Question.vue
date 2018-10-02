@@ -15,7 +15,7 @@
       </div>
       <add-element
         v-show="isEditing"
-        :include="['HTML', 'IMAGE']"
+        :include="['HTML', 'IMAGE', 'EMBED']"
         @add="addElement">
       </add-element>
     </div>

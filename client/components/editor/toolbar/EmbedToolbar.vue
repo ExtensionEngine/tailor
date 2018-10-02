@@ -54,8 +54,10 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import { mapActions } from 'vuex-module';
+import EventBus from 'EventBus';
 import { withValidation } from 'utils/validation';
+
+const teChannel = EventBus.channel('te');
 
 export default {
   name: 'embed-toolbar',
@@ -70,19 +72,23 @@ export default {
       url
     };
   },
+  computed: {
+    id() {
+      return this.element._cid || this.element.id;
+    }
+  },
   methods: {
-    ...mapActions({ updateElement: 'update' }, 'tes'),
     onChange() {
       const { height, url } = this;
       this.$validator.validateAll().then(isValid => {
         if (!isValid) return;
         const element = cloneDeep(this.element);
         const data = { ...element.data, height, url };
-        this.save({ ...this.element, data });
+        this.save(data);
       });
     },
-    save: debounce(function (element) {
-      this.updateElement(element);
+    save: debounce(function (data) {
+      teChannel.emit(`${this.id}/embedUpdate`, data);
     }, 700)
   }
 };

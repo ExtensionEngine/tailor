@@ -22,12 +22,14 @@
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import TeEmbed from './Embed';
 import TeHtml from './Html';
 import TeImage from './Image';
 
 const TE_TYPES = {
   HTML: 'te-html',
-  IMAGE: 'te-image'
+  IMAGE: 'te-image',
+  EMBED: 'te-embed'
 };
 
 export default {
@@ -78,11 +80,12 @@ export default {
       e.component = { name: 'teaching-element', data: this.element };
     },
     save(data) {
-      Object.assign(this.element.data, data);
+      this.$set(this.element, 'data', data);
       this.$emit('save', this.element);
     }
   },
   components: {
+    TeEmbed,
     TeHtml,
     TeImage
   }
