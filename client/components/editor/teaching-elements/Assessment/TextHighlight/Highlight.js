@@ -1,3 +1,5 @@
+const wildcardIndex = -1;
+
 export default class Highlight {
   constructor(start, text) {
     this.start = start;
@@ -8,16 +10,12 @@ export default class Highlight {
     return this.start + this.text.length - 1;
   }
 
-  static get wildcardIndex() {
-    return -1;
-  }
-
   static isWildcardObject(object) {
-    return object.start === Highlight.wildcardIndex;
+    return object.start === wildcardIndex;
   }
 
   static toWildcardObject(text) {
-    return { start: Highlight.wildcardIndex, text };
+    return { start: wildcardIndex, text };
   }
 
   static fromPlainObject(object) {

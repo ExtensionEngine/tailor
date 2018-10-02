@@ -12,13 +12,13 @@ export default class Highlights {
   }
 
   static fromPlainObjects(objects) {
-    const highlights = map(objects, o => Highlight.fromPlainObject(o));
+    const highlights = map(objects, it => Highlight.fromPlainObject(it));
     return new Highlights(highlights);
   }
 
   toPlainObjects() {
-    const sorted = sortBy(this.highlights, h => h.start);
-    return map(sorted, h => h.toPlainObject());
+    const sorted = sortBy(this.highlights, it => it.start);
+    return map(sorted, it => it.toPlainObject());
   }
 
   addHighlight(startIndex, text) {
@@ -64,7 +64,7 @@ export default class Highlights {
   }
 
   removeHighlights(highlights) {
-    forEach(highlights, h => this.remove(h));
+    forEach(highlights, it => this.remove(it));
   }
 
   trimHighlight(highlight, neighbors, isAdding) {
