@@ -73,8 +73,8 @@ export default class Highlights {
     if (isAdding) return highlight.absorb(neighbors);
 
     const { left, right } = neighbors;
-    if (left) left.rightTrim(highlight);
-    if (right) right.leftTrim(highlight);
+    if (left) left.trim(highlight);
+    if (right) right.trim(highlight);
   }
 
   updateForText(text) {

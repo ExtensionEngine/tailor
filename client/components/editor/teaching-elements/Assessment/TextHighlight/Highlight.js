@@ -58,20 +58,16 @@ export default class Highlight {
     }
   }
 
-  leftTrim(other) {
-    if (!this.bordersFromLeft(other)) return;
+  trim(other) {
+    if (!this.bordersFromLeft(other) && !this.bordersFromRight(other)) return;
 
-    if (this.start <= other.end) {
+    if (this.bordersFromLeft(other) && this.start <= other.end) {
       const startIndex = other.end - this.start + 1;
       this.text = this.text.substring(startIndex);
       this.start = other.end + 1;
     }
-  }
 
-  rightTrim(other) {
-    if (!this.bordersFromRight(other)) return;
-
-    if (this.end >= other.start) {
+    if (this.bordersFromRight(other) && this.end >= other.start) {
       const endIndex = this.text.length - (this.end - other.start) - 1;
       this.text = this.text.substring(0, endIndex);
     }

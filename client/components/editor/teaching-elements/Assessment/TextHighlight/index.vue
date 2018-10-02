@@ -132,7 +132,7 @@ export default {
     }
   },
   watch: {
-    wildcards() {
+    wildcardKeywords() {
       this.update();
     }
   },
