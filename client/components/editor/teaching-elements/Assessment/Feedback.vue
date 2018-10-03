@@ -17,13 +17,13 @@
             <span class="answer-index">Answer {{ index + 1 }}:</span>
             {{ answer }}
           </div>
-          <textarea
-            :ref="'option' + index"
-            :value="feedback ? feedback[index] : ''"
-            :disabled="!isEditing"
-            @change="update(index)"
-            class="form-control">
-          </textarea>
+          <quill-editor
+            v-if="isEditing"
+            :content="feedback[index]"
+            :options="quillOptions"
+            @change="update($event, index)">
+          </quill-editor>
+          <div v-else v-html="feedback[index]"></div>
         </li>
       </ul>
     </transition>
@@ -32,6 +32,20 @@
 
 <script>
 import isArray from 'lodash/isArray';
+import { quillEditor as QuillEditor } from 'vue-quill-editor';
+
+const QUILL_OPTIONS = {
+  modules: {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['blockquote', 'code-block'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ script: 'sub' }, { script: 'super' }],
+      [{ 'color': [] }, { 'background': [] }],
+      ['link']
+    ]
+  }
+};
 
 export default {
   name: 'feedback',
@@ -48,18 +62,23 @@ export default {
   computed: {
     processedAnswers() {
       return isArray(this.answers) ? this.answers : ['True', 'False'];
+    },
+    quillOptions() {
+      return QUILL_OPTIONS;
     }
   },
   methods: {
-    update(index) {
-      let data = { [index]: this.$refs[`option${index}`][0].value };
-      this.$emit('update', data);
+    update({ html }, index) {
+      this.$emit('update', { [index]: html });
     }
   },
   watch: {
     isEditing(val) {
       if (val) this.isExpanded = true;
     }
+  },
+  components: {
+    QuillEditor
   }
 };
 </script>
