@@ -17,10 +17,11 @@
         ref="quillEditor"
         :options="options"
         :content="content"
-        @ready="onQuillReady">
+        @ready="onQuillReady"
+        class="text-editor">
       </quill-editor>
-      <div v-else class="ql-container ql-snow">
-        <div v-html="content" class="ql-editor"></div>
+      <div v-else class="ql-container ql-snow text-editor">
+        <p v-html="getFormattedHtml()" class="ql-editor"></p>
       </div>
     </div>
   </div>
@@ -32,8 +33,10 @@ import Highlight from './highlight.format';
 import { getPlainContent } from './helpers';
 import isEmpty from 'lodash/isEmpty';
 import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
+import Wildcard from './wildcard.format';
 
 Quill.register('formats/highlight', Highlight);
+Quill.register('formats/wildcard', Wildcard);
 
 const noUpdate = 'other';
 
@@ -54,10 +57,16 @@ export default {
   },
   data() {
     return {
-      options: options({ highlight: this.onHighlight }),
-      content: this.text,
+      content: String(this.text),
       highlights: cloneDeep(this.answers)
     };
+  },
+  computed: {
+    options() {
+      return this.enabled
+        ? options({ highlight: this.onHighlight })
+        : { modules: { toolbar: false } };
+    }
   },
   methods: {
     update() {
@@ -68,22 +77,10 @@ export default {
       return this.$refs.quillEditor.quill;
     },
     getText() {
-      return getFormattedContent(this.getTextEditor().getContents());
+      return getFormattedContent(this.getTextEditor().getContents(), true);
     },
     getAnswers() {
       return this.highlights;
-    },
-    clearHighlights() {
-      const textEditor = this.getTextEditor();
-      const textLength = textEditor.getLength();
-      textEditor.formatText(0, textLength, { highlight: false }, noUpdate);
-    },
-    renderHighlights(highlights) {
-      this.clearHighlights();
-      const textEditor = this.getTextEditor();
-      highlights.forEach(({ start, length }) => {
-        textEditor.formatText(start, length, { highlight: true }, noUpdate);
-      });
     },
     onHighlight(isApplicable) {
       const highlight = this.getCurrentSelection();
@@ -119,15 +116,21 @@ export default {
       this.update();
     },
     refreshEditorHighlights() {
-      const getData = it => ({ start: it.start, length: it.text.length });
-      const wildcards = this.wildcards.toPlainObjects();
-      const highlights = this.highlights.toPlainObjects().concat(wildcards);
-
-      this.renderHighlights(highlights.map(it => getData(it)));
+      refreshTags(
+        this.getTextEditor(),
+        this.highlights.toPlainObjects(),
+        this.wildcards.toPlainObjects()
+      );
     },
     onQuillReady(quill) {
       this.getTextEditor().on('text-change', this.onContentChanged);
       this.refreshEditorHighlights();
+    },
+    getFormattedHtml() {
+      const highlights = this.highlights.toPlainObjects();
+      const wildcards = this.wildcards.toPlainObjects();
+
+      return getFormattedContent(this.content, false, { highlights, wildcards });
     }
   },
   watch: {
@@ -138,23 +141,84 @@ export default {
   components: { QuillEditor }
 };
 
-function getFormattedContent(quillContents) {
+function getFormattedContent(content, isDelta, tags = {}) {
   const tempEditor = new Quill(document.createElement('div'));
-  tempEditor.setContents(quillContents);
-  tempEditor.formatText(0, tempEditor.getLength(), { highlight: false });
-  const children = tempEditor.container.getElementsByClassName('ql-editor');
+  const container = tempEditor.container.getElementsByClassName('ql-editor')[0];
 
-  return children[0].innerHTML;
+  isDelta ? tempEditor.setContents(content) : container.innerHTML = content;
+
+  clearTags(tempEditor);
+
+  if (!isEmpty(tags)) {
+    const { highlights, wildcards } = tags;
+    refreshTags(tempEditor, highlights || [], wildcards || []);
+  }
+
+  return container.innerHTML;
+}
+
+function addHighlightTag(textEditor, start, length) {
+  textEditor.formatText(start, length, { highlight: true }, noUpdate);
+}
+
+function addWildcardTag(textEditor, start, length) {
+  textEditor.formatText(start, length, { wildcard: true }, noUpdate);
+}
+
+function clearTags(textEditor) {
+  const options = { highlight: false, wildcard: false };
+  textEditor.formatText(0, textEditor.getLength(), options, noUpdate);
+}
+
+function refreshTags(editor, highlights, wildcards) {
+  clearTags(editor);
+  highlights.forEach(it => addHighlightTag(editor, it.start, it.text.length));
+  wildcards.forEach(it => addWildcardTag(editor, it.start, it.text.length));
 }
 </script>
 
 <style lang="scss" scoped>
 $highlight: #2f73e9;
+$wildcard: #144acc;
+$editorHeight: 117px;
+$editorBorder: 1px dotted #ccc;
+
+/* TODO: merge duplicate CSS entries */
+.te-html /deep/ {
+  .ql-editor {
+    min-height: $editorHeight;
+    border: $editorBorder;
+  }
+
+  .text-editor {
+    span.ql-highlight {
+      color: #fff;
+      background: $highlight;
+    }
+
+    span.ql-wildcard {
+      color: #fff;
+      background: $wildcard;
+    }
+  }
+}
 
 .quill-editor /deep/ {
+  min-height: $editorHeight;
+  border: $editorBorder;
+
+  img {
+    vertical-align: initial;
+  }
+
   span.ql-highlight {
     color: #fff;
     background: $highlight;
+  }
+
+  span.ql-wildcard {
+    color: #fff;
+    background: $wildcard;
   }
 }
 
@@ -175,25 +239,5 @@ $highlight: #2f73e9;
 
 .well {
   margin-bottom: 0;
-}
-</style>
-
-<style lang="scss">
-.te-html {
-  .ql-editor {
-    min-height: 117px;
-
-    img {
-      vertical-align: initial;
-    }
-  }
-
-  .ql-container.ql-snow {
-    border: none !important;
-  }
-
-  .ql-editor.ql-blank::before {
-    width: 100%;
-  }
 }
 </style>

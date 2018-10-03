@@ -11,6 +11,38 @@
         @change="update">
       </text-editor>
       <div v-if="isEditing">
+        <div class="highlighted">
+          <span class="instructions-title">Wildcards:</span>
+          <span
+            v-for="(wildcard, index) in wildcardKeywords"
+            :key="index"
+            @click="removeWildcard(wildcard)"
+            class="item wildcard">
+            {{ wildcard }}
+          </span>
+          <span
+            v-if="!enableWildcardInput"
+            @click="enableWildcardInput = true"
+            class="mdi mdi-plus item wildcard">
+          </span>
+          <span v-else>
+            <input ref="wildcardInput" type="text"/>
+            <button
+              @click="addWildcard($refs.wildcardInput.value)"
+              type="button"
+              class="btn btn-default btn-material">
+              Add
+            </button>
+            <button
+              @click="enableWildcardInput = false"
+              type="button"
+              class="btn btn-default btn-material">
+              Cancel</button>
+          </span>
+          <div v-if="wildcardKeywords.length">
+            (click on an item to remove it from the list)
+          </div>
+        </div>
         <div v-if="answers.length" class="highlighted">
           <span class="instructions-title">Highlights:</span>
           <span
@@ -20,28 +52,9 @@
             class="item">
             {{ highlight.text }}
           </span>
-          (click on an item to remove it from the list)
-        </div>
-        <div v-if="wildcardKeywords.length" class="highlighted">
-          <span class="instructions-title">Wildcards:</span>
-          <span
-            v-for="(wildcard, index) in wildcardKeywords"
-            :key="index"
-            @click="removeWildcard(wildcard)"
-            class="item">
-            {{ wildcard }}
-          </span>
-          (click on an item to remove it from the list)
-        </div>
-        <div>
-          <span class="instructions-title">Add a wildcard:</span>
-          <input ref="wildcardInput" type="text"/>
-          <button
-            @click="addWildcard($refs.wildcardInput.value)"
-            type="button"
-            class="btn btn-default btn-material">
-            Add
-          </button>
+          <div>
+            (click on an item to remove it from the list)
+          </div>
         </div>
       </div>
     </span>
@@ -73,7 +86,8 @@ export default {
   data() {
     const wildcards = filter(this.assessment.answers, it => isWildcard(it));
     return {
-      wildcards: new Wildcards(wildcards.map(it => it.text), this.getText())
+      wildcards: new Wildcards(wildcards.map(it => it.text), this.getText()),
+      enableWildcardInput: false
     };
   },
   computed: {
@@ -122,6 +136,7 @@ export default {
       if (!this.isFocused || !text.length) return;
       this.wildcards.addWildcard(text, this.getText());
       this.$refs.wildcardInput.value = '';
+      this.enableWildcardInput = false;
     },
     removeWildcard(text) {
       if (!this.isFocused) return;
@@ -142,6 +157,7 @@ export default {
 
 <style lang="scss" scoped>
 $highlightBackground: #2f73e9;
+$wildcardBackground: #144acc;
 $highlightTextColor: #fff;
 $error: #d9534f;
 
@@ -168,7 +184,8 @@ $error: #d9534f;
 }
 
 .btn {
-  padding: 5px;
+  min-width: 35px;
+  padding: 1px 2px;
   background: #aaa;
 }
 
@@ -185,6 +202,11 @@ $error: #d9534f;
     font-size: smaller;
     background: $highlightBackground;
     cursor: pointer;
+    user-select: none;
+
+    &.wildcard {
+      background: $wildcardBackground;
+    }
   }
 }
 
