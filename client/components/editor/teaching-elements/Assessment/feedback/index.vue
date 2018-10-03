@@ -10,42 +10,23 @@
     </span>
     <transition name="fade">
       <ul v-if="isExpanded">
-        <li
+        <feedback-item
           v-for="(answer, index) in processedAnswers"
-          :key="index">
-          <div>
-            <span class="answer-index">Answer {{ index + 1 }}:</span>
-            {{ answer }}
-          </div>
-          <quill-editor
-            v-if="isEditing"
-            :content="feedback[index]"
-            :options="quillOptions"
-            @change="update($event, index)">
-          </quill-editor>
-          <div v-else v-html="feedback[index]"></div>
-        </li>
+          :key="index"
+          :answer="answer"
+          :index="index"
+          :feedback="feedback[index]"
+          :isEditing="isEditing"
+          @update="update($event, index)">
+        </feedback-item>
       </ul>
     </transition>
   </div>
 </template>
 
 <script>
+import FeedbackItem from './FeedbackItem';
 import isArray from 'lodash/isArray';
-import { quillEditor as QuillEditor } from 'vue-quill-editor';
-
-const QUILL_OPTIONS = {
-  modules: {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ script: 'sub' }, { script: 'super' }],
-      [{ 'color': [] }, { 'background': [] }],
-      ['link']
-    ]
-  }
-};
 
 export default {
   name: 'feedback',
@@ -62,9 +43,6 @@ export default {
   computed: {
     processedAnswers() {
       return isArray(this.answers) ? this.answers : ['True', 'False'];
-    },
-    quillOptions() {
-      return QUILL_OPTIONS;
     }
   },
   methods: {
@@ -78,15 +56,13 @@ export default {
     }
   },
   components: {
-    QuillEditor
+    FeedbackItem
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .feedback {
-  width: 100%;
-  margin: 0 auto;
   padding: 30px 20px 15px;
   text-align: left;
 }
@@ -103,23 +79,6 @@ export default {
 ul {
   margin-top: 20px;
   list-style: none;
-}
-
-li {
-  padding: 10px 0;
-  font-size: 15px;
-
-  .answer-index {
-    padding-right: 10px;
-    color: #444;
-    font-weight: bold;
-  }
-
-  textarea {
-    height: 50px;
-    margin: 10px 0;
-    resize: none;
-  }
 }
 
 .fade-enter-active {
