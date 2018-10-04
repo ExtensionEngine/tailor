@@ -47,6 +47,11 @@ export default {
     ...mapGetters(['focusedElement'], 'editor'),
     isFocused() {
       if (!get(this.focusedElement, 'type')) return false;
+
+      // prevent isFocused from returning true if both element
+      // and focusedElement ids are undefined
+      if (!this.focusedElement.id && !this.focusedElement._cid) return false;
+
       return this.focusedElement.embedded
         ? this.focusedElement.id === this.element.id
         : this.focusedElement._cid === this.element._cid;

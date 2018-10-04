@@ -1,28 +1,15 @@
 <template>
-  <div class="te-html">
-    <div v-if="!enabled && !content">
-      <div class="well text-placeholder">
-        <div class="message">
-          <span v-if="!content">
-            <span class="heading">Text placeholder</span>
-            <span>Click to edit</span>
-          </span>
-          <span v-else>{{ content }}</span>
-        </div>
-      </div>
-    </div>
-    <div v-else>
-      <quill-editor
-        v-if="enabled"
-        ref="quillEditor"
-        :options="options"
-        :content="content"
-        @ready="onQuillReady"
-        class="text-editor">
-      </quill-editor>
-      <div v-else class="ql-container ql-snow text-editor">
-        <p v-html="getFormattedHtml()" class="ql-editor"></p>
-      </div>
+  <div class="editor-container">
+    <quill-editor
+      v-if="enabled"
+      ref="quillEditor"
+      :options="options"
+      :content="content"
+      @ready="onQuillReady"
+      class="text-editor">
+    </quill-editor>
+    <div v-else class="ql-container ql-snow text-editor">
+      <p v-html="getFormattedHtml()" class="ql-editor"></p>
     </div>
   </div>
 </template>
@@ -42,6 +29,7 @@ const noUpdate = 'other';
 
 const toolbar = handlers => ({ container: '#highlightQuillToolbar', handlers });
 const options = eventHandlers => ({
+  placeholder: 'Insert text here',
   modules: {
     toolbar: toolbar(eventHandlers),
     imageEmbed: { spacing: 1 }
@@ -58,15 +46,9 @@ export default {
   data() {
     return {
       content: String(this.text),
-      highlights: cloneDeep(this.answers)
+      highlights: cloneDeep(this.answers),
+      options: options({ highlight: this.onHighlight })
     };
-  },
-  computed: {
-    options() {
-      return this.enabled
-        ? options({ highlight: this.onHighlight })
-        : { modules: { toolbar: false } };
-    }
   },
   methods: {
     update() {
@@ -127,6 +109,11 @@ export default {
       this.refreshEditorHighlights();
     },
     getFormattedHtml() {
+      if (!this.content.length) {
+        const text = 'Click here to start editing';
+        return `<span style="color: #aaa; font-size: 20px;">${text}</span>`;
+      }
+
       const highlights = this.highlights.toPlainObjects();
       const wildcards = this.wildcards.toPlainObjects();
 
@@ -184,7 +171,11 @@ $editorHeight: 117px;
 $editorBorder: 1px dotted #ccc;
 
 /* TODO: merge duplicate CSS entries */
-.te-html /deep/ {
+.editor-container /deep/ {
+  .ql-container {
+    border: none !important;
+  }
+
   .ql-editor {
     min-height: $editorHeight;
     border: $editorBorder;

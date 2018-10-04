@@ -1,18 +1,21 @@
 export function getPlainContent(text) {
   const temp = document.createElement('div');
-  temp.innerHTML = text;
+  const preparedText = String(text).replace(/<p><br><\/p>/gi, '\n\n');
+  temp.innerHTML = preparedText;
+
   return temp.innerText;
 }
 
-export function getOccurrenceIndices(string, substring, lastIndex = 0) {
-  if (!string.length) return [];
+// TODO: replace by a regex
+export function getOccurrenceIndices(str, substr, lastIndex = 0) {
+  if (!str.length) return [];
 
-  const currentIndex = string.indexOf(substring);
-  if (currentIndex === -1 || currentIndex + 1 > string.length) return [];
+  const currentIndex = str.indexOf(substr);
+  if (currentIndex === -1 || currentIndex + 1 > str.length) return [];
 
-  const newString = string.substring(currentIndex + 1);
+  const newString = str.substring(currentIndex + 1);
   const index = currentIndex + lastIndex;
   const oldIndex = index + 1;
 
-  return [index].concat(getOccurrenceIndices(newString, substring, oldIndex));
+  return [index].concat(getOccurrenceIndices(newString, substr, oldIndex));
 }

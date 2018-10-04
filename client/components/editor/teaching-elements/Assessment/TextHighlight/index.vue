@@ -74,6 +74,8 @@ import { mapGetters, mapMutations } from 'vuex-module';
 import TextEditor from './TextEditor';
 import Wildcards from './Wildcards';
 
+const textHighlight = 'TEXT_HIGHLIGHT';
+
 const isWildcard = object => Highlight.isWildcardObject(object);
 
 export default {
@@ -106,7 +108,8 @@ export default {
     isFocused() {
       const focused = this.focusedElement();
       if (!focused.type) return false;
-      return focused._cid === this.$parent.element._cid;
+      return focused.type === textHighlight &&
+        focused.parentElementCid === this.$parent.element._cid;
     },
     wildcardKeywords() {
       return this.wildcards.keywords;
@@ -143,7 +146,12 @@ export default {
       this.wildcards.removeWildcard(text, this.getText());
     },
     spawnToolbar() {
-      if (this.isEditing) this.focusElement(this.$parent.element);
+      if (!this.isEditing) return;
+
+      this.focusElement({
+        type: textHighlight,
+        parentElementCid: this.$parent.element._cid
+      });
     }
   },
   watch: {

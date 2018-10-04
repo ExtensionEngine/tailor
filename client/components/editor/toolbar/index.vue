@@ -87,7 +87,7 @@ const TOOLBAR_TYPES = {
   PDF: 'pdf-toolbar',
   AUDIO: 'audio-toolbar',
   'TABLE-CELL': 'table-toolbar',
-  ASSESSMENT: 'highlight-quill-toolbar'
+  TEXT_HIGHLIGHT: 'highlight-quill-toolbar'
 };
 
 export default {
