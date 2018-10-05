@@ -1,7 +1,9 @@
+import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import forEach from 'lodash/forEach';
 import forEachRight from 'lodash/forEachRight';
 import Highlight from './Highlight';
+import inRange from 'lodash/inRange';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import sortBy from 'lodash/sortBy';
@@ -72,6 +74,13 @@ export default class Highlights {
     const { left, right } = neighbors;
     if (left) left.trim(highlight);
     if (right) right.trim(highlight);
+  }
+
+  findByTextIndex(index) {
+    const highlight = find(this.highlights, it => {
+      return inRange(index, it.start, it.end + 1);
+    });
+    return highlight || null;
   }
 
   updateForText(text) {

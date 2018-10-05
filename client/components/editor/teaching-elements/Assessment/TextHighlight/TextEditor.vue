@@ -65,8 +65,9 @@ export default {
       return this.highlights;
     },
     onHighlight(isApplicable) {
-      const highlight = this.getCurrentSelection();
-      if (isEmpty(highlight)) return;
+      const { highlight, hasRange } = this.getCurrentSelection();
+      if (!highlight) return;
+      if (isApplicable && !hasRange) return;
 
       isApplicable
         ? this.addHighlight(highlight)
@@ -74,12 +75,17 @@ export default {
     },
     getCurrentSelection() {
       const textEditor = this.getTextEditor();
-      const range = textEditor.getSelection(true);
+      const { index, length } = textEditor.getSelection(true);
+      const selection = { highlight: null, hasRange: !!length };
 
-      if (!range.length) return {};
+      if (selection.hasRange) {
+        const text = textEditor.getText(index, length);
+        selection.highlight = { start: index, text };
+      } else {
+        selection.highlight = this.highlights.findByTextIndex(index);
+      }
 
-      const selectedText = textEditor.getText(range.index, range.length);
-      return { start: range.index, text: selectedText };
+      return selection;
     },
     onContentChanged(delta, oldContent, source) {
       this.content = this.getTextEditor().root.innerHTML;
