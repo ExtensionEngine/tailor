@@ -1,5 +1,11 @@
 <template>
-  <div class="editor-container">
+  <div v-if="!enabled && !content" class="no-content-placeholder">
+    <div class="message">
+      <span class="heading">Text placeholder</span>
+      <span>Click to edit</span>
+    </div>
+  </div>
+  <div v-else :class="enabled ? 'active' : 'inactive'" class="editor-container">
     <quill-editor
       v-if="enabled"
       ref="quillEditor"
@@ -173,8 +179,16 @@ function refreshTags(editor, highlights, wildcards) {
 <style lang="scss" scoped>
 $highlight: #2f73e9;
 $wildcard: #144acc;
-$editorHeight: 117px;
-$editorBorder: 1px dotted #ccc;
+$editorHeight: 128px;
+
+.editor-container.active {
+  border: 1px solid #90a4ae;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.editor-container.inactive {
+  border: 1px dotted #ccc;
+}
 
 /* TODO: merge duplicate CSS entries */
 .editor-container /deep/ {
@@ -184,10 +198,12 @@ $editorBorder: 1px dotted #ccc;
 
   .ql-editor {
     min-height: $editorHeight;
-    border: $editorBorder;
+    margin-bottom: 0;
   }
 
   .text-editor {
+    margin: 10px 20px;
+
     span.ql-highlight {
       color: #fff;
       background: $highlight;
@@ -202,7 +218,7 @@ $editorBorder: 1px dotted #ccc;
 
 .quill-editor /deep/ {
   min-height: $editorHeight;
-  border: $editorBorder;
+  border: none !important;
 
   img {
     vertical-align: initial;
@@ -219,9 +235,17 @@ $editorBorder: 1px dotted #ccc;
   }
 }
 
-.text-placeholder {
+.no-content-placeholder {
+  margin-bottom: 0;
+  padding: 10px 20px;
+  border: 1px dotted #ccc;
+
   .message {
-    padding: 9px;
+    min-height: $editorHeight;
+    padding: 28px;
+    background: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    text-align: center;
 
     .heading {
       font-size: 24px;
@@ -234,7 +258,8 @@ $editorBorder: 1px dotted #ccc;
   }
 }
 
-.well {
-  margin-bottom: 0;
+.no-content-placeholder, .editor-container {
+  width: 100%;
+  margin: 0;
 }
 </style>
