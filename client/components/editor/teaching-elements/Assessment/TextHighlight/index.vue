@@ -5,8 +5,7 @@
       <text-editor
         ref="textEditor"
         :text="assessment.text"
-        :answers="answerHighlights"
-        :wildcards="wildcardHighlights"
+        :answers="highlights"
         :enabled="isEditing && isFocused"
         @change="update">
       </text-editor>
@@ -66,17 +65,11 @@
 
 <script>
 import { defaults } from 'utils/assessment';
-import filter from 'lodash/filter';
-import Highlight from './Highlight';
-import Highlights from './Highlights';
-import { getPlainContent } from './helpers';
+import { getPlainContent, mapPlainObjectsToHighlights } from './helpers';
 import { mapGetters, mapMutations } from 'vuex-module';
 import TextEditor from './TextEditor';
-import Wildcards from './Wildcards';
 
 const textHighlight = 'TEXT_HIGHLIGHT';
-
-const isWildcard = object => Highlight.isWildcardObject(object);
 
 export default {
   name: 'text-highlight',
@@ -86,18 +79,15 @@ export default {
     isEditing: { type: Boolean, default: false }
   },
   data() {
-    const wildcards = filter(this.assessment.answers, it => isWildcard(it));
+    const answers = this.assessment.answers;
     return {
-      wildcards: new Wildcards(wildcards.map(it => it.text), this.getText()),
+      highlights: mapPlainObjectsToHighlights(answers, this.getText()),
       enableWildcardInput: false
     };
   },
   computed: {
     answers() {
-      return filter(this.assessment.answers, it => !isWildcard(it));
-    },
-    answerHighlights() {
-      return Highlights.fromPlainObjects(this.answers);
+      return this.highlights.highlights;
     },
     hasErrors() {
       return this.errors.length > 0;
@@ -112,10 +102,7 @@ export default {
         focused.parentElementCid === this.$parent.element._cid;
     },
     wildcardKeywords() {
-      return this.wildcards.keywords;
-    },
-    wildcardHighlights() {
-      return this.wildcards.highlights;
+      return this.highlights.wildcards;
     }
   },
   methods: {
@@ -123,27 +110,25 @@ export default {
     ...mapGetters(['focusedElement'], 'editor'),
     update() {
       const text = this.textEditor.getText();
-      const answers = this.textEditor.getAnswers().toPlainObjects();
-      const wildcards = this.wildcards.toPlainObjects();
-
-      this.$emit('update', { text, answers: answers.concat(wildcards) });
+      const highlights = this.textEditor.highlights;
+      this.$emit('update', { text, answers: highlights.toPlainObjects() });
     },
     getText() {
       return getPlainContent(this.assessment.text);
     },
     removeHighlight(highlight) {
       if (!this.isFocused) return;
-      this.textEditor.removeHighlight(highlight);
+      this.highlights.removeHighlight(highlight);
     },
     addWildcard(text) {
       if (!this.isFocused || !text.length) return;
-      this.wildcards.addWildcard(text, this.getText());
+      this.highlights.addWildcard(text, this.getText());
       this.$refs.wildcardInput.value = '';
       this.enableWildcardInput = false;
     },
     removeWildcard(text) {
       if (!this.isFocused) return;
-      this.wildcards.removeWildcard(text, this.getText());
+      this.highlights.removeWildcard(text, this.getText());
     },
     spawnToolbar() {
       if (!this.isEditing) return;

@@ -1,13 +1,18 @@
 const wildcardIndex = -1;
 
 export default class Highlight {
-  constructor(start, text) {
+  constructor(start, text, isWildcard = false) {
     this.start = start;
     this.text = text;
+    this.isWildcard = isWildcard;
   }
 
   get end() {
-    return this.start + this.text.length - 1;
+    return this.start + this.length - 1;
+  }
+
+  get length() {
+    return this.text.length;
   }
 
   static isWildcardObject(object) {
@@ -18,12 +23,9 @@ export default class Highlight {
     return { start: wildcardIndex, text };
   }
 
-  static fromPlainObject(object) {
-    return new Highlight(object.start, object.text);
-  }
-
   toPlainObject() {
-    return { start: this.start, text: this.text };
+    const start = this.isWildcard ? wildcardIndex : this.start;
+    return { start, text: this.text };
   }
 
   equals(other) {
@@ -55,11 +57,15 @@ export default class Highlight {
       const highlightStartIndex = left.end - this.start + 1;
       this.start = left.start;
       this.text = left.text + this.text.substring(highlightStartIndex);
+
+      if (this.isWildcard) this.isWildcard = false;
     }
 
     if (right && right.end > this.end) {
       const rightStartIndex = this.end - right.start + 1;
       this.text += right.text.substring(rightStartIndex);
+
+      if (this.isWildcard) this.isWildcard = false;
     }
   }
 
@@ -73,22 +79,18 @@ export default class Highlight {
     }
 
     if (this.bordersFromRight(other) && this.end >= other.start) {
-      const endIndex = this.text.length - (this.end - other.start) - 1;
+      const endIndex = this.length - (this.end - other.start) - 1;
       this.text = this.text.substring(0, endIndex);
     }
   }
 
   splitBy(other) {
     const endIndex = other.start - this.start;
-    const otherStartIndex = endIndex + other.text.length;
+    const otherStartIndex = endIndex + other.length;
 
     return [
       new Highlight(this.start, this.text.substring(0, endIndex)),
       new Highlight(other.end + 1, this.text.substring(otherStartIndex))
     ];
-  }
-
-  isAppropriate(text) {
-    return this.text === text.substring(this.start, this.end + 1);
   }
 }

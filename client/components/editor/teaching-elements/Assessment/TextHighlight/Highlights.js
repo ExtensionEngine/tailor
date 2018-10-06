@@ -1,3 +1,4 @@
+import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import forEach from 'lodash/forEach';
@@ -5,32 +6,38 @@ import forEachRight from 'lodash/forEachRight';
 import Highlight from './Highlight';
 import inRange from 'lodash/inRange';
 import isEmpty from 'lodash/isEmpty';
-import map from 'lodash/map';
+import { isHighlightValid, getWildcardHighlights } from './helpers';
 import sortBy from 'lodash/sortBy';
 
 export default class Highlights {
-  constructor(highlights = []) {
-    this.highlights = highlights;
+  constructor(items = [], wildcards = []) {
+    this.items = items;
+    this.wildcards = wildcards;
   }
 
-  static fromPlainObjects(objects) {
-    const highlights = map(objects, it => Highlight.fromPlainObject(it));
-    return new Highlights(highlights);
+  get highlights() {
+    const highlights = filter(this.items, it => !it.isWildcard);
+    return sortBy(highlights, highlight => highlight.start);
   }
 
   toPlainObjects() {
-    const sorted = sortBy(this.highlights, it => it.start);
-    return map(sorted, it => it.toPlainObject());
+    let highlights = this.highlights.map(it => it.toPlainObject());
+    this.wildcards.forEach(it => highlights.push(Highlight.toWildcardObject(it)));
+    return highlights;
   }
 
-  addHighlight(startIndex, text) {
-    const highlight = new Highlight(startIndex, text);
-    if (findIndex(this.highlights, highlight) === -1) this.add(highlight);
+  addWildcard(wildcard, text) {
+    if (!wildcard || !text) return;
+    if (this.wildcards.includes(wildcard)) return;
+
+    this.wildcards.push(wildcard);
+    getWildcardHighlights(wildcard, text).forEach(it => this.addHighlight(it));
   }
 
-  add(highlight) {
+  addHighlight(highlight) {
+    if (findIndex(this.items, highlight) !== -1) return;
+
     const { inner, outer, containing } = this.getNearby(highlight);
-
     if (containing) return;
 
     this.trimHighlight(highlight, outer, true);
@@ -38,16 +45,22 @@ export default class Highlights {
     const outerHighlights = isEmpty(outer) ? [] : Object.values(outer);
     this.removeHighlights(inner.concat(outerHighlights));
 
-    this.highlights.push(highlight);
+    this.items.push(highlight);
   }
 
-  removeHighlight(startIndex, text) {
-    this.remove(new Highlight(startIndex, text));
+  removeWildcard(wildcard, text) {
+    if (!wildcard) return;
+    if (!this.wildcards.includes(wildcard)) return;
+
+    const shouldRemove = it => it.isWildcard && it.text === wildcard;
+    this.removeHighlights(filter(this.items, it => shouldRemove(it)));
+
+    this.wildcards.splice(findIndex(this.wildcards, wildcard), 1);
   }
 
-  remove(highlight) {
-    const existingIndex = findIndex(this.highlights, highlight);
-    if (existingIndex !== -1) return this.highlights.splice(existingIndex, 1);
+  removeHighlight(highlight) {
+    const existingIndex = findIndex(this.items, highlight);
+    if (existingIndex !== -1) return this.items.splice(existingIndex, 1);
 
     const { inner, outer, containing } = this.getNearby(highlight);
 
@@ -55,7 +68,7 @@ export default class Highlights {
       const split = containing.splitBy(highlight);
       this.removeHighlights([containing, highlight]);
 
-      return this.highlights.push(...split);
+      return this.items.push(...split);
     }
 
     this.trimHighlight(highlight, outer, false);
@@ -63,7 +76,7 @@ export default class Highlights {
   }
 
   removeHighlights(highlights) {
-    forEach(highlights, it => this.remove(it));
+    forEach(highlights, it => this.removeHighlight(it));
   }
 
   trimHighlight(highlight, neighbors, isAdding) {
@@ -84,15 +97,17 @@ export default class Highlights {
   }
 
   updateForText(text) {
-    forEachRight(this.highlights, it => {
-      if (!it.isAppropriate(text)) this.remove(it);
+    forEachRight(this.items, it => {
+      if (!isHighlightValid(it, text)) this.removeHighlight(it);
     });
   }
 
   getNearby(highlight) {
     const related = { inner: [], outer: {}, containing: null };
 
-    forEach(this.highlights, it => {
+    forEach(this.items, it => {
+      // TODO: change neighbor handling so that adding a wildcard does not
+      // result in removing the highlights that contain the wildcard text
       if (it.contains(highlight)) return (related.containing = it);
       if (highlight.equals(it) || highlight.contains(it)) {
         return related.inner.push(it);

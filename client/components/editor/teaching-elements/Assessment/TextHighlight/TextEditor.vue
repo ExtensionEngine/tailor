@@ -22,14 +22,14 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import Highlight from './highlight.format';
+import Highlight from './Highlight';
+import HighlightFormat from './highlight.format';
 import { getPlainContent } from './helpers';
-import isEmpty from 'lodash/isEmpty';
 import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
-import Wildcard from './wildcard.format';
+import WildcardFormat from './wildcard.format';
 
-Quill.register('formats/highlight', Highlight);
-Quill.register('formats/wildcard', Wildcard);
+Quill.register('formats/highlight', HighlightFormat);
+Quill.register('formats/wildcard', WildcardFormat);
 
 const noUpdate = 'other';
 
@@ -46,7 +46,6 @@ export default {
   props: {
     text: { type: String, required: true },
     answers: { type: Object, required: true },
-    wildcards: { type: Object, default: () => {} },
     enabled: { type: Boolean, default: true }
   },
   data() {
@@ -67,17 +66,16 @@ export default {
     getText() {
       return getFormattedContent(this.getTextEditor().getContents(), true);
     },
-    getAnswers() {
-      return this.highlights;
-    },
     onHighlight(isApplicable) {
       const { highlight, hasRange } = this.getCurrentSelection();
       if (!highlight) return;
       if (isApplicable && !hasRange) return;
 
       isApplicable
-        ? this.addHighlight(highlight)
-        : this.removeHighlight(highlight);
+        ? this.highlights.addHighlight(highlight)
+        : this.highlights.removeHighlight(highlight);
+
+      this.update();
     },
     getCurrentSelection() {
       const textEditor = this.getTextEditor();
@@ -86,7 +84,7 @@ export default {
 
       if (selection.hasRange) {
         const text = textEditor.getText(index, length);
-        selection.highlight = { start: index, text };
+        selection.highlight = new Highlight(index, text);
       } else {
         selection.highlight = this.highlights.findByTextIndex(index);
       }
@@ -97,23 +95,13 @@ export default {
       this.content = this.getTextEditor().root.innerHTML;
       const text = getPlainContent(this.content);
       this.highlights.updateForText(text);
-      this.wildcards.updateForText(text);
 
       if (source !== noUpdate) this.update();
-    },
-    addHighlight(highlight) {
-      this.highlights.addHighlight(highlight.start, highlight.text);
-      this.update();
-    },
-    removeHighlight(highlight) {
-      this.highlights.removeHighlight(highlight.start, highlight.text);
-      this.update();
     },
     refreshEditorHighlights() {
       refreshTags(
         this.getTextEditor(),
-        this.highlights.toPlainObjects(),
-        this.wildcards.toPlainObjects()
+        this.highlights.items
       );
     },
     onQuillReady(quill) {
@@ -126,32 +114,33 @@ export default {
         return `<span style="color: #aaa; font-size: 20px;">${text}</span>`;
       }
 
-      const highlights = this.highlights.toPlainObjects();
-      const wildcards = this.wildcards.toPlainObjects();
-
-      return getFormattedContent(this.content, false, { highlights, wildcards });
+      return getFormattedContent(this.content, false, this.highlights.items);
     }
   },
   watch: {
-    wildcards() {
-      this.refreshEditorHighlights();
+    highlights: {
+      handler: function (newVal, oldVal) {
+        this.refreshEditorHighlights();
+      }
+    },
+    answers: {
+      handler: function (newVal, oldVal) {
+        this.highlights = cloneDeep(this.answers);
+      },
+      deep: true
     }
   },
   components: { QuillEditor }
 };
 
-function getFormattedContent(content, isDelta, tags = {}) {
+function getFormattedContent(content, isDelta, highlights = []) {
   const tempEditor = new Quill(document.createElement('div'));
   const container = tempEditor.container.getElementsByClassName('ql-editor')[0];
 
   isDelta ? tempEditor.setContents(content) : container.innerHTML = content;
 
   clearTags(tempEditor);
-
-  if (!isEmpty(tags)) {
-    const { highlights, wildcards } = tags;
-    refreshTags(tempEditor, highlights || [], wildcards || []);
-  }
+  if (highlights.length) refreshTags(tempEditor, highlights);
 
   return container.innerHTML;
 }
@@ -169,10 +158,13 @@ function clearTags(textEditor) {
   textEditor.formatText(0, textEditor.getLength(), options, noUpdate);
 }
 
-function refreshTags(editor, highlights, wildcards) {
+function refreshTags(editor, highlights) {
   clearTags(editor);
-  highlights.forEach(it => addHighlightTag(editor, it.start, it.text.length));
-  wildcards.forEach(it => addWildcardTag(editor, it.start, it.text.length));
+
+  highlights.forEach(it => {
+    if (it.isWildcard) return addWildcardTag(editor, it.start, it.length);
+    return addHighlightTag(editor, it.start, it.length);
+  });
 }
 </script>
 
