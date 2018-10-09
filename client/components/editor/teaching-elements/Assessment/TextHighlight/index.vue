@@ -7,7 +7,7 @@
         :text="assessment.text"
         :answers="highlights"
         :enabled="isEditing && isFocused"
-        @change="update">
+        @change="updateFromChild">
       </text-editor>
       <div v-if="isEditing">
         <div class="highlighted">
@@ -109,9 +109,11 @@ export default {
     ...mapMutations(['focusElement'], 'editor'),
     ...mapGetters(['focusedElement'], 'editor'),
     update() {
-      const text = this.textEditor.getText();
-      const highlights = this.textEditor.highlights;
-      this.$emit('update', { text, answers: highlights.toPlainObjects() });
+      const answers = this.highlights.toPlainObjects();
+      this.$emit('update', { answers, text: this.textEditor.getText() });
+    },
+    updateFromChild() {
+      this.highlights.update(this.textEditor.highlights);
     },
     getText() {
       return getPlainContent(this.assessment.text);
@@ -128,7 +130,7 @@ export default {
     },
     removeWildcard(text) {
       if (!this.isFocused) return;
-      this.highlights.removeWildcard(text, this.getText());
+      this.highlights.removeWildcard(text);
     },
     spawnToolbar() {
       if (!this.isEditing) return;
@@ -140,8 +142,11 @@ export default {
     }
   },
   watch: {
-    wildcardKeywords() {
-      this.update();
+    highlights: {
+      handler: function () {
+        this.update();
+      },
+      deep: true
     }
   },
   components: { TextEditor }

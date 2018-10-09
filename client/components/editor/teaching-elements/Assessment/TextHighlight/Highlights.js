@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
@@ -26,6 +27,11 @@ export default class Highlights {
     return highlights;
   }
 
+  update(other) {
+    this.items = cloneDeep(other.items);
+    this.wildcards = cloneDeep(other.wildcards);
+  }
+
   addWildcard(wildcard, text) {
     if (!wildcard || !text) return;
     if (this.wildcards.includes(wildcard)) return;
@@ -48,7 +54,7 @@ export default class Highlights {
     this.items.push(highlight);
   }
 
-  removeWildcard(wildcard, text) {
+  removeWildcard(wildcard) {
     if (!wildcard) return;
     if (!this.wildcards.includes(wildcard)) return;
 
@@ -106,8 +112,6 @@ export default class Highlights {
     const related = { inner: [], outer: {}, containing: null };
 
     forEach(this.items, it => {
-      // TODO: change neighbor handling so that adding a wildcard does not
-      // result in removing the highlights that contain the wildcard text
       if (it.contains(highlight)) return (related.containing = it);
       if (highlight.equals(it) || highlight.contains(it)) {
         return related.inner.push(it);

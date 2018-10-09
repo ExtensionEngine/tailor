@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import Highlight from './Highlight';
 import HighlightFormat from './highlight.format';
+import Highlights from './Highlights';
 import { getPlainContent } from './helpers';
 import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
 import WildcardFormat from './wildcard.format';
@@ -49,9 +49,11 @@ export default {
     enabled: { type: Boolean, default: true }
   },
   data() {
+    const highlights = new Highlights();
+    highlights.update(this.answers);
     return {
       content: String(this.text),
-      highlights: cloneDeep(this.answers),
+      highlights,
       options: options({ highlight: this.onHighlight })
     };
   },
@@ -121,11 +123,12 @@ export default {
     highlights: {
       handler: function (newVal, oldVal) {
         this.refreshEditorHighlights();
-      }
+      },
+      deep: true
     },
     answers: {
       handler: function (newVal, oldVal) {
-        this.highlights = cloneDeep(this.answers);
+        this.highlights.update(this.answers);
       },
       deep: true
     }
@@ -179,7 +182,9 @@ $editorHeight: 128px;
 }
 
 .editor-container.inactive {
+  background: #eee;
   border: 1px dotted #ccc;
+  user-select: none;
 }
 
 /* TODO: merge duplicate CSS entries */
