@@ -95,10 +95,11 @@ export default {
     },
     onContentChanged(delta, oldContent, source) {
       this.content = this.getTextEditor().root.innerHTML;
-      const text = getPlainContent(this.content);
-      this.highlights.updateForText(text);
 
-      if (source !== noUpdate) this.update();
+      if (source !== noUpdate) {
+        this.highlights.updateForText(getPlainContent(this.content));
+        this.update();
+      }
     },
     refreshEditorHighlights() {
       refreshTags(

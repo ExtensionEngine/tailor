@@ -7,7 +7,8 @@ import forEachRight from 'lodash/forEachRight';
 import Highlight from './Highlight';
 import inRange from 'lodash/inRange';
 import isEmpty from 'lodash/isEmpty';
-import { isHighlightValid, getWildcardHighlights } from './helpers';
+import { isHighlightValid, getWildcardHighlights, getWildcardsHighlights }
+  from './helpers';
 import sortBy from 'lodash/sortBy';
 
 export default class Highlights {
@@ -104,8 +105,10 @@ export default class Highlights {
 
   updateForText(text) {
     forEachRight(this.items, it => {
-      if (!isHighlightValid(it, text)) this.removeHighlight(it);
+      if (it.isWildcard || !isHighlightValid(it, text)) this.removeHighlight(it);
     });
+    // TODO: too slow; refactor
+    this.items.push(...getWildcardsHighlights(this.wildcards, text));
   }
 
   getNearby(highlight) {

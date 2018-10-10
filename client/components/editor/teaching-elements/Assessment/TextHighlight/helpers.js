@@ -5,7 +5,6 @@ function getOccurrenceIndices(text, wildcard) {
   const regex = new RegExp(wildcard);
   let indices = [];
   const indexModifier = wildcard.length - 1;
-  let startIndex = 0;
 
   let match = text.match(regex);
   if (!match || !match.index) return indices;
@@ -14,11 +13,9 @@ function getOccurrenceIndices(text, wildcard) {
 
   while (currentIndex) {
     if (!indices.includes(currentIndex)) indices.push(currentIndex);
-    startIndex = currentIndex + indexModifier;
-    const match = text.substring(startIndex).match(regex);
-    if (!match || !match.index) break;
-
-    currentIndex += match.index + indexModifier;
+    currentIndex += indexModifier;
+    const match = text.substring(currentIndex).match(regex);
+    currentIndex = (match && match.index) ? currentIndex + match.index : null;
   }
 
   return indices;
@@ -40,13 +37,27 @@ export function isHighlightValid(highlight, text) {
 }
 
 export function getWildcardHighlights(wildcard, text) {
-  let wildcards = [];
+  if (!wildcard || !text.length) return [];
+
+  let highlights = [];
 
   getOccurrenceIndices(text, wildcard).forEach(index => {
-    wildcards.push(new Highlight(index, wildcard, true));
+    highlights.push(new Highlight(index, wildcard, true));
   });
 
-  return wildcards;
+  return highlights;
+}
+
+export function getWildcardsHighlights(wildcards, text) {
+  if (!wildcards.length || !text.length) return [];
+
+  let highlights = [];
+
+  wildcards.forEach(wildcard => {
+    highlights.push(...getWildcardHighlights(wildcard, text));
+  });
+
+  return highlights;
 }
 
 export function mapPlainObjectsToHighlights(objects, text) {
