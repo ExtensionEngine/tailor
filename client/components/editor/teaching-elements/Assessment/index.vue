@@ -73,7 +73,7 @@ import { mapGetters, mapMutations } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
 import DragDrop from './DragDrop';
-import Feedback from './feedback';
+import Feedback from './Feedback';
 import FillBlank from './FillBlank';
 import find from 'lodash/find';
 import get from 'lodash/get';
