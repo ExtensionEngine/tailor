@@ -1,25 +1,34 @@
 <template>
-  <li>
-    <span class="answer-index">Answer {{ index + 1 }}:</span>
-    <template v-if="answer.length">{{ answer }}</template>
-    <i v-else>Answer not added.</i>
+  <li class="feedback-item">
+    <p class="answer">
+      <span class="prefix">Answer {{ index + 1 }}:</span>
+      <template v-if="answer.length">{{ answer }}</template>
+      <i v-else>Answer not added.</i>
+    </p>
     <quill-editor
       v-if="isEditing"
       :content="feedback"
       :options="quillOptions"
-      @change="$emit('update', $event)">
+      @change="$emit('update', $event)"
+      class="feedback edit">
     </quill-editor>
-    <div v-else-if="feedback.length" v-html="feedback"></div>
-    <div v-else>
-      <i>Feedback not added.</i>
-    </div>
+    <template v-else>
+      <p
+        v-if="feedback.length"
+        v-html="feedback"
+        class="feedback">
+      </p>
+      <p v-else class="feedback empty">
+        <i>Feedback not added.</i>
+      </p>
+    </template>
   </li>
 </template>
 
 <script>
 import { quillEditor as QuillEditor } from 'vue-quill-editor';
 
-const QUILL_OPTIONS = {
+const quillOptions = () => ({
   modules: {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
@@ -30,7 +39,7 @@ const QUILL_OPTIONS = {
       ['link']
     ]
   }
-};
+});
 
 export default {
   name: 'feedback-item',
@@ -38,25 +47,19 @@ export default {
     answer: { type: String, default: '' },
     feedback: { type: String, default: '' },
     isEditing: { type: Boolean, required: true },
-    index: { type: Number, required: true }
+    index: { type: Number, required: true },
+    quillOptions: { type: Object, default: quillOptions }
   },
-  computed: {
-    quillOptions() {
-      return QUILL_OPTIONS;
-    }
-  },
-  components: {
-    QuillEditor
-  }
+  components: { QuillEditor }
 };
 </script>
 
 <style lang="scss" scoped>
-li {
+.feedback-item {
   padding: 10px 0;
   font-size: 15px;
 
-  .answer-index {
+  .prefix {
     padding-right: 10px;
     color: #444;
     font-weight: bold;
