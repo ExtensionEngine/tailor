@@ -12,12 +12,9 @@
       <ul v-if="isExpanded">
         <feedback-item
           v-for="(answer, index) in processedAnswers"
+          v-bind="{ index, answer, isEditing, feedback: feedback[index] }"
           :key="index"
-          :answer="answer"
-          :index="index"
-          :feedback="feedback[index]"
-          :isEditing="isEditing"
-          @update="update($event, index)">
+          @update="({ html }) => $emit('update', { [index]: html })">
         </feedback-item>
       </ul>
     </transition>
@@ -45,19 +42,12 @@ export default {
       return isArray(this.answers) ? this.answers : ['True', 'False'];
     }
   },
-  methods: {
-    update({ html }, index) {
-      this.$emit('update', { [index]: html });
-    }
-  },
   watch: {
     isEditing(val) {
       if (val) this.isExpanded = true;
     }
   },
-  components: {
-    FeedbackItem
-  }
+  components: { FeedbackItem }
 };
 </script>
 
