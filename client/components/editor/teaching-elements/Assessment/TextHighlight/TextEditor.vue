@@ -96,10 +96,15 @@ export default {
     onContentChanged(delta, oldContent, source) {
       this.content = this.getTextEditor().root.innerHTML;
 
-      if (source !== noUpdate) {
-        this.highlights.updateForText(getPlainContent(this.content));
-        this.update();
+      if (source === noUpdate) return;
+
+      const change = getChange(delta);
+      if (change) {
+        const text = getPlainContent(this.content);
+        this.highlights.updateForText(text, change);
       }
+
+      this.update();
     },
     refreshEditorHighlights() {
       refreshTags(
@@ -169,6 +174,16 @@ function refreshTags(editor, highlights) {
     if (it.isWildcard) return addWildcardTag(editor, it.start, it.length);
     return addHighlightTag(editor, it.start, it.length);
   });
+}
+
+function getChange(delta) {
+  if (!delta.ops || delta.ops.length !== 2) return null;
+
+  const change = delta.ops[1];
+  if (!change.delete && !change.insert) return null;
+
+  const modifier = change.delete ? -(change.delete) : change.insert.length;
+  return { start: delta.ops[0].retain, modifier };
 }
 </script>
 

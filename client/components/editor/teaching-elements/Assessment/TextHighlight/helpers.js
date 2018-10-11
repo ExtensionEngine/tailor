@@ -36,6 +36,16 @@ export function isHighlightValid(highlight, text) {
   return highlight.text === text.substring(highlight.start, highlight.end + 1);
 }
 
+export function updateHighlight(highlight, text, change) {
+  const start = highlight.start + change.modifier;
+  const end = start + highlight.length;
+
+  if (text.substring(start, end) !== highlight.text) return false;
+
+  highlight.start = start;
+  return true;
+}
+
 export function getWildcardHighlights(wildcard, text) {
   if (!wildcard || !text.length) return [];
 
@@ -43,18 +53,6 @@ export function getWildcardHighlights(wildcard, text) {
 
   getOccurrenceIndices(text, wildcard).forEach(index => {
     highlights.push(new Highlight(index, wildcard, true));
-  });
-
-  return highlights;
-}
-
-export function getWildcardsHighlights(wildcards, text) {
-  if (!wildcards.length || !text.length) return [];
-
-  let highlights = [];
-
-  wildcards.forEach(wildcard => {
-    highlights.push(...getWildcardHighlights(wildcard, text));
   });
 
   return highlights;
