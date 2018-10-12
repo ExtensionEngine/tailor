@@ -18,7 +18,6 @@
       "relationships": [{
         "type": "prerequisites",
         "label": "Prerequisites",
-        "placeholder": "Select prerequisites",
         "multiple": true,
         "searchable": true,
         "allowEmpty": true,
