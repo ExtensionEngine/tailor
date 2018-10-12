@@ -22,7 +22,7 @@
         "multiple": true,
         "searchable": true,
         "allowEmpty": true,
-        "placeholder": 'Click to select',
+        "placeholder": "Click to select",
         "allowTwoWay": false,
         "allowInsideLineage": false
       }, {
