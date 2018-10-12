@@ -49,11 +49,9 @@ export default {
     enabled: { type: Boolean, default: true }
   },
   data() {
-    const highlights = new Highlights();
-    highlights.update(this.answers);
     return {
       content: String(this.text),
-      highlights,
+      highlights: (new Highlights()).update(this.answers),
       options: options({ highlight: this.onHighlight })
     };
   },
@@ -64,6 +62,9 @@ export default {
     },
     getTextEditor() {
       return this.$refs.quillEditor.quill;
+    },
+    getAnswers() {
+      return this.highlights.toPlainObjects();
     },
     getText() {
       return getFormattedContent(this.getTextEditor().getContents(), true);
@@ -76,8 +77,6 @@ export default {
       isApplicable
         ? this.highlights.addHighlight(highlight)
         : this.highlights.removeHighlight(highlight);
-
-      this.update();
     },
     getCurrentSelection() {
       const textEditor = this.getTextEditor();
@@ -123,12 +122,22 @@ export default {
       }
 
       return getFormattedContent(this.content, false, this.highlights.items);
+    },
+    removeHighlight(highlight) {
+      this.highlights.addHighlight(highlight);
+    },
+    addWildcard(wildcard) {
+      this.highlights.addWildcard(wildcard, getPlainContent(this.content));
+    },
+    removeWildcard(wildcard) {
+      this.highlights.removeWildcard(wildcard);
     }
   },
   watch: {
     highlights: {
       handler: function (newVal, oldVal) {
         this.refreshEditorHighlights();
+        if (!this.highlights.equals(this.answers)) this.update();
       },
       deep: true
     },

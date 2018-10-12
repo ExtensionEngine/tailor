@@ -2,16 +2,18 @@ import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
-import forEach from 'lodash/forEach';
+import {
+  findNearbyHighlights,
+  getWildcardHighlights,
+  isHighlightValid,
+  trimHighlight,
+  updateHighlight
+} from './helpers';
 import forEachRight from 'lodash/forEachRight';
 import Highlight from './Highlight';
 import inRange from 'lodash/inRange';
 import isEmpty from 'lodash/isEmpty';
-import {
-  isHighlightValid,
-  getWildcardHighlights,
-  updateHighlight
-} from './helpers';
+import isEqual from 'lodash/isEqual';
 import sortBy from 'lodash/sortBy';
 
 export default class Highlights {
@@ -28,12 +30,24 @@ export default class Highlights {
   toPlainObjects() {
     let highlights = this.highlights.map(it => it.toPlainObject());
     this.wildcards.forEach(it => highlights.push(Highlight.toWildcardObject(it)));
+
     return highlights;
   }
 
+  equals(other) {
+    return isEqual(this.items, other.items) &&
+      isEqual(this.wildcards, other.wildcards);
+  }
+
   update(other) {
-    this.items = cloneDeep(other.items);
-    this.wildcards = cloneDeep(other.wildcards);
+    if (this.equals(other)) return this;
+
+    if (!isEqual(this.items, other.items)) this.items = cloneDeep(other.items);
+    if (!isEqual(this.wildcards, other.wildcards)) {
+      this.wildcards = cloneDeep(other.wildcards);
+    }
+
+    return this;
   }
 
   addWildcard(wildcard, text) {
@@ -47,10 +61,11 @@ export default class Highlights {
   addHighlight(highlight) {
     if (findIndex(this.items, highlight) !== -1) return;
 
-    const { inner, outer, containing } = this.getNearby(highlight);
+    const nearby = findNearbyHighlights(highlight, this.items);
+    const { inner, outer, containing } = nearby;
     if (containing) return;
 
-    this.trimHighlight(highlight, outer, true);
+    trimHighlight(highlight, outer, true);
 
     const outerHighlights = isEmpty(outer) ? [] : Object.values(outer);
     this.removeHighlights(inner.concat(outerHighlights));
@@ -65,14 +80,30 @@ export default class Highlights {
     const shouldRemove = it => it.isWildcard && it.text === wildcard;
     this.removeHighlights(filter(this.items, it => shouldRemove(it)));
 
-    this.wildcards.splice(findIndex(this.wildcards, wildcard), 1);
+    const index = findIndex(this.wildcards, wildcard);
+    if (index !== -1) this.wildcards.splice(index, 1);
   }
 
   removeHighlight(highlight) {
+    this.remove(highlight);
+
+    if (!highlight.isWildcard) {
+      // restore the wildcard(s) formerly overshadowed by the highlight
+      return this.wildcards.forEach(wildcard => {
+        const index = highlight.text.indexOf(wildcard);
+        if (index === -1) return;
+        const start = highlight.start + index;
+        this.addHighlight(new Highlight(start, wildcard, true));
+      });
+    }
+  }
+
+  remove(highlight) {
     const existingIndex = findIndex(this.items, highlight);
     if (existingIndex !== -1) return this.items.splice(existingIndex, 1);
 
-    const { inner, outer, containing } = this.getNearby(highlight);
+    const nearby = findNearbyHighlights(highlight, this.items);
+    const { inner, outer, containing } = nearby;
 
     if (containing) {
       const split = containing.splitBy(highlight);
@@ -81,22 +112,12 @@ export default class Highlights {
       return this.items.push(...split);
     }
 
-    this.trimHighlight(highlight, outer, false);
+    trimHighlight(highlight, outer, false);
     this.removeHighlights(inner);
   }
 
   removeHighlights(highlights) {
-    forEach(highlights, it => this.removeHighlight(it));
-  }
-
-  trimHighlight(highlight, neighbors, isAdding) {
-    if (isEmpty(neighbors)) return;
-
-    if (isAdding) return highlight.absorb(neighbors);
-
-    const { left, right } = neighbors;
-    if (left) left.trim(highlight);
-    if (right) right.trim(highlight);
+    highlights.forEach(it => this.remove(it));
   }
 
   findByTextIndex(index) {
@@ -113,20 +134,5 @@ export default class Highlights {
       if (updateHighlight(it, text, change)) return;
       this.removeHighlight(it);
     });
-  }
-
-  getNearby(highlight) {
-    const related = { inner: [], outer: {}, containing: null };
-
-    forEach(this.items, it => {
-      if (it.contains(highlight)) return (related.containing = it);
-      if (highlight.equals(it) || highlight.contains(it)) {
-        return related.inner.push(it);
-      }
-      if (highlight.bordersFromLeft(it)) related.outer.left = it;
-      if (highlight.bordersFromRight(it)) related.outer.right = it;
-    });
-
-    return related;
   }
 }

@@ -1,5 +1,6 @@
 import Highlight from './Highlight';
 import Highlights from './Highlights';
+import isEmpty from 'lodash/isEmpty';
 
 function getOccurrenceIndices(text, wildcard) {
   const regex = new RegExp(wildcard);
@@ -46,6 +47,16 @@ export function updateHighlight(highlight, text, change) {
   return true;
 }
 
+export function trimHighlight(highlight, neighbors, isAdding) {
+  if (isEmpty(neighbors)) return;
+
+  if (isAdding) return highlight.absorb(neighbors);
+
+  const { left, right } = neighbors;
+  if (left) left.trim(highlight);
+  if (right) right.trim(highlight);
+}
+
 export function getWildcardHighlights(wildcard, text) {
   if (!wildcard || !text.length) return [];
 
@@ -71,4 +82,19 @@ export function mapPlainObjectsToHighlights(objects, text) {
   });
 
   return new Highlights(highlights, wildcards);
+}
+
+export function findNearbyHighlights(highlight, highlights) {
+  const related = { inner: [], outer: {}, containing: null };
+
+  highlights.forEach(it => {
+    if (it.contains(highlight)) return (related.containing = it);
+    if (highlight.equals(it) || highlight.contains(it)) {
+      return related.inner.push(it);
+    }
+    if (highlight.bordersFromLeft(it)) related.outer.left = it;
+    if (highlight.bordersFromRight(it)) related.outer.right = it;
+  });
+
+  return related;
 }
