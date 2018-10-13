@@ -6,6 +6,8 @@ import {
   findNearbyHighlights,
   getWildcardHighlights,
   isHighlightValid,
+  removeWildcardKeyword,
+  safelyRemove,
   trimHighlight,
   updateHighlight
 } from './helpers';
@@ -81,8 +83,7 @@ export default class Highlights {
     const shouldRemove = it => it.isWildcard && it.text === wildcard;
     this.removeHighlights(filter(this.items, it => shouldRemove(it)));
 
-    const index = this.wildcards.indexOf(wildcard);
-    if (index !== -1) this.wildcards.splice(index, 1);
+    removeWildcardKeyword(wildcard, this.wildcards);
   }
 
   removeHighlight(highlight) {
@@ -100,8 +101,8 @@ export default class Highlights {
   }
 
   remove(highlight) {
-    const existingIndex = findIndex(this.items, highlight);
-    if (existingIndex !== -1) return this.items.splice(existingIndex, 1);
+    const index = findIndex(this.items, highlight);
+    if (index !== -1) safelyRemove(this.items, index, this.wildcards);
 
     const nearby = findNearbyHighlights(highlight, this.items);
     const { inner, outer, containing } = nearby;

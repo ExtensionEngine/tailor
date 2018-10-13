@@ -1,3 +1,4 @@
+import findIndex from 'lodash/findIndex';
 import Highlight from './Highlight';
 import Highlights from './Highlights';
 import isEmpty from 'lodash/isEmpty';
@@ -97,4 +98,19 @@ export function findNearbyHighlights(highlight, highlights) {
   });
 
   return related;
+}
+
+export function removeWildcardKeyword(wildcard, wildcards) {
+  const index = wildcards.indexOf(wildcard);
+  if (index !== -1) wildcards.splice(index, 1);
+}
+
+export function safelyRemove(highlights, index, wildcards) {
+  const highlight = highlights[index];
+  highlights.splice(index, 1);
+  if (!highlight.isWildcard) return;
+
+  const wildcard = { text: highlight.text, isWildcard: true };
+  const noWildcards = findIndex(highlights, wildcard) === -1;
+  if (noWildcards) removeWildcardKeyword(highlight.text, wildcards);
 }
