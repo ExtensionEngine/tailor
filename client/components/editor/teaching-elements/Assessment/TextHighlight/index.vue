@@ -49,7 +49,7 @@
             :key="index"
             @click="removeHighlight(highlight)"
             class="item">
-            {{ highlight.text }}
+            {{ getDisplayText(highlight) }}
           </span>
           <div>
             (click on an item to remove it from the list)
@@ -68,6 +68,7 @@ import { defaults } from 'utils/assessment';
 import { getPlainContent, mapPlainObjectsToHighlights } from './helpers';
 import { mapGetters, mapMutations } from 'vuex-module';
 import TextEditor from './TextEditor';
+import truncate from 'lodash/truncate';
 
 const textHighlight = 'TEXT_HIGHLIGHT';
 
@@ -129,6 +130,9 @@ export default {
     removeWildcard(text) {
       if (!this.isFocused) return;
       this.textEditor.removeWildcard(text);
+    },
+    getDisplayText(highlight) {
+      return truncate(highlight.text, { 'length': 50, 'omission': '[...]' });
     },
     spawnToolbar() {
       if (!this.isEditing) return;

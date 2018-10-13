@@ -127,7 +127,7 @@ export default {
       return getFormattedContent(this.content, false, this.highlights.items);
     },
     removeHighlight(highlight) {
-      this.highlights.addHighlight(highlight);
+      this.highlights.removeHighlight(highlight);
     },
     addWildcard(wildcard) {
       this.highlights.addWildcard(wildcard, getPlainContent(this.content));
