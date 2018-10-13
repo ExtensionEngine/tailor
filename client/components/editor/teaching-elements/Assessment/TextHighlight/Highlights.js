@@ -80,7 +80,7 @@ export default class Highlights {
     const shouldRemove = it => it.isWildcard && it.text === wildcard;
     this.removeHighlights(filter(this.items, it => shouldRemove(it)));
 
-    const index = findIndex(this.wildcards, wildcard);
+    const index = this.wildcards.indexOf(wildcard);
     if (index !== -1) this.wildcards.splice(index, 1);
   }
 
