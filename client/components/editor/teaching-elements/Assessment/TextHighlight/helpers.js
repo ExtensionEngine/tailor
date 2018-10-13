@@ -48,14 +48,19 @@ export function updateHighlight(highlight, text, change) {
   return true;
 }
 
-export function trimHighlight(highlight, neighbors, isAdding) {
-  if (isEmpty(neighbors)) return;
+export function adjustForWildcards(highlight, wildcards) {
+  highlight.isWildcard = wildcards.includes(highlight.text);
+  return highlight;
+}
 
-  if (isAdding) return highlight.absorb(neighbors);
+export function trimHighlight({ highlight, isAdding }, neighbors, wildcards) {
+  if (isEmpty(neighbors)) return adjustForWildcards(highlight, wildcards);
+
+  if (isAdding) return highlight.absorb(neighbors, wildcards);
 
   const { left, right } = neighbors;
-  if (left) left.trim(highlight);
-  if (right) right.trim(highlight);
+  if (left) left.trim(highlight, wildcards);
+  if (right) right.trim(highlight, wildcards);
 }
 
 export function getWildcardHighlights(wildcard, text) {

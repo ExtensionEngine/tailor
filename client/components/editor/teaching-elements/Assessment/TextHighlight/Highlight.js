@@ -1,3 +1,5 @@
+import { adjustForWildcards } from './helpers';
+
 const wildcardIndex = -1;
 
 export default class Highlight {
@@ -52,24 +54,22 @@ export default class Highlight {
     return other.start <= this.end + 1 && other.start > this.start;
   }
 
-  absorb({ left, right }) {
+  absorb({ left, right }, wildcards) {
     if (left && left.start < this.start) {
       const highlightStartIndex = left.end - this.start + 1;
       this.start = left.start;
       this.text = left.text + this.text.substring(highlightStartIndex);
-
-      if (this.isWildcard) this.isWildcard = false;
     }
 
     if (right && right.end > this.end) {
       const rightStartIndex = this.end - right.start + 1;
       this.text += right.text.substring(rightStartIndex);
-
-      if (this.isWildcard) this.isWildcard = false;
     }
+
+    adjustForWildcards(this, wildcards);
   }
 
-  trim(other) {
+  trim(other, wildcards) {
     if (!this.bordersFromLeft(other) && !this.bordersFromRight(other)) return;
 
     if (this.bordersFromLeft(other) && this.start <= other.end) {
@@ -82,15 +82,23 @@ export default class Highlight {
       const endIndex = this.length - (this.end - other.start) - 1;
       this.text = this.text.substring(0, endIndex);
     }
+
+    adjustForWildcards(this, wildcards);
   }
 
-  splitBy(other) {
+  splitBy(other, wildcards) {
     const endIndex = other.start - this.start;
     const otherStartIndex = endIndex + other.length;
+    const highlights = [];
+    const left = new Highlight(this.start, this.text.substring(0, endIndex));
+    const right = new Highlight(
+      other.end + 1,
+      this.text.substring(otherStartIndex)
+    );
 
-    return [
-      new Highlight(this.start, this.text.substring(0, endIndex)),
-      new Highlight(other.end + 1, this.text.substring(otherStartIndex))
-    ];
+    if (left.text.length) highlights.push(adjustForWildcards(left, wildcards));
+    if (right.text.length) highlights.push(adjustForWildcards(right, wildcards));
+
+    return highlights;
   }
 }

@@ -21,10 +21,10 @@
 </template>
 
 <script>
+import { adjustForWildcards, getPlainContent } from './helpers';
 import Highlight from './Highlight';
 import HighlightFormat from './highlight.format';
 import Highlights from './Highlights';
-import { getPlainContent } from './helpers';
 import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
 import WildcardFormat from './wildcard.format';
 
@@ -85,7 +85,10 @@ export default {
 
       if (selection.hasRange) {
         const text = textEditor.getText(index, length);
-        selection.highlight = new Highlight(index, text);
+        selection.highlight = adjustForWildcards(
+          new Highlight(index, text),
+          this.highlights.wildcards
+        );
       } else {
         selection.highlight = this.highlights.findByTextIndex(index);
       }

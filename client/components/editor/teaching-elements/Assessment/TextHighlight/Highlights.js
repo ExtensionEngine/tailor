@@ -3,6 +3,7 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import {
+  adjustForWildcards,
   findNearbyHighlights,
   getWildcardHighlights,
   isHighlightValid,
@@ -68,7 +69,7 @@ export default class Highlights {
     const { inner, outer, containing } = nearby;
     if (containing) return;
 
-    trimHighlight(highlight, outer, true);
+    trimHighlight({ highlight, isAdding: true }, outer, this.wildcards);
 
     const outerHighlights = isEmpty(outer) ? [] : Object.values(outer);
     this.removeHighlights(inner.concat(outerHighlights));
@@ -102,19 +103,22 @@ export default class Highlights {
 
   remove(highlight) {
     const index = findIndex(this.items, highlight);
-    if (index !== -1) safelyRemove(this.items, index, this.wildcards);
+    if (index !== -1) return safelyRemove(this.items, index, this.wildcards);
 
     const nearby = findNearbyHighlights(highlight, this.items);
     const { inner, outer, containing } = nearby;
 
     if (containing) {
-      const split = containing.splitBy(highlight);
+      if (highlight.isWildcard) return;
+
+      let split = containing.splitBy(highlight, this.wildcards);
+      split = split.map(it => adjustForWildcards(it, this.wildcards));
       this.removeHighlights([containing, highlight]);
 
       return this.items.push(...split);
     }
 
-    trimHighlight(highlight, outer, false);
+    trimHighlight({ highlight, isAdding: false }, outer, this.wildcards);
     this.removeHighlights(inner);
   }
 
