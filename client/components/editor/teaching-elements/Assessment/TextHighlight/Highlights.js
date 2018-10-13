@@ -3,7 +3,6 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import {
-  adjustForWildcards,
   findNearbyHighlights,
   getWildcardHighlights,
   isHighlightValid,
@@ -111,8 +110,7 @@ export default class Highlights {
     if (containing) {
       if (highlight.isWildcard) return;
 
-      let split = containing.splitBy(highlight, this.wildcards);
-      split = split.map(it => adjustForWildcards(it, this.wildcards));
+      const split = containing.splitBy(highlight, this.wildcards);
       this.removeHighlights([containing, highlight]);
 
       return this.items.push(...split);
