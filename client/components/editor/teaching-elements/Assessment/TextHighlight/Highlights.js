@@ -52,6 +52,7 @@ export default class Highlights {
 
   addWildcard(wildcard, text) {
     if (!wildcard || !text) return;
+    if (!text.includes(wildcard)) return;
     if (this.wildcards.includes(wildcard)) return;
 
     this.wildcards.push(wildcard);
