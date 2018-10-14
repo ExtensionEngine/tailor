@@ -78,11 +78,12 @@ export default {
       return this.type === 'ASSESSMENT';
     },
     assessmentFilter() {
-      // Restrict TR within assessments block.
+      // Restrict TR within assessment block and exam.
       // Assessments are associated with outline activity.
       if (!this.activity) return;
       const outlineActivity = getLevel(this.activity.type);
-      if (outlineActivity) return ['TR'];
+      const examGroup = this.activity.type === 'ASSESSMENT_GROUP';
+      if (outlineActivity || examGroup) return ['TR'];
     },
     columnWidth() {
       return `col-xs-${12 / this.columns}`;
