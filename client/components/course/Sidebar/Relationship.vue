@@ -2,7 +2,7 @@
   <div class="relationship">
     <label :for="type">{{ label }}</label>
     <multiselect
-      :value="relationship"
+      :value="members"
       :options="options"
       :searchable="searchable"
       :multiple="multiple"
@@ -25,7 +25,6 @@ import every from 'lodash/every';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
-import intersectionWith from 'lodash/intersectionWith';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import Select from '../../common/Select';
@@ -48,26 +47,22 @@ export default {
     ...mapGetters(['activity', 'activities'], 'course'),
     ...mapGetters(['getLineage'], 'activities'),
     options() {
+      const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
       const activities = without(this.activities, this.activity);
-      return this.optionsGenerator(activities);
+      const conds = [it => getLevel(it.type)];
+      if (!allowCircularLinks) conds.push(it => !includes(this.getMemberIds(it), id));
+      if (!allowInsideLineage) {
+        const lineage = this.getLineage(this.activity);
+        conds.push(it => !includes(lineage, it));
+      }
+      return filter(activities, it => every(conds, cond => cond(it)));
     },
     selectPlaceholder() {
       return isEmpty(this.options) ? 'No activities' : this.placeholder;
     },
-    relationship() {
-      const ids = this.getRelationships(this.activity);
-      const comparator = (activity, id) => activity.id === id;
-      return intersectionWith(this.options, ids, comparator);
-    },
-    lineage() {
-      return this.getLineage(this.activity);
-    },
-    optionsGenerator() {
-      const { allowInsideLineage, allowCircularLinks, lineage, activity: { id } } = this;
-      const conds = [it => getLevel(it.type)];
-      if (!allowInsideLineage) conds.push(it => !includes(lineage, it));
-      if (!allowCircularLinks) conds.push(it => !includes(this.getRelationships(it), id));
-      return options => filter(options, it => every(conds, cond => cond(it)));
+    members() {
+      const ids = this.getMemberIds(this.activity);
+      return filter(this.options, it => includes(ids, it.id));
     }
   },
   methods: {
@@ -75,12 +70,12 @@ export default {
     getCustomLabel(activity) {
       return get(activity, 'data.name', '');
     },
-    getRelationships(activity) {
+    getMemberIds(activity) {
       return get(activity, `refs.${this.type}`, []);
     },
-    onRelationshipChanged(relationship) {
-      const activity = cloneDeep(this.activity) || {};
-      set(activity, `refs.${this.type}`, map(relationship, 'id'));
+    onRelationshipChanged(members) {
+      let activity = cloneDeep(this.activity) || {};
+      set(activity, `refs.${this.type}`, map(members, 'id'));
       this.update(activity);
     }
   },
