@@ -22,7 +22,7 @@
         "searchable": true,
         "allowEmpty": true,
         "placeholder": "Click to select",
-        "allowTwoWay": false,
+        "allowCircularLinks": false,
         "allowInsideLineage": false
       }, {
         "type": "replacements",

@@ -41,7 +41,7 @@ export default {
     searchable: { type: Boolean, default: true },
     allowEmpty: { type: Boolean, default: true },
     placeholder: { type: String, default: 'Click to select' },
-    allowTwoWay: { type: Boolean, default: false },
+    allowCircularLinks: { type: Boolean, default: false },
     allowInsideLineage: { type: Boolean, default: false }
   },
   computed: {
@@ -63,10 +63,10 @@ export default {
       return this.getLineage(this.activity);
     },
     optionsGenerator() {
-      const { allowInsideLineage, allowTwoWay, lineage, activity: { id } } = this;
+      const { allowInsideLineage, allowCircularLinks, lineage, activity: { id } } = this;
       const conds = [it => getLevel(it.type)];
       if (!allowInsideLineage) conds.push(it => !includes(lineage, it));
-      if (!allowTwoWay) conds.push(it => !includes(this.getRelationships(it), id));
+      if (!allowCircularLinks) conds.push(it => !includes(this.getRelationships(it), id));
       return options => filter(options, it => every(conds, cond => cond(it)));
     }
   },
