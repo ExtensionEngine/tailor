@@ -9,7 +9,7 @@
       :allowEmpty="allowEmpty"
       :disabled="!options.length"
       :placeholder="selectPlaceholder"
-      :customLabel="({ data: { name = '' } = {} }) => name"
+      :customLabel="getCustomLabel"
       :name="type"
       @input="onRelationshipChanged"
       trackBy="id">
@@ -72,6 +72,9 @@ export default {
   },
   methods: {
     ...mapActions(['update'], 'activities'),
+    getCustomLabel(activity) {
+      return get(activity, 'data.name', '');
+    },
     getRelationships(activity) {
       return get(activity, `refs.${this.type}`, []);
     },
