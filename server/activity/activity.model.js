@@ -1,9 +1,9 @@
 'use strict';
 
+const { Model } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
-const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
@@ -78,7 +78,13 @@ class Activity extends Model {
   static scopes({ Op }) {
     const notNull = { [Op.ne]: null };
     return {
-      withReferences: { where: { 'refs.prerequisites': notNull } }
+      withReferences(relationships = []) {
+        const or = relationships.reduce((refs, type) => {
+          refs.push({ [`refs.${type}`]: notNull });
+          return refs;
+        }, []);
+        return { where: { [Op.or]: or } };
+      }
     };
   }
 
@@ -126,10 +132,11 @@ class Activity extends Model {
    * @param {SequelizeTransaction} [transaction]
    * @returns {Promise.<Activity>} Updated instance.
    */
-  mapClonedReferences(mappings, transaction) {
+  mapClonedReferences(mappings, relationships, transaction) {
     const refs = this.refs || {};
-    if (!refs.prerequisites) return Promise.resolve(this);
-    refs.prerequisites = refs.prerequisites.map(it => mappings[it]);
+    relationships.forEach(type => {
+      if (refs[type]) refs[type] = refs[type].map(it => mappings[it])
+    });
     return this.update({ refs }, { transaction });
   }
 

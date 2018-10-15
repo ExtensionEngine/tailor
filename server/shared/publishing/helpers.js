@@ -1,6 +1,6 @@
 'use strict';
 
-const { getRepositoryRelationships } = require('../../../config/shared/activities');
+const { getTypeRelationships } = require('../../../config/shared/activities');
 const { TeachingElement } = require('../database');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
@@ -186,7 +186,7 @@ function saveSpine(spine) {
 }
 
 function addToSpine(spine, activity) {
-  const relationships = getRepositoryRelationships(activity.type);
+  const relationships = getTypeRelationships(activity.type);
   activity = Object.assign(
     pick(activity, [
       'id', 'uid', 'parentId', 'type', 'position', 'data',
