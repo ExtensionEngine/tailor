@@ -31,6 +31,7 @@ import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
 import get from 'lodash/get';
+import { getLevel } from 'shared/activities';
 import includes from 'lodash/includes';
 import SelectAssessment from './SelectAssessment';
 
@@ -77,8 +78,12 @@ export default {
       return this.type === 'ASSESSMENT';
     },
     assessmentFilter() {
+      // Restrict TR within assessment block and exam.
+      // Assessments are associated with outline activity.
       if (!this.activity) return;
-      if (this.activity.type !== 'PERSPECTIVE') return ['TR'];
+      const outlineActivity = getLevel(this.activity.type);
+      const examGroup = this.activity.type === 'ASSESSMENT_GROUP';
+      if (outlineActivity || examGroup) return ['TR'];
     },
     columnWidth() {
       return `col-xs-${12 / this.columns}`;
