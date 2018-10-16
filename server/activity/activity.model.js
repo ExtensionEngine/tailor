@@ -79,10 +79,7 @@ class Activity extends Model {
     const notNull = { [Op.ne]: null };
     return {
       withReferences(relationships = []) {
-        const or = relationships.reduce((refs, type) => {
-          refs.push({ [`refs.${type}`]: notNull });
-          return refs;
-        }, []);
+        const or = relationships.map(type => ({ [`refs.${type}`]: notNull }));
         return { where: { [Op.or]: or } };
       }
     };
