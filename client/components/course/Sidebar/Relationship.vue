@@ -32,7 +32,7 @@ import set from 'lodash/set';
 import without from 'lodash/without';
 
 export default {
-  name: 'relationship',
+  name: 'outline-relationship',
   props: {
     type: { type: String, required: true },
     label: { type: String, required: true },
