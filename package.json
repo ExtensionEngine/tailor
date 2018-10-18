@@ -28,9 +28,12 @@
     "db:reset": "node -r ./server/script/preflight ./server/script/dbReset.js",
     "migrate": "node -r ./server/script/preflight ./server/script/migrate.js",
     "add:admin": "node -r ./server/script/preflight ./server/script/addAdmin.js",
+    "invite:admin": "node -r ./server/script/preflight ./server/script/inviteAdmin.js",
     "integration:add": "node -r ./server/script/preflight ./server/script/addIntegration.js",
     "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
-    "start": "node -r ./server/script/preflight ./server"
+    "start": "node -r ./server/script/preflight ./server",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "auto-bind": "^1.2.0",
@@ -101,7 +104,7 @@
     "untildify": "^3.0.2",
     "url-join": "^1.1.0",
     "vee-validate": "^2.0.4",
-    "vue": "^2.5.2",
+    "vue": "^2.5.17",
     "vue-aplayer": "^1.4.1",
     "vue-avatar": "^2.1.1",
     "vue-color": "^2.3.0",
@@ -112,7 +115,7 @@
     "vue-infinite-scroll": "^2.0.0",
     "vue-multiselect": "^2.0.2",
     "vue-plyr": "^3.0.0",
-    "vue-quill-editor": "^2.2.4",
+    "vue-quill-editor": "^2.3.3",
     "vue-router": "^2.0.3",
     "vue-timeago": "^3.4.0",
     "vue-video-player": "^3.1.4",
@@ -121,7 +124,8 @@
     "vuex-module": "^0.4.0",
     "vuex-router-sync": "^3.0.0",
     "weekstart": "^1.0.0",
-    "yup": "^0.24.1"
+    "yup": "^0.24.1",
+    "snyk": "^1.103.4"
   },
   "devDependencies": {
     "babel-polyfill": "^6.26.0",
@@ -150,10 +154,11 @@
     "stylelint-webpack-plugin": "^0.9.0",
     "umzug": "^2.1.0",
     "val-loader": "^1.0.2",
-    "vue-template-compiler": "^2.5.2"
+    "vue-template-compiler": "^2.5.17"
   },
   "engines": {
     "node": ">= 8.8.0",
     "npm": ">= 5.4.2"
-  }
+  },
+  "snyk": true
 }
