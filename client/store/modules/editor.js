@@ -21,11 +21,12 @@ state({
 getter(function focusedElement() {
   const focused = this.state.focusedElement;
 
+  if (!focused) return {};
   // TODO: temporary workaround; refactor when on-demand toolbar activation
   // becomes available
   if (focused.type === 'TEXT_HIGHLIGHT') return focused;
+  if (!focused.id) return {};
 
-  if (!focused || !focused.id) return {};
   const tes = this.rootGetters.tes;
   const id = focused.id;
 
