@@ -3,6 +3,26 @@ import Highlight from './Highlight';
 import Highlights from './Highlights';
 import isEmpty from 'lodash/isEmpty';
 
+export function adjustForWildcards(highlight, wildcards) {
+  highlight.isWildcard = wildcards.includes(highlight.text);
+  return highlight;
+}
+
+export function findNearbyHighlights(highlight, highlights) {
+  const related = { inner: [], outer: {}, containing: null };
+
+  highlights.forEach(it => {
+    if (it.contains(highlight)) return (related.containing = it);
+    if (highlight.equals(it) || highlight.contains(it)) {
+      return related.inner.push(it);
+    }
+    if (highlight.bordersFromLeft(it)) related.outer.left = it;
+    if (highlight.bordersFromRight(it)) related.outer.right = it;
+  });
+
+  return related;
+}
+
 function getOccurrenceIndices(text, wildcard) {
   const regex = new RegExp(wildcard);
   let indices = [];
@@ -34,35 +54,6 @@ export function getPlainContent(text) {
   return temp.innerText;
 }
 
-export function isHighlightValid(highlight, text) {
-  return highlight.text === text.substring(highlight.start, highlight.end + 1);
-}
-
-export function updateHighlight(highlight, text, change) {
-  const start = highlight.start + change.modifier;
-  const end = start + highlight.length;
-
-  if (text.substring(start, end) !== highlight.text) return false;
-
-  highlight.start = start;
-  return true;
-}
-
-export function adjustForWildcards(highlight, wildcards) {
-  highlight.isWildcard = wildcards.includes(highlight.text);
-  return highlight;
-}
-
-export function trimHighlight({ highlight, isAdding }, neighbors, wildcards) {
-  if (isEmpty(neighbors)) return adjustForWildcards(highlight, wildcards);
-
-  if (isAdding) return highlight.absorb(neighbors, wildcards);
-
-  const { left, right } = neighbors;
-  if (left) left.trim(highlight, wildcards);
-  if (right) right.trim(highlight, wildcards);
-}
-
 export function getWildcardHighlights(wildcard, text) {
   if (!wildcard || !text.length) return [];
 
@@ -73,6 +64,14 @@ export function getWildcardHighlights(wildcard, text) {
   });
 
   return highlights;
+}
+
+export function isHighlightValid(highlight, text) {
+  return highlight.text === text.substring(highlight.start, highlight.end + 1);
+}
+
+export function isValidWildcard(highlight, wildcards) {
+  return highlight.isWildcard && wildcards.includes(highlight.text);
 }
 
 export function mapPlainObjectsToHighlights(objects, text) {
@@ -90,21 +89,6 @@ export function mapPlainObjectsToHighlights(objects, text) {
   return new Highlights(highlights, wildcards);
 }
 
-export function findNearbyHighlights(highlight, highlights) {
-  const related = { inner: [], outer: {}, containing: null };
-
-  highlights.forEach(it => {
-    if (it.contains(highlight)) return (related.containing = it);
-    if (highlight.equals(it) || highlight.contains(it)) {
-      return related.inner.push(it);
-    }
-    if (highlight.bordersFromLeft(it)) related.outer.left = it;
-    if (highlight.bordersFromRight(it)) related.outer.right = it;
-  });
-
-  return related;
-}
-
 export function removeWildcardKeyword(wildcard, wildcards) {
   const index = wildcards.indexOf(wildcard);
   if (index !== -1) wildcards.splice(index, 1);
@@ -118,4 +102,24 @@ export function safelyRemove(highlights, index, wildcards) {
   const wildcard = { text: highlight.text, isWildcard: true };
   const noWildcards = findIndex(highlights, wildcard) === -1;
   if (noWildcards) removeWildcardKeyword(highlight.text, wildcards);
+}
+
+export function trimHighlight({ highlight, isAdding }, neighbors, wildcards) {
+  if (isEmpty(neighbors)) return adjustForWildcards(highlight, wildcards);
+
+  if (isAdding) return highlight.absorb(neighbors, wildcards);
+
+  const { left, right } = neighbors;
+  if (left) left.trim(highlight, wildcards);
+  if (right) right.trim(highlight, wildcards);
+}
+
+export function updateHighlight(highlight, text, change) {
+  const start = highlight.start + change.modifier;
+  const end = start + highlight.length;
+
+  if (text.substring(start, end) !== highlight.text) return false;
+
+  highlight.start = start;
+  return true;
 }

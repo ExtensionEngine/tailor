@@ -1,4 +1,5 @@
 import { adjustForWildcards } from './helpers';
+import inRange from 'lodash/inRange';
 
 const wildcardIndex = -1;
 
@@ -25,35 +26,6 @@ export default class Highlight {
     return { start: wildcardIndex, text };
   }
 
-  toPlainObject() {
-    const start = this.isWildcard ? wildcardIndex : this.start;
-    return { start, text: this.text };
-  }
-
-  equals(other) {
-    return this.start === other.start && this.end === other.end;
-  }
-
-  contains(other) {
-    if (this.equals(other)) return false;
-    return (this.start <= other.start && this.end > other.end) ||
-      (this.start < other.start && this.end >= other.end);
-  }
-
-  bordersFromLeft(other) {
-    if (this.equals(other)) return false;
-    if (this.contains(other)) return false;
-
-    return (other.end >= this.start - 1 && other.end < this.end);
-  }
-
-  bordersFromRight(other) {
-    if (this.equals(other)) return false;
-    if (this.contains(other)) return false;
-
-    return other.start <= this.end + 1 && other.start > this.start;
-  }
-
   absorb({ left, right }, wildcards) {
     if (left && left.start < this.start) {
       const highlightStartIndex = left.end - this.start + 1;
@@ -67,6 +39,49 @@ export default class Highlight {
     }
 
     adjustForWildcards(this, wildcards);
+  }
+
+  bordersFromLeft(other) {
+    if (this.equals(other)) return false;
+    if (this.contains(other)) return false;
+    return other.start <= this.start &&
+      inRange(other.end, this.start - 1, this.end + 1);
+  }
+
+  bordersFromRight(other) {
+    if (this.equals(other)) return false;
+    if (this.contains(other)) return false;
+    return other.end >= this.end &&
+      inRange(other.start + 1, this.start, this.end + 2);
+  }
+
+  contains(other) {
+    if (this.equals(other)) return false;
+    return this.start < other.start && this.end > other.end;
+  }
+
+  equals(other) {
+    return this.start === other.start && this.end === other.end;
+  }
+
+  splitBy(other, wildcards) {
+    const endIndex = other.start - this.start;
+    const otherStartIndex = endIndex + other.length;
+    const left = new Highlight(this.start, this.text.substring(0, endIndex));
+    const right = new Highlight(
+      other.end + 1,
+      this.text.substring(otherStartIndex)
+    );
+
+    return [
+      adjustForWildcards(left, wildcards),
+      adjustForWildcards(right, wildcards)
+    ];
+  }
+
+  toPlainObject() {
+    const start = this.isWildcard ? wildcardIndex : this.start;
+    return { start, text: this.text };
   }
 
   trim(other, wildcards) {
@@ -84,21 +99,5 @@ export default class Highlight {
     }
 
     adjustForWildcards(this, wildcards);
-  }
-
-  splitBy(other, wildcards) {
-    const endIndex = other.start - this.start;
-    const otherStartIndex = endIndex + other.length;
-    const highlights = [];
-    const left = new Highlight(this.start, this.text.substring(0, endIndex));
-    const right = new Highlight(
-      other.end + 1,
-      this.text.substring(otherStartIndex)
-    );
-
-    if (left.text.length) highlights.push(adjustForWildcards(left, wildcards));
-    if (right.text.length) highlights.push(adjustForWildcards(right, wildcards));
-
-    return highlights;
   }
 }

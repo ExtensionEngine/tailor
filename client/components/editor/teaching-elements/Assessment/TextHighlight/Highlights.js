@@ -6,6 +6,7 @@ import {
   findNearbyHighlights,
   getWildcardHighlights,
   isHighlightValid,
+  isValidWildcard,
   removeWildcardKeyword,
   safelyRemove,
   trimHighlight,
@@ -29,38 +30,6 @@ export default class Highlights {
     return sortBy(highlights, highlight => highlight.start);
   }
 
-  toPlainObjects() {
-    let highlights = this.highlights.map(it => it.toPlainObject());
-    this.wildcards.forEach(it => highlights.push(Highlight.toWildcardObject(it)));
-
-    return highlights;
-  }
-
-  equals(other) {
-    return isEqual(this.items, other.items) &&
-      isEqual(this.wildcards, other.wildcards);
-  }
-
-  update(other) {
-    if (this.equals(other)) return this;
-
-    if (!isEqual(this.items, other.items)) this.items = cloneDeep(other.items);
-    if (!isEqual(this.wildcards, other.wildcards)) {
-      this.wildcards = cloneDeep(other.wildcards);
-    }
-
-    return this;
-  }
-
-  addWildcard(wildcard, text) {
-    if (!wildcard || !text) return;
-    if (!text.includes(wildcard)) return;
-    if (this.wildcards.includes(wildcard)) return;
-
-    this.wildcards.push(wildcard);
-    getWildcardHighlights(wildcard, text).forEach(it => this.addHighlight(it));
-  }
-
   addHighlight(highlight) {
     if (findIndex(this.items, highlight) !== -1) return;
 
@@ -76,14 +45,43 @@ export default class Highlights {
     this.items.push(highlight);
   }
 
-  removeWildcard(wildcard) {
-    if (!wildcard) return;
-    if (!this.wildcards.includes(wildcard)) return;
+  addWildcard(wildcard, text) {
+    if (!wildcard || !text) return;
+    if (!text.includes(wildcard)) return;
+    if (this.wildcards.includes(wildcard)) return;
 
-    const shouldRemove = it => it.isWildcard && it.text === wildcard;
-    this.removeHighlights(filter(this.items, it => shouldRemove(it)));
+    this.wildcards.push(wildcard);
+    getWildcardHighlights(wildcard, text).forEach(it => this.addHighlight(it));
+  }
 
-    removeWildcardKeyword(wildcard, this.wildcards);
+  equals(other) {
+    return isEqual(this.items, other.items) &&
+      isEqual(this.wildcards, other.wildcards);
+  }
+
+  findByTextIndex(index) {
+    const highlight = find(this.highlights, it => {
+      return inRange(index, it.start, it.end + 1);
+    });
+    return highlight || null;
+  }
+
+  remove(highlight) {
+    const index = findIndex(this.items, highlight);
+    if (index !== -1) return safelyRemove(this.items, index, this.wildcards);
+    if (isValidWildcard(highlight, this.wildcards)) return;
+
+    const nearby = findNearbyHighlights(highlight, this.items);
+    const { inner, outer, containing } = nearby;
+
+    if (containing) {
+      const split = containing.splitBy(highlight, this.wildcards);
+      this.removeHighlights([containing, highlight]);
+      return this.items.push(...split);
+    }
+
+    trimHighlight({ highlight, isAdding: false }, outer, this.wildcards);
+    this.removeHighlights(inner);
   }
 
   removeHighlight(highlight) {
@@ -100,35 +98,36 @@ export default class Highlights {
     }
   }
 
-  remove(highlight) {
-    const index = findIndex(this.items, highlight);
-    if (index !== -1) return safelyRemove(this.items, index, this.wildcards);
-
-    const nearby = findNearbyHighlights(highlight, this.items);
-    const { inner, outer, containing } = nearby;
-
-    if (containing) {
-      if (highlight.isWildcard) return;
-
-      const split = containing.splitBy(highlight, this.wildcards);
-      this.removeHighlights([containing, highlight]);
-
-      return this.items.push(...split);
-    }
-
-    trimHighlight({ highlight, isAdding: false }, outer, this.wildcards);
-    this.removeHighlights(inner);
-  }
-
   removeHighlights(highlights) {
     highlights.forEach(it => this.remove(it));
   }
 
-  findByTextIndex(index) {
-    const highlight = find(this.highlights, it => {
-      return inRange(index, it.start, it.end + 1);
-    });
-    return highlight || null;
+  removeWildcard(wildcard) {
+    if (!wildcard) return;
+    if (!this.wildcards.includes(wildcard)) return;
+
+    removeWildcardKeyword(wildcard, this.wildcards);
+
+    const shouldRemove = it => it.isWildcard && it.text === wildcard;
+    this.removeHighlights(filter(this.items, it => shouldRemove(it)));
+  }
+
+  toPlainObjects() {
+    let highlights = this.highlights.map(it => it.toPlainObject());
+    this.wildcards.forEach(it => highlights.push(Highlight.toWildcardObject(it)));
+
+    return highlights;
+  }
+
+  update(other) {
+    if (this.equals(other)) return this;
+
+    if (!isEqual(this.items, other.items)) this.items = cloneDeep(other.items);
+    if (!isEqual(this.wildcards, other.wildcards)) {
+      this.wildcards = cloneDeep(other.wildcards);
+    }
+
+    return this;
   }
 
   updateForText(text, change) {
