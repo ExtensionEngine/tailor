@@ -81,11 +81,11 @@ Defines the structure of an activity realtionship field.
 * **type** `String` - Defines the name of the relationship. The relationship will be published under this value.
 * **label** `String` - Display label.
 * **placeholder** `String` - Display label for select picker.
-* **multiple** `Boolean` - Defines if the relationship can have multiple members chosen. True by default.
+* **multiple** `Boolean` - Defines if the relationship can have multiple associations chosen. True by default.
 * **searchable** `Boolean` - Defines if the list of activities can be searched. True by default.
 * **allowEmpty** `Boolean` - Defines if the member list can be empty. True by default.
 * **allowCircularLinks** `Boolean` - Defines if member of a relationship instance can set the owner of that instance 
-as a member of its own instane of that relationship. Example, activity X sets activity Y as its prerequisite. 
+as a member of its own instance of that relationship. Example, activity X sets activity Y as its prerequisite. 
 If `allowCircualLinks` is set to true then activity Y can set activity X as its prerequisite. False by default.
 * **allowInsideLineage** `Boolean` - Defines if an ancestor or a descendant can be a member of the relationship.
 False by default.

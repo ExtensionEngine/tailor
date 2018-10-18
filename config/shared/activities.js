@@ -27,7 +27,7 @@ module.exports = {
   getSchema,
   getSchemaId,
   getRepositoryMeta,
-  getTypeRelationships,
+  getLevelRelationships,
   getRepositoryRelationships,
   getOutlineLevels,
   getObjectives,
@@ -87,7 +87,7 @@ function getRepositoryMeta(repository) {
   });
 }
 
-function getTypeRelationships(type) {
+function getLevelRelationships(type) {
   return get(getLevel(type), 'relationships', []);
 }
 

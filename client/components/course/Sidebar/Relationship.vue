@@ -2,7 +2,7 @@
   <div class="relationship">
     <label :for="type">{{ label }}</label>
     <multiselect
-      :value="members"
+      :value="associations"
       :options="options"
       :searchable="searchable"
       :multiple="multiple"
@@ -32,7 +32,7 @@ import set from 'lodash/set';
 import without from 'lodash/without';
 
 export default {
-  name: 'outline-relationship',
+  name: 'activity-relationship',
   props: {
     type: { type: String, required: true },
     label: { type: String, required: true },
@@ -50,7 +50,7 @@ export default {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
       const activities = without(this.activities, this.activity);
       const conds = [it => getLevel(it.type)];
-      if (!allowCircularLinks) conds.push(it => !includes(this.getMemberIds(it), id));
+      if (!allowCircularLinks) conds.push(it => !includes(this.getAssociationIds(it), id));
       if (!allowInsideLineage) {
         const lineage = this.getLineage(this.activity);
         conds.push(it => !includes(lineage, it));
@@ -60,8 +60,8 @@ export default {
     selectPlaceholder() {
       return isEmpty(this.options) ? 'No activities' : this.placeholder;
     },
-    members() {
-      const ids = this.getMemberIds(this.activity);
+    associations() {
+      const ids = this.getAssociationIds(this.activity);
       return filter(this.options, it => includes(ids, it.id));
     }
   },
@@ -70,12 +70,12 @@ export default {
     getCustomLabel(activity) {
       return get(activity, 'data.name', '');
     },
-    getMemberIds(activity) {
+    getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
     },
-    onRelationshipChanged(members) {
+    onRelationshipChanged(associations) {
       let activity = cloneDeep(this.activity) || {};
-      set(activity, `refs.${this.type}`, map(members, 'id'));
+      set(activity, `refs.${this.type}`, map(associations, 'id'));
       this.update(activity);
     }
   },

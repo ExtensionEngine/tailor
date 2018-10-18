@@ -21,7 +21,7 @@
         @update="updateActivity">
       </meta-input>
     </div>
-    <div class="relationship-element">
+    <div class="relationships-element">
       <relationship
         v-for="relationship in config.relationships"
         v-bind="relationship"
