@@ -191,8 +191,9 @@ function addToSpine(spine, activity) {
     pick(activity, [
       'id', 'uid', 'parentId', 'type', 'position', 'data',
       'publishedAt', 'updatedAt', 'createdAt'
-    ]),
-    ...relationships.map(({ type }) => ({ [type]: get(activity, `refs.${type}`, []) }))
+    ]), {
+      relationships: mapRelationships(relationships, activity)
+    }
   );
   renameKey(activity, 'data', 'meta');
   let index = findIndex(spine.structure, { id: activity.id });
@@ -249,6 +250,12 @@ function getBaseUrl(repoId, parentId) {
   return FLAT_REPO_STRUCTURE
     ? `repository/${repoId}`
     : `repository/${repoId}/${parentId}`;
+}
+
+function mapRelationships(relationships, activity) {
+  return relationships.reduce((acc, { type }) => {
+    return Object.assign(acc, { [type]: get(activity, `refs.${type}`, []) });
+  }, {});
 }
 
 module.exports = {
