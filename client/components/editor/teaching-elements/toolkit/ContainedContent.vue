@@ -10,7 +10,9 @@
     <span class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
-    <content-element v-bind="{ element, isDisabled, isDragged }"/>
+    <content-element
+      v-bind="{ element, isDisabled, isDragged }"
+      @save="data => $emit('save', data)"/>
   </div>
 </template>
 

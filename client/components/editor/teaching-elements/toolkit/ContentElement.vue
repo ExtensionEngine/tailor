@@ -7,13 +7,14 @@
       :is="componentName"
       :element="element"
       :isFocused="isFocused"
-      :isDragged="isDragged"/>
+      :isDragged="isDragged"
+      @save="data => $emit('save', data)"/>
   </div>
 </template>
 
 <script>
-import EventBus from 'EventBus';
 import { getComponentName, getElementId } from './utils';
+import EventBus from 'EventBus';
 
 export default {
   name: 'content-element',
@@ -42,7 +43,7 @@ export default {
   },
   created() {
     EventBus.on('element:focus', element => {
-      this.isFocused = getElementId(element) === this.id;
+      this.isFocused = !!element && (getElementId(element) === this.id);
     });
   },
   provide() {
