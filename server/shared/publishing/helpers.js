@@ -1,5 +1,7 @@
 'use strict';
 
+const { getLevelRelationships } = require('../../../config/shared/activities');
+const { TeachingElement } = require('../database');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
@@ -13,7 +15,6 @@ const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const storage = require('../storage');
 const without = require('lodash/without');
-const { TeachingElement } = require('../database');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
 
@@ -185,12 +186,14 @@ function saveSpine(spine) {
 }
 
 function addToSpine(spine, activity) {
+  const relationships = getLevelRelationships(activity.type);
   activity = Object.assign(
     pick(activity, [
       'id', 'uid', 'parentId', 'type', 'position', 'data',
       'publishedAt', 'updatedAt', 'createdAt'
-    ]),
-    { prerequisites: get(activity, 'refs.prerequisites', []) }
+    ]), {
+      relationships: mapRelationships(relationships, activity)
+    }
   );
   renameKey(activity, 'data', 'meta');
   let index = findIndex(spine.structure, { id: activity.id });
@@ -247,6 +250,12 @@ function getBaseUrl(repoId, parentId) {
   return FLAT_REPO_STRUCTURE
     ? `repository/${repoId}`
     : `repository/${repoId}/${parentId}`;
+}
+
+function mapRelationships(relationships, activity) {
+  return relationships.reduce((acc, { type }) => {
+    return Object.assign(acc, { [type]: get(activity, `refs.${type}`, []) });
+  }, {});
 }
 
 module.exports = {
