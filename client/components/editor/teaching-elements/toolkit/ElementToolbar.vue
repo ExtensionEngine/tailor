@@ -64,6 +64,11 @@ export default {
       });
     }
   },
+  watch: {
+    focusedElement(val) {
+      this.$emit('toggle', !!val);
+    }
+  },
   created() {
     EventBus.on('element:focus', element => {
       this.focusedElement = element;

@@ -1,18 +1,7 @@
 <template>
   <div class="toolbar">
-    <div v-if="elementSelected" class="toolbar-container">
-      <component
-        :is="getComponentName(focusedElement.type)"
-        :key="focusedElement._cid || focusedElement.id"
-        :element="focusedElement">
-      </component>
-      <div class="delete-element">
-        <span @click="requestDeleteConfirmation" class="btn btn-fab btn-danger">
-          <span class="mdi mdi-delete"></span>
-        </span>
-      </div>
-    </div>
-    <div v-else class="toolbar-container editor-toolbar">
+    <element-toolbar @toggle="state => (showDefaultToolbar = !state)"/>
+    <div v-show="showDefaultToolbar" class="toolbar-container editor-toolbar">
       <router-link
         :to="{ name: 'course', params: { courseId } }"
         class="toolbar-btn">
@@ -49,53 +38,28 @@
 </template>
 
 <script>
-import AccordionToolbar from './AccordionToolbar';
-import AudioToolbar from './AudioToolbar';
-import BrightcoveVideoToolbar from './BrightcoveVideoToolbar';
-import CarouselToolbar from './CarouselToolbar';
-import DefaultToolbar from './DefaultToolbar';
+import { mapActions, mapGetters } from 'vuex-module';
 import drop from 'lodash/drop';
-import EventBus from 'EventBus';
-import EmbedToolbar from './EmbedToolbar';
+import ElementToolbar from '../teaching-elements/toolkit/ElementToolbar';
 import fecha from 'fecha';
 import find from 'lodash/find';
 import format from 'string-template';
 import get from 'lodash/get';
-import ImageToolbar from './ImageToolbar';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import ModalToolbar from './ModalToolbar';
-import PdfToolbar from './PdfToolbar';
-import QuillToolbar from './QuillToolbar';
-import TableToolbar from './TableToolbar';
 import truncate from 'truncate';
-import VideoToolbar from './VideoToolbar';
 
-const PREVIEW_URL = process.env.PREVIEW_URL;
-const appChannel = EventBus.channel('app');
-
-const TOOLBAR_TYPES = {
-  IMAGE: 'image-toolbar',
-  VIDEO: 'video-toolbar',
-  BRIGHTCOVE_VIDEO: 'brightcove-video-toolbar',
-  EMBED: 'embed-toolbar',
-  HTML: 'quill-toolbar',
-  ACCORDION: 'accordion-toolbar',
-  CAROUSEL: 'carousel-toolbar',
-  MODAL: 'modal-toolbar',
-  TABLE: 'table-toolbar',
-  PDF: 'pdf-toolbar',
-  AUDIO: 'audio-toolbar',
-  'TABLE-CELL': 'table-toolbar'
-};
+const { PREVIEW_URL } = process.env;
 
 export default {
   name: 'toolbar',
   data() {
-    return { publishing: false };
+    return {
+      showDefaultToolbar: true,
+      publishing: false
+    };
   },
   computed: {
-    ...mapGetters(['focusedElement', 'activity'], 'editor'),
-    ...mapGetters(['tes', 'activities']),
+    ...mapGetters(['activity'], 'editor'),
+    ...mapGetters(['activities']),
     courseId() {
       return get(this.activity, 'courseId');
     },
@@ -107,9 +71,6 @@ export default {
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : '';
       return `Publish '${truncate(name, 30)}'. ${status}`;
-    },
-    elementSelected() {
-      return get(this, 'focusedElement.type');
     },
     previewUrl() {
       if (!PREVIEW_URL) return;
@@ -129,58 +90,15 @@ export default {
   methods: {
     ...mapActions(['publish'], 'activities'),
     ...mapActions({ removeElement: 'remove' }, 'tes'),
-    ...mapActions(['focusoutElement'], 'editor'),
-    ...mapMutations(['focusElement'], 'editor'),
-    remove(element) {
-      // Special case the deletion of tables, so it's possible to delete them
-      // from cells as well
-      if (element.type === 'TABLE-CELL') {
-        const tableElement = find(this.tes, te => !!get(te, `data.embeds.${element.id}`));
-        this.removeElement(tableElement);
-        this.focusoutElement();
-        return;
-      }
-
-      if (element.embedded) {
-        appChannel.emit('deleteElement', element);
-      } else {
-        this.removeElement(element);
-      }
-
-      this.focusoutElement();
-    },
     publishActivity() {
       this.publishing = true;
       this.publish(this.activity).then(() => (this.publishing = false));
-    },
-    requestDeleteConfirmation() {
-      appChannel.emit('showConfirmationModal', {
-        type: 'element',
-        item: this.focusedElement,
-        action: () => this.remove(this.focusedElement)
-      });
-    },
-    getComponentName(type) {
-      return TOOLBAR_TYPES[type] || 'default-toolbar';
     },
     truncate(str, len = 50) {
       return truncate(str, len);
     }
   },
-  components: {
-    AccordionToolbar,
-    AudioToolbar,
-    BrightcoveVideoToolbar,
-    CarouselToolbar,
-    DefaultToolbar,
-    EmbedToolbar,
-    ImageToolbar,
-    ModalToolbar,
-    PdfToolbar,
-    QuillToolbar,
-    TableToolbar,
-    VideoToolbar
-  }
+  components: { ElementToolbar }
 };
 </script>
 
@@ -189,19 +107,6 @@ export default {
   position: absolute;
   width: 100%;
   z-index: 999;
-}
-
-.delete-element {
-  position: absolute;
-  z-index: 999;
-  right: 0;
-  transform: translate(-90%, -55%);
-
-  .btn {
-    font-size: 26px;
-    line-height: 48px;
-    vertical-align: middle;
-  }
 }
 
 .editor-toolbar {
