@@ -5,19 +5,17 @@
       :class="{ editing: isEditing, 'question-error': questionError }"
       class="question">
       <div class="row">
-        <primitive
+        <contained-content
           v-for="element in assessment.data.question"
           :key="element.id"
-          :initialElement="element"
-          :disabled="!isEditing"
-          @save="elementChanged">
-        </primitive>
+          :element="element"
+          :isDisabled="!isEditing"
+          @save="data => elementChanged(element, data)"/>
       </div>
       <add-element
         v-show="isEditing"
         :include="['HTML', 'IMAGE']"
-        @add="addElement">
-      </add-element>
+        @add="addElement"/>
     </div>
     <span v-if="isEditing && helperText" class="help-block">
       {{ helperText }}
@@ -28,11 +26,11 @@
 <script>
 import AddElement from '../../structure/AddElement';
 import cloneDeep from 'lodash/cloneDeep';
+import ContainedContent from '../toolkit/ContainedContent';
 import EventBus from 'EventBus';
 import findIndex from 'lodash/findIndex';
 import { helperText } from 'utils/assessment';
 import pullAt from 'lodash/pullAt';
-import Primitive from '../Primitive';
 
 const appChannel = EventBus.channel('app');
 
@@ -57,8 +55,9 @@ export default {
       const question = this.assessment.data.question.concat(element);
       this.$emit('update', { question });
     },
-    elementChanged(element) {
+    elementChanged(element, data) {
       if (!this.isEditing) return;
+      element = { ...element, data };
       const question = cloneDeep(this.assessment.data.question);
       const index = findIndex(question, { id: element.id });
       if (index < 0) return;
@@ -78,7 +77,7 @@ export default {
   },
   components: {
     AddElement,
-    Primitive
+    ContainedContent
   }
 };
 </script>
