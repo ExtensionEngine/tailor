@@ -26,8 +26,10 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
+import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import Promise from 'bluebird';
 import Toolbar from './toolbar';
 import truncate from 'truncate';
@@ -42,7 +44,7 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['focusedElement', 'activity', 'contentContainers'], 'editor'),
+    ...mapGetters(['activity', 'contentContainers'], 'editor'),
     ...mapGetters(['course'], 'course'),
     showAssessments() {
       return config.hasAssessments(this.activity.type);
@@ -56,7 +58,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['focusoutElement'], 'editor'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
@@ -77,16 +78,13 @@ export default {
       if (!this.mousedownCaptured) return;
       // Reset
       this.mousedownCaptured = false;
-      if (!this.focusedElement) return;
-      if (!e.component ||
-        ((e.component.data._cid !== this.focusedElement._cid) &&
-        (e.component.data.id !== this.focusedElement.id))) {
-        this.focusoutElement();
+      if (get(e, 'component.name') !== 'content-element') {
+        EventBus.emit('element:focus');
       }
     }
   },
   created() {
-    this.focusoutElement();
+    EventBus.emit('element:focus');
     // TODO: Do this better!
     const courseId = this.$route.params.courseId;
     const activityId = this.$route.params.activityId;
