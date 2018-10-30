@@ -1,13 +1,25 @@
 'use strict';
 
 const { createError, validationError } = require('../shared/error/helpers');
-const { NOT_FOUND } = require('http-status-codes');
+const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
+const { role } = require('../../config/shared');
 const { User } = require('../shared/database');
 
-function index(req, res) {
-  const attributes = ['id', 'email', 'role'];
-  return User.findAll({ attributes })
-    .then(users => res.json({ data: users }));
+function index({ query: { roleType } }, res) {
+  let options = { attributes: ['id', 'email', 'role'], raw: true };
+  if (roleType) options.where = { role: { $in: role.getRoleNames(roleType) } };
+  return User.findAll(options).then(data => res.json({ data }));
+}
+
+function upsert({ body: { email, role } }, res) {
+  return User.findOne({ where: { email }, paranoid: false })
+    .then(user => user ? user.update({ role }) : User.invite({ email, role }))
+    .then(user => user.deletedAt ? user.restore() : user)
+    .then(data => res.json({ data }));
+}
+
+function remove({ params: { id } }, res) {
+  return User.destroy({ where: { id } }).then(() => res.sendStatus(NO_CONTENT));
 }
 
 function forgotPassword({ body }, res) {
@@ -18,7 +30,7 @@ function forgotPassword({ body }, res) {
     .then(() => res.end());
 }
 
-function resetPassword({ body, params }, res) {
+function resetPassword({ body }, res) {
   const { password, token } = body;
   return User.find({ where: { token } })
     .then(user => user || createError(NOT_FOUND, 'Invalid token'))
@@ -46,6 +58,8 @@ function login({ body }, res) {
 
 module.exports = {
   index,
+  upsert,
+  remove,
   forgotPassword,
   resetPassword,
   login
