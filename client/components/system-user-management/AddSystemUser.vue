@@ -26,7 +26,7 @@
       </div>
       <div class="col-lg-1 col-md-2">
         <button
-          :disabled="disableInvite"
+          :disabled="isDisabled"
           type="submit"
           class="btn btn-primary btn-block">
           Invite
@@ -54,7 +54,7 @@ export default {
     };
   },
   computed: {
-    disableInvite() {
+    isDisabled() {
       return !this.email.trim().length || this.vErrors.has('email');
     }
   },
