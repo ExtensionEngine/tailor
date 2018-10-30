@@ -9,7 +9,7 @@
       </div>
       <router-link
         v-if="course"
-        :to="{ name: 'course', params: { courseId: course.id }}"
+        :to="{ name: 'course', params: { courseId: course.id } }"
         class="course-title">
         <span class="navbar-acronym">
           <span>{{ courseAcronym }}</span>
@@ -23,6 +23,11 @@
             <span class="icon mdi mdi-menu-down"></span>
           </a>
           <ul class="dropdown-menu">
+            <li v-if="isAdmin">
+              <router-link :to="{ name: 'system-user-management' }">
+                System user management
+              </router-link>
+            </li>
             <li><a @click="logout" href="#">Log out</a></li>
           </ul>
         </li>
@@ -44,7 +49,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user']),
+    ...mapGetters(['user', 'isAdmin']),
     ...mapGetters(['course'], 'course'),
     courseAcronym() {
       return this.course ? getAcronym(this.course.name) : null;

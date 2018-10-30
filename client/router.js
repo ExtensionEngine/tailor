@@ -13,6 +13,7 @@ import General from './components/course/Settings/General';
 import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
+import SystemUserManagement from './components/system-user-management';
 import TreeView from './components/course/TreeView';
 import UserManagement from './components/course/Settings/UserManagement';
 
@@ -33,8 +34,11 @@ let router = new Router({
       name: 'course',
       component: Outline
     }, {
+      path: 'editor/:activityId',
+      name: 'editor',
+      component: Editor
+    }, {
       path: 'settings',
-      name: 'course-settings',
       component: CourseSettings,
       children: [{
         path: '',
@@ -55,9 +59,9 @@ let router = new Router({
       component: TreeView
     }]
   }, {
-    path: '/course/:courseId/editor/:activityId',
-    name: 'editor',
-    component: Editor,
+    path: '/system-users',
+    name: 'system-user-management',
+    component: SystemUserManagement,
     meta: { auth: true }
   }, {
     path: '/',
