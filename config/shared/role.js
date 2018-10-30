@@ -1,5 +1,6 @@
 'use strict';
 
+const isPlainObject = require('lodash/isPlainObject');
 const values = require('lodash/values');
 
 const userRoles = { USER: 'USER', ADMIN: 'ADMIN', INTEGRATION: 'INTEGRATION' };
@@ -12,5 +13,9 @@ module.exports = {
   user: userRoles,
   course: courseRoles,
   userRoleRegex,
-  courseRoleRegex
+  courseRoleRegex,
+  getRoleNames(type) {
+    const roles = this[type];
+    return isPlainObject(roles) ? values(roles) : [];
+  }
 };
