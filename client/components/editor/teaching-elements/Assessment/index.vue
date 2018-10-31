@@ -10,11 +10,11 @@
             :options="examObjectives"
             :searchable="true"
             :disabled="!isEditing || !examObjectives.length"
-            :trackBy="'id'"
             :customLabel="it => it.data ? it.data.name : ''"
             :placeholder="examObjectiveLabel"
             :showReset="isEditing"
-            @input="onObjectiveSelected">
+            @input="onObjectiveSelected"
+            trackBy="id">
           </multiselect>
         </div>
       </div>
