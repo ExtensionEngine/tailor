@@ -63,7 +63,7 @@ export default {
       Object.assign(this, { email: '', role: this.defaultRole });
     }
   },
-  mounted() {
+  created() {
     this.reset();
   },
   components: {
