@@ -3,7 +3,7 @@
     <ul class="nav nav-tabs">
       <!-- TODO: Create component for nav tabs -->
       <li :class="{ active: $route.name === 'course' }">
-        <router-link :to="{ name: 'course' }">Outline</router-link>
+        <router-link :to="{ name: 'course', params: { courseId } }">Outline</router-link>
       </li>
       <li :class="{ active: $route.name === 'tree-view' }">
         <router-link :to="{ name: 'tree-view' }">Tree View</router-link>
@@ -38,10 +38,10 @@ export default {
   computed: {
     ...mapGetters(['course', 'activities', 'activity'], 'course'),
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
-    showSettings() {
-      return this.isAdmin || this.isCourseAdmin;
+    courseId() {
+      return this.$route.params.courseId;
     },
-    showDetails() {
+    showSettings() {
       return this.isAdmin || this.isCourseAdmin;
     }
   },
@@ -55,7 +55,7 @@ export default {
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
   },
   created() {
-    const { courseId } = this.$route.params;
+    const { courseId } = this;
     const existingSelection = this.activity && this.activity.courseId === courseId;
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
