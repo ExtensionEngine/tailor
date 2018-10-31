@@ -18,8 +18,6 @@
           :options="roles"
           :searchable="false"
           :allowEmpty="false"
-          :trackBy="null"
-          :label="null"
           @input="newRole => (role = newRole)"
           placeholder="Select role"
           class="role-select"/>
@@ -44,14 +42,11 @@ export default {
   name: 'add-system-user',
   mixins: [withValidation()],
   props: {
-    defaultRole: { type: String, required: true },
+    defaultRole: { type: Object, required: true },
     roles: { type: Array, required: true }
   },
   data() {
-    return {
-      email: '',
-      role: ''
-    };
+    return { email: '', role: {} };
   },
   computed: {
     isDisabled() {
@@ -61,7 +56,7 @@ export default {
   methods: {
     addUser() {
       const { email, role } = this;
-      this.$emit('add', email, { role });
+      this.$emit('add', email, { role: role.value });
       this.reset();
     },
     reset() {

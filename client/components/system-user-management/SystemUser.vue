@@ -3,14 +3,12 @@
     <td class="email-cell">{{ email }}</td>
     <td>
       <multiselect
-        :value="role"
+        :value="selectedRole"
         :options="roles"
         :disabled="!canChangeRole"
         :searchable="false"
         :allowEmpty="false"
-        :trackBy="null"
-        :label="null"
-        @input="role => $emit('update', { role })"
+        @input="({ value: role }) => $emit('update', { role })"
         placeholder="Select new role">
       </multiselect>
     </td>
@@ -32,12 +30,12 @@ export default {
     role: { type: String, required: true },
     roles: { type: Array, required: true }
   },
-  data() {
-    return { selectedRole: this.role };
-  },
   computed: {
+    selectedRole() {
+      return { label: this.role, value: this.role };
+    },
     canChangeRole() {
-      return this.roles.includes(this.role);
+      return this.roles.find(it => it.value === this.role);
     }
   },
   components: {

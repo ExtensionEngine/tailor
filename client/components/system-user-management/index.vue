@@ -31,8 +31,11 @@ import { getUsers, upsertUser, removeUser } from '../../api/system';
 import { role } from 'shared';
 import AddSystemUser from './AddSystemUser';
 import Loader from '../common/Loader';
+import map from 'lodash/map';
 import omit from 'lodash/omit';
 import SystemUser from './SystemUser';
+
+const { INTEGRATION, USER } = role.user;
 
 export default {
   name: 'system-user-management',
@@ -44,10 +47,11 @@ export default {
   },
   computed: {
     defaultRole() {
-      return role.user.USER;
+      return this.roles.find(it => it.value === USER);
     },
     roles() {
-      return Object.values(omit(role.user, role.user.INTEGRATION));
+      const { user: roles } = role;
+      return map(omit(roles, INTEGRATION), it => ({ label: it, value: it }));
     }
   },
   methods: {
