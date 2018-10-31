@@ -1,7 +1,7 @@
 <template>
   <div class="system-users-container">
     <h2>System user management</h2>
-    <loader v-if="showLoader"></loader>
+    <loader v-if="showLoader"/>
     <div v-else class="system-users">
       <add-system-user v-bind="{ defaultRole, roles }" @add="upsertUser"/>
       <table class="table table-striped table-hover">
@@ -18,8 +18,7 @@
             v-bind="{ id, email, role, roles }"
             :key="id"
             @update="data => upsertUser(email, data)"
-            @delete="removeUser(id)">
-          </system-user>
+            @delete="removeUser(id)"/>
         </tbody>
       </table>
     </div>
