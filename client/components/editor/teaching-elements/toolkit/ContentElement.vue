@@ -48,7 +48,7 @@ export default {
   },
   provide() {
     return {
-      $toolbar: EventBus.channel(`element:${this.id}`)
+      $elementBus: EventBus.channel(`element:${this.id}`)
     };
   }
 };
