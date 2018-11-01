@@ -1,9 +1,6 @@
 <template>
-  <div v-if="focusedElement" class="element-toolbar-wrapper">
-    <component
-      :is="componentName"
-      :key="id"
-      :element="focusedElement"/>
+  <div :key="id" class="element-toolbar-wrapper">
+    <component :is="componentName" :element="element" @save="saveElement"/>
     <div class="delete-element">
       <span @click="requestDeleteConfirmation" class="btn btn-fab btn-danger">
         <span class="mdi mdi-delete"></span>
@@ -22,19 +19,19 @@ const appBus = EventBus.channel('app');
 
 export default {
   name: 'element-toolbar-wrapper',
-  data() {
-    return { focusedElement: null };
+  props: {
+    element: { type: Object, required: true }
   },
   computed: {
     id() {
-      return this.focusedElement && getElementId(this.focusedElement);
+      return getElementId(this.element);
     },
     componentName() {
-      return this.focusedElement && getToolbarName(this.focusedElement.type);
+      return getToolbarName(this.element.type);
     }
   },
   methods: {
-    ...mapActions({ removeElement: 'remove' }, 'tes'),
+    ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
     remove(element) {
       // Special case the deletion of tables
       // so it's possible to delete them from cells as well
@@ -59,24 +56,14 @@ export default {
     requestDeleteConfirmation() {
       appBus.emit('showConfirmationModal', {
         type: 'element',
-        item: this.focusedElement,
-        action: () => this.remove(this.focusedElement)
+        item: this.element,
+        action: () => this.remove(this.element)
       });
     }
   },
-  watch: {
-    focusedElement(val) {
-      this.$emit('toggle', !!val);
-    }
-  },
-  created() {
-    EventBus.on('element:focus', element => {
-      this.focusedElement = element;
-    });
-  },
   provide() {
     return {
-      $toolbar: EventBus.channel(`element:${this.id}`)
+      $elementBus: EventBus.channel(`element:${this.id}`)
     };
   }
 };

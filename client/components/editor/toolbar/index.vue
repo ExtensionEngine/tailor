@@ -1,7 +1,7 @@
 <template>
   <div class="toolbar">
-    <element-toolbar @toggle="state => (showDefaultToolbar = !state)"/>
-    <div v-show="showDefaultToolbar" class="toolbar-container editor-toolbar">
+    <element-toolbar v-if="selectedElement" :element="selectedElement"/>
+    <div v-show="!selectedElement" class="toolbar-container editor-toolbar">
       <router-link
         :to="{ name: 'course', params: { courseId } }"
         class="toolbar-btn">
@@ -16,7 +16,7 @@
         <span class="mdi mdi-eye"></span>
       </a>
       <div
-        v-tooltip="`${publishTooltip}`"
+        v-tooltip="publishTooltip"
         :class="{ disabled: publishing }"
         @click="publishActivity"
         class="toolbar-btn btn-alt">
@@ -41,6 +41,7 @@
 import { mapActions, mapGetters } from 'vuex-module';
 import drop from 'lodash/drop';
 import ElementToolbar from '../teaching-elements/toolkit/ElementToolbar';
+import EventBus from 'EventBus';
 import fecha from 'fecha';
 import find from 'lodash/find';
 import format from 'string-template';
@@ -53,7 +54,7 @@ export default {
   name: 'toolbar',
   data() {
     return {
-      showDefaultToolbar: true,
+      selectedElement: null,
       publishing: false
     };
   },
@@ -97,6 +98,11 @@ export default {
     truncate(str, len = 50) {
       return truncate(str, len);
     }
+  },
+  created() {
+    EventBus.on('element:focus', element => {
+      this.selectedElement = element;
+    });
   },
   components: { ElementToolbar }
 };
