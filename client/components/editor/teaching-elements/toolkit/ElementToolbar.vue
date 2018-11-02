@@ -14,11 +14,13 @@ import { getElementId, getToolbarName } from './utils';
 import EventBus from 'EventBus';
 import get from 'lodash/get';
 import { mapActions } from 'vuex-module';
+import { withValidation } from 'utils/validation';
 
 const appBus = EventBus.channel('app');
 
 export default {
   name: 'element-toolbar-wrapper',
+  mixins: [withValidation()],
   props: {
     element: { type: Object, required: true }
   },
