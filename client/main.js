@@ -7,7 +7,7 @@ import 'vue-directive-tooltip/css/index.css';
 
 import { getComponentName, getToolbarName } from './components/editor/teaching-elements/toolkit/utils';
 import AccordionToolbar from './components/editor/toolbar/AccordionToolbar';
-import AudioToolbar from './components/editor/toolbar/AudioToolbar';
+import AudioToolbar from 'tce/tce-audio/edit/Toolbar';
 import BrightcoveVideoToolbar from './components/editor/toolbar/BrightcoveVideoToolbar';
 import CarouselToolbar from './components/editor/toolbar/CarouselToolbar';
 import DefaultToolbar from './components/editor/toolbar/DefaultToolbar';
@@ -20,7 +20,7 @@ import TableToolbar from './components/editor/toolbar/TableToolbar';
 import Timeago from 'vue-timeago';
 import TeAccordion from './components/editor/teaching-elements/Accordion/Accordion';
 import TeAssessment from './components/editor/teaching-elements/Assessment';
-import TeAudio from './components/editor/teaching-elements/Audio';
+import TeAudio from 'tce/tce-audio/edit';
 import TeBreak from './components/editor/teaching-elements/PageBreak';
 import TeBrightcoveVideo from './components/editor/teaching-elements/BrightcoveVideo';
 import TeCarousel from './components/editor/teaching-elements/Carousel/Carousel';

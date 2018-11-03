@@ -1,5 +1,5 @@
 <template>
-  <div class="te-audio">
+  <div class="tce-audio">
     <div v-show="showPlaceholder">
       <div class="audio-placeholder">
         <div class="message">
@@ -36,15 +36,13 @@ import Aplayer from 'vue-aplayer';
 import get from 'lodash/get';
 
 export default {
-  name: 'te-audio',
+  name: 'tce-audio',
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
   },
   data() {
-    return {
-      error: null
-    };
+    return { error: null };
   },
   computed: {
     source() {
@@ -92,14 +90,12 @@ export default {
       });
     }
   },
-  components: {
-    Aplayer
-  }
+  components: { Aplayer }
 };
 </script>
 
 <style lang="scss" scoped>
-.te-audio {
+.tce-audio {
   position: relative;
   min-height: 70px;
 

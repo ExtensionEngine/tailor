@@ -1,5 +1,5 @@
 <template>
-  <div class="audio-toolbar">
+  <div class="tce-audio-toolbar">
     <input
       v-model="url"
       :disabled="!edit"
@@ -7,52 +7,50 @@
       type="text"
       placeholder="URL">
     <button
-      v-if="!edit"
-      @click="edit = true"
-      class="btn btn-default"
-      type="button">
-      Edit
-    </button>
-    <button
       v-if="edit"
       @click="save"
       class="btn btn-success"
       type="button">
       Save
     </button>
+    <button
+      v-else
+      @click="edit = true"
+      class="btn btn-default"
+      type="button">
+      Edit
+    </button>
   </div>
 </template>
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { mapActions } from 'vuex-module';
 
 export default {
-  name: 'audio-toolbar',
+  name: 'tce-audio-toolbar',
   props: {
     element: { type: Object, required: true }
   },
   data() {
     return {
-      edit: !this.element.data.url,
       url: '',
+      edit: !this.element.data.url,
       ...cloneDeep(this.element.data)
     };
   },
   methods: {
-    ...mapActions({ updateElement: 'update' }, 'tes'),
     save() {
       this.edit = false;
-      let element = cloneDeep(this.element);
+      const element = cloneDeep(this.element);
       element.data.url = this.url;
-      this.updateElement(element);
+      this.$emit('save', element);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.audio-toolbar {
+.tce-audio-toolbar {
   position: relative;
   z-index: 999;
   width: 100%;

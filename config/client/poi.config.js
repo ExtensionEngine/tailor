@@ -14,6 +14,7 @@ const aliases = {
   components: path.join(rootPath, 'client/components'),
   shared: path.join(rootPath, 'config/shared'),
   utils: path.join(rootPath, 'client/utils'),
+  tce: path.join(rootPath, 'content-elements'),
   EventBus: path.join(rootPath, 'client/EventBus')
 };
 
