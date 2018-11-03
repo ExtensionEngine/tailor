@@ -1,5 +1,5 @@
 <template>
-  <div class="embed-toolbar">
+  <div class="tce-embed-toolbar">
     <div class="toolbar-item">
       <label for="heightInput">
         <span class="mdi mdi-arrow-expand"></span>
@@ -54,12 +54,10 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import { mapActions } from 'vuex-module';
-import { withValidation } from 'utils/validation';
 
 export default {
-  name: 'embed-toolbar',
-  mixins: [withValidation()],
+  name: 'tce-embed-toolbar',
+  inject: ['$validator'],
   props: {
     element: { type: Object, required: true }
   },
@@ -71,25 +69,24 @@ export default {
     };
   },
   methods: {
-    ...mapActions({ updateElement: 'update' }, 'tes'),
     onChange() {
       const { height, url } = this;
       this.$validator.validateAll().then(isValid => {
         if (!isValid) return;
         const element = cloneDeep(this.element);
-        const data = { ...element.data, height, url };
-        this.save({ ...this.element, data });
+        Object.assign(element.data, { height, url });
+        this.save(element);
       });
     },
     save: debounce(function (element) {
-      this.updateElement(element);
+      this.$emit('save', element);
     }, 700)
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.embed-toolbar {
+.tce-embed-toolbar {
   width: 100%;
   height: 48px;
   padding: 0 30px 0 10px;

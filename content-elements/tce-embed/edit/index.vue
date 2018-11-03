@@ -1,7 +1,7 @@
 <template>
-  <div :style="{ height: height + 'px' }" class="te-embed">
+  <div :style="{ height: `${height}px` }" class="tce-embed">
     <div v-if="showPlaceholder">
-      <div :style="{ height: height + 'px' }" class="well placeholder">
+      <div :style="{ height: `${height}px` }" class="well placeholder">
         <span class="heading">Embed placeholder</span>
         <span v-show="!isFocused" class="message">Select to edit</span>
         <span v-show="isFocused" class="message">Please use toolbar to enter url</span>
@@ -28,18 +28,18 @@
 
 <script>
 export default {
-  name: 'te-embed',
+  name: 'tce-embed',
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false }
   },
   computed: {
-    height() {
-      return this.element.data.height;
-    },
     url() {
       return this.element.data.url;
+    },
+    height() {
+      return this.element.data.height;
     },
     showPlaceholder() {
       return !this.element.data.url;
@@ -53,7 +53,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.te-embed {
+.tce-embed {
   position: relative;
   overflow: auto;
 }
