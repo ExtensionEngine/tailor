@@ -1,5 +1,5 @@
 <template>
-  <div class="image-toolbar">
+  <div class="tce-image-toolbar">
     <ul>
       <li class="btn btn-link btn-sm upload-button">
         <label for="upload" class="upload-label">
@@ -24,12 +24,10 @@
 
 <script>
 import capitalize from 'lodash/capitalize';
-import EventBus from 'EventBus';
 import isEmpty from 'lodash/isEmpty';
 
-const teChannel = EventBus.channel('te');
-
 export default {
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true }
   },
@@ -41,9 +39,6 @@ export default {
   computed: {
     isUploaded() {
       return this.element.data && this.element.data.url;
-    },
-    id() {
-      return this.element._cid || this.element.id;
     }
   },
   methods: {
@@ -53,24 +48,24 @@ export default {
       const reader = new window.FileReader();
       reader.readAsDataURL(image);
       reader.addEventListener('load', e => {
-        teChannel.emit(`${this.id}/upload`, e.target.result);
+        this.$elementBus.emit('upload', e.target.result);
       });
     },
     toggleTool(tool) {
       const show = this.currentTool !== tool;
       const prefix = show ? 'show' : 'hide';
-      teChannel.emit(`${this.id}/${prefix}${capitalize(tool)}`);
+      this.$elementBus.emit(`${prefix}${capitalize(tool)}`);
       this.currentTool = show ? tool : null;
     },
     crop() {
-      teChannel.emit(`${this.id}/crop`);
+      this.$elementBus.emit('crop');
     },
     undo() {
-      teChannel.emit(`${this.id}/undo`);
+      this.$elementBus.emit('undo');
     },
     reset() {
       if (!this.currentTool) return;
-      teChannel.emit(`${this.id}/hide${capitalize(this.currentTool)}`);
+      this.$elementBus.emit(`hide${capitalize(this.currentTool)}`);
       this.currentTool = null;
     }
   },
@@ -81,7 +76,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.image-toolbar {
+.tce-image-toolbar {
   position: relative;
   width: 100%;
   height: 50px;

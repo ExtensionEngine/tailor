@@ -1,5 +1,5 @@
 <template>
-  <div class="te-image">
+  <div class="tce-image">
     <div v-if="showPlaceholder" class="well image-placeholder">
       <div class="message">
         <span class="heading">Image placeholder</span>
@@ -14,7 +14,7 @@
         :auto-crop-area="0.5"
         :autoCrop="false"
         :guides="true"
-        :ready="ready"
+        :ready="onReady"
         :responsive="true"
         :rotatable="false"
         :background="false"
@@ -23,20 +23,16 @@
         :movable="false"
         :modal="false"
         :src="currentImage"
-        drag-mode="none">
-      </cropper>
+        drag-mode="none"/>
       <img v-show="!showCropper" :src="currentImage" class="preview-image">
     </div>
   </div>
 </template>
 
 <script>
-import Cropper from '../../common/Cropper';
-import EventBus from 'EventBus';
+import Cropper from './Cropper';
 import { imgSrcToDataURL } from 'blob-util';
 import isEmpty from 'lodash/isEmpty';
-
-const teChannel = EventBus.channel('te');
 
 function toDataUrl(imageUrl) {
   if (!imageUrl) return Promise.resolve(imageUrl);
@@ -44,7 +40,8 @@ function toDataUrl(imageUrl) {
 }
 
 export default {
-  name: 'te-image',
+  name: 'tce-image',
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
@@ -62,13 +59,10 @@ export default {
       if (imageAvailable) return false;
       if (this.$refs.cropper) this.$refs.cropper.destroy();
       return true;
-    },
-    id() {
-      return this.element._cid || this.element.id;
     }
   },
   methods: {
-    ready() {
+    onReady() {
       if (!this.showCropper || !this.$refs.cropper) return;
       this.$refs.cropper.show();
     },
@@ -95,29 +89,29 @@ export default {
   mounted() {
     toDataUrl(this.element.data.url).then(dataUrl => this.loadImage(dataUrl));
 
-    teChannel.on(`${this.id}/upload`, dataUrl => {
+    this.$elementBus.on('upload', dataUrl => {
       if (this.currentImage) this.$refs.cropper.replace(dataUrl);
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
       this.$emit('save', { url: dataUrl });
     });
 
-    teChannel.on(`${this.id}/showCropper`, () => {
+    this.$elementBus.on('showCropper', () => {
       this.showCropper = true;
       this.$refs.cropper.show();
     });
 
-    teChannel.on(`${this.id}/hideCropper`, () => {
+    this.$elementBus.on('hideCropper', () => {
       this.showCropper = false;
       this.$refs.cropper.clear();
     });
 
-    teChannel.on(`${this.id}/crop`, () => {
+    this.$elementBus.on('crop', () => {
       this.currentImage = this.$refs.cropper.getCroppedCanvas().toDataURL();
       this.$refs.cropper.replace(this.currentImage);
     });
 
-    teChannel.on(`${this.id}/undo`, () => {
+    this.$elementBus.on('undo', () => {
       this.currentImage = this.persistedImage;
       this.$refs.cropper.replace(this.persistedImage);
     });
@@ -125,9 +119,7 @@ export default {
   beforeDestroy() {
     if (this.$refs.cropper) this.$refs.cropper.destroy();
   },
-  components: {
-    Cropper
-  }
+  components: { Cropper }
 };
 </script>
 
