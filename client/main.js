@@ -21,7 +21,7 @@ import Timeago from 'vue-timeago';
 import TeAccordion from './components/editor/teaching-elements/Accordion/Accordion';
 import TeAssessment from './components/editor/teaching-elements/Assessment';
 import TeAudio from 'tce/tce-audio/edit';
-import TeBreak from './components/editor/teaching-elements/PageBreak';
+import TeBreak from 'tce/tce-page-break/edit';
 import TeBrightcoveVideo from 'tce/tce-brightcove-video/edit';
 import TeCarousel from './components/editor/teaching-elements/Carousel/Carousel';
 import TeEmbed from 'tce/tce-embed/edit';
