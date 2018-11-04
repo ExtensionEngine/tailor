@@ -8,7 +8,7 @@ import 'vue-directive-tooltip/css/index.css';
 import { getComponentName, getToolbarName } from './components/editor/teaching-elements/toolkit/utils';
 import AccordionToolbar from './components/editor/toolbar/AccordionToolbar';
 import AudioToolbar from 'tce/tce-audio/edit/Toolbar';
-import BrightcoveVideoToolbar from './components/editor/toolbar/BrightcoveVideoToolbar';
+import BrightcoveVideoToolbar from 'tce/tce-brightcove-video/edit/Toolbar';
 import CarouselToolbar from './components/editor/toolbar/CarouselToolbar';
 import DefaultToolbar from './components/editor/toolbar/DefaultToolbar';
 import EmbedToolbar from 'tce/tce-embed/edit/Toolbar';
@@ -22,7 +22,7 @@ import TeAccordion from './components/editor/teaching-elements/Accordion/Accordi
 import TeAssessment from './components/editor/teaching-elements/Assessment';
 import TeAudio from 'tce/tce-audio/edit';
 import TeBreak from './components/editor/teaching-elements/PageBreak';
-import TeBrightcoveVideo from './components/editor/teaching-elements/BrightcoveVideo';
+import TeBrightcoveVideo from 'tce/tce-brightcove-video/edit';
 import TeCarousel from './components/editor/teaching-elements/Carousel/Carousel';
 import TeEmbed from 'tce/tce-embed/edit';
 import TeHtml from 'tce/tce-html/edit';

@@ -1,5 +1,5 @@
 <template>
-  <div class="te-brightcove-video">
+  <div class="tce-brightcove-video">
     <div v-if="showPlaceholder">
       <div class="well video-placeholder">
         <div class="message">
@@ -27,7 +27,7 @@ import BrightcovePlayer from './Player';
 import get from 'lodash/get';
 
 export default {
-  name: 'te-brightcove-video',
+  name: 'tce-brightcove-video',
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
@@ -51,7 +51,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.te-brightcove-video {
+.tce-brightcove-video {
   position: relative;
 }
 

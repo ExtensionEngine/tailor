@@ -1,5 +1,5 @@
 <template>
-  <div class="brightcove-video-toolbar">
+  <div class="tce-brightcove-toolbar">
     <div class="input-group">
       <div class="row">
         <div class="col-xs-4">
@@ -48,12 +48,12 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
-import { mapActions } from 'vuex-module';
 import pick from 'lodash/pick';
 
 const props = ['accountId', 'playerId', 'videoId'];
 
 export default {
+  name: 'tce-brightcove-toolbar',
   props: {
     element: { type: Object, required: true }
   },
@@ -67,19 +67,18 @@ export default {
     };
   },
   methods: {
-    ...mapActions({ updateElement: 'update' }, 'tes'),
     save() {
       this.edit = false;
-      let element = cloneDeep(this.element);
-      element.data = Object.assign({}, element.data, pick(this, props));
-      this.updateElement(element);
+      const element = cloneDeep(this.element);
+      Object.assign(element.data, pick(this, props));
+      this.$emit('save', element);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.brightcove-video-toolbar {
+.tce-brightcove-toolbar {
   position: relative;
   z-index: 999;
   width: 100%;
