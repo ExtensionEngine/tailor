@@ -1,5 +1,5 @@
 <template>
-  <div class="te-html">
+  <div class="tce-html">
     <div v-if="!isFocused && !content">
       <div class="well text-placeholder">
         <div class="message">
@@ -54,7 +54,7 @@ const options = {
 };
 
 export default {
-  name: 'te-html',
+  name: 'tce-html',
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
@@ -124,7 +124,7 @@ export default {
 </style>
 
 <style lang="scss">
-.te-html {
+.tce-html {
   .ql-editor {
     min-height: 117px;
 

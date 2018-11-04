@@ -2,7 +2,7 @@
   <div
     @mousedown.prevent="() => {}"
     id="quillToolbar"
-    class="quill-toolbar">
+    class="tce-html-toolbar">
     <span class="ql-formats">
       <button class="ql-undo"><span class="icon mdi mdi-undo"></span></button>
       <button class="ql-redo"><span class="icon mdi mdi-redo"></span></button>
@@ -86,12 +86,12 @@
 
 <script>
 export default {
-  name: 'quill-toolbar'
+  name: 'tce-html-toolbar'
 };
 </script>
 
 <style lang="scss">
-.quill-toolbar {
+.tce-html-toolbar {
   display: none;
   position: relative;
   z-index: 999;
@@ -109,11 +109,11 @@ export default {
   }
 }
 
-.quill-toolbar.ql-toolbar {
+.tce-html-toolbar.ql-toolbar {
   display: block;
 }
 
-.quill-toolbar.ql-toolbar.ql-snow {
+.tce-html-toolbar.ql-toolbar.ql-snow {
   border: none;
 }
 </style>
