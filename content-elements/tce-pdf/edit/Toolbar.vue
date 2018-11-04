@@ -1,5 +1,5 @@
 <template>
-  <div class="pdf-toolbar">
+  <div class="tce-pdf-toolbar">
     <div :class="{ visible }" class="new-window">
       <a :href="url" target="_blank">
         <span class="mdi mdi-open-in-new"></span>
@@ -30,10 +30,9 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { mapActions } from 'vuex-module';
 
 export default {
-  name: 'pdf-toolbar',
+  name: 'tce-pdf-toolbar',
   props: {
     element: { type: Object, required: true }
   },
@@ -48,19 +47,18 @@ export default {
     visible() { return this.url || false; }
   },
   methods: {
-    ...mapActions({ updateElement: 'update' }, 'tes'),
     save() {
       this.editing = false;
-      let element = cloneDeep(this.element);
+      const element = cloneDeep(this.element);
       element.data.url = this.url;
-      this.updateElement(element);
+      this.$emit('save', element);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.pdf-toolbar {
+.tce-pdf-toolbar {
   position: relative;
   width: 100%;
   height: 60px;

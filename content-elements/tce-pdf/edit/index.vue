@@ -1,5 +1,5 @@
 <template>
-  <div class="te-pdf">
+  <div class="tce-pdf">
     <div v-show="showPlaceholder">
       <div class="well pdf-placeholder">
         <div class="message">
@@ -42,14 +42,14 @@
 
 <script>
 import get from 'lodash/get';
-import CircularProgress from 'components/common/CircularProgress';
+import CircularProgress from './CircularProgress';
 import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';
 
 const ERR_TIMEOUT = 2500;
 
 export default {
-  name: 'te-pdf',
+  name: 'tce-pdf',
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
@@ -109,7 +109,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.te-pdf {
+.tce-pdf {
   position: relative;
 }
 

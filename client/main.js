@@ -12,9 +12,9 @@ import BrightcoveVideoToolbar from './components/editor/toolbar/BrightcoveVideoT
 import CarouselToolbar from './components/editor/toolbar/CarouselToolbar';
 import DefaultToolbar from './components/editor/toolbar/DefaultToolbar';
 import EmbedToolbar from 'tce/tce-embed/edit/Toolbar';
-import ImageToolbar from './components/editor/toolbar/ImageToolbar';
+import ImageToolbar from 'tce/tce-image/edit/Toolbar';
 import ModalToolbar from './components/editor/toolbar/ModalToolbar';
-import PdfToolbar from './components/editor/toolbar/PdfToolbar';
+import PdfToolbar from 'tce/tce-pdf/edit/Toolbar';
 import QuillToolbar from './components/editor/toolbar/QuillToolbar';
 import TableToolbar from './components/editor/toolbar/TableToolbar';
 import Timeago from 'vue-timeago';
@@ -26,9 +26,9 @@ import TeBrightcoveVideo from './components/editor/teaching-elements/BrightcoveV
 import TeCarousel from './components/editor/teaching-elements/Carousel/Carousel';
 import TeEmbed from 'tce/tce-embed/edit';
 import TeHtml from './components/editor/teaching-elements/Html';
-import TeImage from './components/editor/teaching-elements/Image';
+import TeImage from 'tce/tce-image/edit';
 import TeModal from './components/editor/teaching-elements/Modal';
-import TePdf from './components/editor/teaching-elements/Pdf';
+import TePdf from 'tce/tce-pdf/edit';
 import TeTable from './components/editor/teaching-elements/Table';
 import TeTableCell from './components/editor/teaching-elements/Table/TableCell';
 import TeVideo from './components/editor/teaching-elements/Video';
