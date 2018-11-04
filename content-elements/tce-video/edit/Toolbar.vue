@@ -1,5 +1,5 @@
 <template>
-  <div class="video-toolbar">
+  <div class="tce-video-toolbar">
     <input
       v-model="url"
       :disabled="!edit"
@@ -25,10 +25,9 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { mapActions } from 'vuex-module';
 
 export default {
-  name: 'video-toolbar',
+  name: 'tce-video-toolbar',
   props: {
     element: { type: Object, required: true }
   },
@@ -40,19 +39,18 @@ export default {
     };
   },
   methods: {
-    ...mapActions({ updateElement: 'update' }, 'tes'),
     save() {
       this.edit = false;
       let element = cloneDeep(this.element);
       element.data.url = this.url;
-      this.updateElement(element);
+      this.$emit('save', element);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.video-toolbar {
+.tce-video-toolbar {
   position: relative;
   z-index: 999;
   width: 100%;

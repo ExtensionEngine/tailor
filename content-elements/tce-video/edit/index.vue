@@ -1,5 +1,5 @@
 <template>
-  <div class="te-video">
+  <div class="tce-video">
     <div v-if="showPlaceholder">
       <div class="well video-placeholder">
         <div class="message">
@@ -52,7 +52,7 @@ const CUSTOM_SUBTYPE_MAPPING = {
 };
 
 export default {
-  name: 'te-video',
+  name: 'tce-video',
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
@@ -123,7 +123,7 @@ function handlePlyrErrors(Plyr) {
 </script>
 
 <style lang="scss" scoped>
-.te-video {
+.tce-video {
   position: relative;
 }
 

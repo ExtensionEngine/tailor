@@ -31,10 +31,10 @@ import TeModal from './components/editor/teaching-elements/Modal';
 import TePdf from 'tce/tce-pdf/edit';
 import TeTable from './components/editor/teaching-elements/Table';
 import TeTableCell from './components/editor/teaching-elements/Table/TableCell';
-import TeVideo from './components/editor/teaching-elements/Video';
+import TeVideo from 'tce/tce-video/edit';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
-import VideoToolbar from './components/editor/toolbar/VideoToolbar';
+import VideoToolbar from 'tce/tce-video/edit/Toolbar';
 import Vue from 'vue';
 import { sync } from 'vuex-router-sync';
 
