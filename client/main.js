@@ -13,7 +13,7 @@ import CarouselToolbar from './components/editor/toolbar/CarouselToolbar';
 import DefaultToolbar from './components/editor/toolbar/DefaultToolbar';
 import EmbedToolbar from 'tce/tce-embed/edit/Toolbar';
 import ImageToolbar from 'tce/tce-image/edit/Toolbar';
-import ModalToolbar from './components/editor/toolbar/ModalToolbar';
+import ModalToolbar from 'tce/tce-modal/edit/Toolbar';
 import PdfToolbar from 'tce/tce-pdf/edit/Toolbar';
 import QuillToolbar from 'tce/tce-html/edit/Toolbar';
 import TableToolbar from './components/editor/toolbar/TableToolbar';
@@ -27,7 +27,7 @@ import TeCarousel from './components/editor/teaching-elements/Carousel/Carousel'
 import TeEmbed from 'tce/tce-embed/edit';
 import TeHtml from 'tce/tce-html/edit';
 import TeImage from 'tce/tce-image/edit';
-import TeModal from './components/editor/teaching-elements/Modal';
+import TeModal from 'tce/tce-modal/edit';
 import TePdf from 'tce/tce-pdf/edit';
 import TeTable from './components/editor/teaching-elements/Table';
 import TeTableCell from './components/editor/teaching-elements/Table/TableCell';

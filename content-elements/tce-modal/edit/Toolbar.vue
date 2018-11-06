@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-toolbar">
+  <div class="tce-modal-toolbar">
     <ul>
       <li @click="toggleEdit" class="btn btn-link btn-sm">
         <span class="mdi mdi-pencil"></span>
@@ -21,12 +21,9 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import EventBus from 'EventBus';
-import { mapActions } from 'vuex-module';
-
-const teChannel = EventBus.channel('te');
 
 export default {
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true }
   },
@@ -35,29 +32,23 @@ export default {
       title: this.element.data.title
     };
   },
-  computed: {
-    id() {
-      return this.element._cid || this.element.id;
-    }
-  },
   methods: {
-    ...mapActions(['save'], 'tes'),
     toggleEdit() {
-      teChannel.emit(`${this.id}/toggleEdit`);
+      this.$elementBus.emit('toggleEdit');
     }
   },
   watch: {
     title: debounce(function () {
-      let element = cloneDeep(this.element);
+      const element = cloneDeep(this.element);
       element.data.title = this.title;
-      this.save(element);
+      this.$emit('save', element);
     }, 500)
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.modal-toolbar {
+.tce-modal-toolbar {
   position: relative;
   width: 100%;
   height: 50px;

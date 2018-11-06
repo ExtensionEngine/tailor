@@ -3,12 +3,11 @@
     <div slot="header"></div>
     <div slot="body">
       <div class="row">
-        <primitive
+        <content-element
           v-for="it in elements"
           :key="it.id"
-          :initialElement="it"
-          :disabled="true">
-        </primitive>
+          :element="it"
+          :isDisabled="true"/>
       </div>
     </div>
     <div slot="footer">
@@ -20,11 +19,11 @@
 </template>
 
 <script>
-import Modal from 'components/common/Modal';
-import Primitive from '../Primitive';
+import { ContentElement } from 'tce-core';
+import Modal from './Modal';
 
 export default {
-  name: 'te-modal-preview',
+  name: 'tce-modal-preview',
   props: {
     elements: { type: Array, default: () => ([]) }
   },
@@ -40,8 +39,8 @@ export default {
     this.visible = true;
   },
   components: {
-    Modal,
-    Primitive
+    ContentElement,
+    Modal
   }
 };
 </script>

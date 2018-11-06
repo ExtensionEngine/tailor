@@ -9,7 +9,7 @@
       slot-scope="{ element, isDragged }"
       :element="element"
       :isDragged="isDragged"
-      @save="data => saveItem(item, data)"/>
+      @save="data => saveItem(element, data)"/>
   </element-list>
 </template>
 
