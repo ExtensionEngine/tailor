@@ -1,5 +1,6 @@
 'use strict';
 
+const { getFromSameLevel } = require('../../config/shared/activities');
 const { Model } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isEmpty = require('lodash/isEmpty');
@@ -137,11 +138,10 @@ class Activity extends Model {
     return this.update({ refs }, { transaction });
   }
 
-  siblings() {
-    return Activity.findAll({
-      where: { parentId: this.parentId, courseId: this.courseId },
-      order: [['position', 'ASC']]
-    });
+  siblings(filter = {}) {
+    const { parentId, courseId } = this;
+    const where = { ...filter, parentId, courseId };
+    return Activity.findAll({ where, order: [['position', 'ASC']] });
   }
 
   predecessors() {
@@ -192,11 +192,17 @@ class Activity extends Model {
 
   reorder(index) {
     return this.sequelize.transaction(t => {
-      return this.siblings().then(siblings => {
+      const filter = this.getReorderFilter();
+      return this.siblings(filter).then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
         return this.save({ transaction: t });
       });
     });
+  }
+
+  getReorderFilter() {
+    const types = getFromSameLevel(this.type).map(it => it.type);
+    return { type:{ $in: types } };
   }
 }
 
