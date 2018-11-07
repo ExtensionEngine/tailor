@@ -1,5 +1,5 @@
 <template>
-  <div class="carousel-toolbar">
+  <div class="tce-carousel-toolbar">
     <ul>
       <li @click="add" class="btn btn-link btn-sm">
         <span class="mdi mdi-plus"></span>
@@ -36,14 +36,10 @@
 
 <script>
 import debounce from 'lodash/debounce';
-import EventBus from 'EventBus';
-import { withValidation } from 'utils/validation';
-
-const teChannel = EventBus.channel('te');
 
 export default {
-  name: 'carousel-toolbar',
-  mixins: [withValidation()],
+  name: 'tce-carousel-toolbar',
+  inject: ['$elementBus', '$validator'],
   props: {
     element: { type: Object, required: true }
   },
@@ -54,16 +50,16 @@ export default {
   },
   methods: {
     add() {
-      teChannel.emit(`${this.element._cid}/add`);
+      this.$elementBus.emit('add');
     },
     remove() {
-      teChannel.emit(`${this.element._cid}/remove`);
+      this.$elementBus.emit('remove');
     }
   },
   watch: {
     height: debounce(function () {
       if (!this.vErrors.has('height')) {
-        teChannel.emit(`${this.element._cid}/height`, this.height);
+        this.$elementBus.emit('height', this.height);
       }
     }, 2000)
   }
@@ -71,7 +67,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.carousel-toolbar {
+.tce-carousel-toolbar {
   position: relative;
   width: 100%;
   height: 48px;

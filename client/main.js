@@ -9,7 +9,7 @@ import { getComponentName, getToolbarName } from './components/editor/teaching-e
 import AccordionToolbar from 'tce/tce-accordion/edit/Toolbar';
 import AudioToolbar from 'tce/tce-audio/edit/Toolbar';
 import BrightcoveVideoToolbar from 'tce/tce-brightcove-video/edit/Toolbar';
-import CarouselToolbar from './components/editor/toolbar/CarouselToolbar';
+import CarouselToolbar from 'tce/tce-carousel/edit/Toolbar';
 import DefaultToolbar from './components/editor/toolbar/DefaultToolbar';
 import EmbedToolbar from 'tce/tce-embed/edit/Toolbar';
 import ImageToolbar from 'tce/tce-image/edit/Toolbar';
@@ -23,7 +23,7 @@ import TeAssessment from './components/editor/teaching-elements/Assessment';
 import TeAudio from 'tce/tce-audio/edit';
 import TeBreak from 'tce/tce-page-break/edit';
 import TeBrightcoveVideo from 'tce/tce-brightcove-video/edit';
-import TeCarousel from './components/editor/teaching-elements/Carousel/Carousel';
+import TeCarousel from 'tce/tce-carousel/edit';
 import TeEmbed from 'tce/tce-embed/edit';
 import TeHtml from 'tce/tce-html/edit';
 import TeImage from 'tce/tce-image/edit';
