@@ -17,38 +17,19 @@
         <div v-if="!hasElements" class="well">
           Click the button below to Create your first teaching element.
         </div>
-        <draggable
-          :list="elements"
-          :options="dragOptions"
-          @update="reorder"
-          class="row">
-          <primitive
-            v-for="element in elements"
-            :key="element.id"
-            :initialElement="element"
-            :drag="true"
-            @save="saveBodyElement">
-          </primitive>
-        </draggable>
-        <add-element
-          :include="['HTML', 'IMAGE']"
-          :layout="true"
-          @add="addElement"
-          class="add-element">
-        </add-element>
+        <embedded-container
+          :container="{ embeds }"
+          @save="({ embeds }) => save(item, embeds)"/>
       </div>
     </transition>
   </li>
 </template>
 
 <script>
-import AddElement from '../../structure/AddElement';
-import calculatePosition from 'utils/calculatePosition.js';
 import cloneDeep from 'lodash/cloneDeep';
-import Draggable from 'vuedraggable';
-import pick from 'lodash/pick';
-import Primitive from '../Primitive';
-import toArray from 'lodash/toArray';
+import { EmbeddedContainer } from 'tce-core';
+import forEach from 'lodash/forEach';
+import isEmpty from 'lodash/isEmpty';
 
 export default {
   name: 'accordion-item',
@@ -58,31 +39,17 @@ export default {
   },
   data() {
     return {
-      dragOptions: { handle: '.drag-handle' },
       header: this.item.header,
       isCollapsed: true,
       isEditingHeader: false
     };
   },
   computed: {
-    elements() {
-      return toArray(pick(this.embeds, Object.keys(this.item.body)))
-        .sort((a, b) => a.position - b.position);
-    },
     hasElements() {
-      return !!this.elements.length;
+      return !isEmpty(this.embeds);
     }
   },
   methods: {
-    reorder({ newIndex: newPosition }) {
-      const items = cloneDeep(this.elements);
-      const isFirstChild = newPosition === 0;
-      const context = { items, newPosition, isFirstChild };
-      const newElementPosition = calculatePosition(context);
-      const element = cloneDeep(items[newPosition]);
-      element.position = newElementPosition;
-      this.$emit('save', { element });
-    },
     toggle() {
       this.isCollapsed = !this.isCollapsed;
     },
@@ -92,28 +59,18 @@ export default {
     },
     saveHeader() {
       this.isEditingHeader = false;
-      this.$emit('save', { item: { ...this.item, header: this.header } });
+      this.save({ ...this.item, header: this.header }, this.embeds);
     },
-    saveBodyElement(element) {
-      if (this.item.body && !this.item.body[element.id]) return;
-      this.$emit('save', { element: cloneDeep(element) });
-    },
-    addElement(element) {
-      let item = cloneDeep(this.item);
-      item.body[element.id] = true;
-      element = cloneDeep(element);
-      element.position = Object.keys(item.body).length;
-      this.$emit('save', { item, element });
+    save(item, embeds = {}) {
+      item = cloneDeep(item);
+      forEach(embeds, it => (item.body[it.id] = true));
+      this.$emit('save', { item, embeds });
     },
     deleteItem() {
       this.$emit('delete', this.item.id);
     }
   },
-  components: {
-    AddElement,
-    Draggable,
-    Primitive
-  }
+  components: { EmbeddedContainer }
 };
 </script>
 

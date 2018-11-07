@@ -1,5 +1,5 @@
 <template>
-  <div class="accordion-toolbar">
+  <div class="tce-accordion-toolbar">
     <ul>
       <li @click="add" class="btn btn-link btn-sm">
         <span class="mdi mdi-plus"></span> Add item
@@ -9,25 +9,22 @@
 </template>
 
 <script>
-import EventBus from 'EventBus';
-
-const teChannel = EventBus.channel('te');
-
 export default {
-  name: 'accordion-toolbar',
+  name: 'tce-accordion-toolbar',
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true }
   },
   methods: {
     add() {
-      teChannel.emit(`${this.element._cid}/add`);
+      this.$elementBus.emit('add');
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.accordion-toolbar {
+.tce-accordion-toolbar {
   position: relative;
   width: 100%;
   height: 48px;

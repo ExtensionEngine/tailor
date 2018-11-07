@@ -6,7 +6,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
 import { getComponentName, getToolbarName } from './components/editor/teaching-elements/toolkit/utils';
-import AccordionToolbar from './components/editor/toolbar/AccordionToolbar';
+import AccordionToolbar from 'tce/tce-accordion/edit/Toolbar';
 import AudioToolbar from 'tce/tce-audio/edit/Toolbar';
 import BrightcoveVideoToolbar from 'tce/tce-brightcove-video/edit/Toolbar';
 import CarouselToolbar from './components/editor/toolbar/CarouselToolbar';
@@ -18,7 +18,7 @@ import PdfToolbar from 'tce/tce-pdf/edit/Toolbar';
 import QuillToolbar from 'tce/tce-html/edit/Toolbar';
 import TableToolbar from './components/editor/toolbar/TableToolbar';
 import Timeago from 'vue-timeago';
-import TeAccordion from './components/editor/teaching-elements/Accordion/Accordion';
+import TeAccordion from 'tce/tce-accordion/edit';
 import TeAssessment from './components/editor/teaching-elements/Assessment';
 import TeAudio from 'tce/tce-audio/edit';
 import TeBreak from 'tce/tce-page-break/edit';
