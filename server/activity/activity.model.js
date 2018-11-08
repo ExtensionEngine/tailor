@@ -138,10 +138,11 @@ class Activity extends Model {
     return this.update({ refs }, { transaction });
   }
 
-  siblings(filter = {}) {
+  siblings({ filter = {}, transaction }) {
     const { parentId, courseId } = this;
     const where = { ...filter, parentId, courseId };
-    return Activity.findAll({ where, order: [['position', 'ASC']] });
+    const options = { where, order: [['position', 'ASC']], transaction };
+    return Activity.findAll(options);
   }
 
   predecessors() {
@@ -191,12 +192,12 @@ class Activity extends Model {
   }
 
   reorder(index) {
-    return this.sequelize.transaction(t => {
+    return this.sequelize.transaction(transaction => {
       const types = getSiblingLevels(this.type).map(it => it.type);
-      const filter = { type:{ $in: types } };
-      return this.siblings(filter).then(siblings => {
+      const filter = { type: { $in: types } };
+      return this.siblings({ filter, transaction }).then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
-        return this.save({ transaction: t });
+        return this.save({ transaction });
       });
     });
   }
