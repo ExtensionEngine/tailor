@@ -1,6 +1,11 @@
 <template>
   <div :key="id" class="element-toolbar-wrapper">
-    <component :is="componentName" :element="element" @save="saveElement"/>
+    <component
+      :is="componentName"
+      :element="element"
+      :embed="embed"
+      @save="saveElement"/>
+    <slot></slot>
     <div class="delete-element">
       <span @click="requestDeleteConfirmation" class="btn btn-fab btn-danger">
         <span class="mdi mdi-delete"></span>
@@ -12,7 +17,6 @@
 <script>
 import { getElementId, getToolbarName } from './utils';
 import EventBus from 'EventBus';
-import get from 'lodash/get';
 import { mapActions } from 'vuex-module';
 import { withValidation } from 'utils/validation';
 
@@ -22,7 +26,8 @@ export default {
   name: 'element-toolbar-wrapper',
   mixins: [withValidation()],
   props: {
-    element: { type: Object, required: true }
+    element: { type: Object, required: true },
+    embed: { type: Object, default: null }
   },
   computed: {
     id() {
@@ -35,21 +40,11 @@ export default {
   methods: {
     ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
     remove(element) {
-      // Special case the deletion of tables
-      // so it's possible to delete them from cells as well
-      if (element.type === 'TABLE-CELL') {
-        const tableElement = find(this.tes, te => !!get(te, `data.embeds.${element.id}`));
-        this.removeElement(tableElement);
-        this.focusoutElement();
-        return;
-      }
-
       if (element.embedded) {
         appBus.emit('deleteElement', element);
       } else {
         this.removeElement(element);
       }
-
       this.focusoutElement();
     },
     focusoutElement() {

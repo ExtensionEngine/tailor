@@ -1,6 +1,6 @@
 <template>
-  <div id="tableToolbar" class="table-toolbar">
-    <span class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
+  <div class="tce-table-toolbar">
+    <span v-if="embed" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
       <span class="mdi mdi-table"></span>
       Table
     </span>
@@ -8,35 +8,16 @@
       <li
         v-for="action in actions"
         :key="action.name"
-        :disabled="!isCell"
         @click="trigger(action.name)"
         class="btn btn-link btn-sm">
         {{ action.label }}
       </li>
     </ul>
-    <div v-if="isCell" class="quill-options">
-      <span class="quill-group">
-        <span class="ql-formats">
-          <button class="ql-bold"></button>
-          <button class="ql-italic"></button>
-          <button class="ql-underline"></button>
-        </span>
-      </span>
-      <span class="quill-group">
-        <span class="ql-formats">
-          <button class="ql-link" type="button"></button>
-        </span>
-      </span>
-    </div>
   </div>
 </template>
 
 <script>
-import EventBus from 'EventBus';
-
-const teChannel = EventBus.channel('te');
-
-const actions = [
+const actions = () => [
   { name: 'addRowBefore', label: 'Add row before' },
   { name: 'addRowAfter', label: 'Add row after' },
   { name: 'addColumnBefore', label: 'Add column before' },
@@ -46,38 +27,23 @@ const actions = [
 ];
 
 export default {
-  name: 'table-toolbar',
+  name: 'tce-table-toolbar',
+  inject: ['$elementBus'],
   props: {
-    element: { type: Object, required: true }
+    element: { type: Object, required: true },
+    embed: { type: Object, default: null }
   },
-  data() {
-    return {
-      actions
-    };
-  },
-  computed: {
-    isCell() {
-      return this.element.type === 'TABLE-CELL';
-    }
-  },
+  computed: { actions },
   methods: {
     trigger(action) {
-      this[action]();
+      this.$elementBus.emit(action, this.embed.id);
     }
-  },
-  mounted() {
-    actions.forEach(action => {
-      this[action.name] = () => {
-        const { tableId, cellId } = this.element.data;
-        teChannel.emit(`${tableId}/${action.name}`, cellId);
-      };
-    });
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.table-toolbar {
+.tce-table-toolbar {
   position: relative;
   width: 100%;
   height: 48px;
@@ -133,7 +99,7 @@ export default {
   }
 }
 
-.table-toolbar.ql-toolbar.ql-snow {
+.tce-table-toolbar.ql-toolbar.ql-snow {
   padding: 0;
   border: none;
   font-family: inherit;

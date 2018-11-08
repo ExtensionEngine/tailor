@@ -1,6 +1,6 @@
 <template>
   <div class="tce-html">
-    <div v-if="!isFocused && !content">
+    <div v-if="!isFocused && !content && showPlaceholder">
       <div class="well text-placeholder">
         <div class="message">
           <span class="heading">Text placeholder</span>
@@ -57,7 +57,8 @@ export default {
   name: 'tce-html',
   props: {
     element: { type: Object, required: true },
-    isFocused: { type: Boolean, default: false }
+    isFocused: { type: Boolean, default: false },
+    showPlaceholder: { type: Boolean, default: true }
   },
   data() {
     return {

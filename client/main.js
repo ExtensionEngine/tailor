@@ -16,7 +16,7 @@ import ImageToolbar from 'tce/tce-image/edit/Toolbar';
 import ModalToolbar from 'tce/tce-modal/edit/Toolbar';
 import PdfToolbar from 'tce/tce-pdf/edit/Toolbar';
 import QuillToolbar from 'tce/tce-html/edit/Toolbar';
-import TableToolbar from './components/editor/toolbar/TableToolbar';
+import TableToolbar from 'tce/tce-table/edit/Toolbar';
 import Timeago from 'vue-timeago';
 import TeAccordion from 'tce/tce-accordion/edit';
 import TeAssessment from './components/editor/teaching-elements/Assessment';
@@ -29,8 +29,7 @@ import TeHtml from 'tce/tce-html/edit';
 import TeImage from 'tce/tce-image/edit';
 import TeModal from 'tce/tce-modal/edit';
 import TePdf from 'tce/tce-pdf/edit';
-import TeTable from './components/editor/teaching-elements/Table';
-import TeTableCell from './components/editor/teaching-elements/Table/TableCell';
+import TeTable from 'tce/tce-table/edit';
 import TeVideo from 'tce/tce-video/edit';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
@@ -56,8 +55,7 @@ const contentElements = [
   { element: TeModal, toolbar: ModalToolbar, type: 'MODAL' },
   { element: TePdf, toolbar: PdfToolbar, type: 'PDF' },
   { element: TeAudio, toolbar: AudioToolbar, type: 'AUDIO' },
-  { element: TeTable, toolbar: TableToolbar, type: 'TABLE' },
-  { element: TeTableCell, toolbar: QuillToolbar, type: 'TABLE-CELL' }
+  { element: TeTable, toolbar: TableToolbar, type: 'TABLE' }
 ];
 
 contentElements.forEach(it => {

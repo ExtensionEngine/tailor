@@ -1,6 +1,6 @@
 <template>
   <div class="editor-wrapper">
-    <toolbar></toolbar>
+    <toolbar/>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
       <circular-progress v-if="showLoader"></circular-progress>
       <div v-else>

@@ -1,6 +1,18 @@
 <template>
   <div class="toolbar">
-    <element-toolbar v-if="selectedElement" :element="selectedElement"/>
+    <element-toolbar
+      v-if="selectedComposite"
+      :key="selectedElement.id || selectedElement._cid"
+      :element="selectedComposite"
+      :embed="selectedElement">
+      <slot>
+        <element-toolbar :element="selectedElement"/>
+      </slot>
+    </element-toolbar>
+    <element-toolbar
+      v-else-if="selectedElement"
+      :key="selectedElement.id || selectedElement._cid"
+      :element="selectedElement"/>
     <div v-show="!selectedElement" class="toolbar-container editor-toolbar">
       <router-link
         :to="{ name: 'course', params: { courseId } }"
@@ -55,6 +67,7 @@ export default {
   data() {
     return {
       selectedElement: null,
+      selectedComposite: null,
       publishing: false
     };
   },
@@ -100,8 +113,9 @@ export default {
     }
   },
   created() {
-    EventBus.on('element:focus', element => {
+    EventBus.on('element:focus', (element, composite) => {
       this.selectedElement = element;
+      this.selectedComposite = composite;
     });
   },
   components: { ElementToolbar }

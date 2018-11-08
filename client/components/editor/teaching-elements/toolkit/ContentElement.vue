@@ -1,9 +1,10 @@
 <template>
   <div
-    :class="{ focused: isFocused }"
+    :class="{ focused: isFocused, frame }"
     @click="focus"
     class="content-element">
     <component
+      v-bind="$attrs"
       :is="componentName"
       :element="element"
       :isFocused="isFocused"
@@ -18,10 +19,13 @@ import EventBus from 'EventBus';
 
 export default {
   name: 'content-element',
+  inheritAttrs: false,
   props: {
     element: { type: Object, required: true },
+    parent: { type: Object, default: null },
     isDragged: { type: Boolean, default: false },
-    isDisabled: { type: Boolean, default: false }
+    isDisabled: { type: Boolean, default: false },
+    frame: { type: Boolean, default: true }
   },
   data() {
     return { isFocused: false };
@@ -37,13 +41,14 @@ export default {
   methods: {
     focus(e) {
       if (this.isDisabled || e.component) return;
-      EventBus.emit('element:focus', this.element);
+      EventBus.emit('element:focus', this.element, this.parent);
       e.component = { name: 'content-element', data: this.element };
     }
   },
   created() {
     EventBus.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
+      this.$emit('focus', this.isFocused);
     });
   },
   provide() {
@@ -57,12 +62,15 @@ export default {
 <style lang="scss" scoped>
 .content-element {
   position: relative;
-  padding: 10px 20px;
-  border: 1px dotted #ccc;
 
   &.focused {
     border: 1px solid #90a4ae;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
   }
+}
+
+.frame {
+  padding: 10px 20px;
+  border: 1px dotted #ccc;
 }
 </style>

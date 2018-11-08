@@ -1,5 +1,5 @@
 <template>
-  <div class="table">
+  <div class="tce-table">
     <div
       v-for="row in table"
       :key="row.id"
@@ -7,10 +7,10 @@
       <table-cell
         v-for="cell in cells(row)"
         :key="cell.id"
-        :element="embeds[cell.id]"
+        :cell="embeds[cell.id]"
+        :table="element"
         :disabled="disabled"
-        @save="saveCell">
-      </table-cell>
+        @save="saveCell"/>
     </div>
   </div>
 </template>
@@ -18,18 +18,14 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import EventBus from 'EventBus';
 import find from 'lodash/find';
 import first from 'lodash/first';
 import forEach from 'lodash/forEach';
 import last from 'lodash/last';
-import { mapActions, mapMutations } from 'vuex-module';
 import size from 'lodash/size';
 import sortBy from 'lodash/sortBy';
 import TableCell from './TableCell';
 import times from 'lodash/times';
-
-const teChannel = EventBus.channel('te');
 
 const MIN_ROWS = 1;
 const MIN_COLUMNS = 1;
@@ -92,7 +88,8 @@ function removeEmbed(embeds, predicate = {}) {
 }
 
 export default {
-  name: 'te-table',
+  name: 'tce-table',
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false }
@@ -109,8 +106,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ saveElement: 'save' }, 'tes'),
-    ...mapMutations(['focusElement'], 'editor'),
     cells(row) {
       return sortBy(row.cells, 'position');
     },
@@ -131,7 +126,7 @@ export default {
         addEmbed(embeds, cellId, tableId);
       });
       rows[newRow.id] = newRow;
-      this.saveElement(element);
+      this.$emit('save', element.data);
     },
     addColumn(cellId, direction = Direction.AFTER) {
       const row = this.findRow(cellId);
@@ -141,7 +136,6 @@ export default {
 
       let element = cloneDeep(this.element);
       let { tableId, rows, embeds } = element.data;
-
       const position = calculateInsertPosition(row.cells, cell, direction);
       forEach(rows, row => {
         const cellId = cuid();
@@ -149,7 +143,7 @@ export default {
         addEmbed(embeds, cellId, tableId);
       });
 
-      this.saveElement(element);
+      this.$emit('save', element.data);
     },
     removeRow(cellId) {
       const row = this.findRow(cellId);
@@ -192,7 +186,6 @@ export default {
         embeds = cloneDeep(this.embeds);
         embeds[element.id] = element;
       }
-
       this.$emit('save', { embeds });
     }
   },
@@ -216,20 +209,20 @@ export default {
     this.$emit('save', { tableId, embeds, rows });
   },
   mounted() {
-    const { tableId } = this.element.data;
-    teChannel.on(`${tableId}/addRowBefore`, id => this.addRow(id, Direction.BEFORE));
-    teChannel.on(`${tableId}/addRowAfter`, id => this.addRow(id, Direction.AFTER));
-    teChannel.on(`${tableId}/addColumnBefore`, id => this.addColumn(id, Direction.BEFORE));
-    teChannel.on(`${tableId}/addColumnAfter`, id => this.addColumn(id, Direction.AFTER));
-    teChannel.on(`${tableId}/removeRow`, id => this.removeRow(id));
-    teChannel.on(`${tableId}/removeColumn`, id => this.removeColumn(id));
+    const { $elementBus: bus } = this;
+    bus.on('addRowBefore', id => this.addRow(id, Direction.BEFORE));
+    bus.on('addRowAfter', id => this.addRow(id, Direction.AFTER));
+    bus.on('addColumnBefore', id => this.addColumn(id, Direction.BEFORE));
+    bus.on('addColumnAfter', id => this.addColumn(id, Direction.AFTER));
+    bus.on('removeRow', id => this.removeRow(id));
+    bus.on('removeColumn', id => this.removeColumn(id));
   },
   components: { TableCell }
 };
 </script>
 
 <style lang="scss" scoped>
-.table {
+.tce-table {
   display: table;
   border-collapse: collapse;
 
