@@ -32,7 +32,7 @@ module.exports = {
   getOutlineLevels,
   getObjectives,
   getLevel,
-  getFromSameLevel,
+  getSiblingLevels,
   isEditable: activityType => {
     const config = getLevel(activityType);
     const hasContainers = !!getSupportedContainers(activityType).length;
@@ -62,7 +62,7 @@ function getLevel(type) {
   return schemaId && find(getOutlineLevels(schemaId), { type });
 }
 
-function getFromSameLevel(type) {
+function getSiblingLevels(type) {
   const schemaId = getSchemaId(type);
   if (!schemaId) return [{ type }];
   const levels = getOutlineLevels(schemaId);
