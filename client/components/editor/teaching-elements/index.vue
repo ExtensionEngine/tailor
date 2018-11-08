@@ -9,7 +9,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import ContainedContent from './toolkit/ContainedContent';
+import { ContainedContent } from 'tce-core';
 import { mapActions } from 'vuex-module';
 
 export default {

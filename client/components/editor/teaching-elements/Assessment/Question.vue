@@ -26,7 +26,7 @@
 <script>
 import AddElement from '../../structure/AddElement';
 import cloneDeep from 'lodash/cloneDeep';
-import ContainedContent from '../toolkit/ContainedContent';
+import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
 import findIndex from 'lodash/findIndex';
 import { helperText } from 'utils/assessment';

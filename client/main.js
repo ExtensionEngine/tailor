@@ -5,7 +5,7 @@ import 'event-source-polyfill';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
-import { getComponentName, getToolbarName } from './components/editor/teaching-elements/toolkit/utils';
+import { getComponentName, getToolbarName } from 'tce-core/utils';
 import AccordionToolbar from 'tce/tce-accordion/edit/Toolbar';
 import AudioToolbar from 'tce/tce-audio/edit/Toolbar';
 import BrightcoveVideoToolbar from 'tce/tce-brightcove-video/edit/Toolbar';

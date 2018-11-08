@@ -52,7 +52,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 import drop from 'lodash/drop';
-import ElementToolbar from '../teaching-elements/toolkit/ElementToolbar';
+import { ElementToolbar } from 'tce-core';
 import EventBus from 'EventBus';
 import fecha from 'fecha';
 import find from 'lodash/find';
