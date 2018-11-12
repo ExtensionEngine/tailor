@@ -18,9 +18,9 @@
             </span>
           </div>
           <input
+            v-focus="{ groupKey }"
             :ref="`group${groupKey}`"
             :value="groupName"
-            v-focus="{ groupKey }"
             @change="updateGroupName(groupKey)"
             @keyup.enter.esc="focus(groupKey)"
             @blur="isFocused(groupKey) && focus(groupKey)"
@@ -46,9 +46,9 @@
               </span>
             </div>
             <input
+              v-focus="{ groupKey, answerKey }"
               :ref="`answer${answerKey}`"
               :value="answer"
-              v-focus="{ groupKey, answerKey }"
               @change="updateAnswer(answerKey)"
               @keyup.enter.esc="focus(groupKey, answerKey)"
               @blur="isFocused(groupKey, answerKey) && focus(groupKey, answerKey)"
@@ -66,6 +66,7 @@
 </template>
 
 <script>
+import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import forEach from 'lodash/forEach';
@@ -74,9 +75,9 @@ import pull from 'lodash/pull';
 
 export default {
   props: {
-    assessment: Object,
-    isEditing: Boolean,
-    errors: Array
+    assessment: { type: Object, default: defaults.DD },
+    isEditing: { type: Boolean, default: false },
+    errors: { type: Array, default: () => ([]) }
   },
   data() {
     return {

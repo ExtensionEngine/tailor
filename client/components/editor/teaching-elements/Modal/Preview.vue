@@ -25,17 +25,19 @@ import Primitive from '../Primitive';
 
 export default {
   name: 'te-modal-preview',
-  props: ['elements'],
+  props: {
+    elements: { type: Array, default: () => ([]) }
+  },
   data() {
     return { visible: false };
-  },
-  mounted() {
-    this.visible = true;
   },
   watch: {
     visible(val) {
       if (!val) setTimeout(() => this.$emit('close'), 0);
     }
+  },
+  mounted() {
+    this.visible = true;
   },
   components: {
     Modal,

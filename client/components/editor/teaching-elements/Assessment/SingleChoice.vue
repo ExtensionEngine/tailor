@@ -8,7 +8,9 @@
       <span class="mdi mdi-plus"></span>
     </button>
     <ul>
-      <li v-for="(answer, index) in answers">
+      <li
+        v-for="(answer, index) in answers"
+        :key="index">
         <span :class="{ 'has-error': correctError }" class="answers-radio">
           <input
             :checked="correct === index"
@@ -34,6 +36,7 @@
 </template>
 
 <script>
+import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import range from 'lodash/range';
 
@@ -44,9 +47,9 @@ const customAlert = {
 
 export default {
   props: {
-    assessment: Object,
-    isEditing: Boolean,
-    errors: Array
+    assessment: { type: Object, default: defaults.SC },
+    errors: { type: Array, default: () => ([]) },
+    isEditing: { type: Boolean, default: false }
   },
   computed: {
     answers() {

@@ -21,13 +21,13 @@
 import Multiselect from 'vue-multiselect';
 
 export default {
-  name: 'select',
+  name: 'v-select',
   inheritAttrs: true,
-  props: [
-    'value',
-    'inputPlacement',
-    'showReset'
-  ],
+  props: {
+    value: { type: [Object, Array, String, Number], default: null },
+    inputPlacement: { type: String, default: 'bottom' },
+    showReset: { type: Boolean, default: false }
+  },
   data() {
     return { isOpen: false };
   },

@@ -3,6 +3,7 @@
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const first = require('lodash/first');
+const flatMap = require('lodash/flatMap');
 const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
 const last = require('lodash/last');
@@ -10,6 +11,7 @@ const map = require('lodash/map');
 const mergeConfig = require('../utils/mergeConfig');
 const parseSchemas = require('./schema-parser');
 const sortBy = require('lodash/sortBy');
+const union = require('lodash/union');
 
 const defaultConfiguration = require('./activities-rc');
 const customConfiguration = require('./activities-rc.load')();
@@ -25,10 +27,13 @@ module.exports = {
   getSchema,
   getSchemaId,
   getRepositoryMeta,
+  getLevelRelationships,
+  getRepositoryRelationships,
   getOutlineLevels,
   getObjectives,
   getLevel,
   getContentContainer,
+  getSiblingLevels,
   isEditable: activityType => {
     const config = getLevel(activityType);
     const hasContainers = !!getSupportedContainers(activityType).length;
@@ -56,6 +61,15 @@ function getOutlineLevels(schemaId) {
 function getLevel(type) {
   const schemaId = getSchemaId(type);
   return schemaId && find(getOutlineLevels(schemaId), { type });
+}
+
+function getSiblingLevels(type) {
+  const schemaId = getSchemaId(type);
+  if (!schemaId) return [{ type }];
+  const levels = getOutlineLevels(schemaId);
+  const { level } = find(levels, { type }) || {};
+  if (!level) return [{ type }];
+  return filter(levels, { level });
 }
 
 function getSupportedContainers(type) {
@@ -90,4 +104,14 @@ function getContentContainer(schemaId, containerType) {
   const schemaConfig = get(schema, 'contentContainers', []);
   return find(schemaConfig, { type: containerType }) ||
          find(defaultConfig, { type: containerType });
+}
+
+function getLevelRelationships(type) {
+  return get(getLevel(type), 'relationships', []);
+}
+
+function getRepositoryRelationships(schemaId) {
+  const structure = getOutlineLevels(schemaId);
+  return flatMap(structure, it => it.relationships)
+    .reduce((acc, { type }) => union(acc, [type]), []);
 }

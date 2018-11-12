@@ -1,10 +1,10 @@
 <template>
   <div class="add-element">
-    <div @click="toggleSelection"
-        :class="[locked ? 'locked' : 'unlocked']"
-        class="btn-base"
-        v-tooltip="tooltipConfig"
-    >
+    <div
+      v-tooltip="tooltipConfig"
+      :class="[locked ? 'locked' : 'unlocked']"
+      @click="toggleSelection"
+      class="btn-base">
       <span
         :class="[selectionOpened ? 'btn-close' : 'btn-open']"
         class="mdi mdi-plus toggle-selection">
@@ -25,9 +25,9 @@
 </template>
 
 <script>
+import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import { defaults } from 'utils/assessment';
 import isFunction from 'lodash/isFunction';
 import SelectElement from './SelectElement';
 import SelectWidth from './SelectWidth';
@@ -35,10 +35,10 @@ import SelectWidth from './SelectWidth';
 export default {
   name: 'add-element',
   props: {
-    include: { type: Array, default() { return []; } },
-    activity: { type: Object, required: true },
-    position: { type: Number, default: 1 },
-    layout: { type: Boolean, default: false },
+    activity: { type: Object, default: null },
+    position: { type: Number, default: null },
+    layout: { type: Boolean, default: true },
+    include: { type: Array, default: null },
     locked: { type: Boolean, default: false },
     elementsLimit: { type: Number, default: Infinity }
   },
@@ -66,7 +66,7 @@ export default {
     tooltipConfig() {
       return {
         content:
-          `${this.activity.type} has reached it's elements 
+          `${this.activity.type} has reached it's elements
           limit of ${this.elementsLimit}`,
         class: 'warning-tooltip' + (!this.locked ? ' hidden' : '')
       };

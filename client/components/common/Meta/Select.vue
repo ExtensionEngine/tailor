@@ -23,7 +23,12 @@ import Select from '../../common/Select';
 
 export default {
   name: 'multi-select',
-  props: ['meta'],
+  props: {
+    meta: { type: Object, default: () => ({ value: null }) }
+  },
+  data() {
+    return { active: false };
+  },
   computed: {
     value() {
       return find(this.options, { value: this.meta.value });
@@ -32,9 +37,6 @@ export default {
       const { options } = this.meta;
       return options.map(it => isString(it) ? { label: it, value: it } : it);
     }
-  },
-  data() {
-    return { active: false };
   },
   components: { multiselect: Select }
 };

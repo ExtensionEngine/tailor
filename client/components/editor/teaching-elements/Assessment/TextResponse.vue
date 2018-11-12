@@ -15,11 +15,13 @@
 </template>
 
 <script>
+import { defaults } from 'utils/assessment';
+
 export default {
   props: {
-    assessment: Object,
-    errors: Array,
-    isEditing: Boolean
+    assessment: { type: Object, default: defaults.TR },
+    errors: { type: Array, default: () => ([]) },
+    isEditing: { type: Boolean, default: false }
   },
   data() {
     return {

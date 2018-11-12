@@ -52,7 +52,10 @@ import toArray from 'lodash/toArray';
 
 export default {
   name: 'accordion-item',
-  props: ['item', 'embeds'],
+  props: {
+    item: { type: Object, required: true },
+    embeds: { type: Object, default: () => ({}) }
+  },
   data() {
     return {
       dragOptions: { handle: '.drag-handle' },

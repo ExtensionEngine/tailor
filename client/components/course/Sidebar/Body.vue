@@ -16,12 +16,18 @@
     <div class="meta-element">
       <meta-input
         v-for="it in metadata"
+        :key="`${activity._cid}.${it.key}`"
         :meta="it"
-        :key="`${activity.id}${it.type}`"
         @update="updateActivity">
       </meta-input>
     </div>
-    <prerequisites v-if="config.hasPrerequisites"></prerequisites>
+    <div class="relationships-element">
+      <relationship
+        v-for="relationship in config.relationships"
+        v-bind="relationship"
+        :key="`${activity._cid}.${relationship.type}`">
+      </relationship>
+    </div>
     <discussion
       editor-position="bottom"
       class="discussion">
@@ -30,16 +36,16 @@
 </template>
 
 <script>
+import { getLevel } from 'shared/activities';
+import { mapActions, mapGetters } from 'vuex-module';
 import CircularProgress from 'components/common/CircularProgress';
 import cloneDeep from 'lodash/cloneDeep';
 import Discussion from './Discussion';
 import fecha from 'fecha';
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
-import { mapActions, mapGetters } from 'vuex-module';
 import Meta from 'components/common/Meta';
-import Prerequisites from './Prerequisites';
+import Relationship from './Relationship';
 
 export default {
   data() {
@@ -81,7 +87,7 @@ export default {
   components: {
     CircularProgress,
     Discussion,
-    Prerequisites,
+    Relationship,
     MetaInput: Meta
   }
 };

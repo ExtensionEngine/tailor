@@ -19,8 +19,7 @@
     <select-assessment
       v-if="showAssessments"
       :exclude="assessmentFilter"
-      @selected="setSubtype">
-    </select-assessment>
+      @selected="setSubtype"/>
   </div>
 </template>
 
@@ -30,6 +29,7 @@ import filter from 'lodash/filter';
 import first from 'lodash/first';
 import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
+import { getLevel } from 'shared/activities';
 import includes from 'lodash/includes';
 import SelectAssessment from './SelectAssessment';
 
@@ -50,13 +50,12 @@ const TE_TYPES = [
 ];
 
 const ELEMENTS_PER_ROW = 6;
-const firstType = items => get(first(items), 'type');
 
 export default {
   name: 'select-element',
   props: {
-    activity: { type: Object },
-    include: { type: Array, default: [] },
+    activity: { type: Object, default: null },
+    include: { type: Array, default: null },
     rowSize: { type: Number, default: ELEMENTS_PER_ROW }
   },
   data() {
@@ -71,16 +70,18 @@ export default {
     },
     elements() {
       if (isEmpty(this.include)) return TE_TYPES;
-      let items = filter(TE_TYPES, it => includes(this.include, it.type));
-      if (firstType(items) === 'ASSESSMENT') this.type = 'ASSESSMENT';
-      return items;
+      return filter(TE_TYPES, it => includes(this.include, it.type));
     },
     showAssessments() {
       return this.type === 'ASSESSMENT';
     },
     assessmentFilter() {
+      // Restrict TR within assessment block and exam.
+      // Assessments are associated with outline activity.
       if (!this.activity) return;
-      if (this.activity.type !== 'PERSPECTIVE') return ['TR'];
+      const outlineActivity = getLevel(this.activity.type);
+      const examGroup = this.activity.type === 'ASSESSMENT_GROUP';
+      if (outlineActivity || examGroup) return ['TR'];
     },
     columnWidth() {
       return `col-xs-${12 / this.columns}`;
@@ -106,6 +107,11 @@ export default {
     },
     close() {
       this.type = null;
+    }
+  },
+  created() {
+    if (get(first(this.elements), 'type') === 'ASSESSMENT') {
+      this.type = 'ASSESSMENT';
     }
   },
   components: { SelectAssessment }

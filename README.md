@@ -73,21 +73,35 @@ Configuration for schema structure nodes (activities). Contains the following pr
 * **hasAssessments** `Boolean` - Activity allows adding assessments activities to it.
 * **hasExams** `Boolean` - Activity allows adding exam activities to it.
 * **exams** `Object` - Configuration for activity exams.
-* **hasPrerequisites** `Boolean` - Defines if this activity should offer other activities as prerequisites.
+* **relationships** `Array<Relationship>` - Defines what relationships this activity has to other activities.
 * **meta** `Array<Metadata>` - An array of objects defining activity metadata.
+
+#### Relationship
+Defines the structure of an activity realtionship field.
+* **type** `String` - Defines the name of the relationship. The relationship will be published under this value.
+* **label** `String` - Display label.
+* **placeholder** `String` - Display label for select picker.
+* **multiple** `Boolean` - Defines if the relationship can have multiple associations chosen. True by default.
+* **searchable** `Boolean` - Defines if the list of activities can be searched. True by default.
+* **allowEmpty** `Boolean` - Defines if the member list can be empty. True by default.
+* **allowCircularLinks** `Boolean` - Defines if member of a relationship instance can set the owner of that instance 
+as a member of its own instance of that relationship. Example, activity X sets activity Y as its prerequisite. 
+If `allowCircualLinks` is set to true then activity Y can set activity X as its prerequisite. False by default.
+* **allowInsideLineage** `Boolean` - Defines if an ancestor or a descendant can be a member of the relationship.
+False by default.
 
 #### Metadata
 Defines the structure of an activity metadata field.
-* **key** `String`- Unique key for the field.
-* **type** `String`- Type of the input component used on the client.
-* **label** `String`- Display label.
-* **placeholder** `String`- Input component placeholder.
-* **validate** `MetadataValidator`- Validator object.
-* **defaultValue** `*`- Default field value.
+* **key** `String` - Unique key for the field.
+* **type** `String` - Type of the input component used on the client.
+* **label** `String` - Display label.
+* **placeholder** `String` - Input component placeholder.
+* **validate** `MetadataValidator` - Validator object.
+* **defaultValue** `*` - Default field value.
 
 #### MetadataValidator
 Defines validation rules on an activity metadata field.
-* **rules** `Object`- Contains the following properties:
+* **rules** `Object` - Contains the following properties:
   * max `Number` - Maximum character count.
   * required `Boolean` - Defines if the field is required.
 

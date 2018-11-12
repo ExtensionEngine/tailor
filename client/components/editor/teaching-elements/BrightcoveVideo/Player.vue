@@ -20,9 +20,9 @@ const ERROR_INVALID_CONFIG = 'ERR_INVALID_CONFIGURATION';
 export default {
   name: 'brightcove-player',
   props: {
-    accountId: String,
-    playerId: String,
-    videoId: String,
+    accountId: { type: String, default: null },
+    playerId: { type: String, default: null },
+    videoId: { type: String, default: null },
     debug: { type: Boolean, default: false },
     analytics: { type: Boolean, default: false }
   },
@@ -110,12 +110,6 @@ export default {
       this.error = err;
     }
   },
-  mounted() {
-    this.initPlayer();
-  },
-  beforeDestroy() {
-    this.destroyPlayer();
-  },
   watch: {
     playerUrl() {
       if (!this.$el) return;
@@ -125,6 +119,12 @@ export default {
       if (!this.$el) return;
       this.initPlayer();
     }
+  },
+  mounted() {
+    this.initPlayer();
+  },
+  beforeDestroy() {
+    this.destroyPlayer();
   }
 };
 
@@ -156,8 +156,7 @@ function empty(el) {
 </script>
 
 <style lang="scss" scoped>
-.brightcove-player,
-.brightcove-player /deep/ .video-js {
+.brightcove-player, .brightcove-player /deep/ .video-js {
   width: 100%;
   height: 360px;
 }
@@ -165,7 +164,7 @@ function empty(el) {
 .error {
   position: relative;
   height: 100%;
-  background: rgba(0,0,0,.9);
+  background: rgba(0,0,0,0.9);
 }
 
 .error .message {
@@ -179,9 +178,9 @@ function empty(el) {
   .mdi { font-size: 42px; }
 }
 
-.brightcove-player /deep/ .vjs-error .vjs-error-display:before {
+.brightcove-player /deep/ .vjs-error .vjs-error-display::before {
+  content: "\F026";
   font-size: 42px;
   font-family: "Material Design Icons";
-  content: "\F026"; // alert
 }
 </style>

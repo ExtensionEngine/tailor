@@ -8,8 +8,8 @@
       <div v-else>
         <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
           <input
-            v-model="name"
             v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+            v-model="name"
             class="form-control"
             name="name"
             type="text"
@@ -18,8 +18,8 @@
         </div>
         <div :class="{ 'has-error': vErrors.has('description') }" class="form-group">
           <textarea
-            v-model="description"
             v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
+            v-model="description"
             class="form-control"
             name="description"
             placeholder="Description">

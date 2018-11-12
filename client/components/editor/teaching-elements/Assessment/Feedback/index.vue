@@ -10,33 +10,27 @@
     </span>
     <transition name="fade">
       <ul v-if="isExpanded">
-        <li v-for="(answer, index) in processedAnswers">
-          <div>
-            <span class="answer-index">Answer {{ index + 1 }}:</span>
-            {{ answer }}
-          </div>
-          <textarea
-            :ref="'option' + index"
-            :value="feedback ? feedback[index] : ''"
-            :disabled="!isEditing"
-            @change="update(index)"
-            class="form-control">
-          </textarea>
-        </li>
+        <feedback-item
+          v-for="(answer, index) in processedAnswers"
+          v-bind="{ index, answer, isEditing, feedback: feedback[index] }"
+          :key="index"
+          @update="({ html }) => $emit('update', { [index]: html })">
+        </feedback-item>
       </ul>
     </transition>
   </div>
 </template>
 
 <script>
+import FeedbackItem from './FeedbackItem';
 import isArray from 'lodash/isArray';
 
 export default {
   name: 'feedback',
   props: {
-    answers: [Array, Boolean],
-    feedback: Object,
-    isEditing: Boolean
+    answers: { type: [Array, Boolean], default: null },
+    feedback: { type: Object, default: () => ({}) },
+    isEditing: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -48,24 +42,17 @@ export default {
       return isArray(this.answers) ? this.answers : ['True', 'False'];
     }
   },
-  methods: {
-    update(index) {
-      let data = { [index]: this.$refs[`option${index}`][0].value };
-      this.$emit('update', data);
-    }
-  },
   watch: {
     isEditing(val) {
       if (val) this.isExpanded = true;
     }
-  }
+  },
+  components: { FeedbackItem }
 };
 </script>
 
 <style lang="scss" scoped>
 .feedback {
-  width: 100%;
-  margin: 0 auto;
   padding: 30px 20px 15px;
   text-align: left;
 }
@@ -82,23 +69,6 @@ export default {
 ul {
   margin-top: 20px;
   list-style: none;
-}
-
-li {
-  padding: 10px 0;
-  font-size: 15px;
-
-  .answer-index {
-    padding-right: 10px;
-    color: #444;
-    font-weight: bold;
-  }
-
-  textarea {
-    height: 50px;
-    margin: 10px 0;
-    resize: none;
-  }
 }
 
 .fade-enter-active {

@@ -9,8 +9,8 @@
       v-show="editing"
       :class="{ 'has-error': vErrors.has(meta.key) }">
       <input
-        v-model="value"
         v-validate="meta.validate"
+        v-model="value"
         :ref="meta.key"
         :name="meta.key"
         :placeholder="meta.placeholder"
@@ -28,9 +28,11 @@
 import { withValidation } from 'utils/validation';
 
 export default {
-  mixins: [withValidation()],
   name: 'line-input',
-  props: ['meta'],
+  mixins: [withValidation()],
+  props: {
+    meta: { type: Object, default: () => ({ value: null }) }
+  },
   data() {
     return {
       value: this.meta.value,

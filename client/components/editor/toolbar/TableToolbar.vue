@@ -7,6 +7,7 @@
     <ul class="dropdown-menu" role="menu">
       <li
         v-for="action in actions"
+        :key="action.name"
         :disabled="!isCell"
         @click="trigger(action.name)"
         class="btn btn-link btn-sm">
@@ -46,7 +47,9 @@ const actions = [
 
 export default {
   name: 'table-toolbar',
-  props: ['element'],
+  props: {
+    element: { type: Object, required: true }
+  },
   data() {
     return {
       actions

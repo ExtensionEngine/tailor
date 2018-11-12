@@ -15,7 +15,7 @@
         :key="course._cid"
         :course="course">
       </course-card>
-      <infinite-loading @infinite="loadMore" ref="infiniteLoading">
+      <infinite-loading ref="infiniteLoading" @infinite="loadMore">
         <div slot="spinner" class="spinner"><circular-progress/></div>
         <div slot="no-results" class="no-results">
           {{ orderedCourses.length ? '' : 'No courses found.' }}

@@ -26,7 +26,9 @@ import TesList from '../TesList';
 
 export default {
   name: 'group-introduction',
-  props: ['group'],
+  props: {
+    group: { type: Object, required: true }
+  },
   computed: {
     ...mapGetters(['tes']),
     introductionElements() {

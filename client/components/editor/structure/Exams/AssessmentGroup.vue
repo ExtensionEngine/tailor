@@ -59,7 +59,11 @@ const appChannel = EventBus.channel('app');
 
 export default {
   name: 'assessment-group',
-  props: ['group', 'exam', 'position'],
+  props: {
+    group: { type: Object, required: true },
+    exam: { type: Object, required: true },
+    position: { type: Number, required: true }
+  },
   data() {
     return {
       selected: [],

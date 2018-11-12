@@ -15,7 +15,8 @@
         @save="saveBodyElement">
       </primitive>
     </draggable>
-    <add-element v-if="!hasElements"
+    <add-element
+      v-if="!hasElements"
       :include="['HTML', 'IMAGE']"
       :layout="false"
       @add="addElement"
@@ -36,7 +37,11 @@ import toArray from 'lodash/toArray';
 
 export default {
   name: 'carousel-item',
-  props: ['item', 'embeds', 'activeItem'],
+  props: {
+    item: { type: Object, required: true },
+    embeds: { type: Object, default: () => ({}) },
+    activeItem: { type: Number, default: null }
+  },
   data() {
     return {
       dragOptions: { handle: '.embed-drag-handle' }
