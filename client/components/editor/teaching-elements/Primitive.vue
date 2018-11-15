@@ -80,8 +80,9 @@ export default {
       e.component = { name: 'teaching-element', data: this.element };
     },
     save(data) {
-      this.$set(this.element, 'data', data);
-      this.$emit('save', this.element);
+      const { element } = this;
+      this.$set(element, 'data', { ...element.data, ...data });
+      this.$emit('save', element);
     }
   },
   components: {
