@@ -29,12 +29,13 @@ export default {
     ...mapGetters(['course'], 'course'),
     ...mapGetters(['focusedElement'], 'editor'),
     config() {
-      return getTesMeta(this.course.schema, this.focusedElement.type) || {};
+      const { course, focusedElement } = this;
+      return getTesMeta(course.schema, focusedElement.type) || {};
     },
     metadata() {
       if (!get(this.config, 'meta')) return [];
       return map(this.config.meta, it => {
-        let value = get(this.item, `data.${it.key}`);
+        const value = get(this.item, `data.${it.key}`);
         return { ...it, value };
       });
     }
@@ -42,7 +43,7 @@ export default {
   methods: {
     ...mapActions(['update'], 'tes'),
     updateElement(key, value) {
-      const meta = cloneDeep(this.focusedElement.meta) || {};
+      let meta = cloneDeep(this.focusedElement.meta) || {};
       meta[key] = value;
       return this.update({ _cid: this.focusedElement._cid, meta });
     }
