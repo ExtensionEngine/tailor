@@ -27,6 +27,10 @@
 </template>
 
 <script>
+import EventBus from 'EventBus';
+
+const teChannel = EventBus.channel('te');
+
 export default {
   name: 'te-embed',
   props: {
@@ -43,7 +47,15 @@ export default {
     },
     showPlaceholder() {
       return !this.element.data.url;
+    },
+    id() {
+      return this.element._cid || this.element.id;
     }
+  },
+  mounted() {
+    teChannel.on(`${this.id}/embedUpdate`, ({ height, url }) => {
+      this.$emit('save', { height, url });
+    });
   },
   created() {
     if (this.element.data.height) return;
