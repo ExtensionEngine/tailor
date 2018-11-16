@@ -1,6 +1,9 @@
 <template>
   <div class="editor-wrapper">
-    <toolbar></toolbar>
+    <toolbar @toggleSidebar="showSidebar = !showSidebar"></toolbar>
+    <transition name="slide">
+      <sidebar v-if="showSidebar"></sidebar>
+    </transition>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
       <circular-progress v-if="showLoader"></circular-progress>
       <div v-else>
@@ -29,6 +32,7 @@ import ContentContainers from './structure/ContentContainers';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import Promise from 'bluebird';
+import Sidebar from './sidebar';
 import Toolbar from './toolbar';
 import truncate from 'truncate';
 
@@ -37,6 +41,7 @@ export default {
   data() {
     return {
       showLoader: true,
+      showSidebar: false,
       mousedownCaptured: false
     };
   },
@@ -85,6 +90,12 @@ export default {
       }
     }
   },
+  watch: {
+    focusedElement(next, previous) {
+      if (next._cid === previous._cid) return;
+      this.showSidebar = false;
+    }
+  },
   created() {
     this.focusoutElement();
     // TODO: Do this better!
@@ -105,6 +116,7 @@ export default {
     CircularProgress,
     ContentContainers,
     Exams,
+    Sidebar,
     Toolbar
   }
 };
@@ -150,5 +162,13 @@ export default {
     padding: 0 10px;
     color: #999;
   }
+}
+
+.slide-enter-active, .slide-leave-active {
+  transition: margin-right 0.5s;
+}
+
+.slide-enter, .slide-leave-to {
+  margin-right: -300px;
 }
 </style>

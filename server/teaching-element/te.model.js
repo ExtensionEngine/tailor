@@ -36,6 +36,9 @@ class TeachingElement extends Model {
       data: {
         type: JSONB
       },
+      meta: {
+        type: JSONB
+      },
       refs: {
         type: JSONB,
         defaultValue: {}
