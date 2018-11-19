@@ -4,7 +4,7 @@
       <div class="col-md-7">
         <input
           v-validate="'email'"
-          v-model.trim="email"
+          v-model.trim="context.email"
           data-vv-delay="0"
           class="form-control"
           type="email"
@@ -14,7 +14,7 @@
       </div>
       <div class="col-lg-4 col-md-3">
         <multiselect
-          :value="role"
+          :value="context.role"
           :options="roles"
           :searchable="false"
           :allowEmpty="false"
@@ -46,25 +46,24 @@ export default {
     roles: { type: Array, required: true }
   },
   data() {
-    return { email: '', role: {} };
+    return {
+      context: { email: '', role: this.defaultRole }
+    };
   },
   computed: {
     isDisabled() {
-      return !this.email.length || this.vErrors.has('email');
+      return !this.context.email.length || this.vErrors.has('email');
     }
   },
   methods: {
     addUser() {
-      const { email, role } = this;
+      const { email, role } = this.context;
       this.$emit('add', email, { role: role.value });
       this.reset();
     },
     reset() {
-      Object.assign(this, { email: '', role: this.defaultRole });
+      this.context = { email: '', role: this.defaultRole };
     }
-  },
-  created() {
-    this.reset();
   },
   components: {
     Multiselect
