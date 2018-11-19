@@ -5,14 +5,15 @@ const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
 const { Model } = require('sequelize');
 const Promise = require('bluebird');
-const { user: Role } = require('../../config/shared').role;
+const { role } = require('../../config/shared');
+
+const { user: { ADMIN, USER, INTEGRATION } } = role;
 
 const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
 
 class User extends Model {
-  static fields(DataTypes) {
-    const { DATE, ENUM, STRING, VIRTUAL } = DataTypes;
+  static fields({ DATE, ENUM, STRING, VIRTUAL }) {
     return {
       email: {
         type: STRING,
@@ -27,8 +28,8 @@ class User extends Model {
         validate: { notEmpty: true, len: [5, 100] }
       },
       role: {
-        type: ENUM(Role.ADMIN, Role.USER, Role.INTEGRATION),
-        defaultValue: Role.USER
+        type: ENUM(ADMIN, USER, INTEGRATION),
+        defaultValue: USER
       },
       profile: {
         type: VIRTUAL,
@@ -97,6 +98,14 @@ class User extends Model {
     };
   }
 
+  static scopes() {
+    return {
+      withRoleType(type) {
+        return type && { where: { role: { $in: role.getRoleNames(type) } } };
+      }
+    };
+  }
+
   static invite(user) {
     return this.create(user).then(user => {
       user.token = user.createToken({ expiresIn: '5 days' });
@@ -106,7 +115,7 @@ class User extends Model {
   }
 
   isAdmin() {
-    return this.role === Role.ADMIN || this.role === Role.INTEGRATION;
+    return this.role === ADMIN || this.role === INTEGRATION;
   }
 
   authenticate(password) {

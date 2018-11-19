@@ -2,13 +2,13 @@
 
 const { createError, validationError } = require('../shared/error/helpers');
 const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
-const { role } = require('../../config/shared');
 const { User } = require('../shared/database');
 
 function index({ query: { roleType } }, res) {
-  let options = { attributes: ['id', 'email', 'role'], raw: true };
-  if (roleType) options.where = { role: { $in: role.getRoleNames(roleType) } };
-  return User.findAll(options).then(data => res.json({ data }));
+  let options = { attributes: ['id', 'email', 'role'] };
+  return User.scope({ method: ['withRoleType', roleType] })
+    .findAll(options)
+    .then(data => res.json({ data }));
 }
 
 function upsert({ body: { email, role } }, res) {
