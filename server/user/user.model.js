@@ -11,8 +11,7 @@ const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
 
 class User extends Model {
-  static fields(DataTypes) {
-    const { DATE, ENUM, STRING, VIRTUAL } = DataTypes;
+  static fields({ DATE, ENUM, STRING, VIRTUAL }) {
     return {
       email: {
         type: STRING,
