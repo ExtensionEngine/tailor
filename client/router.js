@@ -28,6 +28,7 @@ let router = new Router({
   }, {
     path: '/course/:courseId',
     component: Course,
+    props: true,
     meta: { auth: true },
     children: [{
       path: '',

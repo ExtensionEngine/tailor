@@ -30,6 +30,9 @@ import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
 export default {
+  props: {
+    courseId: { type: String, required: true }
+  },
   data() {
     return {
       showLoader: true
@@ -38,9 +41,6 @@ export default {
   computed: {
     ...mapGetters(['course', 'activities', 'activity'], 'course'),
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
-    courseId() {
-      return this.$route.params.courseId;
-    },
     showSettings() {
       return this.isAdmin || this.isCourseAdmin;
     }
