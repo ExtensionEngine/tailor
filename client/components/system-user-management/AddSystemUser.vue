@@ -4,7 +4,7 @@
       <div class="col-md-7">
         <input
           v-validate="'email'"
-          v-model="email"
+          v-model.trim="email"
           data-vv-delay="0"
           class="form-control"
           type="email"
@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      return !this.email.trim().length || this.vErrors.has('email');
+      return !this.email.length || this.vErrors.has('email');
     }
   },
   methods: {
