@@ -92,8 +92,7 @@ export default {
   },
   watch: {
     focusedElement(next, previous) {
-      if (next._cid === previous._cid) return;
-      this.showSidebar = false;
+      if (next._cid !== previous._cid) this.showSidebar = false;
     }
   },
   created() {
