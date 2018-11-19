@@ -60,7 +60,7 @@ let router = new Router({
       component: TreeView
     }]
   }, {
-    path: '/system-users',
+    path: '/settings/users',
     name: 'system-user-management',
     component: SystemUserManagement,
     meta: { auth: true }
