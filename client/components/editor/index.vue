@@ -51,7 +51,12 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['focusedElement', 'activity', 'contentContainers', 'focusedElementConfig'], 'editor'),
+    ...mapGetters([
+      'activity',
+      'contentContainers',
+      'focusedElement',
+      'focusedElementConfig'
+    ], 'editor'),
     ...mapGetters(['course'], 'course'),
     showAssessments() {
       return config.hasAssessments(this.activity.type);
