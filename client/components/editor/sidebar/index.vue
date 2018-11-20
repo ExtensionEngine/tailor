@@ -1,11 +1,11 @@
 <template>
   <div class="sidebar">
-    <div v-if="focusedElementConfig.type">
-      <h3>{{ focusedElementConfig.label }} Metadata</h3>
+    <div v-if="config.type">
+      <h3>{{ config.label }} Metadata</h3>
       <div class="meta-element">
         <meta-input
           v-for="it in metadata"
-          :key="`${focusedElement._cid}.${it.key}`"
+          :key="`${element._cid}.${it.key}`"
           :meta="it"
           @update="updateElement">
         </meta-input>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import map from 'lodash/map';
@@ -24,12 +24,15 @@ import MetaInput from 'components/common/Meta';
 
 export default {
   name: 'sidebar',
+  props: {
+    config: { type: Object, required: true },
+    element: { type: Object, required: true }
+  },
   computed: {
-    ...mapGetters(['focusedElement', 'focusedElementConfig'], 'editor'),
     metadata() {
-      if (!get(this.focusedElementConfig, 'meta')) return [];
-      return map(this.focusedElementConfig.meta, it => {
-        const value = get(this.focusedElement, `meta.${it.key}`);
+      if (!get(this.config, 'meta')) return [];
+      return map(this.config.meta, it => {
+        const value = get(this.element, `meta.${it.key}`);
         return { ...it, value };
       });
     }
@@ -37,9 +40,9 @@ export default {
   methods: {
     ...mapActions(['update'], 'tes'),
     updateElement(key, value) {
-      let meta = cloneDeep(this.focusedElement.meta) || {};
+      let meta = cloneDeep(this.element.meta) || {};
       meta[key] = value;
-      return this.update({ _cid: this.focusedElement._cid, meta });
+      return this.update({ _cid: this.element._cid, meta });
     }
   },
   components: { MetaInput }

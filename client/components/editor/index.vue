@@ -2,7 +2,11 @@
   <div class="editor-wrapper">
     <toolbar @toggleSidebar="showSidebar = !showSidebar"></toolbar>
     <transition name="slide">
-      <sidebar v-if="showSidebar"></sidebar>
+      <sidebar
+        v-if="showSidebar"
+        :config="focusedElementConfig"
+        :element="focusedElement">
+      </sidebar>
     </transition>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
       <circular-progress v-if="showLoader"></circular-progress>
@@ -47,7 +51,7 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['focusedElement', 'activity', 'contentContainers'], 'editor'),
+    ...mapGetters(['focusedElement', 'activity', 'contentContainers', 'focusedElementConfig'], 'editor'),
     ...mapGetters(['course'], 'course'),
     showAssessments() {
       return config.hasAssessments(this.activity.type);
