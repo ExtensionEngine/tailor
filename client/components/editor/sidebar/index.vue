@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
-    <div v-if="config.type">
-      <h3>{{ config.label }} Metadata</h3>
+    <div v-if="focusedElementConfig.type">
+      <h3>{{ focusedElementConfig.label }} Metadata</h3>
       <div class="meta-element">
         <meta-input
           v-for="it in metadata"
@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import { getTesMeta } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
@@ -26,16 +25,11 @@ import MetaInput from 'components/common/Meta';
 export default {
   name: 'sidebar',
   computed: {
-    ...mapGetters(['course'], 'course'),
-    ...mapGetters(['focusedElement'], 'editor'),
-    config() {
-      const { course, focusedElement } = this;
-      return getTesMeta(course.schema, focusedElement.type) || {};
-    },
+    ...mapGetters(['focusedElement', 'focusedElementConfig'], 'editor'),
     metadata() {
-      if (!get(this.config, 'meta')) return [];
-      return map(this.config.meta, it => {
-        const value = get(this.item, `data.${it.key}`);
+      if (!get(this.focusedElementConfig, 'meta')) return [];
+      return map(this.focusedElementConfig.meta, it => {
+        const value = get(this.focusedElement, `meta.${it.key}`);
         return { ...it, value };
       });
     }
