@@ -6,12 +6,17 @@ const isUrl = require('is-url');
 const mime = require('mime-types');
 const nodeUrl = require('url');
 const Promise = require('bluebird');
+const some = require('lodash/some');
 const storage = require('./index');
 const values = require('lodash/values');
 
 const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
+const hasPrimitiveAnswers = assessment => {
+  if (!assessment.data || !assessment.data.answers) return false;
+  return some(assessment.data.answers, isPrimitive);
+};
 
 function processStatics(item) {
   return item.type === 'ASSESSMENT'
@@ -26,13 +31,19 @@ function processAsset(asset) {
 function processAssessment(assessment) {
   let question = assessment.data.question;
   if (!question || question.length < 1) return Promise.resolve(assessment);
-  return Promise.each(question, it => processAsset(it));
+  return Promise.each(question, it => processAsset(it))
+    .then(() => processPrimitiveAnswers(assessment));
 }
 
 function processPrimitive(primitive) {
   if (!isPrimitive(primitive)) throw new Error('Invalid primitive');
   if (!processor[primitive.type]) return Promise.resolve(primitive);
   return processor[primitive.type](primitive);
+}
+
+function processPrimitiveAnswers(assessment) {
+  if (!hasPrimitiveAnswers(assessment)) return Promise.resolve(assessment);
+  return Promise.each(assessment.data.answers, it => processPrimitive(it));
 }
 
 function processComposite(composite) {
@@ -75,7 +86,8 @@ function resolveStatics(item) {
 function resolveAssessment(assessment) {
   let question = assessment.data.question;
   if (!question || question.length < 1) return Promise.resolve(assessment);
-  return Promise.each(question, it => resolveAsset(it)).then(() => assessment);
+  return Promise.each(question, it => resolveAsset(it)).then(() => assessment)
+    .then(() => resolvePrimitiveAnswers(assessment));
 }
 
 function resolveAsset(element) {
@@ -87,6 +99,12 @@ function resolveAsset(element) {
 function resolvePrimitive(primitive) {
   if (!resolver[primitive.type]) return Promise.resolve(primitive);
   return resolver[primitive.type](primitive);
+}
+
+function resolvePrimitiveAnswers(assessment) {
+  if (!hasPrimitiveAnswers(assessment)) return Promise.resolve(assessment);
+  return Promise.each(assessment.data.answers, it => resolvePrimitive(it))
+    .then(() => assessment);
 }
 
 function resolveComposite(composite) {

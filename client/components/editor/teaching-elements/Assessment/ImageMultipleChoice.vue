@@ -1,65 +1,68 @@
 <template>
   <div :class="{ disabled }">
     <h5>Answers</h5>
-    <span @click="addAnswer" class="btn btn-link mdi mdi-plus pull-right"></span>
     <ul>
-      <li v-for="answer in answers" :key="answer.key" class="answer-row">
+      <li v-for="{ id, data } in answers" :key="id" class="answer-row">
         <span
-          :class="{ 'has-error': !!vErrors.first(answer.key) }"
+          :class="{ 'has-error': !!vErrors.first(id) }"
           class="row-content">
           <input
-            :checked="correct.includes(answer.key)"
+            :checked="correct.includes(id)"
             :disabled="disabled"
-            @change="toggleAnswer(answer.key)"
+            @change="toggleAnswer(id)"
             type="checkbox"/>
-          <div class="dead-center-img-container">
-            <img
-              :src="answer.value || './assets/img/no-image.png'"
-              class="dead-center-img"/>
-          </div>
+          <async-image :url="data.url" class="image-container"/>
           <div class="image-input-err">
             <input
               v-validate
-              :ref="`${answer.key}_file_input`"
+              :ref="`${id}_file_input`"
               :data-vv-rules="imageValidationRules"
               :accept="imageInputType"
-              :data-key="answer.key"
+              :data-key="id"
               :disabled="disabled"
-              :name="answer.key"
+              :name="id"
               @change="updateAnswer"
               data-vv-as="image"
               class="image-input"
               type="file"/>
             <button
-              @click="$refs[`${answer.key}_file_input`][0].click();"
+              @click="$refs[`${id}_file_input`][0].click();"
               class="btn btn-material btn-primary"
               type="button">
               Upload image...
             </button>
-            <span v-if="vErrors.first(answer.key)" class="error-msg">
-              {{ vErrors.first(answer.key) }}
+            <span v-if="vErrors.first(id)" class="error-msg">
+              {{ vErrors.first(id) }}
             </span>
           </div>
-          <span @click="removeAnswer(answer.key)" class="mdi mdi-close control">
+          <span
+            @click="removeAnswer(id)"
+            class="mdi mdi-close control btn-remove">
           </span>
         </span>
       </li>
     </ul>
+    <span
+      v-if="isEditing"
+      @click="addAnswer"
+      class="btn btn-link mdi mdi-plus btn-add">
+    </span>
   </div>
 </template>
 
 <script>
 import { blobToDataURL } from 'blob-util';
+import { defaults } from 'utils/assessment';
+import { withValidation } from 'utils/validation';
+import AsyncImage from './shared/AsyncImage';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import { defaults } from 'utils/assessment';
 import find from 'lodash/find';
 import pull from 'lodash/pull';
-import { withValidation } from 'utils/validation';
 
 const maxImageDimension = 256;
+const findById = (collection, id) => find(collection, { id });
 const isImageValidationError = err => !!err[Symbol.for('error:image-validation')];
-const findByKey = (collection, key) => find(collection, { key });
 
 const maxDimensionsValidationRule = {
   getMessage(field, [width, height], data) {
@@ -68,15 +71,11 @@ const maxDimensionsValidationRule = {
       ${maxImageDimension}x${maxImageDimension}`;
   },
   validate(files, [width, height]) {
-    if (!files || !files[0]) {
-      return Promise.resolve(true);
-    }
+    if (!files || !files[0]) return Promise.resolve(true);
     return getImageDimensions(files[0].dataUrl)
       .then(({ width, height }) => {
         let valid = true;
-        if (width > maxImageDimension || height > maxImageDimension) {
-          valid = false;
-        }
+        if (width > maxImageDimension || height > maxImageDimension) valid = false;
         return Promise.resolve(valid);
       });
   }
@@ -114,12 +113,10 @@ export default {
     update(data) {
       this.$emit('update', data);
     },
-    toggleAnswer(key) {
+    toggleAnswer(id) {
       let correct = cloneDeep(this.correct);
-      const position = correct.indexOf(key);
-
-      position < 0 ? correct.push(key) : correct.splice(position, 1);
-
+      const position = correct.indexOf(id);
+      position < 0 ? correct.push(id) : correct.splice(position, 1);
       this.update({ correct });
     },
     updateAnswer(evt) {
@@ -139,8 +136,8 @@ export default {
           if (!isValid) return Promise.reject(imageValidationError());
         })
         .then(() => {
-          let answer = findByKey(answers, dataset.key);
-          if (answer) answer.value = image.dataUrl;
+          let answer = findById(answers, dataset.key);
+          if (answer) answer.data.url = image.dataUrl;
         })
         .then(() => this.update({ answers }))
         .catch(error => {
@@ -150,22 +147,22 @@ export default {
     },
     addAnswer() {
       let answers = cloneDeep(this.answers);
-      answers.push({ key: cuid(), value: '' });
+      answers.push({ type: 'IMAGE', data: { url: '' }, id: cuid() });
       this.update({ answers });
     },
-    removeAnswer(key) {
+    removeAnswer(id) {
       let answers = cloneDeep(this.answers);
       let correct = cloneDeep(this.correct);
       let feedback = cloneDeep(this.feedback);
 
-      pull(answers, findByKey(answers, key));
+      pull(answers, findById(answers, id));
 
-      const index = correct.indexOf(key);
+      const index = correct.indexOf(id);
       if (index !== -1) correct.splice(index, 1);
 
-      if (feedback) pull(feedback, findByKey(feedback, key));
+      if (feedback) pull(feedback, findById(feedback, id));
 
-      this.deleteErrorMessages(key);
+      this.deleteErrorMessages(id);
       this.update({ answers, correct, feedback });
     },
     hasCorrectAnswers() {
@@ -188,8 +185,8 @@ export default {
 
       this.$validator.validateAll();
     },
-    deleteErrorMessages(answerKey) {
-      const errorField = this.$validator.fields.find({ name: answerKey });
+    deleteErrorMessages(answerId) {
+      const errorField = this.$validator.fields.find({ name: answerId });
       if (errorField) {
         errorField.reset();
         this.$validator.errors.remove(errorField.name, errorField.scope);
@@ -203,7 +200,8 @@ export default {
   },
   created() {
     this.$validator.extend('maxdimensions', maxDimensionsValidationRule);
-  }
+  },
+  components: { AsyncImage }
 };
 
 function getImageDimensions(imageSrc) {
@@ -238,26 +236,10 @@ ul {
   list-style: none;
 
   li {
-    position: relative;
-    margin: 20px 0;
-    padding-left: 40px;
-    text-align: start;
-
-    .form-control {
-      padding-left: 10px;
-    }
-
-    input[type=checkbox] {
-      position: absolute;
-      top: 30%;
-      left: 0;
-    }
+    padding: 2rem;
   }
 
   .mdi-close {
-    position: absolute;
-    right: 1%;
-    bottom: 50%;
     padding: 5px;
     color: #888;
     cursor: pointer;
@@ -268,19 +250,21 @@ ul {
   }
 }
 
-.dead-center-img-container {
-  margin-right: 5%;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
-}
-
 .image {
   &-input {
     display: none;
 
     &-err {
       vertical-align: text-top;
+
+      .btn {
+        margin-left: 2rem;
+      }
     }
+  }
+
+  &-container {
+    margin: 0 2rem;
   }
 }
 
@@ -313,6 +297,17 @@ ul {
 
   .control, .btn {
     opacity: 0;
+  }
+}
+
+.btn {
+  &-add {
+    font-size: 3rem;
+  }
+
+  &-remove {
+    margin-left: 10%;
+    font-size: 2rem;
   }
 }
 </style>

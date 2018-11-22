@@ -58,6 +58,13 @@ const objectMap = yup.object().shape({
   value: yup.string().required()
 });
 
+const imageObjectMap = yup.object().shape({
+  id: yup.string().required(),
+  data: yup.object().shape({
+    url: yup.string().min(1).required()
+  })
+});
+
 yup.addMethod(yup.array, 'castMap', function () {
   return this.transform(function (value, originalValue) {
     if (this.isType(value)) return value;
@@ -79,7 +86,7 @@ export const schemas = {
   }),
   IMC: yup.object().shape({
     ...baseSchema,
-    answers: yup.array().min(2).of(objectMap).required(),
+    answers: yup.array().min(2).of(imageObjectMap).required(),
     correct: yup.array().min(1).of(yup.string()).required()
   }),
   NR: yup.object().shape({
@@ -158,7 +165,13 @@ export const defaults = {
       answers: [],
       correct: []
     };
-    times(3, () => element.answers.push({ key: cuid(), value: '' }));
+    times(3, () => element.answers.push({
+      type: 'IMAGE',
+      data: {
+        url: ''
+      },
+      id: cuid()
+    }));
     return element;
   },
   NR: () => ({

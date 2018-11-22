@@ -1,11 +1,9 @@
 <template>
   <li class="feedback-item">
     <p class="answer">
-      <template v-if="answer.value">
-        <div class="dead-center-img-container">
-          <img :src="answer.value" class="dead-center-img"/>
-        </div>
-      </template>
+      <span v-if="answer.data && answer.data.url">
+        <async-image :url="answer.data.url"/>
+      </span>
       <template v-else>
         <span class="prefix">Answer {{ index + 1 }}:</span>
         <template v-if="answer.length">{{ answer }}</template>
@@ -34,6 +32,7 @@
 
 <script>
 import { quillEditor as QuillEditor } from 'vue-quill-editor';
+import AsyncImage from '../shared/AsyncImage';
 
 const quillOptions = () => ({
   modules: {
@@ -57,7 +56,7 @@ export default {
     index: { type: Number, required: true },
     quillOptions: { type: Object, default: quillOptions }
   },
-  components: { QuillEditor }
+  components: { AsyncImage, QuillEditor }
 };
 </script>
 
@@ -71,11 +70,5 @@ export default {
     color: #444;
     font-weight: bold;
   }
-}
-
-.dead-center-img-container {
-  width: 200px;
-  height: 200px;
-  border: 1px solid #ccc;
 }
 </style>
