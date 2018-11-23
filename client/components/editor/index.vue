@@ -1,10 +1,19 @@
 <template>
   <div class="editor-wrapper">
-    <toolbar @toggleSidebar="showSidebar = !showSidebar"></toolbar>
+    <toolbar>
+      <span slot="actions">
+        <span
+          v-if="focusedElementMetadata.length"
+          @click="showSidebar = !showSidebar"
+          class="btn btn-fab btn-primary">
+          <span class="mdi mdi-wrench"></span>
+        </span>
+      </span>
+    </toolbar>
     <transition name="slide">
       <sidebar
         v-if="showSidebar"
-        :config="focusedElementConfig"
+        :metadata="focusedElementMetadata"
         :element="focusedElement">
       </sidebar>
     </transition>
@@ -55,7 +64,7 @@ export default {
       'activity',
       'contentContainers',
       'focusedElement',
-      'focusedElementConfig'
+      'focusedElementMetadata'
     ], 'editor'),
     ...mapGetters(['course'], 'course'),
     showAssessments() {

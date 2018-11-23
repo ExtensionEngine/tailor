@@ -7,9 +7,7 @@
         :element="focusedElement">
       </component>
       <div class="delete-element">
-        <span @click="$emit('toggleSidebar')" class="btn btn-fab btn-primary">
-          <span class="mdi mdi-wrench"></span>
-        </span>
+        <slot name="actions"></slot>
         <span @click="requestDeleteConfirmation" class="btn btn-fab btn-danger">
           <span class="mdi mdi-delete"></span>
         </span>

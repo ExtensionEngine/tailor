@@ -1,47 +1,31 @@
 <template>
   <div class="sidebar">
-    <div v-if="config.type">
-      <h3>{{ config.label }} Metadata</h3>
-      <div class="meta-element">
-        <meta-input
-          v-for="it in metadata"
-          :key="`${element._cid}.${it.key}`"
-          :meta="it"
-          @update="updateElement">
-        </meta-input>
-      </div>
+    <h3>Metadata</h3>
+    <div class="meta-element">
+      <meta-input
+        v-for="it in metadata"
+        :key="`${element._cid}.${it.key}`"
+        :meta="it"
+        @update="updateElement">
+      </meta-input>
     </div>
-    <div v-else><h4>This element has no metadata options.</h4></div>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex-module';
-import cloneDeep from 'lodash/cloneDeep';
-import get from 'lodash/get';
-import map from 'lodash/map';
 import MetaInput from 'components/common/Meta';
 
 export default {
   name: 'sidebar',
   props: {
-    config: { type: Object, required: true },
-    element: { type: Object, required: true }
-  },
-  computed: {
-    metadata() {
-      if (!get(this.config, 'meta')) return [];
-      return map(this.config.meta, it => {
-        const value = get(this.element, `meta.${it.key}`);
-        return { ...it, value };
-      });
-    }
+    element: { type: Object, required: true },
+    metadata: { type: Array, required: true }
   },
   methods: {
     ...mapActions(['update'], 'tes'),
     updateElement(key, value) {
-      let meta = cloneDeep(this.element.meta) || {};
-      meta[key] = value;
+      const meta = { ...this.element.meta, [key]: value };
       return this.update({ _cid: this.element._cid, meta });
     }
   },
