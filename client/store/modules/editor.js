@@ -1,8 +1,7 @@
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getSupportedContainers, getTesMeta } from 'shared/activities';
-import map from 'lodash/map';
+import { getSupportedContainers } from 'shared/activities';
 import reduce from 'lodash/reduce';
 import { VuexModule } from 'vuex-module';
 
@@ -56,22 +55,6 @@ getter(function assessments() {
   const { tes } = this.rootGetters;
   const activityId = Number(route.params.activityId);
   return filter(tes, { activityId, type: 'ASSESSMENT' });
-});
-
-getter(function focusedElementConfig() {
-  const course = this.rootGetters['course/course'];
-  const focusedElement = this.getters['editor/focusedElement'];
-  return getTesMeta(course.schema, focusedElement.type) || {};
-});
-
-getter(function focusedElementMetadata() {
-  const config = this.rootGetters['editor/focusedElementConfig'];
-  if (!config.meta) return [];
-  const element = this.rootGetters['editor/focusedElement'];
-  return map(config.meta, it => {
-    const value = get(element, `meta.${it.key}`);
-    return { ...it, value };
-  });
 });
 
 // TODO: Implement persistance upon focusout

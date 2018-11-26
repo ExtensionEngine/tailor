@@ -1,7 +1,9 @@
 import courseApi from '../../api/course';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import { getOutlineLevels } from 'shared/activities';
+import get from 'lodash/get';
+import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
+import map from 'lodash/map';
 import values from 'lodash/values';
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
@@ -65,6 +67,31 @@ getter(function revisions() {
   return filter(revs, { courseId })
     .map(rev => ({ ...rev, createdAt: new Date(rev.createdAt) }))
     .sort((rev1, rev2) => rev2.createdAt - rev1.createdAt);
+});
+
+getter(function focusedElementConfig() {
+  return isTes => {
+    if (isTes) {
+      const course = this.rootGetters['course/course'];
+      const focusedElement = this.getters['editor/focusedElement'];
+      return getTesMeta(course.schema, focusedElement.type) || {};
+    }
+    return getLevel(this.rootGetters['course/activity'].type) || {};
+  };
+});
+
+getter(function focusedElementMetadata() {
+  return isTes => {
+    const config = this.rootGetters['course/focusedElementConfig'](isTes);
+    if (!config.meta) return [];
+    const element = isTes
+      ? this.rootGetters['editor/focusedElement']
+      : this.rootGetters['course/activity'];
+    return map(config.meta, it => {
+      const value = get(element, `${isTes ? 'meta' : 'data'}.${it.key}`);
+      return { ...it, value };
+    });
+  };
 });
 
 action(function getUsers() {

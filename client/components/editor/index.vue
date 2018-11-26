@@ -3,7 +3,7 @@
     <toolbar>
       <span slot="actions">
         <span
-          v-if="focusedElementMetadata.length"
+          v-if="metadata.length"
           @click="showSidebar = !showSidebar"
           class="btn btn-fab btn-primary">
           <span class="mdi mdi-wrench"></span>
@@ -13,7 +13,7 @@
     <transition name="slide">
       <sidebar
         v-if="showSidebar"
-        :metadata="focusedElementMetadata"
+        :metadata="metadata"
         :element="focusedElement">
       </sidebar>
     </transition>
@@ -60,13 +60,11 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters([
-      'activity',
-      'contentContainers',
-      'focusedElement',
-      'focusedElementMetadata'
-    ], 'editor'),
-    ...mapGetters(['course'], 'course'),
+    ...mapGetters(['activity', 'contentContainers', 'focusedElement'], 'editor'),
+    ...mapGetters(['course', 'focusedElementMetadata'], 'course'),
+    metadata() {
+      return this.focusedElementMetadata(true);
+    },
     showAssessments() {
       return config.hasAssessments(this.activity.type);
     },
