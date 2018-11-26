@@ -141,7 +141,7 @@
     "eslint-plugin-vue": "^4.7.1",
     "imports-loader": "^0.7.1",
     "node-sass": "^4.5.3",
-    "nodemon": "^1.12.1",
+    "nodemon": "^1.18.6",
     "poi": "^9.4.4",
     "poi-preset-bundle-report": "^2.0.2",
     "poi-preset-eslint": "^9.0.1",
