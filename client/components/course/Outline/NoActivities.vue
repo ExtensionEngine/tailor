@@ -1,7 +1,7 @@
 <template>
   <div class="well">
     <div class="row">
-      <div class="col-md-8">
+      <div :class="`col-md-${showLevelPicker ? 8 : 10}`">
         <span
           :class="{ 'has-error': vErrors.has('name') }"
           class="form-group">
@@ -18,7 +18,7 @@
           </span>
         </span>
       </div>
-      <div class="col-md-2">
+      <div v-if="showLevelPicker" class="col-md-2">
         <multiselect
           :value="level"
           :options="levels"
@@ -56,6 +56,9 @@ export default {
     ...mapGetters(['course', 'structure', 'activities'], 'course'),
     levels() {
       return filter(this.structure, { level: 1 });
+    },
+    showLevelPicker() {
+      return this.levels.length > 1;
     }
   },
   methods: {
@@ -81,8 +84,8 @@ export default {
       });
     }
   },
-  mounted() {
-    this.level = this.levels[0];
+  created() {
+    this.level = first(this.levels);
   },
   components: { multiselect }
 };
