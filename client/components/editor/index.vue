@@ -206,6 +206,6 @@ export default {
 }
 
 .slide-enter, .slide-leave-to {
-  margin-right: -300px;
+  margin-right: -380px;
 }
 </style>

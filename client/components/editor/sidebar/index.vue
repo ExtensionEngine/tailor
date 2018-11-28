@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <h3>Metadata</h3>
+    <h2>Metadata</h2>
     <div class="meta-element">
       <meta-input
         v-for="it in metadata"
@@ -35,12 +35,16 @@ export default {
 
 <style lang="scss" scoped>
 .sidebar {
+  h2 {
+    font-size: 18px;
+  }
+
   position: absolute;
   top: 100px;
   right: 0;
   bottom: 0;
-  width: 300px;
-  padding: 75px 0 75px 20px;
+  width: 380px;
+  padding: 25px 0 75px 20px;
   text-align: left;
   background: white;
   box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18);
