@@ -11,7 +11,7 @@ if (args.length !== 1) {
 
 const email = args[0];
 
-User.invite({ email, role: role.ADMIN })
+User.invite({ email, role: role.ADMIN }, { awaitEmail: true })
   .then(user => {
     console.log(`Invitation sent to ${user.email} for Admin role.`);
     process.exit(0);

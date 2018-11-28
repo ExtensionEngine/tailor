@@ -96,12 +96,13 @@ class User extends Model {
     };
   }
 
-  static invite(user) {
-    return this.create(user).then(user => {
-      user.token = user.createToken({ expiresIn: '5 days' });
-      mail.invite(user);
-      return user.save();
-    });
+  static invite(user, { awaitEmail }) {
+    return this.create(user)
+      .then(async user => {
+        user.token = user.createToken({ expiresIn: '5 days' });
+        awaitEmail ? await mail.invite(user) : mail.invite(user);
+        return user.save();
+      });
   }
 
   isAdmin() {
