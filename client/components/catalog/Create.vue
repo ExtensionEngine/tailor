@@ -136,10 +136,9 @@ export default {
 
 <style lang="scss" scoped>
 .btn-fab .mdi {
-  display: inline-block;
-  font-size: 28px;
-  line-height: 28px;
-  vertical-align: middle;
+  display: flex;
+  justify-content: center;
+  font-size: 32px;
 }
 
 .create-course {
