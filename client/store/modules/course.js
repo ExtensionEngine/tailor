@@ -10,6 +10,8 @@ import { VuexModule } from 'vuex-module';
 
 const { build, getter, action, mutation, state } = new VuexModule('course');
 const COURSE_ROUTE = /\/course\/\d+/;
+// NOTE: teaching elements always have `activityId` foreign key and that is
+//       how we can tell if an element is `tes` or `activity`
 const isTes = element => !!element.activityId;
 
 state({
@@ -73,8 +75,6 @@ getter(function revisions() {
 getter(function getConfig() {
   return element => {
     if (!element.type) return {};
-    // NOTE: teaching elements always have activityId foreign key and that is
-    // how we can tell if an element is tes or activity
     if (isTes(element)) {
       const course = this.rootGetters['course/course'];
       return getTesMeta(course.schema, element.type);
