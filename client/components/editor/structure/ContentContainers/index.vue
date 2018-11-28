@@ -11,11 +11,12 @@
       :types="types"
       :name="name"
       :layout="layout"
+      :deleteDisabled="deleteDisabled"
       :class="`${name}-container`"
       @delete="deleteContainer(container)"
       class="content-container">
     </content-container>
-    <div v-if="addBtnEnabled">
+    <div v-if="!addDisabled">
       <button @click="addContainer" class="add-btn btn btn-primary btn-material">
         <span class="add-icon mdi mdi-plus"></span>
         Create {{ name }}
@@ -44,14 +45,20 @@ export default {
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: false },
-    layout: { type: Boolean, default: true }
+    layout: { type: Boolean, default: true },
+    min: { type: Number, default: null },
+    max: { type: Number, default: null }
   },
   computed: {
     name() {
       return this.label.toLowerCase();
     },
-    addBtnEnabled() {
-      return !(!this.multiple && this.containerGroup.length);
+    addDisabled() {
+      return (!this.multiple && this.containerGroup.length) ||
+        (this.max && this.containerGroup.length >= this.max);
+    },
+    deleteDisabled() {
+      return this.min && this.containerGroup.length <= this.min;
     },
     nextPosition() {
       const last = get(maxBy(this.containerGroup, 'position'), 'position', 0);

@@ -2,6 +2,7 @@
   <div>
     <div class="actions">
       <button
+        v-if="!deleteDisabled"
         @click="deleteContainer"
         class="btn btn-default btn-material pull-right"
         type="button">
@@ -43,7 +44,8 @@ export default {
     container: { type: Object, required: true },
     types: { type: Array, default: null },
     name: { type: String, required: true },
-    layout: { type: Boolean, required: true }
+    layout: { type: Boolean, required: true },
+    deleteDisabled: { type: Boolean, default: false }
   },
   computed: {
     ...mapGetters(['tes']),
