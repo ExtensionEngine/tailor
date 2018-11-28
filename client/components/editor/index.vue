@@ -66,7 +66,7 @@ export default {
     ...mapGetters(['activity', 'contentContainers', 'focusedElement'], 'editor'),
     ...mapGetters(['course', 'getMetadata'], 'course'),
     isSidebarDisabled() {
-      return this.editedElements[this.focusedElement.id];
+      return this.editedElements[this.focusedElement._cid];
     },
     metadata() {
       return this.getMetadata(this.focusedElement);

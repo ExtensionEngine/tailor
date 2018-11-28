@@ -234,8 +234,11 @@ export default {
     }
   },
   watch: {
-    isEditing(val) {
-      isFunction(this.toggleElement) && this.toggleElement(this.element.id, val);
+    isEditing: {
+      handler(val) {
+        isFunction(this.toggleElement) && this.toggleElement(this.element._cid, val);
+      },
+      immediate: true
     }
   },
   mounted() {
