@@ -58,13 +58,13 @@ function getOutlineLevels(schemaId) {
   return getSchema(schemaId).structure;
 }
 
-function getLevel(type) {
+function getLevel(type, defaultValue) {
   const schemaId = getSchemaId(type);
-  return schemaId && find(getOutlineLevels(schemaId), { type });
+  return (schemaId && find(getOutlineLevels(schemaId), { type })) || defaultValue;
 }
 
-function getTesMeta(schemaId, type) {
-  return find(getSchema(schemaId).tesMeta, { type }) || {};
+function getTesMeta(schemaId, type, defaultValue) {
+  return find(getSchema(schemaId).tesMeta, { type }) || defaultValue;
 }
 
 function getSiblingLevels(type) {
