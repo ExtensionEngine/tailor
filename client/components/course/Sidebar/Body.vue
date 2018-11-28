@@ -50,18 +50,18 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activity', 'focusedElementConfig', 'focusedElementMetadata'], 'course'),
+    ...mapGetters(['activity', 'getConfig', 'getMetadata'], 'course'),
     config() {
-      return this.focusedElementConfig();
+      return this.getConfig(this.activity);
+    },
+    metadata() {
+      return this.getMetadata(this.activity);
     },
     publishStatus() {
       let { publishedAt } = this.activity;
       return publishedAt
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
-    },
-    metadata() {
-      return this.focusedElementMetadata();
     }
   },
   methods: {

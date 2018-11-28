@@ -61,9 +61,9 @@ export default {
   computed: {
     ...mapGetters(['activities']),
     ...mapGetters(['activity', 'contentContainers', 'focusedElement'], 'editor'),
-    ...mapGetters(['course', 'focusedElementMetadata'], 'course'),
+    ...mapGetters(['course', 'getMetadata'], 'course'),
     metadata() {
-      return this.focusedElementMetadata(true);
+      return this.getMetadata(this.focusedElement);
     },
     showAssessments() {
       return config.hasAssessments(this.activity.type);

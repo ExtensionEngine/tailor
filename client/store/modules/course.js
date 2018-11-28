@@ -69,24 +69,25 @@ getter(function revisions() {
     .sort((rev1, rev2) => rev2.createdAt - rev1.createdAt);
 });
 
-getter(function focusedElementConfig() {
-  return isTes => {
+getter(function getConfig() {
+  return element => {
+    if (!element.type) return {};
+    // NOTE: teaching elements always have activityId foreign key and that is
+    // how we can tell if an element is tes or activity
+    const isTes = !!element.activityId;
     if (isTes) {
       const course = this.rootGetters['course/course'];
-      const focusedElement = this.getters['editor/focusedElement'];
-      return getTesMeta(course.schema, focusedElement.type) || {};
+      return getTesMeta(course.schema, element.type) || {};
     }
-    return getLevel(this.rootGetters['course/activity'].type) || {};
+    return getLevel(element.type) || {};
   };
 });
 
-getter(function focusedElementMetadata() {
-  return isTes => {
-    const config = this.rootGetters['course/focusedElementConfig'](isTes);
+getter(function getMetadata() {
+  return element => {
+    const config = this.rootGetters['course/getConfig'](element);
     if (!config.meta) return [];
-    const element = isTes
-      ? this.rootGetters['editor/focusedElement']
-      : this.rootGetters['course/activity'];
+    const isTes = !!element.activityId;
     return map(config.meta, it => {
       const value = get(element, `${isTes ? 'meta' : 'data'}.${it.key}`);
       return { ...it, value };
