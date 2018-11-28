@@ -32,6 +32,7 @@ import EventBus from 'EventBus';
 import get from 'lodash/get';
 import { mapActions } from 'vuex-module';
 import maxBy from 'lodash/maxBy';
+import times from 'lodash/times';
 
 const appChannel = EventBus.channel('app');
 
@@ -78,6 +79,10 @@ export default {
         action: () => this.remove(container)
       });
     }
+  },
+  created() {
+    if (!this.min || this.containerGroup.length >= this.min) return;
+    return times(this.min - this.containerGroup.length, this.addContainer);
   },
   filters: {
     capitalize(val) {
