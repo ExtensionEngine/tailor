@@ -77,7 +77,7 @@ getter(function getConfig() {
     // how we can tell if an element is tes or activity
     if (isTes(element)) {
       const course = this.rootGetters['course/course'];
-      return getTesMeta(course.schema, element.type) || {};
+      return getTesMeta(course.schema, element.type);
     }
     return getLevel(element.type) || {};
   };

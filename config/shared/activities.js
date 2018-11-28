@@ -64,7 +64,7 @@ function getLevel(type) {
 }
 
 function getTesMeta(schemaId, type) {
-  return find(getSchema(schemaId).tesMeta, { type });
+  return find(getSchema(schemaId).tesMeta, { type }) || {};
 }
 
 function getSiblingLevels(type) {
