@@ -5,7 +5,8 @@
         <span
           v-if="metadata.length"
           @click="showSidebar = !showSidebar"
-          class="btn btn-fab btn-primary">
+          class="btn btn-fab btn-primary"
+          title="Toggle teaching element sidebar">
           <span class="mdi mdi-wrench"></span>
         </span>
       </span>
