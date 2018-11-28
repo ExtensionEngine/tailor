@@ -4,6 +4,7 @@
       <span slot="actions">
         <span
           v-if="metadata.length"
+          :disabled="isSidebarDisabled"
           @click="showSidebar = !showSidebar"
           class="btn btn-fab btn-primary"
           title="Toggle teaching element sidebar">
@@ -13,7 +14,7 @@
     </toolbar>
     <transition name="slide">
       <sidebar
-        v-if="showSidebar"
+        v-if="showSidebar && !isSidebarDisabled"
         :metadata="metadata"
         :element="focusedElement">
       </sidebar>
@@ -56,13 +57,17 @@ export default {
     return {
       showLoader: true,
       showSidebar: false,
-      mousedownCaptured: false
+      mousedownCaptured: false,
+      editedElements: {}
     };
   },
   computed: {
     ...mapGetters(['activities']),
     ...mapGetters(['activity', 'contentContainers', 'focusedElement'], 'editor'),
     ...mapGetters(['course', 'getMetadata'], 'course'),
+    isSidebarDisabled() {
+      return this.editedElements[this.focusedElement.id];
+    },
     metadata() {
       return this.getMetadata(this.focusedElement);
     },
@@ -105,12 +110,20 @@ export default {
         (e.component.data.id !== this.focusedElement.id))) {
         this.focusoutElement();
       }
+    },
+    toggleEditedElement(elementId, value) {
+      this.$set(this.editedElements, elementId, value);
     }
   },
   watch: {
     focusedElement(current, previous) {
       if (current._cid !== previous._cid) this.showSidebar = false;
     }
+  },
+  provide() {
+    return {
+      toggleElement: this.toggleEditedElement
+    };
   },
   created() {
     this.focusoutElement();

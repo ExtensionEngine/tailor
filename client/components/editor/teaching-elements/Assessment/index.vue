@@ -91,6 +91,7 @@ import TrueFalse from './TrueFalse';
 import uniq from 'lodash/uniq';
 import unset from 'lodash/unset';
 
+const isFunction = arg => typeof arg === 'function';
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
 
@@ -232,6 +233,11 @@ export default {
       this.objective = objective;
     }
   },
+  watch: {
+    isEditing(val) {
+      isFunction(this.toggleElement) && this.toggleElement(this.element.id, val);
+    }
+  },
   mounted() {
     this.setObjective();
   },
@@ -248,7 +254,8 @@ export default {
     MatchingQuestion,
     DragDrop,
     multiselect
-  }
+  },
+  inject: ['toggleElement']
 };
 </script>
 
