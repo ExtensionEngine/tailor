@@ -146,7 +146,7 @@ export default {
     examObjectiveLabel() {
       if (isEmpty(this.examObjectives)) return '';
       const types = uniq(map(this.examObjectives, 'type'));
-      const label = types.length > 1 ? 'Objective' : getLevel(types[0], {}).label;
+      const label = types.length > 1 ? 'Objective' : getLevel(types[0]).label;
       return `Link ${label}`;
     }
   },

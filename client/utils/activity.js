@@ -16,7 +16,7 @@ export function getChildren(activities, parentId) {
 export function getOutlineChildren(activities, parentId) {
   const children = getChildren(activities, parentId);
   if (!parentId || !children.length) return children;
-  const types = getLevel(find(activities, { id: parentId }).type, {}).subLevels;
+  const types = getLevel(find(activities, { id: parentId }).type).subLevels;
   return filter(children, it => types.includes(it.type));
 }
 

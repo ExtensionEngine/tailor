@@ -92,9 +92,7 @@ export default {
       this.hide();
     },
     isSameLevel(activity) {
-      const activityLevel = getLevel(activity.type, {}).level;
-      const anchorLevel = getLevel(this.anchor.type, {}).level;
-      return activityLevel && anchorLevel && activityLevel === anchorLevel;
+      return getLevel(activity.type).level === getLevel(this.anchor.type).level;
     },
     resolveParent(activity) {
       return this.isSameLevel(activity) ? this.anchor.parentId : this.anchor.id;
