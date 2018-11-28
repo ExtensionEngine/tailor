@@ -40,11 +40,11 @@ export default {
   right: 0;
   bottom: 0;
   width: 300px;
-  padding-top: 75px;
-  padding-left: 20px;
+  padding: 75px 0 75px 20px;
   text-align: left;
   background: white;
   box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18);
+  overflow-y: auto;
   z-index: 998;
 }
 </style>
