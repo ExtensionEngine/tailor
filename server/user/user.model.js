@@ -9,6 +9,7 @@ const { user: Role } = require('../../config/shared').role;
 
 const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
+const noop = Function.prototype;
 
 class User extends Model {
   static fields({ DATE, ENUM, STRING, VIRTUAL }) {
@@ -96,12 +97,13 @@ class User extends Model {
     };
   }
 
-  static invite(user) {
-    return this.create(user).then(user => {
-      user.token = user.createToken({ expiresIn: '5 days' });
-      mail.invite(user);
-      return user.save();
-    });
+  static invite(user, emailCb = noop) {
+    return this.create(user)
+      .then(user => {
+        user.token = user.createToken({ expiresIn: '5 days' });
+        mail.invite(user).asCallback(emailCb);
+        return user.save();
+      });
   }
 
   isAdmin() {
