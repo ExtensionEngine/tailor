@@ -96,11 +96,11 @@ class User extends Model {
     };
   }
 
-  static invite(user, { awaitEmail }) {
+  static invite(user, emailCb) {
     return this.create(user)
-      .then(async user => {
+      .then(user => {
         user.token = user.createToken({ expiresIn: '5 days' });
-        awaitEmail ? await mail.invite(user) : mail.invite(user);
+        mail.invite(user).asCallback(emailCb);
         return user.save();
       });
   }
