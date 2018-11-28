@@ -32,7 +32,9 @@
     "contentContainers": [{
       "type": "PAGE",
       "label": "Page",
-      "multiple": false
+      "multiple": false,
+      "min": 1,
+      "max": 1
     }]
   }]
 }

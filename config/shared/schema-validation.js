@@ -46,6 +46,9 @@ const schema = yup.object().shape({
     label: yup.string().min(2).max(100).required(),
     types: yup.array().of(yup.string().min(2).max(20)),
     multiple: yup.boolean(),
+    min: yup.number().integer().min(0).when('multiple', conditionalMax(1)),
+    max: yup.number().integer().min(yup.ref('min'))
+      .when('multiple', conditionalMax(1)),
     displayHeading: yup.boolean()
   }))
 });
@@ -60,3 +63,7 @@ module.exports = function (config) {
     throw err;
   }
 };
+
+function conditionalMax(max) {
+  return (field, schema) => field ? schema : schema.max(max);
+}
