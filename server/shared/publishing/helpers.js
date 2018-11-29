@@ -20,7 +20,7 @@ const { FLAT_REPO_STRUCTURE } = process.env;
 
 const TES_ATTRS = [
   'id', 'uid', 'type', 'contentId', 'contentSignature',
-  'position', 'data', 'meta', 'refs', 'createdAt', 'updatedAt'
+  'position', 'data', 'refs', 'createdAt', 'updatedAt'
 ];
 
 function publishActivity(activity) {

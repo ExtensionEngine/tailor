@@ -36,10 +36,14 @@
 </template>
 
 <script>
+import { getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
 import CircularProgress from 'components/common/CircularProgress';
+import cloneDeep from 'lodash/cloneDeep';
 import Discussion from './Discussion';
 import fecha from 'fecha';
+import get from 'lodash/get';
+import map from 'lodash/map';
 import Meta from 'components/common/Meta';
 import Relationship from './Relationship';
 
@@ -50,24 +54,29 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activity', 'getConfig', 'getMetadata'], 'course'),
+    ...mapGetters(['activity'], 'course'),
     config() {
-      return this.getConfig(this.activity);
-    },
-    metadata() {
-      return this.getMetadata(this.activity);
+      return getLevel(this.activity.type) || {};
     },
     publishStatus() {
       let { publishedAt } = this.activity;
       return publishedAt
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
+    },
+    metadata() {
+      if (!get(this.config, 'meta')) return [];
+      return map(this.config.meta, it => {
+        let value = get(this.activity, `data.${it.key}`);
+        return { ...it, value };
+      });
     }
   },
   methods: {
     ...mapActions(['update', 'publish'], 'activities'),
     updateActivity(key, value) {
-      const data = { ...this.activity.data, [key]: value };
+      const data = cloneDeep(this.activity.data) || {};
+      data[key] = value;
       this.update({ _cid: this.activity._cid, data });
     },
     publishActivity() {

@@ -82,15 +82,6 @@ const SCHEMAS = [{
       placeholder: 'Click to add...',
       validate: { rules: { required: false, max: 250 } }
     }]
-  }],
-  tesMeta: [{
-    type: 'ASSESSMENT',
-    label: 'Assessment',
-    meta: [{
-      key: 'description',
-      type: 'TEXTAREA',
-      label: 'Description'
-    }]
   }]
 }];
 
