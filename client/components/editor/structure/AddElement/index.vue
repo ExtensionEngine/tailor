@@ -27,6 +27,10 @@ import cuid from 'cuid';
 import isFunction from 'lodash/isFunction';
 import SelectElement from './SelectElement';
 import SelectWidth from './SelectWidth';
+import times from 'lodash/times';
+
+const getTextElement = () =>
+  ({ id: cuid(), type: 'HTML', embedded: true, data: { width: 12 } });
 
 export default {
   name: 'add-element',
@@ -80,9 +84,22 @@ export default {
         element.data = isFunction(defaults[this.subtype])
           ? defaults[this.subtype]()
           : cloneDeep(defaults[this.subtype]);
-        element.data.question = [
-          { id: cuid(), type: 'HTML', data: { width: 12 }, embedded: true }
-        ];
+        element.data.question = [getTextElement()];
+      }
+
+      if (element.type === 'POLL') {
+        const question = getTextElement();
+        element.data = {
+          name: null,
+          embeds: { [question.id]: question },
+          question: question.id,
+          options: []
+        };
+        times(2, i => {
+          const option = { ...getTextElement(), position: i + 1 };
+          element.data.embeds[option.id] = option;
+          element.data.options.push(option.id);
+        });
       }
 
       element.data.width = this.width || 12;

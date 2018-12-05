@@ -48,6 +48,7 @@ const TE_TYPES = [
   { type: 'MODAL', label: 'Modal', icon: 'mdi-window-maximize' },
   { type: 'TABLE', label: 'Table', icon: 'mdi-table' },
   { type: 'PDF', label: 'PDF', icon: 'mdi-file-pdf-box' },
+  { type: 'POLL', label: 'Poll', icon: 'mdi-poll-box' },
   { type: 'AUDIO', label: 'Audio', icon: 'mdi-volume-high' }
 ];
 

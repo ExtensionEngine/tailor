@@ -39,6 +39,7 @@ import TeHtml from './Html';
 import TeImage from './Image';
 import TeModal from './Modal';
 import TePdf from './Pdf';
+import TePoll from './Poll';
 import TeTable from './Table';
 import TeVideo from './Video';
 import throttle from 'lodash/throttle';
@@ -56,7 +57,8 @@ const TE_TYPES = {
   MODAL: 'te-modal',
   PDF: 'te-pdf',
   AUDIO: 'te-audio',
-  TABLE: 'te-table'
+  TABLE: 'te-table',
+  POLL: 'te-poll'
 };
 
 export default {
@@ -127,6 +129,7 @@ export default {
     TeImage,
     TeModal,
     TePdf,
+    TePoll,
     TeTable,
     TeVideo
   }
