@@ -23,7 +23,7 @@
       <draggable
         :list="children"
         :options="{ handle: '.activity' }"
-        @update="reorder">
+        @update="data => reorder(data, children)">
         <activity
           v-for="(subActivity, index) in children"
           v-bind="subActivity"
@@ -44,9 +44,11 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import InsertActivity from './InsertActivity';
 import map from 'lodash/map';
+import reorderActivities from 'utils/reorder';
 
 export default {
   name: 'activity',
+  mixins: [reorderActivities],
   props: {
     _cid: { type: String, required: true },
     id: { type: Number, default: null },
