@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapGetters } from 'vuex-module';
 import Activity from './Activity';
 import CircularProgress from 'components/common/CircularProgress';
 import Draggable from 'vuedraggable';
@@ -45,9 +45,6 @@ export default {
       return filter(this.activities, it => types.includes(it.type))
         .sort((x, y) => x.position - y.position);
     }
-  },
-  methods: {
-    ...mapActions({ updatePosition: 'reorder' }, 'activities')
   },
   components: { Activity, CircularProgress, Draggable, NoActivities, Sidebar }
 };

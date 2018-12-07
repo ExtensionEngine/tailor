@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapGetters, mapMutations } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -88,7 +88,6 @@ export default {
   },
   methods: {
     ...mapMutations(['focusActivity', 'toggleActivity'], 'course'),
-    ...mapActions({ updatePosition: 'reorder' }, 'activities'),
     isSelected(_cid) {
       return this.focusedActivity._cid === _cid;
     },
