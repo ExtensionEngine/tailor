@@ -44,11 +44,11 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import InsertActivity from './InsertActivity';
 import map from 'lodash/map';
-import reorderActivities from 'utils/reorder';
+import reorderMixin from './reorderMixin';
 
 export default {
   name: 'activity',
-  mixins: [reorderActivities],
+  mixins: [reorderMixin],
   props: {
     _cid: { type: String, required: true },
     id: { type: Number, default: null },
@@ -90,13 +90,6 @@ export default {
     ...mapMutations(['focusActivity', 'toggleActivity'], 'course'),
     isSelected(_cid) {
       return this.focusedActivity._cid === _cid;
-    },
-    reorder({ newIndex: newPosition }) {
-      const items = this.children;
-      const activity = items[newPosition];
-      const isFirstChild = newPosition === 0;
-      const context = { items, newPosition, isFirstChild };
-      this.updatePosition({ activity, context });
     }
   },
   components: { Draggable, InsertActivity }

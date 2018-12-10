@@ -30,11 +30,11 @@ import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
 import NoActivities from './NoActivities';
-import reorderActivities from 'utils/reorder';
+import reorderMixin from './reorderMixin';
 import Sidebar from '../Sidebar';
 
 export default {
-  mixins: [reorderActivities],
+  mixins: [reorderMixin],
   props: {
     showLoader: { type: Boolean, default: false }
   },
