@@ -2,7 +2,8 @@
   <div class="html-input">
     <label :for="meta.key">{{ meta.label }}</label>
     <quill-editor
-      v-model="content">
+      v-model="content"
+      :options="quillOptions">
     </quill-editor>
   </div>
 </template>
@@ -10,11 +11,24 @@
 <script>
 import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
 
+const quillOptions = () => ({
+  modules: {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['blockquote', 'code-block'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ script: 'sub' }, { script: 'super' }],
+      [{ color: [] }, { background: [] }],
+      ['link', 'image']
+    ]
+  }
+});
+
 export default {
   name: 'html-input',
   props: {
     meta: { type: Object, default: () => ({ value: null }) },
-    minHeight: { type: Number, default: 100 }
+    quillOptions: { type: Object, default: quillOptions }
   },
   data() {
     return {
