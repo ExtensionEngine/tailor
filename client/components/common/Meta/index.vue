@@ -10,6 +10,7 @@
 import Checkbox from './Checkbox';
 import ColorPicker from './ColorPicker';
 import DatePicker from './DatePicker';
+import Html from './Html';
 import Input from './Input';
 import mapKeys from 'lodash/mapKeys';
 import Select from './Select';
@@ -21,6 +22,7 @@ const META_TYPES = {
   COLOR: ColorPicker,
   DATE: DatePicker,
   DATETIME: DatePicker,
+  HTML: Html,
   INPUT: Input,
   SELECT: Select,
   SWITCH: Switch,
