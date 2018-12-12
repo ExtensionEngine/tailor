@@ -12,7 +12,7 @@
           @ready="editor => editor.focus()"
           @blur="update">
         </quill-editor>
-        <div v-else @click="editing = true" class="ql-container ql-snow">
+        <div v-else @click="editing = true" class="ql-container ql-snow content">
           <div v-html="content || meta.placeholder" class="ql-editor"></div>
         </div>
       </div>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import some from 'lodash/some';
 import { quillEditor as QuillEditor } from 'vue-quill-editor';
 
 const quillOptions = () => ({
@@ -54,8 +55,9 @@ export default {
       this.$emit('update', this.meta.key, this.content);
     },
     getActiveTooltips(quill) {
-      const tooltip = quill.container.querySelector('.ql-tooltip');
-      if (tooltip && !tooltip.classList.contains('ql-hidden')) return tooltip;
+      const tooltips = quill.container.querySelectorAll('.ql-tooltip');
+      const visibleTooltip = !some(tooltips, it => it.classList.contains('ql-hidden'));
+      if (tooltips.length && visibleTooltip) return tooltips;
     }
   },
   components: {
@@ -78,5 +80,9 @@ export default {
 
 .quill-input:focus-within {
   background: initial;
+}
+
+.content {
+  padding-top: 42px;
 }
 </style>
