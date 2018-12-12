@@ -8,7 +8,7 @@
           v-model="content"
           :ref="meta.key"
           :name="meta.key"
-          :options="getQuillOptions()"
+          :options="quillOptions"
           @ready="editor => editor.focus()"
           @blur="update">
         </quill-editor>
@@ -23,19 +23,23 @@
 <script>
 import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
 
-const defaultData = [
-  ['bold', 'italic', 'underline'],
-  ['blockquote'],
-  [{ list: 'ordered' }, { list: 'bullet' }],
-  [{ script: 'sub' }, { script: 'super' }],
-  ['link', 'image']
-];
+const quillOptions = () => ({
+  modules: {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      ['blockquote'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ script: 'sub' }, { script: 'super' }],
+      ['link', 'image']
+    ]
+  }
+});
 
 export default {
   name: 'html-input',
   props: {
     meta: { type: Object, default: () => ({ value: null }) },
-    quillOptionsData: { type: Array, default() { return defaultData; } }
+    quillOptions: { type: Object, default: quillOptions }
   },
   data() {
     return {
@@ -44,13 +48,6 @@ export default {
     };
   },
   methods: {
-    getQuillOptions() {
-      return {
-        modules: {
-          toolbar: this.quillOptionsData
-        }
-      };
-    },
     update() {
       this.editing = false;
       if (this.meta.value === this.content) return;
