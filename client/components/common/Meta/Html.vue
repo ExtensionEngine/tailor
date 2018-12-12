@@ -1,13 +1,20 @@
 <template>
   <div class="quill-input">
     <label :for="meta.key">{{ meta.label }}</label>
-    <div class="editor-wrapper">
-      <quill-editor
-        v-model="content"
-        :ref="meta.key"
-        :name="meta.key"
-        :options="getQuillOptions()">
-      </quill-editor>
+    <div>
+      <div class="editor-wrapper">
+        <quill-editor
+          v-if="editing"
+          v-model="content"
+          :ref="meta.key"
+          :name="meta.key"
+          :options="getQuillOptions()"
+          @blur="update">
+        </quill-editor>
+        <div v-else @click="editing = true" class="ql-container ql-snow">
+          <div v-html="content" class="ql-editor"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -31,8 +38,7 @@ export default {
   },
   data() {
     return {
-      value: this.meta.value,
-      content: null,
+      content: this.meta.value,
       editing: false
     };
   },
@@ -43,6 +49,11 @@ export default {
           toolbar: this.quillOptionsData
         }
       };
+    },
+    update() {
+      this.editing = false;
+      if (this.meta.value === this.content) return;
+      this.$emit('update', this.meta.key, this.content);
     }
   },
   components: {
