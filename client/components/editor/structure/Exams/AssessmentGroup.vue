@@ -8,12 +8,20 @@
       <div class="form-group time-limit">
         <label for="timeLimit">Time limit (minutes)</label>
         <input
+          v-validate="{ rules: { min_value: 0 } }"
           v-model="timeLimit"
+          :class="{ 'has-error': isTimeLimitInvalid }"
           id="timeLimit"
+          name="timeLimit"
+          data-vv-as="time limit"
           class="form-control"
           type="number"
+          min="0"
           step="15">
       </div>
+      <span v-if="isTimeLimitInvalid" class="help-block">
+        {{ vErrors.first('timeLimit') }}
+      </span>
     </div>
     <h3>Question group {{ toLetter(position) }}</h3>
     <h4>Introduction</h4>
@@ -54,11 +62,13 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
 import sortBy from 'lodash/sortBy';
 import TesList from '../TesList';
+import { withValidation } from 'utils/validation';
 
 const appChannel = EventBus.channel('app');
 
 export default {
   name: 'assessment-group',
+  mixins: [withValidation()],
   props: {
     group: { type: Object, required: true },
     exam: { type: Object, required: true },
@@ -75,6 +85,9 @@ export default {
     assessments() {
       const cond = { activityId: this.group.id, type: 'ASSESSMENT' };
       return sortBy(filter(this.tes, cond), 'position');
+    },
+    isTimeLimitInvalid() {
+      return this.vErrors.has('timeLimit');
     },
     hasAssessments() {
       return this.assessments && !!this.assessments.length;
@@ -127,6 +140,7 @@ export default {
   },
   watch: {
     timeLimit: debounce(function (val) {
+      if (this.isTimeLimitInvalid) return;
       let group = cloneDeep(this.group);
       group.data = group.data || {};
       group.data.timeLimit = val;
@@ -142,6 +156,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.help-block {
+  margin-top: 0;
+}
+
+.form-control{
+  &.has-error {
+    box-shadow: inset 0 -2px 0 #e51c23;
+  }
+}
+
 h3 {
   margin: 30px 5px;
   color: #444;
@@ -187,7 +211,7 @@ h4 {
 }
 
 .time-limit {
-  margin: 7px 20px;
+  margin: 7px 25px;
 
   label {
     margin-right: 5px;
