@@ -9,10 +9,11 @@
           :ref="meta.key"
           :name="meta.key"
           :options="getQuillOptions()"
+          @ready="editor => editor.focus()"
           @blur="update">
         </quill-editor>
         <div v-else @click="editing = true" class="ql-container ql-snow">
-          <div v-html="content" class="ql-editor"></div>
+          <div v-html="content || meta.placeholder" class="ql-editor"></div>
         </div>
       </div>
     </div>
