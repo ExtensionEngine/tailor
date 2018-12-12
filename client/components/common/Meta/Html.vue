@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
+import { quillEditor as QuillEditor } from 'vue-quill-editor';
 
 const quillOptions = () => ({
   modules: {
@@ -48,15 +48,18 @@ export default {
     };
   },
   methods: {
-    update() {
-      this.editing = false;
+    update(quill) {
+      if (!this.getActiveTooltips(quill)) this.editing = false;
       if (this.meta.value === this.content) return;
       this.$emit('update', this.meta.key, this.content);
+    },
+    getActiveTooltips(quill) {
+      const tooltip = quill.container.querySelector('.ql-tooltip');
+      if (tooltip && !tooltip.classList.contains('ql-hidden')) return tooltip;
     }
   },
   components: {
-    QuillEditor,
-    Quill
+    QuillEditor
   }
 };
 </script>
