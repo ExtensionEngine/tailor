@@ -1,40 +1,49 @@
 <template>
-  <div class="html-input">
+  <div class="quill-input">
     <label :for="meta.key">{{ meta.label }}</label>
-    <quill-editor
-      v-model="content"
-      :options="quillOptions">
-    </quill-editor>
+    <div class="editor-wrapper">
+      <quill-editor
+        v-model="content"
+        :ref="meta.key"
+        :name="meta.key"
+        :options="getQuillOptions()">
+      </quill-editor>
+    </div>
   </div>
 </template>
 
 <script>
 import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
 
-const quillOptions = () => ({
-  modules: {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ script: 'sub' }, { script: 'super' }],
-      [{ color: [] }, { background: [] }],
-      ['link', 'image']
-    ]
-  }
-});
+const defaultData = [
+  ['bold', 'italic', 'underline'],
+  ['blockquote'],
+  [{ list: 'ordered' }, { list: 'bullet' }],
+  [{ script: 'sub' }, { script: 'super' }],
+  ['link', 'image']
+];
 
 export default {
   name: 'html-input',
   props: {
     meta: { type: Object, default: () => ({ value: null }) },
-    quillOptions: { type: Object, default: quillOptions }
+    quillOptionsData: { type: Array, default() { return defaultData; } }
   },
   data() {
     return {
       value: this.meta.value,
-      content: null
+      content: null,
+      editing: false
     };
+  },
+  methods: {
+    getQuillOptions() {
+      return {
+        modules: {
+          toolbar: this.quillOptionsData
+        }
+      };
+    }
   },
   components: {
     QuillEditor,
@@ -44,10 +53,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.html-input {
+.quill-input {
   position: relative;
-  padding: 3px 8px;
-  margin: 15px 0 35px 0;
+  padding: 10px 8px;
+  margin: 0 0 20px 0;
   cursor: pointer;
+}
+
+.quill-input:hover:not(:focus-within) {
+  background: #f5f5f5;
+}
+
+.quill-input:focus-within {
+  background: initial;
 }
 </style>
