@@ -1,28 +1,24 @@
 <template>
-  <div class="quill-input">
+  <div class="meta-quill-input">
     <label :for="meta.key">{{ meta.label }}</label>
-    <div>
-      <div class="editor-wrapper">
-        <quill-editor
-          v-if="editing"
-          v-model="content"
-          :ref="meta.key"
-          :name="meta.key"
-          :options="quillOptions"
-          @ready="editor => editor.focus()"
-          @blur="update">
-        </quill-editor>
-        <div v-else @click="editing = true" class="ql-container ql-snow content">
-          <div v-html="content || meta.placeholder" class="ql-editor"></div>
-        </div>
-      </div>
+    <div class="editor-wrapper">
+      <quill-editor
+        v-model="content"
+        :ref="meta.key"
+        :name="meta.key"
+        :options="quillOptions"
+        :disabled="!editing"
+        :class="{ 'meta-quill-disabled': !editing }"
+        @focus="enableEditor"
+        @blur="update">
+      </quill-editor>
     </div>
   </div>
 </template>
 
 <script>
-import some from 'lodash/some';
 import { quillEditor as QuillEditor } from 'vue-quill-editor';
+import some from 'lodash/some';
 
 const quillOptions = () => ({
   modules: {
@@ -54,6 +50,9 @@ export default {
       if (this.meta.value === this.content) return;
       this.$emit('update', this.meta.key, this.content);
     },
+    enableEditor(quill) {
+      this.editing = true;
+    },
     getActiveTooltips(quill) {
       const tooltips = quill.container.querySelectorAll('.ql-tooltip');
       const visibleTooltip = !some(tooltips, it => it.classList.contains('ql-hidden'));
@@ -66,23 +65,21 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.quill-input {
+<style lang="scss">
+.meta-quill-input {
   position: relative;
   padding: 10px 8px;
   margin: 0 0 20px 0;
   cursor: pointer;
-}
 
-.quill-input:hover:not(:focus-within) {
-  background: #f5f5f5;
-}
+  .meta-quill-disabled {
+    .ql-toolbar.ql-snow {
+      background: #f5f5f5;
+    }
+  }
 
-.quill-input:focus-within {
-  background: initial;
-}
-
-.content {
-  padding-top: 42px;
+  .ql-tooltip {
+    left: 30px !important;
+  }
 }
 </style>
