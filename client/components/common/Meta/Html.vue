@@ -52,6 +52,8 @@ export default {
     },
     enableEditing() {
       this.editing = true;
+      const { quill } = this.$refs.html;
+      return this.$nextTick(() => quill.focus());
     },
     getActiveTooltips(quill) {
       const tooltips = quill.container.querySelectorAll('.ql-tooltip');
