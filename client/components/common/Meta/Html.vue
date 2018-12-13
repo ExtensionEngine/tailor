@@ -9,7 +9,7 @@
         :options="quillOptions"
         :disabled="!editing"
         :class="{ 'meta-quill-disabled': !editing }"
-        @focus="enableEditor"
+        @focus="enableEditing"
         @blur="update">
       </quill-editor>
     </div>
@@ -50,7 +50,7 @@ export default {
       if (this.meta.value === this.content) return;
       this.$emit('update', this.meta.key, this.content);
     },
-    enableEditor(quill) {
+    enableEditing() {
       this.editing = true;
     },
     getActiveTooltips(quill) {
