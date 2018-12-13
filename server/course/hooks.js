@@ -41,7 +41,7 @@ function add(Course, models) {
   });
 
   function updateTEStats({ hook, instance: { type, id, courseId } }) {
-    if (!['ASSESSMENT', 'PERSPECTIVE'].includes(type)) return;
+    if (!['ASSESSMENT', 'PERSPECTIVE'].includes(type) && !getSchemaId(type)) return;
     logger.info(`[Course] TeachingElement#${hook}`, { type, id, courseId });
     const where = { courseId, type: 'ASSESSMENT', detached: false };
     return TeachingElement.count({ where })
