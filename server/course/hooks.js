@@ -4,7 +4,6 @@ const { getObjectives, getSchemaId } = require('../../config/shared/activities')
 const addHooks = require('../shared/util/addHooks');
 const find = require('lodash/find');
 const first = require('lodash/first');
-const get = require('lodash/get');
 const logger = require('../shared/logger');
 const map = require('lodash/map');
 
@@ -32,11 +31,20 @@ function add(Course, models) {
     const instance = Array.isArray(data)
       ? find(data, { type: 'ASSESSMENT' })
       : data;
-    if (get(instance, 'type') !== 'ASSESSMENT') return;
-    const { id, courseId, type } = instance;
+    return updateTEStats({ hook, instance });
+  });
+
+  // Track assessments on perspective deletion.
+  addHooks(Activity, hooks, (hook, data, options) => {
+    const instance = Array.isArray(data) ? first(data) : data;
+    return updateTEStats({ hook, instance });
+  });
+
+  function updateTEStats({ hook, instance: { type, id, courseId } }) {
+    if (!['ASSESSMENT', 'PERSPECTIVE'].includes(type)) return;
     logger.info(`[Course] TeachingElement#${hook}`, { type, id, courseId });
     const where = { courseId, type: 'ASSESSMENT', detached: false };
     return TeachingElement.count({ where })
       .then(count => Course.updateStats(courseId, 'assessments', count));
-  });
+  }
 }
