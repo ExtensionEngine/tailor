@@ -24,7 +24,6 @@ const quillOptions = () => ({
   modules: {
     toolbar: [
       ['bold', 'italic', 'underline'],
-      ['blockquote'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ script: 'sub' }, { script: 'super' }],
       ['link', 'image']
