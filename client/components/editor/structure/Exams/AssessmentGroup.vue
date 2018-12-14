@@ -7,20 +7,21 @@
     <div class="form-inline pull-right">
       <div class="form-group time-limit">
         <label for="timeLimit">Time limit (minutes)</label>
-        <input
-          v-validate="{ rules: { min_value: 0 } }"
+        <v-input
+          v-validate="{ rules: { min_value: 0, numeric: true } }"
           v-model="timeLimit"
-          :class="{ 'has-error': isTimeLimitInvalid }"
+          :class="{ 'has-error': timeLimitErrorMsg }"
+          :scope="scope"
           id="timeLimit"
-          name="timeLimit"
           data-vv-as="time limit"
-          class="form-control"
+          name="timeLimit"
           type="number"
           min="0"
-          step="15">
+          step="15"
+          class="form-control"/>
       </div>
-      <span v-if="isTimeLimitInvalid" class="help-block">
-        {{ vErrors.first('timeLimit') }}
+      <span v-if="timeLimitErrorMsg" class="help-block">
+        {{ timeLimitErrorMsg }}
       </span>
     </div>
     <h3>Question group {{ toLetter(position) }}</h3>
@@ -60,6 +61,7 @@ import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
+import NumericInput from 'components/common/NumericInput';
 import sortBy from 'lodash/sortBy';
 import TesList from '../TesList';
 import { withValidation } from 'utils/validation';
@@ -77,7 +79,8 @@ export default {
   data() {
     return {
       selected: [],
-      timeLimit: get(this.group, 'data.timeLimit', 0)
+      timeLimit: get(this.group, 'data.timeLimit', 0),
+      scope: 'badInputError'
     };
   },
   computed: {
@@ -86,8 +89,9 @@ export default {
       const cond = { activityId: this.group.id, type: 'ASSESSMENT' };
       return sortBy(filter(this.tes, cond), 'position');
     },
-    isTimeLimitInvalid() {
-      return this.vErrors.has('timeLimit');
+    timeLimitErrorMsg() {
+      const { vErrors, scope } = this;
+      return vErrors.first('timeLimit') || vErrors.first('timeLimit', scope);
     },
     hasAssessments() {
       return this.assessments && !!this.assessments.length;
@@ -140,7 +144,7 @@ export default {
   },
   watch: {
     timeLimit: debounce(function (val) {
-      if (this.isTimeLimitInvalid) return;
+      if (this.timeLimitErrorMsg) return;
       let group = cloneDeep(this.group);
       group.data = group.data || {};
       group.data.timeLimit = val;
@@ -150,22 +154,13 @@ export default {
   components: {
     AssessmentItem,
     TesList,
-    GroupIntroduction
+    GroupIntroduction,
+    [NumericInput.name]: NumericInput
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.help-block {
-  margin-top: 0;
-}
-
-.form-control{
-  &.has-error {
-    box-shadow: inset 0 -2px 0 #e51c23;
-  }
-}
-
 h3 {
   margin: 30px 5px;
   color: #444;
@@ -210,8 +205,12 @@ h4 {
   }
 }
 
+.form-inline {
+  text-align: right;
+}
+
 .time-limit {
-  margin: 7px 25px;
+  margin: 7px 20px;
 
   label {
     margin-right: 5px;
@@ -221,6 +220,12 @@ h4 {
   input {
     width: 50px;
     text-align: center;
+  }
+
+  .form-control {
+    &.has-error {
+      box-shadow: inset 0 -2px 0 #e51c23;
+    }
   }
 }
 </style>
