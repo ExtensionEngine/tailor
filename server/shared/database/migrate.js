@@ -1,25 +1,11 @@
 'use strict';
 
-const db = require('./index');
 const findIndex = require('lodash/findIndex');
 const flatten = require('lodash/flatten');
 const map = require('lodash/map');
-const Umzug = require('umzug');
+const umzug = require('./umzug');
 
 const changelog = [];
-
-const umzug = new Umzug({
-  // Possible values: 'json', 'sequelize', an argument for `require()`
-  storage: 'json',
-  storageOptions: {},
-  // The logging function.
-  // A function that gets executed everytime migrations start and have ended.
-  logging: false,
-  migrations: {
-    params: [db.sequelize.getQueryInterface(), db.sequelize.constructor, db],
-    path: './server/shared/database/migrations'
-  }
-});
 
 // TODO: Implement migration down
 module.exports = function migrate(to, from) {
