@@ -79,6 +79,11 @@ export default {
     }
   }
 
+  .ql-container {
+    max-height: 230px;
+    overflow: auto;
+   }
+
   .ql-tooltip {
     left: 30px !important;
   }
