@@ -87,7 +87,7 @@ export default {
     },
     saveItem(item) {
       let element = cloneDeep(this.element);
-      if (!item.position) item.position = this.embeds.length;
+      if (!item.position) item.position = this.embeds.length + 1;
       element.data.embeds = element.data.embeds || {};
       element.data.embeds[item.id] = item;
       this.save(element);

@@ -23,7 +23,7 @@
       <draggable
         :list="children"
         :options="{ handle: '.activity' }"
-        @update="reorder">
+        @update="data => reorder(data, children)">
         <activity
           v-for="(subActivity, index) in children"
           v-bind="subActivity"
@@ -38,15 +38,17 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapGetters, mapMutations } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import InsertActivity from './InsertActivity';
 import map from 'lodash/map';
+import reorderMixin from './reorderMixin';
 
 export default {
   name: 'activity',
+  mixins: [reorderMixin],
   props: {
     _cid: { type: String, required: true },
     id: { type: Number, default: null },
@@ -86,16 +88,8 @@ export default {
   },
   methods: {
     ...mapMutations(['focusActivity', 'toggleActivity'], 'course'),
-    ...mapActions({ updatePosition: 'reorder' }, 'activities'),
     isSelected(_cid) {
       return this.focusedActivity._cid === _cid;
-    },
-    reorder({ newIndex: newPosition }) {
-      const items = this.children;
-      const activity = items[newPosition];
-      const isFirstChild = newPosition === 0;
-      const context = { items, newPosition, isFirstChild };
-      this.updatePosition({ activity, context });
     }
   },
   components: { Draggable, InsertActivity }

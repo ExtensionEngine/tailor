@@ -3,13 +3,18 @@
     <circular-progress v-if="showLoader"/>
     <div v-else class="outline">
       <div class="activity-container">
-        <activity
-          v-for="(activity, index) in topLevelActivities"
-          v-bind="activity"
-          :key="activity._cid"
-          :index="index + 1"
-          :level="1"
-          :activities="activities"/>
+        <draggable
+          :list="topLevelActivities"
+          :options="{ handle: '.activity' }"
+          @update="data => reorder(data, topLevelActivities)">
+          <activity
+            v-for="(activity, index) in topLevelActivities"
+            v-bind="activity"
+            :key="activity._cid"
+            :index="index + 1"
+            :level="1"
+            :activities="activities"/>
+        </draggable>
         <no-activities v-if="!topLevelActivities.length"/>
       </div>
       <sidebar/>
@@ -21,12 +26,15 @@
 import { mapGetters } from 'vuex-module';
 import Activity from './Activity';
 import CircularProgress from 'components/common/CircularProgress';
+import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
 import NoActivities from './NoActivities';
+import reorderMixin from './reorderMixin';
 import Sidebar from '../Sidebar';
 
 export default {
+  mixins: [reorderMixin],
   props: {
     showLoader: { type: Boolean, default: false }
   },
@@ -38,7 +46,7 @@ export default {
         .sort((x, y) => x.position - y.position);
     }
   },
-  components: { Activity, CircularProgress, NoActivities, Sidebar }
+  components: { Activity, CircularProgress, Draggable, NoActivities, Sidebar }
 };
 </script>
 
