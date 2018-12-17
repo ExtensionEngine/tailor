@@ -142,7 +142,6 @@ export default {
         setTimeout(() => this.saveQuestion(question), 50);
         return;
       }
-      if (!this.embedsTotal || this.embedsTotal < 4) return;
       if (!element.data.embeds[item.id]) return;
       delete element.data.embeds[item.id];
       this.save(element);
