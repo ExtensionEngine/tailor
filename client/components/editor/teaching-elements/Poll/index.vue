@@ -6,6 +6,7 @@
         <label for="`${element._cid}pollName`">Poll name</label>
         <input
           v-model="name"
+          @focusout="updateName"
           id="`${element._cid}pollName`"
           type="text"
           class="form-control"
@@ -74,19 +75,11 @@ export default {
   },
   data() {
     return {
+      name: get(this.element, 'data.name', ''),
       dragOptions: { handle: '.option-index' }
     };
   },
   computed: {
-    name: {
-      get() {
-        return this.element.data.name;
-      },
-      set(name) {
-        const data = { ...this.element.data, name };
-        this.save({ ...this.element, data });
-      }
-    },
     embeds() {
       return get(this.element, 'data.embeds', {});
     },
@@ -106,6 +99,10 @@ export default {
   },
   methods: {
     ...mapActions(['save'], 'tes'),
+    updateName() {
+      const data = { ...this.element.data, name: this.name };
+      this.save({ ...this.element, data });
+    },
     saveQuestion(question) {
       const element = cloneDeep(this.element);
       element.data.question = question.id;
