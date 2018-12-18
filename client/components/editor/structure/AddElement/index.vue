@@ -59,7 +59,8 @@ export default {
         (this.type !== 'ASSESSMENT') &&
         (this.type !== 'BREAK') &&
         (this.type !== 'CAROUSEL') &&
-        (this.type !== 'TABLE');
+        (this.type !== 'TABLE') &&
+        (this.type !== 'POLL');
     }
   },
   methods: {
