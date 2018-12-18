@@ -1,9 +1,10 @@
 'use strict';
 
+const db = require('./');
 const findIndex = require('lodash/findIndex');
 const flatten = require('lodash/flatten');
 const map = require('lodash/map');
-const umzug = require('./umzug');
+const umzug = require('./umzug')(db);
 
 const changelog = [];
 
