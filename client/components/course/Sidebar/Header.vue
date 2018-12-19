@@ -32,9 +32,9 @@ export default {
       return type && isEditable(type);
     },
     info() {
-      const name = get(this.activity.data, 'name');
-      if (this.$route.name !== TREE_VIEW) return name;
-      return `${this.activity.id}: ${name}`;
+      const { activity, $route: { name: routeName } } = this;
+      const name = get(activity.data, 'name');
+      return (routeName === TREE_VIEW) ? `${activity.id}: ${name}` : name;
     }
   },
   methods: {
