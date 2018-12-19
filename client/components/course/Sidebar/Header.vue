@@ -22,6 +22,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
+const TREE_VIEW = 'tree-view';
 
 export default {
   computed: {
@@ -29,6 +30,11 @@ export default {
     isEditable() {
       const type = get(this.activity, 'type');
       return type && isEditable(type);
+    },
+    info() {
+      const name = get(this.activity.data, 'name');
+      if (this.$route.name !== TREE_VIEW) return name;
+      return `${this.activity.id}: ${name}`;
     }
   },
   methods: {
@@ -45,6 +51,7 @@ export default {
       appChannel.emit('showConfirmationModal', {
         type: 'activity',
         item: this.activity,
+        info: this.info,
         action: () => {
           const { parentId } = this.activity;
           const rootFilter = it => !it.parentId && (it.id !== this.activity.id);
