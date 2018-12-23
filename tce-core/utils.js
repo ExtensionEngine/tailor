@@ -1,7 +1,11 @@
 import toCase from 'to-case';
 
 export function getComponentName(type) {
-  return `content-${toCase.slug(type)}`;
+  return `te-${toCase.slug(type)}`;
+}
+
+export function processAssessmentType(type) {
+  return `assessment-${toCase.slug(type)}`;
 }
 
 export function getToolbarName(type) {
