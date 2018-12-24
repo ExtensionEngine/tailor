@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import range from 'lodash/range';
 
@@ -40,7 +39,7 @@ const customAlert = {
 
 export default {
   props: {
-    assessment: { type: Object, default: defaults.MC },
+    assessment: { type: Object, required: true },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
@@ -66,7 +65,7 @@ export default {
       this.$emit('update', data);
     },
     toggleAnswer(index) {
-      let correct = cloneDeep(this.correct);
+      const correct = cloneDeep(this.correct);
       const position = correct.indexOf(index);
 
       if (position < 0) {
@@ -78,19 +77,19 @@ export default {
       this.update({ correct });
     },
     updateAnswer(index) {
-      let answers = cloneDeep(this.answers);
+      const answers = cloneDeep(this.answers);
       answers[index] = this.$refs[`input${index}`][0].value;
       this.update({ answers });
     },
     addAnswer() {
-      let answers = cloneDeep(this.answers);
+      const answers = cloneDeep(this.answers);
       answers.push('');
       this.update({ answers });
     },
     removeAnswer(answerIndex) {
-      let answers = cloneDeep(this.answers);
-      let correct = cloneDeep(this.correct);
-      let feedback = cloneDeep(this.feedback);
+      const answers = cloneDeep(this.answers);
+      const correct = cloneDeep(this.correct);
+      const feedback = cloneDeep(this.feedback);
 
       answers.splice(answerIndex, 1);
       const index = correct.indexOf(answerIndex);
