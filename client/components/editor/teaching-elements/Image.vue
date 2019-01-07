@@ -76,6 +76,18 @@ export default {
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
       if (dataUrl) this.$refs.cropper.replace(dataUrl);
+    },
+    getImageDimensions(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          resolve({ width: img.width, height: img.height });
+        };
+        img.onerror = (event) => {
+          reject(event);
+        };
+        img.src = url;
+      });
     }
   },
   watch: {
@@ -83,7 +95,9 @@ export default {
       if (focused) return;
 
       if (this.persistedImage !== this.currentImage) {
-        this.$emit('save', { url: this.currentImage });
+        this.getImageDimensions(this.currentImage).then(({ width, height }) => {
+          this.$emit('save', { url: this.currentImage, imgWidth: width, imgHeight: height });
+        });
       }
 
       if (this.currentImage) this.$refs.cropper.clear();
@@ -99,7 +113,9 @@ export default {
       if (this.currentImage) this.$refs.cropper.replace(dataUrl);
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
-      this.$emit('save', { url: dataUrl });
+      this.getImageDimensions(dataUrl).then(({ width, height }) => {
+        this.$emit('save', { url: dataUrl, imgWidth: width, imgHeight: height });
+      });
     });
 
     teChannel.on(`${this.id}/showCropper`, () => {
