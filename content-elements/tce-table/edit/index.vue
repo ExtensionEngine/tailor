@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { addCell, addEmbed, removeCell, removeEmbed } from './utils';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import find from 'lodash/find';
@@ -25,7 +26,6 @@ import last from 'lodash/last';
 import size from 'lodash/size';
 import sortBy from 'lodash/sortBy';
 import TableCell from './TableCell';
-import times from 'lodash/times';
 
 const MIN_ROWS = 1;
 const MIN_COLUMNS = 1;
@@ -56,39 +56,8 @@ function getFocusedItem(collection, current) {
          sibling(sorted, current, Direction.AFTER);
 }
 
-function addCell(row, cell = {}) {
-  if (!row.cells) row.cells = {};
-  row.cells[cell.id] = cell;
-  return cell;
-}
-
-function removeCell(row, predicate = {}) {
-  const cell = find(row.cells, predicate);
-  if (!cell) return;
-  delete row.cells[cell.id];
-  return cell;
-}
-
-function addEmbed(embeds, cellId, tableId) {
-  const embed = {
-    id: cellId,
-    type: 'TABLE-CELL',
-    embedded: true,
-    data: { tableId, cellId }
-  };
-  embeds[cellId] = embed;
-  return embed;
-}
-
-function removeEmbed(embeds, predicate = {}) {
-  const embed = find(embeds, predicate);
-  if (!embed) return;
-  delete embeds[embed.id];
-  return embed;
-}
-
 export default {
-  name: 'tce-table',
+  name: 'te-table',
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
@@ -188,25 +157,6 @@ export default {
       }
       this.$emit('save', { embeds });
     }
-  },
-  created() {
-    if (this.element.data.rows) return;
-    const tableId = cuid();
-    let embeds = {};
-    let rows = {};
-    times(2, position => {
-      const rowId = cuid();
-      const row = { id: rowId, position, cells: {} };
-      rows[rowId] = row;
-
-      times(3, position => {
-        const cellId = cuid();
-        addCell(row, { id: cellId, position });
-        addEmbed(embeds, cellId, tableId);
-      });
-    });
-
-    this.$emit('save', { tableId, embeds, rows });
   },
   mounted() {
     const { $elementBus: bus } = this;
