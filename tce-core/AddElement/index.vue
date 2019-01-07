@@ -12,24 +12,22 @@
           v-if="selectType"
           :activity="activity"
           :include="include"
-          @selected="setType">
-        </select-element>
-        <select-width v-if="selectWidth" @selected="setWidth"></select-width>
+          @selected="setType"/>
+        <select-width v-if="selectWidth" @selected="setWidth"/>
       </div>
     </transition>
   </div>
 </template>
 
 <script>
-import { defaults } from 'utils/assessment';
-import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import isFunction from 'lodash/isFunction';
+import get from 'lodash/get';
 import SelectElement from './SelectElement';
 import SelectWidth from './SelectWidth';
 
 export default {
   name: 'add-element',
+  inject: ['$teRegistry'],
   props: {
     activity: { type: Object, default: null },
     position: { type: Number, default: null },
@@ -49,13 +47,7 @@ export default {
       return !this.type;
     },
     selectWidth() {
-      return this.layout &&
-        !this.selectType &&
-        (this.type !== 'ACCORDION') &&
-        (this.type !== 'ASSESSMENT') &&
-        (this.type !== 'BREAK') &&
-        (this.type !== 'CAROUSEL') &&
-        (this.type !== 'TABLE');
+      return this.layout && !this.selectType;
     }
   },
   methods: {
@@ -67,36 +59,28 @@ export default {
       }
     },
     create() {
-      let element = { type: this.type, data: {} };
+      const { type, subtype } = this;
+      const element = { type, data: {} };
+      // If teaching element within activity
       if (this.activity) {
         element.activityId = this.activity.id;
         element.position = this.position;
       } else {
+        // If embed, assign id
         element.id = cuid();
         element.embedded = true;
       }
-
       if (element.type === 'ASSESSMENT') {
-        element.data = isFunction(defaults[this.subtype])
-          ? defaults[this.subtype]()
-          : cloneDeep(defaults[this.subtype]);
-        element.data.question = [
-          { id: cuid(), type: 'HTML', data: { width: 12 }, embedded: true }
-        ];
+        const question = [{
+          id: cuid(), type: 'HTML', data: { width: 12 }, embedded: true
+        }];
+        element.data = { ...element.data, question, type: subtype };
       }
-
-      element.data.width = this.width || 12;
-
-      if (element.type === 'ACCORDION') {
-        const id = cuid();
-        Object.assign(element.data, {
-          embeds: {},
-          items: {
-            [id]: { id, header: 'Header', body: {} }
-          }
-        });
-      }
-
+      const config = this.$teRegistry.get((subtype || type));
+      const initState = get(config, 'initState', () => ({}));
+      element.data = { ...element.data, ...initState() };
+      const forceWidth = get(config, 'ui.forceFullWidth', false);
+      element.data.width = forceWidth ? 12 : (this.width || 12);
       this.$emit('add', element);
       this.close();
     },
@@ -116,10 +100,7 @@ export default {
       this.selectionOpened = false;
     }
   },
-  components: {
-    SelectElement,
-    SelectWidth
-  }
+  components: { SelectElement, SelectWidth }
 };
 </script>
 

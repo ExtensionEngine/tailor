@@ -6,11 +6,11 @@
       class="row">
       <div
         v-for="assessment in row"
-        :key="assessment.type"
+        :key="assessment.subtype"
         :class="columnWidth"
-        @click="$emit('selected', assessment.type)"
+        @click="$emit('selected', assessment.subtype)"
         class="btn-base assessment-type">
-        <span>{{ assessment.title }}</span>
+        <span>{{ assessment.name }}</span>
       </div>
     </div>
   </div>
@@ -20,15 +20,13 @@
 import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
-import toArray from 'lodash/toArray';
-import { typeInfo } from 'utils/assessment';
 
 const ASSESSMENTS_PER_ROW = 6;
-const assessments = toArray(typeInfo);
 
 export default {
   name: 'select-assessment',
   props: {
+    assessments: { type: Array, default: () => [] },
     exclude: { type: Array, default: () => ([]) },
     rowSize: { type: Number, default: ASSESSMENTS_PER_ROW }
   },
@@ -40,8 +38,8 @@ export default {
       return Math.min(this.elements.length, this.rowSize);
     },
     elements() {
-      if (!this.exclude) return assessments;
-      return filter(assessments, it => !includes(this.exclude, it.type));
+      if (!this.exclude) return this.assessments;
+      return filter(this.assessments, it => !includes(this.exclude, it.type));
     },
     columnWidth() {
       return `col-xs-${12 / this.columns}`;

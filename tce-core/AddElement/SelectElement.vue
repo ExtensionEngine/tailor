@@ -2,7 +2,7 @@
   <div class="select-element">
     <div
       v-if="!showAssessments"
-      :style="{ 'max-width': maxWidth + 'px' }"
+      :style="{ 'max-width': `${maxWidth}px` }"
       class="elements">
       <div
         v-for="(row, index) in rows"
@@ -14,14 +14,14 @@
           :class="columnWidth"
           @click="setType(element.type)"
           class="element-type">
-          <span :class="element.icon" class="mdi"></span>
-          <span>{{ element.label }}</span>
+          <span :class="element.ui.icon" class="mdi"></span>
+          <span>{{ element.name }}</span>
         </div>
       </div>
     </div>
     <select-assessment
       v-if="showAssessments"
-      :exclude="assessmentFilter"
+      :assessments="assessments"
       @selected="setSubtype"/>
   </div>
 </template>
@@ -29,32 +29,14 @@
 <script>
 import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
-import first from 'lodash/first';
-import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
 import includes from 'lodash/includes';
 import SelectAssessment from './SelectAssessment';
-
-const TE_TYPES = [
-  { type: 'HTML', label: 'Text', icon: 'mdi-format-text' },
-  { type: 'IMAGE', label: 'Image', icon: 'mdi-image' },
-  { type: 'VIDEO', label: 'Video', icon: 'mdi-video' },
-  { type: 'BRIGHTCOVE_VIDEO', label: 'Brightcove Video', icon: 'mdi-video' },
-  { type: 'ASSESSMENT', label: 'Question', icon: 'mdi-help' },
-  { type: 'EMBED', label: 'Embed', icon: 'mdi-arrange-bring-forward' },
-  { type: 'BREAK', label: 'Page Break', icon: 'mdi-format-page-break' },
-  { type: 'ACCORDION', label: 'Accordion', icon: 'mdi-view-sequential' },
-  { type: 'CAROUSEL', label: 'Carousel', icon: 'mdi-view-carousel' },
-  { type: 'MODAL', label: 'Modal', icon: 'mdi-window-maximize' },
-  { type: 'TABLE', label: 'Table', icon: 'mdi-table' },
-  { type: 'PDF', label: 'PDF', icon: 'mdi-file-pdf-box' },
-  { type: 'AUDIO', label: 'Audio', icon: 'mdi-volume-high' }
-];
 
 const ELEMENTS_PER_ROW = 6;
 
 export default {
   name: 'select-element',
+  inject: ['$teRegistry'],
   props: {
     activity: { type: Object, default: null },
     include: { type: Array, default: null },
@@ -64,6 +46,9 @@ export default {
     return { type: null };
   },
   computed: {
+    registry() {
+      return this.$teRegistry.get();
+    },
     rows() {
       return chunk(this.elements, this.rowSize);
     },
@@ -71,19 +56,20 @@ export default {
       return Math.min(this.elements.length, this.rowSize);
     },
     elements() {
-      if (!this.include) return TE_TYPES;
-      return filter(TE_TYPES, it => includes(this.include, it.type));
+      const result = filter(this.registry, it => it.type !== 'ASSESSMENT');
+      if (this.assessments.length) {
+        result.push({
+          name: 'Assessment', type: 'ASSESSMENT', ui: { icon: 'mdi-help' }
+        });
+      }
+      if (!this.include) return result;
+      return filter(result, it => includes(this.include, it.type));
+    },
+    assessments() {
+      return filter(this.registry, { type: 'ASSESSMENT' });
     },
     showAssessments() {
       return this.type === 'ASSESSMENT';
-    },
-    assessmentFilter() {
-      // Restrict TR within assessment block and exam.
-      // Assessments are associated with outline activity.
-      if (!this.activity) return;
-      const outlineActivity = getLevel(this.activity.type);
-      const examGroup = this.activity.type === 'ASSESSMENT_GROUP';
-      if (outlineActivity || examGroup) return ['TR'];
     },
     columnWidth() {
       return `col-xs-${12 / this.columns}`;
@@ -112,9 +98,8 @@ export default {
     }
   },
   created() {
-    if (get(first(this.elements), 'type') === 'ASSESSMENT') {
-      this.type = 'ASSESSMENT';
-    }
+    const assessments = filter(this.elements, { type: 'ASSESSMENT' });
+    if (assessments.length === this.elements.length) this.type = 'ASSESSMENT';
   },
   components: { SelectAssessment }
 };
