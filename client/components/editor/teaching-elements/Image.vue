@@ -43,6 +43,15 @@ function toDataUrl(imageUrl) {
   return imgSrcToDataURL(imageUrl, 'image/png', 'Anonymous');
 }
 
+function getImageDimensions(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve({ width: img.width, height: img.height });
+    img.onerror = (event) => reject(event);
+    img.src = url;
+  });
+}
+
 export default {
   name: 'te-image',
   props: {
@@ -72,21 +81,14 @@ export default {
       if (!this.showCropper || !this.$refs.cropper) return;
       this.$refs.cropper.show();
     },
-    loadImage(dataUrl) {
+    load(dataUrl) {
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
       if (dataUrl) this.$refs.cropper.replace(dataUrl);
     },
-    getImageDimensions(url) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-          resolve({ width: img.width, height: img.height });
-        };
-        img.onerror = (event) => {
-          reject(event);
-        };
-        img.src = url;
+    save(image) {
+      getImageDimensions(image).then(({ width, height }) => {
+        this.$emit('save', { url: image, meta: { width, height } });
       });
     }
   },
@@ -95,27 +97,23 @@ export default {
       if (focused) return;
 
       if (this.persistedImage !== this.currentImage) {
-        this.getImageDimensions(this.currentImage).then(({ width, height }) => {
-          this.$emit('save', { url: this.currentImage, imgWidth: width, imgHeight: height });
-        });
+        this.save(this.currentImage);
       }
 
       if (this.currentImage) this.$refs.cropper.clear();
     },
     'element.data.url'(imageUrl) {
-      toDataUrl(imageUrl).then(dataUrl => this.loadImage(dataUrl));
+      toDataUrl(imageUrl).then(dataUrl => this.load(dataUrl));
     }
   },
   mounted() {
-    toDataUrl(this.element.data.url).then(dataUrl => this.loadImage(dataUrl));
+    toDataUrl(this.element.data.url).then(dataUrl => this.load(dataUrl));
 
     teChannel.on(`${this.id}/upload`, dataUrl => {
       if (this.currentImage) this.$refs.cropper.replace(dataUrl);
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
-      this.getImageDimensions(dataUrl).then(({ width, height }) => {
-        this.$emit('save', { url: dataUrl, imgWidth: width, imgHeight: height });
-      });
+      this.save(dataUrl);
     });
 
     teChannel.on(`${this.id}/showCropper`, () => {
