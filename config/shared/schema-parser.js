@@ -29,6 +29,7 @@ function processRepositoryConfig(schema) {
 function processActivityConfig(schema, activity) {
   activity.type = processType(schema, activity.type);
   activity.subLevels = map(activity.subLevels, type => processType(schema, type));
+  activity.relationships = processActivityRelationships(activity);
   activity.meta = get(activity, 'meta', []);
   const hasNameMeta = find(activity.meta, { key: 'name' });
   if (!hasNameMeta) {
@@ -55,4 +56,16 @@ function getMetaDefaults(meta) {
   return transform(meta, (acc, it) => {
     if (it.defaultValue) acc[it.key] = it.defaultValue;
   }, {});
+}
+
+function processActivityRelationships(activity) {
+  const { hasPrerequisites, relationships = [] } = activity;
+  if (hasPrerequisites && !find(relationships, { type: 'prerequisites' })) {
+    relationships.unshift({
+      type: 'prerequisites',
+      label: 'Prerequisites',
+      placeholder: 'Select prerequisites'
+    });
+  }
+  return relationships;
 }

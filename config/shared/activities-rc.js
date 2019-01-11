@@ -28,7 +28,11 @@ const SCHEMAS = [{
     hasAssessments: false,
     hasExams: true,
     exams: { objectives: ['TOPIC'] },
-    hasPrerequisites: true,
+    relationships: [{
+      type: 'prerequisites',
+      label: 'Prerequisites',
+      placeholder: 'Select prerequisites'
+    }],
     meta: [{
       key: 'description',
       type: 'TEXTAREA',
@@ -45,7 +49,11 @@ const SCHEMAS = [{
     contentContainers: [],
     hasAssessments: false,
     hasExams: false,
-    hasPrerequisites: true,
+    relationships: [{
+      type: 'prerequisites',
+      label: 'Prerequisites',
+      placeholder: 'Select prerequisites'
+    }],
     meta: [{
       key: 'description',
       type: 'TEXTAREA',
@@ -62,7 +70,11 @@ const SCHEMAS = [{
     contentContainers: ['PERSPECTIVE'],
     hasAssessments: true,
     hasExams: false,
-    hasPrerequisites: true,
+    relationships: [{
+      type: 'prerequisites',
+      label: 'Prerequisites',
+      placeholder: 'Select prerequisites'
+    }],
     meta: [{
       key: 'description',
       type: 'TEXTAREA',

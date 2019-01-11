@@ -22,7 +22,7 @@ import Multiselect from 'vue-multiselect';
 
 export default {
   name: 'v-select',
-  inheritAttrs: true,
+  inheritAttrs: false,
   props: {
     value: { type: [Object, Array, String, Number], default: null },
     inputPlacement: { type: String, default: 'bottom' },
