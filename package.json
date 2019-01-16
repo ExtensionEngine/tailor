@@ -86,6 +86,7 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "morgan": "^1.9.0",
+    "multer": "^1.4.1",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
     "path-exists": "^3.0.0",
@@ -98,6 +99,7 @@
     "sass-web-fonts": "^2.0.2",
     "save-as": "^0.1.8",
     "sequelize": "^4.22.0",
+    "snyk": "^1.103.4",
     "string-template": "^1.0.0",
     "to-case": "^2.0.0",
     "truncate": "^2.0.0",
@@ -124,8 +126,7 @@
     "vuex-module": "^0.4.0",
     "vuex-router-sync": "^3.0.0",
     "weekstart": "^1.0.0",
-    "yup": "^0.24.1",
-    "snyk": "^1.103.4"
+    "yup": "^0.24.1"
   },
   "devDependencies": {
     "babel-polyfill": "^6.26.0",
