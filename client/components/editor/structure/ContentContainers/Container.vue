@@ -17,9 +17,9 @@
       :activity="container"
       :types="types"
       :layout="layout"
-      @add="save"
-      @addAtIndex="saveElementToIndex"
-      @update="reorderElements">
+      @add="addElement"
+      @insert="insert"
+      @update="reorder">
       <teaching-element
         slot="list-item"
         slot-scope="{ item, dragged, setWidth }"
@@ -54,25 +54,27 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save', 'saveAtIndex', 'reorder'], 'tes'),
-    reorderElements({ newIndex: newPosition }) {
-      this.reorder({
-        element: this.teachingElements[newPosition],
-        context: this.getContext(newPosition)
-      });
+    ...mapActions({
+      reorderElements: 'reorder',
+      insertElement: 'insert',
+      addElement: 'save'
+    }, 'tes'),
+    reorder({ newIndex: newPosition }) {
+      const items = this.teachingElements;
+      const element = items[newPosition];
+      const isFirstChild = newPosition === 0;
+      const context = { items, newPosition, isFirstChild };
+      this.reorderElements({ element, context });
     },
-    saveElementToIndex({ element, index }) {
-      this.saveAtIndex({ element, context: this.getContext(index) });
+    insert(element) {
+      const items = this.teachingElements;
+      const { position: newPosition } = element;
+      const isFirstChild = newPosition === -1;
+      const context = { items, newPosition, isFirstChild, insert: true };
+      this.insertElement({ element, context });
     },
     deleteContainer() {
       this.$emit('delete');
-    },
-    getContext(index) {
-      return {
-        newPosition: index,
-        items: this.teachingElements,
-        isFirstChild: index === 0
-      };
     }
   },
   components: {

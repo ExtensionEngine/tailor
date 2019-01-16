@@ -129,7 +129,7 @@ export default {
   margin: 0 auto;
 
   .row {
-    padding-bottom: 30px;
+    padding-bottom: 10px;
   }
 }
 

@@ -1,32 +1,50 @@
 <template>
   <div class="add-element">
-    <div v-if="!alwaysDisplayed" @click="toggleSelection" class="btn-base">
+    <div @click="toggleSelection" class="btn-base">
       <span
         :class="[selectionOpened ? 'btn-close' : 'btn-open']"
         class="mdi mdi-plus toggle-selection">
       </span>
     </div>
     <transition name="slide-fade">
-      <div v-if="selectionOpened" class="selections">
+      <component v-if="selectionOpened" :is="selectContainer">
         <select-element
-          v-if="selectType"
+          v-if="!type"
           :activity="activity"
           :include="include"
-          @selected="setType">
-        </select-element>
-        <select-width v-if="selectWidth" @selected="setWidth"></select-width>
-      </div>
+          @selected="setType"/>
+        <select-width v-if="canSelectWidth" @selected="setWidth"/>
+      </component>
     </transition>
   </div>
 </template>
 
 <script>
 import { defaults } from 'utils/assessment';
-import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import isFunction from 'lodash/isFunction';
+import InlineContainer from './InlineContainer';
+import PopoverContainer from './PopoverContainer';
 import SelectElement from './SelectElement';
 import SelectWidth from './SelectWidth';
+
+const DEFAULT_WIDTH = 12;
+const FIXED_WIDTH_TYPES = ['ACCORDION', 'ASSESSMENT', 'BREAK', 'CAROUSEL', 'TABLE'];
+
+const elementData = {
+  build(type, ...args) {
+    return this[type] ? this[type](...args) : this.standard(...args);
+  },
+  standard: width => ({ width }),
+  ASSESSMENT: (width, subtype) => {
+    const question = { id: cuid(), type: 'HTML', data: { width: 12 }, embedded: true };
+    return { width, ...defaults[subtype](), question: [question] };
+  },
+  ACCORDION: width => {
+    const id = cuid();
+    const items = { [id]: { id, header: 'Header', body: {} } };
+    return { width, items, embeds: {} };
+  }
+};
 
 export default {
   name: 'add-element',
@@ -35,89 +53,68 @@ export default {
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
     include: { type: Array, default: null },
-    alwaysDisplayed: { type: Boolean, default: false }
+    popover: { type: Boolean, default: false }
   },
   data() {
     return {
       type: null,
       subtype: null,
-      width: null,
-      selectionOpened: false || this.alwaysDisplayed
+      width: DEFAULT_WIDTH,
+      selectionOpened: false
     };
   },
   computed: {
-    selectType() {
-      return !this.type;
+    canSelectWidth() {
+      const { layout, type } = this;
+      return layout && type && !FIXED_WIDTH_TYPES.includes(type);
     },
-    selectWidth() {
-      return this.layout &&
-        !this.selectType &&
-        (this.type !== 'ACCORDION') &&
-        (this.type !== 'ASSESSMENT') &&
-        (this.type !== 'BREAK') &&
-        (this.type !== 'CAROUSEL') &&
-        (this.type !== 'TABLE');
+    selectContainer() {
+      const type = this.popover ? 'popover' : 'inline';
+      return `${type}-container`;
     }
   },
   methods: {
     toggleSelection() {
-      if (this.selectionOpened) {
-        this.close();
-      } else {
-        this.selectionOpened = true;
-      }
+      if (this.selectionOpened) return this.close();
+      this.selectionOpened = true;
+      this.$emit('opened');
     },
     create() {
-      let element = { type: this.type, data: {} };
-      if (this.activity) {
-        element.activityId = this.activity.id;
-        element.position = this.position;
+      const { type, subtype, width, activity, position } = this;
+      const data = elementData.build(type, width, subtype);
+      let element = { type, data };
+
+      if (activity) {
+        element.activityId = activity.id;
+        element.position = position;
       } else {
         element.id = cuid();
         element.embedded = true;
       }
 
-      if (element.type === 'ASSESSMENT') {
-        element.data = isFunction(defaults[this.subtype])
-          ? defaults[this.subtype]()
-          : cloneDeep(defaults[this.subtype]);
-        element.data.question = [
-          { id: cuid(), type: 'HTML', data: { width: 12 }, embedded: true }
-        ];
-      }
-
-      element.data.width = this.width || 12;
-
-      if (element.type === 'ACCORDION') {
-        const id = cuid();
-        Object.assign(element.data, {
-          embeds: {},
-          items: {
-            [id]: { id, header: 'Header', body: {} }
-          }
-        });
-      }
-
+      this.close(true);
       this.$emit('add', element);
-      this.close();
     },
     setType({ type, subtype }) {
       this.type = type;
       this.subtype = subtype;
-      if (!this.selectWidth) this.create();
+      if (!this.canSelectWidth) this.create();
     },
     setWidth(width) {
       this.width = width;
       this.create();
     },
-    close() {
+    close(fully) {
       this.type = null;
       this.subtype = null;
-      this.width = null;
+      this.width = DEFAULT_WIDTH;
       this.selectionOpened = false;
+      this.$emit('closed', fully);
     }
   },
   components: {
+    InlineContainer,
+    PopoverContainer,
     SelectElement,
     SelectWidth
   }
@@ -151,24 +148,20 @@ export default {
     font-size: 28px;
     line-height: 28px;
     vertical-align: top;
-
-    &:hover {
-      color: #42b983;
-      cursor: pointer;
-    }
+    cursor: pointer;
   }
+}
 
-  .slide-fade-enter-active {
-    transition: all 0.2s ease-in-out;
-  }
+.slide-fade-enter-active {
+  transition: all 0.2s ease-in-out;
+}
 
-  .slide-fade-enter {
-    transform: translateY(-30px);
-    opacity: 0;
-  }
+.slide-fade-enter {
+  transform: translateY(-30px);
+  opacity: 0;
+}
 
-  .slide-fade-leave-to, .slide-fade-leave-active {
-    display: none;
-  }
+.slide-fade-leave-to, .slide-fade-leave-active {
+  display: none;
 }
 </style>
