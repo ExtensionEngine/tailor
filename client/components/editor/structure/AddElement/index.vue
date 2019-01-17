@@ -60,7 +60,8 @@ export default {
         (this.type !== 'BREAK') &&
         (this.type !== 'CAROUSEL') &&
         (this.type !== 'TABLE') &&
-        (this.type !== 'POLL');
+        (this.type !== 'POLL') &&
+        (this.type !== 'REFLECTION');
     }
   },
   methods: {
@@ -101,6 +102,14 @@ export default {
           element.data.embeds[option.id] = option;
           element.data.options.push(option.id);
         });
+      }
+
+      if (element.type === 'REFLECTION') {
+        const question = getTextElement();
+        element.data = {
+          embeds: { [question.id]: question },
+          question: question.id
+        };
       }
 
       element.data.width = this.width || 12;

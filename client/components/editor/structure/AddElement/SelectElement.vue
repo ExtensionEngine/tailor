@@ -49,7 +49,8 @@ const TE_TYPES = [
   { type: 'TABLE', label: 'Table', icon: 'mdi-table' },
   { type: 'PDF', label: 'PDF', icon: 'mdi-file-pdf-box' },
   { type: 'POLL', label: 'Poll', icon: 'mdi-poll-box' },
-  { type: 'AUDIO', label: 'Audio', icon: 'mdi-volume-high' }
+  { type: 'AUDIO', label: 'Audio', icon: 'mdi-volume-high' },
+  { type: 'REFLECTION', label: 'Reflection', icon: 'mdi-comment-text' }
 ];
 
 const ELEMENTS_PER_ROW = 6;
