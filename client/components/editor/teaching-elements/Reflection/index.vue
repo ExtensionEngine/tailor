@@ -68,7 +68,6 @@ $label-color: #3f51b5;
 
 .reflection-container {
   width: 100%;
-  text-align: left;
 }
 
 .reflection-heading {
@@ -84,6 +83,7 @@ $label-color: #3f51b5;
 
 .answer {
   margin-top: 20px;
+  text-align: left;
 }
 
 .answer-label {
