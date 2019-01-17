@@ -57,7 +57,7 @@ $main-color: #337ab7;
 .insert-element {
   position: relative;
   width: 100%;
-  margin: 5px 0;
+  padding: 5px 0;
   opacity: 0;
   transition: opacity 0.6s;
 
@@ -75,17 +75,22 @@ $main-color: #337ab7;
     position: relative;
     z-index: 1;
     width: 100%;
-    height: 3px;
+    height: 2px;
     background-color: $main-color;
 
     .add-element {
       position: absolute;
-      top: -12px;
+      top: -10px;
       left: 50%;
       transform: translateX(-50%);
       margin: 0;
       background-color: white;
       color: $main-color;
+
+      /deep/ .btn-base {
+        font-size: 22px;
+        line-height: 22px;
+      }
     }
   }
 }

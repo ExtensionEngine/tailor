@@ -145,6 +145,7 @@ export default {
   }
 
   .btn-base {
+    color: #337ab7;
     font-size: 28px;
     line-height: 28px;
     vertical-align: top;
