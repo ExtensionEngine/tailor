@@ -8,24 +8,21 @@
       @update="$emit('update', $event)"
       class="row">
       <div
-        v-for="({ te, key, width, canAddBefore, clearfix }, index) in tes"
-        :key="key"
-        :class="{ clearfix }"
+        v-for="(item, index) in list"
+        :key="item._cid || item.id"
+        :class="`col-xs-${item.data.width || 12}`"
         class="list-item-container">
         <insert-element
-          v-if="canAddBefore"
           :include="types"
           :activity="activity"
           :position="index - 1"
           :layout="layout"
           @add="el => $emit('insert', el)"/>
-        <div :class="`col-xs-${width}`">
-          <slot
-            :item="te"
-            :setWidth="false"
-            :dragged="dragElementIndex === index"
-            name="list-item"/>
-        </div>
+        <slot
+          :item="item"
+          :setWidth="false"
+          :dragged="dragElementIndex === index"
+          name="list-item"/>
       </div>
     </draggable>
     <div class="add-element-container">
@@ -62,17 +59,6 @@ export default {
     };
   },
   computed: {
-    tes() {
-      let skipAdd = false;
-      return this.list.map(te => {
-        const key = te._cid || te.id;
-        const canAddBefore = !skipAdd;
-        const width = te.data.width || 12;
-        const clearfix = width === 12 || !canAddBefore;
-        skipAdd = width < 12 && !skipAdd;
-        return { te, key, width, canAddBefore, clearfix };
-      });
-    },
     options() {
       return Object.assign(this.dragOptions, {
         handle: '.drag-handle',
@@ -112,10 +98,7 @@ export default {
       display: none;
     }
 
-    div[class^="col"] {
-      padding: 0;
-    }
-
+    div[class^="col"],
     /deep/ .te-container {
       padding: 0;
     }

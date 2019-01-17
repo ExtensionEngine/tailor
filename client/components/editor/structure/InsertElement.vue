@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ show }"
+    :class="{ show, opened }"
     @mouseenter="hovering = true"
     @mouseleave="hovering = false"
     class="insert-element">
@@ -55,7 +55,9 @@ export default {
 $main-color: #337ab7;
 
 .insert-element {
+  position: relative;
   width: 100%;
+  margin: 5px 0;
   opacity: 0;
   transition: opacity 0.6s;
 
@@ -63,17 +65,26 @@ $main-color: #337ab7;
     opacity: 1;
   }
 
+  &.opened {
+    .add-element-wrapper {
+      z-index: 2;
+    }
+  }
+
   .add-element-wrapper {
     position: relative;
+    z-index: 1;
     width: 100%;
     height: 3px;
     background-color: $main-color;
 
     .add-element {
       position: absolute;
-      top: -13px;
-      right: -27px;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
       margin: 0;
+      background-color: white;
       color: $main-color;
     }
   }
