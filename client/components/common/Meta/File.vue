@@ -1,7 +1,7 @@
 <template>
   <div class="meta-file-upload">
     <label :for="meta.key" class="meta-name">{{ meta.label }}</label>
-    <file-upload></file-upload>
+    <file-upload :meta="meta"></file-upload>
   </div>
 </template>
 
