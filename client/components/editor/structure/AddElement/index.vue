@@ -21,6 +21,7 @@
 
 <script>
 import { defaults } from 'utils/assessment';
+import get from 'lodash/get';
 import cuid from 'cuid';
 import InlineContainer from './InlineContainer';
 import PopoverContainer from './PopoverContainer';
@@ -30,19 +31,23 @@ import SelectWidth from './SelectWidth';
 const DEFAULT_WIDTH = 12;
 const FIXED_WIDTH_TYPES = ['ACCORDION', 'ASSESSMENT', 'BREAK', 'CAROUSEL', 'TABLE'];
 
+const getEmbededData = (type, data) => ({ id: cuid(), type, data, embedded: true });
+
 const elementData = {
-  build(type, ...args) {
-    return this[type] ? this[type](...args) : this.standard(...args);
+  build(type, width, position, activityId, ...args) {
+    let data = { width };
+    if (this[type]) Object.assign(data, this[type](...args));
+    const opts = activityId ? { position, activityId } : getEmbededData(type, data);
+    return { type, data, ...opts };
   },
-  standard: width => ({ width }),
-  ASSESSMENT: (width, subtype) => {
-    const question = { id: cuid(), type: 'HTML', data: { width: 12 }, embedded: true };
-    return { width, ...defaults[subtype](), question: [question] };
+  ASSESSMENT: subtype => {
+    const question = getEmbededData('HTML', { width: 12 });
+    return { ...defaults[subtype](), question: [question] };
   },
-  ACCORDION: width => {
+  ACCORDION: () => {
     const id = cuid();
     const items = { [id]: { id, header: 'Header', body: {} } };
-    return { width, items, embeds: {} };
+    return { items, embeds: {} };
   }
 };
 
@@ -81,19 +86,10 @@ export default {
     },
     create() {
       const { type, subtype, width, activity, position } = this;
-      const data = elementData.build(type, width, subtype);
-      let element = { type, data };
-
-      if (activity) {
-        element.activityId = activity.id;
-        element.position = position;
-      } else {
-        element.id = cuid();
-        element.embedded = true;
-      }
-
+      const activityId = get(activity, 'id');
+      const data = elementData.build(type, width, position, activityId, subtype);
+      this.$emit('add', data);
       this.close(true);
-      this.$emit('add', element);
     },
     setType({ type, subtype }) {
       this.type = type;
@@ -135,13 +131,9 @@ export default {
   }
 
   .btn-close {
+    margin-right: 2px;
     transform: rotate(45deg);
     transition: all 0.2s ease-in-out;
-  }
-
-  .selections {
-    min-height: 85px;
-    margin-top: 10px;
   }
 
   .btn-base {

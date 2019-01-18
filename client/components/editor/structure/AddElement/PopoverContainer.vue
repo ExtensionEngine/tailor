@@ -11,7 +11,7 @@
 
 <style lang="scss" scoped>
 .element-selection-popover {
-  top: 30px;
+  top: 25px;
   left: 50%;
   transform: translate(-50%);
   display: block;

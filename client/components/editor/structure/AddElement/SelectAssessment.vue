@@ -9,7 +9,7 @@
         :key="assessment.type"
         :class="columnWidth"
         @click="$emit('selected', assessment.type)"
-        class="btn-base assessment-type">
+        class="assessment-type">
         <span>{{ assessment.title }}</span>
       </div>
     </div>
@@ -60,21 +60,16 @@ export default {
     padding-bottom: 40px;
   }
 
-  .btn-base {
+  .assessment-type {
     display: inline-block;
-    font-size: 28px;
-    line-height: 28px;
+    font-size: 16px;
+    line-height: 16px;
     vertical-align: middle;
 
     &:hover {
       color: #42b983;
       cursor: pointer;
     }
-  }
-
-  .assessment-type {
-    font-size: 16px;
-    line-height: 16px;
   }
 }
 </style>
