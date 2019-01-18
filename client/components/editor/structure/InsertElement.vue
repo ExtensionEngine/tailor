@@ -59,7 +59,7 @@ $main-color: #337ab7;
   width: 100%;
   padding: 5px 0;
   opacity: 0;
-  transition: opacity 0.6s;
+  transition: opacity 0.8s ease-in-out;
 
   &.show {
     opacity: 1;
