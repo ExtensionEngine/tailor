@@ -85,7 +85,6 @@ $main-color: #337ab7;
       transform: translateX(-50%);
       margin: 0;
       background-color: white;
-      color: $main-color;
 
       /deep/ .btn-base {
         font-size: 22px;

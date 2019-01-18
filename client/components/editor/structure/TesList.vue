@@ -32,7 +32,6 @@
         :activity="activity"
         :position="nextPosition"
         :layout="layout"
-        :top="true"
         @add="el => $emit('add', el)"/>
     </div>
   </div>

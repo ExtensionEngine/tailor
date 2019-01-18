@@ -41,7 +41,7 @@ const elementData = {
     return { type, data, ...opts };
   },
   ASSESSMENT: subtype => {
-    const question = getEmbededData('HTML', { width: 12 });
+    const question = getEmbededData('HTML', { width: DEFAULT_WIDTH });
     return { ...defaults[subtype](), question: [question] };
   },
   ACCORDION: () => {
