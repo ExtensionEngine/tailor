@@ -1,18 +1,24 @@
 <template>
   <div class="meta-file-upload">
-    <label :for="meta.key" class="meta-name">{{ meta.label }}</label>
+    <label class="meta-name">{{ meta.label }}</label>
     <file-upload :meta="meta" @key="updateActivity"></file-upload>
-    <span>{{ meta.value.name }}</span>
+    <span>{{ fileName }}</span>
   </div>
 </template>
 
 <script>
 import FileUpload from '../FileUpload.vue';
+import get from 'lodash/get';
 
 export default {
   name: 'file',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
+  },
+  computed: {
+    fileName() {
+      return get(this.meta, 'value.name', '');
+    }
   },
   methods: {
     updateActivity(key, name) {
