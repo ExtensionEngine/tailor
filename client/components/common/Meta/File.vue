@@ -1,7 +1,8 @@
 <template>
   <div class="meta-file-upload">
     <label :for="meta.key" class="meta-name">{{ meta.label }}</label>
-    <file-upload :meta="meta"></file-upload>
+    <file-upload :meta="meta" @key="updateActivity"></file-upload>
+    <span>{{ meta.value.name }}</span>
   </div>
 </template>
 
@@ -12,6 +13,11 @@ export default {
   name: 'file',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
+  },
+  methods: {
+    updateActivity(key, name) {
+      return this.$emit('update', key, name);
+    }
   },
   components: {
     FileUpload

@@ -26,7 +26,8 @@ export default {
   },
   data() {
     return {
-      uploading: false
+      uploading: false,
+      error: {}
     };
   },
   methods: {
@@ -44,8 +45,11 @@ export default {
       this.$validator.validate(this.meta.key).then(result => {
         if (!result) return;
         this.uploading = true;
-        request.post('/files', this.form).then(res => {
-          return res;
+        const [ file ] = this.$refs.fileInput.files;
+        request.post('/files', this.form).then(({ data }) => {
+          this.uploading = false;
+          if (!data.error) return this.$emit('key', data.key, file.name);
+          this.error = data.error;
         });
       });
     }
