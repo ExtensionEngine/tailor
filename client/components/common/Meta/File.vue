@@ -1,8 +1,12 @@
 <template>
   <div class="meta-file-upload">
     <label class="meta-name">{{ meta.label }}</label>
-    <file-upload :meta="meta" @key="updateActivity"></file-upload>
-    <span>{{ fileName }}</span>
+    <span class="file-name">{{ fileName }}</span>
+    <file-upload
+      :meta="meta"
+      @key="updateActivity"
+      @delete="updateActivity">
+    </file-upload>
   </div>
 </template>
 
@@ -21,8 +25,10 @@ export default {
     }
   },
   methods: {
-    updateActivity(key, name) {
-      return this.$emit('update', key, name);
+    updateActivity(url, name) {
+      let update = null;
+      if (url && name) update = { url, name };
+      return this.$emit('update', this.meta.key, update);
     }
   },
   components: {
@@ -50,6 +56,23 @@ export default {
     width: 100%;
     margin-bottom: 10px;
     color: #808080;
+  }
+
+  .file-name {
+    color:#0000FF;
+    font-size: 16px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .delete {
+    padding: 0 5px;
+    font-size: 16px;
+    color: #808080;
+
+    &:hover {
+      color: #555;
+    }
   }
 }
 </style>

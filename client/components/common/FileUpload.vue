@@ -1,6 +1,7 @@
 <template>
   <div>
-    <form @submit.prevent>
+    <circular-progress v-if="uploading"></circular-progress>
+    <form v-else @submit.prevent>
       <input
         v-validate="meta.validate"
         ref="fileInput"
@@ -17,11 +18,13 @@
       </label>
     </form>
     <span class="help-block">{{ vErrors.first(meta.key) }}</span>
+    <span v-if="meta.value" @click="deleteFile" class="mdi mdi-delete delete"></span>
   </div>
 </template>
 
 <script>
 import { withValidation } from 'utils/validation';
+import CircularProgress from 'components/common/CircularProgress';
 
 import request from '../../api/request';
 
@@ -60,7 +63,13 @@ export default {
           this.error = data.error;
         });
       });
+    },
+    deleteFile() {
+      return this.$emit('delete', this.meta.key, null);
     }
+  },
+  components: {
+    CircularProgress
   }
 };
 </script>
