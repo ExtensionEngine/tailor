@@ -7,7 +7,7 @@ function uploadFile(req, res) {
   const extension = path.extname(file.originalname);
   const hash = crypto.createHash('md5').update(`${file}`).digest('hex');
   const key = `repository/assets/${hash}${extension}`;
-  return saveFile(key, req.file.buffer).then(({ $response }) => {
+  return saveFile(key, req.file.buffer, { ContentType: file.mimetype }).then(({ $response }) => {
     return res.json({ key, error: $response.error });
   });
 }

@@ -82,7 +82,7 @@ export default {
       return request.get('/files', { params: { url: this.meta.value.url } })
         .then(({ data }) => {
           this.downloadUrl = data;
-          return (window.location.href = data);
+          return window.open(data, '_blank');
         });
     },
     deleteFile() {
