@@ -27,11 +27,13 @@
 </template>
 
 <script>
-import { withValidation } from 'utils/validation';
 import CircularProgress from 'components/common/CircularProgress';
+import EventBus from 'EventBus';
 import get from 'lodash/get';
-
+import { withValidation } from 'utils/validation';
 import request from '../../api/request';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   name: 'file-upload',
@@ -75,7 +77,11 @@ export default {
       });
     },
     deleteFile() {
-      return this.$emit('delete', this.meta.key, null);
+      appChannel.emit('showConfirmationModal', {
+        type: 'file',
+        item: { name: this.savedfileName },
+        action: () => this.$emit('delete', this.meta.key, null)
+      });
     }
   },
   components: {
