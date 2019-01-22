@@ -16,15 +16,20 @@
         class="btn btn-link btn-sm upload-button">
         Choose a file
       </label>
+      <span
+        v-else
+        class="file-name">{{ savedfileName }}
+        <span @click="deleteFile" class="mdi mdi-delete delete"></span>
+      </span>
     </form>
     <span class="help-block">{{ vErrors.first(meta.key) }}</span>
-    <span v-if="meta.value" @click="deleteFile" class="mdi mdi-delete delete"></span>
   </div>
 </template>
 
 <script>
 import { withValidation } from 'utils/validation';
 import CircularProgress from 'components/common/CircularProgress';
+import get from 'lodash/get';
 
 import request from '../../api/request';
 
@@ -36,20 +41,25 @@ export default {
   },
   data() {
     return {
-      fileName: '',
+      extractedFileName: '',
       uploading: false,
       error: {}
     };
+  },
+  computed: {
+    savedfileName() {
+      return get(this.meta, 'value.name', '');
+    }
   },
   methods: {
     constructFileForm(e) {
       this.form = new FormData();
       const [file] = e.target.files;
       if (!file) {
-        this.filename = null;
+        this.extractedFileName = null;
         return;
       }
-      this.fileName = file.name;
+      this.extractedFileName = file.name;
       this.form.append('file', file, file.name);
     },
     upload(e) {
@@ -59,7 +69,7 @@ export default {
         this.uploading = true;
         return request.post('/files', this.form).then(({ data }) => {
           this.uploading = false;
-          if (!data.error) return this.$emit('key', data.key, this.fileName);
+          if (!data.error) return this.$emit('key', data.key, this.extractedFileName);
           this.error = data.error;
         });
       });
@@ -81,6 +91,16 @@ export default {
 
 .upload-button {
   padding: 0;
+}
+
+.delete {
+  padding: 0 5px;
+  font-size: 18px;
+  color: #808080;
+
+  &:hover {
+    color: #555;
+  }
 }
 
 </style>

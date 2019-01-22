@@ -1,7 +1,6 @@
 <template>
   <div class="meta-file-upload">
     <label class="meta-name">{{ meta.label }}</label>
-    <span class="file-name">{{ fileName }}</span>
     <file-upload
       :meta="meta"
       @key="updateActivity"
@@ -12,17 +11,11 @@
 
 <script>
 import FileUpload from '../FileUpload.vue';
-import get from 'lodash/get';
 
 export default {
   name: 'file',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
-  },
-  computed: {
-    fileName() {
-      return get(this.meta, 'value.name', '');
-    }
   },
   methods: {
     updateActivity(url, name) {
@@ -63,16 +56,6 @@ export default {
     font-size: 16px;
     text-decoration: underline;
     cursor: pointer;
-  }
-
-  .delete {
-    padding: 0 5px;
-    font-size: 16px;
-    color: #808080;
-
-    &:hover {
-      color: #555;
-    }
   }
 }
 </style>
