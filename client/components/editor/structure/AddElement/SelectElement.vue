@@ -33,7 +33,6 @@ import first from 'lodash/first';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import includes from 'lodash/includes';
-import round from 'lodash/round';
 import SelectAssessment from './SelectAssessment';
 
 const TE_TYPES = [
@@ -87,7 +86,7 @@ export default {
       if (outlineActivity || examGroup) return ['TR'];
     },
     columnWidth() {
-      return `col-xs-${round(12 / this.columns)}`;
+      return `col-xs-${Math.round(12 / this.columns)}`;
     },
     maxWidth() {
       // Set the maximum width of the select component container in the
