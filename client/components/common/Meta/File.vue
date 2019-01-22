@@ -50,12 +50,5 @@ export default {
     margin-bottom: 10px;
     color: #808080;
   }
-
-  .file-name {
-    color:#0000FF;
-    font-size: 16px;
-    text-decoration: underline;
-    cursor: pointer;
-  }
 }
 </style>

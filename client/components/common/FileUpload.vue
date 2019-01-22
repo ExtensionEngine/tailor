@@ -18,9 +18,10 @@
       </label>
       <span
         v-else
+        @click="consumeDownloadUrl"
         class="file-name">{{ savedfileName }}
-        <span @click="deleteFile" class="mdi mdi-delete delete"></span>
       </span>
+      <span v-if="meta.value" @click="deleteFile" class="mdi mdi-delete delete"></span>
     </form>
     <span class="help-block">{{ vErrors.first(meta.key) }}</span>
   </div>
@@ -43,9 +44,10 @@ export default {
   },
   data() {
     return {
+      downloadUrl: '',
       extractedFileName: '',
-      uploading: false,
-      error: {}
+      error: {},
+      uploading: false
     };
   },
   computed: {
@@ -76,11 +78,21 @@ export default {
         });
       });
     },
+    consumeDownloadUrl() {
+      return request.get('/files', { params: { url: this.meta.value.url } })
+        .then(({ data }) => {
+          this.downloadUrl = data;
+          return (window.location.href = data);
+        });
+    },
     deleteFile() {
       appChannel.emit('showConfirmationModal', {
         type: 'file',
         item: { name: this.savedfileName },
-        action: () => this.$emit('delete', this.meta.key, null)
+        action: () => {
+          this.downloadUrl = '';
+          return this.$emit('delete', this.meta.key, null);
+        }
       });
     }
   },
@@ -97,6 +109,13 @@ export default {
 
 .upload-button {
   padding: 0;
+}
+
+.file-name {
+  color:#0000FF;
+  font-size: 16px;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .delete {
