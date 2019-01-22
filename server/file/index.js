@@ -1,4 +1,4 @@
-const ctrl = require('./upload.controller');
+const ctrl = require('./file.controller');
 const router = require('express-promise-router')();
 const multer = require('multer');
 

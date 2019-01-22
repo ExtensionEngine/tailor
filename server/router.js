@@ -6,7 +6,7 @@ const commentRouter = require('./comment').router;
 const courseRouter = require('./course').router;
 const revisionRouter = require('./revision').router;
 const teRouter = require('./teaching-element').router;
-const uploadRouter = require('./file-upload').router;
+const uploadRouter = require('./file').router;
 const userRouter = require('./user').router;
 
 const router = express.Router();
