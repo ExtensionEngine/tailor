@@ -61,7 +61,8 @@ const objectMap = yup.object().shape({
 const imageObjectMap = yup.object().shape({
   id: yup.string().required(),
   data: yup.object().shape({
-    url: yup.string().min(1).required()
+    url: yup.string().min(1).required(),
+    caption: yup.string().default('')
   })
 });
 

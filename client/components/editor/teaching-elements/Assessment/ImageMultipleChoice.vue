@@ -17,7 +17,7 @@
               :data-key="id"
               :disabled="disabled"
               :name="id"
-              @change="updateAnswer"
+              @change="updateAnswerImage"
               data-vv-as="image"
               class="image-input"
               type="file"/>
@@ -28,6 +28,20 @@
               Upload image...
             </button>
             <span v-if="!data.url" class="error-msg">Please upload an image.</span>
+          </div>
+          <div class="caption-container">
+            <span v-if="!isEditing">{{ data.caption }}</span>
+            <textarea
+              v-else
+              v-model="data.caption"
+              :data-key="id"
+              @input="updateAnswerCaption"
+              autofocus=""
+              cols="40"
+              placeholder="Input image caption text (optional)"
+              rows="3"
+              type="text">
+            </textarea>
           </div>
           <span
             @click="removeAnswer(id)"
@@ -108,14 +122,18 @@ export default {
     update(data) {
       this.$emit('update', data);
     },
-    updateAnswer(evt) {
+    updateAnswerCaption({ target: input }) {
+      const { dataset, value } = input;
       let answers = cloneDeep(this.answers);
-      const { target: input } = evt;
+      let answer = findById(answers, dataset.key);
+      if (answer) answer.data.caption = value;
+      this.update({ answers });
+    },
+    updateAnswerImage({ target: input }) {
       const { dataset, files = [] } = input;
       const image = files[0];
-
       if (!image) return;
-
+      let answers = cloneDeep(this.answers);
       return blobToDataURL(image)
         .then(dataUrl => (image.dataUrl = dataUrl))
         .then(() => {
@@ -239,6 +257,18 @@ ul {
   &-remove {
     margin-left: 10%;
     font-size: 2rem;
+  }
+}
+
+.caption-container {
+  width: 30%;
+  margin-left: 3rem;
+  vertical-align: middle;
+
+  span {
+    display: block;
+    font-size: 2rem;
+    word-wrap: break-word;
   }
 }
 </style>
