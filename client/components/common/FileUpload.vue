@@ -30,9 +30,9 @@
 <script>
 import CircularProgress from 'components/common/CircularProgress';
 import EventBus from 'EventBus';
-import { withValidation } from 'utils/validation';
 import request from '../../api/request';
 import uniqueId from 'lodash/uniqueId';
+import { withValidation } from 'utils/validation';
 
 const appChannel = EventBus.channel('app');
 
@@ -80,8 +80,10 @@ export default {
     consumeDownloadUrl() {
       return request.get('/files', { params: { url: this.fileUrl } })
         .then(({ data }) => {
-          this.downloadUrl = data;
-          return window.open(data, '_blank');
+          const a = document.createElement('a');
+          a.href = data;
+          a.target = '_blank';
+          a.click();
         });
     },
     deleteFile() {
