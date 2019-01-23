@@ -1,11 +1,10 @@
 # Tailor
 
-[![GitHub package version](https://img.shields.io/github/package-json/v/ExtensionEngine/tailor.svg)](https://github.com/ExtensionEngine/tailor/blob/develop/package.json#L3)
+[![GitHub package version](https://badgen.net/github/release/ExtensionEngine/tailor)](https://github.com/ExtensionEngine/tailor/releases)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d6d198f9c56b4ca799b4624c5bb3e16c?branch=develop)](https://www.codacy.com/app/underscope/tailor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ExtensionEngine/tailor&amp;utm_campaign=Badge_Grade)
-[![codebeat badge](https://codebeat.co/badges/f577cd02-ad4f-464d-8afc-be153929703d)](https://codebeat.co/projects/github-com-extensionengine-tailor-develop)
-[![Known Vulnerabilities](https://snyk.io/test/github/ExtensionEngine/tailor/badge.svg)](https://snyk.io/test/github/ExtensionEngine/tailor)
-[![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg)](https://github.com/Flet/semistandard)
-[![GitHub license](https://img.shields.io/github/license/ExtensionEngine/tailor.svg)](https://github.com/ExtensionEngine/tailor/blob/develop/LICENSE)
+[![Known Vulnerabilities](https://snyk.io/test/github/ExtensionEngine/tailor/develop/badge.svg)](https://snyk.io/test/github/ExtensionEngine/tailor)
+[![GitHub license](https://badgen.net/github/license/ExtensionEngine/tailor)](https://github.com/ExtensionEngine/tailor/blob/develop/LICENSE)
+[![js semistandard style](https://badgen.net/badge/code%20style/semistandard/pink)](https://github.com/Flet/semistandard)
 [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
 
 Adaptive course authoring platform.
