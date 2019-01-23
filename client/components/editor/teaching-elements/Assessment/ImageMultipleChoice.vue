@@ -3,9 +3,7 @@
     <h5>Answers</h5>
     <ul>
       <li v-for="{ id, data } in answers" :key="id" class="answer-row">
-        <span
-          :class="{ 'has-error': !!vErrors.first(id) }"
-          class="row-content">
+        <span :class="{ 'has-error': !data.url }" class="row-content">
           <input
             :checked="correct.includes(id)"
             :disabled="disabled"
@@ -14,9 +12,7 @@
           <async-image :url="data.url" class="image-container"/>
           <div class="image-input-err">
             <input
-              v-validate
               :ref="`${id}_file_input`"
-              :data-vv-rules="imageValidationRules"
               :accept="imageInputType"
               :data-key="id"
               :disabled="disabled"
@@ -31,9 +27,7 @@
               type="button">
               Upload image...
             </button>
-            <span v-if="vErrors.first(id)" class="error-msg">
-              {{ vErrors.first(id) }}
-            </span>
+            <span v-if="!data.url" class="error-msg">Please upload an image.</span>
           </div>
           <span
             @click="removeAnswer(id)"
@@ -53,36 +47,15 @@
 <script>
 import { blobToDataURL } from 'blob-util';
 import { defaults } from 'utils/assessment';
-import { withValidation } from 'utils/validation';
 import AsyncImage from './shared/AsyncImage';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import find from 'lodash/find';
 import pull from 'lodash/pull';
 
-const maxImageDimension = 256;
 const findById = (collection, id) => find(collection, { id });
-const isImageValidationError = err => !!err[Symbol.for('error:image-validation')];
-
-const maxDimensionsValidationRule = {
-  getMessage(field, [width, height], data) {
-    return (data && data.message) ||
-      `Incorrect image width and/or height. Maximum allowed image dimensions:
-      ${maxImageDimension}x${maxImageDimension}`;
-  },
-  validate(files, [width, height]) {
-    if (!files || !files[0]) return Promise.resolve(true);
-    return getImageDimensions(files[0].dataUrl)
-      .then(({ width, height }) => {
-        let valid = true;
-        if (width > maxImageDimension || height > maxImageDimension) valid = false;
-        return Promise.resolve(valid);
-      });
-  }
-};
 
 export default {
-  mixins: [withValidation()],
   props: {
     assessment: { type: Object, default: defaults.IMC },
     isEditing: { type: Boolean, default: false },
@@ -104,47 +77,9 @@ export default {
     },
     imageInputType() {
       return this.fileInputTypes.join(',');
-    },
-    imageValidationRules() {
-      return `size:100|maxdimensions:${maxImageDimension},${maxImageDimension}`;
     }
   },
   methods: {
-    update(data) {
-      this.$emit('update', data);
-    },
-    toggleAnswer(id) {
-      let correct = cloneDeep(this.correct);
-      const position = correct.indexOf(id);
-      position < 0 ? correct.push(id) : correct.splice(position, 1);
-      this.update({ correct });
-    },
-    updateAnswer(evt) {
-      let answers = cloneDeep(this.answers);
-      const { target: input } = evt;
-      const { dataset, files = [] } = input;
-      const image = files[0];
-
-      this.deleteErrorMessages(dataset.key);
-
-      if (!image) return;
-
-      return blobToDataURL(image)
-        .then(dataUrl => (image.dataUrl = dataUrl))
-        .then(() => this.$validator.validate(dataset.key, [image]))
-        .then(isValid => {
-          if (!isValid) return Promise.reject(imageValidationError());
-        })
-        .then(() => {
-          let answer = findById(answers, dataset.key);
-          if (answer) answer.data.url = image.dataUrl;
-        })
-        .then(() => this.update({ answers }))
-        .catch(error => {
-          if (!isImageValidationError(error)) throw error;
-        })
-        .then(() => (input.value = null));
-    },
     addAnswer() {
       let answers = cloneDeep(this.answers);
       answers.push({ type: 'IMAGE', data: { url: '' }, id: cuid() });
@@ -162,11 +97,33 @@ export default {
 
       if (feedback) pull(feedback, findById(feedback, id));
 
-      this.deleteErrorMessages(id);
       this.update({ answers, correct, feedback });
     },
-    hasCorrectAnswers() {
-      return this.correct.length > 0;
+    toggleAnswer(id) {
+      let correct = cloneDeep(this.correct);
+      const position = correct.indexOf(id);
+      position < 0 ? correct.push(id) : correct.splice(position, 1);
+      this.update({ correct });
+    },
+    update(data) {
+      this.$emit('update', data);
+    },
+    updateAnswer(evt) {
+      let answers = cloneDeep(this.answers);
+      const { target: input } = evt;
+      const { dataset, files = [] } = input;
+      const image = files[0];
+
+      if (!image) return;
+
+      return blobToDataURL(image)
+        .then(dataUrl => (image.dataUrl = dataUrl))
+        .then(() => {
+          let answer = findById(answers, dataset.key);
+          if (answer) answer.data.url = image.dataUrl;
+        })
+        .then(() => this.update({ answers }))
+        .then(() => (input.value = null));
     },
     validate() {
       let error = {};
@@ -175,22 +132,13 @@ export default {
           type: 'alert-danger',
           text: 'Please make at least two answers available.'
         };
-      } else if (!this.hasCorrectAnswers()) {
+      } else if (this.correct.length < 1) {
         error = {
           type: 'alert-danger',
           text: 'There needs to be at least one correct answer.'
         };
       }
       this.$emit('alert', error);
-
-      this.$validator.validateAll();
-    },
-    deleteErrorMessages(answerId) {
-      const errorField = this.$validator.fields.find({ name: answerId });
-      if (errorField) {
-        errorField.reset();
-        this.$validator.errors.remove(errorField.name, errorField.scope);
-      }
     }
   },
   watch: {
@@ -198,25 +146,8 @@ export default {
       this.validate();
     }
   },
-  created() {
-    this.$validator.extend('maxdimensions', maxDimensionsValidationRule);
-  },
   components: { AsyncImage }
 };
-
-function getImageDimensions(imageSrc) {
-  return new Promise(resolve => {
-    let i = document.createElement('img');
-    i.onload = () => resolve({ width: i.width, height: i.height });
-    i.src = imageSrc;
-  });
-}
-
-function imageValidationError(message = '') {
-  const err = new Error(message);
-  err[Symbol.for('error:image-validation')] = true;
-  return err;
-}
 </script>
 
 <style lang="scss" scoped>
