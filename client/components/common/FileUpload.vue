@@ -3,36 +3,36 @@
     <circular-progress v-if="uploading"></circular-progress>
     <form v-else @submit.prevent>
       <input
-        v-validate="meta.validate"
-        ref="fileInput"
+        v-validate="validate"
+        :id="id"
+        :ref="id"
+        :name="id"
         @change="upload"
-        id="file-input"
-        name="file"
         type="file"
         class="upload-input">
       <label
-        v-if="!meta.value"
-        for="file-input"
+        v-if="!fileUrl"
+        :for="id"
         class="btn btn-link btn-sm upload-button">
         Choose a file
       </label>
       <span
         v-else
         @click="consumeDownloadUrl"
-        class="file-name">{{ savedfileName }}
+        class="file-name">{{ fileName }}
       </span>
-      <span v-if="meta.value" @click="deleteFile" class="mdi mdi-delete delete"></span>
+      <span v-if="fileUrl" @click="deleteFile" class="mdi mdi-delete delete"></span>
     </form>
-    <span class="help-block">{{ vErrors.first(meta.key) }}</span>
+    <span class="help-block">{{ vErrors.first(id) }}</span>
   </div>
 </template>
 
 <script>
 import CircularProgress from 'components/common/CircularProgress';
 import EventBus from 'EventBus';
-import get from 'lodash/get';
 import { withValidation } from 'utils/validation';
 import request from '../../api/request';
+import uniqueId from 'lodash/uniqueId';
 
 const appChannel = EventBus.channel('app');
 
@@ -40,7 +40,10 @@ export default {
   name: 'file-upload',
   mixins: [withValidation()],
   props: {
-    meta: { type: Object, default: () => ({}) }
+    id: { type: String, default: () => uniqueId('file_') },
+    fileName: { type: String, default: '' },
+    fileUrl: { type: String, default: '' },
+    validate: { type: Object, default: () => ({ rules: { ext: [] } }) }
   },
   data() {
     return {
@@ -49,11 +52,6 @@ export default {
       error: {},
       uploading: false
     };
-  },
-  computed: {
-    savedfileName() {
-      return get(this.meta, 'value.name', '');
-    }
   },
   methods: {
     constructFileForm(e) {
@@ -68,7 +66,7 @@ export default {
     },
     upload(e) {
       this.constructFileForm(e);
-      this.$validator.validate(this.meta.key).then(result => {
+      this.$validator.validate(this.id).then(result => {
         if (!result) return;
         this.uploading = true;
         return request.post('/files', this.form).then(({ data }) => {
@@ -79,7 +77,7 @@ export default {
       });
     },
     consumeDownloadUrl() {
-      return request.get('/files', { params: { url: this.meta.value.url } })
+      return request.get('/files', { params: { url: this.fileUrl } })
         .then(({ data }) => {
           this.downloadUrl = data;
           return window.open(data, '_blank');
@@ -88,10 +86,10 @@ export default {
     deleteFile() {
       appChannel.emit('showConfirmationModal', {
         type: 'file',
-        item: { name: this.savedfileName },
+        item: { name: this.fileName },
         action: () => {
           this.downloadUrl = '';
-          return this.$emit('delete', this.meta.key, null);
+          return this.$emit('delete', this.id, null);
         }
       });
     }

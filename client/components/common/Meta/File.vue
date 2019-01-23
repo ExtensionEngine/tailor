@@ -2,7 +2,7 @@
   <div class="meta-file-upload">
     <label class="meta-name">{{ meta.label }}</label>
     <file-upload
-      :meta="meta"
+      v-bind="fileOptions"
       @key="updateActivity"
       @delete="updateActivity">
     </file-upload>
@@ -11,11 +11,22 @@
 
 <script>
 import FileUpload from '../FileUpload.vue';
+import get from 'lodash/get';
 
 export default {
   name: 'file',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
+  },
+  computed: {
+    fileOptions() {
+      return {
+        id: this.meta.key,
+        fileName: get(this.meta, 'value.name', ''),
+        fileUrl: get(this.meta, 'value.url', ''),
+        validate: this.meta.validate
+      };
+    }
   },
   methods: {
     updateActivity(url, name) {
