@@ -47,7 +47,12 @@ function getImageDimensions(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve({ width: img.width, height: img.height });
-    img.onerror = (event) => reject(event);
+    img.onerror = event => {
+      const err = new Error('Error loading the image');
+      err.cause = event;
+
+      reject(err);
+    };
     img.src = url;
   });
 }
