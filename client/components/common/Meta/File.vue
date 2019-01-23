@@ -24,7 +24,8 @@ export default {
         id: this.meta.key,
         fileName: get(this.meta, 'value.name', ''),
         fileUrl: get(this.meta, 'value.url', ''),
-        validate: this.meta.validate
+        validate: this.meta.validate,
+        labelText: this.meta.placeholder
       };
     }
   },

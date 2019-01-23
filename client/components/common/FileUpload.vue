@@ -14,7 +14,7 @@
         v-if="!fileUrl"
         :for="id"
         class="btn btn-link btn-sm upload-button">
-        Choose a file
+        {{ labelText }}
       </label>
       <span
         v-else
@@ -43,7 +43,8 @@ export default {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
     fileUrl: { type: String, default: '' },
-    validate: { type: Object, default: () => ({ rules: { ext: [] } }) }
+    validate: { type: Object, default: () => ({ rules: { ext: [] } }) },
+    labelText: { type: String, default: 'Choose a file' }
   },
   data() {
     return {
