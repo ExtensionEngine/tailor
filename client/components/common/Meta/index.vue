@@ -26,7 +26,7 @@ const META_TYPES = {
   SELECT: Select,
   SWITCH: Switch,
   TEXTAREA: Textarea,
-  UPLOAD: FileUpload
+  FILE: FileUpload
 };
 const components = mapKeys(META_TYPES, 'name');
 
