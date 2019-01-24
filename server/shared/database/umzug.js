@@ -2,7 +2,7 @@
 
 const Umzug = require('umzug');
 
-const umzug = db => new Umzug({
+module.exports = db => new Umzug({
   storage: 'json',
   storageOptions: {},
   logging: false,
