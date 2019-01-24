@@ -11,5 +11,3 @@ module.exports = db => new Umzug({
     path: './server/shared/database/migrations'
   }
 });
-
-module.exports = umzug;
