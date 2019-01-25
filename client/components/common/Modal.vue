@@ -53,35 +53,12 @@ function toggleFocusTrap(focusTrap, condition) {
 }
 </script>
 
-<style lang="scss" scoped>
-.modal {
-  display: block;
-}
-
-.modal.in[backdrop] {
-  background-color: rgba(0,0,0,0.5);
-}
-
-.modal-dialog {
-  height: 100%;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.modal-enter, .modal-leave-active {
-  opacity: 0;
-}
-
-.modal-enter .modal-content, .modal-leave-active .modal-content {
-  transform: scale(1.1);
-}
-</style>
-
 <style lang="scss">
 @function headings($from: 1, $to: 6) {
   @if $from == $to {
     @return 'h#{$from}';
-  } @else {
+  }
+  @else {
     @return 'h#{$from},' + headings($from + 1, $to);
   }
 }
@@ -100,7 +77,7 @@ function toggleFocusTrap(focusTrap, condition) {
       0 11px 15px -7px rgba(0,0,0,0.2),
       0 24px 38px 3px rgba(0,0,0,0.14),
       0 9px 46px 8px rgba(0,0,0,0.12);
-    transition: all .3s ease;
+    transition: all 0.3s ease;
   }
 
   .modal-header {
@@ -128,5 +105,29 @@ function toggleFocusTrap(focusTrap, condition) {
     font-weight: 500;
     border: none;
   }
+}
+</style>
+
+<style lang="scss" scoped>
+.modal {
+  display: block;
+}
+
+.modal.in[backdrop] {
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-dialog {
+  height: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.modal-enter, .modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-content, .modal-leave-active .modal-content {
+  transform: scale(1.1);
 }
 </style>

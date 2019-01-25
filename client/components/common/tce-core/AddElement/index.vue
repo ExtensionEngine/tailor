@@ -124,8 +124,8 @@ export default {
   }
 
   .selections {
-    margin-top: 10px;
     min-height: 85px;
+    margin-top: 10px;
   }
 
   .btn-base {

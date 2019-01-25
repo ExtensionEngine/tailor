@@ -272,10 +272,8 @@ $link-color: #ababab;
     &:hover .circle {
       fill: darken($node-color, 10%);
     }
-  }
 
-  // Capture all mouse events on circle wrapper.
-  .node .circle-wrapper {
+    // Capture all mouse events on circle wrapper.
     * {
       cursor: pointer;
       pointer-events: none;

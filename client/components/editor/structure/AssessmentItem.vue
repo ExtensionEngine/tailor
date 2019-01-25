@@ -145,8 +145,8 @@ export default {
 
   .title {
     display: inline-block;
-    height: 19px;
     max-width: 80%;
+    height: 19px;
   }
 
   .label {

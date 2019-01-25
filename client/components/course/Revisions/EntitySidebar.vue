@@ -98,7 +98,7 @@ $revision-padding: 32px;
   }
 }
 
-.revision:hover, .selected {
+.selected, .revision:hover {
   .rollback {
     display: flex;
     justify-content: center;
