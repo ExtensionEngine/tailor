@@ -12,7 +12,8 @@
     </span>
     <content-element
       v-bind="{ element, isDisabled, isDragged }"
-      @save="data => $emit('save', data)"/>
+      @add="$emit('add', $event)"
+      @save="$emit('save', $event)"/>
   </div>
 </template>
 

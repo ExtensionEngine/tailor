@@ -29,7 +29,6 @@
 <script>
 import filter from 'lodash/filter';
 import map from 'lodash/map';
-import TeAssessment from '../teaching-elements/Assessment';
 import truncate from 'lodash/truncate';
 
 const blankRegex = /(@blank)/g;
@@ -52,9 +51,6 @@ export default {
       question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
       return truncate(question, { length: 50 });
     }
-  },
-  components: {
-    TeAssessment
   }
 };
 </script>

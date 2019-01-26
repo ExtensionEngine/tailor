@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import AddElement from './AddElement';
+import AddElement from 'tce-core/AddElement';
 import AssessmentItem from './AssessmentItem';
 import EventBus from 'EventBus';
 import map from 'lodash/map';

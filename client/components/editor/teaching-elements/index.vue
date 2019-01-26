@@ -4,13 +4,14 @@
     :isDragged="dragged"
     :isDisabled="disabled"
     :setWidth="setWidth"
+    @add="addElement"
     @save="save"/>
 </template>
 
 <script>
+import { mapActions, mapMutations } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
-import { mapActions } from 'vuex-module';
 
 export default {
   name: 'teaching-element',
@@ -22,6 +23,7 @@ export default {
   },
   methods: {
     ...mapActions({ saveElement: 'save' }, 'tes'),
+    ...mapMutations({ addElement: 'add' }, 'tes'),
     save(data) {
       const element = cloneDeep(this.element);
       Object.assign(element.data, data);

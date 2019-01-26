@@ -9,7 +9,8 @@
       :element="element"
       :isFocused="isFocused"
       :isDragged="isDragged"
-      @save="data => $emit('save', data)"/>
+      @add="$emit('add', $event)"
+      @save="$emit('save', $event)"/>
   </div>
 </template>
 

@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import AddElement from '../../structure/AddElement';
+import AddElement from '../AddElement';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
