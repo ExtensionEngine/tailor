@@ -1,10 +1,12 @@
 <template>
   <div :key="id" class="element-toolbar-wrapper">
     <component
+      v-if="componentName"
       :is="componentName"
       :element="element"
       :embed="embed"
       @save="saveElement"/>
+    <default-toolbar v-else/>
     <slot></slot>
     <div class="delete-element">
       <span @click="requestDeleteConfirmation" class="btn btn-fab btn-danger">
@@ -16,6 +18,7 @@
 
 <script>
 import { getElementId, getToolbarName } from './utils';
+import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import { mapActions } from 'vuex-module';
 import { withValidation } from 'utils/validation';
@@ -34,7 +37,9 @@ export default {
       return getElementId(this.element);
     },
     componentName() {
-      return getToolbarName(this.element.type);
+      const { type } = this.element;
+      if (type === 'ASSESSMENT') return;
+      return getToolbarName(type);
     }
   },
   methods: {
@@ -62,7 +67,8 @@ export default {
     return {
       $elementBus: EventBus.channel(`element:${this.id}`)
     };
-  }
+  },
+  components: { DefaultToolbar }
 };
 </script>
 
