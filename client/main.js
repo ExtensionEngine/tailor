@@ -37,7 +37,8 @@ const registry = new ElementRegistry(Vue);
   'tce-single-choice',
   'tce-true-false',
   'tce-text-response',
-  'tce-numerical-response'
+  'tce-numerical-response',
+  'tce-fill-blank'
 ].forEach(tailorElement => registry.load(tailorElement));
 
 Vue.use(Tooltip, { delay: 50 });
