@@ -1,22 +1,23 @@
 <template>
   <div @selected="$emit('selected')" class="assessment-container">
     <div class="assessment">
+      <slot/>
       <question
-        :assessment="element"
-        :errors="errors"
+        :assessment="editedElement"
         :isEditing="isEditing"
+        :errors="errors"
         @update="update"/>
       <component
         :is="resolveComponentName(element)"
-        :assessment="element.data"
-        :errors="errors"
+        :assessment="editedElement.data"
         :isEditing="isEditing"
+        :errors="errors"
         @update="update"
         @alert="setAlert"/>
       <div :class="{ 'has-error': hintError }" class="form-group">
         <span class="form-label">Hint</span>
         <input
-          v-model="element.data.hint"
+          v-model="editedElement.data.hint"
           :disabled="!isEditing"
           class="form-control"
           type="text"
@@ -24,8 +25,8 @@
       </div>
       <feedback
         v-if="showFeedback"
-        :answers="element.data.answers"
-        :feedback="element.data.feedback"
+        :answers="editedElement.data.answers"
+        :feedback="editedElement.data.feedback"
         :isEditing="isEditing"
         @update="updateFeedback"/>
       <div class="alert-container">
@@ -38,7 +39,7 @@
         @cancel="cancel"
         @save="save"
         @remove="remove"
-        @edit="edit"
+        @edit="isEditing = true"
         class="controls"/>
     </div>
   </div>
@@ -70,17 +71,17 @@ export default {
     const isEditing = !this.element.id;
     return {
       isEditing,
+      editedElement: cloneDeep(this.element),
       alert: {},
-      errors: [],
-      previousVersion: null
+      errors: []
     };
   },
   computed: {
-    assessmentType() {
-      return this.element.data.type;
-    },
     schema() {
       return this.$teRegistry.get(this.assessmentType).schema;
+    },
+    assessmentType() {
+      return this.element.data.type;
     },
     hintError() {
       return this.errors.includes('hint');
@@ -88,12 +89,12 @@ export default {
     showFeedback() {
       const { assessmentType } = this;
       const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
-      return !this.summative && feedbackSupported;
+      return feedbackSupported;
     }
   },
   methods: {
     resolveComponentName(element) {
-      return getComponentName(processAssessmentType(element.data.type));
+      return getComponentName(processAssessmentType(this.assessmentType));
     },
     setAlert(data = {}) {
       this.alert = data;
@@ -104,34 +105,32 @@ export default {
         }, 3000);
       }
     },
-    validate(data) {
-      return this.schema.validate(data, validationOptions);
+    validate() {
+      return this.schema.validate(this.editedElement.data, validationOptions);
     },
     update(data, validate) {
-      const element = cloneDeep(this.element);
-      Object.assign(element.data, data);
-      this.$emit('add', element);
+      Object.assign(this.editedElement.data, data);
+      this.$emit('add', cloneDeep(this.editedElement));
       if (validate && !isEmpty(this.errors)) {
         this.errors = [];
-        this.validate(element.data).catch(err => {
-          this.errors = errorProcessor(err);
-        });
+        this.validate().catch(err => (this.errors = errorProcessor(err)));
       }
     },
     save() {
       if (!this.isEditing) return;
       this.errors = [];
-      this.validate(this.element.data).then(() => {
-        this.$emit('save', cloneDeep(this.element.data));
+      this.validate().then(() => {
+        this.$emit('save', cloneDeep(this.editedElement.data));
         this.isEditing = false;
         this.setAlert(saveAlert);
       }).catch(err => (this.errors = errorProcessor(err)));
     },
     cancel() {
-      if (!this.previousVersion) {
+      if (!this.editedElement.id) {
         this.$emit('remove');
       } else {
-        this.$emit('add', cloneDeep(this.previousVersion));
+        this.editedElement = cloneDeep(this.element);
+        this.$emit('add', this.editedElement);
         this.isEditing = false;
         this.setAlert();
         this.errors = [];
@@ -140,18 +139,14 @@ export default {
     close() {
       this.$emit('selected');
     },
-    edit() {
-      this.previousVersion = cloneDeep(this.element);
-      this.isEditing = true;
-    },
     remove() {
       this.$emit('remove');
     },
     updateFeedback(feedback) {
-      const element = cloneDeep(this.element);
-      element.data.feedback = element.data.feedback || {};
-      Object.assign(element.data.feedback, feedback);
-      this.$emit('add', element);
+      const data = this.editedElement.data;
+      data.feedback = data.feedback || {};
+      Object.assign(data.feedback, feedback);
+      this.$emit('add', cloneDeep(this.editedElement));
     }
   },
   components: { Controls, Feedback, Question }

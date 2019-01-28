@@ -17,23 +17,21 @@
         :expanded="isSelected(it)"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @remove="it.id ? requestDeleteConfirmation(it) : remove(it)">
-      </assessment-item>
+        @remove="it.id ? requestDeleteConfirmation(it) : remove(it)"/>
     </ul>
     <add-element
       :include="['ASSESSMENT']"
       :activity="activity"
-      @add="addAssessment">
-    </add-element>
+      @add="addAssessment"/>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import AddElement from 'tce-core/AddElement';
 import AssessmentItem from './AssessmentItem';
 import EventBus from 'EventBus';
 import map from 'lodash/map';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 
 const appChannel = EventBus.channel('app');
 
