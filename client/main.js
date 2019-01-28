@@ -34,7 +34,8 @@ const registry = new ElementRegistry(Vue);
   'tce-carousel',
   'tce-brightcove-video',
   'tce-multiple-choice',
-  'tce-single-choice'
+  'tce-single-choice',
+  'tce-true-false'
 ].forEach(tailorElement => registry.load(tailorElement));
 
 Vue.use(Tooltip, { delay: 50 });
