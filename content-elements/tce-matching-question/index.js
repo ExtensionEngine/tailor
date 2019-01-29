@@ -1,4 +1,6 @@
+import cuid from 'lodash/cuid';
 import Edit from './edit';
+import times from 'lodash/times';
 import yup from 'yup';
 
 const objectMap = yup.object().shape({
@@ -15,15 +17,25 @@ const schema = yup.object().shape({
   })
 });
 
-const initState = () => ({
-  premises: [],
-  responses: [],
-  correct: {},
-  headings: {
-    premise: 'Premise',
-    response: 'Response'
-  }
-});
+const initState = () => {
+  const element = {
+    premises: [],
+    responses: [],
+    correct: {},
+    headings: {
+      premise: 'Premise',
+      response: 'Response'
+    }
+  };
+  times(2, () => {
+    const premiseKey = cuid();
+    const responseKey = cuid();
+    element.premises.push({ key: premiseKey, value: '' });
+    element.responses.push({ key: responseKey, value: '' });
+    element.correct[premiseKey] = responseKey;
+  });
+  return element;
+};
 
 export default {
   name: 'Matching question',
