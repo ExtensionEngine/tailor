@@ -57,6 +57,7 @@ import last from 'lodash/last';
 import map from 'lodash/map';
 import Question from './Question';
 import toPath from 'lodash/toPath';
+import yup from 'yup';
 
 const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
@@ -78,7 +79,8 @@ export default {
   },
   computed: {
     schema() {
-      return this.$teRegistry.get(this.assessmentType).schema;
+      const elementSchema = this.$teRegistry.get(this.assessmentType).schema;
+      return yup.object().shape({ ...baseSchema, ...elementSchema });
     },
     assessmentType() {
       return this.element.data.type;
@@ -164,6 +166,24 @@ function errorProcessor(error) {
     return `${path[0]}${key}`;
   });
 }
+
+const question = yup.array().test(
+  'has-text', 'Please define question', question => !!find(question, containsText)
+);
+
+function containsText(asset) {
+  return asset.type === 'HTML' &&
+    asset.data.content &&
+    asset.data.content.trim().length > 0;
+}
+
+const baseSchema = {
+  question,
+  hint: yup.string().trim().max(500),
+  _refs: yup.object().shape({
+    objectiveId: yup.number().integer().positive()
+  })
+};
 </script>
 
 <style lang="scss" scoped>

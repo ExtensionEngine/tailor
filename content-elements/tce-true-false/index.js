@@ -1,9 +1,9 @@
 import Edit from './edit';
 import yup from 'yup';
 
-const schema = yup.object().shape({
+const schema = {
   correct: yup.boolean().required()
-});
+};
 
 const initState = () => ({
   correct: null

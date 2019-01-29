@@ -8,14 +8,14 @@ const objectMap = yup.object().shape({
   value: yup.string().required()
 });
 
-const schema = yup.object().shape({
+const schema = {
   premises: yup.array().of(objectMap),
   responses: yup.array().of(objectMap),
   headings: yup.object().shape({
     premise: yup.string().trim().min(1).max(200).required(),
     response: yup.string().trim().min(1).max(200).required()
   })
-});
+};
 
 const initState = () => {
   const element = {

@@ -8,14 +8,14 @@ const objectMap = yup.object().shape({
   value: yup.string().required()
 });
 
-const schema = yup.object().shape({
+const schema = {
   groups: yup.array().castMap().of(objectMap).min(2),
   answers: yup.array().castMap().of(objectMap),
   correct: yup.array().castMap().of(yup.object().shape({
     key: yup.string().required(),
     value: yup.array().of(yup.string().required()).min(1)
   })).min(1)
-});
+};
 
 const initState = () => {
   const element = {

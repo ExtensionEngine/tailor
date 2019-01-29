@@ -1,9 +1,9 @@
 import Edit from './edit';
 import yup from 'yup';
 
-const schema = yup.object().shape({
+const schema = {
   correct: yup.string().trim().min(1).max(7000).required()
-});
+};
 
 const initState = () => ({
   correct: ''

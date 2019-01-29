@@ -4,14 +4,14 @@ import yup from 'yup';
 
 const BLANK_PLACEHOLDER = /(@blank)/g;
 
-const schema = yup.object().shape({
+const schema = {
   question: yup.array().test(
     'has-blanks', 'At least one @blank required', question => {
       return !!find(question, it => containsText(it) && containsBlanks(it));
     }
   ),
   correct: yup.array().of(yup.array().min(1).of(yup.string().trim().min(1).max(200).required()))
-});
+};
 
 const initState = () => ({
   correct: []
