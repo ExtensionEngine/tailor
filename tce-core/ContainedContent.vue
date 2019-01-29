@@ -52,7 +52,7 @@ export default {
 <style lang="scss" scoped>
 .drag-handle {
   position: absolute;
-  top: 0;
+  top: 4px;
   left: -3px;
   z-index: 2;
   width: 26px;
