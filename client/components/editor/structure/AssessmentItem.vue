@@ -172,4 +172,13 @@ export default {
     visibility: visible;
   }
 }
+
+.select-leaf {
+  clear: both;
+
+  > div {
+    width: 400px;
+    float: right;
+  }
+}
 </style>
