@@ -1,4 +1,4 @@
-import cuid from 'lodash/cuid';
+import cuid from 'cuid';
 import Edit from './edit';
 import times from 'lodash/times';
 import yup from 'yup';
