@@ -73,12 +73,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.toolbar-container {
-  position: absolute;
-  width: 100%;
-  z-index: 999;
-}
-
 .delete-element {
   position: absolute;
   z-index: 999;
