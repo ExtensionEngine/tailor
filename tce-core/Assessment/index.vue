@@ -168,7 +168,7 @@ function errorProcessor(error) {
 }
 
 const question = yup.array().test(
-  'has-text', 'Please define question', question => !!find(question, containsText)
+  'has-text', 'Please define question', question => !!question.find(containsText)
 );
 
 function containsText(asset) {
