@@ -5,12 +5,12 @@
       :key="index"
       class="row">
       <div
-        v-for="assessment in row"
-        :key="assessment.subtype"
+        v-for="{ name, subtype } in row"
+        :key="subtype"
         :class="columnWidth"
-        @click="$emit('selected', assessment.subtype)"
+        @click="$emit('selected', subtype)"
         class="btn-base assessment-type">
-        <span>{{ assessment.name }}</span>
+        <span>{{ name }}</span>
       </div>
     </div>
   </div>
@@ -18,8 +18,6 @@
 
 <script>
 import chunk from 'lodash/chunk';
-import filter from 'lodash/filter';
-import includes from 'lodash/includes';
 
 const ASSESSMENTS_PER_ROW = 6;
 
@@ -38,8 +36,9 @@ export default {
       return Math.min(this.elements.length, this.rowSize);
     },
     elements() {
-      if (!this.exclude) return this.assessments;
-      return filter(this.assessments, it => !includes(this.exclude, it.type));
+      const { exclude, assessments } = this;
+      if (!exclude.length) return assessments;
+      return assessments.filter(it => !exclude.includes(it.type));
     },
     columnWidth() {
       return `col-xs-${12 / this.columns}`;
