@@ -1,6 +1,6 @@
 <template>
   <div class="tce-table-toolbar">
-    <span v-if="embed" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
+    <span class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
       <span class="mdi mdi-table"></span>
       Table
     </span>
