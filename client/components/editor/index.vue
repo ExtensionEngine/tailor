@@ -31,7 +31,7 @@ import Exams from './structure/Exams';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import Promise from 'bluebird';
-import Toolbar from './toolbar';
+import Toolbar from './Toolbar';
 import truncate from 'truncate';
 
 export default {
