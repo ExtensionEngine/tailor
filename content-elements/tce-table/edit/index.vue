@@ -19,6 +19,7 @@
 import { addCell, addEmbed, removeCell, removeEmbed } from './utils';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
+import EventBus from 'EventBus';
 import find from 'lodash/find';
 import first from 'lodash/first';
 import forEach from 'lodash/forEach';
@@ -80,6 +81,9 @@ export default {
     },
     findRow(cellId, rows = this.rows) {
       return find(rows, row => row.cells[cellId]);
+    },
+    focusElement(cell) {
+      EventBus.emit('element:focus', { ...cell, type: 'HTML' }, this.element);
     },
     addRow(cellId, direction = Direction.AFTER) {
       const row = this.findRow(cellId);
@@ -147,6 +151,7 @@ export default {
 
       const focusedCell = getFocusedItem(row.cells, cell);
       if (focusedCell) this.focusElement(embeds[focusedCell.id]);
+
       this.$emit('save', { embeds, rows });
     },
     saveCell(element) {

@@ -14,6 +14,7 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import { ContentElement } from 'tce-core';
+
 export default {
   name: 'table-cell',
   props: {
