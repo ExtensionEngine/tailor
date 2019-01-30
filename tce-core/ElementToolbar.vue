@@ -1,7 +1,7 @@
 <template>
   <div :key="id" class="element-toolbar-wrapper">
     <component
-      v-if="componentName"
+      v-if="componentExists"
       :is="componentName"
       :element="element"
       :embed="embed"
@@ -21,6 +21,7 @@ import { getElementId, getToolbarName } from './utils';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import { mapActions } from 'vuex-module';
+import Vue from 'vue';
 import { withValidation } from 'utils/validation';
 
 const appBus = EventBus.channel('app');
@@ -40,6 +41,9 @@ export default {
       const { type } = this.element;
       if (type === 'ASSESSMENT') return;
       return getToolbarName(type);
+    },
+    componentExists() {
+      return Vue.options.components[this.componentName];
     }
   },
   methods: {
