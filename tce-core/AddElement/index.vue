@@ -9,11 +9,11 @@
     <transition name="slide-fade">
       <div v-if="selectionOpened" class="selections">
         <select-element
-          v-if="selectType"
+          v-if="!type"
           :activity="activity"
           :include="include"
           @selected="setType"/>
-        <select-width v-if="selectWidth" @selected="setWidth"/>
+        <select-width v-if="canSelectWidth" @selected="setWidth"/>
       </div>
     </transition>
   </div>
@@ -24,6 +24,8 @@ import cuid from 'cuid';
 import get from 'lodash/get';
 import SelectElement from './SelectElement';
 import SelectWidth from './SelectWidth';
+
+const FIXED_WIDTH_TYPES = ['ACCORDION', 'ASSESSMENT', 'BREAK', 'CAROUSEL', 'TABLE'];
 
 export default {
   name: 'add-element',
@@ -43,11 +45,9 @@ export default {
     };
   },
   computed: {
-    selectType() {
-      return !this.type;
-    },
-    selectWidth() {
-      return this.layout && !this.selectType;
+    canSelectWidth() {
+      const { layout, type } = this;
+      return layout && type && !FIXED_WIDTH_TYPES.includes(type);
     }
   },
   methods: {
@@ -87,7 +87,7 @@ export default {
     setType({ type, subtype }) {
       this.type = type;
       this.subtype = subtype;
-      if (!this.selectWidth) this.create();
+      if (!this.canSelectWidth) this.create();
     },
     setWidth(width) {
       this.width = width;
