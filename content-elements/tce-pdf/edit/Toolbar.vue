@@ -20,6 +20,7 @@
     </button>
     <button
       v-else
+      :disabled="!hasChanges"
       @click="save"
       class="btn btn-success"
       type="button">
@@ -44,7 +45,12 @@ export default {
     };
   },
   computed: {
-    visible() { return this.url || false; }
+    visible() {
+      return !!this.url;
+    },
+    hasChanges() {
+      return this.element.data.url !== this.url.trim();
+    }
   },
   methods: {
     save() {
