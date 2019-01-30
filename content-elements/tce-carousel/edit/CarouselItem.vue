@@ -1,5 +1,5 @@
 <template>
-  <li :class="{ 'active': isActive }" class="container-fluid carousel-item">
+  <li :class="{ active: isActive }" class="container-fluid carousel-item">
     <div v-if="!hasElements" class="well">
       Click the button below to Create your first teaching element.
     </div>
@@ -31,9 +31,6 @@ export default {
     }
   },
   methods: {
-    toggle() {
-      this.isActive = !this.isActive;
-    },
     save(item, embeds = {}) {
       item = cloneDeep(item);
       forEach(embeds, it => (item.body[it.id] = true));

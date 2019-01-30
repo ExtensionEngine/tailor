@@ -3,15 +3,21 @@
     <div
       v-show="show"
       :backdrop="backdrop"
-      :class="{ in: show, out: !show }"
+      :class="show ? 'in' : 'out'"
       class="modal"
       role="alertdialog"
       aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header"><slot name="header"></slot></div>
-          <div class="modal-body"><slot name="body"></slot></div>
-          <div class="modal-footer"><slot name="footer"></slot></div>
+          <div class="modal-header">
+            <slot name="header"/>
+          </div>
+          <div class="modal-body">
+            <slot name="body"/>
+          </div>
+          <div class="modal-footer">
+            <slot name="footer"/>
+          </div>
         </div>
       </div>
     </div>
@@ -43,13 +49,13 @@ export default {
 };
 
 function toggleClass(el, className, condition) {
-  if (condition) el.classList.add(className);
-  else el.classList.remove(className);
+  if (condition) return el.classList.add(className);
+  return el.classList.remove(className);
 }
 
 function toggleFocusTrap(focusTrap, condition) {
-  if (condition) focusTrap.activate();
-  else focusTrap.deactivate();
+  if (condition) return focusTrap.activate();
+  return focusTrap.deactivate();
 }
 </script>
 

@@ -123,7 +123,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.toolbar-container {
+.toolbar {
   position: absolute;
   width: 100%;
   z-index: 999;
