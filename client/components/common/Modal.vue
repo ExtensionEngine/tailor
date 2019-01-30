@@ -86,45 +86,47 @@ function toggleFocusTrap(focusTrap, condition) {
   }
 }
 
-.modal-content {
-  top: 96px;
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 4px;
-  font: 14px Roboto, Helvetica, Arial;
-  text-align: left;
-  border: none;
-  border-radius: 2px;
-  box-shadow:
-    0 11px 15px -7px rgba(0,0,0,0.2),
-    0 24px 38px 3px rgba(0,0,0,0.14),
-    0 9px 46px 8px rgba(0,0,0,0.12);
-  transition: all .3s ease;
-}
+.modal, .modal-dialog {
+  .modal-content {
+    top: 96px;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 4px;
+    font: 14px Roboto, Helvetica, Arial;
+    text-align: left;
+    border: none;
+    border-radius: 2px;
+    box-shadow:
+      0 11px 15px -7px rgba(0,0,0,0.2),
+      0 24px 38px 3px rgba(0,0,0,0.14),
+      0 9px 46px 8px rgba(0,0,0,0.12);
+    transition: all .3s ease;
+  }
 
-.modal-header {
-  color: #333;
-  font-size: 20px;
-  font-weight: 500;
-  border: none;
-
-  #{headings()} {
+  .modal-header {
+    color: #333;
     font-size: 20px;
+    font-weight: 500;
+    border: none;
+
+    #{headings()} {
+      font-size: 20px;
+    }
   }
-}
 
-.modal-body {
-  color: #555;
-  font-weight: 400;
+  .modal-body {
+    color: #555;
+    font-weight: 400;
 
-  b, strong {
-    color: #363636;
+    b, strong {
+      color: #363636;
+    }
   }
-}
 
-.modal-footer {
-  padding: 8px;
-  font-weight: 500;
-  border: none;
+  .modal-footer {
+    padding: 8px;
+    font-weight: 500;
+    border: none;
+  }
 }
 </style>

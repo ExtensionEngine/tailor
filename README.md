@@ -1,11 +1,10 @@
 # Tailor
 
-[![GitHub package version](https://img.shields.io/github/package-json/v/ExtensionEngine/tailor.svg)](https://github.com/ExtensionEngine/tailor/blob/develop/package.json#L3)
+[![GitHub package version](https://badgen.net/github/release/ExtensionEngine/tailor)](https://github.com/ExtensionEngine/tailor/releases)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d6d198f9c56b4ca799b4624c5bb3e16c?branch=develop)](https://www.codacy.com/app/underscope/tailor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ExtensionEngine/tailor&amp;utm_campaign=Badge_Grade)
-[![codebeat badge](https://codebeat.co/badges/f577cd02-ad4f-464d-8afc-be153929703d)](https://codebeat.co/projects/github-com-extensionengine-tailor-develop)
-[![Known Vulnerabilities](https://snyk.io/test/github/ExtensionEngine/tailor/badge.svg)](https://snyk.io/test/github/ExtensionEngine/tailor)
-[![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg)](https://github.com/Flet/semistandard)
-[![GitHub license](https://img.shields.io/github/license/ExtensionEngine/tailor.svg)](https://github.com/ExtensionEngine/tailor/blob/develop/LICENSE)
+[![Known Vulnerabilities](https://snyk.io/test/github/ExtensionEngine/tailor/develop/badge.svg)](https://snyk.io/test/github/ExtensionEngine/tailor)
+[![GitHub license](https://badgen.net/github/license/ExtensionEngine/tailor)](https://github.com/ExtensionEngine/tailor/blob/develop/LICENSE)
+[![js semistandard style](https://badgen.net/badge/code%20style/semistandard/pink)](https://github.com/Flet/semistandard)
 [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
 
 Adaptive course authoring platform.
@@ -73,21 +72,35 @@ Configuration for schema structure nodes (activities). Contains the following pr
 * **hasAssessments** `Boolean` - Activity allows adding assessments activities to it.
 * **hasExams** `Boolean` - Activity allows adding exam activities to it.
 * **exams** `Object` - Configuration for activity exams.
-* **hasPrerequisites** `Boolean` - Defines if this activity should offer other activities as prerequisites.
+* **relationships** `Array<Relationship>` - Defines what relationships this activity has to other activities.
 * **meta** `Array<Metadata>` - An array of objects defining activity metadata.
+
+#### Relationship
+Defines the structure of an activity realtionship field.
+* **type** `String` - Defines the name of the relationship. The relationship will be published under this value.
+* **label** `String` - Display label.
+* **placeholder** `String` - Display label for select picker.
+* **multiple** `Boolean` - Defines if the relationship can have multiple associations chosen. True by default.
+* **searchable** `Boolean` - Defines if the list of activities can be searched. True by default.
+* **allowEmpty** `Boolean` - Defines if the member list can be empty. True by default.
+* **allowCircularLinks** `Boolean` - Defines if member of a relationship instance can set the owner of that instance 
+as a member of its own instance of that relationship. Example, activity X sets activity Y as its prerequisite. 
+If `allowCircualLinks` is set to true then activity Y can set activity X as its prerequisite. False by default.
+* **allowInsideLineage** `Boolean` - Defines if an ancestor or a descendant can be a member of the relationship.
+False by default.
 
 #### Metadata
 Defines the structure of an activity metadata field.
-* **key** `String`- Unique key for the field.
-* **type** `String`- Type of the input component used on the client.
-* **label** `String`- Display label.
-* **placeholder** `String`- Input component placeholder.
-* **validate** `MetadataValidator`- Validator object.
-* **defaultValue** `*`- Default field value.
+* **key** `String` - Unique key for the field.
+* **type** `String` - Type of the input component used on the client.
+* **label** `String` - Display label.
+* **placeholder** `String` - Input component placeholder.
+* **validate** `MetadataValidator` - Validator object.
+* **defaultValue** `*` - Default field value.
 
 #### MetadataValidator
 Defines validation rules on an activity metadata field.
-* **rules** `Object`- Contains the following properties:
+* **rules** `Object` - Contains the following properties:
   * max `Number` - Maximum character count.
   * required `Boolean` - Defines if the field is required.
 

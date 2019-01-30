@@ -88,7 +88,7 @@ export default {
       activity.parentId = this.resolveParent(activity);
       activity.position = this.calculatePosition(activity);
       this[this.action](activity);
-      if (this.anchor.type !== activity.type) this.$emit('expand');
+      if (this.anchor.id === activity.parentId) this.$emit('expand');
       this.hide();
     },
     isSameLevel(activity) {

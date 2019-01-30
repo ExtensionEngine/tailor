@@ -11,13 +11,14 @@
       :placeholder="meta.placeholder"
       @open="active = true"
       @close="active = false"
-      @input="({ value }) => $emit('update', meta.key, value)">
+      @input="update">
     </multiselect>
   </div>
 </template>
 
 <script>
 import find from 'lodash/find';
+import get from 'lodash/get';
 import isString from 'lodash/isString';
 import Select from '../../common/Select';
 
@@ -36,6 +37,11 @@ export default {
     options() {
       const { options } = this.meta;
       return options.map(it => isString(it) ? { label: it, value: it } : it);
+    }
+  },
+  methods: {
+    update(data) {
+      return this.$emit('update', this.meta.key, get(data, 'value', null));
     }
   },
   components: { multiselect: Select }

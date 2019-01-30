@@ -14,7 +14,7 @@
       </div>
       <add-element
         v-show="isEditing"
-        :include="['HTML', 'IMAGE']"
+        :include="['HTML', 'IMAGE', 'EMBED']"
         @add="addElement"/>
     </div>
     <span v-if="isEditing && helperText" class="help-block">

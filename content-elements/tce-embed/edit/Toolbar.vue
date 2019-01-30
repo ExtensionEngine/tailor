@@ -68,6 +68,11 @@ export default {
       url
     };
   },
+  computed: {
+    id() {
+      return this.element._cid || this.element.id;
+    }
+  },
   methods: {
     onChange() {
       const { height, url } = this;

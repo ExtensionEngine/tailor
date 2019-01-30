@@ -145,7 +145,7 @@ $highlight: #42b983;
   }
 }
 
-.btn-select {
+.btn-fab.btn-select {
   display: none;
   position: absolute;
   right: -20px;
