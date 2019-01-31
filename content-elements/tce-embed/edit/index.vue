@@ -27,12 +27,9 @@
 </template>
 
 <script>
-import EventBus from 'EventBus';
-
-const teChannel = EventBus.channel('te');
-
 export default {
   name: 'tce-embed',
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
@@ -53,13 +50,7 @@ export default {
     }
   },
   mounted() {
-    teChannel.on(`${this.id}/embedUpdate`, ({ height, url }) => {
-      this.$emit('save', { height, url });
-    });
-  },
-  created() {
-    if (this.element.data.height) return;
-    this.$emit('save', { height: 300, url: '' });
+    this.$elementBus.on('save', data => this.$emit('save', data));
   }
 };
 </script>

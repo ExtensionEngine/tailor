@@ -52,12 +52,11 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
 
 export default {
   name: 'tce-embed-toolbar',
-  inject: ['$validator'],
+  inject: ['$validator', '$elementBus'],
   props: {
     element: { type: Object, required: true }
   },
@@ -78,13 +77,11 @@ export default {
       const { height, url } = this;
       this.$validator.validateAll().then(isValid => {
         if (!isValid) return;
-        const element = cloneDeep(this.element);
-        Object.assign(element.data, { height, url });
-        this.save(element);
+        this.save({ height, url });
       });
     },
-    save: debounce(function (element) {
-      this.$emit('save', element);
+    save: debounce(function (data) {
+      this.$elementBus.emit('save', data);
     }, 700)
   }
 };
