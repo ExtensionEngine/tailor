@@ -19,11 +19,15 @@
 import AccordionItem from './AccordionItem';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
+import EventBus from 'EventBus';
+import forEach from 'lodash/forEach';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import reduce from 'lodash/reduce';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   name: 'tce-accordion',
@@ -71,6 +75,15 @@ export default {
       const element = cloneDeep(this.element);
       element.data.items[id] = { id, header: 'Header', body: {} };
       this.$emit('save', element.data);
+    });
+
+    appChannel.on('deleteElement', ({ embedded, id }) => {
+      if (!embedded || !this.embeds[id]) return;
+      let embeds = cloneDeep(this.embeds);
+      let items = cloneDeep(this.items);
+      delete embeds[id];
+      forEach(items, it => delete it.body[id]);
+      this.$emit('save', { embeds, items });
     });
   },
   components: { AccordionItem }

@@ -43,18 +43,15 @@ export default {
       return getToolbarName(type);
     },
     componentExists() {
-      return Vue.options.components[this.componentName];
+      return !!Vue.options.components[this.componentName];
     }
   },
   methods: {
     ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
     remove(element) {
-      if (element.embedded) {
-        appBus.emit('deleteElement', element);
-      } else {
-        this.removeElement(element);
-      }
       this.focusoutElement();
+      if (!element.embedded) return this.removeElement(element);
+      appBus.emit('deleteElement', element);
     },
     focusoutElement() {
       EventBus.emit('element:focus');
