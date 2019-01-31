@@ -94,12 +94,14 @@ export default {
       return size(this.embeds);
     },
     nameError() {
-      return this.isFocused && !this.name;
+      if (!this.isFocused) return;
+      return !this.name || this.name.length < 2 || this.name.length > 250;
     }
   },
   methods: {
     ...mapActions(['save'], 'tes'),
     updateName() {
+      if (this.nameError) return;
       const data = { ...this.element.data, name: this.name };
       this.save({ ...this.element, data });
     },
