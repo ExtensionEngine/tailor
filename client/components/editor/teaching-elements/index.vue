@@ -40,8 +40,9 @@ import TeImage from './Image';
 import TeModal from './Modal';
 import TePdf from './Pdf';
 import TePoll from './Poll';
-import TeReflection from './Reflection';
+import TeSliderReflection from './SliderReflection';
 import TeTable from './Table';
+import TeTextReflection from './TextReflection';
 import TeVideo from './Video';
 import throttle from 'lodash/throttle';
 
@@ -60,7 +61,8 @@ const TE_TYPES = {
   AUDIO: 'te-audio',
   TABLE: 'te-table',
   POLL: 'te-poll',
-  REFLECTION: 'te-reflection'
+  TEXT_REFLECTION: 'te-text-reflection',
+  SLIDER_REFLECTION: 'te-slider-reflection'
 };
 
 export default {
@@ -132,7 +134,8 @@ export default {
     TeModal,
     TePdf,
     TePoll,
-    TeReflection,
+    TeTextReflection,
+    TeSliderReflection,
     TeTable,
     TeVideo
   }

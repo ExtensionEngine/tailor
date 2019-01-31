@@ -50,7 +50,8 @@ const TE_TYPES = [
   { type: 'PDF', label: 'PDF', icon: 'mdi-file-pdf-box' },
   { type: 'POLL', label: 'Poll', icon: 'mdi-poll-box' },
   { type: 'AUDIO', label: 'Audio', icon: 'mdi-volume-high' },
-  { type: 'REFLECTION', label: 'Reflection', icon: 'mdi-comment-text' }
+  { type: 'TEXT_REFLECTION', label: 'Text Reflection', icon: 'mdi-comment-text' },
+  { type: 'SLIDER_REFLECTION', label: 'Slider Reflection', icon: 'mdi-ray-start-end' }
 ];
 
 const ELEMENTS_PER_ROW = 6;

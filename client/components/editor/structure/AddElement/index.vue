@@ -61,7 +61,8 @@ export default {
         (this.type !== 'CAROUSEL') &&
         (this.type !== 'TABLE') &&
         (this.type !== 'POLL') &&
-        (this.type !== 'REFLECTION');
+        (this.type !== 'TEXT_REFLECTION') &&
+        (this.type !== 'SLIDER_REFLECTION');
     }
   },
   methods: {
@@ -89,7 +90,7 @@ export default {
         element.data.question = [getTextElement()];
       }
 
-      if (element.type === 'POLL') {
+      if (['POLL', 'SLIDER_REFLECTION'].includes(element.type)) {
         const question = getTextElement();
         element.data = {
           name: null,
@@ -104,7 +105,7 @@ export default {
         });
       }
 
-      if (element.type === 'REFLECTION') {
+      if (element.type === 'TEXT_REFLECTION') {
         const question = getTextElement();
         element.data = {
           embeds: { [question.id]: question },

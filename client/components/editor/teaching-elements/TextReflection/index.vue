@@ -1,8 +1,8 @@
 <template>
-  <div class="te-reflection">
+  <div class="te-text-reflection">
     <div class="reflection-container">
       <div class="reflection-heading">
-        <h4>Reflection</h4>
+        <h4>Text Reflection</h4>
         <span class="mdi mdi-comment-text pull-right"></span>
       </div>
       <div class="question row">
@@ -32,7 +32,7 @@ import Primitive from '../Primitive';
 import set from 'lodash/set';
 
 export default {
-  name: 'te-reflection',
+  name: 'te-text-reflection',
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
@@ -61,7 +61,7 @@ export default {
 <style lang="scss" scoped>
 $label-color: #3f51b5;
 
-.te-reflection {
+.te-text-reflection {
   margin: 10px auto;
   padding: 10px 30px 20px;
 }
