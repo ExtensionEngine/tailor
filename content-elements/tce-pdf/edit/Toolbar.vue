@@ -49,7 +49,8 @@ export default {
       return !!this.url;
     },
     hasChanges() {
-      return this.element.data.url !== this.url.trim();
+      const { url, element: { data } } = this;
+      return url && data.url !== url.trim();
     }
   },
   methods: {
