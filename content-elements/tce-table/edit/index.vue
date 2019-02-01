@@ -19,7 +19,6 @@
 import { addCell, addEmbed, removeCell, removeEmbed } from './utils';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import EventBus from 'EventBus';
 import find from 'lodash/find';
 import first from 'lodash/first';
 import forEach from 'lodash/forEach';
@@ -83,7 +82,7 @@ export default {
       return find(rows, row => row.cells[cellId]);
     },
     focusElement(cell) {
-      EventBus.emit('element:focus', { ...cell, type: 'HTML' }, this.element);
+      this.$emit('focus', {}, { ...cell, type: 'HTML' }, this.element);
     },
     addRow(cellId, direction = Direction.AFTER) {
       const row = this.findRow(cellId);
