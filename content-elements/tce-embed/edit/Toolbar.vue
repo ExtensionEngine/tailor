@@ -62,15 +62,7 @@ export default {
   },
   data() {
     const { height, url } = this.element.data;
-    return {
-      height,
-      url
-    };
-  },
-  computed: {
-    id() {
-      return this.element._cid || this.element.id;
-    }
+    return { height, url };
   },
   methods: {
     onChange() {

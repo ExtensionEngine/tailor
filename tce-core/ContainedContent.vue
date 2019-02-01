@@ -13,7 +13,8 @@
     <content-element
       v-bind="{ element, isDisabled, isDragged }"
       @add="$emit('add', $event)"
-      @save="$emit('save', $event)"/>
+      @save="$emit('save', $event)"
+      @delete="$emit('delete')"/>
   </div>
 </template>
 

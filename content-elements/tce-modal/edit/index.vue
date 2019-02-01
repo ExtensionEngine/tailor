@@ -6,7 +6,8 @@
       </div>
       <embedded-container
         :container="element.data"
-        @save="$emit('save', $event)"/>
+        @save="$emit('save', $event)"
+        @delete="deleteEmbed($event)"/>
     </div>
     <button
       v-else
@@ -25,11 +26,8 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import { EmbeddedContainer } from 'tce-core';
-import EventBus from 'EventBus';
 import Preview from './Preview';
 import values from 'lodash/values';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   name: 'tce-modal',
@@ -55,14 +53,15 @@ export default {
       return this.embeds.length;
     }
   },
+  methods: {
+    deleteEmbed(item) {
+      const data = cloneDeep(this.element.data);
+      delete data.embeds[item.id];
+      this.$emit('save', data);
+    }
+  },
   created() {
     this.$elementBus.on('toggleEdit', () => (this.isEditing = !this.isEditing));
-    appChannel.on('deleteElement', ({ embedded, id }) => {
-      if (!embedded || !this.element.data.embeds[id]) return;
-      let element = cloneDeep(this.element);
-      delete this.element.data.embeds[id];
-      this.$emit('save', element);
-    });
   },
   components: { EmbeddedContainer, Preview }
 };

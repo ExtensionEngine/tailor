@@ -37,6 +37,9 @@ export default {
     },
     componentName() {
       return getComponentName(this.element.type);
+    },
+    elementBus() {
+      return EventBus.channel(`element:${this.id}`);
     }
   },
   methods: {
@@ -49,12 +52,12 @@ export default {
   created() {
     EventBus.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
-      this.$emit('focus', this.isFocused);
     });
+    this.elementBus.on('delete', () => this.$emit('delete'));
   },
   provide() {
     return {
-      $elementBus: EventBus.channel(`element:${this.id}`)
+      $elementBus: this.elementBus
     };
   }
 };

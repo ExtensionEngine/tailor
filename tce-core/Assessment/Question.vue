@@ -10,7 +10,8 @@
           :key="element.id"
           :element="element"
           :isDisabled="!isEditing"
-          @save="data => elementChanged(element, data)"/>
+          @save="data => elementChanged(element, data)"
+          @delete="deleteElement(element)"/>
       </div>
       <add-element
         v-show="isEditing"
@@ -27,12 +28,9 @@
 import AddElement from '../AddElement';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
-import EventBus from 'EventBus';
 import findIndex from 'lodash/findIndex';
 import { helperText } from 'utils/assessment';
 import pullAt from 'lodash/pullAt';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   name: 'question',
@@ -63,17 +61,14 @@ export default {
       if (index < 0) return;
       question[index] = element;
       this.$emit('update', { question });
-    }
-  },
-  created() {
-    appChannel.on('deleteElement', element => {
-      if (!element.embedded) return;
+    },
+    deleteElement(element) {
       const index = findIndex(this.assessment.data.question, { id: element.id });
       if (index === -1) return;
       let question = cloneDeep(this.assessment.data.question);
       pullAt(question, index);
       this.$emit('update', { question });
-    });
+    }
   },
   components: {
     AddElement,

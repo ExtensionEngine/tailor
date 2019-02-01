@@ -37,6 +37,9 @@ export default {
     id() {
       return getElementId(this.element);
     },
+    elementBus() {
+      return EventBus.channel(`element:${this.id}`);
+    },
     componentName() {
       const { type } = this.element;
       if (type === 'ASSESSMENT') return;
@@ -50,8 +53,8 @@ export default {
     ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
     remove(element) {
       this.focusoutElement();
-      if (!element.embedded) return this.removeElement(element);
-      appBus.emit('deleteElement', element);
+      if (element.embedded) return this.elementBus.emit('delete');
+      this.removeElement(element);
     },
     focusoutElement() {
       EventBus.emit('element:focus');

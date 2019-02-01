@@ -30,9 +30,7 @@
 <script>
 import CarouselItem from './CarouselItem';
 import cloneDeep from 'lodash/cloneDeep';
-import EventBus from 'EventBus';
 import find from 'lodash/find';
-import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
@@ -40,7 +38,6 @@ import pick from 'lodash/pick';
 import reduce from 'lodash/reduce';
 
 const DEFAULT_HEIGHT = 500;
-const appChannel = EventBus.channel('app');
 const getIndices = obj => map(obj, (val, key) => parseInt(key)).sort().reverse();
 
 export default {
@@ -119,15 +116,6 @@ export default {
       const data = cloneDeep(this.element.data);
       data.height = height;
       this.$emit('save', data);
-    });
-
-    appChannel.on('deleteElement', ({ embedded, id }) => {
-      if (!embedded || !this.embeds[id]) return;
-      let embeds = cloneDeep(this.embeds);
-      let items = cloneDeep(this.items);
-      delete embeds[id];
-      forEach(items, it => delete it.body[id]);
-      this.$emit('save', { embeds, items });
     });
   },
   components: { CarouselItem }

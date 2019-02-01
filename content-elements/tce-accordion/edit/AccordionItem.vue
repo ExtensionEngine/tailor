@@ -19,7 +19,8 @@
         </div>
         <embedded-container
           :container="{ embeds }"
-          @save="({ embeds }) => save(item, embeds)"/>
+          @save="({ embeds }) => save(item, embeds)"
+          @delete="deleteEmbed($event)"/>
       </div>
     </transition>
   </li>
@@ -68,6 +69,13 @@ export default {
     },
     deleteItem() {
       this.$emit('delete', this.item.id);
+    },
+    deleteEmbed(embed) {
+      const embeds = cloneDeep(this.embeds);
+      const item = cloneDeep(this.item);
+      delete embeds[embed.id];
+      delete item.body[embed.id];
+      this.$emit('save', { item, embeds });
     }
   },
   components: { EmbeddedContainer }

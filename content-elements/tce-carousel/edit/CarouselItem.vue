@@ -5,7 +5,8 @@
     </div>
     <embedded-container
       :container="{ embeds }"
-      @save="({ embeds }) => save(item, embeds)"/>
+      @save="({ embeds }) => save(item, embeds)"
+      @delete="deleteEmbed($event)"/>
   </li>
 </template>
 
@@ -34,6 +35,13 @@ export default {
     save(item, embeds = {}) {
       item = cloneDeep(item);
       forEach(embeds, it => (item.body[it.id] = true));
+      this.$emit('save', { item, embeds });
+    },
+    deleteEmbed(embed) {
+      const embeds = cloneDeep(this.embeds);
+      const item = cloneDeep(this.item);
+      delete embeds[embed.id];
+      delete item.body[embed.id];
       this.$emit('save', { item, embeds });
     }
   },
