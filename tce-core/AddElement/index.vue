@@ -65,7 +65,7 @@ export default {
     },
     create() {
       const { type, subtype, width, config } = this;
-      const element = { type, width, data: {} };
+      const element = { type, data: { width } };
       // If teaching element within activity
       if (this.activity) {
         element.activityId = this.activity.id;
