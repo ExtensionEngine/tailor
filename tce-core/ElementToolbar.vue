@@ -69,7 +69,7 @@ export default {
   },
   provide() {
     return {
-      $elementBus: EventBus.channel(`element:${this.id}`)
+      $elementBus: this.elementBus
     };
   },
   components: { DefaultToolbar }
