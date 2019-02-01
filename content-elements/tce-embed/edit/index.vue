@@ -44,9 +44,6 @@ export default {
     },
     showPlaceholder() {
       return !this.element.data.url;
-    },
-    id() {
-      return this.element._cid || this.element.id;
     }
   },
   mounted() {
