@@ -25,7 +25,7 @@ import get from 'lodash/get';
 import SelectElement from './SelectElement';
 import SelectWidth from './SelectWidth';
 
-const FIXED_WIDTH_TYPES = ['ACCORDION', 'ASSESSMENT', 'BREAK', 'CAROUSEL', 'TABLE'];
+const DEFAULT_WIDTH = 12;
 
 export default {
   name: 'add-element',
@@ -40,27 +40,32 @@ export default {
     return {
       type: null,
       subtype: null,
-      width: null,
+      width: DEFAULT_WIDTH,
       selectionOpened: false
     };
   },
   computed: {
+    config() {
+      const { type, subtype, $teRegistry } = this;
+      if (!type && !subtype) return;
+      return $teRegistry.get(subtype || type);
+    },
+    forceWidth() {
+      return get(this.config, 'ui.forceFullWidth', false);
+    },
     canSelectWidth() {
-      const { layout, type } = this;
-      return layout && type && !FIXED_WIDTH_TYPES.includes(type);
+      const { layout, type, forceWidth } = this;
+      return layout && type && !forceWidth;
     }
   },
   methods: {
     toggleSelection() {
-      if (this.selectionOpened) {
-        this.close();
-      } else {
-        this.selectionOpened = true;
-      }
+      if (this.selectionOpened) return this.close();
+      this.selectionOpened = true;
     },
     create() {
-      const { type, subtype } = this;
-      const element = { type, data: {} };
+      const { type, subtype, width, config } = this;
+      const element = { type, width, data: {} };
       // If teaching element within activity
       if (this.activity) {
         element.activityId = this.activity.id;
@@ -71,16 +76,12 @@ export default {
         element.embedded = true;
       }
       if (element.type === 'ASSESSMENT') {
-        const question = [{
-          id: cuid(), type: 'HTML', data: { width: 12 }, embedded: true
-        }];
+        const data = { width: DEFAULT_WIDTH };
+        const question = [{ data, id: cuid(), type: 'HTML', embedded: true }];
         element.data = { ...element.data, question, type: subtype };
       }
-      const config = this.$teRegistry.get((subtype || type));
       const initState = get(config, 'initState', () => ({}));
       element.data = { ...element.data, ...initState() };
-      const forceWidth = get(config, 'ui.forceFullWidth', false);
-      element.data.width = forceWidth ? 12 : (this.width || 12);
       this.$emit('add', element);
       this.close();
     },
@@ -96,7 +97,7 @@ export default {
     close() {
       this.type = null;
       this.subtype = null;
-      this.width = null;
+      this.width = DEFAULT_WIDTH;
       this.selectionOpened = false;
     }
   },
