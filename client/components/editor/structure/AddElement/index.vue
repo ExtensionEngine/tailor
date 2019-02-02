@@ -96,12 +96,11 @@ export default {
           name: null,
           embeds: { [question.id]: question },
           question: question.id,
-          options: []
+          options: {}
         };
         times(2, i => {
-          const option = { ...getTextElement(), position: i + 1 };
-          element.data.embeds[option.id] = option;
-          element.data.options.push(option.id);
+          const option = { id: cuid(), content: null, position: i + 1 };
+          element.data.options[option.id] = option;
         });
       }
 

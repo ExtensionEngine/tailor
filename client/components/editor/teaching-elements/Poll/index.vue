@@ -2,7 +2,7 @@
   <div class="te-poll">
     <div class="poll-container">
       <span class="mdi mdi-poll pull-right"></span>
-      <div :class="{ 'has-error': nameError }" class="form-group name">
+      <div :class="{ 'has-error': isFocused && !name }" class="form-group name">
         <label for="`${element._cid}pollName`">Poll name</label>
         <input
           v-model="name"
@@ -23,7 +23,10 @@
       </div>
       <div class="options-heading">
         <h4>Options</h4>
-        <button @click="addOption" class="btn btn-default btn-material">
+        <button
+          v-if="optionsTotal < 5"
+          @click="addOption"
+          class="btn btn-default btn-material">
           Add Option
         </button>
       </div>
@@ -35,12 +38,21 @@
         <div
           v-for="(option, index) in options"
           :key="option.id"
+          :class="{ 'has-error': isFocused && !option.content }"
           class="option">
           <span class="option-index">{{ index + 1 }}</span>
-          <primitive
-            :initialElement="option"
-            @save="saveOption"
-            class="option-input"/>
+          <input
+            :ref="`input${option.id}`"
+            :value="option.content"
+            :name="option.id"
+            @change="updateOption(option)"
+            placeholder="Option..."
+            class="option-input form-control">
+          <span
+            v-if="optionsTotal > 2"
+            @click="removeOption(option)"
+            class="mdi mdi-close control">
+          </span>
         </div>
       </draggable>
     </div>
@@ -53,7 +65,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import Draggable from 'vuedraggable';
 import EventBus from 'EventBus';
-import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import last from 'lodash/last';
@@ -64,8 +75,7 @@ import size from 'lodash/size';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
-const getTextElement = () =>
-  ({ id: cuid(), type: 'HTML', embedded: true, data: { width: 12 } });
+const getInputElement = () => ({ id: cuid(), content: null });
 
 export default {
   name: 'te-poll',
@@ -87,21 +97,16 @@ export default {
       return this.embeds[this.element.data.question];
     },
     options() {
-      const { embeds, options } = this.element.data;
-      return sortBy(filter(embeds, it => options.includes(it.id)), 'position');
+      const options = cloneDeep(get(this.element, 'data.options'));
+      return sortBy(options, 'position');
     },
-    embedsTotal() {
-      return size(this.embeds);
-    },
-    nameError() {
-      if (!this.isFocused) return;
-      return !this.name || this.name.length < 2 || this.name.length > 250;
+    optionsTotal() {
+      return size(this.options);
     }
   },
   methods: {
     ...mapActions(['save'], 'tes'),
     updateName() {
-      if (this.nameError) return;
       const data = { ...this.element.data, name: this.name };
       this.save({ ...this.element, data });
     },
@@ -111,18 +116,28 @@ export default {
       set(element.data.embeds, question.id, question);
       this.save(element);
     },
+    updateOption(option) {
+      const existing = find(this.options, { id: option.id });
+      if (!existing) return;
+      existing.content = this.$refs[`input${option.id}`][0].value.trim();
+      this.saveOption(existing);
+    },
     saveOption(option) {
       const element = cloneDeep(this.element);
-      element.data.options = element.data.options || [];
-      const existing = find(this.options, { id: option.id });
-      set(element.data.embeds, option.id, option);
-      if (!existing) element.data.options.push(option.id);
+      set(element.data.options, option.id, option);
       this.save(element);
     },
     addOption() {
       const nextPosition = Math.ceil(get(last(this.options), 'position', 0) + 1);
-      const option = { ...getTextElement(), position: nextPosition };
-      this.saveOption(option);
+      const option = { ...getInputElement(), position: nextPosition };
+      const existing = find(this.options, { id: option.id });
+      if (!existing) this.saveOption(option);
+    },
+    removeOption(option) {
+      const element = cloneDeep(this.element);
+      const existing = find(this.options, { id: option.id });
+      if (existing) delete element.data.options[option.id];
+      this.save(element);
     },
     reorderOption({ newIndex: newPosition }) {
       const items = cloneDeep(this.options);
@@ -136,17 +151,11 @@ export default {
   },
   created() {
     appChannel.on('deleteElement', item => {
-      const element = cloneDeep(this.element);
-      if (!item.embedded) return;
       if (item.id === this.question.id) {
         const question = cloneDeep(this.question);
         question.data.content = '';
         setTimeout(() => this.saveQuestion(question), 50);
-        return;
       }
-      if (!element.data.embeds[item.id]) return;
-      delete element.data.embeds[item.id];
-      this.save(element);
     });
   },
   components: { Draggable, Primitive }
@@ -196,6 +205,7 @@ h4 {
   $min-height: 30px;
 
   display: flex;
+  position: relative;
 
   &-index {
     position: relative;
@@ -224,22 +234,20 @@ h4 {
   }
 
   &-input {
-    flex: 1;
+    width: 100%;
+    margin: 10px 0 10px 20px;
+  }
 
-    /deep/ .teaching-element {
-      $border-height: 2px;
+  .mdi-close {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    padding: 5px;
+    color: #888;
+    cursor: pointer;
 
-      min-height: $min-height + $border-height;
-      padding: 0;
-
-      .ql-editor {
-        min-height: $min-height;
-        padding: 6px 10px;
-      }
-
-      .text-placeholder {
-        display: none;
-      }
+    &:hover {
+      color: darken(#888, 20%);
     }
   }
 }

@@ -28,12 +28,21 @@
         <div
           v-for="(option, index) in options"
           :key="option.id"
+          :class="{ 'has-error': isFocused && !option.content }"
           class="option">
           <span class="option-index">{{ index + 1 }}</span>
-          <primitive
-            :initialElement="option"
-            @save="saveOption"
-            class="option-input"/>
+          <input
+            :ref="`input${option.id}`"
+            :value="option.content"
+            :name="option.id"
+            @change="updateOption(option)"
+            placeholder="Option..."
+            class="option-input form-control">
+          <span
+            v-if="optionsTotal > 2"
+            @click="removeOption(option)"
+            class="mdi mdi-close control">
+          </span>
         </div>
       </draggable>
     </div>
@@ -46,7 +55,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import Draggable from 'vuedraggable';
 import EventBus from 'EventBus';
-import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import last from 'lodash/last';
@@ -57,8 +65,7 @@ import size from 'lodash/size';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
-const getTextElement = () =>
-  ({ id: cuid(), type: 'HTML', embedded: true, data: { width: 12 } });
+const getInputElement = () => ({ id: cuid(), content: null });
 
 export default {
   name: 'te-slider-reflection',
@@ -67,10 +74,7 @@ export default {
     isFocused: { type: Boolean, default: false }
   },
   data() {
-    return {
-      name: get(this.element, 'data.name', ''),
-      dragOptions: { handle: '.option-index' }
-    };
+    return { dragOptions: { handle: '.option-index' } };
   },
   computed: {
     embeds() {
@@ -80,40 +84,43 @@ export default {
       return this.embeds[this.element.data.question];
     },
     options() {
-      const { embeds, options } = this.element.data;
-      return sortBy(filter(embeds, it => options.includes(it.id)), 'position');
+      const options = cloneDeep(get(this.element, 'data.options'));
+      return sortBy(options, 'position');
     },
     optionsTotal() {
       return size(this.options);
-    },
-    nameError() {
-      return this.isFocused && !this.name;
     }
   },
   methods: {
     ...mapActions(['save'], 'tes'),
-    updateName() {
-      const data = { ...this.element.data, name: this.name };
-      this.save({ ...this.element, data });
-    },
     saveQuestion(question) {
       const element = cloneDeep(this.element);
       element.data.question = question.id;
       set(element.data.embeds, question.id, question);
       this.save(element);
     },
+    updateOption(option) {
+      const existing = find(this.options, { id: option.id });
+      if (!existing) return;
+      existing.content = this.$refs[`input${option.id}`][0].value;
+      this.saveOption(existing);
+    },
     saveOption(option) {
       const element = cloneDeep(this.element);
-      element.data.options = element.data.options || [];
-      const existing = find(this.options, { id: option.id });
-      set(element.data.embeds, option.id, option);
-      if (!existing) element.data.options.push(option.id);
+      set(element.data.options, option.id, option);
       this.save(element);
     },
     addOption() {
       const nextPosition = Math.ceil(get(last(this.options), 'position', 0) + 1);
-      const option = { ...getTextElement(), position: nextPosition };
-      this.saveOption(option);
+      const option = { ...getInputElement(), position: nextPosition };
+      const existing = find(this.options, { id: option.id });
+      if (!existing) this.saveOption(option);
+    },
+    removeOption(option) {
+      const element = cloneDeep(this.element);
+      const existing = find(this.options, { id: option.id });
+      if (existing) delete element.data.options[option.id];
+      this.save(element);
     },
     reorderOption({ newIndex: newPosition }) {
       const items = cloneDeep(this.options);
@@ -127,17 +134,11 @@ export default {
   },
   created() {
     appChannel.on('deleteElement', item => {
-      const element = cloneDeep(this.element);
-      if (!item.embedded) return;
       if (item.id === this.question.id) {
         const question = cloneDeep(this.question);
         question.data.content = '';
         setTimeout(() => this.saveQuestion(question), 50);
-        return;
       }
-      if (!element.data.embeds[item.id]) return;
-      delete element.data.embeds[item.id];
-      this.save(element);
     });
   },
   components: { Draggable, Primitive }
@@ -182,6 +183,7 @@ $label-color: #3f51b5;
   $min-height: 30px;
 
   display: flex;
+  position: relative;
 
   &-index {
     position: relative;
@@ -198,22 +200,20 @@ $label-color: #3f51b5;
   }
 
   &-input {
-    flex: 1;
+    width: 100%;
+    margin: 10px 0 10px 20px;
+  }
 
-    /deep/ .teaching-element {
-      $border-height: 2px;
+  .mdi-close {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    padding: 5px;
+    color: #888;
+    cursor: pointer;
 
-      min-height: $min-height + $border-height;
-      padding: 0;
-
-      .ql-editor {
-        min-height: $min-height;
-        padding: 6px 10px;
-      }
-
-      .text-placeholder {
-        display: none;
-      }
+    &:hover {
+      color: darken(#888, 20%);
     }
   }
 }
