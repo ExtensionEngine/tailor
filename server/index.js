@@ -18,8 +18,13 @@ const config = require('../config/server');
 const database = require('./shared/database');
 const logger = require('./shared/logger');
 const runApp = promisify(app.listen.bind(app));
+const umzug = require('./shared/database/umzug')(database);
 
 database.initialize()
+  .then(() => umzug.pending())
+  .then(migrations => {
+    if (migrations.length) throw new Error('There are pending migrations.');
+  })
   .then(() => logger.info(`Database initialized`))
   .then(() => require('../config/shared/activities'))
   .then(() => runApp(config.port))

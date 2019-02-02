@@ -49,6 +49,7 @@ import reorderMixin from './reorderMixin';
 export default {
   name: 'activity',
   mixins: [reorderMixin],
+  inheritAttrs: false,
   props: {
     _cid: { type: String, required: true },
     id: { type: Number, default: null },
