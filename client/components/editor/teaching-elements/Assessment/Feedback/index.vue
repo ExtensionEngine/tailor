@@ -14,7 +14,7 @@
           v-for="(answer, index) in processedAnswers"
           :key="getIndex(answer, index)"
           v-bind="{ index, answer, isEditing, feedback: feedback[getIndex(answer, index)] }"
-          @update="({ html }) => update(answer, index, html)">
+          @update="({ html }) => $emit('update', { [getIndex(answer, index)]: html })">
         </feedback-item>
       </ul>
     </transition>
@@ -44,11 +44,7 @@ export default {
   },
   methods: {
     getIndex(answer, index) {
-      return answer.key || index;
-    },
-    update(answer, index, html) {
-      const answerIndex = this.getIndex(answer, index);
-      this.$emit('update', { [answerIndex]: html });
+      return answer.id || index;
     }
   },
   watch: {
