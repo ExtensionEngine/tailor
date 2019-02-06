@@ -128,15 +128,12 @@ export default {
       }).catch(err => (this.errors = errorProcessor(err)));
     },
     cancel() {
-      if (!this.editedElement.id) {
-        this.$emit('remove');
-      } else {
-        this.editedElement = cloneDeep(this.element);
-        this.$emit('add', this.editedElement);
-        this.isEditing = false;
-        this.setAlert();
-        this.errors = [];
-      }
+      if (!this.element.id) return this.$emit('remove');
+      this.editedElement = cloneDeep(this.element);
+      this.$emit('add', this.editedElement);
+      this.isEditing = false;
+      this.setAlert();
+      this.errors = [];
     },
     close() {
       this.$emit('selected');
