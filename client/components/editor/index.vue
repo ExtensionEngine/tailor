@@ -1,6 +1,24 @@
 <template>
   <div class="editor-wrapper">
-    <toolbar></toolbar>
+    <toolbar>
+      <span slot="actions">
+        <span
+          v-if="metadata.length"
+          :disabled="isSidebarDisabled"
+          @click="showSidebar = !showSidebar"
+          class="btn btn-fab btn-primary"
+          title="Toggle teaching element sidebar">
+          <span class="mdi mdi-wrench"></span>
+        </span>
+      </span>
+    </toolbar>
+    <transition name="slide">
+      <sidebar
+        v-if="showSidebar && !isSidebarDisabled"
+        :metadata="metadata"
+        :element="focusedElement">
+      </sidebar>
+    </transition>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
       <circular-progress v-if="showLoader"></circular-progress>
       <div v-else>
@@ -29,6 +47,7 @@ import ContentContainers from './structure/ContentContainers';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import Promise from 'bluebird';
+import Sidebar from './sidebar';
 import Toolbar from './toolbar';
 import truncate from 'truncate';
 
@@ -37,13 +56,21 @@ export default {
   data() {
     return {
       showLoader: true,
-      mousedownCaptured: false
+      showSidebar: false,
+      mousedownCaptured: false,
+      editedElements: {}
     };
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['focusedElement', 'activity', 'contentContainers'], 'editor'),
-    ...mapGetters(['course'], 'course'),
+    ...mapGetters(['activity', 'contentContainers', 'focusedElement'], 'editor'),
+    ...mapGetters(['course', 'getMetadata'], 'course'),
+    isSidebarDisabled() {
+      return this.editedElements[this.focusedElement._cid];
+    },
+    metadata() {
+      return this.getMetadata(this.focusedElement);
+    },
     showAssessments() {
       return config.hasAssessments(this.activity.type);
     },
@@ -83,7 +110,20 @@ export default {
         (e.component.data.id !== this.focusedElement.id))) {
         this.focusoutElement();
       }
+    },
+    toggleEditedElement(elementId, value) {
+      this.$set(this.editedElements, elementId, value);
     }
+  },
+  watch: {
+    focusedElement(current, previous) {
+      if (current._cid !== previous._cid) this.showSidebar = false;
+    }
+  },
+  provide() {
+    return {
+      toggleElement: this.toggleEditedElement
+    };
   },
   created() {
     this.focusoutElement();
@@ -105,15 +145,24 @@ export default {
     CircularProgress,
     ContentContainers,
     Exams,
+    Sidebar,
     Toolbar
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@import '~bootswatch/paper/variables';
+
 .editor-wrapper {
   display: flex;
   flex-direction: column;
+
+  .btn.btn-fab.btn-primary[disabled] {
+    opacity: 1;
+    background: mix($brand-primary, $gray-light, 25);
+    box-shadow: none;
+  }
 }
 
 .editor {
@@ -150,5 +199,13 @@ export default {
     padding: 0 10px;
     color: #999;
   }
+}
+
+.slide-enter-active, .slide-leave-active {
+  transition: margin-right 0.5s;
+}
+
+.slide-enter, .slide-leave-to {
+  margin-right: -380px;
 }
 </style>
