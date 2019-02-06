@@ -98,7 +98,7 @@ export default {
       });
 
       // Render nodes & links.
-      const descendants = this.nodes.descendants();
+      const descendants = this.nodes ? this.nodes.descendants() : [];
       this.renderLinks(descendants.slice(1), g);
       this.renderNodes(descendants, g);
 
@@ -182,7 +182,7 @@ export default {
   mounted() {
     // Re-render chart when data changes.
     this.$watch('nodes', nodes => {
-      if (nodes) this.renderTree();
+      this.renderTree();
     }, { immediate: true });
   }
 };

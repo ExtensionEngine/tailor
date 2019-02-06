@@ -10,7 +10,8 @@
       :isFocused="isFocused"
       :isDragged="isDragged"
       @add="$emit('add', $event)"
-      @save="$emit('save', $event)"/>
+      @save="$emit('save', $event)"
+      @focus="focus"/>
   </div>
 </template>
 
@@ -37,24 +38,27 @@ export default {
     },
     componentName() {
       return getComponentName(this.element.type);
+    },
+    elementBus() {
+      return EventBus.channel(`element:${this.id}`);
     }
   },
   methods: {
-    focus(e) {
+    focus(e, element = this.element, parent = this.parent) {
       if (this.isDisabled || e.component) return;
-      EventBus.emit('element:focus', this.element, this.parent);
-      e.component = { name: 'content-element', data: this.element };
+      EventBus.emit('element:focus', element, parent);
+      e.component = { name: 'content-element', data: element };
     }
   },
   created() {
     EventBus.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
-      this.$emit('focus', this.isFocused);
     });
+    this.elementBus.on('delete', () => this.$emit('delete'));
   },
   provide() {
     return {
-      $elementBus: EventBus.channel(`element:${this.id}`)
+      $elementBus: this.elementBus
     };
   }
 };

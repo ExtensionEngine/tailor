@@ -1,9 +1,7 @@
 import Edit from './edit';
 import Toolbar from './edit/Toolbar';
 
-const initState = () => ({
-  url: null
-});
+const initState = () => ({ url: null });
 
 export default {
   name: 'Image',

@@ -9,7 +9,8 @@
       slot-scope="{ element, isDragged }"
       :element="element"
       :isDragged="isDragged"
-      @save="data => saveItem(element, data)"/>
+      @save="data => saveItem(element, data)"
+      @delete="$emit('delete', element)"/>
   </element-list>
 </template>
 

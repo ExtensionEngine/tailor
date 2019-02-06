@@ -2,7 +2,7 @@
   <div class="editor-wrapper">
     <toolbar/>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
-      <circular-progress v-if="showLoader"></circular-progress>
+      <circular-progress v-if="showLoader"/>
       <div v-else>
         <div class="container">
           <content-containers
@@ -10,10 +10,9 @@
             :key="type"
             :containerGroup="containerGroup"
             :parentId="activity.id"
-            v-bind="getContainerConfig(type)">
-          </content-containers>
-          <assessments v-if="showAssessments"></assessments>
-          <exams v-if="showExams"></exams>
+            v-bind="getContainerConfig(type)"/>
+          <assessments v-if="showAssessments"/>
+          <exams v-if="showExams"/>
         </div>
       </div>
     </div>

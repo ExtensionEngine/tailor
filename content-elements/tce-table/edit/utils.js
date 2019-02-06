@@ -1,3 +1,5 @@
+import find from 'lodash/find';
+
 export function addCell(row, cell) {
   if (!row.cells) row.cells = {};
   row.cells[cell.id] = cell;

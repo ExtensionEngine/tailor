@@ -9,11 +9,11 @@
     <transition name="slide-fade">
       <div v-if="selectionOpened" class="selections">
         <select-element
-          v-if="selectType"
+          v-if="!type"
           :activity="activity"
           :include="include"
           @selected="setType"/>
-        <select-width v-if="selectWidth" @selected="setWidth"/>
+        <select-width v-if="canSelectWidth" @selected="setWidth"/>
       </div>
     </transition>
   </div>
@@ -24,6 +24,8 @@ import cuid from 'cuid';
 import get from 'lodash/get';
 import SelectElement from './SelectElement';
 import SelectWidth from './SelectWidth';
+
+const DEFAULT_WIDTH = 12;
 
 export default {
   name: 'add-element',
@@ -38,29 +40,32 @@ export default {
     return {
       type: null,
       subtype: null,
-      width: null,
+      width: DEFAULT_WIDTH,
       selectionOpened: false
     };
   },
   computed: {
-    selectType() {
-      return !this.type;
+    config() {
+      const { type, subtype, $teRegistry } = this;
+      if (!type && !subtype) return;
+      return $teRegistry.get(subtype || type);
     },
-    selectWidth() {
-      return this.layout && !this.selectType;
+    forceWidth() {
+      return get(this.config, 'ui.forceFullWidth', false);
+    },
+    canSelectWidth() {
+      const { layout, type, forceWidth } = this;
+      return layout && type && !forceWidth;
     }
   },
   methods: {
     toggleSelection() {
-      if (this.selectionOpened) {
-        this.close();
-      } else {
-        this.selectionOpened = true;
-      }
+      if (this.selectionOpened) return this.close();
+      this.selectionOpened = true;
     },
     create() {
-      const { type, subtype } = this;
-      const element = { type, data: {} };
+      const { type, subtype, width, config } = this;
+      const element = { type, data: { width } };
       // If teaching element within activity
       if (this.activity) {
         element.activityId = this.activity.id;
@@ -71,23 +76,19 @@ export default {
         element.embedded = true;
       }
       if (element.type === 'ASSESSMENT') {
-        const question = [{
-          id: cuid(), type: 'HTML', data: { width: 12 }, embedded: true
-        }];
+        const data = { width: DEFAULT_WIDTH };
+        const question = [{ data, id: cuid(), type: 'HTML', embedded: true }];
         element.data = { ...element.data, question, type: subtype };
       }
-      const config = this.$teRegistry.get((subtype || type));
       const initState = get(config, 'initState', () => ({}));
       element.data = { ...element.data, ...initState() };
-      const forceWidth = get(config, 'ui.forceFullWidth', false);
-      element.data.width = forceWidth ? 12 : (this.width || 12);
       this.$emit('add', element);
       this.close();
     },
     setType({ type, subtype }) {
       this.type = type;
       this.subtype = subtype;
-      if (!this.selectWidth) this.create();
+      if (!this.canSelectWidth) this.create();
     },
     setWidth(width) {
       this.width = width;
@@ -96,7 +97,7 @@ export default {
     close() {
       this.type = null;
       this.subtype = null;
-      this.width = null;
+      this.width = DEFAULT_WIDTH;
       this.selectionOpened = false;
     }
   },

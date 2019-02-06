@@ -7,7 +7,8 @@
           v-for="it in elements"
           :key="it.id"
           :element="it"
-          :isDisabled="true"/>
+          :isDisabled="true"
+          :frame="false"/>
       </div>
     </div>
     <div slot="footer">

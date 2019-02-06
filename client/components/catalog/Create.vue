@@ -32,13 +32,13 @@
             </div>
           </div>
           <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
-            <input
+            <textarea
               v-validate="{ rules: { required: true, min: 2, max: 250 } }"
               v-model="name"
               class="form-control"
               name="name"
-              type="text"
-              placeholder="Name"/>
+              placeholder="Name">
+            </textarea>
             <span class="help-block">{{ vErrors.first('name') }}</span>
           </div>
           <div :class="{ 'has-error': vErrors.has('description') }" class="form-group">
@@ -136,10 +136,9 @@ export default {
 
 <style lang="scss" scoped>
 .btn-fab .mdi {
-  display: inline-block;
-  font-size: 28px;
-  line-height: 28px;
-  vertical-align: middle;
+  display: flex;
+  justify-content: center;
+  font-size: 32px;
 }
 
 .create-course {

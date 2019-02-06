@@ -81,6 +81,9 @@ export default {
     findRow(cellId, rows = this.rows) {
       return find(rows, row => row.cells[cellId]);
     },
+    focusElement(cell) {
+      this.$emit('focus', {}, { ...cell, type: 'HTML' }, this.element);
+    },
     addRow(cellId, direction = Direction.AFTER) {
       const row = this.findRow(cellId);
       if (!row) return;
@@ -147,6 +150,7 @@ export default {
 
       const focusedCell = getFocusedItem(row.cells, cell);
       if (focusedCell) this.focusElement(embeds[focusedCell.id]);
+
       this.$emit('save', { embeds, rows });
     },
     saveCell(element) {

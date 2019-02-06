@@ -39,7 +39,8 @@ const registry = new ElementRegistry(Vue);
   'tce-text-response',
   'tce-numerical-response',
   'tce-fill-blank',
-  'tce-matching-question'
+  'tce-matching-question',
+  'tce-drag-drop'
 ].forEach(tailorElement => registry.load(tailorElement));
 
 Vue.use(Tooltip, { delay: 50 });

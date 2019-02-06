@@ -6,7 +6,8 @@
       </div>
       <embedded-container
         :container="element.data"
-        @save="$emit('save', $event)"/>
+        @save="$emit('save', $event)"
+        @delete="deleteEmbed($event)"/>
     </div>
     <button
       v-else
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import { EmbeddedContainer } from 'tce-core';
 import Preview from './Preview';
 import values from 'lodash/values';
@@ -49,6 +51,13 @@ export default {
     },
     hasElements() {
       return this.embeds.length;
+    }
+  },
+  methods: {
+    deleteEmbed(item) {
+      const data = cloneDeep(this.element.data);
+      delete data.embeds[item.id];
+      this.$emit('save', data);
     }
   },
   created() {

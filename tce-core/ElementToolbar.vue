@@ -1,7 +1,7 @@
 <template>
   <div :key="id" class="element-toolbar-wrapper">
     <component
-      v-if="componentName"
+      v-if="componentExists"
       :is="componentName"
       :element="element"
       :embed="embed"
@@ -21,6 +21,7 @@ import { getElementId, getToolbarName } from './utils';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import { mapActions } from 'vuex-module';
+import Vue from 'vue';
 import { withValidation } from 'utils/validation';
 
 const appBus = EventBus.channel('app');
@@ -36,21 +37,24 @@ export default {
     id() {
       return getElementId(this.element);
     },
+    elementBus() {
+      return EventBus.channel(`element:${this.id}`);
+    },
     componentName() {
       const { type } = this.element;
       if (type === 'ASSESSMENT') return;
       return getToolbarName(type);
+    },
+    componentExists() {
+      return !!Vue.options.components[this.componentName];
     }
   },
   methods: {
     ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
     remove(element) {
-      if (element.embedded) {
-        appBus.emit('deleteElement', element);
-      } else {
-        this.removeElement(element);
-      }
       this.focusoutElement();
+      if (element.embedded) return this.elementBus.emit('delete');
+      this.removeElement(element);
     },
     focusoutElement() {
       EventBus.emit('element:focus');
@@ -65,7 +69,7 @@ export default {
   },
   provide() {
     return {
-      $elementBus: EventBus.channel(`element:${this.id}`)
+      $elementBus: this.elementBus
     };
   },
   components: { DefaultToolbar }
