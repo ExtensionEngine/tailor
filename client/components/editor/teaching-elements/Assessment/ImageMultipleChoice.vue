@@ -65,6 +65,7 @@ import AsyncImage from './shared/AsyncImage';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import find from 'lodash/find';
+import omit from 'lodash/omit';
 import pull from 'lodash/pull';
 
 const findById = (collection, id) => find(collection, { id });
@@ -109,7 +110,7 @@ export default {
       const index = correct.indexOf(id);
       if (index !== -1) correct.splice(index, 1);
 
-      if (feedback) pull(feedback, findById(feedback, id));
+      if (feedback) feedback = omit(feedback, id);
 
       this.update({ answers, correct, feedback });
     },
