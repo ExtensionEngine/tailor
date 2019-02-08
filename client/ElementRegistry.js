@@ -4,18 +4,28 @@ import {
   processAssessmentType
 } from 'tce-core/utils';
 import cloneDeep from 'lodash/cloneDeep';
+import elementList from './components/content-elements';
 import find from 'lodash/find';
 import pick from 'lodash/pick';
+import Promise from 'bluebird';
 
 export default class ElementRegistry {
   constructor(Vue) {
-    this.Vue = Vue;
     this._registry = [];
+    this.Vue = Vue;
   }
 
-  async load(moduleName) {
+  async initialize() {
+    await Promise.map(elementList, location => this.load(location));
+    const extensions = await this.loadExtensionList();
+    await Promise.map(extensions, location => this.load(location, true));
+  }
+
+  async load(location, isExtension) {
     const { _registry, Vue } = this;
-    const element = (await import(`../content-elements/${moduleName}`)).default;
+    const element = isExtension
+      ? (await import(`../extensions/content-elements/${location}`)).default
+      : (await import(`./components/content-elements/${location}`)).default;
     const attrs = [
       'name', 'type', 'subtype', 'version', 'schema', 'initState', 'ui'
     ];
@@ -38,5 +48,11 @@ export default class ElementRegistry {
     const { _registry: registry } = this;
     const res = find(registry, { subtype: type }) || find(registry, { type });
     return res && cloneDeep(res);
+  }
+
+  loadExtensionList() {
+    return import('../extensions/content-elements/')
+      .then(module => module.default)
+      .catch(() => console.log('No extensions loaded!') || []);
   }
 }
