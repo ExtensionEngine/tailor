@@ -38,7 +38,7 @@ function create({ body, params, user }, res) {
 }
 
 function patch({ body, params, user }, res) {
-  const attrs = ['refs', 'type', 'data', 'position', 'courseId', 'deletedAt'];
+  const attrs = ['refs', 'type', 'data', 'meta', 'position', 'courseId', 'deletedAt'];
   const data = pick(body, attrs);
   const paranoid = body.paranoid !== false;
   return TeachingElement.findById(params.teId, { paranoid })
