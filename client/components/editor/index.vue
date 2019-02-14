@@ -46,7 +46,7 @@ import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getElementId } from 'tce-core';
+import { getElementId } from 'tce-core/utils';
 import Promise from 'bluebird';
 import Sidebar from './sidebar';
 import Toolbar from './Toolbar';
