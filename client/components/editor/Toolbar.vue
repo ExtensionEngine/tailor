@@ -1,19 +1,26 @@
 <template>
   <div class="toolbar">
     <element-toolbar
-      v-if="selectedComposite"
-      :key="selectedElement.id || selectedElement._cid"
-      :element="selectedComposite"
-      :embed="selectedElement">
-      <slot>
-        <element-toolbar :element="selectedElement"/>
-      </slot>
+      v-if="element && element.parent"
+      :key="element.parent._cid"
+      :element="element.parent"
+      :embed="element">
+      <template slot="embed-toolbar">
+        <element-toolbar :element="element"/>
+      </template>
+      <template slot="actions">
+        <slot name="actions"></slot>
+      </template>
     </element-toolbar>
     <element-toolbar
-      v-else-if="selectedElement"
-      :key="selectedElement.id || selectedElement._cid"
-      :element="selectedElement"/>
-    <div v-show="!selectedElement" class="toolbar-container editor-toolbar">
+      v-else-if="element"
+      :key="element._cid"
+      :element="element">
+      <template slot="actions">
+        <slot name="actions"></slot>
+      </template>
+    </element-toolbar>
+    <div v-show="!element" class="toolbar-container editor-toolbar">
       <router-link
         :to="{ name: 'course', params: { courseId } }"
         class="toolbar-btn">
@@ -53,7 +60,6 @@
 import { mapActions, mapGetters } from 'vuex-module';
 import drop from 'lodash/drop';
 import { ElementToolbar } from 'tce-core';
-import EventBus from 'EventBus';
 import fecha from 'fecha';
 import find from 'lodash/find';
 import format from 'string-template';
@@ -64,10 +70,11 @@ const { PREVIEW_URL } = process.env;
 
 export default {
   name: 'toolbar',
+  props: {
+    element: { type: Object, default: null }
+  },
   data() {
     return {
-      selectedElement: null,
-      selectedComposite: null,
       publishing: false
     };
   },
@@ -111,12 +118,6 @@ export default {
     truncate(str, len = 50) {
       return truncate(str, len);
     }
-  },
-  created() {
-    EventBus.on('element:focus', (element, composite) => {
-      this.selectedElement = element;
-      this.selectedComposite = composite;
-    });
   },
   components: { ElementToolbar }
 };

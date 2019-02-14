@@ -72,7 +72,7 @@ export default {
       return this.type === 'ASSESSMENT';
     },
     columnWidth() {
-      return `col-xs-${12 / this.columns}`;
+      return `col-xs-${Math.floor(12 / this.columns)}`;
     },
     maxWidth() {
       // Set the maximum width of the select component container in the

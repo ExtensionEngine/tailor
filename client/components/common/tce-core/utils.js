@@ -13,7 +13,7 @@ export function getToolbarName(type) {
 }
 
 export function getElementId(element) {
-  return element._cid || element.id;
+  return element && (element._cid || element.id);
 }
 
 export function resolveElementPosition(context) {

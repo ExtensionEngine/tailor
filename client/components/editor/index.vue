@@ -1,6 +1,23 @@
 <template>
   <div class="editor-wrapper">
-    <toolbar/>
+    <toolbar :element="focusedElement">
+      <span slot="actions">
+        <span
+          v-if="metadata.length"
+          @click="showSidebar = !showSidebar"
+          class="btn btn-fab btn-primary"
+          title="Toggle teaching element sidebar">
+          <span class="mdi mdi-backburger"></span>
+        </span>
+      </span>
+    </toolbar>
+    <transition name="slide">
+      <sidebar
+        v-if="showSidebar"
+        :metadata="metadata"
+        :element="focusedElement">
+      </sidebar>
+    </transition>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
       <circular-progress v-if="showLoader"/>
       <div v-else>
@@ -29,7 +46,9 @@ import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import { getElementId } from 'tce-core';
 import Promise from 'bluebird';
+import Sidebar from './sidebar';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
 
@@ -38,13 +57,18 @@ export default {
   data() {
     return {
       showLoader: true,
+      focusedElement: null,
+      showSidebar: false,
       mousedownCaptured: false
     };
   },
   computed: {
     ...mapGetters(['activities']),
     ...mapGetters(['activity', 'contentContainers'], 'editor'),
-    ...mapGetters(['course'], 'course'),
+    ...mapGetters(['course', 'getMetadata'], 'course'),
+    metadata() {
+      return this.getMetadata(this.focusedElement);
+    },
     showAssessments() {
       return config.hasAssessments(this.activity.type);
     },
@@ -83,7 +107,16 @@ export default {
     }
   },
   created() {
-    EventBus.emit('element:focus');
+    EventBus.on('element:focus', (element, composite) => {
+      if (!element) {
+        this.focusedElement = null;
+        this.showSidebar = false;
+        return;
+      }
+      if (getElementId(this.focusedElement) === getElementId(element)) return;
+      this.focusedElement = { ...element, parent: composite };
+      this.showSidebar = this.metadata.length && this.showSidebar;
+    });
     // TODO: Do this better!
     const courseId = this.$route.params.courseId;
     const activityId = this.$route.params.activityId;
@@ -102,15 +135,24 @@ export default {
     CircularProgress,
     ContentContainers,
     Exams,
+    Sidebar,
     Toolbar
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@import '~bootswatch/paper/variables';
+
 .editor-wrapper {
   display: flex;
   flex-direction: column;
+
+  .btn.btn-fab.btn-primary[disabled] {
+    opacity: 1;
+    background: mix($brand-primary, $gray-light, 25);
+    box-shadow: none;
+  }
 }
 
 .editor {
@@ -147,5 +189,13 @@ export default {
     padding: 0 10px;
     color: #999;
   }
+}
+
+.slide-enter-active, .slide-leave-active {
+  transition: margin-right 0.5s;
+}
+
+.slide-enter, .slide-leave-to {
+  margin-right: -380px;
 }
 </style>

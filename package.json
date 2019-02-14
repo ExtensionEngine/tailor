@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "auto-bind": "^1.2.0",
-    "aws-sdk": "^2.178.0",
+    "aws-sdk": "^2.342.0",
     "axios": "^0.15.2",
     "bcryptjs": "^2.3.0",
     "blob-util": "^1.2.1",

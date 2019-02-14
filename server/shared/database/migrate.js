@@ -6,7 +6,10 @@ const flatten = require('lodash/flatten');
 const map = require('lodash/map');
 const umzug = require('./umzug')(db);
 
-const changelog = [];
+const changelog = [{
+  name: 'add-meta',
+  migrations: ['20181115140943-add-meta-to-teaching-element']
+}];
 
 // TODO: Implement migration down
 module.exports = function migrate(to, from) {
