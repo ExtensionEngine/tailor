@@ -9,7 +9,7 @@ import find from 'lodash/find';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
 
-const CONTENT_ELEMENT = 'index';
+const EXTENSIONS_LIST = 'index';
 
 export default class ElementRegistry {
   constructor(Vue) {
@@ -53,7 +53,7 @@ export default class ElementRegistry {
   }
 
   loadExtensionList() {
-    return import(`../extensions/content-elements/${CONTENT_ELEMENT}`)
+    return import(`../extensions/content-elements/${EXTENSIONS_LIST}`)
       .then(module => module.default)
       .catch(() => console.log('No extensions loaded!') || []);
   }
