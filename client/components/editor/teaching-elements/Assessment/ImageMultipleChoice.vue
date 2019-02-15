@@ -12,6 +12,7 @@
           <async-image :url="data.url" class="image-container"/>
           <div class="image-input-err">
             <input
+              v-validate="'size:1000'"
               :ref="`${id}_file_input`"
               :accept="imageInputType"
               :data-key="id"
@@ -27,7 +28,9 @@
               type="button">
               Upload image...
             </button>
-            <span v-if="!data.url" class="error-msg">Please upload an image.</span>
+            <span v-if="vErrors.first(id)" class="error-msg">
+              {{ vErrors.first(id) }}
+            </span>
           </div>
           <div class="caption-container">
             <span v-if="!isEditing">{{ data.caption }}</span>
@@ -61,16 +64,21 @@
 <script>
 import { blobToDataURL } from 'blob-util';
 import { defaults } from 'utils/assessment';
+import { withValidation } from 'utils/validation';
 import AsyncImage from './shared/AsyncImage';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import omit from 'lodash/omit';
 import pull from 'lodash/pull';
+import some from 'lodash/some';
 
 const findById = (collection, id) => find(collection, { id });
+const isImageValidationError = err => !!err[Symbol.for('error:image-validation')];
 
 export default {
+  mixins: [withValidation()],
   props: {
     assessment: { type: Object, default: defaults.IMC },
     isEditing: { type: Boolean, default: false },
@@ -100,18 +108,22 @@ export default {
       answers.push({ type: 'IMAGE', data: { url: '' }, id: cuid() });
       this.update({ answers });
     },
+    deleteErrorMessages(answerId) {
+      const errorField = this.$validator.fields.find({ name: answerId });
+      if (errorField) {
+        errorField.reset();
+        this.$validator.errors.remove(errorField.name, errorField.scope);
+      }
+    },
     removeAnswer(id) {
       let answers = cloneDeep(this.answers);
       let correct = cloneDeep(this.correct);
       let feedback = cloneDeep(this.feedback);
-
       pull(answers, findById(answers, id));
-
       const index = correct.indexOf(id);
       if (index !== -1) correct.splice(index, 1);
-
       if (feedback) feedback = omit(feedback, id);
-
+      this.deleteErrorMessages(id);
       this.update({ answers, correct, feedback });
     },
     toggleAnswer(id) {
@@ -132,16 +144,25 @@ export default {
     },
     updateAnswerImage({ target: input }) {
       const { dataset, files = [] } = input;
+      const { key: answerId } = dataset;
       const image = files[0];
+      this.deleteErrorMessages(answerId);
       if (!image) return;
       let answers = cloneDeep(this.answers);
       return blobToDataURL(image)
         .then(dataUrl => (image.dataUrl = dataUrl))
+        .then(() => this.$validator.validate(answerId, [image]))
+        .then(isValid => {
+          if (!isValid) return Promise.reject(imageValidationError());
+        })
         .then(() => {
-          let answer = findById(answers, dataset.key);
+          let answer = findById(answers, answerId);
           if (answer) answer.data.url = image.dataUrl;
         })
         .then(() => this.update({ answers }))
+        .catch(error => {
+          if (!isImageValidationError(error)) throw error;
+        })
         .then(() => (input.value = null));
     },
     validate() {
@@ -156,8 +177,14 @@ export default {
           type: 'alert-danger',
           text: 'There needs to be at least one correct answer.'
         };
+      } else if (some(this.answers, answer => !!get(answer, 'data.url'))) {
+        error = {
+          type: 'alert-danger',
+          text: 'Please upload all the missing images.'
+        };
       }
       this.$emit('alert', error);
+      this.$validator.validateAll();
     }
   },
   watch: {
@@ -167,6 +194,12 @@ export default {
   },
   components: { AsyncImage }
 };
+
+function imageValidationError(message = '') {
+  const err = new Error(message);
+  err[Symbol.for('error:image-validation')] = true;
+  return err;
+}
 </script>
 
 <style lang="scss" scoped>
@@ -236,6 +269,7 @@ ul {
 
 .error-msg {
   display: block;
+  position: absolute;
   text-align: center;
   margin-top: 2%;
   color: $errorRed;
