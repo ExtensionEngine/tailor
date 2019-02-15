@@ -2,7 +2,7 @@
   <div class="toolbar">
     <element-toolbar
       v-if="element && element.parent"
-      :key="element.parent._cid"
+      :key="element.id"
       :element="element.parent"
       :embed="element">
       <template slot="embed-toolbar">
