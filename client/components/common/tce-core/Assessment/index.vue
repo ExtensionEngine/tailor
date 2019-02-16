@@ -36,10 +36,10 @@
       </div>
       <controls
         :isEditing="isEditing"
-        @cancel="cancel"
+        @edit="edit"
         @save="save"
         @remove="remove"
-        @edit="isEditing = true"
+        @cancel="cancel"
         class="controls"/>
     </div>
   </div>
@@ -98,17 +98,9 @@ export default {
     resolveComponentName(element) {
       return getComponentName(processAssessmentType(this.assessmentType));
     },
-    setAlert(data = {}) {
-      this.alert = data;
-      const { type, message } = data;
-      if (type && type !== 'alert-danger') {
-        setTimeout(() => {
-          if (message === this.alert.message) this.setAlert();
-        }, 3000);
-      }
-    },
-    validate() {
-      return this.schema.validate(this.editedElement.data, validationOptions);
+    edit() {
+      this.editedElement = cloneDeep(this.element);
+      this.isEditing = true;
     },
     update(data, validate) {
       Object.assign(this.editedElement.data, data);
@@ -128,7 +120,7 @@ export default {
       }).catch(err => (this.errors = errorProcessor(err)));
     },
     cancel() {
-      if (!this.element.id) return this.$emit('remove');
+      if (!this.editedElement.id) return this.$emit('delete');
       this.editedElement = cloneDeep(this.element);
       this.$emit('add', this.editedElement);
       this.isEditing = false;
@@ -140,6 +132,18 @@ export default {
     },
     remove() {
       this.$emit('remove');
+    },
+    setAlert(data = {}) {
+      this.alert = data;
+      const { type, message } = data;
+      if (type && type !== 'alert-danger') {
+        setTimeout(() => {
+          if (message === this.alert.message) this.setAlert();
+        }, 3000);
+      }
+    },
+    validate() {
+      return this.schema.validate(this.editedElement.data, validationOptions);
     },
     updateFeedback(feedback) {
       const data = this.editedElement.data;

@@ -13,7 +13,7 @@
       :exam="exam"
       :summative="true"
       @selected="$emit('selected')"
-      @remove="$emit('remove')"
+      @delete="$emit('delete')"
       @save="save">
       <div class="label assessment-type pull-left">{{ elementConfig.name }}</div>
       <span @click="$emit('selected')" class="btn btn-link pull-right">Collapse</span>
@@ -32,7 +32,7 @@
     <div v-else @click="$emit('selected')" class="minimized">
       <span class="label label-success">{{ elementConfig.subtype }}</span>
       <span class="title">{{ question }}</span>
-      <span @click.stop="$emit('remove')" class="delete">
+      <span @click.stop="$emit('delete')" class="delete">
         <span class="mdi mdi-close"></span>
       </span>
     </div>

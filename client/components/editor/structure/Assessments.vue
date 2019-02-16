@@ -17,7 +17,7 @@
         :expanded="isSelected(it)"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @remove="it.id ? requestDeleteConfirmation(it) : remove(it)"/>
+        @delete="it.id ? requestDeleteConfirmation(it) : remove(it)"/>
     </ul>
     <add-element
       :include="['ASSESSMENT']"

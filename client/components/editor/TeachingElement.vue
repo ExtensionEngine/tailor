@@ -5,7 +5,8 @@
     :isDisabled="disabled"
     :setWidth="setWidth"
     @add="addElement"
-    @save="save"/>
+    @save="save"
+    @delete="removeElement(element)"/>
 </template>
 
 <script>
@@ -22,7 +23,7 @@ export default {
     setWidth: { type: Boolean, default: true }
   },
   methods: {
-    ...mapActions({ saveElement: 'save' }, 'tes'),
+    ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
     ...mapMutations({ addElement: 'add' }, 'tes'),
     save(data) {
       const element = cloneDeep(this.element);

@@ -11,6 +11,7 @@
       :isDragged="isDragged"
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
+      @delete="$emit('delete')"
       @focus="focus"/>
   </div>
 </template>
