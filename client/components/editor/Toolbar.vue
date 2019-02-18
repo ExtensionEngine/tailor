@@ -2,7 +2,7 @@
   <div class="toolbar">
     <element-toolbar
       v-if="element && element.parent"
-      :key="element.id"
+      :key="`${element.parent._cid}-${element.id}`"
       :element="element.parent"
       :embed="element">
       <template slot="embed-toolbar">
@@ -14,7 +14,7 @@
     </element-toolbar>
     <element-toolbar
       v-else-if="element"
-      :key="element._cid"
+      :key="element._cid || element.id"
       :element="element">
       <template slot="actions">
         <slot name="actions"></slot>
