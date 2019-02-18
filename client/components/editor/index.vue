@@ -14,6 +14,7 @@
     <transition name="slide">
       <sidebar
         v-if="showSidebar"
+        :key="focusedElement._cid"
         :metadata="metadata"
         :element="focusedElement">
       </sidebar>

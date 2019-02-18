@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import { mapActions } from 'vuex-module';
 import MetaInput from 'components/common/Meta';
 
@@ -22,11 +23,19 @@ export default {
     element: { type: Object, required: true },
     metadata: { type: Array, required: true }
   },
+  data() {
+    return {
+      sidebarMeta: cloneDeep(this.element.meta)
+    };
+  },
   methods: {
     ...mapActions(['update'], 'tes'),
     updateElement(key, value) {
-      const meta = { ...this.element.meta, [key]: value };
-      return this.update({ _cid: this.element._cid, meta });
+      this.sidebarMeta = { ...this.sidebarMeta, [key]: value };
+      return this.update({
+        _cid: this.element._cid,
+        meta: { ...this.sidebarMeta }
+      });
     }
   },
   components: { MetaInput }
@@ -44,7 +53,7 @@ export default {
   top: 100px;
   right: 0;
   bottom: 0;
-  width: 350px;
+  width: 380px;
   padding: 25px 0 75px 20px;
   text-align: left;
   background: white;
