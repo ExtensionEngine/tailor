@@ -1,14 +1,12 @@
 <template>
-  <div class="table-cell">
-    <div class="cell-editor col-xs-12">
-      <content-element
-        :element="processedElement"
-        :parent="table"
-        :frame="false"
-        :showPlaceholder="false"
-        @save="save"/>
-    </div>
-  </div>
+  <content-element
+    :element="processedElement"
+    :parent="table"
+    :frame="false"
+    :showPlaceholder="false"
+    @save="save"
+    class="table-cell">
+  </content-element>
 </template>
 
 <script>
@@ -21,9 +19,6 @@ export default {
     cell: { type: Object, required: true },
     table: { type: Object, required: true },
     disabled: { type: Boolean, default: false }
-  },
-  data() {
-    return { isFocused: false };
   },
   computed: {
     processedElement() {
@@ -48,21 +43,10 @@ export default {
   height: 100%;
   border: 1px solid black;
 
-  .cell-editor {
-    height: 100%;
-    padding: 0;
-  }
-}
-</style>
-
-<style lang="scss">
-.cell-editor {
-  .ql-editor {
-    min-height: 42px;
-  }
-
-  .ql-container.ql-snow {
-    border: none !important;
+  /deep/ {
+    .ql-editor {
+      min-height: 24px;
+    }
   }
 }
 </style>
