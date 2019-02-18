@@ -122,6 +122,7 @@ function toggleFocusTrap(focusTrap, condition) {
 .modal-body {
   color: #555;
   font-weight: 400;
+  overflow: hidden;
 
   b, strong {
     color: #363636;
