@@ -46,6 +46,11 @@ export default {
   /deep/ {
     .ql-editor {
       min-height: 24px;
+      word-break: break-all;
+    }
+
+    .ql-blank::before {
+      content: '';
     }
   }
 }
