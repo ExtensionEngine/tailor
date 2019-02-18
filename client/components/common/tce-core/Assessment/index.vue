@@ -149,7 +149,6 @@ export default {
       const data = this.editedElement.data;
       data.feedback = data.feedback || {};
       Object.assign(data.feedback, feedback);
-      this.$emit('add', cloneDeep(this.editedElement));
     }
   },
   components: { Controls, Feedback, Question }
