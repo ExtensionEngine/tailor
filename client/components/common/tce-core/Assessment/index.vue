@@ -104,7 +104,6 @@ export default {
     },
     update(data, validate) {
       Object.assign(this.editedElement.data, data);
-      this.$emit('add', cloneDeep(this.editedElement));
       if (validate && !isEmpty(this.errors)) {
         this.errors = [];
         this.validate().catch(err => (this.errors = errorProcessor(err)));
