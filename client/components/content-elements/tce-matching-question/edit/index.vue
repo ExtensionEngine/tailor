@@ -5,8 +5,8 @@
         :class="{ error: errors.includes('headings.premise') }"
         class="col-xs-4 col-xs-offset-1 heading-input-wrapper">
         <input
-          v-model="premiseHeading"
-          @blur="update"
+          :value="headings.premise"
+          @blur="e => updateHeading({ premise: e.target.value })"
           class="heading-input"
           type="text"/>
       </div>
@@ -15,8 +15,8 @@
         :class="{ error: errors.includes('headings.response') }"
         class="col-xs-4 heading-input-wrapper">
         <input
-          v-model="responseHeading"
-          @blur="update"
+          :value="headings.response"
+          @blur="e => updateHeading({ response: e.target.value })"
           class="heading-input"
           type="text"/>
       </div>
@@ -94,14 +94,14 @@ export default {
     isEditing: { type: Boolean, default: false }
   },
   data() {
-    const { headings } = this.assessment;
     return {
-      focused: { key: null },
-      premiseHeading: headings.premise,
-      responseHeading: headings.response
+      focused: { key: null }
     };
   },
   computed: {
+    headings() {
+      return { premise: null, response: null, ...this.assessment.headings };
+    },
     premises() {
       return this.assessment.premises || {};
     },
@@ -119,6 +119,9 @@ export default {
     }
   },
   methods: {
+    updateHeading(val) {
+      this.update({ headings: { ...this.headings, ...val } });
+    },
     updatePremiseContent(key, evt) {
       let premises = cloneDeep(this.premises);
       this.getPremiseItem(key, premises).value = evt.target.value;
@@ -172,8 +175,6 @@ export default {
       return this.focused.key === key;
     },
     update(data = {}) {
-      const { premiseHeading: premise, responseHeading: response } = this;
-      data.headings = { premise, response };
       this.$emit('update', data, true);
     },
     hasError(key, type) {
