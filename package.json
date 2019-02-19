@@ -128,6 +128,7 @@
     "snyk": "^1.103.4"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",

@@ -85,6 +85,7 @@ getter(function getConfig() {
 
 getter(function getMetadata() {
   return element => {
+    if (!element) return [];
     const config = this.rootGetters['course/getConfig'](element);
     if (!config.meta) return [];
     return map(config.meta, it => {

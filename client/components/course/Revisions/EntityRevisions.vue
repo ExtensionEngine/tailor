@@ -28,7 +28,7 @@ import first from 'lodash/first';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import Promise from 'bluebird';
-import TeachingElement from 'components/editor/teaching-elements';
+import TeachingElement from 'components/editor/TeachingElement';
 
 const WITHOUT_STATICS = ['HTML', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED', 'BREAK'];
 

@@ -1,26 +1,26 @@
 <template>
   <div class="editor-wrapper">
-    <toolbar>
+    <toolbar :element="focusedElement">
       <span slot="actions">
         <span
           v-if="metadata.length"
-          :disabled="isSidebarDisabled"
           @click="showSidebar = !showSidebar"
           class="btn btn-fab btn-primary"
           title="Toggle teaching element sidebar">
-          <span class="mdi mdi-wrench"></span>
+          <span class="mdi mdi-backburger"></span>
         </span>
       </span>
     </toolbar>
     <transition name="slide">
       <sidebar
-        v-if="showSidebar && !isSidebarDisabled"
+        v-if="showSidebar"
+        :key="focusedElement._cid"
         :metadata="metadata"
         :element="focusedElement">
       </sidebar>
     </transition>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
-      <circular-progress v-if="showLoader"></circular-progress>
+      <circular-progress v-if="showLoader"/>
       <div v-else>
         <div class="container">
           <content-containers
@@ -28,10 +28,9 @@
             :key="type"
             :containerGroup="containerGroup"
             :parentId="activity.id"
-            v-bind="getContainerConfig(type)">
-          </content-containers>
-          <assessments v-if="showAssessments"></assessments>
-          <exams v-if="showExams"></exams>
+            v-bind="getContainerConfig(type)"/>
+          <assessments v-if="showAssessments"/>
+          <exams v-if="showExams"/>
         </div>
       </div>
     </div>
@@ -44,11 +43,14 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
+import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
+import get from 'lodash/get';
+import { getElementId } from 'tce-core/utils';
 import Promise from 'bluebird';
 import Sidebar from './sidebar';
-import Toolbar from './toolbar';
+import Toolbar from './Toolbar';
 import truncate from 'truncate';
 
 export default {
@@ -56,18 +58,15 @@ export default {
   data() {
     return {
       showLoader: true,
+      focusedElement: null,
       showSidebar: false,
-      mousedownCaptured: false,
-      editedElements: {}
+      mousedownCaptured: false
     };
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['activity', 'contentContainers', 'focusedElement'], 'editor'),
+    ...mapGetters(['activity', 'contentContainers'], 'editor'),
     ...mapGetters(['course', 'getMetadata'], 'course'),
-    isSidebarDisabled() {
-      return this.editedElements[this.focusedElement._cid];
-    },
     metadata() {
       return this.getMetadata(this.focusedElement);
     },
@@ -83,7 +82,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['focusoutElement'], 'editor'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
@@ -104,29 +102,22 @@ export default {
       if (!this.mousedownCaptured) return;
       // Reset
       this.mousedownCaptured = false;
-      if (!this.focusedElement) return;
-      if (!e.component ||
-        ((e.component.data._cid !== this.focusedElement._cid) &&
-        (e.component.data.id !== this.focusedElement.id))) {
-        this.focusoutElement();
+      if (get(e, 'component.name') !== 'content-element') {
+        EventBus.emit('element:focus');
       }
-    },
-    toggleEditedElement(elementId, value) {
-      this.$set(this.editedElements, elementId, value);
     }
-  },
-  watch: {
-    focusedElement(current, previous) {
-      if (current._cid !== previous._cid) this.showSidebar = false;
-    }
-  },
-  provide() {
-    return {
-      toggleElement: this.toggleEditedElement
-    };
   },
   created() {
-    this.focusoutElement();
+    EventBus.on('element:focus', (element, composite) => {
+      if (!element) {
+        this.focusedElement = null;
+        this.showSidebar = false;
+        return;
+      }
+      if (getElementId(this.focusedElement) === getElementId(element)) return;
+      this.focusedElement = { ...element, parent: composite };
+      this.showSidebar = this.metadata.length && this.showSidebar;
+    });
     // TODO: Do this better!
     const courseId = this.$route.params.courseId;
     const activityId = this.$route.params.activityId;

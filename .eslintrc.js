@@ -2,7 +2,10 @@ const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
   root: true,
-  parserOptions: { sourceType: 'module' },
+  parserOptions: {
+    parser: "babel-eslint",
+    sourceType: 'module'
+  },
   // https://github.com/Flet/eslint-config-semistandard
   extends: [
     'semistandard',

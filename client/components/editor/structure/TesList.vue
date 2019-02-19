@@ -27,13 +27,12 @@
       :activity="activity"
       :position="nextPosition"
       :layout="layout"
-      @add="el => $emit('add', el)">
-    </add-element>
+      @add="el => $emit('add', el)"/>
   </div>
 </template>
 
 <script>
-import AddElement from './AddElement';
+import AddElement from 'tce-core/AddElement';
 import Draggable from 'vuedraggable';
 import last from 'lodash/last';
 

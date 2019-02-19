@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <h2>Metadata</h2>
+    <h2>Additional settings</h2>
     <div class="meta-element">
       <meta-input
         v-for="it in metadata"
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import { mapActions } from 'vuex-module';
 import MetaInput from 'components/common/Meta';
 
@@ -22,11 +23,19 @@ export default {
     element: { type: Object, required: true },
     metadata: { type: Array, required: true }
   },
+  data() {
+    return {
+      sidebarMeta: cloneDeep(this.element.meta)
+    };
+  },
   methods: {
     ...mapActions(['update'], 'tes'),
     updateElement(key, value) {
-      const meta = { ...this.element.meta, [key]: value };
-      return this.update({ _cid: this.element._cid, meta });
+      this.sidebarMeta = { ...this.sidebarMeta, [key]: value };
+      return this.update({
+        _cid: this.element._cid,
+        meta: { ...this.sidebarMeta }
+      });
     }
   },
   components: { MetaInput }
@@ -36,6 +45,7 @@ export default {
 <style lang="scss" scoped>
 .sidebar {
   h2 {
+    margin: 40px 5px 20px;
     font-size: 18px;
   }
 
