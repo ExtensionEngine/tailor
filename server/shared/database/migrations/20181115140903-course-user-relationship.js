@@ -36,11 +36,15 @@ module.exports = {
         type: Sequelize.DATE,
         field: 'deleted_at'
       }
-    }).then(() => queryInterface.addConstraint(
-      TABLE_NAME,
-      ['user_id', 'course_id'],
-      { type: 'primary key', name: 'course_user_pkey' }
-    ));
+    }).then(async () => {
+      const table = await queryInterface.describeTable(TABLE_NAME);
+      if (table.course_id.primaryKey && table.user_id.primaryKey) return;
+      return queryInterface.addConstraint(
+        TABLE_NAME,
+        ['course_id', 'user_id'],
+        { type: 'primary key', name: 'course_user_pkey' }
+      );
+    });
   },
   down: queryInterface => queryInterface.dropTable(TABLE_NAME)
 };
