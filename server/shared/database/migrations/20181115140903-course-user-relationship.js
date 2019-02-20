@@ -20,8 +20,7 @@ module.exports = {
         allowNull: false
       },
       role: {
-        type: Sequelize.ENUM(role.ADMIN, role.AUTHOR),
-        allowNull: false
+        type: Sequelize.ENUM(role.ADMIN, role.AUTHOR)
       },
       createdAt: {
         type: Sequelize.DATE,

@@ -12,14 +12,12 @@ module.exports = {
     userId: {
       type: Sequelize.INTEGER,
       field: 'user_id',
-      references: { model: 'user', key: 'id' },
-      allowNull: false
+      references: { model: 'user', key: 'id' }
     },
     courseId: {
       type: Sequelize.INTEGER,
       field: 'course_id',
-      references: { model: 'course', key: 'id' },
-      allowNull: false
+      references: { model: 'course', key: 'id' }
     },
     entity: {
       type: Sequelize.ENUM(['ACTIVITY', 'COURSE', 'TEACHING_ELEMENT']),
@@ -35,13 +33,11 @@ module.exports = {
     },
     createdAt: {
       type: Sequelize.DATE,
-      field: 'created_at',
-      allowNull: false
+      field: 'created_at'
     },
     updatedAt: {
       type: Sequelize.DATE,
-      field: 'updated_at',
-      allowNull: false
+      field: 'updated_at'
     }
   }),
   down: queryInterface => queryInterface.dropTable(TABLE_NAME)

@@ -15,16 +15,13 @@ module.exports = {
       defaultValue: Sequelize.UUIDV4
     },
     schema: {
-      type: Sequelize.STRING(20),
-      allowNull: false
+      type: Sequelize.STRING
     },
     name: {
-      type: Sequelize.STRING,
-      allowNull: false
+      type: Sequelize.STRING
     },
     description: {
-      type: Sequelize.TEXT,
-      allowNull: false
+      type: Sequelize.TEXT
     },
     data: {
       type: Sequelize.JSONB,

@@ -12,20 +12,17 @@ module.exports = {
     authorId: {
       type: Sequelize.INTEGER,
       field: 'author_id',
-      references: { model: 'user', key: 'id' },
-      allowNull: false
+      references: { model: 'user', key: 'id' }
     },
     activityId: {
       type: Sequelize.INTEGER,
       field: 'activity_id',
-      references: { model: 'activity', key: 'id' },
-      allowNull: false
+      references: { model: 'activity', key: 'id' }
     },
     courseId: {
       type: Sequelize.INTEGER,
       field: 'course_id',
-      references: { model: 'course', key: 'id' },
-      allowNull: false
+      references: { model: 'course', key: 'id' }
     },
     content: {
       type: Sequelize.TEXT,
@@ -33,13 +30,11 @@ module.exports = {
     },
     createdAt: {
       type: Sequelize.DATE,
-      field: 'created_at',
-      allowNull: false
+      field: 'created_at'
     },
     updatedAt: {
       type: Sequelize.DATE,
-      field: 'updated_at',
-      allowNull: false
+      field: 'updated_at'
     },
     deletedAt: {
       type: Sequelize.DATE,

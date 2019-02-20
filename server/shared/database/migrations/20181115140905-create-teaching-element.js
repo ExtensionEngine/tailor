@@ -12,8 +12,7 @@ module.exports = {
     courseId: {
       type: Sequelize.INTEGER,
       field: 'course_id',
-      references: { model: 'course', key: 'id' },
-      allowNull: false
+      references: { model: 'course', key: 'id' }
     },
     activityId: {
       type: Sequelize.INTEGER,
@@ -29,8 +28,7 @@ module.exports = {
       type: Sequelize.STRING
     },
     position: {
-      type: Sequelize.DOUBLE,
-      allowNull: false
+      type: Sequelize.DOUBLE
     },
     contentId: {
       type: Sequelize.UUID,
@@ -42,10 +40,6 @@ module.exports = {
       field: 'content_signature'
     },
     data: {
-      type: Sequelize.JSONB,
-      defaultValue: {}
-    },
-    meta: {
       type: Sequelize.JSONB,
       defaultValue: {}
     },

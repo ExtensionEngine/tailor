@@ -12,8 +12,7 @@ module.exports = {
     courseId: {
       type: Sequelize.INTEGER,
       field: 'course_id',
-      references: { model: 'course', key: 'id' },
-      allowNull: false
+      references: { model: 'course', key: 'id' }
     },
     parentId: {
       type: Sequelize.INTEGER,

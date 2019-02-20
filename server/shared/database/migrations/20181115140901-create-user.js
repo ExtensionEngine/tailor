@@ -13,18 +13,16 @@ module.exports = {
     },
     email: {
       type: Sequelize.STRING,
-      unique: true,
-      allowNull: false
+      unique: true
     },
     password: {
       type: Sequelize.STRING
     },
     role: {
-      type: Sequelize.ENUM(Role.ADMIN, Role.USER, Role.INTEGRATION),
-      allowNull: false
+      type: Sequelize.ENUM(Role.ADMIN, Role.USER, Role.INTEGRATION)
     },
     token: {
-      type: Sequelize.STRING(500),
+      type: Sequelize.STRING,
       unique: true
     },
     createdAt: {
