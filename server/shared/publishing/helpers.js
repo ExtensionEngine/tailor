@@ -1,7 +1,7 @@
 'use strict';
 
 const { getLevelRelationships } = require('../../../config/shared/activities');
-const { TeachingElement } = require('../database');
+const { Sequelize, TeachingElement } = require('../database');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
@@ -17,6 +17,7 @@ const storage = require('../storage');
 const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
+const { Op } = Sequelize;
 
 const TES_ATTRS = [
   'id', 'uid', 'type', 'contentId', 'contentSignature',
@@ -111,7 +112,7 @@ function publishContent(repository, activity) {
 }
 
 function publishContainers(parent, types) {
-  return parent.getChildren({ where: { type: { $in: types } } })
+  return parent.getChildren({ where: { type: { [Op.in]: types } } })
     .then(containers => Promise.map(containers, fetchContainer))
     .then(containers => Promise.map(containers, it => {
       return saveFile(parent, `${it.id}.container`, it).then(() => it);

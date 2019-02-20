@@ -1,6 +1,7 @@
 'use strict';
 
 const { getObjectives, getSchemaId } = require('../../config/shared/activities');
+const sequelize = require('sequelize');
 const addHooks = require('../shared/util/addHooks');
 const find = require('lodash/find');
 const first = require('lodash/first');
@@ -8,7 +9,7 @@ const get = require('lodash/get');
 const logger = require('../shared/logger');
 const map = require('lodash/map');
 
-module.exports = { add };
+const { Op } = sequelize;
 
 function add(Course, models) {
   const { Activity, TeachingElement } = models;
@@ -22,7 +23,7 @@ function add(Course, models) {
     if (!schemaId) return;
     logger.info(`[Course] Activity#${hook}`, { type, id, courseId });
     const objectiveTypes = map(getObjectives(schemaId), 'type');
-    const where = { courseId, type: { $in: objectiveTypes }, detached: false };
+    const where = { courseId, type: { [Op.in]: objectiveTypes }, detached: false };
     return Activity.count({ where })
       .then(count => Course.updateStats(courseId, 'objectives', count));
   });
@@ -40,3 +41,5 @@ function add(Course, models) {
       .then(count => Course.updateStats(courseId, 'assessments', count));
   });
 }
+
+module.exports = { add };

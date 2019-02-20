@@ -133,7 +133,7 @@ class Activity extends Model {
   mapClonedReferences(mappings, relationships, transaction) {
     const refs = this.refs || {};
     relationships.forEach(type => {
-      if (refs[type]) refs[type] = refs[type].map(it => mappings[it])
+      if (refs[type]) refs[type] = refs[type].map(it => mappings[it]);
     });
     return this.update({ refs }, { transaction });
   }
@@ -191,10 +191,10 @@ class Activity extends Model {
     });
   }
 
-  reorder(index) {
+  reorder(index, { Op }) {
     return this.sequelize.transaction(transaction => {
       const types = getSiblingLevels(this.type).map(it => it.type);
-      const filter = { type: { $in: types } };
+      const filter = { type: { [Op.in]: types } };
       return this.siblings({ filter, transaction }).then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
         return this.save({ transaction });
