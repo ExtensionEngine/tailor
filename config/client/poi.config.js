@@ -1,92 +1,99 @@
 'use strict';
 
 const brand = require('./brand');
-const Dotenv = require('dotenv-webpack');
-const find = require('lodash/find');
-const merge = require('lodash/merge');
+const mapValues = require('lodash/mapValues');
 const path = require('path');
 const serverPort = require('../server').port;
 
+const isProduction = process.env.NODE_ENV === 'production';
+const extensions = ['.vue'];
+
 const rootPath = path.resolve(__dirname, '../../');
 const aliases = {
-  client: path.join(rootPath, 'client'),
-  assets: path.join(rootPath, 'client/assets'),
-  components: path.join(rootPath, 'client/components'),
+  '@': path.resolve(rootPath, './client'),
+  client: '@',
+  assets: '@/assets',
+  components: '@/components',
   shared: path.join(rootPath, 'config/shared'),
-  utils: path.join(rootPath, 'client/utils'),
+  utils: '@/utils',
   tce: path.join(rootPath, 'content-elements'),
-  'tce-core': path.join(rootPath, '/client/components/common/tce-core'),
-  EventBus: path.join(rootPath, 'client/EventBus')
+  'tce-core': '@/components/common/tce-core',
+  EventBus: '@/EventBus'
 };
 
-const rules = [{
-  test: /bootstrap-sass[/\\]assets[/\\]javascripts[/\\]/,
-  use: 'imports-loader?jQuery=jquery'
-}, {
-  test: /\.load\.js$/,
-  use: 'val-loader'
-}];
-
-const uglifyJsOptions = {
-  compressor: { warnings: false, keep_fnames: true },
-  mangle: { keep_fnames: true }
+const devServer = {
+  headers: {
+    'X-Powered-By': 'Webpack DevSever'
+  },
+  proxy: {
+    '/api': {
+      target: `http://127.0.0.1:${serverPort}`
+    }
+  },
+  // Override using: `npm run dev:server -- --port <number>`
+  port: 8080,
+  hotEntries: ['app']
 };
 
-const applyBrandConfig = config => {
-  const exposeBrandStyle = options => merge(options, { data: brand.style });
-  config.module.rule('scss').use('sass-loader').tap(exposeBrandStyle);
-  config.module.rule('vue').use('vue-loader').tap(config => {
-    const sassLoader = find(config.loaders.scss, { loader: 'sass-loader' });
-    if (sassLoader) exposeBrandStyle(sassLoader.options);
-    return config;
-  });
-};
-
-module.exports = (options, req) => ({
-  presets: [
-    require('poi-preset-eslint')({ mode: '*' }),
-    require('poi-preset-bundle-report')()
+module.exports = {
+  plugins: [
+    '@poi/eslint',
+    '@poi/bundle-report'
   ],
   entry: {
     app: 'client/main.js'
   },
-  dist: 'dist',
-  html: {
-    title: brand.globals.TITLE,
-    favicon: `client/${brand.globals.FAVICON}`
+  output: {
+    dir: 'dist',
+    sourceMap: !isProduction,
+    html: {
+      title: brand.globals.TITLE,
+      favicon: path.join('client/', brand.globals.FAVICON)
+    }
   },
-  define: { BRAND_CONFIG: brand.globals },
-  webpack(config) {
-    config.module.rules.push(...rules);
-    config.plugins.push(new Dotenv());
-    return config;
-  },
-  extendWebpack(config) {
-    configureModuleResolution(config);
-    config.resolve.alias.merge(aliases);
-    applyBrandConfig(config);
-    if (options.mode !== 'production') return;
-    config.plugin('minimize').tap(args => [merge(...args, uglifyJsOptions)]);
-  },
-  copy: { from: 'client/assets/img', to: 'assets/img' },
-  sourceMap: options.mode === 'development',
-  hotEntry: 'app',
-  generateStats: true,
-  // Override using: `npm run dev:server -- --port <number>`
-  port: 8080,
-  devServer: {
-    proxy: {
-      '/api': {
-        target: `http://127.0.0.1:${serverPort}`
+  css: {
+    loaderOptions: {
+      sass: {
+        data: brand.style
       }
     }
-  }
-});
+  },
+  constants: {
+    BRAND_CONFIG: mapValues(brand.globals, JSON.stringify)
+  },
+  chainWebpack(config, { mode }) {
+    config.resolve.alias.merge(aliases);
+    config.resolve.extensions.merge(extensions);
 
-// NOTE: Remove absolute path to local `node_modules` from configuration
-// https://github.com/webpack/webpack/issues/6538#issuecomment-367324775
-function configureModuleResolution(config) {
-  const localModules = path.join(rootPath, 'node_modules');
-  config.resolve.modules.delete(localModules);
-  config.resolveLoader.modules.delete(localModules);
-}
+    config.module.rule('bootstrap')
+      .test(/bootstrap-sass[/\\]assets[/\\]javascripts[/\\]/)
+      .post()
+      .use('imports-loader')
+      .loader(require.resolve('imports-loader'))
+      .options({ jQuery: 'jquery' });
+
+    config.module.rule('val')
+      .test(/\.load\.js$/)
+      .post()
+      .use('val-loader')
+      .loader(require.resolve('val-loader'));
+
+    config
+      .plugin('dotenv')
+        .use(require('dotenv-webpack'))
+        .end()
+      .plugin('copy')
+        .use(require('copy-webpack-plugin'), [[
+          { from: 'client/assets/img', to: 'assets/img' }
+        ]]);
+
+    if (mode !== 'production') return;
+    config
+      .plugin('minimize')
+      .tap(([options]) => {
+        options.terserOptions.keep_fnames = true;
+        return [options];
+      });
+  },
+  devServer
+};
