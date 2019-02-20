@@ -23,6 +23,10 @@ ecosystem.config.js
 !.eslintrc*
 !.*rc.*.example
 
+# Extensions
+extensions/content-elements/*
+!extensions/content-elements/.gitkeep
+
 # Branding
 client/assets/img/*logo*
 !client/assets/img/default-logo*
