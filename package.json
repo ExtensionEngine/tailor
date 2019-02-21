@@ -161,7 +161,8 @@
     "stylelint-webpack-plugin": "^0.9.0",
     "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.5.17",
+    "webpack-stats-plugin": "^0.2.1"
   },
   "engines": {
     "node": ">= 8.8.0",

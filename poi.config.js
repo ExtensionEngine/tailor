@@ -40,6 +40,7 @@ module.exports = {
   plugins: [
     '@poi/eslint',
     '@poi/bundle-report',
+    require.resolve('./build/plugins/stats'),
     {
       resolve: require.resolve('./build/plugins/copy'),
       options: { patterns: copy }
