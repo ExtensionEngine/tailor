@@ -39,7 +39,8 @@ client/assets/img/*favicon*
 umzug.json
 
 # Build artifacts
-dist/
+dist/*
+!dist/.gitkeep
 stats.json
 
 # General
