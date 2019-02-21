@@ -1,24 +1,21 @@
 'use strict';
 
-const brand = require('./brand');
-const mapValues = require('lodash/mapValues');
 const path = require('path');
-const serverPort = require('../server').port;
+const serverPort = require('./config/server').port;
 
 const isProduction = process.env.NODE_ENV === 'production';
 const extensions = ['.vue'];
 
-const rootPath = path.resolve(__dirname, '../../');
 const aliases = {
-  '@': path.resolve(rootPath, './client'),
+  '@': path.resolve(__dirname, './client'),
   client: '@',
   assets: '@/assets',
   components: '@/components',
-  shared: path.join(rootPath, 'config/shared'),
-  utils: '@/utils',
-  tce: path.join(rootPath, 'content-elements'),
   'tce-core': '@/components/common/tce-core',
-  EventBus: '@/EventBus'
+  EventBus: '@/EventBus',
+  utils: '@/utils',
+  shared: path.join(__dirname, 'config/shared'),
+  tce: path.join(__dirname, 'content-elements')
 };
 
 const devServer = {
@@ -38,28 +35,22 @@ const devServer = {
 module.exports = {
   plugins: [
     '@poi/eslint',
-    '@poi/bundle-report'
+    '@poi/bundle-report',
+    {
+      resolve: require.resolve('./build/plugins/copy'),
+      options: {
+        patterns: [{ from: 'client/assets/img', to: 'assets/img' }]
+      }
+    }, {
+      resolve: require.resolve('./build/plugins/brand')
+    }
   ],
   entry: {
     app: 'client/main.js'
   },
   output: {
     dir: 'dist',
-    sourceMap: !isProduction,
-    html: {
-      title: brand.globals.TITLE,
-      favicon: path.join('client/', brand.globals.FAVICON)
-    }
-  },
-  css: {
-    loaderOptions: {
-      sass: {
-        data: brand.style
-      }
-    }
-  },
-  constants: {
-    BRAND_CONFIG: mapValues(brand.globals, JSON.stringify)
+    sourceMap: !isProduction
   },
   chainWebpack(config, { mode }) {
     config.resolve.alias.merge(aliases);
@@ -80,12 +71,7 @@ module.exports = {
 
     config
       .plugin('dotenv')
-        .use(require('dotenv-webpack'))
-        .end()
-      .plugin('copy')
-        .use(require('copy-webpack-plugin'), [[
-          { from: 'client/assets/img', to: 'assets/img' }
-        ]]);
+      .use(require.resolve('dotenv-webpack'));
 
     if (mode !== 'production') return;
     config

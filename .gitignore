@@ -28,6 +28,8 @@ extensions/content-elements/*
 !extensions/content-elements/.gitkeep
 
 # Branding
+brand.config.*
+!brand.config.*.example
 client/assets/img/*logo*
 !client/assets/img/default-logo*
 client/assets/img/*favicon*
