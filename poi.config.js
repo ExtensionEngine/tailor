@@ -18,6 +18,8 @@ const aliases = {
   tce: path.join(__dirname, 'content-elements')
 };
 
+const copy = [{ from: 'client/assets/img', to: 'assets/img' }];
+
 const devServer = {
   headers: {
     'X-Powered-By': 'Webpack DevSever'
@@ -38,12 +40,13 @@ module.exports = {
     '@poi/bundle-report',
     {
       resolve: require.resolve('./build/plugins/copy'),
-      options: {
-        patterns: [{ from: 'client/assets/img', to: 'assets/img' }]
-      }
+      options: { patterns: copy }
     }, {
-      resolve: require.resolve('./build/plugins/brand')
-    }
+      resolve: require.resolve('./build/plugins/clean-out-dir'),
+      options: { exclude: '.gitkeep' }
+    },
+    require.resolve('./build/plugins/html-version-spec'),
+    require.resolve('./build/plugins/brand')
   ],
   entry: {
     app: 'client/main.js'
