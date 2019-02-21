@@ -1,6 +1,7 @@
 'use strict';
 
 const { readFileSync } = require('fs');
+const isObject = require('lodash/isObject');
 const JoyCon = require('joycon');
 const map = require('lodash/map');
 const merge = require('lodash/merge');
@@ -9,6 +10,10 @@ const stripJsonComments = require('strip-json-comments');
 
 exports.name = 'tailor:brand';
 
+exports.cli = api => {
+  api.command.option('--brand-config <path>', 'Set path to brand config file');
+};
+
 const prefix = `${exports.name}-plugin:`;
 
 const parseJSON = str => JSON.parse(stripJsonComments(str));
@@ -16,7 +21,7 @@ const toScssVariable = (value, name) => `$${name}: ${value};`;
 
 const joycon = new JoyCon({ parseJSON });
 joycon.addLoader({
-  test: /\.[^\.]*rc$/,
+  test: /\.[^.]*rc$/,
   loadSync: path => parseJSON(readFileSync(path, 'utf-8'))
 });
 
@@ -34,12 +39,8 @@ const getStyleConfig = () => ({
   altBrandColor: '#5C6BC0'
 });
 
-exports.cli = api => {
-  api.command.option('--brand-config <path>', 'Set path to brand config file');
-};
-
 exports.apply = (api, { files, imagesPath } = {}) => {
-  const brandConfig = loadConfig(api, files);
+  const brandConfig = loadConfig(api, files) || {};
   const constants = merge(getAppConfig(), brandConfig);
   const style = merge(getStyleConfig(), brandConfig.style);
 
@@ -75,11 +76,13 @@ function loadConfig({ cli, logger }, files) {
       stopDir: path.dirname(parentDir)
     });
   }
-  const { path: configPath, data = {} } = joycon.loadSync(options);
-  if (configPath) {
-    logger.debug(prefix, `Using brand config file: ${configPath}`);
-  } else {
-    logger.debug(prefix, 'Using default brand configration');
+  const { path: configPath, data: config } = joycon.loadSync(options);
+  if (!configPath) {
+    return logger.debug(prefix, 'Using default brand configration');
   }
-  return data;
+  if (!isObject(config)) {
+    return logger.error(prefix, `Invalid config provided: ${configPath}`);
+  }
+  logger.debug(prefix, `Using brand config file: ${configPath}`);
+  return config;
 }
