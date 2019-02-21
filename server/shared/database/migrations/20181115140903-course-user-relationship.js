@@ -1,7 +1,5 @@
 'use strict';
 
-const { course: role } = require('../../../../config/shared').role;
-
 const TABLE_NAME = 'course_user';
 
 module.exports = {
@@ -20,7 +18,7 @@ module.exports = {
         allowNull: false
       },
       role: {
-        type: Sequelize.ENUM(role.ADMIN, role.AUTHOR)
+        type: Sequelize.ENUM('COURSE_ADMIN', 'COURSE_AUTHOR')
       },
       createdAt: {
         type: Sequelize.DATE,

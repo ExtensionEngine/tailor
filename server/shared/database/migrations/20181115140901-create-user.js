@@ -1,7 +1,5 @@
 'use strict';
 
-const { user: Role } = require('../../../../config/shared').role;
-
 const TABLE_NAME = 'user';
 
 module.exports = {
@@ -19,7 +17,7 @@ module.exports = {
       type: Sequelize.STRING
     },
     role: {
-      type: Sequelize.ENUM(Role.ADMIN, Role.USER, Role.INTEGRATION)
+      type: Sequelize.ENUM('ADMIN', 'USER', 'INTEGRATION')
     },
     token: {
       type: Sequelize.STRING,
