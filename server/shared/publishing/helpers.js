@@ -111,7 +111,7 @@ function publishContent(repository, activity) {
 }
 
 function publishContainers(parent, types) {
-  return parent.getChildren({ where: { type: { $in: types } } })
+  return parent.getChildren({ where: { type: types } })
     .then(containers => Promise.map(containers, fetchContainer))
     .then(containers => Promise.map(containers, it => {
       return saveFile(parent, `${it.id}.container`, it).then(() => it);

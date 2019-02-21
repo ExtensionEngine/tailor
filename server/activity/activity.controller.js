@@ -28,7 +28,7 @@ function patch({ activity, body, user }, res) {
 }
 
 function list({ course, query, opts }, res) {
-  if (!query.detached) opts.where.$and = [{ detached: false }];
+  if (!query.detached) opts.where = { detached: false };
   return course.getActivities(opts).then(data => res.json({ data }));
 }
 
@@ -54,7 +54,7 @@ function publish({ activity }, res) {
 function clone({ activity, body }, res) {
   const { courseId, parentId, position } = body;
   return activity.clone(courseId, parentId, position).then(mappings => {
-    const opts = { where: { id: { $in: Object.values(mappings) } } };
+    const opts = { where: { id: Object.values(mappings) } };
     return Activity.findAll(opts).then(data => res.json({ data }));
   });
 }

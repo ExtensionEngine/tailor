@@ -1,20 +1,22 @@
 'use strict';
 
-const { Activity, TeachingElement } = require('../shared/database');
+const { Activity, TeachingElement, Sequelize } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
 
+const { Op } = Sequelize;
+
 function list({ course, query, opts }, res) {
   if (query.activityId || query.parentId) {
     const { activityId, parentId } = query;
-    const where = { $or: [] };
-    if (activityId) where.$or.push({ id: parseInt(activityId, 10) });
-    if (parentId) where.$or.push({ parentId: parseInt(parentId, 10) });
+    const where = { [Op.or]: [] };
+    if (activityId) where[Op.or].push({ id: parseInt(activityId, 10) });
+    if (parentId) where[Op.or].push({ parentId: parseInt(parentId, 10) });
     opts.include = { model: Activity, attributes: [], where };
   }
-  if (!query.detached) opts.where.$and = [{ detached: false }];
+  if (!query.detached) opts.where = { detached: false };
 
   const elements = query.integration
     ? course.getTeachingElements(opts)
