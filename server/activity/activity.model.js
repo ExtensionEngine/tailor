@@ -1,7 +1,7 @@
 'use strict';
 
 const { getSiblingLevels } = require('../../config/shared/activities');
-const { Model, Op } = require('sequelize');
+const { Model } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
@@ -194,7 +194,7 @@ class Activity extends Model {
   reorder(index) {
     return this.sequelize.transaction(transaction => {
       const types = getSiblingLevels(this.type).map(it => it.type);
-      const filter = { type: { [Op.in]: types } };
+      const filter = { type: types };
       return this.siblings({ filter, transaction }).then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
         return this.save({ transaction });

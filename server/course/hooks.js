@@ -7,9 +7,6 @@ const first = require('lodash/first');
 const get = require('lodash/get');
 const logger = require('../shared/logger');
 const map = require('lodash/map');
-const sequelize = require('sequelize');
-
-const { Op } = sequelize;
 
 function add(Course, models) {
   const { Activity, TeachingElement } = models;
@@ -23,7 +20,7 @@ function add(Course, models) {
     if (!schemaId) return;
     logger.info(`[Course] Activity#${hook}`, { type, id, courseId });
     const objectiveTypes = map(getObjectives(schemaId), 'type');
-    const where = { courseId, type: { [Op.in]: objectiveTypes }, detached: false };
+    const where = { courseId, type: objectiveTypes, detached: false };
     return Activity.count({ where })
       .then(count => Course.updateStats(courseId, 'objectives', count));
   });

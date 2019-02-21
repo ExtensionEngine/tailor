@@ -1,13 +1,11 @@
 'use strict';
 
-const { Activity, Sequelize } = require('../shared/database');
+const { Activity } = require('../shared/database');
 const { getOutlineLevels } = require('../../config/shared/activities');
 const find = require('lodash/find');
 const get = require('lodash/get');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
-
-const { Op } = Sequelize;
 
 function create({ course, body, params, user }, res) {
   const outlineConfig = find(getOutlineLevels(course.schema), { type: body.type });
@@ -56,7 +54,7 @@ function publish({ activity }, res) {
 function clone({ activity, body }, res) {
   const { courseId, parentId, position } = body;
   return activity.clone(courseId, parentId, position).then(mappings => {
-    const opts = { where: { id: { [Op.in]: Object.values(mappings) } } };
+    const opts = { where: { id: Object.values(mappings) } };
     return Activity.findAll(opts).then(data => res.json({ data }));
   });
 }
