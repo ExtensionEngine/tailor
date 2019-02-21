@@ -3,6 +3,7 @@
 const path = require('path');
 const serverPort = require('./config/server').port;
 
+const imagesPath = 'assets/img';
 const isProduction = process.env.NODE_ENV === 'production';
 
 const aliases = {
@@ -17,7 +18,7 @@ const aliases = {
   tce: path.join(__dirname, 'content-elements')
 };
 
-const copy = [{ from: 'client/assets/img', to: 'assets/img' }];
+const copy = [{ from: 'client/assets/img', to: imagesPath }];
 
 const devServer = {
   headers: {
@@ -47,7 +48,13 @@ module.exports = {
       options: { exclude: '.gitkeep' }
     },
     require.resolve('./build/plugins/html-version-spec'),
-    require.resolve('./build/plugins/brand')
+    {
+      resolve: require.resolve('./build/plugins/brand'),
+      options: {
+        files: ['.brandrc', '.brandrc.js'],
+        imagesPath
+      }
+    }
   ],
   entry: {
     app: 'client/main.js'

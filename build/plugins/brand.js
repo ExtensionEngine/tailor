@@ -1,5 +1,6 @@
 'use strict';
 
+const { readFileSync } = require('fs');
 const JoyCon = require('joycon');
 const map = require('lodash/map');
 const merge = require('lodash/merge');
@@ -9,11 +10,14 @@ const stripJsonComments = require('strip-json-comments');
 exports.name = 'tailor:brand';
 
 const prefix = `${exports.name}-plugin:`;
+
+const parseJSON = str => JSON.parse(stripJsonComments(str));
 const toScssVariable = (value, name) => `$${name}: ${value};`;
 
-const joycon = new JoyCon({
-  files: ['brand.config.json', 'brand.config.js'],
-  parseJSON: str => JSON.parse(stripJsonComments(str))
+const joycon = new JoyCon({ parseJSON });
+joycon.addLoader({
+  test: /\.[^\.]*rc$/,
+  loadSync: path => parseJSON(readFileSync(path, 'utf-8'))
 });
 
 const getAppConfig = () => ({
@@ -30,17 +34,16 @@ const getStyleConfig = () => ({
   altBrandColor: '#5C6BC0'
 });
 
-exports.apply = ({ config, logger }, { imagesPath = '/assets/img/' } = {}) => {
-  const { path: configPath, data = {} } = joycon.loadSync();
-  if (configPath) {
-    logger.debug(prefix, `Using brand config file: ${configPath}`);
-  } else {
-    logger.debug(prefix, 'Using default brand configration');
-  }
+exports.cli = api => {
+  api.command.option('--brand-config <path>', 'Set path to brand config file');
+};
 
-  const constants = merge(getAppConfig(), data);
-  const style = merge(getStyleConfig(), data.style);
+exports.apply = (api, { files, imagesPath } = {}) => {
+  const brandConfig = loadConfig(api, files);
+  const constants = merge(getAppConfig(), brandConfig);
+  const style = merge(getStyleConfig(), brandConfig.style);
 
+  const { config } = api;
   config.output.html = Object.assign({}, config.output.html, {
     title: constants.title,
     favicon: path.join('client/', imagesPath, constants.favicon)
@@ -59,3 +62,24 @@ exports.apply = ({ config, logger }, { imagesPath = '/assets/img/' } = {}) => {
     }
   });
 };
+
+function loadConfig({ cli, logger }, files) {
+  const options = { files };
+  if (cli.options.brandConfig) {
+    const filepath = path.resolve(cli.options.brandConfig);
+    const filename = path.basename(filepath);
+    const parentDir = path.dirname(filepath);
+    Object.assign(options, {
+      files: [filename],
+      cwd: parentDir,
+      stopDir: path.dirname(parentDir)
+    });
+  }
+  const { path: configPath, data = {} } = joycon.loadSync(options);
+  if (configPath) {
+    logger.debug(prefix, `Using brand config file: ${configPath}`);
+  } else {
+    logger.debug(prefix, 'Using default brand configration');
+  }
+  return data;
+}
