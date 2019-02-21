@@ -14,6 +14,7 @@
     "clean": "del-cli dist/* !dist/.gitkeep",
     "webpack:inspect-config": "poi --inspect-webpack",
     "webpack:bundle-report": "poi --prod --bundle-report",
+    "webpack:stats": "poi --prod --print-stats",
     "e2e": "node client/test/e2e/runner.js",
     "unit:client": "echo \"Error: no unit tests specified\" && exit 0",
     "test:client": "npm run unit:client && npm run e2e",
