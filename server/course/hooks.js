@@ -8,8 +8,6 @@ const get = require('lodash/get');
 const logger = require('../shared/logger');
 const map = require('lodash/map');
 
-module.exports = { add };
-
 function add(Course, models) {
   const { Activity, TeachingElement } = models;
   const hooks = ['afterCreate', 'afterBulkCreate', 'afterDestroy', 'afterBulkDestroy'];
@@ -22,7 +20,7 @@ function add(Course, models) {
     if (!schemaId) return;
     logger.info(`[Course] Activity#${hook}`, { type, id, courseId });
     const objectiveTypes = map(getObjectives(schemaId), 'type');
-    const where = { courseId, type: { $in: objectiveTypes }, detached: false };
+    const where = { courseId, type: objectiveTypes, detached: false };
     return Activity.count({ where })
       .then(count => Course.updateStats(courseId, 'objectives', count));
   });
@@ -40,3 +38,5 @@ function add(Course, models) {
       .then(count => Course.updateStats(courseId, 'assessments', count));
   });
 }
+
+module.exports = { add };
