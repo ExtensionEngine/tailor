@@ -1,13 +1,13 @@
 'use strict';
 
 const { getObjectives, getSchemaId } = require('../../config/shared/activities');
-const sequelize = require('sequelize');
 const addHooks = require('../shared/util/addHooks');
 const find = require('lodash/find');
 const first = require('lodash/first');
 const get = require('lodash/get');
 const logger = require('../shared/logger');
 const map = require('lodash/map');
+const sequelize = require('sequelize');
 
 const { Op } = sequelize;
 
