@@ -1,4 +1,4 @@
-import 'babel-polyfill';
+import '@babel/polyfill';
 import 'dom-shims/shim/Element.classList';
 import 'dom-shims/shim/Element.mutation';
 import 'event-source-polyfill';
