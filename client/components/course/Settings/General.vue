@@ -47,7 +47,7 @@ export default {
       return [{
         key: 'name',
         value: this.course.name,
-        type: 'INPUT',
+        type: 'TEXTAREA',
         label: 'Name',
         validate: { rules: { required: true, min: 2, max: 250 } }
       }, {

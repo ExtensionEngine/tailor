@@ -1,25 +1,15 @@
 'use strict';
 
-const db = require('./index');
+const db = require('./');
 const findIndex = require('lodash/findIndex');
 const flatten = require('lodash/flatten');
 const map = require('lodash/map');
-const Umzug = require('umzug');
+const umzug = require('./umzug')(db);
 
-const changelog = [];
-
-const umzug = new Umzug({
-  // Possible values: 'json', 'sequelize', an argument for `require()`
-  storage: 'json',
-  storageOptions: {},
-  // The logging function.
-  // A function that gets executed everytime migrations start and have ended.
-  logging: false,
-  migrations: {
-    params: [db.sequelize.getQueryInterface(), db.sequelize.constructor, db],
-    path: './server/shared/database/migrations'
-  }
-});
+const changelog = [{
+  name: 'add-meta',
+  migrations: ['20181115140943-add-meta-to-teaching-element']
+}];
 
 // TODO: Implement migration down
 module.exports = function migrate(to, from) {
