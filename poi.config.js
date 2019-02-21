@@ -4,7 +4,6 @@ const path = require('path');
 const serverPort = require('./config/server').port;
 
 const isProduction = process.env.NODE_ENV === 'production';
-const extensions = ['.vue'];
 
 const aliases = {
   '@': path.resolve(__dirname, './client'),
@@ -33,6 +32,8 @@ const devServer = {
   port: 8080,
   hotEntries: ['app']
 };
+
+const extensions = ['.vue'];
 
 module.exports = {
   plugins: [
