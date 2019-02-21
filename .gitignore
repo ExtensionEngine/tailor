@@ -19,9 +19,9 @@ selenium-debug.log
 # Configuration
 .env
 ecosystem.config.js
-.*rc.*
+.*rc*
 !.eslintrc*
-!.*rc.*.example
+!.*.example
 
 # Extensions
 extensions/content-elements/*
@@ -37,7 +37,8 @@ client/assets/img/*favicon*
 umzug.json
 
 # Build artifacts
-dist/
+dist/*
+!dist/.gitkeep
 stats.json
 
 # General

@@ -89,6 +89,7 @@ export default {
       // Make sure that component state is kept
       // until events (i.e. focusout => save) are triggered
       setTimeout(() => {
+        if (this.isFocused) return;
         this.content = get(val, 'data.content', '');
       }, 0);
     },

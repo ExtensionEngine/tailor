@@ -39,6 +39,19 @@ function toDataUrl(imageUrl) {
   return imgSrcToDataURL(imageUrl, 'image/png', 'Anonymous');
 }
 
+function getImageDimensions(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve({ width: img.width, height: img.height });
+    img.onerror = event => {
+      const err = new Error(`Failed to load image: ${url}`);
+      err.cause = event;
+      reject(err);
+    };
+    img.src = url;
+  });
+}
+
 export default {
   name: 'tce-image',
   inject: ['$elementBus'],
@@ -66,10 +79,15 @@ export default {
       if (!this.showCropper || !this.$refs.cropper) return;
       this.$refs.cropper.show();
     },
-    loadImage(dataUrl) {
+    load(dataUrl) {
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
       if (dataUrl) this.$refs.cropper.replace(dataUrl);
+    },
+    save(image) {
+      getImageDimensions(image).then(({ width, height }) => {
+        this.$emit('save', { url: image, meta: { width, height } });
+      });
     }
   },
   watch: {
@@ -77,23 +95,23 @@ export default {
       if (focused) return;
 
       if (this.persistedImage !== this.currentImage) {
-        this.$emit('save', { url: this.currentImage });
+        this.save(this.currentImage);
       }
 
       if (this.currentImage) this.$refs.cropper.clear();
     },
     'element.data.url'(imageUrl) {
-      toDataUrl(imageUrl).then(dataUrl => this.loadImage(dataUrl));
+      toDataUrl(imageUrl).then(dataUrl => this.load(dataUrl));
     }
   },
   mounted() {
-    toDataUrl(this.element.data.url).then(dataUrl => this.loadImage(dataUrl));
+    toDataUrl(this.element.data.url).then(dataUrl => this.load(dataUrl));
 
     this.$elementBus.on('upload', dataUrl => {
       if (this.currentImage) this.$refs.cropper.replace(dataUrl);
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
-      this.$emit('save', { url: dataUrl });
+      this.save(dataUrl);
     });
 
     this.$elementBus.on('showCropper', () => {
