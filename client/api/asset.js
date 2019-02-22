@@ -1,4 +1,3 @@
-import get from 'lodash/get';
 import request from './request';
 
 const url = {
@@ -7,7 +6,7 @@ const url = {
 
 function getUrl(key) {
   const params = { key };
-  return request.get(url.root(), { params }).then(res => get(res, 'data.url'));
+  return request.get(url.root(), { params }).then(res => res.data.url);
 }
 
 function upload(data) {

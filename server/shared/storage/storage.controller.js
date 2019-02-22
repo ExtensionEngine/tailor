@@ -4,8 +4,8 @@ const crypto = require('crypto');
 const path = require('path');
 
 function getUrl(req, res) {
-  const { origin, query: { key } } = req;
-  return getFileUrl(key, { origin }).then(url => res.json({ url }));
+  const { query: { key } } = req;
+  return getFileUrl(key).then(url => res.json({ url }));
 }
 
 function upload({ file }, res) {
