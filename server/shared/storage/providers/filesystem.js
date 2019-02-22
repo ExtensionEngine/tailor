@@ -3,7 +3,6 @@
 const Promise = require('bluebird');
 const exists = require('path-exists');
 const expandPath = require('untildify');
-const fileType = require('file-type');
 const fs = Promise.promisifyAll(require('fs'));
 const Joi = require('joi');
 const mkdirp = Promise.promisify(require('mkdirp'));
@@ -70,10 +69,8 @@ class FilesystemStorage {
     return exists(this.path(key));
   }
 
-  // Uses dataURIs that are permanent by definition.
-  getFileUrl(key, options = {}) {
-    return this.getFile(key, options)
-      .then(data => getDataUrl(data));
+  getFileUrl(key, { origin }) {
+    return Promise.resolve(path.join(origin, key));
   }
 }
 
@@ -81,8 +78,3 @@ module.exports = {
   schema,
   create: FilesystemStorage.create
 };
-
-function getDataUrl(buffer, mimetype) {
-  if (!mimetype) mimetype = fileType(buffer).mime;
-  return `data:${mimetype};base64,${buffer.toString('base64')}`;
-}
