@@ -70,7 +70,7 @@ class FilesystemStorage {
   }
 
   getFileUrl(key, { origin }) {
-    return Promise.resolve(path.join(origin, key));
+    return Promise.resolve(`${origin}/${key}`);
   }
 }
 
