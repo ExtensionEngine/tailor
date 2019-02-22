@@ -5,8 +5,8 @@ const activityRouter = require('./activity').router;
 const commentRouter = require('./comment').router;
 const courseRouter = require('./course').router;
 const revisionRouter = require('./revision').router;
+const storageRouter = require('./shared/storage/storage.router').router;
 const teRouter = require('./teaching-element').router;
-const uploadRouter = require('./file').router;
 const userRouter = require('./user').router;
 
 const router = express.Router();
@@ -16,7 +16,7 @@ router.use('/', activityRouter);
 router.use('/', commentRouter);
 router.use('/', teRouter);
 router.use('/', revisionRouter);
-router.use('/', uploadRouter);
+router.use('/', storageRouter);
 router.use('/', userRouter);
 
 module.exports = router;
