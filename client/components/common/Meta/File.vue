@@ -1,11 +1,10 @@
 <template>
-  <div class="meta-file-upload">
+  <div class="meta-file">
     <label class="meta-name">{{ meta.label }}</label>
     <file-upload
-      v-bind="fileOptions"
-      @key="updateActivity"
-      @delete="updateActivity">
-    </file-upload>
+      v-bind="options"
+      @upload="$emit('update', meta.key, $event)"
+      @delete="$emit('update', meta.key, null)"/>
   </div>
 </template>
 
@@ -14,36 +13,27 @@ import FileUpload from '../FileUpload.vue';
 import get from 'lodash/get';
 
 export default {
-  name: 'file',
+  name: 'meta-file',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
   computed: {
-    fileOptions() {
+    options() {
       return {
         id: this.meta.key,
+        fileKey: get(this.meta, 'value.key', ''),
         fileName: get(this.meta, 'value.name', ''),
-        fileUrl: get(this.meta, 'value.url', ''),
         validate: this.meta.validate,
-        labelText: this.meta.placeholder
+        label: this.meta.placeholder
       };
     }
   },
-  methods: {
-    updateActivity(url, name) {
-      let update = null;
-      if (url && name) update = { url, name };
-      return this.$emit('update', this.meta.key, update);
-    }
-  },
-  components: {
-    FileUpload
-  }
+  components: { FileUpload }
 };
 </script>
 
 <style lang="scss" scoped>
-.meta-file-upload {
+.meta-file {
   position: relative;
   min-height: 50px;
   margin: 20px 0;

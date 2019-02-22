@@ -11,17 +11,17 @@
         type="file"
         class="upload-input">
       <label
-        v-if="!fileUrl"
+        v-if="!fileKey"
         :for="id"
         class="btn btn-material btn-sm upload-button">
-        {{ labelText }}
+        {{ label }}
       </label>
       <span
         v-else
         @click="download"
         class="file-name">{{ fileName }}
       </span>
-      <span v-if="fileUrl" @click="deleteFile" class="mdi mdi-delete delete"></span>
+      <span v-if="fileKey" @click="deleteFile" class="mdi mdi-delete delete"></span>
     </form>
     <span class="help-block">{{ vErrors.first(id) }}</span>
   </div>
@@ -42,9 +42,9 @@ export default {
   props: {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
-    fileUrl: { type: String, default: '' },
+    fileKey: { type: String, default: '' },
     validate: { type: Object, default: () => ({ rules: { ext: [] } }) },
-    labelText: { type: String, default: 'Choose a file' }
+    label: { type: String, default: 'Choose a file' }
   },
   data() {
     return {
@@ -71,16 +71,16 @@ export default {
         if (!isValid) return;
         this.uploading = true;
         return api.upload(this.form)
-          .then(data => {
+          .then(({ key }) => {
             this.uploading = false;
-            this.$emit('key', data.key, this.extractedFileName);
+            this.$emit('upload', { key, name: this.extractedFileName });
           }).catch(() => {
             this.error = 'An error has occurred!';
           });
       });
     },
     download() {
-      return api.getUrl(this.fileUrl).then(url => {
+      return api.getUrl(this.fileKey).then(url => {
         const a = document.createElement('a');
         a.href = url;
         a.download = this.fileName || this.extractedFileName;
