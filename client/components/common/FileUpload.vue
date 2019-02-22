@@ -1,6 +1,6 @@
 <template>
   <div>
-    <circular-progress v-if="uploading"></circular-progress>
+    <circular-progress v-if="uploading"/>
     <form v-else @submit.prevent>
       <input
         v-validate="validate"
@@ -13,12 +13,12 @@
       <label
         v-if="!fileUrl"
         :for="id"
-        class="btn btn-link btn-sm upload-button">
+        class="btn btn-material btn-sm upload-button">
         {{ labelText }}
       </label>
       <span
         v-else
-        @click="consumeDownloadUrl"
+        @click="download"
         class="file-name">{{ fileName }}
       </span>
       <span v-if="fileUrl" @click="deleteFile" class="mdi mdi-delete delete"></span>
@@ -28,9 +28,9 @@
 </template>
 
 <script>
+import api from '@/api/asset';
 import CircularProgress from 'components/common/CircularProgress';
 import EventBus from 'EventBus';
-import request from '../../api/request';
 import uniqueId from 'lodash/uniqueId';
 import { withValidation } from 'utils/validation';
 
@@ -67,24 +67,25 @@ export default {
     },
     upload(e) {
       this.constructFileForm(e);
-      this.$validator.validate(this.id).then(result => {
-        if (!result) return;
+      this.$validator.validate(this.id).then(isValid => {
+        if (!isValid) return;
         this.uploading = true;
-        return request.post('/files', this.form).then(({ data }) => {
-          this.uploading = false;
-          if (!data.error) return this.$emit('key', data.key, this.extractedFileName);
-          this.error = data.error;
-        });
+        return api.upload(this.form)
+          .then(data => {
+            this.uploading = false;
+            this.$emit('key', data.key, this.extractedFileName);
+          }).catch(() => {
+            this.error = 'An error has occurred!';
+          });
       });
     },
-    consumeDownloadUrl() {
-      return request.get('/files', { params: { url: this.fileUrl } })
-        .then(({ data }) => {
-          const a = document.createElement('a');
-          a.href = data;
-          a.target = '_blank';
-          a.click();
-        });
+    download() {
+      return api.getUrl(this.fileUrl).then(url => {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.extractedFileName;
+        a.click();
+      });
     },
     deleteFile() {
       appChannel.emit('showConfirmationModal', {
@@ -97,9 +98,7 @@ export default {
       });
     }
   },
-  components: {
-    CircularProgress
-  }
+  components: { CircularProgress }
 };
 </script>
 
@@ -109,7 +108,7 @@ export default {
 }
 
 .upload-button {
-  padding: 0;
+  background-color: #eee;
 }
 
 .file-name {
@@ -123,10 +122,10 @@ export default {
   padding: 0 5px;
   font-size: 18px;
   color: #808080;
+  cursor: pointer;
 
   &:hover {
     color: #555;
   }
 }
-
 </style>
