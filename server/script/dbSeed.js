@@ -1,7 +1,7 @@
 'use strict';
 
 const db = require('../shared/database');
-const seed = require('../shared/database/seed');
+const seed = require('../shared/database/seeds');
 
 db.sequelize.sync({ force: true })
   .then(() => seed())
