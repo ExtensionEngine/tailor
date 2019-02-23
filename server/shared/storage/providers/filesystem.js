@@ -71,7 +71,7 @@ class FilesystemStorage {
   }
 
   getFileUrl(key) {
-    return Promise.resolve(`${config.hostname}:${config.port}/${key}`);
+    return Promise.resolve(`${config.host}/${key}`);
   }
 }
 
