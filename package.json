@@ -14,6 +14,7 @@
     "clean": "del-cli dist/* !dist/.gitkeep",
     "webpack:inspect-config": "poi --inspect-webpack",
     "webpack:bundle-report": "poi --prod --bundle-report",
+    "webpack:stats": "poi --prod --print-stats",
     "e2e": "node client/test/e2e/runner.js",
     "unit:client": "echo \"Error: no unit tests specified\" && exit 0",
     "test:client": "npm run unit:client && npm run e2e",
@@ -162,13 +163,13 @@
     "stylelint-order": "^0.7.0",
     "stylelint-processor-html": "^1.0.0",
     "stylelint-webpack-plugin": "^0.9.0",
-    "umzug": "^2.1.0",
+    "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.5.17",
+    "webpack-stats-plugin": "^0.2.1"
   },
   "engines": {
     "node": ">= 8.8.0",
     "npm": ">= 5.4.2"
-  },
-  "snyk": true
+  }
 }
