@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require('../../../config');
+const config = require('../../../../config/server');
 const Promise = require('bluebird');
 const exists = require('path-exists');
 const expandPath = require('untildify');
@@ -71,7 +71,7 @@ class FilesystemStorage {
   }
 
   getFileUrl(key) {
-    return Promise.resolve(`${config.host}/${key}`);
+    return Promise.resolve(`${config.origin}/${key}`);
   }
 }
 
