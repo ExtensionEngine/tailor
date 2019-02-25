@@ -6,6 +6,7 @@ const express = require('express');
 const helmet = require('helmet');
 const includes = require('lodash/includes');
 const morgan = require('morgan');
+const origin = require('./shared/origin');
 const passport = require('passport');
 const path = require('path');
 
@@ -16,12 +17,16 @@ const config = require('../config/server');
 const logger = require('./shared/logger');
 const router = require('./router');
 
+const { STORAGE_PATH } = process.env;
+
 const app = express();
 app.use(helmet());
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(passport.initialize());
+app.use(origin());
 app.use(express.static(path.join(__dirname, '../dist/')));
+if (STORAGE_PATH) app.use(express.static(STORAGE_PATH));
 
 // Log http requests
 const isSuccessful = res => res.statusCode <= 400;

@@ -3,8 +3,10 @@
 const path = require('path');
 const serverPort = require('./config/server').port;
 
+const { NODE_ENV, STORAGE_PATH } = process.env;
 const imagesPath = 'assets/img';
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = NODE_ENV === 'production';
+const serverUrl = `http://127.0.0.1:${serverPort}`;
 
 const aliases = {
   '@': path.resolve(__dirname, './client'),
@@ -25,9 +27,8 @@ const devServer = {
     'X-Powered-By': 'Webpack DevSever'
   },
   proxy: {
-    '/api': {
-      target: `http://127.0.0.1:${serverPort}`
-    }
+    '/api': { target: serverUrl },
+    ...(STORAGE_PATH ? { '/repository': serverUrl } : {})
   },
   // Override using: `npm run dev:server -- --port <number>`
   port: 8080,
