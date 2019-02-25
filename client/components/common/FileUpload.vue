@@ -47,33 +47,24 @@ export default {
     label: { type: String, default: 'Choose a file' }
   },
   data() {
-    return {
-      downloadUrl: '',
-      extractedFileName: '',
-      error: {},
-      uploading: false
-    };
+    return { uploading: false };
   },
   methods: {
-    constructFileForm(e) {
+    createFileForm(e) {
       this.form = new FormData();
       const [file] = e.target.files;
-      if (!file) {
-        this.extractedFileName = null;
-        return;
-      }
-      this.extractedFileName = file.name;
+      if (!file) return;
       this.form.append('file', file, file.name);
     },
     upload(e) {
-      this.constructFileForm(e);
+      this.createFileForm(e);
       this.$validator.validate(this.id).then(isValid => {
         if (!isValid) return;
         this.uploading = true;
         return api.upload(this.form)
           .then(({ key }) => {
             this.uploading = false;
-            this.$emit('upload', { key, name: this.extractedFileName });
+            this.$emit('upload', { key, name: this.form.get('file').name });
           }).catch(() => {
             this.error = 'An error has occurred!';
           });
@@ -83,7 +74,7 @@ export default {
       return api.getUrl(this.fileKey).then(url => {
         const a = document.createElement('a');
         a.href = url;
-        a.download = this.fileName || this.extractedFileName;
+        a.download = this.fileName;
         a.target = '_blank';
         a.click();
       });
@@ -92,10 +83,7 @@ export default {
       appChannel.emit('showConfirmationModal', {
         type: 'file',
         item: { name: this.fileName },
-        action: () => {
-          this.downloadUrl = '';
-          return this.$emit('delete', this.id, null);
-        }
+        action: () => this.$emit('delete', this.id, null)
       });
     }
   },
