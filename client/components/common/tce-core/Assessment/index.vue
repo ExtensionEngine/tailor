@@ -1,0 +1,231 @@
+<template>
+  <div @selected="$emit('selected')" class="assessment-container">
+    <div class="assessment">
+      <slot/>
+      <question
+        :assessment="editedElement"
+        :isEditing="isEditing"
+        :errors="errors"
+        @update="update"/>
+      <component
+        :is="resolveComponentName(element)"
+        :assessment="editedElement.data"
+        :isEditing="isEditing"
+        :errors="errors"
+        @update="update"
+        @alert="setAlert"/>
+      <div :class="{ 'has-error': hintError }" class="form-group">
+        <span class="form-label">Hint</span>
+        <input
+          v-model="editedElement.data.hint"
+          :disabled="!isEditing"
+          class="form-control"
+          type="text"
+          placeholder="Optional hint">
+      </div>
+      <feedback
+        v-if="showFeedback"
+        :answers="editedElement.data.answers"
+        :feedback="editedElement.data.feedback"
+        :isEditing="isEditing"
+        @update="updateFeedback"/>
+      <div class="alert-container">
+        <div v-show="alert.text" :class="alert.type" class="alert">
+          <strong>{{ alert.text }}</strong>
+        </div>
+      </div>
+      <controls
+        :isEditing="isEditing"
+        @edit="edit"
+        @save="save"
+        @remove="remove"
+        @cancel="cancel"
+        class="controls"/>
+    </div>
+  </div>
+</template>
+
+<script>
+import { getComponentName, processAssessmentType } from '../utils';
+import cloneDeep from 'lodash/cloneDeep';
+import Controls from './Controls';
+import dropRight from 'lodash/dropRight';
+import Feedback from './Feedback';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import last from 'lodash/last';
+import map from 'lodash/map';
+import Question from './Question';
+import toPath from 'lodash/toPath';
+import yup from 'yup';
+
+const saveAlert = { text: 'Question saved !', type: 'alert-success' };
+const validationOptions = { recursive: true, abortEarly: false };
+
+export default {
+  name: 'te-assessment',
+  inject: ['$teRegistry'],
+  props: {
+    element: { type: Object, required: true }
+  },
+  data() {
+    const isEditing = !this.element.id;
+    return {
+      isEditing,
+      editedElement: cloneDeep(this.element),
+      alert: {},
+      errors: []
+    };
+  },
+  computed: {
+    schema() {
+      const elementSchema = this.$teRegistry.get(this.assessmentType).schema;
+      return yup.object().shape({ ...baseSchema, ...elementSchema });
+    },
+    assessmentType() {
+      return this.element.data.type;
+    },
+    hintError() {
+      return this.errors.includes('hint');
+    },
+    showFeedback() {
+      const { assessmentType } = this;
+      const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
+      return feedbackSupported;
+    }
+  },
+  methods: {
+    resolveComponentName(element) {
+      return getComponentName(processAssessmentType(this.assessmentType));
+    },
+    edit() {
+      this.editedElement = cloneDeep(this.element);
+      this.isEditing = true;
+    },
+    update(data, validate) {
+      Object.assign(this.editedElement.data, data);
+      if (validate && !isEmpty(this.errors)) {
+        this.errors = [];
+        this.validate().catch(err => (this.errors = errorProcessor(err)));
+      }
+    },
+    save() {
+      if (!this.isEditing) return;
+      this.errors = [];
+      this.validate().then(() => {
+        this.$emit('save', cloneDeep(this.editedElement.data));
+        this.isEditing = false;
+        this.setAlert(saveAlert);
+      }).catch(err => (this.errors = errorProcessor(err)));
+    },
+    cancel() {
+      if (!this.editedElement.id) return this.$emit('delete');
+      this.editedElement = cloneDeep(this.element);
+      this.$emit('add', this.editedElement);
+      this.isEditing = false;
+      this.setAlert();
+      this.errors = [];
+    },
+    close() {
+      this.$emit('selected');
+    },
+    remove() {
+      this.$emit('remove');
+    },
+    setAlert(data = {}) {
+      this.alert = data;
+      const { type, message } = data;
+      if (type && type !== 'alert-danger') {
+        setTimeout(() => {
+          if (message === this.alert.message) this.setAlert();
+        }, 3000);
+      }
+    },
+    validate() {
+      return this.schema.validate(this.editedElement.data, validationOptions);
+    },
+    updateFeedback(feedback) {
+      const data = this.editedElement.data;
+      data.feedback = data.feedback || {};
+      Object.assign(data.feedback, feedback);
+    }
+  },
+  components: { Controls, Feedback, Question }
+};
+
+function errorProcessor(error) {
+  let item = error.value;
+  if (item.type !== 'DD') return map(error.inner, it => it.path);
+  // TODO: Nasty !!
+  return map(error.inner, it => {
+    let path = toPath(it.path);
+    if (path.length === 1) return it.path;
+    if (last(path) !== 'value') return;
+    let key = get(error.value, dropRight(path).concat('key'));
+    return `${path[0]}${key}`;
+  });
+}
+
+const question = yup.array().test(
+  'has-text', 'Please define question', question => !!question.find(containsText)
+);
+
+function containsText(asset) {
+  return asset.type === 'HTML' &&
+    asset.data.content &&
+    asset.data.content.trim().length > 0;
+}
+
+const baseSchema = {
+  question,
+  hint: yup.string().trim().max(500),
+  _refs: yup.object().shape({
+    objectiveId: yup.number().integer().positive()
+  })
+};
+</script>
+
+<style lang="scss" scoped>
+.assessment {
+  min-height: 400px;
+  margin: 10px auto;
+  padding: 10px 30px 30px;
+  background-color: white;
+  overflow: visible;
+
+  .alert {
+    display: inline-block;
+    margin: 0 auto;
+    padding: 3px 7px;
+    text-align: center;
+  }
+
+  .assessment-type {
+    margin: 10px 0 20px;
+    padding: 4px 15px;
+    font-size: 13px;
+    background-color: #707070;
+    border-radius: 1px;
+  }
+
+  .form-group {
+    text-align: left;
+    width: 100%;
+    margin: 0 auto;
+    padding: 25px 20px 15px;
+    overflow: hidden;
+  }
+
+  .form-label {
+    font-size: 20px;
+  }
+
+  input.form-control {
+    padding-left: 10px;
+  }
+}
+
+.disabled .controls {
+  display: none;
+}
+</style>

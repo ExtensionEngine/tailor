@@ -10,6 +10,7 @@
 import Checkbox from './Checkbox';
 import ColorPicker from './ColorPicker';
 import DatePicker from './DatePicker';
+import FileUpload from './File';
 import Input from './Input';
 import mapKeys from 'lodash/mapKeys';
 import Select from './Select';
@@ -24,7 +25,8 @@ const META_TYPES = {
   INPUT: Input,
   SELECT: Select,
   SWITCH: Switch,
-  TEXTAREA: Textarea
+  TEXTAREA: Textarea,
+  FILE: FileUpload
 };
 const components = mapKeys(META_TYPES, 'name');
 

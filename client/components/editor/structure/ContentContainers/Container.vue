@@ -34,7 +34,7 @@
 import filter from 'lodash/filter';
 import { mapActions, mapGetters } from 'vuex-module';
 import sortBy from 'lodash/sortBy';
-import TeachingElement from '../../teaching-elements';
+import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
 
 export default {
