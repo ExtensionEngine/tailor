@@ -42,7 +42,7 @@ function resolveOrigin(hostname = '127.0.0.1', protocol = 'http', port = 3000) {
 
 function resolveOriginPort(hostname) {
   const { REVERSE_PROXY_PORT } = process.env;
-  if (isLocalhost(hostname)) return ':8080';
+  if (!REVERSE_PROXY_PORT) return `:${port}`;
   if (REVERSE_PROXY_PORT === '80' || REVERSE_PROXY_PORT === '443') return '';
   return `:${REVERSE_PROXY_PORT}`;
 }
