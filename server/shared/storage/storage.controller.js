@@ -10,7 +10,7 @@ function getUrl(req, res) {
 
 function upload({ file }, res) {
   const extension = path.extname(file.originalname);
-  const hash = crypto.createHash('md5').update(`${file}`).digest('hex');
+  const hash = crypto.createHash('sha256').update(`${file}`).digest('hex');
   const key = `${ASSET_ROOT}/${hash}${extension}`;
   return saveFile(key, file.buffer, { ContentType: file.mimetype })
     .then(() => res.json({ key }));
