@@ -15,7 +15,7 @@ const sample = require('lodash/sample');
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
 function index({ query, user, opts }, res) {
-  if (query.search) opts.where.name = { [Op.like]: `%${query.search}%` };
+  if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
   const courses = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return courses.then(data => res.json({ data }));
 }
