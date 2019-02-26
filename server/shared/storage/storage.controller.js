@@ -6,8 +6,6 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
-const sha256 = buf => crypto.createHash('sha256').update(buf).digest('hex');
-
 function getUrl(req, res) {
   const { query: { key } } = req;
   return getFileUrl(key).then(url => res.json({ url }));
@@ -15,7 +13,7 @@ function getUrl(req, res) {
 
 async function upload({ file }, res) {
   const buffer = await readFile(file);
-  const hash = sha256(buffer);
+  const hash = sha256(file.originalname, buffer);
   const extension = path.extname(file.originalname);
   const key = path.join(ASSET_ROOT, `${hash}${extension}`);
   await saveFile(key, buffer, { ContentType: file.mimetype });
@@ -27,4 +25,10 @@ module.exports = { getUrl, upload };
 function readFile(file) {
   if (file.buffer) return Promise.resolve(file.buffer);
   return fs.readFile(file.path);
+}
+
+function sha256(...args) {
+  const hash = crypto.createHash('sha256');
+  args.forEach(arg => hash.update(arg));
+  return hash.digest('hex');
 }
