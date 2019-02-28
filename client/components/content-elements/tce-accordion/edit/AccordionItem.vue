@@ -94,10 +94,10 @@ export default {
   .contents {
     line-height: 34px;
 
-    &:after {
+    &::after {
+      content: '';
       display: inline-block;
       width: 100%;
-      content: '';
     }
 
     span {
@@ -111,7 +111,7 @@ export default {
       width: 90%;
       max-width: 90%;
       padding-top: 1px;
-      color: #555555;
+      color: #555;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
