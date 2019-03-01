@@ -11,6 +11,7 @@ import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
 import Vue from 'vue';
+import Vuetify from 'vuetify';
 import { sync } from 'vuex-router-sync';
 
 import store from './store';
@@ -22,6 +23,7 @@ Vue.component('te-assessment', Assessment);
 const registry = new ElementRegistry(Vue);
 registry.initialize();
 
+Vue.use(Vuetify, { iconfont: 'mdi' });
 Vue.use(Tooltip, { delay: 50 });
 Vue.use(VeeValidate, {
   delay: 700,
