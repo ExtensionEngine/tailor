@@ -106,7 +106,7 @@ function getColor(type, structure) {
 </script>
 
 <style lang='scss' scoped>
-$accent: #337AB7;
+$accent: #337ab7;
 
 .loader-outer {
   position: absolute;
@@ -143,10 +143,6 @@ $accent: #337AB7;
 }
 
 .tree /deep/ {
-  .node .circle-wrapper:hover .circle {
-    filter: url(#drop-shadow);
-  }
-
   .selected {
     .circle-wrapper {
       filter: url(#lighten);
@@ -160,6 +156,10 @@ $accent: #337AB7;
       fill: $accent;
       font-weight: bold;
     }
+  }
+
+  .node .circle-wrapper:hover .circle {
+    filter: url(#drop-shadow);
   }
 
   // Disable all effects on root/course node.

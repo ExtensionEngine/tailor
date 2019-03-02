@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import AddElement from './AddElement';
+import AddElement from 'tce-core/AddElement';
 import Draggable from 'vuedraggable';
 import InsertElement from './InsertElement';
 import last from 'lodash/last';

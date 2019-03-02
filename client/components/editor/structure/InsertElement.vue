@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import AddElement from './AddElement';
+import AddElement from 'tce-core/AddElement';
 
 export default {
   props: {
@@ -67,7 +67,7 @@ $main-color: #337ab7;
 
   &.opened {
     .add-element-wrapper {
-      z-index: 2;
+      z-index: 100;
     }
   }
 

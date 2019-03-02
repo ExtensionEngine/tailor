@@ -36,7 +36,7 @@
         :expanded="isSelected(item)"
         @selected="toggleSelect(item)"
         @save="saveAssessment"
-        @remove="item.id ? requestDeletion(item) : remove(item)">
+        @delete="item.id ? requestDeletion(item) : remove(item)">
       </assessment-item>
     </tes-list>
   </div>

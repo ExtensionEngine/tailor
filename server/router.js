@@ -1,20 +1,29 @@
 'use strict';
 
-const express = require('express');
 const activityRouter = require('./activity').router;
+const auth = require('passport').authenticate('jwt');
 const commentRouter = require('./comment').router;
 const courseRouter = require('./course').router;
+const express = require('express');
 const revisionRouter = require('./revision').router;
+const storageRouter = require('./shared/storage/storage.router').router;
 const teRouter = require('./teaching-element').router;
 const userRouter = require('./user').router;
 
 const router = express.Router();
 router.use(processBody);
+
+// Public routes:
+router.use('/', userRouter);
+
+// Protected routes:
+router.use('/', auth);
 router.use('/', courseRouter);
 router.use('/', activityRouter);
 router.use('/', commentRouter);
 router.use('/', teRouter);
 router.use('/', revisionRouter);
+router.use('/', storageRouter);
 router.use('/', userRouter);
 
 module.exports = router;

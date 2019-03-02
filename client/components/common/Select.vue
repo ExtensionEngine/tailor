@@ -74,8 +74,8 @@ export default {
     right: 20px;
     padding: 5px;
     box-shadow: none;
-    background: none;
     color: #999;
+    background: none;
     cursor: pointer;
   }
 }
@@ -142,7 +142,7 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       font-size: 12px;
-      font-family: "Roboto";
+      font-family: Roboto, Helvetica, Arial, sans-serif;
     }
   }
 
@@ -179,6 +179,8 @@ export default {
   }
 
   .multiselect__select {
+    top: 8px;
+    bottom: 1px;
     width: 20px;
     height: 34px;
     padding: 0;
@@ -203,11 +205,6 @@ export default {
     margin: 0;
     padding-left: 10px;
     line-height: 32px;
-  }
-
-  .multiselect__select {
-    top: 8px;
-    bottom: 1px;
   }
 }
 

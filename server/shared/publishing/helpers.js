@@ -20,7 +20,7 @@ const { FLAT_REPO_STRUCTURE } = process.env;
 
 const TES_ATTRS = [
   'id', 'uid', 'type', 'contentId', 'contentSignature',
-  'position', 'data', 'refs', 'createdAt', 'updatedAt'
+  'position', 'data', 'meta', 'refs', 'createdAt', 'updatedAt'
 ];
 
 function publishActivity(activity) {
@@ -111,7 +111,7 @@ function publishContent(repository, activity) {
 }
 
 function publishContainers(parent, types) {
-  return parent.getChildren({ where: { type: { $in: types } } })
+  return parent.getChildren({ where: { type: types } })
     .then(containers => Promise.map(containers, fetchContainer))
     .then(containers => Promise.map(containers, it => {
       return saveFile(parent, `${it.id}.container`, it).then(() => it);

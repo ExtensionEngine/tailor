@@ -13,6 +13,8 @@ const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 
+const ASSET_ROOT = 'repository/assets';
+
 function processStatics(item) {
   return item.type === 'ASSESSMENT'
     ? processAssessment(item)
@@ -61,7 +63,7 @@ processor.IMAGE = asset => {
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
   const hashString = `${asset.id}${file}`;
   const hash = crypto.createHash('md5').update(hashString).digest('hex');
-  const key = `repository/assets/${asset.id}/${hash}.${extension}`;
+  const key = `${ASSET_ROOT}/${asset.id}/${hash}.${extension}`;
   asset.data.url = key;
   return saveFile(key, file).then(() => asset);
 };
@@ -115,6 +117,7 @@ function saveFile(key, file) {
 }
 
 module.exports = {
+  ASSET_ROOT,
   processStatics,
   resolveStatics
 };
