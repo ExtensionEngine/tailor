@@ -6,16 +6,14 @@
         class="mdi mdi-plus toggle-selection">
       </span>
     </div>
-    <transition name="slide-fade">
-      <component v-if="selectionOpened" :is="selectContainer">
-        <select-element
-          v-if="!type"
-          :activity="activity"
-          :include="include"
-          @selected="setType"/>
-        <select-width v-if="canSelectWidth" @selected="setWidth"/>
-      </component>
-    </transition>
+    <component v-if="selectionOpened" :is="selectContainer">
+      <select-element
+        v-if="!type"
+        :activity="activity"
+        :include="include"
+        @selected="setType"/>
+      <select-width v-if="canSelectWidth" @selected="setWidth"/>
+    </component>
   </div>
 </template>
 
@@ -146,17 +144,5 @@ export default {
     vertical-align: top;
     cursor: pointer;
   }
-}
-
-.slide-fade-enter-active {
-  transition: all 0.2s ease-in-out;
-}
-
-.slide-fade-enter {
-  transform: translate(-30px);
-}
-
-.slide-fade-leave-to, .slide-fade-leave-active {
-  display: none;
 }
 </style>
