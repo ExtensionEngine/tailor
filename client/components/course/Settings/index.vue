@@ -25,6 +25,15 @@
             class="list-group-item">
             <span class="mdi mdi-content-copy"></span>Clone repository
           </li>
+          <li
+            @click="publishAll"
+            class="list-group-item">
+            <span class="mdi mdi-upload"></span>Publish all
+            <circular-progress v-if="publishing"></circular-progress>
+          </li>
+          <li v-if="currentPublish" class="list-group-item">
+            {{ currentPublish }}
+          </li>
         </ul>
         <div class="actions">
           <button
@@ -50,10 +59,14 @@
 <script>
 import api from '../../../api/course';
 import CloneModal from './CloneModal';
+import CircularProgress from 'components/common/CircularProgress';
 import EventBus from 'EventBus';
+import filter from 'lodash/filter';
 import General from './General';
 import JSZip from 'jszip';
+import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
+import Promise from 'bluebird';
 import saveAs from 'save-as';
 import UserManagement from './UserManagement';
 
@@ -61,14 +74,23 @@ const appChannel = EventBus.channel('app');
 
 export default {
   data() {
-    return { showCloneModal: false };
+    return {
+      showCloneModal: false,
+      publishing: false,
+      currentPublish: ''
+    };
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course'], 'course')
+    ...mapGetters(['course', 'activities', 'structure'], 'course'),
+    allActivities() {
+      const allTypes = map(this.structure, 'type');
+      return filter(this.activities, it => allTypes.includes(it.type));
+    }
   },
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
+    ...mapActions(['publish'], 'activities'),
     downloadContentInventory() {
       api.getContentInventory(this.$route.params.courseId)
         .then(response => JSZip.loadAsync(response))
@@ -84,12 +106,23 @@ export default {
     },
     routeTo(name) {
       this.$router.push({ name });
+    },
+    publishAll() {
+      this.publishing = true;
+      Promise.each(this.allActivities, activity => {
+        this.currentPublish = `Publishing ${activity.data.name}`;
+        return (this.publish(activity));
+      }).then(() => {
+        this.publishing = false;
+        this.currentPublish = '';
+      });
     }
   },
   components: {
     CloneModal,
     General,
-    UserManagement
+    UserManagement,
+    CircularProgress
   }
 };
 </script>
@@ -117,6 +150,12 @@ export default {
   &:hover, &.selected {
     background-color: #efefef;
   }
+}
+
+.circular-progress {
+  width: 24px;
+  margin: 0 10px;
+  float: right;
 }
 
 .mdi {

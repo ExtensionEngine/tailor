@@ -20,6 +20,12 @@ export function getOutlineChildren(activities, parentId) {
   return filter(children, it => types.includes(it.type));
 }
 
+export function getAllChildren(activities, activity, types) {
+  let allChildren = getDescendants(activities, activity);
+  allChildren.push(activity);
+  return filter(allChildren, it => types.includes(it.type));
+}
+
 export function getDescendants(activities, activity) {
   const children = filter(activities, { parentId: activity.id });
   if (!children.length) return [];
