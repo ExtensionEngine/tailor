@@ -5,7 +5,7 @@
         <search @change="search"></search>
       </div>
       <div class="col-md-3">
-        <create-course class="pull-right"></create-course>
+        <create-course class="pull-right"/>
       </div>
     </div>
     <div v-show="searching" class="search-spinner"><circular-progress/></div>

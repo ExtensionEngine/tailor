@@ -1,0 +1,6 @@
+// Patches in order for vuetify to work alongside bootstrap
+.v-input {
+  input:focus {
+    box-shadow: none !important;
+  }
+}

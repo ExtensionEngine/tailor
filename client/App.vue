@@ -1,9 +1,9 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <navbar></navbar>
     <router-view class="contaner-fluid view"></router-view>
     <confirmation-modal></confirmation-modal>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -30,8 +30,8 @@ html, body {
   height: 100%;
 }
 
-body {
-  background-color: #e0e0e0;
+.application {
+  background-color: #e0e0e0 !important;
 }
 
 #app {

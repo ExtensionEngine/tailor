@@ -110,6 +110,7 @@
     "truncate": "^2.0.0",
     "untildify": "^3.0.2",
     "url-join": "^1.1.0",
+    "v-hotkey": "^0.3.0",
     "vee-validate": "^2.0.4",
     "vue": "^2.5.18",
     "vue-aplayer": "^1.4.1",
