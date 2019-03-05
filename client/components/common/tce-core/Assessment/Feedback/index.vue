@@ -14,8 +14,7 @@
           v-for="(answer, index) in processedAnswers"
           v-bind="{ index, answer, isEditing, feedback: feedback[index] }"
           :key="index"
-          @update="({ html }) => $emit('update', { [index]: html })">
-        </feedback-item>
+          @update="({ html }) => $emit('update', { [index]: html })"/>
       </ul>
     </transition>
   </div>
@@ -69,17 +68,5 @@ export default {
 ul {
   margin-top: 20px;
   list-style: none;
-}
-
-.fade-enter-active {
-  transition: opacity 0.5s;
-}
-
-.fade-enter {
-  opacity: 0;
-}
-
-.fade-leave, .fade-leave-active, .fade-leave-to {
-  display: none;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <transition name="slide-fade">
+  <transition name="slide">
     <div class="selections">
       <slot/>
     </div>
@@ -12,15 +12,15 @@
   margin-top: 10px;
 }
 
-.slide-fade-enter-active {
+.slide-enter-active {
   transition: all 0.2s ease-in-out;
 }
 
-.slide-fade-enter {
+.slide-enter {
   transform: translateY(-30px);
 }
 
-.slide-fade-leave-to, .slide-fade-leave-active {
+.slide-leave-to, .slide-leave-active {
   display: none;
 }
 </style>

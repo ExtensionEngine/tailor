@@ -1,12 +1,12 @@
 <template>
-  <div
-    class="popover bottom fade in element-selection-popover"
-    role="tooltip">
-    <div class="arrow"></div>
-    <div class="popover-content">
-      <slot/>
+  <transition name="fade">
+    <div class="popover bottom element-selection-popover" role="tooltip">
+      <div class="arrow"></div>
+      <div class="popover-content">
+        <slot/>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <style lang="scss" scoped>
