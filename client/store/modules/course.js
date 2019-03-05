@@ -48,6 +48,13 @@ getter(function activity() {
   return activities[this.state.activity] || {};
 });
 
+getter(function allOutlineDescendants() {
+  const { activities } = this.rootGetters;
+  const structure = this.getters['course/structure'];
+  const type = map(structure, 'type');
+  return filter(activities, it => type.includes(it.type));
+});
+
 getter(function isCollapsed(activity) {
   const { outline } = this.state;
   return activity => activity && !outline.expanded[activity._cid];

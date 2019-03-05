@@ -31,8 +31,8 @@
             <span class="mdi mdi-upload"></span>Publish all
             <circular-progress v-if="publishing"></circular-progress>
           </li>
-          <li v-if="currentPublish" class="list-group-item">
-            {{ currentPublish }}
+          <li v-if="publishMessage" class="list-group-item">
+            {{ publishMessage }}
           </li>
         </ul>
         <div class="actions">
@@ -61,10 +61,8 @@ import api from '../../../api/course';
 import CloneModal from './CloneModal';
 import CircularProgress from 'components/common/CircularProgress';
 import EventBus from 'EventBus';
-import filter from 'lodash/filter';
 import General from './General';
 import JSZip from 'jszip';
-import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import Promise from 'bluebird';
 import saveAs from 'save-as';
@@ -77,16 +75,12 @@ export default {
     return {
       showCloneModal: false,
       publishing: false,
-      currentPublish: ''
+      publishMessage: ''
     };
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course', 'activities', 'structure'], 'course'),
-    allActivities() {
-      const allTypes = map(this.structure, 'type');
-      return filter(this.activities, it => allTypes.includes(it.type));
-    }
+    ...mapGetters(['course', 'allOutlineDescendants'], 'course')
   },
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
@@ -109,12 +103,12 @@ export default {
     },
     publishAll() {
       this.publishing = true;
-      Promise.each(this.allActivities, activity => {
-        this.currentPublish = `Publishing ${activity.data.name}`;
+      Promise.each(this.allOutlineDescendants, activity => {
+        this.publishMessage = `Publishing ${activity.data.name}`;
         return (this.publish(activity));
       }).then(() => {
         this.publishing = false;
-        this.currentPublish = '';
+        this.publishMessage = '';
       });
     }
   },

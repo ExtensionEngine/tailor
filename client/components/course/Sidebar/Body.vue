@@ -8,7 +8,7 @@
       <div class="btn-group">
         <a
           :disabled="publishing"
-          @click="publishActivity"
+          @click="publishActivities(activity)"
           class="btn btn-primary">
           Publish
         </a>
@@ -21,21 +21,23 @@
         <ul class="dropdown-menu">
           <li>
             <a
-              @click="publishAll"
-              href="#">
-              Publish all
-            </a>
-          </li>
-          <li>
-            <a
-              @click="publishWithDescendants"
+              @click="publishActivities(activityWithDescendants)"
               href="#">
               Publish descendants
             </a>
           </li>
+          <li>
+            <a
+              @click="publishActivities(allOutlineDescendants)"
+              href="#">
+              Publish all
+            </a>
+          </li>
         </ul>
       </div>
-      <p>{{ currentPublish }}</p>
+      <div>
+        <span>{{ publishMessage }}</span>
+      </div>
     </div>
     <span class="type-label">{{ config.label }}</span>
     <div class="meta-element">
@@ -62,11 +64,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
-import { getAllChildren } from 'utils/activity';
+import { getDescendants } from 'utils/activity';
 import CircularProgress from 'components/common/CircularProgress';
 import Discussion from './Discussion';
 import fecha from 'fecha';
 import filter from 'lodash/filter';
+import isArray from 'lodash/isArray';
 import map from 'lodash/map';
 import Meta from 'components/common/Meta';
 import Relationship from './Relationship';
@@ -76,11 +79,18 @@ export default {
   data() {
     return {
       publishing: false,
-      currentPublish: ''
+      publishMessage: ''
     };
   },
   computed: {
-    ...mapGetters(['activity', 'getConfig', 'getMetadata', 'activities', 'structure'], 'course'),
+    ...mapGetters([
+      'activity',
+      'getConfig',
+      'getMetadata',
+      'activities',
+      'structure',
+      'allOutlineDescendants'
+    ], 'course'),
     config() {
       return this.getConfig(this.activity);
     },
@@ -93,11 +103,11 @@ export default {
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
     },
-    allActivities() {
-      return filter(this.activities, it => this.types.includes(it.type));
-    },
-    allDescendants() {
-      return getAllChildren(this.activities, this.activity, this.types);
+    activityWithDescendants() {
+      const types = map(this.structure, 'type');
+      let descendantsWithActivity = getDescendants(this.activities, this.activity);
+      descendantsWithActivity.push(this.activity);
+      return filter(descendantsWithActivity, it => types.includes(it.type));
     },
     types() {
       return map(this.structure, 'type');
@@ -109,25 +119,21 @@ export default {
       const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });
     },
-    publishActivity() {
-      this.publishing = true;
-      this.publish(this.activity).then(() => (this.publishing = false));
-    },
-    publishMultiple(activities) {
+    publishActivities(activities) {
+      if (!isArray(activities)) activities = this.convertToArray(activities);
       this.publishing = true;
       Promise.each(activities, activity => {
-        this.currentPublish = `Publishing ${activity.data.name}`;
+        this.publishMessage = `Publishing ${activity.data.name}`;
         return (this.publish(activity));
       }).then(() => {
         this.publishing = false;
-        this.currentPublish = '';
+        this.publishMessage = '';
       });
     },
-    publishWithDescendants() {
-      this.publishMultiple(this.allDescendants);
-    },
-    publishAll() {
-      this.publishMultiple(this.allActivities);
+    convertToArray(activity) {
+      const activityArray = [];
+      activityArray.push(activity);
+      return activityArray;
     }
   },
   components: {
