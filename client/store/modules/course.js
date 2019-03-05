@@ -48,7 +48,7 @@ getter(function activity() {
   return activities[this.state.activity] || {};
 });
 
-getter(function allOutlineDescendants() {
+getter(function allOutlineElements() {
   const { activities } = this.rootGetters;
   const structure = this.getters['course/structure'];
   const type = map(structure, 'type');

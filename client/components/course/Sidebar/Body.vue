@@ -3,12 +3,12 @@
     <div class="publish-container">
       <div class="publish-date">
         <circular-progress v-if="publishing"></circular-progress>
-        <span v-else>{{ publishStatus }}</span>
+        <span v-else>{{ publishedAt }}</span>
       </div>
       <div class="btn-group">
         <a
           :disabled="publishing"
-          @click="publishActivities(activity)"
+          @click="publishData()"
           class="btn btn-primary">
           Publish
         </a>
@@ -21,14 +21,14 @@
         <ul class="dropdown-menu">
           <li>
             <a
-              @click="publishActivities(activityWithDescendants)"
+              @click="publishWithDescendants()"
               href="#">
               Publish descendants
             </a>
           </li>
           <li>
             <a
-              @click="publishActivities(allOutlineDescendants)"
+              @click="publishAll()"
               href="#">
               Publish all
             </a>
@@ -36,7 +36,7 @@
         </ul>
       </div>
       <div>
-        <span>{{ publishMessage }}</span>
+        <span>{{ publishStatus }}</span>
       </div>
     </div>
     <span class="type-label">{{ config.label }}</span>
@@ -63,23 +63,23 @@
 </template>
 
 <script>
+import EventBus from 'EventBus';
 import { mapActions, mapGetters } from 'vuex-module';
 import { getDescendants } from 'utils/activity';
 import CircularProgress from 'components/common/CircularProgress';
 import Discussion from './Discussion';
 import fecha from 'fecha';
-import filter from 'lodash/filter';
-import isArray from 'lodash/isArray';
-import map from 'lodash/map';
 import Meta from 'components/common/Meta';
 import Relationship from './Relationship';
 import Promise from 'bluebird';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   data() {
     return {
       publishing: false,
-      publishMessage: ''
+      publishStatus: ''
     };
   },
   computed: {
@@ -87,9 +87,7 @@ export default {
       'activity',
       'getConfig',
       'getMetadata',
-      'activities',
-      'structure',
-      'allOutlineDescendants'
+      'allOutlineElements'
     ], 'course'),
     config() {
       return this.getConfig(this.activity);
@@ -97,20 +95,17 @@ export default {
     metadata() {
       return this.getMetadata(this.activity);
     },
-    publishStatus() {
+    publishedAt() {
       let { publishedAt } = this.activity;
       return publishedAt
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
     },
     activityWithDescendants() {
-      const types = map(this.structure, 'type');
-      let descendantsWithActivity = getDescendants(this.activities, this.activity);
+      const props = [this.allOutlineElements, this.activity];
+      let descendantsWithActivity = getDescendants(...props);
       descendantsWithActivity.push(this.activity);
-      return filter(descendantsWithActivity, it => types.includes(it.type));
-    },
-    types() {
-      return map(this.structure, 'type');
+      return descendantsWithActivity;
     }
   },
   methods: {
@@ -119,21 +114,33 @@ export default {
       const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });
     },
-    publishActivities(activities) {
-      if (!isArray(activities)) activities = this.convertToArray(activities);
+    publishData(activities = [this.activity]) {
       this.publishing = true;
       Promise.each(activities, activity => {
-        this.publishMessage = `Publishing ${activity.data.name}`;
+        this.publishStatus = `Publishing ${activity.data.name}`;
         return (this.publish(activity));
       }).then(() => {
         this.publishing = false;
-        this.publishMessage = '';
+        this.publishStatus = '';
       });
     },
-    convertToArray(activity) {
-      const activityArray = [];
-      activityArray.push(activity);
-      return activityArray;
+    publishAll() {
+      appChannel.emit('showConfirmationModal', {
+        type: 'publishAll',
+        item: this.activity,
+        action: () => {
+          this.publishData(this.allOutlineElements);
+        }
+      });
+    },
+    publishWithDescendants() {
+      appChannel.emit('showConfirmationModal', {
+        type: 'publishDescendants',
+        item: this.activity,
+        action: () => {
+          this.publishData(this.activityWithDescendants);
+        }
+      });
     }
   },
   components: {

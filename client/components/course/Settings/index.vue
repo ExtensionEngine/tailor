@@ -80,7 +80,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course', 'allOutlineDescendants'], 'course')
+    ...mapGetters(['course', 'allOutlineElements'], 'course')
   },
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
@@ -101,9 +101,16 @@ export default {
     routeTo(name) {
       this.$router.push({ name });
     },
-    publishAll() {
+    publishAll(activities) {
+      appChannel.emit('showConfirmationModal', {
+        type: 'publishAll',
+        item: this.activity,
+        action: () => this.publishActivities()
+      });
+    },
+    publishActivities() {
       this.publishing = true;
-      Promise.each(this.allOutlineDescendants, activity => {
+      Promise.each(this.allOutlineElements, activity => {
         this.publishMessage = `Publishing ${activity.data.name}`;
         return (this.publish(activity));
       }).then(() => {
@@ -147,9 +154,9 @@ export default {
 }
 
 .circular-progress {
+  float: right;
   width: 24px;
   margin: 0 10px;
-  float: right;
 }
 
 .mdi {

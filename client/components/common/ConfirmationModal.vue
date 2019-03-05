@@ -1,9 +1,12 @@
 <template>
   <modal :show="show">
     <div slot="header">
-      <h3 class="modal-title">Delete {{ context.type }}?</h3>
+      <h3 class="modal-title">{{ title }}</h3>
     </div>
-    <div slot="body">
+    <div v-if="publish" slot="body">
+      {{ body }}
+    </div>
+    <div v-else slot="body">
       Are you sure you want to delete
       <span v-if="info">{{ context.type }} <b>{{ info }}</b></span>
       <span v-else>this {{ context.type }}</span>?
@@ -44,6 +47,31 @@ export default {
   computed: {
     info() {
       return this.context.item.name;
+    },
+    publishAll() {
+      return this.context.type === 'publishAll';
+    },
+    publishDescendants() {
+      return this.context.type === 'publishDescendants';
+    },
+    publish() {
+      return this.publishAll || this.publishDescendants;
+    },
+    body() {
+      if (this.context.type === 'publishDescendants') {
+        return `Are you sure you want to publish ${this.context.item.data.name}
+         along with its descendants`;
+      } else if (this.context.type === 'publishAll') {
+        return `Are you sure you want to publish all activities in this course?`;
+      } else {
+        return `Are you sure you want to delete
+        <span v-if="info">{{ context.type }} <b>{{ info }}</b></span>
+        <span v-else>this {{ context.type }}</span>?`;
+      }
+    },
+    title() {
+      if (this.publish) return `Publish`;
+      else return `Delete ${this.context.type}?`;
     }
   },
   methods: {
