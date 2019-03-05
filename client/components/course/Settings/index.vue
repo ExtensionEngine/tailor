@@ -80,7 +80,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course', 'allOutlineElements'], 'course')
+    ...mapGetters(['course', 'outlineElements'], 'course')
   },
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
@@ -103,14 +103,15 @@ export default {
     },
     publishAll(activities) {
       appChannel.emit('showConfirmationModal', {
-        type: 'publishAll',
-        item: this.activity,
+        type: 'publish',
+        message: `Are you sure you want to publish all
+        activities within this course?`,
         action: () => this.publishActivities()
       });
     },
     publishActivities() {
       this.publishing = true;
-      Promise.each(this.allOutlineElements, activity => {
+      Promise.each(this.outlineElements, activity => {
         this.publishMessage = `Publishing ${activity.data.name}`;
         return (this.publish(activity));
       }).then(() => {

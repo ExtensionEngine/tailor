@@ -21,14 +21,14 @@
         <ul class="dropdown-menu">
           <li>
             <a
-              @click="publishWithDescendants()"
+              @click="publishConfirmation(activityWithDescendants)"
               href="#">
               Publish descendants
             </a>
           </li>
           <li>
             <a
-              @click="publishAll()"
+              @click="publishConfirmation(outlineElements, 'publishAll')"
               href="#">
               Publish all
             </a>
@@ -87,7 +87,7 @@ export default {
       'activity',
       'getConfig',
       'getMetadata',
-      'allOutlineElements'
+      'outlineElements'
     ], 'course'),
     config() {
       return this.getConfig(this.activity);
@@ -102,7 +102,7 @@ export default {
         : 'Not published';
     },
     activityWithDescendants() {
-      const props = [this.allOutlineElements, this.activity];
+      const props = [this.outlineElements, this.activity];
       let descendantsWithActivity = getDescendants(...props);
       descendantsWithActivity.push(this.activity);
       return descendantsWithActivity;
@@ -124,23 +124,23 @@ export default {
         this.publishStatus = '';
       });
     },
-    publishAll() {
+    publishConfirmation(activities, type) {
+      const message = this.getMessage(type);
       appChannel.emit('showConfirmationModal', {
-        type: 'publishAll',
-        item: this.activity,
+        type: 'publish',
+        message: message,
         action: () => {
-          this.publishData(this.allOutlineElements);
+          this.publishData(activities);
         }
       });
     },
-    publishWithDescendants() {
-      appChannel.emit('showConfirmationModal', {
-        type: 'publishDescendants',
-        item: this.activity,
-        action: () => {
-          this.publishData(this.activityWithDescendants);
-        }
-      });
+    getMessage(type) {
+      if (type === 'publishAll') {
+        return `Are you sure you want to publish all
+        activities within this course?`;
+      }
+      return `Are you sure you want to publish this activity along with all
+        its descendants?`;
     }
   },
   components: {

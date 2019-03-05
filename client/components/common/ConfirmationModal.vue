@@ -4,7 +4,7 @@
       <h3 class="modal-title">{{ title }}</h3>
     </div>
     <div v-if="publish" slot="body">
-      {{ body }}
+      {{ context.message }}
     </div>
     <div v-else slot="body">
       Are you sure you want to delete
@@ -35,7 +35,7 @@ import { focus } from 'vue-focus';
 import Modal from './Modal';
 
 const appChannel = EventBus.channel('app');
-const defaultData = { item: {}, type: '' };
+const defaultData = { item: {}, type: '', message: '' };
 
 export default {
   data() {
@@ -48,26 +48,8 @@ export default {
     info() {
       return this.context.item.name;
     },
-    publishAll() {
-      return this.context.type === 'publishAll';
-    },
-    publishDescendants() {
-      return this.context.type === 'publishDescendants';
-    },
     publish() {
-      return this.publishAll || this.publishDescendants;
-    },
-    body() {
-      if (this.context.type === 'publishDescendants') {
-        return `Are you sure you want to publish ${this.context.item.data.name}
-         along with its descendants`;
-      } else if (this.context.type === 'publishAll') {
-        return `Are you sure you want to publish all activities in this course?`;
-      } else {
-        return `Are you sure you want to delete
-        <span v-if="info">{{ context.type }} <b>{{ info }}</b></span>
-        <span v-else>this {{ context.type }}</span>?`;
-      }
+      return this.context.type === 'publish';
     },
     title() {
       if (this.publish) return `Publish`;
