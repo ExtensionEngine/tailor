@@ -44,7 +44,7 @@ html, body {
   text-align: center;
   overflow: hidden;
 
-  > .view {
+  /deep/ .view {
     overflow-y: scroll;
     overflow-y: overlay;
   }
