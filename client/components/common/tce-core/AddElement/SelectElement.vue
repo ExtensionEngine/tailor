@@ -7,7 +7,7 @@
       <div
         v-for="(row, index) in rows"
         :key="index"
-        class="row">
+        class="row element-container">
         <div
           v-for="element in row"
           :key="element.type"
@@ -106,14 +106,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.select-element {
-  margin: 0 auto;
-}
-
 .elements {
   margin: 0 auto;
 
-  .row {
+  .element-container {
     padding-bottom: 10px;
   }
 }

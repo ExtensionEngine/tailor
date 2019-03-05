@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="{ show, opened }"
-    @mouseenter="hovering = true"
-    @mouseleave="hovering = false"
-    class="insert-element">
+  <div :class="{ opened }" class="insert-element">
     <div class="add-element-wrapper">
       <add-element
         :include="include"
@@ -13,7 +9,7 @@
         :popover="true"
         @add="el => $emit('add', el)"
         @opened="opened = true"
-        @closed="onClose"/>
+        @closed="opened = false"/>
     </div>
   </div>
 </template>
@@ -29,21 +25,7 @@ export default {
     include: { type: Array, default: null }
   },
   data() {
-    return {
-      hovering: false,
-      opened: false
-    };
-  },
-  computed: {
-    show() {
-      return this.hovering || this.opened;
-    }
-  },
-  methods: {
-    onClose(fully = false) {
-      this.opened = false;
-      if (fully) this.hovering = false;
-    }
+    return { opened: false };
   },
   components: {
     AddElement
@@ -61,11 +43,13 @@ $main-color: #337ab7;
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
 
-  &.show {
+  &:hover {
     opacity: 1;
   }
 
   &.opened {
+    opacity: 1;
+
     .add-element-wrapper {
       z-index: 100;
     }

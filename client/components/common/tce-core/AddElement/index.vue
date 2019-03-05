@@ -89,7 +89,7 @@ export default {
       const initState = get(config, 'initState', () => ({}));
       element.data = { ...element.data, ...initState() };
       this.$emit('add', element);
-      this.close(true);
+      this.close();
     },
     setType({ type, subtype }) {
       this.type = type;
@@ -100,12 +100,12 @@ export default {
       this.width = width;
       this.create();
     },
-    close(fully) {
+    close() {
       this.type = null;
       this.subtype = null;
       this.width = DEFAULT_WIDTH;
       this.selectionOpened = false;
-      this.$emit('closed', fully);
+      this.$emit('closed');
     }
   },
   components: {
