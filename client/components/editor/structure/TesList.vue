@@ -97,8 +97,7 @@ export default {
       display: none;
     }
 
-    div[class^="col"],
-    /deep/ .te-container {
+    /deep/ .contained-content {
       padding: 0;
     }
   }
