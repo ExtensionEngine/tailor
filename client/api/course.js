@@ -37,6 +37,9 @@ function getContentInventory(courseId) {
 function publishRepositoryMeta(id) {
   return request.post(`/courses/${id}/publish`).then(res => res.data);
 }
+function getDownload(courseId) {
+  return request.get(`/courses/${courseId}/download`).then(res => res.data);
+}
 
 export default {
   getCourses,
@@ -44,5 +47,6 @@ export default {
   upsertUser,
   removeUser,
   getContentInventory,
-  publishRepositoryMeta
+  publishRepositoryMeta,
+  getDownload
 };

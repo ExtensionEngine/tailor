@@ -11,6 +11,11 @@ const map = require('lodash/map');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
 const sample = require('lodash/sample');
+const path = require('path');
+const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs'));
+const download = require('../shared/download/helpers');
+const JSZip = require('jszip');
 
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
@@ -101,10 +106,28 @@ function exportContentInventory({ course }, res) {
     });
 }
 
+function downloadCourse({ course }, res) {
+  download.publishRepositoryDetails(course)
+  .then(() => download.readdir(path.join(__dirname, `../../data/tempRepository/${course.dataValues.id}`), 'utf8'))
+  .then(readFiles => {
+    let zip = new JSZip();
+    Promise.map(readFiles, (file) => {
+      return fs.readFileAsync(path.join(__dirname, `../../data/tempRepository/${course.dataValues.id}/${file}`), 'utf8')
+      .then(data => {
+        zip.file(file, data);
+      });
+    })
+    .then(() => {
+      return zip.generateAsync({ type: 'base64' })
+      .then((file) => res.json({ data: { file } }));
+    })
+    .then(() => download.deleteDir(path.join(__dirname, '../../data/tempRepository')));
+  });
+}
+
 const transform = user => {
   return Object.assign(user.profile, { courseRole: user.courseUser.role });
 };
-
 module.exports = {
   index,
   create,
@@ -116,5 +139,6 @@ module.exports = {
   upsertUser,
   removeUser,
   exportContentInventory,
-  publishRepoInfo
+  publishRepoInfo,
+  downloadCourse
 };

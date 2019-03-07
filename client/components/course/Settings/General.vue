@@ -7,6 +7,11 @@
         class="btn btn-primary btn-material btn-sm pull-right">
         <span class="mdi mdi-publish"></span> Publish info
       </button>
+      <button
+        @click="download"
+        class="btn btn-primary btn-material btn-sm pull-right">
+        <span class="mdi mdi-download"></span> Download info
+      </button>
     </div>
     <meta-input
       v-for="it in requiredData"
@@ -28,11 +33,13 @@
 <script>
 import { getRepositoryMeta } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
+import { base64StringToBlob } from 'blob-util';
 import api from '../../../api/course';
 import cloneDeep from 'lodash/cloneDeep';
 import EventBus from 'EventBus';
 import find from 'lodash/find';
 import Meta from 'components/common/Meta';
+import saveAs from 'save-as';
 import set from 'lodash/set';
 
 const appChannel = EventBus.channel('app');
@@ -80,6 +87,14 @@ export default {
       this.publishing = true;
       return api.publishRepositoryMeta(this.$route.params.courseId)
         .then(() => (this.publishing = false));
+    },
+    download() {
+      api.getDownload(this.$route.params.courseId)
+      .then(res => {
+        const { file } = res.data;
+        base64StringToBlob(file, 'application/zip')
+        .then(blob => saveAs(blob, 'repoContent.zip'));
+      });
     }
   },
   components: { MetaInput: Meta }
@@ -103,6 +118,7 @@ export default {
 
   .btn {
     padding: 8px 12px;
+    margin-left: 10px
   }
 }
 
