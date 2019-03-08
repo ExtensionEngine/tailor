@@ -31,6 +31,7 @@ import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
 import SelectAssessment from './SelectAssessment';
+import sortBy from 'lodash/sortBy';
 
 const ELEMENTS_PER_ROW = 6;
 
@@ -50,7 +51,7 @@ export default {
       return this.$teRegistry.get();
     },
     rows() {
-      return chunk(this.elements, this.rowSize);
+      return chunk(sortBy(this.elements, 'type'), this.rowSize);
     },
     columns() {
       return Math.min(this.elements.length, this.rowSize);
