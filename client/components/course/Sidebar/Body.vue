@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import EventBus from 'EventBus';
 import { mapActions, mapGetters } from 'vuex-module';
 import { getDescendants } from 'utils/activity';
 import CircularProgress from 'components/common/CircularProgress';
@@ -71,11 +70,10 @@ import Discussion from './Discussion';
 import fecha from 'fecha';
 import Meta from 'components/common/Meta';
 import Relationship from './Relationship';
-import Promise from 'bluebird';
-
-const appChannel = EventBus.channel('app');
+import publishConfirmation from 'components/common/mixins/publish';
 
 export default {
+  mixins: [publishConfirmation],
   data() {
     return {
       publishing: false,
@@ -101,11 +99,8 @@ export default {
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
     },
-    activityWithDescendants() {
-      const props = [this.outlineActivities, this.activity];
-      let descendantsWithActivity = getDescendants(...props);
-      descendantsWithActivity.push(this.activity);
-      return descendantsWithActivity;
+    activityWithDescendants({ activity } = this) {
+      return [...getDescendants(this.outlineActivities, activity), activity];
     }
   },
   methods: {
@@ -113,33 +108,6 @@ export default {
     updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });
-    },
-    publishConfirmation(activities = [this.activity]) {
-      const message = this.getPublishMessage(activities);
-      appChannel.emit('showConfirmationModal', {
-        type: 'publish',
-        message: message,
-        action: () => {
-          this.publishing = true;
-          Promise.each(activities, activity => {
-            this.publishStatus = `Publishing ${activity.data.name}`;
-            return (this.publish(activity));
-          }).then(() => {
-            this.publishing = false;
-            this.publishStatus = '';
-          });
-        }
-      });
-    },
-    getPublishMessage(activities) {
-      if (activities.length === 1) {
-        return `Are you sure you want to publish this activity?`;
-      } else if (activities.length === this.outlineActivities.length) {
-        return `Are you sure you want to publish all
-        activities within this course?`;
-      }
-      return `Are you sure you want to publish this activity along with all
-      its descendants?`;
     }
   },
   components: {

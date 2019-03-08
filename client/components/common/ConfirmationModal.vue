@@ -45,9 +45,6 @@ export default {
     };
   },
   computed: {
-    info() {
-      return this.context.info || this.context.item.name;
-    },
     publish() {
       return this.context.type === 'publish';
     },

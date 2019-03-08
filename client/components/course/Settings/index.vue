@@ -26,13 +26,13 @@
             <span class="mdi mdi-content-copy"></span>Clone repository
           </li>
           <li
-            @click="publishAll"
+            @click="publishConfirmation(outlineActivities)"
             class="list-group-item">
             <span class="mdi mdi-upload"></span>Publish all
             <circular-progress v-if="publishing"></circular-progress>
           </li>
-          <li v-if="publishMessage" class="list-group-item">
-            {{ publishMessage }}
+          <li v-if="publishStatus" class="list-group-item">
+            {{ publishStatus }}
           </li>
         </ul>
         <div class="actions">
@@ -64,18 +64,19 @@ import EventBus from 'EventBus';
 import General from './General';
 import JSZip from 'jszip';
 import { mapActions, mapGetters } from 'vuex-module';
-import Promise from 'bluebird';
 import saveAs from 'save-as';
+import publishConfirmation from 'components/common/mixins/publish';
 import UserManagement from './UserManagement';
 
 const appChannel = EventBus.channel('app');
 
 export default {
+  mixins: [publishConfirmation],
   data() {
     return {
       showCloneModal: false,
       publishing: false,
-      publishMessage: ''
+      publishStatus: ''
     };
   },
   computed: {
@@ -100,24 +101,6 @@ export default {
     },
     routeTo(name) {
       this.$router.push({ name });
-    },
-    publishAll(activities) {
-      appChannel.emit('showConfirmationModal', {
-        type: 'publish',
-        message: `Are you sure you want to publish all
-        activities within this course?`,
-        action: () => this.publishActivities()
-      });
-    },
-    publishActivities() {
-      this.publishing = true;
-      Promise.each(this.outlineActivities, activity => {
-        this.publishMessage = `Publishing ${activity.data.name}`;
-        return (this.publish(activity));
-      }).then(() => {
-        this.publishing = false;
-        this.publishMessage = '';
-      });
     }
   },
   components: {
