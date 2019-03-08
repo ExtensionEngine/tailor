@@ -57,7 +57,7 @@ function getFocusedItem(collection, current) {
 }
 
 export default {
-  name: 'te-table',
+  name: 'tce-table',
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
