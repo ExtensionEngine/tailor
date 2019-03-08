@@ -1,7 +1,7 @@
 import toCase from 'to-case';
 
 export function getComponentName(type) {
-  return `te-${toCase.slug(type)}`;
+  return `tce-${toCase.slug(type)}`;
 }
 
 export function processAssessmentType(type) {
