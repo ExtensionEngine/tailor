@@ -11,7 +11,8 @@
             :element="question"
             :isDisabled="false"
             :frame="true"
-            @save="data => saveQuestion(data)"/>
+            @save="data => saveQuestion(data)"
+            @delete="deleteQuestion"/>
         </div>
       </div>
       <div class="options-heading">
@@ -98,6 +99,11 @@ export default {
       question.data = data;
       elementData.embeds[this.question.id] = question;
       this.saveElement(elementData);
+    },
+    deleteQuestion() {
+      const question = cloneDeep(this.question);
+      question.data.content = '';
+      setTimeout(() => this.saveQuestion(question.data), 50);
     },
     updateOption(option) {
       const existing = find(this.options, { id: option.id });

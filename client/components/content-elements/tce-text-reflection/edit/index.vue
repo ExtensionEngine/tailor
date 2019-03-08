@@ -11,7 +11,8 @@
             :element="question"
             :isDisabled="false"
             :frame="true"
-            @save="data => saveQuestion(data)"/>
+            @save="data => saveQuestion(data)"
+            @delete="deleteQuestion"/>
         </div>
       </div>
       <div class="answer form-group">
@@ -52,7 +53,15 @@ export default {
       const question = elementData.embeds[this.question.id];
       question.data = data;
       elementData.embeds[this.question.id] = question;
-      this.$emit('save', elementData);
+      this.saveElement(elementData);
+    },
+    deleteQuestion() {
+      const question = cloneDeep(this.question);
+      question.data.content = '';
+      setTimeout(() => this.saveQuestion(question.data), 50);
+    },
+    saveElement(data) {
+      this.$emit('save', data);
     }
   },
   components: { ContentElement }
