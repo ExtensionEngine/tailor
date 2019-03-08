@@ -6,11 +6,13 @@
         <span class="mdi mdi-comment-text pull-right"></span>
       </div>
       <div class="question row">
-        <content-element
-          :element="question"
-          :isDisabled="false"
-          :frame="false"
-          @save="data => saveQuestion(data)"/>
+        <div class="col-xs-12">
+          <content-element
+            :element="question"
+            :isDisabled="false"
+            :frame="true"
+            @save="data => saveQuestion(data)"/>
+        </div>
       </div>
       <div class="answer form-group">
         <label for="`${element._cid}`" class="answer-label">Answer</label>

@@ -18,7 +18,7 @@
           <content-element
             :element="question"
             :isDisabled="false"
-            :frame="false"
+            :frame="true"
             @save="data => saveQuestion(data)"/>
         </div>
       </div>
