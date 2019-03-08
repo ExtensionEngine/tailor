@@ -80,7 +80,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course', 'outlineElements'], 'course')
+    ...mapGetters(['course', 'outlineActivities'], 'course')
   },
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
@@ -111,7 +111,7 @@ export default {
     },
     publishActivities() {
       this.publishing = true;
-      Promise.each(this.outlineElements, activity => {
+      Promise.each(this.outlineActivities, activity => {
         this.publishMessage = `Publishing ${activity.data.name}`;
         return (this.publish(activity));
       }).then(() => {

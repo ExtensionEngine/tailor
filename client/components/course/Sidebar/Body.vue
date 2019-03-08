@@ -8,7 +8,7 @@
       <div class="btn-group">
         <a
           :disabled="publishing"
-          @click="publishData()"
+          @click="publishConfirmation()"
           class="btn btn-primary">
           Publish
         </a>
@@ -28,7 +28,7 @@
           </li>
           <li>
             <a
-              @click="publishConfirmation(outlineElements, 'publishAll')"
+              @click="publishConfirmation(outlineActivities)"
               href="#">
               Publish all
             </a>
@@ -87,7 +87,7 @@ export default {
       'activity',
       'getConfig',
       'getMetadata',
-      'outlineElements'
+      'outlineActivities'
     ], 'course'),
     config() {
       return this.getConfig(this.activity);
@@ -102,7 +102,7 @@ export default {
         : 'Not published';
     },
     activityWithDescendants() {
-      const props = [this.outlineElements, this.activity];
+      const props = [this.outlineActivities, this.activity];
       let descendantsWithActivity = getDescendants(...props);
       descendantsWithActivity.push(this.activity);
       return descendantsWithActivity;
@@ -114,33 +114,32 @@ export default {
       const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });
     },
-    publishData(activities = [this.activity]) {
-      this.publishing = true;
-      Promise.each(activities, activity => {
-        this.publishStatus = `Publishing ${activity.data.name}`;
-        return (this.publish(activity));
-      }).then(() => {
-        this.publishing = false;
-        this.publishStatus = '';
-      });
-    },
-    publishConfirmation(activities, type) {
-      const message = this.getMessage(type);
+    publishConfirmation(activities = [this.activity]) {
+      const message = this.getPublishMessage(activities);
       appChannel.emit('showConfirmationModal', {
         type: 'publish',
         message: message,
         action: () => {
-          this.publishData(activities);
+          this.publishing = true;
+          Promise.each(activities, activity => {
+            this.publishStatus = `Publishing ${activity.data.name}`;
+            return (this.publish(activity));
+          }).then(() => {
+            this.publishing = false;
+            this.publishStatus = '';
+          });
         }
       });
     },
-    getMessage(type) {
-      if (type === 'publishAll') {
+    getPublishMessage(activities) {
+      if (activities.length === 1) {
+        return `Are you sure you want to publish this activity?`;
+      } else if (activities.length === this.outlineActivities.length) {
         return `Are you sure you want to publish all
         activities within this course?`;
       }
       return `Are you sure you want to publish this activity along with all
-        its descendants?`;
+      its descendants?`;
     }
   },
   components: {

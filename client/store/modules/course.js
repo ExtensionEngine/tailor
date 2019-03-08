@@ -48,11 +48,11 @@ getter(function activity() {
   return activities[this.state.activity] || {};
 });
 
-getter(function outlineElements() {
+getter(function outlineActivities() {
   const { activities } = this.rootGetters;
   const structure = this.getters['course/structure'];
-  const type = map(structure, 'type');
-  return filter(activities, it => type.includes(it.type));
+  const outlineTypes = map(structure, 'type');
+  return filter(activities, it => outlineTypes.includes(it.type));
 });
 
 getter(function isCollapsed(activity) {
