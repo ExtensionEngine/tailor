@@ -8,7 +8,7 @@
     </div>
     <div v-else slot="body">
       Are you sure you want to delete
-      <span v-if="info">{{ context.type }} <b>{{ info }}</b></span>
+      <span v-if="context.info">{{ context.type }} <b>{{ context.info }}</b></span>
       <span v-else>this {{ context.type }}</span>?
     </div>
     <div slot="footer">
@@ -35,7 +35,7 @@ import { focus } from 'vue-focus';
 import Modal from './Modal';
 
 const appChannel = EventBus.channel('app');
-const defaultData = { item: {}, type: '', message: '' };
+const defaultData = { item: {}, type: '', message: '', info: '' };
 
 export default {
   data() {
@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     info() {
-      return this.context.item.name;
+      return this.context.info || this.context.item.name;
     },
     publish() {
       return this.context.type === 'publish';
