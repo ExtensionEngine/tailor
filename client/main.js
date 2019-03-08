@@ -17,7 +17,7 @@ import store from './store';
 import router from './router';
 import App from './App';
 
-Vue.component('te-assessment', Assessment);
+Vue.component('tce-assessment', Assessment);
 
 const registry = new ElementRegistry(Vue);
 registry.initialize();
