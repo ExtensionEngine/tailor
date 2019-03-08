@@ -63,7 +63,7 @@ const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
 
 export default {
-  name: 'te-assessment',
+  name: 'tce-assessment',
   inject: ['$teRegistry'],
   props: {
     element: { type: Object, required: true }
