@@ -19,5 +19,6 @@ export default [
   'tce-fill-blank',
   'tce-matching-question',
   'tce-drag-drop',
-  'tce-text-reflection'
+  'tce-text-reflection',
+  'tce-slider-reflection'
 ];
