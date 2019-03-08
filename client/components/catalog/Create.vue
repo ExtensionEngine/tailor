@@ -34,7 +34,7 @@
             :error-messages="vErrors.collect('name')"
             label="Name"
             data-vv-name="name"/>
-          <v-text-field
+          <v-textarea
             v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
             v-model.trim="repository.description"
             :error-messages="vErrors.collect('description')"
