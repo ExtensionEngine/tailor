@@ -101,6 +101,7 @@ export default {
 .activity {
   position: relative;
   color: #444;
+  font-family: Roboto, sans-serif;
   font-size: 17px;
   text-align: left;
   background-color: white;
@@ -118,7 +119,7 @@ export default {
     min-width: 44px;
     height: 42px;
     margin-right: 7px;
-    padding: 8px 10px 0;
+    padding: 6px 10px 0;
     color: white;
     font-size: 20px;
     text-align: center;
@@ -141,7 +142,7 @@ export default {
     top: 0;
     left: 0;
     height: 42px;
-    padding: 10px 60px 0;
+    padding: 8px 60px 0;
     color: #555;
     white-space: nowrap;
     text-overflow: ellipsis;
