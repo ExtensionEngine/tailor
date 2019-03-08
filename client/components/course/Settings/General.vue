@@ -91,8 +91,8 @@ export default {
     download() {
       api.getDownload(this.$route.params.courseId)
       .then(res => {
-        const { file } = res.data;
-        base64StringToBlob(file, 'application/zip')
+        const { zippedFile } = res.data;
+        base64StringToBlob(zippedFile, 'application/zip')
         .then(blob => saveAs(blob, 'repoContent.zip'));
       });
     }
