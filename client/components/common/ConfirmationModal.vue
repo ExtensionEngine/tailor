@@ -49,8 +49,7 @@ export default {
       return this.context.type === 'publish';
     },
     title() {
-      if (this.publish) return `Publish`;
-      else return `Delete ${this.context.type}?`;
+      return this.publish ? 'Publish' : `Delete ${this.context.type}?`;
     }
   },
   methods: {

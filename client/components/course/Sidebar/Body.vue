@@ -20,16 +20,12 @@
         </a>
         <ul class="dropdown-menu">
           <li>
-            <a
-              @click="publishConfirmation(activityWithDescendants)"
-              href="#">
+            <a @click="publishConfirmation(activityWithDescendants)" href="#">
               Publish descendants
             </a>
           </li>
           <li>
-            <a
-              @click="publishConfirmation(outlineActivities)"
-              href="#">
+            <a @click="publishConfirmation(outlineActivities)" href="#">
               Publish all
             </a>
           </li>
@@ -69,8 +65,8 @@ import CircularProgress from 'components/common/CircularProgress';
 import Discussion from './Discussion';
 import fecha from 'fecha';
 import Meta from 'components/common/Meta';
-import Relationship from './Relationship';
 import publishConfirmation from 'components/common/mixins/publish';
+import Relationship from './Relationship';
 
 export default {
   mixins: [publishConfirmation],
@@ -99,8 +95,8 @@ export default {
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
     },
-    activityWithDescendants({ activity } = this) {
-      return [...getDescendants(this.outlineActivities, activity), activity];
+    activityWithDescendants({ activity, outlineActivities } = this) {
+      return [...getDescendants(outlineActivities, activity), activity];
     }
   },
   methods: {

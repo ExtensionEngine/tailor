@@ -29,7 +29,7 @@
             @click="publishConfirmation(outlineActivities)"
             class="list-group-item">
             <span class="mdi mdi-upload"></span>Publish all
-            <circular-progress v-if="publishing"></circular-progress>
+            <circular-progress v-if="publishing"/>
           </li>
           <li v-if="publishStatus" class="list-group-item">
             {{ publishStatus }}
