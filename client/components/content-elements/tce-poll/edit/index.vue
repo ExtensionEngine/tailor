@@ -26,7 +26,7 @@
       <div class="options-heading">
         <h4>Options</h4>
         <button
-          v-if="optionsTotal < 5"
+          v-if="optionsTotal < 10"
           @click="addOption"
           class="btn btn-default btn-material">
           Add Option
