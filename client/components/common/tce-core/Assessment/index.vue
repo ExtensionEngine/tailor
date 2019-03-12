@@ -15,7 +15,7 @@
         :errors="errors"
         @update="update"
         @alert="setAlert"/>
-      <div v-if="isGraded" :class="{ 'has-error': hintError }" class="form-group">
+      <div :class="{ 'has-error': hintError }" class="form-group">
         <span class="form-label">Hint</span>
         <input
           v-model="editedElement.data.hint"
