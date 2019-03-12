@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { getElementType, isQuestionElement } from '../utils';
 import cuid from 'cuid';
 import get from 'lodash/get';
 import SelectElement from './SelectElement';
@@ -48,7 +49,7 @@ export default {
     config() {
       const { type, subtype, $teRegistry } = this;
       if (!type && !subtype) return;
-      return $teRegistry.get(subtype || type);
+      return $teRegistry.get(subtype || getElementType(type));
     },
     forceWidth() {
       return get(this.config, 'ui.forceFullWidth', false);
@@ -75,7 +76,7 @@ export default {
         element.id = cuid();
         element.embedded = true;
       }
-      if (element.type === 'ASSESSMENT') {
+      if (isQuestionElement(element.type)) {
         const data = { width: DEFAULT_WIDTH };
         const question = [{ data, id: cuid(), type: 'HTML', embedded: true }];
         element.data = { ...element.data, question, type: subtype };

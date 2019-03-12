@@ -1,11 +1,19 @@
 import toCase from 'to-case';
 
 export function getComponentName(type) {
-  return `tce-${toCase.slug(type)}`;
+  return `tce-${toCase.slug(getElementType(type))}`;
 }
 
 export function processAssessmentType(type) {
   return `assessment-${toCase.slug(type)}`;
+}
+
+export function isQuestionElement(type) {
+  return ['QUESTION', 'ASSESSMENT'].includes(type);
+}
+
+export function getElementType(type) {
+  return type === 'QUESTION' ? 'ASSESSMENT' : type;
 }
 
 export function getToolbarName(type) {

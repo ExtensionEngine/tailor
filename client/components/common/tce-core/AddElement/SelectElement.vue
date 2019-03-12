@@ -1,7 +1,7 @@
 <template>
   <div class="select-element">
     <div
-      v-if="!showAssessments"
+      v-if="!showQuestions"
       :style="{ 'max-width': `${maxWidth}px` }"
       class="elements">
       <div
@@ -20,7 +20,7 @@
       </div>
     </div>
     <select-assessment
-      v-if="showAssessments"
+      v-if="showQuestions"
       :assessments="assessments"
       @selected="setSubtype"/>
   </div>
@@ -30,6 +30,7 @@
 import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
+import { isQuestionElement } from '../utils';
 import SelectAssessment from './SelectAssessment';
 
 const ELEMENTS_PER_ROW = 6;
@@ -59,7 +60,13 @@ export default {
       const result = filter(this.registry, it => it.type !== 'ASSESSMENT');
       if (this.assessments.length) {
         result.push({
-          name: 'Assessment', type: 'ASSESSMENT', ui: { icon: 'mdi-help' }
+          name: 'Assessment',
+          type: 'ASSESSMENT',
+          ui: { icon: 'mdi-help' }
+        }, {
+          name: 'Question',
+          type: 'QUESTION',
+          ui: { icon: 'mdi-comment-question-outline' }
         });
       }
       if (!this.include) return result;
@@ -68,8 +75,8 @@ export default {
     assessments() {
       return filter(this.registry, { type: 'ASSESSMENT' });
     },
-    showAssessments() {
-      return this.type === 'ASSESSMENT';
+    showQuestions() {
+      return isQuestionElement(this.type);
     },
     columnWidth() {
       return `col-xs-${Math.floor(12 / this.columns)}`;
@@ -82,7 +89,7 @@ export default {
   },
   methods: {
     setType(type) {
-      if (type === 'ASSESSMENT') {
+      if (isQuestionElement(type)) {
         this.type = type;
         return;
       }
