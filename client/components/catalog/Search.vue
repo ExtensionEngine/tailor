@@ -73,7 +73,7 @@ export default {
   }
 
   .form-control {
-    height: 43px;
+    height: 44px;
     padding: 0 7px;
     font-size: 18px;
     text-indent: 10px;
