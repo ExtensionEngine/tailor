@@ -10,11 +10,12 @@
       <component
         :is="resolveComponentName(element)"
         :assessment="editedElement.data"
+        :isGraded="isGraded"
         :isEditing="isEditing"
         :errors="errors"
         @update="update"
         @alert="setAlert"/>
-      <div :class="{ 'has-error': hintError }" class="form-group">
+      <div v-if="isGraded" :class="{ 'has-error': hintError }" class="form-group">
         <span class="form-label">Hint</span>
         <input
           v-model="editedElement.data.hint"
@@ -27,6 +28,7 @@
         v-if="showFeedback"
         :answers="editedElement.data.answers"
         :feedback="editedElement.data.feedback"
+        :isGraded="isGraded"
         :isEditing="isEditing"
         @update="updateFeedback"/>
       <div class="alert-container">
@@ -55,6 +57,7 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
 import map from 'lodash/map';
+import omit from 'lodash/omit';
 import Question from './Question';
 import toPath from 'lodash/toPath';
 import yup from 'yup';
@@ -80,10 +83,16 @@ export default {
   computed: {
     schema() {
       const elementSchema = this.$teRegistry.get(this.assessmentType).schema;
-      return yup.object().shape({ ...baseSchema, ...elementSchema });
+      return yup.object().shape({
+        ...baseSchema,
+        ...this.isGraded ? elementSchema : omit(elementSchema, ['correct'])
+      });
     },
     assessmentType() {
       return this.element.data.type;
+    },
+    isGraded() {
+      return this.element.type === 'ASSESSMENT';
     },
     hintError() {
       return this.errors.includes('hint');

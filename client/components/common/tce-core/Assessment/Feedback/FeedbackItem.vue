@@ -1,9 +1,9 @@
 <template>
   <li class="feedback-item">
     <p class="answer">
-      <span class="prefix">Answer {{ index + 1 }}:</span>
+      <span class="prefix">{{ title }} {{ index + 1 }}:</span>
       <template v-if="answer.length">{{ answer }}</template>
-      <i v-else>Answer not added.</i>
+      <i v-else>{{ title }} not added.</i>
     </p>
     <quill-editor
       v-if="isEditing"
@@ -46,9 +46,15 @@ export default {
   props: {
     answer: { type: String, default: '' },
     feedback: { type: String, default: '' },
+    isGraded: { type: Boolean, default: false },
     isEditing: { type: Boolean, required: true },
     index: { type: Number, required: true },
     quillOptions: { type: Object, default: quillOptions }
+  },
+  computed: {
+    title() {
+      return this.isGraded ? 'Answer' : 'Option';
+    }
   },
   components: { QuillEditor }
 };
