@@ -5,7 +5,7 @@
     @toggle="toggleSelection"
     class="add-element">
     <template slot="toggle">
-      <div @click="toggleSelection" class="btn-base">
+      <div @click="toggleSelection" class="btn-base toggle-btn">
         <span
           :class="[selectionOpened ? 'btn-close' : 'btn-open']"
           class="mdi mdi-plus toggle-selection">
@@ -142,7 +142,7 @@ export default {
     margin-top: 10px;
   }
 
-  .btn-base {
+  .toggle-btn {
     color: #42b983;
     font-size: 28px;
     line-height: 28px;

@@ -1,9 +1,10 @@
 <template>
   <div class="select-element">
-    <div
-      v-if="!showAssessments"
-      :style="{ 'max-width': `${maxWidth}px` }"
-      class="elements">
+    <select-assessment
+      v-if="showAssessments"
+      :assessments="assessments"
+      @selected="setSubtype"/>
+    <div v-else :style="{ 'max-width': `${maxWidth}px` }" class="elements">
       <div
         v-for="(row, index) in rows"
         :key="index"
@@ -19,10 +20,6 @@
         </div>
       </div>
     </div>
-    <select-assessment
-      v-if="showAssessments"
-      :assessments="assessments"
-      @selected="setSubtype"/>
   </div>
 </template>
 

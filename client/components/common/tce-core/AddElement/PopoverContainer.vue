@@ -30,20 +30,31 @@ export default {
   margin: 0;
   padding: 5px 0;
   opacity: 0;
-  transition: opacity 0.8s ease-in-out;
+  transition: opacity 0.8s ease-in-out, margin 0.2s ease-in-out;
 
   &:hover {
     opacity: 1;
   }
 
   &.opened {
+    margin: 2px 0;
     opacity: 1;
+
+    .add-element-line {
+      height: 3px;
+    }
 
     .add-element-wrapper {
       z-index: 100;
+
+      /deep/ .toggle-btn {
+        top: -15px;
+        font-size: 28px;
+        line-height: 28px;
+      }
     }
 
-    .popover {
+    .element-selection-popover {
       display: block;
     }
   }
@@ -53,21 +64,22 @@ export default {
     height: 2px;
     background-color: #42b983;
     cursor: pointer;
+    transition: height 0.4s ease-in-out;
   }
 
   .add-element-wrapper {
     position: relative;
     z-index: 1;
 
-    /deep/ .btn-base {
+    /deep/ .toggle-btn {
       position: absolute;
-      top: -12px;
+      top: -14px;
       left: 50%;
       transform: translateX(-50%);
       margin: 0;
       background-color: white;
-      font-size: 22px;
-      line-height: 22px;
+      font-size: 24px;
+      line-height: 24px;
     }
   }
 }
@@ -82,5 +94,6 @@ export default {
   text-align: center;
   color: #444;
   font-family: inherit;
+  border-radius: 20px;
 }
 </style>
