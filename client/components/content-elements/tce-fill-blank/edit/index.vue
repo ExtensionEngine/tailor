@@ -54,6 +54,7 @@ const ALERT = {
 export default {
   props: {
     assessment: { type: Object, default: defaults.FB },
+    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
@@ -129,7 +130,7 @@ export default {
     },
     question: debounce(function (newVal, oldVal) {
       if (!this.hasChanges(newVal, oldVal)) return;
-      this.parse();
+      if (this.isGraded) this.parse();
     }, 200)
   },
   components: { draggable }

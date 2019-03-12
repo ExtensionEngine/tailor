@@ -1,8 +1,8 @@
 <template>
   <div class="form-group">
-    <span class="form-label">Answers</span>
+    <span class="form-label">{{ isGraded ? 'Answers' : 'Response' }}</span>
     <span
-      v-if="isEditing"
+      v-if="isEditing && isGraded"
       @click="addAnswer"
       class="btn-add-answer btn btn-link mdi mdi-plus pull-right">
     </span>
@@ -14,7 +14,7 @@
         class="answer row">
         <div class="col-xs-3">
           <input
-            :disabled="!isEditing"
+            :disabled="disabled"
             :value="prefixes[index]"
             @input="updateAnswer('prefixes', $event.target.value, index)"
             type="text"
@@ -23,7 +23,7 @@
         </div>
         <div :class="`col-xs-${ correct.length > 1 ? 5 : 6 }`">
           <input
-            :disabled="!isEditing"
+            :disabled="disabled"
             :value="correct[index]"
             @input="updateAnswer('correct', $event.target.value, index)"
             type="text"
@@ -32,7 +32,7 @@
         </div>
         <div class="col-xs-3">
           <input
-            :disabled="!isEditing"
+            :disabled="disabled"
             :value="suffixes[index]"
             @input="updateAnswer('suffixes', $event.target.value, index)"
             type="text"
@@ -72,6 +72,7 @@ import toNumber from 'lodash/toNumber';
 export default {
   props: {
     assessment: { type: Object, default: defaults.NR },
+    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
@@ -87,6 +88,9 @@ export default {
     },
     suffixes() {
       return get(this.assessment, 'suffixes', []);
+    },
+    disabled() {
+      return !this.isEditing || !this.isGraded;
     }
   },
   methods: {
