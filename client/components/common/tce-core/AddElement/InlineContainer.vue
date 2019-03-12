@@ -1,9 +1,12 @@
 <template>
-  <transition name="slide">
-    <div class="selections">
-      <slot/>
-    </div>
-  </transition>
+  <div>
+    <slot name="toggle"/>
+    <transition name="slide">
+      <div class="selections">
+        <slot name="selection"/>
+      </div>
+    </transition>
+  </div>
 </template>
 
 <style lang="scss" scoped>

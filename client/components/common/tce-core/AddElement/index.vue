@@ -1,20 +1,26 @@
 <template>
-  <div class="add-element">
-    <div @click="toggleSelection" class="btn-base">
-      <span
-        :class="[selectionOpened ? 'btn-close' : 'btn-open']"
-        class="mdi mdi-plus toggle-selection">
-      </span>
-    </div>
-    <component v-if="selectionOpened" :is="selectContainer">
+  <component
+    :is="selectContainer"
+    :opened="selectionOpened"
+    @toggle="toggleSelection"
+    class="add-element">
+    <template slot="toggle">
+      <div @click="toggleSelection" class="btn-base">
+        <span
+          :class="[selectionOpened ? 'btn-close' : 'btn-open']"
+          class="mdi mdi-plus toggle-selection">
+        </span>
+      </div>
+    </template>
+    <template v-if="selectionOpened" slot="selection">
       <select-element
         v-if="!type"
         :activity="activity"
         :include="include"
         @selected="setType"/>
       <select-width v-if="canSelectWidth" @selected="setWidth"/>
-    </component>
-  </div>
+    </template>
+  </component>
 </template>
 
 <script>
@@ -42,7 +48,8 @@ export default {
       type: null,
       subtype: null,
       width: DEFAULT_WIDTH,
-      selectionOpened: false
+      selectionOpened: false,
+      opened: false
     };
   },
   computed: {
@@ -67,7 +74,6 @@ export default {
     toggleSelection() {
       if (this.selectionOpened) return this.close();
       this.selectionOpened = true;
-      this.$emit('opened');
     },
     create() {
       const { type, subtype, width, config } = this;
@@ -105,7 +111,6 @@ export default {
       this.subtype = null;
       this.width = DEFAULT_WIDTH;
       this.selectionOpened = false;
-      this.$emit('closed');
     }
   },
   components: {
@@ -138,7 +143,7 @@ export default {
   }
 
   .btn-base {
-    color: #337ab7;
+    color: #42b983;
     font-size: 28px;
     line-height: 28px;
     vertical-align: top;
