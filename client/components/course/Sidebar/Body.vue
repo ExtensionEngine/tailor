@@ -2,30 +2,30 @@
   <div class="body">
     <div class="publish-container">
       <div class="publish-date">
-        <circular-progress v-if="publishing"></circular-progress>
-        <span v-else>{{ publishedAt }}</span>
+        <circular-progress v-if="isPublishing"></circular-progress>
+        <span v-else>{{ publishedAtMessage }}</span>
       </div>
       <div class="btn-group">
         <a
-          :disabled="publishing"
-          @click="publishConfirmation()"
+          :disabled="isPublishing"
+          @click="confirmPublishing()"
           class="btn btn-primary">
           Publish
         </a>
         <a
-          :disabled="publishing"
+          :disabled="isPublishing"
           class="btn btn-primary dropdown-toggle"
           data-toggle="dropdown">
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
           <li>
-            <a @click="publishConfirmation(activityWithDescendants)" href="#">
+            <a @click="confirmPublishing(activityWithDescendants)" href="#">
               Publish descendants
             </a>
           </li>
           <li>
-            <a @click="publishConfirmation(outlineActivities)" href="#">
+            <a @click="confirmPublishing(outlineActivities)" href="#">
               Publish all
             </a>
           </li>
@@ -65,17 +65,11 @@ import CircularProgress from 'components/common/CircularProgress';
 import Discussion from './Discussion';
 import fecha from 'fecha';
 import Meta from 'components/common/Meta';
-import publishConfirmation from 'components/common/mixins/publish';
+import confirmPublishing from 'components/common/mixins/publish';
 import Relationship from './Relationship';
 
 export default {
-  mixins: [publishConfirmation],
-  data() {
-    return {
-      publishing: false,
-      publishStatus: ''
-    };
-  },
+  mixins: [confirmPublishing],
   computed: {
     ...mapGetters([
       'activity',
@@ -89,7 +83,7 @@ export default {
     metadata() {
       return this.getMetadata(this.activity);
     },
-    publishedAt() {
+    publishedAtMessage() {
       let { publishedAt } = this.activity;
       return publishedAt
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
@@ -100,7 +94,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update', 'publish'], 'activities'),
+    ...mapActions({ publishActivity: 'publish', update: 'update' }, 'activities'),
     updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });

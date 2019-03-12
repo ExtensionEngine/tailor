@@ -26,10 +26,10 @@
             <span class="mdi mdi-content-copy"></span>Clone repository
           </li>
           <li
-            @click="publishConfirmation(outlineActivities)"
+            @click="confirmPublishing(outlineActivities)"
             class="list-group-item">
             <span class="mdi mdi-upload"></span>Publish all
-            <circular-progress v-if="publishing"/>
+            <circular-progress v-if="isPublishing"/>
           </li>
           <li v-if="publishStatus" class="list-group-item">
             {{ publishStatus }}
@@ -58,25 +58,23 @@
 
 <script>
 import api from '../../../api/course';
-import CloneModal from './CloneModal';
 import CircularProgress from 'components/common/CircularProgress';
+import CloneModal from './CloneModal';
 import EventBus from 'EventBus';
 import General from './General';
 import JSZip from 'jszip';
 import { mapActions, mapGetters } from 'vuex-module';
 import saveAs from 'save-as';
-import publishConfirmation from 'components/common/mixins/publish';
+import confirmPublishing from 'components/common/mixins/publish';
 import UserManagement from './UserManagement';
 
 const appChannel = EventBus.channel('app');
 
 export default {
-  mixins: [publishConfirmation],
+  mixins: [confirmPublishing],
   data() {
     return {
-      showCloneModal: false,
-      publishing: false,
-      publishStatus: ''
+      showCloneModal: false
     };
   },
   computed: {
@@ -85,7 +83,7 @@ export default {
   },
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
-    ...mapActions(['publish'], 'activities'),
+    ...mapActions({ publishActivity: 'publish' }, 'activities'),
     downloadContentInventory() {
       api.getContentInventory(this.$route.params.courseId)
         .then(response => JSZip.loadAsync(response))

@@ -35,7 +35,7 @@ import { focus } from 'vue-focus';
 import Modal from './Modal';
 
 const appChannel = EventBus.channel('app');
-const defaultData = { item: {}, type: '', message: '', info: '' };
+const defaultData = { item: {}, type: '', message: '', info: '', title: '' };
 
 export default {
   data() {
@@ -46,10 +46,10 @@ export default {
   },
   computed: {
     publish() {
-      return this.context.type === 'publish';
+      return !!this.context.message;
     },
     title() {
-      return this.publish ? 'Publish' : `Delete ${this.context.type}?`;
+      return this.context.title || `Delete ${this.context.type}?`;
     }
   },
   methods: {

@@ -4,32 +4,43 @@ import Promise from 'bluebird';
 
 const appChannel = EventBus.channel('app');
 const prefixMessage = 'Are you sure you want to publish';
-const m1 = `${prefixMessage} this activity?`;
-const m2 = `${prefixMessage} all activities within this course?`;
-const m3 = `${prefixMessage} this activity along with all its descendants?`;
+const messages = {
+  activity: `${prefixMessage} this activity?`,
+  allActivities: `${prefixMessage} all activities within this course?`,
+  allDescendants: `${prefixMessage} this activity along with all its descendants?`
+};
 
 export default {
+  data() {
+    return {
+      isPublishing: false,
+      publishStatus: ''
+    };
+  },
   methods: {
-    publishConfirmation(activities = [this.activity]) {
+    confirmPublishing(activities = [this.activity]) {
       const message = this.getPublishMessage(activities.length);
       appChannel.emit('showConfirmationModal', {
-        type: 'publish',
+        title: 'Publish',
         message: message,
-        action: () => {
-          this.publishing = true;
-          Promise.each(activities, activity => {
-            this.publishStatus = `Publishing ${activity.data.name}`;
-            return this.publish(activity);
-          }).then(() => {
-            this.publishing = false;
-            this.publishStatus = '';
-          });
-        }
+        action: () => this.publish(activities)
+      });
+    },
+    publish(activities) {
+      this.isPublishing = true;
+      Promise.each(activities, activity => {
+        this.publishStatus = `Publishing ${activity.data.name}`;
+        return this.publishActivity(activity);
+      }).then(() => {
+        this.isPublishing = false;
+        this.publishStatus = '';
       });
     },
     getPublishMessage(activityCount) {
-      if (activityCount === 1) return m1;
-      return activityCount === this.outlineActivities.length ? m2 : m3;
+      const { activity, allActivities, allDescendants } = messages;
+      if (activityCount === 1) return activity;
+      if (activityCount === this.outlineActivities.length) return allActivities;
+      return allDescendants;
     }
   }
 };
