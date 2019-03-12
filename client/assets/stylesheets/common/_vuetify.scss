@@ -8,3 +8,8 @@
 .v-text-field input {
   padding: 8px 0;
 }
+
+a:hover, a:active, a:visited, a:focus {
+  color: inherit;
+  text-decoration: inherit;
+}
