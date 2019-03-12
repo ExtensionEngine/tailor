@@ -2,7 +2,7 @@
   <div>
     <div class="activity-wrapper">
       <div
-        :class="{ selected: isSelected(_cid) }"
+        :class="{ 'elevation-8 selected': isSelected(_cid) }"
         @click="focusActivity(_cid)"
         class="activity">
         <span :style="{ 'background-color': color }" class="position">
@@ -111,7 +111,12 @@ export default {
   cursor: pointer;
 
   &.selected {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15), 0 2px 5px rgba(0,0,0,0.3);
+    background-color: #fafafa;
+    border-bottom: 1px solid #888;
+
+    .activity-name {
+      color: #444;
+    }
   }
 
   .position {
