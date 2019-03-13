@@ -33,7 +33,6 @@
 <script>
 import { getRepositoryMeta } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
-import { base64StringToBlob } from 'blob-util';
 import api from '../../../api/course';
 import cloneDeep from 'lodash/cloneDeep';
 import EventBus from 'EventBus';
@@ -91,9 +90,7 @@ export default {
     download() {
       api.getDownload(this.$route.params.courseId)
       .then(res => {
-        const { zippedFile } = res.data;
-        base64StringToBlob(zippedFile, 'application/zip')
-        .then(blob => saveAs(blob, 'repoContent.zip'));
+        saveAs(res.data, `repoContent.zip`);
       });
     }
   },

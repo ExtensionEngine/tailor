@@ -26,8 +26,8 @@ function prepZip(files, courseId) {
       });
     })
   .then(() => {
-    return zip.generateAsync({ type: 'base64' })
-    .then(zipped => resolve(zipped));
+    return zip.generateAsync({ type: 'nodebuffer' })
+    .then((file) => resolve(fs.writeFileAsync(`tempRepository/${courseId}.zip`, file)));
   });
   });
 }
@@ -36,15 +36,12 @@ function deleteDir(folder) {
 }
 function publishRepositoryDetails(repository) {
   return getPublishedStructure(repository).then(spine => {
-    Object.assign(spine, getRepositoryAttrs(repository));
     return saveSpine(spine);
   });
 }
 function getPublishedStructure(repository) {
-  const storageKey = `../tempRepository/${repository.id}/index.json`;
-  return storage.getFile(storageKey).then(buffer => {
-    const data = buffer && JSON.parse(buffer.toString('utf8'));
-    return data || { ...getRepositoryAttrs(repository), structure: [] };
+  return new Promise((resolve) => {
+    resolve(getRepositoryAttrs(repository));
   });
 }
 function getRepositoryAttrs(repository) {
@@ -55,7 +52,7 @@ function getRepositoryAttrs(repository) {
 }
 
 function saveSpine(spine) {
-  const hashProperties = pick(spine, without(keys(spine), ['version', 'publishedAt']));
+  const hashProperties = pick(spine, without(keys(spine), ['version', 'downloadedAt']));
   const version = hash(hashProperties, { algorithm: 'sha1' });
   const updatedSpine = { ...spine, version, publishedAt: new Date() };
   const spineData = Buffer.from(JSON.stringify(updatedSpine), 'utf8');

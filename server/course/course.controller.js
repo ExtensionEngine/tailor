@@ -12,7 +12,7 @@ const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
 const sample = require('lodash/sample');
 const download = require('../shared/download/helpers');
-
+const path = require('path');
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
 function index({ query, user, opts }, res) {
@@ -106,8 +106,10 @@ function downloadCourse({ course }, res) {
   return download.publishRepositoryDetails(course)
     .then(() => download.getFileNames(course.id))
     .then(files => download.prepZip(files, course.id))
-    .then(zippedFile => res.json({data: {zippedFile}}))
-    .then(() => download.deleteDir('tempRepository'));
+    .then(() => {
+      res.download(path.join(__dirname, `../..//tempRepository/${course.id}.zip`), `${course.id}.zip`);
+      return download.deleteDir('tempRepository');
+    });
 }
 
 const transform = user => {
