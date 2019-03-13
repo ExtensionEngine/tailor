@@ -41,7 +41,7 @@ export default {
       return assessments.filter(it => !exclude.includes(it.type));
     },
     columnWidth() {
-      return `col-xs-${12 / this.columns}`;
+      return `col-xs-${Math.floor(12 / this.columns)}`;
     }
   }
 };
