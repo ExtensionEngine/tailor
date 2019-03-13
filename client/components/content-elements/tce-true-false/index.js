@@ -13,6 +13,7 @@ export default {
   name: 'True - False',
   type: 'ASSESSMENT',
   subtype: 'TF',
+  reflection: true,
   version: '1.0',
   schema,
   initState,

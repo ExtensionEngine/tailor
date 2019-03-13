@@ -15,6 +15,7 @@ export default {
   name: 'Single Choice',
   type: 'ASSESSMENT',
   subtype: 'SC',
+  reflection: true,
   version: '1.0',
   schema,
   initState,

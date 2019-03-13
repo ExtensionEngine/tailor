@@ -15,6 +15,7 @@ export default {
   name: 'Multiple Choice',
   type: 'ASSESSMENT',
   subtype: 'MC',
+  reflection: true,
   version: '1.0',
   schema,
   initState,

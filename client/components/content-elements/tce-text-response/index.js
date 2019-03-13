@@ -13,6 +13,7 @@ export default {
   name: 'Text Response',
   type: 'ASSESSMENT',
   subtype: 'TR',
+  reflection: true,
   version: '1.0',
   schema,
   initState,

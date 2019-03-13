@@ -21,6 +21,7 @@ export default {
   name: 'Fill in the blank',
   type: 'ASSESSMENT',
   subtype: 'FB',
+  reflection: true,
   version: '1.0',
   schema,
   initState,

@@ -29,7 +29,8 @@ export default class ElementRegistry {
       ? (await import(`../extensions/content-elements/${location}`)).default
       : (await import(`./components/content-elements/${location}`)).default;
     const attrs = [
-      'name', 'type', 'subtype', 'version', 'schema', 'initState', 'ui'
+      'name', 'type', 'subtype', 'reflection',
+      'version', 'schema', 'initState', 'ui'
     ];
     const isAssessment = element.type === 'ASSESSMENT';
     const type = isAssessment
