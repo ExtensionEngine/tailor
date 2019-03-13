@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     rows() {
-      return chunk(sortBy(this.elements, 'subtype'), this.rowSize);
+      return chunk(sortBy(this.elements, 'position'), this.rowSize);
     },
     columns() {
       return Math.min(this.elements.length, this.rowSize);

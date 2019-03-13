@@ -51,7 +51,7 @@ export default {
       return this.$teRegistry.get();
     },
     rows() {
-      return chunk(sortBy(this.elements, 'type'), this.rowSize);
+      return chunk(sortBy(this.elements, 'position'), this.rowSize);
     },
     columns() {
       return Math.min(this.elements.length, this.rowSize);
