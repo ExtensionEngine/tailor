@@ -38,7 +38,11 @@ function publishRepositoryMeta(id) {
   return request.post(`/courses/${id}/publish`).then(res => res.data);
 }
 function getDownload(courseId) {
-  return request.get(`/courses/${courseId}/download`).then(res => res.data);
+  return request({
+    method: 'get',
+    responseType: 'blob',
+    url: `/courses/${courseId}/download`
+  });
 }
 
 export default {
