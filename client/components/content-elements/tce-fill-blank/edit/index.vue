@@ -128,13 +128,10 @@ export default {
     isEditing(newVal) {
       if (!newVal) this.answerGroups = this.assessment.answerGroups;
     },
-    question(newVal, oldVal) {
-      if (!this.isGraded) return;
-      debounce(function (newVal, oldVal) {
-        if (!this.hasChanges(newVal, oldVal)) return;
-        this.parse();
-      }, 200);
-    }
+    question: debounce(function (newVal, oldVal) {
+      if (!this.isGraded || !this.hasChanges(newVal, oldVal)) return;
+      this.parse();
+    }, 200)
   },
   components: { draggable }
 };
