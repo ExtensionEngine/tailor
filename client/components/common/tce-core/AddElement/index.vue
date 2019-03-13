@@ -143,11 +143,14 @@ export default {
   }
 
   .toggle-btn {
-    color: #42b983;
     font-size: 28px;
     line-height: 28px;
     vertical-align: top;
     cursor: pointer;
+
+    &:hover {
+      color: #42b983;
+    }
   }
 }
 </style>
