@@ -146,7 +146,9 @@ export default {
   .title {
     display: inline-block;
     max-width: 80%;
-    height: 19px;
+    color: #444;
+    font-size: 16px !important;
+    font-weight: 400;
   }
 
   .label {

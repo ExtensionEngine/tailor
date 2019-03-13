@@ -37,7 +37,7 @@ export default {
 
   span {
     display: inline-block;
-    padding-top: 6px;
+    padding-top: 13px;
   }
 }
 </style>

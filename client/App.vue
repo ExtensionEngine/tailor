@@ -1,9 +1,9 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <navbar></navbar>
     <router-view class="contaner-fluid view"></router-view>
     <confirmation-modal></confirmation-modal>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -30,21 +30,21 @@ html, body {
   height: 100%;
 }
 
-body {
-  background-color: #e0e0e0;
+.application {
+  background-color: #e0e0e0 !important;
 }
 
 #app {
   height: 100%;
   padding-top: 64px;
   color: rgba(0,0,0,0.87);
-  font-family: 'Catamaran', Helvetica, Arial, sans-serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   overflow: hidden;
 
-  > .view {
+  /deep/ .view {
     overflow-y: scroll;
     overflow-y: overlay;
   }
