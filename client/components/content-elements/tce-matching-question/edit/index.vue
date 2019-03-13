@@ -44,7 +44,7 @@
           placeholder="Insert text here ...">
       </div>
       <div class="col-xs-2">
-        <span v-if="isGraded" class="mdi mdi-arrow-right"></span>
+        <span class="mdi mdi-arrow-right"></span>
       </div>
       <div
         :class="{ flip: isFocused(responseKey) }"
@@ -90,7 +90,6 @@ import shuffle from 'lodash/shuffle';
 export default {
   props: {
     assessment: { type: Object, default: defaults.MQ },
-    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
