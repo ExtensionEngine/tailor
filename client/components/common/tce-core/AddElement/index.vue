@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { getElementType, isQuestionElement } from '../utils';
+import { getElementType, isAssessment } from '../utils';
 import cuid from 'cuid';
 import get from 'lodash/get';
 import SelectElement from './SelectElement';
@@ -76,7 +76,7 @@ export default {
         element.id = cuid();
         element.embedded = true;
       }
-      if (isQuestionElement(element.type)) {
+      if (isAssessment(element.type)) {
         const data = { width: DEFAULT_WIDTH };
         const question = [{ data, id: cuid(), type: 'HTML', embedded: true }];
         element.data = { ...element.data, question, type: subtype };

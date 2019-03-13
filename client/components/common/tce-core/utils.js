@@ -8,7 +8,7 @@ export function processAssessmentType(type) {
   return `assessment-${toCase.slug(type)}`;
 }
 
-export function isQuestionElement(type) {
+export function isAssessment(type) {
   return ['QUESTION', 'ASSESSMENT'].includes(type);
 }
 

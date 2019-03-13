@@ -66,7 +66,7 @@ export default {
       return this.assessment.correct;
     },
     hasAnswers() {
-      return this.answerGroups.length > 0;
+      return get(this.answerGroups, 'length');
     },
     hasExtraAnswers() {
       return this.answerGroups.length !== this.blanksCount;

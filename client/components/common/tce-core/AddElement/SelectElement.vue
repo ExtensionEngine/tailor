@@ -1,7 +1,7 @@
 <template>
   <div class="select-element">
     <div
-      v-if="!showQuestions"
+      v-if="!showAssessments"
       :style="{ 'max-width': `${maxWidth}px` }"
       class="elements">
       <div
@@ -20,7 +20,7 @@
       </div>
     </div>
     <select-assessment
-      v-if="showQuestions"
+      v-if="showAssessments"
       :assessments="assessments"
       @selected="setSubtype"/>
   </div>
@@ -30,7 +30,7 @@
 import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
-import { isQuestionElement } from '../utils';
+import { isAssessment } from '../utils';
 import SelectAssessment from './SelectAssessment';
 
 const ELEMENTS_PER_ROW = 6;
@@ -77,8 +77,8 @@ export default {
       if (this.type === 'QUESTION') filters.reflection = true;
       return filter(this.registry, filters);
     },
-    showQuestions() {
-      return isQuestionElement(this.type);
+    showAssessments() {
+      return isAssessment(this.type);
     },
     columnWidth() {
       return `col-xs-${Math.floor(12 / this.columns)}`;
@@ -91,7 +91,7 @@ export default {
   },
   methods: {
     setType(type) {
-      if (isQuestionElement(type)) {
+      if (isAssessment(type)) {
         this.type = type;
         return;
       }

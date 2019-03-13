@@ -120,7 +120,7 @@ export default {
   },
   watch: {
     assessment() {
-      if (this.isGraded) this.validate();
+      this.validate();
     }
   }
 };
