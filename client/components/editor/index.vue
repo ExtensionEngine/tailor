@@ -157,7 +157,7 @@ export default {
 }
 
 .editor {
-  padding-top: 110px;
+  padding-top: 80px;
   overflow-y: scroll;
   overflow-y: overlay;
 
