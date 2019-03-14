@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="file-upload">
     <circular-progress v-if="uploading"/>
-    <form v-else @submit.prevent>
+    <form v-else @submit.prevent class="upload-form">
       <input
         v-validate="validate"
         :id="id"
@@ -92,8 +92,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.file-upload, .upload-form {
+  display: inline-block;
+}
+
+// Using width/height restriction on hidden element
+// rather than `display: none;` because of Safari (v11.1 & v11.2) issue
+// https://forums.developer.apple.com/thread/103471
 .upload-input {
   visibility: hidden;
+  max-width: 0;
+  max-height: 0;
 }
 
 .upload-button {
