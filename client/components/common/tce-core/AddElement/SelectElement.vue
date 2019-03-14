@@ -4,31 +4,32 @@
       v-if="showAssessments"
       :assessments="assessments"
       @selected="setSubtype"/>
-    <div v-else :style="{ 'max-width': `${maxWidth}px` }" class="elements">
-      <div
-        v-for="(row, index) in rows"
-        :key="index"
-        class="row element-container">
-        <div
-          v-for="element in row"
-          :key="element.type"
-          :class="columnWidth"
-          @click="setType(element.type)"
+    <v-container v-else :grid-list-lg="true" fluid>
+      <v-layout row wrap>
+        <v-flex
+          v-for="{ name, type, ui } in elements"
+          :key="type"
+          v-bind="elementBindings"
+          @click="setType(type)"
           class="element-type">
-          <span :class="element.ui.icon" class="mdi"></span>
-          <span>{{ element.name }}</span>
-        </div>
-      </div>
-    </div>
+          <v-icon class="element-icon" medium>
+            {{ ui.icon }}
+          </v-icon>
+          <div class="element-name">
+            {{ name }}
+          </div>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 
 <script>
-import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
 import SelectAssessment from './SelectAssessment';
 
+const ASSESSMENT = 'ASSESSMENT';
 const ELEMENTS_PER_ROW = 6;
 
 export default {
@@ -46,36 +47,28 @@ export default {
     registry() {
       return this.$teRegistry.get();
     },
-    rows() {
-      return chunk(this.elements, this.rowSize);
-    },
-    columns() {
-      return Math.min(this.elements.length, this.rowSize);
-    },
     elements() {
-      const result = filter(this.registry, it => it.type !== 'ASSESSMENT');
+      const result = filter(this.registry, it => it.type !== ASSESSMENT);
       if (this.assessments.length) {
         result.push({
-          name: 'Assessment', type: 'ASSESSMENT', ui: { icon: 'mdi-help' }
+          name: 'Assessment', type: ASSESSMENT, ui: { icon: 'mdi-help' }
         });
       }
       if (!this.include) return result;
       return filter(result, it => includes(this.include, it.type));
     },
     assessments() {
-      return filter(this.registry, { type: 'ASSESSMENT' });
+      return filter(this.registry, { type: ASSESSMENT });
     },
     showAssessments() {
-      return this.type === 'ASSESSMENT';
+      return this.type === ASSESSMENT;
     },
-    columnWidth() {
-      return `col-xs-${Math.floor(12 / this.columns)}`;
-    },
-    maxWidth() {
-      // Set the maximum width of the select component container in the
-      // increments of 150px, with the baseline of 2 elements having 200px width
-      return 200 + (this.columns - 2) * 150;
+    elementBindings() {
+      const columns = Math.min(this.elements.length, this.rowSize);
+      const columnWidth = Math.floor(12 / columns);
+      return { [`xs${columnWidth}`]: true };
     }
+
   },
   methods: {
     setType(type) {
@@ -95,8 +88,8 @@ export default {
     }
   },
   created() {
-    const assessments = filter(this.elements, { type: 'ASSESSMENT' });
-    if (assessments.length === this.elements.length) this.type = 'ASSESSMENT';
+    const assessments = filter(this.elements, { type: ASSESSMENT });
+    if (assessments.length === this.elements.length) this.type = ASSESSMENT;
   },
   components: { SelectAssessment }
 };
@@ -112,19 +105,14 @@ export default {
 }
 
 .element-type {
+  font-size: 16px;
+
   &:hover {
-    color: #42b983;
     cursor: pointer;
-  }
 
-  span {
-    display: block;
-    font-size: 16px;
-  }
-
-  .mdi {
-    padding-bottom: 7px;
-    font-size: 30px;
+    .element-icon, .element-name {
+      color: #42b983;
+    }
   }
 }
 </style>

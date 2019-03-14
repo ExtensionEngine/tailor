@@ -96,10 +96,6 @@ export default {
     .insert-element {
       display: none;
     }
-
-    /deep/ .contained-content {
-      padding: 0;
-    }
   }
 }
 </style>

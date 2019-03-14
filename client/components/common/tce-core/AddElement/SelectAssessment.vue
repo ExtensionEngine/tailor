@@ -1,24 +1,20 @@
 <template>
-  <div class="select-assessment">
-    <div
-      v-for="(row, index) in rows"
-      :key="index"
-      class="row">
-      <div
-        v-for="{ name, subtype } in row"
+  <v-container :grid-list-lg="true">
+    <v-layout row wrap>
+      <v-flex
+        v-for="{ name, subtype } in assessments"
         :key="subtype"
-        :class="columnWidth"
+        v-bind="assessmentBindings"
         @click="$emit('selected', subtype)"
+        align-self-center
         class="btn-base assessment-type">
-        <span>{{ name }}</span>
-      </div>
-    </div>
-  </div>
+        {{ name }}
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
-import chunk from 'lodash/chunk';
-
 const ASSESSMENTS_PER_ROW = 6;
 
 export default {
@@ -29,44 +25,29 @@ export default {
     rowSize: { type: Number, default: ASSESSMENTS_PER_ROW }
   },
   computed: {
-    rows() {
-      return chunk(this.elements, this.rowSize);
-    },
-    columns() {
-      return Math.min(this.elements.length, this.rowSize);
-    },
     elements() {
       const { exclude, assessments } = this;
       if (!exclude.length) return assessments;
       return assessments.filter(it => !exclude.includes(it.type));
     },
-    columnWidth() {
-      return `col-xs-${12 / this.columns}`;
+    assessmentBindings() {
+      const columns = Math.min(this.elements.length, this.rowSize);
+      const columnWidth = Math.floor(12 / columns);
+      return { [`xs${columnWidth}`]: true };
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.select-assessment {
-  max-width: 970px;
-  margin: 20px auto;
+.assessment-type {
   color: #444;
+  font-size: 16px;
+  line-height: 16px;
 
-  .row {
-    padding-bottom: 40px;
-  }
-
-  .assessment-type {
-    display: inline-block;
-    font-size: 16px;
-    line-height: 16px;
-    vertical-align: middle;
-
-    &:hover {
-      color: #42b983;
-      cursor: pointer;
-    }
+  &:hover {
+    color: #42b983;
+    cursor: pointer;
   }
 }
 </style>
