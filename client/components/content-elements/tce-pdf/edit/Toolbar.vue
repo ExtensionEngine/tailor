@@ -1,16 +1,24 @@
 <template>
   <div class="tce-pdf-toolbar">
-    <div :class="{ visible }" class="new-window">
+    <div v-if="url && !editing" class="new-window">
       <a :href="url" target="_blank">
         <span class="mdi mdi-open-in-new"></span>
       </a>
     </div>
+    <file-upload
+      v-if="!url || editing"
+      :fileKey="fileName ? url : null"
+      :validate="{ ext: 'PDF' }"
+      @upload="setFile"
+      @delete="setFile"/>
     <input
-      v-model="url"
+      ref="input"
+      :value="fileName || url"
       :disabled="!editing"
+      @input="editUrl"
       class="form-control"
       type="text"
-      placeholder="URL">
+      placeholder="...or paste a URL">
     <button
       v-if="!editing"
       @click="editing = true"
@@ -31,6 +39,8 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import FileUpload from '@/components/common/FileUpload';
+import pick from 'lodash/pick';
 
 export default {
   name: 'tce-pdf-toolbar',
@@ -45,22 +55,28 @@ export default {
     };
   },
   computed: {
-    visible() {
-      return !!this.url;
-    },
     hasChanges() {
       const { url, element: { data } } = this;
-      return url && data.url !== url.trim();
+      return url && data.url !== url;
     }
   },
   methods: {
     save() {
       this.editing = false;
       const element = cloneDeep(this.element);
-      element.data.url = this.url;
+      Object.assign(element.data, pick(this, ['url', 'fileName']));
       this.$emit('save', element);
-    }
-  }
+    },
+    setFile({ key, name }) {
+      this.url = key || null;
+      this.fileName = name || null;
+    },
+    editUrl() {
+      this.fileName = null;
+      this.url = this.$refs.input.value;
+    },
+  },
+  components: { FileUpload }
 };
 </script>
 
@@ -93,11 +109,6 @@ export default {
   .new-window {
     display: inline-block;
     background: #fff;
-    visibility: hidden;
-
-    &.visible {
-      visibility: visible;
-    }
 
     a {
       color: #444;
@@ -106,6 +117,10 @@ export default {
         color: #42b983;
       }
     }
+  }
+
+  /deep/ .help-block {
+    display: none;
   }
 }
 </style>
