@@ -37,7 +37,7 @@ function getContentInventory(courseId) {
 function publishRepositoryMeta(id) {
   return request.post(`/courses/${id}/publish`).then(res => res.data);
 }
-function getDownload(courseId) {
+function getDownloadFile(courseId) {
   return request({
     method: 'get',
     responseType: 'blob',
@@ -52,5 +52,5 @@ export default {
   removeUser,
   getContentInventory,
   publishRepositoryMeta,
-  getDownload
+  getDownloadFile
 };

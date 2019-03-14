@@ -22,7 +22,7 @@ router
   .post('/courses/:id/users', ctrl.upsertUser)
   .delete('/courses/:id/users/:userId', ctrl.removeUser)
   .get('/courses/:id/contentInventory', ctrl.exportContentInventory)
-  .get('/courses/:id/download', ctrl.downloadCourse);
+  .get('/courses/:id/download', ctrl.downloadCourseInfo);
 
 function getCourse(req, res) {
   return Course.findById(req.params.id, { paranoid: false })

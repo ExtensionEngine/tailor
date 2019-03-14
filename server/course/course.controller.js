@@ -101,7 +101,7 @@ function exportContentInventory({ course }, res) {
     });
 }
 
-function downloadCourse({ course }, res) {
+function downloadCourseInfo({ course }, res) {
   const tempPubSer = createPubSer({
     filesystem: {
       path: 'temp'
@@ -131,5 +131,5 @@ module.exports = {
   removeUser,
   exportContentInventory,
   publishRepoInfo,
-  downloadCourse
+  downloadCourseInfo
 };
