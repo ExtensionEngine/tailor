@@ -83,7 +83,7 @@ export default {
       }
       const initState = get(config, 'initState', () => ({}));
       element.data = { ...element.data, ...initState() };
-      if (element.type === 'QUESTION') delete element.data.correct;
+      if (element.type === 'REFLECTION') delete element.data.correct;
       this.$emit('add', element);
       this.close();
     },

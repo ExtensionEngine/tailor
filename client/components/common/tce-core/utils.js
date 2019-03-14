@@ -9,11 +9,11 @@ export function processAssessmentType(type) {
 }
 
 export function isAssessment(type) {
-  return ['QUESTION', 'ASSESSMENT'].includes(type);
+  return ['REFLECTION', 'ASSESSMENT'].includes(type);
 }
 
 export function getElementType(type) {
-  return type === 'QUESTION' ? 'ASSESSMENT' : type;
+  return type === 'REFLECTION' ? 'ASSESSMENT' : type;
 }
 
 export function getToolbarName(type) {

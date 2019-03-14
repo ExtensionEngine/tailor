@@ -64,8 +64,8 @@ export default {
           type: 'ASSESSMENT',
           ui: { icon: 'mdi-help' }
         }, {
-          name: 'Question',
-          type: 'QUESTION',
+          name: 'Reflection',
+          type: 'REFLECTION',
           ui: { icon: 'mdi-comment-question-outline' }
         });
       }
@@ -74,7 +74,7 @@ export default {
     },
     assessments() {
       const filters = { type: 'ASSESSMENT' };
-      if (this.type === 'QUESTION') filters.reflection = true;
+      if (this.type === 'REFLECTION') filters.reflection = true;
       return filter(this.registry, filters);
     },
     showAssessments() {
