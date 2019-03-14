@@ -61,6 +61,10 @@ export default {
 $container-height: 40px;
 $font-color: #333;
 
+.v-toolbar {
+  z-index: 10;
+}
+
 .app-brand {
   cursor: pointer;
 

@@ -1,8 +1,10 @@
 <template>
   <v-app id="app">
-    <navbar></navbar>
-    <router-view class="contaner-fluid view"></router-view>
-    <confirmation-modal></confirmation-modal>
+    <navbar/>
+    <v-content>
+      <router-view class="view"/>
+    </v-content>
+    <confirmation-modal/>
   </v-app>
 </template>
 
@@ -30,28 +32,23 @@ html, body {
   height: 100%;
 }
 
-.application {
-  background-color: #e0e0e0 !important;
-}
-
 #app {
-  height: 100%;
-  padding-top: 64px;
   color: rgba(0,0,0,0.87);
   font-family: Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   overflow: hidden;
-
-  /deep/ .view {
-    overflow-y: scroll;
-    overflow-y: overlay;
-  }
+  background-color: #e0e0e0 !important;
 }
 
-// TODO: Remove global override of Bootstrap class
-.contaner-fluid {
+.v-content .view {
+  overflow-y: scroll;
+  overflow-y: overlay;
+}
+
+.application, .v-content, .view {
+  width: 100%;
   height: 100%;
 }
 </style>
