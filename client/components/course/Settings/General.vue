@@ -90,7 +90,7 @@ export default {
     download() {
       api.getDownload(this.$route.params.courseId)
       .then(res => {
-        saveAs(res.data, `repoContent.zip`);
+        saveAs(res.data, `${this.course.name}.zip`);
       });
     }
   },

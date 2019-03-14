@@ -13,7 +13,7 @@ const omit = require('lodash/omit');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
-const storage = require('../storage');
+const storage = require('../storage').storage;
 const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;

@@ -9,6 +9,9 @@ class Storage {
     this.provider = Storage.createProvider(config);
     autobind(this);
   }
+  static create(config) {
+    return new Storage(config);
+  }
 
   getFile(key, options = {}) {
     return this.provider.getFile(key, options);
@@ -55,7 +58,10 @@ class Storage {
   }
 }
 
-module.exports = new Storage(config);
+module.exports = {
+  storage: new Storage(config),
+  create: Storage.create
+};
 
 function loadProvider(name) {
   try {

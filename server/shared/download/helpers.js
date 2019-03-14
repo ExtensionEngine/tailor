@@ -1,7 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
-const storage = require('../storage');
+const strg = require('../storage');
 const hash = require('hash-obj');
 const keys = require('lodash/keys');
 const pick = require('lodash/pick');
@@ -9,16 +9,22 @@ const without = require('lodash/without');
 const JSZip = require('jszip');
 const fs = Promise.promisifyAll(require('fs-extra'));
 const path = require('path');
+const storage = strg.create({
+  filesystem: {
+    path: 'temp'
+  },
+  provider: 'filesystem'
+});
 
 function getFileNames(key) {
-  const folderPath = path.join(__dirname, `../../../tempRepository/${key}`);
+  const folderPath = path.join(__dirname, `../../../temp/tempRepository/${key}`);
   return fs.readdirAsync(folderPath);
 }
 function prepZip(files, courseId) {
   return new Promise((resolve) => {
     let zip = new JSZip();
     Promise.map(files, (file) => {
-      const key = `../../../tempRepository/${courseId}/${file}`;
+      const key = `../../../temp/tempRepository/${courseId}/${file}`;
       const filePath = path.join(__dirname, key);
       return fs.readFileAsync(filePath, 'utf8')
       .then(data => {
@@ -27,7 +33,7 @@ function prepZip(files, courseId) {
     })
   .then(() => {
     return zip.generateAsync({ type: 'nodebuffer' })
-    .then((file) => resolve(fs.writeFileAsync(`tempRepository/${courseId}.zip`, file)));
+    .then((file) => resolve(fs.writeFileAsync(`temp/tempRepository/${courseId}.zip`, file)));
   });
   });
 }
@@ -56,7 +62,7 @@ function saveSpine(spine) {
   const version = hash(hashProperties, { algorithm: 'sha1' });
   const updatedSpine = { ...spine, version, publishedAt: new Date() };
   const spineData = Buffer.from(JSON.stringify(updatedSpine), 'utf8');
-  const key = `../tempRepository/${spine.id}/index.json`;
+  const key = `/tempRepository/${spine.id}/index.json`;
   return storage.saveFile(key, spineData);
 }
 

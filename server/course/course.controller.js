@@ -107,8 +107,8 @@ function downloadCourse({ course }, res) {
     .then(() => download.getFileNames(course.id))
     .then(files => download.prepZip(files, course.id))
     .then(() => {
-      res.download(path.join(__dirname, `../..//tempRepository/${course.id}.zip`), `${course.id}.zip`);
-      return download.deleteDir('tempRepository');
+      res.download(path.join(__dirname, `../../temp/tempRepository/${course.id}.zip`));
+      return download.deleteDir('temp');
     });
 }
 
