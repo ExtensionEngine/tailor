@@ -24,8 +24,8 @@ export default class ElementRegistry {
     await this.load(elements.concat(extensions));
   }
 
-  load(items) {
-    return Promise.map(items, async ({ location, isExtension }, position) => {
+  load(elements) {
+    return Promise.map(elements, async ({ location, isExtension }, position) => {
       const { _registry, Vue } = this;
       const element = isExtension
         ? (await import(`../extensions/content-elements/${location}`)).default
