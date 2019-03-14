@@ -3,6 +3,7 @@
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
+const { getFileNames, prepZip, deleteDir } = require('../shared/download/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
@@ -11,8 +12,6 @@ const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const sample = require('lodash/sample');
-const download = require('../shared/download/helpers');
-const path = require('path');
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
 function index({ query, user, opts }, res) {
@@ -109,11 +108,11 @@ function downloadCourse({ course }, res) {
     },
     provider: 'filesystem'});
   return tempPubSer.publishRepoDetails(course)
-    .then(() => download.getFileNames(course.id))
-    .then(files => download.prepZip(files, course.id))
+    .then(() => getFileNames(course.id))
+    .then(files => prepZip(files, course.id))
     .then(() => {
-      res.download(path.join(__dirname, `../../temp/repository/${course.id}.zip`));
-      return download.deleteDir('temp');
+      res.download(`temp/repository/${course.id}.zip`);
+      return deleteDir('temp');
     });
 }
 

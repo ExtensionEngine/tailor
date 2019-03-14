@@ -6,12 +6,12 @@ const JSZip = require('jszip');
 const path = require('path');
 
 function getFileNames(key) {
-  const folderPath = path.join(__dirname, `../../../temp/repository/${key}`);
+  const folderPath = `temp/repository/${key}`;
   return fs.readdirAsync(folderPath);
 }
 function prepZip(files, courseId) {
   return new Promise((resolve) => {
-    let zip = new JSZip();
+    const zip = new JSZip();
     Promise.map(files, (file) => {
       const key = `../../../temp/repository/${courseId}/${file}`;
       const filePath = path.join(__dirname, key);
