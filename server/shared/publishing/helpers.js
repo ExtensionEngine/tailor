@@ -13,7 +13,6 @@ const omit = require('lodash/omit');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
-const storage = require('../storage').storage;
 const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
@@ -23,8 +22,8 @@ const TES_ATTRS = [
   'position', 'data', 'meta', 'refs', 'createdAt', 'updatedAt'
 ];
 
-function publishActivity(activity) {
-  return getStructureData(activity).then(data => {
+function publishActivity(activity, storage) {
+  return getStructureData(activity, storage).then(data => {
     let { repository, predecessors, spine } = data;
     predecessors.forEach(it => {
       const exists = find(spine.structure, { id: it.id });
@@ -32,16 +31,16 @@ function publishActivity(activity) {
     });
     activity.publishedAt = new Date();
     addToSpine(spine, activity);
-    return publishContent(repository, activity).then(content => {
+    return publishContent(repository, activity, storage).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
-      return saveSpine(spine)
-        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+      return saveSpine(spine, storage)
+        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt, storage))
         .then(() => activity.save());
     });
   });
 }
 
-function updateRepositoryCatalog(repository, publishedAt) {
+function updateRepositoryCatalog(repository, publishedAt, storage) {
   return storage.getFile('repository/index.json').then(buffer => {
     let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
     let existing = find(catalog, { id: repository.id });
@@ -56,16 +55,16 @@ function updateRepositoryCatalog(repository, publishedAt) {
   });
 }
 
-function publishRepositoryDetails(repository) {
-  return getPublishedStructure(repository).then(spine => {
+function publishRepositoryDetails(repository, storage) {
+  return getPublishedStructure(repository, storage).then(spine => {
     Object.assign(spine, getRepositoryAttrs(repository));
-    return saveSpine(spine)
-      .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt));
+    return saveSpine(spine, storage)
+      .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt, storage));
   });
 }
 
-function unpublishActivity(repository, activity) {
-  return getPublishedStructure(repository).then(spine => {
+function unpublishActivity(repository, activity, storage) {
+  return getPublishedStructure(repository, storage).then(spine => {
     const spineActivity = find(spine.structure, { id: activity.id });
     if (!spineActivity) return;
     const deleted = getSpineChildren(spine, activity).concat(spineActivity);
@@ -77,22 +76,22 @@ function unpublishActivity(repository, activity) {
       });
     }).then(() => {
       spine.structure = filter(spine.structure, ({ id }) => !find(deleted, { id }));
-      return saveSpine(spine)
-        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+      return saveSpine(spine, storage)
+        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt, storage))
         .then(() => activity.save());
     });
   });
 }
 
-function getStructureData(activity) {
+function getStructureData(activity, storage) {
   const repoData = activity.getCourse().then(repository => {
-    return getPublishedStructure(repository).then(spine => ({ repository, spine }));
+    return getPublishedStructure(repository, storage).then(spine => ({ repository, spine }));
   });
   return Promise.all([repoData, activity.predecessors()])
     .spread((repoData, predecessors) => Object.assign(repoData, { predecessors }));
 }
 
-function getPublishedStructure(repository) {
+function getPublishedStructure(repository, storage) {
   const storageKey = `repository/${repository.id}/index.json`;
   return storage.getFile(storageKey).then(buffer => {
     const data = buffer && JSON.parse(buffer.toString('utf8'));
@@ -100,36 +99,36 @@ function getPublishedStructure(repository) {
   });
 }
 
-function publishContent(repository, activity) {
+function publishContent(repository, activity, storage) {
   const config = find(repository.getSchemaConfig().structure, pick(activity, 'type'));
   const containerTypes = get(config, 'contentContainers', []);
   return Promise.all([
-    publishContainers(activity, containerTypes),
-    publishExams(activity),
-    publishAssessments(activity)
+    publishContainers(activity, containerTypes, storage),
+    publishExams(activity, storage),
+    publishAssessments(activity, storage)
   ]).spread((containers, exams, assessments) => ({ containers, exams, assessments }));
 }
 
-function publishContainers(parent, types) {
+function publishContainers(parent, types, storage) {
   return parent.getChildren({ where: { type: types } })
     .then(containers => Promise.map(containers, fetchContainer))
     .then(containers => Promise.map(containers, it => {
-      return saveFile(parent, `${it.id}.container`, it).then(() => it);
+      return saveFile(parent, `${it.id}.container`, it, storage).then(() => it);
     }));
 }
 
-function publishExams(parent) {
+function publishExams(parent, storage) {
   return fetchExams(parent).then(exams => Promise.map(exams, exam => {
-    return saveFile(parent, `${exam.id}.exam`, exam).then(() => exam);
+    return saveFile(parent, `${exam.id}.exam`, exam, storage).then(() => exam);
   }));
 }
 
-function publishAssessments(parent) {
+function publishAssessments(parent, storage) {
   const options = { where: { type: 'ASSESSMENT' }, attributes: TES_ATTRS };
   return parent.getTeachingElements(options).then(assessments => {
     if (!assessments.length) return Promise.resolve([]);
     const key = getAssessmentsKey(parent);
-    return saveFile(parent, key, assessments).then(() => assessments);
+    return saveFile(parent, key, assessments, storage).then(() => assessments);
   });
 }
 
@@ -170,13 +169,13 @@ async function fetchQuestionGroups(exam) {
   };
 }
 
-function saveFile(parent, key, data) {
+function saveFile(parent, key, data, storage) {
   const buffer = Buffer.from(JSON.stringify(data), 'utf8');
   const baseUrl = getBaseUrl(parent.courseId, parent.id);
   return storage.saveFile(`${baseUrl}/${key}.json`, buffer);
 }
 
-function saveSpine(spine) {
+function saveSpine(spine, storage) {
   const hashProperties = pick(spine, without(keys(spine), ['version', 'publishedAt']));
   const version = hash(hashProperties, { algorithm: 'sha1' });
   const updatedSpine = { ...spine, version, publishedAt: new Date() };

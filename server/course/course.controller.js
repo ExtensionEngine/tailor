@@ -6,10 +6,10 @@ const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
+const { publishingService, create: createPubSer } = require('../shared/publishing/publishing.service');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
-const publishingService = require('../shared/publishing/publishing.service');
 const sample = require('lodash/sample');
 const download = require('../shared/download/helpers');
 const path = require('path');
@@ -103,11 +103,16 @@ function exportContentInventory({ course }, res) {
 }
 
 function downloadCourse({ course }, res) {
-  return download.publishRepositoryDetails(course)
+  const tempPubSer = createPubSer({
+    filesystem: {
+      path: 'temp'
+    },
+    provider: 'filesystem'});
+  return tempPubSer.publishRepoDetails(course)
     .then(() => download.getFileNames(course.id))
     .then(files => download.prepZip(files, course.id))
     .then(() => {
-      res.download(path.join(__dirname, `../../temp/tempRepository/${course.id}.zip`));
+      res.download(path.join(__dirname, `../../temp/repository/${course.id}.zip`));
       return download.deleteDir('temp');
     });
 }

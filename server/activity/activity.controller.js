@@ -2,10 +2,10 @@
 
 const { Activity } = require('../shared/database');
 const { getOutlineLevels } = require('../../config/shared/activities');
+const { publishingService } = require('../shared/publishing/publishing.service');
 const find = require('lodash/find');
 const get = require('lodash/get');
 const pick = require('lodash/pick');
-const publishingService = require('../shared/publishing/publishing.service');
 
 function create({ course, body, params, user }, res) {
   const outlineConfig = find(getOutlineLevels(course.schema), { type: body.type });
