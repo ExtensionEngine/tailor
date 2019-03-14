@@ -32,7 +32,7 @@ export default class ElementRegistry {
       'name', 'type', 'subtype', 'reflection',
       'version', 'schema', 'initState', 'ui'
     ];
-    const isAssessment = element.type === 'ASSESSMENT';
+    const isAssessment = ['QUESTION', 'ASSESSMENT'].includes(element.type);
     const type = isAssessment
       ? processAssessmentType(element.subtype)
       : element.type;

@@ -73,9 +73,9 @@ export default {
       return filter(result, it => includes(this.include, it.type));
     },
     assessments() {
-      const filters = { type: 'ASSESSMENT' };
-      if (this.type === 'REFLECTION') filters.reflection = true;
-      return filter(this.registry, filters);
+      const types = ['QUESTION'];
+      if (this.type === 'ASSESSMENT') types.push(this.type);
+      return filter(this.registry, it => types.includes(it.type));
     },
     showAssessments() {
       return isAssessment(this.type);

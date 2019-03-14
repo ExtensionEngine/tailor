@@ -11,9 +11,8 @@ const initState = () => ({
 
 export default {
   name: 'Text Response',
-  type: 'ASSESSMENT',
+  type: 'QUESTION',
   subtype: 'TR',
-  reflection: true,
   version: '1.0',
   schema,
   initState,

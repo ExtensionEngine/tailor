@@ -19,9 +19,8 @@ const initState = () => ({
 
 export default {
   name: 'Fill in the blank',
-  type: 'ASSESSMENT',
+  type: 'QUESTION',
   subtype: 'FB',
-  reflection: true,
   version: '1.0',
   schema,
   initState,

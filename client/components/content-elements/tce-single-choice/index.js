@@ -13,9 +13,8 @@ const initState = () => ({
 
 export default {
   name: 'Single Choice',
-  type: 'ASSESSMENT',
+  type: 'QUESTION',
   subtype: 'SC',
-  reflection: true,
   version: '1.0',
   schema,
   initState,
