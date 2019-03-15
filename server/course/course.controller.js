@@ -108,11 +108,10 @@ function downloadCourseInfo({ course }, res) {
     },
     provider: 'filesystem'});
   return tempPubSer.publishRepoDetails(course)
-    .then(() => getFileNames(course.id))
-    .then(files => prepZip(files, course.id))
+    .then(() => prepZip(course.id))
     .then(() => {
-      res.download(`temp/repository/${course.id}.zip`);
-      return deleteDir('temp');
+      res.download(`temp/repository/${course.id}.tgz`);
+      //return deleteDir('temp');
     });
 }
 

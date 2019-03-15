@@ -59,6 +59,7 @@ class Storage {
 }
 
 module.exports = {
+  Storage,
   storage: new Storage(config),
   create: Storage.create
 };

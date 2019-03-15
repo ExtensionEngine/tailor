@@ -107,6 +107,7 @@
     "sequelize": "^4.22.0",
     "snyk": "^1.134.2",
     "string-template": "^1.0.0",
+    "tar": "^4.4.8",
     "to-case": "^2.0.0",
     "truncate": "^2.0.0",
     "untildify": "^3.0.2",
