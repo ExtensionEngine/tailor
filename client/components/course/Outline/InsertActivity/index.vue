@@ -3,7 +3,7 @@
     <div v-if="!showInput" @click="show" class="divider-wrapper">
       <div class="divider">
         <div class="action">
-          <v-btn color="blue-grey darken-1" fab dark small>
+          <v-btn color="blue-grey darken-1" dark small>
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>
@@ -113,7 +113,7 @@ export default {
 
 <style lang="scss" scoped>
 .divider-wrapper {
-  width: 100%;
+  margin-right: -6px;
   padding: 8px 0;
   cursor: pointer;
   opacity: 0;
@@ -132,11 +132,23 @@ export default {
 
     .action {
       position: absolute;
-      top: -26px;
-      right: -62px;
+      top: -18px;
+      right: -32px;
       height: 0;
       font-size: 16px;
       text-align: left;
+    }
+  }
+
+  .v-btn {
+    $size: 24px;
+
+    height: $size;
+    width: $size;
+    min-width: $size;
+
+    .v-icon {
+      font-size: 20px;
     }
   }
 }
