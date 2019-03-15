@@ -106,10 +106,13 @@ export default {
 
 .element-type {
   font-size: 16px;
+  cursor: pointer;
+
+  .element-icon {
+    color: #444;
+  }
 
   &:hover {
-    cursor: pointer;
-
     .element-icon, .element-name {
       color: #42b983;
     }

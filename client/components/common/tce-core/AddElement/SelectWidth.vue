@@ -1,14 +1,21 @@
 <template>
-  <div class="select-width">
-    <div
-      v-for="width in widths"
-      :key="width.value"
-      @click="$emit('selected', width.value)"
-      class="content-width">
-      <span :class="width.icon" class="mdi"></span>
-      <span>{{ width.label }} width</span>
-    </div>
-  </div>
+  <v-container :grid-list-xs="true">
+    <v-layout row wrap>
+      <v-flex
+        v-for="{ value, label, icon } in widths"
+        :key="value"
+        @click="$emit('selected', value)"
+        align-self-center
+        class="width-container">
+        <v-icon large class="width-icon">
+          {{ icon }}
+        </v-icon>
+        <div class="width-label">
+          {{ label }} width
+        </div>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -26,27 +33,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.select-width {
-  display: inline-block;
-}
+.width-container {
+  font-size: 16px;
+  cursor: pointer;
 
-.content-width {
-  display: inline-block;
-  margin: 0 20px;
-  padding: 5px 10px;
+  .width-icon {
+    color: #444;
+  }
 
   &:hover {
-    color: #42b983;
-    cursor: pointer;
-  }
-
-  span {
-    display: block;
-    font-size: 16px;
-  }
-
-  .mdi {
-    font-size: 36px;
+    .width-icon, .width-label {
+      color: #42b983;
+    }
   }
 }
 </style>
