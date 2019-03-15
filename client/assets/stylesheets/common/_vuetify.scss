@@ -1,8 +1,8 @@
+// Patches in order for vuetify to work alongside bootstrap
 .v-text-field input {
   padding: 8px 0;
 }
 
-// Patches in order for vuetify to work alongside bootstrap
 .v-input {
   input:focus, textarea:focus {
     box-shadow: none !important;
