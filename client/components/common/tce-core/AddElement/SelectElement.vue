@@ -4,7 +4,7 @@
       v-if="showAssessments"
       :assessments="assessments"
       @selected="setSubtype"/>
-    <v-container v-else :grid-list-lg="true" fluid>
+    <v-container v-else :grid-list-lg="true" fluid class="py-3 px-2">
       <v-layout row wrap>
         <v-flex
           v-for="{ name, type, ui } in elements"

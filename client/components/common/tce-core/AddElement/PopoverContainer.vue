@@ -36,14 +36,13 @@ export default {
   width: 100%;
   margin: 0;
   opacity: 0;
-  transition: opacity 0.8s ease-in-out, margin 0.2s ease-in-out;
+  transition: opacity 0.8s ease-in-out;
 
   &:hover {
     opacity: 1;
   }
 
   &.opened {
-    margin: 2px 0;
     opacity: 1;
 
     hr {
@@ -59,8 +58,9 @@ export default {
   hr {
     flex: 1;
     height: 2px;
-    margin: 0;
+    margin: 0 0 1px;
     background-color: #42b983;
+    border: 0;
     cursor: pointer;
     transition: height 0.2s ease-in-out;
   }
