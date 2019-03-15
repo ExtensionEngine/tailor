@@ -43,6 +43,14 @@ module.exports = {
     '@poi/bundle-report',
     require.resolve('./build/plugins/stats'),
     {
+      resolve: require.resolve('./build/plugins/output-filenames'),
+      options: {
+        vendor: {
+          font: 'assets/fonts/[name].[ext]',
+          image: 'assets/images/[name].[ext]'
+        }
+      }
+    }, {
       resolve: require.resolve('./build/plugins/copy'),
       options: { patterns: copy }
     }, {
