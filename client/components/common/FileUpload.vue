@@ -101,7 +101,7 @@ export default {
 }
 
 .file-name {
-  color:#0000FF;
+  color: #00f;
   font-size: 16px;
   text-decoration: underline;
   cursor: pointer;
@@ -109,8 +109,8 @@ export default {
 
 .delete {
   padding: 0 5px;
-  font-size: 18px;
   color: #808080;
+  font-size: 18px;
   cursor: pointer;
 
   &:hover {

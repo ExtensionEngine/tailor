@@ -192,7 +192,7 @@ $line-size: 20px;
     }
 
     .action {
-      padding: 0px 5px;
+      padding: 0 5px;
 
       &:hover {
         background: #e0e0e0;

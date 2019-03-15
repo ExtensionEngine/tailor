@@ -55,12 +55,12 @@ exports.apply = (api, { files, imagesPath } = {}) => {
     }
   });
   config.constants = Object.assign({}, config.constants, {
-    BRAND_CONFIG: {
-      TITLE: JSON.stringify(constants.title),
-      FAVICON: JSON.stringify(path.join(imagesPath, constants.favicon)),
-      LOGO_COMPACT: JSON.stringify(path.join(imagesPath, constants.logo.compact)),
-      LOGO_FULL: JSON.stringify(path.join(imagesPath, constants.logo.full))
-    }
+    BRAND_CONFIG: JSON.stringify({
+      TITLE: constants.title,
+      FAVICON: path.join(imagesPath, constants.favicon),
+      LOGO_COMPACT: path.join(imagesPath, constants.logo.compact),
+      LOGO_FULL: path.join(imagesPath, constants.logo.full)
+    })
   });
 };
 
