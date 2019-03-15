@@ -85,6 +85,7 @@ export default {
   display: inline-block;
   margin: 0 0 0 10px;
   padding: 0;
+  font-size: 14px !important;
 
   input {
     min-width: 250px;
