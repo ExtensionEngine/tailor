@@ -122,9 +122,8 @@ export default {
       if (!this.isEditing) return;
       this.errors = [];
       this.validate().then(() => {
-        const elementData = this.isGraded
-          ? cloneDeep(this.editedElement.data)
-          : cloneDeep(omit(this.editedElement.data, ['correct']));
+        const elementData = cloneDeep(this.editedElement.data);
+        if (!this.isGraded) delete elementData.correct;
         this.$emit('save', elementData);
         this.isEditing = false;
         this.setAlert(saveAlert);
