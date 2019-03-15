@@ -109,8 +109,6 @@ $gutter: 5px;
 .title {
   display: block;
   margin-bottom: 10px;
-  font-size: 14px !important;
-  font-weight: 400;
   color: #808080;
 }
 

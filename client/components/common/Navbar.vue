@@ -1,8 +1,8 @@
 <template>
   <v-toolbar color="white" app fixed>
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
-      <v-avatar size="40">
-        <img :src="logo" alt="Logo" class="logo"/>
+      <v-avatar color="blue darken-3" size="40">
+        <v-icon color="white">mdi-content-cut</v-icon>
       </v-avatar>
       <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
     </router-link>
@@ -42,7 +42,6 @@ export default {
   name: 'main-toolbar',
   data() {
     return {
-      logo: BRAND_CONFIG.LOGO_COMPACT,
       title: BRAND_CONFIG.TITLE
     };
   },
@@ -60,6 +59,10 @@ export default {
 <style lang="scss" scoped>
 $container-height: 40px;
 $font-color: #333;
+
+.v-toolbar {
+  z-index: 10;
+}
 
 .app-brand {
   cursor: pointer;

@@ -19,7 +19,7 @@ import store from './store';
 import router from './router';
 import App from './App';
 
-Vue.component('te-assessment', Assessment);
+Vue.component('tce-assessment', Assessment);
 
 const registry = new ElementRegistry(Vue);
 registry.initialize();
@@ -37,7 +37,7 @@ Vue.use(VeeValidate, {
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {
-    'en-US': require('assets/locales/timeago-en-US-short.json')
+    'en-US': require('@/assets/locales/timeago-en-US-short.json')
   }
 });
 
