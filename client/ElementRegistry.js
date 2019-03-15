@@ -18,30 +18,31 @@ export default class ElementRegistry {
   }
 
   async initialize() {
-    const elements = elementList.map(location => ({ location }));
-    const extensionList = await this.loadExtensionList();
-    const extensions = extensionList.map(location => ({ location, isExtension: true }));
-    await this.load(elements.concat(extensions));
+    await Promise.map(elementList, (location, position) => {
+      return this.load(location, position);
+    });
+    const extensions = await this.loadExtensionList();
+    await Promise.map(extensions, (location, position) => {
+      return this.load(location, elementList.length + position, true);
+    });
   }
 
-  load(elements) {
-    return Promise.map(elements, async ({ location, isExtension }, position) => {
-      const { _registry, Vue } = this;
-      const element = isExtension
-        ? (await import(`../extensions/content-elements/${location}`)).default
-        : (await import(`./components/content-elements/${location}`)).default;
-      const attrs = [
-        'name', 'type', 'subtype', 'version', 'schema', 'initState', 'ui'
-      ];
-      const isAssessment = element.type === 'ASSESSMENT';
-      const type = isAssessment
-        ? processAssessmentType(element.subtype)
-        : element.type;
-      const componentName = getComponentName(type);
-      _registry.push({ ...pick(element, attrs), componentName, position });
-      Vue.component(componentName, element.Edit);
-      if (element.Toolbar) Vue.component(getToolbarName(type), element.Toolbar);
-    });
+  async load(location, position, isExtension) {
+    const { _registry, Vue } = this;
+    const element = isExtension
+      ? (await import(`../extensions/content-elements/${location}`)).default
+      : (await import(`./components/content-elements/${location}`)).default;
+    const attrs = [
+      'name', 'type', 'subtype', 'version', 'schema', 'initState', 'ui'
+    ];
+    const isAssessment = element.type === 'ASSESSMENT';
+    const type = isAssessment
+      ? processAssessmentType(element.subtype)
+      : element.type;
+    const componentName = getComponentName(type);
+    _registry.push({ ...pick(element, attrs), componentName, position });
+    Vue.component(componentName, element.Edit);
+    if (element.Toolbar) Vue.component(getToolbarName(type), element.Toolbar);
   }
 
   all() {
