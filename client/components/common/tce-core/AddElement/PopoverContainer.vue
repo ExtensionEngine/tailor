@@ -8,7 +8,7 @@
       :lazy="true"
       :nudge-bottom="10"
       :offset-y="true"
-      min-width="650"
+      min-width="675"
       z-index="101"
       attach=""
       content-class="selection-menu">
