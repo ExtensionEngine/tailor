@@ -1,7 +1,8 @@
 import {
   getComponentName,
   getToolbarName,
-  processAssessmentType
+  processAssessmentType,
+  isQuestion
 } from 'tce-core/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import elementList from './components/content-elements';
@@ -31,8 +32,7 @@ export default class ElementRegistry {
     const attrs = [
       'name', 'type', 'subtype', 'version', 'schema', 'initState', 'ui'
     ];
-    const isAssessment = ['QUESTION', 'ASSESSMENT'].includes(element.type);
-    const type = isAssessment
+    const type = isQuestion(element.type)
       ? processAssessmentType(element.subtype)
       : element.type;
     const componentName = getComponentName(type);

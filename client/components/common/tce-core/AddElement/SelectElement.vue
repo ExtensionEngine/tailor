@@ -1,7 +1,7 @@
 <template>
   <div class="select-element">
     <div
-      v-if="!showAssessments"
+      v-if="!showQuestions"
       :style="{ 'max-width': `${maxWidth}px` }"
       class="elements">
       <div
@@ -20,8 +20,8 @@
       </div>
     </div>
     <select-assessment
-      v-if="showAssessments"
-      :assessments="assessments"
+      v-if="showQuestions"
+      :assessments="questions"
       @selected="setSubtype"/>
   </div>
 </template>
@@ -30,7 +30,7 @@
 import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
-import { isAssessment } from '../utils';
+import { isQuestion } from '../utils';
 import SelectAssessment from './SelectAssessment';
 
 const ELEMENTS_PER_ROW = 6;
@@ -57,8 +57,8 @@ export default {
       return Math.min(this.elements.length, this.rowSize);
     },
     elements() {
-      const result = filter(this.registry, it => it.type !== 'ASSESSMENT');
-      if (this.assessments.length) {
+      const result = filter(this.registry, it => !isQuestion(it.type));
+      if (this.questions.length) {
         result.push({
           name: 'Assessment',
           type: 'ASSESSMENT',
@@ -72,13 +72,14 @@ export default {
       if (!this.include) return result;
       return filter(result, it => includes(this.include, it.type));
     },
-    assessments() {
+    questions() {
       const types = ['QUESTION'];
       if (this.type === 'ASSESSMENT') types.push(this.type);
+      if (this.type === 'REFLECTION') types.push(this.type);
       return filter(this.registry, it => types.includes(it.type));
     },
-    showAssessments() {
-      return isAssessment(this.type);
+    showQuestions() {
+      return isQuestion(this.type);
     },
     columnWidth() {
       return `col-xs-${Math.floor(12 / this.columns)}`;
@@ -91,7 +92,7 @@ export default {
   },
   methods: {
     setType(type) {
-      if (isAssessment(type)) {
+      if (isQuestion(type)) {
         this.type = type;
         return;
       }
@@ -105,10 +106,6 @@ export default {
     close() {
       this.type = null;
     }
-  },
-  created() {
-    const assessments = filter(this.elements, { type: 'ASSESSMENT' });
-    if (assessments.length === this.elements.length) this.type = 'ASSESSMENT';
   },
   components: { SelectAssessment }
 };

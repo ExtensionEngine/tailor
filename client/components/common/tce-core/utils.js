@@ -8,8 +8,8 @@ export function processAssessmentType(type) {
   return `assessment-${toCase.slug(type)}`;
 }
 
-export function isAssessment(type) {
-  return ['REFLECTION', 'ASSESSMENT'].includes(type);
+export function isQuestion(type) {
+  return ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
 }
 
 export function getElementType(type) {
