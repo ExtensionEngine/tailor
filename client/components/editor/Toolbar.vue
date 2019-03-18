@@ -128,6 +128,7 @@ export default {
   position: absolute;
   width: 100%;
   z-index: 999;
+  border-top: 1px solid #ddd;
 }
 
 .editor-toolbar {

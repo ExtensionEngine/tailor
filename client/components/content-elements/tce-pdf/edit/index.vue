@@ -190,7 +190,6 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  padding-bottom: 30px;
   z-index: 2;
 
   .ie & {
