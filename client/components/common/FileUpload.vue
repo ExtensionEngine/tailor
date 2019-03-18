@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import api from '@/api/asset';
 import CircularProgress from 'components/common/CircularProgress';
 import EventBus from 'EventBus';
 import uniqueId from 'lodash/uniqueId';
@@ -38,6 +37,7 @@ const appChannel = EventBus.channel('app');
 
 export default {
   name: 'file-upload',
+  inject: ['$storageService'],
   mixins: [withValidation()],
   props: {
     id: { type: String, default: () => uniqueId('file_') },
@@ -61,7 +61,7 @@ export default {
       this.$validator.validate(this.id).then(isValid => {
         if (!isValid) return;
         this.uploading = true;
-        return api.upload(this.form)
+        return this.$storageService.upload(this.form)
           .then(({ key }) => {
             this.uploading = false;
             this.$emit('upload', { key, name: this.form.get('file').name });
@@ -71,13 +71,14 @@ export default {
       });
     },
     download() {
-      return api.getUrl(this.fileKey).then(url => {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = this.fileName;
-        a.target = '_blank';
-        a.click();
-      });
+      return this.$storageService.getUrl(this.fileKey)
+        .then(url => {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = this.fileName;
+          a.target = '_blank';
+          a.click();
+        });
     },
     deleteFile() {
       appChannel.emit('showConfirmationModal', {

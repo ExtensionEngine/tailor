@@ -5,6 +5,7 @@ import 'event-source-polyfill';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
+import assetsApi from '@/api/asset';
 import Assessment from 'tce-core/Assessment';
 import ElementRegistry from './ElementRegistry';
 import Timeago from 'vue-timeago';
@@ -47,7 +48,8 @@ new Vue({
   render: h => h(App),
   provide() {
     return {
-      $teRegistry: registry
+      $teRegistry: registry,
+      $storageService: assetsApi
     };
   }
 });
