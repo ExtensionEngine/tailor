@@ -69,7 +69,7 @@ export default {
   width: 100%;
   height: 100%;
   float: left;
-  padding: 80px 60px 0;
+  padding: 80px 90px 0 60px;
   overflow-y: scroll;
   overflow-y: overlay;
 

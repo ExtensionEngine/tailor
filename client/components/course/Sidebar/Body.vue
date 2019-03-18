@@ -1,16 +1,15 @@
 <template>
   <div class="body">
     <div class="publish-container">
-      <div class="publish-date">
-        <circular-progress v-if="publishing"></circular-progress>
-        <span v-else>{{ publishStatus }}</span>
-      </div>
-      <button
-        :disabled="publishing"
+      <div class="publish-date">{{ publishStatus }}</div>
+      <v-btn
+        :loading="publishing"
         @click="publishActivity"
-        class="btn btn-primary btn-material">
+        color="blue-grey"
+        outline
+        small>
         Publish
-      </button>
+      </v-btn>
     </div>
     <span class="type-label">{{ config.label }}</span>
     <div class="meta-element">
@@ -37,7 +36,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
-import CircularProgress from 'components/common/CircularProgress';
 import Discussion from './Discussion';
 import fecha from 'fecha';
 import Meta from 'components/common/Meta';
@@ -76,7 +74,6 @@ export default {
     }
   },
   components: {
-    CircularProgress,
     Discussion,
     Relationship,
     MetaInput: Meta
@@ -95,20 +92,14 @@ export default {
   padding: 0 7px;
 
   .publish-date {
-    width: 170px;
+    width: 180px;
     line-height: 44px;
   }
 
-  .btn {
+  .v-btn {
     position: absolute;
     top: 10px;
     right: 24px;
-    padding: 6px;
-  }
-
-  .circular-progress {
-    width: 24px;
-    margin: 0 20px;
   }
 }
 
