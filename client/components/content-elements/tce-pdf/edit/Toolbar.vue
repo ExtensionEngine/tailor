@@ -44,7 +44,7 @@ import pick from 'lodash/pick';
 
 export default {
   name: 'tce-pdf-toolbar',
-  inject: ['$storageService'],
+  inject: ['$elementBus', '$storageService'],
   props: {
     element: { type: Object, required: true }
   },
@@ -67,7 +67,7 @@ export default {
       this.editing = false;
       const element = cloneDeep(this.element);
       Object.assign(element.data, pick(this, ['url', 'fileName']));
-      this.$emit('save', element);
+      this.$elementBus.emit('save', element);
     },
     setFile({ key, name }) {
       this.url = key || null;

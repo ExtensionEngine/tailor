@@ -51,7 +51,7 @@ const TYPE = 'application/pdf';
 
 export default {
   name: 'tce-pdf',
-  inject: ['$storageService'],
+  inject: ['$elementBus', '$storageService'],
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
@@ -107,6 +107,7 @@ export default {
   },
   mounted() {
     this.resolveUrl().then(() => this.embedPdf());
+    this.$elementBus.on('save', ({ data }) => this.$emit('save', data));
   },
   beforeDestroy() {
     this.pdfObject = null;
