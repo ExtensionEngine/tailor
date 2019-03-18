@@ -18,7 +18,7 @@
       </label>
       <span
         v-else
-        @click="download"
+        @click="downloadFile"
         class="file-name">{{ fileName }}
       </span>
       <span v-if="fileKey" @click="deleteFile" class="mdi mdi-delete delete"></span>
@@ -29,6 +29,7 @@
 
 <script>
 import CircularProgress from 'components/common/CircularProgress';
+import downloadMixin from 'utils/downloadMixin';
 import EventBus from 'EventBus';
 import uniqueId from 'lodash/uniqueId';
 import { withValidation } from 'utils/validation';
@@ -38,7 +39,7 @@ const appChannel = EventBus.channel('app');
 export default {
   name: 'file-upload',
   inject: ['$storageService'],
-  mixins: [withValidation()],
+  mixins: [downloadMixin, withValidation()],
   props: {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
@@ -70,15 +71,9 @@ export default {
           });
       });
     },
-    download() {
+    downloadFile() {
       return this.$storageService.getUrl(this.fileKey)
-        .then(url => {
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = this.fileName;
-          a.target = '_blank';
-          a.click();
-        });
+        .then(url => this.download(url, this.fileName));
     },
     deleteFile() {
       appChannel.emit('showConfirmationModal', {
