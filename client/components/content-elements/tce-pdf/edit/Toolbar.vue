@@ -1,7 +1,7 @@
 <template>
   <div class="tce-pdf-toolbar">
     <div v-if="url && !editing" class="new-window">
-      <a :href="url" target="_blank">
+      <a :href="signedUrl || url" target="_blank">
         <span class="mdi mdi-open-in-new"></span>
       </a>
     </div>
@@ -44,6 +44,7 @@ import pick from 'lodash/pick';
 
 export default {
   name: 'tce-pdf-toolbar',
+  inject: ['$storageService'],
   props: {
     element: { type: Object, required: true }
   },
@@ -51,6 +52,7 @@ export default {
     return {
       editing: !this.element.data.url,
       url: '',
+      signedUrl: null,
       ...cloneDeep(this.element.data)
     };
   },
@@ -73,8 +75,17 @@ export default {
     },
     editUrl() {
       this.fileName = null;
-      this.url = this.$refs.input.value;
-    },
+      this.url = this.$refs.input.value.trim();
+    }
+  },
+  watch: {
+    url: {
+      immediate: true,
+      handler: function (val) {
+        if (!this.fileName) return (this.signedUrl = null);
+        this.$storageService.getUrl(val).then(url => (this.signedUrl = url));
+      }
+    }
   },
   components: { FileUpload }
 };

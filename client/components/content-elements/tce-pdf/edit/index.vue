@@ -47,9 +47,11 @@ import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';
 
 const ERR_TIMEOUT = 2500;
+const TYPE = 'application/pdf';
 
 export default {
   name: 'tce-pdf',
+  inject: ['$storageService'],
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
@@ -57,15 +59,14 @@ export default {
   data() {
     return {
       showError: false,
-      showViewer: true
+      showViewer: true,
+      url: ''
     };
   },
   computed: {
     source() {
-      const src = get(this.element, 'data.url');
-      if (!src) return;
-      const type = 'application/pdf';
-      return { type, src };
+      if (!this.url) return;
+      return { type: TYPE, src: this.url };
     },
     showPlaceholder() {
       return !this.source;
@@ -89,17 +90,23 @@ export default {
       if (!this.source) return;
       if (this.pdfObject) this.pdfObject.remove();
       this.createObject();
+    },
+    resolveUrl() {
+      const { url, fileName } = get(this.element, 'data', {});
+      if (!fileName) return Promise.resolve(this.url = url);
+      return this.$storageService.getUrl(url)
+        .then(signedUrl => (this.url = signedUrl));
     }
   },
   watch: {
-    source() {
+    'element.data.url'() {
       this.showViewer = true;
       this.showError = false;
-      this.embedPdf();
+      this.resolveUrl().then(() => this.embedPdf());
     }
   },
   mounted() {
-    this.embedPdf();
+    this.resolveUrl().then(() => this.embedPdf());
   },
   beforeDestroy() {
     this.pdfObject = null;
