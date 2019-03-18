@@ -1,24 +1,15 @@
 <template>
   <div class="toolbar">
     <element-toolbar
-      v-if="element && element.parent"
-      :key="`${element.parent._cid}-${element.id}`"
-      :element="element.parent"
-      :embed="element">
-      <template slot="embed-toolbar">
-        <element-toolbar :element="element"/>
-      </template>
-      <template slot="actions">
-        <slot name="actions"></slot>
-      </template>
-    </element-toolbar>
-    <element-toolbar
-      v-else-if="element"
-      :key="element._cid || element.id"
-      :element="element">
-      <template slot="actions">
-        <slot name="actions"></slot>
-      </template>
+      v-if="focusedElement"
+      :key="focusedElement.id"
+      :element="focusedElement.parent || focusedElement"
+      :embed="focusedElement.parent ? focusedElement : null">
+      <element-toolbar
+        v-if="focusedElement.parent"
+        slot="embed-toolbar"
+        :element="focusedElement"/>
+      <slot slot="actions" name="actions"></slot>
     </element-toolbar>
     <div v-show="!element" class="toolbar-container editor-toolbar">
       <router-link
@@ -68,6 +59,11 @@ import truncate from 'truncate';
 
 const { PREVIEW_URL } = process.env;
 
+const getEmbed = ({ type, data }, id) => {
+  if (type === 'ASSESSMENT') return find(data.question, { id });
+  return get(data, `embeds.${id}`);
+};
+
 export default {
   name: 'toolbar',
   props: {
@@ -79,8 +75,16 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['activities', 'tes']),
     ...mapGetters(['activity'], 'editor'),
-    ...mapGetters(['activities']),
+    focusedElement() {
+      const { element, tes } = this;
+      if (!element) return;
+      if (!element.embedded) return tes[element._cid];
+      let embed;
+      const parent = find(tes, p => (embed = getEmbed(p, element.id)));
+      return element.parent ? { ...embed, parent } : embed;
+    },
     courseId() {
       return get(this.activity, 'courseId');
     },
