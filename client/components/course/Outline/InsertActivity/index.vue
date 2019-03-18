@@ -135,17 +135,15 @@ export default {
       top: -18px;
       right: -32px;
       height: 0;
-      font-size: 16px;
-      text-align: left;
     }
   }
 
   .v-btn {
     $size: 24px;
 
-    height: $size;
     width: $size;
     min-width: $size;
+    height: $size;
 
     .v-icon {
       font-size: 20px;
