@@ -19,9 +19,9 @@
         </div>
       </div>
     </div>
-    <select-assessment
+    <select-question
       v-if="showQuestions"
-      :assessments="questions"
+      :questions="questions"
       @selected="setSubtype"/>
   </div>
 </template>
@@ -31,7 +31,7 @@ import chunk from 'lodash/chunk';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
 import { isQuestion } from '../utils';
-import SelectAssessment from './SelectAssessment';
+import SelectQuestion from './SelectQuestion';
 
 const ELEMENTS_PER_ROW = 6;
 
@@ -107,7 +107,7 @@ export default {
       this.type = null;
     }
   },
-  components: { SelectAssessment }
+  components: { SelectQuestion }
 };
 </script>
 

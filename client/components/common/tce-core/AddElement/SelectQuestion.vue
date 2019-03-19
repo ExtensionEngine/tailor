@@ -1,5 +1,5 @@
 <template>
-  <div class="select-assessment">
+  <div class="select-question">
     <div
       v-for="(row, index) in rows"
       :key="index"
@@ -9,7 +9,7 @@
         :key="subtype"
         :class="columnWidth"
         @click="$emit('selected', subtype)"
-        class="btn-base assessment-type">
+        class="btn-base question-type">
         <span>{{ name }}</span>
       </div>
     </div>
@@ -19,14 +19,14 @@
 <script>
 import chunk from 'lodash/chunk';
 
-const ASSESSMENTS_PER_ROW = 6;
+const QUESTIONS_PER_ROW = 6;
 
 export default {
-  name: 'select-assessment',
+  name: 'select-question',
   props: {
-    assessments: { type: Array, default: () => [] },
+    questions: { type: Array, default: () => [] },
     exclude: { type: Array, default: () => ([]) },
-    rowSize: { type: Number, default: ASSESSMENTS_PER_ROW }
+    rowSize: { type: Number, default: QUESTIONS_PER_ROW }
   },
   computed: {
     rows() {
@@ -36,9 +36,9 @@ export default {
       return Math.min(this.elements.length, this.rowSize);
     },
     elements() {
-      const { exclude, assessments } = this;
-      if (!exclude.length) return assessments;
-      return assessments.filter(it => !exclude.includes(it.type));
+      const { exclude, questions } = this;
+      if (!exclude.length) return questions;
+      return questions.filter(it => !exclude.includes(it.type));
     },
     columnWidth() {
       return `col-xs-${Math.floor(12 / this.columns)}`;
@@ -48,7 +48,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.select-assessment {
+.select-question {
   max-width: 970px;
   margin: 20px auto;
   color: #444;
@@ -69,7 +69,7 @@ export default {
     }
   }
 
-  .assessment-type {
+  .question-type {
     font-size: 16px;
     line-height: 16px;
   }
