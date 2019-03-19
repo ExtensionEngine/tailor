@@ -1,7 +1,7 @@
 import toCase from 'to-case';
 
 export function getComponentName(type) {
-  return `tce-${toCase.slug(getElementType(type))}`;
+  return `tce-${toCase.slug(resolveElementType(type))}`;
 }
 
 export function processAssessmentType(type) {
@@ -12,7 +12,7 @@ export function isQuestion(type) {
   return ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
 }
 
-export function getElementType(type) {
+export function resolveElementType(type) {
   return type === 'REFLECTION' ? 'ASSESSMENT' : type;
 }
 

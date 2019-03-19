@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { getElementType, isQuestion } from '../utils';
+import { isQuestion, resolveElementType } from '../utils';
 import cuid from 'cuid';
 import get from 'lodash/get';
 import SelectElement from './SelectElement';
@@ -49,7 +49,7 @@ export default {
     config() {
       const { type, subtype, $teRegistry } = this;
       if (!type && !subtype) return;
-      return $teRegistry.get(subtype || getElementType(type));
+      return $teRegistry.get(subtype || resolveElementType(type));
     },
     forceWidth() {
       return get(this.config, 'ui.forceFullWidth', false);
