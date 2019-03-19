@@ -3,7 +3,7 @@
     <div slot="header">
       <h3 class="modal-title">{{ title }}</h3>
     </div>
-    <div v-if="publish" slot="body">
+    <div v-if="hasMessage" slot="body">
       {{ context.message }}
     </div>
     <div v-else slot="body">
@@ -45,7 +45,7 @@ export default {
     };
   },
   computed: {
-    publish() {
+    hasMessage() {
       return !!this.context.message;
     },
     title() {

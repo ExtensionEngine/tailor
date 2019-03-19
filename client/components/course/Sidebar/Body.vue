@@ -1,40 +1,6 @@
 <template>
   <div class="body">
-    <div class="publish-container">
-      <div class="publish-date">
-        <circular-progress v-if="isPublishing"></circular-progress>
-        <span v-else>{{ publishedAtMessage }}</span>
-      </div>
-      <div class="btn-group">
-        <a
-          :disabled="isPublishing"
-          @click="confirmPublishing()"
-          class="btn btn-primary">
-          Publish
-        </a>
-        <a
-          :disabled="isPublishing"
-          class="btn btn-primary dropdown-toggle"
-          data-toggle="dropdown">
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li>
-            <a @click="confirmPublishing(activityWithDescendants)" href="#">
-              Publish descendants
-            </a>
-          </li>
-          <li>
-            <a @click="confirmPublishing(outlineActivities)" href="#">
-              Publish all
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <span>{{ publishStatus }}</span>
-      </div>
-    </div>
+    <publish></publish>
     <span class="type-label">{{ config.label }}</span>
     <div class="meta-element">
       <meta-input
@@ -60,49 +26,35 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
-import { getDescendants } from 'utils/activity';
-import CircularProgress from 'components/common/CircularProgress';
 import Discussion from './Discussion';
-import fecha from 'fecha';
 import Meta from 'components/common/Meta';
-import confirmPublishing from 'components/common/mixins/publish';
+import Publish from './Publish';
 import Relationship from './Relationship';
 
 export default {
-  mixins: [confirmPublishing],
   computed: {
     ...mapGetters([
       'activity',
       'getConfig',
-      'getMetadata',
-      'outlineActivities'
+      'getMetadata'
     ], 'course'),
     config() {
       return this.getConfig(this.activity);
     },
     metadata() {
       return this.getMetadata(this.activity);
-    },
-    publishedAtMessage() {
-      let { publishedAt } = this.activity;
-      return publishedAt
-        ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
-        : 'Not published';
-    },
-    activityWithDescendants({ activity, outlineActivities } = this) {
-      return [...getDescendants(outlineActivities, activity), activity];
     }
   },
   methods: {
-    ...mapActions({ publishActivity: 'publish', update: 'update' }, 'activities'),
+    ...mapActions(['update'], 'activities'),
     updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });
     }
   },
   components: {
-    CircularProgress,
     Discussion,
+    Publish,
     Relationship,
     MetaInput: Meta
   }
@@ -113,28 +65,6 @@ export default {
 .body {
   position: relative;
   padding: 6px 15px;
-}
-
-.publish-container {
-  min-height: 70px;
-  padding: 0 7px;
-
-  .publish-date {
-    width: 170px;
-    line-height: 44px;
-  }
-
-  .btn-group {
-    position: absolute;
-    top: 10px;
-    right: 40px;
-    padding: 6px;
-  }
-
-  .circular-progress {
-    width: 24px;
-    margin: 0 20px;
-  }
 }
 
 .discussion {

@@ -65,13 +65,13 @@ import General from './General';
 import JSZip from 'jszip';
 import { mapActions, mapGetters } from 'vuex-module';
 import saveAs from 'save-as';
-import confirmPublishing from 'components/common/mixins/publish';
+import publishMixin from 'components/common/mixins/publish';
 import UserManagement from './UserManagement';
 
 const appChannel = EventBus.channel('app');
 
 export default {
-  mixins: [confirmPublishing],
+  mixins: [publishMixin],
   data() {
     return {
       showCloneModal: false

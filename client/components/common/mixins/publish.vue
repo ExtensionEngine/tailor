@@ -28,7 +28,7 @@ export default {
     },
     publish(activities) {
       this.isPublishing = true;
-      Promise.each(activities, activity => {
+      return Promise.each(activities, activity => {
         this.publishStatus = `Publishing ${activity.data.name}`;
         return this.publishActivity(activity);
       }).then(() => {
