@@ -18,7 +18,6 @@
 
 <script>
 import chunk from 'lodash/chunk';
-import sortBy from 'lodash/sortBy';
 
 const ASSESSMENTS_PER_ROW = 6;
 
@@ -31,7 +30,7 @@ export default {
   },
   computed: {
     rows() {
-      return chunk(sortBy(this.elements, 'position'), this.rowSize);
+      return chunk(this.elements, this.rowSize);
     },
     columns() {
       return Math.min(this.elements.length, this.rowSize);

@@ -48,10 +48,10 @@ export default {
   },
   computed: {
     registry() {
-      return this.$teRegistry.get();
+      return sortBy(this.$teRegistry.get(), 'position');
     },
     rows() {
-      return chunk(sortBy(this.elements, 'position'), this.rowSize);
+      return chunk(this.elements, this.rowSize);
     },
     columns() {
       return Math.min(this.elements.length, this.rowSize);
