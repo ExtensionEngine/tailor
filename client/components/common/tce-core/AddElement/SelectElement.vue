@@ -107,6 +107,10 @@ export default {
       this.type = null;
     }
   },
+  created() {
+    const assessments = filter(this.elements, { type: 'ASSESSMENT' });
+    if (assessments.length === this.elements.length) this.type = 'ASSESSMENT';
+  },
   components: { SelectQuestion }
 };
 </script>
