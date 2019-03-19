@@ -28,6 +28,7 @@
 
 <script>
 import chunk from 'lodash/chunk';
+import countBy from 'lodash/countBy';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
 import { isQuestion } from '../utils';
@@ -58,12 +59,16 @@ export default {
     },
     elements() {
       const result = filter(this.registry, it => !isQuestion(it.type));
-      if (this.questions.length) {
+      const elementTypes = countBy(this.registry, 'type');
+      if (elementTypes.QUESTION || elementTypes.ASSESSMENT) {
         result.push({
           name: 'Assessment',
           type: 'ASSESSMENT',
           ui: { icon: 'mdi-help' }
-        }, {
+        });
+      }
+      if (elementTypes.QUESTION || elementTypes.REFLECTION) {
+        result.push({
           name: 'Reflection',
           type: 'REFLECTION',
           ui: { icon: 'mdi-comment-question-outline' }
@@ -73,7 +78,8 @@ export default {
       return filter(result, it => includes(this.include, it.type));
     },
     questions() {
-      const types = ['QUESTION'];
+      if (!isQuestion(this.type)) return [];
+      const types = ['QUESTION', this.type];
       if (this.type === 'ASSESSMENT') types.push(this.type);
       if (this.type === 'REFLECTION') types.push(this.type);
       return filter(this.registry, it => types.includes(it.type));
@@ -109,7 +115,9 @@ export default {
   },
   created() {
     const assessments = filter(this.elements, { type: 'ASSESSMENT' });
+    const reflections = filter(this.elements, { type: 'REFLECTION' });
     if (assessments.length === this.elements.length) this.type = 'ASSESSMENT';
+    if (reflections.length === this.elements.length) this.type = 'REFLECTION';
   },
   components: { SelectQuestion }
 };
