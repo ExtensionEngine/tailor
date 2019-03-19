@@ -18,17 +18,19 @@ export default class ElementRegistry {
   }
 
   async initialize() {
-    await Promise.map(elementList, (location, position) => {
-      return this.load(location, position);
+    await Promise.map(elementList, (location, index) => {
+      return this.load(location, { position: index });
     });
     const extensions = await this.loadExtensionList();
-    await Promise.map(extensions, (location, position) => {
-      return this.load(location, elementList.length + position, true);
+    await Promise.map(extensions, (location, index) => {
+      const options = { position: elementList.length + index, isExtension: true };
+      return this.load(location, options);
     });
   }
 
-  async load(location, position, isExtension) {
+  async load(location, options = {}) {
     const { _registry, Vue } = this;
+    const { position = _registry.length, isExtension } = options;
     const element = isExtension
       ? (await import(`../extensions/content-elements/${location}`)).default
       : (await import(`./components/content-elements/${location}`)).default;
