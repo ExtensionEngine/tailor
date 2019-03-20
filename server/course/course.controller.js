@@ -102,16 +102,17 @@ function exportContentInventory({ course }, res) {
 }
 
 function downloadCourseInfo({ course }, res) {
-  const tempPubSer = createPubSer({
+  const tempPublishingService = createPubSer({
     filesystem: {
       path: 'temp'
     },
     provider: 'filesystem'});
-  return tempPubSer.publishRepoDetails(course)
-    .then(() => prepZip(course.id))
+  return tempPublishingService.publishRepoDetails(course)
+    .then(() => getFileNames(course.id))
+    .then((files) => prepZip(course.id, files))
     .then(() => {
       res.download(`temp/repository/${course.id}.tgz`);
-      //return deleteDir('temp');
+      return deleteDir('temp');
     });
 }
 

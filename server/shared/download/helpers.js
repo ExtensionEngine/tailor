@@ -25,34 +25,15 @@ function getFileNames(key) {
   const folderPath = `temp/repository/${key}`;
   return tempStorage.readDir(folderPath);
 }
-function prepZip(courseId) {
-  return new Promise((resolve) => {
-    resolve(tar.c(
-      {
-        gzip: true,
-        C: `temp/repository/`,
-        P: false
-      },
-      [`${courseId}`])
-    .pipe(fs.createWriteStream(`temp/repository/${courseId}.tar`)));
-  });
+function prepZip(courseId, files) {
+  return tar.c(
+    {
+      gzip: true,
+      C: `temp/repository/${courseId}`,
+      file: `temp/repository/${courseId}.tgz`
+    },
+    files);
 }
-/*
-const zip = new JSZip();
-Promise.map(files, (file) => {
-  const key = `../../../temp/repository/${courseId}/${file}`;
-  const filePath = path.join(__dirname, key);
-  return tempStorage.getFile(filePath, { encoding: 'utf8' })
-  .then(data => {
-    zip.file(file, data);
-  });
-})
-.then(() => {
-return zip.generateAsync({ type: 'nodebuffer' })
-.then((file) => resolve(tempStorage.saveFile(`repository/${courseId}.zip`, file)));
-});
-*/
-
 function deleteDir(folder) {
   return tempStorage.delDir(folder);
 }
