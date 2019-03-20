@@ -16,11 +16,12 @@
         class="btn btn-material btn-sm upload-button">
         {{ label }}
       </label>
-      <span
+      <asset-link
         v-else
-        @click="downloadFile"
-        class="file-name">{{ fileName }}
-      </span>
+        :url="`storage://${fileKey}`"
+        class="file-name">
+        {{ fileName }}
+      </asset-link>
       <span v-if="fileKey" @click="deleteFile" class="mdi mdi-delete delete"></span>
     </form>
     <span class="help-block">{{ vErrors.first(id) }}</span>
@@ -28,6 +29,7 @@
 </template>
 
 <script>
+import AssetLink from 'components/common/AssetLink';
 import CircularProgress from 'components/common/CircularProgress';
 import downloadMixin from 'utils/downloadMixin';
 import EventBus from 'EventBus';
@@ -71,10 +73,6 @@ export default {
           });
       });
     },
-    downloadFile() {
-      return this.$storageService.getUrl(this.fileKey)
-        .then(url => this.download(url, this.fileName));
-    },
     deleteFile() {
       appChannel.emit('showConfirmationModal', {
         type: 'file',
@@ -83,7 +81,7 @@ export default {
       });
     }
   },
-  components: { CircularProgress }
+  components: { CircularProgress, AssetLink }
 };
 </script>
 

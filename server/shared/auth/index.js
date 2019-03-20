@@ -11,11 +11,17 @@ const jwtOptions = {
   // audience: process.env.SERVER_URL
 };
 
-passport.use(new Strategy(jwtOptions, (payload, done) => {
+passport.use('jwt', new Strategy(jwtOptions, verify));
+passport.use('jwt:form', new Strategy({
+  ...jwtOptions,
+  jwtFromRequest: ExtractJwt.fromBodyField('auth')
+}, verify));
+
+function verify(payload, done) {
   return User.findById(payload.id)
     .then(user => done(null, user || false))
     .error(err => done(err, false));
-}));
+}
 
 passport.serializeUser((user, done) => {
   done(null, user);

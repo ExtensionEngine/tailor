@@ -1,8 +1,11 @@
+import path from 'path';
 import request from './request';
 
 const url = {
   root: () => '/asset'
 };
+
+const resolveEndpoint = path.join(request.defaults.baseURL, url.root());
 
 function getUrl(key) {
   const params = { key };
@@ -16,6 +19,7 @@ function upload(data) {
 }
 
 export default {
+  resolveEndpoint,
   getUrl,
   upload
 };

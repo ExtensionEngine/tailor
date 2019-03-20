@@ -15,6 +15,7 @@ router.use(processBody);
 
 // Public routes:
 router.use('/', userRouter);
+router.use('/', storageRouter);
 
 // Protected routes:
 router.use('/', auth);
@@ -23,7 +24,6 @@ router.use('/', activityRouter);
 router.use('/', commentRouter);
 router.use('/', teRouter);
 router.use('/', revisionRouter);
-router.use('/', storageRouter);
 router.use('/', userRouter);
 
 module.exports = router;
