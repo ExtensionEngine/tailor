@@ -90,7 +90,6 @@ export default {
     download() {
       api.getDownloadFile(this.$route.params.courseId)
         .then(res => {
-          console.log(res.data);
           saveAs(res.data, `${this.course.name}.tgz`);
         });
     }
