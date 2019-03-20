@@ -26,11 +26,12 @@ function getFileNames(key) {
   return tempStorage.readDir(folderPath);
 }
 function prepZip(courseId, files) {
+  const key = `temp/repository/${courseId}`;
   return tar.c(
     {
       gzip: true,
-      C: `temp/repository/${courseId}`,
-      file: `temp/repository/${courseId}.tgz`
+      C: key,
+      file: `${key}.tgz`
     },
     files);
 }

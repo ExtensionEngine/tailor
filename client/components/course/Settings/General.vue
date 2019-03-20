@@ -89,9 +89,7 @@ export default {
     },
     download() {
       api.getDownloadFile(this.$route.params.courseId)
-        .then(res => {
-          saveAs(res.data, `${this.course.name}.tgz`);
-        });
+        .then(res => saveAs(res, `${this.course.name}.tgz`));
     }
   },
   components: { MetaInput: Meta }

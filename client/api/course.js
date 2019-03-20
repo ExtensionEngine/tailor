@@ -42,7 +42,7 @@ function getDownloadFile(courseId) {
     method: 'get',
     responseType: 'blob',
     url: `/courses/${courseId}/download`
-  });
+  }).then(res => res.data);
 }
 
 export default {
