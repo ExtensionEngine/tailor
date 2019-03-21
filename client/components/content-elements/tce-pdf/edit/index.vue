@@ -51,7 +51,7 @@ const TYPE = 'application/pdf';
 
 export default {
   name: 'tce-pdf',
-  inject: ['$elementBus', '$storageService'],
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
@@ -65,8 +65,9 @@ export default {
   },
   computed: {
     source() {
-      if (!this.url) return;
-      return { type: TYPE, src: this.url };
+      const src = get(this.element, 'data.url');
+      if (!src) return;
+      return { type: TYPE, src };
     },
     showPlaceholder() {
       return !this.source;
@@ -90,23 +91,17 @@ export default {
       if (!this.source) return;
       if (this.pdfObject) this.pdfObject.remove();
       this.createObject();
-    },
-    resolveUrl() {
-      const { url, fileName } = get(this.element, 'data', {});
-      if (!fileName) return Promise.resolve(this.url = url);
-      return this.$storageService.getUrl(url)
-        .then(signedUrl => (this.url = signedUrl));
     }
   },
   watch: {
     'element.data.url'() {
       this.showViewer = true;
       this.showError = false;
-      this.resolveUrl().then(() => this.embedPdf());
+      this.embedPdf();
     }
   },
   mounted() {
-    this.resolveUrl().then(() => this.embedPdf());
+    this.embedPdf();
     this.$elementBus.on('save', ({ data }) => this.$emit('save', data));
   },
   beforeDestroy() {
