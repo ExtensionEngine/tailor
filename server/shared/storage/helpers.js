@@ -1,6 +1,8 @@
 'use strict';
 
 const crypto = require('crypto');
+const forEach = require('lodash/forEach');
+const { getFileUrl } = require('./');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
@@ -68,10 +70,16 @@ processor.IMAGE = asset => {
   return saveFile(key, file).then(() => asset);
 };
 
-function resolveStatics(item) {
-  return item.type === 'ASSESSMENT'
+// TODO: Temp patch until asset embeding is unified
+async function resolveStatics(item) {
+  const element = await (item.type === 'ASSESSMENT'
     ? resolveAssessment(item)
-    : resolveAsset(item);
+    : resolveAsset(item));
+  if (!element.data.assets) return element;
+  forEach(element.data.assets, async (key, value) => {
+    element.data[key] = await getFileUrl(value);
+  });
+  return element;
 }
 
 function resolveAssessment(assessment) {
