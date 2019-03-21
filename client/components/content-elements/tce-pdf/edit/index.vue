@@ -46,7 +46,7 @@ import CircularProgress from './CircularProgress';
 import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';
 
-const ERR_TIMEOUT = 2500;
+const ERR_TIMEOUT = 10000;
 const TYPE = 'application/pdf';
 
 export default {
