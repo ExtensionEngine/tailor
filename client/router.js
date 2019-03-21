@@ -34,7 +34,6 @@ let router = new Router({
       component: Outline
     }, {
       path: 'settings',
-      name: 'course-settings',
       component: CourseSettings,
       children: [{
         path: '',

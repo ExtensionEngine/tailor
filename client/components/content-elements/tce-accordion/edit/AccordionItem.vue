@@ -112,6 +112,8 @@ export default {
       max-width: 90%;
       padding-top: 1px;
       color: #555;
+      font-size: 16px !important;
+      font-weight: normal;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
