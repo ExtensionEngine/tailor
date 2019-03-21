@@ -1,7 +1,7 @@
 import Edit from './edit';
 import Toolbar from './edit/Toolbar';
 
-const initState = () => ({ url: null });
+const initState = () => ({ url: null, fileName: '' });
 
 export default {
   name: 'PDF',
