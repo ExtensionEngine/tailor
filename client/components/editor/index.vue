@@ -53,18 +53,24 @@ import Sidebar from './sidebar';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
 
+const getEmbed = ({ type, data }, id) => {
+  if (type === 'ASSESSMENT') return find(data.question, { id });
+  return get(data, `embeds.${id}`);
+};
+
 export default {
   name: 'editor',
   data() {
     return {
       showLoader: true,
-      focusedElement: null,
+      selectedElement: null,
+      showParentToolbar: false,
       showSidebar: false,
       mousedownCaptured: false
     };
   },
   computed: {
-    ...mapGetters(['activities']),
+    ...mapGetters(['activities', 'tes']),
     ...mapGetters(['activity', 'contentContainers'], 'editor'),
     ...mapGetters(['course', 'getMetadata'], 'course'),
     metadata() {
@@ -79,6 +85,14 @@ export default {
     containerConfigs() {
       if (!this.activity) return [];
       return config.getSupportedContainers(this.activity.type);
+    },
+    focusedElement() {
+      const { selectedElement, tes } = this;
+      if (!selectedElement) return;
+      if (!selectedElement.embedded) return tes[selectedElement._cid];
+      let embed;
+      const parent = find(tes, p => (embed = getEmbed(p, selectedElement.id)));
+      return this.showParentToolbar ? { ...embed, parent } : embed;
     }
   },
   methods: {
@@ -110,12 +124,14 @@ export default {
   created() {
     EventBus.on('element:focus', (element, composite) => {
       if (!element) {
-        this.focusedElement = null;
+        this.selectedElement = null;
+        this.showParentToolbar = false;
         this.showSidebar = false;
         return;
       }
-      if (getElementId(this.focusedElement) === getElementId(element)) return;
-      this.focusedElement = { ...element, parent: composite };
+      if (getElementId(this.selectedElement) === getElementId(element)) return;
+      this.selectedElement = element;
+      this.showParentToolbar = !!composite;
       this.showSidebar = this.metadata.length && this.showSidebar;
     });
     // TODO: Do this better!
