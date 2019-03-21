@@ -5,7 +5,8 @@ const TOOLBAR_MAP = {
 };
 
 export function getComponentName(type) {
-  return `tce-${toCase.slug(type)}`;
+  const elementType = TOOLBAR_MAP[type] || type;
+  return `tce-${toCase.slug(elementType)}`;
 }
 
 export function processAssessmentType(type) {
