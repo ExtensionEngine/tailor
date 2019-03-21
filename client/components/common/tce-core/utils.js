@@ -1,5 +1,9 @@
 import toCase from 'to-case';
 
+const TOOLBAR_MAP = {
+  'TABLE-CELL': 'HTML'
+};
+
 export function getComponentName(type) {
   return `tce-${toCase.slug(type)}`;
 }
@@ -9,7 +13,8 @@ export function processAssessmentType(type) {
 }
 
 export function getToolbarName(type) {
-  return `${toCase.slug(type)}-toolbar`;
+  const elementType = TOOLBAR_MAP[type] || type;
+  return `${toCase.slug(elementType)}-toolbar`;
 }
 
 export function getElementId(element) {
