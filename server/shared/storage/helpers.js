@@ -18,7 +18,7 @@ const ASSET_ROOT = 'repository/assets';
 
 function processStatics(item) {
   return isQuestion(item.type)
-    ? processAssessment(item)
+    ? processQuestion(item)
     : processAsset(item);
 }
 
@@ -26,9 +26,9 @@ function processAsset(asset) {
   return isPrimitive(asset) ? processPrimitive(asset) : processComposite(asset);
 }
 
-function processAssessment(assessment) {
-  let question = assessment.data.question;
-  if (!question || question.length < 1) return Promise.resolve(assessment);
+function processQuestion(element) {
+  let question = element.data.question;
+  if (!question || question.length < 1) return Promise.resolve(element);
   return Promise.each(question, it => processAsset(it));
 }
 
@@ -71,14 +71,14 @@ processor.IMAGE = asset => {
 
 function resolveStatics(item) {
   return isQuestion(item.type)
-    ? resolveAssessment(item)
+    ? resolveQuestion(item)
     : resolveAsset(item);
 }
 
-function resolveAssessment(assessment) {
-  let question = assessment.data.question;
-  if (!question || question.length < 1) return Promise.resolve(assessment);
-  return Promise.each(question, it => resolveAsset(it)).then(() => assessment);
+function resolveQuestion(element) {
+  let question = element.data.question;
+  if (!question || question.length < 1) return Promise.resolve(element);
+  return Promise.each(question, it => resolveAsset(it)).then(() => element);
 }
 
 function resolveAsset(element) {
