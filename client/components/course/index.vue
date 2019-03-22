@@ -1,24 +1,16 @@
 <template>
-  <div class="course-container">
-    <ul class="nav nav-tabs">
-      <!-- TODO: Create component for nav tabs -->
-      <li :class="{ active: $route.name === 'course' }">
-        <router-link :to="{ name: 'course' }">Outline</router-link>
-      </li>
-      <li :class="{ active: $route.name === 'tree-view' }">
-        <router-link :to="{ name: 'tree-view' }">Tree View</router-link>
-      </li>
-      <li :class="{ active: $route.name === 'course-revisions' }">
-        <router-link :to="{ name: 'course-revisions' }">Revisions</router-link>
-      </li>
-      <li
-        v-if="showSettings"
-        :class="{ active: $route.matched.some(it => it.name === 'course-info') }">
-        <router-link :to="{ name: 'course-info' }">Settings</router-link>
-      </li>
-    </ul>
+  <div class="repo-container">
+    <v-tabs slider-color="grey darken-2" light>
+      <v-tab
+        v-for="tab in tabs"
+        :key="tab.name"
+        :to="{ name: tab.route }"
+        ripple>
+        {{ tab.name }}
+      </v-tab>
+    </v-tabs>
     <div class="tab-content" infinite-wrapper>
-      <router-view :showLoader="showLoader"></router-view>
+      <router-view :showLoader="showLoader"/>
     </div>
   </div>
 </template>
@@ -36,13 +28,18 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'activities', 'activity'], 'course'),
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
-    showSettings() {
-      return this.isAdmin || this.isCourseAdmin;
-    },
-    showDetails() {
-      return this.isAdmin || this.isCourseAdmin;
+    ...mapGetters(['course', 'activities', 'activity'], 'course'),
+    tabs() {
+      const items = [
+        { name: 'Outline', route: 'course' },
+        { name: 'Tree View', route: 'tree-view' },
+        { name: 'Revisions', route: 'course-revisions' }
+      ];
+      if (this.isAdmin || this.isCourseAdmin) {
+        items.push({ name: 'Settings', route: 'course-info' });
+      }
+      return items;
     }
   },
   methods: {
@@ -77,24 +74,14 @@ export default {
 </script>
 
 <style lang="scss">
-.course-container, .tab-content, .tab-pane {
+.repo-container, .tab-content, .tab-pane {
   width: 100%;
   height: 100%;
 }
 
-.course-container {
+.repo-container {
   display: flex;
   flex-direction: column;
-
-  .nav-tabs {
-    width: 100%;
-    background-color: white;
-    z-index: 1;
-
-    li a {
-      font-size: 16px;
-    }
-  }
 
   .tab-content {
     overflow-y: scroll;

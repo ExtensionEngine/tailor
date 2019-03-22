@@ -42,3 +42,12 @@ export default {
   components
 };
 </script>
+
+<style lang="scss" scoped>
+/deep/ .title {
+  color: #808080;
+  font-family: Roboto, Helvetica, sans-serif;
+  font-size: 14px !important;
+  font-weight: normal;
+}
+</style>
