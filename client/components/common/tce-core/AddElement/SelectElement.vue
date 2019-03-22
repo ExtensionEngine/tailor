@@ -33,6 +33,7 @@ import filter from 'lodash/filter';
 import includes from 'lodash/includes';
 import { isQuestion } from '../utils';
 import SelectQuestion from './SelectQuestion';
+import sortBy from 'lodash/sortBy';
 
 const ELEMENTS_PER_ROW = 6;
 
@@ -49,7 +50,7 @@ export default {
   },
   computed: {
     registry() {
-      return this.$teRegistry.get();
+      return sortBy(this.$teRegistry.get(), 'position');
     },
     rows() {
       return chunk(this.elements, this.rowSize);
