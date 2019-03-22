@@ -21,6 +21,7 @@
 import { getElementId, getToolbarName } from './utils';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
+import { isQuestion } from 'common/utils';
 import { mapActions } from 'vuex-module';
 import Vue from 'vue';
 import { withValidation } from 'utils/validation';
@@ -43,7 +44,7 @@ export default {
     },
     componentName() {
       const { type } = this.element;
-      if (type === 'ASSESSMENT') return;
+      if (isQuestion(type)) return;
       return getToolbarName(type);
     },
     componentExists() {

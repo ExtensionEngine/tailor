@@ -1,3 +1,4 @@
+import { isQuestion } from 'common/utils';
 import toCase from 'to-case';
 
 export function getComponentName(type) {
@@ -6,10 +7,6 @@ export function getComponentName(type) {
 
 export function processAnswerType(type) {
   return `answer-${toCase.slug(type)}`;
-}
-
-export function isQuestion(type) {
-  return ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
 }
 
 export function resolveElementType(type) {

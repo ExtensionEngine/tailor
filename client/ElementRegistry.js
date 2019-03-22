@@ -1,12 +1,12 @@
 import {
   getComponentName,
   getToolbarName,
-  isQuestion,
   processAnswerType
 } from 'tce-core/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import elementList from './components/content-elements';
 import find from 'lodash/find';
+import { isQuestion } from 'common/utils';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
 

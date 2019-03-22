@@ -1,6 +1,7 @@
 'use strict';
 
 const crypto = require('crypto');
+const { isQuestion } = require('../../../common/utils');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
@@ -16,7 +17,7 @@ const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 const ASSET_ROOT = 'repository/assets';
 
 function processStatics(item) {
-  return item.type === 'ASSESSMENT'
+  return isQuestion(item.type)
     ? processAssessment(item)
     : processAsset(item);
 }
@@ -69,7 +70,7 @@ processor.IMAGE = asset => {
 };
 
 function resolveStatics(item) {
-  return item.type === 'ASSESSMENT'
+  return isQuestion(item.type)
     ? resolveAssessment(item)
     : resolveAsset(item);
 }

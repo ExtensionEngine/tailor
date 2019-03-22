@@ -20,6 +20,7 @@
 
 <script>
 import filter from 'lodash/filter';
+import { isQuestion } from 'common/utils';
 import { mapActions, mapGetters } from 'vuex-module';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
@@ -32,7 +33,7 @@ export default {
   computed: {
     ...mapGetters(['tes']),
     introductionElements() {
-      let cond = it => it.activityId === this.group.id && it.type !== 'ASSESSMENT';
+      let cond = it => it.activityId === this.group.id && !isQuestion(it.type);
       return filter(this.tes, cond).sort((a, b) => a.position - b.position);
     }
   },
