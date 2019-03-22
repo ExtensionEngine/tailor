@@ -1,10 +1,10 @@
 <template>
   <div class="form-group">
-    <span class="form-label">Answer</span>
+    <span class="form-label">{{ isGraded ? 'Answer' : 'Response' }}</span>
     <span :class="{ 'has-error': correctError }" class="answer">
       <textarea
         v-model="correct"
-        :disabled="!isEditing"
+        :disabled="!isEditing || !isGraded"
         @blur="update"
         class="form-control"
         rows="6"
@@ -20,6 +20,7 @@ import { defaults } from 'utils/assessment';
 export default {
   props: {
     assessment: { type: Object, default: defaults.TR },
+    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
@@ -40,7 +41,7 @@ export default {
   },
   watch: {
     isEditing(newVal) {
-      if (!newVal) this.correct = this.assessment.correct;
+      if (this.isGraded && !newVal) this.correct = this.assessment.correct;
     }
   }
 };

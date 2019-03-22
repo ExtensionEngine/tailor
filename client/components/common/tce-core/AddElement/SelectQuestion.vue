@@ -2,12 +2,12 @@
   <v-container :grid-list-lg="true">
     <v-layout row wrap>
       <v-flex
-        v-for="{ name, subtype } in assessments"
+        v-for="{ name, subtype } in questions"
         :key="subtype"
-        v-bind="assessmentBindings"
+        v-bind="questionBindings"
         @click="$emit('selected', subtype)"
         align-self-center
-        class="btn-base assessment-type">
+        class="btn-base question-type">
         {{ name }}
       </v-flex>
     </v-layout>
@@ -15,22 +15,22 @@
 </template>
 
 <script>
-const ASSESSMENTS_PER_ROW = 6;
+const QUESTIONS_PER_ROW = 6;
 
 export default {
-  name: 'select-assessment',
+  name: 'select-question',
   props: {
-    assessments: { type: Array, default: () => [] },
+    questions: { type: Array, default: () => [] },
     exclude: { type: Array, default: () => ([]) },
-    rowSize: { type: Number, default: ASSESSMENTS_PER_ROW }
+    rowSize: { type: Number, default: QUESTIONS_PER_ROW }
   },
   computed: {
     elements() {
-      const { exclude, assessments } = this;
-      if (!exclude.length) return assessments;
-      return assessments.filter(it => !exclude.includes(it.type));
+      const { exclude, questions } = this;
+      if (!exclude.length) return questions;
+      return questions.filter(it => !exclude.includes(it.type));
     },
-    assessmentBindings() {
+    questionBindings() {
       const columns = Math.min(this.elements.length, this.rowSize);
       const columnWidth = Math.floor(12 / columns);
       return { [`xs${columnWidth}`]: true };
@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.assessment-type {
+.question-type {
   color: #444;
   font-size: 16px;
   line-height: 16px;

@@ -12,7 +12,7 @@
       <ul v-if="isExpanded">
         <feedback-item
           v-for="(answer, index) in processedAnswers"
-          v-bind="{ index, answer, isEditing, feedback: feedback[index] }"
+          v-bind="{ index, answer, isEditing, isGraded, feedback: feedback[index] }"
           :key="index"
           @update="({ html }) => $emit('update', { [index]: html })"/>
       </ul>
@@ -29,6 +29,7 @@ export default {
   props: {
     answers: { type: [Array, Boolean], default: null },
     feedback: { type: Object, default: () => ({}) },
+    isGraded: { type: Boolean, default: false },
     isEditing: { type: Boolean, default: false }
   },
   data() {

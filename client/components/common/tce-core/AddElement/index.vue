@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { isQuestion, resolveElementType } from '../utils';
 import cuid from 'cuid';
 import get from 'lodash/get';
 import InlineContainer from './InlineContainer';
@@ -56,7 +57,7 @@ export default {
     config() {
       const { type, subtype, $teRegistry } = this;
       if (!type && !subtype) return;
-      return $teRegistry.get(subtype || type);
+      return $teRegistry.get(subtype || resolveElementType(type));
     },
     forceWidth() {
       return get(this.config, 'ui.forceFullWidth', false);
@@ -87,13 +88,14 @@ export default {
         element.id = cuid();
         element.embedded = true;
       }
-      if (element.type === 'ASSESSMENT') {
+      if (isQuestion(element.type)) {
         const data = { width: DEFAULT_WIDTH };
         const question = [{ data, id: cuid(), type: 'HTML', embedded: true }];
         element.data = { ...element.data, question, type: subtype };
       }
       const initState = get(config, 'initState', () => ({}));
       element.data = { ...element.data, ...initState() };
+      if (element.type === 'REFLECTION') delete element.data.correct;
       this.$emit('add', element);
       this.close();
     },
