@@ -4,8 +4,8 @@ export function getComponentName(type) {
   return `tce-${toCase.slug(resolveElementType(type))}`;
 }
 
-export function processAssessmentType(type) {
-  return `assessment-${toCase.slug(type)}`;
+export function processAnswerType(type) {
+  return `answer-${toCase.slug(type)}`;
 }
 
 export function isQuestion(type) {
@@ -13,7 +13,7 @@ export function isQuestion(type) {
 }
 
 export function resolveElementType(type) {
-  return type === 'REFLECTION' ? 'ASSESSMENT' : type;
+  return isQuestion(type) ? 'QUESTION-CONTAINER' : type;
 }
 
 export function getToolbarName(type) {

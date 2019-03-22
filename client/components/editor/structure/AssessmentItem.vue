@@ -7,7 +7,7 @@
     <span v-if="exam" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
-    <tce-assessment
+    <tce-question-container
       v-if="expanded"
       :element="assessment"
       :exam="exam"
@@ -28,7 +28,7 @@
           :placeholder="examObjectiveLabel"
           @input="onObjectiveSelected"/>
       </div>
-    </tce-assessment>
+    </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
       <span class="label label-success">{{ elementConfig.subtype }}</span>
       <span class="title">{{ question }}</span>
