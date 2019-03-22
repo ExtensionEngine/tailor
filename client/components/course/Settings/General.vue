@@ -88,7 +88,7 @@ export default {
         .then(() => (this.publishing = false));
     },
     download() {
-      api.getDownloadFile(this.$route.params.courseId)
+      return api.getDownloadFile(this.$route.params.courseId)
         .then(res => saveAs(res, `${this.course.name}.tgz`));
     }
   },

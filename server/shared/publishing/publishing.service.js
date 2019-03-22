@@ -6,12 +6,12 @@ const {
   publishRepositoryDetails,
   unpublishActivity
 } = require('./helpers');
-const storage = require('../storage');
+const { storage } = require('../storage');
 
 class PublishingService {
   constructor() {
     this.queue = new PromiseQueue(1, Infinity);
-    this.storage = storage.storage;
+    this.storage = storage;
   }
   publishActivity(activity) {
     return this.queue.add(() => publishActivity(activity, this.storage));
@@ -27,6 +27,6 @@ class PublishingService {
 }
 
 module.exports = {
-  publishingService: new PublishingService(),
-  PublishingService
+  PublishingService,
+  publishingService: new PublishingService()
 };

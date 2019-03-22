@@ -1,10 +1,10 @@
 'use strict';
 
+const { Storage } = require('../storage');
+const { PublishingService } = require('../publishing/publishing.service');
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs-extra'));
 const tar = require('tar');
-const { Storage } = require('../storage');
-const { PublishingService } = require('../publishing/publishing.service');
 
 class TempStorage extends Storage {
   constructor(config) {
@@ -43,8 +43,8 @@ function prepFiles(files) {
 }
 
 module.exports = {
+  DownloadingService,
   deleteDir,
   prepZip,
-  prepFiles,
-  DownloadingService
+  prepFiles
 };
