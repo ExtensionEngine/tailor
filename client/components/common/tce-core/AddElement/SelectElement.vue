@@ -78,10 +78,8 @@ export default {
       return filter(result, it => includes(this.include, it.type));
     },
     questions() {
-      if (!isQuestion(this.type)) return [];
+      if (!this.showQuestions) return [];
       const types = ['QUESTION', this.type];
-      if (this.type === 'ASSESSMENT') types.push(this.type);
-      if (this.type === 'REFLECTION') types.push(this.type);
       return filter(this.registry, it => types.includes(it.type));
     },
     showQuestions() {
