@@ -1,7 +1,7 @@
 <template>
   <div class="select-element">
     <div
-      v-if="!showAssessments"
+      v-if="!showQuestions"
       :style="{ 'max-width': `${maxWidth}px` }"
       class="elements">
       <div
@@ -19,18 +19,20 @@
         </div>
       </div>
     </div>
-    <select-assessment
-      v-if="showAssessments"
-      :assessments="assessments"
+    <select-question
+      v-if="showQuestions"
+      :questions="questions"
       @selected="setSubtype"/>
   </div>
 </template>
 
 <script>
 import chunk from 'lodash/chunk';
+import countBy from 'lodash/countBy';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
-import SelectAssessment from './SelectAssessment';
+import { isQuestion } from '../utils';
+import SelectQuestion from './SelectQuestion';
 import sortBy from 'lodash/sortBy';
 
 const ELEMENTS_PER_ROW = 6;
@@ -57,20 +59,32 @@ export default {
       return Math.min(this.elements.length, this.rowSize);
     },
     elements() {
-      const result = filter(this.registry, it => it.type !== 'ASSESSMENT');
-      if (this.assessments.length) {
+      const result = filter(this.registry, it => !isQuestion(it.type));
+      const elementTypes = countBy(this.registry, 'type');
+      if (elementTypes.QUESTION || elementTypes.ASSESSMENT) {
         result.push({
-          name: 'Assessment', type: 'ASSESSMENT', ui: { icon: 'mdi-help' }
+          name: 'Assessment',
+          type: 'ASSESSMENT',
+          ui: { icon: 'mdi-help' }
+        });
+      }
+      if (elementTypes.QUESTION || elementTypes.REFLECTION) {
+        result.push({
+          name: 'Reflection',
+          type: 'REFLECTION',
+          ui: { icon: 'mdi-comment-question-outline' }
         });
       }
       if (!this.include) return result;
       return filter(result, it => includes(this.include, it.type));
     },
-    assessments() {
-      return filter(this.registry, { type: 'ASSESSMENT' });
+    questions() {
+      if (!this.showQuestions) return [];
+      const types = ['QUESTION', this.type];
+      return filter(this.registry, it => types.includes(it.type));
     },
-    showAssessments() {
-      return this.type === 'ASSESSMENT';
+    showQuestions() {
+      return isQuestion(this.type);
     },
     columnWidth() {
       return `col-xs-${Math.floor(12 / this.columns)}`;
@@ -83,7 +97,7 @@ export default {
   },
   methods: {
     setType(type) {
-      if (type === 'ASSESSMENT') {
+      if (isQuestion(type)) {
         this.type = type;
         return;
       }
@@ -100,9 +114,11 @@ export default {
   },
   created() {
     const assessments = filter(this.elements, { type: 'ASSESSMENT' });
+    const reflections = filter(this.elements, { type: 'REFLECTION' });
     if (assessments.length === this.elements.length) this.type = 'ASSESSMENT';
+    if (reflections.length === this.elements.length) this.type = 'REFLECTION';
   },
-  components: { SelectAssessment }
+  components: { SelectQuestion }
 };
 </script>
 

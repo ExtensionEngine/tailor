@@ -5,8 +5,8 @@ import 'event-source-polyfill';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
-import Assessment from 'tce-core/Assessment';
 import ElementRegistry from './ElementRegistry';
+import QuestionContainer from 'tce-core/QuestionContainer';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
@@ -19,7 +19,7 @@ import store from './store';
 import router from './router';
 import App from './App';
 
-Vue.component('tce-assessment', Assessment);
+Vue.component('tce-question-container', QuestionContainer);
 
 const registry = new ElementRegistry(Vue);
 registry.initialize();
