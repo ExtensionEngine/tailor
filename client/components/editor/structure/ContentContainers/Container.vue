@@ -2,6 +2,13 @@
   <div>
     <div class="actions">
       <button
+        @click="previewContainer"
+        class="btn btn-default btn-material pull-left"
+        type="button">
+        <span class="mdi mdi-eye"></span>
+        Preview {{ name }}
+      </button>
+      <button
         @click="deleteContainer"
         class="btn btn-default btn-material pull-right"
         type="button">
@@ -36,6 +43,7 @@ import { mapActions, mapGetters } from 'vuex-module';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
+import api from '@/api/preview';
 
 export default {
   name: 'content-container',
@@ -60,6 +68,11 @@ export default {
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
+    },
+    previewContainer() {
+      const { courseId, id } = this.container;
+      return api.createPreview(courseId, id)
+        .then(location => window.open(location));
     },
     deleteContainer() {
       this.$emit('delete');

@@ -1,11 +1,14 @@
 'use strict';
 
 const { Activity } = require('../shared/database');
+const { fetchContainer } = require('../shared/publishing/helpers');
 const { getOutlineLevels } = require('../../config/shared/activities');
+const { previewUrl } = require('../../config/server');
 const find = require('lodash/find');
 const get = require('lodash/get');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
+const request = require('got');
 
 function create({ course, body, params, user }, res) {
   const outlineConfig = find(getOutlineLevels(course.schema), { type: body.type });
@@ -59,6 +62,14 @@ function clone({ activity, body }, res) {
   });
 }
 
+function getPreview({ activity }, res) {
+  return fetchContainer(activity)
+    .then(data => request.post(previewUrl, { json: true, body: data }))
+    .then(resp => res.json({
+      location: `${new URL(resp.body.data.url, previewUrl)}`
+    }));
+}
+
 module.exports = {
   create,
   show,
@@ -67,5 +78,6 @@ module.exports = {
   remove,
   reorder,
   clone,
-  publish
+  publish,
+  getPreview
 };

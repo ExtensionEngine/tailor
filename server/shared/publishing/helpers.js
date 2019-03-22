@@ -261,5 +261,6 @@ function mapRelationships(relationships, activity) {
 module.exports = {
   publishActivity,
   unpublishActivity,
-  publishRepositoryDetails
+  publishRepositoryDetails,
+  fetchContainer
 };

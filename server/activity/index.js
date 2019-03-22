@@ -19,7 +19,8 @@ router
   .delete('/courses/:courseId/activities/:activityId', ctrl.remove)
   .post('/courses/:courseId/activities/:activityId/reorder', ctrl.reorder)
   .post('/courses/:courseId/activities/:activityId/clone', ctrl.clone)
-  .get('/courses/:courseId/activities/:activityId/publish', ctrl.publish);
+  .get('/courses/:courseId/activities/:activityId/publish', ctrl.publish)
+  .get('/courses/:courseId/activities/:activityId/preview', ctrl.getPreview);
 
 function getActivity(req, res) {
   return Activity.findById(req.params.activityId, { paranoid: false })
