@@ -18,10 +18,9 @@
 </template>
 
 <script>
-import { getElementId, getToolbarName } from './utils';
+import { getElementId, getToolbarName, isQuestion } from './utils';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
-import { isQuestion } from 'common/utils';
 import { mapActions } from 'vuex-module';
 import Vue from 'vue';
 import { withValidation } from 'utils/validation';

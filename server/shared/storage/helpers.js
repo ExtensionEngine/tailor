@@ -1,7 +1,6 @@
 'use strict';
 
 const crypto = require('crypto');
-const { isQuestion } = require('../../../common/utils');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
@@ -13,6 +12,7 @@ const values = require('lodash/values');
 const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
+const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
 
 const ASSET_ROOT = 'repository/assets';
 

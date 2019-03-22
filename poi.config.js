@@ -16,7 +16,6 @@ const aliases = {
   'tce-core': '@/components/common/tce-core',
   EventBus: '@/EventBus',
   utils: '@/utils',
-  common: path.resolve(__dirname, './common'),
   shared: path.join(__dirname, 'config/shared'),
   tce: path.join(__dirname, 'content-elements')
 };

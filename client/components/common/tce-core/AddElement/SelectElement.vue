@@ -31,7 +31,7 @@ import chunk from 'lodash/chunk';
 import countBy from 'lodash/countBy';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
-import { isQuestion } from 'common/utils';
+import { isQuestion } from '../utils';
 import SelectQuestion from './SelectQuestion';
 
 const ELEMENTS_PER_ROW = 6;

@@ -20,10 +20,9 @@
 </template>
 
 <script>
+import { isQuestion, resolveElementType } from '../utils';
 import cuid from 'cuid';
 import get from 'lodash/get';
-import { isQuestion } from 'common/utils';
-import { resolveElementType } from '../utils';
 import SelectElement from './SelectElement';
 import SelectWidth from './SelectWidth';
 
