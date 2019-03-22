@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { getElementId, getToolbarName } from './utils';
+import { getElementId, getToolbarName, isQuestion } from './utils';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import { mapActions } from 'vuex-module';
@@ -43,7 +43,7 @@ export default {
     },
     componentName() {
       const { type } = this.element;
-      if (type === 'ASSESSMENT') return;
+      if (isQuestion(type)) return;
       return getToolbarName(type);
     },
     componentExists() {

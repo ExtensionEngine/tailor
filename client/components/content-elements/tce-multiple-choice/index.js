@@ -13,7 +13,7 @@ const initState = () => ({
 
 export default {
   name: 'Multiple Choice',
-  type: 'ASSESSMENT',
+  type: 'QUESTION',
   subtype: 'MC',
   version: '1.0',
   schema,
