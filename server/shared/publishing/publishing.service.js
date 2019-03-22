@@ -9,12 +9,9 @@ const {
 const storage = require('../storage');
 
 class PublishingService {
-  constructor(config) {
+  constructor() {
     this.queue = new PromiseQueue(1, Infinity);
-    this.storage = config ? storage.create(config) : storage.storage;
-  }
-  static create(config) {
-    return new PublishingService(config);
+    this.storage = storage.storage;
   }
   publishActivity(activity) {
     return this.queue.add(() => publishActivity(activity, this.storage));
@@ -31,5 +28,5 @@ class PublishingService {
 
 module.exports = {
   publishingService: new PublishingService(),
-  create: PublishingService.create
+  PublishingService
 };

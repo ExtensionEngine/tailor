@@ -3,11 +3,11 @@
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
-const { getFileNames, prepZip, deleteDir } = require('../shared/download/helpers');
+const { prepZip, deleteDir, DownloadingService, prepFiles } = require('../shared/download/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
-const { publishingService, create: createPubSer } = require('../shared/publishing/publishing.service');
+const { publishingService } = require('../shared/publishing/publishing.service');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -102,14 +102,13 @@ function exportContentInventory({ course }, res) {
 }
 
 function downloadCourseInfo({ course }, res) {
-  const tempPublishingService = createPubSer({
+  const tempPublishingService = new DownloadingService({
     filesystem: {
       path: 'temp'
     },
     provider: 'filesystem'});
   return tempPublishingService.publishRepoDetails(course)
-    .then(() => getFileNames(course.id))
-    .then((files) => prepZip(course.id, files))
+    .then(() => prepZip(course.id, prepFiles(tempPublishingService.storage.writtenFiles)))
     .then(() => {
       res.download(`temp/repository/${course.id}.tgz`);
       return deleteDir('temp');

@@ -2,29 +2,27 @@
 
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs-extra'));
-const storage = require('../storage');
 const tar = require('tar');
-class Storage extends storage.Storage {
-  static create(config) {
-    return new Storage(config);
+const { Storage } = require('../storage');
+const { PublishingService } = require('../publishing/publishing.service');
+
+class TempStorage extends Storage {
+  constructor(config) {
+    super(config);
+    this.writtenFiles = [];
   }
-  readDir(key) {
-    return fs.readdirAsync(key);
-  }
-  delDir(key) {
-    return fs.removeAsync(key);
+  saveFile(key, data, options = {}) {
+    this.writtenFiles.push(key);
+    return super.saveFile(key, data, options);
   }
 }
-const tempStorage = Storage.create({
-  filesystem: {
-    path: 'temp'
-  },
-  provider: 'filesystem'
-});
-function getFileNames(key) {
-  const folderPath = `temp/repository/${key}`;
-  return tempStorage.readDir(folderPath);
+class DownloadingService extends PublishingService {
+  constructor(config) {
+    super(config);
+    this.storage = new TempStorage(config);
+  }
 }
+
 function prepZip(courseId, files) {
   const key = `temp/repository/${courseId}`;
   return tar.c(
@@ -36,11 +34,17 @@ function prepZip(courseId, files) {
     files);
 }
 function deleteDir(folder) {
-  return tempStorage.delDir(folder);
+  return fs.removeAsync(folder);
+}
+
+function prepFiles(files) {
+  files.pop();
+  return files.map(file => file.split('/').pop());
 }
 
 module.exports = {
-  getFileNames,
   deleteDir,
-  prepZip
+  prepZip,
+  prepFiles,
+  DownloadingService
 };
