@@ -12,12 +12,13 @@ const values = require('lodash/values');
 const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
+const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
 
 const ASSET_ROOT = 'repository/assets';
 
 function processStatics(item) {
-  return item.type === 'ASSESSMENT'
-    ? processAssessment(item)
+  return isQuestion(item.type)
+    ? processQuestion(item)
     : processAsset(item);
 }
 
@@ -25,9 +26,9 @@ function processAsset(asset) {
   return isPrimitive(asset) ? processPrimitive(asset) : processComposite(asset);
 }
 
-function processAssessment(assessment) {
-  let question = assessment.data.question;
-  if (!question || question.length < 1) return Promise.resolve(assessment);
+function processQuestion(element) {
+  let question = element.data.question;
+  if (!question || question.length < 1) return Promise.resolve(element);
   return Promise.each(question, it => processAsset(it));
 }
 
@@ -69,15 +70,15 @@ processor.IMAGE = asset => {
 };
 
 function resolveStatics(item) {
-  return item.type === 'ASSESSMENT'
-    ? resolveAssessment(item)
+  return isQuestion(item.type)
+    ? resolveQuestion(item)
     : resolveAsset(item);
 }
 
-function resolveAssessment(assessment) {
-  let question = assessment.data.question;
-  if (!question || question.length < 1) return Promise.resolve(assessment);
-  return Promise.each(question, it => resolveAsset(it)).then(() => assessment);
+function resolveQuestion(element) {
+  let question = element.data.question;
+  if (!question || question.length < 1) return Promise.resolve(element);
+  return Promise.each(question, it => resolveAsset(it)).then(() => element);
 }
 
 function resolveAsset(element) {

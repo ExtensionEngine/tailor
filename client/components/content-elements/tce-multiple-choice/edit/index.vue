@@ -1,12 +1,12 @@
 <template>
   <div :class="{ disabled }">
-    <h5>Answers</h5>
+    <h5>{{ isGraded ? 'Answers' : 'Options' }}</h5>
     <span @click="addAnswer" class="btn btn-link mdi mdi-plus pull-right"></span>
     <ul>
       <li
         v-for="(answer, index) in answers"
         :key="index">
-        <span :class="{ 'has-error': !hasCorrectAnswers }">
+        <span v-if="isGraded" :class="{ 'has-error': !hasCorrectAnswers }">
           <input
             :checked="correct.includes(index)"
             :disabled="disabled"
@@ -18,9 +18,9 @@
             :ref="`input${index}`"
             :value="answers[index]"
             :disabled="disabled"
+            :placeholder="isGraded ? 'Answer...' : 'Option...'"
             @change="updateAnswer(index)"
-            class="form-control"
-            placeholder="Answer...">
+            class="form-control">
         </span>
         <span @click="removeAnswer(index)" class="mdi mdi-close control"></span>
       </li>
@@ -40,6 +40,7 @@ const customAlert = {
 export default {
   props: {
     assessment: { type: Object, required: true },
+    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },

@@ -6,11 +6,19 @@ const TOOLBAR_MAP = {
 
 export function getComponentName(type) {
   const elementType = TOOLBAR_MAP[type] || type;
-  return `tce-${toCase.slug(elementType)}`;
+  return `tce-${toCase.slug(resolveElementType(elementType))}`;
 }
 
-export function processAssessmentType(type) {
-  return `assessment-${toCase.slug(type)}`;
+export function processAnswerType(type) {
+  return `answer-${toCase.slug(type)}`;
+}
+
+export function isQuestion(type) {
+  return ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
+}
+
+export function resolveElementType(type) {
+  return isQuestion(type) ? 'QUESTION-CONTAINER' : type;
 }
 
 export function getToolbarName(type) {
