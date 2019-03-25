@@ -88,6 +88,11 @@ ul {
     width: 100%;
     margin: 10px 0;
 
+    input[disabled]::after {
+      background: #eee;
+      border: none;
+    }
+
     .answers {
       vertical-align: bottom;
       font-size: 16px;
