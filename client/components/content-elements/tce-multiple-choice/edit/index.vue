@@ -93,12 +93,14 @@ export default {
       const feedback = cloneDeep(this.feedback);
 
       answers.splice(answerIndex, 1);
-      const index = correct.indexOf(answerIndex);
-      if (index !== -1) correct.splice(index, 1);
 
-      correct.forEach((it, i) => {
-        if (it >= answerIndex) correct[i] = it - 1;
-      });
+      if (this.isGraded) {
+        const index = correct.indexOf(answerIndex);
+        if (index !== -1) correct.splice(index, 1);
+        correct.forEach((it, i) => {
+          if (it >= answerIndex) correct[i] = it - 1;
+        });
+      }
 
       if (feedback) {
         range(answerIndex, answers.length).forEach(it => {

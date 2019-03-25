@@ -90,8 +90,10 @@ export default {
 
       answers.splice(index, 1);
 
-      if (correct === index) correct = null;
-      if (correct && correct >= index) correct -= 1;
+      if (this.isGraded) {
+        if (correct === index) correct = null;
+        if (correct && correct >= index) correct -= 1;
+      }
 
       if (feedback) {
         range(index, answers.length).forEach(it => {
