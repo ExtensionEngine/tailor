@@ -47,14 +47,14 @@ import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getElementId } from 'tce-core/utils';
+import { getElementId, isQuestion } from 'tce-core/utils';
 import Promise from 'bluebird';
 import Sidebar from './sidebar';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
 
 const getEmbed = ({ type, data }, id) => {
-  if (type === 'ASSESSMENT') return find(data.question, { id });
+  if (isQuestion(type)) return find(data.question, { id });
   return get(data, `embeds.${id}`);
 };
 
