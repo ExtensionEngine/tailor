@@ -10,25 +10,23 @@
       color="info">
       <v-icon>mdi-open-in-new</v-icon>
     </v-btn>
-    <template>
-      <file-upload
-        v-show="!file && isEditing"
-        :uploading.sync="uploading"
-        :validate="{ ext: 'PDF' }"
-        @upload="val => (file = val) && (urlInput = null)"
-        sm/>
-      <template v-if="file">
-        <v-btn
-          v-if="isEditing"
-          @click.stop="removeAsset"
-          flat
-          small
-          icon
-          color="red">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-        <v-text-field v-model="fileName" disabled/>
-      </template>
+    <file-upload
+      v-show="!file && isEditing"
+      :uploading.sync="uploading"
+      :validate="{ ext: 'PDF' }"
+      @upload="val => (file = val) && (urlInput = null)"
+      sm/>
+    <template v-if="file">
+      <v-btn
+        v-if="isEditing"
+        @click.stop="removeAsset"
+        flat
+        small
+        icon
+        color="red">
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+      <v-text-field :value="fileName" disabled/>
     </template>
     <v-text-field
       v-if="!uploading && (urlInput || !hasAsset)"
@@ -118,7 +116,6 @@ export default {
 }
 
 .v-text-field {
-  width: 300px;
   max-width: 600px;
   margin: 0 20px;
   padding: 0 7px;

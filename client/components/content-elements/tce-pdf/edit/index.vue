@@ -59,8 +59,7 @@ export default {
   data() {
     return {
       showError: false,
-      showViewer: true,
-      url: ''
+      showViewer: true
     };
   },
   computed: {
