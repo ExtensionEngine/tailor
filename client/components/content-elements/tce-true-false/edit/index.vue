@@ -3,7 +3,7 @@
     <span class="form-label">
       {{ isGraded ? 'Select correct  answer' : 'Options' }}
     </span>
-    <ul>
+    <ul :class="{ 'non-graded': !isGraded }">
       <li>
         <span :class="{ 'has-error': correctError }">
           <input
@@ -88,16 +88,16 @@ ul {
     width: 100%;
     margin: 10px 0;
 
-    input[disabled]::after {
-      background: #eee;
-      border: none;
-    }
-
     .answers {
       vertical-align: bottom;
       font-size: 16px;
     }
   }
+}
+
+.non-graded input[disabled]::after {
+  background: #eee;
+  border: none;
 }
 
 @media (max-width: 850px) {
