@@ -5,7 +5,8 @@
     <ul>
       <li
         v-for="(answer, index) in answers"
-        :key="index">
+        :key="index"
+        :class="{ 'non-graded': !isGraded }">
         <span v-if="isGraded" :class="{ 'has-error': !hasCorrectAnswers }">
           <input
             :checked="correct.includes(index)"
@@ -13,7 +14,8 @@
             @change="toggleAnswer(index)"
             type="checkbox">
         </span>
-        <span :class="errorClass(index)">
+        <v-avatar v-else size="32" color="blue">{{ index + 1 }}</v-avatar>
+        <span :class="errorClass(index)" class="input-container">
           <input
             :ref="`input${index}`"
             :value="answers[index]"
@@ -145,6 +147,22 @@ ul {
     position: relative;
     margin: 20px 0;
     padding-left: 40px;
+
+    &.non-graded {
+      padding-left: 0;
+    }
+
+    .v-avatar {
+      float: left;
+      margin-top: 3px;
+      margin-right: 10px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .input-container {
+      display: flex;
+    }
 
     .form-control {
       padding-left: 10px;

@@ -7,7 +7,7 @@
       class="btn btn-link answers-add">
       <span class="mdi mdi-plus"></span>
     </button>
-    <ul>
+    <ul :class="{ 'non-graded': !isGraded }">
       <li
         v-for="(answer, index) in answers"
         :key="index">
@@ -21,6 +21,7 @@
             @change="selectAnswer(index)"
             type="radio">
         </span>
+        <v-avatar v-else size="32" color="blue">{{ index + 1 }}</v-avatar>
         <span :class="{ 'has-error': answerError(index) }" class="answers-input">
           <input
             :ref="`input${index}`"
@@ -166,6 +167,10 @@ export default {
 ul {
   padding: 10px 0 0 50px;
 
+  &.non-graded {
+    padding-left: 40px;
+  }
+
   li {
     display: inline-block;
     position: relative;
@@ -180,6 +185,13 @@ ul {
       input {
         padding-bottom: 9px;
       }
+    }
+
+    .v-avatar {
+      float: left;
+      margin-top: 3px;
+      color: #fff;
+      font-weight: 700;
     }
 
     .answers-input {
