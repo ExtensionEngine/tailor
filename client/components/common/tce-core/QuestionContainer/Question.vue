@@ -4,15 +4,15 @@
     <div
       :class="{ editing: isEditing, 'question-error': questionError }"
       class="question">
-      <div class="row">
+      <draggable :list="question" :options="dragOptions" class="row">
         <contained-content
-          v-for="element in assessment.data.question"
+          v-for="element in question"
           :key="element.id"
           :element="element"
           :isDisabled="!isEditing"
           @save="data => elementChanged(element, data)"
           @delete="deleteElement(element)"/>
-      </div>
+      </draggable>
       <add-element
         v-show="isEditing"
         :include="['HTML', 'IMAGE', 'EMBED']"
@@ -29,6 +29,7 @@
 import AddElement from '../AddElement';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
+import Draggable from 'vuedraggable';
 import findIndex from 'lodash/findIndex';
 import { helperText } from 'utils/assessment';
 import pullAt from 'lodash/pullAt';
@@ -41,12 +42,22 @@ export default {
     isEditing: { type: Boolean, default: false }
   },
   computed: {
+    question() {
+      return this.assessment.data.question;
+    },
     helperText() {
       const helper = helperText[this.assessment.data.type] || {};
       return helper.question;
     },
     questionError() {
       return this.errors.includes('question');
+    },
+    dragOptions() {
+      return {
+        handle: '.drag-handle',
+        scrollSpeed: 15,
+        scrollSensitivity: 125
+      };
     }
   },
   methods: {
@@ -73,7 +84,8 @@ export default {
   },
   components: {
     AddElement,
-    ContainedContent
+    ContainedContent,
+    Draggable
   }
 };
 </script>
