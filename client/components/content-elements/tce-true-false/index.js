@@ -11,7 +11,7 @@ const initState = () => ({
 
 export default {
   name: 'True - False',
-  type: 'ASSESSMENT',
+  type: 'QUESTION',
   subtype: 'TF',
   version: '1.0',
   schema,

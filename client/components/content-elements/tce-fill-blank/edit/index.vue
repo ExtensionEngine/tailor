@@ -54,6 +54,7 @@ const ALERT = {
 export default {
   props: {
     assessment: { type: Object, default: defaults.FB },
+    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
@@ -65,7 +66,7 @@ export default {
       return this.assessment.correct;
     },
     hasAnswers() {
-      return this.answerGroups.length > 0;
+      return get(this.answerGroups, 'length') > 0;
     },
     hasExtraAnswers() {
       return this.answerGroups.length !== this.blanksCount;
@@ -128,7 +129,7 @@ export default {
       if (!newVal) this.answerGroups = this.assessment.answerGroups;
     },
     question: debounce(function (newVal, oldVal) {
-      if (!this.hasChanges(newVal, oldVal)) return;
+      if (!this.isGraded || !this.hasChanges(newVal, oldVal)) return;
       this.parse();
     }, 200)
   },
