@@ -12,7 +12,9 @@ router
   .use(bodyParser.urlencoded())
   .use(auth)
   .get('/asset', ctrl.getUrl)
-  .post('/asset', ctrl.resolveUrl)
-  .post('/asset', upload.single('file'), ctrl.upload);
+  .post('/asset', upload.single('file'), (req, res) => {
+    if (req.file) return ctrl.upload(req, res);
+    return ctrl.resolveUrl(req, res);
+  });
 
 module.exports = { router };

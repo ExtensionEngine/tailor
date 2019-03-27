@@ -7,15 +7,15 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
-function getUrl(req, res) {
-  const { query: { key } } = req;
-  return getFileUrl(key).then(url => res.json({ url }));
+async function getUrl({ query }, res) {
+  const url = await getFileUrl(query.key);
+  res.json({ url });
 }
 
-function resolveUrl({ body }, res, next) {
-  if (body.action !== 'resolve') return next();
+async function resolveUrl({ body }, res) {
   const { key } = parseUrl(body.url);
-  return getFileUrl(key).then(url => res.redirect(url));
+  const url = await getFileUrl(key, { download: body.download });
+  res.redirect(url);
 }
 
 async function upload({ file }, res) {

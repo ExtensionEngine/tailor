@@ -7,6 +7,7 @@ import 'vue-directive-tooltip/css/index.css';
 
 import assetsApi from '@/api/asset';
 import Assessment from 'tce-core/Assessment';
+import AssetControls from './plugins/asset-controls';
 import ElementRegistry from './ElementRegistry';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
@@ -25,21 +26,24 @@ Vue.component('tce-assessment', Assessment);
 const registry = new ElementRegistry(Vue);
 registry.initialize();
 
-Vue.use(VueHotkey);
-Vue.use(Vuetify, { iconfont: 'mdi' });
-Vue.use(Tooltip, { delay: 50 });
-Vue.use(VeeValidate, {
-  delay: 700,
-  fieldsBagName: 'vFields',
-  errorBagName: 'vErrors',
-  inject: false
+Vue.use(AssetControls, {
+  apiUrl: assetsApi.root,
+  auth: () => localStorage.getItem('JWT_TOKEN')
 });
-
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {
     'en-US': require('@/assets/locales/timeago-en-US-short.json')
   }
+});
+Vue.use(Tooltip, { delay: 50 });
+Vue.use(VueHotkey);
+Vue.use(Vuetify, { iconfont: 'mdi' });
+Vue.use(VeeValidate, {
+  delay: 700,
+  fieldsBagName: 'vFields',
+  errorBagName: 'vErrors',
+  inject: false
 });
 
 sync(store, router);

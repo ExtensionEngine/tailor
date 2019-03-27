@@ -92,9 +92,12 @@ class Amazon {
   }
 
   // API docs: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getSignedUrl-property
-  getFileUrl(key, options = {}) {
-    const expires = options.expires || DEFAULT_EXPIRATION_TIME;
-    const params = Object.assign(options, { Bucket: this.bucket, Key: key, Expires: expires });
+  getFileUrl(key, { expires, download, ...options } = {}) {
+    const params = Object.assign(options, { Bucket: this.bucket, Key: key });
+    params.Expires = expires || DEFAULT_EXPIRATION_TIME;
+    if (download) {
+      params.ResponseContentDisposition = `attachment;filename=${download}`;
+    }
     return this._getSignedUrl('getObject', params);
   }
 

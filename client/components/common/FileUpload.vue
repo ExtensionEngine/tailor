@@ -18,7 +18,8 @@
       </label>
       <asset-link
         v-else
-        :url="`storage://${fileKey}`"
+        :href="`storage://${fileKey}`"
+        :download="fileName"
         class="file-name">
         {{ fileName }}
       </asset-link>
@@ -29,7 +30,6 @@
 </template>
 
 <script>
-import AssetLink from 'components/common/AssetLink';
 import CircularProgress from 'components/common/CircularProgress';
 import downloadMixin from 'utils/downloadMixin';
 import EventBus from 'EventBus';
@@ -81,7 +81,7 @@ export default {
       });
     }
   },
-  components: { CircularProgress, AssetLink }
+  components: { CircularProgress }
 };
 </script>
 
