@@ -9,10 +9,10 @@ const tar = require('tar');
 class TempStorage extends Storage {
   constructor(config) {
     super(config);
-    this.writtenFiles = [];
+    this._writtenFiles = [];
   }
   saveFile(key, data, options = {}) {
-    this.writtenFiles.push(key);
+    this._writtenFiles.push(key);
     return super.saveFile(key, data, options);
   }
 }
@@ -21,10 +21,17 @@ class DownloadingService extends PublishingService {
     super(config);
     this.storage = new TempStorage(config);
   }
+  publishRepoDetails(course) {
+    return super.publishRepoDetails(course)
+      .then(() => {
+        return new Promise((resolve) => resolve(this.storage._writtenFiles));
+      });
+  }
 }
 
 function prepZip(courseId, files) {
   const key = `temp/repository/${courseId}`;
+  files = prepFiles(files);
   return tar.c(
     {
       gzip: true,

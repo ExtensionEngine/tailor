@@ -108,7 +108,7 @@ function downloadCourseInfo({ course }, res) {
     },
     provider: 'filesystem'});
   return downloadService.publishRepoDetails(course)
-    .then(() => prepZip(course.id, prepFiles(downloadService.storage.writtenFiles)))
+    .then((files) => prepZip(course.id, files))
     .then(() => {
       res.download(`temp/repository/${course.id}.tgz`);
       return deleteDir('temp');
