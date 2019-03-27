@@ -1,7 +1,7 @@
 <template>
   <div class="file-upload">
     <circular-progress v-if="uploading"/>
-    <form v-else ref="form" @submit.prevent class="upload-form">
+    <form v-else @submit.prevent class="upload-form">
       <input
         v-validate="validate"
         v-bind="{ id, name: id }"
@@ -60,8 +60,7 @@ export default {
         this.uploading = true;
         return this.$storageService.upload(data)
           .then(({ url, publicUrl, key }) => {
-            const { name } = data.get('file');
-            this.$emit('upload', { url, publicUrl, key, name });
+            this.$emit('upload', { url, publicUrl, key, name: file.name });
           })
           .catch(() => (this.error = 'An error has occurred!'))
           .finally(() => (this.uploading = false));
