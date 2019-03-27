@@ -1,6 +1,6 @@
 <template>
   <form
-    :action="action"
+    :action="apiUrl"
     :target="download ? '' : target"
     method="post"
     class="asset-link">
@@ -20,7 +20,7 @@ export default {
     target: { type: String, default: '' }
   },
   computed: {
-    action: ({ $options }) => $options.$_apiUrl,
+    apiUrl: ({ $options }) => $options.$_apiUrl,
     auth: ({ $options }) => $options.$_auth()
   }
 };
