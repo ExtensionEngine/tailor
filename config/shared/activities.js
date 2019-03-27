@@ -32,6 +32,7 @@ module.exports = {
   getOutlineLevels,
   getObjectives,
   getLevel,
+  getTypeName,
   getTesMeta,
   getSiblingLevels,
   isEditable: activityType => {
@@ -52,6 +53,10 @@ function getSchema(id) {
 
 function getSchemaId(type) {
   return type.includes('/') && first(type.split('/'));
+}
+
+function getTypeName(type) {
+  return type.includes('/') && type.split('/')[1];
 }
 
 function getOutlineLevels(schemaId) {

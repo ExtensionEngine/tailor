@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { getLevel } from 'shared/activities';
+import { getLevel, getTypeName } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import every from 'lodash/every';
@@ -41,14 +41,20 @@ export default {
     allowEmpty: { type: Boolean, default: true },
     placeholder: { type: String, default: 'Click to select' },
     allowCircularLinks: { type: Boolean, default: false },
-    allowInsideLineage: { type: Boolean, default: false }
+    allowInsideLineage: { type: Boolean, default: false },
+    allowedTypes: { type: Array, default: () => ([]) }
   },
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
     ...mapGetters(['getLineage'], 'activities'),
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
-      const activities = without(this.activities, this.activity);
+      let activities = without(this.activities, this.activity);
+      if (this.allowedTypes.length) {
+        activities = filter(activities, activity => {
+          return includes(this.allowedTypes, getTypeName(activity.type));
+        });
+      }
       const conds = [it => getLevel(it.type)];
       if (!allowCircularLinks) conds.push(it => !includes(this.getAssociationIds(it), id));
       if (!allowInsideLineage) {
@@ -63,12 +69,17 @@ export default {
     associations() {
       const ids = this.getAssociationIds(this.activity);
       return filter(this.options, it => includes(ids, it.id));
+    },
+    displayType() {
+      return this.allowedTypes.length > 1;
     }
   },
   methods: {
     ...mapActions(['update'], 'activities'),
     getCustomLabel(activity) {
-      return get(activity, 'data.name', '');
+      const name = get(activity, 'data.name', '');
+      const type = get(getLevel(activity.type), 'label');
+      return !this.displayType ? name : `${name} (${type})`;
     },
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
