@@ -3,7 +3,7 @@
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
-const { DownloadingService, deleteDir, prepFiles, prepZip } = require('../shared/download/helpers');
+const { DownloadingService, deleteDir, prepZip } = require('../shared/download/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
@@ -108,7 +108,7 @@ function downloadCourseInfo({ course }, res) {
     },
     provider: 'filesystem'});
   return downloadService.publishRepoDetails(course)
-    .then((files) => prepZip(course.id, files))
+    .then(files => prepZip(course.id, files))
     .then(() => {
       res.download(`temp/repository/${course.id}.tgz`);
       return deleteDir('temp');
