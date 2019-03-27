@@ -4,7 +4,7 @@
     <div
       :class="{ editing: isEditing, 'question-error': questionError }"
       class="question">
-      <draggable :list="question" :options="dragOptions" class="row">
+      <draggable v-model="question" :options="dragOptions" class="row">
         <contained-content
           v-for="element in question"
           :key="element.id"
@@ -42,8 +42,13 @@ export default {
     isEditing: { type: Boolean, default: false }
   },
   computed: {
-    question() {
-      return this.assessment.data.question;
+    question: {
+      get() {
+        return cloneDeep(this.assessment.data.question);
+      },
+      set(question) {
+        this.$emit('update', { question });
+      }
     },
     helperText() {
       const helper = helperText[this.assessment.data.type] || {};
