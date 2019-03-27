@@ -22,9 +22,11 @@ async function upload({ file }, res) {
   const buffer = await readFile(file);
   const hash = sha256(file.originalname, buffer);
   const extension = path.extname(file.originalname);
-  const key = path.join(ASSET_ROOT, `${hash}${extension}`);
+  const name = path.basename(file.originalname, extension).substring(0, 180).trim();
+  const key = path.join(ASSET_ROOT, `${hash}___${name}${extension}`);
   await saveFile(key, buffer, { ContentType: file.mimetype });
-  return res.json({ key });
+  const publicUrl = await getFileUrl(key);
+  return res.json({ key, url: `storage://${key}`, publicUrl });
 }
 
 module.exports = { resolveUrl, getUrl, upload };

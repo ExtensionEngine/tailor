@@ -13,7 +13,7 @@
       <label
         v-if="!fileKey"
         :for="id"
-        class="btn btn-material btn-sm upload-button">
+        :class="[sm ? 'v-btn v-btn--small' : 'btn btn-material btn-sm upload-button']">
         {{ label }}
       </label>
       <asset-link
@@ -47,7 +47,8 @@ export default {
     fileName: { type: String, default: '' },
     fileKey: { type: String, default: '' },
     validate: { type: Object, default: () => ({ rules: { ext: [] } }) },
-    label: { type: String, default: 'Choose a file' }
+    label: { type: String, default: 'Choose a file' },
+    sm: { type: Boolean, default: false }
   },
   data() {
     return { uploading: false };
@@ -65,9 +66,10 @@ export default {
         if (!isValid) return;
         this.uploading = true;
         return this.$storageService.upload(this.form)
-          .then(({ key }) => {
+          .then(({ url, publicUrl, key }) => {
             this.uploading = false;
-            this.$emit('upload', { key, name: this.form.get('file').name });
+            const { name } = this.form.get('file');
+            this.$emit('upload', { url, publicUrl, key, name });
           }).catch(() => {
             this.error = 'An error has occurred!';
           });
@@ -79,6 +81,11 @@ export default {
         item: { name: this.fileName },
         action: () => this.$emit('delete', this.id, null)
       });
+    }
+  },
+  watch: {
+    uploading(val) {
+      this.$emit('update:uploading', val);
     }
   },
   components: { CircularProgress }
