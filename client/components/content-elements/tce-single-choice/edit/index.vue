@@ -168,7 +168,7 @@ ul {
   padding: 10px 0 0 50px;
 
   &.non-graded {
-    padding-left: 40px;
+    padding-left: 30px;
   }
 
   li {
@@ -189,7 +189,8 @@ ul {
 
     .v-avatar {
       float: left;
-      margin-top: 3px;
+      margin-top: 8px;
+      margin-right: 6px;
       color: #fff;
       font-weight: 700;
     }

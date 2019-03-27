@@ -95,9 +95,13 @@ ul {
   }
 }
 
-.non-graded input[disabled]::after {
-  background: #eee;
-  border: none;
+.non-graded {
+  padding-left: 35px;
+
+  input[disabled]::after {
+    background: #eee;
+    border: none;
+  }
 }
 
 @media (max-width: 850px) {
