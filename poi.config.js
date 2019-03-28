@@ -1,12 +1,12 @@
 'use strict';
 
 const path = require('path');
-const serverPort = require('./config/server').port;
+const config = require('./config/server');
 
-const { NODE_ENV, STORAGE_PATH } = process.env;
+const { filesystem } = config.storage;
 const imagesPath = 'assets/img';
-const isProduction = NODE_ENV === 'production';
-const serverUrl = `http://127.0.0.1:${serverPort}`;
+const isProduction = process.env.NODE_ENV === 'production';
+const serverUrl = `http://127.0.0.1:${config.port}`;
 
 const aliases = {
   '@': path.resolve(__dirname, './client'),
@@ -22,14 +22,12 @@ const aliases = {
 
 const copy = [{ from: 'client/assets/img', to: imagesPath }];
 
+const proxy = { '/api': { target: serverUrl } };
+if (filesystem.path) proxy['/repository'] = { target: serverUrl };
+
 const devServer = {
-  headers: {
-    'X-Powered-By': 'Webpack DevSever'
-  },
-  proxy: {
-    '/api': { target: serverUrl },
-    ...(STORAGE_PATH ? { '/repository': serverUrl } : {})
-  },
+  headers: { 'X-Powered-By': 'Webpack DevSever' },
+  proxy,
   // Override using: `npm run dev:server -- --port <number>`
   port: 8080,
   hotEntries: ['app']

@@ -15,7 +15,7 @@ const config = require('../config/server');
 const logger = require('./shared/logger');
 const router = require('./router');
 
-const { STORAGE_PATH } = process.env;
+const { filesystem } = config.storage;
 
 const app = express();
 app.use(helmet());
@@ -24,7 +24,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(passport.initialize());
 app.use(origin());
 app.use(express.static(path.join(__dirname, '../dist/')));
-if (STORAGE_PATH) app.use(express.static(STORAGE_PATH));
+if (filesystem.path) app.use(express.static(filesystem.path));
 
 // Mount main router.
 app.use('/api/v1', requestLogger, router);

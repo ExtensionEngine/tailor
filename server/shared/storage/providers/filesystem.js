@@ -1,9 +1,7 @@
 'use strict';
 
-const config = require('../../../../config/server');
 const Promise = require('bluebird');
 const exists = require('path-exists');
-const expandPath = require('untildify');
 const fs = Promise.promisifyAll(require('fs'));
 const Joi = require('joi');
 const mkdirp = Promise.promisify(require('mkdirp'));
@@ -11,7 +9,6 @@ const path = require('path');
 const { validateConfig } = require('../validation');
 
 const isNotFound = err => err.code === 'ENOENT';
-const resolvePath = str => path.resolve(expandPath(str));
 
 const schema = Joi.object().keys({
   path: Joi.string().required()
@@ -20,7 +17,7 @@ const schema = Joi.object().keys({
 class FilesystemStorage {
   constructor(config) {
     config = validateConfig(config, schema);
-    this.root = resolvePath(config.path);
+    this.root = path.resolve(config.path);
   }
 
   static create(config) {
@@ -71,7 +68,7 @@ class FilesystemStorage {
   }
 
   getFileUrl(key) {
-    return Promise.resolve(`${config.origin}/${key}`);
+    return Promise.resolve(path.join('/', key));
   }
 }
 
