@@ -1,7 +1,6 @@
 'use strict';
 
 const autobind = require('auto-bind');
-const config = require('../../../config/server').storage;
 const path = require('path');
 const { validateConfig } = require('./validation');
 
@@ -57,7 +56,8 @@ class Storage {
   }
 }
 
-module.exports = new Storage(config);
+module.exports = config => new Storage(config);
+module.exports.Storage = Storage;
 
 function loadProvider(name) {
   try {

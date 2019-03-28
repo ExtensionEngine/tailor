@@ -7,7 +7,7 @@ const isUrl = require('is-url');
 const mime = require('mime-types');
 const nodeUrl = require('url');
 const Promise = require('bluebird');
-const storage = require('./index');
+const storage = require('./')(require('../../../config/server').storage);
 const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
 

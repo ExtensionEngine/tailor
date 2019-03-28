@@ -1,20 +1,20 @@
 'use strict';
 
-const { getFileUrl, saveFile } = require('./');
 const { ASSET_ROOT } = require('./helpers');
 const { URL } = require('url');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const storage = require('./')(require('../../../config/server').storage);
 
 async function getUrl({ query }, res) {
-  const url = await getFileUrl(query.key);
+  const url = await storage.getFileUrl(query.key);
   res.json({ url });
 }
 
 async function resolveUrl({ body }, res) {
   const { key } = parseUrl(body.url);
-  const url = await getFileUrl(key, { download: body.download });
+  const url = await storage.getFileUrl(key, { download: body.download });
   res.redirect(url);
 }
 
@@ -24,8 +24,8 @@ async function upload({ file }, res) {
   const extension = path.extname(file.originalname);
   const name = path.basename(file.originalname, extension).substring(0, 180).trim();
   const key = path.join(ASSET_ROOT, `${hash}___${name}${extension}`);
-  await saveFile(key, buffer, { ContentType: file.mimetype });
-  const publicUrl = await getFileUrl(key);
+  await storage.saveFile(key, buffer, { ContentType: file.mimetype });
+  const publicUrl = await storage.getFileUrl(key);
   return res.json({ key, url: `storage://${key}`, publicUrl });
 }
 
