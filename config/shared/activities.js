@@ -25,14 +25,12 @@ parseSchemas(SCHEMAS);
 module.exports = {
   SCHEMAS,
   getSchema,
-  getSchemaId,
   getRepositoryMeta,
   getLevelRelationships,
   getRepositoryRelationships,
   getOutlineLevels,
   getObjectives,
   getLevel,
-  getTypeName,
   getTesMeta,
   getSiblingLevels,
   isEditable: activityType => {
@@ -42,7 +40,8 @@ module.exports = {
   },
   getSupportedContainers,
   hasAssessments: level => getLevel(level).hasAssessments,
-  hasExams: level => getLevel(level).hasExams
+  hasExams: level => getLevel(level).hasExams,
+  parseType
 };
 
 function getSchema(id) {
@@ -51,20 +50,12 @@ function getSchema(id) {
   return schema;
 }
 
-function getSchemaId(type) {
-  return type.includes('/') && first(type.split('/'));
-}
-
-function getTypeName(type) {
-  return type.includes('/') && type.split('/')[1];
-}
-
 function getOutlineLevels(schemaId) {
   return getSchema(schemaId).structure;
 }
 
 function getLevel(type) {
-  const schemaId = getSchemaId(type);
+  const { schemaId } = parseType(type);
   return schemaId && find(getOutlineLevels(schemaId), { type });
 }
 
@@ -73,7 +64,7 @@ function getTesMeta(schemaId, type) {
 }
 
 function getSiblingLevels(type) {
-  const schemaId = getSchemaId(type);
+  const { schemaId } = parseType(type);
   if (!schemaId) return [{ type }];
   const levels = getOutlineLevels(schemaId);
   const { level } = find(levels, { type }) || {};
@@ -82,7 +73,8 @@ function getSiblingLevels(type) {
 }
 
 function getSupportedContainers(type) {
-  const schema = getSchema(getSchemaId(type));
+  const { schemaId } = parseType(type);
+  const schema = getSchema(schemaId);
   const defaultConfig = get(defaultConfiguration, 'CONTENT_CONTAINERS', []);
   const schemaConfig = get(schema, 'contentContainers', []);
   const activityConfig = get(getLevel(type), 'contentContainers', []);
@@ -115,4 +107,10 @@ function getRepositoryRelationships(schemaId) {
   const structure = getOutlineLevels(schemaId);
   return flatMap(structure, it => it.relationships)
     .reduce((acc, { type }) => union(acc, [type]), []);
+}
+
+function parseType(type) {
+  const schemaId = type.includes('/') && first(type.split('/'));
+  const typeName = type.includes('/') && type.split('/')[1];
+  return { schemaId, typeName };
 }

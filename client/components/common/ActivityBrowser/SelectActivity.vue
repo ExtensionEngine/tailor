@@ -32,7 +32,7 @@
 
 <script>
 import { getAncestors } from 'client/utils/activity';
-import { getSchemaId } from 'shared/activities';
+import { parseType } from 'shared/activities';
 import activityApi from 'client/api/activity';
 import CircularProgress from 'components/common/CircularProgress';
 import filter from 'lodash/filter';
@@ -63,8 +63,8 @@ export default {
     },
     isCompatibleSchema() {
       if (!this.selectableLevels.length) return true;
-      const schema = getSchemaId(first(this.selectableLevels).type);
-      return schema === this.repository.schema;
+      const { schemaId } = parseType(first(this.selectableLevels).type);
+      return schemaId === this.repository.schema;
     }
   },
   methods: {

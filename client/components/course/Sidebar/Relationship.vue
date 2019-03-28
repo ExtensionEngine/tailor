@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { getLevel, getTypeName } from 'shared/activities';
+import { getLevel, parseType } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import every from 'lodash/every';
@@ -52,7 +52,8 @@ export default {
       let activities = without(this.activities, this.activity);
       if (this.allowedTypes.length) {
         activities = filter(activities, activity => {
-          return includes(this.allowedTypes, getTypeName(activity.type));
+          const { typeName } = parseType(activity.type);
+          return includes(this.allowedTypes, typeName);
         });
       }
       const conds = [it => getLevel(it.type)];
