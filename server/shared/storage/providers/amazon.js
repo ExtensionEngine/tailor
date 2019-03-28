@@ -4,7 +4,6 @@ const contentDisposition = require('content-disposition');
 const Joi = require('joi');
 const path = require('path');
 const S3 = require('aws-sdk/clients/s3');
-const { validateConfig } = require('../validation');
 
 const isNotFound = err => err.code === 'NoSuchKey';
 const DEFAULT_EXPIRATION_TIME = 3600; // seconds
@@ -18,8 +17,6 @@ const schema = Joi.object().keys({
 
 class Amazon {
   constructor(config) {
-    config = validateConfig(config, schema);
-
     const s3Config = {
       signatureVersion: 'v4',
       accessKeyId: config.key,

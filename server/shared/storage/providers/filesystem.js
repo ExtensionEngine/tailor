@@ -8,7 +8,6 @@ const Joi = require('joi');
 const mkdirp = Promise.promisify(require('mkdirp'));
 const path = require('path');
 const { URLSearchParams } = require('url');
-const { validateConfig } = require('../validation');
 
 const isNotFound = err => err.code === 'ENOENT';
 
@@ -18,7 +17,6 @@ const schema = Joi.object().keys({
 
 class FilesystemStorage {
   constructor(config) {
-    config = validateConfig(config, schema);
     this.root = path.resolve(config.path);
   }
 

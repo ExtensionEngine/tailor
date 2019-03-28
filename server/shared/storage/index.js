@@ -3,6 +3,7 @@
 const autobind = require('auto-bind');
 const config = require('../../../config/server').storage;
 const path = require('path');
+const { validateConfig } = require('./validation');
 
 class Storage {
   constructor(config) {
@@ -51,7 +52,8 @@ class Storage {
 
     // Load provider module & create provider instance.
     const config = options[providerName];
-    return loadProvider(providerName).create(config);
+    const provider = loadProvider(providerName);
+    return provider.create(validateConfig(config, provider.schema));
   }
 }
 
