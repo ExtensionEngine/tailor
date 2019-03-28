@@ -119,8 +119,11 @@ export default {
     }
   },
   watch: {
-    assessment() {
-      this.validate();
+    assessment: {
+      deep: true,
+      handler: function () {
+        this.validate();
+      }
     }
   }
 };
