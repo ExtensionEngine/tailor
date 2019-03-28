@@ -11,7 +11,8 @@ module.exports = {
     bucket: process.env.STORAGE_BUCKET
   },
   filesystem: {
-    path: normalize(process.env.STORAGE_PATH)
+    path: normalize(process.env.STORAGE_PATH),
+    publicPath: process.env.STORAGE_PUBLIC_PATH
   },
   provider: process.env.STORAGE_PROVIDER
 };

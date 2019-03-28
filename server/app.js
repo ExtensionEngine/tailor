@@ -15,8 +15,6 @@ const config = require('../config/server');
 const logger = require('./shared/logger');
 const router = require('./router');
 
-const { filesystem } = config.storage;
-
 const app = express();
 app.use(helmet());
 app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
@@ -25,20 +23,10 @@ app.use(passport.initialize());
 app.use(origin());
 app.use(express.static(path.join(__dirname, '../dist/')));
 
-app.set('storage', require('./shared/storage')(config.storage));
-if (filesystem.path) {
-  const baseUrl = '/repository/assets';
-  const serveStatic = express.static(filesystem.path, {
-    setHeaders(res) {
-      if (!res.contentDisposition) return;
-      res.setHeader('Content-Disposition', res.contentDisposition);
-    }
-  });
-  app.use(baseUrl, (req, res, next) => {
-    req.url = path.join(baseUrl, req.url);
-    res.contentDisposition = req.query['response-content-disposition'];
-    next();
-  }, serveStatic);
+const storage = require('./shared/storage')(config.storage);
+app.set('storage', storage);
+if (storage.type === 'filesystem') {
+  app.use(storage.config.publicPath, storage.provider.serveHandler);
 }
 
 // Mount main router.

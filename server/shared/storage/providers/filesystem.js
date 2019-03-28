@@ -9,15 +9,18 @@ const mkdirp = Promise.promisify(require('mkdirp'));
 const path = require('path');
 const { URLSearchParams } = require('url');
 
+const RESPONSE_CONTENT_DISPOSITION = 'response-content-disposition';
 const isNotFound = err => err.code === 'ENOENT';
 
 const schema = Joi.object().keys({
-  path: Joi.string().required()
+  path: Joi.string().required(),
+  publicPath: Joi.string().required()
 });
 
 class FilesystemStorage {
   constructor(config) {
     this.root = path.resolve(config.path);
+    this.publicPath = path.join('/', config.publicPath);
   }
 
   static create(config) {
@@ -69,15 +72,21 @@ class FilesystemStorage {
 
   getFileUrl(key, { download }) {
     const searchParams = new URLSearchParams();
+    searchParams.append('key', key);
     if (download) {
       searchParams.append(
-        'response-content-disposition',
+        RESPONSE_CONTENT_DISPOSITION,
         contentDisposition(download)
       );
     }
-    const pathname = path.join('/', key);
-    const query = searchParams.toString();
-    return Promise.resolve(`${pathname}?${query}`);
+    return Promise.resolve(`${this.publicPath}?${searchParams}`);
+  }
+
+  get serveHandler() {
+    if (!this._serveHandler) {
+      this._serveHandler = createServeHandler({ root: this.root });
+    }
+    return this._serveHandler;
   }
 }
 
@@ -85,3 +94,21 @@ module.exports = {
   schema,
   create: FilesystemStorage.create
 };
+
+function createServeHandler({ root }) {
+  return (req, res, next) => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+    const headers = {};
+    const contentDisposition = req.query[RESPONSE_CONTENT_DISPOSITION];
+    if (contentDisposition) {
+      headers['Content-Disposition'] = contentDisposition;
+    }
+    const options = { root, headers };
+    const { key } = req.query;
+    if (!key) return next();
+    res.sendFile(key, options, err => {
+      if (err && !isNotFound(err)) return next(err);
+      next();
+    });
+  };
+}

@@ -4,10 +4,21 @@ const autobind = require('auto-bind');
 const path = require('path');
 const { validateConfig } = require('./validation');
 
+const PROVIDER_CONFIG = Symbol('config');
+const PROVIDER_TYPE = Symbol('type');
+
 class Storage {
   constructor(config) {
     this.provider = Storage.createProvider(config);
     autobind(this);
+  }
+
+  get config() {
+    return this.provider[PROVIDER_CONFIG];
+  }
+
+  get type() {
+    return this.provider[PROVIDER_TYPE];
   }
 
   getFile(key, options = {}) {
@@ -51,8 +62,12 @@ class Storage {
 
     // Load provider module & create provider instance.
     const config = options[providerName];
-    const provider = loadProvider(providerName);
-    return provider.create(validateConfig(config, provider.schema));
+    const Provider = loadProvider(providerName);
+    const provider = Provider.create(validateConfig(config, Provider.schema));
+    return Object.assign(provider, {
+      [PROVIDER_CONFIG]: config,
+      [PROVIDER_TYPE]: providerName
+    });
   }
 }
 
