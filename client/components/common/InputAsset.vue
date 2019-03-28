@@ -13,13 +13,15 @@
     <file-upload
       v-show="!file && isEditing"
       :uploading.sync="uploading"
-      :validate="{ ext: 'PDF' }"
+      :validate="{ ext: extensions }"
+      :confirmDeletion="false"
+      :label="uploadLabel"
       @upload="val => (file = val) && (urlInput = null)"
       sm/>
     <template v-if="file">
       <v-btn
         v-if="isEditing"
-        @click.stop="removeAsset"
+        @click.stop="file = null"
         flat
         small
         icon
@@ -52,20 +54,20 @@
 </template>
 
 <script>
-import EventBus from 'EventBus';
 import FileUpload from '@/components/common/FileUpload';
 import get from 'lodash/get';
 import last from 'lodash/last';
 import pick from 'lodash/pick';
 
-const appChannel = EventBus.channel('app');
 const isUploaded = url => url && new URL(url).protocol === 'storage:';
 
 export default {
   name: 'input-asset',
   props: {
     url: { type: String, default: null },
-    publicUrl: { type: String, default: null }
+    publicUrl: { type: String, default: null },
+    extensions: { type: Array, required: true },
+    uploadLabel: { type: String, default: 'Select file' }
   },
   data() {
     const isLinked = !isUploaded(this.url);
@@ -96,13 +98,6 @@ export default {
       this.isEditing = false;
       const payload = this.file || { url: this.urlInput, publicUrl: this.urlInput };
       this.$emit('input', payload);
-    },
-    removeAsset() {
-      appChannel.emit('showConfirmationModal', {
-        type: 'asset',
-        item: { name: this.fileName },
-        action: () => (this.file = null)
-      });
     }
   },
   components: { FileUpload }
