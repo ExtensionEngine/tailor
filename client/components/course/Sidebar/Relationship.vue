@@ -69,7 +69,7 @@ export default {
     },
     optionsGrouped() {
       return map(groupBy(this.options, 'type'), (it, type) => ({
-        type,
+        type: parseType(type).typeName,
         activities: it
       }));
     },
