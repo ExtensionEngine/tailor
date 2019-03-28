@@ -85,8 +85,11 @@ export default {
       return get(activity, `refs.${this.type}`, []);
     },
     onRelationshipChanged(associations) {
+      const associationIds = associations.id
+        ? [associations.id]
+        : map(associations, 'id');
       let activity = cloneDeep(this.activity) || {};
-      set(activity, `refs.${this.type}`, map(associations, 'id'));
+      set(activity, `refs.${this.type}`, associationIds);
       this.update(activity);
     }
   },
