@@ -69,7 +69,8 @@ export default {
     },
     associations() {
       const ids = this.getAssociationIds(this.activity);
-      return filter(this.options, it => includes(ids, it.id));
+      const associations = filter(this.options, it => includes(ids, it.id));
+      return this.multiple ? associations : associations[0];
     },
     displayType() {
       return this.allowedTypes.length > 1;
