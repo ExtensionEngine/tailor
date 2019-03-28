@@ -38,10 +38,8 @@ function publishRepositoryMeta(id) {
   return request.post(`/courses/${id}/publish`).then(res => res.data);
 }
 function getDownloadFile(courseId) {
-  return request({
-    method: 'get',
-    responseType: 'blob',
-    url: `/courses/${courseId}/download`
+  return request.get(`/courses/${courseId}/download`, {
+    responseType: 'blob'
   }).then(res => res.data);
 }
 

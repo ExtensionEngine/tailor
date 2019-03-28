@@ -35,8 +35,7 @@ function prepZip(courseId, files) {
   return tar.c(
     {
       gzip: true,
-      C: key,
-      file: `${key}.tgz`
+      C: key
     },
     files);
 }
