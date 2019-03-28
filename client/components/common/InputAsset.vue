@@ -10,25 +10,25 @@
       color="info">
       <v-icon>mdi-open-in-new</v-icon>
     </v-btn>
-    <template>
-      <file-upload
-        v-show="!file && isEditing"
-        :uploading.sync="uploading"
-        :validate="{ ext: 'PDF' }"
-        @upload="val => (file = val) && (urlInput = null)"
-        sm/>
-      <template v-if="file">
-        <v-btn
-          v-if="isEditing"
-          @click.stop="removeAsset"
-          flat
-          small
-          icon
-          color="red">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-        <v-text-field v-model="fileName" disabled/>
-      </template>
+    <file-upload
+      v-show="!file && isEditing"
+      :uploading.sync="uploading"
+      :validate="{ ext: extensions }"
+      :confirmDeletion="false"
+      :label="uploadLabel"
+      @upload="val => (file = val) && (urlInput = null)"
+      sm/>
+    <template v-if="file">
+      <v-btn
+        v-if="isEditing"
+        @click.stop="file = null"
+        flat
+        small
+        icon
+        color="red">
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+      <v-text-field :value="fileName" disabled/>
     </template>
     <v-text-field
       v-if="!uploading && (urlInput || !hasAsset)"
@@ -54,20 +54,20 @@
 </template>
 
 <script>
-import EventBus from 'EventBus';
 import FileUpload from '@/components/common/FileUpload';
 import get from 'lodash/get';
 import last from 'lodash/last';
 import pick from 'lodash/pick';
 
-const appChannel = EventBus.channel('app');
 const isUploaded = url => url && new URL(url).protocol === 'storage:';
 
 export default {
   name: 'input-asset',
   props: {
     url: { type: String, default: null },
-    publicUrl: { type: String, default: null }
+    publicUrl: { type: String, default: null },
+    extensions: { type: Array, required: true },
+    uploadLabel: { type: String, default: 'Select file' }
   },
   data() {
     const isLinked = !isUploaded(this.url);
@@ -98,13 +98,6 @@ export default {
       this.isEditing = false;
       const payload = this.file || { url: this.urlInput, publicUrl: this.urlInput };
       this.$emit('input', payload);
-    },
-    removeAsset() {
-      appChannel.emit('showConfirmationModal', {
-        type: 'asset',
-        item: { name: this.fileName },
-        action: () => (this.file = null)
-      });
     }
   },
   components: { FileUpload }
@@ -118,7 +111,6 @@ export default {
 }
 
 .v-text-field {
-  width: 300px;
   max-width: 600px;
   margin: 0 20px;
   padding: 0 7px;
