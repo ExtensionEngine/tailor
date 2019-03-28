@@ -96,11 +96,15 @@ ul {
 }
 
 .non-graded {
-  padding-left: 35px;
+  padding-left: 30px;
 
-  input[disabled]::after {
-    background: #eee;
-    border: none;
+  input {
+    margin: 5px 3px 0 0;
+
+    &[disabled]::after {
+      background: #eee;
+      border: none;
+    }
   }
 }
 
