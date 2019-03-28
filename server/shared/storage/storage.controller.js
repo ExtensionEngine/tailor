@@ -1,6 +1,6 @@
 'use strict';
 
-const { ASSET_ROOT } = require('./helpers');
+const { ASSET_ROOT, STORAGE_PROTOCOL } = require('./helpers');
 const { URL } = require('url');
 const crypto = require('crypto');
 const fs = require('fs');
@@ -26,7 +26,7 @@ async function upload({ file }, res) {
   const key = path.join(ASSET_ROOT, `${hash}___${name}${extension}`);
   await storage.saveFile(key, buffer, { ContentType: file.mimetype });
   const publicUrl = await storage.getFileUrl(key);
-  return res.json({ key, url: `storage://${key}`, publicUrl });
+  return res.json({ key, url: `${STORAGE_PROTOCOL}${key}`, publicUrl });
 }
 
 module.exports = { resolveUrl, getUrl, upload };
