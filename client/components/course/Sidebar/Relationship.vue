@@ -42,7 +42,7 @@ export default {
     placeholder: { type: String, default: 'Click to select' },
     allowCircularLinks: { type: Boolean, default: false },
     allowInsideLineage: { type: Boolean, default: false },
-    allowedTypes: { type: Array, default: () => ([]) }
+    allowedTypes: { type: Array, default: null }
   },
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
