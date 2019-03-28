@@ -50,17 +50,17 @@ export default {
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
       let activities = without(this.activities, this.activity);
-      if (this.allowedTypes.length) {
-        activities = filter(activities, activity => {
-          const { typeName } = parseType(activity.type);
-          return includes(this.allowedTypes, typeName);
-        });
-      }
       const conds = [it => getLevel(it.type)];
       if (!allowCircularLinks) conds.push(it => !includes(this.getAssociationIds(it), id));
       if (!allowInsideLineage) {
         const lineage = this.getLineage(this.activity);
         conds.push(it => !includes(lineage, it));
+      }
+      if (this.allowedTypes.length) {
+        conds.push(({ type }) => {
+          const { typeName } = parseType(type);
+          return includes(this.allowedTypes, typeName);
+        });
       }
       return filter(activities, it => every(conds, cond => cond(it)));
     },
