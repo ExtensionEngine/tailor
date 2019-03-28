@@ -3,7 +3,7 @@
     <label :for="type">{{ label }}</label>
     <multiselect
       :value="associations"
-      :options="options"
+      :options="optionsGrouped"
       :searchable="searchable"
       :multiple="multiple"
       :allowEmpty="allowEmpty"
@@ -12,6 +12,8 @@
       :customLabel="getCustomLabel"
       :name="type"
       @input="onRelationshipChanged"
+      groupLabel="type"
+      groupValues="activities"
       trackBy="id">
     </multiselect>
   </div>
@@ -24,6 +26,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import every from 'lodash/every';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
+import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
@@ -64,6 +67,12 @@ export default {
       }
       return filter(activities, it => every(conds, cond => cond(it)));
     },
+    optionsGrouped() {
+      return map(groupBy(this.options, 'type'), (it, type) => ({
+        type,
+        activities: it
+      }));
+    },
     selectPlaceholder() {
       return isEmpty(this.options) ? 'No activities' : this.placeholder;
     },
@@ -79,9 +88,7 @@ export default {
   methods: {
     ...mapActions(['update'], 'activities'),
     getCustomLabel(activity) {
-      const name = get(activity, 'data.name', '');
-      const type = get(getLevel(activity.type), 'label');
-      return !this.displayType ? name : `${name} (${type})`;
+      return get(activity, 'data.name', '');
     },
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
