@@ -5,25 +5,27 @@ const { URL } = require('url');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const storage = require('./')(require('../../../config/server').storage);
 
-async function getUrl({ query }, res) {
+async function getUrl({ app, query }, res) {
+  const storage = app.get('storage');
   const url = await storage.getFileUrl(query.key);
   res.json({ url });
 }
 
-async function resolveUrl({ body }, res) {
+async function resolveUrl({ app, body }, res) {
   const { key } = parseUrl(body.url);
+  const storage = app.get('storage');
   const url = await storage.getFileUrl(key, { download: body.download });
   res.redirect(url);
 }
 
-async function upload({ file }, res) {
+async function upload({ app, file }, res) {
   const buffer = await readFile(file);
   const hash = sha256(file.originalname, buffer);
   const extension = path.extname(file.originalname);
   const name = path.basename(file.originalname, extension).substring(0, 180).trim();
   const key = path.join(ASSET_ROOT, `${hash}___${name}${extension}`);
+  const storage = app.get('storage');
   await storage.saveFile(key, buffer, { ContentType: file.mimetype });
   const publicUrl = await storage.getFileUrl(key);
   return res.json({ key, url: `${STORAGE_PROTOCOL}${key}`, publicUrl });

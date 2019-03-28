@@ -24,6 +24,8 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(passport.initialize());
 app.use(origin());
 app.use(express.static(path.join(__dirname, '../dist/')));
+
+app.set('storage', require('./shared/storage')(config.storage));
 if (filesystem.path) {
   const baseUrl = '/repository/assets';
   const serveStatic = express.static(filesystem.path, {
