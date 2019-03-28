@@ -59,7 +59,13 @@ import get from 'lodash/get';
 import last from 'lodash/last';
 import pick from 'lodash/pick';
 
-const isUploaded = url => url && new URL(url).protocol === 'storage:';
+function isUploaded(url) {
+  try {
+    return url && new URL(url).protocol === 'storage:';
+  } catch (e) {
+    return false;
+  }
+}
 
 export default {
   name: 'input-asset',
