@@ -1,5 +1,6 @@
 'use strict';
 
+const contentDisposition = require('content-disposition');
 const Joi = require('joi');
 const path = require('path');
 const S3 = require('aws-sdk/clients/s3');
@@ -96,7 +97,7 @@ class Amazon {
     const params = Object.assign(options, { Bucket: this.bucket, Key: key });
     params.Expires = expires || DEFAULT_EXPIRATION_TIME;
     if (download) {
-      params.ResponseContentDisposition = `attachment;filename=${download}`;
+      params.ResponseContentDisposition = contentDisposition(download);
     }
     return this._getSignedUrl('getObject', params);
   }

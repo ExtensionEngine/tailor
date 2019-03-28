@@ -24,7 +24,20 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(passport.initialize());
 app.use(origin());
 app.use(express.static(path.join(__dirname, '../dist/')));
-if (filesystem.path) app.use(express.static(filesystem.path));
+if (filesystem.path) {
+  const baseUrl = '/repository/assets';
+  const serveStatic = express.static(filesystem.path, {
+    setHeaders(res) {
+      if (!res.contentDisposition) return;
+      res.setHeader('Content-Disposition', res.contentDisposition);
+    }
+  });
+  app.use(baseUrl, (req, res, next) => {
+    req.url = path.join(baseUrl, req.url);
+    res.contentDisposition = req.query['response-content-disposition'];
+    next();
+  }, serveStatic);
+}
 
 // Mount main router.
 app.use('/api/v1', requestLogger, router);

@@ -1,11 +1,13 @@
 'use strict';
 
 const Promise = require('bluebird');
+const contentDisposition = require('content-disposition');
 const exists = require('path-exists');
 const fs = Promise.promisifyAll(require('fs'));
 const Joi = require('joi');
 const mkdirp = Promise.promisify(require('mkdirp'));
 const path = require('path');
+const { URLSearchParams } = require('url');
 const { validateConfig } = require('../validation');
 
 const isNotFound = err => err.code === 'ENOENT';
@@ -67,8 +69,17 @@ class FilesystemStorage {
     return exists(this.path(key));
   }
 
-  getFileUrl(key) {
-    return Promise.resolve(path.join('/', key));
+  getFileUrl(key, { download }) {
+    const searchParams = new URLSearchParams();
+    if (download) {
+      searchParams.append(
+        'response-content-disposition',
+        contentDisposition(download)
+      );
+    }
+    const pathname = path.join('/', key);
+    const query = searchParams.toString();
+    return Promise.resolve(`${pathname}?${query}`);
   }
 }
 

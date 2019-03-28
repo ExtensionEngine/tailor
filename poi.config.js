@@ -23,7 +23,7 @@ const aliases = {
 const copy = [{ from: 'client/assets/img', to: imagesPath }];
 
 const proxy = { '/api': { target: serverUrl } };
-if (filesystem.path) proxy['/repository'] = { target: serverUrl };
+if (filesystem.path) proxy['/repository/assets'] = { target: serverUrl };
 
 const devServer = {
   headers: { 'X-Powered-By': 'Webpack DevSever' },
