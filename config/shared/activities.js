@@ -2,7 +2,6 @@
 
 const filter = require('lodash/filter');
 const find = require('lodash/find');
-const first = require('lodash/first');
 const flatMap = require('lodash/flatMap');
 const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
@@ -109,9 +108,7 @@ function getRepositoryRelationships(schemaId) {
     .reduce((acc, { type }) => union(acc, [type]), []);
 }
 
-function parseType(type) {
-  if (!type.includes('/')) return {};
-  const schemaId = type.includes('/') && first(type.split('/'));
-  const typeName = type.includes('/') && type.split('/')[1];
-  return { schemaId, typeName };
+function parseType(type = '') {
+  const [schemaId, typeName] = type.split('/');
+  return typeName ? { schemaId, typeName } : {};
 }
