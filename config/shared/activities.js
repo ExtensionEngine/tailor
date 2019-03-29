@@ -110,6 +110,7 @@ function getRepositoryRelationships(schemaId) {
 }
 
 function parseType(type) {
+  if (!type.includes('/')) return {};
   const schemaId = type.includes('/') && first(type.split('/'));
   const typeName = type.includes('/') && type.split('/')[1];
   return { schemaId, typeName };

@@ -2,7 +2,7 @@
   <div class="relationship">
     <label :for="type">{{ label }}</label>
     <multiselect
-      :value="associations"
+      :value="multiple ? associations : associations[0]"
       :options="optionsGrouped"
       :searchable="searchable"
       :multiple="multiple"
@@ -52,7 +52,7 @@ export default {
     ...mapGetters(['getLineage'], 'activities'),
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
-      let activities = without(this.activities, this.activity);
+      const activities = without(this.activities, this.activity);
       const conds = [it => getLevel(it.type)];
       if (!allowCircularLinks) conds.push(it => !includes(this.getAssociationIds(it), id));
       if (!allowInsideLineage) {
@@ -78,8 +78,7 @@ export default {
     },
     associations() {
       const ids = this.getAssociationIds(this.activity);
-      const associations = filter(this.options, it => includes(ids, it.id));
-      return this.multiple ? associations : associations[0];
+      return filter(this.options, it => includes(ids, it.id));
     },
     displayType() {
       return this.allowedTypes.length > 1;
