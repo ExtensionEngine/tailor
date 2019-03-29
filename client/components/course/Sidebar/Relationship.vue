@@ -95,7 +95,11 @@ export default {
     onRelationshipChanged(value) {
       const associations = Array.isArray(value) ? value : [value];
       let activity = cloneDeep(this.activity) || {};
-      set(activity, `refs.${this.type}`, filter(map(associations, 'id')));
+      const ids = associations.reduce((acc, { id }) => {
+        if (id) acc.push(id);
+        return acc;
+      }, []);
+      set(activity, `refs.${this.type}`, ids);
       this.update(activity);
     }
   },
