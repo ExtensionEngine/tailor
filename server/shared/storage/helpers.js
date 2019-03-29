@@ -1,14 +1,17 @@
 'use strict';
 
 const crypto = require('crypto');
+const { getFileUrl } = require('./');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
 const nodeUrl = require('url');
 const Promise = require('bluebird');
 const storage = require('./index');
+const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
 
+const STORAGE_PROTOCOL = 'storage://';
 const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
@@ -69,10 +72,19 @@ processor.IMAGE = asset => {
   return saveFile(key, file).then(() => asset);
 };
 
-function resolveStatics(item) {
-  return isQuestion(item.type)
+// TODO: Temp patch until asset embeding is unified
+async function resolveStatics(item) {
+  const element = await (isQuestion(item.type)
     ? resolveQuestion(item)
-    : resolveAsset(item);
+    : resolveAsset(item));
+  if (!element.data.assets) return element;
+  await Promise.map(toPairs(element.data.assets), async ([key, url]) => {
+    const isStorageResource = url.startsWith(STORAGE_PROTOCOL);
+    element.data[key] = isStorageResource
+      ? (await getFileUrl(url.substr(STORAGE_PROTOCOL.length, url.length)))
+      : url;
+  });
+  return element;
 }
 
 function resolveQuestion(element) {
@@ -119,6 +131,7 @@ function saveFile(key, file) {
 
 module.exports = {
   ASSET_ROOT,
+  STORAGE_PROTOCOL,
   processStatics,
   resolveStatics
 };

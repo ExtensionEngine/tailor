@@ -16,7 +16,11 @@
       {{ repository.name }}
     </router-link>
     <v-spacer></v-spacer>
-    <v-menu min-width="220px" transition="slide-y-transition" offset-y>
+    <v-menu
+      min-width="220px"
+      transition="slide-y-transition"
+      offset-y
+      z-index="1000">
       <v-btn slot="activator" icon large class="mr-2">
         <v-avatar size="42px" color="#eaeaea">
           <span class="grey--text headline">{{ user.email[0] }}</span>
