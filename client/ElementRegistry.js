@@ -1,7 +1,8 @@
 import {
   getComponentName,
   getToolbarName,
-  processAssessmentType
+  isQuestion,
+  processAnswerType
 } from 'tce-core/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import elementList from './components/content-elements';
@@ -18,25 +19,30 @@ export default class ElementRegistry {
   }
 
   async initialize() {
-    await Promise.map(elementList, location => this.load(location));
+    await Promise.map(elementList, (location, index) => {
+      return this.load(location, { position: index });
+    });
     const extensions = await this.loadExtensionList();
-    await Promise.map(extensions, location => this.load(location, true));
+    await Promise.map(extensions, (location, index) => {
+      const options = { position: elementList.length + index, isExtension: true };
+      return this.load(location, options);
+    });
   }
 
-  async load(location, isExtension) {
+  async load(location, options = {}) {
     const { _registry, Vue } = this;
+    const { position = _registry.length, isExtension } = options;
     const element = isExtension
       ? (await import(`../extensions/content-elements/${location}`)).default
       : (await import(`./components/content-elements/${location}`)).default;
     const attrs = [
       'name', 'type', 'subtype', 'version', 'schema', 'initState', 'ui'
     ];
-    const isAssessment = element.type === 'ASSESSMENT';
-    const type = isAssessment
-      ? processAssessmentType(element.subtype)
+    const type = isQuestion(element.type)
+      ? processAnswerType(element.subtype)
       : element.type;
     const componentName = getComponentName(type);
-    _registry.push({ ...pick(element, attrs), componentName });
+    _registry.push({ ...pick(element, attrs), componentName, position });
     Vue.component(componentName, element.Edit);
     if (element.Toolbar) Vue.component(getToolbarName(type), element.Toolbar);
   }

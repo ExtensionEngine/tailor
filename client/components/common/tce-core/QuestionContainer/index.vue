@@ -10,6 +10,7 @@
       <component
         :is="resolveComponentName(element)"
         :assessment="editedElement.data"
+        :isGraded="isGraded"
         :isEditing="isEditing"
         :errors="errors"
         @update="update"
@@ -27,6 +28,7 @@
         v-if="showFeedback"
         :answers="editedElement.data.answers"
         :feedback="editedElement.data.feedback"
+        :isGraded="isGraded"
         :isEditing="isEditing"
         @update="updateFeedback"/>
       <div class="alert-container">
@@ -46,7 +48,7 @@
 </template>
 
 <script>
-import { getComponentName, processAssessmentType } from '../utils';
+import { getComponentName, processAnswerType } from '../utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
 import dropRight from 'lodash/dropRight';
@@ -55,6 +57,7 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
 import map from 'lodash/map';
+import omit from 'lodash/omit';
 import Question from './Question';
 import toPath from 'lodash/toPath';
 import yup from 'yup';
@@ -63,7 +66,7 @@ const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
 
 export default {
-  name: 'te-assessment',
+  name: 'tce-question-container',
   inject: ['$teRegistry'],
   props: {
     element: { type: Object, required: true }
@@ -79,24 +82,30 @@ export default {
   },
   computed: {
     schema() {
-      const elementSchema = this.$teRegistry.get(this.assessmentType).schema;
-      return yup.object().shape({ ...baseSchema, ...elementSchema });
+      const elementSchema = this.$teRegistry.get(this.answerType).schema;
+      return yup.object().shape({
+        ...baseSchema,
+        ...this.isGraded ? elementSchema : omit(elementSchema, ['correct'])
+      });
     },
-    assessmentType() {
+    answerType() {
       return this.element.data.type;
+    },
+    isGraded() {
+      return this.element.type === 'ASSESSMENT';
     },
     hintError() {
       return this.errors.includes('hint');
     },
     showFeedback() {
-      const { assessmentType } = this;
-      const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(assessmentType) > -1;
+      const { answerType } = this;
+      const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(answerType) > -1;
       return feedbackSupported;
     }
   },
   methods: {
     resolveComponentName(element) {
-      return getComponentName(processAssessmentType(this.assessmentType));
+      return getComponentName(processAnswerType(this.answerType));
     },
     edit() {
       this.editedElement = cloneDeep(this.element);

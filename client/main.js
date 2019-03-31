@@ -5,23 +5,27 @@ import 'event-source-polyfill';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
-import Assessment from 'tce-core/Assessment';
 import ElementRegistry from './ElementRegistry';
+import QuestionContainer from 'tce-core/QuestionContainer';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
 import Vue from 'vue';
+import VueHotkey from 'v-hotkey';
+import Vuetify from 'vuetify';
 import { sync } from 'vuex-router-sync';
 
 import store from './store';
 import router from './router';
 import App from './App';
 
-Vue.component('te-assessment', Assessment);
+Vue.component('tce-question-container', QuestionContainer);
 
 const registry = new ElementRegistry(Vue);
 registry.initialize();
 
+Vue.use(VueHotkey);
+Vue.use(Vuetify, { iconfont: 'mdi' });
 Vue.use(Tooltip, { delay: 50 });
 Vue.use(VeeValidate, {
   delay: 700,
@@ -33,7 +37,7 @@ Vue.use(VeeValidate, {
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {
-    'en-US': require('assets/locales/timeago-en-US-short.json')
+    'en-US': require('@/assets/locales/timeago-en-US-short.json')
   }
 });
 

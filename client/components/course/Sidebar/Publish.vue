@@ -1,43 +1,39 @@
 <template>
   <div class="publish-container">
     <div class="publish-date">
-      <circular-progress v-if="isPublishing"></circular-progress>
-      <span v-else>{{ publishedAtMessage }}</span>
+      <span>{{ publishedAtMessage }}</span>
     </div>
-    <div class="btn-group">
-      <a
-        :disabled="isPublishing"
-        @click="confirmPublishing()"
-        class="btn btn-primary">
-        Publish
-      </a>
-      <a
-        :disabled="isPublishing"
-        class="btn btn-primary dropdown-toggle"
-        data-toggle="dropdown">
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu">
-        <li>
-          <a @click="confirmPublishing(activityWithDescendants)" href="#">
-            Publish descendants
-          </a>
-        </li>
-        <li>
-          <a @click="confirmPublishing(outlineActivities)" href="#">
-            Publish all
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div>
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          :loading="isPublishing"
+          :disabled="isPublishing"
+          v-on="on"
+          color="blue-grey"
+          outline
+          small>
+          Publish
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-tile @click="confirmPublishing()">
+          <v-list-tile-title>Publish element</v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile @click="confirmPublishing(activityWithDescendants)">
+          <v-list-tile-title>Publish descendants</v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile @click="confirmPublishing(outlineActivities)">
+          <v-list-tile-title>Publish all</v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-menu>
+    <div class="publish-status">
       <span>{{ publishStatus }}</span>
     </div>
   </div>
 </template>
 
 <script>
-import CircularProgress from 'components/common/CircularProgress';
 import publishMixin from 'components/common/mixins/publish';
 import fecha from 'fecha';
 import { getDescendants } from 'utils/activity';
@@ -62,40 +58,24 @@ export default {
   },
   methods: {
     ...mapActions({ publishActivity: 'publish' }, 'activities')
-  },
-  components: {
-    CircularProgress
   }
 };
 </script>
 
 <style lang="scss" scoped>
-  .btn-group {
-  position: absolute;
-  top: 10px;
-  right: 40px;
-  padding: 6px;
-  }
-
   .publish-container {
   min-height: 70px;
   padding: 0 7px;
 
   .publish-date {
-    width: 170px;
+    width: 180px;
     line-height: 44px;
   }
 
-  .btn-group {
+  .v-btn {
     position: absolute;
     top: 10px;
-    right: 40px;
-    padding: 6px;
-  }
-
-  .circular-progress {
-    width: 24px;
-    margin: 0 20px;
+    right: 24px;
   }
 }
 </style>
