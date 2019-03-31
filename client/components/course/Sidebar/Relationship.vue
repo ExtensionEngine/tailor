@@ -23,6 +23,7 @@ import { mapActions, mapGetters } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import every from 'lodash/every';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
@@ -62,7 +63,9 @@ export default {
     },
     associations() {
       const ids = this.getAssociationIds(this.activity);
-      return filter(this.options, it => includes(ids, it.id));
+      return this.multiple
+        ? filter(this.options, it => includes(ids, it.id))
+        : find(this.options, { id: ids });
     }
   },
   methods: {
@@ -73,9 +76,10 @@ export default {
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
     },
-    onRelationshipChanged(associations) {
+    onRelationshipChanged(value) {
       let activity = cloneDeep(this.activity) || {};
-      set(activity, `refs.${this.type}`, map(associations, 'id'));
+      const associations = this.multiple ? map(value, 'id') : get(value, 'id');
+      set(activity, `refs.${this.type}`, associations);
       this.update(activity);
     }
   },
