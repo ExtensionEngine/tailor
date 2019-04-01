@@ -59,7 +59,7 @@ export default {
         const lineage = this.getLineage(this.activity);
         conds.push(it => !includes(lineage, it));
       }
-      if (this.allowedTypes.length) {
+      if (this.allowedTypes && this.allowedTypes.length) {
         const schemaId = getSchemaId(this.activity.type);
         const allowedTypes = this.allowedTypes.map(type => `${schemaId}/${type}`);
         conds.push(({ type }) => includes(allowedTypes, type));
@@ -78,9 +78,6 @@ export default {
     associations() {
       const ids = this.getAssociationIds(this.activity);
       return filter(this.options, it => includes(ids, it.id));
-    },
-    displayType() {
-      return this.allowedTypes.length > 1;
     }
   },
   methods: {
