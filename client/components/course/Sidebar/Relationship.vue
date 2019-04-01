@@ -3,7 +3,7 @@
     <label :for="type">{{ label }}</label>
     <multiselect
       :value="multiple ? associations : associations[0]"
-      :options="optionsGrouped"
+      :options="optionGroups"
       :searchable="searchable"
       :multiple="multiple"
       :allowEmpty="allowEmpty"
@@ -67,7 +67,7 @@ export default {
       }
       return filter(activities, it => every(conds, cond => cond(it)));
     },
-    optionsGrouped() {
+    optionGroups() {
       return map(groupBy(this.options, 'type'), (it, type) => ({
         type: parseType(type).typeName,
         activities: it
