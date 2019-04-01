@@ -2,6 +2,7 @@
 
 const filter = require('lodash/filter');
 const find = require('lodash/find');
+const first = require('lodash/first');
 const flatMap = require('lodash/flatMap');
 const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
@@ -24,6 +25,7 @@ parseSchemas(SCHEMAS);
 module.exports = {
   SCHEMAS,
   getSchema,
+  getSchemaId,
   getRepositoryMeta,
   getLevelRelationships,
   getRepositoryRelationships,
@@ -39,8 +41,7 @@ module.exports = {
   },
   getSupportedContainers,
   hasAssessments: level => getLevel(level).hasAssessments,
-  hasExams: level => getLevel(level).hasExams,
-  parseType
+  hasExams: level => getLevel(level).hasExams
 };
 
 function getSchema(id) {
@@ -49,12 +50,16 @@ function getSchema(id) {
   return schema;
 }
 
+function getSchemaId(type) {
+  return type.includes('/') && first(type.split('/'));
+}
+
 function getOutlineLevels(schemaId) {
   return getSchema(schemaId).structure;
 }
 
 function getLevel(type) {
-  const { schemaId } = parseType(type);
+  const schemaId = getSchemaId(type);
   return schemaId && find(getOutlineLevels(schemaId), { type });
 }
 
@@ -63,7 +68,7 @@ function getTesMeta(schemaId, type) {
 }
 
 function getSiblingLevels(type) {
-  const { schemaId } = parseType(type);
+  const schemaId = getSchemaId(type);
   if (!schemaId) return [{ type }];
   const levels = getOutlineLevels(schemaId);
   const { level } = find(levels, { type }) || {};
@@ -72,8 +77,7 @@ function getSiblingLevels(type) {
 }
 
 function getSupportedContainers(type) {
-  const { schemaId } = parseType(type);
-  const schema = getSchema(schemaId);
+  const schema = getSchema(getSchemaId(type));
   const defaultConfig = get(defaultConfiguration, 'CONTENT_CONTAINERS', []);
   const schemaConfig = get(schema, 'contentContainers', []);
   const activityConfig = get(getLevel(type), 'contentContainers', []);
@@ -106,9 +110,4 @@ function getRepositoryRelationships(schemaId) {
   const structure = getOutlineLevels(schemaId);
   return flatMap(structure, it => it.relationships)
     .reduce((acc, { type }) => union(acc, [type]), []);
-}
-
-function parseType(type = '') {
-  const [schemaId, typeName] = type.split('/');
-  return typeName ? { schemaId, typeName } : {};
 }

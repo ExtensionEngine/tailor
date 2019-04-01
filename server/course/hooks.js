@@ -1,6 +1,6 @@
 'use strict';
 
-const { getObjectives, parseType } = require('../../config/shared/activities');
+const { getObjectives, getSchemaId } = require('../../config/shared/activities');
 const addHooks = require('../shared/util/addHooks');
 const find = require('lodash/find');
 const first = require('lodash/first');
@@ -16,7 +16,7 @@ function add(Course, models) {
   addHooks(Activity, hooks, (hook, data, options) => {
     const instance = Array.isArray(data) ? first(data) : data;
     const { id, courseId, type } = instance;
-    const { schemaId } = parseType(type);
+    const schemaId = getSchemaId(type);
     if (!schemaId) return;
     logger.info(`[Course] Activity#${hook}`, { type, id, courseId });
     const objectiveTypes = map(getObjectives(schemaId), 'type');

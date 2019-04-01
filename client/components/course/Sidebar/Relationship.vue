@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { getLevel, parseType } from 'shared/activities';
+import { getLevel, getSchemaId } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import every from 'lodash/every';
@@ -48,7 +48,7 @@ export default {
     allowedTypes: { type: Array, default: null }
   },
   computed: {
-    ...mapGetters(['activity', 'activities'], 'course'),
+    ...mapGetters(['activity', 'activities', 'getConfig'], 'course'),
     ...mapGetters(['getLineage'], 'activities'),
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
@@ -60,16 +60,15 @@ export default {
         conds.push(it => !includes(lineage, it));
       }
       if (this.allowedTypes.length) {
-        conds.push(({ type }) => {
-          const { typeName } = parseType(type);
-          return includes(this.allowedTypes, typeName);
-        });
+        const schemaId = getSchemaId(this.activity.type);
+        const allowedTypes = this.allowedTypes.map(type => `${schemaId}/${type}`);
+        conds.push(({ type }) => includes(allowedTypes, type));
       }
       return filter(activities, it => every(conds, cond => cond(it)));
     },
     optionGroups() {
       return map(groupBy(this.options, 'type'), (it, type) => ({
-        type: parseType(type).typeName,
+        type: getLevel(type).label,
         activities: it
       }));
     },
@@ -95,8 +94,8 @@ export default {
     onRelationshipChanged(value) {
       const associations = Array.isArray(value) ? value : [value];
       let activity = cloneDeep(this.activity) || {};
-      const ids = associations.reduce((acc, { id }) => {
-        if (id) acc.push(id);
+      const ids = associations.reduce((acc, it) => {
+        if (it && it.id) acc.push(it.id);
         return acc;
       }, []);
       set(activity, `refs.${this.type}`, ids);
