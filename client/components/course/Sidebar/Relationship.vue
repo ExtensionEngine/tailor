@@ -48,7 +48,7 @@ export default {
     allowedTypes: { type: Array, default: null }
   },
   computed: {
-    ...mapGetters(['activity', 'activities', 'getConfig'], 'course'),
+    ...mapGetters(['activity', 'activities'], 'course'),
     ...mapGetters(['getLineage'], 'activities'),
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
