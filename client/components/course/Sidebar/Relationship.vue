@@ -12,7 +12,7 @@
       :customLabel="getCustomLabel"
       :name="type"
       @input="onRelationshipChanged"
-      groupLabel="type"
+      groupLabel="typeLabel"
       groupValues="activities"
       trackBy="id">
     </multiselect>
@@ -45,7 +45,7 @@ export default {
     placeholder: { type: String, default: 'Click to select' },
     allowCircularLinks: { type: Boolean, default: false },
     allowInsideLineage: { type: Boolean, default: false },
-    allowedTypes: { type: Array, default: null }
+    allowedTypes: { type: Array, default: () => [] }
   },
   computed: {
     ...mapGetters(['activity', 'activities'], 'course'),
@@ -59,7 +59,7 @@ export default {
         const lineage = this.getLineage(this.activity);
         conds.push(it => !includes(lineage, it));
       }
-      if (this.allowedTypes && this.allowedTypes.length) {
+      if (this.allowedTypes.length) {
         const schemaId = getSchemaId(this.activity.type);
         const allowedTypes = this.allowedTypes.map(type => `${schemaId}/${type}`);
         conds.push(({ type }) => includes(allowedTypes, type));
@@ -68,7 +68,7 @@ export default {
     },
     optionGroups() {
       return map(groupBy(this.options, 'type'), (it, type) => ({
-        type: getLevel(type).label,
+        typeLabel: getLevel(type).label,
         activities: it
       }));
     },
@@ -89,13 +89,11 @@ export default {
       return get(activity, `refs.${this.type}`, []);
     },
     onRelationshipChanged(value) {
-      const associations = Array.isArray(value) ? value : [value];
+      const associations = Array.isArray(value)
+        ? value
+        : value ? [value] : [];
       let activity = cloneDeep(this.activity) || {};
-      const ids = associations.reduce((acc, it) => {
-        if (it && it.id) acc.push(it.id);
-        return acc;
-      }, []);
-      set(activity, `refs.${this.type}`, ids);
+      set(activity, `refs.${this.type}`, map(associations, 'id'));
       this.update(activity);
     }
   },
