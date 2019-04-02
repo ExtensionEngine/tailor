@@ -22,7 +22,9 @@
 <script>
 import { getLevel, getSchemaId } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
+import castArray from 'lodash/castArray';
 import cloneDeep from 'lodash/cloneDeep';
+import compact from 'lodash/compact';
 import every from 'lodash/every';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
@@ -89,9 +91,7 @@ export default {
       return get(activity, `refs.${this.type}`, []);
     },
     onRelationshipChanged(value) {
-      const associations = Array.isArray(value)
-        ? value
-        : value ? [value] : [];
+      const associations = compact(castArray(value));
       let activity = cloneDeep(this.activity) || {};
       set(activity, `refs.${this.type}`, map(associations, 'id'));
       this.update(activity);
