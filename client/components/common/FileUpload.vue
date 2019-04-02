@@ -7,7 +7,7 @@
         :id="id"
         :ref="id"
         :name="id"
-        :accept="validate.ext.join(',')"
+        :accept="fileFilter"
         @change="upload"
         type="file"
         class="upload-input">
@@ -45,12 +45,19 @@ export default {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
     fileKey: { type: String, default: '' },
-    validate: { type: Object, default: () => ({ rules: { ext: [] } }) },
+    validate: { type: Object, default: () => ({ ext: [] }) },
     label: { type: String, default: 'Choose a file' },
     sm: { type: Boolean, default: false }
   },
   data() {
     return { uploading: false };
+  },
+  computed: {
+    fileFilter() {
+      const { validate: { ext, rules } } = this;
+      if (Array.isArray(ext)) return ext.join(',');
+      if (rules && Array.isArray(rules.ext)) return rules.ext.join(',');
+    }
   },
   methods: {
     createFileForm(e) {
