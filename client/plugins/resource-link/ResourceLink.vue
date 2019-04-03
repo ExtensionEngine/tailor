@@ -35,5 +35,9 @@ export default {
 <style lang="scss">
 .resource-link {
   display: inline;
+
+  button:focus {
+    outline: inherit;
+  }
 }
 </style>

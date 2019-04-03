@@ -1,21 +1,18 @@
 <template>
   <div class="input-asset">
-    <v-btn
-      v-if="url && !isEditing"
-      :href="publicUrl || url"
-      target="_blank"
-      flat
-      small
-      icon
-      color="info">
-      <v-icon>mdi-open-in-new</v-icon>
+    <v-btn v-if="url && !isEditing" flat icon color="info">
+      <component
+        :is="isLinked ? 'a' : 'asset-link'"
+        :href="url"
+        target="_blank">
+        <v-icon>mdi-open-in-new</v-icon>
+      </component>
     </v-btn>
     <file-upload
       v-show="!file && isEditing"
+      :label="uploadLabel"
       :uploading.sync="uploading"
       :validate="{ ext: extensions }"
-      :confirmDeletion="false"
-      :label="uploadLabel"
       @upload="val => (file = val) && (urlInput = null)"
       sm/>
     <template v-if="file">
@@ -23,7 +20,6 @@
         v-if="isEditing"
         @click.stop="file = null"
         flat
-        small
         icon
         color="red">
         <v-icon>mdi-delete</v-icon>
