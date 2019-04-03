@@ -1,6 +1,7 @@
 const isProduction = process.env.NODE_ENV === 'production';
+const reProtocol = /^[a-z0-9.+-]+:\/\//i;
 
-export const install = (Vue, { apiUrl } = {}) => {
+export const install = (Vue, { apiUrl, defaultProtocol } = {}) => {
   const ResourceLink = Vue.component('resource-link');
   if (!ResourceLink) {
     return !isProduction &&
@@ -8,11 +9,12 @@ export const install = (Vue, { apiUrl } = {}) => {
   }
   Vue.component('asset-link', {
     render(createElement, { props, data, children }) {
+      const url = prependProtocol(props.href, defaultProtocol);
       data.props = {
         action: apiUrl,
         download: props.download,
         target: props.target,
-        params: { url: props.href }
+        params: { url }
       };
       return createElement(ResourceLink, data, children);
     },
@@ -25,6 +27,11 @@ export const install = (Vue, { apiUrl } = {}) => {
 };
 
 export default install;
+
+function prependProtocol(url, protocol) {
+  if (reProtocol.test(url)) return url;
+  return url.replace(/^(?!(?:\w+:)?\/\/)/, protocol);
+}
 
 function pick(source, props = []) {
   return props.reduce((acc, prop) => {

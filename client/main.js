@@ -30,7 +30,10 @@ registry.initialize();
 Vue.use(ResourceLink, {
   auth: () => localStorage.getItem('JWT_TOKEN')
 });
-Vue.use(AssetLink, { apiUrl: assetsApi.root });
+Vue.use(AssetLink, {
+  apiUrl: assetsApi.root,
+  defaultProtocol: 'storage://'
+});
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {

@@ -17,7 +17,7 @@
       </label>
       <template v-else>
         <asset-link
-          :href="`storage://${fileKey}`"
+          :href="fileKey"
           :download="fileName"
           class="file-name">
           {{ fileName }}
