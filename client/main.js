@@ -6,9 +6,10 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
 import assetsApi from '@/api/asset';
-import AssetControls from './plugins/asset-controls';
+import AssetLink from './plugins/asset-link';
 import ElementRegistry from './ElementRegistry';
 import QuestionContainer from 'tce-core/QuestionContainer';
+import ResourceLink from './plugins/resource-link';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
@@ -26,10 +27,10 @@ Vue.component('tce-question-container', QuestionContainer);
 const registry = new ElementRegistry(Vue);
 registry.initialize();
 
-Vue.use(AssetControls, {
-  apiUrl: assetsApi.root,
+Vue.use(ResourceLink, {
   auth: () => localStorage.getItem('JWT_TOKEN')
 });
+Vue.use(AssetLink, { apiUrl: assetsApi.root });
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {
