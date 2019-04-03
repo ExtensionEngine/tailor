@@ -12,6 +12,14 @@
       @open="active = true"
       @close="active = false"
       @input="update">
+      <template slot="option" slot-scope="{ option }">
+        <img v-if="option.img" :src="option.img" :alt="option.label" class="img">
+        <span>{{ option.label }}</span>
+      </template>
+      <template slot="singleLabel" slot-scope="{ option }">
+        <img v-if="option.img" :src="option.img" :alt="option.label" class="img">
+        <span>{{ option.label }}</span>
+      </template>
     </multiselect>
   </div>
 </template>
@@ -61,14 +69,18 @@ export default {
     background-color: inherit;
   }
 
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+
   label {
     color: #808080;
   }
 
-  .multiselect {
-    color: #333;
-    font-size: 17px;
-    line-height: 24px;
+  .img {
+    width: 36px;
+    height: 36px;
+    margin-right: 15px;
   }
 }
 </style>
