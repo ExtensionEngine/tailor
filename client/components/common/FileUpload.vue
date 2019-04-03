@@ -3,11 +3,11 @@
     <circular-progress v-if="uploading"/>
     <form v-else @submit.prevent class="upload-form">
       <input
+        v-filefilter
         v-validate="validate"
         :id="id"
         :ref="id"
         :name="id"
-        :accept="fileFilter"
         @change="upload"
         type="file"
         class="upload-input">
@@ -51,13 +51,6 @@ export default {
   },
   data() {
     return { uploading: false };
-  },
-  computed: {
-    fileFilter() {
-      const { validate: { ext, rules } } = this;
-      if (Array.isArray(ext)) return ext.join(',');
-      if (rules && Array.isArray(rules.ext)) return rules.ext.join(',');
-    }
   },
   methods: {
     createFileForm(e) {
