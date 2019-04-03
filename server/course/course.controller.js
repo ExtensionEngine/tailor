@@ -3,11 +3,13 @@
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
-const { DownloadingService, deleteDir, prepZip } = require('../shared/download/helpers');
+const { ArchiveStorage } = require('../shared/download/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
-const { publishingService } = require('../shared/publishing/publishing.service');
+const cuid = require('cuid');
+const PublishingService = require('../shared/publishing/publishing.service');
+const publishingService = require('../shared/publishing/publishing.service').publishingService;
 const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -102,16 +104,17 @@ function exportContentInventory({ course }, res) {
 }
 
 function downloadCourseInfo({ course }, res) {
-  const downloadService = new DownloadingService({
+  const path = cuid();
+  const downloadService = new PublishingService(new ArchiveStorage({
     filesystem: {
-      path: 'temp'
+      path
     },
-    provider: 'filesystem'});
+    provider: 'filesystem'}));
   return downloadService.publishRepoDetails(course)
-    .then(files => prepZip(course.id, files))
-    .then(zip => {
-      res.send(zip);
-      return deleteDir('temp');
+    .then(() => downloadService.storage.zipFiles(course.id, path))
+    .then(() => {
+      res.download(`${path}/repository/${course.id}.tgz`);
+      return downloadService.storage.deleteFolder(path);
     });
 }
 

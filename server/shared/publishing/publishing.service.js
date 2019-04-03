@@ -6,27 +6,25 @@ const {
   publishRepositoryDetails,
   unpublishActivity
 } = require('./helpers');
-const { Storage, storage } = require('../storage');
+const defaultStorage = require('../storage').storage;
 
 class PublishingService {
-  constructor(config) {
+  constructor(storage = defaultStorage) {
     this.queue = new PromiseQueue(1, Infinity);
-    this.storage = config ? new Storage(config) : storage;
+    this.storage = storage;
   }
   publishActivity(activity) {
-    return this.queue.add(() => publishActivity(activity, this.storage));
+    return this.queue.add(() => publishActivity(this.storage, activity));
   }
 
   publishRepoDetails(repository) {
-    return this.queue.add(() => publishRepositoryDetails(repository, this.storage));
+    return this.queue.add(() => publishRepositoryDetails(this.storage, repository));
   }
 
   unpublishActivity(repository, activity) {
-    return this.queue.add(() => unpublishActivity(repository, activity, this.storage));
+    return this.queue.add(() => unpublishActivity(this.storage, repository, activity));
   }
 }
 
-module.exports = {
-  PublishingService,
-  publishingService: new PublishingService()
-};
+module.exports = PublishingService;
+module.exports.publishingService = new PublishingService();

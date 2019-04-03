@@ -8,6 +8,7 @@
         <span class="mdi mdi-publish"></span> Publish info
       </button>
       <button
+        :disabled="downloading"
         @click="download"
         class="btn btn-primary btn-material btn-sm pull-right">
         <span class="mdi mdi-download"></span> Download info
@@ -45,7 +46,10 @@ const appChannel = EventBus.channel('app');
 
 export default {
   data() {
-    return { publishing: false };
+    return {
+      publishing: false,
+      downloading: false
+    };
   },
   computed: {
     ...mapGetters(['course'], 'course'),
@@ -88,8 +92,10 @@ export default {
         .then(() => (this.publishing = false));
     },
     download() {
+      this.downloading = true;
       return api.getDownloadFile(this.$route.params.courseId)
-        .then(res => saveAs(res, `${this.course.name}.tgz`));
+        .then(res => saveAs(res, `${this.course.name}.tgz`))
+        .then(() => (this.downloading = false));
     }
   },
   components: { MetaInput: Meta }
