@@ -1,6 +1,11 @@
 <template>
   <div class="tce-pdf-toolbar">
-    <input-asset :url="url" :publicUrl="publicUrl" @input="save"/>
+    <input-asset
+      :url="url"
+      :publicUrl="publicUrl"
+      :extensions="['.pdf']"
+      @input="save"
+      uploadLabel="Upload pdf"/>
   </div>
 </template>
 

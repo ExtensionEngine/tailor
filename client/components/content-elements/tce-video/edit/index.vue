@@ -53,6 +53,7 @@ const CUSTOM_SUBTYPE_MAPPING = {
 
 export default {
   name: 'tce-video',
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
@@ -73,7 +74,8 @@ export default {
     },
     type() {
       if (NOT_NATIVE.test(this.url)) return { isNative: false };
-      const ext = extname(this.url).substring(1);
+      const url = this.url.split('?').shift();
+      const ext = extname(url).substring(1);
       const name = `video/${CUSTOM_SUBTYPE_MAPPING[ext] || ext}`;
       return { isNative: true, name };
     },
@@ -104,6 +106,9 @@ export default {
   },
   beforeDestroy() {
     if (this.player) this.player.pause();
+  },
+  mounted() {
+    this.$elementBus.on('save', ({ data }) => this.$emit('save', data));
   },
   components: { Plyr }
 };

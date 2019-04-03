@@ -5,6 +5,7 @@
       <input
         v-validate="validate"
         v-bind="{ id, name: id }"
+        :accept="validate.ext.join(',')"
         @change="upload"
         type="file"
         class="upload-input">
