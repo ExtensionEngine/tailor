@@ -1,7 +1,6 @@
 'use strict';
 
 const crypto = require('crypto');
-const { getFileUrl } = require('./');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
@@ -81,7 +80,7 @@ async function resolveStatics(item) {
   await Promise.map(toPairs(element.data.assets), async ([key, url]) => {
     const isStorageResource = url.startsWith(STORAGE_PROTOCOL);
     element.data[key] = isStorageResource
-      ? (await getFileUrl(url.substr(STORAGE_PROTOCOL.length, url.length)))
+      ? (await storage.getFileUrl(url.substr(STORAGE_PROTOCOL.length, url.length)))
       : url;
   });
   return element;
