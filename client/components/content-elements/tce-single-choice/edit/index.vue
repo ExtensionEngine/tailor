@@ -7,7 +7,7 @@
       class="btn btn-link answers-add">
       <span class="mdi mdi-plus"></span>
     </button>
-    <ul>
+    <ul :class="{ 'non-graded': !isGraded }">
       <li
         v-for="(answer, index) in answers"
         :key="index">
@@ -21,6 +21,7 @@
             @change="selectAnswer(index)"
             type="radio">
         </span>
+        <v-avatar v-else size="32" color="blue">{{ index + 1 }}</v-avatar>
         <span :class="{ 'has-error': answerError(index) }" class="answers-input">
           <input
             :ref="`input${index}`"
@@ -90,8 +91,10 @@ export default {
 
       answers.splice(index, 1);
 
-      if (correct === index) correct = null;
-      if (correct && correct >= index) correct -= 1;
+      if (this.isGraded) {
+        if (correct === index) correct = null;
+        if (correct && correct >= index) correct -= 1;
+      }
 
       if (feedback) {
         range(index, answers.length).forEach(it => {
@@ -116,8 +119,11 @@ export default {
     }
   },
   watch: {
-    assessment() {
-      this.validate();
+    assessment: {
+      deep: true,
+      handler: function () {
+        this.validate();
+      }
     }
   }
 };
@@ -164,6 +170,10 @@ export default {
 ul {
   padding: 10px 0 0 50px;
 
+  &.non-graded {
+    padding-left: 30px;
+  }
+
   li {
     display: inline-block;
     position: relative;
@@ -178,6 +188,14 @@ ul {
       input {
         padding-bottom: 9px;
       }
+    }
+
+    .v-avatar {
+      float: left;
+      margin-top: 8px;
+      margin-right: 6px;
+      color: #fff;
+      font-weight: 700;
     }
 
     .answers-input {

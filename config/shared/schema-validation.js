@@ -20,7 +20,8 @@ const relationships = yup.array().of(yup.object().shape({
   searchable: yup.boolean(),
   allowEmpty: yup.boolean(),
   allowCircularLinks: yup.boolean(),
-  allowInsideLineage: yup.boolean()
+  allowInsideLineage: yup.boolean(),
+  allowedTypes: yup.array().of(activityType)
 }));
 
 const schema = yup.object().shape({
