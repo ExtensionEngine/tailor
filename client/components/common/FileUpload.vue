@@ -3,7 +3,7 @@
     <circular-progress v-if="uploading"/>
     <form v-else @submit.prevent class="upload-form">
       <input
-        v-filefilter
+        v-filefilter="'auto'"
         v-validate="validate"
         :id="id"
         :ref="id"
