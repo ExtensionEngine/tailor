@@ -1,24 +1,25 @@
 <template>
-  <div>
+  <div class="file-upload">
     <circular-progress v-if="uploading"/>
-    <form v-else @submit.prevent>
+    <form v-else @submit.prevent class="upload-form">
       <input
         v-validate="validate"
         :id="id"
         :ref="id"
         :name="id"
+        :accept="validate.ext.join(',')"
         @change="upload"
         type="file"
         class="upload-input">
       <label
         v-if="!fileKey"
         :for="id"
-        class="btn btn-material btn-sm upload-button">
+        :class="[sm ? 'v-btn v-btn--small' : 'btn btn-material btn-sm upload-button']">
         {{ label }}
       </label>
       <span
         v-else
-        @click="download"
+        @click="downloadFile"
         class="file-name">{{ fileName }}
       </span>
       <span v-if="fileKey" @click="deleteFile" class="mdi mdi-delete delete"></span>
@@ -28,8 +29,8 @@
 </template>
 
 <script>
-import api from '@/api/asset';
 import CircularProgress from 'components/common/CircularProgress';
+import downloadMixin from 'utils/downloadMixin';
 import EventBus from 'EventBus';
 import uniqueId from 'lodash/uniqueId';
 import { withValidation } from 'utils/validation';
@@ -38,13 +39,15 @@ const appChannel = EventBus.channel('app');
 
 export default {
   name: 'file-upload',
-  mixins: [withValidation()],
+  inject: ['$storageService'],
+  mixins: [downloadMixin, withValidation()],
   props: {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
     fileKey: { type: String, default: '' },
     validate: { type: Object, default: () => ({ rules: { ext: [] } }) },
-    label: { type: String, default: 'Choose a file' }
+    label: { type: String, default: 'Choose a file' },
+    sm: { type: Boolean, default: false }
   },
   data() {
     return { uploading: false };
@@ -61,23 +64,19 @@ export default {
       this.$validator.validate(this.id).then(isValid => {
         if (!isValid) return;
         this.uploading = true;
-        return api.upload(this.form)
-          .then(({ key }) => {
+        return this.$storageService.upload(this.form)
+          .then(({ url, publicUrl, key }) => {
             this.uploading = false;
-            this.$emit('upload', { key, name: this.form.get('file').name });
+            const { name } = this.form.get('file');
+            this.$emit('upload', { url, publicUrl, key, name });
           }).catch(() => {
             this.error = 'An error has occurred!';
           });
       });
     },
-    download() {
-      return api.getUrl(this.fileKey).then(url => {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = this.fileName;
-        a.target = '_blank';
-        a.click();
-      });
+    downloadFile() {
+      return this.$storageService.getUrl(this.fileKey)
+        .then(url => this.download(url, this.fileName));
     },
     deleteFile() {
       appChannel.emit('showConfirmationModal', {
@@ -87,13 +86,27 @@ export default {
       });
     }
   },
+  watch: {
+    uploading(val) {
+      this.$emit('update:uploading', val);
+    }
+  },
   components: { CircularProgress }
 };
 </script>
 
 <style lang="scss" scoped>
+.file-upload, .upload-form {
+  display: inline-block;
+}
+
+// Using width/height restriction on hidden element
+// rather than `display: none;` because of Safari (v11.1 & v11.2) issue
+// https://forums.developer.apple.com/thread/103471
 .upload-input {
   visibility: hidden;
+  max-width: 0;
+  max-height: 0;
 }
 
 .upload-button {

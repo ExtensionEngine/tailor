@@ -1,11 +1,19 @@
 'use strict';
 
 const calculatePosition = require('../shared/util/calculatePosition');
+const forEach = require('lodash/forEach');
+const get = require('lodash/get');
 const hash = require('hash-obj');
 const isNumber = require('lodash/isNumber');
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const { processStatics, resolveStatics } = require('../shared/storage/helpers');
+
+const pruneVirtualProps = element => {
+  const assets = get(element, 'data.assets', {});
+  forEach(assets, key => delete element.data[key]);
+  return element;
+};
 
 class TeachingElement extends Model {
   static fields(DataTypes) {
@@ -80,10 +88,12 @@ class TeachingElement extends Model {
   static hooks() {
     return {
       beforeCreate(te) {
+        pruneVirtualProps(te);
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
       },
       beforeUpdate(te) {
+        pruneVirtualProps(te);
         if (!te.changed('data')) return Promise.resolve();
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
