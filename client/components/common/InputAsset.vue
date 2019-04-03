@@ -24,12 +24,13 @@
         color="red">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
-      <v-text-field :value="fileName" disabled/>
+      <v-text-field :value="fileName" :hide-details="true" disabled/>
     </template>
     <v-text-field
       v-if="!uploading && (urlInput || !hasAsset)"
       v-model="urlInput"
       :disabled="!isEditing"
+      :hide-details="true"
       placeholder="or paste a URL"/>
     <span class="actions">
       <v-btn
@@ -110,14 +111,13 @@ export default {
 .input-asset {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .v-text-field {
   max-width: 600px;
-  margin: 0 20px;
-  padding: 0 7px;
-  margin-top: 2px;
-  padding-bottom: 0;
+  margin: 0 20px 6px;
+  padding: 0 8px;
 }
 
 /deep/ .help-block {
