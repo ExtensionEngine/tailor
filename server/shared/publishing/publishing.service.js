@@ -6,7 +6,7 @@ const {
   publishRepositoryDetails,
   unpublishActivity
 } = require('./helpers');
-const defaultStorage = require('../storage').storage;
+const defaultStorage = require('../storage');
 
 class PublishingService {
   constructor(storage = defaultStorage) {
@@ -26,5 +26,5 @@ class PublishingService {
   }
 }
 
-module.exports = PublishingService;
-module.exports.publishingService = new PublishingService();
+module.exports = new PublishingService();
+module.exports.PublishingService = PublishingService;

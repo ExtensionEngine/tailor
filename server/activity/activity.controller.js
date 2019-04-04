@@ -2,7 +2,7 @@
 
 const { Activity } = require('../shared/database');
 const { getOutlineLevels } = require('../../config/shared/activities');
-const publishingService = require('../shared/publishing/publishing.service').publishingService;
+const publishingService = require('../shared/publishing/publishing.service');
 const find = require('lodash/find');
 const get = require('lodash/get');
 const pick = require('lodash/pick');

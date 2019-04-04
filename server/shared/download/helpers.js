@@ -1,8 +1,7 @@
 'use strict';
+
 const { uniq } = require('lodash');
-const Promise = require('bluebird');
-const rmdir = Promise.promisify(require('rimraf'));
-const Storage = require('../storage');
+const { Storage } = require('../storage');
 const tar = require('tar');
 
 class ArchiveStorage extends Storage {
@@ -14,22 +13,18 @@ class ArchiveStorage extends Storage {
     this._writtenFiles.push(key.split('/').pop());
     return super.saveFile(key, data, options);
   }
-  deleteFolder(key) {
-    return rmdir(key);
-  }
-  zipFiles(courseId, path) {
+
+  archiveContent(courseId, path) {
     const key = `${path}/repository/${courseId}`;
+    const options = {
+      gzip: true,
+      cwd: key,
+      file: `${key}.tgz`
+    };
     this._writtenFiles = uniq(this._writtenFiles);
-    return tar.c(
-      {
-        gzip: true,
-        C: key,
-        file: `${key}.tgz`
-      },
-      this._writtenFiles);
+    return tar.create(options, this._writtenFiles)
+        .then(() => Promise.resolve(`${key}.tgz`));
   }
 }
 
-module.exports = {
-  ArchiveStorage
-};
+module.exports = ArchiveStorage;

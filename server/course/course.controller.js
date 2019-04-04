@@ -3,18 +3,20 @@
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
-const { ArchiveStorage } = require('../shared/download/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
+const { PublishingService } = require('../shared/publishing/publishing.service');
+const ArchiveStorage = require('../shared/download/helpers');
 const cuid = require('cuid');
-const PublishingService = require('../shared/publishing/publishing.service');
-const publishingService = require('../shared/publishing/publishing.service').publishingService;
 const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
+const publishingService = require('../shared/publishing/publishing.service');
+const removeDir = require('util').promisify(require('rimraf'));
 const sample = require('lodash/sample');
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
+const { STORAGE_PATH } = process.env;
 
 function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
@@ -104,17 +106,16 @@ function exportContentInventory({ course }, res) {
 }
 
 function downloadCourseInfo({ course }, res) {
-  const path = cuid();
-  const downloadService = new PublishingService(new ArchiveStorage({
-    filesystem: {
-      path
-    },
-    provider: 'filesystem'}));
+  const contentPath = `${STORAGE_PATH}/temp/${cuid()}`;
+  const archiveStorage = new ArchiveStorage({
+    filesystem: { path: contentPath },
+    provider: 'filesystem'});
+  const downloadService = new PublishingService(archiveStorage);
   return downloadService.publishRepoDetails(course)
-    .then(() => downloadService.storage.zipFiles(course.id, path))
-    .then(() => {
-      res.download(`${path}/repository/${course.id}.tgz`);
-      return downloadService.storage.deleteFolder(path);
+    .then(() => archiveStorage.archiveContent(course.id, contentPath))
+    .then((filePath) => {
+      res.download(filePath);
+      return removeDir(contentPath);
     });
 }
 
