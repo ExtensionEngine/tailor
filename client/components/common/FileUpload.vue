@@ -60,11 +60,11 @@ export default {
         if (!isValid) return;
         this.uploading = true;
         return this.$storageService.upload(data)
+          .finally(() => (this.uploading = false))
           .then(({ url, publicUrl, key }) => {
             this.$emit('upload', { url, publicUrl, key, name: file.name });
           })
-          .catch(() => (this.error = 'An error has occurred!'))
-          .finally(() => (this.uploading = false));
+          .catch(() => (this.error = 'An error has occurred!'));
       });
     },
     deleteFile() {

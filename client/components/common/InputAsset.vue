@@ -1,68 +1,62 @@
 <template>
   <div class="input-asset">
-    <v-btn v-if="url && !isEditing" flat icon color="info">
-      <component
-        :is="isLinked ? 'a' : 'asset-link'"
-        :href="url"
-        target="_blank">
-        <v-icon>mdi-open-in-new</v-icon>
-      </component>
-    </v-btn>
-    <file-upload
-      v-show="!file && isEditing"
-      :label="uploadLabel"
-      :uploading.sync="uploading"
-      :validate="{ ext: extensions }"
-      @upload="val => (file = val) && (urlInput = null)"
-      sm/>
-    <template v-if="file">
+    <template v-if="!isEditing">
+      <v-btn flat icon color="info">
+        <component
+          :is="isFile ? 'asset-link' : 'a'"
+          :href="url"
+          target="_blank">
+          <v-icon>mdi-open-in-new</v-icon>
+        </component>
+      </v-btn>
+      <v-text-field
+        :value="isFile ? filename(asset.url) : asset.url"
+        :hide-details="true"
+        disabled/>
+    </template>
+    <template v-else>
+      <file-upload
+        v-if="!isFile"
+        :label="uploadLabel"
+        :uploading.sync="uploading"
+        :validate="{ ext: extensions }"
+        @upload="onFileUpload"
+        sm/>
       <v-btn
-        v-if="isEditing"
-        @click.stop="file = null"
+        v-else
+        @click.stop="onFileDelete"
         flat
         icon
         color="red">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
-      <v-text-field :value="fileName" :hide-details="true" disabled/>
+      <v-text-field
+        v-show="!uploading"
+        :disabled="isFile"
+        :value="isFile ? filename(asset.url) : asset.url"
+        :hide-details="true"
+        @input="onLinkSet"
+        placeholder="or paste a URL"/>
     </template>
-    <v-text-field
-      v-if="!uploading && (urlInput || !hasAsset)"
-      v-model="urlInput"
-      :disabled="!isEditing"
-      :hide-details="true"
-      placeholder="or paste a URL"/>
-    <span class="actions">
-      <v-btn
-        v-if="!isEditing"
-        @click.stop="isEditing = true"
-        small>
+    <div class="actions">
+      <v-btn v-if="!isEditing" @click.stop="isEditing = true" small>
         Edit
       </v-btn>
-      <v-btn
-        v-else
-        :disabled="uploading || !hasAsset"
-        @click.stop="save"
-        small>
+      <v-btn v-else :disabled="uploading || !asset.url" @click.stop="submit" small>
         {{ hasChanges ? 'Save' : 'Cancel' }}
       </v-btn>
-    </span>
+    </div>
   </div>
 </template>
 
 <script>
+import { basename } from 'path';
 import FileUpload from '@/components/common/FileUpload';
-import get from 'lodash/get';
-import last from 'lodash/last';
-import pick from 'lodash/pick';
 
-function isUploaded(url) {
-  try {
-    return url && new URL(url).protocol === 'storage:';
-  } catch (e) {
-    return false;
-  }
-}
+const FILENAME_DELIMITER = /_+/g;
+
+const castString = arg => arg || '';
+const last = arr => arr[arr.length - 1];
 
 export default {
   name: 'input-asset',
@@ -73,38 +67,55 @@ export default {
     uploadLabel: { type: String, default: 'Select file' }
   },
   data() {
-    const isLinked = !isUploaded(this.url);
+    const url = castString(this.url);
+    const publicUrl = castString(this.publicUrl);
     return {
-      isEditing: !this.url,
+      isEditing: !url,
+      isFile: Boolean(url) && !isLinked(url),
       uploading: false,
-      file: isLinked ? null : pick(this, ['url', 'publicUrl']),
-      urlInput: isLinked ? this.url : null
+      asset: { url, publicUrl }
     };
   },
   computed: {
-    hasAsset() {
-      return this.file || this.urlInput;
-    },
-    isLinked() {
-      return !!this.urlInput;
-    },
-    hasChanges() {
-      return this.url !== (this.isLinked ? this.urlInput : get(this, 'file.url'));
-    },
-    fileName() {
-      if (!this.file) return null;
-      return last(this.file.url.split('___'));
-    }
+    hasChanges: ({ url, asset }) => castString(url) !== castString(asset.url)
   },
   methods: {
-    save() {
+    filename(url) {
+      const { pathname } = parseUrl(url) || {};
+      return last(basename(pathname).split(FILENAME_DELIMITER));
+    },
+    onFileUpload({ url, publicUrl }) {
+      this.isFile = true;
+      Object.assign(this.asset, { url, publicUrl });
+    },
+    onFileDelete() {
+      // TODO: Remove asset from server.
+      this.isFile = false;
+      Object.assign(this.asset, { url: '', publicUrl: '' });
+    },
+    onLinkSet(url) {
+      this.isFile = false;
+      Object.assign(this.asset, { url, publicUrl: url });
+    },
+    submit() {
       this.isEditing = false;
-      const payload = this.file || { url: this.urlInput, publicUrl: this.urlInput };
-      this.$emit('input', payload);
+      if (!this.hasChanges) return;
+      this.$emit('input', { ...this.asset });
     }
   },
   components: { FileUpload }
 };
+
+function isLinked(url) {
+  const { protocol } = parseUrl(url) || {};
+  return protocol === 'https:' || protocol === 'http:';
+}
+
+function parseUrl(url) {
+  try {
+    return url && new URL(url);
+  } catch (e) {}
+}
 </script>
 
 <style lang="scss" scoped>
