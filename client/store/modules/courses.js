@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VuexCollection from '../helpers/collection.js';
+import VuexCollection from '../helpers/collection';
 
 const { state, getter, action, mutation, build } = new VuexCollection('courses', '/courses');
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
