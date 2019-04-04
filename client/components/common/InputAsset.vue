@@ -127,7 +127,7 @@ function parseUrl(url) {
 
 .v-text-field {
   max-width: 600px;
-  margin: 0 20px 6px;
+  margin: 0 8px 6px;
   padding: 0 8px;
 }
 
