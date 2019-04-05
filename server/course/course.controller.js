@@ -116,7 +116,7 @@ function downloadCourseInfo({ course, body: activites }, res) {
   return downloadService.publishRepoDetails(course)
     .then(() => Promise.each(activites, activity =>
       Activity.findById(activity.id)
-      .then((activity) => downloadService.publishActivity(activity))))
+        .then((activity) => downloadService.publishActivity(activity))))
     .then(() => archiveStorage.archiveContent(course.id, contentPath))
     .then((filePath) => {
       res.download(filePath);
