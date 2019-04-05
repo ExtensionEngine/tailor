@@ -1,8 +1,8 @@
 'use strict';
 
-const { uniq } = require('lodash');
 const { Storage } = require('../storage');
 const tar = require('tar');
+const uniq = require('lodash/uniq');
 
 class ArchiveStorage extends Storage {
   constructor(config) {

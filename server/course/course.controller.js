@@ -1,6 +1,6 @@
 'use strict';
 
-const { Course, CourseUser, User } = require('../shared/database');
+const { Activity, Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
@@ -12,6 +12,7 @@ const cuid = require('cuid');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
+const Promise = require('bluebird');
 const publishingService = require('../shared/publishing/publishing.service');
 const removeDir = require('util').promisify(require('rimraf'));
 const sample = require('lodash/sample');
@@ -105,13 +106,17 @@ function exportContentInventory({ course }, res) {
     });
 }
 
-function downloadCourseInfo({ course }, res) {
+function downloadCourseInfo({ course, body: activites }, res) {
   const contentPath = `${STORAGE_PATH}/temp/${cuid()}`;
   const archiveStorage = new ArchiveStorage({
     filesystem: { path: contentPath },
-    provider: 'filesystem'});
+    provider: 'filesystem'}
+  );
   const downloadService = new PublishingService(archiveStorage);
   return downloadService.publishRepoDetails(course)
+    .then(() => Promise.each(activites, activity =>
+      Activity.findById(activity.id)
+      .then((activity) => downloadService.publishActivity(activity))))
     .then(() => archiveStorage.archiveContent(course.id, contentPath))
     .then((filePath) => {
       res.download(filePath);

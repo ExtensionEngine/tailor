@@ -52,7 +52,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course'], 'course'),
+    ...mapGetters(['course', 'outlineActivities'], 'course'),
     requiredData() {
       return [{
         key: 'name',
@@ -93,7 +93,7 @@ export default {
     },
     download() {
       this.downloading = true;
-      return api.getDownloadFile(this.$route.params.courseId)
+      return api.getDownloadFile(this.$route.params.courseId, this.outlineActivities)
         .then(res => saveAs(res, `${this.course.name}.tgz`))
         .then(() => (this.downloading = false));
     }
@@ -118,8 +118,8 @@ export default {
   min-height: 36px;
 
   .btn {
+    margin-left: 10px;
     padding: 8px 12px;
-    margin-left: 10px
   }
 }
 

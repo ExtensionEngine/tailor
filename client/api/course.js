@@ -37,8 +37,8 @@ function getContentInventory(courseId) {
 function publishRepositoryMeta(id) {
   return request.post(`/courses/${id}/publish`).then(res => res.data);
 }
-function getDownloadFile(courseId) {
-  return request.get(`/courses/${courseId}/download`, {
+function getDownloadFile(courseId, data) {
+  return request.post(`/courses/${courseId}/download`, data, {
     responseType: 'blob'
   }).then(res => res.data);
 }
