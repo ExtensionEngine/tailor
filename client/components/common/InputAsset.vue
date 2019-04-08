@@ -17,11 +17,13 @@
     <template v-else>
       <file-upload
         v-if="!isFile"
-        :label="uploadLabel"
         :uploading.sync="uploading"
         :validate="{ ext: extensions }"
         @upload="onFileUpload"
-        sm/>
+        tag="v-btn"
+        small>
+        {{ uploadLabel }}
+      </file-upload>
       <v-btn
         v-else
         @click.stop="onFileDelete"

@@ -4,7 +4,9 @@
     <file-upload
       v-bind="options"
       @upload="$emit('update', meta.key, $event)"
-      @delete="$emit('update', meta.key, null)"/>
+      @delete="$emit('update', meta.key, null)">
+      {{ meta.placeholder }}
+    </file-upload>
   </div>
 </template>
 
@@ -23,8 +25,7 @@ export default {
         id: this.meta.key,
         fileKey: get(this.meta, 'value.key', ''),
         fileName: get(this.meta, 'value.name', ''),
-        validate: this.meta.validate,
-        label: this.meta.placeholder
+        validate: this.meta.validate
       };
     }
   },

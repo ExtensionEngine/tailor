@@ -2,19 +2,22 @@
   <div class="file-upload">
     <circular-progress v-if="uploading"/>
     <form v-else @submit.prevent class="upload-form">
-      <input
-        v-validate="validate"
-        v-bind="{ id, name: id }"
-        :accept="validate.ext.join(',')"
-        @change="upload"
-        type="file"
-        class="upload-input">
-      <label
+      <component
         v-if="!fileKey"
+        v-bind="$attrs"
         :for="id"
-        :class="[sm ? 'v-btn v-btn--small' : 'btn btn-material btn-sm upload-button']">
-        {{ label }}
-      </label>
+        :is="tag"
+        :class="[isLabel ? 'btn btn-material btn-sm' : '', 'file']"
+        :tag="!isLabel ? label : null">
+        <input
+          v-validate="validate"
+          v-bind="{ id, name: id }"
+          :accept="validate.ext.join(',')"
+          @change="upload"
+          type="file"
+          class="upload-input">
+        <slot>Choose a file</slot>
+      </component>
       <template v-else>
         <asset-link
           :href="fileKey"
@@ -41,15 +44,18 @@ export default {
   name: 'file-upload',
   inject: ['$storageService'],
   mixins: [withValidation()],
+  inheritAttrs: false,
   props: {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
     fileKey: { type: String, default: '' },
     validate: { type: Object, default: () => ({ rules: { ext: [] } }) },
-    label: { type: String, default: 'Choose a file' },
-    sm: { type: Boolean, default: false }
+    tag: { type: String, default: () => 'label' }
   },
   data: () => ({ uploading: false }),
+  computed: {
+    isLabel: ({ tag }) => tag === 'label'
+  },
   methods: {
     upload(e) {
       if (!e.target.files) return;
@@ -85,21 +91,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.file-upload, .upload-form {
-  display: inline-block;
-}
+.file {
+  position: relative;
+  padding: 6px 8px;
+  background: darken(#fff, 8%);
+  cursor: pointer;
 
-// Using width/height restriction on hidden element
-// rather than `display: none;` because of Safari (v11.1 & v11.2) issue
-// https://forums.developer.apple.com/thread/103471
-.upload-input {
-  visibility: hidden;
-  max-width: 0;
-  max-height: 0;
-}
+  &:hover, &.active {
+    background: darken(#fff, 16%);
+  }
 
-.upload-button {
-  background-color: #eee;
+  input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    outline: none;
+    pointer-events: none;
+  }
 }
 
 .file-name {
