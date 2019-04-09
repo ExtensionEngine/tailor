@@ -8,11 +8,16 @@ import Vue from 'vue';
 import VuexCollection from '../helpers/collection';
 
 const { action, getter, state, mutation, build } = new VuexCollection('comments');
+const PAGINATION_DEFAULTS = { offset: 0, limit: 12 };
 let SSE_CLIENT;
 
 state({
-  courseId: '',
-  activitiesFetched: {}
+  path: '',
+  activitiesFetched: {},
+  $internals: {
+    pagination: PAGINATION_DEFAULTS,
+    allCommentsFetched: false
+  }
 });
 
 getter(function comments() {
@@ -22,8 +27,17 @@ getter(function comments() {
 }, { global: true });
 
 getter(function courseComments() {
-  return orderBy(this.state.items, 'createdAt', 'desc');
+  return this.state.items;
 }, { global: true });
+
+getter(function commentQueryParams() {
+  const { pagination } = this.state.$internals;
+  return pagination;
+}, { global: true });
+
+getter(function hasMoreResults() {
+  return !this.state.$internals.allCommentsFetched;
+});
 
 getter(function commentsCount() {
   return Object.keys(this.rootGetters.comments).length;
@@ -35,12 +49,19 @@ getter(function commentsFetched() {
 });
 
 action(function fetch({ activityId } = {}) {
-  const { courseId } = this.context.rootState.route.params;
-  let action = this.state.courseId === courseId ? 'fetch' : 'reset';
-  if (action === 'reset') this.commit('setCourse', courseId);
-  this.api.fetch({ activityId })
-    .then(result => this.commit(action, result))
-    .then(result => this.commit('commentsFetched', activityId));
+  const params = activityId || this.context.getters.commentQueryParams;
+  const { path } = this.context.rootState.route;
+  let action = this.state.path === path ? 'fetch' : 'reset';
+  if (action === 'reset') this.commit('setPath', path);
+  return this.api.fetch(params)
+    .then(result => {
+      this.commit(action, result);
+      if (!activityId) {
+        const length = Object.keys(result).length;
+        this.commit('setPagination', { offset: params.offset + params.limit });
+        this.commit('allCommentsFetched', length < params.limit);
+      } else { this.commit('commentsFetched', activityId); }
+    });
 });
 
 action(function subscribe() {
@@ -64,8 +85,13 @@ action(function remove(comment) {
   return this.api.remove(comment);
 });
 
-mutation(function setCourse(courseId) {
-  this.state.courseId = courseId;
+action(function resetPagination() {
+  this.commit('setPagination', PAGINATION_DEFAULTS);
+  this.commit('reset', {});
+});
+
+mutation(function setPath(path) {
+  this.state.path = path;
   this.state.activitiesFetched = {};
 });
 
@@ -86,6 +112,15 @@ mutation(function sseUpdate(comment) {
   const data = pick(comment, ['content', 'createdAt', 'updatedAt', 'deletedAt']);
   const updated = Object.assign({}, existing, data);
   Vue.set(this.state.items, updated._cid, updated);
+});
+
+mutation(function setPagination(changes) {
+  let $internals = this.state.$internals;
+  $internals.pagination = { ...$internals.pagination, ...changes };
+});
+
+mutation(function allCommentsFetched(allFetched) {
+  this.state.$internals.allCommentsFetched = allFetched;
 });
 
 export default build();

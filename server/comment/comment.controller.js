@@ -8,6 +8,11 @@ function list({ course, opts, query }, res) {
   if (query.activityId) {
     opts.where.activityId = query.activityId;
   }
+  if (query.limit && query.offset) {
+    const { limit, offset } = query;
+    opts.limit = limit;
+    opts.offset = offset;
+  }
   return course.getComments({ ...opts, include })
     .then(data => res.json({ data }));
 }
