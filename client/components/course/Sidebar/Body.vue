@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <publish></publish>
+    <publish/>
     <span class="type-label">{{ config.label }}</span>
     <div class="meta-element">
       <meta-input
