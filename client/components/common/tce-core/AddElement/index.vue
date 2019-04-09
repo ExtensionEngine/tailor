@@ -149,12 +149,13 @@ $disabled-color: #a1a1a1;
 
 .element-container {
   min-height: 400px;
-  padding: 0 0 20px;
+  padding: 0 0 30px;
   background: white;
 }
 
 .group-heading {
-  margin: 10px 26px 5px;
+  margin: 0 26px 5px;
+  padding-top: 10px;
   color: #555;
   font-size: 16px;
   font-weight: 500;
