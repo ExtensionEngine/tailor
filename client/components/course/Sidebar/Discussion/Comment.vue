@@ -17,6 +17,7 @@
           class="author">
           {{ comment.author.email }}
         </span>
+        <slot></slot>
         <span v-if="isEdited" class="edited-icon icon mdi mdi-pencil"></span>
         <button
           v-if="showActions"
