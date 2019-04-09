@@ -13,6 +13,7 @@
         :class="`col-xs-${item.data.width || 12}`"
         class="list-item-container">
         <add-element
+          v-if="enableAdd"
           :include="types"
           :activity="activity"
           :position="index - 1"
