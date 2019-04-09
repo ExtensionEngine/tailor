@@ -26,19 +26,22 @@
           name="list-item"/>
       </div>
     </draggable>
-    <add-element
-      v-if="enableAdd"
-      :include="types"
-      :activity="activity"
-      :position="nextPosition"
-      :layout="layout"
-      @add="el => $emit('add', el)"/>
+    <div class="add-element-container">
+      <add-element
+        v-if="enableAdd"
+        :include="types"
+        :activity="activity"
+        :position="nextPosition"
+        :layout="layout"
+        @add="el => $emit('add', el)"/>
+    </div>
   </div>
 </template>
 
 <script>
 import AddElement from 'tce-core/AddElement';
 import Draggable from 'vuedraggable';
+import InsertElement from './InsertElement';
 import last from 'lodash/last';
 
 export default {
@@ -68,7 +71,11 @@ export default {
       return lastItem ? lastItem.position + 1 : 1;
     }
   },
-  components: { AddElement, Draggable }
+  components: {
+    AddElement,
+    InsertElement,
+    Draggable
+  }
 };
 </script>
 
