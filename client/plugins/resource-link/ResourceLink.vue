@@ -1,7 +1,7 @@
 <template>
   <form
     :action="action"
-    :target="download ? '' : target"
+    :target="download ? null : target"
     method="post"
     class="resource-link">
     <input v-for="field in fields" v-bind="field" :key="field.name" type="hidden">
