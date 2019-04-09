@@ -94,14 +94,14 @@ export default {
       return filter(items, it => this.include.includes(it.type));
     },
     assessments() {
-      const { registry, isSubset, include } = this;
+      const { registry, isSubset, include, questions } = this;
       if (isSubset && !include.includes('ASSESSMENT')) return [];
-      return filter(registry, { type: 'ASSESSMENT' }).concat(this.questions);
+      return filter(registry, { type: 'ASSESSMENT' }).concat(questions);
     },
     reflections() {
-      const { registry, isSubset, include } = this;
+      const { registry, isSubset, include, questions } = this;
       if (isSubset && !include.includes('REFLECTION')) return [];
-      return filter(registry, { type: 'REFLECTION' }).concat(this.questions);
+      return filter(registry, { type: 'REFLECTION' }).concat(questions);
     },
     isSubset() {
       return !!this.include && !!this.include.length;
@@ -159,7 +159,7 @@ $disabled-color: #a1a1a1;
 .element-container {
   min-height: 400px;
   padding: 0 0 30px;
-  background: white;
+  background: #fff;
 }
 
 .group-heading {
