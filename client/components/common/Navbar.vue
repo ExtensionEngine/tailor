@@ -39,18 +39,20 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
 import { getAcronym } from 'utils/course';
+import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
   name: 'main-toolbar',
+  props: {
+    user: { type: Object, required: true }
+  },
   data() {
     return {
       title: BRAND_CONFIG.TITLE
     };
   },
   computed: {
-    ...mapGetters(['user']),
     ...mapGetters({ repository: 'course' }, 'course'),
     repositoryAcronym() {
       return this.repository ? getAcronym(this.repository.name) : null;
