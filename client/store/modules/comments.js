@@ -21,6 +21,10 @@ getter(function comments() {
   return orderBy(activityComments, 'createdAt', 'desc');
 }, { global: true });
 
+getter(function courseComments() {
+  return orderBy(this.state.items, 'createdAt', 'desc');
+}, { global: true });
+
 getter(function commentsCount() {
   return Object.keys(this.rootGetters.comments).length;
 });
@@ -30,8 +34,8 @@ getter(function commentsFetched() {
   return !!this.state.activitiesFetched[activityId];
 });
 
-action(function fetch({ activityId }) {
-  const { courseId } = this.rootState.route.params;
+action(function fetch({ activityId } = {}) {
+  const { courseId } = this.context.rootState.route.params;
   let action = this.state.courseId === courseId ? 'fetch' : 'reset';
   if (action === 'reset') this.commit('setCourse', courseId);
   this.api.fetch({ activityId })

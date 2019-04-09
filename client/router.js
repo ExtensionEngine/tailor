@@ -4,6 +4,7 @@ import Vue from 'vue';
 
 import Auth from './components/auth/Container';
 import Catalog from './components/catalog/Container';
+import Comments from './components/course/Comments';
 import Course from './components/course';
 import CourseRevisions from './components/course/Revisions';
 import CourseSettings from './components/course/Settings';
@@ -52,6 +53,11 @@ let router = new Router({
       path: 'tree-view',
       name: 'tree-view',
       component: TreeView
+    },
+    {
+      path: 'comments',
+      name: 'comments',
+      component: Comments
     }]
   }, {
     path: '/course/:courseId/editor/:activityId',

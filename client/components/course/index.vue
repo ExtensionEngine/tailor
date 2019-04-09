@@ -34,7 +34,8 @@ export default {
       const items = [
         { name: 'Outline', route: 'course' },
         { name: 'Tree View', route: 'tree-view' },
-        { name: 'Revisions', route: 'course-revisions' }
+        { name: 'Revisions', route: 'course-revisions' },
+        { name: 'Comments', route: 'comments' }
       ];
       if (this.isAdmin || this.isCourseAdmin) {
         items.push({ name: 'Settings', route: 'course-info' });
