@@ -77,6 +77,5 @@ export default {
 
 .contained-content {
   position: relative;
-  padding: 7px 0;
 }
 </style>

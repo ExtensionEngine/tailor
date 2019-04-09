@@ -1,55 +1,55 @@
 <template>
-  <v-bottom-sheet v-model="show" max-width="1240" inset>
-    <template v-slot:activator>
-      <v-btn icon flat color="blue-grey darken-2">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-    </template>
-    <div class="element-container">
-      <v-toolbar v-if="layout" dense class="mb-2">
-        <v-spacer/>
-        <v-divider vertical class="mx-2"/>
-        <v-btn-toggle v-model="elementWidth" mandatory>
-          <v-btn :value="100" flat>
-            <v-icon>mdi-square-outline</v-icon>
-          </v-btn>
-          <v-btn :value="50" flat>
-            <v-icon>mdi-select-compare</v-icon>
-          </v-btn>
-        </v-btn-toggle>
-        <v-divider class="mx-2" vertical/>
-        <v-chip label class="width-label">
-          <span>Element width:</span>
-          <span class="label-value px-1">{{ elementWidth }}</span>%
-        </v-chip>
-      </v-toolbar>
-      <div
-        v-for="group in library"
-        :key="group.name">
-        <div class="group-heading">
-          <v-icon>{{ group.icon }}</v-icon>
-          <span>{{ group.name }}</span>
-        </div>
-        <div class="group-elements">
-          <button
-            v-for="element in group.elements"
-            :key="element.position"
-            :disabled="isElementDisabled(element)"
-            @click.stop="add(element)"
-            class="element">
-            <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
-            <h5 class="body-2">{{ element.name }}</h5>
-          </button>
+  <div>
+    <component :is="activator" @click.native.stop="show = true"/>
+    <v-bottom-sheet v-model="show" max-width="1240" inset>
+      <div class="element-container">
+        <v-toolbar v-if="layout" dense class="mb-2">
+          <v-spacer/>
+          <v-divider vertical class="mx-2"/>
+          <v-btn-toggle v-model="elementWidth" mandatory>
+            <v-btn :value="100" flat>
+              <v-icon>mdi-square-outline</v-icon>
+            </v-btn>
+            <v-btn :value="50" flat>
+              <v-icon>mdi-select-compare</v-icon>
+            </v-btn>
+          </v-btn-toggle>
+          <v-divider class="mx-2" vertical/>
+          <v-chip label class="width-label">
+            <span>Element width:</span>
+            <span class="label-value px-1">{{ elementWidth }}</span>%
+          </v-chip>
+        </v-toolbar>
+        <div
+          v-for="group in library"
+          :key="group.name">
+          <div class="group-heading">
+            <v-icon>{{ group.icon }}</v-icon>
+            <span>{{ group.name }}</span>
+          </div>
+          <div class="group-elements">
+            <button
+              v-for="element in group.elements"
+              :key="element.position"
+              :disabled="isElementDisabled(element)"
+              @click.stop="add(element)"
+              class="element">
+              <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
+              <h5 class="body-2">{{ element.name }}</h5>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </v-bottom-sheet>
+    </v-bottom-sheet>
+  </div>
 </template>
 
 <script>
 import cuid from 'cuid';
+import DefaultActivator from './DefaultActivator';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
+import InlineActivator from './InlineActivator';
 import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
 import sortBy from 'lodash/sortBy';
@@ -68,7 +68,8 @@ export default {
     activity: { type: Object, default: null },
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
-    include: { type: Array, default: null }
+    include: { type: Array, default: null },
+    inline: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -77,6 +78,10 @@ export default {
     };
   },
   computed: {
+    activator() {
+      const type = this.inline ? 'inline' : 'default';
+      return `${type}-activator`;
+    },
     registry() {
       return sortBy(this.$teRegistry.get(), 'position');
     },
@@ -138,6 +143,10 @@ export default {
       if (this.elementWidth === 100) return false;
       return get(element, 'ui.forceFullWidth', false);
     }
+  },
+  components: {
+    DefaultActivator,
+    InlineActivator
   }
 };
 </script>

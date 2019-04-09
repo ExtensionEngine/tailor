@@ -8,17 +8,22 @@
       @update="$emit('update', $event)"
       class="row">
       <div
-        v-for="(it, index) in list"
-        :key="it._cid || it.id"
-        :class="`col-xs-${it.data.width || 12}`"
-        @dragstart="dragElementIndex = index"
-        @dragend="dragElementIndex = -1">
+        v-for="(item, index) in list"
+        :key="item._cid || item.id"
+        :class="`col-xs-${item.data.width || 12}`"
+        class="list-item-container">
+        <add-element
+          :include="types"
+          :activity="activity"
+          :position="index - 1"
+          :layout="layout"
+          :inline="true"
+          @add="el => $emit('insert', el)"/>
         <slot
-          :item="it"
+          :item="item"
           :setWidth="false"
           :dragged="dragElementIndex === index"
-          name="list-item">
-        </slot>
+          name="list-item"/>
       </div>
     </draggable>
     <add-element
@@ -46,7 +51,9 @@ export default {
     layout: { type: Boolean, default: false }
   },
   data() {
-    return { dragElementIndex: null };
+    return {
+      dragElementIndex: -1
+    };
   },
   computed: {
     options() {
@@ -69,5 +76,16 @@ export default {
 /* Do not remove! Makes sure vuedraggable detects correct scrollable parent */
 .list-group {
   padding: 10px 15px;
+}
+
+.list-item-container {
+  &.sortable-drag {
+    margin: 0;
+    padding: 0;
+
+    /deep/ .inline-activator {
+      display: none;
+    }
+  }
 }
 </style>

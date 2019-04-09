@@ -17,15 +17,15 @@
       :activity="container"
       :types="types"
       :layout="layout"
-      @add="saveElement"
+      @add="addElement"
+      @insert="insert"
       @update="reorder">
       <teaching-element
         slot="list-item"
         slot-scope="{ item, dragged, setWidth }"
         :setWidth="setWidth"
         :dragged="dragged"
-        :element="item">
-      </teaching-element>
+        :element="item"/>
     </tes-list>
   </div>
 </template>
@@ -53,13 +53,24 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ reorderElements: 'reorder', saveElement: 'save' }, 'tes'),
+    ...mapActions({
+      reorderElements: 'reorder',
+      insertElement: 'insert',
+      addElement: 'save'
+    }, 'tes'),
     reorder({ newIndex: newPosition }) {
       const items = this.teachingElements;
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
+    },
+    insert(element) {
+      const items = this.teachingElements;
+      const { position: newPosition } = element;
+      const isFirstChild = newPosition === -1;
+      const context = { items, newPosition, isFirstChild, insert: true };
+      this.insertElement({ element, context });
     },
     deleteContainer() {
       this.$emit('delete');
