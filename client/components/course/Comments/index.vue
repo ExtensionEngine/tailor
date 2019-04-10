@@ -1,9 +1,11 @@
 <template>
-  <div class="comments">
+  <ul class="comments">
     <comment
       v-for="comment in courseComments"
       :key="comment._cid || comment.id"
       :comment="comment"
+      @update="onUpdate"
+      @remove="onRemove"
       class="clearfix comment">
       <span class="comment-activity">Activity {{ comment.activityId }}</span>
     </comment>
@@ -18,7 +20,7 @@
       </div>
       <span slot="no-more"></span>
     </infinite-loading>
-  </div>
+  </ul>
 </template>
 
 <script>
@@ -35,12 +37,19 @@ export default {
     ...mapGetters(['courseComments'])
   },
   methods: {
-    ...mapActions(['fetch', 'resetPagination'], 'comments'),
+    ...mapActions(['fetch', 'resetPagination', 'update', 'remove'], 'comments'),
     fetchComments($state) {
       return this.fetch().then(() => {
         if (!isEmpty(this.courseComments)) $state.loaded();
         if (!this.hasMoreResults) $state.complete();
       });
+    },
+    onUpdate(comment, content) {
+      const updatedAt = Date.now();
+      this.update(Object.assign({}, comment, { content, updatedAt }));
+    },
+    onRemove(comment) {
+      this.remove(comment);
     }
   },
   mounted() {
