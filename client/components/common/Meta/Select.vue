@@ -69,10 +69,6 @@ export default {
     background-color: inherit;
   }
 
-  &:not(:last-child) {
-    margin-bottom: 15px;
-  }
-
   label {
     color: #808080;
   }
@@ -81,6 +77,12 @@ export default {
     width: 36px;
     height: 36px;
     margin-right: 15px;
+  }
+
+  /deep/ .multiselect {
+    color: #333;
+    font-size: 17px;
+    line-height: 24px;
   }
 }
 </style>
