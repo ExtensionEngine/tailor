@@ -81,15 +81,5 @@ export default {
   width: 100%;
   min-height: 36px;
   margin-bottom: 25px;
-  color: #707070;
-  font-size: 22px;
-
-  .btn {
-    color: #707070;
-    border: 1px solid #f0f0f0;
-    border-radius: 2px;
-    outline: none;
-    box-shadow: none;
-  }
 }
 </style>
