@@ -114,6 +114,11 @@ export default {
       color: #444;
       background-color: #eee;
     }
+
+    &--disabled {
+      color: #444;
+      background: #dfdfdf;
+    }
   }
 
   .multiselect__content-wrapper {
