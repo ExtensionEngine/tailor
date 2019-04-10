@@ -42,7 +42,7 @@ export default {
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: true },
-    searchable: { type: Boolean, default: true },
+    searchable: { type: Boolean, default: false },
     allowEmpty: { type: Boolean, default: true },
     placeholder: { type: String, default: 'Click to select' },
     allowCircularLinks: { type: Boolean, default: false },
