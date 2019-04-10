@@ -12,11 +12,13 @@
         :key="item._cid || item.id"
         :class="`col-xs-${item.data.width || 12}`"
         class="list-item-container">
-        <insert-element
+        <add-element
+          v-if="enableAdd"
           :include="types"
           :activity="activity"
           :position="index - 1"
           :layout="layout"
+          :inline="true"
           @add="el => $emit('insert', el)"/>
         <slot
           :item="item"
@@ -84,16 +86,12 @@ export default {
   padding: 10px 15px;
 }
 
-.add-element-container {
-  position: relative;
-}
-
 .list-item-container {
   &.sortable-drag {
     margin: 0;
     padding: 0;
 
-    .insert-element {
+    /deep/ .inline-activator {
       display: none;
     }
   }
