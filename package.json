@@ -158,7 +158,7 @@
     "joycon": "^2.2.4",
     "node-sass": "^4.11.0",
     "nodemon": "^1.18.6",
-    "poi": "^12.5.9",
+    "poi": "^12.5.5",
     "poi-preset-bundle-report": "^2.0.2",
     "poi-preset-eslint": "^9.0.1",
     "sass-loader": "^7.1.0",
