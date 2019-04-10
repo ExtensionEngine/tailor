@@ -42,7 +42,6 @@
 <script>
 import AddElement from 'tce-core/AddElement';
 import Draggable from 'vuedraggable';
-import InsertElement from './InsertElement';
 import last from 'lodash/last';
 
 export default {
@@ -72,11 +71,7 @@ export default {
       return lastItem ? lastItem.position + 1 : 1;
     }
   },
-  components: {
-    AddElement,
-    InsertElement,
-    Draggable
-  }
+  components: { AddElement, Draggable }
 };
 </script>
 
