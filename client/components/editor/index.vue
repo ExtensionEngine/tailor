@@ -2,13 +2,15 @@
   <div class="editor-wrapper">
     <toolbar :element="focusedElement">
       <span slot="actions">
-        <span
+        <v-btn
           v-if="metadata.length"
           @click="showSidebar = !showSidebar"
-          class="btn btn-fab btn-primary"
+          color="blue-grey"
+          fab
+          dark
           title="Toggle teaching element sidebar">
-          <span class="mdi mdi-backburger"></span>
-        </span>
+          <v-icon>mdi-backburger</v-icon>
+        </v-btn>
       </span>
     </toolbar>
     <transition name="slide">
