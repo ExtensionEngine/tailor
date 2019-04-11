@@ -9,7 +9,7 @@
       </v-btn>
     </div>
     <div v-else class="pull-right">
-      <v-btn @click="$emit('edit')" color="success" depressed>
+      <v-btn @click="$emit('edit')" color="blue-grey lighten-1" dark depressed>
         Edit
       </v-btn>
     </div>

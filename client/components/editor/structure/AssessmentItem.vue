@@ -3,7 +3,7 @@
     :class="{ hover }"
     @mouseenter="hover = true"
     @mouseleave="hover = false"
-    class="list-group-item assessment-item">
+    class="list-group-item assessment-item elevation-1">
     <span v-if="exam" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
@@ -15,26 +15,48 @@
       @selected="$emit('selected')"
       @delete="$emit('delete')"
       @save="save">
-      <div class="label assessment-type pull-left">{{ elementConfig.name }}</div>
-      <span @click="$emit('selected')" class="btn btn-link pull-right">Collapse</span>
-      <div v-if="exam && examObjectives.length" class="select-leaf">
-        <multiselect
-          :value="objective"
-          :options="examObjectives"
-          :searchable="true"
-          :disabled="!examObjectives.length"
-          :trackBy="'id'"
-          :customLabel="it => it.data ? it.data.name : ''"
-          :placeholder="examObjectiveLabel"
-          @input="onObjectiveSelected"/>
+      <div class="header">
+        <v-chip
+          color="blue-grey darken-1"
+          label
+          dark
+          small
+          class="pull-left text-uppercase">
+          {{ elementConfig.name }}
+        </v-chip>
+        <v-btn
+          @click="$emit('selected')"
+          flat
+          small
+          class="pull-right collapse">
+          Collapse
+        </v-btn>
+        <div v-if="exam && examObjectives.length" class="select-leaf">
+          <multiselect
+            :value="objective"
+            :options="examObjectives"
+            :searchable="true"
+            :disabled="!examObjectives.length"
+            :trackBy="'id'"
+            :customLabel="it => it.data ? it.data.name : ''"
+            :placeholder="examObjectiveLabel"
+            @input="onObjectiveSelected"/>
+        </div>
       </div>
     </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
-      <span class="label label-success">{{ elementConfig.subtype }}</span>
-      <span class="title">{{ question }}</span>
-      <span @click.stop="$emit('delete')" class="delete">
-        <span class="mdi mdi-close"></span>
-      </span>
+      <v-chip color="blue-grey darken-1" label dark small>
+        {{ elementConfig.subtype }}
+      </v-chip>
+      <span class="question">{{ question }}</span>
+      <v-btn
+        @click.stop="$emit('delete')"
+        color="blue-grey darken-2"
+        flat
+        icon
+        class="delete">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
     </div>
   </li>
 </template>
@@ -115,12 +137,22 @@ export default {
 
 <style lang="scss" scoped>
 .assessment-item {
-  margin-bottom: 7px;
+  margin-bottom: 10px;
   padding: 0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
 
-  &, &:first-child, &:last-child {
-    border-radius: 0;
+  .v-chip {
+    float: left;
+    min-width: 30px;
+    margin: 0;
+  }
+
+  .header {
+    padding-bottom: 40px;
+
+    .collapse {
+      margin: 0;
+      padding: 0;
+    }
   }
 
   .drag-handle {
@@ -139,39 +171,33 @@ export default {
   }
 
   .minimized {
-    padding: 12px 22px;
-    &:hover { cursor: pointer; }
-  }
+    padding: 5px 22px;
+    cursor: pointer;
 
-  .title {
-    display: inline-block;
-    max-width: 80%;
-    color: #444;
-    font-size: 16px !important;
-    font-weight: 400;
-  }
+    .question {
+      display: inline-block;
+      max-width: 80%;
+      color: #444;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 34px;
+    }
 
-  .label {
-    float: left;
-    min-width: 30px;
-    padding: 3px 5px;
-    font-size: 11px;
+    .v-chip {
+      margin-top: 5px;
+    }
   }
 
   .delete {
     display: inline-block;
     position: absolute;
-    right: 15px;
-    color: #707070;
-    font-size: 18px;
-    line-height: 18px;
-    visibility: hidden;
-
-    &:hover { color: #555; }
+    top: 0;
+    right: 0;
+    opacity: 0;
   }
 
   &.hover:not(.sortable-chosen) .delete {
-    visibility: visible;
+    opacity: 1;
   }
 }
 
