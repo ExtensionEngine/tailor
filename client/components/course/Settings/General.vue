@@ -52,7 +52,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'outlineActivities'], 'course'),
+    ...mapGetters(['course'], 'course'),
     requiredData() {
       return [{
         key: 'name',
@@ -93,9 +93,9 @@ export default {
     },
     download() {
       this.downloading = true;
-      return api.getDownloadFile(this.$route.params.courseId, this.outlineActivities)
+      return api.exportCourse(this.$route.params.courseId)
         .then(res => saveAs(res, `${this.course.name}.tgz`))
-        .then(() => (this.downloading = false));
+        .finally(() => (this.downloading = false));
     }
   },
   components: { MetaInput: Meta }

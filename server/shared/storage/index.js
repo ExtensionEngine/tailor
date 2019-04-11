@@ -57,6 +57,7 @@ class Storage {
 
 module.exports = new Storage(config);
 module.exports.Storage = Storage;
+
 function loadProvider(name) {
   try {
     return require(path.join(__dirname, './providers/', name));

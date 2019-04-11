@@ -37,8 +37,9 @@ function getContentInventory(courseId) {
 function publishRepositoryMeta(id) {
   return request.post(`/courses/${id}/publish`).then(res => res.data);
 }
-function getDownloadFile(courseId, data) {
-  return request.post(`/courses/${courseId}/download`, data, {
+
+function exportCourse(courseId) {
+  return request.get(`/courses/${courseId}/download`, {
     responseType: 'blob'
   }).then(res => res.data);
 }
@@ -50,5 +51,5 @@ export default {
   removeUser,
   getContentInventory,
   publishRepositoryMeta,
-  getDownloadFile
+  exportCourse
 };

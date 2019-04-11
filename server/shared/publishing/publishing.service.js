@@ -6,10 +6,9 @@ const {
   publishRepositoryDetails,
   unpublishActivity
 } = require('./helpers');
-const defaultStorage = require('../storage');
 
 class PublishingService {
-  constructor(storage = defaultStorage) {
+  constructor(storage = require('../storage')) {
     this.queue = new PromiseQueue(1, Infinity);
     this.storage = storage;
   }

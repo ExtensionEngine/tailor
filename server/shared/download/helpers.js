@@ -1,29 +1,27 @@
 'use strict';
 
 const { Storage } = require('../storage');
+const path = require('path');
 const tar = require('tar');
-const uniq = require('lodash/uniq');
 
 class ArchiveStorage extends Storage {
   constructor(config) {
     super(config);
-    this._writtenFiles = [];
+    this._writtenFiles = new Set();
   }
   saveFile(key, data, options = {}) {
-    this._writtenFiles.push(key.split('/').pop());
+    this._writtenFiles.add(key);
     return super.saveFile(key, data, options);
   }
 
-  archiveContent(courseId, path) {
-    const key = `${path}/repository/${courseId}`;
+  archiveContent(courseId, storagePath) {
     const options = {
       gzip: true,
-      cwd: key,
-      file: `${key}.tgz`
+      cwd: storagePath,
+      file: path.join(storagePath, `${courseId}.tgz`)
     };
-    this._writtenFiles = uniq(this._writtenFiles);
-    return tar.create(options, this._writtenFiles)
-        .then(() => Promise.resolve(`${key}.tgz`));
+    return tar.create(options, Array.from(this._writtenFiles))
+        .then(() => path.join(storagePath, `${courseId}.tgz`));
   }
 }
 
