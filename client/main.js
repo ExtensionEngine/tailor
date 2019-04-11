@@ -6,8 +6,8 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
 import { root as assetApiUrl } from '@/api/asset';
-import AssetLink from './plugins/asset-link';
-import AssetUpload from './plugins/asset-upload';
+import AssetLink from './plugins/asset/link';
+import AssetUpload from './plugins/asset/upload';
 import ElementRegistry from './ElementRegistry';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import ResourceComponents from './plugins/resource-components';
