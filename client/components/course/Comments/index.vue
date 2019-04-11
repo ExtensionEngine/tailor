@@ -1,13 +1,17 @@
 <template>
   <ul class="comments">
     <comment
-      v-for="comment in courseComments"
+      v-for="(comment, index) in paginatedComments"
       :key="comment._cid || comment.id"
       :comment="comment"
       @update="onUpdate"
       @remove="onRemove"
       class="clearfix comment">
-      <span class="comment-activity">Activity {{ comment.activityId }}</span>
+      <div
+        v-if="sameActivity(comment.activityId, index)"
+        class="comment-activity">
+        Activity {{ comment.activityId }}
+      </div>
     </comment>
     <infinite-loading @infinite="fetchComments">
       <span slot="spinner">
@@ -16,7 +20,7 @@
         </div>
       </span>
       <div slot="no-results" class="no-results">
-        {{ courseComments.length ? '' : 'No comments found.' }}
+        {{ paginatedComments.length ? '' : 'No comments found.' }}
       </div>
       <span slot="no-more"></span>
     </infinite-loading>
@@ -34,13 +38,13 @@ export default {
   name: 'comments',
   computed: {
     ...mapGetters(['hasMoreResults'], 'comments'),
-    ...mapGetters(['courseComments'])
+    ...mapGetters(['paginatedComments'])
   },
   methods: {
-    ...mapActions(['fetch', 'resetPagination', 'update', 'remove'], 'comments'),
+    ...mapActions(['fetchPaginated', 'resetPagination', 'update', 'remove'], 'comments'),
     fetchComments($state) {
-      return this.fetch().then(() => {
-        if (!isEmpty(this.courseComments)) $state.loaded();
+      return this.fetchPaginated().then(() => {
+        if (!isEmpty(this.paginatedComments)) $state.loaded();
         if (!this.hasMoreResults) $state.complete();
       });
     },
@@ -50,6 +54,9 @@ export default {
     },
     onRemove(comment) {
       this.remove(comment);
+    },
+    sameActivity(activityId, i) {
+      return i ? this.paginatedComments[i - 1].activityId !== activityId : !i;
     }
   },
   mounted() {
@@ -66,10 +73,18 @@ export default {
 
 .comments {
   margin: 60px 60px 0;
-  padding: 30px;
+  padding: 20px 50px;
   text-align: left;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   list-style: none;
 }
+
+.comment-activity {
+  border-bottom: gray solid 1px;
+  margin: 20px 0px;
+  padding: 10px 0px;
+  font-size: 16px;
+}
+
 </style>

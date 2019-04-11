@@ -26,8 +26,8 @@ getter(function comments() {
   return orderBy(activityComments, 'createdAt', 'desc');
 }, { global: true });
 
-getter(function courseComments() {
-  return this.state.items;
+getter(function paginatedComments() {
+  return orderBy(this.state.items, 'createdAt', 'desc');
 }, { global: true });
 
 getter(function commentQueryParams() {
@@ -49,18 +49,25 @@ getter(function commentsFetched() {
 });
 
 action(function fetch({ activityId } = {}) {
-  const params = activityId || this.context.getters.commentQueryParams;
   const { path } = this.context.rootState.route;
   let action = this.state.path === path ? 'fetch' : 'reset';
   if (action === 'reset') this.commit('setPath', path);
-  return this.api.fetch(params)
+  return this.api.fetch({ activityId })
+    .then(result => this.commit(action, result))
+    .then(() => this.commit('commentsFetched', activityId));
+});
+
+action(function fetchPaginated({ activityId } = {}) {
+  const { offset, limit } = this.context.getters.commentQueryParams;
+  const { path } = this.context.rootState.route;
+  let action = this.state.path === path ? 'fetch' : 'reset';
+  if (action === 'reset') this.commit('setPath', path);
+  return this.api.fetch({ activityId, offset, limit })
     .then(result => {
       this.commit(action, result);
-      if (!activityId) {
-        const length = Object.keys(result).length;
-        this.commit('setPagination', { offset: params.offset + params.limit });
-        this.commit('allCommentsFetched', length < params.limit);
-      } else { this.commit('commentsFetched', activityId); }
+      const length = Object.keys(result).length;
+      this.commit('setPagination', { offset: offset + limit });
+      this.commit('allCommentsFetched', length < limit);
     });
 });
 

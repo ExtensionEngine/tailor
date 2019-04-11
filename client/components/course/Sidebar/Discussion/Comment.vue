@@ -2,6 +2,7 @@
   <li
     @mouseover="hovered = true"
     @mouseleave="hovered = false">
+    <slot></slot>
     <span v-if="avatar" class="pull-left avatar">
       <avatar
         :size="40"
@@ -17,7 +18,6 @@
           class="author">
           {{ comment.author.email }}
         </span>
-        <slot></slot>
         <span v-if="isEdited" class="edited-icon icon mdi mdi-pencil"></span>
         <button
           v-if="showActions"
