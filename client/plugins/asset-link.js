@@ -1,5 +1,7 @@
+import pick from 'lodash/pick';
+import normalizeUrl from 'normalize-url';
+
 const isProduction = process.env.NODE_ENV === 'production';
-const reProtocol = /^[a-z0-9.+-]+:\/\//i;
 
 export const install = (Vue, { apiUrl, direct, defaultProtocol } = {}) => {
   const ResourceLink = Vue.component('resource-link');
@@ -13,7 +15,7 @@ export const install = (Vue, { apiUrl, direct, defaultProtocol } = {}) => {
       if (props.direct) {
         Object.assign(data.props, { url: props.href });
       } else {
-        const url = prependProtocol(props.href, defaultProtocol);
+        const url = normalizeUrl(props.href, { defaultProtocol });
         Object.assign(data.props, { url: apiUrl, params: { url } });
       }
       return createElement(ResourceLink, data, children);
@@ -28,15 +30,3 @@ export const install = (Vue, { apiUrl, direct, defaultProtocol } = {}) => {
 };
 
 export default install;
-
-function prependProtocol(url, protocol) {
-  if (reProtocol.test(url)) return url;
-  return url.replace(/^(?!(?:\w+:)?\/\/)/, protocol);
-}
-
-function pick(source, props = []) {
-  return props.reduce((acc, prop) => {
-    if (!(prop in source)) return acc;
-    return Object.assign(acc, { [prop]: source[prop] });
-  }, {});
-}

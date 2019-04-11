@@ -1,3 +1,5 @@
+import pick from 'lodash/pick';
+
 const isProduction = process.env.NODE_ENV === 'production';
 
 export const install = (Vue, { apiUrl, direct, defaultTag } = {}) => {
@@ -24,10 +26,3 @@ export const install = (Vue, { apiUrl, direct, defaultTag } = {}) => {
 };
 
 export default install;
-
-function pick(source, props = []) {
-  return props.reduce((acc, prop) => {
-    if (!(prop in source)) return acc;
-    return Object.assign(acc, { [prop]: source[prop] });
-  }, {});
-}
