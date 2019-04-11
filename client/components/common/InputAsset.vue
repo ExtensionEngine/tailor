@@ -2,12 +2,9 @@
   <div class="input-asset">
     <template v-if="!isEditing">
       <v-btn flat icon color="info">
-        <component
-          :is="isFile ? 'asset-link' : 'a'"
-          :href="url"
-          target="_blank">
+        <asset-link :href="url" :direct="!isFile" target="_blank">
           <v-icon>mdi-open-in-new</v-icon>
-        </component>
+        </asset-link>
       </v-btn>
       <v-text-field
         :value="isFile ? filename(asset.url) : asset.url"
@@ -15,15 +12,16 @@
         disabled/>
     </template>
     <template v-else>
-      <file-upload
+      <asset-upload
+        v-validate="{ ext: extensions }"
         v-if="!isFile"
+        :accept="extensions"
         :uploading.sync="uploading"
-        :validate="{ ext: extensions }"
         @upload="onFileUpload"
-        tag="v-btn"
+        name="file"
         small>
         {{ uploadLabel }}
-      </file-upload>
+      </asset-upload>
       <v-btn
         v-else
         @click.stop="onFileDelete"
@@ -44,7 +42,11 @@
       <v-btn v-if="!isEditing" @click.stop="isEditing = true" small>
         Edit
       </v-btn>
-      <v-btn v-else :disabled="uploading || !asset.url" @click.stop="submit" small>
+      <v-btn
+        v-else
+        :disabled="uploading || (!asset.url && !hasChanges)"
+        @click.stop="submit"
+        small>
         {{ hasChanges ? 'Save' : 'Cancel' }}
       </v-btn>
     </div>
@@ -53,7 +55,7 @@
 
 <script>
 import { basename } from 'path';
-import FileUpload from '@/components/common/FileUpload';
+import { withValidation } from '@/utils/validation';
 
 const FILENAME_DELIMITER = /_+/g;
 
@@ -62,6 +64,7 @@ const last = arr => arr[arr.length - 1];
 
 export default {
   name: 'input-asset',
+  mixins: [withValidation()],
   props: {
     url: { type: String, default: null },
     publicUrl: { type: String, default: null },
@@ -104,8 +107,7 @@ export default {
       if (!this.hasChanges) return;
       this.$emit('input', { ...this.asset });
     }
-  },
-  components: { FileUpload }
+  }
 };
 
 function isLinked(url) {

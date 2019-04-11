@@ -5,7 +5,7 @@ const url = {
   root: () => '/asset'
 };
 
-const root = path.join(request.defaults.baseURL, url.root());
+export const root = path.join(request.defaults.baseURL, url.root());
 
 function getUrl(key) {
   const params = { key };
@@ -19,7 +19,6 @@ function upload(data) {
 }
 
 export default {
-  root,
   getUrl,
   upload
 };

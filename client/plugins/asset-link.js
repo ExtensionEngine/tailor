@@ -1,26 +1,27 @@
 const isProduction = process.env.NODE_ENV === 'production';
 const reProtocol = /^[a-z0-9.+-]+:\/\//i;
 
-export const install = (Vue, { apiUrl, defaultProtocol } = {}) => {
+export const install = (Vue, { apiUrl, direct, defaultProtocol } = {}) => {
   const ResourceLink = Vue.component('resource-link');
   if (!ResourceLink) {
     return !isProduction &&
-      Vue.util.warn('Cannot find `<resource-link>` component.');
+      Vue.util.warn('Can\'t find `<resource-link>` component.');
   }
   Vue.component('asset-link', {
     render(createElement, { props, data, children }) {
-      const url = prependProtocol(props.href, defaultProtocol);
-      data.props = {
-        action: apiUrl,
-        download: props.download,
-        target: props.target,
-        params: { url }
-      };
+      data.props = pick(props, ['download', 'target', 'direct']);
+      if (props.direct) {
+        Object.assign(data.props, { url: props.href });
+      } else {
+        const url = prependProtocol(props.href, defaultProtocol);
+        Object.assign(data.props, { url: apiUrl, params: { url } });
+      }
       return createElement(ResourceLink, data, children);
     },
     functional: true,
     props: {
       ...pick(ResourceLink.options.props, ['download', 'target']),
+      direct: { type: Boolean, default: () => direct },
       href: { type: String, required: true }
     }
   });

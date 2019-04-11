@@ -5,11 +5,12 @@ import 'event-source-polyfill';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
-import assetsApi from '@/api/asset';
+import { root as assetApiUrl } from '@/api/asset';
 import AssetLink from './plugins/asset-link';
+import AssetUpload from './plugins/asset-upload';
 import ElementRegistry from './ElementRegistry';
 import QuestionContainer from 'tce-core/QuestionContainer';
-import ResourceLink from './plugins/resource-link';
+import ResourceComponents from './plugins/resource-components';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
@@ -27,13 +28,9 @@ Vue.component('tce-question-container', QuestionContainer);
 const registry = new ElementRegistry(Vue);
 registry.initialize();
 
-Vue.use(ResourceLink, {
-  auth: () => localStorage.getItem('JWT_TOKEN')
-});
-Vue.use(AssetLink, {
-  apiUrl: assetsApi.root,
-  defaultProtocol: 'storage://'
-});
+Vue.use(ResourceComponents, { auth: () => localStorage.getItem('JWT_TOKEN') });
+Vue.use(AssetLink, { apiUrl: assetApiUrl, defaultProtocol: 'storage://' });
+Vue.use(AssetUpload, { apiUrl: assetApiUrl, direct: true, defaultTag: 'v-btn' });
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {
@@ -58,10 +55,5 @@ new Vue({
   store,
   el: '#app',
   render: h => h(App),
-  provide() {
-    return {
-      $teRegistry: registry,
-      $storageService: assetsApi
-    };
-  }
+  provide: () => ({ $teRegistry: registry })
 });

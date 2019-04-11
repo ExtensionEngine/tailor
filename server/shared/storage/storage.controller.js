@@ -5,6 +5,9 @@ const { URL } = require('url');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const urlJoin = require('url-join');
+
+const createUrl = key => urlJoin(STORAGE_PROTOCOL, key);
 
 async function getUrl({ app, query }, res) {
   const storage = app.get('storage');
@@ -27,8 +30,9 @@ async function upload({ app, file }, res) {
   const key = path.join(ASSET_ROOT, `${hash}___${name}${extension}`);
   const storage = app.get('storage');
   await storage.saveFile(key, buffer, { ContentType: file.mimetype });
+  const url = createUrl(key);
   const publicUrl = await storage.getFileUrl(key);
-  return res.json({ key, url: `${STORAGE_PROTOCOL}${key}`, publicUrl });
+  return res.json({ filename: file.originalname, key, url, publicUrl });
 }
 
 module.exports = { resolveUrl, getUrl, upload };
