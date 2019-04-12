@@ -72,8 +72,8 @@ export default {
       return lastItem ? lastItem.position + 1 : 1;
     },
     additionType() {
-      const { nextPosition, lastPosition } = this;
-      return nextPosition === lastPosition ? 'add' : 'insert';
+      const { list, nextPosition, lastPosition } = this;
+      return !list.length || nextPosition === lastPosition ? 'add' : 'insert';
     }
   },
   methods: {
