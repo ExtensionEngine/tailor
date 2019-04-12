@@ -62,14 +62,14 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex-module';
 import api from '../../../api/course';
 import CloneModal from './CloneModal';
 import EventBus from 'EventBus';
 import General from './General';
 import JSZip from 'jszip';
-import { mapActions, mapGetters } from 'vuex-module';
-import saveAs from 'save-as';
 import publishMixin from 'components/common/mixins/publish';
+import saveAs from 'save-as';
 import UserManagement from './UserManagement';
 
 const appChannel = EventBus.channel('app');
