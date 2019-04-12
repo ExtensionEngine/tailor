@@ -7,42 +7,47 @@
             :class="{ selected: $route.name === 'course-info' }"
             @click="routeTo('course-info')"
             class="list-group-item">
-            <span class="mdi mdi-wrench"></span>General
+            <v-icon>mdi-wrench</v-icon>General
           </li>
           <li
             :class="{ selected: $route.name === 'user-management' }"
             @click="routeTo('user-management')"
             class="list-group-item">
-            <span class="mdi mdi-account"></span>User Management
-          </li>
-          <li
-            @click="downloadContentInventory"
-            class="list-group-item">
-            <span class="mdi mdi-download"></span>Knewton Inventory
-          </li>
-          <li
-            @click="showCloneModal = true"
-            class="list-group-item">
-            <span class="mdi mdi-content-copy"></span>Clone repository
-          </li>
-          <li
-            @click="confirmPublishing(outlineActivities)"
-            class="list-group-item">
-            <span class="mdi mdi-upload"></span>Publish all
-            <circular-progress v-if="isPublishing"/>
-          </li>
-          <li v-if="publishStatus" class="list-group-item">
-            {{ publishStatus }}
+            <v-icon>mdi-account</v-icon>User Management
           </li>
         </ul>
         <div class="actions">
-          <button
+          <v-btn
+            @click="downloadContentInventory"
+            color="blue-grey darken-3"
+            flat
+            block>
+            <v-icon>mdi-download</v-icon>
+            Knewton Inventory
+          </v-btn>
+          <v-btn
+            @click="showCloneModal = true"
+            color="blue-grey darken-3"
+            flat
+            block>
+            <v-icon>mdi-content-copy</v-icon>Clone repository
+          </v-btn>
+          <v-btn
+            :loading="isPublishing"
+            @click="confirmPublishing(outlineActivities)"
+            color="blue-grey darken-3"
+            flat
+            block>
+            <v-icon>mdi-upload</v-icon>Publish content
+          </v-btn>
+          <v-btn
             @click.stop="showDeleteConfirmation"
-            type="button"
-            class="btn btn-danger btn-material btn-block btn-delete">
-            <span class="mdi mdi-delete"></span>
+            color="error"
+            flat
+            block>
+            <v-icon>mdi-delete</v-icon>
             Delete repository
-          </button>
+          </v-btn>
         </div>
       </div>
       <div class="col-md-8 col-lg-9">
@@ -58,7 +63,6 @@
 
 <script>
 import api from '../../../api/course';
-import CircularProgress from 'components/common/CircularProgress';
 import CloneModal from './CloneModal';
 import EventBus from 'EventBus';
 import General from './General';
@@ -104,8 +108,7 @@ export default {
   components: {
     CloneModal,
     General,
-    UserManagement,
-    CircularProgress
+    UserManagement
   }
 };
 </script>
@@ -116,7 +119,7 @@ export default {
 }
 
 .list-group {
-  padding: 10px 10px 300px;
+  padding: 10px 10px 350px;
   line-height: 32px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
@@ -124,21 +127,18 @@ export default {
 
 .list-group-item {
   margin-bottom: 2px;
-  padding: 10px;
+  padding: 4px;
+  color: #444;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 500;
   text-align: left;
   text-transform: uppercase;
   border: 0;
   cursor: pointer;
 
-  &:hover, &.selected {
+  &.selected {
     background-color: #efefef;
   }
-}
-
-.circular-progress {
-  float: right;
-  width: 24px;
-  margin: 0 10px;
 }
 
 .mdi {
@@ -152,15 +152,14 @@ export default {
   right: 15px;
   bottom: 20px;
   left: 15px;
+  padding: 10px;
+}
 
-  button {
-    width: 80%;
-    margin: 30px 10%;
+.v-btn {
+  margin: 15px 0;
 
-    .mdi {
-      margin-right: 5px;
-      margin-left: 0;
-    }
+  /deep/ div {
+    justify-content: left;
   }
 }
 </style>

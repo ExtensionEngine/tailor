@@ -1,12 +1,14 @@
 <template>
   <div v-if="course" class="settings">
     <div class="actions">
-      <button
-        :disabled="publishing"
+      <v-btn
+        :loading="publishing"
         @click="publish"
-        class="btn btn-primary btn-material btn-sm pull-right">
-        <span class="mdi mdi-publish"></span> Publish info
-      </button>
+        color="blue-grey darken-1"
+        outline
+        class="pull-right">
+        Publish info
+      </v-btn>
     </div>
     <meta-input
       v-for="it in requiredData"
