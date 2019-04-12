@@ -1,14 +1,10 @@
 <script>
 import EventBus from 'EventBus';
+import get from 'lodash/get';
 import Promise from 'bluebird';
 
 const appChannel = EventBus.channel('app');
-const prefixMessage = 'Are you sure you want to publish';
-const messages = {
-  activity: `${prefixMessage} this activity?`,
-  allActivities: `${prefixMessage} all activities within this course?`,
-  allDescendants: `${prefixMessage} this activity along with all its descendants?`
-};
+const prefix = message => `Are you sure you want to publish ${message}`;
 
 export default {
   data() {
@@ -21,8 +17,8 @@ export default {
     confirmPublishing(activities = [this.activity]) {
       const message = this.getPublishMessage(activities.length);
       appChannel.emit('showConfirmationModal', {
-        title: 'Publish',
-        message: message,
+        title: 'Publish content',
+        message,
         action: () => this.publish(activities)
       });
     },
@@ -37,10 +33,11 @@ export default {
       });
     },
     getPublishMessage(activityCount) {
-      const { activity, allActivities, allDescendants } = messages;
-      if (activityCount === 1) return activity;
-      if (activityCount === this.outlineActivities.length) return allActivities;
-      return allDescendants;
+      const name = get(this, 'activity.data.name', 'activity');
+      const totalActivities = get(this, 'outlineActivities.length', 0);
+      if (activityCount === 1) return prefix(`${name} activity?`);
+      if (activityCount === totalActivities) return prefix('all activities?');
+      return prefix(`${name} and all its descendants?`);
     }
   }
 };
