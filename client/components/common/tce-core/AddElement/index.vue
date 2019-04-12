@@ -1,7 +1,7 @@
 <template>
   <div>
     <component :is="activator" @click.native.stop="show = true"/>
-    <v-bottom-sheet v-model="show" max-width="1240" inset>
+    <v-bottom-sheet v-model="show" max-width="1240" inset lazy>
       <div class="element-container">
         <v-toolbar v-if="layout" dense class="mb-2">
           <v-spacer/>
