@@ -35,19 +35,14 @@ export default {
   computed: {
     auth: ({ $options }) => $options.$_auth(),
     type: ({ tag }) => tag !== 'label' ? 'label' : null,
-    fileFilter() {
-      if (!this.accept) return this.accept;
-      if (Array.isArray(this.accept)) return this.accept.join(',');
-      return this.accept;
-    }
+    fileFilter: ({ accept }) => Array.isArray(accept) ? accept.join(',') : accept
   },
   methods: {
     onFileSelected(e) {
       if (!e.target.files) return;
       const [file] = e.target.files;
       if (!this.$validator) return this.uploadFile(file);
-      return this.$validator
-        .validate(this.$attrs.name)
+      return this.$validator.validate(this.$attrs.name)
         .then(isValid => isValid && this.uploadFile(file));
     },
     uploadFile(file) {

@@ -11,7 +11,7 @@ export const install = (Vue, { apiUrl, direct, defaultTag } = {}) => {
   Vue.component('asset-upload', {
     render(createElement, { props, data, children }) {
       data.props = {
-        ...pick(props, ['accept', 'direct', 'tag']),
+        ...pick(props, ['direct', 'accept', 'tag']),
         action: apiUrl
       };
       return createElement(ResourceUpload, data, children);

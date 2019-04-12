@@ -1,4 +1,4 @@
-<template class="gm">
+<template>
   <a
     v-if="direct"
     v-bind="{ href, download, target }"
@@ -33,14 +33,13 @@ export default {
   },
   computed: {
     auth: ({ $options }) => $options.$_auth(),
-    fields() {
-      return Object.keys(this.params).map(name => ({
-        name,
-        value: this.params[name]
-      }));
-    }
+    fields: ({ params }) => toArray(params)
   }
 };
+
+function toArray(obj) {
+  return Object.keys(obj).map(key => ({ key, value: obj[key] }));
+}
 </script>
 
 <style lang="scss">

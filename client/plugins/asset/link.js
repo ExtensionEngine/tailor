@@ -11,7 +11,7 @@ export const install = (Vue, { apiUrl, direct, defaultProtocol } = {}) => {
   }
   Vue.component('asset-link', {
     render(createElement, { props, data, children }) {
-      data.props = pick(props, ['download', 'target', 'direct']);
+      data.props = pick(props, ['direct', 'download', 'target']);
       const href = normalizeUrl(props.href, { defaultProtocol });
       const action = !props.direct ? apiUrl : '';
       Object.assign(data.props, { action, href });
