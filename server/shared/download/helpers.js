@@ -9,19 +9,27 @@ class ArchiveStorage extends Storage {
     super(config);
     this._writtenFiles = new Set();
   }
+
   saveFile(key, data, options = {}) {
     this._writtenFiles.add(key);
     return super.saveFile(key, data, options);
   }
 
-  archiveContent(courseId, storagePath) {
+  get filepaths() {
+    if (this._writtenFiles) {
+      return Array.from(this._writtenFiles);
+    }
+  }
+
+  archiveContents(courseId, storagePath) {
+    const filename = `${courseId}.tgz`;
     const options = {
       gzip: true,
       cwd: storagePath,
-      file: path.join(storagePath, `${courseId}.tgz`)
+      file: path.join(storagePath, filename)
     };
-    return tar.create(options, Array.from(this._writtenFiles))
-        .then(() => path.join(storagePath, `${courseId}.tgz`));
+    return tar.create(options, this.filepaths)
+        .then(() => path.join(storagePath, filename));
   }
 }
 

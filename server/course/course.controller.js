@@ -8,17 +8,14 @@ const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
 const { PublishingService } = require('../shared/publishing/publishing.service');
 const ArchiveStorage = require('../shared/download/helpers');
-const cuid = require('cuid');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
-const path = require('path');
 const pick = require('lodash/pick');
-const Promise = require('bluebird');
 const publishingService = require('../shared/publishing/publishing.service');
 const removeDir = require('util').promisify(require('rimraf'));
 const sample = require('lodash/sample');
+const tempy = require('tempy');
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
-const { filesystem: { path: storagePath } } = require('../../config/server').storage;
 
 function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
@@ -108,20 +105,23 @@ function exportContentInventory({ course }, res) {
 }
 
 function exportCourse({ course }, res) {
-  const contentPath = path.join(storagePath, 'temp', cuid());
-  const archiveStorage = new ArchiveStorage({
-    filesystem: { path: contentPath },
+  const tempPath = tempy.directory();
+  const options = {
+    filesystem: { path: tempPath },
     provider: 'filesystem'
-  });
-  const downloadService = new PublishingService(archiveStorage);
-  return downloadService.publishRepoDetails(course)
-    .then(() => Activity.findAll({ where: { course_id: course.id } })
-      .then((activites) => Promise.each(activites, activity =>
-        downloadService.publishActivity(activity))))
-    .then(() => archiveStorage.archiveContent(course.id, contentPath))
-    .then((filePath) => {
+  };
+  const storage = new ArchiveStorage(options);
+  const publisher = new PublishingService(storage);
+  return publisher.publishRepoDetails(course)
+    .then(() => {
+      const where = { course_id: course.id };
+      return Activity.findAll({ where }).each(activity =>
+        publisher.publishActivity(activity));
+    })
+    .then(() => storage.archiveContents(course.id, tempPath))
+    .then(filePath => {
       res.download(filePath);
-      return removeDir(contentPath);
+      return removeDir(tempPath);
     });
 }
 

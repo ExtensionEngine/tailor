@@ -8,8 +8,8 @@
         <span class="mdi mdi-publish"></span> Publish info
       </button>
       <button
-        :disabled="downloading"
-        @click="download"
+        :disabled="exporting"
+        @click="exportCourse"
         class="btn btn-primary btn-material btn-sm pull-right">
         <span class="mdi mdi-download"></span> Download info
       </button>
@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       publishing: false,
-      downloading: false
+      exporting: false
     };
   },
   computed: {
@@ -91,11 +91,11 @@ export default {
       return api.publishRepositoryMeta(this.$route.params.courseId)
         .then(() => (this.publishing = false));
     },
-    download() {
-      this.downloading = true;
+    exportCourse() {
+      this.exporting = true;
       return api.exportCourse(this.$route.params.courseId)
         .then(res => saveAs(res, `${this.course.name}.tgz`))
-        .finally(() => (this.downloading = false));
+        .finally(() => (this.exporting = false));
     }
   },
   components: { MetaInput: Meta }
