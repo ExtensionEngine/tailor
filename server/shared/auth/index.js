@@ -5,28 +5,20 @@ const passport = require('passport');
 const { User } = require('../database');
 
 const jwtOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeader(),
+  jwtFromRequest: ExtractJwt.fromExtractors([
+    ExtractJwt.fromAuthHeader(),
+    ExtractJwt.fromBodyField('auth')
+  ]),
   secretOrKey: process.env.AUTH_JWT_SECRET
   // issuer: process.env.AUTH_JWT_ISSUER,
   // audience: process.env.SERVER_URL
 };
 
-passport.use('jwt', new Strategy(jwtOptions, verify));
-passport.use('jwt:form', new Strategy({
-  ...jwtOptions,
-  jwtFromRequest: ExtractJwt.fromBodyField('auth')
-}, verify));
-
-function verify(payload, done) {
+passport.use('jwt', new Strategy(jwtOptions, (payload, done) => {
   return User.findById(payload.id)
     .then(user => done(null, user || false))
     .error(err => done(err, false));
-}
+}));
 
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));

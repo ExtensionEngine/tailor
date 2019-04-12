@@ -10,7 +10,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 router
   .get('/asset', auth('jwt'), ctrl.getUrl)
-  .post('/asset', upload.single('file'), auth(['jwt', 'jwt:form']), (req, res) => {
+  .post('/asset', upload.single('file'), auth('jwt'), (req, res) => {
     if (req.file) return ctrl.upload(req, res);
     return ctrl.resolveUrl(req, res);
   });
