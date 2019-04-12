@@ -9,6 +9,7 @@ const auth = (...args) => passport.authenticate(...args);
 const upload = multer({ storage: multer.memoryStorage() });
 
 router
+  .options('/asset', auth('jwt'), ctrl.getUploadConfig)
   .get('/asset', auth('jwt'), ctrl.getPublicUrl)
   .post('/asset', upload.single('file'), auth('jwt'), (req, res) => {
     if (req.file) return ctrl.upload(req, res);

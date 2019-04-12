@@ -27,7 +27,7 @@ export default {
   props: {
     action: { type: String, required: true },
     upload: { type: Function, required: true },
-    direct: { type: Boolean, default: false },
+    preflight: { type: Function, required: true },
     accept: { type: [String, Array], default: null },
     tag: { type: String, default: () => 'label' },
     params: { type: Object, default: () => ({}) }
@@ -48,19 +48,15 @@ export default {
     },
     uploadFile(file) {
       this.uploading = true;
-      return this.getUploadUrl()
-        .then(({ url, isPublic }) => {
-          const params = Object.assign({}, this.params);
-          if (!isPublic) params.auth = this.auth;
-          return this.upload(url, file, params);
+      return Promise.resolve(this.preflight())
+        .then(config => {
+          Object.assign(config, { params: this.params });
+          if (!config.isPublic) config.params.auth = this.auth;
+          return this.upload(file, config);
         })
         .finally(() => (this.uploading = false))
         .then(data => this.$emit('upload', data))
         .catch(err => this.$emit('error', err));
-    },
-    getUploadUrl() {
-      if (this.direct) return Promise.resolve({ url: this.action, isPublic: false });
-      // TODO: Resolve public upload url!
     }
   },
   watch: {

@@ -17,7 +17,11 @@ const router = require('./router');
 
 const app = express();
 app.use(helmet());
-app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
+app.use(cors({
+  origin: config.auth.corsAllowedOrigins,
+  credentials: true,
+  preflightContinue: true
+}));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(passport.initialize());
 app.use(origin());
@@ -26,8 +30,8 @@ app.use(express.static(path.join(__dirname, '../dist/')));
 // Setup asset storage.
 const storage = require('./shared/storage')(config.storage);
 app.set('storage', storage);
-if (storage.provider.serveHandler) {
-  app.use(storage.config.publicPath, storage.provider.serveHandler);
+if (storage.serveHandler) {
+  app.use(storage.config.publicPath, storage.serveHandler);
 }
 
 // Mount main router.

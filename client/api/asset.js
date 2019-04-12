@@ -12,6 +12,12 @@ const url = {
 export const apiUrl = path.join(request.defaults.baseURL, url.root());
 export const protocol = 'storage://';
 
+export async function getUploadConfig({ direct = false } = {}) {
+  if (direct) return { url: apiUrl, isPublic: false };
+  const resp = await request.options(url.root());
+  return resp.data;
+}
+
 export async function getPublicUrl(url) {
   url = normalizeUrl(url, { defaultProtocol: protocol });
   const params = { url };
@@ -19,7 +25,7 @@ export async function getPublicUrl(url) {
   return resp.data.url;
 }
 
-export async function upload(url, file, params) {
+export async function upload(file, { url, params }) {
   const form = new FormData();
   form.append('file', file, file.name);
   forEach(params, (value, name) => form.append(name, value));

@@ -10,7 +10,14 @@ const PROVIDER_TYPE = Symbol('type');
 class Storage {
   constructor(config) {
     this.provider = Storage.createProvider(config);
-    autobind(this);
+    autobind(this, {
+      exclude: [
+        'config',
+        'type',
+        'serveHandler',
+        'uploadHandler'
+      ]
+    });
   }
 
   get config() {
@@ -19,6 +26,14 @@ class Storage {
 
   get type() {
     return this.provider[PROVIDER_TYPE];
+  }
+
+  get serveHandler() {
+    return this.provider.serveHandler;
+  }
+
+  get uploadHandler() {
+    return this.provider.uploadHandler;
   }
 
   getFile(key, options = {}) {
@@ -51,6 +66,10 @@ class Storage {
 
   copyFile(key, newKey, options = {}) {
     return this.provider.copyFile(key, newKey, options);
+  }
+
+  getUploadConfig() {
+    return this.provider.getUploadConfig && this.provider.getUploadConfig();
   }
 
   static createProvider(options) {

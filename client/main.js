@@ -39,7 +39,7 @@ Vue.use(AssetLink, {
 Vue.use(AssetUpload, {
   apiUrl: asset.apiUrl,
   upload: asset.upload,
-  direct: true,
+  getUploadConfig: () => asset.getUploadConfig({ direct: false }),
   defaultTag: 'v-btn'
 });
 
