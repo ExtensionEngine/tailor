@@ -2,7 +2,8 @@ import pick from 'lodash/pick';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-export const install = (Vue, { apiUrl, direct, defaultTag } = {}) => {
+export const install = (Vue, options = {}) => {
+  const { apiUrl, upload, direct, defaultTag } = options;
   const ResourceUpload = Vue.component('resource-upload');
   if (!ResourceUpload) {
     return !isProduction &&
@@ -12,7 +13,8 @@ export const install = (Vue, { apiUrl, direct, defaultTag } = {}) => {
     render(createElement, { props, data, children }) {
       data.props = {
         ...pick(props, ['direct', 'accept', 'tag']),
-        action: apiUrl
+        action: apiUrl,
+        upload
       };
       return createElement(ResourceUpload, data, children);
     },

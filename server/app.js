@@ -23,9 +23,10 @@ app.use(passport.initialize());
 app.use(origin());
 app.use(express.static(path.join(__dirname, '../dist/')));
 
+// Setup asset storage.
 const storage = require('./shared/storage')(config.storage);
 app.set('storage', storage);
-if (storage.type === 'filesystem') {
+if (storage.provider.serveHandler) {
   app.use(storage.config.publicPath, storage.provider.serveHandler);
 }
 

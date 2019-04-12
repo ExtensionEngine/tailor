@@ -2,6 +2,7 @@
 
 const Promise = require('bluebird');
 const contentDisposition = require('content-disposition');
+const crypto = require('crypto');
 const exists = require('path-exists');
 const fs = Promise.promisifyAll(require('fs'));
 const Joi = require('joi');
@@ -70,7 +71,7 @@ class FilesystemStorage {
     return exists(this.path(key));
   }
 
-  getFileUrl(key, { download }) {
+  getFileUrl(key, { download } = {}) {
     const searchParams = new URLSearchParams();
     searchParams.append('key', key);
     if (download) {
@@ -83,10 +84,13 @@ class FilesystemStorage {
   }
 
   get serveHandler() {
-    if (!this._serveHandler) {
-      this._serveHandler = createServeHandler({ root: this.root });
-    }
+    if (!this._serveHandler) this._serveHandler = createServeHandler(this);
     return this._serveHandler;
+  }
+
+  get uploadHandler() {
+    if (!this._uploadHandler) this._uploadHandler = createUploadHandler(this);
+    return this._uploadHandler;
   }
 }
 
@@ -95,7 +99,7 @@ module.exports = {
   create: FilesystemStorage.create
 };
 
-function createServeHandler({ root }) {
+function createServeHandler(storage) {
   return (req, res, next) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') return next();
     const headers = {};
@@ -103,7 +107,7 @@ function createServeHandler({ root }) {
     if (contentDisposition) {
       headers['Content-Disposition'] = contentDisposition;
     }
-    const options = { root, headers };
+    const options = { root: storage.root, headers };
     const { key } = req.query;
     if (!key) return next();
     res.sendFile(key, options, err => {
@@ -111,4 +115,33 @@ function createServeHandler({ root }) {
       next();
     });
   };
+}
+
+function createUploadHandler(storage) {
+  return async ({ file }, res) => {
+    const buffer = await toBuffer(file);
+    const filename = basename({ filename: file.originalname, buffer });
+    const key = path.join(storage.publicPath, filename);
+    await storage.saveFile(key, buffer, { ContentType: file.mimetype });
+    const publicUrl = await storage.getFileUrl(key);
+    return res.json({ filename: file.originalname, key, publicUrl });
+  };
+}
+
+function basename({ filename, buffer, maxLength = 180 }) {
+  const hash = sha256(filename, buffer);
+  const extension = path.extname(filename);
+  const name = path.basename(filename, extension).substring(0, maxLength).trim();
+  return `${hash}___${name}${extension}`;
+}
+
+function toBuffer(file) {
+  if (file.buffer) return Promise.resolve(file.buffer);
+  return fs.readFile(file.path);
+}
+
+function sha256(...args) {
+  const hash = crypto.createHash('sha256');
+  args.forEach(arg => hash.update(arg));
+  return hash.digest('hex');
 }

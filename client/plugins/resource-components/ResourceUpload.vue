@@ -26,6 +26,7 @@ export default {
   },
   props: {
     action: { type: String, required: true },
+    upload: { type: Function, required: true },
     direct: { type: Boolean, default: false },
     accept: { type: [String, Array], default: null },
     tag: { type: String, default: () => 'label' },
@@ -51,7 +52,7 @@ export default {
         .then(({ url, isPublic }) => {
           const params = Object.assign({}, this.params);
           if (!isPublic) params.auth = this.auth;
-          return upload(url, file, params);
+          return this.upload(url, file, params);
         })
         .finally(() => (this.uploading = false))
         .then(data => this.$emit('upload', data))
@@ -68,17 +69,6 @@ export default {
     }
   }
 };
-
-function upload(url, file, params) {
-  const body = new FormData();
-  body.append('file', file, file.name);
-  forEach(params, (value, name) => body.append(name, value));
-  return fetch(url, { method: 'post', body }).then(resp => resp.json());
-}
-
-function forEach(obj, cb) {
-  return Object.keys(obj).forEach(key => cb(obj[key], key));
-}
 </script>
 
 <style lang="scss" scoped>
