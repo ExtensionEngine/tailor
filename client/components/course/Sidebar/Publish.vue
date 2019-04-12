@@ -3,11 +3,10 @@
     <div class="publish-date">
       <span>{{ publishedAtMessage }}</span>
     </div>
-    <v-menu offset-y>
+    <v-menu lazy offset-y left>
       <template v-slot:activator="{ on }">
         <v-btn
           :loading="isPublishing"
-          :disabled="isPublishing"
           v-on="on"
           color="blue-grey"
           outline
@@ -17,13 +16,13 @@
       </template>
       <v-list>
         <v-list-tile @click="confirmPublishing()">
-          <v-list-tile-title>Publish element</v-list-tile-title>
+          <v-list-tile-title>{{ activityLabel }}</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="confirmPublishing(activityWithDescendants)">
-          <v-list-tile-title>Publish descendants</v-list-tile-title>
+          <v-list-tile-title>{{ activityLabel }} and children</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="confirmPublishing(outlineActivities)">
-          <v-list-tile-title>Publish all</v-list-tile-title>
+          <v-list-tile-title>All</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
@@ -34,20 +33,21 @@
 </template>
 
 <script>
-import publishMixin from 'components/common/mixins/publish';
+import { mapActions, mapGetters } from 'vuex-module';
 import fecha from 'fecha';
 import { getDescendants } from 'utils/activity';
-import { mapGetters, mapActions } from 'vuex-module';
+import { getLevel } from 'shared/activities';
+import publishMixin from 'components/common/mixins/publish';
 
 export default {
   mixins: [publishMixin],
   computed: {
-    ...mapGetters([
-      'activity',
-      'outlineActivities'
-    ], 'course'),
+    ...mapGetters(['activity', 'outlineActivities'], 'course'),
+    activityLabel() {
+      return getLevel(this.activity.type).label;
+    },
     publishedAtMessage() {
-      let { publishedAt } = this.activity;
+      const { publishedAt } = this.activity;
       return publishedAt
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
@@ -56,14 +56,12 @@ export default {
       return [...getDescendants(outlineActivities, activity), activity];
     }
   },
-  methods: {
-    ...mapActions({ publishActivity: 'publish' }, 'activities')
-  }
+  methods: mapActions({ publishActivity: 'publish' }, 'activities')
 };
 </script>
 
 <style lang="scss" scoped>
-  .publish-container {
+.publish-container {
   min-height: 70px;
   padding: 0 7px;
 
