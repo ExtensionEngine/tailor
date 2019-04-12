@@ -16,10 +16,12 @@
       </template>
       <v-list>
         <v-list-tile @click="confirmPublishing()">
-          <v-list-tile-title>{{ activityLabel }}</v-list-tile-title>
+          <v-list-tile-title>{{ config.label }}</v-list-tile-title>
         </v-list-tile>
-        <v-list-tile @click="confirmPublishing(activityWithDescendants)">
-          <v-list-tile-title>{{ activityLabel }} and children</v-list-tile-title>
+        <v-list-tile
+          v-if="config.subLevels && config.subLevels.length"
+          @click="confirmPublishing(activityWithDescendants)">
+          <v-list-tile-title>{{ config.label }} and children</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="confirmPublishing(outlineActivities)">
           <v-list-tile-title>All</v-list-tile-title>
@@ -43,8 +45,8 @@ export default {
   mixins: [publishMixin],
   computed: {
     ...mapGetters(['activity', 'outlineActivities'], 'course'),
-    activityLabel() {
-      return getLevel(this.activity.type).label;
+    config() {
+      return getLevel(this.activity.type);
     },
     publishedAtMessage() {
       const { publishedAt } = this.activity;
