@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import CircularProgress from 'components/common/CircularProgress';
-import EventBus from 'EventBus';
-import { withValidation } from 'utils/validation';
+import CircularProgress from '@/components/common/CircularProgress';
+import EventBus from '@/EventBus';
+import { withValidation } from '@/utils/validation';
 
 const appChannel = EventBus.channel('app');
 
