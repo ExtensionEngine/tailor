@@ -2,9 +2,10 @@
 
 const { ASSET_ROOT, STORAGE_PROTOCOL } = require('./helpers');
 const { URL } = require('url');
+const { promisify } = require('util');
 const crypto = require('crypto');
-const fs = require('fs');
 const path = require('path');
+const readFile = promisify(require('fs').readFile);
 const urlJoin = require('url-join');
 
 const createUrl = key => urlJoin(STORAGE_PROTOCOL, key);
@@ -23,7 +24,7 @@ async function resolveUrl({ app, body }, res) {
 }
 
 async function upload({ app, file }, res) {
-  const buffer = await readFile(file);
+  const buffer = await toBuffer(file);
   const hash = sha256(file.originalname, buffer);
   const extension = path.extname(file.originalname);
   const name = path.basename(file.originalname, extension).substring(0, 180).trim();
@@ -37,9 +38,9 @@ async function upload({ app, file }, res) {
 
 module.exports = { resolveUrl, getUrl, upload };
 
-function readFile(file) {
+function toBuffer(file) {
   if (file.buffer) return Promise.resolve(file.buffer);
-  return fs.readFile(file.path);
+  return readFile(file.path);
 }
 
 function sha256(...args) {
