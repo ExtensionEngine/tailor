@@ -1,32 +1,15 @@
 <template>
-  <modal :show="show">
-    <div slot="header">
-      <h3 class="modal-title">{{ title }}</h3>
-    </div>
-    <div v-if="hasMessage" slot="body">
-      {{ context.message }}
-    </div>
-    <div v-else slot="body">
-      Are you sure you want to delete
-      <span v-if="context.info">{{ context.type }} <b>{{ context.info }}</b></span>
-      <span v-else>this {{ context.type }}</span>?
-    </div>
-    <div slot="footer">
-      <button
-        @click="close"
-        class="btn btn-material btn-default"
-        type="button">
-        Close
-      </button>
-      <button
-        v-focus="show"
-        @click="confirm"
-        class="btn btn-material btn-danger"
-        type="button">
-        Confirm
-      </button>
-    </div>
-  </modal>
+  <v-dialog v-model="show" width="500">
+    <v-card>
+      <v-card-title class="headline">{{ context.title }}</v-card-title>
+      <v-card-text class="text-sm-left">{{ context.message }}</v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn @click="close" flat>Close</v-btn>
+        <v-btn v-focus="show" @click="confirm" color="error" flat>Confirm</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -35,22 +18,14 @@ import { focus } from 'vue-focus';
 import Modal from './Modal';
 
 const appChannel = EventBus.channel('app');
-const defaultData = { item: {}, type: '', message: '', info: '', title: '' };
+const defaultData = () => ({ title: '', message: '' });
 
 export default {
   data() {
     return {
       show: false,
-      context: defaultData
+      context: defaultData()
     };
-  },
-  computed: {
-    hasMessage() {
-      return !!this.context.message;
-    },
-    title() {
-      return this.context.title || `Delete ${this.context.type}?`;
-    }
   },
   methods: {
     open(context) {
@@ -59,7 +34,7 @@ export default {
     },
     close() {
       this.show = false;
-      this.context = defaultData;
+      this.context = defaultData();
     },
     confirm() {
       this.context.action();
@@ -73,9 +48,3 @@ export default {
   components: { Modal }
 };
 </script>
-
-<style lang="scss" scoped>
-.modal-body b {
-  text-transform: uppercase;
-}
-</style>

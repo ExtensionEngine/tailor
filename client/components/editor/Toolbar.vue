@@ -127,7 +127,7 @@ export default {
 .toolbar {
   position: absolute;
   width: 100%;
-  z-index: 999;
+  z-index: 99;
   border-top: 1px solid #ddd;
 }
 

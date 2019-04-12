@@ -80,8 +80,8 @@ export default {
     },
     requestDeleteConfirmation(assessment) {
       appChannel.emit('showConfirmationModal', {
-        type: 'assessment',
-        item: assessment,
+        title: 'Delete assessment?',
+        message: 'Are you sure you want to delete assessment?',
         action: () => this.remove(assessment)
       });
     }

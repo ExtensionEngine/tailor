@@ -60,9 +60,8 @@ export default {
     },
     deleteActivity() {
       appChannel.emit('showConfirmationModal', {
-        type: 'activity',
-        item: this.activity,
-        info: this.info,
+        title: 'Delete activity?',
+        message: `Are you sure you want to delete activity ${this.info}?`,
         action: () => {
           const { parentId } = this.activity;
           const rootFilter = it => !it.parentId && (it.id !== this.activity.id);

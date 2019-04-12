@@ -92,8 +92,8 @@ export default {
     },
     showDeleteConfirmation() {
       appChannel.emit('showConfirmationModal', {
-        type: 'course',
-        item: this.course,
+        title: 'Delete course?',
+        message: `Are you sure you want to delete course ${this.course.name}?`,
         action: () => this.removeCourse(this.course) && this.$router.push('/')
       });
     },
