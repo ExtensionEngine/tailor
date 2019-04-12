@@ -25,7 +25,7 @@ export default {
     }
   },
   props: {
-    url: { type: String, required: true },
+    action: { type: String, required: true },
     direct: { type: Boolean, default: false },
     accept: { type: [String, Array], default: null },
     tag: { type: String, default: () => 'label' },
@@ -63,7 +63,7 @@ export default {
         .catch(err => this.$emit('error', err));
     },
     getUploadUrl() {
-      if (this.direct) return Promise.resolve({ url: this.url, isPublic: false });
+      if (this.direct) return Promise.resolve({ url: this.action, isPublic: false });
       // TODO: Resolve public upload url!
     }
   },

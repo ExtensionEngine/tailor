@@ -12,7 +12,7 @@ export const install = (Vue, { apiUrl, direct, defaultTag } = {}) => {
     render(createElement, { props, data, children }) {
       data.props = {
         ...pick(props, ['accept', 'direct', 'tag']),
-        url: apiUrl
+        action: apiUrl
       };
       return createElement(ResourceUpload, data, children);
     },

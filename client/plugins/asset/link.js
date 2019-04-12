@@ -12,19 +12,15 @@ export const install = (Vue, { apiUrl, direct, defaultProtocol } = {}) => {
   Vue.component('asset-link', {
     render(createElement, { props, data, children }) {
       data.props = pick(props, ['download', 'target', 'direct']);
-      if (props.direct) {
-        Object.assign(data.props, { url: props.href });
-      } else {
-        const url = normalizeUrl(props.href, { defaultProtocol });
-        Object.assign(data.props, { url: apiUrl, params: { url } });
-      }
+      const href = normalizeUrl(props.href, { defaultProtocol });
+      const action = !props.direct ? apiUrl : '';
+      Object.assign(data.props, { action, href });
       return createElement(ResourceLink, data, children);
     },
     functional: true,
     props: {
-      ...pick(ResourceLink.options.props, ['download', 'target']),
-      direct: { type: Boolean, default: () => direct },
-      href: { type: String, required: true }
+      ...pick(ResourceLink.options.props, ['href', 'download', 'target']),
+      direct: { type: Boolean, default: () => direct }
     }
   });
 };
