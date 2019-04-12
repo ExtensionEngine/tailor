@@ -10,9 +10,9 @@
     <slot name="embed-toolbar"></slot>
     <div class="delete-element">
       <slot name="actions"></slot>
-      <span @click="requestDeleteConfirmation" class="btn btn-fab btn-danger">
-        <span class="mdi mdi-delete"></span>
-      </span>
+      <v-btn @click="requestDeleteConfirmation" color="error" fab dark>
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
     </div>
   </div>
 </template>
@@ -82,13 +82,10 @@ export default {
   position: absolute;
   z-index: 999;
   right: 0;
-  transform: translate(-90%, -55%);
+  transform: translate(-90%, -40%);
 
-  .btn {
-    margin-left: 8px;
-    font-size: 26px;
-    line-height: 48px;
-    vertical-align: middle;
+  .v-btn {
+    margin: 4px;
   }
 }
 </style>
