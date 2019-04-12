@@ -88,8 +88,8 @@ export default {
     },
     requestDeletion(item) {
       appChannel.emit('showConfirmationModal', {
-        type: 'exam',
-        item,
+        title: 'Delete exam?',
+        message: 'Are you sure you want to delete exam?',
         action: () => this.remove(item)
       });
     }

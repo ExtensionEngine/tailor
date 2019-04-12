@@ -69,8 +69,8 @@ export default {
     },
     deleteContainer(container) {
       appChannel.emit('showConfirmationModal', {
-        type: this.name,
-        item: container,
+        title: `Delete ${this.name}?`,
+        message: `Are you sure you want to delete ${this.name}?`,
         action: () => this.remove(container)
       });
     }
