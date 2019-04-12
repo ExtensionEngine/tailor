@@ -55,7 +55,7 @@ export default {
   data() {
     return {
       dragElementIndex: -1,
-      nextPosition: this.lastPosition,
+      nextPosition: 0,
       isElementDrawerVisible: false
     };
   },
@@ -84,6 +84,12 @@ export default {
     hideElementDrawer() {
       this.isElementDrawerVisible = false;
       this.nextPosition = this.lastPosition;
+    }
+  },
+  watch: {
+    lastPosition: {
+      handler(val) { this.nextPosition = val; },
+      immediate: true
     }
   },
   components: { AddElement, Draggable, InlineActivator }
