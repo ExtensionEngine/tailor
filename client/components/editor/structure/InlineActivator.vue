@@ -1,7 +1,7 @@
 <template>
   <div class="inline-activator">
     <hr>
-    <v-icon class="activator" color="blue-grey darken-2">mdi-plus</v-icon>
+    <v-icon color="blue-grey darken-2">mdi-plus</v-icon>
     <hr>
   </div>
 </template>
@@ -13,7 +13,7 @@
   width: 100%;
   margin: 0;
   opacity: 0;
-  transition: opacity 0.5s;
+  transition: opacity 0.2s, padding 0.1s;
   cursor: pointer;
 
   hr {
@@ -22,28 +22,12 @@
     height: 2px;
     margin: 0 0 1px 0;
     background-color: #717171;
-    transition: height 0.2s;
-  }
-
-  .activator {
-    transition: font-size 0.2s;
   }
 
   &:hover {
-    $delay: 0.2s;
+    padding: 5px 0;
     opacity: 1;
-
-    &, hr, .activator {
-      transition-delay: $delay;
-    }
-
-    hr {
-      height: 3px;
-    }
-
-    .activator {
-      font-size: 40px;
-    }
+    transition: opacity 0.5s, padding 0.2s 0.5s;
   }
 }
 </style>
