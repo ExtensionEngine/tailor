@@ -9,8 +9,9 @@
       @update="reorder">
       <teaching-element
         slot="list-item"
-        slot-scope="{ item, dragged, setWidth }"
+        slot-scope="{ item, dragged, setWidth, setMargin }"
         :setWidth="setWidth"
+        :setMargin="setMargin"
         :dragged="dragged"
         :element="item">
       </teaching-element>

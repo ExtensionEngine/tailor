@@ -23,6 +23,7 @@
         <slot
           :item="item"
           :setWidth="false"
+          :setMargin="false"
           :dragged="dragElementIndex === index"
           name="list-item"/>
       </div>

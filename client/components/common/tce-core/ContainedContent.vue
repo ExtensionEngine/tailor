@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[widthClass, { disabled: isDisabled, hovered: isHovered }]"
+    :class="[widthClass, marginClass, { disabled: isDisabled, hovered: isHovered }]"
     @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
     @dragstart="$emit('dragstart')"
@@ -29,14 +29,19 @@ export default {
     element: { type: Object, required: true },
     isDisabled: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false },
-    setWidth: { type: Boolean, default: true }
+    setWidth: { type: Boolean, default: true },
+    setMargin: { type: Boolean, default: true }
   },
   data() {
     return { isHovered: false };
   },
   computed: {
     widthClass() {
-      return this.setWidth ? `col-xs-${get(this.element, 'data.width', 12)}` : '';
+      const { element, setWidth } = this;
+      return setWidth ? `col-xs-${get(element, 'data.width', 12)}` : '';
+    },
+    marginClass() {
+      return this.setMargin ? 'my-2' : 'my-0';
     }
   },
   methods: {
@@ -53,7 +58,6 @@ export default {
 <style lang="scss" scoped>
 .drag-handle {
   position: absolute;
-  top: 4px;
   left: -3px;
   z-index: 2;
   width: 26px;
@@ -77,5 +81,6 @@ export default {
 
 .contained-content {
   position: relative;
+  padding: 0;
 }
 </style>
