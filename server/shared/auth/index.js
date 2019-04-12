@@ -14,7 +14,7 @@ const jwtOptions = {
   // audience: process.env.SERVER_URL
 };
 
-passport.use('jwt', new Strategy(jwtOptions, (payload, done) => {
+passport.use(new Strategy(jwtOptions, (payload, done) => {
   return User.findById(payload.id)
     .then(user => done(null, user || false))
     .error(err => done(err, false));
