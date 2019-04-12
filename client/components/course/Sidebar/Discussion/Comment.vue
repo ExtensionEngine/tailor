@@ -4,10 +4,10 @@
     @mouseleave="hovered = false">
     <span v-if="avatar" class="pull-left avatar">
       <avatar
-        :size="40"
+        :size="38"
         :username="comment.author.email"
         :initials="authorInitials"
-        color="#ffffffd9">
+        color="#ffffff">
       </avatar>
     </span>
     <div class="content-wrapper">
