@@ -12,14 +12,9 @@
         :key="item._cid || item.id"
         :class="`col-xs-${item.data.width || 12}`"
         class="list-item-container">
-        <add-element
+        <inline-activator
           v-if="enableAdd"
-          :include="types"
-          :activity="activity"
-          :position="index - 1"
-          :layout="layout"
-          :inline="true"
-          @add="el => $emit('insert', el)"/>
+          @click.native="showElementDrawer(index - 1)"/>
         <slot
           :item="item"
           :setWidth="false"
@@ -35,7 +30,9 @@
         :activity="activity"
         :position="nextPosition"
         :layout="layout"
-        @add="el => $emit('add', el)"/>
+        :show="isElementDrawerVisible"
+        @hide="hideElementDrawer"
+        @add="el => $emit(additionType, el)"/>
     </div>
   </div>
 </template>
@@ -43,6 +40,7 @@
 <script>
 import AddElement from 'tce-core/AddElement';
 import Draggable from 'vuedraggable';
+import InlineActivator from './InlineActivator';
 import last from 'lodash/last';
 
 export default {
@@ -56,7 +54,9 @@ export default {
   },
   data() {
     return {
-      dragElementIndex: -1
+      dragElementIndex: -1,
+      nextPosition: this.lastPosition,
+      isElementDrawerVisible: false
     };
   },
   computed: {
@@ -67,12 +67,26 @@ export default {
         scrollSensitivity: 125
       });
     },
-    nextPosition() {
+    lastPosition() {
       const lastItem = last(this.list);
       return lastItem ? lastItem.position + 1 : 1;
+    },
+    additionType() {
+      const { nextPosition, lastPosition } = this;
+      return nextPosition === lastPosition ? 'add' : 'insert';
     }
   },
-  components: { AddElement, Draggable }
+  methods: {
+    showElementDrawer(position) {
+      this.nextPosition = position;
+      this.isElementDrawerVisible = true;
+    },
+    hideElementDrawer() {
+      this.isElementDrawerVisible = false;
+      this.nextPosition = this.lastPosition;
+    }
+  },
+  components: { AddElement, Draggable, InlineActivator }
 };
 </script>
 
@@ -84,7 +98,7 @@ export default {
 
 .list-item-container {
   &.sortable-drag {
-    margin: 0;
+    margin: 10px 0;
     padding: 0;
 
     /deep/ .inline-activator {

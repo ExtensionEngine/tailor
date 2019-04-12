@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <component :is="activator" @click.native.stop="show = true"/>
-    <v-bottom-sheet v-model="show" max-width="1240" inset lazy>
+  <div class="add-element-container">
+    <v-btn @click.stop="isVisible = true" icon flat color="blue-grey darken-2">
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+    <v-bottom-sheet v-model="isVisible" max-width="1240" inset lazy>
       <div class="element-container">
         <v-toolbar v-if="layout" dense class="mb-2">
           <v-spacer/>
@@ -46,10 +48,8 @@
 
 <script>
 import cuid from 'cuid';
-import DefaultActivator from './DefaultActivator';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
-import InlineActivator from './InlineActivator';
 import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
 import sortBy from 'lodash/sortBy';
@@ -69,19 +69,15 @@ export default {
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
     include: { type: Array, default: null },
-    inline: { type: Boolean, default: false }
+    show: { type: Boolean, default: false }
   },
   data() {
     return {
-      show: false,
+      isVisible: false,
       elementWidth: 100
     };
   },
   computed: {
-    activator() {
-      const type = this.inline ? 'inline' : 'default';
-      return `${type}-activator`;
-    },
     registry() {
       return sortBy(this.$teRegistry.get(), 'position');
     },
@@ -137,16 +133,20 @@ export default {
       element.data = { ...element.data, ...initState() };
       if (element.type === 'REFLECTION') delete element.data.correct;
       this.$emit('add', element);
-      this.show = false;
+      this.isVisible = false;
     },
     isElementDisabled(element) {
       if (this.elementWidth === 100) return false;
       return get(element, 'ui.forceFullWidth', false);
     }
   },
-  components: {
-    DefaultActivator,
-    InlineActivator
+  watch: {
+    show(val) {
+      if (val) this.isVisible = val;
+    },
+    isVisible(val, oldVal) {
+      if (!val && oldVal) this.$emit('hide');
+    }
   }
 };
 </script>
