@@ -33,6 +33,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
+const TREE_VIEW_ROUTE = 'tree-view';
 
 export default {
   computed: {
@@ -53,9 +54,12 @@ export default {
       });
     },
     deleteActivity() {
+      const { activity, $route: { name: routeName } } = this;
+      const isTreeView = routeName === TREE_VIEW_ROUTE;
+      const name = `${isTreeView ? `${activity.id}: ` : ''}${activity.data.name}`;
       appChannel.emit('showConfirmationModal', {
-        type: 'activity',
-        item: this.activity,
+        title: 'Delete activity?',
+        message: `Are you sure you want to delete activity ${name}?`,
         action: () => {
           const { parentId } = this.activity;
           const rootFilter = it => !it.parentId && (it.id !== this.activity.id);

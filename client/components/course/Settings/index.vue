@@ -7,33 +7,47 @@
             :class="{ selected: $route.name === 'course-info' }"
             @click="routeTo('course-info')"
             class="list-group-item">
-            <span class="mdi mdi-wrench"></span>General
+            <v-icon>mdi-wrench</v-icon>General
           </li>
           <li
             :class="{ selected: $route.name === 'user-management' }"
             @click="routeTo('user-management')"
             class="list-group-item">
-            <span class="mdi mdi-account"></span>User Management
-          </li>
-          <li
-            @click="downloadContentInventory"
-            class="list-group-item">
-            <span class="mdi mdi-download"></span>Knewton Inventory
-          </li>
-          <li
-            @click="showCloneModal = true"
-            class="list-group-item">
-            <span class="mdi mdi-content-copy"></span>Clone repository
+            <v-icon>mdi-account</v-icon>User Management
           </li>
         </ul>
         <div class="actions">
-          <button
+          <v-btn
+            @click="downloadContentInventory"
+            color="blue-grey darken-3"
+            flat
+            block>
+            <v-icon>mdi-download</v-icon>
+            Knewton Inventory
+          </v-btn>
+          <v-btn
+            @click="showCloneModal = true"
+            color="blue-grey darken-3"
+            flat
+            block>
+            <v-icon>mdi-content-copy</v-icon>Clone repository
+          </v-btn>
+          <v-btn
+            :loading="isPublishing"
+            @click="confirmPublishing(outlineActivities)"
+            color="blue-grey darken-3"
+            flat
+            block>
+            <v-icon>mdi-upload</v-icon>Publish content
+          </v-btn>
+          <v-btn
             @click.stop="showDeleteConfirmation"
-            type="button"
-            class="btn btn-danger btn-material btn-block btn-delete">
-            <span class="mdi mdi-delete"></span>
+            color="error"
+            flat
+            block>
+            <v-icon>mdi-delete</v-icon>
             Delete repository
-          </button>
+          </v-btn>
         </div>
       </div>
       <div class="col-md-8 col-lg-9">
@@ -48,27 +62,32 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex-module';
 import api from '../../../api/course';
 import CloneModal from './CloneModal';
 import EventBus from 'EventBus';
 import General from './General';
 import JSZip from 'jszip';
-import { mapActions, mapGetters } from 'vuex-module';
+import publishMixin from 'components/common/mixins/publish';
 import saveAs from 'save-as';
 import UserManagement from './UserManagement';
 
 const appChannel = EventBus.channel('app');
 
 export default {
+  mixins: [publishMixin],
   data() {
-    return { showCloneModal: false };
+    return {
+      showCloneModal: false
+    };
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course'], 'course')
+    ...mapGetters(['course', 'outlineActivities'], 'course')
   },
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
+    ...mapActions({ publishActivity: 'publish' }, 'activities'),
     downloadContentInventory() {
       api.getContentInventory(this.$route.params.courseId)
         .then(response => JSZip.loadAsync(response))
@@ -77,8 +96,8 @@ export default {
     },
     showDeleteConfirmation() {
       appChannel.emit('showConfirmationModal', {
-        type: 'course',
-        item: this.course,
+        title: 'Delete course?',
+        message: `Are you sure you want to delete course ${this.course.name}?`,
         action: () => this.removeCourse(this.course) && this.$router.push('/')
       });
     },
@@ -100,7 +119,7 @@ export default {
 }
 
 .list-group {
-  padding: 10px 10px 300px;
+  padding: 10px 10px 350px;
   line-height: 32px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
@@ -108,13 +127,16 @@ export default {
 
 .list-group-item {
   margin-bottom: 2px;
-  padding: 10px;
+  padding: 4px;
+  color: #444;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 500;
   text-align: left;
   text-transform: uppercase;
   border: 0;
   cursor: pointer;
 
-  &:hover, &.selected {
+  &.selected {
     background-color: #efefef;
   }
 }
@@ -130,15 +152,14 @@ export default {
   right: 15px;
   bottom: 20px;
   left: 15px;
+  padding: 10px;
+}
 
-  button {
-    width: 80%;
-    margin: 30px 10%;
+.v-btn {
+  margin: 15px 0;
 
-    .mdi {
-      margin-right: 5px;
-      margin-left: 0;
-    }
+  /deep/ div {
+    justify-content: left;
   }
 }
 </style>
