@@ -1,7 +1,9 @@
 <template>
   <div class="body">
-    <publish/>
-    <span class="type-label">{{ config.label }}</span>
+    <publishing/>
+    <v-chip :color="config.color" label dark small class="type-label">
+      {{ config.label }}
+    </v-chip>
     <div class="meta-element">
       <meta-input
         v-for="it in metadata"
@@ -28,16 +30,12 @@
 import { mapActions, mapGetters } from 'vuex-module';
 import Discussion from './Discussion';
 import Meta from 'components/common/Meta';
-import Publish from './Publish';
+import Publishing from './Publishing';
 import Relationship from './Relationship';
 
 export default {
   computed: {
-    ...mapGetters([
-      'activity',
-      'getConfig',
-      'getMetadata'
-    ], 'course'),
+    ...mapGetters(['activity', 'getConfig', 'getMetadata'], 'course'),
     config() {
       return this.getConfig(this.activity);
     },
@@ -54,7 +52,7 @@ export default {
   },
   components: {
     Discussion,
-    Publish,
+    Publishing,
     Relationship,
     MetaInput: Meta
   }
@@ -73,7 +71,7 @@ export default {
 }
 
 .type-label {
-  display: inline-block;
-  margin: 5px 0 25px 7px;
+  margin: 5px 5px 20px;
+  font-weight: 500;
 }
 </style>
