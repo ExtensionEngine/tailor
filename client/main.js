@@ -6,11 +6,9 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
 import * as asset from '@/api/asset';
-import AssetLink from './plugins/asset/link';
-import AssetUpload from './plugins/asset/upload';
+import AssetComponents from './plugins/asset';
 import ElementRegistry from './ElementRegistry';
 import QuestionContainer from 'tce-core/QuestionContainer';
-import ResourceComponents from './plugins/resource-components';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
@@ -28,21 +26,18 @@ Vue.component('tce-question-container', QuestionContainer);
 const registry = new ElementRegistry(Vue);
 registry.initialize();
 
-Vue.use(ResourceComponents, {
-  auth: () => localStorage.getItem('JWT_TOKEN')
-});
-
-Vue.use(AssetLink, {
+Vue.use(AssetComponents, {
+  auth: () => localStorage.getItem('JWT_TOKEN'),
   apiUrl: asset.apiUrl,
-  defaultProtocol: asset.protocol
+  link: {
+    defaultProtocol: asset.protocol
+  },
+  upload: {
+    upload: asset.upload,
+    getUploadConfig: () => asset.getUploadConfig({ direct: false }),
+    defaultTag: 'v-btn'
+  }
 });
-Vue.use(AssetUpload, {
-  apiUrl: asset.apiUrl,
-  upload: asset.upload,
-  getUploadConfig: () => asset.getUploadConfig({ direct: false }),
-  defaultTag: 'v-btn'
-});
-
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {
