@@ -49,7 +49,7 @@ getter(function activity() {
 });
 
 getter(function outlineActivities() {
-  const { activities } = this.rootGetters;
+  const activities = this.getters['course/activities'];
   const structure = this.getters['course/structure'];
   const outlineTypes = map(structure, 'type');
   return filter(activities, it => outlineTypes.includes(it.type));
