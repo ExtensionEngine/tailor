@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[widthClass, marginClass, { disabled: isDisabled, hovered: isHovered }]"
+    :class="[widthClass, { disabled: isDisabled, hovered: isHovered }]"
     @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
     @dragstart="$emit('dragstart')"
@@ -29,8 +29,7 @@ export default {
     element: { type: Object, required: true },
     isDisabled: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false },
-    setWidth: { type: Boolean, default: true },
-    setMargin: { type: Boolean, default: true }
+    setWidth: { type: Boolean, default: true }
   },
   data() {
     return { isHovered: false };
@@ -39,9 +38,6 @@ export default {
     widthClass() {
       const { element, setWidth } = this;
       return setWidth ? `col-xs-${get(element, 'data.width', 12)}` : '';
-    },
-    marginClass() {
-      return this.setMargin ? 'my-2' : 'my-0';
     }
   },
   methods: {
@@ -81,6 +77,7 @@ export default {
 
 .contained-content {
   position: relative;
+  margin: 7px 0;
   padding: 0;
 }
 </style>

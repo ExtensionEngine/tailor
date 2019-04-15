@@ -10,7 +10,7 @@
       <div
         v-for="(item, index) in list"
         :key="item._cid || item.id"
-        :class="`col-xs-${item.data.width || 12}`"
+        :class="getContainerClasses(item)"
         class="list-item-container">
         <inline-activator
           v-if="enableAdd"
@@ -18,7 +18,6 @@
         <slot
           :item="item"
           :setWidth="false"
-          :setMargin="false"
           :dragged="dragElementIndex === index"
           name="list-item"/>
       </div>
@@ -84,6 +83,11 @@ export default {
     hideElementDrawer() {
       this.isElementDrawerVisible = false;
       this.nextPosition = this.lastPosition;
+    },
+    getContainerClasses({ data: { width } }) {
+      let classes = [`col-xs-${width || 12}`];
+      if (this.enableAdd) classes.push('insertable');
+      return classes;
     }
   },
   watch: {
@@ -103,6 +107,12 @@ export default {
 }
 
 .list-item-container {
+  &.insertable /deep/ {
+    > .contained-content {
+      margin: 0;
+    }
+  }
+
   &.sortable-drag {
     margin: 10px 0;
     padding: 0;
