@@ -34,7 +34,7 @@ Vue.use(AssetComponents, {
   },
   upload: {
     upload: asset.upload,
-    getUploadConfig: () => asset.getUploadConfig({ direct: false }),
+    direct: false,
     defaultTag: 'v-btn'
   }
 });

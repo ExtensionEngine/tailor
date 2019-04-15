@@ -12,12 +12,6 @@ const url = {
 export const apiUrl = path.join(request.defaults.baseURL, url.root());
 export const protocol = 'storage://';
 
-export async function getUploadConfig({ direct = false } = {}) {
-  if (direct) return { url: apiUrl, isPublic: false };
-  const resp = await request.options(url.root());
-  return resp.data;
-}
-
 export async function getPublicUrl(url) {
   url = normalizeUrl(url, { defaultProtocol: protocol });
   const params = { url };

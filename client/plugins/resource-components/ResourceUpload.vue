@@ -27,7 +27,7 @@ export default {
   props: {
     action: { type: String, required: true },
     upload: { type: Function, required: true },
-    preflight: { type: Function, required: true },
+    direct: { type: Boolean, default: false },
     accept: { type: [String, Array], default: null },
     tag: { type: String, default: () => 'label' },
     params: { type: Object, default: () => ({}) }
@@ -48,7 +48,7 @@ export default {
     },
     uploadFile(file) {
       this.uploading = true;
-      return Promise.resolve(this.preflight())
+      return Promise.resolve(this.getUploadConfig(file))
         .then(config => {
           Object.assign(config, { params: this.params });
           if (!config.isPublic) config.params.auth = this.auth;
@@ -57,6 +57,10 @@ export default {
         .finally(() => (this.uploading = false))
         .then(data => this.$emit('upload', data))
         .catch(err => this.$emit('error', err));
+    },
+    getUploadConfig(file) {
+      if (!this.direct) return preflight(this.action, { file, auth: this.auth });
+      return Promise.resolve({ url: this.action, isPublic: false });
     }
   },
   watch: {
@@ -65,6 +69,17 @@ export default {
     }
   }
 };
+
+async function preflight(url, { file, auth }) {
+  const form = new FormData();
+  form.append('auth', auth);
+  form.append('filename', file.name);
+  form.append('filesize', file.size);
+  form.append('filetype', file.type);
+  const resp = await fetch(url, { method: 'OPTIONS', body: form });
+  if (!resp.ok) throw new Error(`Fetch error: ${resp.statusText}`);
+  return resp.json();
+}
 </script>
 
 <style lang="scss" scoped>
