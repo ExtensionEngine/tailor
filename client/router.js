@@ -15,6 +15,9 @@ import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
 import TreeView from './components/course/TreeView';
 import UserManagement from './components/course/Settings/UserManagement';
+import UserSettings from './components/user';
+import UserPrivacy from './components/user/Settings/UserPrivacy';
+import UserGeneral from './components/user/Settings/UserGeneral';
 
 Vue.use(Router);
 
@@ -24,6 +27,19 @@ let router = new Router({
     name: 'catalog',
     component: Catalog,
     meta: { auth: true }
+  }, {
+    path: '/settings',
+    component: UserSettings,
+    meta: { auth: true },
+    children: [{
+      path: '',
+      name: 'general',
+      component: UserGeneral
+    }, {
+      path: 'privacy',
+      name: 'privacy',
+      component: UserPrivacy
+    }]
   }, {
     path: '/course/:courseId',
     component: Course,
@@ -71,7 +87,7 @@ let router = new Router({
       name: 'forgot-password',
       component: ForgotPassword
     }, {
-      path: 'reset-password/:token',
+      path: 'reset-password',
       name: 'reset-password',
       component: ResetPassword
     }]

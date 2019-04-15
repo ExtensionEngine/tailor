@@ -30,6 +30,9 @@
         <v-list-tile>
           <v-list-tile-title>{{ user.email }}</v-list-tile-title>
         </v-list-tile>
+        <v-list-tile :to="{ name: 'general' }">
+          <v-list-tile-title>Profile</v-list-tile-title>
+        </v-list-tile>
         <v-list-tile @click="logout">
           <v-list-tile-title>Logout</v-list-tile-title>
         </v-list-tile>
@@ -77,9 +80,9 @@ $font-color: #333;
   }
 
   .app-name {
-    line-height: $container-height;
     font-size: 20px;
     font-weight: 400;
+    line-height: $container-height;
   }
 }
 
@@ -114,5 +117,10 @@ $font-color: #333;
   padding-right: 4px;
   color: #777;
   font-weight: bold;
+}
+
+/deep/ a {
+  text-decoration: none;
+  color: inherit !important;
 }
 </style>

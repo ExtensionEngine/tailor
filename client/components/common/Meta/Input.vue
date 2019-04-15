@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     focusInput() {
-      this.editing = true;
+      this.editing = this.meta.editing;
       setTimeout(() => this.$refs[this.meta.key].focus(), 0);
     },
     focusoutInput() {

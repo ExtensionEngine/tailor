@@ -11,6 +11,9 @@ router
   .post('/users/forgotPassword', ctrl.forgotPassword)
   .post('/users/resetPassword', ctrl.resetPassword)
   // Protected routes:
+  .post('/users/me/:id/changePassword', ctrl.changePassword)
+  .get('/users/me', auth, ctrl.getProfile)
+  .patch('/users/me', auth, ctrl.updateProfile)
   .get('/users', auth, ctrl.index);
 
 module.exports = {

@@ -44,9 +44,33 @@ function login({ body }, res) {
     });
 }
 
+function updateProfile({ body: { user } }, res, next) {
+  const { id, email, firstName, lastName, imgUrl } = user;
+  return User.findByPk(id)
+    .then(user => user.update({ email, firstName, lastName, imgUrl })
+    .then(updatedUser => res.json({ user: updatedUser.profile }))
+    .catch(err => next(err)));
+}
+
+function changePassword({ body: { password }, params: { id } }, res) {
+  return User.findByPk(id)
+    .then(user => {
+      user.password = password;
+      return user.save().catch(validationError);
+    })
+    .then(() => res.sendStatus(200));
+}
+
+function getProfile({ body: { user } }, res) {
+  return res.sendStatus(200);
+}
+
 module.exports = {
   index,
   forgotPassword,
   resetPassword,
-  login
+  login,
+  updateProfile,
+  getProfile,
+  changePassword
 };

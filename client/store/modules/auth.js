@@ -38,7 +38,7 @@ getter(function isCourseAuthor() {
 action(function login(credentials) {
   return authApi
     .login(credentials)
-    .then(user => this.commit('login', user));
+    .then(user => this.commit('setUser', user));
 });
 
 action(function logout() {
@@ -58,7 +58,16 @@ action(function resetPassword({ token, password }) {
   return authApi.resetPassword(token, password);
 });
 
-mutation(function login(user) {
+action(function changePassword({ UserId, password }) {
+  return authApi.changePassword(UserId, password);
+});
+
+action(function updateInfo(user) {
+  return authApi.updateUserInfo(user)
+    .then(({ data: { user } }) => this.commit('setUser', user));
+});
+
+mutation(function setUser(user) {
   this.state.user = user;
 });
 

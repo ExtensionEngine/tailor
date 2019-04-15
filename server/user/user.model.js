@@ -30,13 +30,30 @@ class User extends Model {
         type: ENUM(Role.ADMIN, Role.USER, Role.INTEGRATION),
         defaultValue: Role.USER
       },
+      firstName: {
+        type: STRING,
+        defaultValue: '',
+        field: 'first_name'
+      },
+      lastName: {
+        type: STRING,
+        defaultValue: '',
+        field: 'last_name'
+      },
+      imgUrl: {
+        type: STRING,
+        field: 'img_url'
+      },
       profile: {
         type: VIRTUAL,
         get() {
           return {
             id: this.id,
             email: this.email,
-            role: this.role
+            role: this.role,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            imgUrl: this.imgUrl
           };
         }
       },

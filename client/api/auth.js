@@ -3,7 +3,9 @@ import request from './request';
 const url = {
   login: '/users/login',
   forgotPassword: '/users/forgotPassword',
-  resetPassword: '/users/resetPassword'
+  resetPassword: '/users/resetPassword',
+  updateProfile: '/users/me',
+  changePassword: id => `/users/me/${id}/changePassword`
 };
 
 function login(credentials) {
@@ -30,9 +32,19 @@ function resetPassword(token, password) {
   return request.post(url.resetPassword, { token, password });
 }
 
+function changePassword(id, password) {
+  return request.post(url.changePassword(id), { password });
+}
+
+function updateUserInfo(user) {
+  return request.patch(url.updateProfile, { user });
+}
+
 export default {
   login,
   logout,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  updateUserInfo,
+  changePassword
 };
