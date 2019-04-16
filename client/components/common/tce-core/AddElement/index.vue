@@ -54,6 +54,7 @@ import { isQuestion } from '../utils';
 import reduce from 'lodash/reduce';
 import sortBy from 'lodash/sortBy';
 
+const DEFAULT_ELEMENT_WIDTH = 100;
 const LAYOUT = { HALF_WIDTH: 6, FULL_WIDTH: 12 };
 const ELEMENT_GROUPS = [
   { name: 'Content Elements', icon: 'mdi-set-center' },
@@ -74,7 +75,7 @@ export default {
   data() {
     return {
       isVisible: false,
-      elementWidth: 100
+      elementWidth: DEFAULT_ELEMENT_WIDTH
     };
   },
   computed: {
@@ -136,8 +137,12 @@ export default {
       this.isVisible = false;
     },
     isElementDisabled(element) {
-      if (this.elementWidth === 100) return false;
+      if (this.elementWidth === DEFAULT_ELEMENT_WIDTH) return false;
       return get(element, 'ui.forceFullWidth', false);
+    },
+    onHidden() {
+      this.elementWidth = DEFAULT_ELEMENT_WIDTH;
+      this.$emit('hidden');
     }
   },
   watch: {
@@ -145,7 +150,7 @@ export default {
       if (val) this.isVisible = val;
     },
     isVisible(val, oldVal) {
-      if (!val && oldVal) this.$emit('hide');
+      if (!val && oldVal) this.onHidden();
     }
   }
 };

@@ -30,7 +30,7 @@
         :position="insertPosition"
         :layout="layout"
         :show="isElementDrawerVisible"
-        @hide="hideElementDrawer"
+        @hidden="onHiddenElementDrawer"
         @add="addElement"/>
     </div>
   </div>
@@ -76,7 +76,7 @@ export default {
       this.insertPosition = position;
       this.isElementDrawerVisible = true;
     },
-    hideElementDrawer() {
+    onHiddenElementDrawer() {
       this.isElementDrawerVisible = false;
       this.insertPosition = this.lastPosition;
     },
