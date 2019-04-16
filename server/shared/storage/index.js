@@ -68,8 +68,8 @@ class Storage {
     return this.provider.copyFile(key, newKey, options);
   }
 
-  getUploadConfig() {
-    return this.provider.getUploadConfig && this.provider.getUploadConfig();
+  getUploadConfig(options) {
+    return this.provider.getUploadConfig && this.provider.getUploadConfig(options);
   }
 
   static createProvider(options) {

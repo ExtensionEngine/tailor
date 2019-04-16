@@ -16,6 +16,8 @@
 </template>
 
 <script>
+const isProduction = process.env.NODE_ENV === 'production';
+
 export default {
   name: 'resource-upload',
   inject: ['$validator'],
@@ -50,17 +52,27 @@ export default {
       this.uploading = true;
       return Promise.resolve(this.getUploadConfig(file))
         .then(config => {
-          Object.assign(config, { params: this.params });
-          if (!config.isPublic) config.params.auth = this.auth;
+          config.fields = Object.assign({}, config.fields, this.params);
+          if (!config.isPublic) config.fields.auth = this.auth;
           return this.upload(file, config);
         })
         .finally(() => (this.uploading = false))
         .then(data => this.$emit('upload', data))
-        .catch(err => this.$emit('error', err));
+        .catch(err => {
+          this.$emit('error', err);
+          if (!isProduction) throw err;
+        });
     },
     getUploadConfig(file) {
       if (!this.direct) return preflight(this.action, { file, auth: this.auth });
-      return Promise.resolve({ url: this.action, isPublic: false });
+      return Promise.resolve({
+        url: this.action,
+        isPublic: false,
+        response: {
+          type: 'json',
+          keys: { key: 'key' }
+        }
+      });
     }
   },
   watch: {

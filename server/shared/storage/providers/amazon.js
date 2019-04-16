@@ -99,11 +99,39 @@ class Amazon {
     return this._getSignedUrl('getObject', params);
   }
 
+  getUploadConfig({ filename: key, filetype } = {}) {
+    const Fields = {
+      key,
+      // NOTE: This has to be string because all form fields are mandated to be
+      //       strings. (https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html#RESTObjectPOST-requests)
+      success_action_status: '201',
+      'Content-Type': filetype
+    };
+    const params = { Bucket: this.bucket, Key: key, Fields };
+    return this._getUploadConfig(params)
+      .then(config => Object.assign(config, {
+        isPublic: true,
+        response: {
+          type: 'document',
+          keys: { key: './PostResponse/Key' }
+        }
+      }));
+  }
+
   _getSignedUrl(operation, params) {
     return new Promise((resolve, reject) => {
       this.client.getSignedUrl(operation, params, (err, url) => {
         if (err) return reject(err);
         resolve(url);
+      });
+    });
+  }
+
+  _getUploadConfig(params) {
+    return new Promise((resolve, reject) => {
+      this.client.createPresignedPost(params, (err, data) => {
+        if (err) return reject(err);
+        resolve(data);
       });
     });
   }

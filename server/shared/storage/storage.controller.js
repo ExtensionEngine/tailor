@@ -7,13 +7,20 @@ const path = require('path');
 
 async function getUploadConfig(req, res) {
   const storage = req.app.get('storage');
-  const config = await storage.getUploadConfig();
+  const config = await storage.getUploadConfig(req.body);
   if (config) return res.json(config);
-  if (storage.uploadHandler) {
-    const url = path.join(req.baseUrl, req.path);
-    return res.json({ url, isPublic: false });
+  if (!storage.uploadHandler) {
+    return createError(INTERNAL_SERVER_ERROR, 'Unable to create upload config.');
   }
-  return createError(INTERNAL_SERVER_ERROR, 'Unable to create upload config.');
+  const url = path.join(req.baseUrl, req.path);
+  return res.json({
+    url,
+    isPublic: false,
+    response: {
+      type: 'json',
+      keys: { key: 'key' }
+    }
+  });
 }
 
 async function getPublicUrl({ app, query }, res) {
