@@ -129,6 +129,7 @@ $line-size: 20px;
 
 .comment {
   padding: 8px 0;
+  position: relative;
 
   .avatar {
     margin-top: 4px;
@@ -183,7 +184,7 @@ $line-size: 20px;
     .actions {
       z-index: 1000;
       position: absolute;
-      right: 18px;
+      right: 0;
       padding: 3px 0;
       font-size: 12px;
       list-style: none;
