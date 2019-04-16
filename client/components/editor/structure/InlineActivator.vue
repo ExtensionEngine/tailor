@@ -1,7 +1,9 @@
 <template>
   <div class="inline-activator">
     <hr>
-    <v-icon color="pink lighten-1" class="px-2">mdi-plus</v-icon>
+    <v-chip color="blue-grey lighten-1" dark small>
+      <v-icon>mdi-plus</v-icon>
+    </v-chip>
     <hr>
   </div>
 </template>
@@ -21,13 +23,12 @@
     flex: 1;
     display: inline-flex;
     height: 1px;
-    margin: 0 0 1px 0;
+    margin: 0;
     background-color: #90a4ae;
   }
 
-  .v-icon {
-    border: 1px solid #b0bec5;
-    border-radius: 4px;
+  .v-chip {
+    margin: 0;
   }
 
   &:hover {
