@@ -27,11 +27,11 @@
         v-if="enableAdd"
         :include="types"
         :activity="activity"
-        :position="nextPosition"
+        :position="insertPosition"
         :layout="layout"
         :show="isElementDrawerVisible"
         @hide="hideElementDrawer"
-        @add="el => $emit(additionType, el)"/>
+        @add="addElement"/>
     </div>
   </div>
 </template>
@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       dragElementIndex: -1,
-      nextPosition: 0,
+      insertPosition: 0,
       isElementDrawerVisible: false
     };
   },
@@ -69,30 +69,30 @@ export default {
     lastPosition() {
       const lastItem = last(this.list);
       return lastItem ? lastItem.position + 1 : 1;
-    },
-    additionType() {
-      const { list, nextPosition, lastPosition } = this;
-      return !list.length || nextPosition === lastPosition ? 'add' : 'insert';
     }
   },
   methods: {
     showElementDrawer(position) {
-      this.nextPosition = position;
+      this.insertPosition = position;
       this.isElementDrawerVisible = true;
     },
     hideElementDrawer() {
       this.isElementDrawerVisible = false;
-      this.nextPosition = this.lastPosition;
+      this.insertPosition = this.lastPosition;
     },
     getContainerClasses({ data: { width } }) {
       let classes = [`col-xs-${width || 12}`];
       if (this.enableAdd) classes.push('insertable');
       return classes;
+    },
+    addElement(element) {
+      const type = element.position === this.lastPosition ? 'add' : 'insert';
+      this.$emit(type, element);
     }
   },
   watch: {
     lastPosition: {
-      handler(val) { this.nextPosition = val; },
+      handler(val) { this.insertPosition = val; },
       immediate: true
     }
   },
