@@ -39,8 +39,8 @@
 </template>
 
 <script>
-import { getAcronym } from 'utils/course';
 import { mapActions, mapGetters } from 'vuex-module';
+import { getAcronym } from 'utils/course';
 
 export default {
   name: 'main-toolbar',
