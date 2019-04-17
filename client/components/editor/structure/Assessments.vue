@@ -22,7 +22,9 @@
     <add-element
       :include="['ASSESSMENT']"
       :activity="activity"
-      @add="addAssessment"/>
+      @add="addAssessment"
+      large
+      label="Add assessment"/>
   </div>
 </template>
 
