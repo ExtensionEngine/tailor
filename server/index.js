@@ -3,10 +3,10 @@
 const app = require('./app');
 const bluebird = require('bluebird');
 const boxen = require('boxen');
-const capitalize = require('to-case').capital;
 const pkg = require('../package.json');
 const { promisify } = require('util');
 const sequelize = require('sequelize');
+const { upperCaseFirst } = require('change-case');
 
 // NOTE: This needs to be done before db models get loaded!
 if (process.env.NODE_ENV !== 'production') {
@@ -30,7 +30,7 @@ database.initialize()
   .catch(err => logger.error({ err }));
 
 const message = (name, version) => `
-${capitalize(name)} v${version}
+${upperCaseFirst(name)} v${version}
 
 It's aliveeeee 🚀
 

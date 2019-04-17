@@ -1,6 +1,6 @@
 'use strict';
 
-const { constant } = require('to-case');
+const { pascalCase } = require('change-case');
 const forEach = require('lodash/forEach');
 const logger = require('../shared/logger');
 
@@ -27,7 +27,7 @@ function add(Revision, models, { HookTypes, addHook }) {
   function createRevision(hookType, instance, { context = {}, transaction }) {
     if (!context.userId) return;
     const courseId = isCourse(instance) ? instance.id : instance.courseId;
-    const entity = constant(instance.constructor.name);
+    const entity = pascalCase(instance.constructor.name);
     const operation = hooks[hookType];
     logger.info(`[Revision] ${entity}#${hookType}`, { entity, operation, id: instance.id, courseId });
     const revision = { courseId, entity, operation, state: instance.toJSON(), userId: context.userId };

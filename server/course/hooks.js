@@ -20,8 +20,8 @@ exports.add = (Course, models, { HookTypes, addHook }) => {
   forEach(hooks, type => addHook(Activity, type, updateObjectiveStats));
   forEach(hooks, type => addHook(TeachingElement, type, updateAssessmentStats));
 
-  function updateObjectiveStats(hookType, instances) {
-    const activity = first(castArray(instances));
+  function updateObjectiveStats(hookType, activities) {
+    const activity = first(castArray(activities));
     const { id, courseId, type } = activity;
     const schemaId = getSchemaId(type);
     if (!schemaId) return;
@@ -32,8 +32,8 @@ exports.add = (Course, models, { HookTypes, addHook }) => {
       .then(count => Course.updateStats(courseId, 'objectives', count));
   }
 
-  function updateAssessmentStats(hookType, instances) {
-    const assessment = find(castArray(instances), { type: 'ASSESSMENT' });
+  function updateAssessmentStats(hookType, teachingElements) {
+    const assessment = find(castArray(teachingElements), { type: 'ASSESSMENT' });
     const { id, courseId, type } = assessment;
     logger.info(`[Course] TeachingElement#${hookType}`, { type, id, courseId });
     const where = { courseId, type: 'ASSESSMENT', detached: false };
