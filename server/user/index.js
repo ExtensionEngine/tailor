@@ -10,6 +10,7 @@ router
   .post('/users/login', ctrl.login)
   .post('/users/forgotPassword', ctrl.forgotPassword)
   .post('/users/resetPassword', ctrl.resetPassword)
+  .post('/users/commentsCheckTime', ctrl.commentsCheckTime)
   // Protected routes:
   .get('/users', auth, ctrl.index);
 

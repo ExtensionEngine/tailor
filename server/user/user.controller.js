@@ -44,9 +44,22 @@ function login({ body }, res) {
     });
 }
 
+function commentsCheckTime({ body }, res) {
+  const { checkTime, userId } = body;
+  return User.findByPk(userId)
+    .then(user => user || createError(NOT_FOUND, 'User does not exist'))
+    .then(user => {
+      const oldTime = user.checkedCommentsAt;
+      user.checkedCommentsAt = checkTime;
+      user.save().catch(validationError);
+      return res.json({ checkedAt: oldTime });
+    });
+}
+
 module.exports = {
   index,
   forgotPassword,
   resetPassword,
-  login
+  login,
+  commentsCheckTime
 };
