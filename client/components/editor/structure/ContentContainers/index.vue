@@ -32,6 +32,7 @@ import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import { mapActions } from 'vuex-module';
 import maxBy from 'lodash/maxBy';
 
@@ -74,6 +75,9 @@ export default {
         action: () => this.remove(container)
       });
     }
+  },
+  created() {
+    if (isEmpty(this.containerGroup)) this.addContainer();
   },
   filters: {
     capitalize(val) {
