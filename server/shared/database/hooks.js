@@ -3,12 +3,9 @@
 const { hooks } = require('sequelize/lib/hooks');
 const mapValues = require('lodash/mapValues');
 
-const HookTypes = mapValues(hooks, (_, key) => key);
+const HookTypes = exports.HookTypes = mapValues(hooks, (_, key) => key);
 
 const isFunction = arg => typeof arg === 'function';
-const noop = () => {};
-
-exports.HookTypes = HookTypes;
 
 exports.addHook = (Model, hookType, name, hook) => {
   checkType(hookType);
@@ -16,16 +13,11 @@ exports.addHook = (Model, hookType, name, hook) => {
     hook = name;
     name = null;
   }
-  Model.addHook(hookType, name, wrappedHook);
+  const wrappedHook = wrapHook(hook);
+  const args = [wrappedHook];
+  if (name) args.unshift(name);
+  Model.addHook(hookType, ...args);
   return wrappedHook;
-
-  function wrappedHook(...args) {
-    return hook.call(this, hookType, ...args);
-  }
-};
-
-exports.addHooks = (Model, hookTypes = [], hook = noop) => {
-  return hookTypes.map(it => exports.addHook(Model, it, hook));
 };
 
 exports.removeHook = (Model, hookType, name) => {
@@ -37,6 +29,12 @@ exports.hasHook = (Model, hookType) => {
   checkType(hookType);
   return Model.hasHook(hookType, name);
 };
+
+function wrapHook(hookType, hook) {
+  return function (...args) {
+    return hook.call(this, hookType, ...args);
+  };
+}
 
 function checkType(hookType) {
   if (!(hookType in HookTypes)) {
