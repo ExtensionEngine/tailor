@@ -3,10 +3,10 @@
 const { Activity, TeachingElement, Sequelize } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
+const { Op } = require('sequelize');
 const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
 
-const { Op } = Sequelize;
 
 function list({ course, query, opts }, res) {
   if (query.activityId || query.parentId) {
