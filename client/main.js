@@ -34,6 +34,7 @@ Vue.use(AssetComponents, {
   },
   upload: {
     upload: asset.upload,
+    basename: asset.basename,
     direct: false,
     defaultTag: 'v-btn'
   }

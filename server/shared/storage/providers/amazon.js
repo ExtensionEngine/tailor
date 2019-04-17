@@ -99,13 +99,13 @@ class Amazon {
     return this._getSignedUrl('getObject', params);
   }
 
-  getUploadConfig({ filename: key, filetype } = {}) {
+  getUploadConfig({ key, mimetype } = {}) {
     const Fields = {
       key,
       // NOTE: This has to be string because all form fields are mandated to be
       //       strings. (https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPOST.html#RESTObjectPOST-requests)
       success_action_status: '201',
-      'Content-Type': filetype
+      'Content-Type': mimetype
     };
     const params = { Bucket: this.bucket, Key: key, Fields };
     return this._getUploadConfig(params)

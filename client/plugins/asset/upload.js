@@ -1,14 +1,15 @@
 import pick from 'lodash/pick';
 
 export const install = (Vue, options = {}) => {
-  const { apiUrl, upload, direct, defaultTag } = options;
+  const { apiUrl, upload, basename, direct, defaultTag } = options;
   const ResourceUpload = Vue.component('resource-upload');
   Vue.component('asset-upload', {
     render(createElement, { props, data, children }) {
       data.props = {
         ...pick(props, ['direct', 'accept', 'tag']),
         action: apiUrl,
-        upload
+        upload,
+        basename
       };
       return createElement(ResourceUpload, data, children);
     },

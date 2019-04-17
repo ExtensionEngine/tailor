@@ -4,6 +4,7 @@ const untildify = require('untildify');
 const normalize = path => path ? untildify(path) : path;
 
 module.exports = {
+  assetRoot: 'repository/assets',
   amazon: {
     key: process.env.STORAGE_KEY,
     secret: process.env.STORAGE_SECRET,

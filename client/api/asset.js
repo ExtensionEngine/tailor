@@ -1,4 +1,5 @@
 import axios from 'axios';
+import crypto from 'crypto';
 import forEach from 'lodash/forEach';
 import get from 'lodash/get';
 import mapValues from 'lodash/mapValues';
@@ -19,6 +20,11 @@ const reader = {
   json: get,
   default: get
 };
+
+function findText(xmldoc, xpath) {
+  const node = xmldoc.evaluate(xpath, xmldoc).iterateNext();
+  return node && node.textContent;
+}
 
 export async function getPublicUrl(url) {
   url = normalizeUrl(url, { defaultProtocol: protocol });
@@ -43,7 +49,25 @@ export async function upload(file, { url, fields = {}, response = {} }) {
   });
 }
 
-function findText(xmldoc, xpath) {
-  const node = xmldoc.evaluate(xpath, xmldoc).iterateNext();
-  return node && node.textContent;
+export async function basename(file, { maxLength = 180 } = {}) {
+  const filename = file.name;
+  const contents = await toBuffer(file);
+  const hash = sha256(filename, contents);
+  const extension = path.extname(filename);
+  const name = path.basename(filename, extension).substring(0, maxLength).trim();
+  return `${hash}___${name}${extension}`;
+}
+
+function toBuffer(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = event => resolve(event.target.result);
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function sha256(...args) {
+  const hash = crypto.createHash('sha256');
+  args.forEach(arg => hash.update(arg));
+  return hash.digest('hex');
 }

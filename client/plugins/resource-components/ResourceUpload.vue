@@ -29,6 +29,7 @@ export default {
   props: {
     action: { type: String, required: true },
     upload: { type: Function, required: true },
+    basename: { type: Function, default: file => file.name },
     direct: { type: Boolean, default: false },
     accept: { type: [String, Array], default: null },
     tag: { type: String, default: () => 'label' },
@@ -63,16 +64,20 @@ export default {
           if (!isProduction) throw err;
         });
     },
-    getUploadConfig(file) {
-      if (!this.direct) return preflight(this.action, { file, auth: this.auth });
-      return Promise.resolve({
+    async getUploadConfig(file) {
+      const filename = await this.basename(file);
+      if (!this.direct) {
+        return preflight(this.action, { file, filename, auth: this.auth });
+      }
+      return {
         url: this.action,
         isPublic: false,
+        fields: { key: filename },
         response: {
           type: 'json',
           keys: { key: 'key' }
         }
-      });
+      };
     }
   },
   watch: {
@@ -82,12 +87,13 @@ export default {
   }
 };
 
-async function preflight(url, { file, auth }) {
+async function preflight(url, { file, filename, auth }) {
   const form = new FormData();
   form.append('auth', auth);
-  form.append('filename', file.name);
-  form.append('filesize', file.size);
-  form.append('filetype', file.type);
+  form.append('filename', filename);
+  form.append('originalname', file.name);
+  form.append('size', file.size);
+  form.append('mimetype', file.type);
   const resp = await fetch(url, { method: 'OPTIONS', body: form });
   if (!resp.ok) throw new Error(`Fetch error: ${resp.statusText}`);
   return resp.json();

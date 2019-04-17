@@ -69,7 +69,8 @@ class Storage {
   }
 
   getUploadConfig(options) {
-    return this.provider.getUploadConfig && this.provider.getUploadConfig(options);
+    options.key = path.join(this.config.assetRoot, options.filename);
+    return this.provider.getUploadConfig(options);
   }
 
   static createProvider(options) {
@@ -80,7 +81,8 @@ class Storage {
     }
 
     // Load provider module & create provider instance.
-    const config = options[providerName];
+    const { assetRoot } = options;
+    const config = Object.assign(options[providerName], { assetRoot });
     const Provider = loadProvider(providerName);
     const provider = Provider.create(validateConfig(config, Provider.schema));
     return Object.assign(provider, {

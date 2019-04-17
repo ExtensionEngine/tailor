@@ -2,7 +2,6 @@
 
 const Promise = require('bluebird');
 const contentDisposition = require('content-disposition');
-const crypto = require('crypto');
 const exists = require('path-exists');
 const fs = Promise.promisifyAll(require('fs'));
 const Joi = require('joi');
@@ -83,6 +82,17 @@ class FilesystemStorage {
     return Promise.resolve(`${this.publicPath}?${searchParams}`);
   }
 
+  getUploadConfig({ key } = {}) {
+    return {
+      isPublic: false,
+      fields: { key },
+      response: {
+        type: 'json',
+        keys: { key: 'key' }
+      }
+    };
+  }
+
   get serveHandler() {
     if (!this._serveHandler) this._serveHandler = createServeHandler(this);
     return this._serveHandler;
@@ -118,30 +128,15 @@ function createServeHandler(storage) {
 }
 
 function createUploadHandler(storage) {
-  return async ({ file }, res) => {
+  return async ({ file, body }, res) => {
+    const { key } = body;
     const buffer = await toBuffer(file);
-    const filename = basename({ filename: file.originalname, buffer });
-    const key = path.join(storage.publicPath, filename);
     await storage.saveFile(key, buffer, { ContentType: file.mimetype });
-    const publicUrl = await storage.getFileUrl(key);
-    return res.json({ filename: file.originalname, key, publicUrl });
+    return res.json({ key });
   };
-}
-
-function basename({ filename, buffer, maxLength = 180 }) {
-  const hash = sha256(filename, buffer);
-  const extension = path.extname(filename);
-  const name = path.basename(filename, extension).substring(0, maxLength).trim();
-  return `${hash}___${name}${extension}`;
 }
 
 function toBuffer(file) {
   if (file.buffer) return Promise.resolve(file.buffer);
   return fs.readFile(file.path);
-}
-
-function sha256(...args) {
-  const hash = crypto.createHash('sha256');
-  args.forEach(arg => hash.update(arg));
-  return hash.digest('hex');
 }
