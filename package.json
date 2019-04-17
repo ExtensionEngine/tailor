@@ -103,7 +103,7 @@
     "safe-require": "^1.0.3",
     "sass-web-fonts": "^2.0.2",
     "save-as": "^0.1.8",
-    "sequelize": "^4.22.0",
+    "sequelize": "^5.6.1",
     "snyk": "^1.134.2",
     "string-template": "^1.0.0",
     "to-case": "^2.0.0",

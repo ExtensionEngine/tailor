@@ -18,8 +18,8 @@ function add(Comment) {
     broadcast(events.UPDATE, instance);
   });
 
-  addHooks(Comment, ['afterDelete'], (hook, instance) => {
-    Comment.findById(instance.id, { paranoid: false }).then(deleted => {
+  addHooks(Comment, ['afterDestroy'], (hook, instance) => {
+    Comment.findByPk(instance.id, { paranoid: false }).then(deleted => {
       broadcast(events.DELETE, deleted);
     });
   });

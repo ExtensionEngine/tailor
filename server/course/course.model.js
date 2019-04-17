@@ -81,7 +81,7 @@ class Course extends Model {
   }
 
   static updateStats(id, key, value) {
-    return this.findById(id).then(course => {
+    return this.findByPk(id).then(course => {
       if (!course) return;
       const stats = course.stats || {};
       stats[key] = value;

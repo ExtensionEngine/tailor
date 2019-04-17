@@ -1,7 +1,7 @@
 'use strict';
 
 const { getSiblingLevels } = require('../../config/shared/activities');
-const { Model } = require('sequelize');
+const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
@@ -76,7 +76,7 @@ class Activity extends Model {
     });
   }
 
-  static scopes({ Op }) {
+  static scopes() {
     const notNull = { [Op.ne]: null };
     return {
       withReferences(relationships = []) {
