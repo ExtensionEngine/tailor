@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <navbar/>
+    <navbar v-if="user" :user="user"/>
     <v-content>
       <router-view class="view"/>
     </v-content>
@@ -12,11 +12,13 @@
 import ConfirmationModal from 'components/common/ConfirmationModal';
 import isIexplorer from 'is-iexplorer';
 import Navbar from 'components/common/Navbar';
+import { mapGetters } from 'vuex-module';
 
 if (isIexplorer) document.body.classList.add('ie');
 
 export default {
   name: 'app',
+  computed: mapGetters(['user']),
   components: {
     ConfirmationModal,
     Navbar

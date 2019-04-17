@@ -2,13 +2,15 @@
   <div class="editor-wrapper">
     <toolbar :element="focusedElement">
       <span slot="actions">
-        <span
+        <v-btn
           v-if="metadata.length"
           @click="showSidebar = !showSidebar"
-          class="btn btn-fab btn-primary"
+          color="blue-grey"
+          fab
+          dark
           title="Toggle teaching element sidebar">
-          <span class="mdi mdi-backburger"></span>
-        </span>
+          <v-icon>mdi-backburger</v-icon>
+        </v-btn>
       </span>
     </toolbar>
     <transition name="slide">
@@ -161,42 +163,12 @@ export default {
   overflow-y: scroll;
   overflow-y: overlay;
 
-  .breadcrumbs {
-    margin: 70px 0 10px;
-    color: #555;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    line-height: 20px;
-    text-align: left;
-  }
-
-  h2 {
-    margin: 20px 0 30px;
-    color: #444;
-    font-size: 20px;
-    line-height: 30px;
-    text-align: left;
-
-    a {
-      margin-left: 15px;
-    }
+  .container {
+    max-width: 1100px;
   }
 
   .circular-progress {
     margin-top: 150px;
   }
-
-  .divider {
-    padding: 0 10px;
-    color: #999;
-  }
-}
-
-.slide-enter-active, .slide-leave-active {
-  transition: margin-right 0.5s;
-}
-
-.slide-enter, .slide-leave-to {
-  margin-right: -380px;
 }
 </style>

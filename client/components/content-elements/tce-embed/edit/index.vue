@@ -78,7 +78,7 @@ export default {
   align-items: center;
   justify-content: center;
   position: absolute;
-  z-index: 99;
+  z-index: 3;
   width: 100%;
   height: 100%;
   background-color: #333;

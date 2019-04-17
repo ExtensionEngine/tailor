@@ -12,8 +12,7 @@
         slot-scope="{ item, dragged, setWidth }"
         :setWidth="setWidth"
         :dragged="dragged"
-        :element="item">
-      </teaching-element>
+        :element="item"/>
     </tes-list>
   </div>
 </template>

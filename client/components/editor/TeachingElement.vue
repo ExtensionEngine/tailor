@@ -1,9 +1,9 @@
 <template>
   <contained-content
+    v-bind="$attrs"
     :element="element"
     :isDragged="dragged"
     :isDisabled="disabled"
-    :setWidth="setWidth"
     @add="addElement"
     @save="save"
     @delete="removeElement(element)"/>
@@ -16,11 +16,11 @@ import { ContainedContent } from 'tce-core';
 
 export default {
   name: 'teaching-element',
+  inheritAttrs: false,
   props: {
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
-    dragged: { type: Boolean, default: false },
-    setWidth: { type: Boolean, default: true }
+    dragged: { type: Boolean, default: false }
   },
   methods: {
     ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
