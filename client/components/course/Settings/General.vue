@@ -49,13 +49,13 @@ export default {
         value: this.course.name,
         type: 'TEXTAREA',
         label: 'Name',
-        validate: { rules: { required: true, min: 2, max: 250 } }
+        validate: { required: true, min: 2, max: 250 }
       }, {
         key: 'description',
         value: this.course.description,
         type: 'TEXTAREA',
         label: 'Description',
-        validate: { rules: { required: true, min: 2, max: 2000 } }
+        validate: { required: true, min: 2, max: 2000 }
       }];
     },
     metadata() {
