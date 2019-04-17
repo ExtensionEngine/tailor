@@ -16,18 +16,21 @@ exports.addHook = (Model, hookType, name, hook) => {
     hook = name;
     name = null;
   }
-  Model.addHook(hookType, name, function (...args) {
+  Model.addHook(hookType, name, wrappedHook);
+  return wrappedHook;
+
+  function wrappedHook(...args) {
     return hook.call(this, hookType, ...args);
-  });
+  }
 };
 
 exports.addHooks = (Model, hookTypes = [], hook = noop) => {
-  hookTypes.forEach(it => exports.addHook(Model, it, hook));
+  return hookTypes.map(it => exports.addHook(Model, it, hook));
 };
 
 exports.removeHook = (Model, hookType, name) => {
   checkType(hookType);
-  return Model.removeHook(hookType, name);
+  Model.removeHook(hookType, name);
 };
 
 exports.hasHook = (Model, hookType) => {
