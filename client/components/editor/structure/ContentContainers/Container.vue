@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-5">
     <div class="actions">
       <v-btn
         @click="deleteContainer"

@@ -177,6 +177,7 @@ export default {
     .question {
       display: inline-block;
       max-width: 80%;
+      min-height: 30px;
       color: #444;
       font-size: 16px;
       font-weight: 400;

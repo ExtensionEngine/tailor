@@ -22,7 +22,7 @@
           name="list-item"/>
       </div>
     </draggable>
-    <div class="add-element-container">
+    <div class="add-element-container mt-5">
       <add-element
         v-if="enableAdd"
         :include="types"
@@ -31,7 +31,9 @@
         :layout="layout"
         :show="isElementDrawerVisible"
         @hidden="onHiddenElementDrawer"
-        @add="addElement"/>
+        @add="addElement"
+        large
+        icon="mdi-pencil-plus"/>
     </div>
   </div>
 </template>

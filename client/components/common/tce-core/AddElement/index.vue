@@ -1,7 +1,20 @@
 <template>
   <div class="add-element-container">
-    <v-btn @click.stop="isVisible = true" icon flat color="blue-grey darken-2">
-      <v-icon>mdi-plus</v-icon>
+    <v-btn
+      v-if="large"
+      @click.stop="isVisible = true"
+      outline
+      color="blue-grey darken-2"
+      class="mt-3 mb-4">
+      <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
+    </v-btn>
+    <v-btn
+      v-else
+      @click.stop="isVisible = true"
+      icon
+      flat
+      color="blue-grey darken-2">
+      <v-icon>{{ icon }}</v-icon>
     </v-btn>
     <v-bottom-sheet v-model="isVisible" max-width="1240" inset lazy>
       <div class="element-container">
@@ -66,11 +79,14 @@ export default {
   name: 'add-element',
   inject: ['$teRegistry'],
   props: {
+    show: { type: Boolean, default: false },
     activity: { type: Object, default: null },
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
     include: { type: Array, default: null },
-    show: { type: Boolean, default: false }
+    large: { type: Boolean, default: false },
+    label: { type: String, default: 'Add content' },
+    icon: { type: String, default: 'mdi-plus' }
   },
   data() {
     return {
@@ -93,12 +109,14 @@ export default {
     assessments() {
       const { registry, isSubset, include, questions } = this;
       if (isSubset && !include.includes('ASSESSMENT')) return [];
-      return filter(registry, { type: 'ASSESSMENT' }).concat(questions);
+      return filter(registry, { type: 'ASSESSMENT' })
+        .concat(questions.map(it => ({ ...it, type: 'ASSESSMENT' })));
     },
     reflections() {
       const { registry, isSubset, include, questions } = this;
       if (isSubset && !include.includes('REFLECTION')) return [];
-      return filter(registry, { type: 'REFLECTION' }).concat(questions);
+      return filter(registry, { type: 'REFLECTION' })
+        .concat(questions.map(it => ({ ...it, type: 'REFLECTION' })));
     },
     isSubset() {
       return !!this.include && !!this.include.length;
