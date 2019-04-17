@@ -76,8 +76,8 @@ class Course extends Model {
     };
   }
 
-  static addHooks(models) {
-    hooks.add(this, models);
+  static hooks(models, Hooks) {
+    hooks.add(this, models, Hooks);
   }
 
   static updateStats(id, key, value) {
