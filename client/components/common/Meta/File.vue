@@ -49,8 +49,8 @@ export default {
   methods: {
     onFileDelete() {
       appChannel.emit('showConfirmationModal', {
-        type: 'file',
-        item: { name: this.filename },
+        title: 'Delete asset?',
+        message: `Are you sure you want to delete ${this.filename}?`,
         action: () => this.deleteFile()
       });
     },
