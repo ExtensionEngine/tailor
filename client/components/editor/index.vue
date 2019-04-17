@@ -45,6 +45,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
+import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
@@ -52,6 +53,7 @@ import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
 import Promise from 'bluebird';
 import Sidebar from './sidebar';
+import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
 
@@ -110,7 +112,21 @@ export default {
     }
   },
   created() {
-    EventBus.on('element:focus', (element, composite) => {
+    this.$store.subscribe(debounce((mutation, state) => {
+      const { type, payload: element } = mutation;
+      const { focusedElement } = this;
+      if (!focusedElement) return;
+      if ((type !== 'tes/save') && (type !== 'tes/add')) return;
+      if (element._cid === focusedElement._cid) {
+        this.focusedElement = { ...focusedElement, ...element };
+        return;
+      }
+      const embed = element.data.embeds[focusedElement.id];
+      if (!embed) return;
+      const hasParent = !!focusedElement.parent;
+      this.focusedElement = { ...embed, parent: hasParent ? element : null };
+    }, 100));
+    EventBus.on('element:focus', throttle((element, composite) => {
       if (!element) {
         this.focusedElement = null;
         this.showSidebar = false;
@@ -119,7 +135,7 @@ export default {
       if (getElementId(this.focusedElement) === getElementId(element)) return;
       this.focusedElement = { ...element, parent: composite };
       this.showSidebar = this.metadata.length && this.showSidebar;
-    });
+    }, 50));
     // TODO: Do this better!
     const courseId = this.$route.params.courseId;
     const activityId = this.$route.params.activityId;
