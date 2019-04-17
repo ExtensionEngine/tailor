@@ -6,24 +6,44 @@
           <croppa
             v-model="croppa"
             :accept="'image/*'"
+            :width="230"
+            :height="230"
             :show-remove-button="false"
-            @file-choose="saveCroppedImage"
-            auto-sizing
-            show-loading
-            prevent-white-space>
+            :disabled="disabled"
+            :initial-image="currentImage"
+            @file-choose="uploadCroppedImage"
+            prevent-white-space
+            show-loading>
           </croppa>
+          <v-divider></v-divider>
           <v-card-actions class="img-actions">
-            <v-btn :color="primaryColor" @click="doneEditing" flat large>
+            <div class="zoom-actions">
+              <v-btn @click="handleZoom('zoomIn')" flat small fab>
+                <span class="mdi mdi-plus"></span>
+              </v-btn>
+              <v-btn @click="handleZoom('zoomOut')" flat small fab>
+                <span class="mdi mdi-minus"></span>
+              </v-btn>
+            </div>
+            <v-btn @click="doneEditing" color="light-blue darken-3" flat small>
               <span class="mdi mdi-image"></span>
               Done editing
             </v-btn>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-btn :color="dangerColor" @click="removeImage" v-on="on" flat large>
+                <v-btn @click="removeImage" v-on="on" color="red darken-2" flat small>
                   <span class="mdi mdi-delete"></span>
                 </v-btn>
               </template>
               <span>Delete image</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn @click="editImage" v-on="on" color="cyan darken-1" flat small>
+                  <span class="mdi mdi-pencil"></span>
+                </v-btn>
+              </template>
+              <span>Edit image</span>
             </v-tooltip>
           </v-card-actions>
         </v-card>
@@ -38,24 +58,30 @@
             class="meta-input">
           </meta-input>
           <v-card-actions class="form-actions">
-            <v-btn @click="routeTo('catalog')" flat large>Cancel</v-btn>
+            <v-btn @click="routeTo('catalog')" color="light-blue darken-3" flat large>
+              Cancel
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
-    <v-snackbar v-model="snackbar" :timeout="timeout" :color="dangerColor" left>
+    <v-snackbar v-model="error" :timeout="timeout" color="red darken-2" left>
       There is no any file. Please choose an image.
-      <v-btn @click="snackbar=false" dark flat>Close</v-btn>
+      <v-btn @click="error=false" dark flat>Close</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="success" :timeout="timeout" color="green darken-1" left>
+      Changes saved.
+      <v-btn @click="success=false" dark flat>Close</v-btn>
     </v-snackbar>
   </v-container>
 </template>
 
 <script>
-import Meta from 'components/common/Meta';
-import cloneDeep from 'lodash/cloneDeep';
-import set from 'lodash/set';
 import assetsApi from '../../../api/asset.js';
+import cloneDeep from 'lodash/cloneDeep';
 import { mapActions, mapGetters } from 'vuex-module';
+import Meta from 'components/common/Meta';
+import set from 'lodash/set';
 
 const validate = { required: true, min: 2, max: 250 };
 
@@ -63,10 +89,11 @@ export default {
   name: 'user-settings',
   data() {
     return {
-      snackbar: false,
+      disabled: false,
+      currentImage: null,
+      success: false,
+      error: false,
       timeout: 2500,
-      dangerColor: '#d9534f',
-      primaryColor: '#337ab7',
       croppa: {}
     };
   },
@@ -105,30 +132,59 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['updateInfo']),
+    ...mapActions(['updateInfo', 'saveImageUrl', 'deleteImageUrl']),
     updateKey(key, value) {
       const data = cloneDeep(this.user);
       this.updateInfo(set(data, key, value));
     },
-    saveCroppedImage(file) {
-      const fd = new FormData();
-      fd.append('file', file, file.name);
-      assetsApi.upload(fd)
-      .then(res => {
-        console.log(res);
-      });
+    uploadCroppedImage(file) {
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      assetsApi.upload(formData)
+        .then(res => (this.currentImage = res.key));
+    },
+    editImage() {
+      if (!this.croppa.hasImage()) return;
+      this.disabled = false;
+    },
+    handleZoom(zoom) {
+      if (this.disabled) return;
+      if (zoom === 'zoomIn') this.croppa.zoomIn();
+      else this.croppa.zoomOut();
     },
     doneEditing() {
-      if (!this.croppa.hasImage()) this.snackbar = true;
-      else this.croppa.$props.disabled = true;
+      if (!this.croppa.hasImage()) {
+        this.error = true;
+        return;
+      }
+      if (this.disabled) return;
+      this.croppa.generateBlob(editedImage => {
+        const formData = new FormData();
+        formData.append('file', editedImage);
+        assetsApi.upload(formData)
+          .then(res => res.key)
+          .then(key => this.saveImageUrl({ UserId: this.user.id, key }))
+          .then(() => (this.currentImage = this.user.imgUrl));
+        this.success = true;
+        this.disabled = true;
+      });
     },
     removeImage() {
-      this.croppa.remove();
-      this.croppa.$props.disabled = false;
+      this.deleteImageUrl({ UserId: this.user.id })
+        .then(() => this.croppa.remove());
+      this.disabled = false;
     },
     routeTo(name) {
       this.$router.push({ name });
     }
+  },
+  created() {
+    if (!this.user.imgUrl) {
+      this.disabled = false;
+      return;
+    }
+    this.currentImage = this.user.imgUrl;
+    this.disabled = true;
   },
   components: { MetaInput: Meta }
 };
@@ -142,11 +198,32 @@ export default {
 
 .croppa-container {
   display: inline-block;
-  width: 100%;
+  width: 230px;
+  height: 230px;
   margin: auto;
+  margin-top: 5%;
   padding: 0;
   background-color: #f5f5f5;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  border: 1px solid #e3e3e3;
+}
+
+.croppa-container:hover {
+  cursor: pointer;
+}
+
+.zoom-actions {
+  display: inline-block;
+
+  .v-btn {
+    padding-left: 3%;
+    color: #000;
+  }
+}
+
+.img-actions {
+  display: inline-block;
+  width: 100%;
+  padding: 20px;
 }
 
 .card-general {
@@ -166,15 +243,8 @@ export default {
     .v-btn {
       margin-left: auto;
       padding: 8px 12px;
-      color: #337ab7;
     }
   }
-}
-
-.img-actions {
-  display: inline-block;
-  width: 100%;
-  padding: 20px;
 }
 
 .card-img {
@@ -184,7 +254,7 @@ export default {
 }
 
 .flex-img {
-  max-width: 80% !important;
+  max-width: 100% !important;
   margin-left: 40px;
 }
 

@@ -45,9 +45,9 @@ function login({ body }, res) {
 }
 
 function updateProfile({ body: { user } }, res, next) {
-  const { id, email, firstName, lastName, imgUrl } = user;
+  const { id, email, firstName, lastName } = user;
   return User.findByPk(id)
-    .then(user => user.update({ email, firstName, lastName, imgUrl })
+    .then(user => user.update({ email, firstName, lastName })
     .then(updatedUser => res.json({ user: updatedUser.profile }))
     .catch(err => next(err)));
 }
@@ -61,8 +61,18 @@ function changePassword({ body: { password }, params: { id } }, res) {
     .then(() => res.sendStatus(200));
 }
 
-function getProfile({ body: { user } }, res) {
-  return res.sendStatus(200);
+function saveImageKey({ body: { key }, params: { id } }, res, next) {
+  return User.findByPk(id)
+    .then(user => user.update({ imgUrl: key }))
+    .then(updatedUser => res.json({ user: updatedUser.profile }))
+    .catch(err => next(err));
+}
+
+function deleteImageKey({ params: { id } }, res, next) {
+  return User.findByPk(id)
+    .then(user => user.update({ imgUrl: '' }))
+    .then(updatedUser => res.json({ user: updatedUser.profile }))
+    .catch(err => next(err));
 }
 
 module.exports = {
@@ -71,6 +81,7 @@ module.exports = {
   resetPassword,
   login,
   updateProfile,
-  getProfile,
-  changePassword
+  changePassword,
+  saveImageKey,
+  deleteImageKey
 };

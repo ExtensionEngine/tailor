@@ -62,6 +62,16 @@ action(function changePassword({ UserId, password }) {
   return authApi.changePassword(UserId, password);
 });
 
+action(function saveImageUrl({ UserId, key }) {
+  return authApi.saveImageUrl(UserId, key)
+    .then(({ data: { user } }) => this.commit('setUser', user));
+});
+
+action(function deleteImageUrl({ UserId }) {
+  return authApi.deleteImageUrl(UserId)
+    .then(({ data: { user } }) => this.commit('setUser', user));
+});
+
 action(function updateInfo(user) {
   return authApi.updateUserInfo(user)
     .then(({ data: { user } }) => this.commit('setUser', user));

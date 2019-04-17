@@ -5,6 +5,8 @@ const url = {
   forgotPassword: '/users/forgotPassword',
   resetPassword: '/users/resetPassword',
   updateProfile: '/users/me',
+  saveImageUrl: id => `/users/me/${id}/saveImageKey`,
+  deleteImageUrl: id => `/users/me/${id}/deleteImageKey`,
   changePassword: id => `/users/me/${id}/changePassword`
 };
 
@@ -36,6 +38,14 @@ function changePassword(id, password) {
   return request.post(url.changePassword(id), { password });
 }
 
+function saveImageUrl(id, key) {
+  return request.post(url.saveImageUrl(id), { key });
+}
+
+function deleteImageUrl(id) {
+  return request.post(url.deleteImageUrl(id));
+}
+
 function updateUserInfo(user) {
   return request.patch(url.updateProfile, { user });
 }
@@ -46,5 +56,7 @@ export default {
   forgotPassword,
   resetPassword,
   updateUserInfo,
-  changePassword
+  changePassword,
+  saveImageUrl,
+  deleteImageUrl
 };
