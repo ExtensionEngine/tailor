@@ -1,12 +1,11 @@
 'use strict';
 
-const { Activity, TeachingElement, Sequelize } = require('../shared/database');
+const { Activity, TeachingElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
+const { EmptyResultError, Op } = require('sequelize');
 const { NOT_FOUND } = require('http-status-codes');
 const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
-
-const { Op } = Sequelize;
 
 function list({ course, query, opts }, res) {
   if (query.activityId || query.parentId) {
@@ -27,7 +26,7 @@ function list({ course, query, opts }, res) {
 function show({ params }, res) {
   const teId = parseInt(params.teId, 10);
   return TeachingElement.fetch(teId)
-    .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
+    .catch(EmptyResultError, () => createError(NOT_FOUND, 'TEL not found'))
     .then(asset => res.json({ data: asset }));
 }
 
@@ -44,7 +43,7 @@ function patch({ body, params, user }, res) {
   const data = pick(body, attrs);
   const paranoid = body.paranoid !== false;
   return TeachingElement.findByPk(params.teId, { paranoid })
-    .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
+    .catch(EmptyResultError, () => createError(NOT_FOUND, 'TEL not found'))
     .then(asset => asset.update(data, { context: { userId: user.id } }))
     .then(asset => resolveStatics(asset))
     .then(asset => res.json({ data: asset }));
@@ -52,7 +51,7 @@ function patch({ body, params, user }, res) {
 
 function remove({ params, user }, res) {
   return TeachingElement.findByPk(params.teId)
-    .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
+    .catch(EmptyResultError, () => createError(NOT_FOUND, 'TEL not found'))
     .then(asset => asset.destroy({ context: { userId: user.id } }))
     .then(() => res.end());
 }

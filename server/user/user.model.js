@@ -93,7 +93,8 @@ class User extends Model {
       underscored: true,
       timestamps: true,
       paranoid: true,
-      freezeTableName: true
+      freezeTableName: true,
+      rejectOnEmpty: true
     };
   }
 

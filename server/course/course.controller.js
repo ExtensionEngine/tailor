@@ -5,7 +5,7 @@ const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
-const { Op } = require('sequelize');
+const { EmptyResultError, Op } = require('sequelize');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -75,7 +75,7 @@ function removeUser(req, res) {
   const { course } = req;
   const { userId } = req.params;
   return User.findByPk(userId)
-    .then(user => user || createError(NOT_FOUND, 'User not found'))
+    .catch(EmptyResultError, () => createError(NOT_FOUND, 'User not found'))
     .then(user => course.removeUser(user))
     .then(() => res.end());
 }

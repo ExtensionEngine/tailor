@@ -114,7 +114,8 @@ class TeachingElement extends Model {
       tableName: 'teaching_element',
       underscored: true,
       timestamps: true,
-      paranoid: true
+      paranoid: true,
+      rejectOnEmpty: true
     };
   }
 

@@ -2,11 +2,13 @@
 
 const { authorize } = require('../shared/auth/mw');
 const { Course } = require('../shared/database');
+const { EmptyResultError } = require('sequelize');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const ctrl = require('./course.controller');
 const processQuery = require('../shared/util/processListQuery')();
 const router = require('express-promise-router')();
+
 
 router
   .use('/courses/:id*', getCourse)
@@ -36,7 +38,7 @@ function hasAccess(req, res) {
   const { user, course } = req;
   if (user.isAdmin()) return Promise.resolve('next');
   return course.getUser(user)
-    .then(user => user || createError(UNAUTHORIZED, 'Access restricted'))
+    .catch(EmptyResultError, () => createError(UNAUTHORIZED, 'Access restricted'))
     .then(user => {
       req.courseRole = user.courseUser.role;
       return Promise.resolve('next');

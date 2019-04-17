@@ -2,7 +2,7 @@
 
 const { createError, validationError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
-const { User } = require('../shared/database');
+const { User, EmptyResultError } = require('../shared/database');
 
 function index(req, res) {
   const attributes = ['id', 'email', 'role'];
@@ -13,7 +13,7 @@ function index(req, res) {
 function forgotPassword({ body }, res) {
   const { email } = body;
   return User.findOne({ where: { email } })
-    .then(user => user || createError(NOT_FOUND, 'User not found'))
+    .catch(EmptyResultError, () => createError(NOT_FOUND, 'User not found'))
     .then(user => user.sendResetToken())
     .then(() => res.end());
 }
@@ -21,7 +21,7 @@ function forgotPassword({ body }, res) {
 function resetPassword({ body, params }, res) {
   const { password, token } = body;
   return User.findOne({ where: { token } })
-    .then(user => user || createError(NOT_FOUND, 'Invalid token'))
+    .catch(EmptyResultError, () => createError(NOT_FOUND, 'Invalid token'))
     .then(user => {
       user.password = password;
       return user.save().catch(validationError);
@@ -35,7 +35,7 @@ function login({ body }, res) {
     createError(400, 'Please enter email and password');
   }
   return User.findOne({ where: { email } })
-    .then(user => user || createError(NOT_FOUND, 'User does not exist'))
+    .catch(EmptyResultError, () => createError(NOT_FOUND, 'User does not exist'))
     .then(user => user.authenticate(password))
     .then(user => user || createError(NOT_FOUND, 'Wrong password'))
     .then(user => {
