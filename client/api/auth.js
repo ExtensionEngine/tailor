@@ -30,9 +30,15 @@ function resetPassword(token, password) {
   return request.post(url.resetPassword, { token, password });
 }
 
+function commentCheckTime({ userId, checkTime }) {
+  return request.post('/users/commentsCheckTime', { userId, checkTime })
+    .then(res => res.data);
+}
+
 export default {
   login,
   logout,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  commentCheckTime
 };

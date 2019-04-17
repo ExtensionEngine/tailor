@@ -1,5 +1,5 @@
 <template>
-  <ul class="comments">
+  <ul :class="{ 'comments-end': allComments }" class="comments">
     <comment
       v-for="(comment, index) in paginatedComments"
       :key="comment._cid || comment.id"
@@ -9,9 +9,16 @@
       class="clearfix comment">
       <div
         v-if="sameActivity(comment.activityId, index)"
+        slot="activity-id"
         class="comment-activity">
         Activity {{ comment.activityId }}
       </div>
+      <span
+        v-if="!initialCheckTime || initialCheckTime < comment.createdAt"
+        slot="new-comment"
+        class="new-comment">
+        NEW
+      </span>
     </comment>
     <infinite-loading @infinite="fetchComments">
       <span slot="spinner">
@@ -33,10 +40,18 @@ import CircularProgress from 'components/common/CircularProgress';
 import Comment from '../Sidebar/Discussion/Comment';
 import InfiniteLoading from 'vue-infinite-loading';
 import isEmpty from 'lodash/isEmpty';
+import api from 'client/api/auth';
 
 export default {
   name: 'comments',
+  data() {
+    return {
+      initialCheckTime: '',
+      allComments: false
+    };
+  },
   computed: {
+    ...mapGetters(['user']),
     ...mapGetters(['hasMoreResults'], 'comments'),
     ...mapGetters(['paginatedComments'])
   },
@@ -45,7 +60,10 @@ export default {
     fetchComments($state) {
       return this.fetchPaginated().then(() => {
         if (!isEmpty(this.paginatedComments)) $state.loaded();
-        if (!this.hasMoreResults) $state.complete();
+        if (!this.hasMoreResults) {
+          $state.complete();
+          this.allComments = true;
+        }
       });
     },
     onUpdate(comment, content) {
@@ -61,6 +79,10 @@ export default {
   },
   mounted() {
     this.resetPagination();
+    const userId = this.user.id;
+    const checkTime = new Date();
+    api.commentCheckTime({ checkTime, userId })
+      .then(data => (this.initialCheckTime = data.checkedAt));
   },
   components: { CircularProgress, Comment, InfiniteLoading }
 };
@@ -78,6 +100,20 @@ export default {
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   list-style: none;
+}
+
+.comments-end {
+  margin-bottom: 60px;
+}
+
+.new-comment {
+  background-color:#737373;
+  border-radius: 3px;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 3px 5px;
+  margin-right: 5px;
 }
 
 .comment-activity {
