@@ -36,7 +36,8 @@ export default {
   },
   computed: {
     widthClass() {
-      return this.setWidth ? `col-xs-${get(this.element, 'data.width', 12)}` : '';
+      const { element, setWidth } = this;
+      return setWidth ? `col-xs-${get(element, 'data.width', 12)}` : '';
     }
   },
   methods: {
@@ -53,7 +54,6 @@ export default {
 <style lang="scss" scoped>
 .drag-handle {
   position: absolute;
-  top: 4px;
   left: -3px;
   z-index: 2;
   width: 26px;
@@ -77,6 +77,7 @@ export default {
 
 .contained-content {
   position: relative;
-  padding: 7px 0;
+  margin: 7px 0;
+  padding: 0;
 }
 </style>
