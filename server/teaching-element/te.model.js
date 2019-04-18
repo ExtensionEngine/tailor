@@ -167,7 +167,7 @@ class TeachingElement extends Model {
     return this.getActivity().then(parent => {
       if (parent.type !== 'ASSESSMENT_GROUP') return {};
       if (this.type === 'ASSESSMENT') return { type: 'ASSESSMENT' };
-      return { type: { $not: this.type } };
+      return { type: { [Op.not]: this.type } };
     });
   }
 }
