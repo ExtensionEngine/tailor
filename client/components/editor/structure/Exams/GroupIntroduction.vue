@@ -6,14 +6,14 @@
       :types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true"
       @add="saveElement"
-      @update="reorder">
+      @update="reorder"
+      embedded>
       <teaching-element
         slot="list-item"
         slot-scope="{ item, dragged, setWidth }"
         :setWidth="setWidth"
         :dragged="dragged"
-        :element="item">
-      </teaching-element>
+        :element="item"/>
     </tes-list>
   </div>
 </template>

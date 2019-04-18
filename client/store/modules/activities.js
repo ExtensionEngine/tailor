@@ -1,14 +1,14 @@
-import calculatePosition from 'utils/calculatePosition.js';
+import calculatePosition from 'utils/calculatePosition';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import {
   getDescendants as getDeepChildren,
   getAncestors as getParents
-} from 'utils/activity.js';
+} from 'utils/activity';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import request from '../../api/request';
-import VuexCollection from '../helpers/collection.js';
+import VuexCollection from '../helpers/collection';
 
 const { getter, action, mutation, build } = new VuexCollection('activities');
 

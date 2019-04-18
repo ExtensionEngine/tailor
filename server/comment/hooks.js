@@ -1,26 +1,23 @@
 'use strict';
 
 const { broadcast, events } = require('./channel');
-const addHooks = require('../shared/util/addHooks');
 const pick = require('lodash/pick');
 
-module.exports = { add };
-
-function add(Comment) {
-  addHooks(Comment, ['afterCreate'], (hook, instance) => {
-    instance.getAuthor().then(a => {
+exports.add = (Comment, _, { HookTypes, addHook }) => {
+  addHook(Comment, HookTypes.afterCreate, (_, comment) => {
+    comment.getAuthor().then(a => {
       const author = pick(a, ['id', 'email']);
-      broadcast(events.CREATE, { ...instance.dataValues, author });
+      broadcast(events.CREATE, { ...comment.toJSON(), author });
     });
   });
 
-  addHooks(Comment, ['afterUpdate'], (hook, instance) => {
-    broadcast(events.UPDATE, instance);
+  addHook(Comment, HookTypes.afterUpdate, (_, comment) => {
+    broadcast(events.UPDATE, comment);
   });
 
-  addHooks(Comment, ['afterDelete'], (hook, instance) => {
-    Comment.findById(instance.id, { paranoid: false }).then(deleted => {
+  addHook(Comment, HookTypes.afterDestroy, (_, comment) => {
+    Comment.findByPk(comment.id, { paranoid: false }).then(deleted => {
       broadcast(events.DELETE, deleted);
     });
   });
-}
+};

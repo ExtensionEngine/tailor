@@ -1,6 +1,6 @@
 <template>
   <content-element
-    :element="processedElement"
+    :element="cell"
     :parent="table"
     :frame="false"
     :showPlaceholder="false"
@@ -19,12 +19,6 @@ export default {
     cell: { type: Object, required: true },
     table: { type: Object, required: true },
     disabled: { type: Boolean, default: false }
-  },
-  computed: {
-    processedElement() {
-      // Override type due to legacy format
-      return { ...this.cell, type: 'HTML' };
-    }
   },
   methods: {
     save(data) {

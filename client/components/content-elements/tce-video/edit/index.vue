@@ -149,7 +149,7 @@ function handlePlyrErrors(Plyr) {
 
 .overlay {
   position: absolute;
-  z-index: 99;
+  z-index: 3;
   width: 100%;
   height: 100%;
   background-color: #333;
