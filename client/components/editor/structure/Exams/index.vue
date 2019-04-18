@@ -9,10 +9,14 @@
         :position="index">
       </exam>
     </ul>
-    <button @click="create" class="btn btn-primary btn-material create-exam">
-      <span class="mdi mdi-plus"></span>
+    <v-btn
+      @click.stop="create"
+      color="blue darken-1"
+      dark
+      class="mt-4">
+      <v-icon class="pr-2">mdi-plus</v-icon>
       Create Exam Version
-    </button>
+    </v-btn>
   </div>
 </template>
 
@@ -58,10 +62,5 @@ h2 {
 
 .exams {
   margin: 80px 0 200px;
-}
-
-.create-exam {
-  min-width: 300px;
-  margin: 40px 0;
 }
 </style>

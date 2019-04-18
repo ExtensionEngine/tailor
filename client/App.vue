@@ -34,6 +34,10 @@ html, body {
   height: 100%;
 }
 
+html {
+  overflow-y: auto !important; // override Vuetify's default style
+}
+
 #app {
   color: rgba(0,0,0,0.87);
   font-family: Roboto, Helvetica, Arial, sans-serif;

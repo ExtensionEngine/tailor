@@ -105,7 +105,7 @@
     "safe-require": "^1.0.3",
     "sass-web-fonts": "^2.0.2",
     "save-as": "^0.1.8",
-    "sequelize": "^4.22.0",
+    "sequelize": "^5.6.1",
     "snyk": "^1.134.2",
     "string-template": "^1.0.0",
     "to-case": "^2.0.0",
@@ -114,7 +114,7 @@
     "url-join": "^1.1.0",
     "v-hotkey": "^0.3.0",
     "vee-validate": "^2.0.4",
-    "vue": "^2.5.18",
+    "vue": "^2.6.10",
     "vue-aplayer": "^1.4.1",
     "vue-avatar": "^2.1.1",
     "vue-color": "^2.7.0",
@@ -173,7 +173,7 @@
     "stylelint-webpack-plugin": "^0.10.5",
     "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
-    "vue-template-compiler": "^2.5.18"
+    "vue-template-compiler": "^2.6.10"
   },
   "engines": {
     "node": ">= 8.8.0",
