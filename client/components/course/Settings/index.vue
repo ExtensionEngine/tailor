@@ -1,22 +1,20 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-4 col-lg-3">
-        <v-card>
-          <sidebar
-            :isPublishing="isPublishing"
-            @actionClick="onActionClick"/>
-        </v-card>
-      </div>
-      <div class="col-md-8 col-lg-9">
+  <v-container>
+    <v-layout row align-start>
+      <v-card>
+        <sidebar
+          :isPublishing="isPublishing"
+          @actionClick="onActionClick"/>
+      </v-card>
+      <v-flex ml-4>
         <router-view></router-view>
-      </div>
-    </div>
+      </v-flex>
+    </v-layout>
     <clone-modal
       :show="showCloneModal"
       @close="showCloneModal = false">
     </clone-modal>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -82,9 +80,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.row {
-  margin: 60px 30px 5px;
-}
-</style>

@@ -1,8 +1,7 @@
 <template>
   <v-navigation-drawer
     stateless
-    value="true"
-  >
+    value="true">
     <v-list>
       <v-list-tile
         @click="routeTo('course-info')"
