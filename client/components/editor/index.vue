@@ -42,6 +42,7 @@
 <script>
 import * as config from 'shared/activities';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { getElementId, isQuestion } from 'tce-core/utils';
 import Assessments from './structure/Assessments';
 import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
@@ -50,7 +51,6 @@ import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getElementId } from 'tce-core/utils';
 import Promise from 'bluebird';
 import Sidebar from './sidebar';
 import throttle from 'lodash/throttle';
@@ -121,7 +121,9 @@ export default {
         this.focusedElement = { ...focusedElement, ...element };
         return;
       }
-      const embed = element.data.embeds[focusedElement.id];
+      const embed = isQuestion(element.type)
+        ? find(element.data.question, { id: focusedElement.id })
+        : get(element, `data.embeds.${focusedElement.id}`);
       if (!embed) return;
       const hasParent = !!focusedElement.parent;
       this.focusedElement = { ...embed, parent: hasParent ? element : null };
