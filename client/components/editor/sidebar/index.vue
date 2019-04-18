@@ -59,6 +59,6 @@ export default {
   background: white;
   box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18);
   overflow-y: auto;
-  z-index: 998;
+  z-index: 98;
 }
 </style>
