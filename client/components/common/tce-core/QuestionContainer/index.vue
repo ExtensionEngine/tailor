@@ -76,6 +76,7 @@ export default {
     return {
       isEditing,
       editedElement: cloneDeep(this.element),
+      undoState: cloneDeep(this.element),
       alert: {},
       errors: []
     };
@@ -109,6 +110,7 @@ export default {
     },
     edit() {
       this.editedElement = cloneDeep(this.element);
+      this.undoState = cloneDeep(this.element);
       this.isEditing = true;
     },
     update(data, validate) {
@@ -117,6 +119,7 @@ export default {
         this.errors = [];
         this.validate().catch(err => (this.errors = errorProcessor(err)));
       }
+      this.$emit('add', this.editedElement);
     },
     save() {
       if (!this.isEditing) return;
@@ -130,7 +133,7 @@ export default {
     cancel() {
       if (!this.editedElement.id) return this.$emit('delete');
       this.editedElement = cloneDeep(this.element);
-      this.$emit('add', this.editedElement);
+      this.$emit('add', this.undoState);
       this.isEditing = false;
       this.setAlert();
       this.errors = [];
