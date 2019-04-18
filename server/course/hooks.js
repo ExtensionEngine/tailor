@@ -34,6 +34,7 @@ exports.add = (Course, models, { HookTypes, addHook }) => {
 
   function updateAssessmentStats(hookType, instances) {
     const assessment = find(castArray(instances), { type: 'ASSESSMENT' });
+    if (!assessment) return;
     const { id, courseId, type } = assessment;
     logger.info(`[Course] TeachingElement#${hookType}`, { type, id, courseId });
     const where = { courseId, type: 'ASSESSMENT', detached: false };
