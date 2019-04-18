@@ -112,7 +112,7 @@ export default {
     }
   },
   created() {
-    this.$store.subscribe(debounce((mutation, state) => {
+    this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;
       if (!focusedElement) return;
@@ -150,6 +150,9 @@ export default {
       this.getTeachingElements({ activityId, parentId: activityId }),
       Promise.delay(700)
     ).then(() => (this.showLoader = false));
+  },
+  beforeDestroy() {
+    this.unsubscribe();
   },
   components: {
     Assessments,
