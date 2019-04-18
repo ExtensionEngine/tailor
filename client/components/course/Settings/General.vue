@@ -1,12 +1,14 @@
 <template>
   <div v-if="course" class="settings">
     <div class="actions">
-      <button
-        :disabled="publishing"
+      <v-btn
+        :loading="publishing"
         @click="publish"
-        class="btn btn-primary btn-material btn-sm pull-right">
-        <span class="mdi mdi-publish"></span> Publish info
-      </button>
+        color="blue-grey darken-1"
+        outline
+        class="pull-right">
+        Publish info
+      </v-btn>
     </div>
     <meta-input
       v-for="it in requiredData"
@@ -30,12 +32,9 @@ import { getRepositoryMeta } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
 import api from '../../../api/course';
 import cloneDeep from 'lodash/cloneDeep';
-import EventBus from 'EventBus';
 import find from 'lodash/find';
 import Meta from 'components/common/Meta';
 import set from 'lodash/set';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   data() {
@@ -63,18 +62,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update', 'remove'], 'courses'),
+    ...mapActions(['update'], 'courses'),
     updateKey(key, value) {
       if (find(this.metadata, { key })) key = `data.${key}`;
       const data = cloneDeep(this.course);
       this.update(set(data, key, value));
-    },
-    removeCourse() {
-      appChannel.emit('showConfirmationModal', {
-        type: 'course',
-        item: this.course,
-        action: () => this.remove(this.course) && this.$router.push('/')
-      });
     },
     publish() {
       this.publishing = true;

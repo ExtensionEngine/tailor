@@ -2,13 +2,15 @@
   <div class="editor-wrapper">
     <toolbar :element="focusedElement">
       <span slot="actions">
-        <span
+        <v-btn
           v-if="metadata.length"
           @click="showSidebar = !showSidebar"
-          class="btn btn-fab btn-primary"
+          color="blue-grey"
+          fab
+          dark
           title="Toggle teaching element sidebar">
-          <span class="mdi mdi-backburger"></span>
-        </span>
+          <v-icon>mdi-backburger</v-icon>
+        </v-btn>
       </span>
     </toolbar>
     <transition name="slide">
@@ -40,16 +42,18 @@
 <script>
 import * as config from 'shared/activities';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { getElementId, isQuestion } from 'tce-core/utils';
 import Assessments from './structure/Assessments';
 import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
+import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getElementId } from 'tce-core/utils';
 import Promise from 'bluebird';
 import Sidebar from './sidebar';
+import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
 
@@ -108,7 +112,23 @@ export default {
     }
   },
   created() {
-    EventBus.on('element:focus', (element, composite) => {
+    this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
+      const { type, payload: element } = mutation;
+      const { focusedElement } = this;
+      if (!focusedElement) return;
+      if ((type !== 'tes/save') && (type !== 'tes/add')) return;
+      if (element._cid === focusedElement._cid) {
+        this.focusedElement = { ...focusedElement, ...element };
+        return;
+      }
+      const embed = isQuestion(element.type)
+        ? find(element.data.question, { id: focusedElement.id })
+        : get(element, `data.embeds.${focusedElement.id}`);
+      if (!embed) return;
+      const hasParent = !!focusedElement.parent;
+      this.focusedElement = { ...embed, parent: hasParent ? element : null };
+    }, 100));
+    EventBus.on('element:focus', throttle((element, composite) => {
       if (!element) {
         this.focusedElement = null;
         this.showSidebar = false;
@@ -117,7 +137,7 @@ export default {
       if (getElementId(this.focusedElement) === getElementId(element)) return;
       this.focusedElement = { ...element, parent: composite };
       this.showSidebar = this.metadata.length && this.showSidebar;
-    });
+    }, 50));
     // TODO: Do this better!
     const courseId = this.$route.params.courseId;
     const activityId = this.$route.params.activityId;
@@ -130,6 +150,9 @@ export default {
       this.getTeachingElements({ activityId, parentId: activityId }),
       Promise.delay(700)
     ).then(() => (this.showLoader = false));
+  },
+  beforeDestroy() {
+    this.unsubscribe();
   },
   components: {
     Assessments,
@@ -161,42 +184,12 @@ export default {
   overflow-y: scroll;
   overflow-y: overlay;
 
-  .breadcrumbs {
-    margin: 70px 0 10px;
-    color: #555;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    line-height: 20px;
-    text-align: left;
-  }
-
-  h2 {
-    margin: 20px 0 30px;
-    color: #444;
-    font-size: 20px;
-    line-height: 30px;
-    text-align: left;
-
-    a {
-      margin-left: 15px;
-    }
+  .container {
+    max-width: 1100px;
   }
 
   .circular-progress {
     margin-top: 150px;
   }
-
-  .divider {
-    padding: 0 10px;
-    color: #999;
-  }
-}
-
-.slide-enter-active, .slide-leave-active {
-  transition: margin-right 0.5s;
-}
-
-.slide-enter, .slide-leave-to {
-  margin-right: -380px;
 }
 </style>

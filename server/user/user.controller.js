@@ -12,7 +12,7 @@ function index(req, res) {
 
 function forgotPassword({ body }, res) {
   const { email } = body;
-  return User.find({ where: { email } })
+  return User.findOne({ where: { email } })
     .then(user => user || createError(NOT_FOUND, 'User not found'))
     .then(user => user.sendResetToken())
     .then(() => res.end());
@@ -20,7 +20,7 @@ function forgotPassword({ body }, res) {
 
 function resetPassword({ body, params }, res) {
   const { password, token } = body;
-  return User.find({ where: { token } })
+  return User.findOne({ where: { token } })
     .then(user => user || createError(NOT_FOUND, 'Invalid token'))
     .then(user => {
       user.password = password;
@@ -34,7 +34,7 @@ function login({ body }, res) {
   if (!email || !password) {
     createError(400, 'Please enter email and password');
   }
-  return User.find({ where: { email } })
+  return User.findOne({ where: { email } })
     .then(user => user || createError(NOT_FOUND, 'User does not exist'))
     .then(user => user.authenticate(password))
     .then(user => user || createError(NOT_FOUND, 'Wrong password'))

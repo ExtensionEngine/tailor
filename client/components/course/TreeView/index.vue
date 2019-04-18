@@ -90,7 +90,6 @@ function tree(activities, structure, root = { size: 0 }, parent = root, depth = 
   parent.children = reduce(activities, (acc, it) => {
     const parentId = parent.id || null;
     if (it.parentId !== parentId) return acc;
-    it.name = it.id;
     it.color = getColor(it.type, structure);
     const subtree = tree(activities, structure, root, { ...it }, depth + 1);
     acc.push(subtree);

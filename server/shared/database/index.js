@@ -4,6 +4,7 @@ const { migrationsPath } = require('../../../sequelize.config');
 const { wrapAsyncMethods } = require('./helpers');
 const config = require('./config');
 const forEach = require('lodash/forEach');
+const Hooks = require('./hooks');
 const invoke = require('lodash/invoke');
 const logger = require('../logger');
 const pick = require('lodash/pick');
@@ -27,11 +28,9 @@ const { Sequelize: { DataTypes } } = sequelize;
 
 const defineModel = Model => {
   const fields = invoke(Model, 'fields', DataTypes, sequelize) || {};
-  const hooks = invoke(Model, 'hooks') || {};
-  const scopes = invoke(Model, 'scopes', sequelize) || {};
   const options = invoke(Model, 'options') || {};
   wrapAsyncMethods(Model);
-  return Model.init(fields, { sequelize, hooks, scopes, ...options });
+  return Model.init(fields, { sequelize, ...options });
 };
 
 function initialize() {
@@ -84,7 +83,10 @@ const models = {
 
 forEach(models, model => {
   invoke(model, 'associate', models);
-  invoke(model, 'addHooks', models);
+  invoke(model, 'hooks', models, Hooks);
+  const scopes = invoke(model, 'scopes', models);
+  if (!scopes) return;
+  forEach(scopes, (it, name) => model.addScope(name, it, { override: true }));
 });
 
 const db = {

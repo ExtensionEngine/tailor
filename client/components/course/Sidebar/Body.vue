@@ -1,17 +1,9 @@
 <template>
   <div class="body">
-    <div class="publish-container">
-      <div class="publish-date">{{ publishStatus }}</div>
-      <v-btn
-        :loading="publishing"
-        @click="publishActivity"
-        color="blue-grey"
-        outline
-        small>
-        Publish
-      </v-btn>
-    </div>
-    <span class="type-label">{{ config.label }}</span>
+    <publishing/>
+    <v-chip :color="config.color" label dark small class="type-label">
+      {{ config.label }}
+    </v-chip>
     <div class="meta-element">
       <meta-input
         v-for="it in metadata"
@@ -37,16 +29,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 import Discussion from './Discussion';
-import fecha from 'fecha';
 import Meta from 'components/common/Meta';
+import Publishing from './Publishing';
 import Relationship from './Relationship';
 
 export default {
-  data() {
-    return {
-      publishing: false
-    };
-  },
   computed: {
     ...mapGetters(['activity', 'getConfig', 'getMetadata'], 'course'),
     config() {
@@ -54,27 +41,18 @@ export default {
     },
     metadata() {
       return this.getMetadata(this.activity);
-    },
-    publishStatus() {
-      let { publishedAt } = this.activity;
-      return publishedAt
-        ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
-        : 'Not published';
     }
   },
   methods: {
-    ...mapActions(['update', 'publish'], 'activities'),
+    ...mapActions(['update'], 'activities'),
     updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });
-    },
-    publishActivity() {
-      this.publishing = true;
-      this.publish(this.activity).then(() => (this.publishing = false));
     }
   },
   components: {
     Discussion,
+    Publishing,
     Relationship,
     MetaInput: Meta
   }
@@ -87,29 +65,13 @@ export default {
   padding: 6px 15px;
 }
 
-.publish-container {
-  min-height: 70px;
-  padding: 0 7px;
-
-  .publish-date {
-    width: 180px;
-    line-height: 44px;
-  }
-
-  .v-btn {
-    position: absolute;
-    top: 10px;
-    right: 24px;
-  }
-}
-
 .discussion {
   margin-top: 32px;
   margin-bottom: 8px;
 }
 
 .type-label {
-  display: inline-block;
-  margin: 5px 0 25px 7px;
+  margin: 5px 5px 20px;
+  font-weight: 500;
 }
 </style>

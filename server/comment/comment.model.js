@@ -32,8 +32,8 @@ class Comment extends Model {
     };
   }
 
-  static addHooks(models) {
-    hooks.add(this, models);
+  static hooks(models, Hooks) {
+    hooks.add(this, models, Hooks);
   }
 
   static associate({ Activity, Course, User }) {
