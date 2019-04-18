@@ -3,35 +3,37 @@
     <v-layout row wrap>
       <v-flex xs3 class="flex-img">
         <v-card class="card-img">
-          <croppa
-            v-model="croppa"
-            :accept="'image/*'"
-            :width="230"
-            :height="230"
-            :show-remove-button="false"
-            :disabled="disabled"
-            :initial-image="currentImage"
-            @file-choose="uploadCroppedImage"
-            prevent-white-space
-            show-loading>
-          </croppa>
+          <div class="header">
+            <croppa
+              v-model="croppa"
+              :accept="'image/*'"
+              :width="230"
+              :height="230"
+              :show-remove-button="false"
+              :disabled="disabled"
+              :initial-image="currentImage"
+              @file-choose="uploadCroppedImage"
+              prevent-white-space
+              show-loading>
+            </croppa>
+          </div>
           <v-divider></v-divider>
           <v-card-actions class="img-actions">
-            <div class="zoom-actions">
+            <div v-if="currentImage && !disabled" class="edit-actions">
               <v-btn @click="handleZoom('zoomIn')" flat small fab>
                 <span class="mdi mdi-plus"></span>
               </v-btn>
               <v-btn @click="handleZoom('zoomOut')" flat small fab>
                 <span class="mdi mdi-minus"></span>
               </v-btn>
+              <v-btn @click="doneEditing" color="light-blue darken-3" flat>
+                <span class="mdi mdi-image"></span>
+                Done editing
+              </v-btn>
             </div>
-            <v-btn @click="doneEditing" color="light-blue darken-3" flat small>
-              <span class="mdi mdi-image"></span>
-              Done editing
-            </v-btn>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-btn @click="removeImage" v-on="on" color="red darken-2" flat small>
+                <v-btn @click="removeImage" v-on="on" color="red darken-2" flat>
                   <span class="mdi mdi-delete"></span>
                 </v-btn>
               </template>
@@ -39,7 +41,7 @@
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-btn @click="editImage" v-on="on" color="cyan darken-1" flat small>
+                <v-btn @click="editImage" v-on="on" color="cyan darken-1" flat>
                   <span class="mdi mdi-pencil"></span>
                 </v-btn>
               </template>
@@ -79,9 +81,12 @@
 <script>
 import assetsApi from '../../../api/asset.js';
 import cloneDeep from 'lodash/cloneDeep';
+import EventBus from 'EventBus';
 import { mapActions, mapGetters } from 'vuex-module';
 import Meta from 'components/common/Meta';
 import set from 'lodash/set';
+
+const appChannel = EventBus.channel('app');
 
 const validate = { required: true, min: 2, max: 250 };
 
@@ -140,7 +145,7 @@ export default {
     uploadCroppedImage(file) {
       const formData = new FormData();
       formData.append('file', file, file.name);
-      assetsApi.upload(formData)
+      return assetsApi.upload(formData)
         .then(res => (this.currentImage = res.key));
     },
     editImage() {
@@ -161,18 +166,30 @@ export default {
       this.croppa.generateBlob(editedImage => {
         const formData = new FormData();
         formData.append('file', editedImage);
-        assetsApi.upload(formData)
+        return assetsApi.upload(formData)
           .then(res => res.key)
           .then(key => this.saveImageUrl({ UserId: this.user.id, key }))
-          .then(() => (this.currentImage = this.user.imgUrl));
-        this.success = true;
-        this.disabled = true;
+          .then(() => {
+            this.currentImage = this.user.imgUrl;
+            this.success = true;
+            this.disabled = true;
+          });
       });
     },
     removeImage() {
-      this.deleteImageUrl({ UserId: this.user.id })
-        .then(() => this.croppa.remove());
-      this.disabled = false;
+      if (!this.croppa.hasImage()) return;
+      appChannel.emit('showConfirmationModal', {
+        type: 'image',
+        item: this.user.imgUrl,
+        action: () => {
+          return this.deleteImageUrl({ UserId: this.user.id })
+            .then(() => {
+              this.croppa.remove();
+              this.currentImage = null;
+              this.disabled = false;
+            });
+        }
+      });
     },
     routeTo(name) {
       this.$router.push({ name });
@@ -198,24 +215,24 @@ export default {
 
 .croppa-container {
   display: inline-block;
-  width: 230px;
-  height: 230px;
+  height: 235px;
   margin: auto;
   margin-top: 5%;
+  border-radius: 50%;
+  overflow: hidden;
   padding: 0;
   background-color: #f5f5f5;
-  border: 1px solid #e3e3e3;
+  border: 4px solid #e3e3e3;
 }
 
 .croppa-container:hover {
   cursor: pointer;
 }
 
-.zoom-actions {
+.edit-actions {
   display: inline-block;
 
   .v-btn {
-    padding-left: 3%;
     color: #000;
   }
 }
@@ -223,6 +240,7 @@ export default {
 .img-actions {
   display: inline-block;
   width: 100%;
+  margin-top: 20%;
   padding: 20px;
 }
 
@@ -251,6 +269,11 @@ export default {
   width: 100%;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+
+  .header {
+    height: 140px;
+    background: rgb(63, 81, 181);
+  }
 }
 
 .flex-img {
