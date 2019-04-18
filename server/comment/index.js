@@ -32,7 +32,7 @@ router
 
 function getComment(req, res) {
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
-  return Comment.findById(req.params.commentId, { paranoid: false, include })
+  return Comment.findByPk(req.params.commentId, { paranoid: false, include })
     .then(comment => comment || createError(NOT_FOUND, 'Comment not found'))
     .then(comment => {
       req.comment = comment;

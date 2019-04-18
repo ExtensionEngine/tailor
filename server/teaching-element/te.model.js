@@ -5,7 +5,7 @@ const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
 const isNumber = require('lodash/isNumber');
-const { Model } = require('sequelize');
+const { Model, Op } = require('sequelize');
 const pick = require('lodash/pick');
 const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 
@@ -101,7 +101,7 @@ class TeachingElement extends Model {
     };
   }
 
-  static scopes({ Op }) {
+  static scopes() {
     const notNull = { [Op.ne]: null };
     return {
       withReferences: { where: { 'refs.objectiveId': notNull } }
@@ -120,7 +120,7 @@ class TeachingElement extends Model {
 
   static fetch(opt) {
     return isNumber(opt)
-      ? TeachingElement.findById(opt).then(it => it && resolveStatics(it))
+      ? TeachingElement.findByPk(opt).then(it => it && resolveStatics(it))
       : TeachingElement.findAll(opt)
           .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
   }

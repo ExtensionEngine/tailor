@@ -22,7 +22,7 @@ router
   .get('/courses/:courseId/activities/:activityId/publish', ctrl.publish);
 
 function getActivity(req, res) {
-  return Activity.findById(req.params.activityId, { paranoid: false })
+  return Activity.findByPk(req.params.activityId, { paranoid: false })
     .then(activity => activity || createError(NOT_FOUND, 'Activity not found'))
     .then(activity => {
       req.activity = activity;
