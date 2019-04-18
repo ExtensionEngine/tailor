@@ -1,18 +1,17 @@
 <template>
-  <div class="select-action">
-    <div
+  <v-item-group class="select-action">
+    <v-btn
       v-for="action in actions"
       :key="action.name"
-      @click="$emit('selected', action.name)"
-      class="action">
-      <span :class="action.icon" class="mdi"></span>
+      @click="$emit('selected', action.name)">
+      <v-icon class="action-icon">{{ action.icon }}</v-icon>
       <span>{{ action.label }}</span>
-    </div>
-    <div @click="$emit('close')" class="action">
-      <span class="mdi mdi-close"></span>
+    </v-btn>
+    <v-btn @click="$emit('close')">
+      <v-icon class="action-icon">mdi-close</v-icon>
       <span>Cancel</span>
-    </div>
-  </div>
+    </v-btn>
+  </v-item-group>
 </template>
 
 <script>
@@ -32,26 +31,10 @@ export default {
 
 <style lang="scss" scoped>
 .select-action {
-  margin: 0 auto;
+  margin: 16px 0;
 }
 
-.action {
-  display: inline-block;
-  margin: 20px 25px;
-
-  &:hover {
-    color: #42b983;
-    cursor: pointer;
-  }
-
-  span {
-    display: block;
-    font-size: 16px;
-  }
-
-  .mdi {
-    padding-bottom: 7px;
-    font-size: 26px;
-  }
+.action-icon {
+  padding-right: 4px;
 }
 </style>
