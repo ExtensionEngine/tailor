@@ -104,16 +104,17 @@ export default {
   }
 
   .audio-placeholder {
-    padding-top: 1rem;
+    padding: 1.25rem;
+    background-color: #f1f1f1;
 
     .message {
       .heading {
-        font-size: 1.8rem;
+        font-size: 24px;
       }
 
       p {
         margin: 0;
-        font-size: 1.4rem;
+        font-size: 18px;
       }
     }
   }
