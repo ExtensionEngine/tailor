@@ -13,7 +13,7 @@ exports.addHook = (Model, hookType, name, hook) => {
     hook = name;
     name = null;
   }
-  const wrappedHook = wrapHook(hook);
+  const wrappedHook = wrapHook(hookType, hook);
   const args = [wrappedHook];
   if (name) args.unshift(name);
   Model.addHook(hookType, ...args);
