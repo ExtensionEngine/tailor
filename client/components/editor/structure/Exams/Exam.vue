@@ -30,13 +30,15 @@
         :exam="exam"
         :position="index">
       </assessment-group>
-      <button
+      <v-btn
         :disabled="!exam.id"
-        @click="createGroup"
-        class="btn btn-primary btn-material create-group">
-        <span class="mdi mdi-plus"></span>
-        Create Question Group
-      </button>
+        @click.stop="createGroup"
+        color="blue-grey lighten-1"
+        dark
+        class="my-5">
+        <v-icon class="pr-2">mdi-file-tree</v-icon>
+        Add Question Group
+      </v-btn>
     </div>
   </li>
 </template>
@@ -144,10 +146,5 @@ h3 {
 .label {
   min-width: 40px;
   line-height: 12px;
-}
-
-.create-group {
-  min-width: 210px;
-  margin: 40px 0;
 }
 </style>

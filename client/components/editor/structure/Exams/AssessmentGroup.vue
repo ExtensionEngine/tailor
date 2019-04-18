@@ -27,7 +27,8 @@
       :activity="group"
       :types="['ASSESSMENT']"
       @add="addAssessment"
-      @update="reorderAssessment">
+      @update="reorderAssessment"
+      embedded>
       <assessment-item
         slot="list-item"
         slot-scope="{ item }"
