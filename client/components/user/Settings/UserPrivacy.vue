@@ -37,7 +37,7 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-snackbar v-model="error" :timeout="timeout" color="red darken-2" left>
+    <v-snackbar v-model="error" :timeout="timeout" color="error" left>
       An error has occurred!
       <v-btn @click="snackbar=false" dark flat>Close</v-btn>
     </v-snackbar>

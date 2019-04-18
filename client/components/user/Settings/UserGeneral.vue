@@ -67,11 +67,11 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-snackbar v-model="error" :timeout="timeout" color="red darken-2" left>
-      There is no any file. Please choose an image.
+    <v-snackbar v-model="error" :timeout="timeout" color="error" left>
+      An error has occurred!
       <v-btn @click="error=false" dark flat>Close</v-btn>
     </v-snackbar>
-    <v-snackbar v-model="success" :timeout="timeout" color="green darken-1" left>
+    <v-snackbar v-model="success" :timeout="timeout" color="success" left>
       Changes saved.
       <v-btn @click="success=false" dark flat>Close</v-btn>
     </v-snackbar>
@@ -146,10 +146,14 @@ export default {
       const formData = new FormData();
       formData.append('file', file, file.name);
       return assetsApi.upload(formData)
-        .then(res => (this.currentImage = res.key));
+        .then(res => (this.currentImage = res.key))
+        .catch(() => (this.error = true));
     },
     editImage() {
-      if (!this.croppa.hasImage()) return;
+      if (!this.croppa.hasImage()) {
+        this.croppa.chooseFile();
+        return;
+      }
       this.disabled = false;
     },
     handleZoom(zoom) {

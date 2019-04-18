@@ -72,6 +72,7 @@ export default {
   padding: 80px 90px 0 60px;
   overflow-y: scroll;
   overflow-y: overlay;
+  scrollbar-width: none;
 
   /deep/ {
     > :last-child {
