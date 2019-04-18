@@ -23,9 +23,6 @@ module.exports = {
       type: Sequelize.STRING,
       unique: true
     },
-    checkedCommentsAt: {
-      type: Sequelize.DATE
-    },
     createdAt: {
       type: Sequelize.DATE,
       field: 'created_at',

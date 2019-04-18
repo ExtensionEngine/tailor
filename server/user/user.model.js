@@ -45,7 +45,8 @@ class User extends Model {
         unique: true
       },
       checkedCommentsAt: {
-        type: DATE
+        type: DATE,
+        field: 'checked_comments_at'
       },
       createdAt: {
         type: DATE,
