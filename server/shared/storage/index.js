@@ -69,7 +69,7 @@ class Storage {
   }
 
   getUploadConfig(options) {
-    options.key = path.join(this.config.assetRoot, options.filename);
+    options.key = path.join(this.config.assetRoot, options.pathname);
     return this.provider.getUploadConfig(options);
   }
 

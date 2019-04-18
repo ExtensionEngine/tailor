@@ -49,7 +49,7 @@ export async function upload(file, { url, fields = {}, response = {} }) {
   });
 }
 
-export async function basename(file, { maxLength = 180 } = {}) {
+export async function pathname(file, { maxLength = 180 } = {}) {
   const filename = file.name;
   const contents = await toBuffer(file);
   const hash = sha256(filename, contents);

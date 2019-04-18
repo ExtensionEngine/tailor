@@ -29,7 +29,7 @@ export default {
   props: {
     action: { type: String, required: true },
     upload: { type: Function, required: true },
-    basename: { type: Function, default: file => file.name },
+    pathname: { type: Function, default: file => file.name },
     direct: { type: Boolean, default: false },
     accept: { type: [String, Array], default: null },
     tag: { type: String, default: () => 'label' },
@@ -65,14 +65,14 @@ export default {
         });
     },
     async getUploadConfig(file) {
-      const filename = await this.basename(file);
+      const pathname = await this.pathname(file);
       if (!this.direct) {
-        return preflight(this.action, { file, filename, auth: this.auth });
+        return preflight(this.action, { file, pathname, auth: this.auth });
       }
       return {
         url: this.action,
         isPublic: false,
-        fields: { key: filename },
+        fields: { key: pathname },
         response: {
           type: 'json',
           keys: { key: 'key' }
@@ -87,10 +87,10 @@ export default {
   }
 };
 
-async function preflight(url, { file, filename, auth }) {
+async function preflight(url, { file, pathname, auth }) {
   const form = new FormData();
   form.append('auth', auth);
-  form.append('filename', filename);
+  form.append('pathname', pathname);
   form.append('originalname', file.name);
   form.append('size', file.size);
   form.append('mimetype', file.type);
