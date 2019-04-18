@@ -179,8 +179,8 @@ export default {
     removeImage() {
       if (!this.croppa.hasImage()) return;
       appChannel.emit('showConfirmationModal', {
-        type: 'image',
-        item: this.user.imgUrl,
+        title: 'Delete image?',
+        message: 'Are you sure you want to delete current image?',
         action: () => {
           return this.deleteImageUrl({ UserId: this.user.id })
             .then(() => {
@@ -234,6 +234,10 @@ export default {
 
   .v-btn {
     color: #000;
+  }
+
+  .mdi-plus, .mdi-minus {
+    padding-left: 10%;
   }
 }
 
