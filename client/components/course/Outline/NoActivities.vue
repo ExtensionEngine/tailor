@@ -1,40 +1,39 @@
 <template>
-  <div class="well">
-    <div class="row">
-      <div :class="`col-md-${showLevelPicker ? 8 : 10}`">
-        <span
-          :class="{ 'has-error': vErrors.has('name') }"
-          class="form-group">
-          <input
-            v-validate="{ rules: { required: true, min: 2, max: 250 } }"
-            v-model="name"
-            class="form-control"
-            type="text"
-            name="name"
-            autofocus=""
-            placeholder="Name">
-          <span v-show="vErrors.has('name')" class="help-block">
-            {{ vErrors.first('name') }}
+  <v-card min-height="128px">
+    <v-container>
+      <v-layout row ma-0>
+        <v-flex mt-2 mr-2 class="name-container">
+          <span
+            :class="{ 'has-error': vErrors.has('name') }"
+            class="form-group">
+            <input
+              v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+              v-model="name"
+              class="form-control"
+              type="text"
+              name="name"
+              autofocus=""
+              placeholder="Name">
+            <span v-show="vErrors.has('name')" class="help-block">
+              {{ vErrors.first('name') }}
+            </span>
           </span>
-        </span>
-      </div>
-      <div v-if="showLevelPicker" class="col-md-2">
-        <multiselect
-          :value="level"
-          :options="levels"
-          :allow-empty="false"
-          @input="onLevelSelected">
-        </multiselect>
-      </div>
-      <div class="col-md-2">
-        <button
-          @click.stop="create"
-          class="btn btn-block btn-primary btn-material">
+        </v-flex>
+        <v-flex v-if="showLevelPicker">
+          <multiselect
+            :value="level"
+            :options="levels"
+            :allow-empty="false"
+            @input="onLevelSelected"
+            class="level-picker">
+          </multiselect>
+        </v-flex>
+        <v-btn @click.stop="create">
           Add
-        </button>
-      </div>
-    </div>
-  </div>
+        </v-btn>
+      </v-layout>
+    </v-container>
+  </v-card>
 </template>
 
 <script>
@@ -92,13 +91,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.well {
-  background-color: white;
-  border: 1px solid #ccc;
+.name-container {
+  flex-grow: 4;
+}
 
-  input {
-    margin: 6px;
-    padding-left: 5px;
-  }
+.level-picker {
+  margin: 1px 8px 0;
 }
 </style>
