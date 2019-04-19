@@ -87,7 +87,7 @@ let router = new Router({
       name: 'forgot-password',
       component: ForgotPassword
     }, {
-      path: 'reset-password',
+      path: 'reset-password/:token',
       name: 'reset-password',
       component: ResetPassword
     }]

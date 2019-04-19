@@ -80,4 +80,8 @@ export default {
     }
   }
 }
+
+.activity-container::-webkit-scrollbar {
+  width: 0 !important;
+}
 </style>

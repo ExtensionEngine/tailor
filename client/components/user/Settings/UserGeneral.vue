@@ -227,10 +227,11 @@ export default {
   padding: 0;
   background-color: #f5f5f5;
   border: 4px solid #e3e3e3;
+  cursor: pointer;
 }
 
-.croppa-container:hover {
-  cursor: pointer;
+.croppa--has-target.croppa--disabled {
+  cursor: auto;
 }
 
 .edit-actions {
