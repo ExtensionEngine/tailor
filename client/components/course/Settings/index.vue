@@ -4,7 +4,7 @@
       <v-card>
         <sidebar
           :isPublishing="isPublishing"
-          @actionClick="onActionClick"/>
+          @action="onActionClick"/>
       </v-card>
       <v-flex ml-4>
         <router-view></router-view>
@@ -14,6 +14,7 @@
       :show="showCloneModal"
       @close="showCloneModal = false">
     </clone-modal>
+    <progress-dialog :show="isPublishing"/>
   </v-container>
 </template>
 
@@ -24,8 +25,8 @@ import CloneModal from './CloneModal';
 import EventBus from 'EventBus';
 import General from './General';
 import JSZip from 'jszip';
+import ProgressDialog from '@/components/common/ProgressDialog';
 import publishMixin from 'components/common/mixins/publish';
-import result from 'lodash/result';
 import saveAs from 'save-as';
 import Sidebar from './Sidebar';
 import UserManagement from './UserManagement';
@@ -36,19 +37,10 @@ export default {
   mixins: [publishMixin],
   data() {
     return {
-      showCloneModal: false,
-      ACTIONS: {
-        knewton: this.downloadContentInventory,
-        clone: () => (this.showCloneModal = true),
-        publish: () => this.confirmPublishing(this.outlineActivities),
-        delete: this.showDeleteConfirmation
-      }
+      showCloneModal: false
     };
   },
-  computed: {
-    ...mapGetters(['isAdmin']),
-    ...mapGetters(['course', 'outlineActivities'], 'course')
-  },
+  computed: mapGetters(['course', 'outlineActivities'], 'course'),
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
     ...mapActions({ publishActivity: 'publish' }, 'activities'),
@@ -60,21 +52,31 @@ export default {
     },
     showDeleteConfirmation() {
       appChannel.emit('showConfirmationModal', {
-        title: 'Delete course?',
-        message: `Are you sure you want to delete course ${this.course.name}?`,
+        title: 'Delete repository?',
+        message: `Are you sure you want to delete repository ${this.course.name}?`,
         action: () => this.removeCourse(this.course) && this.$router.push('/')
       });
     },
-    routeTo(name) {
-      this.$router.push({ name });
-    },
     onActionClick(name) {
-      result(this.ACTIONS, name);
+      const actions = {
+        publish: this.publishRepository,
+        clone: this.showCloneModal,
+        delete: this.showDeleteConfirmation,
+        knewton: this.downloadContentInventory
+      };
+      actions[name]();
+    },
+    publishRepository() {
+      this.confirmPublishing(this.outlineActivities);
+    },
+    showCloneModal() {
+      this.showCloneModal = true;
     }
   },
   components: {
     CloneModal,
     General,
+    ProgressDialog,
     Sidebar,
     UserManagement
   }
