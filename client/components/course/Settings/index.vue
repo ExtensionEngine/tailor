@@ -60,7 +60,7 @@ export default {
     onActionClick(name) {
       const actions = {
         publish: this.publishRepository,
-        clone: this.showCloneModal,
+        clone: this.clone,
         delete: this.showDeleteConfirmation,
         knewton: this.downloadContentInventory
       };
@@ -69,7 +69,7 @@ export default {
     publishRepository() {
       this.confirmPublishing(this.outlineActivities);
     },
-    showCloneModal() {
+    clone() {
       this.showCloneModal = true;
     }
   },
