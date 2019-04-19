@@ -15,14 +15,7 @@ module.exports = (sequelize, { path, logger = {} }) => {
     storage: 'sequelize',
     storageOptions: { sequelize, tableName },
     migrations: { path, params },
-    logging(message) {
-      if (message.startsWith('==')) return;
-      if (message.startsWith('File:')) {
-        const file = message.split(/\s+/g)[1];
-        return log({ file }, message);
-      }
-      return log(message);
-    }
+    logging
   });
 
   umzug.on('migrating', migration => log({ migration }, '⬆️  Migrating:', migration));
@@ -37,5 +30,12 @@ module.exports = (sequelize, { path, logger = {} }) => {
     const migrations = (await umzug.executed()).map(it => it.file);
     if (!migrations.length) return;
     log({ migrations }, '🗄️  Executed migrations:\n', migrations.join('\n'));
+  }
+
+  function logging(message) {
+    if (message.startsWith('==')) return;
+    if (!message.startsWith('File:')) return log(message);
+    const [, file] = message.split(/\s+/g);
+    return log({ file }, message);
   }
 };
