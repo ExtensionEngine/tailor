@@ -1,11 +1,11 @@
 'use strict';
 
-const Promise = require('bluebird');
+const pify = require('pify');
 const contentDisposition = require('content-disposition');
 const exists = require('path-exists');
-const fs = Promise.promisifyAll(require('fs'));
+const fs = pify(require('fs'));
 const Joi = require('joi');
-const mkdirp = Promise.promisify(require('mkdirp'));
+const mkdirp = pify(require('mkdirp'));
 const path = require('path');
 const { URLSearchParams } = require('url');
 
@@ -33,7 +33,7 @@ class FilesystemStorage {
   }
 
   getFile(key, options = {}) {
-    return fs.readFileAsync(this.path(key), options)
+    return fs.readFile(this.path(key), options)
       .catch(err => {
         if (isNotFound(err)) return null;
         return Promise.reject(err);
@@ -43,14 +43,14 @@ class FilesystemStorage {
   saveFile(key, data, options = {}) {
     const filePath = this.path(key);
     return mkdirp(path.dirname(filePath))
-      .then(() => fs.writeFileAsync(filePath, data, options));
+      .then(() => fs.writeFile(filePath, data, options));
   }
 
   copyFile(key, newKey) {
     const src = this.path(key);
     const dest = this.path(newKey);
     return mkdirp(path.dirname(dest))
-      .then(() => fs.copyFileAsync(src, dest));
+      .then(() => fs.copyFile(src, dest));
   }
 
   moveFile(key, newKey) {
@@ -59,11 +59,11 @@ class FilesystemStorage {
   }
 
   deleteFile(key) {
-    return fs.unlinkAsync(this.path(key));
+    return fs.unlink(this.path(key));
   }
 
   listFiles(options = {}) {
-    return fs.readdirAsync(this.root, options);
+    return fs.readdir(this.root, options);
   }
 
   fileExists(key) {

@@ -2,6 +2,7 @@
 
 const autobind = require('auto-bind');
 const path = require('path');
+const safeRequire = require('safe-require');
 const { validateConfig } = require('./validation');
 
 const PROVIDER_CONFIG = Symbol('config');
@@ -96,10 +97,7 @@ module.exports = config => new Storage(config);
 module.exports.Storage = Storage;
 
 function loadProvider(name) {
-  try {
-    return require(path.join(__dirname, './providers/', name));
-  } catch (err) {
-    if (err.code === 'MODULE_NOT_FOUND') throw new Error('Unsupported provider');
-    throw err;
-  }
+  const provider = safeRequire(path.join(__dirname, './providers/', name));
+  if (!provider) throw new Error('Unsupported provider');
+  return provider;
 }

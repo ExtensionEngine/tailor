@@ -28,7 +28,7 @@ app.use(origin());
 app.use(express.static(path.join(__dirname, '../dist/')));
 
 // Setup asset storage.
-const storage = require('./shared/storage')(config.storage);
+const storage = require('@fabric/storage')(config.storage);
 app.set('storage', storage);
 if (storage.serveHandler) {
   app.use(storage.config.publicPath, storage.serveHandler);
