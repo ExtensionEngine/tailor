@@ -1,17 +1,16 @@
 'use strict';
 
-const { migrationsPath } = require('../../../sequelize.config');
 const { wrapAsyncMethods } = require('./helpers');
 const config = require('./config');
 const forEach = require('lodash/forEach');
 const Hooks = require('./hooks');
 const invoke = require('lodash/invoke');
 const logger = require('../logger');
+const path = require('path');
 const pick = require('lodash/pick');
 const pkg = require('../../../package.json');
 const semver = require('semver');
 const Sequelize = require('sequelize');
-const Umzug = require('umzug');
 
 // Require models.
 const User = require('../../user/user.model');
@@ -22,45 +21,17 @@ const TeachingElement = require('../../teaching-element/te.model');
 const Revision = require('../../revision/revision.model');
 const Comment = require('../../comment/comment.model');
 
-const isProduction = process.env.NODE_ENV === 'production';
 const sequelize = createConnection(config);
+const migrations = require('./migrations')(sequelize, {
+  path: path.join(__dirname, './migrations/'),
+  logger
+});
 
 function initialize() {
-  const umzug = new Umzug({
-    storage: 'sequelize',
-    storageOptions: {
-      sequelize,
-      tableName: config.migrationStorageTableName
-    },
-    migrations: {
-      params: [sequelize.getQueryInterface(), sequelize.Sequelize],
-      path: migrationsPath
-    },
-    logging(message) {
-      if (message.startsWith('==')) return;
-      if (message.startsWith('File:')) {
-        const file = message.split(/\s+/g)[1];
-        return logger.info({ file }, message);
-      }
-      return logger.info(message);
-    }
-  });
-
-  umzug.on('migrating', m => logger.info({ migration: m }, '⬆️  Migrating:', m));
-  umzug.on('migrated', m => logger.info({ migration: m }, '⬆️  Migrated:', m));
-  umzug.on('reverting', m => logger.info({ migration: m }, '⬇️  Reverting:', m));
-  umzug.on('reverted', m => logger.info({ migration: m }, '⬇️  Reverted:', m));
-
   return sequelize.authenticate()
     .then(() => logger.info(getConfig(sequelize), '🗄️  Connected to database'))
     .then(() => checkPostgreVersion(sequelize))
-    .then(() => !isProduction && umzug.up())
-    .then(() => umzug.executed())
-    .then(migrations => {
-      const files = migrations.map(it => it.file);
-      if (!files.length) return;
-      logger.info({ migrations: files }, '🗄️  Executed migrations:\n', files.join('\n'));
-    });
+    .then(() => migrations.run());
 }
 
 const models = {
@@ -77,9 +48,8 @@ function defineModel(Model, connection = sequelize) {
   const { DataTypes } = connection.Sequelize;
   const fields = invoke(Model, 'fields', DataTypes, connection) || {};
   const options = invoke(Model, 'options') || {};
-  Object.assign(options, { sequelize: connection });
   wrapAsyncMethods(Model);
-  return Model.init(fields, options);
+  return Model.init(fields, { sequelize, ...options });
 }
 
 forEach(models, model => {

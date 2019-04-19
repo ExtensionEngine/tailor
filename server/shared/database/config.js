@@ -6,7 +6,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
   ...readConfig(),
-  operatorsAliases: false,
   migrationStorageTableName: 'sequelize_meta',
   benchmark: !isProduction,
   logging(query, time) {
