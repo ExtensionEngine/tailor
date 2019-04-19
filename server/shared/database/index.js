@@ -90,13 +90,11 @@ forEach(models, model => {
 
 function addHooks(model, Hooks, models) {
   const hooks = invoke(model, 'hooks', Hooks, models);
-  if (!hooks) return;
   forEach(hooks, (it, type) => model.addHook(type, it));
 }
 
 function addScopes(model, models) {
   const scopes = invoke(model, 'scopes', models);
-  if (!scopes) return;
   forEach(scopes, (it, name) => model.addScope(name, it, { override: true }));
 }
 
