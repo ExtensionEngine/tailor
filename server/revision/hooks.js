@@ -6,20 +6,21 @@ const logger = require('../shared/logger');
 
 module.exports = { add };
 
-function add(Revision, models, { HookTypes, addHook }) {
-  const { Course, Activity, TeachingElement } = models;
+function add(Revision, Hooks, { Course, Activity, TeachingElement }) {
   const hooks = {
-    [HookTypes.afterCreate]: 'CREATE',
-    [HookTypes.afterUpdate]: 'UPDATE',
-    [HookTypes.afterDestroy]: 'REMOVE'
+    [Hooks.afterCreate]: 'CREATE',
+    [Hooks.afterUpdate]: 'UPDATE',
+    [Hooks.afterDestroy]: 'REMOVE'
   };
+
+  const addHook = (Model, type, hook) => Model.addHook(type, Hooks.withType(type, hook));
   const isCourse = model => model instanceof Course;
 
   // TODO: Courses are soft deleted already?
   // When course is removed, its id is no longer valid and cannot be saved
   // as a foreign key. Remove this when courses are soft-deleted:
-  addHook(Course, HookTypes.afterCreate, createRevision);
-  addHook(Course, HookTypes.afterUpdate, createRevision);
+  addHook(Course, Hooks.afterCreate, createRevision);
+  addHook(Course, Hooks.afterUpdate, createRevision);
 
   forEach(hooks, (_, type) => addHook(Activity, type, createRevision));
   forEach(hooks, (_, type) => addHook(TeachingElement, type, createRevision));

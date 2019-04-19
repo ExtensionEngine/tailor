@@ -24,14 +24,6 @@ const Comment = require('../../comment/comment.model');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const sequelize = createConnection(config);
-const { Sequelize: { DataTypes } } = sequelize;
-
-const defineModel = Model => {
-  const fields = invoke(Model, 'fields', DataTypes, sequelize) || {};
-  const options = invoke(Model, 'options') || {};
-  wrapAsyncMethods(Model);
-  return Model.init(fields, { sequelize, ...options });
-};
 
 function initialize() {
   const umzug = new Umzug({
@@ -41,7 +33,7 @@ function initialize() {
       tableName: config.migrationStorageTableName
     },
     migrations: {
-      params: [sequelize.getQueryInterface(), Sequelize],
+      params: [sequelize.getQueryInterface(), sequelize.Sequelize],
       path: migrationsPath
     },
     logging(message) {
@@ -81,13 +73,32 @@ const models = {
   Comment: defineModel(Comment)
 };
 
+function defineModel(Model, connection = sequelize) {
+  const { DataTypes } = connection.Sequelize;
+  const fields = invoke(Model, 'fields', DataTypes, connection) || {};
+  const options = invoke(Model, 'options') || {};
+  Object.assign(options, { sequelize: connection });
+  wrapAsyncMethods(Model);
+  return Model.init(fields, options);
+}
+
 forEach(models, model => {
   invoke(model, 'associate', models);
-  invoke(model, 'hooks', models, Hooks);
+  addHooks(model, Hooks, models);
+  addScopes(model, models);
+});
+
+function addHooks(model, Hooks, models) {
+  const hooks = invoke(model, 'hooks', Hooks, models);
+  if (!hooks) return;
+  forEach(hooks, (it, type) => model.addHook(type, it));
+}
+
+function addScopes(model, models) {
   const scopes = invoke(model, 'scopes', models);
   if (!scopes) return;
   forEach(scopes, (it, name) => model.addScope(name, it, { override: true }));
-});
+}
 
 const db = {
   Sequelize,

@@ -85,14 +85,14 @@ class TeachingElement extends Model {
     });
   }
 
-  static hooks() {
+  static hooks(Hooks) {
     return {
-      beforeCreate(te) {
+      [Hooks.beforeCreate](te) {
         pruneVirtualProps(te);
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
       },
-      beforeUpdate(te) {
+      [Hooks.beforeUpdate](te) {
         pruneVirtualProps(te);
         if (!te.changed('data')) return Promise.resolve();
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
