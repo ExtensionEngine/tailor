@@ -1,13 +1,13 @@
 import ResourceComponents from '@extensionengine/resource-components';
-import * as AssetLink from './link';
-import * as AssetUpload from './upload';
+import AssetLink from './link';
+import AssetUpload from './upload';
 
 import '@extensionengine/resource-components/dist/resource-components.css';
 
 export const install = (Vue, { auth, apiUrl, link, upload } = {}) => {
   Vue.use(ResourceComponents, { auth });
-  AssetLink.install(Vue, { ...link, apiUrl });
-  AssetUpload.install(Vue, { ...upload, apiUrl });
+  Vue.use(AssetLink, { ...link, apiUrl });
+  Vue.use(AssetUpload, { ...upload, apiUrl });
 };
 
 export default install;
