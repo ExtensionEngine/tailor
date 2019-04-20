@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
+    "@extensionengine/resource-components": "^1.0.0",
     "@fabric/storage": "^1.0.0",
     "@mdi/font": "^3.5.95",
     "axios": "^0.18.0",

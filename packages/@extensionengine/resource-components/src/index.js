@@ -1,5 +1,5 @@
-import ResourceLink from './ResourceLink';
-import ResourceUpload from './ResourceUpload';
+import ResourceLink from './ResourceLink.vue';
+import ResourceUpload from './ResourceUpload.vue';
 
 export const install = (Vue, { auth } = {}) => {
   Vue.component(ResourceLink.name, {
