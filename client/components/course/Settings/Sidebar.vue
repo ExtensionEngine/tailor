@@ -8,7 +8,7 @@
         active-class="grey--text text--darken-3"
         exact
         ripple>
-        <v-list-tile-action>
+        <v-list-tile-action class="pl-1">
           <v-icon>{{ icon }}</v-icon>
         </v-list-tile-action>
         <v-list-tile-title>{{ label }}</v-list-tile-title>
@@ -25,7 +25,7 @@
           :color="color ? color : 'blue-grey darken-3'"
           @click="$emit('action', name)"
           ripple>
-          <v-list-tile-action>
+          <v-list-tile-action class="pl-1">
             <v-icon :color="color ? color : 'blue-grey darken-2'">
               mdi-{{ icon }}
             </v-icon>
@@ -43,7 +43,7 @@ export default {
     routes() {
       return [
         { label: 'General', name: 'course-info', icon: 'mdi-wrench' },
-        { label: 'User management', name: 'user-management', icon: 'mdi-account' }
+        { label: 'People', name: 'user-management', icon: 'mdi-account' }
       ];
     },
     actions() {
