@@ -62,6 +62,16 @@ action(function reorder({ activity, context }) {
     });
 });
 
+action(function remove(model) {
+  const descendants = getDeepChildren(this.state.items, model);
+  if (!model.id && !model._version) {
+    this.commit('remove', [model]);
+    return Promise.resolve(true);
+  }
+  return this.api.remove(model)
+    .then(() => this.commit('remove', [model, ...descendants]));
+});
+
 action(function clone(mapping) {
   const { srcId, srcCourseId } = mapping;
   const url = `/courses/${srcCourseId}/activities/${srcId}/clone`;

@@ -6,6 +6,7 @@
         @click="publish"
         color="blue-grey darken-1"
         outline
+        small
         class="pull-right">
         Publish info
       </v-btn>

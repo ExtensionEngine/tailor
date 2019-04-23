@@ -28,7 +28,7 @@
           @click="$emit('selected')"
           flat
           small
-          class="pull-right collapse">
+          class="pull-right collapse-item">
           Collapse
         </v-btn>
         <div v-if="exam && examObjectives.length" class="select-leaf">
@@ -149,7 +149,7 @@ export default {
   .header {
     padding-bottom: 40px;
 
-    .collapse {
+    .collapse-item {
       margin: 0;
       padding: 0;
     }

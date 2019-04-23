@@ -1,5 +1,7 @@
 <template>
-  <div class="list-group">
+  <div
+    :class="{ 'embeded-elements': embedded }"
+    class="list-group">
     <draggable
       :list="list"
       :options="options"
@@ -13,7 +15,7 @@
         :class="getContainerClasses(item)"
         class="list-item-container">
         <inline-activator
-          v-if="enableAdd"
+          v-if="enableAdd && !embedded"
           @click.native="showElementDrawer(index - 1)"/>
         <slot
           :item="item"
@@ -30,10 +32,10 @@
         :position="insertPosition"
         :layout="layout"
         :show="isElementDrawerVisible"
+        :large="!embedded"
+        :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'"
         @hidden="onHiddenElementDrawer"
-        @add="addElement"
-        large
-        icon="mdi-pencil-plus"/>
+        @add="addElement"/>
     </div>
   </div>
 </template>
@@ -51,7 +53,8 @@ export default {
     enableAdd: { type: Boolean, default: true },
     types: { type: Array, default: null },
     activity: { type: Object, required: true },
-    layout: { type: Boolean, default: false }
+    layout: { type: Boolean, default: false },
+    embedded: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -103,6 +106,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.embeded-elements /deep/ .contained-content {
+  margin: 7px 0 !important;
+}
+
 /* Do not remove! Makes sure vuedraggable detects correct scrollable parent */
 .list-group {
   padding: 10px 15px;

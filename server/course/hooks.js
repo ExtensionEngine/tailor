@@ -8,17 +8,22 @@ const first = require('lodash/first');
 const logger = require('../shared/logger');
 const map = require('lodash/map');
 
-exports.add = (Course, models, { HookTypes, addHook }) => {
-  const { Activity, TeachingElement } = models;
+exports.add = (Course, Hooks, { Activity, TeachingElement }) => {
   const hooks = [
-    HookTypes.afterCreate,
-    HookTypes.afterBulkCreate,
-    HookTypes.afterDestroy,
-    HookTypes.afterBulkDestroy
+    Hooks.afterCreate,
+    Hooks.afterBulkCreate,
+    Hooks.afterDestroy,
+    Hooks.afterBulkDestroy
   ];
 
-  forEach(hooks, type => addHook(Activity, type, updateObjectiveStats));
-  forEach(hooks, type => addHook(TeachingElement, type, updateAssessmentStats));
+  forEach(hooks, type => {
+    const hook = Hooks.withType(type, updateObjectiveStats);
+    return Activity.addHook(type, hook);
+  });
+  forEach(hooks, type => {
+    const hook = Hooks.withType(type, updateAssessmentStats);
+    return TeachingElement.addHook(type, hook);
+  });
 
   function updateObjectiveStats(hookType, instances) {
     const activity = first(castArray(instances));
@@ -34,6 +39,7 @@ exports.add = (Course, models, { HookTypes, addHook }) => {
 
   function updateAssessmentStats(hookType, instances) {
     const assessment = find(castArray(instances), { type: 'ASSESSMENT' });
+    if (!assessment) return;
     const { id, courseId, type } = assessment;
     logger.info(`[Course] TeachingElement#${hookType}`, { type, id, courseId });
     const where = { courseId, type: 'ASSESSMENT', detached: false };
