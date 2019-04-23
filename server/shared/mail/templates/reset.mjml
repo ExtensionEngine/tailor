@@ -1,0 +1,74 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-class name="title"
+        font-size="30px"
+        color="white"
+        background-color="#1565c0" />
+      <mj-class name="content"
+        color="#222222"
+        background-color="white"
+        font-size="14px" />
+      <mj-class name="ctaButton"
+        color="white"
+        background-color="#0c377b"
+        width="200px"
+        height="50px"
+        inner-padding="0 25px"
+        padding="25px" />
+      <mj-class name="footer"
+        color="#666666"
+        background-color="white"
+        font-size="12px" />
+      <mj-class name="divider"
+        border-width="1px"
+        border-color="#eaeaea"
+        padding="20px 25px" />
+    </mj-attributes>
+    <mj-style inline="inline">
+      strong {
+        font-weight: bold;
+      }
+      a {
+        color: #067df7;
+        text-decoration: none;
+      }
+      .icon {
+        vertical-align: text-bottom;
+      }
+    </mj-style>
+  </mj-head>
+  <mj-body>
+    <mj-section mj-class="title">
+      <mj-column>
+        <mj-text mj-class="title">
+          Tailor Author
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section mj-class="content">
+      <mj-column>
+        <mj-text mj-class="content">
+          Hello <strong>{recipientName}</strong>,
+        </mj-text>
+        <mj-text mj-class="content" padding-bottom="0">
+          You have requested password reset.
+        </mj-text>
+        <mj-text mj-class="content">
+          Please reset your password by clicking the button below:
+        </mj-text>
+        <mj-button mj-class="ctaButton" href="{href}">
+          Reset password
+        </mj-button>
+        <mj-text mj-class="content">
+          Or copy and paste this URL into your browser:
+        </mj-text>
+        <mj-text mj-class="content"><a href="{href}">{href}</a></mj-text>
+        <mj-divider mj-class="divider" />
+        <mj-text mj-class="footer">
+          If you didn't request this, please ignore this email.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
