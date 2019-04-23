@@ -10,7 +10,7 @@ const mapKeys = require('lodash/mapKeys');
 const map = require('lodash/map');
 const mjml2html = require('mjml');
 const path = require('path');
-const pupa = require('pupa');
+const mustache = require('mustache');
 
 module.exports = {
   renderHtml,
@@ -28,13 +28,13 @@ function renderHtml(templatePath, data, style) {
     const imagePath = $image.attr('src');
     $image.attr('src', getDataUri(imagePath));
   });
-  const output = pupa($.html(), data);
-  return mjml2html(output, { minify: true }).html;
+  const output = mjml2html($.html(), { minify: true }).html;
+  return mustache.render(output, data);
 }
 
 function renderText(templatePath, data) {
   const template = fs.readFileSync(templatePath, 'utf8');
-  return pupa(template, data);
+  return mustache.render(template, data);
 }
 
 function getAttributes($, style = {}) {
