@@ -1,0 +1,50 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-class name="title"
+        font-size="30px"
+        color="white"
+        background-color="#1565c0" />
+      <mj-class name="content"
+        color="#222222"
+        background-color="white"
+        font-size="14px" />
+    </mj-attributes>
+    <mj-style inline="inline">
+      strong {
+        font-weight: bold;
+      }
+      a {
+        color: #067df7;
+        text-decoration: none;
+      }
+    </mj-style>
+  </mj-head>
+  <mj-body>
+    <mj-section mj-class="title">
+      <mj-column>
+        <mj-text mj-class="title">
+          Tailor Author
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section mj-class="content">
+      <mj-column>
+        <mj-text mj-class="content">
+          Hello <strong>{{recipient}}</strong>,
+        </mj-text>
+        <mj-text mj-class="content">
+          You have requested list of recent comments.
+        </mj-text>
+        <mj-text mj-class="content">
+          List of comments:
+        </mj-text>
+        <mj-raw>{{#comments}}</mj-raw>
+        <mj-text mj-class="content" font-size="12px" padding-bottom="0">
+          <strong>{{author.email}}</strong>: {{content}}
+        </mj-text>
+        <mj-raw>{{/comments}}</mj-raw>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

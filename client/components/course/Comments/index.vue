@@ -1,5 +1,11 @@
 <template>
   <ul :class="{ 'comments-end': allComments }" class="comments">
+    <v-btn
+      @click="sendComments"
+      color="info"
+      outline>
+      Send
+    </v-btn>
     <comment
       v-for="(comment, index) in paginatedComments"
       :key="comment._cid || comment.id"
@@ -75,6 +81,11 @@ export default {
     },
     sameActivity(activityId, i) {
       return i ? this.paginatedComments[i - 1].activityId !== activityId : !i;
+    },
+    sendComments() {
+      const email = this.user.email;
+      const comments = this.paginatedComments.slice(0, 10);
+      api.emailComments({ email, comments });
     }
   },
   mounted() {

@@ -15,7 +15,7 @@ const server = email.server.connect({
   host: process.env.EMAIL_HOST,
   ssl: true
 });
-logger.info(getConfig(server), '📧  SMTP client created');
+logger.debug(getConfig(server), '📧  SMTP client created');
 
 function send(message) {
   return new Promise((resolve, reject) => {
@@ -30,11 +30,10 @@ function invite(user) {
   const href = resetUrl(user);
   const { hostname } = new URL(href);
   const recipient = user.email;
-  const recipientName = user.firstName;
-  const data = { href, origin, hostname, recipientName };
+  const data = { href, origin, hostname, recipient };
   const html = renderHtml(path.join(templatesDir, 'welcome.mjml'), data);
   const text = renderText(path.join(templatesDir, 'welcome.txt'), data);
-  logger.info({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending invite email to:', recipient);
+  logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending invite email to:', recipient);
   return send({
     from: EMAIL_ADDRESS,
     to: recipient,
@@ -47,11 +46,10 @@ function invite(user) {
 function resetPassword(user) {
   const href = resetUrl(user);
   const recipient = user.email;
-  const recipientName = user.firstName;
-  const data = { href, recipientName };
+  const data = { href, recipient };
   const html = renderHtml(path.join(templatesDir, 'reset.mjml'), data);
   const text = renderText(path.join(templatesDir, 'reset.txt'), data);
-  logger.info({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending reset password email to:', recipient);
+  logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending reset password email to:', recipient);
   return send({
     from: EMAIL_ADDRESS,
     to: recipient,
@@ -70,8 +68,24 @@ function getConfig(server) {
   ]);
 }
 
+function commentsList({ user, comments }) {
+  const recipient = user.email;
+  const data = { comments, recipient };
+  const html = renderHtml(path.join(templatesDir, 'comments.mjml'), data);
+  const text = renderText(path.join(templatesDir, 'comments.txt'), data);
+  logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending comments email to:', recipient);
+  return send({
+    from: EMAIL_ADDRESS,
+    to: recipient,
+    subject: 'Comments list',
+    text,
+    attachment: [{ data: html, alternative: true }]
+  });
+}
+
 module.exports = {
   send,
   invite,
-  resetPassword
+  resetPassword,
+  commentsList
 };

@@ -1,0 +1,12 @@
+Tailor Author
+=================================================
+
+Hello {{recipient}},
+
+List of comments:
+
+{{#comments}}
+{{author.email}}: {{content}}
+{{/comments}}
+
+-------------------------------------------------

@@ -35,10 +35,15 @@ function commentCheckTime({ userId, checkTime }) {
     .then(res => res.data);
 }
 
+function emailComments({ email, comments }) {
+  return request.post('/users/emailComments', { email, comments });
+}
+
 export default {
   login,
   logout,
   forgotPassword,
   resetPassword,
-  commentCheckTime
+  commentCheckTime,
+  emailComments
 };
