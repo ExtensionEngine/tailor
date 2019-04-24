@@ -3,11 +3,11 @@
     <circular-progress v-if="uploading"/>
     <form v-else @submit.prevent class="upload-form">
       <input
+        v-filefilter="'auto'"
         v-validate="validate"
         :id="id"
         :ref="id"
         :name="id"
-        :accept="validate.ext.join(',')"
         @change="upload"
         type="file"
         class="upload-input">
@@ -45,7 +45,7 @@ export default {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
     fileKey: { type: String, default: '' },
-    validate: { type: Object, default: () => ({ rules: { ext: [] } }) },
+    validate: { type: Object, default: () => ({ ext: [] }) },
     label: { type: String, default: 'Choose a file' },
     sm: { type: Boolean, default: false }
   },
