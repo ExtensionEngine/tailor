@@ -52,26 +52,15 @@ function updateProfile({ body: { user } }, res, next) {
     .catch(err => next(err)));
 }
 
-function changePassword({ body: { password }, params: { id } }, res) {
-  return User.findByPk(id)
-    .then(user => {
-      user.password = password;
-      return user.save().catch(validationError);
-    })
-    .then(() => res.sendStatus(200));
+function changePassword({ user, body: { password } }, res) {
+  return user.update({ password })
+    .then(() => res.sendStatus(200))
+    .catch(validationError);
 }
 
-function saveImageKey({ body: { key }, params: { id } }, res, next) {
-  return User.findByPk(id)
-    .then(user => user.update({ imgUrl: key }))
-    .then(updatedUser => res.json({ user: updatedUser.profile }))
-    .catch(err => next(err));
-}
-
-function deleteImageKey({ params: { id } }, res, next) {
-  return User.findByPk(id)
-    .then(user => user.update({ imgUrl: '' }))
-    .then(updatedUser => res.json({ user: updatedUser.profile }))
+function updateImageUrl({ user, body: { key } }, res, next) {
+  return user.update({ imgUrl: key })
+    .then(({ profile }) => res.json({ user: profile }))
     .catch(err => next(err));
 }
 
@@ -82,6 +71,5 @@ module.exports = {
   login,
   updateProfile,
   changePassword,
-  saveImageKey,
-  deleteImageKey
+  updateImageUrl
 };

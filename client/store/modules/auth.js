@@ -58,17 +58,12 @@ action(function resetPassword({ token, password }) {
   return authApi.resetPassword(token, password);
 });
 
-action(function changePassword({ UserId, password }) {
-  return authApi.changePassword(UserId, password);
+action(function changePassword({ password }) {
+  return authApi.changePassword(password);
 });
 
-action(function saveImageUrl({ UserId, key }) {
-  return authApi.saveImageUrl(UserId, key)
-    .then(({ data: { user } }) => this.commit('setUser', user));
-});
-
-action(function deleteImageUrl({ UserId }) {
-  return authApi.deleteImageUrl(UserId)
+action(function updateImageUrl({ key }) {
+  return authApi.updateImageUrl(key)
     .then(({ data: { user } }) => this.commit('setUser', user));
 });
 

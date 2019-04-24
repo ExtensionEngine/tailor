@@ -6,7 +6,7 @@
         :key="tab.name"
         :to="{ name: tab.route }"
         ripple>
-        {{ tab.name }}
+        <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
       </v-tab>
     </v-tabs>
     <div class="tab-content" infinite-wrapper>
@@ -27,8 +27,8 @@ export default {
   computed: {
     tabs() {
       const items = [
-        { name: 'General', route: 'general' },
-        { name: 'Privacy', route: 'privacy' }
+        { name: 'General', route: 'general', icon: 'wrench' },
+        { name: 'Privacy', route: 'privacy', icon: 'lock-outline' }
       ];
       return items;
     }
@@ -50,6 +50,12 @@ export default {
   .tab-content {
     overflow-y: scroll;
     overflow-y: overlay;
+  }
+}
+
+.tab-active {
+  .v-icon {
+    color: #263238 !important;
   }
 }
 </style>

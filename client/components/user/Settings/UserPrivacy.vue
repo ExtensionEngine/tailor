@@ -30,7 +30,7 @@
                 {{ vErrors.first('passwordConfirmation') }}
               </span>
             </div>
-            <v-btn :disabled="!isValid" flat large>
+            <v-btn :disabled="!isValid" type="submit" flat large>
               Submit
             </v-btn>
           </form>
@@ -60,15 +60,14 @@ export default {
   computed: {
     ...mapGetters(['user']),
     isValid() {
-      return this.password && this.vErrors.count() === 0;
+      return this.password && !this.vErrors.count();
     }
   },
   methods: {
     ...mapActions(['changePassword']),
     submit() {
-      const UserId = this.user.id;
       this.$validator.validateAll().then(result => {
-        return this.changePassword({ password: this.password, UserId })
+        return this.changePassword({ password: this.password })
           .then(() => this.$router.push({ name: 'general' }))
           .catch(() => (this.error = true));
       });

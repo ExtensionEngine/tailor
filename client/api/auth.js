@@ -5,9 +5,8 @@ const url = {
   forgotPassword: '/users/forgotPassword',
   resetPassword: '/users/resetPassword',
   updateProfile: '/users/me',
-  saveImageUrl: id => `/users/me/${id}/saveImageKey`,
-  deleteImageUrl: id => `/users/me/${id}/deleteImageKey`,
-  changePassword: id => `/users/me/${id}/changePassword`
+  imageUrl: '/users/me/image-url',
+  changePassword: '/users/me/change-password'
 };
 
 function login(credentials) {
@@ -34,16 +33,12 @@ function resetPassword(token, password) {
   return request.post(url.resetPassword, { token, password });
 }
 
-function changePassword(id, password) {
-  return request.post(url.changePassword(id), { password });
+function changePassword(password) {
+  return request.post(url.changePassword, { password });
 }
 
-function saveImageUrl(id, key) {
-  return request.post(url.saveImageUrl(id), { key });
-}
-
-function deleteImageUrl(id) {
-  return request.post(url.deleteImageUrl(id));
+function updateImageUrl(key) {
+  return request.patch(url.imageUrl, { key });
 }
 
 function updateUserInfo(user) {
@@ -57,6 +52,5 @@ export default {
   resetPassword,
   updateUserInfo,
   changePassword,
-  saveImageUrl,
-  deleteImageUrl
+  updateImageUrl
 };

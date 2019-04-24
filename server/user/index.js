@@ -11,10 +11,10 @@ router
   .post('/users/forgotPassword', ctrl.forgotPassword)
   .post('/users/resetPassword', ctrl.resetPassword)
   // Protected routes:
-  .post('/users/me/:id/saveImageKey', auth, ctrl.saveImageKey)
-  .post('/users/me/:id/deleteImageKey', auth, ctrl.deleteImageKey)
-  .post('/users/me/:id/changePassword', auth, ctrl.changePassword)
-  .patch('/users/me', auth, ctrl.updateProfile)
+  .use('/users/me*', auth)
+  .post('/users/me/change-password', ctrl.changePassword)
+  .patch('/users/me/image-url', ctrl.updateImageUrl)
+  .patch('/users/me', ctrl.updateProfile)
   .get('/users', auth, ctrl.index);
 
 module.exports = {
