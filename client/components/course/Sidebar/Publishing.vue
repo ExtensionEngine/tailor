@@ -1,5 +1,5 @@
 <template>
-  <div class="publish-container">
+  <div :key="activity._cid" class="publish-container">
     <div class="publish-date">
       <span>{{ publishedAtMessage }}</span>
     </div>
@@ -22,9 +22,6 @@
           v-if="config.subLevels && config.subLevels.length"
           @click="confirmPublishing(activityWithDescendants)">
           <v-list-tile-title>{{ config.label }} and children</v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile @click="confirmPublishing(outlineActivities)">
-          <v-list-tile-title>All</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
