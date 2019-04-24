@@ -5,8 +5,11 @@
         v-for="tab in tabs"
         :key="tab.name"
         :to="{ name: tab.route }"
-        ripple>
-        {{ tab.name }}
+        active-class="tab-active"
+        ripple
+        exact
+        class="px-1">
+        <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
       </v-tab>
     </v-tabs>
     <div class="tab-content" infinite-wrapper>
@@ -21,6 +24,14 @@ import filter from 'lodash/filter';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
+const tabs = [
+  { name: 'Structure', route: 'course', icon: 'file-tree' },
+  { name: 'Graph View', route: 'tree-view', icon: 'source-fork mdi-rotate-180' },
+  { name: 'History', route: 'course-revisions', icon: 'history' },
+  { name: 'Comments', route: 'comments', icon: 'comment-text-outline' },
+  { name: 'Settings', route: 'course-info', icon: 'settings-outline' }
+];
+
 export default {
   data() {
     return {
@@ -31,16 +42,8 @@ export default {
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
     ...mapGetters(['course', 'activities', 'activity'], 'course'),
     tabs() {
-      const items = [
-        { name: 'Outline', route: 'course' },
-        { name: 'Tree View', route: 'tree-view' },
-        { name: 'Revisions', route: 'course-revisions' },
-        { name: 'Comments', route: 'comments' }
-      ];
-      if (this.isAdmin || this.isCourseAdmin) {
-        items.push({ name: 'Settings', route: 'course-info' });
-      }
-      return items;
+      if (!this.isAdmin && !this.isCourseAdmin) tabs.pop();
+      return tabs;
     }
   },
   methods: {
@@ -87,6 +90,12 @@ export default {
   .tab-content {
     overflow-y: scroll;
     overflow-y: overlay;
+  }
+}
+
+.tab-active {
+  .v-icon {
+    color: #263238 !important;
   }
 }
 </style>
