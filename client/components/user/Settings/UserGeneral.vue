@@ -6,12 +6,7 @@
           <div class="header">
             <croppa
               v-model="croppa"
-              :accept="'image/*'"
-              :width="230"
-              :height="230"
-              :show-remove-button="false"
-              :disabled="disabled"
-              :initial-image="currentImage"
+              v-bind="options"
               @file-choose="uploadCroppedImage"
               placeholder=""
               prevent-white-space
@@ -28,11 +23,11 @@
             </croppa>
           </div>
           <v-card-actions class="img-actions">
-            <div v-if="currentImage && !disabled" class="edit-actions">
-              <v-btn @click="handleZoom('zoomIn')" flat fab>
+            <div v-if="isEditing" class="edit-actions">
+              <v-btn @click="croppa.zoomIn()" flat fab>
                 <v-icon>mdi mdi-magnify-plus</v-icon>
               </v-btn>
-              <v-btn @click="handleZoom('zoomOut')" flat fab>
+              <v-btn @click="croppa.zoomOut()" flat fab>
                 <v-icon>mdi mdi-magnify-minus</v-icon>
               </v-btn>
               <v-flex pa-3>
@@ -78,7 +73,7 @@
 </template>
 
 <script>
-import assetsApi from '../../../api/asset.js';
+import assetsApi from '../../../api/asset';
 import cloneDeep from 'lodash/cloneDeep';
 import EventBus from 'EventBus';
 import { mapActions, mapGetters } from 'vuex-module';
@@ -134,6 +129,16 @@ export default {
         label: 'Last name',
         validate
       }];
+    },
+    options() {
+      return {
+        accept: 'image/*',
+        width: 230,
+        height: 230,
+        disabled: this.disabled,
+        showRemoveButton: false,
+        initialImage: this.currentImage
+      };
     }
   },
   methods: {
@@ -142,15 +147,9 @@ export default {
       const data = cloneDeep(this.user);
       this.updateInfo(set(data, key, value));
     },
-    uploadCroppedImage(file) {
-      const formData = new FormData();
-      formData.append('file', file, file.name);
-      return assetsApi.upload(formData)
-        .then(({ key }) => {
-          this.currentImage = key;
-          this.isEditing = true;
-        })
-        .catch(() => (this.error = true));
+    uploadCroppedImage() {
+      this.isEditing = true;
+      this.disabled = false;
     },
     editImage() {
       if (!this.croppa.hasImage()) {
@@ -159,11 +158,6 @@ export default {
       }
       this.isEditing = true;
       this.disabled = false;
-    },
-    handleZoom(zoom) {
-      if (this.disabled) return;
-      if (zoom === 'zoomIn') return this.croppa.zoomIn();
-      this.croppa.zoomOut();
     },
     doneEditing() {
       if (this.disabled) return;
@@ -175,6 +169,8 @@ export default {
           .then(() => {
             this.currentImage = this.user.imgUrl;
             this.success = true;
+          })
+          .finally(() => {
             this.isEditing = false;
             this.disabled = true;
           });
@@ -182,7 +178,6 @@ export default {
     },
     cancelEditing() {
       if (!this.user.imgUrl) {
-        this.currentImage = null;
         this.isEditing = false;
         return this.croppa.remove();
       }
@@ -196,12 +191,10 @@ export default {
         title: 'Delete image?',
         message: 'Are you sure you want to delete current image?',
         action: () => {
-          return this.updateImageUrl({ key: '' })
-            .then(() => {
-              this.croppa.remove();
-              this.currentImage = null;
-              this.disabled = false;
-            });
+          this.croppa.remove();
+          this.currentImage = null;
+          this.disabled = false;
+          return this.updateImageUrl({ key: '' });
         }
       });
     },
