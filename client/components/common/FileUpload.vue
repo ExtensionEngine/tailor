@@ -80,8 +80,8 @@ export default {
     },
     deleteFile() {
       appChannel.emit('showConfirmationModal', {
-        type: 'file',
-        item: { name: this.fileName },
+        title: 'Delete file?',
+        message: `Are you sure you want to delete ${this.fileName}?`,
         action: () => this.$emit('delete', this.id, null)
       });
     }

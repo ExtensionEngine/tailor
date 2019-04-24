@@ -76,12 +76,12 @@ class Course extends Model {
     };
   }
 
-  static addHooks(models) {
-    hooks.add(this, models);
+  static hooks(Hooks, models) {
+    hooks.add(this, Hooks, models);
   }
 
   static updateStats(id, key, value) {
-    return this.findById(id).then(course => {
+    return this.findByPk(id).then(course => {
       if (!course) return;
       const stats = course.stats || {};
       stats[key] = value;

@@ -49,8 +49,8 @@ class Revision extends Model {
     };
   }
 
-  static addHooks(models) {
-    hooks.add(this, models);
+  static hooks(Hooks, models) {
+    hooks.add(this, Hooks, models);
   }
 }
 

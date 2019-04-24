@@ -1,4 +1,9 @@
 // Patches in order for vuetify to work alongside bootstrap
+.v-input input, .v-input input[type=text][readonly] {
+  box-shadow: inherit;
+  border: inherit;
+}
+
 .v-text-field input {
   padding: 8px 0;
 }
