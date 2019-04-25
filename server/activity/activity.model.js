@@ -1,12 +1,13 @@
 'use strict';
 
 const { getSiblingLevels } = require('../../config/shared/activities');
-const { Model, Op } = require('sequelize');
+const { Model } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
+const withReferences = require('../shared/database/mixins/withReferences');
 
 class Activity extends Model {
   static fields(DataTypes) {
@@ -27,10 +28,6 @@ class Activity extends Model {
       },
       data: {
         type: JSONB
-      },
-      refs: {
-        type: JSONB,
-        defaultValue: {}
       },
       detached: {
         type: BOOLEAN,
@@ -74,16 +71,6 @@ class Activity extends Model {
       as: 'children',
       foreignKey: { name: 'parentId', field: 'parent_id' }
     });
-  }
-
-  static scopes() {
-    const notNull = { [Op.ne]: null };
-    return {
-      withReferences(relationships = []) {
-        const or = relationships.map(type => ({ [`refs.${type}`]: notNull }));
-        return { where: { [Op.or]: or } };
-      }
-    };
   }
 
   static options() {
@@ -202,6 +189,8 @@ class Activity extends Model {
     });
   }
 }
+
+withReferences(Activity);
 
 function removeAll(Model, where = {}, soft = false) {
   if (!soft) return Model.destroy({ where });

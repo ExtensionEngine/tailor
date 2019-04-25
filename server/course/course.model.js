@@ -101,8 +101,8 @@ class Course extends Model {
     const opts = { where: { courseId: this.id }, transaction };
     const relationships = getRepositoryRelationships(this.schema);
     const [activities, elements] = await Promise.all([
-      Activity.scope({ method: ['withReferences', relationships] }).findAll(opts),
-      TeachingElement.scope('withReferences').findAll(opts)
+      Activity.withReferences(relationships).findAll(opts),
+      TeachingElement.withReferences(['objectiveId']).findAll(opts)
     ]);
     return Promise.join(
       Promise.map(activities, it => it.mapClonedReferences(mappings, relationships, transaction)),

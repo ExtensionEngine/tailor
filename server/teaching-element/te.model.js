@@ -8,6 +8,7 @@ const isNumber = require('lodash/isNumber');
 const { Model, Op } = require('sequelize');
 const pick = require('lodash/pick');
 const { processStatics, resolveStatics } = require('../shared/storage/helpers');
+const withReferences = require('../shared/database/mixins/withReferences');
 
 const pruneVirtualProps = element => {
   const assets = get(element, 'data.assets', {});
@@ -46,10 +47,6 @@ class TeachingElement extends Model {
       },
       meta: {
         type: JSONB
-      },
-      refs: {
-        type: JSONB,
-        defaultValue: {}
       },
       linked: {
         type: BOOLEAN,
@@ -98,13 +95,6 @@ class TeachingElement extends Model {
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
       }
-    };
-  }
-
-  static scopes() {
-    const notNull = { [Op.ne]: null };
-    return {
-      withReferences: { where: { 'refs.objectiveId': notNull } }
     };
   }
 
@@ -171,5 +161,7 @@ class TeachingElement extends Model {
     });
   }
 }
+
+withReferences(TeachingElement);
 
 module.exports = TeachingElement;
