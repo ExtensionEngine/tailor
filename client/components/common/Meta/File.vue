@@ -4,10 +4,10 @@
     <template v-if="!value">
       <circular-progress v-if="uploading"/>
       <asset-upload
+        v-filefilter="'auto'"
         v-validate="validate"
         v-if="!value"
         :name="name"
-        :accept="fileFilter"
         @upload="$emit('update', meta.key, $event)"
         tag="label"
         class="upload-btn btn btn-material btn-sm">
@@ -43,8 +43,7 @@ export default {
     value: ({ meta }) => meta.value,
     url: ({ value }) => value.url,
     filename: ({ value }) => value.filename,
-    validate: ({ meta }) => meta.validate,
-    fileFilter: ({ validate }) => validate ? readSpecifiers(validate) : []
+    validate: ({ meta }) => meta.validate
   },
   methods: {
     onFileDelete() {
@@ -61,14 +60,6 @@ export default {
   },
   components: { CircularProgress }
 };
-
-function readSpecifiers(config) {
-  const specifiers = [];
-  const rules = config.rules || config;
-  if (Array.isArray(rules.ext)) specifiers.push(...rules.ext);
-  if (Array.isArray(rules.mimes)) specifiers.push(...rules.mimes);
-  return specifiers;
-}
 </script>
 
 <style lang="scss" scoped>

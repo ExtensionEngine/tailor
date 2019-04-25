@@ -39,7 +39,13 @@ export default {
   computed: {
     auth: ({ $options }) => $options.$_auth(),
     type: ({ tag }) => tag !== 'label' ? 'label' : null,
-    fileFilter: ({ accept }) => Array.isArray(accept) ? accept.join(',') : accept
+    fileFilter({ $attrs, accept }) {
+      // NOTE: Watching `$attrs` is required because they react to property
+      //       changes!
+      if (this.$el) accept = accept || this.$el.accept;
+      accept = accept || null;
+      return Array.isArray(accept) ? accept.join(',') : accept;
+    }
   },
   methods: {
     onFileSelected(e) {

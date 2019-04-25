@@ -1,16 +1,11 @@
 const isProduction = process.env.NODE_ENV === 'production';
 
 const isString = arg => typeof arg === 'string';
-const isFileInput = el => el.tagName === 'INPUT' || el.type === 'file';
 
 export const install = Vue => {
   const warn = (msg, vm) => Vue.util.warn(`[v-filefilter]: ${msg}`, vm);
   Vue.directive('filefilter', {
     inserted(el, { value }, { context: vm }) {
-      if (!isFileInput(el)) {
-        return !isProduction &&
-          warn('Using directive on incompatible element; expected `input[type="file"]`.', vm);
-      }
       if (!value) return !isProduction && warn('Missing required argument.', vm);
       if (Array.isArray(value)) return (el.accept = value.join(','));
       if (!isString(value)) {
