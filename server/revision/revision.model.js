@@ -3,6 +3,12 @@
 const hooks = require('./hooks');
 const { Model } = require('sequelize');
 
+const Operation = {
+  Create: 'CREATE',
+  Update: 'UPDATE',
+  Remove: 'REMOVE'
+};
+
 class Revision extends Model {
   static fields(DataTypes) {
     const { DATE, ENUM, JSONB } = DataTypes;
@@ -14,7 +20,7 @@ class Revision extends Model {
       },
       operation: {
         type: ENUM,
-        values: ['CREATE', 'UPDATE', 'REMOVE'],
+        values: Object.values(Operation),
         allowNull: false
       },
       state: {
@@ -47,6 +53,10 @@ class Revision extends Model {
       modelName: 'revision',
       freezeTableName: true
     };
+  }
+
+  static get Operation() {
+    return Operation;
   }
 
   static hooks(Hooks, models) {

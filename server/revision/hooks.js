@@ -7,10 +7,11 @@ const logger = require('../shared/logger');
 module.exports = { add };
 
 function add(Revision, Hooks, { Course, Activity, TeachingElement }) {
+  const { Operation } = Revision;
   const hooks = {
-    [Hooks.afterCreate]: 'CREATE',
-    [Hooks.afterUpdate]: 'UPDATE',
-    [Hooks.afterDestroy]: 'REMOVE'
+    [Hooks.afterCreate]: Operation.Create,
+    [Hooks.afterUpdate]: Operation.Update,
+    [Hooks.afterDestroy]: Operation.Remove
   };
 
   const addHook = (Model, type, hook) => Model.addHook(type, Hooks.withType(type, hook));
