@@ -125,26 +125,26 @@ class TeachingElement extends Model {
           .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
   }
 
-  static cloneElements(src, container, transaction) {
+  static cloneElements(src, container, options) {
     const { id: activityId, courseId } = container;
     return this.bulkCreate(src.map(it => {
       return Object.assign(pick(it, [
         'type', 'position', 'data', 'contentId', 'contentSignature', 'refs'
       ]), { activityId, courseId });
-    }), { returning: true, transaction });
+    }), { ...options, returning: true });
   }
 
   /**
    * Maps references for cloned element.
    * @param {Object} mappings Dict where keys represent old and values new ids.
-   * @param {SequelizeTransaction} [transaction]
+   * @param {Object} options
    * @returns {Promise.<TeachingElement>} Updated instance.
    */
-  mapClonedReferences(mappings, transaction) {
+  mapClonedReferences(mappings, options) {
     const { refs } = this;
     if (!refs.objectiveId) return Promise.resolve();
     refs.objectiveId = mappings[refs.objectiveId];
-    return this.update({ refs }, { transaction });
+    return this.update({ refs }, options);
   }
 
   siblings(filter = {}) {

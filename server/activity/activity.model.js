@@ -96,46 +96,46 @@ class Activity extends Model {
     };
   }
 
-  static async cloneActivities(src, dstCourseId, dstParentId, opts) {
-    if (!opts.idMappings) opts.idMappings = {};
-    const { idMappings, transaction } = opts;
+  static async cloneActivities(src, dstCourseId, dstParentId, options) {
+    const { idMappings = {}, context, transaction } = options;
     const dstActivities = await Activity.bulkCreate(map(src, it => ({
       courseId: dstCourseId,
       parentId: dstParentId,
       ...pick(it, ['type', 'position', 'data', 'refs'])
-    })), { returning: true, transaction });
+    })), { context, returning: true, transaction });
     const TeachingElement = this.sequelize.model('TeachingElement');
     return Promise.reduce(src, async (acc, it, index) => {
       const parent = dstActivities[index];
       acc[it.id] = parent.id;
       const where = { activityId: it.id, detached: false };
       const tes = await TeachingElement.findAll({ where, transaction });
-      await TeachingElement.cloneElements(tes, parent, transaction);
+      await TeachingElement.cloneElements(tes, parent, { context, transaction });
       const children = await it.getChildren({ where: { detached: false } });
       if (!children.length) return acc;
-      return Activity.cloneActivities(children, dstCourseId, parent.id, opts);
+      return Activity.cloneActivities(children, dstCourseId, parent.id, options);
     }, idMappings);
   }
 
-  clone(courseId, parentId, position) {
-    return this.sequelize.transaction(t => {
+  clone(courseId, parentId, position, context) {
+    return this.sequelize.transaction(transaction => {
+      const options = { context, transaction };
       if (position) this.position = position;
-      return Activity.cloneActivities([this], courseId, parentId, t);
+      return Activity.cloneActivities([this], courseId, parentId, options);
     });
   }
 
   /**
    * Maps references for cloned activity.
    * @param {Object} mappings Dict where keys represent old and values new ids.
-   * @param {SequelizeTransaction} [transaction]
+   * @param {Object} options
    * @returns {Promise.<Activity>} Updated instance.
    */
-  mapClonedReferences(mappings, relationships, transaction) {
+  mapClonedReferences(mappings, relationships, options) {
     const refs = this.refs || {};
     relationships.forEach(type => {
       if (refs[type]) refs[type] = refs[type].map(it => mappings[it]);
     });
-    return this.update({ refs }, { transaction });
+    return this.update({ refs }, options);
   }
 
   siblings({ filter = {}, transaction }) {

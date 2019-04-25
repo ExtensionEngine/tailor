@@ -92,10 +92,11 @@ class Course extends Model {
   /**
    * Maps references for cloned activities and teaching elements.
    * @param {Object} mappings Dict where keys represent old and values new ids.
-   * @param {SequelizeTransaction} [transaction]
+   * @param {Object} options
    * @returns {Promise.<Object>} Object with mapped activities and elements.
    */
-  async mapClonedReferences(mappings, transaction) {
+  async mapClonedReferences(mappings, options) {
+    const { transaction } = options;
     const Activity = this.sequelize.model('Activity');
     const TeachingElement = this.sequelize.model('TeachingElement');
     const opts = { where: { courseId: this.id }, transaction };
@@ -105,8 +106,8 @@ class Course extends Model {
       TeachingElement.scope('withReferences').findAll(opts)
     ]);
     return Promise.join(
-      Promise.map(activities, it => it.mapClonedReferences(mappings, relationships, transaction)),
-      Promise.map(elements, it => it.mapClonedReferences(mappings, transaction)),
+      Promise.map(activities, it => it.mapClonedReferences(mappings, relationships, options)),
+      Promise.map(elements, it => it.mapClonedReferences(mappings, options)),
       (activities, elements) => ({ activities, elements })
     );
   }
@@ -117,12 +118,13 @@ class Course extends Model {
     const srcAttributes = pick(this, ['schema', 'data', 'stats']);
     const dstAttributes = Object.assign(srcAttributes, { name, description });
     return this.sequelize.transaction(async transaction => {
-      const dst = await Course.create(dstAttributes, { context, transaction });
+      const options = { context, transaction };
+      const dst = await Course.create(dstAttributes, options);
       const src = await Activity.findAll({
         where: { courseId: this.id, parentId: null }, transaction
       });
-      const idMap = await Activity.cloneActivities(src, dst.id, null, { transaction });
-      await dst.mapClonedReferences(idMap, transaction);
+      const idMap = await Activity.cloneActivities(src, dst.id, null, options);
+      await dst.mapClonedReferences(idMap, options);
       return dst;
     });
   }
