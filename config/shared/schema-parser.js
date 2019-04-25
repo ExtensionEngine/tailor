@@ -49,7 +49,7 @@ function processActivityConfig(schema, activity) {
       type: 'TEXTAREA',
       label: 'Name',
       placeholder: 'Click to add...',
-      validate: { rules: { max: 250, required: true } }
+      validate: { max: 250, required: true }
     });
   }
   activity.defaultMeta = getMetaDefaults(activity.meta);
