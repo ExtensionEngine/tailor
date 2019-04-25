@@ -1,7 +1,7 @@
 {
   "name": "tailor",
-  "version": "2.4.3",
-  "description": "Course authoring platform",
+  "version": "3.0.0",
+  "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "private": true,
   "browserslist": [
