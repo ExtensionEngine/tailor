@@ -6,7 +6,9 @@ Hello {{recipient}},
 List of comments:
 
 {{#comments}}
+Activity {{0.activityId}}
+{{#.}}
 {{author.email}}: {{content}}
-{{/comments}}
+{{/.}}
 
--------------------------------------------------
+{{/comments}}

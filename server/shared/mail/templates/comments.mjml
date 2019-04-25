@@ -9,6 +9,26 @@
         color="#222222"
         background-color="white"
         font-size="14px" />
+      <mj-accordion
+        border="1px solid lightgray"
+        padding="5px 25px" />
+      <mj-accordion-element
+        icon-wrapped-url="http://i.imgur.com/Xvw0vjq.png"
+        icon-unwrapped-url="http://i.imgur.com/KKHenWa.png"
+        icon-height="10px"
+        icon-width="10px" />
+      <mj-accordion-title
+        font-family="Roboto, Open Sans, Helvetica, Arial, sans-serif"
+        background-color="#fafafa"
+        color="#031017"
+        padding="15px"
+        font-size="14px" />
+      <mj-accordion-text
+        font-family="Open Sans, Helvetica, Arial, sans-serif"
+        background-color="#fff"
+        padding="10px"
+        color="#505050"
+        font-size="12px" />
     </mj-attributes>
     <mj-style inline="inline">
       strong {
@@ -39,11 +59,20 @@
         <mj-text mj-class="content">
           List of comments:
         </mj-text>
-        <mj-raw>{{#comments}}</mj-raw>
-        <mj-text mj-class="content" font-size="12px" padding-bottom="0">
-          <strong>{{author.email}}</strong>: {{content}}
-        </mj-text>
-        <mj-raw>{{/comments}}</mj-raw>
+        <mj-accordion>
+          <mj-raw>{{#comments}}</mj-raw>
+          <mj-accordion-element>
+            <mj-accordion-title>Activity {{0.activityId}}</mj-accordion-title>
+            <mj-raw>{{#.}}</mj-raw>
+            <mj-accordion-text>
+              <mj-text mj-class="content" font-size="12px" padding-bottom="0">
+                <strong>{{author.email}}</strong>: {{content}}
+              </mj-text>
+            </mj-accordion-text>
+            <mj-raw>{{/.}}</mj-raw>
+          </mj-accordion-element>
+          <mj-raw>{{/comments}}</mj-raw>
+        </mj-accordion>
       </mj-column>
     </mj-section>
   </mj-body>

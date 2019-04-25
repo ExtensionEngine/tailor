@@ -13,7 +13,9 @@ const server = email.server.connect({
   user: process.env.EMAIL_USER,
   password: process.env.EMAIL_PASSWORD,
   host: process.env.EMAIL_HOST,
-  ssl: true
+  port: process.env.EMAIL_PORT || null,
+  ssl: Boolean(process.env.EMAIL_SSL),
+  tls: Boolean(process.env.EMAIL_TLS)
 });
 logger.debug(getConfig(server), '📧  SMTP client created');
 
@@ -70,7 +72,7 @@ function getConfig(server) {
 
 function commentsList({ user, comments }) {
   const recipient = user.email;
-  const data = { comments, recipient };
+  const data = { comments: sortComments(comments), recipient };
   const html = renderHtml(path.join(templatesDir, 'comments.mjml'), data);
   const text = renderText(path.join(templatesDir, 'comments.txt'), data);
   logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending comments email to:', recipient);
@@ -81,6 +83,20 @@ function commentsList({ user, comments }) {
     text,
     attachment: [{ data: html, alternative: true }]
   });
+}
+
+function sortComments(comments) {
+  const sortedComments = [];
+  let temp = [];
+  comments.forEach((comment, i) => {
+    if (i && comment.activityId !== comments[i - 1].activityId) {
+      sortedComments.push(temp);
+      temp = [];
+    }
+    temp.push(comment);
+  });
+  sortedComments.push(temp);
+  return sortedComments;
 }
 
 module.exports = {
