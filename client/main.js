@@ -8,6 +8,7 @@ import 'vue-directive-tooltip/css/index.css';
 import * as asset from '@/api/asset';
 import AssetComponents from './plugins/asset';
 import ElementRegistry from './ElementRegistry';
+import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
@@ -39,6 +40,7 @@ Vue.use(AssetComponents, {
     defaultTag: 'v-btn'
   }
 });
+Vue.use(FileFilter);
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {

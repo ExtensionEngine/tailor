@@ -15,6 +15,23 @@
       @close="showCloneModal = false">
     </clone-modal>
     <progress-dialog :show="isPublishing"/>
+    <v-footer height="auto" color="blue-grey darken-2" absolute>
+      <v-layout row justify-center>
+        <v-flex
+          xs-12
+          class="body-2 grey--text text--lighten-4 py-2">
+          <v-chip
+            color="grey lighten-4"
+            label
+            small
+            class="mr-3 grey--text text--darken-4">
+            v3.0 Silk
+          </v-chip>
+          Built with <v-icon color="pink">mdi-heart</v-icon>
+          ExtensionEngine
+        </v-flex>
+      </v-layout>
+    </v-footer>
   </v-container>
 </template>
 
