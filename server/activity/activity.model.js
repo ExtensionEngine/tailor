@@ -102,7 +102,7 @@ class Activity extends Model {
       courseId: dstCourseId,
       parentId: dstParentId,
       ...pick(it, ['type', 'position', 'data', 'refs'])
-    })), { context, returning: true, transaction });
+    })), { context, returning: true, individualHooks: true, transaction });
     const TeachingElement = this.sequelize.model('TeachingElement');
     return Promise.reduce(src, async (acc, it, index) => {
       const parent = dstActivities[index];
@@ -168,7 +168,7 @@ class Activity extends Model {
 
   remove(options = {}) {
     if (!options.recursive) return this.destroy(options);
-    return this.sequelize.transaction(t => {
+    return this.sequelize.transaction(transaction => {
       return this.descendants({ attributes: ['id'] })
         .then(descendants => {
           descendants.all = [...descendants.nodes, ...descendants.leaves];
@@ -178,13 +178,13 @@ class Activity extends Model {
           const TeachingElement = this.sequelize.model('TeachingElement');
           const activities = map(descendants.all, 'id');
           const where = { activityId: [...activities, this.id] };
-          return removeAll(TeachingElement, where, options.soft)
+          return removeAll(TeachingElement, { ...options, transaction, where })
             .then(() => descendants);
         })
         .then(descendants => {
           const activities = map(descendants.nodes, 'id');
           const where = { parentId: [...activities, this.id] };
-          return removeAll(Activity, where, options.soft);
+          return removeAll(Activity, { ...options, transaction, where });
         })
         .then(() => this.destroy(options))
         .then(() => this);
@@ -203,9 +203,9 @@ class Activity extends Model {
   }
 }
 
-function removeAll(Model, where = {}, soft = false) {
-  if (!soft) return Model.destroy({ where });
-  return Model.update({ detached: true }, { where });
+function removeAll(Model, { soft = false, ...options }) {
+  if (!soft) return Model.destroy(options);
+  return Model.update({ detached: true }, options);
 }
 
 module.exports = Activity;
