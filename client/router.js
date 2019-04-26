@@ -16,8 +16,8 @@ import ResetPassword from './components/auth/ResetPassword';
 import TreeView from './components/course/TreeView';
 import UserManagement from './components/course/Settings/UserManagement';
 import UserSettings from './components/user';
-import UserPrivacy from './components/user/Settings/UserPrivacy';
-import UserGeneral from './components/user/Settings/UserGeneral';
+import UserPrivacy from './components/user/UserPrivacy';
+import UserGeneral from './components/user/Settings';
 
 Vue.use(Router);
 
@@ -33,11 +33,11 @@ let router = new Router({
     meta: { auth: true },
     children: [{
       path: '',
-      name: 'general',
+      name: 'user-info',
       component: UserGeneral
     }, {
       path: 'privacy',
-      name: 'privacy',
+      name: 'user-privacy',
       component: UserPrivacy
     }]
   }, {

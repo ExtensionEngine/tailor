@@ -44,12 +44,11 @@ function login({ body }, res) {
     });
 }
 
-function updateProfile({ body: { user } }, res, next) {
-  const { id, email, firstName, lastName } = user;
-  return User.findByPk(id)
-    .then(user => user.update({ email, firstName, lastName })
-    .then(updatedUser => res.json({ user: updatedUser.profile }))
-    .catch(err => next(err)));
+function updateProfile({ user, body: { userCredentials } }, res, next) {
+  const { email, firstName, lastName } = userCredentials;
+  return user.update({ email, firstName, lastName })
+    .then(({ profile }) => res.json({ user: profile }))
+    .catch(err => next(err));
 }
 
 function changePassword({ user, body: { password } }, res) {

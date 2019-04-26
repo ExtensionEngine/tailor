@@ -41,8 +41,8 @@ function updateImageUrl(key) {
   return request.patch(url.imageUrl, { key });
 }
 
-function updateUserInfo(user) {
-  return request.patch(url.updateProfile, { user });
+function updateUserInfo(userCredentials) {
+  return request.patch(url.updateProfile, { userCredentials });
 }
 
 export default {

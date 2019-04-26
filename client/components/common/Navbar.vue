@@ -30,7 +30,7 @@
         <v-list-tile>
           <v-list-tile-title>{{ user.email }}</v-list-tile-title>
         </v-list-tile>
-        <v-list-tile :to="{ name: 'general' }">
+        <v-list-tile :to="{ name: 'user-info' }">
           <v-list-tile-title>Profile</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="logout">

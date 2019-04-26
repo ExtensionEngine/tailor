@@ -67,8 +67,8 @@ action(function updateImageUrl({ key }) {
     .then(({ data: { user } }) => this.commit('setUser', user));
 });
 
-action(function updateInfo(user) {
-  return authApi.updateUserInfo(user)
+action(function updateInfo(userCredentials) {
+  return authApi.updateUserInfo(userCredentials)
     .then(({ data: { user } }) => this.commit('setUser', user));
 });
 
