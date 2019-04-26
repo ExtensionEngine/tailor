@@ -7,6 +7,7 @@ import 'vue-directive-tooltip/css/index.css';
 
 import assetsApi from '@/api/asset';
 import ElementRegistry from './ElementRegistry';
+import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
@@ -26,6 +27,7 @@ Vue.component('tce-question-container', QuestionContainer);
 const registry = new ElementRegistry(Vue);
 registry.initialize();
 
+Vue.use(FileFilter);
 Vue.use(VueHotkey);
 Vue.use(Vuetify, { iconfont: 'mdi' });
 Vue.use(Tooltip, { delay: 50 });

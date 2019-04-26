@@ -9,7 +9,7 @@ const meta = yup.array().of(yup.object().shape({
   type: yup.string().min(2).max(30).required(),
   label: yup.string().min(2).max(50).required(),
   placeholder: yup.string().min(2).max(100),
-  validate: yup.object().shape({ rules: yup.object() })
+  validate: yup.object()
 }));
 
 const relationships = yup.array().of(yup.object().shape({

@@ -74,4 +74,10 @@ export default {
   margin: 5px 5px 20px;
   font-weight: 500;
 }
+
+.meta-element {
+  > * {
+    padding-top: 20px;
+  }
+}
 </style>
