@@ -130,15 +130,13 @@ function getConfig(sequelize) {
 }
 
 function checkPostgreVersion(sequelize) {
-  const type = sequelize.QueryTypes.VERSION;
-  return sequelize.query('SHOW server_version', { type })
-    .then(version => {
-      logger.info({ version }, 'PostgreSQL version:', version);
-      const range = pkg.engines && pkg.engines.postgres;
-      if (!range) return;
-      if (semver.satisfies(semver.coerce(version), range)) return;
-      const err = new Error(`"${pkg.name}" requires PostgreSQL ${range}`);
-      logger.error({ version, required: range }, err.message);
-      return Promise.reject(err);
-    });
+  return sequelize.getQueryInterface().databaseVersion().then(version => {
+    logger.info({ version }, 'PostgreSQL version:', version);
+    const range = pkg.engines && pkg.engines.postgres;
+    if (!range) return;
+    if (semver.satisfies(semver.coerce(version), range)) return;
+    const err = new Error(`"${pkg.name}" requires PostgreSQL ${range}`);
+    logger.error({ version, required: range }, err.message);
+    return Promise.reject(err);
+  });
 }
