@@ -131,7 +131,7 @@ class TeachingElement extends Model {
       return Object.assign(pick(it, [
         'type', 'position', 'data', 'contentId', 'contentSignature', 'refs'
       ]), { activityId, courseId });
-    }), { ...options, returning: true, individualHooks: true });
+    }), { ...options, returning: true });
   }
 
   /**

@@ -1,7 +1,9 @@
 'use strict';
 
 const { constant } = require('to-case');
+const castArray = require('lodash/castArray');
 const forEach = require('lodash/forEach');
+const groupBy = require('lodash/groupBy');
 const logger = require('../shared/logger');
 
 module.exports = { add };
@@ -20,19 +22,45 @@ function add(Revision, Hooks, { Course, Activity, TeachingElement }) {
   // TODO: Courses are soft deleted already?
   // When course is removed, its id is no longer valid and cannot be saved
   // as a foreign key. Remove this when courses are soft-deleted:
-  addHook(Course, Hooks.afterCreate, createRevision);
-  addHook(Course, Hooks.afterUpdate, createRevision);
+  addHook(Course, Hooks.afterCreate, revisionHook(Operation.Create));
+  addHook(Course, Hooks.afterUpdate, revisionHook(Operation.Update));
 
-  forEach(hooks, (_, type) => addHook(Activity, type, createRevision));
-  forEach(hooks, (_, type) => addHook(TeachingElement, type, createRevision));
+  // Add individual operation hooks.
+  forEach(hooks, (operation, type) => addHook(Activity, type, revisionHook(operation)));
+  forEach(hooks, (operation, type) => addHook(TeachingElement, type, revisionHook(operation)));
+  // Add bulk operation hooks (cloning).
+  addHook(Activity, Hooks.afterBulkCreate, revisionHook(Operation.Create));
+  addHook(TeachingElement, Hooks.afterBulkCreate, revisionHook(Operation.Create));
 
-  function createRevision(hookType, instance, { context = {}, transaction }) {
+  function revisionHook(operation) {
+    return (type, instances, options) => {
+      return createRevisions(type, instances, { ...options, operation });
+    };
+  }
+
+  function createRevisions(hookType, instances, { context = {}, operation, transaction }) {
     if (!context.userId) return;
-    const courseId = isCourse(instance) ? instance.id : instance.courseId;
-    const entity = constant(instance.constructor.name);
-    const operation = hooks[hookType];
-    logger.info(`[Revision] ${entity}#${hookType}`, { entity, operation, id: instance.id, courseId });
-    const revision = { courseId, entity, operation, state: instance.toJSON(), userId: context.userId };
-    return Revision.create(revision, { transaction });
+    const revisions = castArray(instances).map(instance => {
+      const courseId = isCourse(instance) ? instance.id : instance.courseId;
+      const entity = constant(instance.constructor.name);
+      return {
+        courseId,
+        entity,
+        operation,
+        state: instance.toJSON(),
+        userId: context.userId
+      };
+    });
+    forEach(groupBy(revisions, 'entity'), (revisions, entity) => {
+      const data = revisions.map(it => formatRevision(it));
+      logger.info(`[Revision] ${entity}#${hookType}`, data);
+    });
+    return Revision.bulkCreate(revisions, { transaction });
   }
 }
+
+function formatRevision({ courseId, entity, operation, state }) {
+  const { id } = state;
+  return { entity, operation, id, courseId };
+}
+

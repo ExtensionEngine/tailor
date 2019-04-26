@@ -102,7 +102,7 @@ class Activity extends Model {
       courseId: dstCourseId,
       parentId: dstParentId,
       ...pick(it, ['type', 'position', 'data', 'refs'])
-    })), { context, returning: true, individualHooks: true, transaction });
+    })), { context, returning: true, transaction });
     const TeachingElement = this.sequelize.model('TeachingElement');
     return Promise.reduce(src, async (acc, it, index) => {
       const parent = dstActivities[index];
