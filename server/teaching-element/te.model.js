@@ -17,6 +17,10 @@ const pruneVirtualProps = element => {
 };
 
 class TeachingElement extends Model {
+  static mixins() {
+    return [withReferences];
+  }
+
   static fields(DataTypes) {
     const { BOOLEAN, DATE, DOUBLE, JSONB, STRING, UUID, UUIDV4 } = DataTypes;
     return {
@@ -161,7 +165,5 @@ class TeachingElement extends Model {
     });
   }
 }
-
-withReferences(TeachingElement);
 
 module.exports = TeachingElement;

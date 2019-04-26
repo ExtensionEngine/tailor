@@ -10,6 +10,10 @@ const Promise = require('bluebird');
 const withReferences = require('../shared/database/mixins/withReferences');
 
 class Activity extends Model {
+  static mixins() {
+    return [withReferences];
+  }
+
   static fields(DataTypes) {
     const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4 } = DataTypes;
     return {
@@ -189,8 +193,6 @@ class Activity extends Model {
     });
   }
 }
-
-withReferences(Activity);
 
 function removeAll(Model, where = {}, soft = false) {
   if (!soft) return Model.destroy({ where });
