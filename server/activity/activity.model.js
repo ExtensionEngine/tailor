@@ -123,8 +123,9 @@ class Activity extends Model {
   }
 
   static async cloneActivities(activities, courseId, parentId, options) {
-    const { lookupTable = {}, context, transaction } = options;
-    const items = activities.map(it => ({ ...this.views.clone(it), courseId, parentId }));
+    const { mappings = {}, context, transaction } = options;
+    const { views } = this;
+    const items = activities.map(it => ({ ...views.clone(it), courseId, parentId }));
     const clonedActivities = await this.bulkCreate(items, { ...options, returning: true });
     if (!isEmpty(clonedActivities)) {
       await this.runHooks('afterBulkClone', clonedActivities, options);
@@ -139,7 +140,7 @@ class Activity extends Model {
       const children = await activity.getChildren({ where: { detached: false } });
       if (isEmpty(children)) return acc;
       return Activity.cloneActivities(children, courseId, parent.id, options);
-    }, lookupTable);
+    }, mappings);
   }
 
   clone(courseId, parentId, position, context) {
@@ -204,13 +205,13 @@ class Activity extends Model {
           const TeachingElement = this.sequelize.model('TeachingElement');
           const activities = map(descendants.all, 'id');
           const where = { activityId: [...activities, this.id] };
-          return removeAll(TeachingElement, { ...options, transaction, where })
+          return removeAll(TeachingElement, { ...options, where, transaction })
             .then(() => descendants);
         })
         .then(descendants => {
           const activities = map(descendants.nodes, 'id');
           const where = { parentId: [...activities, this.id] };
-          return removeAll(Activity, { ...options, transaction, where });
+          return removeAll(Activity, { ...options, where, transaction });
         })
         .then(() => this.destroy(options))
         .then(() => this);

@@ -149,7 +149,8 @@ class TeachingElement extends Model {
 
   static async cloneElements(tes, container, options) {
     const { id: activityId, courseId } = container;
-    const items = tes.map(it => ({ ...this.views.clone(it), activityId, courseId }));
+    const { views } = this;
+    const items = tes.map(it => ({ ...views.clone(it), activityId, courseId }));
     const clonedTes = await this.bulkCreate(items, { ...options, returning: true });
     if (!isEmpty(clonedTes)) {
       await this.runHooks('afterBulkClone', clonedTes, options);
