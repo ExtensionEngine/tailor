@@ -55,8 +55,8 @@ function clone({ user, activity, body }, res) {
   const { courseId, parentId, position } = body;
   const context = { userId: user.id };
   return activity.clone(courseId, parentId, position, context).then(mappings => {
-    const opts = { where: { id: Object.values(mappings) } };
-    return Activity.findAll(opts).then(data => res.json({ data }));
+    const where = { id: Object.values(mappings) };
+    return Activity.findAll({ where }).then(data => res.json({ data }));
   });
 }
 
