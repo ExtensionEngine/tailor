@@ -5,7 +5,9 @@ const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
+const mapValues = require('lodash/mapValues');
 const pick = require('lodash/pick');
+const pickBy = require('lodash/pickBy');
 const Promise = require('bluebird');
 
 class Activity extends Model {
@@ -18,19 +20,23 @@ class Activity extends Model {
         defaultValue: UUIDV4
       },
       type: {
-        type: STRING
+        type: STRING,
+        meta: { clone: true }
       },
       position: {
         type: DOUBLE,
         allowNull: false,
-        validate: { min: 0 }
+        validate: { min: 0 },
+        meta: { clone: true }
       },
       data: {
-        type: JSONB
+        type: JSONB,
+        meta: { clone: true }
       },
       refs: {
         type: JSONB,
-        defaultValue: {}
+        defaultValue: {},
+        meta: { clone: true }
       },
       detached: {
         type: BOOLEAN,
@@ -96,24 +102,40 @@ class Activity extends Model {
     };
   }
 
-  static async cloneActivities(src, dstCourseId, dstParentId, options) {
-    const { idMappings = {}, context, transaction } = options;
-    const dstActivities = await Activity.bulkCreate(map(src, it => ({
-      courseId: dstCourseId,
-      parentId: dstParentId,
-      ...pick(it, ['type', 'position', 'data', 'refs'])
-    })), { context, returning: true, transaction });
+  static hooks(Hooks) {
+    Hooks.register('afterBulkClone');
+  }
+
+  static get views() {
+    const cloneableFields = pickBy(this.rawAttributes, ({ meta }) => {
+      return meta && Boolean(meta.clone);
+    });
+
+    return {
+      clone(activity) {
+        return mapValues(cloneableFields, (_, name) => activity.get(name));
+      }
+    };
+  }
+
+  static async cloneActivities(activities, courseId, parentId, options) {
+    const { lookupTable = {}, context, transaction } = options;
+    const items = activities.map(it => ({ ...this.views.clone(it), courseId, parentId }));
+    const clonedActivities = await this.bulkCreate(items, { ...options, returning: true });
+    if (!isEmpty(clonedActivities)) {
+      await this.runHooks('afterBulkClone', clonedActivities, options);
+    }
     const TeachingElement = this.sequelize.model('TeachingElement');
-    return Promise.reduce(src, async (acc, it, index) => {
-      const parent = dstActivities[index];
-      acc[it.id] = parent.id;
-      const where = { activityId: it.id, detached: false };
+    return Promise.reduce(activities, async (acc, activity, index) => {
+      const parent = clonedActivities[index];
+      acc[activity.id] = parent.id;
+      const where = { activityId: activity.id, detached: false };
       const tes = await TeachingElement.findAll({ where, transaction });
       await TeachingElement.cloneElements(tes, parent, { context, transaction });
-      const children = await it.getChildren({ where: { detached: false } });
-      if (!children.length) return acc;
-      return Activity.cloneActivities(children, dstCourseId, parent.id, options);
-    }, idMappings);
+      const children = await activity.getChildren({ where: { detached: false } });
+      if (isEmpty(children)) return acc;
+      return Activity.cloneActivities(children, courseId, parent.id, options);
+    }, lookupTable);
   }
 
   clone(courseId, parentId, position, context) {

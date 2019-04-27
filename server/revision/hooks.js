@@ -10,10 +10,11 @@ module.exports = { add };
 
 function add(Revision, Hooks, { Course, Activity, TeachingElement }) {
   const { Operation } = Revision;
+  const { Type } = Hooks;
   const hooks = {
-    [Hooks.afterCreate]: Operation.Create,
-    [Hooks.afterUpdate]: Operation.Update,
-    [Hooks.afterDestroy]: Operation.Remove
+    [Type.afterCreate]: Operation.Create,
+    [Type.afterUpdate]: Operation.Update,
+    [Type.afterDestroy]: Operation.Remove
   };
 
   const addHook = (Model, type, hook) => Model.addHook(type, Hooks.withType(type, hook));
@@ -22,15 +23,15 @@ function add(Revision, Hooks, { Course, Activity, TeachingElement }) {
   // TODO: Courses are soft deleted already?
   // When course is removed, its id is no longer valid and cannot be saved
   // as a foreign key. Remove this when courses are soft-deleted:
-  addHook(Course, Hooks.afterCreate, revisionHook(Operation.Create));
-  addHook(Course, Hooks.afterUpdate, revisionHook(Operation.Update));
+  addHook(Course, Type.afterCreate, revisionHook(Operation.Create));
+  addHook(Course, Type.afterUpdate, revisionHook(Operation.Update));
 
   // Add individual operation hooks.
   forEach(hooks, (operation, type) => addHook(Activity, type, revisionHook(operation)));
   forEach(hooks, (operation, type) => addHook(TeachingElement, type, revisionHook(operation)));
   // Add bulk operation hooks (cloning).
-  addHook(Activity, Hooks.afterBulkCreate, revisionHook(Operation.Create));
-  addHook(TeachingElement, Hooks.afterBulkCreate, revisionHook(Operation.Create));
+  addHook(Activity, 'afterBulkClone', revisionHook(Operation.Create));
+  addHook(TeachingElement, 'afterBulkClone', revisionHook(Operation.Create));
 
   function revisionHook(operation) {
     return (type, instances, options) => {
@@ -63,4 +64,3 @@ function formatRevision({ courseId, entity, operation, state }) {
   const { id } = state;
   return { entity, operation, id, courseId };
 }
-

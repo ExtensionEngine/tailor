@@ -9,11 +9,12 @@ const logger = require('../shared/logger');
 const map = require('lodash/map');
 
 exports.add = (Course, Hooks, { Activity, TeachingElement }) => {
+  const { Type } = Hooks;
   const hooks = [
-    Hooks.afterCreate,
-    Hooks.afterBulkCreate,
-    Hooks.afterDestroy,
-    Hooks.afterBulkDestroy
+    Type.afterCreate,
+    Type.afterBulkCreate,
+    Type.afterDestroy,
+    Type.afterBulkDestroy
   ];
 
   forEach(hooks, type => {

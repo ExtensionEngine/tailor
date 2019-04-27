@@ -88,6 +88,8 @@ forEach(models, model => {
   addScopes(model, models);
 });
 
+Hooks.setup(Sequelize);
+
 function addHooks(model, Hooks, models) {
   const hooks = invoke(model, 'hooks', Hooks, models);
   forEach(hooks, (it, type) => model.addHook(type, it));

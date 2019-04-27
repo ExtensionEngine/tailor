@@ -4,9 +4,11 @@ const calculatePosition = require('../shared/util/calculatePosition');
 const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
+const isEmpty = require('lodash/isEmpty');
 const isNumber = require('lodash/isNumber');
 const { Model, Op } = require('sequelize');
-const pick = require('lodash/pick');
+const mapValues = require('lodash/mapValues');
+const pickBy = require('lodash/pickBy');
 const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 
 const pruneVirtualProps = element => {
@@ -25,31 +27,37 @@ class TeachingElement extends Model {
         defaultValue: UUIDV4
       },
       type: {
-        type: STRING
+        type: STRING,
+        meta: { clone: true }
       },
       position: {
         type: DOUBLE,
-        validate: { min: 0, max: 1000000 }
+        validate: { min: 0, max: 1000000 },
+        meta: { clone: true }
       },
       contentId: {
         type: UUID,
         field: 'content_id',
-        defaultValue: UUIDV4
+        defaultValue: UUIDV4,
+        meta: { clone: true }
       },
       contentSignature: {
         type: STRING(40),
         field: 'content_signature',
-        validate: { notEmpty: true }
+        validate: { notEmpty: true },
+        meta: { clone: true }
       },
       data: {
-        type: JSONB
+        type: JSONB,
+        meta: { clone: true }
       },
       meta: {
         type: JSONB
       },
       refs: {
         type: JSONB,
-        defaultValue: {}
+        defaultValue: {},
+        meta: { clone: true }
       },
       linked: {
         type: BOOLEAN,
@@ -86,13 +94,15 @@ class TeachingElement extends Model {
   }
 
   static hooks(Hooks) {
+    const { Type } = Hooks;
+    Hooks.register('afterBulkClone');
     return {
-      [Hooks.beforeCreate](te) {
+      [Type.beforeCreate](te) {
         pruneVirtualProps(te);
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
       },
-      [Hooks.beforeUpdate](te) {
+      [Type.beforeUpdate](te) {
         pruneVirtualProps(te);
         if (!te.changed('data')) return Promise.resolve();
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
@@ -118,6 +128,18 @@ class TeachingElement extends Model {
     };
   }
 
+  static get views() {
+    const cloneableFields = pickBy(this.rawAttributes, ({ meta }) => {
+      return meta && Boolean(meta.clone);
+    });
+
+    return {
+      clone(teachingElement) {
+        return mapValues(cloneableFields, (_, name) => teachingElement.get(name));
+      }
+    };
+  }
+
   static fetch(opt) {
     return isNumber(opt)
       ? TeachingElement.findByPk(opt).then(it => it && resolveStatics(it))
@@ -125,13 +147,14 @@ class TeachingElement extends Model {
           .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
   }
 
-  static cloneElements(src, container, options) {
+  static async cloneElements(tes, container, options) {
     const { id: activityId, courseId } = container;
-    return this.bulkCreate(src.map(it => {
-      return Object.assign(pick(it, [
-        'type', 'position', 'data', 'contentId', 'contentSignature', 'refs'
-      ]), { activityId, courseId });
-    }), { ...options, returning: true });
+    const items = tes.map(it => ({ ...this.views.clone(it), activityId, courseId }));
+    const clonedTes = await this.bulkCreate(items, { ...options, returning: true });
+    if (!isEmpty(clonedTes)) {
+      await this.runHooks('afterBulkClone', clonedTes, options);
+    }
+    return clonedTes;
   }
 
   /**
