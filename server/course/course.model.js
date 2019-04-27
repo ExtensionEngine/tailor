@@ -3,7 +3,8 @@
 const { getRepositoryRelationships, getSchema } = require('../../config/shared/activities');
 const { Model } = require('sequelize');
 const hooks = require('./hooks');
-const pick = require('lodash/pick');
+const mapValues = require('lodash/mapValues');
+const pickBy = require('lodash/pickBy');
 const Promise = require('bluebird');
 
 class Course extends Model {
@@ -17,7 +18,8 @@ class Course extends Model {
       },
       schema: {
         type: STRING,
-        validate: { notEmpty: true, len: [2, 20] }
+        validate: { notEmpty: true, len: [2, 20] },
+        meta: { clone: true }
       },
       name: {
         type: STRING,
@@ -29,11 +31,13 @@ class Course extends Model {
       },
       data: {
         type: JSONB,
-        defaultValue: {}
+        defaultValue: {},
+        meta: { clone: true }
       },
       stats: {
         type: JSONB,
-        defaultValue: { objectives: 0, assessments: 0 }
+        defaultValue: { objectives: 0, assessments: 0 },
+        meta: { clone: true }
       },
       createdAt: {
         type: DATE,
@@ -80,6 +84,18 @@ class Course extends Model {
     hooks.add(this, Hooks, models);
   }
 
+  static get views() {
+    const cloneableFields = pickBy(this.rawAttributes, ({ meta }) => {
+      return meta && Boolean(meta.clone);
+    });
+
+    return {
+      clone(course) {
+        return mapValues(cloneableFields, (_, name) => course.get(name));
+      }
+    };
+  }
+
   static updateStats(id, key, value) {
     return this.findByPk(id).then(course => {
       if (!course) return;
@@ -115,17 +131,18 @@ class Course extends Model {
   clone(name, description, context) {
     const Course = this.sequelize.model('Course');
     const Activity = this.sequelize.model('Activity');
-    const srcAttributes = pick(this, ['schema', 'data', 'stats']);
-    const dstAttributes = Object.assign(srcAttributes, { name, description });
+    const { views } = this.constructor;
     return this.sequelize.transaction(async transaction => {
       const options = { context, transaction };
-      const dst = await Course.create(dstAttributes, options);
-      const src = await Activity.findAll({
-        where: { courseId: this.id, parentId: null }, transaction
-      });
-      const idMap = await Activity.cloneActivities(src, dst.id, null, options);
-      await dst.mapClonedReferences(idMap, options);
-      return dst;
+      const item = { ...views.clone(this), name, description };
+      const clonedCourse = await Course.create(item, options);
+      const where = { courseId: this.id };
+      const rootActivities = await Activity
+        .scope('root').findAll({ ...options, where });
+      const mappings = await Activity
+        .cloneActivities(rootActivities, clonedCourse.id, null, options);
+      await clonedCourse.mapClonedReferences(mappings, options);
+      return clonedCourse;
     });
   }
 

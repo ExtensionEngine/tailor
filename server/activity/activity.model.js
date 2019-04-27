@@ -85,6 +85,10 @@ class Activity extends Model {
   static scopes() {
     const notNull = { [Op.ne]: null };
     return {
+      root() {
+        const where = { parentId: null };
+        return { where };
+      },
       withReferences(relationships = []) {
         const or = relationships.map(type => ({ [`refs.${type}`]: notNull }));
         return { where: { [Op.or]: or } };
