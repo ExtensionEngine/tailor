@@ -3,7 +3,7 @@
 const Hooks = require('sequelize/lib/hooks');
 const mapValues = require('lodash/mapValues');
 
-const addHook = Hooks.addHook;
+const { addHook } = Hooks;
 Hooks.addHook = function (type) {
   if (!Hooks.hooks[type]) {
     throw new TypeError(`Hook type \`${type}\` is not registered`);
