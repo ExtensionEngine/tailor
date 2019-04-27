@@ -7,9 +7,8 @@ const hash = require('hash-obj');
 const isEmpty = require('lodash/isEmpty');
 const isNumber = require('lodash/isNumber');
 const { Model, Op } = require('sequelize');
-const mapValues = require('lodash/mapValues');
-const pickBy = require('lodash/pickBy');
 const { processStatics, resolveStatics } = require('../shared/storage/helpers');
+const withCloneView = require('../shared/database/mixins/withCloneView');
 
 const pruneVirtualProps = element => {
   const assets = get(element, 'data.assets', {});
@@ -18,6 +17,10 @@ const pruneVirtualProps = element => {
 };
 
 class TeachingElement extends Model {
+  static mixins() {
+    return [withCloneView];
+  }
+
   static fields(DataTypes) {
     const { BOOLEAN, DATE, DOUBLE, JSONB, STRING, UUID, UUIDV4 } = DataTypes;
     return {
@@ -125,18 +128,6 @@ class TeachingElement extends Model {
       underscored: true,
       timestamps: true,
       paranoid: true
-    };
-  }
-
-  static get views() {
-    const cloneableFields = pickBy(this.rawAttributes, ({ meta }) => {
-      return meta && Boolean(meta.clone);
-    });
-
-    return {
-      clone(teachingElement) {
-        return mapValues(cloneableFields, (_, name) => teachingElement.get(name));
-      }
     };
   }
 

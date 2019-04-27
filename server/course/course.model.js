@@ -3,11 +3,14 @@
 const { getRepositoryRelationships, getSchema } = require('../../config/shared/activities');
 const { Model } = require('sequelize');
 const hooks = require('./hooks');
-const mapValues = require('lodash/mapValues');
-const pickBy = require('lodash/pickBy');
 const Promise = require('bluebird');
+const withCloneView = require('../shared/database/mixins/withCloneView');
 
 class Course extends Model {
+  static mixins() {
+    return [withCloneView];
+  }
+
   static fields(DataTypes) {
     const { DATE, JSONB, STRING, TEXT, UUID, UUIDV4 } = DataTypes;
     return {
@@ -82,18 +85,6 @@ class Course extends Model {
 
   static hooks(Hooks, models) {
     hooks.add(this, Hooks, models);
-  }
-
-  static get views() {
-    const cloneableFields = pickBy(this.rawAttributes, ({ meta }) => {
-      return meta && Boolean(meta.clone);
-    });
-
-    return {
-      clone(course) {
-        return mapValues(cloneableFields, (_, name) => course.get(name));
-      }
-    };
   }
 
   static updateStats(id, key, value) {

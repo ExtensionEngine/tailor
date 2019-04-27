@@ -5,12 +5,15 @@ const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
-const mapValues = require('lodash/mapValues');
 const pick = require('lodash/pick');
-const pickBy = require('lodash/pickBy');
 const Promise = require('bluebird');
+const withCloneView = require('../shared/database/mixins/withCloneView');
 
 class Activity extends Model {
+  static mixins() {
+    return [withCloneView];
+  }
+
   static fields(DataTypes) {
     const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4 } = DataTypes;
     return {
@@ -108,18 +111,6 @@ class Activity extends Model {
 
   static hooks(Hooks) {
     Hooks.register('afterBulkClone');
-  }
-
-  static get views() {
-    const cloneableFields = pickBy(this.rawAttributes, ({ meta }) => {
-      return meta && Boolean(meta.clone);
-    });
-
-    return {
-      clone(activity) {
-        return mapValues(cloneableFields, (_, name) => activity.get(name));
-      }
-    };
   }
 
   static async cloneActivities(activities, courseId, parentId, options) {
