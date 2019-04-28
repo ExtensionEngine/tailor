@@ -5,11 +5,13 @@
       <router-view class="view"/>
     </v-content>
     <confirmation-modal/>
+    <snackbar/>
   </v-app>
 </template>
 
 <script>
 import ConfirmationModal from 'components/common/ConfirmationModal';
+import Snackbar from 'components/common/Snackbar';
 import isIexplorer from 'is-iexplorer';
 import Navbar from 'components/common/Navbar';
 import { mapGetters } from 'vuex-module';
@@ -21,6 +23,7 @@ export default {
   computed: mapGetters(['user']),
   components: {
     ConfirmationModal,
+    Snackbar,
     Navbar
   }
 };

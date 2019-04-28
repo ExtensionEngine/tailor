@@ -47,8 +47,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
-import pick from 'lodash/pick';
 import { withValidation } from 'utils/validation';
+import EventBus from 'EventBus';
+import pick from 'lodash/pick';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   name: 'user-info',
@@ -61,7 +64,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+    error() {
+      return { color: 'error', message: 'An error has occurred!' };
+    },
+    success() {
+      return { color: 'success', message: 'Changes saved.' };
+    }
   },
   methods: {
     ...mapActions(['updateInfo']),
@@ -71,10 +80,10 @@ export default {
         .then(async isValid => {
           if (!isValid) return;
           await this.updateInfo({ firstName, lastName, email });
-          this.$emit('message', true);
+          appChannel.emit('showSnackbar', this.success);
           this.$nextTick(() => this.$validator.reset());
         })
-        .catch(() => (this.$emit('message', true)));
+        .catch(() => appChannel.emit('showSnackbar', this.error));
     },
     routeTo(name) {
       this.$router.push({ name });

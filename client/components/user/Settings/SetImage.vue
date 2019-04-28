@@ -77,6 +77,9 @@ export default {
         showRemoveButton: false,
         initialImage: this.currentImage
       };
+    },
+    success() {
+      return { color: 'success', message: 'Profile photo changed.' };
     }
   },
   methods: {
@@ -102,7 +105,7 @@ export default {
           .then(({ key }) => this.updateImageUrl({ key }))
           .then(() => {
             this.currentImage = this.user.imgUrl;
-            this.$emit('message', true);
+            appChannel.emit('showSnackbar', this.success);
           })
           .finally(() => {
             this.isEditing = false;

@@ -14,18 +14,14 @@
         <v-text-field
           v-validate="'required|confirmed:password'"
           :error-messages="vErrors.first('passwordConfirmation')"
-          data-vv-as="password"
+          data-vv-as="confirmedPassword"
           type="password"
-          data-vv-name="password"
+          data-vv-name="confirmedPassword"
           label="Please re-enter your password"/>
         <v-btn :disabled="!isValid" type="submit" color="blue-grey darken-1" flat large>
           Submit
         </v-btn>
       </form>
-      <v-snackbar v-model="success" :timeout="timeout" color="success">
-        Password changed.
-        <v-btn @click="success=false" dark flat>Close</v-btn>
-      </v-snackbar>
     </v-card>
   </v-layout>
 </template>
@@ -33,13 +29,14 @@
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 import { withValidation } from 'utils/validation';
+import EventBus from 'EventBus';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   mixins: [withValidation()],
   data() {
     return {
-      success: false,
-      timeout: 2500,
       password: ''
     };
   },
@@ -47,6 +44,12 @@ export default {
     ...mapGetters(['user']),
     isValid() {
       return this.password && !this.vErrors.count();
+    },
+    error() {
+      return { color: 'error', message: 'An error has occurred!' };
+    },
+    success() {
+      return { color: 'success', message: 'Password changed.' };
     }
   },
   methods: {
@@ -54,10 +57,11 @@ export default {
     submit() {
       this.$validator.validateAll().then(result => {
         return this.changePassword({ password: this.password })
-          .then(async () => {
-            await this.$nextTick(() => this.$validator.reset());
-            this.success = true;
-          });
+          .then(() => {
+            this.$nextTick(() => this.$validator.reset());
+            appChannel.emit('showSnackbar', this.success);
+          })
+          .catch(() => appChannel.emit('showSnackbar', this.error));
       });
     }
   }
