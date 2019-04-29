@@ -58,8 +58,8 @@ action(function resetPassword({ token, password }) {
   return authApi.resetPassword(token, password);
 });
 
-action(function changePassword({ password }) {
-  return authApi.changePassword(password);
+action(function changePassword({ currentPassword, newPassword }) {
+  return authApi.changePassword(currentPassword, newPassword);
 });
 
 action(function updateImageUrl({ key }) {

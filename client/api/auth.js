@@ -33,8 +33,8 @@ function resetPassword(token, password) {
   return request.post(url.resetPassword, { token, password });
 }
 
-function changePassword(password) {
-  return request.post(url.changePassword, { password });
+function changePassword(currentPassword, newPassword) {
+  return request.post(url.changePassword, { currentPassword, newPassword });
 }
 
 function updateImageUrl(key) {

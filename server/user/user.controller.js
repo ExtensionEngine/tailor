@@ -51,10 +51,11 @@ function updateProfile({ user, body: { userCredentials } }, res, next) {
     .catch(err => next(err));
 }
 
-function changePassword({ user, body: { password } }, res) {
-  return user.update({ password })
-    .then(() => res.sendStatus(200))
-    .catch(validationError);
+function changePassword({ user, body: { currentPassword, newPassword } }, res) {
+  return user.authenticate(currentPassword)
+    .then(user => user || createError(NOT_FOUND, 'Incorrect current password'))
+    .then(user => user.update({ password: newPassword }))
+    .then(() => res.sendStatus(200));
 }
 
 function updateImageUrl({ user, body: { key } }, res, next) {

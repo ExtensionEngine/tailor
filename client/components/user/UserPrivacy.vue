@@ -5,19 +5,27 @@
       <form @submit.prevent="submit">
         <v-text-field
           v-validate="'required|alphanumerical|min:6'"
-          ref="password"
-          v-model="password"
-          :error-messages="vErrors.first('password')"
+          v-model="currentPassword"
+          :error-messages="vErrors.first('currentPassword')"
           type="password"
-          data-vv-name="password"
-          label="Password"/>
+          data-vv-name="currentPassword"
+          label="Current password"/>
         <v-text-field
-          v-validate="'required|confirmed:password'"
-          :error-messages="vErrors.first('passwordConfirmation')"
-          data-vv-as="confirmedPassword"
+          v-validate="'required|alphanumerical|min:6'"
+          ref="newPassword"
+          v-model="newPassword"
+          :error-messages="vErrors.first('newPassword')"
           type="password"
-          data-vv-name="confirmedPassword"
-          label="Please re-enter your password"/>
+          name="newPassword"
+          label="New password"/>
+        <v-text-field
+          v-validate="'required|confirmed:newPassword'"
+          v-model="reNewPassword"
+          :error-messages="vErrors.first('passwordConfirmation')"
+          data-vv-as="new password"
+          type="password"
+          name="passwordConfirmation"
+          label="Please re-enter your new password"/>
         <v-btn :disabled="!isValid" type="submit" color="blue-grey darken-1" flat large>
           Submit
         </v-btn>
@@ -29,39 +37,38 @@
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 import { withValidation } from 'utils/validation';
-import EventBus from 'EventBus';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   mixins: [withValidation()],
   data() {
     return {
-      password: ''
+      currentPassword: '',
+      newPassword: '',
+      reNewPassword: ''
     };
   },
   computed: {
     ...mapGetters(['user']),
     isValid() {
-      return this.password && !this.vErrors.count();
-    },
-    error() {
-      return { color: 'error', message: 'An error has occurred!' };
-    },
-    success() {
-      return { color: 'success', message: 'Password changed.' };
+      return (this.currentPassword && this.newPassword && !this.vErrors.count());
     }
   },
   methods: {
     ...mapActions(['changePassword']),
     submit() {
+      const { currentPassword, newPassword } = this;
       this.$validator.validateAll().then(result => {
-        return this.changePassword({ password: this.password })
+        if (!result) return this.$snackbar.error('Validation failed!');
+        return this.changePassword({ currentPassword, newPassword })
           .then(() => {
             this.$nextTick(() => this.$validator.reset());
-            appChannel.emit('showSnackbar', this.success);
+            this.$snackbar.succes('Password changed.');
           })
-          .catch(() => appChannel.emit('showSnackbar', this.error));
+          .catch(({ response: { data: { error: { message } } } }) => {
+            this.currentPassword = this.newPassword = this.reNewPassword = '';
+            this.$nextTick(() => this.$validator.reset());
+            this.$snackbar.error(message);
+          });
       });
     }
   }

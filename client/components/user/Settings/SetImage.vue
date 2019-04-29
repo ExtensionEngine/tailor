@@ -77,9 +77,6 @@ export default {
         showRemoveButton: false,
         initialImage: this.currentImage
       };
-    },
-    success() {
-      return { color: 'success', message: 'Profile photo changed.' };
     }
   },
   methods: {
@@ -105,7 +102,7 @@ export default {
           .then(({ key }) => this.updateImageUrl({ key }))
           .then(() => {
             this.currentImage = this.user.imgUrl;
-            appChannel.emit('showSnackbar', this.success);
+            this.$snackbar.succes('Profile photo changed.');
           })
           .finally(() => {
             this.isEditing = false;
@@ -130,6 +127,7 @@ export default {
         action: () => {
           this.currentImage = null;
           this.disabled = false;
+          this.$snackbar.info('Profile photo deleted.');
           return this.updateImageUrl({ key: '' });
         }
       });
