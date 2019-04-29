@@ -24,6 +24,9 @@ router
   .post(ctrl.create);
 
 router
+  .post('/courses/:courseId/comments/email', ctrl.email);
+
+router
   .route('/courses/:courseId/comments/:commentId')
   .all(getComment)
   .get(ctrl.show)

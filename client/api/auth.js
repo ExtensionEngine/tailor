@@ -35,8 +35,8 @@ function commentCheckTime({ userId, checkTime }) {
     .then(res => res.data);
 }
 
-function emailComments({ email, comments }) {
-  return request.post('/users/emailComments', { email, comments });
+function emailComments({ courseId, email, since }) {
+  return request.post(`/courses/${courseId}/comments/email`, { email, since });
 }
 
 export default {
