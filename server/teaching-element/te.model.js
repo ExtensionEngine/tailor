@@ -17,7 +17,7 @@ const pruneVirtualProps = element => {
 };
 
 class TeachingElement extends Model {
-  static mixins() {
+  static get mixins() {
     return [withCloneView];
   }
 

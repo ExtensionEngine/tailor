@@ -10,7 +10,7 @@ const Promise = require('bluebird');
 const withCloneView = require('../shared/database/mixins/withCloneView');
 
 class Activity extends Model {
-  static mixins() {
+  static get mixins() {
     return [withCloneView];
   }
 

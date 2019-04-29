@@ -13,6 +13,8 @@ const semver = require('semver');
 const Sequelize = require('sequelize');
 const Umzug = require('umzug');
 
+require('./mixins')(Sequelize);
+
 // Require models.
 const User = require('../../user/user.model');
 const Course = require('../../course/course.model');
@@ -75,7 +77,6 @@ const models = {
 
 function defineModel(Model, connection = sequelize) {
   const { DataTypes } = connection.Sequelize;
-  applyMixins(Model);
   const fields = invoke(Model, 'fields', DataTypes, connection) || {};
   const options = invoke(Model, 'options') || {};
   Object.assign(options, { sequelize: connection });
@@ -90,14 +91,6 @@ forEach(models, model => {
 });
 
 Hooks.setup(Sequelize);
-
-function applyMixins(Model) {
-  const mixins = invoke(Model, 'mixins') || [];
-  return mixins.reduce((model, mixin) => {
-    mixin(model);
-    return model;
-  }, Model);
-}
 
 function addHooks(model, Hooks, models) {
   const hooks = invoke(model, 'hooks', Hooks, models);
