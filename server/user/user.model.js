@@ -69,17 +69,17 @@ class User extends Model {
     });
   }
 
-  static hooks({ Type }) {
+  static hooks({ HookType }) {
     return {
-      [Type.beforeCreate](user) {
+      [HookType.beforeCreate](user) {
         return user.encryptPassword();
       },
-      [Type.beforeUpdate](user) {
+      [HookType.beforeUpdate](user) {
         return user.changed('password')
           ? user.encryptPassword()
           : Promise.resolve();
       },
-      [Type.beforeBulkCreate](users) {
+      [HookType.beforeBulkCreate](users) {
         let updates = [];
         users.forEach(user => updates.push(user.encryptPassword()));
         return Promise.all(updates);

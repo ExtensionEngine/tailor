@@ -97,15 +97,15 @@ class TeachingElement extends Model {
   }
 
   static hooks(Hooks) {
-    const { Type } = Hooks;
+    const { HookType } = Hooks;
     Hooks.register('afterBulkClone');
     return {
-      [Type.beforeCreate](te) {
+      [HookType.beforeCreate](te) {
         pruneVirtualProps(te);
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
       },
-      [Type.beforeUpdate](te) {
+      [HookType.beforeUpdate](te) {
         pruneVirtualProps(te);
         if (!te.changed('data')) return Promise.resolve();
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });

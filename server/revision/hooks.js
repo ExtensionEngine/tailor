@@ -10,11 +10,11 @@ module.exports = { add };
 
 function add(Revision, Hooks, { Course, Activity, TeachingElement }) {
   const { Operation } = Revision;
-  const { Type } = Hooks;
+  const { HookType } = Hooks;
   const hooks = {
-    [Type.afterCreate]: Operation.Create,
-    [Type.afterUpdate]: Operation.Update,
-    [Type.afterDestroy]: Operation.Remove
+    [HookType.afterCreate]: Operation.Create,
+    [HookType.afterUpdate]: Operation.Update,
+    [HookType.afterDestroy]: Operation.Remove
   };
 
   const addHook = (Model, type, hook) => Model.addHook(type, Hooks.withType(type, hook));
@@ -23,8 +23,8 @@ function add(Revision, Hooks, { Course, Activity, TeachingElement }) {
   // TODO: Courses are soft deleted already?
   // When course is removed, its id is no longer valid and cannot be saved
   // as a foreign key. Remove this when courses are soft-deleted:
-  addHook(Course, Type.afterCreate, revisionHook(Operation.Create));
-  addHook(Course, Type.afterUpdate, revisionHook(Operation.Update));
+  addHook(Course, HookType.afterCreate, revisionHook(Operation.Create));
+  addHook(Course, HookType.afterUpdate, revisionHook(Operation.Update));
 
   // Add individual operation hooks.
   forEach(hooks, (operation, type) => addHook(Activity, type, revisionHook(operation)));

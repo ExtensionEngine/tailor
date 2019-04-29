@@ -11,11 +11,11 @@ Hooks.addHook = function (type) {
   return addHook.apply(this, arguments);
 };
 
-exports.Type = mapValues(Hooks.hooks, (_, key) => key);
+exports.HookType = mapValues(Hooks.hooks, (_, key) => key);
 
 exports.register = (type, options = {}) => {
   Hooks.hooks[type] = options;
-  exports.Type[type] = type;
+  exports.HookType[type] = type;
 };
 
 exports.setup = Sequelize => {
