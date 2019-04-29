@@ -44,7 +44,6 @@
 import AddElement from 'tce-core/AddElement';
 import Draggable from 'vuedraggable';
 import InlineActivator from './InlineActivator';
-import last from 'lodash/last';
 
 export default {
   props: {
@@ -72,8 +71,7 @@ export default {
       });
     },
     lastPosition() {
-      const lastItem = last(this.list);
-      return lastItem ? lastItem.position + 1 : 1;
+      return this.list.length + 1;
     }
   },
   methods: {
