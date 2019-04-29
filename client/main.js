@@ -16,6 +16,7 @@ import Vue from 'vue';
 import Croppa from 'vue-croppa';
 import VueHotkey from 'v-hotkey';
 import Vuetify from 'vuetify';
+import VuetifySnackbar from '@/plugins/vuetify-snackbar';
 import { sync } from 'vuex-router-sync';
 
 import store from './store';
@@ -30,6 +31,7 @@ registry.initialize();
 Vue.use(FileFilter);
 Vue.use(VueHotkey);
 Vue.use(Vuetify, { iconfont: 'mdi' });
+Vue.use(VuetifySnackbar);
 Vue.use(Tooltip, { delay: 50 });
 Vue.use(VeeValidate, {
   delay: 700,
