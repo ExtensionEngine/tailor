@@ -1,10 +1,14 @@
 'use strict';
 
-const { Comment } = require('../shared/database');
-const { User } = require('../shared/database');
+const { Activity, Comment, User } = require('../shared/database');
+const { Op } = require('sequelize');
+const mail = require('../shared/mail');
 
 function list({ course, opts, query }, res) {
-  const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
+  const include = [
+    { model: User, as: 'author', attributes: ['id', 'email'] },
+    { model: Activity, as: 'activity', attributes: ['id', 'type', 'data'] }
+  ];
   if (query.activityId) {
     opts.where.activityId = query.activityId;
   }
@@ -15,6 +19,25 @@ function list({ course, opts, query }, res) {
   }
   return course.getComments({ ...opts, include })
     .then(data => res.json({ data }));
+}
+
+function email({ course, body }, res) {
+  const include = [
+    { model: User, as: 'author', attributes: ['id', 'email'] },
+    { model: Activity, as: 'activity', attributes: ['id', 'type', 'data'] }
+  ];
+  const { since, email } = body;
+  let date = new Date();
+  date.setDate(date.getDate() - since);
+  const opts = { where: { createdAt: { [Op.gt]: date } } };
+  return course.getComments({ ...opts, include })
+    .then(data => mail.commentsList({
+      user: email,
+      comments: data,
+      schema: course.schema,
+      days: since
+    }))
+    .then(() => res.end());
 }
 
 function show({ comment }, res) {
@@ -45,5 +68,6 @@ module.exports = {
   show,
   create,
   patch,
-  remove
+  remove,
+  email
 };
