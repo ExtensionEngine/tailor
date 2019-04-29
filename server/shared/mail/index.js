@@ -2,9 +2,11 @@
 
 const { renderHtml, renderText } = require('./render');
 const { origin } = require('../../../config/server');
+const { getOutlineLevels } = require('../../../config/shared/activities');
 const email = require('emailjs');
 const logger = require('../logger');
 const path = require('path');
+const find = require('lodash/find');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
@@ -70,9 +72,9 @@ function getConfig(server) {
   ]);
 }
 
-function commentsList({ user, comments }) {
-  const recipient = user.email;
-  const data = { comments: sortComments(comments), recipient };
+function commentsList({ user, comments, schema, days }) {
+  const recipient = user;
+  const data = { comments: sortComments({ comments, schema }), recipient, days };
   const html = renderHtml(path.join(templatesDir, 'comments.mjml'), data);
   const text = renderText(path.join(templatesDir, 'comments.txt'), data);
   logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending comments email to:', recipient);
@@ -85,10 +87,14 @@ function commentsList({ user, comments }) {
   });
 }
 
-function sortComments(comments) {
+function sortComments({ comments, schema }) {
+  const structure = getOutlineLevels(schema);
   const sortedComments = [];
   let temp = [];
   comments.forEach((comment, i) => {
+    const { label, color } = find(structure, { type: comment.activity.type });
+    comment.activity.label = label;
+    comment.activity.color = color;
     if (i && comment.activityId !== comments[i - 1].activityId) {
       sortedComments.push(temp);
       temp = [];

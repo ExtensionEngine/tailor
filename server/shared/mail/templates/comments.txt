@@ -3,10 +3,10 @@ Tailor Author
 
 Hello {{recipient}},
 
-List of comments:
+Comments in last {{days}} days:
 
 {{#comments}}
-Activity {{0.activityId}}
+{{0.activity.data.name}} [{{0.activity.label}}]
 {{#.}}
 {{author.email}}: {{content}}
 {{/.}}
