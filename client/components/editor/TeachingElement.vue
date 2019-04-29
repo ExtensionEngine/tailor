@@ -15,6 +15,8 @@ import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
 
+const SNACKBAR_CONFIG = { color: 'blue-grey darken-3', right: true };
+
 export default {
   name: 'teaching-element',
   inheritAttrs: false,
@@ -32,9 +34,9 @@ export default {
     save(data) {
       const element = cloneDeep(this.element);
       Object.assign(element.data, data);
-      return element.embedded
-        ? this.$emit('save', element)
-        : this.saveElement(element);
+      if (element.embedded) return this.$emit('save', element);
+      return this.saveElement(element)
+        .then(() => this.$snackbar.show('Element saved', SNACKBAR_CONFIG));
     },
     remove() {
       this.removeElement(this.element).then(() => {
