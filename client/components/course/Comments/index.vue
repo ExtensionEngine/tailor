@@ -1,5 +1,5 @@
 <template>
-  <ul :class="{ 'comments-end': allComments }" class="comments">
+  <v-list :class="{ 'comments-end': allComments }" class="comments">
     <v-btn
       @click="sendComments"
       color="info"
@@ -17,7 +17,13 @@
         v-if="sameActivity(comment.activityId, index)"
         slot="activity-id"
         class="comment-activity">
-        Activity {{ comment.activityId }}
+        {{ comment.activity.data.name }}
+        <v-chip label small outline color="primary">
+          A{{ comment.activity.id }}
+        </v-chip>
+        <v-chip :color="getType(comment).color" label small outline >
+          {{ getType(comment).label }}
+        </v-chip>
       </div>
       <span
         v-if="!initialCheckTime || initialCheckTime < comment.createdAt"
@@ -37,7 +43,7 @@
       </div>
       <span slot="no-more"></span>
     </infinite-loading>
-  </ul>
+  </v-list>
 </template>
 
 <script>
@@ -46,6 +52,7 @@ import CircularProgress from 'components/common/CircularProgress';
 import Comment from '../Sidebar/Discussion/Comment';
 import InfiniteLoading from 'vue-infinite-loading';
 import isEmpty from 'lodash/isEmpty';
+import find from 'lodash/find';
 import api from 'client/api/auth';
 
 export default {
@@ -59,7 +66,8 @@ export default {
   computed: {
     ...mapGetters(['user']),
     ...mapGetters(['hasMoreResults'], 'comments'),
-    ...mapGetters(['paginatedComments'])
+    ...mapGetters(['paginatedComments']),
+    ...mapGetters(['structure'], 'course')
   },
   methods: {
     ...mapActions(['fetchPaginated', 'resetPagination', 'update', 'remove'], 'comments'),
@@ -82,10 +90,13 @@ export default {
     sameActivity(activityId, i) {
       return i ? this.paginatedComments[i - 1].activityId !== activityId : !i;
     },
+    getType(comment) {
+      return find(this.structure, { type: comment.activity.type });
+    },
     sendComments() {
       const email = this.user.email;
-      const comments = this.paginatedComments.slice(0, 10);
-      api.emailComments({ email, comments });
+      const { courseId } = this.$route.params;
+      api.emailComments({ courseId, email, since: 7 });
     }
   },
   mounted() {
@@ -131,7 +142,6 @@ export default {
   border-bottom: gray solid 1px;
   margin: 20px 0px;
   padding: 10px 0px;
-  font-size: 16px;
+  font-size: 18px;
 }
-
 </style>
