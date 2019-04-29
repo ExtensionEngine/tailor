@@ -102,7 +102,7 @@ export default {
           .then(({ key }) => this.updateImageUrl({ key }))
           .then(() => {
             this.currentImage = this.user.imgUrl;
-            this.$snackbar.succes('Profile photo changed.');
+            this.$snackbar.success('Profile photo changed.');
           })
           .finally(() => {
             this.isEditing = false;

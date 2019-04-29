@@ -62,7 +62,7 @@ export default {
         return this.changePassword({ currentPassword, newPassword })
           .then(() => {
             this.$nextTick(() => this.$validator.reset());
-            this.$snackbar.succes('Password changed.');
+            this.$snackbar.success('Password changed.');
           })
           .catch(({ response: { data: { error: { message } } } }) => {
             this.currentPassword = this.newPassword = this.reNewPassword = '';

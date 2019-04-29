@@ -71,7 +71,7 @@ export default {
         .then(async isValid => {
           if (!isValid) return;
           await this.updateInfo({ firstName, lastName, email });
-          this.$snackbar.succes('Changes saved.');
+          this.$snackbar.success('Changes saved.');
           this.$nextTick(() => this.$validator.reset());
         })
         .catch(() => this.$snackbar.error('An error has occurred!'));
