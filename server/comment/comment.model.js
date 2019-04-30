@@ -1,7 +1,9 @@
 'use strict';
 
-const hooks = require('./hooks');
+const { getOutlineLevels } = require('../../config/shared/activities');
 const { Model } = require('sequelize');
+const find = require('lodash/find');
+const hooks = require('./hooks');
 
 class Comment extends Model {
   static fields(DataTypes) {
@@ -57,6 +59,20 @@ class Comment extends Model {
       freezeTableName: true
     };
   }
-}
 
+  static sortComments({ comments, schema }) {
+    const structure = getOutlineLevels(schema);
+    const sortedComments = [];
+    comments.forEach((comment, i) => {
+      const { label, color } = find(structure, { type: comment.activity.type });
+      comment.activity.label = label;
+      comment.activity.color = color;
+      if (!i || comment.activityId !== comments[i - 1].activityId) {
+        sortedComments.push([]);
+      }
+      sortedComments[sortedComments.length - 1].push(comment);
+    });
+    return sortedComments;
+  }
+}
 module.exports = Comment;

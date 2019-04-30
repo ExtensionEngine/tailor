@@ -34,12 +34,8 @@ function email({ course, body }, res) {
     where: { createdAt: { [Op.gt]: date } }
   };
   return course.getComments({ ...opts, include })
-    .then(data => mail.commentsList({
-      user: email,
-      comments: data,
-      schema: course.schema,
-      days: since
-    }))
+    .then(comments => Comment.sortComments({ comments, schema: course.schema }))
+    .then(comments => mail.commentsList({ user: email, comments, days: since }))
     .then(() => res.end());
 }
 
