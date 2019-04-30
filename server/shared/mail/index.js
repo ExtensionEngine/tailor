@@ -70,9 +70,9 @@ function getConfig(server) {
   ]);
 }
 
-function commentsList({ user, comments, days }) {
-  const recipient = user;
-  const data = { comments, user, days };
+function commentsList({ email, comments, since }) {
+  const recipient = email;
+  const data = { comments, recipient, since };
   const html = renderHtml(path.join(templatesDir, 'comments.mjml'), data);
   const text = renderText(path.join(templatesDir, 'comments.txt'), data);
   logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending comments email to:', recipient);

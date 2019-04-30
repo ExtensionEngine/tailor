@@ -62,17 +62,16 @@ class Comment extends Model {
 
   static sortComments({ comments, schema }) {
     const structure = getOutlineLevels(schema);
-    const sortedComments = [];
-    comments.forEach((comment, i) => {
+    return comments.reduce((accumulator, comment, i) => {
       const { label, color } = find(structure, { type: comment.activity.type });
       comment.activity.label = label;
       comment.activity.color = color;
       if (!i || comment.activityId !== comments[i - 1].activityId) {
-        sortedComments.push([]);
+        accumulator.push([]);
       }
-      sortedComments[sortedComments.length - 1].push(comment);
-    });
-    return sortedComments;
+      accumulator[accumulator.length - 1].push(comment);
+      return accumulator;
+    }, []);
   }
 }
 module.exports = Comment;

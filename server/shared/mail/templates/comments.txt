@@ -7,7 +7,7 @@ Comments in last {{days}} days:
 
 {{#comments}}
 -------------------------------------------------
-{{0.activity.data.name}} [{{0.activity.label}}]
+{{0.activity.data.name}} [A{{0.activity.id}}][{{0.activity.label}}]
 -------------------------------------------------
 {{#.}}
 {{author.email}}: {{content}}

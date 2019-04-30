@@ -35,7 +35,7 @@ function email({ course, body }, res) {
   };
   return course.getComments({ ...opts, include })
     .then(comments => Comment.sortComments({ comments, schema: course.schema }))
-    .then(comments => mail.commentsList({ user: email, comments, days: since }))
+    .then(comments => mail.commentsList({ email, comments, since }))
     .then(() => res.end());
 }
 

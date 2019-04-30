@@ -12,7 +12,7 @@
       <v-subheader
         v-if="sameActivity(comment.activityId, index)"
         class="comment-activity">
-        {{ comment.activity.data.name }}
+        <span class="activity-title">{{ comment.activity.data.name }}</span>
         <div class="labels">
           <v-chip label small outline color="primary">
             A{{ comment.activity.id }}
@@ -141,14 +141,6 @@ export default {
   border-radius: 3px;
 }
 
-.labels {
-  font-size: 0;
-
-  .v-chip + .v-chip {
-    margin-left: 0;
-  }
-}
-
 .comment-activity {
   display: flex;
   border-bottom: gray solid 1px;
@@ -157,4 +149,17 @@ export default {
   font-size: 18px;
   justify-content: space-between;
 }
+
+.activity-title {
+  padding-left: 2px;
+}
+
+.labels {
+  font-size: 0;
+
+  .v-chip + .v-chip {
+    margin-left: 0;
+  }
+}
+
 </style>

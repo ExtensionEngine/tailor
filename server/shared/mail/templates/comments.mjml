@@ -39,15 +39,31 @@
       strong {
         font-weight: bold;
       }
-      .outline {
-      	padding: 3px 7px;
-      	border-radius: 2px;
-        margin-left: 7px;
-        font-size: 11px;
-      }
       a {
         color: #067df7;
         text-decoration: none;
+      }
+      .comments-header {
+        display:flex;
+        flex-wrap:wrap;
+        justify-content: space-between;
+      }
+      .title {
+        margin-right: 7px;
+        line-height: 20px
+      }
+      .label {
+      	padding: 3px 7px;
+      	border-radius: 2px;
+        font-size: 11px;
+        line-height: 20px;
+      }
+      .activity {
+        color: #1976d2;
+        border: 1px solid #1976d2;
+      }
+      .type {
+        color: white;
       }
     </mj-style>
   </mj-head>
@@ -68,18 +84,24 @@
           You have requested list of recent comments.
         </mj-text>
         <mj-text mj-class="content">
-          Comments in last {{days}} days:
+          Comments in last {{since}} days:
         </mj-text>
         <mj-accordion>
           <mj-raw>{{#comments}}</mj-raw>
           <mj-accordion-element>
             <mj-accordion-title>
-              <span style="line-height:20px">{{0.activity.data.name}}</span>
-              <span
-                class="outline"
-                style="color: {{0.activity.color}}; border: 1px solid {{0.activity.color}};">
-                {{0.activity.label}}
-              </span>
+              <div class="comments-header">
+                <span class="title">{{0.activity.data.name}}</span>
+                <div>
+                  <span class="label activity">A{{0.activity.id}}</span>
+                  <span
+                    class="label type"
+                    style="background-color: {{0.activity.color}};
+                    border: 1px solid {{0.activity.color}};">
+                    {{0.activity.label}}
+                  </span>
+                </div>
+              </div>
             </mj-accordion-title>
             <mj-raw>{{#.}}</mj-raw>
             <mj-accordion-text>
