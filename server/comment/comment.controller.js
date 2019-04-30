@@ -29,7 +29,10 @@ function email({ course, body }, res) {
   const { since, email } = body;
   let date = new Date();
   date.setDate(date.getDate() - since);
-  const opts = { where: { createdAt: { [Op.gt]: date } } };
+  const opts = {
+    order: [['createdAt', 'DESC']],
+    where: { createdAt: { [Op.gt]: date } }
+  };
   return course.getComments({ ...opts, include })
     .then(data => mail.commentsList({
       user: email,

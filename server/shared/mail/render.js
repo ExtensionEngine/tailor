@@ -11,6 +11,7 @@ const map = require('lodash/map');
 const mjml2html = require('mjml');
 const path = require('path');
 const mustache = require('mustache');
+const wrap = require('word-wrap');
 
 module.exports = {
   renderHtml,
@@ -34,7 +35,8 @@ function renderHtml(templatePath, data, style) {
 
 function renderText(templatePath, data) {
   const template = fs.readFileSync(templatePath, 'utf8');
-  return mustache.render(template, data);
+  const textTemplate = mustache.render(template, data);
+  return wrap(textTemplate, { width: 50 });
 }
 
 function getAttributes($, style = {}) {

@@ -137,6 +137,7 @@
     "vuex-module": "^0.4.0",
     "vuex-router-sync": "^3.0.0",
     "weekstart": "^1.0.0",
+    "word-wrap": "^1.2.3",
     "yup": "^0.24.1"
   },
   "devDependencies": {
