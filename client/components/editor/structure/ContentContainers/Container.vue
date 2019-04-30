@@ -21,7 +21,6 @@
       :activity="container"
       :types="types"
       :layout="layout"
-      @add="addElement"
       @insert="insert"
       @update="reorder">
       <teaching-element
