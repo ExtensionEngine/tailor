@@ -6,7 +6,9 @@ Hello {{recipient}},
 Comments in last {{days}} days:
 
 {{#comments}}
+-------------------------------------------------
 {{0.activity.data.name}} [{{0.activity.label}}]
+-------------------------------------------------
 {{#.}}
 {{author.email}}: {{content}}
 {{/.}}

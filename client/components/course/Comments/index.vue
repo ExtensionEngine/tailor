@@ -18,12 +18,14 @@
         slot="activity-id"
         class="comment-activity">
         {{ comment.activity.data.name }}
-        <v-chip label small outline color="primary">
-          A{{ comment.activity.id }}
-        </v-chip>
-        <v-chip :color="getType(comment).color" label small outline >
-          {{ getType(comment).label }}
-        </v-chip>
+        <div class="labels">
+          <v-chip label small outline color="primary">
+            A{{ comment.activity.id }}
+          </v-chip>
+          <v-chip :color="getType(comment).color" label small text-color="white">
+            {{ getType(comment).label }}
+          </v-chip>
+        </div>
       </div>
       <span
         v-if="!initialCheckTime || initialCheckTime < comment.createdAt"
@@ -129,19 +131,29 @@ export default {
 }
 
 .new-comment {
-  background-color:#737373;
-  border-radius: 3px;
+  margin-right: 5px;
+  padding: 3px 5px;
   color: white;
   font-size: 10px;
   font-weight: bold;
-  padding: 3px 5px;
-  margin-right: 5px;
+  background-color: #737373;
+  border-radius: 3px;
+}
+
+.labels {
+  font-size: 0;
+
+  .v-chip + .v-chip {
+    margin-left: 0;
+  }
 }
 
 .comment-activity {
+  display: flex;
   border-bottom: gray solid 1px;
-  margin: 20px 0px;
-  padding: 10px 0px;
+  margin: 20px 0;
+  padding: 10px 0;
   font-size: 18px;
+  justify-content: space-between;
 }
 </style>
