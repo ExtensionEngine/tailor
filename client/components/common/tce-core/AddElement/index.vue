@@ -88,13 +88,15 @@ export default {
     label: { type: String, default: 'Add content' },
     icon: { type: String, default: 'mdi-plus' }
   },
-  data() {
-    return {
-      isVisible: false,
-      elementWidth: DEFAULT_ELEMENT_WIDTH
-    };
-  },
+  data: () => ({ elementWidth: DEFAULT_ELEMENT_WIDTH }),
   computed: {
+    isVisible: {
+      get: ({ show }) => show,
+      set(val) {
+        this.$emit('update:show', val);
+        if (!val) this.onClose();
+      }
+    },
     registry() {
       return sortBy(this.$teRegistry.get(), 'position');
     },
@@ -158,18 +160,8 @@ export default {
       if (this.elementWidth === DEFAULT_ELEMENT_WIDTH) return false;
       return get(element, 'ui.forceFullWidth', false);
     },
-    onHidden() {
+    onClose() {
       this.elementWidth = DEFAULT_ELEMENT_WIDTH;
-      this.$emit('hidden');
-    }
-  },
-  watch: {
-    show(val) {
-      if (val) this.isVisible = val;
-    },
-    isVisible(val, oldVal) {
-      if (val && !oldVal) this.$emit('shown');
-      if (!val && oldVal) this.onHidden();
     }
   }
 };

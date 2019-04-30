@@ -16,7 +16,7 @@
         class="list-item-container">
         <inline-activator
           v-if="enableAdd && !embedded"
-          @click.native="showElementDrawer(index - 1)"/>
+          @click.native="openElementDrawer(index - 1)"/>
         <slot
           :item="item"
           :setWidth="false"
@@ -30,11 +30,9 @@
         :include="types"
         :activity="activity"
         :layout="layout"
-        :show="isElementDrawerVisible"
+        :show.sync="showElementDrawer"
         :large="!embedded"
         :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'"
-        @shown="onShowElementDrawer"
-        @hidden="onCloseElementDrawer"
         @add="insertElement"/>
     </div>
   </div>
@@ -58,8 +56,8 @@ export default {
   data() {
     return {
       dragElementIndex: -1,
-      insertPosition: null,
-      isElementDrawerVisible: false
+      insertPosition: 0,
+      showElementDrawer: false
     };
   },
   computed: {
@@ -69,20 +67,13 @@ export default {
         scrollSpeed: 15,
         scrollSensitivity: 125
       });
-    }
+    },
+    positionLimit: ({ list }) => list.length - 1
   },
   methods: {
-    showElementDrawer(position) {
+    openElementDrawer(position) {
       this.insertPosition = position;
-      this.isElementDrawerVisible = true;
-    },
-    onCloseElementDrawer() {
-      this.isElementDrawerVisible = false;
-      this.insertPosition = null;
-    },
-    onShowElementDrawer() {
-      const { insertPosition: position, list } = this;
-      if (!Number.isInteger(position)) this.insertPosition = list.length - 1;
+      this.showElementDrawer = true;
     },
     getContainerClasses({ data: { width } }) {
       let classes = [`col-xs-${width || 12}`];
@@ -91,6 +82,15 @@ export default {
     },
     insertElement(element) {
       this.$emit('insert', { ...element, position: this.insertPosition });
+    }
+  },
+  watch: {
+    showElementDrawer: {
+      handler(isOpen) {
+        if (!isOpen) this.insertPosition = this.positionLimit;
+        this.insertPosition = Math.min(this.insertPosition, this.positionLimit);
+      },
+      immediate: true
     }
   },
   components: { AddElement, Draggable, InlineActivator }
