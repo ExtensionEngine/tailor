@@ -7,18 +7,14 @@ const appChannel = EventBus.channel('app');
 const prefix = message => `Are you sure you want to publish ${message}`;
 
 export default {
-  data() {
-    return {
-      publishStatus: {
-        progress: 0,
-        message: ''
-      }
-    };
-  },
-  computed: {
-    isPublishing() {
-      return this.publishStatus.progress > 0;
+  data: () => ({
+    publishStatus: {
+      progress: 0,
+      message: ''
     }
+  }),
+  computed: {
+    isPublishing: ({ publishStatus }) => publishStatus.progress > 0
   },
   methods: {
     confirmPublishing(activities = [this.activity]) {
@@ -33,12 +29,10 @@ export default {
       return Promise.each(activities, (activity, i) => {
         const progress = i + 1;
         const message = `Publishing ${activity.data.name}`;
-        Object.assign(this.publishStatus, { progress, message });
+        this.publishStatus = { progress, message };
         return this.publishActivity(activity);
-      }).finally(() => {
-        this.publishStatus.progress = 0;
-        this.publishStatus.message = '';
-      });
+      })
+      .finally(() => (this.publishStatus = { progress: 0, message: '' }));
     },
     getPublishMessage(activityCount) {
       const name = get(this, 'activity.data.name', 'activity');
