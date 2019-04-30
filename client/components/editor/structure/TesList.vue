@@ -29,13 +29,12 @@
         v-if="enableAdd"
         :include="types"
         :activity="activity"
-        :position="insertPosition"
         :layout="layout"
         :show="isElementDrawerVisible"
         :large="!embedded"
         :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'"
         @hidden="onHiddenElementDrawer"
-        @add="addElement"/>
+        @add="insertElement"/>
     </div>
   </div>
 </template>
@@ -58,7 +57,7 @@ export default {
   data() {
     return {
       dragElementIndex: -1,
-      insertPosition: 0,
+      insertPosition: null,
       isElementDrawerVisible: false
     };
   },
@@ -69,9 +68,6 @@ export default {
         scrollSpeed: 15,
         scrollSensitivity: 125
       });
-    },
-    lastPosition() {
-      return this.list.length + 1;
     }
   },
   methods: {
@@ -81,22 +77,18 @@ export default {
     },
     onHiddenElementDrawer() {
       this.isElementDrawerVisible = false;
-      this.insertPosition = this.lastPosition;
+      this.insertPosition = null;
     },
     getContainerClasses({ data: { width } }) {
       let classes = [`col-xs-${width || 12}`];
       if (this.enableAdd) classes.push('insertable');
       return classes;
     },
-    addElement(element) {
-      const type = element.position === this.lastPosition ? 'add' : 'insert';
-      this.$emit(type, element);
-    }
-  },
-  watch: {
-    lastPosition: {
-      handler(val) { this.insertPosition = val; },
-      immediate: true
+    insertElement(element) {
+      let { insertPosition: position, list } = this;
+      if (!Number.isInteger(position)) position = list.length - 1;
+      this.$emit('insert', { ...element, position });
+      this.insertPosition = null;
     }
   },
   components: { AddElement, Draggable, InlineActivator }

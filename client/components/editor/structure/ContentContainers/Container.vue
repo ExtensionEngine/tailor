@@ -59,8 +59,7 @@ export default {
   methods: {
     ...mapActions({
       reorderElements: 'reorder',
-      insertElement: 'insert',
-      addElement: 'save'
+      insertElement: 'insert'
     }, 'tes'),
     reorder({ newIndex: newPosition }) {
       const items = this.teachingElements;
