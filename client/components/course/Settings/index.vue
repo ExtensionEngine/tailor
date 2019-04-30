@@ -60,8 +60,8 @@ export default {
   computed: {
     ...mapGetters(['course', 'outlineActivities'], 'course'),
     publishPercentage() {
-      if (this.progress <= 0) return 0;
-      return this.progress / this.outlineActivities.length * 100;
+      if (this.publishStatus.progress <= 0) return 0;
+      return this.publishStatus.progress / this.outlineActivities.length * 100;
     }
   },
   methods: {

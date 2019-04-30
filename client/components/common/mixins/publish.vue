@@ -9,10 +9,16 @@ const prefix = message => `Are you sure you want to publish ${message}`;
 export default {
   data() {
     return {
-      progress: 0,
-      isPublishing: false,
-      publishStatus: ''
+      publishStatus: {
+        progress: 0,
+        message: ''
+      }
     };
+  },
+  computed: {
+    isPublishing() {
+      return this.publishStatus.progress > 0;
+    }
   },
   methods: {
     confirmPublishing(activities = [this.activity]) {
@@ -24,15 +30,14 @@ export default {
       });
     },
     publish(activities) {
-      this.isPublishing = true;
       return Promise.each(activities, (activity, i) => {
-        this.progress = i;
-        this.publishStatus = `Publishing ${activity.data.name}`;
+        const progress = i + 1;
+        const message = `Publishing ${activity.data.name}`;
+        Object.assign(this.publishStatus, { progress, message });
         return this.publishActivity(activity);
       }).finally(() => {
-        this.progress = 0;
-        this.isPublishing = false;
-        this.publishStatus = '';
+        this.publishStatus.progress = 0;
+        this.publishStatus.message = '';
       });
     },
     getPublishMessage(activityCount) {
