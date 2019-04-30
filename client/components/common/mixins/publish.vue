@@ -27,7 +27,7 @@ export default {
     },
     publish(activities) {
       return Promise.each(activities, (activity, i) => {
-        const progress = i + 1;
+        const progress = (i + 1) / activities.length;
         const message = `Publishing ${activity.data.name}`;
         this.publishStatus = { progress, message };
         return this.publishActivity(activity);

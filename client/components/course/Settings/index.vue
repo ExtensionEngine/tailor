@@ -59,10 +59,7 @@ export default {
   },
   computed: {
     ...mapGetters(['course', 'outlineActivities'], 'course'),
-    publishPercentage() {
-      if (this.publishStatus.progress <= 0) return 0;
-      return this.publishStatus.progress / this.outlineActivities.length * 100;
-    }
+    publishPercentage: ({ publishStatus }) => publishStatus.progress * 100
   },
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
