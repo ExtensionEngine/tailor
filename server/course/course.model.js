@@ -1,8 +1,8 @@
 'use strict';
 
-const { getSchema } = require('../../config/shared/activities');
-const hooks = require('./hooks');
+const { getRepositoryRelationships, getSchema } = require('../../config/shared/activities');
 const { Model } = require('sequelize');
+const hooks = require('./hooks');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
@@ -76,12 +76,12 @@ class Course extends Model {
     };
   }
 
-  static addHooks(models) {
-    hooks.add(this, models);
+  static hooks(Hooks, models) {
+    hooks.add(this, Hooks, models);
   }
 
   static updateStats(id, key, value) {
-    return this.findById(id).then(course => {
+    return this.findByPk(id).then(course => {
       if (!course) return;
       const stats = course.stats || {};
       stats[key] = value;
@@ -99,10 +99,13 @@ class Course extends Model {
     const Activity = this.sequelize.model('Activity');
     const TeachingElement = this.sequelize.model('TeachingElement');
     const opts = { where: { courseId: this.id }, transaction };
-    const activities = await Activity.scope('withReferences').findAll(opts);
-    const elements = await TeachingElement.scope('withReferences').findAll(opts);
+    const relationships = getRepositoryRelationships(this.schema);
+    const [activities, elements] = await Promise.all([
+      Activity.scope({ method: ['withReferences', relationships] }).findAll(opts),
+      TeachingElement.scope('withReferences').findAll(opts)
+    ]);
     return Promise.join(
-      Promise.map(activities, it => it.mapClonedReferences(mappings, transaction)),
+      Promise.map(activities, it => it.mapClonedReferences(mappings, relationships, transaction)),
       Promise.map(elements, it => it.mapClonedReferences(mappings, transaction)),
       (activities, elements) => ({ activities, elements })
     );

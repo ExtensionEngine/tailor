@@ -1,148 +1,120 @@
 <template>
-  <nav v-if="user" class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <router-link :to="{ name: 'catalog' }" class="navbar-brand">
-          <img :src="logo" alt="Logo" class="logo"/>
-          <div class="title">{{ title }}</div>
-        </router-link>
-      </div>
-      <router-link
-        v-if="course"
-        :to="{ name: 'course', params: { courseId: course.id }}"
-        class="course-title">
-        <span class="navbar-acronym">
-          <span>{{ courseAcronym }}</span>
-        </span>
-        {{ course.name }}
-      </router-link>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Welcome {{ user.email }}
-            <span class="icon mdi mdi-menu-down"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="#" @click="logout">Log out</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </nav>
+  <v-toolbar color="white" app fixed>
+    <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
+      <v-avatar color="blue darken-3" size="40">
+        <v-icon color="white">mdi-content-cut</v-icon>
+      </v-avatar>
+      <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
+    </router-link>
+    <router-link
+      v-if="repository"
+      :to="{ name: 'course', params: { courseId: repository.id }}"
+      class="repository-title">
+      <span class="navbar-acronym">
+        <span>{{ repositoryAcronym }}</span>
+      </span>
+      {{ repository.name }}
+    </router-link>
+    <v-spacer></v-spacer>
+    <v-menu
+      min-width="220px"
+      transition="slide-y-transition"
+      offset-y
+      z-index="1000">
+      <v-btn slot="activator" icon large class="mr-2">
+        <v-avatar size="42px" color="#eaeaea">
+          <span class="grey--text headline">{{ user.email[0] }}</span>
+        </v-avatar>
+      </v-btn>
+      <v-list>
+        <v-list-tile>
+          <v-list-tile-title>{{ user.email }}</v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile @click="logout">
+          <v-list-tile-title>Logout</v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-menu>
+  </v-toolbar>
 </template>
 
 <script>
-import { getAcronym } from 'utils/course';
 import { mapActions, mapGetters } from 'vuex-module';
+import { getAcronym } from 'utils/course';
 
 export default {
-  name: 'navbar',
+  name: 'main-toolbar',
+  props: {
+    user: { type: Object, required: true }
+  },
   data() {
     return {
-      logo: BRAND_CONFIG.LOGO_COMPACT,
       title: BRAND_CONFIG.TITLE
     };
   },
   computed: {
-    ...mapGetters(['user']),
-    ...mapGetters(['course'], 'course'),
-    courseAcronym() {
-      return this.course ? getAcronym(this.course.name) : null;
+    ...mapGetters({ repository: 'course' }, 'course'),
+    repositoryAcronym() {
+      return this.repository ? getAcronym(this.repository.name) : null;
     }
   },
   methods: mapActions(['logout'])
 };
 </script>
 
-<style lang="scss">
-$nav-height: 64px;
-$font-color: #424242;
-$bg-color: #fff;
+<style lang="scss" scoped>
+$container-height: 40px;
+$font-color: #333;
 
-.navbar {
-  height: $nav-height;
-  background-color: $bg-color;
-  box-shadow:
-    0 2px 2px 0 rgba(0,0,0,0.14),
-    0 1px 5px 0 rgba(0,0,0,0.12),
-    0 3px 1px -2px rgba(0,0,0,0.2);
+.v-toolbar {
+  z-index: 10;
+}
 
-  .dropdown-toggle .icon {
-    padding: 0 5px;
+.app-brand {
+  cursor: pointer;
 
-    &::before {
-      position: relative;
-      top: -2px;
-      font-size: 24px;
-      line-height: 24px;
-      vertical-align: middle;
-    }
-  }
-
-  .navbar-brand {
-    height: $nav-height;
-    padding: 0;
-
-    .logo {
-      float: left;
-      height: 36px;
-      margin: 12px 25px 0 20px;
-    }
-
-    .title {
-      float: left;
-      color: $font-color;
-      font-size: 18px;
-      line-height: $nav-height;
-    }
-  }
-
-  .course-title {
+  .v-avatar {
     float: left;
-    width: 50%;
-    margin-left: 38px;
-    color: $font-color;
-    font-size: 16px;
-    line-height: $nav-height;
-    font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-decoration: none;
-    overflow: hidden;
-
-    &:hover {
-      color: darken($font-color, 20%);
-    }
-
-    @media (max-width: 1200px) {
-      width: 40%;
-    }
-
-    @media (max-width: 1000px) {
-      width: 25%;
-    }
+    margin-right: 14px;
   }
 
-  .navbar-acronym {
-    padding-right: 4px;
-    color: #777;
-    font-weight: bold;
+  .app-name {
+    line-height: $container-height;
+    font-size: 20px;
+    font-weight: 400;
+  }
+}
+
+.repository-title {
+  float: left;
+  width: 50%;
+  margin-left: 30px;
+  color: $font-color;
+  font-size: 16px;
+  line-height: $container-height;
+  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+  overflow: hidden;
+
+  &:hover {
+    color: darken($font-color, 20%);
   }
 
-  .navbar-nav {
-    .dropdown a {
-      padding: 20px 10px;
-      color: $font-color;
-    }
-
-    .dropdown-menu a {
-      padding: 12px 15px;
-    }
-
-    ul {
-      border-radius: 2px;
-    }
+  @media (max-width: 1200px) {
+    width: 40%;
   }
+
+  @media (max-width: 1000px) {
+    width: 25%;
+  }
+}
+
+.navbar-acronym {
+  padding-right: 4px;
+  color: #777;
+  font-weight: bold;
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
   <div class="catalog" infinite-wrapper>
     <div class="row">
-      <div class="col-md-6 col-md-offset-3">
+      <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
         <search @change="search"></search>
       </div>
-      <div class="col-md-3">
-        <create-course class="pull-right"></create-course>
+      <div class="col-md-2 col-sm-1">
+        <create-course class="pull-right"/>
       </div>
     </div>
     <div v-show="searching" class="search-spinner"><circular-progress/></div>
@@ -15,7 +15,7 @@
         :key="course._cid"
         :course="course">
       </course-card>
-      <infinite-loading @infinite="loadMore" ref="infiniteLoading">
+      <infinite-loading ref="infiniteLoading" @infinite="loadMore">
         <div slot="spinner" class="spinner"><circular-progress/></div>
         <div slot="no-results" class="no-results">
           {{ orderedCourses.length ? '' : 'No courses found.' }}
@@ -96,6 +96,10 @@ export default {
 
   @media (min-width: 1700px) {
     padding: 30px 300px 100px;
+  }
+
+  /deep/ .course-search {
+    margin-top: 8px;
   }
 }
 

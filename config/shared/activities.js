@@ -3,6 +3,7 @@
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const first = require('lodash/first');
+const flatMap = require('lodash/flatMap');
 const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
 const last = require('lodash/last');
@@ -10,6 +11,7 @@ const map = require('lodash/map');
 const mergeConfig = require('../utils/mergeConfig');
 const parseSchemas = require('./schema-parser');
 const sortBy = require('lodash/sortBy');
+const union = require('lodash/union');
 
 const defaultConfiguration = require('./activities-rc');
 const customConfiguration = require('./activities-rc.load')();
@@ -25,9 +27,13 @@ module.exports = {
   getSchema,
   getSchemaId,
   getRepositoryMeta,
+  getLevelRelationships,
+  getRepositoryRelationships,
   getOutlineLevels,
   getObjectives,
   getLevel,
+  getTesMeta,
+  getSiblingLevels,
   isEditable: activityType => {
     const config = getLevel(activityType);
     const hasContainers = !!getSupportedContainers(activityType).length;
@@ -57,6 +63,19 @@ function getLevel(type) {
   return schemaId && find(getOutlineLevels(schemaId), { type });
 }
 
+function getTesMeta(schemaId, type) {
+  return find(getSchema(schemaId).tesMeta, { type }) || {};
+}
+
+function getSiblingLevels(type) {
+  const schemaId = getSchemaId(type);
+  if (!schemaId) return [{ type }];
+  const levels = getOutlineLevels(schemaId);
+  const { level } = find(levels, { type }) || {};
+  if (!level) return [{ type }];
+  return filter(levels, { level });
+}
+
 function getSupportedContainers(type) {
   const schema = getSchema(getSchemaId(type));
   const defaultConfig = get(defaultConfiguration, 'CONTENT_CONTAINERS', []);
@@ -81,4 +100,14 @@ function getRepositoryMeta(repository) {
     let value = get(repository, `data.${it.key}`);
     return { ...it, value };
   });
+}
+
+function getLevelRelationships(type) {
+  return get(getLevel(type), 'relationships', []);
+}
+
+function getRepositoryRelationships(schemaId) {
+  const structure = getOutlineLevels(schemaId);
+  return flatMap(structure, it => it.relationships)
+    .reduce((acc, { type }) => union(acc, [type]), []);
 }

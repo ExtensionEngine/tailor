@@ -9,7 +9,9 @@ import { getAcronym, getColor } from 'utils/course';
 
 export default {
   name: 'acronym',
-  props: ['course'],
+  props: {
+    course: { type: Object, required: true }
+  },
   computed: {
     acronym() {
       return getAcronym(this.course.name);
@@ -35,7 +37,7 @@ export default {
 
   span {
     display: inline-block;
-    padding-top: 6px;
+    padding-top: 13px;
   }
 }
 </style>

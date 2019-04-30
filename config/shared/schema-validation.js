@@ -12,6 +12,18 @@ const meta = yup.array().of(yup.object().shape({
   validate: yup.object().shape({ rules: yup.object() })
 }));
 
+const relationships = yup.array().of(yup.object().shape({
+  type: yup.string().min(2).max(100).required(),
+  label: yup.string().min(2).max(100).required(),
+  placeholder: yup.string().min(2).max(100),
+  multiple: yup.boolean(),
+  searchable: yup.boolean(),
+  allowEmpty: yup.boolean(),
+  allowCircularLinks: yup.boolean(),
+  allowInsideLineage: yup.boolean(),
+  allowedTypes: yup.array().of(activityType)
+}));
+
 const schema = yup.object().shape({
   id: yup.string().min(2).max(20).required(),
   name: yup.string().min(2).max(200).required(),
@@ -22,12 +34,12 @@ const schema = yup.object().shape({
     label: yup.string().min(2).max(100).required(),
     color: yup.string().matches(/^#(?:[0-9a-fA-F]{3}){1,2}$/).required(),
     subLevels: yup.array().of(activityType),
-    hasPrerequisites: yup.boolean(),
     isObjective: yup.boolean(),
     contentContainers: yup.array().of(activityType),
     hasAssessments: yup.boolean(),
     hasExams: yup.boolean(),
     exams: yup.object().shape({ objectives: yup.array().of(activityType) }),
+    relationships,
     meta
   })).min(1),
   contentContainers: yup.array().of(yup.object().shape({

@@ -1,0 +1,91 @@
+<template>
+  <div :key="id" class="element-toolbar-wrapper">
+    <component
+      v-if="componentExists"
+      :is="componentName"
+      :element="element"
+      :embed="embed"
+      @save="saveElement"/>
+    <default-toolbar v-else/>
+    <slot name="embed-toolbar"></slot>
+    <div class="delete-element">
+      <slot name="actions"></slot>
+      <v-btn @click="requestDeleteConfirmation" color="error" fab dark>
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+    </div>
+  </div>
+</template>
+
+<script>
+import { getElementId, getToolbarName, isQuestion } from './utils';
+import DefaultToolbar from './DefaultToolbar';
+import EventBus from 'EventBus';
+import { mapActions } from 'vuex-module';
+import Vue from 'vue';
+import { withValidation } from 'utils/validation';
+
+const appBus = EventBus.channel('app');
+
+export default {
+  name: 'element-toolbar-wrapper',
+  mixins: [withValidation()],
+  props: {
+    element: { type: Object, required: true },
+    embed: { type: Object, default: null }
+  },
+  computed: {
+    id() {
+      return getElementId(this.element);
+    },
+    elementBus() {
+      return EventBus.channel(`element:${this.id}`);
+    },
+    componentName() {
+      const { type } = this.element;
+      if (isQuestion(type)) return;
+      return getToolbarName(type);
+    },
+    componentExists() {
+      return !!Vue.options.components[this.componentName];
+    }
+  },
+  methods: {
+    ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
+    remove(element) {
+      this.focusoutElement();
+      if (element.embedded) return this.elementBus.emit('delete');
+      this.removeElement(element);
+    },
+    focusoutElement() {
+      EventBus.emit('element:focus');
+    },
+    requestDeleteConfirmation() {
+      appBus.emit('showConfirmationModal', {
+        title: 'Delete element?',
+        message: 'Are you sure you want to delete element?',
+        action: () => this.remove(this.element)
+      });
+    }
+  },
+  provide() {
+    return {
+      $elementBus: this.elementBus
+    };
+  },
+  components: { DefaultToolbar }
+};
+</script>
+
+<style lang="scss" scoped>
+.delete-element {
+  position: absolute;
+  z-index: 999;
+  right: 0;
+  transform: translate(-90%, -40%);
+
+  .v-btn {
+    margin: 4px;
+  }
+}
+</style>

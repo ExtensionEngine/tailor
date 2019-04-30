@@ -67,18 +67,6 @@ export default {
       return zoom().scaleExtent([start, end]);
     }
   },
-  watch: {
-    hovered(node) {
-      if (!node) return this.$emit('node:focusout');
-      if (node.depth > 0) this.$emit('node:focus', node, node.data);
-    }
-  },
-  mounted() {
-    // Re-render chart when data changes.
-    this.$watch('nodes', nodes => {
-      if (nodes) this.renderTree();
-    }, { immediate: true });
-  },
   methods: {
     renderTree() {
       // Setup chart.
@@ -110,7 +98,7 @@ export default {
       });
 
       // Render nodes & links.
-      const descendants = this.nodes.descendants();
+      const descendants = this.nodes ? this.nodes.descendants() : [];
       this.renderLinks(descendants.slice(1), g);
       this.renderNodes(descendants, g);
 
@@ -139,7 +127,7 @@ export default {
       // Append label.
       node.append('text')
         .classed('label', true)
-        .text(d => d.data.name)
+        .text(d => d.data.name || d.data.id)
         .style('text-anchor', 'middle')
         .attr('dy', '.35em')
         .attr('y', d => {
@@ -184,6 +172,18 @@ export default {
       const scale = clamp(ratio, defScale, maxScale);
       this.zoomHandler.scaleTo(svg, scale);
     }
+  },
+  watch: {
+    hovered(node) {
+      if (!node) return this.$emit('node:focusout');
+      if (node.depth > 0) this.$emit('node:focus', node, node.data);
+    }
+  },
+  mounted() {
+    // Re-render chart when data changes.
+    this.$watch('nodes', nodes => {
+      this.renderTree();
+    }, { immediate: true });
   }
 };
 
@@ -272,10 +272,8 @@ $link-color: #ababab;
     &:hover .circle {
       fill: darken($node-color, 10%);
     }
-  }
 
-  // Capture all mouse events on circle wrapper.
-  .node .circle-wrapper {
+    // Capture all mouse events on circle wrapper.
     * {
       cursor: pointer;
       pointer-events: none;

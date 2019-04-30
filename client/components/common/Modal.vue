@@ -27,18 +27,18 @@ export default {
     backdrop: { type: Boolean, default: true },
     focus: { type: Boolean, default: true }
   },
-  mounted() {
-    this.focusTrap = focusTrap(this.$el, { escapeDeactivates: false });
-  },
-  beforeDestroy() {
-    this.focusTrap = null;
-  },
   watch: {
     show(isOpen) {
       toggleClass(document.body, 'modal-open', isOpen);
       const focus = isOpen && this.focus;
       this.$nextTick(() => toggleFocusTrap(this.focusTrap, focus));
     }
+  },
+  mounted() {
+    this.focusTrap = focusTrap(this.$el, { escapeDeactivates: false });
+  },
+  beforeDestroy() {
+    this.focusTrap = null;
   }
 };
 
@@ -52,6 +52,61 @@ function toggleFocusTrap(focusTrap, condition) {
   else focusTrap.deactivate();
 }
 </script>
+
+<style lang="scss">
+@function headings($from: 1, $to: 6) {
+  @if $from == $to {
+    @return 'h#{$from}';
+  }
+  @else {
+    @return 'h#{$from},' + headings($from + 1, $to);
+  }
+}
+
+.modal, .modal-dialog {
+  .modal-content {
+    top: 96px;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 4px;
+    font: 14px Roboto, Helvetica, Arial;
+    text-align: left;
+    border: none;
+    border-radius: 2px;
+    box-shadow:
+      0 11px 15px -7px rgba(0,0,0,0.2),
+      0 24px 38px 3px rgba(0,0,0,0.14),
+      0 9px 46px 8px rgba(0,0,0,0.12);
+    transition: all 0.3s ease;
+  }
+
+  .modal-header {
+    color: #333;
+    font-size: 20px;
+    font-weight: 500;
+    border: none;
+
+    #{headings()} {
+      font-size: 20px;
+    }
+  }
+
+  .modal-body {
+    color: #555;
+    font-weight: 400;
+
+    b, strong {
+      color: #363636;
+    }
+  }
+
+  .modal-footer {
+    padding: 8px;
+    font-weight: 500;
+    border: none;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .modal {
@@ -74,57 +129,5 @@ function toggleFocusTrap(focusTrap, condition) {
 
 .modal-enter .modal-content, .modal-leave-active .modal-content {
   transform: scale(1.1);
-}
-</style>
-
-<style lang="scss">
-@function headings($from: 1, $to: 6) {
-  @if $from == $to {
-    @return 'h#{$from}';
-  } @else {
-    @return 'h#{$from},' + headings($from + 1, $to);
-  }
-}
-
-.modal-content {
-  top: 96px;
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 4px;
-  font: 14px Roboto, Helvetica, Arial;
-  text-align: left;
-  border: none;
-  border-radius: 2px;
-  box-shadow:
-    0 11px 15px -7px rgba(0,0,0,0.2),
-    0 24px 38px 3px rgba(0,0,0,0.14),
-    0 9px 46px 8px rgba(0,0,0,0.12);
-  transition: all .3s ease;
-}
-
-.modal-header {
-  color: #333;
-  font-size: 20px;
-  font-weight: 500;
-  border: none;
-
-  #{headings()} {
-    font-size: 20px;
-  }
-}
-
-.modal-body {
-  color: #555;
-  font-weight: 400;
-
-  b, strong {
-    color: #363636;
-  }
-}
-
-.modal-footer {
-  padding: 8px;
-  font-weight: 500;
-  border: none;
 }
 </style>

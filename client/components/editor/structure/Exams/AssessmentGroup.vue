@@ -27,7 +27,8 @@
       :activity="group"
       :types="['ASSESSMENT']"
       @add="addAssessment"
-      @update="reorderAssessment">
+      @update="reorderAssessment"
+      embedded>
       <assessment-item
         slot="list-item"
         slot-scope="{ item }"
@@ -36,7 +37,7 @@
         :expanded="isSelected(item)"
         @selected="toggleSelect(item)"
         @save="saveAssessment"
-        @remove="item.id ? requestDeletion(item) : remove(item)">
+        @delete="item.id ? requestDeletion(item) : remove(item)">
       </assessment-item>
     </tes-list>
   </div>
@@ -59,7 +60,11 @@ const appChannel = EventBus.channel('app');
 
 export default {
   name: 'assessment-group',
-  props: ['group', 'exam', 'position'],
+  props: {
+    group: { type: Object, required: true },
+    exam: { type: Object, required: true },
+    position: { type: Number, required: true }
+  },
   data() {
     return {
       selected: [],
@@ -114,9 +119,10 @@ export default {
     requestDeletion(item) {
       const isGroup = item.type === 'ASSESSMENT_GROUP';
       const action = isGroup ? 'removeGroup' : 'remove';
+      const type = isGroup ? 'group' : 'element';
       appChannel.emit('showConfirmationModal', {
-        type: isGroup ? 'group' : 'element',
-        item,
+        title: `Delete ${type}?`,
+        message: `Are you sure you want to delete ${type}?`,
         action: () => this[action](item)
       });
     }

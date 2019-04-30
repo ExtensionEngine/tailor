@@ -10,12 +10,12 @@
       </div>
       <entity-sidebar
         v-show="expanded"
+        ref="sidebar"
         :revisions="revisions"
         :selected="selectedRevision"
         :isDetached="isDetached"
         @preview="previewRevision"
-        @rollback="rollback"
-        ref="sidebar">
+        @rollback="rollback">
       </entity-sidebar>
     </div>
   </transition>
@@ -28,13 +28,16 @@ import first from 'lodash/first';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import Promise from 'bluebird';
-import TeachingElement from 'components/editor/teaching-elements';
+import TeachingElement from 'components/editor/TeachingElement';
 
 const WITHOUT_STATICS = ['HTML', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED', 'BREAK'];
 
 export default {
   name: 'entity-revisions',
-  props: ['revision', 'isDetached'],
+  props: {
+    revision: { type: Object, required: true },
+    isDetached: { type: Boolean, default: false }
+  },
   data() {
     return {
       expanded: false,

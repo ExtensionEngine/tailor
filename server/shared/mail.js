@@ -1,9 +1,9 @@
 'use strict';
 
+const config = require('../../config/server');
 const email = require('emailjs');
 const Promise = require('bluebird');
 
-const SERVER_URL = process.env.SERVER_URL;
 const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
 
 const server = email.server.connect({
@@ -19,11 +19,13 @@ function send(message) {
   });
 }
 
+const resetUrl = user => `${config.origin}/#/reset-password/${user.token}`;
+
 function invite(user) {
-  const link = `${SERVER_URL}/#/reset-password/${user.token}`;
+  const href = resetUrl(user);
   const message = `
-    An account has been created for you on ${SERVER_URL}.
-    Please click <a href="${link}">here</a> to complete your registration.`;
+    An account has been created for you on ${config.origin}.
+    Please click <a href="${href}">here</a> to complete your registration.`;
 
   return send({
     from: EMAIL_ADDRESS,
@@ -34,10 +36,10 @@ function invite(user) {
 }
 
 function resetPassword(user) {
-  const link = `${SERVER_URL}/#/reset-password/${user.token}`;
+  const href = resetUrl(user);
   const message = `
     You requested password reset.
-    Please click <a href="${link}">here</a> to complete the reset process.`;
+    Please click <a href="${href}">here</a> to complete the reset process.`;
 
   return send({
     from: EMAIL_ADDRESS,

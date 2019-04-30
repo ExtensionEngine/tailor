@@ -1,33 +1,10 @@
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import get from 'lodash/get';
 import { getSupportedContainers } from 'shared/activities';
 import reduce from 'lodash/reduce';
 import { VuexModule } from 'vuex-module';
 
-const { state, getter, action, mutation, build } = new VuexModule('editor');
-
-function findEmbeddedElement(tes, id) {
-  const embedsKey = `data.embeds`;
-  const questionKey = `data.question`;
-  const getEmbed = it => find(get(it, embedsKey) || get(it, questionKey), { id });
-  return getEmbed(find(tes, it => getEmbed(it)));
-}
-
-state({
-  focusedElement: null
-});
-
-getter(function focusedElement() {
-  const focused = this.state.focusedElement;
-  if (!focused || !focused.id) return {};
-  const tes = this.rootGetters.tes;
-  const id = focused.id;
-
-  return !focused.embedded
-    ? find(tes, { id })
-    : findEmbeddedElement(tes, id);
-});
+const { getter, build } = new VuexModule('editor');
 
 getter(function activity() {
   const { route } = this.rootState;
@@ -55,15 +32,6 @@ getter(function assessments() {
   const { tes } = this.rootGetters;
   const activityId = Number(route.params.activityId);
   return filter(tes, { activityId, type: 'ASSESSMENT' });
-});
-
-// TODO: Implement persistance upon focusout
-action(function focusoutElement() {
-  this.commit('focusElement');
-});
-
-mutation(function focusElement(element = {}) {
-  this.state.focusedElement = element;
 });
 
 export default build();

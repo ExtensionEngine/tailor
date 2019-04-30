@@ -20,6 +20,7 @@ class Amazon {
     config = validateConfig(config, schema);
 
     const s3Config = {
+      signatureVersion: 'v4',
       accessKeyId: config.key,
       secretAccessKey: config.secret,
       region: config.region,

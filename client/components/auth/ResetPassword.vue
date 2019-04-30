@@ -4,8 +4,9 @@
     <form @submit.prevent="submit">
       <div :class="{ 'has-error': vErrors.has('password') }" class="form-group">
         <input
-          v-model="password"
           v-validate="{ rules: { required: true, min: 6, alphanumerical: true } }"
+          ref="password"
+          v-model="password"
           class="form-control"
           name="password"
           type="password"
@@ -42,16 +43,16 @@ import { withValidation } from 'utils/validation';
 
 export default {
   mixins: [withValidation()],
-  computed: {
-    isValid() {
-      return this.password && this.vErrors.count() === 0;
-    }
-  },
   data() {
     return {
       error: null,
       password: ''
     };
+  },
+  computed: {
+    isValid() {
+      return this.password && this.vErrors.count() === 0;
+    }
   },
   methods: {
     ...mapActions(['resetPassword']),

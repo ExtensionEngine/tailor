@@ -1,23 +1,19 @@
 <template>
-  <div class="course-container">
-    <ul class="nav nav-tabs">
-      <!-- TODO: Create component for nav tabs -->
-      <li :class="{ active: $route.name === 'course' }">
-        <router-link :to="{ name: 'course' }">Outline</router-link>
-      </li>
-      <li :class="{ active: $route.name === 'tree-view' }">
-        <router-link :to="{ name: 'tree-view' }">Tree View</router-link>
-      </li>
-      <li :class="{ active: $route.name === 'course-revisions' }">
-        <router-link :to="{ name: 'course-revisions' }">Revisions</router-link>
-      </li>
-      <li v-if="showSettings"
-        :class="{ active: $route.matched.some(it => it.name === 'course-info') }">
-        <router-link :to="{ name: 'course-info' }">Settings</router-link>
-      </li>
-    </ul>
+  <div class="repo-container">
+    <v-tabs slider-color="grey darken-2" light>
+      <v-tab
+        v-for="tab in tabs"
+        :key="tab.name"
+        :to="{ name: tab.route }"
+        active-class="tab-active"
+        ripple
+        exact
+        class="px-1">
+        <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
+      </v-tab>
+    </v-tabs>
     <div class="tab-content" infinite-wrapper>
-      <router-view :showLoader="showLoader"></router-view>
+      <router-view :showLoader="showLoader"/>
     </div>
   </div>
 </template>
@@ -28,6 +24,13 @@ import filter from 'lodash/filter';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
+const tabs = [
+  { name: 'Structure', route: 'course', icon: 'file-tree' },
+  { name: 'Graph View', route: 'tree-view', icon: 'source-fork mdi-rotate-180' },
+  { name: 'History', route: 'course-revisions', icon: 'history' },
+  { name: 'Settings', route: 'course-info', icon: 'settings-outline' }
+];
+
 export default {
   data() {
     return {
@@ -35,13 +38,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'activities', 'activity'], 'course'),
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
-    showSettings() {
-      return this.isAdmin || this.isCourseAdmin;
-    },
-    showDetails() {
-      return this.isAdmin || this.isCourseAdmin;
+    ...mapGetters(['course', 'activities', 'activity'], 'course'),
+    tabs() {
+      if (!this.isAdmin && !this.isCourseAdmin) tabs.pop();
+      return tabs;
     }
   },
   methods: {
@@ -76,28 +77,24 @@ export default {
 </script>
 
 <style lang="scss">
-.course-container, .tab-content, .tab-pane {
+.repo-container, .tab-content, .tab-pane {
   width: 100%;
   height: 100%;
 }
 
-.course-container {
+.repo-container {
   display: flex;
   flex-direction: column;
-
-  .nav-tabs {
-    width: 100%;
-    background-color: white;
-    z-index: 1;
-
-    li a {
-      font-size: 16px;
-    }
-  }
 
   .tab-content {
     overflow-y: scroll;
     overflow-y: overlay;
+  }
+}
+
+.tab-active {
+  .v-icon {
+    color: #263238 !important;
   }
 }
 </style>

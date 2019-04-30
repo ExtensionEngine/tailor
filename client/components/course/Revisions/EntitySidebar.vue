@@ -34,7 +34,11 @@ import fecha from 'fecha';
 
 export default {
   name: 'entity-sidebar',
-  props: ['revisions', 'selected', 'isDetached'],
+  props: {
+    revisions: { type: Array, default: () => ([]) },
+    selected: { type: Object, default: null },
+    isDetached: { type: Boolean, default: false }
+  },
   methods: {
     isSelected(revision) {
       return revision.id === this.selected.id;
@@ -94,7 +98,7 @@ $revision-padding: 32px;
   }
 }
 
-.revision:hover, .selected {
+.selected, .revision:hover {
   .rollback {
     display: flex;
     justify-content: center;

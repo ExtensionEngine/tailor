@@ -19,10 +19,12 @@
 </template>
 
 <script>
-import { Chrome as ColorPicker } from 'vue-color';
+import ColorPicker from 'vue-color/src/components/Chrome';
 
 export default {
-  props: ['value'],
+  props: {
+    value: { type: String, required: true }
+  },
   data() {
     return {
       color: { hex: this.value || '#ffffff' }
@@ -42,7 +44,7 @@ export default {
 .btn {
   margin-right: 5px;
   padding: 6px 16px;
-  font-family: "Roboto";
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-size: 12.5px;
   font-weight: 500;
   outline: none;
@@ -108,7 +110,7 @@ export default {
   .input__input {
     height: 24px;
     color: #222;
-    font-family: "Roboto";
+    font-family: Roboto, Helvetica, Arial, sans-serif;
     font-size: 13px;
     background: #fdfdfd;
   }

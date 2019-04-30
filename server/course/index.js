@@ -24,7 +24,7 @@ router
   .get('/courses/:id/contentInventory', ctrl.exportContentInventory);
 
 function getCourse(req, res) {
-  return Course.findById(req.params.id, { paranoid: false })
+  return Course.findByPk(req.params.id, { paranoid: false })
     .then(course => course || createError(NOT_FOUND, 'Course not found'))
     .then(course => {
       req.course = course;

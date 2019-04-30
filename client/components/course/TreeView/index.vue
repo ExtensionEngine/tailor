@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import Activity from 'components/course/Activity';
 import CircularProgress from 'components/common/CircularProgress';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -39,7 +38,9 @@ const graphOptions = {
 
 export default {
   name: 'tree-view',
-  props: ['showLoader'],
+  props: {
+    showLoader: { type: Boolean, default: false }
+  },
   data() {
     return {
       graphOptions,
@@ -78,7 +79,6 @@ export default {
     }
   },
   components: {
-    Activity,
     CircularProgress,
     Sidebar,
     TreeGraph
@@ -90,7 +90,6 @@ function tree(activities, structure, root = { size: 0 }, parent = root, depth = 
   parent.children = reduce(activities, (acc, it) => {
     const parentId = parent.id || null;
     if (it.parentId !== parentId) return acc;
-    it.name = it.id;
     it.color = getColor(it.type, structure);
     const subtree = tree(activities, structure, root, { ...it }, depth + 1);
     acc.push(subtree);
@@ -106,7 +105,7 @@ function getColor(type, structure) {
 </script>
 
 <style lang='scss' scoped>
-$accent: #337AB7;
+$accent: #337ab7;
 
 .loader-outer {
   position: absolute;
@@ -143,10 +142,6 @@ $accent: #337AB7;
 }
 
 .tree /deep/ {
-  .node .circle-wrapper:hover .circle {
-    filter: url(#drop-shadow);
-  }
-
   .selected {
     .circle-wrapper {
       filter: url(#lighten);
@@ -160,6 +155,10 @@ $accent: #337AB7;
       fill: $accent;
       font-weight: bold;
     }
+  }
+
+  .node .circle-wrapper:hover .circle {
+    filter: url(#drop-shadow);
   }
 
   // Disable all effects on root/course node.

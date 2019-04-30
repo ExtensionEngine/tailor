@@ -1,13 +1,18 @@
 import courseApi from '../../api/course';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import { getOutlineLevels } from 'shared/activities';
+import get from 'lodash/get';
+import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
+import map from 'lodash/map';
 import values from 'lodash/values';
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
 
 const { build, getter, action, mutation, state } = new VuexModule('course');
 const COURSE_ROUTE = /\/course\/\d+/;
+// NOTE: teaching elements always have `activityId` foreign key and that is
+//       how we can tell if an element is `tes` or `activity`
+const isTes = element => !!element.activityId;
 
 state({
   activity: undefined,
@@ -43,6 +48,13 @@ getter(function activity() {
   return activities[this.state.activity] || {};
 });
 
+getter(function outlineActivities() {
+  const activities = this.getters['course/activities'];
+  const structure = this.getters['course/structure'];
+  const outlineTypes = map(structure, 'type');
+  return filter(activities, it => outlineTypes.includes(it.type));
+});
+
 getter(function isCollapsed(activity) {
   const { outline } = this.state;
   return activity => activity && !outline.expanded[activity._cid];
@@ -65,6 +77,29 @@ getter(function revisions() {
   return filter(revs, { courseId })
     .map(rev => ({ ...rev, createdAt: new Date(rev.createdAt) }))
     .sort((rev1, rev2) => rev2.createdAt - rev1.createdAt);
+});
+
+getter(function getConfig() {
+  return element => {
+    if (!element.type) return {};
+    if (isTes(element)) {
+      const course = this.rootGetters['course/course'];
+      return getTesMeta(course.schema, element.type);
+    }
+    return getLevel(element.type) || {};
+  };
+});
+
+getter(function getMetadata() {
+  return element => {
+    if (!element) return [];
+    const config = this.rootGetters['course/getConfig'](element);
+    if (!config.meta) return [];
+    return map(config.meta, it => {
+      const value = get(element, `${isTes(element) ? 'meta' : 'data'}.${it.key}`);
+      return { ...it, value };
+    });
+  };
 });
 
 action(function getUsers() {

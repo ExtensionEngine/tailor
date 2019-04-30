@@ -1,9 +1,10 @@
 'use strict';
 
+const { getSiblingLevels } = require('../../config/shared/activities');
+const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
-const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
@@ -75,10 +76,13 @@ class Activity extends Model {
     });
   }
 
-  static scopes({ Op }) {
+  static scopes() {
     const notNull = { [Op.ne]: null };
     return {
-      withReferences: { where: { 'refs.prerequisites': notNull } }
+      withReferences(relationships = []) {
+        const or = relationships.map(type => ({ [`refs.${type}`]: notNull }));
+        return { where: { [Op.or]: or } };
+      }
     };
   }
 
@@ -126,18 +130,19 @@ class Activity extends Model {
    * @param {SequelizeTransaction} [transaction]
    * @returns {Promise.<Activity>} Updated instance.
    */
-  mapClonedReferences(mappings, transaction) {
+  mapClonedReferences(mappings, relationships, transaction) {
     const refs = this.refs || {};
-    if (!refs.prerequisites) return Promise.resolve(this);
-    refs.prerequisites = refs.prerequisites.map(it => mappings[it]);
+    relationships.forEach(type => {
+      if (refs[type]) refs[type] = refs[type].map(it => mappings[it]);
+    });
     return this.update({ refs }, { transaction });
   }
 
-  siblings() {
-    return Activity.findAll({
-      where: { parentId: this.parentId, courseId: this.courseId },
-      order: [['position', 'ASC']]
-    });
+  siblings({ filter = {}, transaction }) {
+    const { parentId, courseId } = this;
+    const where = { ...filter, parentId, courseId };
+    const options = { where, order: [['position', 'ASC']], transaction };
+    return Activity.findAll(options);
   }
 
   predecessors() {
@@ -187,10 +192,12 @@ class Activity extends Model {
   }
 
   reorder(index) {
-    return this.sequelize.transaction(t => {
-      return this.siblings().then(siblings => {
+    return this.sequelize.transaction(transaction => {
+      const types = getSiblingLevels(this.type).map(it => it.type);
+      const filter = { type: types };
+      return this.siblings({ filter, transaction }).then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
-        return this.save({ transaction: t });
+        return this.save({ transaction });
       });
     });
   }

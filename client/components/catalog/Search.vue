@@ -1,6 +1,8 @@
 <template>
   <div class="course-search">
-    <div class="input-group" :style="{ width: expanded ? '100%' : '80%' }">
+    <div
+      :style="{ width: expanded ? '100%' : '80%' }"
+      class="input-group">
       <span class="input-group-btn">
         <button
           v-show="!query"
@@ -18,8 +20,8 @@
         </button>
       </span>
       <input
-        v-model.trim="query"
         v-focus="expanded"
+        v-model.trim="query"
         @focus="expanded = true"
         @blur="expanded = false"
         class="form-control"
@@ -71,7 +73,7 @@ export default {
   }
 
   .form-control {
-    height: 45px;
+    height: 44px;
     padding: 0 7px;
     font-size: 18px;
     text-indent: 10px;
@@ -80,9 +82,9 @@ export default {
 
   .btn {
     padding: 8px 12px 4px;
-    background-color: white;
-    font-size: 22px;
     color: #656565;
+    font-size: 22px;
+    background-color: white;
     box-shadow: none;
     outline: none;
 

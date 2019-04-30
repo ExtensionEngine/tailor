@@ -1,20 +1,24 @@
 <template>
-  <div id="app">
-    <navbar></navbar>
-    <router-view class="contaner-fluid view"></router-view>
-    <confirmation-modal></confirmation-modal>
-  </div>
+  <v-app id="app">
+    <navbar v-if="user" :user="user"/>
+    <v-content>
+      <router-view class="view"/>
+    </v-content>
+    <confirmation-modal/>
+  </v-app>
 </template>
 
 <script>
 import ConfirmationModal from 'components/common/ConfirmationModal';
 import isIexplorer from 'is-iexplorer';
 import Navbar from 'components/common/Navbar';
+import { mapGetters } from 'vuex-module';
 
 if (isIexplorer) document.body.classList.add('ie');
 
 export default {
   name: 'app',
+  computed: mapGetters(['user']),
   components: {
     ConfirmationModal,
     Navbar
@@ -23,35 +27,34 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~assets/stylesheets/main';
+@import '~@/assets/stylesheets/main';
 
 html, body {
   width: 100%;
   height: 100%;
 }
 
-body {
-  background-color: #e0e0e0;
+html {
+  overflow-y: auto !important; // override Vuetify's default style
 }
 
 #app {
-  height: 100%;
-  padding-top: 64px;
   color: rgba(0,0,0,0.87);
-  font-family: 'Catamaran', Helvetica, Arial, sans-serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   overflow: hidden;
-
-  > .view {
-    overflow-y: scroll;
-    overflow-y: overlay;
-  }
+  background-color: #e0e0e0 !important;
 }
 
-// TODO: Remove global override of Bootstrap class
-.contaner-fluid {
+.v-content .view {
+  overflow-y: scroll;
+  overflow-y: overlay;
+}
+
+.application, .v-content, .view {
+  width: 100%;
   height: 100%;
 }
 </style>
