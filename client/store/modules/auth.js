@@ -62,13 +62,8 @@ action(function changePassword({ currentPassword, newPassword }) {
   return authApi.changePassword(currentPassword, newPassword);
 });
 
-action(function updateImageUrl({ key }) {
-  return authApi.updateImageUrl(key)
-    .then(({ data: { user } }) => this.commit('setUser', user));
-});
-
-action(function updateInfo(userCredentials) {
-  return authApi.updateUserInfo(userCredentials)
+action(function updateInfo(userData) {
+  return authApi.updateUserInfo(userData)
     .then(({ data: { user } }) => this.commit('setUser', user));
 });
 

@@ -1,7 +1,7 @@
 'use strict';
 
 const { createError, validationError } = require('../shared/error/helpers');
-const { NOT_FOUND } = require('http-status-codes');
+const { NOT_FOUND, BAD_REQUEST, NO_CONTENT } = require('http-status-codes');
 const { User } = require('../shared/database');
 
 function index(req, res) {
@@ -44,24 +44,18 @@ function login({ body }, res) {
     });
 }
 
-function updateProfile({ user, body: { userCredentials } }, res, next) {
-  const { email, firstName, lastName } = userCredentials;
-  return user.update({ email, firstName, lastName })
-    .then(({ profile }) => res.json({ user: profile }))
-    .catch(err => next(err));
+function updateProfile({ user, body }, res) {
+  const { email, firstName, lastName, key: imgUrl } = body.userData;
+  return user.update({ email, firstName, lastName, imgUrl })
+    .then(({ profile }) => res.json({ user: profile }));
 }
 
-function changePassword({ user, body: { currentPassword, newPassword } }, res) {
+function changePassword({ user, body }, res) {
+  const { currentPassword, newPassword } = body;
   return user.authenticate(currentPassword)
-    .then(user => user || createError(NOT_FOUND, 'Incorrect current password'))
+    .then(user => user || createError(BAD_REQUEST))
     .then(user => user.update({ password: newPassword }))
-    .then(() => res.sendStatus(200));
-}
-
-function updateImageUrl({ user, body: { key } }, res, next) {
-  return user.update({ imgUrl: key })
-    .then(({ profile }) => res.json({ user: profile }))
-    .catch(err => next(err));
+    .then(() => res.sendStatus(NO_CONTENT));
 }
 
 module.exports = {
@@ -70,6 +64,5 @@ module.exports = {
   resetPassword,
   login,
   updateProfile,
-  changePassword,
-  updateImageUrl
+  changePassword
 };

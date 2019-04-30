@@ -4,18 +4,18 @@ const Promise = require('bluebird');
 const { Sequelize } = require('sequelize');
 
 const TABLE_NAME = 'user';
-const options = { type: Sequelize.STRING, defaultValue: '' };
-const COLLUMNS = [
-  { name: 'first_name', options },
-  { name: 'last_name', options },
-  { name: 'img_url', options }
-];
+
+const COLUMNS = {
+  first_name: { type: Sequelize.STRING, defaultValue: '' },
+  last_name: { type: Sequelize.STRING, defaultValue: '' },
+  img_url: { type: Sequelize.STRING(1234), defaultValue: '' }
+};
 
 module.exports = {
-  up: queryInterface => Promise.map(COLLUMNS, it => {
-    return queryInterface.addColumn(TABLE_NAME, it.name, it.options);
+  up: queryInterface => Promise.map(Object.entries(COLUMNS), ([name, options]) => {
+    return queryInterface.addColumn(TABLE_NAME, name, options);
   }),
-  down: queryInterface => Promise.map(COLLUMNS, it => {
-    return queryInterface.removeColumn(TABLE_NAME, it.name);
+  down: queryInterface => Promise.map(Object.entries(COLUMNS), ([name]) => {
+    return queryInterface.removeColumn(TABLE_NAME, name);
   })
 };

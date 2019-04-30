@@ -20,7 +20,7 @@
         </v-flex>
         <v-flex xs9 class="px-4">
           <v-text-field
-            v-validate="'max:20'"
+            v-validate="{ max: 20 }"
             v-model="firstName"
             :error-messages="vErrors.collect('name')"
             data-vv-name="name"
@@ -28,7 +28,7 @@
         </v-flex>
         <v-flex xs9 class="px-4">
           <v-text-field
-            v-validate="'max:20'"
+            v-validate="{ max: 20 }"
             v-model="lastName"
             :error-messages="vErrors.collect('name')"
             data-vv-name="name"
@@ -69,10 +69,9 @@ export default {
       const { firstName, lastName, email } = this;
       this.$validator.validateAll()
         .then(async isValid => {
-          if (!isValid) return;
+          if (!isValid) return this.$snackbar.error('Validation failed!');
           await this.updateInfo({ firstName, lastName, email });
           this.$snackbar.success('Changes saved.');
-          this.$nextTick(() => this.$validator.reset());
         })
         .catch(() => this.$snackbar.error('An error has occurred!'));
     },

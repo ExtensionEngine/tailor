@@ -7,6 +7,9 @@
           v-model="croppa"
           v-bind="options"
           @file-choose="uploadCroppedImage"
+          @new-image-drawn="onNewImage"
+          @zoom="onZoom"
+          @dblclick="onZoom"
           placeholder=""
           prevent-white-space
           show-loading>
@@ -23,33 +26,40 @@
         </div>
       </v-avatar>
     </div>
-    <v-card-actions class="img-actions">
-      <div v-if="isEditing" class="edit-actions">
-        <v-layout mt-4 row justify-space-around>
-          <v-btn @click="croppa.zoomIn()" color="blue-grey" flat fab>
-            <v-icon>mdi mdi-magnify-plus</v-icon>
-          </v-btn>
-          <v-btn @click="croppa.zoomOut()" color="blue-grey" flat fab>
-            <v-icon>mdi mdi-magnify-minus</v-icon>
-          </v-btn>
+    <v-card-actions>
+      <v-container v-if="isEditing" mt-5 fluid grid-list-lg>
+        <v-layout mt-4 row wrap>
+          <v-flex xs12>
+            <v-slider
+              v-model="sliderVal"
+              :min="sliderMin"
+              :max="sliderMax"
+              @input="onSliderChange"
+              @click:append="croppa.zoomIn()"
+              @click:prepend="croppa.zoomOut()"
+              append-icon="mdi-plus"
+              prepend-icon="mdi-minus"
+              step=".001">
+            </v-slider>
+          </v-flex>
+          <v-flex pa-4 d-flex>
+            <v-btn @click="doneEditing" color="light-blue darken-3" flat large>
+              <v-icon dark>mdi-image</v-icon>
+              Save
+            </v-btn>
+            <v-btn @click="cancelEditing" color="blue-grey" flat large>
+              <v-icon dark>mdi-close</v-icon>
+              Cancel
+            </v-btn>
+          </v-flex>
         </v-layout>
-        <v-flex pa-4 d-flex>
-          <v-btn @click="doneEditing" color="light-blue darken-3" flat large>
-            <v-icon dark>mdi-image</v-icon>
-            Save
-          </v-btn>
-          <v-btn @click="cancelEditing" color="blue-grey" flat large>
-            <v-icon dark>mdi-close</v-icon>
-            Cancel
-          </v-btn>
-        </v-flex>
-      </div>
+      </v-container>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import assetsApi from '../../../api/asset';
+import assetsApi from '@/api/asset';
 import EventBus from 'EventBus';
 import { mapActions, mapGetters } from 'vuex-module';
 
@@ -57,30 +67,29 @@ const appChannel = EventBus.channel('app');
 
 export default {
   name: 'user-settings',
-  data() {
-    return {
-      isEditing: false,
-      disabled: false,
-      currentImage: null,
-      timeout: 2500,
-      croppa: {}
-    };
-  },
+  data: () => ({
+    isEditing: false,
+    disabled: false,
+    currentImage: null,
+    timeout: 2500,
+    sliderVal: 0,
+    sliderMin: 0,
+    sliderMax: 0,
+    croppa: {}
+  }),
   computed: {
     ...mapGetters(['user']),
-    options() {
-      return {
-        accept: 'image/*',
-        width: 200,
-        height: 200,
-        disabled: this.disabled,
-        showRemoveButton: false,
-        initialImage: this.currentImage
-      };
-    }
+    options: vm => ({
+      accept: 'image/*',
+      width: 150,
+      height: 150,
+      disabled: vm.disabled,
+      showRemoveButton: false,
+      initialImage: vm.currentImage
+    })
   },
   methods: {
-    ...mapActions(['updateImageUrl']),
+    ...mapActions(['updateInfo']),
     uploadCroppedImage() {
       this.isEditing = true;
       this.disabled = false;
@@ -93,22 +102,35 @@ export default {
       this.isEditing = true;
       this.disabled = false;
     },
+    onNewImage() {
+      this.sliderVal = this.sliderMin = this.croppa.scaleRatio;
+      this.sliderMax = this.croppa.scaleRatio * 2;
+    },
+    onSliderChange(val) {
+      this.croppa.scaleRatio = val;
+    },
+    onZoom(e) {
+      if (!e) return (this.sliderVal = this.croppa.scaleRatio);
+      this.croppa.scaleRatio *= 1.2;
+      this.sliderVal = this.croppa.scaleRatio;
+    },
     doneEditing() {
       if (this.disabled) return;
-      this.croppa.generateBlob(editedImage => {
-        const formData = new FormData();
-        formData.append('file', editedImage);
-        return assetsApi.upload(formData)
-          .then(({ key }) => this.updateImageUrl({ key }))
-          .then(() => {
-            this.currentImage = this.user.imgUrl;
-            this.$snackbar.success('Profile photo changed.');
-          })
-          .finally(() => {
-            this.isEditing = false;
-            this.disabled = true;
-          });
-      });
+      generateBlob(this.croppa)
+        .then(editedImage => {
+          const formData = new FormData();
+          formData.append('file', editedImage);
+          return assetsApi.upload(formData);
+        })
+        .then(({ key }) => this.updateInfo({ key }))
+        .then(() => {
+          this.currentImage = this.user.imgUrl;
+          this.$snackbar.success('Profile photo changed.');
+        })
+        .finally(() => {
+          this.isEditing = false;
+          this.disabled = true;
+        });
     },
     cancelEditing() {
       if (!this.user.imgUrl) {
@@ -128,7 +150,7 @@ export default {
           this.currentImage = null;
           this.disabled = false;
           this.$snackbar.info('Profile photo deleted.');
-          return this.updateImageUrl({ key: '' });
+          return this.updateInfo({ key: '' });
         }
       });
     }
@@ -143,6 +165,10 @@ export default {
     this.disabled = true;
   }
 };
+
+function generateBlob(croppa) {
+  return new Promise(resolve => croppa.generateBlob(resolve));
+}
 </script>
 
 <style lang="scss" scoped>
@@ -176,7 +202,7 @@ export default {
     }
 
     .placeholder-icon {
-      font-size: 10rem;
+      font-size: 8rem;
       opacity: 0.7;
     }
   }
@@ -191,7 +217,7 @@ export default {
   right: 0;
   bottom: 0;
   left: 0;
-  height: 200px;
+  height: 150px;
   margin: auto;
   border-radius: 50%;
   overflow: hidden;
@@ -211,12 +237,6 @@ img {
   border: 4px solid #e3e3e3;
 }
 
-.img-actions {
-  display: inline-block;
-  width: 100%;
-  margin-top: 20%;
-}
-
 .card-img {
   display: block;
   position: relative;
@@ -226,7 +246,7 @@ img {
 
   .header {
     position: relative;
-    height: 130px;
+    height: 100px;
     background: rgb(63, 81, 181);
   }
 }

@@ -13,7 +13,7 @@ import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
 import Vue from 'vue';
-import Croppa from 'vue-croppa';
+import VueCroppa from 'vue-croppa';
 import VueHotkey from 'v-hotkey';
 import Vuetify from 'vuetify';
 import VuetifySnackbar from '@/plugins/vuetify-snackbar';
@@ -39,7 +39,7 @@ Vue.use(VeeValidate, {
   errorBagName: 'vErrors',
   inject: false
 });
-Vue.use(Croppa);
+Vue.use(VueCroppa);
 
 Vue.use(Timeago, {
   locale: 'en-US',

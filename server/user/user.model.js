@@ -41,7 +41,7 @@ class User extends Model {
         field: 'last_name'
       },
       imgUrl: {
-        type: STRING,
+        type: STRING(1234),
         field: 'img_url'
       },
       profile: {

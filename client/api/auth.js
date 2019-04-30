@@ -5,7 +5,6 @@ const url = {
   forgotPassword: '/users/forgotPassword',
   resetPassword: '/users/resetPassword',
   updateProfile: '/users/me',
-  imageUrl: '/users/me/image-url',
   changePassword: '/users/me/change-password'
 };
 
@@ -37,12 +36,8 @@ function changePassword(currentPassword, newPassword) {
   return request.post(url.changePassword, { currentPassword, newPassword });
 }
 
-function updateImageUrl(key) {
-  return request.patch(url.imageUrl, { key });
-}
-
-function updateUserInfo(userCredentials) {
-  return request.patch(url.updateProfile, { userCredentials });
+function updateUserInfo(userData) {
+  return request.patch(url.updateProfile, { userData });
 }
 
 export default {
@@ -51,6 +46,5 @@ export default {
   forgotPassword,
   resetPassword,
   updateUserInfo,
-  changePassword,
-  updateImageUrl
+  changePassword
 };
