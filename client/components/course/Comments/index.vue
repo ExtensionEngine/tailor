@@ -6,16 +6,11 @@
       outline>
       Send
     </v-btn>
-    <comment
+    <v-list-title
       v-for="(comment, index) in paginatedComments"
-      :key="comment._cid || comment.id"
-      :comment="comment"
-      @update="onUpdate"
-      @remove="onRemove"
-      class="clearfix comment">
-      <div
+      :key="comment._cid || comment.id">
+      <v-subheader
         v-if="sameActivity(comment.activityId, index)"
-        slot="activity-id"
         class="comment-activity">
         {{ comment.activity.data.name }}
         <div class="labels">
@@ -26,14 +21,20 @@
             {{ getType(comment).label }}
           </v-chip>
         </div>
-      </div>
-      <span
-        v-if="!initialCheckTime || initialCheckTime < comment.createdAt"
-        slot="new-comment"
-        class="new-comment">
-        NEW
-      </span>
-    </comment>
+      </v-subheader>
+      <comment
+        :comment="comment"
+        @update="onUpdate"
+        @remove="onRemove"
+        class="clearfix comment">
+        <span
+          v-if="!initialCheckTime || initialCheckTime < comment.createdAt"
+          slot="new-comment"
+          class="new-comment">
+          NEW
+        </span>
+      </comment>
+    </v-list-title>
     <infinite-loading @infinite="fetchComments">
       <span slot="spinner">
         <div class="col-lg-12 loader-wrapper">

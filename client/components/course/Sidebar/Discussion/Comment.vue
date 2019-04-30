@@ -2,7 +2,6 @@
   <li
     @mouseover="hovered = true"
     @mouseleave="hovered = false">
-    <slot name="activity-id"></slot>
     <span v-if="avatar" class="pull-left avatar">
       <avatar
         :size="38"
