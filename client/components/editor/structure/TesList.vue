@@ -34,7 +34,7 @@
         :large="!embedded"
         :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'"
         @shown="onShowElementDrawer"
-        @hidden="onHiddenElementDrawer"
+        @hidden="onCloseElementDrawer"
         @add="insertElement"/>
     </div>
   </div>
@@ -76,7 +76,7 @@ export default {
       this.insertPosition = position;
       this.isElementDrawerVisible = true;
     },
-    onHiddenElementDrawer() {
+    onCloseElementDrawer() {
       this.isElementDrawerVisible = false;
       this.insertPosition = null;
     },
