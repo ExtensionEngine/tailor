@@ -10,7 +10,7 @@ Comments in last {{days}} days:
 {{0.activity.data.name}} [A{{0.activity.id}}][{{0.activity.label}}]
 -------------------------------------------------
 {{#.}}
-{{author.email}}: {{content}}
+{{author.email}}: {{content}} [{{#format}}{{createdAt}}{{/format}}]
 {{/.}}
 
 {{/comments}}

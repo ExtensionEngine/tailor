@@ -3,6 +3,7 @@
 const { renderHtml, renderText } = require('./render');
 const { origin } = require('../../../config/server');
 const email = require('emailjs');
+const fecha = require('fecha');
 const logger = require('../logger');
 const path = require('path');
 const pick = require('lodash/pick');
@@ -72,7 +73,7 @@ function getConfig(server) {
 
 function commentsList({ email, comments, since }) {
   const recipient = email;
-  const data = { comments, recipient, since };
+  const data = { comments, recipient, since, format: () => format };
   const html = renderHtml(path.join(templatesDir, 'comments.mjml'), data);
   const text = renderText(path.join(templatesDir, 'comments.txt'), data);
   logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending comments email to:', recipient);
@@ -83,6 +84,10 @@ function commentsList({ email, comments, since }) {
     text,
     attachment: [{ data: html, alternative: true }]
   });
+}
+
+function format(date, render) {
+  return fecha.format(new Date(render(date)), 'M/D/YY HH:mm');
 }
 
 module.exports = {

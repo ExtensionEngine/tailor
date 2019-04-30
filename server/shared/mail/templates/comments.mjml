@@ -56,7 +56,7 @@
       	padding: 3px 7px;
       	border-radius: 2px;
         font-size: 11px;
-        line-height: 20px;
+        height: 20px;
       }
       .activity {
         color: #1976d2;
@@ -64,6 +64,11 @@
       }
       .type {
         color: white;
+      }
+      .time {
+        font-size: 10px;
+        font-weight: bold;
+        color: #1976d2;
       }
     </mj-style>
   </mj-head>
@@ -106,7 +111,10 @@
             <mj-raw>{{#.}}</mj-raw>
             <mj-accordion-text>
               <mj-text mj-class="content" font-size="12px" padding-bottom="0">
-                <strong>{{author.email}}</strong>: {{content}}
+                <div class="comments-header">
+                  <span><strong>{{author.email}}</strong>: {{content}}</span>
+                  <span class="time">{{#format}}{{createdAt}}{{/format}}</span>
+                </div>
               </mj-text>
             </mj-accordion-text>
             <mj-raw>{{/.}}</mj-raw>
