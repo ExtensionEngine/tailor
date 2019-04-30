@@ -9,6 +9,7 @@ const prefix = message => `Are you sure you want to publish ${message}`;
 export default {
   data() {
     return {
+      activityNum: 0,
       isPublishing: false,
       publishStatus: ''
     };
@@ -26,8 +27,10 @@ export default {
       this.isPublishing = true;
       return Promise.each(activities, activity => {
         this.publishStatus = `Publishing ${activity.data.name}`;
-        return this.publishActivity(activity);
+        return this.publishActivity(activity)
+          .then(() => this.activityNum++);
       }).then(() => {
+        this.activityNum = 0;
         this.isPublishing = false;
         this.publishStatus = '';
       });

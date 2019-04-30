@@ -14,7 +14,7 @@
       :show="showCloneModal"
       @close="showCloneModal = false">
     </clone-modal>
-    <progress-dialog :show="isPublishing"/>
+    <progress-dialog :show="isPublishing" :status="publishPercentage"/>
     <v-footer height="auto" color="blue-grey darken-2" absolute>
       <v-layout row justify-center>
         <v-flex
@@ -57,7 +57,13 @@ export default {
       showCloneModal: false
     };
   },
-  computed: mapGetters(['course', 'outlineActivities'], 'course'),
+  computed: {
+    ...mapGetters(['course', 'outlineActivities'], 'course'),
+    publishPercentage() {
+      if (this.activityNum <= 0) return 0;
+      return this.activityNum / this.outlineActivities.length * 100;
+    }
+  },
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
     ...mapActions({ publishActivity: 'publish' }, 'activities'),

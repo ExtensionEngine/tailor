@@ -8,7 +8,7 @@
         <v-card-text>
           Please wait...
           <v-progress-linear
-            indeterminate
+            v-model="status"
             color="white"
             class="mb-0"/>
         </v-card-text>
@@ -20,7 +20,8 @@
 <script>
 export default {
   props: {
-    show: { type: Boolean, default: false }
+    show: { type: Boolean, default: false },
+    status: { type: Number, default: 0 }
   }
 };
 </script>
