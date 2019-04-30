@@ -32,7 +32,7 @@
           v-show="showDropdown"
           class="actions">
           <li
-            @mousedown.stop="toggleEdit"
+            @mousedown.prevent="toggleEdit"
             class="action"
             role="button">
             <span class="icon mdi mdi-pencil"></span>
