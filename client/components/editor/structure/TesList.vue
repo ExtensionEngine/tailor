@@ -43,31 +43,29 @@ import AddElement from 'tce-core/AddElement';
 import Draggable from 'vuedraggable';
 import InlineActivator from './InlineActivator';
 
+const draggableConfig = {
+  handle: '.drag-handle',
+  scrollSpeed: 15,
+  scrollSensitivity: 125
+};
+
 export default {
   props: {
-    list: { type: Array, default() { return []; } },
-    dragOptions: { type: Object, default() { return {}; } },
+    list: { type: Array, default: () => [] },
+    dragOptions: { type: Object, default: () => ({}) },
     enableAdd: { type: Boolean, default: true },
     types: { type: Array, default: null },
     activity: { type: Object, required: true },
     layout: { type: Boolean, default: false },
     embedded: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      dragElementIndex: -1,
-      insertPosition: 0,
-      showElementDrawer: false
-    };
-  },
+  data: () => ({
+    dragElementIndex: -1,
+    insertPosition: 0,
+    showElementDrawer: false
+  }),
   computed: {
-    options() {
-      return Object.assign(this.dragOptions, {
-        handle: '.drag-handle',
-        scrollSpeed: 15,
-        scrollSensitivity: 125
-      });
-    },
+    options: ({ dragOptions }) => ({ ...dragOptions, ...draggableConfig }),
     positionLimit: ({ list }) => list.length - 1
   },
   methods: {
