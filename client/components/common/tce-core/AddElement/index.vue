@@ -168,6 +168,7 @@ export default {
       if (val) this.isVisible = val;
     },
     isVisible(val, oldVal) {
+      if (val && !oldVal) this.$emit('shown');
       if (!val && oldVal) this.onHidden();
     }
   }

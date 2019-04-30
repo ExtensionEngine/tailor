@@ -33,6 +33,7 @@
         :show="isElementDrawerVisible"
         :large="!embedded"
         :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'"
+        @shown="onShowElementDrawer"
         @hidden="onHiddenElementDrawer"
         @add="insertElement"/>
     </div>
@@ -79,16 +80,17 @@ export default {
       this.isElementDrawerVisible = false;
       this.insertPosition = null;
     },
+    onShowElementDrawer() {
+      const { insertPosition: position, list } = this;
+      if (!Number.isInteger(position)) this.insertPosition = list.length - 1;
+    },
     getContainerClasses({ data: { width } }) {
       let classes = [`col-xs-${width || 12}`];
       if (this.enableAdd) classes.push('insertable');
       return classes;
     },
     insertElement(element) {
-      let { insertPosition: position, list } = this;
-      if (!Number.isInteger(position)) position = list.length - 1;
-      this.$emit('insert', { ...element, position });
-      this.insertPosition = null;
+      this.$emit('insert', { ...element, position: this.insertPosition });
     }
   },
   components: { AddElement, Draggable, InlineActivator }
