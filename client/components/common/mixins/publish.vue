@@ -6,13 +6,10 @@ import Promise from 'bluebird';
 const appChannel = EventBus.channel('app');
 const prefix = message => `Are you sure you want to publish ${message}`;
 
+const initialStatus = () => ({ progress: 0, message: '' });
+
 export default {
-  data: () => ({
-    publishStatus: {
-      progress: 0,
-      message: ''
-    }
-  }),
+  data: () => ({ publishStatus: initialStatus() }),
   computed: {
     isPublishing: ({ publishStatus }) => publishStatus.progress > 0
   },
@@ -32,7 +29,7 @@ export default {
         this.publishStatus = { progress, message };
         return this.publishActivity(activity);
       })
-      .finally(() => (this.publishStatus = { progress: 0, message: '' }));
+      .finally(() => (this.publishStatus = initialStatus()));
     },
     getPublishMessage(activityCount) {
       const name = get(this, 'activity.data.name', 'activity');
