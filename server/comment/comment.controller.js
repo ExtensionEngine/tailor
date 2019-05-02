@@ -5,10 +5,7 @@ const { Op } = require('sequelize');
 const mail = require('../shared/mail');
 
 function list({ course, opts, query }, res) {
-  const include = [
-    { model: User, as: 'author', attributes: ['id', 'email'] },
-    { model: Activity, as: 'activity', attributes: ['id', 'type', 'data'] }
-  ];
+  const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
   if (query.activityId) {
     opts.where.activityId = query.activityId;
   }

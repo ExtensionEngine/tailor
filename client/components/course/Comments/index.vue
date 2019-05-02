@@ -12,13 +12,13 @@
           v-if="sameActivity(comment.activityId, index)"
           :key="'header' + comment._cid || comment.id"
           class="comment-activity">
-          <span class="activity-title">{{ comment.activity.data.name }}</span>
+          <span class="activity-title">{{ config(comment).title }}</span>
           <div class="labels">
             <v-chip label small outline color="primary">
-              A{{ comment.activity.id }}
+              A{{ comment.activityId }}
             </v-chip>
-            <v-chip :color="getType(comment).color" label small text-color="white">
-              {{ getType(comment).label }}
+            <v-chip :color="config(comment).color" label small text-color="white">
+              {{ config(comment).label }}
             </v-chip>
           </div>
         </v-subheader>
@@ -73,7 +73,8 @@ export default {
     ...mapGetters(['user']),
     ...mapGetters(['hasMoreResults'], 'comments'),
     ...mapGetters(['paginatedComments']),
-    ...mapGetters(['structure'], 'course')
+    ...mapGetters(['getConfig'], 'course'),
+    ...mapGetters(['activities'])
   },
   methods: {
     ...mapActions(['fetchPaginated', 'resetPagination', 'update', 'remove',
@@ -97,8 +98,9 @@ export default {
     sameActivity(activityId, i) {
       return i ? this.paginatedComments[i - 1].activityId !== activityId : !i;
     },
-    getType(comment) {
-      return find(this.structure, { type: comment.activity.type });
+    config(comment) {
+      const activity = find(this.activities, { id: comment.activityId });
+      return { title: activity.data.name, ...this.getConfig(activity) };
     },
     sendComments() {
       const email = this.user.email;

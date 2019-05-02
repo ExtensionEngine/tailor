@@ -9,7 +9,7 @@ const model = require('./comment.model');
 const processQuery = require('../shared/util/processListQuery');
 const { middleware: sse } = require('../shared/util/sse');
 const router = require('express-promise-router')();
-const { User, Activity } = require('../shared/database');
+const { User } = require('../shared/database');
 
 const defaultListQuery = {
   order: [['createdAt', 'DESC']],
@@ -34,10 +34,7 @@ router
   .delete(canEdit, ctrl.remove);
 
 function getComment(req, res) {
-  const include = [
-    { model: User, as: 'author', attributes: ['id', 'email'] },
-    { model: Activity, as: 'activity', attributes: ['id', 'type', 'data'] }
-  ];
+  const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
   return Comment.findByPk(req.params.commentId, { paranoid: false, include })
     .then(comment => comment || createError(NOT_FOUND, 'Comment not found'))
     .then(comment => {
