@@ -9,6 +9,10 @@ exports.add = (Comment, Hooks) => {
       const author = pick(a, ['id', 'email']);
       broadcast(events.CREATE, { ...comment.toJSON(), author });
     });
+    comment.getActivity().then(a => {
+      const activity = pick(a, ['id', 'data', 'type']);
+      broadcast(events.CREATE, { ...comment.toJSON(), activity });
+    });
   });
 
   Comment.addHook(Hooks.afterUpdate, comment => {
