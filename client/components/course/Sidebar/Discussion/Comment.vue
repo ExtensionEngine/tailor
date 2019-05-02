@@ -128,8 +128,8 @@ $font-size: 16px;
 $line-size: 20px;
 
 .comment {
-  padding: 8px 0;
   position: relative;
+  padding: 8px 0;
 
   .avatar {
     margin-top: 4px;

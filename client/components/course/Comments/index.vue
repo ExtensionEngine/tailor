@@ -1,40 +1,43 @@
 <template>
-  <v-list :class="{ 'comments-end': allComments }" class="comments">
+  <div :class="{ 'comments-end': allComments }" class="comments">
     <v-btn
       @click="sendComments"
       color="info"
       outline>
       Send
     </v-btn>
-    <v-list-title
-      v-for="(comment, index) in paginatedComments"
-      :key="comment._cid || comment.id">
-      <v-subheader
-        v-if="sameActivity(comment.activityId, index)"
-        class="comment-activity">
-        <span class="activity-title">{{ comment.activity.data.name }}</span>
-        <div class="labels">
-          <v-chip label small outline color="primary">
-            A{{ comment.activity.id }}
-          </v-chip>
-          <v-chip :color="getType(comment).color" label small text-color="white">
-            {{ getType(comment).label }}
-          </v-chip>
-        </div>
-      </v-subheader>
-      <comment
-        :comment="comment"
-        @update="onUpdate"
-        @remove="onRemove"
-        class="clearfix comment">
-        <span
-          v-if="!initialCheckTime || initialCheckTime < comment.createdAt"
-          slot="new-comment"
-          class="new-comment">
-          NEW
-        </span>
-      </comment>
-    </v-list-title>
+    <v-list two-line>
+      <template v-for="(comment, index) in paginatedComments">
+        <v-subheader
+          v-if="sameActivity(comment.activityId, index)"
+          :key="'header' + comment._cid || comment.id"
+          class="comment-activity">
+          <span class="activity-title">{{ comment.activity.data.name }}</span>
+          <div class="labels">
+            <v-chip label small outline color="primary">
+              A{{ comment.activity.id }}
+            </v-chip>
+            <v-chip :color="getType(comment).color" label small text-color="white">
+              {{ getType(comment).label }}
+            </v-chip>
+          </div>
+        </v-subheader>
+        <v-list-tile :key="comment._cid || comment.id">
+          <comment
+            :comment="comment"
+            @update="onUpdate"
+            @remove="onRemove"
+            class="clearfix comment">
+            <span
+              v-if="!initialCheckTime || initialCheckTime < comment.createdAt"
+              slot="new-comment"
+              class="new-comment">
+              NEW
+            </span>
+          </comment>
+        </v-list-tile>
+      </template>
+    </v-list>
     <infinite-loading @infinite="fetchComments">
       <span slot="spinner">
         <div class="col-lg-12 loader-wrapper">
@@ -46,7 +49,7 @@
       </div>
       <span slot="no-more"></span>
     </infinite-loading>
-  </v-list>
+  </div>
 </template>
 
 <script>
@@ -73,7 +76,8 @@ export default {
     ...mapGetters(['structure'], 'course')
   },
   methods: {
-    ...mapActions(['fetchPaginated', 'resetPagination', 'update', 'remove'], 'comments'),
+    ...mapActions(['fetchPaginated', 'resetPagination', 'update', 'remove',
+      'subscribe', 'unsubscribe'], 'comments'),
     fetchComments($state) {
       return this.fetchPaginated().then(() => {
         if (!isEmpty(this.paginatedComments)) $state.loaded();
@@ -104,10 +108,14 @@ export default {
   },
   mounted() {
     this.resetPagination();
+    this.subscribe();
     const userId = this.user.id;
     const checkTime = new Date();
     api.commentCheckTime({ checkTime, userId })
       .then(data => (this.initialCheckTime = data.checkedAt));
+  },
+  beforeDestroy() {
+    this.unsubscribe();
   },
   components: { CircularProgress, Comment, InfiniteLoading }
 };
@@ -125,6 +133,10 @@ export default {
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   list-style: none;
+}
+
+.comment {
+  width: 100%;
 }
 
 .comments-end {
