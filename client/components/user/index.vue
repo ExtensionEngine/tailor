@@ -1,10 +1,10 @@
 <template>
   <v-container>
-    <v-layout row align-start>
+    <v-layout align-start justify-center>
       <v-card>
         <sidebar/>
       </v-card>
-      <v-flex ml-4>
+      <v-flex xs12 sm6 md3 ml-5>
         <router-view/>
       </v-flex>
     </v-layout>

@@ -62,6 +62,10 @@ action(function changePassword({ currentPassword, newPassword }) {
   return authApi.changePassword(currentPassword, newPassword);
 });
 
+action(function uploadAvatar(data) {
+  return authApi.uploadAvatar(data);
+});
+
 action(function updateInfo(userData) {
   return authApi.updateUserInfo(userData)
     .then(({ data: { user } }) => this.commit('setUser', user));

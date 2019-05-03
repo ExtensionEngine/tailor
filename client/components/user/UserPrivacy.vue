@@ -1,8 +1,13 @@
 <template>
   <v-layout align-center>
     <v-card class="card-container">
-      <h1 class="title">Change password</h1>
-      <form @submit.prevent="submit">
+      <v-layout ma-4 justify-center>
+        <v-chip color="light-blue darken-3" text-color="white">
+          <v-icon left>mdi-lock-open</v-icon>
+          Change password
+        </v-chip>
+      </v-layout>
+      <v-form ref="form" @submit.prevent="submit">
         <v-text-field
           v-validate="{ required: true, alphanumerical: true, min: 6 }"
           v-model="currentPassword"
@@ -31,7 +36,7 @@
         <v-btn :disabled="isDisabled" type="submit" color="blue-grey darken-1" flat large>
           Submit
         </v-btn>
-      </form>
+      </v-form>
     </v-card>
   </v-layout>
 </template>
@@ -68,7 +73,10 @@ export default {
               this.currentPassword = this.newPassword = this.reNewPassword = '';
               this.$snackbar.error('Incorrect current password.');
             })
-            .finally(() => requestAnimationFrame(() => this.$validator.reset()));
+            .finally(() => requestAnimationFrame(() => {
+              this.$validator.reset();
+              this.$refs.form.reset();
+            }));
         });
     }
   }
@@ -82,7 +90,9 @@ export default {
   background-color: white;
 }
 
-h1 {
-  margin-bottom: 30px;
+/deep/ {
+  .v-chip__content {
+    padding: 20px 20px !important;
+  }
 }
 </style>

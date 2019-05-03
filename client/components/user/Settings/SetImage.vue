@@ -1,5 +1,5 @@
 <template>
-  <v-card class="card-img">
+  <v-card flat class="card-img">
     <div class="header">
       <v-avatar :size="options.height">
         <croppa
@@ -20,46 +20,32 @@
             <v-icon class="placeholder-icon">mdi-account</v-icon>
           </div>
           <div v-if="!isEditing" class="croppa-tools actions">
-            <v-icon @click="editImage" dark>mdi-pencil</v-icon>
+            <v-icon v-if="!currentImage" @click="editImage" dark>mdi-camera</v-icon>
+            <v-icon v-else @click="editImage" dark>mdi-pencil</v-icon>
             <v-icon v-if="currentImage" @click="removeImage" dark>mdi-delete</v-icon>
           </div>
         </div>
       </v-avatar>
     </div>
-    <v-card-actions>
-      <v-container v-if="isEditing" mt-5 fluid grid-list-lg>
-        <v-layout mt-4 row wrap>
-          <v-flex xs12>
-            <v-slider
-              v-model="sliderVal"
-              :min="sliderMin"
-              :max="sliderMax"
-              @input="onSliderChange"
-              @click:append="croppa.zoomIn()"
-              @click:prepend="croppa.zoomOut()"
-              append-icon="mdi-plus"
-              prepend-icon="mdi-minus"
-              step=".001">
-            </v-slider>
-          </v-flex>
-          <v-flex pa-4 d-flex>
-            <v-btn @click="doneEditing" color="light-blue darken-3" flat large>
-              <v-icon dark>mdi-image</v-icon>
-              Save
-            </v-btn>
-            <v-btn @click="cancelEditing" color="blue-grey" flat large>
-              <v-icon dark>mdi-close</v-icon>
-              Cancel
-            </v-btn>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-card-actions>
+    <v-layout v-if="isEditing" pt-5 mt-2 row justify-center>
+      <v-flex xs7>
+        <v-slider
+          v-model="sliderVal"
+          :min="sliderMin"
+          :max="sliderMax"
+          @input="onSliderChange"
+          @click:append="croppa.zoomIn()"
+          @click:prepend="croppa.zoomOut()"
+          append-icon="mdi-plus"
+          prepend-icon="mdi-minus"
+          step=".001">
+        </v-slider>
+      </v-flex>
+    </v-layout>
   </v-card>
 </template>
 
 <script>
-import assetsApi from '@/api/asset';
 import EventBus from 'EventBus';
 import { mapActions, mapGetters } from 'vuex-module';
 
@@ -67,8 +53,10 @@ const appChannel = EventBus.channel('app');
 
 export default {
   name: 'user-settings',
+  props: {
+    isEditing: { type: Boolean, default: false }
+  },
   data: () => ({
-    isEditing: false,
     disabled: false,
     currentImage: null,
     timeout: 2500,
@@ -81,17 +69,18 @@ export default {
     ...mapGetters(['user']),
     options: vm => ({
       accept: 'image/*',
-      width: 150,
-      height: 150,
+      width: 130,
+      height: 130,
       disabled: vm.disabled,
       showRemoveButton: false,
       initialImage: vm.currentImage
     })
   },
   methods: {
-    ...mapActions(['updateInfo']),
-    uploadCroppedImage() {
-      this.isEditing = true;
+    ...mapActions(['updateInfo', 'uploadAvatar']),
+    uploadCroppedImage(file) {
+      if (!file) return this.$emit('editing', false);
+      this.$emit('editing', true);
       this.disabled = false;
     },
     editImage() {
@@ -99,8 +88,20 @@ export default {
         this.croppa.chooseFile();
         return;
       }
-      this.isEditing = true;
+      this.$emit('editing', true);
       this.disabled = false;
+    },
+    doneEditing() {
+      if (this.disabled) return;
+      generateBlob(this.croppa)
+        .then(editedImage => {
+          const formData = new FormData();
+          formData.append('file', editedImage);
+          return this.uploadAvatar(formData);
+        })
+        .then(({ data }) => this.updateInfo({ key: data.key }))
+        .then(() => (this.currentImage = this.user.imgUrl))
+        .finally(() => this.$emit('editing', false));
     },
     onNewImage() {
       this.sliderVal = this.sliderMin = this.croppa.scaleRatio;
@@ -113,33 +114,6 @@ export default {
       if (!e) return (this.sliderVal = this.croppa.scaleRatio);
       this.croppa.scaleRatio *= 1.2;
       this.sliderVal = this.croppa.scaleRatio;
-    },
-    doneEditing() {
-      if (this.disabled) return;
-      generateBlob(this.croppa)
-        .then(editedImage => {
-          const formData = new FormData();
-          formData.append('file', editedImage);
-          return assetsApi.upload(formData);
-        })
-        .then(({ key }) => this.updateInfo({ key }))
-        .then(() => {
-          this.currentImage = this.user.imgUrl;
-          this.$snackbar.success('Profile photo changed.');
-        })
-        .finally(() => {
-          this.isEditing = false;
-          this.disabled = true;
-        });
-    },
-    cancelEditing() {
-      if (!this.user.imgUrl) {
-        this.isEditing = false;
-        return this.croppa.remove();
-      }
-      this.croppa.refresh();
-      this.isEditing = false;
-      this.disabled = true;
     },
     removeImage() {
       if (!this.currentImage) return;
@@ -155,13 +129,17 @@ export default {
       });
     }
   },
+  watch: {
+    isEditing(newValue) {
+      if (!newValue) return this.croppa.remove();
+    }
+  },
   created() {
     if (!this.user.imgUrl) {
       this.disabled = false;
       return;
     }
     this.currentImage = this.user.imgUrl;
-    this.isEditing = false;
     this.disabled = true;
   }
 };
@@ -181,7 +159,7 @@ function generateBlob(croppa) {
   left: 0;
   overflow: hidden;
   margin: auto;
-  margin-top: 5%;
+  margin-top: 10%;
 
   .croppa-tools {
     display: flex;
@@ -202,7 +180,7 @@ function generateBlob(croppa) {
     }
 
     .placeholder-icon {
-      font-size: 8rem;
+      font-size: 7rem;
       opacity: 0.7;
     }
   }
@@ -217,11 +195,9 @@ function generateBlob(croppa) {
   right: 0;
   bottom: 0;
   left: 0;
-  height: 150px;
   margin: auto;
   border-radius: 50%;
   overflow: hidden;
-  padding: 0;
   background-color: #f5f5f5;
   border: 4px solid #e3e3e3;
   cursor: pointer;
@@ -234,20 +210,20 @@ function generateBlob(croppa) {
 }
 
 img {
+  background-color: #f5f5f5;
   border: 4px solid #e3e3e3;
 }
 
 .card-img {
   display: block;
   position: relative;
-  width: 35%;
-  background-color: white;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  width: 100%;
 
   .header {
     position: relative;
-    height: 100px;
-    background: rgb(63, 81, 181);
+    height: 110px;
+    margin-bottom: 5%;
+    background: #0277bd;
   }
 }
 </style>

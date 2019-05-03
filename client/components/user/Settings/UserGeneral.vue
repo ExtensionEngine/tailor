@@ -1,15 +1,10 @@
 <template>
   <v-flex>
-    <v-layout row align-start pl-5 mt-5>
-      <v-chip color="light-blue darken-3" text-color="white">
-        <v-avatar>
-          <v-icon>mdi-account-circle</v-icon>
-        </v-avatar>
-        {{ user.role }}
-      </v-chip>
-    </v-layout>
-    <form @submit.prevent="updateUser">
-      <v-layout column class="ma-5">
+    <v-form @submit.prevent="updateUser">
+      <v-layout row mr-0 ml-0>
+        <set-image ref="setImage" :isEditing="isEditing" @editing="setEditing"/>
+      </v-layout>
+      <v-layout column ma-3 mt-5>
         <v-flex xs9 class="px-4">
           <v-text-field
             v-validate="{ required: true, email: true }"
@@ -35,19 +30,31 @@
             label="Last name"/>
         </v-flex>
       </v-layout>
-      <v-btn type="submit" color="blue-grey darken-1" flat dark large>
-        Submit
-      </v-btn>
-      <v-btn @click="routeTo('catalog')" color="light-blue darken-3" flat large>
-        Return
-      </v-btn>
-    </form>
+      <v-flex ma-4>
+        <v-layout row justify-space-between>
+          <v-btn
+            @click="avatarSubmit"
+            type="submit"
+            color="blue-grey darken-1"
+            flat
+            dark
+            large>
+            Save
+          </v-btn>
+          <v-btn v-if="isEditing" @click="setEditing(false)" color="blue-grey" flat large>
+            <v-icon left dark>mdi-close</v-icon>
+            Cancel
+          </v-btn>
+        </v-layout>
+      </v-flex>
+    </v-form>
   </v-flex>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 import { withValidation } from 'utils/validation';
+import SetImage from './SetImage';
 import pick from 'lodash/pick';
 
 export default {
@@ -57,7 +64,8 @@ export default {
     return {
       firstName: '',
       lastName: '',
-      email: ''
+      email: '',
+      isEditing: false
     };
   },
   computed: {
@@ -75,12 +83,16 @@ export default {
         })
         .catch(() => this.$snackbar.error('An error has occurred!'));
     },
-    routeTo(name) {
-      this.$router.push({ name });
+    setEditing(val) {
+      this.isEditing = val;
+    },
+    avatarSubmit() {
+      this.$refs.setImage.doneEditing();
     }
   },
   created() {
     Object.assign(this, pick(this.user, ['firstName', 'lastName', 'email']));
-  }
+  },
+  components: { SetImage }
 };
 </script>

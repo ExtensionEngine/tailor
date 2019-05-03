@@ -29,9 +29,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.v-list__group::after {
-  background: none !important;
-}
-</style>

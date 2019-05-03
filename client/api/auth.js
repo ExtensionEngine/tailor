@@ -2,10 +2,11 @@ import request from './request';
 
 const url = {
   login: '/users/login',
-  forgotPassword: '/users/forgotPassword',
-  resetPassword: '/users/resetPassword',
+  forgotPassword: '/users/forgot-password',
+  resetPassword: '/users/reset-password',
   updateProfile: '/users/me',
-  changePassword: '/users/me/change-password'
+  changePassword: '/users/me/change-password',
+  uploadAvatar: '/users/me/upload-avatar'
 };
 
 function login(credentials) {
@@ -36,6 +37,10 @@ function changePassword(currentPassword, newPassword) {
   return request.post(url.changePassword, { currentPassword, newPassword });
 }
 
+function uploadAvatar(data) {
+  return request.post(url.uploadAvatar, data);
+}
+
 function updateUserInfo(userData) {
   return request.patch(url.updateProfile, { userData });
 }
@@ -46,5 +51,6 @@ export default {
   forgotPassword,
   resetPassword,
   updateUserInfo,
-  changePassword
+  changePassword,
+  uploadAvatar
 };

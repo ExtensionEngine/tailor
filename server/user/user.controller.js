@@ -3,6 +3,11 @@
 const { createError, validationError } = require('../shared/error/helpers');
 const { NOT_FOUND, BAD_REQUEST, NO_CONTENT } = require('http-status-codes');
 const { User } = require('../shared/database');
+const { getFileUrl, saveFile } = require('../shared/storage');
+const { AVATAR_ROOT } = require('../shared/storage/helpers');
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 
 function index(req, res) {
   const attributes = ['id', 'email', 'role'];
@@ -58,11 +63,32 @@ function changePassword({ user, body }, res) {
     .then(() => res.sendStatus(NO_CONTENT));
 }
 
+async function upload({ file }, res) {
+  const buffer = await readFile(file);
+  const hash = sha256(file.originalname, buffer);
+  const key = path.join(AVATAR_ROOT, `${hash}___${file.originalname}`);
+  await saveFile(key, buffer, { ContentType: file.mimetype });
+  const publicUrl = await getFileUrl(key);
+  return res.json({ key, url: `storage://${key}`, publicUrl });
+}
+
+function readFile(file) {
+  if (file.buffer) return Promise.resolve(file.buffer);
+  return fs.readFile(file.path);
+}
+
+function sha256(...args) {
+  const hash = crypto.createHash('sha256');
+  args.forEach(arg => hash.update(arg));
+  return hash.digest('hex');
+}
+
 module.exports = {
   index,
   forgotPassword,
   resetPassword,
   login,
   updateProfile,
-  changePassword
+  changePassword,
+  upload
 };
