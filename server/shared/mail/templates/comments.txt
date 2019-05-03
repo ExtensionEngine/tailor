@@ -3,7 +3,7 @@ Tailor Author
 
 Hello {{recipient}},
 
-Comments in last {{days}} days:
+Comments in last {{since}} days:
 
 {{#comments}}
 -------------------------------------------------
