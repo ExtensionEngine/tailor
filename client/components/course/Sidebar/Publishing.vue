@@ -26,7 +26,7 @@
       </v-list>
     </v-menu>
     <div class="publish-status">
-      <span>{{ publishStatus }}</span>
+      <span>{{ publishStatus.message }}</span>
     </div>
   </div>
 </template>
