@@ -11,6 +11,7 @@ const toml = require('toml');
 
 const CONFIG_FILE = 'pm2.deploy.toml';
 const DEFAULT_ENV = 'development';
+const script = require.resolve('./server');
 
 const execSync = (cmd, args, opts) => execFileSync(cmd, args, opts).toString().trim();
 const getCurrentBranch = () => execSync('git', ['symbolic-ref', '--short', 'HEAD']);
@@ -19,7 +20,7 @@ const code = arg => `\`${arg}\``;
 const prefix = (label = 'PM2') => kleur.inverse().bold().yellow(` ${label} `);
 const log = (msg, ...args) => msg && console.error([prefix(), msg].join(' '), ...args);
 
-const rePM2ConfigVar = /^PM2_/i;
+const rePM2ConfigVar = /^PM2_CONFIG_/i;
 const config = Object.entries(process.env).reduce((config, [key, value]) => {
   if (!rePM2ConfigVar.test(key)) {
     Object.assign(config.env, { [key]: value });
@@ -34,9 +35,9 @@ const config = Object.entries(process.env).reduce((config, [key, value]) => {
 exports.apps = [{
   ...config.app,
   name: config.app.name || pkg.name,
-  script: require.resolve('./server'),
   env_development: { ...config.env, NODE_ENV: 'development' },
-  env_production: { ...config.env, NODE_ENV: 'production' }
+  env_production: { ...config.env, NODE_ENV: 'production' },
+  script
 }];
 
 const deployConfig = loadConfig(path.join(process.cwd(), CONFIG_FILE));
