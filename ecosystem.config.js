@@ -19,17 +19,24 @@ const code = arg => `\`${arg}\``;
 const prefix = (label = 'PM2') => kleur.inverse().bold().yellow(` ${label} `);
 const log = (msg, ...args) => msg && console.error([prefix(), msg].join(' '), ...args);
 
-exports.apps = [{
-  name: pkg.name,
-  script: require.resolve('./server'),
-  env_development: {
-    ...process.env,
-    NODE_ENV: 'development'
-  },
-  env_production: {
-    ...process.env,
-    NODE_ENV: 'production'
+const rePM2ConfigVar = /^PM2_/i;
+const config = Object.entries(process.env).reduce((config, [key, value]) => {
+  if (!rePM2ConfigVar.test(key)) {
+    Object.assign(config.env, { [key]: value });
+    return config;
   }
+  key = key.toLowerCase().replace(rePM2ConfigVar, '');
+  if (key.startsWith('env')) return config;
+  Object.assign(config.app, { [key]: value });
+  return config;
+}, { app: {}, env: {} });
+
+exports.apps = [{
+  ...config.app,
+  name: config.app.name || pkg.name,
+  script: require.resolve('./server'),
+  env_development: { ...config.env, NODE_ENV: 'development' },
+  env_production: { ...config.env, NODE_ENV: 'production' }
 }];
 
 const deployConfig = loadConfig(path.join(process.cwd(), CONFIG_FILE));
