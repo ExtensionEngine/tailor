@@ -18,7 +18,7 @@ selenium-debug.log
 
 # Configuration
 .env
-ecosystem.config.js
+pm2.deploy.toml
 .*rc*
 !.eslintrc*
 !.*.example

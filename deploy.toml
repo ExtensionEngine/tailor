@@ -1,0 +1,17 @@
+# Use this file to specify PM2 deployment configurations:
+# https://github.com/keymetrics/doc-pm2/blob/master/en/runtime/reference/ecosystem-file.md#deploy-options
+
+[production]
+env = { NODE_ENV = "production" }
+host = "tailor.example.com"
+user = "tailor"
+path = "$HOME/vendor/tailor"
+ref = "master"
+ssh_options = "StrictHostKeyChecking=no"
+
+[stagging]
+host = "stagging.tailor.example.com"
+user = "tailor"
+path = "$HOME/vendor/tailor"
+ref = "" # leave this empty or omit this key in order to use current git branch
+ssh_options = "StrictHostKeyChecking=no"

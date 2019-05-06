@@ -38,6 +38,10 @@
     "start": "node -r ./server/script/preflight ./server",
     "postshrinkwrap": "sed -i.bak 's/http:\\/\\//https:\\/\\//g' package-lock.json && rm -v package-lock.json.bak"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ExtensionEngine/tailor.git"
+  },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@mdi/font": "^3.5.95",
@@ -157,6 +161,7 @@
     "eslint-plugin-vue": "^4.7.1",
     "imports-loader": "^0.8.0",
     "joycon": "^2.2.4",
+    "kleur": "^3.0.3",
     "node-sass": "^4.11.0",
     "nodemon": "^1.18.6",
     "poi": "^12.5.5",
@@ -170,6 +175,7 @@
     "stylelint-order": "^3.0.0",
     "stylelint-scss": "^3.6.1",
     "stylelint-webpack-plugin": "^0.10.5",
+    "toml": "^3.0.0",
     "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
     "vue-template-compiler": "^2.6.10"
