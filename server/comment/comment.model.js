@@ -64,9 +64,10 @@ class Comment extends Model {
     const structure = getOutlineLevels(schema);
     return comments.reduce((accumulator, comment, i) => {
       const { label, color } = find(structure, { type: comment.activity.type });
+      const previous = comments[i - 1];
       comment.activity.label = label;
       comment.activity.color = color;
-      if (!i || comment.activityId !== comments[i - 1].activityId) {
+      if (!previous || comment.activityId !== previous.activityId) {
         accumulator.push([]);
       }
       accumulator[accumulator.length - 1].push(comment);

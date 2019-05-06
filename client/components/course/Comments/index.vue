@@ -9,16 +9,22 @@
     <v-list two-line>
       <template v-for="(comment, index) in paginatedComments">
         <v-subheader
-          v-if="sameActivity(comment.activityId, index)"
+          v-if="!isSameDiscussion(comment, paginatedComments[index - 1])"
           :key="'header' + comment._cid || comment.id"
           class="comment-activity">
-          <span class="activity-title">{{ config(comment).title }}</span>
+          <span class="activity-title">
+            {{ config[comment.activityId].title }}
+          </span>
           <div class="labels">
             <v-chip label small outline color="primary">
               A{{ comment.activityId }}
             </v-chip>
-            <v-chip :color="config(comment).color" label small text-color="white">
-              {{ config(comment).label }}
+            <v-chip
+              :color="config[comment.activityId].color"
+              label
+              small
+              text-color="white">
+              {{ config[comment.activityId].label }}
             </v-chip>
           </div>
         </v-subheader>
@@ -54,12 +60,11 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex-module';
+import api from 'client/api/auth';
 import CircularProgress from 'components/common/CircularProgress';
 import Comment from '../Sidebar/Discussion/Comment';
 import InfiniteLoading from 'vue-infinite-loading';
 import isEmpty from 'lodash/isEmpty';
-import find from 'lodash/find';
-import api from 'client/api/auth';
 
 export default {
   name: 'comments',
@@ -73,12 +78,27 @@ export default {
     ...mapGetters(['user']),
     ...mapGetters(['hasMoreResults'], 'comments'),
     ...mapGetters(['paginatedComments']),
-    ...mapGetters(['getConfig'], 'course'),
-    ...mapGetters(['activities'])
+    ...mapGetters(['activities', 'getConfig'], 'course'),
+    config() {
+      return this.activities.reduce((acc, activity) => {
+        if (!isEmpty(activity.data)) {
+          const { label, color } = this.getConfig(activity);
+          acc[activity.id] = { title: activity.data.name, label, color };
+        }
+        return acc;
+      }, {});
+    }
   },
   methods: {
-    ...mapActions(['fetchPaginated', 'resetPagination', 'update', 'remove',
-      'subscribe', 'unsubscribe'], 'comments'),
+    ...mapActions([
+      'fetchPaginated',
+      'resetPagination',
+      'update',
+      'remove',
+      'subscribe',
+      'unsubscribe'
+    ], 'comments'),
+    isSameDiscussion,
     fetchComments($state) {
       return this.fetchPaginated().then(() => {
         if (!isEmpty(this.paginatedComments)) $state.loaded();
@@ -94,13 +114,6 @@ export default {
     },
     onRemove(comment) {
       this.remove(comment);
-    },
-    sameActivity(activityId, i) {
-      return i ? this.paginatedComments[i - 1].activityId !== activityId : !i;
-    },
-    config(comment) {
-      const activity = find(this.activities, { id: comment.activityId });
-      return { title: activity.data.name, ...this.getConfig(activity) };
     },
     sendComments() {
       const email = this.user.email;
@@ -121,6 +134,10 @@ export default {
   },
   components: { CircularProgress, Comment, InfiniteLoading }
 };
+
+function isSameDiscussion(comment1 = {}, comment2 = {}) {
+  return comment1.activityId === comment2.activityId;
+}
 </script>
 
 <style lang="scss" scoped>
