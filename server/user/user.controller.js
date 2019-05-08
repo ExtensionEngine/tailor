@@ -6,7 +6,7 @@ const { User } = require('../shared/database');
 const { getFileUrl, saveFile } = require('../shared/storage');
 const { AVATAR_ROOT } = require('../shared/storage/helpers');
 const crypto = require('crypto');
-const fs = require('fs');
+const mime = require('mime-types');
 const path = require('path');
 
 function index(req, res) {
@@ -64,17 +64,18 @@ function changePassword({ user, body }, res) {
 }
 
 async function upload({ file }, res) {
+  const { originalname, mimetype } = file;
   const buffer = await readFile(file);
-  const hash = sha256(file.originalname, buffer);
-  const key = path.join(AVATAR_ROOT, `${hash}___${file.originalname}`);
-  await saveFile(key, buffer, { ContentType: file.mimetype });
+  const hash = sha256(originalname, buffer);
+  const extension = mime.extension(mimetype);
+  const key = path.join(AVATAR_ROOT, `${hash}___${originalname}.${extension}`);
+  await saveFile(key, buffer, { ContentType: mimetype });
   const publicUrl = await getFileUrl(key);
   return res.json({ key, url: `storage://${key}`, publicUrl });
 }
 
-function readFile(file) {
-  if (file.buffer) return Promise.resolve(file.buffer);
-  return fs.readFile(file.path);
+function readFile({ buffer }) {
+  if (buffer) return Promise.resolve(buffer);
 }
 
 function sha256(...args) {

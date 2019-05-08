@@ -1,52 +1,48 @@
 <template>
   <v-flex>
     <v-form @submit.prevent="updateUser">
-      <v-layout row mr-0 ml-0>
-        <set-image ref="setImage" :isEditing="isEditing" @editing="setEditing"/>
+      <set-image ref="setImage" :isEditing="isEditing" @editing="setEditing"/>
+      <v-layout column mx-5 mt-2>
+        <v-text-field
+          v-validate="{ required: true, email: true }"
+          v-model="email"
+          :error-messages="vErrors.collect('email')"
+          name="email"
+          label="Email"/>
+        <v-text-field
+          v-validate="{ max: 20 }"
+          v-model="firstName"
+          :error-messages="vErrors.collect('name')"
+          name="firstName"
+          label="First name"/>
+        <v-text-field
+          v-validate="{ max: 20 }"
+          v-model="lastName"
+          :error-messages="vErrors.collect('name')"
+          name="lastName"
+          label="Last name"/>
+        <v-card-actions>
+          <v-layout my-4 justify-end>
+            <v-btn
+              v-if="isEditing"
+              @click="setEditing(false)"
+              color="error"
+              flat
+              outline>
+              Cancel
+            </v-btn>
+            <v-btn
+              @click="avatarSubmit"
+              type="submit"
+              color="light-blue darken-3"
+              flat
+              dark
+              outline>
+              Save changes
+            </v-btn>
+          </v-layout>
+        </v-card-actions>
       </v-layout>
-      <v-layout column ma-3 mt-5>
-        <v-flex xs9 class="px-4">
-          <v-text-field
-            v-validate="{ required: true, email: true }"
-            v-model="email"
-            :error-messages="vErrors.collect('email')"
-            data-vv-name="email"
-            label="Email"/>
-        </v-flex>
-        <v-flex xs9 class="px-4">
-          <v-text-field
-            v-validate="{ max: 20 }"
-            v-model="firstName"
-            :error-messages="vErrors.collect('name')"
-            data-vv-name="name"
-            label="First name"/>
-        </v-flex>
-        <v-flex xs9 class="px-4">
-          <v-text-field
-            v-validate="{ max: 20 }"
-            v-model="lastName"
-            :error-messages="vErrors.collect('name')"
-            data-vv-name="name"
-            label="Last name"/>
-        </v-flex>
-      </v-layout>
-      <v-flex ma-4>
-        <v-layout row justify-space-between>
-          <v-btn
-            @click="avatarSubmit"
-            type="submit"
-            color="blue-grey darken-1"
-            flat
-            dark
-            large>
-            Save
-          </v-btn>
-          <v-btn v-if="isEditing" @click="setEditing(false)" color="blue-grey" flat large>
-            <v-icon left dark>mdi-close</v-icon>
-            Cancel
-          </v-btn>
-        </v-layout>
-      </v-flex>
     </v-form>
   </v-flex>
 </template>
@@ -69,7 +65,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+    hasChanges: vm => Object.keys(vm.vFields).some(name => vm.vFields[name].changed)
   },
   methods: {
     ...mapActions(['updateInfo']),
@@ -78,13 +75,16 @@ export default {
       this.$validator.validateAll()
         .then(async isValid => {
           if (!isValid) return this.$snackbar.error('Validation failed!');
+          if (!this.hasChanges) return;
           await this.updateInfo({ firstName, lastName, email });
-          this.$snackbar.success('Changes saved.');
+          this.$validator.reset();
+          this.$snackbar.success('User information updated.');
         })
         .catch(() => this.$snackbar.error('An error has occurred!'));
     },
     setEditing(val) {
       this.isEditing = val;
+      this.$refs.setImage.croppa.refresh();
     },
     avatarSubmit() {
       this.$refs.setImage.doneEditing();
@@ -96,3 +96,15 @@ export default {
   components: { SetImage }
 };
 </script>
+
+<style lang="scss" scoped>
+.v-card__actions {
+  padding: 0;
+
+  .v-btn {
+    width: 125px;
+    min-width: 100px;
+    margin-bottom: 10px;
+  }
+}
+</style>

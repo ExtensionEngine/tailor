@@ -1,44 +1,56 @@
 <template>
-  <v-layout align-center>
-    <v-card class="card-container">
-      <v-layout ma-4 justify-center>
-        <v-chip color="light-blue darken-3" text-color="white">
-          <v-icon left>mdi-lock-open</v-icon>
-          Change password
-        </v-chip>
-      </v-layout>
-      <v-form ref="form" @submit.prevent="submit">
-        <v-text-field
-          v-validate="{ required: true, alphanumerical: true, min: 6 }"
-          v-model="currentPassword"
-          :error-messages="vErrors.first('currentPassword')"
-          data-vv-as="current password"
-          type="password"
-          data-vv-name="currentPassword"
-          label="Current password"/>
-        <v-text-field
-          v-validate="{ required: true, alphanumerical: true, min: 6 }"
-          ref="newPassword"
-          v-model="newPassword"
-          :error-messages="vErrors.first('newPassword')"
-          data-vv-as="new password"
-          type="password"
-          name="newPassword"
-          label="New password"/>
-        <v-text-field
-          v-validate="{ required: true, confirmed: 'newPassword' }"
-          v-model="reNewPassword"
-          :error-messages="vErrors.first('passwordConfirmation')"
-          data-vv-as="new password"
-          type="password"
-          name="passwordConfirmation"
-          label="Please re-enter your new password"/>
-        <v-btn :disabled="isDisabled" type="submit" color="blue-grey darken-1" flat large>
-          Submit
-        </v-btn>
-      </v-form>
-    </v-card>
-  </v-layout>
+  <v-card class="elevation-2">
+    <v-layout align-center>
+      <v-flex>
+        <v-layout row mx-0>
+          <v-toolbar class="elevation-0" height="113" color="light-blue darken-3" dark>
+            <v-icon>mdi-lock-open</v-icon>
+            <v-toolbar-title>Change Password</v-toolbar-title>
+          </v-toolbar>
+        </v-layout>
+        <v-form @submit.prevent="submit">
+          <v-layout column mx-5 mt-4>
+            <v-text-field
+              v-validate="{ required: true, alphanumerical: true, min: 6 }"
+              v-model="currentPassword"
+              :error-messages="vErrors.first('currentPassword')"
+              data-vv-as="current password"
+              type="password"
+              name="currentPassword"
+              label="Current password"/>
+            <v-text-field
+              v-validate="{ required: true, alphanumerical: true, min: 6 }"
+              ref="newPassword"
+              v-model="newPassword"
+              :error-messages="vErrors.first('newPassword')"
+              data-vv-as="new password"
+              type="password"
+              name="newPassword"
+              label="New password"/>
+            <v-text-field
+              v-validate="{ required: true, confirmed: 'newPassword' }"
+              v-model="reNewPassword"
+              :error-messages="vErrors.first('passwordConfirmation')"
+              data-vv-as="new password"
+              type="password"
+              name="passwordConfirmation"
+              label="Please re-enter your new password"/>
+            <v-card-actions>
+              <v-layout my-4 row wrap justify-end>
+                <v-btn
+                  :disabled="!isValidated"
+                  type="submit"
+                  color="light-blue darken-3"
+                  outline>
+                  Submit
+                </v-btn>
+              </v-layout>
+            </v-card-actions>
+          </v-layout>
+        </v-form>
+      </v-flex>
+    </v-layout>
+  </v-card>
 </template>
 
 <script>
@@ -56,8 +68,8 @@ export default {
   },
   computed: {
     ...mapGetters(['user']),
-    isDisabled: vm => Object.keys(vm.vFields).some(name => {
-      return vm.vFields[name] && vm.vFields[name].invalid;
+    isValidated: vm => Object.keys(vm.vFields).every(name => {
+      return vm.vFields[name] && vm.vFields[name].validated;
     })
   },
   methods: {
@@ -69,14 +81,11 @@ export default {
           if (!isValid) return this.$snackbar.error('Validation failed!');
           return this.changePassword({ currentPassword, newPassword })
             .then(() => this.$snackbar.success('Password changed.'))
-            .catch(() => {
+            .catch(() => this.$snackbar.error('Incorrect current password.'))
+            .finally(() => {
               this.currentPassword = this.newPassword = this.reNewPassword = '';
-              this.$snackbar.error('Incorrect current password.');
-            })
-            .finally(() => requestAnimationFrame(() => {
-              this.$validator.reset();
-              this.$refs.form.reset();
-            }));
+              requestAnimationFrame(() => this.$validator.reset());
+            });
         });
     }
   }
@@ -84,15 +93,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card-container {
-  width: 100%;
-  padding: 30px 30px;
-  background-color: white;
-}
+.v-card__actions {
+  padding: 0;
 
-/deep/ {
-  .v-chip__content {
-    padding: 20px 20px !important;
+  .v-btn {
+    width: 125px;
+    min-width: 100px;
+    margin-bottom: 10px;
   }
 }
 </style>

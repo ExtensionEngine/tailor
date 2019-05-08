@@ -4,7 +4,7 @@
       <v-card>
         <sidebar/>
       </v-card>
-      <v-flex xs12 sm6 md3 ml-5>
+      <v-flex xs12 sm5 md3 ml-5>
         <router-view/>
       </v-flex>
     </v-layout>
