@@ -12,13 +12,15 @@
         <v-text-field
           v-validate="{ max: 20 }"
           v-model="firstName"
-          :error-messages="vErrors.collect('name')"
+          :error-messages="vErrors.collect('firstName')"
+          data-vv-as="first name"
           name="firstName"
           label="First name"/>
         <v-text-field
           v-validate="{ max: 20 }"
           v-model="lastName"
-          :error-messages="vErrors.collect('name')"
+          :error-messages="vErrors.collect('lastName')"
+          data-vv-as="last name"
           name="lastName"
           label="Last name"/>
         <v-card-actions>
