@@ -1,3 +1,4 @@
+{{#wrap}}
 Tailor Author
 =================================================
 
@@ -14,3 +15,4 @@ Comments in last {{since}} days:
 {{/.}}
 
 {{/comments}}
+{{/wrap}}

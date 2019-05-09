@@ -9,6 +9,7 @@ const logger = require('../logger');
 const path = require('path');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
+const wrap = require('word-wrap');
 
 const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
 const server = email.server.connect(mailConfig);
@@ -27,7 +28,7 @@ function invite(user) {
   const href = resetUrl(user);
   const { hostname } = new URL(href);
   const recipient = user.email;
-  const data = { href, origin, hostname, recipient };
+  const data = { href, origin, hostname, recipient, wrap: () => wrapText };
   const html = renderHtml(path.join(templatesDir, 'welcome.mjml'), data);
   const text = renderText(path.join(templatesDir, 'welcome.txt'), data);
   logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending invite email to:', recipient);
@@ -43,7 +44,7 @@ function invite(user) {
 function resetPassword(user) {
   const href = resetUrl(user);
   const recipient = user.email;
-  const data = { href, recipient };
+  const data = { href, recipient, wrap: () => wrapText };
   const html = renderHtml(path.join(templatesDir, 'reset.mjml'), data);
   const text = renderText(path.join(templatesDir, 'reset.txt'), data);
   logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending reset password email to:', recipient);
@@ -67,7 +68,7 @@ function getConfig(server) {
 
 function commentsList({ email, comments, since }) {
   const recipient = email;
-  const data = { comments, recipient, since, format: () => format };
+  const data = { comments, recipient, since, format: () => format, wrap: () => wrapText };
   const html = renderHtml(path.join(templatesDir, 'comments.mjml'), data);
   const text = renderText(path.join(templatesDir, 'comments.txt'), data);
   logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending comments email to:', recipient);
@@ -82,6 +83,10 @@ function commentsList({ email, comments, since }) {
 
 function format(date, render) {
   return fecha.format(new Date(render(date)), 'M/D/YY HH:mm');
+}
+
+function wrapText(content, render) {
+  return wrap(render(content), { width: 50 });
 }
 
 module.exports = {
