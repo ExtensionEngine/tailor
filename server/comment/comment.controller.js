@@ -6,10 +6,10 @@ const mail = require('../shared/mail');
 
 function list({ course, opts, query }, res) {
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
-  if (query.activityId) {
+  if ('activityId' in query) {
     opts.where.activityId = query.activityId;
   }
-  if (query.limit && query.offset) {
+  if ('limit' in query && 'offset' in query) {
     const { limit, offset } = query;
     opts.limit = limit;
     opts.offset = offset;
@@ -19,21 +19,24 @@ function list({ course, opts, query }, res) {
 }
 
 function email({ course, body }, res) {
-  const include = [
-    { model: User, as: 'author', attributes: ['id', 'email'] },
-    { model: Activity, as: 'activity', attributes: ['id', 'type', 'data'] }
-  ];
   const { since, email } = body;
-  let date = new Date();
-  date.setDate(date.getDate() - since);
   const opts = {
+    include: [
+      { model: User, as: 'author', attributes: ['id', 'email'] },
+      { model: Activity, as: 'activity', attributes: ['id', 'type', 'data'] }
+    ],
     order: [['createdAt', 'DESC']],
-    where: { createdAt: { [Op.gt]: date } }
+    where: { createdAt: { [Op.gt]: offsetDate(new Date(), -since) } }
   };
-  return course.getComments({ ...opts, include })
+  return course.getComments(opts)
     .then(comments => Comment.sortComments({ comments, schema: course.schema }))
     .then(comments => mail.commentsList({ email, comments, since }))
     .then(() => res.end());
+}
+
+function offsetDate(date, offset) {
+  date.setDate(date.getDate() + offset);
+  return date;
 }
 
 function show({ comment }, res) {

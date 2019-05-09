@@ -3,7 +3,6 @@
 const { createError, validationError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { User } = require('../shared/database');
-const mail = require('../shared/mail');
 
 function index(req, res) {
   const attributes = ['id', 'email', 'role'];
@@ -57,19 +56,10 @@ function commentsCheckTime({ body }, res) {
     });
 }
 
-function emailComments({ body }, res) {
-  const { email, comments } = body;
-  return User.findOne({ where: { email } })
-    .then(user => user || createError(NOT_FOUND, 'User not found'))
-    .then(user => mail.commentsList({ user, comments }))
-    .then(() => res.end());
-}
-
 module.exports = {
   index,
   forgotPassword,
   resetPassword,
   login,
-  commentsCheckTime,
-  emailComments
+  commentsCheckTime
 };

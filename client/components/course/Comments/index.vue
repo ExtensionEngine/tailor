@@ -10,7 +10,7 @@
       <template v-for="(comment, index) in paginatedComments">
         <v-subheader
           v-if="!isSameDiscussion(comment, paginatedComments[index - 1])"
-          :key="'header' + comment._cid || comment.id"
+          :key="`header ${comment._cid || comment.id}`"
           class="comment-activity">
           <span class="activity-title">
             {{ config[comment.activityId].title }}
@@ -68,12 +68,10 @@ import isEmpty from 'lodash/isEmpty';
 
 export default {
   name: 'comments',
-  data() {
-    return {
-      initialCheckTime: '',
-      allComments: false
-    };
-  },
+  data: () => ({
+    initialCheckTime: '',
+    allComments: false
+  }),
   computed: {
     ...mapGetters(['user']),
     ...mapGetters(['hasMoreResults'], 'comments'),

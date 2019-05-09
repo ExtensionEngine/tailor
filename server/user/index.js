@@ -11,7 +11,6 @@ router
   .post('/users/forgotPassword', ctrl.forgotPassword)
   .post('/users/resetPassword', ctrl.resetPassword)
   .post('/users/commentsCheckTime', ctrl.commentsCheckTime)
-  .post('/users/emailComments', ctrl.emailComments)
   // Protected routes:
   .get('/users', auth, ctrl.index);
 
