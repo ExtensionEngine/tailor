@@ -2,6 +2,7 @@
 
 const { renderHtml, renderText } = require('./render');
 const { origin } = require('../../../config/server');
+const mailConfig = require('../../../config/server/mail');
 const email = require('emailjs');
 const fecha = require('fecha');
 const logger = require('../logger');
@@ -10,14 +11,7 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
 const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
-const server = email.server.connect({
-  user: process.env.EMAIL_USER,
-  password: process.env.EMAIL_PASSWORD,
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT || null,
-  ssl: Boolean(process.env.EMAIL_SSL),
-  tls: Boolean(process.env.EMAIL_TLS)
-});
+const server = email.server.connect(mailConfig);
 logger.debug(getConfig(server), '📧  SMTP client created');
 
 function send(message) {
