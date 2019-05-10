@@ -2,7 +2,7 @@
   <v-layout column mr-0 ml-0>
     <v-toolbar class="elevation-0" height="113" color="light-blue darken-3" dark>
     </v-toolbar>
-    <div v-if="!disabled || !currentImage" class="croppa-box">
+    <div v-if="!disabled" class="croppa-box">
       <croppa
         v-model="croppa"
         v-bind="options"
@@ -32,7 +32,7 @@
     <v-avatar
       v-if="!isEditing"
       :size="options.height"
-      :class="{ 'avatar-style': !disabled || !currentImage}">
+      :class="{ 'avatar-style': !disabled }">
       <img v-if="currentImage" :src="currentImage">
       <v-icon v-else class="placeholder-icon">mdi-account</v-icon>
       <div @click="uploadNewImage" class="v-avatar actions">
@@ -131,6 +131,9 @@ function generateBlob(croppa) {
 </script>
 
 <style lang="scss" scoped>
+$image-border: 4px solid #e3e3e3;
+$image-bg-color: #f5f5f5;
+
 .v-avatar {
   position: relative;
   margin: 0 auto;
@@ -138,13 +141,14 @@ function generateBlob(croppa) {
 
   img {
     width: 100%;
-    background-color: #f5f5f5;
-    border: 4px solid #e3e3e3;
+    background-color: $image-bg-color;
+    border: $image-border;
   }
 
   .placeholder-icon {
     font-size: 7rem;
-    opacity: 0.7;
+    background-color: $image-bg-color;
+    border: $image-border;
   }
 
   &.actions {
@@ -154,7 +158,7 @@ function generateBlob(croppa) {
     margin: 0;
     border-radius: 50%;
     background: #546e7a;
-    border: 4px solid #e3e3e3;
+    border: $image-border;
     opacity: 0.7;
     cursor: pointer;
   }
@@ -174,8 +178,8 @@ function generateBlob(croppa) {
     width: 130px;
     height: 130px;
     margin: 0 auto;
-    background-color: #f5f5f5;
-    border: 4px solid #e3e3e3;
+    background-color: $image-bg-color;
+    border: $image-border;
     cursor: pointer;
 
     &.croppa--has-target {
