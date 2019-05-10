@@ -24,7 +24,7 @@
           name="lastName"
           label="Last name"/>
         <v-card-actions>
-          <v-layout my-4 justify-end>
+          <v-layout my-4 row wrap justify-end>
             <v-btn
               v-if="isEditing"
               @click="setEditing(false)"
@@ -85,8 +85,8 @@ export default {
         .catch(() => this.$snackbar.error('An error has occurred!'));
     },
     setEditing(val) {
-      this.isEditing = val;
       this.$refs.setImage.croppa.refresh();
+      this.isEditing = val;
     },
     avatarSubmit() {
       this.$refs.setImage.doneEditing();

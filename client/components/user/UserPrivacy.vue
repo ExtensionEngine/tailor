@@ -36,7 +36,7 @@
               name="passwordConfirmation"
               label="Please re-enter your new password"/>
             <v-card-actions>
-              <v-layout my-4 row wrap justify-end>
+              <v-layout my-4 justify-end>
                 <v-btn
                   :disabled="!isValidated"
                   type="submit"

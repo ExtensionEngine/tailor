@@ -2,7 +2,7 @@
   <v-layout column mr-0 ml-0>
     <v-toolbar class="elevation-0" height="113" color="light-blue darken-3" dark>
     </v-toolbar>
-    <v-avatar :size="options.height">
+    <div v-if="!disabled || !currentImage" class="croppa-box">
       <croppa
         v-model="croppa"
         v-bind="options"
@@ -14,16 +14,7 @@
         prevent-white-space
         show-loading>
       </croppa>
-      <div v-if="!isEditing" class="img-container">
-        <img v-if="currentImage" :src="currentImage">
-        <v-icon v-else class="placeholder-icon">mdi-account</v-icon>
-        <div @click="uploadNewImage" class="img-container actions">
-          <v-icon dark>mdi-camera</v-icon>
-        </div>
-      </div>
-    </v-avatar>
-    <v-layout v-if="isEditing" justify-center>
-      <v-flex xs6>
+      <v-layout v-if="isEditing" px-5 mx-5 mt-2 justify-center>
         <v-slider
           v-model="sliderVal"
           :min="sliderMin"
@@ -36,8 +27,18 @@
           prepend-icon="mdi-minus"
           step=".001">
         </v-slider>
-      </v-flex>
-    </v-layout>
+      </v-layout>
+    </div>
+    <v-avatar
+      v-if="!isEditing"
+      :size="options.height"
+      :class="{ 'avatar-style': !disabled || !currentImage}">
+      <img v-if="currentImage" :src="currentImage">
+      <v-icon v-else class="placeholder-icon">mdi-account</v-icon>
+      <div @click="uploadNewImage" class="v-avatar actions">
+        <v-icon dark>mdi-camera</v-icon>
+      </div>
+    </v-avatar>
   </v-layout>
 </template>
 
@@ -75,11 +76,12 @@ export default {
       this.$emit('editing', true);
     },
     uploadNewImage() {
-      this.croppa.chooseFile();
+      this.disabled = false;
+      this.$nextTick(() => this.croppa.chooseFile());
     },
     doneEditing() {
       if (this.disabled) return;
-      if (!this.$props.isEditing) return;
+      if (!this.isEditing) return;
       generateBlob(this.croppa)
         .then(editedImage => {
           const formData = new FormData();
@@ -94,7 +96,7 @@ export default {
         .catch(() => this.$snackbar.error('An error has occurred!'))
         .finally(() => {
           this.$emit('editing', false);
-          this.croppa.refresh();
+          this.disabled = true;
         });
     },
     onNewImage() {
@@ -114,11 +116,12 @@ export default {
   },
   watch: {
     isEditing(newValue) {
-      if (!newValue) return this.croppa.refresh();
+      if (!newValue) this.disabled = true;
     }
   },
   created() {
     this.currentImage = this.user.imgUrl;
+    this.disabled = true;
   }
 };
 
@@ -128,76 +131,69 @@ function generateBlob(croppa) {
 </script>
 
 <style lang="scss" scoped>
-nav {
-  margin-bottom: 65px;
-}
-
 .v-avatar {
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  overflow: hidden;
-  margin: auto;
-  margin-top: 45px;
+  position: relative;
+  margin: 0 auto;
+  margin-top: -67px;
 
-  .img-container {
-    display: flex;
+  img {
+    width: 100%;
+    background-color: #f5f5f5;
+    border: 4px solid #e3e3e3;
+  }
+
+  .placeholder-icon {
+    font-size: 7rem;
+    opacity: 0.7;
+  }
+
+  &.actions {
     position: absolute;
-    justify-content: center;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    img {
-      width: 100%;
-      background-color: #f5f5f5;
-      border: 4px solid #e3e3e3;
-    }
-
-    .placeholder-icon {
-      font-size: 7rem;
-      opacity: 0.7;
-    }
-
-    &.actions {
-      margin: 4px;
-      border-radius: 50%;
-      background: #546e7a;
-      opacity: 0.7;
-      cursor: pointer;
-    }
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-radius: 50%;
+    background: #546e7a;
+    border: 4px solid #e3e3e3;
+    opacity: 0.7;
+    cursor: pointer;
   }
 
   &:not(:hover) .actions { display: none; }
 }
 
-.croppa-container {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+.croppa-box {
   margin: auto;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #f5f5f5;
-  border: 4px solid #e3e3e3;
-  cursor: pointer;
+  margin-top: -67px;
+  margin-bottom: 20px;
+  z-index: 2;
 
-  &.croppa--has-target {
-    /deep/ {
-      canvas {
-        width: 100% !important;
-        height: 122px !important;
+  .croppa-container {
+    overflow: hidden;
+    border-radius: 50%;
+    width: 130px;
+    height: 130px;
+    margin: 0 auto;
+    background-color: #f5f5f5;
+    border: 4px solid #e3e3e3;
+    cursor: pointer;
+
+    &.croppa--has-target {
+      /deep/ {
+        canvas {
+          width: 100% !important;
+          height: 122px !important;
+        }
       }
-    }
 
-    &:active { cursor: grab; }
-    &.croppa--disabled { cursor: auto; }
+      &:active { cursor: grab; }
+      &.croppa--disabled { cursor: auto; }
+    }
   }
+}
+
+.avatar-style {
+  margin-top: -150px;
+  z-index: 3;
 }
 </style>
