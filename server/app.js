@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const origin = require('./shared/origin');
 const passport = require('passport');
 const path = require('path');
+require('express-async-errors');
 
 // Setup authentication before instantiating the main app router.
 // eslint-disable-next-line no-unused-vars
