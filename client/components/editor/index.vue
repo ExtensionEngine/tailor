@@ -14,16 +14,17 @@
       </span>
     </toolbar>
     <transition name="slide">
-      <sidebar
+      <meta-sidebar
         v-if="showSidebar"
         :key="focusedElement._cid"
         :metadata="metadata"
         :element="focusedElement">
-      </sidebar>
+      </meta-sidebar>
     </transition>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
       <circular-progress v-if="showLoader"/>
-      <div v-else>
+      <template v-else>
+        <main-sidebar :activity="activity"/>
         <div class="container">
           <content-containers
             v-for="(containerGroup, type) in contentContainers"
@@ -34,7 +35,7 @@
           <assessments v-if="showAssessments"/>
           <exams v-if="showExams"/>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -51,8 +52,9 @@ import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import MainSidebar from './MainSidebar';
+import MetaSidebar from './MetaSidebar';
 import Promise from 'bluebird';
-import Sidebar from './sidebar';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
@@ -159,7 +161,8 @@ export default {
     CircularProgress,
     ContentContainers,
     Exams,
-    Sidebar,
+    MainSidebar,
+    MetaSidebar,
     Toolbar
   }
 };
@@ -180,7 +183,7 @@ export default {
 }
 
 .editor {
-  padding-top: 80px;
+  padding: 80px 0 0 420px;
   overflow-y: scroll;
   overflow-y: overlay;
 

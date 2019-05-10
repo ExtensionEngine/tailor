@@ -1,11 +1,11 @@
 <template>
-  <div class="pt-2 px-1">
+  <div class="px-1">
     <v-treeview
       :items="tree"
       :active="[selected.id]"
       :open="opened"
       active-class="pink--text text--darken-2"
-      class="pt-3">
+      class="pt-2">
       <template v-slot:label="{ item }">
         <div class="treview-item">
           <div v-if="!isEditable(item.type)" class="text-truncate">
