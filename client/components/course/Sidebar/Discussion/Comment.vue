@@ -5,7 +5,7 @@
     <span v-if="avatar" class="pull-left avatar">
       <avatar
         :size="38"
-        :username="comment.author.email"
+        :username="author.email"
         :initials="authorInitials"
         color="#ffffff">
       </avatar>
@@ -15,7 +15,7 @@
         <span
           :class="{ 'current-user': isAuthor }"
           class="author">
-          {{ comment.author.email }}
+          {{ author.email }}
         </span>
         <slot name="new-comment"></slot>
         <span v-if="isEdited" class="edited-icon icon mdi mdi-pencil"></span>
@@ -46,13 +46,13 @@
           </li>
         </ul>
         <timeago
-          :since="comment.createdAt"
+          :since="createdAt"
           :auto-update="60"
           class="pull-right time">
         </timeago>
       </span>
       <text-editor
-        :value="comment.content"
+        :value="content"
         :focused="editing"
         :preview="!editing"
         :class="{ deleted: isDeleted }"
@@ -74,7 +74,11 @@ import ThreadComment from './Comment';
 export default {
   name: 'thread-comment',
   props: {
-    comment: { type: Object, required: true },
+    author: { type: Object, required: true },
+    content: { type: String, required: true },
+    createdAt: { type: String, required: true },
+    updatedAt: { type: String, required: true },
+    deletedAt: { type: String, default: null },
     avatar: { type: Boolean, default: true }
   },
   data() {
@@ -87,16 +91,16 @@ export default {
   computed: {
     ...mapGetters(['user']),
     authorInitials() {
-      return this.comment.author.email.substr(0, 2).toUpperCase();
+      return this.author.email.substr(0, 2).toUpperCase();
     },
     isAuthor() {
-      return this.comment.author.id === this.user.id;
+      return this.author.id === this.user.id;
     },
     isEdited() {
-      return this.comment.createdAt !== this.comment.updatedAt;
+      return this.createdAt !== this.updatedAt;
     },
     isDeleted() {
-      return !!this.comment.deletedAt;
+      return !!this.deletedAt;
     },
     showActions() {
       return this.hovered && this.isAuthor && !this.isDeleted;
@@ -108,11 +112,11 @@ export default {
     },
     update(content) {
       this.editing = false;
-      if (!content || content === this.comment.content) return;
-      this.$emit('update', this.comment, content);
+      if (!content || content === this.content) return;
+      this.$emit('update', content);
     },
     remove() {
-      this.$emit('remove', this.comment);
+      this.$emit('remove');
     }
   },
   directives: { focus },

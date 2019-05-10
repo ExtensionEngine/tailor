@@ -3,10 +3,10 @@
     <thread-comment
       v-for="comment in thread"
       :key="comment._cid || comment.id"
-      :comment="comment"
+      v-bind="comment"
       :avatar="avatars"
-      @update="onUpdate"
-      @remove="onRemove"
+      @update="onUpdate(comment, $event)"
+      @remove="onRemove(comment)"
       class="clearfix comment">
     </thread-comment>
   </ul>

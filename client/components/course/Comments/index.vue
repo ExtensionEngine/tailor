@@ -30,9 +30,9 @@
         </v-subheader>
         <v-list-tile :key="comment._cid || comment.id">
           <comment
-            :comment="comment"
-            @update="onUpdate"
-            @remove="onRemove"
+            v-bind="comment"
+            @update="onUpdate(comment, $event)"
+            @remove="onRemove(comment)"
             class="clearfix comment">
             <span
               v-if="!initialCheckTime || initialCheckTime < comment.createdAt"
@@ -120,6 +120,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.paginatedComments);
     this.resetPagination();
     this.subscribe();
     const userId = this.user.id;
