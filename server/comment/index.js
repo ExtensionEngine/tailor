@@ -30,19 +30,19 @@ router
   .patch(canEdit, ctrl.patch)
   .delete(canEdit, ctrl.remove);
 
-function getComment(req, res) {
+function getComment(req, _res, next) {
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
   return Comment.findByPk(req.params.commentId, { paranoid: false, include })
     .then(comment => comment || createError(NOT_FOUND, 'Comment not found'))
     .then(comment => {
       req.comment = comment;
-      return Promise.resolve('next');
+      next();
     });
 }
 
-function canEdit({ user, comment }) {
+function canEdit({ user, comment }, _res, next) {
   if (user.id !== comment.authorId) return createError(FORBIDDEN, 'Forbidden');
-  return Promise.resolve('next');
+  next();
 }
 
 module.exports = {
