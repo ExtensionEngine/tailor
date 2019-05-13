@@ -44,16 +44,18 @@ function login({ body }, res) {
     });
 }
 
-function commentsCheckTime({ body }, res) {
-  const { checkTime, userId } = body;
-  return User.findByPk(userId)
-    .then(user => user || createError(NOT_FOUND, 'User does not exist'))
-    .then(user => {
-      const oldTime = user.checkedCommentsAt;
-      user.checkedCommentsAt = checkTime;
-      user.save().catch(validationError);
-      return res.json({ checkedAt: oldTime });
-    });
+function patch({ body, query }, res) {
+  if ('updateCheckTime' in query) {
+    const { userId } = body;
+    const checkedCommentsAt = new Date();
+    return User.findByPk(userId)
+      .then(user => user || createError(NOT_FOUND, 'User does not exist'))
+      .then(user => {
+        const oldTime = user.checkedCommentsAt;
+        user.update({ checkedCommentsAt });
+        return res.json({ checkedAt: oldTime });
+      });
+  }
 }
 
 module.exports = {
@@ -61,5 +63,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   login,
-  commentsCheckTime
+  patch
 };

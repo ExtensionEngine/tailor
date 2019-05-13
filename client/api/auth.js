@@ -30,8 +30,8 @@ function resetPassword(token, password) {
   return request.post(url.resetPassword, { token, password });
 }
 
-function commentCheckTime({ userId, checkTime }) {
-  return request.post('/users/commentsCheckTime', { userId, checkTime })
+function commentCheckTime({ userId }) {
+  return request.patch('/users?updateCheckTime', { userId })
     .then(res => res.data);
 }
 

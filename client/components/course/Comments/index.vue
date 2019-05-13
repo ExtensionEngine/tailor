@@ -120,7 +120,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.paginatedComments);
     this.resetPagination();
     this.subscribe();
     const userId = this.user.id;
