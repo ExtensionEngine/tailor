@@ -2,46 +2,46 @@
   <v-card class="elevation-2">
     <v-layout align-center>
       <v-flex>
-        <v-layout row mx-0>
-          <v-toolbar class="elevation-0" height="113" color="light-blue darken-3" dark>
-            <v-icon>mdi-lock-open</v-icon>
-            <v-toolbar-title>Change Password</v-toolbar-title>
-          </v-toolbar>
-        </v-layout>
+        <v-flex pa-3 class="header">
+          <v-card class="elevation-2" color="blue-grey" dark>
+            <v-card-title>
+              <v-icon class="mr-2">mdi-lock-open</v-icon>
+              <h4 class="title font-weight-light mb-2">Change Password</h4>
+            </v-card-title>
+          </v-card>
+        </v-flex>
         <v-form @submit.prevent="submit">
           <v-layout column mx-5 mt-4>
-            <v-text-field
-              v-validate="{ required: true, alphanumerical: true, min: 6 }"
-              v-model="currentPassword"
-              :error-messages="vErrors.first('currentPassword')"
-              data-vv-as="current password"
-              type="password"
-              name="currentPassword"
-              label="Current password"/>
-            <v-text-field
-              v-validate="{ required: true, alphanumerical: true, min: 6 }"
-              ref="newPassword"
-              v-model="newPassword"
-              :error-messages="vErrors.first('newPassword')"
-              data-vv-as="new password"
-              type="password"
-              name="newPassword"
-              label="New password"/>
-            <v-text-field
-              v-validate="{ required: true, confirmed: 'newPassword' }"
-              v-model="reNewPassword"
-              :error-messages="vErrors.first('passwordConfirmation')"
-              data-vv-as="new password"
-              type="password"
-              name="passwordConfirmation"
-              label="Please re-enter your new password"/>
+            <v-flex mx-4>
+              <v-text-field
+                v-validate="{ required: true, alphanumerical: true, min: 6 }"
+                v-model="currentPassword"
+                :error-messages="vErrors.first('currentPassword')"
+                data-vv-as="current password"
+                type="password"
+                name="currentPassword"
+                label="Current password"/>
+              <v-text-field
+                v-validate="{ required: true, alphanumerical: true, min: 6 }"
+                ref="newPassword"
+                v-model="newPassword"
+                :error-messages="vErrors.first('newPassword')"
+                data-vv-as="new password"
+                type="password"
+                name="newPassword"
+                label="New password"/>
+              <v-text-field
+                v-validate="{ required: true, confirmed: 'newPassword' }"
+                v-model="reNewPassword"
+                :error-messages="vErrors.first('passwordConfirmation')"
+                data-vv-as="new password"
+                type="password"
+                name="passwordConfirmation"
+                label="Please re-enter your new password"/>
+            </v-flex>
             <v-card-actions>
               <v-layout my-4 justify-end>
-                <v-btn
-                  :disabled="!isValidated"
-                  type="submit"
-                  color="light-blue darken-3"
-                  outline>
+                <v-btn :disabled="!isValidated" type="submit" color="light-blue darken-3" flat>
                   Submit
                 </v-btn>
               </v-layout>
@@ -93,6 +93,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.header {
+  margin-top: -40px;
+}
+
 .v-card__actions {
   padding: 0;
 

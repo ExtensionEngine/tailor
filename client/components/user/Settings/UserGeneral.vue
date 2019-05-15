@@ -2,49 +2,54 @@
   <v-flex>
     <v-form @submit.prevent="updateUser">
       <set-image ref="setImage" :isEditing="isEditing" @editing="setEditing"/>
-      <v-layout column mx-5 mt-2>
-        <v-text-field
-          v-validate="{ required: true, email: true }"
-          v-model="email"
-          :error-messages="vErrors.collect('email')"
-          name="email"
-          label="Email"/>
-        <v-text-field
-          v-validate="{ max: 20 }"
-          v-model="firstName"
-          :error-messages="vErrors.collect('firstName')"
-          data-vv-as="first name"
-          name="firstName"
-          label="First name"/>
-        <v-text-field
-          v-validate="{ max: 20 }"
-          v-model="lastName"
-          :error-messages="vErrors.collect('lastName')"
-          data-vv-as="last name"
-          name="lastName"
-          label="Last name"/>
-        <v-card-actions>
-          <v-layout my-4 row wrap justify-end>
-            <v-btn
-              v-if="isEditing"
-              @click="setEditing(false)"
-              color="error"
-              flat
-              outline>
-              Cancel
-            </v-btn>
-            <v-btn
-              @click="avatarSubmit"
-              type="submit"
-              color="light-blue darken-3"
-              flat
-              dark
-              outline>
-              Save changes
-            </v-btn>
-          </v-layout>
-        </v-card-actions>
+      <v-layout row wrap mx-0 pa-2 justify-center>
+        <v-flex xs5 px-3 mx-3>
+          <v-text-field
+            v-validate="{ required: true, email: true }"
+            v-model="email"
+            :error-messages="vErrors.collect('email')"
+            name="email"
+            label="Email"/>
+          <v-text-field
+            v-validate="{ max: 20 }"
+            v-model="firstName"
+            :error-messages="vErrors.collect('firstName')"
+            data-vv-as="first name"
+            name="firstName"
+            label="First name"/>
+          <v-text-field
+            v-validate="{ max: 20 }"
+            v-model="lastName"
+            :error-messages="vErrors.collect('lastName')"
+            data-vv-as="last name"
+            name="lastName"
+            label="Last name"/>
+        </v-flex>
+        <v-flex xs5 px-3 mx-3>
+          <v-text-field
+            v-validate="{ numeric: true, max: 10 }"
+            v-model="phoneNumber"
+            :error-messages="vErrors.collect('phoneNumber')"
+            name="phoneNumber"
+            mask="phone"
+            label="Phone number"/>
+          <v-select
+            :items="cities"
+            label="Headquarter location"
+            outline
+          ></v-select>
+        </v-flex>
       </v-layout>
+      <v-card-actions>
+        <v-layout mx-5 my-4 row wrap justify-end>
+          <v-btn v-if="isEditing" @click="setEditing(false)" color="pink" flat>
+            Cancel
+          </v-btn>
+          <v-btn @click="avatarSubmit" type="submit" color="light-blue darken-3" flat>
+            Update
+          </v-btn>
+        </v-layout>
+      </v-card-actions>
     </v-form>
   </v-flex>
 </template>
@@ -63,6 +68,8 @@ export default {
       firstName: '',
       lastName: '',
       email: '',
+      phoneNumber: '',
+      cities: ['New York', 'Boston', 'Split', 'Zagreb'],
       isEditing: false
     };
   },

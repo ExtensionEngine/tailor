@@ -1,44 +1,75 @@
 <template>
-  <v-layout column mr-0 ml-0>
-    <v-toolbar class="elevation-0" height="113" color="light-blue darken-3" dark>
-    </v-toolbar>
-    <div v-if="!disabled" class="croppa-box">
-      <croppa
-        v-model="croppa"
-        v-bind="options"
-        @new-image-drawn="onNewImage"
-        @file-choose="uploadImage"
-        @zoom="onZoom"
-        @dblclick="onZoom"
-        placeholder=""
-        prevent-white-space
-        show-loading>
-      </croppa>
-      <v-layout v-if="isEditing" px-5 mx-5 mt-2 justify-center>
-        <v-slider
-          v-model="sliderVal"
-          :min="sliderMin"
-          :max="sliderMax"
-          :hide-details="true"
-          @input="onSliderChange"
-          @click:append="croppa.zoomIn()"
-          @click:prepend="croppa.zoomOut()"
-          append-icon="mdi-plus"
-          prepend-icon="mdi-minus"
-          step=".001">
-        </v-slider>
-      </v-layout>
-    </div>
-    <v-avatar
-      v-if="!isEditing"
-      :size="options.height"
-      :class="{ 'avatar-style': !disabled }">
-      <img v-if="currentImage" :src="currentImage">
-      <v-icon v-else class="placeholder-icon">mdi-account</v-icon>
-      <div @click="uploadNewImage" class="v-avatar actions">
-        <v-icon dark>mdi-camera</v-icon>
-      </div>
-    </v-avatar>
+  <v-layout column mx-0>
+    <v-flex pa-3 class="header">
+      <v-card class="elevation-2" color="blue-grey" dark>
+        <v-card-title>
+          <v-icon class="mr-2">mdi-pencil</v-icon>
+          <h4 class="title font-weight-light mb-2">Edit Profile</h4>
+        </v-card-title>
+      </v-card>
+    </v-flex>
+    <v-layout row wrap mx-0>
+      <v-flex xs6 mt-2>
+        <div v-if="!disabled" class="croppa-box">
+          <croppa
+            v-model="croppa"
+            v-bind="options"
+            @new-image-drawn="onNewImage"
+            @file-choose="uploadImage"
+            @zoom="onZoom"
+            @dblclick="onZoom"
+            placeholder=""
+            prevent-white-space
+            show-loading>
+          </croppa>
+          <v-layout v-if="isEditing" mt-2 justify-center>
+            <v-flex xs6>
+              <v-slider
+                v-model="sliderVal"
+                :min="sliderMin"
+                :max="sliderMax"
+                :hide-details="true"
+                @input="onSliderChange"
+                @click:append="croppa.zoomIn()"
+                @click:prepend="croppa.zoomOut()"
+                append-icon="mdi-plus"
+                prepend-icon="mdi-minus"
+                step=".001">
+              </v-slider>
+            </v-flex>
+          </v-layout>
+        </div>
+        <v-avatar
+          v-if="!isEditing"
+          :size="options.height"
+          :class="{ 'avatar-style': !disabled }">
+          <img v-if="currentImage" :src="currentImage">
+          <v-icon v-else class="placeholder-icon" color="grey">mdi-account</v-icon>
+          <div @click="uploadNewImage" class="v-avatar actions">
+            <v-icon dark>mdi-camera</v-icon>
+          </div>
+        </v-avatar>
+      </v-flex>
+      <v-flex xs6 pl-4>
+        <v-card flat>
+          <v-card-title>
+            <v-icon class="mr-2" color="pink">mdi-account-star</v-icon>
+            <h4 class="title font-weight-light mb-2">{{ user.role }}</h4>
+          </v-card-title>
+          <v-list-tile avatar>
+            <v-list-tile-content>
+              <v-list-tile-title class="font-weight-light mb-2">
+                {{ user.email }}
+              </v-list-tile-title>
+              <v-list-tile-sub-title class="font-weight-light mb-2">
+                {{ user.firstName }} {{ user.lastName }}
+              </v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-divider/>
   </v-layout>
 </template>
 
@@ -134,10 +165,13 @@ function generateBlob(croppa) {
 $image-border: 4px solid #e3e3e3;
 $image-bg-color: #f5f5f5;
 
+.header {
+  margin-top: -40px;
+}
+
 .v-avatar {
   position: relative;
   margin: 0 auto;
-  margin-top: -67px;
 
   img {
     width: 100%;
@@ -157,7 +191,7 @@ $image-bg-color: #f5f5f5;
     height: 100%;
     margin: 0;
     border-radius: 50%;
-    background: #546e7a;
+    background: #607d8b;
     border: $image-border;
     opacity: 0.7;
     cursor: pointer;
@@ -167,9 +201,8 @@ $image-bg-color: #f5f5f5;
 }
 
 .croppa-box {
-  margin: auto;
-  margin-top: -67px;
-  margin-bottom: 20px;
+  margin: 0 auto;
+  margin-bottom: 10px;
   z-index: 2;
 
   .croppa-container {
@@ -197,7 +230,7 @@ $image-bg-color: #f5f5f5;
 }
 
 .avatar-style {
-  margin-top: -150px;
+  margin-top: -173px;
   z-index: 3;
 }
 </style>
