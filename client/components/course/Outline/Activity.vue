@@ -2,21 +2,37 @@
   <div>
     <div class="activity-wrapper">
       <div
-        :class="{ 'elevation-8 selected': isSelected(_cid) }"
+        :class="{ 'grey lighten-4 elevation-8 selected': isHovered || isSelected }"
         @click="focusActivity(_cid)"
-        class="activity">
-        <span :style="{ 'background-color': color }" class="position">
-          {{ index }}
-        </span>
+        @mouseover="isHovered = true"
+        @mouseout="isHovered = false"
+        class="activity elevation-1">
+        <v-chip :color="color" label disabled dark class="icon-container">
+          <v-btn
+            v-if="hasSubtypes"
+            @click="toggleActivity({ _cid })"
+            color="grey lighten-4"
+            flat
+            icon
+            small>
+            <v-icon size="26">mdi-{{ icon }}</v-icon>
+          </v-btn>
+          <v-icon v-else>mdi-file-document-box-outline</v-icon>
+        </v-chip>
         <span class="activity-name">{{ data.name }}</span>
-        <div class="actions">
-          <button @click.stop="toggleActivity({ _cid })" class="collapsible">
-            <span :class="toggleIcon"></span>
-          </button>
-        </div>
+        <v-btn
+          v-show="isEditable && isHovered"
+          :to="{ name: 'editor', params: { activityId: id } }"
+          color="pink"
+          outline
+          small
+          class="btn-open">
+          Open
+          <v-icon class="pl-1">mdi-square-edit-outline</v-icon>
+        </v-btn>
       </div>
       <insert-activity
-        :anchor="{ id, courseId, parentId, type, position }"
+        :anchor="{ id, parentId, courseId, type, position }"
         @expand="toggleActivity({ _cid, expanded: true })"/>
     </div>
     <div v-if="!isCollapsed({ _cid }) && hasChildren">
@@ -43,6 +59,7 @@ import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import InsertActivity from './InsertActivity';
+import { isEditable } from 'shared/activities';
 import map from 'lodash/map';
 import reorderMixin from './reorderMixin';
 
@@ -53,14 +70,19 @@ export default {
   props: {
     _cid: { type: String, required: true },
     id: { type: Number, default: null },
-    courseId: { type: Number, required: true },
     parentId: { type: Number, default: null },
+    courseId: { type: Number, required: true },
     level: { type: Number, required: true },
     index: { type: Number, required: true },
     position: { type: Number, required: true },
     type: { type: String, required: true },
     data: { type: Object, required: true },
     activities: { type: Array, default: () => ([]) }
+  },
+  data() {
+    return {
+      isHovered: false
+    };
   },
   computed: {
     ...mapGetters({
@@ -71,8 +93,17 @@ export default {
     color() {
       return find(this.structure, { type: this.type }).color;
     },
+    isEditable() {
+      return isEditable(this.type);
+    },
+    isSelected() {
+      return this.focusedActivity._cid === this._cid;
+    },
+    hasSubtypes() {
+      return this.level < this.structure.length;
+    },
     hasChildren() {
-      return (this.children.length > 0) && (this.level < this.structure.length);
+      return (this.children.length > 0) && this.hasSubtypes;
     },
     children() {
       const level = this.level + 1;
@@ -81,92 +112,64 @@ export default {
         return this.id && (this.id === it.parentId) && types.includes(it.type);
       }).sort((x, y) => x.position - y.position);
     },
-    toggleIcon() {
-      if (!this.hasChildren) return '';
+    icon() {
+      if (!this.hasSubtypes) return;
       const isCollapsed = this.isCollapsed({ _cid: this._cid });
-      return isCollapsed ? 'mdi mdi-chevron-down' : 'mdi mdi-chevron-up';
+      let icon = isCollapsed ? 'folder' : 'folder-open';
+      if (!this.hasChildren) icon += '-outline';
+      return icon;
     }
   },
-  methods: {
-    ...mapMutations(['focusActivity', 'toggleActivity'], 'course'),
-    isSelected(_cid) {
-      return this.focusedActivity._cid === _cid;
-    }
-  },
+  methods: mapMutations(['focusActivity', 'toggleActivity'], 'course'),
   components: { Draggable, InsertActivity }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .activity {
-  position: relative;
-  color: #444;
+  display: flex;
+  color: #424242;
+  font-size: 20px;
   font-family: Roboto, sans-serif;
-  font-size: 17px;
-  text-align: left;
-  background-color: white;
+  font-weight: 300;
+  background: #fff;
   border-radius: 2px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   &.selected {
-    background-color: #fafafa;
-    border-bottom: 1px solid #888;
+    color: #212121;
+  }
 
-    .activity-name {
-      color: #444;
+  .icon-container {
+    margin: 0;
+    padding: 0;
+
+    /deep/ span {
+      padding: 0 10px;
+      color: #fff;
+    }
+
+    .v-btn {
+      margin: 0;
     }
   }
 
-  .position {
-    position: absolute;
-    min-width: 44px;
-    height: 42px;
-    margin-right: 7px;
-    padding: 6px 10px 0;
-    color: white;
-    font-size: 20px;
-    text-align: center;
-    border-radius: 2px 0 0 2px;
-  }
-
-  .collapsible {
-    padding: 8px 5px 6px;
-    color: #bbb;
-    font-size: 26px;
-    line-height: 26px;
-    background: none;
-    border: none;
-    outline: none;
-  }
-
-  .activity-name {
-    display: block;
-    position: relative;
-    top: 0;
-    left: 0;
-    height: 42px;
-    padding: 8px 60px 0;
-    color: #555;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-
-  .actions {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding-right: 5px;
-
-    .mdi:hover {
-      color: #707070;
-    }
+  .btn-open {
+    margin-left: auto;
   }
 }
 
+.activity-name {
+  display: block;
+  padding: 0 12px;
+  line-height: 40px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .sub-activity {
-  margin-left: 40px;
+  margin-left: 24px;
 }
 </style>
