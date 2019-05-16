@@ -3,7 +3,7 @@
     <v-layout align-center>
       <v-flex>
         <v-flex pa-3 class="header">
-          <v-card class="elevation-2" color="blue-grey" dark>
+          <v-card class="elevation-2" color="blue-grey darken-2" dark>
             <v-card-title>
               <v-icon class="mr-2">mdi-lock-open</v-icon>
               <h4 class="title font-weight-light mb-2">Change Password</h4>

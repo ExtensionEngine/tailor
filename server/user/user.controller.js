@@ -50,8 +50,8 @@ function login({ body }, res) {
 }
 
 function updateProfile({ user, body }, res) {
-  const { email, firstName, lastName, key: imgUrl } = body.userData;
-  return user.update({ email, firstName, lastName, imgUrl })
+  const { email, firstName, lastName, imgUrl, phoneNumber, location } = body.userData;
+  return user.update({ email, firstName, lastName, imgUrl, phoneNumber, location })
     .then(({ profile }) => res.json({ user: profile }));
 }
 

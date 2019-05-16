@@ -40,6 +40,16 @@ class User extends Model {
         defaultValue: '',
         field: 'last_name'
       },
+      phoneNumber: {
+        type: STRING,
+        defaultValue: '',
+        field: 'phone_number'
+      },
+      location: {
+        type: STRING,
+        defaultValue: '',
+        field: 'location'
+      },
       imgUrl: {
         type: STRING(1234),
         field: 'img_url'
@@ -53,6 +63,8 @@ class User extends Model {
             role: this.role,
             firstName: this.firstName,
             lastName: this.lastName,
+            phoneNumber: this.phoneNumber,
+            location: this.location,
             imgUrl: this.imgUrl
           };
         }

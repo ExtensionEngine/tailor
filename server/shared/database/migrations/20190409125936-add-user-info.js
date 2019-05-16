@@ -8,6 +8,8 @@ const TABLE_NAME = 'user';
 const COLUMNS = {
   first_name: { type: Sequelize.STRING, defaultValue: '' },
   last_name: { type: Sequelize.STRING, defaultValue: '' },
+  phone_number: { type: Sequelize.STRING, defaultValue: '' },
+  location: { type: Sequelize.STRING, defaultValue: '' },
   img_url: { type: Sequelize.STRING(1234), defaultValue: '' }
 };
 

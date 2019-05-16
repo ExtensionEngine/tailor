@@ -33,11 +33,14 @@
             name="phoneNumber"
             mask="phone"
             label="Phone number"/>
-          <v-select
-            :items="cities"
-            label="Headquarter location"
-            outline
-          ></v-select>
+          <v-text-field
+            v-validate="{ max: 50 }"
+            v-model="location"
+            :error-messages="vErrors.collect('location')"
+            name="location"
+            label="Location"
+            append-icon="mdi-map-marker"
+            outline/>
         </v-flex>
       </v-layout>
       <v-card-actions>
@@ -69,23 +72,23 @@ export default {
       lastName: '',
       email: '',
       phoneNumber: '',
-      cities: ['New York', 'Boston', 'Split', 'Zagreb'],
+      location: '',
       isEditing: false
     };
   },
   computed: {
     ...mapGetters(['user']),
-    hasChanges: vm => Object.keys(vm.vFields).some(name => vm.vFields[name].changed)
+    hasChanges: vm => Object.keys(vm.vFields).some(name => vm.vFields[name].changed),
+    fieldNames: vm => ['firstName', 'lastName', 'email', 'phoneNumber', 'location']
   },
   methods: {
     ...mapActions(['updateInfo']),
     updateUser() {
-      const { firstName, lastName, email } = this;
       this.$validator.validateAll()
         .then(async isValid => {
           if (!isValid) return this.$snackbar.error('Validation failed!');
           if (!this.hasChanges) return;
-          await this.updateInfo({ firstName, lastName, email });
+          await this.updateInfo(pick(this, this.fieldNames));
           this.$validator.reset();
           this.$snackbar.success('User information updated.');
         })
@@ -100,7 +103,7 @@ export default {
     }
   },
   created() {
-    Object.assign(this, pick(this.user, ['firstName', 'lastName', 'email']));
+    Object.assign(this, pick(this.user, this.fieldNames));
   },
   components: { SetImage }
 };

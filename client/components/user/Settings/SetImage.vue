@@ -1,7 +1,7 @@
 <template>
   <v-layout column mx-0>
     <v-flex pa-3 class="header">
-      <v-card class="elevation-2" color="blue-grey" dark>
+      <v-card class="elevation-2" color="blue-grey darken-2" dark>
         <v-card-title>
           <v-icon class="mr-2">mdi-pencil</v-icon>
           <h4 class="title font-weight-light mb-2">Edit Profile</h4>
@@ -75,6 +75,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
+import gravatar from 'gravatar';
 
 export default {
   name: 'user-settings',
@@ -119,7 +120,7 @@ export default {
           formData.append('file', editedImage);
           return this.uploadAvatar(formData);
         })
-        .then(({ data }) => this.updateInfo({ key: data.key }))
+        .then(({ data }) => this.updateInfo({ imgUrl: data.key }))
         .then(() => {
           this.currentImage = this.user.imgUrl;
           this.$snackbar.success('Profile photo updated.');
@@ -151,8 +152,12 @@ export default {
     }
   },
   created() {
-    this.currentImage = this.user.imgUrl;
     this.disabled = true;
+    if (!this.user.imgUrl) {
+      this.currentImage = gravatar.url(this.user.email, {s: '130', d: 'mp'}, true);
+      return;
+    }
+    this.currentImage = this.user.imgUrl;
   }
 };
 
