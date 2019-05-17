@@ -1,15 +1,15 @@
 <template>
-  <v-layout column mx-0>
-    <v-flex pa-3 class="header">
+  <v-layout class="main-box">
+    <v-flex class="header">
       <v-card class="elevation-2" color="blue-grey darken-2" dark>
         <v-card-title>
-          <v-icon class="mr-2">mdi-pencil</v-icon>
-          <h4 class="title font-weight-light mb-2">Edit Profile</h4>
+          <v-icon>mdi-pencil</v-icon>
+          <h4 class="title">Edit Profile</h4>
         </v-card-title>
       </v-card>
     </v-flex>
-    <v-layout row wrap mx-0>
-      <v-flex xs6 mt-2>
+    <v-layout class="layout-box">
+      <v-flex class="profile-photo-box" xs6>
         <div v-if="!disabled" class="croppa-box">
           <croppa
             v-model="croppa"
@@ -22,7 +22,7 @@
             prevent-white-space
             show-loading>
           </croppa>
-          <v-layout v-if="isEditing" mt-2 justify-center>
+          <v-layout v-if="isEditing" class="slider-layout">
             <v-flex xs6>
               <v-slider
                 v-model="sliderVal"
@@ -50,22 +50,24 @@
           </div>
         </v-avatar>
       </v-flex>
-      <v-flex xs6 pl-4>
+      <v-flex class="info-box" xs6>
         <v-card flat>
           <v-card-title>
-            <v-icon class="mr-2" color="pink">mdi-account-star</v-icon>
-            <h4 class="title font-weight-light mb-2">{{ user.role }}</h4>
+            <v-icon color="pink">mdi-account-star</v-icon>
+            <h4 class="title">{{ user.role }}</h4>
           </v-card-title>
-          <v-list-tile avatar>
-            <v-list-tile-content>
-              <v-list-tile-title class="font-weight-light mb-2">
-                {{ user.email }}
-              </v-list-tile-title>
-              <v-list-tile-sub-title class="font-weight-light mb-2">
-                {{ user.firstName }} {{ user.lastName }}
-              </v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
+          <v-list>
+            <v-list-tile avatar>
+              <v-list-tile-content>
+                <v-list-tile-title class="list-title">
+                  {{ user.email }}
+                </v-list-tile-title>
+                <v-list-tile-sub-title class="list-title">
+                  {{ user.firstName }} {{ user.lastName }}
+                </v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
         </v-card>
       </v-flex>
     </v-layout>
@@ -76,6 +78,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 import gravatar from 'gravatar';
+
+const gravatarConfig = { size: 130, default: 'mp' };
 
 export default {
   name: 'user-settings',
@@ -154,7 +158,7 @@ export default {
   created() {
     this.disabled = true;
     if (!this.user.imgUrl) {
-      this.currentImage = gravatar.url(this.user.email, {s: '130', d: 'mp'}, true);
+      this.currentImage = gravatar.url(this.user.email, gravatarConfig, true);
       return;
     }
     this.currentImage = this.user.imgUrl;
@@ -170,8 +174,54 @@ function generateBlob(croppa) {
 $image-border: 4px solid #e3e3e3;
 $image-bg-color: #f5f5f5;
 
+.main-box {
+  flex-direction: column;
+  margin: 0;
+}
+
 .header {
   margin-top: -40px;
+  padding: 16px 16px;
+
+  .title {
+    margin-bottom: 8px;
+    font-weight: 300;
+  }
+
+  .v-icon {
+    margin-right: 8px;
+  }
+}
+
+.layout-box {
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  margin: 0;
+
+  .profile-photo-box {
+    max-width: 100%;
+    margin-top: 8px;
+  }
+
+  .info-box {
+    max-width: 100%;
+    padding-left: 24px;
+
+    .title {
+      margin-bottom: 8px;
+      font-weight: 300;
+    }
+
+    .v-icon {
+      margin-right: 8px;
+    }
+
+    .list-title {
+      margin-bottom: 8px;
+      font-weight: 300;
+    }
+  }
 }
 
 .v-avatar {
@@ -231,6 +281,11 @@ $image-bg-color: #f5f5f5;
       &:active { cursor: grab; }
       &.croppa--disabled { cursor: auto; }
     }
+  }
+
+  .slider-layout {
+    justify-content: center;
+    margin-top: 8px;
   }
 }
 

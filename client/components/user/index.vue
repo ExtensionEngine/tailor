@@ -1,10 +1,10 @@
 <template>
-  <v-container>
-    <v-layout align-start justify-center>
+  <v-container fluid>
+    <v-layout>
       <v-card>
         <sidebar/>
       </v-card>
-      <v-flex ml-5 mt-4 xs12 sm10 md8>
+      <v-flex>
         <router-view/>
       </v-flex>
     </v-layout>
@@ -20,3 +20,16 @@ export default {
   components: { Sidebar, Settings, UserPrivacy }
 };
 </script>
+
+<style lang="scss" scoped>
+.layout {
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.flex {
+  max-width: 45%;
+  margin-top: 24px;
+  margin-left: 48px;
+}
+</style>

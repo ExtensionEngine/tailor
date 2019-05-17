@@ -2,8 +2,8 @@
   <v-flex>
     <v-form @submit.prevent="updateUser">
       <set-image ref="setImage" :isEditing="isEditing" @editing="setEditing"/>
-      <v-layout row wrap mx-0 pa-2 justify-center>
-        <v-flex xs5 px-3 mx-3>
+      <v-layout class="main-container">
+        <v-flex class="fields-box" xs5>
           <v-text-field
             v-validate="{ required: true, email: true }"
             v-model="email"
@@ -25,7 +25,7 @@
             name="lastName"
             label="Last name"/>
         </v-flex>
-        <v-flex xs5 px-3 mx-3>
+        <v-flex class="fields-box" xs5>
           <v-text-field
             v-validate="{ numeric: true, max: 10 }"
             v-model="phoneNumber"
@@ -44,7 +44,7 @@
         </v-flex>
       </v-layout>
       <v-card-actions>
-        <v-layout mx-5 my-4 row wrap justify-end>
+        <v-layout class="btn-actions">
           <v-btn v-if="isEditing" @click="setEditing(false)" color="pink" flat>
             Cancel
           </v-btn>
@@ -110,13 +110,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-card__actions {
-  padding: 0;
+.main-container {
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0;
+  padding: 8px 8px;
+}
+
+.btn-actions {
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 24px 48px;
 
   .v-btn {
     width: 125px;
     min-width: 100px;
     margin-bottom: 10px;
   }
+}
+
+.fields-box {
+  margin: 0 16px;
+  padding: 0 16px;
+}
+
+.v-card__actions {
+  padding: 0;
 }
 </style>

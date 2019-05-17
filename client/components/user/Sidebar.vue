@@ -8,7 +8,7 @@
         active-class="grey--text text--darken-3"
         exact
         ripple>
-        <v-list-tile-action class="pl-1">
+        <v-list-tile-action class="list-action">
           <v-icon>{{ icon }}</v-icon>
         </v-list-tile-action>
         <v-list-tile-title>{{ label }}</v-list-tile-title>
@@ -29,3 +29,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.list-action {
+  padding-left: 4px;
+}
+</style>

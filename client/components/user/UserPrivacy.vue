@@ -1,18 +1,18 @@
 <template>
   <v-card class="elevation-2">
-    <v-layout align-center>
+    <v-layout class="main-container">
       <v-flex>
-        <v-flex pa-3 class="header">
+        <v-flex class="header">
           <v-card class="elevation-2" color="blue-grey darken-2" dark>
             <v-card-title>
-              <v-icon class="mr-2">mdi-lock-open</v-icon>
-              <h4 class="title font-weight-light mb-2">Change Password</h4>
+              <v-icon>mdi-lock-open</v-icon>
+              <h4 class="title">Change Password</h4>
             </v-card-title>
           </v-card>
         </v-flex>
         <v-form @submit.prevent="submit">
-          <v-layout column mx-5 mt-4>
-            <v-flex mx-4>
+          <v-layout class="fields-layout">
+            <v-flex class="fields-box">
               <v-text-field
                 v-validate="{ required: true, alphanumerical: true, min: 6 }"
                 v-model="currentPassword"
@@ -40,7 +40,7 @@
                 label="Please re-enter your new password"/>
             </v-flex>
             <v-card-actions>
-              <v-layout my-4 justify-end>
+              <v-layout class="btn-actions">
                 <v-btn :disabled="!isValidated" type="submit" color="light-blue darken-3" flat>
                   Submit
                 </v-btn>
@@ -93,17 +93,46 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.header {
-  margin-top: -40px;
+.main-container {
+  align-items: center;
 }
 
-.v-card__actions {
-  padding: 0;
+.header {
+  margin-top: -40px;
+  padding: 16px 16px;
+
+  .title {
+    margin-bottom: 8px;
+    font-weight: 300;
+  }
+
+  .v-icon {
+    margin-right: 8px;
+  }
+}
+
+.fields-layout {
+  flex-direction: column;
+  margin: 0 48px;
+  margin-top: 24px;
+}
+
+.fields-box {
+  margin: 0 24px;
+}
+
+.btn-actions {
+  justify-content: flex-end;
+  margin: 24px 0;
 
   .v-btn {
     width: 125px;
     min-width: 100px;
     margin-bottom: 10px;
   }
+}
+
+.v-card__actions {
+  padding: 0;
 }
 </style>
