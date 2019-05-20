@@ -9,8 +9,8 @@
       </v-card>
     </v-flex>
     <v-layout class="layout-box">
-      <v-flex class="profile-photo-box" xs6>
-        <div v-if="!disabled" class="croppa-box">
+      <v-flex class="profile-photo-box">
+        <div v-if="!disabled" :class="{ 'croppa-style': !isEditing }" class="croppa-box">
           <croppa
             v-model="croppa"
             v-bind="options"
@@ -23,7 +23,7 @@
             show-loading>
           </croppa>
           <v-layout v-if="isEditing" class="slider-layout">
-            <v-flex xs6>
+            <v-flex>
               <v-slider
                 v-model="sliderVal"
                 :min="sliderMin"
@@ -39,10 +39,7 @@
             </v-flex>
           </v-layout>
         </div>
-        <v-avatar
-          v-if="!isEditing"
-          :size="options.height"
-          :class="{ 'avatar-style': !disabled }">
+        <v-avatar v-if="!isEditing" :size="options.height">
           <img v-if="currentImage" :src="currentImage">
           <v-icon v-else class="placeholder-icon" color="grey">mdi-account</v-icon>
           <div @click="uploadNewImage" class="v-avatar actions">
@@ -50,7 +47,7 @@
           </div>
         </v-avatar>
       </v-flex>
-      <v-flex class="info-box" xs6>
+      <v-flex class="info-box">
         <v-card flat>
           <v-card-title>
             <v-icon color="pink">mdi-account-star</v-icon>
@@ -179,14 +176,14 @@ $image-bg-color: #f5f5f5;
   margin: 0;
 }
 
+.title {
+  margin-bottom: 8px;
+  font-weight: 300;
+}
+
 .header {
   margin-top: -40px;
   padding: 16px 16px;
-
-  .title {
-    margin-bottom: 8px;
-    font-weight: 300;
-  }
 
   .v-icon {
     margin-right: 8px;
@@ -200,18 +197,15 @@ $image-bg-color: #f5f5f5;
   margin: 0;
 
   .profile-photo-box {
-    max-width: 100%;
+    flex-basis: 50%;
+    flex-grow: 0;
     margin-top: 8px;
   }
 
   .info-box {
-    max-width: 100%;
+    flex-basis: 50%;
+    flex-grow: 0;
     padding-left: 24px;
-
-    .title {
-      margin-bottom: 8px;
-      font-weight: 300;
-    }
 
     .v-icon {
       margin-right: 8px;
@@ -286,11 +280,16 @@ $image-bg-color: #f5f5f5;
   .slider-layout {
     justify-content: center;
     margin-top: 8px;
+
+    .flex {
+      max-width: 50%;
+      flex-basis: 50%;
+      flex-grow: 0;
+    }
   }
 }
 
-.avatar-style {
-  margin-top: -173px;
-  z-index: 3;
+.croppa-style {
+  display: none;
 }
 </style>

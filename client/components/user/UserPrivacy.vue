@@ -118,7 +118,7 @@ export default {
 }
 
 .fields-box {
-  margin: 0 24px;
+  margin: 0 38px;
 }
 
 .btn-actions {

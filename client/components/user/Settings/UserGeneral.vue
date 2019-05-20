@@ -3,7 +3,7 @@
     <v-form @submit.prevent="updateUser">
       <set-image ref="setImage" :isEditing="isEditing" @editing="setEditing"/>
       <v-layout class="main-container">
-        <v-flex class="fields-box" xs5>
+        <v-flex class="fields-box">
           <v-text-field
             v-validate="{ required: true, email: true }"
             v-model="email"
@@ -25,7 +25,7 @@
             name="lastName"
             label="Last name"/>
         </v-flex>
-        <v-flex class="fields-box" xs5>
+        <v-flex class="fields-box">
           <v-text-field
             v-validate="{ numeric: true, max: 10 }"
             v-model="phoneNumber"
@@ -132,6 +132,9 @@ export default {
 }
 
 .fields-box {
+  flex-basis: 41%;
+  flex-grow: 0;
+  max-width: 41%;
   margin: 0 16px;
   padding: 0 16px;
 }
