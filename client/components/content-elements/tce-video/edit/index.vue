@@ -48,7 +48,8 @@ const MediaError = window.MediaError;
 
 const NOT_NATIVE = /youtu\.?be|vimeo/;
 const CUSTOM_SUBTYPE_MAPPING = {
-  ogv: 'ogg'
+  ogv: 'ogg',
+  m4v: 'mp4'
 };
 
 export default {
