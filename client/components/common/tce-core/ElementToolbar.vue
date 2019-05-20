@@ -10,7 +10,7 @@
     <slot name="embed-toolbar"></slot>
     <div class="delete-element">
       <slot name="actions"></slot>
-      <v-btn @click="requestDeleteConfirmation" color="error" fab dark>
+      <v-btn v-if="!embed" @click="requestDeleteConfirmation" color="error" fab dark>
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </div>
