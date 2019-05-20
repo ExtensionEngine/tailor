@@ -20,18 +20,32 @@
           <v-icon v-else>mdi-file-document-box-outline</v-icon>
         </v-chip>
         <span class="activity-name">{{ data.name }}</span>
-        <v-btn
-          v-show="isEditable && isHovered"
-          :to="{ name: 'editor', params: { activityId: id } }"
-          color="pink"
-          outline
-          small
-          class="btn-open">
-          Open
-          <v-icon class="pl-1">mdi-square-edit-outline</v-icon>
-        </v-btn>
+        <div v-show="isHovered" class="actions">
+          <v-spacer/>
+          <v-btn
+            v-show="isEditable"
+            :to="{ name: 'editor', params: { activityId: id } }"
+            color="pink"
+            outline
+            small>
+            Open
+            <v-icon class="pl-1">mdi-square-edit-outline</v-icon>
+          </v-btn>
+          <v-btn
+            v-show="hasSubtypes"
+            @click="toggleActivity({ _cid })"
+            icon
+            small
+            class="mx-0">
+            <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>
+          </v-btn>
+          <v-btn @click="showOptions()" icon small class="ml-0">
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </div>
       </div>
       <insert-activity
+        ref="options"
         :anchor="{ id, parentId, courseId, type, position }"
         @expand="toggleActivity({ _cid, expanded: true })"/>
     </div>
@@ -99,6 +113,9 @@ export default {
     isSelected() {
       return this.focusedActivity._cid === this._cid;
     },
+    isExpanded() {
+      return !this.isCollapsed({ _cid: this._cid });
+    },
     hasSubtypes() {
       return this.level < this.structure.length;
     },
@@ -114,13 +131,17 @@ export default {
     },
     icon() {
       if (!this.hasSubtypes) return;
-      const isCollapsed = this.isCollapsed({ _cid: this._cid });
-      let icon = isCollapsed ? 'folder' : 'folder-open';
+      let icon = this.isExpanded ? 'folder-open' : 'folder';
       if (!this.hasChildren) icon += '-outline';
       return icon;
     }
   },
-  methods: mapMutations(['focusActivity', 'toggleActivity'], 'course'),
+  methods: {
+    ...mapMutations(['focusActivity', 'toggleActivity'], 'course'),
+    showOptions() {
+      this.$refs['options'].$el.children[0].click();
+    }
+  },
   components: { Draggable, InsertActivity }
 };
 </script>
@@ -155,7 +176,9 @@ export default {
     }
   }
 
-  .btn-open {
+  .actions {
+    display: flex;
+    min-width: 165px;
     margin-left: auto;
   }
 }
@@ -170,6 +193,6 @@ export default {
 }
 
 .sub-activity {
-  margin-left: 24px;
+  margin-left: 44px;
 }
 </style>
