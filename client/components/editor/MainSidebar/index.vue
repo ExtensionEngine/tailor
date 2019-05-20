@@ -1,42 +1,34 @@
 <template>
   <v-navigation-drawer
-    class="elevation-1"
+    top="55"
     absolute
+    mini-variant
+    mini-variant-width="60"
     permanent
     stateless
-    width="400">
-    <v-layout fill-height>
-      <v-navigation-drawer
-        mini-variant
-        mini-variant-width="60"
-        permanent
-        stateless
-        class="blue-grey lighten-4 actions">
-        <v-toolbar flat class="transparent">
-          <v-list class="pa-0">
-            <v-btn
-              v-for="({ name, icon, action }) in actions"
-              :key="name"
-              @click.stop="action"
-              color="blue-grey darken-4"
-              icon
-              flat>
-              <v-icon>mdi-{{ icon }}</v-icon>
-            </v-btn>
-          </v-list>
-        </v-toolbar>
-      </v-navigation-drawer>
-      <div class="sidebar-panel">
-        <repo-navigation :items="outlineActivities" :selected="activity"/>
-      </div>
-    </v-layout>
+    class="blue-grey lighten-4 actions">
+    <v-toolbar flat class="transparent">
+      <v-list class="pa-0">
+        <v-btn
+          v-for="({ name, icon, action }) in actions"
+          :key="name"
+          @click.stop="action"
+          color="blue-grey darken-4"
+          icon
+          flat>
+          <v-icon>mdi-{{ icon }}</v-icon>
+        </v-btn>
+      </v-list>
+    </v-toolbar>
   </v-navigation-drawer>
 </template>
 
 <script>
 import ActivitySidebar from '../../course/Sidebar/Body';
+import Discussion from '../../course/Sidebar/Discussion';
 import format from 'string-template';
 import { mapGetters } from 'vuex-module';
+import MetaSidebar from './MetaSidebar';
 import publishMixin from 'components/common/mixins/publish';
 import RepoNavigation from './RepoNavigation';
 
@@ -45,10 +37,14 @@ const { PREVIEW_URL } = process.env;
 export default {
   mixins: [publishMixin],
   props: {
-    activity: { type: Object, required: true }
+    activity: { type: Object, required: true },
+    focusedElement: { type: Object, default: null }
   },
   computed: {
-    ...mapGetters(['outlineActivities'], 'course'),
+    ...mapGetters(['course', 'getMetadata', 'outlineActivities'], 'course'),
+    metadata() {
+      return this.getMetadata(this.focusedElement);
+    },
     actions() {
       const { $router, activity: { courseId } } = this;
       return [{
@@ -71,13 +67,13 @@ export default {
       return format(PREVIEW_URL, { repositoryId: courseId, activityId: id });
     }
   },
-  components: { ActivitySidebar, RepoNavigation }
+  components: { ActivitySidebar, Discussion, MetaSidebar, RepoNavigation }
 };
 </script>
 
 <style lang="scss" scoped>
 .sidebar-panel, .actions {
-  padding-top: 70px;
+  padding-top: 105px;
 }
 
 .sidebar-panel {

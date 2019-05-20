@@ -24,7 +24,7 @@
     <div @mousedown="onMousedown" @click="onClick" class="editor">
       <circular-progress v-if="showLoader"/>
       <template v-else>
-        <main-sidebar :activity="activity"/>
+        <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
         <div class="container">
           <content-containers
             v-for="(containerGroup, type) in contentContainers"
@@ -72,8 +72,9 @@ export default {
   computed: {
     ...mapGetters(['activities']),
     ...mapGetters(['activity', 'contentContainers'], 'editor'),
-    ...mapGetters(['course', 'getMetadata'], 'course'),
+    ...mapGetters(['getMetadata'], 'course'),
     metadata() {
+      if (!this.focusedElement) return [];
       return this.getMetadata(this.focusedElement);
     },
     showAssessments() {
@@ -183,7 +184,7 @@ export default {
 }
 
 .editor {
-  padding: 80px 0 0 420px;
+  padding: 20px 50px 0 50px;
   overflow-y: scroll;
   overflow-y: overlay;
 
