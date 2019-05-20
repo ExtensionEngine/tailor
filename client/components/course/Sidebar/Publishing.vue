@@ -8,7 +8,7 @@
         <v-btn
           :loading="isPublishing"
           v-on="on"
-          color="blue-grey"
+          color="blue-grey darken-1"
           outline
           small>
           Publish
