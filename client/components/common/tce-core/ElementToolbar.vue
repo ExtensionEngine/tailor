@@ -1,5 +1,5 @@
 <template>
-  <div :key="id" class="element-toolbar-wrapper">
+  <div :key="id" class="element-toolbar-wrapper white elevation-1">
     <component
       v-if="componentExists"
       :is="componentName"
@@ -78,6 +78,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.element-toolbar-wrapper {
+  position: absolute;
+  width: 100%;
+  min-height: 45px;
+}
+
 .delete-element {
   position: absolute;
   z-index: 999;

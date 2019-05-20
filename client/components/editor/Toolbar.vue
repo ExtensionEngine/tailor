@@ -1,5 +1,13 @@
 <template>
   <div class="toolbar-wrapper">
+    <div
+      v-show="activity"
+      class="activity-toolbar blue-grey darken-2 elevation-1">
+      <v-chip :color="config.color" label dark class="mr-3">
+        {{ config.label }}
+      </v-chip>
+      <h1 class="text-truncate">{{ activity.data.name }}</h1>
+    </div>
     <element-toolbar
       v-if="element && element.parent"
       :key="`${element.parent._cid}-${element.id}`"
@@ -20,14 +28,6 @@
         <slot name="actions"></slot>
       </template>
     </element-toolbar>
-    <div
-      v-show="!element && activity"
-      class="activity-toolbar blue-grey darken-2 elevation-1">
-      <v-chip :color="config.color" label dark class="mr-3">
-        {{ config.label }}
-      </v-chip>
-      <h1 class="text-truncate">{{ activity.data.name }}</h1>
-    </div>
   </div>
 </template>
 
@@ -53,15 +53,15 @@ export default {
 
 <style lang="scss" scoped>
 .toolbar-wrapper {
-  position: absolute;
   width: 100%;
   z-index: 99;
 }
 
 .activity-toolbar {
   display: flex;
-  height: 56px;
+  height: 50px;
   padding: 0 5px;
+  z-index: 999;
 
   .v-chip {
     max-width: 300px;
@@ -73,10 +73,10 @@ export default {
   h1 {
     flex: 1;
     margin: 0;
-    padding-top: 16px;
+    padding-top: 13px;
     color: #fff;
-    font-weight: 300;
     font-size: 22px;
+    font-weight: 300;
     text-align: left;
   }
 }

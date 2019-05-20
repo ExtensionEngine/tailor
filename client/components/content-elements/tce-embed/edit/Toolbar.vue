@@ -83,8 +83,6 @@ export default {
   line-height: 48px;
   text-align: left;
   vertical-align: middle;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
 
   .toolbar-item {
     display: inline-block;
