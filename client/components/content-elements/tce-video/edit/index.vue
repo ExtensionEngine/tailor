@@ -47,6 +47,10 @@ handlePlyrErrors(Plyr);
 const MediaError = window.MediaError;
 
 const NOT_NATIVE = /youtu\.?be|vimeo/;
+
+// m4v is a special video file format used by Apple. It is in a mp4 container
+// and uses a .m4v extension. Can contain DRM.
+// More information - https://stackoverflow.com/a/15279480
 const CUSTOM_SUBTYPE_MAPPING = {
   ogv: 'ogg',
   m4v: 'mp4'
