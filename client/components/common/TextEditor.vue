@@ -8,6 +8,8 @@
       @keydown.enter.exact.prevent="onEnter"
       @blur="onBlur"
       @input="$emit('input', content)"
+      auto-grow
+      rows="1"
       class="form-control">
     </textarea>
     <div class="content">
@@ -50,7 +52,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .text-editor {
   position: relative;
   margin: 0;

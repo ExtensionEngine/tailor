@@ -1,49 +1,17 @@
 <template>
-  <div :class="{ 'comments-end': allComments }" class="comments">
+  <div class="comments">
     <v-btn
       @click="sendComments"
       color="info"
       outline>
       Send
     </v-btn>
-    <v-list two-line>
-      <template v-for="(comment, index) in paginatedComments">
-        <v-subheader
-          v-if="!isSameDiscussion(comment, paginatedComments[index - 1])"
-          :key="`header ${comment._cid || comment.id}`"
-          class="comment-activity">
-          <span class="activity-title">
-            {{ config[comment.activityId].title }}
-          </span>
-          <div class="labels">
-            <v-chip label small outline color="primary">
-              A{{ comment.activityId }}
-            </v-chip>
-            <v-chip
-              :color="config[comment.activityId].color"
-              label
-              small
-              text-color="white">
-              {{ config[comment.activityId].label }}
-            </v-chip>
-          </div>
-        </v-subheader>
-        <v-list-tile :key="comment._cid || comment.id">
-          <comment
-            v-bind="comment"
-            @update="onUpdate(comment, $event)"
-            @remove="onRemove(comment)"
-            class="clearfix comment">
-            <span
-              v-if="!initialCheckTime || initialCheckTime < comment.createdAt"
-              slot="new-comment"
-              class="new-comment">
-              NEW
-            </span>
-          </comment>
-        </v-list-tile>
-      </template>
-    </v-list>
+    <discussion
+      v-for="discussion in sortedComments"
+      :key="`header ${discussion[0]._cid || discussion[0].id}`"
+      :discussion="discussion"
+      :initialCheckTime="initialCheckTime"
+    />
     <infinite-loading @infinite="fetchComments">
       <span slot="spinner">
         <div class="col-lg-12 loader-wrapper">
@@ -62,7 +30,7 @@
 import { mapGetters, mapActions } from 'vuex-module';
 import api from 'client/api/auth';
 import CircularProgress from 'components/common/CircularProgress';
-import Comment from '../Sidebar/Discussion/Comment';
+import Discussion from './Discussion';
 import InfiniteLoading from 'vue-infinite-loading';
 import isEmpty from 'lodash/isEmpty';
 
@@ -76,23 +44,21 @@ export default {
     ...mapGetters(['user']),
     ...mapGetters(['hasMoreResults'], 'comments'),
     ...mapGetters(['paginatedComments']),
-    ...mapGetters(['activities', 'getConfig'], 'course'),
-    config() {
-      return this.activities.reduce((acc, activity) => {
-        if (!isEmpty(activity.data)) {
-          const { label, color } = this.getConfig(activity);
-          acc[activity.id] = { title: activity.data.name, label, color };
+    sortedComments() {
+      return this.paginatedComments.reduce((acc, comment, i) => {
+        const previous = this.paginatedComments[i - 1];
+        if (!previous || comment.activityId !== previous.activityId) {
+          acc.push([]);
         }
+        acc[acc.length - 1].push(comment);
         return acc;
-      }, {});
+      }, []);
     }
   },
   methods: {
     ...mapActions([
       'fetchPaginated',
       'resetPagination',
-      'update',
-      'remove',
       'subscribe',
       'unsubscribe'
     ], 'comments'),
@@ -107,7 +73,7 @@ export default {
       });
     },
     onUpdate(comment, content) {
-      const updatedAt = Date.now();
+      const updatedAt = new Date();
       this.update(Object.assign({}, comment, { content, updatedAt }));
     },
     onRemove(comment) {
@@ -123,14 +89,13 @@ export default {
     this.resetPagination();
     this.subscribe();
     const userId = this.user.id;
-    const checkTime = new Date();
-    api.commentCheckTime({ checkTime, userId })
+    api.commentCheckTime({ userId })
       .then(data => (this.initialCheckTime = data.checkedAt));
   },
   beforeDestroy() {
     this.unsubscribe();
   },
-  components: { CircularProgress, Comment, InfiniteLoading }
+  components: { CircularProgress, Discussion, InfiniteLoading }
 };
 
 function isSameDiscussion(comment1 = {}, comment2 = {}) {
@@ -144,51 +109,8 @@ function isSameDiscussion(comment1 = {}, comment2 = {}) {
 }
 
 .comments {
-  margin: 60px 60px 0;
-  padding: 20px 50px;
-  text-align: left;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  list-style: none;
+  // margin: 60px 60px 0;
+  max-width: 850px;
+  margin: 30px auto;
 }
-
-.comment {
-  width: 100%;
-}
-
-.comments-end {
-  margin-bottom: 60px;
-}
-
-.new-comment {
-  margin-right: 5px;
-  padding: 3px 5px;
-  color: white;
-  font-size: 10px;
-  font-weight: bold;
-  background-color: #737373;
-  border-radius: 3px;
-}
-
-.comment-activity {
-  display: flex;
-  border-bottom: gray solid 1px;
-  margin: 20px 0;
-  padding: 10px 0;
-  font-size: 18px;
-  justify-content: space-between;
-}
-
-.activity-title {
-  padding-left: 2px;
-}
-
-.labels {
-  font-size: 0;
-
-  .v-chip + .v-chip {
-    margin-left: 0;
-  }
-}
-
 </style>

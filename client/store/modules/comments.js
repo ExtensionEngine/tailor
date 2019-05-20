@@ -8,7 +8,7 @@ import Vue from 'vue';
 import VuexCollection from '../helpers/collection';
 
 const { action, getter, state, mutation, build } = new VuexCollection('comments');
-const PAGINATION_DEFAULTS = { offset: 0, limit: 12 };
+const PAGINATION_DEFAULTS = { offset: 0, limit: 25 };
 let SSE_CLIENT;
 
 state({
@@ -87,7 +87,7 @@ action(function unsubscribe() {
 action(function remove(comment) {
   // Update locally and let real data update be pushed from server
   // after soft delete
-  comment.deletedAt = new Date();
+  comment.deletedAt = new Date().toString();
   this.commit('update', comment);
   return this.api.remove(comment);
 });
