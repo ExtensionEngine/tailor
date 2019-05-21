@@ -1,5 +1,5 @@
 <template>
-  <div class="comments">
+  <v-container class="comments">
     <v-btn
       @click="sendComments"
       color="info"
@@ -23,7 +23,7 @@
       </div>
       <span slot="no-more"></span>
     </infinite-loading>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -109,8 +109,6 @@ function isSameDiscussion(comment1 = {}, comment2 = {}) {
 }
 
 .comments {
-  // margin: 60px 60px 0;
   max-width: 850px;
-  margin: 30px auto;
 }
 </style>

@@ -32,7 +32,14 @@
       <v-list-tile-action>
         <v-list-tile-action-text>
           <timeago :since="createdAt" :auto-update="60"></timeago>
-          <v-menu offset-y bottom left attach>
+          <v-menu
+            offset-y
+            bottom
+            left
+            attach
+            open-on-hover
+            transition="slide-y-transition"
+            content-class="elevation-2">
             <template v-slot:activator="{ on }">
               <v-btn v-if="showActions" v-on="on" icon small>
                 <span class="icon mdi mdi-dots-vertical"></span>
@@ -74,13 +81,11 @@ export default {
     deletedAt: { type: String, default: null },
     avatar: { type: Boolean, default: true }
   },
-  data() {
-    return {
-      editing: false,
-      showDropdown: false,
-      hovered: false
-    };
-  },
+  data: () => ({
+    editing: false,
+    showDropdown: false,
+    hovered: false
+  }),
   computed: {
     ...mapGetters(['user']),
     authorInitials() {
@@ -119,7 +124,7 @@ export default {
 
 <style lang="scss" scoped>
 $color: #333;
-$color-light: lighten($color, 25%);
+$color-light: gray;
 $avatar-size: 40px;
 $font-size: 16px;
 $line-size: 20px;
@@ -145,19 +150,19 @@ $line-size: 20px;
   }
 }
 
-.edited-icon {
-  color: $color-light;
-  font-size: 12px;
-}
-
 .author {
   color: $color-light;
   font-size: 14px;
   font-weight: 500;
-}
 
-.current-user {
-  color: #0f47a1;
+  &.current-user {
+    color: #0f47a1;
+  }
+
+  .edited-icon {
+    color: $color-light;
+    font-size: 12px;
+  }
 }
 
 .v-list__tile__action-text {
@@ -176,7 +181,7 @@ $line-size: 20px;
 
   .action {
     padding: 0 5px;
-    color: gray;
+    color: $color-light;
     font-size: 12px;
 
     &:hover {

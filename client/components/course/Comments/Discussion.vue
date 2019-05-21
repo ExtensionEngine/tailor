@@ -35,16 +35,16 @@
         </comment>
       </transition-group>
     </v-list>
-    <div class="more-comments">
-      <v-chip
-        v-if="discussion.length > 1"
-        @click="toggle"
-        small
-        outline>
-        <span v-if="!showMore">show more <v-icon>mdi-chevron-down</v-icon></span>
-        <span v-else>show less <v-icon>mdi-chevron-up</v-icon></span>
-      </v-chip>
-    </div>
+    <v-btn
+      v-if="discussion.length > 1"
+      @click="toggle"
+      small
+      depressed
+      block
+      class="more-comments">
+      <span v-if="!showMore">show more <v-icon>mdi-chevron-down</v-icon></span>
+      <span v-else>show less <v-icon>mdi-chevron-up</v-icon></span>
+    </v-btn>
   </v-card>
 </template>
 
@@ -100,19 +100,18 @@ export default {
 .comments-list {
   width: 100%;
   margin-bottom: 15px;
-  padding: 25px 35px;
   text-align: left;
   list-style: none;
 
   .v-list {
-    padding: 0;
+    padding: 15px 25px;
   }
 }
 
 .comment-activity {
   display: flex;
   flex-wrap: wrap;
-  padding-bottom: 15px;
+  padding: 15px;
   font-size: 16px;
   justify-content: space-between;
   border-bottom: 1px solid lightgray;
@@ -127,16 +126,19 @@ export default {
 
   .v-chip {
     margin: 0;
-  }
 
-  .v-chip + .v-chip {
-    margin-left: 5px;
+    + .v-chip {
+      margin-left: 5px;
+    }
   }
 }
 
 .comment {
   width: 100%;
-  padding-top: 10px;
+
+  + .comment {
+    padding-top: 10px;
+  }
 }
 
 .new-comment {
@@ -150,15 +152,15 @@ export default {
 }
 
 .more-comments {
-  text-align: center;
-  margin-top: 10px;
+  margin: 0;
+  text-transform: initial;
 
-  /deep/ .v-chip__content {
-    cursor: pointer;
+  /deep/ .v-btn__content {
+    color: gray;
   }
 
   .v-icon {
-    font-size: 15px;
+    font-size: 18px;
   }
 }
 </style>
