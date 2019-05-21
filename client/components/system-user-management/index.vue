@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { getUsers, upsertUser, removeUser } from '../../api/system';
+import api from 'client/api/system';
 import { role } from 'shared';
 import AddSystemUser from './AddSystemUser';
 import Loader from '../common/Loader';
@@ -55,19 +55,19 @@ export default {
   },
   methods: {
     upsertUser(email, data) {
-      return upsertUser(email, data).then(userData => {
+      return api.upsertUser(email, data).then(userData => {
         let user = this.users.find(it => it.email === email);
         return user ? Object.assign(user, userData) : this.users.unshift(userData);
       });
     },
     removeUser(id) {
-      return removeUser(id).then(() => {
+      return api.removeUser(id).then(() => {
         this.users = this.users.filter(user => user.id !== id);
       });
     }
   },
   created() {
-    getUsers().then(users => Object.assign(this, { users, showLoader: false }));
+    api.getUsers().then(users => Object.assign(this, { users, showLoader: false }));
   },
   components: {
     AddSystemUser,

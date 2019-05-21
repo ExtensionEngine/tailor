@@ -3,7 +3,7 @@
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
-const { Model } = require('sequelize');
+const { Model, Op } = require('sequelize');
 const Promise = require('bluebird');
 const { role } = require('../../config/shared');
 
@@ -71,17 +71,17 @@ class User extends Model {
     });
   }
 
-  static hooks() {
+  static hooks(Hooks) {
     return {
-      beforeCreate(user) {
+      [Hooks.beforeCreate](user) {
         return user.encryptPassword();
       },
-      beforeUpdate(user) {
+      [Hooks.beforeUpdate](user) {
         return user.changed('password')
           ? user.encryptPassword()
           : Promise.resolve();
       },
-      beforeBulkCreate(users) {
+      [Hooks.beforeBulkCreate](users) {
         let updates = [];
         users.forEach(user => updates.push(user.encryptPassword()));
         return Promise.all(updates);
@@ -102,7 +102,7 @@ class User extends Model {
   static scopes() {
     return {
       withRoleType(type) {
-        return type && { where: { role: { $in: role.getRoleNames(type) } } };
+        return type && { where: { role: { [Op.in]: role.getRoleNames(type) } } };
       }
     };
   }

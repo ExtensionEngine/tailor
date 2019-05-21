@@ -16,7 +16,7 @@ function removeUser(id) {
   return request.delete(`/users/${id}`);
 }
 
-module.exports = {
+export default {
   getUsers,
   upsertUser,
   removeUser

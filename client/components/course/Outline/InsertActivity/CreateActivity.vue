@@ -4,7 +4,7 @@
       :class="{ 'has-error': vErrors.has('name') }"
       class="form-group name-input">
       <input
-        v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+        v-validate="{ required: true, min: 2, max: 250 }"
         v-focus.lazy="true"
         v-model="name"
         class="form-control"

@@ -46,10 +46,12 @@ import CircularProgress from './CircularProgress';
 import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';
 
-const ERR_TIMEOUT = 2500;
+const ERR_TIMEOUT = 10000;
+const TYPE = 'application/pdf';
 
 export default {
   name: 'tce-pdf',
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
@@ -64,8 +66,7 @@ export default {
     source() {
       const src = get(this.element, 'data.url');
       if (!src) return;
-      const type = 'application/pdf';
-      return { type, src };
+      return { type: TYPE, src };
     },
     showPlaceholder() {
       return !this.source;
@@ -92,7 +93,7 @@ export default {
     }
   },
   watch: {
-    source() {
+    'element.data.url'() {
       this.showViewer = true;
       this.showError = false;
       this.embedPdf();
@@ -100,6 +101,7 @@ export default {
   },
   mounted() {
     this.embedPdf();
+    this.$elementBus.on('save', ({ data }) => this.$emit('save', data));
   },
   beforeDestroy() {
     this.pdfObject = null;
@@ -182,7 +184,6 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  padding-bottom: 30px;
   z-index: 2;
 
   .ie & {

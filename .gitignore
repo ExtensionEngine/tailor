@@ -36,6 +36,10 @@ client/assets/img/*favicon*
 # DB migrations
 umzug.json
 
+# Filesystem storage provider
+data/*
+!data/.gitkeep
+
 # Build artifacts
 dist/*
 !dist/.gitkeep

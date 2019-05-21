@@ -1,42 +1,49 @@
 'use strict';
 
 const { getObjectives, getSchemaId } = require('../../config/shared/activities');
-const addHooks = require('../shared/util/addHooks');
+const forEach = require('lodash/forEach');
+const castArray = require('lodash/castArray');
 const find = require('lodash/find');
 const first = require('lodash/first');
-const get = require('lodash/get');
 const logger = require('../shared/logger');
 const map = require('lodash/map');
 
-function add(Course, models) {
-  const { Activity, TeachingElement } = models;
-  const hooks = ['afterCreate', 'afterBulkCreate', 'afterDestroy', 'afterBulkDestroy'];
+exports.add = (Course, Hooks, { Activity, TeachingElement }) => {
+  const hooks = [
+    Hooks.afterCreate,
+    Hooks.afterBulkCreate,
+    Hooks.afterDestroy,
+    Hooks.afterBulkDestroy
+  ];
 
-  // Track objectives.
-  addHooks(Activity, hooks, (hook, data, options) => {
-    const instance = Array.isArray(data) ? first(data) : data;
-    const { id, courseId, type } = instance;
+  forEach(hooks, type => {
+    const hook = Hooks.withType(type, updateObjectiveStats);
+    return Activity.addHook(type, hook);
+  });
+  forEach(hooks, type => {
+    const hook = Hooks.withType(type, updateAssessmentStats);
+    return TeachingElement.addHook(type, hook);
+  });
+
+  function updateObjectiveStats(hookType, instances) {
+    const activity = first(castArray(instances));
+    const { id, courseId, type } = activity;
     const schemaId = getSchemaId(type);
     if (!schemaId) return;
-    logger.info(`[Course] Activity#${hook}`, { type, id, courseId });
+    logger.info(`[Course] Activity#${hookType}`, { type, id, courseId });
     const objectiveTypes = map(getObjectives(schemaId), 'type');
     const where = { courseId, type: objectiveTypes, detached: false };
     return Activity.count({ where })
       .then(count => Course.updateStats(courseId, 'objectives', count));
-  });
+  }
 
-  // Track assessments.
-  addHooks(TeachingElement, hooks, (hook, data, { context }) => {
-    const instance = Array.isArray(data)
-      ? find(data, { type: 'ASSESSMENT' })
-      : data;
-    if (get(instance, 'type') !== 'ASSESSMENT') return;
-    const { id, courseId, type } = instance;
-    logger.info(`[Course] TeachingElement#${hook}`, { type, id, courseId });
+  function updateAssessmentStats(hookType, instances) {
+    const assessment = find(castArray(instances), { type: 'ASSESSMENT' });
+    if (!assessment) return;
+    const { id, courseId, type } = assessment;
+    logger.info(`[Course] TeachingElement#${hookType}`, { type, id, courseId });
     const where = { courseId, type: 'ASSESSMENT', detached: false };
     return TeachingElement.count({ where })
       .then(count => Course.updateStats(courseId, 'assessments', count));
-  });
-}
-
-module.exports = { add };
+  }
+};

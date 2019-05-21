@@ -5,6 +5,7 @@ const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
+const { Op } = require('sequelize');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -14,7 +15,7 @@ const sample = require('lodash/sample');
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
 function index({ query, user, opts }, res) {
-  if (query.search) opts.where.name = { $iLike: `%${query.search}%` };
+  if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
   const courses = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return courses.then(data => res.json({ data }));
 }
@@ -73,7 +74,7 @@ function upsertUser({ course, body }, res) {
 function removeUser(req, res) {
   const { course } = req;
   const { userId } = req.params;
-  return User.findById(userId)
+  return User.findByPk(userId)
     .then(user => user || createError(NOT_FOUND, 'User not found'))
     .then(user => course.removeUser(user))
     .then(() => res.end());

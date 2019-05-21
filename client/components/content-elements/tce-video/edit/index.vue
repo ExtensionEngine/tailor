@@ -47,12 +47,18 @@ handlePlyrErrors(Plyr);
 const MediaError = window.MediaError;
 
 const NOT_NATIVE = /youtu\.?be|vimeo/;
+
+// NOTE: m4v is a special video file format used by Apple. It is a video in
+//       mp4 container and uses a `.m4v` extension. Can contain DRM.
+// https://stackoverflow.com/a/15279480
 const CUSTOM_SUBTYPE_MAPPING = {
-  ogv: 'ogg'
+  ogv: 'ogg',
+  m4v: 'mp4'
 };
 
 export default {
   name: 'tce-video',
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
@@ -73,7 +79,8 @@ export default {
     },
     type() {
       if (NOT_NATIVE.test(this.url)) return { isNative: false };
-      const ext = extname(this.url).substring(1);
+      const url = this.url.split('?').shift();
+      const ext = extname(url).substring(1);
       const name = `video/${CUSTOM_SUBTYPE_MAPPING[ext] || ext}`;
       return { isNative: true, name };
     },
@@ -104,6 +111,9 @@ export default {
   },
   beforeDestroy() {
     if (this.player) this.player.pause();
+  },
+  mounted() {
+    this.$elementBus.on('save', ({ data }) => this.$emit('save', data));
   },
   components: { Plyr }
 };
@@ -144,7 +154,7 @@ function handlePlyrErrors(Plyr) {
 
 .overlay {
   position: absolute;
-  z-index: 99;
+  z-index: 3;
   width: 100%;
   height: 100%;
   background-color: #333;

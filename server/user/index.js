@@ -1,19 +1,19 @@
 'use strict';
 
-const { authorize } = require('../shared/auth/mw');
+const auth = require('passport').authenticate('jwt');
 const ctrl = require('./user.controller');
 const model = require('./user.model');
 const router = require('express-promise-router')();
 
-const defaultAuth = authorize();
-
 router
+  // Public routes:
   .post('/users/login', ctrl.login)
-  .get('/users', defaultAuth, ctrl.index)
-  .post('/users', defaultAuth, ctrl.upsert)
   .post('/users/forgotPassword', ctrl.forgotPassword)
   .post('/users/resetPassword', ctrl.resetPassword)
-  .delete('/users/:id', defaultAuth, ctrl.remove);
+  // Protected routes:
+  .get('/users', auth, ctrl.index)
+  .post('/users', auth, ctrl.upsert)
+  .delete('/users/:id', auth, ctrl.remove);
 
 module.exports = {
   model,

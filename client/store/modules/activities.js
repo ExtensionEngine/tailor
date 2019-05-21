@@ -1,14 +1,14 @@
-import calculatePosition from 'utils/calculatePosition.js';
+import calculatePosition from 'utils/calculatePosition';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import {
   getDescendants as getDeepChildren,
   getAncestors as getParents
-} from 'utils/activity.js';
+} from 'utils/activity';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import request from '../../api/request';
-import VuexCollection from '../helpers/collection.js';
+import VuexCollection from '../helpers/collection';
 
 const { getter, action, mutation, build } = new VuexCollection('activities');
 
@@ -60,6 +60,16 @@ action(function reorder({ activity, context }) {
       this.api.setCid(activity);
       this.commit('save', activity);
     });
+});
+
+action(function remove(model) {
+  const descendants = getDeepChildren(this.state.items, model);
+  if (!model.id && !model._version) {
+    this.commit('remove', [model]);
+    return Promise.resolve(true);
+  }
+  return this.api.remove(model)
+    .then(() => this.commit('remove', [model, ...descendants]));
 });
 
 action(function clone(mapping) {

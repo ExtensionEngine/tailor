@@ -1,26 +1,28 @@
 <template>
   <div :class="{ disabled }">
-    <h5>Answers</h5>
+    <h5>{{ isGraded ? 'Answers' : 'Options' }}</h5>
     <span @click="addAnswer" class="btn btn-link mdi mdi-plus pull-right"></span>
     <ul>
       <li
         v-for="(answer, index) in answers"
-        :key="index">
-        <span :class="{ 'has-error': !hasCorrectAnswers }">
+        :key="index"
+        :class="{ 'non-graded': !isGraded }">
+        <span v-if="isGraded" :class="{ 'has-error': !hasCorrectAnswers }">
           <input
             :checked="correct.includes(index)"
             :disabled="disabled"
             @change="toggleAnswer(index)"
             type="checkbox">
         </span>
-        <span :class="errorClass(index)">
+        <v-avatar v-else size="32" color="blue">{{ index + 1 }}</v-avatar>
+        <span :class="errorClass(index)" class="input-container">
           <input
             :ref="`input${index}`"
             :value="answers[index]"
             :disabled="disabled"
+            :placeholder="isGraded ? 'Answer...' : 'Option...'"
             @change="updateAnswer(index)"
-            class="form-control"
-            placeholder="Answer...">
+            class="form-control">
         </span>
         <span @click="removeAnswer(index)" class="mdi mdi-close control"></span>
       </li>
@@ -40,6 +42,7 @@ const customAlert = {
 export default {
   props: {
     assessment: { type: Object, required: true },
+    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
@@ -92,12 +95,14 @@ export default {
       const feedback = cloneDeep(this.feedback);
 
       answers.splice(answerIndex, 1);
-      const index = correct.indexOf(answerIndex);
-      if (index !== -1) correct.splice(index, 1);
 
-      correct.forEach((it, i) => {
-        if (it >= answerIndex) correct[i] = it - 1;
-      });
+      if (this.isGraded) {
+        const index = correct.indexOf(answerIndex);
+        if (index !== -1) correct.splice(index, 1);
+        correct.forEach((it, i) => {
+          if (it >= answerIndex) correct[i] = it - 1;
+        });
+      }
 
       if (feedback) {
         range(answerIndex, answers.length).forEach(it => {
@@ -118,8 +123,11 @@ export default {
     }
   },
   watch: {
-    assessment() {
-      this.validate();
+    assessment: {
+      deep: true,
+      handler: function () {
+        this.validate();
+      }
     }
   }
 };
@@ -142,6 +150,22 @@ ul {
     position: relative;
     margin: 20px 0;
     padding-left: 40px;
+
+    &.non-graded {
+      padding-left: 0;
+    }
+
+    .v-avatar {
+      float: left;
+      margin-top: 3px;
+      margin-right: 10px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .input-container {
+      display: flex;
+    }
 
     .form-control {
       padding-left: 10px;

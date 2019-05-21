@@ -1,4 +1,4 @@
-import VuexCollection from '../helpers/collection.js';
+import VuexCollection from '../helpers/collection';
 
 const { state, build, getter, action, mutation } = new VuexCollection('revisions');
 const PAGINATION_DEFAULTS = { offset: 0, limit: 25 };

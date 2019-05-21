@@ -1,18 +1,9 @@
 <template>
   <div class="body">
-    <div class="publish-container">
-      <div class="publish-date">
-        <circular-progress v-if="publishing"></circular-progress>
-        <span v-else>{{ publishStatus }}</span>
-      </div>
-      <button
-        :disabled="publishing"
-        @click="publishActivity"
-        class="btn btn-primary btn-material">
-        Publish
-      </button>
-    </div>
-    <span class="type-label">{{ config.label }}</span>
+    <publishing/>
+    <v-chip :color="config.color" label dark small class="type-label">
+      {{ config.label }}
+    </v-chip>
     <div class="meta-element">
       <meta-input
         v-for="it in metadata"
@@ -37,18 +28,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
-import CircularProgress from 'components/common/CircularProgress';
 import Discussion from './Discussion';
-import fecha from 'fecha';
 import Meta from 'components/common/Meta';
+import Publishing from './Publishing';
 import Relationship from './Relationship';
 
 export default {
-  data() {
-    return {
-      publishing: false
-    };
-  },
   computed: {
     ...mapGetters(['activity', 'getConfig', 'getMetadata'], 'course'),
     config() {
@@ -56,28 +41,18 @@ export default {
     },
     metadata() {
       return this.getMetadata(this.activity);
-    },
-    publishStatus() {
-      let { publishedAt } = this.activity;
-      return publishedAt
-        ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
-        : 'Not published';
     }
   },
   methods: {
-    ...mapActions(['update', 'publish'], 'activities'),
+    ...mapActions(['update'], 'activities'),
     updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });
-    },
-    publishActivity() {
-      this.publishing = true;
-      this.publish(this.activity).then(() => (this.publishing = false));
     }
   },
   components: {
-    CircularProgress,
     Discussion,
+    Publishing,
     Relationship,
     MetaInput: Meta
   }
@@ -90,35 +65,19 @@ export default {
   padding: 6px 15px;
 }
 
-.publish-container {
-  min-height: 70px;
-  padding: 0 7px;
-
-  .publish-date {
-    width: 170px;
-    line-height: 44px;
-  }
-
-  .btn {
-    position: absolute;
-    top: 10px;
-    right: 24px;
-    padding: 6px;
-  }
-
-  .circular-progress {
-    width: 24px;
-    margin: 0 20px;
-  }
-}
-
 .discussion {
   margin-top: 32px;
   margin-bottom: 8px;
 }
 
 .type-label {
-  display: inline-block;
-  margin: 5px 0 25px 7px;
+  margin: 5px 5px 20px;
+  font-weight: 500;
+}
+
+.meta-element {
+  > * {
+    padding-top: 20px;
+  }
 }
 </style>

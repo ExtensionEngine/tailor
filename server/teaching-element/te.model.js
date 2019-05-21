@@ -1,11 +1,19 @@
 'use strict';
 
 const calculatePosition = require('../shared/util/calculatePosition');
+const forEach = require('lodash/forEach');
+const get = require('lodash/get');
 const hash = require('hash-obj');
 const isNumber = require('lodash/isNumber');
-const { Model } = require('sequelize');
+const { Model, Op } = require('sequelize');
 const pick = require('lodash/pick');
 const { processStatics, resolveStatics } = require('../shared/storage/helpers');
+
+const pruneVirtualProps = element => {
+  const assets = get(element, 'data.assets', {});
+  forEach(assets, key => delete element.data[key]);
+  return element;
+};
 
 class TeachingElement extends Model {
   static fields(DataTypes) {
@@ -77,13 +85,15 @@ class TeachingElement extends Model {
     });
   }
 
-  static hooks() {
+  static hooks(Hooks) {
     return {
-      beforeCreate(te) {
+      [Hooks.beforeCreate](te) {
+        pruneVirtualProps(te);
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
       },
-      beforeUpdate(te) {
+      [Hooks.beforeUpdate](te) {
+        pruneVirtualProps(te);
         if (!te.changed('data')) return Promise.resolve();
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
@@ -91,7 +101,7 @@ class TeachingElement extends Model {
     };
   }
 
-  static scopes({ Op }) {
+  static scopes() {
     const notNull = { [Op.ne]: null };
     return {
       withReferences: { where: { 'refs.objectiveId': notNull } }
@@ -110,7 +120,7 @@ class TeachingElement extends Model {
 
   static fetch(opt) {
     return isNumber(opt)
-      ? TeachingElement.findById(opt).then(it => it && resolveStatics(it))
+      ? TeachingElement.findByPk(opt).then(it => it && resolveStatics(it))
       : TeachingElement.findAll(opt)
           .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
   }
@@ -119,7 +129,13 @@ class TeachingElement extends Model {
     const { id: activityId, courseId } = container;
     return this.bulkCreate(src.map(it => {
       return Object.assign(pick(it, [
-        'type', 'position', 'data', 'contentId', 'contentSignature', 'refs'
+        'type',
+        'position',
+        'data',
+        'contentId',
+        'contentSignature',
+        'refs',
+        'meta'
       ]), { activityId, courseId });
     }), { returning: true, transaction });
   }
@@ -157,7 +173,7 @@ class TeachingElement extends Model {
     return this.getActivity().then(parent => {
       if (parent.type !== 'ASSESSMENT_GROUP') return {};
       if (this.type === 'ASSESSMENT') return { type: 'ASSESSMENT' };
-      return { type: { $not: this.type } };
+      return { type: { [Op.not]: this.type } };
     });
   }
 }

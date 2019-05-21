@@ -3,10 +3,10 @@
 const { Activity, TeachingElement, Sequelize } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
+const { Op } = require('sequelize');
 const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
 
-const { Op } = Sequelize;
 
 function list({ course, query, opts }, res) {
   if (query.activityId || query.parentId) {
@@ -43,7 +43,7 @@ function patch({ body, params, user }, res) {
   const attrs = ['refs', 'type', 'data', 'meta', 'position', 'courseId', 'deletedAt'];
   const data = pick(body, attrs);
   const paranoid = body.paranoid !== false;
-  return TeachingElement.findById(params.teId, { paranoid })
+  return TeachingElement.findByPk(params.teId, { paranoid })
     .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
     .then(asset => asset.update(data, { context: { userId: user.id } }))
     .then(asset => resolveStatics(asset))
@@ -51,14 +51,14 @@ function patch({ body, params, user }, res) {
 }
 
 function remove({ params, user }, res) {
-  return TeachingElement.findById(params.teId)
+  return TeachingElement.findByPk(params.teId)
     .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
     .then(asset => asset.destroy({ context: { userId: user.id } }))
     .then(() => res.end());
 }
 
 function reorder({ body, params }, res) {
-  return TeachingElement.findById(params.teId)
+  return TeachingElement.findByPk(params.teId)
     .then(asset => asset.reorder(body.position))
     .then(asset => res.json({ data: asset }));
 }

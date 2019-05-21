@@ -1,13 +1,24 @@
 <template>
   <div class="header">
     <div class="pull-right">
-      <div @click="deleteActivity" class="btn-delete">
-        <span class="mdi mdi-delete"></span>
-      </div>
+      <v-btn
+        @click="deleteActivity"
+        color="blue-grey"
+        flat
+        icon
+        class="btn-delete">
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
     </div>
-    <button v-show="isEditable" @click.stop="edit" class="btn btn-fab btn-primary">
-      <span class="mdi mdi-pencil"></span>
-    </button>
+    <v-btn
+      v-show="isEditable"
+      @click.stop="edit"
+      color="blue-grey darken-1"
+      fab
+      dark
+      class="btn-edit">
+      <v-icon>mdi-pencil</v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -22,6 +33,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
+const TREE_VIEW_ROUTE = 'tree-view';
 
 export default {
   computed: {
@@ -42,9 +54,12 @@ export default {
       });
     },
     deleteActivity() {
+      const { activity, $route: { name: routeName } } = this;
+      const isTreeView = routeName === TREE_VIEW_ROUTE;
+      const name = `${isTreeView ? `${activity.id}: ` : ''}${activity.data.name}`;
       appChannel.emit('showConfirmationModal', {
-        type: 'activity',
-        item: this.activity,
+        title: 'Delete activity?',
+        message: `Are you sure you want to delete activity ${name}?`,
         action: () => {
           const { parentId } = this.activity;
           const rootFilter = it => !it.parentId && (it.id !== this.activity.id);
@@ -64,29 +79,19 @@ export default {
 <style lang="scss" scoped>
 .header {
   position: relative;
-  min-height: 70px;
+  min-height: 86px;
   margin-bottom: 60px;
   padding: 15px 10px;
   background-color: #eee;
 
-  .btn-fab {
+  .btn-edit {
     position: absolute;
-    bottom: -22px;
+    bottom: -30px;
     left: 30px;
-    padding: 6px;
-    color: #fff;
-    font-size: 23px;
   }
 
   .btn-delete {
-    padding: 0 20px;
-    color: #777;
-    font-size: 20px;
-    cursor: pointer;
-
-    &:hover {
-      color: #555;
-    }
+    margin: 0 10px 0 0;
   }
 }
 </style>

@@ -1,12 +1,14 @@
 <template>
   <div class="form-group">
-    <span class="form-label">Select correct answer</span>
-    <ul>
+    <span class="form-label">
+      {{ isGraded ? 'Select correct  answer' : 'Options' }}
+    </span>
+    <ul :class="{ 'non-graded': !isGraded }">
       <li>
         <span :class="{ 'has-error': correctError }">
           <input
             v-model="correct"
-            :disabled="!isEditing"
+            :disabled="disabled"
             :value="true"
             @change="update"
             type="radio">
@@ -17,7 +19,7 @@
         <span :class="{ 'has-error': correctError }">
           <input
             v-model="correct"
-            :disabled="!isEditing"
+            :disabled="disabled"
             :value="false"
             @change="update"
             type="radio">
@@ -34,6 +36,7 @@ import { defaults } from 'utils/assessment';
 export default {
   props: {
     assessment: { type: Object, default: defaults.TF },
+    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
@@ -45,6 +48,9 @@ export default {
   computed: {
     correctError() {
       return this.errors.includes('correct');
+    },
+    disabled() {
+      return !this.isEditing || !this.isGraded;
     }
   },
   methods: {
@@ -54,7 +60,7 @@ export default {
   },
   watch: {
     isEditing(newVal) {
-      if (!newVal) this.correct = this.assessment.correct;
+      if (this.isGraded && !newVal) this.correct = this.assessment.correct;
     }
   }
 };
@@ -85,6 +91,19 @@ ul {
     .answers {
       vertical-align: bottom;
       font-size: 16px;
+    }
+  }
+}
+
+.non-graded {
+  padding-left: 30px;
+
+  input {
+    margin: 5px 3px 0 0;
+
+    &[disabled]::after {
+      background: #eee;
+      border: none;
     }
   }
 }

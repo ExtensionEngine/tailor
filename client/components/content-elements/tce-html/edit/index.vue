@@ -128,7 +128,7 @@ export default {
 <style lang="scss">
 .tce-html {
   .ql-editor {
-    min-height: 117px;
+    min-height: 121px;
 
     img {
       vertical-align: initial;

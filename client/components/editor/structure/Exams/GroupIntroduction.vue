@@ -6,20 +6,21 @@
       :types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true"
       @add="saveElement"
-      @update="reorder">
+      @update="reorder"
+      embedded>
       <teaching-element
         slot="list-item"
         slot-scope="{ item, dragged, setWidth }"
         :setWidth="setWidth"
         :dragged="dragged"
-        :element="item">
-      </teaching-element>
+        :element="item"/>
     </tes-list>
   </div>
 </template>
 
 <script>
 import filter from 'lodash/filter';
+import { isQuestion } from 'tce-core/utils';
 import { mapActions, mapGetters } from 'vuex-module';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
@@ -32,7 +33,7 @@ export default {
   computed: {
     ...mapGetters(['tes']),
     introductionElements() {
-      let cond = it => it.activityId === this.group.id && it.type !== 'ASSESSMENT';
+      let cond = it => it.activityId === this.group.id && !isQuestion(it.type);
       return filter(this.tes, cond).sort((a, b) => a.position - b.position);
     }
   },

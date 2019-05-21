@@ -27,7 +27,8 @@
       :activity="group"
       :types="['ASSESSMENT']"
       @add="addAssessment"
-      @update="reorderAssessment">
+      @update="reorderAssessment"
+      embedded>
       <assessment-item
         slot="list-item"
         slot-scope="{ item }"
@@ -118,9 +119,10 @@ export default {
     requestDeletion(item) {
       const isGroup = item.type === 'ASSESSMENT_GROUP';
       const action = isGroup ? 'removeGroup' : 'remove';
+      const type = isGroup ? 'group' : 'element';
       appChannel.emit('showConfirmationModal', {
-        type: isGroup ? 'group' : 'element',
-        item,
+        title: `Delete ${type}?`,
+        message: `Are you sure you want to delete ${type}?`,
         action: () => this[action](item)
       });
     }

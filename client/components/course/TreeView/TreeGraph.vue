@@ -127,7 +127,7 @@ export default {
       // Append label.
       node.append('text')
         .classed('label', true)
-        .text(d => d.data.name)
+        .text(d => d.data.name || d.data.id)
         .style('text-anchor', 'middle')
         .attr('dy', '.35em')
         .attr('y', d => {
@@ -272,10 +272,8 @@ $link-color: #ababab;
     &:hover .circle {
       fill: darken($node-color, 10%);
     }
-  }
 
-  // Capture all mouse events on circle wrapper.
-  .node .circle-wrapper {
+    // Capture all mouse events on circle wrapper.
     * {
       cursor: pointer;
       pointer-events: none;
