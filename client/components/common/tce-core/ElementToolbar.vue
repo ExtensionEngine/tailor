@@ -64,7 +64,7 @@ export default {
       appBus.emit('showConfirmationModal', {
         title: 'Delete element?',
         message: 'Are you sure you want to delete element?',
-        action: () => this.remove(this.element)
+        action: () => this.remove(this.element.parent || this.element)
       });
     }
   },

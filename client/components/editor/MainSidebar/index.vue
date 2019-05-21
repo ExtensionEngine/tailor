@@ -28,7 +28,6 @@ import ActivitySidebar from '../../course/Sidebar/Body';
 import Discussion from '../../course/Sidebar/Discussion';
 import format from 'string-template';
 import { mapGetters } from 'vuex-module';
-import MetaSidebar from './MetaSidebar';
 import publishMixin from 'components/common/mixins/publish';
 import RepoNavigation from './RepoNavigation';
 
@@ -67,7 +66,7 @@ export default {
       return format(PREVIEW_URL, { repositoryId: courseId, activityId: id });
     }
   },
-  components: { ActivitySidebar, Discussion, MetaSidebar, RepoNavigation }
+  components: { ActivitySidebar, Discussion, RepoNavigation }
 };
 </script>
 
