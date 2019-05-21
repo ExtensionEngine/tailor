@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="mt-4">
     <v-layout row align-start>
       <v-card>
         <sidebar
@@ -15,7 +15,7 @@
       @close="showCloneModal = false">
     </clone-modal>
     <progress-dialog :show="isPublishing" :status="publishPercentage"/>
-    <v-footer height="auto" color="blue-grey darken-2" absolute>
+    <v-footer height="52" color="blue-grey darken-2" absolute>
       <v-layout row justify-center>
         <v-flex
           xs-12
