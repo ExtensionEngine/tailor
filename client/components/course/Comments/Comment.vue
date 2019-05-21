@@ -54,7 +54,6 @@
         </v-list-tile-action-text>
       </v-list-tile-action>
     </v-list-tile>
-    <slot name="show-more"></slot>
   </li>
 </template>
 

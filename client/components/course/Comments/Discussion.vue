@@ -1,5 +1,5 @@
 <template>
-  <v-card class="comments-list">
+  <v-card v-if="activities.length" class="comments-list">
     <div class="comment-activity">
       <span class="activity-title">
         {{ config[discussion[0].activityId].title }}
@@ -20,7 +20,7 @@
     <v-list>
       <transition-group name="fade">
         <comment
-          v-for="(comment, index) in discussionComments"
+          v-for="comment in discussionComments"
           :key="comment._cid || comment.id"
           v-bind="comment"
           @update="onUpdate(comment, $event)"
@@ -32,27 +32,25 @@
             class="new-comment">
             NEW
           </span>
-          <v-chip
-            v-if="!index && discussion.length > 1"
-            slot="show-more"
-            @click="toggle"
-            small
-            outline
-            class="more-comments">
-            {{ discussion.length - 1 }} more
-            <v-icon v-if="!showMore">mdi-chevron-down</v-icon>
-            <v-icon v-else>mdi-chevron-up</v-icon>
-          </v-chip>
         </comment>
       </transition-group>
     </v-list>
+    <div class="more-comments">
+      <v-chip
+        v-if="discussion.length > 1"
+        @click="toggle"
+        small
+        outline>
+        <span v-if="!showMore">show more <v-icon>mdi-chevron-down</v-icon></span>
+        <span v-else>show less <v-icon>mdi-chevron-up</v-icon></span>
+      </v-chip>
+    </div>
   </v-card>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex-module';
 import Comment from './Comment';
-// import Comment from '../Sidebar/Discussion/Comment';
 import isEmpty from 'lodash/isEmpty';
 
 export default {
@@ -139,10 +137,6 @@ export default {
 .comment {
   width: 100%;
   padding-top: 10px;
-
-  /deep/ .v-chip__content {
-    cursor: pointer;
-  }
 }
 
 .new-comment {
@@ -156,6 +150,15 @@ export default {
 }
 
 .more-comments {
-  margin: 15px 0 5px 0;
+  text-align: center;
+  margin-top: 10px;
+
+  /deep/ .v-chip__content {
+    cursor: pointer;
+  }
+
+  .v-icon {
+    font-size: 15px;
+  }
 }
 </style>

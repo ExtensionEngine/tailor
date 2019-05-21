@@ -15,7 +15,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex-module';
 import orderBy from 'lodash/orderBy';
-import ThreadComment from './Comment';
+import ThreadComment from '../../Comments/Comment';
 
 export default {
   name: 'discussion-thread',
@@ -54,5 +54,9 @@ export default {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.comment {
+  padding: 5px 0;
 }
 </style>
