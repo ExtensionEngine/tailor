@@ -45,17 +45,18 @@ function login({ body }, res) {
 }
 
 function patch({ body, query }, res) {
-  if ('updateCheckTime' in query) {
-    const { userId } = body;
-    const checkedCommentsAt = new Date();
-    return User.findByPk(userId)
-      .then(user => user || createError(NOT_FOUND, 'User does not exist'))
-      .then(user => {
+  const { userId } = body;
+  const checkedCommentsAt = new Date();
+  return User.findByPk(userId)
+    .then(user => user || createError(NOT_FOUND, 'User does not exist'))
+    .then(user => {
+      if ('updateCheckTime' in query) {
         const oldTime = user.checkedCommentsAt;
         user.update({ checkedCommentsAt });
         return res.json({ checkedAt: oldTime });
-      });
-  }
+      }
+      return user.update(body).then(data => res.json({ data }));
+    });
 }
 
 module.exports = {
