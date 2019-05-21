@@ -10,7 +10,7 @@
     </v-flex>
     <v-layout class="layout-box">
       <v-flex class="profile-photo-box">
-        <div v-if="!disabled" :class="{ 'croppa-style': !isEditing }" class="croppa-box">
+        <div v-if="!disabled" v-show="isEditing" class="croppa-box">
           <croppa
             v-model="croppa"
             v-bind="options"
@@ -74,9 +74,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
-import gravatar from 'gravatar';
-
-const gravatarConfig = { size: 130, default: 'mp' };
 
 export default {
   name: 'user-settings',
@@ -154,10 +151,6 @@ export default {
   },
   created() {
     this.disabled = true;
-    if (!this.user.imgUrl) {
-      this.currentImage = gravatar.url(this.user.email, gravatarConfig, true);
-      return;
-    }
     this.currentImage = this.user.imgUrl;
   }
 };
@@ -171,9 +164,19 @@ function generateBlob(croppa) {
 $image-border: 4px solid #e3e3e3;
 $image-bg-color: #f5f5f5;
 
+@mixin flex-container-setup ($flex-flow, $justify-content: center) {
+  display: flex;
+  flex-flow: $flex-flow;
+  justify-content: $justify-content;
+}
+
+.flex-item-setup {
+  flex: 0 50%;
+}
+
 .main-box {
-  flex-direction: column;
   margin: 0;
+  @include flex-container-setup($flex-flow: column nowrap);
 }
 
 .title {
@@ -191,21 +194,17 @@ $image-bg-color: #f5f5f5;
 }
 
 .layout-box {
-  justify-content: center;
-  flex-wrap: wrap;
-  flex-direction: row;
   margin: 0;
+  @include flex-container-setup($flex-flow: row wrap);
 
   .profile-photo-box {
-    flex-basis: 50%;
-    flex-grow: 0;
     margin-top: 8px;
+    @extend .flex-item-setup;
   }
 
   .info-box {
-    flex-basis: 50%;
-    flex-grow: 0;
     padding-left: 24px;
+    @extend .flex-item-setup;
 
     .v-icon {
       margin-right: 8px;
@@ -278,18 +277,13 @@ $image-bg-color: #f5f5f5;
   }
 
   .slider-layout {
-    justify-content: center;
     margin-top: 8px;
+    @include flex-container-setup(row nowrap);
 
     .flex {
       max-width: 50%;
-      flex-basis: 50%;
-      flex-grow: 0;
+      @extend .flex-item-setup;
     }
   }
-}
-
-.croppa-style {
-  display: none;
 }
 </style>

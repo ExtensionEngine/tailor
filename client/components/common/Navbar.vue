@@ -23,7 +23,8 @@
       z-index="1000">
       <v-btn slot="activator" icon large class="mr-2">
         <v-avatar size="42px" color="#eaeaea">
-          <span class="grey--text headline">{{ user.email[0] }}</span>
+          <img :src="user.imgUrl" alt="avatar">
+          <span v-if="!user.imgUrl" class="grey--text headline">{{ user.email[0] }}</span>
         </v-avatar>
       </v-btn>
       <v-list>

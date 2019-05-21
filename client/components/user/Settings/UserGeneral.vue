@@ -6,20 +6,20 @@
         <v-flex class="fields-box">
           <v-text-field
             v-validate="{ required: true, email: true }"
-            v-model="email"
+            v-model="context.email"
             :error-messages="vErrors.collect('email')"
             name="email"
             label="Email"/>
           <v-text-field
             v-validate="{ max: 20 }"
-            v-model="firstName"
+            v-model="context.firstName"
             :error-messages="vErrors.collect('firstName')"
             data-vv-as="first name"
             name="firstName"
             label="First name"/>
           <v-text-field
             v-validate="{ max: 20 }"
-            v-model="lastName"
+            v-model="context.lastName"
             :error-messages="vErrors.collect('lastName')"
             data-vv-as="last name"
             name="lastName"
@@ -28,14 +28,14 @@
         <v-flex class="fields-box">
           <v-text-field
             v-validate="{ numeric: true, max: 10 }"
-            v-model="phoneNumber"
+            v-model="context.phoneNumber"
             :error-messages="vErrors.collect('phoneNumber')"
             name="phoneNumber"
             mask="phone"
             label="Phone number"/>
           <v-text-field
             v-validate="{ max: 50 }"
-            v-model="location"
+            v-model="context.location"
             :error-messages="vErrors.collect('location')"
             name="location"
             label="Location"
@@ -68,27 +68,30 @@ export default {
   mixins: [withValidation()],
   data() {
     return {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phoneNumber: '',
-      location: '',
+      context: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        location: ''
+      },
       isEditing: false
     };
   },
   computed: {
     ...mapGetters(['user']),
-    hasChanges: vm => Object.keys(vm.vFields).some(name => vm.vFields[name].changed),
+    hasChanges: vm => Object.keys(vm.context).some(name => vm.user[name] !== vm.context[name]),
     fieldNames: vm => ['firstName', 'lastName', 'email', 'phoneNumber', 'location']
   },
   methods: {
     ...mapActions(['updateInfo']),
     updateUser() {
+      const { context, hasChanges, fieldNames } = this;
       this.$validator.validateAll()
         .then(async isValid => {
           if (!isValid) return this.$snackbar.error('Validation failed!');
-          if (!this.hasChanges) return;
-          await this.updateInfo(pick(this, this.fieldNames));
+          if (!hasChanges) return;
+          await this.updateInfo(pick(context, fieldNames));
           this.$validator.reset();
           this.$snackbar.success('User information updated.');
         })
@@ -103,26 +106,29 @@ export default {
     }
   },
   created() {
-    Object.assign(this, pick(this.user, this.fieldNames));
+    const { context, user, fieldNames } = this;
+    Object.assign(context, pick(user, fieldNames));
   },
   components: { SetImage }
 };
 </script>
 
 <style lang="scss" scoped>
+@mixin flex-container-setup ($justify-content: center) {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: $justify-content;
+}
+
 .main-container {
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: center;
   margin: 0;
   padding: 8px 8px;
+  @include flex-container-setup();
 }
 
 .btn-actions {
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: flex-end;
   margin: 24px 48px;
+  @include flex-container-setup(flex-end);
 
   .v-btn {
     width: 125px;
@@ -132,8 +138,7 @@ export default {
 }
 
 .fields-box {
-  flex-basis: 41%;
-  flex-grow: 0;
+  flex: 0 41%;
   max-width: 41%;
   margin: 0 16px;
   padding: 0 16px;

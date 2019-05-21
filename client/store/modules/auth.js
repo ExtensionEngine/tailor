@@ -1,9 +1,12 @@
 import authApi from '../../api/auth';
 import find from 'lodash/find';
+import gravatar from 'gravatar';
 import { role } from 'shared';
 import { VuexModule } from 'vuex-module';
 
 const { state, getter, action, mutation, build } = new VuexModule();
+
+const gravatarConfig = { size: 130, default: 'mp' };
 
 state({
   user: JSON.parse(window.localStorage.getItem('TAILOR_USER') || '{}')
@@ -72,6 +75,7 @@ action(function updateInfo(userData) {
 });
 
 mutation(function setUser(user) {
+  if (!user.imgUrl) (user.imgUrl = gravatar.url(user.email, gravatarConfig, true));
   this.state.user = user;
 });
 
