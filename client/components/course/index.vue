@@ -33,7 +33,7 @@ const tabs = [
 
 export default {
   props: {
-    courseId: { type: String, required: true }
+    courseId: { type: Number, required: true }
   },
   data() {
     return {

@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -47,15 +46,10 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['upsertUser'], 'course'),
     addUser() {
       const { email, role } = this;
-      const { courseId } = this.$route.params;
-      this.$validator.validateAll().then(async isValid => {
-        if (!isValid) return;
-        await this.upsertUser({ courseId, email, role });
-        this.email = '';
-        this.$nextTick(() => this.$validator.reset());
+      this.$validator.validateAll().then(isValid => {
+        if (isValid) return this.$emit('upsert', email, role);
       });
     }
   }

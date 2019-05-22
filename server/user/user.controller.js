@@ -2,19 +2,21 @@
 
 const { createError, validationError } = require('../shared/error/helpers');
 const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
+const { role } = require('../../config/shared');
 const { User } = require('../shared/database');
 
 function index({ query: { roleType } }, res) {
   let options = { attributes: ['id', 'email', 'role'] };
   return User.scope({ method: ['withRoleType', roleType] })
     .findAll(options)
+    .filter(user => user.role !== role.user.INTEGRATION)
     .then(data => res.json({ data }));
 }
 
 function upsert({ body: { email, role } }, res) {
+  const data = { deletedAt: null, role, email };
   return User.findOne({ where: { email }, paranoid: false })
-    .then(user => user ? user.update({ role }) : User.invite({ email, role }))
-    .then(user => user.deletedAt ? user.restore() : user)
+    .then(user => user ? user.update(data) : User.invite(data))
     .then(data => res.json({ data }));
 }
 

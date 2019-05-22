@@ -1,3 +1,4 @@
+import { numeric as numericParser } from 'client/utils/paramsParser';
 import Router from 'vue-router';
 import store from './store';
 import Vue from 'vue';
@@ -7,15 +8,15 @@ import Catalog from './components/catalog/Container';
 import Course from './components/course';
 import CourseRevisions from './components/course/Revisions';
 import CourseSettings from './components/course/Settings';
+import CourseUserManagement from './components/course/Settings/CourseUserManagement';
 import Editor from './components/editor';
 import ForgotPassword from './components/auth/ForgotPassword';
 import General from './components/course/Settings/General';
 import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
-import SystemUserManagement from './components/system-user-management';
+import SystemUserManagement from './components/SystemUserManagement';
 import TreeView from './components/course/TreeView';
-import UserManagement from './components/course/Settings/UserManagement';
 
 Vue.use(Router);
 
@@ -28,7 +29,7 @@ let router = new Router({
   }, {
     path: '/course/:courseId',
     component: Course,
-    props: true,
+    props: numericParser,
     meta: { auth: true },
     children: [{
       path: '',
@@ -48,7 +49,8 @@ let router = new Router({
       }, {
         path: 'users',
         name: 'user-management',
-        component: UserManagement
+        props: numericParser,
+        component: CourseUserManagement
       }]
     }, {
       path: 'revisions',

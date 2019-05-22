@@ -7,7 +7,7 @@
           @action="onActionClick"/>
       </v-card>
       <v-flex ml-4>
-        <router-view></router-view>
+        <router-view/>
       </v-flex>
     </v-layout>
     <clone-modal
@@ -37,16 +37,16 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
-import api from '../../../api/course';
+import api from '@/api/course';
 import CloneModal from './CloneModal';
+import CourseUserManagement from './CourseUserManagement';
 import EventBus from 'EventBus';
 import General from './General';
 import JSZip from 'jszip';
-import ProgressDialog from '@/components/common/ProgressDialog';
+import ProgressDialog from 'components/common/ProgressDialog';
 import publishMixin from 'components/common/mixins/publish';
 import saveAs from 'save-as';
 import Sidebar from './Sidebar';
-import UserManagement from './UserManagement';
 
 const appChannel = EventBus.channel('app');
 
@@ -95,10 +95,10 @@ export default {
   },
   components: {
     CloneModal,
+    CourseUserManagement,
     General,
     ProgressDialog,
-    Sidebar,
-    UserManagement
+    Sidebar
   }
 };
 </script>
