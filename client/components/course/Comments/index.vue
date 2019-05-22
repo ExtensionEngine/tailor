@@ -1,5 +1,5 @@
 <template>
-  <v-container class="comments">
+  <div class="comments">
     <v-btn
       @click="sendComments"
       color="info"
@@ -23,7 +23,7 @@
       </div>
       <span slot="no-more"></span>
     </infinite-loading>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -62,7 +62,6 @@ export default {
       'subscribe',
       'unsubscribe'
     ], 'comments'),
-    isSameDiscussion,
     fetchComments($state) {
       return this.fetchPaginated().then(() => {
         if (!isEmpty(this.paginatedComments)) $state.loaded();
@@ -71,13 +70,6 @@ export default {
           this.allComments = true;
         }
       });
-    },
-    onUpdate(comment, content) {
-      const updatedAt = new Date();
-      this.update(Object.assign({}, comment, { content, updatedAt }));
-    },
-    onRemove(comment) {
-      this.remove(comment);
     },
     sendComments() {
       const email = this.user.email;
@@ -97,10 +89,6 @@ export default {
   },
   components: { CircularProgress, Discussion, InfiniteLoading }
 };
-
-function isSameDiscussion(comment1 = {}, comment2 = {}) {
-  return comment1.activityId === comment2.activityId;
-}
 </script>
 
 <style lang="scss" scoped>
@@ -110,5 +98,6 @@ function isSameDiscussion(comment1 = {}, comment2 = {}) {
 
 .comments {
   max-width: 850px;
+  margin: 30px auto;
 }
 </style>

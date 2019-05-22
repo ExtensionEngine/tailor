@@ -1,7 +1,7 @@
 <template>
   <v-card v-if="activities.length" class="comments-list">
-    <div class="comment-activity">
-      <span class="activity-title">
+    <div class="discussion-header">
+      <span class="discussion-title">
         {{ config[discussion[0].activityId].title }}
       </span>
       <div class="labels">
@@ -39,7 +39,7 @@
       v-if="discussion.length > 1"
       @click="toggle"
       small
-      depressed
+      flat
       block
       class="more-comments">
       <span v-if="!showMore">show more <v-icon>mdi-chevron-down</v-icon></span>
@@ -102,42 +102,35 @@ export default {
   margin-bottom: 15px;
   text-align: left;
   list-style: none;
-
-  .v-list {
-    padding: 15px 25px;
-  }
 }
 
-.comment-activity {
+.discussion-header {
   display: flex;
   flex-wrap: wrap;
-  padding: 15px;
-  font-size: 16px;
+  padding: 15px 15px 0;
+  font-size: 17px;
   justify-content: space-between;
-  border-bottom: 1px solid lightgray;
-}
 
-.activity-title {
-  padding-left: 2px;
-}
+  .labels {
+    font-size: 0;
 
-.labels {
-  font-size: 0;
+    .v-chip {
+      margin: 0;
+      font-weight: 500;
 
-  .v-chip {
-    margin: 0;
-
-    + .v-chip {
-      margin-left: 5px;
+      + .v-chip {
+        margin-left: 5px;
+      }
     }
   }
 }
 
 .comment {
   width: 100%;
+  padding: 5px 20px;
 
-  + .comment {
-    padding-top: 10px;
+  &:hover {
+    background: whitesmoke;
   }
 }
 
@@ -153,7 +146,7 @@ export default {
 
 .more-comments {
   margin: 0;
-  text-transform: initial;
+  border-top: 1px solid lightgray;
 
   /deep/ .v-btn__content {
     color: gray;

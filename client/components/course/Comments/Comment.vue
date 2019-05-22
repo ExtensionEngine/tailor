@@ -124,9 +124,9 @@ export default {
 
 <style lang="scss" scoped>
 $color: #333;
-$color-light: gray;
+$color-light: lighten($color, 25%);
 $avatar-size: 40px;
-$font-size: 16px;
+$font-size: 15px;
 $line-size: 20px;
 
 /deep/ .v-list__tile {
@@ -167,9 +167,11 @@ $line-size: 20px;
 
 .v-list__tile__action-text {
   display: flex;
-  line-height: 28px;
+  line-height: 24px;
 
   .v-btn--icon {
+    width: 24px;
+    height: 24px;
     margin: 0 0 0 3px;
   }
 }
