@@ -1,3 +1,4 @@
+{{#wrap}}
 Tailor Author
 =================================================
 
@@ -13,3 +14,4 @@ Or copy and paste this URL into your browser.
 
 -------------------------------------------------
 If you didn't request this, please ignore this email.
+{{/wrap}}
