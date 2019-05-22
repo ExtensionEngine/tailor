@@ -11,7 +11,7 @@
           </v-card>
         </v-flex>
         <v-form @submit.prevent="submit">
-          <v-layout class="fields-layout">
+          <v-layout class="fields-container">
             <v-flex class="fields-box">
               <v-text-field
                 v-validate="{ required: true, alphanumerical: true, min: 6 }"
@@ -111,7 +111,7 @@ export default {
   }
 }
 
-.fields-layout {
+.fields-container {
   flex-direction: column;
   margin: 0 48px;
   margin-top: 24px;

@@ -1,8 +1,6 @@
 <template>
   <v-card class="elevation-2">
-    <v-layout>
-      <user-general/>
-    </v-layout>
+    <user-general/>
   </v-card>
 </template>
 

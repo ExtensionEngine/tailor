@@ -1,5 +1,5 @@
 <template>
-  <v-layout class="main-box">
+  <v-layout class="primary-container">
     <v-flex class="header">
       <v-card class="elevation-2" color="blue-grey darken-2" dark>
         <v-card-title>
@@ -8,7 +8,7 @@
         </v-card-title>
       </v-card>
     </v-flex>
-    <v-layout class="layout-box">
+    <v-layout class="content-container">
       <v-flex class="profile-photo-box">
         <div v-if="!disabled" v-show="isEditing" class="croppa-box">
           <croppa
@@ -32,6 +32,7 @@
                 @input="onSliderChange"
                 @click:append="croppa.zoomIn()"
                 @click:prepend="croppa.zoomOut()"
+                always-dirty
                 append-icon="mdi-plus"
                 prepend-icon="mdi-minus"
                 step=".001">
@@ -110,8 +111,7 @@ export default {
       this.$nextTick(() => this.croppa.chooseFile());
     },
     doneEditing() {
-      if (this.disabled) return;
-      if (!this.isEditing) return;
+      if (this.disabled || !this.isEditing) return;
       generateBlob(this.croppa)
         .then(editedImage => {
           const formData = new FormData();
@@ -174,7 +174,7 @@ $image-bg-color: #f5f5f5;
   flex: 0 50%;
 }
 
-.main-box {
+.primary-container {
   margin: 0;
   @include flex-container-setup($flex-flow: column nowrap);
 }
@@ -193,7 +193,7 @@ $image-bg-color: #f5f5f5;
   }
 }
 
-.layout-box {
+.content-container {
   margin: 0;
   @include flex-container-setup($flex-flow: row wrap);
 
