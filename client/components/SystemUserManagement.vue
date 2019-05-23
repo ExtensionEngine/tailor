@@ -15,7 +15,6 @@
 
 <script>
 import api from '@/api/system';
-import debounce from 'lodash/debounce';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import { role } from 'shared';
@@ -38,11 +37,8 @@ export default {
   },
   methods: {
     upsert(email, role) {
-      debounce(this.upsertUser, 500)(email, { role });
-    },
-    upsertUser(email, data) {
       this.isLoading = true;
-      return api.upsertUser(email, data).then(userData => {
+      return api.upsertUser(email, { role }).then(userData => {
         this.isLoading = false;
         const user = this.users.find(it => it.id === userData.id);
         return user ? Object.assign(user, userData) : this.users.unshift(userData);

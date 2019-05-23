@@ -9,7 +9,6 @@
 </template>
 
 <script>
-import debounce from 'lodash/debounce';
 import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
 import { role } from 'shared';
@@ -36,11 +35,11 @@ export default {
   },
   methods: {
     ...mapActions(['getUsers', 'upsertUser', 'removeUser'], 'course'),
-    upsert: debounce(function (email, role) {
+    upsert(email, role) {
       const { courseId } = this;
       this.isLoading = true;
       this.upsertUser({ email, role, courseId }).then(() => (this.isLoading = false));
-    }, 500),
+    },
     remove({ id: userId }) {
       const { courseId } = this;
       this.isLoading = true;

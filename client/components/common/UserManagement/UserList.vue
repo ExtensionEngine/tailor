@@ -17,7 +17,7 @@
         <v-select
           :value="item[roleType]"
           :items="roles"
-          @change="role => $emit('upsert', item.email, role)"
+          @change="role => upsert(item.email, role)"
           icon/>
       </td>
       <td class="actions">
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
+
 export default {
   props: {
     users: { type: Array, required: true },
@@ -40,6 +42,11 @@ export default {
     headers() {
       return ['User', 'Role', ''].map(text => ({ text, sortable: false }));
     }
+  },
+  methods: {
+    upsert: debounce(function (email, role) {
+      this.$emit('upsert', email, role);
+    }, 500)
   }
 };
 </script>
