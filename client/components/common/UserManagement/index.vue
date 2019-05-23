@@ -1,7 +1,7 @@
 <template>
   <v-card class="settings elevation-2">
     <progress-dialog :show="isLoading" :indeterminate="true"/>
-    <add-user :roles="roles" @upsert="upsert"/>
+    <add-user :roles="roles" :isLoading="isLoading" @upsert="upsert"/>
     <user-list
       v-bind="$attrs"
       :users="users"
@@ -21,7 +21,7 @@ export default {
   props: {
     users: { type: Array, required: true },
     roles: { type: Array, required: true },
-    isLoading: { type: Boolean, default: false }
+    isLoading: { type: Boolean, required: true }
   },
   methods: {
     upsert(...data) {

@@ -37,7 +37,8 @@ import { withValidation } from 'utils/validation';
 export default {
   mixins: [withValidation()],
   props: {
-    roles: { type: Array, required: true }
+    roles: { type: Array, required: true },
+    isLoading: { type: Boolean, required: true }
   },
   data() {
     return {
@@ -51,6 +52,13 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid) return this.$emit('upsert', email, role);
       });
+    }
+  },
+  watch: {
+    isLoading(val) {
+      if (val) return;
+      this.email = '';
+      this.$nextTick(() => this.$validator.reset());
     }
   }
 };
