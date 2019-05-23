@@ -74,9 +74,10 @@ export default {
   },
   methods: {
     ...mapActions({ clone: 'clone', create: 'save' }, 'activities'),
-    ...mapMutations(['showActivityOptions'], 'course'),
+    ...mapMutations(['showActivityOptions', 'focusActivity'], 'course'),
     show() {
       this.showActivityOptions(this.anchor._cid);
+      this.focusActivity(this.anchor._cid);
     },
     hide() {
       this.showActivityOptions(null);
