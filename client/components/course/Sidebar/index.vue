@@ -1,5 +1,5 @@
 <template>
-  <div class="course-sidebar elevation-1">
+  <div :key="activity._cid" class="course-sidebar elevation-1">
     <div v-if="activitySelected">
       <sidebar-header></sidebar-header>
       <sidebar-body></sidebar-body>
