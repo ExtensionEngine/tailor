@@ -50,7 +50,7 @@ export default {
     addUser() {
       const { email, role } = this;
       this.$validator.validateAll().then(isValid => {
-        if (isValid) return this.$emit('upsert', email, role);
+        if (isValid) this.$emit('upsert', email, role);
       });
     }
   },

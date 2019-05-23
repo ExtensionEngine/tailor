@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     upsert(...data) {
-      return this.$emit('upsert', ...data);
+      this.$emit('upsert', ...data);
     }
   },
   components: {

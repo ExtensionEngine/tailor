@@ -38,7 +38,7 @@ export default {
   methods: {
     upsert(email, role) {
       this.isLoading = true;
-      return api.upsertUser(email, { role }).then(userData => {
+      api.upsertUser(email, { role }).then(userData => {
         this.isLoading = false;
         const user = this.users.find(it => it.id === userData.id);
         return user ? Object.assign(user, userData) : this.users.unshift(userData);
