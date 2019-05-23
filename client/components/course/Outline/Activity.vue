@@ -2,15 +2,15 @@
   <div>
     <div class="activity-wrapper">
       <div
-        :class="{ 'grey lighten-4 elevation-8 selected': isHovered || isSelected }"
-        @click="focusActivity(_cid)"
+        :class="{ 'elevation-7 grey lighten-4 selected': isHighlighted }"
+        @click="focus(showOptions)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
         class="activity elevation-1">
-        <v-chip :color="color" label disabled dark class="icon-container">
+        <v-chip :color="color" label dark disabled class="icon-container">
           <v-btn
             v-if="hasSubtypes"
-            @click="toggleActivity({ _cid })"
+            @click="toggle(!isExpanded)"
             color="grey lighten-4"
             flat
             icon
@@ -20,7 +20,7 @@
           <v-icon v-else>mdi-file-document-box-outline</v-icon>
         </v-chip>
         <span class="activity-name">{{ data.name }}</span>
-        <div v-show="isHovered" class="actions">
+        <div v-show="isHighlighted" class="actions">
           <v-spacer/>
           <v-btn
             v-show="isEditable"
@@ -33,21 +33,24 @@
           </v-btn>
           <v-btn
             v-show="hasSubtypes"
-            @click="toggleActivity({ _cid })"
+            @click="toggle"
             icon
             small
             class="mx-0">
             <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>
           </v-btn>
-          <v-btn @click="showOptions()" icon small class="ml-0">
+          <v-btn
+            @click="focus(!showOptions)"
+            icon
+            small
+            class="ml-0">
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </div>
       </div>
       <insert-activity
-        ref="options"
-        :anchor="{ id, parentId, courseId, type, position }"
-        @expand="toggleActivity({ _cid, expanded: true })"/>
+        :anchor="{ id, _cid, parentId, courseId, type, position }"
+        @expand="toggle(true)"/>
     </div>
     <div v-if="!isCollapsed({ _cid }) && hasChildren">
       <draggable
@@ -68,7 +71,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex-module';
+import { mapGetters, mapMutations, mapState } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -104,6 +107,7 @@ export default {
       focusedActivity: 'activity',
       isCollapsed: 'isCollapsed'
     }, 'course'),
+    ...mapState({ outlineState: s => s.course.outline }),
     color() {
       return find(this.structure, { type: this.type }).color;
     },
@@ -113,6 +117,9 @@ export default {
     isSelected() {
       return this.focusedActivity._cid === this._cid;
     },
+    isHighlighted() {
+      return this.isHovered || this.isSelected;
+    },
     isExpanded() {
       return !this.isCollapsed({ _cid: this._cid });
     },
@@ -121,6 +128,9 @@ export default {
     },
     hasChildren() {
       return (this.children.length > 0) && this.hasSubtypes;
+    },
+    showOptions() {
+      return this._cid === this.outlineState.showOptions;
     },
     children() {
       const level = this.level + 1;
@@ -137,9 +147,14 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['focusActivity', 'toggleActivity'], 'course'),
-    showOptions() {
-      this.$refs['options'].$el.children[0].click();
+    ...mapMutations(
+      ['focusActivity', 'toggleActivity', 'showActivityOptions'], 'course'),
+    focus(options = false) {
+      this.focusActivity(this._cid);
+      return this.showActivityOptions(options ? this._cid : null);
+    },
+    toggle(expanded) {
+      this.toggleActivity({ _cid: this._cid, expanded });
     }
   },
   components: { Draggable, InsertActivity }

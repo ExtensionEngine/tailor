@@ -17,7 +17,7 @@ const isTes = element => !!element.activityId;
 state({
   activity: undefined,
   users: {},
-  outline: { expanded: {} }
+  outline: { expanded: {}, showOptions: null }
 });
 
 getter(function course() {
@@ -132,10 +132,21 @@ mutation(function setUsers(users) {
   users.forEach(it => Vue.set(this.state.users, it.id, it));
 });
 
+mutation(function toggleActivities() {
+  const outline = this.getters['course/outlineActivities'];
+  const expanded = this.state.outline.expanded;
+  const state = filter(expanded).length !== outline.length;
+  outline.forEach(it => Vue.set(expanded, it._cid, state));
+});
+
 mutation(function toggleActivity({ _cid, expanded }) {
   let expandedItems = this.state.outline.expanded;
   expanded = expanded === undefined ? !expandedItems[_cid] : expanded;
   Vue.set(expandedItems, _cid, expanded);
+});
+
+mutation(function showActivityOptions(_cid) {
+  this.state.outline.showOptions = _cid;
 });
 
 mutation(function focusActivity(_cid) {

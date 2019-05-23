@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!showInput" @click="show" class="divider-wrapper">
+    <div v-if="!showActions" @click="show" class="divider-wrapper">
       <div class="divider">
         <div class="action">
           <v-btn color="blue-grey darken-1" dark small>
@@ -35,7 +35,7 @@
 <script>
 import { getLevel } from 'shared/activities';
 import { getOutlineChildren, getParent } from 'utils/activity';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex-module';
 import ActivityBrowser from 'components/common/ActivityBrowser';
 import calculatePosition from 'utils/calculatePosition';
 import CreateActivity from './CreateActivity';
@@ -52,13 +52,16 @@ export default {
   },
   data() {
     return {
-      showInput: false,
       action: null
     };
   },
   computed: {
     ...mapGetters(['activities']),
     ...mapGetters(['structure'], 'course'),
+    ...mapState({ outlineState: s => s.course.outline }),
+    showActions() {
+      return this.anchor._cid === this.outlineState.showOptions;
+    },
     supportedLevels() {
       const grandParent = getParent(this.activities, this.anchor);
       const { subLevels = [] } = find(this.structure, { type: this.anchor.type });
@@ -71,11 +74,12 @@ export default {
   },
   methods: {
     ...mapActions({ clone: 'clone', create: 'save' }, 'activities'),
+    ...mapMutations(['showActivityOptions'], 'course'),
     show() {
-      this.showInput = true;
+      this.showActivityOptions(this.anchor._cid);
     },
     hide() {
-      this.showInput = false;
+      this.showActivityOptions(null);
       this.action = null;
     },
     executeAction(activity) {
