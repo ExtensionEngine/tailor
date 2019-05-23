@@ -82,7 +82,7 @@ export default {
   padding: 20px 5px;
 
   input {
-    background-color: #e0e0e0;
+    background-color: inherit;
   }
 
   .btn-sm.btn-material {

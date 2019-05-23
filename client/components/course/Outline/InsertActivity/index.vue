@@ -122,6 +122,7 @@ export default {
   padding: 8px 0;
   cursor: pointer;
   opacity: 0;
+  transition: opacity 0.2s;
 
   &:hover {
     opacity: 1;
@@ -133,7 +134,7 @@ export default {
     height: 2px;
     background-color: #717171;
     opacity: inherit;
-    transition-delay: 0.2s;
+    transition-delay: 0.05s;
 
     .action {
       position: absolute;

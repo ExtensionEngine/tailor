@@ -1,5 +1,5 @@
 <template>
-  <div class="outline-page grey lighten-3">
+  <div class="outline-page">
     <circular-progress v-if="showLoader"/>
     <div v-else class="outline">
       <div class="activity-container">

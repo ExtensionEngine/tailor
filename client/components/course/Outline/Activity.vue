@@ -2,7 +2,7 @@
   <div>
     <div class="activity-wrapper">
       <div
-        :class="{ 'elevation-7 grey lighten-4 selected': isHighlighted }"
+        :class="{ 'elevation-9 selected': isHighlighted }"
         @click="focus(showOptions)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
@@ -29,7 +29,6 @@
             outline
             small>
             Open
-            <v-icon class="pl-1">mdi-square-edit-outline</v-icon>
           </v-btn>
           <v-btn
             v-show="hasSubtypes"
@@ -171,7 +170,7 @@ export default {
   background: #fff;
   border-radius: 2px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   &.selected {
     color: #212121;
