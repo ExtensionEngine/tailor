@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="revisions.length > 0" class="revisions">
+    <div v-if="revisions.length > 0" class="revisions elevation-2 white">
       <ul>
         <revision-item
           v-for="revision in bundledRevisions"
@@ -81,8 +81,6 @@ export default {
   padding: 30px;
   font-family: Roboto, sans-serif;
   text-align: left;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
 
   ul {
     padding: 8px 0;

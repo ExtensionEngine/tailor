@@ -1,5 +1,5 @@
 <template>
-  <div class="catalog" infinite-wrapper>
+  <div class="catalog grey lighten-2" infinite-wrapper>
     <div class="row">
       <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
         <search @change="search"></search>

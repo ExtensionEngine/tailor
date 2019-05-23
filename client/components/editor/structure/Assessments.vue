@@ -6,7 +6,7 @@
         {{ allSelected ? 'hide all' : 'show all' }}
       </v-btn>
     </div>
-    <v-alert :value="!hasAssessments" color="#eee" icon="mdi-information-variant">
+    <v-alert :value="!hasAssessments" color="white" icon="mdi-information-variant">
       Click the button below to create first assessment.
     </v-alert>
     <ul class="list-group">

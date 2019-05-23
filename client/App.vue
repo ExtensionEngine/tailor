@@ -2,7 +2,7 @@
   <v-app id="app">
     <navbar v-if="user" :user="user"/>
     <v-content>
-      <router-view class="view"/>
+      <router-view class="view grey lighten-3"/>
     </v-content>
     <confirmation-modal/>
   </v-app>
@@ -45,7 +45,6 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   overflow: hidden;
-  background-color: #e0e0e0 !important;
 }
 
 .v-content .view {

@@ -72,7 +72,7 @@ export default {
 
 <style lang="scss" scoped>
 .sidebar-panel, .actions {
-  padding-top: 105px;
+  padding-top: 60px;
 }
 
 .sidebar-panel {

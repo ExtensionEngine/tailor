@@ -1,6 +1,6 @@
 <template>
   <div class="col-lg-4">
-    <div @click="navigateTo" class="course-card">
+    <div @click="navigateTo" class="course-card elevation-2 white">
       <div class="body">
         <div class="title">
           <acronym :course="course"></acronym>
@@ -75,13 +75,11 @@ export default {
   color: #555;
   font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   border-radius: 3px;
-  background-color: #fff;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.54);
   transition: box-shadow 0.2s ease;
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18) !important;
   }
 
   .body {

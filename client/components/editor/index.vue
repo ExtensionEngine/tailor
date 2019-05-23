@@ -175,12 +175,6 @@ export default {
 .editor-wrapper {
   display: flex;
   flex-direction: column;
-
-  .btn.btn-fab.btn-primary[disabled] {
-    opacity: 1;
-    background: mix($brand-primary, $gray-light, 25);
-    box-shadow: none;
-  }
 }
 
 .editor {
