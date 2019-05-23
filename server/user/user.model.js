@@ -6,10 +6,13 @@ const mail = require('../shared/mail');
 const { Model } = require('sequelize');
 const Promise = require('bluebird');
 const { user: Role } = require('../../config/shared').role;
+const gravatar = require('gravatar');
 
 const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
 const noop = Function.prototype;
+
+const gravatarConfig = { size: 130, default: 'mp' };
 
 class User extends Model {
   static fields({ DATE, ENUM, STRING, VIRTUAL }) {
@@ -52,7 +55,8 @@ class User extends Model {
       },
       imgUrl: {
         type: STRING(1234),
-        field: 'img_url'
+        field: 'img_url',
+        defaultValue: ''
       },
       profile: {
         type: VIRTUAL,
@@ -101,9 +105,11 @@ class User extends Model {
   static hooks(Hooks) {
     return {
       [Hooks.beforeCreate](user) {
+        user.setGravatar();
         return user.encryptPassword();
       },
       [Hooks.beforeUpdate](user) {
+        if (user.changed('email')) user.setGravatar();
         return user.changed('password')
           ? user.encryptPassword()
           : Promise.resolve();
@@ -133,6 +139,10 @@ class User extends Model {
         mail.invite(user).asCallback(emailCb);
         return user.save();
       });
+  }
+
+  setGravatar() {
+    return (this.imgUrl = gravatar.url(this.email, gravatarConfig, true));
   }
 
   isAdmin() {

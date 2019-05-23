@@ -41,7 +41,7 @@
           </v-layout>
         </div>
         <v-avatar v-if="!isEditing" :size="options.height">
-          <img v-if="currentImage" :src="currentImage">
+          <img v-if="currentImage" :src="user.imgUrl">
           <v-icon v-else class="placeholder-icon" color="grey">mdi-account</v-icon>
           <div @click="uploadNewImage" class="v-avatar actions">
             <v-icon dark>mdi-camera</v-icon>
@@ -77,7 +77,7 @@
 import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
-  name: 'user-settings',
+  name: 'set-image',
   props: {
     isEditing: { type: Boolean, default: false }
   },

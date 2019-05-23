@@ -1,7 +1,7 @@
 'use strict';
 
 const { createError, validationError } = require('../shared/error/helpers');
-const { NOT_FOUND, BAD_REQUEST, NO_CONTENT } = require('http-status-codes');
+const { NOT_FOUND, BAD_REQUEST, NO_CONTENT, CONFLICT } = require('http-status-codes');
 const { User } = require('../shared/database');
 const { getFileUrl, saveFile } = require('../shared/storage');
 const { AVATAR_ROOT } = require('../shared/storage/helpers');
@@ -52,7 +52,8 @@ function login({ body }, res) {
 function updateProfile({ user, body }, res) {
   const { email, firstName, lastName, imgUrl, phoneNumber, location } = body.userData;
   return user.update({ email, firstName, lastName, imgUrl, phoneNumber, location })
-    .then(({ profile }) => res.json({ user: profile }));
+    .then(({ profile }) => res.json({ user: profile }))
+    .catch(() => validationError(CONFLICT));
 }
 
 function changePassword({ user, body }, res) {

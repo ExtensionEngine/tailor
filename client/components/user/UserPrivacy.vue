@@ -58,6 +58,7 @@ import { mapActions, mapGetters } from 'vuex-module';
 import { withValidation } from 'utils/validation';
 
 export default {
+  name: 'user-privacy',
   mixins: [withValidation()],
   data() {
     return {

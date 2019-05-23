@@ -93,7 +93,7 @@ export default {
           this.$snackbar.success('User information updated.');
           this.$validator.reset();
         })
-        .catch(() => this.$snackbar.error('An error has occurred!'));
+        .catch(() => this.$snackbar.error('Email already exists!'));
     },
     setEditing(val) {
       this.$refs.setImage.croppa.refresh();
