@@ -6,7 +6,7 @@ const { role } = require('../../config/shared');
 const { User } = require('../shared/database');
 
 function index({ query: { roleType } }, res) {
-  let options = { attributes: ['id', 'email', 'role'] };
+  const options = { attributes: ['id', 'email', 'role'] };
   return User.scope({ method: ['withRoleType', roleType] })
     .findAll(options)
     .filter(user => user.role !== role.user.INTEGRATION)

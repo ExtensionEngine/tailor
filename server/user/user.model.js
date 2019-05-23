@@ -5,9 +5,9 @@ const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
 const { Model, Op } = require('sequelize');
 const Promise = require('bluebird');
-const { role } = require('../../config/shared');
+const { role: roles } = require('../../config/shared');
 
-const { user: { ADMIN, USER, INTEGRATION } } = role;
+const { user: { ADMIN, USER, INTEGRATION } } = roles;
 
 const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
@@ -102,7 +102,9 @@ class User extends Model {
   static scopes() {
     return {
       withRoleType(type) {
-        return type && { where: { role: { [Op.in]: role.getRoleNames(type) } } };
+        if (!type) return;
+        const role = { [Op.in]: roles.getRoleNames(type) };
+        return { where: { role } };
       }
     };
   }
