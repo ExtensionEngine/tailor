@@ -24,12 +24,16 @@ import filter from 'lodash/filter';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
-const tabs = [
-  { name: 'Structure', route: 'course', icon: 'file-tree' },
-  { name: 'Graph View', route: 'tree-view', icon: 'source-fork mdi-rotate-180' },
-  { name: 'History', route: 'course-revisions', icon: 'history' },
-  { name: 'Settings', route: 'course-info', icon: 'settings-outline' }
-];
+const TABS = {
+  GENERAL: [
+    { name: 'Structure', route: 'course', icon: 'file-tree' },
+    { name: 'Graph View', route: 'tree-view', icon: 'source-fork mdi-rotate-180' },
+    { name: 'History', route: 'course-revisions', icon: 'history' }
+  ],
+  SECURE: [
+    { name: 'Settings', route: 'course-info', icon: 'settings-outline' }
+  ]
+};
 
 export default {
   props: {
@@ -44,7 +48,8 @@ export default {
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
     ...mapGetters(['course', 'activities', 'activity'], 'course'),
     tabs() {
-      if (!this.isAdmin && !this.isCourseAdmin) tabs.pop();
+      const tabs = [...TABS.GENERAL];
+      if (this.isAdmin || this.isCourseAdmin) tabs.push(...TABS.SECURE);
       return tabs;
     }
   },
