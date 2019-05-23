@@ -1,17 +1,20 @@
 <template>
   <div class="repo-container">
-    <v-tabs slider-color="grey darken-2" light>
-      <v-tab
-        v-for="tab in tabs"
-        :key="tab.name"
-        :to="{ name: tab.route }"
-        active-class="tab-active"
-        ripple
-        exact
-        class="px-1">
-        <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
-      </v-tab>
-    </v-tabs>
+    <div class="course-header">
+      <v-tabs slider-color="grey darken-2" light>
+        <v-tab
+          v-for="tab in tabs"
+          :key="tab.name"
+          :to="{ name: tab.route }"
+          active-class="tab-active"
+          ripple
+          exact
+          class="px-1">
+          <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
+        </v-tab>
+      </v-tabs>
+      <active-users/>
+    </div>
     <div class="tab-content" infinite-wrapper>
       <router-view :showLoader="showLoader"/>
     </div>
@@ -20,6 +23,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import ActiveUsers from 'components/common/ActiveUsers';
 import filter from 'lodash/filter';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
@@ -72,7 +76,8 @@ export default {
         this.resetActivityFocus(activities[0]._cid);
       }
     });
-  }
+  },
+  components: { ActiveUsers }
 };
 </script>
 
@@ -90,6 +95,12 @@ export default {
     overflow-y: scroll;
     overflow-y: overlay;
   }
+}
+
+.course-header {
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
 }
 
 .tab-active {

@@ -53,11 +53,13 @@
         </div>
       </div>
     </div>
+    <active-users v-if="!element"/>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
+import ActiveUsers from 'components/common/ActiveUsers';
 import drop from 'lodash/drop';
 import { ElementToolbar } from 'tce-core';
 import fecha from 'fecha';
@@ -119,14 +121,21 @@ export default {
       return truncate(str, len);
     }
   },
-  components: { ElementToolbar }
+  components: { ActiveUsers, ElementToolbar }
 };
 </script>
 
 <style lang="scss" scoped>
 .toolbar {
+  display: flex;
+  justify-content: space-between;
   position: absolute;
   width: 100%;
+  background-color: white;
+  box-shadow:
+    0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2);
   z-index: 99;
   border-top: 1px solid #ddd;
 }
@@ -134,11 +143,6 @@ export default {
 .editor-toolbar {
   display: flex;
   height: 52px;
-  background-color: white;
-  box-shadow:
-    0 2px 2px 0 rgba(0, 0, 0, 0.14),
-    0 1px 5px 0 rgba(0, 0, 0, 0.12),
-    0 3px 1px -2px rgba(0, 0, 0, 0.2);
 
   .editor-heading {
     flex: 1;
