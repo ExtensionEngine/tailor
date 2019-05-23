@@ -22,7 +22,7 @@
       </td>
       <td class="actions">
         <v-btn color="blue-grey" icon flat small>
-          <v-icon @click="$emit('remove', item)">mdi-delete</v-icon>
+          <v-icon @click="remove(item)">mdi-delete</v-icon>
         </v-btn>
       </td>
     </template>
@@ -30,7 +30,10 @@
 </template>
 
 <script>
+import EventBus from 'EventBus';
 import debounce from 'lodash/debounce';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   props: {
@@ -46,7 +49,14 @@ export default {
   methods: {
     upsert: debounce(function (email, role) {
       this.$emit('upsert', email, role);
-    }, 500)
+    }, 500),
+    remove(item) {
+      appChannel.emit('showConfirmationModal', {
+        title: `Remove user?`,
+        message: `Are you sure you want to remove ${item.email}?`,
+        action: () => this.$emit('remove', item)
+      });
+    }
   }
 };
 </script>
