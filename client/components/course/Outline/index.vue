@@ -1,8 +1,21 @@
 <template>
-  <div class="outline-page">
+  <div class="outline-page grey lighten-3">
     <circular-progress v-if="showLoader"/>
     <div v-else class="outline">
       <div class="activity-container">
+        <v-toolbar
+          v-if="topLevelActivities.length"
+          color="grey lighten-3"
+          flat
+          dense>
+          <v-spacer/>
+          <v-btn
+            @click="toggleActivities"
+            color="blue-grey darken-2"
+            flat>
+            Toggle all
+          </v-btn>
+        </v-toolbar>
         <draggable
           :list="topLevelActivities"
           :options="{ handle: '.activity' }"
@@ -13,7 +26,7 @@
             :key="activity._cid"
             :index="index + 1"
             :level="1"
-            :activities="activities"/>
+            :activities="outlineActivities"/>
         </draggable>
         <no-activities v-if="!topLevelActivities.length"/>
       </div>
@@ -23,7 +36,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
+import { mapGetters, mapMutations } from 'vuex-module';
 import Activity from './Activity';
 import CircularProgress from 'components/common/CircularProgress';
 import Draggable from 'vuedraggable';
@@ -39,13 +52,14 @@ export default {
     showLoader: { type: Boolean, default: false }
   },
   computed: {
-    ...mapGetters(['activities', 'structure'], 'course'),
+    ...mapGetters(['structure', 'outlineActivities'], 'course'),
     topLevelActivities() {
       const types = map(filter(this.structure, { level: 1 }), 'type');
-      return filter(this.activities, it => types.includes(it.type))
+      return filter(this.outlineActivities, it => types.includes(it.type))
         .sort((x, y) => x.position - y.position);
     }
   },
+  methods: mapMutations(['toggleActivities'], 'course'),
   components: { Activity, CircularProgress, Draggable, NoActivities, Sidebar }
 };
 </script>
@@ -69,7 +83,7 @@ export default {
   width: 100%;
   height: 100%;
   float: left;
-  padding: 80px 90px 0 60px;
+  padding: 40px 90px 0 60px;
   overflow-y: scroll;
   overflow-y: overlay;
 
@@ -78,5 +92,9 @@ export default {
       margin-bottom: 120px;
     }
   }
+}
+
+/deep/ .v-toolbar__content {
+  padding: 0;
 }
 </style>
