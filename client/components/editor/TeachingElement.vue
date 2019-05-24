@@ -14,8 +14,7 @@ import { mapActions, mapMutations } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
-
-const SNACKBAR_CONFIG = { color: 'blue-grey darken-3', right: true };
+import throttle from 'lodash/throttle';
 
 export default {
   name: 'teaching-element',
@@ -36,8 +35,12 @@ export default {
       Object.assign(element.data, data);
       if (element.embedded) return this.$emit('save', element);
       return this.saveElement(element)
-        .then(() => this.$snackbar.show('Element saved', SNACKBAR_CONFIG));
+        .then(() => this.showNotification());
     },
+    showNotification: throttle(function () {
+      const opts = { color: 'blue-grey darken-2', right: true };
+      this.$snackbar.show('Element saved', opts);
+    }, 4000),
     remove() {
       this.removeElement(this.element).then(() => {
         this.$nextTick(() => EventBus.emit('element:focus'));
