@@ -25,7 +25,7 @@
             label
             small
             class="mr-3 grey--text text--darken-4">
-            v3.0 Silk
+            v3.1 Silk
           </v-chip>
           Built with <v-icon color="pink">mdi-heart</v-icon>
           ExtensionEngine
