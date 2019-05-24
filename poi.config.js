@@ -78,6 +78,9 @@ module.exports = {
     dir: 'dist',
     sourceMap: !isProduction
   },
+  envs: {
+    API_PATH: process.env.API_PATH
+  },
   chainWebpack(config, { mode }) {
     config.resolve.alias.merge(aliases);
     config.resolve.extensions.merge(extensions);

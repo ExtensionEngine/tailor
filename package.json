@@ -93,6 +93,7 @@
     "multer": "^1.4.1",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
+    "passport-local": "^1.0.0",
     "path-exists": "^3.0.0",
     "pg": "^6.4.2",
     "pg-hstore": "^2.3.2",

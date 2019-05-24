@@ -1,14 +1,14 @@
 'use strict';
 
+const { Model } = require('sequelize');
+const { user: Role } = require('../../config/shared').role;
+const Audience = require('../shared/auth/audience');
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
-const { Model } = require('sequelize');
 const Promise = require('bluebird');
-const { user: Role } = require('../../config/shared').role;
 
 const bcrypt = Promise.promisifyAll(require('bcryptjs'));
-const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
 const noop = Function.prototype;
 
 class User extends Model {
@@ -100,7 +100,10 @@ class User extends Model {
   static invite(user, emailCb = noop) {
     return this.create(user)
       .then(user => {
-        user.token = user.createToken({ expiresIn: '5 days' });
+        user.token = user.createToken({
+          audience: Audience.Scope.Setup,
+          expiresIn: '5 days'
+        });
         mail.invite(user).asCallback(emailCb);
         return user.save();
       });
@@ -129,12 +132,16 @@ class User extends Model {
   }
 
   createToken(options = {}) {
-    const payload = { id: this.id, email: this.email };
-    return jwt.sign(payload, AUTH_SECRET, options);
+    const { id, email } = this;
+    const payload = { id, email };
+    return jwt.sign(payload, config.auth.secret, options);
   }
 
   sendResetToken() {
-    this.token = this.createToken({ expiresIn: '5 days' });
+    this.token = this.createToken({
+      audience: Audience.Scope.Setup,
+      expiresIn: '5 days'
+    });
     mail.resetPassword(this);
     return this.save();
   }

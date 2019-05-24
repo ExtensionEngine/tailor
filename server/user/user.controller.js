@@ -3,6 +3,7 @@
 const { createError, validationError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { User } = require('../shared/database');
+const Audience = require('../shared/auth/audience');
 
 function index(req, res) {
   const attributes = ['id', 'email', 'role'];
@@ -29,19 +30,12 @@ function resetPassword({ body, params }, res) {
     .then(() => res.end());
 }
 
-function login({ body }, res) {
-  const { email, password } = body;
-  if (!email || !password) {
-    createError(400, 'Please enter email and password');
-  }
-  return User.findOne({ where: { email } })
-    .then(user => user || createError(NOT_FOUND, 'User does not exist'))
-    .then(user => user.authenticate(password))
-    .then(user => user || createError(NOT_FOUND, 'Wrong password'))
-    .then(user => {
-      const token = user.createToken({ expiresIn: '5 days' });
-      res.json({ data: { token, user: user.profile } });
-    });
+function login({ user }, res) {
+  const token = user.createToken({
+    audience: Audience.Scope.Access,
+    expiresIn: '5 days'
+  });
+  res.json({ data: { token, user: user.profile } });
 }
 
 module.exports = {
