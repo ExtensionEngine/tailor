@@ -19,7 +19,7 @@
       class="content-container elevation-2">
     </content-container>
     <div v-if="addBtnEnabled">
-      <v-btn @click="addContainer" color="blue darken-1" dark>
+      <v-btn @click="addContainer" color="primary">
         <v-icon class="pr-2">mdi-plus</v-icon>
         Create {{ name }}
       </v-btn>
