@@ -129,7 +129,13 @@ class TeachingElement extends Model {
     const { id: activityId, courseId } = container;
     return this.bulkCreate(src.map(it => {
       return Object.assign(pick(it, [
-        'type', 'position', 'data', 'contentId', 'contentSignature', 'refs'
+        'type',
+        'position',
+        'data',
+        'contentId',
+        'contentSignature',
+        'refs',
+        'meta'
       ]), { activityId, courseId });
     }), { returning: true, transaction });
   }

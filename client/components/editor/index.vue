@@ -116,7 +116,7 @@ export default {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;
       if (!focusedElement) return;
-      if ((type !== 'tes/save') && (type !== 'tes/add')) return;
+      if (!['tes/save', 'tes/add', 'tes/update'].includes(type)) return;
       if (element._cid === focusedElement._cid) {
         this.focusedElement = { ...focusedElement, ...element };
         return;
