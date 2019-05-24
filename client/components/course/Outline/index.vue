@@ -4,7 +4,7 @@
     <div v-else class="outline">
       <div class="activity-container">
         <v-toolbar
-          v-if="topLevelActivities.length"
+          v-if="!isFlat"
           color="grey lighten-3"
           flat
           dense>
@@ -17,18 +17,18 @@
           </v-btn>
         </v-toolbar>
         <draggable
-          :list="topLevelActivities"
+          :list="rootActivities"
           :options="{ handle: '.activity' }"
-          @update="data => reorder(data, topLevelActivities)">
+          @update="data => reorder(data, rootActivities)">
           <activity
-            v-for="(activity, index) in topLevelActivities"
+            v-for="(activity, index) in rootActivities"
             v-bind="activity"
             :key="activity._cid"
             :index="index + 1"
             :level="1"
             :activities="outlineActivities"/>
         </draggable>
-        <no-activities v-if="!topLevelActivities.length"/>
+        <no-activities v-if="!rootActivities.length"/>
       </div>
       <sidebar/>
     </div>
@@ -41,6 +41,7 @@ import Activity from './Activity';
 import CircularProgress from 'components/common/CircularProgress';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import map from 'lodash/map';
 import NoActivities from './NoActivities';
 import reorderMixin from './reorderMixin';
@@ -53,7 +54,12 @@ export default {
   },
   computed: {
     ...mapGetters(['structure', 'outlineActivities'], 'course'),
-    topLevelActivities() {
+    isFlat() {
+      const types = map(filter(this.structure, { level: 2 }), 'type');
+      if (!types.length) return false;
+      return !find(this.outlineActivities, it => types.includes(it.type));
+    },
+    rootActivities() {
       const types = map(filter(this.structure, { level: 1 }), 'type');
       return filter(this.outlineActivities, it => types.includes(it.type))
         .sort((x, y) => x.position - y.position);
@@ -83,7 +89,7 @@ export default {
   width: 100%;
   height: 100%;
   float: left;
-  padding: 40px 90px 0 60px;
+  padding: 50px 90px 0 60px;
   overflow-y: scroll;
   overflow-y: overlay;
 
