@@ -10,7 +10,7 @@
         <v-chip :color="color" label dark disabled class="icon-container">
           <v-btn
             v-if="hasSubtypes"
-            @click="toggle(!isExpanded)"
+            @click="toggle()"
             color="grey lighten-4"
             flat
             icon
@@ -32,7 +32,7 @@
           </v-btn>
           <v-btn
             v-show="hasSubtypes"
-            @click="toggle"
+            @click="toggle()"
             icon
             small
             class="mx-0">
@@ -152,7 +152,7 @@ export default {
       this.focusActivity(this._cid);
       return this.showActivityOptions(options ? this._cid : null);
     },
-    toggle(expanded) {
+    toggle(expanded = !this.isExpanded) {
       this.toggleActivity({ _cid: this._cid, expanded });
     }
   },
