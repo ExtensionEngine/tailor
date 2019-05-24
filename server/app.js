@@ -9,9 +9,7 @@ const passport = require('passport');
 const path = require('path');
 require('express-async-errors');
 
-// Setup authentication before instantiating the main app router.
-// eslint-disable-next-line no-unused-vars
-const auth = require('./shared/auth');
+require('./shared/auth');
 const config = require('../config/server');
 const logger = require('./shared/logger');
 const router = require('./router');
