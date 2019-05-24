@@ -29,7 +29,6 @@ import Discussion from '../../course/Sidebar/Discussion';
 import format from 'string-template';
 import { mapGetters } from 'vuex-module';
 import publishMixin from 'components/common/mixins/publish';
-import RepoNavigation from './RepoNavigation';
 
 const { PREVIEW_URL } = process.env;
 
@@ -66,7 +65,7 @@ export default {
       return format(PREVIEW_URL, { repositoryId: courseId, activityId: id });
     }
   },
-  components: { ActivitySidebar, Discussion, RepoNavigation }
+  components: { ActivitySidebar, Discussion }
 };
 </script>
 
