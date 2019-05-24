@@ -186,8 +186,8 @@ $disabled-color: #a1a1a1;
 }
 
 .group-heading {
-  margin: 0 26px 5px;
-  padding-top: 10px;
+  margin: 0 40px 5px;
+  padding-top: 20px;
   color: #555;
   font-size: 16px;
   font-weight: 500;
@@ -208,7 +208,7 @@ $disabled-color: #a1a1a1;
 .group-elements {
   display: flex;
   width: 100%;
-  padding: 0 20px;
+  padding: 0 30px;
   flex-wrap: wrap;
 }
 
