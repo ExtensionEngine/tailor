@@ -8,7 +8,9 @@
         <create-course class="pull-right"/>
       </div>
     </div>
-    <div v-show="searching" class="search-spinner"><circular-progress/></div>
+    <div v-show="searching" class="search-spinner">
+      <v-progress-circular indeterminate color="primary"/>
+    </div>
     <div v-show="!searching" class="row course-list">
       <course-card
         v-for="course in orderedCourses"
@@ -16,7 +18,9 @@
         :course="course">
       </course-card>
       <infinite-loading ref="infiniteLoading" @infinite="loadMore">
-        <div slot="spinner" class="spinner"><circular-progress/></div>
+        <div slot="spinner" class="spinner">
+          <v-progress-circular indeterminate color="primary"/>
+        </div>
         <div slot="no-results" class="no-results">
           {{ orderedCourses.length ? '' : 'No courses found.' }}
         </div>
@@ -27,7 +31,6 @@
 </template>
 
 <script>
-import CircularProgress from 'components/common/CircularProgress';
 import CourseCard from './Card';
 import CreateCourse from './Create';
 import get from 'lodash/get';
@@ -81,7 +84,6 @@ export default {
     this.search();
   },
   components: {
-    CircularProgress,
     CourseCard,
     CreateCourse,
     InfiniteLoading,

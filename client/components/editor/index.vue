@@ -22,7 +22,7 @@
       </meta-sidebar>
     </transition>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
-      <circular-progress v-if="showLoader"/>
+      <v-progress-circular v-if="showLoader" indeterminate color="primary"/>
       <template v-else>
         <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
         <div class="container">
@@ -45,7 +45,6 @@ import * as config from 'shared/activities';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import { getElementId, isQuestion } from 'tce-core/utils';
 import Assessments from './structure/Assessments';
-import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
@@ -159,7 +158,6 @@ export default {
   },
   components: {
     Assessments,
-    CircularProgress,
     ContentContainers,
     Exams,
     MainSidebar,
@@ -186,8 +184,8 @@ export default {
     max-width: 1100px;
   }
 
-  .circular-progress {
-    margin-top: 150px;
+  .v-progress-circular {
+    margin-top: 120px;
   }
 }
 </style>

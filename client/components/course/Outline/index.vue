@@ -1,6 +1,6 @@
 <template>
   <div class="outline-page">
-    <circular-progress v-if="showLoader"/>
+    <v-progress-circular v-if="showLoader" indeterminate color="primary"/>
     <div v-else class="outline">
       <div class="activity-container">
         <v-toolbar
@@ -38,7 +38,6 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex-module';
 import Activity from './Activity';
-import CircularProgress from 'components/common/CircularProgress';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -66,7 +65,7 @@ export default {
     }
   },
   methods: mapMutations(['toggleActivities'], 'course'),
-  components: { Activity, CircularProgress, Draggable, NoActivities, Sidebar }
+  components: { Activity, Draggable, NoActivities, Sidebar }
 };
 </script>
 
@@ -74,8 +73,8 @@ export default {
 .outline-page {
   height: 100%;
 
-  .circular-progress {
-    margin-top: 115px;
+  .v-progress-circular {
+    margin-top: 120px;
   }
 }
 

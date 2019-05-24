@@ -12,7 +12,7 @@
     <infinite-loading @infinite="fetchRevisions">
       <span slot="spinner">
         <div class="col-lg-12 loader-wrapper">
-          <circular-progress></circular-progress>
+          <v-progress-circular indeterminate color="primary"/>
         </div>
       </span>
       <span slot="no-results">No changes recorded.</span>
@@ -24,7 +24,6 @@
 <script>
 import { isSameInstance } from 'utils/revision';
 import { mapActions, mapGetters } from 'vuex-module';
-import CircularProgress from 'components/common/CircularProgress';
 import InfiniteLoading from 'vue-infinite-loading';
 import last from 'lodash/last';
 import reduce from 'lodash/reduce';
@@ -67,13 +66,13 @@ export default {
   mounted() {
     this.resetPagination();
   },
-  components: { CircularProgress, InfiniteLoading, RevisionItem }
+  components: { InfiniteLoading, RevisionItem }
 };
 </script>
 
 <style lang="scss" scoped>
 .loader-wrapper {
-  margin: 50px 0;
+  margin: 120px 0;
 }
 
 .revisions {
