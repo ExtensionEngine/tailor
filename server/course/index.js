@@ -9,7 +9,7 @@ const processQuery = require('../shared/util/processListQuery')();
 const router = require('express').Router();
 
 router
-  .use('/courses/:id*', getCourse)
+  .param('id', getCourse)
   .use('/courses/:id*', hasAccess)
   .get('/courses', processQuery, ctrl.index)
   .post('/courses', authorize(), ctrl.create)
@@ -23,8 +23,8 @@ router
   .delete('/courses/:id/users/:userId', ctrl.removeUser)
   .get('/courses/:id/contentInventory', ctrl.exportContentInventory);
 
-function getCourse(req, _res, next) {
-  return Course.findByPk(req.params.id, { paranoid: false })
+function getCourse(req, _res, next, id) {
+  return Course.findByPk(id, { paranoid: false })
     .then(course => course || createError(NOT_FOUND, 'Course not found'))
     .then(course => {
       req.course = course;

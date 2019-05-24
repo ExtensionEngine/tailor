@@ -24,15 +24,15 @@ router
   .post(ctrl.create);
 
 router
+  .param('commentId', getComment)
   .route('/courses/:courseId/comments/:commentId')
-  .all(getComment)
   .get(ctrl.show)
   .patch(canEdit, ctrl.patch)
   .delete(canEdit, ctrl.remove);
 
-function getComment(req, _res, next) {
+function getComment(req, _res, next, commentId) {
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
-  return Comment.findByPk(req.params.commentId, { paranoid: false, include })
+  return Comment.findByPk(commentId, { paranoid: false, include })
     .then(comment => comment || createError(NOT_FOUND, 'Comment not found'))
     .then(comment => {
       req.comment = comment;
