@@ -9,15 +9,23 @@
     class="blue-grey lighten-4 actions">
     <v-toolbar flat class="transparent">
       <v-list class="pa-0">
-        <v-btn
-          v-for="({ name, icon, action }) in actions"
-          :key="name"
-          @click.stop="action"
-          color="blue-grey darken-4"
-          icon
-          flat>
-          <v-icon>mdi-{{ icon }}</v-icon>
-        </v-btn>
+        <v-tooltip
+          v-for="({ title, icon, action }) in actions"
+          :key="title"
+          color="blue-grey darken-3"
+          right>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              v-on="on"
+              @click.stop="action"
+              color="blue-grey darken-4"
+              icon
+              flat>
+              <v-icon>mdi-{{ icon }}</v-icon>
+            </v-btn>
+          </template>
+          <span>{{ title }}</span>
+        </v-tooltip>
       </v-list>
     </v-toolbar>
   </v-navigation-drawer>
@@ -56,7 +64,7 @@ export default {
       }, {
         title: 'Publish',
         icon: 'upload',
-        action: () => this.confirmPublishing(this.activity)
+        action: () => this.confirmPublishing()
       }];
     },
     previewUrl() {
