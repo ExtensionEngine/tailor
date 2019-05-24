@@ -25,9 +25,6 @@ import App from './App';
 
 Vue.component('tce-question-container', QuestionContainer);
 
-const registry = new ElementRegistry(Vue);
-registry.initialize();
-
 Vue.use(FileFilter);
 Vue.use(VueHotkey);
 Vue.use(Vuetify, { iconfont: 'mdi' });
@@ -48,18 +45,20 @@ Vue.use(Timeago, {
   }
 });
 
-sync(store, router);
-
-/* eslint-disable no-new */
-new Vue({
-  router,
-  store,
-  el: '#app',
-  render: h => h(App),
-  provide() {
-    return {
-      $teRegistry: registry,
-      $storageService: assetsApi
-    };
-  }
+const registry = new ElementRegistry(Vue);
+registry.initialize().then(() => {
+  sync(store, router);
+  /* eslint-disable no-new */
+  new Vue({
+    router,
+    store,
+    el: '#app',
+    render: h => h(App),
+    provide() {
+      return {
+        $teRegistry: registry,
+        $storageService: assetsApi
+      };
+    }
+  });
 });
