@@ -1,9 +1,11 @@
+import compact from 'lodash/compact';
 import courseApi from '../../api/course';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
 import map from 'lodash/map';
+import transform from 'lodash/transform';
 import values from 'lodash/values';
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
@@ -133,10 +135,12 @@ mutation(function setUsers(users) {
 });
 
 mutation(function toggleActivities() {
-  const outline = this.getters['course/outlineActivities'];
-  const expanded = this.state.outline.expanded;
-  const state = filter(expanded).length !== outline.length;
-  outline.forEach(it => Vue.set(expanded, it._cid, state));
+  const { getters, state } = this;
+  const outline = filter(getters['course/outlineActivities'], it => !it.deletedAt);
+  const totalExpanded = compact(Object.values(state.outline.expanded)).length;
+  const isOpen = totalExpanded < outline.length;
+  const expanded = transform(outline, (acc, it) => (acc[it._cid] = isOpen), {});
+  Vue.set(this.state.outline, 'expanded', expanded);
 });
 
 mutation(function toggleActivity({ _cid, expanded }) {
