@@ -2,7 +2,7 @@
   <div class="body">
     <publishing/>
     <v-chip :color="config.color" label dark small class="type-label">
-      {{ config.label }}
+      {{ config.label.toUpperCase() }}
     </v-chip>
     <div class="meta-element">
       <meta-input

@@ -20,12 +20,13 @@
           class="editor">
         </text-editor>
         <div class="clearfix controls">
-          <button
+          <v-btn
             @click="post"
-            type="button"
-            class="btn btn-default btn-material pull-right btn-post">
+            color="primary"
+            outline
+            class="pull-right">
             Post
-          </button>
+          </v-btn>
         </div>
       </div>
       <div class="spacer"></div>
@@ -170,15 +171,6 @@ $editor-size: 60px;
   .header & {
     margin-left: 25px;
     line-height: 20px;
-  }
-}
-
-.btn-post {
-  padding: 6px 8px;
-  background: darken(#fff, 8%);
-
-  &:hover {
-    background: darken(#fff, 16%);
   }
 }
 </style>

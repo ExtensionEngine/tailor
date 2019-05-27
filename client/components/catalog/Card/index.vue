@@ -73,7 +73,7 @@ export default {
   margin-top: 40px;
   padding: 30px 30px 20px;
   color: #555;
-  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: Poppins, Helvetica, Arial, sans-serif;
   border-radius: 3px;
   transition: box-shadow 0.2s ease;
   cursor: pointer;
@@ -96,6 +96,7 @@ export default {
 .title {
   height: 100px;
   margin: 20px 0 10px;
+  font-family: Poppins, Helvetica, Arial, sans-serif;
   font-size: 20px;
   font-weight: 300;
   line-height: 34px;

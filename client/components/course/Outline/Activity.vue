@@ -19,7 +19,9 @@
           </v-btn>
           <v-icon v-else>mdi-file-document-box-outline</v-icon>
         </v-chip>
-        <span class="activity-name">{{ data.name }}</span>
+        <span class="activity-name grey--text text--darken-3">
+          {{ data.name }}
+        </span>
         <div v-show="isHighlighted" class="actions">
           <v-spacer/>
           <v-btn
@@ -163,17 +165,14 @@ export default {
 <style lang="scss" scoped>
 .activity {
   display: flex;
-  color: #424242;
-  font-size: 20px;
-  font-family: Roboto, sans-serif;
-  font-weight: 300;
+  font-size: 18px;
   background: #fff;
   border-radius: 2px;
   cursor: pointer;
   transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   &.selected {
-    color: #212121;
+    color: #414141;
   }
 
   .icon-container {
@@ -199,8 +198,8 @@ export default {
 
 .activity-name {
   display: block;
-  padding: 0 12px;
-  line-height: 40px;
+  padding: 2px 12px 0;
+  line-height: 38px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;

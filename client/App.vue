@@ -40,7 +40,7 @@ html {
 
 #app {
   color: rgba(0,0,0,0.87);
-  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-family: Poppins, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

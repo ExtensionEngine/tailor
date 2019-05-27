@@ -78,7 +78,6 @@ export default {
 .revisions {
   margin: 60px 60px 0;
   padding: 30px;
-  font-family: Roboto, sans-serif;
   text-align: left;
 
   ul {
