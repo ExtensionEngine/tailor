@@ -81,7 +81,7 @@ export default {
 .outline {
   position: relative;
   height: 100%;
-  padding-right: 420px;
+  padding-right: 450px;
 }
 
 .activity-container {
