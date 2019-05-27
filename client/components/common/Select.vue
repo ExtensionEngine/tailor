@@ -130,7 +130,7 @@ export default {
     padding-left: 12px;
     border-radius: 26px;
     color: #4a4a4a;
-    line-height: 26px;
+    line-height: 24px;
     background: #e0e0e0;
     cursor: default;
 
@@ -157,7 +157,7 @@ export default {
     vertical-align: middle;
     width: 20px;
     margin: 0 4px;
-    line-height: 26px;
+    line-height: 24px;
     overflow: hidden;
     cursor: pointer;
 
