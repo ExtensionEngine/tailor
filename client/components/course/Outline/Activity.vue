@@ -80,6 +80,7 @@ import InsertActivity from './InsertActivity';
 import { isEditable } from 'shared/activities';
 import map from 'lodash/map';
 import reorderMixin from './reorderMixin';
+import size from 'lodash/size';
 
 export default {
   name: 'activity',
@@ -109,8 +110,11 @@ export default {
       isCollapsed: 'isCollapsed'
     }, 'course'),
     ...mapState({ outlineState: s => s.course.outline }),
+    config() {
+      return find(this.structure, { type: this.type });
+    },
     color() {
-      return find(this.structure, { type: this.type }).color;
+      return this.config.color;
     },
     isEditable() {
       return isEditable(this.type);
@@ -125,7 +129,7 @@ export default {
       return !this.isCollapsed({ _cid: this._cid });
     },
     hasSubtypes() {
-      return this.level < this.structure.length;
+      return !!size(this.config.subLevels);
     },
     hasChildren() {
       return (this.children.length > 0) && this.hasSubtypes;
