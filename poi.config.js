@@ -3,7 +3,7 @@
 const path = require('path');
 const serverPort = require('./config/server').port;
 
-const { NODE_ENV, STORAGE_PATH } = process.env;
+const { NODE_ENV, STORAGE_PATH, API_PATH } = process.env;
 const imagesPath = 'assets/img';
 const isProduction = NODE_ENV === 'production';
 const serverUrl = `http://127.0.0.1:${serverPort}`;
@@ -79,7 +79,7 @@ module.exports = {
     sourceMap: !isProduction
   },
   envs: {
-    API_PATH: process.env.API_PATH
+    API_PATH
   },
   chainWebpack(config, { mode }) {
     config.resolve.alias.merge(aliases);
