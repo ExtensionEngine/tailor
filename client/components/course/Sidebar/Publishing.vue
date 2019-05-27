@@ -65,7 +65,7 @@ export default {
   padding: 0 7px;
 
   .publish-date {
-    width: 180px;
+    width: 200px;
     line-height: 44px;
   }
 
