@@ -15,7 +15,15 @@
       </span>
       {{ repository.name }}
     </router-link>
-    <v-spacer></v-spacer>
+    <v-spacer/>
+    <v-toolbar-items>
+      <v-btn :to="{ name: 'catalog' }" exact flat>
+        Catalog
+      </v-btn>
+      <v-btn v-if="isAdmin" :to="{ name: 'system-user-management' }" flat>
+        Settings
+      </v-btn>
+    </v-toolbar-items>
     <v-menu
       min-width="220px"
       transition="slide-y-transition"
@@ -29,11 +37,6 @@
       <v-list>
         <v-list-tile>
           <v-list-tile-title>{{ user.email }}</v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile
-          v-if="isAdmin"
-          :to="{ name: 'system-user-management' }">
-          <v-list-tile-title>System user management</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="logout">
           <v-list-tile-title>Logout</v-list-tile-title>
