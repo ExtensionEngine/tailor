@@ -73,7 +73,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ clone: 'clone', create: 'save' }, 'activities'),
+    ...mapActions({ copy: 'clone', create: 'save' }, 'activities'),
     ...mapMutations(['showActivityOptions', 'focusActivity'], 'course'),
     show() {
       this.showActivityOptions(this.anchor._cid);
@@ -84,7 +84,7 @@ export default {
       this.action = null;
     },
     executeAction(activity) {
-      if (this.action === 'clone') {
+      if (this.action === 'copy') {
         activity = {
           srcId: activity.id,
           srcCourseId: activity.courseId,
