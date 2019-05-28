@@ -13,7 +13,7 @@
     <v-btn
       v-show="isEditable"
       @click.stop="edit"
-      color="blue-grey darken-2"
+      color="primary"
       fab
       dark
       class="btn-edit">

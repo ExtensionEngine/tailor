@@ -15,7 +15,7 @@
       @close="showCloneModal = false">
     </clone-modal>
     <progress-dialog :show="isPublishing" :status="publishPercentage"/>
-    <v-footer height="52" color="blue-grey darken-2" absolute>
+    <v-footer height="52" color="primary" absolute>
       <v-layout row justify-center>
         <v-flex
           xs-12

@@ -4,7 +4,7 @@
       v-if="large"
       @click.stop="isVisible = true"
       outline
-      color="blue-grey darken-2"
+      color="primary"
       class="mt-3 mb-4">
       <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
     </v-btn>
@@ -13,7 +13,7 @@
       @click.stop="isVisible = true"
       icon
       flat
-      color="blue-grey darken-2">
+      color="primary">
       <v-icon>{{ icon }}</v-icon>
     </v-btn>
     <v-bottom-sheet v-model="isVisible" max-width="1240" inset lazy>

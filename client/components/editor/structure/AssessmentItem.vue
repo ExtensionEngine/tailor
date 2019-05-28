@@ -51,7 +51,7 @@
       <span class="question">{{ question }}</span>
       <v-btn
         @click.stop="$emit('delete')"
-        color="blue-grey darken-2"
+        color="primary"
         flat
         icon
         class="delete">

@@ -4,7 +4,7 @@
       v-for="({ label, icon, action }) in actions"
       :key="label"
       @click="action"
-      color="blue-grey darken-2"
+      color="primary"
       flat>
       <v-icon class="pr-2">mdi-{{ icon }}</v-icon>{{ label }}
     </v-btn>

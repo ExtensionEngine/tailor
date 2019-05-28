@@ -2,7 +2,7 @@
   <div class="toolbar-wrapper">
     <div
       v-show="activity"
-      class="activity-toolbar blue-grey darken-2 elevation-1">
+      class="activity-toolbar primary elevation-1">
       <v-chip :color="config.color" label dark class="mr-3">
         {{ config.label }}
       </v-chip>

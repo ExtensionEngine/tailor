@@ -11,7 +11,7 @@
           <v-spacer/>
           <v-btn
             @click="toggleActivities"
-            color="blue-grey darken-2"
+            color="primary"
             flat>
             Toggle all
           </v-btn>

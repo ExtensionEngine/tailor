@@ -2,7 +2,7 @@
   <div class="repo-container">
     <v-tabs
       height="50"
-      color="blue-grey darken-2"
+      color="primary"
       slider-color="grey lighten-4"
       dark
       class="elevation-2">
