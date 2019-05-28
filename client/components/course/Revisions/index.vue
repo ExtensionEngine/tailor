@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="revisions.length > 0" class="revisions elevation-2 white">
+    <div v-if="revisions.length > 0" class="revisions white elevation-2">
       <ul>
         <revision-item
           v-for="revision in bundledRevisions"
@@ -12,7 +12,7 @@
     <infinite-loading @infinite="fetchRevisions">
       <span slot="spinner">
         <div class="col-lg-12 loader-wrapper">
-          <v-progress-circular indeterminate color="primary"/>
+          <v-progress-circular color="primary" indeterminate/>
         </div>
       </span>
       <span slot="no-results">No changes recorded.</span>

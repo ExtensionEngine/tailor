@@ -123,7 +123,6 @@ export default {
       padding: 0 10px;
       font-size: 12px;
       line-height: 12px;
-      font-family: Poppins, Helvetica, Arial, sans-serif;
       text-transform: uppercase;
     }
 

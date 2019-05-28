@@ -2,7 +2,7 @@
   <div class="activities-container">
     <div class="loader-outer">
       <div class="loader-inner">
-        <v-progress-circular v-if="showLoader" indeterminate color="primary"/>
+        <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
       </div>
     </div>
     <div :style="{ visibility }" class="activities">

@@ -86,7 +86,6 @@ export default {
   padding-right: 24px;
   color: #555;
   font-size: 14px;
-  font-family: Poppins, Helvetica, Arial, sans-serif;
 
   &:focus {
     box-shadow: inset 0 -2px 0 #337ab7;

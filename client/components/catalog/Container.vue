@@ -9,7 +9,7 @@
       </div>
     </div>
     <div v-show="searching" class="search-spinner">
-      <v-progress-circular indeterminate color="primary"/>
+      <v-progress-circular color="primary" indeterminate/>
     </div>
     <div v-show="!searching" class="row course-list">
       <course-card
@@ -19,7 +19,7 @@
       </course-card>
       <infinite-loading ref="infiniteLoading" @infinite="loadMore">
         <div slot="spinner" class="spinner">
-          <v-progress-circular indeterminate color="primary"/>
+          <v-progress-circular color="primary" indeterminate/>
         </div>
         <div slot="no-results" class="no-results">
           {{ orderedCourses.length ? '' : 'No courses found.' }}

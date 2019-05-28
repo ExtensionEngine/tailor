@@ -1,19 +1,19 @@
 <template>
   <div class="col-lg-4">
-    <div @click="navigateTo" class="course-card elevation-2 white">
+    <div @click="navigateTo" class="repo-card white elevation-2">
       <div class="body">
-        <div class="title">
-          <acronym :course="course"></acronym>
+        <div class="repo-title">
+          <acronym :course="course"/>
           {{ name }}
         </div>
         <div class="description">{{ description }}</div>
       </div>
       <div class="row">
         <span class="col-xs-6">
-          <stat :name="objectiveLabel" :value="objectives"></stat>
+          <stat :name="objectiveLabel" :value="objectives"/>
         </span>
         <span class="col-xs-6">
-          <stat :value="assessments" name="Knowledge checks"></stat>
+          <stat :value="assessments" name="Knowledge checks"/>
         </span>
       </div>
     </div>
@@ -68,12 +68,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.course-card {
+.repo-card {
   min-height: 300px;
   margin-top: 40px;
   padding: 30px 30px 20px;
   color: #555;
-  font-family: Poppins, Helvetica, Arial, sans-serif;
   border-radius: 3px;
   transition: box-shadow 0.2s ease;
   cursor: pointer;
@@ -93,10 +92,9 @@ export default {
   }
 }
 
-.title {
+.repo-title {
   height: 100px;
   margin: 20px 0 10px;
-  font-family: Poppins, Helvetica, Arial, sans-serif;
   font-size: 20px;
   font-weight: 300;
   line-height: 34px;

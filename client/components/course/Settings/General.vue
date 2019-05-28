@@ -1,5 +1,5 @@
 <template>
-  <div v-if="course" class="settings elevation-1 white">
+  <div v-if="course" class="settings white elevation-1">
     <div class="actions">
       <v-btn
         :loading="publishing"

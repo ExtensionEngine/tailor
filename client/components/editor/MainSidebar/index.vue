@@ -32,10 +32,10 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex-module';
 import ActivitySidebar from '../../course/Sidebar/Body';
 import Discussion from '../../course/Sidebar/Discussion';
 import format from 'string-template';
-import { mapGetters } from 'vuex-module';
 import publishMixin from 'components/common/mixins/publish';
 
 const { PREVIEW_URL } = process.env;
@@ -47,10 +47,7 @@ export default {
     focusedElement: { type: Object, default: null }
   },
   computed: {
-    ...mapGetters(['course', 'getMetadata', 'outlineActivities'], 'course'),
-    metadata() {
-      return this.getMetadata(this.focusedElement);
-    },
+    ...mapGetters(['outlineActivities'], 'course'),
     actions() {
       const { $router, activity: { courseId } } = this;
       return [{
@@ -73,17 +70,13 @@ export default {
       return format(PREVIEW_URL, { repositoryId: courseId, activityId: id });
     }
   },
+  methods: mapActions({ publishActivity: 'publish' }, 'activities'),
   components: { ActivitySidebar, Discussion }
 };
 </script>
 
 <style lang="scss" scoped>
-.sidebar-panel, .actions {
+.actions {
   padding-top: 60px;
-}
-
-.sidebar-panel {
-  width: 340px;
-  max-width: 340px;
 }
 </style>

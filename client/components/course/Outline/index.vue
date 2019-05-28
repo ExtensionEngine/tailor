@@ -1,6 +1,6 @@
 <template>
   <div class="outline-page">
-    <v-progress-circular v-if="showLoader" indeterminate color="primary"/>
+    <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
     <div v-else class="outline">
       <div class="activity-container">
         <v-toolbar

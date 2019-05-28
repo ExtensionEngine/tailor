@@ -22,7 +22,7 @@
       </meta-sidebar>
     </transition>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
-      <v-progress-circular v-if="showLoader" indeterminate color="primary"/>
+      <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
       <template v-else>
         <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
         <div class="container">
@@ -69,7 +69,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activities']),
     ...mapGetters(['activity', 'contentContainers'], 'editor'),
     ...mapGetters(['getMetadata'], 'course'),
     metadata() {
@@ -176,7 +175,7 @@ export default {
 }
 
 .editor {
-  padding: 20px 50px 0 50px;
+  padding: 20px 50px 0;
   overflow-y: scroll;
   overflow-y: overlay;
 

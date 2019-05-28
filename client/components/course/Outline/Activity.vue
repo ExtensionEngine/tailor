@@ -11,7 +11,6 @@
           <v-btn
             v-if="hasSubtypes"
             @click="toggle()"
-            color="grey lighten-4"
             flat
             icon
             small>
