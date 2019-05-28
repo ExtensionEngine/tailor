@@ -57,7 +57,7 @@ getter(function outlineActivities() {
   return filter(activities, it => outlineTypes.includes(it.type));
 });
 
-getter(function isCollapsed(activity) {
+getter(function isCollapsed() {
   const { outline } = this.state;
   return activity => activity && !outline.expanded[activity._cid];
 });
