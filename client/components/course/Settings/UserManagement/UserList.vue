@@ -8,7 +8,10 @@
     <template v-slot:items="{ item }">
       <td class="text-xs-left">
         <v-avatar color="blue lighten-1" size="40" dark class="mr-3">
-          <img :src="item.imgUrl"/>
+          <img v-if="item.imgUrl" :src="item.imgUrl"/>
+          <span v-else class="headline white--text">
+            {{ item.email[0].toUpperCase() }}
+          </span>
         </v-avatar>
         {{ item.email }}
       </td>
