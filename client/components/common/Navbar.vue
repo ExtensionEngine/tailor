@@ -92,7 +92,6 @@ $font-color: #333;
   color: $font-color;
   font-size: 16px;
   line-height: $container-height;
-  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;

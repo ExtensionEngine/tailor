@@ -6,6 +6,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
 import assetsApi from '@/api/asset';
+import colors from 'vuetify/es5/util/colors';
 import ElementRegistry from './ElementRegistry';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
@@ -26,7 +27,13 @@ Vue.component('tce-question-container', QuestionContainer);
 
 Vue.use(FileFilter);
 Vue.use(VueHotkey);
-Vue.use(Vuetify, { iconfont: 'mdi' });
+Vue.use(Vuetify, {
+  iconfont: 'mdi',
+  theme: {
+    primary: colors.blueGrey.darken2,
+    secondary: colors.pink
+  }
+});
 Vue.use(VuetifySnackbar);
 Vue.use(Tooltip, { delay: 50 });
 Vue.use(VeeValidate, {

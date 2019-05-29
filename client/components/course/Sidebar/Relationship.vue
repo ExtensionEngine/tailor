@@ -50,12 +50,12 @@ export default {
     allowedTypes: { type: Array, default: () => [] }
   },
   computed: {
-    ...mapGetters(['activity', 'activities'], 'course'),
+    ...mapGetters(['activity', 'outlineActivities'], 'course'),
     ...mapGetters(['getLineage'], 'activities'),
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
-      const activities = without(this.activities, this.activity);
-      const conds = [it => getLevel(it.type)];
+      const activities = without(this.outlineActivities, this.activity);
+      const conds = [];
       if (!allowCircularLinks) conds.push(it => !includes(this.getAssociationIds(it), id));
       if (!allowInsideLineage) {
         const lineage = this.getLineage(this.activity);

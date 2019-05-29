@@ -38,7 +38,7 @@ export default {
         .then(() => this.showNotification());
     },
     showNotification: throttle(function () {
-      const opts = { color: 'blue-grey darken-2', right: true };
+      const opts = { color: 'primary', right: true };
       this.$snackbar.show('Element saved', opts);
     }, 4000),
     remove() {
