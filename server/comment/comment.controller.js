@@ -16,9 +16,9 @@ function show({ comment }, res) {
   return res.json({ data: comment });
 }
 
-function create({ body, params, user }, res) {
+function create({ body, course, user }, res) {
   const { content, activityId } = body;
-  const { courseId } = params;
+  const courseId = course.id;
   const authorId = user.id;
   return Comment.create({ content, activityId, courseId, authorId })
     .then(data => res.json({ data }));

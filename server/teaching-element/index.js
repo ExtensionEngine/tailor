@@ -1,24 +1,24 @@
 'use strict';
 
 const ctrl = require('./te.controller');
-const model = require('./te.model');
 const processQuery = require('../shared/util/processListQuery')();
 const router = require('express').Router();
 
 router
-  .route('/courses/:courseId/tes')
+  .route('/')
   .get(processQuery, ctrl.list)
   .post(ctrl.create);
 
 router
-  .route('/courses/:courseId/tes/:teId')
+  .route('/:teId')
   .get(ctrl.show)
   .patch(ctrl.patch)
   .delete(ctrl.remove);
 
-router.post('/courses/:courseId/tes/:teId/reorder', ctrl.reorder);
+router
+  .post('/:teId/reorder', ctrl.reorder);
 
 module.exports = {
-  model,
+  path: '/tes',
   router
 };
