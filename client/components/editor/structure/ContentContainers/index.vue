@@ -3,7 +3,7 @@
     <h2 v-if="displayHeading">{{ name | capitalize }}</h2>
     <v-alert
       :value="!containerGroup.length"
-      color="#eee"
+      color="white"
       icon="mdi-information-variant">
       Click the button below to create first {{ name | capitalize }}.
     </v-alert>
@@ -16,10 +16,10 @@
       :layout="layout"
       :class="`${name}-container`"
       @delete="deleteContainer(container)"
-      class="content-container elevation-3">
+      class="content-container elevation-2">
     </content-container>
     <div v-if="addBtnEnabled">
-      <v-btn @click="addContainer" color="blue darken-1" dark>
+      <v-btn @click="addContainer" color="primary">
         <v-icon class="pr-2">mdi-plus</v-icon>
         Create {{ name }}
       </v-btn>

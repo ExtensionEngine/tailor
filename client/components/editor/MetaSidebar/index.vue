@@ -45,7 +45,7 @@ export default {
 <style lang="scss" scoped>
 .sidebar {
   h2 {
-    margin: 40px 5px 20px;
+    margin: 100px 5px 20px;
     font-size: 18px;
   }
 
