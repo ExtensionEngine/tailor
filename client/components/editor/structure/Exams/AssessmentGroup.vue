@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import AssessmentItem from '../AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
@@ -51,7 +52,6 @@ import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import numberToLetter from 'utils/numberToLetter';
 import sortBy from 'lodash/sortBy';
 import TesList from '../TesList';

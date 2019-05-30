@@ -18,12 +18,12 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex-module';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import map from 'lodash/map';
-import { mapGetters, mapMutations } from 'vuex-module';
 import reduce from 'lodash/reduce';
 import Sidebar from 'components/course/Sidebar';
 import TreeGraph from './TreeGraph';

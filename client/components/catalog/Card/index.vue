@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import { getObjectives } from 'shared/activities';
 import Acronym from 'components/common/Acronym';
 import get from 'lodash/get';
+import { getObjectives } from 'shared/activities';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
 import Stat from './Stat';

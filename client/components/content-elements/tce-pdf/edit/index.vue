@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import get from 'lodash/get';
 import CircularProgress from './CircularProgress';
+import get from 'lodash/get';
 import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';
 
