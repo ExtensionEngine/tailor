@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import Sidebar from './Sidebar';
 import Settings from './Settings';
+import Sidebar from './Sidebar';
 import UserPrivacy from './UserPrivacy';
 
 export default {

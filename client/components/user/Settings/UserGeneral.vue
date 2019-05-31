@@ -57,9 +57,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
-import { withValidation } from 'utils/validation';
-import SetImage from './SetImage';
 import pick from 'lodash/pick';
+import SetImage from './SetImage';
+import { withValidation } from 'utils/validation';
 
 export default {
   name: 'user-info',
