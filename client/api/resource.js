@@ -18,7 +18,7 @@ export default class Resource {
   }
 
   url(path = '') {
-    return join(this.getBaseUrl(), path);
+    return join(this.getBaseUrl(), path.toString());
   }
 
   /**
