@@ -1,29 +1,29 @@
 <template>
   <div class="editor-wrapper">
-    <toolbar :element="focusedElement">
-      <span slot="actions">
-        <v-btn
-          v-if="metadata.length"
-          @click="showSidebar = !showSidebar"
-          color="blue-grey"
-          fab
-          dark
-          title="Toggle teaching element sidebar">
-          <v-icon>mdi-backburger</v-icon>
-        </v-btn>
-      </span>
-    </toolbar>
-    <transition name="slide">
-      <meta-sidebar
-        v-if="showSidebar"
-        :key="focusedElement._cid"
-        :metadata="metadata"
-        :element="focusedElement">
-      </meta-sidebar>
-    </transition>
-    <div @mousedown="onMousedown" @click="onClick" class="editor">
-      <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
-      <template v-else>
+    <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
+    <template v-else>
+      <toolbar :element="focusedElement">
+        <span slot="actions">
+          <v-btn
+            v-if="metadata.length"
+            @click="showSidebar = !showSidebar"
+            color="blue-grey"
+            fab
+            dark
+            title="Toggle teaching element sidebar">
+            <v-icon>mdi-backburger</v-icon>
+          </v-btn>
+        </span>
+      </toolbar>
+      <transition name="slide">
+        <meta-sidebar
+          v-if="showSidebar"
+          :key="focusedElement._cid"
+          :metadata="metadata"
+          :element="focusedElement">
+        </meta-sidebar>
+      </transition>
+      <div @mousedown="onMousedown" @click="onClick" class="editor">
         <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
         <div class="container">
           <content-containers
@@ -35,8 +35,8 @@
           <assessments v-if="showAssessments"/>
           <exams v-if="showExams"/>
         </div>
-      </template>
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -112,7 +112,9 @@ export default {
       }
     }
   },
-  created() {
+  async created() {
+    const { courseId, activityId } = this.$route.params;
+    if (!this.course) await this.getCourse(courseId);
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;
@@ -140,8 +142,6 @@ export default {
       this.showSidebar = this.metadata.length && this.showSidebar;
     }, 50));
     // TODO: Do this better!
-    const courseId = this.$route.params.courseId;
-    const activityId = this.$route.params.activityId;
     const baseUrl = `/courses/${courseId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
     this.setupTesApi(`${baseUrl}/tes`);
@@ -172,6 +172,12 @@ export default {
 .editor-wrapper {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+
+  .v-progress-circular {
+    align-self: center;
+    margin-top: 120px;
+  }
 }
 
 .editor {
@@ -181,10 +187,6 @@ export default {
 
   .container {
     max-width: 1100px;
-  }
-
-  .v-progress-circular {
-    margin-top: 120px;
   }
 }
 </style>
