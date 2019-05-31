@@ -106,7 +106,7 @@ export default class Resource {
       // if server id is not provided but exist inside resource cache
       if (!model.id && this.getKey(model._cid)) this.setKey(model);
       const action = model.id ? 'patch' : 'post';
-      const url = model.id ? this.url(model.id) : this.url('');
+      const url = model.id ? this.url(model.id) : this.url();
       return axios[action](url, this.clean(model))
         .then(response => {
           if (!model.id) this.map(model._cid, response.data.data.id);
