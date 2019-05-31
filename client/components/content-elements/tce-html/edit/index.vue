@@ -98,7 +98,7 @@ export default {
     },
     content: debounce(function () {
       this.save();
-    }, 2000)
+    }, 4000)
   },
   components: { QuillEditor }
 };

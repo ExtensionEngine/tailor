@@ -52,8 +52,6 @@ export default {
   position: relative;
   width: 100%;
   height: 50px;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
 
   ul {
     float: left;
@@ -98,7 +96,6 @@ export default {
     padding: 2px 10px;
     font-size: 12px;
     line-height: 12px;
-    font-family: 'Catamaran', Helvetica, Arial, sans-serif;
     text-transform: uppercase;
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="course-sidebar">
+  <div :key="activity._cid" class="course-sidebar elevation-1">
     <div v-if="activitySelected">
       <sidebar-header></sidebar-header>
       <sidebar-body></sidebar-body>
@@ -38,7 +38,7 @@ export default {
 .course-sidebar {
   position: absolute;
   right: 0;
-  width: 420px;
+  width: 450px;
   height: 100%;
   overflow: auto;
   text-align: left;

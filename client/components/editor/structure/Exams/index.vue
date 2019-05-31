@@ -9,11 +9,7 @@
         :position="index">
       </exam>
     </ul>
-    <v-btn
-      @click.stop="create"
-      color="blue darken-1"
-      dark
-      class="mt-4">
+    <v-btn @click.stop="create" color="primary" class="mt-4">
       <v-icon class="pr-2">mdi-plus</v-icon>
       Create Exam Version
     </v-btn>

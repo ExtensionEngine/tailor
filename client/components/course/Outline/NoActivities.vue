@@ -27,11 +27,7 @@
         </multiselect>
       </div>
       <div class="col-md-2">
-        <button
-          @click.stop="create"
-          class="btn btn-block btn-primary btn-material">
-          Add
-        </button>
+        <v-btn @click.stop="create" color="blue-grey" outline>Add</v-btn>
       </div>
     </div>
   </div>

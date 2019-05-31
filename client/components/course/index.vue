@@ -1,6 +1,11 @@
 <template>
   <div class="repo-container">
-    <v-tabs slider-color="grey darken-2" light>
+    <v-tabs
+      height="50"
+      color="primary"
+      slider-color="grey lighten-4"
+      dark
+      class="elevation-2">
       <v-tab
         v-for="tab in tabs"
         :key="tab.name"
@@ -92,9 +97,7 @@ export default {
   }
 }
 
-.tab-active {
-  .v-icon {
-    color: #263238 !important;
-  }
+.v-tabs {
+  z-index: 2;
 }
 </style>
