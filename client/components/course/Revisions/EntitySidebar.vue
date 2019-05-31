@@ -56,6 +56,11 @@ export default {
 <style lang="scss" scoped>
 $revision-padding: 32px;
 
+.selected-revision {
+  color: #fff !important;
+  background-color: #1e88e5;
+}
+
 .sidebar {
   flex: 0 0 320px;
 }
@@ -119,9 +124,8 @@ $revision-padding: 32px;
   }
 }
 
-.selected, .selected.revision:hover {
-  color: #fff;
-  background-color: #1e88e5;
+.selected.revision:hover {
+  @extend .selected-revision;
 
   .rollback:hover {
     background-color: #42a5f5;
@@ -156,6 +160,8 @@ $revision-padding: 32px;
 }
 
 .selected {
+  @extend .selected-revision;
+
   .progress-background {
     opacity: 1;
   }

@@ -47,13 +47,13 @@ html {
   overflow: hidden;
 }
 
-.v-content .view {
-  overflow-y: scroll;
-  overflow-y: overlay;
-}
-
 .application, .v-content, .view {
   width: 100%;
   height: 100%;
+}
+
+.v-content .view {
+  overflow-y: scroll;
+  overflow-y: overlay;
 }
 </style>

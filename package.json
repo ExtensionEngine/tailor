@@ -97,6 +97,7 @@
     "pg": "^6.4.2",
     "pg-hstore": "^2.3.2",
     "pluralize": "^7.0.0",
+    "poi-preset-sass-resources": "^4.0.2",
     "promise-queue": "^2.2.3",
     "rcfile": "^1.0.3",
     "read-pkg-up": "^3.0.0",

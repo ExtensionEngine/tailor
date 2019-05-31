@@ -75,23 +75,6 @@ input[type=checkbox] {
   opacity: 0;
 }
 
-label {
-  position: relative;
-  cursor: pointer;
-
-  &.checked .lever {
-    background: $lever-checked;
-
-    &::after {
-      background: $checked;
-    }
-
-    &::before, &::after {
-      left: 18px;
-    }
-  }
-}
-
 .lever {
   content: "";
   display: inline-block;
@@ -132,13 +115,30 @@ label {
   }
 }
 
-.lever:active::before {
-  transform: scale(2.4);
-  background-color: rgba(0,0,0,0.08);
+label {
+  position: relative;
+  cursor: pointer;
 
-  .checked & {
+  &.checked .lever {
+    background: $lever-checked;
+
+    &::after {
+      background: $checked;
+    }
+
+    &::before, &::after {
+      left: 18px;
+    }
+  }
+
+  .lever:active::before {
     transform: scale(2.4);
-    background-color: transparentize($checked, 0.85);
+    background-color: rgba(0,0,0,0.08);
+
+    .checked & {
+      transform: scale(2.4);
+      background-color: transparentize($checked, 0.85);
+    }
   }
 }
 </style>

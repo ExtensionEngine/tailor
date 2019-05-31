@@ -119,8 +119,8 @@ export default {
 .v-text-field {
   max-width: 600px;
   margin: 0 20px;
-  padding: 0 7px;
   margin-top: 2px;
+  padding: 0 7px;
   padding-bottom: 0;
 }
 
