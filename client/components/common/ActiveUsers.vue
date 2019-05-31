@@ -1,13 +1,13 @@
 <template>
   <div class="active-users">
     <v-avatar
-      v-tooltip="user.firstName + ' ' + user.lastName"
+      v-tooltip="user.email"
       v-for="user in users"
       :key="user.id"
       size="30"
       color="#eaeaea">
       <span class="grey--text">
-        {{ user.firstName[0] }}
+        {{ user.email[0].toUpperCase() }}
       </span>
     </v-avatar>
   </div>
@@ -16,14 +16,8 @@
 <script>
 export default {
   name: 'active-users',
-  computed: {
-    users() {
-      return [
-        { id: 1, firstName: 'Ilija', lastName: 'Veselica' },
-        { id: 2, firstName: 'Toma', lastName: 'Zelic' },
-        { id: 3, firstName: 'Zdravko', lastName: 'Curic' }
-      ];
-    }
+  props: {
+    users: { type: Array, default: () => [] }
   }
 };
 </script>

@@ -1,16 +1,23 @@
 'use strict';
 
+const { broadcast, events } = require('./channel');
 const { authorize } = require('../shared/auth/mw');
+const channel = require('./channel');
 const { Course } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
+const { middleware: sse } = require('../shared/util/sse');
 const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const ctrl = require('./course.controller');
+const pick = require('lodash/pick');
 const processQuery = require('../shared/util/processListQuery')();
 const router = require('express-promise-router')();
+
+router.get('/courses/:id/active-users/subscribe', sse, channel.subscribe);
 
 router
   .use('/courses/:id*', getCourse)
   .use('/courses/:id*', hasAccess)
+  .use('/courses/:id*', registerActiveUser)
   .get('/courses', processQuery, ctrl.index)
   .post('/courses', authorize(), ctrl.create)
   .get('/courses/:id', ctrl.get)
@@ -41,6 +48,13 @@ function hasAccess(req, res) {
       req.courseRole = user.courseUser.role;
       return Promise.resolve('next');
     });
+}
+
+function registerActiveUser(req, res) {
+  const { user, course } = req;
+  const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
+  broadcast(events.ADD_ACTIVE_USER, course.id, activeUser);
+  return Promise.resolve('next');
 }
 
 module.exports = {

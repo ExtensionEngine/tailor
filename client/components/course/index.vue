@@ -13,7 +13,7 @@
           <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
         </v-tab>
       </v-tabs>
-      <active-users/>
+      <active-users :users="activeUsers"/>
     </div>
     <div class="tab-content" infinite-wrapper>
       <router-view :showLoader="showLoader"/>
@@ -43,13 +43,17 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin', 'isCourseAdmin']),
-    ...mapGetters(['course', 'activities', 'activity'], 'course'),
+    ...mapGetters(['course', 'activities', 'activity', 'activeUsers'], 'course'),
     tabs() {
       if (!this.isAdmin && !this.isCourseAdmin) tabs.pop();
       return tabs;
+    },
+    courseId() {
+      return this.$route.params.courseId;
     }
   },
   methods: {
+    ...mapActions(['subscribe'], 'course'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
@@ -59,15 +63,14 @@ export default {
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
   },
   created() {
-    const { courseId } = this.$route.params;
-    const existingSelection = this.activity && this.activity.courseId === courseId;
+    const existingSelection = this.activity && this.activity.courseId === this.courseId;
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
-    this.setupActivityApi(`/courses/${courseId}/activities`);
-    this.setupCommentsApi(`/courses/${courseId}/comments`);
-    this.setupRevisionApi(`/courses/${courseId}/revisions`);
-    this.setupTesApi(`/courses/${courseId}/tes`);
-    if (!this.course) this.getCourse(courseId);
+    this.setupActivityApi(`/courses/${this.courseId}/activities`);
+    this.setupCommentsApi(`/courses/${this.courseId}/comments`);
+    this.setupRevisionApi(`/courses/${this.courseId}/revisions`);
+    this.setupTesApi(`/courses/${this.courseId}/tes`);
+    if (!this.course) this.getCourse(this.courseId);
     return Promise.join(this.getActivities(), Promise.delay(500)).then(() => {
       this.showLoader = false;
       let activities = filter(this.activities, { parentId: null });
@@ -76,6 +79,12 @@ export default {
         this.resetActivityFocus(activities[0]._cid);
       }
     });
+  },
+  mounted() {
+    this.subscribe(this.courseId);
+  },
+  beforeDestroy() {
+    this.unsubscribe();
   },
   components: { ActiveUsers }
 };

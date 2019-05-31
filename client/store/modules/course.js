@@ -4,6 +4,7 @@ import find from 'lodash/find';
 import get from 'lodash/get';
 import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
 import map from 'lodash/map';
+import SSEClient from '../../SSEClient';
 import values from 'lodash/values';
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
@@ -13,11 +14,13 @@ const COURSE_ROUTE = /\/course\/\d+/;
 // NOTE: teaching elements always have `activityId` foreign key and that is
 //       how we can tell if an element is `tes` or `activity`
 const isTes = element => !!element.activityId;
+let SSE_CLIENT;
 
 state({
   activity: undefined,
   users: {},
-  outline: { expanded: {} }
+  outline: { expanded: {} },
+  activeUsers: {}
 });
 
 getter(function course() {
@@ -70,6 +73,10 @@ getter(function users() {
   return values(this.state.users);
 });
 
+getter(function activeUsers() {
+  return values(this.state.activeUsers);
+});
+
 getter(function revisions() {
   const { route } = this.rootState;
   const courseId = Number(route.params.courseId);
@@ -119,6 +126,18 @@ action(function removeUser({ courseId, userId }) {
     .then(() => this.commit('removeUser', userId));
 });
 
+action(function subscribe(courseId) {
+  if (SSE_CLIENT) SSE_CLIENT.disconnect();
+  SSE_CLIENT = new SSEClient(`/api/v1/courses/${courseId}/active-users/subscribe`);
+  SSE_CLIENT.subscribe('active_user_add', user => this.commit('sseAddActiveUser', user));
+  SSE_CLIENT.subscribe('active_user_remove', user => this.commit('sseRemoveActiveUser', user));
+});
+
+action(function unsubscribe() {
+  if (!SSE_CLIENT) return;
+  SSE_CLIENT.disconnect();
+});
+
 mutation(function upsertUser(user) {
   Vue.set(this.state.users, user.id, user);
 });
@@ -141,5 +160,15 @@ mutation(function toggleActivity({ _cid, expanded }) {
 mutation(function focusActivity(_cid) {
   this.state.activity = _cid;
 });
+
+mutation(function sseAddActiveUser(user) {
+  if (this.state.activeUsers.id) return;
+  Vue.set(this.state.activeUsers, user.id, user);
+});
+
+// mutation(function sseRemoveActiveUser(user) {
+//   if (this.state.activeUsers.id) return;
+//   Vue.set(this.state.activeUsers, user.id, user);
+// });
 
 export default build();
