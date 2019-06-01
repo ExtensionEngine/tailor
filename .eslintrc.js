@@ -30,9 +30,7 @@ module.exports = {
       named: 'never'
     }],
     'sort-imports': ['error', {
-      'ignoreCase': true,
-      'ignoreMemberSort': false,
-      'memberSyntaxSortOrder': ['none', 'all', 'multiple', 'single']
+      'ignoreCase': true
     }],
     // Vue rules
     'vue/html-self-closing': 'off',
