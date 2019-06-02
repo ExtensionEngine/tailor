@@ -11,8 +11,8 @@
 <script>
 import ConfirmationModal from 'components/common/ConfirmationModal';
 import isIexplorer from 'is-iexplorer';
-import Navbar from 'components/common/Navbar';
 import { mapGetters } from 'vuex-module';
+import Navbar from 'components/common/Navbar';
 
 if (isIexplorer) document.body.classList.add('ie');
 

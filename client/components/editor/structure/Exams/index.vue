@@ -17,9 +17,9 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex-module';
 import Exam from './Exam';
 import filter from 'lodash/filter';
-import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
   name: 'exams',

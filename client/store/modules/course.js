@@ -1,9 +1,9 @@
+import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
 import compact from 'lodash/compact';
 import courseApi from '../../api/course';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
 import map from 'lodash/map';
 import transform from 'lodash/transform';
 import values from 'lodash/values';

@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import { getLevel } from 'shared/activities';
 import { getOutlineChildren, getParent } from 'utils/activity';
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex-module';
 import ActivityBrowser from 'components/common/ActivityBrowser';
@@ -43,6 +42,7 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
+import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
 import SelectAction from './SelectAction';
 

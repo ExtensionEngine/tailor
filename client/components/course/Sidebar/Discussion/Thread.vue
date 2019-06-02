@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import orderBy from 'lodash/orderBy';
 import ThreadComment from './Comment';
 

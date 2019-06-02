@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import { defaults } from 'utils/assessment';
 import debounce from 'lodash/debounce';
+import { defaults } from 'utils/assessment';
 import draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
