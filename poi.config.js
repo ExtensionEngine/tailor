@@ -3,7 +3,7 @@
 const path = require('path');
 const serverPort = require('./config/server').port;
 
-const { NODE_ENV, STORAGE_PATH, API_PATH } = process.env;
+const { API_PATH, NODE_ENV, STORAGE_PATH } = process.env;
 const imagesPath = 'assets/img';
 const isProduction = NODE_ENV === 'production';
 const serverUrl = `http://127.0.0.1:${serverPort}`;
