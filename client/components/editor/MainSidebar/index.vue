@@ -47,10 +47,11 @@ export default {
     focusedElement: { type: Object, default: null }
   },
   computed: {
-    ...mapGetters(['outlineActivities'], 'course'),
+    ...mapGetters(['isAdmin']),
+    ...mapGetters(['outlineActivities', 'isCourseAdmin'], 'course'),
     actions() {
       const { $router, activity: { courseId } } = this;
-      return [{
+      const items = [{
         title: 'Back',
         icon: 'arrow-left',
         action: () => $router.push({ name: 'course', params: { courseId } })
@@ -58,11 +59,13 @@ export default {
         title: 'Preview',
         icon: 'eye',
         action: () => window.open(this.previewUrl, '_blank')
-      }, {
+      }];
+      if (!this.isAdmin && !this.isCourseAdmin) return items;
+      return items.concat({
         title: 'Publish',
         icon: 'upload',
         action: () => this.confirmPublishing()
-      }];
+      });
     },
     previewUrl() {
       if (!PREVIEW_URL) return;
@@ -77,6 +80,6 @@ export default {
 
 <style lang="scss" scoped>
 .actions {
-  padding-top: 60px;
+  padding-top: 105px;
 }
 </style>
