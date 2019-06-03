@@ -1,5 +1,4 @@
 import authApi from '../../api/auth';
-import find from 'lodash/find';
 import { role } from 'shared';
 import { VuexModule } from 'vuex-module';
 
@@ -17,22 +16,6 @@ getter(function user() {
 getter(function isAdmin() {
   const user = this.state.user;
   return user.role === role.user.ADMIN;
-});
-
-getter(function isCourseAdmin() {
-  const { route } = this.rootState;
-  const { courses } = this.rootGetters;
-  const user = this.state.user;
-  const course = find(courses, { _key: route.params.courseKey });
-  return course && (course.users[user._key] === role.course.ADMIN);
-});
-
-getter(function isCourseAuthor() {
-  const { route } = this.rootState;
-  const { courses } = this.rootGetters;
-  const user = this.state.user;
-  const course = find(courses, { _key: route.params.courseKey });
-  return course && (course.users[user._key] === role.course.AUTHOR);
 });
 
 action(function login(credentials) {
