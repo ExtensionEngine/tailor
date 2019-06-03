@@ -30,7 +30,7 @@ function getContentInventory(courseId) {
   return request({
     method: 'get',
     responseType: 'arraybuffer',
-    url: `/courses/${courseId}/contentInventory`
+    url: `/courses/${courseId}/content-inventory`
   }).then(res => res.data);
 }
 

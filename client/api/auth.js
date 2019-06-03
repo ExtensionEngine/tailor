@@ -2,8 +2,8 @@ import request from './request';
 
 const url = {
   login: '/users/login',
-  forgotPassword: '/users/forgotPassword',
-  resetPassword: '/users/resetPassword'
+  forgotPassword: '/users/forgot-password',
+  resetPassword: '/users/reset-password'
 };
 
 function login(credentials) {

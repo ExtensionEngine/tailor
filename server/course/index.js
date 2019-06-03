@@ -37,7 +37,7 @@ router
   .get('/:id/users', ctrl.getUsers)
   .post('/:id/users', ctrl.upsertUser)
   .delete('/:id/users/:userId', ctrl.removeUser)
-  .get('/:id/contentInventory', ctrl.exportContentInventory);
+  .get('/:id/content-inventory', ctrl.exportContentInventory);
 
 mount(router, '/:id', activity);
 mount(router, '/:id', comment);

@@ -7,8 +7,8 @@ const router = require('express').Router();
 router
   // Public routes:
   .post('/login', ctrl.login)
-  .post('/forgotPassword', ctrl.forgotPassword)
-  .post('/resetPassword', ctrl.resetPassword)
+  .post('/forgot-password', ctrl.forgotPassword)
+  .post('/reset-password', ctrl.resetPassword)
   // Protected routes:
   .use(auth)
   .get('/', ctrl.index);
