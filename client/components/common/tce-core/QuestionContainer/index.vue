@@ -132,8 +132,8 @@ export default {
     },
     cancel() {
       if (!this.editedElement.id) return this.$emit('delete');
-      this.editedElement = cloneDeep(this.element);
-      this.$emit('add', this.undoState);
+      this.$emit('add', cloneDeep(this.undoState));
+      this.editedElement = cloneDeep(this.undoState);
       this.isEditing = false;
       this.setAlert();
       this.errors = [];
