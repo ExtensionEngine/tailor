@@ -1,8 +1,7 @@
 'use strict';
 
-const { broadcast, events } = require('./channel');
+const { broadcast, events, subscribe } = require('../shared/activeUserChannel');
 const { authorize } = require('../shared/auth/mw');
-const channel = require('./channel');
 const { Course } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { middleware: sse } = require('../shared/util/sse');
@@ -12,15 +11,15 @@ const pick = require('lodash/pick');
 const processQuery = require('../shared/util/processListQuery')();
 const router = require('express-promise-router')();
 
-router.get('/courses/:id/active-users/subscribe', sse, channel.subscribe);
+router.get('/courses/:id/active-users/subscribe', sse, subscribe);
 
 router
   .use('/courses/:id*', getCourse)
   .use('/courses/:id*', hasAccess)
-  .use('/courses/:id*', registerActiveUser)
+  // .use('/courses/:id*', registerActiveUser)
   .get('/courses', processQuery, ctrl.index)
   .post('/courses', authorize(), ctrl.create)
-  .get('/courses/:id', ctrl.get)
+  .get('/courses/:id', registerActiveUser, ctrl.get)
   .patch('/courses/:id', ctrl.patch)
   .delete('/courses/:id', ctrl.remove)
   .post('/courses/:id/clone', authorize(), ctrl.clone)
