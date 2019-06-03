@@ -80,6 +80,6 @@ export default {
 
 <style lang="scss" scoped>
 .actions {
-  padding-top: 60px;
+  padding-top: 105px;
 }
 </style>
