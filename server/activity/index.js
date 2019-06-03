@@ -6,7 +6,7 @@ const ctrl = require('./activity.controller');
 const model = require('./activity.model');
 const { NOT_FOUND } = require('http-status-codes');
 const processListQuery = require('../shared/util/processListQuery');
-const router = require('express-promise-router')();
+const router = require('express').Router();
 
 const processQuery = processListQuery({ order: [['position']] });
 
