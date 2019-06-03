@@ -2,6 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="users"
+    :loading="isLoading"
     no-data-text="No assigned users."
     hide-actions>
     <template v-slot:items="{ item }">
@@ -30,8 +31,8 @@
 </template>
 
 <script>
-import EventBus from 'EventBus';
 import debounce from 'lodash/debounce';
+import EventBus from 'EventBus';
 
 const appChannel = EventBus.channel('app');
 
@@ -39,6 +40,7 @@ export default {
   props: {
     users: { type: Array, required: true },
     roles: { type: Array, required: true },
+    isLoading: { type: Boolean, required: true },
     roleType: { type: String, default: 'role' }
   },
   computed: {

@@ -2,15 +2,15 @@
   <user-management
     :users="users"
     :roles="roles"
-    :isLoading="isLoading"
+    :isRequesting="isRequesting"
     @upsert="upsert"
     @remove="remove"
     roleType="courseRole"/>
 </template>
 
 <script>
-import map from 'lodash/map';
 import { mapActions, mapGetters } from 'vuex-module';
+import map from 'lodash/map';
 import { role } from 'shared';
 import { title as titleCase } from 'to-case';
 import UserManagement from 'components/common/UserManagement';
@@ -21,7 +21,7 @@ export default {
   },
   data() {
     return {
-      isLoading: true
+      isRequesting: true
     };
   },
   computed: {
@@ -37,17 +37,17 @@ export default {
     ...mapActions(['getUsers', 'upsertUser', 'removeUser'], 'course'),
     upsert(email, role) {
       const { courseId } = this;
-      this.isLoading = true;
-      this.upsertUser({ email, role, courseId }).then(() => (this.isLoading = false));
+      this.isRequesting = true;
+      this.upsertUser({ email, role, courseId }).then(() => (this.isRequesting = false));
     },
     remove({ id: userId }) {
       const { courseId } = this;
-      this.isLoading = true;
-      this.removeUser({ userId, courseId }).then(() => (this.isLoading = false));
+      this.isRequesting = true;
+      this.removeUser({ userId, courseId }).then(() => (this.isRequesting = false));
     }
   },
   created() {
-    this.getUsers().then(() => (this.isLoading = false));
+    this.getUsers().then(() => (this.isRequesting = false));
   },
   components: {
     UserManagement

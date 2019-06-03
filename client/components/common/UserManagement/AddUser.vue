@@ -20,6 +20,7 @@
       </v-flex>
       <v-flex xs2>
         <v-btn
+          :loading="isLoading"
           type="submit"
           color="blue-grey darken-1"
           small

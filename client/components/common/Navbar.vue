@@ -6,6 +6,7 @@
       </v-avatar>
       <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
     </router-link>
+    <v-spacer/>
     <router-link
       v-if="repository"
       :to="{ name: 'course', params: { courseId: repository.id }}"
@@ -15,7 +16,6 @@
       </span>
       {{ repository.name }}
     </router-link>
-    <v-spacer/>
     <v-toolbar-items>
       <v-btn :to="{ name: 'catalog' }" exact flat>
         Catalog
@@ -79,13 +79,13 @@ $font-color: #333;
   z-index: 10;
 }
 
-.app-brand {
-  cursor: pointer;
+.v-toolbar__items {
+  margin-right: 15px;
+}
 
-  .v-avatar {
-    float: left;
-    margin-right: 14px;
-  }
+.app-brand {
+  display: flex;
+  cursor: pointer;
 
   .app-name {
     line-height: $container-height;
@@ -95,9 +95,7 @@ $font-color: #333;
 }
 
 .repository-title {
-  float: left;
-  width: 50%;
-  margin-left: 30px;
+  margin-right: 15px;
   color: $font-color;
   font-size: 16px;
   line-height: $container-height;
@@ -109,14 +107,6 @@ $font-color: #333;
 
   &:hover {
     color: darken($font-color, 20%);
-  }
-
-  @media (max-width: 1200px) {
-    width: 40%;
-  }
-
-  @media (max-width: 1000px) {
-    width: 25%;
   }
 }
 

@@ -1,20 +1,24 @@
 <template>
-  <v-container>
-    <v-layout>
-      <v-flex>
-        <user-management
-          :users="users"
-          :roles="roles"
-          :isLoading="isLoading"
-          @upsert="upsert"
-          @remove="remove"/>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <div class="grey lighten-2 user-management-container">
+    <v-container>
+      <v-layout>
+        <v-flex>
+          <user-management
+            :users="users"
+            :roles="roles"
+            :isRequesting="isRequesting"
+            @upsert="upsert"
+            @remove="remove"/>
+        </v-flex>
+      </v-layout>
+      <app-footer/>
+    </v-container>
+  </div>
 </template>
 
 <script>
 import api from '@/api/system';
+import AppFooter from '@/components/common/Footer';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import { role } from 'shared';
@@ -24,7 +28,7 @@ import UserManagement from 'components/common/UserManagement';
 export default {
   data() {
     return {
-      isLoading: true,
+      isRequesting: true,
       users: []
     };
   },
@@ -37,26 +41,33 @@ export default {
   },
   methods: {
     upsert(email, role) {
-      this.isLoading = true;
+      this.isRequesting = true;
       api.upsertUser(email, { role }).then(userData => {
-        this.isLoading = false;
+        this.isRequesting = false;
         const user = this.users.find(it => it.id === userData.id);
         return user ? Object.assign(user, userData) : this.users.unshift(userData);
       });
     },
     remove({ id }) {
-      this.isLoading = true;
+      this.isRequesting = true;
       api.removeUser(id).then(() => {
-        this.isLoading = false;
+        this.isRequesting = false;
         this.users = this.users.filter(user => user.id !== id);
       });
     }
   },
   created() {
-    api.getUsers().then(users => Object.assign(this, { users, isLoading: false }));
+    api.getUsers().then(users => Object.assign(this, { users, isRequesting: false }));
   },
   components: {
+    AppFooter,
     UserManagement
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.user-management-container {
+  padding-bottom: 75px;
+}
+</style>
