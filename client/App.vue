@@ -2,7 +2,7 @@
   <v-app id="app">
     <navbar v-if="user" :user="user"/>
     <v-content>
-      <router-view class="view"/>
+      <router-view class="view grey lighten-3"/>
     </v-content>
     <confirmation-modal/>
   </v-app>
@@ -11,8 +11,8 @@
 <script>
 import ConfirmationModal from 'components/common/ConfirmationModal';
 import isIexplorer from 'is-iexplorer';
-import Navbar from 'components/common/Navbar';
 import { mapGetters } from 'vuex-module';
+import Navbar from 'components/common/Navbar';
 
 if (isIexplorer) document.body.classList.add('ie');
 
@@ -40,12 +40,11 @@ html {
 
 #app {
   color: rgba(0,0,0,0.87);
-  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-family: Poppins, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   overflow: hidden;
-  background-color: #e0e0e0 !important;
 }
 
 .v-content .view {

@@ -79,9 +79,9 @@
 </template>
 
 <script>
-import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
+import { defaults } from 'utils/assessment';
 import find from 'lodash/find';
 import keys from 'lodash/keys';
 import pull from 'lodash/pull';

@@ -66,9 +66,9 @@
 </template>
 
 <script>
-import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
+import { defaults } from 'utils/assessment';
 import forEach from 'lodash/forEach';
 import pick from 'lodash/pick';
 import pull from 'lodash/pull';

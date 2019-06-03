@@ -1,9 +1,11 @@
+import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
+import compact from 'lodash/compact';
 import courseApi from '../../api/course';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
 import map from 'lodash/map';
+import transform from 'lodash/transform';
 import values from 'lodash/values';
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
@@ -17,7 +19,7 @@ const isTes = element => !!element.activityId;
 state({
   activity: undefined,
   users: {},
-  outline: { expanded: {} }
+  outline: { expanded: {}, showOptions: null }
 });
 
 getter(function course() {
@@ -55,7 +57,7 @@ getter(function outlineActivities() {
   return filter(activities, it => outlineTypes.includes(it.type));
 });
 
-getter(function isCollapsed(activity) {
+getter(function isCollapsed() {
   const { outline } = this.state;
   return activity => activity && !outline.expanded[activity._cid];
 });
@@ -132,10 +134,23 @@ mutation(function setUsers(users) {
   users.forEach(it => Vue.set(this.state.users, it.id, it));
 });
 
+mutation(function toggleActivities() {
+  const { getters, state } = this;
+  const outline = filter(getters['course/outlineActivities'], it => !it.deletedAt);
+  const totalExpanded = compact(Object.values(state.outline.expanded)).length;
+  const isOpen = totalExpanded < outline.length;
+  const expanded = transform(outline, (acc, it) => (acc[it._cid] = isOpen), {});
+  Vue.set(this.state.outline, 'expanded', expanded);
+});
+
 mutation(function toggleActivity({ _cid, expanded }) {
   let expandedItems = this.state.outline.expanded;
   expanded = expanded === undefined ? !expandedItems[_cid] : expanded;
   Vue.set(expandedItems, _cid, expanded);
+});
+
+mutation(function showActivityOptions(_cid) {
+  this.state.outline.showOptions = _cid;
 });
 
 mutation(function focusActivity(_cid) {

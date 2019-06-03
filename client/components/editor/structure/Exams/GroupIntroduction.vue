@@ -19,9 +19,9 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex-module';
 import filter from 'lodash/filter';
 import { isQuestion } from 'tce-core/utils';
-import { mapActions, mapGetters } from 'vuex-module';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
 

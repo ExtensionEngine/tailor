@@ -14,16 +14,17 @@
       </span>
     </toolbar>
     <transition name="slide">
-      <sidebar
+      <meta-sidebar
         v-if="showSidebar"
         :key="focusedElement._cid"
         :metadata="metadata"
         :element="focusedElement">
-      </sidebar>
+      </meta-sidebar>
     </transition>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
-      <circular-progress v-if="showLoader"/>
-      <div v-else>
+      <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
+      <template v-else>
+        <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
         <div class="container">
           <content-containers
             v-for="(containerGroup, type) in contentContainers"
@@ -34,25 +35,25 @@
           <assessments v-if="showAssessments"/>
           <exams v-if="showExams"/>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
 import * as config from 'shared/activities';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import { getElementId, isQuestion } from 'tce-core/utils';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
-import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import MainSidebar from './MainSidebar';
+import MetaSidebar from './MetaSidebar';
 import Promise from 'bluebird';
-import Sidebar from './sidebar';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
@@ -68,10 +69,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activities']),
     ...mapGetters(['activity', 'contentContainers'], 'editor'),
-    ...mapGetters(['course', 'getMetadata'], 'course'),
+    ...mapGetters(['getMetadata'], 'course'),
     metadata() {
+      if (!this.focusedElement) return [];
       return this.getMetadata(this.focusedElement);
     },
     showAssessments() {
@@ -156,10 +157,10 @@ export default {
   },
   components: {
     Assessments,
-    CircularProgress,
     ContentContainers,
     Exams,
-    Sidebar,
+    MainSidebar,
+    MetaSidebar,
     Toolbar
   }
 };
@@ -171,16 +172,10 @@ export default {
 .editor-wrapper {
   display: flex;
   flex-direction: column;
-
-  .btn.btn-fab.btn-primary[disabled] {
-    opacity: 1;
-    background: mix($brand-primary, $gray-light, 25);
-    box-shadow: none;
-  }
 }
 
 .editor {
-  padding-top: 80px;
+  padding: 20px 50px 0;
   overflow-y: scroll;
   overflow-y: overlay;
 
@@ -188,8 +183,8 @@ export default {
     max-width: 1100px;
   }
 
-  .circular-progress {
-    margin-top: 150px;
+  .v-progress-circular {
+    margin-top: 120px;
   }
 }
 </style>

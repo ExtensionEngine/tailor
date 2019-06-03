@@ -2,22 +2,55 @@
   <div>
     <div class="activity-wrapper">
       <div
-        :class="{ 'elevation-8 selected': isSelected(_cid) }"
-        @click="focusActivity(_cid)"
-        class="activity">
-        <span :style="{ 'background-color': color }" class="position">
-          {{ index }}
+        :class="{ 'elevation-9 selected': isHighlighted }"
+        @click="focus(showOptions)"
+        @mouseover="isHovered = true"
+        @mouseout="isHovered = false"
+        class="activity elevation-1">
+        <v-chip :color="color" label dark disabled class="icon-container">
+          <v-btn
+            v-if="hasSubtypes"
+            @click="toggle()"
+            flat
+            icon
+            small>
+            <v-icon size="26">mdi-{{ icon }}</v-icon>
+          </v-btn>
+          <v-icon v-else>mdi-file-document-box-outline</v-icon>
+        </v-chip>
+        <span class="activity-name grey--text text--darken-3">
+          {{ data.name }}
         </span>
-        <span class="activity-name">{{ data.name }}</span>
-        <div class="actions">
-          <button @click.stop="toggleActivity({ _cid })" class="collapsible">
-            <span :class="toggleIcon"></span>
-          </button>
+        <div v-show="isHighlighted" class="actions">
+          <v-spacer/>
+          <v-btn
+            v-show="isEditable"
+            :to="{ name: 'editor', params: { activityId: id } }"
+            color="pink"
+            outline
+            small>
+            Open
+          </v-btn>
+          <v-btn
+            v-show="hasSubtypes"
+            @click="toggle()"
+            icon
+            small
+            class="mx-0">
+            <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>
+          </v-btn>
+          <v-btn
+            @click="focus(!showOptions)"
+            icon
+            small
+            class="ml-0">
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
         </div>
       </div>
       <insert-activity
-        :anchor="{ id, courseId, parentId, type, position }"
-        @expand="toggleActivity({ _cid, expanded: true })"/>
+        :anchor="{ id, _cid, parentId, courseId, type, position }"
+        @expand="toggle(true)"/>
     </div>
     <div v-if="!isCollapsed({ _cid }) && hasChildren">
       <draggable
@@ -38,13 +71,15 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex-module';
+import { mapGetters, mapMutations, mapState } from 'vuex-module';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import InsertActivity from './InsertActivity';
+import { isEditable } from 'shared/activities';
 import map from 'lodash/map';
 import reorderMixin from './reorderMixin';
+import size from 'lodash/size';
 
 export default {
   name: 'activity',
@@ -53,8 +88,8 @@ export default {
   props: {
     _cid: { type: String, required: true },
     id: { type: Number, default: null },
-    courseId: { type: Number, required: true },
     parentId: { type: Number, default: null },
+    courseId: { type: Number, required: true },
     level: { type: Number, required: true },
     index: { type: Number, required: true },
     position: { type: Number, required: true },
@@ -62,17 +97,44 @@ export default {
     data: { type: Object, required: true },
     activities: { type: Array, default: () => ([]) }
   },
+  data() {
+    return {
+      isHovered: false
+    };
+  },
   computed: {
     ...mapGetters({
       structure: 'structure',
       focusedActivity: 'activity',
       isCollapsed: 'isCollapsed'
     }, 'course'),
+    ...mapState({ outlineState: s => s.course.outline }),
+    config() {
+      return find(this.structure, { type: this.type });
+    },
     color() {
-      return find(this.structure, { type: this.type }).color;
+      return this.config.color;
+    },
+    isEditable() {
+      return isEditable(this.type);
+    },
+    isSelected() {
+      return this.focusedActivity._cid === this._cid;
+    },
+    isHighlighted() {
+      return this.isHovered || this.isSelected;
+    },
+    isExpanded() {
+      return !this.isCollapsed({ _cid: this._cid });
+    },
+    hasSubtypes() {
+      return !!size(this.config.subLevels);
     },
     hasChildren() {
-      return (this.children.length > 0) && (this.level < this.structure.length);
+      return (this.children.length > 0) && this.hasSubtypes;
+    },
+    showOptions() {
+      return this._cid === this.outlineState.showOptions;
     },
     children() {
       const level = this.level + 1;
@@ -81,92 +143,72 @@ export default {
         return this.id && (this.id === it.parentId) && types.includes(it.type);
       }).sort((x, y) => x.position - y.position);
     },
-    toggleIcon() {
-      if (!this.hasChildren) return '';
-      const isCollapsed = this.isCollapsed({ _cid: this._cid });
-      return isCollapsed ? 'mdi mdi-chevron-down' : 'mdi mdi-chevron-up';
+    icon() {
+      if (!this.hasSubtypes) return;
+      let icon = this.isExpanded ? 'folder-open' : 'folder';
+      if (!this.hasChildren) icon += '-outline';
+      return icon;
     }
   },
   methods: {
-    ...mapMutations(['focusActivity', 'toggleActivity'], 'course'),
-    isSelected(_cid) {
-      return this.focusedActivity._cid === _cid;
+    ...mapMutations(
+      ['focusActivity', 'toggleActivity', 'showActivityOptions'], 'course'),
+    focus(options = false) {
+      this.focusActivity(this._cid);
+      return this.showActivityOptions(options ? this._cid : null);
+    },
+    toggle(expanded = !this.isExpanded) {
+      this.toggleActivity({ _cid: this._cid, expanded });
     }
   },
   components: { Draggable, InsertActivity }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .activity {
-  position: relative;
-  color: #444;
-  font-family: Roboto, sans-serif;
-  font-size: 17px;
-  text-align: left;
-  background-color: white;
+  display: flex;
+  font-size: 18px;
+  background: #fff;
   border-radius: 2px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
+  transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   &.selected {
-    background-color: #fafafa;
-    border-bottom: 1px solid #888;
+    color: #414141;
+  }
 
-    .activity-name {
-      color: #444;
+  .icon-container {
+    margin: 0;
+    padding: 0;
+
+    /deep/ span {
+      padding: 0 10px;
+      color: #fff;
     }
-  }
 
-  .position {
-    position: absolute;
-    min-width: 44px;
-    height: 42px;
-    margin-right: 7px;
-    padding: 6px 10px 0;
-    color: white;
-    font-size: 20px;
-    text-align: center;
-    border-radius: 2px 0 0 2px;
-  }
-
-  .collapsible {
-    padding: 8px 5px 6px;
-    color: #bbb;
-    font-size: 26px;
-    line-height: 26px;
-    background: none;
-    border: none;
-    outline: none;
-  }
-
-  .activity-name {
-    display: block;
-    position: relative;
-    top: 0;
-    left: 0;
-    height: 42px;
-    padding: 8px 60px 0;
-    color: #555;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    .v-btn {
+      margin: 0;
+    }
   }
 
   .actions {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding-right: 5px;
-
-    .mdi:hover {
-      color: #707070;
-    }
+    display: flex;
+    min-width: 165px;
+    margin-left: auto;
   }
 }
 
+.activity-name {
+  display: block;
+  padding: 2px 12px 0;
+  line-height: 38px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .sub-activity {
-  margin-left: 40px;
+  margin-left: 44px;
 }
 </style>

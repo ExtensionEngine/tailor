@@ -1,3 +1,4 @@
+/* eslint-disable sort-imports */
 import { numeric as numericParser } from 'client/utils/paramsParser';
 import Router from 'vue-router';
 import store from './store';
