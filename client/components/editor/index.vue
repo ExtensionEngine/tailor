@@ -1,28 +1,30 @@
 <template>
   <div class="editor-wrapper">
-    <toolbar :element="focusedElement">
-      <span slot="actions">
-        <v-btn
-          v-if="metadata.length"
-          @click="showSidebar = !showSidebar"
-          color="blue-grey"
-          fab
-          dark
-          title="Toggle teaching element sidebar">
-          <v-icon>mdi-backburger</v-icon>
-        </v-btn>
-      </span>
-    </toolbar>
-    <transition name="slide">
-      <meta-sidebar
-        v-if="showSidebar"
-        :key="focusedElement._cid"
-        :metadata="metadata"
-        :element="focusedElement">
-      </meta-sidebar>
-    </transition>
-    <div @mousedown="onMousedown" @click="onClick" class="editor">
+    <template v-if="activity">
+      <toolbar :element="focusedElement">
+        <span slot="actions">
+          <v-btn
+            v-if="metadata.length"
+            @click="showSidebar = !showSidebar"
+            color="blue-grey"
+            fab
+            dark
+            title="Toggle teaching element sidebar">
+            <v-icon>mdi-backburger</v-icon>
+          </v-btn>
+        </span>
+      </toolbar>
       <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
+      <transition name="slide">
+        <meta-sidebar
+          v-if="showSidebar"
+          :key="focusedElement._cid"
+          :metadata="metadata"
+          :element="focusedElement">
+        </meta-sidebar>
+      </transition>
+    </template>
+    <div @mousedown="onMousedown" @click="onClick" class="editor">
       <div class="container">
         <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
         <template v-else>
@@ -69,8 +71,8 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['course', 'getMetadata'], 'course'),
     ...mapGetters(['activity', 'contentContainers'], 'editor'),
-    ...mapGetters(['getMetadata'], 'course'),
     metadata() {
       if (!this.focusedElement) return [];
       return this.getMetadata(this.focusedElement);
@@ -114,7 +116,6 @@ export default {
   },
   async created() {
     const { courseId, activityId } = this.$route.params;
-    if (!this.course) await this.getCourse(courseId);
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;
@@ -145,12 +146,12 @@ export default {
     const baseUrl = `/courses/${courseId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
     this.setupTesApi(`${baseUrl}/tes`);
-    if (!this.course) this.getCourse(courseId);
-    Promise.join(
+    const actions = [
       this.getActivities(),
-      this.getTeachingElements({ activityId, parentId: activityId }),
-      Promise.delay(700)
-    ).then(() => (this.showLoader = false));
+      this.getTeachingElements({ activityId, parentId: activityId })
+    ];
+    if (!this.course) actions.push(this.getCourse(courseId));
+    Promise.all(actions).then(() => (this.showLoader = false));
   },
   beforeDestroy() {
     this.unsubscribe();
