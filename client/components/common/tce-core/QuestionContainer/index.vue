@@ -62,7 +62,6 @@ import Question from './Question';
 import toPath from 'lodash/toPath';
 import yup from 'yup';
 
-const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
 
 export default {
@@ -127,7 +126,6 @@ export default {
       this.validate().then(() => {
         this.$emit('save', cloneDeep(this.editedElement.data));
         this.isEditing = false;
-        this.setAlert(saveAlert);
       }).catch(err => (this.errors = errorProcessor(err)));
     },
     cancel() {
