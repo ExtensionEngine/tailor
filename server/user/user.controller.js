@@ -1,9 +1,9 @@
 'use strict';
 
 const { createError, validationError } = require('../shared/error/helpers');
+const Audience = require('../shared/auth/audience');
 const { NOT_FOUND } = require('http-status-codes');
 const { User } = require('../shared/database');
-const Audience = require('../shared/auth/audience');
 
 function index(req, res) {
   const attributes = ['id', 'email', 'role'];

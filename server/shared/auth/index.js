@@ -1,11 +1,11 @@
 'use strict';
 
 const { ExtractJwt, Strategy } = require('passport-jwt');
-const { User } = require('../database');
 const Audience = require('./audience');
 const config = require('../../../config/server/auth');
 const LocalStrategy = require('passport-local');
 const passport = require('passport');
+const { User } = require('../database');
 
 const options = {
   usernameField: 'email',

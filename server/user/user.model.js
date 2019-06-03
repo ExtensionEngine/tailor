@@ -1,12 +1,12 @@
 'use strict';
 
-const { Model } = require('sequelize');
-const { user: Role } = require('../../config/shared').role;
 const Audience = require('../shared/auth/audience');
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
+const { Model } = require('sequelize');
 const Promise = require('bluebird');
+const { user: Role } = require('../../config/shared').role;
 
 const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const noop = Function.prototype;
