@@ -1,11 +1,10 @@
 import assign from 'lodash/assign';
+import axios from './request';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import join from 'url-join';
 import omit from 'lodash/omit';
 import Queue from 'promise-queue';
-
-import axios from './request';
 
 // used to serialize api calls that modify data
 const queue = new Queue(1, Infinity);

@@ -42,8 +42,8 @@
 
 <script>
 import * as config from 'shared/activities';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import { getElementId, isQuestion } from 'tce-core/utils';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';

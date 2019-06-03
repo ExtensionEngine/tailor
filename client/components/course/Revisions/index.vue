@@ -22,9 +22,9 @@
 </template>
 
 <script>
-import { isSameInstance } from 'utils/revision';
 import { mapActions, mapGetters } from 'vuex-module';
 import InfiniteLoading from 'vue-infinite-loading';
+import { isSameInstance } from 'utils/revision';
 import last from 'lodash/last';
 import reduce from 'lodash/reduce';
 import RevisionItem from './RevisionItem';

@@ -31,14 +31,14 @@
 </template>
 
 <script>
-import { getAncestors } from 'client/utils/activity';
-import { getSchemaId } from 'shared/activities';
 import activityApi from 'client/api/activity';
 import CircularProgress from 'components/common/CircularProgress';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
 import get from 'lodash/get';
+import { getAncestors } from 'client/utils/activity';
+import { getSchemaId } from 'shared/activities';
 import map from 'lodash/map';
 import Promise from 'bluebird';
 import reduce from 'lodash/reduce';
