@@ -38,11 +38,16 @@ function publishRepositoryMeta(id) {
   return request.post(`/courses/${id}/publish`).then(res => res.data);
 }
 
+function registerActiveUser(id) {
+  return request.post(`/courses/${id}/register-active-user`);
+}
+
 export default {
   getCourses,
   getUsers,
   upsertUser,
   removeUser,
   getContentInventory,
-  publishRepositoryMeta
+  publishRepositoryMeta,
+  registerActiveUser
 };

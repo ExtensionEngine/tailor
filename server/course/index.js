@@ -16,10 +16,9 @@ router.get('/courses/:id/active-users/subscribe', sse, subscribe);
 router
   .use('/courses/:id*', getCourse)
   .use('/courses/:id*', hasAccess)
-  // .use('/courses/:id*', registerActiveUser)
   .get('/courses', processQuery, ctrl.index)
   .post('/courses', authorize(), ctrl.create)
-  .get('/courses/:id', registerActiveUser, ctrl.get)
+  .get('/courses/:id', ctrl.get)
   .patch('/courses/:id', ctrl.patch)
   .delete('/courses/:id', ctrl.remove)
   .post('/courses/:id/clone', authorize(), ctrl.clone)
@@ -27,7 +26,8 @@ router
   .get('/courses/:id/users', ctrl.getUsers)
   .post('/courses/:id/users', ctrl.upsertUser)
   .delete('/courses/:id/users/:userId', ctrl.removeUser)
-  .get('/courses/:id/contentInventory', ctrl.exportContentInventory);
+  .get('/courses/:id/contentInventory', ctrl.exportContentInventory)
+  .post('/courses/:id/register-active-user', registerActiveUser);
 
 function getCourse(req, res) {
   return Course.findByPk(req.params.id, { paranoid: false })
@@ -52,8 +52,9 @@ function hasAccess(req, res) {
 function registerActiveUser(req, res) {
   const { user, course } = req;
   const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
-  broadcast(events.ADD_ACTIVE_USER, course.id, activeUser);
-  return Promise.resolve('next');
+  const context = { courseId: course.id };
+  broadcast(events.ADD_ACTIVE_USER, activeUser, context);
+  res.end();
 }
 
 module.exports = {

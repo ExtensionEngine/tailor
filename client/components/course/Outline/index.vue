@@ -23,8 +23,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import Activity from './Activity';
+import api from '../../../api/course';
 import CircularProgress from 'components/common/CircularProgress';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
@@ -44,7 +45,17 @@ export default {
       const types = map(filter(this.structure, { level: 1 }), 'type');
       return filter(this.activities, it => types.includes(it.type))
         .sort((x, y) => x.position - y.position);
+    },
+    courseId() {
+      return this.$route.params.courseId;
     }
+  },
+  methods: {
+    ...mapActions(['subscribe'], 'course')
+  },
+  mounted() {
+    this.subscribe(this.courseId);
+    api.registerActiveUser(this.courseId);
   },
   components: { Activity, CircularProgress, Draggable, NoActivities, Sidebar }
 };

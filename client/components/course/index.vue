@@ -47,13 +47,9 @@ export default {
     tabs() {
       if (!this.isAdmin && !this.isCourseAdmin) tabs.pop();
       return tabs;
-    },
-    courseId() {
-      return this.$route.params.courseId;
     }
   },
   methods: {
-    ...mapActions(['subscribe'], 'course'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
@@ -63,14 +59,16 @@ export default {
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
   },
   created() {
-    const existingSelection = this.activity && this.activity.courseId === this.courseId;
+    const courseId = this.$route.params.courseId;
+    const existingSelection = this.activity && this.activity.courseId === courseId;
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
-    this.setupActivityApi(`/courses/${this.courseId}/activities`);
-    this.setupCommentsApi(`/courses/${this.courseId}/comments`);
-    this.setupRevisionApi(`/courses/${this.courseId}/revisions`);
-    this.setupTesApi(`/courses/${this.courseId}/tes`);
-    if (!this.course) this.getCourse(this.courseId);
+    this.setupActivityApi(`/courses/${courseId}/activities`);
+    this.setupCommentsApi(`/courses/${courseId}/comments`);
+    this.setupRevisionApi(`/courses/${courseId}/revisions`);
+    this.setupTesApi(`/courses/${courseId}/tes`);
+    if (!this.course) this.getCourse(courseId);
+    // TODO: Fetch active users
     return Promise.join(this.getActivities(), Promise.delay(500)).then(() => {
       this.showLoader = false;
       let activities = filter(this.activities, { parentId: null });
@@ -79,12 +77,6 @@ export default {
         this.resetActivityFocus(activities[0]._cid);
       }
     });
-  },
-  mounted() {
-    this.subscribe(this.courseId);
-  },
-  beforeDestroy() {
-    this.unsubscribe();
   },
   components: { ActiveUsers }
 };
