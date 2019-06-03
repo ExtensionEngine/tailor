@@ -1,7 +1,7 @@
 'use strict';
 
-const { resolveStatics } = require('../shared/storage/helpers');
 const { Revision, User } = require('../shared/database');
+const { resolveStatics } = require('../shared/storage/helpers');
 
 function index({ course, query }, res) {
   const { limit, offset, entity, entityId } = query;

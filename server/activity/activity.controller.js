@@ -1,9 +1,9 @@
 'use strict';
 
 const { Activity } = require('../shared/database');
-const { getOutlineLevels } = require('../../config/shared/activities');
 const find = require('lodash/find');
 const get = require('lodash/get');
+const { getOutlineLevels } = require('../../config/shared/activities');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
 
