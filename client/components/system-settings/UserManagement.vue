@@ -1,24 +1,14 @@
 <template>
-  <div class="grey lighten-2 user-management-container">
-    <v-container>
-      <v-layout>
-        <v-flex>
-          <user-management
-            :users="users"
-            :roles="roles"
-            :isRequesting="isRequesting"
-            @upsert="upsert"
-            @remove="remove"/>
-        </v-flex>
-      </v-layout>
-      <app-footer/>
-    </v-container>
-  </div>
+  <user-management
+    :users="users"
+    :roles="roles"
+    :isRequesting="isRequesting"
+    @upsert="upsert"
+    @remove="remove"/>
 </template>
 
 <script>
 import api from '@/api/system';
-import AppFooter from '@/components/common/Footer';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import { role } from 'shared';
@@ -60,14 +50,7 @@ export default {
     api.getUsers().then(users => Object.assign(this, { users, isRequesting: false }));
   },
   components: {
-    AppFooter,
     UserManagement
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.user-management-container {
-  padding-bottom: 75px;
-}
-</style>

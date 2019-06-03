@@ -16,7 +16,10 @@ import General from './components/course/Settings/General';
 import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
-import SystemUserManagement from './components/SystemUserManagement';
+import SystemElementsList from './components/system-settings/ElementsList';
+import SystemSchemasList from './components/system-settings/SchemasList';
+import SystemSettings from './components/system-settings';
+import SystemUserManagement from './components/system-settings/UserManagement';
 import TreeView from './components/course/TreeView';
 
 Vue.use(Router);
@@ -63,10 +66,26 @@ let router = new Router({
       component: TreeView
     }]
   }, {
-    path: '/settings/users',
-    name: 'system-user-management',
-    component: SystemUserManagement,
-    meta: { auth: true }
+    path: '/system-settings',
+    component: SystemSettings,
+    meta: { auth: true },
+    children: [{
+      path: '/',
+      name: 'system-management',
+      redirect: { name: 'system-user-management' }
+    }, {
+      path: 'users',
+      name: 'system-user-management',
+      component: SystemUserManagement
+    }, {
+      path: 'schemas',
+      name: 'system-schemas-list',
+      component: SystemSchemasList
+    }, {
+      path: 'elements',
+      name: 'system-elements-list',
+      component: SystemElementsList
+    }]
   }, {
     path: '/',
     name: 'auth',

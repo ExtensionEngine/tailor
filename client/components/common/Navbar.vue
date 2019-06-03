@@ -20,8 +20,8 @@
       <v-btn :to="{ name: 'catalog' }" exact flat>
         Catalog
       </v-btn>
-      <v-btn v-if="isAdmin" :to="{ name: 'system-user-management' }" flat>
-        Settings
+      <v-btn v-if="isAdmin" :to="{ name: 'system-management' }" flat>
+        System Settings
       </v-btn>
     </v-toolbar-items>
     <v-menu
