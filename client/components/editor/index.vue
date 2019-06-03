@@ -1,31 +1,31 @@
 <template>
   <div class="editor-wrapper">
-    <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
-    <template v-else>
-      <toolbar :element="focusedElement">
-        <span slot="actions">
-          <v-btn
-            v-if="metadata.length"
-            @click="showSidebar = !showSidebar"
-            color="blue-grey"
-            fab
-            dark
-            title="Toggle teaching element sidebar">
-            <v-icon>mdi-backburger</v-icon>
-          </v-btn>
-        </span>
-      </toolbar>
-      <transition name="slide">
-        <meta-sidebar
-          v-if="showSidebar"
-          :key="focusedElement._cid"
-          :metadata="metadata"
-          :element="focusedElement">
-        </meta-sidebar>
-      </transition>
-      <div @mousedown="onMousedown" @click="onClick" class="editor">
-        <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
-        <div class="container">
+    <toolbar :element="focusedElement">
+      <span slot="actions">
+        <v-btn
+          v-if="metadata.length"
+          @click="showSidebar = !showSidebar"
+          color="blue-grey"
+          fab
+          dark
+          title="Toggle teaching element sidebar">
+          <v-icon>mdi-backburger</v-icon>
+        </v-btn>
+      </span>
+    </toolbar>
+    <transition name="slide">
+      <meta-sidebar
+        v-if="showSidebar"
+        :key="focusedElement._cid"
+        :metadata="metadata"
+        :element="focusedElement">
+      </meta-sidebar>
+    </transition>
+    <div @mousedown="onMousedown" @click="onClick" class="editor">
+      <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
+      <div class="container">
+        <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
+        <template v-else>
           <content-containers
             v-for="(containerGroup, type) in contentContainers"
             :key="type"
@@ -34,9 +34,9 @@
             v-bind="getContainerConfig(type)"/>
           <assessments v-if="showAssessments"/>
           <exams v-if="showExams"/>
-        </div>
+        </template>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -172,7 +172,6 @@ export default {
 .editor-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
 
   .v-progress-circular {
     align-self: center;
