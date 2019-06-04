@@ -46,8 +46,9 @@ export default {
       const list = sortBy(this.$teRegistry.get(), 'position');
       const icon = 'mdi-help-rhombus';
       return list.reduce((registry, { type, ui, ...item }) => {
+        const searchable = item.name.toLowerCase();
         const group = QUESTION_TYPES.includes(type) ? 'questions' : 'contentElements';
-        registry[group].push({ ...item, ui: { icon, ...ui } });
+        registry[group].push({ searchable, ...item, ui: { icon, ...ui } });
         return registry;
       }, { contentElements: [], questions: [] });
     },
@@ -55,7 +56,7 @@ export default {
       let { registry, search } = this;
       if (!search) return registry;
       search = search.toLowerCase();
-      const cond = ({ name }) => name.toLowerCase().includes(search);
+      const cond = ({ searchable }) => searchable.includes(search);
       const contentElements = registry.contentElements.filter(cond);
       const questions = registry.questions.filter(cond);
       return { contentElements, questions };
