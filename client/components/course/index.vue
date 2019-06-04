@@ -1,12 +1,11 @@
 <template>
   <div class="repo-container">
-    <div class="course-header">
+    <div class="course-header primary">
       <v-tabs
         height="50"
         color="primary"
         slider-color="grey lighten-4"
-        dark
-        class="elevation-2">
+        dark>
         <v-tab
           v-for="tab in tabs"
           :key="tab.name"
@@ -105,7 +104,6 @@ export default {
 .course-header {
   display: flex;
   justify-content: space-between;
-  background: #fff;
 }
 
 .v-tabs {
