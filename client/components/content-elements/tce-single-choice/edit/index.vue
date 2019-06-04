@@ -21,7 +21,7 @@
             @change="selectAnswer(index)"
             type="radio">
         </span>
-        <v-avatar v-else size="32" color="blue">{{ index + 1 }}</v-avatar>
+        <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
         <span :class="{ 'has-error': answerError(index) }" class="answers-input">
           <input
             :ref="`input${index}`"
@@ -192,7 +192,7 @@ ul {
 
     .v-avatar {
       float: left;
-      margin-top: 8px;
+      margin-top: 5px;
       margin-right: 6px;
       color: #fff;
       font-weight: 700;
