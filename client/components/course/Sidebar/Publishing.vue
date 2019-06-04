@@ -8,7 +8,7 @@
         <v-btn
           :loading="isPublishing"
           v-on="on"
-          color="blue-grey"
+          color="blue-grey darken-1"
           outline
           small>
           Publish
@@ -65,7 +65,7 @@ export default {
   padding: 0 7px;
 
   .publish-date {
-    width: 180px;
+    width: 200px;
     line-height: 44px;
   }
 

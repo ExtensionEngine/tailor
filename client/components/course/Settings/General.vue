@@ -1,5 +1,5 @@
 <template>
-  <div v-if="course" class="settings">
+  <div v-if="course" class="settings white elevation-1">
     <div class="actions">
       <v-btn
         :loading="publishing"
@@ -29,11 +29,11 @@
 </template>
 
 <script>
-import { getRepositoryMeta } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex-module';
 import api from '../../../api/course';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
+import { getRepositoryMeta } from 'shared/activities';
 import Meta from 'components/common/Meta';
 import set from 'lodash/set';
 
@@ -83,8 +83,6 @@ export default {
 .settings {
   padding: 30px 30px 10px;
   text-align: left;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 
   .meta-input {
     margin: 20px 0;

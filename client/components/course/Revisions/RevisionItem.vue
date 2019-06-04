@@ -5,7 +5,7 @@
       :style="{ cursor: isTeachingElement ? 'pointer' : 'auto' }"
       @click="toggle"
       class="revision">
-      <div :style="{ color }" class="acronym"><span>{{ acronym }}</span></div>
+      <div :style="{ color }" class="acronym">{{ acronym }}</div>
       <div class="content">
         <div class="description">{{ description }}</div>
         <div class="name">{{ revision.user.email }}</div>
@@ -26,10 +26,10 @@ import {
   getRevisionAcronym,
   getRevisionColor
 } from 'utils/revision';
-import { mapGetters } from 'vuex-module';
 import EntityRevisions from './EntityRevisions';
 import fecha from 'fecha';
 import find from 'lodash/find';
+import { mapGetters } from 'vuex-module';
 
 export default {
   name: 'revision-item',
@@ -90,14 +90,11 @@ export default {
     width: 40px;
     height: 40px;
     margin-right: 16px;
-    font-size: 18px;
+    font-size: 20px;
+    line-height: 41px;
     text-align: center;
     border-radius: 50%;
-    background-color: #eee;
-
-    span {
-      line-height: 40px;
-    }
+    background-color: #f1f1f1;
   }
 
   .content {

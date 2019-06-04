@@ -2,7 +2,7 @@
   <div class="activities-container">
     <div class="loader-outer">
       <div class="loader-inner">
-        <circular-progress v-if="showLoader"></circular-progress>
+        <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
       </div>
     </div>
     <div :style="{ visibility }" class="activities">
@@ -18,13 +18,12 @@
 </template>
 
 <script>
-import CircularProgress from 'components/common/CircularProgress';
+import { mapGetters, mapMutations } from 'vuex-module';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import map from 'lodash/map';
-import { mapGetters, mapMutations } from 'vuex-module';
 import reduce from 'lodash/reduce';
 import Sidebar from 'components/course/Sidebar';
 import TreeGraph from './TreeGraph';
@@ -79,7 +78,6 @@ export default {
     }
   },
   components: {
-    CircularProgress,
     Sidebar,
     TreeGraph
   }
@@ -113,11 +111,10 @@ $accent: #337ab7;
   left: 0;
   width: 100%;
   height: 100%;
-  padding-right: 400px;
 
   .loader-inner {
     position: absolute;
-    top: 50%;
+    top: 120px;
     left: 50%;
     transform: translate(-50%, -50%);
     padding: inherit;

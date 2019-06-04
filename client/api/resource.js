@@ -1,11 +1,10 @@
 import assign from 'lodash/assign';
+import axios from './request';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import join from 'url-join';
 import omit from 'lodash/omit';
 import Queue from 'promise-queue';
-
-import axios from './request';
 
 // used to serialize api calls that modify data
 const queue = new Queue(1, Infinity);
@@ -18,7 +17,7 @@ export default class Resource {
   }
 
   url(path = '') {
-    return join(this.getBaseUrl(), path);
+    return join(this.getBaseUrl(), path.toString());
   }
 
   /**
@@ -106,7 +105,7 @@ export default class Resource {
       // if server id is not provided but exist inside resource cache
       if (!model.id && this.getKey(model._cid)) this.setKey(model);
       const action = model.id ? 'patch' : 'post';
-      const url = model.id ? this.url(model.id) : this.url('');
+      const url = model.id ? this.url(model.id) : this.url();
       return axios[action](url, this.clean(model))
         .then(response => {
           if (!model.id) this.map(model._cid, response.data.data.id);

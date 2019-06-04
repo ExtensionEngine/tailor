@@ -97,7 +97,6 @@ export default {
   z-index: 999;
   width: 100%;
   height: 45px;
-  background-color: #fff;
   text-align: left;
 
   .icon {

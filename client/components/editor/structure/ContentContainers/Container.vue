@@ -11,7 +11,7 @@
     </div>
     <v-alert
       :value="!teachingElements.length"
-      color="blue-grey darken-2"
+      color="primary"
       icon="mdi-information-variant"
       outline>
       Click the button below to create content.
@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import filter from 'lodash/filter';
 import { mapActions, mapGetters } from 'vuex-module';
+import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';

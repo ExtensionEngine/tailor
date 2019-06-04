@@ -1,9 +1,9 @@
 import cuid from 'cuid';
 import each from 'lodash/each';
+import Resource from '../../api/resource';
+
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
-
-import Resource from '../../api/resource';
 
 export default function (collectionName, baseUrl = '') {
   let module = new VuexModule(collectionName);

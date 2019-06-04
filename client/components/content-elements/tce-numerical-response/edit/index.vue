@@ -59,8 +59,8 @@
 </template>
 
 <script>
-import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
+import { defaults } from 'utils/assessment';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import includes from 'lodash/includes';

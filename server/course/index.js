@@ -9,12 +9,12 @@ const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const ctrl = require('./course.controller');
 const pick = require('lodash/pick');
 const processQuery = require('../shared/util/processListQuery')();
-const router = require('express-promise-router')();
+const router = require('express').Router();
 
 router.get('/courses/:id/active-users/subscribe', sse, subscribe);
 
 router
-  .use('/courses/:id*', getCourse)
+  .param('id', getCourse)
   .use('/courses/:id*', hasAccess)
   .get('/courses', processQuery, ctrl.index)
   .post('/courses', authorize(), ctrl.create)
@@ -29,23 +29,23 @@ router
   .get('/courses/:id/contentInventory', ctrl.exportContentInventory)
   .post('/courses/:id/register-active-user', registerActiveUser);
 
-function getCourse(req, res) {
-  return Course.findByPk(req.params.id, { paranoid: false })
+function getCourse(req, _res, next, id) {
+  return Course.findByPk(id, { paranoid: false })
     .then(course => course || createError(NOT_FOUND, 'Course not found'))
     .then(course => {
       req.course = course;
-      return Promise.resolve('next');
+      next();
     });
 }
 
-function hasAccess(req, res) {
+function hasAccess(req, _res, next) {
   const { user, course } = req;
-  if (user.isAdmin()) return Promise.resolve('next');
+  if (user.isAdmin()) return next();
   return course.getUser(user)
     .then(user => user || createError(UNAUTHORIZED, 'Access restricted'))
     .then(user => {
       req.courseRole = user.courseUser.role;
-      return Promise.resolve('next');
+      next();
     });
 }
 

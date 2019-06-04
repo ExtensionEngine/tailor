@@ -80,7 +80,6 @@ export default {
   position: relative;
   width: 100%;
   height: 50px;
-  background-color: #fff;
 
   ul {
     float: left;
