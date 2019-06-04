@@ -1,8 +1,8 @@
 <template>
-  <div class="toolbar-wrapper">
+  <div class="toolbar-wrapper primary">
     <div
       v-show="activity"
-      class="activity-toolbar primary elevation-1">
+      class="activity-toolbar">
       <v-chip :color="config.color" label dark class="mr-3">
         {{ config.label }}
       </v-chip>
