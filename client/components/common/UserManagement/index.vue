@@ -71,7 +71,7 @@ export default {
 
 <style lang="scss" scoped>
 .settings {
-  padding: 30px 30px 30px;
+  padding: 30px;
 }
 
 .loading-spinner {
