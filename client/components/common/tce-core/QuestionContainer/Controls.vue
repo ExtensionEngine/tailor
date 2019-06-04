@@ -4,12 +4,12 @@
       <v-btn @click="$emit('cancel')" flat>
         Cancel
       </v-btn>
-      <v-btn @click="save" color="success" depressed>
+      <v-btn @click="save" color="primary">
         Save
       </v-btn>
     </div>
     <div v-else class="pull-right">
-      <v-btn @click="$emit('edit')" color="blue-grey lighten-1" dark depressed>
+      <v-btn @click="$emit('edit')" color="primary">
         Edit
       </v-btn>
     </div>
