@@ -7,6 +7,7 @@
         {{ config.label }}
       </v-chip>
       <h1 class="text-truncate">{{ activity.data.name }}</h1>
+      <active-users :users="activeUsers"/>
     </div>
     <element-toolbar
       v-if="element && element.parent"
@@ -28,7 +29,6 @@
         <slot name="actions"></slot>
       </template>
     </element-toolbar>
-    <active-users v-if="!element"/>
   </div>
 </template>
 
@@ -45,6 +45,7 @@ export default {
   },
   computed: {
     ...mapGetters(['activity'], 'editor'),
+    ...mapGetters(['activeUsers'], 'course'),
     config() {
       return getLevel(this.activity.type);
     }
@@ -55,8 +56,6 @@ export default {
 
 <style lang="scss" scoped>
 .toolbar-wrapper {
-  display: flex;
-  justify-content: space-between;
   width: 100%;
   background-color: #fff;
   box-shadow:
