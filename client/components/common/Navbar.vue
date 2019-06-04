@@ -17,11 +17,8 @@
       {{ repository.name }}
     </router-link>
     <v-toolbar-items>
-      <v-btn :to="{ name: 'catalog' }" exact flat>
-        Catalog
-      </v-btn>
-      <v-btn v-if="isAdmin" :to="{ name: 'system-management' }" flat>
-        System Settings
+      <v-btn :to="{ name: 'catalog' }" exact flat icon>
+        <v-icon>mdi-home</v-icon>
       </v-btn>
     </v-toolbar-items>
     <v-menu
@@ -37,6 +34,9 @@
       <v-list>
         <v-list-tile>
           <v-list-tile-title>{{ user.email }}</v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile v-if="isAdmin" :to="{ name: 'system-management' }">
+          <v-list-tile-title>System Settings</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="logout">
           <v-list-tile-title>Logout</v-list-tile-title>
@@ -95,6 +95,7 @@ $font-color: #333;
 }
 
 .repository-title {
+  max-width: 250px;
   margin-right: 15px;
   color: $font-color;
   font-size: 16px;
