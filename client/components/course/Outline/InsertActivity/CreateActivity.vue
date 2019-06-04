@@ -4,7 +4,7 @@
       :class="{ 'has-error': vErrors.has('name') }"
       class="form-group name-input">
       <input
-        v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+        v-validate="{ required: true, min: 2, max: 250 }"
         v-focus.lazy="true"
         v-model="name"
         class="form-control"
@@ -39,13 +39,13 @@
 </template>
 
 <script>
-import { focus } from 'vue-focus';
-import { mapGetters } from 'vuex-module';
-import { withValidation } from 'utils/validation';
 import ActivityBrowser from 'components/common/ActivityBrowser';
 import first from 'lodash/first';
+import { focus } from 'vue-focus';
+import { mapGetters } from 'vuex-module';
 import multiselect from 'components/common/Select';
 import SelectAction from './SelectAction';
+import { withValidation } from 'utils/validation';
 
 export default {
   mixins: [withValidation()],
@@ -82,7 +82,7 @@ export default {
   padding: 20px 5px;
 
   input {
-    background-color: #e0e0e0;
+    background-color: inherit;
   }
 
   .btn-sm.btn-material {

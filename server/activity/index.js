@@ -6,12 +6,12 @@ const ctrl = require('./activity.controller');
 const model = require('./activity.model');
 const { NOT_FOUND } = require('http-status-codes');
 const processListQuery = require('../shared/util/processListQuery');
-const router = require('express-promise-router')();
+const router = require('express').Router();
 
 const processQuery = processListQuery({ order: [['position']] });
 
 router
-  .use('/courses/:courseId/activities/:activityId*', getActivity)
+  .param('activityId', getActivity)
   .get('/courses/:courseId/activities', processQuery, ctrl.list)
   .post('/courses/:courseId/activities', ctrl.create)
   .get('/courses/:courseId/activities/:activityId', ctrl.show)
@@ -21,12 +21,12 @@ router
   .post('/courses/:courseId/activities/:activityId/clone', ctrl.clone)
   .get('/courses/:courseId/activities/:activityId/publish', ctrl.publish);
 
-function getActivity(req, res) {
-  return Activity.findById(req.params.activityId, { paranoid: false })
+function getActivity(req, _res, next, activityId) {
+  return Activity.findByPk(activityId, { paranoid: false })
     .then(activity => activity || createError(NOT_FOUND, 'Activity not found'))
     .then(activity => {
       req.activity = activity;
-      return Promise.resolve('next');
+      next();
     });
 }
 

@@ -1,19 +1,19 @@
 <template>
   <div class="col-lg-4">
-    <div @click="navigateTo" class="course-card">
+    <div @click="navigateTo" class="repo-card white elevation-2">
       <div class="body">
-        <div class="title">
-          <acronym :course="course"></acronym>
+        <div class="repo-title">
+          <acronym :course="course"/>
           {{ name }}
         </div>
         <div class="description">{{ description }}</div>
       </div>
       <div class="row">
         <span class="col-xs-6">
-          <stat :name="objectiveLabel" :value="objectives"></stat>
+          <stat :name="objectiveLabel" :value="objectives"/>
         </span>
         <span class="col-xs-6">
-          <stat :value="assessments" name="Knowledge checks"></stat>
+          <stat :value="assessments" name="Knowledge checks"/>
         </span>
       </div>
     </div>
@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import { getObjectives } from 'shared/activities';
 import Acronym from 'components/common/Acronym';
 import get from 'lodash/get';
+import { getObjectives } from 'shared/activities';
 import map from 'lodash/map';
 import pluralize from 'pluralize';
 import Stat from './Stat';
@@ -68,20 +68,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.course-card {
+.repo-card {
   min-height: 300px;
   margin-top: 40px;
   padding: 30px 30px 20px;
   color: #555;
-  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   border-radius: 3px;
-  background-color: #fff;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.54);
   transition: box-shadow 0.2s ease;
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18) !important;
   }
 
   .body {
@@ -95,7 +92,7 @@ export default {
   }
 }
 
-.title {
+.repo-title {
   height: 100px;
   margin: 20px 0 10px;
   font-size: 20px;

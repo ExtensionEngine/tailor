@@ -3,11 +3,11 @@
     <circular-progress v-if="uploading"/>
     <form v-else @submit.prevent class="upload-form">
       <input
+        v-filefilter="'auto'"
         v-validate="validate"
         :id="id"
         :ref="id"
         :name="id"
-        :accept="validate.ext.join(',')"
         @change="upload"
         type="file"
         class="upload-input">
@@ -45,7 +45,7 @@ export default {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
     fileKey: { type: String, default: '' },
-    validate: { type: Object, default: () => ({ rules: { ext: [] } }) },
+    validate: { type: Object, default: () => ({ ext: [] }) },
     label: { type: String, default: 'Choose a file' },
     sm: { type: Boolean, default: false }
   },
@@ -80,8 +80,8 @@ export default {
     },
     deleteFile() {
       appChannel.emit('showConfirmationModal', {
-        type: 'file',
-        item: { name: this.fileName },
+        title: 'Delete file?',
+        message: `Are you sure you want to delete ${this.fileName}?`,
         action: () => this.$emit('delete', this.id, null)
       });
     }

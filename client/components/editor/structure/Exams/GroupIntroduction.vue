@@ -6,22 +6,22 @@
       :types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true"
       @add="saveElement"
-      @update="reorder">
+      @update="reorder"
+      embedded>
       <teaching-element
         slot="list-item"
         slot-scope="{ item, dragged, setWidth }"
         :setWidth="setWidth"
         :dragged="dragged"
-        :element="item">
-      </teaching-element>
+        :element="item"/>
     </tes-list>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex-module';
 import filter from 'lodash/filter';
 import { isQuestion } from 'tce-core/utils';
-import { mapActions, mapGetters } from 'vuex-module';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
 

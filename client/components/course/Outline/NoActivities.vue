@@ -6,7 +6,7 @@
           :class="{ 'has-error': vErrors.has('name') }"
           class="form-group">
           <input
-            v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+            v-validate="{ required: true, min: 2, max: 250 }"
             v-model="name"
             class="form-control"
             type="text"
@@ -27,11 +27,7 @@
         </multiselect>
       </div>
       <div class="col-md-2">
-        <button
-          @click.stop="create"
-          class="btn btn-block btn-primary btn-material">
-          Add
-        </button>
+        <v-btn @click.stop="create" color="blue-grey" outline>Add</v-btn>
       </div>
     </div>
   </div>
@@ -39,10 +35,10 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import { withValidation } from 'utils/validation';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
 import multiselect from '../../common/Select';
+import { withValidation } from 'utils/validation';
 
 export default {
   mixins: [withValidation()],

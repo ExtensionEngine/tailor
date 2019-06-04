@@ -1,28 +1,33 @@
 <template>
   <div class="editor-wrapper">
-    <toolbar :element="focusedElement">
-      <span slot="actions">
-        <span
-          v-if="metadata.length"
-          @click="showSidebar = !showSidebar"
-          class="btn btn-fab btn-primary"
-          title="Toggle teaching element sidebar">
-          <span class="mdi mdi-backburger"></span>
+    <template v-if="activity">
+      <toolbar :element="focusedElement">
+        <span slot="actions">
+          <v-btn
+            v-if="metadata.length"
+            @click="showSidebar = !showSidebar"
+            color="primary"
+            fab
+            dark
+            title="Toggle teaching element sidebar">
+            <v-icon>mdi-backburger</v-icon>
+          </v-btn>
         </span>
-      </span>
-    </toolbar>
-    <transition name="slide">
-      <sidebar
-        v-if="showSidebar"
-        :key="focusedElement._cid"
-        :metadata="metadata"
-        :element="focusedElement">
-      </sidebar>
-    </transition>
+      </toolbar>
+      <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
+      <transition name="slide">
+        <meta-sidebar
+          v-if="showSidebar"
+          :key="focusedElement._cid"
+          :metadata="metadata"
+          :element="focusedElement">
+        </meta-sidebar>
+      </transition>
+    </template>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
-      <circular-progress v-if="showLoader"/>
-      <div v-else>
-        <div class="container">
+      <div class="container">
+        <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
+        <template v-else>
           <content-containers
             v-for="(containerGroup, type) in contentContainers"
             :key="type"
@@ -31,7 +36,7 @@
             v-bind="getContainerConfig(type)"/>
           <assessments v-if="showAssessments"/>
           <exams v-if="showExams"/>
-        </div>
+        </template>
       </div>
     </div>
   </div>
@@ -39,17 +44,19 @@
 
 <script>
 import * as config from 'shared/activities';
+import { getElementId, isQuestion } from 'tce-core/utils';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
-import CircularProgress from 'components/common/CircularProgress';
 import ContentContainers from './structure/ContentContainers';
+import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getElementId } from 'tce-core/utils';
+import MainSidebar from './MainSidebar';
+import MetaSidebar from './MetaSidebar';
 import Promise from 'bluebird';
-import Sidebar from './sidebar';
+import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
 
@@ -64,10 +71,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activities']),
-    ...mapGetters(['activity', 'contentContainers'], 'editor'),
     ...mapGetters(['course', 'getMetadata'], 'course'),
+    ...mapGetters(['activity', 'contentContainers'], 'editor'),
     metadata() {
+      if (!this.focusedElement) return [];
       return this.getMetadata(this.focusedElement);
     },
     showAssessments() {
@@ -107,8 +114,25 @@ export default {
       }
     }
   },
-  created() {
-    EventBus.on('element:focus', (element, composite) => {
+  async created() {
+    const { courseId, activityId } = this.$route.params;
+    this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
+      const { type, payload: element } = mutation;
+      const { focusedElement } = this;
+      if (!focusedElement) return;
+      if (!['tes/save', 'tes/add', 'tes/update'].includes(type)) return;
+      if (element._cid === focusedElement._cid) {
+        this.focusedElement = { ...focusedElement, ...element };
+        return;
+      }
+      const embed = isQuestion(element.type)
+        ? find(element.data.question, { id: focusedElement.id })
+        : get(element, `data.embeds.${focusedElement.id}`);
+      if (!embed) return;
+      const hasParent = !!focusedElement.parent;
+      this.focusedElement = { ...embed, parent: hasParent ? element : null };
+    }, 100));
+    EventBus.on('element:focus', throttle((element, composite) => {
       if (!element) {
         this.focusedElement = null;
         this.showSidebar = false;
@@ -117,26 +141,27 @@ export default {
       if (getElementId(this.focusedElement) === getElementId(element)) return;
       this.focusedElement = { ...element, parent: composite };
       this.showSidebar = this.metadata.length && this.showSidebar;
-    });
+    }, 50));
     // TODO: Do this better!
-    const courseId = this.$route.params.courseId;
-    const activityId = this.$route.params.activityId;
     const baseUrl = `/courses/${courseId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
     this.setupTesApi(`${baseUrl}/tes`);
-    if (!this.course) this.getCourse(courseId);
-    Promise.join(
+    const actions = [
       this.getActivities(),
-      this.getTeachingElements({ activityId, parentId: activityId }),
-      Promise.delay(700)
-    ).then(() => (this.showLoader = false));
+      this.getTeachingElements({ activityId, parentId: activityId })
+    ];
+    if (!this.course) actions.push(this.getCourse(courseId));
+    Promise.all(actions).then(() => (this.showLoader = false));
+  },
+  beforeDestroy() {
+    this.unsubscribe();
   },
   components: {
     Assessments,
-    CircularProgress,
     ContentContainers,
     Exams,
-    Sidebar,
+    MainSidebar,
+    MetaSidebar,
     Toolbar
   }
 };
@@ -149,54 +174,19 @@ export default {
   display: flex;
   flex-direction: column;
 
-  .btn.btn-fab.btn-primary[disabled] {
-    opacity: 1;
-    background: mix($brand-primary, $gray-light, 25);
-    box-shadow: none;
+  .v-progress-circular {
+    align-self: center;
+    margin-top: 120px;
   }
 }
 
 .editor {
-  padding-top: 80px;
+  padding: 20px 50px 0;
   overflow-y: scroll;
   overflow-y: overlay;
 
-  .breadcrumbs {
-    margin: 70px 0 10px;
-    color: #555;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    line-height: 20px;
-    text-align: left;
+  .container {
+    max-width: 1100px;
   }
-
-  h2 {
-    margin: 20px 0 30px;
-    color: #444;
-    font-size: 20px;
-    line-height: 30px;
-    text-align: left;
-
-    a {
-      margin-left: 15px;
-    }
-  }
-
-  .circular-progress {
-    margin-top: 150px;
-  }
-
-  .divider {
-    padding: 0 10px;
-    color: #999;
-  }
-}
-
-.slide-enter-active, .slide-leave-active {
-  transition: margin-right 0.5s;
-}
-
-.slide-enter, .slide-leave-to {
-  margin-right: -380px;
 }
 </style>

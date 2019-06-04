@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import { defaults } from 'utils/assessment';
 import cloneDeep from 'lodash/cloneDeep';
+import { defaults } from 'utils/assessment';
 import range from 'lodash/range';
 
 const customAlert = {

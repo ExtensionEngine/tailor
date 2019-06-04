@@ -47,8 +47,13 @@ handlePlyrErrors(Plyr);
 const MediaError = window.MediaError;
 
 const NOT_NATIVE = /youtu\.?be|vimeo/;
+
+// NOTE: m4v is a special video file format used by Apple. It is a video in
+//       mp4 container and uses a `.m4v` extension. Can contain DRM.
+// https://stackoverflow.com/a/15279480
 const CUSTOM_SUBTYPE_MAPPING = {
-  ogv: 'ogg'
+  ogv: 'ogg',
+  m4v: 'mp4'
 };
 
 export default {
@@ -149,7 +154,7 @@ function handlePlyrErrors(Plyr) {
 
 .overlay {
   position: absolute;
-  z-index: 99;
+  z-index: 3;
   width: 100%;
   height: 100%;
   background-color: #333;

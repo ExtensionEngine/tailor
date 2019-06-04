@@ -62,7 +62,6 @@ import Question from './Question';
 import toPath from 'lodash/toPath';
 import yup from 'yup';
 
-const saveAlert = { text: 'Question saved !', type: 'alert-success' };
 const validationOptions = { recursive: true, abortEarly: false };
 
 export default {
@@ -76,6 +75,7 @@ export default {
     return {
       isEditing,
       editedElement: cloneDeep(this.element),
+      undoState: cloneDeep(this.element),
       alert: {},
       errors: []
     };
@@ -109,6 +109,7 @@ export default {
     },
     edit() {
       this.editedElement = cloneDeep(this.element);
+      this.undoState = cloneDeep(this.element);
       this.isEditing = true;
     },
     update(data, validate) {
@@ -117,6 +118,7 @@ export default {
         this.errors = [];
         this.validate().catch(err => (this.errors = errorProcessor(err)));
       }
+      this.$emit('add', this.editedElement);
     },
     save() {
       if (!this.isEditing) return;
@@ -124,13 +126,12 @@ export default {
       this.validate().then(() => {
         this.$emit('save', cloneDeep(this.editedElement.data));
         this.isEditing = false;
-        this.setAlert(saveAlert);
       }).catch(err => (this.errors = errorProcessor(err)));
     },
     cancel() {
       if (!this.editedElement.id) return this.$emit('delete');
-      this.editedElement = cloneDeep(this.element);
-      this.$emit('add', this.editedElement);
+      this.$emit('add', cloneDeep(this.undoState));
+      this.editedElement = cloneDeep(this.undoState);
       this.isEditing = false;
       this.setAlert();
       this.errors = [];

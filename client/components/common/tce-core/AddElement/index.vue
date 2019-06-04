@@ -1,72 +1,140 @@
 <template>
-  <div class="add-element">
-    <div @click="toggleSelection" class="btn-base">
-      <span
-        :class="[selectionOpened ? 'btn-close' : 'btn-open']"
-        class="mdi mdi-plus toggle-selection">
-      </span>
-    </div>
-    <transition name="slide-fade">
-      <div v-if="selectionOpened" class="selections">
-        <select-element
-          v-if="!type"
-          :activity="activity"
-          :include="include"
-          @selected="setType"/>
-        <select-width v-if="canSelectWidth" @selected="setWidth"/>
+  <div class="add-element-container">
+    <v-btn
+      v-if="large"
+      @click.stop="isVisible = true"
+      outline
+      color="primary"
+      class="mt-3 mb-4">
+      <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
+    </v-btn>
+    <v-btn
+      v-else
+      @click.stop="isVisible = true"
+      icon
+      flat
+      color="primary">
+      <v-icon>{{ icon }}</v-icon>
+    </v-btn>
+    <v-bottom-sheet v-model="isVisible" max-width="1240" inset lazy>
+      <div class="element-container">
+        <v-toolbar v-if="layout" dense class="mb-2">
+          <v-spacer/>
+          <v-divider vertical class="mx-2"/>
+          <v-btn-toggle v-model="elementWidth" mandatory>
+            <v-btn :value="100" flat>
+              <v-icon>mdi-square-outline</v-icon>
+            </v-btn>
+            <v-btn :value="50" flat>
+              <v-icon>mdi-select-compare</v-icon>
+            </v-btn>
+          </v-btn-toggle>
+          <v-divider class="mx-2" vertical/>
+          <v-chip label class="width-label">
+            <span>Element width:</span>
+            <span class="label-value px-1">{{ elementWidth }}</span>%
+          </v-chip>
+        </v-toolbar>
+        <div
+          v-for="group in library"
+          :key="group.name">
+          <div class="group-heading">
+            <v-icon>{{ group.icon }}</v-icon>
+            <span>{{ group.name }}</span>
+          </div>
+          <div class="group-elements">
+            <button
+              v-for="element in group.elements"
+              :key="element.position"
+              :disabled="isElementDisabled(element)"
+              @click.stop="add(element)"
+              class="element">
+              <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
+              <h5 class="body-2">{{ element.name }}</h5>
+            </button>
+          </div>
+        </div>
       </div>
-    </transition>
+    </v-bottom-sheet>
   </div>
 </template>
 
 <script>
-import { isQuestion, resolveElementType } from '../utils';
 import cuid from 'cuid';
+import filter from 'lodash/filter';
 import get from 'lodash/get';
-import SelectElement from './SelectElement';
-import SelectWidth from './SelectWidth';
+import { isQuestion } from '../utils';
+import reduce from 'lodash/reduce';
+import sortBy from 'lodash/sortBy';
 
-const DEFAULT_WIDTH = 12;
+const DEFAULT_ELEMENT_WIDTH = 100;
+const LAYOUT = { HALF_WIDTH: 6, FULL_WIDTH: 12 };
+const ELEMENT_GROUPS = [
+  { name: 'Content Elements', icon: 'mdi-set-center' },
+  { name: 'Assessments', icon: 'mdi-help-rhombus' },
+  { name: 'Nongraded questions', icon: 'mdi-comment-question-outline' }
+];
 
 export default {
   name: 'add-element',
   inject: ['$teRegistry'],
   props: {
+    show: { type: Boolean, default: false },
     activity: { type: Object, default: null },
     position: { type: Number, default: null },
     layout: { type: Boolean, default: true },
-    include: { type: Array, default: null }
+    include: { type: Array, default: null },
+    large: { type: Boolean, default: false },
+    label: { type: String, default: 'Add content' },
+    icon: { type: String, default: 'mdi-plus' }
   },
   data() {
     return {
-      type: null,
-      subtype: null,
-      width: DEFAULT_WIDTH,
-      selectionOpened: false
+      isVisible: false,
+      elementWidth: DEFAULT_ELEMENT_WIDTH
     };
   },
   computed: {
-    config() {
-      const { type, subtype, $teRegistry } = this;
-      if (!type && !subtype) return;
-      return $teRegistry.get(subtype || resolveElementType(type));
+    registry() {
+      return sortBy(this.$teRegistry.get(), 'position');
     },
-    forceWidth() {
-      return get(this.config, 'ui.forceFullWidth', false);
+    questions() {
+      return filter(this.registry, { type: 'QUESTION' });
     },
-    canSelectWidth() {
-      const { layout, type, forceWidth } = this;
-      return layout && type && !forceWidth;
+    contentElements() {
+      const items = filter(this.registry, it => !isQuestion(it.type));
+      if (!this.isSubset) return items;
+      return filter(items, it => this.include.includes(it.type));
+    },
+    assessments() {
+      const { registry, isSubset, include, questions } = this;
+      if (isSubset && !include.includes('ASSESSMENT')) return [];
+      return filter(registry, { type: 'ASSESSMENT' })
+        .concat(questions.map(it => ({ ...it, type: 'ASSESSMENT' })));
+    },
+    reflections() {
+      const { registry, isSubset, include, questions } = this;
+      if (isSubset && !include.includes('REFLECTION')) return [];
+      return filter(registry, { type: 'REFLECTION' })
+        .concat(questions.map(it => ({ ...it, type: 'REFLECTION' })));
+    },
+    isSubset() {
+      return !!this.include && !!this.include.length;
+    },
+    library() {
+      const groups = [this.contentElements, this.assessments, this.reflections];
+      return reduce(groups, (acc, elements, i) => {
+        if (elements.length) acc.push({ ...ELEMENT_GROUPS[i], elements });
+        return acc;
+      }, []);
+    },
+    processedWidth() {
+      return this.elementWidth === 50 ? LAYOUT.HALF_WIDTH : LAYOUT.FULL_WIDTH;
     }
   },
   methods: {
-    toggleSelection() {
-      if (this.selectionOpened) return this.close();
-      this.selectionOpened = true;
-    },
-    create() {
-      const { type, subtype, width, config } = this;
-      const element = { type, data: { width } };
+    add({ type, subtype, initState = () => ({}) }) {
+      const element = { type, data: { width: this.processedWidth } };
       // If teaching element within activity
       if (this.activity) {
         element.activityId = this.activity.id;
@@ -77,81 +145,132 @@ export default {
         element.embedded = true;
       }
       if (isQuestion(element.type)) {
-        const data = { width: DEFAULT_WIDTH };
-        const question = [{ data, id: cuid(), type: 'HTML', embedded: true }];
+        const data = { width: LAYOUT.FULL_WIDTH };
+        const question = [{ id: cuid(), data, type: 'HTML', embedded: true }];
         element.data = { ...element.data, question, type: subtype };
       }
-      const initState = get(config, 'initState', () => ({}));
       element.data = { ...element.data, ...initState() };
       if (element.type === 'REFLECTION') delete element.data.correct;
       this.$emit('add', element);
-      this.close();
+      this.isVisible = false;
     },
-    setType({ type, subtype }) {
-      this.type = type;
-      this.subtype = subtype;
-      if (!this.canSelectWidth) this.create();
+    isElementDisabled(element) {
+      if (this.elementWidth === DEFAULT_ELEMENT_WIDTH) return false;
+      return get(element, 'ui.forceFullWidth', false);
     },
-    setWidth(width) {
-      this.width = width;
-      this.create();
-    },
-    close() {
-      this.type = null;
-      this.subtype = null;
-      this.width = DEFAULT_WIDTH;
-      this.selectionOpened = false;
+    onHidden() {
+      this.elementWidth = DEFAULT_ELEMENT_WIDTH;
+      this.$emit('hidden');
     }
   },
-  components: { SelectElement, SelectWidth }
+  watch: {
+    show(val) {
+      if (val) this.isVisible = val;
+    },
+    isVisible(val, oldVal) {
+      if (!val && oldVal) this.onHidden();
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.add-element {
-  margin: 20px 0 30px;
-  color: #444;
+$font-color: #333;
+$accent-color: #d81b60;
+$disabled-color: #a1a1a1;
 
-  .toggle-selection {
-    display: inline-block;
-  }
+.element-container {
+  min-height: 400px;
+  padding: 0 0 30px;
+  background: #fff;
+}
 
-  .btn-open {
-    transition: all 0.2s ease-in-out;
-  }
+.group-heading {
+  margin: 0 40px 5px;
+  padding-top: 20px;
+  color: #555;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 28px;
+  text-align: left;
 
-  .btn-close {
-    transform: rotate(45deg);
-    transition: all 0.2s ease-in-out;
-  }
-
-  .selections {
-    min-height: 85px;
-    margin-top: 10px;
-  }
-
-  .btn-base {
-    font-size: 28px;
+  .v-icon, span {
     line-height: 28px;
-    vertical-align: top;
+    vertical-align: middle;
+  }
 
-    &:hover {
-      color: #42b983;
-      cursor: pointer;
+  .v-icon {
+    margin-right: 6px;
+    color: #546e7a;
+  }
+}
+
+.group-elements {
+  display: flex;
+  width: 100%;
+  padding: 0 30px;
+  flex-wrap: wrap;
+}
+
+.element {
+  align-self: center;
+  width: 130px;
+  min-width: 130px;
+  min-height: 70px;
+  padding: 5px;
+  color: $font-color;
+  font-size: 20px;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+
+  .v-icon {
+    padding: 2px 0;
+    color: $font-color;
+    font-size: 30px;
+  }
+
+  &:disabled {
+    color: $disabled-color;
+    cursor: not-allowed;
+
+    .v-icon {
+      color: $disabled-color;
     }
   }
 
-  .slide-fade-enter-active {
-    transition: all 0.2s ease-in-out;
+  &:enabled:hover {
+    color: $accent-color;
+    background: #fcfcfc;
+    border: 1px solid #888;
+
+    .v-icon {
+      color: $accent-color;
+    }
   }
 
-  .slide-fade-enter {
-    transform: translateY(-30px);
-    opacity: 0;
+  &-title {
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+    line-height: 20px;
+  }
+}
+
+.v-toolbar {
+  .v-divider {
+    align-self: auto;
   }
 
-  .slide-fade-leave-to, .slide-fade-leave-active {
-    display: none;
+  .width-label {
+    min-width: 165px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .label-value {
+    color: $accent-color;
   }
 }
 </style>

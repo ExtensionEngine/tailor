@@ -8,7 +8,7 @@ const { FORBIDDEN, NOT_FOUND } = require('http-status-codes');
 const model = require('./comment.model');
 const processQuery = require('../shared/util/processListQuery');
 const { middleware: sse } = require('../shared/util/sse');
-const router = require('express-promise-router')();
+const router = require('express').Router();
 const { User } = require('../shared/database');
 
 const defaultListQuery = {
@@ -24,25 +24,25 @@ router
   .post(ctrl.create);
 
 router
+  .param('commentId', getComment)
   .route('/courses/:courseId/comments/:commentId')
-  .all(getComment)
   .get(ctrl.show)
   .patch(canEdit, ctrl.patch)
   .delete(canEdit, ctrl.remove);
 
-function getComment(req, res) {
+function getComment(req, _res, next, commentId) {
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
-  return Comment.findById(req.params.commentId, { paranoid: false, include })
+  return Comment.findByPk(commentId, { paranoid: false, include })
     .then(comment => comment || createError(NOT_FOUND, 'Comment not found'))
     .then(comment => {
       req.comment = comment;
-      return Promise.resolve('next');
+      next();
     });
 }
 
-function canEdit({ user, comment }) {
+function canEdit({ user, comment }, _res, next) {
   if (user.id !== comment.authorId) return createError(FORBIDDEN, 'Forbidden');
-  return Promise.resolve('next');
+  next();
 }
 
 module.exports = {

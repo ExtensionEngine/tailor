@@ -44,13 +44,15 @@ import { getAcronym } from 'utils/course';
 
 export default {
   name: 'main-toolbar',
+  props: {
+    user: { type: Object, required: true }
+  },
   data() {
     return {
       title: BRAND_CONFIG.TITLE
     };
   },
   computed: {
-    ...mapGetters(['user']),
     ...mapGetters({ repository: 'course' }, 'course'),
     repositoryAcronym() {
       return this.repository ? getAcronym(this.repository.name) : null;
@@ -90,7 +92,6 @@ $font-color: #333;
   color: $font-color;
   font-size: 16px;
   line-height: $container-height;
-  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -4,10 +4,10 @@
 
 <script>
 import * as d3 from 'd3-selection';
+import { hierarchy, tree } from 'd3-hierarchy';
 import clamp from 'lodash/clamp';
 import flatten from 'lodash/flatten';
 import get from 'lodash/get';
-import { hierarchy, tree } from 'd3-hierarchy';
 import range from 'lodash/range';
 import { zoom } from 'd3-zoom';
 
@@ -127,7 +127,7 @@ export default {
       // Append label.
       node.append('text')
         .classed('label', true)
-        .text(d => d.data.name)
+        .text(d => d.data.name || d.data.id)
         .style('text-anchor', 'middle')
         .attr('dy', '.35em')
         .attr('y', d => {

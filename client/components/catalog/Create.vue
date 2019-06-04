@@ -29,13 +29,13 @@
             data-vv-name="schema"
             class="mb-3"/>
           <v-text-field
-            v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+            v-validate="{ required: true, min: 2, max: 250 }"
             v-model.trim="repository.name"
             :error-messages="vErrors.collect('name')"
             label="Name"
             data-vv-name="name"/>
           <v-textarea
-            v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
+            v-validate="{ required: true, min: 2, max: 2000 }"
             v-model.trim="repository.description"
             :error-messages="vErrors.collect('description')"
             label="Description"
@@ -44,7 +44,7 @@
         <v-card-actions>
           <v-spacer/>
           <v-btn :disabled="showLoader" @click="hide">Cancel</v-btn>
-          <v-btn :loading="showLoader" color="success" outline type="submit">
+          <v-btn :loading="showLoader" color="primary" outline type="submit">
             Create
           </v-btn>
         </v-card-actions>
