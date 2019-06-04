@@ -40,10 +40,6 @@ let router = new Router({
       name: 'course',
       component: Outline
     }, {
-      path: 'editor/:activityId',
-      name: 'editor',
-      component: Editor
-    }, {
       path: 'settings',
       component: CourseSettings,
       children: [{
@@ -65,6 +61,11 @@ let router = new Router({
       name: 'tree-view',
       component: TreeView
     }]
+  }, {
+    path: '/course/:courseId/editor/:activityId',
+    name: 'editor',
+    component: Editor,
+    meta: { auth: true }
   }, {
     path: '/system-settings',
     component: SystemSettings,
