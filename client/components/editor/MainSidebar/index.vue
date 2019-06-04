@@ -8,7 +8,7 @@
     stateless
     class="blue-grey lighten-4 actions">
     <v-toolbar flat class="transparent">
-      <v-list class="pa-0">
+      <v-list>
         <v-tooltip
           v-for="({ title, icon, action }) in actions"
           :key="title"
@@ -47,22 +47,25 @@ export default {
     focusedElement: { type: Object, default: null }
   },
   computed: {
-    ...mapGetters(['outlineActivities'], 'course'),
+    ...mapGetters(['isAdmin']),
+    ...mapGetters(['outlineActivities', 'isCourseAdmin'], 'course'),
     actions() {
       const { $router, activity: { courseId } } = this;
-      return [{
-        title: 'Back',
-        icon: 'arrow-left',
-        action: () => $router.push({ name: 'course', params: { courseId } })
-      }, {
+      const items = [{
         title: 'Preview',
         icon: 'eye',
         action: () => window.open(this.previewUrl, '_blank')
       }, {
+        title: 'Back',
+        icon: 'arrow-left',
+        action: () => $router.push({ name: 'course', params: { courseId } })
+      }];
+      if (!this.isAdmin && !this.isCourseAdmin) return items;
+      return [{
         title: 'Publish',
         icon: 'upload',
         action: () => this.confirmPublishing()
-      }];
+      }].concat(items);
     },
     previewUrl() {
       if (!PREVIEW_URL) return;

@@ -1,7 +1,7 @@
 'use strict';
 
 const boxen = require('boxen');
-const pkg = require('read-pkg-up').sync().pkg;
+const pkg = require('read-pkg-up').sync().package;
 const semver = require('semver');
 
 require('dotenv').load();

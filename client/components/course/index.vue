@@ -29,13 +29,6 @@ import filter from 'lodash/filter';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
-const tabs = [
-  { name: 'Structure', route: 'course', icon: 'file-tree' },
-  { name: 'Graph View', route: 'tree-view', icon: 'source-fork mdi-rotate-180' },
-  { name: 'History', route: 'course-revisions', icon: 'history' },
-  { name: 'Settings', route: 'course-info', icon: 'settings-outline' }
-];
-
 export default {
   data() {
     return {
@@ -43,14 +36,21 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['isAdmin', 'isCourseAdmin']),
-    ...mapGetters(['course', 'activities', 'activity'], 'course'),
+    ...mapGetters(['isAdmin']),
+    ...mapGetters(['course', 'activities', 'activity', 'isCourseAdmin'], 'course'),
     tabs() {
-      if (!this.isAdmin && !this.isCourseAdmin) tabs.pop();
-      return tabs;
+      const items = [
+        { name: 'Structure', route: 'course', icon: 'file-tree' },
+        { name: 'Graph View', route: 'tree-view', icon: 'source-fork mdi-rotate-180' },
+        { name: 'History', route: 'course-revisions', icon: 'history' },
+        { name: 'Settings', route: 'course-info', icon: 'settings-outline' }
+      ];
+      if (!this.isAdmin && !this.isCourseAdmin) items.pop();
+      return items;
     }
   },
   methods: {
+    ...mapActions(['getUsers'], 'course'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
@@ -59,7 +59,7 @@ export default {
     ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
   },
-  created() {
+  async created() {
     const { courseId } = this.$route.params;
     const existingSelection = this.activity && this.activity.courseId === courseId;
     if (!existingSelection) this.resetActivityFocus();
@@ -68,15 +68,14 @@ export default {
     this.setupCommentsApi(`/courses/${courseId}/comments`);
     this.setupRevisionApi(`/courses/${courseId}/revisions`);
     this.setupTesApi(`/courses/${courseId}/tes`);
-    if (!this.course) this.getCourse(courseId);
-    return Promise.join(this.getActivities(), Promise.delay(500)).then(() => {
-      this.showLoader = false;
-      let activities = filter(this.activities, { parentId: null });
-      activities = sortBy(activities, 'position');
-      if (!existingSelection && activities.length) {
-        this.resetActivityFocus(activities[0]._cid);
-      }
-    });
+    const actions = [this.getActivities(), this.getUsers()];
+    if (!this.course) actions.push(this.getCourse(courseId));
+    await Promise.all(actions);
+    this.showLoader = false;
+    const activities = filter(this.activities, { parentId: null });
+    if (!existingSelection && activities.length) {
+      this.resetActivityFocus(sortBy(activities, 'position')[0]._cid);
+    }
   }
 };
 </script>
