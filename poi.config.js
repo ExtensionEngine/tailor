@@ -3,7 +3,7 @@
 const path = require('path');
 const serverPort = require('./config/server').port;
 
-const { NODE_ENV, STORAGE_PATH } = process.env;
+const { AVATAR_COMPRESSION_RATE, AVATAR_MIMETYPE, NODE_ENV, STORAGE_PATH } = process.env;
 const imagesPath = 'assets/img';
 const isProduction = NODE_ENV === 'production';
 const serverUrl = `http://127.0.0.1:${serverPort}`;
@@ -72,6 +72,10 @@ module.exports = {
   output: {
     dir: 'dist',
     sourceMap: !isProduction
+  },
+  envs: {
+    AVATAR_COMPRESSION_RATE,
+    AVATAR_MIMETYPE
   },
   chainWebpack(config, { mode }) {
     config.resolve.alias.merge(aliases);

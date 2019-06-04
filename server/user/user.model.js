@@ -98,22 +98,20 @@ class User extends Model {
 
   static hooks(Hooks) {
     return {
-      [Hooks.beforeCreate](user) {
-        user.setGravatar();
-        return user.encryptPassword();
-      },
-      [Hooks.beforeUpdate](user) {
-        if (user.changed('email')) user.setGravatar();
-        return user.changed('password')
-          ? user.encryptPassword()
-          : Promise.resolve();
-      },
+      [Hooks.beforeCreate]: onUpsert,
+      [Hooks.beforeUpdate]: onUpsert,
       [Hooks.beforeBulkCreate](users) {
         let updates = [];
         users.forEach(user => updates.push(user.encryptPassword()));
         return Promise.all(updates);
       }
     };
+
+    function onUpsert(user) {
+      return user
+        .setGravatar()
+        .encryptPassword();
+    }
   }
 
   static options() {
@@ -135,10 +133,6 @@ class User extends Model {
       });
   }
 
-  setGravatar() {
-    return (this.imgUrl = gravatar.url(this.email, gravatarConfig, true));
-  }
-
   isAdmin() {
     return this.role === Role.ADMIN || this.role === Role.INTEGRATION;
   }
@@ -146,8 +140,8 @@ class User extends Model {
   authenticate(password) {
     if (!this.password) return Promise.resolve(false);
     return bcrypt
-      .compare(password, this.password)
-      .then(match => match ? this : false);
+    .compare(password, this.password)
+    .then(match => match ? this : false);
   }
 
   encrypt(val) {
@@ -155,10 +149,15 @@ class User extends Model {
   }
 
   encryptPassword() {
-    if (!this.password) return Promise.resolve(false);
-    return this
-      .encrypt(this.password)
-      .then(pw => (this.password = pw));
+    if (!this.changed('password') || !this.password) return Promise.resolve(false);
+    return this.encrypt(this.password)
+      .then(password => (this.password = password));
+  }
+
+  setGravatar() {
+    if (!this.changed('email')) return this;
+    this.imgUrl = gravatar.url(this.email, gravatarConfig, true /* https */);
+    return this;
   }
 
   createToken(options = {}) {

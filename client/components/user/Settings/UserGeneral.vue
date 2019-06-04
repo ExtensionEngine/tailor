@@ -63,17 +63,15 @@ const snackOpts = { right: true };
 export default {
   name: 'user-info',
   mixins: [withValidation()],
-  data() {
-    return {
-      context: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        location: ''
-      },
-      isEditing: false
-    };
-  },
+  data: () => ({
+    context: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      location: ''
+    },
+    isEditing: false
+  }),
   computed: {
     ...mapGetters(['user']),
     hasChanges: vm => Object.keys(vm.context).some(name => vm.user[name] !== vm.context[name]),
@@ -85,11 +83,13 @@ export default {
       const { context, hasChanges, fieldNames } = this;
       if (!hasChanges) return;
       this.$validator.validateAll()
-        .then(async isValid => {
+        .then(isValid => {
           if (!isValid) return this.$snackbar.error('Validation failed!', snackOpts);
-          await this.updateInfo(pick(context, fieldNames));
-          this.$snackbar.success('User information updated.', snackOpts);
-          this.$validator.reset();
+          return this.updateInfo(pick(context, fieldNames))
+            .then(() => {
+              this.$snackbar.success('User information updated.', snackOpts);
+              this.$validator.reset();
+            });
         })
         .catch(() => this.$snackbar.error('Email already exists!', snackOpts));
     },

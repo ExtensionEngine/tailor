@@ -1,12 +1,10 @@
 <template>
   <v-card class="elevation-2">
     <v-container class="user-privacy-container">
-      <v-card class="header elevation-2" color="primary" dark>
-        <v-card-title>
-          <v-icon>mdi-lock-open</v-icon>
-          <h4 class="title">Change Password</h4>
-        </v-card-title>
-      </v-card>
+      <v-card-title class="header elevation-2 primary" >
+        <v-icon>mdi-lock-open</v-icon>
+        <h4 class="title">Change Password</h4>
+      </v-card-title>
       <v-form @submit.prevent="submit">
         <v-layout class="fields-container">
           <v-flex class="fields-box">
@@ -72,19 +70,20 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['changePassword']),
+    ...mapActions(['changePassword', 'logout']),
     submit() {
       const { currentPassword, newPassword } = this;
       this.$validator.validateAll()
         .then(isValid => {
           if (!isValid) return this.$snackbar.error('Validation failed!');
           return this.changePassword({ currentPassword, newPassword })
-            .then(() => this.$snackbar.success('Password changed.', snackOpts))
-            .catch(() => this.$snackbar.error('Incorrect current password.', snackOpts))
             .finally(() => {
               this.currentPassword = this.newPassword = this.confirmationPassword = '';
               requestAnimationFrame(() => this.$validator.reset());
-            });
+            })
+            .then(() => this.$snackbar.success('Password changed.', snackOpts))
+            .then(() => this.logout())
+            .catch(() => this.$snackbar.error('Incorrect current password.', snackOpts));
         });
     }
   }
@@ -92,12 +91,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$color: #fff;
+
 .user-privacy-container {
   padding: 0;
 }
 
 .header {
   height: 55px;
+  color: $color;
 
   .title {
     margin: 0 8px;
@@ -106,6 +108,7 @@ export default {
 
   .v-icon {
     margin-right: 8px;
+    color: inherit;
   }
 }
 

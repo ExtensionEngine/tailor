@@ -1,11 +1,9 @@
 <template>
   <v-card class="elevation-2">
-    <v-card class="header elevation-2" color="primary" dark>
-      <v-card-title>
-        <v-icon>mdi-pencil</v-icon>
-        <h4 class="title">Edit Profile</h4>
-      </v-card-title>
-    </v-card>
+    <v-card-title class="header elevation-2 primary">
+      <v-icon>mdi-pencil</v-icon>
+      <h4 class="title">Edit Profile</h4>
+    </v-card-title>
     <user-general/>
   </v-card>
 </template>
@@ -19,8 +17,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$color: #fff;
+
 .header {
   height: 55px;
+  color: $color;
 
   .title {
     margin: 0 8px;
@@ -29,6 +30,7 @@ export default {
 
   .v-icon {
     margin-right: 8px;
+    color: inherit;
   }
 }
 </style>

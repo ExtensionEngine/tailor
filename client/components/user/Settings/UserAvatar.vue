@@ -8,25 +8,24 @@
         @file-choose="uploadImage"
         @zoom="onZoom"
         @dblclick="onZoom"
-        placeholder=""
+        placeholder
         prevent-white-space
         show-loading>
       </croppa>
       <v-layout v-if="isEditing" class="slider-layout">
         <v-slider
           v-model="sliderVal"
-          :min="sliderMin"
-          :max="sliderMax"
+          v-bind="sliderRange"
           :hide-details="true"
+          :step="0.001"
           @input="onSliderChange"
           @click:append="croppa.zoomIn()"
           @click:prepend="croppa.zoomOut()"
           always-dirty
-          class="slider"
           append-icon="mdi-plus"
           prepend-icon="mdi-minus"
           color="light-blue darken-3"
-          step=".001">
+          class="slider">
         </v-slider>
       </v-layout>
     </div>
@@ -43,8 +42,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
+import { avatar as avatarOpts } from 'shared';
 
-const imageOpts = { type: 'image/jpeg', compressionRate: 0.6 };
 const snackOpts = { right: true };
 
 export default {
@@ -57,8 +56,7 @@ export default {
     currentImage: null,
     timeout: 2500,
     sliderVal: 0,
-    sliderMin: 0,
-    sliderMax: 0,
+    sliderRange: { min: 0, max: 0 },
     croppa: {}
   }),
   computed: {
@@ -74,8 +72,7 @@ export default {
   methods: {
     ...mapActions(['updateInfo']),
     uploadImage(file) {
-      if (!file) return this.$emit('editing', false);
-      this.$emit('editing', true);
+      this.$emit('editing', Boolean(file));
     },
     uploadNewImage() {
       this.disabled = false;
@@ -83,8 +80,8 @@ export default {
     },
     doneEditing() {
       if (this.disabled || !this.isEditing) return;
-      const { type, compressionRate } = imageOpts;
-      const imgUrl = this.croppa.generateDataUrl(type, compressionRate);
+      const { mimetype, compressionRate } = avatarOpts;
+      const imgUrl = this.croppa.generateDataUrl(mimetype, compressionRate);
       this.updateInfo({ imgUrl })
         .then(() => {
           this.currentImage = this.user.imgUrl;
@@ -97,9 +94,12 @@ export default {
         });
     },
     onNewImage() {
-      const { scale } = this.croppa.getMetadata();
-      this.sliderVal = this.sliderMin = scale;
-      this.sliderMax = scale * 2;
+      const { scaleRatio } = this.croppa;
+      Object.assign(this.sliderRange, {
+        min: scaleRatio,
+        max: scaleRatio * 2
+      });
+      this.sliderVal = this.sliderRange.min;
     },
     onSliderChange(val) {
       if (!val) return;
@@ -126,6 +126,8 @@ export default {
 <style lang="scss" scoped>
 $image-border: 4px solid #e3e3e3;
 $image-bg-color: #f5f5f5;
+$image-width: 120px;
+$image-height: 120px;
 
 @mixin flex-container-setup ($flex-flow, $justify-content: center) {
   display: flex;
@@ -177,8 +179,8 @@ $image-bg-color: #f5f5f5;
   .croppa-container {
     overflow: hidden;
     border-radius: 50%;
-    width: 120px;
-    height: 120px;
+    width: $image-width;
+    height: $image-height;
     margin: 0 auto;
     background-color: $image-bg-color;
     border: $image-border;
@@ -202,7 +204,7 @@ $image-bg-color: #f5f5f5;
     @include flex-container-setup(row nowrap);
 
     .slider {
-      max-width: 80%;
+      max-width: 200px;
     }
   }
 }
