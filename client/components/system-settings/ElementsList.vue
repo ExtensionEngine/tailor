@@ -1,11 +1,11 @@
 <template>
-  <v-card>
-    <v-card-title>
-      <h1>Elements list</h1>
-    </v-card-title>
+  <v-card class="elements-list-container">
+    <v-card-actions>
+      <v-text-field v-model.trim="search" label="Search" clearable/>
+    </v-card-actions>
     <v-list :expand="true" avatar>
       <v-list-group
-        v-for="(group, name) in registry"
+        v-for="(group, name) in filteredRegistry"
         :key="name"
         value="true">
         <template v-slot:activator>
@@ -37,6 +37,9 @@ const QUESTION_TYPES = ['ASSESSMENT', 'QUESTION'];
 
 export default {
   inject: ['$teRegistry'],
+  data() {
+    return { search: '' };
+  },
   computed: {
     registry() {
       const list = sortBy(this.$teRegistry.get(), 'position');
@@ -46,6 +49,15 @@ export default {
         registry[group].push({ name, position, ui: { icon, ...ui } });
         return registry;
       }, { teachingElements: [], questions: [] });
+    },
+    filteredRegistry() {
+      let { registry, search } = this;
+      if (!search) return registry;
+      search = search.toLowerCase();
+      const cond = ({ name }) => name.toLowerCase().includes(search);
+      const teachingElements = registry.teachingElements.filter(cond);
+      const questions = registry.questions.filter(cond);
+      return { teachingElements, questions };
     }
   },
   filters: {
@@ -55,3 +67,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.elements-list-container {
+  padding: 30px;
+}
+</style>
