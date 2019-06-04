@@ -29,7 +29,6 @@ export default {
 
 .flex {
   max-width: 45%;
-  margin-top: 24px;
   margin-left: 48px;
 }
 </style>

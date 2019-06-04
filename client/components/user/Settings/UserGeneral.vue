@@ -1,7 +1,7 @@
 <template>
   <v-form @submit.prevent="updateUser">
-    <set-image ref="setImage" :isEditing="isEditing" @editing="setEditing"/>
-    <v-layout class="main-container">
+    <user-avatar ref="userAvatar" :isEditing="isEditing" @editing="setEditing"/>
+    <v-layout class="general-info-container">
       <v-flex class="fields-box">
         <v-text-field
           v-validate="{ required: true, email: true }"
@@ -25,13 +25,10 @@
           label="Last name"/>
       </v-flex>
       <v-flex class="fields-box">
-        <v-text-field
-          v-validate="{ numeric: true, max: 10 }"
-          v-model="context.phoneNumber"
-          :error-messages="vErrors.collect('phoneNumber')"
-          name="phoneNumber"
-          mask="phone"
-          label="Phone number"/>
+        <v-layout class="role">
+          <v-icon color="primary">mdi-account-star</v-icon>
+          <h4 class="title">{{ user.role }}</h4>
+        </v-layout>
         <v-text-field
           v-validate="{ max: 50 }"
           v-model="context.location"
@@ -58,8 +55,10 @@
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 import pick from 'lodash/pick';
-import SetImage from './SetImage';
+import UserAvatar from './UserAvatar';
 import { withValidation } from 'utils/validation';
+
+const snackOpts = { right: true };
 
 export default {
   name: 'user-info',
@@ -70,7 +69,6 @@ export default {
         firstName: '',
         lastName: '',
         email: '',
-        phoneNumber: '',
         location: ''
       },
       isEditing: false
@@ -88,26 +86,26 @@ export default {
       if (!hasChanges) return;
       this.$validator.validateAll()
         .then(async isValid => {
-          if (!isValid) return this.$snackbar.error('Validation failed!');
+          if (!isValid) return this.$snackbar.error('Validation failed!', snackOpts);
           await this.updateInfo(pick(context, fieldNames));
-          this.$snackbar.success('User information updated.');
+          this.$snackbar.success('User information updated.', snackOpts);
           this.$validator.reset();
         })
-        .catch(() => this.$snackbar.error('Email already exists!'));
+        .catch(() => this.$snackbar.error('Email already exists!', snackOpts));
     },
     setEditing(val) {
-      this.$refs.setImage.croppa.refresh();
+      this.$refs.userAvatar.croppa.refresh();
       this.isEditing = val;
     },
     avatarSubmit() {
-      this.$refs.setImage.doneEditing();
+      this.$refs.userAvatar.doneEditing();
     }
   },
   created() {
     const { context, user, fieldNames } = this;
     Object.assign(context, pick(user, fieldNames));
   },
-  components: { SetImage }
+  components: { UserAvatar }
 };
 </script>
 
@@ -118,7 +116,13 @@ export default {
   justify-content: $justify-content;
 }
 
-.main-container {
+.title {
+  margin: 0 12px;
+  padding-top: 2.5px;
+  font-weight: 300;
+}
+
+.general-info-container {
   margin: 0;
   padding: 8px 8px;
   @include flex-container-setup();
@@ -140,6 +144,11 @@ export default {
   max-width: 41%;
   margin: 0 16px;
   padding: 0 16px;
+
+  .role {
+    margin-top: 15px;
+    margin-bottom: 20px;
+  }
 }
 
 .v-card__actions {

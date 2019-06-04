@@ -1,21 +1,21 @@
 'use strict';
 
 const config = require('../../config/server');
+const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
 const { Model } = require('sequelize');
 const Promise = require('bluebird');
 const { user: Role } = require('../../config/shared').role;
-const gravatar = require('gravatar');
 
-const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
+const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const noop = Function.prototype;
 
 const gravatarConfig = { size: 130, default: 'mp' };
 
 class User extends Model {
-  static fields({ DATE, ENUM, STRING, VIRTUAL }) {
+  static fields({ DATE, ENUM, STRING, TEXT, VIRTUAL }) {
     return {
       email: {
         type: STRING,
@@ -43,18 +43,13 @@ class User extends Model {
         defaultValue: '',
         field: 'last_name'
       },
-      phoneNumber: {
-        type: STRING,
-        defaultValue: '',
-        field: 'phone_number'
-      },
       location: {
         type: STRING,
         defaultValue: '',
         field: 'location'
       },
       imgUrl: {
-        type: STRING(1234),
+        type: TEXT,
         field: 'img_url',
         defaultValue: ''
       },
@@ -67,7 +62,6 @@ class User extends Model {
             role: this.role,
             firstName: this.firstName,
             lastName: this.lastName,
-            phoneNumber: this.phoneNumber,
             location: this.location,
             imgUrl: this.imgUrl
           };

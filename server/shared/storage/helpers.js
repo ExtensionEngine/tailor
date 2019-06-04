@@ -18,7 +18,6 @@ const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
 
 const ASSET_ROOT = 'repository/assets';
-const AVATAR_ROOT = 'repository/avatars';
 
 function processStatics(item) {
   return isQuestion(item.type)
@@ -132,7 +131,6 @@ function saveFile(key, file) {
 
 module.exports = {
   ASSET_ROOT,
-  AVATAR_ROOT,
   STORAGE_PROTOCOL,
   processStatics,
   resolveStatics

@@ -3,11 +3,6 @@
 const { createError, validationError } = require('../shared/error/helpers');
 const { NOT_FOUND, BAD_REQUEST, NO_CONTENT, CONFLICT } = require('http-status-codes');
 const { User } = require('../shared/database');
-const { getFileUrl, saveFile } = require('../shared/storage');
-const { AVATAR_ROOT } = require('../shared/storage/helpers');
-const crypto = require('crypto');
-const mime = require('mime-types');
-const path = require('path');
 
 function index(req, res) {
   const attributes = ['id', 'email', 'role'];
@@ -50,8 +45,8 @@ function login({ body }, res) {
 }
 
 function updateProfile({ user, body }, res) {
-  const { email, firstName, lastName, imgUrl, phoneNumber, location } = body.userData;
-  return user.update({ email, firstName, lastName, imgUrl, phoneNumber, location })
+  const { email, firstName, lastName, imgUrl, location } = body.userData;
+  return user.update({ email, firstName, lastName, imgUrl, location })
     .then(({ profile }) => res.json({ user: profile }))
     .catch(() => validationError(CONFLICT));
 }
@@ -64,33 +59,11 @@ function changePassword({ user, body }, res) {
     .then(() => res.sendStatus(NO_CONTENT));
 }
 
-async function upload({ file }, res) {
-  const { originalname, mimetype } = file;
-  const buffer = await readFile(file);
-  const hash = sha256(originalname, buffer);
-  const extension = mime.extension(mimetype);
-  const key = path.join(AVATAR_ROOT, `${hash}___${originalname}.${extension}`);
-  await saveFile(key, buffer, { ContentType: mimetype });
-  const publicUrl = await getFileUrl(key);
-  return res.json({ key, url: `storage://${key}`, publicUrl });
-}
-
-function readFile({ buffer }) {
-  if (buffer) return Promise.resolve(buffer);
-}
-
-function sha256(...args) {
-  const hash = crypto.createHash('sha256');
-  args.forEach(arg => hash.update(arg));
-  return hash.digest('hex');
-}
-
 module.exports = {
   index,
   forgotPassword,
   resetPassword,
   login,
   updateProfile,
-  changePassword,
-  upload
+  changePassword
 };
