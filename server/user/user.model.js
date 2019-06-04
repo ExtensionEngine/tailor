@@ -1,9 +1,9 @@
 'use strict';
 
+const { Model, Op } = require('sequelize');
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
-const { Model, Op } = require('sequelize');
 const Promise = require('bluebird');
 const { role: roles } = require('../../config/shared');
 

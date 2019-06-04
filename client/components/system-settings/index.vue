@@ -26,7 +26,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .system-settings-container {
   padding-bottom: 75px;
 }
