@@ -157,6 +157,7 @@ ul {
 
     .v-avatar {
       float: left;
+      margin-top: 1px;
       margin-right: 10px;
       color: #fff;
       font-weight: 700;
