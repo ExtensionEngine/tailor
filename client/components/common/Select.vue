@@ -86,7 +86,6 @@ export default {
   padding-right: 24px;
   color: #555;
   font-size: 14px;
-  font-family: 'Catamaran', Helvetica, Arial, sans-serif;
 
   &:focus {
     box-shadow: inset 0 -2px 0 #337ab7;
@@ -130,7 +129,7 @@ export default {
     padding-left: 12px;
     border-radius: 26px;
     color: #4a4a4a;
-    line-height: 26px;
+    line-height: 24px;
     background: #e0e0e0;
     cursor: default;
 
@@ -157,7 +156,7 @@ export default {
     vertical-align: middle;
     width: 20px;
     margin: 0 4px;
-    line-height: 26px;
+    line-height: 24px;
     overflow: hidden;
     cursor: pointer;
 

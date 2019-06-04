@@ -11,7 +11,7 @@
     </div>
     <v-alert
       :value="!teachingElements.length"
-      color="blue-grey darken-2"
+      color="primary"
       icon="mdi-information-variant"
       outline>
       Click the button below to create content.

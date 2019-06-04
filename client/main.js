@@ -6,6 +6,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
 import assetsApi from '@/api/asset';
+import colors from 'vuetify/es5/util/colors';
 import ElementRegistry from './ElementRegistry';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
@@ -24,12 +25,15 @@ import App from './App';
 
 Vue.component('tce-question-container', QuestionContainer);
 
-const registry = new ElementRegistry(Vue);
-registry.initialize();
-
 Vue.use(FileFilter);
 Vue.use(VueHotkey);
-Vue.use(Vuetify, { iconfont: 'mdi' });
+Vue.use(Vuetify, {
+  iconfont: 'mdi',
+  theme: {
+    primary: colors.blueGrey.darken2,
+    secondary: colors.pink
+  }
+});
 Vue.use(VuetifySnackbar);
 Vue.use(Tooltip, { delay: 50 });
 Vue.use(VeeValidate, {
@@ -38,7 +42,6 @@ Vue.use(VeeValidate, {
   errorBagName: 'vErrors',
   inject: false
 });
-
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {
@@ -46,18 +49,20 @@ Vue.use(Timeago, {
   }
 });
 
-sync(store, router);
-
-/* eslint-disable no-new */
-new Vue({
-  router,
-  store,
-  el: '#app',
-  render: h => h(App),
-  provide() {
-    return {
-      $teRegistry: registry,
-      $storageService: assetsApi
-    };
-  }
+const registry = new ElementRegistry(Vue);
+registry.initialize().then(() => {
+  sync(store, router);
+  /* eslint-disable no-new */
+  new Vue({
+    router,
+    store,
+    el: '#app',
+    render: h => h(App),
+    provide() {
+      return {
+        $teRegistry: registry,
+        $storageService: assetsApi
+      };
+    }
+  });
 });

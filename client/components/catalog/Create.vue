@@ -44,7 +44,7 @@
         <v-card-actions>
           <v-spacer/>
           <v-btn :disabled="showLoader" @click="hide">Cancel</v-btn>
-          <v-btn :loading="showLoader" color="success" outline type="submit">
+          <v-btn :loading="showLoader" color="primary" outline type="submit">
             Create
           </v-btn>
         </v-card-actions>

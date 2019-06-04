@@ -6,12 +6,12 @@ import Promise from 'bluebird';
 const appChannel = EventBus.channel('app');
 const prefix = message => `Are you sure you want to publish ${message}`;
 
+const initialStatus = () => ({ progress: 0, message: '' });
+
 export default {
-  data() {
-    return {
-      isPublishing: false,
-      publishStatus: ''
-    };
+  data: () => ({ publishStatus: initialStatus() }),
+  computed: {
+    isPublishing: ({ publishStatus }) => publishStatus.progress > 0
   },
   methods: {
     confirmPublishing(activities = [this.activity]) {
@@ -23,14 +23,13 @@ export default {
       });
     },
     publish(activities) {
-      this.isPublishing = true;
-      return Promise.each(activities, activity => {
-        this.publishStatus = `Publishing ${activity.data.name}`;
+      return Promise.each(activities, (activity, i) => {
+        const progress = (i + 1) / activities.length;
+        const message = `Publishing ${activity.data.name}`;
+        this.publishStatus = { progress, message };
         return this.publishActivity(activity);
-      }).then(() => {
-        this.isPublishing = false;
-        this.publishStatus = '';
-      });
+      })
+      .finally(() => (this.publishStatus = initialStatus()));
     },
     getPublishMessage(activityCount) {
       const name = get(this, 'activity.data.name', 'activity');

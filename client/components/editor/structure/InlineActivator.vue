@@ -1,7 +1,7 @@
 <template>
   <div class="inline-activator">
     <hr>
-    <v-chip color="blue-grey lighten-1" dark small>
+    <v-chip color="blue-grey" label dark small>
       <v-icon>mdi-plus</v-icon>
     </v-chip>
     <hr>

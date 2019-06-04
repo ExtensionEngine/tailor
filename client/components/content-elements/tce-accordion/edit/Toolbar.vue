@@ -28,8 +28,6 @@ export default {
   position: relative;
   width: 100%;
   height: 48px;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
 
   ul {
     float: left;
