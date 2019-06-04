@@ -1,8 +1,6 @@
 <template>
   <v-card class="elements-list-container">
-    <v-card-actions>
-      <v-text-field v-model.trim="search" label="Search" clearable/>
-    </v-card-actions>
+    <v-text-field v-model.trim="search" label="Search" clearable/>
     <v-list :expand="true" avatar>
       <v-list-group
         v-for="(group, name) in filteredRegistry"

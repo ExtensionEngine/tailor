@@ -12,7 +12,7 @@
           v3.1 Silk
         </v-chip>
         Built with <v-icon color="pink">mdi-heart</v-icon>
-        ExtnsnEngine
+        Extension Engine
       </v-flex>
     </v-layout>
   </v-footer>

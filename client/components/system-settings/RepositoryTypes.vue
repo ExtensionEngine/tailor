@@ -1,8 +1,6 @@
 <template>
   <v-card class="schemas-list-container">
-    <v-card-actions>
-      <v-text-field v-model.trim="search" label="Search" clearable/>
-    </v-card-actions>
+    <v-text-field v-model.trim="search" label="Search" clearable/>
     <v-list>
       <v-list-tile
         v-for="{ id, name } in filteredSchemas"

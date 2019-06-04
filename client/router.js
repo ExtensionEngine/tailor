@@ -16,9 +16,9 @@ import General from './components/course/Settings/General';
 import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
-import SystemElementsList from './components/system-settings/ElementsList';
-import SystemSchemasList from './components/system-settings/SchemasList';
+import SystemRepositoryTypesList from './components/system-settings/RepositoryTypes';
 import SystemSettings from './components/system-settings';
+import SystemTeachingElementsList from './components/system-settings/TeachingElements';
 import SystemUserManagement from './components/system-settings/UserManagement';
 import TreeView from './components/course/TreeView';
 
@@ -78,13 +78,16 @@ let router = new Router({
       name: 'system-user-management',
       component: SystemUserManagement
     }, {
-      path: 'schemas',
-      name: 'system-schemas-list',
-      component: SystemSchemasList
+      path: 'repository-types',
+      name: 'system-repository-types',
+      component: SystemRepositoryTypesList
     }, {
-      path: 'elements',
-      name: 'system-elements-list',
-      component: SystemElementsList
+      path: 'teaching-elements',
+      name: 'system-teaching-elements',
+      component: SystemTeachingElementsList
+    }, {
+      path: '*',
+      redirect: { name: 'system-management' }
     }]
   }, {
     path: '/',

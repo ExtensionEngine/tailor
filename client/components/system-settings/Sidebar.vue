@@ -22,9 +22,9 @@ export default {
   computed: {
     routes() {
       return [
-        { label: 'Users', name: 'system-user-management', icon: 'mdi-account' },
-        { label: 'Schemas list', name: 'system-schemas-list', icon: 'mdi-sitemap' },
-        { label: 'Elements list', name: 'system-elements-list', icon: 'mdi-book-open-variant' }
+        { label: 'System Users', name: 'system-user-management', icon: 'mdi-account' },
+        { label: 'Repository Types', name: 'system-repository-types', icon: 'mdi-sitemap' },
+        { label: 'Teaching Elements', name: 'system-teaching-elements', icon: 'mdi-book-open-variant' }
       ];
     }
   }
