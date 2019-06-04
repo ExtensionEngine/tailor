@@ -8,7 +8,7 @@ const { FORBIDDEN, NOT_FOUND } = require('http-status-codes');
 const model = require('./comment.model');
 const processQuery = require('../shared/util/processListQuery');
 const { middleware: sse } = require('../shared/util/sse');
-const router = require('express-promise-router')();
+const router = require('express').Router();
 const { User } = require('../shared/database');
 
 const defaultListQuery = {

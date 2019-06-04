@@ -43,7 +43,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'outlineActivities'], 'course'),
+    ...mapGetters(['isAdmin']),
+    ...mapGetters(['course', 'outlineActivities', 'isCourseAdmin'], 'course'),
     publishPercentage: ({ publishStatus }) => publishStatus.progress * 100
   },
   methods: {
@@ -77,6 +78,10 @@ export default {
     clone() {
       this.showCloneModal = true;
     }
+  },
+  created() {
+    if (this.isAdmin || this.isCourseAdmin) return;
+    this.$router.push({ name: 'course' });
   },
   components: {
     AppFooter,
