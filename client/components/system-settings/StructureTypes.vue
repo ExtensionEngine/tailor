@@ -1,7 +1,11 @@
 <template>
   <v-card class="schemas-list-container">
     <v-text-field v-model.trim="search" label="Search" clearable/>
-    <v-treeview :items="schemas" :search="search" item-text="label">
+    <v-treeview
+      :items="schemas"
+      :search="search"
+      open-on-click
+      item-text="label">
       <template v-slot:prepend="{ item, open }">
         <v-icon :color="item.color">
           {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
