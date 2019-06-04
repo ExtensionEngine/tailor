@@ -1,7 +1,7 @@
 <template>
   <v-card class="elements-list-container">
     <v-text-field v-model.trim="search" label="Search" clearable/>
-    <v-list :expand="true" avatar>
+    <v-list :expand="true" avatar two-line>
       <v-list-group
         v-for="(group, name) in filteredRegistry"
         :key="name"
@@ -12,14 +12,17 @@
           </v-list-tile>
         </template>
         <v-list-tile
-          v-for="({ name, ui, position }) in group"
+          v-for="({ name, ui, version, position }) in group"
           :key="position"
           ripple>
           <v-list-tile-avatar>
-            <v-icon>{{ ui.icon }}</v-icon>
+            <v-icon large>{{ ui.icon }}</v-icon>
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title v-text="name"/>
+            <v-list-tile-sub-title>
+              Version {{ version }}
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list-group>
@@ -42,20 +45,20 @@ export default {
     registry() {
       const list = sortBy(this.$teRegistry.get(), 'position');
       const icon = 'mdi-help-rhombus';
-      return list.reduce((registry, { name, type, position, ui }) => {
-        const group = QUESTION_TYPES.includes(type) ? 'questions' : 'teachingElements';
-        registry[group].push({ name, position, ui: { icon, ...ui } });
+      return list.reduce((registry, { type, ui, ...item }) => {
+        const group = QUESTION_TYPES.includes(type) ? 'questions' : 'contentElements';
+        registry[group].push({ ...item, ui: { icon, ...ui } });
         return registry;
-      }, { teachingElements: [], questions: [] });
+      }, { contentElements: [], questions: [] });
     },
     filteredRegistry() {
       let { registry, search } = this;
       if (!search) return registry;
       search = search.toLowerCase();
       const cond = ({ name }) => name.toLowerCase().includes(search);
-      const teachingElements = registry.teachingElements.filter(cond);
+      const contentElements = registry.contentElements.filter(cond);
       const questions = registry.questions.filter(cond);
-      return { teachingElements, questions };
+      return { contentElements, questions };
     }
   },
   filters: {

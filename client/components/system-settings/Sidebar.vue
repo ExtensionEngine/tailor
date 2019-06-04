@@ -23,8 +23,8 @@ export default {
     routes() {
       return [
         { label: 'System Users', name: 'system-user-management', icon: 'mdi-account' },
-        { label: 'Repository Types', name: 'system-repository-types', icon: 'mdi-sitemap' },
-        { label: 'Teaching Elements', name: 'system-teaching-elements', icon: 'mdi-book-open-variant' }
+        { label: 'Structure Types', name: 'system-structure-types', icon: 'mdi-file-tree' },
+        { label: 'Content Elements', name: 'system-content-elements', icon: 'mdi-puzzle' }
       ];
     }
   }
