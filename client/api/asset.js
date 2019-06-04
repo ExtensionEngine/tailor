@@ -1,7 +1,7 @@
 import request from './request';
 
 const url = {
-  root: () => '/asset'
+  root: () => '/assets'
 };
 
 function getUrl(key) {

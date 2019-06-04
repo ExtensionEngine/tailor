@@ -12,6 +12,6 @@ router
   .post(upload.single('file'), ctrl.upload);
 
 module.exports = {
-  path: '/asset',
+  path: '/assets',
   router
 };
