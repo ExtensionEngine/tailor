@@ -5,8 +5,8 @@
       v-for="user in users"
       :key="user.id"
       size="30"
-      color="#eaeaea">
-      <span class="grey--text">
+      color="blue-grey darken-4">
+      <span class="blue-grey--text text--lighten-2">
         {{ user.email[0].toUpperCase() }}
       </span>
     </v-avatar>
@@ -31,7 +31,7 @@ export default {
   div {
     margin-left: -5px;
     transition: all 0.2s;
-    box-shadow: 0 0 0 2px #fff;
+    box-shadow: 0 0 0 2px #4d626b;
 
     &:hover {
       z-index: 1;
