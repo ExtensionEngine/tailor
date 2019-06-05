@@ -129,15 +129,15 @@ $image-bg-color: #f5f5f5;
 $image-width: 120px;
 $image-height: 120px;
 
-@mixin flex-container-setup ($flex-flow, $justify-content: center) {
+@mixin flex-container($justify-content: center) {
   display: flex;
-  flex-flow: $flex-flow;
   justify-content: $justify-content;
 }
 
 .user-avatar-container {
+  flex-flow: column wrap;
   margin-top: 18px;
-  @include flex-container-setup($flex-flow: column wrap);
+  @include flex-container();
 }
 
 .v-avatar {
@@ -201,10 +201,11 @@ $image-height: 120px;
 
   .slider-layout {
     margin-top: 8px;
-    @include flex-container-setup(row nowrap);
+    flex-flow: row nowrap;
+    @include flex-container();
 
     .slider {
-      max-width: 200px;
+      max-width: 15rem;
     }
   }
 }

@@ -110,9 +110,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@mixin flex-container-setup ($justify-content: center) {
+@mixin flex-container($justify-content: center) {
   display: flex;
-  flex-flow: row wrap;
   justify-content: $justify-content;
 }
 
@@ -123,14 +122,16 @@ export default {
 }
 
 .general-info-container {
+  flex-flow: row wrap;
   margin: 0;
   padding: 8px 8px;
-  @include flex-container-setup();
+  @include flex-container();
 }
 
 .btn-actions {
+  flex-flow: row wrap;
   margin: 24px 48px;
-  @include flex-container-setup(flex-end);
+  @include flex-container(flex-end);
 
   .v-btn {
     width: 125px;
