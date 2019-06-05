@@ -1,13 +1,12 @@
 'use strict';
 
-const { broadcast, events, subscribe } = require('../shared/activeUserChannel');
+const { subscribe } = require('../shared/activeUserChannel');
 const { authorize } = require('../shared/auth/mw');
 const { Course } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { middleware: sse } = require('../shared/util/sse');
 const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const ctrl = require('./course.controller');
-const pick = require('lodash/pick');
 const processQuery = require('../shared/util/processListQuery')();
 const router = require('express').Router();
 
@@ -27,7 +26,8 @@ router
   .post('/courses/:id/users', ctrl.upsertUser)
   .delete('/courses/:id/users/:userId', ctrl.removeUser)
   .get('/courses/:id/contentInventory', ctrl.exportContentInventory)
-  .post('/courses/:id/register-active-user', registerActiveUser);
+  .post('/courses/:id/register-active-user', ctrl.registerActiveUser)
+  .post('/courses/:id/get-active-users', ctrl.getActiveUsers);
 
 function getCourse(req, _res, next, id) {
   return Course.findByPk(id, { paranoid: false })
@@ -47,14 +47,6 @@ function hasAccess(req, _res, next) {
       req.courseRole = user.courseUser.role;
       next();
     });
-}
-
-function registerActiveUser(req, res) {
-  const { user, course } = req;
-  const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
-  const context = { courseId: course.id };
-  broadcast(events.ADD_ACTIVE_USER, activeUser, context);
-  res.end();
 }
 
 module.exports = {

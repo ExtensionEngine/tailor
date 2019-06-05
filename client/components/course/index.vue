@@ -20,7 +20,7 @@
       <active-users :users="activeUsers"/>
     </div>
     <div class="tab-content" infinite-wrapper>
-      <router-view :showLoader="showLoader"/>
+      <router-view :showLoader="showLoader" @setActiveUsers="setActiveUsers"/>
     </div>
   </div>
 </template>
@@ -35,12 +35,13 @@ import sortBy from 'lodash/sortBy';
 export default {
   data() {
     return {
-      showLoader: true
+      showLoader: true,
+      activeUsers: []
     };
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course', 'activities', 'activity', 'isCourseAdmin', 'activeUsers'], 'course'),
+    ...mapGetters(['course', 'activities', 'activity', 'isCourseAdmin'], 'course'),
     tabs() {
       const items = [
         { name: 'Structure', route: 'course', icon: 'file-tree' },
@@ -53,14 +54,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getUsers'], 'course'),
+    ...mapActions(['getUsers', 'getActiveUsers'], 'course'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activities'),
     ...mapMutations({ setupCommentsApi: 'setBaseUrl' }, 'comments'),
     ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
-    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
+    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
+    setActiveUsers(users) {
+      this.activeUsers = users;
+    }
   },
   async created() {
     const { courseId } = this.$route.params;
@@ -74,7 +78,7 @@ export default {
     const actions = [this.getActivities(), this.getUsers()];
     if (!this.course) actions.push(this.getCourse(courseId));
     await Promise.all(actions);
-    // TODO: Fetch active users
+    this.getActiveUsers();
     this.showLoader = false;
     const activities = filter(this.activities, { parentId: null });
     if (!existingSelection && activities.length) {

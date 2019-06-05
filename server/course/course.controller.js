@@ -1,5 +1,6 @@
 'use strict';
 
+const { activeUsers, broadcast, events } = require('../shared/activeUserChannel');
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
@@ -101,6 +102,17 @@ function exportContentInventory({ course }, res) {
     });
 }
 
+function registerActiveUser(req, res) {
+  const { user, body: { context } } = req;
+  const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
+  broadcast(events.ADD_ACTIVE_USER, activeUser, context);
+  res.end();
+}
+
+function getActiveUsers(req, res) {
+  res.json({ data: { activeUsers } });
+}
+
 const transform = user => {
   return Object.assign(user.profile, { courseRole: user.courseUser.role });
 };
@@ -116,5 +128,7 @@ module.exports = {
   upsertUser,
   removeUser,
   exportContentInventory,
-  publishRepoInfo
+  publishRepoInfo,
+  registerActiveUser,
+  getActiveUsers
 };

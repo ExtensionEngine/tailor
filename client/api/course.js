@@ -38,8 +38,13 @@ function publishRepositoryMeta(id) {
   return request.post(`/courses/${id}/publish`).then(res => res.data);
 }
 
-function registerActiveUser(id) {
-  return request.post(`/courses/${id}/register-active-user`);
+function registerActiveUser(context) {
+  const { courseId } = context;
+  return request.post(`/courses/${courseId}/register-active-user`, { context });
+}
+
+function getActiveUsers(id) {
+  return request.post(`/courses/${id}/get-active-users`).then(res => res.data.data);
 }
 
 export default {
@@ -49,5 +54,6 @@ export default {
   removeUser,
   getContentInventory,
   publishRepositoryMeta,
-  registerActiveUser
+  registerActiveUser,
+  getActiveUsers
 };

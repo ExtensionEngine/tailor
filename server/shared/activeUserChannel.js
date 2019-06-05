@@ -29,25 +29,25 @@ function subscribe(req, res) {
   req.on('close', unsubscribe(courseId, sseClient));
 }
 
-function broadcast(event, activeUser, context) {
+function broadcast(event, user, context) {
   const { courseId } = context;
-  setContext(activeUser, context);
+  setContext(user, context);
   const recipients = get(sseClients, courseId, {});
   each(recipients, r => {
-    r.send(event, activeUser);
+    r.send(event, { user, context });
   });
-  return activeUser;
+  return user;
 }
 
-function setContext(user, context) {
-  const existingUser = activeUsers[user.id];
+function setContext({ id, email }, context) {
+  const existingUser = activeUsers[id];
   if (!existingUser) {
-    activeUsers[user.id] = [context];
+    activeUsers[id] = { id, email, contexts: [context] };
     return;
   }
-  const existingContext = find(existingUser, context);
+  const existingContext = find(existingUser.contexts, context);
   if (existingContext) return;
-  existingUser.push(context);
+  existingUser.contexts.push(context);
 }
 
-module.exports = { subscribe, broadcast, events };
+module.exports = { activeUsers, subscribe, broadcast, events };

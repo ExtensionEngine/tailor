@@ -73,7 +73,13 @@ getter(function revisions() {
 });
 
 getter(function activeUsers() {
-  return values(this.state.activeUsers);
+  const activeUsers = { course: {}, activity: {}, tce: {} };
+  Object.keys(this.state.activeUsers).forEach(userId => {
+    this.state.activeUsers[userId].contexts.forEach(context => {
+      mapActiveUserContext(activeUsers, this.state.activeUsers[userId], context);
+    });
+  });
+  return activeUsers;
 });
 
 getter(function getConfig() {
@@ -138,13 +144,24 @@ action(function removeUser({ courseId, userId }) {
 action(function subscribe(courseId) {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
   SSE_CLIENT = new SSEClient(`/api/v1/courses/${courseId}/active-users/subscribe`);
-  SSE_CLIENT.subscribe('active_user_add', user => this.commit('sseAddActiveUser', user));
-  SSE_CLIENT.subscribe('active_user_remove', user => this.commit('sseRemoveActiveUser', user));
+  SSE_CLIENT.subscribe('active_user_add', ({ user, context }) => {
+    this.commit('sseAddActiveUser', { user, context });
+  });
+  SSE_CLIENT.subscribe('active_user_remove', ({ user, context }) => {
+    this.commit('sseRemoveActiveUser', { user, context });
+  });
 });
 
 action(function unsubscribe() {
   if (!SSE_CLIENT) return;
   SSE_CLIENT.disconnect();
+});
+
+action(function getActiveUsers() {
+  const { route } = this.rootState;
+  const courseId = route.params.courseId;
+  return courseApi.getActiveUsers(courseId)
+    .then(({ activeUsers }) => this.commit('setActiveUsers', activeUsers));
 });
 
 mutation(function upsertUser(user) {
@@ -183,14 +200,36 @@ mutation(function focusActivity(_cid) {
   this.state.activity = _cid;
 });
 
-mutation(function sseAddActiveUser(user) {
-  if (this.state.activeUsers.id) return;
-  Vue.set(this.state.activeUsers, user.id, user);
+mutation(function setActiveUsers(users) {
+  this.state.activeUsers = users || {};
+});
+
+mutation(function sseAddActiveUser({ user, context }) {
+  const activeUser = this.state.activeUsers[user.id];
+  if (activeUser) {
+    activeUser.contexts.push(context);
+    return;
+  }
+  Vue.set(this.state.activeUsers, user.id, { ...user, contexts: [context] });
 });
 
 // mutation(function sseRemoveActiveUser(user) {
 //   if (this.state.activeUsers.id) return;
 //   Vue.set(this.state.activeUsers, user.id, user);
 // });
+
+function mapActiveUserContext(activeUsers, { id: userId, email }, context) {
+  Object.keys(context).forEach(key => {
+    const entityName = key.substring(0, key.length - 2);
+    const entityId = context[key];
+    if (activeUsers[entityName][entityId]) {
+      const user = find(activeUsers[entityName][entityId], { id: userId });
+      if (user) return;
+      activeUsers[entityName][entityId].push({ id: userId, email });
+      return;
+    }
+    activeUsers[entityName][entityId] = [{ id: userId, email }];
+  });
+}
 
 export default build();

@@ -7,7 +7,7 @@
         {{ config.label }}
       </v-chip>
       <h1 class="text-truncate">{{ activity.data.name }}</h1>
-      <active-users :users="activeUsers"/>
+      <slot name="active-users"></slot>
     </div>
     <element-toolbar
       v-if="element && element.parent"
@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import ActiveUsers from 'components/common/ActiveUsers';
 import { ElementToolbar } from 'tce-core';
 import { getLevel } from 'shared/activities';
 import { mapGetters } from 'vuex-module';
@@ -45,12 +44,11 @@ export default {
   },
   computed: {
     ...mapGetters(['activity'], 'editor'),
-    ...mapGetters(['activeUsers'], 'course'),
     config() {
       return getLevel(this.activity.type);
     }
   },
-  components: { ActiveUsers, ElementToolbar }
+  components: { ElementToolbar }
 };
 </script>
 

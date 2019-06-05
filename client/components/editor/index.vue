@@ -2,6 +2,9 @@
   <div class="editor-wrapper">
     <template v-if="activity">
       <toolbar :element="focusedElement">
+        <template slot="active-users">
+          <active-users :users="activityActiveUsers"/>
+        </template>
         <span slot="actions">
           <v-btn
             v-if="metadata.length"
@@ -46,6 +49,8 @@
 import * as config from 'shared/activities';
 import { getElementId, isQuestion } from 'tce-core/utils';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import ActiveUsers from 'components/common/ActiveUsers';
+import api from '../../api/course';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
@@ -71,7 +76,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'getMetadata'], 'course'),
+    ...mapGetters(['course', 'getMetadata', 'activeUsers'], 'course'),
     ...mapGetters(['activity', 'contentContainers'], 'editor'),
     metadata() {
       if (!this.focusedElement) return [];
@@ -86,9 +91,14 @@ export default {
     containerConfigs() {
       if (!this.activity) return [];
       return config.getSupportedContainers(this.activity.type);
+    },
+    activityActiveUsers() {
+      const { activityId } = this.$route.params;
+      return this.activeUsers.activity[activityId];
     }
   },
   methods: {
+    ...mapActions({ subscribeActiveUsers: 'subscribe', getActiveUsers: 'getActiveUsers' }, 'course'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
@@ -151,12 +161,19 @@ export default {
       this.getTeachingElements({ activityId, parentId: activityId })
     ];
     if (!this.course) actions.push(this.getCourse(courseId));
+    this.getActiveUsers();
     Promise.all(actions).then(() => (this.showLoader = false));
+  },
+  mounted() {
+    const { courseId, activityId } = this.$route.params;
+    this.subscribeActiveUsers(courseId);
+    api.registerActiveUser({ courseId, activityId });
   },
   beforeDestroy() {
     this.unsubscribe();
   },
   components: {
+    ActiveUsers,
     Assessments,
     ContentContainers,
     Exams,

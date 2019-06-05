@@ -53,7 +53,7 @@ export default {
     showLoader: { type: Boolean, default: false }
   },
   computed: {
-    ...mapGetters(['structure', 'outlineActivities'], 'course'),
+    ...mapGetters(['structure', 'outlineActivities', 'activeUsers'], 'course'),
     isFlat() {
       const types = map(filter(this.structure, { level: 2 }), 'type');
       if (!types.length) return false;
@@ -72,9 +72,18 @@ export default {
     ...mapActions(['subscribe'], 'course'),
     ...mapMutations(['toggleActivities'], 'course')
   },
+  watch: {
+    activeUsers: {
+      handler() {
+        const users = this.activeUsers.course[this.courseId];
+        this.$emit('setActiveUsers', users);
+      },
+      immediate: true
+    }
+  },
   mounted() {
     this.subscribe(this.courseId);
-    api.registerActiveUser(this.courseId);
+    api.registerActiveUser({ courseId: this.courseId });
   },
   components: { Activity, Draggable, NoActivities, Sidebar }
 };
