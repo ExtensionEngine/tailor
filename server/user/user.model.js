@@ -1,6 +1,7 @@
 'use strict';
 
 const Audience = require('../shared/auth/audience');
+const bcrypt = require('bcrypt');
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
@@ -8,7 +9,6 @@ const { Model } = require('sequelize');
 const Promise = require('bluebird');
 const { user: Role } = require('../../config/shared').role;
 
-const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const noop = Function.prototype;
 
 class User extends Model {

@@ -44,7 +44,7 @@
     "auto-bind": "^2.1.0",
     "aws-sdk": "^2.342.0",
     "axios": "^0.19.0",
-    "bcryptjs": "^2.3.0",
+    "bcrypt": "^3.0.6",
     "blob-util": "^1.2.1",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
