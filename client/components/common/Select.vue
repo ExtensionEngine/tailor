@@ -7,6 +7,16 @@
       @input="val => $emit('input', val)"
       @close="close"
       @open="open">
+      <slot
+        v-for="slot in Object.keys($slots)"
+        :name="slot"
+        :slot="slot"/>
+      <template
+        v-for="slot in Object.keys($scopedSlots)"
+        slot-scope="scope"
+        :slot="slot">
+        <slot v-bind="scope" :name="slot"/>
+      </template>
     </multiselect>
     <span
       v-if="showResetButton"
