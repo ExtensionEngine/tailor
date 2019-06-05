@@ -4,6 +4,7 @@ import courseApi from '../../api/course';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import { role } from 'shared';
@@ -215,8 +216,10 @@ mutation(function sseAddActiveUser({ user, context }) {
 });
 
 mutation(function sseRemoveActiveUser({ user, context }) {
-  // TODO: Delete specific context
-  // Vue.delete(this.state.activeUsers, user.id);
+  const index = this.state.activeUsers[user.id].contexts.findIndex(c => {
+    return isEqual(c, context);
+  });
+  this.state.activeUsers[user.id].contexts.splice(index, 1);
 });
 
 function mapActiveUserContext(activeUsers, { id: userId, email }, context) {

@@ -120,7 +120,7 @@ function removeActiveUser(user, context) {
       return isEqual(omit(c, ['timer']), omit(context, ['timer']));
     });
     broadcast(events.REMOVE_ACTIVE_USER, user, context);
-  }, 2000);
+  }, 10000); // TODO: Extract to config file
 }
 
 function getActiveUsers(req, res) {
