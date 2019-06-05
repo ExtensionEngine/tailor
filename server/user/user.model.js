@@ -140,8 +140,8 @@ class User extends Model {
   authenticate(password) {
     if (!this.password) return Promise.resolve(false);
     return bcrypt
-    .compare(password, this.password)
-    .then(match => match ? this : false);
+      .compare(password, this.password)
+      .then(match => match ? this : false);
   }
 
   encrypt(val) {

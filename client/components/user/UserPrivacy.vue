@@ -17,7 +17,7 @@
               name="currentPassword"
               label="Current password"/>
             <v-text-field
-              v-validate="{ required: true, alphanumerical: true, min: 6 }"
+              v-validate="{ required: true, is_not: currentPassword , alphanumerical: true, min: 6 }"
               ref="newPassword"
               v-model="newPassword"
               :error-messages="vErrors.first('newPassword')"
@@ -83,7 +83,7 @@ export default {
             })
             .then(() => this.$snackbar.success('Password changed.', snackOpts))
             .then(() => this.logout())
-            .catch(() => this.$snackbar.error('Incorrect current password.', snackOpts));
+            .catch(() => this.$snackbar.error('An error has occurred!', snackOpts));
         });
     }
   }

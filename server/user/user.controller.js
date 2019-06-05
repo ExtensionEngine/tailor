@@ -53,6 +53,7 @@ function updateProfile({ user, body }, res) {
 
 function changePassword({ user, body }, res) {
   const { currentPassword, newPassword } = body;
+  if (currentPassword === newPassword) return res.sendStatus(BAD_REQUEST);
   return user.authenticate(currentPassword)
     .then(user => user || createError(BAD_REQUEST))
     .then(user => user.update({ password: newPassword }))
