@@ -10,6 +10,7 @@ export const install = (Vue, { parent = document.body } = {}) => {
   const $snackbar = {
     show: (msg, options) => queue.add(() => vm.show(msg, options)),
     close: () => vm.close,
+    primary: (msg, options) => $snackbar.show(msg, { ...options, color: 'primary' }),
     success: (msg, options) => $snackbar.show(msg, { ...options, color: 'success' }),
     info: (msg, options) => $snackbar.show(msg, { ...options, color: 'info' }),
     warning: (msg, options) => $snackbar.show(msg, { ...options, color: 'warning' }),
