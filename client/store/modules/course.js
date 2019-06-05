@@ -5,6 +5,7 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import map from 'lodash/map';
+import omit from 'lodash/omit';
 import { role } from 'shared';
 import SSEClient from '../../SSEClient';
 import transform from 'lodash/transform';
@@ -213,13 +214,13 @@ mutation(function sseAddActiveUser({ user, context }) {
   Vue.set(this.state.activeUsers, user.id, { ...user, contexts: [context] });
 });
 
-// mutation(function sseRemoveActiveUser(user) {
-//   if (this.state.activeUsers.id) return;
-//   Vue.set(this.state.activeUsers, user.id, user);
-// });
+mutation(function sseRemoveActiveUser({ user, context }) {
+  // TODO: Delete specific context
+  // Vue.delete(this.state.activeUsers, user.id);
+});
 
 function mapActiveUserContext(activeUsers, { id: userId, email }, context) {
-  Object.keys(context).forEach(key => {
+  Object.keys(omit(context, ['timer'])).forEach(key => {
     const entityName = key.substring(0, key.length - 2);
     const entityId = context[key];
     if (activeUsers[entityName][entityId]) {

@@ -38,9 +38,9 @@ function publishRepositoryMeta(id) {
   return request.post(`/courses/${id}/publish`).then(res => res.data);
 }
 
-function registerActiveUser(context) {
+function addActiveUser(context) {
   const { courseId } = context;
-  return request.post(`/courses/${courseId}/register-active-user`, { context });
+  return request.post(`/courses/${courseId}/add-active-user`, { context });
 }
 
 function getActiveUsers(id) {
@@ -54,6 +54,6 @@ export default {
   removeUser,
   getContentInventory,
   publishRepositoryMeta,
-  registerActiveUser,
+  addActiveUser,
   getActiveUsers
 };

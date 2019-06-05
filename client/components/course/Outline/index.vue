@@ -83,7 +83,7 @@ export default {
   },
   mounted() {
     this.subscribe(this.courseId);
-    api.registerActiveUser({ courseId: this.courseId });
+    api.addActiveUser({ courseId: this.courseId });
   },
   components: { Activity, Draggable, NoActivities, Sidebar }
 };

@@ -26,7 +26,7 @@ router
   .post('/courses/:id/users', ctrl.upsertUser)
   .delete('/courses/:id/users/:userId', ctrl.removeUser)
   .get('/courses/:id/contentInventory', ctrl.exportContentInventory)
-  .post('/courses/:id/register-active-user', ctrl.registerActiveUser)
+  .post('/courses/:id/add-active-user', ctrl.addActiveUser)
   .post('/courses/:id/get-active-users', ctrl.getActiveUsers);
 
 function getCourse(req, _res, next, id) {

@@ -167,7 +167,7 @@ export default {
   mounted() {
     const { courseId, activityId } = this.$route.params;
     this.subscribeActiveUsers(courseId);
-    api.registerActiveUser({ courseId, activityId });
+    api.addActiveUser({ courseId, activityId });
   },
   beforeDestroy() {
     this.unsubscribe();
