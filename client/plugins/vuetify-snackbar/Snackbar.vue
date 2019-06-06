@@ -8,7 +8,7 @@
 <script>
 const initialData = () => ({
   message: '',
-  color: '',
+  color: 'primary',
   timeout: 2500,
   right: true
 });

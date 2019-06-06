@@ -38,7 +38,7 @@ export default {
         .then(() => this.showNotification());
     },
     showNotification: throttle(function () {
-      this.$snackbar.primary('Element saved');
+      this.$snackbar.show('Element saved');
     }, 4000),
     remove() {
       this.removeElement(this.element).then(() => {
