@@ -3,7 +3,10 @@
 const each = require('lodash/each');
 const find = require('lodash/find');
 const get = require('lodash/get');
+const isEmpty = require('lodash/isEmpty');
+const isEqual = require('lodash/isEqual');
 const omit = require('lodash/omit');
+const remove = require('lodash/remove');
 const set = require('lodash/set');
 const unset = require('lodash/unset');
 
@@ -40,15 +43,35 @@ function broadcast(event, user, context) {
   return user;
 }
 
-function setContext({ id, email }, context) {
+// TODO: Write in a better way
+function setContext(user, context) {
+  const { id, email } = user;
+  context.toJSON = () => omit(context, ['timer']);
   const existingUser = activeUsers[id];
   if (!existingUser) {
+    context.timer = removeActiveUser(user, context);
     activeUsers[id] = { id, email, contexts: [context] };
     return;
   }
-  const existingContext = find(existingUser.contexts, context);
-  if (existingContext) return;
+  const existingContext = find(existingUser.contexts, omit(context, ['timer', 'toJSON']));
+  if (existingContext) {
+    clearTimeout(existingContext.timer);
+    existingContext.timer = removeActiveUser(user, context);
+    return;
+  }
+  context.timer = removeActiveUser(user, context);
   existingUser.contexts.push(context);
+}
+
+function removeActiveUser(user, context) {
+  return setTimeout(() => {
+    if (!activeUsers[user.id]) return;
+    remove(activeUsers[user.id].contexts, c => {
+      return isEqual(omit(c, ['timer', 'toJSON']), omit(context, ['timer', 'toJSON']));
+    });
+    if (isEmpty(activeUsers[user.id].contexts)) delete activeUsers[user.id];
+    broadcast(events.REMOVE_ACTIVE_USER, user, context);
+  }, 5000); // TODO: Extract to config file
 }
 
 module.exports = { activeUsers, subscribe, broadcast, events };

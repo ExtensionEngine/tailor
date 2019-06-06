@@ -63,9 +63,6 @@ export default {
       const types = map(filter(this.structure, { level: 1 }), 'type');
       return filter(this.outlineActivities, it => types.includes(it.type))
         .sort((x, y) => x.position - y.position);
-    },
-    courseId() {
-      return this.$route.params.courseId;
     }
   },
   methods: {
@@ -75,15 +72,18 @@ export default {
   watch: {
     activeUsers: {
       handler() {
-        const users = this.activeUsers.course[this.courseId];
+        const { courseId } = this.$route.params;
+        const users = this.activeUsers.course[courseId];
         this.$emit('setActiveUsers', users);
       },
       immediate: true
     }
   },
   mounted() {
-    this.subscribe(this.courseId);
-    api.addActiveUser({ courseId: this.courseId });
+    const { courseId } = this.$route.params;
+    this.subscribe(courseId);
+    api.addActiveUser({ courseId });
+    setInterval(() => api.addActiveUser({ courseId }), 4000);
   },
   components: { Activity, Draggable, NoActivities, Sidebar }
 };

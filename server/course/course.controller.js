@@ -8,12 +8,9 @@ const { getSchema } = require('../../config/shared/activities');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
 const getVal = require('lodash/get');
-const isEqual = require('lodash/isEqual');
 const map = require('lodash/map');
-const omit = require('lodash/omit');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
-const removeFromArray = require('lodash/remove');
 const sample = require('lodash/sample');
 
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
@@ -107,20 +104,9 @@ function exportContentInventory({ course }, res) {
 
 function addActiveUser(req, res) {
   const { user, body: { context } } = req;
-  context.timer = removeActiveUser(user, context);
-  context.toJSON = () => omit(context, ['timer']);
   const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
   broadcast(events.ADD_ACTIVE_USER, activeUser, context);
   res.end();
-}
-
-function removeActiveUser(user, context) {
-  return setTimeout(() => {
-    removeFromArray(activeUsers[user.id].contexts, c => {
-      return isEqual(omit(c, ['timer']), omit(context, ['timer']));
-    });
-    broadcast(events.REMOVE_ACTIVE_USER, user, context);
-  }, 10000); // TODO: Extract to config file
 }
 
 function getActiveUsers(req, res) {

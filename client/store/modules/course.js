@@ -207,15 +207,18 @@ mutation(function setActiveUsers(users) {
 });
 
 mutation(function sseAddActiveUser({ user, context }) {
-  const activeUser = this.state.activeUsers[user.id];
-  if (activeUser) {
-    activeUser.contexts.push(context);
+  const { activeUsers } = this.state;
+  if (activeUsers[user.id]) {
+    const existingContext = find(activeUsers[user.id].contexts, context);
+    if (existingContext) return;
+    activeUsers[user.id].contexts.push(context);
     return;
   }
-  Vue.set(this.state.activeUsers, user.id, { ...user, contexts: [context] });
+  Vue.set(activeUsers, user.id, { ...user, contexts: [context] });
 });
 
 mutation(function sseRemoveActiveUser({ user, context }) {
+  if (!this.state.activeUsers[user.id]) return;
   const index = this.state.activeUsers[user.id].contexts.findIndex(c => {
     return isEqual(c, context);
   });
