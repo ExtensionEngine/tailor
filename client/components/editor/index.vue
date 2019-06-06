@@ -168,6 +168,7 @@ export default {
     const { courseId, activityId } = this.$route.params;
     this.subscribeActiveUsers(courseId);
     api.addActiveUser({ courseId, activityId });
+    setInterval(() => api.addActiveUser({ courseId, activityId }), 4000);
   },
   beforeDestroy() {
     this.unsubscribe();
