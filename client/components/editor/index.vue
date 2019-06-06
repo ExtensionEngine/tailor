@@ -72,7 +72,8 @@ export default {
       showLoader: true,
       focusedElement: null,
       showSidebar: false,
-      mousedownCaptured: false
+      mousedownCaptured: false,
+      timer: null
     };
   },
   computed: {
@@ -168,10 +169,14 @@ export default {
     const { courseId, activityId } = this.$route.params;
     this.subscribeActiveUsers(courseId);
     api.addActiveUser({ courseId, activityId });
-    setInterval(() => api.addActiveUser({ courseId, activityId }), 4000);
+    this.timer = setInterval(() => api.addActiveUser({ courseId, activityId }), 4000);
   },
   beforeDestroy() {
     this.unsubscribe();
+  },
+  beforeRouteLeave(to, from, next) {
+    clearInterval(this.timer);
+    next();
   },
   components: {
     ActiveUsers,

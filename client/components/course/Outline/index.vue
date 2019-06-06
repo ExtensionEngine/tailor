@@ -52,6 +52,7 @@ export default {
   props: {
     showLoader: { type: Boolean, default: false }
   },
+  data: () => ({ timer: null }),
   computed: {
     ...mapGetters(['structure', 'outlineActivities', 'activeUsers'], 'course'),
     isFlat() {
@@ -83,7 +84,11 @@ export default {
     const { courseId } = this.$route.params;
     this.subscribe(courseId);
     api.addActiveUser({ courseId });
-    setInterval(() => api.addActiveUser({ courseId }), 4000);
+    this.timer = setInterval(() => api.addActiveUser({ courseId }), 4000);
+  },
+  beforeRouteLeave(to, from, next) {
+    clearInterval(this.timer);
+    next();
   },
   components: { Activity, Draggable, NoActivities, Sidebar }
 };
