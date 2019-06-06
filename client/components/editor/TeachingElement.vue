@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-if="activeUsers.length" class="active-users-wrapper">
-      <active-users :users="activeUsers" theme="light" size="26"/>
+    <div v-if="contentActiveUsers.length" class="active-users-wrapper">
+      <active-users :users="contentActiveUsers" :size="26" theme="light"/>
     </div>
     <contained-content
       v-bind="$attrs"
@@ -15,8 +15,9 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ActiveUsers from 'components/common/ActiveUsers';
+import api from '../../api/course';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
@@ -31,11 +32,10 @@ export default {
     dragged: { type: Boolean, default: false }
   },
   computed: {
-    activeUsers() {
-      return [
-        { id: 2, email: 'toma@e.com' },
-        { id: 1, email: 'ilija@e.com' }
-      ];
+    ...mapGetters(['activeUsers'], 'course'),
+    contentActiveUsers() {
+      const { contentId } = this.element;
+      return this.activeUsers.content[contentId] || [];
     }
   },
   methods: {
@@ -60,6 +60,14 @@ export default {
         this.$nextTick(() => EventBus.emit('element:focus'));
       });
     }
+  },
+  created() {
+    EventBus.on('element:focus', element => {
+      const isFocused = !!element && (element.id === this.element.id);
+      if (!isFocused) return;
+      const { courseId, activityId, contentId } = this.element;
+      api.addActiveUser({ courseId, activityId, contentId });
+    });
   },
   components: { ActiveUsers, ContainedContent }
 };

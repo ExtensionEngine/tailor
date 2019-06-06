@@ -75,7 +75,7 @@ getter(function revisions() {
 });
 
 getter(function activeUsers() {
-  const activeUsers = { course: {}, activity: {}, tce: {} };
+  const activeUsers = { course: {}, activity: {}, content: {} };
   Object.keys(this.state.activeUsers).forEach(userId => {
     this.state.activeUsers[userId].contexts.forEach(context => {
       mapActiveUserContext(activeUsers, this.state.activeUsers[userId], context);

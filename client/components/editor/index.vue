@@ -95,7 +95,7 @@ export default {
     },
     activityActiveUsers() {
       const { activityId } = this.$route.params;
-      return this.activeUsers.activity[activityId];
+      return this.activeUsers.activity[activityId] || [];
     }
   },
   methods: {
