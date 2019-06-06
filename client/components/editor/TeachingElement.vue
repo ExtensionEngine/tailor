@@ -1,16 +1,22 @@
 <template>
-  <contained-content
-    v-bind="$attrs"
-    :element="element"
-    :isDragged="dragged"
-    :isDisabled="disabled"
-    @add="add"
-    @save="save"
-    @delete="remove"/>
+  <div>
+    <div v-if="activeUsers.length" class="active-users-wrapper">
+      <active-users :users="activeUsers" theme="light" size="26"/>
+    </div>
+    <contained-content
+      v-bind="$attrs"
+      :element="element"
+      :isDragged="dragged"
+      :isDisabled="disabled"
+      @add="add"
+      @save="save"
+      @delete="remove"/>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapMutations } from 'vuex-module';
+import ActiveUsers from 'components/common/ActiveUsers';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
@@ -23,6 +29,14 @@ export default {
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
     dragged: { type: Boolean, default: false }
+  },
+  computed: {
+    activeUsers() {
+      return [
+        { id: 2, email: 'toma@e.com' },
+        { id: 1, email: 'ilija@e.com' }
+      ];
+    }
   },
   methods: {
     ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
@@ -47,6 +61,15 @@ export default {
       });
     }
   },
-  components: { ContainedContent }
+  components: { ActiveUsers, ContainedContent }
 };
 </script>
+
+<style lang="scss">
+.active-users-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  height: 30px;
+  margin-bottom: -2px;
+}
+</style>
