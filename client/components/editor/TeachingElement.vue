@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="contentActiveUsers.length" class="active-users-wrapper">
+    <div :class="{ inactive: !contentActiveUsers.length }" class="active-users-wrapper">
       <active-users :users="contentActiveUsers" :size="26" theme="light"/>
     </div>
     <contained-content
@@ -78,5 +78,12 @@ export default {
   justify-content: flex-end;
   height: 30px;
   margin-bottom: -2px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &.inactive {
+    height: 0;
+    transition: all 0.3s ease;
+  }
 }
 </style>
