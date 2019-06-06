@@ -9,7 +9,7 @@
           <v-btn
             v-if="metadata.length"
             @click="showSidebar = !showSidebar"
-            color="blue-grey"
+            color="primary"
             fab
             dark
             title="Toggle teaching element sidebar">
