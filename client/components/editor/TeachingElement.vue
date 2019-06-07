@@ -62,20 +62,24 @@ export default {
         this.$nextTick(() => EventBus.emit('element:focus'));
       });
     },
-    handleElementFocus() {
+    setFocus() {
       EventBus.on('element:focus', element => {
         this.isFocused = !!element && (element.id === this.element.id);
-        const { courseId, activityId, contentId } = this.element;
-        if (this.isFocused) {
-          api.addActiveUser({ courseId, activityId, contentId });
-          return;
-        }
-        api.removeActiveUser({ courseId, activityId, contentId });
       });
     }
   },
+  watch: {
+    isFocused() {
+      const { courseId, activityId, contentId } = this.element;
+      if (this.isFocused) {
+        api.addActiveUser({ courseId, activityId, contentId });
+        return;
+      }
+      api.removeActiveUser({ courseId, activityId, contentId });
+    }
+  },
   created() {
-    this.handleElementFocus();
+    this.setFocus();
   },
   components: { ActiveUsers, ContainedContent }
 };
