@@ -1,8 +1,8 @@
-import repeat from 'lodash/repeat';
+import './image-embed.scss';
 import { Quill } from 'vue-quill-editor';
+import repeat from 'lodash/repeat';
 import Tooltip from './tooltip';
 
-import './image-embed.scss';
 const Keyboard = Quill.import('modules/keyboard');
 
 class EmbedTooltip extends Tooltip {

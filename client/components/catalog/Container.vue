@@ -31,12 +31,12 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import CourseCard from './Card';
 import CreateCourse from './Create';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import isEmpty from 'lodash/isEmpty';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
 import Search from './Search';

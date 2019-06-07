@@ -1,31 +1,33 @@
 <template>
   <div class="editor-wrapper">
-    <toolbar :element="focusedElement">
-      <span slot="actions">
-        <v-btn
-          v-if="metadata.length"
-          @click="showSidebar = !showSidebar"
-          color="blue-grey"
-          fab
-          dark
-          title="Toggle teaching element sidebar">
-          <v-icon>mdi-backburger</v-icon>
-        </v-btn>
-      </span>
-    </toolbar>
-    <transition name="slide">
-      <meta-sidebar
-        v-if="showSidebar"
-        :key="focusedElement._cid"
-        :metadata="metadata"
-        :element="focusedElement">
-      </meta-sidebar>
-    </transition>
+    <template v-if="activity">
+      <toolbar :element="focusedElement">
+        <span slot="actions">
+          <v-btn
+            v-if="metadata.length"
+            @click="showSidebar = !showSidebar"
+            color="primary"
+            fab
+            dark
+            title="Toggle teaching element sidebar">
+            <v-icon>mdi-backburger</v-icon>
+          </v-btn>
+        </span>
+      </toolbar>
+      <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
+      <transition name="slide">
+        <meta-sidebar
+          v-if="showSidebar"
+          :key="focusedElement._cid"
+          :metadata="metadata"
+          :element="focusedElement">
+        </meta-sidebar>
+      </transition>
+    </template>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
-      <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
-      <template v-else>
-        <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
-        <div class="container">
+      <div class="container">
+        <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
+        <template v-else>
           <content-containers
             v-for="(containerGroup, type) in contentContainers"
             :key="type"
@@ -34,16 +36,16 @@
             v-bind="getContainerConfig(type)"/>
           <assessments v-if="showAssessments"/>
           <exams v-if="showExams"/>
-        </div>
-      </template>
+        </template>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import * as config from 'shared/activities';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import { getElementId, isQuestion } from 'tce-core/utils';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
@@ -69,8 +71,8 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['course', 'getMetadata'], 'course'),
     ...mapGetters(['activity', 'contentContainers'], 'editor'),
-    ...mapGetters(['getMetadata'], 'course'),
     metadata() {
       if (!this.focusedElement) return [];
       return this.getMetadata(this.focusedElement);
@@ -112,7 +114,8 @@ export default {
       }
     }
   },
-  created() {
+  async created() {
+    const { courseId, activityId } = this.$route.params;
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;
@@ -140,17 +143,15 @@ export default {
       this.showSidebar = this.metadata.length && this.showSidebar;
     }, 50));
     // TODO: Do this better!
-    const courseId = this.$route.params.courseId;
-    const activityId = this.$route.params.activityId;
     const baseUrl = `/courses/${courseId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
     this.setupTesApi(`${baseUrl}/tes`);
-    if (!this.course) this.getCourse(courseId);
-    Promise.join(
+    const actions = [
       this.getActivities(),
-      this.getTeachingElements({ activityId, parentId: activityId }),
-      Promise.delay(700)
-    ).then(() => (this.showLoader = false));
+      this.getTeachingElements({ activityId, parentId: activityId })
+    ];
+    if (!this.course) actions.push(this.getCourse(courseId));
+    Promise.all(actions).then(() => (this.showLoader = false));
   },
   beforeDestroy() {
     this.unsubscribe();
@@ -172,6 +173,11 @@ export default {
 .editor-wrapper {
   display: flex;
   flex-direction: column;
+
+  .v-progress-circular {
+    align-self: center;
+    margin-top: 120px;
+  }
 }
 
 .editor {
@@ -181,10 +187,6 @@ export default {
 
   .container {
     max-width: 1100px;
-  }
-
-  .v-progress-circular {
-    margin-top: 120px;
   }
 }
 </style>

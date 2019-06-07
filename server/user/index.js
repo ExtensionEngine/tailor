@@ -3,7 +3,7 @@
 const auth = require('passport').authenticate('jwt');
 const ctrl = require('./user.controller');
 const model = require('./user.model');
-const router = require('express-promise-router')();
+const router = require('express').Router();
 
 router
   // Public routes:

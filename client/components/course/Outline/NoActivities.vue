@@ -35,10 +35,10 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import { withValidation } from 'utils/validation';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
 import multiselect from '../../common/Select';
+import { withValidation } from 'utils/validation';
 
 export default {
   mixins: [withValidation()],

@@ -8,8 +8,9 @@
 <script>
 const initialData = () => ({
   message: '',
-  color: '',
-  timeout: 2500
+  color: 'primary',
+  timeout: 2500,
+  right: true
 });
 
 export default {

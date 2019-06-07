@@ -23,10 +23,10 @@
 </template>
 
 <script>
+import { Quill, quillEditor as QuillEditor } from 'vue-quill-editor';
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
 import ImageEmbed from './image-embed';
-import { quillEditor as QuillEditor, Quill } from 'vue-quill-editor';
 
 Quill.register('modules/imageEmbed', ImageEmbed);
 
