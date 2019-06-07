@@ -19,6 +19,7 @@ router
   .delete('/courses/:courseId/activities/:activityId', ctrl.remove)
   .post('/courses/:courseId/activities/:activityId/reorder', ctrl.reorder)
   .post('/courses/:courseId/activities/:activityId/clone', ctrl.clone)
+  .post('/courses/:courseId/activities/:activityId/link', ctrl.link)
   .get('/courses/:courseId/activities/:activityId/publish', ctrl.publish);
 
 function getActivity(req, _res, next, activityId) {
