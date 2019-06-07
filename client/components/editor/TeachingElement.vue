@@ -90,6 +90,11 @@ export default {
   created() {
     this.setFocus();
   },
+  beforeDestroy() {
+    const { courseId, activityId, contentId } = this.element;
+    clearInterval(this.timer);
+    api.removeActiveUser({ courseId, activityId, contentId });
+  },
   components: { ActiveUsers, ContainedContent }
 };
 </script>
