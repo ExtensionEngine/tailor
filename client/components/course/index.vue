@@ -113,4 +113,8 @@ export default {
 .v-tabs {
   z-index: 2;
 }
+
+.active-users {
+  margin-right: 2.6rem;
+}
 </style>

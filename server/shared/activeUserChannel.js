@@ -65,11 +65,11 @@ function setContext(user, context) {
   existingUser.contexts.push(context);
 }
 
-function startRemovalTimer(user, context) {
+function startRemovalTimer(user, context, delay = 60000) {
   return setTimeout(() => {
     removeActiveUser(user, context);
     broadcast(events.REMOVE_ACTIVE_USER, user, context);
-  }, 5000); // TODO: Extract to config file
+  }, delay); // TODO: Extract to config file
 }
 
 function removeActiveUser(user, context) {

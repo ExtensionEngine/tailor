@@ -1,5 +1,7 @@
 <template>
-  <div :class="themeColor.border" class="active-users">
+  <div
+    :class="[themeColor.border, { vertical }]"
+    class="active-users">
     <v-avatar
       v-tooltip="user.email"
       v-for="user in users"
@@ -24,7 +26,8 @@ export default {
   props: {
     users: { type: Array, default: () => [] },
     theme: { type: String, default: THEMES.DARK },
-    size: { type: Number, default: 30 }
+    size: { type: Number, default: 30 },
+    vertical: { type: Boolean, default: false }
   },
   computed: {
     themeColor() {
@@ -48,7 +51,6 @@ export default {
 .active-users {
   display: flex;
   align-items: center;
-  margin-right: 2.6rem;
 
   div {
     margin-left: -5px;
@@ -62,5 +64,18 @@ export default {
 
   &.shadow-grey div { box-shadow: 0 0 0 1px #d0d0d0; }
   &.shadow-blue-grey div { box-shadow: 0 0 0 2px #4d626b; }
+
+  &.vertical {
+    flex-direction: column;
+
+    div {
+      margin-top: -5px;
+      margin-left: 0;
+    }
+
+    div:hover {
+      margin-right: -8px;
+    }
+  }
 }
 </style>

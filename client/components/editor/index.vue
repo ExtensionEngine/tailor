@@ -212,4 +212,8 @@ export default {
     max-width: 1100px;
   }
 }
+
+.active-users {
+  margin-right: 2.2rem;
+}
 </style>

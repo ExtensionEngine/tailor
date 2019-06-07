@@ -79,5 +79,7 @@ export default {
   position: relative;
   margin: 7px 0;
   padding: 0;
+  background: #fff;
+  z-index: 2;
 }
 </style>

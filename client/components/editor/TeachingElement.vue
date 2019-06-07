@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <div :class="{ inactive: !contentActiveUsers.length }" class="active-users-wrapper">
-      <active-users :users="contentActiveUsers" :size="26" theme="light"/>
+  <div class="te-wrapper">
+    <div :class="{ inactive: !showActiveUsers }" class="active-users-wrapper">
+      <active-users :users="contentActiveUsers" :size="26" vertical theme="light"/>
     </div>
     <contained-content
       v-bind="$attrs"
@@ -39,6 +39,9 @@ export default {
     contentActiveUsers() {
       const { contentId } = this.element;
       return this.activeUsers.content[contentId] || [];
+    },
+    showActiveUsers() {
+      return this.contentActiveUsers.length;
     }
   },
   methods: {
@@ -87,16 +90,16 @@ export default {
 
 <style lang="scss">
 .active-users-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  height: 30px;
-  margin-bottom: -2px;
-  transition: all 0.3s ease;
-  overflow: hidden;
+  position: absolute;
+  right: -0.5rem;
+  margin-top: 1rem;
+  transition: all 0.5s ease;
 
   &.inactive {
-    height: 0;
-    transition: all 0.3s ease;
+    opacity: 0;
+    transition: all 0.5s ease;
   }
+
+  .active-users { margin-right: 0; }
 }
 </style>
