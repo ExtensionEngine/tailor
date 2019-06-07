@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import api from 'client/api/auth';
 import CircularProgress from 'components/common/CircularProgress';
 import Discussion from './Discussion';

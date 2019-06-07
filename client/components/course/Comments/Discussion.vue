@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex-module';
 import Comment from './Comment';
 import isEmpty from 'lodash/isEmpty';
 
