@@ -35,9 +35,8 @@ function subscribe(req, res) {
 
 function broadcast(event, user, context) {
   const { courseId } = context;
-  // TODO: Move out two following lines
+  // TODO: Move out following lines
   if (event === events.ADD_ACTIVE_USER) setContext(user, context);
-  if (event === events.REMOVE_ACTIVE_USER) removeActiveUser(user, context);
   const recipients = get(sseClients, courseId, {});
   each(recipients, r => {
     r.send(event, { user, context: omit(context, ['timer']) });
@@ -65,19 +64,21 @@ function setContext(user, context) {
   existingUser.contexts.push(context);
 }
 
-function startRemovalTimer(user, context, delay = 60000) {
+function startRemovalTimer(user, context, delay = 5000) {
   return setTimeout(() => {
-    removeActiveUser(user, context);
+    deleteActiveUser(user, context);
     broadcast(events.REMOVE_ACTIVE_USER, user, context);
   }, delay); // TODO: Extract to config file
 }
 
-function removeActiveUser(user, context) {
+function deleteActiveUser(user, context, stopTimer = false) {
   if (!activeUsers[user.id]) return;
   remove(activeUsers[user.id].contexts, c => {
-    return isEqual(omit(c, ['timer', 'toJSON']), omit(context, ['timer', 'toJSON']));
+    const remove = isEqual(omit(c, ['timer', 'toJSON']), omit(context, ['timer', 'toJSON']));
+    if (stopTimer && remove) clearTimeout(c.timer);
+    return remove;
   });
   if (isEmpty(activeUsers[user.id].contexts)) delete activeUsers[user.id];
 }
 
-module.exports = { activeUsers, subscribe, broadcast, events };
+module.exports = { activeUsers, subscribe, broadcast, events, deleteActiveUser };

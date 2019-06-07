@@ -32,7 +32,10 @@ export default {
     dragged: { type: Boolean, default: false }
   },
   data() {
-    return { isFocused: false };
+    return {
+      isFocused: false,
+      timer: null
+    };
   },
   computed: {
     ...mapGetters(['activeUsers'], 'course'),
@@ -74,11 +77,14 @@ export default {
   watch: {
     isFocused() {
       const { courseId, activityId, contentId } = this.element;
+      const params = { courseId, activityId, contentId };
       if (this.isFocused) {
-        api.addActiveUser({ courseId, activityId, contentId });
+        api.addActiveUser(params);
+        this.timer = setInterval(() => api.addActiveUser(params), 4000);
         return;
       }
-      api.removeActiveUser({ courseId, activityId, contentId });
+      clearInterval(this.timer);
+      api.removeActiveUser(params);
     }
   },
   created() {
@@ -91,7 +97,7 @@ export default {
 <style lang="scss">
 .active-users-wrapper {
   position: absolute;
-  right: -0.5rem;
+  right: -1rem;
   margin-top: 1rem;
   transition: all 0.5s ease;
 

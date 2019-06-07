@@ -74,7 +74,7 @@ export default {
     }
 
     div:hover {
-      margin-right: -8px;
+      margin-right: -5px;
     }
   }
 }
