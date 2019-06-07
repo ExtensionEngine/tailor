@@ -41,6 +41,7 @@
       small
       flat
       block
+      color="pink"
       class="more-comments">
       <span v-if="!showMore">show more <v-icon>mdi-chevron-down</v-icon></span>
       <span v-else>show less <v-icon>mdi-chevron-up</v-icon></span>
@@ -146,11 +147,7 @@ export default {
 
 .more-comments {
   margin: 0;
-  border-top: 1px solid lightgray;
-
-  /deep/ .v-btn__content {
-    color: gray;
-  }
+  border-top: 1px solid #e91e63;
 
   .v-icon {
     font-size: 18px;
