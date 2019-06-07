@@ -1,8 +1,7 @@
 'use strict';
 
 const { renderHtml, renderText } = require('./render');
-const { origin } = require('../../../config/server');
-const mailConfig = require('../../../config/server/mail');
+const { origin, mail: config } = require('../../../config/server');
 const email = require('emailjs');
 const fecha = require('fecha');
 const logger = require('../logger');
@@ -11,7 +10,7 @@ const pick = require('lodash/pick');
 const wrap = require('word-wrap');
 
 const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
-const server = email.server.connect(mailConfig);
+const server = email.server.connect(config);
 logger.debug(getConfig(server), '📧  SMTP client created');
 
 const templatesDir = path.join(__dirname, './templates/');

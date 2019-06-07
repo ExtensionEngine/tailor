@@ -34,11 +34,6 @@ function email({ course, body }, res) {
     .then(() => res.end());
 }
 
-function offsetDate(date, offset) {
-  date.setDate(date.getDate() + offset);
-  return date;
-}
-
 function show({ comment }, res) {
   return res.json({ data: comment });
 }
@@ -64,9 +59,14 @@ function remove({ comment }, res) {
 
 module.exports = {
   list,
+  email,
   show,
   create,
   patch,
-  remove,
-  email
+  remove
 };
+
+function offsetDate(date, offset) {
+  date.setDate(date.getDate() + offset);
+  return date;
+}

@@ -14,6 +14,7 @@ module.exports = {
   port,
   origin,
   auth: require('./auth'),
+  mail: require('./mail'),
   storage: require('./storage')
 };
 
