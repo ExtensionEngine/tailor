@@ -17,6 +17,12 @@ logger.debug(getConfig(server), '📧  SMTP client created');
 const templatesDir = path.join(__dirname, './templates/');
 const resetUrl = user => `${origin}/#/reset-password/${user.token}`;
 
+function send(message) {
+  return new Promise((resolve, reject) => {
+    server.send(message, (err, msg) => err ? reject(err) : resolve(msg));
+  });
+}
+
 function invite(user) {
   const href = resetUrl(user);
   const { hostname } = new URL(href);
@@ -25,7 +31,7 @@ function invite(user) {
   const html = renderHtml(path.join(templatesDir, 'welcome.mjml'), data);
   const text = renderText(path.join(templatesDir, 'welcome.txt'), data);
   logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending invite email to:', recipient);
-  return server.send({
+  return send({
     from: EMAIL_ADDRESS,
     to: recipient,
     subject: 'Invite',
@@ -41,7 +47,7 @@ function resetPassword(user) {
   const html = renderHtml(path.join(templatesDir, 'reset.mjml'), data);
   const text = renderText(path.join(templatesDir, 'reset.txt'), data);
   logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending reset password email to:', recipient);
-  return server.send({
+  return send({
     from: EMAIL_ADDRESS,
     to: recipient,
     subject: 'Reset password',
@@ -65,7 +71,7 @@ function commentsList({ email, comments, since }) {
   const html = renderHtml(path.join(templatesDir, 'comments.mjml'), data);
   const text = renderText(path.join(templatesDir, 'comments.txt'), data);
   logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending comments email to:', recipient);
-  return server.send({
+  return send({
     from: EMAIL_ADDRESS,
     to: recipient,
     subject: 'Comments list',
