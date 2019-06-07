@@ -109,6 +109,13 @@ function addActiveUser(req, res) {
   res.end();
 }
 
+function removeActiveUser(req, res) {
+  const { user, body: { context } } = req;
+  const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
+  broadcast(events.REMOVE_ACTIVE_USER, activeUser, context);
+  res.end();
+}
+
 function getActiveUsers(req, res) {
   res.json({ data: { activeUsers } });
 }
@@ -129,6 +136,7 @@ module.exports = {
   removeUser,
   exportContentInventory,
   publishRepoInfo,
+  getActiveUsers,
   addActiveUser,
-  getActiveUsers
+  removeActiveUser
 };

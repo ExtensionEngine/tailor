@@ -38,13 +38,18 @@ function publishRepositoryMeta(id) {
   return request.post(`/courses/${id}/publish`).then(res => res.data);
 }
 
+function getActiveUsers(id) {
+  return request.post(`/courses/${id}/get-active-users`).then(res => res.data.data);
+}
+
 function addActiveUser(context) {
   const { courseId } = context;
   return request.post(`/courses/${courseId}/add-active-user`, { context });
 }
 
-function getActiveUsers(id) {
-  return request.post(`/courses/${id}/get-active-users`).then(res => res.data.data);
+function removeActiveUser(context) {
+  const { courseId } = context;
+  return request.post(`/courses/${courseId}/remove-active-user`, { context });
 }
 
 export default {
@@ -54,6 +59,7 @@ export default {
   removeUser,
   getContentInventory,
   publishRepositoryMeta,
+  getActiveUsers,
   addActiveUser,
-  getActiveUsers
+  removeActiveUser
 };

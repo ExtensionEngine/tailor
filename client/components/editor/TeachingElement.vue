@@ -31,6 +31,9 @@ export default {
     disabled: { type: Boolean, default: false },
     dragged: { type: Boolean, default: false }
   },
+  data() {
+    return { isFocused: false };
+  },
   computed: {
     ...mapGetters(['activeUsers'], 'course'),
     contentActiveUsers() {
@@ -58,15 +61,21 @@ export default {
       this.removeElement(this.element).then(() => {
         this.$nextTick(() => EventBus.emit('element:focus'));
       });
+    },
+    handleElementFocus() {
+      EventBus.on('element:focus', element => {
+        this.isFocused = !!element && (element.id === this.element.id);
+        const { courseId, activityId, contentId } = this.element;
+        if (this.isFocused) {
+          api.addActiveUser({ courseId, activityId, contentId });
+          return;
+        }
+        api.removeActiveUser({ courseId, activityId, contentId });
+      });
     }
   },
   created() {
-    EventBus.on('element:focus', element => {
-      const isFocused = !!element && (element.id === this.element.id);
-      if (!isFocused) return;
-      const { courseId, activityId, contentId } = this.element;
-      api.addActiveUser({ courseId, activityId, contentId });
-    });
+    this.handleElementFocus();
   },
   components: { ActiveUsers, ContainedContent }
 };

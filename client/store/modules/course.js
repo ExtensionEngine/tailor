@@ -222,6 +222,7 @@ mutation(function sseRemoveActiveUser({ user, context }) {
   const index = this.state.activeUsers[user.id].contexts.findIndex(c => {
     return isEqual(c, context);
   });
+  if (index === -1) return;
   this.state.activeUsers[user.id].contexts.splice(index, 1);
 });
 

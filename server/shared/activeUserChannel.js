@@ -35,7 +35,9 @@ function subscribe(req, res) {
 
 function broadcast(event, user, context) {
   const { courseId } = context;
+  // TODO: Move out two following lines
   if (event === events.ADD_ACTIVE_USER) setContext(user, context);
+  if (event === events.REMOVE_ACTIVE_USER) removeActiveUser(user, context);
   const recipients = get(sseClients, courseId, {});
   each(recipients, r => {
     r.send(event, { user, context: omit(context, ['timer']) });
@@ -49,29 +51,33 @@ function setContext(user, context) {
   context.toJSON = () => omit(context, ['timer']);
   const existingUser = activeUsers[id];
   if (!existingUser) {
-    context.timer = removeActiveUser(user, context);
+    context.timer = startRemovalTimer(user, context);
     activeUsers[id] = { id, email, contexts: [context] };
     return;
   }
   const existingContext = find(existingUser.contexts, omit(context, ['timer', 'toJSON']));
   if (existingContext) {
     clearTimeout(existingContext.timer);
-    existingContext.timer = removeActiveUser(user, context);
+    existingContext.timer = startRemovalTimer(user, context);
     return;
   }
-  context.timer = removeActiveUser(user, context);
+  context.timer = startRemovalTimer(user, context);
   existingUser.contexts.push(context);
 }
 
-function removeActiveUser(user, context) {
+function startRemovalTimer(user, context) {
   return setTimeout(() => {
-    if (!activeUsers[user.id]) return;
-    remove(activeUsers[user.id].contexts, c => {
-      return isEqual(omit(c, ['timer', 'toJSON']), omit(context, ['timer', 'toJSON']));
-    });
-    if (isEmpty(activeUsers[user.id].contexts)) delete activeUsers[user.id];
+    removeActiveUser(user, context);
     broadcast(events.REMOVE_ACTIVE_USER, user, context);
   }, 5000); // TODO: Extract to config file
+}
+
+function removeActiveUser(user, context) {
+  if (!activeUsers[user.id]) return;
+  remove(activeUsers[user.id].contexts, c => {
+    return isEqual(omit(c, ['timer', 'toJSON']), omit(context, ['timer', 'toJSON']));
+  });
+  if (isEmpty(activeUsers[user.id].contexts)) delete activeUsers[user.id];
 }
 
 module.exports = { activeUsers, subscribe, broadcast, events };

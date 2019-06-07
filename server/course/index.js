@@ -27,7 +27,8 @@ router
   .delete('/courses/:id/users/:userId', ctrl.removeUser)
   .get('/courses/:id/contentInventory', ctrl.exportContentInventory)
   .post('/courses/:id/add-active-user', ctrl.addActiveUser)
-  .post('/courses/:id/get-active-users', ctrl.getActiveUsers);
+  .post('/courses/:id/get-active-users', ctrl.getActiveUsers)
+  .post('/courses/:id/remove-active-user', ctrl.removeActiveUser);
 
 function getCourse(req, _res, next, id) {
   return Course.findByPk(id, { paranoid: false })
