@@ -25,7 +25,10 @@
           <v-spacer/>
           <v-btn
             v-show="isEditable"
-            :to="{ name: 'editor', params: { activityId: id } }"
+            :to="{
+              name: 'editor',
+              params: { activityId: originId ? originId : id }
+            }"
             color="pink"
             outline
             small>
@@ -90,6 +93,7 @@ export default {
     id: { type: Number, default: null },
     parentId: { type: Number, default: null },
     courseId: { type: Number, required: true },
+    originId: { type: Number, default: null },
     level: { type: Number, required: true },
     index: { type: Number, required: true },
     position: { type: Number, required: true },
@@ -137,10 +141,12 @@ export default {
       return this._cid === this.outlineState.showOptions;
     },
     children() {
+      const { id, originId, activities, structure } = this;
       const level = this.level + 1;
-      const types = map(filter(this.structure, { level }), 'type');
-      return filter(this.activities, it => {
-        return this.id && (this.id === it.parentId) && types.includes(it.type);
+      const types = map(filter(structure, { level }), 'type');
+
+      return filter(activities, it => {
+        return (originId || id) === it.parentId && types.includes(it.type);
       }).sort((x, y) => x.position - y.position);
     },
     icon() {

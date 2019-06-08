@@ -60,7 +60,7 @@ export default {
     },
     rootActivities() {
       const types = map(filter(this.structure, { level: 1 }), 'type');
-      return filter(this.outlineActivities, it => types.includes(it.type))
+      return filter(this.outlineActivities, it => types.includes(it.type) && it.position)
         .sort((x, y) => x.position - y.position);
     }
   },
