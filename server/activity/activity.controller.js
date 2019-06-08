@@ -23,13 +23,28 @@ function show({ activity }, res) {
 }
 
 function patch({ activity, body, user }, res) {
+  const { originId } = activity;
+  if (originId) {
+    return Activity.updateLinkedActivity(activity, body, {
+      where: { id: originId },
+      context: { userId: user.id }
+    }).then(data => res.json({ data }));
+  }
+
   return activity.update(body, { context: { userId: user.id } })
     .then(data => res.json({ data }));
 }
 
 function list({ course, query, opts }, res) {
   if (!query.detached) opts.where = { detached: false };
-  return course.getActivities(opts).then(data => res.json({ data }));
+  opts.include = [
+    {
+      model: Activity,
+      as: 'origin'
+    }
+  ];
+  return course.getResolvedActivities(opts)
+    .then(data => res.json({ data }));
 }
 
 function remove({ course, activity, user }, res) {
@@ -59,6 +74,14 @@ function clone({ activity, body }, res) {
   });
 }
 
+function link({ activity, body, user }, res) {
+  const { position } = body;
+  return activity.link(position, { context: { userId: user.id } }).then(mappings => {
+    const opts = { where: { id: mappings } };
+    return Activity.findAll(opts).then(data => res.json({ data }));
+  });
+}
+
 module.exports = {
   create,
   show,
@@ -67,5 +90,6 @@ module.exports = {
   remove,
   reorder,
   clone,
+  link,
   publish
 };
