@@ -4,10 +4,11 @@ import {
 } from 'utils/activity';
 import calculatePosition from 'utils/calculatePosition';
 import filter from 'lodash/filter';
-import find from 'lodash/find';
+import findKey from 'lodash/findKey';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import request from '../../api/request';
+import Vue from 'vue';
 import VuexCollection from '../helpers/collection';
 
 const { getter, action, mutation, build } = new VuexCollection('activities');
@@ -89,6 +90,13 @@ action(function publish(activity) {
 
 mutation(function reorder({ activity, position }) {
   activity.position = position;
+});
+
+mutation(function update(activities) {
+  activities.forEach(activity => {
+    const _cid = findKey(this.state.items, { id: activity.id });
+    Vue.set(this.state.items, _cid, { ...activity, _cid });
+  });
 });
 
 export default build();
