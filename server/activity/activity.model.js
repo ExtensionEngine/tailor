@@ -10,7 +10,7 @@ const Promise = require('bluebird');
 
 class Activity extends Model {
   static fields(DataTypes) {
-    const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4 } = DataTypes;
+    const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4, INTEGER } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -22,7 +22,6 @@ class Activity extends Model {
       },
       position: {
         type: DOUBLE,
-        allowNull: false,
         validate: { min: 0 }
       },
       data: {
@@ -36,6 +35,9 @@ class Activity extends Model {
         type: BOOLEAN,
         defaultValue: false,
         allowNull: false
+      },
+      originId: {
+        type: INTEGER
       },
       publishedAt: {
         type: DATE,
@@ -73,6 +75,14 @@ class Activity extends Model {
     this.hasMany(this, {
       as: 'children',
       foreignKey: { name: 'parentId', field: 'parent_id' }
+    });
+    this.belongsTo(this, {
+      as: 'origin',
+      foreignKey: { name: 'originId', field: 'origin_id' }
+    });
+    this.hasMany(this, {
+      as: 'links',
+      foreignKey: { name: 'originId', field: 'origin_id' }
     });
   }
 
@@ -122,6 +132,104 @@ class Activity extends Model {
       if (position) this.position = position;
       return Activity.cloneActivities([this], courseId, parentId, t);
     });
+  }
+
+  static async linkActivities(src, position = null, opts) {
+    const { transaction } = opts;
+
+    if (src.originId) {
+      return Activity.findOne(
+        { where: { id: src.originId } },
+        { transaction }
+      ).then(origin =>
+        Activity.create({
+          ...pick(origin, ['type', 'courseId']),
+          position,
+          originId: origin.id
+        }, opts)
+          .then(linked => [linked.id]));
+    }
+
+    const originActivity = await Activity.create({
+      ...pick(src, ['type', 'data', 'courseId']),
+      position: null
+    }, opts);
+
+    await src.update({ originId: originActivity.id }, opts);
+
+    const TeachingElement = this.sequelize.model('TeachingElement');
+    const tes = await TeachingElement.findAll(
+      { where: { activityId: src.id, detached: false } },
+      { transaction }
+    );
+    const children = await Activity.findAll(
+      { where: { parentId: src.id, detached: false } },
+      { transaction }
+    );
+
+    if (tes.length) {
+      await Promise.each(tes,
+        te => te.update(
+          { activityId: originActivity.id },
+          { transaction }
+        )
+      );
+    }
+
+    if (children.length) {
+      await Promise.each(children,
+        child => child.update(
+          { parentId: originActivity.id },
+          { transaction }
+        )
+      );
+    }
+
+    const linkedActivity = await Activity.create({
+      ...pick(originActivity, ['type', 'courseId']),
+      position,
+      originId: originActivity.id
+    }, opts);
+
+    return [
+      src.id,
+      linkedActivity.id
+    ];
+  }
+
+  static async updateLinkedActivity({ originId }, body, opts) {
+    return Activity.update(body, opts).then(() => {
+      return Activity.getLinkedActivities(originId);
+    });
+  }
+
+  static async getLinkedActivities(originId) {
+    const opts = {
+      where: {
+        originId
+      },
+      include: [
+        {
+          model: Activity,
+          as: 'origin'
+        }
+      ]
+    };
+
+    return Activity.findAll(opts).then(activities => {
+      return activities.map(activity => {
+        activity.data = activity.origin.data;
+        activity.refs = activity.origin.refs;
+        delete activity.origin;
+        return activity;
+      });
+    });
+  }
+
+  link(position, opts) {
+    return this.sequelize.transaction(transaction =>
+      Activity.linkActivities(this, position, { ...opts, transaction })
+    );
   }
 
   /**
