@@ -45,7 +45,8 @@ action(function fetch() {
 action(function restore(revision) {
   const { id, courseId } = revision.state;
   const url = `/courses/${courseId}/revisions/${id}/restore`;
-  this.commit('update', { ...revision, restored: true });
+  Object.assign(revision, { restored: true });
+  this.commit('update', revision);
   return request.post(url, { revision })
     .then(({ data: { data } }) => this.commit('add', data));
 });

@@ -16,13 +16,13 @@ function index({ course, query }, res) {
 }
 
 function restore({ body: { revision }, user }, res) {
+  const { id, restored, state } = revision;
   const opts = { recursive: true, context: { userId: user.id } };
   const include = [{ model: User, attributes: ['id', 'email'] }];
-  const where = { id: revision.id };
-  const { id } = revision.state;
-  Revision.update({ restored: true }, { where });
-  if (revision.entity === 'ACTIVITY') return restoreActivity(id, opts, include, res);
-  return restoreTe(id, opts, include, res);
+  const where = { id };
+  Revision.update({ restored }, { where });
+  if (revision.entity === 'ACTIVITY') return restoreActivity(state.id, opts, include, res);
+  return restoreTe(state.id, opts, include, res);
 }
 
 function resolve({ revision }, res) {
