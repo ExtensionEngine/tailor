@@ -93,6 +93,7 @@ mutation(function reorder({ activity, position }) {
 });
 
 mutation(function update(activities) {
+  if (!Array.isArray(activities)) activities = [activities];
   activities.forEach(activity => {
     const _cid = findKey(this.state.items, { id: activity.id });
     Vue.set(this.state.items, _cid, { ...activity, _cid });
