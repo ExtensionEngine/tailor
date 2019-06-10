@@ -167,9 +167,10 @@ export default {
   },
   mounted() {
     const { courseId, activityId } = this.$route.params;
+    const params = { courseId, activityId };
     this.subscribeActiveUsers(courseId);
-    api.addActiveUser({ courseId, activityId });
-    this.timer = setInterval(() => api.addActiveUser({ courseId, activityId }), 4000);
+    api.addActiveUser(params);
+    this.timer = setInterval(() => api.addActiveUser(params), 20000);
   },
   beforeDestroy() {
     this.unsubscribe();

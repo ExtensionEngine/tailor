@@ -80,7 +80,7 @@ export default {
       const params = { courseId, activityId, contentId };
       if (this.isFocused) {
         api.addActiveUser(params);
-        this.timer = setInterval(() => api.addActiveUser(params), 4000);
+        this.timer = setInterval(() => api.addActiveUser(params), 20000);
         return;
       }
       clearInterval(this.timer);

@@ -64,7 +64,7 @@ function setContext(user, context) {
   existingUser.contexts.push(context);
 }
 
-function startRemovalTimer(user, context, delay = 5000) {
+function startRemovalTimer(user, context, delay = 60000) {
   return setTimeout(() => {
     deleteActiveUser(user, context);
     broadcast(events.REMOVE_ACTIVE_USER, user, context);

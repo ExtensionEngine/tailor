@@ -84,7 +84,7 @@ export default {
     const { courseId } = this.$route.params;
     this.subscribe(courseId);
     api.addActiveUser({ courseId });
-    this.timer = setInterval(() => api.addActiveUser({ courseId }), 4000);
+    this.timer = setInterval(() => api.addActiveUser({ courseId }), 20000);
   },
   beforeRouteLeave(to, from, next) {
     const { courseId } = this.$route.params;
