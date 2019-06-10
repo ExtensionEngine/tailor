@@ -87,6 +87,8 @@ export default {
     this.timer = setInterval(() => api.addActiveUser({ courseId }), 4000);
   },
   beforeRouteLeave(to, from, next) {
+    const { courseId } = this.$route.params;
+    api.removeActiveUser({ courseId });
     clearInterval(this.timer);
     next();
   },

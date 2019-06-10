@@ -160,8 +160,8 @@ action(function unsubscribe() {
 });
 
 action(function getActiveUsers() {
-  const { route } = this.rootState;
-  const courseId = route.params.courseId;
+  const courseId = get(this.rootState, 'route.params.courseId');
+  if (!courseId) return;
   return courseApi.getActiveUsers(courseId)
     .then(({ activeUsers }) => this.commit('setActiveUsers', activeUsers));
 });

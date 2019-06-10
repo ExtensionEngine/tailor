@@ -175,6 +175,8 @@ export default {
     this.unsubscribe();
   },
   beforeRouteLeave(to, from, next) {
+    const { courseId, activityId } = this.$route.params;
+    api.removeActiveUser({ courseId, activityId });
     clearInterval(this.timer);
     next();
   },
