@@ -16,11 +16,10 @@ function index({ course, query }, res) {
 }
 
 function restore({ body: { revision }, user }, res) {
-  const { id, restored, state } = revision;
-  const opts = { recursive: true, context: { userId: user.id } };
+  const { id, state } = revision;
+  const opts = { recursive: true, isRestore: true, context: { userId: user.id } };
   const include = [{ model: User, attributes: ['id', 'email'] }];
-  const where = { id };
-  Revision.update({ restored }, { where });
+  Revision.update({ restored: true }, { where: { id } });
   if (revision.entity === 'ACTIVITY') return restoreActivity(state.id, opts, include, res);
   return restoreTe(state.id, opts, include, res);
 }
@@ -34,7 +33,7 @@ function resolve({ revision }, res) {
 
 function restoreActivity(id, opts, include, res) {
   return Activity.findByPk(id, { paranoid: false })
-      .then(activity => activity.restoreActivity(opts))
+      .then(activity => activity.restoreOrDelete(opts))
       .then(() => {
         const options = { limit: 1, include, order: [[ 'createdAt', 'DESC' ]] };
         return Revision.findAll(options)

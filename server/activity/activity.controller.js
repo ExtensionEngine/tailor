@@ -33,12 +33,17 @@ function list({ course, query, opts }, res) {
 }
 
 function remove({ course, activity, user }, res) {
-  const options = { recursive: true, soft: true, context: { userId: user.id } };
+  const options = {
+    recursive: true,
+    soft: true,
+    isRestore: false,
+    context: { userId: user.id }
+  };
   const unpublish = activity.publishedAt
     ? publishingService.unpublishActivity(course, activity)
     : Promise.resolve();
   return unpublish
-    .then(() => activity.remove(options))
+    .then(() => activity.restoreOrDelete(options))
     .then(data => res.json({ data: pick(data, ['id']) }));
 }
 
