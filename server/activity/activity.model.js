@@ -138,25 +138,20 @@ class Activity extends Model {
     const { transaction } = opts;
 
     if (src.originId) {
-      return Activity.findOne(
-        { where: { id: src.originId } },
-        { transaction }
-      ).then(origin =>
-        Activity.create({
-          ...pick(origin, ['type', 'courseId']),
-          position,
-          parentId,
-          originId: origin.id
-        }, opts)
-          .then(linked => [linked.id]));
+      return Activity.create({
+        ...pick(src, ['type', 'courseId']),
+        position,
+        parentId,
+        originId: src.originId
+      }, opts).then(linked => [linked.id]);
     }
 
-    const originActivity = await Activity.create({
+    const origin = await Activity.create({
       ...pick(src, ['type', 'data', 'courseId']),
       position: null
     }, opts);
 
-    await src.update({ originId: originActivity.id }, opts);
+    await src.update({ originId: origin.id }, opts);
 
     const TeachingElement = this.sequelize.model('TeachingElement');
     const tes = await TeachingElement.findAll(
@@ -171,7 +166,7 @@ class Activity extends Model {
     if (tes.length) {
       await Promise.each(tes,
         te => te.update(
-          { activityId: originActivity.id },
+          { activityId: origin.id },
           { transaction }
         )
       );
@@ -180,22 +175,29 @@ class Activity extends Model {
     if (children.length) {
       await Promise.each(children,
         child => child.update(
-          { parentId: originActivity.id },
+          { parentId: origin.id },
           { transaction }
         )
       );
     }
 
-    const linkedActivity = await Activity.create({
-      ...pick(originActivity, ['type', 'courseId']),
+    if (parentId) {
+      const parent = await Activity.findOne({ where: { parentId } });
+      if (parent.originId) {
+        parentId = parent.originId;
+      }
+    }
+
+    const link = await Activity.create({
+      ...pick(origin, ['type', 'courseId']),
       position,
       parentId,
-      originId: originActivity.id
+      originId: origin.id
     }, opts);
 
     return [
       src.id,
-      linkedActivity.id
+      link.id
     ];
   }
 
