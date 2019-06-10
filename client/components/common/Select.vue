@@ -146,7 +146,7 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       font-size: 12px;
-      font-family: Roboto, Helvetica, Arial, sans-serif;
+      font-family: $font-family-secondary;
     }
   }
 

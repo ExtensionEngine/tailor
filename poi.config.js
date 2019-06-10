@@ -64,8 +64,7 @@ module.exports = {
         files: ['.brandrc', '.brandrc.js'],
         imagesPath
       }
-    },
-    {
+    }, {
       resolve: 'poi-preset-sass-resources',
       options: {
         resources: './client/assets/stylesheets/common/_variables.scss'

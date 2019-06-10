@@ -56,7 +56,7 @@ export default {
 <style lang="scss" scoped>
 $revision-padding: 32px;
 
-@mixin selected-revision() {
+@mixin selected-revision {
   color: #fff;
   background-color: #1e88e5;
 }
@@ -125,7 +125,7 @@ $revision-padding: 32px;
 }
 
 .selected.revision:hover {
-  @include selected-revision();
+  @include selected-revision;
 
   .rollback:hover {
     background-color: #42a5f5;
@@ -160,7 +160,7 @@ $revision-padding: 32px;
 }
 
 .selected {
-  @include selected-revision();
+  @include selected-revision;
 
   .progress-background {
     opacity: 1;

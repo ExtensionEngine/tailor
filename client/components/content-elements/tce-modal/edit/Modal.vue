@@ -98,7 +98,7 @@ function toggleFocusTrap(focusTrap, condition) {
   max-width: 640px;
   margin: 0 auto;
   padding: 4px;
-  font: 14px Roboto, Helvetica, Arial, sans-serif;
+  font: 14px $font-family-secondary;
   text-align: left;
   border: none;
   border-radius: 2px;
