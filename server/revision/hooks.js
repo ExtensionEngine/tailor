@@ -10,7 +10,8 @@ function add(Revision, Hooks, { Course, Activity, TeachingElement }) {
   const hooks = {
     [Hooks.afterCreate]: 'CREATE',
     [Hooks.afterUpdate]: 'UPDATE',
-    [Hooks.afterDestroy]: 'REMOVE'
+    [Hooks.afterDestroy]: 'REMOVE',
+    [Hooks.afterRestore]: 'RESTORE'
   };
 
   const addHook = (Model, type, hook) => Model.addHook(type, Hooks.withType(type, hook));

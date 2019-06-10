@@ -191,6 +191,31 @@ class Activity extends Model {
     });
   }
 
+  restoreActivity(options = {}) {
+    if (!options.recursive) return this.restore(options);
+    return this.sequelize.transaction(t => {
+      return this.descendants({ attributes: ['id'] })
+        .then(descendants => {
+          descendants.all = [...descendants.nodes, ...descendants.leaves];
+          return descendants;
+        })
+        .then(descendants => {
+          const TeachingElement = this.sequelize.model('TeachingElement');
+          const activities = map(descendants.all, 'id');
+          const where = { activityId: [...activities, this.id] };
+          return restoreAll(TeachingElement, where)
+            .then(() => descendants);
+        })
+        .then(descendants => {
+          const activities = map(descendants.nodes, 'id');
+          const where = { parentId: [...activities, this.id] };
+          return restoreAll(Activity, where);
+        })
+        .then(() => this.restore(options))
+        .then(() => this);
+    });
+  }
+
   reorder(index) {
     return this.sequelize.transaction(transaction => {
       const types = getSiblingLevels(this.type).map(it => it.type);
@@ -206,6 +231,10 @@ class Activity extends Model {
 function removeAll(Model, where = {}, soft = false) {
   if (!soft) return Model.destroy({ where });
   return Model.update({ detached: true }, { where });
+}
+
+function restoreAll(Model, where = {}) {
+  return Model.update({ detached: false }, { where });
 }
 
 module.exports = Activity;

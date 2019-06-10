@@ -16,6 +16,8 @@ function getAction(operation) {
       return 'Created';
     case 'REMOVE':
       return 'Removed';
+    case 'RESTORE':
+      return 'Restored';
     case 'UPDATE':
     default:
       return 'Changed';

@@ -1,3 +1,4 @@
+import request from '../../api/request';
 import VuexCollection from '../helpers/collection';
 
 const { state, build, getter, action, mutation } = new VuexCollection('revisions');
@@ -24,6 +25,7 @@ getter(function hasMoreResults() {
 });
 
 action(function fetch() {
+  if (!this.getters) return;
   const params = this.getters.revisionQueryParams;
   return this.api.get('', params).then(response => {
     const { data: revisions } = response.data;
@@ -38,6 +40,14 @@ action(function fetch() {
     this.commit('allRevisionsFetched', revisions.length < params.limit);
     this.commit('fetch', result);
   });
+});
+
+action(function restore(revision) {
+  const { id, courseId } = revision.state;
+  const url = `/courses/${courseId}/revisions/${id}/restore`;
+  this.commit('update', { ...revision, restored: true });
+  return request.post(url, { revision })
+    .then(({ data: { data } }) => this.commit('add', data));
 });
 
 action(function resetPagination() {

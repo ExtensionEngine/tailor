@@ -10,6 +10,9 @@
         <div class="description">{{ description }}</div>
         <div class="name">{{ revision.user.email }}</div>
       </div>
+      <v-icon v-if="isRemoved && !isRestored" @click.stop="restoreItem" class="restore">
+        mdi mdi-loop
+      </v-icon>
       <div class="date">{{ date }}</div>
     </div>
     <entity-revisions
@@ -26,44 +29,37 @@ import {
   getRevisionAcronym,
   getRevisionColor
 } from 'utils/revision';
+import { mapActions, mapGetters } from 'vuex-module';
 import EntityRevisions from './EntityRevisions';
 import fecha from 'fecha';
 import find from 'lodash/find';
-import { mapGetters } from 'vuex-module';
 
 export default {
   name: 'revision-item',
   props: {
     revision: { type: Object, required: true }
   },
-  data() {
-    return { expanded: false };
-  },
+  data: () => ({
+    expanded: false
+  }),
   computed: {
     ...mapGetters(['structure'], 'course'),
     ...mapGetters(['getParent'], 'activities'),
-    activity() {
-      const { state } = this.revision;
+    activity: vm => {
+      const { state } = vm.revision;
       const activityId = state.activityId || state.id;
-      return this.getOutlineLocation(this.getParent(activityId));
+      return vm.getOutlineLocation(vm.getParent(activityId));
     },
-    color() {
-      return getRevisionColor(this.revision);
-    },
-    acronym() {
-      return getRevisionAcronym(this.revision);
-    },
-    date() {
-      return fecha.format(this.revision.createdAt, 'M/D/YY HH:mm');
-    },
-    description() {
-      return getFormatDescription(this.revision, this.activity);
-    },
-    isTeachingElement() {
-      return this.revision.entity === 'TEACHING_ELEMENT';
-    }
+    color: vm => getRevisionColor(vm.revision),
+    acronym: vm => getRevisionAcronym(vm.revision),
+    date: vm => fecha.format(vm.revision.createdAt, 'M/D/YY HH:mm'),
+    description: vm => getFormatDescription(vm.revision, vm.activity),
+    isTeachingElement: vm => vm.revision.entity === 'TEACHING_ELEMENT',
+    isRemoved: vm => vm.revision.operation === 'REMOVE',
+    isRestored: vm => vm.revision.restored
   },
   methods: {
+    ...mapActions(['restore'], 'revisions'),
     getOutlineLocation(current) {
       if (!current) return null;
       const level = find(this.structure, { type: current.type });
@@ -72,6 +68,12 @@ export default {
     },
     toggle() {
       if (this.isTeachingElement) this.expanded = !this.expanded;
+    },
+    restoreItem() {
+      const opts = { right: true, color: 'primary' };
+      const { name: revisionName } = this.revision.state.data;
+      this.restore(this.revision)
+        .then(() => this.$snackbar.show(`${revisionName} restored.`, opts));
     }
   },
   components: { EntityRevisions }
@@ -125,6 +127,17 @@ export default {
 
   .acronym {
     background-color: #fff;
+  }
+}
+
+.restore {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+
+  &:hover {
+    color: #fff;
+    background-color: #888;
   }
 }
 </style>

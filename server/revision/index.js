@@ -9,7 +9,8 @@ const router = require('express').Router();
 router
   .param('revisionId', getRevision)
   .get('/courses/:id/revisions', ctrl.index)
-  .get('/courses/:id/revisions/:revisionId', ctrl.resolve);
+  .get('/courses/:id/revisions/:revisionId', ctrl.resolve)
+  .post('/courses/:id/revisions/:revisionId/restore', ctrl.restore);
 
 function getRevision(req, _res, next, revisionId) {
   const include = [{ model: User, attributes: ['id', 'email'] }];

@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Activity from './Activity';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
@@ -64,7 +64,13 @@ export default {
         .sort((x, y) => x.position - y.position);
     }
   },
-  methods: mapMutations(['toggleActivities'], 'course'),
+  methods: {
+    ...mapActions({ getActivities: 'fetch' }, 'activities'),
+    ...mapMutations(['toggleActivities'], 'course')
+  },
+  created() {
+    this.getActivities();
+  },
   components: { Activity, Draggable, NoActivities, Sidebar }
 };
 </script>
