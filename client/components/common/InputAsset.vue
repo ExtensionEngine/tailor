@@ -74,8 +74,8 @@ export default {
     url: { type: String, default: null },
     publicUrl: { type: String, default: null },
     extensions: { type: Array, required: true },
-    uploadLabel: { type: String, default: 'Select file' },
-    allowFileUpload: { type: Boolean, default: true }
+    allowFileUpload: { type: Boolean, default: true },
+    uploadLabel: { type: String, default: 'Select file' }
   },
   data() {
     const isLinked = !isUploaded(this.url);
