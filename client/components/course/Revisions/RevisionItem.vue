@@ -70,10 +70,9 @@ export default {
       if (this.isTeachingElement) this.expanded = !this.expanded;
     },
     restoreItem() {
-      const opts = { right: true, color: 'primary' };
       const { name: revisionName } = this.revision.state.data;
       this.restore(this.revision)
-        .then(() => this.$snackbar.show(`${revisionName} restored.`, opts));
+        .then(() => this.$snackbar.show(`${revisionName} restored.`));
     }
   },
   components: { EntityRevisions }
