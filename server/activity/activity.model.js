@@ -134,7 +134,7 @@ class Activity extends Model {
     });
   }
 
-  static async linkActivities(src, position = null, opts) {
+  static async linkActivities(src, parentId = null, position = null, opts) {
     const { transaction } = opts;
 
     if (src.originId) {
@@ -145,6 +145,7 @@ class Activity extends Model {
         Activity.create({
           ...pick(origin, ['type', 'courseId']),
           position,
+          parentId,
           originId: origin.id
         }, opts)
           .then(linked => [linked.id]));
@@ -188,6 +189,7 @@ class Activity extends Model {
     const linkedActivity = await Activity.create({
       ...pick(originActivity, ['type', 'courseId']),
       position,
+      parentId,
       originId: originActivity.id
     }, opts);
 
@@ -226,9 +228,9 @@ class Activity extends Model {
     });
   }
 
-  link(position, opts) {
+  link({ parentId, position }) {
     return this.sequelize.transaction(transaction =>
-      Activity.linkActivities(this, position, { ...opts, transaction })
+      Activity.linkActivities(this, parentId, position, { transaction })
     );
   }
 

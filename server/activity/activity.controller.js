@@ -74,9 +74,8 @@ function clone({ activity, body }, res) {
   });
 }
 
-function link({ activity, body, user }, res) {
-  const { position } = body;
-  return activity.link(position, { context: { userId: user.id } }).then(mappings => {
+function link({ activity, body }, res) {
+  return activity.link(body).then(mappings => {
     const opts = { where: { id: mappings } };
     return Activity.findAll(opts).then(data => res.json({ data }));
   });
