@@ -52,7 +52,7 @@
         </div>
       </div>
       <insert-activity
-        :anchor="{ id, _cid, parentId, courseId, type, position }"
+        :anchor="{ id, _cid, parentId, originId, courseId, type, position }"
         @expand="toggle(true)"/>
     </div>
     <div v-if="!isCollapsed({ _cid }) && hasChildren">

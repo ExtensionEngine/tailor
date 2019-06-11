@@ -73,7 +73,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ copy: 'clone', create: 'save' }, 'activities'),
+    ...mapActions({ copy: 'clone', link: 'link', create: 'save' }, 'activities'),
     ...mapMutations(['showActivityOptions', 'focusActivity'], 'course'),
     show() {
       this.showActivityOptions(this.anchor._cid);
@@ -84,7 +84,7 @@ export default {
       this.action = null;
     },
     executeAction(activity) {
-      if (this.action === 'copy') {
+      if (['copy', 'link'].includes(this.action)) {
         activity = {
           srcId: activity.id,
           srcCourseId: activity.courseId,
@@ -102,7 +102,8 @@ export default {
       return getLevel(activity.type).level === getLevel(this.anchor.type).level;
     },
     resolveParent(activity) {
-      return this.isSameLevel(activity) ? this.anchor.parentId : this.anchor.id;
+      const { originId, parentId, id } = this.anchor;
+      return this.isSameLevel(activity) ? parentId : originId || id;
     },
     calculatePosition(activity) {
       const items = getOutlineChildren(this.activities, activity.parentId);

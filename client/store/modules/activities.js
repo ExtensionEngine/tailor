@@ -80,6 +80,13 @@ action(function clone(mapping) {
     .then(({ data: { data } }) => this.commit('fetch', data));
 });
 
+action(function link(mapping) {
+  const { srcId, srcCourseId } = mapping;
+  const url = `/courses/${srcCourseId}/activities/${srcId}/link`;
+  return request.post(url, mapping)
+    .then(({ data: { data } }) => this.commit('fetch', data));
+});
+
 action(function publish(activity) {
   const { id, courseId } = activity;
   const url = `/courses/${courseId}/activities/${id}/publish`;

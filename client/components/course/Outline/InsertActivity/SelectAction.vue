@@ -19,6 +19,7 @@ export default {
       return [
         { label: 'Create', icon: 'plus', action: select('create') },
         { label: 'Copy', icon: 'content-copy', action: select('copy') },
+        { label: 'Use existing', icon: 'link', action: select('link') },
         { label: 'Cancel', icon: 'close', action: () => this.$emit('close') }
       ];
     }
