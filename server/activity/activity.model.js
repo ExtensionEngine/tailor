@@ -166,7 +166,7 @@ class Activity extends Model {
       });
   }
 
-  restoreOrDelete(opts = {}) {
+  removeOrRestore(opts = {}) {
     const { recursive, soft, isRestore } = opts;
     if (!recursive) return isRestore ? this.restore(opts) : this.destroy(opts);
     return this.sequelize.transaction(t => {
@@ -206,8 +206,8 @@ class Activity extends Model {
 }
 
 function removeOrRestoreAll(Model, where = {}, soft = false, isRestore) {
-  if (!soft) return Model.destroy({ where });
   if (isRestore) return Model.update({ detached: false }, { where });
+  if (!soft) return Model.destroy({ where });
   return Model.update({ detached: true }, { where });
 }
 

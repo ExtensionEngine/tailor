@@ -43,7 +43,7 @@ function remove({ course, activity, user }, res) {
     ? publishingService.unpublishActivity(course, activity)
     : Promise.resolve();
   return unpublish
-    .then(() => activity.restoreOrDelete(options))
+    .then(() => activity.removeOrRestore(options))
     .then(data => res.json({ data: pick(data, ['id']) }));
 }
 
