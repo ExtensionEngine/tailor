@@ -143,7 +143,10 @@ class Activity extends Model {
         position,
         parentId,
         originId: src.originId
-      }, opts).then(linked => [linked.id]);
+      }, opts).then(linked => ({
+        originId: linked.originId,
+        id: [linked.id]
+      }));
     }
 
     const origin = await Activity.create({
@@ -183,7 +186,7 @@ class Activity extends Model {
 
     if (parentId) {
       const parent = await Activity.findOne({ where: { parentId } });
-      if (parent.originId) {
+      if (parent && parent.originId) {
         parentId = parent.originId;
       }
     }
@@ -195,23 +198,21 @@ class Activity extends Model {
       originId: origin.id
     }, opts);
 
-    return [
-      src.id,
-      link.id
-    ];
+    return {
+      originId: origin.id,
+      id: [src.id, link.id]
+    };
   }
 
   static async updateLinkedActivity({ originId }, body, opts) {
     return Activity.update(body, opts).then(() => {
-      return Activity.getLinkedActivities(originId);
+      return Activity.getLinkedActivities({ originId });
     });
   }
 
-  static async getLinkedActivities(originId) {
+  static async getLinkedActivities(where) {
     const opts = {
-      where: {
-        originId
-      },
+      where,
       include: [
         {
           model: Activity,

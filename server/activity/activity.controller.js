@@ -75,9 +75,8 @@ function clone({ activity, body }, res) {
 }
 
 function link({ activity, body }, res) {
-  return activity.link(body).then(mappings => {
-    const opts = { where: { id: mappings } };
-    return Activity.findAll(opts).then(data => res.json({ data }));
+  return activity.link(body).then(opts => {
+    return Activity.getLinkedActivities(opts).then(data => res.json({ data }));
   });
 }
 
