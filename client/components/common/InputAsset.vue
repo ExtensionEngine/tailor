@@ -11,6 +11,7 @@
       <v-icon>mdi-open-in-new</v-icon>
     </v-btn>
     <file-upload
+      v-if="allowFileUpload"
       v-show="!file && isEditing"
       :uploading.sync="uploading"
       :validate="{ ext: extensions }"
@@ -34,7 +35,7 @@
       v-if="!uploading && (urlInput || !hasAsset)"
       v-model="urlInput"
       :disabled="!isEditing"
-      placeholder="or paste a URL"/>
+      :placeholder="allowFileUpload ? 'or paste a URL' : 'Paste a URL'"/>
     <span class="actions">
       <v-btn
         v-if="!isEditing"
@@ -73,6 +74,7 @@ export default {
     url: { type: String, default: null },
     publicUrl: { type: String, default: null },
     extensions: { type: Array, required: true },
+    allowFileUpload: { type: Boolean, default: true },
     uploadLabel: { type: String, default: 'Select file' }
   },
   data() {
