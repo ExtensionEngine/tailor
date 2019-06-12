@@ -4,6 +4,7 @@ const { Model, Op } = require('sequelize');
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
+const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const { role: roles } = require('../../config/shared');
 
@@ -35,11 +36,8 @@ class User extends Model {
       profile: {
         type: VIRTUAL,
         get() {
-          return {
-            id: this.id,
-            email: this.email,
-            role: this.role
-          };
+          return pick(this,
+            ['id', 'email', 'role', 'createdAt', 'updatedAt', 'deletedAt']);
         }
       },
       token: {
@@ -101,9 +99,8 @@ class User extends Model {
 
   static scopes() {
     return {
-      withRoleType(type) {
-        if (!type) return;
-        const role = { [Op.in]: roles.getRoleNames(type) };
+      withRoleType() {
+        const role = { [Op.in]: roles.getRoleValues('user') };
         return { where: { role } };
       }
     };
@@ -116,6 +113,14 @@ class User extends Model {
         mail.invite(user).asCallback(emailCb);
         return user.save();
       });
+  }
+
+  static findOrInvite({ email, role = USER }) {
+    return User.findOne({ where: { email }, paranoid: false }).then(user => {
+      if (!user) return User.invite({ email, role });
+      if (!user.deletedAt) return user;
+      return user.restore();
+    });
   }
 
   isAdmin() {
