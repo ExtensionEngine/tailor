@@ -181,6 +181,6 @@ function empty(el) {
 .brightcove-player /deep/ .vjs-error .vjs-error-display::before {
   content: "\F026";
   font-size: 42px;
-  font-family: "Material Design Icons";
+  font-family: $font-family-icons;
 }
 </style>
