@@ -61,6 +61,7 @@ import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
 import MetaSidebar from './MetaSidebar';
 import Promise from 'bluebird';
+import sortBy from 'lodash/sortBy';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
@@ -96,7 +97,7 @@ export default {
     },
     activityActiveUsers() {
       const { activityId } = this.$route.params;
-      return this.activeUsers.activity[activityId] || [];
+      return sortBy(this.activeUsers.activity[activityId], ['created']) || [];
     }
   },
   methods: {

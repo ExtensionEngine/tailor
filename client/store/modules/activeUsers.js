@@ -94,7 +94,8 @@ mutation(function sseRemoveActiveUser({ user, context }) {
 });
 
 function mapActiveUserContext(activeUsers, user, context) {
-  const { id, email, palette, created } = user;
+  const { id, email, palette } = user;
+  const { created } = context;
   const omittedFields = ['timer', 'created'];
   Object.keys(omit(context, omittedFields)).forEach(key => {
     const entityName = key.substring(0, key.length - 2);

@@ -22,6 +22,8 @@ import api from '../../api/activeUsers';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
+import last from 'lodash/last';
+import orderBy from 'lodash/orderBy';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -42,15 +44,15 @@ export default {
     ...mapGetters(['activeUsers'], 'activeUsers'),
     contentActiveUsers() {
       const { contentId } = this.element;
-      return this.activeUsers.content[contentId] || [];
+      return orderBy(this.activeUsers.content[contentId], ['created']) || [];
     },
     showActiveUsers() {
       return this.contentActiveUsers.length;
     },
     highlight() {
       if (!this.contentActiveUsers.length) return;
+      const user = last(this.contentActiveUsers);
       let color;
-      const user = this.contentActiveUsers[0];
       if (user.profileImage) color = user.palette.border;
       else color = user.palette.background;
       return `0 0 0 2px ${color}`;

@@ -54,7 +54,7 @@ export default {
     },
     courseActiveUsers() {
       const { courseId } = this.$route.params;
-      return this.activeUsers.course[courseId] || [];
+      return sortBy(this.activeUsers.course[courseId], ['created']) || [];
     }
   },
   methods: {
