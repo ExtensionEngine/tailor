@@ -35,7 +35,7 @@ function login({ user }, res) {
     audience: Audience.Scope.Access,
     expiresIn: '5 days'
   });
-  res.json({ data: { token, user: user.profile } });
+  return res.json({ data: { token, user: user.profile } });
 }
 
 module.exports = {

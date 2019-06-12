@@ -6,4 +6,5 @@ const Scope = {
 };
 
 const Audience = { Scope };
+
 module.exports = Audience;
