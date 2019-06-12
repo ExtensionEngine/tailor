@@ -24,12 +24,11 @@ import { mapActions, mapGetters } from 'vuex-module';
 import api from '@/api/course';
 import AppFooter from '@/components/common/Footer';
 import CloneModal from './CloneModal';
-import CourseUserManagement from './CourseUserManagement';
 import EventBus from 'EventBus';
 import General from './General';
 import JSZip from 'jszip';
-import ProgressDialog from 'components/common/ProgressDialog';
-import publishMixin from 'components/common/mixins/publish';
+import ProgressDialog from '@/components/common/ProgressDialog';
+import publishMixin from '@/components/common/mixins/publish';
 import saveAs from 'save-as';
 import Sidebar from './Sidebar';
 
@@ -86,7 +85,6 @@ export default {
   components: {
     AppFooter,
     CloneModal,
-    CourseUserManagement,
     General,
     ProgressDialog,
     Sidebar

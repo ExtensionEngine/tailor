@@ -20,7 +20,6 @@
       </v-flex>
       <v-flex xs2>
         <v-btn
-          :loading="isLoading"
           type="submit"
           color="blue-grey darken-1"
           small
@@ -33,13 +32,13 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex-module';
 import { withValidation } from 'utils/validation';
 
 export default {
   mixins: [withValidation()],
   props: {
-    roles: { type: Array, required: true },
-    isLoading: { type: Boolean, required: true }
+    roles: { type: Array, required: true }
   },
   data() {
     return {
@@ -48,18 +47,16 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['upsertUser'], 'course'),
     addUser() {
       const { email, role } = this;
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) this.$emit('upsert', email, role);
+      const { courseId } = this.$route.params;
+      this.$validator.validateAll().then(async isValid => {
+        if (!isValid) return;
+        await this.upsertUser({ courseId, email, role });
+        this.email = '';
+        this.$nextTick(() => this.$validator.reset());
       });
-    }
-  },
-  watch: {
-    isLoading(val) {
-      if (val) return;
-      this.email = '';
-      this.$nextTick(() => this.$validator.reset());
     }
   }
 };

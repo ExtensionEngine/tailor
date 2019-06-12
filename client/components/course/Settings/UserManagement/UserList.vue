@@ -16,9 +16,9 @@
       </td>
       <td class="role-select">
         <v-select
-          :value="item[roleType]"
+          :value="item.courseRole"
           :items="roles"
-          @change="role => upsert(item.email, role)"
+          @change="role => changeRole(item.email, role)"
           icon/>
       </td>
       <td class="actions">
@@ -31,34 +31,39 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex-module';
 import debounce from 'lodash/debounce';
-import EventBus from 'EventBus';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   props: {
-    users: { type: Array, required: true },
-    roles: { type: Array, required: true },
-    isLoading: { type: Boolean, required: true },
-    roleType: { type: String, default: 'role' }
+    roles: { type: Array, required: true }
+  },
+  data() {
+    return { isLoading: true };
   },
   computed: {
+    ...mapGetters(['users'], 'course'),
     headers() {
       return ['User', 'Role', ''].map(text => ({ text, sortable: false }));
     }
   },
   methods: {
-    upsert: debounce(function (email, role) {
-      this.$emit('upsert', email, role);
-    }, 500),
-    remove(item) {
-      appChannel.emit('showConfirmationModal', {
-        title: `Remove user?`,
-        message: `Are you sure you want to remove ${item.email}?`,
-        action: () => this.$emit('remove', item)
-      });
+    ...mapActions(['getUsers', 'upsertUser', 'removeUser'], 'course'),
+    fetchUsers() {
+      this.isLoading = true;
+      return this.getUsers().then(() => (this.isLoading = false));
+    },
+    changeRole(email, role) {
+      const { courseId } = this.$route.params;
+      debounce(this.upsertUser, 500)({ courseId, email, role });
+    },
+    remove(user) {
+      const { courseId } = this.$route.params;
+      this.removeUser({ userId: user.id, courseId });
     }
+  },
+  created() {
+    this.fetchUsers();
   }
 };
 </script>
