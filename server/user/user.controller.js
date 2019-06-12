@@ -2,21 +2,28 @@
 
 const { createError, validationError } = require('../shared/error/helpers');
 const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
-const { role } = require('../../config/shared');
+const map = require('lodash/map');
+const { Op } = require('sequelize');
+const { role: { user: userRole } } = require('../../config/shared');
 const { User } = require('../shared/database');
 
-function index({ query: { roleType } }, res) {
-  const options = { attributes: ['id', 'email', 'role'] };
-  return User.scope({ method: ['withRoleType', roleType] })
-    .findAll(options)
-    .filter(user => user.role !== role.user.INTEGRATION)
-    .then(data => res.json({ data }));
+// TODO: Add fistName, lastName after profile merge
+const createFilter = q => map(['email'],
+  it => ({ [it]: { [Op.iLike]: `%${q}%` } }));
+
+function list({ query: { email, role, filter, archived }, options }, res) {
+  const where = { [Op.and]: [{ role: { [Op.ne]: userRole.INTEGRATION } }] };
+  if (filter) where[Op.or] = createFilter(filter);
+  if (email) where[Op.and].push({ email });
+  if (role) where[Op.and].push({ role });
+  return User.findAndCountAll({ where, ...options, paranoid: !archived })
+    .then(({ rows, count }) => {
+      return res.json({ data: { items: map(rows, 'profile'), total: count } });
+    });
 }
 
 function upsert({ body: { email, role } }, res) {
-  const data = { deletedAt: null, role, email };
-  return User.findOne({ where: { email }, paranoid: false })
-    .then(user => user ? user.update(data) : User.invite(data))
+  return User.findOrInvite({ email, role })
     .then(data => res.json({ data }));
 }
 
@@ -59,7 +66,7 @@ function login({ body }, res) {
 }
 
 module.exports = {
-  index,
+  list,
   upsert,
   remove,
   forgotPassword,

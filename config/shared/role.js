@@ -14,5 +14,5 @@ module.exports = {
   ...role,
   userRoleRegex,
   courseRoleRegex,
-  getRoleNames: type => values(role[type] || {})
+  getRoleValues: type => values(role[type] || {})
 };
