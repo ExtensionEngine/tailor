@@ -167,8 +167,8 @@ class Activity extends Model {
   }
 
   removeOrRestore(opts = {}) {
-    const { recursive, soft, isRestore } = opts;
-    if (!recursive) return isRestore ? this.restore(opts) : this.destroy(opts);
+    const { recursive, soft, restore } = opts;
+    if (!recursive) return restore ? this.restore(opts) : this.destroy(opts);
     return this.sequelize.transaction(t => {
       return this.descendants({ attributes: ['id'] })
         .then(descendants => {
@@ -179,16 +179,16 @@ class Activity extends Model {
           const TeachingElement = this.sequelize.model('TeachingElement');
           const activities = map(descendants.all, 'id');
           const where = { activityId: [...activities, this.id] };
-          return removeOrRestoreAll(TeachingElement, where, soft, isRestore)
+          return removeOrRestoreAll(TeachingElement, where, soft, restore)
             .then(() => descendants);
         })
         .then(descendants => {
           const activities = map(descendants.nodes, 'id');
           const where = { parentId: [...activities, this.id] };
-          return removeOrRestoreAll(Activity, where, soft, isRestore)
+          return removeOrRestoreAll(Activity, where, soft, restore)
             .then(() => descendants);
         })
-        .then(() => isRestore ? this.restore(opts) : this.destroy(opts))
+        .then(() => restore ? this.restore(opts) : this.destroy(opts))
         .then(() => this);
     });
   }
@@ -205,10 +205,9 @@ class Activity extends Model {
   }
 }
 
-function removeOrRestoreAll(Model, where = {}, soft = false, isRestore) {
-  if (isRestore) return Model.update({ detached: false }, { where });
-  if (!soft) return Model.destroy({ where });
-  return Model.update({ detached: true }, { where });
+function removeOrRestoreAll(Model, where = {}, soft = false, restore) {
+  if (!restore && !soft) return Model.destroy({ where });
+  return Model.update({ detached: !restore }, { where });
 }
 
 module.exports = Activity;

@@ -36,7 +36,7 @@ function remove({ course, activity, user }, res) {
   const options = {
     recursive: true,
     soft: true,
-    isRestore: false,
+    restore: false,
     context: { userId: user.id }
   };
   const unpublish = activity.publishedAt
