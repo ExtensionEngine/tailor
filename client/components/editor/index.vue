@@ -171,10 +171,10 @@ export default {
   },
   mounted() {
     const { courseId, activityId } = this.$route.params;
-    const params = { courseId, activityId };
+    const context = { courseId, activityId, created: new Date() };
     this.subscribeActiveUsers(courseId);
-    api.addActiveUser(params);
-    this.timer = setInterval(() => api.addActiveUser(params), 20000);
+    api.addActiveUser(context);
+    this.timer = setInterval(() => api.addActiveUser(context), 20000);
   },
   beforeDestroy() {
     this.unsubscribe();

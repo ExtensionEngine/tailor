@@ -74,8 +74,9 @@ export default {
   mounted() {
     const { courseId } = this.$route.params;
     this.subscribe(courseId);
-    api.addActiveUser({ courseId });
-    this.timer = setInterval(() => api.addActiveUser({ courseId }), 20000);
+    const context = { courseId, created: new Date() };
+    api.addActiveUser(context);
+    this.timer = setInterval(() => api.addActiveUser(context), 20000);
   },
   beforeRouteLeave(to, from, next) {
     const { courseId } = this.$route.params;

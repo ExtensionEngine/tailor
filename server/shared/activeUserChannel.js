@@ -54,7 +54,8 @@ function setContext(user, context) {
     activeUsers[id] = { id, email, created, contexts: [context] };
     return;
   }
-  const existingContext = find(existingUser.contexts, omit(context, ['timer', 'toJSON']));
+  const omittedContext = omit(context, ['timer', 'toJSON', 'created']);
+  const existingContext = find(existingUser.contexts, omittedContext);
   if (existingContext) {
     clearTimeout(existingContext.timer);
     existingContext.timer = startRemovalTimer(user, context);
@@ -73,8 +74,9 @@ function startRemovalTimer(user, context, delay = 60000) {
 
 function deleteActiveUser(user, context, stopTimer = false) {
   if (!activeUsers[user.id]) return;
+  const omittedFields = ['timer', 'toJSON', 'created'];
   remove(activeUsers[user.id].contexts, c => {
-    const remove = isEqual(omit(c, ['timer', 'toJSON']), omit(context, ['timer', 'toJSON']));
+    const remove = isEqual(omit(c, omittedFields), omit(context, omittedFields));
     if (stopTimer && remove) clearTimeout(c.timer);
     return remove;
   });

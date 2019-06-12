@@ -86,14 +86,14 @@ export default {
   watch: {
     isFocused() {
       const { courseId, activityId, contentId } = this.element;
-      const params = { courseId, activityId, contentId };
+      const context = { courseId, activityId, contentId, created: new Date() };
       if (this.isFocused) {
-        api.addActiveUser(params);
-        this.timer = setInterval(() => api.addActiveUser(params), 20000);
+        api.addActiveUser(context);
+        this.timer = setInterval(() => api.addActiveUser(context), 20000);
         return;
       }
       clearInterval(this.timer);
-      api.removeActiveUser(params);
+      api.removeActiveUser(context);
     }
   },
   created() {

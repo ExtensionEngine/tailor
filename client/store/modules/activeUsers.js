@@ -70,30 +70,33 @@ mutation(function setActiveUsers(users) {
 
 mutation(function sseAddActiveUser({ user, context }) {
   const { activeUsers } = this.state;
-  if (!activeUsers[user.id]) {
+  const existingUser = activeUsers[user.id];
+  if (!existingUser) {
     if (!this.getters) return;
     const usedPalettes = this.getters['activeUsers/usedPalettes'];
     assignPalette(user, usedPalettes, this.state.activeUsers);
     Vue.set(activeUsers, user.id, { ...user, contexts: [context] });
     return;
   }
-  const existingContext = find(activeUsers[user.id].contexts, context);
+  const existingContext = find(existingUser.contexts, omit(context, ['created']));
   if (existingContext) return;
-  activeUsers[user.id].contexts.push(context);
+  existingUser.contexts.push(context);
 });
 
 mutation(function sseRemoveActiveUser({ user, context }) {
-  if (!this.state.activeUsers[user.id]) return;
-  const index = this.state.activeUsers[user.id].contexts.findIndex(c => {
-    return isEqual(c, context);
+  const existingUser = this.state.activeUsers[user.id];
+  if (!existingUser) return;
+  const index = existingUser.contexts.findIndex(c => {
+    return isEqual(omit(c, ['created']), omit(context, ['created']));
   });
   if (index === -1) return;
-  this.state.activeUsers[user.id].contexts.splice(index, 1);
+  existingUser.contexts.splice(index, 1);
 });
 
 function mapActiveUserContext(activeUsers, user, context) {
   const { id, email, palette, created } = user;
-  Object.keys(omit(context, ['timer'])).forEach(key => {
+  const omittedFields = ['timer', 'created'];
+  Object.keys(omit(context, omittedFields)).forEach(key => {
     const entityName = key.substring(0, key.length - 2);
     const entityId = context[key];
     if (activeUsers[entityName][entityId]) {
