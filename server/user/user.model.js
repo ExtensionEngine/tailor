@@ -102,6 +102,7 @@ class User extends Model {
       .then(user => {
         user.token = user.createToken({
           audience: Audience.Scope.Setup,
+          issuer: config.auth.issuer,
           expiresIn: '5 days'
         });
         mail.invite(user).asCallback(emailCb);
@@ -140,6 +141,7 @@ class User extends Model {
   sendResetToken() {
     this.token = this.createToken({
       audience: Audience.Scope.Setup,
+      issuer: config.auth.issuer,
       expiresIn: '5 days'
     });
     mail.resetPassword(this);

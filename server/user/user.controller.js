@@ -2,6 +2,7 @@
 
 const { createError, validationError } = require('../shared/error/helpers');
 const Audience = require('../shared/auth/audience');
+const config = require('../../config/server');
 const { NOT_FOUND } = require('http-status-codes');
 const { User } = require('../shared/database');
 
@@ -33,6 +34,7 @@ function resetPassword({ body, params }, res) {
 function login({ user }, res) {
   const token = user.createToken({
     audience: Audience.Scope.Access,
+    issuer: config.auth.issuer,
     expiresIn: '5 days'
   });
   return res.json({ data: { token, user: user.profile } });
