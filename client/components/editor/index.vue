@@ -167,11 +167,11 @@ export default {
       this.getTeachingElements({ activityId, parentId: activityId })
     ];
     if (!this.course) actions.push(this.getCourse(courseId));
-    this.getActiveUsers();
     Promise.all(actions).then(() => (this.showLoader = false));
   },
   mounted() {
     const { courseId, activityId } = this.$route.params;
+    this.getActiveUsers(courseId);
     const context = { courseId, activityId, created: new Date() };
     this.subscribeActiveUsers(courseId);
     api.addActiveUser(context);

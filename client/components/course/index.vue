@@ -80,7 +80,7 @@ export default {
     const actions = [this.getActivities(), this.getUsers()];
     if (!this.course) actions.push(this.getCourse(courseId));
     await Promise.all(actions);
-    this.getActiveUsers();
+    this.getActiveUsers(courseId);
     this.showLoader = false;
     const activities = filter(this.activities, { parentId: null });
     if (!existingSelection && activities.length) {
