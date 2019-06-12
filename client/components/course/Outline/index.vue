@@ -38,7 +38,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Activity from './Activity';
-import api from '../../../api/course';
+import api from '../../../api/activeUsers';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -54,7 +54,8 @@ export default {
   },
   data: () => ({ timer: null }),
   computed: {
-    ...mapGetters(['structure', 'outlineActivities', 'activeUsers'], 'course'),
+    ...mapGetters(['activeUsers'], 'activeUsers'),
+    ...mapGetters(['structure', 'outlineActivities'], 'course'),
     isFlat() {
       const types = map(filter(this.structure, { level: 2 }), 'type');
       if (!types.length) return false;
@@ -67,18 +68,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['subscribe'], 'course'),
+    ...mapActions(['subscribe'], 'activeUsers'),
     ...mapMutations(['toggleActivities'], 'course')
-  },
-  watch: {
-    activeUsers: {
-      handler() {
-        const { courseId } = this.$route.params;
-        const users = this.activeUsers.course[courseId];
-        this.$emit('setActiveUsers', users);
-      },
-      immediate: true
-    }
   },
   mounted() {
     const { courseId } = this.$route.params;

@@ -1,14 +1,14 @@
 <template>
-  <div
-    :class="[themeColor.border, { vertical }]"
-    class="active-users">
+  <div :class="[{ vertical }]" class="active-users">
     <v-avatar
       v-tooltip="user.email"
       v-for="user in users"
       :key="user.id"
-      :color="themeColor.avatar"
+      :color="user.palette.background"
+      :style="{ boxShadow: getBorder(user) }"
       :size="size">
-      <span :class="themeColor.text">
+      <img v-if="user.profileImage" :src="user.profileImage"/>
+      <span v-else :style="{ color: user.palette.text }">
         {{ user.email[0].toUpperCase() }}
       </span>
     </v-avatar>
@@ -16,32 +16,16 @@
 </template>
 
 <script>
-const THEMES = {
-  LIGHT: 'light',
-  DARK: 'dark'
-};
-
 export default {
   name: 'active-users',
   props: {
     users: { type: Array, default: () => [] },
-    theme: { type: String, default: THEMES.DARK },
     size: { type: Number, default: 30 },
     vertical: { type: Boolean, default: false }
   },
-  computed: {
-    themeColor() {
-      const light = {
-        avatar: 'grey lighten-3',
-        text: 'blue-grey--text',
-        border: 'shadow-grey'
-      };
-      const dark = {
-        avatar: 'blue-grey darken-4',
-        text: 'blue-grey--text text--lighten-2',
-        border: 'shadow-blue-grey'
-      };
-      return this.theme === THEMES.LIGHT ? light : dark;
+  methods: {
+    getBorder({ palette }) {
+      return `0 0 0 2px ${palette.border}`;
     }
   }
 };

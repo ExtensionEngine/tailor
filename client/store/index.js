@@ -1,3 +1,4 @@
+import activeUsers from './modules/activeUsers';
 import activities from './modules/activities';
 import auth from './modules/auth';
 import comments from './modules/comments';
@@ -19,6 +20,7 @@ const isDevEnv = process.env.NODE_ENV !== 'production';
 const middlewares = settings.debug.state && isDevEnv ? [createLogger()] : [];
 
 const modules = {
+  activeUsers,
   activities,
   auth,
   comments,

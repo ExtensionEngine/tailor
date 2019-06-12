@@ -46,12 +46,12 @@ function broadcast(event, user, context) {
 
 // TODO: Write in a better way
 function setContext(user, context) {
-  const { id, email } = user;
+  const { id, email, created } = user;
   context.toJSON = () => omit(context, ['timer']);
   const existingUser = activeUsers[id];
   if (!existingUser) {
     context.timer = startRemovalTimer(user, context);
-    activeUsers[id] = { id, email, contexts: [context] };
+    activeUsers[id] = { id, email, created, contexts: [context] };
     return;
   }
   const existingContext = find(existingUser.contexts, omit(context, ['timer', 'toJSON']));

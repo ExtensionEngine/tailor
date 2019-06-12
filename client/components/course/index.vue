@@ -17,10 +17,10 @@
           <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
         </v-tab>
       </v-tabs>
-      <active-users :users="activeUsers"/>
+      <active-users :users="courseActiveUsers"/>
     </div>
     <div class="tab-content" infinite-wrapper>
-      <router-view :showLoader="showLoader" @setActiveUsers="setActiveUsers"/>
+      <router-view :showLoader="showLoader"/>
     </div>
   </div>
 </template>
@@ -35,11 +35,11 @@ import sortBy from 'lodash/sortBy';
 export default {
   data() {
     return {
-      showLoader: true,
-      activeUsers: []
+      showLoader: true
     };
   },
   computed: {
+    ...mapGetters(['activeUsers'], 'activeUsers'),
     ...mapGetters(['isAdmin']),
     ...mapGetters(['course', 'activities', 'activity', 'isCourseAdmin'], 'course'),
     tabs() {
@@ -51,20 +51,22 @@ export default {
       ];
       if (!this.isAdmin && !this.isCourseAdmin) items.pop();
       return items;
+    },
+    courseActiveUsers() {
+      const { courseId } = this.$route.params;
+      return this.activeUsers.course[courseId] || [];
     }
   },
   methods: {
-    ...mapActions(['getUsers', 'getActiveUsers'], 'course'),
+    ...mapActions(['getActiveUsers'], 'activeUsers'),
+    ...mapActions(['getUsers'], 'course'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
     ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activities'),
     ...mapMutations({ setupCommentsApi: 'setBaseUrl' }, 'comments'),
     ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
-    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
-    setActiveUsers(users) {
-      this.activeUsers = users;
-    }
+    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
   },
   async created() {
     const { courseId } = this.$route.params;

@@ -1,13 +1,14 @@
 <template>
   <div class="te-wrapper">
     <div :class="{ inactive: !showActiveUsers }" class="active-users-wrapper">
-      <active-users :users="contentActiveUsers" :size="26" vertical theme="light"/>
+      <active-users :users="contentActiveUsers" :size="26" vertical/>
     </div>
     <contained-content
       v-bind="$attrs"
       :element="element"
       :isDragged="dragged"
       :isDisabled="disabled"
+      :style="{ boxShadow: highlight }"
       @add="add"
       @save="save"
       @delete="remove"/>
@@ -17,7 +18,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ActiveUsers from 'components/common/ActiveUsers';
-import api from '../../api/course';
+import api from '../../api/activeUsers';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
@@ -38,13 +39,21 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activeUsers'], 'course'),
+    ...mapGetters(['activeUsers'], 'activeUsers'),
     contentActiveUsers() {
       const { contentId } = this.element;
       return this.activeUsers.content[contentId] || [];
     },
     showActiveUsers() {
       return this.contentActiveUsers.length;
+    },
+    highlight() {
+      if (!this.contentActiveUsers.length) return;
+      let color;
+      const user = this.contentActiveUsers[0];
+      if (user.profileImage) color = user.palette.border;
+      else color = user.palette.background;
+      return `0 0 0 2px ${color}`;
     }
   },
   methods: {
@@ -102,7 +111,7 @@ export default {
 <style lang="scss">
 .active-users-wrapper {
   position: absolute;
-  right: -1rem;
+  right: -1.25rem;
   margin-top: 1rem;
   transition: all 0.5s ease;
 

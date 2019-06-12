@@ -4,11 +4,8 @@ import courseApi from '../../api/course';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 import map from 'lodash/map';
-import omit from 'lodash/omit';
 import { role } from 'shared';
-import SSEClient from '../../SSEClient';
 import transform from 'lodash/transform';
 import values from 'lodash/values';
 import Vue from 'vue';
@@ -19,12 +16,10 @@ const COURSE_ROUTE = /\/course\/\d+/;
 // NOTE: teaching elements always have `activityId` foreign key and that is
 //       how we can tell if an element is `tes` or `activity`
 const isTes = element => !!element.activityId;
-let SSE_CLIENT;
 
 state({
   activity: undefined,
   users: {},
-  activeUsers: {},
   outline: { expanded: {}, showOptions: null }
 });
 
@@ -72,16 +67,6 @@ getter(function revisions() {
   return filter(revs, { courseId: course.id })
     .map(rev => ({ ...rev, createdAt: new Date(rev.createdAt) }))
     .sort((rev1, rev2) => rev2.createdAt - rev1.createdAt);
-});
-
-getter(function activeUsers() {
-  const activeUsers = { course: {}, activity: {}, content: {} };
-  Object.keys(this.state.activeUsers).forEach(userId => {
-    this.state.activeUsers[userId].contexts.forEach(context => {
-      mapActiveUserContext(activeUsers, this.state.activeUsers[userId], context);
-    });
-  });
-  return activeUsers;
 });
 
 getter(function getConfig() {
@@ -143,29 +128,6 @@ action(function removeUser({ courseId, userId }) {
     .then(() => this.commit('removeUser', userId));
 });
 
-action(function subscribe(courseId) {
-  if (SSE_CLIENT) SSE_CLIENT.disconnect();
-  SSE_CLIENT = new SSEClient(`/api/v1/courses/${courseId}/active-users/subscribe`);
-  SSE_CLIENT.subscribe('active_user_add', ({ user, context }) => {
-    this.commit('sseAddActiveUser', { user, context });
-  });
-  SSE_CLIENT.subscribe('active_user_remove', ({ user, context }) => {
-    this.commit('sseRemoveActiveUser', { user, context });
-  });
-});
-
-action(function unsubscribe() {
-  if (!SSE_CLIENT) return;
-  SSE_CLIENT.disconnect();
-});
-
-action(function getActiveUsers() {
-  const courseId = get(this.rootState, 'route.params.courseId');
-  if (!courseId) return;
-  return courseApi.getActiveUsers(courseId)
-    .then(({ activeUsers }) => this.commit('setActiveUsers', activeUsers));
-});
-
 mutation(function upsertUser(user) {
   Vue.set(this.state.users, user.id, user);
 });
@@ -201,43 +163,5 @@ mutation(function showActivityOptions(_cid) {
 mutation(function focusActivity(_cid) {
   this.state.activity = _cid;
 });
-
-mutation(function setActiveUsers(users) {
-  this.state.activeUsers = users || {};
-});
-
-mutation(function sseAddActiveUser({ user, context }) {
-  const { activeUsers } = this.state;
-  if (activeUsers[user.id]) {
-    const existingContext = find(activeUsers[user.id].contexts, context);
-    if (existingContext) return;
-    activeUsers[user.id].contexts.push(context);
-    return;
-  }
-  Vue.set(activeUsers, user.id, { ...user, contexts: [context] });
-});
-
-mutation(function sseRemoveActiveUser({ user, context }) {
-  if (!this.state.activeUsers[user.id]) return;
-  const index = this.state.activeUsers[user.id].contexts.findIndex(c => {
-    return isEqual(c, context);
-  });
-  if (index === -1) return;
-  this.state.activeUsers[user.id].contexts.splice(index, 1);
-});
-
-function mapActiveUserContext(activeUsers, { id: userId, email }, context) {
-  Object.keys(omit(context, ['timer'])).forEach(key => {
-    const entityName = key.substring(0, key.length - 2);
-    const entityId = context[key];
-    if (activeUsers[entityName][entityId]) {
-      const user = find(activeUsers[entityName][entityId], { id: userId });
-      if (user) return;
-      activeUsers[entityName][entityId].push({ id: userId, email });
-      return;
-    }
-    activeUsers[entityName][entityId] = [{ id: userId, email }];
-  });
-}
 
 export default build();

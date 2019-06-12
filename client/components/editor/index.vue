@@ -50,7 +50,7 @@ import * as config from 'shared/activities';
 import { getElementId, isQuestion } from 'tce-core/utils';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ActiveUsers from 'components/common/ActiveUsers';
-import api from '../../api/course';
+import api from '../../api/activeUsers';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
@@ -77,7 +77,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'getMetadata', 'activeUsers'], 'course'),
+    ...mapGetters(['activeUsers'], 'activeUsers'),
+    ...mapGetters(['course', 'getMetadata'], 'course'),
     ...mapGetters(['activity', 'contentContainers'], 'editor'),
     metadata() {
       if (!this.focusedElement) return [];
@@ -99,7 +100,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ subscribeActiveUsers: 'subscribe', getActiveUsers: 'getActiveUsers' }, 'course'),
+    ...mapActions({
+      subscribeActiveUsers: 'subscribe',
+      getActiveUsers: 'getActiveUsers'
+    }, 'activeUsers'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),

@@ -105,6 +105,7 @@ function exportContentInventory({ course }, res) {
 function addActiveUser(req, res) {
   const { user, body: { context } } = req;
   const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
+  activeUser.created = new Date();
   broadcast(events.ADD_ACTIVE_USER, activeUser, context);
   res.end();
 }
