@@ -22,7 +22,7 @@ import api from '../../api/activeUsers';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
-import last from 'lodash/last';
+import first from 'lodash/first';
 import orderBy from 'lodash/orderBy';
 import throttle from 'lodash/throttle';
 
@@ -51,7 +51,7 @@ export default {
     },
     highlight() {
       if (!this.contentActiveUsers.length) return;
-      const user = last(this.contentActiveUsers);
+      const user = first(this.contentActiveUsers);
       let color;
       if (user.profileImage) color = user.palette.border;
       else color = user.palette.background;
