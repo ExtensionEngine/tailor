@@ -79,9 +79,9 @@ $font-color: #333;
   }
 
   .app-name {
-    line-height: $container-height;
     font-size: 20px;
     font-weight: 400;
+    line-height: $container-height;
   }
 }
 
