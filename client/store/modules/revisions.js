@@ -1,3 +1,4 @@
+import pick from 'lodash/pick';
 import request from '../../api/request';
 import VuexCollection from '../helpers/collection';
 
@@ -45,8 +46,7 @@ action(function fetch() {
 action(function restore(revision) {
   const { id, courseId } = revision.state;
   const url = `/courses/${courseId}/revisions/${id}/restore`;
-  this.commit('update', { ...revision, restored: true });
-  return request.post(url, { revision })
+  return request.post(url, pick(revision, ['state', 'entity']))
     .then(({ data: { data } }) => this.commit('add', data));
 });
 

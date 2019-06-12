@@ -10,7 +10,7 @@
         <div class="description">{{ description }}</div>
         <div class="name">{{ revision.user.email }}</div>
       </div>
-      <v-icon v-if="isRemoved && !isRestored" @click.stop="restoreItem" class="restore">
+      <v-icon v-if="isRemoved" @click.stop="restoreItem" class="restore">
         mdi mdi-loop
       </v-icon>
       <div class="date">{{ date }}</div>
@@ -39,9 +39,7 @@ export default {
   props: {
     revision: { type: Object, required: true }
   },
-  data: () => ({
-    expanded: false
-  }),
+  data: () => ({ expanded: false }),
   computed: {
     ...mapGetters(['structure'], 'course'),
     ...mapGetters(['getParent'], 'activities'),
@@ -55,11 +53,12 @@ export default {
     date: vm => fecha.format(vm.revision.createdAt, 'M/D/YY HH:mm'),
     description: vm => getFormatDescription(vm.revision, vm.activity),
     isTeachingElement: vm => vm.revision.entity === 'TEACHING_ELEMENT',
-    isRemoved: vm => vm.revision.operation === 'REMOVE',
-    isRestored: vm => vm.revision.restored
+    isRemoved: vm => vm.revision.operation === 'REMOVE'
+
   },
   methods: {
     ...mapActions(['restore'], 'revisions'),
+    ...mapActions({ resetActivities: 'reset' }, 'activities'),
     getOutlineLocation(current) {
       if (!current) return null;
       const level = find(this.structure, { type: current.type });
@@ -72,7 +71,10 @@ export default {
     restoreItem() {
       const { name: revisionName } = this.revision.state.data;
       this.restore(this.revision)
-        .then(() => this.$snackbar.show(`${revisionName} restored.`));
+        .then(() => {
+          this.resetActivities();
+          this.$snackbar.show(`${revisionName} restored.`);
+        });
     }
   },
   components: { EntityRevisions }

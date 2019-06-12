@@ -5,7 +5,7 @@ const { Model } = require('sequelize');
 
 class Revision extends Model {
   static fields(DataTypes) {
-    const { BOOLEAN, DATE, ENUM, JSONB } = DataTypes;
+    const { DATE, ENUM, JSONB } = DataTypes;
     return {
       entity: {
         type: ENUM,
@@ -16,10 +16,6 @@ class Revision extends Model {
         type: ENUM,
         values: ['CREATE', 'UPDATE', 'REMOVE', 'RESTORE'],
         allowNull: false
-      },
-      restored: {
-        type: BOOLEAN,
-        defaultValue: false
       },
       state: {
         type: JSONB,
