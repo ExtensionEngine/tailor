@@ -9,7 +9,5 @@ module.exports = {
   saltRounds: parseInt(process.env.AUTH_SALT_ROUNDS, 10) || 10,
   scheme: process.env.AUTH_JWT_SCHEME || 'JWT',
   secret: process.env.AUTH_JWT_SECRET,
-  issuer: process.env.AUTH_JWT_ISSUER,
-  audience: process.env.AUTH_JWT_AUDIENCE,
   corsAllowedOrigins
 };

@@ -5,6 +5,4 @@ const Scope = {
   Setup: 'scope:setup'
 };
 
-const Audience = { Scope };
-
-module.exports = Audience;
+module.exports = { Scope };
