@@ -101,7 +101,7 @@ export default {
     },
     activityActiveUsers() {
       const { activityId } = this;
-      return orderBy(this.activeUsers.activity[activityId], ['created'], ['desc']) || [];
+      return orderBy(this.activeUsers.activity[activityId], 'created', 'desc') || [];
     }
   },
   methods: {

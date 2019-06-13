@@ -29,8 +29,8 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ActiveUsers from 'components/common/ActiveUsers';
 import filter from 'lodash/filter';
+import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
-import sortBy from 'lodash/sortBy';
 
 export default {
   props: {
@@ -56,7 +56,7 @@ export default {
       return items;
     },
     courseActiveUsers() {
-      return sortBy(this.activeUsers.course[this.courseId], ['created']) || [];
+      return orderBy(this.activeUsers.course[this.courseId], 'created', 'desc') || [];
     }
   },
   methods: {
@@ -86,7 +86,7 @@ export default {
     this.showLoader = false;
     const activities = filter(this.activities, { parentId: null });
     if (!existingSelection && activities.length) {
-      this.resetActivityFocus(sortBy(activities, 'position')[0]._cid);
+      this.resetActivityFocus(orderBy(activities, 'position')[0]._cid);
     }
   },
   components: { ActiveUsers }
