@@ -48,8 +48,7 @@ action(function unsubscribe() {
   SSE_CLIENT.disconnect();
 });
 
-action(function getActiveUsers() {
-  const courseId = get(this.rootState, 'route.params.courseId');
+action(function getActiveUsers(courseId) {
   if (!courseId) return;
   return courseApi.getActiveUsers(courseId)
     .then(({ activeUsers }) => this.commit('setActiveUsers', activeUsers));
