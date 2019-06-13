@@ -50,6 +50,7 @@ import Sidebar from '../Sidebar';
 export default {
   mixins: [reorderMixin],
   props: {
+    courseId: { type: Number, required: true },
     showLoader: { type: Boolean, default: false }
   },
   data: () => ({ timer: null }),
@@ -72,15 +73,13 @@ export default {
     ...mapMutations(['toggleActivities'], 'course')
   },
   mounted() {
-    const { courseId } = this.$route.params;
-    this.subscribe(courseId);
-    const context = { courseId, created: new Date() };
+    this.subscribe(this.courseId);
+    const context = { courseId: this.courseId, created: new Date() };
     api.addActiveUser(context);
     this.timer = setInterval(() => api.addActiveUser(context), 20000);
   },
   beforeRouteLeave(to, from, next) {
-    const { courseId } = this.$route.params;
-    api.removeActiveUser({ courseId });
+    api.removeActiveUser({ courseId: this.courseId });
     clearInterval(this.timer);
     next();
   },

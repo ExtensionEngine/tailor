@@ -33,6 +33,9 @@ import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
 export default {
+  props: {
+    courseId: { type: Number, required: true }
+  },
   data() {
     return {
       showLoader: true
@@ -53,8 +56,7 @@ export default {
       return items;
     },
     courseActiveUsers() {
-      const { courseId } = this.$route.params;
-      return sortBy(this.activeUsers.course[courseId], ['created']) || [];
+      return sortBy(this.activeUsers.course[this.courseId], ['created']) || [];
     }
   },
   methods: {
@@ -69,7 +71,7 @@ export default {
     ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
   },
   async created() {
-    const { courseId } = this.$route.params;
+    const { courseId } = this;
     const existingSelection = this.activity && this.activity.courseId === courseId;
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!

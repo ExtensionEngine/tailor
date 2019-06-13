@@ -49,7 +49,6 @@ action(function unsubscribe() {
 });
 
 action(function getActiveUsers(courseId) {
-  if (!courseId) return;
   return courseApi.getActiveUsers(courseId)
     .then(({ activeUsers }) => this.commit('setActiveUsers', activeUsers));
 });
@@ -71,7 +70,6 @@ mutation(function sseAddActiveUser({ user, context }) {
   const { activeUsers } = this.state;
   const existingUser = activeUsers[user.id];
   if (!existingUser) {
-    if (!this.getters) return;
     const usedPalettes = this.getters['activeUsers/usedPalettes'];
     assignPalette(user, usedPalettes, this.state.activeUsers);
     Vue.set(activeUsers, user.id, { ...user, contexts: [context] });

@@ -14,10 +14,15 @@ import General from './components/course/Settings/General';
 import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
+import transform from 'lodash/transform';
 import TreeView from './components/course/TreeView';
 import UserManagement from './components/course/Settings/UserManagement';
 
 Vue.use(Router);
+
+const parseParams = ({ params }) => {
+  return transform(params, (acc, val, key) => (acc[key] = parseInt(val, 10)), {});
+};
 
 let router = new Router({
   routes: [{
@@ -29,10 +34,12 @@ let router = new Router({
     path: '/course/:courseId',
     component: Course,
     meta: { auth: true },
+    props: parseParams,
     children: [{
       path: '',
       name: 'course',
-      component: Outline
+      component: Outline,
+      props: parseParams
     }, {
       path: 'settings',
       component: CourseSettings,
@@ -58,6 +65,7 @@ let router = new Router({
     path: '/course/:courseId/editor/:activityId',
     name: 'editor',
     component: Editor,
+    props: parseParams,
     meta: { auth: true }
   }, {
     path: '/',

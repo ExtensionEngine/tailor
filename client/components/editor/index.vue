@@ -60,14 +60,18 @@ import find from 'lodash/find';
 import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
 import MetaSidebar from './MetaSidebar';
+import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
-import sortBy from 'lodash/sortBy';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
 
 export default {
   name: 'editor',
+  props: {
+    courseId: { type: Number, required: true },
+    activityId: { type: Number, required: true }
+  },
   data() {
     return {
       showLoader: true,
@@ -96,8 +100,8 @@ export default {
       return config.getSupportedContainers(this.activity.type);
     },
     activityActiveUsers() {
-      const { activityId } = this.$route.params;
-      return sortBy(this.activeUsers.activity[activityId], ['created']) || [];
+      const { activityId } = this;
+      return orderBy(this.activeUsers.activity[activityId], ['created'], ['desc']) || [];
     }
   },
   methods: {
@@ -131,7 +135,7 @@ export default {
     }
   },
   async created() {
-    const { courseId, activityId } = this.$route.params;
+    const { courseId, activityId } = this;
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;
@@ -170,7 +174,7 @@ export default {
     Promise.all(actions).then(() => (this.showLoader = false));
   },
   mounted() {
-    const { courseId, activityId } = this.$route.params;
+    const { courseId, activityId } = this;
     this.getActiveUsers(courseId);
     const context = { courseId, activityId, created: new Date() };
     this.subscribeActiveUsers(courseId);
@@ -181,7 +185,7 @@ export default {
     this.unsubscribe();
   },
   beforeRouteLeave(to, from, next) {
-    const { courseId, activityId } = this.$route.params;
+    const { courseId, activityId } = this;
     api.removeActiveUser({ courseId, activityId });
     clearInterval(this.timer);
     next();
