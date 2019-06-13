@@ -1,5 +1,5 @@
-import calculatePosition from 'utils/calculatePosition.js';
-import VuexCollection from '../helpers/collection.js';
+import { utils } from 'tce-core';
+import VuexCollection from '../helpers/collection';
 
 const { action, build, getter, mutation } = new VuexCollection('tes', '/tes');
 
@@ -8,12 +8,12 @@ getter(function tes() {
 }, { global: true });
 
 action(function insert({ element, context }) {
-  const position = calculatePosition(context);
+  const position = utils.calculatePosition(context);
   return this.context.dispatch('tes/save', { ...element, position });
 });
 
 action(function reorder({ element, context }) {
-  this.commit('reorder', { element, position: calculatePosition(context) });
+  this.commit('reorder', { element, position: utils.calculatePosition(context) });
   const data = { position: context.newPosition };
   return this.api.post(`${element.id}/reorder`, data)
     .then(res => {

@@ -15,11 +15,11 @@
 </template>
 
 <script>
+import { calculatePosition } from './utils';
 import cloneDeep from 'lodash/cloneDeep';
 import ContainedContent from './ContainedContent';
 import ElementList from './ElementList';
 import last from 'lodash/last';
-import { resolveElementPosition } from './utils';
 import values from 'lodash/values';
 
 export default {
@@ -49,7 +49,7 @@ export default {
       const context = { items: this.embeds, newPosition, isFirstChild };
       const container = cloneDeep(this.container);
       const reordered = container.embeds[this.embeds[newPosition].id];
-      reordered.position = resolveElementPosition(context);
+      reordered.position = calculatePosition(context);
       this.$emit('save', container);
     },
     saveItem(item, data) {

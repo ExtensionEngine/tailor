@@ -36,7 +36,6 @@
 import { getOutlineChildren, getParent } from 'utils/activity';
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex-module';
 import ActivityBrowser from 'components/common/ActivityBrowser';
-import calculatePosition from 'utils/calculatePosition';
 import CreateActivity from './CreateActivity';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -45,6 +44,7 @@ import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
 import SelectAction from './SelectAction';
+import { utils } from 'tce-core';
 
 export default {
   props: {
@@ -109,7 +109,7 @@ export default {
       const newPosition = findIndex(items, { id: this.anchor.id });
       const isFirstChild = !this.isSameLevel(activity) || newPosition === -1;
       const context = { items, newPosition, isFirstChild, insert: true };
-      return calculatePosition(context);
+      return utils.calculatePosition(context);
     }
   },
   components: { ActivityBrowser, CreateActivity, SelectAction }

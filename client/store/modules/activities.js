@@ -2,12 +2,12 @@ import {
   getDescendants as getDeepChildren,
   getAncestors as getParents
 } from 'utils/activity';
-import calculatePosition from 'utils/calculatePosition';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import request from '../../api/request';
+import { utils } from 'tce-core';
 import VuexCollection from '../helpers/collection';
 
 const { getter, action, mutation, build } = new VuexCollection('activities');
@@ -52,7 +52,7 @@ getter(function getExamObjectives() {
 });
 
 action(function reorder({ activity, context }) {
-  this.commit('reorder', { activity, position: calculatePosition(context) });
+  this.commit('reorder', { activity, position: utils.calculatePosition(context) });
   const data = { position: context.newPosition };
   return this.api.post(`${activity.id}/reorder`, data)
     .then(res => {
