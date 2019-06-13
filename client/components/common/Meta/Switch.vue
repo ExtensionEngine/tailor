@@ -75,23 +75,6 @@ input[type=checkbox] {
   opacity: 0;
 }
 
-label {
-  position: relative;
-  cursor: pointer;
-
-  &.checked .lever {
-    background: $lever-checked;
-
-    &::after {
-      background: $checked;
-    }
-
-    &::before, &::after {
-      left: 18px;
-    }
-  }
-}
-
 .lever {
   content: "";
   display: inline-block;
@@ -126,19 +109,36 @@ label {
   &::after {
     background-color: $unchecked;
     box-shadow:
-      0 3px 1px -2px rgba(0,0,0,0.2),
-      0 2px 2px 0 rgba(0,0,0,0.14),
-      0 1px 5px 0 rgba(0,0,0,0.12);
+      0 3px 1px -2px rgba(0, 0, 0, 0.2),
+      0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 1px 5px 0 rgba(0, 0, 0, 0.12);
   }
 }
 
-.lever:active::before {
-  transform: scale(2.4);
-  background-color: rgba(0,0,0,0.08);
+label {
+  position: relative;
+  cursor: pointer;
 
-  .checked & {
+  &.checked .lever {
+    background: $lever-checked;
+
+    &::after {
+      background: $checked;
+    }
+
+    &::before, &::after {
+      left: 18px;
+    }
+  }
+
+  .lever:active::before {
     transform: scale(2.4);
-    background-color: transparentize($checked, 0.85);
+    background-color: rgba(0, 0, 0, 0.08);
+
+    .checked & {
+      transform: scale(2.4);
+      background-color: transparentize($checked, 0.85);
+    }
   }
 }
 </style>
