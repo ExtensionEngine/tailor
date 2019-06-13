@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import FileUpload from '../FileUpload.vue';
+import { FileUpload } from 'tce-core';
 import get from 'lodash/get';
 
 export default {

@@ -12,7 +12,7 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
-import InputAsset from '@/components/common/InputAsset';
+import { InputAsset } from 'tce-core';
 import set from 'lodash/set';
 
 export default {

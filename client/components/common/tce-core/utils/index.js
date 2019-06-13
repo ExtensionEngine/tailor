@@ -1,5 +1,9 @@
 import toCase from 'to-case';
 
+export { default as downloadMixin } from './downloadMixin';
+
+export * from './validation';
+
 export function getComponentName(type) {
   return `tce-${toCase.slug(resolveElementType(type))}`;
 }

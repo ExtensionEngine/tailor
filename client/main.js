@@ -14,7 +14,7 @@ import QuestionContainer from 'tce-core/QuestionContainer';
 import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
-import VeeValidate from './utils/validation';
+import { utils } from 'tce-core';
 import Vue from 'vue';
 import VueHotkey from 'v-hotkey';
 import Vuetify from 'vuetify';
@@ -37,7 +37,7 @@ Vue.use(Vuetify, {
 });
 Vue.use(VuetifySnackbar);
 Vue.use(Tooltip, { delay: 50 });
-Vue.use(VeeValidate, {
+Vue.use(utils.VeeValidate, {
   delay: 700,
   fieldsBagName: 'vFields',
   errorBagName: 'vErrors',

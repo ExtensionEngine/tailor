@@ -29,18 +29,16 @@
 </template>
 
 <script>
-import CircularProgress from 'components/common/CircularProgress';
-import downloadMixin from 'utils/downloadMixin';
+import { CircularProgress, utils } from 'tce-core';
 import EventBus from 'EventBus';
 import uniqueId from 'lodash/uniqueId';
-import { withValidation } from 'utils/validation';
 
 const appChannel = EventBus.channel('app');
 
 export default {
   name: 'file-upload',
   inject: ['$storageService'],
-  mixins: [downloadMixin, withValidation()],
+  mixins: [utils.downloadMixin, utils.withValidation()],
   props: {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },

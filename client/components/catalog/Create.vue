@@ -57,7 +57,7 @@
 import { mapActions, mapGetters } from 'vuex-module';
 import Promise from 'bluebird';
 import { SCHEMAS } from 'shared/activities';
-import { withValidation } from 'utils/validation';
+import { utils } from 'tce-core';
 
 const getDefaultData = () => ({
   schema: null,
@@ -67,7 +67,7 @@ const getDefaultData = () => ({
 
 export default {
   name: 'create-repository',
-  mixins: [withValidation()],
+  mixins: [utils.withValidation()],
   data() {
     return {
       repository: getDefaultData(),

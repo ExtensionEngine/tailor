@@ -22,14 +22,14 @@ import { getElementId, getToolbarName, isQuestion } from './utils';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
 import { mapActions } from 'vuex-module';
+import { utils } from 'tce-core';
 import Vue from 'vue';
-import { withValidation } from 'utils/validation';
 
 const appBus = EventBus.channel('app');
 
 export default {
   name: 'element-toolbar-wrapper',
-  mixins: [withValidation()],
+  mixins: [utils.withValidation()],
   props: {
     element: { type: Object, required: true },
     embed: { type: Object, default: null }

@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import CircularProgress from 'components/common/CircularProgress';
+import { CircularProgress } from 'tce-core';
 import { mapActions } from 'vuex-module';
 import Modal from 'components/common/Modal';
 import pick from 'lodash/pick';

@@ -32,7 +32,7 @@
 
 <script>
 import activityApi from 'client/api/activity';
-import CircularProgress from 'components/common/CircularProgress';
+import { CircularProgress } from 'tce-core';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';

@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import FileUpload from '@/components/common/FileUpload';
+import { FileUpload } from 'tce-core';
 import get from 'lodash/get';
 import last from 'lodash/last';
 import pick from 'lodash/pick';

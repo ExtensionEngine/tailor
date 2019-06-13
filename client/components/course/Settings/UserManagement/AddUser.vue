@@ -33,10 +33,10 @@
 
 <script>
 import { mapActions } from 'vuex-module';
-import { withValidation } from 'utils/validation';
+import { utils } from 'tce-core';
 
 export default {
-  mixins: [withValidation()],
+  mixins: [utils.withValidation()],
   props: {
     roles: { type: Array, required: true }
   },

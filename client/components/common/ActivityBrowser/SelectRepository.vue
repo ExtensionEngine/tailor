@@ -15,7 +15,7 @@
 
 <script>
 import api from 'client/api/course';
-import CircularProgress from 'components/common/CircularProgress';
+import { CircularProgress } from 'tce-core';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 

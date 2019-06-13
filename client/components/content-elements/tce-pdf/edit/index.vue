@@ -15,7 +15,7 @@
       </div>
       <div class="loader-outer">
         <div class="loader-inner">
-          <circular-progress v-show="!showError"></circular-progress>
+          <circular-progress v-show="!showError"/>
         </div>
       </div>
       <div class="pdf-container">
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import CircularProgress from './CircularProgress';
+import { CircularProgress } from 'tce-core';
 import get from 'lodash/get';
 import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';

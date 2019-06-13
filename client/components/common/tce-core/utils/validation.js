@@ -11,9 +11,7 @@ const alphanumerical = {
 
 VeeValidate.Validator.extend('alphanumerical', alphanumerical);
 
-export default VeeValidate;
-
-const mixin = ({ inherit = false } = {}) => {
+const withValidation = ({ inherit = false } = {}) => {
   if (inherit) return { inject: ['$validator'] };
   return {
     $_veeValidate: {
@@ -22,4 +20,4 @@ const mixin = ({ inherit = false } = {}) => {
   };
 };
 
-export const withValidation = mixin;
+export { VeeValidate, withValidation };

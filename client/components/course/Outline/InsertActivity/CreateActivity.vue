@@ -45,10 +45,10 @@ import { focus } from 'vue-focus';
 import { mapGetters } from 'vuex-module';
 import multiselect from 'components/common/Select';
 import SelectAction from './SelectAction';
-import { withValidation } from 'utils/validation';
+import { utils } from 'tce-core';
 
 export default {
-  mixins: [withValidation()],
+  mixins: [utils.withValidation()],
   props: {
     parent: { type: Object, required: true },
     supportedLevels: { type: Array, required: true }

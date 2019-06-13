@@ -25,11 +25,11 @@
 </template>
 
 <script>
-import { withValidation } from 'utils/validation';
+import { utils } from 'tce-core';
 
 export default {
   name: 'multiline-input',
-  mixins: [withValidation()],
+  mixins: [utils.withValidation()],
   props: {
     meta: { type: Object, default: () => ({ value: null }) },
     minHeight: { type: Number, default: 60 }
