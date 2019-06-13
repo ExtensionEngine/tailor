@@ -9,15 +9,15 @@ import Catalog from './components/catalog/Container';
 import Course from './components/course';
 import CourseRevisions from './components/course/Revisions';
 import CourseSettings from './components/course/Settings';
-import CourseUserManagement from './components/course/Settings/CourseUserManagement';
+import RepoUserManagement from './components/course/Settings/UserManagement';
 import Editor from './components/editor';
 import ForgotPassword from './components/auth/ForgotPassword';
 import General from './components/course/Settings/General';
+import InstalledElements from './components/system-settings/ContentElements';
+import InstalledSchemas from './components/system-settings/StructureTypes';
 import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import ResetPassword from './components/auth/ResetPassword';
-import SystemContentElementsList from './components/system-settings/ContentElements';
-import SystemStructureTypesList from './components/system-settings/StructureTypes';
 import SystemSettings from './components/system-settings';
 import SystemUserManagement from './components/system-settings/UserManagement';
 import TreeView from './components/course/TreeView';
@@ -50,7 +50,7 @@ let router = new Router({
         path: 'users',
         name: 'user-management',
         props: numericParser,
-        component: CourseUserManagement
+        component: RepoUserManagement
       }]
     }, {
       path: 'revisions',
@@ -79,13 +79,13 @@ let router = new Router({
       name: 'system-user-management',
       component: SystemUserManagement
     }, {
-      path: 'structure-types',
-      name: 'system-structure-types',
-      component: SystemStructureTypesList
+      path: 'installed-schemas',
+      name: 'installed-schemas',
+      component: InstalledSchemas
     }, {
-      path: 'content-elements',
-      name: 'system-content-elements',
-      component: SystemContentElementsList
+      path: 'installed-elements',
+      name: 'installed-elements',
+      component: InstalledElements
     }, {
       path: '*',
       redirect: { name: 'system-management' }
