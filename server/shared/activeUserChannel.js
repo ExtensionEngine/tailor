@@ -1,5 +1,7 @@
 'use strict';
 
+// import { activityTimeout } from '../../../../config/shared/activeUsers';
+const { activityTimeout } = require('../../config/shared/activeUsers');
 const each = require('lodash/each');
 const find = require('lodash/find');
 const get = require('lodash/get');
@@ -65,7 +67,7 @@ function setContext(user, context) {
   existingUser.contexts.push(context);
 }
 
-function startRemovalTimer(user, context, delay = 60000) {
+function startRemovalTimer(user, context, delay = activityTimeout) {
   return setTimeout(() => {
     deleteActiveUser(user, context);
     broadcast(events.REMOVE_ACTIVE_USER, user, context);

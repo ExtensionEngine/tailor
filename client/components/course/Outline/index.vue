@@ -44,6 +44,7 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import map from 'lodash/map';
 import NoActivities from './NoActivities';
+import { pingInterval } from '../../../../config/shared/activeUsers';
 import reorderMixin from './reorderMixin';
 import Sidebar from '../Sidebar';
 
@@ -77,7 +78,7 @@ export default {
     await this.getActiveUsers(this.courseId);
     const context = { courseId: this.courseId, created: new Date() };
     await api.addActiveUser(context);
-    this.timer = setInterval(() => api.addActiveUser(context), 20000);
+    this.timer = setInterval(() => api.addActiveUser(context), pingInterval);
   },
   beforeRouteLeave(to, from, next) {
     api.removeActiveUser({ courseId: this.courseId });

@@ -61,6 +61,7 @@ import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
 import MetaSidebar from './MetaSidebar';
 import orderBy from 'lodash/orderBy';
+import { pingInterval } from '../../../config/shared/activeUsers';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
@@ -179,7 +180,7 @@ export default {
     await this.getActiveUsers(courseId);
     const context = { courseId, activityId, created: new Date() };
     await api.addActiveUser(context);
-    this.timer = setInterval(() => api.addActiveUser(context), 20000);
+    this.timer = setInterval(() => api.addActiveUser(context), pingInterval);
   },
   beforeDestroy() {
     this.unsubscribe();
