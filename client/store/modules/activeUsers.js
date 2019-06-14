@@ -54,7 +54,7 @@ action(function getActiveUsers(courseId) {
 });
 
 mutation(function setActiveUsers(users) {
-  Object.keys(users).forEach(id => {
+  map(users, ({ id }) => {
     if (this.state.activeUsers[id]) {
       Vue.set(this.state.activeUsers[id], 'contexts', users[id].contexts);
       return;
