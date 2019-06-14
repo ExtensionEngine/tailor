@@ -1,6 +1,12 @@
 'use strict';
 
-const { activeUsers, broadcast, events, deleteActiveUser } = require('../shared/activeUserChannel');
+const {
+  activeUsers,
+  broadcast,
+  events,
+  addContext,
+  removeContext
+} = require('../shared/activeUserChannel');
 const { Course, CourseUser, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
@@ -106,6 +112,7 @@ function addActiveUser(req, res) {
   const { user, body: { context } } = req;
   const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
   activeUser.created = new Date();
+  addContext(activeUser, context);
   broadcast(events.ADD_ACTIVE_USER, activeUser, context);
   res.end();
 }
@@ -113,7 +120,7 @@ function addActiveUser(req, res) {
 function removeActiveUser(req, res) {
   const { user, body: { context } } = req;
   const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
-  deleteActiveUser(activeUser, context, true);
+  removeContext(activeUser, context, true);
   broadcast(events.REMOVE_ACTIVE_USER, activeUser, context);
   res.end();
 }

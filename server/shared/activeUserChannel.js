@@ -36,8 +36,6 @@ function subscribe(req, res) {
 
 function broadcast(event, user, context) {
   const { courseId } = context;
-  // TODO: Move out following lines
-  if (event === events.ADD_ACTIVE_USER) setContext(user, context);
   const recipients = get(sseClients, courseId, {});
   each(recipients, r => {
     r.send(event, { user, context: omit(context, ['timer']) });
@@ -45,8 +43,15 @@ function broadcast(event, user, context) {
   return user;
 }
 
-// TODO: Write in a better way
-function setContext(user, context) {
+function startRemovalTimer(user, context, delay = activityTimeout) {
+  return setTimeout(() => {
+    removeContext(user, context);
+    broadcast(events.REMOVE_ACTIVE_USER, user, context);
+  }, delay);
+}
+
+// TODO: Do it better
+function addContext(user, context) {
   const { id, email, created } = user;
   context.toJSON = () => omit(context, ['timer']);
   const existingUser = activeUsers[id];
@@ -66,14 +71,7 @@ function setContext(user, context) {
   existingUser.contexts.push(context);
 }
 
-function startRemovalTimer(user, context, delay = activityTimeout) {
-  return setTimeout(() => {
-    deleteActiveUser(user, context);
-    broadcast(events.REMOVE_ACTIVE_USER, user, context);
-  }, delay); // TODO: Extract to config file
-}
-
-function deleteActiveUser(user, context, stopTimer = false) {
+function removeContext(user, context, stopTimer = false) {
   if (!activeUsers[user.id]) return;
   const omittedFields = ['timer', 'toJSON', 'created'];
   remove(activeUsers[user.id].contexts, c => {
@@ -84,4 +82,4 @@ function deleteActiveUser(user, context, stopTimer = false) {
   if (isEmpty(activeUsers[user.id].contexts)) delete activeUsers[user.id];
 }
 
-module.exports = { activeUsers, subscribe, broadcast, events, deleteActiveUser };
+module.exports = { activeUsers, subscribe, broadcast, events, addContext, removeContext };
