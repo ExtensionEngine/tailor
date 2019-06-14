@@ -43,11 +43,6 @@
         color: #067df7;
         text-decoration: none;
       }
-      .comments-header {
-        display:flex;
-        flex-wrap:wrap;
-        justify-content: space-between;
-      }
       .title {
         margin-right: 7px;
         line-height: 20px
@@ -95,9 +90,8 @@
           <mj-raw>{{#comments}}</mj-raw>
           <mj-accordion-element>
             <mj-accordion-title>
-              <div class="comments-header">
                 <span class="title">{{0.activity.data.name}}</span>
-                <div>
+                <span>
                   <span class="label activity">A{{0.activity.id}}</span>
                   <span
                     class="label type"
@@ -105,16 +99,13 @@
                     border: 1px solid {{0.activity.color}};">
                     {{0.activity.label}}
                   </span>
-                </div>
-              </div>
+                </span>
             </mj-accordion-title>
             <mj-raw>{{#.}}</mj-raw>
             <mj-accordion-text>
               <mj-text mj-class="content" font-size="12px" padding-bottom="0">
-                <div class="comments-header">
-                  <span><strong>{{author.email}}</strong>: {{content}}</span>
-                  <span class="time">{{#format}}{{createdAt}}{{/format}}</span>
-                </div>
+                <b>{{author.email}}</b>: {{content}}
+                <span class="time">{{#format}}{{createdAt}}{{/format}}</span>
               </mj-text>
             </mj-accordion-text>
             <mj-raw>{{/.}}</mj-raw>
