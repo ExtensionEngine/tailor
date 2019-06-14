@@ -1,7 +1,7 @@
 <template>
   <div class="te-wrapper">
     <div :class="{ inactive: !showActiveUsers }" class="active-users-wrapper">
-      <active-users :users="contentActiveUsers" :size="26" vertical/>
+      <active-users :users="contentActiveUsers" :size="26" vertical rightTooltip/>
     </div>
     <contained-content
       v-bind="$attrs"

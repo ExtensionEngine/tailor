@@ -1,7 +1,7 @@
 <template>
   <div :class="[{ vertical }]" class="active-users">
     <v-avatar
-      v-tooltip="user.email"
+      v-tooltip="getTooltip(user)"
       v-for="user in users"
       :key="user.id"
       :color="user.palette.background"
@@ -21,11 +21,19 @@ export default {
   props: {
     users: { type: Array, default: () => [] },
     size: { type: Number, default: 30 },
-    vertical: { type: Boolean, default: false }
+    vertical: { type: Boolean, default: false },
+    rightTooltip: { type: Boolean, default: false }
   },
   methods: {
     getBorder({ palette }) {
       return `0 0 0 2px ${palette.border}`;
+    },
+    getTooltip(user) {
+      return {
+        content: user.email,
+        placement: this.rightTooltip ? 'right' : 'bottom.end',
+        offset: this.rightTooltip ? 15 : 5
+      };
     }
   }
 };
