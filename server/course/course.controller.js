@@ -64,7 +64,7 @@ function getUsers(req, res) {
 
 function upsertUser({ course, body }, res) {
   const { email, role } = body;
-  return User.findOrInvite({ email, role })
+  return User.inviteOrUpdate({ email })
     .then(user => findOrCreateRole(course, user, role))
     .then(user => Object.assign({}, user.profile, { courseRole: role }))
     .then(user => res.json({ data: { user } }));

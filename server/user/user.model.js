@@ -4,6 +4,7 @@ const { Model, Op } = require('sequelize');
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
+const map = require('lodash/map');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const { role: roles } = require('../../config/shared');
@@ -115,11 +116,12 @@ class User extends Model {
       });
   }
 
-  static findOrInvite({ email, role = USER }) {
+  static inviteOrUpdate(data) {
+    const { email } = data;
     return User.findOne({ where: { email }, paranoid: false }).then(user => {
-      if (!user) return User.invite({ email, role });
-      if (!user.deletedAt) return user;
-      return user.restore();
+      if (!user) return User.invite(data);
+      map(({ ...data, deletedAt: null }), (v, k) => user.setDataValue(k, v));
+      return user.save();
     });
   }
 

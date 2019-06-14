@@ -23,7 +23,7 @@ function list({ query: { email, role, filter, archived }, options }, res) {
 }
 
 function upsert({ body: { email, role } }, res) {
-  return User.findOrInvite({ email, role })
+  return User.inviteOrUpdate({ email, role })
     .then(data => res.json({ data }));
 }
 
