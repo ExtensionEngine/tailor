@@ -173,12 +173,12 @@ export default {
     if (!this.course) actions.push(this.getCourse(courseId));
     Promise.all(actions).then(() => (this.showLoader = false));
   },
-  mounted() {
+  async mounted() {
     const { courseId, activityId } = this;
-    this.getActiveUsers(courseId);
-    const context = { courseId, activityId, created: new Date() };
     this.subscribeActiveUsers(courseId);
-    api.addActiveUser(context);
+    await this.getActiveUsers(courseId);
+    const context = { courseId, activityId, created: new Date() };
+    await api.addActiveUser(context);
     this.timer = setInterval(() => api.addActiveUser(context), 20000);
   },
   beforeDestroy() {

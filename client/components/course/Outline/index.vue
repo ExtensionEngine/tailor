@@ -69,13 +69,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['subscribe'], 'activeUsers'),
+    ...mapActions(['getActiveUsers', 'subscribe'], 'activeUsers'),
     ...mapMutations(['toggleActivities'], 'course')
   },
-  mounted() {
+  async mounted() {
     this.subscribe(this.courseId);
     const context = { courseId: this.courseId, created: new Date() };
-    api.addActiveUser(context);
+    await this.getActiveUsers(this.courseId);
+    await api.addActiveUser(context);
     this.timer = setInterval(() => api.addActiveUser(context), 20000);
   },
   beforeRouteLeave(to, from, next) {

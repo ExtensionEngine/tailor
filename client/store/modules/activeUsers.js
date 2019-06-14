@@ -56,7 +56,6 @@ action(function getActiveUsers(courseId) {
 mutation(function setActiveUsers(users) {
   Object.keys(users).forEach(id => {
     if (this.state.activeUsers[id]) {
-      // TODO: Check if contexts exists
       Vue.set(this.state.activeUsers[id], 'contexts', users[id].contexts);
       return;
     }
