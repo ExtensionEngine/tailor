@@ -1,8 +1,8 @@
 'use strict';
 
-const { getSiblingLevels } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
+const { getSiblingLevels } = require('../../config/shared/activities');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
