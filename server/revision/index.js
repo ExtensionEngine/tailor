@@ -23,7 +23,6 @@ function getRevision(req, _res, next, revisionId) {
 }
 
 module.exports = {
-  controller: ctrl,
   path: '/revisions',
   router
 };
