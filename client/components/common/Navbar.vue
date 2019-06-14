@@ -88,9 +88,9 @@ $font-color: #333;
   cursor: pointer;
 
   .app-name {
-    line-height: $container-height;
     font-size: 20px;
     font-weight: 400;
+    line-height: $container-height;
   }
 }
 

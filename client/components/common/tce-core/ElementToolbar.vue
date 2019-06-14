@@ -88,7 +88,7 @@ export default {
   position: absolute;
   z-index: 999;
   right: 0;
-  transform: translate(-90%, -40%);
+  transform: translate(-90%, -45%);
 
   .v-btn {
     margin: 4px;

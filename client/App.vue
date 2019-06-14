@@ -40,20 +40,20 @@ html {
 
 #app {
   color: rgba(0,0,0,0.87);
-  font-family: Poppins, Helvetica, Arial, sans-serif;
+  font-family: $font-family-primary;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   overflow: hidden;
 }
 
-.v-content .view {
-  overflow-y: scroll;
-  overflow-y: overlay;
-}
-
 .application, .v-content, .view {
   width: 100%;
   height: 100%;
+}
+
+.v-content .view {
+  overflow-y: scroll;
+  overflow-y: overlay;
 }
 </style>
