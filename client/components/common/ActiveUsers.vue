@@ -5,7 +5,7 @@
       v-for="user in users"
       :key="user.id"
       :color="user.palette.background"
-      :style="{ boxShadow: getBorder(user) }"
+      :style="{ boxShadow: getBorder(user.palette) }"
       :size="size">
       <img v-if="user.profileImage" :src="user.profileImage"/>
       <span v-else :style="{ color: user.palette.text }">
@@ -25,12 +25,12 @@ export default {
     rightTooltip: { type: Boolean, default: false }
   },
   methods: {
-    getBorder({ palette }) {
+    getBorder(palette) {
       return `0 0 0 2px ${palette.border}`;
     },
-    getTooltip(user) {
+    getTooltip({ email }) {
       return {
-        content: user.email,
+        content: email,
         placement: this.rightTooltip ? 'right' : 'bottom.end',
         offset: this.rightTooltip ? 15 : 5
       };
