@@ -103,54 +103,58 @@ export default {
   margin-bottom: 15px;
   text-align: left;
   list-style: none;
-}
 
-.discussion-header {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 15px 15px 0;
-  font-size: 17px;
-  justify-content: space-between;
+  .discussion-header {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px 20px 0;
+    font-size: 17px;
+    justify-content: space-between;
 
-  .labels {
-    font-size: 0;
+    .labels {
+      font-size: 0;
 
-    .v-chip {
-      margin: 0;
-      font-weight: 500;
+      .v-chip {
+        margin: 0;
+        font-weight: 500;
 
-      + .v-chip {
-        margin-left: 5px;
+        + .v-chip {
+          margin-left: 5px;
+        }
       }
     }
   }
-}
 
-.comment {
-  width: 100%;
-  padding: 5px 20px;
+  .v-list {
+    padding: 8px 0 20px;
 
-  &:hover {
-    background: whitesmoke;
+    .comment {
+      width: 100%;
+      padding: 5px 25px;
+
+      &:hover {
+        background: whitesmoke;
+      }
+
+      .new-comment {
+        margin-right: 5px;
+        padding: 3px 5px;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        background-color: #737373;
+        border-radius: 3px;
+      }
+    }
   }
-}
 
-.new-comment {
-  margin-right: 5px;
-  padding: 3px 5px;
-  color: white;
-  font-size: 10px;
-  font-weight: bold;
-  background-color: #737373;
-  border-radius: 3px;
-}
+  .more-comments {
+    margin-top: -12px;
+    border-top: 1px solid #e91e63;
 
-.more-comments {
-  margin: 0;
-  border-top: 1px solid #e91e63;
-
-  .v-icon {
-    font-size: 18px;
+    .v-icon {
+      font-size: 18px;
+    }
   }
 }
 </style>
