@@ -43,10 +43,10 @@ export default {
   computed: {
     ...mapGetters(['structure'], 'course'),
     ...mapGetters(['getParent'], 'activities'),
-    activity: vm => {
-      const { state } = vm.revision;
+    activity() {
+      const { state } = this.revision;
       const activityId = state.activityId || state.id;
-      return vm.getOutlineLocation(vm.getParent(activityId));
+      return this.getOutlineLocation(this.getParent(activityId));
     },
     color: vm => getRevisionColor(vm.revision),
     acronym: vm => getRevisionAcronym(vm.revision),
