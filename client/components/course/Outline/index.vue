@@ -74,8 +74,8 @@ export default {
   },
   async mounted() {
     this.subscribe(this.courseId);
-    const context = { courseId: this.courseId, created: new Date() };
     await this.getActiveUsers(this.courseId);
+    const context = { courseId: this.courseId, created: new Date() };
     await api.addActiveUser(context);
     this.timer = setInterval(() => api.addActiveUser(context), 20000);
   },
