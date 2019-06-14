@@ -13,6 +13,7 @@ module.exports = {
   hostname,
   port,
   origin,
+  mail: require('./mail'),
   auth: require('./auth'),
   storage: require('./storage')
 };

@@ -6,12 +6,7 @@ const Promise = require('bluebird');
 
 const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
 
-const server = email.server.connect({
-  user: process.env.EMAIL_USER,
-  password: process.env.EMAIL_PASSWORD,
-  host: process.env.EMAIL_HOST,
-  ssl: true
-});
+const server = email.server.connect(config.mail);
 
 function send(message) {
   return new Promise((resolve, reject) => {
@@ -19,10 +14,10 @@ function send(message) {
   });
 }
 
-const resetUrl = user => `${config.origin}/#/reset-password/${user.token}`;
+const resetUrl = token => `${config.origin}/#/reset-password/${token}`;
 
-function invite(user) {
-  const href = resetUrl(user);
+function invite(user, token) {
+  const href = resetUrl(token);
   const message = `
     An account has been created for you on ${config.origin}.
     Please click <a href="${href}">here</a> to complete your registration.`;
@@ -35,8 +30,8 @@ function invite(user) {
   });
 }
 
-function resetPassword(user) {
-  const href = resetUrl(user);
+function resetPassword(user, token) {
+  const href = resetUrl(token);
   const message = `
     You requested password reset.
     Please click <a href="${href}">here</a> to complete the reset process.`;

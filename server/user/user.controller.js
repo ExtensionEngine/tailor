@@ -1,9 +1,8 @@
 'use strict';
 
-const { createError, validationError } = require('../shared/error/helpers');
+const { createError } = require('../shared/error/helpers');
 const Audience = require('../shared/auth/audience');
-const config = require('../../config/server');
-const { NOT_FOUND } = require('http-status-codes');
+const { NOT_FOUND, NO_CONTENT } = require('http-status-codes');
 const { User } = require('../shared/database');
 
 function index(req, res) {
@@ -20,21 +19,14 @@ function forgotPassword({ body }, res) {
     .then(() => res.end());
 }
 
-function resetPassword({ body, params }, res) {
-  const { password, token } = body;
-  return User.findOne({ where: { token } })
-    .then(user => user || createError(NOT_FOUND, 'Invalid token'))
-    .then(user => {
-      user.password = password;
-      return user.save().catch(validationError);
-    })
-    .then(() => res.end());
+function resetPassword({ body: { password }, user }, res) {
+  return user.update({ password })
+  .then(() => res.sendStatus(NO_CONTENT));
 }
 
 function login({ user }, res) {
   const token = user.createToken({
     audience: Audience.Scope.Access,
-    issuer: config.auth.issuer,
     expiresIn: '5 days'
   });
   return res.json({ data: { token, user: user.profile } });

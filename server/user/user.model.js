@@ -40,10 +40,6 @@ class User extends Model {
           };
         }
       },
-      token: {
-        type: STRING,
-        unique: true
-      },
       createdAt: {
         type: DATE,
         field: 'created_at'
@@ -100,13 +96,12 @@ class User extends Model {
   static invite(user, emailCb = noop) {
     return this.create(user)
       .then(user => {
-        user.token = user.createToken({
+        const token = user.createToken({
           audience: Audience.Scope.Setup,
-          issuer: config.auth.issuer,
           expiresIn: '5 days'
         });
-        mail.invite(user).asCallback(emailCb);
-        return user.save();
+        mail.invite(user, token).asCallback(emailCb);
+        return user;
       });
   }
 
@@ -135,17 +130,23 @@ class User extends Model {
   createToken(options = {}) {
     const { id, email } = this;
     const payload = { id, email };
-    return jwt.sign(payload, config.auth.secret, options);
+    options.issuer = config.auth.issuer;
+    options.audience = options.audience || Audience.Scope.Access;
+    return jwt.sign(payload, this.getTokenSecret(options.audience), options);
   }
 
   sendResetToken() {
-    this.token = this.createToken({
+    const token = this.createToken({
       audience: Audience.Scope.Setup,
-      issuer: config.auth.issuer,
       expiresIn: '5 days'
     });
-    mail.resetPassword(this);
-    return this.save();
+    mail.resetPassword(this, token);
+  }
+
+  getTokenSecret(audience) {
+    const { secret } = config.auth;
+    if (audience === Audience.Scope.Access) return secret;
+    return `${secret}${this.password}${this.createdAt.getTime()}`;
   }
 }
 

@@ -8,8 +8,8 @@ const router = require('express').Router();
 router
   // Public routes:
   .post('/users/login', authenticate('local'), ctrl.login)
-  .post('/users/forgotPassword', ctrl.forgotPassword)
-  .post('/users/resetPassword', ctrl.resetPassword)
+  .post('/users/forgot-password', ctrl.forgotPassword)
+  .post('/users/reset-password', authenticate('token'), ctrl.resetPassword)
   // Protected routes:
   .use(authenticate('jwt'))
   .get('/users', ctrl.index);
