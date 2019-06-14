@@ -1,6 +1,5 @@
 'use strict';
 
-// import { activityTimeout } from '../../../../config/shared/activeUsers';
 const { activityTimeout } = require('../../config/shared/activeUsers');
 const each = require('lodash/each');
 const find = require('lodash/find');
