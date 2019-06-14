@@ -25,8 +25,8 @@ export default {
     rightTooltip: { type: Boolean, default: false }
   },
   methods: {
-    getBorder(palette) {
-      return `0 0 0 2px ${palette.border}`;
+    getBorder({ border }) {
+      return `0 0 0 2px ${border}`;
     },
     getTooltip({ email }) {
       return {
