@@ -173,6 +173,7 @@ export default {
   }
 
   label {
+    margin: 0 2px 0 0;
     font-size: 14px;
   }
 }
