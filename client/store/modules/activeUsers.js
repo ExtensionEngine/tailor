@@ -54,29 +54,19 @@ action(function getActiveUsers(courseId) {
 });
 
 mutation(function setActiveUsers(users) {
-  map(users, ({ id }) => {
-    if (this.state.activeUsers[id]) {
-      Vue.set(this.state.activeUsers[id], 'contexts', users[id].contexts);
-      return;
-    }
+  const { activeUsers } = this.state;
+  map(users, (user) => {
     const usedPalettes = this.getters['activeUsers/usedPalettes'];
-    assignPalette(users[id], usedPalettes, this.state.activeUsers);
-    Vue.set(this.state.activeUsers, id, users[id]);
+    user.contexts.forEach(context => {
+      addContext(Vue, activeUsers, user, context, usedPalettes);
+    });
   });
 });
 
 mutation(function sseAddActiveUser({ user, context }) {
   const { activeUsers } = this.state;
-  const existingUser = activeUsers[user.id];
-  if (!existingUser) {
-    const usedPalettes = this.getters['activeUsers/usedPalettes'];
-    assignPalette(user, usedPalettes, this.state.activeUsers);
-    Vue.set(activeUsers, user.id, { ...user, contexts: [context] });
-    return;
-  }
-  const existingContext = find(existingUser.contexts, omit(context, ['created']));
-  if (existingContext) return;
-  existingUser.contexts.push(context);
+  const usedPalettes = this.getters['activeUsers/usedPalettes'];
+  addContext(Vue, activeUsers, user, context, usedPalettes);
 });
 
 mutation(function sseRemoveActiveUser({ user, context }) {
@@ -104,6 +94,18 @@ function mapActiveUserContext(activeUsers, user, context) {
     }
     activeUsers[entityName][entityId] = [{ id, email, palette, created }];
   });
+}
+
+function addContext(_vue, activeUsers, user, context, usedPalettes) {
+  const existingUser = activeUsers[user.id];
+  if (!existingUser) {
+    assignPalette(user, usedPalettes, activeUsers);
+    _vue.set(activeUsers, user.id, { ...user, contexts: [context] });
+    return;
+  }
+  const existingContext = find(existingUser.contexts, omit(context, ['created']));
+  if (existingContext) return;
+  existingUser.contexts.push(context);
 }
 
 function assignPalette(user, usedPalettes, activeUsers) {
