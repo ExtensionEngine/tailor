@@ -27,7 +27,7 @@ client.interceptors.request.use(config => {
 });
 
 client.interceptors.response.use(res => res, err => {
-  if (err.response.status === 401) {
+  if (err.response && err.response.status === 401) {
     window.localStorage.removeItem('JWT_TOKEN');
     window.localStorage.removeItem('TAILOR_USER');
     window.location.reload();

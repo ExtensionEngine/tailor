@@ -8,11 +8,7 @@ const origin = require('./shared/origin');
 const path = require('path');
 require('express-async-errors');
 
-<<<<<<< HEAD
-require('./shared/auth');
-=======
 const auth = require('./shared/auth');
->>>>>>> Refactored auth
 const config = require('../config/server');
 const logger = require('./shared/logger');
 const router = require('./router');

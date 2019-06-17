@@ -1,7 +1,7 @@
 'use strict';
 
-const { createError } = require('../shared/error/helpers');
 const Audience = require('../shared/auth/audience');
+const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND, NO_CONTENT } = require('http-status-codes');
 const { User } = require('../shared/database');
 
@@ -19,9 +19,10 @@ function forgotPassword({ body }, res) {
     .then(() => res.end());
 }
 
-function resetPassword({ body: { password }, user }, res) {
+function resetPassword({ body, user }, res) {
+  const { password } = body;
   return user.update({ password })
-  .then(() => res.sendStatus(NO_CONTENT));
+    .then(() => res.sendStatus(NO_CONTENT));
 }
 
 function login({ user }, res) {

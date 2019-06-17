@@ -1,8 +1,8 @@
 'use strict';
 
-const { ExtractJwt, Strategy } = require('passport-jwt');
 const Audience = require('./audience');
-const config = require('../../../config/server/auth');
+const config = require('../../../config/server').auth;
+const { ExtractJwt, Strategy } = require('passport-jwt');
 const jwt = require('jsonwebtoken');
 const LocalStrategy = require('passport-local');
 const passport = require('passport');
@@ -20,15 +20,11 @@ passport.use(new LocalStrategy(options, (email, password, done) => {
     .error(err => done(err, false));
 }));
 
-const jwtOptions = {
+passport.use(new Strategy({
   ...config,
+  audience: Audience.Scope.Access,
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme(config.scheme),
   secretOrKey: config.secret
-};
-
-passport.use(new Strategy({
-  ...jwtOptions,
-  audience: Audience.Scope.Access
 }, verify));
 
 passport.use('token', new Strategy({
@@ -46,8 +42,8 @@ module.exports = {
     return passport.initialize(options);
   },
   authenticate(strategy, options = {}) {
-    // NOTE:  passport to forward errors down the middleware chain:
-    // https://github.com/jaredhanson/passport/blob/ad5fe1dfaeb79f81ba21f99e6025daa0dec87e6e/lib/middleware/authenticate.js#L171
+    // NOTE: Setup passport to forward errors down the middleware chain
+    // https://github.com/jaredhanson/passport/blob/ad5fe1df/lib/middleware/authenticate.js#L171
     return passport.authenticate(strategy, { ...options, failWithError: true });
   }
 };
@@ -60,8 +56,8 @@ function verify(payload, done) {
 
 function secretOrKeyProvider(_, rawToken, done) {
   const { id } = jwt.decode(rawToken);
-  return User.findByPk(id)
+  return User.findByPk(id, { rejectOnEmpty: true })
     .then(user => user.getTokenSecret())
     .then(secret => done(null, secret))
-    .error(err => done(err, false));
+    .catch(err => done(err));
 }

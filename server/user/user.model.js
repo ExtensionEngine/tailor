@@ -2,6 +2,7 @@
 
 const Audience = require('../shared/auth/audience');
 const bcrypt = require('bcrypt');
+const { callbackify } = require('util');
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
@@ -10,6 +11,8 @@ const Promise = require('bluebird');
 const { user: Role } = require('../../config/shared').role;
 
 const noop = Function.prototype;
+const sendInvite = callbackify(mail.invite);
+const sendPasswordReset = callbackify(mail.resetPassword);
 
 class User extends Model {
   static fields({ DATE, ENUM, STRING, VIRTUAL }) {
@@ -93,14 +96,14 @@ class User extends Model {
     };
   }
 
-  static invite(user, emailCb = noop) {
+  static invite(user, mailCb = noop) {
     return this.create(user)
       .then(user => {
         const token = user.createToken({
           audience: Audience.Scope.Setup,
           expiresIn: '5 days'
         });
-        mail.invite(user, token).asCallback(emailCb);
+        sendInvite(user, token, mailCb);
         return user;
       });
   }
@@ -128,25 +131,26 @@ class User extends Model {
   }
 
   createToken(options = {}) {
-    const { id, email } = this;
-    const payload = { id, email };
-    options.issuer = config.auth.issuer;
-    options.audience = options.audience || Audience.Scope.Access;
+    const payload = { id: this.id, email: this.email };
+    Object.assign(options, {
+      issuer: config.auth.issuer,
+      audience: options.audience || Audience.Scope.Access
+    });
     return jwt.sign(payload, this.getTokenSecret(options.audience), options);
   }
 
-  sendResetToken() {
+  sendResetToken(mailCb = noop) {
     const token = this.createToken({
       audience: Audience.Scope.Setup,
       expiresIn: '5 days'
     });
-    mail.resetPassword(this, token);
+    sendPasswordReset(this, token, mailCb);
   }
 
   getTokenSecret(audience) {
     const { secret } = config.auth;
     if (audience === Audience.Scope.Access) return secret;
-    return `${secret}${this.password}${this.createdAt.getTime()}`;
+    return [secret, this.password, this.createdAt.getTime()].join('');
   }
 }
 
