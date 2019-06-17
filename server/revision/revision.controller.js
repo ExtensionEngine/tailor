@@ -1,11 +1,11 @@
 'use strict';
 
 const { Activity, Revision, TeachingElement, User } = require('../shared/database');
-const { NOT_FOUND, NOT_MODIFIED } = require('http-status-codes');
+const { NOT_FOUND, CONFLICT } = require('http-status-codes');
 const { createError } = require('../shared/error/helpers');
 const { resolveStatics } = require('../shared/storage/helpers');
 
-const isRestored = instance => instance.isSoftDeleted() ? instance : createError(NOT_MODIFIED);
+const isRestored = instance => instance.isSoftDeleted() ? instance : createError(CONFLICT);
 
 function index({ course, query }, res) {
   const { limit, offset, entity, entityId } = query;
