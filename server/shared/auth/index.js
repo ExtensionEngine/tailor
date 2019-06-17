@@ -1,8 +1,8 @@
 'use strict';
 
+const { ExtractJwt, Strategy } = require('passport-jwt');
 const Audience = require('./audience');
 const config = require('../../../config/server').auth;
-const { ExtractJwt, Strategy } = require('passport-jwt');
 const jwt = require('jsonwebtoken');
 const LocalStrategy = require('passport-local');
 const passport = require('passport');

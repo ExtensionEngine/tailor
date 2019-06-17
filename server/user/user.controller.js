@@ -1,8 +1,8 @@
 'use strict';
 
+const { NOT_FOUND, NO_CONTENT } = require('http-status-codes');
 const Audience = require('../shared/auth/audience');
 const { createError } = require('../shared/error/helpers');
-const { NOT_FOUND, NO_CONTENT } = require('http-status-codes');
 const { User } = require('../shared/database');
 
 function index(req, res) {
