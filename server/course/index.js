@@ -14,19 +14,15 @@ const comment = require('../comment');
 const revision = require('../revision');
 const teachingElement = require('../teaching-element');
 
-module.exports = { path: '/courses', router };
-
 router
   .use(hasAccess)
   .param('id', getCourse);
 
-router
-  .route('/')
+router.route('/')
   .get(processQuery, ctrl.index)
   .post(authorize(), ctrl.create);
 
-router
-  .route('/:id')
+router.route('/:id')
   .get(ctrl.get)
   .patch(ctrl.patch)
   .delete(ctrl.remove);
@@ -67,3 +63,8 @@ function hasAccess(req, _res, next) {
       next();
     });
 }
+
+module.exports = {
+  path: '/courses',
+  router
+};

@@ -7,7 +7,6 @@ const router = require('express').Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 router
-  .route('/')
   .get(ctrl.getUrl)
   .post(upload.single('file'), ctrl.upload);
 

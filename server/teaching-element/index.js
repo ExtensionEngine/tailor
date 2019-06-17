@@ -4,13 +4,11 @@ const ctrl = require('./te.controller');
 const processQuery = require('../shared/util/processListQuery')();
 const router = require('express').Router();
 
-router
-  .route('/')
+router.route('/')
   .get(processQuery, ctrl.list)
   .post(ctrl.create);
 
-router
-  .route('/:teId')
+router.route('/:teId')
   .get(ctrl.show)
   .patch(ctrl.patch)
   .delete(ctrl.remove);

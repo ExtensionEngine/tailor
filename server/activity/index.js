@@ -11,13 +11,11 @@ const processQuery = processListQuery({ order: [['position']] });
 
 router.param('activityId', getActivity);
 
-router
-  .route('/')
+router.route('/')
   .get(processQuery, ctrl.list)
   .post(ctrl.create);
 
-router
-  .route('/:activityId')
+router.route('/:activityId')
   .get(ctrl.show)
   .patch(ctrl.patch)
   .delete(ctrl.remove);

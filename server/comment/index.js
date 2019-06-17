@@ -17,13 +17,11 @@ const defaultListQuery = {
 
 router.param('commentId', getComment);
 
-router
-  .route('/')
+router.route('/')
   .get(processQuery(defaultListQuery), ctrl.list)
   .post(ctrl.create);
 
-router
-  .route('/:commentId')
+router.route('/:commentId')
   .get(ctrl.show)
   .patch(canEdit, ctrl.patch)
   .delete(canEdit, ctrl.remove);
