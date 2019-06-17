@@ -69,11 +69,11 @@ export default {
       if (this.isTeachingElement) this.expanded = !this.expanded;
     },
     restoreItem() {
-      const { name: revisionName } = this.revision.state.data;
+      const { name } = this.revision.state.data;
       this.restore(this.revision)
         .then(() => {
           this.resetActivities();
-          this.$snackbar.show(`${revisionName} restored.`);
+          this.$snackbar.show(`${name} restored.`);
         });
     }
   },

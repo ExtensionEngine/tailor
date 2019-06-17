@@ -23,7 +23,8 @@ function restore({ body: { state, entity }, user }, res) {
   const opts = { recursive: true, context: { userId: user.id } };
   const include = [{ model: User, attributes: ['id', 'email'] }];
   const action = entity === 'ACTIVITY' ? restoreActivity : restoreTeachingElement;
-  return action(state.id, opts, include)
+  return action(state.id, opts)
+    .then(() => Revision.findOne({ include, order: [[ 'createdAt', 'DESC' ]] }))
     .then(data => res.json({ data }));
 }
 
@@ -34,22 +35,18 @@ function resolve({ revision }, res) {
   });
 }
 
-function restoreActivity(id, opts, include) {
-  const revisionOpts = { include, order: [[ 'createdAt', 'DESC' ]] };
+function restoreActivity(id, opts) {
   return Activity.findByPk(id, { paranoid: false })
       .then(activity => activity || createError(NOT_FOUND))
       .then(activity => isRestored(activity))
-      .then(activity => activity.removeOrRestore(opts))
-      .then(() => Revision.findOne(revisionOpts));
+      .then(activity => activity.removeOrRestore(opts));
 }
 
-function restoreTeachingElement(id, opts, include) {
-  const revisionOpts = { include, order: [[ 'createdAt', 'DESC' ]] };
+function restoreTeachingElement(id, opts) {
   return TeachingElement.findByPk(id, { paranoid: false })
     .then(teachingElement => teachingElement || createError(NOT_FOUND))
     .then(teachingElement => isRestored(teachingElement))
-    .then(teachingElement => teachingElement.restore(opts))
-    .then(() => Revision.findOne(revisionOpts));
+    .then(teachingElement => teachingElement.restore(opts));
 }
 
 module.exports = {
