@@ -143,58 +143,47 @@ class Activity extends Model {
     let link;
     let origin;
     const TeachingElement = this.sequelize.model('TeachingElement');
-    const tes = await TeachingElement.findAll(
-      { where: { activityId: src.id, detached: false } }
-    );
+    const where = { activityId: src.id, detached: false };
+    const tes = await TeachingElement.findAll({ where });
     const children = await src.getChildren({ where: { detached: false } });
-    try {
-      if (src.originId) {
-        link = await Activity.create({
-          ...pick(src, ['type', 'courseId']),
-          position,
-          parentId,
-          originId: src.originId
-        });
-
-        origin = await src.getOrigin();
-        link.data = origin.data;
-        activities = [ ...activities, link ];
-        if (tes.length) await TeachingElement.linkElements(tes, link);
-        if (!children.length) return activities;
-
-        return Promise.reduce(children, async (acc, child) => {
-          acc.push(child);
-          return Activity.linkActivities(child, link.id, child.position, activities);
-        }, activities);
-      }
-
-      origin = await Activity.create({
-        ...pick(src, ['type', 'data', 'courseId']),
-        position: null
-      });
-      await src.update({
-        originId: origin.id,
-        data: null
-      });
-      src.data = origin.data;
+    if (src.originId) {
       link = await Activity.create({
-        ...pick(origin, ['type', 'courseId']),
+        ...pick(src, ['type', 'courseId']),
         position,
         parentId,
-        originId: origin.id
+        originId: src.originId
       });
+      origin = await src.getOrigin();
       link.data = origin.data;
-      activities = [ ...activities, src, link ];
+      activities = [ ...activities, link ];
       if (tes.length) await TeachingElement.linkElements(tes, link);
       if (!children.length) return activities;
-
       return Promise.reduce(children, async (acc, child) => {
         acc.push(child);
         return Activity.linkActivities(child, link.id, child.position, activities);
       }, activities);
-    } catch (e) {
-      console.log(e);
     }
+
+    origin = await Activity.create({
+      ...pick(src, ['type', 'data', 'courseId']),
+      position: null
+    });
+    await src.update({ originId: origin.id, data: null });
+    src.data = origin.data;
+    link = await Activity.create({
+      ...pick(origin, ['type', 'courseId']),
+      position,
+      parentId,
+      originId: origin.id
+    });
+    link.data = origin.data;
+    activities = [ ...activities, src, link ];
+    if (tes.length) await TeachingElement.linkElements(tes, link);
+    if (!children.length) return activities;
+    return Promise.reduce(children, async (acc, child) => {
+      acc.push(child);
+      return Activity.linkActivities(child, link.id, child.position, activities);
+    }, activities);
   }
 
   static async updateLinkedActivity({ originId }, body, opts) {
@@ -206,12 +195,10 @@ class Activity extends Model {
   static async getLinkedActivities(where) {
     const opts = {
       where,
-      include: [
-        {
-          model: Activity,
-          as: 'origin'
-        }
-      ]
+      include: [{
+        model: Activity,
+        as: 'origin'
+      }]
     };
 
     return Activity.findAll(opts).then(activities => {

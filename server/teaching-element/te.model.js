@@ -160,50 +160,45 @@ class TeachingElement extends Model {
 
   static linkElements(elements, container) {
     const { id: activityId, courseId } = container;
-    try {
-      return Promise.each(elements, async element => {
-        const props = pick(element, [
-          'type',
-          'position',
-          'data',
-          'contentId',
-          'originId',
-          'contentSignature',
-          'refs',
-          'meta'
-        ]);
+    return Promise.each(elements, async element => {
+      const props = pick(element, [
+        'type',
+        'position',
+        'data',
+        'contentId',
+        'originId',
+        'contentSignature',
+        'refs',
+        'meta'
+      ]);
 
-        if (element.originId) {
-          return TeachingElement.create({
-            ...props,
-            activityId,
-            courseId
-          });
-        }
-
-        const origin = await TeachingElement.create({
-          ...props,
-          activityId: null,
-          courseId: null,
-          position: null
-        });
-
-        element.originId = origin.id;
-        element.data = {};
-        await element.save();
-
+      if (element.originId) {
         return TeachingElement.create({
           ...props,
-          data: {},
-          originId: origin.id,
           activityId,
           courseId
         });
+      }
+
+      const origin = await TeachingElement.create({
+        ...props,
+        activityId: null,
+        courseId: null,
+        position: null
       });
-    } catch (e) {
-      console.log(e);
-      return null;
-    }
+
+      element.originId = origin.id;
+      element.data = {};
+      await element.save();
+
+      return TeachingElement.create({
+        ...props,
+        data: {},
+        originId: origin.id,
+        activityId,
+        courseId
+      });
+    });
   }
 
   /**

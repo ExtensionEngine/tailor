@@ -24,25 +24,18 @@ function show({ activity }, res) {
 
 function patch({ activity, body, user }, res) {
   const { originId } = activity;
-  if (originId) {
-    return Activity.updateLinkedActivity(activity, body, {
-      where: { id: originId },
-      context: { userId: user.id }
-    }).then(data => res.json({ data }));
-  }
-
-  return activity.update(body, { context: { userId: user.id } })
+  if (!originId) {
+    return activity.update(body, { context: { userId: user.id } })
     .then(data => res.json({ data }));
+  }
+  return Activity.updateLinkedActivity(activity, body, {
+    where: { id: originId },
+    context: { userId: user.id }
+  }).then(data => res.json({ data }));
 }
 
 function list({ course, query, opts }, res) {
   if (!query.detached) opts.where = { detached: false };
-  opts.include = [
-    {
-      model: Activity,
-      as: 'origin'
-    }
-  ];
   return course.getResolvedActivities(opts)
     .then(data => res.json({ data }));
 }

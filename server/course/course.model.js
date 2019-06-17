@@ -146,6 +146,10 @@ class Course extends Model {
   }
 
   getResolvedActivities(opts) {
+    opts.include = [{
+      model: this.sequelize.model('Activity'),
+      as: 'origin'
+    }];
     return this.getActivities(opts).then(activities => {
       return activities.map(activity => {
         if (!activity.origin) return activity;
