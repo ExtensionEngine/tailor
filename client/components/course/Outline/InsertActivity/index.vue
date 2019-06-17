@@ -102,8 +102,8 @@ export default {
       return getLevel(activity.type).level === getLevel(this.anchor.type).level;
     },
     resolveParent(activity) {
-      const { originId, parentId, id } = this.anchor;
-      return this.isSameLevel(activity) ? parentId : originId || id;
+      const { parentId, id } = this.anchor;
+      return this.isSameLevel(activity) ? parentId : id;
     },
     calculatePosition(activity) {
       const items = getOutlineChildren(this.activities, activity.parentId);

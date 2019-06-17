@@ -27,7 +27,7 @@
             v-show="isEditable"
             :to="{
               name: 'editor',
-              params: { activityId: originId ? originId : id }
+              params: { activityId: id }
             }"
             color="pink"
             outline
@@ -141,12 +141,12 @@ export default {
       return this._cid === this.outlineState.showOptions;
     },
     children() {
-      const { id, originId, activities, structure } = this;
+      const { id, activities, structure } = this;
       const level = this.level + 1;
       const types = map(filter(structure, { level }), 'type');
 
       return filter(activities, it => {
-        return (originId || id) === it.parentId && types.includes(it.type);
+        return id === it.parentId && types.includes(it.type);
       }).sort((x, y) => x.position - y.position);
     },
     icon() {
