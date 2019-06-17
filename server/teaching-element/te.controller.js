@@ -3,6 +3,7 @@
 const { Activity, TeachingElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
+const omit = require('lodash/omit');
 const { Op } = require('sequelize');
 const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
@@ -13,7 +14,10 @@ function list({ course, query, opts }, res) {
     const where = { [Op.or]: [] };
     if (activityId) where[Op.or].push({ id: parseInt(activityId, 10) });
     if (parentId) where[Op.or].push({ parentId: parseInt(parentId, 10) });
-    opts.include = { model: Activity, attributes: [], where };
+    opts.include = [
+      { model: Activity, attributes: [], where },
+      { model: TeachingElement, as: 'origin' }
+    ];
   }
   if (!query.detached) opts.where = { detached: false };
 
@@ -38,15 +42,32 @@ function create({ body, params, user }, res) {
     .then(asset => res.json({ data: asset }));
 }
 
-function patch({ body, params, user }, res) {
+async function patch({ body, params, user }, res) {
   const attrs = ['refs', 'type', 'data', 'meta', 'position', 'courseId', 'deletedAt'];
   const data = pick(body, attrs);
   const paranoid = body.paranoid !== false;
-  return TeachingElement.findByPk(params.teId, { paranoid })
-    .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
-    .then(asset => asset.update(data, { context: { userId: user.id } }))
-    .then(asset => resolveStatics(asset))
-    .then(asset => res.json({ data: asset }));
+  const include = {
+    model: TeachingElement,
+    as: 'origin'
+  };
+
+  const element = await TeachingElement.findByPk(params.teId, { paranoid, include });
+  if (!element) return createError(NOT_FOUND, 'TEL not found');
+
+  if (!element.origin) {
+    return element.update(data, { context: { userId: user.id } })
+      .then(element => resolveStatics(element))
+      .then(element => res.json({ data: element }));
+  }
+
+  return element.origin.update(
+    { ...omit(data, 'position', 'deletedAt') },
+    { context: { userId: user.id } }
+  ).then(origin => resolveStatics(origin))
+  .then(origin => {
+    element.data = origin.data;
+    res.json({ data: element });
+  });
 }
 
 function remove({ params, user }, res) {

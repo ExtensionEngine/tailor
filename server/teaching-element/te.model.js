@@ -8,6 +8,7 @@ const isNumber = require('lodash/isNumber');
 const { Model, Op } = require('sequelize');
 const pick = require('lodash/pick');
 const { processStatics, resolveStatics } = require('../shared/storage/helpers');
+const Promise = require('bluebird');
 
 const pruneVirtualProps = element => {
   const assets = get(element, 'data.assets', {});
@@ -17,7 +18,7 @@ const pruneVirtualProps = element => {
 
 class TeachingElement extends Model {
   static fields(DataTypes) {
-    const { BOOLEAN, DATE, DOUBLE, JSONB, STRING, UUID, UUIDV4 } = DataTypes;
+    const { BOOLEAN, DATE, INTEGER, DOUBLE, JSONB, STRING, UUID, UUIDV4 } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -56,6 +57,9 @@ class TeachingElement extends Model {
         defaultValue: false,
         allowNull: false
       },
+      originId: {
+        type: INTEGER
+      },
       detached: {
         type: BOOLEAN,
         defaultValue: false,
@@ -82,6 +86,14 @@ class TeachingElement extends Model {
     });
     this.belongsTo(Course, {
       foreignKey: { name: 'courseId', field: 'course_id' }
+    });
+    this.belongsTo(this, {
+      as: 'origin',
+      foreignKey: { name: 'originId', field: 'origin_id' }
+    });
+    this.hasMany(this, {
+      as: 'links',
+      foreignKey: { name: 'originId', field: 'origin_id' }
     });
   }
 
@@ -120,9 +132,15 @@ class TeachingElement extends Model {
 
   static fetch(opt) {
     return isNumber(opt)
-      ? TeachingElement.findByPk(opt).then(it => it && resolveStatics(it))
+      ? TeachingElement.findByPk(opt).then(it => {
+        if (it.origin) it.data = it.origin.data;
+        return resolveStatics(it);
+      })
       : TeachingElement.findAll(opt)
-          .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
+          .then(arr => Promise.all(arr.map(it => {
+            if (it.origin) it.data = it.origin.data;
+            return resolveStatics(it);
+          })));
   }
 
   static cloneElements(src, container, transaction) {
@@ -138,6 +156,54 @@ class TeachingElement extends Model {
         'meta'
       ]), { activityId, courseId });
     }), { returning: true, transaction });
+  }
+
+  static linkElements(elements, container) {
+    const { id: activityId, courseId } = container;
+    try {
+      return Promise.each(elements, async element => {
+        const props = pick(element, [
+          'type',
+          'position',
+          'data',
+          'contentId',
+          'originId',
+          'contentSignature',
+          'refs',
+          'meta'
+        ]);
+
+        if (element.originId) {
+          return TeachingElement.create({
+            ...props,
+            activityId,
+            courseId
+          });
+        }
+
+        const origin = await TeachingElement.create({
+          ...props,
+          activityId: null,
+          courseId: null,
+          position: null
+        });
+
+        element.originId = origin.id;
+        element.data = {};
+        await element.save();
+
+        return TeachingElement.create({
+          ...props,
+          data: {},
+          originId: origin.id,
+          activityId,
+          courseId
+        });
+      });
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 
   /**
