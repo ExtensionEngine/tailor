@@ -7,20 +7,18 @@ const fecha = require('fecha');
 const logger = require('../logger');
 const path = require('path');
 const pick = require('lodash/pick');
+const { promisify } = require('util');
+const urlJoin = require('url-join');
+const { URL } = require('url');
 const wrap = require('word-wrap');
 
-const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
+const from = `${config.sender.name} <${config.sender.address}>`;
 const server = email.server.connect(config);
 logger.debug(getConfig(server), '📧  SMTP client created');
 
 const templatesDir = path.join(__dirname, './templates/');
-const resetUrl = user => `${origin}/#/reset-password/${user.token}`;
-
-function send(message) {
-  return new Promise((resolve, reject) => {
-    server.send(message, (err, msg) => err ? reject(err) : resolve(msg));
-  });
-}
+const resetUrl = user => urlJoin(origin, '/#/reset-password/', user.token);
+const send = promisify(server.send.bind(server));
 
 function invite(user) {
   const href = resetUrl(user);
@@ -29,9 +27,9 @@ function invite(user) {
   const data = { href, origin, hostname, recipient, wrap: () => wrapText };
   const html = renderHtml(path.join(templatesDir, 'welcome.mjml'), data);
   const text = renderText(path.join(templatesDir, 'welcome.txt'), data);
-  logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending invite email to:', recipient);
+  logger.debug({ recipient, sender: from }, '📧  Sending invite email to:', recipient);
   return send({
-    from: EMAIL_ADDRESS,
+    from,
     to: recipient,
     subject: 'Invite',
     text,
@@ -45,9 +43,9 @@ function resetPassword(user) {
   const data = { href, recipient, wrap: () => wrapText };
   const html = renderHtml(path.join(templatesDir, 'reset.mjml'), data);
   const text = renderText(path.join(templatesDir, 'reset.txt'), data);
-  logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending reset password email to:', recipient);
+  logger.debug({ recipient, sender: from }, '📧  Sending reset password email to:', recipient);
   return send({
-    from: EMAIL_ADDRESS,
+    from,
     to: recipient,
     subject: 'Reset password',
     text,
@@ -69,9 +67,9 @@ function commentsList({ email, comments, since }) {
   const data = { comments, recipient, since, format: () => format, wrap: () => wrapText };
   const html = renderHtml(path.join(templatesDir, 'comments.mjml'), data);
   const text = renderText(path.join(templatesDir, 'comments.txt'), data);
-  logger.debug({ recipient, sender: EMAIL_ADDRESS }, '📧  Sending comments email to:', recipient);
+  logger.debug({ recipient, sender: from }, '📧  Sending comments email to:', recipient);
   return send({
-    from: EMAIL_ADDRESS,
+    from,
     to: recipient,
     subject: 'Comments list',
     text,
