@@ -2,7 +2,7 @@
   <div :class="[{ vertical }]" class="active-users">
     <v-avatar
       v-tooltip="getTooltip(user)"
-      v-for="user in users"
+      v-for="user in activeUsers"
       :key="user.id"
       :color="user.palette.background"
       :style="{ boxShadow: getBorder(user.palette) }"
@@ -24,6 +24,12 @@ export default {
     vertical: { type: Boolean, default: false },
     rightTooltip: { type: Boolean, default: false }
   },
+  data() {
+    return {
+      activeUsers: [],
+      setter: null
+    };
+  },
   methods: {
     getBorder({ border }) {
       return `0 0 0 2px ${border}`;
@@ -34,6 +40,22 @@ export default {
         placement: this.rightTooltip ? 'right' : 'bottom.end',
         offset: this.rightTooltip ? 15 : 5
       };
+    },
+    setActiveUsers(users) {
+      this.setter = setTimeout(() => (this.activeUsers = users), 300);
+    }
+  },
+  watch: {
+    users: {
+      handler(val, oldVal) {
+        if (!this.activeUsers.length) {
+          this.activeUsers = this.users;
+          return;
+        }
+        clearTimeout(this.setter);
+        this.setActiveUsers(this.users);
+      },
+      immediate: true
     }
   }
 };
