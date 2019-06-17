@@ -2,7 +2,7 @@ import path from 'path';
 import request from './request';
 
 const urls = {
-  base: courseId => path.join('/courses/', courseId, '/activities')
+  base: courseId => path.join('/courses/', String(courseId), '/activities')
 };
 
 function getActivities(courseId, params) {
