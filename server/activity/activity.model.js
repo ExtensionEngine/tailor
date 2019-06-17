@@ -3,6 +3,7 @@
 const { getSiblingLevels } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
+const hooks = require('./hooks');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -56,6 +57,10 @@ class Activity extends Model {
         field: 'deleted_at'
       }
     };
+  }
+
+  static hooks(Hooks, models) {
+    hooks.add(this, Hooks, models);
   }
 
   static associate({ Comment, Course, TeachingElement }) {
@@ -134,74 +139,62 @@ class Activity extends Model {
     });
   }
 
-  static async linkActivities(src, parentId = null, position = null, opts) {
-    const { transaction } = opts;
-
-    if (src.originId) {
-      return Activity.create({
-        ...pick(src, ['type', 'courseId']),
-        position,
-        parentId,
-        originId: src.originId
-      }, opts).then(linked => ({
-        originId: linked.originId,
-        id: [linked.id]
-      }));
-    }
-
-    const origin = await Activity.create({
-      ...pick(src, ['type', 'data', 'courseId']),
-      position: null
-    }, opts);
-
-    await src.update({ originId: origin.id }, opts);
-
+  static async linkActivities(src, parentId = null, position = null, activities = []) {
+    let link;
+    let origin;
     const TeachingElement = this.sequelize.model('TeachingElement');
     const tes = await TeachingElement.findAll(
-      { where: { activityId: src.id, detached: false } },
-      { transaction }
+      { where: { activityId: src.id, detached: false } }
     );
-    const children = await Activity.findAll(
-      { where: { parentId: src.id, detached: false } },
-      { transaction }
-    );
+    const children = await src.getChildren({ where: { detached: false } });
+    try {
+      if (src.originId) {
+        link = await Activity.create({
+          ...pick(src, ['type', 'courseId']),
+          position,
+          parentId,
+          originId: src.originId
+        });
 
-    if (tes.length) {
-      await Promise.each(tes,
-        te => te.update(
-          { activityId: origin.id },
-          { transaction }
-        )
-      );
-    }
+        origin = await src.getOrigin();
+        link.data = origin.data;
+        activities = [ ...activities, link ];
+        if (tes.length) await TeachingElement.linkElements(tes, link);
+        if (!children.length) return activities;
 
-    if (children.length) {
-      await Promise.each(children,
-        child => child.update(
-          { parentId: origin.id },
-          { transaction }
-        )
-      );
-    }
-
-    if (parentId) {
-      const parent = await Activity.findOne({ where: { parentId } });
-      if (parent && parent.originId) {
-        parentId = parent.originId;
+        return Promise.reduce(children, async (acc, child) => {
+          acc.push(child);
+          return Activity.linkActivities(child, link.id, child.position, activities);
+        }, activities);
       }
+
+      origin = await Activity.create({
+        ...pick(src, ['type', 'data', 'courseId']),
+        position: null
+      });
+      await src.update({
+        originId: origin.id,
+        data: null
+      });
+      src.data = origin.data;
+      link = await Activity.create({
+        ...pick(origin, ['type', 'courseId']),
+        position,
+        parentId,
+        originId: origin.id
+      });
+      link.data = origin.data;
+      activities = [ ...activities, src, link ];
+      if (tes.length) await TeachingElement.linkElements(tes, link);
+      if (!children.length) return activities;
+
+      return Promise.reduce(children, async (acc, child) => {
+        acc.push(child);
+        return Activity.linkActivities(child, link.id, child.position, activities);
+      }, activities);
+    } catch (e) {
+      console.log(e);
     }
-
-    const link = await Activity.create({
-      ...pick(origin, ['type', 'courseId']),
-      position,
-      parentId,
-      originId: origin.id
-    }, opts);
-
-    return {
-      originId: origin.id,
-      id: [src.id, link.id]
-    };
   }
 
   static async updateLinkedActivity({ originId }, body, opts) {
@@ -232,9 +225,8 @@ class Activity extends Model {
   }
 
   link({ parentId, position }) {
-    return this.sequelize.transaction(transaction =>
-      Activity.linkActivities(this, parentId, position, { transaction })
-    );
+    return Activity.linkActivities(this, parentId, position)
+      .then(activities => activities);
   }
 
   /**
@@ -280,7 +272,7 @@ class Activity extends Model {
   }
 
   remove(options = {}) {
-    if (!options.recursive) return this.destroy(options);
+    if (!options.recursive || this.originId) return this.destroy(options);
     return this.sequelize.transaction(t => {
       return this.descendants({ attributes: ['id'] })
         .then(descendants => {
