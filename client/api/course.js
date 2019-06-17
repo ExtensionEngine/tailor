@@ -3,9 +3,9 @@ import request from './request';
 
 const urls = {
   base: () => '/courses',
-  contentInventory: (courseId) => path.join(urls.base(), courseId, '/content-inventory'),
-  publish: (courseId) => path.join(urls.base(), courseId, '/publish'),
-  users: (courseId, userId = '') => path.join(urls.base(), courseId, '/users', userId)
+  contentInventory: courseId => path.join(urls.base(), String(courseId), '/content-inventory'),
+  publish: courseId => path.join(urls.base(), String(courseId), '/publish'),
+  users: (courseId, userId = '') => path.join(urls.base(), String(courseId), '/users', userId)
 };
 
 function getCourses(params) {
