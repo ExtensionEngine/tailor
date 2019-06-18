@@ -1,7 +1,7 @@
 import request from './request';
 
 function getActiveUsers(id) {
-  return request.post(`/courses/${id}/get-active-users`).then(res => res.data.data);
+  return request.get(`/courses/${id}/get-active-users`).then(res => res.data.data);
 }
 
 function addActiveUser(context) {
