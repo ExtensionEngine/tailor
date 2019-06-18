@@ -10,7 +10,7 @@
         <div class="description">{{ description }}</div>
         <div class="name">{{ revision.user.email }}</div>
       </div>
-      <v-icon v-if="isRemoved" @click.stop="restoreItem" class="restore">
+      <v-icon v-if="isRemoval" @click.stop="restoreItem" class="restore">
         mdi mdi-loop
       </v-icon>
       <div class="date">{{ date }}</div>
@@ -53,7 +53,7 @@ export default {
     date: vm => fecha.format(vm.revision.createdAt, 'M/D/YY HH:mm'),
     description: vm => getFormatDescription(vm.revision, vm.activity),
     isTeachingElement: vm => vm.revision.entity === 'TEACHING_ELEMENT',
-    isRemoved: vm => vm.revision.operation === 'REMOVE'
+    isRemoval: vm => vm.revision.operation === 'REMOVE'
 
   },
   methods: {
@@ -74,7 +74,8 @@ export default {
         .then(() => {
           this.resetActivities();
           this.$snackbar.show(`${name} restored.`);
-        });
+        })
+        .catch(() => this.$snackbar.error('An error has occurred!'));
     }
   },
   components: { EntityRevisions }
@@ -132,9 +133,7 @@ export default {
 }
 
 .restore {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+  @include circle(32px);
 
   &:hover {
     color: #fff;

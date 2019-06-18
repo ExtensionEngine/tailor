@@ -1,22 +1,24 @@
 'use strict';
 
-const replaceEnum = require('sequelize-replace-enum-postgres').default;
+const { alterEnum } = require('../helpers');
+const { Sequelize } = require('sequelize');
 
 const options = {
-  tableName: 'revision',
-  columnName: 'operation',
-  enumName: 'enum_revision_operation'
+  table: 'revision',
+  column: 'operation',
+  allowNull: false
+};
+
+const newOptions = {
+  ...options,
+  type: Sequelize.ENUM(['CREATE', 'UPDATE', 'REMOVE', 'RESTORE'])
+};
+const fallbackOptions = {
+  ...options,
+  type: Sequelize.ENUM(['CREATE', 'UPDATE', 'REMOVE'])
 };
 
 module.exports = {
-  up: queryInterface => replaceEnum({
-    queryInterface,
-    ...options,
-    newValues: ['CREATE', 'UPDATE', 'REMOVE', 'RESTORE']
-  }),
-  down: queryInterface => replaceEnum({
-    queryInterface,
-    ...options,
-    newValues: ['CREATE', 'UPDATE', 'REMOVE']
-  })
+  up: queryInterface => alterEnum(queryInterface, newOptions),
+  down: queryInterface => alterEnum(queryInterface, fallbackOptions)
 };

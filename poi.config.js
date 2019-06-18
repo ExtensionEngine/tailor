@@ -67,7 +67,10 @@ module.exports = {
     }, {
       resolve: 'poi-preset-sass-resources',
       options: {
-        resources: './client/assets/stylesheets/common/_variables.scss'
+        resources: [
+          './client/assets/stylesheets/common/_variables.scss',
+          './client/assets/stylesheets/common/_mixins.scss'
+        ]
       }
     }
   ],

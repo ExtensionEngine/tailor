@@ -166,10 +166,10 @@ class Activity extends Model {
       });
   }
 
-  removeOrRestore(opts = {}) {
-    const { recursive, soft } = opts;
-    if (!recursive) return this.deletedAt ? this.restore(opts) : this.destroy(opts);
-    return this.sequelize.transaction(t => {
+  removeOrRestore({ recursive = true, ...options } = {}) {
+    if (!recursive) return this.deletedAt ? this.restore(options) : this.destroy(options);
+    return this.sequelize.transaction(transaction => {
+      Object.assign(options, { transaction, removed: this.deletedAt });
       return this.descendants({ attributes: ['id'] })
         .then(descendants => {
           descendants.all = [...descendants.nodes, ...descendants.leaves];
@@ -179,17 +179,15 @@ class Activity extends Model {
           const TeachingElement = this.sequelize.model('TeachingElement');
           const activities = map(descendants.all, 'id');
           const where = { activityId: [...activities, this.id] };
-          return removeOrRestoreAll(TeachingElement, where, soft, this.deletedAt)
+          return removeOrRestoreAll(TeachingElement, { ...options, where })
             .then(() => descendants);
         })
         .then(descendants => {
           const activities = map(descendants.nodes, 'id');
           const where = { parentId: [...activities, this.id] };
-          return removeOrRestoreAll(Activity, where, soft, this.deletedAt)
-            .then(() => descendants);
+          return removeOrRestoreAll(Activity, { ...options, where });
         })
-        .then(() => this.deletedAt ? this.restore(opts) : this.destroy(opts))
-        .then(() => this);
+        .then(() => this.removeOrRestore({ ...options, recursive: false }));
     });
   }
 
@@ -205,9 +203,9 @@ class Activity extends Model {
   }
 }
 
-function removeOrRestoreAll(Model, where = {}, soft = false, removed) {
-  if (!removed && !soft) return Model.destroy({ where });
-  return Model.update({ detached: !removed }, { where });
+function removeOrRestoreAll(Model, { soft = false, removed, ...options }) {
+  if (!removed && !soft) return Model.destroy(options);
+  return Model.update({ detached: !removed }, options);
 }
 
 module.exports = Activity;

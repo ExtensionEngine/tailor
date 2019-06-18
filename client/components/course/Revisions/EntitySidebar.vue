@@ -108,10 +108,8 @@ $revision-padding: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 32px;
-    height: 32px;
     margin-right: 8px;
-    border-radius: 50%;
+    @include circle(32px);
 
     &:hover {
       color: #fff;

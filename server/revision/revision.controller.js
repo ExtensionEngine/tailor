@@ -5,7 +5,7 @@ const { NOT_FOUND, CONFLICT } = require('http-status-codes');
 const { createError } = require('../shared/error/helpers');
 const { resolveStatics } = require('../shared/storage/helpers');
 
-const isRestored = instance => instance.isSoftDeleted() ? instance : createError(CONFLICT);
+const isRestored = instance => !instance.isSoftDeleted();
 
 function index({ course, query }, res) {
   const { limit, offset, entity, entityId } = query;
@@ -20,10 +20,10 @@ function index({ course, query }, res) {
 }
 
 function restore({ body: { state, entity }, user }, res) {
-  const opts = { recursive: true, context: { userId: user.id } };
+  const options = { context: { userId: user.id } };
   const include = [{ model: User, attributes: ['id', 'email'] }];
   const action = entity === 'ACTIVITY' ? restoreActivity : restoreTeachingElement;
-  return action(state.id, opts)
+  return action(state.id, options)
     .then(() => Revision.findOne({ include, order: [[ 'createdAt', 'DESC' ]] }))
     .then(data => res.json({ data }));
 }
@@ -35,18 +35,18 @@ function resolve({ revision }, res) {
   });
 }
 
-function restoreActivity(id, opts) {
+function restoreActivity(id, options) {
   return Activity.findByPk(id, { paranoid: false })
-      .then(activity => activity || createError(NOT_FOUND))
-      .then(activity => isRestored(activity))
-      .then(activity => activity.removeOrRestore(opts));
+    .tap(activity => activity || createError(NOT_FOUND))
+    .tap(activity => isRestored(activity) && createError(CONFLICT))
+    .then(activity => activity.removeOrRestore(options));
 }
 
-function restoreTeachingElement(id, opts) {
+function restoreTeachingElement(id, options) {
   return TeachingElement.findByPk(id, { paranoid: false })
-    .then(teachingElement => teachingElement || createError(NOT_FOUND))
-    .then(teachingElement => isRestored(teachingElement))
-    .then(teachingElement => teachingElement.restore(opts));
+    .tap(teachingElement => teachingElement || createError(NOT_FOUND))
+    .tap(teachingElement => isRestored(teachingElement) && createError(CONFLICT))
+    .then(teachingElement => teachingElement.restore(options));
 }
 
 module.exports = {

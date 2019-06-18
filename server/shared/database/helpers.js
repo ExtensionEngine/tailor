@@ -20,7 +20,8 @@ module.exports = {
   sql,
   getValidator,
   setLogging,
-  wrapAsyncMethods
+  wrapAsyncMethods,
+  alterEnum
 };
 
 function wrapAsyncMethods(Model, wrapper = require('bluebird').method) {
@@ -67,4 +68,13 @@ function transformProperties(obj, cb) {
     const val = cb(descriptors[name], name);
     if (val) obj[name] = val;
   });
+}
+
+// NOTE: Enables safe altering of ENUM values: https://git.io/fxzeS
+function alterEnum(queryInterface, { table, column, ...options } = {}) {
+  const { QueryGenerator, sequelize } = queryInterface;
+  const str = { type: Sequelize.STRING, allowNull: false };
+  return queryInterface.changeColumn(table, column, str)
+    .then(() => sequelize.query(QueryGenerator.pgEnumDrop(table, column)))
+    .then(() => queryInterface.changeColumn(table, column, options));
 }

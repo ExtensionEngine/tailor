@@ -1,6 +1,6 @@
 import pick from 'lodash/pick';
-import request from '../../api/request';
-import VuexCollection from '../helpers/collection';
+import revisionApi from '@/api/revision';
+import VuexCollection from '@/store/helpers/collection';
 
 const { state, build, getter, action, mutation } = new VuexCollection('revisions');
 const PAGINATION_DEFAULTS = { offset: 0, limit: 25 };
@@ -45,10 +45,8 @@ action(function fetch() {
 });
 
 action(function restore(revision) {
-  const { id, courseId } = revision.state;
-  const url = `/courses/${courseId}/revisions/${id}/restore`;
-  return request.post(url, pick(revision, ['state', 'entity']))
-    .then(({ data: { data } }) => this.commit('add', data));
+  return revisionApi.restore(revision.state, pick(revision, ['state', 'entity']))
+    .then(data => this.commit('add', data));
 });
 
 action(function resetPagination() {
