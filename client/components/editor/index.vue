@@ -50,7 +50,6 @@ import * as config from 'shared/activities';
 import { getElementId, isQuestion } from 'tce-core/utils';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ActiveUsers from 'components/common/ActiveUsers';
-import activeUsersApi from '../../api/activeUsers';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
@@ -107,6 +106,8 @@ export default {
   },
   methods: {
     ...mapActions({
+      addActiveUser: 'add',
+      removeActiveUser: 'remove',
       subscribeActiveUsers: 'subscribe',
       fetchActiveUsers: 'fetch'
     }, 'activeUsers'),
@@ -179,15 +180,15 @@ export default {
     this.subscribeActiveUsers(courseId);
     await this.fetchActiveUsers(courseId);
     const context = { courseId, activityId, created: new Date() };
-    await activeUsersApi.add(context);
-    this.timer = setInterval(() => activeUsersApi.add(context), pingInterval);
+    await this.addActiveUser(context);
+    this.timer = setInterval(() => this.addActiveUser(context), pingInterval);
   },
   beforeDestroy() {
     this.unsubscribe();
   },
   beforeRouteLeave(to, from, next) {
     const { courseId, activityId } = this;
-    activeUsersApi.remove({ courseId, activityId });
+    this.removeActiveUser({ courseId, activityId });
     clearInterval(this.timer);
     next();
   },

@@ -53,6 +53,14 @@ action(function fetch(courseId) {
     .then(({ activeUsers }) => this.commit('save', activeUsers));
 });
 
+action(function add(context) {
+  return api.add(context);
+});
+
+action(function remove(context) {
+  return api.remove(context);
+});
+
 mutation(function save(users) {
   const { activeUsers } = this.state;
   map(users, (user) => {

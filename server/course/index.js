@@ -1,6 +1,5 @@
 'use strict';
 
-const { subscribe } = require('../shared/activeUserChannel');
 const { authorize } = require('../shared/auth/mw');
 const { Course } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
@@ -9,6 +8,7 @@ const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const ctrl = require('./course.controller');
 const processQuery = require('../shared/util/processListQuery')();
 const router = require('express').Router();
+const { subscribe } = require('../shared/activeUserChannel');
 
 router.get('/courses/:id/active-users/subscribe', sse, subscribe);
 

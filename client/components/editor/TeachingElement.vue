@@ -23,12 +23,12 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ActiveUsers from 'components/common/ActiveUsers';
-import activeUsersApi from '../../api/activeUsers';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
 import first from 'lodash/first';
 import orderBy from 'lodash/orderBy';
+import { pingInterval } from 'shared/active-users';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -64,6 +64,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      addActiveUser: 'add',
+      removeActiveUser: 'remove'
+    }, 'activeUsers'),
     ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
     ...mapMutations({ addElement: 'add' }, 'tes'),
     add(element) {
@@ -95,12 +99,12 @@ export default {
       const { courseId, activityId, contentId } = this.element;
       const context = { courseId, activityId, contentId, created: new Date() };
       if (this.isFocused) {
-        activeUsersApi.add(context);
-        this.timer = setInterval(() => activeUsersApi.add(context), 20000);
+        this.addActiveUser(context);
+        this.timer = setInterval(() => this.addActiveUser(context), pingInterval);
         return;
       }
       clearInterval(this.timer);
-      activeUsersApi.remove(context);
+      this.removeActiveUser(context);
     }
   },
   created() {
@@ -109,7 +113,7 @@ export default {
   beforeDestroy() {
     const { courseId, activityId, contentId } = this.element;
     clearInterval(this.timer);
-    activeUsersApi.remove({ courseId, activityId, contentId });
+    this.removeActiveUser({ courseId, activityId, contentId });
   },
   components: { ActiveUsers, ContainedContent }
 };
