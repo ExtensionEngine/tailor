@@ -61,7 +61,7 @@ import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
 import MetaSidebar from './MetaSidebar';
 import orderBy from 'lodash/orderBy';
-import { pingInterval } from '../../../config/shared/activeUsers';
+import { pingInterval } from 'shared/active-users';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';

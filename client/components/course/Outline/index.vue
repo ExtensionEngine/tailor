@@ -44,7 +44,7 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import map from 'lodash/map';
 import NoActivities from './NoActivities';
-import { pingInterval } from '../../../../config/shared/activeUsers';
+import { pingInterval } from 'shared/active-users';
 import reorderMixin from './reorderMixin';
 import Sidebar from '../Sidebar';
 
