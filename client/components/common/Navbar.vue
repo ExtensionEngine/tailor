@@ -39,8 +39,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
 import { getAcronym } from 'utils/course';
+import { mapActions } from 'vuex';
+import { mapGetters } from 'vuex-module';
 
 export default {
   name: 'main-toolbar',
@@ -58,7 +59,7 @@ export default {
       return this.repository ? getAcronym(this.repository.name) : null;
     }
   },
-  methods: mapActions(['logout'])
+  methods: mapActions('auth', ['logout'])
 };
 </script>
 

@@ -25,7 +25,7 @@
 
 <script>
 import { delay } from 'bluebird';
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 
 export default {
   data() {
@@ -36,7 +36,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['forgotPassword']),
+    ...mapActions('auth', ['forgotPassword']),
     submit() {
       // TODO: Temp
       this.showMessage = true;

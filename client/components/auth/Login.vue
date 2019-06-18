@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 const LOGIN_ERR_MESSAGE = 'User email and password do not match';
 
 export default {
@@ -43,9 +43,9 @@ export default {
       message: ''
     };
   },
-  computed: mapGetters(['user']),
+  computed: mapGetters('auth', ['user']),
   methods: {
-    ...mapActions(['login']),
+    ...mapActions('auth', ['login']),
     submit() {
       this.message = '';
       this.login({ email: this.email, password: this.password })

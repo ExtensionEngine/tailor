@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -55,7 +55,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['resetPassword']),
+    ...mapActions('auth', ['resetPassword']),
     submit() {
       const token = this.$route.params.token;
       this.$validator.validateAll().then(result => {
