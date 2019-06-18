@@ -112,8 +112,8 @@ export default {
   },
   beforeDestroy() {
     const { courseId, activityId, contentId } = this.element;
-    clearInterval(this.timer);
     this.removeActiveUser({ courseId, activityId, contentId });
+    clearInterval(this.timer);
   },
   components: { ActiveUsers, ContainedContent }
 };
