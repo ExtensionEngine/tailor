@@ -12,6 +12,7 @@ import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
 
 const { build, getter, action, mutation, state } = new VuexModule('activeUsers');
+const subscribeUrl = courseId => `/api/v1/courses/${courseId}/active-users/subscribe`;
 let SSE_CLIENT;
 
 state({
@@ -34,7 +35,7 @@ getter(function usedPalettes() {
 
 action(function subscribe(courseId) {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
-  SSE_CLIENT = new SSEClient(`/api/v1/courses/${courseId}/active-users/subscribe`);
+  SSE_CLIENT = new SSEClient(subscribeUrl(courseId));
   SSE_CLIENT.subscribe('active_user_add', ({ user, context }) => {
     this.commit('sseAdd', { user, context });
   });
