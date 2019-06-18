@@ -47,7 +47,7 @@ export default {
   },
   watch: {
     users: {
-      handler(val, oldVal) {
+      handler() {
         if (!this.activeUsers.length) {
           this.activeUsers = this.users;
           return;
