@@ -1,5 +1,6 @@
 'use strict';
 
+const { router: activeUsersRouter } = require('../active-user');
 const { authorize } = require('../shared/auth/mw');
 const { Course } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
@@ -8,7 +9,7 @@ const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const ctrl = require('./course.controller');
 const processQuery = require('../shared/util/processListQuery')();
 const router = require('express').Router();
-const { subscribe } = require('../shared/activeUserChannel');
+const { subscribe } = require('../active-user/channel');
 
 router.get('/courses/:id/active-users/subscribe', sse, subscribe);
 
@@ -26,9 +27,7 @@ router
   .post('/courses/:id/users', ctrl.upsertUser)
   .delete('/courses/:id/users/:userId', ctrl.removeUser)
   .get('/courses/:id/contentInventory', ctrl.exportContentInventory)
-  .get('/courses/:id/active-users', ctrl.getActiveUsers)
-  .post('/courses/:id/active-users', ctrl.addActiveUser)
-  .post('/courses/:id/active-users/remove', ctrl.removeActiveUser);
+  .use('/courses/:id/active-users', activeUsersRouter);
 
 function getCourse(req, _res, next, id) {
   return Course.findByPk(id, { paranoid: false })
