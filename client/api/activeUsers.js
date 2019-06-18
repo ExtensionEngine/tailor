@@ -1,17 +1,21 @@
 import request from './request';
 
-function fetch(id) {
-  return request.get(`/courses/${id}/active-users`).then(res => res.data.data);
+const url = {
+  root: (courseId) => `/courses/${courseId}/active-users`
+};
+
+function fetch(courseId) {
+  return request.get(url.root(courseId)).then(res => res.data.data);
 }
 
 function add(context) {
   const { courseId } = context;
-  return request.post(`/courses/${courseId}/active-users`, { context });
+  return request.post(url.root(courseId), { context });
 }
 
 function remove(context) {
   const { courseId } = context;
-  return request.post(`/courses/${courseId}/active-users/remove`, { context });
+  return request.post(`${url.root(courseId)}/remove`, { context });
 }
 
 export default {
