@@ -60,14 +60,15 @@ import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
 import MetaSidebar from './MetaSidebar';
 import orderBy from 'lodash/orderBy';
-import { pingInterval } from 'shared/active-users';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
+import withActiveUsers from 'components/common/mixins/activeUsers';
 
 export default {
   name: 'editor',
+  mixins: [withActiveUsers],
   props: {
     courseId: { type: Number, required: true },
     activityId: { type: Number, required: true }
@@ -77,8 +78,7 @@ export default {
       showLoader: true,
       focusedElement: null,
       showSidebar: false,
-      mousedownCaptured: false,
-      timer: null
+      mousedownCaptured: false
     };
   },
   computed: {
@@ -105,12 +105,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      addActiveUser: 'add',
-      removeActiveUser: 'remove',
-      subscribeActiveUsers: 'subscribe',
-      fetchActiveUsers: 'fetch'
-    }, 'activeUsers'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
@@ -175,22 +169,8 @@ export default {
     if (!this.course) actions.push(this.getCourse(courseId));
     Promise.all(actions).then(() => (this.showLoader = false));
   },
-  async mounted() {
-    const { courseId, activityId } = this;
-    this.subscribeActiveUsers(courseId);
-    await this.fetchActiveUsers(courseId);
-    const context = { courseId, activityId, created: new Date() };
-    await this.addActiveUser(context);
-    this.timer = setInterval(() => this.addActiveUser(context), pingInterval);
-  },
   beforeDestroy() {
     this.unsubscribe();
-  },
-  beforeRouteLeave(to, from, next) {
-    const { courseId, activityId } = this;
-    this.removeActiveUser({ courseId, activityId });
-    clearInterval(this.timer);
-    next();
   },
   components: {
     ActiveUsers,

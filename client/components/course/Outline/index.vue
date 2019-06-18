@@ -36,19 +36,19 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapGetters, mapMutations } from 'vuex-module';
 import Activity from './Activity';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import map from 'lodash/map';
 import NoActivities from './NoActivities';
-import { pingInterval } from 'shared/active-users';
 import reorderMixin from './reorderMixin';
 import Sidebar from '../Sidebar';
+import withActiveUsers from 'components/common/mixins/activeUsers';
 
 export default {
-  mixins: [reorderMixin],
+  mixins: [reorderMixin, withActiveUsers],
   props: {
     courseId: { type: Number, required: true },
     showLoader: { type: Boolean, default: false }
@@ -69,25 +69,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      addActiveUser: 'add',
-      removeActiveUser: 'remove',
-      fetchActiveUsers: 'fetch',
-      subscribeActiveUsers: 'subscribe'
-    }, 'activeUsers'),
     ...mapMutations(['toggleActivities'], 'course')
-  },
-  async mounted() {
-    this.subscribeActiveUsers(this.courseId);
-    await this.fetchActiveUsers(this.courseId);
-    const context = { courseId: this.courseId, created: new Date() };
-    await this.addActiveUser(context);
-    this.timer = setInterval(() => this.addActiveUser(context), pingInterval);
-  },
-  beforeRouteLeave(to, from, next) {
-    this.removeActiveUser({ courseId: this.courseId });
-    clearInterval(this.timer);
-    next();
   },
   components: { Activity, Draggable, NoActivities, Sidebar }
 };
