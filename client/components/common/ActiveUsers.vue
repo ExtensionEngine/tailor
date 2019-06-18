@@ -42,7 +42,7 @@ export default {
       };
     },
     setActiveUsers(users) {
-      this.setter = setTimeout(() => (this.activeUsers = users), 1000);
+      this.setter = setTimeout(() => (this.activeUsers = users), 700);
     }
   },
   watch: {
