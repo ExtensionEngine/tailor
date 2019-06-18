@@ -4,14 +4,10 @@ const { router: activeUsersRouter } = require('../active-user');
 const { authorize } = require('../shared/auth/mw');
 const { Course } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
-const { middleware: sse } = require('../shared/util/sse');
 const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const ctrl = require('./course.controller');
 const processQuery = require('../shared/util/processListQuery')();
 const router = require('express').Router();
-const { subscribe } = require('../active-user/channel');
-
-router.get('/courses/:id/active-users/subscribe', sse, subscribe);
 
 router
   .param('id', getCourse)
