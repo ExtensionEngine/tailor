@@ -22,7 +22,7 @@ getter(function activeUsers() {
   let activeUsersMap = { course: {}, activity: {}, content: {} };
   Object.keys(this.state.activeUsers).forEach(userId => {
     this.state.activeUsers[userId].contexts.forEach(context => {
-      mapActiveUserContext(activeUsersMap, this.state.activeUsers[userId], context);
+      mapContext(activeUsersMap, this.state.activeUsers[userId], context);
     });
   });
   return activeUsersMap;
@@ -36,10 +36,10 @@ action(function subscribe(courseId) {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
   SSE_CLIENT = new SSEClient(`/api/v1/courses/${courseId}/active-users/subscribe`);
   SSE_CLIENT.subscribe('active_user_add', ({ user, context }) => {
-    this.commit('sseAddActiveUser', { user, context });
+    this.commit('sseAdd', { user, context });
   });
   SSE_CLIENT.subscribe('active_user_remove', ({ user, context }) => {
-    this.commit('sseRemoveActiveUser', { user, context });
+    this.commit('sseRemove', { user, context });
   });
 });
 
@@ -48,12 +48,12 @@ action(function unsubscribe() {
   SSE_CLIENT.disconnect();
 });
 
-action(function getActiveUsers(courseId) {
+action(function fetch(courseId) {
   return api.fetch(courseId)
-    .then(({ activeUsers }) => this.commit('setActiveUsers', activeUsers));
+    .then(({ activeUsers }) => this.commit('save', activeUsers));
 });
 
-mutation(function setActiveUsers(users) {
+mutation(function save(users) {
   const { activeUsers } = this.state;
   map(users, (user) => {
     const usedPalettes = this.getters['activeUsers/usedPalettes'];
@@ -63,13 +63,13 @@ mutation(function setActiveUsers(users) {
   });
 });
 
-mutation(function sseAddActiveUser({ user, context }) {
+mutation(function sseAdd({ user, context }) {
   const { activeUsers } = this.state;
   const usedPalettes = this.getters['activeUsers/usedPalettes'];
   addContext(Vue, activeUsers, user, context, usedPalettes);
 });
 
-mutation(function sseRemoveActiveUser({ user, context }) {
+mutation(function sseRemove({ user, context }) {
   const existingUser = this.state.activeUsers[user.id];
   if (!existingUser) return;
   const index = existingUser.contexts.findIndex(c => {
@@ -79,7 +79,7 @@ mutation(function sseRemoveActiveUser({ user, context }) {
   existingUser.contexts.splice(index, 1);
 });
 
-function mapActiveUserContext(activeUsers, user, context) {
+function mapContext(activeUsers, user, context) {
   const { id, email, palette } = user;
   const { created } = context;
   const omittedFields = ['timer', 'created'];

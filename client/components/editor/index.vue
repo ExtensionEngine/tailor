@@ -50,7 +50,7 @@ import * as config from 'shared/activities';
 import { getElementId, isQuestion } from 'tce-core/utils';
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ActiveUsers from 'components/common/ActiveUsers';
-import api from '../../api/activeUsers';
+import activeUsersApi from '../../api/activeUsers';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
@@ -108,7 +108,7 @@ export default {
   methods: {
     ...mapActions({
       subscribeActiveUsers: 'subscribe',
-      getActiveUsers: 'getActiveUsers'
+      fetchActiveUsers: 'fetch'
     }, 'activeUsers'),
     ...mapActions({ getCourse: 'get' }, 'courses'),
     ...mapActions({ getActivities: 'fetch' }, 'activities'),
@@ -177,17 +177,17 @@ export default {
   async mounted() {
     const { courseId, activityId } = this;
     this.subscribeActiveUsers(courseId);
-    await this.getActiveUsers(courseId);
+    await this.fetchActiveUsers(courseId);
     const context = { courseId, activityId, created: new Date() };
-    await api.addActiveUser(context);
-    this.timer = setInterval(() => api.addActiveUser(context), pingInterval);
+    await activeUsersApi.add(context);
+    this.timer = setInterval(() => activeUsersApi.add(context), pingInterval);
   },
   beforeDestroy() {
     this.unsubscribe();
   },
   beforeRouteLeave(to, from, next) {
     const { courseId, activityId } = this;
-    api.removeActiveUser({ courseId, activityId });
+    activeUsersApi.remove({ courseId, activityId });
     clearInterval(this.timer);
     next();
   },

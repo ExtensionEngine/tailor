@@ -70,12 +70,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getActiveUsers', 'subscribe'], 'activeUsers'),
+    ...mapActions({
+      fetchActiveUsers: 'fetch',
+      subscribeActiveUsers: 'subscribe'
+    }, 'activeUsers'),
     ...mapMutations(['toggleActivities'], 'course')
   },
   async mounted() {
-    this.subscribe(this.courseId);
-    await this.getActiveUsers(this.courseId);
+    this.subscribeActiveUsers(this.courseId);
+    await this.fetchActiveUsers(this.courseId);
     const context = { courseId: this.courseId, created: new Date() };
     await activeUsersApi.add(context);
     this.timer = setInterval(() => activeUsersApi.add(context), pingInterval);

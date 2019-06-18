@@ -23,7 +23,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import ActiveUsers from 'components/common/ActiveUsers';
-import api from '../../api/activeUsers';
+import activeUsersApi from '../../api/activeUsers';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
@@ -95,12 +95,12 @@ export default {
       const { courseId, activityId, contentId } = this.element;
       const context = { courseId, activityId, contentId, created: new Date() };
       if (this.isFocused) {
-        api.addActiveUser(context);
-        this.timer = setInterval(() => api.addActiveUser(context), 20000);
+        activeUsersApi.add(context);
+        this.timer = setInterval(() => activeUsersApi.add(context), 20000);
         return;
       }
       clearInterval(this.timer);
-      api.removeActiveUser(context);
+      activeUsersApi.remove(context);
     }
   },
   created() {
@@ -109,7 +109,7 @@ export default {
   beforeDestroy() {
     const { courseId, activityId, contentId } = this.element;
     clearInterval(this.timer);
-    api.removeActiveUser({ courseId, activityId, contentId });
+    activeUsersApi.remove({ courseId, activityId, contentId });
   },
   components: { ActiveUsers, ContainedContent }
 };
