@@ -37,8 +37,8 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import activeUsersApi from '../../../api/activeUsers';
 import Activity from './Activity';
-import api from '../../../api/activeUsers';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -77,11 +77,11 @@ export default {
     this.subscribe(this.courseId);
     await this.getActiveUsers(this.courseId);
     const context = { courseId: this.courseId, created: new Date() };
-    await api.addActiveUser(context);
-    this.timer = setInterval(() => api.addActiveUser(context), pingInterval);
+    await activeUsersApi.add(context);
+    this.timer = setInterval(() => activeUsersApi.add(context), pingInterval);
   },
   beforeRouteLeave(to, from, next) {
-    api.removeActiveUser({ courseId: this.courseId });
+    activeUsersApi.remove({ courseId: this.courseId });
     clearInterval(this.timer);
     next();
   },

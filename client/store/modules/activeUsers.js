@@ -1,4 +1,4 @@
-import courseApi from '../../api/activeUsers';
+import api from '../../api/activeUsers';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
@@ -49,7 +49,7 @@ action(function unsubscribe() {
 });
 
 action(function getActiveUsers(courseId) {
-  return courseApi.getActiveUsers(courseId)
+  return api.fetch(courseId)
     .then(({ activeUsers }) => this.commit('setActiveUsers', activeUsers));
 });
 

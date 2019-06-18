@@ -1,21 +1,21 @@
 import request from './request';
 
-function getActiveUsers(id) {
+function fetch(id) {
   return request.get(`/courses/${id}/get-active-users`).then(res => res.data.data);
 }
 
-function addActiveUser(context) {
+function add(context) {
   const { courseId } = context;
   return request.post(`/courses/${courseId}/add-active-user`, { context });
 }
 
-function removeActiveUser(context) {
+function remove(context) {
   const { courseId } = context;
   return request.post(`/courses/${courseId}/remove-active-user`, { context });
 }
 
 export default {
-  getActiveUsers,
-  addActiveUser,
-  removeActiveUser
+  fetch,
+  add,
+  remove
 };
