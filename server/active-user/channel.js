@@ -28,7 +28,7 @@ function unsubscribe(courseId, sseClient) {
 }
 
 function subscribe(req, res) {
-  const { id: courseId } = req.params;
+  const { id: courseId } = req.course;
   const sseClient = res.sse;
   set(sseClients, [courseId, sseClient.id], sseClient);
   req.on('close', unsubscribe(courseId, sseClient));

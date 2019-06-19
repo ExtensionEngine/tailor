@@ -1,6 +1,6 @@
 'use strict';
 
-const { router: activeUsersRouter } = require('../active-user');
+const activeUsersRouter = require('../active-user').router;
 const { authorize } = require('../shared/auth/mw');
 const { Course } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
