@@ -144,22 +144,6 @@ class Course extends Model {
   getSchemaConfig() {
     return getSchema(this.schema);
   }
-
-  getResolvedActivities(opts) {
-    opts.include = [{
-      model: this.sequelize.model('Activity'),
-      as: 'origin'
-    }];
-    return this.getActivities(opts).then(activities => {
-      return activities.map(activity => {
-        if (!activity.origin) return activity;
-        activity.data = activity.origin.data;
-        activity.refs = activity.origin.refs;
-        delete activity.origin;
-        return activity;
-      });
-    });
-  }
 }
 
 module.exports = Course;

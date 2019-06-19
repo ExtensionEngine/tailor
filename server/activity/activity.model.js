@@ -61,6 +61,10 @@ class Activity extends Model {
 
   static hooks(Hooks, models) {
     hooks.add(this, Hooks, models);
+    this.addHook(
+      Hooks.beforeFind,
+      options => this._defaultsOptions(options, this.scopes().withOrigin)
+    );
   }
 
   static associate({ Comment, Course, TeachingElement }) {
@@ -97,7 +101,8 @@ class Activity extends Model {
       withReferences(relationships = []) {
         const or = relationships.map(type => ({ [`refs.${type}`]: notNull }));
         return { where: { [Op.or]: or } };
-      }
+      },
+      withOrigin: { include: [{ model: Activity, as: 'origin' }] }
     };
   }
 
@@ -109,6 +114,16 @@ class Activity extends Model {
       paranoid: true,
       freezeTableName: true
     };
+  }
+
+  get isLink() {
+    return this.originId && this.origin;
+  }
+
+  update(values, options) {
+    if (!this.isLink) return super.update(values, options);
+    return this.origin.update(values, options)
+      .then(origin => origin.getLinks());
   }
 
   static async cloneActivities(src, dstCourseId, dstParentId, opts) {
@@ -143,8 +158,8 @@ class Activity extends Model {
     let link;
     let origin;
     const TeachingElement = this.sequelize.model('TeachingElement');
-    const where = { activityId: src.id, detached: false };
-    const tes = await TeachingElement.findAll({ where });
+    const tesOptions = { where: { activityId: src.id, detached: false } };
+    const tes = await TeachingElement.findAll(tesOptions);
     const children = await src.getChildren({ where: { detached: false } });
     if (src.originId) {
       link = await Activity.create({
@@ -184,31 +199,6 @@ class Activity extends Model {
       acc.push(child);
       return Activity.linkActivities(child, link.id, child.position, activities);
     }, activities);
-  }
-
-  static async updateLinkedActivity({ originId }, body, opts) {
-    return Activity.update(body, opts).then(() => {
-      return Activity.getLinkedActivities({ originId });
-    });
-  }
-
-  static async getLinkedActivities(where) {
-    const opts = {
-      where,
-      include: [{
-        model: Activity,
-        as: 'origin'
-      }]
-    };
-
-    return Activity.findAll(opts).then(activities => {
-      return activities.map(activity => {
-        activity.data = activity.origin.data;
-        activity.refs = activity.origin.refs;
-        delete activity.origin;
-        return activity;
-      });
-    });
   }
 
   link({ parentId, position }) {
@@ -259,7 +249,7 @@ class Activity extends Model {
   }
 
   remove(options = {}) {
-    if (!options.recursive || this.originId) return this.destroy(options);
+    if (!options.recursive) return this.destroy(options);
     return this.sequelize.transaction(t => {
       return this.descendants({ attributes: ['id'] })
         .then(descendants => {
@@ -292,6 +282,16 @@ class Activity extends Model {
         return this.save({ transaction });
       });
     });
+  }
+
+  toJSON() {
+    const values = super.toJSON();
+    if (!this.isLink) return values;
+    return {
+      ...values,
+      data: this.origin.data,
+      refs: this.origin.refs
+    };
   }
 }
 

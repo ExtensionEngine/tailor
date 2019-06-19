@@ -99,6 +99,9 @@ class TeachingElement extends Model {
 
   static hooks(Hooks) {
     return {
+      [Hooks.beforeFind](options) {
+        return this._defaultsOptions(options, this.scopes().withOrigin);
+      },
       [Hooks.beforeCreate](te) {
         pruneVirtualProps(te);
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
@@ -116,7 +119,8 @@ class TeachingElement extends Model {
   static scopes() {
     const notNull = { [Op.ne]: null };
     return {
-      withReferences: { where: { 'refs.objectiveId': notNull } }
+      withReferences: { where: { 'refs.objectiveId': notNull } },
+      withOrigin: { include: [{ model: TeachingElement, as: 'origin' }] }
     };
   }
 
@@ -130,17 +134,27 @@ class TeachingElement extends Model {
     };
   }
 
+  get isLink() {
+    return this.originId && this.origin;
+  }
+
+  update(values, options) {
+    if (!this.isLink) {
+      return super.update(values, options)
+      .then(element => resolveStatics(element));
+    }
+
+    return this.origin.update({ ...values, position: null }, options)
+      .then(origin => resolveStatics(origin))
+      .then(origin => origin.getLinks({ where: { id: this.id } }))
+      .then(elements => elements[0]);
+  }
+
   static fetch(opt) {
     return isNumber(opt)
-      ? TeachingElement.findByPk(opt).then(it => {
-        if (it.origin) it.data = it.origin.data;
-        return resolveStatics(it);
-      })
+      ? TeachingElement.findByPk(opt).then(it => resolveStatics(it))
       : TeachingElement.findAll(opt)
-          .then(arr => Promise.all(arr.map(it => {
-            if (it.origin) it.data = it.origin.data;
-            return resolveStatics(it);
-          })));
+        .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
   }
 
   static cloneElements(src, container, transaction) {
@@ -172,7 +186,7 @@ class TeachingElement extends Model {
         'meta'
       ]);
 
-      if (element.originId) {
+      if (element.isLink) {
         return TeachingElement.create({
           ...props,
           activityId,
@@ -183,7 +197,6 @@ class TeachingElement extends Model {
       const origin = await TeachingElement.create({
         ...props,
         activityId: null,
-        courseId: null,
         position: null
       });
 
@@ -236,6 +249,16 @@ class TeachingElement extends Model {
       if (this.type === 'ASSESSMENT') return { type: 'ASSESSMENT' };
       return { type: { [Op.not]: this.type } };
     });
+  }
+
+  toJSON() {
+    const values = super.toJSON();
+    if (!this.isLink) return values;
+    return {
+      ...values,
+      data: this.origin.data,
+      refs: this.origin.refs
+    };
   }
 }
 
