@@ -5,7 +5,7 @@ const get = require('lodash/get');
 const set = require('lodash/set');
 const unset = require('lodash/unset');
 
-const clients = {};
+const sseClients = {};
 
 const events = {
   CREATE: 'comment_create',
@@ -13,25 +13,24 @@ const events = {
   DELETE: 'comment_delete'
 };
 
-function unsubscribe(courseId, client) {
+function unsubscribe(courseId, sseClient) {
   return () => {
-    unset(clients, [courseId, client.id]);
-    client.close();
+    unset(sseClients, [courseId, sseClient.id]);
+    sseClient.close();
   };
 }
 
 function subscribe(req, res) {
-  const { courseId } = req.params;
-  const client = res.sse;
-  set(clients, [courseId, client.id], client);
-  req.on('close', unsubscribe(courseId, client));
+  const { id: courseId } = req.course;
+  const sseClient = res.sse;
+  set(sseClients, [courseId, sseClient.id], sseClient);
+  req.on('close', unsubscribe(courseId, sseClient));
 }
 
-function broadcast(event, comment) {
-  const { courseId } = comment;
-  const recipients = get(clients, courseId, {});
-  each(recipients, r => r.send(event, comment));
-  return comment;
+function broadcast(event, courseId, data) {
+  const recipients = get(sseClients, courseId, {});
+  each(recipients, r => r.send(event, data));
+  return data;
 }
 
 module.exports = { subscribe, broadcast, events };

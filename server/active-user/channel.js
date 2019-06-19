@@ -2,7 +2,6 @@
 
 const each = require('lodash/each');
 const get = require('lodash/get');
-const omit = require('lodash/omit');
 const set = require('lodash/set');
 const unset = require('lodash/unset');
 
@@ -27,13 +26,10 @@ function subscribe(req, res) {
   req.on('close', unsubscribe(courseId, sseClient));
 }
 
-function broadcast(event, user, context) {
-  const { courseId } = context;
+function broadcast(event, courseId, data) {
   const recipients = get(sseClients, courseId, {});
-  each(recipients, r => {
-    r.send(event, { user, context: omit(context, ['timer']) });
-  });
-  return user;
+  each(recipients, r => r.send(event, data));
+  return data;
 }
 
 module.exports = { subscribe, broadcast, events };

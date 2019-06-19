@@ -9,19 +9,23 @@ function fetch(req, res) {
 }
 
 function add(req, res) {
-  const { user, body: { context } } = req;
-  const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
-  activeUser.created = new Date();
-  addContext(activeUser, context);
-  broadcast(events.ADD_ACTIVE_USER, activeUser, context);
+  const { user: loggedUser, body: { context } } = req;
+  const { courseId } = context;
+  const user = pick(loggedUser, ['id', 'email', 'firstName', 'lastName']);
+  user.created = new Date();
+  addContext(user, context);
+  const data = { user, context };
+  broadcast(events.ADD_ACTIVE_USER, courseId, data);
   res.end();
 }
 
 function remove(req, res) {
-  const { user, body: { context } } = req;
-  const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
-  removeContext(activeUser, context, true);
-  broadcast(events.REMOVE_ACTIVE_USER, activeUser, context);
+  const { user: loggedUser, body: { context } } = req;
+  const { courseId } = context;
+  const user = pick(loggedUser, ['id', 'email', 'firstName', 'lastName']);
+  removeContext(user, context, true);
+  const data = { user, context };
+  broadcast(events.REMOVE_ACTIVE_USER, courseId, data);
   res.end();
 }
 

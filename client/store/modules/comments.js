@@ -42,9 +42,9 @@ action(function fetch({ activityId }) {
 action(function subscribe() {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
   SSE_CLIENT = new SSEClient(`/api/v1${this.state.$baseUrl}/subscribe`);
-  SSE_CLIENT.subscribe('comment_create', item => this.commit('sseAdd', item));
-  SSE_CLIENT.subscribe('comment_update', item => this.commit('sseUpdate', item));
-  SSE_CLIENT.subscribe('comment_delete', item => this.commit('sseUpdate', item));
+  SSE_CLIENT.subscribe('comment_create', ({ comment }) => this.commit('sseAdd', comment));
+  SSE_CLIENT.subscribe('comment_update', ({ comment }) => this.commit('sseUpdate', comment));
+  SSE_CLIENT.subscribe('comment_delete', ({ comment }) => this.commit('sseUpdate', comment));
 });
 
 action(function unsubscribe() {
