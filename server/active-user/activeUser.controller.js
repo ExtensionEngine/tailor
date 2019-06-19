@@ -1,12 +1,7 @@
 'use strict';
 
-const {
-  activeUsers,
-  broadcast,
-  events,
-  addContext,
-  removeContext
-} = require('./channel');
+const { activeUsers, addContext, removeContext } = require('./store');
+const { broadcast, events } = require('./channel');
 const pick = require('lodash/pick');
 
 function fetch(req, res) {
@@ -29,7 +24,6 @@ function remove(req, res) {
   broadcast(events.REMOVE_ACTIVE_USER, activeUser, context);
   res.end();
 }
-
 
 module.exports = {
   fetch,
