@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import fecha from 'fecha';
 import { getDescendants } from 'utils/activity';
 import { getLevel } from 'shared/activities';
@@ -41,7 +41,7 @@ import publishMixin from 'components/common/mixins/publish';
 export default {
   mixins: [publishMixin],
   computed: {
-    ...mapGetters(['activity', 'outlineActivities'], 'course'),
+    ...mapGetters('course', ['activity', 'outlineActivities']),
     config() {
       return getLevel(this.activity.type);
     },

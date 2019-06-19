@@ -1,12 +1,12 @@
-import authApi from '../../../api/auth';
+import api from '../../../api/auth';
 
 export const login = ({ commit }, credentials) => {
-  return authApi.login(credentials)
+  return api.login(credentials)
     .then(user => commit('login', user));
 };
 
 export const logout = () => {
-  return authApi
+  return api
     .logout()
     .then(() => setTimeout(() => {
       window.localStorage.removeItem('TAILOR_USER');
@@ -15,9 +15,9 @@ export const logout = () => {
 };
 
 export const forgotPassword = (context, { email }) => {
-  return authApi.forgotPassword(email);
+  return api.forgotPassword(email);
 };
 
 export const resetPassword = (context, { token, password }) => {
-  return authApi.resetPassword(token, password);
+  return api.resetPassword(token, password);
 };

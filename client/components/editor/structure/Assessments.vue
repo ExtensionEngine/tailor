@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import AddElement from 'tce-core/AddElement';
 import AssessmentItem from './AssessmentItem';
 import EventBus from 'EventBus';
@@ -47,14 +47,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activity', 'assessments'], 'editor'),
+    ...mapGetters('editor', ['activity', 'assessments']),
     hasAssessments() {
       return this.assessments.length;
     }
   },
   methods: {
-    ...mapActions(['save', 'update', 'remove'], 'tes'),
-    ...mapMutations(['add'], 'tes'),
+    ...mapActions('tes', ['save', 'update', 'remove']),
+    ...mapMutations('tes', ['add']),
     addAssessment(assessment) {
       this.add(assessment);
       this.selected.push(assessment._cid);

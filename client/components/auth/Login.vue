@@ -43,9 +43,9 @@ export default {
       message: ''
     };
   },
-  computed: mapGetters('auth', ['user']),
+  computed: mapGetters(['user']),
   methods: {
-    ...mapActions('auth', ['login']),
+    ...mapActions(['login']),
     submit() {
       this.message = '';
       this.login({ email: this.email, password: this.password })

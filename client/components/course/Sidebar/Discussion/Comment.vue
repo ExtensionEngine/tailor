@@ -84,7 +84,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('auth', ['user']),
+    ...mapGetters(['user']),
     authorInitials() {
       return this.comment.author.email.substr(0, 2).toUpperCase();
     },

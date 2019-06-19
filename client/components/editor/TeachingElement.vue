@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex-module';
+import { mapActions, mapMutations } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
@@ -25,8 +25,8 @@ export default {
     dragged: { type: Boolean, default: false }
   },
   methods: {
-    ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
-    ...mapMutations({ addElement: 'add' }, 'tes'),
+    ...mapActions('tes', { saveElement: 'save', removeElement: 'remove' }),
+    ...mapMutations('tes', { addElement: 'add' }),
     add(element) {
       this.addElement({ ...this.element, ...cloneDeep(element) });
     },

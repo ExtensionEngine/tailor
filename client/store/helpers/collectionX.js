@@ -1,6 +1,6 @@
 import cuid from 'cuid';
 import each from 'lodash/each';
-import Resource from '../../api/resource';
+import Resource from './resource';
 
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
@@ -15,7 +15,6 @@ export default function (collectionName, baseUrl = '') {
     $internals: {},
     $baseUrl: baseUrl
   });
-
   const getBaseUrl = () => module.state.$baseUrl;
   module.api = new Resource(getBaseUrl);
 

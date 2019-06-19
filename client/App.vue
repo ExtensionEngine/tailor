@@ -18,7 +18,7 @@ if (isIexplorer) document.body.classList.add('ie');
 
 export default {
   name: 'app',
-  computed: mapGetters('auth', ['user']),
+  computed: mapGetters(['user']),
   components: {
     ConfirmationModal,
     Navbar

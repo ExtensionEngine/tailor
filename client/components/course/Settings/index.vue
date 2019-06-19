@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import api from '../../../api/course';
 import CloneModal from './CloneModal';
 import EventBus from 'EventBus';
@@ -59,12 +59,12 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course', 'outlineActivities', 'isCourseAdmin'], 'course'),
+    ...mapGetters('course', ['course', 'outlineActivities', 'isCourseAdmin']),
     publishPercentage: ({ publishStatus }) => publishStatus.progress * 100
   },
   methods: {
-    ...mapActions({ removeCourse: 'remove' }, 'courses'),
-    ...mapActions({ publishActivity: 'publish' }, 'activities'),
+    ...mapActions('courses', { removeCourse: 'remove' }),
+    ...mapActions('activities', { publishActivity: 'publish' }),
     downloadContentInventory() {
       api.getContentInventory(this.$route.params.courseId)
         .then(response => JSZip.loadAsync(response))

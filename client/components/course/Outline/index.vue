@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex-module';
+import { mapGetters, mapMutations } from 'vuex';
 import Activity from './Activity';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
@@ -52,7 +52,7 @@ export default {
     showLoader: { type: Boolean, default: false }
   },
   computed: {
-    ...mapGetters(['structure', 'outlineActivities'], 'course'),
+    ...mapGetters('course', ['structure', 'outlineActivities']),
     isFlat() {
       const types = map(filter(this.structure, { level: 2 }), 'type');
       if (!types.length) return false;
@@ -64,7 +64,7 @@ export default {
         .sort((x, y) => x.position - y.position);
     }
   },
-  methods: mapMutations(['toggleActivities'], 'course'),
+  methods: mapMutations('course', ['toggleActivities']),
   components: { Activity, Draggable, NoActivities, Sidebar }
 };
 </script>

@@ -42,7 +42,7 @@
 import ActivityBrowser from 'components/common/ActivityBrowser';
 import first from 'lodash/first';
 import { focus } from 'vue-focus';
-import { mapGetters } from 'vuex-module';
+import { mapGetters } from 'vuex';
 import multiselect from 'components/common/Select';
 import SelectAction from './SelectAction';
 import { withValidation } from 'utils/validation';
@@ -56,7 +56,7 @@ export default {
   data() {
     return { name: '', level: null };
   },
-  computed: mapGetters(['structure'], 'course'),
+  computed: mapGetters('course', ['structure']),
   methods: {
     create() {
       this.$validator.validateAll().then(isValid => {

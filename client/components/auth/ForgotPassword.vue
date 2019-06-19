@@ -36,7 +36,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('auth', ['forgotPassword']),
+    ...mapActions(['forgotPassword']),
     submit() {
       // TODO: Temp
       this.showMessage = true;

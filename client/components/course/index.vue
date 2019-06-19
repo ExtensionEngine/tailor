@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
@@ -37,7 +37,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course', 'activities', 'activity', 'isCourseAdmin'], 'course'),
+    ...mapGetters('course', ['course', 'activities', 'activity', 'isCourseAdmin']),
     tabs() {
       const items = [
         { name: 'Structure', route: 'course', icon: 'file-tree' },
@@ -50,14 +50,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getUsers'], 'course'),
-    ...mapActions({ getCourse: 'get' }, 'courses'),
-    ...mapActions({ getActivities: 'fetch' }, 'activities'),
-    ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
-    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activities'),
-    ...mapMutations({ setupCommentsApi: 'setBaseUrl' }, 'comments'),
-    ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
-    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
+    ...mapActions('course', ['getUsers']),
+    ...mapActions('courses', { getCourse: 'get' }),
+    ...mapActions('activities', { getActivities: 'fetch' }),
+    ...mapMutations('course', { resetActivityFocus: 'focusActivity' }),
+    ...mapActions('activities', { setupActivityApi: 'setBaseUrl' }),
+    ...mapActions('comments', { setupCommentsApi: 'setBaseUrl' }),
+    ...mapActions('revisions', { setupRevisionApi: 'setBaseUrl' }),
+    ...mapActions('tes', { setupTesApi: 'setBaseUrl' })
   },
   async created() {
     const { courseId } = this.$route.params;

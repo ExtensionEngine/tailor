@@ -45,7 +45,7 @@
 <script>
 import * as config from 'shared/activities';
 import { getElementId, isQuestion } from 'tce-core/utils';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
@@ -71,8 +71,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'getMetadata'], 'course'),
-    ...mapGetters(['activity', 'contentContainers'], 'editor'),
+    ...mapGetters('course', ['course', 'getMetadata']),
+    ...mapGetters('editor', ['activity', 'contentContainers']),
     metadata() {
       if (!this.focusedElement) return [];
       return this.getMetadata(this.focusedElement);
@@ -89,11 +89,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ getCourse: 'get' }, 'courses'),
-    ...mapActions({ getActivities: 'fetch' }, 'activities'),
-    ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
-    ...mapMutations({ setupActivitiesApi: 'setBaseUrl' }, 'activities'),
-    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes'),
+    ...mapActions('courses', { getCourse: 'get' }),
+    ...mapActions('activities', { getActivities: 'fetch' }),
+    ...mapActions('tes', { getTeachingElements: 'fetch' }),
+    ...mapMutations('activities', { setupActivitiesApi: 'setBaseUrl' }),
+    ...mapMutations('tes', { setupTesApi: 'setBaseUrl' }),
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
     },
