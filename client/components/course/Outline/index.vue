@@ -55,7 +55,6 @@ export default {
   },
   data: () => ({ timer: null }),
   computed: {
-    ...mapGetters(['activeUsers'], 'activeUsers'),
     ...mapGetters(['structure', 'outlineActivities'], 'course'),
     isFlat() {
       const types = map(filter(this.structure, { level: 2 }), 'type');
@@ -68,9 +67,7 @@ export default {
         .sort((x, y) => x.position - y.position);
     }
   },
-  methods: {
-    ...mapMutations(['toggleActivities'], 'course')
-  },
+  methods: mapMutations(['toggleActivities'], 'course'),
   components: { Activity, Draggable, NoActivities, Sidebar }
 };
 </script>
