@@ -1,14 +1,16 @@
+'use strict';
+
 const ctrl = require('./activeUser.controller');
-const router = require('express').Router({ mergeParams: true });
+const router = require('express').Router();
 const { middleware: sse } = require('../shared/util/sse');
-const { subscribe } = require('../active-user/channel');
+const { subscribe } = require('./channel');
 
 router.get('/subscribe', sse, subscribe);
 
 router
-  .get('/', ctrl.getActiveUsers)
-  .post('/', ctrl.addActiveUser)
-  .post('/remove', ctrl.removeActiveUser);
+  .get('/', ctrl.fetch)
+  .post('/', ctrl.add)
+  .post('/remove', ctrl.remove);
 
 module.exports = {
   ctrl,

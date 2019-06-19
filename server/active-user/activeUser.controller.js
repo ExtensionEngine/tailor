@@ -9,7 +9,11 @@ const {
 } = require('./channel');
 const pick = require('lodash/pick');
 
-function addActiveUser(req, res) {
+function fetch(req, res) {
+  res.json({ data: { activeUsers } });
+}
+
+function add(req, res) {
   const { user, body: { context } } = req;
   const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
   activeUser.created = new Date();
@@ -18,7 +22,7 @@ function addActiveUser(req, res) {
   res.end();
 }
 
-function removeActiveUser(req, res) {
+function remove(req, res) {
   const { user, body: { context } } = req;
   const activeUser = pick(user, ['id', 'email', 'firstName', 'lastName']);
   removeContext(activeUser, context, true);
@@ -26,12 +30,9 @@ function removeActiveUser(req, res) {
   res.end();
 }
 
-function getActiveUsers(req, res) {
-  res.json({ data: { activeUsers } });
-}
 
 module.exports = {
-  getActiveUsers,
-  addActiveUser,
-  removeActiveUser
+  fetch,
+  add,
+  remove
 };
