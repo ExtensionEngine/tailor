@@ -1,6 +1,6 @@
 'use strict';
 
-const channel = require('./channel');
+const { subscribe } = require('../course/channel');
 const { Comment } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const ctrl = require('./comment.controller');
@@ -16,7 +16,7 @@ const defaultListQuery = {
   paranoid: false
 };
 
-router.get('/courses/:courseId/comments/subscribe', sse, channel.subscribe);
+router.get('/courses/:courseId/comments/subscribe', sse, subscribe);
 
 router
   .route('/courses/:courseId/comments')

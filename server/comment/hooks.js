@@ -1,6 +1,7 @@
 'use strict';
 
-const { broadcast, events } = require('./channel');
+const { broadcast } = require('../course/channel');
+const events = require('./events');
 const pick = require('lodash/pick');
 
 exports.add = (Comment, Hooks) => {

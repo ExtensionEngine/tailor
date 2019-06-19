@@ -3,7 +3,7 @@
 const ctrl = require('./activeUser.controller');
 const router = require('express').Router();
 const { middleware: sse } = require('../shared/util/sse');
-const { subscribe } = require('./channel');
+const { subscribe } = require('../course/channel');
 
 router.get('/subscribe', sse, subscribe);
 

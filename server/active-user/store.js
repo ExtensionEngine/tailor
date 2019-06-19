@@ -1,7 +1,8 @@
 'use strict';
 
-const { broadcast, events } = require('./channel');
 const { activityTimeout } = require('../../config/shared/active-users');
+const { broadcast } = require('../course/channel');
+const events = require('./events');
 const find = require('lodash/find');
 const isEmpty = require('lodash/isEmpty');
 const isEqual = require('lodash/isEqual');

@@ -7,12 +7,6 @@ const unset = require('lodash/unset');
 
 const sseClients = {};
 
-const events = {
-  CREATE: 'comment_create',
-  UPDATE: 'comment_update',
-  DELETE: 'comment_delete'
-};
-
 function unsubscribe(courseId, sseClient) {
   return () => {
     unset(sseClients, [courseId, sseClient.id]);
@@ -33,4 +27,4 @@ function broadcast(event, courseId, data) {
   return data;
 }
 
-module.exports = { subscribe, broadcast, events };
+module.exports = { subscribe, broadcast };
