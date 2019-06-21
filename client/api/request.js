@@ -1,5 +1,5 @@
 import axios from 'axios';
-import enhanceError from 'axios/lib/core/enhanceError';
+import JSendError from './JSendInterceptor';
 
 // TODO: read this from configuration.
 const BASE_URL = '/api/v1/';
@@ -31,35 +31,11 @@ client.interceptors.response.use(res => reassignData(res), err => {
   }
 });
 
-function reassignData(resp) {
-  const { data, ...jsend } = resp.data;
-  Object.assign(resp, { data, jsend });
-  if (jsend.status !== 'error' && jsend.status !== 'fail') return resp;
-  throw new JSendError(`Request failed with jsend status: ${jsend.status}`, resp);
-}
-
-// NOTE: added `JSendError` handler for later `jsend` implementation
-class JSendError extends Error {
-  constructor(message, response) {
-    super(message);
-    const { config, request, jsend } = response;
-    const { toJSON, ...info } = enhanceError({}, config, null, request, response);
-    Object.assign(this, info, {
-      jsend,
-      toJSON() {
-        const json = toJSON.call(this);
-        return Object.assign(json, { jsend });
-      }
-    });
-  }
-
-  get name() {
-    return this.constructor.name;
-  }
-
-  get isJSendError() {
-    return true;
-  }
+function reassignData(response) {
+  const { data, ...jsend } = response.data;
+  Object.assign(response, { data, jsend });
+  if (jsend.status !== 'error' && jsend.status !== 'fail') return response;
+  throw new JSendError(`Request failed with jsend status: ${jsend.status}`, response);
 }
 
 export default client;
