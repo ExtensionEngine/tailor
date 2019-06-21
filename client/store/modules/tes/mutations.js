@@ -1,6 +1,12 @@
-import generateMutations from '../../helpers/mutations';
-
-const { fetch, reset, add, save, remove, update, setBaseUrl } = generateMutations('/tes');
+import {
+  add,
+  fetch,
+  remove,
+  reset,
+  save,
+  setBaseUrl,
+  update
+} from '../../helpers/mutations';
 
 const reorder = ({ element, position }) => {
   element.position = position;

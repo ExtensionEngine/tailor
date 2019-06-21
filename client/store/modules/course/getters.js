@@ -61,7 +61,7 @@ export const getConfig = (state, getters, rootState, rootGetters) => {
   return element => {
     if (!element.type) return {};
     if (isTes(element)) {
-      const course = rootGetters.course;
+      const course = getters.course;
       return getTesMeta(course.schema, element.type);
     }
     return getLevel(element.type) || {};

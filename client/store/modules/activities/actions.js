@@ -1,17 +1,22 @@
+import {
+  fetch,
+  get,
+  reset,
+  save,
+  setBaseUrl,
+  update
+} from '../../helpers/actions';
 import calculatePosition from 'utils/calculatePosition';
-import generateActions from '../../helpers/actions';
 import { getDescendants as getDeepChildren } from 'utils/activity';
 import request from '../../../api/request';
 
-const { api, get, fetch, reset, save, update, setBaseUrl } = generateActions();
-
-const reorder = ({ commit }, { activity, context }) => {
+const reorder = ({ state, commit }, { activity, context }) => {
   commit('reorder', { activity, position: calculatePosition(context) });
   const data = { position: context.newPosition };
-  return api.post(`${activity.id}/reorder`, data)
+  return state.api.post(`${activity.id}/reorder`, data)
     .then(res => {
       let activity = res.data.data;
-      api.setCid(activity);
+      state.api.setCid(activity);
       commit('save', activity);
     });
 };
@@ -22,7 +27,7 @@ const remove = ({ state, commit }, model) => {
     commit('remove', [model]);
     return Promise.resolve(true);
   }
-  return api.remove(model)
+  return state.api.remove(model)
     .then(() => commit('remove', [model, ...descendants]));
 };
 

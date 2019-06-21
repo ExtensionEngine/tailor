@@ -1,11 +1,12 @@
 import * as actions from './actions';
 import * as getters from './getters';
 import * as mutations from './mutations';
+import Resource from '../../helpers/resource';
 
 const state = {
+  api: new Resource(),
   items: {},
-  $internals: {},
-  $baseUrl: ''
+  $internals: {}
 };
 
 export default {

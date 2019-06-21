@@ -1,6 +1,12 @@
-import generateMutations from '../../helpers/mutations';
-
-const { fetch, reset, add, save, remove, update, setBaseUrl } = generateMutations();
+import {
+  add,
+  fetch,
+  remove,
+  reset,
+  save,
+  setBaseUrl,
+  update
+} from '../../helpers/mutations';
 
 const setPagination = (state, changes) => {
   let $internals = state.$internals;

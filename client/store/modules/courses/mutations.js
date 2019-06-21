@@ -1,7 +1,12 @@
-import generateMutations from '../../helpers/mutations';
+import {
+  add,
+  fetch,
+  remove,
+  reset,
+  setBaseUrl,
+  update
+} from '../../helpers/mutations';
 import Vue from 'vue';
-
-const { fetch, reset, add, remove, update, setBaseUrl } = generateMutations('/courses');
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
 

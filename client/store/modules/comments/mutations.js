@@ -1,9 +1,15 @@
+import {
+  add,
+  fetch,
+  remove,
+  reset,
+  save,
+  setBaseUrl,
+  update
+} from '../../helpers/mutations';
 import cuid from 'cuid';
-import generateMutations from '../../helpers/mutations';
 import pick from 'lodash/pick';
 import Vue from 'vue';
-
-const { fetch, reset, add, save, remove, update, setBaseUrl } = generateMutations();
 
 const setCourse = (state, courseId) => {
   state.courseId = courseId;

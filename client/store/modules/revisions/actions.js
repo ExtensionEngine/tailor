@@ -1,17 +1,22 @@
-import generateActions from '../../helpers/actions';
-
-const { api, get, reset, save, remove, update, setBaseUrl } = generateActions();
+import {
+  get,
+  remove,
+  reset,
+  save,
+  setBaseUrl,
+  update
+} from '../../helpers/actions';
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 25 };
 
-const fetch = ({ getters, commit }) => {
+const fetch = ({ state, getters, commit }) => {
   const params = getters.revisionQueryParams;
-  return api.get('', params).then(response => {
+  return state.api.get('', params).then(response => {
     const { data: revisions } = response.data;
 
     let result = {};
     revisions.forEach(it => {
-      api.setCid(it);
+      state.api.setCid(it);
       result[it._cid] = it;
     });
 
