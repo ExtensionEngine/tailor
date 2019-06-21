@@ -9,7 +9,7 @@ const url = {
 function login(credentials) {
   return request
     .post(url.login, credentials)
-    .then(res => res.data.data)
+    .then(res => res.data)
     .then(({ token, user }) => {
       window.localStorage.setItem('JWT_TOKEN', token);
       return user;

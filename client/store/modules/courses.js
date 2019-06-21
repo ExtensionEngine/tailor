@@ -40,9 +40,7 @@ getter(function hasMoreResults() {
 action(function fetch({ reset = false } = {}) {
   const mutation = reset ? 'reset' : 'fetch';
   const params = this.getters.courseQueryParams;
-  return this.api.get('', params).then(response => {
-    const { data: courses } = response.data;
-
+  return this.api.get('', params).then(({ data: courses }) => {
     let result = {};
     courses.forEach(it => {
       this.api.setCid(it);
@@ -56,8 +54,7 @@ action(function fetch({ reset = false } = {}) {
 });
 
 action(function clone({ id, name, description }) {
-  return this.api.post(`/${id}/clone`, { name, description }).then(response => {
-    const { data: course } = response.data;
+  return this.api.post(`/${id}/clone`, { name, description }).then(({ data: course }) => {
     this.commit('add', course);
     return course.id;
   });

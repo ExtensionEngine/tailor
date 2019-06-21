@@ -1,4 +1,5 @@
 import axios from 'axios';
+import enhanceError from 'axios/lib/core/enhanceError';
 
 // TODO: read this from configuration.
 const BASE_URL = '/api/v1/';
@@ -20,7 +21,7 @@ client.interceptors.request.use(config => {
   return config;
 });
 
-client.interceptors.response.use(res => res, err => {
+client.interceptors.response.use(res => reassignData(res), err => {
   if (err.response.status === 401) {
     window.localStorage.removeItem('JWT_TOKEN');
     window.localStorage.removeItem('TAILOR_USER');
@@ -29,5 +30,36 @@ client.interceptors.response.use(res => res, err => {
     throw err;
   }
 });
+
+function reassignData(resp) {
+  const { data, ...jsend } = resp.data;
+  Object.assign(resp, { data, jsend });
+  if (jsend.status !== 'error' && jsend.status !== 'fail') return resp;
+  throw new JSendError(`Request failed with jsend status: ${jsend.status}`, resp);
+}
+
+// NOTE: added `JSendError` handler for later `jsend` implementation
+class JSendError extends Error {
+  constructor(message, response) {
+    super(message);
+    const { config, request, jsend } = response;
+    const { toJSON, ...info } = enhanceError({}, config, null, request, response);
+    Object.assign(this, info, {
+      jsend,
+      toJSON() {
+        const json = toJSON.call(this);
+        return Object.assign(json, { jsend });
+      }
+    });
+  }
+
+  get name() {
+    return this.constructor.name;
+  }
+
+  get isJSendError() {
+    return true;
+  }
+}
 
 export default client;

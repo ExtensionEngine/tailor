@@ -16,8 +16,7 @@ action(function reorder({ element, context }) {
   this.commit('reorder', { element, position: calculatePosition(context) });
   const data = { position: context.newPosition };
   return this.api.post(`${element.id}/reorder`, data)
-    .then(res => {
-      let element = res.data.data;
+    .then(({ data: element }) => {
       this.api.setCid(element);
       this.commit('save', element);
     });

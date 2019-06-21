@@ -36,7 +36,7 @@ action(function fetch({ activityId }) {
   if (action === 'reset') this.commit('setCourse', courseId);
   this.api.fetch({ activityId })
     .then(result => this.commit(action, result))
-    .then(result => this.commit('commentsFetched', activityId));
+    .then(() => this.commit('commentsFetched', activityId));
 });
 
 action(function subscribe() {
