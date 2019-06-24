@@ -8,6 +8,7 @@ import {
   update
 } from '../../helpers/mutations';
 import cuid from 'cuid';
+import find from 'lodash/find';
 import pick from 'lodash/pick';
 import Vue from 'vue';
 
