@@ -55,7 +55,7 @@ export default {
       return [...getDescendants(outlineActivities, activity), activity];
     }
   },
-  methods: mapActions({ publishActivity: 'publish' }, 'activities')
+  methods: mapActions('activities', { publishActivity: 'publish' })
 };
 </script>
 
