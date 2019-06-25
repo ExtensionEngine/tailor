@@ -15,21 +15,21 @@ function create({ course, body, params, user }, res) {
     { data: Object.assign({}, defaultMeta, body.data) },
     { courseId: params.courseId });
   const opts = { context: { userId: user.id } };
-  return Activity.create(data, opts).then(data => res.json({ data }));
+  return Activity.create(data, opts).then(data => res.jsend.success(data));
 }
 
 function show({ activity }, res) {
-  return res.json({ data: activity });
+  return res.jsend.success(activity);
 }
 
 function patch({ activity, body, user }, res) {
   return activity.update(body, { context: { userId: user.id } })
-    .then(data => res.json({ data }));
+    .then(data => res.jsend.success(data));
 }
 
 function list({ course, query, opts }, res) {
   if (!query.detached) opts.where = { detached: false };
-  return course.getActivities(opts).then(data => res.json({ data }));
+  return course.getActivities(opts).then(data => res.jsend.success(data));
 }
 
 function remove({ course, activity, user }, res) {
@@ -39,23 +39,23 @@ function remove({ course, activity, user }, res) {
     : Promise.resolve();
   return unpublish
     .then(() => activity.remove(options))
-    .then(data => res.json({ data: pick(data, ['id']) }));
+    .then(data => res.jsend.success(pick(data, ['id'])));
 }
 
 function reorder({ activity, body }, res) {
-  return activity.reorder(body.position).then(data => res.json({ data }));
+  return activity.reorder(body.position).then(data => res.jsend.success(data));
 }
 
 function publish({ activity }, res) {
   return publishingService.publishActivity(activity)
-    .then(data => res.json({ data }));
+    .then(data => res.jsend.success(data));
 }
 
 function clone({ activity, body }, res) {
   const { courseId, parentId, position } = body;
   return activity.clone(courseId, parentId, position).then(mappings => {
     const opts = { where: { id: Object.values(mappings) } };
-    return Activity.findAll(opts).then(data => res.json({ data }));
+    return Activity.findAll(opts).then(data => res.jsend.success(data));
   });
 }
 

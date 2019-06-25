@@ -1,12 +1,11 @@
 'use strict';
 
-const { Activity, TeachingElement, Sequelize } = require('../shared/database');
+const { Activity, TeachingElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
 const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
-
 
 function list({ course, query, opts }, res) {
   if (query.activityId || query.parentId) {
@@ -21,14 +20,14 @@ function list({ course, query, opts }, res) {
   const elements = query.integration
     ? course.getTeachingElements(opts)
     : TeachingElement.fetch(opts);
-  return elements.then(data => res.json({ data }));
+  return elements.then(data => res.jsend.success(data));
 }
 
 function show({ params }, res) {
   const teId = parseInt(params.teId, 10);
   return TeachingElement.fetch(teId)
     .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
-    .then(asset => res.json({ data: asset }));
+    .then(asset => res.jsend.success(asset));
 }
 
 function create({ body, params, user }, res) {
@@ -36,7 +35,7 @@ function create({ body, params, user }, res) {
   const data = Object.assign(pick(body, attr), { courseId: params.courseId });
   return TeachingElement.create(data, { context: { userId: user.id } })
     .then(asset => resolveStatics(asset))
-    .then(asset => res.json({ data: asset }));
+    .then(asset => res.jsend.success(asset));
 }
 
 function patch({ body, params, user }, res) {
@@ -47,7 +46,7 @@ function patch({ body, params, user }, res) {
     .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
     .then(asset => asset.update(data, { context: { userId: user.id } }))
     .then(asset => resolveStatics(asset))
-    .then(asset => res.json({ data: asset }));
+    .then(asset => res.jsend.success(asset));
 }
 
 function remove({ params, user }, res) {
@@ -60,7 +59,7 @@ function remove({ params, user }, res) {
 function reorder({ body, params }, res) {
   return TeachingElement.findByPk(params.teId)
     .then(asset => asset.reorder(body.position))
-    .then(asset => res.json({ data: asset }));
+    .then(asset => res.jsend.success(asset));
 }
 
 module.exports = {

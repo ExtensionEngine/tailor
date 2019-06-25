@@ -12,13 +12,13 @@ function index({ course, query }, res) {
   }
   const include = [{ model: User, attributes: ['id', 'email'] }];
   const opts = { where, include, order: [['createdAt', 'DESC']], limit, offset };
-  return Revision.findAll(opts).then(data => res.json({ data }));
+  return Revision.findAll(opts).then(data => res.jsend.success(data));
 }
 
 function resolve({ revision }, res) {
   return resolveStatics(revision.state).then(state => {
     revision.state = state;
-    return res.json(revision);
+    return res.jsend.success(revision);
   });
 }
 

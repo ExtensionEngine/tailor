@@ -17,7 +17,7 @@ const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
   const courses = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
-  return courses.then(data => res.json({ data }));
+  return courses.then(data => res.jsend.success(data));
 }
 
 function create({ body, user }, res) {
@@ -27,17 +27,17 @@ function create({ body, user }, res) {
     isNewRecord: true,
     returning: true,
     context: { userId: user.id }
-  }).then(course => res.json({ data: course }));
+  }).then(course => res.jsend.success(course));
 }
 
-function get(req, res) {
-  res.json({ data: req.course });
+function get({ course }, res) {
+  res.jsend.success(course);
 }
 
 function patch({ body, course, user }, res) {
   const data = pick(body, ['name', 'description', 'data']);
   return course.update(data, { context: { userId: user.id } })
-    .then(course => res.json({ data: course }));
+    .then(course => res.jsend.success(course));
 }
 
 function remove({ course, user }, res) {
@@ -49,17 +49,17 @@ function clone({ user, course, body }, res) {
   const { name, description } = body;
   const context = { userId: user.id };
   return course.clone(name, description, context)
-    .then(course => res.json({ data: course }));
+    .then(course => res.jsend.success(course));
 }
 
 function publishRepoInfo({ course }, res) {
   return publishingService.publishRepoDetails(course)
-    .then(data => res.json({ data }));
+    .then(data => res.jsend.success(data));
 }
 
 function getUsers(req, res) {
   return req.course.getUsers()
-    .then(users => res.json({ data: map(users, transform) }));
+    .then(users => res.jsend.success(map(users, transform)));
 }
 
 function upsertUser({ course, body }, res) {
@@ -68,7 +68,7 @@ function upsertUser({ course, body }, res) {
     .then(user => user || User.invite({ email }))
     .then(user => findOrCreateRole(course, user, role))
     .then(user => Object.assign({}, user.profile, { courseRole: role }))
-    .then(user => res.json({ data: { user } }));
+    .then(user => res.jsend.success({ user }));
 }
 
 function removeUser(req, res) {

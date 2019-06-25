@@ -8,7 +8,7 @@ const path = require('path');
 
 function getUrl(req, res) {
   const { query: { key } } = req;
-  return getFileUrl(key).then(url => res.json({ url }));
+  return getFileUrl(key).then(url => res.jsend.success({ url }));
 }
 
 async function upload({ file }, res) {
@@ -19,7 +19,7 @@ async function upload({ file }, res) {
   const key = path.join(ASSET_ROOT, `${hash}___${name}${extension}`);
   await saveFile(key, buffer, { ContentType: file.mimetype });
   const publicUrl = await getFileUrl(key);
-  return res.json({ key, url: `storage://${key}`, publicUrl });
+  return res.jsend.success({ key, url: `storage://${key}`, publicUrl });
 }
 
 module.exports = { getUrl, upload };

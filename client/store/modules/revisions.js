@@ -24,6 +24,8 @@ getter(function hasMoreResults() {
 });
 
 action(function fetch() {
+  // NOTE: Investigate it once we migrate to raw vuex
+  if (!this.getters) return;
   const params = this.getters.revisionQueryParams;
   return this.api.get('', params).then(response => {
     const { data: revisions } = response.data;

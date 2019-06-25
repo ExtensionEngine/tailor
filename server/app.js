@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
+const jsend = require('jsend').middleware;
 const origin = require('./shared/origin');
 const passport = require('passport');
 const path = require('path');
@@ -22,6 +23,7 @@ app.use(cors({ origin: config.auth.corsAllowedOrigins, credentials: true }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(passport.initialize());
 app.use(origin());
+app.use(jsend);
 app.use(express.static(path.join(__dirname, '../dist/')));
 if (STORAGE_PATH) app.use(express.static(STORAGE_PATH));
 

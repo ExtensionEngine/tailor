@@ -7,7 +7,7 @@ const { User } = require('../shared/database');
 function index(req, res) {
   const attributes = ['id', 'email', 'role'];
   return User.findAll({ attributes })
-    .then(users => res.json({ data: users }));
+    .then(users => res.jsend.success(users));
 }
 
 function forgotPassword({ body }, res) {
@@ -40,7 +40,7 @@ function login({ body }, res) {
     .then(user => user || createError(NOT_FOUND, 'Wrong password'))
     .then(user => {
       const token = user.createToken({ expiresIn: '5 days' });
-      res.json({ data: { token, user: user.profile } });
+      res.jsend.success({ token, user: user.profile });
     });
 }
 
