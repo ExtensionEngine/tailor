@@ -19,17 +19,13 @@ export const add = (state, model) => {
   Vue.set(state.items, model._cid, model);
 };
 
-export const save = (state, model) => {
-  Vue.set(state.items, model._cid, model);
-};
+export const save = (state, model) => Vue.set(state.items, model._cid, model);
 
 export const remove = (state, result) => {
   result.forEach(it => Vue.delete(state.items, it._cid));
 };
 
-export const update = (state, model) => {
-  Vue.set(state.items, model._cid, model);
-};
+export const update = (state, model) => Vue.set(state.items, model._cid, model);
 
 export const setBaseUrl = (state, url) => {
   state.api.baseUrl = url;

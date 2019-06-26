@@ -30,7 +30,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import api from '../../../api/course';
+import api from '@/api/course';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import { getRepositoryMeta } from 'shared/activities';

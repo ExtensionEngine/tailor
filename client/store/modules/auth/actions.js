@@ -1,4 +1,4 @@
-import api from '../../../api/auth';
+import api from '@/api/auth';
 
 export const login = ({ commit }, credentials) => {
   return api.login(credentials)
@@ -14,9 +14,7 @@ export const logout = () => {
     }, 0));
 };
 
-export const forgotPassword = (context, { email }) => {
-  return api.forgotPassword(email);
-};
+export const forgotPassword = (context, { email }) => api.forgotPassword(email);
 
 export const resetPassword = (context, { token, password }) => {
   return api.resetPassword(token, password);

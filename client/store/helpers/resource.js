@@ -1,5 +1,5 @@
 import assign from 'lodash/assign';
-import axios from '../../api/request';
+import axios from '@/api/request';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import join from 'url-join';

@@ -1,6 +1,4 @@
-export const courses = state => {
-  return state.items;
-};
+export const courses = state => state.items;
 
 export const courseQueryParams = state => {
   const { pagination, sort } = state.$internals;
@@ -15,6 +13,4 @@ export const courseQueryParams = state => {
   };
 };
 
-export const hasMoreResults = state => {
-  return !state.$internals.allCoursesFetched;
-};
+export const hasMoreResults = state => !state.$internals.allCoursesFetched;

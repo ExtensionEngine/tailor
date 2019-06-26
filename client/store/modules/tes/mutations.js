@@ -1,12 +1,4 @@
-import {
-  add,
-  fetch,
-  remove,
-  reset,
-  save,
-  setBaseUrl,
-  update
-} from '../../helpers/mutations';
+import { add, fetch, remove, reset, save, setBaseUrl, update } from '../../helpers/mutations';
 
 const reorder = ({ element, position }) => {
   element.position = position;

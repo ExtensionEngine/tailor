@@ -1,11 +1,4 @@
-import {
-  get,
-  remove,
-  reset,
-  save,
-  setBaseUrl,
-  update
-} from '../../helpers/actions';
+import { get, remove, reset, save, setBaseUrl, update } from '../../helpers/actions';
 
 const fetch = ({ state, getters, commit }, { reset = false } = {}) => {
   const mutation = reset ? 'reset' : 'fetch';

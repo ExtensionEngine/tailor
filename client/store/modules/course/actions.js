@@ -1,4 +1,4 @@
-import api from '../../../api/course';
+import api from '@/api/course';
 import filter from 'lodash/filter';
 
 export const getUsers = ({ rootState, commit }) => {

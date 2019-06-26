@@ -1,12 +1,4 @@
-import {
-  fetch,
-  get,
-  remove,
-  reset,
-  save,
-  setBaseUrl,
-  update
-} from '../../helpers/actions';
+import { fetch, get, remove, reset, save, setBaseUrl, update } from '../../helpers/actions';
 import calculatePosition from 'utils/calculatePosition.js';
 
 const insert = ({ element, context }) => {
