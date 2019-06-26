@@ -36,15 +36,15 @@ const allCoursesFetched = (state, allFetched) => {
 };
 
 export {
+  add,
   allCoursesFetched,
   fetch,
+  remove,
   reset,
-  add,
   resetPagination,
   save,
   setPagination,
   setSearch,
-  remove,
-  update,
-  setBaseUrl
+  setBaseUrl,
+  update
 };

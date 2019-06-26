@@ -37,7 +37,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import api from '../../../api/course';
+import api from '@/api/course';
 import CloneModal from './CloneModal';
 import EventBus from 'EventBus';
 import General from './General';

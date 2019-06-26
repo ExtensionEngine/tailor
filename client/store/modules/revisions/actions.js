@@ -1,11 +1,4 @@
-import {
-  get,
-  remove,
-  reset,
-  save,
-  setBaseUrl,
-  update
-} from '../../helpers/actions';
+import { get, remove, reset, save, setBaseUrl, update } from '../../helpers/actions';
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 25 };
 

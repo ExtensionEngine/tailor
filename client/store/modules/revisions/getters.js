@@ -5,6 +5,4 @@ export const revisionQueryParams = state => {
   return pagination;
 };
 
-export const hasMoreResults = state => {
-  return !state.$internals.allRevisionsFetched;
-};
+export const hasMoreResults = state => !state.$internals.allRevisionsFetched;

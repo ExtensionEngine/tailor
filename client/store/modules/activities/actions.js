@@ -1,14 +1,7 @@
-import {
-  fetch,
-  get,
-  reset,
-  save,
-  setBaseUrl,
-  update
-} from '../../helpers/actions';
+import { fetch, get, reset, save, setBaseUrl, update } from '../../helpers/actions';
 import calculatePosition from 'utils/calculatePosition';
 import { getDescendants as getDeepChildren } from 'utils/activity';
-import request from '../../../api/request';
+import request from '@/api/request';
 
 const reorder = ({ state, commit }, { activity, context }) => {
   commit('reorder', { activity, position: calculatePosition(context) });

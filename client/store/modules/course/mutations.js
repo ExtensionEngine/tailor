@@ -2,13 +2,9 @@ import compact from 'lodash/compact';
 import transform from 'lodash/transform';
 import Vue from 'vue';
 
-export const upsertUser = (state, user) => {
-  Vue.set(state.users, user.id, user);
-};
+export const upsertUser = (state, user) => Vue.set(state.users, user.id, user);
 
-export const removeUser = (state, id) => {
-  Vue.delete(state.users, id);
-};
+export const removeUser = (state, id) => Vue.delete(state.users, id);
 
 export const setUsers = (state, users) => {
   state.users = {};

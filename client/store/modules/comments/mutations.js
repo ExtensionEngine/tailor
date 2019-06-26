@@ -37,13 +37,13 @@ const sseUpdate = (state, comment) => {
 };
 
 export {
-  fetch,
-  reset,
   add,
-  save,
+  fetch,
   remove,
-  update,
+  reset,
+  save,
   setBaseUrl,
+  update,
   setCourse,
   commentsFetched,
   sseAdd,

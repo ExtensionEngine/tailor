@@ -8,7 +8,7 @@ const fetch = ({ state, commit, rootState }, { activityId }) => {
   if (action === 'reset') commit('setCourse', courseId);
   state.api.fetch({ activityId })
     .then(result => commit(action, result))
-    .then(result => commit('commentsFetched', activityId));
+    .then(() => commit('commentsFetched', activityId));
 };
 
 const subscribe = ({ state, commit }) => {
