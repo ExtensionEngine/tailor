@@ -154,26 +154,26 @@ class Activity extends Model {
     });
   }
 
-  static async linkActivities(src, parentId = null, position = null, activities = []) {
+  static async linkActivities(src, parentId = null, position = null, activities = [], transaction) {
     let link;
     const TeachingElement = this.sequelize.model('TeachingElement');
-    const tesOptions = { where: { activityId: src.id, detached: false } };
+    const tesOptions = { where: { activityId: src.id, detached: false }, transaction };
     const tes = await TeachingElement.findAll(tesOptions);
-    const children = await src.getChildren({ where: { detached: false } });
+    const children = await src.getChildren({ where: { detached: false }, transaction });
     const { type, courseId, originId, data } = src;
     if (src.isLink) {
-      link = await Activity.create({ type, courseId, originId, position, parentId });
+      link = await Activity.create({ type, courseId, originId, position, parentId }, { transaction });
       link.data = src.origin.data;
       activities = [ ...activities, link ];
-      if (tes.length) await TeachingElement.linkElements(tes, link);
+      if (tes.length) await TeachingElement.linkElements(tes, link, transaction);
       return Promise.reduce(children, (acc, child) => {
         acc.push(child);
-        return Activity.linkActivities(child, link.id, child.position, activities);
+        return Activity.linkActivities(child, link.id, child.position, activities, transaction);
       }, activities);
     }
 
-    const origin = await Activity.create({ type, courseId, data, position: null });
-    await src.update({ originId: origin.id, data: null });
+    const origin = await Activity.create({ type, courseId, data, position: null }, { transaction });
+    await src.update({ originId: origin.id, data: null }, { transaction });
     src.data = origin.data;
     link = await Activity.create({
       type,
@@ -181,19 +181,21 @@ class Activity extends Model {
       position,
       parentId,
       originId: origin.id
-    });
+    }, { transaction });
     link.data = origin.data;
     activities = [ ...activities, src, link ];
-    if (tes.length) await TeachingElement.linkElements(tes, link);
+    if (tes.length) await TeachingElement.linkElements(tes, link, transaction);
     return Promise.reduce(children, (acc, child) => {
       acc.push(child);
-      return Activity.linkActivities(child, link.id, child.position, activities);
+      return Activity.linkActivities(child, link.id, child.position, activities, transaction);
     }, activities);
   }
 
   link({ parentId, position }) {
-    return Activity.linkActivities(this, parentId, position)
-      .then(activities => activities);
+    return this.sequelize.transaction(transaction => {
+      return Activity.linkActivities(this, parentId, position, [], transaction)
+        .then(activities => activities);
+    });
   }
 
   /**
@@ -239,9 +241,9 @@ class Activity extends Model {
   }
 
   remove(options = {}) {
-    if (this.isLink) return this.removeLink(options);
-    if (!options.recursive) return this.destroy(options);
-    return this.sequelize.transaction(t => {
+    return this.sequelize.transaction(transaction => {
+      if (this.isLink) return this.removeLink({ ...options, transaction });
+      if (!options.recursive) return this.destroy({ ...options, transaction });
       return this.descendants({ attributes: ['id'] })
         .then(descendants => {
           descendants.all = [...descendants.nodes, ...descendants.leaves];
@@ -251,13 +253,13 @@ class Activity extends Model {
           const TeachingElement = this.sequelize.model('TeachingElement');
           const activities = map(descendants.all, 'id');
           const where = { activityId: [...activities, this.id] };
-          return removeAll(TeachingElement, where, options.soft)
+          return removeAll(TeachingElement, where, options)
             .then(() => descendants);
         })
         .then(descendants => {
           const activities = map(descendants.nodes, 'id');
           const where = { parentId: [...activities, this.id] };
-          return removeAll(Activity, where, options.soft);
+          return removeAll(Activity, where, options);
         })
         .then(() => this.destroy(options))
         .then(() => this);
@@ -266,19 +268,13 @@ class Activity extends Model {
 
   async removeLink(options = {}) {
     if (!options.recursive) return this.destroy(options);
-    try {
-      const TeachingElement = this.sequelize.model('TeachingElement');
-      const descendants = await this.descendants()
-        .then(descendants => {
-          return [...descendants.nodes].filter(d => d.id !== this.id);
-        });
-      await removeAll(TeachingElement, { activityId: [ ...map(descendants, 'id') ] }, false);
-      await Promise.each(descendants, d => d.destroy(options));
-      await this.destroy(options);
-      return this;
-    } catch (e) {
-      console.log(e);
-    }
+    const TeachingElement = this.sequelize.model('TeachingElement');
+    let descendants = await this.descendants();
+    descendants = [...descendants.nodes].filter(d => d.id !== this.id);
+    await removeAll(TeachingElement, { activityId: [ ...map(descendants, 'id') ] }, false);
+    await Promise.each(descendants, d => d.destroy(options));
+    await this.destroy(options);
+    return this;
   }
 
   reorder(index) {
@@ -303,9 +299,9 @@ class Activity extends Model {
   }
 }
 
-function removeAll(Model, where = {}, soft = false) {
-  if (!soft) return Model.destroy({ where, returning: true });
-  return Model.update({ detached: true }, { where, returning: true });
+function removeAll(Model, where = {}, { soft = false, transaction }) {
+  if (!soft) return Model.destroy({ where, transaction });
+  return Model.update({ detached: true }, { where, transaction });
 }
 
 module.exports = Activity;

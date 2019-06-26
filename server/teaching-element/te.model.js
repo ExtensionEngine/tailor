@@ -182,7 +182,7 @@ class TeachingElement extends Model {
     }), { returning: true, transaction });
   }
 
-  static linkElements(elements, container) {
+  static linkElements(elements, container, transaction) {
     const { id: activityId, courseId } = container;
     return Promise.each(elements, async element => {
       const props = pick(element, [
@@ -201,14 +201,14 @@ class TeachingElement extends Model {
           ...props,
           activityId,
           courseId
-        });
+        }, { transaction });
       }
 
       const origin = await TeachingElement.create({
         ...props,
         activityId: null,
         position: null
-      });
+      }, { transaction });
 
       element.originId = origin.id;
       element.data = {};
@@ -220,7 +220,7 @@ class TeachingElement extends Model {
         originId: origin.id,
         activityId,
         courseId
-      });
+      }, { transaction });
     });
   }
 
