@@ -1,5 +1,5 @@
 <script>
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import { pingInterval } from 'shared/active-users';
@@ -16,12 +16,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
+    ...mapActions('activeUsers', {
       addActiveUser: 'add',
       removeActiveUser: 'remove',
       subscribeActiveUsers: 'subscribe',
       fetchActiveUsers: 'fetch'
-    }, 'activeUsers')
+    })
   },
   async mounted() {
     this.subscribeActiveUsers(this.courseId);

@@ -1,5 +1,5 @@
 import assign from 'lodash/assign';
-import axios from './request';
+import axios from '../../api/request';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import join from 'url-join';
@@ -10,14 +10,14 @@ import Queue from 'promise-queue';
 const queue = new Queue(1, Infinity);
 
 export default class Resource {
-  constructor(getBaseUrl) {
-    this.getBaseUrl = getBaseUrl;
+  constructor(baseUrl) {
+    this.baseUrl = baseUrl;
     this.queue = queue;
     this.mappings = {};
   }
 
   url(path = '') {
-    return join(this.getBaseUrl(), path.toString());
+    return join(this.baseUrl, path.toString());
   }
 
   /**

@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import CourseCard from './Card';
 import CreateCourse from './Create';
 import get from 'lodash/get';
@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     ...mapGetters(['courses']),
-    ...mapGetters(['hasMoreResults'], 'courses'),
+    ...mapGetters('courses', ['hasMoreResults']),
     loaderState() {
       return get(this.$refs, 'infiniteLoading.stateChanger', {});
     },
@@ -56,8 +56,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch'], 'courses'),
-    ...mapMutations(['setSearch'], 'courses'),
+    ...mapActions('courses', ['fetch']),
+    ...mapMutations('courses', ['setSearch']),
     loadMore() {
       return this.fetch().then(() => {
         if (!isEmpty(this.courses)) this.loaderState.loaded();

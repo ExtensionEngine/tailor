@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import ActivitySidebar from '../../course/Sidebar/Body';
 import Discussion from '../../course/Sidebar/Discussion';
 import format from 'string-template';
@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['outlineActivities', 'isCourseAdmin'], 'course'),
+    ...mapGetters('course', ['outlineActivities', 'isCourseAdmin']),
     actions() {
       const { $router, activity: { courseId } } = this;
       const items = [{
@@ -73,7 +73,7 @@ export default {
       return format(PREVIEW_URL, { repositoryId: courseId, activityId: id });
     }
   },
-  methods: mapActions({ publishActivity: 'publish' }, 'activities'),
+  methods: mapActions('activities', { publishActivity: 'publish' }),
   components: { ActivitySidebar, Discussion }
 };
 </script>

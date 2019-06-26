@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import ActiveUsers from 'components/common/ActiveUsers';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
@@ -46,7 +46,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activeUsers'], 'activeUsers'),
+    ...mapGetters('activeUsers', ['activeUsers']),
     contentActiveUsers() {
       const { contentId } = this.element;
       return orderBy(this.activeUsers.content[contentId], ['created']) || [];
@@ -64,12 +64,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
+    ...mapActions('activeUsers', {
       addActiveUser: 'add',
       removeActiveUser: 'remove'
-    }, 'activeUsers'),
-    ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
-    ...mapMutations({ addElement: 'add' }, 'tes'),
+    }),
+    ...mapActions('tes', { saveElement: 'save', removeElement: 'remove' }),
+    ...mapMutations('tes', { addElement: 'add' }),
     add(element) {
       this.addElement({ ...this.element, ...cloneDeep(element) });
     },

@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import AssessmentItem from '../AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
@@ -82,9 +82,9 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['add'], 'tes'),
-    ...mapActions(['save', 'update', 'reorder', 'remove'], 'tes'),
-    ...mapActions({ updateGroup: 'update', removeGroup: 'remove' }, 'activities'),
+    ...mapMutations('tes', ['add']),
+    ...mapActions('tes', ['save', 'update', 'reorder', 'remove']),
+    ...mapActions('activities', { updateGroup: 'update', removeGroup: 'remove' }),
     addAssessment(assessment) {
       this.add(assessment);
       this.selected.push(assessment._cid);

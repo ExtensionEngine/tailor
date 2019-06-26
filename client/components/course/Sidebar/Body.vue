@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import Discussion from './Discussion';
 import Meta from 'components/common/Meta';
 import Publishing from './Publishing';
@@ -36,7 +36,7 @@ import Relationship from './Relationship';
 export default {
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['activity', 'getConfig', 'getMetadata', 'isCourseAdmin'], 'course'),
+    ...mapGetters('course', ['activity', 'getConfig', 'getMetadata', 'isCourseAdmin']),
     config() {
       return this.getConfig(this.activity);
     },
@@ -45,7 +45,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update'], 'activities'),
+    ...mapActions('activities', ['update']),
     updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });

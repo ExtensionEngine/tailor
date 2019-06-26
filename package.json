@@ -132,7 +132,6 @@
     "vuedraggable": "^2.15.0",
     "vuetify": "^1.5.7",
     "vuex": "^2.0.0",
-    "vuex-module": "^0.4.0",
     "vuex-router-sync": "^3.0.0",
     "weekstart": "^1.0.0",
     "yup": "^0.24.1"
@@ -164,7 +163,7 @@
     "poi-preset-bundle-report": "^2.0.2",
     "poi-preset-eslint": "^9.0.1",
     "sass-loader": "^7.1.0",
-    "sequelize-cli": "^5.4.0",
+    "sequelize-cli": "^5.5.0",
     "strip-json-comments": "^2.0.1",
     "stylelint": "^10.0.1",
     "stylelint-config-standard": "^18.3.0",

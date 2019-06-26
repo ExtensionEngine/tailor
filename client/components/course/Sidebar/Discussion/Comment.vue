@@ -66,7 +66,7 @@
 <script>
 import Avatar from 'vue-avatar';
 import { focus } from 'vue-focus';
-import { mapGetters } from 'vuex-module';
+import { mapGetters } from 'vuex';
 import TextEditor from 'components/common/TextEditor';
 import ThreadComment from './Comment';
 

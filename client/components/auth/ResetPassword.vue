@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 import { withValidation } from 'utils/validation';
 
 export default {

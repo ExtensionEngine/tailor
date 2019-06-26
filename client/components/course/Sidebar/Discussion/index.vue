@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import DiscussionThread from './Thread';
 import TextEditor from 'components/common/TextEditor';
 
@@ -69,8 +69,8 @@ export default {
   },
   computed: {
     ...mapGetters(['user']),
-    ...mapGetters(['activity'], 'course'),
-    ...mapGetters(['commentsCount', 'commentsFetched'], 'comments'),
+    ...mapGetters('course', ['activity']),
+    ...mapGetters('comments', ['commentsCount', 'commentsFetched']),
     direction() {
       return this.editorPosition === 'bottom' ? 'reverse' : '';
     },
@@ -87,7 +87,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch', 'save', 'subscribe', 'unsubscribe'], 'comments'),
+    ...mapActions('comments', ['setBaseUrl', 'fetch', 'save', 'subscribe', 'unsubscribe']),
     fetchComments() {
       if (this.commentsFetched) return;
       this.fetch({ activityId: this.activity.id });
@@ -118,6 +118,8 @@ export default {
     }
   },
   mounted() {
+    const { courseId } = this.$route.params;
+    this.setBaseUrl(`/courses/${courseId}/comments`);
     this.fetchComments();
     this.subscribe();
   },

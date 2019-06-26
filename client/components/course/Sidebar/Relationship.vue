@@ -21,7 +21,7 @@
 
 <script>
 import { getLevel, getSchemaId } from 'shared/activities';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import castArray from 'lodash/castArray';
 import cloneDeep from 'lodash/cloneDeep';
 import compact from 'lodash/compact';
@@ -50,8 +50,8 @@ export default {
     allowedTypes: { type: Array, default: () => [] }
   },
   computed: {
-    ...mapGetters(['activity', 'outlineActivities'], 'course'),
-    ...mapGetters(['getLineage'], 'activities'),
+    ...mapGetters('course', ['activity', 'outlineActivities']),
+    ...mapGetters('activities', ['getLineage']),
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
       const activities = without(this.outlineActivities, this.activity);
@@ -83,7 +83,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update'], 'activities'),
+    ...mapActions('activities', ['update']),
     getCustomLabel(activity) {
       return get(activity, 'data.name', '');
     },

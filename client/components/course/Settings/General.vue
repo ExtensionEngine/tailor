@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import api from '../../../api/course';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
@@ -42,7 +42,7 @@ export default {
     return { publishing: false };
   },
   computed: {
-    ...mapGetters(['course'], 'course'),
+    ...mapGetters('course', ['course']),
     requiredData() {
       return [{
         key: 'name',
@@ -63,7 +63,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update'], 'courses'),
+    ...mapActions('courses', ['update']),
     updateKey(key, value) {
       if (find(this.metadata, { key })) key = `data.${key}`;
       const data = cloneDeep(this.course);
