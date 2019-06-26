@@ -21,6 +21,8 @@ client.interceptors.request.use(config => {
   return config;
 });
 
+JSendInterceptor(client);
+
 client.interceptors.response.use(res => reassignData(res), err => {
   if (err.response.status === 401) {
     window.localStorage.removeItem('JWT_TOKEN');
@@ -30,8 +32,6 @@ client.interceptors.response.use(res => reassignData(res), err => {
     throw err;
   }
 });
-
-JSendInterceptor(client);
 
 function reassignData(response) {
   const { data } = response.data;
