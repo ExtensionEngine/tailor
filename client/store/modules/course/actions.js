@@ -19,6 +19,6 @@ export const removeUser = ({ commit }, { courseId, userId }) => {
 };
 
 export const toggleActivities = ({ getters, commit }) => {
-  const outline = filter(getters['course/outlineActivities'], it => !it.deletedAt);
+  const outline = filter(getters.outlineActivities, it => !it.deletedAt);
   commit('toggleActivities', outline);
 };
