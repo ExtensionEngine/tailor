@@ -166,28 +166,17 @@ class Activity extends Model {
       });
   }
 
-  removeOrRestore({ recursive = true, ...options } = {}) {
-    if (!recursive) return this.deletedAt ? this.restore(options) : this.destroy(options);
-    return this.sequelize.transaction(transaction => {
+  removeOrRestore(options = {}) {
+    return this.sequelize.transaction(async transaction => {
+      const TeachingElement = this.sequelize.model('TeachingElement');
       Object.assign(options, { transaction, removed: this.deletedAt });
-      return this.descendants({ attributes: ['id'] })
-        .then(descendants => {
-          descendants.all = [...descendants.nodes, ...descendants.leaves];
-          return descendants;
-        })
-        .then(descendants => {
-          const TeachingElement = this.sequelize.model('TeachingElement');
-          const activities = map(descendants.all, 'id');
-          const where = { activityId: [...activities, this.id] };
-          return removeOrRestoreAll(TeachingElement, { ...options, where })
-            .then(() => descendants);
-        })
-        .then(descendants => {
-          const activities = map(descendants.nodes, 'id');
-          const where = { parentId: [...activities, this.id] };
-          return removeOrRestoreAll(Activity, { ...options, where });
-        })
-        .then(() => this.removeOrRestore({ ...options, recursive: false }));
+      const descendants = await this.descendants({ attributes: ['id'] });
+      descendants.all = [...descendants.nodes, ...descendants.leaves];
+      let where = { activityId: [...map(descendants.all, 'id'), this.id] };
+      await removeOrRestoreAll(TeachingElement, { ...options, where });
+      where = { parentId: [...map(descendants.nodes, 'id'), this.id] };
+      await removeOrRestoreAll(Activity, { ...options, where });
+      return this.deletedAt ? this.restore(options) : this.destroy(options);
     });
   }
 
