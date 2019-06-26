@@ -117,11 +117,11 @@ class Activity extends Model {
   }
 
   get isLink() {
-    return this.originId && this.origin;
+    return !!(this.originId && this.origin);
   }
 
   update(values, options) {
-    if (!this.isLink) return super.update(values, options);
+    if (!this.isLink || options.revertLink) return super.update(values, options);
     return this.origin.update(values, options)
       .then(origin => origin.getLinks());
   }
@@ -156,37 +156,28 @@ class Activity extends Model {
 
   static async linkActivities(src, parentId = null, position = null, activities = []) {
     let link;
-    let origin;
     const TeachingElement = this.sequelize.model('TeachingElement');
     const tesOptions = { where: { activityId: src.id, detached: false } };
     const tes = await TeachingElement.findAll(tesOptions);
     const children = await src.getChildren({ where: { detached: false } });
-    if (src.originId) {
-      link = await Activity.create({
-        ...pick(src, ['type', 'courseId']),
-        position,
-        parentId,
-        originId: src.originId
-      });
-      origin = await src.getOrigin();
-      link.data = origin.data;
+    const { type, courseId, originId, data } = src;
+    if (src.isLink) {
+      link = await Activity.create({ type, courseId, originId, position, parentId });
+      link.data = src.origin.data;
       activities = [ ...activities, link ];
       if (tes.length) await TeachingElement.linkElements(tes, link);
-      if (!children.length) return activities;
-      return Promise.reduce(children, async (acc, child) => {
+      return Promise.reduce(children, (acc, child) => {
         acc.push(child);
         return Activity.linkActivities(child, link.id, child.position, activities);
       }, activities);
     }
 
-    origin = await Activity.create({
-      ...pick(src, ['type', 'data', 'courseId']),
-      position: null
-    });
+    const origin = await Activity.create({ type, courseId, data, position: null });
     await src.update({ originId: origin.id, data: null });
     src.data = origin.data;
     link = await Activity.create({
-      ...pick(origin, ['type', 'courseId']),
+      type,
+      courseId,
       position,
       parentId,
       originId: origin.id
@@ -194,8 +185,7 @@ class Activity extends Model {
     link.data = origin.data;
     activities = [ ...activities, src, link ];
     if (tes.length) await TeachingElement.linkElements(tes, link);
-    if (!children.length) return activities;
-    return Promise.reduce(children, async (acc, child) => {
+    return Promise.reduce(children, (acc, child) => {
       acc.push(child);
       return Activity.linkActivities(child, link.id, child.position, activities);
     }, activities);
@@ -249,6 +239,7 @@ class Activity extends Model {
   }
 
   remove(options = {}) {
+    if (this.isLink) return this.removeLink(options);
     if (!options.recursive) return this.destroy(options);
     return this.sequelize.transaction(t => {
       return this.descendants({ attributes: ['id'] })
@@ -271,6 +262,23 @@ class Activity extends Model {
         .then(() => this.destroy(options))
         .then(() => this);
     });
+  }
+
+  async removeLink(options = {}) {
+    if (!options.recursive) return this.destroy(options);
+    try {
+      const TeachingElement = this.sequelize.model('TeachingElement');
+      const descendants = await this.descendants()
+        .then(descendants => {
+          return [...descendants.nodes].filter(d => d.id !== this.id);
+        });
+      await removeAll(TeachingElement, { activityId: [ ...map(descendants, 'id') ] }, false);
+      await Promise.each(descendants, d => d.destroy(options));
+      await this.destroy(options);
+      return this;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   reorder(index) {
@@ -296,8 +304,8 @@ class Activity extends Model {
 }
 
 function removeAll(Model, where = {}, soft = false) {
-  if (!soft) return Model.destroy({ where });
-  return Model.update({ detached: true }, { where });
+  if (!soft) return Model.destroy({ where, returning: true });
+  return Model.update({ detached: true }, { where, returning: true });
 }
 
 module.exports = Activity;

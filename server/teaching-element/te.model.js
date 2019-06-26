@@ -112,6 +112,16 @@ class TeachingElement extends Model {
         if (!te.changed('data')) return Promise.resolve();
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
+      },
+      async [Hooks.afterDestroy](te) {
+        const { isLink, origin } = te;
+        if (!isLink) return;
+        const links = await origin.getLinks();
+        if (links.length > 1) return;
+        const [ link ] = links;
+        await link.update({ originId: null, data: origin.data });
+        await origin.destroy();
+        return link;
       }
     };
   }
@@ -139,7 +149,7 @@ class TeachingElement extends Model {
   }
 
   update(values, options) {
-    if (!this.isLink) {
+    if (!this.isLink || options.revertLink) {
       return super.update(values, options)
       .then(element => resolveStatics(element));
     }
