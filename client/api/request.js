@@ -1,5 +1,5 @@
 import axios from 'axios';
-import JSendError from './JSendInterceptor';
+import JSendInterceptor from 'jsend-axios';
 
 // TODO: read this from configuration.
 const BASE_URL = '/api/v1/';
@@ -31,11 +31,11 @@ client.interceptors.response.use(res => reassignData(res), err => {
   }
 });
 
+JSendInterceptor(client);
+
 function reassignData(response) {
-  const { data, ...jsend } = response.data;
-  Object.assign(response, { data, jsend });
-  if (jsend.status !== 'error' && jsend.status !== 'fail') return response;
-  throw new JSendError(`Request failed with jsend status: ${jsend.status}`, response);
+  const { data } = response.data;
+  return Object.assign(response, { data });
 }
 
 export default client;
