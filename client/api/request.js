@@ -35,7 +35,7 @@ client.interceptors.response.use(res => reassignData(res), err => {
 
 function reassignData(response) {
   const { data } = response.data;
-  if (!data) return response;
+  if (response.jsend) return response;
   return Object.assign(response, { data });
 }
 
