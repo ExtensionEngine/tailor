@@ -241,40 +241,27 @@ class Activity extends Model {
   }
 
   remove(options = {}) {
-    return this.sequelize.transaction(transaction => {
-      if (this.isLink) return this.removeLink({ ...options, transaction });
-      if (!options.recursive) return this.destroy({ ...options, transaction });
-      return this.descendants({ attributes: ['id'] })
-        .then(descendants => {
-          descendants.all = [...descendants.nodes, ...descendants.leaves];
-          return descendants;
-        })
-        .then(descendants => {
-          const TeachingElement = this.sequelize.model('TeachingElement');
-          const activities = map(descendants.all, 'id');
-          const where = { activityId: [...activities, this.id] };
-          return removeAll(TeachingElement, where, options)
-            .then(() => descendants);
-        })
-        .then(descendants => {
-          const activities = map(descendants.nodes, 'id');
-          const where = { parentId: [...activities, this.id] };
-          return removeAll(Activity, where, options);
-        })
-        .then(() => this.destroy(options))
-        .then(() => this);
+    return this.sequelize.transaction(async transaction => {
+      options = { ...options, transaction };
+      if (this.isLink) return this.removeLink(options);
+      const TeachingElement = this.sequelize.model('TeachingElement');
+      const descendants = await this.descendants({ attributes: ['id'] });
+      descendants.all = [...descendants.nodes, ...descendants.leaves];
+      let where = { activityId: [...map(descendants.all, 'id'), this.id] };
+      await removeAll(TeachingElement, where, options);
+      where = { parentId: [...map(descendants.nodes, 'id'), this.id] };
+      await removeAll(Activity, where, options);
+      return this.destroy(options);
     });
   }
 
   async removeLink(options = {}) {
-    if (!options.recursive) return this.destroy(options);
     const TeachingElement = this.sequelize.model('TeachingElement');
     let descendants = await this.descendants();
     descendants = [...descendants.nodes].filter(d => d.id !== this.id);
     await removeAll(TeachingElement, { activityId: [ ...map(descendants, 'id') ] }, false);
     await Promise.each(descendants, d => d.destroy(options));
-    await this.destroy(options);
-    return this;
+    return this.destroy(options);
   }
 
   reorder(index) {
