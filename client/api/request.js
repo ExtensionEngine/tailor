@@ -1,4 +1,5 @@
 import axios from 'axios';
+import JSendInterceptor from 'jsend-axios';
 
 // TODO: read this from configuration.
 const BASE_URL = '/api/v1/';
@@ -20,7 +21,9 @@ client.interceptors.request.use(config => {
   return config;
 });
 
-client.interceptors.response.use(res => res, err => {
+JSendInterceptor(client);
+
+client.interceptors.response.use(res => reassignData(res), err => {
   if (err.response.status === 401) {
     window.localStorage.removeItem('JWT_TOKEN');
     window.localStorage.removeItem('TAILOR_USER');
@@ -29,5 +32,11 @@ client.interceptors.response.use(res => res, err => {
     throw err;
   }
 });
+
+function reassignData(response) {
+  const { data } = response.data;
+  if (!data) return response;
+  return Object.assign(response, { data });
+}
 
 export default client;

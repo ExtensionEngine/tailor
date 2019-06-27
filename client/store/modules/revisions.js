@@ -27,9 +27,7 @@ action(function fetch() {
   // NOTE: Investigate it once we migrate to raw vuex
   if (!this.getters) return;
   const params = this.getters.revisionQueryParams;
-  return this.api.get('', params).then(response => {
-    const { data: revisions } = response.data;
-
+  return this.api.get('', params).then(({ data: revisions }) => {
     let result = {};
     revisions.forEach(it => {
       this.api.setCid(it);

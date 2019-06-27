@@ -5,19 +5,19 @@ const url = {
 };
 
 function getCourses(params) {
-  return request.get('/courses', { params }).then(res => res.data.data);
+  return request.get('/courses', { params }).then(res => res.data);
 }
 
 function getUsers(courseId, params) {
   return request
     .get(url.users(courseId), { params })
-    .then(res => res.data.data);
+    .then(res => res.data);
 }
 
 function upsertUser(courseId, data) {
   return request
     .post(url.users(courseId), data)
-    .then(res => res.data.data.user);
+    .then(res => res.data.user);
 }
 
 function removeUser(courseId, userId) {

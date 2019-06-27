@@ -55,8 +55,7 @@ action(function reorder({ activity, context }) {
   this.commit('reorder', { activity, position: calculatePosition(context) });
   const data = { position: context.newPosition };
   return this.api.post(`${activity.id}/reorder`, data)
-    .then(res => {
-      let activity = res.data.data;
+    .then(({ data: activity }) => {
       this.api.setCid(activity);
       this.commit('save', activity);
     });
@@ -76,13 +75,13 @@ action(function clone(mapping) {
   const { srcId, srcCourseId } = mapping;
   const url = `/courses/${srcCourseId}/activities/${srcId}/clone`;
   return request.post(url, mapping)
-    .then(({ data: { data } }) => this.commit('fetch', data));
+    .then(({ data }) => this.commit('fetch', data));
 });
 
 action(function publish(activity) {
   const { id, courseId } = activity;
   const url = `/courses/${courseId}/activities/${id}/publish`;
-  return request.get(url).then(({ data: { data } }) => {
+  return request.get(url).then(({ data }) => {
     this.commit('save', { ...activity, publishedAt: data.publishedAt });
   });
 });
