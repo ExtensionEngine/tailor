@@ -4,10 +4,10 @@
 
 <script>
 import * as d3 from 'd3-selection';
+import { hierarchy, tree } from 'd3-hierarchy';
 import clamp from 'lodash/clamp';
 import flatten from 'lodash/flatten';
 import get from 'lodash/get';
-import { hierarchy, tree } from 'd3-hierarchy';
 import range from 'lodash/range';
 import { zoom } from 'd3-zoom';
 
@@ -242,7 +242,7 @@ function rangeToArray(start, end, size) {
 </script>
 
 <style lang="scss">
-$font: 14px Roboto, Helvetica, Arial;
+$font: 14px $font-family-secondary;
 $text-color: #5a5a5a;
 $node-color: #b9b9b9;
 $link-color: #ababab;

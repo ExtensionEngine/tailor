@@ -3,7 +3,7 @@
     <div class="pull-right">
       <v-btn
         @click="deleteActivity"
-        color="blue-grey"
+        color="blue-grey darken-1"
         flat
         icon
         class="btn-delete">
@@ -13,7 +13,7 @@
     <v-btn
       v-show="isEditable"
       @click.stop="edit"
-      color="blue-grey darken-1"
+      color="primary"
       fab
       dark
       class="btn-edit">
@@ -23,13 +23,13 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import { isEditable } from 'shared/activities';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');

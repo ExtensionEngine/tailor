@@ -81,7 +81,7 @@ export default {
   }
 
   .btn {
-    padding: 8px 12px 4px;
+    padding: 8px 12px 5px;
     color: #656565;
     font-size: 22px;
     background-color: white;

@@ -26,7 +26,7 @@
           @click="$emit('action', name)"
           ripple>
           <v-list-tile-action class="pl-1">
-            <v-icon :color="color ? color : 'blue-grey darken-2'">
+            <v-icon :color="color ? color : 'primary'">
               mdi-{{ icon }}
             </v-icon>
           </v-list-tile-action>

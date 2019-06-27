@@ -51,7 +51,7 @@
       <span class="question">{{ question }}</span>
       <v-btn
         @click.stop="$emit('delete')"
-        color="blue-grey darken-2"
+        color="primary"
         flat
         icon
         class="delete">
@@ -62,7 +62,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -70,6 +69,7 @@ import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
+import { mapGetters } from 'vuex-module';
 import Multiselect from '../../common/Select';
 import set from 'lodash/set';
 import truncate from 'lodash/truncate';

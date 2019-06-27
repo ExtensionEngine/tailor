@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="mt-4">
     <v-layout row align-start>
       <v-card>
         <sidebar
@@ -14,8 +14,8 @@
       :show="showCloneModal"
       @close="showCloneModal = false">
     </clone-modal>
-    <progress-dialog :show="isPublishing"/>
-    <v-footer height="auto" color="blue-grey darken-2" absolute>
+    <progress-dialog :show="isPublishing" :status="publishPercentage"/>
+    <v-footer height="52" color="primary" absolute>
       <v-layout row justify-center>
         <v-flex
           xs-12
@@ -25,10 +25,10 @@
             label
             small
             class="mr-3 grey--text text--darken-4">
-            v3.0 Silk
+            v3.1 Silk
           </v-chip>
           Built with <v-icon color="pink">mdi-heart</v-icon>
-          ExtensionEngine
+          Extension Engine
         </v-flex>
       </v-layout>
     </v-footer>
@@ -57,7 +57,11 @@ export default {
       showCloneModal: false
     };
   },
-  computed: mapGetters(['course', 'outlineActivities'], 'course'),
+  computed: {
+    ...mapGetters(['isAdmin']),
+    ...mapGetters(['course', 'outlineActivities', 'isCourseAdmin'], 'course'),
+    publishPercentage: ({ publishStatus }) => publishStatus.progress * 100
+  },
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
     ...mapActions({ publishActivity: 'publish' }, 'activities'),
@@ -89,6 +93,10 @@ export default {
     clone() {
       this.showCloneModal = true;
     }
+  },
+  created() {
+    if (this.isAdmin || this.isCourseAdmin) return;
+    this.$router.push({ name: 'course' });
   },
   components: {
     CloneModal,

@@ -1,9 +1,12 @@
+import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
+import compact from 'lodash/compact';
 import courseApi from '../../api/course';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
 import map from 'lodash/map';
+import { role } from 'shared';
+import transform from 'lodash/transform';
 import values from 'lodash/values';
 import Vue from 'vue';
 import { VuexModule } from 'vuex-module';
@@ -17,30 +20,27 @@ const isTes = element => !!element.activityId;
 state({
   activity: undefined,
   users: {},
-  outline: { expanded: {} }
+  outline: { expanded: {}, showOptions: null }
 });
 
 getter(function course() {
-  const { route } = this.rootState;
-  const { courses } = this.rootGetters;
-  if (!route.fullPath.match(COURSE_ROUTE)) return;
-  const id = Number(route.params.courseId);
-  return find(courses, { id });
+  const courseId = get(this.rootState, 'route.params.courseId');
+  if (!courseId) return;
+  if (!this.rootState.route.fullPath.match(COURSE_ROUTE)) return;
+  return find(this.rootGetters.courses, { id: Number(courseId) });
 });
 
 getter(function structure() {
-  const { route } = this.rootState;
-  const { courses } = this.rootGetters;
-  if (!route.fullPath.match(COURSE_ROUTE)) return [];
-  const course = find(courses, { id: Number(route.params.courseId) });
+  const course = this.getters['course/course'];
+  if (!course) return;
   return getOutlineLevels(course.schema);
 });
 
 getter(function activities() {
-  const { route } = this.rootState;
-  const { activities: collection } = this.rootGetters;
-  const id = Number(route.params.courseId);
-  return filter(collection, { courseId: id });
+  const course = this.getters['course/course'];
+  if (!course) return;
+  const { activities: items } = this.rootGetters;
+  return filter(items, { courseId: course.id });
 });
 
 getter(function activity() {
@@ -55,26 +55,16 @@ getter(function outlineActivities() {
   return filter(activities, it => outlineTypes.includes(it.type));
 });
 
-getter(function isCollapsed(activity) {
+getter(function isCollapsed() {
   const { outline } = this.state;
   return activity => activity && !outline.expanded[activity._cid];
 });
 
-getter(function assets() {
-  const { route } = this.rootState;
-  if (route.name !== 'editor') return;
-  return this.rootGetters.assets;
-});
-
-getter(function users() {
-  return values(this.state.users);
-});
-
 getter(function revisions() {
-  const { route } = this.rootState;
-  const courseId = Number(route.params.courseId);
+  const course = this.getters['course/course'];
+  if (!course) return [];
   const revs = this.rootGetters.revisions;
-  return filter(revs, { courseId })
+  return filter(revs, { courseId: course.id })
     .map(rev => ({ ...rev, createdAt: new Date(rev.createdAt) }))
     .sort((rev1, rev2) => rev2.createdAt - rev1.createdAt);
 });
@@ -100,6 +90,25 @@ getter(function getMetadata() {
       return { ...it, value };
     });
   };
+});
+
+getter(function users() {
+  return values(this.state.users);
+});
+
+getter(function currentUser() {
+  const { user } = this.rootState.auth;
+  return find(this.state.users, { id: user.id });
+});
+
+getter(function isCourseAdmin() {
+  const user = this.getters['course/currentUser'];
+  return get(user, 'courseRole') === role.course.ADMIN;
+});
+
+getter(function isCourseAuthor() {
+  const user = this.getters['course/currentUser'];
+  return get(user, 'courseRole') === role.course.AUTHOR;
 });
 
 action(function getUsers() {
@@ -132,10 +141,23 @@ mutation(function setUsers(users) {
   users.forEach(it => Vue.set(this.state.users, it.id, it));
 });
 
+mutation(function toggleActivities() {
+  const { getters, state } = this;
+  const outline = filter(getters['course/outlineActivities'], it => !it.deletedAt);
+  const totalExpanded = compact(Object.values(state.outline.expanded)).length;
+  const isOpen = totalExpanded < outline.length;
+  const expanded = transform(outline, (acc, it) => (acc[it._cid] = isOpen), {});
+  Vue.set(this.state.outline, 'expanded', expanded);
+});
+
 mutation(function toggleActivity({ _cid, expanded }) {
   let expandedItems = this.state.outline.expanded;
   expanded = expanded === undefined ? !expandedItems[_cid] : expanded;
   Vue.set(expandedItems, _cid, expanded);
+});
+
+mutation(function showActivityOptions(_cid) {
+  this.state.outline.showOptions = _cid;
 });
 
 mutation(function focusActivity(_cid) {

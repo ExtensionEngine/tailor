@@ -7,6 +7,16 @@
       @input="val => $emit('input', val)"
       @close="close"
       @open="open">
+      <slot
+        v-for="slot in Object.keys($slots)"
+        :name="slot"
+        :slot="slot"/>
+      <template
+        v-for="slot in Object.keys($scopedSlots)"
+        slot-scope="scope"
+        :slot="slot">
+        <slot v-bind="scope" :name="slot"/>
+      </template>
     </multiselect>
     <span
       v-if="showResetButton"
@@ -86,7 +96,6 @@ export default {
   padding-right: 24px;
   color: #555;
   font-size: 14px;
-  font-family: 'Catamaran', Helvetica, Arial, sans-serif;
 
   &:focus {
     box-shadow: inset 0 -2px 0 #337ab7;
@@ -130,7 +139,7 @@ export default {
     padding-left: 12px;
     border-radius: 26px;
     color: #4a4a4a;
-    line-height: 26px;
+    line-height: 24px;
     background: #e0e0e0;
     cursor: default;
 
@@ -147,7 +156,7 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       font-size: 12px;
-      font-family: Roboto, Helvetica, Arial, sans-serif;
+      font-family: $font-family-secondary;
     }
   }
 
@@ -157,7 +166,7 @@ export default {
     vertical-align: middle;
     width: 20px;
     margin: 0 4px;
-    line-height: 26px;
+    line-height: 24px;
     overflow: hidden;
     cursor: pointer;
 
@@ -168,7 +177,7 @@ export default {
       display: inline-block;
       color: #9c9c9c;
       font-size: 18px;
-      font-family: "Material Design Icons";
+      font-family: $font-family-icons;
       font-weight: normal;
       line-height: 26px;
       font-style: normal;

@@ -18,7 +18,7 @@
           :class="{ 'has-error': vErrors.has('height') }"
           class="form-group">
           <input
-            v-validate="{ rules: { required: true, min_value: 300, max_value: 3000 } }"
+            v-validate="{ required: true, min_value: 300, max_value: 3000 }"
             v-model="height"
             id="heightInput"
             class="form-control"
@@ -71,8 +71,6 @@ export default {
   position: relative;
   width: 100%;
   height: 48px;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
 
   ul {
     float: left;
@@ -125,7 +123,6 @@ export default {
       padding: 0 10px;
       font-size: 12px;
       line-height: 12px;
-      font-family: 'Catamaran', Helvetica, Arial, sans-serif;
       text-transform: uppercase;
     }
 

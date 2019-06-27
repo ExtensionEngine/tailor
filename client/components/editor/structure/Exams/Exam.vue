@@ -33,8 +33,8 @@
       <v-btn
         :disabled="!exam.id"
         @click.stop="createGroup"
-        color="blue-grey lighten-1"
-        dark
+        color="primary"
+        outline
         class="my-5">
         <v-icon class="pr-2">mdi-file-tree</v-icon>
         Add Question Group

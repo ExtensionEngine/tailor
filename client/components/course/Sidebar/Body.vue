@@ -1,8 +1,8 @@
 <template>
   <div class="body">
-    <publishing/>
+    <publishing v-if="isAdmin || isCourseAdmin"/>
     <v-chip :color="config.color" label dark small class="type-label">
-      {{ config.label }}
+      {{ config.label.toUpperCase() }}
     </v-chip>
     <div class="meta-element">
       <meta-input
@@ -35,7 +35,8 @@ import Relationship from './Relationship';
 
 export default {
   computed: {
-    ...mapGetters(['activity', 'getConfig', 'getMetadata'], 'course'),
+    ...mapGetters(['isAdmin']),
+    ...mapGetters(['activity', 'getConfig', 'getMetadata', 'isCourseAdmin'], 'course'),
     config() {
       return this.getConfig(this.activity);
     },

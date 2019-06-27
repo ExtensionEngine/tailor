@@ -8,7 +8,7 @@
         <v-btn
           :loading="isPublishing"
           v-on="on"
-          color="blue-grey"
+          color="blue-grey darken-1"
           outline
           small>
           Publish
@@ -19,14 +19,14 @@
           <v-list-tile-title>{{ config.label }}</v-list-tile-title>
         </v-list-tile>
         <v-list-tile
-          v-if="config.subLevels && config.subLevels.length"
+          v-if="activityWithDescendants.length > 1"
           @click="confirmPublishing(activityWithDescendants)">
           <v-list-tile-title>{{ config.label }} and children</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
     <div class="publish-status">
-      <span>{{ publishStatus }}</span>
+      <span>{{ publishStatus.message }}</span>
     </div>
   </div>
 </template>
@@ -65,7 +65,7 @@ export default {
   padding: 0 7px;
 
   .publish-date {
-    width: 180px;
+    width: 200px;
     line-height: 44px;
   }
 

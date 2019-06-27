@@ -14,6 +14,7 @@ import { mapActions, mapMutations } from 'vuex-module';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
+import throttle from 'lodash/throttle';
 
 export default {
   name: 'teaching-element',
@@ -32,10 +33,13 @@ export default {
     save(data) {
       const element = cloneDeep(this.element);
       Object.assign(element.data, data);
-      return element.embedded
-        ? this.$emit('save', element)
-        : this.saveElement(element);
+      if (element.embedded) return this.$emit('save', element);
+      return this.saveElement(element)
+        .then(() => this.showNotification());
     },
+    showNotification: throttle(function () {
+      this.$snackbar.show('Element saved');
+    }, 4000),
     remove() {
       this.removeElement(this.element).then(() => {
         this.$nextTick(() => EventBus.emit('element:focus'));

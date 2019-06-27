@@ -9,11 +9,7 @@
         :position="index">
       </exam>
     </ul>
-    <v-btn
-      @click.stop="create"
-      color="blue darken-1"
-      dark
-      class="mt-4">
+    <v-btn @click.stop="create" color="primary" class="mt-4">
       <v-icon class="pr-2">mdi-plus</v-icon>
       Create Exam Version
     </v-btn>
@@ -21,9 +17,9 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex-module';
 import Exam from './Exam';
 import filter from 'lodash/filter';
-import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
   name: 'exams',
