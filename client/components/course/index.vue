@@ -53,11 +53,11 @@ export default {
     ...mapActions('course', ['getUsers']),
     ...mapActions('courses', { getCourse: 'get' }),
     ...mapActions('activities', { getActivities: 'fetch' }),
-    ...mapMutations('course', { resetActivityFocus: 'focusActivity' }),
     ...mapActions('activities', { setupActivityApi: 'setBaseUrl' }),
     ...mapActions('comments', { setupCommentsApi: 'setBaseUrl' }),
     ...mapActions('revisions', { setupRevisionApi: 'setBaseUrl' }),
-    ...mapActions('tes', { setupTesApi: 'setBaseUrl' })
+    ...mapActions('tes', { setupTesApi: 'setBaseUrl' }),
+    ...mapMutations('course', { resetActivityFocus: 'focusActivity' })
   },
   async created() {
     const { courseId } = this.$route.params;
