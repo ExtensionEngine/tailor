@@ -23,6 +23,7 @@
       :include="['ASSESSMENT']"
       :activity="activity"
       :layout="false"
+      :show.sync="showElementDrawer"
       @add="addAssessment"
       large
       label="Add assessment"/>
@@ -40,12 +41,11 @@ const appChannel = EventBus.channel('app');
 
 export default {
   name: 'assessments',
-  data() {
-    return {
-      selected: [],
-      allSelected: false
-    };
-  },
+  data: () => ({
+    selected: [],
+    allSelected: false,
+    showElementDrawer: false
+  }),
   computed: {
     ...mapGetters(['activity', 'assessments'], 'editor'),
     hasAssessments() {

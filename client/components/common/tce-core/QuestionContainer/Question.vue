@@ -17,6 +17,7 @@
         v-show="isEditing"
         :include="['HTML', 'IMAGE', 'EMBED']"
         :layout="false"
+        :show.sync="showElementDrawer"
         @add="addElement"/>
     </div>
     <span v-if="isEditing && helperText" class="help-block">
@@ -41,6 +42,7 @@ export default {
     errors: { type: Array, default: () => ([]) },
     isEditing: { type: Boolean, default: false }
   },
+  data: () => ({ showElementDrawer: false }),
   computed: {
     question: {
       get() {

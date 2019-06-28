@@ -22,8 +22,8 @@
     <add-element
       v-if="enableAdd"
       :include="supportedTypes"
-      :position="nextPosition"
       :layout="layout"
+      :show.sync="showElementDrawer"
       @add="el => $emit('add', el)"/>
   </div>
 </template>
@@ -32,7 +32,6 @@
 import AddElement from './AddElement';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
-import last from 'lodash/last';
 
 export default {
   name: 'element-list',
@@ -42,21 +41,13 @@ export default {
     layout: { type: Boolean, default: false },
     enableAdd: { type: Boolean, default: true }
   },
-  data() {
-    return { dragElementIndex: null };
-  },
+  data: () => ({ dragElementIndex: null, showElementDrawer: false }),
   computed: {
-    options() {
-      return {
-        handle: '.drag-handle',
-        scrollSpeed: 15,
-        scrollSensitivity: 125
-      };
-    },
-    nextPosition() {
-      const lastItem = last(this.elements);
-      return lastItem ? lastItem.position + 1 : 1;
-    }
+    options: () => ({
+      handle: '.drag-handle',
+      scrollSpeed: 15,
+      scrollSensitivity: 125
+    })
   },
   methods: { get },
   components: { AddElement, Draggable }
