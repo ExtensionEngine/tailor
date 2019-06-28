@@ -7,7 +7,7 @@ import SSEClient from '../../SSEClient';
 import Vue from 'vue';
 import VuexCollection from '../helpers/collection';
 
-const { action, getter, state, mutation, build } = new VuexCollection('comments');
+const { action, getter, state, mutation, build } = new VuexCollection('comments', '/comments');
 let SSE_CLIENT;
 
 state({
@@ -34,14 +34,15 @@ action(function fetch({ activityId }) {
   const { courseId } = this.rootState.route.params;
   let action = this.state.courseId === courseId ? 'fetch' : 'reset';
   if (action === 'reset') this.commit('setCourse', courseId);
-  this.api.fetch({ activityId })
+  this.api.fetch({ activityId, courseId })
     .then(result => this.commit(action, result))
-    .then(result => this.commit('commentsFetched', activityId));
+    .then(() => this.commit('commentsFetched', activityId));
 });
 
 action(function subscribe() {
+  const { courseId } = this.rootState.route.params;
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
-  SSE_CLIENT = new SSEClient(`/api/v1${this.state.$baseUrl}/subscribe`);
+  SSE_CLIENT = new SSEClient(`/api/v1/comments/courses/${courseId}/subscribe`);
   SSE_CLIENT.subscribe('comment_create', item => this.commit('sseAdd', item));
   SSE_CLIENT.subscribe('comment_update', item => this.commit('sseUpdate', item));
   SSE_CLIENT.subscribe('comment_delete', item => this.commit('sseUpdate', item));

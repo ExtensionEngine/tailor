@@ -95,11 +95,11 @@ export default {
     post() {
       if (!this.comment.content) return;
       const author = this.user;
-      const activityId = this.activity.id;
+      const { courseId, id: activityId } = this.activity;
       const createdAt = Date.now();
       const updatedAt = Date.now();
       const { content } = this.comment;
-      const comment = { content, author, activityId, createdAt, updatedAt };
+      const comment = { content, author, courseId, activityId, createdAt, updatedAt };
       this.save(comment)
         .then(() => {
           this.comment = createComment();

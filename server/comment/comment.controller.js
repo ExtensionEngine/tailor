@@ -1,14 +1,13 @@
 'use strict';
 
-const { Comment } = require('../shared/database');
-const { User } = require('../shared/database');
+const { Comment, Course, User } = require('../shared/database');
 
-function list({ course, opts, query }, res) {
+function list({ opts, query }, res) {
+  const { courseId, activityId } = query;
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
-  if (query.activityId) {
-    opts.where.activityId = query.activityId;
-  }
-  return course.getComments({ ...opts, include })
+  if (activityId) (opts.where.activityId = activityId);
+  return Course.findByPk(courseId)
+    .then(course => course.getComments({ ...opts, include }))
     .then(data => res.json({ data }));
 }
 
@@ -16,9 +15,8 @@ function show({ comment }, res) {
   return res.json({ data: comment });
 }
 
-function create({ body, course, user }, res) {
-  const { content, activityId } = body;
-  const courseId = course.id;
+function create({ body, user }, res) {
+  const { content, activityId, courseId } = body;
   const authorId = user.id;
   return Comment.create({ content, activityId, courseId, authorId })
     .then(data => res.json({ data }));

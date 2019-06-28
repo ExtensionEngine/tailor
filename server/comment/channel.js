@@ -21,10 +21,10 @@ function unsubscribe(courseId, client) {
 }
 
 function subscribe(req, res) {
-  const { id } = req.course;
+  const { courseId } = req.params;
   const client = res.sse;
-  set(clients, [id, client.id], client);
-  req.on('close', unsubscribe(id, client));
+  set(clients, [courseId, client.id], client);
+  req.on('close', unsubscribe(courseId, client));
 }
 
 function broadcast(event, comment) {

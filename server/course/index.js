@@ -10,42 +10,40 @@ const processQuery = require('../shared/util/processListQuery')();
 const router = require('express').Router();
 
 const activity = require('../activity');
-const comment = require('../comment');
 const revision = require('../revision');
 const teachingElement = require('../teaching-element');
 
 router
   .use(hasAccess)
-  .param('id', getCourse);
+  .param('courseId', getCourse);
 
 router.route('/')
   .get(processQuery, ctrl.index)
   .post(authorize(), ctrl.create);
 
-router.route('/:id')
+router.route('/:courseId')
   .get(ctrl.get)
   .patch(ctrl.patch)
   .delete(ctrl.remove);
 
 router
-  .post('/:id/clone', authorize(), ctrl.clone)
-  .post('/:id/publish', ctrl.publishRepoInfo)
-  .get('/:id/users', ctrl.getUsers)
-  .post('/:id/users', ctrl.upsertUser)
-  .delete('/:id/users/:userId', ctrl.removeUser)
-  .get('/:id/content-inventory', ctrl.exportContentInventory);
+  .post('/:courseId/clone', authorize(), ctrl.clone)
+  .post('/:courseId/publish', ctrl.publishRepoInfo)
+  .get('/:courseId/users', ctrl.getUsers)
+  .post('/:courseId/users', ctrl.upsertUser)
+  .delete('/:courseId/users/:userId', ctrl.removeUser)
+  .get('/:courseId/content-inventory', ctrl.exportContentInventory);
 
-mount(router, '/:id', activity);
-mount(router, '/:id', comment);
-mount(router, '/:id', revision);
-mount(router, '/:id', teachingElement);
+mount(router, '/:courseId', activity);
+mount(router, '/:courseId', revision);
+mount(router, '/:courseId', teachingElement);
 
 function mount(router, mountPath, subrouter) {
   return router.use(path.join(mountPath, subrouter.path), subrouter.router);
 }
 
-function getCourse(req, _res, next, id) {
-  return Course.findByPk(id, { paranoid: false })
+function getCourse(req, _res, next, courseId) {
+  return Course.findByPk(courseId, { paranoid: false })
     .then(course => course || createError(NOT_FOUND, 'Course not found'))
     .then(course => {
       req.course = course;
