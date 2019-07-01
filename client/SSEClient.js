@@ -20,8 +20,9 @@ class SSEClient {
   static initConnection(url) {
     window.EventSource = window.EventSource || EventSource;
     const token = window.localStorage.getItem('JWT_TOKEN');
-    url += url.includes('?') ? `&jwt=${token}` : `?jwt=${token}`;
-    return new window.EventSource(url, { withCredentials: true });
+    const params = new URLSearchParams();
+    params.append('jwt', token);
+    return new window.EventSource(`${url}?${params.toString()}`);
   }
 
   disconnect() {
