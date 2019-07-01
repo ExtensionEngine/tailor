@@ -5,7 +5,7 @@ let SSE_CLIENT;
 const subscribeUrl = courseId => `/api/v1/courses/${courseId}/active-users/subscribe`;
 
 export const subscribe = ({ state, commit }, courseId) => {
-  if (SSE_CLIENT) SSE_CLIENT.disconnect();
+  if (SSE_CLIENT) return;
   SSE_CLIENT = new SSEClient(subscribeUrl(courseId));
   SSE_CLIENT.subscribe('active_user_add', ({ user, context }) => {
     commit('sseAdd', { user, context });

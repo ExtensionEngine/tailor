@@ -18,8 +18,8 @@ class SSEClient {
 
   static initConnection(url) {
     const token = window.localStorage.getItem('JWT_TOKEN');
-    const headers = { Authorization: `JWT ${token}` };
-    return new window.EventSourcePolyfill(url, { headers });
+    url += url.includes('?') ? `&jwt=${token}` : `?jwt=${token}`;
+    return new EventSource(url);
   }
 
   disconnect() {

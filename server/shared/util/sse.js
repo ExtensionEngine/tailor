@@ -8,7 +8,7 @@ class SSEConnection {
     this.req = req;
     this.res = res;
     this.nextEventId = 0;
-    SSEConnection.initialize(req, res);
+    this.initialize(req, res);
   }
 
   send(event, data) {
@@ -22,14 +22,15 @@ class SSEConnection {
     this.res.end();
   }
 
-  static initialize(req, res) {
+  initialize() {
+    const { req, res } = this;
     req.socket.setNoDelay(true);
     res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
+      'Content-Type': 'text/event-stream;charset=UTF-8',
       'Cache-Control': 'no-cache, no-transform',
-      'Connection': 'keep-alive'
+      'Connection': 'keep-alive, Keep-Alive'
     });
-    res.write(':ok\n\n');
+    this.send('connection_initialized', { sseId: this.id });
   }
 }
 
