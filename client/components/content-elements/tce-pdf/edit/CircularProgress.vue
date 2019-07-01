@@ -28,8 +28,8 @@ export default {
 .path {
   fill: none;
   stroke: #888;
-  stroke-dasharray: 80,200;
-  stroke-dashoffset: 0px;
+  stroke-dasharray: 80, 200;
+  stroke-dashoffset: 0;
   stroke-linecap: round;
   stroke-width: 5;
   transform-origin: center;
@@ -42,16 +42,18 @@ export default {
 
 @keyframes dash {
   0% {
-    stroke-dasharray: 1,200;
-    stroke-dashoffset: 0px;
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
   }
+
   50% {
-    stroke-dasharray: 100,200;
+    stroke-dasharray: 100, 200;
     stroke-dashoffset: -15px;
     stroke: #337ab7;
   }
+
   100% {
-    stroke-dasharray: 100,200;
+    stroke-dasharray: 100, 200;
     stroke-dashoffset: -125px;
   }
 }

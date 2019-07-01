@@ -156,7 +156,7 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       font-size: 12px;
-      font-family: Roboto, Helvetica, Arial, sans-serif;
+      font-family: $font-family-secondary;
     }
   }
 
@@ -177,7 +177,7 @@ export default {
       display: inline-block;
       color: #9c9c9c;
       font-size: 18px;
-      font-family: "Material Design Icons";
+      font-family: $font-family-icons;
       font-weight: normal;
       line-height: 26px;
       font-style: normal;
