@@ -23,6 +23,7 @@ class SSEConnection {
   }
 
   static initialize(req, res) {
+    res.header('Transfer-Encoding', 'identity');
     req.socket.setNoDelay(true);
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
