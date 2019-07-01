@@ -22,7 +22,7 @@
     "lint:client": "eslint --ext .js,.vue config/client client/test/e2e/specs client/test/unit/specs client/components client/store",
     "lint:server": "eslint --ext .js server config/server",
     "lint": "npm run lint:client; npm run lint:server",
-    "dev:server": "nodemon --ignore client/ --exec \"node -r ./server/script/preflight\" ./server | bunyan",
+    "dev:server": "nodemon --ignore client/ --ignore dist/ --ignore extensions/ --exec \"node -r ./server/script/preflight\" ./server | bunyan",
     "debug:server": "node --inspect-brk -r ./server/script/preflight ./server",
     "doc:server": "jsdoc --pedantic --destination ./server/_doc_ --recurse ./server",
     "unit:server": "mocha --recursive \"./server/**/*.spec.js\"",
@@ -36,7 +36,8 @@
     "integration:add": "node -r ./server/script/preflight ./server/script/addIntegration.js",
     "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
     "start": "node -r ./server/script/preflight ./server",
-    "postshrinkwrap": "sed -i.bak 's/http:\\/\\//https:\\/\\//g' package-lock.json && rm -v package-lock.json.bak"
+    "postshrinkwrap": "sed -i.bak 's/http:\\/\\//https:\\/\\//g' package-lock.json && rm -v package-lock.json.bak",
+    "import": "node ./server/script/extensions.js import"
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
@@ -52,6 +53,7 @@
     "bootswatch": "^3.3.7",
     "boxen": "^4.0.0",
     "bunyan": "^1.8.5",
+    "commander": "^2.20.0",
     "cors": "^2.8.1",
     "cropperjs": "^1.0.0-beta.1",
     "cuid": "^1.3.8",
@@ -100,6 +102,7 @@
     "promise-queue": "^2.2.3",
     "rcfile": "^1.0.3",
     "read-pkg-up": "^6.0.0",
+    "rimraf": "^2.6.3",
     "safe-require": "^1.0.3",
     "sass-web-fonts": "^2.0.2",
     "save-as": "^0.1.8",
