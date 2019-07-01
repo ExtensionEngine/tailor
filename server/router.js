@@ -5,6 +5,7 @@ const auth = require('passport').authenticate('jwt');
 const commentRouter = require('./comment').router;
 const courseRouter = require('./course').router;
 const express = require('express');
+const extensionsRouter = require('./extensions').router;
 const revisionRouter = require('./revision').router;
 const storageRouter = require('./shared/storage/storage.router').router;
 const teRouter = require('./teaching-element').router;
@@ -14,6 +15,7 @@ const router = express.Router();
 router.use(processBody);
 
 // Public routes:
+router.use('/', extensionsRouter);
 router.use('/', userRouter);
 
 // Protected routes:
