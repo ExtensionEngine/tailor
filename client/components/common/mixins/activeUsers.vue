@@ -1,37 +1,38 @@
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
-import { pingInterval } from 'shared/active-users';
 
 export default {
-  data() {
-    return {
-      timer: null
-    };
-  },
   computed: {
+    ...mapState('activeUsers', ['sseId']),
     context() {
-      return { ...pick(this, ['courseId', 'activityId']), created: new Date() };
+      return { ...pick(this, ['courseId', 'activityId', 'sseId']), created: new Date() };
     }
   },
   methods: {
     ...mapActions('activeUsers', {
       addActiveUser: 'add',
       removeActiveUser: 'remove',
-      subscribeActiveUsers: 'subscribe',
+      subscribeToActiveUsers: 'subscribe',
       fetchActiveUsers: 'fetch'
     })
   },
+  watch: {
+    sseId: {
+      async handler() {
+        if (!this.sseId) return;
+        await this.addActiveUser(this.context);
+      },
+      immediate: true
+    }
+  },
   async mounted() {
-    this.subscribeActiveUsers(this.courseId);
+    this.subscribeToActiveUsers(this.courseId);
     await this.fetchActiveUsers(this.courseId);
-    await this.addActiveUser(this.context);
-    this.timer = setInterval(() => this.addActiveUser(this.context), pingInterval);
   },
   beforeRouteLeave(to, from, next) {
     this.removeActiveUser(omit(this.context, 'created'));
-    clearInterval(this.timer);
     next();
   }
 };

@@ -53,7 +53,6 @@ export default {
     courseId: { type: Number, required: true },
     showLoader: { type: Boolean, default: false }
   },
-  data: () => ({ timer: null }),
   computed: {
     ...mapGetters('course', ['structure', 'outlineActivities']),
     isFlat() {

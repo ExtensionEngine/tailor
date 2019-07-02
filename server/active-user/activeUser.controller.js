@@ -1,6 +1,6 @@
 'use strict';
 
-const { activeUsers, addContext, removeContext } = require('./store');
+const { activeUsers, addContext, removeContext, removeActiveUser } = require('./store');
 const { broadcast } = require('../course/channel');
 const events = require('./events');
 const pick = require('lodash/pick');
@@ -30,8 +30,15 @@ function remove(req, res) {
   res.end();
 }
 
+function removeSession(courseId, userId, sseId) {
+  removeActiveUser(userId, sseId);
+  const data = { userId, sseId };
+  broadcast(events.REMOVE_ACTIVE_USER_SESSION, courseId, data);
+}
+
 module.exports = {
   fetch,
   add,
-  remove
+  remove,
+  removeSession
 };

@@ -33,6 +33,10 @@ export const sseRemove = (state, { user, context }) => {
   existingUser.contexts.splice(index, 1);
 };
 
+export const setSseId = (state, { sseId }) => {
+  state.sseId = sseId;
+};
+
 function addContext(_vue, activeUsers, user, context, usedPalettes) {
   const existingUser = activeUsers[user.id];
   if (!existingUser) {

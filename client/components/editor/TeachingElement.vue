@@ -28,7 +28,6 @@ import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
 import first from 'lodash/first';
 import orderBy from 'lodash/orderBy';
-import { pingInterval } from 'shared/active-users';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -41,8 +40,7 @@ export default {
   },
   data() {
     return {
-      isFocused: false,
-      timer: null
+      isFocused: false
     };
   },
   computed: {
@@ -100,10 +98,8 @@ export default {
       const context = { courseId, activityId, contentId, created: new Date() };
       if (this.isFocused) {
         this.addActiveUser(context);
-        this.timer = setInterval(() => this.addActiveUser(context), pingInterval);
         return;
       }
-      clearInterval(this.timer);
       this.removeActiveUser(context);
     }
   },
@@ -113,7 +109,6 @@ export default {
   beforeDestroy() {
     const { courseId, activityId, contentId } = this.element;
     this.removeActiveUser({ courseId, activityId, contentId });
-    clearInterval(this.timer);
   },
   components: { ActiveUsers, ContainedContent }
 };
