@@ -7,6 +7,7 @@ const nocache = require('nocache')();
 
 const reEOL = /\r?\n/g;
 const SSE_TIMEOUT_MARGIN = 0.10;
+const SSE_DEFAULT_TIMEOUT = 60000; /* ms */
 const SSE_HEADERS = {
   connection: 'keep-alive',
   'transfer-encoding': 'identity'
@@ -31,8 +32,8 @@ class SSEConnection extends EventEmitter {
   }
 
   get timeout() {
-    const timeout = parseInt(this.req.header('connection-timeout'), 0);
-    if (timeout) return timeout * (1 - SSE_TIMEOUT_MARGIN);
+    const timeout = parseInt(this.req.header('connection-timeout'), 0) || SSE_DEFAULT_TIMEOUT;
+    return timeout * (1 - SSE_TIMEOUT_MARGIN);
   }
 
   initialize() {
