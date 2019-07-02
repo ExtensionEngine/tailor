@@ -1,7 +1,7 @@
 'use strict';
 
 const { getRepositoryRelationships, getSchema } = require('../../config/shared/activities');
-const { Model } = require('sequelize');
+const { Model, Op } = require('sequelize');
 const hooks = require('./hooks');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
@@ -116,10 +116,11 @@ class Course extends Model {
     const Activity = this.sequelize.model('Activity');
     const srcAttributes = pick(this, ['schema', 'data', 'stats']);
     const dstAttributes = Object.assign(srcAttributes, { name, description });
+    const notNull = { [Op.ne]: null };
     return this.sequelize.transaction(async transaction => {
       const dst = await Course.create(dstAttributes, { context, transaction });
       const src = await Activity.findAll({
-        where: { courseId: this.id, parentId: null }, transaction
+        where: { courseId: this.id, parentId: null, position: notNull }, transaction
       });
       const idMap = await Activity.cloneActivities(src, dst.id, null, { transaction });
       await dst.mapClonedReferences(idMap, transaction);
