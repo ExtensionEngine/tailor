@@ -46,7 +46,7 @@ export default {
 <style lang="scss" scoped>
 /deep/ .title {
   color: #808080;
-  font-family: Roboto, Helvetica, sans-serif;
+  font-family: $font-family-secondary;
   font-size: 14px !important;
   font-weight: normal;
 }
