@@ -1,4 +1,3 @@
-import cuid from 'cuid';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import orderBy from 'lodash/orderBy';
@@ -80,7 +79,7 @@ mutation(function commentsFetched(activityId) {
 mutation(function sseAdd(comment) {
   const { id } = comment;
   if (find(this.state.items, { id })) return;
-  comment._cid = cuid();
+  this.api.setCid(comment);
   Vue.set(this.state.items, comment._cid, comment);
 });
 
