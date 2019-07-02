@@ -2,7 +2,7 @@
 import '@babel/polyfill';
 import 'dom-shims/shim/Element.classList';
 import 'dom-shims/shim/Element.mutation';
-import 'event-source-polyfill';
+import 'eventsource/lib/eventsource-polyfill';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 

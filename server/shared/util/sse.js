@@ -25,6 +25,7 @@ class SSEConnection {
   initialize() {
     const { req, res } = this;
     req.socket.setNoDelay(true);
+    res.connection.setTimeout(0);
     res.writeHead(200, {
       'Content-Type': 'text/event-stream;charset=UTF-8',
       'Cache-Control': 'no-cache, no-transform',
