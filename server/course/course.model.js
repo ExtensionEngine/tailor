@@ -119,11 +119,14 @@ class Course extends Model {
     const notNull = { [Op.ne]: null };
     return this.sequelize.transaction(async transaction => {
       const dst = await Course.create(dstAttributes, { context, transaction });
-      const src = await Activity.findAll({
-        where: { courseId: this.id, parentId: null, position: notNull }, transaction
-      });
-      const idMap = await Activity.cloneActivities(src, dst.id, null, { transaction, cloneOrigins: true });
-      await dst.mapClonedReferences(idMap, transaction);
+      const where = { courseId: this.id, parentId: null, position: notNull };
+      const src = await Activity.findAll({ where, transaction });
+      const options = await Activity.cloneActivities(
+        src, dst.id, null,
+        { transaction, cloneOrigins: true }
+      );
+      const map = await Activity.resolveClonedOrigins(options);
+      await dst.mapClonedReferences(map, transaction);
       return dst;
     });
   }
