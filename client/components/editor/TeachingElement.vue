@@ -21,12 +21,13 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActiveUsers from 'components/common/ActiveUsers';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
 import first from 'lodash/first';
+import omit from 'lodash/omit';
 import orderBy from 'lodash/orderBy';
 import throttle from 'lodash/throttle';
 
@@ -45,6 +46,7 @@ export default {
   },
   computed: {
     ...mapGetters('activeUsers', ['activeUsers']),
+    ...mapState('activeUsers', ['sseId']),
     contentActiveUsers() {
       const { contentId } = this.element;
       return orderBy(this.activeUsers.content[contentId], ['created']) || [];
@@ -59,6 +61,11 @@ export default {
       if (user.profileImage) color = user.palette.border;
       else color = user.palette.background;
       return `0 0 0 2px ${color}`;
+    },
+    context() {
+      const { courseId, activityId, contentId } = this.element;
+      const { sseId } = this;
+      return { courseId, activityId, contentId, sseId, created: new Date() };
     }
   },
   methods: {
@@ -94,21 +101,18 @@ export default {
   },
   watch: {
     isFocused() {
-      const { courseId, activityId, contentId } = this.element;
-      const context = { courseId, activityId, contentId, created: new Date() };
       if (this.isFocused) {
-        this.addActiveUser(context);
+        this.addActiveUser(this.context);
         return;
       }
-      this.removeActiveUser(context);
+      this.removeActiveUser(this.context);
     }
   },
   created() {
     this.setFocus();
   },
   beforeDestroy() {
-    const { courseId, activityId, contentId } = this.element;
-    this.removeActiveUser({ courseId, activityId, contentId });
+    this.removeActiveUser(omit(this.context, 'created'));
   },
   components: { ActiveUsers, ContainedContent }
 };
