@@ -7,8 +7,14 @@ import SSEClient from '../../SSEClient';
 import Vue from 'vue';
 import VuexCollection from '../helpers/collection';
 
-const { action, getter, state, mutation, build } = new VuexCollection('comments');
-let SSE_CLIENT;
+const { action, getter, state, mutation, build } = new VuexCollection('comments', '/comments');
+const feed = new SSEClient();
+
+const Event = {
+  Create: 'comment:create',
+  Update: 'comment:update',
+  Delete: 'comment:delete'
+};
 
 state({
   courseId: '',
@@ -40,16 +46,18 @@ action(function fetch({ activityId }) {
 });
 
 action(function subscribe() {
-  if (SSE_CLIENT) return;
-  SSE_CLIENT = new SSEClient(`/api/v1${this.state.$baseUrl}/subscribe`);
-  SSE_CLIENT.subscribe('comment_create', item => this.commit('sseAdd', item));
-  SSE_CLIENT.subscribe('comment_update', item => this.commit('sseUpdate', item));
-  SSE_CLIENT.subscribe('comment_delete', item => this.commit('sseUpdate', item));
+  const { courseId } = this.rootState.route.params;
+  const token = localStorage.getItem('JWT_TOKEN');
+  const params = { courseId, token };
+  feed
+    .connect(this.api.getUrl('/subscribe'), { params })
+    .subscribe(Event.Create, item => this.commit('sseAdd', item))
+    .subscribe(Event.Update, item => this.commit('sseUpdate', item))
+    .subscribe(Event.Delete, item => this.commit('sseUpdate', item));
 });
 
 action(function unsubscribe() {
-  if (!SSE_CLIENT) return;
-  SSE_CLIENT.disconnect();
+  feed.disconnect();
 });
 
 action(function remove(comment) {

@@ -2,8 +2,15 @@
 
 const hooks = require('./hooks');
 const { Model } = require('sequelize');
+const { withFeeds } = require('../shared/feeds');
 
-class Comment extends Model {
+const Events = {
+  Create: 'comment:create',
+  Update: 'comment:update',
+  Delete: 'comment:delete'
+};
+
+class Comment extends withFeeds(Model, Events) {
   static fields(DataTypes) {
     const { DATE, TEXT } = DataTypes;
     return {

@@ -1,33 +1,32 @@
 import axios from 'axios';
+import HttpStatus from 'http-status-codes';
 
-// TODO: read this from configuration.
-const BASE_URL = '/api/v1/';
-
-// Instance of axios to be used for all API requests.
-const client = axios.create({
-  baseURL: BASE_URL,
+const config = {
+  baseURL: process.env.API_PATH,
   withCredentials: true,
   headers: { 'Content-Type': 'application/json' }
-});
+};
+
+// Instance of axios to be used for all API requests.
+const client = axios.create(config);
 
 client.interceptors.request.use(config => {
-  const token = window.localStorage.getItem('JWT_TOKEN');
+  const token = localStorage.getItem('JWT_TOKEN');
   if (token) {
     config.headers['Authorization'] = `JWT ${token}`;
-  } else if (!token && config.headers['Authorization']) {
-    delete config.headers['Authorization'];
+    return config;
   }
+  delete config.headers['Authorization'];
   return config;
 });
 
 client.interceptors.response.use(res => res, err => {
-  if (err.response.status === 401) {
-    window.localStorage.removeItem('JWT_TOKEN');
-    window.localStorage.removeItem('TAILOR_USER');
-    window.location.reload();
-  } else {
-    throw err;
+  if (err.response && err.response.status === HttpStatus.FORBIDDEN) {
+    localStorage.removeItem('TAILOR_USER');
+    localStorage.removeItem('JWT_TOKEN');
+    location.reload();
   }
+  throw err;
 });
 
 export default client;

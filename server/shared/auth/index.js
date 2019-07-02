@@ -6,8 +6,8 @@ const { User } = require('../database');
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromExtractors([
-    ExtractJwt.fromAuthHeaderWithScheme('jwt'),
-    ExtractJwt.fromUrlQueryParameter('jwt')
+    ExtractJwt.fromAuthHeaderWithScheme('JWT'),
+    ExtractJwt.fromUrlQueryParameter('token')
   ]),
   secretOrKey: process.env.AUTH_JWT_SECRET
   // issuer: process.env.AUTH_JWT_ISSUER,
