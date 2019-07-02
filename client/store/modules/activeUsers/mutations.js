@@ -1,9 +1,11 @@
 import find from 'lodash/find';
 import { getUsedPalettes } from './getters';
+import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import palette from 'utils/palette';
+import remove from 'lodash/remove';
 import sample from 'lodash/sample';
 import Vue from 'vue';
 
@@ -31,6 +33,13 @@ export const sseRemove = (state, { user, context }) => {
   });
   if (index === -1) return;
   existingUser.contexts.splice(index, 1);
+};
+
+export const sseRemoveSession = (state, { userId, sseId }) => {
+  const existingUser = state.activeUsers[userId];
+  if (!existingUser) return;
+  remove(existingUser.contexts, c => c.sseId === sseId);
+  if (isEmpty(existingUser.contexts)) Vue.delete(state.activeUsers, userId);
 };
 
 export const setSseId = (state, { sseId }) => {

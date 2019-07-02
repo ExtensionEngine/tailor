@@ -13,8 +13,8 @@ export const subscribe = ({ state, commit }, courseId) => {
   SSE_CLIENT.subscribe('active_user_remove', ({ user, context }) => {
     commit('sseRemove', { user, context });
   });
-  SSE_CLIENT.subscribe('active_user_remove_session', ({ userId }) => {
-    console.log('removeUserSession', { userId });
+  SSE_CLIENT.subscribe('active_user_remove_session', ({ userId, sseId }) => {
+    commit('sseRemoveSession', { userId, sseId });
   });
   SSE_CLIENT.subscribe('connection_initialized', ({ sseId }) => {
     commit('setSseId', { sseId });
