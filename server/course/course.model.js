@@ -122,7 +122,7 @@ class Course extends Model {
       const src = await Activity.findAll({
         where: { courseId: this.id, parentId: null, position: notNull }, transaction
       });
-      const idMap = await Activity.cloneActivities(src, dst.id, null, { transaction });
+      const idMap = await Activity.cloneActivities(src, dst.id, null, { transaction, cloneOrigins: true });
       await dst.mapClonedReferences(idMap, transaction);
       return dst;
     });

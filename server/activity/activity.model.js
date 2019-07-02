@@ -170,21 +170,23 @@ class Activity extends Model {
     }
 
     const clonedActivitiesMap = source
-        .filter(activity => !(activity.isOrigin && idMappings[activity.id]))
-        .map(activity => {
-          let originId = activity.originId;
-          if (originMappings[activity.originId]) {
-            originId = originMappings[activity.originId].id;
-            originMappings[activity.originId].links = originMappings[activity.originId].links + 1;
-          }
-          return {
-            courseId,
-            parentId,
-            originId,
-            data: activity.isLink ? null : activity.data,
-            ...pick(activity, ['type', 'position', 'refs'])
-          };
-        });
+      .filter(activity => !(activity.isOrigin && idMappings[activity.id]))
+      .map(activity => {
+        let originId = activity.originId;
+
+        if (originMappings[activity.originId]) {
+          originId = originMappings[activity.originId].id;
+          originMappings[activity.originId].links = originMappings[activity.originId].links + 1;
+        }
+
+        return {
+          courseId,
+          parentId,
+          originId,
+          data: activity.isLink ? null : activity.data,
+          ...pick(activity, ['type', 'position', 'refs'])
+        };
+      });
 
     const clonedActivities = await Activity.bulkCreate(
       clonedActivitiesMap,
@@ -197,11 +199,13 @@ class Activity extends Model {
 
     return Promise.reduce(source, async (acc, activity, index) => {
       const parent = clonedActivities[index];
-      acc[activity.id] = parent.id;
-      const where = { activityId: activity.id, detached: false };
-      const tes = await TeachingElement.findAll({ where, transaction });
-      await TeachingElement.cloneElements(tes, parent, transaction);
       const children = await activity.getChildren({ where: { detached: false } });
+      const tes = await TeachingElement.findAll({
+        where: { activityId: activity.id, detached: false },
+        transaction
+      });
+      await TeachingElement.cloneElements(tes, parent, transaction);
+      acc[activity.id] = parent.id;
       if (!children.length) return acc;
       return Activity.cloneActivities(
         children,
