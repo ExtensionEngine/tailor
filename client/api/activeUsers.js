@@ -18,8 +18,14 @@ function remove(context) {
   return request.post(`${url.root(courseId)}/remove`, { context });
 }
 
+function removeSession(context) {
+  const { courseId } = context;
+  return request.post(`${url.root(courseId)}/remove-session`, { context });
+}
+
 export default {
   fetch,
   add,
-  remove
+  remove,
+  removeSession
 };

@@ -1,7 +1,8 @@
 <script>
 import { mapActions, mapState } from 'vuex';
-import omit from 'lodash/omit';
 import pick from 'lodash/pick';
+
+const trackedRoutes = ['course', 'editor'];
 
 export default {
   computed: {
@@ -13,7 +14,7 @@ export default {
   methods: {
     ...mapActions('activeUsers', {
       addActiveUser: 'add',
-      removeActiveUser: 'remove',
+      removeActiveUserSession: 'removeSession',
       subscribeToActiveUsers: 'subscribe',
       fetchActiveUsers: 'fetch'
     })
@@ -32,7 +33,9 @@ export default {
     await this.fetchActiveUsers(this.courseId);
   },
   beforeRouteLeave(to, from, next) {
-    this.removeActiveUser(omit(this.context, 'created'));
+    if (!trackedRoutes.includes(to.name)) {
+      this.removeActiveUserSession(this.context);
+    }
     next();
   }
 };

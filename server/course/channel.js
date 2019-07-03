@@ -7,22 +7,19 @@ const unset = require('lodash/unset');
 
 const sseClients = {};
 
-function unsubscribe(courseId, sseClient, { onUnsubscribe, params } = {}) {
+function unsubscribe(req, res, onUnsubscribe) {
   return () => {
-    unset(sseClients, [courseId, sseClient.id]);
-    sseClient.close();
-    if (onUnsubscribe) {
-      params.courseId = courseId;
-      onUnsubscribe(params);
-    }
+    unset(sseClients, [req.course.id, res.sse.id]);
+    res.sse.close();
+    if (onUnsubscribe) onUnsubscribe(req, res);
   };
 }
 
-function subscribe(req, res, { onUnsubscribe, params } = {}) {
+function subscribe(req, res, onUnsubscribe) {
   const { id: courseId } = req.course;
   const sseClient = res.sse;
   set(sseClients, [courseId, sseClient.id], sseClient);
-  req.on('close', unsubscribe(courseId, sseClient, { onUnsubscribe, params }));
+  req.on('close', unsubscribe(req, res, onUnsubscribe));
 }
 
 function broadcast(event, courseId, data) {

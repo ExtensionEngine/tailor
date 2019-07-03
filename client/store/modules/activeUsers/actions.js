@@ -38,3 +38,7 @@ export const add = (_, context) => {
 export const remove = (_, context) => {
   return api.remove(context);
 };
+
+export const removeSession = (_, context) => {
+  return api.removeSession(context);
+};

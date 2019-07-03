@@ -30,10 +30,14 @@ function remove(req, res) {
   res.end();
 }
 
-function removeSession(courseId, userId, sseId) {
+function removeSession(req, res) {
+  const { user: { id: userId }, course } = req;
+  const { sse } = res;
+  const sseId = sse ? sse.id : req.body.context.sseId;
   removeActiveUser(userId, sseId);
   const data = { userId, sseId };
-  broadcast(events.REMOVE_ACTIVE_USER_SESSION, courseId, data);
+  broadcast(events.REMOVE_ACTIVE_USER_SESSION, course.id, data);
+  res.end();
 }
 
 module.exports = {
