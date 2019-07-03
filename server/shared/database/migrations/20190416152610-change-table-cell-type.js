@@ -14,21 +14,20 @@ function setCellType({ data }, type) {
   });
 }
 
-module.exports = {
-  up: async queryInterface => {
-    const tables = await findTables(queryInterface);
-    return Promise.all(tables.map(({ id, data }) => {
-      setCellType({ data }, 'HTML');
-      return queryInterface.update({}, TABLE_NAME, { data }, { id });
-    }));
-  },
-  down: async queryInterface => {
-    const tables = await findTables(queryInterface);
-    return Promise.all(tables.map(({ id, data }) => {
-      setCellType({ data }, 'TABLE-CELL');
-      return queryInterface.update({}, TABLE_NAME, { data }, { id });
-    }));
-  }
+exports.up = async queryInterface => {
+  const tables = await findTables(queryInterface);
+  return Promise.all(tables.map(({ id, data }) => {
+    setCellType({ data }, 'HTML');
+    return queryInterface.update({}, TABLE_NAME, { data }, { id });
+  }));
+};
+
+exports.down = async queryInterface => {
+  const tables = await findTables(queryInterface);
+  return Promise.all(tables.map(({ id, data }) => {
+    setCellType({ data }, 'TABLE-CELL');
+    return queryInterface.update({}, TABLE_NAME, { data }, { id });
+  }));
 };
 
 function mapKeys(obj, cb) {
