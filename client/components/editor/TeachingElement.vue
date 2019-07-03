@@ -65,7 +65,15 @@ export default {
     context() {
       const { courseId, activityId, contentId } = this.element;
       const { sseId } = this;
-      return { courseId, activityId, contentId, sseId, created: new Date() };
+      const routeName = 'teaching-element';
+      return {
+        courseId,
+        activityId,
+        contentId,
+        sseId,
+        routeName,
+        created: new Date()
+      };
     }
   },
   methods: {

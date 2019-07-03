@@ -21,7 +21,8 @@ export const getUsedPalettes = state => {
 function mapContext(activeUsers, user, context) {
   const { id, email, palette } = user;
   const { created } = context;
-  Object.keys(omit(context, ['created', 'sseId'])).forEach(key => {
+  const ommitedFields = ['created', 'sseId', 'routeName'];
+  Object.keys(omit(context, ommitedFields)).forEach(key => {
     const entityName = key.substring(0, key.length - 2);
     const entityId = context[key];
     if (activeUsers[entityName][entityId]) {
