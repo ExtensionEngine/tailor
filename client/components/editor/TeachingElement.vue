@@ -65,7 +65,7 @@ export default {
     context() {
       const { courseId, activityId, contentId } = this.element;
       const { sseId } = this;
-      const routeName = 'teaching-element';
+      const routeName = 'tce';
       return {
         courseId,
         activityId,

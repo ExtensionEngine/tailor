@@ -8,7 +8,7 @@ export default {
   computed: {
     ...mapState('activeUsers', ['sseId']),
     context() {
-      const routeName = this.activityId ? 'editor' : 'course';
+      const routeName = this.activityId ? 'activity' : 'course';
       return {
         ...pick(this, ['courseId', 'activityId', 'sseId']),
         routeName,
