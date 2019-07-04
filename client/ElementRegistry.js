@@ -6,20 +6,17 @@ import {
 } from 'tce-core/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import elementList from './components/content-elements';
-import extensionsList from '../extensions/content-elements';
+import extensionList from '../extensions/content-elements';
 import find from 'lodash/find';
 import pick from 'lodash/pick';
-import Promise from 'bluebird';
 
 export default class ElementRegistry {
   constructor(Vue) {
     this._registry = [];
     this.Vue = Vue;
-  }
 
-  initialize() {
-    const list = [...elementList, ...extensionsList];
-    return Promise.map(list, (item, index) => this.load(item, index));
+    const list = [...elementList, ...extensionList];
+    list.map((item, index) => this.load(item, index));
   }
 
   load(element, position = this._registry.length) {

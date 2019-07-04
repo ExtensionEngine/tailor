@@ -50,20 +50,17 @@ Vue.use(Timeago, {
   }
 });
 
-const registry = new ElementRegistry(Vue);
-registry.initialize().then(() => {
-  sync(store, router);
-  /* eslint-disable no-new */
-  new Vue({
-    router,
-    store,
-    el: '#app',
-    render: h => h(App),
-    provide() {
-      return {
-        $teRegistry: registry,
-        $storageService: assetsApi
-      };
-    }
-  });
+sync(store, router);
+/* eslint-disable no-new */
+new Vue({
+  router,
+  store,
+  el: '#app',
+  render: h => h(App),
+  provide() {
+    return {
+      $teRegistry: new ElementRegistry(Vue),
+      $storageService: assetsApi
+    };
+  }
 });
