@@ -39,16 +39,14 @@
 import { mapActions, mapGetters } from 'vuex-module';
 import api from '../../../api/course';
 import CloneModal from './CloneModal';
-import EventBus from 'EventBus';
 import General from './General';
 import JSZip from 'jszip';
+import { mapRequests } from '@/plugins/radio';
 import ProgressDialog from '@/components/common/ProgressDialog';
 import publishMixin from 'components/common/mixins/publish';
 import saveAs from 'save-as';
 import Sidebar from './Sidebar';
 import UserManagement from './UserManagement';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   mixins: [publishMixin],
@@ -65,6 +63,7 @@ export default {
   methods: {
     ...mapActions({ removeCourse: 'remove' }, 'courses'),
     ...mapActions({ publishActivity: 'publish' }, 'activities'),
+    ...mapRequests('app', ['showConfirmationModal']),
     downloadContentInventory() {
       api.getContentInventory(this.$route.params.courseId)
         .then(response => JSZip.loadAsync(response))
@@ -72,7 +71,7 @@ export default {
         .then(file => saveAs(file, 'Content Inventory.xlsx'));
     },
     showDeleteConfirmation() {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete repository?',
         message: `Are you sure you want to delete repository ${this.course.name}?`,
         action: () => this.removeCourse(this.course) && this.$router.push('/')

@@ -19,13 +19,11 @@
 
 <script>
 import { getElementId, getToolbarName, isQuestion } from './utils';
+import { mapChannels, mapRequests } from '@/plugins/radio';
 import DefaultToolbar from './DefaultToolbar';
-import EventBus from 'EventBus';
 import { mapActions } from 'vuex-module';
 import Vue from 'vue';
 import { withValidation } from 'utils/validation';
-
-const appBus = EventBus.channel('app');
 
 export default {
   name: 'element-toolbar-wrapper',
@@ -35,11 +33,12 @@ export default {
     embed: { type: Object, default: null }
   },
   computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
     id() {
       return getElementId(this.element);
     },
     elementBus() {
-      return EventBus.channel(`element:${this.id}`);
+      return this.$radio.channel(`element:${this.id}`);
     },
     componentName() {
       const { type } = this.element;
@@ -51,6 +50,7 @@ export default {
     }
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
     remove(element) {
       this.focusoutElement();
@@ -58,10 +58,10 @@ export default {
       this.removeElement(element);
     },
     focusoutElement() {
-      EventBus.emit('element:focus');
+      this.editorChannel.emit('element:focus');
     },
     requestDeleteConfirmation() {
-      appBus.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete element?',
         message: 'Are you sure you want to delete element?',
         action: () => this.remove(this.element.parent || this.element)

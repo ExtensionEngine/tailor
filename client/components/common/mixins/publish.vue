@@ -1,9 +1,8 @@
 <script>
-import EventBus from 'EventBus';
 import get from 'lodash/get';
+import { mapRequests } from '@/plugins/radio';
 import Promise from 'bluebird';
 
-const appChannel = EventBus.channel('app');
 const prefix = message => `Are you sure you want to publish ${message}`;
 
 const initialStatus = () => ({ progress: 0, message: '' });
@@ -14,9 +13,10 @@ export default {
     isPublishing: ({ publishStatus }) => publishStatus.progress > 0
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     confirmPublishing(activities = [this.activity]) {
       const message = this.getPublishMessage(activities.length);
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Publish content',
         message,
         action: () => this.publish(activities)

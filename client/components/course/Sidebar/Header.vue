@@ -24,15 +24,14 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
-import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import { isEditable } from 'shared/activities';
+import { mapRequests } from '@/plugins/radio';
 import sortBy from 'lodash/sortBy';
 
-const appChannel = EventBus.channel('app');
 const TREE_VIEW_ROUTE = 'tree-view';
 
 export default {
@@ -46,6 +45,7 @@ export default {
   methods: {
     ...mapActions(['remove'], 'activities'),
     ...mapMutations(['focusActivity'], 'course'),
+    ...mapRequests('app', ['showConfirmationModal']),
     edit() {
       if (!this.isEditable) return;
       this.$router.push({
@@ -57,7 +57,7 @@ export default {
       const { activity, $route: { name: routeName } } = this;
       const isTreeView = routeName === TREE_VIEW_ROUTE;
       const name = `${isTreeView ? `${activity.id}: ` : ''}${activity.data.name}`;
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete activity?',
         message: `Are you sure you want to delete activity ${name}?`,
         action: () => {

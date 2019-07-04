@@ -48,15 +48,13 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import AssessmentItem from '../AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
-import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
+import { mapRequests } from '@/plugins/radio';
 import numberToLetter from 'utils/numberToLetter';
 import sortBy from 'lodash/sortBy';
 import TesList from '../TesList';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   name: 'assessment-group',
@@ -85,6 +83,7 @@ export default {
     ...mapMutations(['add'], 'tes'),
     ...mapActions(['save', 'update', 'reorder', 'remove'], 'tes'),
     ...mapActions({ updateGroup: 'update', removeGroup: 'remove' }, 'activities'),
+    ...mapRequests('app', ['showConfirmationModal']),
     addAssessment(assessment) {
       this.add(assessment);
       this.selected.push(assessment._cid);
@@ -120,7 +119,7 @@ export default {
       const isGroup = item.type === 'ASSESSMENT_GROUP';
       const action = isGroup ? 'removeGroup' : 'remove';
       const type = isGroup ? 'group' : 'element';
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: `Delete ${type}?`,
         message: `Are you sure you want to delete ${type}?`,
         action: () => this[action](item)

@@ -46,12 +46,10 @@
 <script>
 import { mapActions, mapGetters } from 'vuex-module';
 import AssessmentGroup from './AssessmentGroup';
-import EventBus from 'EventBus';
 import filter from 'lodash/filter';
+import { mapRequests } from '@/plugins/radio';
 import numberToLetter from 'utils/numberToLetter';
 import pluralize from 'pluralize';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   name: 'exam',
@@ -81,6 +79,7 @@ export default {
   methods: {
     ...mapActions(['save', 'remove'], 'activities'),
     ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
+    ...mapRequests('app', ['showConfirmationModal']),
     createGroup() {
       this.save({
         type: 'ASSESSMENT_GROUP',
@@ -89,7 +88,7 @@ export default {
       });
     },
     requestDeletion(item) {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete exam?',
         message: 'Are you sure you want to delete exam?',
         action: () => this.remove(item)

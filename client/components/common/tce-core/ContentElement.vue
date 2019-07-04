@@ -18,7 +18,7 @@
 
 <script>
 import { getComponentName, getElementId } from './utils';
-import EventBus from 'EventBus';
+import { mapChannels } from '@/plugins/radio';
 
 export default {
   name: 'content-element',
@@ -34,6 +34,7 @@ export default {
     return { isFocused: false };
   },
   computed: {
+    ...mapChannels({ editorChannel: 'editor' }),
     id() {
       return getElementId(this.element);
     },
@@ -41,18 +42,18 @@ export default {
       return getComponentName(this.element.type);
     },
     elementBus() {
-      return EventBus.channel(`element:${this.id}`);
+      return this.$radio.channel(`element:${this.id}`);
     }
   },
   methods: {
     focus(e, element = this.element, parent = this.parent) {
       if (this.isDisabled || e.component) return;
-      EventBus.emit('element:focus', element, parent);
+      this.editorChannel.emit('element:focus', element, parent);
       e.component = { name: 'content-element', data: element };
     }
   },
   created() {
-    EventBus.on('element:focus', element => {
+    this.editorChannel.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
     });
     this.elementBus.on('delete', () => this.$emit('delete'));

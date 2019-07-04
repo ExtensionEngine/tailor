@@ -33,10 +33,8 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import AddElement from 'tce-core/AddElement';
 import AssessmentItem from './AssessmentItem';
-import EventBus from 'EventBus';
 import map from 'lodash/map';
-
-const appChannel = EventBus.channel('app');
+import { mapRequests } from '@/plugins/radio';
 
 export default {
   name: 'assessments',
@@ -55,6 +53,7 @@ export default {
   methods: {
     ...mapActions(['save', 'update', 'remove'], 'tes'),
     ...mapMutations(['add'], 'tes'),
+    ...mapRequests('app', ['showConfirmationModal']),
     addAssessment(assessment) {
       this.add(assessment);
       this.selected.push(assessment._cid);
@@ -82,7 +81,7 @@ export default {
       this.selected = this.allSelected ? map(this.assessments, it => it._cid) : [];
     },
     requestDeleteConfirmation(assessment) {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete assessment?',
         message: 'Are you sure you want to delete assessment?',
         action: () => this.remove(assessment)

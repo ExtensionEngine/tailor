@@ -12,6 +12,7 @@ import ElementRegistry from './ElementRegistry';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import { sync } from 'vuex-router-sync';
+import Radio from '@/plugins/radio';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
@@ -26,6 +27,7 @@ import App from './App';
 
 Vue.component('tce-question-container', QuestionContainer);
 
+Vue.use(Radio);
 Vue.use(FileFilter);
 Vue.use(VueHotkey);
 Vue.use(Vuetify, {

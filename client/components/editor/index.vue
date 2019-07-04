@@ -49,11 +49,11 @@ import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
-import EventBus from 'EventBus';
 import Exams from './structure/Exams';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
+import { mapChannels } from '@/plugins/radio';
 import MetaSidebar from './MetaSidebar';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
@@ -73,6 +73,7 @@ export default {
   computed: {
     ...mapGetters(['course', 'getMetadata'], 'course'),
     ...mapGetters(['activity', 'contentContainers'], 'editor'),
+    ...mapChannels({ editorChannel: 'editor' }),
     metadata() {
       if (!this.focusedElement) return [];
       return this.getMetadata(this.focusedElement);
@@ -110,7 +111,7 @@ export default {
       // Reset
       this.mousedownCaptured = false;
       if (get(e, 'component.name') !== 'content-element') {
-        EventBus.emit('element:focus');
+        this.editorChannel.emit('element:focus');
       }
     }
   },
@@ -132,7 +133,7 @@ export default {
       const hasParent = !!focusedElement.parent;
       this.focusedElement = { ...embed, parent: hasParent ? element : null };
     }, 100));
-    EventBus.on('element:focus', throttle((element, composite) => {
+    this.editorChannel.on('element:focus', throttle((element, composite) => {
       if (!element) {
         this.focusedElement = null;
         this.showSidebar = false;

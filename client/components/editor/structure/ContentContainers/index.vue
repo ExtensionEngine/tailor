@@ -30,13 +30,11 @@
 <script>
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
-import EventBus from 'EventBus';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { mapActions } from 'vuex-module';
+import { mapRequests } from '@/plugins/radio';
 import maxBy from 'lodash/maxBy';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   name: 'content-containers',
@@ -64,12 +62,13 @@ export default {
   },
   methods: {
     ...mapActions(['save', 'remove'], 'activities'),
+    ...mapRequests('app', ['showConfirmationModal']),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
     deleteContainer(container) {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: `Delete ${this.name}?`,
         message: `Are you sure you want to delete ${this.name}?`,
         action: () => this.remove(container)

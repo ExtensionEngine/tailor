@@ -31,11 +31,9 @@
 <script>
 import CircularProgress from 'components/common/CircularProgress';
 import downloadMixin from 'utils/downloadMixin';
-import EventBus from 'EventBus';
+import { mapRequests } from '@/plugins/radio';
 import uniqueId from 'lodash/uniqueId';
 import { withValidation } from 'utils/validation';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   name: 'file-upload',
@@ -53,6 +51,7 @@ export default {
     return { uploading: false };
   },
   methods: {
+    ...mapRequests('app', ['showConfirmationModal']),
     createFileForm(e) {
       this.form = new FormData();
       const [file] = e.target.files;
@@ -79,7 +78,7 @@ export default {
         .then(url => this.download(url, this.fileName));
     },
     deleteFile() {
-      appChannel.emit('showConfirmationModal', {
+      this.showConfirmationModal({
         title: 'Delete file?',
         message: `Are you sure you want to delete ${this.fileName}?`,
         action: () => this.$emit('delete', this.id, null)
