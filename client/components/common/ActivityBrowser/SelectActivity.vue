@@ -1,6 +1,6 @@
 <template>
   <div class="select-activity">
-    <circular-progress v-if="showLoader"></circular-progress>
+    <v-progress-circular v-if="showLoader" indeterminate color="primary"/>
     <div v-else>
       <span @click="back" class="btn-back">
         <span class="mdi mdi-chevron-left"></span> Back
@@ -32,7 +32,6 @@
 
 <script>
 import activityApi from 'client/api/activity';
-import { CircularProgress } from 'tce-core';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
@@ -107,8 +106,7 @@ export default {
       this.activities = uniqBy(activities, 'id');
       this.showLoader = false;
     });
-  },
-  components: { CircularProgress }
+  }
 };
 </script>
 
@@ -156,9 +154,5 @@ $highlight: #42b983;
   .btn-select {
     display: inline-block;
   }
-}
-
-.circular-progress {
-  margin: 20px 0;
 }
 </style>

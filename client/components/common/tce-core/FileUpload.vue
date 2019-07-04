@@ -1,6 +1,6 @@
 <template>
   <div class="file-upload">
-    <circular-progress v-if="uploading"/>
+    <v-progress-circular v-if="uploading" indeterminate color="primary"/>
     <form v-else @submit.prevent class="upload-form">
       <input
         v-filefilter="'auto'"
@@ -29,9 +29,9 @@
 </template>
 
 <script>
-import { CircularProgress, utils } from 'tce-core';
 import EventBus from 'EventBus';
 import uniqueId from 'lodash/uniqueId';
+import { utils } from 'tce-core';
 
 const appChannel = EventBus.channel('app');
 
@@ -88,8 +88,7 @@ export default {
     uploading(val) {
       this.$emit('update:uploading', val);
     }
-  },
-  components: { CircularProgress }
+  }
 };
 </script>
 

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <circular-progress v-if="showLoader"></circular-progress>
+  <div class="repository-list-container">
+    <v-progress-circular v-if="showLoader" indeterminate color="primary"/>
     <div v-else class="repository-list">
       <div
         v-for="repository in repositories"
@@ -15,7 +15,6 @@
 
 <script>
 import api from 'client/api/course';
-import { CircularProgress } from 'tce-core';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
@@ -31,13 +30,12 @@ export default {
       this.repositories = sortBy(repositories, 'name');
       this.showLoader = false;
     });
-  },
-  components: { CircularProgress }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.repository-list {
+.repository-list-container {
   margin: 25px 20px 20px;
 }
 
@@ -49,9 +47,5 @@ export default {
     color: #42b983;
     cursor: pointer;
   }
-}
-
-.circular-progress {
-  margin: 30px 0;
 }
 </style>

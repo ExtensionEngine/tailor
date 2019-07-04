@@ -4,7 +4,11 @@
       <h3 class="modal-title">Clone repository</h3>
     </div>
     <div slot="body" class="modal-body">
-      <circular-progress v-if="showLoader" class="loader"></circular-progress>
+      <v-progress-circular
+        v-if="showLoader"
+        indeterminate
+        color="primary"
+        class="loader"/>
       <div v-else>
         <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
           <input
@@ -48,7 +52,6 @@
 </template>
 
 <script>
-import { CircularProgress } from 'tce-core';
 import { mapActions } from 'vuex-module';
 import Modal from 'components/common/Modal';
 import pick from 'lodash/pick';
@@ -90,7 +93,7 @@ export default {
       this.vErrors.clear();
     }
   },
-  components: { CircularProgress, Modal },
+  components: { Modal },
   inject: ['$validator']
 };
 </script>

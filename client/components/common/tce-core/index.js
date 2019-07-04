@@ -1,6 +1,5 @@
 import * as utils from './utils';
 import AddElement from './AddElement';
-import CircularProgress from './CircularProgress';
 import ContainedContent from './ContainedContent';
 import ContentElement from './ContentElement';
 import ElementToolbar from './ElementToolbar';
@@ -10,7 +9,6 @@ import InputAsset from './InputAsset';
 
 export {
   AddElement,
-  CircularProgress,
   ContainedContent,
   ContentElement,
   ElementToolbar,
