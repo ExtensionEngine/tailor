@@ -79,6 +79,7 @@
     "is-localhost": "0.0.2",
     "is-safari": "^1.0.0",
     "is-url": "^1.2.2",
+    "jodit-vue": "^1.2.4",
     "joi": "^10.0.1",
     "jquery": "^3.4.1",
     "jsonwebtoken": "^8.0.0",
