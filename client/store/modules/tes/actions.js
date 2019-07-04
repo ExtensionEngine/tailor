@@ -1,12 +1,12 @@
 import { fetch, get, remove, reset, save, setBaseUrl, update } from '../../helpers/actions';
 import calculatePosition from 'utils/calculatePosition.js';
 
-const insert = ({ element, context }) => {
+const insert = ({ dispatch }, { element, context }) => {
   const position = calculatePosition(context);
-  return context.dispatch('tes/save', { ...element, position });
+  return dispatch('save', { ...element, position });
 };
 
-const reorder = ({ state, element, context, commit }) => {
+const reorder = ({ state, commit }, { element, context }) => {
   commit('reorder', { element, position: calculatePosition(context) });
   const data = { position: context.newPosition };
   return state.api.post(`${element.id}/reorder`, data)
