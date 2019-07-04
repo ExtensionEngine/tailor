@@ -6,11 +6,10 @@ import {
 } from 'tce-core/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import elementList from './components/content-elements';
+import extensionsList from '../extensions/content-elements';
 import find from 'lodash/find';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
-
-const EXTENSIONS_LIST = 'index';
 
 export default class ElementRegistry {
   constructor(Vue) {
@@ -18,23 +17,13 @@ export default class ElementRegistry {
     this.Vue = Vue;
   }
 
-  async initialize() {
-    await Promise.map(elementList, (location, index) => {
-      return this.load(location, { position: index });
-    });
-    const extensions = await this.loadExtensionList();
-    await Promise.map(extensions, (location, index) => {
-      const options = { position: elementList.length + index, isExtension: true };
-      return this.load(location, options);
-    });
+  initialize() {
+    const list = [...elementList, ...extensionsList];
+    return Promise.map(list, (item, index) => this.load(item, index));
   }
 
-  async load(location, options = {}) {
+  load(element, position = this._registry.length) {
     const { _registry, Vue } = this;
-    const { position = _registry.length, isExtension } = options;
-    const element = isExtension
-      ? (await import(`../extensions/content-elements/${location}`)).default
-      : (await import(`./components/content-elements/${location}`)).default;
     const attrs = [
       'name', 'type', 'subtype', 'version', 'schema', 'initState', 'ui'
     ];
@@ -56,11 +45,5 @@ export default class ElementRegistry {
     const { _registry: registry } = this;
     const res = find(registry, { subtype: type }) || find(registry, { type });
     return res && cloneDeep(res);
-  }
-
-  loadExtensionList() {
-    return import(`../extensions/content-elements/${EXTENSIONS_LIST}`)
-      .then(module => module.default)
-      .catch(() => console.log('No extensions loaded!') || []);
   }
 }
