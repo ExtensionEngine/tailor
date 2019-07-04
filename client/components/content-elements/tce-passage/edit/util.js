@@ -1,4 +1,5 @@
 const JODIT_TOOLBAR_BREAK = '\n';
+const EXCLUDED_ITEMS = [JODIT_TOOLBAR_BREAK, 'fullsize'];
 
 const ICONS = {
   source: 'code-tags',
@@ -38,7 +39,6 @@ const ICONS = {
   // fullsize: 'arrow-expand-all',
   /* selectall */ 'select-all': 'select-all',
   print: 'printer',
-  about: 'information-outline',
   dots: 'dots-vertical',
   cancel: 'close'
 };
@@ -55,7 +55,8 @@ export function getIcon(name) {
 export function renderToolbar(jodit) {
   const buttons = splitArray(jodit.options.buttons)
     .concat(jodit.options.extraButtons)
-    .filter(it => it !== JODIT_TOOLBAR_BREAK);
+    .filter(it => !EXCLUDED_ITEMS.includes(it));
   const toolbar = document.getElementById('joditToolbar');
+  console.log(buttons);
   return jodit.toolbar.build(buttons, toolbar);
 }
