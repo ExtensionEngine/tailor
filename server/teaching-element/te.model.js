@@ -167,10 +167,14 @@ class TeachingElement extends Model {
         .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
   }
 
-  static cloneElements(src, container, transaction) {
-    const { id: activityId, courseId } = container;
-    return this.bulkCreate(src.map(it => {
-      return Object.assign(pick(it, [
+  static cloneOrigins(source, courseId, tesOriginIdMap, transaction) {
+    return Promise.reduce(source, async (acc, element) => {
+      if (!element.isLink) return acc;
+      if (acc[element.originId]) {
+        acc[element.originId].links = acc[element.originId].links + 1;
+        return acc;
+      }
+      const data = pick(element.origin, [
         'type',
         'position',
         'data',
@@ -178,8 +182,77 @@ class TeachingElement extends Model {
         'contentSignature',
         'refs',
         'meta'
-      ]), { activityId, courseId });
-    }), { returning: true, transaction });
+      ]);
+      const clonedOrigin = await this.create({
+        ...data,
+        courseId,
+        activityId: null,
+        position: null
+      }, { returning: true, transaction });
+      acc[element.originId] = { id: clonedOrigin.id, links: 1 };
+      return acc;
+    }, tesOriginIdMap);
+  }
+
+  static async resolveClonedOrigins({
+    transaction,
+    tesOriginIdMap
+  }) {
+    const originsWithOneLink = Object.values(tesOriginIdMap)
+      .reduce((acc, origin) => {
+        if (origin.links === 1) acc.push(origin.id);
+        return acc;
+      }, []);
+    if (!originsWithOneLink.length) return;
+    await Promise.each(originsWithOneLink, async id => {
+      const origin = await this.findOne({
+        where: { id },
+        transaction
+      });
+      const [ link ] = await origin.getLinks({ transaction });
+      await link.update(
+        { originId: null, data: origin.data },
+        { transaction, revertLink: true }
+      );
+      await origin.destroy({ transaction });
+    });
+  }
+
+  static async cloneElements(elements, container, options) {
+    const { transaction, cloneOrigins } = options;
+    let { tesOriginIdMap = {} } = options;
+    const { id: activityId, courseId } = container;
+    if (cloneOrigins) {
+      tesOriginIdMap = await this.cloneOrigins(elements, courseId, tesOriginIdMap, transaction);
+    }
+    const items = elements.map(element => {
+      let data = pick(element, [
+        'type',
+        'position',
+        'data',
+        'contentId',
+        'contentSignature',
+        'refs',
+        'meta'
+      ]);
+
+      if (!element.isLink) return { ...data, activityId, courseId };
+
+      let tesOriginId = element.originId;
+      if (cloneOrigins && tesOriginIdMap[element.originId]) {
+        tesOriginId = tesOriginIdMap[element.originId].id;
+      }
+
+      return {
+        ...data,
+        data: {},
+        activityId,
+        courseId,
+        originId: tesOriginId
+      };
+    });
+    await this.bulkCreate(items, { returning: true, transaction });
+    return tesOriginIdMap;
   }
 
   static linkElements(elements, container, transaction) {

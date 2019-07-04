@@ -183,7 +183,7 @@ class Activity extends Model {
 
   static async cloneActivities(source, courseId, parentId, options) {
     const { idMap = {}, transaction, cloneOrigins } = options;
-    let { originIdMap = {} } = options;
+    let { originIdMap = {}, tesOriginIdMap = {} } = options;
     const TeachingElement = this.sequelize.model('TeachingElement');
     if (cloneOrigins) {
       originIdMap = await Activity.cloneOrigins(
@@ -229,20 +229,23 @@ class Activity extends Model {
           where: { activityId: activity.id, detached: false },
           transaction
         });
-        await TeachingElement.cloneElements(tes, parent, transaction);
+        if (tes.length) {
+          acc.tesOriginIdMap = await TeachingElement.cloneElements(tes, parent, options);
+        }
         acc.idMap[activity.id] = parent.id;
         if (!children.length) return acc;
         return Activity.cloneActivities(
           children,
           courseId,
           parent.id,
-          { ...options, idMap, originIdMap }
+          { ...options, idMap, originIdMap, tesOriginIdMap }
         );
-      }, { ...options, idMap, originIdMap });
+      }, { ...options, idMap, originIdMap, tesOriginIdMap });
   }
 
   clone(courseId, parentId, position) {
     const cloneOrigins = courseId !== this.courseId;
+    const TeachingElement = this.sequelize.model('TeachingElement');
     return this.sequelize.transaction(transaction => {
       if (position) this.position = position;
       const options = { cloneOrigins, transaction };
@@ -250,6 +253,7 @@ class Activity extends Model {
         .then(options => {
           if (!cloneOrigins) return options.idMap;
           return Activity.resolveClonedOrigins(options)
+            .then(() => TeachingElement.resolveClonedOrigins(options))
             .then(() => options.idMap);
         });
     });
