@@ -155,9 +155,8 @@ export default {
       return this.schema.validate(this.editedElement.data, validationOptions);
     },
     updateFeedback(feedback) {
-      const data = this.editedElement.data;
-      data.feedback = data.feedback || {};
-      Object.assign(data.feedback, feedback);
+      const updatedFeedback = { ...this.editedElement.data.feedback, ...feedback };
+      this.$set(this.editedElement.data, 'feedback', updatedFeedback);
     }
   },
   components: { Controls, Feedback, Question }
