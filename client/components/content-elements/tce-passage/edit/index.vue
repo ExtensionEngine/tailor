@@ -71,6 +71,11 @@ export default {
 <style lang="scss" scoped>
 .jodit-container {
   text-align: left;
+
+  /deep/ .jodit_statusbar {
+    height: 26px;
+    padding-top: 5px;
+  }
 }
 
 .passage-placeholder {

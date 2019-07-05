@@ -40,7 +40,14 @@ const ICONS = {
   /* selectall */ 'select-all': 'select-all',
   print: 'printer',
   dots: 'dots-vertical',
-  cancel: 'close'
+  cancel: 'close',
+  // popup toolbar icons
+  valign: 'format-align-top',
+  splitv: 'format-columns',
+  merge: 'table-merge-cells',
+  addcolumn: 'table-column-plus-after',
+  addrow: 'table-row-plus-after',
+  bin: 'trash-can'
 };
 
 const isString = arg => typeof arg === 'string';
@@ -48,8 +55,7 @@ const splitArray = arg => isString(arg) ? arg.split(/[,\s]+/) : arg;
 
 export function getIcon(name) {
   const code = ICONS[name];
-  const size = 18;
-  return `<span style="font-size: ${size}px" class="mdi mdi-${code}"></span>`;
+  return `<span class="passage-icon mdi mdi-${code}"></span>`;
 }
 
 export function renderToolbar(jodit) {

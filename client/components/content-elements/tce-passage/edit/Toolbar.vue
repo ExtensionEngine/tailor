@@ -3,17 +3,15 @@
 </template>
 
 <style lang="scss" scoped>
-.tce-passage-toolbar {
-  padding-top: 5px;
+/deep/ .jodit_toolbar {
+  padding: 7px 0 9px !important;
+  background: #fff;
+}
+</style>
 
-  /deep/ .jodit_toolbar {
-    border: none;
-    background: #fff;
-    box-shadow: none;
-
-    .jodit_toolbar_btn a span span {
-      display: inherit;
-    }
-  }
+<style lang="scss">
+.jodit_toolbar_btn .passage-icon {
+  display: inherit;
+  font-size: 18px;
 }
 </style>
