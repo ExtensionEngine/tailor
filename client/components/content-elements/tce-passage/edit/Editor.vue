@@ -32,11 +32,15 @@ const joditConfig = {
 
 export default {
   props: {
-    value: { type: String, required: true }
+    value: { type: String, required: true },
+    placeholder: { type: String, default: 'Insert text here...' }
   },
   computed: {
     id: () => cuid(),
-    config: () => joditConfig
+    config: vm => ({
+      ...joditConfig,
+      placeholder: vm.placeholder
+    })
   },
   mounted() {
     const toolbarContainer = document.getElementById('joditToolbar');
@@ -62,6 +66,10 @@ function getMdiIcon(name) {
 <style lang="scss" scoped>
 $statusbar-height: 26px;
 $statusbar-border-size: 1px;
+
+.jodit-wrapper /deep/ .jodit_placeholder {
+  font-style: italic;
+}
 
 .jodit-wrapper /deep/ .jodit_statusbar {
   height: $statusbar-height;
