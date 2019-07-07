@@ -1,19 +1,19 @@
 <template>
   <div class="tce-passage">
-    <template v-if="!isFocused && !content && showPlaceholder">
-      <div class="well passage-placeholder">
-        <div class="message">
-          <span class="heading">Passage placeholder</span>
-          <span>Click to edit</span>
-        </div>
-      </div>
-    </template>
-    <div v-else class="jodit-container">
-      <jodit-editor v-if="isFocused" v-model="content"/>
-      <div v-else>
-        <div v-html="content"></div>
+    <div
+      v-if="!isFocused && !content && showPlaceholder"
+      class="well passage-placeholder">
+      <div class="message">
+        <span class="heading">Passage placeholder</span>
+        <span>Click to edit</span>
       </div>
     </div>
+    <template v-else>
+      <jodit-editor v-if="isFocused" v-model="content"/>
+      <div v-else class="jodit_container">
+        <div v-html="content" class="jodit_wysiwyg"></div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -29,11 +29,9 @@ export default {
     isFocused: { type: Boolean, default: false },
     showPlaceholder: { type: Boolean, default: true }
   },
-  data() {
-    return {
-      content: get(this.element, 'data.content', '')
-    };
-  },
+  data: vm => ({
+    content: get(vm.element, 'data.content', '')
+  }),
   computed: {
     hasChanges() {
       const previousValue = get(this.element, 'data.content', '');
@@ -69,31 +67,37 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.jodit-container {
-  text-align: left;
-
-  /deep/ .jodit_statusbar {
-    height: 26px;
-    padding-top: 5px;
-  }
-}
-
-.passage-placeholder {
-  .message {
-    padding: 50px 9px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
+.tce-passage {
+  text-align: initial;
 }
 
 .well {
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
   margin-bottom: 0;
+}
+
+.passage-placeholder .message {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: center;
+  font-size: 18px;
+  text-align: center;
+
+  span {
+    display: block;
+  }
+
+  .heading {
+    font-size: 24px;
+  }
+}
+</style>
+
+<style lang="scss">
+.jodit_container:not(.jodit_inline) {
+  font-size: 16px;
 }
 </style>

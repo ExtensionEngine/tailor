@@ -1,7 +1,7 @@
-const JODIT_TOOLBAR_BREAK = '\n';
-const EXCLUDED_ITEMS = [JODIT_TOOLBAR_BREAK, 'fullsize'];
+export const JODIT_TOOLBAR_BREAK = '\n';
+export const JODIT_TOOLBAR_SEPARATOR = '|';
 
-const ICONS = {
+const mdiToolbarIcons = {
   source: 'code-tags',
   bold: 'format-bold',
   strikethrough: 'format-strikethrough',
@@ -50,19 +50,4 @@ const ICONS = {
   bin: 'trash-can'
 };
 
-const isString = arg => typeof arg === 'string';
-const splitArray = arg => isString(arg) ? arg.split(/[,\s]+/) : arg;
-
-export function getIcon(name) {
-  const code = ICONS[name];
-  return `<span class="passage-icon mdi mdi-${code}"></span>`;
-}
-
-export function renderToolbar(jodit) {
-  const buttons = splitArray(jodit.options.buttons)
-    .concat(jodit.options.extraButtons)
-    .filter(it => !EXCLUDED_ITEMS.includes(it));
-  const toolbar = document.getElementById('joditToolbar');
-  console.log(buttons);
-  return jodit.toolbar.build(buttons, toolbar);
-}
+export default mdiToolbarIcons;
