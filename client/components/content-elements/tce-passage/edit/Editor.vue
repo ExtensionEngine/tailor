@@ -33,12 +33,14 @@ const joditConfig = {
 export default {
   props: {
     value: { type: String, required: true },
+    minHeight: { type: Number, required: true },
     placeholder: { type: String, default: 'Insert text here...' }
   },
   computed: {
     id: () => cuid(),
     config: vm => ({
       ...joditConfig,
+      minHeight: vm.minHeight,
       placeholder: vm.placeholder
     })
   },

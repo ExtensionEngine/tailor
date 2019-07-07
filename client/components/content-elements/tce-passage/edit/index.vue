@@ -9,7 +9,7 @@
       </div>
     </div>
     <template v-else>
-      <jodit-editor v-if="isFocused" v-model="content"/>
+      <jodit-editor v-if="isFocused" v-model="content" :minHeight="$el.clientHeight"/>
       <div v-else class="jodit_container">
         <div v-html="content" class="jodit_wysiwyg"></div>
       </div>
@@ -74,7 +74,7 @@ export default {
 .well {
   display: flex;
   flex-direction: column;
-  min-height: 200px;
+  min-height: 140px;
   margin-bottom: 0;
 }
 
