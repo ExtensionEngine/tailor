@@ -20,8 +20,7 @@
           v-if="showSidebar"
           :key="focusedElement._cid"
           :metadata="metadata"
-          :element="focusedElement">
-        </meta-sidebar>
+          :element="focusedElement"/>
       </transition>
     </template>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
@@ -35,7 +34,6 @@
             :parentId="activity.id"
             v-bind="getContainerConfig(type)"/>
           <assessments v-if="showAssessments"/>
-          <exams v-if="showExams"/>
         </template>
       </div>
     </div>
@@ -50,7 +48,6 @@ import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
-import Exams from './structure/Exams';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
@@ -79,9 +76,6 @@ export default {
     },
     showAssessments() {
       return config.hasAssessments(this.activity.type);
-    },
-    showExams() {
-      return config.hasExams(this.activity.type);
     },
     containerConfigs() {
       if (!this.activity) return [];
@@ -159,7 +153,6 @@ export default {
   components: {
     Assessments,
     ContentContainers,
-    Exams,
     MainSidebar,
     MetaSidebar,
     Toolbar

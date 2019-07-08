@@ -6,7 +6,6 @@ import calculatePosition from 'utils/calculatePosition';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
 import request from '../../api/request';
 import VuexCollection from '../helpers/collection';
 
@@ -40,15 +39,13 @@ getter(function getLineage() {
 });
 
 getter(function getExamObjectives() {
-  const getObjectives = activity => {
-    const config = getLevel(activity.type);
-    const objectiveTypes = get(config, 'exams.objectives');
+  return (exam, config) => {
+    const activity = find(this.state.items, { id: exam.parentId });
+    const objectiveTypes = get(config, 'objectives');
     if (!objectiveTypes) return [];
-    let children = getDeepChildren(this.state.items, activity);
+    const children = getDeepChildren(this.state.items, activity);
     return filter(children, it => objectiveTypes.includes(it.type));
   };
-
-  return exam => getObjectives(find(this.state.items, { id: exam.parentId }));
 });
 
 action(function reorder({ activity, context }) {

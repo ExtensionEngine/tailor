@@ -17,7 +17,7 @@
     </div>
     <h3>Question group {{ toLetter(position) }}</h3>
     <h4>Introduction</h4>
-    <group-introduction :group="group"></group-introduction>
+    <group-introduction :group="group"/>
     <h4>Questions</h4>
     <div v-if="!hasAssessments" class="well">
       Click the button below to Create first Assessment.
@@ -32,13 +32,13 @@
       <assessment-item
         slot="list-item"
         slot-scope="{ item }"
-        :exam="exam"
+        :examObjectives="examObjectives"
         :assessment="item"
         :expanded="isSelected(item)"
+        :draggable="true"
         @selected="toggleSelect(item)"
         @save="saveAssessment"
-        @delete="item.id ? requestDeletion(item) : remove(item)">
-      </assessment-item>
+        @delete="item.id ? requestDeletion(item) : remove(item)"/>
     </tes-list>
   </div>
 </template>
@@ -62,7 +62,7 @@ export default {
   name: 'assessment-group',
   props: {
     group: { type: Object, required: true },
-    exam: { type: Object, required: true },
+    examObjectives: { type: Array, required: true },
     position: { type: Number, required: true }
   },
   data() {

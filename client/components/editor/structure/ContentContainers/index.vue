@@ -7,17 +7,15 @@
       icon="mdi-information-variant">
       Click the button below to create first {{ name | capitalize }}.
     </v-alert>
-    <content-container
-      v-for="container in containerGroup"
+    <component
+      v-for="(container, index) in containerGroup"
       :key="container._cid || container.id"
+      :is="containerName"
+      v-bind="$attrs"
       :container="container"
-      :types="types"
       :name="name"
-      :layout="layout"
-      :class="`${name}-container`"
-      @delete="deleteContainer(container)"
-      class="content-container elevation-2">
-    </content-container>
+      :position="index"
+      @delete="deleteContainer(container)"/>
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="primary">
         <v-icon class="pr-2">mdi-plus</v-icon>
@@ -31,6 +29,7 @@
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
+import Exam from '../Exams/Exam';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { mapActions } from 'vuex-module';
@@ -40,17 +39,21 @@ const appChannel = EventBus.channel('app');
 
 export default {
   name: 'content-containers',
+  inheritAttrs: false,
   props: {
     containerGroup: { type: Array, default() { return []; } },
     parentId: { type: Number, required: true },
-    types: { type: Array, default: null },
     displayHeading: { type: Boolean, default: false },
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: false },
-    layout: { type: Boolean, default: true }
+    unique: { type: Boolean, default: false }
   },
   computed: {
+    containerName() {
+      if (this.unique) return this.type.toLowerCase();
+      return 'content-container';
+    },
     name() {
       return this.label.toLowerCase();
     },
@@ -84,7 +87,7 @@ export default {
       return capitalize(val);
     }
   },
-  components: { ContentContainer }
+  components: { ContentContainer, Exam }
 };
 </script>
 

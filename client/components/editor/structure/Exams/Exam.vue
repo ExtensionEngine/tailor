@@ -1,5 +1,5 @@
 <template>
-  <li :class="{ collapsed }" class="list-group-item exam">
+  <div :class="{ collapsed }" class="exam">
     <div v-if="collapsed" @click="collapsed = false">
       <h3>{{ title }}</h3>
       <span class="label label-success pull-right">{{ label }}</span>
@@ -9,7 +9,7 @@
         <h3 class="pull-left">{{ title }}</h3>
         <div class="actions">
           <span
-            @click="requestDeletion(exam)"
+            @click="requestDeletion(container)"
             class="btn btn-sm btn-link pull-right">
             Delete
           </span>
@@ -27,11 +27,10 @@
         v-for="(group, index) in groups"
         :key="group._cid"
         :group="group"
-        :exam="exam"
-        :position="index">
-      </assessment-group>
+        :examObjectives="examObjectives"
+        :position="index"/>
       <v-btn
-        :disabled="!exam.id"
+        :disabled="!container.id"
         @click.stop="createGroup"
         color="primary"
         outline
@@ -40,7 +39,7 @@
         Add Question Group
       </v-btn>
     </div>
-  </li>
+  </div>
 </template>
 
 <script>
@@ -56,19 +55,21 @@ const appChannel = EventBus.channel('app');
 export default {
   name: 'exam',
   props: {
-    exam: { type: Object, required: true },
-    position: { type: Number, required: true }
+    container: { type: Object, required: true },
+    position: { type: Number, required: true },
+    config: { type: Object, default: () => ({}) }
   },
   data() {
-    let collapsed = this.exam.id;
+    let collapsed = this.container.id;
     return {
       collapsed
     };
   },
   computed: {
+    ...mapGetters(['getExamObjectives'], 'activities'),
     ...mapGetters(['activities']),
     groups() {
-      return filter(this.activities, { parentId: this.exam.id });
+      return filter(this.activities, { parentId: this.container.id });
     },
     title() {
       return `Exam ${numberToLetter(this.position)}`;
@@ -76,6 +77,9 @@ export default {
     label() {
       const groupTotal = this.groups.length;
       return `${groupTotal} ${pluralize('set', groupTotal)}`;
+    },
+    examObjectives() {
+      return this.getExamObjectives(this.container, this.config);
     }
   },
   methods: {
@@ -84,7 +88,7 @@ export default {
     createGroup() {
       this.save({
         type: 'ASSESSMENT_GROUP',
-        parentId: this.exam.id,
+        parentId: this.container.id,
         position: this.groups.length + 1
       });
     },
@@ -97,7 +101,7 @@ export default {
     }
   },
   created() {
-    this.getTeachingElements({ parentId: this.exam.id });
+    this.getTeachingElements({ parentId: this.container.id });
   },
   components: {
     AssessmentGroup
@@ -118,6 +122,7 @@ h3 {
 .exam {
   margin-bottom: 13px;
   padding: 0;
+  background-color: #ffffff;
   box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 
   > div {

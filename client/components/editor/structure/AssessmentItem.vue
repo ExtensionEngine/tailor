@@ -4,14 +4,12 @@
     @mouseenter="hover = true"
     @mouseleave="hover = false"
     class="list-group-item assessment-item elevation-1">
-    <span v-if="exam" class="drag-handle">
+    <span v-if="draggable" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
     <tce-question-container
       v-if="expanded"
       :element="assessment"
-      :exam="exam"
-      :summative="true"
       @selected="$emit('selected')"
       @delete="$emit('delete')"
       @save="save">
@@ -31,7 +29,7 @@
           class="pull-right collapse-item">
           Collapse
         </v-btn>
-        <div v-if="exam && examObjectives.length" class="select-leaf">
+        <div v-if="examObjectives.length" class="select-leaf">
           <multiselect
             :value="objective"
             :options="examObjectives"
@@ -69,7 +67,6 @@ import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
-import { mapGetters } from 'vuex-module';
 import Multiselect from '../../common/Select';
 import set from 'lodash/set';
 import truncate from 'lodash/truncate';
@@ -83,8 +80,9 @@ export default {
   inject: ['$teRegistry'],
   props: {
     assessment: { type: Object, required: true },
-    exam: { type: Object, default: null },
-    expanded: { type: Boolean, default: false }
+    examObjectives: { type: Array, required: true },
+    expanded: { type: Boolean, default: false },
+    draggable: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -93,7 +91,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getExamObjectives'], 'activities'),
     elementConfig() {
       return this.$teRegistry.get(this.assessment.data.type);
     },
@@ -102,9 +99,6 @@ export default {
       question = map(question, 'data.content').join(' ');
       question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
       return truncate(question, { length: 50 });
-    },
-    examObjectives() {
-      return this.getExamObjectives(this.exam);
     },
     examObjectiveLabel() {
       if (isEmpty(this.examObjectives)) return '';

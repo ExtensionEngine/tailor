@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-5">
+  <div class="mb-5 elevation-2 content-container">
     <div class="actions">
       <v-btn
         @click="deleteContainer"
@@ -47,7 +47,7 @@ export default {
     container: { type: Object, required: true },
     types: { type: Array, default: null },
     name: { type: String, required: true },
-    layout: { type: Boolean, required: true }
+    layout: { type: Boolean, default: true }
   },
   computed: {
     ...mapGetters(['tes']),
