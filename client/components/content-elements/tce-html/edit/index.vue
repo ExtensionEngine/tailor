@@ -24,13 +24,12 @@
 
 <script>
 import { Quill, quillEditor as QuillEditor } from 'vue-quill-editor';
-import CustomTheme from './theme';
+import createCustomTheme from './theme';
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
-import ImageEmbed from './modules/image-embed';
 
-Quill.register('modules/imageEmbed', ImageEmbed);
-Quill.register(`themes/${CustomTheme.name}`, CustomTheme);
+const CustomTheme = createCustomTheme(Quill);
+Quill.register(`themes/${CustomTheme.NAME}`, CustomTheme, true);
 
 const toolbar = {
   container: '#quillToolbar',
@@ -48,7 +47,7 @@ const toolbar = {
 };
 
 const options = {
-  theme: CustomTheme.name,
+  theme: CustomTheme.NAME,
   modules: {
     toolbar,
     imageEmbed: { spacing: 1 },
