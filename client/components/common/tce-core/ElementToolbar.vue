@@ -21,7 +21,7 @@
 import { getElementId, getToolbarName, isQuestion } from './utils';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 import Vue from 'vue';
 import { withValidation } from 'utils/validation';
 
@@ -51,7 +51,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
+    ...mapActions('tes', { saveElement: 'save', removeElement: 'remove' }),
     remove(element) {
       this.focusoutElement();
       if (element.embedded) return this.elementBus.emit('delete');

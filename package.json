@@ -36,7 +36,7 @@
     "integration:add": "node -r ./server/script/preflight ./server/script/addIntegration.js",
     "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
     "start": "node -r ./server/script/preflight ./server",
-    "postshrinkwrap": "sed -i.bak 's/http:\\/\\//https:\\/\\//g' package-lock.json && rm -v package-lock.json.bak"
+    "postshrinkwrap": "rewrite-lockfile package-lock.json"
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
@@ -132,7 +132,6 @@
     "vuedraggable": "^2.15.0",
     "vuetify": "^1.5.7",
     "vuex": "^2.0.0",
-    "vuex-module": "^0.4.0",
     "vuex-router-sync": "^3.0.0",
     "weekstart": "^1.0.0",
     "yup": "^0.24.1"
@@ -141,6 +140,8 @@
     "@babel/core": "^7.3.3",
     "@poi/plugin-bundle-report": "^12.1.0",
     "@poi/plugin-eslint": "^12.0.0",
+    "@types/poi": "^12.5.0",
+    "@types/stylelint": "^9.10.0",
     "acorn": "^6.1.0",
     "babel-eslint": "^10.0.1",
     "clean-webpack-plugin": "^1.0.1",
@@ -163,6 +164,7 @@
     "poi": "^12.6.10",
     "poi-preset-bundle-report": "^2.0.2",
     "poi-preset-eslint": "^9.0.1",
+    "rewrite-lockfile": "^1.0.0",
     "sass-loader": "^7.1.0",
     "sequelize-cli": "^5.5.0",
     "strip-json-comments": "^2.0.1",
