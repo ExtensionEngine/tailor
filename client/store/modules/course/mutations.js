@@ -2,13 +2,18 @@ import compact from 'lodash/compact';
 import transform from 'lodash/transform';
 import Vue from 'vue';
 
-export const upsertUser = (state, user) => Vue.set(state.users, user.id, user);
+export const focusActivity = (state, _cid) => {
+  state.activity = _cid;
+};
 
-export const removeUser = (state, id) => Vue.delete(state.users, id);
+export const showActivityOptions = (state, _cid) => {
+  state.outline.showOptions = _cid;
+};
 
-export const setUsers = (state, users) => {
-  state.users = {};
-  users.forEach(it => Vue.set(state.users, it.id, it));
+export const toggleActivity = (state, { _cid, expanded }) => {
+  const expandedItems = state.outline.expanded;
+  expanded = expanded === undefined ? !expandedItems[_cid] : expanded;
+  Vue.set(expandedItems, _cid, expanded);
 };
 
 export const toggleActivities = (state, outline) => {
@@ -18,16 +23,11 @@ export const toggleActivities = (state, outline) => {
   Vue.set(state.outline, 'expanded', expanded);
 };
 
-export const toggleActivity = (state, { _cid, expanded }) => {
-  let expandedItems = state.outline.expanded;
-  expanded = expanded === undefined ? !expandedItems[_cid] : expanded;
-  Vue.set(expandedItems, _cid, expanded);
-};
+export const upsertUser = (state, user) => Vue.set(state.users, user.id, user);
 
-export const showActivityOptions = (state, _cid) => {
-  state.outline.showOptions = _cid;
-};
+export const removeUser = (state, id) => Vue.delete(state.users, id);
 
-export const focusActivity = (state, _cid) => {
-  state.activity = _cid;
+export const setUsers = (state, users) => {
+  state.users = {};
+  users.forEach(it => Vue.set(state.users, it.id, it));
 };
