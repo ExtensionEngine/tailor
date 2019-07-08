@@ -1,27 +1,19 @@
-import { get, remove, reset, save, setBaseUrl, update } from '../../helpers/actions';
+import generateActions from '../../helpers/actions';
 
+const { api, get, remove, reset, save, setEndpoint } = generateActions();
 const PAGINATION_DEFAULTS = { offset: 0, limit: 25 };
 
-const fetch = ({ state, getters, commit }) => {
-  const params = getters.revisionQueryParams;
-  return state.api.get('', params).then(response => {
-    const { data: revisions } = response.data;
-
-    let result = {};
-    revisions.forEach(it => {
-      state.api.setCid(it);
-      result[it._cid] = it;
-    });
-
+const fetch = ({ getters: { revisionQueryParams: params }, commit }) => {
+  return api.fetch(params).then(revisions => {
     commit('setPagination', { offset: params.offset + params.limit });
-    commit('allRevisionsFetched', revisions.length < params.limit);
-    commit('fetch', result);
+    commit('allRevisionsFetched', Object.keys(revisions).length < params.limit);
+    commit('fetch', revisions);
   });
 };
 
 const resetPagination = ({ commit }) => {
   commit('setPagination', PAGINATION_DEFAULTS);
-  commit('reset', {});
+  commit('reset');
 };
 
-export { get, fetch, remove, reset, save, update, resetPagination, setBaseUrl };
+export { get, fetch, remove, reset, resetPagination, save, setEndpoint };
