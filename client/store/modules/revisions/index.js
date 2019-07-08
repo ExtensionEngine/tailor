@@ -2,7 +2,7 @@ import * as actions from './actions';
 import * as getters from './getters';
 import * as mutations from './mutations';
 
-const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
+const PAGINATION_DEFAULTS = { offset: 0, limit: 25 };
 
 const state = {
   items: {},

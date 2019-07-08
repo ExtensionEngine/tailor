@@ -87,7 +87,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions('comments', ['setEndpoint', 'fetch', 'save', 'subscribe', 'unsubscribe']),
+    ...mapActions('comments',
+      ['setEndpoint', 'fetch', 'save', 'subscribe', 'unsubscribe']
+    ),
     fetchComments() {
       if (this.commentsFetched) return;
       this.fetch(this.activity);
