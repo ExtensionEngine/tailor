@@ -11,14 +11,16 @@
 <script>
 import ConfirmationModal from 'components/common/ConfirmationModal';
 import isIexplorer from 'is-iexplorer';
-import { mapGetters } from 'vuex-module';
+import { mapState } from 'vuex';
 import Navbar from 'components/common/Navbar';
 
 if (isIexplorer) document.body.classList.add('ie');
 
 export default {
   name: 'app',
-  computed: mapGetters(['user']),
+  computed: mapState({
+    user: state => state.auth.user
+  }),
   components: {
     ConfirmationModal,
     Navbar

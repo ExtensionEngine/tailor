@@ -16,13 +16,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
+import { mapGetters } from 'vuex';
 import SidebarBody from './Body';
 import SidebarHeader from './Header';
 
 export default {
   computed: {
-    ...mapGetters(['activity'], 'course'),
+    ...mapGetters('course', ['activity']),
     activitySelected() {
       return !!this.activity._cid;
     }

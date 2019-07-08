@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
 import multiselect from '../../common/Select';
@@ -49,7 +49,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'structure', 'activities'], 'course'),
+    ...mapGetters('course', ['course', 'structure', 'activities']),
     levels() {
       return filter(this.structure, { level: 1 });
     },
@@ -58,8 +58,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save'], 'activities'),
-    ...mapMutations(['focusActivity'], 'course'),
+    ...mapActions('activities', ['save']),
+    ...mapMutations('course', ['focusActivity']),
     onLevelSelected(level) {
       if (!level) return;
       this.level = level;
