@@ -1,7 +1,6 @@
 import './image-embed.scss';
 import { Quill } from 'vue-quill-editor';
-import repeat from 'lodash/repeat';
-import Tooltip from './tooltip';
+import Tooltip from '../ui/tooltip';
 
 const Keyboard = Quill.import('modules/keyboard');
 
@@ -15,7 +14,7 @@ class EmbedTooltip extends Tooltip {
 
   constructor(quill, bounds, { spacing = 0 } = {}) {
     super(quill, bounds);
-    this.padding = repeat(' ', spacing);
+    this.padding = ' '.repeat(spacing);
     this.textbox = this.root.querySelector('input.url');
     this.btnAction = this.root.querySelector('a.action');
     this.listen();

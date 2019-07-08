@@ -1,4 +1,4 @@
-import ColorPicker from './color-picker';
+import ColorPicker from './ui/color-picker';
 import { Quill } from 'vue-quill-editor';
 
 const SnowTheme = Quill.import('themes/snow');
