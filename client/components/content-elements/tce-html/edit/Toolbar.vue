@@ -1,86 +1,59 @@
 <template>
-  <div
-    @mousedown.prevent="() => {}"
-    id="quillToolbar"
-    class="tce-html-toolbar">
-    <span class="ql-formats">
-      <button class="ql-undo"><span class="icon mdi mdi-undo"></span></button>
-      <button class="ql-redo"><span class="icon mdi mdi-redo"></span></button>
-    </span>
-    <span class="ql-formats">
-      <select class="ql-font"></select>
-      <select class="ql-header"></select>
-    </span>
-    <span class="ql-formats">
-      <button class="ql-bold"></button>
-      <button class="ql-italic"></button>
-      <button class="ql-underline"></button>
-      <button class="ql-strike"></button>
-    </span>
-    <span class="ql-formats">
-      <button class="ql-blockquote"></button>
-      <button class="ql-code-block"></button>
-    </span>
-    <span class="ql-formats">
-      <button class="ql-script" value="sub"></button>
-      <button class="ql-script" value="super"></button>
-    </span>
-    <span class="ql-formats">
-      <select class="ql-color">
-        <option value="rgb(0, 0, 0)"></option>
-        <option value="rgb(230, 0, 0)"></option>
-        <option value="rgb(255, 153, 0)"></option>
-        <option value="rgb(255, 255, 0)"></option>
-        <option value="rgb(0, 138, 0)"></option>
-        <option value="rgb(0, 102, 204)"></option>
-        <option value="rgb(153, 51, 255)"></option>
-        <option value="rgb(255, 255, 255)"></option>
-        <option value="rgb(250, 204, 204)"></option>
-        <option value="rgb(255, 235, 204)"></option>
-        <option value="rgb(204, 224, 245)"></option>
-        <option value="rgb(235, 214, 255)"></option>
-        <option value="rgb(187, 187, 187)"></option>
-        <option value="rgb(102, 185, 102)"></option>
-      </select>
-      <select class="ql-background">
-        <option value="rgb(0, 0, 0)"></option>
-        <option value="rgb(230, 0, 0)"></option>
-        <option value="rgb(255, 153, 0)"></option>
-        <option value="rgb(255, 255, 0)"></option>
-        <option value="rgb(0, 138, 0)"></option>
-        <option value="rgb(0, 102, 204)"></option>
-        <option value="rgb(153, 51, 255)"></option>
-        <option value="rgb(255, 255, 255)"></option>
-        <option value="rgb(250, 204, 204)"></option>
-        <option value="rgb(255, 235, 204)"></option>
-        <option value="rgb(204, 224, 245)"></option>
-        <option value="rgb(235, 214, 255)"></option>
-        <option value="rgb(187, 187, 187)"></option>
-        <option value="rgb(102, 185, 102)"></option>
-      </select>
-    </span>
-    <span class="ql-formats">
-      <button class="ql-link" type="button"></button>
-      <button class="ql-image" type="button"></button>
-      <!-- <button class="ql-video" type="button"></button> -->
-    </span>
-    <span class="ql-formats">
-      <button class="ql-list" value="ordered" type="button"></button>
-      <button class="ql-list" value="bullet" type="button"></button>
-      <select class="ql-align">
-        <option selected=""></option>
-        <option value="center"></option>
-        <option value="right"></option>
-        <option value="justify"></option>
-      </select>
-    </span>
-    <span class="ql-formats">
-      <button type="button" class="ql-indent" value="-1"></button>
-      <button type="button" class="ql-indent" value="+1"></button>
-    </span>
-    <span class="ql-formats">
-      <button type="button" class="ql-direction" value="rtl"></button>
-    </span>
+  <div class="tce-html-toolbar">
+    <div @mousedown.prevent="() => {}" id="quillToolbar">
+      <span class="ql-formats">
+        <button class="ql-undo" type="button"></button>
+        <button class="ql-redo" type="button"></button>
+      </span>
+      <span class="ql-formats">
+        <select class="ql-font"></select>
+        <select class="ql-header"></select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-bold" type="button"></button>
+        <button class="ql-italic" type="button"></button>
+        <button class="ql-underline" type="button"></button>
+        <button class="ql-strike" type="button"></button>
+      </span>
+      <span class="ql-formats">
+        <select class="ql-color"></select>
+        <select class="ql-background"></select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-script" value="sub" type="button"></button>
+        <button class="ql-script" value="super" type="button"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-header" value="1" type="button"></button>
+        <button class="ql-header" value="2" type="button"></button>
+        <button class="ql-blockquote" type="button"></button>
+        <button class="ql-code-block" type="button"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-list" value="ordered" type="button"></button>
+        <button class="ql-list" value="bullet" type="button"></button>
+        <button class="ql-indent" value="-1" type="button"></button>
+        <button class="ql-indent" value="+1" type="button"></button>
+      </span>
+      <span class="ql-formats">
+        <select class="ql-align">
+          <option selected=""></option>
+          <option value="center"></option>
+          <option value="right"></option>
+          <option value="justify"></option>
+        </select>
+        <button class="ql-direction" value="rtl" type="button"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-link" type="button"></button>
+        <button class="ql-image" type="button"></button>
+        <!-- <button class="ql-video" type="button"></button> -->
+        <!-- <button class="ql-formula" type="button"></button> -->
+      </span>
+      <span class="ql-formats">
+        <button class="ql-clean" type="button"></button>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -91,27 +64,42 @@ export default {
 </script>
 
 <style lang="scss">
+$icon-color: #333;
+$icon-size: 18px;
+
 .tce-html-toolbar {
-  display: none;
-  position: relative;
-  z-index: 999;
-  width: 100%;
+  display: flex;
+  align-items: center;
   height: 45px;
-  text-align: left;
-
-  .icon {
-    display: inline-block;
-    font-size: 16px;
-    line-height: 16px;
-    vertical-align: middle;
-  }
+  text-align: initial;
 }
 
-.tce-html-toolbar.ql-toolbar {
-  display: block;
-}
-
-.tce-html-toolbar.ql-toolbar.ql-snow {
+.ql-toolbar.ql-snow {
   border: none;
+}
+
+.ql-toolbar .icon {
+  width: $icon-size;
+  height: $icon-size;
+  color: $icon-color;
+  font-size: $icon-size;
+  line-height: $icon-size;
+  vertical-align: top;
+}
+
+.ql-toolbar .ql-direction {
+  span:last-child {
+    display: none;
+  }
+
+  &.ql-active {
+    span:last-child {
+      display: initial;
+    }
+
+    span:first-child {
+      display: none;
+    }
+  }
 }
 </style>

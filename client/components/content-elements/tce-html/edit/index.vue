@@ -125,21 +125,20 @@ export default {
 </style>
 
 <style lang="scss">
-.tce-html {
-  .ql-editor {
-    min-height: 121px;
+.ql-container.ql-snow {
+  font-size: 16px;
+  border: none;
+}
 
-    img {
-      vertical-align: initial;
-    }
-  }
+.ql-editor {
+  min-height: 120px;
 
-  .ql-container.ql-snow {
-    border: none !important;
-  }
-
-  .ql-editor.ql-blank::before {
+  &.ql-blank::before {
     width: 100%;
+  }
+
+  img {
+    vertical-align: initial;
   }
 }
 </style>

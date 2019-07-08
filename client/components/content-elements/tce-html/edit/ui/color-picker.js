@@ -31,8 +31,9 @@ function wrapOptions(options) {
 }
 
 function createButton({ icon, text }) {
-  const btn = document.createElement('button');
+  const btn = document.createElement('span');
   btn.tabIndex = 0;
+  btn.setAttribute('role', 'button');
   btn.appendChild(createIcon(icon));
   btn.innerHTML += text;
   return btn;
