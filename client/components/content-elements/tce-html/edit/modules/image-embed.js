@@ -1,13 +1,13 @@
 import createImageEmbedTooltip from '../ui/image-embed-tooltip';
 
-export default Quill => class ImageEmbed {
+export default Quill => class ImageEmbed extends Quill.import('core/module') {
   static NAME = 'imageEmbed';
 
   constructor(quill, options = {}) {
-    this.quill = quill;
-    quill.tooltips = quill.tooltips = {};
-    const bounds = quill.options.bounds;
+    super(quill, options);
+    const { bounds } = quill.options;
     const ImageEmbedTooltip = createImageEmbedTooltip(Quill);
+    quill.tooltips = quill.tooltips || {};
     quill.tooltips.imageEmbed = new ImageEmbedTooltip(quill, bounds, options);
   }
 };
