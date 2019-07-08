@@ -1,23 +1,24 @@
 import assign from 'lodash/assign';
-import axios from './request';
+import axios from '@/api/request';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import join from 'url-join';
 import omit from 'lodash/omit';
 import Queue from 'promise-queue';
+import reduce from 'lodash/reduce';
 
-// used to serialize api calls that modify data
+// Used to serialize api calls that modify data.
 const queue = new Queue(1, Infinity);
 
 export default class Resource {
-  constructor(getBaseUrl) {
-    this.getBaseUrl = getBaseUrl;
+  constructor(baseUrl) {
+    this.baseUrl = baseUrl;
     this.queue = queue;
     this.mappings = {};
   }
 
   url(path = '') {
-    return join(this.getBaseUrl(), path.toString());
+    return join(this.baseUrl, path.toString());
   }
 
   /**
@@ -35,6 +36,18 @@ export default class Resource {
   setCid(model) {
     model._cid = this.getCid(model.id) || cuid();
     if (model.id) this.map(model._cid, model.id);
+  }
+
+  /**
+   * Transform BE collection into store format.
+   * @param {Array} items
+   */
+  processEntries(items) {
+    return reduce(items, (acc, it) => {
+      this.setCid(it);
+      acc[it._cid] = it;
+      return acc;
+    }, {});
   }
 
   /**
@@ -67,7 +80,7 @@ export default class Resource {
     this.mappings[id] = _cid;
   }
 
-  /*
+  /**
    * Remove both client and server ids for given model.
    * @param {object} model
    */
@@ -105,13 +118,12 @@ export default class Resource {
       // if server id is not provided but exist inside resource cache
       if (!model.id && this.getKey(model._cid)) this.setKey(model);
       const action = model.id ? 'patch' : 'post';
-      const url = model.id ? this.url(model.id) : this.url();
-      return axios[action](url, this.clean(model))
-        .then(response => {
-          if (!model.id) this.map(model._cid, response.data.data.id);
-          model = cloneDeep(model);
-          return assign(model, response.data.data);
-        });
+      const url = this.url(model.id ? model.id.toString() : '');
+      return axios[action](url, this.clean(model)).then(response => {
+        if (!model.id) this.map(model._cid, response.data.data.id);
+        model = cloneDeep(model);
+        return assign(model, response.data.data);
+      });
     });
   }
 
@@ -122,13 +134,11 @@ export default class Resource {
    */
   update(cid, changes) {
     const key = this.getKey(cid);
-    return this
-      .patch(key, changes)
-      .then(response => {
-        const updated = response.data.data;
-        updated._cid = cid;
-        return updated;
-      });
+    return this.patch(key, changes).then(response => {
+      const updated = response.data.data;
+      updated._cid = cid;
+      return updated;
+    });
   }
 
   /**
@@ -148,14 +158,8 @@ export default class Resource {
    * @param {object} params Query params
    */
   fetch(params) {
-    return this.get('', params).then(response => {
-      let result = {};
-      response.data.data.forEach(it => {
-        this.setCid(it);
-        result[it._cid] = it;
-      });
-      return result;
-    });
+    return this.get('', params)
+      .then(({ data: { data } }) => this.processEntries(data));
   }
 
   get(path, params = {}) {

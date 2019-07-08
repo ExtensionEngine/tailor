@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex-module';
+import { mapGetters, mapMutations, mapState } from 'vuex';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -107,11 +107,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
+    ...mapGetters('course', {
       structure: 'structure',
       focusedActivity: 'activity',
       isCollapsed: 'isCollapsed'
-    }, 'course'),
+    }),
     ...mapState({ outlineState: s => s.course.outline }),
     config() {
       return find(this.structure, { type: this.type });
@@ -157,8 +157,8 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(
-      ['focusActivity', 'toggleActivity', 'showActivityOptions'], 'course'),
+    ...mapMutations('course',
+      ['focusActivity', 'toggleActivity', 'showActivityOptions']),
     focus(options = false) {
       this.focusActivity(this._cid);
       return this.showActivityOptions(options ? this._cid : null);
