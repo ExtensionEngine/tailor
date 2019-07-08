@@ -14,8 +14,8 @@ export const logout = () => {
     }, 0));
 };
 
-export const forgotPassword = (context, { email }) => api.forgotPassword(email);
+export const forgotPassword = (_, { email }) => api.forgotPassword(email);
 
-export const resetPassword = (context, { token, password }) => {
+export const resetPassword = (_, { token, password }) => {
   return api.resetPassword(token, password);
 };
