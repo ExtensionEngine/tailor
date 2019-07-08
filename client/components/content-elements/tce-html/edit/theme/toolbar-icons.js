@@ -1,6 +1,6 @@
 const isString = arg => typeof arg === 'string';
 
-const mdiToolbarIcons = {
+const mdiIcons = {
   undo: 'undo',
   redo: 'redo',
   align: {
@@ -47,7 +47,7 @@ const mdiToolbarIcons = {
   video: 'video-plus'
 };
 
-export default mdiToolbarIcons;
+export default mdiIcons;
 
 const textColor = `
   <span style="position: relative;">
@@ -57,7 +57,7 @@ const textColor = `
 
 export function getMdiIcon(name, value) {
   if (name === 'color') return textColor;
-  const icon = mdiToolbarIcons[name];
+  const icon = mdiIcons[name];
   const code = isString(icon) ? icon : icon[value];
   return `<span class="icon mdi mdi-${code}"></span>`;
 }

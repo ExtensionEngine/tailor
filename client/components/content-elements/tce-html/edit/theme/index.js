@@ -1,4 +1,4 @@
-import mdiToolbarIcons, { getMdiIcon } from './toolbar-icons';
+import mdiIcons, { getMdiIcon } from './toolbar-icons';
 import createColorPicker from './ui/color-picker';
 import createImageEmbed from './modules/image-embed';
 
@@ -56,7 +56,7 @@ export default Quill => {
     }
   };
 
-  return class CustomTheme extends SnowTheme {
+  return class TailorTheme extends SnowTheme {
     static NAME = 'tailor';
     static DEFAULTS = {
       modules: { toolbar }
@@ -91,7 +91,7 @@ export default Quill => {
         }));
       }
       if (align) {
-        const icons = mapKeys(mdiToolbarIcons.align, (_, icon) => getMdiIcon('align', icon));
+        const icons = mapKeys(mdiIcons.align, (_, icon) => getMdiIcon('align', icon));
         this.pickers.push(new IconPicker(align, icons));
       }
     }
