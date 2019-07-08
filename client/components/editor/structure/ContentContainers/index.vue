@@ -29,7 +29,7 @@
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
-import Exam from '../Exams/Exam';
+import Exam from '../Exam';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { mapActions } from 'vuex-module';
