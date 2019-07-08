@@ -75,7 +75,7 @@
 import api from '@/api/user';
 import EventBus from 'EventBus';
 import humanize from 'humanize-string';
-import { mapGetters } from 'vuex-module';
+import { mapState } from 'vuex';
 import throttle from 'lodash/throttle';
 import UserDialog from './UserDialog';
 
@@ -108,7 +108,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user']),
+    ...mapState({ user: state => state.auth.user }),
     headers,
     defaultPage
   },
