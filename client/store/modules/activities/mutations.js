@@ -1,7 +1,7 @@
-import { add, fetch, remove, reset, save, setBaseUrl, update } from '../../helpers/mutations';
+import { add, fetch, remove, reset, save, setEndpoint } from '../../helpers/mutations';
 
 const reorder = (state, { activity, position }) => {
-  activity.position = position;
+  state.items[activity._cid].position = position;
 };
 
-export { fetch, reset, add, save, remove, reorder, update, setBaseUrl };
+export { add, fetch, remove, reorder, reset, save, setEndpoint };
