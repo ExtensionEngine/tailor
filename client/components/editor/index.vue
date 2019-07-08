@@ -45,7 +45,7 @@
 <script>
 import * as config from 'shared/activities';
 import { getElementId, isQuestion } from 'tce-core/utils';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
@@ -90,10 +90,14 @@ export default {
   },
   methods: {
     ...mapActions('courses', { getCourse: 'get' }),
-    ...mapActions('activities', { getActivities: 'fetch' }),
-    ...mapActions('tes', { getTeachingElements: 'fetch' }),
-    ...mapMutations('activities', { setupActivitiesApi: 'setBaseUrl' }),
-    ...mapMutations('tes', { setupTesApi: 'setBaseUrl' }),
+    ...mapActions('activities', {
+      getActivities: 'fetch',
+      setupActivitiesApi: 'setEndpoint'
+    }),
+    ...mapActions('tes', {
+      getTeachingElements: 'fetch',
+      setupTesApi: 'setEndpoint'
+    }),
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
     },

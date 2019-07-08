@@ -53,10 +53,10 @@ export default {
     ...mapActions('course', ['getUsers']),
     ...mapActions('courses', { getCourse: 'get' }),
     ...mapActions('activities', { getActivities: 'fetch' }),
-    ...mapActions('activities', { setupActivityApi: 'setBaseUrl' }),
-    ...mapActions('comments', { setupCommentsApi: 'setBaseUrl' }),
-    ...mapActions('revisions', { setupRevisionApi: 'setBaseUrl' }),
-    ...mapActions('tes', { setupTesApi: 'setBaseUrl' }),
+    ...mapActions('activities', { setupActivityApi: 'setEndpoint' }),
+    ...mapActions('comments', { setupCommentsApi: 'setEndpoint' }),
+    ...mapActions('revisions', { setupRevisionApi: 'setEndpoint' }),
+    ...mapActions('tes', { setupTesApi: 'setEndpoint' }),
     ...mapMutations('course', { resetActivityFocus: 'focusActivity' })
   },
   async created() {
