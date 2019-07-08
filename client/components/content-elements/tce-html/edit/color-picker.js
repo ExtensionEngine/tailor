@@ -1,5 +1,6 @@
 import './color-picker.scss';
 import { Quill } from 'vue-quill-editor';
+
 const BaseColorPicker = Quill.import('ui/color-picker');
 
 const className = (...names) => names.join(' ');
@@ -17,6 +18,7 @@ export default class ColorPicker extends BaseColorPicker {
     btnReset.className = className('picker-item__none');
     btnReset.addEventListener('click', () => {
       this.quill.format(this.type, null, Quill.sources.USER);
+      this.close();
     });
     const colorOptions = wrapOptions(this.options);
     colorOptions.className = className('picker-colors');
