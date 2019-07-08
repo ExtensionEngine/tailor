@@ -1,11 +1,4 @@
-import {
-  add,
-  fetch,
-  remove,
-  reset,
-  setBaseUrl,
-  update
-} from '../../helpers/mutations';
+import { add, fetch, remove, reset, setEndpoint } from '../../helpers/mutations';
 import Vue from 'vue';
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
@@ -43,8 +36,7 @@ export {
   reset,
   resetPagination,
   save,
+  setEndpoint,
   setPagination,
-  setSearch,
-  setBaseUrl,
-  update
+  setSearch
 };
