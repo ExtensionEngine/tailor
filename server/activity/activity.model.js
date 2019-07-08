@@ -3,7 +3,6 @@
 const { getSiblingLevels } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
-const hooks = require('./hooks');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -60,7 +59,6 @@ class Activity extends Model {
   }
 
   static hooks(Hooks, models) {
-    hooks.add(this, Hooks, models);
     this.addHook(
       Hooks.beforeFind,
       options => this._defaultsOptions(options, this.scopes().withOrigin)
@@ -217,7 +215,7 @@ class Activity extends Model {
     options.clonedActivities = options.clonedActivities ? [
       ...options.clonedActivities,
       ...clonedActivities
-    ] : [ ...clonedActivities ];
+    ] : [...clonedActivities];
 
     return Promise.reduce(source,
       async (acc, activity, index) => {
@@ -267,32 +265,25 @@ class Activity extends Model {
     transaction
   ) {
     let link;
-    const TeachingElement = this.sequelize.model('TeachingElement');
-    const tesOptions = {
-      where: { activityId: source.id, detached: false },
-      transaction
-    };
-    const tes = await TeachingElement.findAll(tesOptions);
     const children = await source.getChildren({
       where: { detached: false },
       transaction
     });
-    const { type, courseId, originId, data } = source;
 
-    if (source.isLink) {
+    const data = pick(source, [
+      'type', 'courseId', 'originId', 'parentId', 'position'
+    ]);
+
+    if (source.isLink || source.isOrigin) {
+      const originId = source.isOrigin ? source.id : source.originId;
       link = await Activity.create(
-        { type, courseId, originId, position, parentId },
+        { ...data, parentId, position, originId },
         { transaction }
       );
-      link.data = source.origin.data;
-      activities = [ ...activities, link ];
-
-      if (tes.length) {
-        await TeachingElement.linkElements(tes, link, transaction);
-      }
+      link.data = source.isOrigin ? source.data : source.origin.data;
+      activities = [...activities, link];
 
       return Promise.reduce(children, (acc, child) => {
-        acc.push(child);
         return Activity.linkActivities(
           child,
           link.id,
@@ -303,39 +294,36 @@ class Activity extends Model {
       }, activities);
     }
 
-    const origin = await Activity.create(
-      { type, courseId, data, position: null },
-      { transaction }
-    );
-    await source.update(
-      { originId: origin.id, data: null },
-      { transaction }
-    );
-    source.data = origin.data;
-    link = await Activity.create({
-      type,
-      courseId,
-      position,
-      parentId,
-      originId: origin.id
-    }, { transaction });
-    link.data = origin.data;
-    activities = [ ...activities, source, link ];
+    const linksMap = [{ ...data, originId: source.id, parentId, position }];
+    if (!source.parentId) linksMap.push({ ...data, originId: source.id, parentId });
 
-    if (tes.length) {
-      await TeachingElement.linkElements(tes, link, transaction);
-    }
+    const links = await Activity.bulkCreate(
+      linksMap,
+      { returning: true, transaction }
+    );
 
-    return Promise.reduce(children, (acc, child) => {
-      acc.push(child);
-      return Activity.linkActivities(
-        child,
-        link.id,
-        child.position,
-        activities,
-        transaction
-      );
-    }, activities);
+    links.forEach(link => { link.data = source.data; });
+
+    source = await source.update(
+      { position: null },
+      { returning: true, transaction }
+    );
+
+    activities = [...activities, ...links, source];
+    await Promise.each(links, async link => {
+      const childLinks = await Promise.reduce(children, (acc, child) => {
+        return Activity.linkActivities(
+          child,
+          link.id,
+          child.position,
+          activities,
+          transaction
+        );
+      }, []);
+      activities = [ ...activities, ...childLinks ];
+    });
+
+    return activities;
   }
 
   link({ parentId, position }) {
@@ -403,12 +391,24 @@ class Activity extends Model {
   }
 
   async removeLink(options = {}) {
-    const TeachingElement = this.sequelize.model('TeachingElement');
     let descendants = await this.descendants();
     descendants = [...descendants.nodes].filter(d => d.id !== this.id);
-    await removeAll(TeachingElement, { activityId: [ ...map(descendants, 'id') ] }, false);
-    await Promise.each(descendants, d => d.destroy(options));
-    return this.destroy(options);
+    await Promise.each(descendants, d => d.remove(options));
+    await this.destroy(options);
+    const links = await this.origin.getLinks(options);
+    if (links.length !== 1) return;
+    const [ link ] = links;
+    const children = await link.getChildren(options);
+
+    if (children.length) {
+      await Promise.each(children, async child =>
+        child.update({ parentId: this.origin.id }, options)
+      );
+    }
+
+    await this.origin.update({ position: link.position, parentId: link.parentId }, options);
+    await link.destroy(options);
+    return this.origin;
   }
 
   reorder(index) {
