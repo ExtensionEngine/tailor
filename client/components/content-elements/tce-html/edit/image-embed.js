@@ -6,6 +6,13 @@ import Tooltip from './tooltip';
 const Keyboard = Quill.import('modules/keyboard');
 
 class EmbedTooltip extends Tooltip {
+  static TEMPLATE = `
+    <div class="controls">
+      <label>Enter image url:</label>
+      <input class="url" type="text">
+      <a class="action">Save</a>
+    </div>`;
+
   constructor(quill, bounds, { spacing = 0 } = {}) {
     super(quill, bounds);
     this.padding = repeat(' ', spacing);
@@ -54,13 +61,6 @@ class EmbedTooltip extends Tooltip {
     this.hide();
   }
 }
-
-EmbedTooltip.TEMPLATE = `
-  <div class="controls">
-    <label>Enter image url:</label>
-    <input class="url" type="text">
-    <a class="action">Save</a>
-  </div>`;
 
 export default class ImageEmbed {
   constructor(quill, options = {}) {

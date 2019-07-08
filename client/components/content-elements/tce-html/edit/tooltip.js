@@ -1,4 +1,5 @@
 import { Quill } from 'vue-quill-editor';
+
 const BaseTooltip = Quill.import('ui/tooltip');
 
 export default class Tooltip extends BaseTooltip {
