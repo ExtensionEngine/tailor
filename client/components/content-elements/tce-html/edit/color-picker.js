@@ -13,20 +13,34 @@ export default class ColorPicker extends BaseColorPicker {
 
   buildPicker() {
     super.buildPicker();
-    const btnReset = document.createElement('button');
+    const btnReset = createButton({ icon: 'mdi-water-off', text: 'None' });
     btnReset.className = className('picker-item__none');
-    btnReset.tabIndex = 0;
-    btnReset.appendChild(createIcon('water-off'));
-    btnReset.innerHTML += 'None';
     btnReset.addEventListener('click', () => {
       this.quill.format(this.type, null, Quill.sources.USER);
     });
-    this.options.insertAdjacentElement('afterbegin', btnReset);
+    const colorOptions = wrapOptions(this.options);
+    colorOptions.className = className('picker-colors');
+    this.options.appendChild(btnReset);
+    this.options.appendChild(colorOptions);
   }
+}
+
+function wrapOptions(options) {
+  const container = document.createElement('div');
+  Array.from(options.children).forEach(option => container.appendChild(option));
+  return container;
+}
+
+function createButton({ icon, text }) {
+  const btn = document.createElement('button');
+  btn.tabIndex = 0;
+  btn.appendChild(createIcon(icon));
+  btn.innerHTML += text;
+  return btn;
 }
 
 function createIcon(name) {
   const icon = document.createElement('span');
-  icon.className = className('icon', 'mdi', `mdi-${name}`);
+  icon.className = className('icon', 'mdi', name);
   return icon;
 }
