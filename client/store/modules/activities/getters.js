@@ -10,8 +10,8 @@ import { getLevel } from 'shared/activities';
 export const activities = state => state.items;
 
 export const getParent = state => {
-  return activityId => {
-    const activity = find(state.items, { id: activityId });
+  return id => {
+    const activity = find(state.items, { id });
     return activity ? find(state.items, { id: activity.parentId }) : null;
   };
 };
@@ -25,7 +25,11 @@ export const getAncestors = state => {
 };
 
 export const getLineage = state => {
-  return activity => getParents(state.items, activity);
+  return activity => {
+    const ancestors = getParents(state.items, activity);
+    const descendants = getDeepChildren(state.items, activity);
+    return [...ancestors, ...descendants];
+  };
 };
 
 export const getExamObjectives = state => {

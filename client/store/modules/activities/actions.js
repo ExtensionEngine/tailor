@@ -1,17 +1,15 @@
-import { fetch, get, reset, save, setBaseUrl, update } from '../../helpers/actions';
 import calculatePosition from 'utils/calculatePosition';
+import generateActions from '../../helpers/actions';
 import { getDescendants as getDeepChildren } from 'utils/activity';
 import request from '@/api/request';
 
-const reorder = ({ state, commit }, { activity, context }) => {
-  commit('reorder', { activity, position: calculatePosition(context) });
-  const data = { position: context.newPosition };
-  return state.api.post(`${activity.id}/reorder`, data)
-    .then(res => {
-      let activity = res.data.data;
-      state.api.setCid(activity);
-      commit('save', activity);
-    });
+const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();
+
+const reorder = ({ commit }, { activity, context }) => {
+  const position = calculatePosition(context);
+  commit('reorder', { activity, position });
+  return api.post(`${activity.id}/reorder`, { position: context.newPosition })
+    .then(({ data: { data } }) => commit('save', { ...activity, ...data }));
 };
 
 const remove = ({ state, commit }, model) => {
@@ -20,23 +18,32 @@ const remove = ({ state, commit }, model) => {
     commit('remove', [model]);
     return Promise.resolve(true);
   }
-  return state.api.remove(model)
+  return api.remove(model)
     .then(() => commit('remove', [model, ...descendants]));
+};
+
+const publish = ({ commit }, activity) => {
+  return api.get(`${activity.id}/publish`).then(({ data: { data } }) => {
+    commit('save', { ...activity, publishedAt: data.publishedAt });
+  });
 };
 
 const clone = ({ commit }, mapping) => {
   const { srcId, srcCourseId } = mapping;
   const url = `/courses/${srcCourseId}/activities/${srcId}/clone`;
   return request.post(url, mapping)
-    .then(({ data: { data } }) => commit('fetch', data));
+    .then(({ data: { data } }) => commit('fetch', api.processEntries(data)));
 };
 
-const publish = ({ commit }, activity) => {
-  const { id, courseId } = activity;
-  const url = `/courses/${courseId}/activities/${id}/publish`;
-  return request.get(url).then(({ data: { data } }) => {
-    commit('save', { ...activity, publishedAt: data.publishedAt });
-  });
+export {
+  clone,
+  get,
+  fetch,
+  publish,
+  remove,
+  reorder,
+  reset,
+  save,
+  setEndpoint,
+  update
 };
-
-export { clone, get, fetch, publish, remove, reorder, reset, save, update, setBaseUrl };

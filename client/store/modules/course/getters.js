@@ -6,72 +6,58 @@ import map from 'lodash/map';
 import { role } from 'shared';
 import values from 'lodash/values';
 
-const COURSE_ROUTE = /\/course\/\d+/;
-// NOTE: teaching elements always have `activityId` foreign key and that is
-//       how we can tell if an element is `tes` or `activity`
 const isTes = element => !!element.activityId;
 
-export const course = (state, getters, rootState, rootGetters) => {
-  const courseId = get(rootState, 'route.params.courseId');
+export const course = (_state, _getters, { route }, { courses }) => {
+  const courseId = get(route, 'params.courseId');
   if (!courseId) return;
-  if (!rootState.route.fullPath.match(COURSE_ROUTE)) return;
-  return find(rootGetters.courses, { id: Number(courseId) });
+  return find(courses, { id: parseInt(courseId, 10) });
 };
 
-export const structure = (state, getters) => {
-  const course = getters.course;
+export const structure = (_, { course }) => {
   if (!course) return;
   return getOutlineLevels(course.schema);
 };
 
-export const activities = (state, getters, rootState, rootGetters) => {
-  const course = getters.course;
+export const activities = (_state, { course }, _rootState, rootGetters) => {
   if (!course) return;
   const { activities: items } = rootGetters;
   return filter(items, { courseId: course.id });
 };
 
-export const activity = (state, getters, rootState, rootGetters) => {
-  const { activities } = rootGetters;
+export const activity = (state, _getters, _rootState, { activities }) => {
   return activities[state.activity] || {};
 };
 
-export const outlineActivities = (state, getters) => {
-  const activities = getters.activities;
-  const structure = getters.structure;
+export const outlineActivities = (_, getters) => {
+  const { activities, structure } = getters;
   const outlineTypes = map(structure, 'type');
   return filter(activities, it => outlineTypes.includes(it.type));
 };
 
 export const isCollapsed = state => {
-  const { outline } = state;
-  return activity => activity && !outline.expanded[activity._cid];
+  return activity => activity && !state.outline.expanded[activity._cid];
 };
 
-export const revisions = (state, getters, rootState, rootGetters) => {
-  const course = getters.course;
+export const revisions = (_state, { course }, _rootState, rootGetters) => {
   if (!course) return [];
-  const revs = rootGetters.revisions;
-  return filter(revs, { courseId: course.id })
+  return filter(rootGetters.revisions, { courseId: course.id })
     .map(rev => ({ ...rev, createdAt: new Date(rev.createdAt) }))
     .sort((rev1, rev2) => rev2.createdAt - rev1.createdAt);
 };
 
-export const getConfig = (state, getters, rootState, rootGetters) => {
+export const getConfig = (_, { course }) => {
   return element => {
     if (!element.type) return {};
-    if (isTes(element)) {
-      const course = getters.course;
-      return getTesMeta(course.schema, element.type);
-    }
+    if (isTes(element)) return getTesMeta(course.schema, element.type);
     return getLevel(element.type) || {};
   };
 };
 
-export const getMetadata = (state, getters, rootState, rootGetters) => {
+export const getMetadata = (_, { getConfig }) => {
   return element => {
     if (!element) return [];
-    const config = getters.getConfig(element);
+    const config = getConfig(element);
     if (!config.meta) return [];
     return map(config.meta, it => {
       const value = get(element, `${isTes(element) ? 'meta' : 'data'}.${it.key}`);
@@ -82,17 +68,9 @@ export const getMetadata = (state, getters, rootState, rootGetters) => {
 
 export const users = state => values(state.users);
 
-export const currentUser = (state, getters, rootState) => {
+export const isCourseAdmin = (state, _, rootState) => {
   const { user } = rootState.auth;
-  return find(state.users, { id: user.id });
-};
-
-export const isCourseAdmin = (state, getters) => {
-  const user = getters.currentUser;
-  return get(user, 'courseRole') === role.course.ADMIN;
-};
-
-export const isCourseAuthor = (state, getters) => {
-  const user = getters.currentUser;
-  return get(user, 'courseRole') === role.course.AUTHOR;
+  if (!user) return;
+  const courseUser = find(state.users, { id: user.id });
+  return get(courseUser, 'courseRole') === role.course.ADMIN;
 };

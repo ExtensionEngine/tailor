@@ -7,9 +7,10 @@ import omit from 'lodash/omit';
 import palette from 'utils/palette';
 import remove from 'lodash/remove';
 import sample from 'lodash/sample';
+import { setEndpoint } from '../../helpers/mutations';
 import Vue from 'vue';
 
-export const save = (state, users) => {
+const save = (state, users) => {
   const { activeUsers } = state;
   map(users, (user) => {
     const usedPalettes = getUsedPalettes(state);
@@ -19,13 +20,13 @@ export const save = (state, users) => {
   });
 };
 
-export const sseAdd = (state, { user, context }) => {
+const sseAdd = (state, { user, context }) => {
   const { activeUsers } = state;
   const usedPalettes = getUsedPalettes(state);
   addContext(Vue, activeUsers, user, context, usedPalettes);
 };
 
-export const sseRemove = (state, { user, context }) => {
+const sseRemove = (state, { user, context }) => {
   const existingUser = state.activeUsers[user.id];
   if (!existingUser) return;
   const index = existingUser.contexts.findIndex(c => {
@@ -35,15 +36,24 @@ export const sseRemove = (state, { user, context }) => {
   existingUser.contexts.splice(index, 1);
 };
 
-export const sseRemoveSession = (state, { userId, sseId }) => {
+const sseRemoveSession = (state, { userId, sseId }) => {
   const existingUser = state.activeUsers[userId];
   if (!existingUser) return;
   remove(existingUser.contexts, c => c.sseId === sseId);
   if (isEmpty(existingUser.contexts)) Vue.delete(state.activeUsers, userId);
 };
 
-export const setSseId = (state, { sseId }) => {
+const setSseId = (state, { sseId }) => {
   state.sseId = sseId;
+};
+
+export {
+  save,
+  setEndpoint,
+  setSseId,
+  sseAdd,
+  sseRemove,
+  sseRemoveSession
 };
 
 function addContext(_vue, activeUsers, user, context, usedPalettes) {

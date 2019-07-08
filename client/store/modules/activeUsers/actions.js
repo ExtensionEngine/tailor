@@ -1,12 +1,13 @@
 import api from '../../../api/activeUsers';
+import generateActions from '../../helpers/actions';
 import SSEClient from '../../../SSEClient';
 
 let SSE_CLIENT;
-const subscribeUrl = courseId => `/api/v1/courses/${courseId}/active-users/subscribe`;
+const { setEndpoint } = generateActions();
 
-export const subscribe = ({ state, commit }, courseId) => {
+const subscribe = ({ state, commit }, courseId) => {
   if (SSE_CLIENT) return;
-  SSE_CLIENT = new SSEClient(subscribeUrl(courseId));
+  SSE_CLIENT = new SSEClient(`/api/v1${state.$apiUrl}/subscribe`);
   SSE_CLIENT.subscribe('active_user_add', ({ user, context }) => {
     commit('sseAdd', { user, context });
   });
@@ -21,24 +22,34 @@ export const subscribe = ({ state, commit }, courseId) => {
   });
 };
 
-export const unsubscribe = () => {
+const unsubscribe = () => {
   if (!SSE_CLIENT) return;
   SSE_CLIENT.disconnect();
 };
 
-export const fetch = ({ state, commit }, courseId) => {
+const fetch = ({ state, commit }, courseId) => {
   return api.fetch(courseId)
     .then(({ activeUsers }) => commit('save', activeUsers));
 };
 
-export const add = (_, context) => {
+const add = (_, context) => {
   return api.add(context);
 };
 
-export const remove = (_, context) => {
+const remove = (_, context) => {
   return api.remove(context);
 };
 
-export const removeSession = (_, context) => {
+const removeSession = (_, context) => {
   return api.removeSession(context);
+};
+
+export {
+  add,
+  fetch,
+  remove,
+  removeSession,
+  subscribe,
+  setEndpoint,
+  unsubscribe
 };

@@ -19,6 +19,7 @@ export default {
   methods: {
     ...mapActions('activeUsers', {
       addActiveUser: 'add',
+      removeActiveUser: 'remove',
       removeActiveUserSession: 'removeSession',
       subscribeToActiveUsers: 'subscribe',
       fetchActiveUsers: 'fetch'
@@ -41,6 +42,8 @@ export default {
     if (!trackedRoutes.includes(to.name)) {
       this.removeActiveUserSession(this.context);
     }
+    // Remove children context
+    if (to.name === 'course') this.removeActiveUser(this.context);
     next();
   }
 };

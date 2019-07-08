@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import DiscussionThread from './Thread';
 import TextEditor from 'components/common/TextEditor';
 
@@ -68,7 +68,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user']),
+    ...mapState({ user: state => state.auth.user }),
     ...mapGetters('course', ['activity']),
     ...mapGetters('comments', ['commentsCount', 'commentsFetched']),
     direction() {
@@ -87,10 +87,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions('comments', ['setBaseUrl', 'fetch', 'save', 'subscribe', 'unsubscribe']),
+    ...mapActions('comments',
+      ['setEndpoint', 'fetch', 'save', 'subscribe', 'unsubscribe']
+    ),
     fetchComments() {
       if (this.commentsFetched) return;
-      this.fetch({ activityId: this.activity.id });
+      this.fetch(this.activity);
     },
     post() {
       if (!this.comment.content) return;
@@ -118,8 +120,6 @@ export default {
     }
   },
   mounted() {
-    const { courseId } = this.$route.params;
-    this.setBaseUrl(`/courses/${courseId}/comments`);
     this.fetchComments();
     this.subscribe();
   },

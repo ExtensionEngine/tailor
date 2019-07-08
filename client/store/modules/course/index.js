@@ -4,11 +4,9 @@ import * as mutations from './mutations';
 
 const state = {
   activity: undefined,
-  items: {},
-  users: {},
   outline: { expanded: {}, showOptions: null },
-  $internals: {},
-  $baseUrl: ''
+  users: {},
+  $apiUrl: null
 };
 
 export default {

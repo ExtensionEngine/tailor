@@ -1,15 +1,7 @@
-import {
-  add,
-  fetch,
-  remove,
-  reset,
-  save,
-  setBaseUrl,
-  update
-} from '../../helpers/mutations';
+import { add, fetch, reset, save, setEndpoint } from '../../helpers/mutations';
 
 const setPagination = (state, changes) => {
-  let $internals = state.$internals;
+  const $internals = state.$internals;
   $internals.pagination = { ...$internals.pagination, ...changes };
 };
 
@@ -18,13 +10,11 @@ const allRevisionsFetched = (state, allFetched) => {
 };
 
 export {
+  add,
   allRevisionsFetched,
   fetch,
   reset,
-  add,
   save,
-  remove,
-  setPagination,
-  update,
-  setBaseUrl
+  setEndpoint,
+  setPagination
 };

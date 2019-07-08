@@ -93,6 +93,14 @@ export default {
   .type-select {
     min-width: 170px;
     margin-left: 25px;
+
+    /deep/ .multiselect {
+      padding-top: 0;
+
+      .multiselect__select {
+        top: 0;
+      }
+    }
   }
 
   .actions {

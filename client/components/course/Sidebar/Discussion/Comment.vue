@@ -66,7 +66,7 @@
 <script>
 import Avatar from 'vue-avatar';
 import { focus } from 'vue-focus';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import TextEditor from 'components/common/TextEditor';
 import ThreadComment from './Comment';
 
@@ -84,7 +84,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user']),
+    ...mapState({ user: state => state.auth.user }),
     authorInitials() {
       return this.comment.author.email.substr(0, 2).toUpperCase();
     },

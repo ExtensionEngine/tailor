@@ -4,7 +4,9 @@ import * as mutations from './mutations';
 
 const state = {
   activeUsers: {},
-  sseId: null
+  sseId: null,
+  courseId: null,
+  $apiUrl: null
 };
 
 export default {

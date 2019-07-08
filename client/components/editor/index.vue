@@ -48,7 +48,7 @@
 <script>
 import * as config from 'shared/activities';
 import { getElementId, isQuestion } from 'tce-core/utils';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import ActiveUsers from 'components/common/ActiveUsers';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
@@ -105,11 +105,16 @@ export default {
     }
   },
   methods: {
+    ...mapActions('activeUsers', { setupActivityUsersApi: 'setEndpoint' }),
     ...mapActions('courses', { getCourse: 'get' }),
-    ...mapActions('activities', { getActivities: 'fetch' }),
-    ...mapActions('tes', { getTeachingElements: 'fetch' }),
-    ...mapMutations('activities', { setupActivitiesApi: 'setBaseUrl' }),
-    ...mapMutations('tes', { setupTesApi: 'setBaseUrl' }),
+    ...mapActions('activities', {
+      getActivities: 'fetch',
+      setupActivitiesApi: 'setEndpoint'
+    }),
+    ...mapActions('tes', {
+      getTeachingElements: 'fetch',
+      setupTesApi: 'setEndpoint'
+    }),
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
     },
@@ -132,6 +137,7 @@ export default {
   },
   async created() {
     const { courseId, activityId } = this;
+    this.setupActivityUsersApi(`/courses/${courseId}/active-users`);
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;

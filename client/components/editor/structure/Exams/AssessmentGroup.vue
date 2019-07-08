@@ -82,9 +82,9 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('tes', ['add']),
     ...mapActions('tes', ['save', 'update', 'reorder', 'remove']),
     ...mapActions('activities', { updateGroup: 'update', removeGroup: 'remove' }),
+    ...mapMutations('tes', ['add']),
     addAssessment(assessment) {
       this.add(assessment);
       this.selected.push(assessment._cid);

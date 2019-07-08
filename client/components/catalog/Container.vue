@@ -22,7 +22,7 @@
           <v-progress-circular color="primary" indeterminate/>
         </div>
         <div slot="no-results" class="no-results">
-          {{ orderedCourses.length ? '' : 'No courses found.' }}
+          {{ orderedCourses.length ? '' : 'No repositories found.' }}
         </div>
         <span slot="no-more"></span>
       </infinite-loading>
