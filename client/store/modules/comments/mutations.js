@@ -1,12 +1,4 @@
-import {
-  add,
-  fetch,
-  remove,
-  reset,
-  save,
-  setBaseUrl,
-  update
-} from '../../helpers/mutations';
+import { fetch, remove, reset, save, setEndpoint } from '../../helpers/mutations';
 import cuid from 'cuid';
 import find from 'lodash/find';
 import pick from 'lodash/pick';
@@ -32,20 +24,17 @@ const sseUpdate = (state, comment) => {
   const existing = find(state.items, { id: comment.id });
   if (!existing) return;
   const data = pick(comment, ['content', 'createdAt', 'updatedAt', 'deletedAt']);
-  const updated = Object.assign({}, existing, data);
-  Vue.set(state.items, updated._cid, updated);
+  Vue.set(state.items, existing._cid, { ...existing, ...data });
 };
 
 export {
-  add,
+  commentsFetched,
   fetch,
   remove,
   reset,
   save,
-  setBaseUrl,
-  update,
   setCourse,
-  commentsFetched,
+  setEndpoint,
   sseAdd,
   sseUpdate
 };
