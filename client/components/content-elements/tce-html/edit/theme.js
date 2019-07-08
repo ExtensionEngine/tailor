@@ -5,9 +5,22 @@ export default Quill => {
   const ImageEmbed = createImageEmbed(Quill);
   Quill.register(`modules/${ImageEmbed.NAME}`, ImageEmbed, true);
 
-  return class CustomTheme extends Quill.import('themes/snow') {
-    static DEFAULTS = Object.assign({}, super.DEFAULTS);
+  const SnowTheme = Quill.import('themes/snow');
+  const { toolbar: baseToolbar } = SnowTheme.DEFAULTS.modules;
+  const toolbar = {
+    handlers: {
+      ...baseToolbar.handlers,
+      image() {
+        this.quill.tooltips.imageEmbed.show();
+      }
+    }
+  };
+
+  return class CustomTheme extends SnowTheme {
     static NAME = 'tailor';
+    static DEFAULTS = {
+      modules: { toolbar }
+    };
 
     buildPickers(selects, icons) {
       selects = selects.slice();

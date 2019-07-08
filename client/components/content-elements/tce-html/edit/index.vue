@@ -39,9 +39,6 @@ const toolbar = {
     },
     undo() {
       this.quill.history.undo();
-    },
-    image() {
-      this.quill.tooltips.imageEmbed.show();
     }
   }
 };
