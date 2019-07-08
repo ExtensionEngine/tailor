@@ -1,7 +1,7 @@
 import generateActions from '../../helpers/actions';
 import SSEClient from '../../../SSEClient';
 
-const { api, get, save, setEndpoint } = generateActions();
+const { api, get, save, setEndpoint, update } = generateActions();
 let SSE_CLIENT;
 
 const fetch = ({ state, commit }, { id, courseId }) => {
@@ -33,4 +33,13 @@ const remove = ({ state, commit }, comment) => {
   return api.remove(comment);
 };
 
-export { fetch, get, remove, save, subscribe, setEndpoint, unsubscribe };
+export {
+  fetch,
+  get,
+  remove,
+  save,
+  subscribe,
+  setEndpoint,
+  unsubscribe,
+  update
+};
