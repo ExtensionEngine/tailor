@@ -1,24 +1,22 @@
 <template>
-  <v-toolbar color="white" app fixed>
+  <v-toolbar color="grey lighten-5" app dense fixed>
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
-      <v-avatar color="blue darken-3" size="40">
-        <v-icon color="white">mdi-content-cut</v-icon>
+      <v-avatar color="primary darken-1" size="34" class="mt-1">
+        <v-icon color="grey lighten-4">mdi-content-cut</v-icon>
       </v-avatar>
-      <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
+      <v-toolbar-title class="app-name ml-2">{{ title }}</v-toolbar-title>
     </router-link>
     <v-spacer/>
-    <router-link
-      v-if="repository"
-      :to="{ name: 'course', params: { courseId: repository.id }}"
-      class="repository-title">
-      <span class="navbar-acronym">
-        <span>{{ repositoryAcronym }}</span>
-      </span>
-      {{ repository.name }}
-    </router-link>
-    <v-toolbar-items>
-      <v-btn :to="{ name: 'catalog' }" exact flat icon>
-        <v-icon>mdi-home</v-icon>
+    <v-toolbar-items class="mr-2">
+      <v-btn
+        v-for="({ name, to, icon }) in routes"
+        :key="name"
+        :to="to"
+        color="blue-grey darken-3"
+        exact
+        flat>
+        <v-icon class="pr-1">mdi-{{ icon }}</v-icon>
+        <span class="toolbar-route">{{ name }}</span>
       </v-btn>
     </v-toolbar-items>
     <v-menu
@@ -26,17 +24,14 @@
       transition="slide-y-transition"
       offset-y
       z-index="1000">
-      <v-btn slot="activator" icon large class="mr-2">
-        <v-avatar size="42px" color="#eaeaea">
-          <span class="grey--text headline">{{ user.email[0] }}</span>
+      <v-btn slot="activator" icon class="mr-2">
+        <v-avatar size="34" color="grey lighten-2">
+          <span class="grey--text text--darken-1 headline">{{ user.email[0] }}</span>
         </v-avatar>
       </v-btn>
       <v-list>
         <v-list-tile>
           <v-list-tile-title>{{ user.email }}</v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile v-if="isAdmin" :to="{ name: 'system-management' }">
-          <v-list-tile-title>System Settings</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="logout">
           <v-list-tile-title>Logout</v-list-tile-title>
@@ -48,7 +43,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { getAcronym } from 'utils/course';
 
 export default {
   name: 'main-toolbar',
@@ -63,8 +57,20 @@ export default {
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('course', { repository: 'course' }),
-    repositoryAcronym() {
-      return this.repository ? getAcronym(this.repository.name) : null;
+    routes() {
+      const items = [
+        { name: 'Catalog', to: { name: 'catalog' }, icon: 'view-list' },
+        { name: 'Admin', to: { name: 'system-user-management' }, icon: 'settings' }
+      ];
+      if (!this.isAdmin) items.pop();
+      if (this.repository) {
+        items.unshift({
+          name: this.repository.name,
+          to: { name: 'course', params: { courseId: this.repository.id } },
+          icon: 'card-text-outline'
+        });
+      }
+      return items;
     }
   },
   methods: mapActions(['logout'])
@@ -85,6 +91,7 @@ $font-color: #333;
 
 .app-brand {
   display: flex;
+  padding-bottom: 2px;
   cursor: pointer;
 
   .app-name {
@@ -94,13 +101,8 @@ $font-color: #333;
   }
 }
 
-.repository-title {
-  max-width: 250px;
-  margin-right: 15px;
-  color: $font-color;
-  font-size: 16px;
-  line-height: $container-height;
-  text-align: left;
+.toolbar-route {
+  max-width: 380px;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-decoration: none;
@@ -109,11 +111,5 @@ $font-color: #333;
   &:hover {
     color: darken($font-color, 20%);
   }
-}
-
-.navbar-acronym {
-  padding-right: 4px;
-  color: #777;
-  font-weight: bold;
 }
 </style>
