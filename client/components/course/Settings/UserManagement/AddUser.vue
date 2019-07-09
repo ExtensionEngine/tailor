@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -47,7 +47,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['upsertUser'], 'course'),
+    ...mapActions('course', ['upsertUser']),
     addUser() {
       const { email, role } = this;
       const { courseId } = this.$route.params;

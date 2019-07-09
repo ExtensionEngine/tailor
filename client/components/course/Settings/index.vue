@@ -7,7 +7,7 @@
           @action="onActionClick"/>
       </v-card>
       <v-flex ml-4>
-        <router-view></router-view>
+        <router-view/>
       </v-flex>
     </v-layout>
     <clone-modal
@@ -15,38 +15,22 @@
       @close="showCloneModal = false">
     </clone-modal>
     <progress-dialog :show="isPublishing" :status="publishPercentage"/>
-    <v-footer height="52" color="primary" absolute>
-      <v-layout row justify-center>
-        <v-flex
-          xs-12
-          class="body-2 grey--text text--lighten-4 py-2">
-          <v-chip
-            color="grey lighten-4"
-            label
-            small
-            class="mr-3 grey--text text--darken-4">
-            v3.1 Silk
-          </v-chip>
-          Built with <v-icon color="pink">mdi-heart</v-icon>
-          Extension Engine
-        </v-flex>
-      </v-layout>
-    </v-footer>
+    <app-footer/>
   </v-container>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
-import api from '../../../api/course';
+import { mapActions, mapGetters } from 'vuex';
+import api from '@/api/course';
+import AppFooter from '@/components/common/Footer';
 import CloneModal from './CloneModal';
 import EventBus from 'EventBus';
 import General from './General';
 import JSZip from 'jszip';
 import ProgressDialog from '@/components/common/ProgressDialog';
-import publishMixin from 'components/common/mixins/publish';
+import publishMixin from '@/components/common/mixins/publish';
 import saveAs from 'save-as';
 import Sidebar from './Sidebar';
-import UserManagement from './UserManagement';
 
 const appChannel = EventBus.channel('app');
 
@@ -59,12 +43,12 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course', 'outlineActivities', 'isCourseAdmin'], 'course'),
+    ...mapGetters('course', ['course', 'outlineActivities', 'isCourseAdmin']),
     publishPercentage: ({ publishStatus }) => publishStatus.progress * 100
   },
   methods: {
-    ...mapActions({ removeCourse: 'remove' }, 'courses'),
-    ...mapActions({ publishActivity: 'publish' }, 'activities'),
+    ...mapActions('courses', { removeCourse: 'remove' }),
+    ...mapActions('activities', { publishActivity: 'publish' }),
     downloadContentInventory() {
       api.getContentInventory(this.$route.params.courseId)
         .then(response => JSZip.loadAsync(response))
@@ -99,11 +83,11 @@ export default {
     this.$router.push({ name: 'course' });
   },
   components: {
+    AppFooter,
     CloneModal,
     General,
     ProgressDialog,
-    Sidebar,
-    UserManagement
+    Sidebar
   }
 };
 </script>
