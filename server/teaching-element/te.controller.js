@@ -13,9 +13,7 @@ function list({ course, query, opts }, res) {
     const where = { [Op.or]: [] };
     if (activityId) where[Op.or].push({ id: parseInt(activityId, 10) });
     if (parentId) where[Op.or].push({ parentId: parseInt(parentId, 10) });
-    opts.include = [
-      { model: Activity, attributes: [], where }
-    ];
+    opts.include = { model: Activity, attributes: [], where };
   }
   if (!query.detached) opts.where = { detached: false };
 
@@ -40,7 +38,7 @@ function create({ body, params, user }, res) {
     .then(asset => res.json({ data: asset }));
 }
 
-async function patch({ body, params, user }, res) {
+function patch({ body, params, user }, res) {
   const attrs = ['refs', 'type', 'data', 'meta', 'position', 'courseId', 'deletedAt'];
   const data = pick(body, attrs);
   const paranoid = body.paranoid !== false;
