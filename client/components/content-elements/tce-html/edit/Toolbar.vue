@@ -65,6 +65,7 @@ export default {
 
 <style lang="scss">
 $icon-color: #333;
+$icon-accent-color: #ff6590;
 $icon-size: 18px;
 
 .tce-html-toolbar {
@@ -72,10 +73,6 @@ $icon-size: 18px;
   align-items: center;
   height: 45px;
   text-align: initial;
-}
-
-.ql-toolbar.ql-snow {
-  border: none;
 }
 
 .ql-toolbar .icon {
@@ -100,6 +97,29 @@ $icon-size: 18px;
     span:first-child {
       display: none;
     }
+  }
+}
+
+.ql-toolbar.ql-snow {
+  border: none;
+
+  @mixin icon-color($color, $background: none) {
+    background: $background;
+
+    .icon {
+      color: $icon-accent-color;
+    }
+  }
+
+  button:hover, button:focus, .ql-picker-label:hover, .ql-picker-item:hover {
+    @include icon-color($color: $icon-accent-color);
+  }
+
+  button.ql-active, .ql-picker-label.ql-active, .ql-picker-item.ql-selected {
+    @include icon-color(
+      $color: $icon-accent-color,
+      $background: lighten($icon-accent-color, 25%)
+    );
   }
 }
 </style>
