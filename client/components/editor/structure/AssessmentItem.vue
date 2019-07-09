@@ -13,7 +13,7 @@
       @selected="$emit('selected')"
       @delete="$emit('delete')"
       @save="save">
-      <div class="header">
+      <div slot-scope="{ isEditing }" class="header">
         <v-chip
           color="blue-grey darken-1"
           label
@@ -34,7 +34,7 @@
             :value="objective"
             :options="objectives"
             :searchable="true"
-            :disabled="!objectives.length"
+            :disabled="!isEditing"
             :trackBy="'id'"
             :customLabel="it => it.data ? it.data.name : ''"
             :placeholder="examObjectiveLabel"
