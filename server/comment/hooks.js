@@ -1,25 +1,27 @@
 'use strict';
 
-const { broadcast } = require('../course/channel');
-const events = require('./events');
-const pick = require('lodash/pick');
+const sse = require('../shared/sse');
 
 exports.add = (Comment, Hooks) => {
+  const { Events } = Comment;
+
   Comment.addHook(Hooks.afterCreate, comment => {
-    comment.getAuthor().then(a => {
-      const author = pick(a, ['id', 'email']);
-      const data = { comment: { ...comment.toJSON(), author } };
-      broadcast(events.CREATE, comment.courseId, data);
+    comment.getAuthor().then(({ id, email }) => {
+      const author = { id, email };
+      const channel = sse.channel(comment.courseId);
+      if (channel) channel.send(Events.Create, { ...comment.toJSON(), author });
     });
   });
 
   Comment.addHook(Hooks.afterUpdate, comment => {
-    broadcast(events.UPDATE, comment.courseId, { comment });
+    const channel = sse.channel(comment.courseId);
+    if (channel) channel.send(Events.Update, comment);
   });
 
   Comment.addHook(Hooks.afterDestroy, comment => {
-    Comment.findByPk(comment.id, { paranoid: false }).then(deleted => {
-      broadcast(events.DELETE, comment.courseId, { deleted });
+    Comment.findByPk(comment.id, { paranoid: false }).then(comment => {
+      const channel = sse.channel(comment.courseId);
+      if (channel) channel.send(Events.Delete, comment);
     });
   });
 };

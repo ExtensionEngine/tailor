@@ -3,7 +3,7 @@
 const path = require('path');
 const serverPort = require('./config/server').port;
 
-const { NODE_ENV, STORAGE_PATH } = process.env;
+const { API_PATH, NODE_ENV, STORAGE_PATH } = process.env;
 const imagesPath = 'assets/img';
 const isProduction = NODE_ENV === 'production';
 const serverUrl = `http://127.0.0.1:${serverPort}`;
@@ -80,6 +80,9 @@ module.exports = {
     dir: 'dist',
     sourceMap: !isProduction
   },
+  envs: {
+    API_PATH
+  },
   chainWebpack(config, { mode }) {
     config.resolve.alias.merge(aliases);
     config.resolve.extensions.merge(extensions);
@@ -90,6 +93,13 @@ module.exports = {
       .use('imports-loader')
       .loader(require.resolve('imports-loader'))
       .options({ jQuery: 'jquery' });
+
+    config.module.rule('event-source-polyfill')
+      .test(require.resolve('event-source-polyfill'))
+      .post()
+      .use('exports-loader')
+      .loader(require.resolve('exports-loader'))
+      .options({ EventSource: 'exports.EventSource || exports.NativeEventSource' });
 
     config.module.rule('val')
       .test(/\.load\.js$/)

@@ -1,4 +1,3 @@
-<script>
 import { mapActions, mapState } from 'vuex';
 import pick from 'lodash/pick';
 
@@ -20,31 +19,30 @@ export default {
     ...mapActions('activeUsers', {
       addActiveUser: 'add',
       removeActiveUser: 'remove',
-      removeActiveUserSession: 'removeSession',
       subscribeToActiveUsers: 'subscribe',
+      unsubscribeFromActiveUsers: 'unsubscribe',
       fetchActiveUsers: 'fetch'
     })
   },
   watch: {
     sseId: {
-      async handler() {
+      handler() {
         if (!this.sseId) return;
-        await this.addActiveUser(this.context);
+        this.addActiveUser(this.context);
       },
       immediate: true
     }
   },
-  async mounted() {
+  mounted() {
     this.subscribeToActiveUsers(this.courseId);
-    await this.fetchActiveUsers(this.courseId);
+    this.fetchActiveUsers(this.courseId);
   },
   beforeRouteLeave(to, from, next) {
     if (!trackedRoutes.includes(to.name)) {
-      this.removeActiveUserSession(this.context);
+      this.unsubscribeFromActiveUsers(this.context);
     }
     // Remove children context
     if (to.name === 'course') this.removeActiveUser(this.context);
     next();
   }
 };
-</script>

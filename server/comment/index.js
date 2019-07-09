@@ -1,22 +1,21 @@
 'use strict';
 
-const { subscribe } = require('../course/channel');
-const { Comment } = require('../shared/database');
+const { Comment, User, Sequelize } = require('../shared/database');
+const { FORBIDDEN, NOT_FOUND } = require('http-status-codes');
 const { createError } = require('../shared/error/helpers');
 const ctrl = require('./comment.controller');
-const { FORBIDDEN, NOT_FOUND } = require('http-status-codes');
-const model = require('./comment.model');
+const { middleware: sse } = require('../shared/sse');
 const processQuery = require('../shared/util/processListQuery');
-const { middleware: sse } = require('../shared/util/sse');
 const router = require('express').Router();
-const { User } = require('../shared/database');
+
+const { EmptyResultError } = Sequelize;
 
 const defaultListQuery = {
   order: [['createdAt', 'DESC']],
   paranoid: false
 };
 
-router.get('/courses/:courseId/comments/subscribe', sse, subscribe);
+router.get('/courses/:courseId/comments/subscribe', sse, createFeed);
 
 router
   .route('/courses/:courseId/comments')
@@ -30,10 +29,19 @@ router
   .patch(canEdit, ctrl.patch)
   .delete(canEdit, ctrl.remove);
 
+function createFeed({ query }, { sse }) {
+  sse.join(query.courseId);
+}
+
 function getComment(req, _res, next, commentId) {
-  const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
-  return Comment.findByPk(commentId, { paranoid: false, include })
-    .then(comment => comment || createError(NOT_FOUND, 'Comment not found'))
+  const include = [{
+    model: User,
+    as: 'author',
+    attributes: ['id', 'email']
+  }];
+  const options = { include, paranoid: false, rejectOnEmpty: true };
+  return Comment.findByPk(commentId, options)
+    .catch(EmptyResultError, () => createError(NOT_FOUND, 'Comment not found'))
     .then(comment => {
       req.comment = comment;
       next();
@@ -46,6 +54,6 @@ function canEdit({ user, comment }, _res, next) {
 }
 
 module.exports = {
-  model,
+  model: Comment,
   router
 };

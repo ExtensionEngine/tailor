@@ -15,17 +15,12 @@ function add(context) {
 
 function remove(context) {
   const { courseId } = context;
-  return request.post(`${url.root(courseId)}/remove`, { context });
-}
-
-function removeSession(context) {
-  const { courseId } = context;
-  return request.post(`${url.root(courseId)}/remove-session`, { context });
+  return request.delete(url.root(courseId), { context });
 }
 
 export default {
+  url,
   fetch,
   add,
-  remove,
-  removeSession
+  remove
 };

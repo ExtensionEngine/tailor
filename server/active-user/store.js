@@ -1,35 +1,28 @@
 'use strict';
 
-const isEmpty = require('lodash/isEmpty');
-const isEqual = require('lodash/isEqual');
-const omit = require('lodash/omit');
-const remove = require('lodash/remove');
-
-const activeUsers = {};
-
-function addContext(user, context) {
-  const { id, email, created } = user;
-  const existingUser = activeUsers[id];
-  if (!existingUser) {
-    activeUsers[id] = { id, email, created, contexts: [context] };
-    return;
+module.exports = new (class extends Map {
+  addContext(user, context) {
+    this._ensureUser(user);
+    const record = this.get(user.id);
+    record.contexts.push(context);
   }
-  existingUser.contexts.push(context);
-}
 
-function removeContext(user, context) {
-  if (!activeUsers[user.id]) return;
-  remove(activeUsers[user.id].contexts, c => {
-    const remove = isEqual(omit(c, ['created']), omit(context, ['created']));
-    return remove;
-  });
-  if (isEmpty(activeUsers[user.id].contexts)) delete activeUsers[user.id];
-}
+  removeContext(user, filterFn) {
+    const record = this.get(user.id);
+    if (!record) return;
+    record.contexts = record.contexts.filter(context => !filterFn(context));
+    if (record.contexts.length <= 0) this.delete(user.id);
+  }
 
-function removeActiveUser(userId, sseId) {
-  if (!activeUsers[userId]) return;
-  remove(activeUsers[userId].contexts, c => c.sseId === sseId);
-  if (isEmpty(activeUsers[userId].contexts)) delete activeUsers[userId];
-}
+  _ensureUser(user) {
+    if (this.has(user.id)) return;
+    const created = new Date();
+    this.set(user.id, { ...user, created, contexts: [] });
+  }
 
-module.exports = { activeUsers, addContext, removeContext, removeActiveUser };
+  toJSON() {
+    return Array.from(this.entries()).reduce((acc, [key, value]) => {
+      return Object.assign(acc, { [key]: value });
+    }, {});
+  }
+})();

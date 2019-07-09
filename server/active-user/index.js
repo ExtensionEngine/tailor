@@ -1,17 +1,15 @@
 'use strict';
 
 const ctrl = require('./activeUser.controller');
+const { middleware: sse } = require('../shared/sse');
 const router = require('express').Router();
-const { middleware: sse } = require('../shared/util/sse');
-const { subscribe } = require('../course/channel');
 
-router.get('/subscribe', sse, (req, res) => subscribe(req, res, ctrl.removeSession));
+router.get('/subscribe', sse, ctrl.subscribe);
 
-router
-  .get('/', ctrl.fetch)
-  .post('/', ctrl.add)
-  .post('/remove', ctrl.remove)
-  .post('/remove-session', ctrl.removeSession);
+router.route('/')
+  .get(ctrl.fetch)
+  .post(ctrl.add)
+  .delete(ctrl.remove);
 
 module.exports = {
   ctrl,

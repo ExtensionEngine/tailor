@@ -1,48 +1,55 @@
 'use strict';
 
-const { activeUsers, addContext, removeContext, removeActiveUser } = require('./store');
-const { broadcast } = require('../course/channel');
-const events = require('./events');
+const ActiveUsers = require('./store');
+const Events = require('./Events');
+const isEqual = require('lodash/isEqual');
 const pick = require('lodash/pick');
+const sse = require('../shared/sse');
 
-function fetch(req, res) {
-  res.json({ data: { activeUsers } });
+function fetch(_req, res) {
+  const activeUsers = ActiveUsers;
+  res.json({
+    data: { activeUsers }
+  });
 }
 
-function add(req, res) {
-  const { user: loggedUser, body: { context } } = req;
-  const { courseId } = context;
-  const user = pick(loggedUser, ['id', 'email', 'firstName', 'lastName']);
-  user.created = new Date();
-  addContext(user, context);
-  const data = { user, context };
-  broadcast(events.ADD_ACTIVE_USER, courseId, data);
+function add({ body, user }, res) {
   res.end();
+  const { context } = body;
+  user = pick(user, ['id', 'email', 'firstName', 'lastName']);
+  ActiveUsers.addContext(user, context);
+  const channel = sse.channel(context.courseId);
+  if (channel) channel.send(Events.Add, { user, context });
 }
 
-function remove(req, res) {
-  const { user: loggedUser, body: { context } } = req;
-  const { courseId } = context;
-  const user = pick(loggedUser, ['id', 'email', 'firstName', 'lastName']);
-  removeContext(user, context, true);
-  const data = { user, context };
-  broadcast(events.REMOVE_ACTIVE_USER, courseId, data);
+function remove({ body, user }, res) {
   res.end();
+  const { context } = body;
+  const { _created, ...targetContext } = context;
+  user = pick(user, ['id', 'email', 'firstName', 'lastName']);
+  ActiveUsers.removeContext(user, ({ _created, ...context }) => {
+    return isEqual(context, targetContext);
+  });
+  const channel = sse.channel(context.courseId);
+  if (channel) channel.send(Events.Remove, { user, context });
 }
 
-function removeSession(req, res) {
-  const { user: { id: userId }, course } = req;
-  const { sse } = res;
-  const sseId = sse ? sse.id : req.body.context.sseId;
-  removeActiveUser(userId, sseId);
-  const data = { userId, sseId };
-  broadcast(events.REMOVE_ACTIVE_USER_SESSION, course.id, data);
-  res.end();
+function subscribe({ course, user }, { sse }) {
+  const { id: sseId } = sse;
+  sse.join(course.id);
+  sse.on('close', () => onUnsubscribe({ course, sseId, user }));
+}
+
+function onUnsubscribe({ course, sseId, user }) {
+  ActiveUsers.removeContext(user, context => context.sseId === sseId);
+  const channel = sse.channel(course.id);
+  const { id: userId } = user;
+  if (channel) channel.send(Events.RemoveSession, { userId, sseId });
 }
 
 module.exports = {
   fetch,
   add,
   remove,
-  removeSession
+  subscribe
 };
