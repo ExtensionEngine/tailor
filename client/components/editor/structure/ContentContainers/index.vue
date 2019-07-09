@@ -48,7 +48,8 @@ export default {
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: false },
-    unique: { type: Boolean, default: false }
+    unique: { type: Boolean, default: false },
+    required: { type: Boolean, default: true }
   },
   computed: {
     containerName() {
@@ -81,7 +82,7 @@ export default {
     }
   },
   created() {
-    if (isEmpty(this.containerGroup)) this.addContainer();
+    if (this.required && isEmpty(this.containerGroup)) this.addContainer();
   },
   filters: {
     capitalize(val) {
