@@ -72,21 +72,25 @@ class SSEConnection extends EventEmitter {
   }
 
   static channel(channelId) {
+    channelId = String(channelId);
     return this._channels.get(channelId);
   }
 
   join(channelId) {
+    channelId = String(channelId);
     this._ensureChannel(channelId);
     const channel = this.constructor.channel(channelId);
     return channel && channel.add(this);
   }
 
   leave(channelId) {
+    channelId = String(channelId);
     const channel = this.constructor.channel(channelId);
     return channel && channel.remove(this);
   }
 
   _ensureChannel(channelId) {
+    channelId = String(channelId);
     const { _channels: channels } = this.constructor;
     if (!channels.has(channelId)) {
       channels.set(channelId, new Channel(channelId));

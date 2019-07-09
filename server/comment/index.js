@@ -30,7 +30,7 @@ router
   .delete(canEdit, ctrl.remove);
 
 function createFeed({ query }, { sse }) {
-  sse.join(String(query.courseId));
+  sse.join(query.courseId);
 }
 
 function getComment(req, _res, next, commentId) {

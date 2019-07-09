@@ -8,19 +8,19 @@ exports.add = (Comment, Hooks) => {
   Comment.addHook(Hooks.afterCreate, comment => {
     comment.getAuthor().then(({ id, email }) => {
       const author = { id, email };
-      const channel = sse.channel(String(comment.courseId));
+      const channel = sse.channel(comment.courseId);
       if (channel) channel.send(Events.Create, { ...comment.toJSON(), author });
     });
   });
 
   Comment.addHook(Hooks.afterUpdate, comment => {
-    const channel = sse.channel(String(comment.courseId));
+    const channel = sse.channel(comment.courseId);
     if (channel) channel.send(Events.Update, comment);
   });
 
   Comment.addHook(Hooks.afterDestroy, comment => {
     Comment.findByPk(comment.id, { paranoid: false }).then(comment => {
-      const channel = sse.channel(String(comment.courseId));
+      const channel = sse.channel(comment.courseId);
       if (channel) channel.send(Events.Delete, comment);
     });
   });
