@@ -9,7 +9,7 @@
         <h3 class="pull-left">{{ title }}</h3>
         <div class="actions">
           <span
-            @click="requestDeletion(container)"
+            @click="$emit('delete')"
             class="btn btn-sm btn-link pull-right">
             Delete
           </span>
@@ -45,12 +45,9 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import AssessmentGroup from './AssessmentGroup';
-import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import numberToLetter from 'utils/numberToLetter';
 import pluralize from 'pluralize';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   name: 'exam',
@@ -87,13 +84,6 @@ export default {
         type: 'ASSESSMENT_GROUP',
         parentId: this.container.id,
         position: this.groups.length + 1
-      });
-    },
-    requestDeletion(item) {
-      appChannel.emit('showConfirmationModal', {
-        title: 'Delete exam?',
-        message: 'Are you sure you want to delete exam?',
-        action: () => this.remove(item)
       });
     }
   },
