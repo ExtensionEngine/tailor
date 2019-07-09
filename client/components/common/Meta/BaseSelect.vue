@@ -9,6 +9,7 @@
       :options="options"
       :searchable="false"
       :placeholder="meta.placeholder"
+      :multiple="isMultiSelect"
       @open="active = true"
       @close="active = false"
       @input="update">
@@ -25,13 +26,11 @@
 </template>
 
 <script>
-import find from 'lodash/find';
-import get from 'lodash/get';
 import isString from 'lodash/isString';
 import Select from '../../common/Select';
 
 export default {
-  name: 'multi-select',
+  name: 'base-meta-select',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
@@ -39,8 +38,11 @@ export default {
     return { active: false };
   },
   computed: {
-    value() {
-      return find(this.options, { value: this.meta.value });
+    isMultiSelect: () => {
+      throw new Error('Computed "isMultiSelect" must be implemented');
+    },
+    value: () => {
+      throw new Error('Computed "value" must be implemented');
     },
     options() {
       const { options } = this.meta;
@@ -48,8 +50,12 @@ export default {
     }
   },
   methods: {
+    parseInput() {
+      throw new Error('Method "parseInput" must be implemented');
+    },
     update(data) {
-      return this.$emit('update', this.meta.key, get(data, 'value', null));
+      const payload = this.parseInput(data);
+      return this.$emit('update', this.meta.key, payload);
     }
   },
   components: { multiselect: Select }
