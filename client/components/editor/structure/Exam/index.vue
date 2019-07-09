@@ -60,10 +60,7 @@ export default {
     config: { type: Object, default: () => ({}) }
   },
   data() {
-    let collapsed = this.container.id;
-    return {
-      collapsed
-    };
+    return { collapsed: this.container.id };
   },
   computed: {
     ...mapGetters('activities', ['getExamObjectives']),
