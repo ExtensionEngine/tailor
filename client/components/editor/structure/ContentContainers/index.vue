@@ -34,6 +34,7 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { mapActions } from 'vuex';
 import maxBy from 'lodash/maxBy';
+import toCase from 'to-case';
 
 const appChannel = EventBus.channel('app');
 
@@ -51,7 +52,7 @@ export default {
   },
   computed: {
     containerName() {
-      if (this.unique) return this.type.toLowerCase();
+      if (this.unique) return toCase.slug(this.type);
       return 'content-container';
     },
     name() {
