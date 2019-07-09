@@ -271,14 +271,15 @@ class Activity extends Model {
 
       activities = [...activities, link.id];
 
-      return Promise.reduce(children, (acc, child) => {
-        return Activity.linkActivities(
+      return Promise.reduce(children, async (acc, child) => {
+        const result = await Activity.linkActivities(
           child,
           link.id,
           child.position,
-          activities,
+          [],
           transaction
         );
+        return [ ...acc, ...result ];
       }, activities);
     }
 
@@ -376,6 +377,7 @@ class Activity extends Model {
   }
 
   async removeLink(options = {}) {
+    if (this.deletedAt) return this.origin.remove(options);
     let descendants = await this.descendants();
     descendants = [...descendants.nodes].filter(d => d.id !== this.id);
     await Promise.each(descendants, d => d.remove(options));
