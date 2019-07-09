@@ -1,10 +1,10 @@
 'use strict';
 
-const { Model, Op } = require('sequelize');
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
+const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const { role: roles } = require('../../config/shared');
@@ -95,15 +95,6 @@ class User extends Model {
       timestamps: true,
       paranoid: true,
       freezeTableName: true
-    };
-  }
-
-  static scopes() {
-    return {
-      withRoleType() {
-        const role = { [Op.in]: roles.getRoleValues('user') };
-        return { where: { role } };
-      }
     };
   }
 

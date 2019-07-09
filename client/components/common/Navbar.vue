@@ -7,7 +7,7 @@
       <v-toolbar-title class="app-name ml-2">{{ title }}</v-toolbar-title>
     </router-link>
     <v-spacer/>
-    <v-toolbar-items class="mr-2">
+    <v-toolbar-items>
       <v-btn
         v-for="({ name, to, icon }) in routes"
         :key="name"
