@@ -2,7 +2,6 @@
 
 const hooks = require('./hooks');
 const { Model } = require('sequelize');
-const { withFeeds } = require('../shared/feeds');
 
 const Events = {
   Create: 'comment:create',
@@ -10,7 +9,7 @@ const Events = {
   Delete: 'comment:delete'
 };
 
-class Comment extends withFeeds(Model, Events) {
+class Comment extends Model {
   static fields(DataTypes) {
     const { DATE, TEXT } = DataTypes;
     return {
@@ -63,6 +62,10 @@ class Comment extends withFeeds(Model, Events) {
       paranoid: true,
       freezeTableName: true
     };
+  }
+
+  static get Events() {
+    return Events;
   }
 }
 

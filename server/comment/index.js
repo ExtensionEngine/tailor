@@ -30,8 +30,7 @@ router
   .delete(canEdit, ctrl.remove);
 
 function createFeed({ query }, { sse }) {
-  const channel = sse.join(String(query.courseId));
-  Comment.feeds.add(channel);
+  sse.join(String(query.courseId));
 }
 
 function getComment(req, _res, next, commentId) {
