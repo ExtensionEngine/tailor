@@ -1,49 +1,53 @@
 <template>
-  <div>
+  <div class="mb-5">
     <div class="actions">
-      <button
+      <v-btn
         @click="previewContainer"
         class="btn btn-default btn-material pull-left"
         type="button">
         <span class="mdi mdi-eye"></span>
         Preview {{ name }}
-      </button>
-      <button
+      </v-btn>
+      <v-btn
         @click="deleteContainer"
-        class="btn btn-default btn-material pull-right"
-        type="button">
-        <span class="mdi mdi-delete"></span>
+        color="error"
+        outline
+        class="pull-right">
         Delete {{ name }}
-      </button>
+      </v-btn>
     </div>
-    <div v-if="!teachingElements.length" class="well">
+    <v-alert
+      :value="!teachingElements.length"
+      color="primary"
+      icon="mdi-information-variant"
+      outline>
       Click the button below to create content.
-    </div>
+    </v-alert>
     <tes-list
       :list="teachingElements"
       :activity="container"
       :types="types"
       :layout="layout"
-      @add="saveElement"
+      @add="addElement"
+      @insert="insert"
       @update="reorder">
       <teaching-element
         slot="list-item"
         slot-scope="{ item, dragged, setWidth }"
         :setWidth="setWidth"
         :dragged="dragged"
-        :element="item">
-      </teaching-element>
+        :element="item"/>
     </tes-list>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import api from '@/api/preview';
 import filter from 'lodash/filter';
-import { mapActions, mapGetters } from 'vuex-module';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
-import api from '@/api/preview';
 
 export default {
   name: 'content-container',
@@ -61,7 +65,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ reorderElements: 'reorder', saveElement: 'save' }, 'tes'),
+    ...mapActions('tes', {
+      reorderElements: 'reorder',
+      insertElement: 'insert',
+      addElement: 'save'
+    }),
     reorder({ newIndex: newPosition }) {
       const items = this.teachingElements;
       const element = items[newPosition];
@@ -73,6 +81,13 @@ export default {
       const { courseId, id } = this.container;
       return api.createPreview(courseId, id)
         .then(location => window.open(location));
+    },
+    insert(element) {
+      const items = this.teachingElements;
+      const { position: newPosition } = element;
+      const isFirstChild = newPosition === -1;
+      const context = { items, newPosition, isFirstChild, insert: true };
+      this.insertElement({ element, context });
     },
     deleteContainer() {
       this.$emit('delete');
@@ -90,15 +105,5 @@ export default {
   width: 100%;
   min-height: 36px;
   margin-bottom: 25px;
-  color: #707070;
-  font-size: 22px;
-
-  .btn {
-    color: #707070;
-    border: 1px solid #f0f0f0;
-    border-radius: 2px;
-    outline: none;
-    box-shadow: none;
-  }
 }
 </style>

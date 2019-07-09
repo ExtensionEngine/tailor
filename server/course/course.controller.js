@@ -74,7 +74,7 @@ function upsertUser({ course, body }, res) {
 function removeUser(req, res) {
   const { course } = req;
   const { userId } = req.params;
-  return User.findById(userId)
+  return User.findByPk(userId)
     .then(user => user || createError(NOT_FOUND, 'User not found'))
     .then(user => course.removeUser(user))
     .then(() => res.end());

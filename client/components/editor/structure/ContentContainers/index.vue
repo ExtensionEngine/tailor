@@ -1,9 +1,12 @@
 <template>
   <div class="content-containers">
     <h2 v-if="displayHeading">{{ name | capitalize }}</h2>
-    <div v-if="!containerGroup.length" class="well">
+    <v-alert
+      :value="!containerGroup.length"
+      color="white"
+      icon="mdi-information-variant">
       Click the button below to create first {{ name | capitalize }}.
-    </div>
+    </v-alert>
     <content-container
       v-for="container in containerGroup"
       :key="container._cid || container.id"
@@ -13,13 +16,13 @@
       :layout="layout"
       :class="`${name}-container`"
       @delete="deleteContainer(container)"
-      class="content-container">
+      class="content-container elevation-2">
     </content-container>
     <div v-if="addBtnEnabled">
-      <button @click="addContainer" class="add-btn btn btn-primary btn-material">
-        <span class="add-icon mdi mdi-plus"></span>
+      <v-btn @click="addContainer" color="primary">
+        <v-icon class="pr-2">mdi-plus</v-icon>
         Create {{ name }}
-      </button>
+      </v-btn>
     </div>
   </div>
 </template>
@@ -29,7 +32,8 @@ import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
 import get from 'lodash/get';
-import { mapActions } from 'vuex-module';
+import isEmpty from 'lodash/isEmpty';
+import { mapActions } from 'vuex';
 import maxBy from 'lodash/maxBy';
 
 const appChannel = EventBus.channel('app');
@@ -59,18 +63,21 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save', 'remove'], 'activities'),
+    ...mapActions('activities', ['save', 'remove']),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
     deleteContainer(container) {
       appChannel.emit('showConfirmationModal', {
-        type: this.name,
-        item: container,
+        title: `Delete ${this.name}?`,
+        message: `Are you sure you want to delete ${this.name}?`,
         action: () => this.remove(container)
       });
     }
+  },
+  created() {
+    if (isEmpty(this.containerGroup)) this.addContainer();
   },
   filters: {
     capitalize(val) {
@@ -84,6 +91,11 @@ export default {
 <style lang="scss" scoped>
 .content-containers {
   margin: 70px 0;
+
+  > .v-alert {
+    margin: 30px 0;
+    color: #555;
+  }
 }
 
 h2 {
@@ -100,15 +112,5 @@ h2 {
   margin: 25px 0;
   padding: 20px 40px;
   background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-}
-
-.add-btn {
-  min-width: 300px;
-  margin: 30px 0 0;
-}
-
-.add-icon {
-  padding-right: 3px;
 }
 </style>

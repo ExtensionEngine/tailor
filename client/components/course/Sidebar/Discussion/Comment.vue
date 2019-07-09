@@ -4,10 +4,10 @@
     @mouseleave="hovered = false">
     <span v-if="avatar" class="pull-left avatar">
       <avatar
-        :size="40"
+        :size="38"
         :username="comment.author.email"
         :initials="authorInitials"
-        color="#ffffffd9">
+        color="#ffffff">
       </avatar>
     </span>
     <div class="content-wrapper">
@@ -30,7 +30,7 @@
           v-show="showDropdown"
           class="actions">
           <li
-            @mousedown.stop="toggleEdit"
+            @mousedown.prevent="toggleEdit"
             class="action"
             role="button">
             <span class="icon mdi mdi-pencil"></span>
@@ -66,7 +66,7 @@
 <script>
 import Avatar from 'vue-avatar';
 import { focus } from 'vue-focus';
-import { mapGetters } from 'vuex-module';
+import { mapState } from 'vuex';
 import TextEditor from 'components/common/TextEditor';
 import ThreadComment from './Comment';
 
@@ -84,7 +84,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user']),
+    ...mapState({ user: state => state.auth.user }),
     authorInitials() {
       return this.comment.author.email.substr(0, 2).toUpperCase();
     },

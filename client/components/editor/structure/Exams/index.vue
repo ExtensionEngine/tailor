@@ -9,22 +9,22 @@
         :position="index">
       </exam>
     </ul>
-    <button @click="create" class="btn btn-primary btn-material create-exam">
-      <span class="mdi mdi-plus"></span>
+    <v-btn @click.stop="create" color="primary" class="mt-4">
+      <v-icon class="pr-2">mdi-plus</v-icon>
       Create Exam Version
-    </button>
+    </v-btn>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Exam from './Exam';
 import filter from 'lodash/filter';
-import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
   name: 'exams',
   computed: {
-    ...mapGetters(['activity'], 'editor'),
+    ...mapGetters('editor', ['activity']),
     ...mapGetters(['activities']),
     exams() {
       const parentId = this.activity.id;
@@ -32,7 +32,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save'], 'activities'),
+    ...mapActions('activities', ['save']),
     create() {
       this.save({
         type: 'EXAM',
@@ -58,10 +58,5 @@ h2 {
 
 .exams {
   margin: 80px 0 200px;
-}
-
-.create-exam {
-  min-width: 300px;
-  margin: 40px 0;
 }
 </style>

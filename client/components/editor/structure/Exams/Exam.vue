@@ -30,19 +30,21 @@
         :exam="exam"
         :position="index">
       </assessment-group>
-      <button
+      <v-btn
         :disabled="!exam.id"
-        @click="createGroup"
-        class="btn btn-primary btn-material create-group">
-        <span class="mdi mdi-plus"></span>
-        Create Question Group
-      </button>
+        @click.stop="createGroup"
+        color="primary"
+        outline
+        class="my-5">
+        <v-icon class="pr-2">mdi-file-tree</v-icon>
+        Add Question Group
+      </v-btn>
     </div>
   </li>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import AssessmentGroup from './AssessmentGroup';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
@@ -77,8 +79,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save', 'remove'], 'activities'),
-    ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
+    ...mapActions('activities', ['save', 'remove']),
+    ...mapActions('tes', { getTeachingElements: 'fetch' }),
     createGroup() {
       this.save({
         type: 'ASSESSMENT_GROUP',
@@ -88,8 +90,8 @@ export default {
     },
     requestDeletion(item) {
       appChannel.emit('showConfirmationModal', {
-        type: 'exam',
-        item,
+        title: 'Delete exam?',
+        message: 'Are you sure you want to delete exam?',
         action: () => this.remove(item)
       });
     }
@@ -144,10 +146,5 @@ h3 {
 .label {
   min-width: 40px;
   line-height: 12px;
-}
-
-.create-group {
-  min-width: 210px;
-  margin: 40px 0;
 }
 </style>

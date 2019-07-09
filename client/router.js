@@ -1,3 +1,4 @@
+/* eslint-disable sort-imports */
 import Router from 'vue-router';
 import store from './store';
 import Vue from 'vue';
@@ -34,7 +35,6 @@ let router = new Router({
       component: Outline
     }, {
       path: 'settings',
-      name: 'course-settings',
       component: CourseSettings,
       children: [{
         path: '',
@@ -80,7 +80,7 @@ let router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(it => it.meta.auth) && !store.getters.user) {
+  if (to.matched.some(it => it.meta.auth) && !store.state.auth.user) {
     next({ path: '/login', query: { redirect: to.fullPath } });
   } else {
     next();

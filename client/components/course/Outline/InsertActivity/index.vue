@@ -1,9 +1,11 @@
 <template>
   <div>
-    <div v-if="!showInput" @click="show" class="divider-wrapper">
+    <div v-if="!showActions" @click="show" class="divider-wrapper">
       <div class="divider">
         <div class="action">
-          <span class="mdi mdi-plus plus"></span>
+          <v-btn color="blue-grey darken-1" dark small>
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
         </div>
       </div>
     </div>
@@ -31,9 +33,8 @@
 </template>
 
 <script>
-import { getLevel } from 'shared/activities';
 import { getOutlineChildren, getParent } from 'utils/activity';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityBrowser from 'components/common/ActivityBrowser';
 import calculatePosition from 'utils/calculatePosition';
 import CreateActivity from './CreateActivity';
@@ -41,6 +42,7 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
+import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
 import SelectAction from './SelectAction';
 
@@ -50,13 +52,16 @@ export default {
   },
   data() {
     return {
-      showInput: false,
       action: null
     };
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['structure'], 'course'),
+    ...mapGetters('course', ['structure']),
+    ...mapState({ outlineState: s => s.course.outline }),
+    showActions() {
+      return this.anchor._cid === this.outlineState.showOptions;
+    },
     supportedLevels() {
       const grandParent = getParent(this.activities, this.anchor);
       const { subLevels = [] } = find(this.structure, { type: this.anchor.type });
@@ -68,16 +73,18 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ clone: 'clone', create: 'save' }, 'activities'),
+    ...mapActions('activities', { copy: 'clone', create: 'save' }),
+    ...mapMutations('course', ['showActivityOptions', 'focusActivity']),
     show() {
-      this.showInput = true;
+      this.showActivityOptions(this.anchor._cid);
+      this.focusActivity(this.anchor._cid);
     },
     hide() {
-      this.showInput = false;
+      this.showActivityOptions(null);
       this.action = null;
     },
     executeAction(activity) {
-      if (this.action === 'clone') {
+      if (this.action === 'copy') {
         activity = {
           srcId: activity.id,
           srcCourseId: activity.courseId,
@@ -111,10 +118,11 @@ export default {
 
 <style lang="scss" scoped>
 .divider-wrapper {
-  width: 100%;
-  padding: 7px 0;
+  margin-right: -6px;
+  padding: 8px 0;
   cursor: pointer;
   opacity: 0;
+  transition: opacity 0.2s;
 
   &:hover {
     opacity: 1;
@@ -124,24 +132,28 @@ export default {
     position: relative;
     width: 100%;
     height: 2px;
-    background-color: #aaa;
+    background-color: #717171;
     opacity: inherit;
+    transition-delay: 0.05s;
 
     .action {
       position: absolute;
-      top: -8px;
-      right: -27px;
+      top: -18px;
+      right: -32px;
       height: 0;
-      color: #aaa;
-      font-size: 16px;
-      text-align: left;
     }
   }
 
-  .plus {
-    padding: 0 5px;
-    font-size: 20px;
-    line-height: 20px;
+  .v-btn {
+    $size: 24px;
+
+    width: $size;
+    min-width: $size;
+    height: $size;
+
+    .v-icon {
+      font-size: 20px;
+    }
   }
 }
 </style>

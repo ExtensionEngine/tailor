@@ -25,7 +25,7 @@
 
 <script>
 import { delay } from 'bluebird';
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 
 export default {
   data() {

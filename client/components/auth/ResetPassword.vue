@@ -4,7 +4,7 @@
     <form @submit.prevent="submit">
       <div :class="{ 'has-error': vErrors.has('password') }" class="form-group">
         <input
-          v-validate="{ rules: { required: true, min: 6, alphanumerical: true } }"
+          v-validate="{ required: true, min: 6, alphanumerical: true }"
           ref="password"
           v-model="password"
           class="form-control"
@@ -17,7 +17,7 @@
         :class="{ 'has-error': vErrors.has('passwordConfirmation') }"
         class="form-group">
         <input
-          v-validate="{ rules: { required: true, confirmed: 'password' } }"
+          v-validate="{ required: true, confirmed: 'password' }"
           data-vv-as="password"
           class="form-control"
           name="passwordConfirmation"
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 import { withValidation } from 'utils/validation';
 
 export default {

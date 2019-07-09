@@ -13,7 +13,7 @@
       </div>
     </div>
     <transition name="slide-fade">
-      <div v-if="!isCollapsed" class="container-fluid accordion-body">
+      <div v-show="!isCollapsed" class="container-fluid accordion-body">
         <div v-if="!hasElements" class="well">
           Click the button below to Create your first teaching element.
         </div>
@@ -112,6 +112,8 @@ export default {
       max-width: 90%;
       padding-top: 1px;
       color: #555;
+      font-size: 16px !important;
+      font-weight: normal;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

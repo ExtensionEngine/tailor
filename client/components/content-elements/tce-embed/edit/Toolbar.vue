@@ -9,11 +9,7 @@
         :class="{ 'has-error': vErrors.has('height') }"
         class="input">
         <input
-          v-validate="{
-            rules: {
-              required: true, numeric: true, min_value: 50, max_value: 3000
-            }
-          }"
+          v-validate="{ required: true, numeric: true, min_value: 50, max_value: 3000 }"
           v-model="height"
           @input="onChange"
           id="heightInput"
@@ -34,7 +30,7 @@
       </label>
       <span :class="{ 'has-error': vErrors.has('url') }" class="input url">
         <input
-          v-validate="{ rules: { required: true, url: true } }"
+          v-validate="{ required: true, url: true }"
           v-model="url"
           @input="onChange"
           id="urlInput"
@@ -87,8 +83,6 @@ export default {
   line-height: 48px;
   text-align: left;
   vertical-align: middle;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
 
   .toolbar-item {
     display: inline-block;
@@ -102,7 +96,6 @@ export default {
       padding: 0 10px;
       font-size: 12px;
       line-height: 12px;
-      font-family: 'Catamaran', Helvetica, Arial, sans-serif;
       text-transform: uppercase;
     }
 

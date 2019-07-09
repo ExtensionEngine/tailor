@@ -22,6 +22,7 @@ const aliases = {
 
 const copy = [{ from: 'client/assets/img', to: imagesPath }];
 
+/** @type {import('poi').Config.DevServer} */
 const devServer = {
   headers: {
     'X-Powered-By': 'Webpack DevSever'
@@ -37,12 +38,21 @@ const devServer = {
 
 const extensions = ['.vue'];
 
+/** @type {import('poi').Config} */
 module.exports = {
   plugins: [
     '@poi/eslint',
     '@poi/bundle-report',
     require.resolve('./build/plugins/stats'),
     {
+      resolve: require.resolve('./build/plugins/output-filenames'),
+      options: {
+        vendor: {
+          font: 'assets/fonts/[name].[ext]',
+          image: 'assets/images/[name].[ext]'
+        }
+      }
+    }, {
       resolve: require.resolve('./build/plugins/copy'),
       options: { patterns: copy }
     }, {
@@ -55,6 +65,11 @@ module.exports = {
       options: {
         files: ['.brandrc', '.brandrc.js'],
         imagesPath
+      }
+    }, {
+      resolve: 'poi-preset-sass-resources',
+      options: {
+        resources: './client/assets/stylesheets/common/_variables.scss'
       }
     }
   ],

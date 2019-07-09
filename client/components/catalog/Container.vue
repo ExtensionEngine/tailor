@@ -1,14 +1,16 @@
 <template>
-  <div class="catalog" infinite-wrapper>
+  <div class="catalog grey lighten-2" infinite-wrapper>
     <div class="row">
-      <div class="col-md-6 col-md-offset-3">
+      <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
         <search @change="search"></search>
       </div>
-      <div class="col-md-3">
-        <create-course class="pull-right"></create-course>
+      <div class="col-md-2 col-sm-1">
+        <create-course class="pull-right"/>
       </div>
     </div>
-    <div v-show="searching" class="search-spinner"><circular-progress/></div>
+    <div v-show="searching" class="search-spinner">
+      <v-progress-circular color="primary" indeterminate/>
+    </div>
     <div v-show="!searching" class="row course-list">
       <course-card
         v-for="course in orderedCourses"
@@ -16,9 +18,11 @@
         :course="course">
       </course-card>
       <infinite-loading ref="infiniteLoading" @infinite="loadMore">
-        <div slot="spinner" class="spinner"><circular-progress/></div>
+        <div slot="spinner" class="spinner">
+          <v-progress-circular color="primary" indeterminate/>
+        </div>
         <div slot="no-results" class="no-results">
-          {{ orderedCourses.length ? '' : 'No courses found.' }}
+          {{ orderedCourses.length ? '' : 'No repositories found.' }}
         </div>
         <span slot="no-more"></span>
       </infinite-loading>
@@ -27,13 +31,12 @@
 </template>
 
 <script>
-import CircularProgress from 'components/common/CircularProgress';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import CourseCard from './Card';
 import CreateCourse from './Create';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import isEmpty from 'lodash/isEmpty';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
 import Search from './Search';
@@ -44,7 +47,7 @@ export default {
   },
   computed: {
     ...mapGetters(['courses']),
-    ...mapGetters(['hasMoreResults'], 'courses'),
+    ...mapGetters('courses', ['hasMoreResults']),
     loaderState() {
       return get(this.$refs, 'infiniteLoading.stateChanger', {});
     },
@@ -53,8 +56,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch'], 'courses'),
-    ...mapMutations(['setSearch'], 'courses'),
+    ...mapActions('courses', ['fetch']),
+    ...mapMutations('courses', ['setSearch']),
     loadMore() {
       return this.fetch().then(() => {
         if (!isEmpty(this.courses)) this.loaderState.loaded();
@@ -81,7 +84,6 @@ export default {
     this.search();
   },
   components: {
-    CircularProgress,
     CourseCard,
     CreateCourse,
     InfiniteLoading,
@@ -96,6 +98,10 @@ export default {
 
   @media (min-width: 1700px) {
     padding: 30px 300px 100px;
+  }
+
+  /deep/ .course-search {
+    margin-top: 8px;
   }
 }
 

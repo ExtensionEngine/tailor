@@ -8,7 +8,7 @@
       <div v-else>
         <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
           <input
-            v-validate="{ rules: { required: true, min: 2, max: 250 } }"
+            v-validate="{ required: true, min: 2, max: 250 }"
             v-model="name"
             class="form-control"
             name="name"
@@ -18,7 +18,7 @@
         </div>
         <div :class="{ 'has-error': vErrors.has('description') }" class="form-group">
           <textarea
-            v-validate="{ rules: { required: true, min: 2, max: 2000 } }"
+            v-validate="{ required: true, min: 2, max: 2000 }"
             v-model="description"
             class="form-control"
             name="description"
@@ -48,8 +48,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
 import CircularProgress from 'components/common/CircularProgress';
+import { mapActions } from 'vuex';
 import Modal from 'components/common/Modal';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
@@ -66,7 +66,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['clone'], 'courses'),
+    ...mapActions('courses', ['clone']),
     close() {
       this.$emit('close');
       this.name = '';
