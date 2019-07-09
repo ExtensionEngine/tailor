@@ -5,7 +5,7 @@
         v-for="({ name, label, icon }) in routes"
         :key="name"
         :to="{ name }"
-        active-class="blue-grey--text text--darken-4"
+        active-class="blue-grey--text text--darken-3"
         exact
         ripple>
         <v-list-tile-action class="pl-1">

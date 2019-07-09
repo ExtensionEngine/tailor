@@ -5,7 +5,8 @@
       :items="schemas"
       :search="search"
       open-on-click
-      item-text="label">
+      item-text="label"
+      class="pt-3">
       <template v-slot:prepend="{ item, open }">
         <v-icon :color="item.color">
           {{ open ? 'mdi-folder-open' : 'mdi-folder' }}

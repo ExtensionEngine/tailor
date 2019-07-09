@@ -28,6 +28,6 @@ export default {
 
 <style lang="scss" scoped>
 .system-settings-container {
-  padding: 20px 0 75px 0;
+  padding: 25px 0 75px 0;
 }
 </style>
