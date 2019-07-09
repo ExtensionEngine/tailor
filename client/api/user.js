@@ -14,8 +14,13 @@ function remove({ id }) {
   return request.delete(`/users/${id}`);
 }
 
+function reinvite({ id }) {
+  return request.post(`/users/${id}/reinvite`);
+}
+
 export default {
   fetch,
   upsert,
-  remove
+  remove,
+  reinvite
 };

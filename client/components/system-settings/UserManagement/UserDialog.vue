@@ -9,7 +9,7 @@
             v-if="!isNewUser"
             :disabled="isLoading"
             :loading="isLoading"
-            @click="invite"
+            @click="reinvite"
             color="blue-grey"
             outline>
             Reinvite
@@ -100,9 +100,9 @@ export default {
         this.close();
       });
     },
-    invite() {
+    reinvite() {
       this.isLoading = true;
-      api.invite(this.user).finally(() => (this.isLoading = false));
+      api.reinvite(this.user).finally(() => (this.isLoading = false));
     }
   },
   watch: {

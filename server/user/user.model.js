@@ -109,11 +109,7 @@ class User extends Model {
 
   static invite(user, emailCb = noop) {
     return this.create(user)
-      .then(user => {
-        user.token = user.createToken({ expiresIn: '5 days' });
-        mail.invite(user).asCallback(emailCb);
-        return user.save();
-      });
+      .then(user => this.sendInvitation(user, emailCb));
   }
 
   static inviteOrUpdate(data) {
@@ -123,6 +119,12 @@ class User extends Model {
       map(({ ...data, deletedAt: null }), (v, k) => user.setDataValue(k, v));
       return user.save();
     });
+  }
+
+  static sendInvitation(user, emailCb = noop) {
+    user.token = user.createToken({ expiresIn: '5 days' });
+    mail.invite(user).asCallback(emailCb);
+    return user.save();
   }
 
   isAdmin() {

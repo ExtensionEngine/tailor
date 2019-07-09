@@ -1,7 +1,7 @@
 'use strict';
 
 const { createError, validationError } = require('../shared/error/helpers');
-const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
+const { ACCEPTED, NO_CONTENT, NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const { Op } = require('sequelize');
 const { role: { user: userRole } } = require('../../config/shared');
@@ -65,11 +65,19 @@ function login({ body }, res) {
     });
 }
 
+function reinvite({ params }, res) {
+  return User.findByPk(params.id)
+    .then(user => user || createError(NOT_FOUND, 'User does not exist!'))
+    .then(user => User.sendInvitation(user))
+    .then(() => res.status(ACCEPTED).end());
+}
+
 module.exports = {
   list,
   upsert,
   remove,
   forgotPassword,
   resetPassword,
-  login
+  login,
+  reinvite
 };

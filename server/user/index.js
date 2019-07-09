@@ -16,7 +16,8 @@ router
   .use('/users*', auth)
   .get('/users', processPagination(User), ctrl.list)
   .post('/users', ctrl.upsert)
-  .delete('/users/:id', ctrl.remove);
+  .delete('/users/:id', ctrl.remove)
+  .post('/users/:id/reinvite', ctrl.reinvite);
 
 module.exports = {
   model,
