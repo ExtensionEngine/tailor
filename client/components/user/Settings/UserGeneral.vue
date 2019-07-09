@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapState } from 'vuex';
 import pick from 'lodash/pick';
 import UserAvatar from './UserAvatar';
 import { withValidation } from 'utils/validation';
@@ -73,12 +73,14 @@ export default {
     isEditing: false
   }),
   computed: {
-    ...mapGetters(['user']),
+    ...mapState({
+      user: state => state.auth.user
+    }),
     hasChanges: vm => Object.keys(vm.context).some(name => vm.user[name] !== vm.context[name]),
     fieldNames: vm => ['firstName', 'lastName', 'email', 'phoneNumber', 'location']
   },
   methods: {
-    ...mapActions(['updateInfo']),
+    ...mapActions('auth', ['updateInfo']),
     updateUser() {
       const { context, hasChanges, fieldNames } = this;
       if (!hasChanges) return;

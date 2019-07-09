@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapState } from 'vuex';
 import { avatar as avatarOpts } from 'shared';
 
 const snackOpts = { right: true };
@@ -60,7 +60,9 @@ export default {
     croppa: {}
   }),
   computed: {
-    ...mapGetters(['user']),
+    ...mapState({
+      user: state => state.auth.user
+    }),
     options: vm => ({
       accept: 'image/*',
       width: 120,
@@ -70,7 +72,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['updateInfo']),
+    ...mapActions('auth', ['updateInfo']),
     uploadImage(file) {
       this.$emit('editing', Boolean(file));
     },

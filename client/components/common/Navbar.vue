@@ -1,28 +1,31 @@
 <template>
-  <v-toolbar color="white" app fixed>
+  <v-toolbar color="grey lighten-5" app dense fixed>
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
-      <v-avatar color="blue darken-3" size="40">
-        <v-icon color="white">mdi-content-cut</v-icon>
+      <v-avatar color="primary darken-1" size="34" class="mt-1">
+        <v-icon color="grey lighten-4">mdi-content-cut</v-icon>
       </v-avatar>
-      <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
+      <v-toolbar-title class="app-name ml-2">{{ title }}</v-toolbar-title>
     </router-link>
-    <router-link
-      v-if="repository"
-      :to="{ name: 'course', params: { courseId: repository.id }}"
-      class="repository-title">
-      <span class="navbar-acronym">
-        <span>{{ repositoryAcronym }}</span>
-      </span>
-      {{ repository.name }}
-    </router-link>
-    <v-spacer></v-spacer>
+    <v-spacer/>
+    <v-toolbar-items>
+      <v-btn
+        v-for="({ name, to, icon }) in routes"
+        :key="name"
+        :to="to"
+        color="blue-grey darken-3"
+        exact
+        flat>
+        <v-icon class="pr-1">mdi-{{ icon }}</v-icon>
+        <span class="toolbar-route">{{ name }}</span>
+      </v-btn>
+    </v-toolbar-items>
     <v-menu
       min-width="220px"
       transition="slide-y-transition"
       offset-y
       z-index="1000">
-      <v-btn slot="activator" icon large class="mr-2">
-        <v-avatar size="42px" color="#eaeaea">
+      <v-btn slot="activator" icon class="mr-2">
+        <v-avatar size="34" color="grey lighten-2">
           <img v-if="user.imgUrl" :src="user.imgUrl">
           <span v-else class="grey--text headline">{{ user.email[0] }}</span>
         </v-avatar>
@@ -43,8 +46,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
-import { getAcronym } from 'utils/course';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'main-toolbar',
@@ -57,9 +59,22 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ repository: 'course' }, 'course'),
-    repositoryAcronym() {
-      return this.repository ? getAcronym(this.repository.name) : null;
+    ...mapGetters(['isAdmin']),
+    ...mapGetters('course', { repository: 'course' }),
+    routes() {
+      const items = [
+        { name: 'Catalog', to: { name: 'catalog' }, icon: 'view-list' },
+        { name: 'Admin', to: { name: 'system-user-management' }, icon: 'settings' }
+      ];
+      if (!this.isAdmin) items.pop();
+      if (this.repository) {
+        items.unshift({
+          name: this.repository.name,
+          to: { name: 'course', params: { courseId: this.repository.id } },
+          icon: 'card-text-outline'
+        });
+      }
+      return items;
     }
   },
   methods: mapActions(['logout'])
@@ -74,13 +89,14 @@ $font-color: #333;
   z-index: 10;
 }
 
-.app-brand {
-  cursor: pointer;
+.v-toolbar__items {
+  margin-right: 15px;
+}
 
-  .v-avatar {
-    float: left;
-    margin-right: 14px;
-  }
+.app-brand {
+  display: flex;
+  padding-bottom: 2px;
+  cursor: pointer;
 
   .app-name {
     font-size: 20px;
@@ -89,14 +105,8 @@ $font-color: #333;
   }
 }
 
-.repository-title {
-  float: left;
-  width: 50%;
-  margin-left: 30px;
-  color: $font-color;
-  font-size: 16px;
-  line-height: $container-height;
-  text-align: left;
+.toolbar-route {
+  max-width: 380px;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-decoration: none;
@@ -105,20 +115,6 @@ $font-color: #333;
   &:hover {
     color: darken($font-color, 20%);
   }
-
-  @media (max-width: 1200px) {
-    width: 40%;
-  }
-
-  @media (max-width: 1000px) {
-    width: 25%;
-  }
-}
-
-.navbar-acronym {
-  padding-right: 4px;
-  color: #777;
-  font-weight: bold;
 }
 
 /deep/ a {

@@ -69,7 +69,7 @@ import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
-import { mapGetters } from 'vuex-module';
+import { mapGetters } from 'vuex';
 import Multiselect from '../../common/Select';
 import set from 'lodash/set';
 import truncate from 'lodash/truncate';
@@ -93,7 +93,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getExamObjectives'], 'activities'),
+    ...mapGetters('activities', ['getExamObjectives']),
     elementConfig() {
       return this.$teRegistry.get(this.assessment.data.type);
     },

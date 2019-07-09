@@ -14,7 +14,7 @@
             @change="toggleAnswer(index)"
             type="checkbox">
         </span>
-        <v-avatar v-else size="32" color="blue">{{ index + 1 }}</v-avatar>
+        <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
         <span :class="errorClass(index)" class="input-container">
           <input
             :ref="`input${index}`"
@@ -157,7 +157,7 @@ ul {
 
     .v-avatar {
       float: left;
-      margin-top: 3px;
+      margin-top: 1px;
       margin-right: 10px;
       color: #fff;
       font-weight: 700;

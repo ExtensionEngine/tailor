@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapState } from 'vuex';
 import { withValidation } from 'utils/validation';
 
 const snackOpts = { right: true };
@@ -64,13 +64,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user']),
+    ...mapState({
+      user: state => state.auth.user
+    }),
     isValidated: vm => Object.keys(vm.vFields).every(name => {
       return vm.vFields[name] && vm.vFields[name].validated;
     })
   },
   methods: {
-    ...mapActions(['changePassword', 'logout']),
+    ...mapActions('auth', ['changePassword', 'logout']),
     submit() {
       const { currentPassword, newPassword } = this;
       this.$validator.validateAll()

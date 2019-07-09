@@ -17,7 +17,7 @@
         :expanded="isSelected(it)"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @delete="it.id ? requestDeleteConfirmation(it) : remove(it)"/>
+        @delete="requestRemoveConfirmation(it)"/>
     </ul>
     <add-element
       :include="['ASSESSMENT']"
@@ -30,9 +30,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import AddElement from 'tce-core/AddElement';
 import AssessmentItem from './AssessmentItem';
+import capitalize from 'lodash/capitalize';
 import EventBus from 'EventBus';
 import map from 'lodash/map';
 
@@ -47,14 +48,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activity', 'assessments'], 'editor'),
+    ...mapGetters('editor', ['activity', 'assessments']),
     hasAssessments() {
       return this.assessments.length;
     }
   },
   methods: {
-    ...mapActions(['save', 'update', 'remove'], 'tes'),
-    ...mapMutations(['add'], 'tes'),
+    ...mapActions('tes', ['save', 'update', 'remove']),
+    ...mapMutations('tes', ['add']),
     addAssessment(assessment) {
       this.add(assessment);
       this.selected.push(assessment._cid);
@@ -81,12 +82,12 @@ export default {
       this.allSelected = !this.allSelected;
       this.selected = this.allSelected ? map(this.assessments, it => it._cid) : [];
     },
-    requestDeleteConfirmation(assessment) {
-      appChannel.emit('showConfirmationModal', {
-        title: 'Delete assessment?',
-        message: 'Are you sure you want to delete assessment?',
-        action: () => this.remove(assessment)
-      });
+    requestRemoveConfirmation(assessment) {
+      const actionPrefix = assessment.id ? 'delete' : 'discard';
+      const title = capitalize(`${actionPrefix} assessment?`);
+      const message = `Are you sure you want to ${actionPrefix} assessment?`;
+      const action = () => this.remove(assessment);
+      appChannel.emit('showConfirmationModal', { title, message, action });
     }
   },
   components: { AddElement, AssessmentItem }
