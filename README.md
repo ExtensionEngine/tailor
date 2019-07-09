@@ -115,6 +115,9 @@ Configuration for content containers. Contains the following properties:
 * **types** `Array<String>` - An array of possible teaching element types that can exist inside ContentContainer. If not specified all types of elements are allowed.
 * **displayHeading** `Boolean` - Defines if a heading is displayed on top of the ContentContainer. False by default.
 * **layout** `Boolean` - Defines if elements inside container can be placed two in a row. True by default.
+* **required** `Boolean` - Defines if an instance of the container is created if non exist. True by default.
+* **unique** `Boolean` - Defines if the container has a unique structure and that the default structure should not be used. False by default.
+The name of the structure component used is the `slug casing` version of the `type` property. (example: ABC_DEF -> abc-def)
 
 ### `PREVIEW_URL`
 A string template that will be interpolated on the client using two route params, `repositoryId` and `activityId`, into a preview URL for each activiy. Example:
