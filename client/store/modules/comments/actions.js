@@ -1,7 +1,9 @@
 import generateActions from '@/store/helpers/actions';
 import SSEClient from '@/SSEClient';
+import urlJoin from 'url-join';
 
 const { api, get, save, setEndpoint, update } = generateActions();
+const baseUrl = process.env.API_PATH;
 const feed = new SSEClient();
 
 const Event = {
@@ -23,8 +25,9 @@ const subscribe = ({ rootState, commit }) => {
   const { courseId } = rootState.route.params;
   const token = localStorage.getItem('JWT_TOKEN');
   const params = { courseId, token };
+  const url = urlJoin(baseUrl, api.url('/subscribe'));
   feed
-    .connect(api.getUrl('/subscribe'), { params })
+    .connect(url, { params })
     .subscribe(Event.Create, item => api.setCid(item) || commit('sseAdd', item))
     .subscribe(Event.Update, item => commit('sseUpdate', item))
     .subscribe(Event.Delete, item => commit('sseUpdate', item));
@@ -33,10 +36,8 @@ const subscribe = ({ rootState, commit }) => {
 const unsubscribe = () => feed.disconnect();
 
 const remove = ({ commit }, comment) => {
-  // Update locally and let real data update be pushed from server
-  // after soft delete
   comment.deletedAt = new Date();
-  commit('update', comment);
+  commit('save', comment);
   return api.remove(comment);
 };
 

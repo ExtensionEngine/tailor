@@ -2,10 +2,10 @@ import assign from 'lodash/assign';
 import client from '@/api/request';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
-import join from 'url-join';
 import omit from 'lodash/omit';
 import Queue from 'promise-queue';
 import reduce from 'lodash/reduce';
+import urlJoin from 'url-join';
 
 // Used to serialize api calls that modify data.
 const queue = new Queue(1, Infinity);
@@ -18,16 +18,7 @@ export default class Resource {
   }
 
   url(path = '') {
-    return join(this.baseUrl, path.toString());
-  }
-
-  /**
-   * Get full resource api url for given path.
-   * @param {string} path
-   * @returns {string} url
-   */
-  getUrl(path = '') {
-    return join(client.defaults.baseURL, this.url(path));
+    return urlJoin(this.baseUrl, path.toString());
   }
 
   /**
