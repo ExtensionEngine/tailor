@@ -1,7 +1,4 @@
-export const JODIT_TOOLBAR_BREAK = '\n';
-export const JODIT_TOOLBAR_SEPARATOR = '|';
-
-const mdiToolbarIcons = {
+const mdiIcons = {
   source: 'code-tags',
   bold: 'format-bold',
   strikethrough: 'format-strikethrough',
@@ -50,4 +47,9 @@ const mdiToolbarIcons = {
   bin: 'trash-can'
 };
 
-export default mdiToolbarIcons;
+export default mdiIcons;
+
+export function getMdiIcon(name) {
+  const code = mdiIcons[name];
+  return `<span class="mdi mdi-${code}"></span>`;
+}

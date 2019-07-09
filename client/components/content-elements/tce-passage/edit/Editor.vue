@@ -8,9 +8,16 @@
 </template>
 
 <script>
-import mdiToolbarIcons, { JODIT_TOOLBAR_BREAK } from './toolbar-icons';
 import cuid from 'cuid';
+// TODO: Import `Jodit` from `jodit-vue` once it becomes available!
+import Jodit from 'jodit';
 import JoditVue from 'jodit-vue';
+import mdiIcons from './plugins/mdi-icons';
+
+// Load custom plugins.
+Object.assign(Jodit.plugins, { mdiIcons });
+
+const JODIT_TOOLBAR_BREAK = '\n';
 
 const isString = arg => typeof arg === 'string';
 const splitArray = arg => isString(arg) ? arg.split(/[,\s]+/) : arg;
@@ -22,7 +29,6 @@ const joditConfig = {
   removeButtons: ['fullsize', 'about', JODIT_TOOLBAR_BREAK],
   // Disable default toolbar.
   toolbar: false,
-  events: { getIcon: getMdiIcon },
   // Setup Ace editor.
   sourceEditorNativeOptions: {
     theme: 'ace/theme/chrome'
@@ -57,11 +63,6 @@ function renderToolbar(jodit, toolbarContainer) {
   const { options } = jodit;
   const buttons = splitArray(options.buttons).concat(options.extraButtons);
   return jodit.toolbar.build(buttons, toolbarContainer);
-}
-
-function getMdiIcon(name) {
-  const code = mdiToolbarIcons[name];
-  return `<span class="mdi mdi-${code}"></span>`;
 }
 </script>
 
@@ -101,6 +102,7 @@ $statusbar-border-size: 1px;
 @import '~jodit/build/jodit.min.css';
 
 $icon-color: #333;
+$icon-accent-color: #ff6590;
 $icon-size: 18px;
 
 .jodit_toolbar_btn .jodit_icon {
@@ -113,5 +115,28 @@ $icon-size: 18px;
 
 .jodit_statusbar .jodit_toolbar_btn .jodit_icon {
   line-height: $icon-size;
+}
+
+.jodit_toolbar > li.jodit_toolbar_btn {
+  &.jodit_toolbar_btn-separator {
+    margin-right: 15px !important;
+    border: none;
+  }
+
+  &.jodit_active {
+    background: lighten($icon-accent-color, 25%);
+
+    .jodit_icon {
+      color: $icon-accent-color;
+    }
+  }
+
+  &:not(.jodit_toolbar-input):hover {
+    background: none;
+
+    .jodit_icon {
+      color: $icon-accent-color;
+    }
+  }
 }
 </style>
