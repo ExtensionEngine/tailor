@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import { getAcronym } from 'utils/course';
 
 export default {
@@ -53,7 +53,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ repository: 'course' }, 'course'),
+    ...mapGetters('course', { repository: 'course' }),
     repositoryAcronym() {
       return this.repository ? getAcronym(this.repository.name) : null;
     }

@@ -32,7 +32,7 @@ import EventBus from 'EventBus';
 import Exam from '../Exam';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 import maxBy from 'lodash/maxBy';
 
 const appChannel = EventBus.channel('app');
@@ -66,7 +66,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save', 'remove'], 'activities'),
+    ...mapActions('activities', ['save', 'remove']),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });

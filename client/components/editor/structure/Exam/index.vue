@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import AssessmentGroup from './AssessmentGroup';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
@@ -66,7 +66,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getExamObjectives'], 'activities'),
+    ...mapGetters('activities', ['getExamObjectives']),
     ...mapGetters(['activities']),
     groups() {
       return filter(this.activities, { parentId: this.container.id });
@@ -83,8 +83,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save', 'remove'], 'activities'),
-    ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
+    ...mapActions('activities', ['save', 'remove']),
+    ...mapActions('tes', { getTeachingElements: 'fetch' }),
     createGroup() {
       this.save({
         type: 'ASSESSMENT_GROUP',

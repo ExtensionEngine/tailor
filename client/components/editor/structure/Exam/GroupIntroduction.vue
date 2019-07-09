@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import filter from 'lodash/filter';
 import { isQuestion } from 'tce-core/utils';
 import TeachingElement from '../../TeachingElement';
@@ -38,7 +38,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ reorderElements: 'reorder', saveElement: 'save' }, 'tes'),
+    ...mapActions('tes', { reorderElements: 'reorder', saveElement: 'save' }),
     reorder({ newIndex: newPosition }) {
       const items = this.introductionElements;
       const element = items[newPosition];

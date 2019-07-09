@@ -80,7 +80,7 @@ export default {
   inject: ['$teRegistry'],
   props: {
     assessment: { type: Object, required: true },
-    examObjectives: { type: Array, required: true },
+    examObjectives: { type: Array, default: () => [] },
     expanded: { type: Boolean, default: false },
     draggable: { type: Boolean, default: false }
   },

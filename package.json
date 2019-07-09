@@ -132,7 +132,6 @@
     "vuedraggable": "^2.15.0",
     "vuetify": "^1.5.7",
     "vuex": "^2.0.0",
-    "vuex-module": "^0.4.0",
     "vuex-router-sync": "^3.0.0",
     "weekstart": "^1.0.0",
     "yup": "^0.24.1"
