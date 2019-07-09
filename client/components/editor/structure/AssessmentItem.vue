@@ -29,12 +29,12 @@
           class="pull-right collapse-item">
           Collapse
         </v-btn>
-        <div v-if="examObjectives.length" class="select-leaf">
+        <div v-if="objectives.length" class="select-leaf">
           <multiselect
             :value="objective"
-            :options="examObjectives"
+            :options="objectives"
             :searchable="true"
-            :disabled="!examObjectives.length"
+            :disabled="!objectives.length"
             :trackBy="'id'"
             :customLabel="it => it.data ? it.data.name : ''"
             :placeholder="examObjectiveLabel"
@@ -80,7 +80,7 @@ export default {
   inject: ['$teRegistry'],
   props: {
     assessment: { type: Object, required: true },
-    examObjectives: { type: Array, default: () => [] },
+    objectives: { type: Array, default: () => [] },
     expanded: { type: Boolean, default: false },
     draggable: { type: Boolean, default: false }
   },
@@ -101,8 +101,8 @@ export default {
       return truncate(question, { length: 50 });
     },
     examObjectiveLabel() {
-      if (isEmpty(this.examObjectives)) return '';
-      const types = uniq(map(this.examObjectives, 'type'));
+      if (isEmpty(this.objectives)) return '';
+      const types = uniq(map(this.objectives, 'type'));
       const label = types.length > 1 ? 'Objective' : getLevel(types[0]).label;
       return `Link ${label}`;
     }
@@ -123,7 +123,7 @@ export default {
   mounted() {
     const objectiveId = get(this.assessment, 'refs.objectiveId');
     if (!objectiveId) return;
-    this.objective = find(this.examObjectives, { id: objectiveId });
+    this.objective = find(this.objectives, { id: objectiveId });
   },
   components: { Multiselect }
 };

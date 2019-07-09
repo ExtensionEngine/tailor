@@ -27,7 +27,7 @@
         v-for="(group, index) in groups"
         :key="group._cid"
         :group="group"
-        :examObjectives="examObjectives"
+        :objectives="examObjectives"
         :position="index"/>
       <v-btn
         :disabled="!container.id"

@@ -32,7 +32,7 @@
       <assessment-item
         slot="list-item"
         slot-scope="{ item }"
-        :examObjectives="examObjectives"
+        :objectives="objectives"
         :assessment="item"
         :expanded="isSelected(item)"
         :draggable="true"
@@ -62,7 +62,7 @@ export default {
   name: 'assessment-group',
   props: {
     group: { type: Object, required: true },
-    examObjectives: { type: Array, required: true },
+    objectives: { type: Array, required: true },
     position: { type: Number, required: true }
   },
   data() {
