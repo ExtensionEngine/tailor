@@ -31,7 +31,8 @@
           :items="users"
           :total-items="totalItems"
           :pagination.sync="dataTable"
-          :must-sort="true">
+          :must-sort="true"
+          :loading="loading">
           <template slot="items" slot-scope="{ item }">
             <tr :key="item.id">
               <td class="no-wrap text-xs-left">{{ item.email }}</td>
@@ -81,7 +82,13 @@ import UserDialog from './UserDialog';
 
 const appChannel = EventBus.channel('app');
 
-const defaultPage = () => ({ sortBy: 'updatedAt', descending: true, page: 1 });
+const defaultPage = () => ({
+  sortBy: 'updatedAt',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10
+});
+
 const headers = () => [
   { text: 'Email', value: 'email' },
   { text: 'Role', value: 'role' },
@@ -104,7 +111,8 @@ export default {
       userDialog: false,
       editedUser: null,
       showArchived: false,
-      confirmation: null
+      confirmation: null,
+      loading: true
     };
   },
   computed: {
@@ -118,6 +126,7 @@ export default {
       this.userDialog = true;
     },
     fetch: throttle(async function (opts) {
+      this.loading = true;
       Object.assign(this.dataTable, opts);
       const { items, total } = await api.fetch({
         sortBy: this.dataTable.sortBy,
@@ -129,6 +138,7 @@ export default {
       });
       this.users = items;
       this.totalItems = total;
+      this.loading = false;
     }, 400),
     archiveOrRestore(user) {
       const action = user.deletedAt ? 'restore' : 'archive';
