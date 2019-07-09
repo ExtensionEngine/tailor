@@ -24,6 +24,8 @@ const splitArray = arg => isString(arg) ? arg.split(/[,\s]+/) : arg;
 
 /** @type {import('jodit/src/Config').Config & import('jodit/src/plugins') } */
 const joditConfig = {
+  autofocus: true,
+  addNewLineOnDBLClick: false,
   // Disable fullsize plugin & remove it's toolbar item.
   disablePlugins: ['fullsize'],
   removeButtons: ['fullsize', 'about', JODIT_TOOLBAR_BREAK],
@@ -32,8 +34,7 @@ const joditConfig = {
   // Setup Ace editor.
   sourceEditorNativeOptions: {
     theme: 'ace/theme/chrome'
-  },
-  autofocus: true
+  }
 };
 
 export default {
