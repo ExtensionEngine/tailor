@@ -18,9 +18,10 @@
       v-model="level"
       :options="supportedLevels"
       :searchable="false"
-      trackBy="type"
       data-vv-value-path="type"
       data-vv-delay="0"
+      trackBy="type"
+      name="type"
       class="type-select">
     </multiselect>
     <div class="actions">

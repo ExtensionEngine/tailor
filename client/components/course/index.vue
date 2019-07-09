@@ -30,6 +30,9 @@ import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
 export default {
+  props: {
+    courseId: { type: Number, required: true }
+  },
   data() {
     return {
       showLoader: true
@@ -60,7 +63,7 @@ export default {
     ...mapMutations('course', { resetActivityFocus: 'focusActivity' })
   },
   async created() {
-    const { courseId } = this.$route.params;
+    const { courseId } = this;
     const existingSelection = this.activity && this.activity.courseId === courseId;
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
