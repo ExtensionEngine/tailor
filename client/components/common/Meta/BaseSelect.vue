@@ -27,16 +27,14 @@
 
 <script>
 import isString from 'lodash/isString';
-import Select from '../../common/Select';
+import Select from '@/components/common/Select';
 
 export default {
   name: 'base-meta-select',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
-  data() {
-    return { active: false };
-  },
+  data: () => ({ active: false }),
   computed: {
     isMultiSelect: () => {
       throw new Error('Computed "isMultiSelect" must be implemented');

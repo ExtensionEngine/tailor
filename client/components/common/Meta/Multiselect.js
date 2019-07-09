@@ -1,17 +1,17 @@
 import BaseSelect from './BaseSelect';
 
+const includes = (arr, ...args) => arr.includes(...args);
+
 export default {
   name: 'meta-multiselect',
   extends: BaseSelect,
   computed: {
     isMultiSelect: () => true,
-    value() {
-      return this.options.filter(it => (this.meta.value || []).includes(it.value));
+    value: ({ meta, options }) => {
+      return options.filter(it => includes(meta.value || [], it.value));
     }
   },
   methods: {
-    parseInput(data = []) {
-      return data.map(it => it.value);
-    }
+    parseInput: (data = []) => data.map(it => it.value)
   }
 };
