@@ -37,7 +37,7 @@
             :disabled="!isEditing"
             :trackBy="'id'"
             :customLabel="it => it.data ? it.data.name : ''"
-            :placeholder="examObjectiveLabel"
+            :placeholder="objectiveLabel"
             @input="onObjectiveSelected"/>
         </div>
       </div>
@@ -100,7 +100,7 @@ export default {
       question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
       return truncate(question, { length: 50 });
     },
-    examObjectiveLabel() {
+    objectiveLabel() {
       if (isEmpty(this.objectives)) return '';
       const types = uniq(map(this.objectives, 'type'));
       const label = types.length > 1 ? 'Objective' : getLevel(types[0]).label;
