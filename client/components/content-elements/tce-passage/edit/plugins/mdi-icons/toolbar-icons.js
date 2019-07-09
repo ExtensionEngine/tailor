@@ -29,7 +29,7 @@ const mdiIcons = {
   redo: 'redo',
   cut: 'content-cut',
   hr: 'minus',
-  eraser: 'eraser',
+  eraser: 'format-clear',
   copyformat: 'format-paint',
   /* symbol */ omega: 'omega',
   // NOTE: `fullsize` icon can NOT be changed!
