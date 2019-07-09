@@ -24,7 +24,7 @@ export default {
       return [
         { label: 'System Users', name: 'system-user-management', icon: 'account' },
         { label: 'Structure Types', name: 'installed-schemas', icon: 'file-tree' },
-        { label: 'Content Elements', name: 'installed-elements', icon: 'puzzle' }
+        { label: 'Installed Elements', name: 'installed-elements', icon: 'puzzle' }
       ];
     }
   }

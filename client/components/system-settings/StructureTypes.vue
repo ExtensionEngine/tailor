@@ -1,5 +1,5 @@
 <template>
-  <v-card class="schemas-list-container">
+  <v-card class="schema-list-container">
     <v-text-field v-model.trim="search" label="Search" clearable/>
     <v-treeview
       :items="schemas"
@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.schemas-list-container {
+.schema-list-container {
   padding: 30px;
   text-align: left;
 }

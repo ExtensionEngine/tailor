@@ -1,5 +1,5 @@
 <template>
-  <div class="grey lighten-2 system-settings-container">
+  <div class="system-settings-container grey lighten-2">
     <v-container>
       <v-layout row align-start>
         <v-card>
@@ -28,6 +28,6 @@ export default {
 
 <style lang="scss" scoped>
 .system-settings-container {
-  padding-bottom: 75px;
+  padding: 20px 0 75px 0;
 }
 </style>

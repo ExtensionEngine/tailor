@@ -1,5 +1,5 @@
 <template>
-  <v-card class="elements-list-container">
+  <v-card class="element-list-container">
     <v-text-field v-model.trim="search" label="Search" clearable/>
     <v-list :expand="true" avatar two-line>
       <v-list-group
@@ -20,9 +20,7 @@
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title v-text="name"/>
-            <v-list-tile-sub-title>
-              Version {{ version }}
-            </v-list-tile-sub-title>
+            <v-list-tile-sub-title>Version {{ version }}</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list-group>
@@ -71,7 +69,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.elements-list-container {
+.element-list-container {
   padding: 30px;
+}
+
+.theme--light.v-list {
+  .v-list__group--active:before, .v-list__group--active:after {
+    background: none;
+  }
 }
 </style>
