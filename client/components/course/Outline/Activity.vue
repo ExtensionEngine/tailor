@@ -27,7 +27,7 @@
             v-show="isEditable"
             :to="{
               name: 'editor',
-              params: { activityId: id }
+              params: { activityId: originId ? originId : id }
             }"
             color="pink"
             outline
