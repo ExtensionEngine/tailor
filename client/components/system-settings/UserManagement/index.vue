@@ -32,7 +32,8 @@
           :total-items="totalItems"
           :pagination.sync="dataTable"
           :must-sort="true"
-          :loading="loading">
+          :loading="loading"
+          :rows-per-page-items="[10, 20, 50, 100]">
           <template slot="items" slot-scope="{ item }">
             <tr :key="item.id">
               <td class="no-wrap text-xs-left">{{ item.email }}</td>
