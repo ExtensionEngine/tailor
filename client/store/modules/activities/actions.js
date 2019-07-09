@@ -35,7 +35,15 @@ const clone = ({ commit }, mapping) => {
     .then(({ data: { data } }) => commit('fetch', api.processEntries(data)));
 };
 
+function link({ commit }, mapping) {
+  const { srcId, srcCourseId } = mapping;
+  const url = `/courses/${srcCourseId}/activities/${srcId}/link`;
+  return request.post(url, mapping)
+    .then(({ data: { data } }) => commit('fetch', api.processEntries(data)));
+}
+
 export {
+  link,
   clone,
   get,
   fetch,

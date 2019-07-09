@@ -114,7 +114,6 @@ class Course extends Model {
   clone(name, description, context) {
     const Course = this.sequelize.model('Course');
     const Activity = this.sequelize.model('Activity');
-    const TeachingElement = this.sequelize.model('TeachingElement');
     const srcAttributes = pick(this, ['schema', 'data', 'stats']);
     const dstAttributes = Object.assign(srcAttributes, { name, description });
     const notNull = { [Op.ne]: null };
@@ -126,8 +125,7 @@ class Course extends Model {
         src, dst.id, null,
         { transaction, cloneOrigins: true }
       );
-      const map = await Activity.resolveClonedOrigins(options);
-      await TeachingElement.resolveClonedOrigins(options);
+      const map = await Activity.resolveClonedOrigins(dst.id, options);
       await dst.mapClonedReferences(map, transaction);
       return dst;
     });

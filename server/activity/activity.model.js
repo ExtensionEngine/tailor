@@ -5,6 +5,7 @@ const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
+const omitBy = require('lodash/omitBy');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
@@ -130,79 +131,50 @@ class Activity extends Model {
       .then(origin => origin.getLinks());
   }
 
-  static cloneOrigins(source, courseId, originIdMap, transaction) {
-    return Promise.reduce(source, async (acc, activity) => {
-      if (!activity.isLink) return acc;
-      if (acc[activity.originId]) {
-        acc[activity.originId].links = acc[activity.originId].links + 1;
-        return acc;
-      }
+  static cloneOrigins(source, courseId, idMap, transaction) {
+    return Promise.reduce(source, async (acc, { isLink, origin }) => {
+      const TeachingElement = this.sequelize.model('TeachingElement');
+      if (!isLink || acc[origin.id]) return acc;
       const clonedOrigin = await Activity.create({
         courseId,
-        parentId: null,
-        position: null,
-        ...pick(activity.origin, ['type', 'data', 'refs'])
+        parentId: acc[origin.parentId] ? acc[origin.parentId] : null,
+        ...pick(origin, ['type', 'data', 'refs', 'position'])
       }, { returning: true, transaction });
-      acc[activity.originId] = { id: clonedOrigin.id, links: 1 };
-      return acc;
-    }, originIdMap);
-  }
-
-  static async resolveClonedOrigins({
-    clonedActivities,
-    transaction,
-    originIdMap,
-    idMap
-  }) {
-    const originsWithOneLink = Object.values(originIdMap)
-      .reduce((acc, origin) => {
-        if (origin.links === 1) acc.push(origin.id);
-        return acc;
-      }, []);
-    if (!originsWithOneLink.length) return;
-    const links = clonedActivities.filter(activity =>
-      originsWithOneLink.includes(activity.originId)
-    );
-    if (!links.length) return;
-    await Promise.each(links, async link => {
-      const origin = await Activity.findOne({
-        where: { id: link.originId },
+      acc[origin.id] = clonedOrigin.id;
+      const tes = await TeachingElement.findAll({
+        where: { activityId: origin.id, detached: false },
         transaction
       });
-      await link.update(
-        { originId: null, data: origin.data },
-        { transaction, revertLink: true }
-      );
-      await origin.destroy({ transaction });
-    });
-
-    return idMap;
+      if (tes.length) await TeachingElement.cloneElements(tes, clonedOrigin, transaction);
+      return acc;
+    }, idMap);
   }
 
   static async cloneActivities(source, courseId, parentId, options) {
-    const { idMap = {}, transaction, cloneOrigins } = options;
-    let { originIdMap = {}, tesOriginIdMap = {} } = options;
+    const { transaction, cloneOrigins } = options;
+    let { idMap = {} } = options;
     const TeachingElement = this.sequelize.model('TeachingElement');
     if (cloneOrigins) {
-      originIdMap = await Activity.cloneOrigins(
+      idMap = await Activity.cloneOrigins(
         source,
         courseId,
-        originIdMap,
+        idMap,
         transaction
       );
     }
+
     const clonedActivitiesMap = source
       .filter(activity => !(activity.isOrigin && idMap[activity.id]))
       .map(activity => {
         let originId = activity.originId;
-        if (cloneOrigins && originIdMap[activity.originId]) {
-          originId = originIdMap[activity.originId].id;
+        if (cloneOrigins && idMap[activity.originId]) {
+          originId = idMap[activity.originId];
         }
         return {
           courseId,
           parentId,
           originId,
-          data: activity.isLink ? null : activity.data,
+          data: activity.isLink ? {} : activity.data,
           ...pick(activity, ['type', 'position', 'refs'])
         };
       });
@@ -212,23 +184,18 @@ class Activity extends Model {
       { returning: true, transaction }
     );
 
-    options.clonedActivities = options.clonedActivities ? [
-      ...options.clonedActivities,
-      ...clonedActivities
-    ] : [...clonedActivities];
-
     return Promise.reduce(source,
       async (acc, activity, index) => {
         const parent = clonedActivities[index];
         const children = await activity.getChildren(
           { where: { detached: false } }
         );
-        const tes = await TeachingElement.findAll({
-          where: { activityId: activity.id, detached: false },
-          transaction
-        });
-        if (tes.length) {
-          acc.tesOriginIdMap = await TeachingElement.cloneElements(tes, parent, options);
+        if (!cloneOrigins) {
+          const tes = await TeachingElement.findAll({
+            where: { activityId: activity.id, detached: false },
+            transaction
+          });
+          if (tes.length) await TeachingElement.cloneElements(tes, parent, transaction);
         }
         acc.idMap[activity.id] = parent.id;
         if (!children.length) return acc;
@@ -236,25 +203,47 @@ class Activity extends Model {
           children,
           courseId,
           parent.id,
-          { ...options, idMap, originIdMap, tesOriginIdMap }
+          { ...options, idMap }
         );
-      }, { ...options, idMap, originIdMap, tesOriginIdMap });
+      }, { idMap });
   }
 
   clone(courseId, parentId, position) {
     const cloneOrigins = courseId !== this.courseId;
-    const TeachingElement = this.sequelize.model('TeachingElement');
     return this.sequelize.transaction(transaction => {
       if (position) this.position = position;
       const options = { cloneOrigins, transaction };
       return Activity.cloneActivities([this], courseId, parentId, options)
-        .then(options => {
-          if (!cloneOrigins) return options.idMap;
-          return Activity.resolveClonedOrigins(options)
-            .then(() => TeachingElement.resolveClonedOrigins(options))
-            .then(() => options.idMap);
-        });
+        .then(options => Activity.resolveClonedOrigins(courseId, options));
     });
+  }
+
+  static async resolveClonedOrigins(courseId, options) {
+    const { transaction } = options;
+    let { idMap } = options;
+    const origins = await Activity.findAll({ where: {
+      courseId,
+      position: null
+    }});
+
+    await Promise.each(origins, async origin => {
+      const links = await origin.getLinks({ transaction });
+      if (links.length !== 1) return;
+      const [ link ] = links;
+      const children = await link.getChildren({ transaction });
+
+      if (children.length) {
+        await Promise.each(children, async child =>
+          child.update({ parentId: this.origin.id }, { transaction })
+        );
+      }
+
+      await origin.update({ position: link.position, parentId: link.parentId }, { transaction });
+      await link.destroy({ transaction });
+      idMap = omitBy(idMap, id => id === link.id);
+    });
+
+    return idMap;
   }
 
   static async linkActivities(
@@ -264,7 +253,6 @@ class Activity extends Model {
     activities = [],
     transaction
   ) {
-    let link;
     const children = await source.getChildren({
       where: { detached: false },
       transaction
@@ -276,12 +264,12 @@ class Activity extends Model {
 
     if (source.isLink || source.isOrigin) {
       const originId = source.isOrigin ? source.id : source.originId;
-      link = await Activity.create(
+      const link = await Activity.create(
         { ...data, parentId, position, originId },
         { transaction }
       );
-      link.data = source.isOrigin ? source.data : source.origin.data;
-      activities = [...activities, link];
+
+      activities = [...activities, link.id];
 
       return Promise.reduce(children, (acc, child) => {
         return Activity.linkActivities(
@@ -302,28 +290,25 @@ class Activity extends Model {
       { returning: true, transaction }
     );
 
-    links.forEach(link => { link.data = source.data; });
-
     source = await source.update(
       { position: null },
       { returning: true, transaction }
     );
 
-    activities = [...activities, ...links, source];
-    await Promise.each(links, async link => {
-      const childLinks = await Promise.reduce(children, (acc, child) => {
-        return Activity.linkActivities(
+    activities = [...activities, source.id, ...links.map(link => link.id)];
+    return Promise.reduce(links, async (acc, link) => {
+      const result = await Promise.reduce(children, async (acc, child) => {
+        const result = await Activity.linkActivities(
           child,
           link.id,
           child.position,
-          activities,
+          [],
           transaction
         );
+        return [ ...acc, ...result ];
       }, []);
-      activities = [ ...activities, ...childLinks ];
-    });
-
-    return activities;
+      return [ ...acc, ...result ];
+    }, activities);
   }
 
   link({ parentId, position }) {

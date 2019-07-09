@@ -8,7 +8,6 @@ const isNumber = require('lodash/isNumber');
 const { Model, Op } = require('sequelize');
 const pick = require('lodash/pick');
 const { processStatics, resolveStatics } = require('../shared/storage/helpers');
-const Promise = require('bluebird');
 
 const pruneVirtualProps = element => {
   const assets = get(element, 'data.assets', {});
@@ -18,7 +17,7 @@ const pruneVirtualProps = element => {
 
 class TeachingElement extends Model {
   static fields(DataTypes) {
-    const { BOOLEAN, DATE, INTEGER, DOUBLE, JSONB, STRING, UUID, UUIDV4 } = DataTypes;
+    const { BOOLEAN, DATE, DOUBLE, JSONB, STRING, UUID, UUIDV4 } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -57,9 +56,6 @@ class TeachingElement extends Model {
         defaultValue: false,
         allowNull: false
       },
-      originId: {
-        type: INTEGER
-      },
       detached: {
         type: BOOLEAN,
         defaultValue: false,
@@ -87,21 +83,10 @@ class TeachingElement extends Model {
     this.belongsTo(Course, {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
-    this.belongsTo(this, {
-      as: 'origin',
-      foreignKey: { name: 'originId', field: 'origin_id' }
-    });
-    this.hasMany(this, {
-      as: 'links',
-      foreignKey: { name: 'originId', field: 'origin_id' }
-    });
   }
 
   static hooks(Hooks) {
     return {
-      [Hooks.beforeFind](options) {
-        return this._defaultsOptions(options, this.scopes().withOrigin);
-      },
       [Hooks.beforeCreate](te) {
         pruneVirtualProps(te);
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
@@ -112,16 +97,6 @@ class TeachingElement extends Model {
         if (!te.changed('data')) return Promise.resolve();
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
-      },
-      async [Hooks.afterDestroy](te) {
-        const { isLink, origin } = te;
-        if (!isLink) return;
-        const links = await origin.getLinks();
-        if (links.length > 1) return;
-        const [ link ] = links;
-        await link.update({ originId: null, data: origin.data });
-        await origin.destroy();
-        return link;
       }
     };
   }
@@ -129,8 +104,7 @@ class TeachingElement extends Model {
   static scopes() {
     const notNull = { [Op.ne]: null };
     return {
-      withReferences: { where: { 'refs.objectiveId': notNull } },
-      withOrigin: { include: [{ model: TeachingElement, as: 'origin' }] }
+      withReferences: { where: { 'refs.objectiveId': notNull } }
     };
   }
 
@@ -144,89 +118,17 @@ class TeachingElement extends Model {
     };
   }
 
-  get isLink() {
-    return this.originId && this.origin;
-  }
-
-  update(values, options) {
-    if (!this.isLink || options.revertLink) {
-      return super.update(values, options)
-      .then(element => resolveStatics(element));
-    }
-
-    return this.origin.update({ ...values, position: null }, options)
-      .then(origin => resolveStatics(origin))
-      .then(origin => origin.getLinks({ where: { id: this.id } }))
-      .then(elements => elements[0]);
-  }
-
   static fetch(opt) {
     return isNumber(opt)
-      ? TeachingElement.findByPk(opt).then(it => resolveStatics(it))
+      ? TeachingElement.findByPk(opt).then(it => it && resolveStatics(it))
       : TeachingElement.findAll(opt)
-        .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
+          .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
   }
 
-  static cloneOrigins(source, courseId, tesOriginIdMap, transaction) {
-    return Promise.reduce(source, async (acc, element) => {
-      if (!element.isLink) return acc;
-      if (acc[element.originId]) {
-        acc[element.originId].links = acc[element.originId].links + 1;
-        return acc;
-      }
-      const data = pick(element.origin, [
-        'type',
-        'position',
-        'data',
-        'contentId',
-        'contentSignature',
-        'refs',
-        'meta'
-      ]);
-      const clonedOrigin = await this.create({
-        ...data,
-        courseId,
-        activityId: null,
-        position: null
-      }, { returning: true, transaction });
-      acc[element.originId] = { id: clonedOrigin.id, links: 1 };
-      return acc;
-    }, tesOriginIdMap);
-  }
-
-  static async resolveClonedOrigins({
-    transaction,
-    tesOriginIdMap
-  }) {
-    const originsWithOneLink = Object.values(tesOriginIdMap)
-      .reduce((acc, origin) => {
-        if (origin.links === 1) acc.push(origin.id);
-        return acc;
-      }, []);
-    if (!originsWithOneLink.length) return;
-    await Promise.each(originsWithOneLink, async id => {
-      const origin = await this.findOne({
-        where: { id },
-        transaction
-      });
-      const [ link ] = await origin.getLinks({ transaction });
-      await link.update(
-        { originId: null, data: origin.data },
-        { transaction, revertLink: true }
-      );
-      await origin.destroy({ transaction });
-    });
-  }
-
-  static async cloneElements(elements, container, options) {
-    const { transaction, cloneOrigins } = options;
-    let { tesOriginIdMap = {} } = options;
+  static cloneElements(src, container, transaction) {
     const { id: activityId, courseId } = container;
-    if (cloneOrigins) {
-      tesOriginIdMap = await this.cloneOrigins(elements, courseId, tesOriginIdMap, transaction);
-    }
-    const items = elements.map(element => {
-      let data = pick(element, [
+    return this.bulkCreate(src.map(it => {
+      return Object.assign(pick(it, [
         'type',
         'position',
         'data',
@@ -234,67 +136,8 @@ class TeachingElement extends Model {
         'contentSignature',
         'refs',
         'meta'
-      ]);
-
-      if (!element.isLink) return { ...data, activityId, courseId };
-
-      let tesOriginId = element.originId;
-      if (cloneOrigins && tesOriginIdMap[element.originId]) {
-        tesOriginId = tesOriginIdMap[element.originId].id;
-      }
-
-      return {
-        ...data,
-        data: {},
-        activityId,
-        courseId,
-        originId: tesOriginId
-      };
-    });
-    await this.bulkCreate(items, { returning: true, transaction });
-    return tesOriginIdMap;
-  }
-
-  static linkElements(elements, container, transaction) {
-    const { id: activityId, courseId } = container;
-    return Promise.each(elements, async element => {
-      const props = pick(element, [
-        'type',
-        'position',
-        'data',
-        'contentId',
-        'originId',
-        'contentSignature',
-        'refs',
-        'meta'
-      ]);
-
-      if (element.isLink) {
-        return TeachingElement.create({
-          ...props,
-          activityId,
-          courseId
-        }, { transaction });
-      }
-
-      const origin = await TeachingElement.create({
-        ...props,
-        activityId: null,
-        position: null
-      }, { transaction });
-
-      element.originId = origin.id;
-      element.data = {};
-      await element.save();
-
-      return TeachingElement.create({
-        ...props,
-        data: {},
-        originId: origin.id,
-        activityId,
-        courseId
-      }, { transaction });
-    });
+      ]), { activityId, courseId });
+    }), { returning: true, transaction });
   }
 
   /**
@@ -332,16 +175,6 @@ class TeachingElement extends Model {
       if (this.type === 'ASSESSMENT') return { type: 'ASSESSMENT' };
       return { type: { [Op.not]: this.type } };
     });
-  }
-
-  toJSON() {
-    const values = super.toJSON();
-    if (!this.isLink) return values;
-    return {
-      ...values,
-      data: this.origin.data,
-      refs: this.origin.refs
-    };
   }
 }
 
