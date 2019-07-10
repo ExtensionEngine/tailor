@@ -31,10 +31,10 @@ import ContentContainer from './Container';
 import EventBus from 'EventBus';
 import Exam from '../Exam';
 import get from 'lodash/get';
+import { getContainerName } from 'tce-core/utils';
 import isEmpty from 'lodash/isEmpty';
 import { mapActions } from 'vuex';
 import maxBy from 'lodash/maxBy';
-import toCase from 'to-case';
 
 const appChannel = EventBus.channel('app');
 
@@ -53,7 +53,7 @@ export default {
   },
   computed: {
     containerName() {
-      if (this.unique) return toCase.slug(this.type);
+      if (this.unique) return getContainerName(this.type);
       return 'content-container';
     },
     name() {
@@ -89,7 +89,7 @@ export default {
       return capitalize(val);
     }
   },
-  components: { ContentContainer, Exam }
+  components: { ContentContainer, TccExam: Exam }
 };
 </script>
 

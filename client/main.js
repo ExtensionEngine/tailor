@@ -8,7 +8,7 @@ import 'vue-directive-tooltip/css/index.css';
 
 import assetsApi from '@/api/asset';
 import colors from 'vuetify/es5/util/colors';
-import ElementRegistry from './ElementRegistry';
+import ContentRegistry from './content-registry';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import { sync } from 'vuex-router-sync';
@@ -50,8 +50,8 @@ Vue.use(Timeago, {
   }
 });
 
-const registry = new ElementRegistry(Vue);
-registry.initialize().then(() => {
+const contentRegistry = new ContentRegistry(Vue);
+contentRegistry.initialize().then(() => {
   sync(store, router);
   /* eslint-disable no-new */
   new Vue({
@@ -61,7 +61,7 @@ registry.initialize().then(() => {
     render: h => h(App),
     provide() {
       return {
-        $teRegistry: registry,
+        $teRegistry: contentRegistry.elementRegistry,
         $storageService: assetsApi
       };
     }
