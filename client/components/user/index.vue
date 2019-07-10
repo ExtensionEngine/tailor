@@ -1,14 +1,16 @@
 <template>
-  <v-container fluid>
-    <v-layout>
-      <v-card>
-        <sidebar :routes="routes"/>
-      </v-card>
-      <v-flex>
-        <router-view/>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <div class="user-info-container grey lighten-2">
+    <v-container>
+      <v-layout row align-start>
+        <v-card>
+          <sidebar :routes="routes"/>
+        </v-card>
+        <v-flex ml-4>
+          <router-view/>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -28,13 +30,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.layout {
-  align-items: flex-start;
-  justify-content: center;
-}
-
-.flex {
-  max-width: 58rem;
-  margin-left: 48px;
+.user-info-container {
+  padding: 25px 0 75px 0;
 }
 </style>
