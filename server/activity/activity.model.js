@@ -101,7 +101,10 @@ class Activity extends Model {
         const or = relationships.map(type => ({ [`refs.${type}`]: notNull }));
         return { where: { [Op.or]: or } };
       },
-      withOrigin: { include: [{ model: Activity, as: 'origin' }] }
+      withOrigin: { include: [
+        { model: Activity, as: 'origin' },
+        { model: Activity, as: 'links' }
+      ] }
     };
   }
 
@@ -120,7 +123,7 @@ class Activity extends Model {
   }
 
   get isOrigin() {
-    return !this.position && !this.parentId;
+    return this.links && this.links.length > 0;
   }
 
   update(values, options) {
@@ -251,7 +254,8 @@ class Activity extends Model {
     parentId = null,
     position = null,
     activities = [],
-    transaction
+    transaction,
+    isChild = false,
   ) {
     const children = await source.getChildren({
       where: { detached: false },
@@ -259,7 +263,7 @@ class Activity extends Model {
     });
 
     const data = pick(source, [
-      'type', 'courseId', 'originId', 'parentId', 'position'
+      'type', 'courseId', 'originId', 'parentId'
     ]);
 
     if (source.isLink || source.isOrigin) {
@@ -277,6 +281,7 @@ class Activity extends Model {
           link.id,
           child.position,
           [],
+          true,
           transaction
         );
         return [ ...acc, ...result ];
@@ -284,15 +289,10 @@ class Activity extends Model {
     }
 
     const linksMap = [{ ...data, originId: source.id, parentId, position }];
-    if (!source.parentId) linksMap.push({ ...data, originId: source.id, parentId });
+    if (!isChild) linksMap.push({ ...data, originId: source.id, position });
 
     const links = await Activity.bulkCreate(
       linksMap,
-      { returning: true, transaction }
-    );
-
-    source = await source.update(
-      { position: null },
       { returning: true, transaction }
     );
 
@@ -304,6 +304,7 @@ class Activity extends Model {
           link.id,
           child.position,
           [],
+          true,
           transaction
         );
         return [ ...acc, ...result ];
@@ -314,7 +315,7 @@ class Activity extends Model {
 
   link({ parentId, position }) {
     return this.sequelize.transaction(transaction => {
-      return Activity.linkActivities(this, parentId, position, [], transaction)
+      return Activity.linkActivities(this, parentId, position, [], false, transaction)
         .then(activities => activities);
     });
   }
@@ -411,7 +412,12 @@ class Activity extends Model {
 
   toJSON() {
     const values = super.toJSON();
-    if (!this.isLink) return values;
+    if (!this.isLink) {
+      return {
+        ...values,
+        isOrigin: this.isOrigin
+      };
+    }
     return {
       ...values,
       data: this.origin.data,

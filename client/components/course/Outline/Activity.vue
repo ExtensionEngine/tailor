@@ -146,7 +146,7 @@ export default {
       const types = map(filter(structure, { level }), 'type');
 
       return filter(activities, it => {
-        return id === it.parentId && types.includes(it.type);
+        return id === it.parentId && types.includes(it.type) && !it.isOrigin;
       }).sort((x, y) => x.position - y.position);
     },
     icon() {
