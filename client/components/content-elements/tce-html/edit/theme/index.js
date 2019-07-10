@@ -1,6 +1,7 @@
 import mdiIcons, { getMdiIcon } from './toolbar-icons';
 import createColorPicker from './ui/color-picker';
 import createImageEmbed from './modules/image-embed';
+import Tooltip from 'tooltip.js';
 
 const colors = [
   '#000000',
@@ -40,6 +41,11 @@ const colors = [
   '#3d1466'
 ];
 const reQuillControl = /^ql-/;
+const tooltipTemplate = `
+  <div class="tooltip" role="tooltip">
+    <div class="tooltip-arrow"></div>
+    <div class="tooltip-inner"></div>
+  </div>`;
 
 export default Quill => {
   const ImageEmbed = createImageEmbed(Quill);
@@ -62,8 +68,14 @@ export default Quill => {
       modules: { toolbar }
     };
 
+    extendToolbar(toolbar) {
+      super.extendToolbar(toolbar);
+      this.buildTooltips();
+    }
+
     buildButtons(buttons) {
-      Array.from(buttons).forEach(it => buildButton(it));
+      buttons.forEach(it => buildButton(it));
+      this.buttons = buttons;
     }
 
     buildPickers(selects, icons) {
@@ -95,6 +107,11 @@ export default Quill => {
         this.pickers.push(new IconPicker(align, icons));
       }
     }
+
+    buildTooltips() {
+      this.pickers.forEach(it => buildTooltip(it.container, it.select.title));
+      this.buttons.forEach(it => buildTooltip(it));
+    }
   };
 };
 
@@ -107,6 +124,16 @@ function buildButton(button) {
     return;
   }
   button.innerHTML = getMdiIcon(name, button.value);
+}
+
+function buildTooltip(el, title, delay = 300) {
+  if (el.style.display === 'none') return;
+  return new Tooltip(el, {
+    template: tooltipTemplate,
+    placement: 'bottom',
+    title,
+    delay
+  });
 }
 
 function fillSelect(select, values, defaultValue = false) {
