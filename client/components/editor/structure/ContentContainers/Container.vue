@@ -2,13 +2,6 @@
   <div class="mb-5">
     <div class="actions">
       <v-btn
-        @click="previewContainer"
-        class="btn btn-default btn-material pull-left"
-        type="button">
-        <span class="mdi mdi-eye"></span>
-        Preview {{ name }}
-      </v-btn>
-      <v-btn
         @click="deleteContainer"
         color="error"
         outline
@@ -43,7 +36,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import api from '@/api/preview';
 import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
@@ -76,11 +68,6 @@ export default {
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
-    },
-    previewContainer() {
-      const { courseId, id } = this.container;
-      return api.createPreview(courseId, id)
-        .then(location => window.open(location));
     },
     insert(element) {
       const items = this.teachingElements;
