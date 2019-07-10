@@ -72,7 +72,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions('auth', ['updateInfo']),
+    ...mapActions(['updateInfo']),
     uploadImage(file) {
       this.$emit('editing', Boolean(file));
     },

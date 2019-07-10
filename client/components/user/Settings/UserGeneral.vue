@@ -80,7 +80,7 @@ export default {
     fieldNames: vm => ['firstName', 'lastName', 'email', 'phoneNumber', 'location']
   },
   methods: {
-    ...mapActions('auth', ['updateInfo']),
+    ...mapActions(['updateInfo']),
     updateUser() {
       const { context, hasChanges, fieldNames } = this;
       if (!hasChanges) return;

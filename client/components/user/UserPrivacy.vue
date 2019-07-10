@@ -72,7 +72,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions('auth', ['changePassword', 'logout']),
+    ...mapActions(['changePassword', 'logout']),
     submit() {
       const { currentPassword, newPassword } = this;
       this.$validator.validateAll()
