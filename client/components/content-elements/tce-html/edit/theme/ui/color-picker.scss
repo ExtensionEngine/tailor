@@ -4,13 +4,13 @@
     $icon-size: 18px;
 
     display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    float: none;
     width: 100%;
     height: $height;
     padding: 0 1px;
     line-height: $height;
-    float: none;
-    align-items: center;
-    vertical-align: middle;
     text-align: left;
 
     .icon {

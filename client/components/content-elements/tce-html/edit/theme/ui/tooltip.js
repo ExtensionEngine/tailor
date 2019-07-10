@@ -1,7 +1,4 @@
-import { Quill } from 'vue-quill-editor';
-const BaseTooltip = Quill.import('ui/tooltip');
-
-export default class Tooltip extends BaseTooltip {
+export default Quill => class Tooltip extends Quill.import('ui/tooltip') {
   constructor(quill, bounds) {
     super(quill, bounds);
     this._onClick = this._onClick.bind(this);
@@ -25,4 +22,4 @@ export default class Tooltip extends BaseTooltip {
   _onClick(e) {
     if (this.isOpen && !this.root.contains(e.target)) this.hide();
   }
-}
+};
