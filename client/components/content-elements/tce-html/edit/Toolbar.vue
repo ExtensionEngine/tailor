@@ -139,17 +139,20 @@ $icon-size: 18px;
 
 .ql-toolbar .tooltip {
   $color: #2a2a2a;
+  $offset: 2px;
   $arrow-size: 5px;
 
   display: block;
   position: absolute;
+  top: $offset !important;
   padding: 6px 12px;
   line-height: 1.42;
   background: $color;
   border: 1px solid #fff;
   border-radius: 0;
-  cursor: default;
   z-index: 999;
+  user-select: none;
+  cursor: default;
   // TODO: Remove this after bootstrap gets removed!
   opacity: initial;
 

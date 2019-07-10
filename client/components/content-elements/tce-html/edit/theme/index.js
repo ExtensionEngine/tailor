@@ -146,7 +146,7 @@ function buildButton(button) {
   button.innerHTML = getMdiIcon(name, button.value);
 }
 
-function buildTooltip(el, title, showDelay = 500) {
+function buildTooltip(el, title, showDelay = 350) {
   if (el.style.display === 'none') return;
   return new Tooltip(el, {
     template: tooltipTemplate,
