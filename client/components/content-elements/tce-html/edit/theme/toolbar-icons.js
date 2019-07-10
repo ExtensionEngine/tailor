@@ -7,7 +7,7 @@ const mdiIcons = {
     '': 'format-align-left',
     center: 'format-align-center',
     right: 'format-align-right',
-    justify: 'format-alignt-justify'
+    justify: 'format-align-justify'
   },
   background: 'format-color-highlight',
   blockquote: 'format-quote-close',
