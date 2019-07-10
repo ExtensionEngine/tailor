@@ -21,9 +21,9 @@ import ResetPassword from './components/auth/ResetPassword';
 import SystemSettings from './components/system-settings';
 import SystemUserManagement from './components/system-settings/UserManagement';
 import TreeView from './components/course/TreeView';
+import UserGeneral from './components/user/General';
+import UserPrivacy from './components/user/Privacy';
 import UserSettings from './components/user';
-import UserPrivacy from './components/user/UserPrivacy';
-import UserGeneral from './components/user/Settings';
 
 Vue.use(Router);
 

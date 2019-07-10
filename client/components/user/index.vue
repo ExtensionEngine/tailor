@@ -12,12 +12,10 @@
 </template>
 
 <script>
-import Settings from './Settings';
 import Sidebar from './Sidebar';
-import UserPrivacy from './UserPrivacy';
 
 export default {
-  components: { Sidebar, Settings, UserPrivacy }
+  components: { Sidebar }
 };
 </script>
 

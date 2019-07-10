@@ -17,7 +17,12 @@
               name="currentPassword"
               label="Current password"/>
             <v-text-field
-              v-validate="{ required: true, is_not: currentPassword , alphanumerical: true, min: 6 }"
+              v-validate="{
+                required: true,
+                is_not: currentPassword,
+                alphanumerical: true,
+                min: 6
+              }"
               ref="newPassword"
               v-model="newPassword"
               :error-messages="vErrors.first('newPassword')"
@@ -36,7 +41,11 @@
           </v-flex>
           <v-card-actions>
             <v-layout class="btn-actions">
-              <v-btn :disabled="!isValidated" type="submit" color="light-blue darken-3" flat>
+              <v-btn
+                :disabled="!isValidated"
+                type="submit"
+                color="light-blue darken-3"
+                flat>
                 Submit
               </v-btn>
             </v-layout>
