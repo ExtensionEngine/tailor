@@ -100,19 +100,24 @@ function getPublishedStructure(repository) {
   });
 }
 
-function publishContent(repository, activity) {
-  const config = find(repository.getSchemaConfig().structure, pick(activity, 'type'));
-  const containerTypes = get(config, 'contentContainers', []);
+function fetchActivityContent(repository, activity) {
   return Promise.all([
-    publishContainers(activity, containerTypes),
+    fetchContainers(repository, activity),
+    fetchAssessments(activity),
+    fetchExams(activity)
+  ]).spread((containers, assessments, exams) => ({ containers, assessments, exams }));
+}
+
+function publishContent(repository, activity) {
+  return Promise.all([
+    publishContainers(repository, activity),
     publishExams(activity),
     publishAssessments(activity)
   ]).spread((containers, exams, assessments) => ({ containers, exams, assessments }));
 }
 
-function publishContainers(parent, types) {
-  return parent.getChildren({ where: { type: types } })
-    .then(containers => Promise.map(containers, fetchContainer))
+function publishContainers(repository, parent) {
+  return fetchContainers(repository, parent)
     .then(containers => Promise.map(containers, it => {
       return saveFile(parent, `${it.id}.container`, it).then(() => it);
     }));
@@ -125,11 +130,17 @@ function publishExams(parent) {
 }
 
 function publishAssessments(parent) {
-  const options = { where: { type: 'ASSESSMENT' }, attributes: TES_ATTRS };
-  return parent.getTeachingElements(options).then(assessments => {
+  return fetchAssessments(parent).then(assessments => {
     const key = getAssessmentsKey(parent);
     return saveFile(parent, key, assessments).then(() => assessments);
   });
+}
+
+function fetchContainers(repository, parent) {
+  const config = find(repository.getSchemaConfig().structure, pick(parent, 'type'));
+  const containerTypes = get(config, 'contentContainers', []);
+  return parent.getChildren({ where: { type: containerTypes } })
+    .then(containers => Promise.map(containers, fetchContainer));
 }
 
 function fetchContainer(container) {
@@ -141,6 +152,11 @@ function fetchContainer(container) {
       return it;
     })
   }));
+}
+
+function fetchAssessments(parent) {
+  const options = { where: { type: 'ASSESSMENT' }, attributes: TES_ATTRS };
+  return parent.getTeachingElements(options);
 }
 
 function fetchExams(parent) {
@@ -261,5 +277,5 @@ module.exports = {
   publishActivity,
   unpublishActivity,
   publishRepositoryDetails,
-  fetchContainer
+  fetchActivityContent
 };

@@ -1,14 +1,14 @@
 'use strict';
 
 const { Activity } = require('../shared/database');
-const { fetchContainer } = require('../shared/publishing/helpers');
-const { getOutlineLevels } = require('../../config/shared/activities');
-const { previewUrl } = require('../../config/server');
+const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');
 const get = require('lodash/get');
+const { getOutlineLevels } = require('../../config/shared/activities');
 const pick = require('lodash/pick');
+const { previewUrl } = require('../../config/server');
 const publishingService = require('../shared/publishing/publishing.service');
-const request = require('got');
+const request = require('axios');
 
 function create({ course, body, params, user }, res) {
   const outlineConfig = find(getOutlineLevels(course.schema), { type: body.type });
@@ -62,12 +62,15 @@ function clone({ activity, body }, res) {
   });
 }
 
-function getPreview({ activity }, res) {
-  return fetchContainer(activity)
-    .then(data => request.post(previewUrl, { json: true, body: data }))
-    .then(resp => res.json({
-      location: `${new URL(resp.body.data.url, previewUrl)}`
-    }));
+function getPreviewUrl({ course, activity }, res) {
+  return fetchActivityContent(course, activity)
+    .then(content => {
+      const body = { uid: activity.uid, ...content };
+      return request.post(previewUrl, body);
+    })
+    .then(({ data: { url } }) => {
+      return res.json({ location: `${new URL(url, previewUrl)}` });
+    });
 }
 
 module.exports = {
@@ -79,5 +82,5 @@ module.exports = {
   reorder,
   clone,
   publish,
-  getPreview
+  getPreviewUrl
 };

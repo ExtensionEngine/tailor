@@ -20,7 +20,7 @@ router
   .post('/courses/:courseId/activities/:activityId/reorder', ctrl.reorder)
   .post('/courses/:courseId/activities/:activityId/clone', ctrl.clone)
   .get('/courses/:courseId/activities/:activityId/publish', ctrl.publish)
-  .get('/courses/:courseId/activities/:activityId/preview', ctrl.getPreview);
+  .get('/courses/:courseId/activities/:activityId/preview', ctrl.getPreviewUrl);
 
 function getActivity(req, _res, next, activityId) {
   return Activity.findByPk(activityId, { paranoid: false })
