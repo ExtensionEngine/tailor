@@ -1,7 +1,7 @@
 import mdiIcons, { getMdiIcon } from './toolbar-icons';
-import BaseTooltip from 'tooltip.js';
 import createColorPicker from './ui/color-picker';
 import createImageEmbed from './modules/image-embed';
+import Tooltip from 'tooltip.js';
 
 const colors = [
   '#000000',
@@ -41,19 +41,32 @@ const colors = [
   '#3d1466'
 ];
 const reQuillControl = /^ql-/;
-const tooltipTemplate = `
-  <div class="tooltip" role="tooltip">
-    <div class="tooltip-arrow"></div>
-    <div class="tooltip-inner"></div>
-  </div>`;
 
-const isExpanded = el => el.classList.contains('ql-expanded');
-const isPicker = el => el.classList.contains('ql-picker');
+class ToolbarTooltip extends Tooltip {
+  constructor(input, showDelay = 350) {
+    const isPicker = Boolean(input.select);
+    const reference = isPicker ? input.container : input;
+    const title = isPicker ? input.select.dataset.title : input.dataset.title;
+    super(reference, {
+      placement: 'bottom',
+      delay: { show: showDelay, hide: 0 },
+      title
+    });
+    if (isPicker) return this._interceptToggle(input);
+    input.addEventListener('click', this.hide);
+  }
 
-class Tooltip extends BaseTooltip {
   _show(reference, options) {
-    if (isPicker(reference) && isExpanded(reference)) return;
+    if (reference.classList.contains('ql-expanded')) return;
     return super._show(reference, options);
+  }
+
+  _interceptToggle(picker) {
+    const { togglePicker } = picker;
+    picker.togglePicker = () => {
+      this.hide();
+      return togglePicker.call(picker);
+    };
   }
 }
 
@@ -119,18 +132,8 @@ export default Quill => {
     }
 
     buildTooltips() {
-      this.pickers.forEach(picker => {
-        const tooltip = buildTooltip(picker.container, picker.select.title);
-        const { togglePicker } = picker;
-        picker.togglePicker = function () {
-          if (tooltip) tooltip.hide();
-          return togglePicker.apply(this, arguments);
-        };
-      });
-      this.buttons.forEach(button => {
-        const tooltip = buildTooltip(button);
-        button.addEventListener('click', () => tooltip && tooltip.hide());
-      });
+      this.pickers.forEach(picker => new ToolbarTooltip(picker));
+      this.buttons.forEach(button => new ToolbarTooltip(button));
     }
   };
 };
@@ -144,16 +147,6 @@ function buildButton(button) {
     return;
   }
   button.innerHTML = getMdiIcon(name, button.value);
-}
-
-function buildTooltip(el, title, showDelay = 350) {
-  if (el.style.display === 'none') return;
-  return new Tooltip(el, {
-    template: tooltipTemplate,
-    placement: 'bottom',
-    delay: { show: showDelay, hide: 0 },
-    title
-  });
 }
 
 function fillSelect(select, values, defaultValue = false) {

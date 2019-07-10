@@ -2,56 +2,56 @@
   <div class="tce-html-toolbar">
     <div @mousedown.prevent="() => {}" id="quillToolbar">
       <span class="ql-formats">
-        <button class="ql-undo" title="Undo" type="button"></button>
-        <button class="ql-redo" title="Redo" type="button"></button>
+        <button class="ql-undo" data-title="Undo" type="button"></button>
+        <button class="ql-redo" data-title="Redo" type="button"></button>
       </span>
       <span class="ql-formats">
-        <select class="ql-font" title="Font"></select>
-        <select class="ql-header" title="Style"></select>
+        <select class="ql-font" data-title="Font"></select>
+        <select class="ql-header" data-title="Style"></select>
       </span>
       <span class="ql-formats">
-        <button class="ql-bold" title="Bold" type="button"></button>
-        <button class="ql-italic" title="Italic" type="button"></button>
-        <button class="ql-underline" title="Underline" type="button"></button>
-        <button class="ql-strike" title="Strikethrough" type="button"></button>
+        <button class="ql-bold" data-title="Bold" type="button"></button>
+        <button class="ql-italic" data-title="Italic" type="button"></button>
+        <button class="ql-underline" data-title="Underline" type="button"></button>
+        <button class="ql-strike" data-title="Strikethrough" type="button"></button>
       </span>
       <span class="ql-formats">
-        <select class="ql-color" title="Text color"></select>
-        <select class="ql-background" title="Highlight color"></select>
+        <select class="ql-color" data-title="Text color"></select>
+        <select class="ql-background" data-title="Highlight color"></select>
       </span>
       <span class="ql-formats">
-        <button class="ql-script" value="sub" title="Subscript" type="button"></button>
-        <button class="ql-script" value="super" title="Superscript" type="button"></button>
+        <button class="ql-script" value="sub" data-title="Subscript" type="button"></button>
+        <button class="ql-script" value="super" data-title="Superscript" type="button"></button>
       </span>
       <span class="ql-formats">
-        <button class="ql-header" value="1" title="Heading 1" type="button"></button>
-        <button class="ql-header" value="2" title="Heading 2" type="button"></button>
-        <button class="ql-blockquote" title="Quote" type="button"></button>
-        <button class="ql-code-block" title="Code" type="button"></button>
+        <button class="ql-header" value="1" data-title="Heading 1" type="button"></button>
+        <button class="ql-header" value="2" data-title="Heading 2" type="button"></button>
+        <button class="ql-blockquote" data-title="Quote" type="button"></button>
+        <button class="ql-code-block" data-title="Code" type="button"></button>
       </span>
       <span class="ql-formats">
-        <button class="ql-list" value="ordered" title="Numbered list" type="button"></button>
-        <button class="ql-list" value="bullet" title="Bulleted List" type="button"></button>
-        <button class="ql-indent" value="-1" title="Decrease indent" type="button"></button>
-        <button class="ql-indent" value="+1" title="Increase indent" type="button"></button>
+        <button class="ql-list" value="ordered" data-title="Numbered list" type="button"></button>
+        <button class="ql-list" value="bullet" data-title="Bulleted List" type="button"></button>
+        <button class="ql-indent" value="-1" data-title="Decrease indent" type="button"></button>
+        <button class="ql-indent" value="+1" data-title="Increase indent" type="button"></button>
       </span>
       <span class="ql-formats">
-        <select class="ql-align" title="Alignment">
+        <select class="ql-align" data-title="Alignment">
           <option selected=""></option>
           <option value="center"></option>
           <option value="right"></option>
           <option value="justify"></option>
         </select>
-        <button class="ql-direction" value="rtl" title="Text direction" type="button"></button>
+        <button class="ql-direction" value="rtl" data-title="Text direction" type="button"></button>
       </span>
       <span class="ql-formats">
-        <button class="ql-link" title="Insert link..." type="button"></button>
-        <button class="ql-image" title="Image" type="button"></button>
+        <button class="ql-link" data-title="Insert link..." type="button"></button>
+        <button class="ql-image" data-title="Image" type="button"></button>
         <!-- <button class="ql-video" type="button"></button> -->
         <!-- <button class="ql-formula" type="button"></button> -->
       </span>
       <span class="ql-formats">
-        <button class="ql-clean" title="Clear formatting" type="button"></button>
+        <button class="ql-clean" data-title="Clear formatting" type="button"></button>
       </span>
     </div>
   </div>
@@ -138,57 +138,46 @@ $icon-size: 18px;
 }
 
 .ql-toolbar .tooltip {
-  $color: #2a2a2a;
+  $background-color: #2a2a2a;
+  $text-color: #fff;
   $offset: 2px;
   $arrow-size: 5px;
 
   display: block;
   position: absolute;
-  top: $offset !important;
+  z-index: 999;
+  margin-top: $arrow-size + $offset;
   padding: 6px 12px;
   line-height: 1.42;
-  background: $color;
+  background: $background-color;
   border: 1px solid #fff;
   border-radius: 0;
-  z-index: 999;
   user-select: none;
   cursor: default;
   // TODO: Remove this after bootstrap gets removed!
   opacity: initial;
 
-  .tooltip-arrow {
+  &-arrow {
     position: absolute;
+    top: -$arrow-size;
+    left: calc(50% - #{$arrow-size});
     width: 0;
     height: 0;
-    border-color: $color;
-    border-style: solid;
-    margin: $arrow-size;
+    margin: 0 $arrow-size;
+    border: $arrow-size solid transparent;
+    border-top-width: 0;
+    border-bottom-color: $background-color;
   }
 
-  .tooltip-inner {
+  &-inner {
     padding: 0;
-    color: #fff;
+    color: $text-color;
     font-size: 0.96rem;
     font-family: $font-family-secondary;
     font-weight: 500;
     text-align: center;
     // TODO: Remove this after bootstrap gets removed!
     background: initial;
-  }
-
-  &[x-placement^="bottom"] {
-    margin-top: $arrow-size;
-  }
-
-  &[x-placement^="bottom"] .tooltip-arrow {
-    top: -$arrow-size;
-    left: calc(50% - #{$arrow-size});
-    margin-top: 0;
-    margin-bottom: 0;
-    border-width: 0 $arrow-size $arrow-size $arrow-size;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-top-color: transparent;
   }
 }
 </style>
