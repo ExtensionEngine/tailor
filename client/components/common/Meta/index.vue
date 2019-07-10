@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="resolveComponent(meta.type)"
+    :is="component"
     :meta="meta"
     @update="(key, value) => $emit('update', key, value)">
   </component>
@@ -13,6 +13,7 @@ import DatePicker from './DatePicker';
 import FileUpload from './File';
 import Input from './Input';
 import mapKeys from 'lodash/mapKeys';
+import Multiselect from './Multiselect';
 import Select from './Select';
 import Switch from './Switch';
 import Textarea from './Textarea';
@@ -24,6 +25,7 @@ const META_TYPES = {
   DATETIME: DatePicker,
   INPUT: Input,
   SELECT: Select,
+  MULTISELECT: Multiselect,
   SWITCH: Switch,
   TEXTAREA: Textarea,
   FILE: FileUpload
@@ -34,10 +36,9 @@ export default {
   props: {
     meta: { type: Object, required: true }
   },
-  methods: {
-    resolveComponent(type = '') {
-      return META_TYPES[type.toUpperCase()] || META_TYPES.INPUT;
-    }
+  computed: {
+    type: vm => (vm.meta.type || '').toUpperCase(),
+    component: vm => META_TYPES[vm.type] || META_TYPES.INPUT
   },
   components
 };
