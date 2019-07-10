@@ -9,6 +9,7 @@ import 'vue-directive-tooltip/css/index.css';
 import assetsApi from '@/api/asset';
 import colors from 'vuetify/es5/util/colors';
 import ContentRegistry from './content-registry';
+import fecha from 'fecha';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import { sync } from 'vuex-router-sync';
@@ -25,7 +26,9 @@ import router from './router';
 import App from './App';
 
 Vue.component('tce-question-container', QuestionContainer);
-
+Vue.filter('formatDate', (value, dateFormat = 'MM/DD/YY HH:mm') => {
+  return value && fecha.format(new Date(value), dateFormat);
+});
 Vue.use(FileFilter);
 Vue.use(VueHotkey);
 Vue.use(Vuetify, {
