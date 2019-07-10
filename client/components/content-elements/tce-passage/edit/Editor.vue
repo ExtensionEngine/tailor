@@ -26,6 +26,7 @@ const splitArray = arg => isString(arg) ? arg.split(/[,\s]+/) : arg;
 const joditConfig = {
   autofocus: true,
   addNewLineOnDBLClick: false,
+  showTooltipDelay: 350,
   // Disable fullsize plugin & remove it's toolbar item.
   disablePlugins: ['fullsize'],
   removeButtons: ['fullsize', 'about', JODIT_TOOLBAR_BREAK],
@@ -166,5 +167,47 @@ $icon-size: 18px;
   background: #fff;
   border: 1px solid #ccc;
   box-shadow: rgba(0,0,0,0.2) 0 2px 8px;
+}
+
+.jodit_toolbar_btn .jodit_tooltip {
+  $background-color: #2a2a2a;
+  $text-color: #fff;
+  $offset: -1px;
+  $arrow-size: 5px;
+
+  $horizontal-padding: 12px;
+
+  display: block;
+  position: absolute;
+  z-index: 999;
+  width: auto;
+  min-width: 90px;
+  margin-top: $arrow-size + $offset;
+  padding: 6px $horizontal-padding;
+  color: $text-color;
+  font-size: 0.96rem;
+  font-family: $font-family-secondary;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.42;
+  background: $background-color;
+  border: 1px solid #fff;
+  border-radius: 0;
+  user-select: none;
+  cursor: default;
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -$arrow-size;
+    left: calc(50% - #{$arrow-size} - #{$horizontal-padding / 2});
+    width: 0;
+    height: 0;
+    margin: 0 $arrow-size;
+    border: $arrow-size solid transparent;
+    border-top-width: 0;
+    border-bottom-color: $background-color;
+  }
 }
 </style>
