@@ -118,26 +118,53 @@ $icon-size: 18px;
   line-height: $icon-size;
 }
 
-.jodit_toolbar > li.jodit_toolbar_btn {
+.jodit_toolbar > .jodit_toolbar_btn:not(.jodit_toolbar-input) {
   &.jodit_toolbar_btn-separator {
     margin-right: 15px !important;
     border: none;
   }
 
-  &.jodit_active {
-    background: lighten($icon-accent-color, 25%);
+  @mixin colorize($color, $background: none) {
+    color: $color;
+    background: $background;
 
-    .jodit_icon {
-      color: $icon-accent-color;
+    & > a {
+      color: inherit;
+      background: inherit;
+
+      .jodit_icon {
+        color: inherit;
+      }
+
+      // dropdown chevrons
+      .jodit_with_dropdownlist-trigger {
+        border-top-color: $color;
+      }
+
+      // TODO: Remove after bootstrap gets removed!
+      blockquote {
+        border: none;
+      }
     }
   }
 
-  &:not(.jodit_toolbar-input):hover {
-    background: none;
+  &:not(.jodit_disabled) {
+    &.jodit_active {
+      @include colorize(
+        $color: $icon-accent-color,
+        $background: lighten($icon-accent-color, 25%)
+      );
+    }
 
-    .jodit_icon {
-      color: $icon-accent-color;
+    &:not(.jodit_active):hover {
+      @include colorize($color: $icon-accent-color);
     }
   }
+}
+
+.jodit_toolbar_list > .jodit_toolbar, .jodit_toolbar_list > .jodit_toolbar .jodit_toolbar {
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: rgba(0,0,0,0.2) 0 2px 8px;
 }
 </style>
