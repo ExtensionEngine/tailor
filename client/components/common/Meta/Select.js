@@ -8,6 +8,6 @@ export default {
     value: ({ meta, options }) => options.find(it => it.value === meta.value)
   },
   methods: {
-    parseInput: ({ data }) => data.value || null
+    parseInput: data => data.value || null
   }
 };
