@@ -2,7 +2,7 @@
   <div class="select-activity">
     <circular-progress v-if="showLoader"></circular-progress>
     <div v-else>
-      <span @click="back" class="btn-back">
+      <span v-if="showBackButton" @click="back" class="btn-back">
         <span class="mdi mdi-chevron-left"></span> Back
       </span>
       <div v-if="!currentLevel.length" class="well">
@@ -47,6 +47,7 @@ import uniqBy from 'lodash/uniqBy';
 
 export default {
   props: {
+    action: { type: String, default: null },
     repository: { type: Object, required: true },
     selectableLevels: { type: Array, default: () => ([]) }
   },
@@ -65,6 +66,9 @@ export default {
       if (!this.selectableLevels.length) return true;
       const schema = getSchemaId(first(this.selectableLevels).type);
       return schema === this.repository.schema;
+    },
+    showBackButton() {
+      return !(this.action === 'link' && !this.parent);
     }
   },
   methods: {

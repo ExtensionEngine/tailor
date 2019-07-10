@@ -17,6 +17,8 @@
       </select-action>
       <activity-browser
         v-else-if="action !== 'create'"
+        :action="action"
+        :repository="action === 'link' ? course : null"
         :selectableLevels="supportedLevels"
         @selected="executeAction"
         @close="hide">
@@ -57,7 +59,7 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters('course', ['structure']),
+    ...mapGetters('course', ['structure', 'course']),
     ...mapState({ outlineState: s => s.course.outline }),
     showActions() {
       return this.anchor._cid === this.outlineState.showOptions;

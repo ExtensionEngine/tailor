@@ -6,14 +6,15 @@
       <span class="mdi mdi-close"></span>
     </button>
     <select-repository
-      v-if="!repository"
-      @selected="selected => (repository = selected)">
+      v-if="!currentRepository"
+      @selected="selected => (currentRepository = selected)">
     </select-repository>
     <select-activity
       v-else
-      :repository="repository"
+      :action="action"
+      :repository="currentRepository"
       :selectableLevels="selectableLevels"
-      @reset="repository = null"
+      @reset="currentRepository = null"
       @selected="activity => $emit('selected', activity)">
     </select-activity>
   </div>
@@ -25,12 +26,14 @@ import SelectRepository from './SelectRepository';
 
 export default {
   props: {
+    action: { type: String, default: null },
+    repository: { type: Object, default: null },
     selectableLevels: { type: Array, default: () => ([]) }
   },
   data() {
     return {
-      repository: null,
-      activity: null
+      activity: null,
+      currentRepository: this.repository || null
     };
   },
   components: {
