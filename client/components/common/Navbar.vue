@@ -116,9 +116,4 @@ $font-color: #333;
     color: darken($font-color, 20%);
   }
 }
-
-/deep/ a {
-  text-decoration: none;
-  color: inherit !important;
-}
 </style>
