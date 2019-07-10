@@ -1,7 +1,7 @@
 import mdiIcons, { getMdiIcon } from './toolbar-icons';
+import BaseTooltip from 'tooltip.js';
 import createColorPicker from './ui/color-picker';
 import createImageEmbed from './modules/image-embed';
-import Tooltip from 'tooltip.js';
 
 const colors = [
   '#000000',
@@ -46,6 +46,16 @@ const tooltipTemplate = `
     <div class="tooltip-arrow"></div>
     <div class="tooltip-inner"></div>
   </div>`;
+
+const isExpanded = el => el.classList.contains('ql-expanded');
+const isPicker = el => el.classList.contains('ql-picker');
+
+class Tooltip extends BaseTooltip {
+  _show(reference, options) {
+    if (isPicker(reference) && isExpanded(reference)) return;
+    return super._show(reference, options);
+  }
+}
 
 export default Quill => {
   const ImageEmbed = createImageEmbed(Quill);
@@ -109,8 +119,18 @@ export default Quill => {
     }
 
     buildTooltips() {
-      this.pickers.forEach(it => buildTooltip(it.container, it.select.title));
-      this.buttons.forEach(it => buildTooltip(it));
+      this.pickers.forEach(picker => {
+        const tooltip = buildTooltip(picker.container, picker.select.title);
+        const { togglePicker } = picker;
+        picker.togglePicker = function () {
+          if (tooltip) tooltip.hide();
+          return togglePicker.apply(this, arguments);
+        };
+      });
+      this.buttons.forEach(button => {
+        const tooltip = buildTooltip(button);
+        button.addEventListener('click', () => tooltip && tooltip.hide());
+      });
     }
   };
 };
@@ -126,13 +146,13 @@ function buildButton(button) {
   button.innerHTML = getMdiIcon(name, button.value);
 }
 
-function buildTooltip(el, title, delay = 300) {
+function buildTooltip(el, title, showDelay = 500) {
   if (el.style.display === 'none') return;
   return new Tooltip(el, {
     template: tooltipTemplate,
     placement: 'bottom',
-    title,
-    delay
+    delay: { show: showDelay, hide: 0 },
+    title
   });
 }
 
