@@ -19,14 +19,9 @@
 
 <script>
 export default {
-  computed: {
-    routes() {
-      return [
-        { label: 'System Users', name: 'system-user-management', icon: 'account' },
-        { label: 'Structure Types', name: 'installed-schemas', icon: 'file-tree' },
-        { label: 'Installed Elements', name: 'installed-elements', icon: 'puzzle' }
-      ];
-    }
+  name: 'settings-sidebar',
+  props: {
+    routes: { type: Array, required: true }
   }
 };
 </script>

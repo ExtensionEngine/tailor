@@ -3,7 +3,7 @@
     <v-container>
       <v-layout row align-start>
         <v-card>
-          <sidebar/>
+          <sidebar :routes="routes"/>
         </v-card>
         <v-flex ml-4>
           <router-view/>
@@ -15,10 +15,19 @@
 </template>
 
 <script>
-import AppFooter from '@/components/common/Footer';
-import Sidebar from './Sidebar';
+import AppFooter from 'components/common/Footer';
+import Sidebar from 'components/common/SettingsSidebar';
 
 export default {
+  computed: {
+    routes() {
+      return [
+        { label: 'System Users', name: 'system-user-management', icon: 'account' },
+        { label: 'Structure Types', name: 'installed-schemas', icon: 'file-tree' },
+        { label: 'Installed Elements', name: 'installed-elements', icon: 'puzzle' }
+      ];
+    }
+  },
   components: {
     AppFooter,
     Sidebar

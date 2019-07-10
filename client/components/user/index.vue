@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-layout>
       <v-card>
-        <sidebar/>
+        <sidebar :routes="routes"/>
       </v-card>
       <v-flex>
         <router-view/>
@@ -12,9 +12,17 @@
 </template>
 
 <script>
-import Sidebar from './Sidebar';
+import Sidebar from 'components/common/SettingsSidebar';
 
 export default {
+  computed: {
+    routes() {
+      return [
+        { label: 'General', name: 'user-info', icon: 'account' },
+        { label: 'Privacy', name: 'user-privacy', icon: 'shield-outline' }
+      ];
+    }
+  },
   components: { Sidebar }
 };
 </script>
