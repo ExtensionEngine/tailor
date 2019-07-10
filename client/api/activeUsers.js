@@ -15,7 +15,7 @@ function add(context) {
 
 function remove(context) {
   const { courseId } = context;
-  return request.delete(url.root(courseId), { context });
+  return request.delete(url.root(courseId), { data: { context } });
 }
 
 export default {
