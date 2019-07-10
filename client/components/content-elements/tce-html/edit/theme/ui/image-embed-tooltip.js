@@ -1,10 +1,7 @@
-import './image-embed.scss';
-import { Quill } from 'vue-quill-editor';
-import Tooltip from '../ui/tooltip';
+import './image-embed-tooltip.scss';
+import createTooltip from './tooltip';
 
-const Keyboard = Quill.import('modules/keyboard');
-
-class EmbedTooltip extends Tooltip {
+export default Quill => class ImageEmbedTooltip extends createTooltip(Quill) {
   static TEMPLATE = `
     <div class="controls">
       <label>Enter image url:</label>
@@ -21,6 +18,7 @@ class EmbedTooltip extends Tooltip {
   }
 
   listen() {
+    const Keyboard = Quill.import('modules/keyboard');
     this.btnAction.addEventListener('click', () => this.embedImage());
     this.textbox.addEventListener('keydown', e => {
       if (Keyboard.match(e, 'enter')) {
@@ -59,13 +57,4 @@ class EmbedTooltip extends Tooltip {
     this.textbox.value = '';
     this.hide();
   }
-}
-
-export default class ImageEmbed {
-  constructor(quill, options = {}) {
-    this.quill = quill;
-    quill.tooltips = quill.tooltips = {};
-    const bounds = quill.options.bounds;
-    quill.tooltips.imageEmbed = new EmbedTooltip(quill, bounds, options);
-  }
-}
+};

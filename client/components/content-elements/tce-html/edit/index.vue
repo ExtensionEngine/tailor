@@ -24,13 +24,12 @@
 
 <script>
 import { Quill, quillEditor as QuillEditor } from 'vue-quill-editor';
-import CustomTheme from './theme';
+import createCustomTheme from './theme';
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
-import ImageEmbed from './modules/image-embed';
 
-Quill.register('modules/imageEmbed', ImageEmbed);
-Quill.register(`themes/${CustomTheme.name}`, CustomTheme);
+const CustomTheme = createCustomTheme(Quill);
+Quill.register(`themes/${CustomTheme.NAME}`, CustomTheme, true);
 
 const toolbar = {
   container: '#quillToolbar',
@@ -40,15 +39,12 @@ const toolbar = {
     },
     undo() {
       this.quill.history.undo();
-    },
-    image() {
-      this.quill.tooltips.imageEmbed.show();
     }
   }
 };
 
 const options = {
-  theme: CustomTheme.name,
+  theme: CustomTheme.NAME,
   modules: {
     toolbar,
     imageEmbed: { spacing: 1 },
@@ -129,21 +125,20 @@ export default {
 </style>
 
 <style lang="scss">
-.tce-html {
-  .ql-editor {
-    min-height: 121px;
+.ql-container.ql-snow {
+  font-size: 16px;
+  border: none;
+}
 
-    img {
-      vertical-align: initial;
-    }
-  }
+.ql-editor {
+  min-height: 120px;
 
-  .ql-container.ql-snow {
-    border: none !important;
-  }
-
-  .ql-editor.ql-blank::before {
+  &.ql-blank::before {
     width: 100%;
+  }
+
+  img {
+    vertical-align: initial;
   }
 }
 </style>

@@ -1,11 +1,8 @@
 import './color-picker.scss';
-import { Quill } from 'vue-quill-editor';
-
-const BaseColorPicker = Quill.import('ui/color-picker');
 
 const className = (...names) => names.join(' ');
 
-export default class ColorPicker extends BaseColorPicker {
+export default Quill => class ColorPicker extends Quill.import('ui/color-picker') {
   constructor(quill, { type, select, label }) {
     super(select, label);
     this.quill = quill;
@@ -25,7 +22,7 @@ export default class ColorPicker extends BaseColorPicker {
     this.options.appendChild(btnReset);
     this.options.appendChild(colorOptions);
   }
-}
+};
 
 function wrapOptions(options) {
   const container = document.createElement('div');
@@ -34,8 +31,9 @@ function wrapOptions(options) {
 }
 
 function createButton({ icon, text }) {
-  const btn = document.createElement('button');
+  const btn = document.createElement('span');
   btn.tabIndex = 0;
+  btn.setAttribute('role', 'button');
   btn.appendChild(createIcon(icon));
   btn.innerHTML += text;
   return btn;
