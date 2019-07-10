@@ -103,23 +103,37 @@ $icon-size: 18px;
 .ql-toolbar.ql-snow {
   border: none;
 
-  @mixin icon-color($color, $background: none) {
+  @mixin colorize($color, $background: none) {
+    color: $icon-accent-color;
     background: $background;
 
     .icon {
-      color: $icon-accent-color;
+      color: inherit;
+    }
+
+    // dropdown chevrons
+    .ql-stroke {
+      stroke: currentColor;
     }
   }
 
-  button:hover, button:focus, .ql-picker-label:hover, .ql-picker-item:hover {
-    @include icon-color($color: $icon-accent-color);
+  button:hover, button:focus {
+    @include colorize($color: $icon-accent-color);
   }
 
-  button.ql-active, .ql-picker-label.ql-active, .ql-picker-item.ql-selected {
-    @include icon-color(
+  .ql-picker:not(.ql-expanded) .ql-picker-label:hover, .ql-picker-item:hover {
+    @include colorize($color: $icon-accent-color);
+  }
+
+  button.ql-active, .ql-picker-label.ql-active {
+    @include colorize(
       $color: $icon-accent-color,
       $background: lighten($icon-accent-color, 25%)
     );
+  }
+
+  .ql-picker-item.ql-selected {
+    @include colorize($color: $icon-accent-color);
   }
 }
 </style>
