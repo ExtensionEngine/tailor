@@ -34,7 +34,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import ActivitySidebar from '../../course/Sidebar/Body';
-import api from '@/api/preview';
+import api from '@/api/activity';
 import Discussion from '../../course/Sidebar/Discussion';
 import publishMixin from 'components/common/mixins/publish';
 
