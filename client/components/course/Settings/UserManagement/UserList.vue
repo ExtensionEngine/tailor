@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
 
 export default {
@@ -42,13 +42,13 @@ export default {
     return { isLoading: true };
   },
   computed: {
-    ...mapGetters(['users'], 'course'),
+    ...mapGetters('course', ['users']),
     headers() {
       return ['User', 'Role', ''].map(text => ({ text, sortable: false }));
     }
   },
   methods: {
-    ...mapActions(['getUsers', 'upsertUser', 'removeUser'], 'course'),
+    ...mapActions('course', ['getUsers', 'upsertUser', 'removeUser']),
     fetchUsers() {
       this.isLoading = true;
       return this.getUsers().then(() => (this.isLoading = false));

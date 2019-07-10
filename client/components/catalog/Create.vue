@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import Promise from 'bluebird';
 import { SCHEMAS } from 'shared/activities';
 import { withValidation } from 'utils/validation';
@@ -82,7 +82,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save'], 'courses'),
+    ...mapActions('courses', ['save']),
     submit() {
       this.$validator.validateAll().then(isValid => {
         if (!isValid) return;
