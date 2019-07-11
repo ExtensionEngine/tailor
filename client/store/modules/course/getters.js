@@ -36,7 +36,7 @@ export const outlineActivities = (_, getters) => {
 };
 
 export const isCollapsed = state => {
-  return activity => activity && !state.outline.expanded[activity._cid];
+  return activity => activity && !state.outline.expanded[activity.uid];
 };
 
 export const revisions = (_state, { course }, _rootState, rootGetters) => {

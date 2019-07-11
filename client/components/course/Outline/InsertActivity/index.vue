@@ -60,7 +60,7 @@ export default {
     ...mapGetters('course', ['structure']),
     ...mapState({ outlineState: s => s.course.outline }),
     showActions() {
-      return this.anchor._cid === this.outlineState.showOptions;
+      return this.anchor.uid === this.outlineState.showOptions;
     },
     supportedLevels() {
       const grandParent = getParent(this.activities, this.anchor);
@@ -76,8 +76,8 @@ export default {
     ...mapActions('activities', { copy: 'clone', create: 'save' }),
     ...mapMutations('course', ['showActivityOptions', 'focusActivity']),
     show() {
-      this.showActivityOptions(this.anchor._cid);
-      this.focusActivity(this.anchor._cid);
+      this.showActivityOptions(this.anchor.uid);
+      this.focusActivity(this.anchor.uid);
     },
     hide() {
       this.showActivityOptions(null);

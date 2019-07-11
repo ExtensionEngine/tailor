@@ -49,10 +49,10 @@
         </div>
       </div>
       <insert-activity
-        :anchor="{ id, _cid, parentId, courseId, type, position }"
+        :anchor="{ id, uid, parentId, courseId, type, position }"
         @expand="toggle(true)"/>
     </div>
-    <div v-if="!isCollapsed({ _cid }) && hasChildren">
+    <div v-if="!isCollapsed({ uid }) && hasChildren">
       <draggable
         :list="children"
         :options="{ handle: '.activity' }"
@@ -60,7 +60,7 @@
         <activity
           v-for="(subActivity, index) in children"
           v-bind="subActivity"
-          :key="subActivity._cid"
+          :key="subActivity.uid"
           :index="index + 1"
           :level="level + 1"
           :activities="activities"
@@ -86,7 +86,7 @@ export default {
   mixins: [reorderMixin],
   inheritAttrs: false,
   props: {
-    _cid: { type: String, required: true },
+    uid: { type: String, required: true },
     id: { type: Number, default: null },
     parentId: { type: Number, default: null },
     courseId: { type: Number, required: true },
@@ -119,13 +119,13 @@ export default {
       return isEditable(this.type);
     },
     isSelected() {
-      return this.focusedActivity._cid === this._cid;
+      return this.focusedActivity.uid === this.uid;
     },
     isHighlighted() {
       return this.isHovered || this.isSelected;
     },
     isExpanded() {
-      return !this.isCollapsed({ _cid: this._cid });
+      return !this.isCollapsed({ uid: this.uid });
     },
     hasSubtypes() {
       return !!size(this.config.subLevels);
@@ -134,7 +134,7 @@ export default {
       return (this.children.length > 0) && this.hasSubtypes;
     },
     showOptions() {
-      return this._cid === this.outlineState.showOptions;
+      return this.uid === this.outlineState.showOptions;
     },
     children() {
       const level = this.level + 1;
@@ -154,11 +154,11 @@ export default {
     ...mapMutations('course',
       ['focusActivity', 'toggleActivity', 'showActivityOptions']),
     focus(options = false) {
-      this.focusActivity(this._cid);
-      return this.showActivityOptions(options ? this._cid : null);
+      this.focusActivity(this.uid);
+      return this.showActivityOptions(options ? this.uid : null);
     },
     toggle(expanded = !this.isExpanded) {
-      this.toggleActivity({ _cid: this._cid, expanded });
+      this.toggleActivity({ uid: this.uid, expanded });
     }
   },
   components: { Draggable, InsertActivity }

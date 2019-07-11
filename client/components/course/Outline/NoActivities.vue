@@ -75,7 +75,7 @@ export default {
         })
         .then(() => {
           const activity = first(this.activities);
-          if (activity) this.focusActivity(activity._cid);
+          if (activity) this.focusActivity(activity.uid);
         });
       });
     }

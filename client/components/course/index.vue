@@ -77,7 +77,7 @@ export default {
     this.showLoader = false;
     const activities = filter(this.activities, { parentId: null });
     if (!existingSelection && activities.length) {
-      this.resetActivityFocus(sortBy(activities, 'position')[0]._cid);
+      this.resetActivityFocus(sortBy(activities, 'position')[0].uid);
     }
   }
 };

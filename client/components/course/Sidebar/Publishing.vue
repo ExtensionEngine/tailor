@@ -1,5 +1,5 @@
 <template>
-  <div :key="activity._cid" class="publish-container">
+  <div :key="activity.uid" class="publish-container">
     <div class="publish-date">
       <span>{{ publishedAtMessage }}</span>
     </div>

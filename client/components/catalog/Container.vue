@@ -14,7 +14,7 @@
     <div v-show="!searching" class="row course-list">
       <course-card
         v-for="course in orderedCourses"
-        :key="course._cid"
+        :key="course.uid"
         :course="course">
       </course-card>
       <infinite-loading ref="infiniteLoading" @infinite="loadMore">

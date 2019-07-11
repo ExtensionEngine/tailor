@@ -23,7 +23,7 @@
           <activity
             v-for="(activity, index) in rootActivities"
             v-bind="activity"
-            :key="activity._cid"
+            :key="activity.uid"
             :index="index + 1"
             :level="1"
             :activities="outlineActivities"/>

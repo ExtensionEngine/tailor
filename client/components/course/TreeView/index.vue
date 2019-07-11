@@ -74,7 +74,7 @@ export default {
     onNodeSelect(node, activity, circle) {
       if (!isActivityNode(node)) return;
       this.setSelected(circle);
-      this.focusActivity(activity._cid);
+      this.focusActivity(activity.uid);
     }
   },
   components: {

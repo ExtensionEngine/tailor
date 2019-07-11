@@ -1,4 +1,3 @@
-import cuid from 'cuid';
 import Resource from './resource';
 
 export default function ($apiUrl) {
@@ -21,15 +20,13 @@ export default function ($apiUrl) {
   };
 
   const save = ({ state, commit }, model) => {
-    if (!model._cid) model._cid = cuid();
     model._synced = false;
     model._version = Date.now();
     // Create or update model locally.
-    commit('save', model);
     return api.save(model).then(model => {
       // Check if new change happened locally during api call.
       // Do not update meta if there is newer change.
-      const previous = state.items[model._cid];
+      const previous = state.items[model.uid];
       if (previous && previous._version === model._version) model._synced = true;
       commit('save', model);
     });

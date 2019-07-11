@@ -7,7 +7,7 @@
     <div class="meta-element">
       <meta-input
         v-for="it in metadata"
-        :key="`${activity._cid}.${it.key}`"
+        :key="`${activity.uid}.${it.key}`"
         :meta="it"
         @update="updateActivity">
       </meta-input>
@@ -16,7 +16,7 @@
       <relationship
         v-for="relationship in config.relationships"
         v-bind="relationship"
-        :key="`${activity._cid}.${relationship.type}`">
+        :key="`${activity.uid}.${relationship.type}`">
       </relationship>
     </div>
     <discussion
@@ -48,7 +48,7 @@ export default {
     ...mapActions('activities', ['update']),
     updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
-      this.update({ _cid: this.activity._cid, data });
+      this.update({ _cid: this.activity.uid, data });
     }
   },
   components: {
