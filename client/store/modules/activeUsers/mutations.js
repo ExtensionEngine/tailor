@@ -15,7 +15,7 @@ const save = (state, users) => {
   map(users, user => {
     const usedPalettes = getUsedPalettes(state);
     user.contexts.forEach(context => {
-      addContext(Vue, activeUsers, user, context, usedPalettes);
+      setUserActivity(Vue, activeUsers, user, context, usedPalettes);
     });
   });
 };
@@ -23,7 +23,7 @@ const save = (state, users) => {
 const sseAdd = (state, { user, context }) => {
   const { activeUsers } = state;
   const usedPalettes = getUsedPalettes(state);
-  addContext(Vue, activeUsers, user, context, usedPalettes);
+  setUserActivity(Vue, activeUsers, user, context, usedPalettes);
 };
 
 const sseRemove = (state, { user, context }) => {
@@ -56,7 +56,7 @@ export {
   sseRemoveSession
 };
 
-function addContext(_vue, activeUsers, user, context, usedPalettes) {
+function setUserActivity(_vue, activeUsers, user, context, usedPalettes) {
   const existingUser = activeUsers[user.id];
   if (!existingUser) {
     assignPalette(user, usedPalettes, activeUsers);
