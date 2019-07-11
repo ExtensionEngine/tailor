@@ -1,6 +1,6 @@
 <template>
   <div class="repo-container">
-    <div class="course-header primary">
+    <div class="course-header primary elevation-2">
       <v-tabs
         height="50"
         color="primary"
