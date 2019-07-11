@@ -12,13 +12,12 @@ export default class ContainerRegistry {
 
   async initialize() {
     const extensions = await this.loadExtensionList();
-    return Promise
-      .map(extensions, (location, index) => this.load(location, index));
+    return Promise.map(extensions, (path, index) => this.load(path, index));
   }
 
-  async load(location, position) {
+  async load(path, position) {
     const { _registry, Vue } = this;
-    const element = (await import(`../../extensions/content-containers/${location}`)).default;
+    const element = (await import(`../../extensions/content-containers/${path}`)).default;
     const attrs = ['type', 'version'];
     const contanerName = getContainerName(element.type);
     _registry.push({ ...pick(element, attrs), contanerName, position });
