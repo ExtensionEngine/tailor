@@ -1,7 +1,7 @@
 import request from './request';
 
 const url = {
-  root: (courseId) => `/courses/${courseId}/active-users`
+  root: courseId => `/courses/${courseId}/active-users`
 };
 
 function fetch(courseId) {
