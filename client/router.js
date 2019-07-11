@@ -18,16 +18,11 @@ import Login from './components/auth/Login';
 import Outline from './components/course/Outline';
 import RepoUserManagement from './components/course/Settings/UserManagement';
 import ResetPassword from './components/auth/ResetPassword';
-import transform from 'lodash/transform';
 import SystemSettings from './components/system-settings';
 import SystemUserManagement from './components/system-settings/UserManagement';
 import TreeView from './components/course/TreeView';
 
 Vue.use(Router);
-
-const parseParams = ({ params }) => {
-  return transform(params, (acc, val, key) => (acc[key] = parseInt(val, 10)), {});
-};
 
 let router = new Router({
   routes: [{
@@ -38,13 +33,13 @@ let router = new Router({
   }, {
     path: '/course/:courseId',
     component: Course,
-    props: parseParams,
+    props: numericParser,
     meta: { auth: true },
     children: [{
       path: '',
       name: 'course',
       component: Outline,
-      props: parseParams
+      props: numericParser
     }, {
       path: 'settings',
       component: CourseSettings,
@@ -71,7 +66,7 @@ let router = new Router({
     path: '/course/:courseId/editor/:activityId',
     name: 'editor',
     component: Editor,
-    props: parseParams,
+    props: numericParser,
     meta: { auth: true }
   }, {
     path: '/system-settings',
