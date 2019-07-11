@@ -31,7 +31,7 @@ const subscribe = ({ commit, rootState }) => {
       commit('sseRemoveSession', { userId, sseId });
     })
     .subscribe('connection_initialized', ({ sseId }) => {
-      commit('setSseId', { sseId });
+      commit('setSseId', sseId);
     });
 };
 
@@ -42,11 +42,11 @@ const fetch = ({ commit }, courseId) => {
     .then(({ activeUsers }) => commit('save', activeUsers));
 };
 
-const add = ({ state }, context) => {
+const add = (_, context) => {
   return api.add(context);
 };
 
-const remove = ({ state }, context) => {
+const remove = (_, context) => {
   return api.remove(context);
 };
 

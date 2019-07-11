@@ -17,8 +17,8 @@ export default {
   },
   methods: {
     ...mapActions('activeUsers', {
-      addActiveUser: 'add',
-      removeActiveUser: 'remove',
+      addContext: 'add',
+      removeContext: 'remove',
       subscribeToActiveUsers: 'subscribe',
       unsubscribeFromActiveUsers: 'unsubscribe',
       fetchActiveUsers: 'fetch'
@@ -28,7 +28,7 @@ export default {
     sseId: {
       handler() {
         if (!this.sseId) return;
-        this.addActiveUser(this.context);
+        this.addContext(this.context);
       },
       immediate: true
     }
@@ -41,8 +41,9 @@ export default {
     if (!trackedRoutes.includes(to.name)) {
       this.unsubscribeFromActiveUsers(this.context);
     }
-    // Remove children context
-    if (to.name === 'course') this.removeActiveUser(this.context);
+    // Remove context when leaving route except when navigating
+    // to course route (Outline component)
+    if (to.name === 'course') this.removeContext(this.context);
     next();
   }
 };

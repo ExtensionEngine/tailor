@@ -12,7 +12,7 @@ import Vue from 'vue';
 
 const save = (state, users) => {
   const { activeUsers } = state;
-  map(users, (user) => {
+  map(users, user => {
     const usedPalettes = getUsedPalettes(state);
     user.contexts.forEach(context => {
       addContext(Vue, activeUsers, user, context, usedPalettes);
@@ -43,7 +43,7 @@ const sseRemoveSession = (state, { userId, sseId }) => {
   if (isEmpty(existingUser.contexts)) Vue.delete(state.activeUsers, userId);
 };
 
-const setSseId = (state, { sseId }) => {
+const setSseId = (state, sseId) => {
   state.sseId = sseId;
 };
 

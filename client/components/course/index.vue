@@ -17,7 +17,7 @@
           <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
         </v-tab>
       </v-tabs>
-      <active-users :users="courseActiveUsers"/>
+      <active-users :users="getActiveUsers('course', courseId)"/>
     </div>
     <div class="tab-content" infinite-wrapper>
       <router-view :showLoader="showLoader"/>
@@ -42,7 +42,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('activeUsers', ['activeUsers']),
+    ...mapGetters('activeUsers', ['getActiveUsers']),
     ...mapGetters(['isAdmin']),
     ...mapGetters('course', ['course', 'activities', 'activity', 'isCourseAdmin']),
     tabs() {
@@ -54,9 +54,6 @@ export default {
       ];
       if (!this.isAdmin && !this.isCourseAdmin) items.pop();
       return items;
-    },
-    courseActiveUsers() {
-      return orderBy(this.activeUsers.course[this.courseId], 'created', 'desc') || [];
     }
   },
   methods: {

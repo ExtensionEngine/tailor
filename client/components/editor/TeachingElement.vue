@@ -2,8 +2,8 @@
   <div class="te-wrapper">
     <div :class="{ inactive: !showActiveUsers }" class="active-users-wrapper">
       <active-users
-        v-if="contentActiveUsers.length"
-        :users="contentActiveUsers"
+        v-if="activeUsers"
+        :users="activeUsers"
         :size="26"
         vertical
         rightTooltip/>
@@ -28,7 +28,6 @@ import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
 import first from 'lodash/first';
 import omit from 'lodash/omit';
-import orderBy from 'lodash/orderBy';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -45,18 +44,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('activeUsers', ['activeUsers']),
+    ...mapGetters('activeUsers', ['getActiveUsers']),
     ...mapState('activeUsers', ['sseId']),
-    contentActiveUsers() {
-      const { contentId } = this.element;
-      return orderBy(this.activeUsers.content[contentId], ['created']) || [];
+    activeUsers() {
+      return this.getActiveUsers('content', this.element.contentId);
     },
     showActiveUsers() {
-      return this.contentActiveUsers.length;
+      return this.activeUsers.length;
     },
     highlight() {
-      if (!this.contentActiveUsers.length) return;
-      const user = first(this.contentActiveUsers);
+      if (!this.activeUsers.length) return;
+      const user = first(this.activeUsers);
       let color;
       if (user.profileImage) color = user.palette.border;
       else color = user.palette.background;
@@ -78,8 +76,8 @@ export default {
   },
   methods: {
     ...mapActions('activeUsers', {
-      addActiveUser: 'add',
-      removeActiveUser: 'remove'
+      addActiveUserContext: 'add',
+      removeActiveUserContext: 'remove'
     }),
     ...mapActions('tes', { saveElement: 'save', removeElement: 'remove' }),
     ...mapMutations('tes', { addElement: 'add' }),
@@ -100,27 +98,24 @@ export default {
       this.removeElement(this.element).then(() => {
         this.$nextTick(() => EventBus.emit('element:focus'));
       });
-    },
-    setFocus() {
-      EventBus.on('element:focus', element => {
-        this.isFocused = !!element && (element.id === this.element.id);
-      });
     }
   },
   watch: {
     isFocused() {
       if (this.isFocused) {
-        this.addActiveUser(this.context);
+        this.addActiveUserContext(this.context);
         return;
       }
-      this.removeActiveUser(this.context);
+      this.removeActiveUserContext(this.context);
     }
   },
   created() {
-    this.setFocus();
+    EventBus.on('element:focus', element => {
+      this.isFocused = !!element && (element.id === this.element.id);
+    });
   },
   beforeDestroy() {
-    this.removeActiveUser(omit(this.context, 'created'));
+    this.removeActiveUserContext(omit(this.context, 'created'));
   },
   components: { ActiveUsers, ContainedContent }
 };

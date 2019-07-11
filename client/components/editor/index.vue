@@ -3,7 +3,7 @@
     <template v-if="activity">
       <toolbar :element="focusedElement">
         <template slot="active-users">
-          <active-users :users="activityActiveUsers"/>
+          <active-users :users="getActiveUsers('activity', activityId)"/>
         </template>
         <span slot="actions">
           <v-btn
@@ -59,7 +59,6 @@ import find from 'lodash/find';
 import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
 import MetaSidebar from './MetaSidebar';
-import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
@@ -82,7 +81,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('activeUsers', ['activeUsers']),
+    ...mapGetters('activeUsers', ['getActiveUsers']),
     ...mapGetters('course', ['course', 'getMetadata']),
     ...mapGetters('editor', ['activity', 'contentContainers']),
     metadata() {
@@ -98,10 +97,6 @@ export default {
     containerConfigs() {
       if (!this.activity) return [];
       return config.getSupportedContainers(this.activity.type);
-    },
-    activityActiveUsers() {
-      const { activityId } = this;
-      return orderBy(this.activeUsers.activity[activityId], 'created', 'desc') || [];
     }
   },
   methods: {

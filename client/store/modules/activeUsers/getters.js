@@ -3,6 +3,7 @@ import find from 'lodash/find';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
+import orderBy from 'lodash/orderBy';
 
 export const activeUsers = state => {
   let activeUsersMap = { course: {}, activity: {}, content: {} };
@@ -16,6 +17,12 @@ export const activeUsers = state => {
 
 export const getUsedPalettes = state => {
   return filter(map(state.activeUsers, user => get(user.palette, 'id', null)));
+};
+
+export const getActiveUsers = (_state, getters) => {
+  return (entity, entityId) => {
+    return orderBy(getters.activeUsers[entity][entityId], 'created', 'desc') || [];
+  };
 };
 
 function mapContext(activeUsers, user, context) {
