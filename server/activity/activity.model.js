@@ -254,8 +254,8 @@ class Activity extends Model {
     parentId = null,
     position = null,
     activities = [],
-    transaction,
     isChild = false,
+    transaction
   ) {
     const children = await source.getChildren({
       where: { detached: false },
@@ -263,7 +263,7 @@ class Activity extends Model {
     });
 
     const data = pick(source, [
-      'type', 'courseId', 'originId', 'parentId'
+      'type', 'courseId', 'originId', 'parentId', 'position'
     ]);
 
     if (source.isLink || source.isOrigin) {
