@@ -46,6 +46,9 @@
 import { mapActions, mapGetters } from 'vuex';
 import AssessmentGroup from './AssessmentGroup';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
+import get from 'lodash/get';
+import { getDescendants as getDeepChildren } from 'utils/activity';
 import numberToLetter from 'utils/numberToLetter';
 import pluralize from 'pluralize';
 
@@ -60,7 +63,6 @@ export default {
     return { collapsed: this.container.id };
   },
   computed: {
-    ...mapGetters('activities', ['getExamObjectives']),
     ...mapGetters(['activities']),
     groups() {
       return filter(this.activities, { parentId: this.container.id });
@@ -73,7 +75,12 @@ export default {
       return `${groupTotal} ${pluralize('set', groupTotal)}`;
     },
     examObjectives() {
-      return this.getExamObjectives(this.container, this.config);
+      const { container, config, activities } = this;
+      const activity = find(activities, { id: container.parentId });
+      const objectiveTypes = get(config, 'objectives');
+      if (!objectiveTypes) return [];
+      const children = getDeepChildren(activities, activity);
+      return filter(children, it => objectiveTypes.includes(it.type));
     }
   },
   methods: {

@@ -22,8 +22,8 @@
 import { mapActions, mapGetters } from 'vuex';
 import filter from 'lodash/filter';
 import { isQuestion } from 'tce-core/utils';
-import TeachingElement from '../../TeachingElement';
-import TesList from '../TesList';
+import TeachingElement from '../../../editor/TeachingElement';
+import TesList from '../../../editor/structure/TesList';
 
 export default {
   name: 'group-introduction',

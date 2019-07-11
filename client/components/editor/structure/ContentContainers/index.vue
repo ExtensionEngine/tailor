@@ -29,7 +29,6 @@
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
-import Exam from '../Exam';
 import get from 'lodash/get';
 import { getContainerName } from 'tce-core/utils';
 import isEmpty from 'lodash/isEmpty';
@@ -89,7 +88,7 @@ export default {
       return capitalize(val);
     }
   },
-  components: { ContentContainer, TccExam: Exam }
+  components: { ContentContainer }
 };
 </script>
 

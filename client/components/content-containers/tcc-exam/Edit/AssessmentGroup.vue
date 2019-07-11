@@ -45,7 +45,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import AssessmentItem from '../AssessmentItem';
+import AssessmentItem from '../../../editor/structure/AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
@@ -54,7 +54,7 @@ import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
 import numberToLetter from 'utils/numberToLetter';
 import sortBy from 'lodash/sortBy';
-import TesList from '../TesList';
+import TesList from '../../../editor/structure/TesList';
 
 const appChannel = EventBus.channel('app');
 

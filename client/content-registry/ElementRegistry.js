@@ -24,8 +24,8 @@ export default class ElementRegistry {
     });
     const extensions = await this.loadExtensionList();
     await Promise.map(extensions, (location, index) => {
-      const options = { position: elementList.length + index, isExtension: true };
-      return this.load(location, options);
+      const position = elementList.length + index;
+      return this.load(location, { position, isExtension: true });
     });
   }
 

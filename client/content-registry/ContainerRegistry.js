@@ -1,3 +1,4 @@
+import componentList from '../components/content-containers';
 import { getContainerName } from 'tce-core/utils';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
@@ -11,17 +12,26 @@ export default class ContainerRegistry {
   }
 
   async initialize() {
+    await Promise.map(componentList, (path, index) => {
+      return this.load(path, { position: index });
+    });
     const extensions = await this.loadExtensionList();
-    return Promise.map(extensions, (path, index) => this.load(path, index));
+    await Promise.map(extensions, (path, index) => {
+      const position = componentList.length + index;
+      return this.load(path, { position, isExtension: true });
+    });
   }
 
-  async load(path, position) {
+  async load(path, options) {
     const { _registry, Vue } = this;
-    const element = (await import(`../../extensions/content-containers/${path}`)).default;
+    const { position = _registry.length, isExtension } = options;
+    const container = isExtension
+      ? (await import(`../../extensions/content-containers/${path}`)).default
+      : (await import(`../components/content-containers/${path}`)).default;
     const attrs = ['type', 'version'];
-    const contanerName = getContainerName(element.type);
-    _registry.push({ ...pick(element, attrs), contanerName, position });
-    Vue.component(contanerName, element.Edit);
+    const contanerName = getContainerName(container.type);
+    _registry.push({ ...pick(container, attrs), contanerName, position });
+    Vue.component(contanerName, container.Edit);
   }
 
   loadExtensionList() {
