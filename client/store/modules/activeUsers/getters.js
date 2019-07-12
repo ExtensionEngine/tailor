@@ -28,7 +28,7 @@ export const getActiveUsers = (_state, getters) => {
 function mapContext(activeUsers, user, context) {
   const { id, email, palette } = user;
   const { created } = context;
-  const ommitedFields = ['created', 'sseId', 'routeName'];
+  const ommitedFields = ['created', 'sseId'];
   Object.keys(omit(context, ommitedFields)).forEach(key => {
     const entityName = key.substring(0, key.length - 2);
     const entityId = context[key];
