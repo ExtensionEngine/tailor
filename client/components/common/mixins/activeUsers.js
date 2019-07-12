@@ -1,5 +1,5 @@
 import { mapActions, mapState } from 'vuex';
-import pick from 'lodash/pick';
+import pickBy from 'lodash/pickBy';
 
 const trackedRoutes = ['course', 'editor'];
 
@@ -7,9 +7,13 @@ export default {
   computed: {
     ...mapState('activeUsers', ['sseId']),
     context() {
-      return {
-        ...pick(this, ['courseId', 'activityId', 'sseId']), created: new Date()
+      const context = {
+        activityId: Number(this.$route.params.activityId),
+        courseId: Number(this.$route.params.courseId),
+        sseId: this.sseId,
+        created: new Date()
       };
+      return pickBy(context);
     }
   },
   methods: {
