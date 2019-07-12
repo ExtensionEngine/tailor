@@ -25,9 +25,9 @@ function add({ body, user }, res) {
 function remove({ body, user }, res) {
   res.end();
   const { context } = body;
-  const { _created, ...targetContext } = context;
+  const { created, ...targetContext } = context;
   user = pick(user, ['id', 'email', 'firstName', 'lastName']);
-  ActiveUsers.removeContext(user, ({ _created, ...context }) => {
+  ActiveUsers.removeContext(user, ({ created, ...context }) => {
     return isEqual(context, targetContext);
   });
   const channel = sse.channel(context.courseId);

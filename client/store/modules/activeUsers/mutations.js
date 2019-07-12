@@ -1,18 +1,15 @@
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
-import map from 'lodash/map';
 import omit from 'lodash/omit';
 import remove from 'lodash/remove';
 import { setEndpoint } from '../../helpers/mutations';
 import Vue from 'vue';
 
-const save = (state, users) => {
+const save = (state, user) => {
   const { activeUsers } = state;
-  map(users, user => {
-    user.contexts.forEach(context => {
-      setUserActivity(Vue, activeUsers, user, context);
-    });
+  user.contexts.forEach(context => {
+    setUserActivity(Vue, activeUsers, user, context);
   });
 };
 
@@ -53,7 +50,7 @@ export {
   sseRemoveSession
 };
 
-function setUserActivity(_vue, activeUsers, user, context, usedPalettes) {
+function setUserActivity(_vue, activeUsers, user, context) {
   const existingUser = activeUsers[user.id];
   if (!existingUser) {
     _vue.set(activeUsers, user.id, { ...user, contexts: [context] });

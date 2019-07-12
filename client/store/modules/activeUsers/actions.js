@@ -1,4 +1,5 @@
 import api from '@/api/activeUsers';
+import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import generateActions from '@/store/helpers/actions';
 import { getUsedPalettes } from './getters';
@@ -52,8 +53,8 @@ const fetch = ({ state, commit }, courseId) => {
       forEach(activeUsers, user => {
         const usedPalettes = getUsedPalettes(state);
         assignPalette(user, usedPalettes, activeUsers);
+        commit('save', user);
       });
-      commit('save', activeUsers);
     });
 };
 
@@ -75,7 +76,7 @@ export {
 };
 
 function assignPalette(user, usedPalettes) {
-  const colorPalette = find(palette, p => !usedPalettes.includes(p.id)) ||
-    sample(palette);
+  const availablePalette = find(palette, p => !usedPalettes.includes(p.id));
+  const colorPalette = availablePalette || sample(palette);
   user.palette = colorPalette;
 }
