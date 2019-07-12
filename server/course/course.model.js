@@ -50,7 +50,7 @@ class Course extends Model {
     };
   }
 
-  static associate({ Activity, Comment, CourseUser, TeachingElement, User }) {
+  static associate({ Activity, Comment, CourseUser, Revision, TeachingElement, User }) {
     this.hasMany(Activity, {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
@@ -58,6 +58,9 @@ class Course extends Model {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
     this.hasMany(TeachingElement, {
+      foreignKey: { name: 'courseId', field: 'course_id' }
+    });
+    this.hasMany(Revision, {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
     this.belongsToMany(User, {

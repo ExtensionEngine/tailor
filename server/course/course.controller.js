@@ -1,6 +1,6 @@
 'use strict';
 
-const { Course, CourseUser, User } = require('../shared/database');
+const { Course, CourseUser, User, Revision } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
@@ -16,6 +16,14 @@ const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
 function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
+  opts.include = [{
+    model: Revision,
+    as: 'revisions',
+    include: [{ model: User, attributes: ['id', 'email'] }],
+    order: [['createdAt', 'DESC']],
+    limit: 1
+  }];
+  opts.order = [['createdAt', 'DESC']];
   const courses = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return courses.then(data => res.json({ data }));
 }
