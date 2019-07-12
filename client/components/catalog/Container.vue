@@ -1,44 +1,50 @@
 <template>
-  <div class="catalog grey lighten-2" infinite-wrapper>
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
-        <search @change="search"></search>
+  <div infinite-wrapper class="catalog-wrapper">
+    <v-container class="catalog">
+      <v-layout row class="mb-4">
+        <v-flex md6 sm10 offset-md3 offset-sm1>
+          <search @change="search" class="pt-4"/>
+        </v-flex>
+        <v-flex md3 sm1>
+          <create-repository class="pt-2"/>
+        </v-flex>
+      </v-layout>
+      <v-layout v-show="!searching" row wrap>
+        <v-flex
+          v-for="repository in orderedRepositories"
+          :key="repository._cid"
+          xs4
+          class="px-2 py-3">
+          <repository-card :repository="repository"/>
+        </v-flex>
+      </v-layout>
+      <v-progress-circular
+        v-show="searching"
+        color="primary"
+        indeterminate
+        class="search-spinner"/>
+    </v-container>
+    <infinite-loading ref="infiniteLoading" @infinite="loadMore">
+      <div slot="spinner" class="spinner">
+        <v-progress-circular color="primary" indeterminate/>
       </div>
-      <div class="col-md-2 col-sm-1">
-        <create-course class="pull-right"/>
+      <div slot="no-results" class="no-results subheading">
+        {{ orderedRepositories.length ? '' : 'No matches found' }}
       </div>
-    </div>
-    <div v-show="searching" class="search-spinner">
-      <v-progress-circular color="primary" indeterminate/>
-    </div>
-    <div v-show="!searching" class="row course-list">
-      <course-card
-        v-for="course in orderedCourses"
-        :key="course._cid"
-        :course="course">
-      </course-card>
-      <infinite-loading ref="infiniteLoading" @infinite="loadMore">
-        <div slot="spinner" class="spinner">
-          <v-progress-circular color="primary" indeterminate/>
-        </div>
-        <div slot="no-results" class="no-results">
-          {{ orderedCourses.length ? '' : 'No repositories found.' }}
-        </div>
-        <span slot="no-more"></span>
-      </infinite-loading>
-    </div>
+      <span slot="no-more"></span>
+    </infinite-loading>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import CourseCard from './Card';
-import CreateCourse from './Create';
+import CreateRepository from './Create';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import isEmpty from 'lodash/isEmpty';
 import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
+import RepositoryCard from './Card';
 import Search from './Search';
 
 export default {
@@ -48,11 +54,11 @@ export default {
   computed: {
     ...mapGetters(['courses']),
     ...mapGetters('courses', ['hasMoreResults']),
+    orderedRepositories() {
+      return orderBy(this.courses, 'updatedAt', 'desc');
+    },
     loaderState() {
       return get(this.$refs, 'infiniteLoading.stateChanger', {});
-    },
-    orderedCourses() {
-      return orderBy(this.courses, 'updatedAt', 'desc');
     }
   },
   methods: {
@@ -67,7 +73,7 @@ export default {
     load(query) {
       this.loaderState.loaded();
       this.loaderState.complete();
-      return Promise.join(this.fetch({ reset: true }), Promise.delay(500))
+      return Promise.join(this.fetch({ reset: true }))
         .then(() => {
           this.loaderState.reset();
           if (!isEmpty(this.courses)) this.loaderState.loaded();
@@ -84,32 +90,39 @@ export default {
     this.search();
   },
   components: {
-    CourseCard,
-    CreateCourse,
+    CreateRepository,
     InfiniteLoading,
+    RepositoryCard,
     Search
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.catalog-wrapper {
+  position: relative;
+}
+
 .catalog {
-  padding: 30px 100px 100px;
-
-  @media (min-width: 1700px) {
-    padding: 30px 300px 100px;
-  }
-
-  /deep/ .course-search {
-    margin-top: 8px;
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 230px;
+    width: 100%;
+    background: #455a64;
+    box-shadow:
+      0px 3px 5px -1px rgba(0,0,0,0.2),
+      0px 5px 8px 0px rgba(0,0,0,0.14),
+      0px 1px 14px 0px rgba(0,0,0,0.12);
   }
 }
 
 .search-spinner {
-  margin-top: 80px;
+  margin-top: 170px;
 }
 
 .spinner, .no-results {
-  margin-top: 36px;
+  margin-top: 120px;
 }
 </style>
