@@ -1,5 +1,9 @@
 import api from '@/api/activeUsers';
+import forEach from 'lodash/forEach';
 import generateActions from '@/store/helpers/actions';
+import { getUsedPalettes } from './getters';
+import palette from 'utils/palette';
+import sample from 'lodash/sample';
 import SSEClient from '@/SSEClient';
 import urlJoin from 'url-join';
 
@@ -13,7 +17,7 @@ const Events = {
   RemoveSession: 'active_user:remove_session'
 };
 
-const subscribe = ({ commit, rootState }) => {
+const subscribe = ({ state, commit, rootState }) => {
   const { courseId } = rootState.route.params;
   const token = localStorage.getItem('JWT_TOKEN');
   const params = { token };
@@ -22,6 +26,8 @@ const subscribe = ({ commit, rootState }) => {
   feed
     .connect(url, { params })
     .subscribe(Events.Add, ({ user, context }) => {
+      const usedPalettes = getUsedPalettes(state);
+      assignPalette(user, usedPalettes);
       commit('sseAdd', { user, context });
     })
     .subscribe(Events.Remove, ({ user, context }) => {
@@ -35,11 +41,20 @@ const subscribe = ({ commit, rootState }) => {
     });
 };
 
-const unsubscribe = () => feed.disconnect();
+const unsubscribe = ({ commit }) => {
+  feed.disconnect();
+  commit('setSseId', null);
+};
 
-const fetch = ({ commit }, courseId) => {
+const fetch = ({ state, commit }, courseId) => {
   return api.fetch(courseId)
-    .then(({ activeUsers }) => commit('save', activeUsers));
+    .then(({ activeUsers }) => {
+      forEach(activeUsers, user => {
+        const usedPalettes = getUsedPalettes(state);
+        assignPalette(user, usedPalettes, activeUsers);
+      });
+      commit('save', activeUsers);
+    });
 };
 
 const add = (_, context) => {
@@ -58,3 +73,9 @@ export {
   subscribe,
   unsubscribe
 };
+
+function assignPalette(user, usedPalettes) {
+  const colorPalette = find(palette, p => !usedPalettes.includes(p.id)) ||
+    sample(palette);
+  user.palette = colorPalette;
+}

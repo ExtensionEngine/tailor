@@ -1,29 +1,24 @@
 import find from 'lodash/find';
-import { getUsedPalettes } from './getters';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
-import palette from 'utils/palette';
 import remove from 'lodash/remove';
-import sample from 'lodash/sample';
 import { setEndpoint } from '../../helpers/mutations';
 import Vue from 'vue';
 
 const save = (state, users) => {
   const { activeUsers } = state;
   map(users, user => {
-    const usedPalettes = getUsedPalettes(state);
     user.contexts.forEach(context => {
-      setUserActivity(Vue, activeUsers, user, context, usedPalettes);
+      setUserActivity(Vue, activeUsers, user, context);
     });
   });
 };
 
 const sseAdd = (state, { user, context }) => {
   const { activeUsers } = state;
-  const usedPalettes = getUsedPalettes(state);
-  setUserActivity(Vue, activeUsers, user, context, usedPalettes);
+  setUserActivity(Vue, activeUsers, user, context);
 };
 
 const sseRemove = (state, { user, context }) => {
@@ -40,7 +35,9 @@ const sseRemoveSession = (state, { userId, sseId }) => {
   const existingUser = state.activeUsers[userId];
   if (!existingUser) return;
   remove(existingUser.contexts, c => c.sseId === sseId);
-  if (isEmpty(existingUser.contexts)) Vue.delete(state.activeUsers, userId);
+  if (isEmpty(existingUser.contexts)) {
+    Vue.delete(state.activeUsers, userId);
+  }
 };
 
 const setSseId = (state, sseId) => {
@@ -59,18 +56,10 @@ export {
 function setUserActivity(_vue, activeUsers, user, context, usedPalettes) {
   const existingUser = activeUsers[user.id];
   if (!existingUser) {
-    assignPalette(user, usedPalettes, activeUsers);
     _vue.set(activeUsers, user.id, { ...user, contexts: [context] });
     return;
   }
   const existingContext = find(existingUser.contexts, omit(context, ['created']));
   if (existingContext) return;
   existingUser.contexts.push(context);
-}
-
-function assignPalette(user, usedPalettes, activeUsers) {
-  if (activeUsers[user.id]) return;
-  const colorPalette = find(palette, p => !usedPalettes.includes(p.id)) ||
-    sample(palette);
-  user.palette = colorPalette;
 }
