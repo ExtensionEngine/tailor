@@ -1,15 +1,15 @@
 <template>
-  <div :class="[{ vertical }]" class="active-users">
+  <div :class="{ vertical }" class="active-users">
     <v-avatar
-      v-tooltip="getTooltip(user)"
-      v-for="user in activeUsers"
-      :key="user.id"
-      :color="user.palette.background"
-      :style="{ boxShadow: getBorder(user.palette) }"
+      v-tooltip="getTooltip(email)"
+      v-for="{ id, email, palette, profileImage } in activeUsers"
+      :key="id"
+      :color="palette.background"
+      :style="{ boxShadow: `0 0 0 2px ${palette.border}` }"
       :size="size">
-      <img v-if="user.profileImage" :src="user.profileImage"/>
-      <span v-else :style="{ color: user.palette.text }">
-        {{ user.email[0].toUpperCase() }}
+      <img v-if="profileImage" :src="profileImage"/>
+      <span v-else :style="{ color: palette.text }">
+        {{ email[0].toUpperCase() }}
       </span>
     </v-avatar>
   </div>
@@ -22,7 +22,7 @@ export default {
     users: { type: Array, default: () => [] },
     size: { type: Number, default: 30 },
     vertical: { type: Boolean, default: false },
-    rightTooltip: { type: Boolean, default: false }
+    tooltipRight: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -31,14 +31,11 @@ export default {
     };
   },
   methods: {
-    getBorder({ border }) {
-      return `0 0 0 2px ${border}`;
-    },
-    getTooltip({ email }) {
+    getTooltip(content) {
       return {
-        content: email,
-        placement: this.rightTooltip ? 'right' : 'bottom.end',
-        offset: this.rightTooltip ? 15 : 5
+        content,
+        placement: this.tooltipRight ? 'right' : 'bottom.end',
+        offset: this.tooltipRight ? 15 : 5
       };
     },
     setActiveUsers(users) {
@@ -61,7 +58,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .active-users {
   display: flex;
   align-items: center;

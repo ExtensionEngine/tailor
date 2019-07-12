@@ -1,19 +1,19 @@
 <template>
   <div class="te-wrapper">
-    <div :class="{ inactive: !showActiveUsers }" class="active-users-wrapper">
+    <div :class="{ inactive: !hasActiveUsers }" class="active-users-wrapper">
       <active-users
         v-if="activeUsers"
         :users="activeUsers"
         :size="26"
         vertical
-        rightTooltip/>
+        tooltipRight/>
     </div>
     <contained-content
       v-bind="$attrs"
       :element="element"
       :isDragged="dragged"
       :isDisabled="disabled"
-      :style="{ boxShadow: highlight }"
+      :style="style"
       @add="add"
       @save="save"
       @delete="remove"/>
@@ -49,16 +49,14 @@ export default {
     activeUsers() {
       return this.getActiveUsers('content', this.element.contentId);
     },
-    showActiveUsers() {
+    hasActiveUsers() {
       return this.activeUsers.length;
     },
-    highlight() {
+    style() {
       if (!this.activeUsers.length) return;
-      const user = first(this.activeUsers);
-      let color;
-      if (user.profileImage) color = user.palette.border;
-      else color = user.palette.background;
-      return `0 0 0 2px ${color}`;
+      const { palette, profileImage } = first(this.activeUsers);
+      const color = palette[profileImage ? 'border' : 'background'];
+      return { boxShadow: `0 0 0 2px ${color}` };
     },
     context() {
       const { courseId, activityId, contentId } = this.element;
