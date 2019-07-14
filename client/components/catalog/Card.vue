@@ -2,7 +2,7 @@
   <v-card @click="navigateTo" class="repository-card">
     <div class="card-heading blue-grey darken-4">
       <v-chip :color="repository.data.color" small label class="ml-3 mr-0"/>
-      <v-chip color="grey lighten-3" small label class="ml-0 body-2">
+      <v-chip color="grey lighten-3" small label class="ml-0">
         {{ schema }}
       </v-chip>
       <v-card-title class="headline grey--text text--lighten-4 pt-1">
@@ -18,8 +18,12 @@
       <div class="desc grey--text text--darken-3">{{ description }}</div>
     </div>
     <v-card-actions class="px-2 py-1">
-      <v-btn icon>
-        <v-icon color="pink" class="mdi-rotate-45">mdi-pin</v-icon>
+      <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" icon>
+        <v-icon
+          :color="isPinned ? 'pink': 'grey'"
+          :class="{ 'mdi-rotate-45': isPinned }">
+          mdi-pin
+        </v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -27,7 +31,9 @@
 
 <script>
 import first from 'lodash/first';
+import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
+import { mapActions } from 'vuex';
 import truncate from 'truncate';
 
 export default {
@@ -38,9 +44,11 @@ export default {
     name: ({ repository }) => truncate(repository.name, 70),
     description: ({ repository }) => truncate(repository.description, 100),
     schema: ({ repository }) => getSchema(repository.schema).name,
-    userAction: ({ repository }) => first(repository.revisions)
+    userAction: ({ repository }) => first(repository.revisions),
+    isPinned: ({ repository }) => get(repository, 'courseUser.pinned', false)
   },
   methods: {
+    ...mapActions('courses', ['pin']),
     navigateTo() {
       if (window.getSelection().toString()) return;
       this.$router.push({
