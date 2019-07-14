@@ -7,12 +7,10 @@
     <v-btn
       slot="activator"
       color="pink"
-      fixed
-      right
-      bottom
       fab
       dark
-      class="mr-3 mb-4">
+      absolute
+      class="add-repo">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-form @submit.prevent="submit">
@@ -56,9 +54,7 @@
         <v-card-actions>
           <v-spacer/>
           <v-btn :disabled="showLoader" @click="hide">Cancel</v-btn>
-          <v-btn :loading="showLoader" color="primary" outline type="submit">
-            Create
-          </v-btn>
+          <v-btn :loading="showLoader" outline type="submit">Create</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>

@@ -1,8 +1,8 @@
 <template>
   <div infinite-wrapper class="catalog-wrapper">
-    <create-repository/>
     <v-container class="catalog">
-      <v-layout row class="pt-2 mb-4">
+      <v-layout row class="catalog-actions">
+        <create-repository/>
         <v-flex md4 sm10 offset-md4 offset-sm1>
           <search @change="search"/>
         </v-flex>
@@ -15,7 +15,7 @@
           <select-order
             :sortBy="sortBy"
             @update="setOrder"
-            class="pl-4"/>
+            class="pl-2"/>
         </v-flex>
       </v-layout>
       <v-layout v-show="!searching" row wrap>
@@ -153,5 +153,16 @@ export default {
 
 .spinner, .no-results {
   margin-top: 120px;
+}
+
+.catalog-actions {
+  margin-bottom: 14px;
+  padding-top: 8px;
+  position: relative;
+
+  /deep/ .add-repo {
+    top: 4px;
+    right: 14px;
+  }
 }
 </style>
