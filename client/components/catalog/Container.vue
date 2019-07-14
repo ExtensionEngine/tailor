@@ -1,12 +1,21 @@
 <template>
   <div infinite-wrapper class="catalog-wrapper">
+    <create-repository/>
     <v-container class="catalog">
-      <v-layout row class="mb-4">
-        <v-flex md6 sm10 offset-md3 offset-sm1>
-          <search @change="search" class="pt-4"/>
+      <v-layout row class="pt-2 mb-4">
+        <v-flex md4 sm10 offset-md4 offset-sm1>
+          <search @change="search"/>
         </v-flex>
-        <v-flex md3 sm1>
-          <create-repository class="pt-2"/>
+        <v-flex md3 sm1 class="text-sm-left pl-2">
+          <v-btn @click="togglePinned" icon flat>
+            <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
+              mdi-pin
+            </v-icon>
+          </v-btn>
+          <select-order
+            :sortBy="sortBy"
+            @update="setOrder"
+            class="pl-4"/>
         </v-flex>
       </v-layout>
       <v-layout v-show="!searching" row wrap>
@@ -37,33 +46,44 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import CreateRepository from './Create';
+import filter from 'lodash/filter';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import isEmpty from 'lodash/isEmpty';
+import isString from 'lodash/isString';
 import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
 import RepositoryCard from './Card';
 import Search from './Search';
+import SelectOrder from './SelectOrder';
 
 export default {
   data() {
     return { searching: false };
   },
   computed: {
-    ...mapGetters(['courses']),
-    ...mapGetters('courses', ['hasMoreResults']),
+    ...mapState('courses', {
+      sortBy: state => state.$internals.sort,
+      showPinned: 'showPinned'
+    }),
+    ...mapGetters('courses', ['courses', 'hasMoreResults']),
     orderedRepositories() {
-      return orderBy(this.courses, 'updatedAt', 'desc');
+      const { field, order } = this.sortBy;
+      const items = orderBy(this.courses, it => {
+        return isString(it[field]) ? it[field].toLowerCase() : it[field];
+      }, order.toLowerCase());
+      if (!this.showPinned) return items;
+      return filter(items, it => get(it, 'courseUser.pinned', false));
     },
     loaderState() {
       return get(this.$refs, 'infiniteLoading.stateChanger', {});
     }
   },
   methods: {
-    ...mapActions('courses', ['fetch']),
-    ...mapMutations('courses', ['setSearch']),
+    ...mapActions('courses', ['fetch', 'fetchPinned']),
+    ...mapMutations('courses', ['togglePinned', 'setSearch', 'setOrder']),
     loadMore() {
       return this.fetch().then(() => {
         if (!isEmpty(this.courses)) this.loaderState.loaded();
@@ -86,14 +106,21 @@ export default {
       return this.load().then(() => (this.searching = false));
     }
   },
+  watch: {
+    sortBy(val) {
+      this.search();
+    }
+  },
   mounted() {
+    this.fetchPinned();
     this.search();
   },
   components: {
     CreateRepository,
     InfiniteLoading,
     RepositoryCard,
-    Search
+    Search,
+    SelectOrder
   }
 };
 </script>
@@ -104,6 +131,8 @@ export default {
 }
 
 .catalog {
+  max-width: 1185px !important;
+
   &::before {
     position: absolute;
     top: 0;

@@ -2,7 +2,7 @@
   <span>
     <v-menu offset-y>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon flat>
+        <v-btn v-on="on" icon flat class="mx-0">
           <v-icon color="primary lighten-4">mdi-sort</v-icon>
         </v-btn>
       </template>
@@ -12,15 +12,15 @@
           :key="field"
           @click="$emit('update', { field, order })">
           <v-list-tile-title
-            :class="`${selected.field === field ? 'pink' : 'black'}--text`">
+            :class="`${sortBy.field === field ? 'pink' : 'black'}--text`">
             {{ text }}
           </v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
-    <v-btn @click="toggleOrder" icon flat>
+    <v-btn @click="toggleOrder" icon flat class="mx-0">
       <v-icon color="primary lighten-4">
-        mdi-sort-{{ selected.order === 'ASC' ? 'ascending' : 'descending' }}
+        mdi-sort-{{ sortBy.order === 'ASC' ? 'ascending' : 'descending' }}
       </v-icon>
     </v-btn>
   </span>
@@ -29,7 +29,7 @@
 <script>
 export default {
   props: {
-    selected: { type: Object, required: true }
+    sortBy: { type: Object, required: true }
   },
   computed: {
     options() {
@@ -41,8 +41,8 @@ export default {
   },
   methods: {
     toggleOrder() {
-      const order = this.selected.order === 'ASC' ? 'DESC' : 'ASC';
-      this.$emit('update', { ...this.selected, order });
+      const order = this.sortBy.order === 'ASC' ? 'DESC' : 'ASC';
+      this.$emit('update', { ...this.sortBy, order });
     }
   }
 };
