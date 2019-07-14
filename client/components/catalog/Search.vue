@@ -1,7 +1,7 @@
 <template>
   <div class="course-search">
     <div
-      :style="{ width: expanded ? '100%' : '80%' }"
+      :style="{ width: expanded ? '100%' : '95%' }"
       class="input-group">
       <span class="input-group-btn">
         <button
@@ -57,11 +57,9 @@ export default {
 
 <style lang="scss" scoped>
 .course-search {
-  width: 450px;
   margin: 0 auto;
 
   .input-group {
-    width: 80%;
     margin: 0 auto;
     overflow: hidden;
     border-radius: 3px;
