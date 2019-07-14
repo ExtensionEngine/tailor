@@ -63,6 +63,9 @@ class Course extends Model {
     this.hasMany(Revision, {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
+    this.hasMany(CourseUser, {
+      foreignKey: { name: 'courseId', field: 'course_id' }
+    });
     this.belongsToMany(User, {
       through: CourseUser,
       foreignKey: { name: 'courseId', field: 'course_id' }
