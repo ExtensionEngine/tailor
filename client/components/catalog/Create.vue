@@ -4,12 +4,25 @@
     v-if="isAdmin"
     v-model="isVisible"
     width="600px">
-    <v-btn slot="activator" color="pink" dark absolute fab>
+    <v-btn
+      slot="activator"
+      color="pink"
+      fixed
+      right
+      bottom
+      fab
+      dark
+      class="mr-3 mb-4">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-form @submit.prevent="submit">
       <v-card class="pa-3">
-        <v-card-title class="headline">Create repository</v-card-title>
+        <v-card-title class="headline">
+          <v-avatar color="secondary" size="38" class="mr-2">
+            <v-icon color="white">mdi-folder-plus-outline</v-icon>
+          </v-avatar>
+          New
+        </v-card-title>
         <v-card-text>
           <v-alert
             :value="vErrors.has('default')"
@@ -25,7 +38,6 @@
             :error-messages="vErrors.collect('schema')"
             item-value="id"
             item-text="name"
-            label="Type"
             data-vv-name="schema"
             class="mb-3"/>
           <v-text-field
@@ -60,7 +72,7 @@ import { SCHEMAS } from 'shared/activities';
 import { withValidation } from 'utils/validation';
 
 const getDefaultData = () => ({
-  schema: null,
+  schema: SCHEMAS[0].id,
   name: null,
   description: null
 });
