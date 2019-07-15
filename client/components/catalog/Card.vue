@@ -11,7 +11,7 @@
     </div>
     <div class="card-body">
       <div class="pb-2 grey--text text--darken-2">
-        <v-icon color="primary" class="pr-1">mdi-pencil-outline</v-icon>
+        <v-icon color="primary" class="pr-1">mdi-history</v-icon>
         <span>{{ userAction.createdAt | formatDate }}</span>
         <div>{{ userAction.user.email }}</div>
       </div>
