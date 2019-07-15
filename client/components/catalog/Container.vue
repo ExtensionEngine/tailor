@@ -121,6 +121,9 @@ export default {
   watch: {
     sortBy(val) {
       this.search();
+    },
+    hasPinnedRepos(val) {
+      if (this.showPinned && !val) this.togglePinned();
     }
   },
   mounted() {
