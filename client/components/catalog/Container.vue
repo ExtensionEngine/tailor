@@ -7,11 +7,20 @@
           <search @change="search"/>
         </v-flex>
         <v-flex md3 sm1 class="text-sm-left pl-2">
-          <v-btn @click="togglePinned" icon flat>
-            <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
-              mdi-pin
-            </v-icon>
-          </v-btn>
+          <v-tooltip open-delay="1000" right>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                v-on="on"
+                @click="hasPinnedRepos && togglePinned()"
+                icon
+                flat>
+                <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
+                  mdi-pin
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>{{ hasPinnedRepos ? 'Show pinned' : '0 pinned items' }}</span>
+          </v-tooltip>
           <select-order
             :sortBy="sortBy"
             @update="setOrder"
@@ -76,6 +85,9 @@ export default {
       }, order.toLowerCase());
       if (!this.showPinned) return items;
       return filter(items, it => get(it, 'courseUser.pinned', false));
+    },
+    hasPinnedRepos() {
+      return filter(this.courses, 'courseUser.pinned').length;
     },
     loaderState() {
       return get(this.$refs, 'infiniteLoading.stateChanger', {});

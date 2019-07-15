@@ -1,4 +1,7 @@
-export const courses = state => ({ ...state.pinned, ...state.items });
+export const courses = state => ({
+  ...(state.search ? {} : state.pinned),
+  ...state.items
+});
 
 export const courseQueryParams = state => {
   const { pagination, sort } = state.$internals;
