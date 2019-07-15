@@ -131,7 +131,9 @@ export default {
 }
 
 .catalog {
-  max-width: 1185px !important;
+  @media(min-width: 1440px) {
+    max-width: 1185px !important;
+  }
 
   &::before {
     position: absolute;
@@ -156,13 +158,13 @@ export default {
 }
 
 .catalog-actions {
-  margin-bottom: 14px;
-  padding-top: 8px;
+  margin-bottom: 20px;
+  padding-top: 12px;
   position: relative;
 
   /deep/ .add-repo {
-    top: 4px;
-    right: 14px;
+    top: 10px;
+    right: 16px;
   }
 }
 </style>
