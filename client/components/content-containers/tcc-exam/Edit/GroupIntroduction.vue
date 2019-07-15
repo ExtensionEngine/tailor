@@ -7,21 +7,23 @@
       :layout="true"
       @add="$emit('saveElement', $event)"
       @update="reorder">
-      <teaching-element
+      <contained-content
         slot="list-item"
         slot-scope="{ element, dragged }"
+        :element="element"
         :setWidth="false"
-        :dragged="dragged"
-        :element="element"/>
+        :isDragged="dragged"
+        @save="save(element, $event)"
+        @delete="$emit('deleteElement', element)"/>
     </element-list>
   </div>
 </template>
 
 <script>
-import { ElementList } from 'tce-core';
+import { ContainedContent, ElementList } from 'tce-core';
+import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import { isQuestion } from 'tce-core/utils';
-import TeachingElement from '../../../editor/TeachingElement';
 
 export default {
   name: 'group-introduction',
@@ -36,6 +38,11 @@ export default {
     }
   },
   methods: {
+    save(element, data) {
+      element = cloneDeep(element);
+      Object.assign(element.data, data);
+      this.$emit('saveElement', element);
+    },
     reorder({ newIndex: newPosition }) {
       const items = this.introductionElements;
       const element = items[newPosition];
@@ -45,8 +52,8 @@ export default {
     }
   },
   components: {
-    ElementList,
-    TeachingElement
+    ContainedContent,
+    ElementList
   }
 };
 </script>

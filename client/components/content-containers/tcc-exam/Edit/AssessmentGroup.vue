@@ -21,7 +21,8 @@
       :group="group"
       :tes="tes"
       @saveElement="$emit('saveElement', $event)"
-      @reorderElement="$emit('reorderElement', $event)"/>
+      @reorderElement="$emit('reorderElement', $event)"
+      @deleteElement="$emit('deleteElement', $event)"/>
     <h4>Questions</h4>
     <div v-if="!hasAssessments" class="well">
       Click the button below to Create first Assessment.
