@@ -77,7 +77,7 @@ export default {
   &.shadow-blue-grey div { box-shadow: 0 0 0 2px #4d626b; }
 
   &.vertical {
-    flex-direction: column;
+    flex-direction: column-reverse;
 
     div {
       margin-top: -5px;
