@@ -22,6 +22,7 @@
     <add-element
       v-if="enableAdd"
       :include="supportedTypes"
+      :activity="activity"
       :position="nextPosition"
       :layout="layout"
       @add="el => $emit('add', el)"/>
@@ -39,6 +40,7 @@ export default {
   props: {
     elements: { type: Array, default: () => ([]) },
     supportedTypes: { type: Array, default: null },
+    activity: { type: Object, default: null },
     layout: { type: Boolean, default: false },
     enableAdd: { type: Boolean, default: true }
   },

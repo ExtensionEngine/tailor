@@ -1,7 +1,7 @@
 <template>
   <element-list
     :elements="embeds"
-    :supportedTypes="['HTML', 'IMAGE']"
+    :supportedTypes="types"
     @add="addItem"
     @update="reorderItem">
     <contained-content
@@ -25,7 +25,8 @@ import values from 'lodash/values';
 export default {
   name: 'embedded-container',
   props: {
-    container: { type: Object, required: true }
+    container: { type: Object, required: true },
+    types: { type: Array, default() { return ['HTML', 'IMAGE']; } }
   },
   computed: {
     embeds() {

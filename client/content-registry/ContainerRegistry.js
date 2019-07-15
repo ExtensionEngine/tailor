@@ -1,4 +1,4 @@
-import componentList from '../components/content-containers';
+import containerList from '../components/content-containers';
 import { getContainerName } from 'tce-core/utils';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
@@ -12,12 +12,12 @@ export default class ContainerRegistry {
   }
 
   async initialize() {
-    await Promise.map(componentList, (path, index) => {
+    await Promise.map(containerList, (path, index) => {
       return this.load(path, { position: index });
     });
     const extensions = await this.loadExtensionList();
     await Promise.map(extensions, (path, index) => {
-      const position = componentList.length + index;
+      const position = containerList.length + index;
       return this.load(path, { position, isExtension: true });
     });
   }

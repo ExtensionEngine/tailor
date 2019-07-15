@@ -2,17 +2,23 @@
 
 const { Activity, TeachingElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
+const isArray = require('lodash/isArray');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
 const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
+
+const parseParentId = parentId => {
+  if (!isArray(parentId)) parentId = [parentId];
+  return parentId.map(id => Number(id));
+};
 
 function list({ course, query, opts }, res) {
   if (query.activityId || query.parentId) {
     const { activityId, parentId } = query;
     const where = { [Op.or]: [] };
     if (activityId) where[Op.or].push({ id: parseInt(activityId, 10) });
-    if (parentId) where[Op.or].push({ parentId: parseInt(parentId, 10) });
+    if (parentId) where[Op.or].push({ parentId: { [Op.in]: parseParentId(parentId) } });
     opts.include = { model: Activity, attributes: [], where };
   }
   if (!query.detached) opts.where = { detached: false };

@@ -1,7 +1,7 @@
 <template>
   <div class="assessment-group">
     <div :class="{ 'divider': position }"></div>
-    <span @click="requestDeletion(group)" class="remove">
+    <span @click="$emit('delete')" class="remove">
       <span class="mdi mdi-delete"></span>
     </span>
     <div class="form-inline pull-right">
@@ -15,116 +15,110 @@
           step="15">
       </div>
     </div>
-    <h3>Question group {{ toLetter(position) }}</h3>
+    <h3>Question group {{ position | toLetter }}</h3>
     <h4>Introduction</h4>
-    <group-introduction :group="group"/>
+    <group-introduction
+      :group="group"
+      :tes="tes"
+      @saveElement="$emit('saveElement', $event)"
+      @reorderElement="$emit('reorderElement', $event)"/>
     <h4>Questions</h4>
     <div v-if="!hasAssessments" class="well">
       Click the button below to Create first Assessment.
     </div>
-    <tes-list
-      :list="assessments"
+    <element-list
+      :elements="elements"
       :activity="group"
-      :types="['ASSESSMENT']"
+      :supportedTypes="['ASSESSMENT']"
       @add="addAssessment"
-      @update="reorderAssessment"
-      embedded>
+      @update="reorderAssessment">
       <assessment-item
         slot="list-item"
-        slot-scope="{ item }"
+        slot-scope="{ element }"
         :objectives="objectives"
-        :assessment="item"
-        :expanded="isSelected(item)"
+        :assessment="element"
+        :expanded="isSelected(element)"
         :draggable="true"
-        @selected="toggleSelect(item)"
+        @selected="toggleSelect(element)"
         @save="saveAssessment"
-        @delete="item.id ? requestDeletion(item) : remove(item)"/>
-    </tes-list>
+        @delete="deleteElement(element)"/>
+    </element-list>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
 import AssessmentItem from '../../../editor/structure/AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
+import cuid from 'cuid';
 import debounce from 'lodash/debounce';
-import EventBus from 'EventBus';
+import { ElementList } from 'tce-core';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import GroupIntroduction from './GroupIntroduction';
 import numberToLetter from 'utils/numberToLetter';
 import sortBy from 'lodash/sortBy';
-import TesList from '../../../editor/structure/TesList';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   name: 'assessment-group',
   props: {
     group: { type: Object, required: true },
+    tes: { type: Object, required: true },
     objectives: { type: Array, required: true },
     position: { type: Number, required: true }
   },
   data() {
     return {
+      unsaved: [],
       selected: [],
       timeLimit: get(this.group, 'data.timeLimit', 0)
     };
   },
   computed: {
-    ...mapGetters(['tes']),
     assessments() {
       const cond = { activityId: this.group.id, type: 'ASSESSMENT' };
       return sortBy(filter(this.tes, cond), 'position');
     },
+    elements() {
+      return [...this.assessments, ...this.unsaved];
+    },
     hasAssessments() {
-      return this.assessments && !!this.assessments.length;
+      return this.elements && !!this.elements.length;
     }
   },
   methods: {
-    ...mapActions('tes', ['save', 'update', 'reorder', 'remove']),
-    ...mapActions('activities', { updateGroup: 'update', removeGroup: 'remove' }),
-    ...mapMutations('tes', ['add']),
     addAssessment(assessment) {
-      this.add(assessment);
-      this.selected.push(assessment._cid);
+      const cid = cuid();
+      this.unsaved.push({ ...assessment, _cid: cid });
+      this.selected.push(cid);
     },
     reorderAssessment({ newIndex: newPosition }) {
-      const items = this.assessments;
+      const items = this.elements;
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
-      this.reorder({ element, context });
+      this.$emit('reorderElement', { element, context });
     },
     saveAssessment(assessment) {
-      assessment.id ? this.update(assessment) : this.save(assessment);
+      if (assessment.id) return this.$emit('updateElement', assessment);
+      this.$emit('saveElement', assessment);
+    },
+    deleteElement(assessment) {
+      if (!assessment.id) return this.remove(assessment);
+      this.$emit('deleteElement', assessment);
     },
     toggleSelect(assessment) {
-      const question = assessment.data.question;
-      const hasQuestion = question && question.length > 0;
-      if (this.isSelected(assessment) && !hasQuestion) {
-        this.remove(assessment);
-      } else if (this.isSelected(assessment)) {
+      if (this.isSelected(assessment)) {
         this.selected.splice(this.selected.indexOf(assessment._cid), 1);
       } else {
         this.selected.push(assessment._cid);
       }
     },
+    remove({ _cid: cid }) {
+      const index = this.unsaved.findIndex(it => it._cid === cid);
+      this.unsaved.splice(index, 1);
+    },
     isSelected(assessment) {
       return this.selected.includes(assessment._cid);
-    },
-    toLetter(number) {
-      return numberToLetter(number);
-    },
-    requestDeletion(item) {
-      const isGroup = item.type === 'ASSESSMENT_GROUP';
-      const action = isGroup ? 'removeGroup' : 'remove';
-      const type = isGroup ? 'group' : 'element';
-      appChannel.emit('showConfirmationModal', {
-        title: `Delete ${type}?`,
-        message: `Are you sure you want to delete ${type}?`,
-        action: () => this[action](item)
-      });
     }
   },
   watch: {
@@ -132,12 +126,21 @@ export default {
       let group = cloneDeep(this.group);
       group.data = group.data || {};
       group.data.timeLimit = val;
-      this.updateGroup(group);
-    }, 1500)
+      this.$emit('update', group);
+    }, 1500),
+    assessments(val) {
+      for (let id in val) {
+        if (!this.unsaved.length) return;
+        this.remove(val[id]);
+      }
+    }
+  },
+  filters: {
+    toLetter: numberToLetter
   },
   components: {
     AssessmentItem,
-    TesList,
+    ElementList,
     GroupIntroduction
   }
 };

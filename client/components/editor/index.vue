@@ -53,6 +53,7 @@ import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
 import MetaSidebar from './MetaSidebar';
 import Promise from 'bluebird';
+import reduce from 'lodash/reduce';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
@@ -112,7 +113,7 @@ export default {
       }
     }
   },
-  async created() {
+  created() {
     const { courseId, activityId } = this.$route.params;
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
@@ -144,12 +145,17 @@ export default {
     const baseUrl = `/courses/${courseId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
     this.setupTesApi(`${baseUrl}/tes`);
-    const actions = [
-      this.getActivities(),
-      this.getTeachingElements({ activityId, parentId: activityId })
-    ];
+    const actions = [this.getActivities()];
     if (!this.course) actions.push(this.getCourse(courseId));
-    Promise.all(actions).then(() => (this.showLoader = false));
+    Promise
+      .all(actions)
+      .then(() => {
+        const parentId = reduce(this.contentContainers, (acc, it) => {
+          return [...acc, ...it.map(({ id }) => id)];
+        }, [activityId]);
+        return this.getTeachingElements({ activityId, parentId });
+      })
+      .then(() => (this.showLoader = false));
   },
   beforeDestroy() {
     this.unsubscribe();

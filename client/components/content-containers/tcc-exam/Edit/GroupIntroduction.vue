@@ -1,54 +1,51 @@
 <template>
   <div class="group-introduction">
-    <tes-list
-      :list="introductionElements"
+    <element-list
+      :elements="introductionElements"
       :activity="group"
-      :types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
+      :supportedTypes="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true"
-      @add="saveElement"
-      @update="reorder"
-      embedded>
+      @add="$emit('saveElement', $event)"
+      @update="reorder">
       <teaching-element
         slot="list-item"
-        slot-scope="{ item, dragged, setWidth }"
-        :setWidth="setWidth"
+        slot-scope="{ element, dragged }"
+        :setWidth="false"
         :dragged="dragged"
-        :element="item"/>
-    </tes-list>
+        :element="element"/>
+    </element-list>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { ElementList } from 'tce-core';
 import filter from 'lodash/filter';
 import { isQuestion } from 'tce-core/utils';
 import TeachingElement from '../../../editor/TeachingElement';
-import TesList from '../../../editor/structure/TesList';
 
 export default {
   name: 'group-introduction',
   props: {
-    group: { type: Object, required: true }
+    group: { type: Object, required: true },
+    tes: { type: Object, required: true }
   },
   computed: {
-    ...mapGetters(['tes']),
     introductionElements() {
       let cond = it => it.activityId === this.group.id && !isQuestion(it.type);
       return filter(this.tes, cond).sort((a, b) => a.position - b.position);
     }
   },
   methods: {
-    ...mapActions('tes', { reorderElements: 'reorder', saveElement: 'save' }),
     reorder({ newIndex: newPosition }) {
       const items = this.introductionElements;
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
-      this.reorderElements({ element, context });
+      this.$emit('reorderElement', { element, context });
     }
   },
   components: {
-    TesList,
+    ElementList,
     TeachingElement
   }
 };

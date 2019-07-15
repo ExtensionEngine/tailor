@@ -2,7 +2,7 @@
   <div class="mb-5 elevation-2 content-container">
     <div class="actions">
       <v-btn
-        @click="deleteContainer"
+        @click="$emit('delete')"
         color="error"
         outline
         class="pull-right">
@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import filter from 'lodash/filter';
+import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
@@ -45,12 +45,12 @@ export default {
   name: 'content-container',
   props: {
     container: { type: Object, required: true },
+    tes: { type: Object, required: true },
     types: { type: Array, default: null },
     name: { type: String, required: true },
     layout: { type: Boolean, default: true }
   },
   computed: {
-    ...mapGetters(['tes']),
     teachingElements() {
       const activityId = this.container.id;
       return sortBy(filter(this.tes, { activityId }), 'position');
@@ -75,9 +75,6 @@ export default {
       const isFirstChild = newPosition === -1;
       const context = { items, newPosition, isFirstChild, insert: true };
       this.insertElement({ element, context });
-    },
-    deleteContainer() {
-      this.$emit('delete');
     }
   },
   components: {

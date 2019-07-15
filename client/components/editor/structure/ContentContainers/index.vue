@@ -15,7 +15,16 @@
       :container="container"
       :name="name"
       :position="index"
-      @delete="deleteContainer(container)"/>
+      :activities="activities"
+      :tes="tes"
+      @addSubcontainer="save"
+      @updateSubcontainer="update"
+      @deleteSubcontainer="requestContainerDeletion"
+      @saveElement="saveElement"
+      @updateElement="updateElement"
+      @reorderElement="reorderElements"
+      @deleteElement="requestElementDeletion"
+      @delete="requestContainerDeletion(container)"/>
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="primary">
         <v-icon class="pr-2">mdi-plus</v-icon>
@@ -26,13 +35,13 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
 import get from 'lodash/get';
 import { getContainerName } from 'tce-core/utils';
 import isEmpty from 'lodash/isEmpty';
-import { mapActions } from 'vuex';
 import maxBy from 'lodash/maxBy';
 
 const appChannel = EventBus.channel('app');
@@ -51,6 +60,7 @@ export default {
     required: { type: Boolean, default: true }
   },
   computed: {
+    ...mapGetters(['activities', 'tes']),
     containerName() {
       if (this.unique) return getContainerName(this.type);
       return 'content-container';
@@ -67,16 +77,29 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', ['save', 'remove']),
+    ...mapActions('activities', ['save', 'update', 'remove']),
+    ...mapActions('tes', {
+      saveElement: 'save',
+      updateElement: 'update',
+      reorderElements: 'reorder',
+      deleteElement: 'remove'
+    }),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
-    deleteContainer(container) {
+    requestContainerDeletion(container, name = this.name) {
       appChannel.emit('showConfirmationModal', {
-        title: `Delete ${this.name}?`,
-        message: `Are you sure you want to delete ${this.name}?`,
+        title: `Delete ${name}?`,
+        message: `Are you sure you want to delete ${name}?`,
         action: () => this.remove(container)
+      });
+    },
+    requestElementDeletion(element) {
+      appChannel.emit('showConfirmationModal', {
+        title: `Delete element?`,
+        message: `Are you sure you want to delete element?`,
+        action: () => this.deleteElement(element)
       });
     }
   },
@@ -84,9 +107,7 @@ export default {
     if (this.required && isEmpty(this.containerGroup)) this.addContainer();
   },
   filters: {
-    capitalize(val) {
-      return capitalize(val);
-    }
+    capitalize
   },
   components: { ContentContainer }
 };

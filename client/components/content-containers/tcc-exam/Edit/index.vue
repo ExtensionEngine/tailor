@@ -27,8 +27,15 @@
         v-for="(group, index) in groups"
         :key="group._cid"
         :group="group"
+        :tes="tes"
         :objectives="examObjectives"
-        :position="index"/>
+        :position="index"
+        @saveElement="$emit('saveElement', $event)"
+        @updateElement="$emit('updateElement', $event)"
+        @reorderElement="$emit('reorderElement', $event)"
+        @deleteElement="$emit('deleteElement', $event)"
+        @update="$emit('updateSubcontainer', $event)"
+        @delete="$emit('deleteSubcontainer', group, 'group')"/>
       <v-btn
         :disabled="!container.id"
         @click.stop="createGroup"
@@ -43,7 +50,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import AssessmentGroup from './AssessmentGroup';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -57,13 +63,14 @@ export default {
   props: {
     container: { type: Object, required: true },
     position: { type: Number, required: true },
+    activities: { type: Object, required: true },
+    tes: { type: Object, required: true },
     config: { type: Object, default: () => ({}) }
   },
   data() {
     return { collapsed: this.container.id };
   },
   computed: {
-    ...mapGetters(['activities']),
     groups() {
       return filter(this.activities, { parentId: this.container.id });
     },
@@ -84,18 +91,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', ['save', 'remove']),
-    ...mapActions('tes', { getTeachingElements: 'fetch' }),
     createGroup() {
-      this.save({
+      this.$emit('addSubcontainer', {
         type: 'ASSESSMENT_GROUP',
         parentId: this.container.id,
         position: this.groups.length + 1
       });
     }
-  },
-  created() {
-    this.getTeachingElements({ parentId: this.container.id });
   },
   components: {
     AssessmentGroup
