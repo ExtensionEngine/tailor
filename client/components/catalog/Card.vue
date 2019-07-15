@@ -72,8 +72,8 @@ export default {
 }
 
 .card-heading {
-  height: 144px;
-  padding: 6px 0 0;
+  height: 146px;
+  padding: 8px 0 0;
   overflow: hidden;
 
   .v-chip {
