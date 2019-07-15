@@ -8,10 +8,16 @@ const {
   get,
   remove,
   reset,
-  save,
   setEndpoint,
   update
 } = generateActions('/courses');
+
+const save = ({ commit, dispatch }, model) => {
+  return api.save(model).then(() => {
+    commit('setOrder', { field: 'createdAt', order: 'DESC' });
+    dispatch('reset');
+  });
+};
 
 const fetch = ({ getters, commit }, { reset = false } = {}) => {
   const mutation = reset ? 'reset' : 'fetch';

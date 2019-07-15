@@ -7,7 +7,7 @@
           <search @change="search"/>
         </v-flex>
         <v-flex md3 sm1 class="text-sm-left pl-2">
-          <v-tooltip open-delay="1000" right>
+          <v-tooltip open-delay="800" right>
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
