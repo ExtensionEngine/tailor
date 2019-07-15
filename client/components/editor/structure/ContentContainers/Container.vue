@@ -29,14 +29,26 @@
         slot-scope="{ item, dragged, setWidth }"
         :setWidth="setWidth"
         :dragged="dragged"
-        :element="item"/>
+        :element="item"
+        :elementStyle="getElementStyle(item.contentId)">
+        <div :class="{ inactive: !hasActiveUsers(item.contentId) }" class="active-users-wrapper">
+          <active-users
+            v-if="getActiveUsers('element', item.contentId)"
+            :users="getActiveUsers('element', item.contentId)"
+            :size="26"
+            vertical
+            tooltipRight/>
+        </div>
+      </teaching-element>
     </tes-list>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import ActiveUsers from 'components/common/ActiveUsers';
 import filter from 'lodash/filter';
+import first from 'lodash/first';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
@@ -50,6 +62,7 @@ export default {
     layout: { type: Boolean, required: true }
   },
   computed: {
+    ...mapGetters('activeUsers', ['getActiveUsers']),
     ...mapGetters(['tes']),
     teachingElements() {
       const activityId = this.container.id;
@@ -78,9 +91,21 @@ export default {
     },
     deleteContainer() {
       this.$emit('delete');
+    },
+    hasActiveUsers(elementId) {
+      const activeUsers = this.getActiveUsers('element', elementId);
+      return activeUsers.length;
+    },
+    getElementStyle(elementId) {
+      const activeUsers = this.getActiveUsers('element', elementId);
+      if (!activeUsers.length) return;
+      const { palette, profileImage } = first(activeUsers);
+      const color = palette[profileImage ? 'border' : 'background'];
+      return { boxShadow: `0 0 0 2px ${color}` };
     }
   },
   components: {
+    ActiveUsers,
     TesList,
     TeachingElement
   }
@@ -92,5 +117,19 @@ export default {
   width: 100%;
   min-height: 36px;
   margin-bottom: 25px;
+}
+
+/deep/ .active-users-wrapper {
+  position: absolute;
+  right: -1.25rem;
+  margin-top: 1rem;
+  transition: all 0.5s ease;
+
+  &.inactive {
+    opacity: 0;
+    transition: all 0.5s ease;
+  }
+
+  .active-users { margin-right: 0; }
 }
 </style>
