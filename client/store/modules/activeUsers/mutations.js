@@ -2,6 +2,7 @@ import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import omit from 'lodash/omit';
+import pick from 'lodash/pick';
 import remove from 'lodash/remove';
 import { setEndpoint } from '../../helpers/mutations';
 import Vue from 'vue';
@@ -18,11 +19,11 @@ const sseAdd = (state, { user, context }) => {
   setUserActivity(Vue, activeUsers, user, context);
 };
 
-const sseRemove = (state, { user, context }) => {
+const sseRemove = (state, { user, context: sourceContext }) => {
   const existingUser = state.activeUsers[user.id];
   if (!existingUser) return;
-  const index = existingUser.contexts.findIndex(c => {
-    return isEqual(omit(c, ['created']), omit(context, ['created']));
+  const index = existingUser.contexts.findIndex(targetContext => {
+    return isContextEqual(sourceContext, targetContext);
   });
   if (index === -1) return;
   existingUser.contexts.splice(index, 1);
@@ -59,4 +60,11 @@ function setUserActivity(_vue, activeUsers, user, context) {
   const existingContext = find(existingUser.contexts, omit(context, ['created']));
   if (existingContext) return;
   existingUser.contexts.push(context);
+}
+
+function isContextEqual(sourceContext, targetContext) {
+  const fields = ['courseId', 'sseId'];
+  if (sourceContext.elementId) fields.push('elementId');
+  if (sourceContext.activityId) fields.push('activityId');
+  return isEqual(pick(sourceContext, fields), pick(targetContext, fields));
 }

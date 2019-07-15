@@ -47,7 +47,7 @@ export default {
     ...mapGetters('activeUsers', ['getActiveUsers']),
     ...mapState('activeUsers', ['sseId']),
     activeUsers() {
-      return this.getActiveUsers('content', this.element.contentId);
+      return this.getActiveUsers('element', this.element.contentId);
     },
     hasActiveUsers() {
       return this.activeUsers.length;
@@ -59,9 +59,10 @@ export default {
       return { boxShadow: `0 0 0 2px ${color}` };
     },
     context() {
-      const { courseId, activityId, contentId } = this.element;
+      const { courseId, activityId, contentId: elementId } = this.element;
       const { sseId } = this;
-      return { courseId, activityId, contentId, sseId, created: new Date() };
+      const created = new Date();
+      return { courseId, activityId, elementId, sseId, created };
     }
   },
   methods: {

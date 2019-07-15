@@ -6,7 +6,7 @@ import omit from 'lodash/omit';
 import orderBy from 'lodash/orderBy';
 
 export const activeUsers = state => {
-  let activeUsersMap = { course: {}, activity: {}, content: {} };
+  let activeUsersMap = { course: {}, activity: {}, element: {} };
   Object.keys(state.activeUsers).forEach(userId => {
     state.activeUsers[userId].contexts.forEach(context => {
       mapContext(activeUsersMap, state.activeUsers[userId], context);
