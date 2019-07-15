@@ -1,9 +1,9 @@
 <template>
   <v-layout justify-center class="elevation-1 white">
-    <v-flex class="mt-1">
+    <v-flex>
       <v-toolbar color="white" flat>
         <v-spacer/>
-        <v-btn @click.stop="showUserDialog()" color="primary" outline>
+        <v-btn @click.stop="showUserDialog()" color="primary darken-1" outline>
           Add user
         </v-btn>
       </v-toolbar>
