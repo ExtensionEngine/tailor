@@ -1,5 +1,5 @@
 <template>
-  <v-footer height="52" color="primary" absolute>
+  <v-footer height="48" color="primary" absolute>
     <v-layout row justify-center>
       <v-flex
         xs-12
