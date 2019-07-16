@@ -1,57 +1,58 @@
 <template>
-  <modal :show="true">
-    <div slot="header">
-      <h3 class="modal-title">Copy Activity</h3>
-    </div>
-    <div slot="body" class="modal-body">
-      <circular-progress v-if="showLoader"/>
-      <v-treeview
-        v-else
-        :items="repositories"
-        :transition="true"
-        :load-children="fetchActivities"
-        loading-icon="mdi-loading"
-        class="pt-3">
-        <template v-slot:prepend="{ item, open }">
-          <v-icon :color="item.data.color">
-            {{ getIcon(item.children, open) }}
-          </v-icon>
-        </template>
-        <template v-slot:append="{ item }">
-          <div
-            v-if="item.supported"
-            :class="{ picked: isPicked(item) }"
-            @click="toggleSelect(item)"
-            class="select-btn">
-            {{ isPicked(item) ? 'Deselect' : 'Select' }}
-          </div>
-        </template>
-      </v-treeview>
-    </div>
-    <div slot="footer">
-      <button
-        @click="$emit('cancel')"
-        class="btn btn-material btn-default"
-        type="button">
-        Cancel
-      </button>
-      <button
-        :class="{ disabled: !selected }"
-        @click="$emit('copy', selected)"
-        class="btn btn-material btn-primary"
-        type="button">
-        Copy
-      </button>
-    </div>
-  </modal>
+  <v-dialog :value="true" width="600px" persistent>
+    <v-card class="pa-3">
+      <v-card-title class="headline">
+        <v-avatar color="secondary" size="38" class="mr-2">
+          <v-icon color="white">mdi-content-copy</v-icon>
+        </v-avatar>
+        Copy activity
+      </v-card-title>
+      <v-card-text class="content-section">
+        <div v-if="showLoader" class="search-spinner">
+          <v-progress-circular color="primary" indeterminate/>
+        </div>
+        <v-treeview
+          v-else
+          :items="repositories"
+          :transition="true"
+          :load-children="fetchActivities"
+          loading-icon="mdi-loading"
+          class="pt-3">
+          <template v-slot:prepend="{ item, open }">
+            <v-icon :color="item.data.color">
+              {{ getIcon(item.children, open) }}
+            </v-icon>
+          </template>
+          <template v-slot:append="{ item }">
+            <div
+              v-if="item.supported"
+              :class="{ picked: isPicked(item) }"
+              @click="toggleSelect(item)"
+              class="select-btn">
+              {{ isPicked(item) ? 'Deselect' : 'Select' }}
+            </div>
+          </template>
+        </v-treeview>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer/>
+        <v-btn @click="$emit('cancel')">Cancel</v-btn>
+        <v-btn
+          :disabled="!selected"
+          @click="$emit('copy', selected)"
+          color="primary"
+          outline>
+          Copy
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 import activityApi from 'client/api/activity';
-import CircularProgress from 'components/common/CircularProgress';
 import courseApi from 'client/api/course';
 import get from 'lodash/get';
-import Modal from 'components/common/Modal';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
@@ -105,21 +106,27 @@ export default {
       this.repositories = sortBy(repositories, 'name');
       this.showLoader = false;
     });
-  },
-  components: { CircularProgress, Modal }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.disabled {
-  pointer-events: none;
-}
-
 .select-btn {
   cursor: pointer;
+
+  &.picked {
+    color: #337ab7;
+  }
 }
 
-.picked {
-  color: #337ab7;
+.content-section {
+  max-height: 400px;
+  margin: 20px auto 40px;
+  user-select: none;
+  overflow-y: scroll;
+
+  :not(.search-spinner) {
+    text-align: left;
+  }
 }
 </style>
