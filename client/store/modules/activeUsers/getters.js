@@ -2,8 +2,8 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import map from 'lodash/map';
-import omit from 'lodash/omit';
 import orderBy from 'lodash/orderBy';
+import pick from 'lodash/pick';
 
 export const activeUsers = state => {
   let activeUsersMap = { course: {}, activity: {}, element: {} };
@@ -26,18 +26,20 @@ export const getActiveUsers = (_state, getters) => {
 };
 
 function mapContext(activeUsers, user, context) {
-  const { id, email, palette } = user;
-  const { created } = context;
-  const ommitedFields = ['created', 'sseId'];
-  Object.keys(omit(context, ommitedFields)).forEach(key => {
-    const entityName = key.substring(0, key.length - 2);
-    const entityId = context[key];
-    if (activeUsers[entityName][entityId]) {
-      const user = find(activeUsers[entityName][entityId], { id });
-      if (user) return;
-      activeUsers[entityName][entityId].push({ id, email, palette, created });
-      return;
-    }
-    activeUsers[entityName][entityId] = [{ id, email, palette, created }];
-  });
+  const { courseId, activityId, elementId, created } = context;
+  const userData = { ...pick(user, ['id', 'email', 'palette']), created };
+  setEntityActivity(activeUsers, 'course', courseId, userData);
+  if (activityId) setEntityActivity(activeUsers, 'activity', activityId, userData);
+  if (elementId) setEntityActivity(activeUsers, 'element', elementId, userData);
+}
+
+function setEntityActivity(activeUsers, entity, entityId, user) {
+  const { id, email, palette, created } = user;
+  if (activeUsers[entity][entityId]) {
+    const user = find(activeUsers[entity][entityId], { id });
+    if (user) return;
+    activeUsers[entity][entityId].push({ id, email, palette, created });
+    return;
+  }
+  activeUsers[entity][entityId] = [{ id, email, palette, created }];
 }
