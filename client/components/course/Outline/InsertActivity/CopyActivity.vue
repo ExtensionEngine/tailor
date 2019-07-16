@@ -1,5 +1,5 @@
 <template>
-  <modal :show="show">
+  <modal :show="true">
     <div slot="header">
       <h3 class="modal-title">Copy Activity</h3>
     </div>
@@ -12,11 +12,8 @@
         :load-children="fetchActivities"
         class="pt-3">
         <template v-slot:prepend="{ item, open }">
-          <v-icon v-if="item.children" :color="item.data.color">
-            {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
-          </v-icon>
-          <v-icon v-else>
-            {{ 'mdi-file-document-box' }}
+          <v-icon :color="item.data.color">
+            {{ getIcon(item.children, open) }}
           </v-icon>
         </template>
         <template v-slot:append="{ item }">
@@ -32,7 +29,7 @@
     </div>
     <div slot="footer">
       <button
-        @click="closeModal"
+        @click="$emit('cancel')"
         class="btn btn-material btn-default"
         type="button">
         Cancel
@@ -64,40 +61,35 @@ export default {
   data() {
     return {
       showLoader: true,
-      repositories: [],
       selected: null,
-      show: true
+      repositories: []
     };
   },
   methods: {
+    getIcon(children, open) {
+      if (!children) return 'mdi-file-document-box';
+      return open ? 'mdi-folder-open' : 'mdi-folder';
+    },
     isPicked({ id }) {
       return get(this.selected, 'id') === id;
-    },
-    closeModal() {
-      this.show = false;
-      this.$emit('cancel');
     },
     toggleSelect(item) {
       this.selected = item.id !== get(this.selected, 'id') ? item : null;
     },
-    appendChildren(children, activities) {
+    addChildren(children, activities) {
       return children.map(it => {
         it.name = it.data.name;
         it.supported = this.supportedLevels.find(({ type }) => type === it.type);
-        it.children = this.getChildren(it.id, activities);
+        const grandChildren = activities.filter(item => item.parentId === it.id);
+        if (!grandChildren.length) return it;
+        it.children = this.addChildren(grandChildren, activities);
         return it;
       });
-    },
-    getChildren(id, activities) {
-      const children = activities.filter(it => it.parentId === id);
-      if (!children.length) return;
-      const withChildren = this.appendChildren(children, activities);
-      return withChildren;
     },
     fetchActivities(repository) {
       return activityApi.getActivities(repository.id).then(items => {
         let activities = sortBy(items, 'position');
-        activities = this.appendChildren(activities, activities);
+        activities = this.addChildren(activities, activities);
         repository.children = activities.filter(it => it.parentId === null);
         return repository;
       });
@@ -105,9 +97,9 @@ export default {
   },
   created() {
     return Promise.join(courseApi.getCourses(), Promise.delay(700), items => {
-      const repositories = items.map(it => {
-        it.children = [];
-        return it;
+      const repositories = items.map(repository => {
+        repository.children = [];
+        return repository;
       });
       this.repositories = sortBy(repositories, 'name');
       this.showLoader = false;
