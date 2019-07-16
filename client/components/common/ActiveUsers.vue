@@ -26,8 +26,7 @@ export default {
   },
   data() {
     return {
-      activeUsers: [],
-      setter: null
+      activeUsers: []
     };
   },
   methods: {
@@ -39,7 +38,7 @@ export default {
       };
     },
     setActiveUsers(users) {
-      this.setter = setTimeout(() => (this.activeUsers = users), 700);
+      this.activeUsers = users;
     }
   },
   watch: {
@@ -49,7 +48,6 @@ export default {
           this.activeUsers = this.users;
           return;
         }
-        clearTimeout(this.setter);
         this.setActiveUsers(this.users);
       },
       immediate: true
