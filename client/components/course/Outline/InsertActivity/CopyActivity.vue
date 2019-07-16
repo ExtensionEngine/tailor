@@ -11,28 +11,36 @@
         <div v-if="showLoader" class="search-spinner">
           <v-progress-circular color="primary" indeterminate/>
         </div>
-        <v-treeview
-          v-else
-          :items="repositories"
-          :transition="true"
-          :load-children="fetchActivities"
-          loading-icon="mdi-loading"
-          class="pt-3">
-          <template v-slot:prepend="{ item, open }">
-            <v-icon :color="item.data.color">
-              {{ getIcon(item.children, open) }}
-            </v-icon>
-          </template>
-          <template v-slot:append="{ item }">
-            <div
-              v-if="item.supported"
-              :class="{ picked: isPicked(item) }"
-              @click="toggleSelect(item)"
-              class="select-btn">
-              {{ isPicked(item) ? 'Deselect' : 'Select' }}
-            </div>
-          </template>
-        </v-treeview>
+        <div v-else>
+          <v-text-field
+            v-model="search"
+            @input="fetchAllActivities"
+            label="Search activities"
+            clearable
+            clear-icon="mdi-close-circle-outline"/>
+          <v-treeview
+            :items="repositories"
+            :load-children="fetchActivities"
+            :search="search"
+            transition
+            loading-icon="mdi-loading"
+            class="pt-3 tree-view">
+            <template v-slot:prepend="{ item, open }">
+              <v-icon :color="item.data.color">
+                {{ getIcon(item.children, open) }}
+              </v-icon>
+            </template>
+            <template v-slot:append="{ item }">
+              <div
+                v-if="item.supported"
+                :class="{ picked: isPicked(item) }"
+                @click="toggleSelect(item)"
+                class="select-btn">
+                {{ isPicked(item) ? 'Deselect' : 'Select' }}
+              </div>
+            </template>
+          </v-treeview>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-spacer/>
@@ -64,10 +72,18 @@ export default {
     return {
       showLoader: true,
       selected: null,
-      repositories: []
+      repositories: [],
+      search: '',
+      allFetched: false
     };
   },
   methods: {
+    fetchAllActivities() {
+      if (this.allFetched) return;
+      this.allFetched = true;
+      const emptyRepositories = this.repositories.filter(it => !it.children.length);
+      return emptyRepositories.forEach(it => this.fetchActivities(it));
+    },
     getIcon(children, open) {
       if (!children) return 'mdi-file-document-box';
       return open ? 'mdi-folder-open' : 'mdi-folder';
@@ -119,14 +135,12 @@ export default {
   }
 }
 
-.content-section {
+.tree-view {
   max-height: 400px;
-  margin: 20px auto 40px;
+  margin-bottom: 20px;
+  padding-right: 20px;
+  text-align: left;
   user-select: none;
   overflow-y: scroll;
-
-  :not(.search-spinner) {
-    text-align: left;
-  }
 }
 </style>
