@@ -11,23 +11,20 @@
     </div>
     <div v-else>
       <select-action
-        v-if="!action"
+        v-if="!action || action === 'copy'"
         @selected="selected => (action = selected)"
-        @close="hide">
-      </select-action>
-      <activity-browser
-        v-else-if="action !== 'create'"
-        :selectableLevels="supportedLevels"
-        @selected="executeAction"
-        @close="hide">
-      </activity-browser>
+        @close="hide"/>
       <create-activity
-        v-else
+        v-else-if="action === 'create'"
         :parent="anchor"
         :supportedLevels="supportedLevels"
         @create="executeAction"
-        @close="hide">
-      </create-activity>
+        @close="hide"/>
+      <copy-activity
+        v-if="action === 'copy'"
+        :supportedLevels="supportedLevels"
+        @copy="executeAction"
+        @cancel="action = ''"/>
     </div>
   </div>
 </template>
@@ -35,8 +32,8 @@
 <script>
 import { getOutlineChildren, getParent } from 'utils/activity';
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import ActivityBrowser from 'components/common/ActivityBrowser';
 import calculatePosition from 'utils/calculatePosition';
+import CopyActivity from './CopyActivity';
 import CreateActivity from './CreateActivity';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -112,7 +109,7 @@ export default {
       return calculatePosition(context);
     }
   },
-  components: { ActivityBrowser, CreateActivity, SelectAction }
+  components: { CopyActivity, CreateActivity, SelectAction }
 };
 </script>
 
