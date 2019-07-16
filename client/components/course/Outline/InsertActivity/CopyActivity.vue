@@ -97,7 +97,6 @@ export default {
     }
   },
   created() {
-    console.log(this.$vuetify.icons);
     return Promise.join(courseApi.getCourses(), Promise.delay(700), items => {
       const repositories = items.map(repository => {
         repository.children = [];
