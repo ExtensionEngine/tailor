@@ -10,7 +10,7 @@
         :items="repositories"
         :transition="true"
         :load-children="fetchActivities"
-        loading-icon="$vuetify.icons.expand"
+        loading-icon="mdi-loading"
         class="pt-3">
         <template v-slot:prepend="{ item, open }">
           <v-icon :color="item.data.color">
