@@ -24,21 +24,80 @@ const TES_ATTRS = [
 ];
 
 function publishActivity(activity) {
+  if (activity.isLink) return publishLinkedActivity(activity);
+  if (!activity.isOrigin) {
+    return getStructureData(activity).then(data => {
+      let { repository, predecessors, spine } = data;
+      predecessors.forEach(it => {
+        const exists = find(spine.structure, { id: it.id });
+        if (!exists) addToSpine(spine, it);
+      });
+      activity.publishedAt = new Date();
+      addToSpine(spine, activity);
+      return publishContent(repository, activity).then(content => {
+        attachContentSummary(find(spine.structure, { id: activity.id }), content);
+        return saveSpine(spine)
+        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+        .then(() => activity.save());
+      });
+    });
+  }
+}
+function publishLinkedActivity(activity) {
   return getStructureData(activity).then(data => {
     let { repository, predecessors, spine } = data;
     predecessors.forEach(it => {
       const exists = find(spine.structure, { id: it.id });
-      if (!exists) addToSpine(spine, it);
+      if (!exists) {
+        if (it.isLink) addLinkToSpine(spine, it);
+        else addToSpine(spine, it);
+      }
     });
     activity.publishedAt = new Date();
-    addToSpine(spine, activity);
-    return publishContent(repository, activity).then(content => {
-      attachContentSummary(find(spine.structure, { id: activity.id }), content);
+    addLinkToSpine(spine, activity);
+    return publishContent(repository, activity.origin).then(content => {
+      attachContentSummary(find(spine.structure, { id: activity.originId }), content);
       return saveSpine(spine)
         .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
         .then(() => activity.save());
     });
   });
+}
+
+async function addLinkToSpine(spine, activity) {
+  const relationships = getLevelRelationships(activity.type);
+  let index = findIndex(spine.structure, { id: activity.originId });
+  const parent = await activity.getParent();
+  const parentId = parent.isLink ? activity.origin.parentId : parent.id;
+
+  if (index > 0) {
+    const parentIds = Array.isArray(spine.structure[index].parentId)
+      ? spine.structure[index].parentId : [spine.structure[index].parentId];
+    if (parentIds.includes(parentId)) return;
+    spine.structure[index] = {
+      ...spine.structure[index],
+      parentId: [ ...parentIds, parentId ]
+    };
+    return;
+  }
+  const children = await activity.getChildren();
+  let childrenIds = [];
+  if (children.length) {
+    childrenIds = children.sort((a, b) => a.position > b.position).map(child => {
+      return child.originId ? child.originId : child.id;
+    });
+  }
+  activity = {
+    ...pick(activity.origin, [
+      'id', 'uid', 'type', 'position', 'data',
+      'publishedAt', 'updatedAt', 'createdAt'
+    ]),
+    parentId: [ parentId ],
+    childrenIds,
+    relationships: mapRelationships(relationships, activity.origin)
+  };
+  renameKey(activity, 'data', 'meta');
+  return spine.structure.push(activity);
 }
 
 function updateRepositoryCatalog(repository, publishedAt) {
