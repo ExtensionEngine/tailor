@@ -10,6 +10,7 @@
         :items="repositories"
         :transition="true"
         :load-children="fetchActivities"
+        loading-icon="$vuetify.icons.expand"
         class="pt-3">
         <template v-slot:prepend="{ item, open }">
           <v-icon :color="item.data.color">
@@ -96,6 +97,7 @@ export default {
     }
   },
   created() {
+    console.log(this.$vuetify.icons);
     return Promise.join(courseApi.getCourses(), Promise.delay(700), items => {
       const repositories = items.map(repository => {
         repository.children = [];
