@@ -102,14 +102,9 @@ export default {
     },
     hide() {
       this.isVisible = false;
-    }
-  },
-  watch: {
-    isVisible(val) {
-      if (!val) return;
       this.repository = getDefaultData();
+      this.$validator.reset();
       this.showLoader = false;
-      this.vErrors.clear();
     }
   }
 };
