@@ -7,6 +7,7 @@ const get = require('lodash/get');
 const { getOutlineLevels } = require('../../config/shared/activities');
 const pick = require('lodash/pick');
 const { previewUrl } = require('../../config/server');
+const Promise = require('bluebird');
 const publishingService = require('../shared/publishing/publishing.service');
 const request = require('axios');
 
@@ -18,7 +19,9 @@ function create({ course, body, params, user }, res) {
     { data: Object.assign({}, defaultMeta, body.data) },
     { courseId: params.courseId });
   const opts = { context: { userId: user.id } };
-  return Activity.create(data, opts).then(data => res.json({ data }));
+  return Activity.create(data, opts)
+    .then(linkCreated)
+    .then(data => res.json({ data }));
 }
 
 function show({ activity }, res) {
@@ -80,6 +83,15 @@ function getPreviewUrl({ course, activity }, res) {
       return res.json({ location: `${new URL(url, previewUrl)}` });
     });
 }
+
+const linkCreated = async data => {
+  if (!data.parentId) return data;
+  const parent = await data.getParent();
+  if (!parent.isLink) return data;
+  const links = await parent.origin.getLinks();
+  await Promise.each(links, async link => data.link({ position: data.position, parentId: link.id, child: true }));
+  return Activity.findByPk(data.id).then(data => data);
+};
 
 module.exports = {
   create,

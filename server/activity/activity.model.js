@@ -313,9 +313,9 @@ class Activity extends Model {
     }, activities);
   }
 
-  link({ parentId, position }) {
+  link({ parentId, position, child = false }) {
     return this.sequelize.transaction(transaction => {
-      return Activity.linkActivities(this, parentId, position, [], false, transaction)
+      return Activity.linkActivities(this, parentId, position, [], child, transaction)
         .then(activities => activities);
     });
   }
@@ -413,9 +413,19 @@ class Activity extends Model {
   toJSON() {
     const values = super.toJSON();
     if (!this.isLink) {
+      if (!this.isOrigin) {
+        return {
+          ...values,
+          isOrigin: false
+        };
+      }
+
+      this.links.forEach(link => { link.data = this.data; });
+
       return {
         ...values,
-        isOrigin: this.isOrigin
+        links: this.links,
+        isOrigin: true
       };
     }
     return {
