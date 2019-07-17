@@ -36,10 +36,10 @@
       <assessment-item
         slot="list-item"
         slot-scope="{ element }"
-        :objectives="objectives"
         :assessment="element"
+        :objectives="objectives"
+        :objectiveLabel="objectiveLabel"
         :expanded="isSelected(element)"
-        :draggable="true"
         @selected="toggleSelect(element)"
         @save="saveAssessment"
         @delete="deleteElement(element)"/>
@@ -48,16 +48,20 @@
 </template>
 
 <script>
-import AssessmentItem from '../../../editor/structure/AssessmentItem';
+import AssessmentItem from './Assessment';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import debounce from 'lodash/debounce';
 import { ElementList } from 'tce-core';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
+import { getLevel } from 'shared/activities';
 import GroupIntroduction from './GroupIntroduction';
+import isEmpty from 'lodash/isEmpty';
+import map from 'lodash/map';
 import numberToLetter from 'utils/numberToLetter';
 import sortBy from 'lodash/sortBy';
+import uniq from 'lodash/uniq';
 
 export default {
   name: 'assessment-group',
@@ -84,6 +88,12 @@ export default {
     },
     hasAssessments() {
       return this.elements && !!this.elements.length;
+    },
+    objectiveLabel() {
+      if (isEmpty(this.objectives)) return '';
+      const types = uniq(map(this.objectives, 'type'));
+      const label = types.length > 1 ? 'Objective' : getLevel(types[0]).label;
+      return `Link ${label}`;
     }
   },
   methods: {

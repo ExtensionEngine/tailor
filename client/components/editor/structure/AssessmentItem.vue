@@ -29,17 +29,7 @@
           class="pull-right collapse-item">
           Collapse
         </v-btn>
-        <div v-if="objectives.length" class="select-leaf">
-          <multiselect
-            :value="objective"
-            :options="objectives"
-            :searchable="true"
-            :disabled="!isEditing"
-            :trackBy="'id'"
-            :customLabel="it => it.data ? it.data.name : ''"
-            :placeholder="objectiveLabel"
-            @input="onObjectiveSelected"/>
-        </div>
+        <slot v-bind="{ isEditing }" name="header" />
       </div>
     </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
@@ -62,15 +52,8 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
-import find from 'lodash/find';
-import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
-import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
-import Multiselect from '../../common/Select';
-import set from 'lodash/set';
 import truncate from 'lodash/truncate';
-import uniq from 'lodash/uniq';
 
 const blankRegex = /(@blank)/g;
 const htmlRegex = /<\/?[^>]+(>|$)/g;
@@ -80,15 +63,11 @@ export default {
   inject: ['$teRegistry'],
   props: {
     assessment: { type: Object, required: true },
-    objectives: { type: Array, default: () => [] },
     expanded: { type: Boolean, default: false },
     draggable: { type: Boolean, default: false }
   },
   data() {
-    return {
-      hover: false,
-      objective: null
-    };
+    return { hover: false };
   },
   computed: {
     elementConfig() {
@@ -99,12 +78,6 @@ export default {
       question = map(question, 'data.content').join(' ');
       question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
       return truncate(question, { length: 50 });
-    },
-    objectiveLabel() {
-      if (isEmpty(this.objectives)) return '';
-      const types = uniq(map(this.objectives, 'type'));
-      const label = types.length > 1 ? 'Objective' : getLevel(types[0]).label;
-      return `Link ${label}`;
     }
   },
   methods: {
@@ -112,20 +85,8 @@ export default {
       const assessment = cloneDeep(this.assessment);
       Object.assign(assessment.data, data);
       this.$emit('save', assessment);
-    },
-    onObjectiveSelected(objective) {
-      this.objective = objective;
-      const assessment = cloneDeep(this.assessment);
-      set(assessment, 'refs.objectiveId', this.objective.id);
-      this.$emit('save', assessment);
     }
-  },
-  mounted() {
-    const objectiveId = get(this.assessment, 'refs.objectiveId');
-    if (!objectiveId) return;
-    this.objective = find(this.objectives, { id: objectiveId });
-  },
-  components: { Multiselect }
+  }
 };
 </script>
 
@@ -193,15 +154,6 @@ export default {
 
   &.hover:not(.sortable-chosen) .delete {
     opacity: 1;
-  }
-}
-
-.select-leaf {
-  clear: both;
-
-  > div {
-    width: 400px;
-    float: right;
   }
 }
 </style>
