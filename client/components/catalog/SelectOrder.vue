@@ -6,15 +6,13 @@
           <v-icon color="primary lighten-4">mdi-sort</v-icon>
         </v-btn>
       </template>
-      <v-list>
+      <v-list class="py-0">
         <v-list-tile
           v-for="({ text, field, order }) in options"
           :key="field"
+          :class="{ 'secondary--text text--lighten-1': sortBy.field === field }"
           @click="$emit('update', { field, order })">
-          <v-list-tile-title
-            :class="`${sortBy.field === field ? 'pink' : 'black'}--text`">
-            {{ text }}
-          </v-list-tile-title>
+          <v-list-tile-title>{{ text }}</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
