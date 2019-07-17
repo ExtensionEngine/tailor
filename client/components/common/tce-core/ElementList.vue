@@ -16,6 +16,7 @@
         <slot
           :element="element"
           :isDragged="dragElementIndex === index"
+          :position="index"
           name="list-item"/>
       </div>
     </draggable>

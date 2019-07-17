@@ -11,7 +11,7 @@
       <span class="mdi mdi-drag-vertical"></span>
     </span>
     <content-element
-      v-bind="{ element, isDisabled, isDragged }"
+      v-bind="bindings"
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
       @delete="$emit('delete')"/>
@@ -25,6 +25,7 @@ import throttle from 'lodash/throttle';
 
 export default {
   name: 'contained-content',
+  inheritAttrs: false,
   props: {
     element: { type: Object, required: true },
     isDisabled: { type: Boolean, default: false },
@@ -35,6 +36,10 @@ export default {
     return { isHovered: false };
   },
   computed: {
+    bindings() {
+      const { element, isDisabled, isDragged, $attrs: attrs } = this;
+      return { element, isDisabled, isDragged, ...attrs };
+    },
     widthClass() {
       const { element, setWidth } = this;
       return setWidth ? `col-xs-${get(element, 'data.width', 12)}` : '';
