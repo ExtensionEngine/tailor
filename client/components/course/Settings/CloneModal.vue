@@ -1,7 +1,12 @@
 <template>
   <v-dialog :value="show" width="600px" persistent>
     <v-card class="pa-3">
-      <v-card-title class="headline">Clone repository</v-card-title>
+      <v-card-title class="headline">
+        <v-avatar color="secondary" size="38" class="mr-2">
+          <v-icon color="white">mdi-content-copy</v-icon>
+        </v-avatar>
+        Clone repository
+      </v-card-title>
       <v-card-text>
         <div v-if="showLoader" class="search-spinner">
           <v-progress-circular color="primary" indeterminate/>
