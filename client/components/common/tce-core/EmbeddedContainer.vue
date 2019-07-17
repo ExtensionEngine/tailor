@@ -3,7 +3,7 @@
     :elements="embeds"
     :supportedTypes="types"
     @add="addItem"
-    @update="reorderItem">
+    @reorder="reorderItem">
     <contained-content
       slot="list-item"
       slot-scope="{ element, isDragged }"
@@ -45,11 +45,11 @@ export default {
       container.embeds[item.id] = item;
       this.$emit('save', container);
     },
-    reorderItem({ newIndex: newPosition }) {
+    reorderItem({ newPosition, items }) {
       const isFirstChild = newPosition === 0;
-      const context = { items: this.embeds, newPosition, isFirstChild };
+      const context = { items, newPosition, isFirstChild };
       const container = cloneDeep(this.container);
-      const reordered = container.embeds[this.embeds[newPosition].id];
+      const reordered = container.embeds[items[newPosition].id];
       reordered.position = resolveElementPosition(context);
       this.$emit('save', container);
     },

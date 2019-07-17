@@ -6,7 +6,7 @@
       :supportedTypes="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true"
       @add="$emit('saveElement', $event)"
-      @update="reorder">
+      @reorder="$emit('reorderElement', $event)">
       <contained-content
         slot="list-item"
         slot-scope="{ element, dragged }"
@@ -42,13 +42,6 @@ export default {
       element = cloneDeep(element);
       Object.assign(element.data, data);
       this.$emit('saveElement', element);
-    },
-    reorder({ newIndex: newPosition }) {
-      const items = this.introductionElements;
-      const element = items[newPosition];
-      const isFirstChild = newPosition === 0;
-      const context = { items, newPosition, isFirstChild };
-      this.$emit('reorderElement', { element, context });
     }
   },
   components: {

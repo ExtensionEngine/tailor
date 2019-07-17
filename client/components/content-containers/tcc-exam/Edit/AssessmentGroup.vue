@@ -32,7 +32,7 @@
       :activity="group"
       :supportedTypes="['ASSESSMENT']"
       @add="addAssessment"
-      @update="reorderAssessment">
+      @reorder="$emit('reorderElement', $event)">
       <assessment-item
         slot="list-item"
         slot-scope="{ element }"
@@ -91,13 +91,6 @@ export default {
       const cid = cuid();
       this.unsaved.push({ ...assessment, _cid: cid });
       this.selected.push(cid);
-    },
-    reorderAssessment({ newIndex: newPosition }) {
-      const items = this.elements;
-      const element = items[newPosition];
-      const isFirstChild = newPosition === 0;
-      const context = { items, newPosition, isFirstChild };
-      this.$emit('reorderElement', { element, context });
     },
     saveAssessment(assessment) {
       if (assessment.id) return this.$emit('updateElement', assessment);

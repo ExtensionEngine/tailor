@@ -81,12 +81,18 @@ export default {
     ...mapActions('tes', {
       saveElement: 'save',
       updateElement: 'update',
-      reorderElements: 'reorder',
+      reorderElement: 'reorder',
       deleteElement: 'remove'
     }),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
+    },
+    reorderElements({ newPosition, items }) {
+      const element = items[newPosition];
+      const isFirstChild = newPosition === 0;
+      const context = { items, newPosition, isFirstChild };
+      this.reorderElement({ element, context });
     },
     requestDeletion(content, action, name) {
       appChannel.emit('showConfirmationModal', {

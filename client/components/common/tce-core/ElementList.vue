@@ -5,7 +5,7 @@
       :options="options"
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
-      @update="$emit('update', $event)"
+      @update="reorder"
       class="row">
       <div
         v-for="(element, index) in elements"
@@ -61,7 +61,13 @@ export default {
       return lastItem ? lastItem.position + 1 : 1;
     }
   },
-  methods: { get },
+  methods: {
+    get,
+    reorder({ newIndex: newPosition }) {
+      const items = this.elements;
+      this.$emit('reorder', { newPosition, items });
+    }
+  },
   components: { AddElement, Draggable }
 };
 </script>
