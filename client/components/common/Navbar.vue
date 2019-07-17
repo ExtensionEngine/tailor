@@ -2,7 +2,7 @@
   <v-toolbar color="grey lighten-5" app dense fixed>
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
       <v-avatar color="primary darken-1" size="34" class="mt-1">
-        <v-icon color="grey lighten-4">mdi-content-cut</v-icon>
+        <img :src="logo" alt="Logo" class="logo">
       </v-avatar>
       <v-toolbar-title class="app-name ml-2">{{ title }}</v-toolbar-title>
     </router-link>
@@ -49,11 +49,10 @@ export default {
   props: {
     user: { type: Object, required: true }
   },
-  data() {
-    return {
-      title: BRAND_CONFIG.TITLE
-    };
-  },
+  data: () => ({
+    title: BRAND_CONFIG.TITLE,
+    logo: BRAND_CONFIG.LOGO_COMPACT
+  }),
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('course', { repository: 'course' }),
@@ -111,5 +110,9 @@ $font-color: #333;
   &:hover {
     color: darken($font-color, 20%);
   }
+}
+
+.logo {
+  width: 26px;
 }
 </style>

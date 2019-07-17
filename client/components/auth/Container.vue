@@ -2,7 +2,7 @@
   <div class="auth-container">
     <div class="auth-panel elevation-2">
       <div class="auth-header">
-        <v-icon size="73" color="white" class="logo">mdi-content-cut</v-icon>
+        <img :src="logo" alt="Logo" class="logo">
         <h1>{{ title }}</h1>
       </div>
       <div class="auth-body">
@@ -14,11 +14,10 @@
 
 <script>
 export default {
-  data() {
-    return {
-      title: BRAND_CONFIG.TITLE
-    };
-  }
+  data: () => ({
+    title: BRAND_CONFIG.TITLE,
+    logo: BRAND_CONFIG.LOGO_FULL
+  })
 };
 </script>
 
@@ -39,7 +38,7 @@ $primary: #2e434c;
   h1 {
     margin: 0;
     color: white;
-    font-size: 22px;
+    font-size: 1.57rem;
     line-height: 18px;
   }
 
@@ -69,5 +68,9 @@ $primary: #2e434c;
     font-size: 16px;
     line-height: 16px;
   }
+}
+
+.logo {
+  width: 5.36rem;
 }
 </style>
