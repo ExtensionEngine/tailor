@@ -2,7 +2,6 @@
 
 const { getRepositoryRelationships, getSchema } = require('../../config/shared/activities');
 const { Model } = require('sequelize');
-const hooks = require('./hooks');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
@@ -30,10 +29,6 @@ class Course extends Model {
       data: {
         type: JSONB,
         defaultValue: {}
-      },
-      stats: {
-        type: JSONB,
-        defaultValue: { objectives: 0, assessments: 0 }
       },
       createdAt: {
         type: DATE,
@@ -80,19 +75,6 @@ class Course extends Model {
       paranoid: true,
       freezeTableName: true
     };
-  }
-
-  static hooks(Hooks, models) {
-    hooks.add(this, Hooks, models);
-  }
-
-  static updateStats(id, key, value) {
-    return this.findByPk(id).then(course => {
-      if (!course) return;
-      const stats = course.stats || {};
-      stats[key] = value;
-      return course.update({ stats });
-    });
   }
 
   /**
