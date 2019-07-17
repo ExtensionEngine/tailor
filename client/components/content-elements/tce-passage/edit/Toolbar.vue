@@ -71,9 +71,11 @@ $text-size: 16px;
   border: none;
   box-shadow: none;
 
-  & > .jodit_toolbar_btn {
+  & > li.jodit_toolbar_btn {
+    min-width: 30px;
+
     & > a {
-      padding: 6px;
+      padding: 6px 5px;
     }
 
     .jodit_icon {
@@ -98,6 +100,10 @@ $text-size: 16px;
         text-align: center;
       }
     }
+  }
+
+  &.loading > li.jodit_toolbar_btn {
+    transition: none;
   }
 }
 
@@ -139,6 +145,7 @@ $text-size: 16px;
   }
 
   &.jodit_toolbar_btn-separator {
+    min-width: 0;
     margin-right: 15px !important;
     border: none;
   }

@@ -22,7 +22,6 @@ const splitArray = arg => isString(arg) ? arg.split(/[,\s]+/) : arg;
 
 /** @type {import('jodit/src/Config').Config & import('jodit/src/plugins') } */
 const joditConfig = {
-  autofocus: true,
   addNewLineOnDBLClick: false,
   showTooltipDelay: 350,
   disablePlugins: ['fullsize', 'source'],
@@ -52,8 +51,10 @@ export default {
     })
   },
   mounted() {
+    const { editor } = this.$refs.jodit;
+    editor.selection.focus();
     const toolbarContainer = document.getElementById('joditToolbar');
-    renderToolbar(this.$refs.jodit.editor, toolbarContainer);
+    renderToolbar(editor, toolbarContainer);
   },
   components: {
     JoditVue
@@ -61,9 +62,12 @@ export default {
 };
 
 function renderToolbar(jodit, toolbarContainer) {
-  const { options } = jodit;
+  const { options, toolbar } = jodit;
   const buttons = splitArray(options.buttons).concat(options.extraButtons);
-  return jodit.toolbar.build(buttons, toolbarContainer);
+  toolbar.container.classList.add('loading');
+  const result = toolbar.build(buttons, toolbarContainer);
+  setTimeout(() => toolbar.container.classList.remove('loading'), 0);
+  return result;
 }
 </script>
 
