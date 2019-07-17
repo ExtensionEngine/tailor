@@ -26,7 +26,7 @@ export default class ToolbarBuilder {
       const control = Jodit.defaultOptions.controls[name];
       if (!control) return acc;
       Object.assign(control, { tooltip, hotkeys: [] });
-      acc.push(control.name || name);
+      acc.push(name);
       return acc;
     }, []);
     if (this._buttons.length > 0 && buttons.length > 0) {
