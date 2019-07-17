@@ -12,7 +12,6 @@ const mdiIcons = {
   indent: 'format-indent-increase',
   font: 'format-font',
   fontsize: 'format-size',
-  brush: 'water',
   paragraph: 'format-pilcrow',
   image: 'image-plus',
   file: 'file-plus',
@@ -47,9 +46,16 @@ const mdiIcons = {
   bin: 'trash-can'
 };
 
+const textColor = `
+  <span class="icon stack">
+    <span class="icon stacked mdi mdi-format-color-text"></span>
+    <span class="icon stacked mdi mdi-color-helper"></span>
+  </span>`;
+
 export default mdiIcons;
 
 export function getMdiIcon(name) {
+  if (name === 'brush') return textColor;
   const code = mdiIcons[name];
   return `<span class="mdi mdi-${code}"></span>`;
 }

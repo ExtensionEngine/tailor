@@ -2,22 +2,20 @@
   <div class="jodit-wrapper">
     <jodit-vue
       ref="jodit"
-      v-bind="{ id, config, value }"
+      v-bind="{ id, buttons, config, value }"
       @input="value => $emit('input', value)"/>
   </div>
 </template>
 
 <script>
-import cuid from 'cuid';
+import fontControls from './plugins/font-controls';
 // TODO: Import `Jodit` from `jodit-vue` once it becomes available!
 import Jodit from 'jodit';
 import JoditVue from 'jodit-vue';
 import mdiIcons from './plugins/mdi-icons';
-
-// Load custom plugins.
-Object.assign(Jodit.plugins, { mdiIcons });
-
-const JODIT_TOOLBAR_BREAK = '\n';
+import Toolbar from './Toolbar';
+import toolbarPopups from './plugins/toolbar-popups';
+import uniqueId from 'lodash/uniqueId';
 
 const isString = arg => typeof arg === 'string';
 const splitArray = arg => isString(arg) ? arg.split(/[,\s]+/) : arg;
@@ -27,16 +25,16 @@ const joditConfig = {
   autofocus: true,
   addNewLineOnDBLClick: false,
   showTooltipDelay: 350,
-  // Disable fullsize plugin & remove it's toolbar item.
-  disablePlugins: ['fullsize'],
-  removeButtons: ['fullsize', 'about', JODIT_TOOLBAR_BREAK],
-  // Disable default toolbar.
-  toolbar: false,
-  // Setup Ace editor.
-  sourceEditorNativeOptions: {
-    theme: 'ace/theme/chrome'
-  }
+  disablePlugins: ['fullsize', 'source'],
+  toolbar: false
 };
+
+// Load custom plugins.
+mdiIcons(Jodit);
+fontControls(Jodit);
+toolbarPopups(Jodit, {
+  popupOpenClass: 'popup_open'
+});
 
 export default {
   props: {
@@ -45,7 +43,8 @@ export default {
     placeholder: { type: String, default: 'Insert text here...' }
   },
   computed: {
-    id: () => cuid(),
+    id: () => uniqueId('jodit_editor_'),
+    buttons: () => Toolbar.$buttons,
     config: vm => ({
       ...joditConfig,
       minHeight: vm.minHeight,
@@ -69,6 +68,8 @@ function renderToolbar(jodit, toolbarContainer) {
 </script>
 
 <style lang="scss" scoped>
+$icon-color: #333;
+$icon-size: 18px;
 $statusbar-height: 26px;
 $statusbar-border-size: 1px;
 
@@ -88,126 +89,18 @@ $statusbar-border-size: 1px;
     line-height: inherit;
     vertical-align: top;
 
-    a {
+    & > a {
       vertical-align: middle;
     }
-  }
-}
 
-.jodit-wrapper /deep/ .jodit_source .ace_editor {
-  font-size: 13px;
-  font-family: $font-family-monospace;
-}
-</style>
-
-<style lang="scss">
-@import '~jodit/build/jodit.min.css';
-
-$icon-color: #333;
-$icon-accent-color: #ff6590;
-$icon-size: 18px;
-
-.jodit_toolbar_btn .jodit_icon {
-  display: inherit;
-  width: $icon-size;
-  height: $icon-size;
-  color: $icon-color;
-  font-size: $icon-size;
-}
-
-.jodit_statusbar .jodit_toolbar_btn .jodit_icon {
-  line-height: $icon-size;
-}
-
-.jodit_toolbar > .jodit_toolbar_btn:not(.jodit_toolbar-input) {
-  &.jodit_toolbar_btn-separator {
-    margin-right: 15px !important;
-    border: none;
-  }
-
-  @mixin colorize($color, $background: none) {
-    color: $color;
-    background: $background;
-
-    & > a {
-      color: inherit;
-      background: inherit;
-
-      .jodit_icon {
-        color: inherit;
-      }
-
-      // dropdown chevrons
-      .jodit_with_dropdownlist-trigger {
-        border-top-color: $color;
-      }
-
-      // TODO: Remove after bootstrap gets removed!
-      blockquote {
-        border: none;
-      }
+    .jodit_icon {
+      display: inline-block;
+      width: $icon-size;
+      height: $icon-size;
+      color: $icon-color;
+      font-size: $icon-size;
+      line-height: $icon-size;
     }
-  }
-
-  &:not(.jodit_disabled) {
-    &.jodit_active {
-      @include colorize(
-        $color: $icon-accent-color,
-        $background: lighten($icon-accent-color, 25%)
-      );
-    }
-
-    &:not(.jodit_active):hover {
-      @include colorize($color: $icon-accent-color);
-    }
-  }
-}
-
-.jodit_toolbar_list > .jodit_toolbar, .jodit_toolbar_list > .jodit_toolbar .jodit_toolbar {
-  background: #fff;
-  border: 1px solid #ccc;
-  box-shadow: rgba(0,0,0,0.2) 0 2px 8px;
-}
-
-.jodit_toolbar_btn .jodit_tooltip {
-  $background-color: #2a2a2a;
-  $text-color: #fff;
-  $offset: -1px;
-  $arrow-size: 5px;
-
-  $horizontal-padding: 12px;
-
-  display: block;
-  position: absolute;
-  z-index: 999;
-  width: auto;
-  min-width: 90px;
-  margin-top: $arrow-size + $offset;
-  padding: 6px $horizontal-padding;
-  color: $text-color;
-  font-size: 0.96rem;
-  font-family: $font-family-secondary;
-  font-weight: 500;
-  text-align: center;
-  line-height: 1.42;
-  background: $background-color;
-  border: 1px solid #fff;
-  border-radius: 0;
-  user-select: none;
-  cursor: default;
-
-  &::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: -$arrow-size;
-    left: calc(50% - #{$arrow-size} - #{$horizontal-padding / 2});
-    width: 0;
-    height: 0;
-    margin: 0 $arrow-size;
-    border: $arrow-size solid transparent;
-    border-top-width: 0;
-    border-bottom-color: $background-color;
   }
 }
 </style>
