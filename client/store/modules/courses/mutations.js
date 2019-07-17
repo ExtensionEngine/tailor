@@ -4,7 +4,7 @@ import Vue from 'vue';
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
 
 const save = (state, course) => {
-  const search = state.search.toLowerCase();
+  const search = state.search && state.search.toLowerCase();
   const name = course.name.toLowerCase();
   if (search && !name.includes(search)) return;
   Vue.set(state.items, course._cid, course);

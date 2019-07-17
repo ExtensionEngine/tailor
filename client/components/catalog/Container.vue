@@ -1,6 +1,6 @@
 <template>
   <div infinite-wrapper class="catalog-wrapper">
-    <v-container class="catalog">
+    <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog">
       <v-layout row class="catalog-actions">
         <create-repository/>
         <v-flex md4 sm10 offset-md4 offset-sm1>
@@ -11,7 +11,7 @@
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
-                @click="hasPinnedRepos && togglePinned()"
+                @click="togglePinned() || search(queryParams.search)"
                 icon
                 flat>
                 <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
@@ -19,50 +19,44 @@
                 </v-icon>
               </v-btn>
             </template>
-            <span>{{ hasPinnedRepos ? 'Show pinned' : '0 pinned items' }}</span>
+            <span>Toggle pinned</span>
           </v-tooltip>
-          <select-order
-            :sortBy="sortBy"
-            @update="setOrder"
-            class="pl-2"/>
+          <select-order :sortBy="sortBy" @update="setOrder" class="pl-2"/>
         </v-flex>
       </v-layout>
       <v-layout v-show="!searching" row wrap>
         <v-flex
-          v-for="repository in orderedRepositories"
+          v-for="repository in repositories"
           :key="repository._cid"
           xs4
           class="px-2 py-3">
           <repository-card :repository="repository"/>
         </v-flex>
       </v-layout>
-      <v-progress-circular
-        v-show="searching"
-        color="primary"
-        indeterminate
-        class="search-spinner"/>
+      <infinite-loading ref="infiniteLoading" @infinite="loadMore">
+        <div slot="spinner" class="spinner">
+          <v-progress-circular color="primary" indeterminate/>
+        </div>
+        <div slot="no-results" class="no-results subheading">
+          <v-alert
+            :value="true"
+            color="blue-grey lighten-4"
+            icon="mdi-cloud-search-outline"
+            outline>
+            {{ noRepositoriesMessage }}
+          </v-alert>
+        </div>
+        <span slot="no-more"></span>
+      </infinite-loading>
     </v-container>
-    <infinite-loading ref="infiniteLoading" @infinite="loadMore">
-      <div slot="spinner" class="spinner">
-        <v-progress-circular color="primary" indeterminate/>
-      </div>
-      <div slot="no-results" class="no-results subheading">
-        {{ orderedRepositories.length ? '' : 'No matches found' }}
-      </div>
-      <span slot="no-more"></span>
-    </infinite-loading>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import CreateRepository from './Create';
-import filter from 'lodash/filter';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
-import isEmpty from 'lodash/isEmpty';
-import isString from 'lodash/isString';
-import orderBy from 'lodash/orderBy';
 import Promise from 'bluebird';
 import RepositoryCard from './Card';
 import Search from './Search';
@@ -70,35 +64,39 @@ import SelectOrder from './SelectOrder';
 
 export default {
   data() {
-    return { searching: false };
+    return {
+      searching: false
+    };
   },
   computed: {
     ...mapState('courses', {
       sortBy: state => state.$internals.sort,
       showPinned: 'showPinned'
     }),
-    ...mapGetters('courses', ['courses', 'hasMoreResults']),
-    orderedRepositories() {
-      const { field, order } = this.sortBy;
-      const items = orderBy(this.courses, it => {
-        return isString(it[field]) ? it[field].toLowerCase() : it[field];
-      }, order.toLowerCase());
-      if (!this.showPinned) return items;
-      return filter(items, it => get(it, 'courseUser.pinned', false));
+    ...mapGetters('courses', {
+      repositories: 'courses',
+      queryParams: 'courseQueryParams',
+      hasMoreResults: 'hasMoreResults'
+    }),
+    hasRepositories() {
+      return !!this.repositories.length;
     },
-    hasPinnedRepos() {
-      return filter(this.courses, 'courseUser.pinned').length;
+    noRepositoriesMessage() {
+      if (this.hasRepositories) return;
+      if (this.queryParams.search) return 'No matches found';
+      if (this.showPinned) return '0 pinned items';
+      return '0 available repositories';
     },
     loaderState() {
       return get(this.$refs, 'infiniteLoading.stateChanger', {});
     }
   },
   methods: {
-    ...mapActions('courses', ['fetch', 'fetchPinned']),
+    ...mapActions('courses', ['fetch']),
     ...mapMutations('courses', ['togglePinned', 'setSearch', 'setOrder']),
     loadMore() {
       return this.fetch().then(() => {
-        if (!isEmpty(this.courses)) this.loaderState.loaded();
+        if (this.hasRepositories) this.loaderState.loaded();
         if (!this.hasMoreResults) this.loaderState.complete();
       });
     },
@@ -108,27 +106,24 @@ export default {
       return Promise.join(this.fetch({ reset: true }))
         .then(() => {
           this.loaderState.reset();
-          if (!isEmpty(this.courses)) this.loaderState.loaded();
+          if (this.hasRepositories) this.loaderState.loaded();
           if (!this.hasMoreResults) this.loaderState.complete();
         });
     },
     search(query) {
       this.setSearch(query);
       this.searching = true;
-      return this.load().then(() => (this.searching = false));
+      return this.load()
+        .then(() => (this.searching = false));
     }
   },
   watch: {
     sortBy(val) {
       this.search();
     },
-    hasPinnedRepos(val) {
-      if (this.showPinned && !val) this.togglePinned();
+    repositories(val) {
+      if (!val.length & this.showPinned) this.loaderState.reset();
     }
-  },
-  mounted() {
-    this.fetchPinned();
-    this.search();
   },
   components: {
     CreateRepository,
@@ -162,14 +157,17 @@ export default {
       0px 5px 8px 0px rgba(0,0,0,0.14),
       0px 1px 14px 0px rgba(0,0,0,0.12);
   }
-}
 
-.search-spinner {
-  margin-top: 170px;
+  &.catalog-empty {
+    &::before {
+      height: 100%;
+      width: 100%;
+    }
+  }
 }
 
 .spinner, .no-results {
-  margin-top: 120px;
+  margin-top: 40px;
 }
 
 .catalog-actions {

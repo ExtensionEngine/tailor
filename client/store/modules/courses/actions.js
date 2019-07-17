@@ -29,11 +29,6 @@ const fetch = ({ getters, commit }, { reset = false } = {}) => {
   });
 };
 
-const fetchPinned = ({ commit }) => {
-  return fetchCourses({ pinned: true })
-    .then(courses => commit('fetchPinned', courses));
-};
-
 const clone = ({ commit }, { id, name, description }) => {
   return api.post(`/${id}/clone`, { name, description }).then(response => {
     const { data: course } = response.data;
@@ -51,7 +46,6 @@ const pin = ({ commit, getters }, { id, pin }) => {
 export {
   clone,
   fetch,
-  fetchPinned,
   get,
   pin,
   remove,

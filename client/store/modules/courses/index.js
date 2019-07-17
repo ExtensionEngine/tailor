@@ -6,7 +6,6 @@ const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
 
 const state = {
   items: {},
-  pinned: {},
   search: '',
   showPinned: false,
   $internals: {
