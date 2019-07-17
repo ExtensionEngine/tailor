@@ -1,9 +1,13 @@
 import filter from 'lodash/filter';
 import get from 'lodash/get';
+import orderBy from 'lodash/orderBy';
 
 export const courses = state => {
-  if (!state.showPinned) return Object.values(state.items);
-  return filter(state.items, it => get(it, 'courseUser.pinned'));
+  const { sort } = state.$internals;
+  const items = state.showPinned
+    ? filter(state.items, it => get(it, 'courseUser.pinned'))
+    : state.items;
+  return orderBy(items, sort.field, sort.order.toLowerCase());
 };
 
 export const courseQueryParams = state => {
