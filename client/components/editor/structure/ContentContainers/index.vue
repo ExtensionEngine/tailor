@@ -88,19 +88,18 @@ export default {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
-    requestContainerDeletion(container, name = this.name) {
+    requestDeletion(content, action, name) {
       appChannel.emit('showConfirmationModal', {
         title: `Delete ${name}?`,
         message: `Are you sure you want to delete ${name}?`,
-        action: () => this.remove(container)
+        action: () => this[action](content)
       });
     },
+    requestContainerDeletion(container, name = this.name) {
+      this.requestDeletion(container, 'remove', name);
+    },
     requestElementDeletion(element) {
-      appChannel.emit('showConfirmationModal', {
-        title: `Delete element?`,
-        message: `Are you sure you want to delete element?`,
-        action: () => this.deleteElement(element)
-      });
+      this.requestDeletion(element, 'deleteElement', 'element');
     }
   },
   created() {

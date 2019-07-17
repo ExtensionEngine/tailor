@@ -49,11 +49,12 @@ import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
 import find from 'lodash/find';
+import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
+import map from 'lodash/map';
 import MetaSidebar from './MetaSidebar';
 import Promise from 'bluebird';
-import reduce from 'lodash/reduce';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 import truncate from 'truncate';
@@ -147,15 +148,11 @@ export default {
     this.setupTesApi(`${baseUrl}/tes`);
     const actions = [this.getActivities()];
     if (!this.course) actions.push(this.getCourse(courseId));
-    Promise
-      .all(actions)
-      .then(() => {
-        const parentId = reduce(this.contentContainers, (acc, it) => {
-          return [...acc, ...it.map(({ id }) => id)];
-        }, [activityId]);
-        return this.getTeachingElements({ activityId, parentId });
-      })
-      .then(() => (this.showLoader = false));
+    Promise.all(actions).then(() => {
+      const parentId = flatMap(this.contentContainers, it => map(it, 'id'));
+      return this.getTeachingElements({ activityId, parentId });
+    })
+    .then(() => (this.showLoader = false));
   },
   beforeDestroy() {
     this.unsubscribe();

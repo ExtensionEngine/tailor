@@ -1,6 +1,6 @@
 <template>
   <div class="assessment-group">
-    <div :class="{ 'divider': position }"></div>
+    <div :class="{ divider: position }"></div>
     <span @click="$emit('delete')" class="remove">
       <span class="mdi mdi-delete"></span>
     </span>
