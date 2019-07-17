@@ -7,11 +7,16 @@
       <form @submit.prevent="submit">
         <div class="form-group">
           <v-text-field
+            v-validate="{ required: true, email: true }"
             v-model="email"
+            :error-messages="vErrors.collect('email')"
             type="email"
+            name="email"
             label="Please enter your email"/>
         </div>
-        <v-btn color="primary" outline block type="submit">Send reset email</v-btn>
+        <v-btn :disabled="!isValid" color="primary" outline block type="submit">
+          Send reset email
+        </v-btn>
         <div class="options">
           <a @click="$router.go(-1)">Back</a>
         </div>
@@ -23,14 +28,21 @@
 <script>
 import { delay } from 'bluebird';
 import { mapActions } from 'vuex';
+import { withValidation } from 'utils/validation';
 
 export default {
+  mixins: [withValidation()],
   data() {
     return {
       email: '',
       message: 'Reset email sent',
       showMessage: false
     };
+  },
+  computed: {
+    isValid() {
+      return this.email && this.vErrors.count() === 0;
+    }
   },
   methods: {
     ...mapActions(['forgotPassword']),
@@ -52,7 +64,7 @@ export default {
 }
 
 .options {
-  padding: 20px 0 5px;
+  padding-top: 10px;
 
   a {
     display: inline-block;

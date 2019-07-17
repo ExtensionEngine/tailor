@@ -5,27 +5,43 @@
     </div>
     <form @submit.prevent="submit" novalidate>
       <div class="form-group">
-        <v-text-field v-model="email" type="email" label="Email"/>
+        <v-text-field
+          v-validate="{ required: true, email: true }"
+          v-model="email"
+          :error-messages="vErrors.collect('email')"
+          type="email"
+          name="email"
+          label="Email"/>
       </div>
       <div class="form-group">
-        <v-text-field v-model="password" type="password" label="Password"/>
+        <v-text-field
+          v-validate="{ required: true }"
+          v-model="password"
+          :error-messages="vErrors.collect('password')"
+          type="password"
+          name="password"
+          label="Password"/>
       </div>
+      <v-btn :disabled="!isValid" color="primary" outline block type="submit">
+        Log in
+      </v-btn>
       <div class="options">
         <router-link :to="{ name: 'forgot-password' }">
           Forgot password ?
         </router-link>
       </div>
-      <v-btn color="primary" outline block type="submit">Log in</v-btn>
     </form>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import { withValidation } from 'utils/validation';
 const LOGIN_ERR_MESSAGE = 'User email and password do not match';
 
 export default {
   name: 'login',
+  mixins: [withValidation()],
   data() {
     return {
       email: '',
@@ -33,7 +49,12 @@ export default {
       message: ''
     };
   },
-  computed: mapState({ user: state => state.auth.user }),
+  computed: {
+    ...mapState({ user: state => state.auth.user }),
+    isValid() {
+      return this.email && this.password && this.vErrors.count() === 0;
+    }
+  },
   methods: {
     ...mapActions(['login']),
     submit() {
@@ -48,7 +69,7 @@ export default {
 
 <style lang="scss" scoped>
 .options {
-  padding: 10px 0 25px;
+  padding: 15px 0 5px;
   text-align: right;
 }
 </style>
