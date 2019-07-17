@@ -12,7 +12,7 @@
           :key="field"
           :class="{ 'secondary--text text--lighten-1': sortBy.field === field }"
           @click="$emit('update', { field, order })">
-          <v-list-tile-title>{{ text }}</v-list-tile-title>
+          <v-list-tile-title class="pr-3">{{ text }}</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>

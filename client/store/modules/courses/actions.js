@@ -13,7 +13,7 @@ const {
 } = generateActions('/courses');
 
 const save = ({ commit, dispatch }, model) => {
-  return api.save(model).then(() => {
+  return api.post('/', model).then(() => {
     commit('setOrder', { field: 'createdAt', order: 'DESC' });
     dispatch('reset');
   });
