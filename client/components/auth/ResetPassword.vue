@@ -2,37 +2,28 @@
   <div>
     <div class="message"><span>{{ error }}</span></div>
     <form @submit.prevent="submit">
-      <div :class="{ 'has-error': vErrors.has('password') }" class="form-group">
-        <input
+      <div class="form-group">
+        <v-text-field
           v-validate="{ required: true, min: 6, alphanumerical: true }"
           ref="password"
           v-model="password"
-          class="form-control"
+          :error-messages="vErrors.collect('password')"
           name="password"
           type="password"
-          placeholder="Password"/>
-        <span class="help-block">{{ vErrors.first('password') }}</span>
+          label="Password"/>
       </div>
-      <div
-        :class="{ 'has-error': vErrors.has('passwordConfirmation') }"
-        class="form-group">
-        <input
+      <div class="form-group">
+        <v-text-field
           v-validate="{ required: true, confirmed: 'password' }"
+          :error-messages="vErrors.collect('passwordConfirmation')"
           data-vv-as="password"
-          class="form-control"
           name="passwordConfirmation"
           type="password"
-          placeholder="Please re-enter your password"/>
-        <span class="help-block">
-          {{ vErrors.first('passwordConfirmation') }}
-        </span>
+          label="Please re-enter your password"/>
       </div>
-      <button
-        :disabled="!isValid"
-        class="btn btn-default btn-block"
-        type="submit">
+      <v-btn :disabled="!isValid" color="primary" outline block type="submit">
         Change password
-      </button>
+      </v-btn>
     </form>
   </div>
 </template>
@@ -67,3 +58,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.form-group {
+  margin-top: 10px;
+}
+</style>

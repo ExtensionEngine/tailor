@@ -5,27 +5,17 @@
     </div>
     <form @submit.prevent="submit" novalidate>
       <div class="form-group">
-        <input
-          v-model="email"
-          class="form-control"
-          type="email"
-          placeholder="Email"/>
+        <v-text-field v-model="email" type="email" label="Email"/>
       </div>
       <div class="form-group">
-        <input
-          v-model="password"
-          class="form-control"
-          type="password"
-          placeholder="Password"/>
+        <v-text-field v-model="password" type="password" label="Password"/>
       </div>
       <div class="options">
         <router-link :to="{ name: 'forgot-password' }">
           Forgot password ?
         </router-link>
       </div>
-      <button type="submit" class="btn btn-default btn-material btn-block">
-        Log in
-      </button>
+      <v-btn color="primary" outline block type="submit">Log in</v-btn>
     </form>
   </div>
 </template>
@@ -58,7 +48,7 @@ export default {
 
 <style lang="scss" scoped>
 .options {
-  padding: 5px 0 10px;
+  padding: 10px 0 25px;
   text-align: right;
 }
 </style>

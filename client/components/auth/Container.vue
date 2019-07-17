@@ -1,8 +1,8 @@
 <template>
   <div class="auth-container">
-    <div class="auth-panel">
+    <div class="auth-panel elevation-2">
       <div class="auth-header">
-        <img :src="logo" alt="Logo"/>
+        <v-icon size="73" color="white" class="logo">mdi-content-cut</v-icon>
         <h1>{{ title }}</h1>
       </div>
       <div class="auth-body">
@@ -16,34 +16,25 @@
 export default {
   data() {
     return {
-      title: BRAND_CONFIG.TITLE,
-      logo: BRAND_CONFIG.LOGO_FULL
+      title: BRAND_CONFIG.TITLE
     };
   }
 };
 </script>
 
 <style lang="scss">
+$primary: #2e434c;
+
 .auth-container {
   padding-top: 5%;
 }
 
 .auth-panel {
-  width: 440px;
+  width: 480px;
   margin: auto;
   background-color: #fff;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   border-radius: 4px;
   transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1);
-
-  &:hover {
-    box-shadow: 0 6px 10px rgba(0,0,0,0.2), 0 6px 8px rgba(0,0,0,0.22);
-  }
-
-  img {
-    width: 130px;
-    margin: 15px 0 10px;
-  }
 
   h1 {
     margin: 0;
@@ -54,23 +45,27 @@ export default {
 
   .auth-header {
     padding-bottom: 20px;
-    background: linear-gradient(90deg, $brandColor 65%, $altBrandColor);
+    background-color: $primary;
     border-radius: 4px 4px 0 0;
+
+    .logo {
+      margin: 30px 0;
+    }
   }
 
   .auth-body {
-    padding: 20px 30px;
+    padding: 25px 30px;
 
     a {
       color: inherit;
-      font-weight: 500;
+      font-weight: 400;
     }
   }
 
   .message {
     min-height: 16px;
     margin-bottom: 20px;
-    color: #da126d;
+    color: #e91e63;
     font-size: 16px;
     line-height: 16px;
   }

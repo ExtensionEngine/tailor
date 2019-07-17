@@ -6,15 +6,12 @@
     <div v-else>
       <form @submit.prevent="submit">
         <div class="form-group">
-          <input
+          <v-text-field
             v-model="email"
-            class="form-control"
             type="email"
-            placeholder="Please enter your email"/>
+            label="Please enter your email"/>
         </div>
-        <button type="submit" class="btn btn-default btn-block">
-          Send reset email
-        </button>
+        <v-btn color="primary" outline block type="submit">Send reset email</v-btn>
         <div class="options">
           <a @click="$router.go(-1)">Back</a>
         </div>
@@ -55,7 +52,7 @@ export default {
 }
 
 .options {
-  padding-top: 16px;
+  padding: 20px 0 5px;
 
   a {
     display: inline-block;
