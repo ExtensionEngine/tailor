@@ -7,28 +7,20 @@
           <v-progress-circular color="primary" indeterminate/>
         </div>
         <div v-else>
-          <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
-            <input
-              v-validate="{ required: true, min: 2, max: 250 }"
-              v-model="name"
-              class="form-control"
-              name="name"
-              type="text"
-              placeholder="Name"/>
-            <span class="help-block">{{ vErrors.first('name') }}</span>
-          </div>
-          <div
-            :class="{ 'has-error': vErrors.has('description') }"
-            class="form-group">
-            <textarea
-              v-validate="{ required: true, min: 2, max: 2000 }"
-              v-model="description"
-              class="form-control"
-              name="description"
-              placeholder="Description">
-            </textarea>
-            <span class="help-block">{{ vErrors.first('description') }}</span>
-          </div>
+          <v-text-field
+            v-validate="{ required: true, min: 2, max: 250 }"
+            v-model="name"
+            :error-messages="vErrors.collect('name')"
+            class="form-group"
+            label="Name"
+            data-vv-name="name"/>
+          <v-textarea
+            v-validate="{ required: true, min: 2, max: 2000 }"
+            v-model="description"
+            :error-messages="vErrors.collect('description')"
+            class="form-group"
+            label="Description"
+            data-vv-name="description"/>
         </div>
       </v-card-text>
       <v-card-actions>
@@ -95,6 +87,6 @@ export default {
 
 <style lang="scss" scoped>
 .form-group {
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 </style>
