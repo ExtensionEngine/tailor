@@ -20,9 +20,9 @@
       @addSubcontainer="save"
       @updateSubcontainer="update"
       @deleteSubcontainer="requestContainerDeletion"
-      @saveElement="saveElement"
+      @saveElement="saveContentElement"
       @updateElement="updateElement"
-      @reorderElement="reorderElements"
+      @reorderElement="reorderContentElements"
       @deleteElement="requestElementDeletion"
       @delete="requestContainerDeletion(container)"/>
     <div v-if="addBtnEnabled">
@@ -43,6 +43,7 @@ import get from 'lodash/get';
 import { getContainerName } from 'tce-core/utils';
 import isEmpty from 'lodash/isEmpty';
 import maxBy from 'lodash/maxBy';
+import throttle from 'lodash/throttle';
 
 const appChannel = EventBus.channel('app');
 
@@ -81,14 +82,17 @@ export default {
     ...mapActions('tes', {
       saveElement: 'save',
       updateElement: 'update',
-      reorderElement: 'reorder',
+      reorderElements: 'reorder',
       deleteElement: 'remove'
     }),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
-    reorderElements({ newPosition, items }) {
+    saveContentElement(element) {
+      return this.saveElement(element).then(() => this.showNotification());
+    },
+    reorderContentElements({ newPosition, items }) {
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
@@ -106,7 +110,10 @@ export default {
     },
     requestElementDeletion(element) {
       this.requestDeletion(element, 'deleteElement', 'element');
-    }
+    },
+    showNotification: throttle(function () {
+      this.$snackbar.show('Element saved');
+    }, 4000)
   },
   created() {
     if (this.required && isEmpty(this.containerGroup)) this.addContainer();
