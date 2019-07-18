@@ -3,13 +3,16 @@ import { getMdiIcon } from './toolbar-icons';
 const capitalize = str => str[0].toUpperCase() + str.slice(1);
 const noop = () => {};
 
+const JODIT_NO_COLOR = '';
+const JODIT_COMMAND_BACKGROUND_COLOR = 'background';
+const JODIT_COMMAND_TEXT_COLOR = 'forecolor';
 const JODIT_CONTROL_ALIGN = 'align';
 const JODIT_CONTROL_COLOR = 'brush';
 const JODIT_EVENT_AFTER_COLOR_POPUP_OPEN = `after${capitalize(JODIT_CONTROL_COLOR)}OpenPopup`;
 
 export const name = 'MdiIcons';
 
-export const install = Jodit => {
+export const install = (Jodit, { btnResetColorClass = 'btn_reset_color' } = {}) => {
   const { controls } = Jodit.defaultOptions;
 
   Jodit.plugins[name] = editor => {
@@ -31,16 +34,16 @@ export const install = Jodit => {
         [textColorBtn, bgColorBtn] = buttons;
       }
       buttons.forEach(el => {
-        el.classList.add('btn-no-color');
+        el.classList.add(btnResetColorClass);
         el.innerHTML = '';
         el.appendChild(createButton({ icon: 'mdi-water-off', text: 'None' }));
       });
       textColorBtn.addEventListener('click', () => {
-        editor.execCommand('forecolor', false, '');
+        editor.execCommand(JODIT_COMMAND_TEXT_COLOR, false, JODIT_NO_COLOR);
         editor.events.fire('closeAllPopups');
       });
       bgColorBtn.addEventListener('click', () => {
-        editor.execCommand('background', false, '');
+        editor.execCommand(JODIT_COMMAND_BACKGROUND_COLOR, false, JODIT_NO_COLOR);
         editor.events.fire('closeAllPopups');
       });
     }

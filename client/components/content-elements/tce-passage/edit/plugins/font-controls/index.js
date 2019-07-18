@@ -4,7 +4,7 @@ const JODIT_CONTROL_PARAGRAPH_STYLE = 'paragraph';
 
 export const name = 'FontControls';
 
-export const install = Jodit => {
+export const install = (Jodit, { pickerLabelClass = 'picker_label' }) => {
   const { controls } = Jodit.defaultOptions;
 
   if (controls[JODIT_CONTROL_FONT]) {
@@ -15,6 +15,20 @@ export const install = Jodit => {
   }
   if (controls[JODIT_CONTROL_PARAGRAPH_STYLE]) {
     Object.assign(controls[JODIT_CONTROL_PARAGRAPH_STYLE], { getLabel });
+  }
+
+  function getLabel(editor, control, button) {
+    const entry = getActiveEntry(editor, control);
+    if (!entry) return;
+    const [, key] = entry;
+    const icon = button.createIcon(control.icon, control);
+    const label = document.createElement('span');
+    label.classList.add(pickerLabelClass);
+    label.appendChild(icon);
+    label.innerHTML += key;
+    button.textBox.innerHTML = '';
+    button.textBox.appendChild(label);
+    return false;
   }
 };
 
@@ -32,26 +46,6 @@ const normalize = (() => {
     }
   };
 })();
-
-function getLabel(editor, control, button) {
-  const entry = getActiveEntry(editor, control);
-  if (!entry) return;
-  const [, key] = entry;
-  const icon = button.createIcon(control.icon, control);
-  Object.assign(icon.style, {
-    marginRight: '4px'
-  });
-  const label = document.createElement('span');
-  Object.assign(label.style, {
-    display: 'inline-block',
-    verticalAlign: 'middle'
-  });
-  label.appendChild(icon);
-  label.innerHTML += key;
-  button.textBox.innerHTML = '';
-  button.textBox.appendChild(label);
-  return false;
-}
 
 function getActiveEntry(editor, control) {
   const entries = Object.entries(control.list);

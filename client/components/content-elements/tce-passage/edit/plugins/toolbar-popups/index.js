@@ -4,7 +4,7 @@ const isToolbarButton = el => el.classList.contains('jodit_toolbar_btn');
 
 export const name = 'ToolbarPopups';
 
-export const install = (Jodit, { popupOpenClass = 'popup_open' }) => {
+export const install = (Jodit, { popupOpenClass = 'popup_open' } = {}) => {
   Jodit.plugins[name] = editor => {
     editor.events
       .on('beforeOpenPopup', togglePopup)

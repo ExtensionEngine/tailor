@@ -30,8 +30,12 @@ const joditConfig = {
 };
 
 // Load custom plugins.
-mdiIcons(Jodit);
-fontControls(Jodit);
+mdiIcons(Jodit, {
+  btnResetColorClass: 'btn_reset_color'
+});
+fontControls(Jodit, {
+  pickerLabelClass: 'picker_label'
+});
 toolbarPopups(Jodit, {
   popupOpenClass: 'popup_open'
 });

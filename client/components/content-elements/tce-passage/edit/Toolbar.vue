@@ -84,7 +84,8 @@ $text-size: 16px;
       height: $icon-size;
       color: $icon-color;
       font-size: $icon-size;
-      line-height: $text-size;
+      line-height: $icon-size;
+      vertical-align: top;
 
       &.stack {
         position: relative;
@@ -150,6 +151,16 @@ $text-size: 16px;
     border: none;
   }
 
+  .picker_label {
+    display: inline-block;
+    height: $icon-size;
+    line-height: $icon-size;
+
+    .jodit_icon {
+      margin-right: 4px;
+    }
+  }
+
   // TODO: Remove after bootstrap gets removed!
   blockquote {
     border: none;
@@ -173,16 +184,19 @@ $text-size: 16px;
   }
 }
 
-.jodit_colorpicker .btn-no-color {
+.jodit_colorpicker > div {
+  margin-bottom: 8px;
+}
+
+.jodit_colorpicker .btn_reset_color {
   width: auto;
-  margin-top: 5px;
 
   &:active, &:hover {
     color: $icon-accent-color;
     background: none;
   }
 
-  * {
+  span {
     float: none;
   }
 
@@ -195,9 +209,8 @@ $text-size: 16px;
       outline: none;
     }
 
-    .jodit_icon {
+    span.jodit_icon {
       color: inherit;
-      vertical-align: top;
     }
   }
 }
@@ -246,5 +259,9 @@ $text-size: 16px;
 
 .jodit_toolbar_btn.popup_open .jodit_tooltip {
   display: none;
+}
+
+.jodit_toolbar_popup {
+  margin-top: 6px;
 }
 </style>
