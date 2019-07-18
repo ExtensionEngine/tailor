@@ -3,7 +3,7 @@
     v-hotkey="{ esc: hide }"
     v-if="isAdmin"
     v-model="isVisible"
-    width="600px">
+    width="700px">
     <v-btn
       slot="activator"
       color="pink"
@@ -85,9 +85,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    schemas() {
-      return SCHEMAS;
-    }
+    schemas: () => SCHEMAS
   },
   methods: {
     ...mapActions('courses', ['save']),
@@ -101,10 +99,15 @@ export default {
       });
     },
     hide() {
-      this.isVisible = false;
       this.repository = getDefaultData();
-      this.$validator.reset();
       this.showLoader = false;
+      this.isVisible = false;
+    }
+  },
+  watch: {
+    isVisible(val) {
+      if (!val) return;
+      setTimeout(() => this.$validator.reset(), 60);
     }
   }
 };
