@@ -50,6 +50,7 @@ const textColor = `
   <span class="icon stack">
     <span class="icon stacked mdi mdi-format-color-text"></span>
     <span class="icon stacked mdi mdi-color-helper"></span>
+    <svg width="0" height="0" style="display: none;"></svg>
   </span>`;
 
 export default mdiIcons;

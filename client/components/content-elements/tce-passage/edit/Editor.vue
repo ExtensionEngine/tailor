@@ -24,6 +24,7 @@ const splitArray = arg => isString(arg) ? arg.split(/[,\s]+/) : arg;
 const joditConfig = {
   addNewLineOnDBLClick: false,
   showTooltipDelay: 350,
+  colorPickerDefaultTab: 'color',
   disablePlugins: ['fullsize', 'source'],
   toolbar: false
 };

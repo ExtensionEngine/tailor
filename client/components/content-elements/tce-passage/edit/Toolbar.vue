@@ -173,6 +173,35 @@ $text-size: 16px;
   }
 }
 
+.jodit_colorpicker .btn-no-color {
+  width: auto;
+  margin-top: 5px;
+
+  &:active, &:hover {
+    color: $icon-accent-color;
+    background: none;
+  }
+
+  * {
+    float: none;
+  }
+
+  & > span {
+    display: inline-block;
+    height: $icon-size;
+    line-height: $icon-size;
+
+    &:focus {
+      outline: none;
+    }
+
+    .jodit_icon {
+      color: inherit;
+      vertical-align: top;
+    }
+  }
+}
+
 .jodit_toolbar_btn .jodit_tooltip {
   $background-color: #2a2a2a;
   $text-color: #fff;
