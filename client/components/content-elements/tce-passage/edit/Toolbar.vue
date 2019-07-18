@@ -156,11 +156,21 @@ $text-size: 16px;
   }
 }
 
-.jodit_toolbar_list > .jodit_toolbar, .jodit_toolbar_list > .jodit_toolbar .jodit_toolbar {
-  padding: 0 !important;
-  background: #fff;
-  border: 1px solid #ccc;
-  box-shadow: rgba(0,0,0,0.2) 0 2px 8px;
+.jodit_toolbar_list > .jodit_toolbar {
+  &, & .jodit_toolbar {
+    padding: 0 !important;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: rgba(0,0,0,0.2) 0 2px 8px;
+  }
+
+  li.jodit_toolbar_btn > a {
+    padding: 8px 16px;
+
+    .jodit_toolbar_btn-left & {
+      padding: 8px 12px;
+    }
+  }
 }
 
 .jodit_toolbar_btn .jodit_tooltip {
