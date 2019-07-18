@@ -37,7 +37,7 @@
             </v-flex>
           </v-layout>
         </v-container>
-        <slot v-bind="{ isEditing }" name="header" />
+        <slot v-bind="{ isEditing }" name="header"/>
       </div>
     </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
