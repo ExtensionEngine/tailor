@@ -7,16 +7,20 @@
     @save="save"
     @delete="$emit('delete')">
     <template slot="header" slot-scope="{ isEditing }">
-      <div v-if="objectives.length" class="select-leaf">
-        <multiselect
-          v-model="objective"
-          :options="objectives"
-          :searchable="true"
-          :disabled="!isEditing"
-          :trackBy="'id'"
-          :customLabel="it => it.data ? it.data.name : ''"
-          :placeholder="objectiveLabel"/>
-      </div>
+      <v-container v-if="objectives.length" class="pa-0 mt-2">
+        <v-layout justify-end>
+          <v-flex xs4>
+            <multiselect
+              v-model="objective"
+              :options="objectives"
+              :searchable="true"
+              :disabled="!isEditing"
+              :trackBy="'id'"
+              :customLabel="it => it.data ? it.data.name : ''"
+              :placeholder="objectiveLabel"/>
+          </v-flex>
+        </v-layout>
+      </v-container>
     </template>
   </assessment-item>
 </template>
@@ -55,14 +59,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.select-leaf {
-  clear: both;
-
-  > div {
-    width: 400px;
-    float: right;
-  }
-}
-</style>

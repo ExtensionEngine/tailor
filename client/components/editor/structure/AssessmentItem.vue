@@ -13,22 +13,30 @@
       @selected="$emit('selected')"
       @delete="$emit('delete')"
       @save="save">
-      <div slot-scope="{ isEditing }" class="header">
-        <v-chip
-          color="blue-grey darken-1"
-          label
-          dark
-          small
-          class="pull-left text-uppercase">
-          {{ elementConfig.name }}
-        </v-chip>
-        <v-btn
-          @click="$emit('selected')"
-          flat
-          small
-          class="pull-right collapse-item">
-          Collapse
-        </v-btn>
+      <div slot-scope="{ isEditing }" class="pb-5">
+        <v-container pa-0>
+          <v-layout>
+            <v-flex grow>
+              <v-chip
+                color="blue-grey darken-1"
+                label
+                dark
+                small
+                class="pull-left text-uppercase">
+                {{ elementConfig.name }}
+              </v-chip>
+            </v-flex>
+            <v-flex shrink>
+              <v-btn
+                @click="$emit('selected')"
+                flat
+                small
+                class="ma-0 pa-0">
+                Collapse
+              </v-btn>
+            </v-flex>
+          </v-layout>
+        </v-container>
         <slot v-bind="{ isEditing }" name="header" />
       </div>
     </tce-question-container>
@@ -96,18 +104,7 @@ export default {
   padding: 0;
 
   .v-chip {
-    float: left;
     min-width: 30px;
-    margin: 0;
-  }
-
-  .header {
-    padding-bottom: 40px;
-
-    .collapse-item {
-      margin: 0;
-      padding: 0;
-    }
   }
 
   .drag-handle {
