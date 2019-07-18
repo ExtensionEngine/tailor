@@ -1,6 +1,10 @@
 <template>
   <v-card class="schema-list-container">
-    <v-text-field v-model.trim="search" label="Search" clearable/>
+    <v-text-field
+      v-model.trim="search"
+      label="Search"
+      append-icon="mdi-magnify"
+      clearable/>
     <v-treeview
       :items="schemas"
       :search="search"

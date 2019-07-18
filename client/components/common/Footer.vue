@@ -1,5 +1,5 @@
 <template>
-  <v-footer height="48" color="primary" absolute>
+  <v-footer height="46" color="primary" absolute>
     <v-layout row justify-center>
       <v-flex
         xs-12
@@ -17,3 +17,9 @@
     </v-layout>
   </v-footer>
 </template>
+
+<style lang="scss" scoped>
+.v-footer {
+  box-shadow: 0px -1px 1px 0px rgba(0,0,0,0.2);
+}
+</style>

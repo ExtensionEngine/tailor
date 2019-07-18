@@ -1,6 +1,16 @@
 <template>
-  <div class="system-settings-container grey lighten-2">
-    <div class="heading"></div>
+  <div class="system-settings-container white">
+    <div class="heading primary elevation-5">
+      <v-chip
+        color="primary lighten-4"
+        label
+        class="body-2 mt-2 ml-3">
+        <v-icon color="secondary lighten-1" class="pr-1">
+          mdi-shield-account-outline
+        </v-icon>
+        Admin
+      </v-chip>
+    </div>
     <v-container>
       <v-layout row align-start>
         <v-card>
@@ -31,19 +41,18 @@ export default {
 .system-settings-container {
   width: 100%;
   height: 100%;
-  padding: 46px 0 75px 0;
+  padding: 50px 0 60px;
 }
 
 .heading {
   position: absolute;
   top: 0;
   left: 0;
-  height: 110px;
   width: 100%;
-  background: #455a64;
-  box-shadow:
-    0px 3px 5px -1px rgba(0,0,0,0.2),
-    0px 5px 8px 0px rgba(0,0,0,0.14),
-    0px 1px 14px 0px rgba(0,0,0,0.12);
+  height: 46px;
+  text-align: left;
+  text-transform: uppercase;
+  color: #444;
+  z-index: 2;
 }
 </style>
