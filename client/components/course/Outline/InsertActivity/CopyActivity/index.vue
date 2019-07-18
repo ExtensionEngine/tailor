@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="true" width="600px" persistent>
+  <v-dialog :value="true" width="700px" persistent>
     <v-card class="pa-3">
       <v-card-title class="headline">
         <v-avatar color="secondary" size="38" class="mr-2">

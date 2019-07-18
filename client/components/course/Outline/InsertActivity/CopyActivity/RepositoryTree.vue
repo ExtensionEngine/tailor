@@ -56,7 +56,7 @@ export default {
 
 .treeview {
   max-height: 400px;
-  padding: 20px;
+  margin: 20px 10px;
   text-align: left;
   user-select: none;
   overflow-y: scroll;
