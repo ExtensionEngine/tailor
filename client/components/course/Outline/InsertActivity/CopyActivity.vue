@@ -12,16 +12,9 @@
           <v-progress-circular color="primary" indeterminate/>
         </div>
         <div v-else>
-          <v-text-field
-            v-model="search"
-            @input="fetchAllActivities"
-            label="Search activities"
-            clearable
-            clear-icon="mdi-close-circle-outline"/>
           <v-treeview
             :items="repositories"
             :load-children="fetchActivities"
-            :search="search"
             transition
             loading-icon="mdi-loading"
             class="pt-3 tree-view">
@@ -72,18 +65,10 @@ export default {
     return {
       showLoader: true,
       selected: null,
-      repositories: [],
-      search: '',
-      allFetched: false
+      repositories: []
     };
   },
   methods: {
-    fetchAllActivities() {
-      if (this.allFetched) return;
-      this.allFetched = true;
-      const emptyRepositories = this.repositories.filter(it => !it.children.length);
-      return emptyRepositories.forEach(it => this.fetchActivities(it));
-    },
     getIcon(children, open) {
       if (!children) return 'mdi-file-document-box';
       return open ? 'mdi-folder-open' : 'mdi-folder';
@@ -98,7 +83,9 @@ export default {
       return children.map(it => {
         it.name = it.data.name;
         it.supported = this.supportedLevels.find(({ type }) => type === it.type);
-        const grandChildren = activities.filter(item => item.parentId === it.id);
+        const grandChildren = activities.filter(item => {
+          return item.data.name && item.parentId === it.id;
+        });
         if (!grandChildren.length) return it;
         it.children = this.addChildren(grandChildren, activities);
         return it;
