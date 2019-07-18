@@ -15,6 +15,7 @@ const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const storage = require('../storage');
 const without = require('lodash/without');
+const uniq = require('lodash/uniq');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
 
@@ -23,50 +24,48 @@ const TES_ATTRS = [
   'position', 'data', 'meta', 'refs', 'createdAt', 'updatedAt'
 ];
 
-function publishActivity(activity) {
+async function publishActivity(activity) {
   if (activity.isLink) return publishLinkedActivity(activity);
-  if (!activity.isOrigin) {
-    return getStructureData(activity).then(data => {
-      let { repository, predecessors, spine } = data;
-      predecessors.forEach(it => {
-        const exists = find(spine.structure, { id: it.id });
-        if (!exists) addToSpine(spine, it);
-      });
-      activity.publishedAt = new Date();
-      addToSpine(spine, activity);
-      return publishContent(repository, activity).then(content => {
-        attachContentSummary(find(spine.structure, { id: activity.id }), content);
-        return saveSpine(spine)
-        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
-        .then(() => activity.save());
-      });
-    });
-  }
-}
-function publishLinkedActivity(activity) {
-  return getStructureData(activity).then(data => {
+  return getStructureData(activity).then(async data => {
     let { repository, predecessors, spine } = data;
-    predecessors.forEach(it => {
+    predecessors.forEach(async it => {
       const exists = find(spine.structure, { id: it.id });
-      if (!exists) {
-        if (it.isLink) addLinkToSpine(spine, it);
-        else addToSpine(spine, it);
-      }
+      if (!exists) await addToSpine(spine, it);
     });
     activity.publishedAt = new Date();
-    addLinkToSpine(spine, activity);
-    return publishContent(repository, activity.origin).then(content => {
-      attachContentSummary(find(spine.structure, { id: activity.originId }), content);
+    await addToSpine(spine, activity);
+    return publishContent(repository, activity).then(content => {
+      attachContentSummary(find(spine.structure, { id: activity.id }), content);
       return saveSpine(spine)
         .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
         .then(() => activity.save());
     });
   });
 }
+async function publishLinkedActivity(activity) {
+  return getStructureData(activity).then(async data => {
+    let { repository, predecessors, spine } = data;
+    predecessors.forEach(async it => {
+      const exists = find(spine.structure, { id: it.id });
+      if (!exists) {
+        if (it.isLink) await addLinkToSpine(spine, it);
+        else await addToSpine(spine, it);
+      }
+    });
+    activity.publishedAt = new Date();
+    await addLinkToSpine(spine, activity);
+    return publishContent(repository, activity.origin).then(content => {
+      attachContentSummary(find(spine.structure, { id: activity.originId }), content);
+      return saveSpine(spine)
+          .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+          .then(() => activity.save());
+    });
+  });
+}
 
 async function addLinkToSpine(spine, activity) {
   const relationships = getLevelRelationships(activity.type);
-  let index = findIndex(spine.structure, { id: activity.originId });
+  const index = findIndex(spine.structure, { id: activity.originId });
   const parent = await activity.getParent();
   const parentId = parent.isLink ? activity.origin.parentId : parent.id;
 
@@ -83,16 +82,16 @@ async function addLinkToSpine(spine, activity) {
   const children = await activity.getChildren();
   let childrenIds = [];
   if (children.length) {
-    childrenIds = children.sort((a, b) => a.position > b.position).map(child => {
+    childrenIds = uniq(children.sort((a, b) => a.position > b.position).map(child => {
       return child.originId ? child.originId : child.id;
-    });
+    }));
   }
   activity = {
     ...pick(activity.origin, [
       'id', 'uid', 'type', 'position', 'data',
       'publishedAt', 'updatedAt', 'createdAt'
     ]),
-    parentId: [ parentId ],
+    parentId: [parentId],
     childrenIds,
     relationships: mapRelationships(relationships, activity.origin)
   };
@@ -259,14 +258,22 @@ function saveSpine(spine) {
   return storage.saveFile(key, spineData).then(() => updatedSpine);
 }
 
-function addToSpine(spine, activity) {
+async function addToSpine(spine, activity) {
   const relationships = getLevelRelationships(activity.type);
+  const children = await activity.getChildren();
+  let childrenIds = [];
+  if (children.length) {
+    childrenIds = uniq(children.sort((a, b) => a.position > b.position).map(child => {
+      return child.originId ? child.originId : child.id;
+    }));
+  }
   activity = Object.assign(
     pick(activity, [
       'id', 'uid', 'parentId', 'type', 'position', 'data',
       'publishedAt', 'updatedAt', 'createdAt'
     ]), {
-      relationships: mapRelationships(relationships, activity)
+      relationships: mapRelationships(relationships, activity),
+      childrenIds
     }
   );
   renameKey(activity, 'data', 'meta');
