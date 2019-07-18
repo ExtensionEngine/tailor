@@ -11,28 +11,27 @@
         <div v-if="showLoader" class="search-spinner">
           <v-progress-circular color="primary" indeterminate/>
         </div>
-        <div v-else>
-          <v-treeview
-            :items="repositories"
-            :load-children="fetchActivities"
-            transition
-            loading-icon="mdi-loading"
-            class="pt-3 tree-view">
-            <template v-slot:prepend="{ item, open }">
-              <v-icon :color="item.data.color">
-                {{ getIcon(item.children, open) }}
-              </v-icon>
-            </template>
-            <template v-slot:append="{ item }">
-              <div
-                v-if="item.supported"
-                :class="{ picked: isPicked(item) }"
-                @click="toggleSelect(item)"
-                class="select-btn">
-                {{ isPicked(item) ? 'Deselect' : 'Select' }}
-              </div>
-            </template>
-          </v-treeview>
+        <div v-else-if="selectedRepository">
+          <v-layout justify-space-between>
+            <v-select
+              :value="selectedRepository"
+              :items="repositories"
+              @input="updateSelected"
+              item-text="name"
+              item-value="id"
+              label="Repository"
+              class="repo-dropdown"/>
+            <v-text-field
+              v-model="search"
+              placeholder="Filter by name..."
+              clearable
+              clear-icon="mdi-close-circle-outline"/>
+          </v-layout>
+          <repository-tree
+            :activities="selectedRepository.children"
+            :search="search"
+            :selected="selected"
+            @toggleSelect="toggleSelect"/>
         </div>
       </v-card-text>
       <v-card-actions>
@@ -55,6 +54,7 @@ import activityApi from 'client/api/activity';
 import courseApi from 'client/api/course';
 import get from 'lodash/get';
 import Promise from 'bluebird';
+import RepositoryTree from './RepositoryTree';
 import sortBy from 'lodash/sortBy';
 
 export default {
@@ -65,16 +65,22 @@ export default {
     return {
       showLoader: true,
       selected: null,
-      repositories: []
+      repositories: [],
+      selectedRepository: null,
+      search: ''
     };
   },
   methods: {
-    getIcon(children, open) {
-      if (!children) return 'mdi-file-document-box';
-      return open ? 'mdi-folder-open' : 'mdi-folder';
-    },
-    isPicked({ id }) {
-      return get(this.selected, 'id') === id;
+    updateSelected(id) {
+      if (id !== get(this.selectedRepository, 'id')) this.selected = null;
+      const repo = this.repositories.find(it => it.id === id);
+      if (repo.children) {
+        this.selectedRepository = repo;
+      } else {
+        return this.fetchActivities(repo).then(repository => {
+          this.selectedRepository = repository;
+        });
+      }
     },
     toggleSelect(item) {
       this.selected = item.id !== get(this.selected, 'id') ? item : null;
@@ -92,6 +98,7 @@ export default {
       });
     },
     fetchActivities(repository) {
+      if (repository.children) return repository;
       return activityApi.getActivities(repository.id).then(items => {
         let activities = sortBy(items, 'position');
         activities = this.addChildren(activities, activities);
@@ -102,32 +109,17 @@ export default {
   },
   created() {
     return Promise.join(courseApi.getCourses(), Promise.delay(700), items => {
-      const repositories = items.map(repository => {
-        repository.children = [];
-        return repository;
-      });
-      this.repositories = sortBy(repositories, 'name');
+      this.repositories = sortBy(items, 'name');
       this.showLoader = false;
+      return this.updateSelected(this.repositories[0].id);
     });
-  }
+  },
+  components: { RepositoryTree }
 };
 </script>
 
 <style lang="scss" scoped>
-.select-btn {
-  cursor: pointer;
-
-  &.picked {
-    color: #337ab7;
-  }
-}
-
-.tree-view {
-  max-height: 400px;
-  margin-bottom: 20px;
-  padding-right: 20px;
-  text-align: left;
-  user-select: none;
-  overflow-y: scroll;
+.repo-dropdown.v-text-field {
+  margin-right: 30px;
 }
 </style>
