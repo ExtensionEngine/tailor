@@ -3,7 +3,7 @@
     :assessment="assessment"
     :expanded="expanded"
     :draggable="true"
-    @selected="$emit('selected')"
+    @selected="expanded = !expanded"
     @save="save"
     @delete="$emit('delete')">
     <template slot="header" slot-scope="{ isEditing }">
@@ -36,11 +36,13 @@ export default {
   props: {
     assessment: { type: Object, required: true },
     objectives: { type: Array, required: true },
-    objectiveLabel: { type: String, required: true },
-    expanded: { type: Boolean, required: true }
+    objectiveLabel: { type: String, required: true }
   },
   data() {
-    return { objective: null };
+    return {
+      expanded: !this.assessment.id,
+      objective: null
+    };
   },
   methods: {
     save(assessment) {

@@ -39,8 +39,6 @@
         :assessment="element"
         :objectives="objectives"
         :objectiveLabel="objectiveLabel"
-        :expanded="isSelected(element)"
-        @selected="toggleSelect(element)"
         @save="saveAssessment"
         @delete="deleteElement(element)"/>
     </element-list>
@@ -74,7 +72,6 @@ export default {
   data() {
     return {
       unsaved: [],
-      selected: [],
       timeLimit: get(this.group, 'data.timeLimit', 0)
     };
   },
@@ -100,7 +97,6 @@ export default {
     addAssessment(assessment) {
       const cid = cuid();
       this.unsaved.push({ ...assessment, _cid: cid });
-      this.selected.push(cid);
     },
     saveAssessment(assessment) {
       if (assessment.id) return this.$emit('updateElement', assessment);
@@ -110,19 +106,9 @@ export default {
       if (!assessment.id) return this.remove(assessment);
       this.$emit('deleteElement', assessment);
     },
-    toggleSelect(assessment) {
-      if (this.isSelected(assessment)) {
-        this.selected.splice(this.selected.indexOf(assessment._cid), 1);
-      } else {
-        this.selected.push(assessment._cid);
-      }
-    },
     remove({ _cid: cid }) {
       const index = this.unsaved.findIndex(it => it._cid === cid);
       this.unsaved.splice(index, 1);
-    },
-    isSelected(assessment) {
-      return this.selected.includes(assessment._cid);
     }
   },
   watch: {
