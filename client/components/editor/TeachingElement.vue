@@ -37,7 +37,12 @@ export default {
     };
   },
   computed: {
-    ...mapState('activeUsers', ['sseId'])
+    ...mapState('activeUsers', ['sseId']),
+    context() {
+      const { courseId, activityId, contentId: elementId } = this.element;
+      const { sseId } = this;
+      return { courseId, activityId, elementId, sseId };
+    }
   },
   methods: {
     ...mapActions('activeUsers', {
@@ -63,21 +68,16 @@ export default {
       this.removeElement(this.element).then(() => {
         this.$nextTick(() => EventBus.emit('element:focus'));
       });
-    },
-    getContext() {
-      const { courseId, activityId, contentId: elementId } = this.element;
-      const { sseId } = this;
-      const created = new Date();
-      return { courseId, activityId, elementId, sseId, created };
     }
   },
   watch: {
     isFocused() {
+      this.context.created = new Date();
       if (this.isFocused) {
-        this.addActiveUserContext(this.getContext());
+        this.addActiveUserContext(this.context);
         return;
       }
-      this.removeActiveUserContext(this.getContext());
+      this.removeActiveUserContext(this.context);
     }
   },
   created() {
@@ -86,7 +86,7 @@ export default {
     });
   },
   beforeDestroy() {
-    this.removeActiveUserContext(omit(this.getContext(), 'created'));
+    this.removeActiveUserContext(omit(this.context, 'created'));
   },
   components: { ActiveUsers, ContainedContent }
 };

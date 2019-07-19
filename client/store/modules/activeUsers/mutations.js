@@ -42,13 +42,18 @@ const setSseId = (state, sseId) => {
   state.sseId = sseId;
 };
 
+const resetActiveUsers = (state) => {
+  state.activeUsers = {};
+};
+
 export {
   save,
   setEndpoint,
   setSseId,
   sseAdd,
   sseRemove,
-  sseRemoveSession
+  sseRemoveSession,
+  resetActiveUsers
 };
 
 function setUserActivity(_vue, activeUsers, user, context) {

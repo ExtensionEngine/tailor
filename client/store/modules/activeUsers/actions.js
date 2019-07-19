@@ -44,6 +44,7 @@ const subscribe = ({ state, commit, rootState }) => {
 
 const unsubscribe = ({ commit }) => {
   feed.disconnect();
+  commit('resetActiveUsers');
   commit('setSseId', null);
 };
 
