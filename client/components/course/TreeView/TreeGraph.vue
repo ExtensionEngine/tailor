@@ -124,10 +124,12 @@ export default {
         .attr('class', d => `node depth-${d.depth}`)
         .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
+      const label = ({ data }) => data.name || (data.originId || data.id);
+
       // Append label.
       node.append('text')
         .classed('label', true)
-        .text(d => d.data.name || d.data.id)
+        .text(d => label(d))
         .style('text-anchor', 'middle')
         .attr('dy', '.35em')
         .attr('y', d => {
