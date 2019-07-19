@@ -168,8 +168,10 @@ class Activity extends Model {
       );
     }
 
-    const clonedActivitiesMap = source
-      .filter(activity => !(activity.isOrigin && idMap[activity.id]))
+    const filteredSource = source
+    .filter(activity => !(activity.isOrigin && idMap[activity.id]));
+
+    const clonedActivitiesMap = filteredSource
       .map(activity => {
         let originId = activity.originId;
         if (cloneOrigins && idMap[activity.originId]) {
@@ -189,7 +191,7 @@ class Activity extends Model {
       { returning: true, transaction }
     );
 
-    return Promise.reduce(source,
+    return Promise.reduce(filteredSource,
       async (acc, activity, index) => {
         const parent = clonedActivities[index];
         const children = await activity.getChildren(
