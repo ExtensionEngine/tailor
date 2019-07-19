@@ -19,9 +19,12 @@ router
   .delete('/courses/:courseId/activities/:activityId', ctrl.remove)
   .post('/courses/:courseId/activities/:activityId/reorder', ctrl.reorder)
   .post('/courses/:courseId/activities/:activityId/clone', ctrl.clone)
-  .post('/courses/:courseId/activities/:activityId/link', ctrl.link)
   .get('/courses/:courseId/activities/:activityId/publish', ctrl.publish)
   .get('/courses/:courseId/activities/:activityId/preview', ctrl.getPreviewUrl);
+
+if (process.env.ENABLE_ACTIVITY_LINKING) {
+  router.post('/courses/:courseId/activities/:activityId/link', ctrl.link);
+}
 
 function getActivity(req, _res, next, activityId) {
   return Activity.findByPk(activityId, { paranoid: false })

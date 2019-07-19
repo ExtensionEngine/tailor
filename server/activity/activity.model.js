@@ -9,6 +9,8 @@ const omitBy = require('lodash/omitBy');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
+const { ENABLE_ACTIVITY_LINKING } = process.env;
+
 class Activity extends Model {
   static fields(DataTypes) {
     const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4, INTEGER } = DataTypes;
@@ -222,8 +224,9 @@ class Activity extends Model {
   }
 
   static async resolveClonedOrigins(courseId, options) {
-    const { transaction } = options;
     let { idMap } = options;
+    if (!ENABLE_ACTIVITY_LINKING) return idMap;
+    const { transaction } = options;
     const origins = await Activity.findAll({ where: {
       courseId,
       position: null
@@ -365,7 +368,7 @@ class Activity extends Model {
   remove(options = {}) {
     return this.sequelize.transaction(async transaction => {
       options = { ...options, transaction };
-      if (this.isLink) return this.removeLink(options);
+      if (ENABLE_ACTIVITY_LINKING && this.isLink) return this.removeLink(options);
       const TeachingElement = this.sequelize.model('TeachingElement');
       const descendants = await this.descendants({ attributes: ['id'] });
       descendants.all = [...descendants.nodes, ...descendants.leaves];
@@ -412,6 +415,7 @@ class Activity extends Model {
 
   toJSON() {
     const values = super.toJSON();
+    if (!ENABLE_ACTIVITY_LINKING) return values;
     if (!this.isLink) {
       if (!this.isOrigin) {
         return {

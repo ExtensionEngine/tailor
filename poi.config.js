@@ -80,6 +80,9 @@ module.exports = {
     dir: 'dist',
     sourceMap: !isProduction
   },
+  envs: {
+    ENABLE_ACTIVITY_LINKING: process.env.ENABLE_ACTIVITY_LINKING
+  },
   chainWebpack(config, { mode }) {
     config.resolve.alias.merge(aliases);
     config.resolve.extensions.merge(extensions);
