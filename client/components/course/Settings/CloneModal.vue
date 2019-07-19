@@ -16,14 +16,14 @@
             v-validate="{ required: true, min: 2, max: 250 }"
             v-model="name"
             :error-messages="vErrors.collect('name')"
-            class="form-group"
+            class="mb-4 form-group"
             label="Name"
             data-vv-name="name"/>
           <v-textarea
             v-validate="{ required: true, min: 2, max: 2000 }"
             v-model="description"
             :error-messages="vErrors.collect('description')"
-            class="form-group"
+            class="mb-4 form-group"
             label="Description"
             data-vv-name="description"/>
         </div>
@@ -89,9 +89,3 @@ export default {
   inject: ['$validator']
 };
 </script>
-
-<style lang="scss" scoped>
-.form-group {
-  margin-bottom: 20px;
-}
-</style>
