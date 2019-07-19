@@ -1,35 +1,39 @@
 <template>
   <div class="well">
-    <div class="row">
-      <div :class="`col-md-${showLevelPicker ? 8 : 10}`">
-        <span
-          :class="{ 'has-error': vErrors.has('name') }"
-          class="form-group">
-          <input
+    <v-container grid-list-xl fluid>
+      <v-layout row align-center>
+        <v-flex grow>
+          <v-text-field
             v-validate="{ required: true, min: 2, max: 250 }"
+            :error-messages="vErrors.collect('name')"
+            :autofocus="true"
             v-model="name"
-            class="form-control"
-            type="text"
             name="name"
-            autofocus=""
-            placeholder="Name">
-          <span v-show="vErrors.has('name')" class="help-block">
-            {{ vErrors.first('name') }}
-          </span>
-        </span>
-      </div>
-      <div v-if="showLevelPicker" class="col-md-2">
-        <multiselect
-          :value="level"
-          :options="levels"
-          :allow-empty="false"
-          @input="onLevelSelected">
-        </multiselect>
-      </div>
-      <div class="col-md-2">
-        <v-btn @click.stop="create" color="blue-grey" outline>Add</v-btn>
-      </div>
-    </div>
+            placeholder="Name"/>
+        </v-flex>
+        <v-flex shrink>
+          <v-select
+            v-validate="{ required: true }"
+            v-if="showLevelPicker"
+            :error-messages="vErrors.collect('type')"
+            v-model="levelType"
+            :items="levels"
+            item-text="label"
+            item-value="type"
+            name="type"
+            placeholder="Type"/>
+        </v-flex>
+        <v-flex shrink>
+          <v-btn
+            :disabled="vErrors.any()"
+            @click.stop="create"
+            color="primary"
+            outline>
+            Create
+          </v-btn>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 
@@ -45,7 +49,7 @@ export default {
   data() {
     return {
       name: '',
-      level: null
+      levelType: null
     };
   },
   computed: {
@@ -60,15 +64,11 @@ export default {
   methods: {
     ...mapActions('activities', ['save']),
     ...mapMutations('course', ['focusActivity']),
-    onLevelSelected(level) {
-      if (!level) return;
-      this.level = level;
-    },
     create() {
       this.$validator.validateAll().then(result => {
         if (!result) return;
         this.save({
-          type: this.level.type,
+          type: this.levelType,
           data: { name: this.name },
           courseId: this.course.id,
           position: 1
@@ -81,7 +81,7 @@ export default {
     }
   },
   created() {
-    this.level = first(this.levels);
+    if (!this.showLevelPicker) this.levelType = first(this.levels).type;
   },
   components: { multiselect }
 };
@@ -91,10 +91,5 @@ export default {
 .well {
   background-color: white;
   border: 1px solid #ccc;
-
-  input {
-    margin: 6px;
-    padding-left: 5px;
-  }
 }
 </style>
