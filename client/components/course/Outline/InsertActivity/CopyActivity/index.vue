@@ -12,21 +12,26 @@
           <v-progress-circular color="primary" indeterminate/>
         </div>
         <div v-else-if="selectedRepository">
-          <v-layout justify-space-between>
-            <v-select
-              :value="selectedRepository"
-              :items="repositories"
-              @input="updateSelected"
-              item-text="name"
-              item-value="id"
-              label="Repository"
-              class="repo-dropdown"/>
-            <v-text-field
-              v-model="search"
-              placeholder="Filter by name..."
-              clearable
-              clear-icon="mdi-close-circle-outline"/>
-          </v-layout>
+          <v-container grid-list-xl pa-0>
+            <v-layout justify-space-between>
+              <v-flex>
+                <v-select
+                  :value="selectedRepository"
+                  :items="repositories"
+                  @input="updateSelected"
+                  item-text="name"
+                  item-value="id"
+                  label="Repository"/>
+              </v-flex>
+              <v-flex>
+                <v-text-field
+                  v-model="search"
+                  placeholder="Filter by name..."
+                  clearable
+                  clear-icon="mdi-close-circle-outline"/>
+              </v-flex>
+            </v-layout>
+          </v-container>
           <repository-tree
             :activities="selectedRepository.children"
             :search="search"
@@ -117,9 +122,3 @@ export default {
   components: { RepositoryTree }
 };
 </script>
-
-<style lang="scss" scoped>
-.repo-dropdown.v-text-field {
-  margin-right: 30px;
-}
-</style>
