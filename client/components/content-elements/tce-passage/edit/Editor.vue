@@ -30,15 +30,9 @@ const joditConfig = {
 };
 
 // Load custom plugins.
-mdiIcons(Jodit, {
-  btnResetColorClass: 'btn_reset_color'
-});
-fontControls(Jodit, {
-  pickerLabelClass: 'picker_label'
-});
-toolbarPopups(Jodit, {
-  popupOpenClass: 'popup_open'
-});
+mdiIcons(Jodit, { btnResetColorClass: 'btn_reset_color' });
+fontControls(Jodit, { pickerLabelClass: 'picker_label' });
+toolbarPopups(Jodit, { popupOpenClass: 'popup_open' });
 
 export default {
   props: {
