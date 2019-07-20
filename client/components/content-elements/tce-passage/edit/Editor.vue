@@ -55,11 +55,22 @@ export default {
       placeholder: vm.placeholder
     })
   },
+  methods: {
+    renderToolbar() {
+      const { editor } = this.$refs.jodit;
+      editor.selection.focus();
+      const toolbarContainer = document.getElementById('joditToolbar');
+      renderToolbar(editor, toolbarContainer);
+    }
+  },
   mounted() {
     const { editor } = this.$refs.jodit;
-    editor.selection.focus();
-    const toolbarContainer = document.getElementById('joditToolbar');
-    renderToolbar(editor, toolbarContainer);
+    editor.events
+      .on('afterInit', this.renderToolbar)
+      .on('beforeDestruct', () => {
+        if (!editor.events) return;
+        editor.events.off('afterInit', this.renderToolbar);
+      });
   },
   components: {
     JoditVue

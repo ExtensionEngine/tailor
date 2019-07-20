@@ -122,8 +122,8 @@ $text-size: 16px;
       }
 
       // dropdown chevrons
-      .jodit_with_dropdownlist-trigger {
-        border-top-color: $color;
+      .jodit_with_dropdownlist-trigger svg {
+        fill: currentColor;
       }
     }
   }
@@ -149,6 +149,10 @@ $text-size: 16px;
     min-width: 0;
     margin-right: 15px !important;
     border: none;
+  }
+
+  & > a .jodit_with_dropdownlist-trigger {
+    vertical-align: top;
   }
 
   .picker_label {

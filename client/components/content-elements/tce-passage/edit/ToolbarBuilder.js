@@ -24,8 +24,11 @@ export default class ToolbarBuilder {
   addGroup(controls = []) {
     const buttons = controls.reduce((acc, [name, tooltip]) => {
       const control = Jodit.defaultOptions.controls[name];
+      const { en } = Jodit.lang;
       if (!control) return acc;
-      Object.assign(control, { tooltip, hotkeys: [] });
+      control.tooltip = control.tooltip || tooltip;
+      Object.assign(en, { [control.tooltip]: tooltip });
+      Object.assign(control, { hotkeys: [] });
       acc.push(name);
       return acc;
     }, []);
