@@ -73,6 +73,7 @@ $text-size: 16px;
 
   & > li.jodit_toolbar_btn {
     min-width: 30px;
+    line-height: 100%;
 
     & > a {
       padding: 6px 5px;
@@ -101,10 +102,6 @@ $text-size: 16px;
         text-align: center;
       }
     }
-  }
-
-  &.loading > li.jodit_toolbar_btn {
-    transition: none;
   }
 }
 

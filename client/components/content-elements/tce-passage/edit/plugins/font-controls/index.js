@@ -61,6 +61,7 @@ const normalize = (() => {
 })();
 
 function getActiveEntry(editor, control, defaultValue) {
+  if (!editor.isInited) return [null, defaultValue];
   const entries = Object.entries(control.list);
   const entry = entries.find(args => control.isActiveChild(editor, { args }));
   if (entry) return entry;

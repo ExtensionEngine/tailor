@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import externalToolbar from './plugins/external-toolbar';
 import fontControls from './plugins/font-controls';
 // TODO: Import `Jodit` from `jodit-vue` once it becomes available!
 import Jodit from 'jodit';
@@ -17,19 +18,16 @@ import Toolbar from './Toolbar';
 import toolbarPopups from './plugins/toolbar-popups';
 import uniqueId from 'lodash/uniqueId';
 
-const isString = arg => typeof arg === 'string';
-const splitArray = arg => isString(arg) ? arg.split(/[,\s]+/) : arg;
-
 /** @type {import('jodit/src/Config').Config & import('jodit/src/plugins') } */
 const joditConfig = {
   addNewLineOnDBLClick: false,
   showTooltipDelay: 350,
   colorPickerDefaultTab: 'color',
-  disablePlugins: ['fullsize', 'source'],
-  toolbar: false
+  disablePlugins: ['fullsize', 'source']
 };
 
 // Load custom plugins.
+externalToolbar(Jodit, { toolbarContainer: '#joditToolbar' });
 mdiIcons(Jodit, { btnResetColorClass: 'btn_reset_color' });
 fontControls(Jodit, { pickerLabelClass: 'picker_label' });
 toolbarPopups(Jodit, { popupOpenClass: 'popup_open' });
@@ -49,36 +47,14 @@ export default {
       placeholder: vm.placeholder
     })
   },
-  methods: {
-    renderToolbar() {
-      const { editor } = this.$refs.jodit;
-      editor.selection.focus();
-      const toolbarContainer = document.getElementById('joditToolbar');
-      renderToolbar(editor, toolbarContainer);
-    }
-  },
   mounted() {
     const { editor } = this.$refs.jodit;
-    editor.events
-      .on('afterInit', this.renderToolbar)
-      .on('beforeDestruct', () => {
-        if (!editor.events) return;
-        editor.events.off('afterInit', this.renderToolbar);
-      });
+    editor.selection.focus();
   },
   components: {
     JoditVue
   }
 };
-
-function renderToolbar(jodit, toolbarContainer) {
-  const { options, toolbar } = jodit;
-  const buttons = splitArray(options.buttons).concat(options.extraButtons);
-  toolbar.container.classList.add('loading');
-  const result = toolbar.build(buttons, toolbarContainer);
-  setTimeout(() => toolbar.container.classList.remove('loading'), 0);
-  return result;
-}
 </script>
 
 <style lang="scss" scoped>
@@ -86,6 +62,15 @@ $icon-color: #333;
 $icon-size: 18px;
 $statusbar-height: 26px;
 $statusbar-border-size: 1px;
+
+.jodit-wrapper /deep/ .jodit_container {
+  display: flex;
+  flex-direction: column;
+
+  .jodit_workplace {
+    flex-grow: 1;
+  }
+}
 
 .jodit-wrapper /deep/ .jodit_placeholder {
   font-style: italic;
