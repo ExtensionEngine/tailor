@@ -49,6 +49,7 @@ export default {
   },
   mounted() {
     const { editor } = this.$refs.jodit;
+    editor.editor.style.cursor = 'initial';
     editor.selection.focus();
   },
   components: {
