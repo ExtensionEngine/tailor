@@ -64,15 +64,6 @@ $icon-size: 18px;
 $statusbar-height: 26px;
 $statusbar-border-size: 1px;
 
-.jodit-wrapper /deep/ .jodit_container {
-  display: flex;
-  flex-direction: column;
-
-  .jodit_workplace {
-    flex-grow: 1;
-  }
-}
-
 .jodit-wrapper /deep/ .jodit_placeholder {
   font-style: italic;
 }
