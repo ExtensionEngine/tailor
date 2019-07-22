@@ -4,16 +4,12 @@
       <v-layout row class="catalog-actions">
         <create-repository/>
         <v-flex md4 sm10 offset-md4 offset-sm1>
-          <search @change="search"/>
+          <search @change="setSearch($event)"/>
         </v-flex>
         <v-flex md3 sm1 class="text-sm-left pl-2">
           <v-tooltip open-delay="800" right>
             <template v-slot:activator="{ on }">
-              <v-btn
-                v-on="on"
-                @click="togglePinned() || search(queryParams.search)"
-                icon
-                flat>
+              <v-btn v-on="on" @click="togglePinned()" icon flat>
                 <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
                   mdi-pin
                 </v-icon>
@@ -24,7 +20,7 @@
           <select-order :sortBy="sortBy" @update="setOrder" class="pl-2"/>
         </v-flex>
       </v-layout>
-      <v-layout v-show="!searching" row wrap>
+      <v-layout row wrap>
         <v-flex
           v-for="repository in repositories"
           :key="repository._cid"
@@ -33,7 +29,7 @@
           <repository-card :repository="repository"/>
         </v-flex>
       </v-layout>
-      <infinite-loading ref="infiniteLoading" @infinite="loadMore">
+      <infinite-loading ref="loader" @infinite="load">
         <div slot="spinner" class="spinner">
           <v-progress-circular color="primary" indeterminate/>
         </div>
@@ -57,17 +53,13 @@ import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import CreateRepository from './Create';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
-import Promise from 'bluebird';
+import isEqual from 'lodash/isEqual';
+import pick from 'lodash/pick';
 import RepositoryCard from './Card';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
 
 export default {
-  data() {
-    return {
-      searching: false
-    };
-  },
   computed: {
     ...mapState('courses', {
       sortBy: state => state.$internals.sort,
@@ -78,6 +70,9 @@ export default {
       queryParams: 'courseQueryParams',
       hasMoreResults: 'hasMoreResults'
     }),
+    loader() {
+      return get(this.$refs, 'loader.stateChanger', {});
+    },
     hasRepositories() {
       return !!this.repositories.length;
     },
@@ -86,43 +81,28 @@ export default {
       if (this.queryParams.search) return 'No matches found';
       if (this.showPinned) return '0 pinned items';
       return '0 available repositories';
-    },
-    loaderState() {
-      return get(this.$refs, 'infiniteLoading.stateChanger', {});
     }
   },
   methods: {
     ...mapActions('courses', ['fetch']),
     ...mapMutations('courses', ['togglePinned', 'setSearch', 'setOrder']),
-    loadMore() {
+    load() {
       return this.fetch().then(() => {
-        if (this.hasRepositories) this.loaderState.loaded();
-        if (!this.hasMoreResults) this.loaderState.complete();
+        if (this.hasRepositories) this.loader.loaded();
+        if (!this.hasMoreResults) this.loader.complete();
       });
-    },
-    load(query) {
-      this.loaderState.loaded();
-      this.loaderState.complete();
-      return Promise.join(this.fetch({ reset: true }))
-        .then(() => {
-          this.loaderState.reset();
-          if (this.hasRepositories) this.loaderState.loaded();
-          if (!this.hasMoreResults) this.loaderState.complete();
-        });
-    },
-    search(query) {
-      this.setSearch(query);
-      this.searching = true;
-      return this.load()
-        .then(() => (this.searching = false));
     }
   },
   watch: {
-    sortBy(val) {
-      this.search();
+    repositories(items) {
+      // If all items get unpinned
+      if (!items.length & this.showPinned) this.loader.reset();
     },
-    repositories(val) {
-      if (!val.length & this.showPinned) this.loaderState.reset();
+    queryParams(val, oldVal) {
+      const attrs = ['search', 'sortOrder', 'sortBy', 'pinned'];
+      const changedFilter = !isEqual(pick(val, attrs), pick(oldVal, attrs));
+      if (!changedFilter) return;
+      this.load().then(() => this.loader.reset());
     }
   },
   components: {

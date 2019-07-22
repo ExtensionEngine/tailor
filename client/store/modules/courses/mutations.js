@@ -15,15 +15,17 @@ const fetchPinned = (state, courses) => {
 };
 
 const togglePinned = state => {
+  state.$internals.pagination = { ...PAGINATION_DEFAULTS };
   state.showPinned = !state.showPinned;
 };
 
 const setSearch = (state, query = '') => {
-  state.$internals.pagination = PAGINATION_DEFAULTS;
+  state.$internals.pagination = { ...PAGINATION_DEFAULTS };
   state.search = query;
 };
 
 const setOrder = (state, order) => {
+  state.$internals.pagination = { ...PAGINATION_DEFAULTS };
   state.$internals.sort = { ...state.$internals.sort, ...order };
 };
 

@@ -19,13 +19,13 @@ const save = ({ commit, dispatch }, model) => {
   });
 };
 
-const fetch = ({ getters, commit }, { reset = false } = {}) => {
-  const mutation = reset ? 'reset' : 'fetch';
+const fetch = ({ getters, commit }) => {
   const params = getters.courseQueryParams;
-  return fetchCourses(params).then(courses => {
+  const mutation = params.offset === 0 ? 'reset' : 'fetch';
+  return fetchCourses(params).then(items => {
+    commit(mutation, items);
     commit('setPagination', { offset: params.offset + params.limit });
-    commit('allCoursesFetched', Object.keys(courses).length < params.limit);
-    commit(mutation, courses);
+    commit('allCoursesFetched', Object.keys(items).length < params.limit);
   });
 };
 
