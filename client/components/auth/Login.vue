@@ -16,6 +16,7 @@
         v-model="password"
         :error-messages="vErrors.collect('password')"
         prepend-icon="mdi-lock-outline"
+        browser-autocomplete="new-password"
         type="password"
         name="password"
         label="Password"

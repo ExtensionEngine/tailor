@@ -35,7 +35,7 @@ export default {
   h1 {
     margin: 0;
     color: white;
-    font-size: 1.57rem;
+    font-size: 22px;
   }
 
   .auth-header {
@@ -44,7 +44,7 @@ export default {
     border-radius: 4px 4px 0 0;
 
     .logo {
-      width: 5.36rem;
+      width: 75px;
       margin: 30px 0;
     }
   }
