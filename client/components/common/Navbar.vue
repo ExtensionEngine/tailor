@@ -49,13 +49,11 @@ export default {
   props: {
     user: { type: Object, required: true }
   },
-  data: () => ({
-    title: BRAND_CONFIG.TITLE,
-    logo: BRAND_CONFIG.LOGO_COMPACT
-  }),
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('course', { repository: 'course' }),
+    title: () => BRAND_CONFIG.TITLE,
+    logo: () => BRAND_CONFIG.LOGO_COMPACT,
     routes() {
       const items = [
         { name: 'Catalog', to: { name: 'catalog' }, icon: 'view-list' },

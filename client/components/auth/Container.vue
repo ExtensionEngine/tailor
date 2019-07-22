@@ -14,16 +14,14 @@
 
 <script>
 export default {
-  data: () => ({
-    title: BRAND_CONFIG.TITLE,
-    logo: BRAND_CONFIG.LOGO_FULL
-  })
+  computed: {
+    title: () => BRAND_CONFIG.TITLE,
+    logo: () => BRAND_CONFIG.LOGO_FULL
+  }
 };
 </script>
 
 <style lang="scss">
-$primary: #2e434c;
-
 .auth-container {
   padding-top: 5%;
 }
@@ -44,7 +42,7 @@ $primary: #2e434c;
 
   .auth-header {
     padding-bottom: 20px;
-    background-color: $primary;
+    background-color: var(--v-primary-darken1);
     border-radius: 4px 4px 0 0;
 
     .logo {
@@ -64,7 +62,7 @@ $primary: #2e434c;
   .message {
     min-height: 16px;
     margin-bottom: 20px;
-    color: #e91e63;
+    color: var(--v-secondary-base);
     font-size: 16px;
     line-height: 16px;
   }
