@@ -16,13 +16,13 @@
       <div slot-scope="{ isEditing }" class="pb-5">
         <v-container pa-0>
           <v-layout>
-            <v-flex grow>
+            <v-flex grow class="text-xs-left">
               <v-chip
                 color="blue-grey darken-1"
                 label
                 dark
                 small
-                class="pull-left text-uppercase">
+                class="text-uppercase">
                 {{ elementConfig.name }}
               </v-chip>
             </v-flex>
