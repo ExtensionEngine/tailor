@@ -1,27 +1,25 @@
 <template>
   <div>
-    <div class="message">
-      <span v-if="message">{{ message }}</span>
-    </div>
+    <div v-visible="message" class="message">{{ message }}</div>
     <form @submit.prevent="submit" novalidate>
-      <div class="form-group">
-        <v-text-field
-          v-validate="{ required: true, email: true }"
-          v-model="email"
-          :error-messages="vErrors.collect('email')"
-          type="email"
-          name="email"
-          label="Email"/>
-      </div>
-      <div class="form-group">
-        <v-text-field
-          v-validate="{ required: true }"
-          v-model="password"
-          :error-messages="vErrors.collect('password')"
-          type="password"
-          name="password"
-          label="Password"/>
-      </div>
+      <v-text-field
+        v-validate="{ required: true, email: true }"
+        v-model="email"
+        :error-messages="vErrors.collect('email')"
+        prepend-icon="mdi-email-outline"
+        type="email"
+        name="email"
+        label="Email"
+        class="py-2"/>
+      <v-text-field
+        v-validate="{ required: true }"
+        v-model="password"
+        :error-messages="vErrors.collect('password')"
+        prepend-icon="mdi-lock-outline"
+        type="password"
+        name="password"
+        label="Password"
+        class="py-2"/>
       <v-btn :disabled="!isValid" color="primary" outline block type="submit">
         Log in
       </v-btn>
@@ -35,7 +33,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions } from 'vuex';
 import { withValidation } from 'utils/validation';
 const LOGIN_ERR_MESSAGE = 'User email and password do not match';
 
@@ -50,10 +48,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ user: state => state.auth.user }),
-    isValid() {
-      return this.email && this.password && this.vErrors.count() === 0;
-    }
+    isValid: vm => vm.email && vm.password && (vm.vErrors.count() === 0)
   },
   methods: {
     ...mapActions(['login']),

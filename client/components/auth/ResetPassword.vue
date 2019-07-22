@@ -1,27 +1,33 @@
 <template>
   <div>
-    <div class="message"><span>{{ error }}</span></div>
+    <div class="message">{{ error }}</div>
     <form @submit.prevent="submit">
-      <div class="form-group">
-        <v-text-field
-          v-validate="{ required: true, min: 6, alphanumerical: true }"
-          ref="password"
-          v-model="password"
-          :error-messages="vErrors.collect('password')"
-          name="password"
-          type="password"
-          label="Password"/>
-      </div>
-      <div class="form-group">
-        <v-text-field
-          v-validate="{ required: true, confirmed: 'password' }"
-          :error-messages="vErrors.collect('passwordConfirmation')"
-          data-vv-as="password"
-          name="passwordConfirmation"
-          type="password"
-          label="Please re-enter your password"/>
-      </div>
-      <v-btn :disabled="!isValid" color="primary" outline block type="submit">
+      <v-text-field
+        v-validate="{ required: true, min: 6, alphanumerical: true }"
+        ref="password"
+        v-model="password"
+        :error-messages="vErrors.collect('password')"
+        prepend-icon="mdi-lock"
+        name="password"
+        type="password"
+        label="Password"
+        class="my-1"/>
+      <v-text-field
+        v-validate="{ required: true, confirmed: 'password' }"
+        :error-messages="vErrors.collect('passwordConfirmation')"
+        prepend-icon="mdi-lock-outline"
+        data-vv-as="password"
+        name="passwordConfirmation"
+        type="password"
+        label="Please re-enter your password"
+        class="my-1"/>
+      <v-btn
+        :disabled="!isValid"
+        color="primary"
+        outline
+        block
+        type="submit"
+        class="mt-3">
         Change password
       </v-btn>
     </form>
@@ -48,8 +54,8 @@ export default {
   methods: {
     ...mapActions(['resetPassword']),
     submit() {
-      const token = this.$route.params.token;
-      this.$validator.validateAll().then(result => {
+      const { token } = this.$route.params;
+      this.$validator.validateAll().then(() => {
         return this.resetPassword({ password: this.password, token })
           .then(() => this.$router.push('/'))
           .catch(() => (this.error = 'An error has occurred!'));
@@ -58,9 +64,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.form-group {
-  margin-top: 10px;
-}
-</style>

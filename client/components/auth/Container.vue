@@ -6,7 +6,7 @@
         <h1>{{ title }}</h1>
       </div>
       <div class="auth-body">
-        <router-view></router-view>
+        <router-view/>
       </div>
     </div>
   </div>
@@ -31,13 +31,11 @@ export default {
   margin: auto;
   background-color: #fff;
   border-radius: 4px;
-  transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1);
 
   h1 {
     margin: 0;
     color: white;
     font-size: 1.57rem;
-    line-height: 18px;
   }
 
   .auth-header {
@@ -46,6 +44,7 @@ export default {
     border-radius: 4px 4px 0 0;
 
     .logo {
+      width: 5.36rem;
       margin: 30px 0;
     }
   }
@@ -66,9 +65,5 @@ export default {
     font-size: 16px;
     line-height: 16px;
   }
-}
-
-.logo {
-  width: 5.36rem;
 }
 </style>

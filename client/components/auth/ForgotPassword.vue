@@ -1,27 +1,22 @@
 <template>
   <div>
-    <div v-if="showMessage" class="well">
-      <span>{{ message }}</span>
-    </div>
-    <div v-else>
-      <form @submit.prevent="submit">
-        <div class="form-group">
-          <v-text-field
-            v-validate="{ required: true, email: true }"
-            v-model="email"
-            :error-messages="vErrors.collect('email')"
-            type="email"
-            name="email"
-            label="Please enter your email"/>
-        </div>
-        <v-btn :disabled="!isValid" color="primary" outline block type="submit">
-          Send reset email
-        </v-btn>
-        <div class="options">
-          <a @click="$router.go(-1)">Back</a>
-        </div>
-      </form>
-    </div>
+    <v-alert :value="showMessage" color="primary" class="mb-4">{{ message }}</v-alert>
+    <form @submit.prevent="submit">
+      <v-text-field
+        v-validate="{ required: true, email: true }"
+        v-model="email"
+        :error-messages="vErrors.collect('email')"
+        prepend-icon="mdi-email-outline"
+        type="email"
+        name="email"
+        label="Please enter your email"/>
+      <v-btn :disabled="!isValid" color="primary" outline block type="submit">
+        Send reset email
+      </v-btn>
+      <div class="options">
+        <a @click="$router.go(-1)">Back</a>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -35,34 +30,27 @@ export default {
   data() {
     return {
       email: '',
-      message: 'Reset email sent',
+      message: 'Sending reset email...',
       showMessage: false
     };
   },
   computed: {
-    isValid() {
-      return this.email && this.vErrors.count() === 0;
-    }
+    isValid: vm => vm.email && vm.vErrors.count() === 0
   },
   methods: {
     ...mapActions(['forgotPassword']),
     submit() {
-      // TODO: Temp
       this.showMessage = true;
       this.forgotPassword({ email: this.email })
         .then(() => delay(1000))
         .then(() => this.$router.push('/'))
-        .catch(() => (this.message = 'Error'));
+        .catch(() => (this.message = 'Something went wrong!'));
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.well {
-  font-size: 16px;
-}
-
 .options {
   padding-top: 10px;
 
