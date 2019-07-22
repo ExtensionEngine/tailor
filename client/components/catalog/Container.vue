@@ -157,7 +157,7 @@ export default {
 
   /deep/ .add-repo {
     top: 10px;
-    right: 16px;
+    right: 12px;
   }
 }
 </style>
