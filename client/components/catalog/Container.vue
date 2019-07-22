@@ -4,7 +4,7 @@
       <v-layout row class="catalog-actions">
         <create-repository/>
         <v-flex md4 sm10 offset-md4 offset-sm1>
-          <search @change="setSearch($event)"/>
+          <search :value="queryParams.search" @update="setSearch($event)"/>
         </v-flex>
         <v-flex md3 sm1 class="text-sm-left pl-2">
           <v-tooltip open-delay="800" right>

@@ -3,7 +3,7 @@
     <div :style="{ width: expanded ? '100%' : '95%' }">
       <v-text-field
         v-focus="expanded"
-        v-model.trim="query"
+        :value="value"
         @focus="expanded = true"
         @blur="expanded = false"
         @input="emitChange"
@@ -20,15 +20,17 @@ import debounce from 'lodash/debounce';
 import focus from 'vue-focus';
 
 export default {
+  props: {
+    value: { type: String, default: null }
+  },
   data() {
     return {
-      query: '',
       expanded: false
     };
   },
   methods: {
-    emitChange: debounce(function () {
-      this.$emit('change', this.query);
+    emitChange: debounce(function (val) {
+      this.$emit('update', val && val.trim());
     }, 500)
   },
   directives: focus
