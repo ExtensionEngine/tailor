@@ -87,9 +87,56 @@ function publishRepositoryDetails(repository) {
 }
 
 function unpublishActivity(repository, activity) {
+  if (activity.isLink) return unpublishLinkedActivity(repository, activity);
   return getPublishedStructure(repository).then(spine => {
     const spineActivity = find(spine.structure, { id: activity.id });
     if (!spineActivity) return;
+    const deleted = getSpineChildren(spine, activity).concat(spineActivity);
+    return Promise.map(deleted, it => {
+      const filenames = getActivityFilenames(it);
+      return Promise.map(filenames, filename => {
+        const key = `${getBaseUrl(repository.id, it.id)}/${filename}.json`;
+        return storage.deleteFile(key);
+      });
+    }).then(() => {
+      spine.structure = filter(spine.structure, ({ id }) => !find(deleted, { id }));
+      return saveSpine(spine)
+        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+        .then(() => activity.save());
+    });
+  });
+}
+
+function unpublishLinkedActivity(repository, activity) {
+  const { origin } = activity;
+  return getPublishedStructure(repository).then(async spine => {
+    const parent = await activity.getParent();
+    const parentId = parent.isLink ? origin.parentId : parent.id;
+    const spineActivity = find(spine.structure, { id: origin.id });
+    if (!spineActivity) return;
+    const spineParent = find(spine.structure, it => {
+      return it.children.includes(origin.id) && it.id === parentId;
+    });
+
+    spineParent.children = spineParent.children.filter(child => child !== origin.id);
+
+    if (spineActivity.parentId.length > 1) {
+      spineActivity.parentId = spineActivity.parentId.filter(id => id !== parentId);
+      spine.structure = spine.structure.map(it => {
+        if (it.id === spineActivity.id) return spineActivity;
+        if (it.id === spineParent.id) return spineParent;
+        return it;
+      });
+      return saveSpine(spine)
+        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+        .then(() => activity.save());
+    }
+
+    spine.structure = spine.structure.map(it => {
+      if (it.id === spineParent.id) return spineParent;
+      return it;
+    });
+
     const deleted = getSpineChildren(spine, activity).concat(spineActivity);
     return Promise.map(deleted, it => {
       const filenames = getActivityFilenames(it);
@@ -224,8 +271,7 @@ function saveSpine(spine) {
 
 async function addToSpine(spine, activity) {
   const relationships = getLevelRelationships(activity.type);
-
-  activity = Object.assign(
+  const spineActivity = Object.assign(
     pick(activity, [
       'id', 'uid', 'parentId', 'type', 'position', 'data',
       'publishedAt', 'updatedAt', 'createdAt'
@@ -242,14 +288,14 @@ async function addToSpine(spine, activity) {
         return child.originId ? child.originId : child.id;
       }));
     }
-    activity = { ...activity, children: childrenIds };
+    spineActivity.children = childrenIds;
   }
-  renameKey(activity, 'data', 'meta');
-  let index = findIndex(spine.structure, { id: activity.id });
+  renameKey(spineActivity, 'data', 'meta');
+  let index = findIndex(spine.structure, { id: spineActivity.id });
   if (index < 0) {
-    spine.structure.push(activity);
+    spine.structure.push(spineActivity);
   } else {
-    spine.structure[index] = activity;
+    spine.structure[index] = spineActivity;
   }
 }
 
@@ -258,6 +304,15 @@ async function addLinkToSpine(spine, activity) {
   const index = findIndex(spine.structure, { id: activity.originId });
   const parent = await activity.getParent();
   const parentId = parent.isLink ? activity.origin.parentId : parent.id;
+  const spineParent = find(spine.structure, it => it.id === parentId);
+
+  if (spineParent) {
+    spineParent.children.push(activity.origin.id);
+    spine.structure = spine.structure.map(it => {
+      if (it.id === spineParent.id) return spineParent;
+      return it;
+    });
+  }
 
   if (index > 0) {
     const parentIds = Array.isArray(spine.structure[index].parentId)
@@ -269,14 +324,19 @@ async function addLinkToSpine(spine, activity) {
     };
     return;
   }
+
   const children = await activity.getChildren();
   let childrenIds = [];
   if (children.length) {
-    childrenIds = uniq(children.sort((a, b) => a.position > b.position).map(child => {
-      return child.originId ? child.originId : child.id;
-    }));
+    childrenIds = uniq(
+      children.sort((a, b) => a.position > b.position)
+      .map(child => {
+        return child.originId ? child.originId : child.id;
+      })
+    );
   }
-  activity = {
+
+  const spineActivity = {
     ...pick(activity.origin, [
       'id', 'uid', 'type', 'position', 'data',
       'publishedAt', 'updatedAt', 'createdAt'
@@ -285,16 +345,20 @@ async function addLinkToSpine(spine, activity) {
     children: childrenIds,
     relationships: mapRelationships(relationships, activity.origin)
   };
-  renameKey(activity, 'data', 'meta');
-  return spine.structure.push(activity);
+  renameKey(spineActivity, 'data', 'meta');
+  spine.structure.push(spineActivity);
 }
 
 function getSpineChildren(spine, parent) {
-  let children = filter(spine.structure, { parentId: parent.id });
-  if (!children.length) return [];
+  let children = filterChildren(spine, parent);
   return children.concat(reduce(children, (acc, it) => {
     return acc.concat(getSpineChildren(spine, it));
   }, []));
+}
+
+function filterChildren({ structure }, { id, children = [] }) {
+  if (children.length) return filter(structure, it => children.includes[it.id]);
+  return filter(structure, { parentId: id });
 }
 
 function getRepositoryAttrs(repository) {
