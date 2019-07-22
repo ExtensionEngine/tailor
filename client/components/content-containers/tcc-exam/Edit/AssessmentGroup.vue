@@ -28,7 +28,7 @@
       Click the button below to Create first Assessment.
     </div>
     <element-list
-      :elements="elements"
+      :elements="assessments"
       :activity="group"
       :supportedTypes="['ASSESSMENT']"
       @add="addAssessment"
@@ -58,6 +58,7 @@ import GroupIntroduction from './GroupIntroduction';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import numberToLetter from 'utils/numberToLetter';
+import pickBy from 'lodash/pickBy';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
 
@@ -71,20 +72,21 @@ export default {
   },
   data() {
     return {
-      unsaved: [],
+      unsavedAssessments: {},
       timeLimit: get(this.group, 'data.timeLimit', 0)
     };
   },
   computed: {
-    assessments() {
+    savedAssessments() {
       const cond = { activityId: this.group.id, type: 'ASSESSMENT' };
       return sortBy(filter(this.tes, cond), 'position');
     },
-    elements() {
-      return [...this.assessments, ...this.unsaved];
+    assessments() {
+      const { savedAssessments: saved, unsavedAssessments: unsaved } = this;
+      return [...saved, ...Object.values(unsaved)];
     },
     hasAssessments() {
-      return this.elements && !!this.elements.length;
+      return this.assessments && !!this.assessments.length;
     },
     objectiveLabel() {
       if (isEmpty(this.objectives)) return '';
@@ -95,35 +97,31 @@ export default {
   },
   methods: {
     addAssessment(assessment) {
-      const cid = cuid();
-      this.unsaved.push({ ...assessment, _cid: cid });
+      Object.assign(assessment, { cid: cuid() });
+      this.$set(this.unsavedAssessments, assessment.cid, assessment);
     },
     saveAssessment(assessment) {
       if (assessment.id) return this.$emit('updateElement', assessment);
       this.$emit('saveElement', assessment);
     },
     deleteElement(assessment) {
-      if (!assessment.id) return this.remove(assessment);
+      if (!assessment.id) return this.remove([assessment]);
       this.$emit('deleteElement', assessment);
     },
-    remove({ _cid: cid }) {
-      const index = this.unsaved.findIndex(it => it._cid === cid);
-      this.unsaved.splice(index, 1);
+    remove(assessments) {
+      const ids = assessments.map(it => it.cid);
+      const cond = it => !ids.includes(it.cid);
+      this.unsavedAssessments = pickBy(this.unsavedAssessments, cond);
     }
   },
   watch: {
+    savedAssessments: 'remove',
     timeLimit: debounce(function (val) {
       let group = cloneDeep(this.group);
       group.data = group.data || {};
       group.data.timeLimit = val;
       this.$emit('update', group);
-    }, 1500),
-    assessments(val) {
-      for (let id in val) {
-        if (!this.unsaved.length) return;
-        this.remove(val[id]);
-      }
-    }
+    }, 1500)
   },
   filters: {
     toLetter: numberToLetter
