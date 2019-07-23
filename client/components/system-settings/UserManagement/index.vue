@@ -4,6 +4,7 @@
       <v-toolbar color="white" flat>
         <v-spacer/>
         <v-btn @click.stop="showUserDialog()" color="primary darken-1" outline>
+          <v-icon class="pr-2">mdi-account-plus-outline</v-icon>
           Add user
         </v-btn>
       </v-toolbar>

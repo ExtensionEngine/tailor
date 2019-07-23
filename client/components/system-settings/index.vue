@@ -2,10 +2,10 @@
   <div class="system-settings-container white">
     <div class="heading primary elevation-5">
       <v-chip
-        color="primary lighten-3"
+        color="grey lighten-2"
         label
-        class="mt-2 ml-3 primary--text text--darken-2 body-2">
-        <v-icon color="primary darken-2" class="pr-1">mdi-shield-outline</v-icon>
+        outline
+        class="mt-2 ml-3 px-3 body-2">
         Admin
       </v-chip>
     </div>
