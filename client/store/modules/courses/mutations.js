@@ -11,17 +11,17 @@ const save = (state, course) => {
 };
 
 const togglePinned = state => {
-  state.$internals.pagination = { ...PAGINATION_DEFAULTS };
+  resetPagination(state);
   state.showPinned = !state.showPinned;
 };
 
 const setSearch = (state, query = '') => {
-  state.$internals.pagination = { ...PAGINATION_DEFAULTS };
+  resetPagination(state);
   state.search = query;
 };
 
 const setOrder = (state, order) => {
-  state.$internals.pagination = { ...PAGINATION_DEFAULTS };
+  resetPagination(state);
   state.$internals.sort = { ...state.$internals.sort, ...order };
 };
 
@@ -31,7 +31,7 @@ const setPagination = (state, changes) => {
 };
 
 const resetPagination = state => {
-  state.$internals.pagination = PAGINATION_DEFAULTS;
+  state.$internals.pagination = { ...PAGINATION_DEFAULTS };
 };
 
 const resetFilters = state => {
