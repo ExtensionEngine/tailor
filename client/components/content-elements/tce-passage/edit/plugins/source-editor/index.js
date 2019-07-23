@@ -1,4 +1,5 @@
 import ace from 'brace';
+import beautify from 'js-beautify/js/src/html';
 // eslint-disable-next-line sort-imports
 import 'brace/mode/html';
 import 'brace/theme/chrome';
@@ -19,6 +20,9 @@ export const install = Jodit => {
   Jodit.plugins.source = class extends Source {
     constructor(editor) {
       super(editor);
+      if (editor.options.beautifyHTML) {
+        window.html_beautify = beautify;
+      }
       editor.events.on('aceInited', this.onAceEditorReady);
     }
 
