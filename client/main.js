@@ -37,6 +37,9 @@ Vue.use(Vuetify, {
   theme: {
     primary: colors.blueGrey.darken2,
     secondary: colors.pink
+  },
+  options: {
+    customProperties: true
   }
 });
 Vue.use(VuetifySnackbar);
