@@ -14,6 +14,7 @@
         class="my-1"/>
       <v-text-field
         v-validate="{ required: true, confirmed: 'password' }"
+        v-model="passwordConfirmation"
         :error-messages="vErrors.collect('passwordConfirmation')"
         prepend-icon="mdi-lock-outline"
         data-vv-as="password"
@@ -43,7 +44,8 @@ export default {
   data() {
     return {
       error: null,
-      password: ''
+      password: '',
+      passwordConfirmation: ''
     };
   },
   computed: {
