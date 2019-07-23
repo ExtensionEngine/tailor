@@ -38,6 +38,11 @@ const resetPagination = state => {
   state.$internals.pagination = PAGINATION_DEFAULTS;
 };
 
+const resetFilters = state => {
+  state.search = '';
+  state.showPinned = false;
+};
+
 const allCoursesFetched = (state, allFetched) => {
   state.$internals.allCoursesFetched = allFetched;
 };
@@ -50,6 +55,7 @@ export {
   remove,
   reset,
   resetPagination,
+  resetFilters,
   save,
   setEndpoint,
   setPagination,

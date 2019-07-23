@@ -15,6 +15,7 @@ const {
 const save = ({ commit, dispatch }, model) => {
   return api.post('/', model).then(() => {
     commit('setOrder', { field: 'createdAt', order: 'DESC' });
+    commit('resetFilters');
     dispatch('reset');
   });
 };
