@@ -1,6 +1,6 @@
 'use strict';
 
-const { Course, CourseUser, User, Revision, sequelize } = require('../shared/database');
+const { Course, CourseUser, Revision, sequelize, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');

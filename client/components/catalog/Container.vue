@@ -35,7 +35,7 @@
         </div>
         <div slot="no-results" class="no-results subheading">
           <v-alert
-            :value="true"
+            value="true"
             color="blue-grey lighten-4"
             icon="mdi-cloud-search-outline"
             outline>
@@ -94,9 +94,9 @@ export default {
     }
   },
   watch: {
-    repositories(items) {
+    repositories() {
       // If all items get unpinned
-      if (!items.length & this.showPinned) this.loader.reset();
+      if (!this.hasRepositories && this.showPinned) this.loader.reset();
     },
     queryParams(val, oldVal) {
       const attrs = ['search', 'sortOrder', 'sortBy', 'pinned'];
