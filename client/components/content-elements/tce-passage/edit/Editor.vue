@@ -21,6 +21,7 @@ import uniqueId from 'lodash/uniqueId';
 
 /** @type {import('jodit/src/Config').Config & import('jodit/src/plugins') } */
 const joditConfig = {
+  autofocus: true,
   addNewLineOnDBLClick: false,
   showTooltipDelay: 350,
   colorPickerDefaultTab: 'color',
@@ -52,7 +53,6 @@ export default {
   mounted() {
     const { editor } = this.$refs.jodit;
     editor.editor.style.cursor = 'initial';
-    editor.selection.focus();
   },
   components: {
     JoditVue
