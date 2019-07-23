@@ -2,26 +2,19 @@
 
 const { Activity, TeachingElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
-const isArray = require('lodash/isArray');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
 const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
 
-const parseNumberArray = array => {
-  if (!isArray(array)) array = [array];
-  return array.map(id => Number(id));
-};
-
 function list({ course, query, opts }, res) {
-  if (query.activityId || query.parentId) {
-    const { activityId, parentId } = query;
-    const where = { [Op.or]: [] };
-    if (activityId) where[Op.or].push({ id: Number(activityId) });
-    if (parentId) where[Op.or].push({ parentId: { [Op.in]: parseNumberArray(parentId) } });
+  if (!query.detached) opts.where = { detached: false };
+  if (query.ids) {
+    const ids = query.ids.map(id => Number(id));
+    const cond = { [Op.in]: ids };
+    const where = { [Op.or]: [{ id: cond }, { parentId: cond }] };
     opts.include = { model: Activity, attributes: [], where };
   }
-  if (!query.detached) opts.where = { detached: false };
 
   const elements = query.integration
     ? course.getTeachingElements(opts)

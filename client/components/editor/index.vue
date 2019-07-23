@@ -149,8 +149,8 @@ export default {
     const actions = [this.getActivities()];
     if (!this.course) actions.push(this.getCourse(courseId));
     Promise.all(actions).then(() => {
-      const parentId = flatMap(this.contentContainers, it => map(it, 'id'));
-      return this.getTeachingElements({ activityId, parentId });
+      const ids = flatMap(this.contentContainers, it => map(it, 'id'));
+      return this.getTeachingElements({ ids: [activityId, ...ids] });
     })
     .then(() => (this.showLoader = false));
   },
