@@ -1,6 +1,11 @@
 <template>
   <div>
-    <v-alert :value="showMessage" color="primary" class="mb-4">{{ message }}</v-alert>
+    <v-alert
+      :value="showMessage"
+      :color="error ? 'secondary' : 'primary lighten-1'"
+      class="mb-4 body-2">
+      {{ error || 'Sending reset email...' }}
+    </v-alert>
     <form @submit.prevent="submit">
       <v-text-field
         v-validate="{ required: true, email: true }"
@@ -30,8 +35,8 @@ export default {
   data() {
     return {
       email: '',
-      message: 'Sending reset email...',
-      showMessage: false
+      showMessage: false,
+      error: null
     };
   },
   computed: {
@@ -41,10 +46,9 @@ export default {
     ...mapActions(['forgotPassword']),
     submit() {
       this.showMessage = true;
-      this.forgotPassword({ email: this.email })
-        .then(() => delay(1000))
+      Promise.all([this.forgotPassword({ email: this.email }), delay(3000)])
         .then(() => this.$router.push('/'))
-        .catch(() => (this.message = 'Something went wrong!'));
+        .catch(() => (this.error = 'Something went wrong!'));
     }
   }
 };
