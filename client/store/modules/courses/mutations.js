@@ -10,10 +10,6 @@ const save = (state, course) => {
   Vue.set(state.items, course._cid, course);
 };
 
-const fetchPinned = (state, courses) => {
-  state.pinned = courses;
-};
-
 const togglePinned = state => {
   state.$internals.pagination = { ...PAGINATION_DEFAULTS };
   state.showPinned = !state.showPinned;
