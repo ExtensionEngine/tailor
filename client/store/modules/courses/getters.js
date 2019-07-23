@@ -1,10 +1,15 @@
+import filter from 'lodash/filter';
+import get from 'lodash/get';
 import isString from 'lodash/isString';
 import orderBy from 'lodash/orderBy';
 
 const processSortAttr = val => isString(val) ? val.toLowerCase() : val;
 
-export const courses = ({ items, $internals }) => {
-  const { sort: { field, order } } = $internals;
+export const courses = state => {
+  const items = state.showPinned
+    ? filter(state.items, it => get(it, 'courseUser.pinned'))
+    : state.items;
+  const { sort: { field, order } } = state.$internals;
   return orderBy(items, it => processSortAttr(it[field]), order.toLowerCase());
 };
 
