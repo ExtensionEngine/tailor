@@ -67,6 +67,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$min-height: 140px;
+
 .tce-passage {
   text-align: initial;
 }
@@ -74,7 +76,7 @@ export default {
 .well {
   display: flex;
   flex-direction: column;
-  min-height: 140px;
+  min-height: $min-height;
   margin-bottom: 0;
 }
 
@@ -94,10 +96,9 @@ export default {
     font-size: 24px;
   }
 }
-</style>
 
-<style lang="scss">
-.jodit_container:not(.jodit_inline) {
+/deep/ .jodit_container:not(.jodit_inline) {
+  min-height: $min-height;
   font-size: 16px;
 }
 </style>
