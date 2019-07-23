@@ -47,7 +47,6 @@ export {
   add,
   allCoursesFetched,
   fetch,
-  fetchPinned,
   remove,
   reset,
   resetPagination,
