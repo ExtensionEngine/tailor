@@ -6,6 +6,8 @@
 import ToolbarBuilder from './ToolbarBuilder';
 
 const buttons = ToolbarBuilder.build([[
+  ['source', 'Source']
+], [
   ['undo', 'Undo'],
   ['redo', 'Redo'],
   ['cut', 'Cut selection'],

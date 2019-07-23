@@ -14,6 +14,7 @@ import fontControls from './plugins/font-controls';
 import Jodit from 'jodit';
 import JoditVue from 'jodit-vue';
 import mdiIcons from './plugins/mdi-icons';
+import sourceEditor from './plugins/source-editor';
 import Toolbar from './Toolbar';
 import toolbarPopups from './plugins/toolbar-popups';
 import uniqueId from 'lodash/uniqueId';
@@ -23,7 +24,7 @@ const joditConfig = {
   addNewLineOnDBLClick: false,
   showTooltipDelay: 350,
   colorPickerDefaultTab: 'color',
-  disablePlugins: ['fullsize', 'source']
+  disablePlugins: ['fullsize']
 };
 
 // Load custom plugins.
@@ -31,6 +32,7 @@ externalToolbar(Jodit, { toolbarContainer: '#joditToolbar' });
 mdiIcons(Jodit, { btnResetColorClass: 'btn_reset_color' });
 fontControls(Jodit, { pickerLabelClass: 'picker_label' });
 toolbarPopups(Jodit, { popupOpenClass: 'popup_open' });
+sourceEditor(Jodit);
 
 export default {
   props: {
@@ -66,6 +68,11 @@ $statusbar-border-size: 1px;
 
 .jodit-wrapper /deep/ .jodit_placeholder {
   font-style: italic;
+}
+
+.jodit-wrapper /deep/ .jodit_source .ace_editor {
+  font-size: 13px;
+  font-family: $font-family-monospace;
 }
 
 .jodit-wrapper /deep/ .jodit_statusbar {
