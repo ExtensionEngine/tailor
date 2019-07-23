@@ -57,7 +57,8 @@ export default {
     ...mapActions(['resetPassword']),
     submit() {
       const { token } = this.$route.params;
-      this.$validator.validateAll().then(() => {
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
         return this.resetPassword({ password: this.password, token })
           .then(() => this.$router.push('/'))
           .catch(() => (this.error = 'An error has occurred!'));

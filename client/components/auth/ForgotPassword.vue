@@ -6,7 +6,7 @@
       class="mb-4 body-2">
       {{ error || 'Sending reset email...' }}
     </v-alert>
-    <form @submit.prevent="submit">
+    <form v-if="!error" @submit.prevent="submit">
       <v-text-field
         v-validate="{ required: true, email: true }"
         v-model="email"
@@ -15,13 +15,19 @@
         type="email"
         name="email"
         label="Please enter your email"/>
-      <v-btn :disabled="!isValid" color="primary" outline block type="submit">
+      <v-btn
+        :disabled="!isValid || showMessage"
+        color="primary"
+        outline
+        block
+        type="submit">
         Send reset email
       </v-btn>
       <div class="options">
         <a @click="$router.go(-1)">Back</a>
       </div>
     </form>
+    <a v-else @click.stop="resetInput">Retry</a>
   </div>
 </template>
 
@@ -30,15 +36,15 @@ import { delay } from 'bluebird';
 import { mapActions } from 'vuex';
 import { withValidation } from 'utils/validation';
 
+const getDefaultData = () => ({
+  email: '',
+  showMessage: false,
+  error: null
+});
+
 export default {
   mixins: [withValidation()],
-  data() {
-    return {
-      email: '',
-      showMessage: false,
-      error: null
-    };
-  },
+  data: () => getDefaultData(),
   computed: {
     isValid: vm => vm.email && vm.vErrors.count() === 0
   },
@@ -49,6 +55,9 @@ export default {
       Promise.all([this.forgotPassword({ email: this.email }), delay(3000)])
         .then(() => this.$router.push('/'))
         .catch(() => (this.error = 'Something went wrong!'));
+    },
+    resetInput() {
+      Object.assign(this, getDefaultData());
     }
   }
 };
