@@ -49,7 +49,7 @@
         </div>
       </div>
       <insert-activity
-        :anchor="{ id, _cid, parentId, courseId, type, position, level, label }"
+        :anchor="{ id, _cid, parentId, courseId, type, position, level }"
         @expand="toggle(true)"/>
     </div>
     <div v-if="!isCollapsed({ _cid }) && hasChildren">
@@ -148,9 +148,6 @@ export default {
       let icon = this.isExpanded ? 'folder-open' : 'folder';
       if (!this.hasChildren) icon += '-outline';
       return icon;
-    },
-    label() {
-      return this.data.name;
     }
   },
   methods: {

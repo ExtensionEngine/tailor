@@ -16,11 +16,21 @@
           v-if="showLevelPicker"
           :error-messages="vErrors.collect('type')"
           v-model="levelType"
-          :items="groupedLevels"
+          :items="levels"
           item-text="label"
           item-value="type"
           name="type"
-          placeholder="Type"/>
+          placeholder="Type">
+          <template slot="item" slot-scope="levels">
+            <div v-if="levels.item.group">{{ levels.item.group }}</div>
+            <div v-else>
+              <v-icon v-if="levels.item.level > parent.level" class="pl-2">
+                mdi-subdirectory-arrow-right
+              </v-icon>
+              <span class="black--text">{{ levels.item.label }}</span>
+            </div>
+          </template>
+        </v-select>
       </v-flex>
       <v-flex shrink>
         <v-item-group>
@@ -43,7 +53,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import findIndex from 'lodash/findIndex';
 import first from 'lodash/first';
 import { mapGetters } from 'vuex';
-import truncate from 'lodash/truncate';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -60,13 +69,11 @@ export default {
     showLevelPicker() {
       return this.supportedLevels.length > 1;
     },
-    groupedLevels() {
+    levels() {
       const grouped = cloneDeep(this.supportedLevels);
-      const parentLabel = truncate(this.parent.label, { length: 30 });
-      grouped.unshift({ header: `After '${parentLabel}'` });
       const nestedIndex = findIndex(grouped, it => it.level > this.parent.level);
       if (nestedIndex !== -1) {
-        grouped.splice(nestedIndex, 0, { header: `To '${parentLabel}'` });
+        grouped.splice(nestedIndex, 0, { group: 'Sublevels', disabled: true });
       }
       return grouped;
     }
