@@ -4,7 +4,7 @@
       <v-avatar color="primary darken-1" size="34" class="mt-1">
         <img :src="logo" alt="Logo" class="logo">
       </v-avatar>
-      <v-toolbar-title class="app-name ml-2">{{ title }}</v-toolbar-title>
+      <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
     </router-link>
     <v-spacer/>
     <v-toolbar-items>
@@ -92,6 +92,7 @@ $font-color: #333;
   cursor: pointer;
 
   .app-name {
+    margin: 1px 0 0 10px;
     font-size: 20px;
     font-weight: 400;
     line-height: $container-height;
