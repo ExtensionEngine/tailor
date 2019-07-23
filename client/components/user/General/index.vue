@@ -5,7 +5,8 @@
       <h4 class="title">Edit Profile</h4>
     </v-card-title>
     <v-form @submit.prevent="updateUser">
-      <user-avatar ref="userAvatar" :isEditing="isEditing" @editing="setEditing"/>
+      <user-avatar :imgUrl.sync="context.imgUrl" />
+      <v-divider/>
       <v-layout class="general-info-container">
         <v-flex class="fields-box">
           <v-text-field
@@ -46,11 +47,16 @@
       </v-layout>
       <v-card-actions>
         <v-layout class="btn-actions">
-          <v-btn v-if="isEditing" @click="setEditing(false)" color="pink" flat>
+          <v-spacer/>
+          <v-btn
+            :disabled="!hasChanges"
+            @click="resetUser"
+            color="pink"
+            flat>
             Cancel
           </v-btn>
           <v-btn
-            @click="avatarSubmit"
+            :disabled="!hasChanges"
             type="submit"
             color="light-blue darken-3"
             flat>
@@ -68,6 +74,8 @@ import pick from 'lodash/pick';
 import UserAvatar from './Avatar';
 import { withValidation } from 'utils/validation';
 
+const ATTRIBUTES = [ 'firstName', 'lastName', 'email', 'location', 'imgUrl' ];
+
 const snackOpts = { right: true };
 
 export default {
@@ -75,49 +83,39 @@ export default {
   mixins: [withValidation()],
   data: () => ({
     context: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      location: ''
-    },
-    isEditing: false
+      firstName: null,
+      lastName: null,
+      email: null,
+      location: null,
+      imgUrl: null
+    }
   }),
   computed: {
-    ...mapState({
-      user: state => state.auth.user
-    }),
-    hasChanges: vm => {
-      Object.keys(vm.context).some(name => vm.user[name] !== vm.context[name]);
-    },
-    fieldNames: vm => ['firstName', 'lastName', 'email', 'phoneNumber', 'location']
+    ...mapState({ user: state => state.auth.user }),
+    hasChanges: vm =>
+      Object.keys(vm.context).some(name => vm.user[name] !== vm.context[name]),
+    contextAttrs: () => ATTRIBUTES
   },
   methods: {
     ...mapActions(['updateInfo']),
     updateUser() {
-      const { context, hasChanges, fieldNames } = this;
-      if (!hasChanges) return;
-      this.$validator.validateAll()
-        .then(isValid => {
-          if (!isValid) return this.$snackbar.error('Validation failed!', snackOpts);
-          return this.updateInfo(pick(context, fieldNames))
-            .then(() => {
-              this.$snackbar.success('User information updated.', snackOpts);
-              this.$validator.reset();
-            });
-        })
-        .catch(() => this.$snackbar.error('Email already exists!', snackOpts));
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return this.$snackbar.error('Validation failed!', snackOpts);
+        return this.updateInfo(pick(this.context, this.contextAttrs))
+          .then(() => {
+            this.$validator.reset();
+            this.$snackbar.success('User information updated.', snackOpts);
+          });
+      })
+      .catch(() => this.$snackbar.error('Email already exists!', snackOpts));
     },
-    setEditing(val) {
-      this.$refs.userAvatar.croppa.refresh();
-      this.isEditing = val;
-    },
-    avatarSubmit() {
-      this.$refs.userAvatar.doneEditing();
+    resetUser() {
+      this.$validator.reset();
+      this.context = pick(this.user, this.contextAttrs);
     }
   },
   created() {
-    const { context, user, fieldNames } = this;
-    Object.assign(context, pick(user, fieldNames));
+    this.resetUser();
   },
   components: { UserAvatar }
 };
@@ -125,11 +123,6 @@ export default {
 
 <style lang="scss" scoped>
 $color: #fff;
-
-@mixin flex-container($justify-content: center) {
-  display: flex;
-  justify-content: $justify-content;
-}
 
 .header {
   height: 55px;
@@ -154,16 +147,15 @@ $color: #fff;
   }
 
   .general-info-container {
+    justify-content: center;
     flex-flow: row wrap;
     margin: 0;
     padding: 8px 8px;
-    @include flex-container();
   }
 
   .btn-actions {
     flex-flow: row wrap;
     margin: 24px 48px;
-    @include flex-container(flex-end);
 
     .v-btn {
       width: 125px;
