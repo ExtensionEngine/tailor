@@ -16,7 +16,7 @@
           v-if="showLevelPicker"
           :error-messages="vErrors.collect('type')"
           v-model="levelType"
-          :items="supportedLevels"
+          :items="groupedLevels"
           item-text="label"
           item-value="type"
           name="type"
@@ -39,8 +39,11 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
+import findIndex from 'lodash/findIndex';
 import first from 'lodash/first';
 import { mapGetters } from 'vuex';
+import truncate from 'lodash/truncate';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -56,6 +59,16 @@ export default {
     ...mapGetters('course', ['structure']),
     showLevelPicker() {
       return this.supportedLevels.length > 1;
+    },
+    groupedLevels() {
+      const grouped = cloneDeep(this.supportedLevels);
+      const parentLabel = truncate(this.parent.label, { length: 30 });
+      grouped.unshift({ header: `After '${parentLabel}'` });
+      const nestedIndex = findIndex(grouped, it => it.level > this.parent.level);
+      if (nestedIndex !== -1) {
+        grouped.splice(nestedIndex, 0, { header: `To '${parentLabel}'` });
+      }
+      return grouped;
     }
   },
   methods: {
