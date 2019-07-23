@@ -9,8 +9,15 @@
         </v-btn>
       </v-toolbar>
       <div>
-        <v-layout column align-end class="px-4 table-toolbar">
-          <v-flex lg4>
+        <v-layout row class="filters">
+          <v-flex>
+            <v-switch
+              v-model="showArchived"
+              label="Archived"
+              color="secondary"
+              hide-details/>
+          </v-flex>
+          <v-flex>
             <v-text-field
               v-model="filter"
               append-icon="mdi-magnify"
@@ -18,13 +25,6 @@
               single-line
               hide-details
               clearable/>
-          </v-flex>
-          <v-flex lg4 class="my-1">
-            <v-checkbox
-              v-model="showArchived"
-              label="Show archived"
-              class="archived-checkbox"
-              hide-details/>
           </v-flex>
         </v-layout>
         <v-data-table
@@ -168,25 +168,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-table /deep/ .v-input--checkbox {
-  justify-content: center;
+.v-input--switch.v-input /deep/ .v-label {
+  margin-bottom: 0 !important;
 }
 
-.archived-checkbox /deep/ .v-input__slot {
-  flex-direction: row-reverse;
-
-  .v-input--selection-controls__input {
-    justify-content: center;
-    margin-right: 0;
-  }
-
-  .v-icon {
-    font-size: 18px;
-  }
-
-  label {
-    margin: 0 2px 0 0;
-    font-size: 14px;
-  }
+.filters {
+  margin: 0 18px 8px;
 }
 </style>
