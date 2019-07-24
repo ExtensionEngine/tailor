@@ -1,6 +1,7 @@
 {
   "name": "tailor",
-  "version": "3.1.0",
+  "version": "3.2.0",
+  "codename": "silk",
   "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
   "private": true,
