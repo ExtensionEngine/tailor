@@ -14,7 +14,7 @@
             <v-switch
               v-model="showArchived"
               label="Archived"
-              color="secondary"
+              color="primary"
               hide-details/>
           </v-flex>
           <v-flex>
