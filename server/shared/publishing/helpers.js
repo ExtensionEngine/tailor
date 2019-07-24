@@ -1,5 +1,6 @@
 'use strict';
 
+const content = require('../../content');
 const { getLevelRelationships } = require('../../../config/shared/activities');
 const { TeachingElement } = require('../database');
 const filter = require('lodash/filter');
@@ -104,16 +105,16 @@ function fetchActivityContent(repository, activity) {
   return Promise.all([
     fetchContainers(repository, activity),
     fetchAssessments(activity),
-    fetchExams(activity)
-  ]).spread((containers, assessments, exams) => ({ containers, assessments, exams }));
+    fetchCustomContainers(activity)
+  ]).spread((containers, assessments, custom) => ({ containers, assessments, custom }));
 }
 
 function publishContent(repository, activity) {
   return Promise.all([
     publishContainers(repository, activity),
-    publishExams(activity),
+    publishCustomContainers(activity),
     publishAssessments(activity)
-  ]).spread((containers, exams, assessments) => ({ containers, exams, assessments }));
+  ]).spread((containers, custom, assessments) => ({ containers, custom, assessments }));
 }
 
 function publishContainers(repository, parent) {
@@ -123,10 +124,12 @@ function publishContainers(repository, parent) {
     }));
 }
 
-function publishExams(parent) {
-  return fetchExams(parent).then(exams => Promise.map(exams, exam => {
-    return saveFile(parent, `${exam.id}.exam`, exam).then(() => exam);
-  }));
+function publishCustomContainers(parent) {
+  return fetchCustomContainers(parent)
+    .then(contanainers => Promise.map(contanainers, data => {
+      const { id, publishedAs } = data;
+      return saveFile(parent, `${id}.${publishedAs}`, data).then(() => data);
+    }));
 }
 
 function publishAssessments(parent) {
@@ -140,7 +143,12 @@ function fetchContainers(repository, parent) {
   const config = find(repository.getSchemaConfig().structure, pick(parent, 'type'));
   const containerTypes = get(config, 'contentContainers', []);
   return parent.getChildren({ where: { type: containerTypes } })
-    .then(containers => Promise.map(containers, fetchContainer));
+  .then(containers => Promise.map(containers, fetchContainer));
+}
+
+function fetchCustomContainers(parent) {
+  const options = { include: [{ model: TeachingElement, attributes: TES_ATTRS }] };
+  return content.fetch(parent, options);
 }
 
 function fetchContainer(container) {
@@ -157,32 +165,6 @@ function fetchContainer(container) {
 function fetchAssessments(parent) {
   const options = { where: { type: 'ASSESSMENT' }, attributes: TES_ATTRS };
   return parent.getTeachingElements(options);
-}
-
-function fetchExams(parent) {
-  return parent.getChildren({ where: { type: 'EXAM' } })
-    .then(exams => Promise.map(exams, fetchQuestionGroups))
-    .then(exams => map(exams, ({ exam, groups }) => {
-      const attrs = [
-        'id', 'uid', 'type', 'position', 'parentId', 'createdAt', 'updatedAt'
-      ];
-      return { ...pick(exam, attrs), groups };
-    }));
-}
-
-async function fetchQuestionGroups(exam) {
-  const groups = await exam.getChildren({
-    include: [{ model: TeachingElement, attributes: TES_ATTRS }]
-  });
-  // TODO: Name relationship in order to avoid PascalCase
-  return {
-    exam,
-    groups: map(groups, group => ({
-      ...pick(group, ['id', 'uid', 'type', 'position', 'data', 'createdAt']),
-      intro: filter(group.TeachingElements, it => it.type !== 'ASSESSMENT'),
-      assessments: filter(group.TeachingElements, { type: 'ASSESSMENT' })
-    }))
-  };
 }
 
 function saveFile(parent, key, data) {
@@ -234,20 +216,20 @@ function getRepositoryAttrs(repository) {
   return temp;
 }
 
-function attachContentSummary(obj, { containers, exams, assessments }) {
+function attachContentSummary(obj, { containers, custom, assessments }) {
   obj.contentContainers = map(containers, it => ({
     ...pick(it, ['id', 'uid', 'type']),
     elementCount: it.elements.length
   }));
-  obj.exams = map(exams, it => pick(it, ['id', 'uid']));
+  obj.custom = map(custom, it => pick(it, ['id', 'uid', 'publishedAs']));
   obj.assessments = map(assessments, it => pick(it, ['id', 'uid']));
 }
 
 function getActivityFilenames(spineActivity) {
-  const { contentContainers = [], exams = [], assessments = [] } = spineActivity;
+  const { contentContainers = [], custom = [], assessments = [] } = spineActivity;
   let filenames = [];
   if (assessments.length) filenames.push(getAssessmentsKey(spineActivity));
-  filenames.push(...map(exams, it => `${it.id}.exam`));
+  filenames.push(...map(custom, it => `${it.id}.${it.publishedAs}`));
   filenames.push(...map(contentContainers, it => `${it.id}.container`));
   return filenames;
 }

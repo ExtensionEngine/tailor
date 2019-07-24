@@ -1,4 +1,4 @@
-import Edit from './Edit';
+import Edit from './edit';
 
 export default {
   type: 'EXAM',

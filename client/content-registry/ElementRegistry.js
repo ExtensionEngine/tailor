@@ -5,7 +5,7 @@ import {
   processAnswerType
 } from 'tce-core/utils';
 import cloneDeep from 'lodash/cloneDeep';
-import elementList from '../components/content-elements';
+import elementList from 'components/content-elements';
 import find from 'lodash/find';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
@@ -33,8 +33,8 @@ export default class ElementRegistry {
     const { _registry, Vue } = this;
     const { position = _registry.length, isExtension } = options;
     const element = isExtension
-      ? (await import(`../../extensions/content-elements/${location}`)).default
-      : (await import(`../components/content-elements/${location}`)).default;
+      ? (await import(`extensions/content-elements/${location}`)).default
+      : (await import(`components/content-elements/${location}`)).default;
     const attrs = [
       'name', 'type', 'subtype', 'version', 'schema', 'initState', 'ui'
     ];
@@ -59,7 +59,7 @@ export default class ElementRegistry {
   }
 
   loadExtensionList() {
-    return import(`../../extensions/content-elements/${EXTENSIONS_LIST}`)
+    return import(`extensions/content-elements/${EXTENSIONS_LIST}`)
       .then(module => module.default)
       .catch(() => console.log('No element extensions loaded!') || []);
   }
