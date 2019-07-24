@@ -6,8 +6,8 @@
           v-validate="{ required: true, email: true }"
           v-model="email"
           :error-messages="vErrors.collect('email')"
-          :items="suggestedEmails"
-          @input.native="fetchEmails($event.srcElement.value)"
+          :items="suggestedUsers"
+          @input.native="fetchUsers($event.srcElement.value)"
           data-vv-name="email"
           label="Email"/>
       </v-flex>
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       email: '',
-      suggestedEmails: [],
+      suggestedUsers: [],
       role: this.roles[0].value
     };
   },
@@ -54,19 +54,18 @@ export default {
         if (!isValid) return;
         await this.upsertUser({ courseId, email, role });
         this.email = '';
-        this.suggestedEmails = [];
+        this.suggestedUsers = [];
         this.$nextTick(() => this.$validator.reset());
       });
     },
-    fetchEmails: debounce(function (filter) {
-      if (filter.length < 3) {
-        this.suggestedEmails = [];
-        return;
+    fetchUsers: debounce(function (filter) {
+      if (filter.length > 1) {
+        return api.fetch({ filter }).then(({ items }) => {
+          this.suggestedUsers = items.map(it => it.email);
+        });
       }
-      return api.fetch({ filter }).then(({ items }) => {
-        this.suggestedEmails = items.map(it => it.email);
-      });
-    }, 500)
+      this.suggestedUsers = [];
+    }, 300)
   }
 };
 </script>
