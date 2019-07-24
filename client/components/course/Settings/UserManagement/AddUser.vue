@@ -59,7 +59,10 @@ export default {
       });
     },
     fetchEmails: debounce(function (filter) {
-      if (filter.length < 3) return;
+      if (filter.length < 3) {
+        this.suggestedEmails = [];
+        return;
+      }
       return api.fetch({ filter }).then(({ items }) => {
         this.suggestedEmails = items.map(it => it.email);
       });
