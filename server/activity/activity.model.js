@@ -262,39 +262,24 @@ class Activity extends Model {
     isChild = false,
     transaction
   ) {
-    const children = await source.getChildren({
-      where: { detached: false },
-      transaction
-    });
-
     const data = pick(source, [
-      'type', 'courseId', 'originId', 'parentId', 'position'
+      'data', 'type', 'courseId', 'parentId', 'position'
     ]);
+    const originId = source.isOrigin ? source.id : source.originId;
+    const linksMap = [{ ...data, originId, parentId, position }];
+    if (!isChild) linksMap.push({ ...data, originId, position });
 
-    if (source.isLink || source.isOrigin) {
-      const originId = source.isOrigin ? source.id : source.originId;
-      const link = await Activity.create(
-        { ...data, parentId, position, originId },
-        { transaction }
-      );
-
-      activities = [...activities, link.id];
-
-      return Promise.reduce(children, async (acc, child) => {
-        const result = await Activity.linkActivities(
-          child,
-          link.id,
-          child.position,
-          [],
-          true,
-          transaction
-        );
-        return [ ...acc, ...result ];
-      }, activities);
+    if (parentId) {
+      const parent = await Activity.findOne({ where: { id: parentId }, transaction });
+      if (parent && parent.isLink) {
+        const parentLinks = await parent.origin.getLinks();
+        parentLinks.forEach(({ id }) => {
+          if (id !== parentId) {
+            linksMap.push({ ...data, originId, parentId: id, position });
+          }
+        });
+      }
     }
-
-    const linksMap = [{ ...data, originId: source.id, parentId, position }];
-    if (!isChild) linksMap.push({ ...data, originId: source.id, position });
 
     const links = await Activity.bulkCreate(
       linksMap,
@@ -302,6 +287,10 @@ class Activity extends Model {
     );
 
     activities = [...activities, source.id, ...links.map(link => link.id)];
+    const children = await source.getChildren({
+      where: { detached: false },
+      transaction
+    });
     return Promise.reduce(links, async (acc, link) => {
       const result = await Promise.reduce(children, async (acc, child) => {
         const result = await Activity.linkActivities(
@@ -320,7 +309,7 @@ class Activity extends Model {
 
   link({ parentId, position, child = false }) {
     return this.sequelize.transaction(transaction => {
-      return Activity.linkActivities(this, parentId, position, [], child, transaction)
+      return Activity.linkActivities(this, parentId, position, [], !!parentId, transaction)
         .then(activities => activities);
     });
   }
