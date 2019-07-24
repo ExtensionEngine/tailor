@@ -49,6 +49,16 @@ function remove({ course, activity, user }, res) {
     .then(data => res.json({ data: pick(data, ['id']) }));
 }
 
+function removeLink({ course, activity, user }, res) {
+  const options = { recursive: true, soft: true, context: { userId: user.id } };
+  const unpublish = activity.publishedAt
+    ? publishingService.unpublishActivity(course, activity)
+    : Promise.resolve();
+  return unpublish
+    .then(() => activity.removeLink(options))
+    .then(data => res.json({ data }));
+}
+
 function reorder({ activity, body }, res) {
   return activity.reorder(body.position).then(data => res.json({ data }));
 }
@@ -90,6 +100,7 @@ const linkCreated = async data => {
   if (!parent.isLink) return data;
   const links = await parent.origin.getLinks();
   await Promise.each(links, async link => data.link({ position: data.position, parentId: link.id, child: true }));
+  await data.update({ parentId: parent.origin.id });
   return Activity.findByPk(data.id).then(data => data);
 };
 
@@ -99,6 +110,7 @@ module.exports = {
   list,
   patch,
   remove,
+  removeLink,
   reorder,
   clone,
   link,

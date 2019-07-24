@@ -24,6 +24,7 @@ router
 
 if (process.env.ENABLE_ACTIVITY_LINKING) {
   router.post('/courses/:courseId/activities/:activityId/link', ctrl.link);
+  router.delete('/courses/:courseId/activities/:activityId/link', ctrl.removeLink);
 }
 
 function getActivity(req, _res, next, activityId) {

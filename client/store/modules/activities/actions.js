@@ -18,8 +18,15 @@ const remove = ({ state, commit }, model) => {
     commit('remove', [model]);
     return Promise.resolve(true);
   }
-  return api.remove(model)
-    .then(() => commit('remove', [model, ...descendants]));
+
+  if (!model.originId) {
+    return api.remove(model)
+      .then(() => commit('remove', [model, ...descendants]));
+  }
+
+  const descendantsIds = descendants.map(it => it.id);
+  return api.removeLink(model)
+      .then(data => commit('removeLink', [...data, ...descendantsIds]));
 };
 
 const publish = ({ commit }, activity) => {

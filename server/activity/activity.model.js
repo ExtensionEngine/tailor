@@ -383,13 +383,37 @@ class Activity extends Model {
   }
 
   async removeLink(options = {}) {
-    if (this.deletedAt) return this.origin.remove(options);
+    let deletedIds = [];
     let descendants = await this.descendants();
     descendants = [...descendants.nodes].filter(d => d.id !== this.id);
     await Promise.each(descendants, d => d.remove(options));
     await this.destroy(options);
-    const links = await this.origin.getLinks(options);
-    if (links.length !== 1) return;
+    deletedIds.push(this.id);
+    let links = await this.origin.getLinks(options);
+    if (this.parentId) {
+      const parent = await this.getParent(options);
+      if (parent && parent.isLink) {
+        const parentSiblings = await parent.origin.getLinks(options);
+        const parentSiblingsId = parentSiblings.map(it => it.id);
+        await Promise.each(links, async link => {
+          if (parentSiblingsId.includes(link.parentId)) {
+            deletedIds.push(link.id);
+            await link.destroy(options);
+            omitBy(links, it => it.id === link.id);
+          }
+        });
+      }
+    }
+
+    if (links.length > 1) return deletedIds;
+    if (!links.length) {
+      await this.origin.remove(options);
+      return [
+        ...deletedIds,
+        this.origin.id
+      ];
+    }
+
     const [ link ] = links;
     const children = await link.getChildren(options);
 
@@ -401,7 +425,7 @@ class Activity extends Model {
 
     await this.origin.update({ position: link.position, parentId: link.parentId }, options);
     await link.destroy(options);
-    return this.origin;
+    return deletedIds;
   }
 
   reorder(index) {

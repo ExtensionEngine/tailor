@@ -21,4 +21,12 @@ const saveModels = (state, models) => {
   });
 };
 
-export { add, fetch, remove, reorder, reset, save, setEndpoint };
+const removeLink = (state, ids) => {
+  ids.forEach(id => {
+    const _cid = findKey(state.items, { id });
+    if (!_cid) return;
+    Vue.delete(state.items, _cid);
+  });
+};
+
+export { add, fetch, remove, removeLink, reorder, reset, save, setEndpoint };

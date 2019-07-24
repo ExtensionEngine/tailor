@@ -70,8 +70,8 @@ export default class Resource {
    * Create mapping between client id and server id
    * and store it inside resource cache. Cache is used when
    * model is modified before being created on the server. Using cache
-   * module can use key recieved from previous action in order
-   * to execute apropriate action.
+   * module can use key received from previous action in order
+   * to execute appropriate action.
    * @param {string} _cid
    * @param {string} id
    */
@@ -150,6 +150,14 @@ export default class Resource {
       this.unmap(model);
       return [model];
     });
+  }
+
+  /**
+   * Remove the linked model.
+   * @param {object} model
+   */
+  removeLink(model) {
+    return this.delete(`${model.id}/link`).then(({ data }) => data.data);
   }
 
   /**
