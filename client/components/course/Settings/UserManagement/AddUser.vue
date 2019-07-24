@@ -7,7 +7,7 @@
           v-model="email"
           :error-messages="vErrors.collect('email')"
           :items="suggestedUsers"
-          @input.native="fetchUsers($event.srcElement.value)"
+          @update:searchInput="fetchUsers"
           data-vv-name="email"
           label="Email"/>
       </v-flex>
@@ -29,8 +29,8 @@
 
 <script>
 import api from '@/api/user';
-import debounce from 'lodash/debounce';
 import { mapActions } from 'vuex';
+import throttle from 'lodash/throttle';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -58,14 +58,14 @@ export default {
         this.$nextTick(() => this.$validator.reset());
       });
     },
-    fetchUsers: debounce(function (filter) {
-      if (filter.length > 1) {
+    fetchUsers: throttle(function (filter) {
+      if (filter && filter.length > 1) {
         return api.fetch({ filter }).then(({ items }) => {
           this.suggestedUsers = items.map(it => it.email);
         });
       }
       this.suggestedUsers = [];
-    }, 300)
+    }, 350)
   }
 };
 </script>
