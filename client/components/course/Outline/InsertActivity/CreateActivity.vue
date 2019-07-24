@@ -22,12 +22,17 @@
           name="type"
           placeholder="Type">
           <template slot="item" slot-scope="levels">
-            <div v-if="levels.item.group">{{ levels.item.group }}</div>
-            <div v-else>
-              <v-icon v-if="levels.item.level > parent.level" class="pl-2">
+            <div v-if="levels.item.group">
+              <v-icon color="grey lighten-1">
                 mdi-subdirectory-arrow-right
               </v-icon>
-              <span class="black--text">{{ levels.item.label }}</span>
+              {{ levels.item.group }}
+            </div>
+            <div
+              v-else
+              :class="{ 'pl-3': levels.item.level > parent.level }"
+              class="black--text">
+              {{ levels.item.label }}
             </div>
           </template>
         </v-select>
