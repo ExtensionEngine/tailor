@@ -168,8 +168,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-input--switch.v-input /deep/ .v-label {
-  margin-bottom: 0 !important;
+.v-input--switch {
+  /deep/ {
+    .v-label {
+      margin-bottom: 0;
+    }
+
+    input[type=checkbox] {
+      position: absolute;
+    }
+  }
 }
 
 .filters {
