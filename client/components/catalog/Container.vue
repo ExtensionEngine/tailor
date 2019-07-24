@@ -35,7 +35,7 @@
         </div>
         <div slot="no-results" class="no-results subheading">
           <v-alert
-            value="true"
+            :value="!loading"
             color="blue-grey lighten-4"
             icon="mdi-cloud-search-outline"
             outline>
@@ -60,6 +60,11 @@ import Search from './Search';
 import SelectOrder from './SelectOrder';
 
 export default {
+  data() {
+    return {
+      loading: true
+    };
+  },
   computed: {
     ...mapState('courses', {
       sortBy: state => state.$internals.sort,
@@ -77,6 +82,7 @@ export default {
       return !!this.repositories.length;
     },
     noRepositoriesMessage() {
+      if (this.loading) return;
       if (this.hasRepositories) return;
       if (this.queryParams.search) return 'No matches found';
       if (this.showPinned) return '0 pinned items';
@@ -87,9 +93,11 @@ export default {
     ...mapActions('courses', ['fetch']),
     ...mapMutations('courses', ['togglePinned', 'setSearch', 'setOrder']),
     load() {
+      this.loading = true;
       return this.fetch().then(() => {
         if (this.hasRepositories) this.loader.loaded();
         if (!this.hasMoreResults) this.loader.complete();
+        this.loading = false;
       });
     }
   },
