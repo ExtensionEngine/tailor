@@ -55,5 +55,9 @@ export default {
 .schema-list-container {
   padding: 30px;
   text-align: left;
+
+  /deep/ .v-treeview-node__label {
+    font-size: 17px;
+  }
 }
 </style>
