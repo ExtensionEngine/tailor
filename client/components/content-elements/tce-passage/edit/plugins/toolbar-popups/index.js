@@ -1,26 +1,30 @@
+const JODIT_DEFAULT_EVENT_NAMESPACE = 'JoditEventDefaultNamespace';
 const JODIT_POPUP_ARROW = '.jodit_popup_triangle';
+const JODIT_POPUP_TRIGGER_EVENTS = ['mousedown', 'touchend', 'keydown'];
+const JODIT_TOOLBAR_BUTTON = '.jodit_toolbar_btn';
 
-const isToolbarButton = el => el.classList.contains('jodit_toolbar_btn');
+const isToolbarButton = el => el.matches(JODIT_TOOLBAR_BUTTON);
 
 export const name = 'ToolbarPopups';
 
 export const install = (Jodit, { popupOpenClass = 'popup_open' } = {}) => {
-  Jodit.plugins[name] = editor => {
-    editor.events
-      .on('beforeOpenPopup', togglePopup)
+  const popups = new Map();
+  const toggle = Symbol('toggle');
+
+  Jodit.plugins[name] = (editor) => {
+    const { events } = editor;
+    events
+      .on('beforeOpenPopup', onPopupOpen)
       .on('beforeDestruct', () => {
-        if (!editor.events) return;
-        editor.events.off('beforeOpenPopup', togglePopup);
+        if (events) events.off('beforeOpenPopup', onPopupOpen);
       });
 
-    function togglePopup(popup) {
+    function onPopupOpen(popup) {
       if (!isToolbarButton(popup.target)) return;
-      // Close popup if it is already opened.
-      if (popup.target.classList.contains(popupOpenClass)) {
-        once(popup.target, 'click', () => popup.close());
-      }
-      const { calcPosition, doClose } = popup;
       popup.container.style.display = 'none';
+      popups.set(popup.target, popup);
+
+      const { calcPosition, doClose } = popup;
       popup.calcPosition = () => {
         calcPosition.call(popup);
         popup.target.classList.add(popupOpenClass);
@@ -33,18 +37,41 @@ export const install = (Jodit, { popupOpenClass = 'popup_open' } = {}) => {
       };
       popup.doClose = () => {
         doClose.call(popup);
+        popups.delete(popup.target, popup);
         popup.target.classList.remove(popupOpenClass);
       };
+
+      const [eventDesc] = events.getStore(popup.target)
+        .get(JODIT_POPUP_TRIGGER_EVENTS[0], JODIT_DEFAULT_EVENT_NAMESPACE);
+      const listener = eventDesc && eventDesc.originalCallback;
+      if (!listener || listener[toggle]) return;
+      replaceListener(
+        editor,
+        popup.target,
+        JODIT_POPUP_TRIGGER_EVENTS.join(' '),
+        wrapListener(popup.target, listener),
+        listener
+      );
     }
   };
+
+  function replaceListener(editor, target, events, listener, oldListener) {
+    editor.events
+      .off(target, events, oldListener)
+      .on(target, events, listener);
+  }
+
+  function wrapListener(target, listener) {
+    return Object.assign(togglePopup, { [toggle]: true });
+    function togglePopup() {
+      const popup = popups.get(target);
+      if (popup && popup.isOpened) {
+        popup.close();
+        return;
+      }
+      return listener.apply(this, arguments);
+    }
+  }
 };
 
 export default install;
-
-function once(el, event, listener) {
-  el.addEventListener(event, function wrappedListener() {
-    const result = listener.apply(this, arguments);
-    el.removeEventListener(event, wrappedListener);
-    return result;
-  });
-}

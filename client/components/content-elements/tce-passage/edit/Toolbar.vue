@@ -83,6 +83,10 @@ $text-size: 16px;
 
     & > a {
       padding: 6px 5px;
+
+      &:focus {
+        outline: none;
+      }
     }
 
     .jodit_icon {
