@@ -69,7 +69,7 @@ let router = new Router({
   }, {
     path: '/system-settings',
     component: SystemSettings,
-    meta: { auth: true },
+    meta: { auth: true, restricted: true },
     children: [{
       path: '/',
       name: 'system-management',
@@ -113,6 +113,8 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(it => it.meta.auth) && !store.state.auth.user) {
     next({ path: '/login', query: { redirect: to.fullPath } });
+  } else if (to.matched.some(it => it.meta.restricted) && !store.getters.isAdmin) {
+    next({ name: from.name });
   } else {
     next();
   }
