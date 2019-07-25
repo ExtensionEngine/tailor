@@ -1,6 +1,10 @@
 <template>
   <v-card class="element-list-container">
-    <v-text-field v-model.trim="search" label="Search" clearable/>
+    <v-text-field
+      v-model.trim="search"
+      label="Search"
+      append-icon="mdi-magnify"
+      clearable/>
     <v-list :expand="true" avatar two-line>
       <v-list-group
         v-for="(group, name) in filteredRegistry"
