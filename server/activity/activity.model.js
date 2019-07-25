@@ -128,14 +128,6 @@ class Activity extends Model {
     return this.links && this.links.length > 0;
   }
 
-  update(values, options) {
-    if (!this.isLink || options.revertLink) {
-      return super.update(values, options);
-    }
-    return this.origin.update(values, options)
-      .then(origin => origin.getLinks());
-  }
-
   static cloneOrigins(source, courseId, idMap, transaction) {
     return Promise.reduce(source, async (acc, { isLink, origin }) => {
       const TeachingElement = this.sequelize.model('TeachingElement');
@@ -260,56 +252,62 @@ class Activity extends Model {
     position = null,
     activities = [],
     isChild = false,
-    transaction
+    transaction,
+    depth = 0
   ) {
-    const data = pick(source, [
-      'data', 'type', 'courseId', 'parentId', 'position'
-    ]);
-    const originId = source.isOrigin ? source.id : source.originId;
-    const linksMap = [{ ...data, originId, parentId, position }];
-    if (!isChild) linksMap.push({ ...data, originId, position });
+    try {
+      const data = pick(source, [
+        'data', 'type', 'courseId', 'parentId', 'position'
+      ]);
+      const originId = source.isLink ? source.originId : source.id;
+      const linksMap = [{ ...data, originId, parentId, position }];
+      if (!isChild) linksMap.push({ ...data, originId, position });
 
-    if (parentId) {
-      const parent = await Activity.findOne({ where: { id: parentId }, transaction });
-      if (parent && parent.isLink) {
-        const parentLinks = await parent.origin.getLinks();
-        parentLinks.forEach(({ id }) => {
-          if (id !== parentId) {
-            linksMap.push({ ...data, originId, parentId: id, position });
-          }
-        });
+      if (parentId && !depth) {
+        const parent = await Activity.findOne({ where: { id: parentId }, transaction });
+        if (parent && parent.isLink) {
+          const parentLinks = await parent.origin.getLinks({ transaction });
+          parentLinks.forEach(({ id }) => {
+            if (id !== parentId) {
+              linksMap.push({ ...data, originId, parentId: id, position });
+            }
+          });
+        }
       }
-    }
 
-    const links = await Activity.bulkCreate(
-      linksMap,
-      { returning: true, transaction }
-    );
+      const links = await Activity.bulkCreate(
+        linksMap,
+        { returning: true, transaction }
+      );
 
-    activities = [...activities, source.id, ...links.map(link => link.id)];
-    const children = await source.getChildren({
-      where: { detached: false },
-      transaction
-    });
-    return Promise.reduce(links, async (acc, link) => {
-      const result = await Promise.reduce(children, async (acc, child) => {
-        const result = await Activity.linkActivities(
-          child,
-          link.id,
-          child.position,
-          [],
-          true,
-          transaction
-        );
+      activities = [...activities, source.id, ...links.map(link => link.id)];
+      const children = await source.getChildren({
+        where: { detached: false },
+        transaction
+      });
+      return Promise.reduce(links, async (acc, link) => {
+        const result = await Promise.reduce(children, async (acc, child) => {
+          const result = await Activity.linkActivities(
+            child,
+            link.id,
+            child.position,
+            [],
+            true,
+            transaction,
+            depth + 1
+          );
+          return [ ...acc, ...result ];
+        }, []);
         return [ ...acc, ...result ];
-      }, []);
-      return [ ...acc, ...result ];
-    }, activities);
+      }, activities);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   link({ parentId, position, child = false }) {
     return this.sequelize.transaction(transaction => {
-      return Activity.linkActivities(this, parentId, position, [], !!parentId, transaction)
+      return Activity.linkActivities(this, parentId, position, [], child, transaction)
         .then(activities => activities);
     });
   }
@@ -359,7 +357,6 @@ class Activity extends Model {
   remove(options = {}) {
     return this.sequelize.transaction(async transaction => {
       options = { ...options, transaction };
-      if (ENABLE_ACTIVITY_LINKING && this.isLink) return this.removeLink(options);
       const TeachingElement = this.sequelize.model('TeachingElement');
       const descendants = await this.descendants({ attributes: ['id'] });
       descendants.all = [...descendants.nodes, ...descendants.leaves];
@@ -371,50 +368,56 @@ class Activity extends Model {
     });
   }
 
-  async removeLink(options = {}) {
-    let deletedIds = [];
-    let descendants = await this.descendants();
-    descendants = [...descendants.nodes].filter(d => d.id !== this.id);
-    await Promise.each(descendants, d => d.remove(options));
-    await this.destroy(options);
-    deletedIds.push(this.id);
-    let links = await this.origin.getLinks(options);
-    if (this.parentId) {
-      const parent = await this.getParent(options);
-      if (parent && parent.isLink) {
-        const parentSiblings = await parent.origin.getLinks(options);
-        const parentSiblingsId = parentSiblings.map(it => it.id);
-        await Promise.each(links, async link => {
-          if (parentSiblingsId.includes(link.parentId)) {
-            deletedIds.push(link.id);
-            await link.destroy(options);
-            omitBy(links, it => it.id === link.id);
-          }
-        });
+  async removeLink(options = {}, depth = 0) {
+    return this.sequelize.transaction(async transaction => {
+      options = { ...options, transaction };
+      let deletedIds = [];
+      let descendants = await this.descendants();
+      descendants = [...descendants.nodes].filter(d => d.id !== this.id);
+      await Promise.each(descendants, d => {
+        return d.isLink ? d.removeLink(options, depth + 1) : d.remove(options);
+      });
+      await this.destroy(options);
+      deletedIds.push(this.id);
+      if (!this.origin) return deletedIds;
+      let links = await this.origin.getLinks(options);
+      if (this.parentId && !depth) {
+        const parent = await this.getParent(options);
+        if (parent && parent.isLink) {
+          const parentSiblings = await parent.origin.getLinks(options);
+          const parentSiblingsId = parentSiblings.map(it => it.id);
+          await Promise.each(links, async link => {
+            if (parentSiblingsId.includes(link.parentId)) {
+              deletedIds.push(link.id);
+              await link.destroy(options);
+              omitBy(links, it => it.id === link.id);
+            }
+          });
+        }
       }
-    }
 
-    if (links.length > 1) return deletedIds;
-    if (!links.length) {
-      await this.origin.remove(options);
-      return [
-        ...deletedIds,
-        this.origin.id
-      ];
-    }
+      if (links.length > 1) return deletedIds;
+      if (!links.length) {
+        await this.origin.remove(options);
+        return [
+          ...deletedIds,
+          this.origin.id
+        ];
+      }
 
-    const [ link ] = links;
-    const children = await link.getChildren(options);
+      const [ link ] = links;
+      const children = await link.getChildren(options);
 
-    if (children.length) {
-      await Promise.each(children, async child =>
-        child.update({ parentId: this.origin.id }, options)
-      );
-    }
+      if (children.length) {
+        await Promise.each(children, async child =>
+          child.update({ parentId: this.origin.id }, options)
+        );
+      }
 
-    await this.origin.update({ position: link.position, parentId: link.parentId }, options);
-    await link.destroy(options);
-    return deletedIds;
+      await this.origin.update({ position: link.position, parentId: link.parentId }, options);
+      await link.destroy(options);
+      return deletedIds;
+    });
   }
 
   reorder(index) {

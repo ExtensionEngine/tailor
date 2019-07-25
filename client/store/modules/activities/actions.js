@@ -1,15 +1,25 @@
 import calculatePosition from 'utils/calculatePosition';
+import find from 'lodash/find';
 import generateActions from '../../helpers/actions';
 import { getDescendants as getDeepChildren } from 'utils/activity';
 import request from '@/api/request';
 
-const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();
+const { api, fetch, get, reset, save, setEndpoint } = generateActions();
 
 const reorder = ({ commit }, { activity, context }) => {
   const position = calculatePosition(context);
   commit('reorder', { activity, position });
   return api.post(`${activity.id}/reorder`, { position: context.newPosition })
     .then(({ data: { data } }) => commit('save', { ...activity, ...data }));
+};
+
+const update = ({ state, commit }, { activity, data }) => {
+  if (activity.originId) {
+    activity = find(state.items, { id: activity.originId });
+  }
+  const cid = activity._cid;
+  return api.update(cid, { data })
+    .then(updated => commit('save', { data, ...updated }));
 };
 
 const remove = ({ state, commit }, model) => {

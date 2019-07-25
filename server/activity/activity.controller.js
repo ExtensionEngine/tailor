@@ -94,14 +94,13 @@ function getPreviewUrl({ course, activity }, res) {
     });
 }
 
-const linkCreated = async data => {
-  if (!data.parentId) return data;
-  const parent = await data.getParent();
-  if (!parent.isLink) return data;
-  const links = await parent.origin.getLinks();
-  await Promise.each(links, async link => data.link({ position: data.position, parentId: link.id, child: true }));
-  await data.update({ parentId: parent.origin.id });
-  return Activity.findByPk(data.id).then(data => data);
+const linkCreated = async activity => {
+  if (!activity.parentId) return activity;
+  const parent = await activity.getParent();
+  if (!parent.isLink) return activity;
+  await activity.link({ position: activity.position, parentId: activity.parentId, child: true });
+  await activity.update({ parentId: parent.origin.id });
+  return Activity.findByPk(activity.id).then(data => data);
 };
 
 module.exports = {
