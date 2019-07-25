@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-visible="message" class="message">{{ message }}</div>
+    <div class="message">{{ message }}</div>
     <form @submit.prevent="submit" novalidate>
       <v-text-field
         v-validate="{ required: true, email: true }"
