@@ -119,7 +119,7 @@ $min-height: 140px;
   }
 }
 
-/deep/ .jodit_container:not(.jodit_inline) {
+.jodit_wrapper /deep/ .jodit_container:not(.jodit_inline) {
   min-height: $min-height;
   font-size: 16px;
 }

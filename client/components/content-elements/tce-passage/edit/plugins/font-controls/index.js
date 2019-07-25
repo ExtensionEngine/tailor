@@ -12,7 +12,7 @@ export const install = (Jodit, {
   defaultFontSize = 16,
   defaultParagraphStyle = 'Normal',
   pickerLabelClass = 'picker_label'
-}) => {
+} = {}) => {
   const { controls } = Jodit.defaultOptions;
 
   if (controls[JODIT_CONTROL_FONT]) {
