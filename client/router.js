@@ -114,7 +114,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(it => it.meta.auth) && !store.state.auth.user) {
     next({ path: '/login', query: { redirect: to.fullPath } });
   } else if (to.matched.some(it => it.meta.restricted) && !store.getters.isAdmin) {
-    next({ name: from.name });
+    next({ path: from.fullPath });
   } else {
     next();
   }
