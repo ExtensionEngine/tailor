@@ -1,8 +1,7 @@
 /* eslint-disable sort-imports */
-import get from 'lodash/get';
 import { numeric as numericParser } from 'client/utils/paramsParser';
 import Router from 'vue-router';
-import { role } from 'shared';
+import { role } from '@/../config/shared';
 import store from './store';
 import Vue from 'vue';
 
@@ -125,6 +124,6 @@ router.beforeEach((to, from, next) => {
 export default router;
 
 function isAllowed(route) {
-  const allowed = get(route.matched.find(it => it.meta.allowed), 'meta.allowed');
-  return !allowed || allowed.includes(store.state.auth.user.role);
+  const { meta = {} } = route.matched.find(({ meta = {} }) => meta.allowed) || {};
+  return !meta.allowed || meta.allowed.includes(store.state.auth.user.role);
 }
