@@ -1,5 +1,5 @@
 <template>
-  <div class="jodit-wrapper">
+  <div class="jodit_wrapper">
     <jodit-vue
       ref="jodit"
       v-bind="{ id, buttons, config, value }"
@@ -89,16 +89,16 @@ $icon-size: 18px;
 $statusbar-height: 26px;
 $statusbar-border-size: 1px;
 
-.jodit-wrapper /deep/ .jodit_placeholder {
+.jodit_wrapper /deep/ .jodit_placeholder {
   font-style: italic;
 }
 
-.jodit-wrapper /deep/ .jodit_source .ace_editor {
+.jodit_wrapper /deep/ .jodit_source .ace_editor {
   font-size: 13px;
   font-family: $font-family-monospace;
 }
 
-.jodit-wrapper /deep/ .jodit_statusbar {
+.jodit_wrapper /deep/ .jodit_statusbar {
   height: $statusbar-height;
   line-height: $statusbar-height - $statusbar-border-size;
 
