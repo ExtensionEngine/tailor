@@ -1,37 +1,38 @@
 <template>
-  <v-dialog :value="show" width="600px" persistent>
+  <v-dialog :value="show" width="600" persistent>
     <v-card class="pa-3">
       <v-card-title class="headline">
         <v-avatar color="secondary" size="38" class="mr-2">
           <v-icon color="white">mdi-content-copy</v-icon>
         </v-avatar>
-        Clone repository
+        <span class="secondary--text text--lighten-1 pr-2">Clone</span>
+        <v-divider color="grey" vertical class="my-2"/>
+        <span class="pl-2">{{ schema }}</span>
       </v-card-title>
       <v-card-text>
         <v-text-field
           v-validate="{ required: true, min: 2, max: 250 }"
           v-model="name"
-          :disabled="showLoader"
+          :disabled="inProgress"
           :error-messages="vErrors.collect('name')"
-          class="mb-4 form-group"
+          class="mb-4"
           label="Name"
           data-vv-name="name"/>
         <v-textarea
           v-validate="{ required: true, min: 2, max: 2000 }"
           v-model="description"
-          :disabled="showLoader"
+          :disabled="inProgress"
           :error-messages="vErrors.collect('description')"
-          class="mb-4 form-group"
+          class="mb-4"
           label="Description"
           data-vv-name="description"/>
       </v-card-text>
       <v-card-actions>
         <v-spacer/>
-        <v-btn :disabled="showLoader" @click="close">Cancel</v-btn>
+        <v-btn :disabled="inProgress" @click="close">Cancel</v-btn>
         <v-btn
-          :loading="showLoader"
+          :loading="inProgress"
           @click="cloneRepository"
-          color="primary"
           outline>
           Clone
         </v-btn>
@@ -41,46 +42,41 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
+import { withValidation } from 'utils/validation';
+
+const getDefaultState = () => ({
+  inProgress: false,
+  name: '',
+  description: ''
+});
 
 export default {
+  mixins: [withValidation()],
   props: {
     show: { type: Boolean, required: true }
   },
-  data() {
-    return {
-      showLoader: false,
-      name: '',
-      description: ''
-    };
-  },
+  data: () => getDefaultState(),
+  computed: mapGetters('course', ['schema']),
   methods: {
     ...mapActions('courses', ['clone']),
     close() {
       this.$emit('close');
-      this.name = '';
-      this.description = '';
-      this.showLoader = false;
+      Object.assign(this, getDefaultState());
+      this.$validator.reset();
     },
     cloneRepository() {
       this.$validator.validateAll().then(isValid => {
         if (!isValid) return;
-        this.showLoader = true;
+        this.inProgress = true;
         const { courseId } = this.$route.params;
         const data = { id: courseId, ...pick(this, ['name', 'description']) };
         return Promise.join(this.clone(data), Promise.delay(500))
           .then(() => this.close());
       });
     }
-  },
-  watch: {
-    show(val) {
-      if (!val) return;
-      this.vErrors.clear();
-    }
-  },
-  inject: ['$validator']
+  }
 };
 </script>
