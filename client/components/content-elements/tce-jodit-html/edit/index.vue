@@ -168,4 +168,9 @@ $tooltipColor: #455a64;
     font-size: 24px;
   }
 }
+
+/deep/ .jodit_container:not(.jodit_inline) {
+  min-height: $min-height;
+  font-size: 16px;
+}
 </style>
