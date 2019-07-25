@@ -19,6 +19,8 @@ import Toolbar from './Toolbar';
 import toolbarPopups from './plugins/toolbar-popups';
 import uniqueId from 'lodash/uniqueId';
 
+const JODIT_READY_EVENT = 'joditReady';
+
 /** @type {import('jodit/src/Config').Config & import('jodit/src/plugins') } */
 const joditConfig = {
   autofocus: true,
@@ -29,10 +31,19 @@ const joditConfig = {
 };
 
 // Load custom plugins.
-externalToolbar(Jodit, { toolbarContainer: '#joditToolbar' });
-mdiIcons(Jodit, { btnResetColorClass: 'btn_reset_color' });
-fontControls(Jodit, { pickerLabelClass: 'picker_label' });
-toolbarPopups(Jodit, { popupOpenClass: 'popup_open' });
+externalToolbar(Jodit, {
+  readyEvent: JODIT_READY_EVENT,
+  toolbarContainer: '#joditToolbar'
+});
+mdiIcons(Jodit, {
+  btnResetColorClass: 'btn_reset_color'
+});
+fontControls(Jodit, {
+  pickerLabelClass: 'picker_label'
+});
+toolbarPopups(Jodit, {
+  popupOpenClass: 'popup_open'
+});
 sourceEditor(Jodit);
 
 export default {
@@ -53,6 +64,18 @@ export default {
   mounted() {
     const { editor } = this.$refs.jodit;
     editor.editor.style.cursor = 'initial';
+    editor.events
+      .on('afterInit', something)
+      .on('beforeDestruct', () => {
+        if (editor.events) editor.events.off('afterInit', something);
+      });
+
+    function something() {
+      setTimeout(() => {
+        editor.selection.focus();
+        editor.events.fire(JODIT_READY_EVENT);
+      }, 0);
+    }
   },
   components: {
     JoditVue

@@ -4,7 +4,7 @@ const splitArray = arg => isString(arg) ? arg.split(/[,\s]+/) : arg;
 
 export const name = 'ExternalToolbar';
 
-export const install = (Jodit, { toolbarContainer }) => {
+export const install = (Jodit, { readyEvent = 'afterInit', toolbarContainer }) => {
   Object.assign(Jodit.defaultOptions, { toolbar: false });
 
   const { __initEditor } = Jodit.prototype;
@@ -14,10 +14,10 @@ export const install = (Jodit, { toolbarContainer }) => {
   };
 
   function renderToolbar({ events, options, statusbar, toolbar }) {
-    events.on('afterInit', showToolbar);
+    events.on(readyEvent, showToolbar);
     events.on('beforeDestruct', () => {
       if (!events) return;
-      events.off('afterInit', showToolbar);
+      events.off(readyEvent, showToolbar);
     });
 
     const container = document.querySelector(toolbarContainer);

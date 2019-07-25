@@ -1,5 +1,5 @@
 <template>
-  <div id="joditToolbar" class="tce-passage-toolbar"></div>
+  <div id="joditToolbar" class="jodit_toolbar_container"></div>
 </template>
 
 <script>
@@ -61,6 +61,10 @@ $icon-color: #333;
 $icon-accent-color: #ff6590;
 $icon-size: 18px;
 $text-size: 16px;
+
+.jodit_toolbar_container {
+  min-height: 48px;
+}
 
 .jodit_toolbar {
   margin: 0 !important;
