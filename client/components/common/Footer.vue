@@ -9,7 +9,7 @@
           label
           small
           class="mr-3 grey--text text--darken-4">
-          v3.1 Silk
+          v{{ version }} {{ codename }}
         </v-chip>
         Built with <v-icon color="pink">mdi-heart</v-icon>
         Extension Engine
@@ -18,8 +18,22 @@
   </v-footer>
 </template>
 
+<script>
+import { codename, version } from '@/../package.json';
+
+const capitalize = str => str.charAt(0).toUpperCase() + str.substr(1);
+
+export default {
+  name: 'app-footer',
+  computed: {
+    version: () => version,
+    codename: () => capitalize(codename)
+  }
+};
+</script>
+
 <style lang="scss" scoped>
 .v-footer {
-  box-shadow: 0px -1px 1px 0px rgba(0,0,0,0.2);
+  box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.2);
 }
 </style>
