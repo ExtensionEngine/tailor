@@ -16,6 +16,7 @@ router
   .get('/courses/:id', ctrl.get)
   .patch('/courses/:id', ctrl.patch)
   .delete('/courses/:id', ctrl.remove)
+  .post('/courses/:id/pin', ctrl.pin)
   .post('/courses/:id/clone', authorize(), ctrl.clone)
   .post('/courses/:id/publish', ctrl.publishRepoInfo)
   .get('/courses/:id/users', ctrl.getUsers)

@@ -4,7 +4,7 @@ const { course: role } = require('../../config/shared').role;
 const { Model } = require('sequelize');
 
 class CourseUser extends Model {
-  static fields({ INTEGER, DATE, ENUM }) {
+  static fields({ BOOLEAN, DATE, ENUM, INTEGER }) {
     return {
       userId: {
         type: INTEGER,
@@ -21,6 +21,10 @@ class CourseUser extends Model {
       role: {
         type: ENUM(role.ADMIN, role.AUTHOR),
         defaultValue: role.AUTHOR
+      },
+      pinned: {
+        type: BOOLEAN,
+        defaultValue: false
       },
       createdAt: {
         type: DATE,

@@ -1,6 +1,6 @@
 'use strict';
 
-const { Course, CourseUser, User } = require('../shared/database');
+const { Course, CourseUser, Revision, sequelize, User } = require('../shared/database');
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
@@ -13,9 +13,21 @@ const publishingService = require('../shared/publishing/publishing.service');
 const sample = require('lodash/sample');
 
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
+const lowercaseName = sequelize.fn('lower', sequelize.col('name'));
 
 function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
+  if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
+  opts.include = [{
+    model: Revision,
+    include: [{ model: User, attributes: ['id', 'email'] }],
+    order: [['createdAt', 'DESC']],
+    limit: 1
+  }];
+  const courseUser = query.pinned
+    ? { where: { userId: user.id, pinned: true }, required: true }
+    : { where: { userId: user.id }, required: false };
+  opts.include.push({ model: CourseUser, ...courseUser });
   const courses = user.isAdmin() ? Course.findAll(opts) : user.getCourses(opts);
   return courses.then(data => res.json({ data }));
 }
@@ -43,6 +55,14 @@ function patch({ body, course, user }, res) {
 function remove({ course, user }, res) {
   return course.destroy({ context: { userId: user.id } })
     .then(() => res.status(204).send());
+}
+
+async function pin({ user, course, body }, res) {
+  const opts = { where: { courseId: course.id, userId: user.id } };
+  const [courseUser] = await CourseUser.findOrCreate(opts);
+  courseUser.pinned = body.pin;
+  await courseUser.save();
+  return res.json({ data: courseUser });
 }
 
 function clone({ user, course, body }, res) {
@@ -110,6 +130,7 @@ module.exports = {
   get,
   patch,
   remove,
+  pin,
   clone,
   getUsers,
   upsertUser,
