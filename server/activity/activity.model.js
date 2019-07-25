@@ -255,54 +255,50 @@ class Activity extends Model {
     transaction,
     depth = 0
   ) {
-    try {
-      const data = pick(source, [
-        'data', 'type', 'courseId', 'parentId', 'position'
-      ]);
-      const originId = source.isLink ? source.originId : source.id;
-      const linksMap = [{ ...data, originId, parentId, position }];
-      if (!isChild) linksMap.push({ ...data, originId, position });
+    const data = pick(source, [
+      'data', 'type', 'courseId', 'parentId', 'position'
+    ]);
+    const originId = source.isLink ? source.originId : source.id;
+    const linksMap = [{ ...data, originId, parentId, position }];
+    if (!isChild) linksMap.push({ ...data, originId, position });
 
-      if (parentId && !depth) {
-        const parent = await Activity.findOne({ where: { id: parentId }, transaction });
-        if (parent && parent.isLink) {
-          const parentLinks = await parent.origin.getLinks({ transaction });
-          parentLinks.forEach(({ id }) => {
-            if (id !== parentId) {
-              linksMap.push({ ...data, originId, parentId: id, position });
-            }
-          });
-        }
+    if (parentId && !depth) {
+      const parent = await Activity.findOne({ where: { id: parentId }, transaction });
+      if (parent && parent.isLink) {
+        const parentLinks = await parent.origin.getLinks({ transaction });
+        parentLinks.forEach(({ id }) => {
+          if (id !== parentId) {
+            linksMap.push({ ...data, originId, parentId: id, position });
+          }
+        });
       }
-
-      const links = await Activity.bulkCreate(
-        linksMap,
-        { returning: true, transaction }
-      );
-
-      activities = [...activities, source.id, ...links.map(link => link.id)];
-      const children = await source.getChildren({
-        where: { detached: false },
-        transaction
-      });
-      return Promise.reduce(links, async (acc, link) => {
-        const result = await Promise.reduce(children, async (acc, child) => {
-          const result = await Activity.linkActivities(
-            child,
-            link.id,
-            child.position,
-            [],
-            true,
-            transaction,
-            depth + 1
-          );
-          return [ ...acc, ...result ];
-        }, []);
-        return [ ...acc, ...result ];
-      }, activities);
-    } catch (err) {
-      console.log(err);
     }
+
+    const links = await Activity.bulkCreate(
+      linksMap,
+      { returning: true, transaction }
+    );
+
+    activities = [...activities, source.id, ...links.map(link => link.id)];
+    const children = await source.getChildren({
+      where: { detached: false },
+      transaction
+    });
+    return Promise.reduce(links, async (acc, link) => {
+      const result = await Promise.reduce(children, async (acc, child) => {
+        const result = await Activity.linkActivities(
+          child,
+          link.id,
+          child.position,
+          [],
+          true,
+          transaction,
+          depth + 1
+        );
+        return [ ...acc, ...result ];
+      }, []);
+      return [ ...acc, ...result ];
+    }, activities);
   }
 
   link({ parentId, position, child = false }) {
