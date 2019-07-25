@@ -8,33 +8,28 @@
         Clone repository
       </v-card-title>
       <v-card-text>
-        <div v-if="showLoader" class="search-spinner">
-          <v-progress-circular color="primary" indeterminate/>
-        </div>
-        <div v-else>
-          <v-text-field
-            v-validate="{ required: true, min: 2, max: 250 }"
-            v-model="name"
-            :error-messages="vErrors.collect('name')"
-            class="mb-4 form-group"
-            label="Name"
-            data-vv-name="name"/>
-          <v-textarea
-            v-validate="{ required: true, min: 2, max: 2000 }"
-            v-model="description"
-            :error-messages="vErrors.collect('description')"
-            class="mb-4 form-group"
-            label="Description"
-            data-vv-name="description"/>
-        </div>
+        <v-text-field
+          v-validate="{ required: true, min: 2, max: 250 }"
+          v-model="name"
+          :disabled="showLoader"
+          :error-messages="vErrors.collect('name')"
+          class="mb-4 form-group"
+          label="Name"
+          data-vv-name="name"/>
+        <v-textarea
+          v-validate="{ required: true, min: 2, max: 2000 }"
+          v-model="description"
+          :disabled="showLoader"
+          :error-messages="vErrors.collect('description')"
+          class="mb-4 form-group"
+          label="Description"
+          data-vv-name="description"/>
       </v-card-text>
       <v-card-actions>
         <v-spacer/>
-        <v-btn :disabled="showLoader" @click="close">
-          Cancel
-        </v-btn>
+        <v-btn :disabled="showLoader" @click="close">Cancel</v-btn>
         <v-btn
-          :disabled="showLoader"
+          :loading="showLoader"
           @click="cloneRepository"
           color="primary"
           outline>
