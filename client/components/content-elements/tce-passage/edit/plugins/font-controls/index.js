@@ -2,6 +2,9 @@ const JODIT_CONTROL_FONT = 'font';
 const JODIT_CONTROL_FONTSIZE = 'fontsize';
 const JODIT_CONTROL_PARAGRAPH_STYLE = 'paragraph';
 
+const isEmpty = el => !el.innerHTML;
+const find = (arr, cb, defVal) => arr.find(cb) || defVal;
+
 export const name = 'FontControls';
 
 export const install = (Jodit, {
@@ -18,12 +21,14 @@ export const install = (Jodit, {
       getLabel
     });
   }
+
   if (controls[JODIT_CONTROL_FONTSIZE]) {
     Object.assign(controls[JODIT_CONTROL_FONTSIZE], {
       defaultValue: defaultFontSize,
       getLabel
     });
   }
+
   if (controls[JODIT_CONTROL_PARAGRAPH_STYLE]) {
     Object.assign(controls[JODIT_CONTROL_PARAGRAPH_STYLE], {
       defaultValue: defaultParagraphStyle,
@@ -62,25 +67,30 @@ const normalize = (() => {
 
 function getActiveEntry(editor, control, defaultValue) {
   if (!editor.isInited) return [null, defaultValue];
+
   const entries = Object.entries(control.list);
   const entry = entries.find(args => control.isActiveChild(editor, { args }));
   if (entry) return entry;
-  if (editor.editor.innerHTML) return [null, defaultValue];
+
+  if (isEmpty(editor.editor)) return [null, defaultValue];
+
   if (control.name === JODIT_CONTROL_FONT) {
     const { fontFamily: currentFontFamily } = getComputedStyle(editor.editor);
-    return entries.find(([fontFamily]) => {
+    return find(entries, ([fontFamily]) => {
       return normalize.fontFamily(fontFamily) === currentFontFamily;
-    }) || [null, defaultValue];
+    }, [null, defaultValue]);
   }
+
   if (control.name === JODIT_CONTROL_FONTSIZE) {
     const { fontSize: currentFontSize } = getComputedStyle(editor.editor);
-    return entries.find(([_, fontSize]) => {
+    return find(entries, ([_, fontSize]) => {
       return fontSize === normalize.fontSize(currentFontSize);
-    }) || [null, defaultValue];
+    }, [null, defaultValue]);
   }
+
   if (control.name === JODIT_CONTROL_PARAGRAPH_STYLE) {
-    return entries.find(([_, style]) => {
+    return find(entries, ([_, style]) => {
       return style.toLowerCase() === 'normal';
-    }) || [null, defaultValue];
+    }, [null, defaultValue]);
   }
 }
