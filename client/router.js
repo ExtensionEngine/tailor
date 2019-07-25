@@ -1,6 +1,8 @@
 /* eslint-disable sort-imports */
+import get from 'lodash/get';
 import { numeric as numericParser } from 'client/utils/paramsParser';
 import Router from 'vue-router';
+import { role } from 'shared';
 import store from './store';
 import Vue from 'vue';
 
@@ -69,7 +71,7 @@ let router = new Router({
   }, {
     path: '/system-settings',
     component: SystemSettings,
-    meta: { auth: true, restricted: true },
+    meta: { auth: true, allowed: [role.user.ADMIN] },
     children: [{
       path: '/',
       name: 'system-management',
@@ -113,7 +115,7 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(it => it.meta.auth) && !store.state.auth.user) {
     next({ path: '/login', query: { redirect: to.fullPath } });
-  } else if (to.matched.some(it => it.meta.restricted) && !store.getters.isAdmin) {
+  } else if (!isAllowed(to)) {
     next({ path: from.fullPath });
   } else {
     next();
@@ -121,3 +123,8 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
+
+function isAllowed(route) {
+  const allowed = get(route.matched.find(it => it.meta.allowed), 'meta.allowed');
+  return !allowed || allowed.includes(store.state.auth.user.role);
+}
