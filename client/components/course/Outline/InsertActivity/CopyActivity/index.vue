@@ -1,11 +1,11 @@
 <template>
-  <v-dialog :value="true" width="700px" persistent>
+  <v-dialog :value="true" width="75vw" persistent>
     <v-card class="pa-3">
       <v-card-title class="headline">
         <v-avatar color="secondary" size="38" class="mr-2">
           <v-icon color="white">mdi-content-copy</v-icon>
         </v-avatar>
-        Copy activity
+        Copy activity from {{ schemaName | pluralize }}
       </v-card-title>
       <v-card-text class="content-section">
         <div v-if="showLoader" class="search-spinner">
@@ -18,15 +18,15 @@
                 <v-select
                   :value="selectedRepository"
                   :items="repositories"
+                  :label="schemaName"
                   @input="updateSelected"
                   item-text="name"
-                  item-value="id"
-                  label="Repository"/>
+                  item-value="id"/>
               </v-flex>
-              <v-flex>
+              <v-flex class="filter-activities">
                 <v-text-field
                   v-model="search"
-                  placeholder="Filter by name..."
+                  placeholder="Filter activities..."
                   clearable
                   clear-icon="mdi-close-circle-outline"/>
               </v-flex>
@@ -36,6 +36,7 @@
             :activities="selectedRepository.children"
             :search="search"
             :selected="selected"
+            :schemaName="schemaName"
             @toggleSelect="toggleSelect"/>
         </div>
       </v-card-text>
@@ -58,8 +59,11 @@
 import activityApi from 'client/api/activity';
 import courseApi from 'client/api/course';
 import get from 'lodash/get';
+import { mapGetters } from 'vuex';
+import pluralize from 'pluralize';
 import Promise from 'bluebird';
 import RepositoryTree from './RepositoryTree';
+import { SCHEMAS } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
 
 export default {
@@ -74,6 +78,12 @@ export default {
       selectedRepository: null,
       search: ''
     };
+  },
+  computed: {
+    ...mapGetters('course', ['course']),
+    schemaName() {
+      return SCHEMAS.find(it => it.id === this.course.schema).name;
+    }
   },
   methods: {
     updateSelected(id) {
@@ -113,12 +123,24 @@ export default {
     }
   },
   created() {
+    const { schema } = this.course;
     return Promise.join(courseApi.getCourses(), Promise.delay(700), items => {
-      this.repositories = sortBy(items, 'name');
+      this.repositories = sortBy(items, 'name').filter(it => it.schema === schema);
       this.showLoader = false;
       return this.updateSelected(this.repositories[0].id);
     });
   },
+  filters: {
+    pluralize(val) {
+      return pluralize(val);
+    }
+  },
   components: { RepositoryTree }
 };
 </script>
+
+<style lang="scss" scoped>
+.filter-activities {
+  max-width: 250px;
+}
+</style>

@@ -1,5 +1,7 @@
 <template>
-  <div v-if="!activities.length" class="ma-3">Repository is empty.</div>
+  <div v-if="!activities.length" class="ma-3 mt-5">
+    Selected {{ schemaName }} is empty.
+  </div>
   <v-treeview
     v-else
     ref="treeview"
@@ -7,14 +9,14 @@
     :search="search"
     transition
     open-all
-    class="ma-2 treeview">
+    class="ma-2 py-3 treeview">
     <template v-slot:prepend="{ item, open }">
       <v-icon>{{ getIcon(item.children, open) }}</v-icon>
     </template>
     <template v-slot:append="{ item }">
       <v-btn
         v-if="item.supported"
-        :class="{ picked: isPicked(item) }"
+        :color="isPicked(item) ? 'primary' : 'primary lighten-2'"
         @click="$emit('toggleSelect', item)"
         flat
         small>
@@ -31,7 +33,8 @@ export default {
   props: {
     activities: { type: Array, required: true },
     selected: { type: Object, default: null },
-    search: { type: String, default: '' }
+    search: { type: String, default: '' },
+    schemaName: { type: String, required: true }
   },
   methods: {
     getIcon(children, open) {
@@ -55,9 +58,5 @@ export default {
   max-height: 400px;
   text-align: left;
   overflow-y: scroll;
-
-  .picked {
-    color: #337ab7;
-  }
 }
 </style>
