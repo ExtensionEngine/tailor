@@ -50,7 +50,8 @@ export default {
   props: {
     value: { type: String, required: true },
     minHeight: { type: Number, required: true },
-    placeholder: { type: String, default: 'Insert text here...' }
+    placeholder: { type: String, default: 'Insert text here...' },
+    readonly: { type: Boolean, default: false }
   },
   computed: {
     id: () => uniqueId('jodit_editor_'),
@@ -60,6 +61,14 @@ export default {
       minHeight: vm.minHeight,
       placeholder: vm.placeholder
     })
+  },
+  watch: {
+    readonly(state) {
+      const { editor } = this.$refs.jodit;
+      if (!editor) return;
+      editor.setReadOnly(state);
+      if (!state) editor.selection.focus();
+    }
   },
   mounted() {
     const { editor } = this.$refs.jodit;

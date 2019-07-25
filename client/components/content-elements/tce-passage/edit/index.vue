@@ -11,9 +11,9 @@
     <template v-else>
       <jodit-editor
         v-if="isFocused"
-        ref="editor"
         v-model="content"
-        :minHeight="$el.clientHeight"/>
+        :minHeight="$el.clientHeight"
+        :readonly="readonly"/>
       <div v-else class="jodit_container">
         <div v-html="content" class="jodit_wysiwyg"></div>
       </div>
@@ -35,7 +35,8 @@ export default {
     showPlaceholder: { type: Boolean, default: true }
   },
   data: vm => ({
-    content: get(vm.element, 'data.content', '')
+    content: get(vm.element, 'data.content', ''),
+    readonly: false
   }),
   computed: {
     hasChanges() {
@@ -62,13 +63,10 @@ export default {
       if (oldVal && !val) this.save();
     },
     isDragged(state, oldState) {
-      const jodit = getJodit(this);
-      if (!jodit) return;
-      if (!state && oldState) {
-        return jodit.setReadOnly(false);
-      }
       if (state) {
-        return jodit.setReadOnly(true);
+        this.readonly = true;
+      } else if (!state && oldState) {
+        this.readonly = false;
       }
     },
     content: debounce(function () {
@@ -79,13 +77,6 @@ export default {
     JoditEditor
   }
 };
-
-function getJodit(vm) {
-  if (!vm.$refs.editor) return;
-  const { editor } = vm.$refs;
-  if (!editor.$refs.jodit) return;
-  return editor.$refs.jodit.editor;
-}
 </script>
 
 <style lang="scss" scoped>
