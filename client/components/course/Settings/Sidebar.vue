@@ -16,7 +16,7 @@
       <v-list-group value="true">
         <template v-slot:activator>
           <v-list-tile>
-            <v-list-tile-title>Repository actions</v-list-tile-title>
+            <v-list-tile-title>Actions</v-list-tile-title>
           </v-list-tile>
         </template>
         <v-list-tile
