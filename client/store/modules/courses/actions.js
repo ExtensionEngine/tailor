@@ -30,10 +30,10 @@ const fetch = ({ getters, commit }) => {
   });
 };
 
-const clone = ({ commit }, { id, name, description }) => {
+const clone = ({ dispatch }, { id, name, description }) => {
   return api.post(`/${id}/clone`, { name, description }).then(response => {
     const { data: course } = response.data;
-    commit('add', course);
+    dispatch('reset');
     return course.id;
   });
 };
