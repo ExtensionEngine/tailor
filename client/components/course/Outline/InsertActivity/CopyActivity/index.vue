@@ -1,36 +1,32 @@
 <template>
-  <v-dialog :value="true" width="75vw" persistent>
+  <v-dialog :value="true" width="65vw" persistent>
     <v-card class="pa-3">
       <v-card-title class="headline">
         <v-avatar color="secondary" size="38" class="mr-2">
           <v-icon color="white">mdi-content-copy</v-icon>
         </v-avatar>
-        Copy activity from {{ schemaName | pluralize }}
+        Copy items from {{ schemaName | pluralize }}
       </v-card-title>
-      <v-card-text class="content-section">
+      <v-card-text>
         <div v-if="showLoader" class="search-spinner">
           <v-progress-circular color="primary" indeterminate/>
         </div>
         <div v-else-if="selectedRepository">
-          <v-container grid-list-xl pa-0>
-            <v-layout justify-space-between>
-              <v-flex>
-                <v-select
-                  :value="selectedRepository"
-                  :items="repositories"
-                  :label="schemaName"
-                  @input="updateSelected"
-                  item-text="name"
-                  item-value="id"/>
-              </v-flex>
-              <v-flex class="filter-activities">
-                <v-text-field
-                  v-model="search"
-                  placeholder="Filter activities..."
-                  clearable
-                  clear-icon="mdi-close-circle-outline"/>
-              </v-flex>
-            </v-layout>
+          <v-container py-3 pr-5 mx-0 class="input-section">
+            <v-autocomplete
+              :value="selectedRepository"
+              :items="repositories"
+              :label="schemaName"
+              @input="updateSelected"
+              prepend-inner-icon="mdi-magnify"
+              item-text="name"
+              item-value="id"/>
+            <v-text-field
+              v-model="search"
+              :placeholder="`Filter selected ${schemaName}...`"
+              clearable
+              prepend-inner-icon="mdi-filter-outline"
+              clear-icon="mdi-close-circle-outline"/>
           </v-container>
           <repository-tree
             :activities="selectedRepository.children"
@@ -44,11 +40,11 @@
         <v-spacer/>
         <v-btn @click="$emit('cancel')">Cancel</v-btn>
         <v-btn
-          :disabled="!selected"
+          :disabled="!selected.length"
           @click="$emit('copy', selected)"
           color="primary"
           outline>
-          Copy
+          {{ copyButtonLabel }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -68,12 +64,13 @@ import sortBy from 'lodash/sortBy';
 
 export default {
   props: {
-    supportedLevels: { type: Array, default: () => ([]) }
+    supportedLevels: { type: Array, default: () => ([]) },
+    anchorType: { type: String, required: true }
   },
   data() {
     return {
       showLoader: true,
-      selected: null,
+      selected: [],
       repositories: [],
       selectedRepository: null,
       search: ''
@@ -83,11 +80,19 @@ export default {
     ...mapGetters('course', ['course']),
     schemaName() {
       return SCHEMAS.find(it => it.id === this.course.schema).name;
+    },
+    copyButtonLabel() {
+      const { selected, anchorType } = this;
+      let label = 'Copy';
+      if (!selected.length) return label;
+      if (selected.length > 1) label = label.concat(` ${selected.length} items`);
+      const isSublevel = anchorType !== selected[0].type;
+      return isSublevel ? label.concat(' inside') : label;
     }
   },
   methods: {
     updateSelected(id) {
-      if (id !== get(this.selectedRepository, 'id')) this.selected = null;
+      if (id !== get(this.selectedRepository, 'id')) this.selected = [];
       const repo = this.repositories.find(it => it.id === id);
       if (repo.children) {
         this.selectedRepository = repo;
@@ -98,17 +103,23 @@ export default {
       }
     },
     toggleSelect(item) {
-      this.selected = item.id !== get(this.selected, 'id') ? item : null;
+      if (this.selected.find(({ id }) => id === item.id)) {
+        this.selected = this.selected.filter(({ id }) => id !== item.id);
+      } else {
+        this.selected.push(item);
+      }
     },
     addChildren(children, activities) {
+      const { supportedLevels, addChildren } = this;
       return children.map(it => {
         it.name = it.data.name;
-        it.supported = this.supportedLevels.find(({ type }) => type === it.type);
+        const supported = supportedLevels.find(({ type }) => type === it.type);
+        if (supported) it.level = supported.level;
         const grandChildren = activities.filter(item => {
           return item.data.name && item.parentId === it.id;
         });
         if (!grandChildren.length) return it;
-        it.children = this.addChildren(grandChildren, activities);
+        it.children = addChildren(grandChildren, activities);
         return it;
       });
     },
@@ -120,6 +131,10 @@ export default {
         repository.children = activities.filter(it => it.parentId === null);
         return repository;
       });
+    },
+    copy() {
+      const orderedItems = sortBy(this.selected, ['parentId', 'position']);
+      this.$emit('copy', orderedItems);
     }
   },
   created() {
@@ -140,7 +155,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.filter-activities {
-  max-width: 250px;
+.input-section {
+  max-width: 60%;
 }
 </style>

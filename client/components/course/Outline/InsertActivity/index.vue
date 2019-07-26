@@ -11,20 +11,28 @@
     </div>
     <div v-else>
       <select-action
-        v-if="!action || action === 'copy'"
+        v-if="action !== 'create'"
         @selected="selected => (action = selected)"
         @close="hide"/>
-      <create-activity
-        v-else-if="action === 'create'"
-        :parent="anchor"
-        :supportedLevels="supportedLevels"
-        @create="executeAction"
-        @close="hide"/>
-      <copy-activity
-        v-if="action === 'copy'"
-        :supportedLevels="supportedLevels"
-        @copy="executeAction"
-        @cancel="action = ''"/>
+      <progress-dialog
+        :show="isLoading"
+        :status="loading.status"
+        :label="loading.label"
+        :width="500"/>
+      <template v-if="!isLoading">
+        <create-activity
+          v-if="action === 'create'"
+          :parent="anchor"
+          :supportedLevels="supportedLevels"
+          @create="createActivity"
+          @close="hide"/>
+        <copy-activity
+          v-if="action === 'copy'"
+          :supportedLevels="supportedLevels"
+          :anchorType="anchor.type"
+          @copy="copyActivities"
+          @cancel="action = ''"/>
+      </template>
     </div>
   </div>
 </template>
@@ -41,6 +49,8 @@ import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
 import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
+import ProgressDialog from '@/components/common/ProgressDialog';
+import Promise from 'bluebird';
 import SelectAction from './SelectAction';
 
 export default {
@@ -49,7 +59,8 @@ export default {
   },
   data() {
     return {
-      action: null
+      action: null,
+      loading: { status: 0, label: '' }
     };
   },
   computed: {
@@ -58,6 +69,9 @@ export default {
     ...mapState({ outlineState: s => s.course.outline }),
     showActions() {
       return this.anchor._cid === this.outlineState.showOptions;
+    },
+    isLoading() {
+      return !!this.loading.label;
     },
     supportedLevels() {
       const grandParent = getParent(this.activities, this.anchor);
@@ -80,20 +94,32 @@ export default {
       this.showActivityOptions(null);
       this.action = null;
     },
-    executeAction(activity) {
-      if (this.action === 'copy') {
-        activity = {
-          srcId: activity.id,
-          srcCourseId: activity.courseId,
-          type: activity.type
-        };
-      }
-      activity.courseId = this.anchor.courseId;
-      activity.parentId = this.resolveParent(activity);
-      activity.position = this.calculatePosition(activity);
-      this[this.action](activity);
-      if (this.anchor.id === activity.parentId) this.$emit('expand');
+    formatActivity(it) {
+      const { id, courseId, type } = it;
+      if (this.action === 'copy') it = { srcId: id, srcCourseId: courseId, type };
+      it.courseId = this.anchor.courseId;
+      it.parentId = this.resolveParent(it);
+      it.position = this.calculatePosition(it);
+      return it;
+    },
+    resetActivityState(item) {
+      if (this.anchor.id === item.parentId) this.$emit('expand');
       this.hide();
+      this.loading = { status: 0, label: '' };
+    },
+    createActivity(item) {
+      const activity = this.formatActivity(item);
+      return this.create(activity).then(() => this.resetActivityState(item));
+    },
+    copyActivities(items) {
+      const increment = 100 / items.length;
+      return Promise.each(items, it => {
+        const activity = this.formatActivity(it);
+        this.loading.label = `Copying "${it.name}..."`;
+        return this.copy(activity).then(() => {
+          this.loading.status += increment;
+        });
+      }).then(() => this.resetActivityState(items[0]));
     },
     isSameLevel(activity) {
       return getLevel(activity.type).level === getLevel(this.anchor.type).level;
@@ -109,7 +135,7 @@ export default {
       return calculatePosition(context);
     }
   },
-  components: { CopyActivity, CreateActivity, SelectAction }
+  components: { CopyActivity, CreateActivity, ProgressDialog, SelectAction }
 };
 </script>
 
