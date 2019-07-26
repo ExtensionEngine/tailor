@@ -5,7 +5,7 @@
         <v-avatar color="secondary" size="38" class="mr-2">
           <v-icon color="white">mdi-content-copy</v-icon>
         </v-avatar>
-        Copy items from {{ schemaName | pluralize }}
+        Copy items from {{ schema.name | pluralize }}
       </v-card-title>
       <v-card-text>
         <div v-if="showLoader" class="search-spinner">
@@ -16,14 +16,14 @@
             <v-autocomplete
               :value="selectedRepository"
               :items="repositories"
-              :label="schemaName"
+              :label="schema.name"
               @input="updateSelected"
               prepend-inner-icon="mdi-magnify"
               item-text="name"
               item-value="id"/>
             <v-text-field
               v-model="search"
-              :placeholder="`Filter selected ${schemaName}...`"
+              :placeholder="`Filter selected ${schema.name}...`"
               clearable
               prepend-inner-icon="mdi-filter-outline"
               clear-icon="mdi-close-circle-outline"/>
@@ -32,7 +32,7 @@
             :activities="selectedRepository.children"
             :search="search"
             :selected="selected"
-            :schemaName="schemaName"
+            :schemaName="schema.name"
             @toggleSelect="toggleSelect"/>
         </div>
       </v-card-text>
@@ -55,6 +55,7 @@
 import activityApi from 'client/api/activity';
 import courseApi from 'client/api/course';
 import get from 'lodash/get';
+import keyBy from 'lodash/keyBy';
 import { mapGetters } from 'vuex';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
@@ -78,16 +79,20 @@ export default {
   },
   computed: {
     ...mapGetters('course', ['course']),
-    schemaName() {
-      return SCHEMAS.find(it => it.id === this.course.schema).name;
+    schema() {
+      return SCHEMAS.find(it => it.id === this.course.schema);
+    },
+    structureTypes() {
+      return keyBy(this.schema.structure, 'type');
     },
     copyButtonLabel() {
-      const { selected, anchorType } = this;
+      const { selected, structureTypes, anchorType } = this;
       let label = 'Copy';
       if (!selected.length) return label;
       if (selected.length > 1) label = label.concat(` ${selected.length} items`);
-      const isSublevel = anchorType !== selected[0].type;
-      return isSublevel ? label.concat(' inside') : label;
+      const itemLevel = structureTypes[selected[0].type].level;
+      const anchorLevel = structureTypes[anchorType].level;
+      return itemLevel > anchorLevel ? label.concat(' inside') : label;
     }
   },
   methods: {
