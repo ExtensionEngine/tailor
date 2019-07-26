@@ -4,7 +4,6 @@
       <v-btn
         :loading="publishing"
         @click="publish"
-        color="blue-grey darken-1"
         outline
         small
         class="pull-right">

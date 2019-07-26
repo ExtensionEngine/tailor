@@ -1,4 +1,4 @@
-import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
+import { getLevel, getOutlineLevels, getSchema, getTesMeta } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
@@ -12,6 +12,10 @@ export const course = (_state, _getters, { route }, { courses }) => {
   const courseId = get(route, 'params.courseId');
   if (!courseId) return;
   return find(courses, { id: parseInt(courseId, 10) });
+};
+
+export const schema = (_state, getters) => {
+  return getters.course ? getSchema(getters.course.schema).name : '';
 };
 
 export const structure = (_, { course }) => {
