@@ -13,6 +13,7 @@ import fecha from 'fecha';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import { sync } from 'vuex-router-sync';
+import truncate from 'truncate';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
@@ -29,6 +30,7 @@ Vue.component('tce-question-container', QuestionContainer);
 Vue.filter('formatDate', (value, dateFormat = 'MM/DD/YY HH:mm') => {
   return value && fecha.format(new Date(value), dateFormat);
 });
+Vue.filter('truncate', truncate);
 Vue.use(FileFilter);
 Vue.use(VueHotkey);
 Vue.use(Vuetify, {

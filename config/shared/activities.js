@@ -22,8 +22,19 @@ if (!process.env.ENABLE_DEFAULT_SCHEMA && !isEmpty(customConfiguration)) {
 const { SCHEMAS } = mergeConfig(defaultConfiguration, customConfiguration);
 parseSchemas(SCHEMAS);
 
+class MissingSchemaError extends Error {
+  get name() {
+    return 'MissingSchemaError';
+  }
+
+  static isMissingSchemaError(err) {
+    return err instanceof this;
+  }
+}
+
 module.exports = {
   SCHEMAS,
+  MissingSchemaError,
   getSchema,
   getSchemaId,
   getRepositoryMeta,
@@ -46,8 +57,8 @@ module.exports = {
 
 function getSchema(id) {
   const schema = find(SCHEMAS, { id });
-  if (!schema) throw new Error('Schema does not exist!');
-  return schema;
+  if (schema) return schema;
+  throw new MissingSchemaError('Schema does not exist!');
 }
 
 function getSchemaId(type) {

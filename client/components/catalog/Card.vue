@@ -1,12 +1,12 @@
 <template>
   <v-card @click="navigateTo" class="repository-card">
     <div class="card-heading blue-grey darken-4">
-      <v-chip :color="repository.data.color" small label class="ml-3 mr-0"/>
+      <v-chip :color="data.color" small label class="ml-3 mr-0"/>
       <v-chip color="grey lighten-3" small label class="ml-0">
-        {{ schema }}
+        {{ schema.name }}
       </v-chip>
       <v-card-title class="headline grey--text text--lighten-4 pt-1">
-        {{ name }}
+        {{ name | truncate(70) }}
       </v-card-title>
     </div>
     <div class="card-body">
@@ -15,13 +15,15 @@
         <span>{{ userAction.createdAt | formatDate }}</span>
         <div>{{ userAction.user.email }}</div>
       </div>
-      <div class="desc grey--text text--darken-3">{{ description }}</div>
+      <div class="desc grey--text text--darken-3">
+        {{ description | truncate(100) }}
+      </div>
     </div>
     <v-card-actions class="px-2 py-1">
-      <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" icon>
+      <v-btn @click.stop="$emit('pin', !pinned)" icon>
         <v-icon
-          :color="isPinned ? 'pink': 'grey'"
-          :class="{ 'mdi-rotate-45': isPinned }">
+          :color="pinned ? 'pink': 'grey'"
+          :class="{ 'mdi-rotate-45': pinned }">
           mdi-pin
         </v-icon>
       </v-btn>
@@ -30,31 +32,22 @@
 </template>
 
 <script>
-import first from 'lodash/first';
-import get from 'lodash/get';
-import { getSchema } from 'shared/activities';
-import { mapActions } from 'vuex';
-import truncate from 'truncate';
-
 export default {
   props: {
-    repository: { type: Object, required: true }
+    id: { type: Number, required: true },
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    schema: { type: Object, required: true },
+    revisions: { type: Array, required: true, validator: ([first]) => Boolean(first) },
+    data: { type: Object, default: () => ({}) },
+    pinned: { type: Boolean, default: false }
   },
   computed: {
-    name: ({ repository }) => truncate(repository.name, 70),
-    description: ({ repository }) => truncate(repository.description, 100),
-    schema: ({ repository }) => getSchema(repository.schema).name,
-    userAction: ({ repository }) => first(repository.revisions),
-    isPinned: ({ repository }) => get(repository, 'courseUser.pinned', false)
+    userAction: ({ revisions }) => revisions[0]
   },
   methods: {
-    ...mapActions('courses', ['pin']),
     navigateTo() {
-      if (window.getSelection().toString()) return;
-      this.$router.push({
-        name: 'course',
-        params: { courseId: this.repository.id }
-      });
+      if (!window.getSelection().toString()) this.$emit('open');
     }
   }
 };

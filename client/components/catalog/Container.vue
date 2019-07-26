@@ -1,6 +1,6 @@
 <template>
   <div infinite-wrapper class="catalog-wrapper">
-    <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog">
+    <v-container :class="['catalog', { 'catalog-empty': !hasRepositories }]">
       <v-layout row class="catalog-actions">
         <create-repository/>
         <v-flex md4 sm10 offset-md4 offset-sm1>
@@ -24,9 +24,13 @@
         <v-flex
           v-for="repository in repositories"
           :key="repository._cid"
-          xs4
-          class="px-2 py-3">
-          <repository-card :repository="repository"/>
+          class="card-wrapper px-2 py-3 xs4">
+          <repository-card
+            v-bind="repository"
+            :pinned="repository.courseUser && repository.courseUser.pinned"
+            :schema="getSchema(repository.schema)"
+            @pin="state => pin({ id: repository.id, pin: state })"
+            @open="open(repository)"/>
         </v-flex>
       </v-layout>
       <infinite-loading ref="loader" @infinite="load">
@@ -49,6 +53,7 @@
 </template>
 
 <script>
+import { getSchema, MissingSchemaError } from '@/../config/shared/activities';
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import CreateRepository from './Create';
 import get from 'lodash/get';
@@ -60,11 +65,8 @@ import Search from './Search';
 import SelectOrder from './SelectOrder';
 
 export default {
-  data() {
-    return {
-      loading: true
-    };
-  },
+  inheritAttrs: false,
+  data: () => ({ loading: true }),
   computed: {
     ...mapState('courses', {
       sortBy: state => state.$internals.sort,
@@ -90,14 +92,28 @@ export default {
     }
   },
   methods: {
-    ...mapActions('courses', ['fetch']),
+    ...mapActions('courses', ['fetch', 'pin']),
     ...mapMutations('courses', ['togglePinned', 'setSearch', 'setOrder']),
+    getSchema(id) {
+      try {
+        return getSchema(id);
+      } catch (err) {
+        if (MissingSchemaError.isMissingSchemaError(err)) return;
+        throw err;
+      }
+    },
     load() {
       this.loading = true;
       return this.fetch().then(() => {
         if (this.hasRepositories) this.loader.loaded();
         if (!this.hasMoreResults) this.loader.complete();
         this.loading = false;
+      });
+    },
+    open({ id }) {
+      this.$router.push({
+        name: 'course',
+        params: { courseId: id }
       });
     }
   },
@@ -124,48 +140,50 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.catalog-wrapper {
-  position: relative;
-}
-
 .catalog {
-  @media(min-width: 1440px) {
+  @media (min-width: 1440px) {
     max-width: 1185px !important;
+  }
+
+  &-wrapper {
+    position: relative;
   }
 
   &::before {
     position: absolute;
     top: 0;
     left: 0;
-    height: 230px;
     width: 100%;
+    height: 230px;
     background: #455a64;
     box-shadow:
-      0px 3px 5px -1px rgba(0,0,0,0.2),
-      0px 5px 8px 0px rgba(0,0,0,0.14),
-      0px 1px 14px 0px rgba(0,0,0,0.12);
+      0 3px 5px -1px rgba(0,0,0,0.2),
+      0 5px 8px 0 rgba(0,0,0,0.14),
+      0 1px 14px 0 rgba(0,0,0,0.12);
   }
 
-  &.catalog-empty {
-    &::before {
-      height: 100%;
-      width: 100%;
+  &#{&}-empty::before {
+    width: 100%;
+    height: 100%;
+  }
+
+  &-actions {
+    position: relative;
+    margin-bottom: 20px;
+    padding-top: 12px;
+
+    /deep/ .add-repo {
+      top: 10px;
+      right: 12px;
     }
+  }
+
+  .card-wrapper:empty {
+    display: none;
   }
 }
 
 .spinner, .no-results {
   margin-top: 40px;
-}
-
-.catalog-actions {
-  margin-bottom: 20px;
-  padding-top: 12px;
-  position: relative;
-
-  /deep/ .add-repo {
-    top: 10px;
-    right: 12px;
-  }
 }
 </style>
