@@ -5,6 +5,14 @@
       <v-chip color="grey lighten-3" small label class="ml-0">
         {{ schema }}
       </v-chip>
+      <v-btn
+          @click.stop="navigateTo('course-info')"
+          flat
+          icon
+          color="grey"
+          class="btn-settings text--darken-1 ml-auto my-0">
+          <v-icon>mdi-settings</v-icon>
+        </v-btn>
       <v-card-title class="headline grey--text text--lighten-4 pt-1">
         {{ name | truncate(70) }}
       </v-card-title>
@@ -52,10 +60,10 @@ export default {
   },
   methods: {
     ...mapActions('courses', ['pin']),
-    navigateTo() {
+    navigateTo(name = 'course') {
       if (window.getSelection().toString()) return;
       this.$router.push({
-        name: 'course',
+        name,
         params: { courseId: this.repository.id }
       });
     }

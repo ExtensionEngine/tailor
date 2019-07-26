@@ -99,6 +99,10 @@ export default {
         if (!this.hasMoreResults) this.loader.complete();
         this.loading = false;
       });
+    },
+    open({ id }, name = 'course') {
+      const params = { courseId: id };
+      this.$router.push({ name, params });
     }
   },
   watch: {
