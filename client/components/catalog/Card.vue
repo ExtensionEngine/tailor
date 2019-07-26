@@ -20,12 +20,12 @@
       </div>
     </div>
     <v-card-actions class="px-2 py-1">
-      <v-btn @click.stop="$emit('pin', !pinned)" icon>
-        <v-icon
-          :color="pinned ? 'pink': 'grey'"
-          :class="{ 'mdi-rotate-45': pinned }">
-          mdi-pin
-        </v-icon>
+      <v-btn
+        :color="pinned ? 'pink': 'grey'"
+        @click.stop="$emit('pin', !pinned)"
+        flat
+        icon>
+        <v-icon :class="{ 'mdi-rotate-45': pinned }">mdi-pin</v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>
