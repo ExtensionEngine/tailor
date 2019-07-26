@@ -1,40 +1,39 @@
 <template>
-  <div class="well">
-    <v-container grid-list-xl fluid>
-      <v-layout row align-center>
-        <v-flex grow>
-          <v-text-field
-            v-validate="{ required: true, min: 2, max: 250 }"
-            :error-messages="vErrors.collect('name')"
-            :autofocus="true"
-            v-model="name"
-            name="name"
-            placeholder="Name"/>
-        </v-flex>
-        <v-flex shrink>
-          <v-select
-            v-validate="{ required: true }"
-            v-if="showLevelPicker"
-            :error-messages="vErrors.collect('type')"
-            v-model="levelType"
-            :items="levels"
-            item-text="label"
-            item-value="type"
-            name="type"
-            placeholder="Type"/>
-        </v-flex>
-        <v-flex shrink>
-          <v-btn
-            :disabled="vErrors.any()"
-            @click.stop="create"
-            color="primary"
-            outline>
-            Create
-          </v-btn>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </div>
+  <v-container grid-list-md fluid py-3 class="item-container">
+    <v-layout row align-center>
+      <v-flex grow>
+        <v-text-field
+          v-validate="{ required: true, min: 2, max: 250 }"
+          :error-messages="vErrors.collect('name')"
+          :autofocus="true"
+          :placeholder="namePlaceholder"
+          v-model="name"
+          name="name"/>
+      </v-flex>
+      <v-flex shrink>
+        <v-select
+          v-validate="{ required: true }"
+          v-if="showLevelPicker"
+          :error-messages="vErrors.collect('type')"
+          v-model="levelType"
+          :items="levels"
+          item-text="label"
+          item-value="type"
+          name="type"
+          placeholder="Type"/>
+      </v-flex>
+      <v-flex shrink>
+        <v-btn
+          :disabled="vErrors.any()"
+          @click.stop="create"
+          color="primary lighten-1"
+          class="px-5"
+          depressed>
+          Create
+        </v-btn>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -59,6 +58,9 @@ export default {
     },
     showLevelPicker() {
       return this.levels.length > 1;
+    },
+    namePlaceholder() {
+      return this.showLevelPicker ? 'Name' : `${this.levels[0].label} name`;
     }
   },
   methods: {
@@ -88,7 +90,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.well {
+.item-container {
   background-color: white;
   border: 1px solid #ccc;
 }

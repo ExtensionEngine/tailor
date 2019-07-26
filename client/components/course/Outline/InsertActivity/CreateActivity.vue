@@ -1,19 +1,18 @@
 <template>
-  <v-container grid-list-xl fluid>
+  <v-container grid-list-xl fluid px-0>
     <v-layout row align-center>
       <v-flex grow>
         <v-text-field
           v-validate="{ required: true, min: 2, max: 250 }"
           :error-messages="vErrors.collect('name')"
           :autofocus="true"
+          :placeholder="namePlaceholder"
           v-model="name"
-          name="name"
-          placeholder="Name"/>
+          name="name"/>
       </v-flex>
-      <v-flex shrink>
+      <v-flex v-if="showLevelPicker" class="type-select">
         <v-select
           v-validate="{ required: true }"
-          v-if="showLevelPicker"
           :error-messages="vErrors.collect('type')"
           v-model="levelType"
           :items="levels"
@@ -23,9 +22,7 @@
           placeholder="Type">
           <template slot="item" slot-scope="levels">
             <div v-if="levels.item.group">
-              <v-icon color="grey lighten-1">
-                mdi-subdirectory-arrow-right
-              </v-icon>
+              <v-icon color="grey lighten-1">mdi-subdirectory-arrow-right</v-icon>
               {{ levels.item.group }}
             </div>
             <div
@@ -39,12 +36,13 @@
       </v-flex>
       <v-flex shrink>
         <v-item-group>
-          <v-btn @click.stop="$emit('close')">Cancel</v-btn>
+          <v-btn @click.stop="$emit('close')" outline>Cancel</v-btn>
           <v-btn
             :disabled="vErrors.any()"
             @click.stop="create"
-            color="primary"
-            outline>
+            depressed
+            color="primary lighten-1"
+            class="mr-0">
             Add
           </v-btn>
         </v-item-group>
@@ -81,6 +79,10 @@ export default {
         grouped.splice(nestedIndex, 0, { group: 'Sublevels', disabled: true });
       }
       return grouped;
+    },
+    namePlaceholder() {
+      const { showLevelPicker, supportedLevels } = this;
+      return showLevelPicker ? 'Name' : `${supportedLevels[0].label} name`;
     }
   },
   methods: {
@@ -97,3 +99,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.type-select {
+  max-width: 250px;
+}
+</style>
