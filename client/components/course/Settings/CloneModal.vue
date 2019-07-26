@@ -15,17 +15,17 @@
           v-model="name"
           :disabled="inProgress"
           :error-messages="vErrors.collect('name')"
-          class="mb-4"
           label="Name"
-          data-vv-name="name"/>
+          data-vv-name="name"
+          class="mb-4"/>
         <v-textarea
           v-validate="{ required: true, min: 2, max: 2000 }"
           v-model="description"
           :disabled="inProgress"
           :error-messages="vErrors.collect('description')"
-          class="mb-4"
           label="Description"
-          data-vv-name="description"/>
+          data-vv-name="description"
+          class="mb-4"/>
       </v-card-text>
       <v-card-actions>
         <v-spacer/>
