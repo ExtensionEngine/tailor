@@ -71,9 +71,21 @@ export default {
   padding: 8px 0 0;
   overflow: hidden;
 
+  * {
+    user-select: none;
+  }
+
   .v-chip {
     font-weight: 600;
     text-transform: uppercase;
+
+    /deep/ .v-chip__content {
+      cursor: inherit;
+    }
+  }
+
+  .v-card__title {
+    user-select: initial;
   }
 
   @media (max-width: 1263px) {
