@@ -98,7 +98,10 @@ const linkCreated = async activity => {
   if (!activity.parentId) return activity;
   const parent = await activity.getParent();
   if (!parent.isLink) return activity;
-  await activity.link({ position: activity.position, parentId: activity.parentId, child: true });
+  await activity.link({
+    position: activity.position,
+    parentId: activity.parentId
+  });
   await activity.update({ parentId: parent.origin.id });
   return Activity.findByPk(activity.id).then(data => data);
 };

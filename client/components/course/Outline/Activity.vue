@@ -144,7 +144,6 @@ export default {
       const { id, activities, structure } = this;
       const level = this.level + 1;
       const types = map(filter(structure, { level }), 'type');
-
       return filter(activities, it => {
         return id === it.parentId && types.includes(it.type) && !it.isOrigin;
       }).sort((x, y) => x.position - y.position);
