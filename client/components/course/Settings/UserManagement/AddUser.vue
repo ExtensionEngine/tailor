@@ -21,7 +21,7 @@
           flat/>
       </v-flex>
       <v-flex xs2>
-        <v-btn type="submit" color="blue-grey darken-1" outline>Add</v-btn>
+        <v-btn type="submit" small outline>Add</v-btn>
       </v-flex>
     </v-layout>
   </form>

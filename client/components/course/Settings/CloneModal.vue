@@ -5,9 +5,7 @@
         <v-avatar color="secondary" size="38" class="mr-2">
           <v-icon color="white">mdi-content-copy</v-icon>
         </v-avatar>
-        <span class="secondary--text text--lighten-1 pr-2">Clone</span>
-        <v-divider color="grey" vertical class="my-2"/>
-        <span class="pl-2">{{ schema }}</span>
+        <span>Clone {{ schema.toLowerCase() }}</span>
       </v-card-title>
       <v-card-text>
         <v-text-field
