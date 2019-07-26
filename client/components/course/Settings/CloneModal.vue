@@ -48,8 +48,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
 import CircularProgress from 'components/common/CircularProgress';
+import { mapActions } from 'vuex';
 import Modal from 'components/common/Modal';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
@@ -66,7 +66,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['clone'], 'courses'),
+    ...mapActions('courses', ['clone']),
     close() {
       this.$emit('close');
       this.name = '';

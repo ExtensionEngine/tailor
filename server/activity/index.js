@@ -6,7 +6,7 @@ const ctrl = require('./activity.controller');
 const model = require('./activity.model');
 const { NOT_FOUND } = require('http-status-codes');
 const processListQuery = require('../shared/util/processListQuery');
-const router = require('express-promise-router')();
+const router = require('express').Router();
 
 const processQuery = processListQuery({ order: [['position']] });
 
@@ -19,7 +19,8 @@ router
   .delete('/courses/:courseId/activities/:activityId', ctrl.remove)
   .post('/courses/:courseId/activities/:activityId/reorder', ctrl.reorder)
   .post('/courses/:courseId/activities/:activityId/clone', ctrl.clone)
-  .get('/courses/:courseId/activities/:activityId/publish', ctrl.publish);
+  .get('/courses/:courseId/activities/:activityId/publish', ctrl.publish)
+  .get('/courses/:courseId/activities/:activityId/preview', ctrl.getPreviewUrl);
 
 function getActivity(req, _res, next, activityId) {
   return Activity.findByPk(activityId, { paranoid: false })

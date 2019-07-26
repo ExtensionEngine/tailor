@@ -11,14 +11,16 @@
 <script>
 import ConfirmationModal from 'components/common/ConfirmationModal';
 import isIexplorer from 'is-iexplorer';
+import { mapState } from 'vuex';
 import Navbar from 'components/common/Navbar';
-import { mapGetters } from 'vuex-module';
 
 if (isIexplorer) document.body.classList.add('ie');
 
 export default {
   name: 'app',
-  computed: mapGetters(['user']),
+  computed: mapState({
+    user: state => state.auth.user
+  }),
   components: {
     ConfirmationModal,
     Navbar
@@ -40,20 +42,20 @@ html {
 
 #app {
   color: rgba(0,0,0,0.87);
-  font-family: Poppins, Helvetica, Arial, sans-serif;
+  font-family: $font-family-primary;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   overflow: hidden;
 }
 
-.v-content .view {
-  overflow-y: scroll;
-  overflow-y: overlay;
-}
-
 .application, .v-content, .view {
   width: 100%;
   height: 100%;
+}
+
+.v-content .view {
+  overflow-y: scroll;
+  overflow-y: overlay;
 }
 </style>

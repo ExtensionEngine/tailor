@@ -22,9 +22,9 @@
 </template>
 
 <script>
-import { isSameInstance } from 'utils/revision';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
+import { isSameInstance } from 'utils/revision';
 import last from 'lodash/last';
 import reduce from 'lodash/reduce';
 import RevisionItem from './RevisionItem';
@@ -37,8 +37,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['revisions'], 'course'),
-    ...mapGetters(['hasMoreResults'], 'revisions'),
+    ...mapGetters('course', ['revisions']),
+    ...mapGetters('revisions', ['hasMoreResults']),
     bundledRevisions() {
       return reduce(this.revisions, (acc, it) => {
         const prevRevision = last(acc);
@@ -49,7 +49,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch', 'resetPagination'], 'revisions'),
+    ...mapActions('revisions', ['fetch', 'resetPagination']),
     fetchRevisions($state) {
       this.fetch().then(() => {
         const diff = this.bundledRevisions.length - this.bundledRevisionCount;

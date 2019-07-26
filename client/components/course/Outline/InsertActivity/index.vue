@@ -33,9 +33,8 @@
 </template>
 
 <script>
-import { getLevel } from 'shared/activities';
 import { getOutlineChildren, getParent } from 'utils/activity';
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityBrowser from 'components/common/ActivityBrowser';
 import calculatePosition from 'utils/calculatePosition';
 import CreateActivity from './CreateActivity';
@@ -43,6 +42,7 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
+import { getLevel } from 'shared/activities';
 import map from 'lodash/map';
 import SelectAction from './SelectAction';
 
@@ -57,7 +57,7 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['structure'], 'course'),
+    ...mapGetters('course', ['structure']),
     ...mapState({ outlineState: s => s.course.outline }),
     showActions() {
       return this.anchor._cid === this.outlineState.showOptions;
@@ -73,8 +73,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ copy: 'clone', create: 'save' }, 'activities'),
-    ...mapMutations(['showActivityOptions', 'focusActivity'], 'course'),
+    ...mapActions('activities', { copy: 'clone', create: 'save' }),
+    ...mapMutations('course', ['showActivityOptions', 'focusActivity']),
     show() {
       this.showActivityOptions(this.anchor._cid);
       this.focusActivity(this.anchor._cid);

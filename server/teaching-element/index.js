@@ -3,7 +3,7 @@
 const ctrl = require('./te.controller');
 const model = require('./te.model');
 const processQuery = require('../shared/util/processListQuery')();
-const router = require('express-promise-router')();
+const router = require('express').Router();
 
 router
   .route('/courses/:courseId/tes')

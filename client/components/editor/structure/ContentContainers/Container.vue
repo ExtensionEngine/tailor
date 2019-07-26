@@ -35,8 +35,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import filter from 'lodash/filter';
-import { mapActions, mapGetters } from 'vuex-module';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
@@ -57,11 +57,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
+    ...mapActions('tes', {
       reorderElements: 'reorder',
       insertElement: 'insert',
       addElement: 'save'
-    }, 'tes'),
+    }),
     reorder({ newIndex: newPosition }) {
       const items = this.teachingElements;
       const element = items[newPosition];

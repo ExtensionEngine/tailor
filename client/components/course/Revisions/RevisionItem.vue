@@ -26,10 +26,10 @@ import {
   getRevisionAcronym,
   getRevisionColor
 } from 'utils/revision';
-import { mapGetters } from 'vuex-module';
 import EntityRevisions from './EntityRevisions';
 import fecha from 'fecha';
 import find from 'lodash/find';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'revision-item',
@@ -40,8 +40,8 @@ export default {
     return { expanded: false };
   },
   computed: {
-    ...mapGetters(['structure'], 'course'),
-    ...mapGetters(['getParent'], 'activities'),
+    ...mapGetters('course', ['structure']),
+    ...mapGetters('activities', ['getParent']),
     activity() {
       const { state } = this.revision;
       const activityId = state.activityId || state.id;

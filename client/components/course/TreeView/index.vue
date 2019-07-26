@@ -18,12 +18,12 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import map from 'lodash/map';
-import { mapGetters, mapMutations } from 'vuex-module';
 import reduce from 'lodash/reduce';
 import Sidebar from 'components/course/Sidebar';
 import TreeGraph from './TreeGraph';
@@ -47,7 +47,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activities', 'course', 'structure'], 'course'),
+    ...mapGetters('course', ['activities', 'course', 'structure']),
     // TODO: Remove this hack!
     visibility() {
       return this.showLoader ? 'hidden' : 'visible';
@@ -65,7 +65,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['focusActivity'], 'course'),
+    ...mapMutations('course', ['focusActivity']),
     setSelected(node) {
       if (this.selectedNode) this.selectedNode.classList.remove('selected');
       this.selectedNode = node;

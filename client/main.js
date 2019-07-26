@@ -1,3 +1,4 @@
+/* eslint-disable sort-imports */
 import '@babel/polyfill';
 import 'dom-shims/shim/Element.classList';
 import 'dom-shims/shim/Element.mutation';
@@ -8,8 +9,10 @@ import 'vue-directive-tooltip/css/index.css';
 import assetsApi from '@/api/asset';
 import colors from 'vuetify/es5/util/colors';
 import ElementRegistry from './ElementRegistry';
+import fecha from 'fecha';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
+import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
 import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
@@ -17,14 +20,15 @@ import Vue from 'vue';
 import VueHotkey from 'v-hotkey';
 import Vuetify from 'vuetify';
 import VuetifySnackbar from '@/plugins/vuetify-snackbar';
-import { sync } from 'vuex-router-sync';
 
 import store from './store';
 import router from './router';
 import App from './App';
 
 Vue.component('tce-question-container', QuestionContainer);
-
+Vue.filter('formatDate', (value, dateFormat = 'MM/DD/YY HH:mm') => {
+  return value && fecha.format(new Date(value), dateFormat);
+});
 Vue.use(FileFilter);
 Vue.use(VueHotkey);
 Vue.use(Vuetify, {
@@ -32,6 +36,9 @@ Vue.use(Vuetify, {
   theme: {
     primary: colors.blueGrey.darken2,
     secondary: colors.pink
+  },
+  options: {
+    customProperties: true
   }
 });
 Vue.use(VuetifySnackbar);

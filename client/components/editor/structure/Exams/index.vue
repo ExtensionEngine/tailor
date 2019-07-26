@@ -17,14 +17,14 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Exam from './Exam';
 import filter from 'lodash/filter';
-import { mapActions, mapGetters } from 'vuex-module';
 
 export default {
   name: 'exams',
   computed: {
-    ...mapGetters(['activity'], 'editor'),
+    ...mapGetters('editor', ['activity']),
     ...mapGetters(['activities']),
     exams() {
       const parentId = this.activity.id;
@@ -32,7 +32,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save'], 'activities'),
+    ...mapActions('activities', ['save']),
     create() {
       this.save({
         type: 'EXAM',
