@@ -5,19 +5,15 @@
     @mousedown.stop="focusInput"
     class="input">
     <label :for="meta.key">{{ meta.label }}</label>
-    <div
+    <v-text-field
+      v-validate="meta.validate"
       v-show="editing"
-      :class="{ 'has-error': vErrors.has(meta.key) }">
-      <input
-        v-validate="meta.validate"
-        v-model="value"
-        :ref="meta.key"
-        :name="meta.key"
-        :placeholder="meta.placeholder"
-        @keyup.enter="focusoutInput"
-        class="form-control">
-      <span class="help-block">{{ vErrors.first(meta.key) }}</span>
-    </div>
+      v-model="value"
+      :ref="meta.key"
+      :name="meta.key"
+      :error-messages="vErrors.collect(meta.key)"
+      :placeholder="meta.placeholder"
+      @keyup.enter="focusoutInput"/>
     <div v-show="!editing" @click.stop="focusInput">
       <div class="content">{{ value || meta.placeholder }}</div>
     </div>
@@ -73,18 +69,14 @@ export default {
     color: #808080;
   }
 
-  input {
-    letter-spacing: inherit;
-  }
-
-  .form-control, .content {
-    font-size: 17px;
+  .v-input {
+    min-height: 70px;
   }
 
   .content {
-    margin: 5px 3px 15px 0;
+    margin: 20px 3px 30px 0;
     color: #333;
-    line-height: 24px;
+    font-size: 16px;
     word-wrap: break-word;
   }
 }
