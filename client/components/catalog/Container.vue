@@ -22,13 +22,13 @@
       </v-layout>
       <v-layout row wrap>
         <v-flex
-          v-for="repository in repositories"
+          v-for="({ courseUser, schema, ...repository }) in repositories"
           :key="repository._cid"
           class="card-wrapper px-2 py-3 xs4">
           <repository-card
             v-bind="repository"
-            :pinned="repository.courseUser && repository.courseUser.pinned"
-            :schema="getSchema(repository.schema)"
+            :pinned="courseUser && courseUser.pinned"
+            :schema="getSchema(schema)"
             @pin="state => pin({ id: repository.id, pin: state })"
             @open="open(repository)"/>
         </v-flex>

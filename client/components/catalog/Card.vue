@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     navigateTo() {
-      if (!window.getSelection().toString()) this.$emit('open');
+      if (!getSelection().toString()) this.$emit('open');
     }
   }
 };
@@ -60,7 +60,9 @@ export default {
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18);
+    box-shadow:
+      0 10px 20px rgba(0,0,0,0.2),
+      0 8px 8px rgba(0,0,0,0.18);
   }
 }
 
