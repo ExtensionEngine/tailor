@@ -48,7 +48,7 @@
       <v-chip color="blue-grey darken-1" label dark small>
         {{ elementConfig.subtype }}
       </v-chip>
-      <span class="question">{{ question }}</span>
+      <span class="question">{{ question | truncate(50) }}</span>
       <v-btn
         @click.stop="$emit('delete')"
         color="primary"
@@ -72,7 +72,6 @@ import map from 'lodash/map';
 import { mapGetters } from 'vuex';
 import Multiselect from '../../common/Select';
 import set from 'lodash/set';
-import truncate from 'lodash/truncate';
 import uniq from 'lodash/uniq';
 
 const blankRegex = /(@blank)/g;
@@ -100,8 +99,7 @@ export default {
     question() {
       let question = filter(this.assessment.data.question, { type: 'HTML' });
       question = map(question, 'data.content').join(' ');
-      question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
-      return truncate(question, { length: 50 });
+      return question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
     },
     examObjectives() {
       return this.getExamObjectives(this.exam);
