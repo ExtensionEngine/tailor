@@ -1,6 +1,6 @@
 <template>
   <div class="select-activity">
-    <circular-progress v-if="showLoader"></circular-progress>
+    <circular-progress v-if="showLoader" />
     <div v-else>
       <span @click="back" class="btn-back">
         <span class="mdi mdi-chevron-left"></span> Back

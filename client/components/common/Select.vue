@@ -1,21 +1,22 @@
 <template>
   <div class="custom-select">
     <multiselect
-      :value="value"
-      :class="position"
-      v-bind="options"
       @input="val => $emit('input', val)"
       @close="close"
-      @open="open">
+      @open="open"
+      :value="value"
+      :class="position"
+      v-bind="options">
       <slot
         v-for="slot in Object.keys($slots)"
-        :name="slot"
-        :slot="slot"/>
+        :slot="slot"
+        :name="slot">
+      </slot>
       <template
         v-for="slot in Object.keys($scopedSlots)"
-        slot-scope="scope"
-        :slot="slot">
-        <slot v-bind="scope" :name="slot"/>
+        :slot="slot"
+        slot-scope="scope">
+        <slot v-bind="scope" :name="slot"></slot>
       </template>
     </multiselect>
     <span
