@@ -48,7 +48,7 @@ export default {
         closeOnSelect: true,
         showLabels: false,
         placeholder: 'Select option',
-        trackBy: 'label',
+        trackBy: this.$attrs['track-by'] || 'label',
         label: 'label'
       }, this.$attrs);
     },
@@ -157,6 +157,7 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       font-size: 12px;
+      line-height: 27px;
       font-family: $font-family-secondary;
     }
   }
