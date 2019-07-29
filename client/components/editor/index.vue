@@ -57,7 +57,6 @@ import MetaSidebar from './MetaSidebar';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
-import truncate from 'truncate';
 
 export default {
   name: 'editor',
@@ -99,9 +98,6 @@ export default {
     }),
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
-    },
-    truncate(str, len = 50) {
-      return truncate(str, len);
     },
     onMousedown() {
       this.mousedownCaptured = true;
