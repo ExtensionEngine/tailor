@@ -12,13 +12,13 @@
     <v-container>
       <v-layout row align-start>
         <v-card>
-          <sidebar/>
+          <sidebar />
         </v-card>
         <v-flex ml-4>
-          <router-view/>
+          <router-view />
         </v-flex>
       </v-layout>
-      <app-footer/>
+      <app-footer />
     </v-container>
   </div>
 </template>

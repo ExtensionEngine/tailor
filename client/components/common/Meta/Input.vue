@@ -1,13 +1,13 @@
 <template>
   <v-text-field
-    v-validate="meta.validate"
     v-model="value"
+    v-validate="meta.validate"
+    @change="validateAndUpdate"
     :name="meta.key"
     :error-messages="vErrors.collect(meta.key)"
     :label="meta.label"
     :placeholder="meta.placeholder"
-    @change="validateAndUpdate"
-    outline/>
+    outline />
 </template>
 
 <script>

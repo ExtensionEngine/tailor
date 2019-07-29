@@ -2,9 +2,9 @@
   <div infinite-wrapper class="catalog-wrapper">
     <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog">
       <v-layout row class="catalog-actions">
-        <create-repository/>
+        <create-repository />
         <v-flex md4 sm10 offset-md4 offset-sm1>
-          <search :value="queryParams.search" @update="setSearch($event)"/>
+          <search @update="setSearch($event)" :value="queryParams.search" />
         </v-flex>
         <v-flex md3 sm1 class="text-sm-left pl-2">
           <v-tooltip open-delay="800" right>
@@ -17,7 +17,7 @@
             </template>
             <span>Toggle pinned</span>
           </v-tooltip>
-          <select-order :sortBy="sortBy" @update="setOrder" class="pl-2"/>
+          <select-order @update="setOrder" :sort-by="sortBy" class="pl-2" />
         </v-flex>
       </v-layout>
       <v-layout row wrap>
@@ -26,12 +26,12 @@
           :key="repository._cid"
           xs4
           class="px-2 py-3">
-          <repository-card :repository="repository"/>
+          <repository-card :repository="repository" />
         </v-flex>
       </v-layout>
       <infinite-loading ref="loader" @infinite="load">
         <div slot="spinner" class="spinner">
-          <v-progress-circular color="primary" indeterminate/>
+          <v-progress-circular color="primary" indeterminate />
         </div>
         <div slot="no-results" class="no-results subheading">
           <v-alert
@@ -129,7 +129,7 @@ export default {
 }
 
 .catalog {
-  @media(min-width: 1440px) {
+  @media (min-width: 1440px) {
     max-width: 1185px !important;
   }
 
@@ -137,19 +137,19 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    height: 230px;
     width: 100%;
+    height: 230px;
     background: #455a64;
     box-shadow:
-      0px 3px 5px -1px rgba(0,0,0,0.2),
-      0px 5px 8px 0px rgba(0,0,0,0.14),
-      0px 1px 14px 0px rgba(0,0,0,0.12);
+      0 3px 5px -1px rgba(0,0,0,0.2),
+      0 5px 8px 0 rgba(0,0,0,0.14),
+      0 1px 14px 0 rgba(0,0,0,0.12);
   }
 
   &.catalog-empty {
     &::before {
-      height: 100%;
       width: 100%;
+      height: 100%;
     }
   }
 }
@@ -159,9 +159,9 @@ export default {
 }
 
 .catalog-actions {
+  position: relative;
   margin-bottom: 20px;
   padding-top: 12px;
-  position: relative;
 
   /deep/ .add-repo {
     top: 10px;

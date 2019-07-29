@@ -1,8 +1,8 @@
 <template>
   <v-dialog
-    v-hotkey="{ esc: hide }"
     v-if="isAdmin"
     v-model="isVisible"
+    v-hotkey="{ esc: hide }"
     width="700px">
     <v-btn
       slot="activator"
@@ -30,30 +30,30 @@
             {{ vErrors.first('default') }}
           </v-alert>
           <v-select
-            v-validate="'required'"
             v-model="repository.schema"
+            v-validate="'required'"
             :items="schemas"
             :error-messages="vErrors.collect('schema')"
             item-value="id"
             item-text="name"
             data-vv-name="schema"
-            class="mb-3"/>
+            class="mb-3" />
           <v-text-field
-            v-validate="{ required: true, min: 2, max: 250 }"
             v-model.trim="repository.name"
+            v-validate="{ required: true, min: 2, max: 250 }"
             :error-messages="vErrors.collect('name')"
             label="Name"
-            data-vv-name="name"/>
+            data-vv-name="name" />
           <v-textarea
-            v-validate="{ required: true, min: 2, max: 2000 }"
             v-model.trim="repository.description"
+            v-validate="{ required: true, min: 2, max: 2000 }"
             :error-messages="vErrors.collect('description')"
             label="Description"
-            data-vv-name="description"/>
+            data-vv-name="description" />
         </v-card-text>
         <v-card-actions>
-          <v-spacer/>
-          <v-btn :disabled="showLoader" @click="hide">Cancel</v-btn>
+          <v-spacer />
+          <v-btn @click="hide" :disabled="showLoader">Cancel</v-btn>
           <v-btn :loading="showLoader" outline type="submit">Create</v-btn>
         </v-card-actions>
       </v-card>
