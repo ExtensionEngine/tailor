@@ -1,21 +1,19 @@
 <template>
-  <div class="relationship">
-    <label :for="type">{{ label }}</label>
-    <multiselect
-      @input="onRelationshipChanged"
-      :value="multiple ? associations : associations[0]"
-      :options="optionGroups"
-      :searchable="searchable"
-      :multiple="multiple"
-      :allow-empty="allowEmpty"
-      :disabled="!options.length"
-      :placeholder="selectPlaceholder"
-      :custom-label="getCustomLabel"
-      :name="type"
-      group-label="typeLabel"
-      group-values="activities"
-      track-by="id" />
-  </div>
+  <v-select
+    @input="onRelationshipChanged"
+    :value="multiple ? associations : associations[0]"
+    :items="groupedOptions"
+    :multiple="multiple"
+    :allow-empty="allowEmpty"
+    :disabled="!options.length"
+    :placeholder="selectPlaceholder"
+    :label="label"
+    item-text="data.name"
+    item-value="id"
+    :name="type"
+    chips
+    deletable-chips
+    box />
 </template>
 
 <script>
@@ -24,14 +22,16 @@ import { mapActions, mapGetters } from 'vuex';
 import castArray from 'lodash/castArray';
 import cloneDeep from 'lodash/cloneDeep';
 import compact from 'lodash/compact';
+import concat from 'lodash/concat';
 import every from 'lodash/every';
 import filter from 'lodash/filter';
+import forEach from 'lodash/forEach';
 import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
-import Select from '../../common/Select';
+import pluralize from 'pluralize';
 import set from 'lodash/set';
 import without from 'lodash/without';
 
@@ -67,11 +67,15 @@ export default {
       }
       return filter(activities, it => every(conds, cond => cond(it)));
     },
-    optionGroups() {
-      return map(groupBy(this.options, 'type'), (it, type) => ({
-        typeLabel: getLevel(type).label,
-        activities: it
-      }));
+    groupedOptions() {
+      const grouped = groupBy(this.options, 'type');
+      const withTypes = map(grouped, (it, type) => {
+        const levelLabel = pluralize(getLevel(type).label);
+        return concat({ header: levelLabel }, it);
+      });
+      let flatten = [];
+      forEach(withTypes, it => flatten.push(...it));
+      return flatten;
     },
     selectPlaceholder() {
       return isEmpty(this.options) ? 'No activities' : this.placeholder;
@@ -83,20 +87,17 @@ export default {
   },
   methods: {
     ...mapActions('activities', ['update']),
-    getCustomLabel(activity) {
-      return get(activity, 'data.name', '');
-    },
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
     },
-    onRelationshipChanged(value) {
+    onRelationshipChanged(ids) {
+      const value = ids.map(id => this.options.find(it => it.id === id));
       const associations = compact(castArray(value));
       let activity = cloneDeep(this.activity) || {};
       set(activity, `refs.${this.type}`, map(associations, 'id'));
       this.update(activity);
     }
-  },
-  components: { multiselect: Select }
+  }
 };
 </script>
 
