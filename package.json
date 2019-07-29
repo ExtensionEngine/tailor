@@ -166,7 +166,6 @@
     "nodemon": "^1.18.6",
     "poi": "^12.6.10",
     "poi-preset-bundle-report": "^2.0.2",
-    "poi-preset-eslint": "^9.0.1",
     "rewrite-lockfile": "^1.0.0",
     "sass-loader": "^7.1.0",
     "sequelize-cli": "^5.5.0",

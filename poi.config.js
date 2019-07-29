@@ -101,6 +101,13 @@ module.exports = {
       .plugin('dotenv')
       .use(require.resolve('dotenv-webpack'));
 
+    config
+      .module
+      .rule('eslint')
+      .use('eslint-loader')
+        .loader('eslint-loader')
+        .tap(options => Object.assign(options, { ignore: true }));
+
     if (mode !== 'production') return;
     config
       .plugin('minimize')
