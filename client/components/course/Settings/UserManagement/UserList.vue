@@ -16,10 +16,10 @@
       </td>
       <td class="role-select">
         <v-select
+          @change="role => changeRole(item.email, role)"
           :value="item.courseRole"
           :items="roles"
-          @change="role => changeRole(item.email, role)"
-          icon/>
+          icon />
       </td>
       <td class="actions">
         <v-btn color="primary" icon flat small>

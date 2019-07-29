@@ -14,7 +14,7 @@
       :element="element.parent"
       :embed="element">
       <template slot="embed-toolbar">
-        <element-toolbar :element="element"/>
+        <element-toolbar :element="element" />
       </template>
       <template slot="actions">
         <slot name="actions"></slot>

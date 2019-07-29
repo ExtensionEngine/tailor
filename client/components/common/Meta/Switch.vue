@@ -3,11 +3,11 @@
     <span class="title">{{ meta.label }}</span>
     <v-switch
       v-model="value"
+      @change="$emit('update', meta.key, value)"
       :id="meta.key"
       :name="meta.key"
       :label="meta.description"
-      @change="$emit('update', meta.key, value)"
-      color="primary"/>
+      color="primary" />
   </div>
 </template>
 
