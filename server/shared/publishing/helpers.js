@@ -320,7 +320,7 @@ async function addLinkToSpine(spine, activity) {
     if (parentIds.includes(parentId)) return;
     spine.structure[index] = {
       ...spine.structure[index],
-      parentId: [ ...parentIds, parentId ]
+      parentId: [...parentIds, parentId]
     };
     return;
   }

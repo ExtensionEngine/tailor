@@ -169,7 +169,7 @@ class Activity extends Model {
     let { idMap = {} } = options;
     const { courseId, parentId = null, transaction, cloneOrigins } = options;
     if (cloneOrigins) {
-      idMap = await Activity.cloneOrigins(source, {...options, idMap});
+      idMap = await Activity.cloneOrigins(source, { ...options, idMap });
     }
     const filteredSource = source
       .filter(({ isOrigin, id }) => !isOrigin && !idMap[id]);
@@ -223,7 +223,7 @@ class Activity extends Model {
     await Promise.each(origins, async origin => {
       const links = await origin.getLinks({ transaction });
       if (links.length !== 1) return;
-      const [ link ] = links;
+      const [link] = links;
       const children = await link.getChildren({ transaction });
       if (children.length) {
         await Promise.each(children, async child =>
@@ -390,7 +390,7 @@ class Activity extends Model {
         ];
       }
 
-      const [ link ] = links;
+      const [link] = links;
       const children = await link.getChildren(options);
 
       if (children.length) {
@@ -512,7 +512,7 @@ async function linkChildren(children, options) {
   return Promise.reduce(children, async (acc, child) => {
     return [
       ...acc,
-      ...await Activity.linkActivities(child, {...options, recursion: true})
+      ...await Activity.linkActivities(child, { ...options, recursion: true })
     ];
   }, []);
 }
