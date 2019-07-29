@@ -86,7 +86,7 @@ export default {
   mixins: [reorderMixin],
   inheritAttrs: false,
   props: {
-    /* eslint-disable vue/prop-name-casing */
+    /* eslint-disable-next-line vue/prop-name-casing */
     _cid: { type: String, required: true },
     id: { type: Number, default: null },
     parentId: { type: Number, default: null },
