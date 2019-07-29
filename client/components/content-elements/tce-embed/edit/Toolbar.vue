@@ -9,8 +9,8 @@
         :class="{ 'has-error': vErrors.has('height') }"
         class="input">
         <input
-          v-validate="{ required: true, numeric: true, min_value: 50, max_value: 3000 }"
           v-model="height"
+          v-validate="{ required: true, numeric: true, min_value: 50, max_value: 3000 }"
           @input="onChange"
           id="heightInput"
           data-vv-delay="0"
@@ -30,8 +30,8 @@
       </label>
       <span :class="{ 'has-error': vErrors.has('url') }" class="input url">
         <input
-          v-validate="{ required: true, url: true }"
           v-model="url"
+          v-validate="{ required: true, url: true }"
           @input="onChange"
           id="urlInput"
           data-vv-delay="0"

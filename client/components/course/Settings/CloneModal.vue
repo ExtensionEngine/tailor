@@ -9,28 +9,28 @@
       </v-card-title>
       <v-card-text>
         <v-text-field
-          v-validate="{ required: true, min: 2, max: 250 }"
           v-model="name"
+          v-validate="{ required: true, min: 2, max: 250 }"
           :disabled="inProgress"
           :error-messages="vErrors.collect('name')"
           label="Name"
           data-vv-name="name"
-          class="mb-4"/>
+          class="mb-4" />
         <v-textarea
-          v-validate="{ required: true, min: 2, max: 2000 }"
           v-model="description"
+          v-validate="{ required: true, min: 2, max: 2000 }"
           :disabled="inProgress"
           :error-messages="vErrors.collect('description')"
           label="Description"
           data-vv-name="description"
-          class="mb-4"/>
+          class="mb-4" />
       </v-card-text>
       <v-card-actions>
-        <v-spacer/>
-        <v-btn :disabled="inProgress" @click="close">Cancel</v-btn>
+        <v-spacer />
+        <v-btn @click="close" :disabled="inProgress">Cancel</v-btn>
         <v-btn
-          :loading="inProgress"
           @click="cloneRepository"
+          :loading="inProgress"
           outline>
           Clone
         </v-btn>

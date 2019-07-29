@@ -4,7 +4,7 @@ const TABLE_NAME = 'course';
 const COLUMN_NAME = 'stats';
 
 module.exports = {
-  up: (queryInterface) => {
+  up: queryInterface => {
     return queryInterface.removeColumn(TABLE_NAME, COLUMN_NAME);
   },
   down: (queryInterface, { JSONB }) => {

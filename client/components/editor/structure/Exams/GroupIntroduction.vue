@@ -1,19 +1,19 @@
 <template>
   <div class="group-introduction">
     <tes-list
+      @add="saveElement"
+      @update="reorder"
       :list="introductionElements"
       :activity="group"
       :types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true"
-      @add="saveElement"
-      @update="reorder"
       embedded>
       <teaching-element
         slot="list-item"
         slot-scope="{ item, dragged, setWidth }"
-        :setWidth="setWidth"
+        :set-width="setWidth"
         :dragged="dragged"
-        :element="item"/>
+        :element="item" />
     </tes-list>
   </div>
 </template>

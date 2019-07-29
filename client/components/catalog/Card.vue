@@ -1,7 +1,7 @@
 <template>
   <v-card @click="navigateTo" class="repository-card">
     <div class="card-heading blue-grey darken-4">
-      <v-chip :color="repository.data.color" small label class="ml-3 mr-0"/>
+      <v-chip :color="repository.data.color" small label class="ml-3 mr-0" />
       <v-chip color="grey lighten-3" small label class="ml-0">
         {{ schema }}
       </v-chip>

@@ -1,15 +1,15 @@
 <template>
-  <v-dialog v-hotkey="{ esc: close }" v-model="show" width="700">
+  <v-dialog v-model="show" v-hotkey="{ esc: close }" width="700">
     <v-form @submit.prevent="save">
       <v-card class="pa-3">
         <v-card-title class="headline pr-0">
           <span>{{ userData ? 'Edit' : 'Create' }} User</span>
-          <v-spacer/>
+          <v-spacer />
           <v-btn
             v-if="!isNewUser"
+            @click="reinvite"
             :disabled="isLoading"
             :loading="isLoading"
-            @click="reinvite"
             color="blue-grey"
             outline>
             Reinvite
@@ -17,23 +17,23 @@
         </v-card-title>
         <v-card-text>
           <v-text-field
-            v-validate="{ required: true, email: true, 'unique-email': userData }"
             v-model="user.email"
+            v-validate="{ required: true, email: true, 'unique-email': userData }"
             :error-messages="vErrors.collect('email')"
             label="E-mail"
             data-vv-name="email"
-            class="mb-3"/>
+            class="mb-3" />
           <v-select
-            v-validate="'required'"
             v-model="user.role"
+            v-validate="{ required: true }"
             :items="roles"
             :error-messages="vErrors.collect('role')"
             label="Role"
             data-vv-name="role"
-            class="mb-3"/>
+            class="mb-3" />
         </v-card-text>
         <v-card-actions>
-          <v-spacer/>
+          <v-spacer />
           <v-btn @click="close">Cancel</v-btn>
           <v-btn color="primary" type="submit" outline>Save</v-btn>
         </v-card-actions>

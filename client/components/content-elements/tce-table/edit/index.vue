@@ -7,10 +7,10 @@
       <table-cell
         v-for="cell in cells(row)"
         :key="cell.id"
+        @save="saveCell"
         :cell="embeds[cell.id]"
         :table="element"
-        :disabled="disabled"
-        @save="saveCell"/>
+        :disabled="disabled" />
     </div>
   </div>
 </template>
