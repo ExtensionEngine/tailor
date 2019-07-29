@@ -125,8 +125,14 @@ class TeachingElement extends Model {
           .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
   }
 
-  static cloneElements(src, container, transaction) {
-    const { id: activityId, courseId } = container;
+  /**
+   * @param {Array<TeachingElement>} src
+   * @param {Object} options
+   * @param {Number} options.activityId
+   * @param {Number} options.courseId
+   * @param {SequelizeTransaction} options.transaction
+   */
+  static cloneElements(src, { activityId, courseId, transaction }) {
     return this.bulkCreate(src.map(it => {
       return Object.assign(pick(it, [
         'type',
@@ -137,7 +143,7 @@ class TeachingElement extends Model {
         'refs',
         'meta'
       ]), { activityId, courseId });
-    }), { returning: true, transaction });
+    }), { transaction });
   }
 
   /**

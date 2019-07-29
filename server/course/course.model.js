@@ -1,7 +1,7 @@
 'use strict';
 
 const { getRepositoryRelationships, getSchema } = require('../../config/shared/activities');
-const { Model, Op } = require('sequelize');
+const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
@@ -102,20 +102,25 @@ class Course extends Model {
   clone(name, description, context) {
     const Course = this.sequelize.model('Course');
     const Activity = this.sequelize.model('Activity');
-    const srcAttributes = pick(this, ['schema', 'data', 'stats']);
-    const dstAttributes = Object.assign(srcAttributes, { name, description });
-    const notNull = { [Op.ne]: null };
+    const courseAttributes = {
+      ...pick(this, ['schema', 'data', 'stats']),
+      name,
+      description
+    };
     return this.sequelize.transaction(async transaction => {
-      const dst = await Course.create(dstAttributes, { context, transaction });
-      const where = { courseId: this.id, parentId: null, position: notNull };
+      const course = await Course.create(courseAttributes, { context, transaction });
+      const where = { courseId: this.id, parentId: null };
       const src = await Activity.findAll({ where, transaction });
       const options = await Activity.cloneActivities(
-        src, dst.id, null,
-        { transaction, cloneOrigins: true }
+        src, { courseId: course.id, transaction, cloneOrigins: true }
       );
-      const map = await Activity.resolveClonedOrigins(dst.id, options);
-      await dst.mapClonedReferences(map, transaction);
-      return dst;
+      const map = await Activity.resolveClonedOrigins({
+        ...options,
+        transaction,
+        courseId: course.id
+      });
+      await course.mapClonedReferences(map, transaction);
+      return course;
     });
   }
 
