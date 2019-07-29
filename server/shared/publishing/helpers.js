@@ -56,6 +56,19 @@ function updateRepositoryCatalog(repository, publishedAt) {
   });
 }
 
+function deprecateRepository(repository, deprecatedAt) {
+  return storage.getFile('repository/index.json').then(buffer => {
+    let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
+    let existing = find(catalog, { id: repository.id });
+    if (!existing) return;
+    const repositoryData = { ...getRepositoryAttrs(repository), deprecatedAt };
+    if (deprecatedAt) repositoryData.deprecatedAt = deprecatedAt;
+    Object.assign(existing, omit(repositoryData, ['id']));
+    const data = Buffer.from(JSON.stringify(catalog), 'utf8');
+    return storage.saveFile('repository/index.json', data);
+  });
+}
+
 function publishRepositoryDetails(repository) {
   return getPublishedStructure(repository).then(spine => {
     Object.assign(spine, getRepositoryAttrs(repository));
@@ -277,5 +290,6 @@ module.exports = {
   publishActivity,
   unpublishActivity,
   publishRepositoryDetails,
-  fetchActivityContent
+  fetchActivityContent,
+  deprecateRepository
 };
