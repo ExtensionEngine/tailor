@@ -13,25 +13,25 @@
       <select-action
         v-if="action !== 'create'"
         @selected="selected => (action = selected)"
-        @close="hide"/>
+        @close="hide" />
       <progress-dialog
         :show="isLoading"
         :status="loading.status"
         :label="loading.label"
-        :width="500"/>
+        :width="500" />
       <template v-if="!isLoading">
         <create-activity
           v-if="action === 'create'"
-          :parent="anchor"
-          :supportedLevels="supportedLevels"
           @create="createActivity"
-          @close="hide"/>
+          @close="hide"
+          :parent="anchor"
+          :supported-levels="supportedLevels" />
         <copy-activity
           v-if="action === 'copy'"
-          :supportedLevels="supportedLevels"
-          :anchorType="anchor.type"
           @copy="copyActivities"
-          @cancel="action = ''"/>
+          @cancel="action = ''"
+          :supported-levels="supportedLevels"
+          :anchor-type="anchor.type" />
       </template>
     </div>
   </div>

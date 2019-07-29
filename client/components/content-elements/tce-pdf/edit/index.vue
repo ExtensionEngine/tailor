@@ -15,7 +15,7 @@
       </div>
       <div class="loader-outer">
         <div class="loader-inner">
-          <circular-progress v-show="!showError"></circular-progress>
+          <circular-progress v-show="!showError" />
         </div>
       </div>
       <div class="pdf-container">
@@ -27,8 +27,8 @@
         <img
           v-if="safari"
           v-show="false"
-          :src="source.src"
-          @error="showViewer = false">
+          @error="showViewer = false"
+          :src="source.src">
         <div v-show="showError" class="error">
           <div class="message">
             <span class="icon mdi mdi-alert"></span>

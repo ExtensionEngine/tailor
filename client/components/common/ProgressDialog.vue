@@ -4,7 +4,7 @@
       <v-card color="blue-grey darken-3" dark>
         <v-card-text>
           {{ label }}
-          <v-progress-linear :value="status" color="white" class="mb-0"/>
+          <v-progress-linear :value="status" color="white" class="mb-0" />
         </v-card-text>
       </v-card>
     </v-dialog>

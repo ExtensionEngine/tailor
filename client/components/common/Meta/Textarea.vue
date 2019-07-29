@@ -1,22 +1,22 @@
 <template>
   <div
-    :class="{ editing, 'has-error': vErrors.has(meta.key) }"
     @focusout="focusoutTextarea"
+    :class="[{ editing, 'has-error': vErrors.has(meta.key) }]"
     class="textarea">
     <label :for="meta.key">{{ meta.label }}</label>
     <div class="textarea-wrapper">
       <textarea
-        v-validate="meta.validate"
         v-show="editing"
-        v-model="value"
         :ref="meta.key"
-        :name="meta.key"
-        :placeholder="meta.placeholder"
+        v-model="value"
+        v-validate="meta.validate"
         @keydown.enter="onEnter"
         @keydown.esc="editing = false"
+        :name="meta.key"
+        :placeholder="meta.placeholder"
         class="form-control">
       </textarea>
-      <div :style="previewStyle" @mousedown.stop="focusTextarea" class="content">
+      <div @mousedown.stop="focusTextarea" :style="previewStyle" class="content">
         <pre><span>{{ value || meta.placeholder }}</span><br></pre>
       </div>
     </div>

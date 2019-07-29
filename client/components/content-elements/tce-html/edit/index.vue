@@ -12,11 +12,12 @@
       <quill-editor
         v-if="isFocused"
         v-model="content"
-        :options="options"
-        @ready="onQuillReady">
-      </quill-editor>
+        @ready="onQuillReady"
+        :options="options" />
       <div v-else class="ql-container ql-snow">
-        <div v-html="content" class="ql-editor"></div>
+        <!-- eslint-disable vue/no-v-html -->
+        <div class="ql-editor" v-html="content"></div>
+        <!-- eslint-enable -->
       </div>
     </div>
   </div>

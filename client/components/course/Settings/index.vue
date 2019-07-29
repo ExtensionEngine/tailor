@@ -2,20 +2,15 @@
   <v-container class="mt-4">
     <v-layout row align-start>
       <v-card>
-        <sidebar
-          :isPublishing="isPublishing"
-          @action="onActionClick"/>
+        <sidebar @action="onActionClick" :is-publishing="isPublishing" />
       </v-card>
       <v-flex ml-4>
-        <router-view/>
+        <router-view />
       </v-flex>
     </v-layout>
-    <clone-modal
-      :show="showCloneModal"
-      @close="showCloneModal = false">
-    </clone-modal>
-    <progress-dialog :show="isPublishing" :status="publishPercentage"/>
-    <app-footer/>
+    <clone-modal @close="showCloneModal = false" :show="showCloneModal" />
+    <progress-dialog :show="isPublishing" :status="publishPercentage" />
+    <app-footer />
   </v-container>
 </template>
 
@@ -25,7 +20,6 @@ import api from '@/api/course';
 import AppFooter from '@/components/common/Footer';
 import CloneModal from './CloneModal';
 import EventBus from 'EventBus';
-import General from './General';
 import JSZip from 'jszip';
 import ProgressDialog from '@/components/common/ProgressDialog';
 import publishMixin from '@/components/common/mixins/publish';
@@ -85,7 +79,6 @@ export default {
   components: {
     AppFooter,
     CloneModal,
-    General,
     ProgressDialog,
     Sidebar
   }
