@@ -6,7 +6,7 @@
       </v-avatar>
       <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
     </router-link>
-    <v-spacer/>
+    <v-spacer />
     <v-toolbar-items>
       <v-btn
         v-for="({ name, to, icon }) in routes"

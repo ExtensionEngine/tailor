@@ -22,8 +22,8 @@
         <v-list-tile
           v-for="({ label, name, icon, color }) in actions"
           :key="name"
-          :color="color ? color : 'blue-grey darken-3'"
           @click="$emit('action', name)"
+          :color="color ? color : 'blue-grey darken-3'"
           ripple>
           <v-list-tile-action class="pl-1">
             <v-icon :color="color ? color : 'primary'">

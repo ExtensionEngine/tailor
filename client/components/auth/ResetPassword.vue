@@ -3,25 +3,25 @@
     <div class="message">{{ error }}</div>
     <form @submit.prevent="submit">
       <v-text-field
-        v-validate="{ required: true, min: 6, alphanumerical: true }"
         ref="password"
         v-model="password"
+        v-validate="{ required: true, min: 6, alphanumerical: true }"
         :error-messages="vErrors.collect('password')"
         prepend-icon="mdi-lock"
         name="password"
         type="password"
         label="Password"
-        class="my-1"/>
+        class="my-1" />
       <v-text-field
-        v-validate="{ required: true, confirmed: 'password' }"
         v-model="passwordConfirmation"
+        v-validate="{ required: true, confirmed: 'password' }"
         :error-messages="vErrors.collect('passwordConfirmation')"
         prepend-icon="mdi-lock-outline"
         data-vv-as="password"
         name="passwordConfirmation"
         type="password"
         label="Please re-enter your password"
-        class="my-1"/>
+        class="my-1" />
       <v-btn
         :disabled="!isValid"
         color="primary"

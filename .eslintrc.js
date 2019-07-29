@@ -5,7 +5,7 @@ const isDev = process.env.NODE_ENV === 'development';
 module.exports = {
   root: true,
   parserOptions: {
-    parser: "babel-eslint",
+    parser: 'babel-eslint',
     sourceType: 'module'
   },
   // https://github.com/Flet/eslint-config-semistandard
@@ -23,7 +23,9 @@ module.exports = {
       // https://eslint.org/docs/rules/indent#memberexpression
       MemberExpression: 'off'
     }],
-    'arrow-parens': 'off',
+    'arrow-parens': ['error', 'as-needed'],
+    // TODO: Remove this after all error reports get resolved!
+    'prefer-const': 'off',
     'comma-dangle': ['warn', 'never'],
     'no-debugger': isDev ? 'warn' : 'error',
     'no-unreachable': isDev ? 'warn' : 'error',
@@ -35,9 +37,24 @@ module.exports = {
       'ignoreCase': true
     }],
     // Vue rules
-    'vue/html-self-closing': 'off',
-    'vue/attribute-hyphenation': 'off',
-    'vue/max-attributes-per-line': ['error', { singleline: 5 }],
+    'vue/html-self-closing': ['error', {
+      html: {
+        void: 'never',
+        normal: 'never',
+        component: 'always'
+      },
+      svg: 'never',
+      math: 'never'
+    }],
+    'vue/html-closing-bracket-newline': ['error', {
+      singleline: 'never',
+      multiline: 'never'
+    }],
+    'vue/singleline-html-element-content-newline': 'off',
+    'vue/max-attributes-per-line': ['error', {
+      singleline: 5,
+      multiline: 4
+    }],
     'vue/name-property-casing': ['error', 'kebab-case'],
     // TODO: Add order for custom directives once supported
     'vue/attributes-order': ['error', {
@@ -47,11 +64,12 @@ module.exports = {
         'CONDITIONALS',
         'RENDER_MODIFIERS',
         'UNIQUE',
-        'BINDING',
+        'TWO_WAY_BINDING',
+        'OTHER_DIRECTIVES',
         'EVENTS',
-        'CONTENT',
         'GLOBAL',
-        'OTHER_ATTR'
+        'OTHER_ATTR',
+        'CONTENT'
       ]
     }],
     'vue/order-in-components': ['error', {

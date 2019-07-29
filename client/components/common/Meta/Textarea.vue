@@ -1,15 +1,15 @@
 <template>
   <v-textarea
-    v-validate="meta.validate"
     v-model="value"
+    v-validate="meta.validate"
+    @change="validateAndUpdate"
     :error-messages="vErrors.collect(meta.key)"
     :label="meta.label"
     :name="meta.key"
     :placeholder="meta.placeholder"
     :rows="rows"
-    @change="validateAndUpdate"
     auto-grow
-    outline/>
+    outline />
 </template>
 
 <script>

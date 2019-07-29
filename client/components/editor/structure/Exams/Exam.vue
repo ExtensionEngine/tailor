@@ -28,11 +28,10 @@
         :key="group._cid"
         :group="group"
         :exam="exam"
-        :position="index">
-      </assessment-group>
+        :position="index" />
       <v-btn
-        :disabled="!exam.id"
         @click.stop="createGroup"
+        :disabled="!exam.id"
         color="primary"
         outline
         class="my-5">

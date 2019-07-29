@@ -8,13 +8,13 @@
     </v-alert>
     <form v-if="!error" @submit.prevent="submit">
       <v-text-field
-        v-validate="{ required: true, email: true }"
         v-model="email"
+        v-validate="{ required: true, email: true }"
         :error-messages="vErrors.collect('email')"
         prepend-icon="mdi-email-outline"
         type="email"
         name="email"
-        label="Please enter your email"/>
+        label="Please enter your email" />
       <v-btn
         :disabled="!isValid || showMessage"
         color="primary"

@@ -87,6 +87,7 @@ export default Quill => {
 
   return class TailorTheme extends SnowTheme {
     static NAME = 'tailor';
+
     static DEFAULTS = {
       modules: { toolbar }
     };
