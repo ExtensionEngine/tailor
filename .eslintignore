@@ -1,1 +1,3 @@
-server/_doc_/**/*.js
+dist
+# TODO: remove this after tests get cleaned up!
+test

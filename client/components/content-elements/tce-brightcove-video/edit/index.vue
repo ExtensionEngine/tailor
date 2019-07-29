@@ -16,8 +16,7 @@
       <brightcove-player
         ref="player"
         v-bind="config"
-        class="player">
-      </brightcove-player>
+        class="player" />
     </div>
   </div>
 </template>

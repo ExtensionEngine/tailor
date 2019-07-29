@@ -1,6 +1,6 @@
 <template>
   <div class="input">
-    <color-picker v-model="color"></color-picker>
+    <color-picker v-model="color" />
     <div class="actions">
       <button
         @click="$emit('close')"

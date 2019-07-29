@@ -8,18 +8,18 @@
         <carousel-item
           v-for="it in items"
           :key="it.id"
+          @save="saveItem"
+          @delete="deleteItem"
           :item="it"
           :embeds="embedsByItem[it.id]"
-          :activeItem="activeItem"
-          @save="saveItem"
-          @delete="deleteItem"/>
+          :active-item="activeItem" />
       </ul>
       <ul class="indicators">
         <li
           v-for="it in items"
           :key="it.id"
-          :class="{ 'active': activeItem === it.id }"
           @click="activateItem(it)"
+          :class="{ 'active': activeItem === it.id }"
           class="indicator-item">
         </li>
       </ul>

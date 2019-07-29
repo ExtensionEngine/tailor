@@ -10,14 +10,13 @@
     <content-container
       v-for="container in containerGroup"
       :key="container._cid || container.id"
+      @delete="deleteContainer(container)"
       :container="container"
       :types="types"
       :name="name"
       :layout="layout"
       :class="`${name}-container`"
-      @delete="deleteContainer(container)"
-      class="content-container elevation-2">
-    </content-container>
+      class="content-container elevation-2" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="primary">
         <v-icon class="pr-2">mdi-plus</v-icon>

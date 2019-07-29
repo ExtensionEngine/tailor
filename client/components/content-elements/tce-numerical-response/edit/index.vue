@@ -6,7 +6,7 @@
       @click="addAnswer"
       class="btn-add-answer btn btn-link mdi mdi-plus pull-right">
     </span>
-    <ul >
+    <ul>
       <li
         v-for="(answer, index) in correct"
         :key="index"
@@ -14,27 +14,27 @@
         class="answer row">
         <div class="col-xs-3">
           <input
+            @input="updateAnswer('prefixes', $event.target.value, index)"
             :disabled="!isEditing"
             :value="prefixes[index]"
-            @input="updateAnswer('prefixes', $event.target.value, index)"
             type="text"
             placeholder="Prefix..."
             class="form-control">
         </div>
         <div :class="`col-xs-${ correct.length > 1 ? 5 : 6 }`">
           <input
+            @input="updateAnswer('correct', $event.target.value, index)"
             :disabled="!isEditing"
             :value="correct[index]"
-            @input="updateAnswer('correct', $event.target.value, index)"
             type="text"
             placeholder="Correct value..."
             class="form-control">
         </div>
         <div class="col-xs-3">
           <input
+            @input="updateAnswer('suffixes', $event.target.value, index)"
             :disabled="!isEditing"
             :value="suffixes[index]"
-            @input="updateAnswer('suffixes', $event.target.value, index)"
             type="text"
             placeholder="Suffix..."
             class="form-control">

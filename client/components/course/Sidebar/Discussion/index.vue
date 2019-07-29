@@ -17,8 +17,7 @@
           v-model="comment.content"
           @change="post"
           placeholder="Add a comment..."
-          class="editor">
-        </text-editor>
+          class="editor" />
         <div class="clearfix controls">
           <v-btn
             @click="post"
@@ -33,10 +32,9 @@
       <discussion-thread
         v-bind="$attrs"
         :sort="sortOrder"
-        :showMore="showMore"
-        :minDisplayed="minDisplayedComments"
-        class="discussion-thread">
-      </discussion-thread>
+        :show-more="showMore"
+        :min-displayed="minDisplayedComments"
+        class="discussion-thread" />
       <span v-if="showBtnPosition === 'bottom'" class="btn-show">
         <span @click="showMore = true" class="btn" role="button">
           Show more

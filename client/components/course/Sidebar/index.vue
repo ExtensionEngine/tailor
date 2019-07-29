@@ -1,8 +1,8 @@
 <template>
   <div :key="activity._cid" class="course-sidebar elevation-1">
     <div v-if="activitySelected">
-      <sidebar-header></sidebar-header>
-      <sidebar-body></sidebar-body>
+      <sidebar-header />
+      <sidebar-body />
     </div>
     <div v-else class="placeholder">
       <h4>Outline Sidebar</h4>
