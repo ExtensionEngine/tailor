@@ -1,92 +1,45 @@
 <template>
-  <div
-    :class="{ active }"
-    class="select">
-    <label :for="meta.key">{{ meta.label }}</label>
-    <multiselect
-      :value="value"
-      :name="meta.key"
-      :options="options"
-      :searchable="false"
-      :placeholder="meta.placeholder"
-      :multiple="isMultiSelect"
-      @open="active = true"
-      @close="active = false"
-      @input="update">
-      <template slot="option" slot-scope="{ option }">
-        <img v-if="option.img" :src="option.img" :alt="option.label" class="img">
-        <span>{{ option.label }}</span>
-      </template>
-      <template slot="singleLabel" slot-scope="{ option }">
-        <img v-if="option.img" :src="option.img" :alt="option.label" class="img">
-        <span>{{ option.label }}</span>
-      </template>
-    </multiselect>
-  </div>
+  <v-select
+    :value="meta.value"
+    :name="meta.key"
+    :items="meta.options"
+    :placeholder="meta.placeholder"
+    :label="meta.label"
+    :multiple="isMultiSelect"
+    :chips="isMultiSelect"
+    @change="update"
+    item-text="label"
+    item-value="value"
+    deletable-chips
+    outline>
+  </v-select>
 </template>
 
 <script>
-import isString from 'lodash/isString';
-import Select from '@/components/common/Select';
+import isObject from 'lodash/isObject';
 
 export default {
-  name: 'base-meta-select',
+  name: 'meta-select',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
   data: () => ({ active: false }),
   computed: {
-    isMultiSelect: () => {
-      throw new Error('Computed "isMultiSelect" must be implemented');
+    isMultiSelect() {
+      return this.meta.type === 'MULTISELECT';
     },
-    value: () => {
-      throw new Error('Computed "value" must be implemented');
-    },
-    options() {
-      const { options } = this.meta;
-      return options.map(it => isString(it) ? { label: it, value: it } : it);
+    isCollection() {
+      return isObject(this.meta.options[0]);
     }
   },
   methods: {
-    parseInput() {
-      throw new Error('Method "parseInput" must be implemented');
-    },
     update(data) {
-      const payload = this.parseInput(data);
-      return this.$emit('update', this.meta.key, payload);
+      const { isCollection, meta: { options } } = this;
+      if (isCollection) {
+        data = data.map(it => options.find(({ value }) => value === it));
+      }
+      return this.$emit('update', this.meta.key, data);
     }
-  },
-  components: { multiselect: Select }
+  }
 };
 </script>
-
-<style lang="scss" scoped>
-.select {
-  padding: 3px 8px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
-
-  &.active:hover {
-    background-color: inherit;
-  }
-
-  label {
-    color: #808080;
-  }
-
-  .img {
-    width: 36px;
-    height: 36px;
-    margin-right: 15px;
-  }
-
-  /deep/ .multiselect {
-    color: #333;
-    font-size: 17px;
-    line-height: 24px;
-  }
-}
-</style>
