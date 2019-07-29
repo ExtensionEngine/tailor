@@ -2,20 +2,19 @@
   <div class="relationship">
     <label :for="type">{{ label }}</label>
     <multiselect
+      @input="onRelationshipChanged"
       :value="multiple ? associations : associations[0]"
       :options="optionGroups"
       :searchable="searchable"
       :multiple="multiple"
-      :allowEmpty="allowEmpty"
+      :allow-empty="allowEmpty"
       :disabled="!options.length"
       :placeholder="selectPlaceholder"
-      :customLabel="getCustomLabel"
+      :custom-label="getCustomLabel"
       :name="type"
-      @input="onRelationshipChanged"
-      groupLabel="typeLabel"
-      groupValues="activities"
-      trackBy="id">
-    </multiselect>
+      group-label="typeLabel"
+      group-values="activities"
+      track-by="id" />
   </div>
 </template>
 

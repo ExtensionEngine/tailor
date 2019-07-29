@@ -8,16 +8,16 @@
         <contained-content
           v-for="element in question"
           :key="element.id"
-          :element="element"
-          :isDisabled="!isEditing"
           @save="data => elementChanged(element, data)"
-          @delete="deleteElement(element)"/>
+          @delete="deleteElement(element)"
+          :element="element"
+          :is-disabled="!isEditing" />
       </draggable>
       <add-element
         v-show="isEditing"
+        @add="addElement"
         :include="['HTML', 'IMAGE', 'EMBED']"
-        :layout="false"
-        @add="addElement"/>
+        :layout="false" />
     </div>
     <span v-if="isEditing && helperText" class="help-block">
       {{ helperText }}

@@ -6,8 +6,7 @@
         v-for="(exam, index) in exams"
         :key="exam._cid"
         :exam="exam"
-        :position="index">
-      </exam>
+        :position="index" />
     </ul>
     <v-btn @click.stop="create" color="primary" class="mt-4">
       <v-icon class="pr-2">mdi-plus</v-icon>

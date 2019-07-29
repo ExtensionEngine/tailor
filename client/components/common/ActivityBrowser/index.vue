@@ -11,11 +11,11 @@
     </select-repository>
     <select-activity
       v-else
+      @reset="currentRepository = null"
+      @selected="activity => $emit('selected', activity)"
       :action="action"
       :repository="currentRepository"
-      :selectableLevels="selectableLevels"
-      @reset="currentRepository = null"
-      @selected="activity => $emit('selected', activity)">
+      :selectableLevels="selectableLevels">
     </select-activity>
   </div>
 </template>

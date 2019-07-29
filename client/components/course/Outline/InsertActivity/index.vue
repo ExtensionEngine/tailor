@@ -13,23 +13,20 @@
       <select-action
         v-if="!action"
         @selected="selected => (action = selected)"
-        @close="hide">
-      </select-action>
+        @close="hide" />
       <activity-browser
         v-else-if="action !== 'create'"
+        @selected="executeAction"
+        @close="hide"
         :action="action"
         :repository="action === 'link' ? course : null"
-        :selectableLevels="supportedLevels"
-        @selected="executeAction"
-        @close="hide">
-      </activity-browser>
+        :selectable-levels="supportedLevels" />
       <create-activity
         v-else
-        :parent="anchor"
-        :supportedLevels="supportedLevels"
         @create="executeAction"
-        @close="hide">
-      </create-activity>
+        @close="hide"
+        :parent="anchor"
+        :supported-levels="supportedLevels" />
     </div>
   </div>
 </template>

@@ -1,10 +1,10 @@
 <template>
   <v-app id="app">
-    <navbar v-if="user" :user="user"/>
+    <navbar v-if="user" :user="user" />
     <v-content>
-      <router-view class="view grey lighten-3"/>
+      <router-view class="view grey lighten-3" />
     </v-content>
-    <confirmation-modal/>
+    <confirmation-modal />
   </v-app>
 </template>
 

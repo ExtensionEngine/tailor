@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <publishing v-if="isAdmin || isCourseAdmin"/>
+    <publishing v-if="isAdmin || isCourseAdmin" />
     <v-chip :color="config.color" label dark small class="type-label">
       {{ config.label.toUpperCase() }}
     </v-chip>
@@ -8,21 +8,16 @@
       <meta-input
         v-for="it in metadata"
         :key="`${activity._cid}.${it.key}`"
-        :meta="it"
-        @update="updateActivity">
-      </meta-input>
+        @update="updateActivity"
+        :meta="it" />
     </div>
     <div class="relationships-element">
       <relationship
         v-for="relationship in config.relationships"
-        v-bind="relationship"
-        :key="`${activity._cid}.${relationship.type}`">
-      </relationship>
+        :key="`${activity._cid}.${relationship.type}`"
+        v-bind="relationship" />
     </div>
-    <discussion
-      editor-position="bottom"
-      class="discussion">
-    </discussion>
+    <discussion editor-position="bottom" class="discussion" />
   </div>
 </template>
 
