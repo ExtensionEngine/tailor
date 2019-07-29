@@ -7,12 +7,12 @@
       clearable />
     <v-list :expand="true" avatar two-line>
       <v-list-group
-        v-for="(group, name) in filteredRegistry"
-        :key="name"
+        v-for="(group, groupName) in filteredRegistry"
+        :key="groupName"
         value="true">
         <template v-slot:activator>
           <v-list-tile>
-            <v-list-tile-title>{{ name | parseName }}</v-list-tile-title>
+            <v-list-tile-title>{{ groupName | parseName }}</v-list-tile-title>
           </v-list-tile>
         </template>
         <v-list-tile
