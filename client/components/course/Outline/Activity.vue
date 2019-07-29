@@ -58,10 +58,10 @@
         :list="children"
         :options="{ handle: '.activity' }">
         <activity
-          v-for="(subActivity, index) in children"
+          v-for="(subActivity, childIndex) in children"
           :key="subActivity._cid"
           v-bind="subActivity"
-          :index="index + 1"
+          :index="childIndex + 1"
           :level="level + 1"
           :activities="activities"
           class="sub-activity" />
@@ -86,7 +86,8 @@ export default {
   mixins: [reorderMixin],
   inheritAttrs: false,
   props: {
-    cid: { type: String, required: true },
+    /* eslint-disable vue/prop-name-casing */
+    _cid: { type: String, required: true },
     id: { type: Number, default: null },
     parentId: { type: Number, default: null },
     courseId: { type: Number, required: true },
