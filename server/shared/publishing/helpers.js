@@ -62,7 +62,6 @@ function deprecateRepository(repository, deprecatedAt) {
     let existing = find(catalog, { id: repository.id });
     if (!existing) return;
     const repositoryData = { ...getRepositoryAttrs(repository), deprecatedAt };
-    if (deprecatedAt) repositoryData.deprecatedAt = deprecatedAt;
     Object.assign(existing, omit(repositoryData, ['id']));
     const data = Buffer.from(JSON.stringify(catalog), 'utf8');
     return storage.saveFile('repository/index.json', data);
