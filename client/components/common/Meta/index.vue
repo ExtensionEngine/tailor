@@ -1,9 +1,8 @@
 <template>
   <component
     :is="component"
-    :meta="meta"
-    @update="(key, value) => $emit('update', key, value)">
-  </component>
+    @update="(key, value) => $emit('update', key, value)"
+    :meta="meta" />
 </template>
 
 <script>

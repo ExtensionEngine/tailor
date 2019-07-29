@@ -1,5 +1,6 @@
 <template>
   <v-select
+    @change="update"
     :value="meta.value"
     :name="meta.key"
     :items="meta.options"
@@ -7,12 +8,10 @@
     :label="meta.label"
     :multiple="isMultiSelect"
     :chips="isMultiSelect"
-    @change="update"
     item-text="label"
     item-value="value"
     deletable-chips
-    outline>
-  </v-select>
+    outline />
 </template>
 
 <script>
