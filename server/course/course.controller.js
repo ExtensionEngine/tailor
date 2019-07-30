@@ -54,11 +54,6 @@ function patch({ body, course, user }, res) {
 
 function remove({ course, user }, res) {
   return course.destroy({ context: { userId: user.id } })
-    .then(course => {
-      const deprecatedAt = course.dataValues.deleted_at;
-      if (!deprecatedAt) return;
-      publishingService.deprecateRepository(course.dataValues, deprecatedAt);
-    })
     .then(() => res.status(204).send());
 }
 

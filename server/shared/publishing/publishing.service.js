@@ -25,8 +25,8 @@ class PublishingService {
     return this.queue.add(() => unpublishActivity(repository, activity));
   }
 
-  deprecateRepository(repository, deprecatedAt) {
-    return this.queue.add(() => deprecateRepository(repository, deprecatedAt));
+  deprecateRepository(repository) {
+    return this.queue.add(() => deprecateRepository(repository));
   }
 }
 

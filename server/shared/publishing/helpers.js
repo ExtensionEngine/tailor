@@ -56,7 +56,8 @@ function updateRepositoryCatalog(repository, publishedAt) {
   });
 }
 
-function deprecateRepository(repository, deprecatedAt) {
+function deprecateRepository(repository) {
+  const deprecatedAt = repository.deletedAt;
   return storage.getFile('repository/index.json').then(buffer => {
     let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
     let existing = find(catalog, { id: repository.id });
