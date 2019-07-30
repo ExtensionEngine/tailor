@@ -111,18 +111,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.relationship {
-  margin-top: 40px;
-  padding: 3px 8px;
-
-  label {
-    margin-bottom: 10px;
-    color: #808080;
-  }
-
-  &:hover {
-    background-color: #f5f5f5;
-    cursor: pointer;
-  }
+/deep/ .v-chip .v-chip__content {
+  z-index: 0;
 }
 </style>
