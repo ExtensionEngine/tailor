@@ -2,12 +2,13 @@
   <v-text-field
     v-model="value"
     v-validate="meta.validate"
-    @change="validateAndUpdate"
+    @change="onChange"
     :name="meta.key"
-    :error-messages="vErrors.collect(meta.key)"
+    :data-vv-as="meta.label"
     :label="meta.label"
     :placeholder="meta.placeholder"
-    outline />
+    :error-messages="vErrors.collect(meta.key)"
+    box />
 </template>
 
 <script>
@@ -25,9 +26,9 @@ export default {
     };
   },
   methods: {
-    validateAndUpdate() {
-      this.$validator.validate(this.meta.key).then(result => {
-        if (!result) return;
+    onChange() {
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
         if (this.value === this.meta.value) return;
         this.$emit('update', this.meta.key, this.value);
       });
