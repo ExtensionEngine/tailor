@@ -9,10 +9,10 @@
     :label="label"
     :name="type"
     item-text="data.name"
-    item-value="id"
     :data-vv-name="label"
     :chips="multiple"
     deletable-chips
+    return-object
     box />
 </template>
 
@@ -87,13 +87,7 @@ export default {
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
     },
-    onRelationshipChanged(selected) {
-      let value = null;
-      if (this.multiple) {
-        value = selected.map(id => this.options.find(it => it.id === id));
-      } else {
-        value = this.options.find(it => it.id === selected);
-      }
+    onRelationshipChanged(value) {
       const associations = compact(castArray(value));
       let activity = cloneDeep(this.activity) || {};
       set(activity, `refs.${this.type}`, map(associations, 'id'));
