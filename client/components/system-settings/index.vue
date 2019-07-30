@@ -48,9 +48,9 @@ export default {
   left: 0;
   width: 100%;
   height: 46px;
+  color: #444;
   text-align: left;
   text-transform: uppercase;
-  color: #444;
   z-index: 2;
 }
 </style>
