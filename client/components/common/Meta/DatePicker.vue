@@ -1,58 +1,57 @@
 <template>
   <div class="datepicker control">
     <span class="title">{{ meta.label }}</span>
-    <div class="form-group">
-      <datetime
+    <div class="formatted-date mt-3">
+      <div v-if="!showPicker">
+        {{ formattedDate }}
+        <v-icon @click="showPicker = true" size="22" class="ml-2" color="primary">
+          mdi-pencil-outline
+        </v-icon>
+      </div>
+      <v-date-picker
+        v-else
         v-model="value"
-        @input="value => $emit('update', meta.key, value)"
-        :type="type"
-        :input-class="'form-control'" />
+        @change="update"
+        width="100%"
+        :type="type" />
     </div>
   </div>
 </template>
 
 <script>
-import 'vue-datetime/dist/vue-datetime.css';
-import { Datetime } from 'vue-datetime';
-
 export default {
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
   data() {
-    return { value: this.meta.value };
+    return {
+      value: new Date(this.meta.value).toISOString().substr(0, 10),
+      showPicker: false
+    };
   },
   computed: {
+    formattedDate() {
+      return new Date(this.value).toDateString();
+    },
     type() {
       return this.meta.type.toLowerCase();
     }
   },
-  components: { Datetime }
+  methods: {
+    update(value) {
+      this.$emit('update', this.meta.key, value);
+      this.showPicker = false;
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .control {
   padding: 7px 8px;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
-
-  /deep/ {
-    .vdatetime-input {
-      cursor: pointer;
-    }
-
-    .form-control {
-      background-color: inherit;
-    }
-  }
 }
 
-.title {
-  display: block;
-  margin-bottom: 10px;
-  color: #808080;
+.formatted-date {
+  font-size: 16px;
 }
 </style>
