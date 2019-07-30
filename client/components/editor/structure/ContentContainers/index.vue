@@ -8,15 +8,9 @@
       Click the button below to create first {{ name | capitalize }}.
     </v-alert>
     <component
+      :is="containerName"
       v-for="(container, index) in containerGroup"
       :key="container._cid || container.id"
-      :is="containerName"
-      v-bind="$attrs"
-      :container="container"
-      :name="name"
-      :position="index"
-      :activities="activities"
-      :tes="tes"
       @addSubcontainer="save"
       @updateSubcontainer="update"
       @deleteSubcontainer="requestContainerDeletion"
@@ -24,7 +18,13 @@
       @updateElement="updateElement"
       @reorderElement="reorderContentElements"
       @deleteElement="requestElementDeletion"
-      @delete="requestContainerDeletion(container)"/>
+      @delete="requestContainerDeletion(container)"
+      :container="container"
+      :name="name"
+      :position="index"
+      :activities="activities"
+      :tes="tes"
+      v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="primary">
         <v-icon class="pr-2">mdi-plus</v-icon>

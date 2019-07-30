@@ -1,20 +1,20 @@
 <template>
   <div class="group-introduction">
     <element-list
+      @add="$emit('saveElement', $event)"
+      @reorder="$emit('reorderElement', $event)"
       :elements="introductionElements"
       :activity="group"
-      :supportedTypes="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
-      :layout="true"
-      @add="$emit('saveElement', $event)"
-      @reorder="$emit('reorderElement', $event)">
+      :supported-types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
+      :layout="true">
       <contained-content
         slot="list-item"
         slot-scope="{ element, dragged }"
-        :element="element"
-        :setWidth="false"
-        :isDragged="dragged"
         @save="save(element, $event)"
-        @delete="$emit('deleteElement', element)"/>
+        @delete="$emit('deleteElement', element)"
+        :element="element"
+        :set-width="false"
+        :is-dragged="dragged" />
     </element-list>
   </div>
 </template>

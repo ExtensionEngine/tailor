@@ -26,19 +26,19 @@
       <assessment-group
         v-for="(group, index) in groups"
         :key="group._cid"
-        :group="group"
-        :tes="tes"
-        :objectives="examObjectives"
-        :position="index"
         @saveElement="$emit('saveElement', $event)"
         @updateElement="$emit('updateElement', $event)"
         @reorderElement="$emit('reorderElement', $event)"
         @deleteElement="$emit('deleteElement', $event)"
         @update="$emit('updateSubcontainer', $event)"
-        @delete="$emit('deleteSubcontainer', group, 'group')"/>
+        @delete="$emit('deleteSubcontainer', group, 'group')"
+        :group="group"
+        :tes="tes"
+        :objectives="examObjectives"
+        :position="index" />
       <v-btn
-        :disabled="!container.id"
         @click.stop="createGroup"
+        :disabled="!container.id"
         color="primary"
         outline
         class="my-5">

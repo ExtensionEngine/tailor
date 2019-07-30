@@ -18,12 +18,12 @@
             </span>
           </div>
           <input
-            v-focus="{ groupKey }"
             :ref="`group${groupKey}`"
-            :value="groupName"
+            v-focus="{ groupKey }"
             @change="updateGroupName(groupKey)"
             @keyup.enter.esc="focus(groupKey)"
             @blur="isFocused(groupKey) && focus(groupKey)"
+            :value="groupName"
             class="form-control group-input back"
             placeholder="Insert text here ...">
         </div>
@@ -46,12 +46,12 @@
               </span>
             </div>
             <input
-              v-focus="{ groupKey, answerKey }"
               :ref="`answer${answerKey}`"
-              :value="answer"
+              v-focus="{ groupKey, answerKey }"
               @change="updateAnswer(answerKey)"
               @keyup.enter.esc="focus(groupKey, answerKey)"
               @blur="isFocused(groupKey, answerKey) && focus(groupKey, answerKey)"
+              :value="answer"
               class="form-control response-input back"
               placeholder="Insert text here ...">
           </li>

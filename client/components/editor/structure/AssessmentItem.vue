@@ -1,18 +1,18 @@
 <template>
   <li
-    :class="{ hover }"
     @mouseenter="hover = true"
     @mouseleave="hover = false"
+    :class="{ hover }"
     class="list-group-item assessment-item elevation-1">
     <span v-if="draggable" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
     <tce-question-container
       v-if="expanded"
-      :element="assessment"
       @selected="$emit('selected')"
       @delete="$emit('delete')"
-      @save="save">
+      @save="save"
+      :element="assessment">
       <div slot-scope="{ isEditing }" class="pb-5">
         <v-container pa-0>
           <v-layout>
@@ -37,14 +37,14 @@
             </v-flex>
           </v-layout>
         </v-container>
-        <slot v-bind="{ isEditing }" name="header"/>
+        <slot v-bind="{ isEditing }" name="header"></slot>
       </div>
     </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
       <v-chip color="blue-grey darken-1" label dark small>
         {{ elementConfig.subtype }}
       </v-chip>
-      <span class="question">{{ question }}</span>
+      <span class="question">{{ question | truncate(50) }}</span>
       <v-btn
         @click.stop="$emit('delete')"
         color="primary"

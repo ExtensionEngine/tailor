@@ -1,20 +1,20 @@
 <template>
   <div @selected="$emit('selected')" class="assessment-container">
     <div class="assessment">
-      <slot v-bind="{ isEditing }"/>
+      <slot v-bind="{ isEditing }"></slot>
       <question
+        @update="update"
         :assessment="editedElement"
-        :isEditing="isEditing"
-        :errors="errors"
-        @update="update"/>
+        :is-editing="isEditing"
+        :errors="errors" />
       <component
         :is="resolveComponentName(element)"
-        :assessment="editedElement.data"
-        :isGraded="isGraded"
-        :isEditing="isEditing"
-        :errors="errors"
         @update="update"
-        @alert="setAlert"/>
+        @alert="setAlert"
+        :assessment="editedElement.data"
+        :is-graded="isGraded"
+        :is-editing="isEditing"
+        :errors="errors" />
       <div :class="{ 'has-error': hintError }" class="form-group">
         <span class="form-label">Hint</span>
         <input
@@ -26,23 +26,23 @@
       </div>
       <feedback
         v-if="showFeedback"
+        @update="updateFeedback"
         :answers="editedElement.data.answers"
         :feedback="editedElement.data.feedback"
-        :isGraded="isGraded"
-        :isEditing="isEditing"
-        @update="updateFeedback"/>
+        :is-graded="isGraded"
+        :is-editing="isEditing" />
       <div class="alert-container">
         <div v-show="alert.text" :class="alert.type" class="alert">
           <strong>{{ alert.text }}</strong>
         </div>
       </div>
       <controls
-        :isEditing="isEditing"
         @edit="edit"
         @save="save"
         @remove="remove"
         @cancel="cancel"
-        class="controls"/>
+        class="controls"
+        :is-editing="isEditing" />
     </div>
   </div>
 </template>

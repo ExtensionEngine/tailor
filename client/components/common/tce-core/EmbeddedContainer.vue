@@ -1,16 +1,17 @@
 <template>
   <element-list
-    :elements="embeds"
-    :supportedTypes="types"
     @add="addItem"
-    @reorder="reorderItem">
+    @update="reorderItem"
+    :elements="embeds"
+    :supported-types="types">
     <contained-content
       slot="list-item"
       slot-scope="{ element, isDragged }"
-      :element="element"
-      :isDragged="isDragged"
       @save="data => saveItem(element, data)"
-      @delete="$emit('delete', element)"/>
+      @delete="$emit('delete', element)"
+      :element="element"
+      :is-dragged="isDragged"
+      v-bind="$attrs" />
   </element-list>
 </template>
 
@@ -24,6 +25,7 @@ import values from 'lodash/values';
 
 export default {
   name: 'embedded-container',
+  inheritAttrs: false,
   props: {
     container: { type: Object, required: true },
     types: { type: Array, default() { return ['HTML', 'IMAGE']; } }

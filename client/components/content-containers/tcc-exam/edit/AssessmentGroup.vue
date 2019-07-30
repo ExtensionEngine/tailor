@@ -18,29 +18,29 @@
     <h3>Question group {{ position | toLetter }}</h3>
     <h4>Introduction</h4>
     <group-introduction
-      :group="group"
-      :tes="tes"
       @saveElement="$emit('saveElement', $event)"
       @reorderElement="$emit('reorderElement', $event)"
-      @deleteElement="$emit('deleteElement', $event)"/>
+      @deleteElement="$emit('deleteElement', $event)"
+      :group="group"
+      :tes="tes" />
     <h4>Questions</h4>
     <div v-if="!hasAssessments" class="well">
       Click the button below to Create first Assessment.
     </div>
     <element-list
+      @add="addAssessment"
+      @reorder="$emit('reorderElement', $event)"
       :elements="assessments"
       :activity="group"
-      :supportedTypes="['ASSESSMENT']"
-      @add="addAssessment"
-      @reorder="$emit('reorderElement', $event)">
+      :supported-types="['ASSESSMENT']">
       <assessment-item
         slot="list-item"
         slot-scope="{ element }"
+        @save="saveAssessment"
+        @delete="deleteElement(element)"
         :assessment="element"
         :objectives="objectives"
-        :objectiveLabel="objectiveLabel"
-        @save="saveAssessment"
-        @delete="deleteElement(element)"/>
+        :objective-label="objectiveLabel" />
     </element-list>
   </div>
 </template>

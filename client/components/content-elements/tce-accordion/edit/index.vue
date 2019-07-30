@@ -7,10 +7,10 @@
       <accordion-item
         v-for="it in items"
         :key="it.id"
-        :item="it"
-        :embeds="embedsByItem[it.id]"
         @save="saveItem"
-        @delete="deleteItem"/>
+        @delete="deleteItem"
+        :item="it"
+        :embeds="embedsByItem[it.id]" />
     </ul>
   </div>
 </template>

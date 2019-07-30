@@ -1,11 +1,11 @@
 <template>
   <assessment-item
-    :assessment="assessment"
-    :expanded="expanded"
-    :draggable="true"
     @selected="expanded = !expanded"
     @save="save"
-    @delete="$emit('delete')">
+    @delete="$emit('delete')"
+    :assessment="assessment"
+    :expanded="expanded"
+    :draggable="true">
     <template slot="header" slot-scope="{ isEditing }">
       <v-container v-if="objectives.length" class="pa-0 mt-2">
         <v-layout justify-end>
@@ -15,9 +15,9 @@
               :options="objectives"
               :searchable="true"
               :disabled="!isEditing"
-              :trackBy="'id'"
-              :customLabel="it => it.data ? it.data.name : ''"
-              :placeholder="objectiveLabel"/>
+              :track-by="'id'"
+              :custom-label="it => it.data ? it.data.name : ''"
+              :placeholder="objectiveLabel" />
           </v-flex>
         </v-layout>
       </v-container>

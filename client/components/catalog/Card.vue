@@ -1,12 +1,12 @@
 <template>
   <v-card @click="navigateTo" class="repository-card">
     <div class="card-heading blue-grey darken-4">
-      <v-chip :color="repository.data.color" small label class="ml-3 mr-0"/>
+      <v-chip :color="repository.data.color" small label class="ml-3 mr-0" />
       <v-chip color="grey lighten-3" small label class="ml-0">
         {{ schema }}
       </v-chip>
       <v-card-title class="headline grey--text text--lighten-4 pt-1">
-        {{ name }}
+        {{ name | truncate(70) }}
       </v-card-title>
     </div>
     <div class="card-body">
@@ -15,7 +15,9 @@
         <span>{{ userAction.createdAt | formatDate }}</span>
         <div>{{ userAction.user.email }}</div>
       </div>
-      <div class="desc grey--text text--darken-3">{{ description }}</div>
+      <div class="desc grey--text text--darken-3">
+        {{ description | truncate(100) }}
+      </div>
     </div>
     <v-card-actions class="px-2 py-1">
       <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" icon>
@@ -34,15 +36,14 @@ import first from 'lodash/first';
 import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
 import { mapActions } from 'vuex';
-import truncate from 'truncate';
 
 export default {
   props: {
     repository: { type: Object, required: true }
   },
   computed: {
-    name: ({ repository }) => truncate(repository.name, 70),
-    description: ({ repository }) => truncate(repository.description, 100),
+    name: ({ repository }) => repository.name,
+    description: ({ repository }) => repository.description,
     schema: ({ repository }) => getSchema(repository.schema).name,
     userAction: ({ repository }) => first(repository.revisions),
     isPinned: ({ repository }) => get(repository, 'courseUser.pinned', false)

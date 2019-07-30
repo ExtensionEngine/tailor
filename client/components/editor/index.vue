@@ -14,26 +14,26 @@
           </v-btn>
         </span>
       </toolbar>
-      <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
+      <main-sidebar :activity="activity" :focused-element="focusedElement" />
       <transition name="slide">
         <meta-sidebar
           v-if="showSidebar"
           :key="focusedElement._cid"
           :metadata="metadata"
-          :element="focusedElement"/>
+          :element="focusedElement" />
       </transition>
     </template>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
       <div class="container">
-        <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
+        <v-progress-circular v-if="showLoader" color="primary" indeterminate />
         <template v-else>
           <content-containers
             v-for="(containerGroup, type) in contentContainers"
             :key="type"
-            :containerGroup="containerGroup"
-            :parentId="activity.id"
-            v-bind="getContainerConfig(type)"/>
-          <assessments v-if="showAssessments"/>
+            :container-group="containerGroup"
+            :parent-id="activity.id"
+            v-bind="getContainerConfig(type)" />
+          <assessments v-if="showAssessments" />
         </template>
       </div>
     </div>
@@ -57,7 +57,6 @@ import MetaSidebar from './MetaSidebar';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
-import truncate from 'truncate';
 
 export default {
   name: 'editor',
@@ -96,9 +95,6 @@ export default {
     }),
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
-    },
-    truncate(str, len = 50) {
-      return truncate(str, len);
     },
     onMousedown() {
       this.mousedownCaptured = true;
