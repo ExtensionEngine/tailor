@@ -47,11 +47,6 @@ class User extends Model {
         defaultValue: '',
         field: 'last_name'
       },
-      location: {
-        type: STRING,
-        defaultValue: '',
-        field: 'location'
-      },
       imgUrl: {
         type: TEXT,
         field: 'img_url',
@@ -61,8 +56,9 @@ class User extends Model {
         type: VIRTUAL,
         get() {
           return pick(this, [
-            'id', 'email', 'role', 'firstName', 'lastName', 'location',
-            'imgUrl', 'createdAt', 'updatedAt', 'deletedAt']);
+            'id', 'email', 'role', 'firstName', 'lastName',
+            'imgUrl', 'createdAt', 'updatedAt', 'deletedAt'
+          ]);
         }
       },
       token: {
