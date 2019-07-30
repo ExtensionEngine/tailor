@@ -27,16 +27,17 @@ export default {
     isMultiSelect() {
       return this.meta.type === 'MULTISELECT';
     },
-    isCollection() {
-      return isObject(this.meta.options[0]);
+    areOptionsPrimitive() {
+      return !isObject(this.meta.options[0]);
+    },
+    value() {
+      const { meta: { value, options }, areOptionsPrimitive } = this;
+      if (areOptionsPrimitive) return value;
+      return value.map(val => options.find(it => it.value === val));
     }
   },
   methods: {
     update(data) {
-      const { isCollection, meta: { options } } = this;
-      if (isCollection) {
-        data = data.map(it => options.find(({ value }) => value === it));
-      }
       return this.$emit('update', this.meta.key, data);
     }
   }
