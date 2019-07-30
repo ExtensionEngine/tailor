@@ -1,5 +1,5 @@
 <template>
-  <v-layout justify-center py-5 mt-4>
+  <v-layout justify-center pt-5 pb-4 mb-1>
     <v-avatar size="120px">
       <div class="img-container">
         <img v-if="image" :src="image">
@@ -7,33 +7,34 @@
         <v-icon @click="dialog = true" dark class="overlay">mdi-camera</v-icon>
       </div>
     </v-avatar>
-    <avatar-dialog :visible.sync="dialog" :imgUrl.sync="image"/>
+    <avatar-dialog :visible.sync="dialog" :imgUrl="image" @update="updateAvatar"/>
   </v-layout>
 </template>
 
 <script>
-import AvatarDialog from './Dialog';
+import { mapActions, mapState } from 'vuex';
+import AvatarDialog from './AvatarDialog';
+
+const snackOpts = { right: true };
 
 export default {
   name: 'user-avatar',
-  props: {
-    imgUrl: { type: String, default: null }
-  },
   data() {
-    return {
-      image: null,
-      dialog: false
-    };
+    return { dialog: false };
   },
-  watch: {
-    image(value) {
-      this.$emit('update:imgUrl', value);
-    },
-    imgUrl: {
-      immediate: true,
-      handler(imgUrl) {
-        this.image = imgUrl;
-      }
+  computed: {
+    ...mapState({ user: state => state.auth.user }),
+    image() {
+      return this.user.imgUrl;
+    }
+  },
+  methods: {
+    ...mapActions(['updateInfo']),
+    updateAvatar(imgUrl) {
+      return this.updateInfo({ imgUrl }).then(() => {
+        const { $snackbar } = this;
+        $snackbar.success('Your profile picture has been updated.', snackOpts);
+      });
     }
   },
   components: { AvatarDialog }

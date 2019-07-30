@@ -1,33 +1,25 @@
 <template>
-  <v-dialog v-model="show" width="500">
+  <v-dialog v-model="show" width="640">
     <v-card>
+      <v-card-title class="elevation-2 primary" >
+        <v-icon>mdi-lock-open</v-icon>
+        <h4>Change Avatar</h4>
+        <v-spacer/>
+        <v-icon @click="close">mdi-close-circle-outline</v-icon>
+      </v-card-title>
       <v-card-text>
         <croppa
           v-model="croppa"
           v-bind="options"
-          :initial-image="image"
-          @new-image-drawn="onNewImage"
-          @zoom="onZoom"
-          @dblclick="onZoom"
+          :initial-image="imgUrl"
           prevent-white-space/>
-        <v-slider
-          v-model="sliderVal"
-          v-bind="sliderRange"
-          :hide-details="true"
-          :step="0.01"
-          @input="onSliderChange"
-          @click:append="croppa.zoomIn()"
-          @click:prepend="croppa.zoomOut()"
-          always-dirty
-          append-icon="mdi-plus"
-          prepend-icon="mdi-minus"
-          color="light-blue darken-3"
-          class="slider"/>
       </v-card-text>
+      <v-divider/>
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn @click="chooseFile" flat>Upload</v-btn>
-        <v-btn @click="confirm" color="error" flat>Confirm</v-btn>
+        <v-spacer/>
+        <v-btn v-if="croppa.imageSet" @click="croppa.remove()" flat>Remove</v-btn>
+        <v-btn @click="croppa.chooseFile()" flat>Upload</v-btn>
+        <v-btn @click="confirm" color="primary">Update</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -44,17 +36,15 @@ export default {
   },
   data() {
     return {
-      croppa: null,
-      image: null,
-      sliderVal: 0,
-      sliderRange: { min: 0, max: 0 }
+      croppa: {},
+      image: null
     };
   },
   computed: {
     options: vm => ({
       accept: 'image/*',
-      width: 240,
-      height: 240
+      width: 220,
+      height: 220
     }),
     show: {
       get() {
@@ -66,42 +56,14 @@ export default {
     }
   },
   methods: {
-    chooseFile() {
-      this.croppa.chooseFile();
-    },
     close() {
       this.$emit('update:visible', false);
     },
     confirm() {
       const { mimetype, compressionRate } = avatarOpts;
       const imgUrl = this.croppa.generateDataUrl(mimetype, compressionRate);
-      this.$emit('update:imgUrl', imgUrl);
+      this.$emit('update', imgUrl);
       this.close();
-    },
-    onSliderChange(val) {
-      if (!val) return;
-      this.croppa.scaleRatio = val;
-    },
-    onNewImage() {
-      const { scaleRatio } = this.croppa;
-      Object.assign(this.sliderRange, {
-        min: scaleRatio,
-        max: scaleRatio * 2
-      });
-      this.sliderVal = this.sliderRange.min;
-    },
-    onZoom(e) {
-      if (!e) return (this.sliderVal = this.croppa.scaleRatio);
-      this.croppa.scaleRatio *= 1.2;
-      this.sliderVal = this.croppa.scaleRatio;
-    }
-  },
-  watch: {
-    imgUrl: {
-      immediate: true,
-      handler(imgUrl) {
-        this.image = imgUrl;
-      }
     }
   }
 };
@@ -112,6 +74,21 @@ $image-border: 8px solid #e3e3e3;
 $image-bg-color: #f5f5f5;
 $image-width: 240px;
 $image-height: 240px;
+
+.v-card__title {
+  height: 55px;
+  color: #fff;
+
+  .v-icon {
+    margin-right: 8px;
+    color: inherit;
+  }
+
+  h4 {
+    margin: 0 8px;
+    font-weight: 300;
+  }
+}
 
 .v-dialog__content {
   align-items: flex-start;

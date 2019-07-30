@@ -92,6 +92,7 @@ const defaultPage = () => ({
 });
 
 const headers = () => [
+  { sortable: false },
   { text: 'Email', value: 'email' },
   { text: 'Role', value: 'role' },
   { text: 'Date Created', value: 'createdAt' },
