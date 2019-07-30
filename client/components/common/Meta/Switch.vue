@@ -2,9 +2,8 @@
   <div class="control">
     <span class="title">{{ meta.label }}</span>
     <v-switch
-      v-model="value"
-      @change="$emit('update', meta.key, value)"
-      :id="meta.key"
+      @change="value => $emit('update', meta.key, value)"
+      :input-value="meta.value"
       :name="meta.key"
       :label="meta.description"
       color="primary" />
@@ -16,9 +15,6 @@ export default {
   name: 'switch-input',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
-  },
-  data() {
-    return { value: this.meta.value };
   }
 };
 </script>
