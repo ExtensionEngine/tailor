@@ -3,9 +3,9 @@
     <div v-if="revisions.length > 0" class="revisions white elevation-2">
       <ul>
         <revision-item
-          v-for="revision in bundledRevisions"
           :key="revision._cid"
-          :revision="revision" />
+          :revision="revision"
+          v-for="revision in bundledRevisions" />
       </ul>
     </div>
     <infinite-loading @infinite="fetchRevisions">

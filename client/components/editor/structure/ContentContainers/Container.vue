@@ -17,19 +17,19 @@
       Click the button below to create content.
     </v-alert>
     <tes-list
-      @add="addElement"
-      @insert="insert"
-      @update="reorder"
       :list="teachingElements"
       :activity="container"
       :types="types"
-      :layout="layout">
+      :layout="layout"
+      @add="addElement"
+      @insert="insert"
+      @update="reorder">
       <teaching-element
-        slot="list-item"
-        slot-scope="{ item, dragged, setWidth }"
         :set-width="setWidth"
         :dragged="dragged"
-        :element="item" />
+        :element="item"
+        slot="list-item"
+        slot-scope="{ item, dragged, setWidth }" />
     </tes-list>
   </div>
 </template>

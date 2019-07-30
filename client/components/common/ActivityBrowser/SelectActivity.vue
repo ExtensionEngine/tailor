@@ -12,9 +12,9 @@
         }}
       </div>
       <div
-        v-for="activity in currentLevel"
         :key="activity.id"
         :class="{ leaf: !hasChildren(activity), selectable: isSelectable(activity) }"
+        v-for="activity in currentLevel"
         class="activity-item">
         <span @click="show(activity)" class="name">
           {{ getName(activity) | truncate(100) }}

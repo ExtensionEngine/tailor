@@ -4,7 +4,7 @@
       <v-layout row class="catalog-actions">
         <create-repository />
         <v-flex md4 sm10 offset-md4 offset-sm1>
-          <search @update="setSearch($event)" :value="queryParams.search" />
+          <search :value="queryParams.search" @update="setSearch($event)" />
         </v-flex>
         <v-flex md3 sm1 class="text-sm-left pl-2">
           <v-tooltip open-delay="800" right>
@@ -17,13 +17,13 @@
             </template>
             <span>Toggle pinned</span>
           </v-tooltip>
-          <select-order @update="setOrder" :sort-by="sortBy" class="pl-2" />
+          <select-order :sort-by="sortBy" @update="setOrder" class="pl-2" />
         </v-flex>
       </v-layout>
       <v-layout row wrap>
         <v-flex
-          v-for="repository in repositories"
           :key="repository._cid"
+          v-for="repository in repositories"
           xs4
           class="px-2 py-3">
           <repository-card :repository="repository" />

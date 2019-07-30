@@ -4,24 +4,24 @@
     <span @click="addAnswer" class="btn btn-link mdi mdi-plus pull-right"></span>
     <ul>
       <li
-        v-for="(answer, index) in answers"
         :key="index"
-        :class="{ 'non-graded': !isGraded }">
-        <span v-if="isGraded" :class="{ 'has-error': !hasCorrectAnswers }">
+        :class="{ 'non-graded': !isGraded }"
+        v-for="(answer, index) in answers">
+        <span :class="{ 'has-error': !hasCorrectAnswers }" v-if="isGraded">
           <input
-            @change="toggleAnswer(index)"
             :checked="correct.includes(index)"
             :disabled="disabled"
+            @change="toggleAnswer(index)"
             type="checkbox">
         </span>
         <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
         <span :class="errorClass(index)" class="input-container">
           <input
             :ref="`input${index}`"
-            @change="updateAnswer(index)"
             :value="answers[index]"
             :disabled="disabled"
             :placeholder="isGraded ? 'Answer...' : 'Option...'"
+            @change="updateAnswer(index)"
             class="form-control">
         </span>
         <span @click="removeAnswer(index)" class="mdi mdi-close control"></span>

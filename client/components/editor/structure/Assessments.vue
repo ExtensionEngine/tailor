@@ -11,19 +11,19 @@
     </v-alert>
     <ul class="list-group">
       <assessment-item
-        v-for="it in assessments"
         :key="it._cid"
+        :assessment="it"
+        :expanded="isSelected(it)"
+        v-for="it in assessments"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @delete="requestRemoveConfirmation(it)"
-        :assessment="it"
-        :expanded="isSelected(it)" />
+        @delete="requestRemoveConfirmation(it)" />
     </ul>
     <add-element
-      @add="addAssessment"
       :include="['ASSESSMENT']"
       :activity="activity"
       :layout="false"
+      @add="addAssessment"
       large
       label="Add assessment" />
   </div>

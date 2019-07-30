@@ -1,18 +1,18 @@
 <template>
   <div
-    @click="focus"
     :class="{ focused: isFocused, frame }"
+    @click="focus"
     class="content-element">
     <component
       :is="componentName"
-      @add="$emit('add', $event)"
-      @save="$emit('save', $event)"
-      @delete="$emit('delete')"
-      @focus="focus"
       v-bind="$attrs"
       :element="element"
       :is-focused="isFocused"
-      :is-dragged="isDragged" />
+      :is-dragged="isDragged"
+      @add="$emit('add', $event)"
+      @save="$emit('save', $event)"
+      @delete="$emit('delete')"
+      @focus="focus" />
   </div>
 </template>
 

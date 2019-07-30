@@ -6,10 +6,10 @@
           <span>{{ userData ? 'Edit' : 'Create' }} User</span>
           <v-spacer />
           <v-btn
-            v-if="!isNewUser"
-            @click="reinvite"
             :disabled="isLoading"
             :loading="isLoading"
+            v-if="!isNewUser"
+            @click="reinvite"
             color="blue-grey"
             outline>
             Reinvite

@@ -4,9 +4,9 @@
     <div class="form-group">
       <datetime
         v-model="value"
-        @input="value => $emit('update', meta.key, value)"
         :type="type"
-        :input-class="'form-control'" />
+        :input-class="'form-control'"
+        @input="value => $emit('update', meta.key, value)" />
     </div>
   </div>
 </template>

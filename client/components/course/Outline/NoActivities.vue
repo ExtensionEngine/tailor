@@ -20,10 +20,10 @@
       </div>
       <div v-if="showLevelPicker" class="col-md-2">
         <multiselect
-          @input="onLevelSelected"
           :value="level"
           :options="levels"
-          :allow-empty="false" />
+          :allow-empty="false"
+          @input="onLevelSelected" />
       </div>
       <div class="col-md-2">
         <v-btn @click.stop="create" color="blue-grey" outline>Add</v-btn>

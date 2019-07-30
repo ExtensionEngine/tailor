@@ -50,8 +50,8 @@
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
                 <v-btn
-                  @click="archiveOrRestore(item)"
                   :disabled="user.id === item.id"
+                  @click="archiveOrRestore(item)"
                   color="primary"
                   small
                   flat
@@ -66,10 +66,10 @@
         </v-data-table>
       </div>
       <user-dialog
-        @updated="fetch(defaultPage)"
-        @created="fetch(defaultPage)"
         :visible.sync="userDialog"
-        :user-data="editedUser" />
+        :user-data="editedUser"
+        @updated="fetch(defaultPage)"
+        @created="fetch(defaultPage)" />
     </v-flex>
   </v-layout>
 </template>

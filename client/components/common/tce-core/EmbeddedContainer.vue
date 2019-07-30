@@ -1,16 +1,16 @@
 <template>
   <element-list
-    @add="addItem"
-    @update="reorderItem"
     :elements="embeds"
-    :supported-types="['HTML', 'IMAGE']">
+    :supported-types="['HTML', 'IMAGE']"
+    @add="addItem"
+    @update="reorderItem">
     <contained-content
+      :element="element"
+      :is-dragged="isDragged"
       slot="list-item"
       slot-scope="{ element, isDragged }"
       @save="data => saveItem(element, data)"
-      @delete="$emit('delete', element)"
-      :element="element"
-      :is-dragged="isDragged" />
+      @delete="$emit('delete', element)" />
   </element-list>
 </template>
 

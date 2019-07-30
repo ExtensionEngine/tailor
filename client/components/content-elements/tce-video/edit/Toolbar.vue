@@ -1,10 +1,10 @@
 <template>
   <div class="tce-video-toolbar">
     <input-asset
-      @input="save"
       :url="url"
       :public-url="publicUrl"
       :extensions="['.mp4']"
+      @input="save"
       upload-label="Upload mp4" />
   </div>
 </template>

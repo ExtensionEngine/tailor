@@ -27,10 +27,10 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn @click="close" :disabled="inProgress">Cancel</v-btn>
+        <v-btn :disabled="inProgress" @click="close">Cancel</v-btn>
         <v-btn
-          @click="cloneRepository"
           :loading="inProgress"
+          @click="cloneRepository"
           outline>
           Clone
         </v-btn>

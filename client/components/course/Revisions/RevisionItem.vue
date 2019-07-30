@@ -1,9 +1,9 @@
 <template>
   <li>
     <div
-      @click="toggle"
       :style="{ cursor: isTeachingElement ? 'pointer' : 'auto' }"
       :class="{ expanded }"
+      @click="toggle"
       class="revision">
       <div :style="{ color }" class="acronym">{{ acronym }}</div>
       <div class="content">
@@ -13,9 +13,9 @@
       <div class="date">{{ date }}</div>
     </div>
     <entity-revisions
-      v-if="expanded"
       :revision="revision"
-      :is-detached="!activity" />
+      :is-detached="!activity"
+      v-if="expanded" />
   </li>
 </template>
 

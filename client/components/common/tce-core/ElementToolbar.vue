@@ -2,10 +2,10 @@
   <div :key="id" class="element-toolbar-wrapper white elevation-1">
     <component
       :is="componentName"
-      v-if="componentExists"
-      @save="saveElement"
       :element="element"
-      :embed="embed" />
+      :embed="embed"
+      v-if="componentExists"
+      @save="saveElement" />
     <default-toolbar v-else />
     <slot name="embed-toolbar"></slot>
     <div class="delete-element">

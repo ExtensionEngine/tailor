@@ -1,8 +1,8 @@
 <template>
   <v-dialog
-    v-if="isAdmin"
     v-model="isVisible"
     v-hotkey="{ esc: hide }"
+    v-if="isAdmin"
     width="700px">
     <v-btn
       slot="activator"
@@ -53,7 +53,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="hide" :disabled="showLoader">Cancel</v-btn>
+          <v-btn :disabled="showLoader" @click="hide">Cancel</v-btn>
           <v-btn :loading="showLoader" outline type="submit">Create</v-btn>
         </v-card-actions>
       </v-card>

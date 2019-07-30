@@ -23,21 +23,21 @@
       Click the button below to Create first Assessment.
     </div>
     <tes-list
-      @add="addAssessment"
-      @update="reorderAssessment"
       :list="assessments"
       :activity="group"
       :types="['ASSESSMENT']"
+      @add="addAssessment"
+      @update="reorderAssessment"
       embedded>
       <assessment-item
+        :exam="exam"
+        :assessment="item"
+        :expanded="isSelected(item)"
         slot="list-item"
         slot-scope="{ item }"
         @selected="toggleSelect(item)"
         @save="saveAssessment"
-        @delete="item.id ? requestDeletion(item) : remove(item)"
-        :exam="exam"
-        :assessment="item"
-        :expanded="isSelected(item)" />
+        @delete="item.id ? requestDeletion(item) : remove(item)" />
     </tes-list>
   </div>
 </template>

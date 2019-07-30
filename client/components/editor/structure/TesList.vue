@@ -3,16 +3,16 @@
     :class="{ 'embeded-elements': embedded }"
     class="list-group">
     <draggable
+      :list="list"
+      :options="options"
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
       @update="$emit('update', $event)"
-      :list="list"
-      :options="options"
       class="row">
       <div
-        v-for="(item, index) in list"
         :key="item._cid || item.id"
         :class="getContainerClasses(item)"
+        v-for="(item, index) in list"
         class="list-item-container">
         <inline-activator
           v-if="enableAdd && !embedded"
@@ -27,16 +27,16 @@
     </draggable>
     <div class="add-element-container mt-5">
       <add-element
-        v-if="enableAdd"
-        @hidden="onHiddenElementDrawer"
-        @add="addElement"
         :include="types"
         :activity="activity"
         :position="insertPosition"
         :layout="layout"
         :show="isElementDrawerVisible"
         :large="!embedded"
-        :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'" />
+        :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'"
+        v-if="enableAdd"
+        @hidden="onHiddenElementDrawer"
+        @add="addElement" />
     </div>
   </div>
 </template>

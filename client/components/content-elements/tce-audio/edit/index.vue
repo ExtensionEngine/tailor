@@ -15,10 +15,10 @@
       </div>
       <div class="audio-container">
         <aplayer
+          :music="playerOptions"
           v-if="source"
           v-show="!error"
           @error="error = 'Audio cannot be played.'"
-          :music="playerOptions"
           mode="order" />
         <div v-if="error" class="error">
           <div class="message">

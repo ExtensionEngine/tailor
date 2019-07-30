@@ -6,8 +6,8 @@
     </span>
     <ul class="dropdown-menu" role="menu">
       <li
-        v-for="action in actions"
         :key="action.name"
+        v-for="action in actions"
         @click="trigger(action.name)"
         class="btn btn-link btn-sm">
         {{ action.label }}

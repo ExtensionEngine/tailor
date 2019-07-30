@@ -3,18 +3,18 @@
     <div class="assessment">
       <slot></slot>
       <question
-        @update="update"
         :assessment="editedElement"
         :is-editing="isEditing"
-        :errors="errors" />
+        :errors="errors"
+        @update="update" />
       <component
         :is="resolveComponentName(element)"
-        @update="update"
-        @alert="setAlert"
         :assessment="editedElement.data"
         :is-graded="isGraded"
         :is-editing="isEditing"
-        :errors="errors" />
+        :errors="errors"
+        @update="update"
+        @alert="setAlert" />
       <div :class="{ 'has-error': hintError }" class="form-group">
         <span class="form-label">Hint</span>
         <input
@@ -25,24 +25,24 @@
           placeholder="Optional hint">
       </div>
       <feedback
-        v-if="showFeedback"
-        @update="updateFeedback"
         :answers="editedElement.data.answers"
         :feedback="editedElement.data.feedback"
         :is-graded="isGraded"
-        :is-editing="isEditing" />
+        :is-editing="isEditing"
+        v-if="showFeedback"
+        @update="updateFeedback" />
       <div class="alert-container">
-        <div v-show="alert.text" :class="alert.type" class="alert">
+        <div :class="alert.type" v-show="alert.text" class="alert">
           <strong>{{ alert.text }}</strong>
         </div>
       </div>
       <controls
+        :is-editing="isEditing"
         @edit="edit"
         @save="save"
         @remove="remove"
         @cancel="cancel"
-        class="controls"
-        :is-editing="isEditing" />
+        class="controls" />
     </div>
   </div>
 </template>

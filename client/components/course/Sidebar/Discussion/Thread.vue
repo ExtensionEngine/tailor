@@ -1,12 +1,12 @@
 <template>
   <ul class="thread">
     <thread-comment
-      v-for="comment in thread"
       :key="comment._cid || comment.id"
-      @update="onUpdate"
-      @remove="onRemove"
       :comment="comment"
       :avatar="avatars"
+      v-for="comment in thread"
+      @update="onUpdate"
+      @remove="onRemove"
       class="clearfix comment" />
   </ul>
 </template>

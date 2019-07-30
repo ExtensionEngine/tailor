@@ -2,36 +2,36 @@
   <div class="form-group">
     <span class="form-label">{{ isGraded ? 'Answers' : 'Options' }}</span>
     <button
-      @click="addAnswer"
       :disabled="disabled"
+      @click="addAnswer"
       class="btn btn-link answers-add">
       <span class="mdi mdi-plus"></span>
     </button>
     <ul :class="{ 'non-graded': !isGraded }">
       <li
-        v-for="(answer, index) in answers"
-        :key="index">
+        :key="index"
+        v-for="(answer, index) in answers">
         <span
-          v-if="isGraded"
           :class="{ 'has-error': correctError }"
+          v-if="isGraded"
           class="answers-radio">
           <input
-            @change="selectAnswer(index)"
             :checked="correct === index"
             :disabled="disabled"
+            @change="selectAnswer(index)"
             type="radio">
         </span>
         <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
         <span :class="{ 'has-error': answerError(index) }" class="answers-input">
           <input
             :ref="`input${index}`"
-            @change="updateAnswer(index)"
             :value="answer"
             :disabled="disabled"
             :placeholder="isGraded ? 'Answer...' : 'Option...'"
+            @change="updateAnswer(index)"
             type="text">
         </span>
-        <button @click="removeAnswer(index)" :disabled="disabled" class="destroy">
+        <button :disabled="disabled" @click="removeAnswer(index)" class="destroy">
           <span class="mdi mdi-close"></span>
         </button>
       </li>

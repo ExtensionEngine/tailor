@@ -5,9 +5,9 @@
         Click the button below to Add first teaching element to your modal.
       </div>
       <embedded-container
+        :container="element.data"
         @save="$emit('save', $event)"
-        @delete="deleteEmbed($event)"
-        :container="element.data" />
+        @delete="deleteEmbed($event)" />
     </div>
     <button
       v-else
@@ -17,9 +17,9 @@
       {{ title }}
     </button>
     <preview
+      :elements="embeds"
       v-if="showModal"
-      @close="showModal = false"
-      :elements="embeds" />
+      @close="showModal = false" />
   </div>
 </template>
 

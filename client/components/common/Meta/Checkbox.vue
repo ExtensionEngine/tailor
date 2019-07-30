@@ -6,9 +6,9 @@
         <input
           :ref="meta.key"
           v-model="value"
-          @change="$emit('update', meta.key, value)"
           :id="meta.key"
           :name="meta.key"
+          @change="$emit('update', meta.key, value)"
           type="checkbox">
       </label>
       <p class="description">{{ meta.description }}</p>

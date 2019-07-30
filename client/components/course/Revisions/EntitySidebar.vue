@@ -4,10 +4,10 @@
     <div ref="revisions" class="revision-list">
       <transition-group name="fade-in">
         <span
-          v-for="(revision, index) in revisions"
           :key="revision.id"
-          @click="$emit('preview', revision)"
           :class="{ selected: isSelected(revision) }"
+          v-for="(revision, index) in revisions"
+          @click="$emit('preview', revision)"
           class="revision">
           <div class="description">
             <div>{{ formatDate(revision) }}</div>

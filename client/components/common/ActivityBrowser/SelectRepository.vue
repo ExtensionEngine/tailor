@@ -3,8 +3,8 @@
     <circular-progress v-if="showLoader" />
     <div v-else class="repository-list">
       <div
-        v-for="repository in repositories"
         :key="repository.id"
+        v-for="repository in repositories"
         @click="$emit('selected', repository)"
         class="repository-item">
         {{ repository.name }}

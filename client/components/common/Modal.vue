@@ -1,9 +1,9 @@
 <template>
   <transition name="modal">
     <div
-      v-show="show"
       :backdrop="backdrop"
       :class="{ in: show, out: !show }"
+      v-show="show"
       class="modal"
       role="alertdialog"
       aria-hidden="true">

@@ -25,10 +25,10 @@
           class="pdf">
         </div>
         <img
+          :src="source.src"
           v-if="safari"
           v-show="false"
-          @error="showViewer = false"
-          :src="source.src">
+          @error="showViewer = false">
         <div v-show="showError" class="error">
           <div class="message">
             <span class="icon mdi mdi-alert"></span>

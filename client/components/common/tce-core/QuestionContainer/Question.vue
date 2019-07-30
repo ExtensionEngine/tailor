@@ -6,18 +6,18 @@
       class="question">
       <draggable v-model="question" :options="dragOptions" class="row">
         <contained-content
-          v-for="element in question"
           :key="element.id"
-          @save="data => elementChanged(element, data)"
-          @delete="deleteElement(element)"
           :element="element"
-          :is-disabled="!isEditing" />
+          :is-disabled="!isEditing"
+          v-for="element in question"
+          @save="data => elementChanged(element, data)"
+          @delete="deleteElement(element)" />
       </draggable>
       <add-element
-        v-show="isEditing"
-        @add="addElement"
         :include="['HTML', 'IMAGE', 'EMBED']"
-        :layout="false" />
+        :layout="false"
+        v-show="isEditing"
+        @add="addElement" />
     </div>
     <span v-if="isEditing && helperText" class="help-block">
       {{ helperText }}

@@ -6,10 +6,10 @@
       <i v-else>{{ label }} not added.</i>
     </p>
     <quill-editor
-      v-if="isEditing"
-      @change="$emit('update', $event)"
       :content="feedback"
       :options="quillOptions"
+      v-if="isEditing"
+      @change="$emit('update', $event)"
       class="feedback edit" />
     <template v-else>
       <!-- eslint-disable vue/no-v-html -->

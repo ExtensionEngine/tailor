@@ -11,16 +11,16 @@
     <transition name="fade">
       <ul v-if="isExpanded">
         <feedback-item
-          v-for="(answer, index) in processedAnswers"
           :key="index"
-          @update="({ html }) => $emit('update', { [index]: html })"
           v-bind="{
             index,
             answer,
             isEditing,
             isGraded,
             feedback: feedback[index]
-          }" />
+          }"
+          v-for="(answer, index) in processedAnswers"
+          @update="({ html }) => $emit('update', { [index]: html })" />
       </ul>
     </transition>
   </div>

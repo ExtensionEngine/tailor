@@ -2,9 +2,9 @@
   <div :class="{ disabled: !isEditing }">
     <div class="row">
       <div
-        v-for="(groupName, groupKey, index) in groups"
         :key="groupKey"
         :class="{ clear: index % 2 === 0 }"
+        v-for="(groupName, groupKey, index) in groups"
         class="col-md-6 group">
         <div :class="{ flip: isFocused(groupKey) }" class="drop-container">
           <div @click="focus(groupKey)" class="group-view front center">
@@ -20,18 +20,18 @@
           <input
             :ref="`group${groupKey}`"
             v-focus="{ groupKey }"
+            :value="groupName"
             @change="updateGroupName(groupKey)"
             @keyup.enter.esc="focus(groupKey)"
             @blur="isFocused(groupKey) && focus(groupKey)"
-            :value="groupName"
             class="form-control group-input back"
             placeholder="Insert text here ...">
         </div>
         <ul>
           <li
-            v-for="(answer, answerKey) in getGroupAnswers(groupKey)"
             :key="answerKey"
             :class="{ flip: isFocused(groupKey, answerKey) }"
+            v-for="(answer, answerKey) in getGroupAnswers(groupKey)"
             class="answer-container">
             <div
               @click="focus(groupKey, answerKey)"
@@ -48,10 +48,10 @@
             <input
               :ref="`answer${answerKey}`"
               v-focus="{ groupKey, answerKey }"
+              :value="answer"
               @change="updateAnswer(answerKey)"
               @keyup.enter.esc="focus(groupKey, answerKey)"
               @blur="isFocused(groupKey, answerKey) && focus(groupKey, answerKey)"
-              :value="answer"
               class="form-control response-input back"
               placeholder="Insert text here ...">
           </li>

@@ -8,14 +8,14 @@
       Click the button below to create first {{ name | capitalize }}.
     </v-alert>
     <content-container
-      v-for="container in containerGroup"
       :key="container._cid || container.id"
-      @delete="deleteContainer(container)"
       :container="container"
       :types="types"
       :name="name"
       :layout="layout"
       :class="`${name}-container`"
+      v-for="container in containerGroup"
+      @delete="deleteContainer(container)"
       class="content-container elevation-2" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="primary">

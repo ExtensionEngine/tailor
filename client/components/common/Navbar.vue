@@ -9,9 +9,9 @@
     <v-spacer />
     <v-toolbar-items>
       <v-btn
-        v-for="({ name, to, icon }) in routes"
         :key="name"
         :to="to"
+        v-for="({ name, to, icon }) in routes"
         color="blue-grey darken-3"
         exact
         flat>

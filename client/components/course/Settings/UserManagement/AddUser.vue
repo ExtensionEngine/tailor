@@ -5,9 +5,9 @@
         <v-combobox
           v-model="email"
           v-validate="{ required: true, email: true }"
-          @update:searchInput="fetchUsers"
           :error-messages="vErrors.collect('email')"
           :items="suggestedUsers"
+          @update:searchInput="fetchUsers"
           data-vv-name="email"
           label="Email" />
       </v-flex>

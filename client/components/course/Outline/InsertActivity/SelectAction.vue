@@ -1,8 +1,8 @@
 <template>
   <div class="select-action pa-3">
     <v-btn
-      v-for="({ label, icon, action }) in actions"
       :key="label"
+      v-for="({ label, icon, action }) in actions"
       @click="action"
       color="primary"
       flat>

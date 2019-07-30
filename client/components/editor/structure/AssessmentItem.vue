@@ -1,20 +1,20 @@
 <template>
   <li
+    :class="{ hover }"
     @mouseenter="hover = true"
     @mouseleave="hover = false"
-    :class="{ hover }"
     class="list-group-item assessment-item elevation-1">
     <span v-if="exam" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
     <tce-question-container
+      :element="assessment"
+      :exam="exam"
+      :summative="true"
       v-if="expanded"
       @selected="$emit('selected')"
       @delete="$emit('delete')"
-      @save="save"
-      :element="assessment"
-      :exam="exam"
-      :summative="true">
+      @save="save">
       <div class="header">
         <v-chip
           color="blue-grey darken-1"
@@ -33,14 +33,14 @@
         </v-btn>
         <div v-if="exam && examObjectives.length" class="select-leaf">
           <multiselect
-            @input="onObjectiveSelected"
             :value="objective"
             :options="examObjectives"
             :searchable="true"
             :disabled="!examObjectives.length"
             :track-by="'id'"
             :custom-label="it => it.data ? it.data.name : ''"
-            :placeholder="examObjectiveLabel" />
+            :placeholder="examObjectiveLabel"
+            @input="onObjectiveSelected" />
         </div>
       </div>
     </tce-question-container>

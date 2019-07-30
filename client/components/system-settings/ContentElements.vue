@@ -7,8 +7,8 @@
       clearable />
     <v-list :expand="true" avatar two-line>
       <v-list-group
-        v-for="(group, groupName) in filteredRegistry"
         :key="groupName"
+        v-for="(group, groupName) in filteredRegistry"
         value="true">
         <template v-slot:activator>
           <v-list-tile>
@@ -16,8 +16,8 @@
           </v-list-tile>
         </template>
         <v-list-tile
-          v-for="({ name, ui, version, position }) in group"
           :key="position"
+          v-for="({ name, ui, version, position }) in group"
           ripple>
           <v-list-tile-avatar>
             <v-icon large>{{ ui.icon }}</v-icon>

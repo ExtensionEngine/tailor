@@ -17,10 +17,10 @@
       <main-sidebar :activity="activity" :focused-element="focusedElement" />
       <transition name="slide">
         <meta-sidebar
-          v-if="showSidebar"
           :key="focusedElement._cid"
           :metadata="metadata"
-          :element="focusedElement" />
+          :element="focusedElement"
+          v-if="showSidebar" />
       </transition>
     </template>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
@@ -28,11 +28,11 @@
         <v-progress-circular v-if="showLoader" color="primary" indeterminate />
         <template v-else>
           <content-containers
-            v-for="(containerGroup, type) in contentContainers"
             :key="type"
             :container-group="containerGroup"
             :parent-id="activity.id"
-            v-bind="getContainerConfig(type)" />
+            v-bind="getContainerConfig(type)"
+            v-for="(containerGroup, type) in contentContainers" />
           <assessments v-if="showAssessments" />
           <exams v-if="showExams" />
         </template>

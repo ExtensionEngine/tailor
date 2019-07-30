@@ -6,8 +6,8 @@
     <v-menu lazy offset-y left>
       <template v-slot:activator="{ on }">
         <v-btn
-          v-on="on"
           :loading="isPublishing"
+          v-on="on"
           color="blue-grey darken-1"
           outline
           small>

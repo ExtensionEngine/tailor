@@ -14,8 +14,8 @@
         <div class="message">Double click to preview</div>
       </div>
       <brightcove-player
-        ref="player"
         v-bind="config"
+        ref="player"
         class="player" />
     </div>
   </div>

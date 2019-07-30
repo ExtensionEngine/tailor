@@ -1,8 +1,8 @@
 <template>
   <div class="input-asset">
     <v-btn
-      v-if="url && !isEditing"
       :href="publicUrl || url"
+      v-if="url && !isEditing"
       target="_blank"
       flat
       small
@@ -11,13 +11,13 @@
       <v-icon>mdi-open-in-new</v-icon>
     </v-btn>
     <file-upload
-      v-if="allowFileUpload"
-      v-show="!file && isEditing"
-      @upload="val => (file = val) && (urlInput = null)"
       :uploading.sync="uploading"
       :validate="{ ext: extensions }"
       :confirm-deletion="false"
       :label="uploadLabel"
+      v-if="allowFileUpload"
+      v-show="!file && isEditing"
+      @upload="val => (file = val) && (urlInput = null)"
       sm />
     <template v-if="file">
       <v-btn
@@ -32,10 +32,10 @@
       <v-text-field :value="fileName" disabled />
     </template>
     <v-text-field
-      v-if="!uploading && (urlInput || !hasAsset)"
       v-model="urlInput"
       :disabled="!isEditing"
-      :placeholder="allowFileUpload ? 'or paste a URL' : 'Paste a URL'" />
+      :placeholder="allowFileUpload ? 'or paste a URL' : 'Paste a URL'"
+      v-if="!uploading && (urlInput || !hasAsset)" />
     <span class="actions">
       <v-btn
         v-if="!isEditing"
@@ -44,9 +44,9 @@
         Edit
       </v-btn>
       <v-btn
+        :disabled="uploading || !hasAsset"
         v-else
         @click.stop="save"
-        :disabled="uploading || !hasAsset"
         small>
         {{ hasChanges ? 'Save' : 'Cancel' }}
       </v-btn>

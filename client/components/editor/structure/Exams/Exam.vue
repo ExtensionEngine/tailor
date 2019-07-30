@@ -24,14 +24,14 @@
         Click the button below to Create first question group.
       </div>
       <assessment-group
-        v-for="(group, index) in groups"
         :key="group._cid"
         :group="group"
         :exam="exam"
-        :position="index" />
+        :position="index"
+        v-for="(group, index) in groups" />
       <v-btn
-        @click.stop="createGroup"
         :disabled="!exam.id"
+        @click.stop="createGroup"
         color="primary"
         outline
         class="my-5">

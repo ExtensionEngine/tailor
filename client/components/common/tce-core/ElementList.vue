@@ -1,18 +1,18 @@
 <template>
   <div class="list-group">
     <draggable
+      :list="elements"
+      :options="options"
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
       @update="$emit('update', $event)"
-      :list="elements"
-      :options="options"
       class="row">
       <div
-        v-for="(element, index) in elements"
         :key="element.id"
+        :class="`col-xs-${get(element, 'data.width', 12)}`"
+        v-for="(element, index) in elements"
         @dragstart="dragElementIndex = index"
-        @dragend="dragElementIndex = -1"
-        :class="`col-xs-${get(element, 'data.width', 12)}`">
+        @dragend="dragElementIndex = -1">
         <slot
           :element="element"
           :isDragged="dragElementIndex === index"
@@ -21,11 +21,11 @@
       </div>
     </draggable>
     <add-element
-      v-if="enableAdd"
-      @add="el => $emit('add', el)"
       :include="supportedTypes"
       :position="nextPosition"
-      :layout="layout" />
+      :layout="layout"
+      v-if="enableAdd"
+      @add="el => $emit('add', el)" />
   </div>
 </template>
 

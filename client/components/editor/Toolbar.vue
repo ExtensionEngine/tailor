@@ -9,10 +9,10 @@
       <h1 class="text-truncate">{{ activity.data.name }}</h1>
     </div>
     <element-toolbar
-      v-if="element && element.parent"
       :key="`${element.parent._cid}-${element.id}`"
       :element="element.parent"
-      :embed="element">
+      :embed="element"
+      v-if="element && element.parent">
       <template slot="embed-toolbar">
         <element-toolbar :element="element" />
       </template>
@@ -21,9 +21,9 @@
       </template>
     </element-toolbar>
     <element-toolbar
-      v-else-if="element"
       :key="element._cid || element.id"
-      :element="element">
+      :element="element"
+      v-else-if="element">
       <template slot="actions">
         <slot name="actions"></slot>
       </template>

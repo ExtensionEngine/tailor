@@ -7,9 +7,9 @@
       dark
       class="elevation-2">
       <v-tab
-        v-for="tab in tabs"
         :key="tab.name"
         :to="{ name: tab.route }"
+        v-for="tab in tabs"
         active-class="tab-active"
         ripple
         exact

@@ -2,33 +2,33 @@
   <div class="picker control">
     <span class="title">{{ meta.label }}</span>
     <color-input
+      :value="selected"
       v-if="showInput"
       ref="picker"
       @close="showInput = false"
       @input="color => select(color)"
-      :value="selected"
       class="picker" />
     <div v-else>
       <div class="preview">
         <div
-          @click="showPicker"
           :style="{ background: selected }"
+          @click="showPicker"
           class="selected">
           <span class="mdi mdi-eyedropper eyedropper"></span>
         </div>
       </div>
       <ul class="colors control-group">
         <li
-          v-for="(group, index) in colors"
           :key="index"
+          v-for="(group, index) in colors"
           class="column">
           <ul>
             <li
-              v-for="color in group"
               :key="color"
-              @click="select(color)"
               :style="{ background: color }"
               :class="{ white: isEqualColor(color, '#FFFFFF') }"
+              v-for="color in group"
+              @click="select(color)"
               class="tile">
               <div v-if="isEqualColor(color, selected)" class="dot"></div>
             </li>

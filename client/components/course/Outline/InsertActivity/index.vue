@@ -15,16 +15,16 @@
         @selected="selected => (action = selected)"
         @close="hide" />
       <activity-browser
+        :selectable-levels="supportedLevels"
         v-else-if="action !== 'create'"
         @selected="executeAction"
-        @close="hide"
-        :selectable-levels="supportedLevels" />
+        @close="hide" />
       <create-activity
+        :parent="anchor"
+        :supported-levels="supportedLevels"
         v-else
         @create="executeAction"
-        @close="hide"
-        :parent="anchor"
-        :supported-levels="supportedLevels" />
+        @close="hide" />
     </div>
   </div>
 </template>

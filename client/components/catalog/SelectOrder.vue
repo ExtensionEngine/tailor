@@ -8,10 +8,10 @@
       </template>
       <v-list class="py-0">
         <v-list-tile
-          v-for="({ text, field, order }) in options"
           :key="field"
-          @click="$emit('update', { field, order })"
-          :class="{ 'secondary--text text--lighten-1': sortBy.field === field }">
+          :class="{ 'secondary--text text--lighten-1': sortBy.field === field }"
+          v-for="({ text, field, order }) in options"
+          @click="$emit('update', { field, order })">
           <v-list-tile-title class="pr-3">{{ text }}</v-list-tile-title>
         </v-list-tile>
       </v-list>

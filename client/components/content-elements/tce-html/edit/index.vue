@@ -10,10 +10,10 @@
     </div>
     <div v-else>
       <quill-editor
-        v-if="isFocused"
         v-model="content"
-        @ready="onQuillReady"
-        :options="options" />
+        :options="options"
+        v-if="isFocused"
+        @ready="onQuillReady" />
       <div v-else class="ql-container ql-snow">
         <!-- eslint-disable vue/no-v-html -->
         <div class="ql-editor" v-html="content"></div>

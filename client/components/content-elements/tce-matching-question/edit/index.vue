@@ -5,8 +5,8 @@
         :class="{ error: errors.includes('headings.premise') }"
         class="col-xs-4 col-xs-offset-1 heading-input-wrapper">
         <input
-          @blur="e => updateHeading({ premise: e.target.value })"
           :value="headings.premise"
+          @blur="e => updateHeading({ premise: e.target.value })"
           class="heading-input"
           type="text">
       </div>
@@ -15,15 +15,15 @@
         :class="{ error: errors.includes('headings.response') }"
         class="col-xs-4 heading-input-wrapper">
         <input
-          @blur="e => updateHeading({ response: e.target.value })"
           :value="headings.response"
+          @blur="e => updateHeading({ response: e.target.value })"
           class="heading-input"
           type="text">
       </div>
     </div>
     <div
-      v-for="(responseKey, premiseKey) in correct"
       :key="responseKey"
+      v-for="(responseKey, premiseKey) in correct"
       class="row no-gutters">
       <div
         :class="{ flip: isFocused(premiseKey) }"
@@ -35,11 +35,11 @@
         </div>
         <input
           v-focus="{ key: premiseKey }"
+          :value="getPremiseContent(premiseKey)"
           @change="updatePremiseContent(premiseKey, $event)"
           @keyup.enter="focus(premiseKey)"
           @keyup.esc="focus(premiseKey)"
           @blur="isFocused(premiseKey) && focus(premiseKey)"
-          :value="getPremiseContent(premiseKey)"
           class="form-control premise-input back"
           placeholder="Insert text here ...">
       </div>
@@ -56,11 +56,11 @@
         </div>
         <input
           v-focus="{ key: responseKey }"
+          :value="getResponseContent(responseKey)"
           @change="updateResponseContent(responseKey, $event)"
           @keyup.enter="focus(responseKey)"
           @keyup.esc="focus(responseKey)"
           @blur="isFocused(responseKey) && focus(responseKey)"
-          :value="getResponseContent(responseKey)"
           class="form-control response-input back"
           placeholder="Insert text here ...">
       </div>

@@ -1,20 +1,20 @@
 <template>
   <div
+    :class="[widthClass, { disabled: isDisabled, hovered: isHovered }]"
     @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
     @dragstart="$emit('dragstart')"
     @dragend="$emit('dragend')"
     @dragover="scrollContainer"
-    :class="[widthClass, { disabled: isDisabled, hovered: isHovered }]"
     class="contained-content">
     <span class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
     <content-element
+      v-bind="{ element, isDisabled, isDragged }"
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
-      @delete="$emit('delete')"
-      v-bind="{ element, isDisabled, isDragged }" />
+      @delete="$emit('delete')" />
   </div>
 </template>
 

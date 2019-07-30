@@ -3,10 +3,10 @@
     <h2>Exams</h2>
     <ul class="list-group">
       <exam
-        v-for="(exam, index) in exams"
         :key="exam._cid"
         :exam="exam"
-        :position="index" />
+        :position="index"
+        v-for="(exam, index) in exams" />
     </ul>
     <v-btn @click.stop="create" color="primary" class="mt-4">
       <v-icon class="pr-2">mdi-plus</v-icon>

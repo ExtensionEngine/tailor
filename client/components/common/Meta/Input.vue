@@ -1,20 +1,20 @@
 <template>
   <div
+    :class="{ editing }"
     @focusout="focusoutInput"
     @mousedown.stop="focusInput"
-    :class="{ editing }"
     class="input">
     <label :for="meta.key">{{ meta.label }}</label>
     <div
-      v-show="editing"
-      :class="{ 'has-error': vErrors.has(meta.key) }">
+      :class="{ 'has-error': vErrors.has(meta.key) }"
+      v-show="editing">
       <input
         :ref="meta.key"
         v-model="value"
         v-validate="meta.validate"
-        @keyup.enter="focusoutInput"
         :name="meta.key"
         :placeholder="meta.placeholder"
+        @keyup.enter="focusoutInput"
         class="form-control">
       <span class="help-block">{{ vErrors.first(meta.key) }}</span>
     </div>

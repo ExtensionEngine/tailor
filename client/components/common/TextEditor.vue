@@ -3,11 +3,11 @@
     <textarea
       v-model.trim="content"
       v-focus.lazy="focused"
+      :placeholder="placeholder"
       @keydown.shift.enter.exact="() => {}"
       @keydown.enter.exact.prevent="onEnter"
       @blur="onBlur"
       @input="$emit('input', content)"
-      :placeholder="placeholder"
       class="form-control">
     </textarea>
     <div class="content">

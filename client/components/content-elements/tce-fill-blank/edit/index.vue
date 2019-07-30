@@ -1,8 +1,8 @@
 <template>
-  <div v-if="hasAnswers" :class="{ disabled }">
+  <div :class="{ disabled }" v-if="hasAnswers">
     <h5>Answers</h5>
-    <draggable @update="update" :list="answerGroups" :options="dragOptions">
-      <div v-for="(answers, i) in answerGroups" :key="i" class="answer-group">
+    <draggable :list="answerGroups" :options="dragOptions" @update="update">
+      <div :key="i" v-for="(answers, i) in answerGroups" class="answer-group">
         <span class="drag-handle">
           <span class="mdi mdi-drag-vertical"></span>
         </span>
@@ -18,9 +18,9 @@
         </span>
         <ul>
           <li
-            v-for="(answer, j) in answers"
             :key="`${i}.${j}`"
-            :class="errorClass(i, j)">
+            :class="errorClass(i, j)"
+            v-for="(answer, j) in answers">
             <input
               v-model="answers[j]"
               :disabled="disabled"

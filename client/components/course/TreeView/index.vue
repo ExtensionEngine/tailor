@@ -7,9 +7,9 @@
     </div>
     <div :style="{ visibility }" class="activities">
       <tree-graph
-        @node:select="onNodeSelect"
         v-bind="graphOptions"
         :data="graphData"
+        @node:select="onNodeSelect"
         class="tree" />
       <sidebar />
     </div>

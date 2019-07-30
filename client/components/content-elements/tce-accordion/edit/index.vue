@@ -5,12 +5,12 @@
     </div>
     <ul v-else class="accordion">
       <accordion-item
-        v-for="it in items"
         :key="it.id"
-        @save="saveItem"
-        @delete="deleteItem"
         :item="it"
-        :embeds="embedsByItem[it.id]" />
+        :embeds="embedsByItem[it.id]"
+        v-for="it in items"
+        @save="saveItem"
+        @delete="deleteItem" />
     </ul>
   </div>
 </template>

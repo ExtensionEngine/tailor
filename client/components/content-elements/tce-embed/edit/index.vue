@@ -14,9 +14,9 @@
         </div>
         <!-- Dragging iframes is not supported inside sortablejs container! -->
         <iframe
+          :src="url"
           v-if="!isDragged"
           ref="frame"
-          :src="url"
           class="content"
           frameborder="0"
           sandbox="allow-forms allow-same-origin allow-scripts">

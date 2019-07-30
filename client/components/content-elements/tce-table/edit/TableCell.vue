@@ -1,10 +1,10 @@
 <template>
   <content-element
-    @save="save"
     :element="cell"
     :parent="table"
     :frame="false"
     :show-placeholder="false"
+    @save="save"
     class="table-cell" />
 </template>
 

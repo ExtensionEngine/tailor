@@ -21,10 +21,10 @@
       </div>
       <div class="player">
         <plyr
+          :emit="['error']"
           v-if="showVideo"
           ref="video"
-          @ready="onError"
-          :emit="['error']">
+          @ready="onError">
           <video v-if="type.isNative">
             <source :src="url" :type="type.name">
           </video>

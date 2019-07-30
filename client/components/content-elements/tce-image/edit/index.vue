@@ -6,10 +6,8 @@
         <span>Click to edit</span>
       </div>
     </div>
-    <div v-else :class="{ 'hide-cropper': !showCropper }" class="image-wrapper">
+    <div :class="{ 'hide-cropper': !showCropper }" v-else class="image-wrapper">
       <cropper
-        v-show="showCropper"
-        ref="cropper"
         :view-mode="2"
         :auto-crop-area="0.5"
         :auto-crop="false"
@@ -23,8 +21,10 @@
         :movable="false"
         :modal="false"
         :src="currentImage"
+        v-show="showCropper"
+        ref="cropper"
         drag-mode="none" />
-      <img v-show="!showCropper" :src="currentImage" class="preview-image">
+      <img :src="currentImage" v-show="!showCropper" class="preview-image">
     </div>
   </div>
 </template>

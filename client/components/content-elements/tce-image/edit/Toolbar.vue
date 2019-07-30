@@ -8,9 +8,9 @@
         </label>
       </li>
       <li
+        :class="{ 'active': currentTool === 'cropper' }"
         v-if="isUploaded"
         @click="toggleTool('cropper')"
-        :class="{ 'active': currentTool === 'cropper' }"
         class="btn btn-link btn-sm">
         <span class="mdi mdi-crop"></span> Crop
       </li>

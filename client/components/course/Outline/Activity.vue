@@ -2,10 +2,10 @@
   <div>
     <div class="activity-wrapper">
       <div
+        :class="{ 'elevation-9 selected': isHighlighted }"
         @click="focus(showOptions)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
-        :class="{ 'elevation-9 selected': isHighlighted }"
         class="activity elevation-1">
         <v-chip :color="color" label dark disabled class="icon-container">
           <v-btn
@@ -24,8 +24,8 @@
         <div v-show="isHighlighted" class="actions">
           <v-spacer />
           <v-btn
-            v-show="isEditable"
             :to="{ name: 'editor', params: { activityId: id } }"
+            v-show="isEditable"
             color="pink"
             outline
             small>
@@ -49,21 +49,21 @@
         </div>
       </div>
       <insert-activity
-        @expand="toggle(true)"
-        :anchor="{ id, _cid, parentId, courseId, type, position }" />
+        :anchor="{ id, _cid, parentId, courseId, type, position }"
+        @expand="toggle(true)" />
     </div>
     <div v-if="!isCollapsed({ _cid }) && hasChildren">
       <draggable
-        @update="data => reorder(data, children)"
         :list="children"
-        :options="{ handle: '.activity' }">
+        :options="{ handle: '.activity' }"
+        @update="data => reorder(data, children)">
         <activity
-          v-for="(subActivity, childIndex) in children"
           :key="subActivity._cid"
           v-bind="subActivity"
           :index="childIndex + 1"
           :level="level + 1"
           :activities="activities"
+          v-for="(subActivity, childIndex) in children"
           class="sub-activity" />
       </draggable>
     </div>

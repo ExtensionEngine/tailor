@@ -2,7 +2,6 @@
   <div class="relationship">
     <label :for="type">{{ label }}</label>
     <multiselect
-      @input="onRelationshipChanged"
       :value="multiple ? associations : associations[0]"
       :options="optionGroups"
       :searchable="searchable"
@@ -12,6 +11,7 @@
       :placeholder="selectPlaceholder"
       :custom-label="getCustomLabel"
       :name="type"
+      @input="onRelationshipChanged"
       group-label="typeLabel"
       group-values="activities"
       track-by="id" />

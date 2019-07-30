@@ -4,21 +4,21 @@
     class="select">
     <label :for="meta.key">{{ meta.label }}</label>
     <multiselect
-      @open="active = true"
-      @close="active = false"
-      @input="update"
       :value="value"
       :name="meta.key"
       :options="options"
       :searchable="false"
       :placeholder="meta.placeholder"
-      :multiple="isMultiSelect">
+      :multiple="isMultiSelect"
+      @open="active = true"
+      @close="active = false"
+      @input="update">
       <template slot="option" slot-scope="{ option }">
-        <img v-if="option.img" :src="option.img" :alt="option.label" class="img">
+        <img :src="option.img" :alt="option.label" v-if="option.img" class="img">
         <span>{{ option.label }}</span>
       </template>
       <template slot="singleLabel" slot-scope="{ option }">
-        <img v-if="option.img" :src="option.img" :alt="option.label" class="img">
+        <img :src="option.img" :alt="option.label" v-if="option.img" class="img">
         <span>{{ option.label }}</span>
       </template>
     </multiselect>

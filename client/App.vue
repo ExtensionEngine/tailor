@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <navbar v-if="user" :user="user" />
+    <navbar :user="user" v-if="user" />
     <v-content>
       <router-view class="view grey lighten-3" />
     </v-content>

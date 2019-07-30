@@ -3,10 +3,10 @@
     <div class="message">{{ error }}</div>
     <form @submit.prevent="submit">
       <v-text-field
-        ref="password"
         v-model="password"
         v-validate="{ required: true, min: 6, alphanumerical: true }"
         :error-messages="vErrors.collect('password')"
+        ref="password"
         prepend-icon="mdi-lock"
         name="password"
         type="password"

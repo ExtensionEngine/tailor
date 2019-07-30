@@ -6,15 +6,15 @@
         :ref="id"
         v-filefilter="'auto'"
         v-validate="validate"
-        @change="upload"
         :id="id"
         :name="id"
+        @change="upload"
         type="file"
         class="upload-input">
       <label
-        v-if="!fileKey"
         :for="id"
-        :class="[sm ? 'v-btn v-btn--small' : 'btn btn-material btn-sm upload-button']">
+        :class="[sm ? 'v-btn v-btn--small' : 'btn btn-material btn-sm upload-button']"
+        v-if="!fileKey">
         {{ label }}
       </label>
       <span

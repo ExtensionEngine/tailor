@@ -10,8 +10,8 @@
     <v-toolbar flat class="transparent">
       <v-list>
         <v-tooltip
-          v-for="({ title, icon, action }) in actions"
           :key="title"
+          v-for="({ title, icon, action }) in actions"
           color="blue-grey darken-3"
           right>
           <template v-slot:activator="{ on }">

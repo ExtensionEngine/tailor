@@ -4,11 +4,11 @@
     <div slot="body">
       <div class="row">
         <content-element
-          v-for="it in elements"
           :key="it.id"
           :element="it"
           :is-disabled="true"
-          :frame="false" />
+          :frame="false"
+          v-for="it in elements" />
       </div>
     </div>
     <div slot="footer">

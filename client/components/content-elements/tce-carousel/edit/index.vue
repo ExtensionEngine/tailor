@@ -3,23 +3,23 @@
     <div v-if="!hasItems" class="well">
       Use the toolbar to add the first item to the carousel.
     </div>
-    <div v-else :style="{ height: `${height}px` }" class="carousel">
+    <div :style="{ height: `${height}px` }" v-else class="carousel">
       <ul :style="{ height: height - 40 + 'px' }" class="carousel-items">
         <carousel-item
-          v-for="it in items"
           :key="it.id"
-          @save="saveItem"
-          @delete="deleteItem"
           :item="it"
           :embeds="embedsByItem[it.id]"
-          :active-item="activeItem" />
+          :active-item="activeItem"
+          v-for="it in items"
+          @save="saveItem"
+          @delete="deleteItem" />
       </ul>
       <ul class="indicators">
         <li
-          v-for="it in items"
           :key="it.id"
-          @click="activateItem(it)"
           :class="{ 'active': activeItem === it.id }"
+          v-for="it in items"
+          @click="activateItem(it)"
           class="indicator-item">
         </li>
       </ul>

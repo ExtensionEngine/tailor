@@ -3,10 +3,10 @@
     <h2>Additional settings</h2>
     <div class="meta-element">
       <meta-input
-        v-for="it in metadata"
         :key="`${element._cid}.${it.key}`"
-        @update="updateElement"
-        :meta="it" />
+        :meta="it"
+        v-for="it in metadata"
+        @update="updateElement" />
     </div>
   </div>
 </template>

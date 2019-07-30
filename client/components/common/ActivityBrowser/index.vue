@@ -9,11 +9,11 @@
       v-if="!repository"
       @selected="selected => (repository = selected)" />
     <select-activity
+      :repository="repository"
+      :selectable-levels="selectableLevels"
       v-else
       @reset="repository = null"
-      @selected="activity => $emit('selected', activity)"
-      :repository="repository"
-      :selectable-levels="selectableLevels" />
+      @selected="activity => $emit('selected', activity)" />
   </div>
 </template>
 

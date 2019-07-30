@@ -3,18 +3,18 @@
     <div class="revisions">
       <div class="preview">
         <teaching-element
-          v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
-          :disabled="true" />
+          :disabled="true"
+          v-if="selectedRevision.resolved" />
       </div>
       <entity-sidebar
+        :revisions="revisions"
+        :selected="selectedRevision"
+        :is-detached="isDetached"
         v-show="expanded"
         ref="sidebar"
         @preview="previewRevision"
-        @rollback="rollback"
-        :revisions="revisions"
-        :selected="selectedRevision"
-        :is-detached="isDetached" />
+        @rollback="rollback" />
     </div>
   </transition>
 </template>

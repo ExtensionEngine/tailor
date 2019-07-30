@@ -4,9 +4,9 @@
       Click the button below to Create your first teaching element.
     </div>
     <embedded-container
+      :container="{ embeds }"
       @save="({ embeds }) => save(item, embeds)"
-      @delete="deleteEmbed($event)"
-      :container="{ embeds }" />
+      @delete="deleteEmbed($event)" />
   </li>
 </template>
 

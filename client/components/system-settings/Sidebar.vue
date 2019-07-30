@@ -2,9 +2,9 @@
   <v-navigation-drawer value="true" stateless>
     <v-list class="grey--text text--darken-3">
       <v-list-tile
-        v-for="({ name, label, icon }) in routes"
         :key="name"
         :to="{ name }"
+        v-for="({ name, label, icon }) in routes"
         active-class="black--text"
         exact
         ripple>

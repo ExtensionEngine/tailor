@@ -2,9 +2,9 @@
   <v-navigation-drawer value="true" stateless>
     <v-list class="grey--text text--darken-2">
       <v-list-tile
-        v-for="({ name, label, icon }) in routes"
         :key="name"
         :to="{ name }"
+        v-for="({ name, label, icon }) in routes"
         active-class="grey--text text--darken-3"
         exact
         ripple>
@@ -20,10 +20,10 @@
           </v-list-tile>
         </template>
         <v-list-tile
-          v-for="({ label, name, icon, color }) in actions"
           :key="name"
-          @click="$emit('action', name)"
           :color="color ? color : 'blue-grey darken-3'"
+          v-for="({ label, name, icon, color }) in actions"
+          @click="$emit('action', name)"
           ripple>
           <v-list-tile-action class="pl-1">
             <v-icon :color="color ? color : 'primary'">

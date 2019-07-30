@@ -17,16 +17,16 @@
           </v-btn>
         </v-toolbar>
         <draggable
-          @update="data => reorder(data, rootActivities)"
           :list="rootActivities"
-          :options="{ handle: '.activity' }">
+          :options="{ handle: '.activity' }"
+          @update="data => reorder(data, rootActivities)">
           <activity
-            v-for="(activity, index) in rootActivities"
             :key="activity._cid"
             v-bind="activity"
             :index="index + 1"
             :level="1"
-            :activities="outlineActivities" />
+            :activities="outlineActivities"
+            v-for="(activity, index) in rootActivities" />
         </draggable>
         <no-activities v-if="!rootActivities.length" />
       </div>

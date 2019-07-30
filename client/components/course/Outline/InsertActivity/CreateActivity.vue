@@ -13,11 +13,11 @@
       <span class="help-block">{{ vErrors.first('name') }}</span>
     </span>
     <multiselect
-      v-if="supportedLevels.length > 1"
       v-model="level"
       v-validate="'required'"
       :options="supportedLevels"
       :searchable="false"
+      v-if="supportedLevels.length > 1"
       data-vv-value-path="type"
       data-vv-delay="0"
       track-by="type"
@@ -30,8 +30,8 @@
         X
       </button>
       <button
-        @click.stop="create"
         :disabled="vErrors.any()"
+        @click.stop="create"
         class="btn btn-default btn-sm btn-material add pull-right">
         Add
       </button>

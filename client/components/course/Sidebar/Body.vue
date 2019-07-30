@@ -6,16 +6,16 @@
     </v-chip>
     <div class="meta-element">
       <meta-input
-        v-for="it in metadata"
         :key="`${activity._cid}.${it.key}`"
-        @update="updateActivity"
-        :meta="it" />
+        :meta="it"
+        v-for="it in metadata"
+        @update="updateActivity" />
     </div>
     <div class="relationships-element">
       <relationship
-        v-for="relationship in config.relationships"
         :key="`${activity._cid}.${relationship.type}`"
-        v-bind="relationship" />
+        v-bind="relationship"
+        v-for="relationship in config.relationships" />
     </div>
     <discussion editor-position="bottom" class="discussion" />
   </div>

@@ -18,10 +18,10 @@
         </span>
         <span v-if="isEdited" class="edited-icon icon mdi mdi-pencil"></span>
         <button
+          :class="{ active: showDropdown }"
           v-if="showActions"
           @click="showDropdown = !showDropdown"
           @blur="showDropdown = false"
-          :class="{ active: showDropdown }"
           class="pull-right btn btn-material-icon btn-actions">
           <span class="icon mdi mdi-dots-vertical"></span>
         </button>
@@ -49,12 +49,12 @@
           class="pull-right time" />
       </span>
       <text-editor
-        @blur="update"
-        @change="update"
         :value="comment.content"
         :focused="editing"
         :preview="!editing"
         :class="{ deleted: isDeleted }"
+        @blur="update"
+        @change="update"
         class="content" />
     </div>
   </li>

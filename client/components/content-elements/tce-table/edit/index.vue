@@ -1,16 +1,16 @@
 <template>
   <div class="tce-table">
     <div
-      v-for="row in table"
       :key="row.id"
+      v-for="row in table"
       class="table-row">
       <table-cell
-        v-for="cell in cells(row)"
         :key="cell.id"
-        @save="saveCell"
         :cell="embeds[cell.id]"
         :table="element"
-        :disabled="disabled" />
+        :disabled="disabled"
+        v-for="cell in cells(row)"
+        @save="saveCell" />
     </div>
   </div>
 </template>

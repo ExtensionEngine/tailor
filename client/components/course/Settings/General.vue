@@ -2,8 +2,8 @@
   <div v-if="course" class="settings white elevation-1">
     <div class="actions">
       <v-btn
-        @click="publish"
         :loading="publishing"
+        @click="publish"
         outline
         small
         class="pull-right">
@@ -11,16 +11,16 @@
       </v-btn>
     </div>
     <meta-input
-      v-for="it in requiredData"
       :key="it.key"
-      @update="updateKey"
       :meta="it"
+      v-for="it in requiredData"
+      @update="updateKey"
       class="meta-input" />
     <meta-input
-      v-for="it in metadata"
       :key="it.key"
-      @update="updateKey"
       :meta="it"
+      v-for="it in metadata"
+      @update="updateKey"
       class="meta-input" />
   </div>
 </template>

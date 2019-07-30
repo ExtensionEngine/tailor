@@ -36,18 +36,18 @@
           </v-chip>
         </v-toolbar>
         <div
-          v-for="group in library"
-          :key="group.name">
+          :key="group.name"
+          v-for="group in library">
           <div class="group-heading">
             <v-icon>{{ group.icon }}</v-icon>
             <span>{{ group.name }}</span>
           </div>
           <div class="group-elements">
             <button
-              v-for="element in group.elements"
               :key="element.position"
-              @click.stop="add(element)"
               :disabled="isElementDisabled(element)"
+              v-for="element in group.elements"
+              @click.stop="add(element)"
               class="element">
               <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
               <h5 class="body-2">{{ element.name }}</h5>

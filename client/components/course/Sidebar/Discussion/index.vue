@@ -13,8 +13,8 @@
     <div :direction="direction" class="vertical-layout">
       <div class="editor-wrapper">
         <text-editor
-          ref="editor"
           v-model="comment.content"
+          ref="editor"
           @change="post"
           placeholder="Add a comment..."
           class="editor" />
