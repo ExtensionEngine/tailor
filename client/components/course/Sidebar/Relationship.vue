@@ -1,17 +1,17 @@
 <template>
-  <v-select
+  <v-autocomplete
     @input="onRelationshipChanged"
     :value="multiple ? associations : associations[0]"
     :items="groupedOptions"
     :multiple="multiple"
-    :allow-empty="allowEmpty"
     :disabled="!options.length"
     :placeholder="selectPlaceholder"
     :label="label"
+    :name="type"
     item-text="data.name"
     item-value="id"
-    :name="type"
-    chips
+    :data-vv-name="label"
+    :chips="multiple"
     deletable-chips
     box />
 </template>
@@ -25,7 +25,6 @@ import compact from 'lodash/compact';
 import concat from 'lodash/concat';
 import every from 'lodash/every';
 import filter from 'lodash/filter';
-import forEach from 'lodash/forEach';
 import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
@@ -41,8 +40,6 @@ export default {
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: true },
-    searchable: { type: Boolean, default: true },
-    allowEmpty: { type: Boolean, default: true },
     placeholder: { type: String, default: 'Click to select' },
     allowCircularLinks: { type: Boolean, default: false },
     allowInsideLineage: { type: Boolean, default: false },
@@ -70,11 +67,11 @@ export default {
     groupedOptions() {
       const grouped = groupBy(this.options, 'type');
       const withTypes = map(grouped, (it, type) => {
-        const levelLabel = pluralize(getLevel(type).label);
-        return concat({ header: levelLabel }, it);
+        const headerLabel = pluralize(getLevel(type).label);
+        return concat({ header: headerLabel }, it);
       });
       let flatten = [];
-      forEach(withTypes, it => flatten.push(...it));
+      withTypes.forEach(it => flatten.push(...it));
       return flatten;
     },
     selectPlaceholder() {
@@ -90,8 +87,13 @@ export default {
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
     },
-    onRelationshipChanged(ids) {
-      const value = ids.map(id => this.options.find(it => it.id === id));
+    onRelationshipChanged(selected) {
+      let value = null;
+      if (this.multiple) {
+        value = selected.map(id => this.options.find(it => it.id === id));
+      } else {
+        value = this.options.find(it => it.id === selected);
+      }
       const associations = compact(castArray(value));
       let activity = cloneDeep(this.activity) || {};
       set(activity, `refs.${this.type}`, map(associations, 'id'));
