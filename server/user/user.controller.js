@@ -7,8 +7,7 @@ const { Op } = require('sequelize');
 const { role: { user: userRole } } = require('../../config/shared');
 const { User } = require('../shared/database');
 
-// TODO: Add fistName, lastName after profile merge
-const createFilter = q => map(['email'],
+const createFilter = q => map(['email', 'firstName', 'lastName'],
   it => ({ [it]: { [Op.iLike]: `%${q}%` } }));
 
 function list({ query: { email, role, filter, archived }, options }, res) {
@@ -22,8 +21,8 @@ function list({ query: { email, role, filter, archived }, options }, res) {
     });
 }
 
-function upsert({ body: { email, role } }, res) {
-  return User.inviteOrUpdate({ email, role })
+function upsert({ body: { email, firstName, lastName, role } }, res) {
+  return User.inviteOrUpdate({ email, firstName, lastName, role })
     .then(data => res.json({ data }));
 }
 

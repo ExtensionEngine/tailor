@@ -23,6 +23,22 @@
             label="E-mail"
             data-vv-name="email"
             class="mb-3" />
+          <v-text-field
+            v-model="user.firstName"
+            v-validate="'required|min:2|max:50'"
+            :error-messages="vErrors.collect('firstName')"
+            label="First name"
+            data-vv-as="First name"
+            data-vv-name="firstName"
+            class="mb-3" />
+          <v-text-field
+            v-model="user.lastName"
+            v-validate="'required|min:2|max:50'"
+            :error-messages="vErrors.collect('lastName')"
+            label="Last name"
+            data-vv-as="Last name"
+            data-vv-name="lastName"
+            class="mb-3" />
           <v-select
             v-model="user.role"
             v-validate="{ required: true }"
@@ -55,6 +71,8 @@ import { withValidation } from 'utils/validation';
 const resetUser = () => {
   return {
     email: '',
+    firstName: '',
+    lastName: '',
     role: null
   };
 };

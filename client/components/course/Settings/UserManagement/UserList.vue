@@ -15,6 +15,8 @@
         </v-avatar>
         {{ item.email }}
       </td>
+      <td class="text-xs-left">{{ item.firstName }}</td>
+      <td class="text-xs-left">{{ item.lastName }}</td>
       <td class="role-select">
         <v-select
           @change="role => changeRole(item.email, role)"
@@ -45,7 +47,8 @@ export default {
   computed: {
     ...mapGetters('course', ['users']),
     headers() {
-      return ['User', 'Role', ''].map(text => ({ text, sortable: false }));
+      return ['User', 'First Name', 'Last Name', 'Role', '']
+        .map(text => ({ text, sortable: false }));
     }
   },
   methods: {

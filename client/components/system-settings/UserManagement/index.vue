@@ -37,7 +37,17 @@
           :rows-per-page-items="[10, 20, 50, 100]">
           <template slot="items" slot-scope="{ item }">
             <tr :key="item.id">
+              <td class="no-wrap text-xs-left">
+                <v-avatar color="primary lighten-2" size="40" dark>
+                  <img v-if="item.imgUrl" :src="item.imgUrl">
+                  <span v-else class="headline white--text">
+                    {{ item.email[0].toUpperCase() }}
+                  </span>
+                </v-avatar>
+              </td>
               <td class="no-wrap text-xs-left">{{ item.email }}</td>
+              <td class="no-wrap text-xs-left">{{ item.firstName }}</td>
+              <td class="no-wrap text-xs-left">{{ item.lastName }}</td>
               <td class="no-wrap text-xs-left">{{ item.role }}</td>
               <td class="no-wrap text-xs-left">{{ item.createdAt | formatDate }}</td>
               <td class="no-wrap text-xs-center">
@@ -92,8 +102,10 @@ const defaultPage = () => ({
 });
 
 const headers = () => [
-  { sortable: false },
+  { text: 'User', sortable: false },
   { text: 'Email', value: 'email' },
+  { text: 'First Name', value: 'firstName' },
+  { text: 'Last Name', value: 'lastName' },
   { text: 'Role', value: 'role' },
   { text: 'Date Created', value: 'createdAt' },
   { text: 'Actions', value: 'email', align: 'center', sortable: false }
