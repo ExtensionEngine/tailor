@@ -7,7 +7,7 @@
         <v-icon @click="dialog = true" dark class="overlay">mdi-camera</v-icon>
       </div>
     </v-avatar>
-    <avatar-dialog :visible.sync="dialog" :imgUrl="image" @update="updateAvatar"/>
+    <avatar-dialog @update="updateAvatar" :visible.sync="dialog" :img-url="image" />
   </v-layout>
 </template>
 

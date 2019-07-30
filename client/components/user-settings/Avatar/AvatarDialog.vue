@@ -1,10 +1,10 @@
 <template>
   <v-dialog v-model="show" width="640">
     <v-card>
-      <v-card-title class="elevation-2 primary" >
+      <v-card-title class="elevation-2 primary">
         <v-icon>mdi-lock-open</v-icon>
         <h4>Change Avatar</h4>
-        <v-spacer/>
+        <v-spacer />
         <v-icon @click="close">mdi-close-circle-outline</v-icon>
       </v-card-title>
       <v-card-text>
@@ -12,11 +12,11 @@
           v-model="croppa"
           v-bind="options"
           :initial-image="imgUrl"
-          prevent-white-space/>
+          prevent-white-space />
       </v-card-text>
-      <v-divider/>
+      <v-divider />
       <v-card-actions>
-        <v-spacer/>
+        <v-spacer />
         <v-btn v-if="croppa.imageSet" @click="croppa.remove()" flat>Remove</v-btn>
         <v-btn @click="croppa.chooseFile()" flat>Upload</v-btn>
         <v-btn @click="confirm" color="primary">Update</v-btn>

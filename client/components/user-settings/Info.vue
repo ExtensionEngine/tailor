@@ -2,33 +2,33 @@
   <v-form @submit.prevent="updateUser">
     <v-layout column pt-3 px-4 mx-3>
       <v-text-field
-        v-validate="{ required: true, email: true }"
         v-model="context.email"
+        v-validate="{ required: true, email: true }"
         :error-messages="vErrors.collect('email')"
         data-vv-as="Email"
         data-vv-name="email"
         name="email"
-        label="Email"/>
+        label="Email" />
       <v-text-field
-        v-validate="{ max: 20 }"
         v-model="context.firstName"
+        v-validate="{ max: 20 }"
         :error-messages="vErrors.collect('firstName')"
         data-vv-as="First name"
         data-vv-name="firstName"
-        label="First name"/>
+        label="First name" />
       <v-text-field
-        v-validate="{ max: 20 }"
         v-model="context.lastName"
+        v-validate="{ max: 20 }"
         :error-messages="vErrors.collect('lastName')"
         data-vv-as="Last Name"
         data-vv-name="lastName"
-        label="Last name"/>
+        label="Last name" />
     </v-layout>
     <v-layout px-4 mx-2>
-      <v-spacer/>
+      <v-spacer />
       <v-btn
-        :disabled="!hasChanges"
         @click="resetUser"
+        :disabled="!hasChanges"
         flat
         color="secondary">
         Cancel
@@ -51,7 +51,7 @@ import { withValidation } from 'utils/validation';
 
 const snackOpts = { right: true };
 
-const ATTRIBUTES = [ 'firstName', 'lastName', 'email' ];
+const ATTRIBUTES = ['firstName', 'lastName', 'email'];
 
 const defaultData = () => ({
   firstName: null,

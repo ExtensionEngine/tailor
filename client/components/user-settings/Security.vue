@@ -1,13 +1,13 @@
 <template>
   <v-layout pb-3 px-4 mr-2>
-    <v-spacer/>
+    <v-spacer />
     <v-btn
       @click="isVisible = true"
       color="primary"
       outline>
       Change Password
     </v-btn>
-    <v-dialog v-hotkey="{ esc: hide }" v-model="isVisible" width="700px">
+    <v-dialog v-model="isVisible" v-hotkey="{ esc: hide }" width="700px">
       <v-form @submit.prevent="submit">
         <v-card class="pa-3">
           <v-card-title class="headline">
@@ -18,35 +18,35 @@
           </v-card-title>
           <v-card-text>
             <v-text-field
-              v-validate="{ required: true }"
               v-model="currentPassword"
+              v-validate="{ required: true }"
               :error-messages="vErrors.first('currentPassword')"
               data-vv-as="Current Password"
               data-vv-name="currentPassword"
               type="password"
-              label="Current password"/>
+              label="Current password" />
             <v-text-field
+              ref="newPassword"
+              v-model="newPassword"
               v-validate="{
                 required: true,
                 is_not: currentPassword,
                 alphanumerical: true,
                 min: 6
               }"
-              ref="newPassword"
-              v-model="newPassword"
               :error-messages="vErrors.first('newPassword')"
               data-vv-as="New password"
               data-vv-name="newPassword"
               type="password"
-              label="New password"/>
+              label="New password" />
             <v-text-field
-              v-validate="{ required: true, confirmed: 'newPassword' }"
               v-model="confirmationPassword"
+              v-validate="{ required: true, confirmed: 'newPassword' }"
               :error-messages="vErrors.first('confirmationPassword')"
               data-vv-as="Confirmation password"
               data-vv-name="confirmationPassword"
               type="password"
-              label="Confirm new password"/>
+              label="Confirm new password" />
           </v-card-text>
           <v-card-actions class="mx-2">
             <router-link
@@ -54,7 +54,7 @@
               class="primary--text text--darken-4">
               Forgot password ?
             </router-link>
-            <v-spacer/>
+            <v-spacer />
             <v-btn @click="hide" flat color="secondary">Cancel</v-btn>
             <v-btn
               :disabled="!hasChanges"
