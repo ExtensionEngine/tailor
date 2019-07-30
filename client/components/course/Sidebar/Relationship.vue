@@ -1,16 +1,19 @@
 <template>
   <v-autocomplete
+    v-model="value"
+    v-validate="{ required: !allowEmpty }"
     @input="onRelationshipChanged"
-    :value="multiple ? associations : associations[0]"
+    :error-messages="vErrors.collect(type)"
     :items="groupedOptions"
     :multiple="multiple"
     :disabled="!options.length"
     :placeholder="selectPlaceholder"
     :label="label"
     :name="type"
-    item-text="data.name"
-    :data-vv-name="label"
+    :data-vv-as="label"
     :chips="multiple"
+    :clearable="!multiple"
+    item-text="data.name"
     deletable-chips
     return-object
     box />
@@ -33,18 +36,22 @@ import map from 'lodash/map';
 import pluralize from 'pluralize';
 import set from 'lodash/set';
 import without from 'lodash/without';
+import { withValidation } from 'utils/validation';
 
 export default {
   name: 'activity-relationship',
+  mixins: [withValidation()],
   props: {
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: true },
+    allowEmpty: { type: Boolean, default: true },
     placeholder: { type: String, default: 'Click to select' },
     allowCircularLinks: { type: Boolean, default: false },
     allowInsideLineage: { type: Boolean, default: false },
     allowedTypes: { type: Array, default: () => [] }
   },
+  data: () => ({ value: null }),
   computed: {
     ...mapGetters('course', ['activity', 'outlineActivities']),
     ...mapGetters('activities', ['getLineage']),
@@ -88,11 +95,17 @@ export default {
       return get(activity, `refs.${this.type}`, []);
     },
     onRelationshipChanged(value) {
-      const associations = compact(castArray(value));
-      let activity = cloneDeep(this.activity) || {};
-      set(activity, `refs.${this.type}`, map(associations, 'id'));
-      this.update(activity);
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
+        const associations = compact(castArray(value));
+        let activity = cloneDeep(this.activity) || {};
+        set(activity, `refs.${this.type}`, map(associations, 'id'));
+        this.update(activity);
+      });
     }
+  },
+  created() {
+    this.value = this.multiple ? this.associations : this.associations[0];
   }
 };
 </script>
