@@ -22,7 +22,6 @@ export default {
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
-  data: () => ({ active: false }),
   computed: {
     isMultiSelect() {
       return this.meta.type === 'MULTISELECT';
