@@ -2,7 +2,7 @@
   <v-layout justify-center class="elevation-1 white">
     <v-flex>
       <v-toolbar color="white" flat>
-        <v-spacer/>
+        <v-spacer />
         <v-btn @click.stop="showUserDialog()" color="primary darken-1" outline>
           <v-icon class="pr-2">mdi-account-plus-outline</v-icon>
           Add user
@@ -15,7 +15,7 @@
               v-model="showArchived"
               label="Archived"
               color="primary"
-              hide-details/>
+              hide-details />
           </v-flex>
           <v-flex>
             <v-text-field
@@ -24,7 +24,7 @@
               label="Search"
               single-line
               hide-details
-              clearable/>
+              clearable />
           </v-flex>
         </v-layout>
         <v-data-table
@@ -50,8 +50,8 @@
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
                 <v-btn
-                  :disabled="user.id === item.id"
                   @click="archiveOrRestore(item)"
+                  :disabled="user.id === item.id"
                   color="primary"
                   small
                   flat
@@ -66,10 +66,10 @@
         </v-data-table>
       </div>
       <user-dialog
-        :visible.sync="userDialog"
-        :userData="editedUser"
         @updated="fetch(defaultPage)"
-        @created="fetch(defaultPage)"/>
+        @created="fetch(defaultPage)"
+        :visible.sync="userDialog"
+        :user-data="editedUser" />
     </v-flex>
   </v-layout>
 </template>

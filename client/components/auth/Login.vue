@@ -3,24 +3,24 @@
     <div class="message">{{ message }}</div>
     <form @submit.prevent="submit" novalidate>
       <v-text-field
-        v-validate="{ required: true, email: true }"
         v-model="email"
+        v-validate="{ required: true, email: true }"
         :error-messages="vErrors.collect('email')"
         prepend-icon="mdi-email-outline"
         type="email"
         name="email"
         label="Email"
-        class="py-2"/>
+        class="py-2" />
       <v-text-field
-        v-validate="{ required: true }"
         v-model="password"
+        v-validate="{ required: true }"
         :error-messages="vErrors.collect('password')"
         prepend-icon="mdi-lock-outline"
         browser-autocomplete="new-password"
         type="password"
         name="password"
         label="Password"
-        class="py-2"/>
+        class="py-2" />
       <v-btn :disabled="!isValid" color="primary" outline block type="submit">
         Log in
       </v-btn>

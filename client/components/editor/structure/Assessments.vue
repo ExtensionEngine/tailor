@@ -13,19 +13,19 @@
       <assessment-item
         v-for="it in assessments"
         :key="it._cid"
-        :assessment="it"
-        :expanded="isSelected(it)"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @delete="requestRemoveConfirmation(it)"/>
+        @delete="requestRemoveConfirmation(it)"
+        :assessment="it"
+        :expanded="isSelected(it)" />
     </ul>
     <add-element
+      @add="addAssessment"
       :include="['ASSESSMENT']"
       :activity="activity"
       :layout="false"
-      @add="addAssessment"
       large
-      label="Add assessment"/>
+      label="Add assessment" />
   </div>
 </template>
 

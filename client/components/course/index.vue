@@ -18,7 +18,7 @@
       </v-tab>
     </v-tabs>
     <div class="tab-content" infinite-wrapper>
-      <router-view :showLoader="showLoader"/>
+      <router-view :show-loader="showLoader" />
     </div>
   </div>
 </template>

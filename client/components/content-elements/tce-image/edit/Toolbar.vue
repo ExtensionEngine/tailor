@@ -4,13 +4,13 @@
       <li class="btn btn-link btn-sm upload-button">
         <label for="upload" class="upload-label">
           <span class="mdi mdi-image"></span> Upload
-          <input @change="upload" id="upload" type="file" class="upload-input"/>
+          <input @change="upload" id="upload" type="file" class="upload-input">
         </label>
       </li>
       <li
         v-if="isUploaded"
-        :class="{ 'active': currentTool === 'cropper' }"
         @click="toggleTool('cropper')"
+        :class="{ 'active': currentTool === 'cropper' }"
         class="btn btn-link btn-sm">
         <span class="mdi mdi-crop"></span> Crop
       </li>

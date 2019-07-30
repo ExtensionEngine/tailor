@@ -17,9 +17,9 @@
         <aplayer
           v-if="source"
           v-show="!error"
-          :music="playerOptions"
           @error="error = 'Audio cannot be played.'"
-          mode="order"/>
+          :music="playerOptions"
+          mode="order" />
         <div v-if="error" class="error">
           <div class="message">
             <span class="icon mdi mdi-alert"></span>
