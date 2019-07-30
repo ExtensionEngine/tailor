@@ -28,6 +28,7 @@ import compact from 'lodash/compact';
 import concat from 'lodash/concat';
 import every from 'lodash/every';
 import filter from 'lodash/filter';
+import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
@@ -73,13 +74,10 @@ export default {
     },
     groupedOptions() {
       const grouped = groupBy(this.options, 'type');
-      const withTypes = map(grouped, (it, type) => {
+      return flatMap(grouped, (it, type) => {
         const headerLabel = pluralize(getLevel(type).label);
         return concat({ header: headerLabel }, it);
       });
-      let flatten = [];
-      withTypes.forEach(it => flatten.push(...it));
-      return flatten;
     },
     selectPlaceholder() {
       return isEmpty(this.options) ? 'No activities' : this.placeholder;
