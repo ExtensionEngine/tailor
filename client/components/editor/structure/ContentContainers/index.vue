@@ -96,7 +96,7 @@ export default {
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
-      this.reorderElement({ element, context });
+      this.reorderElements({ element, context });
     },
     requestDeletion(content, action, name) {
       appChannel.emit('showConfirmationModal', {
