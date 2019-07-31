@@ -32,6 +32,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$primary: #455a64;
+$primary-lighten: #768c97;
+
 .control {
   padding: 7px 8px;
 
@@ -46,6 +49,24 @@ export default {
 
     .form-control {
       background-color: inherit;
+    }
+
+    .vdatetime-popup__header,
+    .vdatetime-calendar__month__day--selected span > span {
+      background: $primary;
+    }
+
+    .vdatetime-time-picker__item,
+    .vdatetime-month-picker__item,
+    .vdatetime-year-picker__item {
+      color: $primary-lighten;
+    }
+
+    .vdatetime-popup__actions__button,
+    .vdatetime-time-picker__item--selected,
+    .vdatetime-month-picker__item--selected,
+    .vdatetime-year-picker__item--selected {
+      color: $primary;
     }
   }
 }
