@@ -96,7 +96,7 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (!isValid) return;
         const associations = compact(castArray(value));
-        let activity = cloneDeep(this.activity) || {};
+        const activity = cloneDeep(this.activity) || {};
         set(activity, `refs.${this.type}`, map(associations, 'id'));
         this.update(activity);
       });
