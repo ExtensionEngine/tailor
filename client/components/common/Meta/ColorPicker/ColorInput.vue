@@ -2,18 +2,10 @@
   <div class="input">
     <color-picker v-model="color" />
     <div class="actions">
-      <button
-        @click="$emit('close')"
-        type="button"
-        class="btn btn-default btn-cancel">
-        Cancel
-      </button>
-      <button
-        @click="submit(color)"
-        type="button"
-        class="btn btn-primary btn-submit">
+      <v-btn @click="$emit('close')" outline>Cancel</v-btn>
+      <v-btn @click="submit(color)" depressed color="primary lighten-1">
         Submit
-      </button>
+      </v-btn>
     </div>
   </div>
 </template>
@@ -41,25 +33,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn {
-  margin-right: 5px;
-  padding: 6px 16px;
-  font-family: $font-family-secondary;
-  font-size: 12.5px;
-  font-weight: 500;
-  outline: none;
-}
-
 .input {
   text-align: center;
 
   .actions {
     display: inline-block;
     padding-top: 8px;
-
-    .btn {
-      margin-right: 5px;
-    }
   }
 }
 
