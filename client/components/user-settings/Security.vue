@@ -1,20 +1,20 @@
 <template>
-  <v-layout pb-3 px-4 mr-2>
+  <v-layout pt-3 px-4 mr-2>
     <v-spacer />
     <v-btn
       @click="isVisible = true"
       color="primary"
-      outline>
-      Change Password
+      flat>
+      <v-icon small class="mr-1">mdi-lock</v-icon>Change Password
     </v-btn>
     <v-dialog v-model="isVisible" v-hotkey="{ esc: hide }" width="700px">
       <v-form @submit.prevent="submit">
         <v-card class="pa-3">
           <v-card-title class="headline">
-            <v-avatar color="secondary" size="38" class="mr-2">
-              <v-icon color="white">mdi-security</v-icon>
+            <v-avatar color="primary" size="38" class="mr-2">
+              <v-icon color="white">mdi-lock</v-icon>
             </v-avatar>
-            Security
+            Change Password
           </v-card-title>
           <v-card-text>
             <v-text-field
@@ -55,9 +55,9 @@
               Forgot password ?
             </router-link>
             <v-spacer />
-            <v-btn @click="hide" flat color="secondary">Cancel</v-btn>
+            <v-btn @click="hide" flat color="primary">Cancel</v-btn>
             <v-btn
-              :disabled="!hasChanges"
+              :disabled="!isValid"
               outline
               color="primary"
               type="submit">
@@ -74,8 +74,6 @@
 import { mapActions } from 'vuex';
 import { withValidation } from 'utils/validation';
 
-const snackOpts = { right: true };
-
 const defaultData = () => ({
   currentPassword: null,
   newPassword: null,
@@ -90,27 +88,35 @@ export default {
     isVisible: false
   }),
   computed: {
-    hasChanges() {
-      return Object.keys(this.vFields).some(name => this.vFields[name].changed);
+    isValid() {
+      return Object.keys(this.vFields).every(key => this.vFields[key].valid);
     }
   },
   methods: {
     ...mapActions(['changePassword', 'logout']),
     hide() {
-      Object.assign(this, defaultData());
-      this.$validator.reset();
       this.isVisible = false;
+      return this.reset();
+    },
+    reset() {
+      this.$validator.reset();
+      return Object.assign(this, defaultData());
     },
     submit() {
-      const { currentPassword, newPassword, $snackbar } = this;
       return this.$validator.validateAll()
         .then(isValid => {
-          if (!isValid) return $snackbar.error('Validation failed!', snackOpts);
+          if (!isValid) return;
+          const { currentPassword, newPassword } = this;
           return this.changePassword({ currentPassword, newPassword })
-            .then(() => $snackbar.success('Password changed!', snackOpts))
+            .then(() => this.$snackbar.show('Password changed!'))
             .then(() => this.logout())
-            .catch(() => $snackbar.error(`Current password isn't valid!`, snackOpts));
+            .catch(() => this.$snackbar.error(`Current password isn't valid!`));
         });
+    }
+  },
+  watch: {
+    isVisible(val) {
+      if (!val) return this.reset();
     }
   }
 };

@@ -1,40 +1,40 @@
 <template>
   <v-form @submit.prevent="updateUser">
-    <v-layout column pt-3 px-4 mx-3>
+    <v-layout column pt-2 px-4 mx-3>
       <v-text-field
-        v-model="context.email"
-        v-validate="{ required: true, email: true }"
+        v-model="email"
+        v-validate="'required|email'"
         :error-messages="vErrors.collect('email')"
         data-vv-as="Email"
         data-vv-name="email"
         name="email"
         label="Email" />
       <v-text-field
-        v-model="context.firstName"
-        v-validate="{ max: 20 }"
+        v-model="firstName"
+        v-validate="'required|min:2|max:20'"
         :error-messages="vErrors.collect('firstName')"
         data-vv-as="First name"
         data-vv-name="firstName"
         label="First name" />
       <v-text-field
-        v-model="context.lastName"
-        v-validate="{ max: 20 }"
+        v-model="lastName"
+        v-validate="'required|min:2|max:20'"
         :error-messages="vErrors.collect('lastName')"
         data-vv-as="Last Name"
         data-vv-name="lastName"
         label="Last name" />
     </v-layout>
-    <v-layout px-4 mx-2>
+    <v-layout pb-3 px-4 mx-2>
       <v-spacer />
       <v-btn
         @click="resetUser"
-        :disabled="!hasChanges"
+        :disabled="!hasChanges && !vErrors.any()"
         flat
-        color="secondary">
+        color="primary">
         Cancel
       </v-btn>
       <v-btn
-        :disabled="!hasChanges"
+        :disabled="!hasChanges || !isValid"
         outline
         color="primary"
         type="submit">
@@ -49,8 +49,6 @@ import { mapActions, mapState } from 'vuex';
 import pick from 'lodash/pick';
 import { withValidation } from 'utils/validation';
 
-const snackOpts = { right: true };
-
 const ATTRIBUTES = ['firstName', 'lastName', 'email'];
 
 const defaultData = () => ({
@@ -62,33 +60,37 @@ const defaultData = () => ({
 export default {
   name: 'user-info',
   mixins: [withValidation()],
-  data: () => ({ context: defaultData() }),
+  data: () => defaultData(),
   computed: {
     ...mapState({ user: state => state.auth.user }),
+    userAttrs: () => ATTRIBUTES,
     hasChanges() {
-      return Object.keys(this.vFields).some(name => this.vFields[name].changed);
+      return Object.keys(this.vFields).some(key => this.vFields[key].changed);
     },
-    contextAttrs: () => ATTRIBUTES
+    isValid() {
+      return Object.keys(this.vFields).every(key => this.vFields[key].valid);
+    }
   },
   methods: {
     ...mapActions(['updateInfo']),
     updateUser() {
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return this.$snackbar.error('Validation failed!', snackOpts);
-        return this.updateInfo(pick(this.context, this.contextAttrs))
+      return this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
+        return this.updateInfo(pick(this, this.userAttrs))
           .then(() => {
-            this.$snackbar.success('User information updated!', snackOpts);
-          });
-      })
-      .catch(() => this.$snackbar.error('Email already exists!', snackOpts));
+            this.$snackbar.show('User information updated!');
+            return this.resetUser();
+          })
+          .catch(() => this.$snackbar.error('Email already exists!'));
+      });
     },
     resetUser() {
       this.$validator.reset();
-      this.context = pick(this.user, this.contextAttrs);
+      return Object.assign(this, pick(this.user, this.userAttrs));
     }
   },
   created() {
-    this.resetUser();
+    return this.resetUser();
   }
 };
 </script>

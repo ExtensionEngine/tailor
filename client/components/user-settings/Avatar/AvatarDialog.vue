@@ -1,25 +1,64 @@
 <template>
   <v-dialog v-model="show" width="640">
     <v-card>
-      <v-card-title class="elevation-2 primary">
-        <v-icon>mdi-lock-open</v-icon>
-        <h4>Change Avatar</h4>
+      <v-card-title class="headline">
+        <v-avatar color="primary" size="38" class="mr-2">
+          <v-icon color="white">mdi-image</v-icon>
+        </v-avatar>
+        Change Avatar
         <v-spacer />
-        <v-icon @click="close">mdi-close-circle-outline</v-icon>
+        <v-menu
+          offset-y
+          left
+          min-width="120px"
+          transition="slide-y-transition">
+          <v-btn
+            slot="activator"
+            color="primary"
+            outline
+            flat>
+            <v-icon small class="mr-1">mdi-pencil</v-icon>Edit
+          </v-btn>
+          <v-list>
+            <v-list-tile class="pa-0">
+              <v-btn
+                @click="remove"
+                :disabled="disableRemove"
+                color="primary"
+                flat>
+                <v-icon small class="mr-1">mdi-eraser</v-icon>Remove
+              </v-btn>
+            </v-list-tile>
+            <v-list-tile class="pa-0">
+              <v-btn @click="upload" color="primary" flat>
+                <v-icon small class="mr-1">mdi-upload</v-icon>Upload
+              </v-btn>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
       </v-card-title>
       <v-card-text>
-        <croppa
-          v-model="croppa"
-          v-bind="options"
-          :initial-image="imgUrl"
-          prevent-white-space />
+        <v-layout justify-center>
+          <croppa
+            v-model="croppa"
+            @new-image="disabled = false"
+            v-bind="options"
+            :initial-image="imgUrl"
+            prevent-white-space />
+        </v-layout>
       </v-card-text>
-      <v-divider />
       <v-card-actions>
-        <v-spacer />
-        <v-btn v-if="croppa.imageSet" @click="croppa.remove()" flat>Remove</v-btn>
-        <v-btn @click="croppa.chooseFile()" flat>Upload</v-btn>
-        <v-btn @click="confirm" color="primary">Update</v-btn>
+        <v-layout pb-3 pr-3>
+          <v-spacer />
+          <v-btn @click="close" flat color="primary">Cancel</v-btn>
+          <v-btn
+            @click="confirm"
+            :disabled="disabled"
+            outline
+            color="primary">
+            Update
+          </v-btn>
+        </v-layout>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -27,6 +66,9 @@
 
 <script>
 import { avatar as avatarOpts } from 'shared';
+// import gravatar from 'gravatar';
+
+// const gravatarConfig = { size: 130, default: 'mp' };
 
 export default {
   name: 'avatar-dialog',
@@ -36,8 +78,9 @@ export default {
   },
   data() {
     return {
-      croppa: {},
-      image: null
+      croppa: null,
+      image: null,
+      disabled: true
     };
   },
   computed: {
@@ -53,17 +96,33 @@ export default {
       set(value) {
         if (!value) this.close();
       }
+    },
+    disableRemove() {
+      return this.croppa && !this.croppa.hasImage();
     }
   },
   methods: {
     close() {
       this.$emit('update:visible', false);
     },
+    remove() {
+      this.croppa.remove();
+      this.disabled = false;
+    },
+    upload() {
+      this.croppa.chooseFile();
+    },
     confirm() {
       const { mimetype, compressionRate } = avatarOpts;
       const imgUrl = this.croppa.generateDataUrl(mimetype, compressionRate);
       this.$emit('update', imgUrl);
       this.close();
+    }
+  },
+  watch: {
+    visible(val) {
+      if (val) this.croppa.refresh();
+      this.disabled = true;
     }
   }
 };
@@ -75,32 +134,11 @@ $image-bg-color: #f5f5f5;
 $image-width: 240px;
 $image-height: 240px;
 
-.v-card__title {
-  height: 55px;
-  color: #fff;
-
-  .v-icon {
-    margin-right: 8px;
-    color: inherit;
-  }
-
-  h4 {
-    margin: 0 8px;
-    font-weight: 300;
-  }
-}
-
-.v-dialog__content {
-  align-items: flex-start;
-  margin-top: 150px;
-}
-
 .croppa-container {
   overflow: hidden;
   border-radius: 50%;
   width: $image-width;
   height: $image-height;
-  margin: 25px auto;
   background-color: $image-bg-color;
   border: $image-border;
   cursor: pointer;
@@ -118,8 +156,11 @@ $image-height: 240px;
   }
 }
 
-.slider {
-  max-width: 240px;
-  margin: 0 auto;
+.v-list {
+  padding: 0;
+
+  /deep/ .v-list__tile {
+    padding: 0;
+  }
 }
 </style>

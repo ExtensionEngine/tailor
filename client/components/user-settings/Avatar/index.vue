@@ -1,21 +1,28 @@
 <template>
-  <v-layout justify-center pt-5 pb-4 mb-1>
-    <v-avatar size="120px">
+  <v-layout justify-center pb-3>
+    <v-avatar size="150px">
       <div class="img-container">
         <img v-if="image" :src="image">
-        <v-icon v-else size="106px" color="grey">mdi-account</v-icon>
-        <v-icon @click="dialog = true" dark class="overlay">mdi-camera</v-icon>
+        <v-icon v-else size="142px" color="grey">mdi-account</v-icon>
+        <v-icon
+          @click="dialog = true"
+          dark
+          size="36px"
+          class="overlay">
+          mdi-camera
+        </v-icon>
       </div>
     </v-avatar>
-    <avatar-dialog @update="updateAvatar" :visible.sync="dialog" :img-url="image" />
+    <avatar-dialog
+      @update="updateAvatar"
+      :visible.sync="dialog"
+      :img-url="image" />
   </v-layout>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 import AvatarDialog from './AvatarDialog';
-
-const snackOpts = { right: true };
 
 export default {
   name: 'user-avatar',
@@ -32,8 +39,7 @@ export default {
     ...mapActions(['updateInfo']),
     updateAvatar(imgUrl) {
       return this.updateInfo({ imgUrl }).then(() => {
-        const { $snackbar } = this;
-        $snackbar.success('Your profile picture has been updated.', snackOpts);
+        this.$snackbar.show('Your profile picture has been updated!');
       });
     }
   },
@@ -44,8 +50,8 @@ export default {
 <style lang="scss" scoped>
 $image-border: 4px solid #e3e3e3;
 $image-bg-color: #f5f5f5;
-$image-width: 120px;
-$image-height: 120px;
+$image-width: 150px;
+$image-height: 150px;
 
 .v-avatar {
   .img-container {

@@ -13,11 +13,10 @@
       <v-layout justify-center>
         <v-flex lg8 xl6>
           <v-card>
+            <user-security />
             <user-avatar />
             <v-divider />
             <user-info />
-            <v-divider />
-            <user-security />
           </v-card>
         </v-flex>
       </v-layout>
