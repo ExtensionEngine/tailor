@@ -3,33 +3,33 @@
     <v-layout row align-center>
       <v-flex grow>
         <v-text-field
+          v-model="name"
           v-validate="{ required: true, min: 2, max: 250 }"
           :error-messages="vErrors.collect('name')"
           :autofocus="true"
           :placeholder="namePlaceholder"
-          v-model="name"
-          name="name"/>
+          name="name" />
       </v-flex>
       <v-flex v-if="showLevelPicker" class="type-select">
         <v-select
+          v-model="levelType"
           v-validate="{ required: true }"
           :error-messages="vErrors.collect('type')"
-          v-model="levelType"
           :items="levels"
           item-text="label"
           item-value="type"
           name="type"
           placeholder="Type">
-          <template slot="item" slot-scope="levels">
-            <div v-if="levels.item.group">
+          <template slot="item" slot-scope="{ item }">
+            <div v-if="item.group">
               <v-icon color="grey lighten-1">mdi-subdirectory-arrow-right</v-icon>
-              {{ levels.item.group }}
+              {{ item.group }}
             </div>
             <div
               v-else
-              :class="{ 'pl-3': levels.item.level > parent.level }"
+              :class="{ 'pl-3': item.level > parent.level }"
               class="black--text">
-              {{ levels.item.label }}
+              {{ item.label }}
             </div>
           </template>
         </v-select>
@@ -38,8 +38,8 @@
         <v-item-group>
           <v-btn @click.stop="$emit('close')" outline>Cancel</v-btn>
           <v-btn
-            :disabled="vErrors.any()"
             @click.stop="create"
+            :disabled="vErrors.any()"
             depressed
             color="primary lighten-1"
             class="mr-0">

@@ -3,29 +3,29 @@
     <v-layout row align-center>
       <v-flex grow>
         <v-text-field
+          v-model="name"
           v-validate="{ required: true, min: 2, max: 250 }"
           :error-messages="vErrors.collect('name')"
           :autofocus="true"
           :placeholder="namePlaceholder"
-          v-model="name"
-          name="name"/>
+          name="name" />
       </v-flex>
       <v-flex shrink>
         <v-select
-          v-validate="{ required: true }"
           v-if="showLevelPicker"
-          :error-messages="vErrors.collect('type')"
           v-model="levelType"
+          v-validate="{ required: true }"
+          :error-messages="vErrors.collect('type')"
           :items="levels"
           item-text="label"
           item-value="type"
           name="type"
-          placeholder="Type"/>
+          placeholder="Type" />
       </v-flex>
       <v-flex shrink>
         <v-btn
-          :disabled="vErrors.any()"
           @click.stop="create"
+          :disabled="vErrors.any()"
           color="primary lighten-1"
           class="px-5"
           depressed>
@@ -40,7 +40,6 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
-import multiselect from '../../common/Select';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -84,8 +83,7 @@ export default {
   },
   created() {
     if (!this.showLevelPicker) this.levelType = first(this.levels).type;
-  },
-  components: { multiselect }
+  }
 };
 </script>
 
