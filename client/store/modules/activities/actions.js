@@ -34,7 +34,10 @@ const remove = ({ state, commit }, model) => {
   }
   const descendantsIds = descendants.map(it => it.id);
   return api.removeLink(model)
-    .then(data => commit('removeLink', [...data, ...descendantsIds]));
+    .then(data => commit('removeLink', {
+      ...data,
+      ids: [...descendantsIds, ...data.ids]
+    }));
 };
 
 const publish = ({ commit }, activity) => {
