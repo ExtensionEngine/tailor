@@ -9,39 +9,39 @@
       </v-card-title>
       <v-card-text>
         <div v-if="showLoader" class="search-spinner">
-          <v-progress-circular color="primary" indeterminate/>
+          <v-progress-circular color="primary" indeterminate />
         </div>
         <div v-else-if="selectedRepository">
           <v-container py-3 pr-5 mx-0 class="input-section">
             <v-autocomplete
+              @input="updateSelected"
               :value="selectedRepository"
               :items="repositories"
               :label="schema.name"
-              @input="updateSelected"
               prepend-inner-icon="mdi-magnify"
               item-text="name"
-              item-value="id"/>
+              item-value="id" />
             <v-text-field
               v-model="search"
               :placeholder="`Filter selected ${schema.name}...`"
               clearable
               prepend-inner-icon="mdi-filter-outline"
-              clear-icon="mdi-close-circle-outline"/>
+              clear-icon="mdi-close-circle-outline" />
           </v-container>
           <repository-tree
+            @toggleSelect="toggleSelect"
             :activities="selectedRepository.children"
             :search="search"
             :selected="selected"
-            :schemaName="schema.name"
-            @toggleSelect="toggleSelect"/>
+            :schema-name="schema.name" />
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-spacer/>
+        <v-spacer />
         <v-btn @click="$emit('cancel')">Cancel</v-btn>
         <v-btn
-          :disabled="!selected.length"
           @click="$emit('copy', selected)"
+          :disabled="!selected.length"
           color="primary"
           outline>
           {{ copyButtonLabel }}

@@ -13,8 +13,8 @@
     <template v-slot:prepend="{ item, open }">
       <v-icon
         v-if="item.level"
-        :disabled="!isSupported(item.level)"
-        @click="$emit('toggleSelect', item)">
+        @click="$emit('toggleSelect', item)"
+        :disabled="!isSupported(item.level)">
         {{ getCheckIcon(item.id) }}
       </v-icon>
     </template>
