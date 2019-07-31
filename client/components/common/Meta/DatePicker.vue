@@ -49,6 +49,7 @@ $primary-lighten: #768c97;
 
     .form-control {
       background-color: inherit;
+      box-shadow: none;
     }
 
     .vdatetime-popup__header,
