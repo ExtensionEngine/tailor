@@ -5,7 +5,6 @@ const { getFileUrl } = require('./');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
-const nodeUrl = require('url');
 const Promise = require('bluebird');
 const storage = require('./index');
 const toPairs = require('lodash/toPairs');
@@ -58,7 +57,7 @@ processor.IMAGE = asset => {
   }
 
   if (isUrl(image)) {
-    let url = nodeUrl.parse(image);
+    const url = new URL(image);
     asset.data.url = url.pathname.substr(1, image.length);
     return Promise.resolve(asset);
   }
