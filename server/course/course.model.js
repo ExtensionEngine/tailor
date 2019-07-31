@@ -72,7 +72,7 @@ class Course extends Model {
     return {
       afterDestroy(course) {
         return Course.findByPk(course.id, { paranoid: false })
-          .then(course => publishingService.detachRepository(course));
+          .then(course => publishingService.updateRepositoryCatalog(course));
       }
     };
   }

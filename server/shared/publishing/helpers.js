@@ -41,29 +41,25 @@ function publishActivity(activity) {
   });
 }
 
-function updateRepositoryCatalog(repository, publishedAt) {
+function getRepositoriesCatalog() {
   return storage.getFile('repository/index.json').then(buffer => {
-    let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
+    return (buffer && JSON.parse(buffer.toString('utf8'))) || [];
+  });
+}
+
+function updateRepositoryCatalog(repository, publishedAt) {
+  const detachedAt = repository.deletedAt;
+  return getRepositoriesCatalog().then(catalog => {
     let existing = find(catalog, { id: repository.id });
-    const repositoryData = { ...getRepositoryAttrs(repository), publishedAt };
+    if (!existing && detachedAt) return;
+    const published = publishedAt || existing.publishedAt;
+    const repositoryData = { ...getRepositoryAttrs(repository), publishedAt: published };
     if (existing) {
+      if (detachedAt) repositoryData.detachedAt = detachedAt;
       Object.assign(existing, omit(repositoryData, ['id']));
     } else {
       catalog.push(repositoryData);
     }
-    const data = Buffer.from(JSON.stringify(catalog), 'utf8');
-    return storage.saveFile('repository/index.json', data);
-  });
-}
-
-function detachRepository(repository) {
-  const detachedAt = repository.deletedAt;
-  return storage.getFile('repository/index.json').then(buffer => {
-    let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
-    let existing = find(catalog, { id: repository.id });
-    if (!existing) return;
-    const repositoryData = { ...getRepositoryAttrs(repository), detachedAt };
-    Object.assign(existing, omit(repositoryData, ['id']));
     const data = Buffer.from(JSON.stringify(catalog), 'utf8');
     return storage.saveFile('repository/index.json', data);
   });
@@ -290,7 +286,7 @@ module.exports = {
   publishActivity,
   unpublishActivity,
   publishRepositoryDetails,
+  updateRepositoryCatalog,
   fetchActivityContent,
-  getRepositoryAttrs,
-  detachRepository
+  getRepositoryAttrs
 };
