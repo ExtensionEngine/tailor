@@ -12,11 +12,12 @@ const { role: roles } = require('../../config/shared');
 
 const { user: { ADMIN, USER, INTEGRATION } } = roles;
 
-const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
 const bcrypt = Promise.promisifyAll(require('bcryptjs'));
+const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
+
 const noop = Function.prototype;
 
-const gravatarConfig = { size: 130, default: 'mp' };
+const gravatarConfig = { size: 130, default: 'identicon' };
 
 class User extends Model {
   static fields({ DATE, ENUM, STRING, TEXT, VIRTUAL }) {
@@ -50,7 +51,11 @@ class User extends Model {
       imgUrl: {
         type: TEXT,
         field: 'img_url',
-        defaultValue: ''
+        defaultValue: '',
+        get() {
+          const imgUrl = this.getDataValue('imgUrl');
+          return imgUrl || gravatar.url(this.email, gravatarConfig, true /* https */);
+        }
       },
       profile: {
         type: VIRTUAL,
@@ -92,20 +97,20 @@ class User extends Model {
 
   static hooks(Hooks) {
     return {
-      [Hooks.beforeCreate]: onUpsert,
-      [Hooks.beforeUpdate]: onUpsert,
+      [Hooks.beforeCreate](user) {
+        return user.encryptPassword();
+      },
+      [Hooks.beforeUpdate](user) {
+        return user.changed('password')
+          ? user.encryptPassword()
+          : Promise.resolve();
+      },
       [Hooks.beforeBulkCreate](users) {
         let updates = [];
         users.forEach(user => updates.push(user.encryptPassword()));
         return Promise.all(updates);
       }
     };
-
-    function onUpsert(user) {
-      return user
-        .setGravatar()
-        .encryptPassword();
-    }
   }
 
   static options() {
@@ -154,15 +159,10 @@ class User extends Model {
   }
 
   encryptPassword() {
-    if (!this.changed('password') || !this.password) return Promise.resolve(false);
-    return this.encrypt(this.password)
-      .then(password => (this.password = password));
-  }
-
-  setGravatar() {
-    if (!this.changed('email')) return this;
-    this.imgUrl = gravatar.url(this.email, gravatarConfig, true /* https */);
-    return this;
+    if (!this.password) return Promise.resolve(false);
+    return this
+      .encrypt(this.password)
+      .then(pw => (this.password = pw));
   }
 
   createToken(options = {}) {

@@ -40,10 +40,10 @@
       <v-card-text>
         <v-layout justify-center>
           <croppa
-            v-model="croppa"
-            @new-image="disabled = false"
+            ref="croppa"
+            @new-image="onNewImage"
             v-bind="options"
-            :initial-image="imgUrl"
+            :initial-image="image"
             prevent-white-space />
         </v-layout>
       </v-card-text>
@@ -66,21 +66,23 @@
 
 <script>
 import { avatar as avatarOpts } from 'shared';
-// import gravatar from 'gravatar';
+import gravatar from 'gravatar';
 
-// const gravatarConfig = { size: 130, default: 'mp' };
+const gravatarConfig = { size: 130, default: 'identicon' };
+
+const isGravatar = img => img.indexOf('gravatar.com') !== -1;
 
 export default {
   name: 'avatar-dialog',
   props: {
-    visible: { type: Boolean, default: false },
-    imgUrl: { type: String, default: null }
+    user: { type: Object, required: true },
+    visible: { type: Boolean, default: false }
   },
   data() {
     return {
-      croppa: null,
-      image: null,
-      disabled: true
+      image: this.user.imgUrl,
+      disabled: true,
+      isGravatar: isGravatar(this.user.imgUrl)
     };
   },
   computed: {
@@ -98,7 +100,7 @@ export default {
       }
     },
     disableRemove() {
-      return this.croppa && !this.croppa.hasImage();
+      return this.isGravatar;
     }
   },
   methods: {
@@ -106,22 +108,32 @@ export default {
       this.$emit('update:visible', false);
     },
     remove() {
-      this.croppa.remove();
+      this.$refs.croppa.remove();
       this.disabled = false;
+      this.image = gravatar.url(this.user.email, gravatarConfig, true);
+      this.isGravatar = true;
+      this.$refs.croppa.refresh();
     },
     upload() {
-      this.croppa.chooseFile();
+      this.$refs.croppa.chooseFile();
+    },
+    onNewImage() {
+      this.disabled = false;
+      this.isGravatar = false;
     },
     confirm() {
       const { mimetype, compressionRate } = avatarOpts;
-      const imgUrl = this.croppa.generateDataUrl(mimetype, compressionRate);
+      const imgUrl = !this.isGravatar
+        ? this.$refs.croppa.generateDataUrl(mimetype, compressionRate)
+        : null;
       this.$emit('update', imgUrl);
       this.close();
     }
   },
   watch: {
     visible(val) {
-      if (val) this.croppa.refresh();
+      if (val) this.$refs.croppa.refresh();
+      this.image = this.user.imgUrl;
       this.disabled = true;
     }
   }

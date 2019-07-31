@@ -26,8 +26,7 @@
       z-index="1000">
       <v-btn slot="activator" icon class="mr-2">
         <v-avatar size="34" color="grey lighten-2">
-          <img v-if="user.imgUrl" :src="user.imgUrl">
-          <span v-else class="grey--text headline">{{ user.email[0] }}</span>
+          <img :src="user.imgUrl">
         </v-avatar>
       </v-btn>
       <v-list>

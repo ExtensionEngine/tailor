@@ -2,8 +2,7 @@
   <v-layout justify-center pb-3>
     <v-avatar size="150px">
       <div class="img-container">
-        <img v-if="image" :src="image">
-        <v-icon v-else size="142px" color="grey">mdi-account</v-icon>
+        <img :src="image">
         <v-icon
           @click="dialog = true"
           dark
@@ -16,7 +15,7 @@
     <avatar-dialog
       @update="updateAvatar"
       :visible.sync="dialog"
-      :img-url="image" />
+      :user="user" />
   </v-layout>
 </template>
 

@@ -39,10 +39,7 @@
             <tr :key="item.id">
               <td class="no-wrap text-xs-left">
                 <v-avatar color="primary lighten-2" size="40" dark>
-                  <img v-if="item.imgUrl" :src="item.imgUrl">
-                  <span v-else class="headline white--text">
-                    {{ item.email[0].toUpperCase() }}
-                  </span>
+                  <img :src="item.imgUrl">
                 </v-avatar>
               </td>
               <td class="no-wrap text-xs-left">{{ item.email }}</td>
