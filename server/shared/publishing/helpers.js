@@ -48,14 +48,15 @@ function getRepositoryCatalog() {
 }
 
 function updateRepositoryCatalog(repository, publishedAt) {
-  const detachedAt = repository.deletedAt;
   return getRepositoryCatalog().then(catalog => {
     let existing = find(catalog, { id: repository.id });
-    if (!existing && detachedAt) return;
-    const published = publishedAt || existing.publishedAt;
-    const repositoryData = { ...getRepositoryAttrs(repository), publishedAt: published };
+    if (!existing && repository.deletedAt) return;
+    const repositoryData = {
+      ...getRepositoryAttrs(repository),
+      publishedAt: publishedAt || existing.publishedAt,
+      detachedAt: repository.deletedAt
+    };
     if (existing) {
-      if (detachedAt) repositoryData.detachedAt = detachedAt;
       Object.assign(existing, omit(repositoryData, ['id']));
     } else {
       catalog.push(repositoryData);
@@ -283,6 +284,7 @@ function mapRelationships(relationships, activity) {
 }
 
 module.exports = {
+  getRepositoryCatalog,
   publishActivity,
   unpublishActivity,
   publishRepositoryDetails,
