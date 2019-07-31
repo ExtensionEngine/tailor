@@ -92,7 +92,9 @@ export default {
     },
     getChildren(activity) {
       const parentId = get(activity, 'id', null);
-      return filter(this.activities, { parentId });
+      return filter(this.activities, it => {
+        return it.parentId === parentId && !it.isOrigin;
+      });
     },
     getName(activity) {
       return get(activity, 'data.name', activity.type);
