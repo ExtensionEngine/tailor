@@ -1,10 +1,12 @@
 <template>
-  <div class="meta-file">
-    <label class="meta-name">{{ meta.label }}</label>
-    <file-upload
-      @upload="$emit('update', meta.key, $event)"
-      @delete="$emit('update', meta.key, null)"
-      v-bind="options" />
+  <div class="control">
+    <span class="title">{{ meta.label }}</span>
+    <div class="form-group">
+      <file-upload
+        @upload="$emit('update', meta.key, $event)"
+        @delete="$emit('update', meta.key, null)"
+        v-bind="options" />
+    </div>
   </div>
 </template>
 
@@ -33,11 +35,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.meta-file {
+.control {
   position: relative;
   min-height: 50px;
-  margin: 20px 0;
-  padding: 3px 8px;
+  padding: 7px 8px;
 
   &:hover {
     background-color: #f5f5f5;
@@ -47,10 +48,8 @@ export default {
     background-color: inherit;
   }
 
-  .meta-name {
-    width: 100%;
-    margin-bottom: 10px;
-    color: #808080;
+  .form-group {
+    margin: 10px 0 0;
   }
 }
 </style>

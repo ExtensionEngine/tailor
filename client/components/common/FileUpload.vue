@@ -17,12 +17,15 @@
         :class="[sm ? 'v-btn v-btn--small' : 'btn btn-material btn-sm upload-button']">
         {{ label }}
       </label>
-      <span
-        v-else
-        @click="downloadFile"
-        class="file-name">{{ fileName }}
-      </span>
-      <span v-if="fileKey" @click="deleteFile" class="mdi mdi-delete delete"></span>
+      <span v-else @click="downloadFile" class="file-name">{{ fileName }}</span>
+      <v-icon
+        v-if="fileKey"
+        @click="deleteFile"
+        color="primary lighten-1"
+        class="ml-2"
+        size="22">
+        mdi-delete
+      </v-icon>
     </form>
     <span class="help-block">{{ vErrors.first(id) }}</span>
   </div>
@@ -114,7 +117,7 @@ export default {
 }
 
 .file-name {
-  color: #00f;
+  color: #455a64;
   font-size: 16px;
   text-decoration: underline;
   cursor: pointer;
