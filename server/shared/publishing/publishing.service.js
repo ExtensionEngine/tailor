@@ -2,7 +2,7 @@
 
 const PromiseQueue = require('promise-queue');
 const {
-  deprecateRepository,
+  detachRepository,
   publishActivity,
   publishRepositoryDetails,
   unpublishActivity
@@ -25,8 +25,8 @@ class PublishingService {
     return this.queue.add(() => unpublishActivity(repository, activity));
   }
 
-  deprecateRepository(repository) {
-    return this.queue.add(() => deprecateRepository(repository));
+  detachRepository(repository) {
+    return this.queue.add(() => detachRepository(repository));
   }
 }
 

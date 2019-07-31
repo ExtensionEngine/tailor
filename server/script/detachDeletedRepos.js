@@ -16,11 +16,11 @@ function updateRepositoryCatalog(repositories) {
   return storage.getFile('repository/index.json').then(buffer => {
     console.info('Catalog fetched ...');
     let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
-    console.info('Updating deprecated repos ...');
+    console.info('Updating deleted repos ...');
     each(repositories, repo => {
       let existing = find(catalog, { id: repo.id });
       if (!existing) return;
-      const repositoryData = { ...getRepositoryAttrs(repo), deprecatedAt: repo.deletedAt };
+      const repositoryData = { ...getRepositoryAttrs(repo), detachedAt: repo.deletedAt };
       Object.assign(existing, omit(repositoryData, ['id']));
     });
     const data = Buffer.from(JSON.stringify(catalog), 'utf8');
