@@ -291,5 +291,6 @@ module.exports = {
   unpublishActivity,
   publishRepositoryDetails,
   fetchActivityContent,
+  getRepositoryAttrs,
   deprecateRepository
 };

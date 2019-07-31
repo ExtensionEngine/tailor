@@ -1,10 +1,10 @@
 const { Course, Sequelize } = require('../shared/database');
 const each = require('lodash/each');
 const omit = require('lodash/omit');
-const pick = require('lodash/pick');
 const find = require('lodash/find');
 const Op = Sequelize.Op;
 const storage = require('../shared/storage');
+const { getRepositoryAttrs } = require('../shared/publishing/helpers');
 
 Course.findAll({ where: { deletedAt: { [Op.ne]: null } }, paranoid: false })
   .then(deletedRepos => deletedRepos.length && updateRepositoryCatalog(deletedRepos))
@@ -26,16 +26,4 @@ function updateRepositoryCatalog(repositories) {
     const data = Buffer.from(JSON.stringify(catalog), 'utf8');
     return storage.saveFile('repository/index.json', data);
   });
-}
-
-function getRepositoryAttrs(repository) {
-  const attrs = ['id', 'uid', 'schema', 'name', 'description', 'data'];
-  let temp = pick(repository, attrs);
-  renameKey(temp, 'data', 'meta');
-  return temp;
-}
-
-function renameKey(obj, key, newKey) {
-  obj[newKey] = obj[key];
-  delete obj[key];
 }
