@@ -41,7 +41,7 @@ function publishActivity(activity) {
   });
 }
 
-function getRepositoriesCatalog() {
+function getRepositoryCatalog() {
   return storage.getFile('repository/index.json').then(buffer => {
     return (buffer && JSON.parse(buffer.toString('utf8'))) || [];
   });
@@ -49,7 +49,7 @@ function getRepositoriesCatalog() {
 
 function updateRepositoryCatalog(repository, publishedAt) {
   const detachedAt = repository.deletedAt;
-  return getRepositoriesCatalog().then(catalog => {
+  return getRepositoryCatalog().then(catalog => {
     let existing = find(catalog, { id: repository.id });
     if (!existing && detachedAt) return;
     const published = publishedAt || existing.publishedAt;
