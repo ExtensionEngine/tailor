@@ -2,7 +2,6 @@
 
 const path = require('path');
 const serverPort = require('./config/server').port;
-const yn = require('yn');
 
 const { NODE_ENV, STORAGE_PATH } = process.env;
 const imagesPath = 'assets/img';
@@ -82,9 +81,6 @@ module.exports = {
   output: {
     dir: 'dist',
     sourceMap: !isProduction
-  },
-  envs: {
-    ENABLE_ACTIVITY_LINKING: yn(process.env.ENABLE_ACTIVITY_LINKING)
   },
   chainWebpack(config, { mode }) {
     config.resolve.alias.merge(aliases);

@@ -1,10 +1,12 @@
 'use strict';
 
 const { Activity } = require('../shared/database');
+const { createError } = require('../shared/error/helpers');
 const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');
 const get = require('lodash/get');
 const { getOutlineLevels } = require('../../config/shared/activities');
+const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
 const { previewUrl } = require('../../config/server');
 const Promise = require('bluebird');
@@ -50,6 +52,7 @@ function remove({ course, activity, user }, res) {
 }
 
 function removeLink({ course, activity, user }, res) {
+  if (!course.isLinkingEnabled) return createError(NOT_FOUND, 'Not found');
   const options = { recursive: true, soft: true, context: { userId: user.id } };
   const unpublish = activity.publishedAt
     ? publishingService.unpublishActivity(course, activity)
@@ -68,16 +71,22 @@ function publish({ activity }, res) {
     .then(data => res.json({ data }));
 }
 
-function clone({ activity, body }, res) {
+function clone({ course, activity, body }, res) {
   const { courseId, parentId, position } = body;
-  return activity.clone(courseId, parentId, position).then(mappings => {
+  const { isLinkingEnabled } = course;
+  const options = {
+    courseId, parentId, position, isLinkingEnabled
+  };
+  return activity.clone(options).then(mappings => {
     const opts = { where: { id: Object.values(mappings) } };
     return Activity.findAll(opts).then(data => res.json({ data }));
   });
 }
 
-function link({ activity, body }, res) {
-  return activity.link(body).then(mappings => {
+function link({ course, activity, body }, res) {
+  const { isLinkingEnabled } = course;
+  if (!course.isLinkingEnabled) return createError(NOT_FOUND, 'Not found');
+  return activity.link({ ...body, isLinkingEnabled }).then(mappings => {
     const opts = { where: { id: mappings } };
     return Activity.findAll(opts).then(data => res.json({ data }));
   });

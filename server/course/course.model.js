@@ -7,7 +7,7 @@ const Promise = require('bluebird');
 
 class Course extends Model {
   static fields(DataTypes) {
-    const { DATE, JSONB, STRING, TEXT, UUID, UUIDV4 } = DataTypes;
+    const { DATE, JSONB, STRING, TEXT, UUID, UUIDV4, VIRTUAL } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -41,6 +41,12 @@ class Course extends Model {
       deletedAt: {
         type: DATE,
         field: 'deleted_at'
+      },
+      isLinkingEnabled: {
+        type: VIRTUAL,
+        get() {
+          return this.getSchemaConfig().linkingEnabled;
+        }
       }
     };
   }
@@ -65,6 +71,10 @@ class Course extends Model {
       through: CourseUser,
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
+  }
+
+  get isLinkingEnabled() {
+    return this.getSchemaConfig().linkingEnabled;
   }
 
   static options() {
@@ -111,15 +121,11 @@ class Course extends Model {
       const course = await Course.create(courseAttributes, { context, transaction });
       const where = { courseId: this.id, parentId: null };
       const src = await Activity.findAll({ where, transaction });
-      const options = await Activity.cloneActivities(
-        src, { courseId: course.id, transaction, cloneOrigins: true }
-      );
-      const map = await Activity.resolveClonedOrigins({
-        ...options,
-        transaction,
-        courseId: course.id
-      });
-      await course.mapClonedReferences(map, transaction);
+      let options = { courseId: course.id, transaction, cloneOrigins: true };
+      let idMap = await Activity.cloneActivities(src, options);
+      options = { ...options, isLinkingEnabled: course.isLinkingEnabled, idMap };
+      idMap = await Activity.resolveClonedOrigins(options);
+      await course.mapClonedReferences(idMap, transaction);
       return course;
     });
   }

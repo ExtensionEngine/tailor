@@ -12,15 +12,16 @@
 </template>
 
 <script>
-const isLinkingEnabled = process.env.ENABLE_ACTIVITY_LINKING;
+import { mapGetters } from 'vuex';
 export default {
   computed: {
+    ...mapGetters('course', ['isLinkingEnabled']),
     actions() {
       const select = action => () => this.$emit('selected', action);
       return [
         { label: 'Create', icon: 'plus', action: select('create') },
         { label: 'Copy', icon: 'content-copy', action: select('copy') },
-        isLinkingEnabled && { label: 'Use existing', icon: 'link', action: select('link') },
+        this.isLinkingEnabled && { label: 'Use existing', icon: 'link', action: select('link') },
         { label: 'Cancel', icon: 'close', action: () => this.$emit('close') }
       ].filter(Boolean);
     }

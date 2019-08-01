@@ -17,7 +17,7 @@ const storage = require('../storage');
 const without = require('lodash/without');
 const uniq = require('lodash/uniq');
 
-const { FLAT_REPO_STRUCTURE, ENABLE_ACTIVITY_LINKING } = process.env;
+const { FLAT_REPO_STRUCTURE } = process.env;
 
 const TES_ATTRS = [
   'id', 'uid', 'type', 'contentId', 'contentSignature',
@@ -25,15 +25,15 @@ const TES_ATTRS = [
 ];
 
 async function publishActivity(activity) {
-  if (ENABLE_ACTIVITY_LINKING && activity.isLink) return publishLinkedActivity(activity);
+  if (activity.isLink) return publishLinkedActivity(activity);
   return getStructureData(activity).then(async data => {
     let { repository, predecessors, spine } = data;
     predecessors.forEach(async it => {
       const exists = find(spine.structure, { id: it.id });
-      if (!exists) await addToSpine(spine, it);
+      if (!exists) await addToSpine(spine, it, repository);
     });
     activity.publishedAt = new Date();
-    await addToSpine(spine, activity);
+    await addToSpine(spine, activity, repository);
     return publishContent(repository, activity).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
       return saveSpine(spine)
@@ -49,7 +49,7 @@ async function publishLinkedActivity(activity) {
       const exists = find(spine.structure, { id: it.id });
       if (!exists) {
         if (it.isLink) await addLinkToSpine(spine, it);
-        else await addToSpine(spine, it);
+        else await addToSpine(spine, it, repository);
       }
     });
     activity.publishedAt = new Date();
@@ -57,8 +57,8 @@ async function publishLinkedActivity(activity) {
     return publishContent(repository, activity.origin).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.originId }), content);
       return saveSpine(spine)
-          .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
-          .then(() => activity.save());
+        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+        .then(() => activity.save());
     });
   });
 }
@@ -269,7 +269,7 @@ function saveSpine(spine) {
   return storage.saveFile(key, spineData).then(() => updatedSpine);
 }
 
-async function addToSpine(spine, activity) {
+async function addToSpine(spine, activity, { isLinkingEnabled }) {
   const relationships = getLevelRelationships(activity.type);
   const spineActivity = Object.assign(
     pick(activity, [
@@ -280,7 +280,7 @@ async function addToSpine(spine, activity) {
     }
   );
 
-  if (ENABLE_ACTIVITY_LINKING) {
+  if (isLinkingEnabled) {
     const children = await activity.getChildren();
     let childrenIds = [];
     if (children.length) {

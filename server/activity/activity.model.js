@@ -10,8 +10,6 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const TeachingElement = require('../teaching-element/te.model');
 
-const { ENABLE_ACTIVITY_LINKING } = process.env;
-
 class Activity extends Model {
   static fields(DataTypes) {
     const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4, INTEGER } = DataTypes;
@@ -198,11 +196,20 @@ class Activity extends Model {
     }, idMap);
   }
 
-  clone(courseId, parentId, position) {
+  /**
+   * @param {Object} options
+   * @param {Number} options.courseId
+   * @param {Number} options.parentId
+   * @param {Number} options.position
+   * @param {Boolean} options.isLinkingEnabled
+   * @returns {Promise}
+   */
+  clone(options) {
+    const { courseId, position } = options;
     const cloneOrigins = courseId !== this.courseId;
+    if (position) this.position = position;
     return this.sequelize.transaction(transaction => {
-      if (position) this.position = position;
-      const options = { courseId, parentId, cloneOrigins, transaction };
+      options = { ...options, cloneOrigins, transaction };
       return Activity.cloneActivities([this], options)
         .then(idMap => Activity.resolveClonedOrigins({ ...options, idMap }));
     });
@@ -213,10 +220,13 @@ class Activity extends Model {
    * @param {Object} options
    * @param {Number} options.courseId
    * @param {Object} options.idMap
+   * @param {Boolean} options.isLinkingEnabled
    * @param {SequelizeTransaction} options.transaction
    */
-  static async resolveClonedOrigins({ courseId, idMap, transaction }) {
-    if (!ENABLE_ACTIVITY_LINKING) return idMap;
+  static async resolveClonedOrigins(options) {
+    const { courseId, isLinkingEnabled, transaction } = options;
+    let { idMap } = options;
+    if (!isLinkingEnabled) return idMap;
     const activities = await Activity.findAll({ where: { courseId } });
     const origins = activities.filter(({ isOrigin }) => isOrigin);
     if (!origins.length) return idMap;
@@ -227,7 +237,6 @@ class Activity extends Model {
       await resolveOriginWithOneLink(link, { transaction });
       idMap = omitBy(idMap, id => id === link.id);
     });
-
     return idMap;
   }
 
@@ -377,7 +386,6 @@ class Activity extends Model {
 
   toJSON() {
     const values = super.toJSON();
-    if (!ENABLE_ACTIVITY_LINKING) return values;
     if (!this.isLink) {
       if (!this.isOrigin) {
         return {

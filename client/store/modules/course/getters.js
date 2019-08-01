@@ -18,6 +18,11 @@ export const schema = (_state, getters) => {
   return getters.course ? getSchema(getters.course.schema).name : '';
 };
 
+export const isLinkingEnabled = (_, { course }) => {
+  if (!course) return false;
+  return course.isLinkingEnabled;
+};
+
 export const structure = (_, { course }) => {
   if (!course) return;
   return getOutlineLevels(course.schema);
