@@ -6,7 +6,7 @@ const storage = require('../shared/storage');
 const { getRepositoryAttrs, getRepositoryCatalog } = require('../shared/publishing/helpers');
 
 Course.findAll({ paranoid: false })
-  .then(deletedRepos => deletedRepos.length && updateRepositoryCatalog(deletedRepos))
+  .then(repositories => repositories.length && updateRepositoryCatalog(repositories))
   .then(() => console.info('Catalog updated!'))
   .finally(() => process.exit(0));
 
