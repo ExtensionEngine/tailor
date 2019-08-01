@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar color="grey lighten-5" app dense fixed>
+  <v-app-bar color="grey lighten-5" app dense fixed>
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
       <v-avatar color="primary darken-1" size="34" class="mt-1">
         <img :src="logo" alt="Logo" class="logo">
@@ -14,7 +14,7 @@
         :to="to"
         color="blue-grey darken-3"
         exact
-        flat>
+        text>
         <v-icon class="pr-1">mdi-{{ icon }}</v-icon>
         <span class="toolbar-route">{{ name }}</span>
       </v-btn>
@@ -24,11 +24,13 @@
       transition="slide-y-transition"
       offset-y
       z-index="1000">
-      <v-btn slot="activator" icon class="mr-2">
-        <v-avatar size="34" color="grey lighten-2">
-          <span class="grey--text text--darken-1 headline">{{ user.email[0] }}</span>
-        </v-avatar>
-      </v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" icon class="mr-2">
+          <v-avatar size="34" color="grey lighten-2">
+            <span class="grey--text text--darken-1 headline">{{ user.email[0] }}</span>
+          </v-avatar>
+        </v-btn>
+      </template>
       <v-list>
         <v-list-tile>
           <v-list-tile-title>{{ user.email }}</v-list-tile-title>
@@ -38,7 +40,7 @@
         </v-list-tile>
       </v-list>
     </v-menu>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <script>

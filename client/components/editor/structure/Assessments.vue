@@ -2,7 +2,7 @@
   <div class="assessments">
     <div class="heading">
       <h2 class="blue-grey--text text--darken-3">Assessments</h2>
-      <v-btn v-if="hasAssessments" @click="toggleAssessments" flat small>
+      <v-btn v-if="hasAssessments" @click="toggleAssessments" text small>
         {{ allSelected ? 'hide all' : 'show all' }}
       </v-btn>
     </div>

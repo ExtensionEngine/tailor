@@ -56,7 +56,7 @@ export default {
   padding: 30px;
   text-align: left;
 
-  /deep/ .v-treeview-node__label {
+  ::v-deep .v-treeview-node__label {
     font-size: 17px;
   }
 }

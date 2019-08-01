@@ -31,7 +31,7 @@
         <v-btn
           @click="cloneRepository"
           :loading="inProgress"
-          outline>
+          outlined>
           Clone
         </v-btn>
       </v-card-actions>

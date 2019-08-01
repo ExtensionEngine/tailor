@@ -6,13 +6,13 @@
         <v-toolbar
           v-if="!isFlat"
           color="grey lighten-3"
-          flat
+          text
           dense>
           <v-spacer />
           <v-btn
             @click="toggleActivities"
             color="primary"
-            flat>
+            text>
             Toggle all
           </v-btn>
         </v-toolbar>
@@ -92,14 +92,14 @@ export default {
   overflow-y: scroll;
   overflow-y: overlay;
 
-  /deep/ {
+  ::v-deep {
     > :last-child {
       margin-bottom: 120px;
     }
   }
 }
 
-/deep/ .v-toolbar__content {
+::v-deep .v-toolbar__content {
   padding: 0;
 }
 </style>

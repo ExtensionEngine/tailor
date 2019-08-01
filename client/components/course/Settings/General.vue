@@ -4,7 +4,7 @@
       <v-btn
         @click="publish"
         :loading="publishing"
-        outline
+        outlined
         small
         class="pull-right">
         Publish info
@@ -95,7 +95,7 @@ export default {
 }
 
 .picker {
-  /deep/ .actions {
+  ::v-deep .actions {
     margin: 20px 0 0;
     text-align: left;
   }

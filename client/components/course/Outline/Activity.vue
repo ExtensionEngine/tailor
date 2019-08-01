@@ -11,7 +11,7 @@
           <v-btn
             v-if="hasSubtypes"
             @click="toggle()"
-            flat
+            text
             icon
             small>
             <v-icon size="26">mdi-{{ icon }}</v-icon>
@@ -27,7 +27,7 @@
             v-show="isEditable"
             :to="{ name: 'editor', params: { activityId: id } }"
             color="pink"
-            outline
+            outlined
             small>
             Open
           </v-btn>
@@ -183,7 +183,7 @@ export default {
     margin: 0;
     padding: 0;
 
-    /deep/ span {
+    ::v-deep span {
       padding: 0 10px;
       color: #fff;
     }

@@ -26,7 +26,7 @@
         </v-chip>
         <v-btn
           @click="$emit('selected')"
-          flat
+          text
           small
           class="pull-right collapse-item">
           Collapse
@@ -52,7 +52,7 @@
       <v-btn
         @click.stop="$emit('delete')"
         color="primary"
-        flat
+        text
         icon
         class="delete">
         <v-icon>mdi-close</v-icon>

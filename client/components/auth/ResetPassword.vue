@@ -25,7 +25,7 @@
       <v-btn
         :disabled="!isValid"
         color="primary"
-        outline
+        outlined
         block
         type="submit"
         class="mt-3">

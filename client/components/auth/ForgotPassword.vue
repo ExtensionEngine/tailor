@@ -18,7 +18,7 @@
       <v-btn
         :disabled="!isValid || showMessage"
         color="primary"
-        outline
+        outlined
         block
         type="submit">
         Send reset email

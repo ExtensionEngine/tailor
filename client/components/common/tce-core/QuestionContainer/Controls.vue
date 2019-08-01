@@ -1,7 +1,7 @@
 <template>
   <div class="controls">
     <div v-if="isEditing" class="pull-right">
-      <v-btn @click="$emit('cancel')" flat>
+      <v-btn @click="$emit('cancel')" text>
         Cancel
       </v-btn>
       <v-btn @click="save" color="primary">

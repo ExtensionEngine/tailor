@@ -11,7 +11,7 @@
             :disabled="isLoading"
             :loading="isLoading"
             color="blue-grey"
-            outline>
+            outlined>
             Reinvite
           </v-btn>
         </v-card-title>
@@ -35,7 +35,7 @@
         <v-card-actions>
           <v-spacer />
           <v-btn @click="close">Cancel</v-btn>
-          <v-btn color="primary" type="submit" outline>Save</v-btn>
+          <v-btn color="primary" type="submit" outlined>Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>

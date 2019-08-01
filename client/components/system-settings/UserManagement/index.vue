@@ -1,9 +1,9 @@
 <template>
   <v-layout justify-center class="elevation-1 white">
     <v-flex>
-      <v-toolbar color="white" flat>
+      <v-toolbar color="white" text>
         <v-spacer />
-        <v-btn @click.stop="showUserDialog()" color="primary darken-1" outline>
+        <v-btn @click.stop="showUserDialog()" color="primary darken-1" outlined>
           <v-icon class="pr-2">mdi-account-plus-outline</v-icon>
           Add user
         </v-btn>
@@ -45,7 +45,7 @@
                   @click="showUserDialog(item)"
                   color="primary"
                   small
-                  flat
+                  text
                   icon>
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
@@ -54,7 +54,7 @@
                   :disabled="user.id === item.id"
                   color="primary"
                   small
-                  flat
+                  text
                   icon>
                   <v-icon>
                     mdi-account-{{ item.deletedAt ? 'convert' : 'off' }}
@@ -169,7 +169,7 @@ export default {
 
 <style lang="scss" scoped>
 .v-input--switch {
-  /deep/ {
+  ::v-deep {
     .v-label {
       margin-bottom: 0;
     }

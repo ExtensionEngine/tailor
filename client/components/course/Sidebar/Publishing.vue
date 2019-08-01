@@ -3,13 +3,13 @@
     <div class="publish-date">
       <span>{{ publishedAtMessage }}</span>
     </div>
-    <v-menu lazy offset-y left>
+    <v-menu offset-y left>
       <template v-slot:activator="{ on }">
         <v-btn
           v-on="on"
           :loading="isPublishing"
           color="blue-grey darken-1"
-          outline
+          outlined
           small>
           Publish
         </v-btn>

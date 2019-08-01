@@ -39,7 +39,7 @@ export default {
     background-color: #f5f5f5;
   }
 
-  /deep/ {
+  ::v-deep {
     .vdatetime-input {
       cursor: pointer;
     }

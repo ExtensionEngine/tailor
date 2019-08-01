@@ -4,7 +4,7 @@
       <v-btn
         @click="deleteActivity"
         color="blue-grey darken-1"
-        flat
+        text
         icon
         class="btn-delete">
         <v-icon>mdi-delete</v-icon>

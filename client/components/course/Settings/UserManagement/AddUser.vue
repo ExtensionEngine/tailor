@@ -18,10 +18,10 @@
           :error-messages="vErrors.collect('role')"
           :items="roles"
           data-vv-name="role"
-          flat />
+          text />
       </v-flex>
       <v-flex xs2>
-        <v-btn type="submit" small outline>Add</v-btn>
+        <v-btn type="submit" small outlined>Add</v-btn>
       </v-flex>
     </v-layout>
   </form>

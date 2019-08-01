@@ -7,7 +7,7 @@
     permanent
     stateless
     class="blue-grey lighten-4 actions">
-    <v-toolbar flat class="transparent">
+    <v-toolbar text class="transparent">
       <v-list>
         <v-tooltip
           v-for="({ title, icon, action }) in actions"
@@ -20,7 +20,7 @@
               @click.stop="action"
               color="blue-grey darken-4"
               icon
-              flat>
+              text>
               <v-icon>mdi-{{ icon }}</v-icon>
             </v-btn>
           </template>

@@ -131,7 +131,7 @@
     "vue-timeago": "^3.4.0",
     "vue-video-player": "^3.1.4",
     "vuedraggable": "^2.15.0",
-    "vuetify": "^1.5.7",
+    "vuetify": "^2.0.3",
     "vuex": "^2.0.0",
     "vuex-router-sync": "^3.0.0",
     "weekstart": "^1.0.0",
@@ -160,12 +160,12 @@
     "eslint-plugin-vue": "^5.2.3",
     "imports-loader": "^0.8.0",
     "joycon": "^2.2.5",
-    "node-sass": "^4.12.0",
     "nodemon": "^1.19.1",
     "poi": "^12.7.1",
     "poi-preset-bundle-report": "^2.0.2",
     "poi-preset-eslint": "^9.0.1",
     "rewrite-lockfile": "^1.0.0",
+    "sass": "1.22.7",
     "sass-loader": "^7.1.0",
     "sequelize-cli": "^5.5.0",
     "strip-json-comments": "^3.0.1",
@@ -176,7 +176,8 @@
     "stylelint-webpack-plugin": "^0.10.5",
     "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "vuetify-loader": "^1.3.0"
   },
   "engines": {
     "node": ">= 8.8.0",

@@ -8,7 +8,7 @@
     :label="meta.label"
     :placeholder="meta.placeholder"
     :error-messages="vErrors.collect(meta.key)"
-    box />
+    filled />
 </template>
 
 <script>

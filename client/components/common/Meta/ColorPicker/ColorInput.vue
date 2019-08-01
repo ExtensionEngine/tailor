@@ -63,7 +63,7 @@ export default {
   }
 }
 
-.input /deep/ .c-chrome {
+.input ::v-deep .c-chrome {
   margin: 0 auto;
   box-shadow: none;
   border-radius: 3px;

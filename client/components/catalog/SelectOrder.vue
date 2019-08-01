@@ -2,7 +2,7 @@
   <span>
     <v-menu offset-y>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon flat class="mx-0">
+        <v-btn v-on="on" icon text class="mx-0">
           <v-icon color="primary lighten-4">mdi-sort</v-icon>
         </v-btn>
       </template>
@@ -16,7 +16,7 @@
         </v-list-tile>
       </v-list>
     </v-menu>
-    <v-btn @click="toggleOrder" icon flat class="mx-0">
+    <v-btn @click="toggleOrder" icon text class="mx-0">
       <v-icon color="primary lighten-4">
         mdi-sort-{{ sortBy.order === 'ASC' ? 'ascending' : 'descending' }}
       </v-icon>

@@ -22,7 +22,7 @@
           icon />
       </td>
       <td class="actions">
-        <v-btn color="primary" icon flat small>
+        <v-btn color="primary" icon text small>
           <v-icon @click="remove(item)">mdi-delete</v-icon>
         </v-btn>
       </td>
@@ -78,7 +78,7 @@ export default {
   padding: 0 0 6px 0;
 }
 
-/deep/ .v-input__slot::before {
+::v-deep .v-input__slot::before {
   border: none !important;
 }
 </style>

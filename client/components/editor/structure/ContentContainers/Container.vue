@@ -4,7 +4,7 @@
       <v-btn
         @click="deleteContainer"
         color="error"
-        outline
+        outlined
         class="pull-right">
         Delete {{ name }}
       </v-btn>
@@ -13,7 +13,7 @@
       :value="!teachingElements.length"
       color="primary"
       icon="mdi-information-variant"
-      outline>
+      outlined>
       Click the button below to create content.
     </v-alert>
     <tes-list

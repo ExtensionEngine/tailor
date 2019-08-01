@@ -22,7 +22,7 @@
           <v-btn
             @click="post"
             color="primary"
-            outline
+            outlined
             class="pull-right">
             Post
           </v-btn>

@@ -5,8 +5,8 @@
       <v-card-text class="text-sm-left">{{ context.message }}</v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn @click="close" flat>Close</v-btn>
-        <v-btn v-focus="show" @click="confirm" color="error" flat>Confirm</v-btn>
+        <v-btn @click="close" text>Close</v-btn>
+        <v-btn v-focus="show" @click="confirm" color="error" text>Confirm</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

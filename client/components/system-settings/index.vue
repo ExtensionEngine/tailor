@@ -4,7 +4,7 @@
       <v-chip
         color="grey lighten-2"
         label
-        outline
+        outlined
         class="mt-2 ml-3 px-3 body-2">
         Admin
       </v-chip>

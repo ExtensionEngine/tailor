@@ -83,7 +83,7 @@ export default {
     margin-right: 15px;
   }
 
-  /deep/ .multiselect {
+  ::v-deep .multiselect {
     color: #333;
     font-size: 17px;
     line-height: 24px;

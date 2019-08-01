@@ -158,7 +158,7 @@ export default {
   }
 }
 
-.hide-cropper /deep/ .cropper-container {
+.hide-cropper ::v-deep .cropper-container {
   display: none;
 }
 

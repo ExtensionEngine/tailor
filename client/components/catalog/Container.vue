@@ -9,7 +9,7 @@
         <v-flex md3 sm1 class="text-sm-left pl-2">
           <v-tooltip open-delay="800" right>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" @click="togglePinned()" icon flat>
+              <v-btn v-on="on" @click="togglePinned()" icon text>
                 <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
                   mdi-pin
                 </v-icon>
@@ -38,7 +38,7 @@
             :value="!loading"
             color="blue-grey lighten-4"
             icon="mdi-cloud-search-outline"
-            outline>
+            outlined>
             {{ noRepositoriesMessage }}
           </v-alert>
         </div>
@@ -163,7 +163,7 @@ export default {
   margin-bottom: 20px;
   padding-top: 12px;
 
-  /deep/ .add-repo {
+  ::v-deep .add-repo {
     top: 10px;
     right: 12px;
   }

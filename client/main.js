@@ -7,7 +7,6 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 import 'vue-directive-tooltip/css/index.css';
 
 import assetsApi from '@/api/asset';
-import colors from 'vuetify/es5/util/colors';
 import ElementRegistry from './ElementRegistry';
 
 import { formatDate, truncate } from '@/filters';
@@ -19,8 +18,7 @@ import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
 import Vue from 'vue';
 import VueHotkey from 'v-hotkey';
-import Vuetify from 'vuetify';
-import VuetifySnackbar from '@/plugins/vuetify-snackbar';
+import vuetify from '@/plugins/vuetify';
 
 import store from './store';
 import router from './router';
@@ -31,17 +29,6 @@ Vue.filter('formatDate', formatDate);
 Vue.filter('truncate', truncate);
 Vue.use(FileFilter);
 Vue.use(VueHotkey);
-Vue.use(Vuetify, {
-  iconfont: 'mdi',
-  theme: {
-    primary: colors.blueGrey.darken2,
-    secondary: colors.pink
-  },
-  options: {
-    customProperties: true
-  }
-});
-Vue.use(VuetifySnackbar);
 Vue.use(Tooltip, { delay: 50 });
 Vue.use(VeeValidate, {
   delay: 700,
@@ -63,6 +50,7 @@ registry.initialize().then(() => {
   new Vue({
     router,
     store,
+    vuetify,
     el: '#app',
     render: h => h(App),
     provide() {
