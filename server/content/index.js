@@ -1,8 +1,10 @@
 const containers = require('./containers');
+const elements = require('./elements');
+const Promise = require('bluebird');
 
 module.exports = {
   initialize() {
-    return containers.initialize();
+    return Promise.all([containers.initialize(), elements.initialize()]);
   },
   fetch(...attrs) {
     return containers

@@ -4,7 +4,6 @@ const { Activity, TeachingElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
-const { resolveStatics } = require('../shared/storage/helpers');
 const pick = require('lodash/pick');
 
 function list({ course, query, opts }, res) {
@@ -33,7 +32,6 @@ function create({ body, params, user }, res) {
   const attr = ['activityId', 'type', 'data', 'position', 'refs'];
   const data = Object.assign(pick(body, attr), { courseId: params.courseId });
   return TeachingElement.create(data, { context: { userId: user.id } })
-    .then(asset => resolveStatics(asset))
     .then(asset => res.json({ data: asset }));
 }
 
@@ -44,7 +42,6 @@ function patch({ body, params, user }, res) {
   return TeachingElement.findByPk(params.teId, { paranoid })
     .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
     .then(asset => asset.update(data, { context: { userId: user.id } }))
-    .then(asset => resolveStatics(asset))
     .then(asset => res.json({ data: asset }));
 }
 

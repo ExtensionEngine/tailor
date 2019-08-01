@@ -1,6 +1,7 @@
 'use strict';
 
 const calculatePosition = require('../shared/util/calculatePosition');
+const CustomElementsRegistry = require('../content/elements');
 const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
@@ -97,6 +98,12 @@ class TeachingElement extends Model {
         if (!te.changed('data')) return Promise.resolve();
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
+      },
+      [Hooks.afterCreate](te) {
+        return te.resolveStatics();
+      },
+      [Hooks.afterUpdate](te) {
+        return te.resolveStatics();
       }
     };
   }
@@ -120,9 +127,9 @@ class TeachingElement extends Model {
 
   static fetch(opt) {
     return isNumber(opt)
-      ? TeachingElement.findByPk(opt).then(it => it && resolveStatics(it))
+      ? TeachingElement.findByPk(opt).then(it => it && it.resolveStatics())
       : TeachingElement.findAll(opt)
-          .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
+          .then(arr => Promise.all(arr.map(it => it.resolveStatics())));
   }
 
   static cloneElements(src, container, transaction) {
@@ -175,6 +182,13 @@ class TeachingElement extends Model {
       if (this.type === 'ASSESSMENT') return { type: 'ASSESSMENT' };
       return { type: { [Op.not]: 'ASSESSMENT' } };
     });
+  }
+
+  resolveStatics() {
+    const registry = CustomElementsRegistry;
+    const resolver = registry.getStaticsResolver(this.type);
+    if (resolver) return resolver(this, resolveStatics);
+    return resolveStatics(this);
   }
 }
 
