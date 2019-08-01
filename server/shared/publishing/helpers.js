@@ -303,15 +303,20 @@ async function addLinkToSpine(spine, activity) {
   const relationships = getLevelRelationships(activity.type);
   const index = findIndex(spine.structure, { id: activity.originId });
   const parent = await activity.getParent();
-  const parentId = parent.isLink ? activity.origin.parentId : parent.id;
-  const spineParent = find(spine.structure, it => it.id === parentId);
+  let parentId = null;
+  if (parent) {
+    parentId = parent.isLink ? activity.origin.parentId : parent.id;
+    const spineParent = find(spine.structure, it => it.id === parentId);
 
-  if (spineParent) {
-    spineParent.children.push(activity.origin.id);
-    spine.structure = spine.structure.map(it => {
-      if (it.id === spineParent.id) return spineParent;
-      return it;
-    });
+    if (spineParent) {
+      if (!spineParent.children.includes(activity.origin.id)) {
+        spineParent.children.push(activity.origin.id);
+        spine.structure = spine.structure.map(it => {
+          if (it.id === spineParent.id) return spineParent;
+          return it;
+        });
+      }
+    }
   }
 
   if (index > 0) {

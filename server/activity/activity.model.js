@@ -60,7 +60,7 @@ class Activity extends Model {
     };
   }
 
-  static hooks(Hooks, models) {
+  static hooks(Hooks) {
     this.addHook(
       Hooks.beforeFind,
       options => this._defaultsOptions(options, this.scopes().withOrigin)
@@ -386,20 +386,13 @@ class Activity extends Model {
 
   toJSON() {
     const values = super.toJSON();
-    if (!this.isLink) {
-      if (!this.isOrigin) {
-        return {
-          ...values,
-          isOrigin: false
-        };
-      }
-
+    if (!this.isLink && !this.isOrigin) return values;
+    if (this.isOrigin) {
       this.links.forEach(link => { link.data = this.data; });
-
       return {
         ...values,
-        links: this.links,
-        isOrigin: true
+        isOrigin: true,
+        links: this.links
       };
     }
     return {
