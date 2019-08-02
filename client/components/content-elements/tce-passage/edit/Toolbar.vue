@@ -11,7 +11,6 @@ const buttons = ToolbarBuilder.build([[
   ['undo', 'Undo'],
   ['redo', 'Redo'],
   ['cut', 'Cut selection'],
-  ['print', 'Print'],
   ['copyformat', 'Paint format']
 ], [
   ['font', 'Font'],
