@@ -3,25 +3,25 @@
     <v-layout row align-center class="pl-3">
       <v-flex xs7 class="pr-2">
         <v-combobox
-          v-validate="{ required: true, email: true }"
           v-model="email"
+          v-validate="{ required: true, email: true }"
+          @update:searchInput="fetchUsers"
           :error-messages="vErrors.collect('email')"
           :items="suggestedUsers"
-          @update:searchInput="fetchUsers"
           data-vv-name="email"
-          label="Email"/>
+          label="Email" />
       </v-flex>
       <v-flex xs3 class="px-4">
         <v-select
-          v-validate="'required'"
           v-model="role"
+          v-validate="'required'"
           :error-messages="vErrors.collect('role')"
           :items="roles"
           data-vv-name="role"
-          flat/>
+          flat />
       </v-flex>
       <v-flex xs2>
-        <v-btn type="submit" color="blue-grey darken-1" outline>Add</v-btn>
+        <v-btn type="submit" small outline>Add</v-btn>
       </v-flex>
     </v-layout>
   </form>

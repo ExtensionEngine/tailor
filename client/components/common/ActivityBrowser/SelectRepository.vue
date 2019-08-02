@@ -1,6 +1,6 @@
 <template>
   <div>
-    <circular-progress v-if="showLoader"></circular-progress>
+    <circular-progress v-if="showLoader" />
     <div v-else class="repository-list">
       <div
         v-for="repository in repositories"

@@ -4,11 +4,11 @@
     <div class="control-group">
       <label :for="meta.key" :class="{ checked: value }">
         <input
-          v-model="value"
           :ref="meta.key"
+          v-model="value"
+          @change="$emit('update', meta.key, value)"
           :id="meta.key"
           :name="meta.key"
-          @change="$emit('update', meta.key, value)"
           type="checkbox">
         <span class="lever"></span>
         <p class="description">{{ meta.description }}</p>
