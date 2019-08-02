@@ -272,9 +272,8 @@ class Activity extends Model {
    * @param {Number} options.position
    */
   link({ parentId, position }) {
-    if (position) this.position = position;
     return this.sequelize.transaction(transaction => {
-      return Activity.linkActivities(this, { parentId, transaction })
+      return Activity.linkActivities(this, { parentId, position, transaction })
         .then(activities => activities);
     });
   }
@@ -504,18 +503,22 @@ async function linkChildren(children, options) {
  * @param {Activity} source
  * @param {Object} options
  * @param {Number} options.parentId
+ * @param {Number} options.position
  * @param {Boolean} options.recursion
  * @param {SequelizeTransaction} options.transaction
  * @returns {Array<Object>}
  */
 async function createLinksMap(source, options) {
-  const { parentId = null, recursion = false } = options;
+  const { parentId = null, position, recursion = false } = options;
   const data = pick(source, ['data', 'type', 'courseId', 'parentId', 'position']);
   const originId = source.isLink ? source.originId : source.id;
-  let map = [{ ...data, originId, parentId }];
+  let map = [{ ...data, originId, parentId, position }];
   if (addSourceLink(source, parentId)) map.push({ ...data, originId });
   if (recursion) return map;
-  const parentLinks = await addLinksForAllParents({ ...data, originId }, options);
+  const parentLinks = await addLinksForAllParents(
+    { ...data, position, originId },
+    options
+  );
   return [
     ...map,
     ...parentLinks
