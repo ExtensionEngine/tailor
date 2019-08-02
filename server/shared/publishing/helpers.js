@@ -43,7 +43,8 @@ function publishActivity(activity) {
 
 function getRepositoryCatalog() {
   return storage.getFile('repository/index.json').then(buffer => {
-    return (buffer && JSON.parse(buffer.toString('utf8'))) || [];
+    if (!buffer) return [];
+    return JSON.parse(buffer.toString('utf8'));
   });
 }
 

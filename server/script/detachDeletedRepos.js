@@ -1,9 +1,9 @@
+const { getRepositoryAttrs, getRepositoryCatalog } = require('../shared/publishing/helpers');
 const { Course } = require('../shared/database');
 const each = require('lodash/each');
 const omit = require('lodash/omit');
 const find = require('lodash/find');
 const storage = require('../shared/storage');
-const { getRepositoryAttrs, getRepositoryCatalog } = require('../shared/publishing/helpers');
 
 Course.findAll({ paranoid: false })
   .then(repositories => repositories.length && updateRepositoryCatalog(repositories))
