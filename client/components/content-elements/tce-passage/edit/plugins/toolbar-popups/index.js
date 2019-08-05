@@ -11,7 +11,7 @@ export const install = (Jodit, { popupOpenClass = 'popup_open' } = {}) => {
   const popups = new Map();
   const toggle = Symbol('toggle');
 
-  Jodit.plugins[name] = (editor) => {
+  Jodit.plugins[name] = editor => {
     const { events } = editor;
     events
       .on('beforeOpenPopup', onPopupOpen)

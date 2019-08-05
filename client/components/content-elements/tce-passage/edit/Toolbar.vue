@@ -13,19 +13,22 @@ const buttons = ToolbarBuilder.build([[
   ['cut', 'Cut selection'],
   ['copyformat', 'Paint format']
 ], [
+  ['paragraph', 'Style'],
   ['font', 'Font'],
-  ['fontsize', 'Font size'],
-  ['paragraph', 'Style']
+  ['fontsize', 'Font size']
 ], [
   ['bold', 'Bold'],
   ['italic', 'Italic'],
   ['underline', 'Underline'],
   ['strikethrough', 'Strikethrough']
 ], [
-  ['brush', 'Color']
+  ['brush', 'Text color']
 ], [
-  ['subscript', 'Subscript'],
-  ['superscript', 'Superscript']
+  ['link', 'Insert link...'],
+  ['table', 'Insert table'],
+  ['image', 'Image'],
+  ['symbol', 'Insert special character'],
+  ['hr', 'Horizontal line']
 ], [
   ['ol', 'Numbered list'],
   ['ul', 'Bulleted list'],
@@ -34,11 +37,8 @@ const buttons = ToolbarBuilder.build([[
 ], [
   ['align', 'Alignment']
 ], [
-  ['link', 'Insert link...'],
-  ['table', 'Insert table'],
-  ['image', 'Image'],
-  ['symbol', 'Insert special character'],
-  ['hr', 'Horizontal line']
+  ['subscript', 'Subscript'],
+  ['superscript', 'Superscript']
 ], [
   ['eraser', 'Clear formatting']
 ]]);
@@ -58,7 +58,7 @@ export default {
 
 $icon-color: #333;
 $icon-accent-color: #ff6590;
-$icon-size: 18px;
+$icon-size: 20px;
 $text-size: 16px;
 
 .jodit_toolbar_container {
@@ -153,8 +153,6 @@ $text-size: 16px;
 
   &.jodit_toolbar_btn-separator {
     min-width: 0;
-    margin-right: 15px !important;
-    border: none;
   }
 
   & > a .jodit_with_dropdownlist-trigger {
@@ -166,8 +164,8 @@ $text-size: 16px;
     height: $icon-size;
     line-height: $icon-size;
 
-    .jodit_icon {
-      margin-right: 4px;
+    .mdi {
+      display: none;
     }
   }
 

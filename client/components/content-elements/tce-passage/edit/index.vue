@@ -12,10 +12,11 @@
       <jodit-editor
         v-if="isFocused"
         v-model="content"
-        :minHeight="$el.clientHeight"
-        :readonly="readonly"/>
+        :min-height="$el.clientHeight"
+        :readonly="readonly" />
       <div v-else class="jodit_container">
-        <div v-html="content" class="jodit_wysiwyg"></div>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div class="jodit_wysiwyg" v-html="content"></div>
       </div>
     </template>
   </div>
@@ -108,10 +109,5 @@ $min-height: 140px;
   .heading {
     font-size: 24px;
   }
-}
-
-.jodit_wrapper /deep/ .jodit_container:not(.jodit_inline) {
-  min-height: $min-height;
-  font-size: 16px;
 }
 </style>

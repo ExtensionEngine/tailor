@@ -2,8 +2,8 @@
   <div class="jodit_wrapper">
     <jodit-vue
       ref="jodit"
-      v-bind="{ id, buttons, config, value }"
-      @input="value => $emit('input', value)"/>
+      @input="value => $emit('input', value)"
+      v-bind="{ id, buttons, config, value }" />
   </div>
 </template>
 
@@ -97,39 +97,52 @@ $icon-color: #333;
 $icon-size: 18px;
 $statusbar-height: 26px;
 $statusbar-border-size: 1px;
+$min-height: 140px;
 
-.jodit_wrapper /deep/ .jodit_placeholder {
-  font-style: italic;
-}
+.jodit_wrapper /deep/ {
+  .jodit_container:not(.jodit_inline) {
+    min-height: $min-height;
 
-.jodit_wrapper /deep/ .jodit_source .ace_editor {
-  font-size: 13px;
-  font-family: $font-family-monospace;
-}
-
-.jodit_wrapper /deep/ .jodit_statusbar {
-  height: $statusbar-height;
-  line-height: $statusbar-height - $statusbar-border-size;
-
-  .jodit_statusbar_item {
-    line-height: inherit;
+    .jodit_workplace {
+      border: none;
+    }
   }
 
-  .jodit_toolbar_btn {
-    line-height: inherit;
-    vertical-align: top;
+  .jodit_placeholder {
+    font-style: italic;
+  }
 
-    & > a {
-      vertical-align: middle;
+  .jodit_source .ace_editor {
+    font-size: 13px;
+    font-family: $font-family-monospace;
+  }
+
+  .jodit_statusbar {
+    height: $statusbar-height;
+    line-height: $statusbar-height - $statusbar-border-size;
+    background-color: transparent;
+    border: none;
+
+    .jodit_statusbar_item {
+      line-height: inherit;
     }
 
-    .jodit_icon {
-      display: inline-block;
-      width: $icon-size;
-      height: $icon-size;
-      color: $icon-color;
-      font-size: $icon-size;
-      line-height: $icon-size;
+    .jodit_toolbar_btn {
+      line-height: inherit;
+      vertical-align: top;
+
+      & > a {
+        vertical-align: middle;
+      }
+
+      .jodit_icon {
+        display: inline-block;
+        width: $icon-size;
+        height: $icon-size;
+        color: $icon-color;
+        font-size: $icon-size;
+        line-height: $icon-size;
+      }
     }
   }
 }
