@@ -140,8 +140,14 @@ function publishAssessments(parent) {
 }
 
 function fetchContainers(repository, parent) {
-  const config = find(repository.getSchemaConfig().structure, pick(parent, 'type'));
-  const containerTypes = get(config, 'contentContainers', []);
+  const schemaConfig = repository.getSchemaConfig();
+  const activityConfig = find(schemaConfig.structure, pick(parent, 'type'));
+  let containerTypes = get(activityConfig, 'contentContainers', []);
+  const containersConfig = schemaConfig.contentContainers;
+  containerTypes = containerTypes.filter(type => {
+    const config = find(containersConfig, { type });
+    return !(config && config.unique);
+  });
   return parent.getChildren({ where: { type: containerTypes } })
   .then(containers => Promise.map(containers, fetchContainer));
 }
