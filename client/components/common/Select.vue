@@ -217,7 +217,6 @@ export default {
   }
 
   .multiselect__input {
-    width: 100% !important;
     margin: 0;
     padding-left: 10px;
     line-height: 32px;
