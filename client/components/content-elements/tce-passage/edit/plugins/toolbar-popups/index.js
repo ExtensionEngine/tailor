@@ -1,6 +1,6 @@
 const JODIT_DEFAULT_EVENT_NAMESPACE = 'JoditEventDefaultNamespace';
 const JODIT_POPUP_ARROW = '.jodit_popup_triangle';
-const JODIT_POPUP_TRIGGER_EVENTS = ['mousedown', 'touchend', 'keydown'];
+const JODIT_POPUP_TRIGGER_EVENTS = ['mousedown', 'touchend'];
 const JODIT_TOOLBAR_BUTTON = '.jodit_toolbar_btn';
 
 const isToolbarButton = el => el.matches(JODIT_TOOLBAR_BUTTON);
