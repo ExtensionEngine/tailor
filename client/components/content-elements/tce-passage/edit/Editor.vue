@@ -14,8 +14,8 @@ import fontControls from './plugins/font-controls';
 import Jodit from 'jodit';
 import JoditVue from 'jodit-vue';
 import mdiIcons from './plugins/mdi-icons';
-import observeTables from './plugins/observe-tables';
 import sourceEditor from './plugins/source-editor';
+import tablePopups from './plugins/table-popups';
 import Toolbar from './Toolbar';
 import toolbarPopups from './plugins/toolbar-popups';
 import uniqueId from 'lodash/uniqueId';
@@ -46,7 +46,7 @@ toolbarPopups(Jodit, {
   popupOpenClass: 'popup_open'
 });
 sourceEditor(Jodit);
-observeTables(Jodit);
+tablePopups(Jodit);
 
 export default {
   props: {
