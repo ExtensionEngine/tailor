@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import isFunction from 'lodash/isFunction';
 
 const EVENT_NAME = 'recalcPositionPopup';
 const NAMESPACE = 'JoditEventDefaultNamespace';
@@ -18,7 +19,7 @@ export const install = Jodit => {
 function observeTables(editor, Jodit) {
   const $$ = get(Jodit, 'modules.Helpers.$$', () => []);
   const tableProcessor = get(editor, '__plugins.table', {});
-  if (typeof tableProcessor.observe !== 'function') return;
+  if (!isFunction(tableProcessor.observe)) return;
   $$('table', editor.editor).forEach(table => {
     if (table[tableProcessor.__key]) return;
     tableProcessor.observe(table);
@@ -39,7 +40,7 @@ function addScrollHandler(editor) {
 function getScrollHandler(editor, popup = {}) {
   const store = editor.events.getStore(editor.events);
   const [{ originalCallback } = {}] = store.get(EVENT_NAME, NAMESPACE);
-  if (typeof originalCallback !== 'function') return;
+  if (!isFunction(originalCallback)) return;
   return () => {
     if (!popup.isShown) return;
     originalCallback.call(popup);
