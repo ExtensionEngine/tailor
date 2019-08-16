@@ -65,7 +65,8 @@ function clone({ activity, body }, res) {
 function getPreviewUrl({ course, activity }, res) {
   return fetchActivityContent(course, activity)
     .then(content => {
-      const body = { uid: activity.uid, ...content };
+      const { uid, type } = activity;
+      const body = { uid, type, ...content };
       return request.post(previewUrl, body);
     })
     .then(({ data: { url } }) => {
