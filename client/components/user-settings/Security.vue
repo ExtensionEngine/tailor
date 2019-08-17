@@ -49,17 +49,14 @@
               label="Confirm new password" />
           </v-card-text>
           <v-card-actions class="mx-2">
-            <router-link
-              :to="{ name: 'forgot-password' }"
-              class="primary--text text--darken-4">
+            <router-link :to="{ name: 'forgot-password' }">
               Forgot password ?
             </router-link>
             <v-spacer />
-            <v-btn @click="hide" flat color="primary">Cancel</v-btn>
+            <v-btn @click="hide" flat>Cancel</v-btn>
             <v-btn
               :disabled="!isValid"
               outline
-              color="primary"
               type="submit">
               Update
             </v-btn>

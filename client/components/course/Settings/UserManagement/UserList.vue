@@ -7,9 +7,11 @@
     hide-actions>
     <template v-slot:items="{ item }">
       <td class="text-xs-left">
-        <v-avatar size="40" class="mr-3"><img :src="item.imgUrl"></v-avatar>
-        {{ item.email }}
+        <v-avatar size="40"><img :src="item.imgUrl"></v-avatar>
       </td>
+      <td class="text-xs-left">{{ item.email }}</td>
+      <td class="text-xs-left">{{ item.firstName || '/' }}</td>
+      <td class="text-xs-left">{{ item.lastName || '/' }}</td>
       <td class="role-select">
         <v-select
           @change="role => changeRole(item.email, role)"
@@ -30,6 +32,8 @@
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
 
+const HEADERS = ['User', 'Email', 'First Name', 'Last Name', 'Role', ''];
+
 export default {
   props: {
     roles: { type: Array, required: true }
@@ -40,7 +44,7 @@ export default {
   computed: {
     ...mapGetters('course', ['users']),
     headers() {
-      return ['User', 'Role', ''].map(text => ({ text, sortable: false }));
+      return HEADERS.map(text => ({ text, sortable: false }));
     }
   },
   methods: {
@@ -66,7 +70,7 @@ export default {
 
 <style lang="scss" scoped>
 .role-select {
-  max-width: 26px;
+  max-width: 120px;
 }
 
 .v-table .actions {

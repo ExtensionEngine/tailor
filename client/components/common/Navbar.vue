@@ -1,9 +1,7 @@
 <template>
   <v-toolbar color="grey lighten-5" app dense fixed>
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
-      <v-avatar color="primary darken-1" size="34" class="mt-1">
-        <img :src="logo" alt="Logo" class="logo">
-      </v-avatar>
+      <v-avatar><img :src="logo" alt="Logo"></v-avatar>
       <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
     </router-link>
     <v-spacer />
@@ -112,9 +110,5 @@ $font-color: #333;
   &:hover {
     color: darken($font-color, 20%);
   }
-}
-
-.logo {
-  width: 26px;
 }
 </style>

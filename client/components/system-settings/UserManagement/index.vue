@@ -41,8 +41,8 @@
                 <v-avatar size="40"><img :src="item.imgUrl"></v-avatar>
               </td>
               <td class="no-wrap text-xs-left">{{ item.email }}</td>
-              <td class="no-wrap text-xs-left">{{ item.firstName }}</td>
-              <td class="no-wrap text-xs-left">{{ item.lastName }}</td>
+              <td class="no-wrap text-xs-left">{{ item.firstName || '/' }}</td>
+              <td class="no-wrap text-xs-left">{{ item.lastName || '/' }}</td>
               <td class="no-wrap text-xs-left">{{ item.role }}</td>
               <td class="no-wrap text-xs-left">{{ item.createdAt | formatDate }}</td>
               <td class="no-wrap text-xs-center">
