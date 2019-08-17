@@ -1,61 +1,26 @@
 <template>
-  <v-dialog v-model="show" width="640">
+  <v-dialog v-model="visible" width="640">
     <v-card>
       <v-card-title class="headline">
         <v-avatar color="primary" size="38" class="mr-2">
           <v-icon color="white">mdi-image</v-icon>
         </v-avatar>
         Change Avatar
-        <v-spacer />
-        <v-menu
-          offset-y
-          left
-          min-width="120px"
-          transition="slide-y-transition">
-          <v-btn
-            slot="activator"
-            color="primary"
-            outline
-            flat>
-            <v-icon small class="mr-1">mdi-pencil</v-icon>Edit
-          </v-btn>
-          <v-list>
-            <v-list-tile class="pa-0">
-              <v-btn
-                @click="remove"
-                :disabled="disableRemove"
-                color="primary"
-                flat>
-                <v-icon small class="mr-1">mdi-eraser</v-icon>Remove
-              </v-btn>
-            </v-list-tile>
-            <v-list-tile class="pa-0">
-              <v-btn @click="upload" color="primary" flat>
-                <v-icon small class="mr-1">mdi-upload</v-icon>Upload
-              </v-btn>
-            </v-list-tile>
-          </v-list>
-        </v-menu>
       </v-card-title>
       <v-card-text>
         <v-layout justify-center>
           <croppa
             ref="croppa"
-            @new-image="onNewImage"
+            @file-choose="visible = true"
             v-bind="options"
-            :initial-image="image"
             prevent-white-space />
         </v-layout>
       </v-card-text>
       <v-card-actions>
         <v-layout pb-3 pr-3>
           <v-spacer />
-          <v-btn @click="close" flat color="primary">Cancel</v-btn>
-          <v-btn
-            @click="confirm"
-            :disabled="disabled"
-            outline
-            color="primary">
+          <v-btn @click="close" flat>Cancel</v-btn>
+          <v-btn @click="confirm" outline>
             Update
           </v-btn>
         </v-layout>
@@ -66,75 +31,31 @@
 
 <script>
 import { avatar as avatarOpts } from 'shared';
-import gravatar from 'gravatar';
-
-const gravatarConfig = { size: 130, default: 'identicon' };
-
-const isGravatar = img => img.indexOf('gravatar.com') !== -1;
 
 export default {
   name: 'avatar-dialog',
   props: {
-    user: { type: Object, required: true },
-    visible: { type: Boolean, default: false }
+    imgUrl: { type: String, required: true }
   },
   data() {
-    return {
-      image: this.user.imgUrl,
-      disabled: true,
-      isGravatar: isGravatar(this.user.imgUrl)
-    };
+    return { visible: false };
   },
   computed: {
     options: vm => ({
       accept: 'image/*',
       width: 220,
       height: 220
-    }),
-    show: {
-      get() {
-        return this.visible;
-      },
-      set(value) {
-        if (!value) this.close();
-      }
-    },
-    disableRemove() {
-      return this.isGravatar;
-    }
+    })
   },
   methods: {
     close() {
-      this.$emit('update:visible', false);
-    },
-    remove() {
-      this.$refs.croppa.remove();
-      this.disabled = false;
-      this.image = gravatar.url(this.user.email, gravatarConfig, true);
-      this.isGravatar = true;
-      this.$refs.croppa.refresh();
-    },
-    upload() {
-      this.$refs.croppa.chooseFile();
-    },
-    onNewImage() {
-      this.disabled = false;
-      this.isGravatar = false;
+      this.visible = false;
     },
     confirm() {
       const { mimetype, compressionRate } = avatarOpts;
-      const imgUrl = !this.isGravatar
-        ? this.$refs.croppa.generateDataUrl(mimetype, compressionRate)
-        : null;
+      const imgUrl = this.$refs.croppa.generateDataUrl(mimetype, compressionRate);
       this.$emit('update', imgUrl);
       this.close();
-    }
-  },
-  watch: {
-    visible(val) {
-      if (val) this.$refs.croppa.refresh();
-      this.image = this.user.imgUrl;
-      this.disabled = true;
     }
   }
 };

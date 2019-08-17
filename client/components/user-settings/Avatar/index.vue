@@ -1,37 +1,55 @@
 <template>
   <v-layout justify-center pb-3>
-    <v-avatar size="150px">
-      <div class="img-container">
-        <img :src="image">
-        <v-icon
-          @click="dialog = true"
-          dark
-          size="36px"
-          class="overlay">
-          mdi-camera
-        </v-icon>
-      </div>
-    </v-avatar>
+    <v-speed-dial direction="right">
+      <v-avatar slot="activator" size="150px">
+        <div class="img-container">
+          <img :src="image">
+          <v-icon
+            dark
+            large
+            class="overlay">
+            mdi-camera
+          </v-icon>
+        </div>
+      </v-avatar>
+      <v-btn @click="uploadAvatar" fab dark small color="primary">
+        <v-icon>mdi-upload</v-icon>
+      </v-btn>
+      <v-btn
+        @click="deleteAvatar"
+        :disabled="isGravatar"
+        fab
+        dark
+        small
+        color="secondary">
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+    </v-speed-dial>
     <avatar-dialog
+      ref="avatarDialog"
       @update="updateAvatar"
-      :visible.sync="dialog"
-      :user="user" />
+      :img-url="image" />
   </v-layout>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 import AvatarDialog from './AvatarDialog';
+import EventBus from 'EventBus';
+
+const appChannel = EventBus.channel('app');
+
+const isGravatar = img => /gravatar.com/.test(img);
 
 export default {
   name: 'user-avatar',
-  data() {
-    return { dialog: false };
-  },
   computed: {
     ...mapState({ user: state => state.auth.user }),
     image() {
       return this.user.imgUrl;
+    },
+    isGravatar() {
+      return isGravatar(this.image);
     }
   },
   methods: {
@@ -39,6 +57,18 @@ export default {
     updateAvatar(imgUrl) {
       return this.updateInfo({ imgUrl }).then(() => {
         this.$snackbar.show('Your profile picture has been updated!');
+      });
+    },
+    uploadAvatar() {
+      this.$refs.avatarDialog.$refs.croppa.chooseFile();
+    },
+    deleteAvatar() {
+      appChannel.emit('showConfirmationModal', {
+        title: 'Delete avatar?',
+        message: `Are you sure you want to delete your profile picture?`,
+        action: () => this.updateInfo({ imgUrl: null }).then(() => {
+          this.$snackbar.show('Your profile picture has been updated!');
+        })
       });
     }
   },
