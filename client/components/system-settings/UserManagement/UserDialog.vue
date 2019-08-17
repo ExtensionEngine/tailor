@@ -131,17 +131,6 @@ export default {
       this.vErrors.clear();
       if (!isEmpty(this.userData)) this.user = cloneDeep(this.userData);
     }
-  },
-  mounted() {
-    if (this.$validator.rules['unique-email']) return;
-    this.$validator.extend('unique-email', {
-      getMessage: field => `The ${field} is not unique.`,
-      validate: (email, userData) => {
-        if (userData && email === userData.email) return true;
-        return api.fetch({ email })
-          .then(({ total }) => ({ valid: !total }));
-      }
-    });
   }
 };
 </script>

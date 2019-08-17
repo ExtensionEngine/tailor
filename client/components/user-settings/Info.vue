@@ -2,22 +2,22 @@
   <v-form @submit.prevent="updateUser">
     <v-layout column pt-2 px-4 mx-3>
       <v-text-field
-        v-model="email"
-        v-validate="'required|email'"
+        v-model="userData.email"
+        v-validate="{ required: true, email: true, 'unique-email': user }"
         :error-messages="vErrors.collect('email')"
         data-vv-as="Email"
         data-vv-name="email"
         name="email"
         label="Email" />
       <v-text-field
-        v-model="firstName"
+        v-model="userData.firstName"
         v-validate="'required|min:2|max:20'"
         :error-messages="vErrors.collect('firstName')"
         data-vv-as="First name"
         data-vv-name="firstName"
         label="First name" />
       <v-text-field
-        v-model="lastName"
+        v-model="userData.lastName"
         v-validate="'required|min:2|max:20'"
         :error-messages="vErrors.collect('lastName')"
         data-vv-as="Last Name"
@@ -27,16 +27,14 @@
     <v-layout pb-3 px-4 mx-2>
       <v-spacer />
       <v-btn
-        @click="resetUser"
+        @click="resetForm"
         :disabled="!hasChanges && !vErrors.any()"
-        flat
-        color="primary">
+        flat>
         Cancel
       </v-btn>
       <v-btn
-        :disabled="!hasChanges || !isValid"
+        :disabled="!hasChanges || vErrors.any()"
         outline
-        color="primary"
         type="submit">
         Update
       </v-btn>
@@ -51,7 +49,7 @@ import { withValidation } from 'utils/validation';
 
 const ATTRIBUTES = ['firstName', 'lastName', 'email'];
 
-const defaultData = () => ({
+const resetUser = () => ({
   firstName: null,
   lastName: null,
   email: null
@@ -60,37 +58,32 @@ const defaultData = () => ({
 export default {
   name: 'user-info',
   mixins: [withValidation()],
-  data: () => defaultData(),
+  data: () => ({ userData: resetUser() }),
   computed: {
     ...mapState({ user: state => state.auth.user }),
     userAttrs: () => ATTRIBUTES,
-    hasChanges() {
-      return Object.keys(this.vFields).some(key => this.vFields[key].changed);
-    },
-    isValid() {
-      return Object.keys(this.vFields).every(key => this.vFields[key].valid);
-    }
+    hasChanges: vm => vm.userAttrs.some(key => vm.userData[key] !== vm.user[key])
   },
   methods: {
     ...mapActions(['updateInfo']),
     updateUser() {
       return this.$validator.validateAll().then(isValid => {
         if (!isValid) return;
-        return this.updateInfo(pick(this, this.userAttrs))
+        return this.updateInfo(pick(this.userData, this.userAttrs))
           .then(() => {
             this.$snackbar.show('User information updated!');
-            return this.resetUser();
+            return this.resetForm();
           })
-          .catch(() => this.$snackbar.error('Email already exists!'));
+          .catch(() => this.$snackbar.error('Something went wrong!'));
       });
     },
-    resetUser() {
+    resetForm() {
       this.$validator.reset();
-      return Object.assign(this, pick(this.user, this.userAttrs));
+      return Object.assign(this.userData, pick(this.user, this.userAttrs));
     }
   },
   created() {
-    return this.resetUser();
+    return this.resetForm();
   }
 };
 </script>
