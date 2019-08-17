@@ -38,9 +38,7 @@
           <template slot="items" slot-scope="{ item }">
             <tr :key="item.id">
               <td class="no-wrap text-xs-left">
-                <v-avatar color="primary lighten-2" size="40" dark>
-                  <img :src="item.imgUrl">
-                </v-avatar>
+                <v-avatar size="40"><img :src="item.imgUrl"></v-avatar>
               </td>
               <td class="no-wrap text-xs-left">{{ item.email }}</td>
               <td class="no-wrap text-xs-left">{{ item.firstName }}</td>
