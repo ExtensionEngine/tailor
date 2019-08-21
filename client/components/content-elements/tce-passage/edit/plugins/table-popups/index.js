@@ -1,9 +1,9 @@
 import get from 'lodash/get';
 import isFunction from 'lodash/isFunction';
+import scrollparent from 'scrollparent';
 
 const EVENT_NAME = 'recalcPositionPopup';
 const NAMESPACE = 'JoditEventDefaultNamespace';
-const SCROLLABLE_PARENT_SELECTOR = '.editor';
 
 export const name = 'TablePopups';
 
@@ -27,7 +27,7 @@ function observeTables(editor, Jodit) {
 }
 
 function addScrollHandler(editor) {
-  const node = document.querySelector(SCROLLABLE_PARENT_SELECTOR);
+  const node = scrollparent(editor.container);
   const popup = get(editor, '__plugins.inlinePopup');
   const handler = getScrollHandler(editor, popup);
   if (!popup || !node || !handler) return;
