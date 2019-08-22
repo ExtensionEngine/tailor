@@ -248,20 +248,22 @@ class Activity extends Model {
    * @param {SequelizeTransaction} options.transaction
    */
   static async linkActivities(source, options) {
-    const { transaction } = options;
+    const { transaction, originParentId } = options;
     const linksMap = await createLinksMap(source, options);
     const links = await Activity.bulkCreate(
       linksMap,
       { returning: true, transaction }
     );
     let activities = [source.id, ...links.map(link => link.id)];
+    if (originParentId && !source.isLink) await source.update({ parentId: originParentId });
     const children = await source.getChildren({
       where: { detached: false },
       transaction
     });
-    return Promise.reduce(links, async (acc, { id }) => ([
+    if (!children.length) return activities;
+    return Promise.reduce(links, async (acc, { id, originId }) => ([
       ...acc,
-      ...await linkChildren(children, { ...options, parentId: id })
+      ...await linkChildren(children, { ...options, parentId: id, originParentId: originId })
     ]), activities);
   }
 
@@ -324,12 +326,21 @@ class Activity extends Model {
     return this.sequelize.transaction(async transaction => {
       options = { ...options, transaction };
       const TeachingElement = this.sequelize.model('TeachingElement');
-      const descendants = await this.descendants({ attributes: ['id'] });
-      descendants.all = [...descendants.nodes, ...descendants.leaves];
+      const descendants = await this.descendants();
+      descendants.all = [
+        ...descendants.nodes.filter(d => !d.isLink),
+        ...descendants.leaves.filter(d => !d.isLink)
+      ];
+      descendants.links = descendants.nodes.filter(d => d.isLink);
       let where = { activityId: [...map(descendants.all, 'id'), this.id] };
       await removeAll(TeachingElement, where, options);
-      where = { parentId: [...map(descendants.nodes, 'id'), this.id] };
+      where = { parentId: [...map(descendants.nodes.filter(d => !d.isLink), 'id'), this.id] };
       await removeAll(Activity, where, options);
+      if (descendants.links.length) {
+        await Promise.each(descendants.links, async link => {
+          await Activity.removeLinkedActivities(link, options);
+        });
+      }
       return this.destroy(options);
     });
   }
@@ -342,15 +353,9 @@ class Activity extends Model {
 
   static async removeLinkedActivities(activity, options = {}) {
     let deletedIds = [];
-    let descendants = await activity.descendants();
-    descendants = [...descendants.nodes].filter(d => d.id !== activity.id);
-    await Promise.each(descendants, d => d.isLink
-      ? d.removeLink({ ...options, recursion: true })
-      : d.remove(options)
-    );
+    let origins = [];
     await activity.destroy(options);
     deletedIds.push(activity.id);
-    if (!activity.origin) return { ids: deletedIds };
     let links = await activity.origin.getLinks(options);
     if (activity.parentId && !options.recursion) {
       deletedIds = [
@@ -359,16 +364,24 @@ class Activity extends Model {
       ];
       links = links.filter(link => !deletedIds.includes(link.id));
     }
-    if (links.length > 1) return { ids: deletedIds };
-    if (!links.length) {
-      await activity.origin.remove(options);
-      return { ids: [...deletedIds, activity.origin.id] };
+
+    let children = await activity.getChildren(options);
+    if (children.length) {
+      const result = await removeDescendants(children, { ...options, recursion: true });
+      deletedIds = [...result.deletedIds, ...deletedIds];
+      origins = [...result.origins, ...origins];
     }
-    const [link] = links;
-    const origin = await resolveOriginWithOneLink(link, options);
+
+    if (links.length === 1) {
+      const [link] = links;
+      deletedIds.push(link.id);
+      const origin = await resolveOriginWithOneLink(link, options);
+      origins.push(origin);
+    }
+
     return {
       ids: deletedIds,
-      origin
+      origins
     };
   }
 
@@ -413,15 +426,15 @@ function removeAll(Model, where = {}, { soft = false, transaction }) {
  */
 async function resolveOriginWithOneLink(link, options) {
   const children = await link.getChildren(options);
-  const { originId, parentId, position } = link;
   if (children.length) {
     await Promise.each(
       children,
-      child => child.update({ parentId: originId }, options)
+      async child => {
+        await child.destroy(options);
+      }
     );
   }
   await link.destroy(options);
-  await link.origin.update({ position, parentId }, { options, returning: true });
   return link.getOrigin(options);
 }
 
@@ -445,6 +458,22 @@ async function removeLinksFromAllParents(source, links, options) {
   });
 
   return deletedIds;
+}
+
+/**
+ * @param {Array<Activity>} descendants
+ * @param {Object} options
+ * @returns {Array<Activity>}
+ */
+async function removeDescendants(activities, options) {
+  let deletedIds = [];
+  let origins = [];
+  await Promise.each(activities, async activity => {
+    const result = await Activity.removeLinkedActivities(activity, options);
+    deletedIds = [...result.ids, ...deletedIds];
+    origins = [...result.origins, ...origins];
+  });
+  return { deletedIds, origins };
 }
 
 /**
@@ -513,7 +542,7 @@ async function createLinksMap(source, options) {
   const data = pick(source, ['data', 'type', 'courseId', 'parentId', 'position']);
   const originId = source.isLink ? source.originId : source.id;
   let map = [{ ...data, originId, parentId, position }];
-  if (addSourceLink(source, parentId)) map.push({ ...data, originId });
+  if (addSourceLink(source, parentId) && !recursion) map.push({ ...data, originId });
   if (recursion) return map;
   const parentLinks = await addLinksForAllParents(
     { ...data, position, originId },
@@ -531,6 +560,7 @@ async function createLinksMap(source, options) {
  * @returns {Boolean}
  */
 function addSourceLink(source, parentId) {
+  if (!parentId && source.isLink) return false;
   if (!parentId) return true;
   if (source.parentId === parentId) return false;
   if (!source.isLink && !source.isOrigin) return true;

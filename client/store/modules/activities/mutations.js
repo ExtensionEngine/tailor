@@ -21,17 +21,19 @@ const saveModels = (state, models) => {
   });
 };
 
-const removeLink = (state, { ids, origin }) => {
+const removeLink = (state, { ids, origins }) => {
   ids.forEach(id => {
     const _cid = findKey(state.items, { id });
     if (!_cid) return;
     Vue.delete(state.items, _cid);
   });
 
-  if (origin) {
-    let _cid = findKey(state.items, { id: origin.id, parentId: origin.parentId });
-    if (!_cid) _cid = cuid();
-    Vue.set(state.items, _cid, { ...origin, _cid });
+  if (origins && origins.length) {
+    origins.forEach(origin => {
+      let _cid = findKey(state.items, { id: origin.id, parentId: origin.parentId });
+      if (!_cid) _cid = cuid();
+      Vue.set(state.items, _cid, { ...origin, _cid });
+    });
   }
 };
 
