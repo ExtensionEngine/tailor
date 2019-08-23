@@ -11,14 +11,14 @@ const EXTENSIONS_LIST = 'index';
 class ContainerRegistry {
   constructor() {
     this._registry = [];
-    this._staticsResolver = {};
+    this._staticsHandler = {};
   }
 
   async initialize() {
     await Promise.map(containerList, path => this.load(path));
     const extensions = await this.loadExtensionList();
     await Promise.map(extensions, path => this.load(path, true));
-    this.buildStaticsResolver();
+    this.buildStaticsHandler();
   }
 
   async load(path, isExtension) {
@@ -26,19 +26,19 @@ class ContainerRegistry {
     try {
       this._registry.push(await require(paths[action](path)));
     } catch (_) {
-      console.info(`${path} does not have a custom statics resolver.`);
+      console.info(`${path} does not have a custom statics handling.`);
     }
   }
 
-  buildStaticsResolver() {
-    const { _registry: registry, _staticsResolver: resolver } = this;
+  buildStaticsHandler() {
+    const { _registry: registry, _staticsHandler: handler } = this;
     registry
-      .filter(it => it.resolveStatics)
-      .forEach(it => Object.assign(resolver, { [it.type]: it.resolveStatics }));
+      .filter(it => it.handleStatics)
+      .forEach(it => Object.assign(handler, { [it.type]: it.handleStatics }));
   }
 
-  getStaticsResolver(type) {
-    return this._staticsResolver[type];
+  getStaticsHandler(type) {
+    return this._staticsHandler[type];
   }
 
   loadExtensionList() {

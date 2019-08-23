@@ -91,13 +91,13 @@ class TeachingElement extends Model {
       [Hooks.beforeCreate](te) {
         pruneVirtualProps(te);
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
-        return processStatics(te);
+        return te.processStatics();
       },
       [Hooks.beforeUpdate](te) {
         pruneVirtualProps(te);
         if (!te.changed('data')) return Promise.resolve();
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
-        return processStatics(te);
+        return te.processStatics();
       },
       [Hooks.afterCreate](te) {
         return te.resolveStatics();
@@ -184,11 +184,19 @@ class TeachingElement extends Model {
     });
   }
 
-  resolveStatics() {
+  handleStatics(defaultHandler) {
     const registry = CustomElementsRegistry;
-    const resolver = registry.getStaticsResolver(this.type);
-    if (resolver) return resolver(this, resolveStatics);
-    return resolveStatics(this);
+    const handler = registry.getStaticsHandler(this.type);
+    if (handler) return handler(this, defaultHandler);
+    return defaultHandler(this);
+  }
+
+  resolveStatics() {
+    return this.handleStatics(resolveStatics);
+  }
+
+  processStatics() {
+    return this.handleStatics(processStatics);
   }
 }
 
