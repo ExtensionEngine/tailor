@@ -2,13 +2,19 @@
 
 const isDev = process.env.NODE_ENV === 'development';
 
+/** @type {import('@types/eslint').Linter.Config}  */
 module.exports = {
   root: true,
   parserOptions: {
     parser: 'babel-eslint',
-    sourceType: 'module'
+    sourceType: 'script'
   },
-  // https://github.com/Flet/eslint-config-semistandard
+  overrides: [{
+    files: ['client/**'],
+    parserOptions: {
+      sourceType: 'module'
+    }
+  }],
   extends: [
     'semistandard',
     'plugin:vue/recommended'
@@ -16,6 +22,7 @@ module.exports = {
   // required to lint *.vue files
   plugins: ['vue'],
   rules: {
+    strict: ['error', 'safe'],
     indent: ['error', 2, {
       SwitchCase: 1,
       // NOTE: Consistent indentation IS enforced;
