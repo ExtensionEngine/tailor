@@ -1,7 +1,6 @@
 'use strict';
 
 const calculatePosition = require('../shared/util/calculatePosition');
-const CustomElementsRegistry = require('../content/elements');
 const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
@@ -91,19 +90,19 @@ class TeachingElement extends Model {
       [Hooks.beforeCreate](te) {
         pruneVirtualProps(te);
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
-        return te.processStatics();
+        return processStatics(te);
       },
       [Hooks.beforeUpdate](te) {
         pruneVirtualProps(te);
         if (!te.changed('data')) return Promise.resolve();
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
-        return te.processStatics();
+        return processStatics(te);
       },
       [Hooks.afterCreate](te) {
-        return te.resolveStatics();
+        return resolveStatics(te);
       },
       [Hooks.afterUpdate](te) {
-        return te.resolveStatics();
+        return resolveStatics(te);
       }
     };
   }
@@ -127,9 +126,8 @@ class TeachingElement extends Model {
 
   static fetch(opt) {
     return isNumber(opt)
-      ? TeachingElement.findByPk(opt).then(it => it && it.resolveStatics())
-      : TeachingElement.findAll(opt)
-          .then(arr => Promise.all(arr.map(it => it.resolveStatics())));
+      ? TeachingElement.findByPk(opt).then(it => it && resolveStatics(it))
+      : TeachingElement.findAll(opt).map(resolveStatics);
   }
 
   static cloneElements(src, container, transaction) {
@@ -182,21 +180,6 @@ class TeachingElement extends Model {
       if (this.type === 'ASSESSMENT') return { type: 'ASSESSMENT' };
       return { type: { [Op.not]: 'ASSESSMENT' } };
     });
-  }
-
-  handleStatics(defaultHandler) {
-    const registry = CustomElementsRegistry;
-    const handler = registry.getStaticsHandler(this.type);
-    if (handler) return handler(this, defaultHandler);
-    return defaultHandler(this);
-  }
-
-  resolveStatics() {
-    return this.handleStatics(resolveStatics);
-  }
-
-  processStatics() {
-    return this.handleStatics(processStatics);
   }
 }
 
