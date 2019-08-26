@@ -93,9 +93,13 @@ function link({ course, activity, body }, res) {
 }
 
 function getPreviewUrl({ course, activity }, res) {
-  return fetchActivityContent(course, activity)
+  return fetchActivityContent(course, activity, true)
     .then(content => {
-      const body = { uid: activity.uid, ...content };
+      const body = {
+        ...pick(activity, ['id', 'uid', 'type']),
+        meta: activity.data,
+        ...content
+      };
       return request.post(previewUrl, body);
     })
     .then(({ data: { url } }) => {
