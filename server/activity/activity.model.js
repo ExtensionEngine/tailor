@@ -7,6 +7,7 @@ const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const omitBy = require('lodash/omitBy');
 const pick = require('lodash/pick');
+const remove = require('lodash/remove');
 const Promise = require('bluebird');
 const TeachingElement = require('../teaching-element/te.model');
 
@@ -476,9 +477,10 @@ async function removeLinksFromAllParents(source, links, options) {
   if (!parent || !parent.isLink) return [];
   const deletedIds = [];
   const parentSiblings = await parent.origin.getLinks(options);
-  const parentSiblingsId = parentSiblings.map(it => it.id);
+  let parentSiblingsId = parentSiblings.map(it => it.id);
   await Promise.each(links, async link => {
-    if (parentSiblingsId.includes(link.parentId)) {
+    if (parentSiblingsId.includes(link.parentId) && link.parentId !== source.parentId) {
+      parentSiblingsId = remove(parentSiblingsId, it => it === !link.parentId);
       deletedIds.push(link.id);
       await link.destroy(options);
     }
