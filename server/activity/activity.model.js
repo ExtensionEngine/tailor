@@ -353,7 +353,8 @@ class Activity extends Model {
 
   static async removeLinkedActivities(activity, options = {}) {
     let deletedIds = [];
-    let origins = [];
+    let originIds = [];
+    let updatedActivities = [];
     await activity.destroy(options);
     deletedIds.push(activity.id);
     let links = await activity.origin.getLinks(options);
@@ -367,21 +368,47 @@ class Activity extends Model {
 
     let children = await activity.getChildren(options);
     if (children.length) {
-      const result = await removeDescendants(children, { ...options, recursion: true });
+      const result = await removeLinkedChildren(children, { ...options, recursion: true });
       deletedIds = [...result.deletedIds, ...deletedIds];
-      origins = [...result.origins, ...origins];
+      originIds = [...result.originIds, ...originIds];
+      updatedActivities = [...result.updatedActivities, ...updatedActivities];
+    }
+
+    if (!links.length) {
+      await activity.origin.destroy(options);
+      deletedIds.push(activity.origin.id);
     }
 
     if (links.length === 1) {
       const [link] = links;
+      const linkChildren = await link.getChildren(options);
+      if (linkChildren.length) {
+        await Promise.each(
+          linkChildren,
+          async child => {
+            if (originIds.includes(child.originId)) {
+              deletedIds.push(child.id);
+              await child.destroy(options);
+            }
+            child.parentId = link.originId;
+            await child.save(options);
+            updatedActivities.push(child);
+          }
+        );
+      }
       deletedIds.push(link.id);
-      const origin = await resolveOriginWithOneLink(link, options);
-      origins.push(origin);
+      await link.destroy(options);
+      const origin = await link.getOrigin(options);
+      origin.parentId = link.parentId;
+      await origin.save(options);
+      originIds.push(origin.id);
+      updatedActivities.push(origin);
     }
 
     return {
       ids: deletedIds,
-      origins
+      updatedActivities,
+      originIds
     };
   }
 
@@ -465,15 +492,17 @@ async function removeLinksFromAllParents(source, links, options) {
  * @param {Object} options
  * @returns {Array<Activity>}
  */
-async function removeDescendants(activities, options) {
+async function removeLinkedChildren(activities, options) {
   let deletedIds = [];
-  let origins = [];
+  let originIds = [];
+  let updatedActivities = [];
   await Promise.each(activities, async activity => {
     const result = await Activity.removeLinkedActivities(activity, options);
     deletedIds = [...result.ids, ...deletedIds];
-    origins = [...result.origins, ...origins];
+    originIds = [...result.originIds, ...originIds];
+    updatedActivities = [...result.updatedActivities, ...updatedActivities];
   });
-  return { deletedIds, origins };
+  return { deletedIds, updatedActivities, originIds };
 }
 
 /**

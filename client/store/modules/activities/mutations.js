@@ -21,15 +21,15 @@ const saveModels = (state, models) => {
   });
 };
 
-const removeLink = (state, { ids, origins }) => {
+const removeLink = (state, { ids, updatedActivities }) => {
   ids.forEach(id => {
     const _cid = findKey(state.items, { id });
     if (!_cid) return;
     Vue.delete(state.items, _cid);
   });
 
-  if (origins && origins.length) {
-    origins.forEach(origin => {
+  if (updatedActivities && updatedActivities.length) {
+    updatedActivities.forEach(origin => {
       let _cid = findKey(state.items, { id: origin.id, parentId: origin.parentId });
       if (!_cid) _cid = cuid();
       Vue.set(state.items, _cid, { ...origin, _cid });
