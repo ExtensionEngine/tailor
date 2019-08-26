@@ -1,4 +1,5 @@
 const containerList = require('../../config/shared/custom-containers');
+const find = require('lodash/find');
 const Promise = require('bluebird');
 
 const paths = {
@@ -30,6 +31,11 @@ class ContainerRegistry {
       const data = await container.fetch(...attrs);
       return { data, publishedAs: container.publishedAs };
     });
+  }
+
+  getStaticsResolver(publishedAs) {
+    const container = find(this._registry, { publishedAs });
+    return container.resolve;
   }
 
   loadExtensionList() {

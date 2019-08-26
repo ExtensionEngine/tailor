@@ -1,12 +1,11 @@
 'use strict';
 
 const content = require('../../content');
-const { getLevelRelationships } = require('../../../config/shared/activities');
-const { TeachingElement } = require('../database');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
 const get = require('lodash/get');
+const { getLevelRelationships } = require('../../../config/shared/activities');
 const hash = require('hash-obj');
 const keys = require('lodash/keys');
 const map = require('lodash/map');
@@ -14,7 +13,9 @@ const omit = require('lodash/omit');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
+const { resolveStatics } = require('../storage/helpers');
 const storage = require('../storage');
+const { TeachingElement } = require('../database');
 const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
@@ -101,12 +102,17 @@ function getPublishedStructure(repository) {
   });
 }
 
-function fetchActivityContent(repository, activity) {
-  return Promise.all([
+async function fetchActivityContent(repository, activity, signed = false) {
+  const res = await Promise.all([
     fetchContainers(repository, activity),
     fetchAssessments(activity),
     fetchCustomContainers(activity)
   ]).spread((containers, assessments, custom) => ({ containers, assessments, custom }));
+  if (!signed) return res;
+  res.containers = await Promise.map(res.containers, resolveContainer);
+  res.assessments = await resolveAssessments(res.assessments);
+  res.custom = await Promise.map(res.custom, resolveCustom);
+  return res;
 }
 
 function publishContent(repository, activity) {
@@ -171,6 +177,19 @@ function fetchContainer(container) {
 function fetchAssessments(parent) {
   const options = { where: { type: 'ASSESSMENT' }, attributes: TES_ATTRS };
   return parent.getTeachingElements(options);
+}
+
+async function resolveContainer(container) {
+  container.elements = await Promise.map(container.elements, resolveStatics);
+  return container;
+}
+
+function resolveAssessments(assessments) {
+  return Promise.map(assessments, resolveStatics);
+}
+
+function resolveCustom(container) {
+  return content.resolve(container, resolveStatics);
 }
 
 function saveFile(parent, key, data) {

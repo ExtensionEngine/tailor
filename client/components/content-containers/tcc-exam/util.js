@@ -1,6 +1,7 @@
 const filter = require('lodash/filter');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
+const Promise = require('bluebird');
 
 const ATTRS = [
   'id', 'uid', 'type', 'position', 'parentId', 'createdAt', 'updatedAt'
@@ -23,7 +24,17 @@ function fetch(parent, childOptions) {
   return parent.getChildren(opts).map(exam => fetchGroups(exam, childOptions));
 }
 
+async function resolve(exam, resolveStatics) {
+  exam.groups = await Promise.map(exam.groups, async group => {
+    group.intro = await Promise.map(group.intro, resolveStatics);
+    group.assessments = await Promise.map(group.assessments, resolveStatics);
+    return group;
+  });
+  return exam;
+}
+
 module.exports = {
   fetch,
+  resolve,
   publishedAs: 'exam'
 };

@@ -1,6 +1,6 @@
 {
   "name": "tailor",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "codename": "silk",
   "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
@@ -120,7 +120,6 @@
     "vue-avatar": "^2.1.1",
     "vue-color": "^2.7.0",
     "vue-datetime": "^1.0.0-beta.3",
-    "vue-directive-tooltip": "^1.4.2",
     "vue-focus": "^2.1.0",
     "vue-infinite-loading": "^2.4.4",
     "vue-infinite-scroll": "^2.0.0",

@@ -14,5 +14,9 @@ module.exports = {
           return acc.concat(data.map(it => ({ ...it, publishedAs })));
         }, []);
       });
+  },
+  resolve(container, defaultResolver) {
+    const resolver = containers.getStaticsResolver(container.publishedAs);
+    return resolver(container, defaultResolver);
   }
 };
