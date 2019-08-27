@@ -257,11 +257,12 @@ class Activity extends Model {
     );
     let activities = [source.id, ...links.map(link => link.id)];
     if (originParentId && !source.isLink) await source.update({ parentId: originParentId });
-    const children = await source.getChildren({
+    let children = await source.getChildren({
       where: { detached: false },
       transaction
     });
     if (!children.length) return activities;
+    children = children.filter(child => !child.isOrigin);
     return Promise.reduce(links, async (acc, { id, originId }) => ([
       ...acc,
       ...await linkChildren(children, { ...options, parentId: id, originParentId: originId })
