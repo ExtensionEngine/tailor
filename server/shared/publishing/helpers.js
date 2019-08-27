@@ -343,7 +343,7 @@ async function addLinkToSpine(spine, activity) {
     }
   }
 
-  if (index > 0) {
+  if (index > -1) {
     const parentIds = Array.isArray(spine.structure[index].parentId)
       ? spine.structure[index].parentId : [spine.structure[index].parentId];
     if (parentIds.includes(parentId)) return;
