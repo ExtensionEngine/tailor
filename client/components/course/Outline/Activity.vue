@@ -5,7 +5,7 @@
         @click="focus(showOptions)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
-        :class="{ 'elevation-9 selected': isHighlighted }"
+        :class="{ 'elevation-9 selected': isHighlighted, 'link': originId }"
         class="activity elevation-1">
         <v-chip :color="color" label dark disabled class="icon-container">
           <v-btn
@@ -19,7 +19,7 @@
           <v-icon v-else>mdi-file-document-box-outline</v-icon>
         </v-chip>
         <span class="activity-name grey--text text--darken-3">
-          {{ data.name }}
+          <v-icon v-if="originId" class="pr-2 link-icon">mdi-link</v-icon> {{ data.name }}
         </span>
         <div v-show="isHighlighted" class="actions">
           <v-spacer />
@@ -216,5 +216,17 @@ export default {
 
 .sub-activity {
   margin-left: 44px;
+}
+
+.link {
+  background: #CCCC;
+
+  .activity-name {
+    font-weight: bold;
+  }
+
+  .link-icons {
+    display: flex;
+  }
 }
 </style>
