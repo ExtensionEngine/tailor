@@ -4,8 +4,8 @@ const url = {
   root: () => '/asset'
 };
 
-function getUrl(key) {
-  const params = { key };
+function getUrl(key, options = {}) {
+  const params = { key, ...options };
   return request.get(url.root(), { params }).then(res => res.data.url);
 }
 
