@@ -592,10 +592,10 @@ async function createLinksMap(source, options) {
  * @returns {Boolean}
  */
 function addSourceLink(source, parentId) {
+  if (!source.isLink && !source.isOrigin) return true;
   if (!parentId && source.isLink) return false;
   if (!parentId) return true;
   if (source.parentId === parentId) return false;
-  if (!source.isLink && !source.isOrigin) return true;
   return false;
 }
 
