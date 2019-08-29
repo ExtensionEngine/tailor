@@ -7,7 +7,7 @@
       :loading="loading"
       color="primary"
       class="file-button">
-      <v-icon>mdi mdi-file-download</v-icon> {{ filename }}
+      <v-icon>mdi mdi-file-download</v-icon> {{ label || filename }}
     </v-btn>
     <div v-else>
       <div class="well">
@@ -44,6 +44,9 @@ export default {
     },
     key() {
       return get(this.element, 'data.key');
+    },
+    label() {
+      return get(this.element, 'data.label');
     }
   },
   methods: {
@@ -67,6 +70,9 @@ export default {
   },
   mounted() {
     this.$elementBus.on('upload', this.uploadFile);
+    this.$elementBus.on('update:label', label => {
+      this.$emit('save', { label });
+    });
   }
 };
 </script>

@@ -10,13 +10,36 @@
         <v-icon>mdi mdi-file-upload</v-icon> Upload
       </label>
     </form>
+    <v-text-field
+      v-if="key"
+      v-model.trim="label"
+      placeholder="Label" />
   </div>
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
+import get from 'lodash/get';
+
 export default {
   name: 'tce-file-toolbar',
   inject: ['$elementBus'],
+  props: {
+    element: { type: Object, required: true }
+  },
+  computed: {
+    key() {
+      return get(this.element, 'data.key');
+    },
+    label: {
+      get() {
+        return get(this.element, 'data.label');
+      },
+      set: debounce(function (value) {
+        this.$elementBus.emit('update:label', value);
+      }, 1000)
+    }
+  },
   methods: {
     uploadFile() {
       const form = this.$refs.upload;
@@ -49,6 +72,11 @@ export default {
       font-size: 20px;
       line-height: 20px;
     }
+  }
+
+  .v-text-field {
+    max-width: 500px;
+    margin: 5px 20px 0;
   }
 }
 </style>
