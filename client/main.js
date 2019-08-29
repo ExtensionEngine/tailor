@@ -4,7 +4,6 @@ import 'dom-shims/shim/Element.classList';
 import 'dom-shims/shim/Element.mutation';
 import 'event-source-polyfill';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
-import 'vue-directive-tooltip/css/index.css';
 
 import assetsApi from '@/api/asset';
 import colors from 'vuetify/es5/util/colors';
@@ -15,7 +14,6 @@ import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
-import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
 import Vue from 'vue';
 import VueHotkey from 'v-hotkey';
@@ -42,7 +40,6 @@ Vue.use(Vuetify, {
   }
 });
 Vue.use(VuetifySnackbar);
-Vue.use(Tooltip, { delay: 50 });
 Vue.use(VeeValidate, {
   delay: 700,
   fieldsBagName: 'vFields',
