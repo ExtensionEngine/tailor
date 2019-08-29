@@ -66,7 +66,8 @@ function getPreviewUrl({ course, activity }, res) {
   return fetchActivityContent(course, activity, true)
     .then(content => {
       const body = {
-        ...pick(activity, ['id', 'courseId', 'uid', 'type']),
+        ...pick(activity, ['id', 'uid', 'type']),
+        repositoryId: activity.courseId,
         meta: activity.data,
         ...content
       };
