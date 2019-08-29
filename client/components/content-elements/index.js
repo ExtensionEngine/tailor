@@ -1,5 +1,5 @@
 export default [
-  'tce-html',
+  'tce-passage',
   'tce-image',
   'tce-video',
   'tce-embed',
@@ -19,5 +19,5 @@ export default [
   'tce-fill-blank',
   'tce-matching-question',
   'tce-drag-drop',
-  'tce-passage'
+  'tce-html'
 ];

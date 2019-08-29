@@ -6,7 +6,7 @@ const initState = () => ({
 });
 
 export default {
-  name: 'Text',
+  name: 'Text (deprecated)',
   type: 'HTML',
   version: '1.0',
   initState,

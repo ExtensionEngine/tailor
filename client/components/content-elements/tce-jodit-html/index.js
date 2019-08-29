@@ -4,14 +4,14 @@ import Toolbar from './edit/Toolbar';
 const initState = () => ({ content: '' });
 
 export default {
-  name: 'Passage',
-  type: 'PASSAGE',
+  name: 'Text',
+  type: 'JODIT_HTML',
   version: '1.0',
   initState,
   Edit,
   Toolbar,
   ui: {
-    icon: 'mdi-text-short',
+    icon: 'mdi-text',
     forceFullWidth: false
   }
 };
