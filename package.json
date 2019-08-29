@@ -108,6 +108,7 @@
     "safe-require": "^1.0.3",
     "sass-web-fonts": "^2.0.2",
     "save-as": "^0.1.8",
+    "scrollparent": "^2.0.1",
     "semver": "^6.0.0",
     "sequelize": "^5.8.11",
     "snyk": "^1.134.2",

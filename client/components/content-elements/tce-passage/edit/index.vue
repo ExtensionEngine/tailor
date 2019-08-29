@@ -94,6 +94,10 @@ $min-height: 140px;
   margin-bottom: 0;
 }
 
+.jodit_container {
+  min-height: $min-height;
+}
+
 .passage-placeholder .message {
   display: flex;
   flex-direction: column;
