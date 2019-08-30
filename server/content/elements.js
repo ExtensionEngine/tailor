@@ -1,4 +1,4 @@
-const containerList = require('../../config/shared/custom-elements');
+const elementsList = require('../../config/shared/custom-elements');
 const Promise = require('bluebird');
 
 const paths = {
@@ -8,14 +8,14 @@ const paths = {
 
 const EXTENSIONS_LIST = 'index';
 
-class ContainerRegistry {
+class ElementsRegistry {
   constructor() {
     this._registry = [];
     this._staticsHandler = {};
   }
 
   async initialize() {
-    await Promise.map(containerList, path => this.load(path));
+    await Promise.map(elementsList, path => this.load(path));
     const extensions = await this.loadExtensionList();
     await Promise.map(extensions, path => this.load(path, true));
     this.buildStaticsHandler();
@@ -52,4 +52,4 @@ class ContainerRegistry {
   }
 }
 
-module.exports = new ContainerRegistry();
+module.exports = new ElementsRegistry();
