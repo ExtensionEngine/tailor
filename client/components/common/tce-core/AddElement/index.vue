@@ -146,7 +146,7 @@ export default {
       }
       if (isQuestion(element.type)) {
         const data = { width: LAYOUT.FULL_WIDTH };
-        const question = [{ id: cuid(), data, type: 'HTML', embedded: true }];
+        const question = [{ id: cuid(), data, type: 'JODIT_HTML', embedded: true }];
         element.data = { ...element.data, question, type: subtype };
       }
       element.data = { ...element.data, ...initState() };

@@ -5,7 +5,7 @@
       @update="reorder"
       :list="introductionElements"
       :activity="group"
-      :types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
+      :types="['JODIT_HTML', 'IMAGE', 'VIDEO', 'EMBED', 'HTML']"
       :layout="true"
       embedded>
       <teaching-element

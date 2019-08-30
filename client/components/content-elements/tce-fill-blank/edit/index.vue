@@ -44,6 +44,8 @@ import get from 'lodash/get';
 import reduce from 'lodash/reduce';
 import times from 'lodash/times';
 
+const TEXT_CONTAINERS = ['HTML', 'JODIT_HTML'];
+
 const PLACEHOLDER = /(@blank)/g;
 const ALERT = {
   type: 'alert-danger',
@@ -72,7 +74,7 @@ export default {
       return this.answerGroups.length !== this.blanksCount;
     },
     blanksCount() {
-      const textAssets = filter(this.question, { type: 'HTML' });
+      const textAssets = filter(this.question, it => TEXT_CONTAINERS.includes(it.type));
       return reduce(textAssets, (count, it) => {
         const content = get(it, 'data.content', '');
         return count + (content.match(PLACEHOLDER) || []).length;

@@ -3,7 +3,7 @@
     @add="addItem"
     @update="reorderItem"
     :elements="embeds"
-    :supported-types="['HTML', 'IMAGE']">
+    :supported-types="['JODIT_HTML', 'IMAGE', 'HTML']">
     <contained-content
       slot="list-item"
       slot-scope="{ element, isDragged }"

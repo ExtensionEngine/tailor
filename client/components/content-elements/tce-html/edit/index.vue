@@ -3,7 +3,7 @@
     <div v-if="!isFocused && !content && showPlaceholder">
       <div class="well text-placeholder">
         <div class="message">
-          <span class="heading">Text placeholder</span>
+          <span class="heading">Text (deprecated) placeholder</span>
           <span>Click to edit</span>
         </div>
       </div>

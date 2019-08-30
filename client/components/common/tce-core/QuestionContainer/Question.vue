@@ -16,7 +16,7 @@
       <add-element
         v-show="isEditing"
         @add="addElement"
-        :include="['HTML', 'IMAGE', 'EMBED']"
+        :include="['JODIT_HTML', 'IMAGE', 'EMBED', 'HTML']"
         :layout="false" />
     </div>
     <span v-if="isEditing && helperText" class="help-block">

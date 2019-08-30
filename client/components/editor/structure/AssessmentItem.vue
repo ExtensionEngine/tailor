@@ -74,6 +74,7 @@ import Multiselect from '../../common/Select';
 import set from 'lodash/set';
 import uniq from 'lodash/uniq';
 
+const TEXT_CONTAINERS = ['HTML', 'JODIT_HTML'];
 const blankRegex = /(@blank)/g;
 const htmlRegex = /<\/?[^>]+(>|$)/g;
 
@@ -97,7 +98,7 @@ export default {
       return this.$teRegistry.get(this.assessment.data.type);
     },
     question() {
-      let question = filter(this.assessment.data.question, { type: 'HTML' });
+      let question = filter(this.assessment.data.question, it => TEXT_CONTAINERS.includes(it.type));
       question = map(question, 'data.content').join(' ');
       return question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
     },
