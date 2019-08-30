@@ -1,5 +1,5 @@
 import calculatePosition from 'utils/calculatePosition';
-import find from 'lodash/find';
+import findKey from 'lodash/findKey';
 import generateActions from '../../helpers/actions';
 import { getDescendants as getDeepChildren } from 'utils/activity';
 import request from '@/api/request';
@@ -13,10 +13,15 @@ const reorder = ({ commit }, { activity, context }) => {
     .then(({ data: { data } }) => commit('save', { ...activity, ...data }));
 };
 
-const update = ({ state, commit }, { _cid, originId, data }) => {
-  if (originId) _cid = find(state.items, { id: originId })._cid;
+const update = ({ commit }, { _cid, data }) => {
   return api.update(_cid, { data })
     .then(updated => commit('save', { data, ...updated }));
+};
+
+const updateLinks = ({ state, commit }, { originId, data }) => {
+  const _cid = findKey(state.items, { id: originId });
+  return api.update(_cid, { data })
+    .then(updated => commit('saveLinks', { data, ...updated }));
 };
 
 const remove = ({ state, commit }, model) => {
@@ -68,5 +73,6 @@ export {
   reset,
   save,
   setEndpoint,
-  update
+  update,
+  updateLinks
 };

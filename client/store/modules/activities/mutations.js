@@ -7,14 +7,10 @@ const reorder = (state, { activity, position }) => {
   state.items[activity._cid].position = position;
 };
 
-const save = (state, model) => {
-  if (Array.isArray(model)) return saveModels(state, model);
-  if (model.links && model.links.length) saveModels(state, model.links);
-  Vue.set(state.items, model._cid, model);
-};
+const save = (state, model) => Vue.set(state.items, model._cid, model);
 
-const saveModels = (state, models) => {
-  models.forEach(link => {
+const saveLinks = (state, { links = [] }) => {
+  links.forEach(link => {
     let _cid = findKey(state.items, { id: link.id, parentId: link.parentId });
     if (!_cid) _cid = cuid();
     Vue.set(state.items, _cid, { ...link, _cid });
@@ -37,4 +33,14 @@ const removeLink = (state, { ids, updatedActivities }) => {
   }
 };
 
-export { add, fetch, remove, removeLink, reorder, reset, save, setEndpoint };
+export {
+  add,
+  fetch,
+  remove,
+  removeLink,
+  reorder,
+  reset,
+  save,
+  saveLinks,
+  setEndpoint
+};

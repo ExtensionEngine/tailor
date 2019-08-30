@@ -40,11 +40,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', ['update']),
+    ...mapActions('activities', ['update', 'updateLinks']),
     updateActivity(key, value) {
       const { _cid, originId } = this.activity;
       const data = { ...this.activity.data, [key]: value };
-      this.update({ _cid, originId, data });
+      if (originId) {
+        this.updateLinks({ originId, data });
+      } else {
+        this.update({ _cid, data });
+      }
     }
   },
   components: {

@@ -31,6 +31,7 @@ export default function ($apiUrl) {
       // Do not update meta if there is newer change.
       const previous = state.items[model._cid];
       if (previous && previous._version === model._version) model._synced = true;
+      if (model.links && model.links.length) commit('saveLinks', model);
       commit('save', model);
     });
   };
