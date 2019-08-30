@@ -3,13 +3,16 @@
 const { getSiblingLevels } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
+const every = require('lodash/every');
 const isEmpty = require('lodash/isEmpty');
+const isEqual = require('lodash/isEqual');
 const map = require('lodash/map');
 const omitBy = require('lodash/omitBy');
 const pick = require('lodash/pick');
 const remove = require('lodash/remove');
 const Promise = require('bluebird');
 const TeachingElement = require('../teaching-element/te.model');
+const uniqWith = require('lodash/uniqWith');
 
 class Activity extends Model {
   static fields(DataTypes) {
@@ -255,7 +258,8 @@ class Activity extends Model {
       linksMap,
       { returning: true, transaction }
     );
-    let activities = [source.id, ...links.map(link => link.id)];
+    let activities = links.map(link => link.id);
+    if (source.isOrigin) activities.push(source.id);
     if (originParentId && !source.isLink) await source.update({ parentId: originParentId });
     let children = await source.getChildren({
       where: { detached: false },
@@ -574,17 +578,24 @@ async function createLinksMap(source, options) {
   const { parentId = null, position, recursion = false } = options;
   const data = pick(source, ['data', 'type', 'courseId', 'parentId', 'position']);
   const originId = source.originId || source.id;
-  let map = [{ ...data, originId, parentId, position }];
-  if (addSourceLink(source, parentId) && !recursion) map.push({ ...data, originId });
-  if (recursion) return map;
+  let linksMap = [{ ...data, originId, parentId, position }];
+  if (addSourceLink(source, parentId) && !recursion) linksMap.push({ ...data, originId });
+  if (!every(linksMap, ['parentId', parentId])) {
+    linksMap = uniqWith(linksMap, isEqual);
+  }
+  if (recursion) return linksMap;
   const parentLinks = await addLinksForAllParents(
     { ...data, position, originId },
     options
   );
-  return [
-    ...map,
+
+  linksMap = [
+    ...linksMap,
     ...parentLinks
   ];
+
+  if (!every(linksMap, ['parentId', parentId])) return uniqWith(linksMap, isEqual);
+  return linksMap;
 }
 
 /**
@@ -595,9 +606,7 @@ async function createLinksMap(source, options) {
 function addSourceLink(source, parentId) {
   if (!source.isLink && !source.isOrigin) return true;
   if (!parentId && source.isLink) return false;
-  if (!parentId) return true;
-  if (source.parentId === parentId) return false;
-  return false;
+  return !parentId;
 }
 
 /**
