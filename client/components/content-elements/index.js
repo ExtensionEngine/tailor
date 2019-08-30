@@ -1,5 +1,5 @@
 export default [
-  'tce-passage',
+  'tce-jodit-html',
   'tce-image',
   'tce-video',
   'tce-embed',

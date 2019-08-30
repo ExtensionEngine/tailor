@@ -1,10 +1,10 @@
 <template>
-  <div class="tce-passage">
+  <div class="tce-jodit-html">
     <div
       v-if="!isFocused && !content && showPlaceholder"
-      class="well passage-placeholder">
+      class="well jodit-html-placeholder">
       <div class="message">
-        <span class="heading">Passage placeholder</span>
+        <span class="heading">Text placeholder</span>
         <span>Click to edit</span>
       </div>
     </div>
@@ -28,7 +28,7 @@ import get from 'lodash/get';
 import JoditEditor from './Editor';
 
 export default {
-  name: 'tce-passage',
+  name: 'tce-jodit-html',
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
@@ -83,7 +83,7 @@ export default {
 <style lang="scss" scoped>
 $min-height: 140px;
 
-.tce-passage {
+.tce-jodit-html {
   text-align: initial;
 }
 
@@ -98,7 +98,7 @@ $min-height: 140px;
   min-height: $min-height;
 }
 
-.passage-placeholder .message {
+.jodit-html-placeholder .message {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
