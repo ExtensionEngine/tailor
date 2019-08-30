@@ -42,8 +42,9 @@ export default {
   methods: {
     ...mapActions('activities', ['update']),
     updateActivity(key, value) {
+      const { _cid, originId } = this.activity;
       const data = { ...this.activity.data, [key]: value };
-      this.update({ activity: this.activity, data });
+      this.update({ _cid, originId, data });
     }
   },
   components: {

@@ -67,7 +67,7 @@ export default {
       return schema === this.repository.schema;
     },
     showBackButton() {
-      return !(this.action === 'link' && !this.parent);
+      return this.action !== 'link' || this.parent;
     }
   },
   methods: {
@@ -92,9 +92,7 @@ export default {
     },
     getChildren(activity) {
       const parentId = get(activity, 'id', null);
-      return filter(this.activities, it => {
-        return it.parentId === parentId && !it.isOrigin;
-      });
+      return filter(this.activities, { parentId, isOrigin: false });
     },
     getName(activity) {
       return get(activity, 'data.name', activity.type);

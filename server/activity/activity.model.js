@@ -125,7 +125,7 @@ class Activity extends Model {
   }
 
   get isOrigin() {
-    return this.links && this.links.length > 0;
+    return this.links && this.links.length;
   }
 
   /**
@@ -236,7 +236,7 @@ class Activity extends Model {
       if (links.length !== 1) return;
       const [link] = links;
       await resolveOriginWithOneLink(link, { transaction });
-      idMap = omitBy(idMap, id => id === link.id);
+      idMap = omitBy(idMap, { id: link.id });
     });
     return idMap;
   }
@@ -274,11 +274,11 @@ class Activity extends Model {
    * @param {Object} options
    * @param {Number} options.parentId
    * @param {Number} options.position
+   * @param {Number} options.originParentId
    */
-  link({ parentId, position }) {
+  link(options) {
     return this.sequelize.transaction(transaction => {
-      return Activity.linkActivities(this, { parentId, position, transaction })
-        .then(activities => activities);
+      return Activity.linkActivities(this, { ...options, transaction });
     });
   }
 
@@ -329,19 +329,20 @@ class Activity extends Model {
       options = { ...options, transaction };
       const TeachingElement = this.sequelize.model('TeachingElement');
       const descendants = await this.descendants();
+      const regularNodes = descendants.nodes.filter(d => !d.isLink);
       descendants.all = [
-        ...descendants.nodes.filter(d => !d.isLink),
+        ...regularNodes,
         ...descendants.leaves.filter(d => !d.isLink)
       ];
       descendants.links = descendants.nodes.filter(d => d.isLink);
       let where = { activityId: [...map(descendants.all, 'id'), this.id] };
       await removeAll(TeachingElement, where, options);
-      where = { parentId: [...map(descendants.nodes.filter(d => !d.isLink), 'id'), this.id] };
+      where = { parentId: [...map(regularNodes, 'id'), this.id] };
       await removeAll(Activity, where, options);
       if (descendants.links.length) {
-        await Promise.each(descendants.links, async link => {
-          await Activity.removeLinkedActivities(link, options);
-        });
+        await Promise.each(descendants.links,
+          link => Activity.removeLinkedActivities(link, options)
+        );
       }
       return this.destroy(options);
     });
@@ -427,7 +428,13 @@ class Activity extends Model {
 
   toJSON() {
     const values = super.toJSON();
-    if (!this.isLink && !this.isOrigin) return values;
+    if (!this.isLink && !this.isOrigin) {
+      return {
+        ...values,
+        isOrigin: false
+      };
+    }
+
     if (this.isOrigin) {
       this.links.forEach(link => { link.data = this.data; });
       return {
@@ -438,6 +445,7 @@ class Activity extends Model {
     }
     return {
       ...values,
+      isOrigin: false,
       data: this.origin.data,
       refs: this.origin.refs
     };
@@ -456,12 +464,7 @@ function removeAll(Model, where = {}, { soft = false, transaction }) {
 async function resolveOriginWithOneLink(link, options) {
   const children = await link.getChildren(options);
   if (children.length) {
-    await Promise.each(
-      children,
-      async child => {
-        await child.destroy(options);
-      }
-    );
+    await Promise.each(children, child => child.destroy(options));
   }
   await link.destroy(options);
   return link.getOrigin(options);
@@ -519,9 +522,7 @@ async function removeLinkedChildren(activities, options) {
  */
 function getClonedActivitiesMap(source, options) {
   const { idMap, cloneOrigins, courseId, parentId } = options;
-  const originId = ({ originId }) =>
-    cloneOrigins && idMap[originId] ? idMap[originId] : originId;
-
+  const originId = ({ originId }) => cloneOrigins && (idMap[originId] || originId);
   return source.map(activity => ({
     courseId,
     parentId,
@@ -572,7 +573,7 @@ async function linkChildren(children, options) {
 async function createLinksMap(source, options) {
   const { parentId = null, position, recursion = false } = options;
   const data = pick(source, ['data', 'type', 'courseId', 'parentId', 'position']);
-  const originId = source.isLink ? source.originId : source.id;
+  const originId = source.originId || source.id;
   let map = [{ ...data, originId, parentId, position }];
   if (addSourceLink(source, parentId) && !recursion) map.push({ ...data, originId });
   if (recursion) return map;

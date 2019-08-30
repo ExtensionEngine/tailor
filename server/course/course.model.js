@@ -73,10 +73,6 @@ class Course extends Model {
     });
   }
 
-  get isLinkingEnabled() {
-    return this.getSchemaConfig().linkingEnabled;
-  }
-
   static options() {
     return {
       modelName: 'course',

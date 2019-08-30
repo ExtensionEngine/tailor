@@ -113,10 +113,10 @@ const linkCreated = async activity => {
   if (!parent.isLink) return activity;
   await activity.link({
     position: activity.position,
-    parentId: activity.parentId
+    parentId: activity.parentId,
+    originParentId: parent.origin.id
   });
-  await activity.update({ parentId: parent.origin.id });
-  return Activity.findByPk(activity.id).then(data => data);
+  return Activity.findByPk(activity.id);
 };
 
 module.exports = {

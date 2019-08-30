@@ -27,7 +27,7 @@
             v-show="isEditable"
             :to="{
               name: 'editor',
-              params: { activityId: originId ? originId : id }
+              params: { activityId: originId || id }
             }"
             color="pink"
             outline
@@ -219,7 +219,7 @@ export default {
 }
 
 .link {
-  background: #CCCC;
+  background: #ccc;
 
   .activity-name {
     font-weight: bold;

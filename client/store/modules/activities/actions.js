@@ -13,12 +13,9 @@ const reorder = ({ commit }, { activity, context }) => {
     .then(({ data: { data } }) => commit('save', { ...activity, ...data }));
 };
 
-const update = ({ state, commit }, { activity, data }) => {
-  if (activity.originId) {
-    activity = find(state.items, { id: activity.originId });
-  }
-  const cid = activity._cid;
-  return api.update(cid, { data })
+const update = ({ state, commit }, { _cid, originId, data }) => {
+  if (originId) _cid = find(state.items, { id: originId })._cid;
+  return api.update(_cid, { data })
     .then(updated => commit('save', { data, ...updated }));
 };
 
