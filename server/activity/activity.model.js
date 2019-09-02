@@ -259,7 +259,7 @@ class Activity extends Model {
       { returning: true, transaction }
     );
     let activities = links.map(link => link.id);
-    if (source.isOrigin) activities.push(source.id);
+    if (!source.isLink) activities.push(source.id);
     if (originParentId && !source.isLink) await source.update({ parentId: originParentId });
     let children = await source.getChildren({
       where: { detached: false },
