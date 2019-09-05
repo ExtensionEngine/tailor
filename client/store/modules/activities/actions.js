@@ -30,12 +30,19 @@ const remove = ({ state, commit }, model) => {
     commit('remove', [model]);
     return Promise.resolve(true);
   }
-  if (!model.originId) {
-    return api.remove(model)
-      .then(() => commit('remove', [model, ...descendants]));
+  return api.remove(model)
+    .then(() => commit('remove', [model, ...descendants]));
+};
+
+const removeLink = ({ state, commit }, model, removeOrigin = false) => {
+  const descendants = getDeepChildren(state.items, model);
+  if (!model.id && !model._version) {
+    commit('remove', [model]);
+    return Promise.resolve(true);
   }
   const descendantsIds = descendants.map(it => it.id);
-  return api.removeLink(model)
+  const id = removeOrigin ? model.originId : model.id;
+  return api.removeLink(id)
     .then(data => commit('removeLink', {
       ...data,
       ids: [...descendantsIds, ...data.ids]
@@ -69,6 +76,7 @@ export {
   fetch,
   publish,
   remove,
+  removeLink,
   reorder,
   reset,
   save,

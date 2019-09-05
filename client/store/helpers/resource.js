@@ -153,11 +153,11 @@ export default class Resource {
   }
 
   /**
-   * Remove the linked model.
-   * @param {object} model
+   * Remove the linked model or remove origin and all the links.
+   * @param {Number} id
    */
-  removeLink(model) {
-    return this.delete(`${model.id}/link`).then(({ data }) => data.data);
+  removeLink(id) {
+    return this.delete(`${id}/link`).then(({ data }) => data.data);
   }
 
   /**

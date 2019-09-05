@@ -34,6 +34,19 @@ import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
 const TREE_VIEW_ROUTE = 'tree-view';
+const getMessage = ({ originId }, name) => {
+  return originId
+    ? `Activity ${name} has more the than one occurrence in the tree. Choose your action.`
+    : `Are you sure you want to delete activity ${name}?`;
+};
+const getFocusNode = (activity, activities) => {
+  const { parentId } = activity;
+  const rootFilter = it => !it.parentId && (it.id !== activity.id);
+  // Focus parent or first root node
+  return parentId
+    ? find(activities, { id: parentId })
+    : first(sortBy(filter(activities, rootFilter), 'position'));
+};
 
 export default {
   computed: {
@@ -44,7 +57,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', ['remove']),
+    ...mapActions('activities', ['remove', 'removeLink']),
     ...mapMutations('course', ['focusActivity']),
     edit() {
       if (!this.isEditable) return;
@@ -54,22 +67,40 @@ export default {
       });
     },
     deleteActivity() {
-      const { activity, $route: { name: routeName } } = this;
+      const {
+        $route: { name: routeName },
+        activity,
+        activities,
+        focusActivity,
+        remove,
+        removeLink
+      } = this;
       const isTreeView = routeName === TREE_VIEW_ROUTE;
       const name = `${isTreeView ? `${activity.id}: ` : ''}${activity.data.name}`;
+      const focusNode = getFocusNode(activity, activities);
+      const removeActivity = () => activity.originId
+        ? removeLink(activity)
+        : remove(activity);
+
       appChannel.emit('showConfirmationModal', {
         title: 'Delete activity?',
-        message: `Are you sure you want to delete activity ${name}?`,
-        action: () => {
-          const { parentId } = this.activity;
-          const rootFilter = it => !it.parentId && (it.id !== this.activity.id);
-          // Focus parent or first root node
-          const focusNode = parentId
-            ? find(this.activities, { id: parentId })
-            : first(sortBy(filter(this.activities, rootFilter), 'position'));
-          this.remove(this.activity);
-          if (focusNode) this.focusActivity(focusNode._cid);
-        }
+        message: getMessage(activity, name),
+        actions: [
+          {
+            action: () => {
+              removeActivity();
+              if (focusNode) focusActivity(focusNode._cid);
+            },
+            label: 'Delete activity'
+          },
+          !!activity.originId && {
+            action: () => {
+              removeLink(activity, true);
+              if (focusNode) focusActivity(focusNode._cid);
+            },
+            label: 'Delete all occurrences'
+          }
+        ].filter(Boolean)
       });
     }
   }

@@ -359,6 +359,7 @@ class Activity extends Model {
   }
 
   static async removeLinkedActivities(activity, options = {}) {
+    if (activity.isOrigin) return Activity.removeOrigin(activity, options);
     let deletedIds = [];
     let originIds = [];
     let updatedActivities = [];
@@ -416,6 +417,18 @@ class Activity extends Model {
       ids: deletedIds,
       updatedActivities,
       originIds
+    };
+  }
+
+  static async removeOrigin(activity, options = {}) {
+    const deletedIds = [activity.id];
+    await activity.destroy(options);
+    Promise.each(activity.links, async link => {
+      deletedIds.push(link.id);
+      await link.destroy(options);
+    });
+    return {
+      ids: deletedIds
     };
   }
 
