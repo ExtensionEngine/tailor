@@ -6,7 +6,22 @@
       <v-card-actions>
         <v-spacer />
         <v-btn @click="close" flat>Close</v-btn>
-        <v-btn v-focus="show" @click="confirm" color="error" flat>Confirm</v-btn>
+        <v-btn
+          v-if="context.action"
+          v-focus="show"
+          @click="confirm(context.action)"
+          color="error" flat>
+          Confirm
+        </v-btn>
+        <template v-if="context.actions">
+          <v-btn
+            v-for="({action, label}, index) in context.actions"
+            :key="index"
+            @click="confirm(action)"
+            color="error" flat>
+            {{ label }}
+          </v-btn>
+        </template>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -35,8 +50,8 @@ export default {
       this.show = false;
       this.context = defaultData();
     },
-    confirm() {
-      this.context.action();
+    confirm(action) {
+      action();
       this.close();
     }
   },
