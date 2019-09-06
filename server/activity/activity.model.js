@@ -360,64 +360,17 @@ class Activity extends Model {
 
   static async removeLinkedActivities(activity, options = {}) {
     if (activity.isOrigin) return Activity.removeOrigin(activity, options);
-    let deletedIds = [];
-    let originIds = [];
-    let updatedActivities = [];
-    await activity.destroy(options);
-    deletedIds.push(activity.id);
-    let links = await activity.origin.getLinks(options);
-    if (activity.parentId && !options.recursion) {
-      deletedIds = [
-        ...deletedIds,
-        ...await removeLinksFromAllParents(activity, links, options)
-      ];
-      links = links.filter(link => !deletedIds.includes(link.id));
-    }
-
-    let children = await activity.getChildren(options);
-    if (children.length) {
-      const result = await removeLinkedChildren(children, { ...options, recursion: true });
-      deletedIds = [...result.deletedIds, ...deletedIds];
-      originIds = [...result.originIds, ...originIds];
-      updatedActivities = [...result.updatedActivities, ...updatedActivities];
-    }
-
-    if (!links.length) {
-      await activity.origin.destroy(options);
-      deletedIds.push(activity.origin.id);
-    }
-
-    if (links.length === 1) {
-      const [link] = links;
-      const linkChildren = await link.getChildren(options);
-      if (linkChildren.length) {
-        await Promise.each(
-          linkChildren,
-          async child => {
-            if (originIds.includes(child.originId)) {
-              deletedIds.push(child.id);
-              await child.destroy(options);
-            }
-            child.parentId = link.originId;
-            await child.save(options);
-            updatedActivities.push(child);
-          }
-        );
-      }
-      deletedIds.push(link.id);
-      await link.destroy(options);
-      const origin = await link.getOrigin(options);
-      origin.parentId = link.parentId;
-      await origin.save(options);
-      originIds.push(origin.id);
-      updatedActivities.push(origin);
-    }
-
-    return {
-      ids: deletedIds,
-      updatedActivities,
-      originIds
+    let result = {
+      ids: [],
+      originIds: [],
+      updatedActivities: []
     };
+
+    await activity.destroy(options);
+    result.ids.push(activity.id);
+    result = await removeLinkedChildren(activity, result, { ...options, recursion: true });
+    result = await resolveOriginLinks(activity, result, options);
+    return result;
   }
 
   static async removeOrigin(activity, options = {}) {
@@ -474,6 +427,44 @@ function removeAll(Model, where = {}, { soft = false, transaction }) {
   return Model.update({ detached: true }, { where, transaction });
 }
 
+async function resolveOriginLinks(activity, result, options) {
+  const { origin, parentId } = activity;
+  let links = await origin.getLinks(options);
+  if (parentId && !options.recursion) {
+    ({ result, links } = await removeLinksFromAllParents(activity, links, result, options));
+  }
+  if (links && links.length === 1) return restoreOrigin(links[0], origin, result, options);
+  if (links && links.length > 1) return result;
+  await origin.destroy(options);
+  result.ids.push(origin.id);
+  return result;
+}
+
+async function restoreOrigin(link, origin, result, options) {
+  const { ids, originIds, updatedActivities } = result;
+  ids.push(link.id);
+  await link.destroy(options);
+  origin.parentId = link.parentId;
+  await origin.save(options);
+  originIds.push(origin.id);
+  updatedActivities.push(origin);
+  const linkChildren = await link.getChildren(options);
+  if (!linkChildren.length) return result;
+  await Promise.each(
+    linkChildren,
+    async child => {
+      if (originIds.includes(child.originId)) {
+        ids.push(child.id);
+        await child.destroy(options);
+      }
+      child.parentId = link.originId;
+      await child.save(options);
+      updatedActivities.push(child);
+    }
+  );
+  return { ids, originIds, updatedActivities };
+}
+
 /**
  * @param  {Activity} link
  * @param  {Object} options
@@ -493,21 +484,20 @@ async function resolveOriginWithOneLink(link, options) {
  * @param {Object} options
  * @returns {Array<Activity>}
  */
-async function removeLinksFromAllParents(source, links, options) {
+async function removeLinksFromAllParents(source, links, result, options) {
   const parent = await source.getParent(options);
-  if (!parent || !parent.isLink) return [];
-  const deletedIds = [];
+  if (!parent || !parent.isLink) return { result, links };
   const parentSiblings = await parent.origin.getLinks(options);
   let parentSiblingsId = parentSiblings.map(it => it.id);
   await Promise.each(links, async link => {
     if (parentSiblingsId.includes(link.parentId) && link.parentId !== source.parentId) {
       parentSiblingsId = remove(parentSiblingsId, it => it === !link.parentId);
-      deletedIds.push(link.id);
+      links = remove(links, it => it.id === !link.id);
+      result.ids.push(link.id);
       await link.destroy(options);
     }
   });
-
-  return deletedIds;
+  return { result, links };
 }
 
 /**
@@ -515,17 +505,16 @@ async function removeLinksFromAllParents(source, links, options) {
  * @param {Object} options
  * @returns {Array<Activity>}
  */
-async function removeLinkedChildren(activities, options) {
-  let deletedIds = [];
-  let originIds = [];
-  let updatedActivities = [];
-  await Promise.each(activities, async activity => {
-    const result = await Activity.removeLinkedActivities(activity, options);
-    deletedIds = [...result.ids, ...deletedIds];
-    originIds = [...result.originIds, ...originIds];
-    updatedActivities = [...result.updatedActivities, ...updatedActivities];
+async function removeLinkedChildren(activity, result, options) {
+  let children = await activity.getChildren(options);
+  if (!children.length) return result;
+  await Promise.each(children, async activity => {
+    const { ids, originIds, updatedActivities } = await Activity.removeLinkedActivities(activity, options);
+    result.ids = [...ids, ...result.ids];
+    result.originIds = [...originIds, ...result.originIds];
+    result.updatedActivities = [...updatedActivities, ...result.updatedActivities];
   });
-  return { deletedIds, updatedActivities, originIds };
+  return result;
 }
 
 /**
