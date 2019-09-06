@@ -79,7 +79,7 @@ export default {
       const name = `${isTreeView ? `${activity.id}: ` : ''}${activity.data.name}`;
       const focusNode = getFocusNode(activity, activities);
       const removeActivity = () => activity.originId
-        ? removeLink(activity)
+        ? removeLink({ model: activity })
         : remove(activity);
 
       appChannel.emit('showConfirmationModal', {
@@ -95,7 +95,7 @@ export default {
           },
           !!activity.originId && {
             action: () => {
-              removeLink(activity, true);
+              removeLink({ model: activity, removeOrigin: true });
               if (focusNode) focusActivity(focusNode._cid);
             },
             label: 'Delete all occurrences'

@@ -34,7 +34,7 @@ const remove = ({ state, commit }, model) => {
     .then(() => commit('remove', [model, ...descendants]));
 };
 
-const removeLink = ({ state, commit }, model, removeOrigin = false) => {
+const removeLink = ({ state, commit }, { model, removeOrigin = false }) => {
   const descendants = getDeepChildren(state.items, model);
   if (!model.id && !model._version) {
     commit('remove', [model]);
