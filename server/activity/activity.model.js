@@ -376,7 +376,7 @@ class Activity extends Model {
   static async removeOrigin(activity, options = {}) {
     const deletedIds = [activity.id];
     await activity.destroy(options);
-    Promise.each(activity.links, async link => {
+    await Promise.each(activity.links, async link => {
       deletedIds.push(link.id);
       await link.destroy(options);
     });
