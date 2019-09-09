@@ -48,7 +48,7 @@ function remove({ course, activity, user }, res) {
     : Promise.resolve();
   return unpublish
     .then(() => activity.remove(options))
-    .then(data => res.json({ data: pick(data, ['id']) }));
+    .then(data => res.json({ data }));
 }
 
 function removeLink({ course, activity, user }, res) {

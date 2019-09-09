@@ -1,4 +1,4 @@
-import { add, fetch, remove, reset, setEndpoint } from '../../helpers/mutations';
+import { add, fetch, reset, setEndpoint } from '../../helpers/mutations';
 import cuid from 'cuid';
 import findKey from 'lodash/findKey';
 import Vue from 'vue';
@@ -17,7 +17,7 @@ const saveLinks = (state, { links = [] }) => {
   });
 };
 
-const removeLink = (state, { ids, updatedActivities }) => {
+const remove = (state, { ids, updatedActivities }) => {
   ids.forEach(id => {
     const _cid = findKey(state.items, { id });
     if (!_cid) return;
@@ -37,7 +37,6 @@ export {
   add,
   fetch,
   remove,
-  removeLink,
   reorder,
   reset,
   save,

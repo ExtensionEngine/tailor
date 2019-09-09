@@ -343,12 +343,25 @@ class Activity extends Model {
       await removeAll(TeachingElement, where, options);
       where = { parentId: [...map(regularNodes, 'id'), this.id] };
       await removeAll(Activity, where, options);
-      if (descendants.links.length) {
-        await Promise.each(descendants.links,
-          link => Activity.removeLinkedActivities(link, options)
-        );
-      }
-      return this.destroy(options);
+      await this.destroy(options);
+
+      if (!descendants.links.length) return { ids: [this.id] };
+      let result = {
+        ids: [this.id],
+        originIds: [],
+        updatedActivities: []
+      };
+
+      await Promise.each(descendants.links,
+        async link => {
+          const { ids, originIds, updatedActivities } = await Activity.removeLinkedActivities(link, options);
+          result.ids = [...ids, ...result.ids];
+          result.originIds = [...originIds, ...result.originIds];
+          result.updatedActivities = [...updatedActivities, ...result.updatedActivities];
+        }
+      );
+
+      return result;
     });
   }
 

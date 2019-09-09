@@ -30,8 +30,12 @@ const remove = ({ state, commit }, model) => {
     commit('remove', [model]);
     return Promise.resolve(true);
   }
+  const descendantsIds = descendants.map(it => it.id);
   return api.remove(model)
-    .then(() => commit('remove', [model, ...descendants]));
+    .then(data => commit('remove', {
+      ...data,
+      ids: [...descendantsIds, ...data.ids]
+    }));
 };
 
 const removeLink = ({ state, commit }, { model, removeOrigin = false }) => {
@@ -43,7 +47,7 @@ const removeLink = ({ state, commit }, { model, removeOrigin = false }) => {
   const descendantsIds = descendants.map(it => it.id);
   const id = removeOrigin ? model.originId : model.id;
   return api.removeLink(id)
-    .then(data => commit('removeLink', {
+    .then(data => commit('remove', {
       ...data,
       ids: [...descendantsIds, ...data.ids]
     }));
