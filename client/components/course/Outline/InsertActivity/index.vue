@@ -87,7 +87,8 @@ export default {
         activity = {
           srcId: activity.id,
           srcCourseId: activity.courseId,
-          type: activity.type
+          type: activity.type,
+          originId: this.anchor.originId
         };
       }
       activity.courseId = this.anchor.courseId;

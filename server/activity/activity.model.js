@@ -168,11 +168,12 @@ class Activity extends Model {
    * @param {Boolean} options.shouldCloneOrigins
    */
   static async cloneActivities(source, options) {
+    if (options.originId) return Activity.cloneIntoLink(source, options);
     let { idMap = {} } = options;
     idMap = await Activity.cloneOrigins(source, { ...options, idMap });
     const fnc = ({ isOrigin, id }) => !isOrigin && !idMap[id];
     const filteredSource = source.filter(fnc);
-    const clonedActivitiesMap = await getClonedActivitiesMap(
+    const clonedActivitiesMap = getClonedActivitiesMap(
       filteredSource, { ...options, idMap }
     );
     const clonedActivities = await Activity.bulkCreate(
@@ -187,6 +188,21 @@ class Activity extends Model {
       if (!children.length) return acc;
       return Activity.cloneActivities(children, { ...options, idMap: acc, parentId: id });
     }, idMap);
+  }
+
+  static async cloneIntoLink(source, options) {
+    const { originId } = options;
+    options.originId = null;
+    let idMap = await Activity.cloneActivities(source, options);
+    idMap = await Activity.resolveClonedOrigins({ ...options, idMap });
+    const id = idMap[source[0].originId] || idMap[source[0].id];
+    let activity = await Activity.findByPk(id, options);
+    return Activity.linkActivities(activity, {
+      ...options,
+      position: activity.position,
+      parentId: activity.parentId,
+      originParentId: originId
+    });
   }
 
   /**
@@ -226,12 +242,34 @@ class Activity extends Model {
     });
     const origins = activities.filter(({ isOrigin }) => isOrigin);
     if (!origins.length) return idMap;
+    const originIds = [];
+    const ids = [];
     await Promise.each(origins, async origin => {
       if (origin.links.length !== 1) return;
       const [link] = origin.links;
-      await resolveOriginWithOneLink(link, { transaction });
-      idMap = omitBy(idMap, { id: link.id });
+      ids.push(link.id);
+      await link.destroy(options);
+      origin.parentId = link.parentId;
+      await origin.save(options);
+      originIds.push(origin.id);
+      const linkChildren = await link.getChildren(options);
+      if (linkChildren.length) {
+        await Promise.each(
+          linkChildren,
+          async child => {
+            if (originIds.includes(child.originId)) {
+              ids.push(child.id);
+              await child.destroy(options);
+            } else {
+              child.parentId = link.originId;
+              await child.save(options);
+            }
+          }
+        );
+      }
+      idMap = omitBy(idMap, id => id === link.id);
     });
+    await Activity.destroy({ where: { id: ids }, ...options });
     return idMap;
   }
 
