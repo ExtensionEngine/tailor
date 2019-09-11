@@ -117,10 +117,14 @@ class Course extends Model {
       const course = await Course.create(courseAttributes, { context, transaction });
       const where = { courseId: this.id, parentId: null };
       const src = await Activity.findAll({ where, transaction });
-      let options = { courseId: course.id, transaction, cloneOrigins: true };
+      const { isLinkingEnabled, id } = course;
+      let options = {
+        courseId: id,
+        transaction,
+        isLinkingEnabled,
+        shouldCloneOrigins: true
+      };
       let idMap = await Activity.cloneActivities(src, options);
-      options = { ...options, isLinkingEnabled: course.isLinkingEnabled, idMap };
-      idMap = await Activity.resolveClonedOrigins(options);
       await course.mapClonedReferences(idMap, transaction);
       return course;
     });

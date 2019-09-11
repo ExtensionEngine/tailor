@@ -72,8 +72,11 @@ function publish({ activity }, res) {
 }
 
 function clone({ course, activity, body }, res) {
+  const { position, courseId } = body;
   const { isLinkingEnabled } = course;
-  const options = { ...body, isLinkingEnabled };
+  const shouldCloneOrigins = courseId !== activity.courseId;
+  const options = { ...body, isLinkingEnabled, shouldCloneOrigins };
+  if (position) activity.position = position;
   return activity.clone(options).then(mappings => {
     const opts = { where: { id: Object.values(mappings) } };
     return Activity.findAll(opts).then(data => res.json({ data }));
