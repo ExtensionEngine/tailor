@@ -493,11 +493,10 @@ async function restoreOrigin(link, origin, result, options) {
       if (originIds.includes(child.originId)) {
         ids.push(child.id);
         await child.destroy(options);
-      } else {
-        child.parentId = link.originId;
-        await child.save(options);
-        updatedActivities.push(child);
       }
+      child.parentId = link.originId;
+      await child.save(options);
+      updatedActivities.push(child);
     }
   );
   return { ids, originIds, updatedActivities };
@@ -553,7 +552,11 @@ async function removeLinkedChildren(activity, result, options) {
  */
 async function removeLinks(activities, result, options) {
   await Promise.each(activities, async activity => {
-    const { ids, originIds, updatedActivities } = await Activity.removeLinkedActivity(activity, options);
+    const {
+      ids = [],
+      originIds = [],
+      updatedActivities = []
+    } = await Activity.removeLinkedActivity(activity, options);
     result.ids = [...ids, ...result.ids];
     result.originIds = [...originIds, ...result.originIds];
     result.updatedActivities = [...updatedActivities, ...result.updatedActivities];
