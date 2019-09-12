@@ -17,27 +17,27 @@
       Click the button below to create content.
     </v-alert>
     <tes-list
+      @add="addElement"
+      @insert="insert"
+      @update="reorder"
       :list="teachingElements"
       :activity="container"
       :types="types"
-      :layout="layout"
-      @add="addElement"
-      @insert="insert"
-      @update="reorder">
+      :layout="layout">
       <teaching-element
         slot="list-item"
         slot-scope="{ item, dragged, setWidth }"
-        :setWidth="setWidth"
+        :set-width="setWidth"
         :dragged="dragged"
         :element="item"
-        :elementStyle="getElementStyle(item.contentId)">
+        :element-style="getElementStyle(item.contentId)">
         <div :class="{ inactive: !hasActiveUsers(item.contentId) }" class="active-users-wrapper">
           <active-users
             v-if="getActiveUsers('element', item.contentId)"
             :users="getActiveUsers('element', item.contentId)"
             :size="26"
             vertical
-            tooltipRight/>
+            tooltip-right />
         </div>
       </teaching-element>
     </tes-list>

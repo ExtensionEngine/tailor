@@ -13,12 +13,12 @@
     <file-upload
       v-if="allowFileUpload"
       v-show="!file && isEditing"
+      @upload="val => (file = val) && (urlInput = null)"
       :uploading.sync="uploading"
       :validate="{ ext: extensions }"
-      :confirmDeletion="false"
+      :confirm-deletion="false"
       :label="uploadLabel"
-      @upload="val => (file = val) && (urlInput = null)"
-      sm/>
+      sm />
     <template v-if="file">
       <v-btn
         v-if="isEditing"
@@ -29,13 +29,13 @@
         color="red">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
-      <v-text-field :value="fileName" disabled/>
+      <v-text-field :value="fileName" disabled />
     </template>
     <v-text-field
       v-if="!uploading && (urlInput || !hasAsset)"
       v-model="urlInput"
       :disabled="!isEditing"
-      :placeholder="allowFileUpload ? 'or paste a URL' : 'Paste a URL'"/>
+      :placeholder="allowFileUpload ? 'or paste a URL' : 'Paste a URL'" />
     <span class="actions">
       <v-btn
         v-if="!isEditing"
@@ -45,8 +45,8 @@
       </v-btn>
       <v-btn
         v-else
-        :disabled="uploading || !hasAsset"
         @click.stop="save"
+        :disabled="uploading || !hasAsset"
         small>
         {{ hasChanges ? 'Save' : 'Cancel' }}
       </v-btn>

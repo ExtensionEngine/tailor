@@ -42,7 +42,7 @@ const setSseId = (state, sseId) => {
   state.sseId = sseId;
 };
 
-const resetActiveUsers = (state) => {
+const resetActiveUsers = state => {
   state.activeUsers = {};
 };
 

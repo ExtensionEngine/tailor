@@ -1,12 +1,11 @@
 <template>
   <content-element
+    @save="save"
     :element="cell"
     :parent="table"
     :frame="false"
-    :showPlaceholder="false"
-    @save="save"
-    class="table-cell">
-  </content-element>
+    :show-placeholder="false"
+    class="table-cell" />
 </template>
 
 <script>

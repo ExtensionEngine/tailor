@@ -1,14 +1,18 @@
 <template>
   <v-card class="element-list-container">
-    <v-text-field v-model.trim="search" label="Search" clearable/>
+    <v-text-field
+      v-model.trim="search"
+      label="Search"
+      append-icon="mdi-magnify"
+      clearable />
     <v-list :expand="true" avatar two-line>
       <v-list-group
-        v-for="(group, name) in filteredRegistry"
-        :key="name"
+        v-for="(group, groupName) in filteredRegistry"
+        :key="groupName"
         value="true">
         <template v-slot:activator>
           <v-list-tile>
-            <v-list-tile-title>{{ name | parseName }}</v-list-tile-title>
+            <v-list-tile-title>{{ groupName | parseName }}</v-list-tile-title>
           </v-list-tile>
         </template>
         <v-list-tile
@@ -19,7 +23,7 @@
             <v-icon large>{{ ui.icon }}</v-icon>
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title v-text="name"/>
+            <v-list-tile-title v-text="name" />
             <v-list-tile-sub-title>Version {{ version }}</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -74,7 +78,7 @@ export default {
 }
 
 .theme--light.v-list {
-  .v-list__group--active:before, .v-list__group--active:after {
+  .v-list__group--active::before, .v-list__group--active::after {
     background: none;
   }
 }

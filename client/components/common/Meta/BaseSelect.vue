@@ -4,14 +4,15 @@
     class="select">
     <label :for="meta.key">{{ meta.label }}</label>
     <multiselect
+      @open="active = true"
+      @close="active = false"
+      @input="update"
       :value="value"
       :name="meta.key"
       :options="options"
       :searchable="false"
       :placeholder="meta.placeholder"
-      @open="active = true"
-      @close="active = false"
-      @input="update">
+      :multiple="isMultiSelect">
       <template slot="option" slot-scope="{ option }">
         <img v-if="option.img" :src="option.img" :alt="option.label" class="img">
         <span>{{ option.label }}</span>
@@ -25,22 +26,21 @@
 </template>
 
 <script>
-import find from 'lodash/find';
-import get from 'lodash/get';
 import isString from 'lodash/isString';
-import Select from '../../common/Select';
+import Select from '@/components/common/Select';
 
 export default {
-  name: 'multi-select',
+  name: 'base-meta-select',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },
-  data() {
-    return { active: false };
-  },
+  data: () => ({ active: false }),
   computed: {
-    value() {
-      return find(this.options, { value: this.meta.value });
+    isMultiSelect: () => {
+      throw new Error('Computed "isMultiSelect" must be implemented');
+    },
+    value: () => {
+      throw new Error('Computed "value" must be implemented');
     },
     options() {
       const { options } = this.meta;
@@ -48,8 +48,12 @@ export default {
     }
   },
   methods: {
+    parseInput() {
+      throw new Error('Method "parseInput" must be implemented');
+    },
     update(data) {
-      return this.$emit('update', this.meta.key, get(data, 'value', null));
+      const payload = this.parseInput(data);
+      return this.$emit('update', this.meta.key, payload);
     }
   },
   components: { multiselect: Select }

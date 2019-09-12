@@ -33,12 +33,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActivitySidebar from '../../course/Sidebar/Body';
-import Discussion from '../../course/Sidebar/Discussion';
-import format from 'string-template';
+import api from '@/api/activity';
 import publishMixin from 'components/common/mixins/publish';
-
-const { PREVIEW_URL } = process.env;
 
 export default {
   mixins: [publishMixin],
@@ -54,7 +50,7 @@ export default {
       const items = [{
         title: 'Preview',
         icon: 'eye',
-        action: () => window.open(this.previewUrl, '_blank')
+        action: () => this.previewContainer()
       }, {
         title: 'Back',
         icon: 'arrow-left',
@@ -66,15 +62,16 @@ export default {
         icon: 'upload',
         action: () => this.confirmPublishing()
       }].concat(items);
-    },
-    previewUrl() {
-      if (!PREVIEW_URL) return;
-      const { courseId, id } = this.activity;
-      return format(PREVIEW_URL, { repositoryId: courseId, activityId: id });
     }
   },
-  methods: mapActions('activities', { publishActivity: 'publish' }),
-  components: { ActivitySidebar, Discussion }
+  methods: {
+    ...mapActions('activities', { publishActivity: 'publish' }),
+    previewContainer() {
+      const { courseId, id } = this.activity;
+      return api.createPreview(courseId, id)
+        .then(location => window.open(location));
+    }
+  }
 };
 </script>
 

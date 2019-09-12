@@ -57,7 +57,9 @@ module.exports = {
       options: { patterns: copy }
     }, {
       resolve: require.resolve('./build/plugins/clean-out-dir'),
-      options: { exclude: '.gitkeep' }
+      options: {
+        cleanOnceBeforeBuildPatterns: ['**/*', '!.gitkeep']
+      }
     },
     require.resolve('./build/plugins/html-version-spec'),
     {

@@ -12,11 +12,12 @@
       <quill-editor
         v-if="isFocused"
         v-model="content"
-        :options="options"
-        @ready="onQuillReady">
-      </quill-editor>
+        @ready="onQuillReady"
+        :options="options" />
       <div v-else class="ql-container ql-snow">
-        <div v-html="content" class="ql-editor"></div>
+        <!-- eslint-disable vue/no-v-html -->
+        <div class="ql-editor" v-html="content"></div>
+        <!-- eslint-enable -->
       </div>
     </div>
   </div>
@@ -24,11 +25,12 @@
 
 <script>
 import { Quill, quillEditor as QuillEditor } from 'vue-quill-editor';
+import createCustomTheme from './theme';
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
-import ImageEmbed from './image-embed';
 
-Quill.register('modules/imageEmbed', ImageEmbed);
+const CustomTheme = createCustomTheme(Quill);
+Quill.register(`themes/${CustomTheme.NAME}`, CustomTheme, true);
 
 const toolbar = {
   container: '#quillToolbar',
@@ -38,14 +40,12 @@ const toolbar = {
     },
     undo() {
       this.quill.history.undo();
-    },
-    image() {
-      this.quill.tooltips.imageEmbed.show();
     }
   }
 };
 
 const options = {
+  theme: CustomTheme.NAME,
   modules: {
     toolbar,
     imageEmbed: { spacing: 1 },
@@ -126,21 +126,20 @@ export default {
 </style>
 
 <style lang="scss">
-.tce-html {
-  .ql-editor {
-    min-height: 121px;
+.ql-container.ql-snow {
+  font-size: 16px;
+  border: none;
+}
 
-    img {
-      vertical-align: initial;
-    }
-  }
+.ql-editor {
+  min-height: 120px;
 
-  .ql-container.ql-snow {
-    border: none !important;
-  }
-
-  .ql-editor.ql-blank::before {
+  &.ql-blank::before {
     width: 100%;
+  }
+
+  img {
+    vertical-align: initial;
   }
 }
 </style>

@@ -17,10 +17,10 @@
           <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
         </v-tab>
       </v-tabs>
-      <active-users :users="getActiveUsers('course', courseId)"/>
+      <active-users :users="getActiveUsers('course', courseId)" />
     </div>
     <div class="tab-content" infinite-wrapper>
-      <router-view :showLoader="showLoader"/>
+      <router-view :show-loader="showLoader" />
     </div>
   </div>
 </template>

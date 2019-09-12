@@ -1,21 +1,20 @@
 <template>
   <div class="te-wrapper">
-    <slot/>
+    <slot></slot>
     <contained-content
-      v-bind="$attrs"
-      :element="element"
-      :isDragged="dragged"
-      :isDisabled="disabled"
-      :style="elementStyle"
       @add="add"
       @save="save"
-      @delete="remove"/>
+      @delete="remove"
+      v-bind="$attrs"
+      :element="element"
+      :is-dragged="dragged"
+      :is-disabled="disabled"
+      :style="elementStyle" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
-import ActiveUsers from 'components/common/ActiveUsers';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
@@ -88,6 +87,6 @@ export default {
   beforeDestroy() {
     this.removeActiveUserContext(omit(this.context, 'created'));
   },
-  components: { ActiveUsers, ContainedContent }
+  components: { ContainedContent }
 };
 </script>

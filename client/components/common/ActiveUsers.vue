@@ -1,17 +1,25 @@
 <template>
   <div :class="{ vertical }" class="active-users">
-    <v-avatar
-      v-tooltip="getTooltip(email)"
+    <v-tooltip
       v-for="{ id, email, palette, profileImage } in activeUsers"
       :key="id"
-      :color="palette.background"
-      :style="{ boxShadow: `0 0 0 2px ${palette.border}` }"
-      :size="size">
-      <img v-if="profileImage" :src="profileImage"/>
-      <span v-else :style="{ color: palette.text }">
-        {{ email[0].toUpperCase() }}
-      </span>
-    </v-avatar>
+      open-delay="200"
+      :right="tooltipRight"
+      :bottom="!tooltipRight">
+      <template v-slot:activator="{ on }">
+        <v-avatar
+          v-on="on"
+          :color="palette.background"
+          :style="{ boxShadow: `0 0 0 2px ${palette.border}` }"
+          :size="size">
+          <img v-if="profileImage" :src="profileImage">
+          <span v-else :style="{ color: palette.text }">
+            {{ email[0].toUpperCase() }}
+          </span>
+        </v-avatar>
+      </template>
+      <span>{{ email }}</span>
+    </v-tooltip>
   </div>
 </template>
 
@@ -30,13 +38,6 @@ export default {
     };
   },
   methods: {
-    getTooltip(content) {
-      return {
-        content,
-        placement: this.tooltipRight ? 'right' : 'bottom.end',
-        offset: this.tooltipRight ? 15 : 5
-      };
-    },
     setActiveUsers(users) {
       this.activeUsers = users;
     }
