@@ -1,25 +1,17 @@
 <template>
   <div :class="{ vertical }" class="active-users">
-    <v-tooltip
+    <v-avatar
       v-for="{ id, email, palette, profileImage } in activeUsers"
       :key="id"
-      open-delay="200"
-      :right="tooltipRight"
-      :bottom="!tooltipRight">
-      <template v-slot:activator="{ on }">
-        <v-avatar
-          v-on="on"
-          :color="palette.background"
-          :style="{ boxShadow: `0 0 0 2px ${palette.border}` }"
-          :size="size">
-          <img v-if="profileImage" :src="profileImage">
-          <span v-else :style="{ color: palette.text }">
-            {{ email[0].toUpperCase() }}
-          </span>
-        </v-avatar>
-      </template>
-      <span>{{ email }}</span>
-    </v-tooltip>
+      v-on="on"
+      :color="palette.background"
+      :style="{ boxShadow: `0 0 0 2px ${palette.border}` }"
+      :size="size">
+      <img v-if="profileImage" :src="profileImage">
+      <span v-else :style="{ color: palette.text }">
+        {{ email[0].toUpperCase() }}
+      </span>
+    </v-avatar>
   </div>
 </template>
 
