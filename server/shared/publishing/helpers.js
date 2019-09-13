@@ -113,29 +113,32 @@ function unpublishActivity(repository, activity) {
 function unpublishLinkedActivity(repository, activity) {
   const { origin } = activity;
   return getPublishedStructure(repository).then(async spine => {
-    const parent = await activity.getParent();
-    const parentId = parent.isLink ? origin.parentId : parent.id;
     const spineActivity = find(spine.structure, { id: origin.id });
     if (!spineActivity) return;
-    const spineParent = find(
-      spine.structure,
-      it => it.children.includes(origin.id) && it.id === parentId
-    );
-    spineParent.children = spineParent.children.filter(child => child !== origin.id);
-    if (spineActivity.parentId.length) {
-      spineActivity.parentId = spineActivity.parentId.filter(id => id !== parentId);
-      spine.structure = spine.structure.map(it => {
-        if (it.id === spineActivity.id) return spineActivity;
-        if (it.id === spineParent.id) return spineParent;
-        return it;
-      });
-      return saveSpine(spine)
-        .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
-        .then(() => activity.save());
+
+    const parent = await activity.getParent();
+    if (parent) {
+      const parentId = parent.isLink ? origin.parentId : parent.id;
+      const spineParent = find(
+        spine.structure,
+        it => it.children.includes(origin.id) && it.id === parentId
+      );
+      spineParent.children = spineParent.children.filter(child => child !== origin.id);
+      if (spineActivity.parentId.length) {
+        spineActivity.parentId = spineActivity.parentId.filter(id => id !== parentId);
+        spine.structure = spine.structure.map(it => {
+          if (it.id === spineActivity.id) return spineActivity;
+          if (it.id === spineParent.id) return spineParent;
+          return it;
+        });
+        return saveSpine(spine)
+          .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+          .then(() => activity.save());
+      }
+      spine.structure = spine.structure.map(
+        it => it.id === spineParent.id ? spineParent : it
+      );
     }
-    spine.structure = spine.structure.map(
-      it => it.id === spineParent.id ? spineParent : it
-    );
     const deleted = getSpineChildren(spine, activity).concat(spineActivity);
     return Promise.map(deleted, it => {
       const filenames = getActivityFilenames(it);
