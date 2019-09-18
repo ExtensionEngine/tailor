@@ -4,28 +4,30 @@
     :items="users"
     :loading="isLoading"
     no-data-text="No assigned users."
-    hide-actions>
-    <template v-slot:items="{ item }">
-      <td class="text-xs-left">
-        <v-avatar color="primary lighten-2" size="40" dark class="mr-3">
-          <span class="headline white--text">
-            {{ item.email[0].toUpperCase() }}
-          </span>
-        </v-avatar>
-        {{ item.email }}
-      </td>
-      <td class="role-select">
-        <v-select
-          @change="role => changeRole(item.email, role)"
-          :value="item.courseRole"
-          :items="roles"
-          icon />
-      </td>
-      <td class="actions">
-        <v-btn color="primary" icon text small>
-          <v-icon @click="remove(item)">mdi-delete</v-icon>
-        </v-btn>
-      </td>
+    hide-default-footer>
+    <template v-slot:item="{ item }">
+      <tr>
+        <td class="text-left">
+          <v-avatar color="primary lighten-2" size="40" dark class="mr-3">
+            <span class="headline white--text">
+              {{ item.email[0].toUpperCase() }}
+            </span>
+          </v-avatar>
+          {{ item.email }}
+        </td>
+        <td class="role-select">
+          <v-select
+            @change="role => changeRole(item.email, role)"
+            :value="item.courseRole"
+            :items="roles"
+            icon />
+        </td>
+        <td class="actions">
+          <v-btn color="primary" icon text small>
+            <v-icon @click="remove(item)">mdi-delete</v-icon>
+          </v-btn>
+        </td>
+      </tr>
     </template>
   </v-data-table>
 </template>
@@ -80,5 +82,9 @@ export default {
 
 ::v-deep .v-input__slot::before {
   border: none !important;
+}
+
+::v-deep .v-list.v-sheet {
+  text-align: left;
 }
 </style>
