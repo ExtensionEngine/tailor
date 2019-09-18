@@ -31,13 +31,13 @@
           </v-avatar>
         </v-btn>
       </template>
-      <v-list>
-        <v-list-tile>
-          <v-list-tile-title>{{ user.email }}</v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile @click="logout">
-          <v-list-tile-title>Logout</v-list-tile-title>
-        </v-list-tile>
+      <v-list class="text-left">
+        <v-list-item>
+          <v-list-item-title>{{ user.email }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="logout">
+          <v-list-item-title>Logout</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
   </v-app-bar>
