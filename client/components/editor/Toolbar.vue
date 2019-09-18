@@ -65,7 +65,9 @@ export default {
 
   .v-chip {
     max-width: 300px;
+    height: 26px;
     margin: 12px 10px;
+    font-size: 13px;
     font-weight: 500;
     text-transform: uppercase;
   }

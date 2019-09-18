@@ -114,3 +114,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+::v-deep .v-list.v-sheet {
+  text-align: left;
+}
+</style>

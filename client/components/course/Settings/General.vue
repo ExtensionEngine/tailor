@@ -1,5 +1,5 @@
 <template>
-  <div v-if="course" class="settings white elevation-1">
+  <v-card v-if="course" class="settings">
     <div class="actions">
       <v-btn
         @click="publish"
@@ -22,7 +22,7 @@
       @update="updateKey"
       :meta="it"
       class="meta-input" />
-  </div>
+  </v-card>
 </template>
 
 <script>

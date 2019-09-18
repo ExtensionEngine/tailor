@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="addUser">
-    <v-layout row align-center class="pl-3">
+    <v-layout align-center class="pl-3">
       <v-flex xs7 class="pr-2">
         <v-combobox
           v-model="email"
@@ -69,3 +69,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+::v-deep .v-list.v-sheet {
+  text-align: left;
+}
+</style>

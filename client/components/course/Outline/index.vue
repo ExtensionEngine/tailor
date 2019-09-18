@@ -6,7 +6,7 @@
         <v-toolbar
           v-if="!isFlat"
           color="grey lighten-3"
-          text
+          flat
           dense>
           <v-spacer />
           <v-btn

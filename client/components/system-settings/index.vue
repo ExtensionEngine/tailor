@@ -10,7 +10,7 @@
       </v-chip>
     </div>
     <v-container>
-      <v-layout row align-start>
+      <v-layout align-start>
         <v-card>
           <sidebar />
         </v-card>
@@ -52,5 +52,11 @@ export default {
   text-align: left;
   text-transform: uppercase;
   z-index: 2;
+}
+
+@media (min-width: 1904px) {
+  .container {
+    max-width: 1785px;
+  }
 }
 </style>

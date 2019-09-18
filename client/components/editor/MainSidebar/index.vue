@@ -7,7 +7,7 @@
     permanent
     stateless
     class="blue-grey lighten-4 actions">
-    <v-toolbar text class="transparent">
+    <v-toolbar flat height="fit-content" class="transparent pa-1">
       <v-list>
         <v-tooltip
           v-for="({ title, icon, action }) in actions"
@@ -77,6 +77,16 @@ export default {
 
 <style lang="scss" scoped>
 .actions {
-  padding-top: 60px;
+  padding-top: 3.5rem;
+}
+
+::v-deep .v-toolbar__content {
+  padding: 0;
+
+  .v-btn.v-btn--icon.v-size--default {
+    width: 2.25rem;
+    height: 2.25rem;
+    margin: 0.375rem;
+  }
 }
 </style>

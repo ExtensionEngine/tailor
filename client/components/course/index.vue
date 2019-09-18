@@ -2,7 +2,7 @@
   <div class="repo-container">
     <v-tabs
       height="50"
-      color="primary"
+      background-color="primary"
       slider-color="grey lighten-4"
       dark
       class="elevation-2">
@@ -13,7 +13,7 @@
         active-class="tab-active"
         ripple
         exact
-        class="px-1">
+        class="px-4">
         <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
       </v-tab>
     </v-tabs>

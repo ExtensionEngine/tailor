@@ -57,5 +57,9 @@ h2 {
 
 .exams {
   margin: 80px 0 200px;
+
+  ul {
+    padding-left: 0;
+  }
 }
 </style>

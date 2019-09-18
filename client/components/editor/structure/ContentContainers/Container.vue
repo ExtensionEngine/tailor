@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-5">
+  <v-card class="mb-5">
     <div class="actions">
       <v-btn
         @click="deleteContainer"
@@ -31,7 +31,7 @@
         :dragged="dragged"
         :element="item" />
     </tes-list>
-  </div>
+  </v-card>
 </template>
 
 <script>

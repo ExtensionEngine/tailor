@@ -17,12 +17,12 @@
           <span class="mdi mdi-eyedropper eyedropper"></span>
         </div>
       </div>
-      <ul class="colors control-group">
+      <ul class="colors control-group pl-0">
         <li
           v-for="(group, index) in colors"
           :key="index"
           class="column">
-          <ul>
+          <ul class="pl-0">
             <li
               v-for="color in group"
               :key="color"
@@ -105,12 +105,6 @@ $gutter: 5px;
   }
 }
 
-.title {
-  display: block;
-  margin-bottom: 10px;
-  color: #808080;
-}
-
 .control-group {
   margin: 5px 0;
   color: #333;
@@ -121,6 +115,14 @@ $gutter: 5px;
 
 .picker {
   padding-bottom: 10px;
+
+  .title {
+    display: block;
+    margin-bottom: 10px;
+    color: #808080;
+    font-size: 14px !important;
+    font-weight: normal;
+  }
 }
 
 ul {

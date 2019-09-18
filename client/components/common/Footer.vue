@@ -1,9 +1,9 @@
 <template>
   <v-footer height="46" color="primary" absolute>
-    <v-layout row justify-center>
+    <v-layout justify-center>
       <v-flex
         xs-12
-        class="body-2 grey--text text--lighten-4 py-2">
+        class="body-2 grey--text text--lighten-4">
         <v-chip
           color="grey lighten-4"
           label

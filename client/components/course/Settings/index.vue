@@ -1,6 +1,6 @@
 <template>
   <v-container class="mt-4">
-    <v-layout row align-start>
+    <v-layout align-start>
       <v-card>
         <sidebar @action="onActionClick" :is-publishing="isPublishing" />
       </v-card>
@@ -84,3 +84,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@media (min-width: 1904px) {
+  .container {
+    max-width: 1785px;
+  }
+}
+</style>

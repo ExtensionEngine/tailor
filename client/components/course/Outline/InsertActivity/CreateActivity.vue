@@ -96,6 +96,10 @@ export default {
     ::v-deep .multiselect {
       padding-top: 0;
 
+      .multiselect__content {
+        padding-left: 0;
+      }
+
       .multiselect__select {
         top: 0;
       }

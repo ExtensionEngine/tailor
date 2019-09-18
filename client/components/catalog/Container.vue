@@ -1,7 +1,7 @@
 <template>
   <div infinite-wrapper class="catalog-wrapper">
     <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog">
-      <v-layout row class="catalog-actions">
+      <v-layout class="catalog-actions">
         <create-repository />
         <v-flex md4 sm10 offset-md4 offset-sm1>
           <search @update="setSearch($event)" :value="queryParams.search" />
@@ -9,7 +9,7 @@
         <v-flex md3 sm1 class="text-sm-left pl-2">
           <v-tooltip open-delay="800" right>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" @click="togglePinned()" icon text>
+              <v-btn v-on="on" @click="togglePinned()" icon text class="my-1">
                 <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
                   mdi-pin
                 </v-icon>
@@ -20,7 +20,7 @@
           <select-order @update="setOrder" :sort-by="sortBy" class="pl-2" />
         </v-flex>
       </v-layout>
-      <v-layout row wrap>
+      <v-layout wrap>
         <v-flex
           v-for="repository in repositories"
           :key="repository._cid"

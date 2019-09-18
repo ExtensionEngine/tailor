@@ -135,21 +135,21 @@ export default {
 
     .action {
       position: absolute;
-      top: -18px;
-      right: -32px;
+      top: -12px;
+      right: -24px;
       height: 0;
     }
-  }
 
-  .v-btn {
-    $size: 24px;
+    .v-btn {
+      $size: 24px;
 
-    width: $size;
-    min-width: $size;
-    height: $size;
+      width: $size;
+      min-width: $size;
+      height: $size;
 
-    .v-icon {
-      font-size: 20px;
+      .v-icon {
+        font-size: 20px;
+      }
     }
   }
 }
