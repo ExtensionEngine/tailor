@@ -7,10 +7,14 @@ Vue.use(Vuetify);
 export default new Vuetify({
   iconfont: 'mdi',
   theme: {
-    primary: colors.blueGrey.darken2,
-    secondary: colors.pink
-  },
-  options: {
-    customProperties: true
+    themes: {
+      light: {
+        primary: colors.blueGrey.darken2,
+        secondary: colors.pink
+      }
+    },
+    options: {
+      customProperties: true
+    }
   }
 });
