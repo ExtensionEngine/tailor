@@ -10,14 +10,14 @@
       </v-chip>
     </div>
     <v-container>
-      <v-layout align-start>
+      <v-row align="start" no-gutters class="my-4">
         <v-card>
           <sidebar />
         </v-card>
-        <v-flex ml-4>
+        <v-col class="ml-6">
           <router-view />
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
       <app-footer />
     </v-container>
   </div>
@@ -54,8 +54,12 @@ export default {
   z-index: 2;
 }
 
-@media (min-width: 1904px) {
-  .container {
+.container {
+  @media (min-width: 1264px) {
+    max-width: 1185px;
+  }
+
+  @media (min-width: 1904px) {
     max-width: 1785px;
   }
 }

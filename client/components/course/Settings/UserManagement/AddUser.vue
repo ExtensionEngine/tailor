@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="addUser">
-    <v-layout align-center class="pl-3">
-      <v-flex xs7 class="pr-2">
+    <v-row align="center" class="pl-3">
+      <v-col cols="7" class="pr-2">
         <v-combobox
           v-model="email"
           v-validate="{ required: true, email: true }"
@@ -10,8 +10,8 @@
           :items="suggestedUsers"
           data-vv-name="email"
           label="Email" />
-      </v-flex>
-      <v-flex xs3 class="px-4">
+      </v-col>
+      <v-col cols="3" class="px-4">
         <v-select
           v-model="role"
           v-validate="'required'"
@@ -19,11 +19,11 @@
           :items="roles"
           data-vv-name="role"
           text />
-      </v-flex>
-      <v-flex xs2>
-        <v-btn type="submit" small outlined>Add</v-btn>
-      </v-flex>
-    </v-layout>
+      </v-col>
+      <v-col cols="2">
+        <v-btn block type="submit" outlined>Add</v-btn>
+      </v-col>
+    </v-row>
   </form>
 </template>
 

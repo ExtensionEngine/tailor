@@ -1,6 +1,6 @@
 <template>
-  <v-layout justify-center>
-    <v-flex>
+  <v-row justify="center" no-gutters>
+    <v-col>
       <v-card>
         <v-toolbar color="white" flat>
           <v-spacer />
@@ -10,15 +10,15 @@
           </v-btn>
         </v-toolbar>
         <div>
-          <v-layout class="filters">
-            <v-flex>
+          <v-row no-gutters class="filters">
+            <v-col>
               <v-switch
                 v-model="showArchived"
                 label="Archived"
                 color="primary"
                 hide-details />
-            </v-flex>
-            <v-flex>
+            </v-col>
+            <v-col>
               <v-text-field
                 v-model="filter"
                 append-icon="mdi-magnify"
@@ -26,8 +26,8 @@
                 single-line
                 hide-details
                 clearable />
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
           <v-data-table
             :headers="headers"
             :items="users"
@@ -72,8 +72,8 @@
           :visible.sync="userDialog"
           :user-data="editedUser" />
       </v-card>
-    </v-flex>
-  </v-layout>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

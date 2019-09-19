@@ -1,13 +1,13 @@
 <template>
-  <v-container class="mt-4">
-    <v-layout align-start>
+  <v-container class="my-4">
+    <v-row align="start" no-gutters>
       <v-card>
         <sidebar @action="onActionClick" :is-publishing="isPublishing" />
       </v-card>
-      <v-flex ml-4>
+      <v-col class="ml-6">
         <router-view />
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
     <clone-modal @close="showCloneModal = false" :show="showCloneModal" />
     <progress-dialog :show="isPublishing" :status="publishPercentage" />
     <app-footer />
@@ -86,8 +86,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@media (min-width: 1904px) {
-  .container {
+.container {
+  @media (min-width: 1264px) {
+    max-width: 1185px;
+  }
+
+  @media (min-width: 1904px) {
     max-width: 1785px;
   }
 }

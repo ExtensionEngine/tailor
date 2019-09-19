@@ -1,8 +1,8 @@
 <template>
   <v-footer height="46" color="primary" absolute>
-    <v-layout justify-center>
-      <v-flex
-        xs-12
+    <v-row justify="center" no-gutters>
+      <v-col
+        cols="12"
         class="body-2 grey--text text--lighten-4">
         <v-chip
           color="grey lighten-4"
@@ -13,8 +13,8 @@
         </v-chip>
         Built with <v-icon color="pink">mdi-heart</v-icon>
         Extension Engine
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-footer>
 </template>
 
