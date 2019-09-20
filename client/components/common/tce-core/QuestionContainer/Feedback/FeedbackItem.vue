@@ -7,17 +7,18 @@
     </p>
     <quill-editor
       v-if="isEditing"
+      @change="$emit('update', $event)"
       :content="feedback"
       :options="quillOptions"
-      @change="$emit('update', $event)"
-      class="feedback edit">
-    </quill-editor>
+      class="feedback edit" />
     <template v-else>
+      <!-- eslint-disable vue/no-v-html -->
       <p
         v-if="feedback.length"
-        v-html="feedback"
-        class="feedback">
+        class="feedback"
+        v-html="feedback">
       </p>
+      <!-- elint-enable -->
       <p v-else class="feedback empty">
         <i>Feedback not added.</i>
       </p>

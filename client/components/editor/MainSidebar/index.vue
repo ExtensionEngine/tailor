@@ -33,9 +33,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import ActivitySidebar from '../../course/Sidebar/Body';
 import api from '@/api/activity';
-import Discussion from '../../course/Sidebar/Discussion';
 import publishMixin from 'components/common/mixins/publish';
 
 export default {
@@ -73,8 +71,7 @@ export default {
       return api.createPreview(courseId, id)
         .then(location => window.open(location));
     }
-  },
-  components: { ActivitySidebar, Discussion }
+  }
 };
 </script>
 

@@ -4,7 +4,7 @@
       v-model.trim="search"
       label="Search"
       append-icon="mdi-magnify"
-      clearable/>
+      clearable />
     <v-treeview
       :items="schemas"
       :search="search"

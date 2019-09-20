@@ -8,9 +8,9 @@
         <span :class="{ 'has-error': correctError }">
           <input
             v-model="correct"
+            @change="update"
             :disabled="disabled"
             :value="true"
-            @change="update"
             type="radio">
         </span>
         <span class="answers">True</span>
@@ -19,9 +19,9 @@
         <span :class="{ 'has-error': correctError }">
           <input
             v-model="correct"
+            @change="update"
             :disabled="disabled"
             :value="false"
-            @change="update"
             type="radio">
         </span>
         <span class="answers">False</span>

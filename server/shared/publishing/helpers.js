@@ -1,11 +1,10 @@
 'use strict';
 
-const { getLevelRelationships } = require('../../../config/shared/activities');
-const { TeachingElement } = require('../database');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
 const get = require('lodash/get');
+const { getLevelRelationships } = require('../../../config/shared/activities');
 const hash = require('hash-obj');
 const keys = require('lodash/keys');
 const map = require('lodash/map');
@@ -13,7 +12,9 @@ const omit = require('lodash/omit');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
+const { resolveStatics } = require('../storage/helpers');
 const storage = require('../storage');
+const { TeachingElement } = require('../database');
 const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
@@ -111,12 +112,17 @@ function getPublishedStructure(repository) {
   });
 }
 
-function fetchActivityContent(repository, activity) {
-  return Promise.all([
+async function fetchActivityContent(repository, activity, signed = false) {
+  const res = await Promise.all([
     fetchContainers(repository, activity),
     fetchAssessments(activity),
     fetchExams(activity)
   ]).spread((containers, assessments, exams) => ({ containers, assessments, exams }));
+  if (!signed) return res;
+  res.containers = await Promise.map(res.containers, resolveContainer);
+  res.assessments = await resolveAssessments(res.assessments);
+  res.exams = await Promise.map(res.exams, resolveExam);
+  return res;
 }
 
 function publishContent(repository, activity) {
@@ -194,6 +200,24 @@ async function fetchQuestionGroups(exam) {
       assessments: filter(group.TeachingElements, { type: 'ASSESSMENT' })
     }))
   };
+}
+
+async function resolveContainer(container) {
+  container.elements = await Promise.map(container.elements, resolveStatics);
+  return container;
+}
+
+function resolveAssessments(assessments) {
+  return Promise.map(assessments, resolveStatics);
+}
+
+async function resolveExam(exam) {
+  exam.groups = await Promise.map(exam.groups, async group => {
+    group.intro = await Promise.map(group.intro, resolveStatics);
+    group.assessments = await Promise.map(group.assessments, resolveStatics);
+    return group;
+  });
+  return exam;
 }
 
 function saveFile(parent, key, data) {
