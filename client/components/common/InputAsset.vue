@@ -47,7 +47,9 @@
         v-else
         @click.stop="save"
         :disabled="uploading || !hasAsset"
-        small>
+        text
+        small
+        class="my-1">
         {{ hasChanges ? 'Save' : 'Cancel' }}
       </v-btn>
     </span>

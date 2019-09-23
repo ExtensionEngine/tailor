@@ -14,7 +14,7 @@
       <label
         v-if="!fileKey"
         :for="id"
-        :class="[sm ? 'v-btn v-btn--small' : 'btn btn-material btn-sm upload-button']">
+        :class="[sm ? 'v-btn v-size--small my-1' : 'btn btn-material btn-sm upload-button']">
         {{ label }}
       </label>
       <span

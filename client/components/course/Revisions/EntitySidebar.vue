@@ -95,7 +95,7 @@ $revision-padding: 32px;
   }
 
   .description {
-    width: 220px;
+    width: 225px;
   }
 
   .rollback {

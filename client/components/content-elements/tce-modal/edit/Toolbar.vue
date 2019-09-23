@@ -61,8 +61,11 @@ export default {
 
     li {
       height: 100%;
-      padding-top: 15px;
       color: #444;
+
+      &.btn {
+        padding-top: 15px;
+      }
 
       .mdi {
         display: inline-block;

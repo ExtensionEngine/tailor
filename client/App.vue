@@ -54,8 +54,12 @@ html {
   height: 100%;
 }
 
-.v-content .view {
-  overflow-y: scroll;
-  overflow-y: overlay;
+.v-content {
+  position: absolute;
+
+  .view {
+    overflow-y: scroll;
+    overflow-y: overlay;
+  }
 }
 </style>
