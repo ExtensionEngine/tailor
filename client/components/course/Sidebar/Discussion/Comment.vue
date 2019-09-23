@@ -44,7 +44,7 @@
           </li>
         </ul>
         <timeago
-          :since="comment.createdAt"
+          :datetime="comment.createdAt"
           :auto-update="60"
           class="pull-right time" />
       </span>
