@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'switch-input',
+  name: 'checkbox-input',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   }
