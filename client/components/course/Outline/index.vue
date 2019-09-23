@@ -19,7 +19,7 @@
         <draggable
           @update="data => reorder(data, rootActivities)"
           :list="rootActivities"
-          :options="{ handle: '.activity' }">
+          v-bind="{ handle: '.activity' }">
           <activity
             v-for="(activity, index) in rootActivities"
             :key="activity._cid"
