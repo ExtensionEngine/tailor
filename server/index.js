@@ -20,7 +20,7 @@ const logger = require('./shared/logger');
 const runApp = promisify(app.listen.bind(app));
 
 database.initialize()
-  .then(() => logger.info(`Database initialized`))
+  .then(() => logger.info('Database initialized'))
   .then(() => require('../config/shared/activities'))
   .then(() => runApp(config.port))
   .then(() => {

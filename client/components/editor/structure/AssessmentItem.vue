@@ -99,7 +99,7 @@ export default {
     question() {
       let question = filter(this.assessment.data.question, { type: 'HTML' });
       question = map(question, 'data.content').join(' ');
-      return question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
+      return question.replace(htmlRegex, '').replace(blankRegex, () => '____');
     },
     examObjectives() {
       return this.getExamObjectives(this.exam);
