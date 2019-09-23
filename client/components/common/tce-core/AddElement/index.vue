@@ -16,7 +16,7 @@
       color="primary">
       <v-icon>{{ icon }}</v-icon>
     </v-btn>
-    <v-bottom-sheet v-model="isVisible" max-width="1240" inset lazy>
+    <v-bottom-sheet v-model="isVisible" max-width="1240" inset>
       <div class="element-container">
         <v-toolbar v-if="layout" dense class="mb-2">
           <v-spacer />
