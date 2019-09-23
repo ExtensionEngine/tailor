@@ -1,6 +1,6 @@
 'use strict';
 
-require('dotenv').load();
+require('dotenv').config();
 
 const config = {
   url: process.env.POSTGRES_URI,
