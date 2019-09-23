@@ -12,8 +12,10 @@
     <div class="card-body">
       <div class="pb-2 grey--text text--darken-2">
         <v-icon color="primary" class="pr-1">mdi-history</v-icon>
-        <span>{{ userAction.createdAt | formatDate }}</span>
-        <div>{{ userAction.user.email }}</div>
+        <template v-if="userAction">
+          <span>{{ userAction.createdAt | formatDate }}</span>
+          <div>{{ userAction.user.email }}</div>
+        </template>
       </div>
       <div class="desc grey--text text--darken-3">
         {{ description | truncate(100) }}
