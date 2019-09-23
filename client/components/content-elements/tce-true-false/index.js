@@ -1,5 +1,5 @@
+import * as yup from 'yup';
 import Edit from './edit';
-import yup from 'yup';
 
 const schema = {
   correct: yup.boolean().required()

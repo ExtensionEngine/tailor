@@ -1,3 +1,4 @@
+import * as yup from 'yup';
 import cuid from 'cuid';
 import dropRight from 'lodash/dropRight';
 import find from 'lodash/find';
@@ -7,7 +8,6 @@ import map from 'lodash/map';
 import times from 'lodash/times';
 import toPairs from 'lodash/toPairs';
 import toPath from 'lodash/toPath';
-import yup from 'yup';
 
 export const typeInfo = {
   MC: { type: 'MC', title: 'Multiple choice', class: 'multiple-choice' },

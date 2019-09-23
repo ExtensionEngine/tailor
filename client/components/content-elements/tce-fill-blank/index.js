@@ -1,6 +1,6 @@
+import * as yup from 'yup';
 import Edit from './edit';
 import find from 'lodash/find';
-import yup from 'yup';
 
 const BLANK_PLACEHOLDER = /(@blank)/g;
 
