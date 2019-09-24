@@ -22,3 +22,7 @@ a:hover, a:active, a:visited, a:focus {
 hr.v-divider--vertical {
   margin: 0;
 }
+
+.v-input--selection-controls__input input {
+  position: absolute;
+}
