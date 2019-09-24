@@ -83,8 +83,12 @@ export default {
 <style lang="scss" scoped>
 $min-height: 140px;
 
-.tce-jodit-html {
+.tce-jodit-html /deep/ {
   text-align: initial;
+
+  .jodit-tooltip {
+    background: #ccc;
+  }
 }
 
 .well {
