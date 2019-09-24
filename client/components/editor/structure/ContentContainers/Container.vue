@@ -5,7 +5,7 @@
         @click="deleteContainer"
         color="error"
         outlined
-        class="pull-right">
+        class="float-right">
         Delete {{ name }}
       </v-btn>
     </div>

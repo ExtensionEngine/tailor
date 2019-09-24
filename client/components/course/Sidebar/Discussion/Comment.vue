@@ -2,7 +2,7 @@
   <li
     @mouseover="hovered = true"
     @mouseleave="hovered = false">
-    <span v-if="avatar" class="pull-left avatar">
+    <span v-if="avatar" class="float-left avatar">
       <avatar
         :size="38"
         :username="comment.author.email"
@@ -22,7 +22,7 @@
           @click="showDropdown = !showDropdown"
           @blur="showDropdown = false"
           :class="{ active: showDropdown }"
-          class="pull-right btn btn-material-icon btn-actions">
+          class="float-right btn btn-material-icon btn-actions">
           <span class="icon mdi mdi-dots-vertical"></span>
         </button>
         <ul
@@ -46,7 +46,7 @@
         <timeago
           :since="comment.createdAt"
           :auto-update="60"
-          class="pull-right time" />
+          class="float-right time" />
       </span>
       <text-editor
         @blur="update"

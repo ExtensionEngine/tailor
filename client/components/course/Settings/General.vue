@@ -6,7 +6,7 @@
         :loading="publishing"
         outlined
         small
-        class="pull-right">
+        class="float-right">
         Publish info
       </v-btn>
     </div>

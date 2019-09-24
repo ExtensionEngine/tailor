@@ -21,14 +21,14 @@
           label
           dark
           small
-          class="pull-left text-uppercase">
+          class="float-left text-uppercase">
           {{ elementConfig.name }}
         </v-chip>
         <v-btn
           @click="$emit('selected')"
           text
           small
-          class="pull-right collapse-item">
+          class="float-right collapse-item">
           Collapse
         </v-btn>
         <div v-if="exam && examObjectives.length" class="select-leaf">

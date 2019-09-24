@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="pull-right">
+    <div class="float-right">
       <v-btn
         @click="deleteActivity"
         color="blue-grey darken-1"

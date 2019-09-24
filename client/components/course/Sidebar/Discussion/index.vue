@@ -1,11 +1,11 @@
 <template>
   <div class="discussion">
     <h4 class="header">
-      <span class="pull-left">Comments</span>
+      <span class="float-left">Comments</span>
       <span
         v-show="showBtnPosition === 'top'"
         @click="showMore = !showMore"
-        class="pull-left btn-show"
+        class="float-left btn-show"
         role="button">
         Show {{ showMore ? 'less' : 'more' }}
       </span>
@@ -23,7 +23,7 @@
             @click="post"
             color="primary"
             outlined
-            class="pull-right">
+            class="float-right">
             Post
           </v-btn>
         </div>
