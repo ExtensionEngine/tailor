@@ -1,6 +1,9 @@
 import Jodit from 'jodit';
+import tooltipControl from './controls/tooltip';
 
 const JODIT_TOOLBAR_SEPARATOR = '|';
+
+Object.assign(Jodit.defaultOptions.controls, tooltipControl);
 
 export default class ToolbarBuilder {
   constructor() {

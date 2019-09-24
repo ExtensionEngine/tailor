@@ -14,6 +14,7 @@ const mdiIcons = {
   fontsize: 'format-size',
   paragraph: 'format-pilcrow',
   image: 'image-plus',
+  tooltip: 'tooltip-text',
   file: 'file-plus',
   video: 'video-plus',
   table: 'table-plus',
