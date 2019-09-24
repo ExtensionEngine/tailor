@@ -1,21 +1,23 @@
 <template>
-  <v-container grid-list-xl fluid px-0>
-    <v-layout row align-center>
-      <v-flex grow>
+  <v-container fluid class="px-0">
+    <v-row align="center" no-gutters>
+      <v-col>
         <v-text-field
           v-model="name"
           v-validate="{ required: true, min: 2, max: 250 }"
           :error-messages="vErrors.collect('name')"
           :autofocus="true"
           :placeholder="namePlaceholder"
+          class="mr-6"
           name="name" />
-      </v-flex>
-      <v-flex v-if="showLevelPicker" class="type-select">
+      </v-col>
+      <v-col v-if="showLevelPicker" class="type-select">
         <v-select
           v-model="levelType"
           v-validate="{ required: true }"
           :error-messages="vErrors.collect('type')"
           :items="levels"
+          class="mr-6"
           item-text="label"
           item-value="type"
           name="type"
@@ -33,21 +35,18 @@
             </div>
           </template>
         </v-select>
-      </v-flex>
-      <v-flex shrink>
-        <v-item-group>
-          <v-btn @click.stop="$emit('close')" outline>Cancel</v-btn>
-          <v-btn
-            @click.stop="create"
-            :disabled="vErrors.any()"
-            depressed
-            color="primary lighten-1"
-            class="mr-0">
-            Add
-          </v-btn>
-        </v-item-group>
-      </v-flex>
-    </v-layout>
+      </v-col>
+      <v-col class="actions">
+        <v-btn @click.stop="$emit('close')" class="mr-1" outlined>Cancel</v-btn>
+        <v-btn
+          @click.stop="create"
+          :disabled="vErrors.any()"
+          depressed
+          color="primary lighten-1">
+          Add
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -103,5 +102,9 @@ export default {
 <style lang="scss" scoped>
 .type-select {
   max-width: 250px;
+}
+
+.actions {
+  max-width: fit-content;
 }
 </style>
