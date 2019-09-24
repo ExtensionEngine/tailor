@@ -47,7 +47,7 @@ export default {
 }
 
 .placeholder {
-  margin-top: 50px;
+  margin-top: 28px;
   padding: 0 15px;
   color: #777;
 
