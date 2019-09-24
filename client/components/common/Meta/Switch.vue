@@ -23,7 +23,7 @@ export default {
 .control {
   padding: 3px 8px;
 
-  /deep/ label.v-label {
+  ::v-deep label.v-label {
     margin-bottom: 0;
   }
 }
