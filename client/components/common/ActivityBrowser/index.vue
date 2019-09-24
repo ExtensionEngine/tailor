@@ -1,10 +1,8 @@
 <template>
   <div class="activity-browser">
-    <button
-      @click="$emit('close')"
-      class="btn btn-default btn-fab">
+    <v-btn @click="$emit('close')" fab>
       <span class="mdi mdi-close"></span>
-    </button>
+    </v-btn>
     <select-repository
       v-if="!repository"
       @selected="selected => (repository = selected)" />
@@ -44,5 +42,10 @@ export default {
   margin: 25px auto;
   font-family: $font-family-secondary;
   color: #333;
+}
+
+.v-btn.v-btn--fab {
+  width: 48px;
+  height: 48px;
 }
 </style>

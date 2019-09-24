@@ -5,12 +5,12 @@
       <span @click="back" class="btn-back">
         <span class="mdi mdi-chevron-left"></span> Back
       </span>
-      <div v-if="!currentLevel.length" class="well">
+      <v-alert v-if="!currentLevel.length" outlined color="primary">
         {{ isCompatibleSchema
           ? 'There are no items within this repository.'
           : 'Not compatible with current repository schema.'
         }}
-      </div>
+      </v-alert>
       <div
         v-for="activity in currentLevel"
         :key="activity.id"
@@ -20,11 +20,9 @@
           {{ getName(activity) | truncate(100) }}
           <span class="mdi mdi-chevron-right subitems-indicator"></span>
         </span>
-        <button
-          @click="$emit('selected', activity)"
-          class="btn btn-default btn-fab btn-select">
+        <v-btn @click="$emit('selected', activity)" fab>
           <span class="mdi mdi-content-duplicate"></span>
-        </button>
+        </v-btn>
       </div>
     </div>
   </div>
@@ -144,15 +142,17 @@ $highlight: #42b983;
   }
 }
 
-.btn-fab.btn-select {
+.v-btn.v-btn--fab {
   display: none;
   position: absolute;
   right: -20px;
   transform: translate(0, -40%);
+  width: 48px;
+  height: 48px;
 }
 
 .selectable:hover {
-  .btn-select {
+  .v-btn.v-btn--fab {
     display: inline-block;
   }
 }
