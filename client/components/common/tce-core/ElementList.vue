@@ -66,7 +66,7 @@ export default {
     get,
     reorder({ newIndex: newPosition }) {
       const items = this.elements;
-      this.$emit('reorder', { newPosition, items });
+      this.$emit('update', { newPosition, items });
     }
   },
   components: { AddElement, Draggable }
