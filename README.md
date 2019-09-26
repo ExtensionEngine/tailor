@@ -118,7 +118,7 @@ Configuration for content containers. Contains the following properties:
 * **config** `Object` - Defines `ContentContainer` specific properties.
 * **required** `Boolean` - Defines if an instance of the `ContentContainer` is created if non exist. True by default.
 * **unique** `Boolean` - Defines if the `ContentContainer` has a unique structure and that the default structure should not be used. False by default.
-The name of the structure component used is the `slug casing` version of the `type` property. (example: ABC_DEF -> abc-def)
+The name of the structure component used is the `kebab-cased` version of the `type` property. (example: ABC_DEF -> abc-def)
 
 ### `PREVIEW_URL`
 A string template that will be interpolated on the client using two route params, `repositoryId` and `activityId`, into a preview URL for each activiy. Example:
