@@ -1,7 +1,7 @@
 <template>
   <div @selected="$emit('selected')" class="assessment-container">
     <div class="assessment">
-      <slot v-bind="{ isEditing }"></slot>
+      <slot :isEditing="isEditing"></slot>
       <question
         @update="update"
         :assessment="editedElement"
