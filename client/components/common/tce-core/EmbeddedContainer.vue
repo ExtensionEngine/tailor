@@ -29,7 +29,7 @@ export default {
   inheritAttrs: false,
   props: {
     container: { type: Object, required: true },
-    types: { type: Array, default() { return ['HTML', 'IMAGE']; } },
+    types: { type: Array, default: () => ['HTML', 'IMAGE'] },
     enableAdd: { type: Boolean, default: true }
   },
   computed: {
