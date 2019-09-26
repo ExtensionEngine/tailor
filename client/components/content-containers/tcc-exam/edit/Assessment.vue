@@ -15,7 +15,7 @@
               :options="objectives"
               :searchable="true"
               :disabled="!isEditing"
-              :custom-label="it => it.data ? it.data.name : ''"
+              :custom-label="getCustomLabel"
               :placeholder="objectiveLabel"
               track-by="id" />
           </v-flex>
@@ -45,6 +45,7 @@ export default {
     };
   },
   methods: {
+    getCustomLabel: ({ data }) => get(data, 'name', ''),
     save(assessment) {
       set(assessment, 'refs.objectiveId', get(this.objective, 'id', null));
       this.$emit('save', assessment);
