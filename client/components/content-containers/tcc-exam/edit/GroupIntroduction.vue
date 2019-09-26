@@ -34,8 +34,9 @@ export default {
   },
   computed: {
     introductionElements() {
-      let cond = it => it.activityId === this.group.id && !isQuestion(it.type);
-      return sortBy(filter(this.tes, cond), 'position');
+      const { group, tes } = this;
+      const cond = it => it.activityId === group.id && !isQuestion(it.type);
+      return sortBy(filter(tes, cond), 'position');
     }
   },
   methods: {
