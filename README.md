@@ -112,7 +112,7 @@ Configuration for content containers. Contains the following properties:
 * **type** `String` - `Const cased` string for marking `ContentContainer` type.
 * **label** `String` - String used for referencing `ContentContainer` on the UI.
 * **multiple** `Boolean` - Defines if there can be multiple instances of the `ContentContainer` inside a single `Activity`. False by default.
-* **types** `Array<String>` - An array of possible teaching element types that can exist inside a `ContentContainer`. If not specified all types of elements are allowed.
+* **types** `Array<String>` - An array of possible content element types that can exist inside a `ContentContainer`. If not specified all types of elements are allowed.
 * **displayHeading** `Boolean` - Defines if a heading is displayed on top of the `ContentContainer`. False by default.
 * **layout** `Boolean` - Defines if elements inside a `ContentContainer` instance can be placed two in a row. True by default.
 * **config** `Object` - Defines `ContentContainer` specific properties.
