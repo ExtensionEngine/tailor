@@ -24,6 +24,7 @@ import { ContainedContent, ElementList } from 'tce-core';
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import { isQuestion } from 'tce-core/utils';
+import sortBy from 'lodash/sortBy';
 
 export default {
   name: 'group-introduction',
@@ -34,7 +35,7 @@ export default {
   computed: {
     introductionElements() {
       let cond = it => it.activityId === this.group.id && !isQuestion(it.type);
-      return filter(this.tes, cond).sort((a, b) => a.position - b.position);
+      return sortBy(filter(this.tes, cond), 'position');
     }
   },
   methods: {
