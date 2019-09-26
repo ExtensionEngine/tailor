@@ -3,7 +3,8 @@
     @add="addItem"
     @update="reorderItem"
     :elements="embeds"
-    :supported-types="types">
+    :supported-types="types"
+    :enable-add="enableAdd">
     <contained-content
       slot="list-item"
       slot-scope="{ element, isDragged }"
@@ -28,7 +29,8 @@ export default {
   inheritAttrs: false,
   props: {
     container: { type: Object, required: true },
-    types: { type: Array, default() { return ['HTML', 'IMAGE']; } }
+    types: { type: Array, default() { return ['HTML', 'IMAGE']; } },
+    enableAdd: { type: Boolean, default: true }
   },
   computed: {
     embeds() {
