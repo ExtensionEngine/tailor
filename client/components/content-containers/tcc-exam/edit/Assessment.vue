@@ -15,9 +15,9 @@
               :options="objectives"
               :searchable="true"
               :disabled="!isEditing"
-              :track-by="'id'"
               :custom-label="it => it.data ? it.data.name : ''"
-              :placeholder="objectiveLabel" />
+              :placeholder="objectiveLabel"
+              track-by="id" />
           </v-flex>
         </v-layout>
       </v-container>
