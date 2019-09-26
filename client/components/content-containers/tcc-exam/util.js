@@ -1,5 +1,4 @@
 const filter = require('lodash/filter');
-const map = require('lodash/map');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
@@ -11,7 +10,7 @@ async function fetchGroups(exam, { include }) {
   const groups = await exam.getChildren({ include });
   return {
     ...pick(exam, ATTRS),
-    groups: map(groups, group => ({
+    groups: groups.map(group => ({
       ...pick(group, ['id', 'uid', 'type', 'position', 'data', 'createdAt']),
       intro: filter(group.TeachingElements, it => it.type !== 'ASSESSMENT'),
       assessments: filter(group.TeachingElements, { type: 'ASSESSMENT' })
