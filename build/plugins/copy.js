@@ -1,10 +1,9 @@
 'use strict';
 
-exports.name = 'copy';
-
-exports.apply = (api, { patterns = [], options = {} } = {}) => {
-  api.hook('createWebpackChain', config => {
-    config
+module.exports = (api, { pluginOptions } = {}) => {
+  const { patterns, options } = pluginOptions.copy;
+  api.chainWebpack(webpackConfig => {
+    webpackConfig
       .plugin('copy')
       .use(require('copy-webpack-plugin'), [patterns, options]);
   });

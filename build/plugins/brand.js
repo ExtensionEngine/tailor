@@ -7,14 +7,9 @@ const map = require('lodash/map');
 const merge = require('lodash/merge');
 const path = require('path');
 const stripJsonComments = require('strip-json-comments');
+const logger = require('../../server/shared/logger');
 
-exports.name = 'tailor:brand';
-
-exports.cli = api => {
-  api.command.option('--brand-config <path>', 'Set path to brand config file');
-};
-
-const prefix = `${exports.name}-plugin:`;
+const prefix = 'tailor:brand-plugin:';
 
 const parseJSON = str => JSON.parse(stripJsonComments(str));
 const toScssVariable = (value, name) => `$${name}: ${value};`;
@@ -39,35 +34,42 @@ const getStyleConfig = () => ({
   altBrandColor: '#5C6BC0'
 });
 
-exports.apply = (api, { files, imagesPath } = {}) => {
+module.exports = (api, { pluginOptions } = {}) => {
+  const { files, imagesPath } = pluginOptions.brand;
   const brandConfig = loadConfig(api, files) || {};
   const constants = merge(getAppConfig(), brandConfig);
   const style = merge(getStyleConfig(), brandConfig.style);
 
-  const { config } = api;
-  config.output.html = Object.assign({}, config.output.html, {
+  const { projectOptions } = api.service;
+
+  projectOptions.pages.index = Object.assign({}, projectOptions.pages.index, {
     title: constants.title,
     favicon: path.join('client/', imagesPath, constants.favicon)
   });
-  config.css = Object.assign({}, config.css, {
-    loaderOptions: {
-      sass: { data: map(style, toScssVariable).join('\n') }
-    }
+
+  projectOptions.css.loaderOptions = Object.assign({}, projectOptions.css.loaderOptions, {
+    sass: { data: map(style, toScssVariable).join('\n') }
   });
-  config.constants = Object.assign({}, config.constants, {
-    BRAND_CONFIG: JSON.stringify({
-      TITLE: constants.title,
-      FAVICON: path.join(imagesPath, constants.favicon),
-      LOGO_COMPACT: path.join(imagesPath, constants.logo.compact),
-      LOGO_FULL: path.join(imagesPath, constants.logo.full)
-    })
+
+  api.service.projectOptions = projectOptions;
+
+  api.chainWebpack(webpackConfig => {
+    webpackConfig.plugin('DefinePlugin')
+        .use(require('webpack').DefinePlugin, [{
+          BRAND_CONFIG: JSON.stringify({
+            TITLE: constants.title,
+            FAVICON: path.join(imagesPath, constants.favicon),
+            LOGO_COMPACT: path.join(imagesPath, constants.logo.compact),
+            LOGO_FULL: path.join(imagesPath, constants.logo.full)
+          })
+        }]);
   });
 };
 
-function loadConfig({ cli, logger }, files) {
+function loadConfig({ inlineOptions }, files) {
   const options = { files };
-  if (cli.options.brandConfig) {
-    const filepath = path.resolve(cli.options.brandConfig);
+  if (inlineOptions && inlineOptions.brandConfig) {
+    const filepath = path.resolve(inlineOptions.brandConfig);
     const filename = path.basename(filepath);
     const parentDir = path.dirname(filepath);
     Object.assign(options, {

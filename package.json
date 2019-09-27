@@ -1,42 +1,38 @@
 {
   "name": "tailor",
   "version": "3.2.2",
-  "codename": "silk",
+  "private": true,
   "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
-  "private": true,
-  "browserslist": [
-    "last 2 versions",
-    "ie 11"
-  ],
   "scripts": {
-    "dev:client": "poi --serve",
-    "build": "del-cli node_modules/.cache/vue-loader && poi --prod",
-    "clean": "del-cli dist/* !dist/.gitkeep",
-    "webpack:inspect-config": "poi --inspect-webpack",
-    "webpack:bundle-report": "poi --prod --bundle-report",
-    "webpack:stats": "poi --prod --print-stats",
-    "e2e": "node client/test/e2e/runner.js",
-    "unit:client": "echo \"Error: no unit tests specified\" && exit 0",
-    "test:client": "npm run unit:client && npm run e2e",
-    "lint:js": "eslint --ext .js,.vue .",
-    "lint:scss": "stylelint \"client/**/*.vue\" \"client/**/*.scss\"",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
     "lint": "npm run lint:js && npm run lint:scss",
-    "dev:server": "nodemon --ignore client/ --exec \"node -r ./server/script/preflight\" ./server | bunyan",
-    "debug:server": "node --inspect-brk -r ./server/script/preflight ./server",
-    "doc:server": "jsdoc --pedantic --destination ./server/_doc_ --recurse ./server",
-    "unit:server": "mocha --recursive \"./server/**/*.spec.js\"",
-    "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server",
-    "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
+    "add:admin": "node -r ./server/script/preflight ./server/script/addAdmin.js",
+    "clean": "del-cli dist/* !dist/.gitkeep",
     "db": "node -r ./server/script/preflight ./server/script/sequelize",
     "db:reset": "npm run db drop && npm run db create && npm run db migrate",
     "db:seed": "npm run db seed:all",
-    "add:admin": "node -r ./server/script/preflight ./server/script/addAdmin.js",
-    "invite:admin": "node -r ./server/script/preflight ./server/script/inviteAdmin.js",
+    "debug:server": "node --inspect-brk -r ./server/script/preflight ./server",
+    "dev:client": "poi --serve",
+    "dev:server": "nodemon --ignore client/ --exec \"node -r ./server/script/preflight\" ./server | bunyan",
+    "doc:server": "jsdoc --pedantic --destination ./server/_doc_ --recurse ./server",
+    "e2e": "node client/test/e2e/runner.js",
     "integration:add": "node -r ./server/script/preflight ./server/script/addIntegration.js",
     "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
+    "invite:admin": "node -r ./server/script/preflight ./server/script/inviteAdmin.js",
+    "lint:js": "eslint --ext .js,.vue .",
+    "lint:scss": "stylelint \"client/**/*.vue\" \"client/**/*.scss\"",
+    "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
+    "postshrinkwrap": "rewrite-lockfile package-lock.json",
+    "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server",
     "start": "node -r ./server/script/preflight ./server",
-    "postshrinkwrap": "rewrite-lockfile package-lock.json"
+    "test:client": "npm run unit:client && npm run e2e",
+    "unit:client": "echo \"Error: no unit tests specified\" && exit 0",
+    "unit:server": "mocha --recursive \"./server/**/*.spec.js\"",
+    "webpack:bundle-report": "poi --prod --bundle-report",
+    "webpack:inspect-config": "poi --inspect-webpack",
+    "webpack:stats": "poi --prod --print-stats"
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
@@ -52,6 +48,7 @@
     "bootswatch": "^3.3.7",
     "boxen": "^4.0.0",
     "bunyan": "^1.8.5",
+    "core-js": "^3.1.2",
     "cors": "^2.8.1",
     "cropperjs": "^1.0.0-beta.1",
     "cuid": "^1.3.8",
@@ -142,6 +139,8 @@
     "@poi/plugin-eslint": "^12.0.0",
     "@types/poi": "^12.5.0",
     "@types/stylelint": "^9.10.0",
+    "@vue/cli-plugin-babel": "^4.0.0-rc.4",
+    "@vue/cli-service": "^4.0.0-rc.4",
     "acorn": "^6.2.1",
     "babel-eslint": "^10.0.2",
     "clean-webpack-plugin": "^3.0.0",
@@ -173,13 +172,27 @@
     "stylelint-order": "^3.0.1",
     "stylelint-scss": "^3.9.2",
     "stylelint-webpack-plugin": "^0.10.5",
+    "terser-webpack-plugin": "^2.1.1",
     "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
     "vue-template-compiler": "^2.6.10"
   },
+  "browserslist": [
+    "last 2 versions",
+    "ie 11",
+    "> 1%"
+  ],
+  "codename": "silk",
   "engines": {
     "node": ">= 8.8.0",
     "npm": ">= 5.4.2",
     "postgres": ">= 9.4"
+  },
+  "vuePlugins": {
+    "service": [
+      "./build/plugins/brand.js",
+      "./build/plugins/copy.js",
+      "./build/plugins/output-filenames.js"
+    ]
   }
 }
