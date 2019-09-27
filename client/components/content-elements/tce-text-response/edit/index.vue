@@ -4,8 +4,8 @@
     <span :class="{ 'has-error': correctError }" class="answer">
       <textarea
         v-model="correct"
-        :disabled="!isEditing || !isGraded"
         @blur="update"
+        :disabled="!isEditing || !isGraded"
         class="form-control"
         rows="6"
         type="text">

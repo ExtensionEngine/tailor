@@ -1,41 +1,46 @@
 <template>
   <div>
-    <div class="message">
-      <span v-if="message">{{ message }}</span>
-    </div>
+    <div class="message">{{ message }}</div>
     <form @submit.prevent="submit" novalidate>
-      <div class="form-group">
-        <input
-          v-model="email"
-          class="form-control"
-          type="email"
-          placeholder="Email"/>
-      </div>
-      <div class="form-group">
-        <input
-          v-model="password"
-          class="form-control"
-          type="password"
-          placeholder="Password"/>
-      </div>
+      <v-text-field
+        v-model="email"
+        v-validate="{ required: true, email: true }"
+        :error-messages="vErrors.collect('email')"
+        prepend-icon="mdi-email-outline"
+        type="email"
+        name="email"
+        label="Email"
+        class="py-2" />
+      <v-text-field
+        v-model="password"
+        v-validate="{ required: true }"
+        :error-messages="vErrors.collect('password')"
+        prepend-icon="mdi-lock-outline"
+        browser-autocomplete="new-password"
+        type="password"
+        name="password"
+        label="Password"
+        class="py-2" />
+      <v-btn :disabled="!isValid" color="primary" outline block type="submit">
+        Log in
+      </v-btn>
       <div class="options">
         <router-link :to="{ name: 'forgot-password' }">
           Forgot password ?
         </router-link>
       </div>
-      <button type="submit" class="btn btn-default btn-material btn-block">
-        Log in
-      </button>
     </form>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions } from 'vuex';
+import { withValidation } from 'utils/validation';
 const LOGIN_ERR_MESSAGE = 'User email and password do not match';
 
 export default {
   name: 'login',
+  mixins: [withValidation()],
   data() {
     return {
       email: '',
@@ -43,7 +48,9 @@ export default {
       message: ''
     };
   },
-  computed: mapGetters(['user']),
+  computed: {
+    isValid: vm => vm.email && vm.password && (vm.vErrors.count() === 0)
+  },
   methods: {
     ...mapActions(['login']),
     submit() {
@@ -58,7 +65,7 @@ export default {
 
 <style lang="scss" scoped>
 .options {
-  padding: 5px 0 10px;
+  padding: 15px 0 5px;
   text-align: right;
 }
 </style>

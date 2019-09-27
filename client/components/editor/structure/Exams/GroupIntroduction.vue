@@ -1,25 +1,25 @@
 <template>
   <div class="group-introduction">
     <tes-list
+      @add="saveElement"
+      @update="reorder"
       :list="introductionElements"
       :activity="group"
       :types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true"
-      @add="saveElement"
-      @update="reorder"
       embedded>
       <teaching-element
         slot="list-item"
         slot-scope="{ item, dragged, setWidth }"
-        :setWidth="setWidth"
+        :set-width="setWidth"
         :dragged="dragged"
-        :element="item"/>
+        :element="item" />
     </tes-list>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import filter from 'lodash/filter';
 import { isQuestion } from 'tce-core/utils';
 import TeachingElement from '../../TeachingElement';
@@ -38,7 +38,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ reorderElements: 'reorder', saveElement: 'save' }, 'tes'),
+    ...mapActions('tes', { reorderElements: 'reorder', saveElement: 'save' }),
     reorder({ newIndex: newPosition }) {
       const items = this.introductionElements;
       const element = items[newPosition];

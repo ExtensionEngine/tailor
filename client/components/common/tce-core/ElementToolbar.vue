@@ -1,12 +1,12 @@
 <template>
   <div :key="id" class="element-toolbar-wrapper white elevation-1">
     <component
-      v-if="componentExists"
       :is="componentName"
+      v-if="componentExists"
+      @save="saveElement"
       :element="element"
-      :embed="embed"
-      @save="saveElement"/>
-    <default-toolbar v-else/>
+      :embed="embed" />
+    <default-toolbar v-else />
     <slot name="embed-toolbar"></slot>
     <div class="delete-element">
       <slot name="actions"></slot>
@@ -21,7 +21,7 @@
 import { getElementId, getToolbarName, isQuestion } from './utils';
 import DefaultToolbar from './DefaultToolbar';
 import EventBus from 'EventBus';
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 import Vue from 'vue';
 import { withValidation } from 'utils/validation';
 
@@ -51,7 +51,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ saveElement: 'save', removeElement: 'remove' }, 'tes'),
+    ...mapActions('tes', { saveElement: 'save', removeElement: 'remove' }),
     remove(element) {
       this.focusoutElement();
       if (element.embedded) return this.elementBus.emit('delete');

@@ -28,11 +28,10 @@
         :key="group._cid"
         :group="group"
         :exam="exam"
-        :position="index">
-      </assessment-group>
+        :position="index" />
       <v-btn
-        :disabled="!exam.id"
         @click.stop="createGroup"
+        :disabled="!exam.id"
         color="primary"
         outline
         class="my-5">
@@ -44,7 +43,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import AssessmentGroup from './AssessmentGroup';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
@@ -79,8 +78,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save', 'remove'], 'activities'),
-    ...mapActions({ getTeachingElements: 'fetch' }, 'tes'),
+    ...mapActions('activities', ['save', 'remove']),
+    ...mapActions('tes', { getTeachingElements: 'fetch' }),
     createGroup() {
       this.save({
         type: 'ASSESSMENT_GROUP',

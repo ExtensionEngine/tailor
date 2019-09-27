@@ -22,6 +22,7 @@ const aliases = {
 
 const copy = [{ from: 'client/assets/img', to: imagesPath }];
 
+/** @type {import('poi').Config.DevServer} */
 const devServer = {
   headers: {
     'X-Powered-By': 'Webpack DevSever'
@@ -37,6 +38,7 @@ const devServer = {
 
 const extensions = ['.vue'];
 
+/** @type {import('poi').Config} */
 module.exports = {
   plugins: [
     '@poi/eslint',
@@ -55,7 +57,9 @@ module.exports = {
       options: { patterns: copy }
     }, {
       resolve: require.resolve('./build/plugins/clean-out-dir'),
-      options: { exclude: '.gitkeep' }
+      options: {
+        cleanOnceBeforeBuildPatterns: ['**/*', '!.gitkeep']
+      }
     },
     require.resolve('./build/plugins/html-version-spec'),
     {

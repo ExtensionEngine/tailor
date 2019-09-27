@@ -6,8 +6,8 @@
         <span
           v-for="(revision, index) in revisions"
           :key="revision.id"
-          :class="{ selected: isSelected(revision) }"
           @click="$emit('preview', revision)"
+          :class="{ selected: isSelected(revision) }"
           class="revision">
           <div class="description">
             <div>{{ formatDate(revision) }}</div>

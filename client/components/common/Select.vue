@@ -1,21 +1,22 @@
 <template>
   <div class="custom-select">
     <multiselect
-      :value="value"
-      :class="position"
-      v-bind="options"
       @input="val => $emit('input', val)"
       @close="close"
-      @open="open">
+      @open="open"
+      :value="value"
+      :class="position"
+      v-bind="options">
       <slot
         v-for="slot in Object.keys($slots)"
-        :name="slot"
-        :slot="slot"/>
+        :slot="slot"
+        :name="slot">
+      </slot>
       <template
         v-for="slot in Object.keys($scopedSlots)"
-        slot-scope="scope"
-        :slot="slot">
-        <slot v-bind="scope" :name="slot"/>
+        :slot="slot"
+        slot-scope="scope">
+        <slot v-bind="scope" :name="slot"></slot>
       </template>
     </multiselect>
     <span
@@ -47,7 +48,7 @@ export default {
         closeOnSelect: true,
         showLabels: false,
         placeholder: 'Select option',
-        trackBy: 'label',
+        trackBy: this.$attrs['track-by'] || 'label',
         label: 'label'
       }, this.$attrs);
     },
@@ -156,6 +157,7 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       font-size: 12px;
+      line-height: 27px;
       font-family: $font-family-secondary;
     }
   }
@@ -215,7 +217,6 @@ export default {
   }
 
   .multiselect__input {
-    width: 100% !important;
     margin: 0;
     padding-left: 10px;
     line-height: 32px;

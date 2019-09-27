@@ -4,33 +4,34 @@
       :class="{ 'has-error': vErrors.has('name') }"
       class="form-group name-input">
       <input
-        v-validate="{ required: true, min: 2, max: 250 }"
-        v-focus.lazy="true"
         v-model="name"
+        v-focus.lazy="true"
+        v-validate="{ required: true, min: 2, max: 250 }"
         class="form-control"
         name="name"
         placeholder="Title">
       <span class="help-block">{{ vErrors.first('name') }}</span>
     </span>
     <multiselect
-      v-validate="'required'"
       v-if="supportedLevels.length > 1"
       v-model="level"
+      v-validate="'required'"
       :options="supportedLevels"
       :searchable="false"
-      trackBy="type"
       data-vv-value-path="type"
       data-vv-delay="0"
-      class="type-select">
-    </multiselect>
+      track-by="type"
+      name="type"
+      class="type-select" />
     <div class="actions">
       <button
         @click.stop="$emit('close')"
-        class="btn btn-default btn-sm btn-material pull-right">X
+        class="btn btn-default btn-sm btn-material pull-right">
+        X
       </button>
       <button
-        :disabled="vErrors.any()"
         @click.stop="create"
+        :disabled="vErrors.any()"
         class="btn btn-default btn-sm btn-material add pull-right">
         Add
       </button>
@@ -39,12 +40,10 @@
 </template>
 
 <script>
-import ActivityBrowser from 'components/common/ActivityBrowser';
 import first from 'lodash/first';
 import { focus } from 'vue-focus';
-import { mapGetters } from 'vuex-module';
+import { mapGetters } from 'vuex';
 import multiselect from 'components/common/Select';
-import SelectAction from './SelectAction';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -56,7 +55,7 @@ export default {
   data() {
     return { name: '', level: null };
   },
-  computed: mapGetters(['structure'], 'course'),
+  computed: mapGetters('course', ['structure']),
   methods: {
     create() {
       this.$validator.validateAll().then(isValid => {
@@ -69,7 +68,7 @@ export default {
     this.level = first(this.supportedLevels);
   },
   directives: { focus },
-  components: { multiselect, SelectAction, ActivityBrowser }
+  components: { multiselect }
 };
 </script>
 
@@ -93,6 +92,14 @@ export default {
   .type-select {
     min-width: 170px;
     margin-left: 25px;
+
+    /deep/ .multiselect {
+      padding-top: 0;
+
+      .multiselect__select {
+        top: 0;
+      }
+    }
   }
 
   .actions {

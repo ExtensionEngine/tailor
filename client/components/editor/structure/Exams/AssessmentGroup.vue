@@ -17,34 +17,33 @@
     </div>
     <h3>Question group {{ toLetter(position) }}</h3>
     <h4>Introduction</h4>
-    <group-introduction :group="group"></group-introduction>
+    <group-introduction :group="group" />
     <h4>Questions</h4>
     <div v-if="!hasAssessments" class="well">
       Click the button below to Create first Assessment.
     </div>
     <tes-list
+      @add="addAssessment"
+      @update="reorderAssessment"
       :list="assessments"
       :activity="group"
       :types="['ASSESSMENT']"
-      @add="addAssessment"
-      @update="reorderAssessment"
       embedded>
       <assessment-item
         slot="list-item"
         slot-scope="{ item }"
-        :exam="exam"
-        :assessment="item"
-        :expanded="isSelected(item)"
         @selected="toggleSelect(item)"
         @save="saveAssessment"
-        @delete="item.id ? requestDeletion(item) : remove(item)">
-      </assessment-item>
+        @delete="item.id ? requestDeletion(item) : remove(item)"
+        :exam="exam"
+        :assessment="item"
+        :expanded="isSelected(item)" />
     </tes-list>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import AssessmentItem from '../AssessmentItem';
 import cloneDeep from 'lodash/cloneDeep';
 import debounce from 'lodash/debounce';
@@ -82,9 +81,9 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['add'], 'tes'),
-    ...mapActions(['save', 'update', 'reorder', 'remove'], 'tes'),
-    ...mapActions({ updateGroup: 'update', removeGroup: 'remove' }, 'activities'),
+    ...mapActions('tes', ['save', 'update', 'reorder', 'remove']),
+    ...mapActions('activities', { updateGroup: 'update', removeGroup: 'remove' }),
+    ...mapMutations('tes', ['add']),
     addAssessment(assessment) {
       this.add(assessment);
       this.selected.push(assessment._cid);

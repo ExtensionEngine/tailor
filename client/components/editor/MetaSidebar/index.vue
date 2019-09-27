@@ -5,16 +5,15 @@
       <meta-input
         v-for="it in metadata"
         :key="`${element._cid}.${it.key}`"
-        :meta="it"
-        @update="updateElement">
-      </meta-input>
+        @update="updateElement"
+        :meta="it" />
     </div>
   </div>
 </template>
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 import MetaInput from 'components/common/Meta';
 
 export default {
@@ -29,7 +28,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['update'], 'tes'),
+    ...mapActions('tes', ['update']),
     updateElement(key, value) {
       this.sidebarMeta = { ...this.sidebarMeta, [key]: value };
       return this.update({

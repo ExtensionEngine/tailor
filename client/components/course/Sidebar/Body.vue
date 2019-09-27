@@ -1,33 +1,28 @@
 <template>
   <div class="body">
-    <publishing v-if="isAdmin || isCourseAdmin"/>
+    <publishing v-if="isAdmin || isCourseAdmin" />
     <v-chip :color="config.color" label dark small class="type-label">
       {{ config.label.toUpperCase() }}
     </v-chip>
-    <div class="meta-element">
+    <div class="meta-elements">
       <meta-input
         v-for="it in metadata"
         :key="`${activity._cid}.${it.key}`"
-        :meta="it"
-        @update="updateActivity">
-      </meta-input>
+        @update="updateActivity"
+        :meta="it" />
     </div>
     <div class="relationships-element">
       <relationship
         v-for="relationship in config.relationships"
-        v-bind="relationship"
-        :key="`${activity._cid}.${relationship.type}`">
-      </relationship>
+        :key="`${activity._cid}.${relationship.type}`"
+        v-bind="relationship" />
     </div>
-    <discussion
-      editor-position="bottom"
-      class="discussion">
-    </discussion>
+    <discussion editor-position="bottom" class="discussion" />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import Discussion from './Discussion';
 import Meta from 'components/common/Meta';
 import Publishing from './Publishing';
@@ -36,7 +31,7 @@ import Relationship from './Relationship';
 export default {
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['activity', 'getConfig', 'getMetadata', 'isCourseAdmin'], 'course'),
+    ...mapGetters('course', ['activity', 'getConfig', 'getMetadata', 'isCourseAdmin']),
     config() {
       return this.getConfig(this.activity);
     },
@@ -45,7 +40,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update'], 'activities'),
+    ...mapActions('activities', ['update']),
     updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });
@@ -76,7 +71,9 @@ export default {
   font-weight: 500;
 }
 
-.meta-element {
+.meta-elements {
+  padding-top: 10px;
+
   > * {
     padding-top: 20px;
   }

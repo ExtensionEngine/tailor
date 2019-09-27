@@ -5,9 +5,9 @@ import reduce from 'lodash/reduce';
 import { typeInfo } from './assessment';
 
 const describe = {
-  'COURSE': describeCourseRevision,
-  'ACTIVITY': describeActivityRevision,
-  'TEACHING_ELEMENT': describeElementRevision
+  COURSE: describeCourseRevision,
+  ACTIVITY: describeActivityRevision,
+  TEACHING_ELEMENT: describeElementRevision
 };
 
 function getAction(operation) {

@@ -2,9 +2,8 @@
   <div v-if="course" class="settings white elevation-1">
     <div class="actions">
       <v-btn
-        :loading="publishing"
         @click="publish"
-        color="blue-grey darken-1"
+        :loading="publishing"
         outline
         small
         class="pull-right">
@@ -13,24 +12,22 @@
     </div>
     <meta-input
       v-for="it in requiredData"
-      :meta="it"
       :key="it.key"
       @update="updateKey"
-      class="meta-input">
-    </meta-input>
+      :meta="it"
+      class="meta-input" />
     <meta-input
       v-for="it in metadata"
-      :meta="it"
       :key="it.key"
       @update="updateKey"
-      class="meta-input">
-    </meta-input>
+      :meta="it"
+      class="meta-input" />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
-import api from '../../../api/course';
+import { mapActions, mapGetters } from 'vuex';
+import api from '@/api/course';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import { getRepositoryMeta } from 'shared/activities';
@@ -42,7 +39,7 @@ export default {
     return { publishing: false };
   },
   computed: {
-    ...mapGetters(['course'], 'course'),
+    ...mapGetters('course', ['course']),
     requiredData() {
       return [{
         key: 'name',
@@ -63,7 +60,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update'], 'courses'),
+    ...mapActions('courses', ['update']),
     updateKey(key, value) {
       if (find(this.metadata, { key })) key = `data.${key}`;
       const data = cloneDeep(this.course);

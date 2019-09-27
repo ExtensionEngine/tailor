@@ -14,7 +14,7 @@
       :element="element.parent"
       :embed="element">
       <template slot="embed-toolbar">
-        <element-toolbar :element="element"/>
+        <element-toolbar :element="element" />
       </template>
       <template slot="actions">
         <slot name="actions"></slot>
@@ -34,7 +34,7 @@
 <script>
 import { ElementToolbar } from 'tce-core';
 import { getLevel } from 'shared/activities';
-import { mapGetters } from 'vuex-module';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'editor-toolbar',
@@ -42,7 +42,7 @@ export default {
     element: { type: Object, default: null }
   },
   computed: {
-    ...mapGetters(['activity'], 'editor'),
+    ...mapGetters('editor', ['activity']),
     config() {
       return getLevel(this.activity.type);
     }

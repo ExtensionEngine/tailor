@@ -3,17 +3,16 @@
     <thread-comment
       v-for="comment in thread"
       :key="comment._cid || comment.id"
-      :comment="comment"
-      :avatar="avatars"
       @update="onUpdate"
       @remove="onRemove"
-      class="clearfix comment">
-    </thread-comment>
+      :comment="comment"
+      :avatar="avatars"
+      class="clearfix comment" />
   </ul>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import orderBy from 'lodash/orderBy';
 import ThreadComment from './Comment';
 
@@ -36,7 +35,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update', 'remove'], 'comments'),
+    ...mapActions('comments', ['update', 'remove']),
     onUpdate(comment, content) {
       const updatedAt = Date.now();
       this.update(Object.assign({}, comment, { content, updatedAt }));

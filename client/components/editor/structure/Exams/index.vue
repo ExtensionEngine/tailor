@@ -6,8 +6,7 @@
         v-for="(exam, index) in exams"
         :key="exam._cid"
         :exam="exam"
-        :position="index">
-      </exam>
+        :position="index" />
     </ul>
     <v-btn @click.stop="create" color="primary" class="mt-4">
       <v-icon class="pr-2">mdi-plus</v-icon>
@@ -17,14 +16,14 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import Exam from './Exam';
 import filter from 'lodash/filter';
 
 export default {
   name: 'exams',
   computed: {
-    ...mapGetters(['activity'], 'editor'),
+    ...mapGetters('editor', ['activity']),
     ...mapGetters(['activities']),
     exams() {
       const parentId = this.activity.id;
@@ -32,7 +31,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save'], 'activities'),
+    ...mapActions('activities', ['save']),
     create() {
       this.save({
         type: 'EXAM',

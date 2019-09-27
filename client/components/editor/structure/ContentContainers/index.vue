@@ -10,14 +10,13 @@
     <content-container
       v-for="container in containerGroup"
       :key="container._cid || container.id"
+      @delete="deleteContainer(container)"
       :container="container"
       :types="types"
       :name="name"
       :layout="layout"
       :class="`${name}-container`"
-      @delete="deleteContainer(container)"
-      class="content-container elevation-2">
-    </content-container>
+      class="content-container elevation-2" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="primary">
         <v-icon class="pr-2">mdi-plus</v-icon>
@@ -33,7 +32,7 @@ import ContentContainer from './Container';
 import EventBus from 'EventBus';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 import maxBy from 'lodash/maxBy';
 
 const appChannel = EventBus.channel('app');
@@ -63,7 +62,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save', 'remove'], 'activities'),
+    ...mapActions('activities', ['save', 'remove']),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });

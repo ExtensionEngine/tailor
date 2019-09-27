@@ -17,25 +17,25 @@
       Click the button below to create content.
     </v-alert>
     <tes-list
+      @add="addElement"
+      @insert="insert"
+      @update="reorder"
       :list="teachingElements"
       :activity="container"
       :types="types"
-      :layout="layout"
-      @add="addElement"
-      @insert="insert"
-      @update="reorder">
+      :layout="layout">
       <teaching-element
         slot="list-item"
         slot-scope="{ item, dragged, setWidth }"
-        :setWidth="setWidth"
+        :set-width="setWidth"
         :dragged="dragged"
-        :element="item"/>
+        :element="item" />
     </tes-list>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
@@ -57,11 +57,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
+    ...mapActions('tes', {
       reorderElements: 'reorder',
       insertElement: 'insert',
       addElement: 'save'
-    }, 'tes'),
+    }),
     reorder({ newIndex: newPosition }) {
       const items = this.teachingElements;
       const element = items[newPosition];

@@ -1,9 +1,9 @@
 <template>
   <li>
     <div
-      :class="{ expanded }"
-      :style="{ cursor: isTeachingElement ? 'pointer' : 'auto' }"
       @click="toggle"
+      :style="{ cursor: isTeachingElement ? 'pointer' : 'auto' }"
+      :class="{ expanded }"
       class="revision">
       <div :style="{ color }" class="acronym">{{ acronym }}</div>
       <div class="content">
@@ -18,8 +18,7 @@
     <entity-revisions
       v-if="expanded"
       :revision="revision"
-      :isDetached="!activity">
-    </entity-revisions>
+      :is-detached="!activity" />
   </li>
 </template>
 
@@ -29,7 +28,7 @@ import {
   getRevisionAcronym,
   getRevisionColor
 } from 'utils/revision';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import EntityRevisions from './EntityRevisions';
 import fecha from 'fecha';
 import find from 'lodash/find';
@@ -41,8 +40,8 @@ export default {
   },
   data: () => ({ expanded: false }),
   computed: {
-    ...mapGetters(['structure'], 'course'),
-    ...mapGetters(['getParent'], 'activities'),
+    ...mapGetters('course', ['structure']),
+    ...mapGetters('activities', ['getParent']),
     activity() {
       const { state } = this.revision;
       const activityId = state.activityId || state.id;
@@ -57,8 +56,8 @@ export default {
 
   },
   methods: {
-    ...mapActions(['restore'], 'revisions'),
-    ...mapActions({ resetActivities: 'reset' }, 'activities'),
+    ...mapActions('revisions', ['restore']),
+    ...mapActions('activities', { resetActivities: 'reset' }),
     getOutlineLocation(current) {
       if (!current) return null;
       const level = find(this.structure, { type: current.type });
@@ -70,7 +69,7 @@ export default {
     },
     restoreItem() {
       const { name } = this.revision.state.data;
-      this.restore(this.revision)
+      return this.restore(this.revision)
         .then(() => {
           this.resetActivities();
           this.$snackbar.show(`${name} restored.`);
