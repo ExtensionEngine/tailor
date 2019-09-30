@@ -1,29 +1,18 @@
+const BaseRegistry = require('./BaseRegistry');
 const containerList = require('../../config/shared/custom-containers');
-const find = require('lodash/find');
 const Promise = require('bluebird');
 
-const paths = {
-  getCustom: path => `../../client/components/content-containers/${path}/util`,
-  getExtension: path => `../../extensions/content-containers/${path}/util`
-};
+const EXTENSIONS_LIST = `../../extensions/content-containers/index`;
 
-const EXTENSIONS_LIST = 'index';
-
-class ContainerRegistry {
+class ContainerRegistry extends BaseRegistry {
   constructor() {
-    this._registry = [];
+    super('container', containerList, EXTENSIONS_LIST);
+    this._staticsResolver = {};
   }
 
   async initialize() {
-    await Promise.map(containerList, path => this.load(path));
-    const extensions = await this.loadExtensionList();
-    await Promise.map(extensions, path => this.load(path, true));
-  }
-
-  async load(path, isExtension) {
-    const action = isExtension ? 'getExtension' : 'getCustom';
-    const container = await require(paths[action](path));
-    this._registry.push(container);
+    await super.initialize();
+    this.buildStaticResolver();
   }
 
   fetch(attrs) {
@@ -33,19 +22,15 @@ class ContainerRegistry {
     });
   }
 
-  getStaticsResolver(publishedAs) {
-    const container = find(this._registry, { publishedAs });
-    return container.resolve;
+  buildStaticResolver() {
+    const { _registry: registry, _staticsResolver: resolver } = this;
+    registry
+      .filter(it => it.resolve)
+      .forEach(it => Object.assign(resolver, { [it.publishedAs]: it.resolve }));
   }
 
-  loadExtensionList() {
-    const file = `../../extensions/content-containers/${EXTENSIONS_LIST}`;
-    try {
-      return require(file);
-    } catch (_) {
-      console.log('No container extensions loaded!');
-      return [];
-    }
+  getStaticsResolver(publishedAs) {
+    return this._staticsResolver[publishedAs];
   }
 }
 
