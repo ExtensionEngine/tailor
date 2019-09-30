@@ -51,7 +51,7 @@ export default {
       this.$emit('save', assessment);
     }
   },
-  mounted() {
+  created() {
     const objectiveId = get(this.assessment, 'refs.objectiveId');
     if (!objectiveId) return;
     this.objective = find(this.objectives, { id: objectiveId });
