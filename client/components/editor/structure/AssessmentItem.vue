@@ -13,30 +13,32 @@
       @delete="$emit('delete')"
       @save="save"
       :element="assessment">
-      <div slot-scope="{ isEditing }" class="pb-5">
-        <v-layout>
-          <v-flex grow class="text-xs-left">
-            <v-chip
-              color="blue-grey darken-1"
-              label
-              dark
-              small
-              class="text-uppercase">
-              {{ elementConfig.name }}
-            </v-chip>
-          </v-flex>
-          <v-flex shrink>
-            <v-btn
-              @click="$emit('selected')"
-              flat
-              small
-              class="ma-0 pa-0">
-              Collapse
-            </v-btn>
-          </v-flex>
-        </v-layout>
-        <slot :isEditing="isEditing" name="header"></slot>
-      </div>
+      <template v-slot:default="{ isEditing }">
+        <div class="pb-5">
+          <v-layout>
+            <v-flex grow class="text-xs-left">
+              <v-chip
+                color="blue-grey darken-1"
+                label
+                dark
+                small
+                class="text-uppercase">
+                {{ elementConfig.name }}
+              </v-chip>
+            </v-flex>
+            <v-flex shrink>
+              <v-btn
+                @click="$emit('selected')"
+                flat
+                small
+                class="ma-0 pa-0">
+                Collapse
+              </v-btn>
+            </v-flex>
+          </v-layout>
+          <slot :isEditing="isEditing" name="header"></slot>
+        </div>
+      </template>
     </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
       <v-chip color="blue-grey darken-1" label dark small>

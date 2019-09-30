@@ -6,7 +6,7 @@
     :assessment="assessment"
     :expanded="expanded"
     :draggable="true">
-    <template slot="header" slot-scope="{ isEditing }">
+    <template v-slot:header="{ isEditing }">
       <v-container v-if="objectives.length" class="pa-0 mt-2">
         <v-layout justify-end>
           <v-flex xs4>

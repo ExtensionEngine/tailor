@@ -4,14 +4,14 @@
     @update="reorderItem"
     :elements="embeds"
     :supported-types="types">
-    <contained-content
-      slot="list-item"
-      slot-scope="{ element, isDragged }"
-      @save="data => saveItem(element, data)"
-      @delete="$emit('delete', element)"
-      :element="element"
-      :is-dragged="isDragged"
-      v-bind="$attrs" />
+    <template v-slot:list-item="{ element, isDragged }">
+      <contained-content
+        @save="data => saveItem(element, data)"
+        @delete="$emit('delete', element)"
+        :element="element"
+        :is-dragged="isDragged"
+        v-bind="$attrs" />
+    </template>
   </element-list>
 </template>
 

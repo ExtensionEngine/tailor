@@ -33,14 +33,14 @@
       :elements="assessments"
       :activity="group"
       :supported-types="['ASSESSMENT']">
-      <assessment-item
-        slot="list-item"
-        slot-scope="{ element }"
-        @save="saveAssessment"
-        @delete="deleteElement(element)"
-        :assessment="element"
-        :objectives="objectives"
-        :objective-label="objectiveLabel" />
+      <template v-slot:list-item="{ element }">
+        <assessment-item
+          @save="saveAssessment"
+          @delete="deleteElement(element)"
+          :assessment="element"
+          :objectives="objectives"
+          :objective-label="objectiveLabel" />
+      </template>
     </element-list>
   </div>
 </template>

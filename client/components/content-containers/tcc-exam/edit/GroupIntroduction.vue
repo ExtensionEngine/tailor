@@ -7,14 +7,14 @@
       :activity="group"
       :supported-types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
       :layout="true">
-      <contained-content
-        slot="list-item"
-        slot-scope="{ element, dragged }"
-        @save="save(element, $event)"
-        @delete="$emit('deleteElement', element)"
-        :element="element"
-        :set-width="false"
-        :is-dragged="dragged" />
+      <template v-slot:list-item="{ element, dragged }">
+        <contained-content
+          @save="save(element, $event)"
+          @delete="$emit('deleteElement', element)"
+          :element="element"
+          :set-width="false"
+          :is-dragged="dragged" />
+      </template>
     </element-list>
   </div>
 </template>

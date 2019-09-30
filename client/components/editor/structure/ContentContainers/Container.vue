@@ -24,12 +24,12 @@
       :activity="container"
       :types="types"
       :layout="layout">
-      <teaching-element
-        slot="list-item"
-        slot-scope="{ item, dragged, setWidth }"
-        :set-width="setWidth"
-        :dragged="dragged"
-        :element="item" />
+      <template v-slot:list-item="{ item, dragged, setWidth }">
+        <teaching-element
+          :set-width="setWidth"
+          :dragged="dragged"
+          :element="item" />
+      </template>
     </tes-list>
   </div>
 </template>
