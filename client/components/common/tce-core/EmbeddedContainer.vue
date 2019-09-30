@@ -3,8 +3,7 @@
     @add="addItem"
     @update="reorderItem"
     :elements="embeds"
-    :supported-types="types"
-    :enable-add="enableAdd">
+    :supported-types="types">
     <contained-content
       slot="list-item"
       slot-scope="{ element, isDragged }"
