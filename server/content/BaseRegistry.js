@@ -22,7 +22,7 @@ module.exports = class {
   async load(path, isExtension) {
     try {
       this._registry.push(await require(this.getFullPath(path, isExtension)));
-    } catch (_) {
+    } catch {
       console.info(`${path} does not have a custom statics method.`);
     }
   }
@@ -35,7 +35,7 @@ module.exports = class {
   loadExtensionList() {
     try {
       return require(this._basePath);
-    } catch (_) {
+    } catch {
       console.log(`No ${this._type} extensions loaded!`);
       return [];
     }
