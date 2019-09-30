@@ -1,66 +1,8 @@
-import {
-  getComponentName,
-  getToolbarName,
-  isQuestion,
-  processAnswerType
-} from 'tce-core/utils';
-import cloneDeep from 'lodash/cloneDeep';
+import ComponentRegistry from './ComponentRegistry';
 import elementList from 'components/content-elements';
-import find from 'lodash/find';
-import pick from 'lodash/pick';
-import Promise from 'bluebird';
+import { getComponentName } from 'tce-core/utils';
 
-const EXTENSIONS_LIST = 'index';
+const ATTRS = ['name', 'type', 'subtype', 'version', 'schema', 'initState', 'ui'];
+const options = ['element', elementList, ATTRS, getComponentName];
 
-export default class ElementRegistry {
-  constructor(Vue) {
-    this._registry = [];
-    this.Vue = Vue;
-  }
-
-  async initialize() {
-    await Promise.map(elementList, (location, index) => {
-      return this.load(location, { position: index });
-    });
-    const extensions = await this.loadExtensionList();
-    await Promise.map(extensions, (location, index) => {
-      const position = elementList.length + index;
-      return this.load(location, { position, isExtension: true });
-    });
-  }
-
-  async load(location, options = {}) {
-    const { _registry, Vue } = this;
-    const { position = _registry.length, isExtension } = options;
-    const element = isExtension
-      ? (await import(`extensions/content-elements/${location}`)).default
-      : (await import(`components/content-elements/${location}`)).default;
-    const attrs = [
-      'name', 'type', 'subtype', 'version', 'schema', 'initState', 'ui'
-    ];
-    const type = isQuestion(element.type)
-      ? processAnswerType(element.subtype)
-      : element.type;
-    const componentName = getComponentName(type);
-    _registry.push({ ...pick(element, attrs), componentName, position });
-    Vue.component(componentName, element.Edit);
-    if (element.Toolbar) Vue.component(getToolbarName(type), element.Toolbar);
-  }
-
-  all() {
-    return cloneDeep(this._registry);
-  }
-
-  get(type) {
-    if (!type) return this.all();
-    const { _registry: registry } = this;
-    const res = find(registry, { subtype: type }) || find(registry, { type });
-    return res && cloneDeep(res);
-  }
-
-  loadExtensionList() {
-    return import(`extensions/content-elements/${EXTENSIONS_LIST}`)
-      .then(module => module.default)
-      .catch(() => console.log('No element extensions loaded!') || []);
-  }
-}
+export default Vue => new ComponentRegistry(Vue, ...options);
