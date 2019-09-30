@@ -34,7 +34,7 @@
       "type": "PAGE",
       "label": "Page",
       "multiple": false,
-      "unique": true,
+      "custom": true,
       "required": false
     }]
   }]

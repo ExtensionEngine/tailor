@@ -57,13 +57,13 @@ export default {
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: false },
-    unique: { type: Boolean, default: false },
+    custom: { type: Boolean, default: false },
     required: { type: Boolean, default: true }
   },
   computed: {
     ...mapGetters(['activities', 'tes']),
     containerName() {
-      if (this.unique) return getContainerName(this.type);
+      if (this.custom) return getContainerName(this.type);
       return 'content-container';
     },
     name() {
