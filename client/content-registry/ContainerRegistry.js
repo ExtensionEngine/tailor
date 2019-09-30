@@ -29,9 +29,9 @@ export default class ContainerRegistry {
       ? (await import(`extensions/content-containers/${path}`)).default
       : (await import(`components/content-containers/${path}`)).default;
     const attrs = ['type', 'version'];
-    const contanerName = getContainerName(container.type);
-    _registry.push({ ...pick(container, attrs), contanerName, position });
-    Vue.component(contanerName, container.Edit);
+    const containerName = getContainerName(container.type);
+    _registry.push({ ...pick(container, attrs), containerName, position });
+    Vue.component(containerName, container.Edit);
   }
 
   loadExtensionList() {
