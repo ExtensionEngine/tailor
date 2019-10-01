@@ -3,30 +3,14 @@
     <span class="form-label">
       {{ isGraded ? 'Select correct  answer' : 'Options' }}
     </span>
-    <ul :class="{ 'non-graded': !isGraded }">
-      <li>
-        <span :class="{ 'has-error': correctError }">
-          <input
-            v-model="correct"
-            @change="update"
-            :disabled="disabled"
-            :value="true"
-            type="radio">
-        </span>
-        <span class="answers">True</span>
-      </li>
-      <li>
-        <span :class="{ 'has-error': correctError }">
-          <input
-            v-model="correct"
-            @change="update"
-            :disabled="disabled"
-            :value="false"
-            type="radio">
-        </span>
-        <span class="answers">False</span>
-      </li>
-    </ul>
+    <v-radio-group
+      v-model="correct"
+      @change="update"
+      :error="correctError"
+      :disabled="disabled">
+      <v-radio label="True" :value="true" />
+      <v-radio label="False" :value="false" />
+    </v-radio-group>
   </div>
 </template>
 
@@ -79,38 +63,7 @@ export default {
   font-size: 20px;
 }
 
-ul {
-  padding: 10px 0 0 50px;
-
-  li {
-    display: inline-block;
-    position: relative;
-    width: 100%;
-    margin: 10px 0;
-
-    .answers {
-      vertical-align: bottom;
-      font-size: 16px;
-    }
-  }
-}
-
-.non-graded {
-  padding-left: 30px;
-
-  input {
-    margin: 5px 3px 0 0;
-
-    &[disabled]::after {
-      background: #eee;
-      border: none;
-    }
-  }
-}
-
-@media (max-width: 850px) {
-  ul {
-    padding-left: 0;
-  }
+.v-input--radio-group {
+  padding: 24px 0 0 50px;
 }
 </style>
