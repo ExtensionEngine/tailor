@@ -1,31 +1,31 @@
 <template>
-  <div :class="{ preview }" class="form-group text-editor">
-    <textarea
+  <div :class="{ preview }" class="text-editor">
+    <v-textarea
+      v-if="!preview"
       v-model.trim="content"
-      v-focus.lazy="focused"
       @keydown.shift.enter.exact="() => {}"
       @keydown.enter.exact.prevent="onEnter"
       @blur="onBlur"
       @input="$emit('input', content)"
-      :placeholder="placeholder"
-      class="form-control">
-    </textarea>
-    <div class="content">
+      autofocus
+      single-line
+      hide-details
+      auto-grow
+      rows="1"
+      :placeholder="placeholder" />
+    <div v-else class="content">
       <pre><span>{{ content }}</span><br></pre>
     </div>
   </div>
 </template>
 
 <script>
-import { focus } from 'vue-focus';
-
 export default {
   name: 'text-editor',
   props: {
     value: { type: String, required: true },
     placeholder: { type: String, default: '' },
-    preview: { type: Boolean, default: false },
-    focused: { type: Boolean, default: false }
+    preview: { type: Boolean, default: false }
   },
   data() {
     return { content: this.value };
@@ -50,38 +50,27 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .text-editor {
-  position: relative;
   margin: 0;
 
-  textarea {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    font: inherit;
-    letter-spacing: inherit;
-    box-sizing: content-box;
-    background: transparent;
-    overflow: hidden;
-    resize: none;
-    outline: none;
+  .v-textarea {
+    width: 100%;
+    margin: 0;
+    padding: 0;
 
-    &:focus {
-      outline: none;
+    ::v-deep textarea {
+      padding: 0;
+      padding-bottom: 8px;
+      line-height: inherit;
     }
-  }
-
-  .content {
-    visibility: hidden;
   }
 
   .content pre {
     height: 100%;
     margin: 0;
     //NOTE: Preventing glitches (height changes, vertical scrollbar)
-    padding: 0 4px 8px 0;
+    padding-bottom: 12px;
     font: inherit;
     white-space: pre-wrap;
     word-break: normal;
@@ -90,16 +79,6 @@ export default {
     background: inherit;
     border: none;
     overflow: hidden;
-  }
-}
-
-.text-editor.preview {
-  textarea {
-    display: none;
-  }
-
-  .content {
-    visibility: visible;
   }
 }
 </style>
