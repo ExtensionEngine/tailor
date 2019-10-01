@@ -1,81 +1,89 @@
 <template>
-  <div :class="{ disabled: !isEditing }">
-    <div class="row no-gutters heading">
-      <div
+  <v-container :class="{ disabled: !isEditing }">
+    <v-row justify="center" no-gutters class="heading">
+      <v-col
         :class="{ error: errors.includes('headings.premise') }"
-        class="col-xs-4 col-xs-offset-1 heading-input-wrapper">
-        <input
-          @blur="e => updateHeading({ premise: e.target.value })"
+        cols="4" offset="1" class="heading-input-wrapper">
+        <v-text-field
+          @change="value => updateHeading({ premise: value })"
           :value="headings.premise"
-          class="heading-input"
-          type="text">
-      </div>
-      <div class="col-xs-2"></div>
-      <div
+          :disabled="!isEditing"
+          class="heading-input" />
+      </v-col>
+      <v-col class="col-2" />
+      <v-col
         :class="{ error: errors.includes('headings.response') }"
-        class="col-xs-4 heading-input-wrapper">
-        <input
-          @blur="e => updateHeading({ response: e.target.value })"
+        cols="4"
+        class="heading-input-wrapper">
+        <v-text-field
+          @change="value => updateHeading({ response: value })"
           :value="headings.response"
-          class="heading-input"
-          type="text">
-      </div>
-    </div>
-    <div
+          :disabled="!isEditing"
+          class="heading-input" />
+      </v-col>
+      <v-col cols="1" />
+    </v-row>
+    <v-row
       v-for="(responseKey, premiseKey) in correct"
       :key="responseKey"
-      class="row no-gutters">
-      <div
+      justify="center"
+      no-gutters>
+      <v-col
         :class="{ flip: isFocused(premiseKey) }"
-        class="col-xs-4 col-xs-offset-1 premise-container">
+        cols="4"
+        offset="1"
+        class="premise-container">
         <div @click="focus(premiseKey)" class="premise-view front">
           <span :class="hasError(premiseKey, 'premises')">
             {{ getPremiseContent(premiseKey) || 'Click to edit' }}
           </span>
         </div>
-        <input
+        <v-text-field
           v-focus="{ key: premiseKey }"
           @change="updatePremiseContent(premiseKey, $event)"
           @keyup.enter="focus(premiseKey)"
           @keyup.esc="focus(premiseKey)"
           @blur="isFocused(premiseKey) && focus(premiseKey)"
           :value="getPremiseContent(premiseKey)"
-          class="form-control premise-input back"
-          placeholder="Insert text here ...">
-      </div>
-      <div class="col-xs-2">
-        <span class="mdi mdi-arrow-right"></span>
-      </div>
-      <div
+          class="premise-input back"
+          placeholder="Insert text here ..." />
+      </v-col>
+      <v-col cols="2" align-self="center">
+        <v-icon small>mdi-arrow-right</v-icon>
+      </v-col>
+      <v-col
         :class="{ flip: isFocused(responseKey) }"
-        class="col-xs-4 response-container">
+        cols="4"
+        class="response-container">
         <div @click="focus(responseKey)" class="response-view front">
           <span :class="hasError(responseKey, 'responses')">
             {{ getResponseContent(responseKey) || 'Click to edit' }}
           </span>
         </div>
-        <input
+        <v-text-field
           v-focus="{ key: responseKey }"
           @change="updateResponseContent(responseKey, $event)"
           @keyup.enter="focus(responseKey)"
           @keyup.esc="focus(responseKey)"
           @blur="isFocused(responseKey) && focus(responseKey)"
           :value="getResponseContent(responseKey)"
-          class="form-control response-input back"
-          placeholder="Insert text here ...">
-      </div>
-      <div class="col-xs-1 destroy">
-        <span
+          class="premise-input back"
+          placeholder="Insert text here ..." />
+      </v-col>
+      <v-col cols="1" align-self="center">
+        <v-btn
           v-show="!minItems && isEditing"
           @click="removeItems(premiseKey, responseKey)"
-          class="mdi mdi-close">
-        </span>
-      </div>
-    </div>
-    <div v-show="!maxItems && isEditing">
-      <span @click="addItems" class="mdi mdi-plus"></span>
-    </div>
-  </div>
+          small
+          icon>
+          <v-icon small>mdi-close</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-btn v-show="!maxItems && isEditing" @click="addItems" icon>
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+  </v-container>
 </template>
 
 <script>
@@ -122,14 +130,14 @@ export default {
     updateHeading(val) {
       this.update({ headings: { ...this.headings, ...val } });
     },
-    updatePremiseContent(key, evt) {
+    updatePremiseContent(key, value) {
       let premises = cloneDeep(this.premises);
-      this.getPremiseItem(key, premises).value = evt.target.value;
+      this.getPremiseItem(key, premises).value = value;
       this.update({ premises: shuffle(premises) });
     },
-    updateResponseContent(key, evt) {
+    updateResponseContent(key, value) {
       let responses = cloneDeep(this.responses);
-      this.getResponseItem(key, responses).value = evt.target.value;
+      this.getResponseItem(key, responses).value = value;
       this.update({ responses: shuffle(responses) });
     },
     getResponseContent(key) {
@@ -203,15 +211,10 @@ export default {
 
 <style lang="scss" scoped>
 .no-gutters {
-  margin: 40px 0;
-
-  [class*="col-"] {
-    padding-right: 0;
-    padding-left: 0;
-  }
+  margin-bottom: 40px;
 }
 
-.heading > span, .front, .mdi {
+.heading > span, .front {
   display: block;
   padding: 14px 5px;
 }
@@ -219,10 +222,13 @@ export default {
 .heading {
   .heading-input-wrapper {
     height: 48px;
-    border-bottom: 1px dashed grey;
 
     &.error {
       border-bottom: 2px solid #e51c23;
+    }
+
+    ::v-deep input {
+      text-align: center;
     }
 
     .heading-input {
@@ -274,16 +280,8 @@ export default {
 .premise-input, .response-input {
   position: absolute;
   top: 0;
+  width: 100%;
   height: 100%;
-}
-
-.mdi-plus {
-  display: inline;
-  font-size: 28px;
-}
-
-.destroy {
-  font-size: 15px;
 }
 
 .mdi-plus:hover, .mdi-close:hover {
