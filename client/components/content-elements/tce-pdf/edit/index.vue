@@ -1,14 +1,12 @@
 <template>
   <div class="tce-pdf">
-    <div v-show="showPlaceholder">
-      <div class="well pdf-placeholder">
-        <div class="message">
-          <span class="heading">Pdf placeholder</span>
-          <span v-if="!isFocused">Select to edit</span>
-          <span v-else>Please use toolbar to enter url</span>
-        </div>
+    <v-alert v-show="showPlaceholder" class="pdf-placeholder">
+      <div class="message">
+        <span class="heading">Pdf placeholder</span>
+        <span v-if="!isFocused">Select to edit</span>
+        <span v-else>Please use toolbar to enter url</span>
       </div>
-    </div>
+    </v-alert>
     <div v-show="!showPlaceholder">
       <div v-if="!isFocused" class="overlay">
         <div class="message">Click to preview</div>
@@ -116,6 +114,9 @@ export default {
 }
 
 .pdf-placeholder {
+  margin: 0;
+  background: #f5f5f5;
+
   .message {
     padding: 100px;
 
@@ -166,10 +167,6 @@ export default {
   font-weight: 500;
 
   .icon { font-size: 42px; }
-}
-
-.well {
-  margin: 0;
 }
 
 .pdf-container {
