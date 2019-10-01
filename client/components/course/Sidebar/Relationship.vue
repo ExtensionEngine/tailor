@@ -16,7 +16,7 @@
     item-text="data.name"
     deletable-chips
     return-object
-    box />
+    filled />
 </template>
 
 <script>
@@ -115,9 +115,5 @@ export default {
 
 ::v-deep .v-list {
   text-align: left;
-}
-
-::v-deep .v-input__control .v-select__slot input {
-  border: none;
 }
 </style>

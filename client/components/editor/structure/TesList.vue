@@ -8,12 +8,11 @@
       @update="$emit('update', $event)"
       :list="list"
       :options="options"
-      class="row">
-      <div
+      class="row no-gutters">
+      <v-col
         v-for="(item, index) in list"
         :key="item._cid || item.id"
-        :class="getContainerClasses(item)"
-        class="list-item-container">
+        :class="getContainerClasses(item)">
         <inline-activator
           v-if="enableAdd && !embedded"
           @click.native="showElementDrawer(index - 1)" />
@@ -23,7 +22,7 @@
           :dragged="dragElementIndex === index"
           name="list-item">
         </slot>
-      </div>
+      </v-col>
     </draggable>
     <div class="add-element-container mt-5">
       <add-element
@@ -87,7 +86,7 @@ export default {
       this.insertPosition = this.lastPosition;
     },
     getContainerClasses({ data: { width } }) {
-      let classes = [`col-xs-${width || 12}`];
+      let classes = [`col-${width || 12}`];
       if (this.enableAdd) classes.push('insertable');
       return classes;
     },

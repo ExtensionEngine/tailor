@@ -138,6 +138,7 @@ export default {
   }
 
   &::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;

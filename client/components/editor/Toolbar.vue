@@ -74,8 +74,7 @@ export default {
 
   h1 {
     flex: 1;
-    margin: 0;
-    padding-top: 13px;
+    margin: auto 0;
     color: #fff;
     font-size: 22px;
     font-weight: 300;

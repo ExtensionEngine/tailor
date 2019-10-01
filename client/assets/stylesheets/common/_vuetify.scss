@@ -8,6 +8,10 @@
   padding: 8px 0;
 }
 
+.v-input--selection-controls__input input {
+  position: absolute;
+}
+
 .v-input {
   input:focus, textarea:focus {
     box-shadow: none !important;
@@ -21,8 +25,4 @@ a:hover, a:active, a:visited, a:focus {
 
 hr.v-divider--vertical {
   margin: 0;
-}
-
-.v-input--selection-controls__input input {
-  position: absolute;
 }

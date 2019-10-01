@@ -37,7 +37,7 @@ export default {
   computed: {
     widthClass() {
       const { element, setWidth } = this;
-      return setWidth ? `col-xs-${get(element, 'data.width', 12)}` : '';
+      return setWidth ? `col-${get(element, 'data.width', 12)}` : '';
     }
   },
   methods: {
@@ -77,7 +77,10 @@ export default {
 
 .contained-content {
   position: relative;
-  margin: 7px 0;
   padding: 0;
+}
+
+.question .contained-content {
+  margin: 7px 0;
 }
 </style>

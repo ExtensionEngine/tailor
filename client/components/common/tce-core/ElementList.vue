@@ -12,7 +12,7 @@
         :key="element.id"
         @dragstart="dragElementIndex = index"
         @dragend="dragElementIndex = -1"
-        :class="`col-xs-${get(element, 'data.width', 12)}`">
+        :class="`col-${get(element, 'data.width', 12)}`">
         <slot
           :element="element"
           :isDragged="dragElementIndex === index"
