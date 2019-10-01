@@ -1,36 +1,25 @@
 <template>
   <div class="tce-carousel-toolbar">
-    <ul>
-      <li @click="add" class="btn btn-link btn-sm">
-        <span class="mdi mdi-plus"></span>
-        Add item
-      </li>
-      <li @click="remove" class="btn btn-link btn-sm">
-        <span class="mdi mdi-minus"></span>
-        Remove item
-      </li>
-      <li class="height">
-        <label for="heightInput">
-          <span class="mdi mdi-arrow-expand"></span>
-          Height
-        </label>
-        <span
-          :class="{ 'has-error': vErrors.has('height') }"
-          class="form-group">
-          <input
-            v-model="height"
-            v-validate="{ required: true, min_value: 300, max_value: 3000 }"
-            id="heightInput"
-            class="form-control"
-            name="height"
-            type="text"
-            placeholder="Height">
-        </span>
-        <span v-show="vErrors.has('height')" class="help-block">
-          {{ vErrors.first('height') }}
-        </span>
-      </li>
-    </ul>
+    <v-btn @click="add" tile text>
+      <v-icon small left>mdi-plus</v-icon>
+      Add item
+    </v-btn>
+    <v-btn @click="remove" tile text>
+      <v-icon small left>mdi-minus</v-icon>
+      Remove item
+    </v-btn>
+    <v-text-field
+      v-model="height"
+      v-validate="{ required: true, min_value: 300, max_value: 3000 }"
+      id="heightInput"
+      hide-details
+      single-line
+      prepend-icon="mdi-arrow-expand"
+      label="Height"
+      name="height" />
+    <span v-show="vErrors.has('height')" class="help-block">
+      {{ vErrors.first('height') }}
+    </span>
   </div>
 </template>
 
@@ -68,68 +57,29 @@ export default {
 
 <style lang="scss" scoped>
 .tce-carousel-toolbar {
+  display: flex;
+  align-items: center;
   position: relative;
   width: 100%;
   height: 48px;
+  padding: 0 30px 0 10px;
 
-  ul {
-    float: left;
+  .v-btn {
     height: 100%;
-    margin: 0;
-    padding: 0 30px 0 10px;
-
-    li {
-      height: 100%;
-      padding-top: 15px;
-      color: #444;
-
-      .form-group {
-        display: inline-block;
-      }
-
-      .help-block {
-        display: inline-block;
-        padding-left: 10px;
-      }
-
-      .mdi {
-        display: inline-block;
-        margin-right: 5px;
-        font-size: 20px;
-        line-height: 20px;
-        vertical-align: middle;
-      }
-
-      &.active {
-        background-color: #e8e8e8;
-      }
-    }
   }
 
-  .height {
-    display: inline-block;
-    margin: 0 0 0 10px;
+  .v-input {
+    max-width: 150px;
+    margin-top: 0;
+    margin-left: 8px;
     padding: 0;
+  }
 
-    input {
-      height: 25px;
-      margin: 0;
-      padding: 0;
-      font-size: 14px;
-      line-height: 14px;
-    }
-
-    label {
-      padding: 0 10px;
-      font-size: 12px;
-      line-height: 12px;
-      text-transform: uppercase;
-    }
-
-    .form-group {
-      margin: 0;
-      padding: 0;
-    }
+  .help-block {
+    margin-left: 8px;
+    color: #ff5252;
+    font-size: 14px;
+    font-weight: normal;
   }
 }
 </style>

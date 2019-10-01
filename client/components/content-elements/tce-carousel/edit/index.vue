@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-if="!hasItems" class="well">
+    <v-alert v-if="!hasItems" class="placeholder">
       Use the toolbar to add the first item to the carousel.
-    </div>
+    </v-alert>
     <div v-else :style="{ height: `${height}px` }" class="carousel">
       <ul :style="{ height: height - 40 + 'px' }" class="carousel-items">
         <carousel-item
@@ -123,6 +123,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.placeholder {
+  margin: 0;
+  background: #f5f5f5;
+}
+
 .carousel {
   position: relative;
   width: 100%;
