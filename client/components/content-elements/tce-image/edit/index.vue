@@ -1,11 +1,11 @@
 <template>
   <div class="tce-image">
-    <div v-if="showPlaceholder" class="well image-placeholder">
+    <v-alert v-if="showPlaceholder" class="image-placeholder">
       <div class="message">
         <span class="heading">Image placeholder</span>
         <span>Click to edit</span>
       </div>
-    </div>
+    </v-alert>
     <div v-else :class="{ 'hide-cropper': !showCropper }" class="image-wrapper">
       <cropper
         v-show="showCropper"
@@ -145,6 +145,7 @@ export default {
 .image-placeholder {
   margin-bottom: 0;
   padding: 100px;
+  background-color: #f5f5f5;
 
   .message {
     .heading {

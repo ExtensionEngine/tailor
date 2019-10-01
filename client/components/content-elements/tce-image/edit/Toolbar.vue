@@ -1,23 +1,24 @@
 <template>
   <div class="tce-image-toolbar">
     <ul>
-      <li class="btn btn-link btn-sm upload-button">
+      <v-btn text tile class="upload-button">
         <label for="upload" class="upload-label">
-          <span class="mdi mdi-image"></span> Upload
+          <v-icon small left>mdi-image</v-icon>Upload
           <input @change="upload" id="upload" type="file" class="upload-input">
         </label>
-      </li>
-      <li
+      </v-btn>
+      <v-btn
         v-if="isUploaded"
         @click="toggleTool('cropper')"
         :class="{ 'active': currentTool === 'cropper' }"
-        class="btn btn-link btn-sm">
-        <span class="mdi mdi-crop"></span> Crop
-      </li>
+        tile
+        text>
+        <v-icon small left>mdi-crop</v-icon>Crop
+      </v-btn>
     </ul>
     <div v-if="currentTool === 'cropper'" class="tool">
-      <button @click="undo" class="btn btn-default btn-sm">Undo</button>
-      <button @click="crop" class="btn btn-success btn-sm">Crop</button>
+      <v-btn @click="undo" small depressed>Undo</v-btn>
+      <v-btn @click="crop" small depressed color="success">Crop</v-btn>
     </div>
   </div>
 </template>
@@ -84,37 +85,23 @@ export default {
   ul {
     float: left;
     height: 100%;
-    margin: 0;
     padding: 0 30px 0 10px;
 
-    li {
+    .v-btn {
       height: 100%;
-      padding-top: 15px;
-      color: #444;
-
-      .mdi {
-        display: inline-block;
-        margin-right: 5px;
-        font-size: 20px;
-        line-height: 20px;
-        vertical-align: middle;
-      }
 
       &.active {
         background-color: #e8e8e8;
       }
     }
-  }
 
-  .upload-button {
-    padding: 0;
+    .upload-button {
+      padding: 0;
+    }
   }
 
   .upload-label {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 15px 10px 5px;
+    padding: 16px;
     cursor: pointer;
   }
 
