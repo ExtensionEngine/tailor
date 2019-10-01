@@ -9,7 +9,7 @@
     <v-alert :value="!hasAssessments" color="white" icon="mdi-information-variant">
       Click the button below to create first assessment.
     </v-alert>
-    <ul class="list-group">
+    <v-expansion-panels multiple>
       <assessment-item
         v-for="it in assessments"
         :key="it._cid"
@@ -18,7 +18,7 @@
         @delete="requestRemoveConfirmation(it)"
         :assessment="it"
         :expanded="isSelected(it)" />
-    </ul>
+    </v-expansion-panels>
     <add-element
       @add="addAssessment"
       :include="['ASSESSMENT']"
@@ -109,7 +109,6 @@ export default {
     .v-btn {
       float: right;
       margin: 4px 0 0;
-      padding: 0;
     }
   }
 

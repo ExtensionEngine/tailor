@@ -1,64 +1,59 @@
 <template>
-  <li
-    @mouseenter="hover = true"
-    @mouseleave="hover = false"
-    :class="{ hover }"
-    class="list-group-item assessment-item elevation-1">
+  <v-expansion-panel
+    class="assessment-item">
     <span v-if="exam" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
-    <tce-question-container
-      v-if="expanded"
-      @selected="$emit('selected')"
-      @delete="$emit('delete')"
-      @save="save"
-      :element="assessment"
-      :exam="exam"
-      :summative="true">
-      <div class="header">
+    <v-expansion-panel-header>
+      <template v-slot="{ open }">
         <v-chip
-          color="blue-grey darken-1"
+          v-if="open"
+          color="primary"
           label
           dark
           small
-          class="float-left text-uppercase">
+          class="text-uppercase">
           {{ elementConfig.name }}
         </v-chip>
+        <template v-else>
+          <v-chip color="primary" label dark small>
+            {{ elementConfig.subtype }}
+          </v-chip>
+          <span class="question">{{ question | truncate(50) }}</span>
+        </template>
+      </template>
+      <template v-slot:actions>
         <v-btn
-          @click="$emit('selected')"
-          text
+          @click.stop="$emit('delete')"
+          color="primary"
           small
-          class="float-right collapse-item">
-          Collapse
+          text
+          icon>
+          <v-icon small>mdi-close</v-icon>
         </v-btn>
-        <div v-if="exam && examObjectives.length" class="select-leaf">
-          <multiselect
-            @input="onObjectiveSelected"
-            :value="objective"
-            :options="examObjectives"
-            :searchable="true"
-            :disabled="!examObjectives.length"
-            :track-by="'id'"
-            :custom-label="it => it.data ? it.data.name : ''"
-            :placeholder="examObjectiveLabel" />
-        </div>
+      </template>
+      <div v-if="exam && examObjectives.length" class="select-leaf">
+        <multiselect
+          @input="onObjectiveSelected"
+          :value="objective"
+          :options="examObjectives"
+          :searchable="true"
+          :disabled="!examObjectives.length"
+          :track-by="'id'"
+          :custom-label="it => it.data ? it.data.name : ''"
+          :placeholder="examObjectiveLabel" />
       </div>
-    </tce-question-container>
-    <div v-else @click="$emit('selected')" class="minimized">
-      <v-chip color="blue-grey darken-1" label dark small>
-        {{ elementConfig.subtype }}
-      </v-chip>
-      <span class="question">{{ question | truncate(50) }}</span>
-      <v-btn
-        @click.stop="$emit('delete')"
-        color="primary"
-        text
-        icon
-        class="delete">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </div>
-  </li>
+    </v-expansion-panel-header>
+    <v-expansion-panel-content>
+      <tce-question-container
+        @selected="$emit('selected')"
+        @delete="$emit('delete')"
+        @save="save"
+        :element="assessment"
+        :exam="exam"
+        :summative="true" />
+    </v-expansion-panel-content>
+  </v-expansion-panel>
 </template>
 
 <script>
@@ -134,14 +129,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.v-expansion-panel--active .v-expansion-panel-header {
+  min-height: 48px;
+}
+
 .assessment-item {
-  margin-bottom: 10px;
   padding: 0;
 
   .v-chip {
     float: left;
     min-width: 30px;
     margin: 0;
+    flex-grow: 0;
+  }
+
+  span {
+    flex-grow: 0;
+  }
+
+  ::v-deep .v-expansion-panel-header {
+    justify-content: space-between;
+    padding: 8px 24px;
+
+    .v-expansion-panel-header__icon {
+      margin-left: 0;
+    }
   }
 
   .header {
@@ -157,46 +169,26 @@ export default {
     position: absolute;
     top: 0;
     left: -3px;
+    z-index: 2;
     color: #888;
     font-size: 28px;
     opacity: 0;
     cursor: move;
   }
 
-  &.hover .drag-handle {
+  &:hover .drag-handle {
     opacity: 1;
     transition: opacity 0.6s ease-in-out;
   }
 
-  .minimized {
-    padding: 5px 22px;
-    cursor: pointer;
-
-    .question {
-      display: inline-block;
-      max-width: 80%;
-      min-height: 30px;
-      color: #444;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 34px;
-    }
-
-    .v-chip {
-      margin-top: 5px;
-    }
-  }
-
-  .delete {
+  .question {
     display: inline-block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    opacity: 0;
-  }
-
-  &.hover:not(.sortable-chosen) .delete {
-    opacity: 1;
+    max-width: 80%;
+    min-height: 30px;
+    color: #444;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 34px;
   }
 }
 
