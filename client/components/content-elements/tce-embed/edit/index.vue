@@ -1,12 +1,12 @@
 <template>
   <div :style="{ height: `${height}px` }" class="tce-embed">
-    <div v-if="showPlaceholder">
-      <div :style="{ height: `${height}px` }" class="well placeholder">
+    <v-alert v-if="showPlaceholder" :style="{ height: `${height}px` }" class="placeholder">
+      <div class="message">
         <span class="heading">Embed placeholder</span>
-        <span v-show="!isFocused" class="message">Select to edit</span>
-        <span v-show="isFocused" class="message">Please use toolbar to enter url</span>
+        <span v-if="!isFocused">Select to edit</span>
+        <span v-else>Please use toolbar to enter url</span>
       </div>
-    </div>
+    </v-alert>
     <div v-else>
       <div class="content">
         <div v-show="!isFocused" class="overlay">
@@ -61,14 +61,17 @@ export default {
 .placeholder {
   margin: 0;
   padding: 119px;
-
-  .heading {
-    font-size: 24px;
-  }
+  background-color: #f5f5f5;
 
   .message {
-    display: block;
-    font-size: 18px;
+    .heading {
+      font-size: 24px;
+    }
+
+    span {
+      display: block;
+      font-size: 18px;
+    }
   }
 }
 
