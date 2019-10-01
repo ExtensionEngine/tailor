@@ -1,59 +1,56 @@
 <template>
   <div class="form-group">
     <span class="form-label">Answers</span>
-    <span
-      v-if="isEditing"
-      @click="addAnswer"
-      class="btn-add-answer btn btn-link mdi mdi-plus pull-right">
-    </span>
-    <ul>
-      <li
+    <v-btn v-if="isEditing" @click="addAnswer" icon class="float-right">
+      <v-icon small>mdi-plus</v-icon>
+    </v-btn>
+    <v-container>
+      <v-row
         v-for="(answer, index) in correct"
         :key="index"
-        :class="{ 'has-error': isValidAnswer(index) }"
-        class="answer row">
-        <div class="col-xs-3">
-          <input
-            @input="updateAnswer('prefixes', $event.target.value, index)"
+        class="answer">
+        <v-col cols="3">
+          <v-text-field
+            @change="updateAnswer('prefixes', $event, index)"
             :disabled="!isEditing"
             :value="prefixes[index]"
-            type="text"
-            placeholder="Prefix..."
-            class="form-control">
-        </div>
-        <div :class="`col-xs-${ correct.length > 1 ? 5 : 6 }`">
-          <input
-            @input="updateAnswer('correct', $event.target.value, index)"
+            :error="isValidAnswer(index)"
+            hide-details
+            single-line
+            placeholder="Prefix..." />
+        </v-col>
+        <v-col :cols="correct.length > 1 ? 5 : 6">
+          <v-text-field
+            @change="updateAnswer('correct', $event, index)"
             :disabled="!isEditing"
             :value="correct[index]"
-            type="text"
-            placeholder="Correct value..."
-            class="form-control">
-        </div>
-        <div class="col-xs-3">
-          <input
-            @input="updateAnswer('suffixes', $event.target.value, index)"
+            :error="isValidAnswer(index)"
+            hide-details
+            single-line
+            placeholder="Correct value..." />
+        </v-col>
+        <v-col cols="3">
+          <v-text-field
+            @change="updateAnswer('suffixes', $event, index)"
             :disabled="!isEditing"
             :value="suffixes[index]"
-            type="text"
-            placeholder="Suffix..."
-            class="form-control">
-        </div>
-        <div
+            :error="isValidAnswer(index)"
+            hide-details
+            single-line
+            placeholder="Suffix..." />
+        </v-col>
+        <v-col
           v-if="isEditing && correct.length > 1"
-          class="col-xs-1">
-          <span
-            @click="removeAnswer(index)"
-            class="btn-remove mdi mdi-close">
-          </span>
-        </div>
-      </li>
-    </ul>
-    <div :class="{ 'has-error': !isValid }">
-      <span class="help-block">
-        Only numerical input allowed, if decimal number is needed please
-        use . to separate numbers (e.g. '3.14').
-      </span>
+          cols="1">
+          <v-btn @click="removeAnswer(index)" icon small>
+            <v-icon small>mdi-close</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+    <div class="help-block" :class="{ 'red--text': !isValid }">
+      Only numerical input allowed, if decimal number is needed please
+      use . to separate numbers (e.g. '3.14').
     </div>
   </div>
 </template>
@@ -139,32 +136,13 @@ export default {
   font-size: 20px;
 }
 
-.btn-add-answer {
-  padding: 4px 10px;
-  font-size: 20px;
-  border-radius: 2px;
-}
-
-ul {
+.v-text-field {
+  margin: 0;
   padding: 0;
-  list-style: none;
 }
 
 .answer {
-  margin: 20px 0;
   font-size: 16px;
-
-  .btn-remove {
-    display: inline-block;
-    height: 34px;
-    color: #888;
-    line-height: 34px;
-    cursor: pointer;
-
-    &:hover {
-      color: darken(#888, 20%);
-    }
-  }
 }
 
 input.form-control {
@@ -173,5 +151,6 @@ input.form-control {
 
 .help-block {
   margin-top: 30px;
+  color: gray;
 }
 </style>
