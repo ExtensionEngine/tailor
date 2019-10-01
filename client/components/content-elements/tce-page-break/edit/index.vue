@@ -1,5 +1,5 @@
 <template>
-  <div class="tce-break"></div>
+  <v-alert class="tce-break" />
 </template>
 
 <script>
@@ -12,6 +12,8 @@ export default {
 .tce-break {
   width: 100%;
   height: 20px;
-  background-color: #eaeaea;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
 }
 </style>
