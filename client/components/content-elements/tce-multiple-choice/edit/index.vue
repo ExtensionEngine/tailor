@@ -1,32 +1,39 @@
 <template>
-  <div :class="{ disabled }">
-    <h5>{{ isGraded ? 'Answers' : 'Options' }}</h5>
-    <span @click="addAnswer" class="btn btn-link mdi mdi-plus pull-right"></span>
-    <ul>
-      <li
+  <div class="form-group" :class="{ disabled }">
+    <span class="form-label">{{ isGraded ? 'Answers' : 'Options' }}</span>
+    <v-btn @click="addAnswer" icon class="float-right">
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+    <v-container :class="{ 'non-graded': !isGraded }">
+      <v-row
         v-for="(answer, index) in answers"
         :key="index"
-        :class="{ 'non-graded': !isGraded }">
-        <span v-if="isGraded" :class="{ 'has-error': !hasCorrectAnswers }">
-          <input
+        no-gutters>
+        <v-col cols="1" align-self="center">
+          <v-checkbox
+            v-if="isGraded"
             @change="toggleAnswer(index)"
+            :error="!hasCorrectAnswers"
             :checked="correct.includes(index)"
             :disabled="disabled"
-            type="checkbox">
-        </span>
-        <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
-        <span :class="errorClass(index)" class="input-container">
-          <input
-            :ref="`input${index}`"
-            @change="updateAnswer(index)"
+            hide-details
+            type="checkbox" />
+          <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
+        </v-col>
+        <v-col cols="11">
+          <v-text-field
+            @change="updateAnswer(index, $event)"
+            @click:append="removeAnswer(index)"
+            append-icon="mdi-close"
+            single-line
+            hide-details
+            :error="errors.includes(`answers[${index}]`)"
             :value="answers[index]"
             :disabled="disabled"
-            :placeholder="isGraded ? 'Answer...' : 'Option...'"
-            class="form-control">
-        </span>
-        <span @click="removeAnswer(index)" class="mdi mdi-close control"></span>
-      </li>
-    </ul>
+            :placeholder="isGraded ? 'Answer...' : 'Option...'" />
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -35,7 +42,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import range from 'lodash/range';
 
 const customAlert = {
-  type: 'alert-danger',
+  type: 'error',
   text: 'Please make at least two answers available !'
 };
 
@@ -79,9 +86,9 @@ export default {
 
       this.update({ correct });
     },
-    updateAnswer(index) {
+    updateAnswer(index, value) {
       const answers = cloneDeep(this.answers);
-      answers[index] = this.$refs[`input${index}`][0].value;
+      answers[index] = value;
       this.update({ answers });
     },
     addAnswer() {
@@ -115,11 +122,6 @@ export default {
     },
     validate() {
       this.$emit('alert', this.answers.length < 2 ? customAlert : {});
-    },
-    errorClass(index) {
-      return {
-        'has-error': this.errors.includes(`answers[${index}]`)
-      };
     }
   },
   watch: {
@@ -134,25 +136,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h5 {
-  display: block;
-  margin: 30px 0 10px;
-  font-size: 18px;
+.form-group {
   text-align: left;
+  width: 100%;
+  margin: 0 auto;
+  padding: 25px 20px 15px;
+  overflow: hidden;
 }
 
-ul {
+.form-label {
+  font-size: 20px;
+}
+
+.container {
   clear: both;
   padding: 5px 0 0 10px;
-  list-style: none;
 
-  li {
-    position: relative;
+  .row {
     margin: 20px 0;
-    padding-left: 40px;
 
-    &.non-graded {
-      padding-left: 0;
+    .v-text-field {
+      margin: 0;
+      padding: 0;
+    }
+
+    .v-input--checkbox {
+      margin: 0;
+      padding: 0;
     }
 
     .v-avatar {
@@ -162,51 +172,6 @@ ul {
       color: #fff;
       font-weight: 700;
     }
-
-    .input-container {
-      display: flex;
-    }
-
-    .form-control {
-      padding-left: 10px;
-    }
-
-    input[type=checkbox] {
-      position: absolute;
-      top: 5px;
-      left: 0;
-    }
-  }
-
-  .mdi-close {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-    padding: 5px;
-    color: #888;
-    cursor: pointer;
-
-    &:hover {
-      color: darken(#888, 20%);
-    }
-  }
-}
-
-.has-error {
-  input[type="checkbox"]::after {
-    border-color: #d9534f;
-  }
-
-  input[type="checkbox"]:checked::after {
-    border-color: #337ab7;
-  }
-}
-
-.disabled {
-  pointer-events: none;
-
-  .control, .btn {
-    opacity: 0;
   }
 }
 </style>
