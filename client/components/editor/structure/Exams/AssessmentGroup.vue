@@ -1,27 +1,30 @@
 <template>
   <div class="assessment-group">
     <div :class="{ 'divider': position }"></div>
-    <span @click="requestDeletion(group)" class="remove">
-      <span class="mdi mdi-delete"></span>
-    </span>
-    <div class="form-inline pull-right">
-      <div class="form-group time-limit">
-        <label for="timeLimit">Time limit (minutes)</label>
-        <input
-          v-model="timeLimit"
-          id="timeLimit"
-          class="form-control"
-          type="number"
-          step="15">
-      </div>
+    <div>
+      <v-btn @click="requestDeletion(group)" icon class="float-right">
+        <v-icon color="primary">mdi-delete</v-icon>
+      </v-btn>
+      <v-text-field
+        v-model="timeLimit"
+        id="timeLimit"
+        class="float-right"
+        hide-details
+        label="Time limit (minutes)"
+        type="number"
+        step="15" />
     </div>
     <h3>Question group {{ toLetter(position) }}</h3>
     <h4>Introduction</h4>
     <group-introduction :group="group" />
     <h4>Questions</h4>
-    <div v-if="!hasAssessments" class="well">
+    <v-alert
+      :value="!hasAssessments"
+      color="primary"
+      icon="mdi-information-variant"
+      outlined>
       Click the button below to Create first Assessment.
-    </div>
+    </v-alert>
     <tes-list
       @add="addAssessment"
       @update="reorderAssessment"
@@ -29,15 +32,15 @@
       :activity="group"
       :types="['ASSESSMENT']"
       embedded>
-      <assessment-item
-        slot="list-item"
-        slot-scope="{ item }"
-        @selected="toggleSelect(item)"
-        @save="saveAssessment"
-        @delete="item.id ? requestDeletion(item) : remove(item)"
-        :exam="exam"
-        :assessment="item"
-        :expanded="isSelected(item)" />
+      <v-expansion-panels slot="list-item" slot-scope="{ item }" multiple>
+        <assessment-item
+          @selected="toggleSelect(item)"
+          @save="saveAssessment"
+          @delete="item.id ? requestDeletion(item) : remove(item)"
+          :exam="exam"
+          :assessment="item"
+          :expanded="isSelected(item)" />
+      </v-expansion-panels>
     </tes-list>
   </div>
 </template>
@@ -164,40 +167,10 @@ h4 {
   .assessment-item {
     margin-bottom: 12px;
   }
-
-  .well {
-    font-size: 16px;
-  }
 }
 
 .divider {
   margin: 20px 0 70px;
   border-top: 1px solid #e1e1e1;
-}
-
-.remove {
-  float: right;
-  margin: 10px 5px;
-  color: #777;
-  font-size: 22px;
-
-  &:hover {
-    color: #444;
-    cursor: pointer;
-  }
-}
-
-.time-limit {
-  margin: 7px 20px;
-
-  label {
-    margin-right: 5px;
-    vertical-align: bottom;
-  }
-
-  input {
-    width: 50px;
-    text-align: center;
-  }
 }
 </style>

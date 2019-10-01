@@ -1,13 +1,13 @@
 <template>
   <div class="exams">
     <h2>Exams</h2>
-    <ul class="list-group">
+    <v-expansion-panels multiple>
       <exam
         v-for="(exam, index) in exams"
         :key="exam._cid"
         :exam="exam"
         :position="index" />
-    </ul>
+    </v-expansion-panels>
     <v-btn @click.stop="create" color="primary" class="mt-4">
       <v-icon class="pr-2">mdi-plus</v-icon>
       Create Exam Version

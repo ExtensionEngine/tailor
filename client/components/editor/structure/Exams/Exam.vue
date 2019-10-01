@@ -1,28 +1,27 @@
 <template>
-  <li :class="{ collapsed }" class="list-group-item exam">
-    <div v-if="collapsed" @click="collapsed = false">
+  <v-expansion-panel>
+    <v-expansion-panel-header>
       <h3>{{ title }}</h3>
-      <span class="label label-success pull-right">{{ label }}</span>
-    </div>
-    <div v-else>
-      <div class="header">
-        <h3 class="pull-left">{{ title }}</h3>
-        <div class="actions">
-          <span
-            @click="requestDeletion(exam)"
-            class="btn btn-sm btn-link pull-right">
-            Delete
-          </span>
-          <span
-            @click="collapsed = true"
-            class="btn btn-sm btn-link pull-right">
-            Collapse
-          </span>
-        </div>
-      </div>
-      <div v-if="!groups.length" class="well">
+      <template v-slot:actions>
+        <v-chip color="success" label small class="float-right">{{ label }}</v-chip>
+        <v-chip
+          @click.stop="requestDeletion(exam)"
+          small
+          label
+          outlined
+          class="float-right ml-2">
+          Delete
+        </v-chip>
+      </template>
+    </v-expansion-panel-header>
+    <v-expansion-panel-content>
+      <v-alert
+        :value="!groups.length"
+        color="primary"
+        icon="mdi-information-variant"
+        outlined>
         Click the button below to Create first question group.
-      </div>
+      </v-alert>
       <assessment-group
         v-for="(group, index) in groups"
         :key="group._cid"
@@ -38,8 +37,8 @@
         <v-icon class="pr-2">mdi-file-tree</v-icon>
         Add Question Group
       </v-btn>
-    </div>
-  </li>
+    </v-expansion-panel-content>
+  </v-expansion-panel>
 </template>
 
 <script>
@@ -114,21 +113,6 @@ h3 {
   text-align: left;
 }
 
-.exam {
-  margin-bottom: 13px;
-  padding: 0;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-
-  > div {
-    padding: 15px 25px;
-  }
-
-  .header {
-    min-height: 50px;
-    padding: 5px;
-  }
-}
-
 .collapsed {
   &:hover {
     background-color: #f0f0f0;
@@ -145,5 +129,9 @@ h3 {
 .label {
   min-width: 40px;
   line-height: 12px;
+}
+
+.v-expansion-panel--active .v-expansion-panel-header {
+  min-height: 48px;
 }
 </style>
