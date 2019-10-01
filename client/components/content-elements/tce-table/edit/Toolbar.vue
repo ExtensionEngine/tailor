@@ -1,18 +1,21 @@
 <template>
   <div class="tce-table-toolbar">
-    <span class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
-      <span class="mdi mdi-table"></span>
-      Table
-    </span>
-    <ul class="dropdown-menu" role="menu">
-      <li
-        v-for="action in actions"
-        :key="action.name"
-        @click="trigger(action.name)"
-        class="btn btn-link btn-sm">
-        {{ action.label }}
-      </li>
-    </ul>
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" text tile class="dropdown-toggle ml-3">
+          <v-icon left small>mdi-table</v-icon>
+          Table
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item
+          v-for="action in actions"
+          :key="action.name"
+          @click="trigger(action.name)">
+          {{ action.label }}
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </div>
 </template>
 
@@ -56,20 +59,7 @@ export default {
   }
 
   .dropdown-toggle {
-    margin-left: 10px;
-    padding-top: 15px;
-    color: #444;
-
-    .mdi {
-      margin-right: 5px;
-      font-size: 20px;
-      line-height: 20px;
-      vertical-align: middle;
-    }
-
-    &.active {
-      background-color: #e8e8e8;
-    }
+    height: 100%;
   }
 
   .quill-options {
@@ -79,21 +69,6 @@ export default {
 
   .quill-group {
     padding-left: 5px;
-  }
-
-  .dropdown-menu {
-    height: auto;
-    margin-left: 10px;
-    padding: 5px 0;
-
-    li {
-      display: block;
-    }
-
-    .btn {
-      padding: 10px 12px;
-      text-align: left;
-    }
   }
 }
 
