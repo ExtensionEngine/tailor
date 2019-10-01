@@ -1,16 +1,12 @@
 <template>
   <div class="form-group">
     <span class="form-label">{{ isGraded ? 'Answer' : 'Response' }}</span>
-    <span :class="{ 'has-error': correctError }" class="answer">
-      <textarea
-        v-model="correct"
-        @blur="update"
-        :disabled="!isEditing || !isGraded"
-        class="form-control"
-        rows="6"
-        type="text">
-      </textarea>
-    </span>
+    <v-textarea
+      v-model="correct"
+      @blur="update"
+      :disabled="!isEditing || !isGraded"
+      :error="correctError"
+      rows="6" />
   </div>
 </template>
 
@@ -58,11 +54,5 @@ export default {
 
 .form-label {
   font-size: 20px;
-}
-
-.answer {
-  margin: 10px 0;
-  padding: 10px 0 0 50px;
-  font-size: 16px;
 }
 </style>
