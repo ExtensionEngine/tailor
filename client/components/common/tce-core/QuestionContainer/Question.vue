@@ -19,7 +19,7 @@
         :include="['HTML', 'IMAGE', 'EMBED']"
         :layout="false" />
     </div>
-    <span v-if="isEditing && helperText" class="help-block">
+    <span v-if="isEditing && helperText" class="grey--text">
       {{ helperText }}
     </span>
   </div>

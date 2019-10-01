@@ -17,12 +17,12 @@
         :errors="errors" />
       <div :class="{ 'has-error': hintError }" class="form-group">
         <span class="form-label">Hint</span>
-        <input
+        <v-text-field
           v-model="editedElement.data.hint"
           :disabled="!isEditing"
-          class="form-control"
-          type="text"
-          placeholder="Optional hint">
+          hide-details
+          single-line
+          placeholder="Optional hint" />
       </div>
       <feedback
         v-if="showFeedback"
@@ -31,11 +31,9 @@
         :feedback="editedElement.data.feedback"
         :is-graded="isGraded"
         :is-editing="isEditing" />
-      <div class="alert-container">
-        <div v-show="alert.text" :class="alert.type" class="alert">
-          <strong>{{ alert.text }}</strong>
-        </div>
-      </div>
+      <v-alert v-show="alert.text" outlined :type="alert.type">
+        {{ alert.text }}
+      </v-alert>
       <controls
         @edit="edit"
         @save="save"
@@ -145,7 +143,7 @@ export default {
     setAlert(data = {}) {
       this.alert = data;
       const { type, message } = data;
-      if (type && type !== 'alert-danger') {
+      if (type && type !== 'error') {
         setTimeout(() => {
           if (message === this.alert.message) this.setAlert();
         }, 3000);
@@ -203,11 +201,8 @@ const baseSchema = {
   background-color: white;
   overflow: visible;
 
-  .alert {
-    display: inline-block;
-    margin: 0 auto;
-    padding: 3px 7px;
-    text-align: center;
+  .v-alert {
+    margin-top: 16px;
   }
 
   .assessment-type {
@@ -228,10 +223,6 @@ const baseSchema = {
 
   .form-label {
     font-size: 20px;
-  }
-
-  input.form-control {
-    padding-left: 10px;
   }
 }
 

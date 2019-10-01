@@ -1,17 +1,11 @@
 <template>
   <div class="controls">
-    <div v-if="isEditing" class="pull-right">
-      <v-btn @click="$emit('cancel')" text>
-        Cancel
-      </v-btn>
-      <v-btn @click="save" color="primary">
-        Save
-      </v-btn>
+    <div v-if="isEditing" class="float-right">
+      <v-btn @click="$emit('cancel')" text>Cancel</v-btn>
+      <v-btn @click="save" color="primary">Save</v-btn>
     </div>
-    <div v-else class="pull-right">
-      <v-btn @click="$emit('edit')" color="primary">
-        Edit
-      </v-btn>
+    <div v-else class="float-right">
+      <v-btn @click="$emit('edit')" color="primary">Edit</v-btn>
     </div>
   </div>
 </template>

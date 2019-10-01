@@ -2,11 +2,13 @@
   <div class="feedback">
     <span class="heading">
       Feedback
-      <span
+      <v-btn
         @click="isExpanded = !isExpanded"
-        class="btn btn-link btn-xs">
+        text
+        small
+        class="ml-4">
         {{ isExpanded ? 'hide' : 'show' }}
-      </span>
+      </v-btn>
     </span>
     <transition name="fade">
       <ul v-if="isExpanded">
@@ -65,11 +67,6 @@ export default {
 
 .heading {
   font-size: 20px;
-
-  .btn {
-    margin-left: 15px;
-    padding: 3px 10px;
-  }
 }
 
 ul {
