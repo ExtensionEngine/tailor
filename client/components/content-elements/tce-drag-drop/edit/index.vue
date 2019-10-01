@@ -1,31 +1,35 @@
 <template>
-  <div :class="{ disabled: !isEditing }">
-    <div class="row">
-      <div
+  <v-container :class="{ disabled: !isEditing }">
+    <v-row>
+      <v-col
         v-for="(groupName, groupKey, index) in groups"
         :key="groupKey"
         :class="{ clear: index % 2 === 0 }"
-        class="col-md-6 group">
+        cols="12"
+        md="6"
+        class="group">
         <div :class="{ flip: isFocused(groupKey) }" class="drop-container">
           <div @click="focus(groupKey)" class="group-view front center">
             <span :class="hasError(`groups${groupKey}`)">
               {{ groupName || (isEditing ? 'Click to edit group name' : 'Group') }}
             </span>
-            <span
+            <v-btn
               v-show="!minGroups(groupKey) && isEditing"
               @click.stop="removeGroup(groupKey)"
-              class="destroy mdi mdi-close">
-            </span>
+              icon
+              small
+              class="destroy">
+              <v-icon small>mdi-close</v-icon>
+            </v-btn>
           </div>
-          <input
-            :ref="`group${groupKey}`"
+          <v-text-field
             v-focus="{ groupKey }"
-            @change="updateGroupName(groupKey)"
+            @change="updateGroupName(groupKey, $event)"
             @keyup.enter.esc="focus(groupKey)"
             @blur="isFocused(groupKey) && focus(groupKey)"
             :value="groupName"
-            class="form-control group-input back"
-            placeholder="Insert text here ...">
+            class="group-input back"
+            placeholder="Insert text here ..." />
         </div>
         <ul>
           <li
@@ -39,30 +43,38 @@
               <span :class="hasError(`answers${answerKey}`)">
                 {{ answer || (isEditing ? 'Click to edit answer' : 'Answer') }}
               </span>
-              <span
+              <v-btn
                 v-show="!minAnswers(groupKey) && isEditing"
                 @click.stop="removeAnswer(groupKey, answerKey)"
-                class="destroy mdi mdi-close">
-              </span>
+                icon
+                small
+                class="destroy">
+                <v-icon small>mdi-close</v-icon>
+              </v-btn>
             </div>
-            <input
-              :ref="`answer${answerKey}`"
+            <v-text-field
               v-focus="{ groupKey, answerKey }"
-              @change="updateAnswer(answerKey)"
+              @change="updateAnswer(answerKey, $event)"
               @keyup.enter.esc="focus(groupKey, answerKey)"
               @blur="isFocused(groupKey, answerKey) && focus(groupKey, answerKey)"
               :value="answer"
               class="form-control response-input back"
-              placeholder="Insert text here ...">
+              placeholder="Insert text here ..." />
           </li>
         </ul>
-        <span @click="addAnswer(groupKey)" class="add-answer mdi mdi-plus"></span>
-      </div>
-    </div>
-    <button @click="addGroup" class="btn btn-primary add-group">
-      <span class="mdi mdi-plus"></span> Add Group
-    </button>
-  </div>
+        <v-btn
+          @click="addAnswer(groupKey)"
+          icon
+          small
+          class="add-answer">
+          <v-icon small>mdi-plus</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-btn @click="addGroup" small color="primary" class="add-group">
+      <v-icon left small>mdi-plus</v-icon> Add Group
+    </v-btn>
+  </v-container>
 </template>
 
 <script>
@@ -100,14 +112,14 @@ export default {
       let keys = this.correct[groupKey] || [];
       return pick(this.answers, keys);
     },
-    updateGroupName(groupKey) {
+    updateGroupName(groupKey, value) {
       let groups = cloneDeep(this.groups);
-      groups[groupKey] = this.$refs[`group${groupKey}`][0].value;
+      groups[groupKey] = value;
       this.update({ groups }, true);
     },
-    updateAnswer(answerKey) {
+    updateAnswer(answerKey, value) {
       let answers = cloneDeep(this.answers);
-      answers[answerKey] = this.$refs[`answer${answerKey}`][0].value;
+      answers[answerKey] = value;
       this.update({ answers }, true);
     },
     addGroup() {
@@ -208,8 +220,7 @@ export default {
 
 .destroy {
   position: absolute;
-  top: 14px;
-  right: 6px;
+  right: 8px;
 }
 
 .drop-container, .answer-container {
@@ -248,6 +259,7 @@ export default {
 .group-input, .response-input {
   position: absolute;
   top: 0;
+  width: 100%;
   height: 100%;
 }
 
