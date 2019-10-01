@@ -34,6 +34,8 @@
     <v-text-field
       v-if="!uploading && (urlInput || !hasAsset)"
       v-model="urlInput"
+      single-line
+      hide-details
       :disabled="!isEditing"
       :placeholder="allowFileUpload ? 'or paste a URL' : 'Paste a URL'" />
     <span class="actions">
@@ -126,10 +128,6 @@ export default {
   margin-top: 2px;
   padding: 0 7px;
   padding-bottom: 0;
-}
-
-::v-deep .help-block {
-  display: none;
 }
 
 ::v-deep .circular-progress {

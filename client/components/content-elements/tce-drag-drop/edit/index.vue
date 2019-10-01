@@ -58,7 +58,7 @@
               @keyup.enter.esc="focus(groupKey, answerKey)"
               @blur="isFocused(groupKey, answerKey) && focus(groupKey, answerKey)"
               :value="answer"
-              class="form-control response-input back"
+              class="response-input back"
               placeholder="Insert text here ..." />
           </li>
         </ul>

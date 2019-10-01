@@ -5,7 +5,7 @@
     <template v-slot:activator="{ on }">
       <div v-on="on" class="preview">
         <div :style="{ background: value }" class="selected">
-          <span class="mdi mdi-eyedropper eyedropper"></span>
+          <v-icon class="eyedropper">mdi-eyedropper</v-icon>
         </div>
       </div>
     </template>

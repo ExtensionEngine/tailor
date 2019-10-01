@@ -1,6 +1,6 @@
 <template>
   <div class="feedback">
-    <span class="heading">
+    <span class="title">
       Feedback
       <v-btn
         @click="isExpanded = !isExpanded"
@@ -63,10 +63,6 @@ export default {
 .feedback {
   padding: 30px 20px 15px;
   text-align: left;
-}
-
-.heading {
-  font-size: 20px;
 }
 
 ul {

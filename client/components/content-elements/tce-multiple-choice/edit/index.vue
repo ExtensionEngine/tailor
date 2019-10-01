@@ -1,7 +1,7 @@
 <template>
-  <div class="form-group" :class="{ disabled }">
-    <span class="form-label">{{ isGraded ? 'Answers' : 'Options' }}</span>
-    <v-btn @click="addAnswer" icon class="float-right">
+  <div class="tce-multiple-choice" :class="{ disabled }">
+    <span class="title">{{ isGraded ? 'Answers' : 'Options' }}</span>
+    <v-btn v-if="!disabled" @click="addAnswer" icon class="float-right">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-container :class="{ 'non-graded': !isGraded }">
@@ -136,16 +136,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-group {
+.tce-multiple-choice {
   text-align: left;
-  width: 100%;
-  margin: 0 auto;
   padding: 25px 20px 15px;
-  overflow: hidden;
-}
-
-.form-label {
-  font-size: 20px;
 }
 
 .container {

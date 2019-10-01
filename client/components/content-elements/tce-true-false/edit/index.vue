@@ -1,6 +1,6 @@
 <template>
-  <div class="form-group">
-    <span class="form-label">
+  <div class="tce-true-false">
+    <span class="title">
       {{ isGraded ? 'Select correct  answer' : 'Options' }}
     </span>
     <v-radio-group
@@ -51,16 +51,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-group {
-  width: 100%;
-  margin: 0 auto;
+.tce-true-false {
   padding: 25px 20px 15px;
   text-align: left;
-  overflow: hidden;
-}
-
-.form-label {
-  font-size: 20px;
 }
 
 .v-input--radio-group {

@@ -15,11 +15,12 @@
         :is-graded="isGraded"
         :is-editing="isEditing"
         :errors="errors" />
-      <div :class="{ 'has-error': hintError }" class="form-group">
-        <span class="form-label">Hint</span>
+      <div class="hint">
+        <span class="title">Hint</span>
         <v-text-field
           v-model="editedElement.data.hint"
           :disabled="!isEditing"
+          :error="hintError"
           hide-details
           single-line
           placeholder="Optional hint" />
@@ -213,16 +214,10 @@ const baseSchema = {
     border-radius: 1px;
   }
 
-  .form-group {
+  .hint {
     text-align: left;
-    width: 100%;
-    margin: 0 auto;
     padding: 25px 20px 15px;
     overflow: hidden;
-  }
-
-  .form-label {
-    font-size: 20px;
   }
 }
 

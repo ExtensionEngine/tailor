@@ -1,6 +1,6 @@
 <template>
-  <div class="form-group">
-    <span class="form-label">Answers</span>
+  <div class="tce-numerical-response">
+    <span class="title">Answers</span>
     <v-btn v-if="isEditing" @click="addAnswer" icon class="float-right">
       <v-icon small>mdi-plus</v-icon>
     </v-btn>
@@ -48,7 +48,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <div class="help-block" :class="{ 'red--text': !isValid }">
+    <div class="help-message" :class="{ 'red--text': !isValid }">
       Only numerical input allowed, if decimal number is needed please
       use . to separate numbers (e.g. '3.14').
     </div>
@@ -122,18 +122,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-group {
-  width: 100%;
-  margin: 0 auto;
+.tce-numerical-response {
   padding: 25px 20px 15px;
   text-align: left;
-  overflow: hidden;
-}
-
-.form-label {
-  display: inline-block;
-  padding: 5px;
-  font-size: 20px;
 }
 
 .v-text-field {
@@ -145,11 +136,7 @@ export default {
   font-size: 16px;
 }
 
-input.form-control {
-  padding-left: 10px;
-}
-
-.help-block {
+.help-message {
   margin-top: 30px;
   color: gray;
 }

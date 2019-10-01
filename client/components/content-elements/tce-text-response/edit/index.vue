@@ -1,6 +1,6 @@
 <template>
-  <div class="form-group">
-    <span class="form-label">{{ isGraded ? 'Answer' : 'Response' }}</span>
+  <div class="tce-text-response">
+    <span class="title">{{ isGraded ? 'Answer' : 'Response' }}</span>
     <v-textarea
       v-model="correct"
       @blur="update"
@@ -44,15 +44,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-group {
-  width: 100%;
-  margin: 0 auto;
+.tce-text-response {
   padding: 25px 20px 15px;
   text-align: left;
-  overflow: hidden;
-}
-
-.form-label {
-  font-size: 20px;
 }
 </style>

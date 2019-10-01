@@ -109,6 +109,10 @@ export default {
   max-height: 0;
 }
 
+.v-btn {
+  cursor: pointer;
+}
+
 .upload-button {
   background-color: #eee;
 }

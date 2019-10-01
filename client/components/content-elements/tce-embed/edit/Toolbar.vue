@@ -12,7 +12,7 @@
       class="height"
       name="height"
       label="Height" />
-    <span v-show="vErrors.has('height')" class="help-block">
+    <span v-show="vErrors.has('height')" class="error-messages">
       {{ vErrors.first('height') }}
     </span>
     <v-text-field
@@ -23,11 +23,11 @@
       data-vv-delay="0"
       hide-details
       single-line
-      prepend-icon="mdi-link"
+      prepend-icon="mdi-link-variant"
       class="url"
       name="url"
       label="Url" />
-    <span v-show="vErrors.has('url')" class="help-block">
+    <span v-show="vErrors.has('url')" class="error-messages">
       {{ vErrors.first('url') }}
     </span>
   </div>
@@ -83,7 +83,7 @@ export default {
     }
   }
 
-  .help-block {
+  .error-messages {
     margin-left: 8px;
     color: #ff5252;
     font-size: 14px;

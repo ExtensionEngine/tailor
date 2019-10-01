@@ -17,7 +17,7 @@
       prepend-icon="mdi-arrow-expand"
       label="Height"
       name="height" />
-    <span v-show="vErrors.has('height')" class="help-block">
+    <span v-show="vErrors.has('height')" class="error-messages">
       {{ vErrors.first('height') }}
     </span>
   </div>
@@ -75,7 +75,7 @@ export default {
     padding: 0;
   }
 
-  .help-block {
+  .error-messages {
     margin-left: 8px;
     color: #ff5252;
     font-size: 14px;

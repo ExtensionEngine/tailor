@@ -1,6 +1,6 @@
 <template>
   <div class="question-container">
-    <h4>Question</h4>
+    <span class="title">Question</span>
     <div
       :class="{ editing: isEditing, 'question-error': questionError }"
       class="question">
