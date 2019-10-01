@@ -1,14 +1,12 @@
 <template>
   <div class="tce-video">
-    <div v-if="showPlaceholder">
-      <div class="well video-placeholder">
-        <div class="message">
-          <span class="heading">Video placeholder</span>
-          <span v-if="!isFocused">Select to edit</span>
-          <span v-else>Please use toolbar to enter url</span>
-        </div>
+    <v-alert v-if="showPlaceholder" class="video-placeholder">
+      <div class="message">
+        <span class="heading">Video placeholder</span>
+        <span v-if="!isFocused">Select to edit</span>
+        <span v-else>Please use toolbar to enter url</span>
       </div>
-    </div>
+    </v-alert>
     <div v-else>
       <div v-if="!isFocused" class="overlay">
         <div class="message">Double click to preview</div>
@@ -138,6 +136,9 @@ function handlePlyrErrors(Plyr) {
 }
 
 .video-placeholder {
+  margin-bottom: 0;
+  background-color: #f5f5f5;
+
   .message {
     padding: 155px 20px;
 
@@ -188,10 +189,6 @@ function handlePlyrErrors(Plyr) {
   .icon {
     font-size: 42px;
   }
-}
-
-.well {
-  margin: 0;
 }
 
 .player {
