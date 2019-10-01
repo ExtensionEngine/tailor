@@ -1,6 +1,13 @@
 <template>
   <div class="tce-audio">
-    <div v-show="showPlaceholder">
+    <!-- <v-alert v-show="showPlaceholder" class="audio-placeholder">
+      <div class="message">
+        <span class="heading">Audio placeholder</span>
+        <p v-if="!isFocused">Select to edit</p>
+        <p v-else>Please use toolbar to enter url</p>
+      </div>
+    </v-alert> -->
+    <div v-if="showPlaceholder">
       <div class="audio-placeholder">
         <div class="message">
           <span class="heading">Audio placeholder</span>
@@ -9,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div v-show="!showPlaceholder">
+    <div v-else>
       <div v-if="!isFocused && !error" class="overlay">
         <div class="message">Click to preview</div>
       </div>
@@ -105,7 +112,7 @@ export default {
 
   .audio-placeholder {
     padding: 1.25rem;
-    background-color: #f1f1f1;
+    background-color: #f5f5f5;
 
     .message {
       .heading {

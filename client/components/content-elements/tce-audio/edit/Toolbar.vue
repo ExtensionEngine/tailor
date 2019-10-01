@@ -1,25 +1,26 @@
 <template>
   <div class="tce-audio-toolbar">
-    <input
+    <v-text-field
       v-model="url"
       :disabled="!edit"
-      class="form-control"
-      type="text"
-      placeholder="URL">
-    <button
+      hide-details
+      single-line
+      label="URL" />
+    <v-btn
       v-if="edit"
       @click="save"
-      class="btn btn-success"
+      small
+      color="success"
       type="button">
       Save
-    </button>
-    <button
+    </v-btn>
+    <v-btn
       v-else
       @click="edit = true"
-      class="btn btn-default"
+      small
       type="button">
       Edit
-    </button>
+    </v-btn>
   </div>
 </template>
 
@@ -51,26 +52,20 @@ export default {
 
 <style lang="scss" scoped>
 .tce-audio-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 999;
   width: 100%;
   height: 60px;
-  padding: 13px 45px 0;
+  padding: 0 30px 0 10px;
 
-  .form-control {
-    display: inline-block;
-    max-width: 600px;
-    margin: 0 20px;
-    padding: 0 7px;
-  }
-
-  .btn {
-    padding: 6px 15px;
-    font-size: 11px;
-
-    &:active {
-      outline: none;
-    }
+  .v-input {
+    max-width: 150px;
+    margin-top: 0;
+    margin-right: 16px;
+    padding: 0;
   }
 }
 </style>
