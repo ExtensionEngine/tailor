@@ -1,13 +1,11 @@
 <template>
   <div class="tce-html">
-    <div v-if="!isFocused && !content && showPlaceholder">
-      <div class="well text-placeholder">
-        <div class="message">
-          <span class="heading">Text placeholder</span>
-          <span>Click to edit</span>
-        </div>
+    <v-alert v-if="!isFocused && !content && showPlaceholder" class="text-placeholder">
+      <div class="message">
+        <span class="heading">Text placeholder</span>
+        <span>Click to edit</span>
       </div>
-    </div>
+    </v-alert>
     <div v-else>
       <quill-editor
         v-if="isFocused"
@@ -106,6 +104,10 @@ export default {
 
 <style lang="scss" scoped>
 .text-placeholder {
+  margin-bottom: 0;
+  padding: 19px;
+  background-color: #f5f5f5;
+
   .message {
     padding: 9px;
 
@@ -118,10 +120,6 @@ export default {
       font-size: 18px;
     }
   }
-}
-
-.well {
-  margin-bottom: 0;
 }
 </style>
 
