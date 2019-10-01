@@ -1,32 +1,39 @@
 <template>
   <div class="tce-modal">
-    <div v-if="isEditing" class="container-fluid">
-      <div v-if="!hasElements" class="well">
+    <div v-if="isEditing">
+      <v-alert v-if="!hasElements" class="placeholder">
         Click the button below to Add first teaching element to your modal.
-      </div>
+      </v-alert>
       <embedded-container
         @save="$emit('save', $event)"
         @delete="deleteEmbed($event)"
         :container="element.data" />
     </div>
-    <button
-      v-else
-      @click="showModal = true"
-      class="btn btn-primary btn-open"
-      type="button">
-      {{ title }}
-    </button>
-    <preview
-      v-if="showModal"
-      @close="showModal = false"
-      :elements="embeds" />
+    <v-dialog v-if="!isEditing" v-model="showModal" width="640">
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" color="primary">{{ title }}</v-btn>
+      </template>
+      <v-card>
+        <content-element
+          v-for="it in embeds"
+          :key="it.id"
+          :element="it"
+          :is-disabled="true"
+          :frame="false" />
+        <v-card-actions>
+          <div class="flex-grow-1"></div>
+          <v-btn @click="showModal = false" color="primary" text>
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import { ContentElement, EmbeddedContainer } from 'tce-core';
 import cloneDeep from 'lodash/cloneDeep';
-import { EmbeddedContainer } from 'tce-core';
-import Preview from './Preview';
 import values from 'lodash/values';
 
 export default {
@@ -63,17 +70,15 @@ export default {
   created() {
     this.$elementBus.on('toggleEdit', () => (this.isEditing = !this.isEditing));
   },
-  components: { EmbeddedContainer, Preview }
+  components: { EmbeddedContainer, ContentElement }
 };
 </script>
 
 <style lang="scss" scoped>
-.btn-open {
-  max-width: 90%;
-  padding: 9px 20px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+.tce-modal {
+  .placeholder {
+    margin: 0;
+    background: #f5f5f5;
+  }
 }
 </style>

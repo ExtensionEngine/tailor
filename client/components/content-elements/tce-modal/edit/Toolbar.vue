@@ -1,20 +1,14 @@
 <template>
   <div class="tce-modal-toolbar">
-    <ul>
-      <li @click="toggleEdit" class="btn btn-link btn-sm">
-        <span class="mdi mdi-pencil"></span>
-        <span>Toggle Edit</span>
-      </li>
-      <li class="title form-inline">
-        <label for="titleInput">Title</label>
-        <input
-          v-model="title"
-          id="titleInput"
-          class="form-control"
-          type="text"
-          placeholder="Title">
-      </li>
-    </ul>
+    <v-btn @click="toggleEdit" text tile>
+      <v-icon small left>mdi-pencil</v-icon>Toggle Edit
+    </v-btn>
+    <v-text-field
+      v-model="title"
+      id="titleInput"
+      label="Title"
+      hide-details
+      single-line />
   </div>
 </template>
 
@@ -49,57 +43,22 @@ export default {
 
 <style lang="scss" scoped>
 .tce-modal-toolbar {
+  display: flex;
   position: relative;
   width: 100%;
   height: 50px;
+  align-items: center;
+  padding: 0 30px 0 10px;
 
-  ul {
-    float: left;
+  .v-btn {
     height: 100%;
-    margin: 0;
-    padding: 0 30px 0 10px;
-
-    li {
-      height: 100%;
-      color: #444;
-
-      &.btn {
-        padding-top: 15px;
-      }
-
-      .mdi {
-        display: inline-block;
-        margin-right: 5px;
-        font-size: 18px;
-        line-height: 18px;
-        vertical-align: middle;
-      }
-
-      &.active {
-        background-color: #e8e8e8;
-      }
-    }
-  }
-}
-
-.title {
-  display: inline-block;
-  margin: 0 0 0 10px;
-  padding: 0;
-  font-size: 14px !important;
-
-  input {
-    min-width: 250px;
-    height: 20px;
-    font-size: 14px;
-    line-height: 14px;
   }
 
-  label {
-    padding: 2px 10px;
-    font-size: 12px;
-    line-height: 12px;
-    text-transform: uppercase;
+  .v-text-field {
+    max-width: 150px;
+    margin-top: 0;
+    margin-left: 8px;
+    padding: 0;
   }
 }
 </style>
