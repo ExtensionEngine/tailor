@@ -1,9 +1,9 @@
 <template>
   <div class="tce-accordion">
-    <div v-if="!hasItems" class="well">
+    <v-alert v-if="!hasItems" class="placeholder">
       Use the toolbar to add the first item to the accordion.
-    </div>
-    <ul v-else class="accordion">
+    </v-alert>
+    <v-expansion-panels v-else accordion multiple>
       <accordion-item
         v-for="it in items"
         :key="it.id"
@@ -11,7 +11,7 @@
         @delete="deleteItem"
         :item="it"
         :embeds="embedsByItem[it.id]" />
-    </ul>
+    </v-expansion-panels>
   </div>
 </template>
 
@@ -78,11 +78,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.accordion {
-  margin: 0;
-  padding-left: 0;
-  border: 1px solid #ddd;
-  border-bottom: none;
-  list-style-type: none;
+.tce-accordion {
+  .placeholder {
+    margin: 0;
+    padding: 19px;
+    background: #f5f5f5;
+  }
 }
 </style>

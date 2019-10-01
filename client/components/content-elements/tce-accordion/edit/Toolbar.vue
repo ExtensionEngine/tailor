@@ -1,10 +1,8 @@
 <template>
   <div class="tce-accordion-toolbar">
-    <ul>
-      <li @click="add" class="btn btn-link btn-sm">
-        <span class="mdi mdi-plus"></span> Add item
-      </li>
-    </ul>
+    <v-btn @click="add" tile text>
+      <v-icon small left>mdi-plus</v-icon> Add item
+    </v-btn>
   </div>
 </template>
 
@@ -29,29 +27,10 @@ export default {
   width: 100%;
   height: 48px;
 
-  ul {
+  .v-btn {
     float: left;
     height: 100%;
-    margin: 0;
-    padding: 0 30px 0 10px;
-
-    li {
-      height: 100%;
-      padding-top: 15px;
-      color: #444;
-
-      .mdi {
-        display: inline-block;
-        margin-right: 5px;
-        font-size: 20px;
-        line-height: 20px;
-        vertical-align: middle;
-      }
-
-      &.active {
-        background-color: #e8e8e8;
-      }
-    }
+    margin-left: 10px;
   }
 }
 </style>
