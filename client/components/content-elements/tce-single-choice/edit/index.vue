@@ -1,41 +1,35 @@
 <template>
   <div class="form-group">
     <span class="form-label">{{ isGraded ? 'Answers' : 'Options' }}</span>
-    <button
-      @click="addAnswer"
-      :disabled="disabled"
-      class="btn btn-link answers-add">
-      <span class="mdi mdi-plus"></span>
-    </button>
-    <ul :class="{ 'non-graded': !isGraded }">
-      <li
-        v-for="(answer, index) in answers"
-        :key="index">
-        <span
-          v-if="isGraded"
-          :class="{ 'has-error': correctError }"
-          class="answers-radio">
-          <input
-            @change="selectAnswer(index)"
-            :checked="correct === index"
-            :disabled="disabled"
-            type="radio">
-        </span>
-        <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
-        <span :class="{ 'has-error': answerError(index) }" class="answers-input">
-          <input
-            :ref="`input${index}`"
-            @change="updateAnswer(index)"
-            :value="answer"
-            :disabled="disabled"
-            :placeholder="isGraded ? 'Answer...' : 'Option...'"
-            type="text">
-        </span>
-        <button @click="removeAnswer(index)" :disabled="disabled" class="destroy">
-          <span class="mdi mdi-close"></span>
-        </button>
-      </li>
-    </ul>
+    <v-btn @click="addAnswer" :disabled="disabled" icon class="float-right">
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+    <v-container :class="{ 'non-graded': !isGraded }">
+      <v-radio-group
+        @change="selectAnswer"
+        :value="correct"
+        :error="correctError"
+        :disabled="disabled">
+        <v-row v-for="(answer, index) in answers" :key="index" no-gutters>
+          <v-col cols="1" align-self="center">
+            <v-radio v-if="isGraded" />
+            <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
+          </v-col>
+          <v-col cols="11">
+            <v-text-field
+              @change="updateAnswer(index, $event)"
+              @click:append="removeAnswer(index)"
+              append-icon="mdi-close"
+              single-line
+              hide-details
+              :error="answerError(index)"
+              :value="answer"
+              :disabled="disabled"
+              :placeholder="isGraded ? 'Answer...' : 'Option...'" />
+          </v-col>
+        </v-row>
+      </v-radio-group>
+    </v-container>
   </div>
 </template>
 
@@ -79,9 +73,9 @@ export default {
       answers.push('');
       this.update({ answers });
     },
-    updateAnswer(index) {
+    updateAnswer(index, value) {
       let answers = cloneDeep(this.answers);
-      answers[index] = this.$refs[`input${index}`][0].value;
+      answers[index] = value;
       this.update({ answers });
     },
     removeAnswer(index) {
@@ -142,89 +136,33 @@ export default {
   font-size: 20px;
 }
 
-.answers-add {
-  float: right;
-  font-size: 16px;
-}
+.container {
+  clear: both;
+  padding: 5px 0 0 10px;
 
-.destroy {
-  display: none;
-  position: absolute;
-  right: 10px;
-  bottom: 8px;
-  padding: 0;
-  background-color: transparent;
-  opacity: 0.6;
-  transition: all 0.2s;
-  border: 0;
-
-  span {
-    font-size: 16px;
-  }
-}
-
-.destroy:focus {
-  outline: none;
-}
-
-ul {
-  padding: 10px 0 0 50px;
-
-  &.non-graded {
-    padding-left: 30px;
-  }
-
-  li {
-    display: inline-block;
-    position: relative;
+  ::v-deep .v-input__control {
     width: 100%;
+  }
+
+  .row {
     margin: 10px 0;
 
-    .answers-radio {
-      float: left;
-      width: 19px;
-      margin-top: 7px;
+    .v-text-field {
+      margin: 0;
+      padding: 0;
+    }
 
-      input {
-        padding-bottom: 9px;
-      }
+    ::v-deep .v-input__slot {
+      margin: 0;
     }
 
     .v-avatar {
       float: left;
-      margin-top: 4px;
-      margin-right: 6px;
+      margin-top: 1px;
+      margin-right: 10px;
       color: #fff;
       font-weight: 700;
     }
-
-    .answers-input {
-      display: block;
-      overflow: hidden;
-
-      input {
-        width: 100%;
-        height: 40px;
-        margin-left: 3px;
-        padding: 0 33px 0 10px;
-      }
-
-      input:focus {
-        outline: none;
-      }
-    }
-  }
-
-  li:hover {
-    .destroy:enabled {
-      display: inline;
-    }
-  }
-}
-
-@media (max-width: 850px) {
-  ul {
-    padding-left: 0;
   }
 }
 </style>
