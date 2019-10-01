@@ -4,30 +4,33 @@
     <draggable @update="update" :list="answerGroups" :options="dragOptions">
       <div v-for="(answers, i) in answerGroups" :key="i" class="answer-group">
         <span class="drag-handle">
-          <span class="mdi mdi-drag-vertical"></span>
+          <v-icon>mdi-drag-vertical</v-icon>
         </span>
-        <span class="label">{{ i + 1 }}</span>
-        <span
-          @click="addAnswer(i)"
-          class="mdi mdi-plus btn btn-link pull-right">
-        </span>
-        <span
+        <v-chip small label>{{ i + 1 }}</v-chip>
+        <v-btn @click="addAnswer(i)" icon small class="float-right">
+          <v-icon small>mdi-plus</v-icon>
+        </v-btn>
+        <v-btn
           v-if="hasExtraAnswers"
           @click="removeAnswerGroup(i)"
-          class="mdi mdi-delete btn btn-link pull-right">
-        </span>
+          icon
+          small
+          class="float-right">
+          <v-icon small>mdi-delete</v-icon>
+        </v-btn>
         <ul>
           <li
             v-for="(answer, j) in answers"
-            :key="`${i}.${j}`"
-            :class="errorClass(i, j)">
-            <input
+            :key="`${i}.${j}`">
+            <v-text-field
               v-model="answers[j]"
+              @click:append="removeAnswer(i, j)"
               :disabled="disabled"
-              type="text"
-              class="form-control"
-              placeholder="Answer...">
-            <span @click="removeAnswer(i, j)" class="btn-remove mdi mdi-close"></span>
+              :error="errorClass(i, j)"
+              append-icon="mdi-close"
+              hide-details
+              single-line
+              placeholder="Answer..." />
           </li>
         </ul>
       </div>
@@ -46,7 +49,7 @@ import times from 'lodash/times';
 
 const PLACEHOLDER = /(@blank)/g;
 const ALERT = {
-  type: 'alert-danger',
+  type: 'error',
   text: `Question and blanks are out of sync !
         Please delete unnecessary answers or add blanks in the question !`
 };
@@ -160,11 +163,10 @@ h5 {
     }
   }
 
-  .label {
-    padding: 1px 10px;
-    font-size: 12px;
-    line-height: 24px;
-    border-radius: 1px;
+  .v-chip {
+    height: 21px;
+    color: white;
+    font-weight: bold;
     background-color: #aaa;
   }
 }
@@ -176,19 +178,6 @@ ul {
   li {
     position: relative;
     margin: 20px 0;
-  }
-
-  .btn-remove {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-    padding: 5px;
-    color: #888;
-    cursor: pointer;
-
-    &:hover {
-      color: darken(#888, 20%);
-    }
   }
 }
 
