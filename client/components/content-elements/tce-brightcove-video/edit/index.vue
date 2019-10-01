@@ -1,14 +1,12 @@
 <template>
   <div class="tce-brightcove-video">
-    <div v-if="showPlaceholder">
-      <div class="well video-placeholder">
-        <div class="message">
-          <span class="heading">Video placeholder</span>
-          <span v-if="!isFocused">Select to edit</span>
-          <span v-else>Please use toolbar to change video parameters</span>
-        </div>
+    <v-alert v-if="showPlaceholder" class="video-placeholder">
+      <div class="message">
+        <span class="heading">Video placeholder</span>
+        <span v-if="!isFocused">Select to edit</span>
+        <span v-else>Please use toolbar to change video parameters</span>
       </div>
-    </div>
+    </v-alert>
     <div v-else>
       <div v-if="!isFocused" class="overlay">
         <div class="message">Double click to preview</div>
@@ -55,6 +53,9 @@ export default {
 }
 
 .video-placeholder {
+  margin-bottom: 0;
+  background-color: #f5f5f5;
+
   .message {
     padding: 100px 20px;
 
@@ -83,10 +84,6 @@ export default {
     color: green;
     font-size: 22px;
   }
-}
-
-.well {
-  margin: 0;
 }
 
 .player ::v-deep .video-js .vjs-big-play-button {

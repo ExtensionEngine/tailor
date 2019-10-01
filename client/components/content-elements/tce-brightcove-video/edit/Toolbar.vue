@@ -1,47 +1,38 @@
 <template>
   <div class="tce-brightcove-toolbar">
-    <div class="input-group">
-      <div class="row">
-        <div class="col-xs-4">
-          <input
-            v-model="accountId"
-            :disabled="!edit"
-            class="form-control"
-            type="text"
-            placeholder="Account Id">
-        </div>
-        <div class="col-xs-4">
-          <input
-            v-model="playerId"
-            :disabled="!edit"
-            class="form-control"
-            type="text"
-            placeholder="Player Id">
-        </div>
-        <div class="col-xs-4">
-          <input
-            v-model="videoId"
-            :disabled="!edit"
-            class="form-control"
-            type="text"
-            placeholder="Video Id">
-        </div>
-      </div>
-    </div>
-    <button
+    <v-text-field
+      v-model="accountId"
+      :disabled="!edit"
+      single-line
+      hide-details
+      placeholder="Account Id" />
+    <v-text-field
+      v-model="playerId"
+      :disabled="!edit"
+      single-line
+      hide-details
+      placeholder="Player Id" />
+    <v-text-field
+      v-model="videoId"
+      :disabled="!edit"
+      single-line
+      hide-details
+      placeholder="Video Id" />
+    <v-btn
       v-if="!edit"
       @click="edit = true"
-      class="btn btn-default"
+      small
       type="button">
       Edit
-    </button>
-    <button
+    </v-btn>
+    <v-btn
       v-if="edit"
       @click="save"
-      class="btn btn-success"
+      small
+      color="success"
       type="button">
       Save
-    </button>
+    </v-btn>
   </div>
 </template>
 
@@ -79,34 +70,20 @@ export default {
 
 <style lang="scss" scoped>
 .tce-brightcove-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 999;
   width: 100%;
   height: 60px;
-  padding: 13px 45px 0;
-}
+  padding: 0 30px 0 10px;
 
-.input-group {
-  display: block;
-  width: 100%;
-  float: left;
-  margin-right: -200px;
-  padding-right: 200px;
-}
-
-.form-control {
-  padding: 0 7px;
-  background: transparent;
-}
-
-.btn {
-  position: relative;
-  z-index: 1;
-  padding: 6px 15px;
-  font-size: 11px;
-
-  &:active {
-    outline: none;
+  .v-input {
+    max-width: 250px;
+    margin-top: 0;
+    margin-right: 16px;
+    padding: 0;
   }
 }
 </style>
