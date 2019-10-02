@@ -28,7 +28,6 @@ export default {
     parent: { type: Object, default: null },
     isDragged: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
-    isFocusable: { type: Boolean, default: true },
     frame: { type: Boolean, default: true }
   },
   data() {
@@ -53,7 +52,6 @@ export default {
     }
   },
   created() {
-    if (!this.isFocusable) return;
     this.elementBus.on('delete', () => this.$emit('delete'));
     EventBus.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
