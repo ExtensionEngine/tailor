@@ -155,7 +155,7 @@ function fetchContainers(repository, parent) {
     return !(config && config.custom);
   });
   return parent.getChildren({ where: { type: containerTypes } })
-  .then(containers => Promise.map(containers, fetchContainer));
+    .then(containers => Promise.map(containers, fetchContainer));
 }
 
 function fetchCustomContainers(parent) {
