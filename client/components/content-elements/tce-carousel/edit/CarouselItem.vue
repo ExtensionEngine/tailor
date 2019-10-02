@@ -1,7 +1,7 @@
 <template>
   <li :class="{ active: isActive }" class="carousel-item">
     <v-alert v-if="!hasElements" class="placeholder">
-      Use the toolbar to add the first item to the carousel.
+      Click the button below to Create your first teaching element.
     </v-alert>
     <embedded-container
       @save="({ embeds }) => save(item, embeds)"
