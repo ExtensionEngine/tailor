@@ -36,7 +36,7 @@
       <template v-slot:list-item="{ element }">
         <assessment-item
           @save="saveAssessment"
-          @delete="deleteElement(element)"
+          @delete="deleteAssessment(element)"
           :assessment="element"
           :objectives="objectives"
           :objective-label="objectiveLabel" />
@@ -104,7 +104,7 @@ export default {
       if (assessment.id) return this.$emit('updateElement', assessment);
       this.$emit('saveElement', assessment);
     },
-    deleteElement(assessment) {
+    deleteAssessment(assessment) {
       if (!assessment.id) return this.remove([assessment]);
       this.$emit('deleteElement', assessment);
     },
