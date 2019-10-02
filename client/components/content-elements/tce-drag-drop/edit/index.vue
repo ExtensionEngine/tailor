@@ -185,9 +185,9 @@ export default {
         const { groupKey, answerKey } = vnode.context.focused;
         const { groupKey: newGroupKey, answerKey: newAnswerKey } = binding.value;
         if (groupKey === newGroupKey && answerKey === newAnswerKey) {
-          el.focus();
+          vnode.componentInstance.focus();
         } else {
-          el.blur();
+          vnode.componentInstance.blur();
         }
       }
     }

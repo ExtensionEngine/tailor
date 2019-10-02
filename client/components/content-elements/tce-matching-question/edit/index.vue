@@ -199,9 +199,9 @@ export default {
         const focusedKey = vnode.context.focused.key;
         const key = binding.value.key;
         if (key === focusedKey) {
-          el.focus();
+          vnode.componentInstance.focus();
         } else {
-          el.blur();
+          vnode.componentInstance.blur();
         }
       }
     }
