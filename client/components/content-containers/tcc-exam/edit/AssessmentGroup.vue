@@ -86,7 +86,7 @@ export default {
       return [...saved, ...Object.values(unsaved)];
     },
     hasAssessments() {
-      return this.assessments && !!this.assessments.length;
+      return !isEmpty(this.assessments);
     },
     objectiveLabel() {
       if (isEmpty(this.objectives)) return '';
