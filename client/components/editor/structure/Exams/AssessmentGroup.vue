@@ -34,12 +34,10 @@
       embedded>
       <v-expansion-panels slot="list-item" slot-scope="{ item }" multiple>
         <assessment-item
-          @selected="toggleSelect(item)"
           @save="saveAssessment"
           @delete="item.id ? requestDeletion(item) : remove(item)"
           :exam="exam"
-          :assessment="item"
-          :expanded="isSelected(item)" />
+          :assessment="item" />
       </v-expansion-panels>
     </tes-list>
   </div>
@@ -69,7 +67,6 @@ export default {
   },
   data() {
     return {
-      selected: [],
       timeLimit: get(this.group, 'data.timeLimit', 0)
     };
   },
@@ -89,7 +86,6 @@ export default {
     ...mapMutations('tes', ['add']),
     addAssessment(assessment) {
       this.add(assessment);
-      this.selected.push(assessment._cid);
     },
     reorderAssessment({ newIndex: newPosition }) {
       const items = this.assessments;
@@ -100,20 +96,6 @@ export default {
     },
     saveAssessment(assessment) {
       assessment.id ? this.update(assessment) : this.save(assessment);
-    },
-    toggleSelect(assessment) {
-      const question = assessment.data.question;
-      const hasQuestion = question && question.length > 0;
-      if (this.isSelected(assessment) && !hasQuestion) {
-        this.remove(assessment);
-      } else if (this.isSelected(assessment)) {
-        this.selected.splice(this.selected.indexOf(assessment._cid), 1);
-      } else {
-        this.selected.push(assessment._cid);
-      }
-    },
-    isSelected(assessment) {
-      return this.selected.includes(assessment._cid);
     },
     toLetter(number) {
       return numberToLetter(number);

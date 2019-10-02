@@ -1,5 +1,5 @@
 <template>
-  <div @selected="$emit('selected')" class="assessment-container">
+  <div class="assessment-container">
     <div class="assessment">
       <slot></slot>
       <question

@@ -9,15 +9,13 @@
     <v-alert :value="!hasAssessments" color="white" icon="mdi-information-variant">
       Click the button below to create first assessment.
     </v-alert>
-    <v-expansion-panels multiple>
+    <v-expansion-panels v-model="selected" multiple>
       <assessment-item
         v-for="it in assessments"
         :key="it._cid"
-        @selected="toggleSelect(it)"
         @save="saveAssessment"
         @delete="requestRemoveConfirmation(it)"
-        :assessment="it"
-        :expanded="isSelected(it)" />
+        :assessment="it" />
     </v-expansion-panels>
     <add-element
       @add="addAssessment"
@@ -43,14 +41,16 @@ export default {
   name: 'assessments',
   data() {
     return {
-      selected: [],
-      allSelected: false
+      selected: []
     };
   },
   computed: {
     ...mapGetters('editor', ['activity', 'assessments']),
     hasAssessments() {
       return this.assessments.length;
+    },
+    allSelected() {
+      return this.assessments.length === this.selected.length;
     }
   },
   methods: {
@@ -58,29 +58,13 @@ export default {
     ...mapMutations('tes', ['add']),
     addAssessment(assessment) {
       this.add(assessment);
-      this.selected.push(assessment._cid);
     },
     saveAssessment(assessment) {
       // TODO: Figure out why save is broken (for update)
       return assessment.id ? this.update(assessment) : this.save(assessment);
     },
-    toggleSelect(assessment) {
-      const question = assessment.data.question;
-      const hasQuestion = question && question.length > 0;
-      if (this.isSelected(assessment) && !hasQuestion) {
-        this.remove(assessment);
-      } else if (this.isSelected(assessment)) {
-        this.selected.splice(this.selected.indexOf(assessment._cid), 1);
-      } else {
-        this.selected.push(assessment._cid);
-      }
-    },
-    isSelected(assessment) {
-      return this.selected.includes(assessment._cid);
-    },
     toggleAssessments() {
-      this.allSelected = !this.allSelected;
-      this.selected = this.allSelected ? map(this.assessments, it => it._cid) : [];
+      this.selected = !this.allSelected ? map(this.assessments, (it, i) => i) : [];
     },
     requestRemoveConfirmation(assessment) {
       const actionPrefix = assessment.id ? 'delete' : 'discard';

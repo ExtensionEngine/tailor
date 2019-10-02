@@ -32,21 +32,19 @@
           <v-icon small>mdi-close</v-icon>
         </v-btn>
       </template>
-      <div v-if="exam && examObjectives.length" class="select-leaf">
-        <multiselect
-          @input="onObjectiveSelected"
-          :value="objective"
-          :options="examObjectives"
-          :searchable="true"
-          :disabled="!examObjectives.length"
-          :track-by="'id'"
-          :custom-label="it => it.data ? it.data.name : ''"
-          :placeholder="examObjectiveLabel" />
-      </div>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
+      <v-autocomplete
+        v-if="exam && examObjectives.length"
+        @input="onObjectiveSelected"
+        :value="objective"
+        :items="examObjectives"
+        item-text="data.name"
+        :disabled="!examObjectives.length"
+        :placeholder="examObjectiveLabel"
+        class="float-right mr-2"
+        return-object />
       <tce-question-container
-        @selected="$emit('selected')"
         @delete="$emit('delete')"
         @save="save"
         :element="assessment"
@@ -65,7 +63,6 @@ import { getLevel } from 'shared/activities';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { mapGetters } from 'vuex';
-import Multiselect from '../../common/Select';
 import set from 'lodash/set';
 import uniq from 'lodash/uniq';
 
@@ -77,8 +74,7 @@ export default {
   inject: ['$teRegistry'],
   props: {
     assessment: { type: Object, required: true },
-    exam: { type: Object, default: null },
-    expanded: { type: Boolean, default: false }
+    exam: { type: Object, default: null }
   },
   data() {
     return {
@@ -123,8 +119,7 @@ export default {
     const objectiveId = get(this.assessment, 'refs.objectiveId');
     if (!objectiveId) return;
     this.objective = find(this.examObjectives, { id: objectiveId });
-  },
-  components: { Multiselect }
+  }
 };
 </script>
 
@@ -192,12 +187,7 @@ export default {
   }
 }
 
-.select-leaf {
-  clear: both;
-
-  > div {
-    width: 400px;
-    float: right;
-  }
+::v-deep .v-list {
+  text-align: left;
 }
 </style>
