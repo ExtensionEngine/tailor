@@ -192,7 +192,9 @@
     "service": [
       "./build/plugins/brand.js",
       "./build/plugins/copy.js",
-      "./build/plugins/output-filenames.js"
+      "./build/plugins/clean-out-dir.js",
+      "./build/plugins/stats.js",
+      "./build/plugins/html-version-spec.js"
     ]
   }
 }

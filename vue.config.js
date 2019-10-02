@@ -3,9 +3,9 @@
 const path = require('path');
 const serverPort = require('./config/server').port;
 
-const { NODE_ENV, STORAGE_PATH } = process.env;
+const { STORAGE_PATH } = process.env;
 const imagesPath = 'assets/img';
-const isProduction = NODE_ENV === 'production';
+// const isProduction = NOxDE_ENV === 'production';
 const serverUrl = `http://127.0.0.1:${serverPort}`;
 
 const aliases = {
@@ -25,7 +25,8 @@ const copy = [{ from: 'client/assets/img', to: imagesPath }];
 module.exports = {
   pages: {
     index: {
-      entry: './client/main.js'
+      entry: './client/main.js',
+      title: 'Tailor'
     }
   },
   runtimeCompiler: true,
@@ -49,15 +50,8 @@ module.exports = {
       imagesPath
     },
     copy: { patterns: copy },
-    outputFilenames: {
-      normal: {
-        font: 'assets/fonts/[name].[ext]',
-        image: 'assets/images/[name].[ext]'
-      },
-      vendor: {
-        font: 'assets/fonts/[name].[ext]',
-        image: 'assets/images/[name].[ext]'
-      }
+    cleanOutDir: {
+      cleanOnceBeforeBuildPatterns: ['**/*', '!.gitkeep']
     }
   },
   chainWebpack(config) {
@@ -80,14 +74,14 @@ module.exports = {
       .plugin('dotenv')
       .use(require.resolve('dotenv-webpack'));
 
-    if (!isProduction) return;
-    // TODO: convert to Vue Cli
-    config
-      .plugin('minimize')
-      .user
-      .tap(([options]) => {
-        options.terserOptions.keep_fnames = true;
-        return [options];
-      });
+    // if (!isProduction) return;
+    // // TODO: convert to Vue Cli
+    // config
+    //   .plugin('minimize')
+    //   .user
+    //   .tap(([options]) => {
+    //     options.terserOptions.keep_fnames = true;
+    //     return [options];
+    //   });
   }
 };

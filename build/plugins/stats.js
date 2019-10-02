@@ -1,16 +1,7 @@
 'use strict';
 
 const { writeFileSync } = require('fs');
-
-exports.name = 'stats';
-
-exports.cli = api => {
-  api.command.option(
-    '--print-stats',
-    'Output webpack stats to `stats.json`',
-    { default: false, type: [Boolean] }
-  );
-};
+const logger = require('../../server/shared/logger');
 
 class StatsPlugin {
   constructor({ logger, path = 'stats.json' } = {}) {
@@ -20,17 +11,25 @@ class StatsPlugin {
 
   apply(compiler) {
     compiler.hooks.done.tap('write-stats', stats => {
-      this.logger.log('\nGenerating webpack stats file');
+      this.logger.debug('\nGenerating webpack stats file');
       writeFileSync(this.path, JSON.stringify(stats.toJson()), 'utf8');
-      this.logger.done(`Location: ${this.path}`);
+      this.logger.debug(`Location: ${this.path}`);
     });
   }
 }
 
-exports.apply = api => {
-  api.hook('createWebpackChain', config => {
-    if (!api.cli.options.printStats) return;
-    const options = { logger: api.logger };
-    config.plugin('generate-stats').use(StatsPlugin, [options]);
-  });
+module.exports = api => {
+  const { build } = api.service.commands;
+
+  const buildFn = build.fn;
+
+  build.fn = (...args) => {
+    if (args[0].stats) {
+      api.chainWebpack(webpackConfig => {
+        const options = { logger };
+        webpackConfig.plugin('generate-stats').use(StatsPlugin, [options]);
+      });
+    }
+    return buildFn(...args);
+  };
 };

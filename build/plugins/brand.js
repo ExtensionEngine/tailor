@@ -34,11 +34,29 @@ const getStyleConfig = () => ({
   altBrandColor: '#5C6BC0'
 });
 
-module.exports = (api, { pluginOptions } = {}) => {
-  const { files, imagesPath } = pluginOptions.brand;
-  const brandConfig = loadConfig(api, files) || {};
-  const constants = merge(getAppConfig(), brandConfig);
-  const style = merge(getStyleConfig(), brandConfig.style);
+module.exports = (api, { pluginOptions }) => {
+  const { serve, build } = api.service.commands;
+
+  const serveFn = serve.fn;
+  const buildFn = build.fn;
+
+  serve.fn = (...args) => {
+    addBranding(api, pluginOptions, args[0]);
+    return serveFn(...args);
+  };
+
+  build.fn = (...args) => {
+    addBranding(api, pluginOptions, args[0]);
+    return buildFn(...args);
+  };
+};
+
+function addBranding(api, { brand }, { brandConfig }) {
+  const { files, imagesPath } = brand;
+  console.log(brandConfig);
+  const config = loadConfig(brandConfig, files) || {};
+  const constants = merge(getAppConfig(), config);
+  const style = merge(getStyleConfig(), config.style);
 
   const { projectOptions } = api.service;
 
@@ -52,24 +70,26 @@ module.exports = (api, { pluginOptions } = {}) => {
   });
 
   api.service.projectOptions = projectOptions;
+  console.log(projectOptions.pages.index);
+  console.log(constants);
 
   api.chainWebpack(webpackConfig => {
     webpackConfig.plugin('DefinePlugin')
-        .use(require('webpack').DefinePlugin, [{
-          BRAND_CONFIG: JSON.stringify({
-            TITLE: constants.title,
-            FAVICON: path.join(imagesPath, constants.favicon),
-            LOGO_COMPACT: path.join(imagesPath, constants.logo.compact),
-            LOGO_FULL: path.join(imagesPath, constants.logo.full)
-          })
-        }]);
+      .use(require('webpack').DefinePlugin, [{
+        BRAND_CONFIG: JSON.stringify({
+          TITLE: constants.title,
+          FAVICON: path.join(imagesPath, constants.favicon),
+          LOGO_COMPACT: path.join(imagesPath, constants.logo.compact),
+          LOGO_FULL: path.join(imagesPath, constants.logo.full)
+        })
+      }]);
   });
-};
+}
 
-function loadConfig({ inlineOptions }, files) {
+function loadConfig(brandConfig, files) {
   const options = { files };
-  if (inlineOptions && inlineOptions.brandConfig) {
-    const filepath = path.resolve(inlineOptions.brandConfig);
+  if (brandConfig) {
+    const filepath = path.resolve(brandConfig);
     const filename = path.basename(filepath);
     const parentDir = path.dirname(filepath);
     Object.assign(options, {
