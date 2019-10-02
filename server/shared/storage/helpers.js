@@ -21,8 +21,9 @@ const ASSET_ROOT = 'repository/assets';
 
 function processStatics(item) {
   const customProcessor = CustomElementsRegistry.getStaticsHandler(item.type);
-  if (!customProcessor) return defaultStaticsProcessor(item);
-  return customProcessor(item, defaultStaticsProcessor, processStatics);
+  return customProcessor
+    ? customProcessor(item, defaultStaticsProcessor, processStatics)
+    : defaultStaticsProcessor(item);
 }
 
 function defaultStaticsProcessor(item) {
@@ -81,8 +82,9 @@ processor.IMAGE = asset => {
 // TODO: Temp patch until asset embeding is unified
 function resolveStatics(item) {
   const customResolver = CustomElementsRegistry.getStaticsHandler(item.type);
-  if (!customResolver) return defaultStaticsResolver(item);
-  return customResolver(item, defaultStaticsResolver, resolveStatics);
+  return customResolver
+    ? customResolver(item, defaultStaticsResolver, resolveStatics)
+    : defaultStaticsResolver(item);
 }
 
 async function defaultStaticsResolver(item) {
