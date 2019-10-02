@@ -129,10 +129,6 @@ export default {
 }
 
 .catalog {
-  @media (min-width: 960px) {
-    max-width: 900px;
-  }
-
   @media (min-width: 1264px) {
     max-width: 1185px;
   }

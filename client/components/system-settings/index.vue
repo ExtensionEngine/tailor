@@ -53,14 +53,4 @@ export default {
   text-transform: uppercase;
   z-index: 2;
 }
-
-.container {
-  @media (min-width: 1264px) {
-    max-width: 1185px;
-  }
-
-  @media (min-width: 1904px) {
-    max-width: 1785px;
-  }
-}
 </style>
