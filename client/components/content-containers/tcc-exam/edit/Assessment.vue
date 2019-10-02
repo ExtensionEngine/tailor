@@ -7,20 +7,18 @@
     :expanded="expanded"
     :draggable="true">
     <template v-slot:header="{ isEditing }">
-      <v-container v-if="objectives.length" class="pa-0 mt-2">
-        <v-layout justify-end>
-          <v-flex xs4>
-            <multiselect
-              v-model="objective"
-              :options="objectives"
-              :searchable="true"
-              :disabled="!isEditing"
-              :custom-label="getCustomLabel"
-              :placeholder="objectiveLabel"
-              track-by="id" />
-          </v-flex>
-        </v-layout>
-      </v-container>
+      <v-layout v-if="objectives.length" justify-end class="pa-0 mt-2">
+        <v-flex xs4>
+          <multiselect
+            v-model="objective"
+            :options="objectives"
+            :searchable="true"
+            :disabled="!isEditing"
+            :custom-label="getCustomLabel"
+            :placeholder="objectiveLabel"
+            track-by="id" />
+        </v-flex>
+      </v-layout>
     </template>
   </assessment-item>
 </template>
