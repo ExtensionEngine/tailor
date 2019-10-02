@@ -105,17 +105,17 @@ export default {
       this.$emit('saveElement', assessment);
     },
     deleteAssessment(assessment) {
-      if (!assessment.id) return this.remove([assessment]);
+      if (!assessment.id) return this.clearUnsavedAssessments([assessment]);
       this.$emit('deleteElement', assessment);
     },
-    remove(assessments) {
+    clearUnsavedAssessments(assessments) {
       const ids = assessments.map(it => it.cid);
       const cond = it => !ids.includes(it.cid);
       this.unsavedAssessments = pickBy(this.unsavedAssessments, cond);
     }
   },
   watch: {
-    savedAssessments: 'remove',
+    savedAssessments: 'clearUnsavedAssessments',
     timeLimit: debounce(function (val) {
       let group = cloneDeep(this.group);
       group.data = group.data || {};
