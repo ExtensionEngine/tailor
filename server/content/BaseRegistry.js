@@ -1,7 +1,7 @@
 const Promise = require('bluebird');
 
 const PATHS = {
-  CUSTOM: '../../client/components',
+  DEFAULT: '../../client/components',
   EXTENSION: '../../extensions'
 };
 
@@ -28,7 +28,7 @@ module.exports = class {
   }
 
   getFullPath(path, isExtension) {
-    const basePath = isExtension ? PATHS.EXTENSION : PATHS.CUSTOM;
+    const basePath = isExtension ? PATHS.EXTENSION : PATHS.DEFAULT;
     return `${basePath}/content-${this._type}s/${path}/util`;
   }
 
