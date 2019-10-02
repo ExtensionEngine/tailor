@@ -129,7 +129,7 @@
     "vue-timeago": "^3.4.0",
     "vue-video-player": "^3.1.4",
     "vuedraggable": "^2.15.0",
-    "vuetify": "^2.0.18",
+    "vuetify": "^2.1.0",
     "vuex": "^2.0.0",
     "vuex-router-sync": "^3.0.0",
     "weekstart": "^1.0.0",
