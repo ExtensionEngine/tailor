@@ -152,7 +152,7 @@ function fetchContainers(repository, parent) {
   const containersConfig = schemaConfig.contentContainers;
   const coreTypes = containerTypes.filter(type => {
     const config = find(containersConfig, { type });
-    return !(config && config.custom);
+    return !get(config, 'custom', false);
   });
   return parent.getChildren({ where: { type: coreTypes } })
     .then(containers => Promise.map(containers, fetchContainer));
