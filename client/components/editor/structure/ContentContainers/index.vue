@@ -102,6 +102,7 @@ h2 {
   padding: 0;
   color: #444;
   font-size: 18px;
+  font-weight: $font-weight-medium;
   text-align: left;
 }
 

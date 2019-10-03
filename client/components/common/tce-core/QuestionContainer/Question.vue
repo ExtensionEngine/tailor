@@ -100,6 +100,10 @@ export default {
   clear: both;
   width: 100%;
   text-align: left;
+
+  .title {
+    font-family: $font-family-primary !important;
+  }
 }
 
 .question {

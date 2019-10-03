@@ -125,6 +125,10 @@ export default {
 .tce-numerical-response {
   padding: 25px 20px 15px;
   text-align: left;
+
+  .title {
+    font-family: $font-family-primary !important;
+  }
 }
 
 .v-text-field {
@@ -139,5 +143,6 @@ export default {
 .help-message {
   margin-top: 30px;
   color: gray;
+  font-size: 14px;
 }
 </style>

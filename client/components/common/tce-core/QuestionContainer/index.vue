@@ -218,6 +218,10 @@ const baseSchema = {
     text-align: left;
     padding: 25px 20px 15px;
     overflow: hidden;
+
+    .title {
+      font-family: $font-family-primary !important;
+    }
   }
 }
 

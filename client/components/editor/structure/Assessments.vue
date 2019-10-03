@@ -100,6 +100,7 @@ export default {
     display: inline-block;
     margin: 0;
     font-size: 18px;
+    font-weight: $font-weight-medium;
     line-height: 30px;
     vertical-align: middle;
   }

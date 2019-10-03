@@ -139,6 +139,10 @@ export default {
 .tce-multiple-choice {
   text-align: left;
   padding: 25px 20px 15px;
+
+  .title {
+    font-family: $font-family-primary !important;
+  }
 }
 
 .container {

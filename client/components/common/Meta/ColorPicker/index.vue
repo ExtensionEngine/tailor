@@ -1,5 +1,5 @@
 <template>
-  <div class="picker control my-2">
+  <div class="picker my-2">
     <span class="title">{{ meta.label }}</span>
     <color-input @input="select" :value="selected" />
     <ul class="colors control-group pl-0">
@@ -92,7 +92,8 @@ $gutter: 5px;
     display: block;
     margin-bottom: 10px;
     color: #808080;
-    font-size: 14px !important;
+    font-family: $font-family-primary !important;
+    font-size: 12px !important;
     font-weight: normal;
     line-height: 1rem;
   }

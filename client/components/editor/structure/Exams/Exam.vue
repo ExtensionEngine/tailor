@@ -110,6 +110,7 @@ h3 {
   padding: 0;
   color: #505050;
   font-size: 14px;
+  font-weight: $font-weight-medium;
   text-align: left;
 }
 

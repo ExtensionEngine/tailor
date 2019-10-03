@@ -63,6 +63,10 @@ export default {
 .feedback {
   padding: 30px 20px 15px;
   text-align: left;
+
+  .title {
+    font-family: $font-family-primary !important;
+  }
 }
 
 ul {

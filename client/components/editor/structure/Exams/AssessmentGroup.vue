@@ -132,6 +132,7 @@ h3 {
   margin: 30px 5px;
   color: #444;
   font-size: 18px;
+  font-weight: $font-weight-medium;
   text-align: left;
 }
 
@@ -139,6 +140,7 @@ h4 {
   margin: 20px 5px;
   color: #444;
   font-size: 16px;
+  font-weight: $font-weight-medium;
   text-align: left;
 }
 

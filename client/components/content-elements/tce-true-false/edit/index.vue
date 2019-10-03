@@ -54,6 +54,10 @@ export default {
 .tce-true-false {
   padding: 25px 20px 15px;
   text-align: left;
+
+  .title {
+    font-family: $font-family-primary !important;
+  }
 }
 
 .v-input--radio-group {

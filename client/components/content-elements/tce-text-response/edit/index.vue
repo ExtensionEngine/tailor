@@ -47,5 +47,9 @@ export default {
 .tce-text-response {
   padding: 25px 20px 15px;
   text-align: left;
+
+  .title {
+    font-family: $font-family-primary !important;
+  }
 }
 </style>
