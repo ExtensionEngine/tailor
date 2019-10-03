@@ -150,11 +150,11 @@ function fetchContainers(repository, parent) {
   const activityConfig = find(schemaConfig.structure, pick(parent, 'type'));
   const containerTypes = get(activityConfig, 'contentContainers', []);
   const containersConfig = schemaConfig.contentContainers;
-  const pluggedInTypes = containerTypes.filter(type => {
+  const coreTypes = containerTypes.filter(type => {
     const config = find(containersConfig, { type });
     return !(config && config.custom);
   });
-  return parent.getChildren({ where: { type: pluggedInTypes } })
+  return parent.getChildren({ where: { type: coreTypes } })
     .then(containers => Promise.map(containers, fetchContainer));
 }
 
