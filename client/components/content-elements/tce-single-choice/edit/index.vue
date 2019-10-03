@@ -1,8 +1,8 @@
 <template>
   <div class="tce-single-choice">
     <span class="title">{{ isGraded ? 'Answers' : 'Options' }}</span>
-    <v-btn @click="addAnswer" :disabled="disabled" icon class="float-right">
-      <v-icon>mdi-plus</v-icon>
+    <v-btn @click="addAnswer" :disabled="disabled" small icon class="float-right">
+      <v-icon small>mdi-plus</v-icon>
     </v-btn>
     <v-container :class="{ 'non-graded': !isGraded }">
       <v-radio-group
@@ -147,6 +147,10 @@ export default {
     .v-text-field {
       margin: 0;
       padding: 0;
+
+      ::v-deep .v-icon {
+        font-size: inherit;
+      }
     }
 
     ::v-deep .v-input__slot {

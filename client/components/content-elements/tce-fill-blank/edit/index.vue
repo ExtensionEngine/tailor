@@ -177,6 +177,15 @@ ul {
   li {
     position: relative;
     margin: 20px 0;
+
+    .v-text-field {
+      margin: 0;
+      padding: 0;
+
+      ::v-deep .v-icon {
+        font-size: inherit;
+      }
+    }
   }
 }
 
