@@ -4,7 +4,7 @@ const app = require('./app');
 const bluebird = require('bluebird');
 const boxen = require('boxen');
 const capitalize = require('to-case').capital;
-const content = require('./content');
+const contentPluginRegistry = require('./content-plugin-registry');
 const pkg = require('../package.json');
 const { promisify } = require('util');
 const sequelize = require('sequelize');
@@ -23,7 +23,7 @@ const runApp = promisify(app.listen.bind(app));
 database.initialize()
   .then(() => logger.info(`Database initialized`))
   .then(() => require('../config/shared/activities'))
-  .then(() => content.initialize())
+  .then(() => contentPluginRegistry.initialize())
   .then(() => runApp(config.port))
   .then(() => {
     logger.info(`Server listening on port ${config.port}`);

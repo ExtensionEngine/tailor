@@ -15,11 +15,12 @@ class ContainerRegistry extends BaseRegistry {
     this.buildStaticResolver();
   }
 
-  fetch(attrs) {
-    return Promise.map(this._registry, async container => {
+  fetch(...attrs) {
+    return Promise.reduce(this._registry, async (acc, container) => {
+      const { publishedAs } = container;
       const data = await container.fetch(...attrs);
-      return { data, publishedAs: container.publishedAs };
-    });
+      return acc.concat(data.map(it => ({ ...it, publishedAs })));
+    }, []);
   }
 
   buildStaticResolver() {
@@ -29,8 +30,9 @@ class ContainerRegistry extends BaseRegistry {
       .forEach(it => Object.assign(resolver, { [it.publishedAs]: it.resolve }));
   }
 
-  getStaticsResolver(publishedAs) {
-    return this._staticsResolver[publishedAs];
+  resolveStatics(container, defaultResolver) {
+    const resolver = this._staticsResolver[container.publishedAs];
+    return resolver(container, defaultResolver);
   }
 }
 

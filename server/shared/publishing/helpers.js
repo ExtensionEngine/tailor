@@ -1,6 +1,6 @@
 'use strict';
 
-const content = require('../../content');
+const { containerRegistry } = require('../../content-plugin-registry');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
@@ -160,7 +160,7 @@ function fetchContainers(repository, parent) {
 
 function fetchCustomContainers(parent) {
   const options = { include: [{ model: TeachingElement, attributes: TES_ATTRS }] };
-  return content.fetch(parent, options);
+  return containerRegistry.fetch(parent, options);
 }
 
 function fetchContainer(container) {
@@ -189,7 +189,7 @@ function resolveAssessments(assessments) {
 }
 
 function resolveCustom(container) {
-  return content.resolve(container, resolveStatics);
+  return containerRegistry.resolveStatics(container, resolveStatics);
 }
 
 function saveFile(parent, key, data) {
