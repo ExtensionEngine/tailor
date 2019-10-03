@@ -1,6 +1,5 @@
 import ContainerRegistry from './ContainerRegistry';
 import ElementRegistry from './ElementRegistry';
-import Promise from 'bluebird';
 
 export default class ContentRepository {
   constructor(Vue) {
