@@ -94,7 +94,7 @@ export default {
       return includes(this.errors, `correct[${index}]`);
     },
     addAnswer() {
-      let { correct, prefixes, suffixes } = cloneDeep(this.assessment);
+      const { correct, prefixes, suffixes } = cloneDeep(this.assessment);
       prefixes.push('');
       suffixes.push('');
       correct.push('');
@@ -105,13 +105,13 @@ export default {
         if (last(value) === '.') return;
         value = toNumber(value) || value;
       }
-      let values = cloneDeep(this[name]);
+      const values = cloneDeep(this[name]);
       values[index] = value;
       this.update({ [name]: values });
     },
     removeAnswer(index) {
       if (this.correct.length <= 1) return;
-      let { correct, prefixes, suffixes } = cloneDeep(this.assessment);
+      const { correct, prefixes, suffixes } = cloneDeep(this.assessment);
       pullAt(prefixes, index);
       pullAt(suffixes, index);
       pullAt(correct, index);

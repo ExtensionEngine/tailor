@@ -145,9 +145,9 @@ export default {
     }
   },
   mounted() {
-    let props = {};
+    const props = {};
     const data = omit(this.$options.props, ['containerStyle', 'src', 'alt']);
-    for (let key in data) {
+    for (const key in data) {
       if (this[key] !== undefined) {
         props[key] = this[key];
       }

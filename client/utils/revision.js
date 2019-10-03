@@ -27,7 +27,7 @@ function getActivityText(activity) {
 }
 
 function describeActivityRevision(rev, activity) {
-  let { type } = rev.state;
+  const { type } = rev.state;
   let name = get(rev, 'state.data.name');
   name = name ? `'${name}' ` : '';
   const level = getLevel(type);
@@ -60,6 +60,7 @@ export function getFormatDescription(rev, activity) {
 export function getRevisionAcronym(rev) {
   switch (rev.entity) {
     case 'ACTIVITY':
+      // eslint-disable-next-line no-case-declarations
       const typeArray = rev.state.type.split('_', 2);
       return reduce(typeArray, (acc, val) => acc + val.charAt(0), '');
     case 'COURSE':
@@ -75,6 +76,7 @@ export function getRevisionColor(rev) {
   const DEFAULT_COLOR = '#808080';
   switch (rev.entity) {
     case 'ACTIVITY':
+      // eslint-disable-next-line no-case-declarations
       const level = getLevel(rev.state.type);
       return level ? level.color : DEFAULT_COLOR;
     case 'COURSE':
