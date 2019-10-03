@@ -10,7 +10,7 @@ import Promise from 'bluebird';
 
 const EXTENSIONS_LIST = 'index';
 
-export default class BaseRegistry {
+export default class ComponentRegistry {
   constructor(Vue, type, extensions, attrs, getName) {
     this._registry = [];
     this.Vue = Vue;
