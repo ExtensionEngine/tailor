@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-5 elevation-2 content-container">
+  <div class="content-container mb-5 elevation-2">
     <div class="actions">
       <v-btn
         @click="$emit('delete')"
