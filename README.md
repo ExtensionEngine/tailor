@@ -109,7 +109,7 @@ An array of ContentContainer objects.
 
 #### ContentContainer
 Configuration for content containers. Contains the following properties:
-* **type** `String` - `Const cased` string for marking `ContentContainer` type.
+* **type** `String` - `const-cased` string for marking `ContentContainer` type.
 * **label** `String` - String used for referencing `ContentContainer` on the UI.
 * **multiple** `Boolean` - Defines if there can be multiple instances of the `ContentContainer` inside a single `Activity`. False by default.
 * **types** `Array<String>` - An array of possible content element types that can exist inside a `ContentContainer`. If not specified all types of elements are allowed.
