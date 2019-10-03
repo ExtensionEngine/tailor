@@ -39,7 +39,7 @@ import { defaults } from 'utils/assessment';
 import range from 'lodash/range';
 
 const customAlert = {
-  type: 'alert-danger',
+  type: 'error',
   text: 'Please make at least two answers available !'
 };
 
@@ -127,6 +127,10 @@ export default {
 .tce-single-choice {
   text-align: left;
   padding: 25px 20px 15px;
+
+  .title {
+    font-family: $font-family-primary !important;
+  }
 }
 
 .container {

@@ -26,7 +26,7 @@
               v-model="answers[j]"
               @click:append="removeAnswer(i, j)"
               :disabled="disabled"
-              :error="errorClass(i, j)"
+              :error="answerError(i, j)"
               append-icon="mdi-close"
               hide-details
               single-line
@@ -117,9 +117,8 @@ export default {
       this.answerGroups.push(...times(count, () => ['']));
       this.update();
     },
-    errorClass(groupIndex, answerIndex) {
-      const answer = `correct[${groupIndex}][${answerIndex}]`;
-      return { 'has-error': this.errors.includes(answer) };
+    answerError(groupIndex, answerIndex) {
+      return this.errors.includes(`correct[${groupIndex}][${answerIndex}]`);
     },
     hasChanges(newVal, oldVal) {
       let v1 = reduce(oldVal, (r, it) => r + get(it, 'data.content', ''), '');
