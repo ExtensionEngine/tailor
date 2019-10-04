@@ -97,10 +97,12 @@ class Activity extends withActivityHelper(Model) {
         const or = relationships.map(type => ({ [`refs.${type}`]: notNull }));
         return { where: { [Op.or]: or } };
       },
-      withOrigin: { include: [
-        { model: Activity, as: 'origin' },
-        { model: Activity, as: 'links' }
-      ] }
+      withOrigin: {
+        include: [
+          { model: Activity, as: 'origin' },
+          { model: Activity, as: 'links' }
+        ]
+      }
     };
   }
 

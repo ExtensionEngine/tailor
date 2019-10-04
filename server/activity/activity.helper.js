@@ -1,3 +1,5 @@
+'use strict';
+
 const every = require('lodash/every');
 const isEmpty = require('lodash/isEmpty');
 const isEqual = require('lodash/isEqual');
@@ -84,7 +86,7 @@ module.exports = Model => class extends Model {
     await removeAll(Activity, where, options);
     await activity.destroy(options);
     if (!descendants.links.length) return { ids: [activity.id] };
-    let result = { ids: [activity.id], originIds: [], updatedActivities: [] };
+    const result = { ids: [activity.id], originIds: [], updatedActivities: [] };
     return Activity.removeLinks(descendants.links, result, options);
   }
 
@@ -136,7 +138,7 @@ module.exports = Model => class extends Model {
    */
   static async removeLinkedChildren(activity, result, options) {
     const Activity = this.sequelize.model('Activity');
-    let children = await activity.getChildren(options);
+    const children = await activity.getChildren(options);
     if (!children.length) return result;
     return Activity.removeLinks(children, result, options);
   }
@@ -302,9 +304,9 @@ module.exports = Model => class extends Model {
     const Activity = this.sequelize.model('Activity');
     const { originId } = options;
     options.originId = null;
-    let idMap = await Activity.cloneActivities(source, options);
+    const idMap = await Activity.cloneActivities(source, options);
     const id = idMap[source[0].originId] || idMap[source[0].id];
-    let activity = await Activity.findByPk(id, options);
+    const activity = await Activity.findByPk(id, options);
     return Activity.linkActivities(activity, {
       ...options,
       position: activity.position,
@@ -395,7 +397,7 @@ module.exports = Model => class extends Model {
       linksMap,
       { returning: true, transaction }
     );
-    let activities = links.map(link => link.id);
+    const activities = links.map(link => link.id);
     if (!source.isLink) activities.push(source.id);
     if (originParentId && !source.isLink) await source.update({ parentId: originParentId });
     let children = await source.getChildren({
