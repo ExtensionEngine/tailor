@@ -1,13 +1,14 @@
 'use strict';
 
-const { readFileSync } = require('fs');
+const { error, info } = require('@vue/cli-shared-utils');
+const { DefinePlugin } = require('webpack');
 const isObject = require('lodash/isObject');
 const JoyCon = require('joycon');
 const map = require('lodash/map');
 const merge = require('lodash/merge');
+const { readFileSync } = require('fs');
 const path = require('path');
 const stripJsonComments = require('strip-json-comments');
-const logger = require('../../server/shared/logger');
 
 const prefix = 'tailor:brand-plugin:';
 
@@ -40,42 +41,41 @@ module.exports = (api, { pluginOptions }) => {
   const serveFn = serve.fn;
   const buildFn = build.fn;
 
-  serve.fn = (...args) => {
+  serve.fn = function (...args) {
     addBranding(api, pluginOptions, args[0]);
-    return serveFn(...args);
+    return serveFn.call(this, ...args);
   };
 
-  build.fn = (...args) => {
+  build.fn = function (...args) {
     addBranding(api, pluginOptions, args[0]);
-    return buildFn(...args);
+    return buildFn.call(this, ...args);
   };
 };
 
 function addBranding(api, { brand }, { brandConfig }) {
   const { files, imagesPath } = brand;
-  console.log(brandConfig);
   const config = loadConfig(brandConfig, files) || {};
   const constants = merge(getAppConfig(), config);
   const style = merge(getStyleConfig(), config.style);
 
   const { projectOptions } = api.service;
 
-  projectOptions.pages.index = Object.assign({}, projectOptions.pages.index, {
+  projectOptions.pages.index = {
+    ...projectOptions.pages.index,
     title: constants.title,
     favicon: path.join('client/', imagesPath, constants.favicon)
-  });
+  };
 
-  projectOptions.css.loaderOptions = Object.assign({}, projectOptions.css.loaderOptions, {
+  projectOptions.css.loaderOptions = {
+    ...projectOptions.css.loaderOptions,
     sass: { data: map(style, toScssVariable).join('\n') }
-  });
+  };
 
   api.service.projectOptions = projectOptions;
-  console.log(projectOptions.pages.index);
-  console.log(constants);
-
-  api.chainWebpack(webpackConfig => {
-    webpackConfig.plugin('DefinePlugin')
-      .use(require('webpack').DefinePlugin, [{
+  api.chainWebpack(config => {
+    config
+      .plugin('DefinePlugin')
+      .use(DefinePlugin, [{
         BRAND_CONFIG: JSON.stringify({
           TITLE: constants.title,
           FAVICON: path.join(imagesPath, constants.favicon),
@@ -99,12 +99,8 @@ function loadConfig(brandConfig, files) {
     });
   }
   const { path: configPath, data: config } = joycon.loadSync(options);
-  if (!configPath) {
-    return logger.debug(prefix, 'Using default brand configration');
-  }
-  if (!isObject(config)) {
-    return logger.error(prefix, `Invalid config provided: ${configPath}`);
-  }
-  logger.debug(prefix, `Using brand config file: ${configPath}`);
+  if (!configPath) return info('Using default brand configuration', prefix);
+  if (!isObject(config)) return error(`Invalid config provided: ${configPath}`, prefix);
+  info(`Using brand config file: ${configPath}`, prefix);
   return config;
 }
