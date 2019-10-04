@@ -33,7 +33,7 @@
     </div>
     <element-list
       @add="addAssessment"
-      @reorder="$emit('reorderElement', $event)"
+      @update="$emit('reorderElement', $event)"
       :elements="assessments"
       :activity="group"
       :supported-types="['ASSESSMENT']">

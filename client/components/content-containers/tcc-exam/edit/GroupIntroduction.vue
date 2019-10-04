@@ -2,7 +2,7 @@
   <div class="group-introduction">
     <element-list
       @add="$emit('saveElement', $event)"
-      @reorder="$emit('reorderElement', $event)"
+      @update="$emit('reorderElement', $event)"
       :elements="introductionElements"
       :activity="group"
       :supported-types="['HTML', 'IMAGE', 'VIDEO', 'EMBED']"
