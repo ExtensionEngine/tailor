@@ -1,20 +1,24 @@
 <template>
   <div class="assessment-group">
     <div class="divider"></div>
-    <span @click="$emit('delete')" class="remove">
-      <span class="mdi mdi-delete"></span>
-    </span>
-    <div class="form-inline pull-right">
-      <div class="form-group time-limit">
-        <label for="timeLimit">Time limit (minutes)</label>
-        <input
+    <v-layout justify-end class="pa-0">
+      <v-flex xs2>
+        <v-text-field
           v-model="timeLimit"
-          id="timeLimit"
-          class="form-control"
+          v-validate="{ numeric: true, min_value: 0 }"
+          :error-messages="timeLimitError"
+          name="timeLimit"
+          data-vv-as="time limit"
+          hint="Time limit (minutes)"
           type="number"
-          step="15">
-      </div>
-    </div>
+          step="15"
+          persistent-hint>
+          <template v-slot:append-outer>
+            <v-icon @click="$emit('delete')">mdi-delete</v-icon>
+          </template>
+        </v-text-field>
+      </v-flex>
+    </v-layout>
     <h3>Question group {{ position | toLetter }}</h3>
     <h4>Introduction</h4>
     <group-introduction
@@ -61,9 +65,11 @@ import numberToLetter from 'utils/numberToLetter';
 import pickBy from 'lodash/pickBy';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
+import { withValidation } from 'utils/validation';
 
 export default {
   name: 'assessment-group',
+  mixins: [withValidation()],
   props: {
     group: { type: Object, required: true },
     tes: { type: Object, required: true },
@@ -77,6 +83,10 @@ export default {
     };
   },
   computed: {
+    timeLimitError() {
+      if (!this.vErrors.collect('timeLimit').length) return;
+      return ['Must be above 0.'];
+    },
     savedAssessments() {
       const cond = { activityId: this.group.id, type: 'ASSESSMENT' };
       return sortBy(filter(this.tes, cond), 'position');
@@ -117,10 +127,13 @@ export default {
   watch: {
     savedAssessments: 'clearUnsavedAssessments',
     timeLimit: debounce(function (val) {
-      let group = cloneDeep(this.group);
-      group.data = group.data || {};
-      group.data.timeLimit = val;
-      this.$emit('update', group);
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
+        let group = cloneDeep(this.group);
+        group.data = group.data || {};
+        group.data.timeLimit = val;
+        this.$emit('update', group);
+      });
     }, 1500)
   },
   filters: {
