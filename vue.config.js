@@ -21,7 +21,6 @@ const aliases = {
 
 const copy = [{ from: 'client/assets/img', to: imagesPath }];
 
-// @ts-check
 module.exports = {
   pages: {
     index: {
@@ -38,10 +37,14 @@ module.exports = {
     }
   },
   devServer: {
+    headers: {
+      'X-Powered-By': 'Webpack DevSever'
+    },
     proxy: {
-      '^/api': { target: serverUrl, ws: false },
-      ...STORAGE_PATH && { '^/repository': { target: serverUrl } }
-    }
+      '/api': { target: serverUrl, ws: false },
+      ...STORAGE_PATH && { '/repository': { target: serverUrl } }
+    },
+    port: 8080
   },
   pluginOptions: {
     brand: {
