@@ -37,7 +37,7 @@ export const getExamObjectives = state => {
     const config = getLevel(activity.type);
     const objectiveTypes = get(config, 'exams.objectives');
     if (!objectiveTypes) return [];
-    let children = getDeepChildren(state.items, activity);
+    const children = getDeepChildren(state.items, activity);
     return filter(children, it => objectiveTypes.includes(it.type));
   };
 

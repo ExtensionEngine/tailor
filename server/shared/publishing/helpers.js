@@ -28,7 +28,7 @@ const TES_ATTRS = [
 async function publishActivity(activity) {
   if (activity.isLink) return publishLinkedActivity(activity);
   return getStructureData(activity).then(async data => {
-    let { repository, predecessors, spine } = data;
+    const { repository, predecessors, spine } = data;
     predecessors.forEach(async it => {
       const exists = find(spine.structure, { id: it.id });
       if (!exists) await addToSpine(spine, it, repository);
@@ -46,7 +46,7 @@ async function publishActivity(activity) {
 
 async function publishLinkedActivity(activity) {
   return getStructureData(activity).then(async data => {
-    let { repository, predecessors, spine } = data;
+    const { repository, predecessors, spine } = data;
     predecessors.forEach(async it => {
       const exists = find(spine.structure, { id: it.id });
       if (!exists) {
@@ -68,8 +68,8 @@ async function publishLinkedActivity(activity) {
 
 function updateRepositoryCatalog(repository, publishedAt) {
   return storage.getFile('repository/index.json').then(buffer => {
-    let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
-    let existing = find(catalog, { id: repository.id });
+    const catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
+    const existing = find(catalog, { id: repository.id });
     const repositoryData = { ...getRepositoryAttrs(repository), publishedAt };
     if (existing) {
       Object.assign(existing, omit(repositoryData, ['id']));
@@ -306,7 +306,7 @@ async function addToSpine(spine, activity, { isLinkingEnabled }) {
   );
 
   if (isLinkingEnabled) {
-    let children = await activity.getChildren();
+    const children = await activity.getChildren();
     let childrenIds = [];
     if (children.length) {
       childrenIds = children
@@ -316,7 +316,7 @@ async function addToSpine(spine, activity, { isLinkingEnabled }) {
     spineActivity.children = uniq(childrenIds);
   }
   renameKey(spineActivity, 'data', 'meta');
-  let index = findIndex(spine.structure, { id: spineActivity.id });
+  const index = findIndex(spine.structure, { id: spineActivity.id });
   if (index < 0) {
     spine.structure.push(spineActivity);
   } else {
@@ -375,7 +375,8 @@ async function addLinkToSpine(spine, activity) {
 }
 
 function getSpineChildren(spine, parent) {
-  let children = filterChildren(spine, parent);
+  const children = filterChildren(spine, parent);
+  if (!children.length) return [];
   return children.concat(reduce(children, (acc, it) => {
     return acc.concat(getSpineChildren(spine, it));
   }, []));
@@ -388,7 +389,7 @@ function filterChildren({ structure }, { id, children = [] }) {
 
 function getRepositoryAttrs(repository) {
   const attrs = ['id', 'uid', 'schema', 'name', 'description', 'data'];
-  let temp = pick(repository, attrs);
+  const temp = pick(repository, attrs);
   renameKey(temp, 'data', 'meta');
   return temp;
 }
@@ -404,7 +405,7 @@ function attachContentSummary(obj, { containers, exams, assessments }) {
 
 function getActivityFilenames(spineActivity) {
   const { contentContainers = [], exams = [], assessments = [] } = spineActivity;
-  let filenames = [];
+  const filenames = [];
   if (assessments.length) filenames.push(getAssessmentsKey(spineActivity));
   filenames.push(...map(exams, it => `${it.id}.exam`));
   filenames.push(...map(contentContainers, it => `${it.id}.container`));

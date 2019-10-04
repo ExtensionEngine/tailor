@@ -164,14 +164,14 @@ export default {
 };
 
 function errorProcessor(error) {
-  let item = error.value;
+  const item = error.value;
   if (item.type !== 'DD') return map(error.inner, it => it.path);
   // TODO: Nasty !!
   return map(error.inner, it => {
-    let path = toPath(it.path);
+    const path = toPath(it.path);
     if (path.length === 1) return it.path;
     if (last(path) !== 'value') return;
-    let key = get(error.value, dropRight(path).concat('key'));
+    const key = get(error.value, dropRight(path).concat('key'));
     return `${path[0]}${key}`;
   });
 }
