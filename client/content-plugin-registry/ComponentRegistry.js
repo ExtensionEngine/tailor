@@ -32,7 +32,7 @@ export default class ComponentRegistry {
   }
 
   async load(path, options) {
-    const { _registry, _type, Vue } = this;
+    const { _registry, _type, _attrs, Vue } = this;
     const { position = _registry.length, isExtension } = options;
     const element = isExtension
       ? (await import(`extensions/content-${_type}s/${path}`)).default
@@ -41,7 +41,7 @@ export default class ComponentRegistry {
       ? processAnswerType(element.subtype)
       : element.type;
     const componentName = this._getName(type);
-    _registry.push({ ...pick(element, this._attrs), componentName, position });
+    _registry.push({ ...pick(element, _attrs), componentName, position });
     Vue.component(componentName, element.Edit);
     if (element.Toolbar) Vue.component(getToolbarName(type), element.Toolbar);
   }

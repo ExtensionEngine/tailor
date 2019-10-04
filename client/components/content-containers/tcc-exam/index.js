@@ -1,7 +1,7 @@
 import Edit from './edit';
+import info from './info';
 
 export default {
-  type: 'EXAM',
-  version: '1.0',
+  ...info,
   Edit
 };

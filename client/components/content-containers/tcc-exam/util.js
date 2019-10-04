@@ -1,3 +1,4 @@
+const info = require('./info');
 const filter = require('lodash/filter');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
@@ -33,6 +34,7 @@ async function resolve(exam, resolveStatics) {
 }
 
 module.exports = {
+  ...info,
   fetch,
   resolve,
   publishedAs: 'exam'

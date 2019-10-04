@@ -50,6 +50,7 @@ const appChannel = EventBus.channel('app');
 export default {
   name: 'content-containers',
   inheritAttrs: false,
+  inject: ['$ccRegistry'],
   props: {
     containerGroup: { type: Array, default() { return []; } },
     parentId: { type: Number, required: true },
@@ -57,14 +58,13 @@ export default {
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: false },
-    custom: { type: Boolean, default: false },
     required: { type: Boolean, default: true }
   },
   computed: {
     ...mapGetters(['activities', 'tes']),
     containerName() {
-      if (this.custom) return getContainerName(this.type);
-      return 'content-container';
+      const { type, $ccRegistry: registry } = this;
+      return registry.get(type) ? getContainerName(type) : 'content-container';
     },
     name() {
       return this.label.toLowerCase();

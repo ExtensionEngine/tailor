@@ -65,6 +65,7 @@ contentPluginRegistry.initialize().then(() => {
     provide() {
       return {
         $teRegistry: contentPluginRegistry.elementRegistry,
+        $ccRegistry: contentPluginRegistry.containerRegistry,
         $storageService: assetsApi
       };
     }

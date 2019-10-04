@@ -117,7 +117,7 @@ Configuration for content containers. Contains the following properties:
 * **layout** `Boolean` - Defines if elements inside a `ContentContainer` instance can be placed two in a row. True by default.
 * **config** `Object` - Defines `ContentContainer` specific properties.
 * **required** `Boolean` - Defines if an instance of the `ContentContainer` is created if non exist. True by default.
-* **custom** `Boolean` - Defines if the `ContentContainer` has a custom structure and that the default structure should not be used. False by default.
+* **publishedAs** `String` - Defines the `ContentContainer` the name of the file under which the container will be published. Defaults to `container`.
 The name of the structure component used is the `kebab-cased` version of the `type` property. (example: ABC_DEF -> abc-def)
 
 ### `PREVIEW_URL`

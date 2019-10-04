@@ -106,36 +106,28 @@ async function fetchActivityContent(repository, activity, signed = false) {
   const res = await Promise.all([
     fetchContainers(repository, activity),
     fetchAssessments(activity),
-    fetchCustomContainers(activity)
-  ]).spread((containers, assessments, custom) => ({ containers, assessments, custom }));
+  ]).spread((containers, assessments) => ({ containers, assessments }));
   if (!signed) return res;
-  res.containers = await Promise.map(res.containers, resolveContainer);
-  res.assessments = await resolveAssessments(res.assessments);
-  res.custom = await Promise.map(res.custom, resolveCustom);
-  return res;
+  const [containers, assessments] = await Promise.all([
+    Promise.map(res.containers, resolveContainer),
+    resolveAssessments(res.assessments)
+  ]);
+  return Object.assign(res, { containers, assessments });
 }
 
 function publishContent(repository, activity) {
   return Promise.all([
     publishContainers(repository, activity),
-    publishCustomContainers(activity),
     publishAssessments(activity)
-  ]).spread((containers, custom, assessments) => ({ containers, custom, assessments }));
+  ]).spread((containers, assessments) => ({ containers, assessments }));
 }
 
 function publishContainers(repository, parent) {
   return fetchContainers(repository, parent)
-    .then(containers => Promise.map(containers, it => {
-      return saveFile(parent, `${it.id}.container`, it).then(() => it);
-    }));
-}
-
-function publishCustomContainers(parent) {
-  return fetchCustomContainers(parent)
-    .then(contanainers => Promise.map(contanainers, data => {
-      const { id, publishedAs } = data;
-      return saveFile(parent, `${id}.${publishedAs}`, data).then(() => data);
-    }));
+    .map(it => {
+      const { id, publishedAs = 'container' } = it;
+      return saveFile(parent, `${id}.${publishedAs}`, it).then(() => it);
+    });
 }
 
 function publishAssessments(parent) {
@@ -150,12 +142,34 @@ function fetchContainers(repository, parent) {
   const activityConfig = find(schemaConfig.structure, pick(parent, 'type'));
   const containerTypes = get(activityConfig, 'contentContainers', []);
   const containersConfig = schemaConfig.contentContainers;
-  const coreTypes = containerTypes.filter(type => {
-    const config = find(containersConfig, { type });
-    return !get(config, 'custom', false);
-  });
-  return parent.getChildren({ where: { type: coreTypes } })
-    .then(containers => Promise.map(containers, fetchContainer));
+  const { coreTypes, typeConfigs } = containerTypes
+    .reduce((acc, type) => {
+      const isExtension = !!containerRegistry.getStaticsResolver(type);
+      if (!isExtension) acc.coreTypes.push(type);
+      acc.typeConfigs[type] = find(containersConfig, { type });
+      return acc;
+    }, { coreTypes: [], typeConfigs: {} });
+
+  return Promise.all([
+    parent.getChildren({ where: { type: coreTypes } }).map(fetchDefaultContainer),
+    fetchCustomContainers(parent)
+  ])
+  .reduce((containers, groupedContainers) => {
+    return containers.concat(groupedContainers.map(it => {
+      const { publishedAs = 'container' } = get(typeConfigs, it.type, {});
+      return { ...it, publishedAs };
+    }));
+  }, []);
+}
+
+function fetchDefaultContainer(container) {
+  const order = [['position', 'ASC']];
+  return container
+    .getTeachingElements({ attributes: TES_ATTRS, order })
+    .then(tes => ({
+      ...pick(container, ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt']),
+      elements: map(tes, (it, pos) => Object.assign(it, { position: pos + 1 }))
+    }));
 }
 
 function fetchCustomContainers(parent) {
@@ -163,33 +177,21 @@ function fetchCustomContainers(parent) {
   return containerRegistry.fetch(parent, options);
 }
 
-function fetchContainer(container) {
-  const order = [['position', 'ASC']];
-  return container.getTeachingElements({ attributes: TES_ATTRS, order }).then(tes => ({
-    ...pick(container, ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt']),
-    elements: map(tes, (it, index) => {
-      it.position = index + 1;
-      return it;
-    })
-  }));
-}
-
 function fetchAssessments(parent) {
   const options = { where: { type: 'ASSESSMENT' }, attributes: TES_ATTRS };
   return parent.getTeachingElements(options);
 }
 
-async function resolveContainer(container) {
-  container.elements = await Promise.map(container.elements, resolveStatics);
-  return container;
+function resolveContainer(container) {
+  const { elements, type } = container;
+  const resolver = containerRegistry.getStaticsResolver(type);
+  return resolver
+    ? resolver(container, resolveStatics)
+    : Promise.map(elements, resolveStatics).then(() => container);
 }
 
 function resolveAssessments(assessments) {
   return Promise.map(assessments, resolveStatics);
-}
-
-function resolveCustom(container) {
-  return containerRegistry.resolveStatics(container, resolveStatics);
 }
 
 function saveFile(parent, key, data) {
@@ -241,21 +243,19 @@ function getRepositoryAttrs(repository) {
   return temp;
 }
 
-function attachContentSummary(obj, { containers, custom, assessments }) {
+function attachContentSummary(obj, { containers, assessments }) {
   obj.contentContainers = map(containers, it => ({
-    ...pick(it, ['id', 'uid', 'type']),
-    elementCount: it.elements.length
+    ...pick(it, ['id', 'uid', 'type', 'publishedAs']),
+    elementCount: get(it.elements, 'length')
   }));
-  obj.custom = map(custom, it => pick(it, ['id', 'uid', 'publishedAs']));
   obj.assessments = map(assessments, it => pick(it, ['id', 'uid']));
 }
 
 function getActivityFilenames(spineActivity) {
-  const { contentContainers = [], custom = [], assessments = [] } = spineActivity;
+  const { contentContainers = [], assessments = [] } = spineActivity;
   let filenames = [];
   if (assessments.length) filenames.push(getAssessmentsKey(spineActivity));
-  filenames.push(...map(custom, it => `${it.id}.${it.publishedAs}`));
-  filenames.push(...map(contentContainers, it => `${it.id}.container`));
+  filenames.push(...map(contentContainers, it => `${it.id}.${it.publishedAs}`));
   return filenames;
 }
 
