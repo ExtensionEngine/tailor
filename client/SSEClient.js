@@ -1,51 +1,42 @@
+import get from 'lodash/get';
+import set from 'lodash/set';
+import unset from 'lodash/unset';
+
+function listenerFactory(method) {
+  return ({ data }) => {
+    const message = JSON.parse(data);
+    method(message);
+  };
+}
 
 class SSEClient {
-  constructor() {
-    this._listeners = new Map();
-    this._connection = null;
+  constructor(url) {
+    this.url = url;
+    this.connection = SSEClient.initConnection(url);
+    this.listeners = {};
   }
 
-  get isConnected() {
-    return Boolean(this._connection);
-  }
-
-  connect(url, { params = {}, timeout = 45000 /* ms */, ...options } = {}) {
-    if (this._connection) this.disconnect();
-    const searchParams = new URLSearchParams(Object.entries(params));
-    url = [url, searchParams].filter(Boolean).join('?');
-    this._connection = new EventSource(url, {
-      ...options,
-      // NOTE: This is used by `event-source-polyfill`.
-      headers: { 'Connection-Timeout': timeout },
-      heartbeatTimeout: timeout
-    });
-    return this;
+  static initConnection(url) {
+    const token = window.localStorage.getItem('JWT_TOKEN');
+    const headers = { Authorization: `JWT ${token}` };
+    return new window.EventSource(url, { headers });
   }
 
   disconnect() {
-    this._connection.close();
-    this._connection = null;
-    return this;
+    this.connection.close();
   }
 
-  subscribe(event, listener) {
-    const wrappedListener = parseJson(listener);
-    this._listeners.set(listener, wrappedListener);
-    this._connection.addEventListener(event, wrappedListener);
-    return this;
+  subscribe(event, method) {
+    const listener = listenerFactory(method);
+    this.connection.addEventListener(event, listener);
+    set(this.listeners, event, listener);
   }
 
-  unsubscribe(event, listener) {
-    const wrappedListener = this._listeners.get(listener);
-    this._connection.removeEventListener(event, wrappedListener);
-    return this;
+  unsubscribe(event) {
+    const listener = get(this.listeners, event);
+    this.connection.removeEventListener(event, listener);
+    unset(this.listeners, event);
   }
 }
 
 export default SSEClient;
-
-function parseJson(listener) {
-  return function ({ data } = {}) {
-    listener.call(this, JSON.parse(data));
-  };
-}
