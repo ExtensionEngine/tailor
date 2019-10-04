@@ -75,19 +75,19 @@ export default {
   },
   methods: {
     addAnswer() {
-      let answers = cloneDeep(this.answers);
+      const answers = cloneDeep(this.answers);
       answers.push('');
       this.update({ answers });
     },
     updateAnswer(index) {
-      let answers = cloneDeep(this.answers);
+      const answers = cloneDeep(this.answers);
       answers[index] = this.$refs[`input${index}`][0].value;
       this.update({ answers });
     },
     removeAnswer(index) {
-      let answers = cloneDeep(this.answers);
+      const answers = cloneDeep(this.answers);
       let correct = cloneDeep(this.correct);
-      let feedback = cloneDeep(this.feedback);
+      const feedback = cloneDeep(this.feedback);
 
       answers.splice(index, 1);
 
