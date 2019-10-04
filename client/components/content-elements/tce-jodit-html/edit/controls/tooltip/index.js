@@ -3,6 +3,7 @@ import Jodit from 'Jodit';
 const TOOLTIP_CONTROL = 'tooltip';
 const TOOLTIP_TAG_NAME = 'tooltip-element';
 const TOOLTIP_ATTRIBUTE = 'data-tooltip';
+const TOOLTIP_CLASS = 'tce-jodit-tooltip';
 
 class TooltipElement extends HTMLElement {}
 customElements.define(TOOLTIP_TAG_NAME, TooltipElement);
@@ -40,10 +41,11 @@ export default {
         editor.selection.restore(selInfo);
         const tooltipElement = current || new TooltipElement();
         const tooltipValue = val(form, 'textarea[name=tooltip]');
+        const innerText = val(form, 'input[name=text]');
         tooltipElement.setAttribute(TOOLTIP_ATTRIBUTE, tooltipValue);
-        tooltipElement.innerText = val(form, 'input[name=text]');
-        tooltipElement.classList.add('tailor_jodit_tooltip');
-        if (!current) editor.selection.insertNode(tooltipElement);
+        tooltipElement.classList.add(TOOLTIP_CLASS);
+        tooltipElement.innerText = innerText;
+        if (!current && innerText) editor.selection.insertNode(tooltipElement);
         close();
       });
 
