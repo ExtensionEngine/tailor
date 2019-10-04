@@ -93,6 +93,13 @@ module.exports = {
       .loader(require.resolve('imports-loader'))
       .options({ jQuery: 'jquery' });
 
+    config.module.rule('event-source-polyfill')
+      .test(require.resolve('event-source-polyfill'))
+      .post()
+      .use('exports-loader')
+      .loader(require.resolve('exports-loader'))
+      .options({ EventSource: 'exports.EventSource || exports.NativeEventSource' });
+
     config.module.rule('val')
       .test(/\.load\.js$/)
       .post()
