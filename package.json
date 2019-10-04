@@ -1,36 +1,36 @@
 {
   "name": "tailor",
   "version": "3.2.2",
-  "private": true,
+  "codename": "silk",
   "description": "Content authoring platform",
-  "author": {
-    "name": "ExtensionEngine",
-    "email": "info@extensionengine.com",
-    "url": "https://extensionengine.com"
-  },
+  "author": "ExtensionEngine <info@extensionengine.com>",
+  "private": true,
+  "browserslist": [
+    "last 2 versions",
+    "ie 11"
+  ],
   "scripts": {
-    "add:admin": "node -r ./server/script/preflight ./server/script/addAdmin.js",
+    "dev:client": "vue-cli-service serve",
     "build": "del-cli node_modules/.cache/vue-loader && vue-cli-service build",
     "clean": "del-cli dist/* !dist/.gitkeep",
-    "db:reset": "npm run db drop && npm run db create && npm run db migrate",
-    "db:seed": "npm run db seed:all",
-    "db": "node -r ./server/script/preflight ./server/script/sequelize",
-    "debug:server": "node --inspect-brk -r ./server/script/preflight ./server",
-    "dev:client": "vue-cli-service serve",
-    "dev:server": "nodemon --ignore client/ --exec \"node -r ./server/script/preflight\" ./server | bunyan",
-    "doc:server": "jsdoc --pedantic --destination ./server/_doc_ --recurse ./server",
-    "integration:add": "node -r ./server/script/preflight ./server/script/addIntegration.js",
-    "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
-    "invite:admin": "node -r ./server/script/preflight ./server/script/inviteAdmin.js",
+    "webpack:inspect-config": "vue-cli-service inspect-webpack",
+    "webpack:bundle-report": "vue-cli-service build --report",
+    "webpack:stats": "vue-cli-service build --report-json",
     "lint:js": "eslint --ext .js,.vue .",
     "lint:scss": "stylelint \"client/**/*.vue\" \"client/**/*.scss\"",
     "lint": "npm run lint:js && npm run lint:scss",
+    "dev:server": "nodemon --ignore client/ --exec \"node -r ./server/script/preflight\" ./server | bunyan",
+    "debug:server": "node --inspect-brk -r ./server/script/preflight ./server",
     "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
-    "postshrinkwrap": "rewrite-lockfile package-lock.json",
+    "db": "node -r ./server/script/preflight ./server/script/sequelize",
+    "db:reset": "npm run db drop && npm run db create && npm run db migrate",
+    "db:seed": "npm run db seed:all",
+    "add:admin": "node -r ./server/script/preflight ./server/script/addAdmin.js",
+    "invite:admin": "node -r ./server/script/preflight ./server/script/inviteAdmin.js",
+    "integration:add": "node -r ./server/script/preflight ./server/script/addIntegration.js",
+    "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
     "start": "node -r ./server/script/preflight ./server",
-    "webpack:bundle-report": "npm run build --report",
-    "webpack:inspect-config": "vue-cli-service inspect",
-    "webpack:stats": "npm run build --report-json"
+    "postshrinkwrap": "rewrite-lockfile package-lock.json"
   },
   "dependencies": {
     "@mdi/font": "^3.7.95",
@@ -169,12 +169,6 @@
     "val-loader": "^1.1.1",
     "vue-template-compiler": "^2.6.10"
   },
-  "browserslist": [
-    "last 2 versions",
-    "ie 11",
-    "> 1%"
-  ],
-  "codename": "silk",
   "engines": {
     "node": ">= 8.8.0",
     "npm": ">= 5.4.2",
