@@ -2,7 +2,7 @@ import cuid from 'cuid';
 import Resource from './resource';
 
 export default function ($apiUrl) {
-  let api = new Resource($apiUrl);
+  const api = new Resource($apiUrl);
 
   const get = ({ commit }, id) => {
     return api.getById(id).then(item => commit('save', item) || item);

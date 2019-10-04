@@ -87,7 +87,7 @@ export default {
       this.insertPosition = this.lastPosition;
     },
     getContainerClasses({ data: { width } }) {
-      let classes = [`col-xs-${width || 12}`];
+      const classes = [`col-xs-${width || 12}`];
       if (this.enableAdd) classes.push('insertable');
       return classes;
     },

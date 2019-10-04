@@ -81,7 +81,7 @@ class User extends Model {
           : Promise.resolve();
       },
       [Hooks.beforeBulkCreate](users) {
-        let updates = [];
+        const updates = [];
         users.forEach(user => updates.push(user.encryptPassword()));
         return Promise.all(updates);
       }

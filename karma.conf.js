@@ -1,3 +1,5 @@
+'use strict';
+
 const projectRoot = require('./config/client/helpers/projectRoot');
 const webpackConfig = require('./config/client/webpack/test.js');
 
