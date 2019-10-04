@@ -43,12 +43,12 @@ function createContentInventory(course, activities, tes) {
 }
 
 function createSpreadsheet(taxonomy) {
-  let workbook = new Excel.Workbook();
+  const workbook = new Excel.Workbook();
   workbook.creator = 'Tailor';
   workbook.created = new Date();
 
   // Create 'Content Inventory' sheet
-  let inventory = workbook.addWorksheet('Content Inventory');
+  const inventory = workbook.addWorksheet('Content Inventory');
   inventory.addRow(['Knewton Client ID']);
   inventory.addRow(['Partner Inventory ID']);
 
@@ -75,7 +75,7 @@ function createSpreadsheet(taxonomy) {
   styleInventorySheet(inventory);
 
   // Create 'LO-LO Map' sheet
-  let loMap = workbook.addWorksheet('LO-LO Map');
+  const loMap = workbook.addWorksheet('LO-LO Map');
   loMap.columns = [
     { header: 'Prereq Learning Objective ID', key: 'prereqId', width: 20 },
     { header: 'Prereq Learning Objective Description', key: 'prereqDesc', width: 100 },
@@ -104,7 +104,7 @@ function getTaxonomyName({ id, name }) {
 }
 
 function getTaxon(items, itemId, result = []) {
-  let item = find(items, { id: itemId });
+  const item = find(items, { id: itemId });
   if (!item) return result.length ? result.join('|') : '';
   result.unshift(`${item.type[0]}-${item.id}`);
   return getTaxon(items, item.parentId, result);

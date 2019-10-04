@@ -59,9 +59,8 @@ export default {
     position: { type: Number, required: true }
   },
   data() {
-    let collapsed = this.exam.id;
     return {
-      collapsed
+      collapsed: this.exam.id
     };
   },
   computed: {
