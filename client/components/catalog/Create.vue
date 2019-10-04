@@ -2,7 +2,7 @@
   <v-dialog
     v-if="isAdmin"
     v-model="isVisible"
-    v-hotkey="{ esc: hide }"
+    v-hotkey="hotkeys"
     width="700px">
     <v-btn
       slot="activator"
@@ -85,7 +85,12 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    schemas: () => SCHEMAS
+    schemas: () => SCHEMAS,
+    hotkeys() {
+      return {
+        esc: this.hide
+      };
+    }
   },
   methods: {
     ...mapActions('courses', ['save']),

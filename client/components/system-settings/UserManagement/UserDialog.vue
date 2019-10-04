@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="show" v-hotkey="{ esc: close }" width="700">
+  <v-dialog v-model="show" v-hotkey="hotkeys" width="700">
     <v-form @submit.prevent="save">
       <v-card class="pa-3">
         <v-card-title class="headline pr-0">
@@ -87,6 +87,9 @@ export default {
     },
     isNewUser() {
       return !this.user.id;
+    },
+    hotkeys() {
+      return { esc: close };
     }
   },
   methods: {
