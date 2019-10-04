@@ -5,7 +5,6 @@ const serverPort = require('./config/server').port;
 
 const { STORAGE_PATH } = process.env;
 const imagesPath = 'assets/img';
-// const isProduction = NOxDE_ENV === 'production';
 const serverUrl = `http://127.0.0.1:${serverPort}`;
 
 const aliases = {
@@ -22,6 +21,7 @@ const aliases = {
 
 const copy = [{ from: 'client/assets/img', to: imagesPath }];
 
+// @ts-check
 module.exports = {
   pages: {
     index: {
@@ -42,7 +42,6 @@ module.exports = {
       '^/api': { target: serverUrl, ws: false },
       ...STORAGE_PATH && { '^/repository': { target: serverUrl } }
     }
-    // Override using: `npm run dev:server -- --port <number>`
   },
   pluginOptions: {
     brand: {
@@ -69,19 +68,5 @@ module.exports = {
       .post()
       .use('val-loader')
       .loader(require.resolve('val-loader'));
-
-    config
-      .plugin('dotenv')
-      .use(require.resolve('dotenv-webpack'));
-
-    // if (!isProduction) return;
-    // // TODO: convert to Vue Cli
-    // config
-    //   .plugin('minimize')
-    //   .user
-    //   .tap(([options]) => {
-    //     options.terserOptions.keep_fnames = true;
-    //     return [options];
-    //   });
   }
 };
