@@ -62,7 +62,7 @@ export default {
   padding: 0 30px 0 10px;
 
   .v-input {
-    max-width: 150px;
+    max-width: 500px;
     margin-top: 0;
     margin-right: 16px;
     padding: 0;

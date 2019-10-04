@@ -1,21 +1,12 @@
 <template>
   <div class="tce-audio">
-    <!-- <v-alert v-show="showPlaceholder" class="audio-placeholder">
+    <v-alert v-if="showPlaceholder" class="audio-placeholder">
       <div class="message">
         <span class="heading">Audio placeholder</span>
         <p v-if="!isFocused">Select to edit</p>
         <p v-else>Please use toolbar to enter url</p>
       </div>
-    </v-alert> -->
-    <div v-if="showPlaceholder">
-      <div class="audio-placeholder">
-        <div class="message">
-          <span class="heading">Audio placeholder</span>
-          <p v-if="!isFocused">Select to edit</p>
-          <p v-else>Please use toolbar to enter url</p>
-        </div>
-      </div>
-    </div>
+    </v-alert>
     <div v-else>
       <div v-if="!isFocused && !error" class="overlay">
         <div class="message">Click to preview</div>
@@ -27,12 +18,9 @@
           @error="error = 'Audio cannot be played.'"
           :music="playerOptions"
           mode="order" />
-        <div v-if="error" class="error">
-          <div class="message">
-            <span class="icon mdi mdi-alert"></span>
-            <p>Error: {{ error }}</p>
-          </div>
-        </div>
+        <v-alert v-if="error" prominent dense class="pa-3 ma-0" type="error">
+          Error: {{ error }}
+        </v-alert>
       </div>
     </div>
   </div>
@@ -111,6 +99,7 @@ export default {
   }
 
   .audio-placeholder {
+    margin-bottom: 0;
     padding: 1.25rem;
     background-color: #f5f5f5;
 
@@ -148,21 +137,6 @@ export default {
       color: #008000;
       font-size: 1.8rem;
       line-height: 40px;
-    }
-  }
-
-  .error {
-    .message {
-      color: white;
-
-      p {
-        display: inline;
-      }
-
-      .icon {
-        font-size: 3rem;
-        vertical-align: middle;
-      }
     }
   }
 }
