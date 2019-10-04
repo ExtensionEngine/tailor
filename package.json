@@ -3,19 +3,22 @@
   "version": "3.2.2",
   "private": true,
   "description": "Content authoring platform",
-  "author": "ExtensionEngine <info@extensionengine.com>",
+  "author": {
+    "name": "ExtensionEngine",
+    "email": "info@extensionengine.com",
+    "url": "https://extensionengine.com"
+  },
   "scripts": {
     "add:admin": "node -r ./server/script/preflight ./server/script/addAdmin.js",
-    "build": "vue-cli-service build",
+    "build": "del-cli node_modules/.cache/vue-loader && vue-cli-service build",
     "clean": "del-cli dist/* !dist/.gitkeep",
     "db:reset": "npm run db drop && npm run db create && npm run db migrate",
     "db:seed": "npm run db seed:all",
     "db": "node -r ./server/script/preflight ./server/script/sequelize",
     "debug:server": "node --inspect-brk -r ./server/script/preflight ./server",
-    "dev:client": "poi --serve",
+    "dev:client": "vue-cli-service serve",
     "dev:server": "nodemon --ignore client/ --exec \"node -r ./server/script/preflight\" ./server | bunyan",
     "doc:server": "jsdoc --pedantic --destination ./server/_doc_ --recurse ./server",
-    "e2e": "node client/test/e2e/runner.js",
     "integration:add": "node -r ./server/script/preflight ./server/script/addIntegration.js",
     "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
     "invite:admin": "node -r ./server/script/preflight ./server/script/inviteAdmin.js",
@@ -24,18 +27,12 @@
     "lint": "npm run lint:js && npm run lint:scss",
     "postinstall": "if [ $BUILD_ASSETS ]; then npm run build; fi",
     "postshrinkwrap": "rewrite-lockfile package-lock.json",
-    "review:server": "npm prune && npm install && npm run unit:server && npm run lint:server",
-    "serve": "vue-cli-service serve",
     "start": "node -r ./server/script/preflight ./server",
-    "test:client": "npm run unit:client && npm run e2e",
-    "unit:client": "echo \"Error: no unit tests specified\" && exit 0",
-    "unit:server": "mocha --recursive \"./server/**/*.spec.js\"",
-    "webpack:bundle-report": "poi --prod --bundle-report",
-    "webpack:inspect-config": "poi --inspect-webpack",
-    "webpack:stats": "poi --prod --print-stats"
+    "webpack:bundle-report": "npm run build --report",
+    "webpack:inspect-config": "vue-cli-service inspect",
+    "webpack:stats": "npm run build --report-json"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.2.5",
     "@mdi/font": "^3.7.95",
     "auto-bind": "^2.1.0",
     "aws-sdk": "^2.342.0",
@@ -95,10 +92,10 @@
     "pg": "^6.4.2",
     "pg-hstore": "^2.3.2",
     "pluralize": "^7.0.0",
-    "poi-preset-sass-resources": "^4.0.2",
     "promise-queue": "^2.2.3",
     "rcfile": "^1.0.3",
     "read-pkg-up": "^6.0.0",
+    "regenerator-runtime": "^0.13.3",
     "safe-require": "^1.0.3",
     "sass-web-fonts": "^2.0.2",
     "save-as": "^0.1.8",
@@ -136,12 +133,9 @@
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@extensionengine/eslint-config": "^1.0.0",
-    "@poi/plugin-bundle-report": "^12.1.1",
-    "@poi/plugin-eslint": "^12.0.0",
-    "@types/poi": "^12.5.0",
     "@types/stylelint": "^9.10.0",
-    "@vue/cli-plugin-babel": "^4.0.0-rc.4",
-    "@vue/cli-service": "^4.0.0-rc.4",
+    "@vue/cli-plugin-babel": "^4.0.0-rc.7",
+    "@vue/cli-service": "^4.0.0-rc.7",
     "acorn": "^6.2.1",
     "babel-eslint": "^10.0.3",
     "clean-webpack-plugin": "^3.0.0",
@@ -161,9 +155,6 @@
     "joycon": "^2.2.5",
     "node-sass": "^4.12.0",
     "nodemon": "^1.19.1",
-    "poi": "^12.7.1",
-    "poi-preset-bundle-report": "^2.0.2",
-    "poi-preset-eslint": "^9.0.1",
     "rewrite-lockfile": "^1.0.0",
     "sass-loader": "^7.1.0",
     "sequelize-cli": "^5.5.0",
@@ -191,11 +182,10 @@
   },
   "vuePlugins": {
     "service": [
-      "./build/plugins/brand.js",
-      "./build/plugins/copy.js",
-      "./build/plugins/clean-out-dir.js",
-      "./build/plugins/stats.js",
-      "./build/plugins/html-version-spec.js"
+      "./build/plugins/brand",
+      "./build/plugins/copy",
+      "./build/plugins/clean-out-dir",
+      "./build/plugins/html-version-spec"
     ]
   }
 }
