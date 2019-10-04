@@ -1,7 +1,7 @@
 <template>
   <div infinite-wrapper class="catalog-wrapper">
     <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog mt-3">
-      <v-row class="catalog-actions" no-gutters="">
+      <v-row no-gutters class="catalog-actions">
         <create-repository />
         <v-col md="4" sm="10" offset-md="4" offset-sm="1">
           <search @update="setSearch($event)" :value="queryParams.search" />

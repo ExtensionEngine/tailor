@@ -11,13 +11,13 @@
     </template>
     <v-card>
       <v-color-picker
-        @input="input => color = input"
+        @input="color = $event"
         :value="value"
         flat
         mode="hexa"
         width="250" />
       <v-card-actions>
-        <div class="flex-grow-1"></div>
+        <v-spacer />
         <v-btn @click="menu = false" small text>Cancel</v-btn>
         <v-btn @click="submit" small text color="primary">Submit</v-btn>
       </v-card-actions>
