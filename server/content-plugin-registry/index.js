@@ -9,8 +9,8 @@ class ContentPluginRegistry {
   }
 
   initialize() {
-    const registires = Object.values(this);
-    return Promise.map(registires, it => it.initialize());
+    const registries = Object.values(this);
+    return Promise.map(registries, it => it.initialize());
   }
 }
 
