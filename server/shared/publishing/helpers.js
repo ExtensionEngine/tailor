@@ -1,11 +1,13 @@
 'use strict';
 
+const {
+  getLevelRelationships, getSupportedContainers
+} = require('../../../config/shared/activities');
 const { containerRegistry } = require('../../content-plugin-registry');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
 const get = require('lodash/get');
-const { getLevelRelationships } = require('../../../config/shared/activities');
 const hash = require('hash-obj');
 const keys = require('lodash/keys');
 const map = require('lodash/map');
@@ -34,7 +36,7 @@ function publishActivity(activity) {
     });
     activity.publishedAt = new Date();
     addToSpine(spine, activity);
-    return publishContent(repository, activity).then(content => {
+    return publishContent(activity).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
       return saveSpine(spine)
         .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
@@ -102,11 +104,10 @@ function getPublishedStructure(repository) {
   });
 }
 
-async function fetchActivityContent(repository, activity, signed = false) {
-  const res = await Promise.all([
-    fetchContainers(repository, activity),
-    fetchAssessments(activity),
-  ]).spread((containers, assessments) => ({ containers, assessments }));
+async function fetchActivityContent(activity, signed = false) {
+  const res = await Promise
+    .all([fetchContainers(activity), fetchAssessments(activity)])
+    .spread((containers, assessments) => ({ containers, assessments }));
   if (!signed) return res;
   const [containers, assessments] = await Promise.all([
     Promise.map(res.containers, resolveContainer),
@@ -115,15 +116,15 @@ async function fetchActivityContent(repository, activity, signed = false) {
   return Object.assign(res, { containers, assessments });
 }
 
-function publishContent(repository, activity) {
+function publishContent(activity) {
   return Promise.all([
-    publishContainers(repository, activity),
+    publishContainers(activity),
     publishAssessments(activity)
   ]).spread((containers, assessments) => ({ containers, assessments }));
 }
 
-function publishContainers(repository, parent) {
-  return fetchContainers(repository, parent)
+function publishContainers(parent) {
+  return fetchContainers(parent)
     .map(it => {
       const { id, publishedAs = 'container' } = it;
       return saveFile(parent, `${id}.${publishedAs}`, it).then(() => it);
@@ -137,28 +138,22 @@ function publishAssessments(parent) {
   });
 }
 
-function fetchContainers(repository, parent) {
-  const schemaConfig = repository.getSchemaConfig();
-  const activityConfig = find(schemaConfig.structure, pick(parent, 'type'));
-  const containerTypes = get(activityConfig, 'contentContainers', []);
-  const containersConfig = schemaConfig.contentContainers;
-  const { coreTypes, typeConfigs } = containerTypes
-    .reduce((acc, type) => {
-      const isExtension = !!containerRegistry.getStaticsResolver(type);
-      if (!isExtension) acc.coreTypes.push(type);
-      acc.typeConfigs[type] = find(containersConfig, { type });
-      return acc;
-    }, { coreTypes: [], typeConfigs: {} });
+function fetchContainers(parent) {
+  const typeConfigs = getSupportedContainers(parent.type);
+  const isCore = it => !containerRegistry.getStaticsResolver(it.type);
+  const coreTypes = typeConfigs.filter(isCore).map(it => it.type);
 
   return Promise.all([
     parent.getChildren({ where: { type: coreTypes } }).map(fetchDefaultContainer),
     fetchCustomContainers(parent)
   ])
   .reduce((containers, groupedContainers) => {
-    return containers.concat(groupedContainers.map(it => {
-      const { publishedAs = 'container' } = get(typeConfigs, it.type, {});
+    const mappedContainers = groupedContainers.map(it => {
+      const config = find(typeConfigs, { type: it.type });
+      const publishedAs = get(config, 'publishedAs', 'container');
       return { ...it, publishedAs };
-    }));
+    });
+    return containers.concat(mappedContainers);
   }, []);
 }
 
