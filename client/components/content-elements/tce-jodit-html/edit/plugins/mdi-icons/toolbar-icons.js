@@ -44,7 +44,10 @@ const mdiIcons = {
   merge: 'table-merge-cells',
   addcolumn: 'table-column-plus-after',
   addrow: 'table-row-plus-after',
-  bin: 'trash-can'
+  bin: 'trash-can',
+  eye: 'eye',
+  unlink: 'link-off',
+  pencil: 'pencil'
 };
 
 const textColor = `

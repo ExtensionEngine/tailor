@@ -76,12 +76,12 @@ export default {
     const { editor } = this.$refs.jodit;
     editor.editor.style.cursor = 'initial';
     editor.events
-      .on('afterInit', something)
+      .on('afterInit', afterInit)
       .on('beforeDestruct', () => {
-        if (editor.events) editor.events.off('afterInit', something);
+        if (editor.events) editor.events.off('afterInit', afterInit);
       });
 
-    function something() {
+    function afterInit() {
       setTimeout(() => {
         editor.selection.focus();
         editor.events.fire(JODIT_READY_EVENT);
