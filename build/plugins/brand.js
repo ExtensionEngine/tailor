@@ -10,7 +10,7 @@ const { readFileSync } = require('fs');
 const path = require('path');
 const stripJsonComments = require('strip-json-comments');
 
-const prefix = 'tailor:brand-plugin:';
+const prefix = 'tailor:brand-plugin';
 
 const parseJSON = str => JSON.parse(stripJsonComments(str));
 const toScssVariable = (value, name) => `$${name}: ${value};`;
@@ -41,14 +41,14 @@ module.exports = (api, { pluginOptions }) => {
   const serveFn = serve.fn;
   const buildFn = build.fn;
 
-  serve.fn = function (...args) {
-    addBranding(api, pluginOptions, args[0]);
-    return serveFn.call(this, ...args);
+  serve.fn = function (args, _api, _options) {
+    addBranding(api, pluginOptions, args);
+    return serveFn.apply(this, arguments);
   };
 
-  build.fn = function (...args) {
-    addBranding(api, pluginOptions, args[0]);
-    return buildFn.call(this, ...args);
+  build.fn = function (args, _api, _options) {
+    addBranding(api, pluginOptions, args);
+    return buildFn.apply(this, arguments);
   };
 };
 
