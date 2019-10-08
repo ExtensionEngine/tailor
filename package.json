@@ -158,6 +158,7 @@
     "nodemon": "^1.19.1",
     "rewrite-lockfile": "^1.0.0",
     "sass-loader": "^7.1.0",
+    "sass-resources-loader": "^2.0.1",
     "sequelize-cli": "^5.5.0",
     "strip-json-comments": "^3.0.1",
     "stylelint": "^11.0.0",
@@ -177,9 +178,10 @@
   "vuePlugins": {
     "service": [
       "./build/plugins/brand",
-      "./build/plugins/copy",
       "./build/plugins/clean-out-dir",
-      "./build/plugins/html-version-spec"
+      "./build/plugins/copy",
+      "./build/plugins/html-version-spec",
+      "./build/plugins/sass-resources"
     ]
   }
 }

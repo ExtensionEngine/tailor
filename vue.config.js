@@ -33,13 +33,6 @@ module.exports = {
     }
   },
   runtimeCompiler: true,
-  css: {
-    loaderOptions: {
-      scss: {
-        data: '@import "~@/assets/stylesheets/common/_variables.scss";'
-      }
-    }
-  },
   devServer: {
     headers: {
       'X-Powered-By': 'Webpack DevSever'
@@ -55,9 +48,12 @@ module.exports = {
       files: ['.brandrc', '.brandrc.js'],
       imagesPath
     },
-    copy: { patterns: copy },
     cleanOutDir: {
       cleanOnceBeforeBuildPatterns: ['**/*', '!.gitkeep']
+    },
+    copy: { patterns: copy },
+    sassResources: {
+      resources: './client/assets/stylesheets/common/_variables.scss'
     }
   },
   chainWebpack(config) {
