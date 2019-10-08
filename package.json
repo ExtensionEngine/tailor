@@ -13,7 +13,7 @@
     "dev:client": "vue-cli-service serve",
     "build": "del-cli node_modules/.cache/vue-loader && vue-cli-service build",
     "clean": "del-cli dist/* !dist/.gitkeep",
-    "webpack:inspect-config": "vue-cli-service inspect-webpack",
+    "webpack:inspect-config": "vue-cli-service inspect",
     "webpack:bundle-report": "vue-cli-service build --report",
     "webpack:stats": "vue-cli-service build --report-json",
     "lint:js": "eslint --ext .js,.vue .",
