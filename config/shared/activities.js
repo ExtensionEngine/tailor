@@ -97,7 +97,7 @@ function getObjectives(schemaId) {
 function getRepositoryMeta(repository) {
   const config = get(getSchema(repository.schema), 'meta', []);
   return map(config, it => {
-    let value = get(repository, `data.${it.key}`);
+    const value = get(repository, `data.${it.key}`);
     return { ...it, value };
   });
 }

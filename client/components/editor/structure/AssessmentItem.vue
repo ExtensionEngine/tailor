@@ -84,7 +84,7 @@ export default {
     question() {
       let question = filter(this.assessment.data.question, { type: 'HTML' });
       question = map(question, 'data.content').join(' ');
-      question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
+      question = question.replace(htmlRegex, '').replace(blankRegex, () => '____');
       return truncate(question, { length: 50 });
     }
   },

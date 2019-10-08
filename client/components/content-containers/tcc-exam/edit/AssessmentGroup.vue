@@ -129,7 +129,7 @@ export default {
     timeLimit: debounce(function (val) {
       this.$validator.validateAll().then(isValid => {
         if (!isValid) return;
-        let group = cloneDeep(this.group);
+        const group = cloneDeep(this.group);
         group.data = group.data || {};
         group.data.timeLimit = val;
         this.$emit('update', group);

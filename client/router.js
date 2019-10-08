@@ -25,7 +25,7 @@ import TreeView from './components/course/TreeView';
 
 Vue.use(Router);
 
-let router = new Router({
+const router = new Router({
   routes: [{
     path: '/',
     name: 'catalog',

@@ -113,7 +113,7 @@ function findOrCreateRole(course, user, role) {
 function exportContentInventory({ course }, res) {
   return course.getInventoryItems()
     .then(({ activities, tes }) => {
-      let workbook = createContentInventory(course, activities, tes);
+      const workbook = createContentInventory(course, activities, tes);
       res.setHeader('Content-Type', 'application/vnd.ms-excel');
       res.setHeader('Content-disposition', 'attachment;filename=report.xls');
       return workbook.xlsx.write(res).then(() => res.end());
