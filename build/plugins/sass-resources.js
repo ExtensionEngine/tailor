@@ -8,8 +8,7 @@ module.exports = (api, { pluginOptions } = {}) => {
       item
         .use('sass-resources-loader')
         .loader('sass-resources-loader')
-        .options({ resources })
-        .end();
+        .options({ resources });
     });
   });
 };
