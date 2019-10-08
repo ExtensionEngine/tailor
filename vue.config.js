@@ -1,6 +1,5 @@
 'use strict';
 
-const HtmlWebpackTemplate = require('html-webpack-template');
 const path = require('path');
 const serverPort = require('./config/server').port;
 
@@ -28,7 +27,6 @@ module.exports = {
     index: {
       entry: './client/main.js',
       title: 'Tailor',
-      template: HtmlWebpackTemplate,
       appMountId: 'app'
     }
   },
