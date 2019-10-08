@@ -11,7 +11,7 @@ module.exports = (api, config) => {
       return getVersion(pkg);
     }
   };
-  config.pages.index = { ...config.pages.index, meta };
+  Object.values(config.pages).forEach(page => Object.assign(page, { meta }));
 };
 
 function getVersion(pkg) {

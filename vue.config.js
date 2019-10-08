@@ -29,7 +29,6 @@ module.exports = {
       entry: './client/main.js',
       title: 'Tailor',
       template: HtmlWebpackTemplate,
-      inject: false,
       appMountId: 'app'
     }
   },
