@@ -22,6 +22,7 @@ const aliases = {
 
 const copy = [{ from: 'client/assets/img', to: imagesPath }];
 
+/** @type {import('@vue/cli-service').ProjectOptions} */
 module.exports = {
   pages: {
     index: {
