@@ -1,4 +1,4 @@
-import Jodit from 'Jodit';
+import Jodit from 'jodit';
 
 const TOOLTIP_CONTROL = 'tooltip';
 const TOOLTIP_TAG_NAME = 'tooltip-element';
