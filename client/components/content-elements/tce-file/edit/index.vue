@@ -54,17 +54,17 @@ export default {
       this.loading = true;
       const { upload } = this.$storageService;
       return Promise.join(upload(formData), Promise.delay(600))
-        .spread(res => pick(res, ['url', 'name']))
+        .spread(res => {
+          const { url, name } = pick(res, ['url', 'name']);
+          return { assets: { url }, name };
+        })
         .then(data => this.$emit('save', data))
         .finally(() => (this.loading = false));
     },
     downloadFile() {
       this.loading = true;
-      const { download, filename, url, $storageService: { getUrl } } = this;
-      const ResponseContentDisposition = `attachment; filename="${filename}"`;
-      const options = { ResponseContentDisposition };
-      return Promise.join(getUrl(url, options), Promise.delay(600))
-        .spread(url => download(url, filename))
+      const { download, filename, url } = this;
+      return Promise.join(download(url, filename), Promise.delay(600))
         .finally(() => (this.loading = false));
     }
   },
