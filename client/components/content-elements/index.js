@@ -1,5 +1,5 @@
 export default [
-  'tce-html',
+  'tce-jodit-html',
   'tce-image',
   'tce-video',
   'tce-embed',
@@ -19,5 +19,6 @@ export default [
   'tce-numerical-response',
   'tce-fill-blank',
   'tce-matching-question',
-  'tce-drag-drop'
+  'tce-drag-drop',
+  'tce-html'
 ];

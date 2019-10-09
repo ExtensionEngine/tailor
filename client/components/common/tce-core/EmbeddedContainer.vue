@@ -28,7 +28,7 @@ export default {
   inheritAttrs: false,
   props: {
     container: { type: Object, required: true },
-    types: { type: Array, default: () => ['HTML', 'IMAGE'] },
+    types: { type: Array, default: () => ['JODIT_HTML', 'HTML', 'IMAGE'] },
     enableAdd: { type: Boolean, default: true }
   },
   computed: {

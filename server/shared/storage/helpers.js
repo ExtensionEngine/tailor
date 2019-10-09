@@ -15,13 +15,14 @@ const ASSET_ROOT = 'repository/assets';
 const STORAGE_PROTOCOL = 'storage://';
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const PRIMITIVES = [
-  'HTML',
+  'JODIT_HTML',
   'FILE',
   'IMAGE',
   'VIDEO',
   'BRIGHTCOVE_VIDEO',
   'TABLE-CELL',
-  'EMBED'
+  'EMBED',
+  'HTML'
 ];
 
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;

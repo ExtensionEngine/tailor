@@ -9,6 +9,8 @@ import toPairs from 'lodash/toPairs';
 import toPath from 'lodash/toPath';
 import yup from 'yup';
 
+const TEXT_CONTAINERS = ['HTML', 'JODIT_HTML'];
+
 export const typeInfo = {
   MC: { type: 'MC', title: 'Multiple choice', class: 'multiple-choice' },
   SC: { type: 'SC', title: 'Single choice', class: 'single-choice' },
@@ -27,7 +29,7 @@ export const helperText = {
 const BLANK_PLACEHOLDER = /(@blank)/g;
 
 function containsText(asset) {
-  return asset.type === 'HTML' &&
+  return TEXT_CONTAINERS.includes(asset.type) &&
     asset.data.content &&
     asset.data.content.trim().length > 0;
 }

@@ -28,7 +28,7 @@ import includes from 'lodash/includes';
 import Promise from 'bluebird';
 import TeachingElement from 'components/editor/TeachingElement';
 
-const WITHOUT_STATICS = ['HTML', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED', 'BREAK'];
+const WITHOUT_STATICS = ['JODIT_HTML', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED', 'BREAK', 'HTML'];
 
 export default {
   name: 'entity-revisions',
