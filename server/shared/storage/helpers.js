@@ -131,20 +131,6 @@ resolver.IMAGE = asset => {
     .then(exists => exists ? getUrl(asset.data.url) : asset);
 };
 
-resolver.FILE = asset => {
-  if (!asset.data || !asset.data.key) return Promise.resolve(asset);
-
-  const ResponseContentDisposition = asset.data.name
-    ? `attachment; filename="${asset.data.name}"`
-    : 'attachment';
-
-  const options = { ResponseContentDisposition, Expires: 3600 };
-  return storage.getFileUrl(asset.data.key, options)
-    .then(url => (asset.data.url = url))
-    .then(() => asset)
-    .catch(() => asset);
-};
-
 function saveFile(key, file) {
   const options = { ACL: 'public-read', ContentType: mime.lookup(key) };
   return storage.saveFile(key, file, options);
