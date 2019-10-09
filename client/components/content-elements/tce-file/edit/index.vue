@@ -1,0 +1,103 @@
+<template>
+  <div class="tce-file">
+    <v-btn
+      v-if="key || loading"
+      @click="downloadFile"
+      :disabled="loading"
+      :loading="loading"
+      color="primary"
+      class="file-button">
+      <v-icon>mdi mdi-file-download</v-icon> {{ label || filename }}
+    </v-btn>
+    <div v-else>
+      <div class="well">
+        <div class="message">
+          <h3 class="heading">File placeholder</h3>
+          <span v-if="!isFocused">Select to edit</span>
+          <span v-else>Please use toolbar to upload file</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import downloadMixin from 'utils/downloadMixin';
+import get from 'lodash/get';
+import pick from 'lodash/pick';
+import Promise from 'bluebird';
+
+export default {
+  name: 'tce-file',
+  mixins: [downloadMixin],
+  inject: ['$elementBus', '$storageService'],
+  props: {
+    element: { type: Object, required: true },
+    isFocused: { type: Boolean, default: false }
+  },
+  data: () => ({
+    loading: false
+  }),
+  computed: {
+    filename() {
+      return get(this.element, 'data.name');
+    },
+    key() {
+      return get(this.element, 'data.key');
+    },
+    label() {
+      return get(this.element, 'data.label');
+    }
+  },
+  methods: {
+    uploadFile(formData) {
+      this.loading = true;
+      const { upload } = this.$storageService;
+      return Promise.join(upload(formData), Promise.delay(600))
+        .spread(res => pick(res, ['key', 'name']))
+        .then(data => this.$emit('save', data))
+        .finally(() => (this.loading = false));
+    },
+    downloadFile() {
+      this.loading = true;
+      const { download, filename, key, $storageService: { getUrl } } = this;
+      const ResponseContentDisposition = `attachment; filename="${filename}"`;
+      const options = { ResponseContentDisposition };
+      return Promise.join(getUrl(key, options), Promise.delay(600))
+        .spread(url => download(url, filename))
+        .finally(() => (this.loading = false));
+    }
+  },
+  mounted() {
+    this.$elementBus.on('upload', this.uploadFile);
+    this.$elementBus.on('update:label', label => {
+      this.$emit('save', { label });
+    });
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.tce-file {
+  .file-button {
+    text-transform: none;
+
+    .mdi-file-download {
+      padding-right: 5px;
+    }
+  }
+
+  .well {
+    margin: 0;
+  }
+
+  .message {
+    padding: 30px 0;
+    font-size: 18px;
+
+    .heading {
+      font-weight: 400;
+    }
+  }
+}
+</style>

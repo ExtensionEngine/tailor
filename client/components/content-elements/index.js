@@ -6,6 +6,7 @@ export default [
   'tce-audio',
   'tce-page-break',
   'tce-pdf',
+  'tce-file',
   'tce-accordion',
   'tce-table',
   'tce-modal',

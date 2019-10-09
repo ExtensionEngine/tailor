@@ -11,13 +11,21 @@ const storage = require('./index');
 const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
 
+const ASSET_ROOT = 'repository/assets';
 const STORAGE_PROTOCOL = 'storage://';
-const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
+const PRIMITIVES = [
+  'HTML',
+  'FILE',
+  'IMAGE',
+  'VIDEO',
+  'BRIGHTCOVE_VIDEO',
+  'TABLE-CELL',
+  'EMBED'
+];
+
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
-
-const ASSET_ROOT = 'repository/assets';
 
 function processStatics(item) {
   const customProcessor = elementRegistry.getStaticsHandler(item.type);
@@ -136,6 +144,20 @@ resolver.IMAGE = asset => {
 
   return storage.fileExists(asset.data.url)
     .then(exists => exists ? getUrl(asset.data.url) : asset);
+};
+
+resolver.FILE = asset => {
+  if (!asset.data || !asset.data.key) return Promise.resolve(asset);
+
+  const ResponseContentDisposition = asset.data.name
+    ? `attachment; filename="${asset.data.name}"`
+    : 'attachment';
+
+  const options = { ResponseContentDisposition, Expires: 3600 };
+  return storage.getFileUrl(asset.data.key, options)
+    .then(url => (asset.data.url = url))
+    .then(() => asset)
+    .catch(() => asset);
 };
 
 function saveFile(key, file) {

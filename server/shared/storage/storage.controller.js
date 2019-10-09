@@ -7,19 +7,20 @@ const fs = require('fs');
 const path = require('path');
 
 function getUrl(req, res) {
-  const { query: { key } } = req;
-  return getFileUrl(key).then(url => res.json({ url }));
+  const { query: { key, ...options } } = req;
+  return getFileUrl(key, options).then(url => res.json({ url }));
 }
 
 async function upload({ file }, res) {
+  const { originalname } = file;
   const buffer = await readFile(file);
-  const hash = sha256(file.originalname, buffer);
-  const extension = path.extname(file.originalname);
-  const name = path.basename(file.originalname, extension).substring(0, 180).trim();
+  const hash = sha256(originalname, buffer);
+  const extension = path.extname(originalname);
+  const name = path.basename(originalname, extension).substring(0, 180).trim();
   const key = path.join(ASSET_ROOT, `${hash}___${name}${extension}`);
   await saveFile(key, buffer, { ContentType: file.mimetype });
   const publicUrl = await getFileUrl(key);
-  return res.json({ key, url: `storage://${key}`, publicUrl });
+  return res.json({ name: originalname, key, publicUrl, url: `storage://${key}` });
 }
 
 module.exports = { getUrl, upload };
