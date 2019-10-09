@@ -11,7 +11,7 @@
       </label>
     </form>
     <v-text-field
-      v-if="key"
+      v-if="url"
       v-model.trim="label"
       placeholder="Label" />
   </div>
@@ -28,8 +28,8 @@ export default {
     element: { type: Object, required: true }
   },
   computed: {
-    key() {
-      return get(this.element, 'data.key');
+    url() {
+      return get(this.element, 'data.url');
     },
     label: {
       get() {

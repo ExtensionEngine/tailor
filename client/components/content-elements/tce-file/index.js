@@ -1,7 +1,7 @@
 import Edit from './edit';
 import Toolbar from './edit/Toolbar';
 
-const initState = () => ({ key: null, name: null, label: null });
+const initState = () => ({ url: null, name: null, label: null });
 
 export default {
   name: 'File',

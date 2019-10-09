@@ -1,7 +1,7 @@
 <template>
   <div class="tce-file">
     <v-btn
-      v-if="key || loading"
+      v-if="url || loading"
       @click="downloadFile"
       :disabled="loading"
       :loading="loading"
@@ -42,8 +42,8 @@ export default {
     filename() {
       return get(this.element, 'data.name');
     },
-    key() {
-      return get(this.element, 'data.key');
+    url() {
+      return get(this.element, 'data.url');
     },
     label() {
       return get(this.element, 'data.label');
@@ -54,16 +54,16 @@ export default {
       this.loading = true;
       const { upload } = this.$storageService;
       return Promise.join(upload(formData), Promise.delay(600))
-        .spread(res => pick(res, ['key', 'name']))
+        .spread(res => pick(res, ['url', 'name']))
         .then(data => this.$emit('save', data))
         .finally(() => (this.loading = false));
     },
     downloadFile() {
       this.loading = true;
-      const { download, filename, key, $storageService: { getUrl } } = this;
+      const { download, filename, url, $storageService: { getUrl } } = this;
       const ResponseContentDisposition = `attachment; filename="${filename}"`;
       const options = { ResponseContentDisposition };
-      return Promise.join(getUrl(key, options), Promise.delay(600))
+      return Promise.join(getUrl(url, options), Promise.delay(600))
         .spread(url => download(url, filename))
         .finally(() => (this.loading = false));
     }
