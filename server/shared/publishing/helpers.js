@@ -241,7 +241,7 @@ function getRepositoryAttrs(repository) {
 function attachContentSummary(obj, { containers, assessments }) {
   obj.contentContainers = map(containers, it => ({
     ...pick(it, ['id', 'uid', 'type', 'publishedAs']),
-    elementCount: get(it.elements, 'length')
+    elementCount: get(it.elements, 'length', 0)
   }));
   obj.assessments = map(assessments, it => pick(it, ['id', 'uid']));
 }
