@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = [
   'tce-html',
   'tce-image',

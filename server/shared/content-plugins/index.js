@@ -1,3 +1,5 @@
+'use strict';
+
 const containerRegistry = require('./containerRegistry');
 const elementRegistry = require('./elementRegistry');
 const Promise = require('bluebird');

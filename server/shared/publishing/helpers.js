@@ -3,7 +3,7 @@
 const {
   getLevelRelationships, getSupportedContainers
 } = require('../../../config/shared/activities');
-const { containerRegistry } = require('../../content-plugin-registry');
+const { containerRegistry } = require('../content-plugins');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');

@@ -1,7 +1,7 @@
 'use strict';
 
 const crypto = require('crypto');
-const { elementRegistry } = require('../../content-plugin-registry');
+const { elementRegistry } = require('../content-plugins');
 const { getFileUrl } = require('./');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');

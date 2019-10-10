@@ -1,3 +1,5 @@
+'use strict';
+
 const Promise = require('bluebird');
 
 const PATHS = {
@@ -22,7 +24,7 @@ module.exports = class {
   async load(path, isExtension) {
     try {
       this._registry.push(await require(this.getFullPath(path, isExtension)));
-    } catch {
+    } catch (err) {
       console.info(`${path} does not have a custom statics method.`);
     }
   }
@@ -35,7 +37,7 @@ module.exports = class {
   loadExtensionList() {
     try {
       return require(this._basePath);
-    } catch {
+    } catch (err) {
       console.log(`No ${this._type} extensions loaded!`);
       return [];
     }
