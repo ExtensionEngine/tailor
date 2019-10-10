@@ -10,7 +10,7 @@
           </v-btn>
         </v-toolbar>
         <div>
-          <v-row no-gutters class="filters">
+          <v-row class="filters">
             <v-col>
               <v-switch
                 v-model="showArchived"
