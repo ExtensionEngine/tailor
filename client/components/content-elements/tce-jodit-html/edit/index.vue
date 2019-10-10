@@ -81,6 +81,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$min-width: 180px;
 $min-height: 140px;
 
 .tce-jodit-html {
@@ -95,6 +96,7 @@ $min-height: 140px;
 }
 
 .jodit_container {
+  min-width: $min-width;
   min-height: $min-height;
 }
 
