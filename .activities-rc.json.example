@@ -33,7 +33,9 @@
     "contentContainers": [{
       "type": "PAGE",
       "label": "Page",
-      "multiple": false
+      "multiple": false,
+      "publishedAs": "Page",
+      "required": false
     }]
   }]
 }

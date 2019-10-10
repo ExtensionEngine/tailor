@@ -26,6 +26,8 @@ ecosystem.config.js
 # Extensions
 extensions/content-elements/*
 !extensions/content-elements/.gitkeep
+extensions/content-containers/*
+!extensions/content-containers/.gitkeep
 
 # Branding
 client/assets/img/*logo*

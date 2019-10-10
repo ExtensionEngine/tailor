@@ -52,10 +52,10 @@ export default {
     }
   },
   created() {
+    this.elementBus.on('delete', () => this.$emit('delete'));
     EventBus.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
     });
-    this.elementBus.on('delete', () => this.$emit('delete'));
   },
   provide() {
     return {

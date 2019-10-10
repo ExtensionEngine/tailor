@@ -1,5 +1,5 @@
 <template>
-  <li :class="{ collapsed }" class="list-group-item exam">
+  <div :class="{ collapsed }" class="exam">
     <div v-if="collapsed" @click="collapsed = false">
       <h3>{{ title }}</h3>
       <span class="label label-success pull-right">{{ label }}</span>
@@ -9,7 +9,7 @@
         <h3 class="pull-left">{{ title }}</h3>
         <div class="actions">
           <span
-            @click="requestDeletion(exam)"
+            @click="$emit('delete')"
             class="btn btn-sm btn-link pull-right">
             Delete
           </span>
@@ -26,12 +26,19 @@
       <assessment-group
         v-for="(group, index) in groups"
         :key="group._cid"
+        @saveElement="$emit('saveElement', $event)"
+        @updateElement="$emit('updateElement', $event)"
+        @reorderElement="$emit('reorderElement', $event)"
+        @deleteElement="$emit('deleteElement', $event)"
+        @update="$emit('updateSubcontainer', $event)"
+        @delete="$emit('deleteSubcontainer', group, 'group')"
         :group="group"
-        :exam="exam"
+        :tes="tes"
+        :objectives="examObjectives"
         :position="index" />
       <v-btn
         @click.stop="createGroup"
-        :disabled="!exam.id"
+        :disabled="!container.id"
         color="primary"
         outline
         class="my-5">
@@ -39,34 +46,33 @@
         Add Question Group
       </v-btn>
     </div>
-  </li>
+  </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import AssessmentGroup from './AssessmentGroup';
-import EventBus from 'EventBus';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
+import get from 'lodash/get';
+import { getDescendants as getDeepChildren } from 'utils/activity';
 import numberToLetter from 'utils/numberToLetter';
 import pluralize from 'pluralize';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   name: 'exam',
   props: {
-    exam: { type: Object, required: true },
-    position: { type: Number, required: true }
+    container: { type: Object, required: true },
+    position: { type: Number, required: true },
+    activities: { type: Object, required: true },
+    tes: { type: Object, required: true },
+    config: { type: Object, default: () => ({}) }
   },
   data() {
-    return {
-      collapsed: this.exam.id
-    };
+    return { collapsed: this.container.id };
   },
   computed: {
-    ...mapGetters(['activities']),
     groups() {
-      return filter(this.activities, { parentId: this.exam.id });
+      return filter(this.activities, { parentId: this.container.id });
     },
     title() {
       return `Exam ${numberToLetter(this.position)}`;
@@ -74,28 +80,24 @@ export default {
     label() {
       const groupTotal = this.groups.length;
       return `${groupTotal} ${pluralize('set', groupTotal)}`;
+    },
+    examObjectives() {
+      const { container, config, activities } = this;
+      const activity = find(activities, { id: container.parentId });
+      const objectiveTypes = get(config, 'objectives');
+      if (!objectiveTypes) return [];
+      const children = getDeepChildren(activities, activity);
+      return filter(children, it => objectiveTypes.includes(it.type));
     }
   },
   methods: {
-    ...mapActions('activities', ['save', 'remove']),
-    ...mapActions('tes', { getTeachingElements: 'fetch' }),
     createGroup() {
-      this.save({
+      this.$emit('addSubcontainer', {
         type: 'ASSESSMENT_GROUP',
-        parentId: this.exam.id,
+        parentId: this.container.id,
         position: this.groups.length + 1
       });
-    },
-    requestDeletion(item) {
-      appChannel.emit('showConfirmationModal', {
-        title: 'Delete exam?',
-        message: 'Are you sure you want to delete exam?',
-        action: () => this.remove(item)
-      });
     }
-  },
-  created() {
-    this.getTeachingElements({ parentId: this.exam.id });
   },
   components: {
     AssessmentGroup
@@ -116,6 +118,7 @@ h3 {
 .exam {
   margin-bottom: 13px;
   padding: 0;
+  background-color: #ffffff;
   box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 
   > div {

@@ -1,6 +1,7 @@
 'use strict';
 
 const crypto = require('crypto');
+const { elementRegistry } = require('../content-plugins');
 const { getFileUrl } = require('./');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
@@ -19,6 +20,13 @@ const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(typ
 const ASSET_ROOT = 'repository/assets';
 
 function processStatics(item) {
+  const customProcessor = elementRegistry.getStaticsHandler(item.type);
+  return customProcessor
+    ? customProcessor(item, defaultStaticsProcessor, processStatics)
+    : defaultStaticsProcessor(item);
+}
+
+function defaultStaticsProcessor(item) {
   return isQuestion(item.type)
     ? processQuestion(item)
     : processAsset(item);
@@ -72,7 +80,14 @@ processor.IMAGE = asset => {
 };
 
 // TODO: Temp patch until asset embeding is unified
-async function resolveStatics(item) {
+function resolveStatics(item) {
+  const customResolver = elementRegistry.getStaticsHandler(item.type);
+  return customResolver
+    ? customResolver(item, defaultStaticsResolver, resolveStatics)
+    : defaultStaticsResolver(item);
+}
+
+async function defaultStaticsResolver(item) {
   const element = await (isQuestion(item.type)
     ? resolveQuestion(item)
     : resolveAsset(item));
