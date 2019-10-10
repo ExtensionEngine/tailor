@@ -8,11 +8,9 @@
 </template>
 
 <script>
+import JoditVue, { Jodit } from 'jodit-vue';
 import externalToolbar from './plugins/external-toolbar';
 import fontControls from './plugins/font-controls';
-// TODO: Import `Jodit` from `jodit-vue` once it becomes available!
-import Jodit from 'jodit';
-import JoditVue from 'jodit-vue';
 import mdiIcons from './plugins/mdi-icons';
 import sourceEditor from './plugins/source-editor';
 import tablePopups from './plugins/table-popups';
