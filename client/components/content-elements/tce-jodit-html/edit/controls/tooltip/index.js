@@ -24,8 +24,7 @@ export default {
         </form>`
       );
 
-      const args = [current, TOOLTIP_TAG_NAME, editor.editor];
-      current = (current && Jodit.modules.Dom.closest(...args)) || false;
+      current = Jodit.modules.Dom.closest(current, TOOLTIP_TAG_NAME, editor.editor);
       if (current) {
         const tooltipValue = current.getAttribute(TOOLTIP_ATTRIBUTE) || '';
         val(form, 'textarea[name=tooltip]', tooltipValue);
