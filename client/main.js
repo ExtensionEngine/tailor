@@ -7,7 +7,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 
 import assetsApi from '@/api/asset';
 import colors from 'vuetify/es5/util/colors';
-import ElementRegistry from './ElementRegistry';
+import ContentPluginRegistry from './content-plugins';
 
 import { formatDate, truncate } from '@/filters';
 import FileFilter from '@/directives/file-filter';
@@ -53,8 +53,8 @@ Vue.use(Timeago, {
   }
 });
 
-const registry = new ElementRegistry(Vue);
-registry.initialize().then(() => {
+const contentPluginRegistry = new ContentPluginRegistry(Vue);
+contentPluginRegistry.initialize().then(() => {
   sync(store, router);
   /* eslint-disable no-new */
   new Vue({
@@ -64,7 +64,8 @@ registry.initialize().then(() => {
     render: h => h(App),
     provide() {
       return {
-        $teRegistry: registry,
+        $teRegistry: contentPluginRegistry.elementRegistry,
+        $ccRegistry: contentPluginRegistry.containerRegistry,
         $storageService: assetsApi
       };
     }

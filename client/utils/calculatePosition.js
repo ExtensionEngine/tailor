@@ -1,5 +1,3 @@
-'use strict';
-
 export default function ({ newPosition, items, isFirstChild, insert = false }) {
   const next = items[newPosition + 1];
   const count = items.length;

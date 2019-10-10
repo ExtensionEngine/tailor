@@ -3,14 +3,15 @@
     @add="addItem"
     @update="reorderItem"
     :elements="embeds"
-    :supported-types="['JODIT_HTML', 'IMAGE', 'HTML']">
-    <contained-content
-      slot="list-item"
-      slot-scope="{ element, isDragged }"
-      @save="data => saveItem(element, data)"
-      @delete="$emit('delete', element)"
-      :element="element"
-      :is-dragged="isDragged" />
+    :supported-types="types">
+    <template v-slot:list-item="{ element, isDragged }">
+      <contained-content
+        @save="data => saveItem(element, data)"
+        @delete="$emit('delete', element)"
+        :element="element"
+        :is-dragged="isDragged"
+        v-bind="$attrs" />
+    </template>
   </element-list>
 </template>
 
@@ -24,8 +25,11 @@ import values from 'lodash/values';
 
 export default {
   name: 'embedded-container',
+  inheritAttrs: false,
   props: {
-    container: { type: Object, required: true }
+    container: { type: Object, required: true },
+    types: { type: Array, default: () => ['JODIT_HTML', 'HTML', 'IMAGE'] },
+    enableAdd: { type: Boolean, default: true }
   },
   computed: {
     embeds() {
@@ -44,11 +48,11 @@ export default {
       container.embeds[item.id] = item;
       this.$emit('save', container);
     },
-    reorderItem({ newIndex: newPosition }) {
+    reorderItem({ newPosition, items }) {
       const isFirstChild = newPosition === 0;
-      const context = { items: this.embeds, newPosition, isFirstChild };
+      const context = { items, newPosition, isFirstChild };
       const container = cloneDeep(this.container);
-      const reordered = container.embeds[this.embeds[newPosition].id];
+      const reordered = container.embeds[items[newPosition].id];
       reordered.position = resolveElementPosition(context);
       this.$emit('save', container);
     },

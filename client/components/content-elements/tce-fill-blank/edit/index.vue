@@ -121,8 +121,8 @@ export default {
       return { 'has-error': this.errors.includes(answer) };
     },
     hasChanges(newVal, oldVal) {
-      let v1 = reduce(oldVal, (r, it) => r + get(it, 'data.content', ''), '');
-      let v2 = reduce(newVal, (r, it) => r + get(it, 'data.content', ''), '');
+      const v1 = reduce(oldVal, (r, it) => r + get(it, 'data.content', ''), '');
+      const v2 = reduce(newVal, (r, it) => r + get(it, 'data.content', ''), '');
       return v1 !== v2;
     }
   },
