@@ -3,8 +3,8 @@
 const Promise = require('bluebird');
 
 const PATHS = {
-  DEFAULT: '../../client/components',
-  EXTENSION: '../../extensions'
+  DEFAULT: '../../../client/components',
+  EXTENSION: '../../../extensions'
 };
 
 module.exports = class {
