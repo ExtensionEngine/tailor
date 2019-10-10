@@ -22,3 +22,22 @@ a:hover, a:active, a:visited, a:focus {
 hr.v-divider--vertical {
   margin: 0;
 }
+
+html {
+  font-size: 16px !important;
+}
+
+.v-application {
+  fieldset legend {
+    border: 0;
+  }
+
+  a:focus {
+    outline: none;
+  }
+
+  .row .no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
