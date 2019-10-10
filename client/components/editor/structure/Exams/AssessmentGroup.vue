@@ -128,7 +128,7 @@ export default {
   },
   watch: {
     timeLimit: debounce(function (val) {
-      let group = cloneDeep(this.group);
+      const group = cloneDeep(this.group);
       group.data = group.data || {};
       group.data.timeLimit = val;
       this.updateGroup(group);

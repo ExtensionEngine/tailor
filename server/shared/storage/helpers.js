@@ -29,7 +29,7 @@ function processAsset(asset) {
 }
 
 function processQuestion(element) {
-  let question = element.data.question;
+  const question = element.data.question;
   if (!question || question.length < 1) return Promise.resolve(element);
   return Promise.each(question, it => processAsset(it));
 }
@@ -46,7 +46,7 @@ function processComposite(composite) {
     .then(() => composite);
 }
 
-let processor = {};
+const processor = {};
 
 processor.IMAGE = asset => {
   const image = asset.data.url;
@@ -87,7 +87,7 @@ async function resolveStatics(item) {
 }
 
 function resolveQuestion(element) {
-  let question = element.data.question;
+  const question = element.data.question;
   if (!question || question.length < 1) return Promise.resolve(element);
   return Promise.each(question, it => resolveAsset(it)).then(() => element);
 }
@@ -108,7 +108,7 @@ function resolveComposite(composite) {
     .then(() => composite);
 }
 
-let resolver = {};
+const resolver = {};
 
 resolver.IMAGE = asset => {
   if (!asset.data || !asset.data.url) return Promise.resolve(asset);
