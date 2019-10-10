@@ -62,7 +62,7 @@ import Question from './Question';
 import toPath from 'lodash/toPath';
 import yup from 'yup';
 
-const TEXT_CONTAINERS = ['HTML', 'JODIT_HTML'];
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 
 const validationOptions = { recursive: true, abortEarly: false };
 
