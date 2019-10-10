@@ -15,8 +15,8 @@ export default {
       const { val } = Jodit.modules.Helpers;
       const form = editor.create.fromHTML(
         `<form class="jodit_form">
-          <textarea name="tooltip"></textarea>
-          <input name="text" type="text">
+          <textarea name="tooltip" placeholder="Tooltip"></textarea>
+          <input name="text" type="text" placeholder="Text">
           <div style="text-align: right">
             <button name="delete" type="button">Delete</button>
             <button name="submit" type="submit">Submit</button>
