@@ -1,5 +1,9 @@
 import toCase from 'to-case';
 
+export function getContainerName(type) {
+  return `tcc-${toCase.slug(type)}`;
+}
+
 export function getComponentName(type) {
   return `tce-${toCase.slug(resolveElementType(type))}`;
 }

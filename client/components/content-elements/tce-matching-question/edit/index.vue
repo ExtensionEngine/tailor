@@ -123,12 +123,12 @@ export default {
       this.update({ headings: { ...this.headings, ...val } });
     },
     updatePremiseContent(key, evt) {
-      let premises = cloneDeep(this.premises);
+      const premises = cloneDeep(this.premises);
       this.getPremiseItem(key, premises).value = evt.target.value;
       this.update({ premises: shuffle(premises) });
     },
     updateResponseContent(key, evt) {
-      let responses = cloneDeep(this.responses);
+      const responses = cloneDeep(this.responses);
       this.getResponseItem(key, responses).value = evt.target.value;
       this.update({ responses: shuffle(responses) });
     },
@@ -145,18 +145,18 @@ export default {
       return find(responses, { key });
     },
     removeItems(premiseKey, responseKey) {
-      let premises = cloneDeep(this.premises);
-      let responses = cloneDeep(this.responses);
-      let correct = cloneDeep(this.correct);
+      const premises = cloneDeep(this.premises);
+      const responses = cloneDeep(this.responses);
+      const correct = cloneDeep(this.correct);
       pull(premises, this.getPremiseItem(premiseKey, premises));
       pull(responses, this.getResponseItem(responseKey, responses));
       delete correct[premiseKey];
       this.update({ premises, responses, correct });
     },
     addItems() {
-      let premises = cloneDeep(this.premises);
-      let responses = cloneDeep(this.responses);
-      let correct = cloneDeep(this.correct);
+      const premises = cloneDeep(this.premises);
+      const responses = cloneDeep(this.responses);
+      const correct = cloneDeep(this.correct);
       const premiseKey = cuid();
       const responseKey = cuid();
       premises.push({ key: premiseKey, value: '' });
@@ -178,7 +178,7 @@ export default {
       this.$emit('update', data, true);
     },
     hasError(key, type) {
-      let index = type === 'premises'
+      const index = type === 'premises'
         ? this.premises.indexOf(this.getPremiseItem(key))
         : this.responses.indexOf(this.getResponseItem(key));
       const answer = `${type}[${index}].value`;
