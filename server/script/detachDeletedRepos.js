@@ -1,3 +1,5 @@
+'use strict';
+
 const { getRepositoryAttrs, getRepositoryCatalog } = require('../shared/publishing/helpers');
 const { Course } = require('../shared/database');
 const each = require('lodash/each');
@@ -16,7 +18,7 @@ function updateRepositoryCatalog(repositories) {
     console.info('Catalog fetched ...');
     console.info('Updating deleted repos ...');
     each(catalog, repo => {
-      let existing = find(repositories, { id: repo.id });
+      const existing = find(repositories, { id: repo.id });
       const repositoryData = {
         ...getRepositoryAttrs(existing),
         detachedAt: existing.deletedAt
