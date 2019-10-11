@@ -103,7 +103,7 @@ export default class Resource {
    */
   getById(id) {
     return this.get(id).then(response => {
-      let item = response.data.data;
+      const item = response.data.data;
       this.setCid(item);
       return item;
     });

@@ -1,27 +1,17 @@
 <template>
-  <div
-    @focusout="focusoutTextarea"
-    :class="[{ editing, 'has-error': vErrors.has(meta.key) }]"
-    class="textarea">
-    <label :for="meta.key">{{ meta.label }}</label>
-    <div class="textarea-wrapper">
-      <textarea
-        v-show="editing"
-        :ref="meta.key"
-        v-model="value"
-        v-validate="meta.validate"
-        @keydown.enter="onEnter"
-        @keydown.esc="editing = false"
-        :name="meta.key"
-        :placeholder="meta.placeholder"
-        class="form-control">
-      </textarea>
-      <div @mousedown.stop="focusTextarea" :style="previewStyle" class="content">
-        <pre><span>{{ value || meta.placeholder }}</span><br></pre>
-      </div>
-    </div>
-    <span class="help-block">{{ vErrors.first(meta.key) }}</span>
-  </div>
+  <v-textarea
+    v-model="value"
+    v-validate="meta.validate"
+    @change="onChange"
+    :name="meta.key"
+    :data-vv-as="meta.label"
+    :label="meta.label"
+    :placeholder="meta.placeholder"
+    :error-messages="vErrors.collect(meta.key)"
+    :rows="rows"
+    auto-grow
+    box
+    class="my-2" />
 </template>
 
 <script>
@@ -32,36 +22,17 @@ export default {
   mixins: [withValidation()],
   props: {
     meta: { type: Object, default: () => ({ value: null }) },
-    minHeight: { type: Number, default: 60 }
+    rows: { type: Number, default: 2 }
   },
   data() {
     return {
-      value: this.meta.value,
-      editing: false
+      value: this.meta.value
     };
   },
-  computed: {
-    previewStyle() {
-      return {
-        visibility: this.editing ? 'hidden' : 'visible',
-        'min-height': `${this.minHeight}px`
-      };
-    }
-  },
   methods: {
-    onEnter(e) {
-      if (e.shiftKey) return;
-      e.preventDefault();
-      this.focusoutTextarea();
-    },
-    focusTextarea() {
-      this.editing = true;
-      setTimeout(() => this.$refs[this.meta.key].focus(), 0);
-    },
-    focusoutTextarea() {
-      this.$validator.validateAll().then(result => {
-        if (!result) return;
-        this.editing = false;
+    onChange() {
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
         if (this.value === this.meta.value) return;
         this.$emit('update', this.meta.key, this.value);
       });
@@ -69,62 +40,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.textarea {
-  position: relative;
-  padding: 3px 8px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
-
-  &.editing:hover {
-    background-color: inherit;
-  }
-
-  label {
-    width: 100%;
-    color: #808080;
-  }
-
-  &-wrapper {
-    position: relative;
-    margin: 5px 0;
-  }
-
-  textarea {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    box-sizing: content-box;
-    overflow: hidden;
-    resize: none;
-    letter-spacing: inherit;
-  }
-
-  .form-control, .content {
-    font-size: 17px;
-  }
-
-  .content {
-    color: #333;
-    line-height: 24px;
-
-    pre {
-      height: 100%;
-      margin: 0;
-      padding: 0 4px 8px 0;
-      font: inherit;
-      background: inherit;
-      border: none;
-      word-break: break-all;
-      word-wrap: break-word;
-      white-space: pre-wrap;
-      overflow: hidden;
-    }
-  }
-}
-</style>

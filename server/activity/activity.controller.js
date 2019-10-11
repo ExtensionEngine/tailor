@@ -62,10 +62,15 @@ function clone({ activity, body }, res) {
   });
 }
 
-function getPreviewUrl({ course, activity }, res) {
-  return fetchActivityContent(course, activity)
+function getPreviewUrl({ activity }, res) {
+  return fetchActivityContent(activity, true)
     .then(content => {
-      const body = { uid: activity.uid, ...content };
+      const body = {
+        ...pick(activity, ['id', 'uid', 'type']),
+        repositoryId: activity.courseId,
+        meta: activity.data,
+        ...content
+      };
       return request.post(previewUrl, body);
     })
     .then(({ data: { url } }) => {
