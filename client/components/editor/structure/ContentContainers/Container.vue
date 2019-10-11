@@ -1,8 +1,8 @@
 <template>
-  <v-card class="mb-5">
+  <v-card class="content-container mb-5">
     <div class="actions">
       <v-btn
-        @click="deleteContainer"
+        @click="$emit('delete')"
         color="error"
         outlined
         class="pull-right">
@@ -24,19 +24,19 @@
       :activity="container"
       :types="types"
       :layout="layout">
-      <teaching-element
-        slot="list-item"
-        slot-scope="{ item, dragged, setWidth }"
-        :set-width="setWidth"
-        :dragged="dragged"
-        :element="item" />
+      <template v-slot:list-item="{ item, dragged, setWidth }">
+        <teaching-element
+          :set-width="setWidth"
+          :dragged="dragged"
+          :element="item" />
+      </template>
     </tes-list>
   </v-card>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import filter from 'lodash/filter';
+import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
@@ -45,12 +45,12 @@ export default {
   name: 'content-container',
   props: {
     container: { type: Object, required: true },
+    tes: { type: Object, required: true },
     types: { type: Array, default: null },
     name: { type: String, required: true },
-    layout: { type: Boolean, required: true }
+    layout: { type: Boolean, default: true }
   },
   computed: {
-    ...mapGetters(['tes']),
     teachingElements() {
       const activityId = this.container.id;
       return sortBy(filter(this.tes, { activityId }), 'position');
@@ -75,9 +75,6 @@ export default {
       const isFirstChild = newPosition === -1;
       const context = { items, newPosition, isFirstChild, insert: true };
       this.insertElement({ element, context });
-    },
-    deleteContainer() {
-      this.$emit('delete');
     }
   },
   components: {
