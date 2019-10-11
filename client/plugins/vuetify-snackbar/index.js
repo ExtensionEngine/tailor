@@ -3,10 +3,13 @@ import Snackbar from './Snackbar';
 
 const queue = new Queue(1, Infinity);
 
-export const install = (Vue, { parent = document.body } = {}) => {
+export const install = (Vue, { parent } = {}) => {
   const SnackbarCtor = Vue.extend(Snackbar);
   const vm = new SnackbarCtor().$mount();
-  document.addEventListener('DOMContentLoaded', () => parent.appendChild(vm.$el));
+  document.addEventListener('DOMContentLoaded', () => {
+    const element = parent || document.getElementById('app');
+    element.appendChild(vm.$el);
+  });
   const $snackbar = {
     show: (msg, options) => queue.add(() => vm.show(msg, options)),
     close: () => vm.close,

@@ -1,8 +1,10 @@
 import colors from 'vuetify/es5/util/colors';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
+import VuetifySnackbar from '@/plugins/vuetify-snackbar';
 
 Vue.use(Vuetify);
+Vue.use(VuetifySnackbar);
 
 export default new Vuetify({
   icons: {
