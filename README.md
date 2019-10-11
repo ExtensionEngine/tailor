@@ -109,12 +109,16 @@ An array of ContentContainer objects.
 
 #### ContentContainer
 Configuration for content containers. Contains the following properties:
-* **type** `String` - Const for marking container type.
-* **label** `String` - Content container label.
-* **multiple** `Boolean` - Defines if there can be multiple instances of the ContentContainer inside one activity. False by default.
-* **types** `Array<String>` - An array of possible teaching element types that can exist inside ContentContainer. If not specified all types of elements are allowed.
-* **displayHeading** `Boolean` - Defines if a heading is displayed on top of the ContentContainer. False by default.
-* **layout** `Boolean` - Defines if elements inside container can be placed two in a row. True by default.
+* **type** `String` - `const-cased` string for marking `ContentContainer` type.
+* **label** `String` - String used for referencing `ContentContainer` on the UI.
+* **multiple** `Boolean` - Defines if there can be multiple instances of the `ContentContainer` inside a single `Activity`. False by default.
+* **types** `Array<String>` - An array of possible content element types that can exist inside a `ContentContainer`. If not specified all types of elements are allowed.
+* **displayHeading** `Boolean` - Defines if a heading is displayed on top of the `ContentContainer`. False by default.
+* **layout** `Boolean` - Defines if elements inside a `ContentContainer` instance can be placed two in a row. True by default.
+* **config** `Object` - Defines `ContentContainer` specific properties.
+* **required** `Boolean` - Defines if an instance of the `ContentContainer` is created if non exist. True by default.
+* **publishedAs** `String` - Defines the `ContentContainer` the name of the file under which the container will be published. Defaults to `container`.
+The name of the structure component used is the `kebab-cased` version of the `type` property. (example: ABC_DEF -> abc-def)
 
 ### `PREVIEW_URL`
 A string template that will be interpolated on the client using two route params, `repositoryId` and `activityId`, into a preview URL for each activiy. Example:

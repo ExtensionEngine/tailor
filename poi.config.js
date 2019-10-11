@@ -17,7 +17,8 @@ const aliases = {
   EventBus: '@/EventBus',
   utils: '@/utils',
   shared: path.join(__dirname, 'config/shared'),
-  tce: path.join(__dirname, 'content-elements')
+  tce: path.join(__dirname, 'content-elements'),
+  extensions: path.join(__dirname, 'extensions')
 };
 
 const copy = [{ from: 'client/assets/img', to: imagesPath }];

@@ -1,7 +1,7 @@
 <template>
   <div @selected="$emit('selected')" class="assessment-container">
     <div class="assessment">
-      <slot></slot>
+      <slot :isEditing="isEditing"></slot>
       <question
         @update="update"
         :assessment="editedElement"
@@ -15,7 +15,7 @@
         :is-graded="isGraded"
         :is-editing="isEditing"
         :errors="errors" />
-      <div :class="{ 'has-error': hintError }" class="form-group">
+      <div :class="{ 'has-error': hintError }" class="form-group hint">
         <span class="form-label">Hint</span>
         <input
           v-model="editedElement.data.hint"
