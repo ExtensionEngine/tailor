@@ -1,7 +1,7 @@
 <template>
   <div @selected="$emit('selected')" class="assessment-container">
     <div class="assessment">
-      <slot></slot>
+      <slot :isEditing="isEditing"></slot>
       <question
         @update="update"
         :assessment="editedElement"
@@ -15,7 +15,7 @@
         :is-graded="isGraded"
         :is-editing="isEditing"
         :errors="errors" />
-      <div :class="{ 'has-error': hintError }" class="form-group">
+      <div :class="{ 'has-error': hintError }" class="form-group hint">
         <span class="form-label">Hint</span>
         <input
           v-model="editedElement.data.hint"
@@ -164,14 +164,14 @@ export default {
 };
 
 function errorProcessor(error) {
-  let item = error.value;
+  const item = error.value;
   if (item.type !== 'DD') return map(error.inner, it => it.path);
   // TODO: Nasty !!
   return map(error.inner, it => {
-    let path = toPath(it.path);
+    const path = toPath(it.path);
     if (path.length === 1) return it.path;
     if (last(path) !== 'value') return;
-    let key = get(error.value, dropRight(path).concat('key'));
+    const key = get(error.value, dropRight(path).concat('key'));
     return `${path[0]}${key}`;
   });
 }

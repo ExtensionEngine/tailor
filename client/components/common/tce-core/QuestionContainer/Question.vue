@@ -82,7 +82,7 @@ export default {
     deleteElement(element) {
       const index = findIndex(this.assessment.data.question, { id: element.id });
       if (index === -1) return;
-      let question = cloneDeep(this.assessment.data.question);
+      const question = cloneDeep(this.assessment.data.question);
       pullAt(question, index);
       this.$emit('update', { question });
     }
