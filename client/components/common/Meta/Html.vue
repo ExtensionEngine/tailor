@@ -3,15 +3,14 @@
     <label :for="meta.key">{{ meta.label }}</label>
     <div class="editor-wrapper">
       <quill-editor
-        v-model="content"
         :ref="meta.key"
+        v-model="content"
+        @focus="enableEditing"
+        @blur="update"
         :name="meta.key"
         :options="quillOptions"
         :disabled="!editing"
-        :class="{ 'meta-quill-disabled': !editing }"
-        @focus="enableEditing"
-        @blur="update">
-      </quill-editor>
+        :class="{ 'meta-quill-disabled': !editing }" />
     </div>
   </div>
 </template>
