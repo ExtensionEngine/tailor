@@ -1,6 +1,6 @@
 <template>
   <div class="select-activity">
-    <circular-progress v-if="showLoader"></circular-progress>
+    <circular-progress v-if="showLoader" />
     <div v-else>
       <span @click="back" class="btn-back">
         <span class="mdi mdi-chevron-left"></span> Back
@@ -17,7 +17,7 @@
         :class="{ leaf: !hasChildren(activity), selectable: isSelectable(activity) }"
         class="activity-item">
         <span @click="show(activity)" class="name">
-          {{ getName(activity) }}
+          {{ getName(activity) | truncate(100) }}
           <span class="mdi mdi-chevron-right subitems-indicator"></span>
         </span>
         <button
@@ -31,18 +31,17 @@
 </template>
 
 <script>
-import { getAncestors } from 'client/utils/activity';
-import { getSchemaId } from 'shared/activities';
 import activityApi from 'client/api/activity';
 import CircularProgress from 'components/common/CircularProgress';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
 import get from 'lodash/get';
+import { getAncestors } from 'client/utils/activity';
+import { getSchemaId } from 'shared/activities';
 import map from 'lodash/map';
 import Promise from 'bluebird';
 import reduce from 'lodash/reduce';
-import truncate from 'truncate';
 import uniqBy from 'lodash/uniqBy';
 
 export default {
@@ -92,7 +91,7 @@ export default {
       return filter(this.activities, { parentId });
     },
     getName(activity) {
-      return truncate(get(activity, 'data.name', activity.type), 100);
+      return get(activity, 'data.name', activity.type);
     }
   },
   created() {
@@ -145,7 +144,7 @@ $highlight: #42b983;
   }
 }
 
-.btn-select {
+.btn-fab.btn-select {
   display: none;
   position: absolute;
   right: -20px;

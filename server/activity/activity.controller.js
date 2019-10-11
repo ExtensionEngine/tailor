@@ -1,11 +1,14 @@
 'use strict';
 
 const { Activity } = require('../shared/database');
-const { getOutlineLevels } = require('../../config/shared/activities');
+const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');
 const get = require('lodash/get');
+const { getOutlineLevels } = require('../../config/shared/activities');
 const pick = require('lodash/pick');
+const { previewUrl } = require('../../config/server');
 const publishingService = require('../shared/publishing/publishing.service');
+const request = require('axios');
 
 function create({ course, body, params, user }, res) {
   const outlineConfig = find(getOutlineLevels(course.schema), { type: body.type });
@@ -28,7 +31,7 @@ function patch({ activity, body, user }, res) {
 }
 
 function list({ course, query, opts }, res) {
-  if (!query.detached) opts.where.$and = [{ detached: false }];
+  if (!query.detached) opts.where = { detached: false };
   return course.getActivities(opts).then(data => res.json({ data }));
 }
 
@@ -54,9 +57,25 @@ function publish({ activity }, res) {
 function clone({ activity, body }, res) {
   const { courseId, parentId, position } = body;
   return activity.clone(courseId, parentId, position).then(mappings => {
-    const opts = { where: { id: { $in: Object.values(mappings) } } };
+    const opts = { where: { id: Object.values(mappings) } };
     return Activity.findAll(opts).then(data => res.json({ data }));
   });
+}
+
+function getPreviewUrl({ activity }, res) {
+  return fetchActivityContent(activity, true)
+    .then(content => {
+      const body = {
+        ...pick(activity, ['id', 'uid', 'type']),
+        repositoryId: activity.courseId,
+        meta: activity.data,
+        ...content
+      };
+      return request.post(previewUrl, body);
+    })
+    .then(({ data: { url } }) => {
+      return res.json({ location: `${new URL(url, previewUrl)}` });
+    });
 }
 
 module.exports = {
@@ -67,5 +86,6 @@ module.exports = {
   remove,
   reorder,
   clone,
-  publish
+  publish,
+  getPreviewUrl
 };

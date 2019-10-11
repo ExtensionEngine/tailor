@@ -1,61 +1,69 @@
 <template>
-  <div class="course-container">
-    <ul class="nav nav-tabs">
-      <!-- TODO: Create component for nav tabs -->
-      <li :class="{ active: $route.name === 'course' }">
-        <router-link :to="{ name: 'course' }">Outline</router-link>
-      </li>
-      <li :class="{ active: $route.name === 'tree-view' }">
-        <router-link :to="{ name: 'tree-view' }">Tree View</router-link>
-      </li>
-      <li :class="{ active: $route.name === 'course-revisions' }">
-        <router-link :to="{ name: 'course-revisions' }">Revisions</router-link>
-      </li>
-      <li
-        v-if="showSettings"
-        :class="{ active: $route.matched.some(it => it.name === 'course-info') }">
-        <router-link :to="{ name: 'course-info' }">Settings</router-link>
-      </li>
-    </ul>
+  <div class="repo-container">
+    <v-tabs
+      height="50"
+      color="primary"
+      slider-color="grey lighten-4"
+      dark
+      class="elevation-2">
+      <v-tab
+        v-for="tab in tabs"
+        :key="tab.name"
+        :to="{ name: tab.route }"
+        active-class="tab-active"
+        ripple
+        exact
+        class="px-1">
+        <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
+      </v-tab>
+    </v-tabs>
     <div class="tab-content" infinite-wrapper>
-      <router-view :showLoader="showLoader"></router-view>
+      <router-view :show-loader="showLoader" />
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
 export default {
+  props: {
+    courseId: { type: Number, required: true }
+  },
   data() {
     return {
       showLoader: true
     };
   },
   computed: {
-    ...mapGetters(['course', 'activities', 'activity'], 'course'),
-    ...mapGetters(['isAdmin', 'isCourseAdmin']),
-    showSettings() {
-      return this.isAdmin || this.isCourseAdmin;
-    },
-    showDetails() {
-      return this.isAdmin || this.isCourseAdmin;
+    ...mapGetters(['isAdmin']),
+    ...mapGetters('course', ['course', 'activities', 'activity', 'isCourseAdmin']),
+    tabs() {
+      const items = [
+        { name: 'Structure', route: 'course', icon: 'file-tree' },
+        { name: 'Graph View', route: 'tree-view', icon: 'source-fork mdi-rotate-180' },
+        { name: 'History', route: 'course-revisions', icon: 'history' },
+        { name: 'Settings', route: 'course-info', icon: 'settings-outline' }
+      ];
+      if (!this.isAdmin && !this.isCourseAdmin) items.pop();
+      return items;
     }
   },
   methods: {
-    ...mapActions({ getCourse: 'get' }, 'courses'),
-    ...mapActions({ getActivities: 'fetch' }, 'activities'),
-    ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
-    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activities'),
-    ...mapMutations({ setupCommentsApi: 'setBaseUrl' }, 'comments'),
-    ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
-    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
+    ...mapActions('course', ['getUsers']),
+    ...mapActions('courses', { getCourse: 'get' }),
+    ...mapActions('activities', { getActivities: 'fetch' }),
+    ...mapActions('activities', { setupActivityApi: 'setEndpoint' }),
+    ...mapActions('comments', { setupCommentsApi: 'setEndpoint' }),
+    ...mapActions('revisions', { setupRevisionApi: 'setEndpoint' }),
+    ...mapActions('tes', { setupTesApi: 'setEndpoint' }),
+    ...mapMutations('course', { resetActivityFocus: 'focusActivity' })
   },
-  created() {
-    const { courseId } = this.$route.params;
+  async created() {
+    const { courseId } = this;
     const existingSelection = this.activity && this.activity.courseId === courseId;
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
@@ -63,42 +71,35 @@ export default {
     this.setupCommentsApi(`/courses/${courseId}/comments`);
     this.setupRevisionApi(`/courses/${courseId}/revisions`);
     this.setupTesApi(`/courses/${courseId}/tes`);
-    if (!this.course) this.getCourse(courseId);
-    return Promise.join(this.getActivities(), Promise.delay(500)).then(() => {
-      this.showLoader = false;
-      let activities = filter(this.activities, { parentId: null });
-      activities = sortBy(activities, 'position');
-      if (!existingSelection && activities.length) {
-        this.resetActivityFocus(activities[0]._cid);
-      }
-    });
+    const actions = [this.getActivities(), this.getUsers()];
+    if (!this.course) actions.push(this.getCourse(courseId));
+    await Promise.all(actions);
+    this.showLoader = false;
+    const activities = filter(this.activities, { parentId: null });
+    if (!existingSelection && activities.length) {
+      this.resetActivityFocus(sortBy(activities, 'position')[0]._cid);
+    }
   }
 };
 </script>
 
 <style lang="scss">
-.course-container, .tab-content, .tab-pane {
+.repo-container, .tab-content, .tab-pane {
   width: 100%;
   height: 100%;
 }
 
-.course-container {
+.repo-container {
   display: flex;
   flex-direction: column;
-
-  .nav-tabs {
-    width: 100%;
-    background-color: white;
-    z-index: 1;
-
-    li a {
-      font-size: 16px;
-    }
-  }
 
   .tab-content {
     overflow-y: scroll;
     overflow-y: overlay;
   }
+}
+
+.v-tabs {
+  z-index: 2;
 }
 </style>

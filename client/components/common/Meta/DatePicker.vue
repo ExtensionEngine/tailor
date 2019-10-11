@@ -4,17 +4,16 @@
     <div class="form-group">
       <datetime
         v-model="value"
+        @input="value => $emit('update', meta.key, value)"
         :type="type"
-        :input-class="'form-control'"
-        @input="value => $emit('update', meta.key, value)">
-      </datetime>
+        :input-class="'form-control'" />
     </div>
   </div>
 </template>
 
 <script>
-import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
+import { Datetime } from 'vue-datetime';
 
 export default {
   props: {

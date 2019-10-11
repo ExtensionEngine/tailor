@@ -11,29 +11,37 @@ logs
 *.log
 npm-debug.log*
 
-# Test reports
-client/test/unit/coverage
-client/test/e2e/reports
-selenium-debug.log
-
 # Configuration
 .env
-ecosystem.config.js
-.*rc.*
-!.eslintrc*
-!.*rc.*.example
+ecosystem.*
+.activitiesrc*
+# TODO: Deprecate `activities-rc` config name
+.activities-rc*
+activities.config.js
+.brandrc*
+brand.config.js
+!*.example
+
+# Extensions
+extensions/content-elements/*
+!extensions/content-elements/.gitkeep
+extensions/content-containers/*
+!extensions/content-containers/.gitkeep
 
 # Branding
-client/assets/img/*logo*
-!client/assets/img/default-logo*
-client/assets/img/*favicon*
-!client/assets/img/default-favicon.ico
+client/assets/img/*
+!client/assets/img/default-*
 
 # DB migrations
 umzug.json
 
+# Filesystem storage provider
+data/*
+!data/.gitkeep
+
 # Build artifacts
-dist/
+dist/*
+!dist/.gitkeep
 stats.json
 
 # General

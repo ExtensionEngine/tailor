@@ -12,7 +12,7 @@
         "type": "INPUT",
         "label": "Description",
         "placeholder": "Click to add...",
-        "validate": { "rules": { "required": false, "max": 23 } }
+        "validate": { "required": false, "max": 23 }
       }],
       "contentContainers": ["PAGE"],
       "relationships": [{
@@ -24,6 +24,7 @@
         "placeholder": "Click to select",
         "allowCircularLinks": false,
         "allowInsideLineage": false
+        "allowedTypes": ["ACTIVITY_TYPE_1", "ACTIVITY_TYPE_2"]
       }, {
         "type": "replacements",
         "label": "replacements"
@@ -32,7 +33,9 @@
     "contentContainers": [{
       "type": "PAGE",
       "label": "Page",
-      "multiple": false
+      "multiple": false,
+      "publishedAs": "Page",
+      "required": false
     }]
   }]
 }

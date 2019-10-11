@@ -1,33 +1,46 @@
 <template>
   <div class="outline-page">
-    <circular-progress v-if="showLoader"/>
+    <v-progress-circular v-if="showLoader" color="primary" indeterminate />
     <div v-else class="outline">
       <div class="activity-container">
+        <v-toolbar
+          v-if="!isFlat"
+          color="grey lighten-3"
+          flat
+          dense>
+          <v-spacer />
+          <v-btn
+            @click="toggleActivities"
+            color="primary"
+            flat>
+            Toggle all
+          </v-btn>
+        </v-toolbar>
         <draggable
-          :list="topLevelActivities"
-          :options="{ handle: '.activity' }"
-          @update="data => reorder(data, topLevelActivities)">
+          @update="data => reorder(data, rootActivities)"
+          :list="rootActivities"
+          :options="{ handle: '.activity' }">
           <activity
-            v-for="(activity, index) in topLevelActivities"
-            v-bind="activity"
+            v-for="(activity, index) in rootActivities"
             :key="activity._cid"
+            v-bind="activity"
             :index="index + 1"
             :level="1"
-            :activities="activities"/>
+            :activities="outlineActivities" />
         </draggable>
-        <no-activities v-if="!topLevelActivities.length"/>
+        <no-activities v-if="!rootActivities.length" />
       </div>
-      <sidebar/>
+      <sidebar />
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import Activity from './Activity';
-import CircularProgress from 'components/common/CircularProgress';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import map from 'lodash/map';
 import NoActivities from './NoActivities';
 import reorderMixin from './reorderMixin';
@@ -39,14 +52,20 @@ export default {
     showLoader: { type: Boolean, default: false }
   },
   computed: {
-    ...mapGetters(['activities', 'structure'], 'course'),
-    topLevelActivities() {
+    ...mapGetters('course', ['structure', 'outlineActivities']),
+    isFlat() {
+      const types = map(filter(this.structure, { level: 2 }), 'type');
+      if (!types.length) return false;
+      return !find(this.outlineActivities, it => types.includes(it.type));
+    },
+    rootActivities() {
       const types = map(filter(this.structure, { level: 1 }), 'type');
-      return filter(this.activities, it => types.includes(it.type))
+      return filter(this.outlineActivities, it => types.includes(it.type))
         .sort((x, y) => x.position - y.position);
     }
   },
-  components: { Activity, CircularProgress, Draggable, NoActivities, Sidebar }
+  methods: mapActions('course', ['toggleActivities']),
+  components: { Activity, Draggable, NoActivities, Sidebar }
 };
 </script>
 
@@ -54,22 +73,22 @@ export default {
 .outline-page {
   height: 100%;
 
-  .circular-progress {
-    margin-top: 115px;
+  .v-progress-circular {
+    margin-top: 120px;
   }
 }
 
 .outline {
   position: relative;
   height: 100%;
-  padding-right: 420px;
+  padding-right: 450px;
 }
 
 .activity-container {
   width: 100%;
   height: 100%;
   float: left;
-  padding: 80px 60px 0;
+  padding: 50px 90px 0 60px;
   overflow-y: scroll;
   overflow-y: overlay;
 
@@ -78,5 +97,9 @@ export default {
       margin-bottom: 120px;
     }
   }
+}
+
+/deep/ .v-toolbar__content {
+  padding: 0;
 }
 </style>

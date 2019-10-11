@@ -1,61 +1,58 @@
 <template>
-  <div v-if="course" class="settings">
+  <div v-if="course" class="settings white elevation-1">
     <div class="actions">
-      <button
-        :disabled="publishing"
+      <v-btn
         @click="publish"
-        class="btn btn-primary btn-material btn-sm pull-right">
-        <span class="mdi mdi-publish"></span> Publish info
-      </button>
+        :loading="publishing"
+        outline
+        small
+        class="pull-right">
+        Publish info
+      </v-btn>
     </div>
     <meta-input
       v-for="it in requiredData"
-      :meta="it"
       :key="it.key"
       @update="updateKey"
-      class="meta-input">
-    </meta-input>
+      :meta="it"
+      class="meta-input" />
     <meta-input
       v-for="it in metadata"
-      :meta="it"
       :key="it.key"
       @update="updateKey"
-      class="meta-input">
-    </meta-input>
+      :meta="it"
+      class="meta-input" />
   </div>
 </template>
 
 <script>
-import { getRepositoryMeta } from 'shared/activities';
-import { mapActions, mapGetters } from 'vuex-module';
-import api from '../../../api/course';
+import { mapActions, mapGetters } from 'vuex';
+import api from '@/api/course';
 import cloneDeep from 'lodash/cloneDeep';
-import EventBus from 'EventBus';
 import find from 'lodash/find';
+import { getRepositoryMeta } from 'shared/activities';
 import Meta from 'components/common/Meta';
 import set from 'lodash/set';
-
-const appChannel = EventBus.channel('app');
 
 export default {
   data() {
     return { publishing: false };
   },
   computed: {
-    ...mapGetters(['course'], 'course'),
+    ...mapGetters('course', ['course']),
     requiredData() {
       return [{
         key: 'name',
         value: this.course.name,
-        type: 'INPUT',
+        type: 'TEXTAREA',
         label: 'Name',
-        validate: { rules: { required: true, min: 2, max: 250 } }
+        validate: { required: true, min: 2, max: 250 }
       }, {
         key: 'description',
         value: this.course.description,
         type: 'TEXTAREA',
         label: 'Description',
-        validate: { rules: { required: true, min: 2, max: 2000 } }
+        validate: { required: true, min: 2, max: 2000 }
       }];
     },
     metadata() {
@@ -63,18 +60,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update', 'remove'], 'courses'),
+    ...mapActions('courses', ['update']),
     updateKey(key, value) {
       if (find(this.metadata, { key })) key = `data.${key}`;
       const data = cloneDeep(this.course);
       this.update(set(data, key, value));
-    },
-    removeCourse() {
-      appChannel.emit('showConfirmationModal', {
-        type: 'course',
-        item: this.course,
-        action: () => this.remove(this.course) && this.$router.push('/')
-      });
     },
     publish() {
       this.publishing = true;
@@ -90,8 +80,6 @@ export default {
 .settings {
   padding: 30px 30px 10px;
   text-align: left;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 
   .meta-input {
     margin: 20px 0;

@@ -1,7 +1,7 @@
-import { getLevel } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import { getLevel } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
 
 export function getParent(activities, activity) {

@@ -1,52 +1,58 @@
 <template>
-  <table class="table table-striped table-hover">
-    <thead>
-      <tr>
-        <th>User</th>
-        <th
-          v-for="role in roles"
-          :key="role.value"
-          class="text-center">
-          {{ role.title }}
-        </th>
-        <th class="text-center">Remove from course</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="user in users" :key="user.id">
-        <td>{{ user.email }}</td>
-        <td
-          v-for="role in roles"
-          :key="role.value"
-          class="text-center">
-          <input
-            :name="user.id"
-            :value="role.value"
-            :checked="user.courseRole === role.value"
-            @click="changeRole(user.email, role.value)"
-            type="radio"/>
-        </td>
-        <td class="text-center">
-          <button @click="remove(user)" type="button" class="btn btn-link">
-            <span class="mdi mdi-close"></span>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <v-data-table
+    :headers="headers"
+    :items="users"
+    :loading="isLoading"
+    no-data-text="No assigned users."
+    hide-actions>
+    <template v-slot:items="{ item }">
+      <td class="text-xs-left">
+        <v-avatar color="primary lighten-2" size="40" dark class="mr-3">
+          <span class="headline white--text">
+            {{ item.email[0].toUpperCase() }}
+          </span>
+        </v-avatar>
+        {{ item.email }}
+      </td>
+      <td class="role-select">
+        <v-select
+          @change="role => changeRole(item.email, role)"
+          :value="item.courseRole"
+          :items="roles"
+          icon />
+      </td>
+      <td class="actions">
+        <v-btn color="primary" icon flat small>
+          <v-icon @click="remove(item)">mdi-delete</v-icon>
+        </v-btn>
+      </td>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
 
 export default {
   props: {
-    roles: { type: Array, required: true },
-    users: { type: Array, required: true }
+    roles: { type: Array, required: true }
+  },
+  data() {
+    return { isLoading: true };
+  },
+  computed: {
+    ...mapGetters('course', ['users']),
+    headers() {
+      return ['User', 'Role', ''].map(text => ({ text, sortable: false }));
+    }
   },
   methods: {
-    ...mapActions(['upsertUser', 'removeUser'], 'course'),
+    ...mapActions('course', ['getUsers', 'upsertUser', 'removeUser']),
+    fetchUsers() {
+      this.isLoading = true;
+      return this.getUsers().then(() => (this.isLoading = false));
+    },
     changeRole(email, role) {
       const { courseId } = this.$route.params;
       debounce(this.upsertUser, 500)({ courseId, email, role });
@@ -55,16 +61,24 @@ export default {
       const { courseId } = this.$route.params;
       this.removeUser({ userId: user.id, courseId });
     }
+  },
+  created() {
+    this.fetchUsers();
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.table {
-  text-align: left;
+.role-select {
+  max-width: 26px;
+}
 
-  input[type="radio"] {
-    display: inline-block;
-  }
+.v-table .actions {
+  max-width: 15px;
+  padding: 0 0 6px 0;
+}
+
+/deep/ .v-input__slot::before {
+  border: none !important;
 }
 </style>

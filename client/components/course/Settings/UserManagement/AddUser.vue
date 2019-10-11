@@ -1,89 +1,71 @@
 <template>
-  <form @submit.prevent="addUser" novalidate>
-    <div class="row">
-      <div
-        :class="{ 'has-error': hasError('email') }"
-        class="col-md-7">
-        <input
+  <form @submit.prevent="addUser">
+    <v-layout row align-center class="pl-3">
+      <v-flex xs7 class="pr-2">
+        <v-combobox
           v-model="email"
-          class="form-control"
-          type="email"
-          placeholder="Email"/>
-        <div v-show="hasError('email')" class="text-danger input-error">
-          {{ errorMessages.email }}
-        </div>
-      </div>
-      <div class="col-md-3">
-        <select v-model="role" class="form-control">
-          <option
-            v-for="role in roles"
-            :key="role.value"
-            :value="role.value">
-            {{ role.title }}
-          </option>
-        </select>
-      </div>
-      <div class="col-md-2">
-        <button type="submit" class="btn btn-primary btn-block">Invite</button>
-      </div>
-    </div>
+          v-validate="{ required: true, email: true }"
+          @update:searchInput="fetchUsers"
+          :error-messages="vErrors.collect('email')"
+          :items="suggestedUsers"
+          data-vv-name="email"
+          label="Email" />
+      </v-flex>
+      <v-flex xs3 class="px-4">
+        <v-select
+          v-model="role"
+          v-validate="'required'"
+          :error-messages="vErrors.collect('role')"
+          :items="roles"
+          data-vv-name="role"
+          flat />
+      </v-flex>
+      <v-flex xs2>
+        <v-btn type="submit" small outline>Add</v-btn>
+      </v-flex>
+    </v-layout>
   </form>
 </template>
 
 <script>
-import emailRegex from 'email-regex';
-import { mapActions } from 'vuex-module';
-import yup from 'yup';
-
-const schema = yup.object().shape({
-  email: yup.string().required().matches(emailRegex({ exact: true })).trim(),
-  role: yup.string().required()
-});
+import api from '@/api/user';
+import { mapActions } from 'vuex';
+import throttle from 'lodash/throttle';
+import { withValidation } from 'utils/validation';
 
 export default {
+  mixins: [withValidation()],
   props: {
     roles: { type: Array, required: true }
   },
   data() {
     return {
       email: '',
-      role: this.roles[0].value,
-      errors: [],
-      errorMessages: { email: 'Please enter a valid email' }
+      suggestedUsers: [],
+      role: this.roles[0].value
     };
   },
   methods: {
-    ...mapActions(['upsertUser'], 'course'),
-    hasError(type) {
-      return this.errors.indexOf(type) > -1;
-    },
+    ...mapActions('course', ['upsertUser']),
     addUser() {
       const { email, role } = this;
       const { courseId } = this.$route.params;
-      this.validate({ email, role })
-        .then(() => {
-          this.email = '';
-          this.upsertUser({ courseId, email, role });
-        })
-        .catch(err => {
-          err.inner.forEach(it => this.errors.push(it.path));
-        });
+      this.$validator.validateAll().then(async isValid => {
+        if (!isValid) return;
+        await this.upsertUser({ courseId, email, role });
+        this.email = '';
+        this.suggestedUsers = [];
+        this.$nextTick(() => this.$validator.reset());
+      });
     },
-    validate(user) {
-      this.errors = [];
-      return schema.validate(user, { abortEarly: false });
-    }
+    fetchUsers: throttle(function (filter) {
+      if (filter && filter.length > 1) {
+        return api.fetch({ filter }).then(({ items }) => {
+          this.suggestedUsers = items.map(it => it.email);
+        });
+      }
+      this.suggestedUsers = [];
+    }, 350)
   }
 };
 </script>
-
-<style lang="scss" scoped>
-form {
-  padding-bottom: 40px;
-
-  .input-error {
-    padding-top: 5px;
-    text-align: left;
-  }
-}
-</style>

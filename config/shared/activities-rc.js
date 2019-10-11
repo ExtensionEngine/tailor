@@ -16,7 +16,7 @@ const CONTENT_CONTAINERS = [{
 
 const SCHEMAS = [{
   id: 'DEFAULT_SCHEMA',
-  name: 'Default schema',
+  name: 'Sample course',
   meta: [],
   structure: [{
     level: 1,
@@ -38,7 +38,7 @@ const SCHEMAS = [{
       type: 'TEXTAREA',
       label: 'Description',
       placeholder: 'Click to add...',
-      validate: { rules: { max: 250 } }
+      validate: { max: 250 }
     }]
   }, {
     level: 2,
@@ -59,7 +59,7 @@ const SCHEMAS = [{
       type: 'TEXTAREA',
       label: 'Description',
       placeholder: 'Click to add...',
-      validate: { rules: { required: false, max: 250 } }
+      validate: { required: false, max: 250 }
     }]
   }, {
     level: 3,
@@ -80,7 +80,16 @@ const SCHEMAS = [{
       type: 'TEXTAREA',
       label: 'Description',
       placeholder: 'Click to add...',
-      validate: { rules: { required: false, max: 250 } }
+      validate: { required: false, max: 250 }
+    }]
+  }],
+  tesMeta: [{
+    type: 'ASSESSMENT',
+    label: 'Assessment',
+    meta: [{
+      key: 'description',
+      type: 'TEXTAREA',
+      label: 'Description'
     }]
   }]
 }];

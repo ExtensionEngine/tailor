@@ -1,18 +1,17 @@
 <template>
   <div>
-    <div v-if="revisions.length > 0" class="revisions">
+    <div v-if="revisions.length > 0" class="revisions white elevation-2">
       <ul>
         <revision-item
           v-for="revision in bundledRevisions"
           :key="revision._cid"
-          :revision="revision">
-        </revision-item>
+          :revision="revision" />
       </ul>
     </div>
     <infinite-loading @infinite="fetchRevisions">
       <span slot="spinner">
         <div class="col-lg-12 loader-wrapper">
-          <circular-progress></circular-progress>
+          <v-progress-circular color="primary" indeterminate />
         </div>
       </span>
       <span slot="no-results">No changes recorded.</span>
@@ -22,10 +21,9 @@
 </template>
 
 <script>
-import { isSameInstance } from 'utils/revision';
-import { mapActions, mapGetters } from 'vuex-module';
-import CircularProgress from 'components/common/CircularProgress';
+import { mapActions, mapGetters } from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
+import { isSameInstance } from 'utils/revision';
 import last from 'lodash/last';
 import reduce from 'lodash/reduce';
 import RevisionItem from './RevisionItem';
@@ -38,8 +36,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['revisions'], 'course'),
-    ...mapGetters(['hasMoreResults'], 'revisions'),
+    ...mapGetters('course', ['revisions']),
+    ...mapGetters('revisions', ['hasMoreResults']),
     bundledRevisions() {
       return reduce(this.revisions, (acc, it) => {
         const prevRevision = last(acc);
@@ -50,7 +48,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch', 'resetPagination'], 'revisions'),
+    ...mapActions('revisions', ['fetch', 'resetPagination']),
     fetchRevisions($state) {
       this.fetch().then(() => {
         const diff = this.bundledRevisions.length - this.bundledRevisionCount;
@@ -67,22 +65,19 @@ export default {
   mounted() {
     this.resetPagination();
   },
-  components: { CircularProgress, InfiniteLoading, RevisionItem }
+  components: { InfiniteLoading, RevisionItem }
 };
 </script>
 
 <style lang="scss" scoped>
 .loader-wrapper {
-  margin: 50px 0;
+  margin: 120px 0;
 }
 
 .revisions {
   margin: 60px 60px 0;
   padding: 30px;
-  font-family: Roboto, sans-serif;
   text-align: left;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.74);
 
   ul {
     padding: 8px 0;

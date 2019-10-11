@@ -1,39 +1,41 @@
 <template>
   <div class="assessments">
     <div class="heading">
-      <h2>Assessments</h2>
-      <span v-if="hasAssessments" @click="toggleAssessments">
+      <h2 class="blue-grey--text text--darken-3">Assessments</h2>
+      <v-btn v-if="hasAssessments" @click="toggleAssessments" flat small>
         {{ allSelected ? 'hide all' : 'show all' }}
-      </span>
+      </v-btn>
     </div>
-    <div v-if="!hasAssessments" class="well">
-      Click the button below to Create first Assessment.
-    </div>
+    <v-alert :value="!hasAssessments" color="white" icon="mdi-information-variant">
+      Click the button below to create first assessment.
+    </v-alert>
     <ul class="list-group">
       <assessment-item
         v-for="it in assessments"
         :key="it._cid"
-        :assessment="it"
-        :expanded="isSelected(it)"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @remove="it.id ? requestDeleteConfirmation(it) : remove(it)">
-      </assessment-item>
+        @delete="requestRemoveConfirmation(it)"
+        :assessment="it"
+        :expanded="isSelected(it)" />
     </ul>
     <add-element
+      @add="addAssessment"
       :include="['ASSESSMENT']"
       :activity="activity"
-      @add="addAssessment">
-    </add-element>
+      :layout="false"
+      large
+      label="Add assessment" />
   </div>
 </template>
 
 <script>
-import AddElement from './AddElement';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import AddElement from 'tce-core/AddElement';
 import AssessmentItem from './AssessmentItem';
+import capitalize from 'lodash/capitalize';
 import EventBus from 'EventBus';
 import map from 'lodash/map';
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
 
 const appChannel = EventBus.channel('app');
 
@@ -46,21 +48,21 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activity', 'assessments'], 'editor'),
+    ...mapGetters('editor', ['activity', 'assessments']),
     hasAssessments() {
       return this.assessments.length;
     }
   },
   methods: {
-    ...mapActions(['save', 'update', 'remove'], 'tes'),
-    ...mapMutations(['add'], 'tes'),
+    ...mapActions('tes', ['save', 'update', 'remove']),
+    ...mapMutations('tes', ['add']),
     addAssessment(assessment) {
       this.add(assessment);
       this.selected.push(assessment._cid);
     },
     saveAssessment(assessment) {
       // TODO: Figure out why save is broken (for update)
-      assessment.id ? this.update(assessment) : this.save(assessment);
+      return assessment.id ? this.update(assessment) : this.save(assessment);
     },
     toggleSelect(assessment) {
       const question = assessment.data.question;
@@ -80,18 +82,15 @@ export default {
       this.allSelected = !this.allSelected;
       this.selected = this.allSelected ? map(this.assessments, it => it._cid) : [];
     },
-    requestDeleteConfirmation(assessment) {
-      appChannel.emit('showConfirmationModal', {
-        type: 'assessment',
-        item: assessment,
-        action: () => this.remove(assessment)
-      });
+    requestRemoveConfirmation(assessment) {
+      const actionPrefix = assessment.id ? 'delete' : 'discard';
+      const title = capitalize(`${actionPrefix} assessment?`);
+      const message = `Are you sure you want to ${actionPrefix} assessment?`;
+      const action = () => this.remove(assessment);
+      appChannel.emit('showConfirmationModal', { title, message, action });
     }
   },
-  components: {
-    AddElement,
-    AssessmentItem
-  }
+  components: { AddElement, AssessmentItem }
 };
 </script>
 
@@ -99,26 +98,27 @@ export default {
 .assessments {
   margin: 70px 0 250px;
 
-  .well {
-    font-size: 16px;
+  .v-alert {
+    color: #555;
   }
 
   .heading {
     text-align: left;
+    padding: 0 0 8px 2px;
 
-    span {
+    .v-btn {
       float: right;
-      margin-top: 12px;
-      cursor: pointer;
+      margin: 4px 0 0;
+      padding: 0;
     }
   }
 
   h2 {
     display: inline-block;
-    margin: 10px 0 15px;
-    padding: 0;
-    color: #444;
+    margin: 0;
     font-size: 18px;
+    line-height: 30px;
+    vertical-align: middle;
   }
 }
 </style>

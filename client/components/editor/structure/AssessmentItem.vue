@@ -1,35 +1,66 @@
 <template>
   <li
-    :class="{ hover }"
     @mouseenter="hover = true"
     @mouseleave="hover = false"
-    class="list-group-item assessment-item">
-    <span v-if="exam" class="drag-handle">
+    :class="{ hover }"
+    class="list-group-item assessment-item elevation-1">
+    <span v-if="draggable" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
-    <te-assessment
+    <tce-question-container
       v-if="expanded"
-      :element="assessment"
-      :exam="exam"
-      :summative="true"
       @selected="$emit('selected')"
-      @remove="$emit('remove')"
-      @save="$emit('save', $event)">
-    </te-assessment>
+      @delete="$emit('delete')"
+      @save="save"
+      :element="assessment">
+      <template v-slot:default="{ isEditing }">
+        <div class="pb-5">
+          <v-layout>
+            <v-flex grow class="text-xs-left">
+              <v-chip
+                color="blue-grey darken-1"
+                label
+                dark
+                small
+                class="text-uppercase">
+                {{ elementConfig.name }}
+              </v-chip>
+            </v-flex>
+            <v-flex shrink>
+              <v-btn
+                @click="$emit('selected')"
+                flat
+                small
+                class="ma-0 pa-0">
+                Collapse
+              </v-btn>
+            </v-flex>
+          </v-layout>
+          <slot :isEditing="isEditing" name="header"></slot>
+        </div>
+      </template>
+    </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
-      <span class="label label-success">{{ assessment.data.type }}</span>
-      <span class="title">{{ question }}</span>
-      <span @click.stop="$emit('remove')" class="delete">
-        <span class="mdi mdi-close"></span>
-      </span>
+      <v-chip color="blue-grey darken-1" label dark small>
+        {{ elementConfig.subtype }}
+      </v-chip>
+      <span class="question">{{ question | truncate(50) }}</span>
+      <v-btn
+        @click.stop="$emit('delete')"
+        color="primary"
+        flat
+        icon
+        class="delete">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
     </div>
   </li>
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
-import TeAssessment from '../teaching-elements/Assessment';
 import truncate from 'lodash/truncate';
 
 const blankRegex = /(@blank)/g;
@@ -37,36 +68,43 @@ const htmlRegex = /<\/?[^>]+(>|$)/g;
 
 export default {
   name: 'assessment-item',
+  inject: ['$teRegistry'],
   props: {
     assessment: { type: Object, required: true },
-    exam: { type: Object, default: null },
-    expanded: { type: Boolean, default: false }
+    expanded: { type: Boolean, default: false },
+    draggable: { type: Boolean, default: false }
   },
   data() {
     return { hover: false };
   },
   computed: {
+    elementConfig() {
+      return this.$teRegistry.get(this.assessment.data.type);
+    },
     question() {
       let question = filter(this.assessment.data.question, { type: 'HTML' });
       question = map(question, 'data.content').join(' ');
-      question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
+      question = question.replace(htmlRegex, '').replace(blankRegex, () => '____');
       return truncate(question, { length: 50 });
     }
   },
-  components: {
-    TeAssessment
+  methods: {
+    save(data) {
+      const assessment = cloneDeep(this.assessment);
+      Object.assign(assessment.data, data);
+      this.$emit('save', assessment);
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .assessment-item {
-  margin-bottom: 7px;
+  margin-bottom: 10px;
   padding: 0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
 
-  &, &:first-child, &:last-child {
-    border-radius: 0;
+  .v-chip {
+    min-width: 30px;
   }
 
   .drag-handle {
@@ -85,37 +123,33 @@ export default {
   }
 
   .minimized {
-    padding: 12px 22px;
-    &:hover { cursor: pointer; }
-  }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 22px;
+    cursor: pointer;
 
-  .title {
-    display: inline-block;
-    height: 19px;
-    max-width: 80%;
-  }
+    .question {
+      display: inline-block;
+      max-width: 80%;
+      min-height: 30px;
+      color: #444;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 34px;
+    }
 
-  .label {
-    float: left;
-    min-width: 30px;
-    padding: 3px 5px;
-    font-size: 11px;
+    .v-chip {
+      margin-top: 5px;
+    }
   }
 
   .delete {
-    display: inline-block;
-    position: absolute;
-    right: 15px;
-    color: #707070;
-    font-size: 18px;
-    line-height: 18px;
-    visibility: hidden;
-
-    &:hover { color: #555; }
+    opacity: 0;
   }
 
   &.hover:not(.sortable-chosen) .delete {
-    visibility: visible;
+    opacity: 1;
   }
 }
 </style>

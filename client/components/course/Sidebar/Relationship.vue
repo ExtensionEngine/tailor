@@ -2,28 +2,32 @@
   <div class="relationship">
     <label :for="type">{{ label }}</label>
     <multiselect
-      :value="associations"
-      :options="options"
+      @input="onRelationshipChanged"
+      :value="multiple ? associations : associations[0]"
+      :options="optionGroups"
       :searchable="searchable"
       :multiple="multiple"
-      :allowEmpty="allowEmpty"
+      :allow-empty="allowEmpty"
       :disabled="!options.length"
       :placeholder="selectPlaceholder"
-      :customLabel="getCustomLabel"
+      :custom-label="getCustomLabel"
       :name="type"
-      @input="onRelationshipChanged"
-      trackBy="id">
-    </multiselect>
+      group-label="typeLabel"
+      group-values="activities"
+      track-by="id" />
   </div>
 </template>
 
 <script>
-import { getLevel } from 'shared/activities';
-import { mapActions, mapGetters } from 'vuex-module';
+import { getLevel, getSchemaId } from 'shared/activities';
+import { mapActions, mapGetters } from 'vuex';
+import castArray from 'lodash/castArray';
 import cloneDeep from 'lodash/cloneDeep';
+import compact from 'lodash/compact';
 import every from 'lodash/every';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
+import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
@@ -41,21 +45,33 @@ export default {
     allowEmpty: { type: Boolean, default: true },
     placeholder: { type: String, default: 'Click to select' },
     allowCircularLinks: { type: Boolean, default: false },
-    allowInsideLineage: { type: Boolean, default: false }
+    allowInsideLineage: { type: Boolean, default: false },
+    allowedTypes: { type: Array, default: () => [] }
   },
   computed: {
-    ...mapGetters(['activity', 'activities'], 'course'),
-    ...mapGetters(['getLineage'], 'activities'),
+    ...mapGetters('course', ['activity', 'outlineActivities']),
+    ...mapGetters('activities', ['getLineage']),
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
-      const activities = without(this.activities, this.activity);
-      const conds = [it => getLevel(it.type)];
+      const activities = without(this.outlineActivities, this.activity);
+      const conds = [];
       if (!allowCircularLinks) conds.push(it => !includes(this.getAssociationIds(it), id));
       if (!allowInsideLineage) {
         const lineage = this.getLineage(this.activity);
         conds.push(it => !includes(lineage, it));
       }
+      if (this.allowedTypes.length) {
+        const schemaId = getSchemaId(this.activity.type);
+        const allowedTypes = this.allowedTypes.map(type => `${schemaId}/${type}`);
+        conds.push(({ type }) => includes(allowedTypes, type));
+      }
       return filter(activities, it => every(conds, cond => cond(it)));
+    },
+    optionGroups() {
+      return map(groupBy(this.options, 'type'), (it, type) => ({
+        typeLabel: getLevel(type).label,
+        activities: it
+      }));
     },
     selectPlaceholder() {
       return isEmpty(this.options) ? 'No activities' : this.placeholder;
@@ -66,15 +82,16 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update'], 'activities'),
+    ...mapActions('activities', ['update']),
     getCustomLabel(activity) {
       return get(activity, 'data.name', '');
     },
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
     },
-    onRelationshipChanged(associations) {
-      let activity = cloneDeep(this.activity) || {};
+    onRelationshipChanged(value) {
+      const associations = compact(castArray(value));
+      const activity = cloneDeep(this.activity) || {};
       set(activity, `refs.${this.type}`, map(associations, 'id'));
       this.update(activity);
     }

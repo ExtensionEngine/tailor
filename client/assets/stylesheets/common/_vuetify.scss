@@ -1,0 +1,24 @@
+// Patches in order for vuetify to work alongside bootstrap
+.v-input input, .v-input textarea, .v-input input[type=text][readonly] {
+  box-shadow: inherit;
+  border: inherit;
+}
+
+.v-text-field input {
+  padding: 8px 0;
+}
+
+.v-input {
+  input:focus, textarea:focus {
+    box-shadow: none !important;
+  }
+}
+
+a:hover, a:active, a:visited, a:focus {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+hr.v-divider--vertical {
+  margin: 0;
+}

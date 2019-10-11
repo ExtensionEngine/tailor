@@ -1,59 +1,67 @@
 <template>
-  <div>
+  <div class="content-container mb-5 elevation-2">
     <div class="actions">
-      <button
-        @click="deleteContainer"
-        class="btn btn-default btn-material pull-right"
-        type="button">
-        <span class="mdi mdi-delete"></span>
+      <v-btn
+        @click="$emit('delete')"
+        color="error"
+        outline
+        class="pull-right">
         Delete {{ name }}
-      </button>
+      </v-btn>
     </div>
-    <div v-if="!teachingElements.length" class="well">
+    <v-alert
+      :value="!teachingElements.length"
+      color="primary"
+      icon="mdi-information-variant"
+      outline>
       Click the button below to create content.
-    </div>
+    </v-alert>
     <tes-list
+      @add="addElement"
+      @insert="insert"
+      @update="reorder"
       :list="teachingElements"
       :activity="container"
       :types="types"
-      :layout="layout"
-      @add="saveElement"
-      @update="reorder">
-      <teaching-element
-        slot="list-item"
-        slot-scope="{ item, dragged, setWidth }"
-        :setWidth="setWidth"
-        :dragged="dragged"
-        :element="item">
-      </teaching-element>
+      :layout="layout">
+      <template v-slot:list-item="{ item, dragged, setWidth }">
+        <teaching-element
+          :set-width="setWidth"
+          :dragged="dragged"
+          :element="item" />
+      </template>
     </tes-list>
   </div>
 </template>
 
 <script>
 import filter from 'lodash/filter';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
-import TeachingElement from '../../teaching-elements';
+import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
 
 export default {
   name: 'content-container',
   props: {
     container: { type: Object, required: true },
+    tes: { type: Object, required: true },
     types: { type: Array, default: null },
     name: { type: String, required: true },
-    layout: { type: Boolean, required: true }
+    layout: { type: Boolean, default: true }
   },
   computed: {
-    ...mapGetters(['tes']),
     teachingElements() {
       const activityId = this.container.id;
       return sortBy(filter(this.tes, { activityId }), 'position');
     }
   },
   methods: {
-    ...mapActions({ reorderElements: 'reorder', saveElement: 'save' }, 'tes'),
+    ...mapActions('tes', {
+      reorderElements: 'reorder',
+      insertElement: 'insert',
+      addElement: 'save'
+    }),
     reorder({ newIndex: newPosition }) {
       const items = this.teachingElements;
       const element = items[newPosition];
@@ -61,8 +69,12 @@ export default {
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
     },
-    deleteContainer() {
-      this.$emit('delete');
+    insert(element) {
+      const items = this.teachingElements;
+      const { position: newPosition } = element;
+      const isFirstChild = newPosition === -1;
+      const context = { items, newPosition, isFirstChild, insert: true };
+      this.insertElement({ element, context });
     }
   },
   components: {
@@ -77,15 +89,5 @@ export default {
   width: 100%;
   min-height: 36px;
   margin-bottom: 25px;
-  color: #707070;
-  font-size: 22px;
-
-  .btn {
-    color: #707070;
-    border: 1px solid #f0f0f0;
-    border-radius: 2px;
-    outline: none;
-    box-shadow: none;
-  }
 }
 </style>

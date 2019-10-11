@@ -3,9 +3,13 @@
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
+const map = require('lodash/map');
 const { Model } = require('sequelize');
+const pick = require('lodash/pick');
 const Promise = require('bluebird');
-const { user: Role } = require('../../config/shared').role;
+const { role: roles } = require('../../config/shared');
+
+const { user: { ADMIN, USER, INTEGRATION } } = roles;
 
 const bcrypt = Promise.promisifyAll(require('bcryptjs'));
 const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
@@ -27,17 +31,14 @@ class User extends Model {
         validate: { notEmpty: true, len: [5, 100] }
       },
       role: {
-        type: ENUM(Role.ADMIN, Role.USER, Role.INTEGRATION),
-        defaultValue: Role.USER
+        type: ENUM(ADMIN, USER, INTEGRATION),
+        defaultValue: USER
       },
       profile: {
         type: VIRTUAL,
         get() {
-          return {
-            id: this.id,
-            email: this.email,
-            role: this.role
-          };
+          return pick(this,
+            ['id', 'email', 'role', 'createdAt', 'updatedAt', 'deletedAt']);
         }
       },
       token: {
@@ -69,18 +70,18 @@ class User extends Model {
     });
   }
 
-  static hooks() {
+  static hooks(Hooks) {
     return {
-      beforeCreate(user) {
+      [Hooks.beforeCreate](user) {
         return user.encryptPassword();
       },
-      beforeUpdate(user) {
+      [Hooks.beforeUpdate](user) {
         return user.changed('password')
           ? user.encryptPassword()
           : Promise.resolve();
       },
-      beforeBulkCreate(users) {
-        let updates = [];
+      [Hooks.beforeBulkCreate](users) {
+        const updates = [];
         users.forEach(user => updates.push(user.encryptPassword()));
         return Promise.all(updates);
       }
@@ -99,15 +100,26 @@ class User extends Model {
 
   static invite(user, emailCb = noop) {
     return this.create(user)
-      .then(user => {
-        user.token = user.createToken({ expiresIn: '5 days' });
-        mail.invite(user).asCallback(emailCb);
-        return user.save();
-      });
+      .then(user => this.sendInvitation(user, emailCb));
+  }
+
+  static inviteOrUpdate(data) {
+    const { email } = data;
+    return User.findOne({ where: { email }, paranoid: false }).then(user => {
+      if (!user) return User.invite(data);
+      map(({ ...data, deletedAt: null }), (v, k) => user.setDataValue(k, v));
+      return user.save();
+    });
+  }
+
+  static sendInvitation(user, emailCb = noop) {
+    user.token = user.createToken({ expiresIn: '5 days' });
+    mail.invite(user).asCallback(emailCb);
+    return user.save();
   }
 
   isAdmin() {
-    return this.role === Role.ADMIN || this.role === Role.INTEGRATION;
+    return this.role === ADMIN || this.role === INTEGRATION;
   }
 
   authenticate(password) {

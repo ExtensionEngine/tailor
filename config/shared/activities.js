@@ -32,6 +32,7 @@ module.exports = {
   getOutlineLevels,
   getObjectives,
   getLevel,
+  getTesMeta,
   getSiblingLevels,
   isEditable: activityType => {
     const config = getLevel(activityType);
@@ -60,6 +61,10 @@ function getOutlineLevels(schemaId) {
 function getLevel(type) {
   const schemaId = getSchemaId(type);
   return schemaId && find(getOutlineLevels(schemaId), { type });
+}
+
+function getTesMeta(schemaId, type) {
+  return find(getSchema(schemaId).tesMeta, { type }) || {};
 }
 
 function getSiblingLevels(type) {
@@ -92,7 +97,7 @@ function getObjectives(schemaId) {
 function getRepositoryMeta(repository) {
   const config = get(getSchema(repository.schema), 'meta', []);
   return map(config, it => {
-    let value = get(repository, `data.${it.key}`);
+    const value = get(repository, `data.${it.key}`);
     return { ...it, value };
   });
 }

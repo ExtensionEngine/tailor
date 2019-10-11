@@ -17,25 +17,24 @@
           v-model="comment.content"
           @change="post"
           placeholder="Add a comment..."
-          class="editor">
-        </text-editor>
+          class="editor" />
         <div class="clearfix controls">
-          <button
+          <v-btn
             @click="post"
-            type="button"
-            class="btn btn-default btn-material pull-right btn-post">
+            color="primary"
+            outline
+            class="pull-right">
             Post
-          </button>
+          </v-btn>
         </div>
       </div>
       <div class="spacer"></div>
       <discussion-thread
         v-bind="$attrs"
         :sort="sortOrder"
-        :showMore="showMore"
-        :minDisplayed="minDisplayedComments"
-        class="discussion-thread">
-      </discussion-thread>
+        :show-more="showMore"
+        :min-displayed="minDisplayedComments"
+        class="discussion-thread" />
       <span v-if="showBtnPosition === 'bottom'" class="btn-show">
         <span @click="showMore = true" class="btn" role="button">
           Show more
@@ -46,7 +45,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import DiscussionThread from './Thread';
 import TextEditor from 'components/common/TextEditor';
 
@@ -67,9 +66,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user']),
-    ...mapGetters(['activity'], 'course'),
-    ...mapGetters(['commentsCount', 'commentsFetched'], 'comments'),
+    ...mapState({ user: state => state.auth.user }),
+    ...mapGetters('course', ['activity']),
+    ...mapGetters('comments', ['commentsCount', 'commentsFetched']),
     direction() {
       return this.editorPosition === 'bottom' ? 'reverse' : '';
     },
@@ -86,10 +85,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch', 'save', 'subscribe', 'unsubscribe'], 'comments'),
+    ...mapActions('comments',
+      ['setEndpoint', 'fetch', 'save', 'subscribe', 'unsubscribe']
+    ),
     fetchComments() {
       if (this.commentsFetched) return;
-      this.fetch({ activityId: this.activity.id });
+      this.fetch(this.activity);
     },
     post() {
       if (!this.comment.content) return;
@@ -117,6 +118,8 @@ export default {
     }
   },
   mounted() {
+    const { courseId } = this.$route.params;
+    this.setEndpoint(`/courses/${courseId}/comments`);
     this.fetchComments();
     this.subscribe();
   },
@@ -170,15 +173,6 @@ $editor-size: 60px;
   .header & {
     margin-left: 25px;
     line-height: 20px;
-  }
-}
-
-.btn-post {
-  padding: 6px 8px;
-  background: darken(#fff, 8%);
-
-  &:hover {
-    background: darken(#fff, 16%);
   }
 }
 </style>

@@ -1,52 +1,71 @@
 <template>
   <div class="content-containers">
     <h2 v-if="displayHeading">{{ name | capitalize }}</h2>
-    <div v-if="!containerGroup.length" class="well">
+    <v-alert
+      :value="!containerGroup.length"
+      color="white"
+      icon="mdi-information-variant">
       Click the button below to create first {{ name | capitalize }}.
-    </div>
-    <content-container
-      v-for="container in containerGroup"
+    </v-alert>
+    <component
+      :is="containerName"
+      v-for="(container, index) in containerGroup"
       :key="container._cid || container.id"
+      @addSubcontainer="save"
+      @updateSubcontainer="update"
+      @deleteSubcontainer="requestContainerDeletion"
+      @saveElement="saveContentElement"
+      @updateElement="updateElement"
+      @reorderElement="reorderContentElements"
+      @deleteElement="requestElementDeletion"
+      @delete="requestContainerDeletion(container)"
       :container="container"
-      :types="types"
       :name="name"
-      :layout="layout"
-      :class="`${name}-container`"
-      @delete="deleteContainer(container)"
-      class="content-container">
-    </content-container>
+      :position="index"
+      :activities="activities"
+      :tes="tes"
+      v-bind="$attrs" />
     <div v-if="addBtnEnabled">
-      <button @click="addContainer" class="add-btn btn btn-primary btn-material">
-        <span class="add-icon mdi mdi-plus"></span>
+      <v-btn @click="addContainer" color="primary">
+        <v-icon class="pr-2">mdi-plus</v-icon>
         Create {{ name }}
-      </button>
+      </v-btn>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
 import get from 'lodash/get';
-import { mapActions } from 'vuex-module';
+import { getContainerName } from 'tce-core/utils';
+import isEmpty from 'lodash/isEmpty';
 import maxBy from 'lodash/maxBy';
+import throttle from 'lodash/throttle';
 
 const appChannel = EventBus.channel('app');
 
 export default {
   name: 'content-containers',
+  inheritAttrs: false,
+  inject: ['$ccRegistry'],
   props: {
     containerGroup: { type: Array, default() { return []; } },
     parentId: { type: Number, required: true },
-    types: { type: Array, default: null },
     displayHeading: { type: Boolean, default: false },
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: false },
-    layout: { type: Boolean, default: true }
+    required: { type: Boolean, default: true }
   },
   computed: {
+    ...mapGetters(['activities', 'tes']),
+    containerName() {
+      const { type, $ccRegistry: registry } = this;
+      return registry.get(type) ? getContainerName(type) : 'content-container';
+    },
     name() {
       return this.label.toLowerCase();
     },
@@ -59,23 +78,48 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save', 'remove'], 'activities'),
+    ...mapActions('activities', ['save', 'update', 'remove']),
+    ...mapActions('tes', {
+      saveElement: 'save',
+      updateElement: 'update',
+      reorderElements: 'reorder',
+      deleteElement: 'remove'
+    }),
     addContainer() {
       const { type, parentId, nextPosition: position } = this;
       this.save({ type, parentId, position });
     },
-    deleteContainer(container) {
+    saveContentElement(element) {
+      return this.saveElement(element).then(() => this.showNotification());
+    },
+    reorderContentElements({ newPosition, items }) {
+      const element = items[newPosition];
+      const isFirstChild = newPosition === 0;
+      const context = { items, newPosition, isFirstChild };
+      this.reorderElements({ element, context });
+    },
+    requestDeletion(content, action, name) {
       appChannel.emit('showConfirmationModal', {
-        type: this.name,
-        item: container,
-        action: () => this.remove(container)
+        title: `Delete ${name}?`,
+        message: `Are you sure you want to delete ${name}?`,
+        action: () => this[action](content)
       });
-    }
+    },
+    requestContainerDeletion(container, name = this.name) {
+      this.requestDeletion(container, 'remove', name);
+    },
+    requestElementDeletion(element) {
+      this.requestDeletion(element, 'deleteElement', 'element');
+    },
+    showNotification: throttle(function () {
+      this.$snackbar.show('Element saved');
+    }, 4000)
+  },
+  created() {
+    if (this.required && isEmpty(this.containerGroup)) this.addContainer();
   },
   filters: {
-    capitalize(val) {
-      return capitalize(val);
-    }
+    capitalize
   },
   components: { ContentContainer }
 };
@@ -84,6 +128,11 @@ export default {
 <style lang="scss" scoped>
 .content-containers {
   margin: 70px 0;
+
+  > .v-alert {
+    margin: 30px 0;
+    color: #555;
+  }
 }
 
 h2 {
@@ -100,15 +149,5 @@ h2 {
   margin: 25px 0;
   padding: 20px 40px;
   background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-}
-
-.add-btn {
-  min-width: 300px;
-  margin: 30px 0 0;
-}
-
-.add-icon {
-  padding-right: 3px;
 }
 </style>

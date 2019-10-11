@@ -1,9 +1,11 @@
 // Google Web Fonts
+/* stylelint-disable function-comma-newline-after */
 @import '~sass-web-fonts/web-fonts';
 $web-font-path: web-fonts-url(
-  ('Catamaran': (300, 400, 500, 600, 700)),
-  ('Roboto': (300, 400, 500, 700))
+  ('Roboto': (300, 400, 500, 700)),
+  ('Poppins': (300, 400, 500, 700))
 );
+/* stylelint-enable */
 
 // Bootstrap files
 @import 'vendor/bootstrap';
@@ -11,8 +13,14 @@ $web-font-path: web-fonts-url(
 @import '~bootswatch/paper/bootswatch';
 @import '~loaders.css/loaders';
 
-$mdi-font-path: '~mdi/fonts';
-@import '~mdi/scss/materialdesignicons';
+// MDI
+$mdi-font-path: '~@mdi/font/fonts';
 
+@import '~@mdi/font/scss/materialdesignicons';
+
+// Common stylesheets
 @import 'common/all';
 @import 'common/assessments/all';
+
+// Vuetify
+@import "~vuetify/dist/vuetify.css";

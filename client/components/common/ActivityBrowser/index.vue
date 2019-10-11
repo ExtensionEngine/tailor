@@ -7,15 +7,13 @@
     </button>
     <select-repository
       v-if="!repository"
-      @selected="selected => (repository = selected)">
-    </select-repository>
+      @selected="selected => (repository = selected)" />
     <select-activity
       v-else
-      :repository="repository"
-      :selectableLevels="selectableLevels"
       @reset="repository = null"
-      @selected="activity => $emit('selected', activity)">
-    </select-activity>
+      @selected="activity => $emit('selected', activity)"
+      :repository="repository"
+      :selectable-levels="selectableLevels" />
   </div>
 </template>
 
@@ -44,7 +42,7 @@ export default {
 .activity-browser {
   width: 550px;
   margin: 25px auto;
-  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: $font-family-secondary;
   color: #333;
 }
 </style>

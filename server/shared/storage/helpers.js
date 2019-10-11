@@ -1,21 +1,34 @@
 'use strict';
 
 const crypto = require('crypto');
+const { elementRegistry } = require('../content-plugins');
+const { getFileUrl } = require('./');
 const isString = require('lodash/isString');
 const isUrl = require('is-url');
 const mime = require('mime-types');
-const nodeUrl = require('url');
 const Promise = require('bluebird');
 const storage = require('./index');
+const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
 
+const STORAGE_PROTOCOL = 'storage://';
 const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
+const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
+
+const ASSET_ROOT = 'repository/assets';
 
 function processStatics(item) {
-  return item.type === 'ASSESSMENT'
-    ? processAssessment(item)
+  const customProcessor = elementRegistry.getStaticsHandler(item.type);
+  return customProcessor
+    ? customProcessor(item, defaultStaticsProcessor, processStatics)
+    : defaultStaticsProcessor(item);
+}
+
+function defaultStaticsProcessor(item) {
+  return isQuestion(item.type)
+    ? processQuestion(item)
     : processAsset(item);
 }
 
@@ -23,9 +36,9 @@ function processAsset(asset) {
   return isPrimitive(asset) ? processPrimitive(asset) : processComposite(asset);
 }
 
-function processAssessment(assessment) {
-  let question = assessment.data.question;
-  if (!question || question.length < 1) return Promise.resolve(assessment);
+function processQuestion(element) {
+  const question = element.data.question;
+  if (!question || question.length < 1) return Promise.resolve(element);
   return Promise.each(question, it => processAsset(it));
 }
 
@@ -41,7 +54,7 @@ function processComposite(composite) {
     .then(() => composite);
 }
 
-let processor = {};
+const processor = {};
 
 processor.IMAGE = asset => {
   const image = asset.data.url;
@@ -52,7 +65,7 @@ processor.IMAGE = asset => {
   }
 
   if (isUrl(image)) {
-    let url = nodeUrl.parse(image);
+    const url = new URL(image);
     asset.data.url = url.pathname.substr(1, image.length);
     return Promise.resolve(asset);
   }
@@ -61,21 +74,37 @@ processor.IMAGE = asset => {
   const extension = image.match(base64Pattern)[1] || DEFAULT_IMAGE_EXTENSION;
   const hashString = `${asset.id}${file}`;
   const hash = crypto.createHash('md5').update(hashString).digest('hex');
-  const key = `repository/assets/${asset.id}/${hash}.${extension}`;
+  const key = `${ASSET_ROOT}/${asset.id}/${hash}.${extension}`;
   asset.data.url = key;
   return saveFile(key, file).then(() => asset);
 };
 
+// TODO: Temp patch until asset embeding is unified
 function resolveStatics(item) {
-  return item.type === 'ASSESSMENT'
-    ? resolveAssessment(item)
-    : resolveAsset(item);
+  const customResolver = elementRegistry.getStaticsHandler(item.type);
+  return customResolver
+    ? customResolver(item, defaultStaticsResolver, resolveStatics)
+    : defaultStaticsResolver(item);
 }
 
-function resolveAssessment(assessment) {
-  let question = assessment.data.question;
-  if (!question || question.length < 1) return Promise.resolve(assessment);
-  return Promise.each(question, it => resolveAsset(it)).then(() => assessment);
+async function defaultStaticsResolver(item) {
+  const element = await (isQuestion(item.type)
+    ? resolveQuestion(item)
+    : resolveAsset(item));
+  if (!element.data.assets) return element;
+  await Promise.map(toPairs(element.data.assets), async ([key, url]) => {
+    const isStorageResource = url.startsWith(STORAGE_PROTOCOL);
+    element.data[key] = isStorageResource
+      ? (await getFileUrl(url.substr(STORAGE_PROTOCOL.length, url.length)))
+      : url;
+  });
+  return element;
+}
+
+function resolveQuestion(element) {
+  const question = element.data.question;
+  if (!question || question.length < 1) return Promise.resolve(element);
+  return Promise.each(question, it => resolveAsset(it)).then(() => element);
 }
 
 function resolveAsset(element) {
@@ -94,7 +123,7 @@ function resolveComposite(composite) {
     .then(() => composite);
 }
 
-let resolver = {};
+const resolver = {};
 
 resolver.IMAGE = asset => {
   if (!asset.data || !asset.data.url) return Promise.resolve(asset);
@@ -115,6 +144,8 @@ function saveFile(key, file) {
 }
 
 module.exports = {
+  ASSET_ROOT,
+  STORAGE_PROTOCOL,
   processStatics,
   resolveStatics
 };

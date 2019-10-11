@@ -1,7 +1,7 @@
 'use strict';
 
 const { getSiblingLevels } = require('../../config/shared/activities');
-const { Model } = require('sequelize');
+const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
@@ -76,7 +76,7 @@ class Activity extends Model {
     });
   }
 
-  static scopes({ Op }) {
+  static scopes() {
     const notNull = { [Op.ne]: null };
     return {
       withReferences(relationships = []) {
@@ -133,7 +133,7 @@ class Activity extends Model {
   mapClonedReferences(mappings, relationships, transaction) {
     const refs = this.refs || {};
     relationships.forEach(type => {
-      if (refs[type]) refs[type] = refs[type].map(it => mappings[it])
+      if (refs[type]) refs[type] = refs[type].map(it => mappings[it]);
     });
     return this.update({ refs }, { transaction });
   }
@@ -194,7 +194,7 @@ class Activity extends Model {
   reorder(index) {
     return this.sequelize.transaction(transaction => {
       const types = getSiblingLevels(this.type).map(it => it.type);
-      const filter = { type: { $in: types } };
+      const filter = { type: types };
       return this.siblings({ filter, transaction }).then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
         return this.save({ transaction });

@@ -1,92 +1,54 @@
 <template>
   <div class="body">
-    <div class="publish-container">
-      <div class="publish-date">
-        <circular-progress v-if="publishing"></circular-progress>
-        <span v-else>{{ publishStatus }}</span>
-      </div>
-      <button
-        :disabled="publishing"
-        @click="publishActivity"
-        class="btn btn-primary btn-material">
-        Publish
-      </button>
-    </div>
-    <span class="type-label">{{ config.label }}</span>
-    <div class="meta-element">
+    <publishing v-if="isAdmin || isCourseAdmin" />
+    <v-chip :color="config.color" label dark small class="type-label">
+      {{ config.label.toUpperCase() }}
+    </v-chip>
+    <div class="meta-elements">
       <meta-input
         v-for="it in metadata"
         :key="`${activity._cid}.${it.key}`"
-        :meta="it"
-        @update="updateActivity">
-      </meta-input>
+        @update="updateActivity"
+        :meta="it" />
     </div>
     <div class="relationships-element">
       <relationship
         v-for="relationship in config.relationships"
-        v-bind="relationship"
-        :key="`${activity._cid}.${relationship.type}`">
-      </relationship>
+        :key="`${activity._cid}.${relationship.type}`"
+        v-bind="relationship" />
     </div>
-    <discussion
-      editor-position="bottom"
-      class="discussion">
-    </discussion>
+    <discussion editor-position="bottom" class="discussion" />
   </div>
 </template>
 
 <script>
-import { getLevel } from 'shared/activities';
-import { mapActions, mapGetters } from 'vuex-module';
-import CircularProgress from 'components/common/CircularProgress';
-import cloneDeep from 'lodash/cloneDeep';
+import { mapActions, mapGetters } from 'vuex';
 import Discussion from './Discussion';
-import fecha from 'fecha';
-import get from 'lodash/get';
-import map from 'lodash/map';
 import Meta from 'components/common/Meta';
+import Publishing from './Publishing';
 import Relationship from './Relationship';
 
 export default {
-  data() {
-    return {
-      publishing: false
-    };
-  },
   computed: {
-    ...mapGetters(['activity'], 'course'),
+    ...mapGetters(['isAdmin']),
+    ...mapGetters('course', ['activity', 'getConfig', 'getMetadata', 'isCourseAdmin']),
     config() {
-      return getLevel(this.activity.type) || {};
-    },
-    publishStatus() {
-      let { publishedAt } = this.activity;
-      return publishedAt
-        ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
-        : 'Not published';
+      return this.getConfig(this.activity);
     },
     metadata() {
-      if (!get(this.config, 'meta')) return [];
-      return map(this.config.meta, it => {
-        let value = get(this.activity, `data.${it.key}`);
-        return { ...it, value };
-      });
+      return this.getMetadata(this.activity);
     }
   },
   methods: {
-    ...mapActions(['update', 'publish'], 'activities'),
+    ...mapActions('activities', ['update']),
     updateActivity(key, value) {
-      const data = cloneDeep(this.activity.data) || {};
-      data[key] = value;
+      const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });
-    },
-    publishActivity() {
-      this.publishing = true;
-      this.publish(this.activity).then(() => (this.publishing = false));
     }
   },
   components: {
-    CircularProgress,
     Discussion,
+    Publishing,
     Relationship,
     MetaInput: Meta
   }
@@ -99,35 +61,21 @@ export default {
   padding: 6px 15px;
 }
 
-.publish-container {
-  min-height: 70px;
-  padding: 0 7px;
-
-  .publish-date {
-    width: 170px;
-    line-height: 44px;
-  }
-
-  .btn {
-    position: absolute;
-    top: 10px;
-    right: 24px;
-    padding: 6px;
-  }
-
-  .circular-progress {
-    width: 24px;
-    margin: 0 20px;
-  }
-}
-
 .discussion {
   margin-top: 32px;
   margin-bottom: 8px;
 }
 
 .type-label {
-  display: inline-block;
-  margin: 5px 0 25px 7px;
+  margin: 5px 5px 20px;
+  font-weight: 500;
+}
+
+.meta-elements {
+  padding-top: 10px;
+
+  > * {
+    padding-top: 20px;
+  }
 }
 </style>

@@ -1,12 +1,23 @@
 <template>
   <div class="custom-select">
     <multiselect
-      :value="value"
-      :class="position"
-      v-bind="options"
       @input="val => $emit('input', val)"
       @close="close"
-      @open="open">
+      @open="open"
+      :value="value"
+      :class="position"
+      v-bind="options">
+      <slot
+        v-for="slot in Object.keys($slots)"
+        :slot="slot"
+        :name="slot">
+      </slot>
+      <template
+        v-for="slot in Object.keys($scopedSlots)"
+        :slot="slot"
+        slot-scope="scope">
+        <slot v-bind="scope" :name="slot"></slot>
+      </template>
     </multiselect>
     <span
       v-if="showResetButton"
@@ -22,7 +33,7 @@ import Multiselect from 'vue-multiselect';
 
 export default {
   name: 'v-select',
-  inheritAttrs: true,
+  inheritAttrs: false,
   props: {
     value: { type: [Object, Array, String, Number], default: null },
     inputPlacement: { type: String, default: 'bottom' },
@@ -37,7 +48,7 @@ export default {
         closeOnSelect: true,
         showLabels: false,
         placeholder: 'Select option',
-        trackBy: 'label',
+        trackBy: this.$attrs['track-by'] || 'label',
         label: 'label'
       }, this.$attrs);
     },
@@ -74,8 +85,8 @@ export default {
     right: 20px;
     padding: 5px;
     box-shadow: none;
-    background: none;
     color: #999;
+    background: none;
     cursor: pointer;
   }
 }
@@ -86,7 +97,6 @@ export default {
   padding-right: 24px;
   color: #555;
   font-size: 14px;
-  font-family: 'Catamaran', Helvetica, Arial, sans-serif;
 
   &:focus {
     box-shadow: inset 0 -2px 0 #337ab7;
@@ -101,6 +111,11 @@ export default {
     &--highlight {
       color: #444;
       background-color: #eee;
+    }
+
+    &--disabled {
+      color: #444;
+      background: #dfdfdf;
     }
   }
 
@@ -125,7 +140,7 @@ export default {
     padding-left: 12px;
     border-radius: 26px;
     color: #4a4a4a;
-    line-height: 26px;
+    line-height: 24px;
     background: #e0e0e0;
     cursor: default;
 
@@ -142,7 +157,8 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       font-size: 12px;
-      font-family: "Roboto";
+      line-height: 27px;
+      font-family: $font-family-secondary;
     }
   }
 
@@ -152,7 +168,7 @@ export default {
     vertical-align: middle;
     width: 20px;
     margin: 0 4px;
-    line-height: 26px;
+    line-height: 24px;
     overflow: hidden;
     cursor: pointer;
 
@@ -163,7 +179,7 @@ export default {
       display: inline-block;
       color: #9c9c9c;
       font-size: 18px;
-      font-family: "Material Design Icons";
+      font-family: $font-family-icons;
       font-weight: normal;
       line-height: 26px;
       font-style: normal;
@@ -179,6 +195,8 @@ export default {
   }
 
   .multiselect__select {
+    top: 8px;
+    bottom: 1px;
     width: 20px;
     height: 34px;
     padding: 0;
@@ -199,15 +217,9 @@ export default {
   }
 
   .multiselect__input {
-    width: 100% !important;
     margin: 0;
     padding-left: 10px;
     line-height: 32px;
-  }
-
-  .multiselect__select {
-    top: 8px;
-    bottom: 1px;
   }
 }
 

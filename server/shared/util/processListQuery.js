@@ -2,6 +2,7 @@
 
 const assign = require('lodash/assign');
 const defaultsDeep = require('lodash/defaultsDeep');
+const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 
 const filter = {
@@ -22,7 +23,7 @@ module.exports = function (defaults) {
 
     if (query.syncedAt) {
       const condition = { $gte: query.syncedAt };
-      options.where.$or = [{ updatedAt: condition }, { deletedAt: condition }];
+      options.where[Op.or] = [{ updatedAt: condition }, { deletedAt: condition }];
     }
 
     req.opts = options;

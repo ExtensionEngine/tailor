@@ -1,6 +1,6 @@
 <template>
   <div :style="{ color }" class="acronym">
-    <span>{{ acronym }}</span>
+    {{ acronym }}
   </div>
 </template>
 
@@ -31,13 +31,9 @@ export default {
   margin-right: 8px;
   font-size: 18px;
   font-weight: 400;
+  line-height: 45px;
   text-align: center;
   border-radius: 30px;
-  background-color: #eee;
-
-  span {
-    display: inline-block;
-    padding-top: 6px;
-  }
+  background: #f1f1f1;
 }
 </style>
