@@ -77,7 +77,8 @@ export default {
 
 <style lang="scss" scoped>
 .actions {
-  padding-top: 3.5rem;
+  position: fixed;
+  padding-top: 6.5rem;
 }
 
 ::v-deep .v-toolbar__content {

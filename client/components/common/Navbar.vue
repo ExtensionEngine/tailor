@@ -82,6 +82,11 @@ $font-color: #333;
 
 .v-toolbar {
   z-index: 10;
+
+  .v-toolbar__content .v-btn.v-btn--icon {
+    width: unset;
+    height: unset;
+  }
 }
 
 .v-toolbar__items {

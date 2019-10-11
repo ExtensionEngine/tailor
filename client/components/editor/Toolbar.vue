@@ -53,6 +53,7 @@ export default {
 
 <style lang="scss" scoped>
 .toolbar-wrapper {
+  position: fixed;
   width: 100%;
   z-index: 99;
 }
