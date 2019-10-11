@@ -33,7 +33,6 @@
     "postshrinkwrap": "rewrite-lockfile package-lock.json"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.6.0",
     "@mdi/font": "^4.4.95",
     "auto-bind": "^2.1.0",
     "aws-sdk": "^2.533.0",
@@ -46,6 +45,7 @@
     "bootswatch": "^3.3.7",
     "boxen": "^4.1.0",
     "bunyan": "^1.8.5",
+    "core-js": "^3.2.1",
     "cors": "^2.8.1",
     "cropperjs": "^1.5.5",
     "cuid": "^2.1.6",
@@ -95,6 +95,7 @@
     "promise-queue": "^2.2.3",
     "rcfile": "^1.0.3",
     "read-pkg-up": "^6.0.0",
+    "regenerator-runtime": "^0.13.3",
     "safe-require": "^1.0.3",
     "sass-web-fonts": "^2.0.2",
     "save-as": "^0.1.8",
