@@ -120,14 +120,6 @@ module.exports = {
     config
       .plugin('dotenv')
       .use(require.resolve('dotenv-webpack'));
-
-    if (mode !== 'production') return;
-    config
-      .plugin('minimize')
-      .tap(([options]) => {
-        options.terserOptions.keep_fnames = true;
-        return [options];
-      });
   },
   devServer
 };

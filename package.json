@@ -165,8 +165,6 @@
     "stylelint-order": "^3.1.1",
     "stylelint-scss": "^3.11.1",
     "stylelint-webpack-plugin": "^0.10.5",
-    "terser": "4.3.4",
-    "terser-webpack-plugin": "2.1.2",
     "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
     "vue-template-compiler": "^2.6.10"
