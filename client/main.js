@@ -4,18 +4,16 @@ import 'dom-shims/shim/Element.classList';
 import 'dom-shims/shim/Element.mutation';
 import 'event-source-polyfill';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
-import 'vue-directive-tooltip/css/index.css';
 
 import assetsApi from '@/api/asset';
 import colors from 'vuetify/es5/util/colors';
-import ElementRegistry from './ElementRegistry';
+import ContentPluginRegistry from './content-plugins';
 
 import { formatDate, truncate } from '@/filters';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
 import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
-import Tooltip from 'vue-directive-tooltip';
 import VeeValidate from './utils/validation';
 import Vue from 'vue';
 import VueCroppa from 'vue-croppa';
@@ -43,7 +41,6 @@ Vue.use(Vuetify, {
   }
 });
 Vue.use(VuetifySnackbar);
-Vue.use(Tooltip, { delay: 50 });
 Vue.use(VeeValidate, {
   delay: 700,
   fieldsBagName: 'vFields',
@@ -59,8 +56,8 @@ Vue.use(Timeago, {
   }
 });
 
-const registry = new ElementRegistry(Vue);
-registry.initialize().then(() => {
+const contentPluginRegistry = new ContentPluginRegistry(Vue);
+contentPluginRegistry.initialize().then(() => {
   sync(store, router);
   /* eslint-disable no-new */
   new Vue({
@@ -70,7 +67,8 @@ registry.initialize().then(() => {
     render: h => h(App),
     provide() {
       return {
-        $teRegistry: registry,
+        $teRegistry: contentPluginRegistry.elementRegistry,
+        $ccRegistry: contentPluginRegistry.containerRegistry,
         $storageService: assetsApi
       };
     }

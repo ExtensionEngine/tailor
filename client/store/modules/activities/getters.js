@@ -2,10 +2,7 @@ import {
   getDescendants as getDeepChildren,
   getAncestors as getParents
 } from 'utils/activity';
-import filter from 'lodash/filter';
 import find from 'lodash/find';
-import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
 
 export const activities = state => state.items;
 
@@ -30,16 +27,4 @@ export const getLineage = state => {
     const descendants = getDeepChildren(state.items, activity);
     return [...ancestors, ...descendants];
   };
-};
-
-export const getExamObjectives = state => {
-  const getObjectives = activity => {
-    const config = getLevel(activity.type);
-    const objectiveTypes = get(config, 'exams.objectives');
-    if (!objectiveTypes) return [];
-    let children = getDeepChildren(state.items, activity);
-    return filter(children, it => objectiveTypes.includes(it.type));
-  };
-
-  return exam => getObjectives(find(state.items, { id: exam.parentId }));
 };
