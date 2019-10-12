@@ -83,6 +83,19 @@ module.exports = {
     dir: 'dist',
     sourceMap: !isProduction
   },
+  babel: {
+    transpileModules: [
+      // NOTE: Packages do NOT contain transpiled code.
+      'humanize-string', 'decamelize',
+      // NOTE: Component is consumed from source.
+      'vue-color',
+      // NOTE: Unclear why is this necessary :/
+      'vue-quill-editor',
+      // TODO: Remove this when https://github.com/Dafrok/v-hotkey/pull/23 gets
+      //       merged!
+      'v-hotkey'
+    ]
+  },
   chainWebpack(config, { mode }) {
     config.resolve.alias.merge(aliases);
     config.resolve.extensions.merge(extensions);
