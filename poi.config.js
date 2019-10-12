@@ -90,10 +90,7 @@ module.exports = {
       // NOTE: Component is consumed from source.
       'vue-color',
       // NOTE: Unclear why is this necessary :/
-      'vue-quill-editor',
-      // TODO: Remove this when https://github.com/Dafrok/v-hotkey/pull/23 gets
-      //       merged!
-      'v-hotkey'
+      'vue-quill-editor'
     ]
   },
   chainWebpack(config, { mode }) {
