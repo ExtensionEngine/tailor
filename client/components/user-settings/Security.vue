@@ -107,7 +107,7 @@ export default {
           return this.changePassword({ currentPassword, newPassword })
             .then(() => this.$snackbar.show('Password changed!'))
             .then(() => this.logout())
-            .catch(() => this.$snackbar.error(`Current password isn't valid!`));
+            .catch(() => this.$snackbar.error('Current password isn\'t valid!'));
         });
     }
   },

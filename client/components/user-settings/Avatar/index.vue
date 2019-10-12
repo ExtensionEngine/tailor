@@ -65,7 +65,7 @@ export default {
     deleteAvatar() {
       appChannel.emit('showConfirmationModal', {
         title: 'Delete avatar?',
-        message: `Are you sure you want to delete your profile picture?`,
+        message: 'Are you sure you want to delete your profile picture?',
         action: () => this.updateInfo({ imgUrl: null }).then(() => {
           this.$snackbar.show('Your profile picture has been updated!');
         })
