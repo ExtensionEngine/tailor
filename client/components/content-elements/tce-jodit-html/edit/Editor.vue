@@ -12,6 +12,7 @@ import JoditVue, { Jodit } from 'jodit-vue';
 import externalToolbar from './plugins/external-toolbar';
 import fontControls from './plugins/font-controls';
 import mdiIcons from './plugins/mdi-icons';
+import pluginsAdapter from './plugins-adapter';
 import sourceEditor from './plugins/source-editor';
 import tablePopups from './plugins/table-popups';
 import Toolbar from './Toolbar';
@@ -28,6 +29,8 @@ const joditConfig = {
   colorPickerDefaultTab: 'color',
   disablePlugins: ['fullsize']
 };
+
+pluginsAdapter(Jodit);
 
 // Load custom plugins.
 externalToolbar(Jodit, {
