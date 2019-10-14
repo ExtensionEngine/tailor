@@ -1,70 +1,103 @@
+import autoBind from 'auto-bind';
+
 const JODIT_DEFAULT_EVENT_NAMESPACE = 'JoditEventDefaultNamespace';
 const JODIT_POPUP_ARROW = '.jodit_popup_triangle';
 const JODIT_POPUP_TRIGGER_EVENTS = ['mousedown', 'touchend'];
 const JODIT_TOOLBAR_BUTTON = '.jodit_toolbar_btn';
 
+const toggle = Symbol('toggle');
+
+const hide = el => (el.style.display = 'none');
 const isToolbarButton = el => el.matches(JODIT_TOOLBAR_BUTTON);
 
-export const name = 'ToolbarPopups';
+/** @typedef {import('jodit/src/Config').Config & import('jodit/src/plugins')} Config */
+/** @typedef {import('jodit').IJodit} Jodit */
+/** @typedef {import('jodit').IComponent} Component */
 
-export const install = (Jodit, { popupOpenClass = 'popup_open' } = {}) => {
-  const popups = new Map();
-  const toggle = Symbol('toggle');
-
-  Jodit.plugins[name] = editor => {
-    const { events } = editor;
-    events
-      .on('beforeOpenPopup', onPopupOpen)
-      .on('beforeDestruct', () => {
-        if (events) events.off('beforeOpenPopup', onPopupOpen);
-      });
-
-    function onPopupOpen(popup) {
-      if (!isToolbarButton(popup.target)) return;
-      popup.container.style.display = 'none';
-      popups.set(popup.target, popup);
-
-      const { calcPosition, doClose } = popup;
-      popup.calcPosition = () => {
-        calcPosition.call(popup);
-        popup.target.classList.add(popupOpenClass);
-        const arrow = popup.container.querySelector(JODIT_POPUP_ARROW);
-        if (arrow) arrow.style.marginLeft = 0;
-        Object.assign(popup.container.style, {
-          marginLeft: 0,
-          display: 'initial'
-        });
-      };
-      popup.doClose = () => {
-        doClose.call(popup);
-        popups.delete(popup.target, popup);
-        popup.target.classList.remove(popupOpenClass);
-      };
-
-      const [eventDesc] = events.getStore(popup.target)
-        .get(JODIT_POPUP_TRIGGER_EVENTS[0], JODIT_DEFAULT_EVENT_NAMESPACE);
-      const listener = eventDesc && eventDesc.originalCallback;
-      if (!listener || listener[toggle]) return;
-      replaceListener(
-        editor,
-        popup.target,
-        JODIT_POPUP_TRIGGER_EVENTS.join(' '),
-        wrapListener(popup.target, listener),
-        listener
-      );
-    }
-  };
-
-  function replaceListener(editor, target, events, listener, oldListener) {
-    editor.events
-      .off(target, events, oldListener)
-      .on(target, events, listener);
+export default class ToolbarPopupsPlugin {
+  static get pluginName() {
+    return 'toolbar-popups';
   }
 
-  function wrapListener(target, listener) {
+  constructor(options) {
+    options.popupOpenClass = options.popupOpenClass || 'popup_open';
+    autoBind(this);
+    this.popups = new Map();
+  }
+
+  /**
+   * @param {Jodit} jodit
+   */
+  init(jodit) {
+    jodit.events.on('beforeOpenPopup', this.beforeOpenPopup);
+  }
+
+  /**
+   * @param {Component} popup
+   */
+  beforeOpenPopup(popup) {
+    const self = this;
+
+    if (!isToolbarButton(popup.target)) return;
+
+    hide(popup.container);
+    this.popups.set(popup.target, popup);
+
+    const { calcPosition, doClose } = popup;
+    popup.calcPosition = function () {
+      calcPosition.apply(this, arguments);
+      self.onOpenPopup(popup);
+    };
+    popup.doClose = function () {
+      doClose.apply(this, arguments);
+      self.onClosePopup(popup);
+    };
+
+    const [eventDesc] = this.jodit.events.getStore(popup.target)
+      .get(JODIT_POPUP_TRIGGER_EVENTS[0], JODIT_DEFAULT_EVENT_NAMESPACE);
+    const oldListener = eventDesc && eventDesc.originalCallback;
+    if (!oldListener || oldListener[toggle]) return;
+
+    replaceListener(
+      this.jodit,
+      popup.target,
+      JODIT_POPUP_TRIGGER_EVENTS.join(' '),
+      this.createToggleAction(popup.target, oldListener),
+      oldListener
+    );
+  }
+
+  /**
+   * @param {Component} popup
+   */
+  onOpenPopup(popup) {
+    popup.target.classList.add(this.options.popupOpenClass);
+    const arrow = popup.container.querySelector(JODIT_POPUP_ARROW);
+    if (arrow) arrow.style.marginLeft = 0;
+    Object.assign(popup.container.style, {
+      marginLeft: 0,
+      display: 'initial'
+    });
+  }
+
+  /**
+   * @param {Component} popup
+   */
+  onClosePopup(popup) {
+    this.popups.delete(popup.target, popup);
+    popup.target.classList.remove(this.options.popupOpenClass);
+  }
+
+  /**
+   * @param {Object} target
+   * @param {EventListener} listener
+   * @returns {EventListener}
+   */
+  createToggleAction(target, listener) {
+    const self = this;
     return Object.assign(togglePopup, { [toggle]: true });
     function togglePopup() {
-      const popup = popups.get(target);
+      const popup = self.popups.get(target);
       if (popup && popup.isOpened) {
         popup.close();
         return;
@@ -72,6 +105,24 @@ export const install = (Jodit, { popupOpenClass = 'popup_open' } = {}) => {
       return listener.apply(this, arguments);
     }
   }
-};
 
-export default install;
+  /**
+   * @param {Jodit} jodit
+   */
+  beforeDestruct(jodit) {
+    jodit.events.off('beforeOpenPopup', this.beforeOpenPopup);
+  }
+}
+
+/**
+ * @param {Jodit} jodit
+ * @param {Object} target
+ * @param {String} events
+ * @param {EventListener} listener
+ * @param {EventListener} oldListener
+ */
+function replaceListener(jodit, target, events, listener, oldListener) {
+  jodit.events
+    .off(target, events, oldListener)
+    .on(target, events, listener);
+}

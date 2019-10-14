@@ -16,7 +16,7 @@ import pluginsAdapter from './plugins-adapter';
 import sourceEditor from './plugins/source-editor';
 import tablePopups from './plugins/table-popups';
 import Toolbar from './Toolbar';
-import toolbarPopups from './plugins/toolbar-popups';
+import ToolbarPopupsPlugin from './plugins/toolbar-popups';
 import uniqueId from 'lodash/uniqueId';
 
 const JODIT_READY_EVENT = 'joditReady';
@@ -33,9 +33,6 @@ const joditConfig = {
 pluginsAdapter(Jodit);
 
 // Load custom plugins.
-toolbarPopups(Jodit, {
-  popupOpenClass: 'popup_open'
-});
 sourceEditor(Jodit);
 tablePopups(Jodit);
 
@@ -54,6 +51,11 @@ const plugins = [{
   use: MdiIconsPlugin,
   options: {
     btnResetColorClass: 'btn_reset_color'
+  }
+}, {
+  use: ToolbarPopupsPlugin,
+  options: {
+    popupOpenClass: 'popup_open'
   }
 }];
 
