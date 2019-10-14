@@ -13,7 +13,7 @@ import ExternalToolbarPlugin from './plugins/external-toolbar';
 import FontControlsPlugin from './plugins/font-controls';
 import MdiIconsPlugin from './plugins/mdi-icons';
 import pluginsAdapter from './plugins-adapter';
-import sourceEditor from './plugins/source-editor';
+import SourceEditorPlugin from './plugins/source-editor';
 import tablePopups from './plugins/table-popups';
 import Toolbar from './Toolbar';
 import ToolbarPopupsPlugin from './plugins/toolbar-popups';
@@ -33,7 +33,6 @@ const joditConfig = {
 pluginsAdapter(Jodit);
 
 // Load custom plugins.
-sourceEditor(Jodit);
 tablePopups(Jodit);
 
 const plugins = [{
@@ -57,6 +56,8 @@ const plugins = [{
   options: {
     popupOpenClass: 'popup_open'
   }
+}, {
+  use: SourceEditorPlugin
 }];
 
 export default {
