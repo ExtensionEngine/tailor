@@ -11,7 +11,7 @@
 import JoditVue, { Jodit } from 'jodit-vue';
 import ExternalToolbarPlugin from './plugins/external-toolbar';
 import FontControlsPlugin from './plugins/font-controls';
-import mdiIcons from './plugins/mdi-icons';
+import MdiIconsPlugin from './plugins/mdi-icons';
 import pluginsAdapter from './plugins-adapter';
 import sourceEditor from './plugins/source-editor';
 import tablePopups from './plugins/table-popups';
@@ -33,9 +33,6 @@ const joditConfig = {
 pluginsAdapter(Jodit);
 
 // Load custom plugins.
-mdiIcons(Jodit, {
-  btnResetColorClass: 'btn_reset_color'
-});
 toolbarPopups(Jodit, {
   popupOpenClass: 'popup_open'
 });
@@ -52,6 +49,11 @@ const plugins = [{
   use: FontControlsPlugin,
   options: {
     pickerLabelClass: 'picker_label'
+  }
+}, {
+  use: MdiIconsPlugin,
+  options: {
+    btnResetColorClass: 'btn_reset_color'
   }
 }];
 
