@@ -9,7 +9,7 @@
 
 <script>
 import JoditVue, { Jodit } from 'jodit-vue';
-import externalToolbar from './plugins/external-toolbar';
+import ExternalToolbarPlugin from './plugins/external-toolbar';
 import fontControls from './plugins/font-controls';
 import mdiIcons from './plugins/mdi-icons';
 import pluginsAdapter from './plugins-adapter';
@@ -21,7 +21,7 @@ import uniqueId from 'lodash/uniqueId';
 
 const JODIT_READY_EVENT = 'joditReady';
 
-/** @type {import('jodit/src/Config').Config & import('jodit/src/plugins') } */
+/** @type {import('jodit/src/Config').Config & import('jodit/src/plugins')} */
 const joditConfig = {
   autofocus: true,
   addNewLineOnDBLClick: false,
@@ -33,10 +33,6 @@ const joditConfig = {
 pluginsAdapter(Jodit);
 
 // Load custom plugins.
-externalToolbar(Jodit, {
-  readyEvent: JODIT_READY_EVENT,
-  toolbarContainer: '#joditToolbar'
-});
 mdiIcons(Jodit, {
   btnResetColorClass: 'btn_reset_color'
 });
@@ -48,6 +44,14 @@ toolbarPopups(Jodit, {
 });
 sourceEditor(Jodit);
 tablePopups(Jodit);
+
+const plugins = [{
+  use: ExternalToolbarPlugin,
+  options: {
+    readyEvent: JODIT_READY_EVENT,
+    toolbarContainer: '#joditToolbar'
+  }
+}];
 
 export default {
   props: {
@@ -62,7 +66,8 @@ export default {
     config: vm => ({
       ...joditConfig,
       minHeight: vm.minHeight,
-      placeholder: vm.placeholder
+      placeholder: vm.placeholder,
+      plugins
     })
   },
   watch: {
