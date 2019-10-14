@@ -84,7 +84,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.repo-container, .tab-content, .tab-pane {
+.repo-container, .tab-content {
   width: 100%;
   height: 100%;
 }
@@ -107,7 +107,7 @@ export default {
       color: rgba(255, 255, 255, 0.6);
     }
 
-    &:not(.v-tab--active):not(.v-tab--disabled) {
+    &:not(.v-tab--active) {
       opacity: 1;
     }
   }
