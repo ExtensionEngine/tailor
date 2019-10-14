@@ -1,50 +1,79 @@
-import get from 'lodash/get';
-import isFunction from 'lodash/isFunction';
+import autoBind from 'auto-bind';
 import scrollparent from 'scrollparent';
 
-const EVENT_NAME = 'recalcPositionPopup';
-const NAMESPACE = 'JoditEventDefaultNamespace';
+const JODIT_RECALC_POPUP_POSITION_EVENT = 'recalcPositionPopup';
+const JODIT_DEFAULT_EVENT_NAMESPACE = 'JoditEventDefaultNamespace';
 
-export const name = 'TablePopups';
+/** @typedef {import('jodit').IJodit} Jodit */
 
-export const install = Jodit => {
-  const { afterInitHook } = Jodit.prototype;
-  Jodit.prototype.afterInitHook = function () {
-    afterInitHook.apply(this, arguments);
-    observeTables(this, Jodit);
-    addScrollHandler(this);
-  };
-};
+export default class TablePopupsPlugin {
+  static get pluginname() {
+    return 'table-popups';
+  }
 
-function observeTables(editor, Jodit) {
-  const $$ = get(Jodit, 'modules.Helpers.$$', () => []);
-  const tableProcessor = get(editor, '__plugins.table', {});
-  if (!isFunction(tableProcessor.observe)) return;
-  $$('table', editor.editor).forEach(table => {
-    if (table[tableProcessor.__key]) return;
-    tableProcessor.observe(table);
-  });
+  constructor() {
+    autoBind(this);
+  }
+
+  /**
+   * @param {Jodit} jodit
+   */
+  init(jodit) {
+    const self = this;
+    const { afterInitHook } = jodit;
+    jodit.afterInitHook = function () {
+      afterInitHook.apply(this, arguments);
+      self.observeTables(jodit);
+      self.scrollContainer = scrollparent(jodit.container);
+      if (self.scrollContainer) self.addScrollHandler(jodit);
+    };
+  }
+
+  /**
+   * @param {Jodit} jodit
+   */
+  observeTables(jodit) {
+    const { constructor: Jodit } = jodit;
+    const { table } = jodit.__plugins;
+    const { $$: query } = Jodit.modules.Helpers;
+    query('table', jodit.editor).forEach(tableEl => {
+      if (table[table.__key]) return;
+      table.observe(tableEl);
+    });
+  }
+
+  /**
+   * @param {Jodit} jodit
+   */
+  addScrollHandler(jodit) {
+    const [eventDesc] = jodit.events.getStore(jodit.events)
+      .get(JODIT_RECALC_POPUP_POSITION_EVENT, JODIT_DEFAULT_EVENT_NAMESPACE);
+
+    const recalcPopupPosition = eventDesc && eventDesc.originalCallback;
+    if (!recalcPopupPosition) return;
+
+    this.scrollHandler = this.createScrollHandler(recalcPopupPosition);
+    jodit.events.on(this.scrollContainer, 'scroll', this.scrollHandler);
+  }
+
+  /**
+   * @param {Function} recalcPopupPosition
+   */
+  createScrollHandler(recalcPopupPosition) {
+    return scrollHandler.bind(this);
+    function scrollHandler() {
+      const { inlinePopup } = this.jodit.__plugins;
+      if (!inlinePopup || !inlinePopup.isShown) return;
+      return recalcPopupPosition.call(inlinePopup);
+    }
+  }
+
+  /**
+   * @param {Jodit} jodit
+   */
+  beforeDestruct(jodit) {
+    if (this.scrollContainer && this.scrollHandler) {
+      jodit.events.off(this.scrollContainer, 'scroll', this.scrollHandler);
+    }
+  }
 }
-
-function addScrollHandler(editor) {
-  const node = scrollparent(editor.container);
-  const popup = get(editor, '__plugins.inlinePopup');
-  const handler = getScrollHandler(editor, popup);
-  if (!popup || !node || !handler) return;
-  node.addEventListener('scroll', handler);
-  editor.events.on('beforeDestruct', () => {
-    node.removeEventListener('scroll', handler);
-  });
-}
-
-function getScrollHandler(editor, popup = {}) {
-  const store = editor.events.getStore(editor.events);
-  const [{ originalCallback } = {}] = store.get(EVENT_NAME, NAMESPACE);
-  if (!isFunction(originalCallback)) return;
-  return () => {
-    if (!popup.isShown) return;
-    originalCallback.call(popup);
-  };
-}
-
-export default install;
