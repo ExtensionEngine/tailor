@@ -10,7 +10,7 @@
 <script>
 import JoditVue, { Jodit } from 'jodit-vue';
 import ExternalToolbarPlugin from './plugins/external-toolbar';
-import fontControls from './plugins/font-controls';
+import FontControlsPlugin from './plugins/font-controls';
 import mdiIcons from './plugins/mdi-icons';
 import pluginsAdapter from './plugins-adapter';
 import sourceEditor from './plugins/source-editor';
@@ -36,9 +36,6 @@ pluginsAdapter(Jodit);
 mdiIcons(Jodit, {
   btnResetColorClass: 'btn_reset_color'
 });
-fontControls(Jodit, {
-  pickerLabelClass: 'picker_label'
-});
 toolbarPopups(Jodit, {
   popupOpenClass: 'popup_open'
 });
@@ -50,6 +47,11 @@ const plugins = [{
   options: {
     readyEvent: JODIT_READY_EVENT,
     toolbarContainer: '#joditToolbar'
+  }
+}, {
+  use: FontControlsPlugin,
+  options: {
+    pickerLabelClass: 'picker_label'
   }
 }];
 
