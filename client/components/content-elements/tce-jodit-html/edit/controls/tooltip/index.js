@@ -27,6 +27,7 @@ export default {
         </form>`
       );
 
+      const deleteButton = form.querySelector('button[name=delete]');
       current = Jodit.modules.Dom.up(current, isTooltipNode, editor.editor);
       if (current) {
         const tooltipValue = current.getAttribute(TOOLTIP_ATTR) || '';
@@ -34,6 +35,7 @@ export default {
         val(form, 'input[name=text]', current.innerText);
       } else {
         val(form, 'input[name=text]', sel ? sel.toString() : '');
+        deleteButton.style.display = 'none';
       }
 
       const selInfo = editor.selection.save();
