@@ -1,12 +1,15 @@
+import isFunction from 'lodash/isFunction';
 import Jodit from 'jodit';
 
 const TOOLTIP_CONTROL = 'tooltip';
-const TOOLTIP_TAG_NAME = 'tooltip-element';
-const TOOLTIP_ATTRIBUTE = 'data-tooltip';
+const TOOLTIP_TAG = 'span';
+const TOOLTIP_ATTR = 'data-tooltip';
 const TOOLTIP_CLASS = 'tce-jodit-tooltip';
 
-class TooltipElement extends HTMLElement {}
-customElements.define(TOOLTIP_TAG_NAME, TooltipElement);
+const isTooltipNode = node => {
+  if (!node || !isFunction(node.hasAttribute)) return false;
+  return node.hasAttribute(TOOLTIP_ATTR);
+};
 
 export default {
   [TOOLTIP_CONTROL]: {
@@ -24,9 +27,9 @@ export default {
         </form>`
       );
 
-      current = Jodit.modules.Dom.closest(current, TOOLTIP_TAG_NAME, editor.editor);
+      current = Jodit.modules.Dom.up(current, isTooltipNode, editor.editor);
       if (current) {
-        const tooltipValue = current.getAttribute(TOOLTIP_ATTRIBUTE) || '';
+        const tooltipValue = current.getAttribute(TOOLTIP_ATTR) || '';
         val(form, 'textarea[name=tooltip]', tooltipValue);
         val(form, 'input[name=text]', current.innerText);
       } else {
@@ -38,10 +41,10 @@ export default {
       form.addEventListener('submit', event => {
         event.preventDefault();
         editor.selection.restore(selInfo);
-        const tooltipElement = current || new TooltipElement();
+        const tooltipElement = current || document.createElement(TOOLTIP_TAG);
         const tooltipValue = val(form, 'textarea[name=tooltip]');
         const innerText = val(form, 'input[name=text]');
-        tooltipElement.setAttribute(TOOLTIP_ATTRIBUTE, tooltipValue);
+        tooltipElement.setAttribute(TOOLTIP_ATTR, tooltipValue);
         tooltipElement.classList.add(TOOLTIP_CLASS);
         tooltipElement.innerText = innerText;
         if (!current && innerText) editor.selection.insertNode(tooltipElement);
