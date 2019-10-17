@@ -7,7 +7,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 
 import assetsApi from '@/api/asset';
 import colors from 'vuetify/es5/util/colors';
-import ContentPluginRegistry from './content-plugin-registry';
+import ContentPluginRegistry from './content-plugins';
 
 import { formatDate, truncate } from '@/filters';
 import FileFilter from '@/directives/file-filter';

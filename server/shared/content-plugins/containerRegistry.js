@@ -1,8 +1,10 @@
+'use strict';
+
 const BaseRegistry = require('./BaseRegistry');
-const containerList = require('../../config/shared/custom-containers');
+const containerList = require('../../../config/shared/core-containers');
 const Promise = require('bluebird');
 
-const EXTENSIONS_LIST = `../../extensions/content-containers/index`;
+const EXTENSIONS_LIST = '../../../extensions/content-containers/index';
 
 class ContainerRegistry extends BaseRegistry {
   constructor() {

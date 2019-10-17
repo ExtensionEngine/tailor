@@ -1,7 +1,9 @@
-const BaseRegistry = require('./BaseRegistry');
-const elementsList = require('../../config/shared/custom-elements');
+'use strict';
 
-const EXTENSIONS_LIST = `../../extensions/content-elements/index`;
+const BaseRegistry = require('./BaseRegistry');
+const elementsList = require('../../../config/shared/core-elements');
+
+const EXTENSIONS_LIST = '../../../extensions/content-elements/index';
 
 class ElementsRegistry extends BaseRegistry {
   constructor() {

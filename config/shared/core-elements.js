@@ -1,11 +1,14 @@
+'use strict';
+
 module.exports = [
-  'tce-html',
+  'tce-jodit-html',
   'tce-image',
   'tce-video',
   'tce-embed',
   'tce-audio',
   'tce-page-break',
   'tce-pdf',
+  'tce-file',
   'tce-accordion',
   'tce-table',
   'tce-modal',
@@ -18,5 +21,6 @@ module.exports = [
   'tce-numerical-response',
   'tce-fill-blank',
   'tce-matching-question',
-  'tce-drag-drop'
+  'tce-drag-drop',
+  'tce-html'
 ];

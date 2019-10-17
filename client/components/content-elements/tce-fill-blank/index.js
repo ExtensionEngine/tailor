@@ -2,7 +2,7 @@ import Edit from './edit';
 import find from 'lodash/find';
 import yup from 'yup';
 
-const TEXT_CONTAINERS = ['HTML', 'JODIT_HTML'];
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const BLANK_PLACEHOLDER = /(@blank)/g;
 
 const schema = {

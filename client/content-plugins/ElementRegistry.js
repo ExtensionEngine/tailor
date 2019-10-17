@@ -1,5 +1,5 @@
 import ComponentRegistry from './ComponentRegistry';
-import elementList from 'components/content-elements';
+import elementList from 'shared/core-elements';
 import { getComponentName } from 'tce-core/utils';
 
 const ATTRS = ['name', 'type', 'subtype', 'version', 'schema', 'initState', 'ui'];

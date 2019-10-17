@@ -9,7 +9,7 @@ import toPairs from 'lodash/toPairs';
 import toPath from 'lodash/toPath';
 import yup from 'yup';
 
-const TEXT_CONTAINERS = ['HTML', 'JODIT_HTML'];
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 
 export const typeInfo = {
   MC: { type: 'MC', title: 'Multiple choice', class: 'multiple-choice' },

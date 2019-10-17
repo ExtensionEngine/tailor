@@ -27,6 +27,7 @@ const buttons = ToolbarBuilder.build([[
   ['link', 'Insert link...'],
   ['table', 'Insert table'],
   ['image', 'Image'],
+  ['tooltip', 'Tooltip'],
   ['symbol', 'Insert special character'],
   ['hr', 'Horizontal line']
 ], [

@@ -44,7 +44,7 @@ import get from 'lodash/get';
 import reduce from 'lodash/reduce';
 import times from 'lodash/times';
 
-const TEXT_CONTAINERS = ['HTML', 'JODIT_HTML'];
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 
 const PLACEHOLDER = /(@blank)/g;
 const ALERT = {

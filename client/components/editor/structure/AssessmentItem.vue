@@ -63,7 +63,7 @@ import filter from 'lodash/filter';
 import map from 'lodash/map';
 import truncate from 'lodash/truncate';
 
-const TEXT_CONTAINERS = ['HTML', 'JODIT_HTML'];
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
 const htmlRegex = /<\/?[^>]+(>|$)/g;
 
