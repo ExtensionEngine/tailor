@@ -25,12 +25,12 @@ jobs:
             - node_modules
 
       - run:
-          name: Run tests
-          command: npm test
-
-      - run:
           name: Lint codebase
           command: npm run lint
+
+      - run:
+          name: Run tests
+          command: npm test
 
       - run:
           name: Run build
