@@ -1,0 +1,37 @@
+# Javascript Node CircleCI 2.0 configuration file
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/node:lts-browsers
+
+    working_directory: ~/tailor
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package-lock.json" }}
+
+      - run:
+          name: Install dependencies
+          command: npm install
+
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+
+      - run:
+          name: Run tests
+          command: npm test
+
+      - run:
+          name: Lint codebase
+          command: npm run lint
+
+      - run:
+          name: Run build
+          command: npm run build
