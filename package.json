@@ -161,7 +161,6 @@
     "sequelize-cli": "^5.5.1",
     "strip-json-comments": "^3.0.1",
     "stylelint": "^11.1.1",
-    "stylelint-webpack-plugin": "^0.10.5",
     "umzug": "^2.2.0",
     "val-loader": "^1.1.1",
     "vue-template-compiler": "^2.6.10"
