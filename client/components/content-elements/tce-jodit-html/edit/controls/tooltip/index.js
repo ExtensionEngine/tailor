@@ -53,7 +53,6 @@ export default {
         close();
       });
 
-      const deleteButton = form.querySelector('button[name=delete]');
       deleteButton.addEventListener('click', event => {
         event.preventDefault();
         if (current) Jodit.modules.Dom.unwrap(current);
