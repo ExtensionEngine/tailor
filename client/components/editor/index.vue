@@ -34,7 +34,6 @@
             :parent-id="activity.id"
             v-bind="getContainerConfig(type)" />
           <assessments v-if="showAssessments" />
-          <exams v-if="showExams" />
         </template>
       </div>
     </div>
@@ -49,10 +48,11 @@ import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
-import Exams from './structure/Exams';
 import find from 'lodash/find';
+import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
+import map from 'lodash/map';
 import MetaSidebar from './MetaSidebar';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
@@ -77,9 +77,6 @@ export default {
     },
     showAssessments() {
       return config.hasAssessments(this.activity.type);
-    },
-    showExams() {
-      return config.hasExams(this.activity.type);
     },
     containerConfigs() {
       if (!this.activity) return [];
@@ -113,7 +110,7 @@ export default {
       }
     }
   },
-  async created() {
+  created() {
     const { courseId, activityId } = this.$route.params;
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
@@ -145,12 +142,13 @@ export default {
     const baseUrl = `/courses/${courseId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
     this.setupTesApi(`${baseUrl}/tes`);
-    const actions = [
-      this.getActivities(),
-      this.getTeachingElements({ activityId, parentId: activityId })
-    ];
+    const actions = [this.getActivities()];
     if (!this.course) actions.push(this.getCourse(courseId));
-    Promise.all(actions).then(() => (this.showLoader = false));
+    Promise.all(actions).then(() => {
+      const ids = flatMap(this.contentContainers, it => map(it, 'id'));
+      return this.getTeachingElements({ ids: [activityId, ...ids] });
+    })
+    .then(() => (this.showLoader = false));
   },
   beforeDestroy() {
     this.unsubscribe();
@@ -158,7 +156,6 @@ export default {
   components: {
     Assessments,
     ContentContainers,
-    Exams,
     MainSidebar,
     MetaSidebar,
     Toolbar

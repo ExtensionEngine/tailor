@@ -1,7 +1,7 @@
 <template>
   <div @selected="$emit('selected')" class="assessment-container">
     <div class="assessment">
-      <slot></slot>
+      <slot :isEditing="isEditing"></slot>
       <question
         @update="update"
         :assessment="editedElement"
@@ -15,7 +15,7 @@
         :is-graded="isGraded"
         :is-editing="isEditing"
         :errors="errors" />
-      <div :class="{ 'has-error': hintError }" class="form-group">
+      <div :class="{ 'has-error': hintError }" class="form-group hint">
         <span class="form-label">Hint</span>
         <input
           v-model="editedElement.data.hint"
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import * as yup from 'yup';
 import { getComponentName, processAnswerType } from '../utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
@@ -60,7 +61,6 @@ import map from 'lodash/map';
 import omit from 'lodash/omit';
 import Question from './Question';
 import toPath from 'lodash/toPath';
-import yup from 'yup';
 
 const validationOptions = { recursive: true, abortEarly: false };
 
