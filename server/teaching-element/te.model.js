@@ -97,6 +97,12 @@ class TeachingElement extends Model {
         if (!te.changed('data')) return Promise.resolve();
         te.contentSignature = hash(te.data, { algorithm: 'sha1' });
         return processStatics(te);
+      },
+      [Hooks.afterCreate](te) {
+        return resolveStatics(te);
+      },
+      [Hooks.afterUpdate](te) {
+        return resolveStatics(te);
       }
     };
   }
@@ -121,8 +127,7 @@ class TeachingElement extends Model {
   static fetch(opt) {
     return isNumber(opt)
       ? TeachingElement.findByPk(opt).then(it => it && resolveStatics(it))
-      : TeachingElement.findAll(opt)
-          .then(arr => Promise.all(arr.map(it => resolveStatics(it))));
+      : TeachingElement.findAll(opt).map(resolveStatics);
   }
 
   /**
@@ -179,7 +184,7 @@ class TeachingElement extends Model {
     return this.getActivity().then(parent => {
       if (parent.type !== 'ASSESSMENT_GROUP') return {};
       if (this.type === 'ASSESSMENT') return { type: 'ASSESSMENT' };
-      return { type: { [Op.not]: this.type } };
+      return { type: { [Op.not]: 'ASSESSMENT' } };
     });
   }
 }

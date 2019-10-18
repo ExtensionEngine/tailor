@@ -1,4 +1,6 @@
-export default [
+'use strict';
+
+module.exports = [
   'tce-html',
   'tce-image',
   'tce-video',

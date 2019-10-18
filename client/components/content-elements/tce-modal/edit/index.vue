@@ -62,6 +62,7 @@ export default {
   },
   created() {
     this.$elementBus.on('toggleEdit', () => (this.isEditing = !this.isEditing));
+    this.$elementBus.on('save', data => this.$emit('save', data));
   },
   components: { EmbeddedContainer, Preview }
 };

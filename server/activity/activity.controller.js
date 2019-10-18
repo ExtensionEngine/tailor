@@ -92,8 +92,8 @@ function link({ course, activity, body }, res) {
   });
 }
 
-function getPreviewUrl({ course, activity }, res) {
-  return fetchActivityContent(course, activity, true)
+function getPreviewUrl({ activity }, res) {
+  return fetchActivityContent(activity, true)
     .then(content => {
       const body = {
         ...pick(activity, ['id', 'uid', 'type']),
