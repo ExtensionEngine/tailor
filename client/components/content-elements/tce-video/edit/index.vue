@@ -42,7 +42,7 @@ import { extname } from 'path';
 import get from 'lodash/get';
 import { PlyrueComponent as Plyrue } from 'plyrue';
 
-const MediaError = window.MediaError;
+const { MEDIA_ERR_SRC_NOT_SUPPORTED } = window.MediaError;
 
 const MIMETYPE = {
   m4v: 'video/mp4',
@@ -63,12 +63,7 @@ export default {
     isFocused: { type: Boolean, default: false },
     isDragged: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      error: null,
-      switchingVideo: false
-    };
-  },
+  data: () => ({ error: null, switchingVideo: false }),
   computed: {
     player: ({ $refs }) => get($refs, 'video.player'),
     url: ({ element }) => get(element, 'data.url', ''),
@@ -80,10 +75,7 @@ export default {
     },
     showPlaceholder: ({ url }) => !url,
     showVideo: ({ switchingVideo, isDragged }) => !(switchingVideo || isDragged),
-    showError: ({ error }) => {
-      if (!error) return false;
-      return error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED;
-    }
+    showError: ({ error }) => error ? error.code === MEDIA_ERR_SRC_NOT_SUPPORTED : false
   },
   methods: {
     onError(err) {
