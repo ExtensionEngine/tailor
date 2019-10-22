@@ -7,7 +7,7 @@ const JODIT_DEFAULT_EVENT_NAMESPACE = 'JoditEventDefaultNamespace';
 /** @typedef {import('jodit').IJodit} Jodit */
 
 export default class TablePopupsPlugin {
-  static get pluginname() {
+  static get pluginName() {
     return 'table-popups';
   }
 
