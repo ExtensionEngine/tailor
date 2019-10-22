@@ -23,6 +23,7 @@ import TablePopupsPlugin from './plugins/table-popups';
 import Toolbar from './Toolbar';
 import ToolbarBuilderPlugin from './plugins/toolbar-builder';
 import ToolbarPopupsPlugin from './plugins/toolbar-popups';
+import TooltipPlugin from './plugins/tooltip';
 import uniqueId from 'lodash/uniqueId';
 
 const JODIT_READY_EVENT = 'joditReady';
@@ -41,6 +42,8 @@ const joditConfig = {
 pluginsAdapter(Jodit);
 
 const plugins = [{
+  use: TooltipPlugin
+}, {
   use: ToolbarBuilderPlugin,
   options: {
     buttons: Toolbar.$buttons,
