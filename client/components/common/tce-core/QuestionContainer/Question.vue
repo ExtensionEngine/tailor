@@ -4,7 +4,7 @@
     <div
       :class="{ editing: isEditing, 'question-error': questionError }"
       class="question">
-      <draggable v-model="question" :options="dragOptions" class="row">
+      <draggable v-model="question" v-bind="dragOptions" class="row">
         <contained-content
           v-for="element in question"
           :key="element.id"
