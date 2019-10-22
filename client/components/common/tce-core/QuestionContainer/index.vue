@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import * as yup from 'yup';
 import { getComponentName, processAnswerType } from '../utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
@@ -60,7 +61,6 @@ import map from 'lodash/map';
 import omit from 'lodash/omit';
 import Question from './Question';
 import toPath from 'lodash/toPath';
-import yup from 'yup';
 
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 
