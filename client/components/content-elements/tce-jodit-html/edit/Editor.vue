@@ -4,10 +4,6 @@
       ref="jodit"
       @input="value => $emit('input', value)"
       v-bind="{ id, config, value }" />
-    <jodit-vue
-      ref="jodit"
-      @input="value => $emit('input', value)"
-      v-bind="{ id, config: { ...config, plugins: [] }, value }" />
   </div>
 </template>
 
