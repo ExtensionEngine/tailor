@@ -1,11 +1,11 @@
 <template>
-  <div id="joditToolbar" class="jodit_toolbar_container"></div>
+  <div :id="id" class="jodit_toolbar_container"></div>
 </template>
 
 <script>
-import ToolbarBuilder from './ToolbarBuilder';
+const id = 'joditToolbar';
 
-const buttons = ToolbarBuilder.build([[
+const buttons = [[
   ['source', 'Source']
 ], [
   ['undo', 'Undo'],
@@ -42,13 +42,17 @@ const buttons = ToolbarBuilder.build([[
   ['superscript', 'Superscript']
 ], [
   ['eraser', 'Clear formatting']
-]]);
+]];
 
 export default {
+  get $containerId() {
+    return `#${id}`;
+  },
   get $buttons() {
     return buttons;
   },
   computed: {
+    id: () => id,
     buttons: () => buttons
   }
 };

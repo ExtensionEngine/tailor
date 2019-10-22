@@ -59,7 +59,7 @@ export default function extend(Jodit) {
       this.$plugins.set(pluginName, plugin);
       this.__plugins[uniqueId('plugin_proxy__')] = new PluginProxy(plugin, this);
       // Apply plugin on jodit options.
-      if (isFunction(plugin.apply)) plugin.apply(config);
+      if (isFunction(plugin.apply)) plugin.apply(config, Jodit);
     });
   };
 

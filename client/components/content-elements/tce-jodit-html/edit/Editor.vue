@@ -3,7 +3,11 @@
     <jodit-vue
       ref="jodit"
       @input="value => $emit('input', value)"
-      v-bind="{ id, buttons, config, value }" />
+      v-bind="{ id, config, value }" />
+    <jodit-vue
+      ref="jodit"
+      @input="value => $emit('input', value)"
+      v-bind="{ id, config: { ...config, plugins: [] }, value }" />
   </div>
 </template>
 
@@ -17,10 +21,12 @@ import pluginsAdapter from './plugins-adapter';
 import SourceEditorPlugin from './plugins/source-editor';
 import TablePopupsPlugin from './plugins/table-popups';
 import Toolbar from './Toolbar';
+import ToolbarBuilderPlugin from './plugins/toolbar-builder';
 import ToolbarPopupsPlugin from './plugins/toolbar-popups';
 import uniqueId from 'lodash/uniqueId';
 
 const JODIT_READY_EVENT = 'joditReady';
+const JODIT_TOOLBAR_SEPARATOR = '|';
 
 /** @type {import('jodit/src/Config').Config & import('jodit/src/plugins')} */
 const joditConfig = {
@@ -28,16 +34,23 @@ const joditConfig = {
   addNewLineOnDBLClick: false,
   showTooltipDelay: 350,
   colorPickerDefaultTab: 'color',
-  disablePlugins: ['fullsize']
+  disablePlugins: ['fullsize'],
+  language: 'en'
 };
 
 pluginsAdapter(Jodit);
 
 const plugins = [{
+  use: ToolbarBuilderPlugin,
+  options: {
+    buttons: Toolbar.$buttons,
+    separator: JODIT_TOOLBAR_SEPARATOR
+  }
+}, {
   use: ExternalToolbarPlugin,
   options: {
     readyEvent: JODIT_READY_EVENT,
-    toolbarContainer: '#joditToolbar'
+    toolbarContainer: Toolbar.$containerId
   }
 }, {
   use: FontControlsPlugin,
@@ -74,7 +87,6 @@ export default {
   },
   computed: {
     id: () => uniqueId('jodit_editor_'),
-    buttons: () => Toolbar.$buttons,
     config: vm => ({
       ...joditConfig,
       minHeight: vm.minHeight,
