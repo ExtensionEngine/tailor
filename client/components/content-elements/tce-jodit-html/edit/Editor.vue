@@ -9,6 +9,7 @@
 
 <script>
 import JoditVue, { Jodit } from 'jodit-vue';
+import AutofocusPlugin from './plugins/autofocus';
 import ExternalToolbarPlugin from './plugins/external-toolbar';
 import FontControlsPlugin from './plugins/font-controls';
 import MdiIconsPlugin from './plugins/mdi-icons';
@@ -57,6 +58,11 @@ const plugins = [{
   use: SourceEditorPlugin
 }, {
   use: TablePopupsPlugin
+}, {
+  use: AutofocusPlugin,
+  options: {
+    readyEvent: JODIT_READY_EVENT
+  }
 }];
 
 export default {
@@ -82,22 +88,6 @@ export default {
       if (!editor) return;
       editor.setReadOnly(state);
       if (!state) editor.selection.focus();
-    }
-  },
-  mounted() {
-    const { editor } = this.$refs.jodit;
-    editor.editor.style.cursor = 'initial';
-    editor.events
-      .on('afterInit', afterInit)
-      .on('beforeDestruct', () => {
-        if (editor.events) editor.events.off('afterInit', afterInit);
-      });
-
-    function afterInit() {
-      setTimeout(() => {
-        editor.selection.focus();
-        editor.events.fire(JODIT_READY_EVENT);
-      }, 0);
     }
   },
   components: {
