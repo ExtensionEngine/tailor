@@ -2,7 +2,7 @@
   <div class="jodit_wrapper">
     <jodit-vue
       ref="jodit"
-      @input="value => $emit('input', value)"
+      @input="input"
       v-bind="{ id, config, value }" />
   </div>
 </template>
@@ -92,6 +92,12 @@ export default {
       placeholder: vm.placeholder,
       plugins
     })
+  },
+  methods: {
+    input(value) {
+      const innerText = this.$refs.jodit.$el.innerText;
+      return this.$emit('input', innerText ? value : '');
+    }
   },
   watch: {
     readonly(state) {
