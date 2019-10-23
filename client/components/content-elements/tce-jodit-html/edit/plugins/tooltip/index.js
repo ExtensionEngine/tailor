@@ -38,8 +38,34 @@ export default class TooltipPlugin {
    */
   apply({ controls }) {
     controls[TOOLTIP_CONTROL] = {
-      popup: this.createTooltipPopup
+      popup: this.createTooltipPopup,
+      isDisable: this.isDisabled,
+      isActive: this.isActive
     };
+  }
+
+  /**
+   * @param {Jodit} jodit
+   */
+  isDisabled(jodit) {
+    const { constructor: Jodit, editor, selection } = jodit;
+    if (!jodit.isInited || !selection.isFocused()) return;
+    let start = selection.sel.anchorNode;
+    if (start.nodeType !== Node.ELEMENT_NODE) start = start.parentElement;
+    const { Dom } = Jodit.modules;
+    return Dom.up(start, el => el.matches('table'), editor);
+  }
+
+  /**
+   * @param {Jodit} jodit
+   */
+  isActive(jodit) {
+    const { constructor: Jodit, editor, selection } = jodit;
+    if (!jodit.isInited || !selection.isFocused()) return;
+    let start = selection.sel.anchorNode;
+    if (start.nodeType !== Node.ELEMENT_NODE) start = start.parentElement;
+    const { Dom } = Jodit.modules;
+    return Dom.up(start, el => el.matches(`.${TOOLTIP_CLASS}`), editor);
   }
 
   /**
