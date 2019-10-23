@@ -2,8 +2,6 @@ import autoBind from 'auto-bind';
 import cloneDeep from 'lodash/cloneDeep';
 import uniqueId from 'lodash/uniqueId';
 
-const JODIT_TOOLBAR_SEPARATOR = '|';
-
 /** @typedef {import('jodit').IJodit} Jodit */
 
 export default class ToolbarBuilderPlugin {
@@ -13,7 +11,7 @@ export default class ToolbarBuilderPlugin {
 
   constructor(options) {
     options.buttons = options.buttons || [];
-    options.separator = options.separator || JODIT_TOOLBAR_SEPARATOR;
+    options.separator = options.separator || '|';
     autoBind(this);
   }
 

@@ -23,7 +23,6 @@ import TooltipPlugin from './plugins/tooltip';
 import uniqueId from 'lodash/uniqueId';
 
 const JODIT_READY_EVENT = 'joditReady';
-const JODIT_TOOLBAR_SEPARATOR = '|';
 
 /** @type {import('jodit/src/Config').Config & import('jodit/src/plugins')} */
 const joditConfig = {
@@ -42,8 +41,7 @@ const plugins = [{
 }, {
   use: ToolbarBuilderPlugin,
   options: {
-    buttons: Toolbar.$buttons,
-    separator: JODIT_TOOLBAR_SEPARATOR
+    buttons: Toolbar.$buttons
   }
 }, {
   use: ExternalToolbarPlugin,
@@ -52,20 +50,11 @@ const plugins = [{
     toolbarContainer: Toolbar.$containerId
   }
 }, {
-  use: FontControlsPlugin,
-  options: {
-    pickerLabelClass: 'picker_label'
-  }
+  use: FontControlsPlugin
 }, {
-  use: MdiIconsPlugin,
-  options: {
-    btnResetColorClass: 'btn_reset_color'
-  }
+  use: MdiIconsPlugin
 }, {
-  use: ToolbarPopupsPlugin,
-  options: {
-    popupOpenClass: 'popup_open'
-  }
+  use: ToolbarPopupsPlugin
 }, {
   use: SourceEditorPlugin
 }, {

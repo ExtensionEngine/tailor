@@ -15,7 +15,7 @@ export default class ExternalToolbarPlugin {
   }
 
   constructor(options) {
-    options.readyEvent = options.readyEvent || 'afterInit';
+    options.readyEvent = options.readyEvent || 'joditReady';
     autoBind(this);
   }
 

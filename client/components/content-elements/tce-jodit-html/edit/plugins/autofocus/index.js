@@ -9,6 +9,7 @@ export default class AutofocusPlugin {
 
   constructor(options) {
     options.readyEvent = options.readyEvent || 'joditReady';
+    options.cursorStyle = options.cursorStyle || 'inital';
     autoBind(this);
   }
 
@@ -16,7 +17,7 @@ export default class AutofocusPlugin {
    * @param {Jodit} jodit
    */
   init(jodit) {
-    jodit.editor.style.cursor = 'initial';
+    jodit.editor.style.cursor = this.options.cursorStyle;
   }
 
   /**
