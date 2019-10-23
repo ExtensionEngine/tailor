@@ -20,7 +20,7 @@ module.exports = {
       references: { model: 'course', key: 'id' }
     },
     entity: {
-      type: Sequelize.ENUM(['ACTIVITY', 'REPOSITORY', 'TEACHING_ELEMENT']),
+      type: Sequelize.ENUM(['ACTIVITY', 'COURSE', 'TEACHING_ELEMENT']),
       allowNull: false
     },
     operation: {
