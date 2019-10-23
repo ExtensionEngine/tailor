@@ -67,8 +67,8 @@ export default class TooltipPlugin {
 
     this.selectionInfo = selection.save();
 
-    events.on(form, 'submit', event => this.saveTooltip(event, current, close));
-    events.on(deleteButton, 'click', event => this.deleteTooltip(event, current, close));
+    events.on(form, 'submit', event => this.attachTooltip(event, current, close));
+    events.on(deleteButton, 'click', event => this.detachTooltip(event, current, close));
 
     return form;
   }
@@ -78,11 +78,12 @@ export default class TooltipPlugin {
    * @param {Node} current
    * @param {Function} close
    */
-  saveTooltip(event, current, close) {
+  attachTooltip(event, current, close) {
     const { constructor: Jodit, selection } = this.jodit;
     const { val } = Jodit.modules.Helpers;
     event.preventDefault();
     selection.restore(this.selectionInfo);
+    this.selectionInfo = null;
     const tooltipElement = current || document.createElement(TOOLTIP_TAG);
     const tooltipValue = val(event.target, 'textarea[name=tooltip]');
     const innerText = val(event.target, 'input[name=text]');
@@ -98,11 +99,12 @@ export default class TooltipPlugin {
    * @param {Node} current
    * @param {Function} close
    */
-  deleteTooltip(event, current, close) {
+  detachTooltip(event, current, close) {
     const { constructor: Jodit, selection } = this.jodit;
     event.preventDefault();
     if (current) Jodit.modules.Dom.unwrap(current);
     selection.restore(this.selectionInfo);
+    this.selectionInfo = null;
     close();
   }
 }
