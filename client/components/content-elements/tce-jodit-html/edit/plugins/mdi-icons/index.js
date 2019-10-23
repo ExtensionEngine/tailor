@@ -32,6 +32,7 @@ export default class MdiIconsPlugin {
 
   constructor(options) {
     options.btnResetColorClass = options.btnResetColorClass || 'btn_reset_color';
+    options.selectedMarkerClass = options.selectedMarkerClass || 'selected_color_marker';
     autoBind(this);
   }
 
@@ -149,6 +150,9 @@ export default class MdiIconsPlugin {
     const pickers = getColorPickers(popup, { defaultTab: 'background' });
 
     pickers.forEach(picker => {
+      const selected = picker.querySelector('.active');
+      if (selected) this.changeSelectedMarker(selected);
+
       const [eventDesc] = events.getStore(picker)
         .get(JODIT_PICKER_SELECTION_EVENTS[0], JODIT_DEFAULT_EVENT_NAMESPACE);
       const oldListener = eventDesc && eventDesc.originalCallback;
@@ -207,15 +211,7 @@ export default class MdiIconsPlugin {
       return;
     }
 
-    // Swap eye icon marking selected color with colorized bullet.
-    const svg = selected.querySelector('svg');
-    svg.style.display = 'none';
-    const circle = createIcon('mdi-circle');
-    Object.assign(circle.style, {
-      color: svg.style.fill,
-      fontSize: '8px'
-    });
-    selected.appendChild(circle);
+    this.changeSelectedMarker(selected);
   }
 
   /**
@@ -232,6 +228,21 @@ export default class MdiIconsPlugin {
     btnResetColor
       .appendChild(createButton({ icon: 'mdi-water-off', text: 'None', tabIndex }));
     return btnResetColor;
+  }
+
+  /**
+   * @param {HTMLAnchorElement} selected
+   */
+  changeSelectedMarker(selected) {
+    // Swap eye icon marking selected color with colorized bullet.
+    selected.classList.add(this.options.selectedMarkerClass);
+    const svg = selected.querySelector('svg');
+    const circle = createIcon('mdi-circle');
+    Object.assign(circle.style, {
+      color: svg.style.fill,
+      fontSize: '8px'
+    });
+    selected.appendChild(circle);
   }
 
   /**

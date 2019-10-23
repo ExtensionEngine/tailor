@@ -228,6 +228,16 @@ $text-size: 16px;
   }
 }
 
+.jodit_colorpicker .selected_color_marker {
+  &::before {
+    display: none;
+  }
+
+  svg {
+    display: none;
+  }
+}
+
 .jodit_toolbar_btn .jodit_tooltip {
   $background-color: #2a2a2a;
   $text-color: #fff;
