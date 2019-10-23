@@ -3,7 +3,7 @@
 const activityRouter = require('./activity').router;
 const auth = require('passport').authenticate('jwt');
 const commentRouter = require('./comment').router;
-const courseRouter = require('./course').router;
+const repositoryRouter = require('./repository').router;
 const express = require('express');
 const revisionRouter = require('./revision').router;
 const storageRouter = require('./shared/storage/storage.router').router;
@@ -18,7 +18,7 @@ router.use('/', userRouter);
 
 // Protected routes:
 router.use('/', auth);
-router.use('/', courseRouter);
+router.use('/', repositoryRouter);
 router.use('/', activityRouter);
 router.use('/', commentRouter);
 router.use('/', teRouter);

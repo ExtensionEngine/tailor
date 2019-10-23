@@ -12,15 +12,15 @@ const processQuery = processListQuery({ order: [['position']] });
 
 router
   .param('activityId', getActivity)
-  .get('/courses/:courseId/activities', processQuery, ctrl.list)
-  .post('/courses/:courseId/activities', ctrl.create)
-  .get('/courses/:courseId/activities/:activityId', ctrl.show)
-  .patch('/courses/:courseId/activities/:activityId', ctrl.patch)
-  .delete('/courses/:courseId/activities/:activityId', ctrl.remove)
-  .post('/courses/:courseId/activities/:activityId/reorder', ctrl.reorder)
-  .post('/courses/:courseId/activities/:activityId/clone', ctrl.clone)
-  .get('/courses/:courseId/activities/:activityId/publish', ctrl.publish)
-  .get('/courses/:courseId/activities/:activityId/preview', ctrl.getPreviewUrl);
+  .get('/repositories/:repositoryId/activities', processQuery, ctrl.list)
+  .post('/repositories/:repositoryId/activities', ctrl.create)
+  .get('/repositories/:repositoryId/activities/:activityId', ctrl.show)
+  .patch('/repositories/:repositoryId/activities/:activityId', ctrl.patch)
+  .delete('/repositories/:repositoryId/activities/:activityId', ctrl.remove)
+  .post('/repositories/:repositoryId/activities/:activityId/reorder', ctrl.reorder)
+  .post('/repositories/:repositoryId/activities/:activityId/clone', ctrl.clone)
+  .get('/repositories/:repositoryId/activities/:activityId/publish', ctrl.publish)
+  .get('/repositories/:repositoryId/activities/:activityId/preview', ctrl.getPreviewUrl);
 
 function getActivity(req, _res, next, activityId) {
   return Activity.findByPk(activityId, { paranoid: false })

@@ -1,7 +1,7 @@
 {
   "SCHEMAS": [{
-    "id": "COURSE",
-    "name": "Example Course",
+    "id": "REPOSITORY",
+    "name": "Example Repository",
     "structure": [{
       "type": "GOAL",
       "label": "Goal",

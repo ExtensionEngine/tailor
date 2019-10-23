@@ -16,16 +16,16 @@ const defaultListQuery = {
   paranoid: false
 };
 
-router.get('/courses/:courseId/comments/subscribe', sse, channel.subscribe);
+router.get('/repositories/:repositoryId/comments/subscribe', sse, channel.subscribe);
 
 router
-  .route('/courses/:courseId/comments')
+  .route('/repositories/:repositoryId/comments')
   .get(processQuery(defaultListQuery), ctrl.list)
   .post(ctrl.create);
 
 router
   .param('commentId', getComment)
-  .route('/courses/:courseId/comments/:commentId')
+  .route('/repositories/:repositoryId/comments/:commentId')
   .get(ctrl.show)
   .patch(canEdit, ctrl.patch)
   .delete(canEdit, ctrl.remove);

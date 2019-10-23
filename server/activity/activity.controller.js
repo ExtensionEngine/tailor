@@ -10,13 +10,13 @@ const { previewUrl } = require('../../config/server');
 const publishingService = require('../shared/publishing/publishing.service');
 const request = require('axios');
 
-function create({ course, body, params, user }, res) {
-  const outlineConfig = find(getOutlineLevels(course.schema), { type: body.type });
+function create({ repository, body, params, user }, res) {
+  const outlineConfig = find(getOutlineLevels(repository.schema), { type: body.type });
   const defaultMeta = !outlineConfig ? {} : get(outlineConfig, 'defaultMeta', {});
   const data = Object.assign(
     pick(body, ['type', 'parentId', 'position']),
     { data: Object.assign({}, defaultMeta, body.data) },
-    { courseId: params.courseId });
+    { repositoryId: params.repositoryId });
   const opts = { context: { userId: user.id } };
   return Activity.create(data, opts).then(data => res.json({ data }));
 }
@@ -30,15 +30,15 @@ function patch({ activity, body, user }, res) {
     .then(data => res.json({ data }));
 }
 
-function list({ course, query, opts }, res) {
+function list({ repository, query, opts }, res) {
   if (!query.detached) opts.where = { detached: false };
-  return course.getActivities(opts).then(data => res.json({ data }));
+  return repository.getActivities(opts).then(data => res.json({ data }));
 }
 
-function remove({ course, activity, user }, res) {
+function remove({ repository, activity, user }, res) {
   const options = { recursive: true, soft: true, context: { userId: user.id } };
   const unpublish = activity.publishedAt
-    ? publishingService.unpublishActivity(course, activity)
+    ? publishingService.unpublishActivity(repository, activity)
     : Promise.resolve();
   return unpublish
     .then(() => activity.remove(options))
@@ -55,8 +55,8 @@ function publish({ activity }, res) {
 }
 
 function clone({ activity, body }, res) {
-  const { courseId, parentId, position } = body;
-  return activity.clone(courseId, parentId, position).then(mappings => {
+  const { repositoryId, parentId, position } = body;
+  return activity.clone(repositoryId, parentId, position).then(mappings => {
     const opts = { where: { id: Object.values(mappings) } };
     return Activity.findAll(opts).then(data => res.json({ data }));
   });
@@ -67,7 +67,7 @@ function getPreviewUrl({ activity }, res) {
     .then(content => {
       const body = {
         ...pick(activity, ['id', 'uid', 'type']),
-        repositoryId: activity.courseId,
+        repositoryId: activity.repositoryId,
         meta: activity.data,
         ...content
       };

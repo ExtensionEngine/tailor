@@ -8,8 +8,8 @@ const router = require('express').Router();
 
 router
   .param('revisionId', getRevision)
-  .get('/courses/:id/revisions', ctrl.index)
-  .get('/courses/:id/revisions/:revisionId', ctrl.resolve);
+  .get('/repositories/:id/revisions', ctrl.index)
+  .get('/repositories/:id/revisions/:revisionId', ctrl.resolve);
 
 function getRevision(req, _res, next, revisionId) {
   const include = [{ model: User, attributes: ['id', 'email'] }];

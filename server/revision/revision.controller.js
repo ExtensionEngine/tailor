@@ -3,9 +3,9 @@
 const { resolveStatics } = require('../shared/storage/helpers');
 const { Revision, User } = require('../shared/database');
 
-function index({ course, query }, res) {
+function index({ repository, query }, res) {
   const { limit, offset, entity, entityId } = query;
-  const where = { courseId: course.id };
+  const where = { repositoryId: repository.id };
   if (entity) {
     where.entity = entity;
     where.state = { id: entityId };

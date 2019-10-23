@@ -66,13 +66,13 @@ export default {
     };
   },
   computed: {
-    ...mapState('courses', {
+    ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
       showPinned: 'showPinned'
     }),
-    ...mapGetters('courses', {
-      repositories: 'courses',
-      queryParams: 'courseQueryParams',
+    ...mapGetters('repositories', {
+      repositories: 'repositories',
+      queryParams: 'repositoryQueryParams',
       hasMoreResults: 'hasMoreResults'
     }),
     loader() {
@@ -90,8 +90,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions('courses', ['fetch']),
-    ...mapMutations('courses', ['togglePinned', 'setSearch', 'setOrder']),
+    ...mapActions('repositories', ['fetch']),
+    ...mapMutations('repositories', ['togglePinned', 'setSearch', 'setOrder']),
     load() {
       this.loading = true;
       return this.fetch().then(() => {

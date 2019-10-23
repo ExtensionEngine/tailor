@@ -29,8 +29,8 @@ const publish = ({ commit }, activity) => {
 };
 
 const clone = ({ commit }, mapping) => {
-  const { srcId, srcCourseId } = mapping;
-  const url = `/courses/${srcCourseId}/activities/${srcId}/clone`;
+  const { srcId, srcRepositoryId } = mapping;
+  const url = `/repositories/${srcRepositoryId}/activities/${srcId}/clone`;
   return request.post(url, mapping)
     .then(({ data: { data } }) => commit('fetch', api.processEntries(data)));
 };

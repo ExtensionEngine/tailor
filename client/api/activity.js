@@ -1,12 +1,12 @@
 import request from './request';
 
-function getActivities(courseId, params) {
-  return request.get(`/courses/${courseId}/activities`, { params })
+function getActivities(repositoryId, params) {
+  return request.get(`/repositories/${repositoryId}/activities`, { params })
     .then(res => res.data.data);
 }
 
-function createPreview(courseId, activityId) {
-  return request.get(`courses/${courseId}/activities/${activityId}/preview`)
+function createPreview(repositoryId, activityId) {
+  return request.get(`repositories/${repositoryId}/activities/${activityId}/preview`)
     .then(res => res.data.location);
 }
 

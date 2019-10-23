@@ -4,15 +4,15 @@ const values = require('lodash/values');
 
 const role = {
   user: { USER: 'USER', ADMIN: 'ADMIN', INTEGRATION: 'INTEGRATION' },
-  course: { ADMIN: 'COURSE_ADMIN', AUTHOR: 'COURSE_AUTHOR' }
+  repository: { ADMIN: 'Repository_ADMIN', AUTHOR: 'Repository_AUTHOR' }
 };
 
 const userRoleRegex = new RegExp(`^(${values(role.user).join('|')})$`);
-const courseRoleRegex = new RegExp(`^(${values(role.course).join('|')})$`);
+const repositoryRoleRegex = new RegExp(`^(${values(role.repository).join('|')})$`);
 
 module.exports = {
   ...role,
   userRoleRegex,
-  courseRoleRegex,
+  repositoryRoleRegex,
   getRoleValues: type => values(role[type] || {})
 };

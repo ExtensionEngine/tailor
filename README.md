@@ -9,7 +9,7 @@
 [![style @extensionengine style](https://badgen.net/badge/stylelint/@extensionengine/black)](https://github.com/ExtensionEngine/stylelint-config)
 [![Open Source Love](https://badgen.net/badge/Open%20Source/%E2%9D%A4/3eaf8e)](https://github.com/ellerbrock/open-source-badge/)
 
-Adaptive course authoring platform.
+Adaptive repository authoring platform.
 
 
 ## :blue_book: Dependencies

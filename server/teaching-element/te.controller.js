@@ -6,7 +6,7 @@ const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 
-function list({ course, query, opts }, res) {
+function list({ repository, query, opts }, res) {
   if (!query.detached) opts.where = { detached: false };
   if (query.ids) {
     const ids = query.ids.map(id => Number(id));
@@ -16,7 +16,7 @@ function list({ course, query, opts }, res) {
   }
 
   const elements = query.integration
-    ? course.getTeachingElements(opts)
+    ? repository.getTeachingElements(opts)
     : TeachingElement.fetch(opts);
   return elements.then(data => res.json({ data }));
 }
@@ -30,13 +30,13 @@ function show({ params }, res) {
 
 function create({ body, params, user }, res) {
   const attr = ['activityId', 'type', 'data', 'position', 'refs'];
-  const data = Object.assign(pick(body, attr), { courseId: params.courseId });
+  const data = Object.assign(pick(body, attr), { repositoryId: params.repositoryId });
   return TeachingElement.create(data, { context: { userId: user.id } })
     .then(asset => res.json({ data: asset }));
 }
 
 function patch({ body, params, user }, res) {
-  const attrs = ['refs', 'type', 'data', 'meta', 'position', 'courseId', 'deletedAt'];
+  const attrs = ['refs', 'type', 'data', 'meta', 'position', 'repositoryId', 'deletedAt'];
   const data = pick(body, attrs);
   const paranoid = body.paranoid !== false;
   return TeachingElement.findByPk(params.teId, { paranoid })

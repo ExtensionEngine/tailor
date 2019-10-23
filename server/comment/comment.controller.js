@@ -3,12 +3,12 @@
 const { Comment } = require('../shared/database');
 const { User } = require('../shared/database');
 
-function list({ course, opts, query }, res) {
+function list({ repository, opts, query }, res) {
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
   if (query.activityId) {
     opts.where.activityId = query.activityId;
   }
-  return course.getComments({ ...opts, include })
+  return repository.getComments({ ...opts, include })
     .then(data => res.json({ data }));
 }
 
@@ -18,9 +18,9 @@ function show({ comment }, res) {
 
 function create({ body, params, user }, res) {
   const { content, activityId } = body;
-  const { courseId } = params;
+  const { repositoryId } = params;
   const authorId = user.id;
-  return Comment.create({ content, activityId, courseId, authorId })
+  return Comment.create({ content, activityId, repositoryId, authorId })
     .then(data => res.json({ data }));
 }
 

@@ -56,15 +56,15 @@ class Activity extends Model {
     };
   }
 
-  static associate({ Comment, Course, TeachingElement }) {
+  static associate({ Comment, Repository, TeachingElement }) {
     this.hasMany(TeachingElement, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
     this.hasMany(Comment, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
-    this.belongsTo(Course, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+    this.belongsTo(Repository, {
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.belongsTo(this, {
       as: 'parent',
@@ -96,11 +96,11 @@ class Activity extends Model {
     };
   }
 
-  static async cloneActivities(src, dstCourseId, dstParentId, opts) {
+  static async cloneActivities(src, dstRepositoryId, dstParentId, opts) {
     if (!opts.idMappings) opts.idMappings = {};
     const { idMappings, transaction } = opts;
     const dstActivities = await Activity.bulkCreate(map(src, it => ({
-      courseId: dstCourseId,
+      repositoryId: dstRepositoryId,
       parentId: dstParentId,
       ...pick(it, ['type', 'position', 'data', 'refs'])
     })), { returning: true, transaction });
@@ -113,14 +113,14 @@ class Activity extends Model {
       await TeachingElement.cloneElements(tes, parent, transaction);
       const children = await it.getChildren({ where: { detached: false } });
       if (!children.length) return acc;
-      return Activity.cloneActivities(children, dstCourseId, parent.id, opts);
+      return Activity.cloneActivities(children, dstRepositoryId, parent.id, opts);
     }, idMappings);
   }
 
-  clone(courseId, parentId, position) {
+  clone(repositoryId, parentId, position) {
     return this.sequelize.transaction(t => {
       if (position) this.position = position;
-      return Activity.cloneActivities([this], courseId, parentId, t);
+      return Activity.cloneActivities([this], repositoryId, parentId, t);
     });
   }
 
@@ -139,8 +139,8 @@ class Activity extends Model {
   }
 
   siblings({ filter = {}, transaction }) {
-    const { parentId, courseId } = this;
-    const where = { ...filter, parentId, courseId };
+    const { parentId, repositoryId } = this;
+    const where = { ...filter, parentId, repositoryId };
     const options = { where, order: [['position', 'ASC']], transaction };
     return Activity.findAll(options);
   }

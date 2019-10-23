@@ -8,10 +8,10 @@ const forEach = require('lodash/forEach');
 const keyBy = require('lodash/keyBy');
 const map = require('lodash/map');
 
-function createContentInventory(course, activities, tes) {
+function createContentInventory(repository, activities, tes) {
   tes = filter(tes, it => it.type !== 'BREAK');
   const containers = keyBy(filter(activities, { type: 'PERSPECTIVE' }), 'id');
-  const taxonomy = getTaxonomyName(course);
+  const taxonomy = getTaxonomyName(repository);
   const taxons = activities.reduce((acc, it) => {
     acc[it.id] = getTaxon(activities, it.id);
     return acc;
@@ -19,7 +19,7 @@ function createContentInventory(course, activities, tes) {
 
   const workbook = createSpreadsheet(taxonomy);
   const inventory = workbook.getWorksheet('Content Inventory');
-  const objectiveTypes = map(getObjectives(course.schema), 'type');
+  const objectiveTypes = map(getObjectives(repository.schema), 'type');
 
   forEach(tes, atom => {
     const container = containers[atom.activityId];

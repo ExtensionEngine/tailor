@@ -16,7 +16,7 @@ const CONTENT_CONTAINERS = [{
 
 const SCHEMAS = [{
   id: 'DEFAULT_SCHEMA',
-  name: 'Sample course',
+  name: 'Sample repository',
   meta: [],
   structure: [{
     level: 1,

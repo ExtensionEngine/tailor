@@ -88,7 +88,7 @@ export default {
     schemas: () => SCHEMAS
   },
   methods: {
-    ...mapActions('courses', ['save']),
+    ...mapActions('repositories', ['save']),
     submit() {
       this.$validator.validateAll().then(isValid => {
         if (!isValid) return;
