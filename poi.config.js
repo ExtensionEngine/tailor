@@ -86,7 +86,7 @@ module.exports = {
   babel: {
     transpileModules: [
       // NOTE: Packages do NOT contain transpiled code.
-      'humanize-string', 'decamelize',
+      'auto-bind', 'decamelize', 'humanize-string',
       // NOTE: Component is consumed from source.
       'vue-color',
       // NOTE: Unclear why is this necessary :/

@@ -1,3 +1,5 @@
+import autoBind from 'auto-bind';
+
 const JODIT_CONTROL_FONT = 'font';
 const JODIT_CONTROL_FONTSIZE = 'fontsize';
 const JODIT_CONTROL_PARAGRAPH_STYLE = 'paragraph';
@@ -5,52 +7,105 @@ const JODIT_CONTROL_PARAGRAPH_STYLE = 'paragraph';
 const isEmpty = el => !el.innerHTML;
 const find = (arr, cb, defVal) => arr.find(cb) || defVal;
 
-export const name = 'FontControls';
+/** @typedef {import('jodit/src/Config').Config & import('jodit/src/plugins')} Config */
+/** @typedef {import('jodit').IJodit} Jodit */
+/** @typedef {import('jodit').IToolbarButton} Button */
+/** @typedef {import('jodit').IControlType<Jodit,Button} Control */
 
-export const install = (Jodit, {
-  defaultFontFamily = 'Sans Serif',
-  defaultFontSize = 16,
-  defaultParagraphStyle = 'Normal',
-  pickerLabelClass = 'picker_label'
-} = {}) => {
-  const { controls } = Jodit.defaultOptions;
-
-  if (controls[JODIT_CONTROL_FONT]) {
-    Object.assign(controls[JODIT_CONTROL_FONT], {
-      defaultValue: defaultFontFamily,
-      getLabel
-    });
+export default class FontControlsPlugin {
+  static get pluginName() {
+    return 'font-controls';
   }
 
-  if (controls[JODIT_CONTROL_FONTSIZE]) {
-    Object.assign(controls[JODIT_CONTROL_FONTSIZE], {
-      defaultValue: defaultFontSize,
-      getLabel
-    });
+  constructor(options) {
+    options.defaultFontFamily = options.defaultFontFamily || 'Sans Serif';
+    options.defaultFontSize = options.defaultFontSize || 16; /* px */
+    options.defaultParagraphStyle = options.defaultParagraphStyle || 'Normal';
+    options.pickerLabelClass = options.pickerLabelClass || 'picker_label';
+    autoBind(this);
   }
 
-  if (controls[JODIT_CONTROL_PARAGRAPH_STYLE]) {
-    Object.assign(controls[JODIT_CONTROL_PARAGRAPH_STYLE], {
-      defaultValue: defaultParagraphStyle,
-      getLabel
-    });
+  /**
+   * @param {Config} config
+   */
+  apply({ controls }) {
+    let control;
+
+    if ((control = controls[JODIT_CONTROL_FONT])) {
+      Object.assign(control, {
+        defaultValue: this.options.defaultFontFamily,
+        getLabel: this.getLabel
+      });
+    }
+
+    if ((control = controls[JODIT_CONTROL_FONTSIZE])) {
+      Object.assign(control, {
+        defaultValue: this.options.defaultFontSize,
+        getLabel: this.getLabel
+      });
+    }
+
+    if ((control = controls[JODIT_CONTROL_PARAGRAPH_STYLE])) {
+      Object.assign(control, {
+        defaultValue: this.options.defaultParagraphStyle,
+        getLabel: this.getLabel
+      });
+    }
   }
 
-  function getLabel(editor, control, button) {
-    const entry = getActiveEntry(editor, control, control.defaultValue);
+  /**
+   * @param {Jodit} jodit
+   * @param {Control} control
+   * @param {Button} button
+   */
+  getLabel(jodit, control, button) {
+    const entry = this.getActiveEntry(jodit, control, control.defaultValue);
     const [, key] = entry;
     const icon = button.createIcon(control.icon, control);
     const label = document.createElement('span');
-    label.classList.add(pickerLabelClass);
+    label.classList.add(this.options.pickerLabelClass);
     label.appendChild(icon);
     label.innerHTML += key;
     button.textBox.innerHTML = '';
     button.textBox.appendChild(label);
     return false;
   }
-};
 
-export default install;
+  /**
+   * @param {Jodit} jodit
+   * @param {Control} control
+   * @returns {[*, String]}
+   */
+  getActiveEntry(jodit, control, defaultValue) {
+    if (!jodit.isInited) return [null, defaultValue];
+
+    const entries = Object.entries(control.list);
+    const entry = entries.find(args => control.isActiveChild(jodit, { args }));
+    if (entry) return entry;
+
+    if (isEmpty(jodit.editor)) return [null, defaultValue];
+
+    if (control.name === JODIT_CONTROL_FONT) {
+      const { fontFamily: currentFontFamily } = getComputedStyle(jodit.editor);
+      return find(entries, ([fontFamily]) => {
+        return normalize.fontFamily(fontFamily) === currentFontFamily;
+      }, [null, defaultValue]);
+    }
+
+    if (control.name === JODIT_CONTROL_FONTSIZE) {
+      const { fontSize: currentFontSize } = getComputedStyle(jodit.editor);
+      return find(entries, ([_, fontSize]) => {
+        return fontSize === normalize.fontSize(currentFontSize);
+      }, [null, defaultValue]);
+    }
+
+    if (control.name === JODIT_CONTROL_PARAGRAPH_STYLE) {
+      return find(entries, ([_, style]) => {
+        return style.toLowerCase() === 'normal';
+      }, [null, defaultValue]);
+    }
+  }
+}
 
 const normalize = (() => {
   const span = document.createElement('span');
@@ -64,33 +119,3 @@ const normalize = (() => {
     }
   };
 })();
-
-function getActiveEntry(editor, control, defaultValue) {
-  if (!editor.isInited) return [null, defaultValue];
-
-  const entries = Object.entries(control.list);
-  const entry = entries.find(args => control.isActiveChild(editor, { args }));
-  if (entry) return entry;
-
-  if (isEmpty(editor.editor)) return [null, defaultValue];
-
-  if (control.name === JODIT_CONTROL_FONT) {
-    const { fontFamily: currentFontFamily } = getComputedStyle(editor.editor);
-    return find(entries, ([fontFamily]) => {
-      return normalize.fontFamily(fontFamily) === currentFontFamily;
-    }, [null, defaultValue]);
-  }
-
-  if (control.name === JODIT_CONTROL_FONTSIZE) {
-    const { fontSize: currentFontSize } = getComputedStyle(editor.editor);
-    return find(entries, ([_, fontSize]) => {
-      return fontSize === normalize.fontSize(currentFontSize);
-    }, [null, defaultValue]);
-  }
-
-  if (control.name === JODIT_CONTROL_PARAGRAPH_STYLE) {
-    return find(entries, ([_, style]) => {
-      return style.toLowerCase() === 'normal';
-    }, [null, defaultValue]);
-  }
-}

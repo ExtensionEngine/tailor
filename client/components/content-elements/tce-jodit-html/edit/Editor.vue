@@ -3,48 +3,79 @@
     <jodit-vue
       ref="jodit"
       @input="value => $emit('input', value)"
-      v-bind="{ id, buttons, config, value }" />
+      v-bind="{ id, config, value }" />
   </div>
 </template>
 
 <script>
 import JoditVue, { Jodit } from 'jodit-vue';
-import externalToolbar from './plugins/external-toolbar';
-import fontControls from './plugins/font-controls';
-import mdiIcons from './plugins/mdi-icons';
-import sourceEditor from './plugins/source-editor';
-import tablePopups from './plugins/table-popups';
+import AutofocusPlugin from './plugins/autofocus';
+import ExternalToolbarPlugin from './plugins/external-toolbar';
+import FontControlsPlugin from './plugins/font-controls';
+import MdiIconsPlugin from './plugins/mdi-icons';
+import pluginsAdapter from './plugins-adapter';
+import SourceEditorPlugin from './plugins/source-editor';
+import TablePopupsPlugin from './plugins/table-popups';
 import Toolbar from './Toolbar';
-import toolbarPopups from './plugins/toolbar-popups';
+import ToolbarBuilderPlugin from './plugins/toolbar-builder';
+import ToolbarPopupsPlugin from './plugins/toolbar-popups';
+import TooltipPlugin from './plugins/tooltip';
 import uniqueId from 'lodash/uniqueId';
 
 const JODIT_READY_EVENT = 'joditReady';
+const JODIT_TOOLBAR_SEPARATOR = '|';
 
-/** @type {import('jodit/src/Config').Config & import('jodit/src/plugins') } */
+/** @type {import('jodit/src/Config').Config & import('jodit/src/plugins')} */
 const joditConfig = {
   autofocus: true,
   addNewLineOnDBLClick: false,
   showTooltipDelay: 350,
   colorPickerDefaultTab: 'color',
-  disablePlugins: ['fullsize']
+  disablePlugins: ['fullsize'],
+  language: 'en'
 };
 
-// Load custom plugins.
-externalToolbar(Jodit, {
-  readyEvent: JODIT_READY_EVENT,
-  toolbarContainer: '#joditToolbar'
-});
-mdiIcons(Jodit, {
-  btnResetColorClass: 'btn_reset_color'
-});
-fontControls(Jodit, {
-  pickerLabelClass: 'picker_label'
-});
-toolbarPopups(Jodit, {
-  popupOpenClass: 'popup_open'
-});
-sourceEditor(Jodit);
-tablePopups(Jodit);
+pluginsAdapter(Jodit);
+
+const plugins = [{
+  use: TooltipPlugin
+}, {
+  use: ToolbarBuilderPlugin,
+  options: {
+    buttons: Toolbar.$buttons,
+    separator: JODIT_TOOLBAR_SEPARATOR
+  }
+}, {
+  use: ExternalToolbarPlugin,
+  options: {
+    readyEvent: JODIT_READY_EVENT,
+    toolbarContainer: Toolbar.$containerId
+  }
+}, {
+  use: FontControlsPlugin,
+  options: {
+    pickerLabelClass: 'picker_label'
+  }
+}, {
+  use: MdiIconsPlugin,
+  options: {
+    btnResetColorClass: 'btn_reset_color'
+  }
+}, {
+  use: ToolbarPopupsPlugin,
+  options: {
+    popupOpenClass: 'popup_open'
+  }
+}, {
+  use: SourceEditorPlugin
+}, {
+  use: TablePopupsPlugin
+}, {
+  use: AutofocusPlugin,
+  options: {
+    readyEvent: JODIT_READY_EVENT
+  }
+}];
 
 export default {
   props: {
@@ -55,11 +86,11 @@ export default {
   },
   computed: {
     id: () => uniqueId('jodit_editor_'),
-    buttons: () => Toolbar.$buttons,
     config: vm => ({
       ...joditConfig,
       minHeight: vm.minHeight,
-      placeholder: vm.placeholder
+      placeholder: vm.placeholder,
+      plugins
     })
   },
   watch: {
@@ -68,22 +99,6 @@ export default {
       if (!editor) return;
       editor.setReadOnly(state);
       if (!state) editor.selection.focus();
-    }
-  },
-  mounted() {
-    const { editor } = this.$refs.jodit;
-    editor.editor.style.cursor = 'initial';
-    editor.events
-      .on('afterInit', afterInit)
-      .on('beforeDestruct', () => {
-        if (editor.events) editor.events.off('afterInit', afterInit);
-      });
-
-    function afterInit() {
-      setTimeout(() => {
-        editor.selection.focus();
-        editor.events.fire(JODIT_READY_EVENT);
-      }, 0);
     }
   },
   components: {
