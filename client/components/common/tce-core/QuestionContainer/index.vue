@@ -154,9 +154,9 @@ export default {
     validate() {
       return this.schema.validate(this.editedElement.data, validationOptions);
     },
-    updateFeedback(feedback) {
-      const updatedFeedback = { ...this.editedElement.data.feedback, ...feedback };
-      this.$set(this.editedElement.data, 'feedback', updatedFeedback);
+    updateFeedback(data) {
+      const { editedElement: element } = this;
+      this.$set(element.data, 'feedback', { ...element.data.feedback, ...data });
     }
   },
   components: { Controls, Feedback, Question }
