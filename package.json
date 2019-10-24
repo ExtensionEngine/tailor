@@ -153,8 +153,6 @@
     "joycon": "^2.2.5",
     "nodemon": "^1.19.4",
     "poi": "^12.7.3",
-    "poi-preset-bundle-report": "^2.0.2",
-    "poi-preset-eslint": "^9.0.1",
     "rewrite-lockfile": "^1.0.1",
     "sass": "^1.23.0",
     "sass-loader": "^7.3.1",
