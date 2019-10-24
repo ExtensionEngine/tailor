@@ -123,13 +123,14 @@
     "vuedraggable": "^2.23.2",
     "vuetify": "^1.5.7",
     "vuex": "^3.1.1",
+    "vuex-persist": "^2.1.1",
     "vuex-router-sync": "^5.0.0",
     "weekstart": "^1.0.0",
     "yup": "^0.27.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
-    "@extensionengine/eslint-config": "^1.0.1",
+    "@extensionengine/eslint-config": "^1.1.0",
     "@extensionengine/stylelint-config": "^1.0.1",
     "@poi/plugin-bundle-report": "^12.1.1",
     "@poi/plugin-eslint": "^12.0.0",

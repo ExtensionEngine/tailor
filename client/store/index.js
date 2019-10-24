@@ -5,11 +5,11 @@ import course from './modules/course';
 import courses from './modules/courses';
 import createLogger from 'vuex/dist/logger';
 import editor from './modules/editor';
-import plugins from './plugins';
+import plugins from './plugins/';
+import request from '../api/request';
 import revisions from './modules/revisions';
 import settings from '../settings';
 import tes from './modules/tes';
-
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -40,7 +40,7 @@ const mapGetters = (namespace, getters) => {
   }, {});
 };
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   middlewares,
   modules,
   plugins,
@@ -53,3 +53,10 @@ export default new Vuex.Store({
   },
   strict: false
 });
+
+request.setStorageInterface({
+  getToken: () => store.getters.token,
+  clearAuthData: () => store.dispatch('logout')
+});
+
+export default store;

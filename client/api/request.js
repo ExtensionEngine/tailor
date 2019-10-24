@@ -10,8 +10,13 @@ const client = axios.create({
   headers: { 'Content-Type': 'application/json' }
 });
 
+client.setStorageInterface = function ({ getToken, clearAuthData }) {
+  this._getAuthToken = getToken;
+  this._clearAuthData = clearAuthData;
+};
+
 client.interceptors.request.use(config => {
-  const token = window.localStorage.getItem('JWT_TOKEN');
+  const token = client._getAuthToken();
   if (token) {
     config.headers.Authorization = `JWT ${token}`;
   } else if (!token && config.headers.Authorization) {
@@ -22,9 +27,8 @@ client.interceptors.request.use(config => {
 
 client.interceptors.response.use(res => res, err => {
   if (err.response.status === 401) {
-    window.localStorage.removeItem('JWT_TOKEN');
-    window.localStorage.removeItem('TAILOR_USER');
-    window.location.reload();
+    // If server responded that request was unauthorized.
+    client._clearAuthData();
   } else {
     throw err;
   }

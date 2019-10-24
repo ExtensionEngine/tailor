@@ -9,16 +9,10 @@ const url = {
 function login(credentials) {
   return request
     .post(url.login, credentials)
-    .then(res => res.data.data)
-    .then(({ token, user }) => {
-      window.localStorage.setItem('JWT_TOKEN', token);
-      return user;
-    });
+    .then(res => res.data.data);
 }
 
 function logout() {
-  window.localStorage.removeItem('JWT_TOKEN');
-  // TODO(underscope): Add server side invalidation
   return Promise.resolve(true);
 }
 

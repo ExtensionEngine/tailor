@@ -1,7 +1,7 @@
-export const login = (state, user) => {
-  state.user = user;
+export const login = (state, data) => {
+  Object.assign(state, data);
 };
 
 export const logout = state => {
-  state.user = null;
+  Object.assign(state, { user: null, token: null });
 };
