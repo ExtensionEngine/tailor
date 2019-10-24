@@ -3,7 +3,9 @@
 const { authenticate } = require('../shared/auth');
 const ctrl = require('./user.controller');
 const model = require('./user.model');
+const { processPagination } = require('../shared/database/pagination');
 const router = require('express').Router();
+const { User } = require('../shared/database');
 
 router
   // Public routes:
@@ -11,8 +13,11 @@ router
   .post('/users/forgot-password', ctrl.forgotPassword)
   .post('/users/reset-password', authenticate('token'), ctrl.resetPassword)
   // Protected routes:
-  .use(authenticate('jwt'))
-  .get('/users', ctrl.index);
+  .use('/users*', authenticate('jwt'))
+  .get('/users', processPagination(User), ctrl.list)
+  .post('/users', ctrl.upsert)
+  .delete('/users/:id', ctrl.remove)
+  .post('/users/:id/reinvite', ctrl.reinvite);
 
 module.exports = {
   model,

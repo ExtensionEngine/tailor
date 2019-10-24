@@ -7,10 +7,10 @@
       <table-cell
         v-for="cell in cells(row)"
         :key="cell.id"
+        @save="saveCell"
         :cell="embeds[cell.id]"
         :table="element"
-        :disabled="disabled"
-        @save="saveCell"/>
+        :disabled="disabled" />
     </div>
   </div>
 </template>
@@ -88,8 +88,8 @@ export default {
       const row = this.findRow(cellId);
       if (!row) return;
 
-      let element = cloneDeep(this.element);
-      let { tableId, rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { tableId, rows, embeds } = element.data;
       const position = calculateInsertPosition(rows, row, direction);
       const newRow = { id: cuid(), position, cells: {} };
       forEach(row.cells, ({ position }) => {
@@ -106,8 +106,8 @@ export default {
       const cell = row.cells[cellId];
       if (!cell) return;
 
-      let element = cloneDeep(this.element);
-      let { tableId, rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { tableId, rows, embeds } = element.data;
       const position = calculateInsertPosition(row.cells, cell, direction);
       forEach(rows, row => {
         const cellId = cuid();
@@ -121,8 +121,8 @@ export default {
       const row = this.findRow(cellId);
       if (!row || size(this.rows) <= MIN_ROWS) return;
 
-      let element = cloneDeep(this.element);
-      let { rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { rows, embeds } = element.data;
       forEach(row.cells, cell => removeEmbed(embeds, { id: cell.id }));
       delete rows[row.id];
 
@@ -140,8 +140,8 @@ export default {
       const cell = row.cells[cellId];
       if (!cell) return;
 
-      let element = cloneDeep(this.element);
-      let { rows, embeds } = element.data;
+      const element = cloneDeep(this.element);
+      const { rows, embeds } = element.data;
 
       forEach(rows, row => {
         const deletedCell = removeCell(row, { position: cell.position });

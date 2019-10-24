@@ -10,6 +10,7 @@ const hostname = resolveHostname();
 const protocol = resolveProtocol(hostname);
 const port = resolvePort();
 const origin = resolveOrigin(hostname, protocol, port);
+const previewUrl = process.env.PREVIEW_URL;
 
 module.exports = {
   protocol,
@@ -18,7 +19,8 @@ module.exports = {
   origin,
   auth,
   mail,
-  storage
+  storage,
+  previewUrl
 };
 
 // Legacy config support

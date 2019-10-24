@@ -1,14 +1,14 @@
 <template>
   <div class="file-upload">
-    <circular-progress v-if="uploading"/>
+    <circular-progress v-if="uploading" />
     <form v-else @submit.prevent class="upload-form">
       <input
+        :ref="id"
         v-filefilter="'auto'"
         v-validate="validate"
-        :id="id"
-        :ref="id"
-        :name="id"
         @change="upload"
+        :id="id"
+        :name="id"
         type="file"
         class="upload-input">
       <label

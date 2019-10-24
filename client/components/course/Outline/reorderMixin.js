@@ -1,8 +1,8 @@
-import { mapActions } from 'vuex-module';
+import { mapActions } from 'vuex';
 
 export default {
   methods: {
-    ...mapActions({ updatePosition: 'reorder' }, 'activities'),
+    ...mapActions('activities', { updatePosition: 'reorder' }),
     reorder({ newIndex: newPosition }, items) {
       const activity = items[newPosition];
       const isFirstChild = newPosition === 0;

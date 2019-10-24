@@ -1,24 +1,26 @@
 <template>
   <v-app id="app">
-    <navbar v-if="user" :user="user"/>
+    <navbar v-if="user" :user="user" />
     <v-content>
-      <router-view class="view grey lighten-3"/>
+      <router-view class="view grey lighten-3" />
     </v-content>
-    <confirmation-modal/>
+    <confirmation-modal />
   </v-app>
 </template>
 
 <script>
 import ConfirmationModal from 'components/common/ConfirmationModal';
 import isIexplorer from 'is-iexplorer';
-import { mapGetters } from 'vuex-module';
+import { mapState } from 'vuex';
 import Navbar from 'components/common/Navbar';
 
 if (isIexplorer) document.body.classList.add('ie');
 
 export default {
   name: 'app',
-  computed: mapGetters(['user']),
+  computed: mapState({
+    user: state => state.auth.user
+  }),
   components: {
     ConfirmationModal,
     Navbar

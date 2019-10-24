@@ -4,20 +4,20 @@
     <div
       :class="{ editing: isEditing, 'question-error': questionError }"
       class="question">
-      <draggable v-model="question" :options="dragOptions" class="row">
+      <draggable v-model="question" v-bind="dragOptions" class="row">
         <contained-content
           v-for="element in question"
           :key="element.id"
-          :element="element"
-          :isDisabled="!isEditing"
           @save="data => elementChanged(element, data)"
-          @delete="deleteElement(element)"/>
+          @delete="deleteElement(element)"
+          :element="element"
+          :is-disabled="!isEditing" />
       </draggable>
       <add-element
         v-show="isEditing"
+        @add="addElement"
         :include="['HTML', 'IMAGE', 'EMBED']"
-        :layout="false"
-        @add="addElement"/>
+        :layout="false" />
     </div>
     <span v-if="isEditing && helperText" class="help-block">
       {{ helperText }}
@@ -82,7 +82,7 @@ export default {
     deleteElement(element) {
       const index = findIndex(this.assessment.data.question, { id: element.id });
       if (index === -1) return;
-      let question = cloneDeep(this.assessment.data.question);
+      const question = cloneDeep(this.assessment.data.question);
       pullAt(question, index);
       this.$emit('update', { question });
     }

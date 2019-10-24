@@ -2,7 +2,6 @@
 
 const { getRepositoryRelationships, getSchema } = require('../../config/shared/activities');
 const { Model } = require('sequelize');
-const hooks = require('./hooks');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
@@ -31,10 +30,6 @@ class Course extends Model {
         type: JSONB,
         defaultValue: {}
       },
-      stats: {
-        type: JSONB,
-        defaultValue: { objectives: 0, assessments: 0 }
-      },
       createdAt: {
         type: DATE,
         field: 'created_at'
@@ -50,7 +45,7 @@ class Course extends Model {
     };
   }
 
-  static associate({ Activity, Comment, CourseUser, TeachingElement, User }) {
+  static associate({ Activity, Comment, CourseUser, Revision, TeachingElement, User }) {
     this.hasMany(Activity, {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
@@ -58,6 +53,12 @@ class Course extends Model {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
     this.hasMany(TeachingElement, {
+      foreignKey: { name: 'courseId', field: 'course_id' }
+    });
+    this.hasMany(Revision, {
+      foreignKey: { name: 'courseId', field: 'course_id' }
+    });
+    this.hasMany(CourseUser, {
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
     this.belongsToMany(User, {
@@ -74,19 +75,6 @@ class Course extends Model {
       paranoid: true,
       freezeTableName: true
     };
-  }
-
-  static hooks(Hooks, models) {
-    hooks.add(this, Hooks, models);
-  }
-
-  static updateStats(id, key, value) {
-    return this.findByPk(id).then(course => {
-      if (!course) return;
-      const stats = course.stats || {};
-      stats[key] = value;
-      return course.update({ stats });
-    });
   }
 
   /**

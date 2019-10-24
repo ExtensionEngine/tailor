@@ -7,8 +7,7 @@
         :size="38"
         :username="comment.author.email"
         :initials="authorInitials"
-        color="#ffffff">
-      </avatar>
+        color="#ffffff" />
     </span>
     <div class="content-wrapper">
       <span class="header">
@@ -20,9 +19,9 @@
         <span v-if="isEdited" class="edited-icon icon mdi mdi-pencil"></span>
         <button
           v-if="showActions"
-          :class="{ active: showDropdown }"
           @click="showDropdown = !showDropdown"
           @blur="showDropdown = false"
+          :class="{ active: showDropdown }"
           class="pull-right btn btn-material-icon btn-actions">
           <span class="icon mdi mdi-dots-vertical"></span>
         </button>
@@ -45,20 +44,18 @@
           </li>
         </ul>
         <timeago
-          :since="comment.createdAt"
+          :datetime="comment.createdAt"
           :auto-update="60"
-          class="pull-right time">
-        </timeago>
+          class="pull-right time" />
       </span>
       <text-editor
+        @blur="update"
+        @change="update"
         :value="comment.content"
         :focused="editing"
         :preview="!editing"
         :class="{ deleted: isDeleted }"
-        @blur="update"
-        @change="update"
-        class="content">
-      </text-editor>
+        class="content" />
     </div>
   </li>
 </template>
@@ -66,9 +63,8 @@
 <script>
 import Avatar from 'vue-avatar';
 import { focus } from 'vue-focus';
-import { mapGetters } from 'vuex-module';
+import { mapState } from 'vuex';
 import TextEditor from 'components/common/TextEditor';
-import ThreadComment from './Comment';
 
 export default {
   name: 'thread-comment',
@@ -84,7 +80,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user']),
+    ...mapState({ user: state => state.auth.user }),
     authorInitials() {
       return this.comment.author.email.substr(0, 2).toUpperCase();
     },
@@ -115,7 +111,7 @@ export default {
     }
   },
   directives: { focus },
-  components: { Avatar, TextEditor, ThreadComment }
+  components: { Avatar, TextEditor }
 };
 </script>
 

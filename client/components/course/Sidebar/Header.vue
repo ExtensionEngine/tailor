@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -37,15 +37,15 @@ const TREE_VIEW_ROUTE = 'tree-view';
 
 export default {
   computed: {
-    ...mapGetters(['activity', 'activities'], 'course'),
+    ...mapGetters('course', ['activity', 'activities']),
     isEditable() {
       const type = get(this.activity, 'type');
       return type && isEditable(type);
     }
   },
   methods: {
-    ...mapActions(['remove'], 'activities'),
-    ...mapMutations(['focusActivity'], 'course'),
+    ...mapActions('activities', ['remove']),
+    ...mapMutations('course', ['focusActivity']),
     edit() {
       if (!this.isEditable) return;
       this.$router.push({

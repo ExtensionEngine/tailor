@@ -1,117 +1,80 @@
 <template>
-  <modal :show="show">
-    <div slot="header">
-      <h3 class="modal-title">Clone repository</h3>
-    </div>
-    <div slot="body" class="modal-body">
-      <circular-progress v-if="showLoader" class="loader"></circular-progress>
-      <div v-else>
-        <div :class="{ 'has-error': vErrors.has('name') }" class="form-group">
-          <input
-            v-validate="{ required: true, min: 2, max: 250 }"
-            v-model="name"
-            class="form-control"
-            name="name"
-            type="text"
-            placeholder="Name"/>
-          <span class="help-block">{{ vErrors.first('name') }}</span>
-        </div>
-        <div :class="{ 'has-error': vErrors.has('description') }" class="form-group">
-          <textarea
-            v-validate="{ required: true, min: 2, max: 2000 }"
-            v-model="description"
-            class="form-control"
-            name="description"
-            placeholder="Description">
-          </textarea>
-          <span class="help-block">{{ vErrors.first('description') }}</span>
-        </div>
-      </div>
-    </div>
-    <div slot="footer">
-      <button
-        :disabled="showLoader"
-        @click="close"
-        class="btn btn-material btn-default"
-        type="button">
-        Cancel
-      </button>
-      <button
-        :disabled="showLoader"
-        @click="cloneRepository"
-        class="btn btn-material btn-primary"
-        type="button">
-        Clone
-      </button>
-    </div>
-  </modal>
+  <v-dialog :value="show" width="600" persistent>
+    <v-card class="pa-3">
+      <v-card-title class="headline">
+        <v-avatar color="secondary" size="38" class="mr-2">
+          <v-icon color="white">mdi-content-copy</v-icon>
+        </v-avatar>
+        <span>Clone {{ schema.toLowerCase() }}</span>
+      </v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="name"
+          v-validate="{ required: true, min: 2, max: 250 }"
+          :disabled="inProgress"
+          :error-messages="vErrors.collect('name')"
+          label="Name"
+          data-vv-name="name"
+          class="mb-4" />
+        <v-textarea
+          v-model="description"
+          v-validate="{ required: true, min: 2, max: 2000 }"
+          :disabled="inProgress"
+          :error-messages="vErrors.collect('description')"
+          label="Description"
+          data-vv-name="description"
+          class="mb-4" />
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn @click="close" :disabled="inProgress">Cancel</v-btn>
+        <v-btn
+          @click="cloneRepository"
+          :loading="inProgress"
+          outline>
+          Clone
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-import CircularProgress from 'components/common/CircularProgress';
-import { mapActions } from 'vuex-module';
-import Modal from 'components/common/Modal';
+import { mapActions, mapGetters } from 'vuex';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
+import { withValidation } from 'utils/validation';
+
+const getDefaultState = () => ({
+  inProgress: false,
+  name: '',
+  description: ''
+});
 
 export default {
+  mixins: [withValidation()],
   props: {
     show: { type: Boolean, required: true }
   },
-  data() {
-    return {
-      showLoader: false,
-      name: '',
-      description: ''
-    };
-  },
+  data: () => getDefaultState(),
+  computed: mapGetters('course', ['schema']),
   methods: {
-    ...mapActions(['clone'], 'courses'),
+    ...mapActions('courses', ['clone']),
     close() {
       this.$emit('close');
-      this.name = '';
-      this.description = '';
-      this.showLoader = false;
+      Object.assign(this, getDefaultState());
+      this.$validator.reset();
     },
     cloneRepository() {
       this.$validator.validateAll().then(isValid => {
         if (!isValid) return;
-        this.showLoader = true;
+        this.inProgress = true;
         const { courseId } = this.$route.params;
         const data = { id: courseId, ...pick(this, ['name', 'description']) };
         return Promise.join(this.clone(data), Promise.delay(500))
           .then(() => this.close());
       });
     }
-  },
-  watch: {
-    show(val) {
-      if (!val) return;
-      this.vErrors.clear();
-    }
-  },
-  components: { CircularProgress, Modal },
-  inject: ['$validator']
+  }
 };
 </script>
-
-<style lang="scss" scoped>
-.form-group {
-  margin-bottom: 50px;
-}
-
-.modal-body {
-  min-height: 210px;
-  padding-right: 0;
-  padding-left: 0;
-}
-
-.loader {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin: auto;
-}
-</style>

@@ -1,21 +1,21 @@
 <template>
   <div @selected="$emit('selected')" class="assessment-container">
     <div class="assessment">
-      <slot/>
+      <slot :isEditing="isEditing"></slot>
       <question
+        @update="update"
         :assessment="editedElement"
-        :isEditing="isEditing"
-        :errors="errors"
-        @update="update"/>
+        :is-editing="isEditing"
+        :errors="errors" />
       <component
         :is="resolveComponentName(element)"
-        :assessment="editedElement.data"
-        :isGraded="isGraded"
-        :isEditing="isEditing"
-        :errors="errors"
         @update="update"
-        @alert="setAlert"/>
-      <div :class="{ 'has-error': hintError }" class="form-group">
+        @alert="setAlert"
+        :assessment="editedElement.data"
+        :is-graded="isGraded"
+        :is-editing="isEditing"
+        :errors="errors" />
+      <div :class="{ 'has-error': hintError }" class="form-group hint">
         <span class="form-label">Hint</span>
         <input
           v-model="editedElement.data.hint"
@@ -26,28 +26,29 @@
       </div>
       <feedback
         v-if="showFeedback"
+        @update="updateFeedback"
         :answers="editedElement.data.answers"
         :feedback="editedElement.data.feedback"
-        :isGraded="isGraded"
-        :isEditing="isEditing"
-        @update="updateFeedback"/>
+        :is-graded="isGraded"
+        :is-editing="isEditing" />
       <div class="alert-container">
         <div v-show="alert.text" :class="alert.type" class="alert">
           <strong>{{ alert.text }}</strong>
         </div>
       </div>
       <controls
-        :isEditing="isEditing"
         @edit="edit"
         @save="save"
         @remove="remove"
         @cancel="cancel"
-        class="controls"/>
+        class="controls"
+        :is-editing="isEditing" />
     </div>
   </div>
 </template>
 
 <script>
+import * as yup from 'yup';
 import { getComponentName, processAnswerType } from '../utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
@@ -60,7 +61,6 @@ import map from 'lodash/map';
 import omit from 'lodash/omit';
 import Question from './Question';
 import toPath from 'lodash/toPath';
-import yup from 'yup';
 
 const validationOptions = { recursive: true, abortEarly: false };
 
@@ -164,14 +164,14 @@ export default {
 };
 
 function errorProcessor(error) {
-  let item = error.value;
+  const item = error.value;
   if (item.type !== 'DD') return map(error.inner, it => it.path);
   // TODO: Nasty !!
   return map(error.inner, it => {
-    let path = toPath(it.path);
+    const path = toPath(it.path);
     if (path.length === 1) return it.path;
     if (last(path) !== 'value') return;
-    let key = get(error.value, dropRight(path).concat('key'));
+    const key = get(error.value, dropRight(path).concat('key'));
     return `${path[0]}${key}`;
   });
 }

@@ -19,8 +19,8 @@
     <v-bottom-sheet v-model="isVisible" max-width="1240" inset lazy>
       <div class="element-container">
         <v-toolbar v-if="layout" dense class="mb-2">
-          <v-spacer/>
-          <v-divider vertical class="mx-2"/>
+          <v-spacer />
+          <v-divider vertical class="mx-2" />
           <v-btn-toggle v-model="elementWidth" mandatory>
             <v-btn :value="100" flat>
               <v-icon>mdi-square-outline</v-icon>
@@ -29,7 +29,7 @@
               <v-icon>mdi-select-compare</v-icon>
             </v-btn>
           </v-btn-toggle>
-          <v-divider class="mx-2" vertical/>
+          <v-divider class="mx-2" vertical />
           <v-chip label class="width-label">
             <span>Element width:</span>
             <span class="label-value px-1">{{ elementWidth }}</span>%
@@ -46,8 +46,8 @@
             <button
               v-for="element in group.elements"
               :key="element.position"
-              :disabled="isElementDisabled(element)"
               @click.stop="add(element)"
+              :disabled="isElementDisabled(element)"
               class="element">
               <v-icon v-if="element.ui.icon">{{ element.ui.icon }}</v-icon>
               <h5 class="body-2">{{ element.name }}</h5>

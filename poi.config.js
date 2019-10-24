@@ -17,11 +17,13 @@ const aliases = {
   EventBus: '@/EventBus',
   utils: '@/utils',
   shared: path.join(__dirname, 'config/shared'),
-  tce: path.join(__dirname, 'content-elements')
+  tce: path.join(__dirname, 'content-elements'),
+  extensions: path.join(__dirname, 'extensions')
 };
 
 const copy = [{ from: 'client/assets/img', to: imagesPath }];
 
+/** @type {import('poi').Config.DevServer} */
 const devServer = {
   headers: {
     'X-Powered-By': 'Webpack DevSever'
@@ -37,6 +39,7 @@ const devServer = {
 
 const extensions = ['.vue'];
 
+/** @type {import('poi').Config} */
 module.exports = {
   plugins: [
     '@poi/eslint',
@@ -55,7 +58,9 @@ module.exports = {
       options: { patterns: copy }
     }, {
       resolve: require.resolve('./build/plugins/clean-out-dir'),
-      options: { exclude: '.gitkeep' }
+      options: {
+        cleanOnceBeforeBuildPatterns: ['**/*', '!.gitkeep']
+      }
     },
     require.resolve('./build/plugins/html-version-spec'),
     {
@@ -81,6 +86,16 @@ module.exports = {
   envs: {
     API_PATH
   },
+  babel: {
+    transpileModules: [
+      // NOTE: Packages do NOT contain transpiled code.
+      'humanize-string', 'decamelize',
+      // NOTE: Component is consumed from source.
+      'vue-color',
+      // NOTE: Unclear why is this necessary :/
+      'vue-quill-editor'
+    ]
+  },
   chainWebpack(config, { mode }) {
     config.resolve.alias.merge(aliases);
     config.resolve.extensions.merge(extensions);
@@ -92,6 +107,13 @@ module.exports = {
       .loader(require.resolve('imports-loader'))
       .options({ jQuery: 'jquery' });
 
+    config.module.rule('event-source-polyfill')
+      .test(require.resolve('event-source-polyfill'))
+      .post()
+      .use('exports-loader')
+      .loader(require.resolve('exports-loader'))
+      .options({ EventSource: 'exports.EventSource || exports.NativeEventSource' });
+
     config.module.rule('val')
       .test(/\.load\.js$/)
       .post()
@@ -101,14 +123,6 @@ module.exports = {
     config
       .plugin('dotenv')
       .use(require.resolve('dotenv-webpack'));
-
-    if (mode !== 'production') return;
-    config
-      .plugin('minimize')
-      .tap(([options]) => {
-        options.terserOptions.keep_fnames = true;
-        return [options];
-      });
   },
   devServer
 };

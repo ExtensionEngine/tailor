@@ -3,11 +3,11 @@
     :class="{ 'embeded-elements': embedded }"
     class="list-group">
     <draggable
-      :list="list"
-      :options="options"
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
       @update="$emit('update', $event)"
+      :list="list"
+      v-bind="options"
       class="row">
       <div
         v-for="(item, index) in list"
@@ -16,26 +16,27 @@
         class="list-item-container">
         <inline-activator
           v-if="enableAdd && !embedded"
-          @click.native="showElementDrawer(index - 1)"/>
+          @click.native="showElementDrawer(index - 1)" />
         <slot
           :item="item"
           :setWidth="false"
           :dragged="dragElementIndex === index"
-          name="list-item"/>
+          name="list-item">
+        </slot>
       </div>
     </draggable>
     <div class="add-element-container mt-5">
       <add-element
         v-if="enableAdd"
+        @hidden="onHiddenElementDrawer"
+        @add="addElement"
         :include="types"
         :activity="activity"
         :position="insertPosition"
         :layout="layout"
         :show="isElementDrawerVisible"
         :large="!embedded"
-        :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'"
-        @hidden="onHiddenElementDrawer"
-        @add="addElement"/>
+        :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'" />
     </div>
   </div>
 </template>
@@ -86,7 +87,7 @@ export default {
       this.insertPosition = this.lastPosition;
     },
     getContainerClasses({ data: { width } }) {
-      let classes = [`col-xs-${width || 12}`];
+      const classes = [`col-xs-${width || 12}`];
       if (this.enableAdd) classes.push('insertable');
       return classes;
     },

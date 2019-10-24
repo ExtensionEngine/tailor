@@ -1,9 +1,11 @@
 'use strict';
 
-const { Sequelize, Op } = require('sequelize');
+const { Sequelize, Utils: { SequelizeMethod }, Op } = require('sequelize');
+const get = require('lodash/get');
 const has = require('lodash/has');
 const inRange = require('lodash/inRange');
 const last = require('lodash/last');
+const mapValues = require('lodash/mapValues');
 
 // eslint-disable-next-line no-extra-parens
 const AsyncFunction = (async function () {}).constructor;
@@ -11,23 +13,42 @@ const AsyncFunction = (async function () {}).constructor;
 const isAsyncFunction = arg => arg instanceof AsyncFunction;
 const notEmpty = input => input.length > 0;
 
-const sql = {
-  concat,
-  where
-};
-
 module.exports = {
-  sql,
+  sql: { concat, where },
   getValidator,
   setLogging,
-  wrapAsyncMethods
+  wrapAsyncMethods,
+  parsePath,
+  build: Model => ({
+    column: (col, model) => dbColumn(col, model || Model),
+    ...mapValues(sqlFunctions, it => buildSqlFunc(it, Model))
+  })
 };
 
-function wrapAsyncMethods(Model, wrapper = require('bluebird').method) {
-  const transformer = ({ value }) => isAsyncFunction(value) && wrapper(value);
-  transformProperties(Model, transformer);
-  transformProperties(Model.prototype, transformer);
-  return Model;
+const dbColumn = (col, Model) => {
+  if (col instanceof SequelizeMethod) return col;
+  const name = get(Model, `rawAttributes.${col}.field`, col);
+  return Sequelize.col(name);
+};
+
+function parsePath(path, Model) {
+  if (!path.includes('.')) return [dbColumn(path, Model)];
+  const [alias, ...columns] = path.split('.');
+  const { target: model } = Model.associations[alias];
+  return [{ model, as: alias }, ...parsePath(columns.join('.'), model)];
+}
+
+const sqlFunctions = {
+  min: 'MIN',
+  max: 'MAX',
+  average: 'AVG',
+  count: 'COUNT',
+  distinct: 'DISTINCT',
+  sum: 'SUM'
+};
+
+function buildSqlFunc(name, Model) {
+  return (col, model) => Sequelize.fn(name, dbColumn(col, model || Model));
 }
 
 function getValidator(Model, attribute) {
@@ -67,4 +88,11 @@ function transformProperties(obj, cb) {
     const val = cb(descriptors[name], name);
     if (val) obj[name] = val;
   });
+}
+
+function wrapAsyncMethods(Model, wrapper = require('bluebird').method) {
+  const transformer = ({ value }) => isAsyncFunction(value) && wrapper(value);
+  transformProperties(Model, transformer);
+  transformProperties(Model.prototype, transformer);
+  return Model;
 }

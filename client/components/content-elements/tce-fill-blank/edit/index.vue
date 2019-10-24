@@ -1,7 +1,7 @@
 <template>
   <div v-if="hasAnswers" :class="{ disabled }">
     <h5>Answers</h5>
-    <draggable :list="answerGroups" :options="dragOptions" @update="update">
+    <draggable @update="update" :list="answerGroups" v-bind="dragOptions">
       <div v-for="(answers, i) in answerGroups" :key="i" class="answer-group">
         <span class="drag-handle">
           <span class="mdi mdi-drag-vertical"></span>
@@ -119,8 +119,8 @@ export default {
       return { 'has-error': this.errors.includes(answer) };
     },
     hasChanges(newVal, oldVal) {
-      let v1 = reduce(oldVal, (r, it) => r + get(it, 'data.content', ''), '');
-      let v2 = reduce(newVal, (r, it) => r + get(it, 'data.content', ''), '');
+      const v1 = reduce(oldVal, (r, it) => r + get(it, 'data.content', ''), '');
+      const v2 = reduce(newVal, (r, it) => r + get(it, 'data.content', ''), '');
       return v1 !== v2;
     }
   },
