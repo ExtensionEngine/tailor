@@ -9,7 +9,7 @@ export default class AutofocusPlugin {
 
   constructor(options) {
     options.readyEvent = options.readyEvent || 'joditReady';
-    options.cursorStyle = options.cursorStyle || 'inital';
+    options.cursorStyle = options.cursorStyle || 'auto';
     autoBind(this);
   }
 
