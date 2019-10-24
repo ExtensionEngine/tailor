@@ -4,16 +4,15 @@
     <color-input
       v-if="showInput"
       ref="picker"
-      :value="selected"
       @close="showInput = false"
       @input="color => select(color)"
-      class="picker">
-    </color-input>
+      :value="selected"
+      class="picker" />
     <div v-else>
       <div class="preview">
         <div
-          :style="{ background: selected }"
           @click="showPicker"
+          :style="{ background: selected }"
           class="selected">
           <span class="mdi mdi-eyedropper eyedropper"></span>
         </div>
@@ -27,9 +26,9 @@
             <li
               v-for="color in group"
               :key="color"
+              @click="select(color)"
               :style="{ background: color }"
               :class="{ white: isEqualColor(color, '#FFFFFF') }"
-              @click="select(color)"
               class="tile">
               <div v-if="isEqualColor(color, selected)" class="dot"></div>
             </li>

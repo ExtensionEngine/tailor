@@ -18,8 +18,8 @@
           :class="{ 'has-error': vErrors.has('height') }"
           class="form-group">
           <input
-            v-validate="{ required: true, min_value: 300, max_value: 3000 }"
             v-model="height"
+            v-validate="{ required: true, min_value: 300, max_value: 3000 }"
             id="heightInput"
             class="form-control"
             name="height"

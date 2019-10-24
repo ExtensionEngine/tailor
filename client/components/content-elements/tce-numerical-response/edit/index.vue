@@ -6,7 +6,7 @@
       @click="addAnswer"
       class="btn-add-answer btn btn-link mdi mdi-plus pull-right">
     </span>
-    <ul >
+    <ul>
       <li
         v-for="(answer, index) in correct"
         :key="index"
@@ -14,27 +14,27 @@
         class="answer row">
         <div class="col-xs-3">
           <input
+            @input="updateAnswer('prefixes', $event.target.value, index)"
             :disabled="!isEditing"
             :value="prefixes[index]"
-            @input="updateAnswer('prefixes', $event.target.value, index)"
             type="text"
             placeholder="Prefix..."
             class="form-control">
         </div>
         <div :class="`col-xs-${ correct.length > 1 ? 5 : 6 }`">
           <input
+            @input="updateAnswer('correct', $event.target.value, index)"
             :disabled="!isEditing"
             :value="correct[index]"
-            @input="updateAnswer('correct', $event.target.value, index)"
             type="text"
             placeholder="Correct value..."
             class="form-control">
         </div>
         <div class="col-xs-3">
           <input
+            @input="updateAnswer('suffixes', $event.target.value, index)"
             :disabled="!isEditing"
             :value="suffixes[index]"
-            @input="updateAnswer('suffixes', $event.target.value, index)"
             type="text"
             placeholder="Suffix..."
             class="form-control">
@@ -94,7 +94,7 @@ export default {
       return includes(this.errors, `correct[${index}]`);
     },
     addAnswer() {
-      let { correct, prefixes, suffixes } = cloneDeep(this.assessment);
+      const { correct, prefixes, suffixes } = cloneDeep(this.assessment);
       prefixes.push('');
       suffixes.push('');
       correct.push('');
@@ -105,13 +105,13 @@ export default {
         if (last(value) === '.') return;
         value = toNumber(value) || value;
       }
-      let values = cloneDeep(this[name]);
+      const values = cloneDeep(this[name]);
       values[index] = value;
       this.update({ [name]: values });
     },
     removeAnswer(index) {
       if (this.correct.length <= 1) return;
-      let { correct, prefixes, suffixes } = cloneDeep(this.assessment);
+      const { correct, prefixes, suffixes } = cloneDeep(this.assessment);
       pullAt(prefixes, index);
       pullAt(suffixes, index);
       pullAt(correct, index);

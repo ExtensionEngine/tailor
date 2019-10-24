@@ -1,13 +1,13 @@
 <template>
   <div :class="{ preview }" class="form-group text-editor">
     <textarea
-      v-focus.lazy="focused"
       v-model.trim="content"
-      :placeholder="placeholder"
+      v-focus.lazy="focused"
       @keydown.shift.enter.exact="() => {}"
       @keydown.enter.exact.prevent="onEnter"
       @blur="onBlur"
       @input="$emit('input', content)"
+      :placeholder="placeholder"
       class="form-control">
     </textarea>
     <div class="content">

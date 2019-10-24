@@ -1,18 +1,18 @@
 <template>
   <div
-    :class="{ focused: isFocused, frame }"
     @click="focus"
+    :class="{ focused: isFocused, frame }"
     class="content-element">
     <component
-      v-bind="$attrs"
       :is="componentName"
-      :element="element"
-      :isFocused="isFocused"
-      :isDragged="isDragged"
       @add="$emit('add', $event)"
       @save="$emit('save', $event)"
       @delete="$emit('delete')"
-      @focus="focus"/>
+      @focus="focus"
+      v-bind="$attrs"
+      :element="element"
+      :is-focused="isFocused"
+      :is-dragged="isDragged" />
   </div>
 </template>
 
@@ -52,10 +52,10 @@ export default {
     }
   },
   created() {
+    this.elementBus.on('delete', () => this.$emit('delete'));
     EventBus.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
     });
-    this.elementBus.on('delete', () => this.$emit('delete'));
   },
   provide() {
     return {

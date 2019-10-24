@@ -1,6 +1,6 @@
 <template>
   <div class="outline-page">
-    <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
+    <v-progress-circular v-if="showLoader" color="primary" indeterminate />
     <div v-else class="outline">
       <div class="activity-container">
         <v-toolbar
@@ -8,7 +8,7 @@
           color="grey lighten-3"
           flat
           dense>
-          <v-spacer/>
+          <v-spacer />
           <v-btn
             @click="toggleActivities"
             color="primary"
@@ -17,26 +17,26 @@
           </v-btn>
         </v-toolbar>
         <draggable
+          @update="data => reorder(data, rootActivities)"
           :list="rootActivities"
-          :options="{ handle: '.activity' }"
-          @update="data => reorder(data, rootActivities)">
+          v-bind="{ handle: '.activity' }">
           <activity
             v-for="(activity, index) in rootActivities"
-            v-bind="activity"
             :key="activity._cid"
+            v-bind="activity"
             :index="index + 1"
             :level="1"
-            :activities="outlineActivities"/>
+            :activities="outlineActivities" />
         </draggable>
-        <no-activities v-if="!rootActivities.length"/>
+        <no-activities v-if="!rootActivities.length" />
       </div>
-      <sidebar/>
+      <sidebar />
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import Activity from './Activity';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
@@ -52,7 +52,7 @@ export default {
     showLoader: { type: Boolean, default: false }
   },
   computed: {
-    ...mapGetters(['structure', 'outlineActivities'], 'course'),
+    ...mapGetters('course', ['structure', 'outlineActivities']),
     isFlat() {
       const types = map(filter(this.structure, { level: 2 }), 'type');
       if (!types.length) return false;
@@ -64,7 +64,7 @@ export default {
         .sort((x, y) => x.position - y.position);
     }
   },
-  methods: mapMutations(['toggleActivities'], 'course'),
+  methods: mapActions('course', ['toggleActivities']),
   components: { Activity, Draggable, NoActivities, Sidebar }
 };
 </script>

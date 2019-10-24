@@ -6,8 +6,8 @@
           :class="{ 'has-error': vErrors.has('name') }"
           class="form-group">
           <input
-            v-validate="{ required: true, min: 2, max: 250 }"
             v-model="name"
+            v-validate="{ required: true, min: 2, max: 250 }"
             class="form-control"
             type="text"
             name="name"
@@ -20,11 +20,10 @@
       </div>
       <div v-if="showLevelPicker" class="col-md-2">
         <multiselect
+          @input="onLevelSelected"
           :value="level"
           :options="levels"
-          :allow-empty="false"
-          @input="onLevelSelected">
-        </multiselect>
+          :allow-empty="false" />
       </div>
       <div class="col-md-2">
         <v-btn @click.stop="create" color="blue-grey" outline>Add</v-btn>
@@ -34,7 +33,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
 import multiselect from '../../common/Select';
@@ -49,7 +48,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['course', 'structure', 'activities'], 'course'),
+    ...mapGetters('course', ['course', 'structure', 'activities']),
     levels() {
       return filter(this.structure, { level: 1 });
     },
@@ -58,8 +57,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['save'], 'activities'),
-    ...mapMutations(['focusActivity'], 'course'),
+    ...mapActions('activities', ['save']),
+    ...mapMutations('course', ['focusActivity']),
     onLevelSelected(level) {
       if (!level) return;
       this.level = level;

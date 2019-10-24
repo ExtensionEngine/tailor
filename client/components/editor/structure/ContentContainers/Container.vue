@@ -1,8 +1,8 @@
 <template>
-  <div class="mb-5">
+  <div class="content-container mb-5 elevation-2">
     <div class="actions">
       <v-btn
-        @click="deleteContainer"
+        @click="$emit('delete')"
         color="error"
         outline
         class="pull-right">
@@ -17,26 +17,26 @@
       Click the button below to create content.
     </v-alert>
     <tes-list
+      @add="addElement"
+      @insert="insert"
+      @update="reorder"
       :list="teachingElements"
       :activity="container"
       :types="types"
-      :layout="layout"
-      @add="addElement"
-      @insert="insert"
-      @update="reorder">
-      <teaching-element
-        slot="list-item"
-        slot-scope="{ item, dragged, setWidth }"
-        :setWidth="setWidth"
-        :dragged="dragged"
-        :element="item"/>
+      :layout="layout">
+      <template v-slot:list-item="{ item, dragged, setWidth }">
+        <teaching-element
+          :set-width="setWidth"
+          :dragged="dragged"
+          :element="item" />
+      </template>
     </tes-list>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
 import filter from 'lodash/filter';
+import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
@@ -45,23 +45,23 @@ export default {
   name: 'content-container',
   props: {
     container: { type: Object, required: true },
+    tes: { type: Object, required: true },
     types: { type: Array, default: null },
     name: { type: String, required: true },
-    layout: { type: Boolean, required: true }
+    layout: { type: Boolean, default: true }
   },
   computed: {
-    ...mapGetters(['tes']),
     teachingElements() {
       const activityId = this.container.id;
       return sortBy(filter(this.tes, { activityId }), 'position');
     }
   },
   methods: {
-    ...mapActions({
+    ...mapActions('tes', {
       reorderElements: 'reorder',
       insertElement: 'insert',
       addElement: 'save'
-    }, 'tes'),
+    }),
     reorder({ newIndex: newPosition }) {
       const items = this.teachingElements;
       const element = items[newPosition];
@@ -75,9 +75,6 @@ export default {
       const isFirstChild = newPosition === -1;
       const context = { items, newPosition, isFirstChild, insert: true };
       this.insertElement({ element, context });
-    },
-    deleteContainer() {
-      this.$emit('delete');
     }
   },
   components: {

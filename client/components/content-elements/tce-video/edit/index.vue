@@ -23,10 +23,10 @@
         <plyr
           v-if="showVideo"
           ref="video"
-          :emit="['error']"
-          @ready="onError">
+          @ready="onError"
+          :emit="['error']">
           <video v-if="type.isNative">
-            <source :src="url" :type="type.name"/>
+            <source :src="url" :type="type.name">
           </video>
           <div v-else class="plyr__video-embed">
             <iframe :src="url" allowfullscreen></iframe>

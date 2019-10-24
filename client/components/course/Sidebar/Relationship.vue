@@ -2,26 +2,25 @@
   <div class="relationship">
     <label :for="type">{{ label }}</label>
     <multiselect
+      @input="onRelationshipChanged"
       :value="multiple ? associations : associations[0]"
       :options="optionGroups"
       :searchable="searchable"
       :multiple="multiple"
-      :allowEmpty="allowEmpty"
+      :allow-empty="allowEmpty"
       :disabled="!options.length"
       :placeholder="selectPlaceholder"
-      :customLabel="getCustomLabel"
+      :custom-label="getCustomLabel"
       :name="type"
-      @input="onRelationshipChanged"
-      groupLabel="typeLabel"
-      groupValues="activities"
-      trackBy="id">
-    </multiselect>
+      group-label="typeLabel"
+      group-values="activities"
+      track-by="id" />
   </div>
 </template>
 
 <script>
 import { getLevel, getSchemaId } from 'shared/activities';
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import castArray from 'lodash/castArray';
 import cloneDeep from 'lodash/cloneDeep';
 import compact from 'lodash/compact';
@@ -50,8 +49,8 @@ export default {
     allowedTypes: { type: Array, default: () => [] }
   },
   computed: {
-    ...mapGetters(['activity', 'outlineActivities'], 'course'),
-    ...mapGetters(['getLineage'], 'activities'),
+    ...mapGetters('course', ['activity', 'outlineActivities']),
+    ...mapGetters('activities', ['getLineage']),
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
       const activities = without(this.outlineActivities, this.activity);
@@ -83,7 +82,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['update'], 'activities'),
+    ...mapActions('activities', ['update']),
     getCustomLabel(activity) {
       return get(activity, 'data.name', '');
     },
@@ -92,7 +91,7 @@ export default {
     },
     onRelationshipChanged(value) {
       const associations = compact(castArray(value));
-      let activity = cloneDeep(this.activity) || {};
+      const activity = cloneDeep(this.activity) || {};
       set(activity, `refs.${this.type}`, map(associations, 'id'));
       this.update(activity);
     }

@@ -16,14 +16,14 @@
       <v-list-group value="true">
         <template v-slot:activator>
           <v-list-tile>
-            <v-list-tile-title>Repository actions</v-list-tile-title>
+            <v-list-tile-title>Actions</v-list-tile-title>
           </v-list-tile>
         </template>
         <v-list-tile
           v-for="({ label, name, icon, color }) in actions"
           :key="name"
-          :color="color ? color : 'blue-grey darken-3'"
           @click="$emit('action', name)"
+          :color="color ? color : 'blue-grey darken-3'"
           ripple>
           <v-list-tile-action class="pl-1">
             <v-icon :color="color ? color : 'primary'">

@@ -5,18 +5,16 @@
         <teaching-element
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
-          :disabled="true">
-        </teaching-element>
+          :disabled="true" />
       </div>
       <entity-sidebar
         v-show="expanded"
         ref="sidebar"
+        @preview="previewRevision"
+        @rollback="rollback"
         :revisions="revisions"
         :selected="selectedRevision"
-        :isDetached="isDetached"
-        @preview="previewRevision"
-        @rollback="rollback">
-      </entity-sidebar>
+        :is-detached="isDetached" />
     </div>
   </transition>
 </template>

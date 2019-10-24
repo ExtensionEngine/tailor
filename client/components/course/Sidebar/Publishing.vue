@@ -6,8 +6,8 @@
     <v-menu lazy offset-y left>
       <template v-slot:activator="{ on }">
         <v-btn
-          :loading="isPublishing"
           v-on="on"
+          :loading="isPublishing"
           color="blue-grey darken-1"
           outline
           small>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import fecha from 'fecha';
 import { getDescendants } from 'utils/activity';
 import { getLevel } from 'shared/activities';
@@ -41,7 +41,7 @@ import publishMixin from 'components/common/mixins/publish';
 export default {
   mixins: [publishMixin],
   computed: {
-    ...mapGetters(['activity', 'outlineActivities'], 'course'),
+    ...mapGetters('course', ['activity', 'outlineActivities']),
     config() {
       return getLevel(this.activity.type);
     },
@@ -55,7 +55,7 @@ export default {
       return [...getDescendants(outlineActivities, activity), activity];
     }
   },
-  methods: mapActions({ publishActivity: 'publish' }, 'activities')
+  methods: mapActions('activities', { publishActivity: 'publish' })
 };
 </script>
 

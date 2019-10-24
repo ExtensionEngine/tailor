@@ -13,9 +13,9 @@ const client = axios.create({
 client.interceptors.request.use(config => {
   const token = window.localStorage.getItem('JWT_TOKEN');
   if (token) {
-    config.headers['Authorization'] = `JWT ${token}`;
-  } else if (!token && config.headers['Authorization']) {
-    delete config.headers['Authorization'];
+    config.headers.Authorization = `JWT ${token}`;
+  } else if (!token && config.headers.Authorization) {
+    delete config.headers.Authorization;
   }
   return config;
 });
