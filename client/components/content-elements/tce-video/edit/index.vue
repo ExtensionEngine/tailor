@@ -69,9 +69,11 @@ export default {
     url: ({ element }) => get(element, 'data.url', ''),
     video: ({ url }) => {
       url = new URL(url);
-      if (isDownloadLink(url)) return { url: url.href, native: true, mime: 'video/*' };
-      if (isShareLink(url)) return { url: url.href, native: false };
-      return { url: url.href, native: true, mime: mimetype(url) };
+      return {
+        url: url.href,
+        native: !isShareLink(url),
+        ...!isShareLink(url) && { mime: mimetype(url) }
+      };
     },
     showPlaceholder: ({ url }) => !url,
     showVideo: ({ switchingVideo, isDragged }) => !(switchingVideo || isDragged),
@@ -100,9 +102,6 @@ export default {
   components: { Plyrue }
 };
 
-function isDownloadLink({ hostname, searchParams }) {
-  return hostname === 'drive.google.com' && searchParams.get('export') === 'download';
-}
 function isShareLink({ hostname }) {
   return VIDEO_HOSTING.some(re => re.test(hostname));
 }
