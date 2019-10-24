@@ -13,8 +13,6 @@ router
   .post('/forgot-password', ctrl.forgotPassword)
   .post('/reset-password', ctrl.resetPassword)
   // Protected routes:
-  .use(auth)
-  .get('/', ctrl.index)
   .use('/users*', auth, authorize())
   .get('/users', processPagination(User), ctrl.list)
   .post('/users', ctrl.upsert)
