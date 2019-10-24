@@ -7,15 +7,13 @@
     </button>
     <select-repository
       v-if="!repository"
-      @selected="selected => (repository = selected)">
-    </select-repository>
+      @selected="selected => (repository = selected)" />
     <select-activity
       v-else
-      :repository="repository"
-      :selectableLevels="selectableLevels"
       @reset="repository = null"
-      @selected="activity => $emit('selected', activity)">
-    </select-activity>
+      @selected="activity => $emit('selected', activity)"
+      :repository="repository"
+      :selectable-levels="selectableLevels" />
   </div>
 </template>
 

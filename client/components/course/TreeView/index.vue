@@ -2,23 +2,22 @@
   <div class="activities-container">
     <div class="loader-outer">
       <div class="loader-inner">
-        <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
+        <v-progress-circular v-if="showLoader" color="primary" indeterminate />
       </div>
     </div>
     <div :style="{ visibility }" class="activities">
       <tree-graph
+        @node:select="onNodeSelect"
         v-bind="graphOptions"
         :data="graphData"
-        @node:select="onNodeSelect"
-        class="tree">
-      </tree-graph>
-      <sidebar></sidebar>
+        class="tree" />
+      <sidebar />
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex-module';
+import { mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
@@ -47,7 +46,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['activities', 'course', 'structure'], 'course'),
+    ...mapGetters('course', ['activities', 'course', 'structure']),
     // TODO: Remove this hack!
     visibility() {
       return this.showLoader ? 'hidden' : 'visible';
@@ -65,7 +64,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['focusActivity'], 'course'),
+    ...mapMutations('course', ['focusActivity']),
     setSelected(node) {
       if (this.selectedNode) this.selectedNode.classList.remove('selected');
       this.selectedNode = node;

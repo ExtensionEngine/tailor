@@ -13,28 +13,25 @@
       <select-action
         v-if="!action"
         @selected="selected => (action = selected)"
-        @close="hide">
-      </select-action>
+        @close="hide" />
       <activity-browser
         v-else-if="action !== 'create'"
-        :selectableLevels="supportedLevels"
         @selected="executeAction"
-        @close="hide">
-      </activity-browser>
+        @close="hide"
+        :selectable-levels="supportedLevels" />
       <create-activity
         v-else
-        :parent="anchor"
-        :supportedLevels="supportedLevels"
         @create="executeAction"
-        @close="hide">
-      </create-activity>
+        @close="hide"
+        :parent="anchor"
+        :supported-levels="supportedLevels" />
     </div>
   </div>
 </template>
 
 <script>
 import { getOutlineChildren, getParent } from 'utils/activity';
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityBrowser from 'components/common/ActivityBrowser';
 import calculatePosition from 'utils/calculatePosition';
 import CreateActivity from './CreateActivity';
@@ -57,7 +54,7 @@ export default {
   },
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters(['structure'], 'course'),
+    ...mapGetters('course', ['structure']),
     ...mapState({ outlineState: s => s.course.outline }),
     showActions() {
       return this.anchor._cid === this.outlineState.showOptions;
@@ -73,8 +70,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ copy: 'clone', create: 'save' }, 'activities'),
-    ...mapMutations(['showActivityOptions', 'focusActivity'], 'course'),
+    ...mapActions('activities', { copy: 'clone', create: 'save' }),
+    ...mapMutations('course', ['showActivityOptions', 'focusActivity']),
     show() {
       this.showActivityOptions(this.anchor._cid);
       this.focusActivity(this.anchor._cid);

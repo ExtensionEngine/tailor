@@ -5,14 +5,13 @@
         <revision-item
           v-for="revision in bundledRevisions"
           :key="revision._cid"
-          :revision="revision">
-        </revision-item>
+          :revision="revision" />
       </ul>
     </div>
     <infinite-loading @infinite="fetchRevisions">
       <span slot="spinner">
         <div class="col-lg-12 loader-wrapper">
-          <v-progress-circular color="primary" indeterminate/>
+          <v-progress-circular color="primary" indeterminate />
         </div>
       </span>
       <span slot="no-results">No changes recorded.</span>
@@ -22,7 +21,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
 import { isSameInstance } from 'utils/revision';
 import last from 'lodash/last';
@@ -37,8 +36,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['revisions'], 'course'),
-    ...mapGetters(['hasMoreResults'], 'revisions'),
+    ...mapGetters('course', ['revisions']),
+    ...mapGetters('revisions', ['hasMoreResults']),
     bundledRevisions() {
       return reduce(this.revisions, (acc, it) => {
         const prevRevision = last(acc);
@@ -49,7 +48,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetch', 'resetPagination'], 'revisions'),
+    ...mapActions('revisions', ['fetch', 'resetPagination']),
     fetchRevisions($state) {
       this.fetch().then(() => {
         const diff = this.bundledRevisions.length - this.bundledRevisionCount;

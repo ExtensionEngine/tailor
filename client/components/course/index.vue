@@ -18,18 +18,21 @@
       </v-tab>
     </v-tabs>
     <div class="tab-content" infinite-wrapper>
-      <router-view :showLoader="showLoader"/>
+      <router-view :show-loader="showLoader" />
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex-module';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
 export default {
+  props: {
+    courseId: { type: Number, required: true }
+  },
   data() {
     return {
       showLoader: true
@@ -37,7 +40,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters(['course', 'activities', 'activity', 'isCourseAdmin'], 'course'),
+    ...mapGetters('course', ['course', 'activities', 'activity', 'isCourseAdmin']),
     tabs() {
       const items = [
         { name: 'Structure', route: 'course', icon: 'file-tree' },
@@ -50,16 +53,16 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getUsers'], 'course'),
-    ...mapActions({ getCourse: 'get' }, 'courses'),
-    ...mapActions({ getActivities: 'fetch' }, 'activities'),
-    ...mapMutations({ resetActivityFocus: 'focusActivity' }, 'course'),
-    ...mapMutations({ setupActivityApi: 'setBaseUrl' }, 'activities'),
-    ...mapMutations({ setupRevisionApi: 'setBaseUrl' }, 'revisions'),
-    ...mapMutations({ setupTesApi: 'setBaseUrl' }, 'tes')
+    ...mapActions('course', ['getUsers']),
+    ...mapActions('courses', { getCourse: 'get' }),
+    ...mapActions('activities', { getActivities: 'fetch' }),
+    ...mapActions('activities', { setupActivityApi: 'setEndpoint' }),
+    ...mapActions('revisions', { setupRevisionApi: 'setEndpoint' }),
+    ...mapActions('tes', { setupTesApi: 'setEndpoint' }),
+    ...mapMutations('course', { resetActivityFocus: 'focusActivity' })
   },
   async created() {
-    const { courseId } = this.$route.params;
+    const { courseId } = this;
     const existingSelection = this.activity && this.activity.courseId === courseId;
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!

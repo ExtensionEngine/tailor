@@ -1,7 +1,7 @@
 <template>
   <v-card class="settings elevation-2">
-    <add-user :roles="roles"/>
-    <user-list :roles="roles"/>
+    <add-user :roles="roles" />
+    <user-list :roles="roles" />
   </v-card>
 </template>
 

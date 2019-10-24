@@ -2,37 +2,35 @@
   <form @submit.prevent="addUser">
     <v-layout row align-center class="pl-3">
       <v-flex xs7 class="pr-2">
-        <v-text-field
-          v-validate="{ required: true, email: true }"
+        <v-combobox
           v-model="email"
+          v-validate="{ required: true, email: true }"
+          @update:searchInput="fetchUsers"
           :error-messages="vErrors.collect('email')"
+          :items="suggestedUsers"
           data-vv-name="email"
-          label="Email"/>
+          label="Email" />
       </v-flex>
       <v-flex xs3 class="px-4">
         <v-select
-          v-validate="'required'"
           v-model="role"
+          v-validate="'required'"
           :error-messages="vErrors.collect('role')"
           :items="roles"
           data-vv-name="role"
-          flat/>
+          flat />
       </v-flex>
       <v-flex xs2>
-        <v-btn
-          type="submit"
-          color="blue-grey darken-1"
-          small
-          dark>
-          Add
-        </v-btn>
+        <v-btn type="submit" small outline>Add</v-btn>
       </v-flex>
     </v-layout>
   </form>
 </template>
 
 <script>
-import { mapActions } from 'vuex-module';
+import api from '@/api/user';
+import { mapActions } from 'vuex';
+import throttle from 'lodash/throttle';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -43,11 +41,12 @@ export default {
   data() {
     return {
       email: '',
+      suggestedUsers: [],
       role: this.roles[0].value
     };
   },
   methods: {
-    ...mapActions(['upsertUser'], 'course'),
+    ...mapActions('course', ['upsertUser']),
     addUser() {
       const { email, role } = this;
       const { courseId } = this.$route.params;
@@ -55,9 +54,18 @@ export default {
         if (!isValid) return;
         await this.upsertUser({ courseId, email, role });
         this.email = '';
+        this.suggestedUsers = [];
         this.$nextTick(() => this.$validator.reset());
       });
-    }
+    },
+    fetchUsers: throttle(function (filter) {
+      if (filter && filter.length > 1) {
+        return api.fetch({ filter }).then(({ items }) => {
+          this.suggestedUsers = items.map(it => it.email);
+        });
+      }
+      this.suggestedUsers = [];
+    }, 350)
   }
 };
 </script>

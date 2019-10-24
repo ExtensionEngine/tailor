@@ -1,15 +1,26 @@
 <template>
   <v-dialog
-    v-hotkey="{ esc: hide }"
     v-if="isAdmin"
     v-model="isVisible"
-    width="600px">
-    <v-btn slot="activator" color="pink" dark absolute fab>
+    v-hotkey="{ esc: hide }"
+    width="700px">
+    <v-btn
+      slot="activator"
+      color="pink"
+      fab
+      dark
+      absolute
+      class="add-repo">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-form @submit.prevent="submit">
       <v-card class="pa-3">
-        <v-card-title class="headline">Create repository</v-card-title>
+        <v-card-title class="headline">
+          <v-avatar color="secondary" size="38" class="mr-2">
+            <v-icon color="white">mdi-folder-plus-outline</v-icon>
+          </v-avatar>
+          New
+        </v-card-title>
         <v-card-text>
           <v-alert
             :value="vErrors.has('default')"
@@ -19,34 +30,31 @@
             {{ vErrors.first('default') }}
           </v-alert>
           <v-select
-            v-validate="'required'"
             v-model="repository.schema"
+            v-validate="'required'"
             :items="schemas"
             :error-messages="vErrors.collect('schema')"
             item-value="id"
             item-text="name"
-            label="Type"
             data-vv-name="schema"
-            class="mb-3"/>
+            class="mb-3" />
           <v-text-field
-            v-validate="{ required: true, min: 2, max: 250 }"
             v-model.trim="repository.name"
+            v-validate="{ required: true, min: 2, max: 250 }"
             :error-messages="vErrors.collect('name')"
             label="Name"
-            data-vv-name="name"/>
+            data-vv-name="name" />
           <v-textarea
-            v-validate="{ required: true, min: 2, max: 2000 }"
             v-model.trim="repository.description"
+            v-validate="{ required: true, min: 2, max: 2000 }"
             :error-messages="vErrors.collect('description')"
             label="Description"
-            data-vv-name="description"/>
+            data-vv-name="description" />
         </v-card-text>
         <v-card-actions>
-          <v-spacer/>
-          <v-btn :disabled="showLoader" @click="hide">Cancel</v-btn>
-          <v-btn :loading="showLoader" color="primary" outline type="submit">
-            Create
-          </v-btn>
+          <v-spacer />
+          <v-btn @click="hide" :disabled="showLoader">Cancel</v-btn>
+          <v-btn :loading="showLoader" outline type="submit">Create</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>
@@ -54,13 +62,13 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex-module';
+import { mapActions, mapGetters } from 'vuex';
 import Promise from 'bluebird';
 import { SCHEMAS } from 'shared/activities';
 import { withValidation } from 'utils/validation';
 
 const getDefaultData = () => ({
-  schema: null,
+  schema: SCHEMAS[0].id,
   name: null,
   description: null
 });
@@ -77,12 +85,10 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    schemas() {
-      return SCHEMAS;
-    }
+    schemas: () => SCHEMAS
   },
   methods: {
-    ...mapActions(['save'], 'courses'),
+    ...mapActions('courses', ['save']),
     submit() {
       this.$validator.validateAll().then(isValid => {
         if (!isValid) return;
@@ -93,15 +99,15 @@ export default {
       });
     },
     hide() {
+      this.repository = getDefaultData();
+      this.showLoader = false;
       this.isVisible = false;
     }
   },
   watch: {
     isVisible(val) {
       if (!val) return;
-      this.repository = getDefaultData();
-      this.showLoader = false;
-      this.vErrors.clear();
+      setTimeout(() => this.$validator.reset(), 60);
     }
   }
 };

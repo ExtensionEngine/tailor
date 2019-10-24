@@ -9,19 +9,19 @@
         :class="{ 'non-graded': !isGraded }">
         <span v-if="isGraded" :class="{ 'has-error': !hasCorrectAnswers }">
           <input
+            @change="toggleAnswer(index)"
             :checked="correct.includes(index)"
             :disabled="disabled"
-            @change="toggleAnswer(index)"
             type="checkbox">
         </span>
         <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
         <span :class="errorClass(index)" class="input-container">
           <input
             :ref="`input${index}`"
+            @change="updateAnswer(index)"
             :value="answers[index]"
             :disabled="disabled"
             :placeholder="isGraded ? 'Answer...' : 'Option...'"
-            @change="updateAnswer(index)"
             class="form-control">
         </span>
         <span @click="removeAnswer(index)" class="mdi mdi-close control"></span>

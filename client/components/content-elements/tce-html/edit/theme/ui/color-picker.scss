@@ -1,0 +1,22 @@
+.ql-color-picker {
+  .ql-picker-options .picker-item__none {
+    $height: 30px;
+    $icon-size: 18px;
+
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    float: none;
+    width: 100%;
+    height: $height;
+    padding: 0 1px;
+    line-height: $height;
+    text-align: left;
+
+    .icon {
+      vertical-align: top;
+      margin-right: 4px;
+      font-size: $icon-size;
+    }
+  }
+}

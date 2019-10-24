@@ -7,6 +7,7 @@ const hostname = resolveHostname();
 const protocol = resolveProtocol(hostname);
 const port = resolvePort();
 const origin = resolveOrigin(hostname, protocol, port);
+const previewUrl = process.env.PREVIEW_URL;
 
 module.exports = {
   protocol,
@@ -14,7 +15,8 @@ module.exports = {
   port,
   origin,
   auth: require('./auth'),
-  storage: require('./storage')
+  storage: require('./storage'),
+  previewUrl
 };
 
 // Legacy config support
