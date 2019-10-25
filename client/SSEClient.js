@@ -10,14 +10,13 @@ function listenerFactory(method) {
 }
 
 class SSEClient {
-  constructor(url) {
+  constructor(url, token) {
     this.url = url;
-    this.connection = SSEClient.initConnection(url);
+    this.connection = SSEClient.initConnection(url, token);
     this.listeners = {};
   }
 
-  static initConnection(url) {
-    const token = window.localStorage.getItem('JWT_TOKEN');
+  static initConnection(url, token) {
     const headers = { Authorization: `JWT ${token}` };
     return new window.EventSource(url, { headers });
   }

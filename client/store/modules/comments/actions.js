@@ -13,9 +13,12 @@ const fetch = ({ state, commit }, { id, courseId }) => {
   });
 };
 
-const subscribe = ({ state, commit }) => {
+const subscribe = ({ state, commit, rootGetters }) => {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
-  SSE_CLIENT = new SSEClient(`/api/v1/${state.$apiUrl}/subscribe`);
+
+  // Get token from the Auth module
+  const token = rootGetters.token;
+  SSE_CLIENT = new SSEClient(`/api/v1/${state.$apiUrl}/subscribe`, token);
   SSE_CLIENT.subscribe('comment_create', item => commit('sseAdd', item));
   SSE_CLIENT.subscribe('comment_update', item => commit('sseUpdate', item));
   SSE_CLIENT.subscribe('comment_delete', item => commit('sseUpdate', item));
