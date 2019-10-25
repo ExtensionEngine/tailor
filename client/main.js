@@ -1,8 +1,5 @@
 /* eslint-disable sort-imports */
-import '@babel/polyfill';
-import 'dom-shims/shim/Element.classList';
-import 'dom-shims/shim/Element.mutation';
-import 'event-source-polyfill';
+import './polyfills';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 
 import assetsApi from '@/api/asset';

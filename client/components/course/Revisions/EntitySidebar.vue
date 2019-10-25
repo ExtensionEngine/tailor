@@ -17,7 +17,7 @@
             v-show="!isDetached && index > 0 && !revision.loading"
             @click.stop="$emit('rollback', revision)"
             class="rollback">
-            <span class="mdi mdi-loop"></span>
+            <span class="mdi mdi-restore"></span>
           </div>
           <div v-show="revision.loading">
             <div class="progress-background"></div>

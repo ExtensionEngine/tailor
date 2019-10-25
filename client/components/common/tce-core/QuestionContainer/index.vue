@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import * as yup from 'yup';
 import { getComponentName, processAnswerType } from '../utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
@@ -60,7 +61,6 @@ import map from 'lodash/map';
 import omit from 'lodash/omit';
 import Question from './Question';
 import toPath from 'lodash/toPath';
-import yup from 'yup';
 
 const validationOptions = { recursive: true, abortEarly: false };
 
@@ -154,10 +154,9 @@ export default {
     validate() {
       return this.schema.validate(this.editedElement.data, validationOptions);
     },
-    updateFeedback(feedback) {
-      const data = this.editedElement.data;
-      data.feedback = data.feedback || {};
-      Object.assign(data.feedback, feedback);
+    updateFeedback(data) {
+      const { editedElement: element } = this;
+      this.$set(element.data, 'feedback', { ...element.data.feedback, ...data });
     }
   },
   components: { Controls, Feedback, Question }
