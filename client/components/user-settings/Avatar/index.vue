@@ -12,7 +12,7 @@
           </v-icon>
         </div>
       </v-avatar>
-      <v-btn @click="uploadAvatar" fab dark small color="primary">
+      <v-btn @click="selectAvatar" fab dark small color="primary">
         <v-icon>mdi-upload</v-icon>
       </v-btn>
       <v-btn
@@ -50,21 +50,19 @@ export default {
   },
   methods: {
     ...mapActions(['updateInfo']),
+    selectAvatar() {
+      this.$refs.avatarDialog.$refs.croppa.chooseFile();
+    },
     updateAvatar(imgUrl) {
       return this.updateInfo({ imgUrl }).then(() => {
         this.$snackbar.show('Your profile picture has been updated!');
       });
     },
-    uploadAvatar() {
-      this.$refs.avatarDialog.$refs.croppa.chooseFile();
-    },
     deleteAvatar() {
       appChannel.emit('showConfirmationModal', {
         title: 'Delete avatar?',
         message: 'Are you sure you want to delete your profile picture?',
-        action: () => this.updateInfo({ imgUrl: null }).then(() => {
-          this.$snackbar.show('Your profile picture has been updated!');
-        })
+        action: () => this.updateAvatar(null)
       });
     }
   },

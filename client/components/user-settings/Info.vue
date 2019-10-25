@@ -89,9 +89,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.v-input {
-  height: 72px;
-}
-</style>
