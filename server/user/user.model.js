@@ -40,11 +40,13 @@ class User extends Model {
       },
       firstName: {
         type: STRING,
-        field: 'first_name'
+        field: 'first_name',
+        validate: { len: [2, 50] }
       },
       lastName: {
         type: STRING,
-        field: 'last_name'
+        field: 'last_name',
+        validate: { len: [2, 50] }
       },
       imgUrl: {
         type: TEXT,

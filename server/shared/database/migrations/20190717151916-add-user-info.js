@@ -6,9 +6,9 @@ const { Sequelize } = require('sequelize');
 const TABLE_NAME = 'user';
 
 const COLUMNS = {
-  first_name: { type: Sequelize.STRING, defaultValue: '' },
-  last_name: { type: Sequelize.STRING, defaultValue: '' },
-  img_url: { type: Sequelize.TEXT, defaultValue: '' }
+  first_name: { type: Sequelize.STRING(50) },
+  last_name: { type: Sequelize.STRING(50) },
+  img_url: { type: Sequelize.TEXT }
 };
 
 module.exports = {
