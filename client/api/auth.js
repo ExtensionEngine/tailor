@@ -2,8 +2,10 @@ import request from './request';
 
 const url = {
   login: '/users/login',
-  forgotPassword: '/users/forgotPassword',
-  resetPassword: '/users/resetPassword'
+  forgotPassword: '/users/forgot-password',
+  resetPassword: '/users/reset-password',
+  profile: '/users/me',
+  changePassword: '/users/me/change-password'
 };
 
 function login(credentials) {
@@ -24,9 +26,19 @@ function resetPassword(token, password) {
   return request.post(url.resetPassword, { token, password });
 }
 
+function changePassword(currentPassword, newPassword) {
+  return request.post(url.changePassword, { currentPassword, newPassword });
+}
+
+function updateUserInfo(userData) {
+  return request.patch(url.profile, userData);
+}
+
 export default {
   login,
   logout,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  updateUserInfo,
+  changePassword
 };

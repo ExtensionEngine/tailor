@@ -1,3 +1,4 @@
+import userApi from '@/api/user';
 import VeeValidate from 'vee-validate';
 
 const alphanumerical = {
@@ -9,7 +10,16 @@ const alphanumerical = {
   }
 };
 
+const uniqueEmail = {
+  getMessage: field => `The ${field} is not unique.`,
+  validate: (email, user) => {
+    if (user && email === user.email) return true;
+    return userApi.fetch({ email }).then(({ total }) => ({ valid: !total }));
+  }
+};
+
 VeeValidate.Validator.extend('alphanumerical', alphanumerical);
+VeeValidate.Validator.extend('unique-email', uniqueEmail);
 
 export default VeeValidate;
 
