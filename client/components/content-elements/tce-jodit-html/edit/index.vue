@@ -93,6 +93,10 @@ $tooltipColor: #455a64;
     overflow: visible;
   }
 
+  .jodit_wysiwyg {
+    overflow-wrap: break-word;
+  }
+
   .tce-jodit-tooltip {
     display: inline-block;
     position: relative;
