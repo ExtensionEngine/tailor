@@ -40,11 +40,11 @@
               type="password"
               label="New password" />
             <v-text-field
-              v-model="confirmationPassword"
+              v-model="passwordConfirmation"
               v-validate="{ required: true, confirmed: 'newPassword' }"
-              :error-messages="vErrors.first('confirmationPassword')"
-              data-vv-as="Confirmation password"
-              data-vv-name="confirmationPassword"
+              :error-messages="vErrors.first('passwordConfirmation')"
+              data-vv-as="Password confirmation"
+              data-vv-name="passwordConfirmation"
               type="password"
               label="Confirm new password" />
           </v-card-text>
@@ -55,7 +55,7 @@
             <v-spacer />
             <v-btn @click="hide" flat>Cancel</v-btn>
             <v-btn
-              :disabled="!isValid"
+              :disabled="vErrors.any()"
               outline
               type="submit">
               Update
@@ -74,7 +74,7 @@ import { withValidation } from 'utils/validation';
 const defaultData = () => ({
   currentPassword: null,
   newPassword: null,
-  confirmationPassword: null
+  passwordConfirmation: null
 });
 
 export default {
@@ -84,11 +84,6 @@ export default {
     ...defaultData(),
     isVisible: false
   }),
-  computed: {
-    isValid() {
-      return Object.keys(this.vFields).every(key => this.vFields[key].valid);
-    }
-  },
   methods: {
     ...mapActions(['changePassword', 'logout']),
     hide() {
@@ -99,16 +94,14 @@ export default {
       this.$validator.reset();
       return Object.assign(this, defaultData());
     },
-    submit() {
-      return this.$validator.validateAll()
-        .then(isValid => {
-          if (!isValid) return;
-          const { currentPassword, newPassword } = this;
-          return this.changePassword({ currentPassword, newPassword })
-            .then(() => this.$snackbar.show('Password changed!'))
-            .then(() => this.logout())
-            .catch(() => this.$snackbar.error('Current password isn\'t valid!'));
-        });
+    async submit() {
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) return;
+      const { currentPassword, newPassword } = this;
+      return this.changePassword({ currentPassword, newPassword })
+        .then(() => this.$snackbar.show('Password changed!'))
+        .then(() => this.logout())
+        .catch(() => this.$snackbar.error('Current password isn\'t valid!'));
     }
   },
   watch: {
