@@ -22,6 +22,10 @@ import ToolbarPopupsPlugin from './plugins/toolbar-popups';
 import TooltipPlugin from './plugins/tooltip';
 import uniqueId from 'lodash/uniqueId';
 
+// NOTE: Fixes production build issues: https://github.com/xdan/jodit/issues/225
+//       caused by: https://github.com/xdan/jodit/blob/3.2.55/src/modules/helpers/checker/isJoditObject.ts#L18
+Object.defineProperty(Jodit, 'name', { value: 'Jodit' });
+
 const JODIT_READY_EVENT = 'joditReady';
 
 /** @type {import('jodit/src/Config').Config & import('jodit/src/plugins')} */
