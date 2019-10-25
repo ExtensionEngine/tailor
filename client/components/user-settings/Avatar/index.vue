@@ -45,12 +45,8 @@ export default {
   name: 'user-avatar',
   computed: {
     ...mapState({ user: state => state.auth.user }),
-    image() {
-      return this.user.imgUrl;
-    },
-    isGravatar() {
-      return isGravatar(this.image);
-    }
+    image: vm => vm.user.imgUrl,
+    isGravatar: vm => isGravatar(vm.image)
   },
   methods: {
     ...mapActions(['updateInfo']),

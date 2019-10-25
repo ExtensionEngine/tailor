@@ -40,18 +40,15 @@ class User extends Model {
       },
       firstName: {
         type: STRING,
-        defaultValue: '',
         field: 'first_name'
       },
       lastName: {
         type: STRING,
-        defaultValue: '',
         field: 'last_name'
       },
       imgUrl: {
         type: TEXT,
         field: 'img_url',
-        defaultValue: '',
         get() {
           const imgUrl = this.getDataValue('imgUrl');
           return imgUrl || gravatar.url(this.email, gravatarConfig, true /* https */);

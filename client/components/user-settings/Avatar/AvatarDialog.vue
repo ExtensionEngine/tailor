@@ -80,7 +80,7 @@ $image-height: 240px;
     /deep/ {
       canvas {
         width: 100% !important;
-        height: 224px !important;
+        height: inherit !important;
       }
     }
 

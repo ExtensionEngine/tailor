@@ -4,7 +4,7 @@ const url = {
   login: '/users/login',
   forgotPassword: '/users/forgot-password',
   resetPassword: '/users/reset-password',
-  updateProfile: '/users/me',
+  profile: '/users/me',
   changePassword: '/users/me/change-password'
 };
 
@@ -37,7 +37,7 @@ function changePassword(currentPassword, newPassword) {
 }
 
 function updateUserInfo(userData) {
-  return request.patch(url.updateProfile, { userData });
+  return request.patch(url.profile, userData);
 }
 
 export default {

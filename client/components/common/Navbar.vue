@@ -1,7 +1,9 @@
 <template>
   <v-toolbar color="grey lighten-5" app dense fixed>
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
-      <v-avatar><img :src="logo" alt="Logo"></v-avatar>
+      <v-avatar color="primary darken-1" size="34" class="mt-1 pa-2">
+        <img :src="logo" alt="Logo">
+      </v-avatar>
       <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
     </router-link>
     <v-spacer />

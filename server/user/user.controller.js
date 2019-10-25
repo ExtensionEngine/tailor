@@ -65,7 +65,7 @@ function login({ body }, res) {
 }
 
 function updateProfile({ user, body }, res) {
-  const { email, firstName, lastName, imgUrl } = body.userData;
+  const { email, firstName, lastName, imgUrl } = body;
   return user.update({ email, firstName, lastName, imgUrl })
     .then(({ profile }) => res.json({ user: profile }))
     .catch(() => validationError(CONFLICT));
