@@ -1,14 +1,13 @@
 'use strict';
 
+const { ACCEPTED, BAD_REQUEST, CONFLICT, NO_CONTENT, NOT_FOUND } = require('http-status-codes');
 const { createError, validationError } = require('../shared/error/helpers');
-const { ACCEPTED, NO_CONTENT, NOT_FOUND } = require('http-status-codes');
 const map = require('lodash/map');
 const { Op } = require('sequelize');
 const { role: { user: userRole } } = require('../../config/shared');
 const { User } = require('../shared/database');
 
-// TODO: Add fistName, lastName after profile merge
-const createFilter = q => map(['email'],
+const createFilter = q => map(['email', 'firstName', 'lastName'],
   it => ({ [it]: { [Op.iLike]: `%${q}%` } }));
 
 function list({ query: { email, role, filter, archived }, options }, res) {
@@ -22,8 +21,8 @@ function list({ query: { email, role, filter, archived }, options }, res) {
     });
 }
 
-function upsert({ body: { email, role } }, res) {
-  return User.inviteOrUpdate({ email, role })
+function upsert({ body: { email, firstName, lastName, role } }, res) {
+  return User.inviteOrUpdate({ email, firstName, lastName, role })
     .then(data => res.json({ data }));
 }
 
@@ -65,6 +64,22 @@ function login({ body }, res) {
     });
 }
 
+function updateProfile({ user, body }, res) {
+  const { email, firstName, lastName, imgUrl } = body;
+  return user.update({ email, firstName, lastName, imgUrl })
+    .then(({ profile }) => res.json({ user: profile }))
+    .catch(() => validationError(CONFLICT));
+}
+
+function changePassword({ user, body }, res) {
+  const { currentPassword, newPassword } = body;
+  if (currentPassword === newPassword) return res.sendStatus(BAD_REQUEST);
+  return user.authenticate(currentPassword)
+    .then(user => user || createError(BAD_REQUEST))
+    .then(user => user.update({ password: newPassword }))
+    .then(() => res.sendStatus(NO_CONTENT));
+}
+
 function reinvite({ params }, res) {
   return User.findByPk(params.id)
     .then(user => user || createError(NOT_FOUND, 'User does not exist!'))
@@ -79,5 +94,7 @@ module.exports = {
   forgotPassword,
   resetPassword,
   login,
+  updateProfile,
+  changePassword,
   reinvite
 };
