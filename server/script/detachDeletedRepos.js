@@ -17,13 +17,13 @@ function updateRepositoryCatalog(repositories) {
   return getRepositoryCatalog().then(catalog => {
     console.info('Catalog fetched ...');
     console.info('Updating deleted repos ...');
-    each(catalog, repo => {
-      const existing = find(repositories, { id: repo.id });
+    each(catalog, catalogItem => {
+      const repository = find(repositories, { id: catalogItem.id });
       const repositoryData = {
-        ...getRepositoryAttrs(existing),
-        detachedAt: existing.deletedAt
+        ...getRepositoryAttrs(repository),
+        detachedAt: repository.deletedAt
       };
-      Object.assign(repo, omit(repositoryData, ['id']));
+      Object.assign(catalogItem, omit(repositoryData, ['id']));
     });
     const data = Buffer.from(JSON.stringify(catalog), 'utf8');
     return storage.saveFile('repository/index.json', data);
