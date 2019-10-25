@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { avatar as avatarOpts } from 'shared';
+const AVATAR_OPTS = { compressionRate: 0.6, mimetype: 'image/jpeg' };
 
 export default {
   name: 'avatar-dialog',
@@ -52,7 +52,7 @@ export default {
       this.visible = false;
     },
     confirm() {
-      const { mimetype, compressionRate } = avatarOpts;
+      const { mimetype, compressionRate } = AVATAR_OPTS;
       const imgUrl = this.$refs.croppa.generateDataUrl(mimetype, compressionRate);
       this.$emit('update', imgUrl);
       this.close();
