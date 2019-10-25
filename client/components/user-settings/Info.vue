@@ -1,28 +1,32 @@
 <template>
   <v-form @submit.prevent="updateUser">
     <v-layout column pt-2 px-4 mx-3>
-      <v-text-field
-        v-model="userData.email"
-        v-validate="{ required: true, email: true, 'unique-email': user }"
-        :error-messages="vErrors.collect('email')"
-        data-vv-as="Email"
-        data-vv-name="email"
-        name="email"
-        label="Email" />
-      <v-text-field
-        v-model="userData.firstName"
-        v-validate="'required|min:2|max:20'"
-        :error-messages="vErrors.collect('firstName')"
-        data-vv-as="First name"
-        data-vv-name="firstName"
-        label="First name" />
-      <v-text-field
-        v-model="userData.lastName"
-        v-validate="'required|min:2|max:20'"
-        :error-messages="vErrors.collect('lastName')"
-        data-vv-as="Last Name"
-        data-vv-name="lastName"
-        label="Last name" />
+      <v-flex>
+        <v-text-field
+          v-model="userData.email"
+          v-validate="{ required: true, email: true, 'unique-email': user }"
+          :error-messages="vErrors.collect('email')"
+          name="email"
+          label="Email" />
+      </v-flex>
+      <v-flex>
+        <v-text-field
+          v-model="userData.firstName"
+          v-validate="'required|min:2|max:20'"
+          :error-messages="vErrors.collect('firstName')"
+          data-vv-as="First name"
+          data-vv-name="firstName"
+          label="First name" />
+      </v-flex>
+      <v-flex>
+        <v-text-field
+          v-model="userData.lastName"
+          v-validate="'required|min:2|max:20'"
+          :error-messages="vErrors.collect('lastName')"
+          data-vv-as="Last Name"
+          data-vv-name="lastName"
+          label="Last name" />
+      </v-flex>
     </v-layout>
     <v-layout pb-3 px-4 mx-2>
       <v-spacer />
@@ -61,25 +65,23 @@ export default {
   data: () => ({ userData: resetUser() }),
   computed: {
     ...mapState({ user: state => state.auth.user }),
-    userAttrs: () => ATTRIBUTES,
-    hasChanges: vm => vm.userAttrs.some(key => vm.userData[key] !== vm.user[key])
+    hasChanges: vm => ATTRIBUTES.some(key => vm.userData[key] !== vm.user[key])
   },
   methods: {
     ...mapActions(['updateInfo']),
-    updateUser() {
-      return this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
-        return this.updateInfo(pick(this.userData, this.userAttrs))
-          .then(() => {
-            this.$snackbar.show('User information updated!');
-            return this.resetForm();
-          })
-          .catch(() => this.$snackbar.error('Something went wrong!'));
-      });
+    async updateUser() {
+      const isValid = this.$validator.validateAll();
+      if (!isValid) return;
+      return this.updateInfo(pick(this.userData, ATTRIBUTES))
+        .then(() => {
+          this.$snackbar.show('User information updated!');
+          return this.resetForm();
+        })
+        .catch(() => this.$snackbar.error('Something went wrong!'));
     },
     resetForm() {
       this.$validator.reset();
-      return Object.assign(this.userData, pick(this.user, this.userAttrs));
+      return Object.assign(this.userData, pick(this.user, ATTRIBUTES));
     }
   },
   created() {
