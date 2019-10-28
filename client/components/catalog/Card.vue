@@ -6,13 +6,14 @@
         {{ schema }}
       </v-chip>
       <v-btn
-          @click.stop="navigateTo('course-info')"
-          flat
-          icon
-          color="grey"
+        v-if="isAdmin || isCourseAdmin"
+        @click.stop="navigateTo('course-info')"
+        flat
+        icon
+        color="grey"
         class="btn-settings text--darken-1 pull-right my-0">
-          <v-icon>mdi-settings</v-icon>
-        </v-btn>
+        <v-icon>mdi-settings</v-icon>
+      </v-btn>
       <v-card-title class="headline grey--text text--lighten-4 pt-1">
         {{ name | truncate(70) }}
       </v-card-title>
@@ -42,16 +43,18 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
-import { mapActions } from 'vuex';
 
 export default {
   props: {
     repository: { type: Object, required: true }
   },
   computed: {
+    ...mapGetters(['isAdmin']),
+    ...mapGetters('course', ['isCourseAdmin']),
     name: ({ repository }) => repository.name,
     description: ({ repository }) => repository.description,
     schema: ({ repository }) => getSchema(repository.schema).name,
