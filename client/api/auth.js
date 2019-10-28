@@ -15,6 +15,7 @@ function login(credentials) {
 }
 
 function logout() {
+  // TODO(underscope): Add server side invalidation
   return Promise.resolve(true);
 }
 
