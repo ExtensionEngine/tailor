@@ -68,8 +68,8 @@ export default {
 <style lang="scss">
 .meta-quill-input {
   position: relative;
-  padding: 10px 8px;
   margin: 0 0 20px 0;
+  padding: 10px 8px;
   cursor: pointer;
 
   .meta-quill-disabled {
@@ -81,7 +81,7 @@ export default {
   .ql-container {
     max-height: 230px;
     overflow: auto;
-   }
+  }
 
   .ql-tooltip {
     left: 30px !important;
