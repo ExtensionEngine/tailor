@@ -6,7 +6,7 @@
         {{ schema }}
       </v-chip>
       <v-btn
-        v-if="isAdmin || isCourseAdmin"
+        v-if="repository.hasAdminAccess"
         @click.stop="navigateTo('course-info')"
         flat
         icon
@@ -43,18 +43,16 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
+import { mapActions } from 'vuex';
 
 export default {
   props: {
     repository: { type: Object, required: true }
   },
   computed: {
-    ...mapGetters(['isAdmin']),
-    ...mapGetters('course', ['isCourseAdmin']),
     name: ({ repository }) => repository.name,
     description: ({ repository }) => repository.description,
     schema: ({ repository }) => getSchema(repository.schema).name,
