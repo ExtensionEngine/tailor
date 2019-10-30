@@ -1,10 +1,10 @@
 'use strict';
 
-const email = require('emailjs');
 const { mail: config, origin } = require('../../config/server');
+const email = require('emailjs');
 const { promisify } = require('util');
-const urlJoin = require('url-join');
 const { URL } = require('url');
+const urlJoin = require('url-join');
 
 const from = `${config.sender.name} <${config.sender.address}>`;
 const server = email.server.connect(config);
