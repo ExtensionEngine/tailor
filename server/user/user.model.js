@@ -2,7 +2,6 @@
 
 const Audience = require('../shared/auth/audience');
 const bcrypt = require('bcrypt');
-const { callbackify } = require('util');
 const config = require('../../config/server');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
@@ -13,9 +12,8 @@ const Promise = require('bluebird');
 const { role: roles } = require('../../config/shared');
 
 const { user: { ADMIN, USER, INTEGRATION } } = roles;
-
-const noop = Function.prototype;
-const sendPasswordReset = callbackify(mail.resetPassword);
+const randomPassword = () =>
+  Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
 
 class User extends Model {
   static fields({ DATE, ENUM, STRING, VIRTUAL }) {
@@ -30,7 +28,8 @@ class User extends Model {
       },
       password: {
         type: STRING,
-        validate: { notEmpty: true, len: [5, 100] }
+        validate: { notEmpty: true, len: [5, 100] },
+        defaultValue: randomPassword
       },
       role: {
         type: ENUM(ADMIN, USER, INTEGRATION),
@@ -96,9 +95,9 @@ class User extends Model {
     };
   }
 
-  static invite(user, mailCb = noop) {
+  static invite(user) {
     return this.create(user)
-      .then(user => this.sendInvitation(user, mailCb));
+      .then(user => this.sendInvitation(user));
   }
 
   static inviteOrUpdate(data) {
@@ -110,10 +109,12 @@ class User extends Model {
     });
   }
 
-  static sendInvitation(user, emailCb = noop) {
-    user.token = user.createToken({ expiresIn: '5 days' });
-    mail.invite(user).asCallback(emailCb);
-    return user.save();
+  static sendInvitation(user) {
+    const token = user.createToken({
+      expiresIn: '5 days',
+      audience: Audience.Scope.Setup
+    });
+    mail.invite(user, token);
   }
 
   isAdmin() {
@@ -147,12 +148,12 @@ class User extends Model {
     return jwt.sign(payload, this.getTokenSecret(options.audience), options);
   }
 
-  sendResetToken(mailCb = noop) {
+  sendResetToken() {
     const token = this.createToken({
       audience: Audience.Scope.Setup,
-      expiresIn: '5 days'
+      expiresIn: '2 days'
     });
-    sendPasswordReset(this, token, mailCb);
+    mail.resetPassword(this, token);
   }
 
   getTokenSecret(audience) {
