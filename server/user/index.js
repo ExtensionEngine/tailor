@@ -1,6 +1,7 @@
 'use strict';
 
 const { authenticate } = require('../shared/auth');
+const { authorize } = require('../shared/auth/mw');
 const ctrl = require('./user.controller');
 const model = require('./user.model');
 const { processPagination } = require('../shared/database/pagination');
@@ -13,7 +14,7 @@ router
   .post('/users/forgot-password', ctrl.forgotPassword)
   .post('/users/reset-password', authenticate('token'), ctrl.resetPassword)
   // Protected routes:
-  .use('/users*', authenticate('jwt'))
+  .use('/users*', authenticate('jwt'), authorize())
   .get('/users', processPagination(User), ctrl.list)
   .post('/users', ctrl.upsert)
   .delete('/users/:id', ctrl.remove)
