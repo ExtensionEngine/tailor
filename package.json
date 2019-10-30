@@ -96,6 +96,7 @@
     "plyrue": "^2.1.4",
     "poi-preset-sass-resources": "^4.1.0",
     "promise-queue": "^2.2.3",
+    "randomstring": "^1.1.5",
     "rcfile": "^1.0.3",
     "read-pkg-up": "^7.0.0",
     "regenerator-runtime": "^0.13.3",

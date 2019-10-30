@@ -10,12 +10,10 @@ const map = require('lodash/map');
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
+const randomstring = require('randomstring');
 const { role: roles } = require('../../config/shared');
 
 const { user: { ADMIN, USER, INTEGRATION } } = roles;
-const randomPassword = () =>
-  Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
-
 const gravatarConfig = { size: 130, default: 'identicon' };
 
 class User extends Model {
@@ -32,7 +30,7 @@ class User extends Model {
       password: {
         type: STRING,
         validate: { notEmpty: true, len: [5, 100] },
-        defaultValue: randomPassword
+        defaultValue: () => randomstring.generate()
       },
       role: {
         type: ENUM(ADMIN, USER, INTEGRATION),
