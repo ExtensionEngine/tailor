@@ -3,6 +3,7 @@
 const Audience = require('../shared/auth/audience');
 const bcrypt = require('bcrypt');
 const config = require('../../config/server');
+const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
@@ -15,8 +16,10 @@ const { user: { ADMIN, USER, INTEGRATION } } = roles;
 const randomPassword = () =>
   Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
 
+const gravatarConfig = { size: 130, default: 'identicon' };
+
 class User extends Model {
-  static fields({ DATE, ENUM, STRING, VIRTUAL }) {
+  static fields({ DATE, ENUM, STRING, TEXT, VIRTUAL }) {
     return {
       email: {
         type: STRING,
@@ -35,11 +38,31 @@ class User extends Model {
         type: ENUM(ADMIN, USER, INTEGRATION),
         defaultValue: USER
       },
+      firstName: {
+        type: STRING,
+        field: 'first_name',
+        validate: { len: [2, 50] }
+      },
+      lastName: {
+        type: STRING,
+        field: 'last_name',
+        validate: { len: [2, 50] }
+      },
+      imgUrl: {
+        type: TEXT,
+        field: 'img_url',
+        get() {
+          const imgUrl = this.getDataValue('imgUrl');
+          return imgUrl || gravatar.url(this.email, gravatarConfig, true /* https */);
+        }
+      },
       profile: {
         type: VIRTUAL,
         get() {
-          return pick(this,
-            ['id', 'email', 'role', 'createdAt', 'updatedAt', 'deletedAt']);
+          return pick(this, [
+            'id', 'email', 'role', 'firstName', 'lastName',
+            'imgUrl', 'createdAt', 'updatedAt', 'deletedAt'
+          ]);
         }
       },
       createdAt: {
