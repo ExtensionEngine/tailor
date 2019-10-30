@@ -1,7 +1,7 @@
 'use strict';
 
 const activityRouter = require('./activity').router;
-const auth = require('passport').authenticate('jwt');
+const auth = require('./shared/auth').authenticate('jwt');
 const commentRouter = require('./comment').router;
 const courseRouter = require('./course').router;
 const express = require('express');

@@ -2,6 +2,7 @@
 
 const { ACCEPTED, BAD_REQUEST, CONFLICT, NO_CONTENT, NOT_FOUND } = require('http-status-codes');
 const { createError, validationError } = require('../shared/error/helpers');
+const Audience = require('../shared/auth/audience');
 const map = require('lodash/map');
 const { Op } = require('sequelize');
 const { role: { user: userRole } } = require('../../config/shared');
@@ -38,30 +39,18 @@ function forgotPassword({ body }, res) {
     .then(() => res.end());
 }
 
-function resetPassword({ body }, res) {
-  const { password, token } = body;
-  return User.findOne({ where: { token } })
-    .then(user => user || createError(NOT_FOUND, 'Invalid token'))
-    .then(user => {
-      user.password = password;
-      return user.save().catch(validationError);
-    })
-    .then(() => res.end());
+function resetPassword({ body, user }, res) {
+  const { password } = body;
+  return user.update({ password })
+    .then(() => res.sendStatus(NO_CONTENT));
 }
 
-function login({ body }, res) {
-  const { email, password } = body;
-  if (!email || !password) {
-    createError(400, 'Please enter email and password');
-  }
-  return User.findOne({ where: { email } })
-    .then(user => user || createError(NOT_FOUND, 'User does not exist'))
-    .then(user => user.authenticate(password))
-    .then(user => user || createError(NOT_FOUND, 'Wrong password'))
-    .then(user => {
-      const token = user.createToken({ expiresIn: '5 days' });
-      res.json({ data: { token, user: user.profile } });
-    });
+function login({ user }, res) {
+  const token = user.createToken({
+    audience: Audience.Scope.Access,
+    expiresIn: '5 days'
+  });
+  return res.json({ data: { token, user: user.profile } });
 }
 
 function updateProfile({ user, body }, res) {
