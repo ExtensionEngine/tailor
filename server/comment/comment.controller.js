@@ -1,7 +1,6 @@
 'use strict';
 
-const { Comment } = require('../shared/database');
-const { User } = require('../shared/database');
+const { Comment, User } = require('../shared/database');
 
 function list({ course, opts, query }, res) {
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
@@ -16,11 +15,10 @@ function show({ comment }, res) {
   return res.json({ data: comment });
 }
 
-function create({ body, params, user }, res) {
+function create({ user, course, body }, res) {
   const { content, activityId } = body;
-  const { courseId } = params;
-  const authorId = user.id;
-  return Comment.create({ content, activityId, courseId, authorId })
+  const { id: courseId } = course;
+  return Comment.create({ content, activityId, courseId, authorId: user.id })
     .then(data => res.json({ data }));
 }
 

@@ -28,9 +28,9 @@ function show({ params }, res) {
     .then(asset => res.json({ data: asset }));
 }
 
-function create({ body, params, user }, res) {
+function create({ body, course, user }, res) {
   const attr = ['activityId', 'type', 'data', 'position', 'refs'];
-  const data = Object.assign(pick(body, attr), { courseId: params.courseId });
+  const data = Object.assign(pick(body, attr), { courseId: course.id });
   return TeachingElement.create(data, { context: { userId: user.id } })
     .then(asset => res.json({ data: asset }));
 }

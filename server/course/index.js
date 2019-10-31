@@ -1,31 +1,52 @@
 'use strict';
 
+const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const { authorize } = require('../shared/auth/mw');
 const { Course } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
-const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
 const ctrl = require('./course.controller');
+const path = require('path');
 const processQuery = require('../shared/util/processListQuery')();
 const router = require('express').Router();
 
-router
-  .param('id', getCourse)
-  .use('/courses/:id*', hasAccess)
-  .get('/courses', processQuery, ctrl.index)
-  .post('/courses', authorize(), ctrl.create)
-  .get('/courses/:id', ctrl.get)
-  .patch('/courses/:id', ctrl.patch)
-  .delete('/courses/:id', ctrl.remove)
-  .post('/courses/:id/pin', ctrl.pin)
-  .post('/courses/:id/clone', authorize(), ctrl.clone)
-  .post('/courses/:id/publish', ctrl.publishRepoInfo)
-  .get('/courses/:id/users', ctrl.getUsers)
-  .post('/courses/:id/users', ctrl.upsertUser)
-  .delete('/courses/:id/users/:userId', ctrl.removeUser)
-  .get('/courses/:id/contentInventory', ctrl.exportContentInventory);
+const activity = require('../activity');
+const comment = require('../comment');
+const revision = require('../revision');
+const teachingElement = require('../teaching-element');
 
-function getCourse(req, _res, next, id) {
-  return Course.findByPk(id, { paranoid: false })
+router
+  .param('courseId', getCourse)
+  .use(hasAccess);
+
+router.route('/')
+  .get(processQuery, ctrl.index)
+  .post(authorize(), ctrl.create);
+
+router.route('/:courseId')
+  .get(ctrl.get)
+  .patch(ctrl.patch)
+  .delete(ctrl.remove);
+
+router
+  .post('/:courseId/pin', ctrl.pin)
+  .post('/:courseId/clone', authorize(), ctrl.clone)
+  .post('/:courseId/publish', ctrl.publishRepoInfo)
+  .get('/:courseId/users', ctrl.getUsers)
+  .post('/:courseId/users', ctrl.upsertUser)
+  .delete('/:courseId/users/:userId', ctrl.removeUser)
+  .get('/:courseId/content-inventory', ctrl.exportContentInventory);
+
+mount(router, '/:courseId', activity);
+mount(router, '/:courseId', revision);
+mount(router, '/:courseId', teachingElement);
+mount(router, '/:courseId', comment);
+
+function mount(router, mountPath, subrouter) {
+  return router.use(path.join(mountPath, subrouter.path), subrouter.router);
+}
+
+function getCourse(req, _res, next, courseId) {
+  return Course.findByPk(courseId, { paranoid: false })
     .then(course => course || createError(NOT_FOUND, 'Course not found'))
     .then(course => {
       req.course = course;
@@ -45,6 +66,6 @@ function hasAccess(req, _res, next) {
 }
 
 module.exports = {
-  ctrl,
+  path: '/courses',
   router
 };

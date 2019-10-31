@@ -10,13 +10,13 @@ const { previewUrl } = require('../../config/server');
 const publishingService = require('../shared/publishing/publishing.service');
 const request = require('axios');
 
-function create({ course, body, params, user }, res) {
+function create({ course, body, user }, res) {
   const outlineConfig = find(getOutlineLevels(course.schema), { type: body.type });
   const defaultMeta = !outlineConfig ? {} : get(outlineConfig, 'defaultMeta', {});
   const data = Object.assign(
     pick(body, ['type', 'parentId', 'position']),
     { data: Object.assign({}, defaultMeta, body.data) },
-    { courseId: params.courseId });
+    { courseId: course.id });
   const opts = { context: { userId: user.id } };
   return Activity.create(data, opts).then(data => res.json({ data }));
 }

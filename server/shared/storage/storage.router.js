@@ -7,7 +7,10 @@ const router = require('express').Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 router
-  .get('/asset', ctrl.getUrl)
-  .post('/asset', upload.single('file'), ctrl.upload);
+  .get('/', ctrl.getUrl)
+  .post('/', upload.single('file'), ctrl.upload);
 
-module.exports = { router };
+module.exports = {
+  path: '/assets',
+  router
+};

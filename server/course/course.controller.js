@@ -4,10 +4,10 @@ const { Course, CourseUser, Revision, sequelize, User } = require('../shared/dat
 const { createContentInventory } = require('../integrations/knewton');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
-const { NOT_FOUND } = require('http-status-codes');
-const { Op } = require('sequelize');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
+const { NOT_FOUND } = require('http-status-codes');
+const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
 const sample = require('lodash/sample');
@@ -91,11 +91,11 @@ function upsertUser({ course, body }, res) {
 }
 
 function removeUser(req, res) {
-  const { course } = req;
-  const { userId } = req.params;
+  const { course, params: { userId } } = req;
+  const where = { userId, courseId: course.id };
   return User.findByPk(userId)
     .then(user => user || createError(NOT_FOUND, 'User not found'))
-    .then(user => course.removeUser(user))
+    .then(() => CourseUser.destroy({ where, force: true }))
     .then(() => res.end());
 }
 
