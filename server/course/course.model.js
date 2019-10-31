@@ -4,6 +4,7 @@ const { getRepositoryRelationships, getSchema } = require('../../config/shared/a
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
+const publishingService = require('../shared/publishing/publishing.service');
 
 class Course extends Model {
   static fields(DataTypes) {
@@ -65,6 +66,15 @@ class Course extends Model {
       through: CourseUser,
       foreignKey: { name: 'courseId', field: 'course_id' }
     });
+  }
+
+  static hooks() {
+    return {
+      afterDestroy(course) {
+        return Course.findByPk(course.id, { paranoid: false })
+          .then(course => publishingService.updateRepositoryCatalog(course));
+      }
+    };
   }
 
   static options() {
