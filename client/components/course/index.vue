@@ -57,6 +57,7 @@ export default {
     ...mapActions('courses', { getCourse: 'get' }),
     ...mapActions('activities', { getActivities: 'fetch' }),
     ...mapActions('activities', { setupActivityApi: 'setEndpoint' }),
+    ...mapActions('comments', { setupCommentsApi: 'setEndpoint' }),
     ...mapActions('revisions', { setupRevisionApi: 'setEndpoint' }),
     ...mapActions('tes', { setupTesApi: 'setEndpoint' }),
     ...mapMutations('course', { resetActivityFocus: 'focusActivity' })
@@ -67,6 +68,7 @@ export default {
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
     this.setupActivityApi(`/courses/${courseId}/activities`);
+    this.setupCommentsApi(`/courses/${courseId}/comments`);
     this.setupRevisionApi(`/courses/${courseId}/revisions`);
     this.setupTesApi(`/courses/${courseId}/tes`);
     const actions = [this.getActivities(), this.getUsers()];

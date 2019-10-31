@@ -1,13 +1,13 @@
 import generateActions from '../../helpers/actions';
 import SSEClient from '../../../SSEClient';
 
-const { api, get, save, setEndpoint, update } = generateActions('/comments');
+const { api, get, save, setEndpoint, update } = generateActions();
 let SSE_CLIENT;
 
 const fetch = ({ state, commit }, { id, courseId }) => {
   const action = state.courseId === courseId ? 'fetch' : 'reset';
   if (action === 'reset') commit('setCourse', courseId);
-  return api.fetch({ activityId: id, courseId }).then(items => {
+  return api.fetch({ activityId: id }).then(items => {
     commit(action, items);
     commit('commentsFetched', id);
   });
@@ -15,7 +15,7 @@ const fetch = ({ state, commit }, { id, courseId }) => {
 
 const subscribe = ({ state, commit }) => {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
-  SSE_CLIENT = new SSEClient(`/api/v1/comments/courses/${state.courseId}/subscribe`);
+  SSE_CLIENT = new SSEClient(`/api/v1/${state.$apiUrl}/subscribe`);
   SSE_CLIENT.subscribe('comment_create', item => commit('sseAdd', item));
   SSE_CLIENT.subscribe('comment_update', item => commit('sseUpdate', item));
   SSE_CLIENT.subscribe('comment_delete', item => commit('sseUpdate', item));

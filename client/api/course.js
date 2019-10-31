@@ -1,15 +1,15 @@
-import path from 'path';
 import request from './request';
 
 const urls = {
-  base: () => '/courses',
-  contentInventory: courseId => path.join(urls.base(), String(courseId), '/content-inventory'),
-  publish: courseId => path.join(urls.base(), String(courseId), '/publish'),
-  users: (courseId, userId = '') => path.join(urls.base(), String(courseId), '/users', userId)
+  root: '/courses',
+  resource: id => `${urls.root}/${id}`,
+  contentInventory: id => `${urls.resource(id)}/content-inventory`,
+  publish: id => `${urls.resource(id)}/publish`,
+  users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`
 };
 
 function getCourses(params) {
-  return request.get(urls.base(), { params }).then(res => res.data.data);
+  return request.get(urls.root, { params }).then(res => res.data.data);
 }
 
 function getUsers(courseId, params) {

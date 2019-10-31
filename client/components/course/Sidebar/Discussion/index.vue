@@ -95,11 +95,11 @@ export default {
     post() {
       if (!this.comment.content) return;
       const author = this.user;
-      const { courseId, id: activityId } = this.activity;
+      const activityId = this.activity.id;
       const createdAt = Date.now();
       const updatedAt = Date.now();
       const { content } = this.comment;
-      const comment = { content, author, courseId, activityId, createdAt, updatedAt };
+      const comment = { content, author, activityId, createdAt, updatedAt };
       this.save(comment)
         .then(() => {
           this.comment = createComment();
@@ -118,6 +118,8 @@ export default {
     }
   },
   mounted() {
+    const { courseId } = this.$route.params;
+    this.setEndpoint(`/courses/${courseId}/comments`);
     this.fetchComments();
     this.subscribe();
   },
