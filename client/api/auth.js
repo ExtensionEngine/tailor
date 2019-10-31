@@ -33,11 +33,11 @@ function resetPassword(token, password) {
 }
 
 function changePassword(currentPassword, newPassword) {
-  return request.post(url.changePassword, { currentPassword, newPassword });
+  return request.post(urls.changePassword, { currentPassword, newPassword });
 }
 
 function updateUserInfo(userData) {
-  return request.patch(url.profile, userData);
+  return request.patch(urls.profile, userData);
 }
 
 export default {
