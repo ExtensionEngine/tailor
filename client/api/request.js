@@ -1,6 +1,6 @@
+import { FORBIDDEN, UNAUTHORIZED } from 'http-status-codes';
 import axios from 'axios';
 import { EventEmitter } from 'events';
-import HttpStatus from 'http-status';
 
 const authScheme = process.env.AUTH_JWT_SCHEME;
 const config = {
@@ -53,7 +53,6 @@ client.interceptors.request.use(config => {
 });
 
 client.interceptors.response.use(res => res, err => {
-  const { FORBIDDEN, UNAUTHORIZED } = HttpStatus;
   if (err.response && [FORBIDDEN, UNAUTHORIZED].includes(err.response.status)) {
     return client.auth.emit('error', err);
   }
