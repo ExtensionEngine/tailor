@@ -23,7 +23,8 @@ router.route('/:activityId')
 router
   .post('/:activityId/reorder', ctrl.reorder)
   .post('/:activityId/clone', ctrl.clone)
-  .get('/:activityId/publish', ctrl.publish);
+  .get('/:activityId/publish', ctrl.publish)
+  .get('/:activityId/preview', ctrl.getPreviewUrl);
 
 function getActivity(req, _res, next, activityId) {
   return Activity.findByPk(activityId, { paranoid: false })

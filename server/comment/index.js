@@ -18,13 +18,13 @@ const defaultListQuery = {
 router.param('commentId', getComment);
 
 router.route('/')
-.get(processQuery(defaultListQuery), ctrl.list)
-.post(ctrl.create);
+  .get(processQuery(defaultListQuery), ctrl.list)
+  .post(ctrl.create);
 
 router.route('/:commentId')
-.get(ctrl.show)
-.patch(canEdit, ctrl.patch)
-.delete(canEdit, ctrl.remove);
+  .get(ctrl.show)
+  .patch(canEdit, ctrl.patch)
+  .delete(canEdit, ctrl.remove);
 
 router.get('/courses/:courseId/subscribe', sse, channel.subscribe);
 

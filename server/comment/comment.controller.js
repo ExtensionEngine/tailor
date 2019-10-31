@@ -4,6 +4,7 @@ const { Comment, Course, User } = require('../shared/database');
 
 function list({ opts, query }, res) {
   const { courseId, activityId } = query;
+  if (!courseId) return [];
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];
   if (activityId) (opts.where.activityId = activityId);
   return Course.findByPk(courseId)
