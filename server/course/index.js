@@ -10,7 +10,7 @@ const processQuery = require('../shared/util/processListQuery')();
 const router = require('express').Router();
 
 const activity = require('../activity');
-const comment = require('./comment');
+const comment = require('../comment');
 const revision = require('../revision');
 const teachingElement = require('../teaching-element');
 
