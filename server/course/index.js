@@ -15,8 +15,8 @@ const revision = require('../revision');
 const teachingElement = require('../teaching-element');
 
 router
-  .use(hasAccess)
-  .param('courseId', getCourse);
+  .param('courseId', getCourse)
+  .use(hasAccess);
 
 router.route('/')
   .get(processQuery, ctrl.index)
