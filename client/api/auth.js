@@ -3,11 +3,13 @@ import request from './request';
 const urls = {
   login: '/users/login',
   forgotPassword: '/users/forgot-password',
-  resetPassword: '/users/reset-password'
+  resetPassword: '/users/reset-password',
+  profile: '/users/me',
+  changePassword: '/users/me/change-password'
 };
 
 function login(credentials) {
-  return request
+  return request.base
     .post(urls.login, credentials)
     .then(res => res.data.data)
     .then(({ token, user }) => {
@@ -30,9 +32,19 @@ function resetPassword(token, password) {
   return request.post(urls.resetPassword, { token, password });
 }
 
+function changePassword(currentPassword, newPassword) {
+  return request.post(url.changePassword, { currentPassword, newPassword });
+}
+
+function updateUserInfo(userData) {
+  return request.patch(url.profile, userData);
+}
+
 export default {
   login,
   logout,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  updateUserInfo,
+  changePassword
 };

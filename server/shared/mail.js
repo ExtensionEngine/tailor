@@ -1,48 +1,40 @@
 'use strict';
 
-const config = require('../../config/server');
+const { mail: config, origin } = require('../../config/server');
 const email = require('emailjs');
-const Promise = require('bluebird');
+const { promisify } = require('util');
+const { URL } = require('url');
+const urlJoin = require('url-join');
 
-const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
+const from = `${config.sender.name} <${config.sender.address}>`;
+const server = email.server.connect(config);
 
-const server = email.server.connect({
-  user: process.env.EMAIL_USER,
-  password: process.env.EMAIL_PASSWORD,
-  host: process.env.EMAIL_HOST,
-  ssl: true
-});
+const resetUrl = token => urlJoin(origin, '/#/reset-password/', token);
+const send = promisify(server.send.bind(server));
 
-function send(message) {
-  return new Promise((resolve, reject) => {
-    server.send(message, (err, msg) => err ? reject(err) : resolve(msg));
-  });
-}
-
-const resetUrl = user => `${config.origin}/#/reset-password/${user.token}`;
-
-function invite(user) {
-  const href = resetUrl(user);
+function invite(user, token) {
+  const href = resetUrl(token);
+  const { hostname } = new URL(href);
   const message = `
-    An account has been created for you on ${config.origin}.
+    An account has been created for you on ${hostname}.
     Please click <a href="${href}">here</a> to complete your registration.`;
 
   return send({
-    from: EMAIL_ADDRESS,
+    from,
     to: user.email,
     subject: 'Invite',
     attachment: [{ data: `<html>${message}</html>`, alternative: true }]
   });
 }
 
-function resetPassword(user) {
-  const href = resetUrl(user);
+function resetPassword(user, token) {
+  const href = resetUrl(token);
   const message = `
     You requested password reset.
     Please click <a href="${href}">here</a> to complete the reset process.`;
 
   return send({
-    from: EMAIL_ADDRESS,
+    from,
     to: user.email,
     subject: 'Reset password',
     attachment: [{ data: `<html>${message}</html>`, alternative: true }]

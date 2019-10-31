@@ -7,6 +7,7 @@
         :size="38"
         :username="comment.author.email"
         :initials="authorInitials"
+        :src="user.imgUrl"
         color="#ffffff" />
     </span>
     <div class="content-wrapper">

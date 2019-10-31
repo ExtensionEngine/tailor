@@ -1,8 +1,8 @@
 <template>
   <v-toolbar color="grey lighten-5" app dense fixed>
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
-      <v-avatar color="primary darken-1" size="34" class="mt-1">
-        <img :src="logo" alt="Logo" class="logo">
+      <v-avatar color="primary darken-1" size="34" class="mt-1 pa-2">
+        <img :src="logo" alt="Logo">
       </v-avatar>
       <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
     </router-link>
@@ -26,12 +26,15 @@
       z-index="1000">
       <v-btn slot="activator" icon class="mr-2">
         <v-avatar size="34" color="grey lighten-2">
-          <span class="grey--text text--darken-1 headline">{{ user.email[0] }}</span>
+          <img :src="user.imgUrl">
         </v-avatar>
       </v-btn>
       <v-list>
         <v-list-tile>
           <v-list-tile-title>{{ user.email }}</v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile :to="{ name: 'user-settings' }">
+          <v-list-tile-title>Profile</v-list-tile-title>
         </v-list-tile>
         <v-list-tile @click="logout">
           <v-list-tile-title>Logout</v-list-tile-title>
@@ -109,9 +112,5 @@ $font-color: #333;
   &:hover {
     color: darken($font-color, 20%);
   }
-}
-
-.logo {
-  width: 26px;
 }
 </style>

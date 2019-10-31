@@ -1,6 +1,6 @@
 'use strict';
 
-const auth = require('passport').authenticate('jwt');
+const { authenticate } = require('../shared/auth');
 const { authorize } = require('../shared/auth/mw');
 const ctrl = require('./user.controller');
 const { processPagination } = require('../shared/database/pagination');
@@ -9,15 +9,17 @@ const { User } = require('../shared/database');
 
 router
   // Public routes:
-  .post('/login', ctrl.login)
+  .post('/login', authenticate('local'), ctrl.login)
   .post('/forgot-password', ctrl.forgotPassword)
-  .post('/reset-password', ctrl.resetPassword)
+  .post('/reset-password', authenticate('token'), ctrl.resetPassword)
   // Protected routes:
-  .use('/users*', auth, authorize())
-  .get('/users', processPagination(User), ctrl.list)
-  .post('/users', ctrl.upsert)
-  .delete('/users/:id', ctrl.remove)
-  .post('/users/:id/reinvite', ctrl.reinvite);
+  .use(authenticate('jwt'))
+  .get('/', authorize(), processPagination(User), ctrl.list)
+  .post('/', authorize(), ctrl.upsert)
+  .post('/me/change-password', ctrl.changePassword)
+  .patch('/me', ctrl.updateProfile)
+  .delete('/:id', authorize(), ctrl.remove)
+  .post('/:id/reinvite', authorize(), ctrl.reinvite);
 
 module.exports = {
   path: '/users',

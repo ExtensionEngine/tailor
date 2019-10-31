@@ -1,6 +1,6 @@
 'use strict';
 
-const auth = require('passport').authenticate('jwt');
+const { authenticate } = require('./shared/auth');
 const comment = require('./comment');
 const course = require('./course');
 const express = require('express');
@@ -14,7 +14,7 @@ router.use(processBody);
 router.use(user.path, user.router);
 
 // Protected routes:
-router.use(auth);
+router.use(authenticate('jwt'));
 router.use(course.path, course.router);
 router.use(storage.path, storage.router);
 router.use(comment.path, comment.router);
