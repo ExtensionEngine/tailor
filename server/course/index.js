@@ -28,6 +28,7 @@ router.route('/:courseId')
   .delete(ctrl.remove);
 
 router
+  .post('/:courseId/pin', ctrl.pin)
   .post('/:courseId/clone', authorize(), ctrl.clone)
   .post('/:courseId/publish', ctrl.publishRepoInfo)
   .get('/:courseId/users', ctrl.getUsers)
