@@ -15,6 +15,8 @@ const defaultListQuery = {
   paranoid: false
 };
 
+router.get('/subscribe', sse, channel.subscribe);
+
 router.param('commentId', getComment);
 
 router.route('/')
@@ -25,8 +27,6 @@ router.route('/:commentId')
   .get(ctrl.show)
   .patch(canEdit, ctrl.patch)
   .delete(canEdit, ctrl.remove);
-
-router.get('/courses/:courseId/subscribe', sse, channel.subscribe);
 
 function getComment(req, _res, next, commentId) {
   const include = [{ model: User, as: 'author', attributes: ['id', 'email'] }];

@@ -10,6 +10,7 @@ const processQuery = require('../shared/util/processListQuery')();
 const router = require('express').Router();
 
 const activity = require('../activity');
+const comment = require('./comment');
 const revision = require('../revision');
 const teachingElement = require('../teaching-element');
 
@@ -37,6 +38,7 @@ router
 mount(router, '/:courseId', activity);
 mount(router, '/:courseId', revision);
 mount(router, '/:courseId', teachingElement);
+mount(router, '/:courseId', comment);
 
 function mount(router, mountPath, subrouter) {
   return router.use(path.join(mountPath, subrouter.path), subrouter.router);

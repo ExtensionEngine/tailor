@@ -1,7 +1,6 @@
 'use strict';
 
 const { authenticate } = require('./shared/auth');
-const comment = require('./comment');
 const course = require('./course');
 const express = require('express');
 const storage = require('./shared/storage/storage.router');
@@ -17,7 +16,6 @@ router.use(user.path, user.router);
 router.use(authenticate('jwt'));
 router.use(course.path, course.router);
 router.use(storage.path, storage.router);
-router.use(comment.path, comment.router);
 
 module.exports = router;
 
