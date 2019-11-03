@@ -39,25 +39,25 @@ function loadConfig(name) {
   const flag = to.camel([name, 'config'].join('_'));
   const envVar = to.constant([pkg.name, name, 'config'].join('_'));
   const configPath = flags[flag] || process.env[envVar];
+  const defaultFiles = [
+    `${name}.config.js`,
+    `.${name}rc.js`,
+    `.${name}rc`,
+    `.${name}rc.json`
+  ];
   // TODO: Remove support for legacy configuration files.
   const legacyFiles = [
     `.${name}-rc`,
     `.${name}-rc.json`
   ];
-  const defaultFiles = [
-    `${name}.config.js`,
-    `.${name}rc.js`,
-    `.${name}rc`,
-    `.${name}rc.json`,
-    ...legacyFiles
-  ];
-  const files = configPath ? [path.resolve(configPath)] : defaultFiles;
+  const files = configPath
+    ? [path.resolve(configPath)]
+    : defaultFiles.concat(legacyFiles);
   const result = joycon.loadSync(files);
   if (result.path) result.filename = path.basename(result.path);
   if (legacyFiles.includes(result.filename)) {
-    const newFilename = result.filename.replace(`${name}-rc`, name);
     deprecate(dedent`Using legacy configuration file: ${result.filename}
-      Please rename it to: ${newFilename}`);
+      Supported configuration files: ${defaultFiles.join(', ')}`);
   }
   if (result.path && !isObject(result.data)) {
     throw new Error(`Invalid configuration file: ${configPath || result.filename}`);
