@@ -10,7 +10,7 @@ const {
   reset,
   setEndpoint,
   update
-} = generateActions('/courses');
+} = generateActions('/repositories');
 
 const save = ({ commit, dispatch }, model) => {
   return api.post('/', model).then(() => {

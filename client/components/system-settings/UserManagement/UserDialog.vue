@@ -65,7 +65,6 @@ import humanize from 'humanize-string';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { role } from 'shared';
-import without from 'lodash/without';
 import { withValidation } from 'utils/validation';
 
 const resetUser = () => {
@@ -100,7 +99,7 @@ export default {
       }
     },
     roles() {
-      const roles = without(role.getRoleValues('user'), 'INTEGRATION');
+      const roles = role.getRoleValues('user');
       return map(roles, it => ({ text: humanize(it), value: it }));
     },
     isNewUser() {

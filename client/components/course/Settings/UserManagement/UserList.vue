@@ -15,7 +15,7 @@
       <td class="role-select">
         <v-select
           @change="role => changeRole(item.email, role)"
-          :value="item.courseRole"
+          :value="item.repositoryRole"
           :items="roles"
           icon />
       </td>

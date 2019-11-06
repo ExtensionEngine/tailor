@@ -1,22 +1,22 @@
 'use strict';
 
-const { course: role } = require('../../config/shared').role;
+const { repository: role } = require('../../config/shared').role;
 const { Model } = require('sequelize');
 
-class CourseUser extends Model {
+class RepositoryUser extends Model {
   static fields({ BOOLEAN, DATE, ENUM, INTEGER }) {
     return {
       userId: {
         type: INTEGER,
         field: 'user_id',
         primaryKey: true,
-        unique: 'course_user_pkey'
+        unique: 'repo_user_pkey'
       },
-      courseId: {
+      repositoryId: {
         type: INTEGER,
-        field: 'course_id',
+        field: 'repository_id',
         primaryKey: true,
-        unique: 'course_user_pkey'
+        unique: 'repo_user_pkey'
       },
       role: {
         type: ENUM(role.ADMIN, role.AUTHOR),
@@ -43,8 +43,8 @@ class CourseUser extends Model {
 
   static options() {
     return {
-      modelName: 'courseUser',
-      tableName: 'course_user',
+      modelName: 'repositoryUser',
+      tableName: 'repository_user',
       underscored: true,
       timestamps: true,
       paranoid: true
@@ -52,4 +52,4 @@ class CourseUser extends Model {
   }
 }
 
-module.exports = CourseUser;
+module.exports = RepositoryUser;
