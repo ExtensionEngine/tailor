@@ -59,7 +59,7 @@ export {
 function fetchCourses(params) {
   return api.fetch(params).then(courses => {
     forEach(courses, it => {
-      it.courseUser = getVal(it, 'courseUsers.0');
+      it.repositoryUser = getVal(it, 'repositoryUsers.0');
       it.lastChange = it.revisions[0];
     });
     return courses;

@@ -5,7 +5,7 @@ import isString from 'lodash/isString';
 import orderBy from 'lodash/orderBy';
 import { role } from 'shared';
 
-const isCourseAdmin = it => get(it, 'courseUser.role') === role.repository.ADMIN;
+const isCourseAdmin = it => get(it, 'repositoryUser.role') === role.repository.ADMIN;
 const processSortAttr = val => isString(val) ? val.toLowerCase() : val;
 
 export const courses = (state, _getters, _rootState, rootGetters) => {
