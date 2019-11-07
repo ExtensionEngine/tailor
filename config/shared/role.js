@@ -3,7 +3,7 @@
 const values = require('lodash/values');
 
 const role = {
-  user: { USER: 'USER', ADMIN: 'ADMIN', INTEGRATION: 'INTEGRATION' },
+  user: { USER: 'USER', ADMIN: 'ADMIN' },
   repository: { ADMIN: 'ADMIN', AUTHOR: 'AUTHOR' }
 };
 
