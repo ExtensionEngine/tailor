@@ -70,9 +70,9 @@ class Repository extends Model {
 
   static hooks() {
     return {
-      afterDestroy(course) {
-        return Course.findByPk(course.id, { paranoid: false })
-          .then(course => publishingService.updateRepositoryCatalog(course));
+      afterDestroy(repo) {
+        return Repository.findByPk(repo.id, { paranoid: false })
+          .then(repo => publishingService.updateRepositoryCatalog(repo));
       }
     };
   }

@@ -1,13 +1,13 @@
 'use strict';
 
 const { getRepositoryAttrs, getRepositoryCatalog } = require('../shared/publishing/helpers');
-const { Course } = require('../shared/database');
 const each = require('lodash/each');
 const omit = require('lodash/omit');
 const find = require('lodash/find');
+const { Repository } = require('../shared/database');
 const storage = require('../shared/storage');
 
-Course.findAll({ paranoid: false })
+Repository.findAll({ paranoid: false })
   .then(repositories => repositories.length && updateRepositoryCatalog(repositories))
   .then(() => console.info('Catalog updated!'))
   .finally(() => process.exit(0));
