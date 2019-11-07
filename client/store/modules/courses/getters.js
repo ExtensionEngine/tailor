@@ -5,12 +5,12 @@ import isString from 'lodash/isString';
 import orderBy from 'lodash/orderBy';
 import { role } from 'shared';
 
-const isCourseAdmin = it => get(it, 'courseUser.role') === role.course.ADMIN;
+const isCourseAdmin = it => get(it, 'repositoryUser.role') === role.repository.ADMIN;
 const processSortAttr = val => isString(val) ? val.toLowerCase() : val;
 
 export const courses = (state, _getters, _rootState, rootGetters) => {
   const items = state.showPinned
-    ? filter(state.items, it => get(it, 'courseUser.pinned'))
+    ? filter(state.items, it => get(it, 'repositoryUser.pinned'))
     : state.items;
   forEach(items, it => {
     it.hasAdminAccess = rootGetters.isAdmin || isCourseAdmin(it);

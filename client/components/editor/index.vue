@@ -139,7 +139,7 @@ export default {
       this.showSidebar = this.metadata.length && this.showSidebar;
     }, 50));
     // TODO: Do this better!
-    const baseUrl = `/courses/${courseId}`;
+    const baseUrl = `/repositories/${courseId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
     this.setupTesApi(`${baseUrl}/tes`);
     const actions = [this.getActivities()];

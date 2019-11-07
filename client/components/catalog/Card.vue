@@ -57,7 +57,7 @@ export default {
     description: ({ repository }) => repository.description,
     schema: ({ repository }) => getSchema(repository.schema).name,
     userAction: ({ repository }) => first(repository.revisions),
-    isPinned: ({ repository }) => get(repository, 'courseUser.pinned', false)
+    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false)
   },
   methods: {
     ...mapActions('courses', ['pin']),

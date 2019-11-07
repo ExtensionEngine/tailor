@@ -1,8 +1,8 @@
 'use strict';
 
 const { authenticate } = require('./shared/auth');
-const course = require('./course');
 const express = require('express');
+const repository = require('./repository');
 const storage = require('./shared/storage/storage.router');
 const user = require('./user');
 
@@ -14,7 +14,7 @@ router.use(user.path, user.router);
 
 // Protected routes:
 router.use(authenticate('jwt'));
-router.use(course.path, course.router);
+router.use(repository.path, repository.router);
 router.use(storage.path, storage.router);
 
 module.exports = router;

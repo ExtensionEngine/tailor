@@ -84,11 +84,11 @@ export default {
       if (this.action === 'copy') {
         activity = {
           srcId: activity.id,
-          srcCourseId: activity.courseId,
+          srcRepositoryId: activity.repositoryId,
           type: activity.type
         };
       }
-      activity.courseId = this.anchor.courseId;
+      activity.repositoryId = this.anchor.repositoryId;
       activity.parentId = this.resolveParent(activity);
       activity.position = this.calculatePosition(activity);
       this[this.action](activity);

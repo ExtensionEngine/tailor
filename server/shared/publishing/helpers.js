@@ -100,7 +100,7 @@ function unpublishActivity(repository, activity) {
 }
 
 function getStructureData(activity) {
-  const repoData = activity.getCourse().then(repository => {
+  const repoData = activity.getRepository().then(repository => {
     return getPublishedStructure(repository).then(spine => ({ repository, spine }));
   });
   return Promise.all([repoData, activity.predecessors()])
@@ -202,7 +202,7 @@ function resolveAssessments(assessments) {
 
 function saveFile(parent, key, data) {
   const buffer = Buffer.from(JSON.stringify(data), 'utf8');
-  const baseUrl = getBaseUrl(parent.courseId, parent.id);
+  const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
   return storage.saveFile(`${baseUrl}/${key}.json`, buffer);
 }
 
