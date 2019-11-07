@@ -10,13 +10,13 @@ class RepositoryUser extends Model {
         type: INTEGER,
         field: 'user_id',
         primaryKey: true,
-        unique: 'repo_user_pkey'
+        unique: 'repository_user_pkey'
       },
       repositoryId: {
         type: INTEGER,
         field: 'repository_id',
         primaryKey: true,
-        unique: 'repo_user_pkey'
+        unique: 'repository_user_pkey'
       },
       role: {
         type: ENUM(role.ADMIN, role.AUTHOR),
