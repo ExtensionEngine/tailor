@@ -71,7 +71,8 @@ export default {
   mounted() {
     this.$elementBus.on('upload', this.uploadFile);
     this.$elementBus.on('update:label', label => {
-      this.$emit('save', { label });
+      const { assets } = this.element.data;
+      this.$emit('save', { label, assets, url: null });
     });
   }
 };
