@@ -30,7 +30,13 @@ function index({ query, user, opts }, res) {
   const repositories = user.isAdmin()
     ? Repository.findAll(opts)
     : user.getRepositories(opts);
-  return repositories.then(data => res.json({ data }));
+  return repositories.then(repositories => {
+    const data = map(repositories, it => ({
+      ...it.dataValues,
+      repositoryUser: getVal(it, 'repositoryUsers.0')
+    }));
+    return res.json({ data });
+  });
 }
 
 function create({ user, body }, res) {

@@ -10,7 +10,7 @@ const processSortAttr = val => isString(val) ? val.toLowerCase() : val;
 
 export const courses = (state, _getters, _rootState, rootGetters) => {
   const items = state.showPinned
-    ? filter(state.items, it => get(it, 'courseUser.pinned'))
+    ? filter(state.items, it => get(it, 'repositoryUser.pinned'))
     : state.items;
   forEach(items, it => {
     it.hasAdminAccess = rootGetters.isAdmin || isCourseAdmin(it);

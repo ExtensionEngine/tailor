@@ -40,7 +40,7 @@ const clone = ({ dispatch }, { id, name, description }) => {
 
 const pin = ({ commit, getters }, { id, pin }) => {
   return api.post(`/${id}/pin`, { pin }).then(({ data: { data } }) => {
-    commit('save', { ...find(getters.courses, { id }), courseUser: data });
+    commit('save', { ...find(getters.courses, { id }), repositoryUser: data });
   });
 };
 
