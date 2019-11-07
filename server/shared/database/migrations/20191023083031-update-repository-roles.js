@@ -19,28 +19,27 @@ const changeRoleColumn = (queryInterface, values) => replaceEnum({
   newValues: values
 });
 
-module.exports = {
-  up: async queryInterface => {
-    await changeRoleColumn(queryInterface, Object.values(ROLES));
-    await updateRoles(queryInterface.sequelize, [
-      [NEW_ROLES.AUTHOR, OLD_ROLES.COURSE_AUTHOR],
-      [NEW_ROLES.ADMIN, OLD_ROLES.COURSE_ADMIN]
-    ]);
-    await changeRoleColumn(queryInterface, Object.values(NEW_ROLES));
-  },
-  down: async queryInterface => {
-    await changeRoleColumn(queryInterface, Object.values(ROLES));
-    await updateRoles(queryInterface.sequelize, [
-      [OLD_ROLES.COURSE_AUTHOR, NEW_ROLES.AUTHOR],
-      [OLD_ROLES.COURSE_ADMIN, NEW_ROLES.ADMIN]
-    ]);
-    await changeRoleColumn(queryInterface, Object.values(OLD_ROLES));
-  }
+exports.up = async queryInterface => {
+  await changeRoleColumn(queryInterface, Object.values(ROLES));
+  await updateRoles(queryInterface.sequelize, [
+    [NEW_ROLES.AUTHOR, OLD_ROLES.COURSE_AUTHOR],
+    [NEW_ROLES.ADMIN, OLD_ROLES.COURSE_ADMIN]
+  ]);
+  await changeRoleColumn(queryInterface, Object.values(NEW_ROLES));
+};
+
+exports.down = async queryInterface => {
+  await changeRoleColumn(queryInterface, Object.values(ROLES));
+  await updateRoles(queryInterface.sequelize, [
+    [OLD_ROLES.COURSE_AUTHOR, NEW_ROLES.AUTHOR],
+    [OLD_ROLES.COURSE_ADMIN, NEW_ROLES.ADMIN]
+  ]);
+  await changeRoleColumn(queryInterface, Object.values(OLD_ROLES));
 };
 
 function updateRoles(db, mappings) {
   return db.transaction(async transaction => {
-    mappings.forEach(async replacements => {
+    return mappings.forEach(async replacements => {
       await db.query(
         'UPDATE "repository_user" SET role=? WHERE role=?',
         { replacements, transaction });
