@@ -1,5 +1,7 @@
 'use strict';
 
+const Promise = require('bluebird');
+
 // Table, current constraint name, new constraint name
 const MAPPINGS = [
   ['repository', 'course_pkey', 'repository_pkey'],
@@ -14,17 +16,16 @@ const MAPPINGS = [
   MAPPINGS.push([table, `${table}_course_id_fkey`, `${table}_repository_id_fkey`]);
 });
 
-module.exports = {
-  up: async queryInterface => {
-    const { sequelize } = queryInterface;
-    MAPPINGS.forEach(it => updateConstraint(sequelize, it));
-  },
-  down: async queryInterface => {
-    const { sequelize } = queryInterface;
-    MAPPINGS.forEach(it => updateConstraint(sequelize, [it[0], it[2], it[1]]));
-  }
+exports.up = queryInterface => {
+  const { sequelize: db } = queryInterface;
+  return Promise.each(MAPPINGS, it => updateConstraint(db, it));
 };
 
-async function updateConstraint(db, [table, oldName, newName]) {
-  await db.query(`ALTER TABLE ${table} RENAME CONSTRAINT ${oldName} TO ${newName}`);
+exports.down = queryInterface => {
+  const { sequelize: db } = queryInterface;
+  return Promise.each(MAPPINGS, it => updateConstraint(db, [it[0], it[2], it[1]]));
+};
+
+function updateConstraint(db, [table, oldName, newName]) {
+  return db.query(`ALTER TABLE ${table} RENAME CONSTRAINT ${oldName} TO ${newName}`);
 }

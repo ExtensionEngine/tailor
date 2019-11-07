@@ -13,15 +13,12 @@ const TABLE_NAMES = [
   'teaching_element'
 ];
 
-module.exports = {
-  up: queryInterface => {
-    return Promise.each(TABLE_NAMES,
-      tableName => queryInterface.renameColumn(tableName, SRC_COL, DST_COL)
-    );
-  },
-  down: queryInterface => {
-    return Promise.each(TABLE_NAMES,
-      tableName => queryInterface.renameColumn(tableName, DST_COL, SRC_COL)
-    );
-  }
+exports.up = queryInterface => {
+  return Promise.each(TABLE_NAMES,
+    tableName => queryInterface.renameColumn(tableName, SRC_COL, DST_COL));
+};
+
+exports.down = queryInterface => {
+  return Promise.each(TABLE_NAMES,
+    tableName => queryInterface.renameColumn(tableName, DST_COL, SRC_COL));
 };
