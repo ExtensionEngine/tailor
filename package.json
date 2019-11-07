@@ -29,6 +29,7 @@
     "invite:admin": "node -r ./server/script/preflight ./server/script/inviteAdmin.js",
     "integration:add": "node -r ./server/script/preflight ./server/script/addIntegration.js",
     "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
+    "detachDeletedRepos": "node -r ./server/script/preflight ./server/script/detachDeletedRepos.js",
     "start": "node -r ./server/script/preflight ./server",
     "postshrinkwrap": "rewrite-lockfile package-lock.json"
   },

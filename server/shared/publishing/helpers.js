@@ -45,11 +45,22 @@ function publishActivity(activity) {
   });
 }
 
-function updateRepositoryCatalog(repository, publishedAt) {
+function getRepositoryCatalog() {
   return storage.getFile('repository/index.json').then(buffer => {
-    const catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
+    if (!buffer) return [];
+    return JSON.parse(buffer.toString('utf8'));
+  });
+}
+
+function updateRepositoryCatalog(repository, publishedAt) {
+  return getRepositoryCatalog().then(catalog => {
     const existing = find(catalog, { id: repository.id });
-    const repositoryData = { ...getRepositoryAttrs(repository), publishedAt };
+    if (!existing && repository.deletedAt) return;
+    const repositoryData = {
+      ...getRepositoryAttrs(repository),
+      publishedAt: publishedAt || existing.publishedAt,
+      detachedAt: repository.deletedAt
+    };
     if (existing) {
       Object.assign(existing, omit(repositoryData, ['id']));
     } else {
@@ -276,8 +287,11 @@ function mapRelationships(relationships, activity) {
 }
 
 module.exports = {
+  getRepositoryCatalog,
   publishActivity,
   unpublishActivity,
   publishRepositoryDetails,
-  fetchActivityContent
+  updateRepositoryCatalog,
+  fetchActivityContent,
+  getRepositoryAttrs
 };
