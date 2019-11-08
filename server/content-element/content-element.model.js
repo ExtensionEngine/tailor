@@ -87,22 +87,22 @@ class ContentElement extends Model {
 
   static hooks(Hooks) {
     return {
-      [Hooks.beforeCreate](te) {
-        pruneVirtualProps(te);
-        te.contentSignature = hash(te.data, { algorithm: 'sha1' });
-        return processStatics(te);
+      [Hooks.beforeCreate](element) {
+        pruneVirtualProps(element);
+        element.contentSignature = hash(element.data, { algorithm: 'sha1' });
+        return processStatics(element);
       },
-      [Hooks.beforeUpdate](te) {
-        pruneVirtualProps(te);
-        if (!te.changed('data')) return Promise.resolve();
-        te.contentSignature = hash(te.data, { algorithm: 'sha1' });
-        return processStatics(te);
+      [Hooks.beforeUpdate](element) {
+        pruneVirtualProps(element);
+        if (!element.changed('data')) return Promise.resolve();
+        element.contentSignature = hash(element.data, { algorithm: 'sha1' });
+        return processStatics(element);
       },
-      [Hooks.afterCreate](te) {
-        return resolveStatics(te);
+      [Hooks.afterCreate](element) {
+        return resolveStatics(element);
       },
-      [Hooks.afterUpdate](te) {
-        return resolveStatics(te);
+      [Hooks.afterUpdate](element) {
+        return resolveStatics(element);
       }
     };
   }

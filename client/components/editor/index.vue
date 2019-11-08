@@ -141,7 +141,7 @@ export default {
     // TODO: Do this better!
     const baseUrl = `/repositories/${courseId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
-    this.setupTesApi(`${baseUrl}/tes`);
+    this.setupTesApi(`${baseUrl}/content-elements`);
     const actions = [this.getActivities()];
     if (!this.course) actions.push(this.getCourse(courseId));
     Promise.all(actions).then(() => {

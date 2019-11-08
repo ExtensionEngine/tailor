@@ -70,7 +70,7 @@ export default {
     this.setupActivityApi(`/repositories/${courseId}/activities`);
     this.setupCommentsApi(`/repositories/${courseId}/comments`);
     this.setupRevisionApi(`/repositories/${courseId}/revisions`);
-    this.setupTesApi(`/repositories/${courseId}/tes`);
+    this.setupTesApi(`/repositories/${courseId}/content-elements`);
     const actions = [this.getActivities(), this.getUsers()];
     if (!this.course) actions.push(this.getCourse(courseId));
     await Promise.all(actions);
