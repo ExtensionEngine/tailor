@@ -7,7 +7,7 @@ import { typeInfo } from './assessment';
 const describe = {
   REPOSITORY: describeRepositoryRevision,
   ACTIVITY: describeActivityRevision,
-  TEACHING_ELEMENT: describeElementRevision
+  CONTENT_ELEMENT: describeElementRevision
 };
 
 function getAction(operation) {
@@ -65,8 +65,8 @@ export function getRevisionAcronym(rev) {
     }
     case 'REPOSITORY':
       return 'R';
-    case 'TEACHING_ELEMENT':
-      return 'TE';
+    case 'CONTENT_ELEMENT':
+      return 'CE';
     default:
       return 'N/A';
   }
