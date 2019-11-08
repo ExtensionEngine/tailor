@@ -139,7 +139,8 @@ resolver.IMAGE = asset => {
 };
 
 function saveFile(key, file) {
-  const options = { ACL: 'public-read', ContentType: mime.lookup(key) };
+  // TODO: Investigate and properly set 'ACL' grant in options
+  const options = { ContentType: mime.lookup(key) };
   return storage.saveFile(key, file, options);
 }
 

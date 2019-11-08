@@ -46,7 +46,7 @@ export default {
     ...mapGetters(['isAdmin']),
     ...mapGetters('course', ['outlineActivities', 'isCourseAdmin']),
     actions() {
-      const { $router, activity: { courseId } } = this;
+      const { $router, activity: { repositoryId } } = this;
       const items = [{
         title: 'Preview',
         icon: 'eye',
@@ -54,7 +54,7 @@ export default {
       }, {
         title: 'Back',
         icon: 'arrow-left',
-        action: () => $router.push({ name: 'course', params: { courseId } })
+        action: () => $router.push({ name: 'course', params: { courseId: repositoryId } })
       }];
       if (!this.isAdmin && !this.isCourseAdmin) return items;
       return [{

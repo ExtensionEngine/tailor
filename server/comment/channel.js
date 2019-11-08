@@ -13,23 +13,23 @@ const events = {
   DELETE: 'comment_delete'
 };
 
-function unsubscribe(courseId, client) {
+function unsubscribe(repositoryId, client) {
   return () => {
-    unset(clients, [courseId, client.id]);
+    unset(clients, [repositoryId, client.id]);
     client.close();
   };
 }
 
 function subscribe(req, res) {
-  const { courseId } = req.params;
+  const { repositoryId } = req.params;
   const client = res.sse;
-  set(clients, [courseId, client.id], client);
-  req.on('close', unsubscribe(courseId, client));
+  set(clients, [repositoryId, client.id], client);
+  req.on('close', unsubscribe(repositoryId, client));
 }
 
 function broadcast(event, comment) {
-  const { courseId } = comment;
-  const recipients = get(clients, courseId, {});
+  const { repositoryId } = comment;
+  const recipients = get(clients, repositoryId, {});
   each(recipients, r => r.send(event, comment));
   return comment;
 }

@@ -67,10 +67,10 @@ export default {
     const existingSelection = this.activity && this.activity.courseId === courseId;
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
-    this.setupActivityApi(`/courses/${courseId}/activities`);
-    this.setupCommentsApi(`/courses/${courseId}/comments`);
-    this.setupRevisionApi(`/courses/${courseId}/revisions`);
-    this.setupTesApi(`/courses/${courseId}/tes`);
+    this.setupActivityApi(`/repositories/${courseId}/activities`);
+    this.setupCommentsApi(`/repositories/${courseId}/comments`);
+    this.setupRevisionApi(`/repositories/${courseId}/revisions`);
+    this.setupTesApi(`/repositories/${courseId}/tes`);
     const actions = [this.getActivities(), this.getUsers()];
     if (!this.course) actions.push(this.getCourse(courseId));
     await Promise.all(actions);

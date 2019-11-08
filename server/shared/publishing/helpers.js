@@ -45,11 +45,22 @@ function publishActivity(activity) {
   });
 }
 
-function updateRepositoryCatalog(repository, publishedAt) {
+function getRepositoryCatalog() {
   return storage.getFile('repository/index.json').then(buffer => {
-    const catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
+    if (!buffer) return [];
+    return JSON.parse(buffer.toString('utf8'));
+  });
+}
+
+function updateRepositoryCatalog(repository, publishedAt) {
+  return getRepositoryCatalog().then(catalog => {
     const existing = find(catalog, { id: repository.id });
-    const repositoryData = { ...getRepositoryAttrs(repository), publishedAt };
+    if (!existing && repository.deletedAt) return;
+    const repositoryData = {
+      ...getRepositoryAttrs(repository),
+      publishedAt: publishedAt || existing.publishedAt,
+      detachedAt: repository.deletedAt
+    };
     if (existing) {
       Object.assign(existing, omit(repositoryData, ['id']));
     } else {
@@ -89,7 +100,7 @@ function unpublishActivity(repository, activity) {
 }
 
 function getStructureData(activity) {
-  const repoData = activity.getCourse().then(repository => {
+  const repoData = activity.getRepository().then(repository => {
     return getPublishedStructure(repository).then(spine => ({ repository, spine }));
   });
   return Promise.all([repoData, activity.predecessors()])
@@ -191,7 +202,7 @@ function resolveAssessments(assessments) {
 
 function saveFile(parent, key, data) {
   const buffer = Buffer.from(JSON.stringify(data), 'utf8');
-  const baseUrl = getBaseUrl(parent.courseId, parent.id);
+  const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
   return storage.saveFile(`${baseUrl}/${key}.json`, buffer);
 }
 
@@ -276,8 +287,11 @@ function mapRelationships(relationships, activity) {
 }
 
 module.exports = {
+  getRepositoryCatalog,
   publishActivity,
   unpublishActivity,
   publishRepositoryDetails,
-  fetchActivityContent
+  updateRepositoryCatalog,
+  fetchActivityContent,
+  getRepositoryAttrs
 };

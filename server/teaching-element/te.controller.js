@@ -6,7 +6,7 @@ const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 
-function list({ course, query, opts }, res) {
+function list({ query, opts }, res) {
   if (!query.detached) opts.where = { detached: false };
   if (query.ids) {
     const ids = query.ids.map(id => Number(id));
@@ -15,28 +15,26 @@ function list({ course, query, opts }, res) {
     opts.include = { model: Activity, attributes: [], where };
   }
 
-  const elements = query.integration
-    ? course.getTeachingElements(opts)
-    : TeachingElement.fetch(opts);
-  return elements.then(data => res.json({ data }));
+  return TeachingElement.fetch(opts)
+    .then(data => res.json({ data }));
 }
 
 function show({ params }, res) {
-  const teId = parseInt(params.teId, 10);
-  return TeachingElement.fetch(teId)
+  const id = parseInt(params.teId, 10);
+  return TeachingElement.fetch(id)
     .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
     .then(asset => res.json({ data: asset }));
 }
 
-function create({ body, params, user }, res) {
+function create({ user, repository, body }, res) {
   const attr = ['activityId', 'type', 'data', 'position', 'refs'];
-  const data = Object.assign(pick(body, attr), { courseId: params.courseId });
+  const data = { ...pick(body, attr), repositoryId: repository.id };
   return TeachingElement.create(data, { context: { userId: user.id } })
     .then(asset => res.json({ data: asset }));
 }
 
 function patch({ body, params, user }, res) {
-  const attrs = ['refs', 'type', 'data', 'meta', 'position', 'courseId', 'deletedAt'];
+  const attrs = ['type', 'data', 'position', 'meta', 'refs', 'deletedAt'];
   const data = pick(body, attrs);
   const paranoid = body.paranoid !== false;
   return TeachingElement.findByPk(params.teId, { paranoid })

@@ -44,12 +44,8 @@ export default {
     };
   },
   computed: {
-    courseId() {
-      return Number(this.$route.params.courseId);
-    },
-    baseUrl() {
-      return `/courses/${this.courseId}/revisions/`;
-    }
+    repositoryId: vm => vm.revision.repositoryId,
+    baseUrl: vm => `/repositories/${vm.repositoryId}/revisions/`
   },
   methods: {
     getRevisions() {
@@ -76,7 +72,7 @@ export default {
     rollback(revision) {
       this.$set(revision, 'loading', true);
       const entity = { ...revision.state, paranoid: false };
-      axios.patch(`/courses/${this.courseId}/tes/${entity.id}`, entity)
+      axios.patch(`/repositories/${this.repositoryId}/tes/${entity.id}`, entity)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);

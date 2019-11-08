@@ -1,13 +1,13 @@
 'use strict';
 
+const { Model, Op } = require('sequelize');
+const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 const calculatePosition = require('../shared/util/calculatePosition');
 const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
 const isNumber = require('lodash/isNumber');
-const { Model, Op } = require('sequelize');
 const pick = require('lodash/pick');
-const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 
 const pruneVirtualProps = element => {
   const assets = get(element, 'data.assets', {});
@@ -76,12 +76,12 @@ class TeachingElement extends Model {
     };
   }
 
-  static associate({ Activity, Course }) {
+  static associate({ Activity, Repository }) {
     this.belongsTo(Activity, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
-    this.belongsTo(Course, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+    this.belongsTo(Repository, {
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
   }
 
@@ -131,7 +131,7 @@ class TeachingElement extends Model {
   }
 
   static cloneElements(src, container, transaction) {
-    const { id: activityId, courseId } = container;
+    const { id: activityId, repositoryId } = container;
     return this.bulkCreate(src.map(it => {
       return Object.assign(pick(it, [
         'type',
@@ -141,7 +141,7 @@ class TeachingElement extends Model {
         'contentSignature',
         'refs',
         'meta'
-      ]), { activityId, courseId });
+      ]), { activityId, repositoryId });
     }), { returning: true, transaction });
   }
 
