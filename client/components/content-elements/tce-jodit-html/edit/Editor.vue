@@ -1,14 +1,11 @@
 <template>
   <div class="jodit_wrapper">
-    <jodit-vue
-      ref="jodit"
-      @input="input"
-      v-bind="{ id, config, value }" />
+    <jodit-editor ref="jodit" @input="input" :config="config" :value="value" />
   </div>
 </template>
 
 <script>
-import JoditVue, { Jodit } from 'jodit-vue';
+import { Jodit, JoditVue as JoditEditor } from 'jodit-vue';
 import AutofocusPlugin from './plugins/autofocus';
 import ExternalToolbarPlugin from './plugins/external-toolbar';
 import FontControlsPlugin from './plugins/font-controls';
@@ -20,7 +17,6 @@ import Toolbar from './Toolbar';
 import ToolbarBuilderPlugin from './plugins/toolbar-builder';
 import ToolbarPopupsPlugin from './plugins/toolbar-popups';
 import TooltipPlugin from './plugins/tooltip';
-import uniqueId from 'lodash/uniqueId';
 
 // NOTE: Fixes production build issues: https://github.com/xdan/jodit/issues/225
 //       caused by: https://github.com/xdan/jodit/blob/3.2.55/src/modules/helpers/checker/isJoditObject.ts#L18
@@ -78,7 +74,6 @@ export default {
     readonly: { type: Boolean, default: false }
   },
   computed: {
-    id: () => uniqueId('jodit_editor_'),
     config: vm => ({
       ...joditConfig,
       minHeight: vm.minHeight,
@@ -101,7 +96,7 @@ export default {
     }
   },
   components: {
-    JoditVue
+    JoditEditor
   }
 };
 </script>
