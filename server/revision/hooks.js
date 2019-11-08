@@ -6,7 +6,7 @@ const logger = require('../shared/logger');
 
 module.exports = { add };
 
-function add(Revision, Hooks, { Repository, Activity, TeachingElement }) {
+function add(Revision, Hooks, { Repository, Activity, ContentElement }) {
   const hooks = {
     [Hooks.afterCreate]: 'CREATE',
     [Hooks.afterUpdate]: 'UPDATE',
@@ -23,7 +23,7 @@ function add(Revision, Hooks, { Repository, Activity, TeachingElement }) {
   addHook(Repository, Hooks.afterUpdate, createRevision);
 
   forEach(hooks, (_, type) => addHook(Activity, type, createRevision));
-  forEach(hooks, (_, type) => addHook(TeachingElement, type, createRevision));
+  forEach(hooks, (_, type) => addHook(ContentElement, type, createRevision));
 
   function createRevision(hookType, instance, { context = {}, transaction }) {
     if (!context.userId) return;

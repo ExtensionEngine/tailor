@@ -18,7 +18,7 @@ const User = require('../../user/user.model');
 const Repository = require('../../repository/repository.model');
 const RepositoryUser = require('../../repository/repositoryUser.model');
 const Activity = require('../../activity/activity.model');
-const TeachingElement = require('../../teaching-element/te.model');
+const ContentElement = require('../../content-element/content-element.model');
 const Revision = require('../../revision/revision.model');
 const Comment = require('../../comment/comment.model');
 
@@ -68,7 +68,7 @@ const models = {
   Repository: defineModel(Repository),
   RepositoryUser: defineModel(RepositoryUser),
   Activity: defineModel(Activity),
-  TeachingElement: defineModel(TeachingElement),
+  ContentElement: defineModel(ContentElement),
   Revision: defineModel(Revision),
   Comment: defineModel(Comment)
 };

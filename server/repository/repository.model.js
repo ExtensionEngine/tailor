@@ -46,14 +46,17 @@ class Repository extends Model {
     };
   }
 
-  static associate({ Activity, Comment, RepositoryUser, Revision, TeachingElement, User }) {
+  static associate(db) {
+    const {
+      Activity, Comment, RepositoryUser, Revision, ContentElement, User
+    } = db;
     this.hasMany(Activity, {
       foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.hasMany(Comment, {
       foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
-    this.hasMany(TeachingElement, {
+    this.hasMany(ContentElement, {
       foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.hasMany(Revision, {
@@ -88,19 +91,19 @@ class Repository extends Model {
   }
 
   /**
-   * Maps references for cloned activities and teaching elements.
+   * Maps references for cloned activities and content elements.
    * @param {Object} mappings Dict where keys represent old and values new ids.
    * @param {SequelizeTransaction} [transaction]
    * @returns {Promise.<Object>} Object with mapped activities and elements.
    */
   async mapClonedReferences(mappings, transaction) {
     const Activity = this.sequelize.model('Activity');
-    const TeachingElement = this.sequelize.model('TeachingElement');
+    const ContentElement = this.sequelize.model('ContentElement');
     const opts = { where: { repositoryId: this.id }, transaction };
     const relationships = getRepositoryRelationships(this.schema);
     const [activities, elements] = await Promise.all([
       Activity.scope({ method: ['withReferences', relationships] }).findAll(opts),
-      TeachingElement.scope('withReferences').findAll(opts)
+      ContentElement.scope('withReferences').findAll(opts)
     ]);
     return Promise.join(
       Promise.map(activities, it => it.mapClonedReferences(mappings, relationships, transaction)),

@@ -56,8 +56,8 @@ class Activity extends Model {
     };
   }
 
-  static associate({ Comment, Repository, TeachingElement }) {
-    this.hasMany(TeachingElement, {
+  static associate({ ContentElement, Comment, Repository }) {
+    this.hasMany(ContentElement, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
     this.hasMany(Comment, {
@@ -104,13 +104,13 @@ class Activity extends Model {
       parentId: dstParentId,
       ...pick(it, ['type', 'position', 'data', 'refs'])
     })), { returning: true, transaction });
-    const TeachingElement = this.sequelize.model('TeachingElement');
+    const ContentElement = this.sequelize.model('ContentElement');
     return Promise.reduce(src, async (acc, it, index) => {
       const parent = dstActivities[index];
       acc[it.id] = parent.id;
       const where = { activityId: it.id, detached: false };
-      const tes = await TeachingElement.findAll({ where, transaction });
-      await TeachingElement.cloneElements(tes, parent, transaction);
+      const elements = await ContentElement.findAll({ where, transaction });
+      await ContentElement.cloneElements(elements, parent, transaction);
       const children = await it.getChildren({ where: { detached: false } });
       if (!children.length) return acc;
       return Activity.cloneActivities(children, dstRepositoryId, parent.id, opts);
@@ -175,10 +175,10 @@ class Activity extends Model {
           return descendants;
         })
         .then(descendants => {
-          const TeachingElement = this.sequelize.model('TeachingElement');
+          const ContentElement = this.sequelize.model('ContentElement');
           const activities = map(descendants.all, 'id');
           const where = { activityId: [...activities, this.id] };
-          return removeAll(TeachingElement, where, options.soft)
+          return removeAll(ContentElement, where, options.soft)
             .then(() => descendants);
         })
         .then(descendants => {

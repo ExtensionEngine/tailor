@@ -9,7 +9,7 @@ class Revision extends Model {
     return {
       entity: {
         type: ENUM,
-        values: ['ACTIVITY', 'REPOSITORY', 'TEACHING_ELEMENT'],
+        values: ['ACTIVITY', 'REPOSITORY', 'CONTENT_ELEMENT'],
         allowNull: false
       },
       operation: {
