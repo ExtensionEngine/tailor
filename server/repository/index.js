@@ -12,7 +12,7 @@ const router = require('express').Router();
 const activity = require('../activity');
 const comment = require('../comment');
 const revision = require('../revision');
-const teachingElement = require('../teaching-element');
+const contentElement = require('../content-element');
 
 router
   .param('repositoryId', getRepository)
@@ -37,7 +37,7 @@ router
 
 mount(router, '/:repositoryId', activity);
 mount(router, '/:repositoryId', revision);
-mount(router, '/:repositoryId', teachingElement);
+mount(router, '/:repositoryId', contentElement);
 mount(router, '/:repositoryId', comment);
 
 function mount(router, mountPath, subrouter) {

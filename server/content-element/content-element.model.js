@@ -15,7 +15,7 @@ const pruneVirtualProps = element => {
   return element;
 };
 
-class TeachingElement extends Model {
+class ContentElement extends Model {
   static fields(DataTypes) {
     const { BOOLEAN, DATE, DOUBLE, JSONB, STRING, UUID, UUIDV4 } = DataTypes;
     return {
@@ -87,22 +87,22 @@ class TeachingElement extends Model {
 
   static hooks(Hooks) {
     return {
-      [Hooks.beforeCreate](te) {
-        pruneVirtualProps(te);
-        te.contentSignature = hash(te.data, { algorithm: 'sha1' });
-        return processStatics(te);
+      [Hooks.beforeCreate](element) {
+        pruneVirtualProps(element);
+        element.contentSignature = hash(element.data, { algorithm: 'sha1' });
+        return processStatics(element);
       },
-      [Hooks.beforeUpdate](te) {
-        pruneVirtualProps(te);
-        if (!te.changed('data')) return Promise.resolve();
-        te.contentSignature = hash(te.data, { algorithm: 'sha1' });
-        return processStatics(te);
+      [Hooks.beforeUpdate](element) {
+        pruneVirtualProps(element);
+        if (!element.changed('data')) return Promise.resolve();
+        element.contentSignature = hash(element.data, { algorithm: 'sha1' });
+        return processStatics(element);
       },
-      [Hooks.afterCreate](te) {
-        return resolveStatics(te);
+      [Hooks.afterCreate](element) {
+        return resolveStatics(element);
       },
-      [Hooks.afterUpdate](te) {
-        return resolveStatics(te);
+      [Hooks.afterUpdate](element) {
+        return resolveStatics(element);
       }
     };
   }
@@ -116,8 +116,8 @@ class TeachingElement extends Model {
 
   static options() {
     return {
-      modelName: 'TeachingElement',
-      tableName: 'teaching_element',
+      modelName: 'ContentElement',
+      tableName: 'content_element',
       underscored: true,
       timestamps: true,
       paranoid: true
@@ -126,8 +126,8 @@ class TeachingElement extends Model {
 
   static fetch(opt) {
     return isNumber(opt)
-      ? TeachingElement.findByPk(opt).then(it => it && resolveStatics(it))
-      : TeachingElement.findAll(opt).map(resolveStatics);
+      ? ContentElement.findByPk(opt).then(it => it && resolveStatics(it))
+      : ContentElement.findAll(opt).map(resolveStatics);
   }
 
   static cloneElements(src, container, transaction) {
@@ -149,7 +149,7 @@ class TeachingElement extends Model {
    * Maps references for cloned element.
    * @param {Object} mappings Dict where keys represent old and values new ids.
    * @param {SequelizeTransaction} [transaction]
-   * @returns {Promise.<TeachingElement>} Updated instance.
+   * @returns {Promise.<ContentElement>} Updated instance.
    */
   mapClonedReferences(mappings, transaction) {
     const { refs } = this;
@@ -160,7 +160,7 @@ class TeachingElement extends Model {
 
   siblings(filter = {}) {
     const where = Object.assign({}, filter, { activityId: this.activityId });
-    return TeachingElement.findAll({ where, order: [['position', 'ASC']] });
+    return ContentElement.findAll({ where, order: [['position', 'ASC']] });
   }
 
   reorder(index) {
@@ -183,4 +183,4 @@ class TeachingElement extends Model {
   }
 }
 
-module.exports = TeachingElement;
+module.exports = ContentElement;
