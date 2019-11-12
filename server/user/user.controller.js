@@ -5,14 +5,13 @@ const { createError, validationError } = require('../shared/error/helpers');
 const Audience = require('../shared/auth/audience');
 const map = require('lodash/map');
 const { Op } = require('sequelize');
-const { role: { user: userRole } } = require('../../config/shared');
 const { User } = require('../shared/database');
 
 const createFilter = q => map(['email', 'firstName', 'lastName'],
   it => ({ [it]: { [Op.iLike]: `%${q}%` } }));
 
 function list({ query: { email, role, filter, archived }, options }, res) {
-  const where = { [Op.and]: [{ role: { [Op.ne]: userRole.INTEGRATION } }] };
+  const where = {};
   if (filter) where[Op.or] = createFilter(filter);
   if (email) where[Op.and].push({ email });
   if (role) where[Op.and].push({ role });

@@ -117,8 +117,10 @@ class User extends Model {
   }
 
   static invite(user) {
-    return this.create(user)
-      .then(user => this.sendInvitation(user));
+    return this.create(user).then(user => {
+      this.sendInvitation(user);
+      return user.reload();
+    });
   }
 
   static inviteOrUpdate(data) {
