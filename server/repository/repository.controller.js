@@ -54,7 +54,7 @@ function patch({ user, repository, body }, res) {
 }
 
 function remove({ user, repository }, res) {
-  return repository.destroy({ context: { userId: user.id } })
+  return repository.destroy({ context: { userId: user.id, publishingService } })
     .then(() => res.status(204).send());
 }
 

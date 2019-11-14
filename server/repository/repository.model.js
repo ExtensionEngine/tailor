@@ -4,7 +4,6 @@ const { getRepositoryRelationships, getSchema } = require('../../config/shared/a
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
-const publishingService = require('../shared/publishing/publishing.service');
 
 class Repository extends Model {
   static fields(DataTypes) {
@@ -73,7 +72,7 @@ class Repository extends Model {
 
   static hooks() {
     return {
-      afterDestroy(repo) {
+      afterDestroy(repo, { context: { publishingService } }) {
         return Repository.findByPk(repo.id, { paranoid: false })
           .then(repo => publishingService.updateRepositoryCatalog(repo));
       }
