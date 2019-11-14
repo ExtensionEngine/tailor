@@ -70,15 +70,6 @@ class Repository extends Model {
     });
   }
 
-  static hooks() {
-    return {
-      afterDestroy(repo, { context: { publishingService } }) {
-        return Repository.findByPk(repo.id, { paranoid: false })
-          .then(repo => publishingService.updateRepositoryCatalog(repo));
-      }
-    };
-  }
-
   static options() {
     return {
       modelName: 'repository',
