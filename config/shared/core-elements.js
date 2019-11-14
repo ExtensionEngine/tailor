@@ -20,5 +20,6 @@ module.exports = [
   'tce-numerical-response',
   'tce-fill-blank',
   'tce-matching-question',
-  'tce-drag-drop'
+  'tce-drag-drop',
+  'tce-jodit'
 ];
