@@ -61,7 +61,6 @@
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
-import truncate from 'lodash/truncate';
 
 const blankRegex = /(@blank)/g;
 const htmlRegex = /<\/?[^>]+(>|$)/g;
@@ -82,10 +81,9 @@ export default {
       return this.$teRegistry.get(this.assessment.data.type);
     },
     question() {
-      let question = filter(this.assessment.data.question, { type: 'HTML' });
-      question = map(question, 'data.content').join(' ');
-      question = question.replace(htmlRegex, '').replace(blankRegex, () => '____');
-      return truncate(question, { length: 50 });
+      const textAssets = filter(this.assessment.data.question, { type: 'HTML' });
+      const question = map(textAssets, 'data.content').join(' ');
+      return question.replace(htmlRegex, '').replace(blankRegex, () => '____');
     }
   },
   methods: {
