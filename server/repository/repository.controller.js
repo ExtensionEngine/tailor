@@ -53,9 +53,10 @@ function patch({ user, repository, body }, res) {
     .then(repository => res.json({ data: repository }));
 }
 
-function remove({ user, repository }, res) {
-  return repository.destroy({ context: { userId: user.id } })
-    .then(() => res.status(204).send());
+async function remove({ user, repository }, res) {
+  const repo = await repository.destroy({ context: { userId: user.id } });
+  publishingService.updateRepositoryCatalog(repo);
+  return res.status(204).send();
 }
 
 async function pin({ user, repository, body }, res) {
