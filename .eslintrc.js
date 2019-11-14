@@ -2,6 +2,15 @@
 
 module.exports = {
   root: true,
+  extends: '@extensionengine',
+  plugins: [
+    'vuetify'
+  ],
+  rules: {
+    'vuetify/no-deprecated-classes': 'error',
+    'vuetify/grid-unknown-attributes': 'error',
+    'vuetify/no-legacy-grid': 'error'
+  },
   overrides: [{
     files: ['extensions/**'],
     parserOptions: {
@@ -9,7 +18,6 @@ module.exports = {
       sourceType: 'module'
     }
   }],
-  extends: '@extensionengine',
   globals: {
     BRAND_CONFIG: true
   }

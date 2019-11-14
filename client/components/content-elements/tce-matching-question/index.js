@@ -1,7 +1,7 @@
+import * as yup from 'yup';
 import cuid from 'cuid';
 import Edit from './edit';
 import times from 'lodash/times';
-import yup from 'yup';
 
 const objectMap = yup.object().shape({
   key: yup.string().required(),

@@ -5,7 +5,7 @@ const passport = require('passport');
 const { User } = require('../database');
 
 const jwtOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeader(),
+  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
   secretOrKey: process.env.AUTH_JWT_SECRET
   // issuer: process.env.AUTH_JWT_ISSUER,
   // audience: process.env.SERVER_URL

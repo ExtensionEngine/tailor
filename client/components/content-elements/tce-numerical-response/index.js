@@ -1,5 +1,5 @@
+import * as yup from 'yup';
 import Edit from './edit';
-import yup from 'yup';
 
 const schema = {
   prefixes: yup.array().min(1).of(yup.string().trim().max(64)),
