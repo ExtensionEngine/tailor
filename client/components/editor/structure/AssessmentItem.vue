@@ -63,8 +63,11 @@ import filter from 'lodash/filter';
 import map from 'lodash/map';
 import truncate from 'lodash/truncate';
 
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
 const htmlRegex = /<\/?[^>]+(>|$)/g;
+
+const getTextAssets = item => filter(item, it => TEXT_CONTAINERS.includes(it.type));
 
 export default {
   name: 'assessment-item',
@@ -82,8 +85,8 @@ export default {
       return this.$teRegistry.get(this.assessment.data.type);
     },
     question() {
-      let question = filter(this.assessment.data.question, { type: 'HTML' });
-      question = map(question, 'data.content').join(' ');
+      const textAssets = getTextAssets(this.assessment.data.question);
+      let question = map(textAssets, 'data.content').join(' ');
       question = question.replace(htmlRegex, '').replace(blankRegex, () => '____');
       return truncate(question, { length: 50 });
     }

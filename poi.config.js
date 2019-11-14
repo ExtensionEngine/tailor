@@ -89,6 +89,8 @@ module.exports = {
   },
   babel: {
     transpileModules: [
+      // NOTE: Remove after new version of tce-jodit
+      'auto-bind',
       // NOTE: Packages do NOT contain transpiled code.
       'humanize-string', 'decamelize',
       // NOTE: Component is consumed from source.
