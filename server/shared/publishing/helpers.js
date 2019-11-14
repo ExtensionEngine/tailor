@@ -4,12 +4,6 @@ const {
   getLevelRelationships, getSupportedContainers
 } = require('../../../config/shared/activities');
 const { containerRegistry } = require('../content-plugins');
-/*
- *  ContentElement is undefined here because:
- *   - /database/index requires /repository.model
- *   - /repository.model requires /publishing.service
- *   - /publishing.service requires /publishing.helpers
- */
 const { ContentElement } = require('../database');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
