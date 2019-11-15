@@ -1,3 +1,8 @@
+// Customizations
+.v-input, .v-chip.v-size--small, .v-chip.v-chip--outlined, .v-btn--outlined {
+  border-radius: 2px !important;
+}
+
 // Patches in order for vuetify to work alongside bootstrap
 .v-input input, .v-input textarea, .v-input input[type=text][readonly] {
   box-shadow: inherit;
