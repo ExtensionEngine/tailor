@@ -12,6 +12,7 @@ import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
 import VeeValidate from './utils/validation';
 import Vue from 'vue';
+import VueCroppa from 'vue-croppa';
 import VueHotkey from 'v-hotkey';
 import vuetify from '@/plugins/vuetify';
 
@@ -30,6 +31,8 @@ Vue.use(VeeValidate, {
   errorBagName: 'vErrors',
   inject: false
 });
+Vue.use(VueCroppa);
+
 Vue.use(Timeago, {
   locale: 'en-US',
   locales: {

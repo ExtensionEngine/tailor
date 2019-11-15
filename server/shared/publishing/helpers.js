@@ -4,6 +4,7 @@ const {
   getLevelRelationships, getSupportedContainers
 } = require('../../../config/shared/activities');
 const { containerRegistry } = require('../content-plugins');
+const { ContentElement } = require('../database');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
@@ -17,12 +18,11 @@ const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
 const { resolveStatics } = require('../storage/helpers');
 const storage = require('../storage');
-const { TeachingElement } = require('../database');
 const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
 
-const TES_ATTRS = [
+const CE_ATTRS = [
   'id', 'uid', 'type', 'contentId', 'contentSignature',
   'position', 'data', 'meta', 'refs', 'createdAt', 'updatedAt'
 ];
@@ -45,11 +45,22 @@ function publishActivity(activity) {
   });
 }
 
-function updateRepositoryCatalog(repository, publishedAt) {
+function getRepositoryCatalog() {
   return storage.getFile('repository/index.json').then(buffer => {
-    const catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
+    if (!buffer) return [];
+    return JSON.parse(buffer.toString('utf8'));
+  });
+}
+
+function updateRepositoryCatalog(repository, publishedAt) {
+  return getRepositoryCatalog().then(catalog => {
     const existing = find(catalog, { id: repository.id });
-    const repositoryData = { ...getRepositoryAttrs(repository), publishedAt };
+    if (!existing && repository.deletedAt) return;
+    const repositoryData = {
+      ...getRepositoryAttrs(repository),
+      publishedAt: publishedAt || existing.publishedAt,
+      detachedAt: repository.deletedAt
+    };
     if (existing) {
       Object.assign(existing, omit(repositoryData, ['id']));
     } else {
@@ -89,7 +100,7 @@ function unpublishActivity(repository, activity) {
 }
 
 function getStructureData(activity) {
-  const repoData = activity.getCourse().then(repository => {
+  const repoData = activity.getRepository().then(repository => {
     return getPublishedStructure(repository).then(spine => ({ repository, spine }));
   });
   return Promise.all([repoData, activity.predecessors()])
@@ -160,21 +171,21 @@ function fetchContainers(parent) {
 function fetchDefaultContainer(container) {
   const order = [['position', 'ASC']];
   return container
-    .getTeachingElements({ attributes: TES_ATTRS, order })
-    .then(tes => ({
+    .getContentElements({ attributes: CE_ATTRS, order })
+    .then(ces => ({
       ...pick(container, ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt']),
-      elements: map(tes, (it, pos) => Object.assign(it, { position: pos + 1 }))
+      elements: map(ces, (it, pos) => Object.assign(it, { position: pos + 1 }))
     }));
 }
 
 function fetchCustomContainers(parent) {
-  const options = { include: [{ model: TeachingElement, attributes: TES_ATTRS }] };
+  const options = { include: [{ model: ContentElement, attributes: CE_ATTRS }] };
   return containerRegistry.fetch(parent, options);
 }
 
 function fetchAssessments(parent) {
-  const options = { where: { type: 'ASSESSMENT' }, attributes: TES_ATTRS };
-  return parent.getTeachingElements(options);
+  const options = { where: { type: 'ASSESSMENT' }, attributes: CE_ATTRS };
+  return parent.getContentElements(options);
 }
 
 function resolveContainer(container) {
@@ -191,7 +202,7 @@ function resolveAssessments(assessments) {
 
 function saveFile(parent, key, data) {
   const buffer = Buffer.from(JSON.stringify(data), 'utf8');
-  const baseUrl = getBaseUrl(parent.courseId, parent.id);
+  const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
   return storage.saveFile(`${baseUrl}/${key}.json`, buffer);
 }
 
@@ -276,8 +287,11 @@ function mapRelationships(relationships, activity) {
 }
 
 module.exports = {
+  getRepositoryCatalog,
   publishActivity,
   unpublishActivity,
   publishRepositoryDetails,
-  fetchActivityContent
+  updateRepositoryCatalog,
+  fetchActivityContent,
+  getRepositoryAttrs
 };

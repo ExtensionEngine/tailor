@@ -48,7 +48,6 @@ export default {
     },
     actions() {
       return [
-        { label: 'Knewton inventory', icon: 'download', name: 'knewton' },
         { label: 'Clone', icon: 'content-copy', name: 'clone' },
         { label: 'Publish', icon: 'upload', name: 'publish' },
         { label: 'Delete', icon: 'delete', name: 'delete', color: 'error' }

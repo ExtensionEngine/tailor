@@ -139,9 +139,9 @@ export default {
       this.showSidebar = this.metadata.length && this.showSidebar;
     }, 50));
     // TODO: Do this better!
-    const baseUrl = `/courses/${courseId}`;
+    const baseUrl = `/repositories/${courseId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
-    this.setupTesApi(`${baseUrl}/tes`);
+    this.setupTesApi(`${baseUrl}/content-elements`);
     const actions = [this.getActivities()];
     if (!this.course) actions.push(this.getCourse(courseId));
     Promise.all(actions).then(() => {

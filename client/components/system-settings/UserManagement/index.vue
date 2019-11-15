@@ -4,74 +4,74 @@
       <v-card>
         <v-toolbar color="white" flat>
           <v-spacer />
-          <v-btn @click.stop="showUserDialog()" color="primary darken-1" outlined>
-            <v-icon class="pr-2">mdi-account-plus-outline</v-icon>
+          <v-btn @click.stop="showUserDialog()" outlined>
             Add user
           </v-btn>
         </v-toolbar>
-        <div>
-          <v-row class="filters">
-            <v-col>
-              <v-switch
-                v-model="showArchived"
-                label="Archived"
-                color="primary"
-                hide-details />
-            </v-col>
-            <v-col>
-              <v-text-field
-                v-model="filter"
-                append-icon="mdi-magnify"
-                label="Search"
-                single-line
-                hide-details
-                clearable />
-            </v-col>
-          </v-row>
-          <v-data-table
-            :headers="headers"
-            :items="users"
-            :server-items-length="totalItems"
-            :options.sync="dataTable"
-            :must-sort="true"
-            :loading="loading"
-            :footer-props="{ itemsPerPageOptions: [10, 20, 50, 100] }">
-            <template slot="item" slot-scope="{ item }">
-              <tr :key="item.id">
-                <td class="text-no-wrap text-left">{{ item.email }}</td>
-                <td class="text-no-wrap text-left">{{ item.role }}</td>
-                <td class="text-no-wrap text-left">{{ item.createdAt | formatDate }}</td>
-                <td class="text-no-wrap text-center">
-                  <v-btn
-                    @click="showUserDialog(item)"
-                    color="primary"
-                    small
-                    text
-                    icon>
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-                  <v-btn
-                    @click="archiveOrRestore(item)"
-                    :disabled="user.id === item.id"
-                    color="primary"
-                    small
-                    text
-                    icon>
-                    <v-icon>
-                      mdi-account-{{ item.deletedAt ? 'convert' : 'off' }}
-                    </v-icon>
-                  </v-btn>
-                </td>
-              </tr>
-            </template>
-          </v-data-table>
-        </div>
-        <user-dialog
-          @updated="fetch(defaultPage)"
-          @created="fetch(defaultPage)"
-          :visible.sync="userDialog"
-          :user-data="editedUser" />
+        <v-row class="filters">
+          <v-col>
+            <v-switch
+              v-model="showArchived"
+              label="Archived"
+              color="primary"
+              hide-details />
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="filter"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+              clearable />
+          </v-col>
+        </v-row>
+        <v-data-table
+          :headers="headers"
+          :items="users"
+          :server-items-length="totalItems"
+          :options.sync="dataTable"
+          :must-sort="true"
+          :loading="loading"
+          :footer-props="{ itemsPerPageOptions: [10, 20, 50, 100] }">
+          <template slot="item" slot-scope="{ item }">
+            <tr :key="item.id">
+              <td class="text-no-wrap text-left">
+                <v-avatar size="40"><img :src="item.imgUrl"></v-avatar>
+              </td>
+              <td class="text-no-wrap text-left">{{ item.email }}</td>
+              <td class="text-no-wrap text-left">{{ item.firstName || '/' }}</td>
+              <td class="text-no-wrap text-left">{{ item.lastName || '/' }}</td>
+              <td class="text-no-wrap text-left">{{ item.role }}</td>
+              <td class="text-no-wrap text-left">{{ item.createdAt | formatDate }}</td>
+              <td class="text-no-wrap text-center">
+                <v-btn
+                  @click="showUserDialog(item)"
+                  small
+                  text
+                  icon>
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn
+                  @click="archiveOrRestore(item)"
+                  :disabled="user.id === item.id"
+                  small
+                  text
+                  icon>
+                  <v-icon>
+                    mdi-account-{{ item.deletedAt ? 'convert' : 'off' }}
+                  </v-icon>
+                </v-btn>
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
       </v-card>
+      <user-dialog
+        @updated="fetch(defaultPage)"
+        @created="fetch(defaultPage)"
+        :visible.sync="userDialog"
+        :user-data="editedUser" />
     </v-col>
   </v-row>
 </template>
@@ -94,7 +94,10 @@ const defaultPage = () => ({
 });
 
 const headers = () => [
+  { text: 'User', sortable: false },
   { text: 'Email', value: 'email' },
+  { text: 'First Name', value: 'firstName' },
+  { text: 'Last Name', value: 'lastName' },
   { text: 'Role', value: 'role' },
   { text: 'Date Created', value: 'createdAt' },
   { text: 'Actions', value: 'email', align: 'center', sortable: false }

@@ -4,26 +4,26 @@
     :items="users"
     :loading="isLoading"
     no-data-text="No assigned users."
-    hide-default-footer>
+    hide-actions>
     <template v-slot:item="{ item }">
       <tr>
         <td class="text-left">
-          <v-avatar color="primary lighten-2" size="40" dark class="mr-3">
-            <span class="headline white--text">
-              {{ item.email[0].toUpperCase() }}
-            </span>
+          <v-avatar size="40">
+            <img :src="item.imgUrl">
           </v-avatar>
-          {{ item.email }}
         </td>
+        <td class="text-left">{{ item.email }}</td>
+        <td class="text-left">{{ item.firstName || '/' }}</td>
+        <td class="text-left">{{ item.lastName || '/' }}</td>
         <td class="role-select">
           <v-select
             @change="role => changeRole(item.email, role)"
-            :value="item.courseRole"
+            :value="item.repositoryRole"
             :items="roles"
             icon />
         </td>
         <td class="actions">
-          <v-btn color="primary" icon text small>
+          <v-btn color="primary" icon>
             <v-icon @click="remove(item)">mdi-delete</v-icon>
           </v-btn>
         </td>
@@ -36,6 +36,8 @@
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
 
+const HEADERS = ['User', 'Email', 'First Name', 'Last Name', 'Role', ''];
+
 export default {
   props: {
     roles: { type: Array, required: true }
@@ -46,7 +48,7 @@ export default {
   computed: {
     ...mapGetters('course', ['users']),
     headers() {
-      return ['User', 'Role', ''].map(text => ({ text, sortable: false }));
+      return HEADERS.map(text => ({ text, sortable: false }));
     }
   },
   methods: {
@@ -72,7 +74,7 @@ export default {
 
 <style lang="scss" scoped>
 .role-select {
-  max-width: 26px;
+  max-width: 120px;
 }
 
 .v-table .actions {

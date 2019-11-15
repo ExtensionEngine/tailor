@@ -50,7 +50,7 @@
       </div>
       <insert-activity
         @expand="toggle(true)"
-        :anchor="{ id, _cid, parentId, courseId, type, position }" />
+        :anchor="{ id, _cid, parentId, repositoryId, type, position }" />
     </div>
     <div v-if="!isCollapsed({ _cid }) && hasChildren">
       <draggable
@@ -90,7 +90,7 @@ export default {
     _cid: { type: String, required: true },
     id: { type: Number, default: null },
     parentId: { type: Number, default: null },
-    courseId: { type: Number, required: true },
+    repositoryId: { type: Number, required: true },
     level: { type: Number, required: true },
     index: { type: Number, required: true },
     position: { type: Number, required: true },

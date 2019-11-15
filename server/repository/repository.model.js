@@ -4,8 +4,9 @@ const { getRepositoryRelationships, getSchema } = require('../../config/shared/a
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
+const publishingService = require('../shared/publishing/publishing.service');
 
-class Course extends Model {
+class Repository extends Model {
   static fields(DataTypes) {
     const { DATE, JSONB, STRING, TEXT, UUID, UUIDV4 } = DataTypes;
     return {
@@ -45,31 +46,43 @@ class Course extends Model {
     };
   }
 
-  static associate({ Activity, Comment, CourseUser, Revision, TeachingElement, User }) {
+  static associate(db) {
+    const {
+      Activity, Comment, RepositoryUser, Revision, ContentElement, User
+    } = db;
     this.hasMany(Activity, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.hasMany(Comment, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
-    this.hasMany(TeachingElement, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+    this.hasMany(ContentElement, {
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.hasMany(Revision, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
-    this.hasMany(CourseUser, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+    this.hasMany(RepositoryUser, {
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.belongsToMany(User, {
-      through: CourseUser,
-      foreignKey: { name: 'courseId', field: 'course_id' }
+      through: RepositoryUser,
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
+  }
+
+  static hooks() {
+    return {
+      afterDestroy(repo) {
+        return Repository.findByPk(repo.id, { paranoid: false })
+          .then(repo => publishingService.updateRepositoryCatalog(repo));
+      }
+    };
   }
 
   static options() {
     return {
-      modelName: 'course',
+      modelName: 'repository',
       underscored: true,
       timestamps: true,
       paranoid: true,
@@ -78,19 +91,19 @@ class Course extends Model {
   }
 
   /**
-   * Maps references for cloned activities and teaching elements.
+   * Maps references for cloned activities and content elements.
    * @param {Object} mappings Dict where keys represent old and values new ids.
    * @param {SequelizeTransaction} [transaction]
    * @returns {Promise.<Object>} Object with mapped activities and elements.
    */
   async mapClonedReferences(mappings, transaction) {
     const Activity = this.sequelize.model('Activity');
-    const TeachingElement = this.sequelize.model('TeachingElement');
-    const opts = { where: { courseId: this.id }, transaction };
+    const ContentElement = this.sequelize.model('ContentElement');
+    const opts = { where: { repositoryId: this.id }, transaction };
     const relationships = getRepositoryRelationships(this.schema);
     const [activities, elements] = await Promise.all([
       Activity.scope({ method: ['withReferences', relationships] }).findAll(opts),
-      TeachingElement.scope('withReferences').findAll(opts)
+      ContentElement.scope('withReferences').findAll(opts)
     ]);
     return Promise.join(
       Promise.map(activities, it => it.mapClonedReferences(mappings, relationships, transaction)),
@@ -100,14 +113,14 @@ class Course extends Model {
   }
 
   clone(name, description, context) {
-    const Course = this.sequelize.model('Course');
+    const Repository = this.sequelize.model('Repository');
     const Activity = this.sequelize.model('Activity');
-    const srcAttributes = pick(this, ['schema', 'data', 'stats']);
+    const srcAttributes = pick(this, ['schema', 'data']);
     const dstAttributes = Object.assign(srcAttributes, { name, description });
     return this.sequelize.transaction(async transaction => {
-      const dst = await Course.create(dstAttributes, { context, transaction });
+      const dst = await Repository.create(dstAttributes, { context, transaction });
       const src = await Activity.findAll({
-        where: { courseId: this.id, parentId: null }, transaction
+        where: { repositoryId: this.id, parentId: null }, transaction
       });
       const idMap = await Activity.cloneActivities(src, dst.id, null, { transaction });
       await dst.mapClonedReferences(idMap, transaction);
@@ -120,18 +133,9 @@ class Course extends Model {
       .then(users => users[0]);
   }
 
-  getInventoryItems() {
-    const where = { detached: false };
-    return Promise.all([
-      this.getActivities({ where }),
-      this.getTeachingElements({ where, order: [['activityId', 'ASC']] })
-    ])
-    .then(([activities, tes]) => ({ activities, tes }));
-  }
-
   getSchemaConfig() {
     return getSchema(this.schema);
   }
 }
 
-module.exports = Course;
+module.exports = Repository;

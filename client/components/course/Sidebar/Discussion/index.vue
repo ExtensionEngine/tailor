@@ -119,7 +119,7 @@ export default {
   },
   mounted() {
     const { courseId } = this.$route.params;
-    this.setEndpoint(`/courses/${courseId}/comments`);
+    this.setEndpoint(`/repositories/${courseId}/comments`);
     this.fetchComments();
     this.subscribe();
   },
