@@ -4,7 +4,7 @@
     :items="users"
     :loading="isLoading"
     no-data-text="No assigned users."
-    hide-actions>
+    hide-default-footer>
     <template v-slot:item="{ item }">
       <tr>
         <td class="text-left">
