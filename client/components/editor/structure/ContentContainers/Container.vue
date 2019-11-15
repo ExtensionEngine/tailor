@@ -1,10 +1,10 @@
 <template>
-  <div class="content-container mb-5 elevation-2">
+  <v-card class="content-container mb-5">
     <div class="actions">
       <v-btn
         @click="$emit('delete')"
         color="error"
-        outline
+        outlined
         class="pull-right">
         Delete {{ name }}
       </v-btn>
@@ -13,7 +13,7 @@
       :value="!teachingElements.length"
       color="primary"
       icon="mdi-information-variant"
-      outline>
+      outlined>
       Click the button below to create content.
     </v-alert>
     <tes-list
@@ -31,7 +31,7 @@
           :element="item" />
       </template>
     </tes-list>
-  </div>
+  </v-card>
 </template>
 
 <script>

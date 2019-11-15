@@ -21,7 +21,7 @@
         name="password"
         label="Password"
         class="py-2" />
-      <v-btn :disabled="!isValid" color="primary" outline block type="submit">
+      <v-btn :disabled="!isValid" color="primary" outlined block type="submit">
         Log in
       </v-btn>
       <div class="options">

@@ -105,6 +105,10 @@ export default {
   margin-top: 40px;
   padding: 3px 8px;
 
+  ::v-deep .multiselect .multiselect__content {
+    padding-left: 0;
+  }
+
   label {
     margin-bottom: 10px;
     color: #808080;

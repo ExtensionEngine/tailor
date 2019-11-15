@@ -1,10 +1,10 @@
 <template>
-  <v-layout pt-3 px-4 mr-2>
+  <v-row class="pt-3 px-4 mr-2">
     <v-spacer />
     <v-btn
       @click="isVisible = true"
       color="primary"
-      flat>
+      text>
       <v-icon small class="mr-1">mdi-lock</v-icon>Change Password
     </v-btn>
     <v-dialog v-model="isVisible" v-hotkey="{ esc: hide }" width="700px">
@@ -64,7 +64,7 @@
         </v-card>
       </v-form>
     </v-dialog>
-  </v-layout>
+  </v-row>
 </template>
 
 <script>

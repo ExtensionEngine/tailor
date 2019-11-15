@@ -4,15 +4,17 @@
     v-model="isVisible"
     v-hotkey="{ esc: hide }"
     width="700px">
-    <v-btn
-      slot="activator"
-      color="pink"
-      fab
-      dark
-      absolute
-      class="add-repo">
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
+    <template v-slot:activator="{ on }">
+      <v-btn
+        v-on="on"
+        color="pink"
+        fab
+        dark
+        absolute
+        class="add-repo">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </template>
     <v-form @submit.prevent="submit">
       <v-card class="pa-3">
         <v-card-title class="headline">
@@ -26,7 +28,7 @@
             :value="vErrors.has('default')"
             color="error"
             icon="mdi-alert-outline"
-            outline>
+            outlined>
             {{ vErrors.first('default') }}
           </v-alert>
           <v-select
@@ -54,7 +56,7 @@
         <v-card-actions>
           <v-spacer />
           <v-btn @click="hide" :disabled="showLoader">Cancel</v-btn>
-          <v-btn :loading="showLoader" outline type="submit">Create</v-btn>
+          <v-btn :loading="showLoader" outlined type="submit">Create</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>
@@ -112,3 +114,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+::v-deep .v-list.v-sheet {
+  text-align: left;
+}
+</style>

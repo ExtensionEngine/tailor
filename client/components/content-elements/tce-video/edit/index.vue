@@ -178,7 +178,7 @@ function mimetype({ pathname }) {
   height: 410px;
   background: #000;
 
-  /deep/ {
+  ::v-deep {
     > div, .plyr--video, .plyr__video-wrapper, video {
       height: 100%;
     }
