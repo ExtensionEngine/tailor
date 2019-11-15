@@ -1,9 +1,8 @@
 <template>
   <component
     :is="component"
-    :meta="meta"
-    @update="(key, value) => $emit('update', key, value)">
-  </component>
+    @update="(key, value) => $emit('update', key, value)"
+    :meta="meta" />
 </template>
 
 <script>
@@ -11,6 +10,7 @@ import Checkbox from './Checkbox';
 import ColorPicker from './ColorPicker';
 import DatePicker from './DatePicker';
 import FileUpload from './File';
+import Html from './Html';
 import Input from './Input';
 import mapKeys from 'lodash/mapKeys';
 import Multiselect from './Multiselect';
@@ -23,6 +23,7 @@ const META_TYPES = {
   COLOR: ColorPicker,
   DATE: DatePicker,
   DATETIME: DatePicker,
+  HTML: Html,
   INPUT: Input,
   SELECT: Select,
   MULTISELECT: Multiselect,
@@ -45,7 +46,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .title {
+::v-deep .title {
   color: #808080;
   font-family: $font-family-secondary;
   font-size: 14px !important;

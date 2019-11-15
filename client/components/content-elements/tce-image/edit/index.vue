@@ -12,7 +12,7 @@
         ref="cropper"
         :view-mode="2"
         :auto-crop-area="0.5"
-        :autoCrop="false"
+        :auto-crop="false"
         :guides="true"
         :ready="onReady"
         :responsive="true"
@@ -23,7 +23,7 @@
         :movable="false"
         :modal="false"
         :src="currentImage"
-        drag-mode="none"/>
+        drag-mode="none" />
       <img v-show="!showCropper" :src="currentImage" class="preview-image">
     </div>
   </div>
@@ -158,7 +158,7 @@ export default {
   }
 }
 
-.hide-cropper /deep/ .cropper-container {
+.hide-cropper ::v-deep .cropper-container {
   display: none;
 }
 

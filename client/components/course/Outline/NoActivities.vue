@@ -6,8 +6,8 @@
           :class="{ 'has-error': vErrors.has('name') }"
           class="form-group">
           <input
-            v-validate="{ required: true, min: 2, max: 250 }"
             v-model="name"
+            v-validate="{ required: true, min: 2, max: 250 }"
             class="form-control"
             type="text"
             name="name"
@@ -20,14 +20,13 @@
       </div>
       <div v-if="showLevelPicker" class="col-md-2">
         <multiselect
+          @input="onLevelSelected"
           :value="level"
           :options="levels"
-          :allow-empty="false"
-          @input="onLevelSelected">
-        </multiselect>
+          :allow-empty="false" />
       </div>
       <div class="col-md-2">
-        <v-btn @click.stop="create" color="blue-grey" outline>Add</v-btn>
+        <v-btn @click.stop="create" color="blue-grey" outlined>Add</v-btn>
       </div>
     </div>
   </div>

@@ -4,9 +4,9 @@
       <v-card-title class="headline">{{ context.title }}</v-card-title>
       <v-card-text class="text-sm-left">{{ context.message }}</v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn @click="close" flat>Close</v-btn>
-        <v-btn v-focus="show" @click="confirm" color="error" flat>Confirm</v-btn>
+        <v-spacer />
+        <v-btn @click="close" text>Close</v-btn>
+        <v-btn v-focus="show" @click="confirm" color="error" text>Confirm</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -15,7 +15,6 @@
 <script>
 import EventBus from 'EventBus';
 import { focus } from 'vue-focus';
-import Modal from './Modal';
 
 const appChannel = EventBus.channel('app');
 const defaultData = () => ({ title: '', message: '' });
@@ -44,7 +43,6 @@ export default {
   created() {
     appChannel.on('showConfirmationModal', this.open);
   },
-  directives: { focus },
-  components: { Modal }
+  directives: { focus }
 };
 </script>

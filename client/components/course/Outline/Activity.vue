@@ -2,16 +2,16 @@
   <div>
     <div class="activity-wrapper">
       <div
-        :class="{ 'elevation-9 selected': isHighlighted }"
         @click="focus(showOptions)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
-        class="activity elevation-1">
-        <v-chip :color="color" label dark disabled class="icon-container">
+        :class="[isHighlighted ? 'elevation-9 selected': 'elevation-1']"
+        class="activity">
+        <v-chip :color="color" label dark class="icon-container">
           <v-btn
             v-if="hasSubtypes"
             @click="toggle()"
-            flat
+            text
             icon
             small>
             <v-icon size="26">mdi-{{ icon }}</v-icon>
@@ -22,12 +22,12 @@
           {{ data.name }}
         </span>
         <div v-show="isHighlighted" class="actions">
-          <v-spacer/>
+          <v-spacer />
           <v-btn
             v-show="isEditable"
             :to="{ name: 'editor', params: { activityId: id } }"
             color="pink"
-            outline
+            outlined
             small>
             Open
           </v-btn>
@@ -49,22 +49,22 @@
         </div>
       </div>
       <insert-activity
-        :anchor="{ id, _cid, parentId, courseId, type, position }"
-        @expand="toggle(true)"/>
+        @expand="toggle(true)"
+        :anchor="{ id, _cid, parentId, repositoryId, type, position }" />
     </div>
     <div v-if="!isCollapsed({ _cid }) && hasChildren">
       <draggable
+        @update="data => reorder(data, children)"
         :list="children"
-        :options="{ handle: '.activity' }"
-        @update="data => reorder(data, children)">
+        v-bind="{ handle: '.activity' }">
         <activity
-          v-for="(subActivity, index) in children"
-          v-bind="subActivity"
+          v-for="(subActivity, childIndex) in children"
           :key="subActivity._cid"
-          :index="index + 1"
+          v-bind="subActivity"
+          :index="childIndex + 1"
           :level="level + 1"
           :activities="activities"
-          class="sub-activity"/>
+          class="sub-activity" />
       </draggable>
     </div>
   </div>
@@ -86,10 +86,11 @@ export default {
   mixins: [reorderMixin],
   inheritAttrs: false,
   props: {
+    /* eslint-disable-next-line vue/prop-name-casing */
     _cid: { type: String, required: true },
     id: { type: Number, default: null },
     parentId: { type: Number, default: null },
-    courseId: { type: Number, required: true },
+    repositoryId: { type: Number, required: true },
     level: { type: Number, required: true },
     index: { type: Number, required: true },
     position: { type: Number, required: true },
@@ -179,10 +180,12 @@ export default {
   }
 
   .icon-container {
+    height: inherit;
     margin: 0;
     padding: 0;
+    border-radius: 0 !important;
 
-    /deep/ span {
+    ::v-deep span {
       padding: 0 10px;
       color: #fff;
     }
@@ -196,6 +199,10 @@ export default {
     display: flex;
     min-width: 165px;
     margin-left: auto;
+
+    .v-btn {
+      margin: 6px 8px;
+    }
   }
 }
 

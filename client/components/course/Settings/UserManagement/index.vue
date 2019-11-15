@@ -1,7 +1,7 @@
 <template>
   <v-card class="settings elevation-2">
-    <add-user :roles="roles"/>
-    <user-list :roles="roles"/>
+    <add-user :roles="roles" />
+    <user-list :roles="roles" />
   </v-card>
 </template>
 
@@ -14,12 +14,7 @@ import UserList from './UserList';
 
 export default {
   computed: {
-    roles() {
-      return map(role.course, it => ({
-        text: titleCase(it.replace('COURSE', '')),
-        value: it
-      }));
-    }
+    roles: () => map(role.repository, value => ({ text: titleCase(value), value }))
   },
   components: {
     AddUser,
@@ -30,6 +25,6 @@ export default {
 
 <style lang="scss" scoped>
 .settings {
-  padding: 30px 30px 10px;
+  padding: 30px;
 }
 </style>

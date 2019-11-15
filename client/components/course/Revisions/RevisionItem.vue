@@ -1,9 +1,9 @@
 <template>
   <li>
     <div
-      :class="{ expanded }"
-      :style="{ cursor: isTeachingElement ? 'pointer' : 'auto' }"
       @click="toggle"
+      :style="{ cursor: isContentElement ? 'pointer' : 'auto' }"
+      :class="{ expanded }"
       class="revision">
       <div :style="{ color }" class="acronym">{{ acronym }}</div>
       <div class="content">
@@ -15,8 +15,7 @@
     <entity-revisions
       v-if="expanded"
       :revision="revision"
-      :isDetached="!activity">
-    </entity-revisions>
+      :is-detached="!activity" />
   </li>
 </template>
 
@@ -59,8 +58,8 @@ export default {
     description() {
       return getFormatDescription(this.revision, this.activity);
     },
-    isTeachingElement() {
-      return this.revision.entity === 'TEACHING_ELEMENT';
+    isContentElement() {
+      return this.revision.entity === 'CONTENT_ELEMENT';
     }
   },
   methods: {
@@ -71,7 +70,7 @@ export default {
       return this.getOutlineLocation(this.getParent(current.id));
     },
     toggle() {
-      if (this.isTeachingElement) this.expanded = !this.expanded;
+      if (this.isContentElement) this.expanded = !this.expanded;
     }
   },
   components: { EntityRevisions }

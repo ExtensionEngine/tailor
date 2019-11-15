@@ -2,9 +2,9 @@
   <div class="meta-file">
     <label class="meta-name">{{ meta.label }}</label>
     <file-upload
-      v-bind="options"
       @upload="$emit('update', meta.key, $event)"
-      @delete="$emit('update', meta.key, null)"/>
+      @delete="$emit('update', meta.key, null)"
+      v-bind="options" />
   </div>
 </template>
 

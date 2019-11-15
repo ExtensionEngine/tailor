@@ -1,18 +1,17 @@
 <template>
   <div>
-    <div v-if="revisions.length > 0" class="revisions white elevation-2">
+    <v-card v-if="revisions.length > 0" class="revisions">
       <ul>
         <revision-item
           v-for="revision in bundledRevisions"
           :key="revision._cid"
-          :revision="revision">
-        </revision-item>
+          :revision="revision" />
       </ul>
-    </div>
+    </v-card>
     <infinite-loading @infinite="fetchRevisions">
       <span slot="spinner">
         <div class="col-lg-12 loader-wrapper">
-          <v-progress-circular color="primary" indeterminate/>
+          <v-progress-circular color="primary" indeterminate />
         </div>
       </span>
       <span slot="no-results">No changes recorded.</span>

@@ -2,20 +2,19 @@
   <div class="relationship">
     <label :for="type">{{ label }}</label>
     <multiselect
+      @input="onRelationshipChanged"
       :value="multiple ? associations : associations[0]"
       :options="optionGroups"
       :searchable="searchable"
       :multiple="multiple"
-      :allowEmpty="allowEmpty"
+      :allow-empty="allowEmpty"
       :disabled="!options.length"
       :placeholder="selectPlaceholder"
-      :customLabel="getCustomLabel"
+      :custom-label="getCustomLabel"
       :name="type"
-      @input="onRelationshipChanged"
-      groupLabel="typeLabel"
-      groupValues="activities"
-      trackBy="id">
-    </multiselect>
+      group-label="typeLabel"
+      group-values="activities"
+      track-by="id" />
   </div>
 </template>
 
@@ -92,7 +91,7 @@ export default {
     },
     onRelationshipChanged(value) {
       const associations = compact(castArray(value));
-      let activity = cloneDeep(this.activity) || {};
+      const activity = cloneDeep(this.activity) || {};
       set(activity, `refs.${this.type}`, map(associations, 'id'));
       this.update(activity);
     }
@@ -105,6 +104,10 @@ export default {
 .relationship {
   margin-top: 40px;
   padding: 3px 8px;
+
+  ::v-deep .multiselect .multiselect__content {
+    padding-left: 0;
+  }
 
   label {
     margin-bottom: 10px;

@@ -5,20 +5,20 @@
         :class="{ error: errors.includes('headings.premise') }"
         class="col-xs-4 col-xs-offset-1 heading-input-wrapper">
         <input
-          :value="headings.premise"
           @blur="e => updateHeading({ premise: e.target.value })"
+          :value="headings.premise"
           class="heading-input"
-          type="text"/>
+          type="text">
       </div>
       <div class="col-xs-2"></div>
       <div
         :class="{ error: errors.includes('headings.response') }"
         class="col-xs-4 heading-input-wrapper">
         <input
-          :value="headings.response"
           @blur="e => updateHeading({ response: e.target.value })"
+          :value="headings.response"
           class="heading-input"
-          type="text"/>
+          type="text">
       </div>
     </div>
     <div
@@ -35,11 +35,11 @@
         </div>
         <input
           v-focus="{ key: premiseKey }"
-          :value="getPremiseContent(premiseKey)"
           @change="updatePremiseContent(premiseKey, $event)"
           @keyup.enter="focus(premiseKey)"
           @keyup.esc="focus(premiseKey)"
           @blur="isFocused(premiseKey) && focus(premiseKey)"
+          :value="getPremiseContent(premiseKey)"
           class="form-control premise-input back"
           placeholder="Insert text here ...">
       </div>
@@ -56,11 +56,11 @@
         </div>
         <input
           v-focus="{ key: responseKey }"
-          :value="getResponseContent(responseKey)"
           @change="updateResponseContent(responseKey, $event)"
           @keyup.enter="focus(responseKey)"
           @keyup.esc="focus(responseKey)"
           @blur="isFocused(responseKey) && focus(responseKey)"
+          :value="getResponseContent(responseKey)"
           class="form-control response-input back"
           placeholder="Insert text here ...">
       </div>
@@ -123,12 +123,12 @@ export default {
       this.update({ headings: { ...this.headings, ...val } });
     },
     updatePremiseContent(key, evt) {
-      let premises = cloneDeep(this.premises);
+      const premises = cloneDeep(this.premises);
       this.getPremiseItem(key, premises).value = evt.target.value;
       this.update({ premises: shuffle(premises) });
     },
     updateResponseContent(key, evt) {
-      let responses = cloneDeep(this.responses);
+      const responses = cloneDeep(this.responses);
       this.getResponseItem(key, responses).value = evt.target.value;
       this.update({ responses: shuffle(responses) });
     },
@@ -145,18 +145,18 @@ export default {
       return find(responses, { key });
     },
     removeItems(premiseKey, responseKey) {
-      let premises = cloneDeep(this.premises);
-      let responses = cloneDeep(this.responses);
-      let correct = cloneDeep(this.correct);
+      const premises = cloneDeep(this.premises);
+      const responses = cloneDeep(this.responses);
+      const correct = cloneDeep(this.correct);
       pull(premises, this.getPremiseItem(premiseKey, premises));
       pull(responses, this.getResponseItem(responseKey, responses));
       delete correct[premiseKey];
       this.update({ premises, responses, correct });
     },
     addItems() {
-      let premises = cloneDeep(this.premises);
-      let responses = cloneDeep(this.responses);
-      let correct = cloneDeep(this.correct);
+      const premises = cloneDeep(this.premises);
+      const responses = cloneDeep(this.responses);
+      const correct = cloneDeep(this.correct);
       const premiseKey = cuid();
       const responseKey = cuid();
       premises.push({ key: premiseKey, value: '' });
@@ -178,11 +178,11 @@ export default {
       this.$emit('update', data, true);
     },
     hasError(key, type) {
-      let index = type === 'premises'
+      const index = type === 'premises'
         ? this.premises.indexOf(this.getPremiseItem(key))
         : this.responses.indexOf(this.getResponseItem(key));
       const answer = `${type}[${index}].value`;
-      return { 'error': this.errors.includes(answer) };
+      return { error: this.errors.includes(answer) };
     }
   },
   directives: {

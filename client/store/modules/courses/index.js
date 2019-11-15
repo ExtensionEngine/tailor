@@ -7,11 +7,12 @@ const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
 const state = {
   items: {},
   search: '',
+  showPinned: false,
   $internals: {
     pagination: PAGINATION_DEFAULTS,
     sort: {
       order: 'DESC',
-      field: 'updatedAt'
+      field: 'createdAt'
     },
     allCoursesFetched: false
   }

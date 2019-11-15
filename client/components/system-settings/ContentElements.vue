@@ -1,28 +1,32 @@
 <template>
   <v-card class="element-list-container">
-    <v-text-field v-model.trim="search" label="Search" clearable/>
-    <v-list :expand="true" avatar two-line>
+    <v-text-field
+      v-model.trim="search"
+      label="Search"
+      append-icon="mdi-magnify"
+      clearable />
+    <v-list :expand="true" avatar two-line class="text-left">
       <v-list-group
-        v-for="(group, name) in filteredRegistry"
-        :key="name"
+        v-for="(group, groupName) in filteredRegistry"
+        :key="groupName"
         value="true">
         <template v-slot:activator>
-          <v-list-tile>
-            <v-list-tile-title>{{ name | parseName }}</v-list-tile-title>
-          </v-list-tile>
+          <v-list-item>
+            <v-list-item-title>{{ groupName | parseName }}</v-list-item-title>
+          </v-list-item>
         </template>
-        <v-list-tile
+        <v-list-item
           v-for="({ name, ui, version, position }) in group"
           :key="position"
           ripple>
-          <v-list-tile-avatar>
+          <v-list-item-avatar>
             <v-icon large>{{ ui.icon }}</v-icon>
-          </v-list-tile-avatar>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="name"/>
-            <v-list-tile-sub-title>Version {{ version }}</v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title v-text="name" />
+            <v-list-item-subtitle>Version {{ version }}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </v-list-group>
     </v-list>
   </v-card>
@@ -74,7 +78,7 @@ export default {
 }
 
 .theme--light.v-list {
-  .v-list__group--active:before, .v-list__group--active:after {
+  .v-list__group--active::before, .v-list__group--active::after {
     background: none;
   }
 }

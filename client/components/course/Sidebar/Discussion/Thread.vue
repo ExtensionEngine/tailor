@@ -3,12 +3,11 @@
     <thread-comment
       v-for="comment in thread"
       :key="comment._cid || comment.id"
-      :comment="comment"
-      :avatar="avatars"
       @update="onUpdate"
       @remove="onRemove"
-      class="clearfix comment">
-    </thread-comment>
+      :comment="comment"
+      :avatar="avatars"
+      class="clearfix comment" />
   </ul>
 </template>
 

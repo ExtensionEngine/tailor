@@ -39,9 +39,9 @@ export default {
   },
   watch: {
     title: debounce(function () {
-      const element = cloneDeep(this.element);
-      element.data.title = this.title;
-      this.$emit('save', element);
+      const data = cloneDeep(this.element.data);
+      data.title = this.title;
+      this.$elementBus.emit('save', data);
     }, 500)
   }
 };
@@ -61,8 +61,11 @@ export default {
 
     li {
       height: 100%;
-      padding-top: 15px;
       color: #444;
+
+      &.btn {
+        padding-top: 15px;
+      }
 
       .mdi {
         display: inline-block;

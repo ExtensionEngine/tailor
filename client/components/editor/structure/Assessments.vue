@@ -2,7 +2,7 @@
   <div class="assessments">
     <div class="heading">
       <h2 class="blue-grey--text text--darken-3">Assessments</h2>
-      <v-btn v-if="hasAssessments" @click="toggleAssessments" flat small>
+      <v-btn v-if="hasAssessments" @click="toggleAssessments" text small>
         {{ allSelected ? 'hide all' : 'show all' }}
       </v-btn>
     </div>
@@ -13,20 +13,20 @@
       <assessment-item
         v-for="it in assessments"
         :key="it._cid"
-        :assessment="it"
-        :expanded="isSelected(it)"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @delete="requestRemoveConfirmation(it)"/>
+        @delete="requestRemoveConfirmation(it)"
+        :assessment="it"
+        :expanded="isSelected(it)" />
     </ul>
     <add-element
+      @add="addAssessment"
       :include="['ASSESSMENT']"
       :activity="activity"
       :layout="false"
       :show.sync="showElementDrawer"
-      @add="addAssessment"
       large
-      label="Add assessment"/>
+      label="Add assessment" />
   </div>
 </template>
 

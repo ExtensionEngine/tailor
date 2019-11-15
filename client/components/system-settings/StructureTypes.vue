@@ -1,6 +1,10 @@
 <template>
   <v-card class="schema-list-container">
-    <v-text-field v-model.trim="search" label="Search" clearable/>
+    <v-text-field
+      v-model.trim="search"
+      label="Search"
+      append-icon="mdi-magnify"
+      clearable />
     <v-treeview
       :items="schemas"
       :search="search"
@@ -51,5 +55,9 @@ export default {
 .schema-list-container {
   padding: 30px;
   text-align: left;
+
+  ::v-deep .v-treeview-node__label {
+    font-size: 17px;
+  }
 }
 </style>

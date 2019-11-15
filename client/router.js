@@ -1,6 +1,7 @@
 /* eslint-disable sort-imports */
 import { numeric as numericParser } from 'client/utils/paramsParser';
 import Router from 'vue-router';
+import { role } from '@/../config/shared';
 import store from './store';
 import Vue from 'vue';
 
@@ -21,14 +22,20 @@ import ResetPassword from './components/auth/ResetPassword';
 import SystemSettings from './components/system-settings';
 import SystemUserManagement from './components/system-settings/UserManagement';
 import TreeView from './components/course/TreeView';
+import UserSettings from './components/user-settings';
 
 Vue.use(Router);
 
-let router = new Router({
+const router = new Router({
   routes: [{
     path: '/',
     name: 'catalog',
     component: Catalog,
+    meta: { auth: true }
+  }, {
+    path: '/settings',
+    name: 'user-settings',
+    component: UserSettings,
     meta: { auth: true }
   }, {
     path: '/course/:courseId',
@@ -69,7 +76,7 @@ let router = new Router({
   }, {
     path: '/system-settings',
     component: SystemSettings,
-    meta: { auth: true },
+    meta: { auth: true, allowed: [role.user.ADMIN] },
     children: [{
       path: '/',
       name: 'system-management',
@@ -113,9 +120,16 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(it => it.meta.auth) && !store.state.auth.user) {
     next({ path: '/login', query: { redirect: to.fullPath } });
+  } else if (!isAllowed(to)) {
+    next({ path: from.fullPath });
   } else {
     next();
   }
 });
 
 export default router;
+
+function isAllowed(route) {
+  const { meta = {} } = route.matched.find(({ meta = {} }) => meta.allowed) || {};
+  return !meta.allowed || meta.allowed.includes(store.state.auth.user.role);
+}

@@ -1,12 +1,11 @@
 <template>
   <content-element
+    @save="save"
     :element="cell"
     :parent="table"
     :frame="false"
-    :showPlaceholder="false"
-    @save="save"
-    class="table-cell">
-  </content-element>
+    :show-placeholder="false"
+    class="table-cell" />
 </template>
 
 <script>
@@ -37,7 +36,7 @@ export default {
   height: 100%;
   border: 1px solid black;
 
-  /deep/ {
+  ::v-deep {
     .ql-editor {
       min-height: 24px;
       word-break: break-all;

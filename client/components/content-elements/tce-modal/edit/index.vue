@@ -5,9 +5,9 @@
         Click the button below to Add first teaching element to your modal.
       </div>
       <embedded-container
-        :container="element.data"
         @save="$emit('save', $event)"
-        @delete="deleteEmbed($event)"/>
+        @delete="deleteEmbed($event)"
+        :container="element.data" />
     </div>
     <button
       v-else
@@ -18,8 +18,8 @@
     </button>
     <preview
       v-if="showModal"
-      :elements="embeds"
-      @close="showModal = false"/>
+      @close="showModal = false"
+      :elements="embeds" />
   </div>
 </template>
 
@@ -62,6 +62,7 @@ export default {
   },
   created() {
     this.$elementBus.on('toggleEdit', () => (this.isEditing = !this.isEditing));
+    this.$elementBus.on('save', data => this.$emit('save', data));
   },
   components: { EmbeddedContainer, Preview }
 };

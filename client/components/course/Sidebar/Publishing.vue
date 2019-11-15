@@ -3,26 +3,26 @@
     <div class="publish-date">
       <span>{{ publishedAtMessage }}</span>
     </div>
-    <v-menu lazy offset-y left>
+    <v-menu offset-y left>
       <template v-slot:activator="{ on }">
         <v-btn
-          :loading="isPublishing"
           v-on="on"
+          :loading="isPublishing"
           color="blue-grey darken-1"
-          outline
+          outlined
           small>
           Publish
         </v-btn>
       </template>
-      <v-list>
-        <v-list-tile @click="confirmPublishing()">
-          <v-list-tile-title>{{ config.label }}</v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile
+      <v-list class="text-left">
+        <v-list-item @click="confirmPublishing()">
+          <v-list-item-title>{{ config.label }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item
           v-if="activityWithDescendants.length > 1"
           @click="confirmPublishing(activityWithDescendants)">
-          <v-list-tile-title>{{ config.label }} and children</v-list-tile-title>
-        </v-list-tile>
+          <v-list-item-title>{{ config.label }} and children</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
     <div class="publish-status">

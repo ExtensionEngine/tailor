@@ -1,38 +1,36 @@
 <template>
   <form @submit.prevent="addUser">
-    <v-layout row align-center class="pl-3">
-      <v-flex xs7 class="pr-2">
-        <v-text-field
-          v-validate="{ required: true, email: true }"
+    <v-row align="center" class="pl-3">
+      <v-col cols="7" class="pr-2">
+        <v-combobox
           v-model="email"
+          v-validate="{ required: true, email: true }"
+          @update:searchInput="fetchUsers"
           :error-messages="vErrors.collect('email')"
+          :items="suggestedUsers"
           data-vv-name="email"
-          label="Email"/>
-      </v-flex>
-      <v-flex xs3 class="px-4">
+          label="Email" />
+      </v-col>
+      <v-col cols="3" class="px-4">
         <v-select
-          v-validate="'required'"
           v-model="role"
+          v-validate="'required'"
           :error-messages="vErrors.collect('role')"
           :items="roles"
           data-vv-name="role"
-          flat/>
-      </v-flex>
-      <v-flex xs2>
-        <v-btn
-          type="submit"
-          color="blue-grey darken-1"
-          small
-          dark>
-          Add
-        </v-btn>
-      </v-flex>
-    </v-layout>
+          text />
+      </v-col>
+      <v-col cols="2">
+        <v-btn block type="submit" outlined>Add</v-btn>
+      </v-col>
+    </v-row>
   </form>
 </template>
 
 <script>
+import api from '@/api/user';
 import { mapActions } from 'vuex';
+import throttle from 'lodash/throttle';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -43,6 +41,7 @@ export default {
   data() {
     return {
       email: '',
+      suggestedUsers: [],
       role: this.roles[0].value
     };
   },
@@ -55,9 +54,24 @@ export default {
         if (!isValid) return;
         await this.upsertUser({ courseId, email, role });
         this.email = '';
+        this.suggestedUsers = [];
         this.$nextTick(() => this.$validator.reset());
       });
-    }
+    },
+    fetchUsers: throttle(function (filter) {
+      if (filter && filter.length > 1) {
+        return api.fetch({ filter }).then(({ items }) => {
+          this.suggestedUsers = items.map(it => it.email);
+        });
+      }
+      this.suggestedUsers = [];
+    }, 350)
   }
 };
 </script>
+
+<style lang="scss" scoped>
+::v-deep .v-list.v-sheet {
+  text-align: left;
+}
+</style>

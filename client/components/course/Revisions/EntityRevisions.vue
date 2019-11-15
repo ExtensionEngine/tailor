@@ -5,18 +5,16 @@
         <teaching-element
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
-          :disabled="true">
-        </teaching-element>
+          :disabled="true" />
       </div>
       <entity-sidebar
         v-show="expanded"
         ref="sidebar"
+        @preview="previewRevision"
+        @rollback="rollback"
         :revisions="revisions"
         :selected="selectedRevision"
-        :isDetached="isDetached"
-        @preview="previewRevision"
-        @rollback="rollback">
-      </entity-sidebar>
+        :is-detached="isDetached" />
     </div>
   </transition>
 </template>
@@ -46,12 +44,8 @@ export default {
     };
   },
   computed: {
-    courseId() {
-      return Number(this.$route.params.courseId);
-    },
-    baseUrl() {
-      return `/courses/${this.courseId}/revisions/`;
-    }
+    repositoryId: vm => vm.revision.repositoryId,
+    baseUrl: vm => `/repositories/${vm.repositoryId}/revisions/`
   },
   methods: {
     getRevisions() {
@@ -78,7 +72,7 @@ export default {
     rollback(revision) {
       this.$set(revision, 'loading', true);
       const entity = { ...revision.state, paranoid: false };
-      axios.patch(`/courses/${this.courseId}/tes/${entity.id}`, entity)
+      axios.patch(`/repositories/${this.repositoryId}/tes/${entity.id}`, entity)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);

@@ -1,58 +1,54 @@
 <template>
   <li
-    :class="{ hover }"
     @mouseenter="hover = true"
     @mouseleave="hover = false"
+    :class="{ hover }"
     class="list-group-item assessment-item elevation-1">
-    <span v-if="exam" class="drag-handle">
+    <span v-if="draggable" class="drag-handle">
       <span class="mdi mdi-drag-vertical"></span>
     </span>
     <tce-question-container
       v-if="expanded"
-      :element="assessment"
-      :exam="exam"
-      :summative="true"
       @selected="$emit('selected')"
       @delete="$emit('delete')"
-      @save="save">
-      <div class="header">
-        <v-chip
-          color="blue-grey darken-1"
-          label
-          dark
-          small
-          class="pull-left text-uppercase">
-          {{ elementConfig.name }}
-        </v-chip>
-        <v-btn
-          @click="$emit('selected')"
-          flat
-          small
-          class="pull-right collapse-item">
-          Collapse
-        </v-btn>
-        <div v-if="exam && examObjectives.length" class="select-leaf">
-          <multiselect
-            :value="objective"
-            :options="examObjectives"
-            :searchable="true"
-            :disabled="!examObjectives.length"
-            :trackBy="'id'"
-            :customLabel="it => it.data ? it.data.name : ''"
-            :placeholder="examObjectiveLabel"
-            @input="onObjectiveSelected"/>
+      @save="save"
+      :element="assessment">
+      <template v-slot:default="{ isEditing }">
+        <div class="pb-5">
+          <v-row no-gutters>
+            <v-col class="text-left grow">
+              <v-chip
+                color="blue-grey darken-1"
+                label
+                dark
+                small
+                class="text-uppercase">
+                {{ elementConfig.name }}
+              </v-chip>
+            </v-col>
+            <v-col class="shrink">
+              <v-btn
+                @click="$emit('selected')"
+                text
+                small
+                class="ma-0 pa-0">
+                Collapse
+              </v-btn>
+            </v-col>
+          </v-row>
+          <slot :isEditing="isEditing" name="header"></slot>
         </div>
-      </div>
+      </template>
     </tce-question-container>
     <div v-else @click="$emit('selected')" class="minimized">
       <v-chip color="blue-grey darken-1" label dark small>
         {{ elementConfig.subtype }}
       </v-chip>
-      <span class="question">{{ question }}</span>
+      <span class="question">{{ question | truncate(50) }}</span>
       <v-btn
         @click.stop="$emit('delete')"
         color="primary"
-        flat
+        text
         icon
         class="delete">
         <v-icon>mdi-close</v-icon>
@@ -64,16 +60,7 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
-import find from 'lodash/find';
-import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
-import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
-import { mapGetters } from 'vuex';
-import Multiselect from '../../common/Select';
-import set from 'lodash/set';
-import truncate from 'lodash/truncate';
-import uniq from 'lodash/uniq';
 
 const blankRegex = /(@blank)/g;
 const htmlRegex = /<\/?[^>]+(>|$)/g;
@@ -83,34 +70,20 @@ export default {
   inject: ['$teRegistry'],
   props: {
     assessment: { type: Object, required: true },
-    exam: { type: Object, default: null },
-    expanded: { type: Boolean, default: false }
+    expanded: { type: Boolean, default: false },
+    draggable: { type: Boolean, default: false }
   },
   data() {
-    return {
-      hover: false,
-      objective: null
-    };
+    return { hover: false };
   },
   computed: {
-    ...mapGetters('activities', ['getExamObjectives']),
     elementConfig() {
       return this.$teRegistry.get(this.assessment.data.type);
     },
     question() {
-      let question = filter(this.assessment.data.question, { type: 'HTML' });
-      question = map(question, 'data.content').join(' ');
-      question = question.replace(htmlRegex, '').replace(blankRegex, () => `____`);
-      return truncate(question, { length: 50 });
-    },
-    examObjectives() {
-      return this.getExamObjectives(this.exam);
-    },
-    examObjectiveLabel() {
-      if (isEmpty(this.examObjectives)) return '';
-      const types = uniq(map(this.examObjectives, 'type'));
-      const label = types.length > 1 ? 'Objective' : getLevel(types[0]).label;
-      return `Link ${label}`;
+      const textAssets = filter(this.assessment.data.question, { type: 'HTML' });
+      const question = map(textAssets, 'data.content').join(' ');
+      return question.replace(htmlRegex, '').replace(blankRegex, () => '____');
     }
   },
   methods: {
@@ -118,20 +91,8 @@ export default {
       const assessment = cloneDeep(this.assessment);
       Object.assign(assessment.data, data);
       this.$emit('save', assessment);
-    },
-    onObjectiveSelected(objective) {
-      this.objective = objective;
-      const assessment = cloneDeep(this.assessment);
-      set(assessment, 'refs.objectiveId', this.objective.id);
-      this.$emit('save', assessment);
     }
-  },
-  mounted() {
-    const objectiveId = get(this.assessment, 'refs.objectiveId');
-    if (!objectiveId) return;
-    this.objective = find(this.examObjectives, { id: objectiveId });
-  },
-  components: { Multiselect }
+  }
 };
 </script>
 
@@ -141,18 +102,7 @@ export default {
   padding: 0;
 
   .v-chip {
-    float: left;
     min-width: 30px;
-    margin: 0;
-  }
-
-  .header {
-    padding-bottom: 40px;
-
-    .collapse-item {
-      margin: 0;
-      padding: 0;
-    }
   }
 
   .drag-handle {
@@ -171,6 +121,9 @@ export default {
   }
 
   .minimized {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 5px 22px;
     cursor: pointer;
 
@@ -190,24 +143,11 @@ export default {
   }
 
   .delete {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    right: 0;
     opacity: 0;
   }
 
   &.hover:not(.sortable-chosen) .delete {
     opacity: 1;
-  }
-}
-
-.select-leaf {
-  clear: both;
-
-  > div {
-    width: 400px;
-    float: right;
   }
 }
 </style>

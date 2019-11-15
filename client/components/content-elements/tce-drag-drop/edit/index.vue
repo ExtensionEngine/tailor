@@ -18,12 +18,12 @@
             </span>
           </div>
           <input
-            v-focus="{ groupKey }"
             :ref="`group${groupKey}`"
-            :value="groupName"
+            v-focus="{ groupKey }"
             @change="updateGroupName(groupKey)"
             @keyup.enter.esc="focus(groupKey)"
             @blur="isFocused(groupKey) && focus(groupKey)"
+            :value="groupName"
             class="form-control group-input back"
             placeholder="Insert text here ...">
         </div>
@@ -46,12 +46,12 @@
               </span>
             </div>
             <input
-              v-focus="{ groupKey, answerKey }"
               :ref="`answer${answerKey}`"
-              :value="answer"
+              v-focus="{ groupKey, answerKey }"
               @change="updateAnswer(answerKey)"
               @keyup.enter.esc="focus(groupKey, answerKey)"
               @blur="isFocused(groupKey, answerKey) && focus(groupKey, answerKey)"
+              :value="answer"
               class="form-control response-input back"
               placeholder="Insert text here ...">
           </li>
@@ -97,23 +97,23 @@ export default {
   },
   methods: {
     getGroupAnswers(groupKey) {
-      let keys = this.correct[groupKey] || [];
+      const keys = this.correct[groupKey] || [];
       return pick(this.answers, keys);
     },
     updateGroupName(groupKey) {
-      let groups = cloneDeep(this.groups);
+      const groups = cloneDeep(this.groups);
       groups[groupKey] = this.$refs[`group${groupKey}`][0].value;
       this.update({ groups }, true);
     },
     updateAnswer(answerKey) {
-      let answers = cloneDeep(this.answers);
+      const answers = cloneDeep(this.answers);
       answers[answerKey] = this.$refs[`answer${answerKey}`][0].value;
       this.update({ answers }, true);
     },
     addGroup() {
-      let groups = cloneDeep(this.groups);
-      let answers = cloneDeep(this.answers);
-      let correct = cloneDeep(this.correct);
+      const groups = cloneDeep(this.groups);
+      const answers = cloneDeep(this.answers);
+      const correct = cloneDeep(this.correct);
       const groupKey = cuid();
       const answerKey = cuid();
       groups[groupKey] = '';
@@ -122,8 +122,8 @@ export default {
       this.update({ groups, answers, correct });
     },
     addAnswer(groupKey) {
-      let answers = cloneDeep(this.answers);
-      let correct = cloneDeep(this.correct);
+      const answers = cloneDeep(this.answers);
+      const correct = cloneDeep(this.correct);
       const answerKey = cuid();
       answers[answerKey] = '';
       correct[groupKey].push(answerKey);
@@ -145,16 +145,16 @@ export default {
       return state.groupKey === groupKey && state.answerKey === answerKey;
     },
     removeAnswer(groupKey, answerKey) {
-      let answers = cloneDeep(this.answers);
-      let correct = cloneDeep(this.correct);
+      const answers = cloneDeep(this.answers);
+      const correct = cloneDeep(this.correct);
       delete answers[answerKey];
       correct[groupKey] = pull(correct[groupKey], answerKey);
       this.update({ answers, correct });
     },
     removeGroup(groupKey) {
-      let groups = cloneDeep(this.groups);
-      let answers = cloneDeep(this.answers);
-      let correct = cloneDeep(this.correct);
+      const groups = cloneDeep(this.groups);
+      const answers = cloneDeep(this.answers);
+      const correct = cloneDeep(this.correct);
       forEach(correct[groupKey], answerKey => delete answers[answerKey]);
       delete groups[groupKey];
       delete correct[groupKey];

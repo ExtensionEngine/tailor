@@ -3,11 +3,11 @@
     :class="{ 'embeded-elements': embedded }"
     class="list-group">
     <draggable
-      :list="list"
-      :options="options"
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
       @update="$emit('update', $event)"
+      :list="list"
+      v-bind="options"
       class="row">
       <div
         v-for="(item, index) in list"
@@ -16,24 +16,26 @@
         class="list-item-container">
         <inline-activator
           v-if="enableAdd && !embedded"
-          @click.native="openElementDrawer(index - 1)"/>
+          @click.native="openElementDrawer(index - 1)" />
         <slot
           :item="item"
           :setWidth="false"
           :dragged="dragElementIndex === index"
-          name="list-item"/>
+          name="list-item">
+        </slot>
       </div>
     </draggable>
     <div class="add-element-container mt-5">
       <add-element
         v-if="enableAdd"
+        @add="insertElement"
+        @hidden="onHiddenElementDrawer"
         :include="types"
         :activity="activity"
         :layout="layout"
         :show.sync="showElementDrawer"
         :large="!embedded"
-        :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'"
-        @add="insertElement"/>
+        :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'" />
     </div>
   </div>
 </template>
@@ -74,7 +76,7 @@ export default {
       this.showElementDrawer = true;
     },
     getContainerClasses({ data: { width } }) {
-      let classes = [`col-xs-${width || 12}`];
+      const classes = [`col-xs-${width || 12}`];
       if (this.enableAdd) classes.push('insertable');
       return classes;
     },
@@ -96,7 +98,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.embeded-elements /deep/ .contained-content {
+.embeded-elements ::v-deep .contained-content {
   margin: 7px 0 !important;
 }
 
@@ -106,7 +108,7 @@ export default {
 }
 
 .list-item-container {
-  &.insertable /deep/ {
+  &.insertable ::v-deep {
     > .contained-content {
       margin: 0;
     }
@@ -116,7 +118,7 @@ export default {
     margin: 10px 0;
     padding: 0;
 
-    /deep/ .inline-activator {
+    ::v-deep .inline-activator {
       display: none;
     }
   }

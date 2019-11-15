@@ -1,8 +1,8 @@
 'use strict';
 
-const { getSiblingLevels } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
+const { getSiblingLevels } = require('../../config/shared/activities');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -56,15 +56,15 @@ class Activity extends Model {
     };
   }
 
-  static associate({ Comment, Course, TeachingElement }) {
-    this.hasMany(TeachingElement, {
+  static associate({ ContentElement, Comment, Repository }) {
+    this.hasMany(ContentElement, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
     this.hasMany(Comment, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
-    this.belongsTo(Course, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+    this.belongsTo(Repository, {
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.belongsTo(this, {
       as: 'parent',
@@ -96,31 +96,31 @@ class Activity extends Model {
     };
   }
 
-  static async cloneActivities(src, dstCourseId, dstParentId, opts) {
+  static async cloneActivities(src, dstRepositoryId, dstParentId, opts) {
     if (!opts.idMappings) opts.idMappings = {};
     const { idMappings, transaction } = opts;
     const dstActivities = await Activity.bulkCreate(map(src, it => ({
-      courseId: dstCourseId,
+      repositoryId: dstRepositoryId,
       parentId: dstParentId,
       ...pick(it, ['type', 'position', 'data', 'refs'])
     })), { returning: true, transaction });
-    const TeachingElement = this.sequelize.model('TeachingElement');
+    const ContentElement = this.sequelize.model('ContentElement');
     return Promise.reduce(src, async (acc, it, index) => {
       const parent = dstActivities[index];
       acc[it.id] = parent.id;
       const where = { activityId: it.id, detached: false };
-      const tes = await TeachingElement.findAll({ where, transaction });
-      await TeachingElement.cloneElements(tes, parent, transaction);
+      const elements = await ContentElement.findAll({ where, transaction });
+      await ContentElement.cloneElements(elements, parent, transaction);
       const children = await it.getChildren({ where: { detached: false } });
       if (!children.length) return acc;
-      return Activity.cloneActivities(children, dstCourseId, parent.id, opts);
+      return Activity.cloneActivities(children, dstRepositoryId, parent.id, opts);
     }, idMappings);
   }
 
-  clone(courseId, parentId, position) {
+  clone(repositoryId, parentId, position) {
     return this.sequelize.transaction(t => {
       if (position) this.position = position;
-      return Activity.cloneActivities([this], courseId, parentId, t);
+      return Activity.cloneActivities([this], repositoryId, parentId, t);
     });
   }
 
@@ -139,8 +139,8 @@ class Activity extends Model {
   }
 
   siblings({ filter = {}, transaction }) {
-    const { parentId, courseId } = this;
-    const where = { ...filter, parentId, courseId };
+    const { parentId, repositoryId } = this;
+    const where = { ...filter, parentId, repositoryId };
     const options = { where, order: [['position', 'ASC']], transaction };
     return Activity.findAll(options);
   }
@@ -175,10 +175,10 @@ class Activity extends Model {
           return descendants;
         })
         .then(descendants => {
-          const TeachingElement = this.sequelize.model('TeachingElement');
+          const ContentElement = this.sequelize.model('ContentElement');
           const activities = map(descendants.all, 'id');
           const where = { activityId: [...activities, this.id] };
-          return removeAll(TeachingElement, where, options.soft)
+          return removeAll(ContentElement, where, options.soft)
             .then(() => descendants);
         })
         .then(descendants => {

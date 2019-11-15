@@ -16,8 +16,7 @@
       <brightcove-player
         ref="player"
         v-bind="config"
-        class="player">
-      </brightcove-player>
+        class="player" />
     </div>
   </div>
 </template>
@@ -90,7 +89,7 @@ export default {
   margin: 0;
 }
 
-.player /deep/ .video-js .vjs-big-play-button {
+.player ::v-deep .video-js .vjs-big-play-button {
   display: none;
 }
 </style>

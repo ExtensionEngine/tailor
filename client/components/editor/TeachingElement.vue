@@ -1,12 +1,12 @@
 <template>
   <contained-content
-    v-bind="$attrs"
-    :element="element"
-    :isDragged="dragged"
-    :isDisabled="disabled"
     @add="add"
     @save="save"
-    @delete="remove"/>
+    @delete="remove"
+    v-bind="$attrs"
+    :element="element"
+    :is-dragged="dragged"
+    :is-disabled="disabled" />
 </template>
 
 <script>

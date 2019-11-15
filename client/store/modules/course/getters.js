@@ -1,4 +1,4 @@
-import { getLevel, getOutlineLevels, getTesMeta } from 'shared/activities';
+import { getLevel, getOutlineLevels, getSchema, getTesMeta } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
@@ -14,6 +14,10 @@ export const course = (_state, _getters, { route }, { courses }) => {
   return find(courses, { id: parseInt(courseId, 10) });
 };
 
+export const schema = (_state, getters) => {
+  return getters.course ? getSchema(getters.course.schema).name : '';
+};
+
 export const structure = (_, { course }) => {
   if (!course) return;
   return getOutlineLevels(course.schema);
@@ -22,7 +26,7 @@ export const structure = (_, { course }) => {
 export const activities = (_state, { course }, _rootState, rootGetters) => {
   if (!course) return;
   const { activities: items } = rootGetters;
-  return filter(items, { courseId: course.id });
+  return filter(items, { repositoryId: course.id });
 };
 
 export const activity = (state, _getters, _rootState, { activities }) => {
@@ -41,7 +45,7 @@ export const isCollapsed = state => {
 
 export const revisions = (_state, { course }, _rootState, rootGetters) => {
   if (!course) return [];
-  return filter(rootGetters.revisions, { courseId: course.id })
+  return filter(rootGetters.revisions, { repositoryId: course.id })
     .map(rev => ({ ...rev, createdAt: new Date(rev.createdAt) }))
     .sort((rev1, rev2) => rev2.createdAt - rev1.createdAt);
 };
@@ -72,5 +76,5 @@ export const isCourseAdmin = (state, _, rootState) => {
   const { user } = rootState.auth;
   if (!user) return;
   const courseUser = find(state.users, { id: user.id });
-  return get(courseUser, 'courseRole') === role.course.ADMIN;
+  return get(courseUser, 'repositoryRole') === role.repository.ADMIN;
 };

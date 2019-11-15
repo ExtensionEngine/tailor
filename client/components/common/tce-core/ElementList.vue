@@ -1,30 +1,33 @@
 <template>
   <div class="list-group">
     <draggable
-      :list="elements"
-      :options="options"
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
-      @update="$emit('update', $event)"
+      @update="reorder"
+      :list="elements"
+      v-bind="options"
       class="row">
       <div
         v-for="(element, index) in elements"
         :key="element.id"
-        :class="`col-xs-${get(element, 'data.width', 12)}`"
         @dragstart="dragElementIndex = index"
-        @dragend="dragElementIndex = -1">
+        @dragend="dragElementIndex = -1"
+        :class="`col-xs-${get(element, 'data.width', 12)}`">
         <slot
           :element="element"
           :isDragged="dragElementIndex === index"
-          name="list-item"/>
+          :position="index"
+          name="list-item">
+        </slot>
       </div>
     </draggable>
     <add-element
       v-if="enableAdd"
+      @add="el => $emit('add', el)"
+      :activity="activity"
       :include="supportedTypes"
       :layout="layout"
-      :show.sync="showElementDrawer"
-      @add="el => $emit('add', el)"/>
+      :show.sync="showElementDrawer" />
   </div>
 </template>
 
@@ -38,6 +41,7 @@ export default {
   props: {
     elements: { type: Array, default: () => ([]) },
     supportedTypes: { type: Array, default: null },
+    activity: { type: Object, default: null },
     layout: { type: Boolean, default: false },
     enableAdd: { type: Boolean, default: true }
   },
@@ -49,7 +53,13 @@ export default {
       scrollSensitivity: 125
     })
   },
-  methods: { get },
+  methods: {
+    get,
+    reorder({ newIndex: newPosition }) {
+      const items = this.elements;
+      this.$emit('update', { newPosition, items });
+    }
+  },
   components: { AddElement, Draggable }
 };
 </script>

@@ -4,28 +4,30 @@
     :items="users"
     :loading="isLoading"
     no-data-text="No assigned users."
-    hide-actions>
-    <template v-slot:items="{ item }">
-      <td class="text-xs-left">
-        <v-avatar color="blue lighten-1" size="40" dark class="mr-3">
-          <span class="headline white--text">
-            {{ item.email[0].toUpperCase() }}
-          </span>
-        </v-avatar>
-        {{ item.email }}
-      </td>
-      <td class="role-select">
-        <v-select
-          :value="item.courseRole"
-          :items="roles"
-          @change="role => changeRole(item.email, role)"
-          icon/>
-      </td>
-      <td class="actions">
-        <v-btn color="blue-grey" icon flat small>
-          <v-icon @click="remove(item)">mdi-delete</v-icon>
-        </v-btn>
-      </td>
+    hide-default-footer>
+    <template v-slot:item="{ item }">
+      <tr>
+        <td class="text-left">
+          <v-avatar size="40">
+            <img :src="item.imgUrl">
+          </v-avatar>
+        </td>
+        <td class="text-left">{{ item.email }}</td>
+        <td class="text-left">{{ item.firstName || '/' }}</td>
+        <td class="text-left">{{ item.lastName || '/' }}</td>
+        <td class="role-select">
+          <v-select
+            @change="role => changeRole(item.email, role)"
+            :value="item.repositoryRole"
+            :items="roles"
+            icon />
+        </td>
+        <td class="actions">
+          <v-btn color="primary" icon>
+            <v-icon @click="remove(item)">mdi-delete</v-icon>
+          </v-btn>
+        </td>
+      </tr>
     </template>
   </v-data-table>
 </template>
@@ -33,6 +35,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
+
+const HEADERS = ['User', 'Email', 'First Name', 'Last Name', 'Role', ''];
 
 export default {
   props: {
@@ -44,7 +48,7 @@ export default {
   computed: {
     ...mapGetters('course', ['users']),
     headers() {
-      return ['User', 'Role', ''].map(text => ({ text, sortable: false }));
+      return HEADERS.map(text => ({ text, sortable: false }));
     }
   },
   methods: {
@@ -70,7 +74,7 @@ export default {
 
 <style lang="scss" scoped>
 .role-select {
-  max-width: 26px;
+  max-width: 120px;
 }
 
 .v-table .actions {
@@ -78,7 +82,11 @@ export default {
   padding: 0 0 6px 0;
 }
 
-/deep/ .v-input__slot::before {
+::v-deep .v-input__slot::before {
   border: none !important;
+}
+
+::v-deep .v-list.v-sheet {
+  text-align: left;
 }
 </style>

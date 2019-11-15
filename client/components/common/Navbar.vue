@@ -1,12 +1,12 @@
 <template>
-  <v-toolbar color="grey lighten-5" app dense fixed>
+  <v-app-bar color="grey lighten-5" app dense fixed>
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
-      <v-avatar color="primary darken-1" size="34" class="mt-1">
-        <v-icon color="grey lighten-4">mdi-content-cut</v-icon>
+      <v-avatar color="primary darken-1" size="34" class="mt-1 pa-2">
+        <img :src="logo" alt="Logo">
       </v-avatar>
-      <v-toolbar-title class="app-name ml-2">{{ title }}</v-toolbar-title>
+      <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
     </router-link>
-    <v-spacer/>
+    <v-spacer />
     <v-toolbar-items>
       <v-btn
         v-for="({ name, to, icon }) in routes"
@@ -14,7 +14,7 @@
         :to="to"
         color="blue-grey darken-3"
         exact
-        flat>
+        text>
         <v-icon class="pr-1">mdi-{{ icon }}</v-icon>
         <span class="toolbar-route">{{ name }}</span>
       </v-btn>
@@ -24,21 +24,26 @@
       transition="slide-y-transition"
       offset-y
       z-index="1000">
-      <v-btn slot="activator" icon class="mr-2">
-        <v-avatar size="34" color="grey lighten-2">
-          <span class="grey--text text--darken-1 headline">{{ user.email[0] }}</span>
-        </v-avatar>
-      </v-btn>
-      <v-list>
-        <v-list-tile>
-          <v-list-tile-title>{{ user.email }}</v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile @click="logout">
-          <v-list-tile-title>Logout</v-list-tile-title>
-        </v-list-tile>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" icon class="mr-2">
+          <v-avatar size="34" color="grey lighten-2">
+            <img :src="user.imgUrl">
+          </v-avatar>
+        </v-btn>
+      </template>
+      <v-list class="text-left">
+        <v-list-item>
+          <v-list-item-title>{{ user.email }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: 'user-settings' }">
+          <v-list-item-title>Profile</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="logout">
+          <v-list-item-title>Logout</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <script>
@@ -49,14 +54,11 @@ export default {
   props: {
     user: { type: Object, required: true }
   },
-  data() {
-    return {
-      title: BRAND_CONFIG.TITLE
-    };
-  },
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('course', { repository: 'course' }),
+    title: () => BRAND_CONFIG.TITLE,
+    logo: () => BRAND_CONFIG.LOGO_COMPACT,
     routes() {
       const items = [
         { name: 'Catalog', to: { name: 'catalog' }, icon: 'view-list' },
@@ -83,6 +85,11 @@ $font-color: #333;
 
 .v-toolbar {
   z-index: 10;
+
+  .v-toolbar__content .v-btn.v-btn--icon {
+    width: unset;
+    height: unset;
+  }
 }
 
 .v-toolbar__items {
@@ -95,6 +102,7 @@ $font-color: #333;
   cursor: pointer;
 
   .app-name {
+    margin: 1px 0 0 10px;
     font-size: 20px;
     font-weight: 400;
     line-height: $container-height;

@@ -1,20 +1,20 @@
 <template>
   <div class="file-upload">
-    <circular-progress v-if="uploading"/>
+    <circular-progress v-if="uploading" />
     <form v-else @submit.prevent class="upload-form">
       <input
+        :ref="id"
         v-filefilter="'auto'"
         v-validate="validate"
-        :id="id"
-        :ref="id"
-        :name="id"
         @change="upload"
+        :id="id"
+        :name="id"
         type="file"
         class="upload-input">
       <label
         v-if="!fileKey"
         :for="id"
-        :class="[sm ? 'v-btn v-btn--small' : 'btn btn-material btn-sm upload-button']">
+        :class="[sm ? 'v-btn v-size--small my-1' : 'btn btn-material btn-sm upload-button']">
         {{ label }}
       </label>
       <span

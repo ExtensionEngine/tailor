@@ -1,18 +1,18 @@
 <template>
   <v-navigation-drawer value="true" stateless>
-    <v-list class="grey--text text--darken-3">
-      <v-list-tile
+    <v-list class="grey--text text--darken-3 text-left">
+      <v-list-item
         v-for="({ name, label, icon }) in routes"
         :key="name"
         :to="{ name }"
-        active-class="primary--text text--darken-1"
+        active-class="black--text"
         exact
         ripple>
-        <v-list-tile-action class="pl-1">
+        <v-list-item-action class="pl-1">
           <v-icon>mdi-{{ icon }}</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-title>{{ label }}</v-list-tile-title>
-      </v-list-tile>
+        </v-list-item-action>
+        <v-list-item-title>{{ label }}</v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -30,3 +30,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.v-list-item__title {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+</style>

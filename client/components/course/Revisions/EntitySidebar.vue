@@ -6,8 +6,8 @@
         <span
           v-for="(revision, index) in revisions"
           :key="revision.id"
-          :class="{ selected: isSelected(revision) }"
           @click="$emit('preview', revision)"
+          :class="{ selected: isSelected(revision) }"
           class="revision">
           <div class="description">
             <div>{{ formatDate(revision) }}</div>
@@ -17,7 +17,7 @@
             v-show="!isDetached && index > 0 && !revision.loading"
             @click.stop="$emit('rollback', revision)"
             class="rollback">
-            <span class="mdi mdi-loop"></span>
+            <span class="mdi mdi-restore"></span>
           </div>
           <div v-show="revision.loading">
             <div class="progress-background"></div>
@@ -95,7 +95,7 @@ $revision-padding: 32px;
   }
 
   .description {
-    width: 220px;
+    width: 225px;
   }
 
   .rollback {

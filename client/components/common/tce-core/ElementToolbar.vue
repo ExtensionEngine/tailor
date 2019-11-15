@@ -1,12 +1,12 @@
 <template>
   <div :key="id" class="element-toolbar-wrapper white elevation-1">
     <component
-      v-if="componentExists"
       :is="componentName"
+      v-if="componentExists"
+      @save="saveElement"
       :element="element"
-      :embed="embed"
-      @save="saveElement"/>
-    <default-toolbar v-else/>
+      :embed="embed" />
+    <default-toolbar v-else />
     <slot name="embed-toolbar"></slot>
     <div class="delete-element">
       <slot name="actions"></slot>

@@ -4,15 +4,15 @@
     class="select">
     <label :for="meta.key">{{ meta.label }}</label>
     <multiselect
+      @open="active = true"
+      @close="active = false"
+      @input="update"
       :value="value"
       :name="meta.key"
       :options="options"
       :searchable="false"
       :placeholder="meta.placeholder"
-      :multiple="isMultiSelect"
-      @open="active = true"
-      @close="active = false"
-      @input="update">
+      :multiple="isMultiSelect">
       <template slot="option" slot-scope="{ option }">
         <img v-if="option.img" :src="option.img" :alt="option.label" class="img">
         <span>{{ option.label }}</span>
@@ -83,7 +83,7 @@ export default {
     margin-right: 15px;
   }
 
-  /deep/ .multiselect {
+  ::v-deep .multiselect {
     color: #333;
     font-size: 17px;
     line-height: 24px;

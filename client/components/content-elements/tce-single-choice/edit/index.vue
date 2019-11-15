@@ -2,8 +2,8 @@
   <div class="form-group">
     <span class="form-label">{{ isGraded ? 'Answers' : 'Options' }}</span>
     <button
-      :disabled="disabled"
       @click="addAnswer"
+      :disabled="disabled"
       class="btn btn-link answers-add">
       <span class="mdi mdi-plus"></span>
     </button>
@@ -16,22 +16,22 @@
           :class="{ 'has-error': correctError }"
           class="answers-radio">
           <input
+            @change="selectAnswer(index)"
             :checked="correct === index"
             :disabled="disabled"
-            @change="selectAnswer(index)"
             type="radio">
         </span>
         <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
         <span :class="{ 'has-error': answerError(index) }" class="answers-input">
           <input
             :ref="`input${index}`"
+            @change="updateAnswer(index)"
             :value="answer"
             :disabled="disabled"
             :placeholder="isGraded ? 'Answer...' : 'Option...'"
-            @change="updateAnswer(index)"
             type="text">
         </span>
-        <button :disabled="disabled" @click="removeAnswer(index)" class="destroy">
+        <button @click="removeAnswer(index)" :disabled="disabled" class="destroy">
           <span class="mdi mdi-close"></span>
         </button>
       </li>
@@ -75,19 +75,19 @@ export default {
   },
   methods: {
     addAnswer() {
-      let answers = cloneDeep(this.answers);
+      const answers = cloneDeep(this.answers);
       answers.push('');
       this.update({ answers });
     },
     updateAnswer(index) {
-      let answers = cloneDeep(this.answers);
+      const answers = cloneDeep(this.answers);
       answers[index] = this.$refs[`input${index}`][0].value;
       this.update({ answers });
     },
     removeAnswer(index) {
-      let answers = cloneDeep(this.answers);
+      const answers = cloneDeep(this.answers);
       let correct = cloneDeep(this.correct);
-      let feedback = cloneDeep(this.feedback);
+      const feedback = cloneDeep(this.feedback);
 
       answers.splice(index, 1);
 

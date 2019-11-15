@@ -1,6 +1,6 @@
 <template>
   <div>
-    <circular-progress v-if="showLoader"></circular-progress>
+    <circular-progress v-if="showLoader" />
     <div v-else class="repository-list">
       <div
         v-for="repository in repositories"
@@ -27,7 +27,7 @@ export default {
     };
   },
   created() {
-    return Promise.join(api.getCourses(), Promise.delay(700), repositories => {
+    return Promise.join(api.getRepositories(), Promise.delay(700), repositories => {
       this.repositories = sortBy(repositories, 'name');
       this.showLoader = false;
     });

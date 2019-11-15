@@ -1,6 +1,6 @@
 <template>
   <div class="outline-page">
-    <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
+    <v-progress-circular v-if="showLoader" color="primary" indeterminate />
     <div v-else class="outline">
       <div class="activity-container">
         <v-toolbar
@@ -8,29 +8,29 @@
           color="grey lighten-3"
           flat
           dense>
-          <v-spacer/>
+          <v-spacer />
           <v-btn
             @click="toggleActivities"
             color="primary"
-            flat>
+            text>
             Toggle all
           </v-btn>
         </v-toolbar>
         <draggable
+          @update="data => reorder(data, rootActivities)"
           :list="rootActivities"
-          :options="{ handle: '.activity' }"
-          @update="data => reorder(data, rootActivities)">
+          v-bind="{ handle: '.activity' }">
           <activity
             v-for="(activity, index) in rootActivities"
-            v-bind="activity"
             :key="activity._cid"
+            v-bind="activity"
             :index="index + 1"
             :level="1"
-            :activities="outlineActivities"/>
+            :activities="outlineActivities" />
         </draggable>
-        <no-activities v-if="!rootActivities.length"/>
+        <no-activities v-if="!rootActivities.length" />
       </div>
-      <sidebar/>
+      <sidebar />
     </div>
   </div>
 </template>
@@ -92,14 +92,14 @@ export default {
   overflow-y: scroll;
   overflow-y: overlay;
 
-  /deep/ {
+  ::v-deep {
     > :last-child {
       margin-bottom: 120px;
     }
   }
 }
 
-/deep/ .v-toolbar__content {
+::v-deep .v-toolbar__content {
   padding: 0;
 }
 </style>

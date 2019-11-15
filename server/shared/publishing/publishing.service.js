@@ -2,6 +2,7 @@
 
 const PromiseQueue = require('promise-queue');
 const {
+  updateRepositoryCatalog,
   publishActivity,
   publishRepositoryDetails,
   unpublishActivity
@@ -22,6 +23,10 @@ class PublishingService {
 
   unpublishActivity(repository, activity) {
     return this.queue.add(() => unpublishActivity(repository, activity));
+  }
+
+  updateRepositoryCatalog(repository) {
+    return this.queue.add(() => updateRepositoryCatalog(repository));
   }
 }
 

@@ -12,9 +12,15 @@
       <ul v-if="isExpanded">
         <feedback-item
           v-for="(answer, index) in processedAnswers"
-          v-bind="{ index, answer, isEditing, isGraded, feedback: feedback[index] }"
           :key="index"
-          @update="({ html }) => $emit('update', { [index]: html })"/>
+          @update="({ html }) => $emit('update', { [index]: html })"
+          v-bind="{
+            index,
+            answer,
+            isEditing,
+            isGraded,
+            feedback: feedback[index]
+          }" />
       </ul>
     </transition>
   </div>

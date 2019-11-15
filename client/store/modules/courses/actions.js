@@ -1,31 +1,67 @@
+import find from 'lodash/find';
+import forEach from 'lodash/forEach';
 import generateActions from '../../helpers/actions';
+import getVal from 'lodash/get';
 
 const {
   api,
   get,
   remove,
   reset,
-  save,
   setEndpoint,
   update
-} = generateActions('/courses');
+} = generateActions('/repositories');
 
-const fetch = ({ getters, commit }, { reset = false } = {}) => {
-  const mutation = reset ? 'reset' : 'fetch';
-  const params = getters.courseQueryParams;
-  return api.fetch(params).then(courses => {
-    commit('setPagination', { offset: params.offset + params.limit });
-    commit('allCoursesFetched', Object.keys(courses).length < params.limit);
-    commit(mutation, courses);
+const save = ({ commit, dispatch }, model) => {
+  return api.post('/', model).then(() => {
+    commit('setOrder', { field: 'createdAt', order: 'DESC' });
+    commit('resetFilters');
+    dispatch('reset');
   });
 };
 
-const clone = ({ commit }, { id, name, description }) => {
+const fetch = ({ getters, commit }) => {
+  const params = getters.courseQueryParams;
+  const mutation = params.offset === 0 ? 'reset' : 'fetch';
+  return fetchCourses(params).then(items => {
+    commit(mutation, items);
+    commit('setPagination', { offset: params.offset + params.limit });
+    commit('allCoursesFetched', Object.keys(items).length < params.limit);
+  });
+};
+
+const clone = ({ dispatch }, { id, name, description }) => {
   return api.post(`/${id}/clone`, { name, description }).then(response => {
     const { data: course } = response.data;
-    commit('add', course);
+    dispatch('reset');
     return course.id;
   });
 };
 
-export { clone, fetch, get, remove, reset, save, setEndpoint, update };
+const pin = ({ commit, getters }, { id, pin }) => {
+  return api.post(`/${id}/pin`, { pin }).then(({ data: { data } }) => {
+    commit('save', { ...find(getters.courses, { id }), repositoryUser: data });
+  });
+};
+
+export {
+  clone,
+  fetch,
+  get,
+  pin,
+  remove,
+  reset,
+  save,
+  setEndpoint,
+  update
+};
+
+function fetchCourses(params) {
+  return api.fetch(params).then(courses => {
+    forEach(courses, it => {
+      it.repositoryUser = getVal(it, 'repositoryUsers.0');
+      it.lastChange = it.revisions[0];
+    });
+    return courses;
+  });
+}

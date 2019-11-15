@@ -2,7 +2,7 @@ import cuid from 'cuid';
 import Resource from './resource';
 
 export default function ($apiUrl) {
-  let api = new Resource($apiUrl);
+  const api = new Resource($apiUrl);
 
   const get = ({ commit }, id) => {
     return api.getById(id).then(item => commit('save', item) || item);
@@ -40,7 +40,7 @@ export default function ($apiUrl) {
     const changes = { ...model };
     delete changes._cid;
     return api.update(cid, changes)
-      .then(updated => commit('save', updated));
+      .then(updated => commit('save', { ...model, ...updated }));
   };
 
   const remove = ({ commit }, model) => {

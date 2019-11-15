@@ -14,7 +14,7 @@
       :element="element.parent"
       :embed="element">
       <template slot="embed-toolbar">
-        <element-toolbar :element="element"/>
+        <element-toolbar :element="element" />
       </template>
       <template slot="actions">
         <slot name="actions"></slot>
@@ -53,6 +53,7 @@ export default {
 
 <style lang="scss" scoped>
 .toolbar-wrapper {
+  position: fixed;
   width: 100%;
   z-index: 99;
 }
@@ -65,7 +66,9 @@ export default {
 
   .v-chip {
     max-width: 300px;
+    height: 26px;
     margin: 12px 10px;
+    font-size: 13px;
     font-weight: 500;
     text-transform: uppercase;
   }

@@ -4,7 +4,7 @@
       v-if="url && !isEditing"
       :href="publicUrl || url"
       target="_blank"
-      flat
+      text
       small
       icon
       color="info">
@@ -13,29 +13,29 @@
     <file-upload
       v-if="allowFileUpload"
       v-show="!file && isEditing"
+      @upload="val => (file = val) && (urlInput = null)"
       :uploading.sync="uploading"
       :validate="{ ext: extensions }"
-      :confirmDeletion="false"
+      :confirm-deletion="false"
       :label="uploadLabel"
-      @upload="val => (file = val) && (urlInput = null)"
-      sm/>
+      sm />
     <template v-if="file">
       <v-btn
         v-if="isEditing"
         @click.stop="file = null"
-        flat
+        text
         small
         icon
         color="red">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
-      <v-text-field :value="fileName" disabled/>
+      <v-text-field :value="fileName" disabled />
     </template>
     <v-text-field
       v-if="!uploading && (urlInput || !hasAsset)"
       v-model="urlInput"
       :disabled="!isEditing"
-      :placeholder="allowFileUpload ? 'or paste a URL' : 'Paste a URL'"/>
+      :placeholder="allowFileUpload ? 'or paste a URL' : 'Paste a URL'" />
     <span class="actions">
       <v-btn
         v-if="!isEditing"
@@ -45,9 +45,11 @@
       </v-btn>
       <v-btn
         v-else
-        :disabled="uploading || !hasAsset"
         @click.stop="save"
-        small>
+        :disabled="uploading || !hasAsset"
+        text
+        small
+        class="my-1">
         {{ hasChanges ? 'Save' : 'Cancel' }}
       </v-btn>
     </span>
@@ -126,11 +128,11 @@ export default {
   padding-bottom: 0;
 }
 
-/deep/ .help-block {
+::v-deep .help-block {
   display: none;
 }
 
-/deep/ .circular-progress {
+::v-deep .circular-progress {
   width: 20px;
   margin: 0 30px;
 }

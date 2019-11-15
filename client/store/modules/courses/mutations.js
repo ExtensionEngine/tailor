@@ -3,25 +3,40 @@ import Vue from 'vue';
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
 
-const resetPagination = state => {
-  state.$internals.pagination = PAGINATION_DEFAULTS;
-};
-
 const save = (state, course) => {
-  const search = state.search.toLowerCase();
+  const search = state.search && state.search.toLowerCase();
   const name = course.name.toLowerCase();
   if (search && !name.includes(search)) return;
   Vue.set(state.items, course._cid, course);
 };
 
-const setPagination = (state, changes) => {
-  let $internals = state.$internals;
-  $internals.pagination = { ...$internals.pagination, ...changes };
+const togglePinned = state => {
+  resetPagination(state);
+  state.showPinned = !state.showPinned;
 };
 
 const setSearch = (state, query = '') => {
-  state.$internals.pagination = PAGINATION_DEFAULTS;
+  resetPagination(state);
   state.search = query;
+};
+
+const setOrder = (state, order) => {
+  resetPagination(state);
+  state.$internals.sort = { ...state.$internals.sort, ...order };
+};
+
+const setPagination = (state, changes) => {
+  const $internals = state.$internals;
+  $internals.pagination = { ...$internals.pagination, ...changes };
+};
+
+const resetPagination = state => {
+  state.$internals.pagination = { ...PAGINATION_DEFAULTS };
+};
+
+const resetFilters = state => {
+  state.search = '';
+  state.showPinned = false;
 };
 
 const allCoursesFetched = (state, allFetched) => {
@@ -35,8 +50,11 @@ export {
   remove,
   reset,
   resetPagination,
+  resetFilters,
   save,
   setEndpoint,
   setPagination,
-  setSearch
+  setOrder,
+  setSearch,
+  togglePinned
 };

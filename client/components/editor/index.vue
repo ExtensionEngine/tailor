@@ -14,28 +14,26 @@
           </v-btn>
         </span>
       </toolbar>
-      <main-sidebar :activity="activity" :focusedElement="focusedElement"/>
+      <main-sidebar :activity="activity" :focused-element="focusedElement" />
       <transition name="slide">
         <meta-sidebar
           v-if="showSidebar"
           :key="focusedElement._cid"
           :metadata="metadata"
-          :element="focusedElement">
-        </meta-sidebar>
+          :element="focusedElement" />
       </transition>
     </template>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
       <div class="container">
-        <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
+        <v-progress-circular v-if="showLoader" color="primary" indeterminate />
         <template v-else>
           <content-containers
             v-for="(containerGroup, type) in contentContainers"
             :key="type"
-            :containerGroup="containerGroup"
-            :parentId="activity.id"
-            v-bind="getContainerConfig(type)"/>
-          <assessments v-if="showAssessments"/>
-          <exams v-if="showExams"/>
+            :container-group="containerGroup"
+            :parent-id="activity.id"
+            v-bind="getContainerConfig(type)" />
+          <assessments v-if="showAssessments" />
         </template>
       </div>
     </div>
@@ -50,15 +48,15 @@ import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
-import Exams from './structure/Exams';
 import find from 'lodash/find';
+import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
+import map from 'lodash/map';
 import MetaSidebar from './MetaSidebar';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
-import truncate from 'truncate';
 
 export default {
   name: 'editor',
@@ -80,9 +78,6 @@ export default {
     showAssessments() {
       return config.hasAssessments(this.activity.type);
     },
-    showExams() {
-      return config.hasExams(this.activity.type);
-    },
     containerConfigs() {
       if (!this.activity) return [];
       return config.getSupportedContainers(this.activity.type);
@@ -101,9 +96,6 @@ export default {
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
     },
-    truncate(str, len = 50) {
-      return truncate(str, len);
-    },
     onMousedown() {
       this.mousedownCaptured = true;
     },
@@ -118,7 +110,7 @@ export default {
       }
     }
   },
-  async created() {
+  created() {
     const { courseId, activityId } = this.$route.params;
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
@@ -147,15 +139,16 @@ export default {
       this.showSidebar = this.metadata.length && this.showSidebar;
     }, 50));
     // TODO: Do this better!
-    const baseUrl = `/courses/${courseId}`;
+    const baseUrl = `/repositories/${courseId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
-    this.setupTesApi(`${baseUrl}/tes`);
-    const actions = [
-      this.getActivities(),
-      this.getTeachingElements({ activityId, parentId: activityId })
-    ];
+    this.setupTesApi(`${baseUrl}/content-elements`);
+    const actions = [this.getActivities()];
     if (!this.course) actions.push(this.getCourse(courseId));
-    Promise.all(actions).then(() => (this.showLoader = false));
+    Promise.all(actions).then(() => {
+      const ids = flatMap(this.contentContainers, it => map(it, 'id'));
+      return this.getTeachingElements({ ids: [activityId, ...ids] });
+    })
+    .then(() => (this.showLoader = false));
   },
   beforeDestroy() {
     this.unsubscribe();
@@ -163,7 +156,6 @@ export default {
   components: {
     Assessments,
     ContentContainers,
-    Exams,
     MainSidebar,
     MetaSidebar,
     Toolbar
@@ -185,7 +177,7 @@ export default {
 }
 
 .editor {
-  padding: 20px 50px 0;
+  padding: 70px 50px 0;
   overflow-y: scroll;
   overflow-y: overlay;
 

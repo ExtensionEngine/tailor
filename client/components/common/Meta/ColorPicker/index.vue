@@ -1,42 +1,25 @@
 <template>
-  <div class="picker control">
+  <div class="picker control my-2">
     <span class="title">{{ meta.label }}</span>
-    <color-input
-      v-if="showInput"
-      ref="picker"
-      :value="selected"
-      @close="showInput = false"
-      @input="color => select(color)"
-      class="picker">
-    </color-input>
-    <div v-else>
-      <div class="preview">
-        <div
-          :style="{ background: selected }"
-          @click="showPicker"
-          class="selected">
-          <span class="mdi mdi-eyedropper eyedropper"></span>
-        </div>
-      </div>
-      <ul class="colors control-group">
-        <li
-          v-for="(group, index) in colors"
-          :key="index"
-          class="column">
-          <ul>
-            <li
-              v-for="color in group"
-              :key="color"
-              :style="{ background: color }"
-              :class="{ white: isEqualColor(color, '#FFFFFF') }"
-              @click="select(color)"
-              class="tile">
-              <div v-if="isEqualColor(color, selected)" class="dot"></div>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <color-input @input="select" :value="selected" />
+    <ul class="colors control-group pl-0">
+      <li
+        v-for="(group, index) in colors"
+        :key="index"
+        class="column">
+        <ul class="pl-0">
+          <li
+            v-for="color in group"
+            :key="color"
+            @click="select(color)"
+            :style="{ background: color }"
+            :class="{ white: isEqualColor(color, '#FFFFFF') }"
+            class="tile">
+            <div v-if="isEqualColor(color, selected)" class="dot"></div>
+          </li>
+        </ul>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -77,10 +60,6 @@ export default {
     }
   },
   methods: {
-    showPicker() {
-      this.showInput = true;
-      setTimeout(() => this.$refs.picker.$el.scrollIntoView(), 0);
-    },
     select(color) {
       if (this.value === color) return;
       this.value = color;
@@ -98,20 +77,6 @@ export default {
 $size: 18px;
 $gutter: 5px;
 
-.control {
-  padding: 3px 8px;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
-}
-
-.title {
-  display: block;
-  margin-bottom: 10px;
-  color: #808080;
-}
-
 .control-group {
   margin: 5px 0;
   color: #333;
@@ -121,38 +86,21 @@ $gutter: 5px;
 }
 
 .picker {
-  padding-bottom: 10px;
+  padding: 10px;
+
+  .title {
+    display: block;
+    margin-bottom: 10px;
+    color: #808080;
+    font-size: 14px !important;
+    font-weight: normal;
+    line-height: 1rem;
+  }
 }
 
 ul {
   margin: 0;
   padding: 0;
-}
-
-.preview {
-  float: left;
-  margin-right: 10px;
-}
-
-.selected {
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
-
-  .eyedropper {
-    color: #fff;
-    font-size: 18px;
-    line-height: 40px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  &:hover .eyedropper {
-    opacity: 1;
-  }
 }
 
 .colors {

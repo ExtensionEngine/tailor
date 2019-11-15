@@ -22,8 +22,8 @@ const mdiIcons = {
   },
   formula: 'function-variant',
   header: {
-    '1': 'format-header-1',
-    '2': 'format-header-2'
+    1: 'format-header-1',
+    2: 'format-header-2'
   },
   italic: 'format-italic',
   image: 'image-plus',

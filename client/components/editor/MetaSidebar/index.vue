@@ -5,9 +5,8 @@
       <meta-input
         v-for="it in metadata"
         :key="`${element._cid}.${it.key}`"
-        :meta="it"
-        @update="updateElement">
-      </meta-input>
+        @update="updateElement"
+        :meta="it" />
     </div>
   </div>
 </template>

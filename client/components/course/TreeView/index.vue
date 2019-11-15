@@ -2,17 +2,16 @@
   <div class="activities-container">
     <div class="loader-outer">
       <div class="loader-inner">
-        <v-progress-circular v-if="showLoader" color="primary" indeterminate/>
+        <v-progress-circular v-if="showLoader" color="primary" indeterminate />
       </div>
     </div>
     <div :style="{ visibility }" class="activities">
       <tree-graph
+        @node:select="onNodeSelect"
         v-bind="graphOptions"
         :data="graphData"
-        @node:select="onNodeSelect"
-        class="tree">
-      </tree-graph>
-      <sidebar></sidebar>
+        class="tree" />
+      <sidebar />
     </div>
   </div>
 </template>
@@ -138,7 +137,7 @@ $accent: #337ab7;
   float: left;
 }
 
-.tree /deep/ {
+.tree ::v-deep {
   .selected {
     .circle-wrapper {
       filter: url(#lighten);
