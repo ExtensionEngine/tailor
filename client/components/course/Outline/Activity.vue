@@ -5,13 +5,13 @@
         @click="focus(showOptions)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
-        :class="{ 'elevation-9 selected': isHighlighted }"
-        class="activity elevation-1">
-        <v-chip :color="color" label dark disabled class="icon-container">
+        :class="[isHighlighted ? 'elevation-9 selected': 'elevation-1']"
+        class="activity">
+        <v-chip :color="color" label dark class="icon-container">
           <v-btn
             v-if="hasSubtypes"
             @click="toggle()"
-            flat
+            text
             icon
             small>
             <v-icon size="26">mdi-{{ icon }}</v-icon>
@@ -27,7 +27,7 @@
             v-show="isEditable"
             :to="{ name: 'editor', params: { activityId: id } }"
             color="pink"
-            outline
+            outlined
             small>
             Open
           </v-btn>
@@ -180,10 +180,12 @@ export default {
   }
 
   .icon-container {
+    height: inherit;
     margin: 0;
     padding: 0;
+    border-radius: 0 !important;
 
-    /deep/ span {
+    ::v-deep span {
       padding: 0 10px;
       color: #fff;
     }
@@ -197,6 +199,10 @@ export default {
     display: flex;
     min-width: 165px;
     margin-left: auto;
+
+    .v-btn {
+      margin: 6px 8px;
+    }
   }
 }
 

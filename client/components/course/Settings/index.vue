@@ -1,13 +1,13 @@
 <template>
-  <v-container class="mt-4">
-    <v-layout row align-start>
+  <v-container class="my-4">
+    <v-row align="start" no-gutters>
       <v-card>
         <sidebar @action="onActionClick" :is-publishing="isPublishing" />
       </v-card>
-      <v-flex ml-4>
+      <v-col class="ml-6">
         <router-view />
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
     <clone-modal @close="showCloneModal = false" :show="showCloneModal" />
     <progress-dialog :show="isPublishing" :status="publishPercentage" />
     <app-footer />

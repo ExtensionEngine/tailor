@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" width="640">
+  <v-dialog v-model="visible" width="640" eager>
     <v-card>
       <v-card-title class="headline">
         <v-avatar color="primary" size="38" class="mr-2">
@@ -8,22 +8,22 @@
         Change Avatar
       </v-card-title>
       <v-card-text>
-        <v-layout justify-center>
+        <v-row justify="center">
           <croppa
             ref="croppa"
             @file-choose="visible = true"
             v-bind="options"
             prevent-white-space />
-        </v-layout>
+        </v-row>
       </v-card-text>
       <v-card-actions>
-        <v-layout pb-3 pr-3>
+        <v-row class="pb-3 pr-3">
           <v-spacer />
-          <v-btn @click="close" flat>Cancel</v-btn>
-          <v-btn @click="confirm" outline>
+          <v-btn @click="close" text>Cancel</v-btn>
+          <v-btn @click="confirm" outlined>
             Update
           </v-btn>
-        </v-layout>
+        </v-row>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -77,7 +77,7 @@ $image-height: 240px;
   cursor: pointer;
 
   &.croppa--has-target {
-    /deep/ {
+    ::v-deep {
       canvas {
         width: 100% !important;
         height: inherit !important;
@@ -92,7 +92,7 @@ $image-height: 240px;
 .v-list {
   padding: 0;
 
-  /deep/ .v-list__tile {
+  ::v-deep .v-list__tile {
     padding: 0;
   }
 }

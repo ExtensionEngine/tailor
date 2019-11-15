@@ -15,8 +15,8 @@
       :element="assessment">
       <template v-slot:default="{ isEditing }">
         <div class="pb-5">
-          <v-layout>
-            <v-flex grow class="text-xs-left">
+          <v-row no-gutters>
+            <v-col class="text-left grow">
               <v-chip
                 color="blue-grey darken-1"
                 label
@@ -25,17 +25,17 @@
                 class="text-uppercase">
                 {{ elementConfig.name }}
               </v-chip>
-            </v-flex>
-            <v-flex shrink>
+            </v-col>
+            <v-col class="shrink">
               <v-btn
                 @click="$emit('selected')"
-                flat
+                text
                 small
                 class="ma-0 pa-0">
                 Collapse
               </v-btn>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
           <slot :isEditing="isEditing" name="header"></slot>
         </div>
       </template>
@@ -48,7 +48,7 @@
       <v-btn
         @click.stop="$emit('delete')"
         color="primary"
-        flat
+        text
         icon
         class="delete">
         <v-icon>mdi-close</v-icon>

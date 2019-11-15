@@ -1,17 +1,16 @@
 <template>
   <v-card @click="navigateTo()" class="repository-card">
     <div class="card-heading blue-grey darken-4">
-      <v-chip :color="repository.data.color" small label class="ml-3 mr-0" />
-      <v-chip color="grey lighten-3" small label class="ml-0">
+      <v-chip :color="repository.data.color" small label class="ml-3 mt-1" />
+      <v-chip color="grey lighten-3" small label class="ml-0 mt-1">
         {{ schema }}
       </v-chip>
       <v-btn
         v-if="repository.hasAdminAccess"
         @click.stop="navigateTo('course-info')"
-        flat
         icon
         color="grey"
-        class="btn-settings text--darken-1 pull-right my-0">
+        class="btn-settings text--darken-1 pull-right my-0 mr-1">
         <v-icon>mdi-settings</v-icon>
       </v-btn>
       <v-card-title class="headline grey--text text--lighten-4 pt-1">
@@ -31,7 +30,7 @@
       </div>
     </div>
     <v-card-actions class="px-2 py-1">
-      <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" icon>
+      <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" text icon>
         <v-icon
           :color="isPinned ? 'pink': 'grey'"
           :class="{ 'mdi-rotate-45': isPinned }">

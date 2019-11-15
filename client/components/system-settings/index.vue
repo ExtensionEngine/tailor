@@ -4,20 +4,20 @@
       <v-chip
         color="grey lighten-2"
         label
-        outline
+        outlined
         class="mt-2 ml-3 px-3 body-2">
         Admin
       </v-chip>
     </div>
     <v-container>
-      <v-layout row align-start>
+      <v-row align="start" no-gutters class="my-4">
         <v-card>
           <sidebar />
         </v-card>
-        <v-flex ml-4>
+        <v-col class="ml-6">
           <router-view />
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
       <app-footer />
     </v-container>
   </div>

@@ -107,7 +107,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.embeded-elements /deep/ .contained-content {
+.embeded-elements ::v-deep .contained-content {
   margin: 7px 0 !important;
 }
 
@@ -117,7 +117,7 @@ export default {
 }
 
 .list-item-container {
-  &.insertable /deep/ {
+  &.insertable ::v-deep {
     > .contained-content {
       margin: 0;
     }
@@ -127,7 +127,7 @@ export default {
     margin: 10px 0;
     padding: 0;
 
-    /deep/ .inline-activator {
+    ::v-deep .inline-activator {
       display: none;
     }
   }
