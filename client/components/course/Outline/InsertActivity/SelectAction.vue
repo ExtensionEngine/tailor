@@ -5,7 +5,7 @@
       :key="label"
       @click="action"
       color="primary"
-      flat>
+      text>
       <v-icon class="pr-2">mdi-{{ icon }}</v-icon>{{ label }}
     </v-btn>
   </div>

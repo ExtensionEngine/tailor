@@ -1,23 +1,25 @@
 <template>
-  <v-layout justify-center pb-3>
+  <v-row justify="center" class="pb-3">
     <v-speed-dial direction="right">
-      <v-avatar slot="activator" size="150px">
-        <div class="img-container">
-          <img :src="image">
-          <v-icon
-            dark
-            large
-            class="overlay">
-            mdi-camera
-          </v-icon>
-        </div>
-      </v-avatar>
+      <template v-slot:activator>
+        <v-avatar size="150">
+          <div class="img-container">
+            <img :src="image">
+            <v-icon
+              dark
+              large
+              class="overlay">
+              mdi-camera
+            </v-icon>
+          </div>
+        </v-avatar>
+      </template>
       <v-btn @click="selectAvatar" fab dark small color="primary">
         <v-icon>mdi-upload</v-icon>
       </v-btn>
       <v-btn
+        v-if="!isGravatar"
         @click="deleteAvatar"
-        :disabled="isGravatar"
         fab
         dark
         small
@@ -29,7 +31,7 @@
       ref="avatarDialog"
       @update="updateAvatar"
       :img-url="image" />
-  </v-layout>
+  </v-row>
 </template>
 
 <script>
@@ -76,7 +78,7 @@ $image-bg-color: #f5f5f5;
 $image-width: 150px;
 $image-height: 150px;
 
-.v-avatar {
+.v-avatar ::v-deep {
   .img-container {
     position: relative;
     height: $image-height;
@@ -85,6 +87,7 @@ $image-height: 150px;
   img, .v-icon {
     background-color: $image-bg-color;
     border: $image-border;
+    border-radius: 50%;
   }
 
   .overlay {

@@ -7,7 +7,7 @@
     permanent
     stateless
     class="blue-grey lighten-4 actions">
-    <v-toolbar flat class="transparent">
+    <v-toolbar flat height="fit-content" class="transparent pa-1">
       <v-list>
         <v-tooltip
           v-for="({ title, icon, action }) in actions"
@@ -20,7 +20,7 @@
               @click.stop="action"
               color="blue-grey darken-4"
               icon
-              flat>
+              text>
               <v-icon>mdi-{{ icon }}</v-icon>
             </v-btn>
           </template>
@@ -77,6 +77,17 @@ export default {
 
 <style lang="scss" scoped>
 .actions {
-  padding-top: 60px;
+  position: fixed;
+  padding-top: 6.5rem;
+}
+
+::v-deep .v-toolbar__content {
+  padding: 0;
+
+  .v-btn.v-btn--icon.v-size--default {
+    width: 2.25rem;
+    height: 2.25rem;
+    margin: 0.375rem;
+  }
 }
 </style>

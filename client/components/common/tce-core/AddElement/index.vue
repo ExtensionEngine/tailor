@@ -3,7 +3,7 @@
     <v-btn
       v-if="large"
       @click.stop="isVisible = true"
-      outline
+      outlined
       color="primary"
       class="mt-3 mb-4">
       <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
@@ -12,20 +12,20 @@
       v-else
       @click.stop="isVisible = true"
       icon
-      flat
+      text
       color="primary">
       <v-icon>{{ icon }}</v-icon>
     </v-btn>
-    <v-bottom-sheet v-model="isVisible" max-width="1240" inset lazy>
+    <v-bottom-sheet v-model="isVisible" max-width="1240" inset>
       <div class="element-container">
         <v-toolbar v-if="layout" dense class="mb-2">
           <v-spacer />
           <v-divider vertical class="mx-2" />
           <v-btn-toggle v-model="elementWidth" mandatory>
-            <v-btn :value="100" flat>
+            <v-btn :value="100" text>
               <v-icon>mdi-square-outline</v-icon>
             </v-btn>
-            <v-btn :value="50" flat>
+            <v-btn :value="50" text>
               <v-icon>mdi-select-compare</v-icon>
             </v-btn>
           </v-btn-toggle>

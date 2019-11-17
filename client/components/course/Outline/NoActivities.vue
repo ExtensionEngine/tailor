@@ -26,7 +26,7 @@
           :allow-empty="false" />
       </div>
       <div class="col-md-2">
-        <v-btn @click.stop="create" color="blue-grey" outline>Add</v-btn>
+        <v-btn @click.stop="create" color="blue-grey" outlined>Add</v-btn>
       </div>
     </div>
   </div>

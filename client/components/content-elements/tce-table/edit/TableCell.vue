@@ -36,7 +36,7 @@ export default {
   height: 100%;
   border: 1px solid black;
 
-  /deep/ {
+  ::v-deep {
     .jodit_container, .ql-editor {
       min-height: 24px;
       word-break: break-all;

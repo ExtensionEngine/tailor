@@ -4,7 +4,7 @@
       v-if="url && !isEditing"
       :href="publicUrl || url"
       target="_blank"
-      flat
+      text
       small
       icon
       color="info">
@@ -23,7 +23,7 @@
       <v-btn
         v-if="isEditing"
         @click.stop="file = null"
-        flat
+        text
         small
         icon
         color="red">
@@ -47,7 +47,9 @@
         v-else
         @click.stop="save"
         :disabled="uploading || !hasAsset"
-        small>
+        text
+        small
+        class="my-1">
         {{ hasChanges ? 'Save' : 'Cancel' }}
       </v-btn>
     </span>
@@ -126,11 +128,11 @@ export default {
   padding-bottom: 0;
 }
 
-/deep/ .help-block {
+::v-deep .help-block {
   display: none;
 }
 
-/deep/ .circular-progress {
+::v-deep .circular-progress {
   width: 20px;
   margin: 0 30px;
 }

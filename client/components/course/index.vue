@@ -2,7 +2,7 @@
   <div class="repo-container">
     <v-tabs
       height="50"
-      color="primary"
+      background-color="primary"
       slider-color="grey lighten-4"
       dark
       class="elevation-2">
@@ -13,7 +13,7 @@
         active-class="tab-active"
         ripple
         exact
-        class="px-1">
+        class="px-4">
         <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
       </v-tab>
     </v-tabs>
@@ -83,8 +83,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.repo-container, .tab-content, .tab-pane {
+<style lang="scss" scoped>
+.repo-container, .tab-content {
   width: 100%;
   height: 100%;
 }
@@ -101,5 +101,15 @@ export default {
 
 .v-tabs {
   z-index: 2;
+
+  ::v-deep .v-tabs-bar.theme--dark .v-tab {
+    &.v-tab--active {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    &:not(.v-tab--active) {
+      opacity: 1;
+    }
+  }
 }
 </style>

@@ -41,6 +41,7 @@ html {
 }
 
 #app {
+  height: 100vh;
   color: rgba(0,0,0,0.87);
   font-family: $font-family-primary;
   -webkit-font-smoothing: antialiased;
@@ -49,7 +50,7 @@ html {
   overflow: hidden;
 }
 
-.application, .v-content, .view {
+.application, .v-application--wrap, .v-content, .view {
   width: 100%;
   height: 100%;
 }

@@ -93,8 +93,12 @@ export default {
     min-width: 170px;
     margin-left: 25px;
 
-    /deep/ .multiselect {
+    ::v-deep .multiselect {
       padding-top: 0;
+
+      .multiselect__content {
+        padding-left: 0;
+      }
 
       .multiselect__select {
         top: 0;
