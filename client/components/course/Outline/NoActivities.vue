@@ -1,39 +1,37 @@
 <template>
-  <v-container class="fluid item-container">
-    <v-row class="align-center">
-      <v-col class="grow">
-        <v-text-field
-          v-model="name"
-          v-validate="{ required: true, min: 2, max: 250 }"
-          :error-messages="vErrors.collect('name')"
-          :autofocus="true"
-          :placeholder="namePlaceholder"
-          name="name" />
-      </v-col>
-      <v-col class="col-2">
-        <v-select
-          v-if="showLevelPicker"
-          v-model="levelType"
-          v-validate="{ required: true }"
-          :error-messages="vErrors.collect('type')"
-          :items="levels"
-          item-text="label"
-          item-value="type"
-          name="type"
-          placeholder="Type" />
-      </v-col>
-      <v-col class="shrink">
-        <v-btn
-          @click.stop="create"
-          :disabled="vErrors.any()"
-          color="primary lighten-1"
-          class="px-5"
-          depressed>
-          Create
-        </v-btn>
-      </v-col>
-    </v-row>
-  </v-container>
+  <v-row class="align-center item-container">
+    <v-col class="grow">
+      <v-text-field
+        v-model="name"
+        v-validate="{ required: true, min: 2, max: 250 }"
+        :error-messages="vErrors.collect('name')"
+        :autofocus="true"
+        :placeholder="namePlaceholder"
+        name="name" />
+    </v-col>
+    <v-col class="col-3 type-select">
+      <v-select
+        v-if="showLevelPicker"
+        v-model="levelType"
+        v-validate="{ required: true }"
+        :error-messages="vErrors.collect('type')"
+        :items="levels"
+        item-text="label"
+        item-value="type"
+        name="type"
+        placeholder="Type" />
+    </v-col>
+    <v-col class="shrink">
+      <v-btn
+        @click.stop="create"
+        :disabled="vErrors.any()"
+        color="primary lighten-1"
+        class="px-5"
+        depressed>
+        Create
+      </v-btn>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -96,6 +94,6 @@ export default {
 }
 
 .type-select {
-  min-width: 250px;
+  min-width: 200px;
 }
 </style>
