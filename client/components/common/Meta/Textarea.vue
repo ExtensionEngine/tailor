@@ -10,7 +10,7 @@
     :error-messages="vErrors.collect(meta.key)"
     :rows="rows"
     auto-grow
-    box
+    outlined
     class="my-2" />
 </template>
 

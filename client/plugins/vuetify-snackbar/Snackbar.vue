@@ -1,7 +1,7 @@
 <template>
   <v-snackbar v-model="snackbar" v-bind="context">
     {{ context.message }}
-    <v-btn @click="close" dark flat>Close</v-btn>
+    <v-btn @click="close" dark text>Close</v-btn>
   </v-snackbar>
 </template>
 

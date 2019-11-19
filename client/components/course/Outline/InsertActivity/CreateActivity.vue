@@ -1,7 +1,7 @@
 <template>
-  <v-container grid-list-xl fluid px-0>
-    <v-layout row align-center>
-      <v-flex grow>
+  <v-container class="fluid create-container">
+    <v-row class="align-center">
+      <v-col class="grow">
         <v-text-field
           v-model="name"
           v-validate="{ required: true, min: 2, max: 250 }"
@@ -9,8 +9,8 @@
           :autofocus="true"
           :placeholder="namePlaceholder"
           name="name" />
-      </v-flex>
-      <v-flex v-if="showLevelPicker" class="type-select">
+      </v-col>
+      <v-col v-if="showLevelPicker" class="col-2">
         <v-select
           v-model="levelType"
           v-validate="{ required: true }"
@@ -33,8 +33,8 @@
             </div>
           </template>
         </v-select>
-      </v-flex>
-      <v-flex shrink>
+      </v-col>
+      <v-col class="shrink action-buttons">
         <v-item-group>
           <v-btn @click.stop="$emit('close')" outline>Cancel</v-btn>
           <v-btn
@@ -46,8 +46,8 @@
             Add
           </v-btn>
         </v-item-group>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -101,7 +101,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.type-select {
-  max-width: 250px;
+.create-container {
+  min-width: 98%;
+}
+
+.action-buttons {
+  min-width: 190px;
 }
 </style>

@@ -5,9 +5,9 @@ import reduce from 'lodash/reduce';
 import { typeInfo } from './assessment';
 
 const describe = {
-  COURSE: describeCourseRevision,
+  REPOSITORY: describeRepositoryRevision,
   ACTIVITY: describeActivityRevision,
-  TEACHING_ELEMENT: describeElementRevision
+  CONTENT_ELEMENT: describeElementRevision
 };
 
 function getAction(operation) {
@@ -45,8 +45,8 @@ function describeElementRevision(rev, activity) {
   return `${action} ${lower(title)} element${activityText}`;
 }
 
-function describeCourseRevision(rev) {
-  return `${getAction(rev.operation)} course`;
+function describeRepositoryRevision(rev) {
+  return `${getAction(rev.operation)} repository`;
 }
 
 export function isSameInstance(a, b) {
@@ -63,10 +63,10 @@ export function getRevisionAcronym(rev) {
       const typeArray = rev.state.type.split('_', 2);
       return reduce(typeArray, (acc, val) => acc + val.charAt(0), '');
     }
-    case 'COURSE':
-      return 'C';
-    case 'TEACHING_ELEMENT':
-      return 'TE';
+    case 'REPOSITORY':
+      return 'R';
+    case 'CONTENT_ELEMENT':
+      return 'CE';
     default:
       return 'N/A';
   }

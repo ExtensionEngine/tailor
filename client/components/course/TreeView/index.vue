@@ -137,7 +137,7 @@ $accent: #337ab7;
   float: left;
 }
 
-.tree /deep/ {
+.tree ::v-deep {
   .selected {
     .circle-wrapper {
       filter: url(#lighten);

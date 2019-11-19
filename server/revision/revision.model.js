@@ -9,7 +9,7 @@ class Revision extends Model {
     return {
       entity: {
         type: ENUM,
-        values: ['ACTIVITY', 'COURSE', 'TEACHING_ELEMENT'],
+        values: ['ACTIVITY', 'REPOSITORY', 'CONTENT_ELEMENT'],
         allowNull: false
       },
       operation: {
@@ -33,9 +33,9 @@ class Revision extends Model {
     };
   }
 
-  static associate({ Course, User }) {
-    this.belongsTo(Course, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+  static associate({ User, Repository }) {
+    this.belongsTo(Repository, {
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.belongsTo(User, {
       foreignKey: { name: 'userId', field: 'user_id' }

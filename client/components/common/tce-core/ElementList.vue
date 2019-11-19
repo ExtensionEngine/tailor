@@ -5,7 +5,7 @@
       @end="dragElementIndex = -1"
       @update="reorder"
       :list="elements"
-      :options="options"
+      v-bind="options"
       class="row">
       <div
         v-for="(element, index) in elements"

@@ -1,7 +1,7 @@
 <template>
-  <v-container grid-list-md fluid py-3 class="item-container">
-    <v-layout row align-center>
-      <v-flex grow>
+  <v-container class="fluid item-container">
+    <v-row class="align-center">
+      <v-col class="grow">
         <v-text-field
           v-model="name"
           v-validate="{ required: true, min: 2, max: 250 }"
@@ -9,8 +9,8 @@
           :autofocus="true"
           :placeholder="namePlaceholder"
           name="name" />
-      </v-flex>
-      <v-flex shrink>
+      </v-col>
+      <v-col class="col-2">
         <v-select
           v-if="showLevelPicker"
           v-model="levelType"
@@ -21,8 +21,8 @@
           item-value="type"
           name="type"
           placeholder="Type" />
-      </v-flex>
-      <v-flex shrink>
+      </v-col>
+      <v-col class="shrink">
         <v-btn
           @click.stop="create"
           :disabled="vErrors.any()"
@@ -31,8 +31,8 @@
           depressed>
           Create
         </v-btn>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -89,7 +89,13 @@ export default {
 
 <style lang="scss" scoped>
 .item-container {
+  min-width: 100%;
+  padding: 12px 50px;
   background-color: white;
   border: 1px solid #ccc;
+}
+
+.type-select {
+  min-width: 250px;
 }
 </style>

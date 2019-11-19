@@ -1,7 +1,7 @@
 <template>
   <div v-if="hasAnswers" :class="{ disabled }">
     <h5>Answers</h5>
-    <draggable @update="update" :list="answerGroups" :options="dragOptions">
+    <draggable @update="update" :list="answerGroups" v-bind="dragOptions">
       <div v-for="(answers, i) in answerGroups" :key="i" class="answer-group">
         <span class="drag-handle">
           <span class="mdi mdi-drag-vertical"></span>

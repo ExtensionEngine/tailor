@@ -1,14 +1,16 @@
 import request from './request';
 
-const url = {
+const urls = {
   login: '/users/login',
-  forgotPassword: '/users/forgotPassword',
-  resetPassword: '/users/resetPassword'
+  forgotPassword: '/users/forgot-password',
+  resetPassword: '/users/reset-password',
+  profile: '/users/me',
+  changePassword: '/users/me/change-password'
 };
 
 function login(credentials) {
-  return request
-    .post(url.login, credentials)
+  return request.base
+    .post(urls.login, credentials)
     .then(res => res.data.data)
     .then(({ token, user }) => {
       window.localStorage.setItem('JWT_TOKEN', token);
@@ -23,16 +25,26 @@ function logout() {
 }
 
 function forgotPassword(email) {
-  return request.post(url.forgotPassword, { email });
+  return request.post(urls.forgotPassword, { email });
 }
 
 function resetPassword(token, password) {
-  return request.post(url.resetPassword, { token, password });
+  return request.post(urls.resetPassword, { token, password });
+}
+
+function changePassword(currentPassword, newPassword) {
+  return request.post(urls.changePassword, { currentPassword, newPassword });
+}
+
+function updateUserInfo(userData) {
+  return request.patch(urls.profile, userData);
 }
 
 export default {
   login,
   logout,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  updateUserInfo,
+  changePassword
 };

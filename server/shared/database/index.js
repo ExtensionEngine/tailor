@@ -15,10 +15,10 @@ const Umzug = require('umzug');
 
 // Require models.
 const User = require('../../user/user.model');
-const Course = require('../../course/course.model');
-const CourseUser = require('../../course/courseUser.model');
+const Repository = require('../../repository/repository.model');
+const RepositoryUser = require('../../repository/repositoryUser.model');
 const Activity = require('../../activity/activity.model');
-const TeachingElement = require('../../teaching-element/te.model');
+const ContentElement = require('../../content-element/content-element.model');
 const Revision = require('../../revision/revision.model');
 const Comment = require('../../comment/comment.model');
 
@@ -65,10 +65,10 @@ function initialize() {
 
 const models = {
   User: defineModel(User),
-  Course: defineModel(Course),
-  CourseUser: defineModel(CourseUser),
+  Repository: defineModel(Repository),
+  RepositoryUser: defineModel(RepositoryUser),
   Activity: defineModel(Activity),
-  TeachingElement: defineModel(TeachingElement),
+  ContentElement: defineModel(ContentElement),
   Revision: defineModel(Revision),
   Comment: defineModel(Comment)
 };
