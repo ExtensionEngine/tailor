@@ -17,14 +17,14 @@ import ThreadComment from './Comment';
 export default {
   name: 'discussion-thread',
   props: {
-    sort: { type: String, default: 'desc' },
-    showMore: { type: Boolean, default: false },
-    minDisplayed: { type: Number, required: true }
+    sortOrder: { type: String, default: 'desc' },
+    showAll: { type: Boolean, default: false },
+    minDisplayed: { type: Number, default: 4 }
   },
   computed: {
     ...mapGetters(['comments']),
-    thread: v => orderBy(v.comments, ['createdAt'], [v.sort]),
-    visibleItems: v => v.showMore ? v.comments : v.comments.slice(0, v.minDisplayed)
+    thread: v => orderBy(v.comments, ['createdAt'], [v.sortOrder]),
+    visibleItems: v => v.showAll ? v.comments : v.comments.slice(0, v.minDisplayed)
   },
   methods: {
     ...mapActions('comments', ['update', 'remove']),
