@@ -46,6 +46,12 @@ class User extends Model {
         field: 'last_name',
         validate: { len: [2, 50] }
       },
+      fullName: {
+        type: VIRTUAL,
+        get() {
+          return [this.firstName, this.lastName].filter(Boolean).join(' ') || null;
+        }
+      },
       imgUrl: {
         type: TEXT,
         field: 'img_url',
