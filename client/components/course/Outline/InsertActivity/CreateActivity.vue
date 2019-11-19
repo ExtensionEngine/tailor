@@ -102,7 +102,7 @@ export default {
 
 <style lang="scss" scoped>
 .create-container {
-  min-width: 98%;
+  min-width: 100%;
 }
 
 .action-buttons {
