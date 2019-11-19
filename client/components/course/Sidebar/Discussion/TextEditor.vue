@@ -1,15 +1,20 @@
 <template>
-  <div :class="{ preview }" class="form-group text-editor">
-    <textarea
+  <div :class="{ preview }" class="comment-editor">
+    <v-textarea
       v-model.trim="content"
       v-focus.lazy="focused"
-      @keydown.shift.enter.exact="() => {}"
+      @keydown.shift.enter.exact="() => false"
       @keydown.enter.exact.prevent="onEnter"
       @blur="onBlur"
       @input="$emit('input', content)"
       :placeholder="placeholder"
-      class="form-control">
-    </textarea>
+      append-icon="mdi-message"
+      rows="3"
+      outlined
+      filled
+      auto-grow
+      clearable
+      counter />
     <div class="content">
       <pre><span>{{ content }}</span><br></pre>
     </div>
@@ -23,13 +28,11 @@ export default {
   name: 'text-editor',
   props: {
     value: { type: String, required: true },
-    placeholder: { type: String, default: '' },
+    focused: { type: Boolean, default: false },
     preview: { type: Boolean, default: false },
-    focused: { type: Boolean, default: false }
+    placeholder: { type: String, default: '' }
   },
-  data() {
-    return { content: this.value };
-  },
+  data: vm => ({ content: vm.value }),
   methods: {
     onEnter(e) {
       this.$emit('change', this.content);
@@ -51,37 +54,19 @@ export default {
 </script>
 
 <style lang="scss">
-.text-editor {
+.comment-editor {
   position: relative;
   margin: 0;
 
-  textarea {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    font: inherit;
-    letter-spacing: inherit;
-    box-sizing: content-box;
-    background: transparent;
-    overflow: hidden;
-    resize: none;
-    outline: none;
-
-    &:focus {
-      outline: none;
-    }
-  }
-
   .content {
-    visibility: hidden;
+    display: none;
   }
 
   .content pre {
     height: 100%;
     margin: 0;
-    //NOTE: Preventing glitches (height changes, vertical scrollbar)
-    padding: 0 4px 8px 0;
+    // NOTE: Preventing glitches (height changes, vertical scrollbar)
+    padding: 0 0.25rem 0.5rem 0;
     font: inherit;
     white-space: pre-wrap;
     word-break: normal;
@@ -93,13 +78,13 @@ export default {
   }
 }
 
-.text-editor.preview {
-  textarea {
+.comment-editor.preview {
+  .v-textarea {
     display: none;
   }
 
   .content {
-    visibility: visible;
+    display: block;
   }
 }
 </style>
