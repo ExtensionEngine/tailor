@@ -1,13 +1,11 @@
 <template>
-  <ul class="thread">
+  <ul class="thread mt-2">
     <thread-comment
-      v-for="comment in thread"
+      v-for="comment in visibleItems"
       :key="comment._cid || comment.id"
       @update="onUpdate"
       @remove="onRemove"
-      :comment="comment"
-      :avatar="avatars"
-      class="clearfix comment" />
+      :comment="comment" />
   </ul>
 </template>
 
@@ -21,24 +19,17 @@ export default {
   props: {
     sort: { type: String, default: 'desc' },
     showMore: { type: Boolean, default: false },
-    avatars: { type: Boolean, default: true },
     minDisplayed: { type: Number, required: true }
   },
   computed: {
     ...mapGetters(['comments']),
-    displayedComments() {
-      if (this.showMore) return this.comments;
-      return this.comments.slice(0, this.minDisplayed);
-    },
-    thread() {
-      return orderBy(this.displayedComments, ['createdAt'], [this.sort]);
-    }
+    thread: v => orderBy(v.comments, ['createdAt'], [v.sort]),
+    visibleItems: v => v.showMore ? v.comments : v.comments.slice(0, v.minDisplayed)
   },
   methods: {
     ...mapActions('comments', ['update', 'remove']),
     onUpdate(comment, content) {
-      const updatedAt = Date.now();
-      this.update(Object.assign({}, comment, { content, updatedAt }));
+      this.update({ ...comment, content, updatedAt: Date.now() });
     },
     onRemove(comment) {
       this.remove(comment);

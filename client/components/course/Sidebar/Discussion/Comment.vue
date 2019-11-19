@@ -1,200 +1,116 @@
 <template>
-  <li
-    @mouseover="hovered = true"
-    @mouseleave="hovered = false">
-    <span v-if="avatar" class="pull-left avatar">
-      <avatar
-        :size="38"
-        :username="comment.author.email"
-        :initials="authorInitials"
-        :src="user.imgUrl"
-        color="#ffffff" />
-    </span>
-    <div class="content-wrapper">
-      <span class="header">
-        <span
-          :class="{ 'current-user': isAuthor }"
-          class="author">
-          {{ comment.author.email }}
-        </span>
-        <span v-if="isEdited" class="edited-icon icon mdi mdi-pencil"></span>
-        <button
-          v-if="showActions"
-          @click="showDropdown = !showDropdown"
-          @blur="showDropdown = false"
-          :class="{ active: showDropdown }"
-          class="pull-right btn btn-material-icon btn-actions">
-          <span class="icon mdi mdi-dots-vertical"></span>
-        </button>
-        <ul
-          v-show="showDropdown"
-          class="actions">
-          <li
-            @mousedown.prevent="toggleEdit"
-            class="action"
-            role="button">
-            <span class="icon mdi mdi-pencil"></span>
-            Edit
-          </li>
-          <li
-            @mousedown.stop="remove"
-            class="action"
-            role="button">
-            <span class="icon mdi mdi-delete"></span>
-            Remove
-          </li>
-        </ul>
-        <timeago
-          :datetime="comment.createdAt"
-          :auto-update="60"
-          class="pull-right time" />
-      </span>
+  <li class="comment">
+    <v-avatar size="34" class="comment-avatar">
+      <img :src="author.imgUrl">
+    </v-avatar>
+    <div class="comment-body pl-3">
+      <div class="header">
+        <span class="author">{{ author.fullName || author.email }}</span>
+        <v-icon v-if="isEdited" size="16" class="ml-1">
+          mdi-pencil-outline
+        </v-icon>
+      </div>
       <text-editor
         @blur="update"
         @change="update"
         :value="comment.content"
-        :focused="editing"
-        :preview="!editing"
+        :focused="isEditing"
+        :preview="!isEditing"
         :class="{ deleted: isDeleted }"
         class="content" />
+      <timeago
+        v-if="!isEditing"
+        :datetime="comment.createdAt"
+        :auto-update="60"
+        class="time" />
     </div>
+    <v-menu v-if="showOptions" bottom left offset-y>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" icon x-small>
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </template>
+      <v-list dense>
+        <v-list-item
+          v-for="{ name, action, icon } in options"
+          :key="name"
+          @mousedown.prevent="action">
+          <v-list-item-title>
+            <v-icon small>{{ icon }}</v-icon>
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </li>
 </template>
 
 <script>
-import Avatar from 'vue-avatar';
 import { focus } from 'vue-focus';
 import { mapState } from 'vuex';
-import TextEditor from 'components/common/TextEditor';
+import TextEditor from './TextEditor';
 
 export default {
   name: 'thread-comment',
   props: {
-    comment: { type: Object, required: true },
-    avatar: { type: Boolean, default: true }
+    comment: { type: Object, required: true }
   },
-  data() {
-    return {
-      editing: false,
-      showDropdown: false,
-      hovered: false
-    };
-  },
+  data: () => ({ isEditing: false }),
   computed: {
     ...mapState({ user: state => state.auth.user }),
-    authorInitials() {
-      return this.comment.author.email.substr(0, 2).toUpperCase();
-    },
-    isAuthor() {
-      return this.comment.author.id === this.user.id;
-    },
-    isEdited() {
-      return this.comment.createdAt !== this.comment.updatedAt;
-    },
-    isDeleted() {
-      return !!this.comment.deletedAt;
-    },
-    showActions() {
-      return this.hovered && this.isAuthor && !this.isDeleted;
+    author: vm => vm.comment.author,
+    isEdited: vm => vm.comment.createdAt !== vm.comment.updatedAt,
+    isDeleted: vm => !!vm.comment.deletedAt,
+    isAuthor: vm => vm.author.id === vm.user.id,
+    showOptions: vm => vm.isAuthor && !vm.isDeleted,
+    options() {
+      return [
+        { name: 'edit', action: this.toggleEdit, icon: 'mdi-pencil' },
+        { name: 'remove', action: this.remove, icon: 'mdi-delete' }
+      ];
     }
   },
   methods: {
-    toggleEdit() {
-      this.editing = !this.editing;
-    },
     update(content) {
-      this.editing = false;
+      this.isEditing = false;
       if (!content || content === this.comment.content) return;
       this.$emit('update', this.comment, content);
     },
     remove() {
       this.$emit('remove', this.comment);
+    },
+    toggleEdit() {
+      this.isEditing = !this.isEditing;
     }
   },
   directives: { focus },
-  components: { Avatar, TextEditor }
+  components: { TextEditor }
 };
 </script>
 
 <style lang="scss" scoped>
-$color: #333;
-$color-light: lighten($color, 25%);
-$avatar-size: 40px;
-$font-size: 16px;
-$line-size: 20px;
-
 .comment {
-  padding: 8px 0;
+  display: flex;
+  margin-bottom: 1.25rem;
 
-  .avatar {
-    margin-top: 4px;
-    margin-right: 10px;
+  &-avatar {
+    width: 2.5rem;
   }
 
-  .content-wrapper {
-    overflow: hidden;
+  &-body {
+    flex: 1;
+  }
+
+  .author {
+    font-size: 1rem;
   }
 
   .content {
-    font-size: $font-size;
-    line-height: $line-size;
-
-    &.deleted ::v-deep .content span {
-      color: $color-light;
-      font-weight: 400;
-      font-style: italic;
-    }
+    margin: 0.375rem 0 0 0;
   }
 
-  .header {
-    margin-bottom: 4px;
-    color: $color-light;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 24px;
-
-    .edited-icon {
-      color: $color-light;
-      font-size: 12px;
-    }
-
-    .current-user {
-      color: #0f47a1;
-    }
-
-    .time {
-      margin-right: 5px;
-      font-size: 12px;
-    }
-
-    .btn-actions {
-      width: 24px;
-      line-height: 24px;
-
-      &.active {
-        color: #337ab7;
-      }
-    }
-
-    .actions {
-      z-index: 1000;
-      position: absolute;
-      right: 18px;
-      padding: 3px 0;
-      font-size: 12px;
-      list-style: none;
-      background: #fff;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-      border-radius: 2px;
-    }
-
-    .action {
-      padding: 0 5px;
-
-      &:hover {
-        background: #e0e0e0;
-      }
-    }
+  .time {
+    color: #888;
+    font-size: 0.75rem;
   }
 }
 </style>
