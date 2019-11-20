@@ -27,14 +27,17 @@
         filled
         dense>
         <template slot="item" slot-scope="{ item }">
-          <div v-if="item.group">
-            <v-icon color="grey" size="16">mdi-subdirectory-arrow-right</v-icon>
+          <div v-if="item.group" class="pr-5">
+            <v-icon color="grey" size="16" class="pr-1">mdi-folder-open-outline</v-icon>
             <span class="pt-2">{{ item.group }}</span>
           </div>
           <div
             v-else
-            :class="{ 'pl-5': item.level > parent.level }"
+            :class="{ 'pl-6': item.level > parent.level }"
             class="black--text">
+            <v-icon size="16" color="grey" class="pr-1">
+              mdi-{{ hasSubtypes(item) ? 'folder' : 'file-document-box-outline' }}
+            </v-icon>
             {{ item.label }}
           </div>
         </template>
@@ -60,6 +63,7 @@
 import first from 'lodash/first';
 import { mapGetters } from 'vuex';
 import partition from 'lodash/partition';
+import size from 'lodash/size';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -86,6 +90,9 @@ export default {
       const isValid = await this.$validator.validateAll();
       if (!isValid) return;
       this.$emit('create', { type: this.levelType, data: { name: this.name } });
+    },
+    hasSubtypes(item) {
+      return !!size(item.subLevels);
     }
   },
   created() {
