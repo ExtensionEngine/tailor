@@ -1,5 +1,5 @@
 <template>
-  <v-row class="align-center item-container">
+  <v-row class="item-container grey lighten-5 align-center">
     <v-col class="grow">
       <v-text-field
         v-model="name"
@@ -9,10 +9,9 @@
         :placeholder="namePlaceholder"
         name="name" />
     </v-col>
-    <v-col class="col-3 type-select">
+    <v-col v-if="showTypeSelect" class="col-3 type-container">
       <v-select
-        v-if="showLevelPicker"
-        v-model="levelType"
+        v-model="type"
         v-validate="{ required: true }"
         :error-messages="vErrors.collect('type')"
         :items="levels"
@@ -25,7 +24,7 @@
       <v-btn
         @click.stop="create"
         :disabled="vErrors.any()"
-        color="primary lighten-1"
+        color="secondary lighten-1"
         class="px-5"
         depressed>
         Create
@@ -45,7 +44,7 @@ export default {
   data() {
     return {
       name: '',
-      levelType: null
+      type: null
     };
   },
   computed: {
@@ -53,11 +52,11 @@ export default {
     levels() {
       return filter(this.structure, { level: 1 });
     },
-    showLevelPicker() {
+    showTypeSelect() {
       return this.levels.length > 1;
     },
     namePlaceholder() {
-      return this.showLevelPicker ? 'Name' : `${this.levels[0].label} name`;
+      return this.showTypeSelect ? 'Name' : `${this.levels[0].label} name`;
     }
   },
   methods: {
@@ -67,7 +66,7 @@ export default {
       this.$validator.validateAll().then(result => {
         if (!result) return;
         this.save({
-          type: this.levelType,
+          type: this.type,
           data: { name: this.name },
           courseId: this.course.id,
           position: 1
@@ -80,7 +79,7 @@ export default {
     }
   },
   created() {
-    if (!this.showLevelPicker) this.levelType = first(this.levels).type;
+    if (!this.showTypeSelect) this.type = first(this.levels).type;
   }
 };
 </script>
@@ -88,12 +87,10 @@ export default {
 <style lang="scss" scoped>
 .item-container {
   min-width: 100%;
-  padding: 12px 50px;
-  background-color: white;
-  border: 1px solid #ccc;
+  padding: 0.75rem 2.5rem;
 }
 
-.type-select {
-  min-width: 200px;
+.type-container {
+  min-width: 12.5rem;
 }
 </style>
