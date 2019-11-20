@@ -7,6 +7,8 @@ const corsAllowedOrigins = (process.env.CORS_ALLOWED_ORIGINS || '')
 
 module.exports = {
   saltRounds: parseInt(process.env.AUTH_SALT_ROUNDS, 10) || 10,
-  sessionSecret: process.env.AUTH_SESSION_SECRET,
+  scheme: process.env.AUTH_JWT_SCHEME || 'JWT',
+  secret: process.env.AUTH_JWT_SECRET,
+  issuer: process.env.AUTH_JWT_ISSUER,
   corsAllowedOrigins
 };

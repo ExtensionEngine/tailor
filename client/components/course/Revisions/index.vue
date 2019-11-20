@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div v-if="revisions.length > 0" class="revisions white elevation-2">
+    <v-card v-if="revisions.length > 0" class="revisions">
       <ul>
         <revision-item
           v-for="revision in bundledRevisions"
           :key="revision._cid"
           :revision="revision" />
       </ul>
-    </div>
+    </v-card>
     <infinite-loading @infinite="fetchRevisions">
       <span slot="spinner">
         <div class="col-lg-12 loader-wrapper">

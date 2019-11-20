@@ -3,9 +3,9 @@
     <draggable
       @start="dragElementIndex = $event.oldIndex"
       @end="dragElementIndex = -1"
-      @update="$emit('update', $event)"
+      @update="reorder"
       :list="elements"
-      :options="options"
+      v-bind="options"
       class="row">
       <div
         v-for="(element, index) in elements"
@@ -16,6 +16,7 @@
         <slot
           :element="element"
           :isDragged="dragElementIndex === index"
+          :position="index"
           name="list-item">
         </slot>
       </div>
@@ -24,6 +25,7 @@
       v-if="enableAdd"
       @add="el => $emit('add', el)"
       :include="supportedTypes"
+      :activity="activity"
       :position="nextPosition"
       :layout="layout" />
   </div>
@@ -40,6 +42,7 @@ export default {
   props: {
     elements: { type: Array, default: () => ([]) },
     supportedTypes: { type: Array, default: null },
+    activity: { type: Object, default: null },
     layout: { type: Boolean, default: false },
     enableAdd: { type: Boolean, default: true }
   },
@@ -59,7 +62,13 @@ export default {
       return lastItem ? lastItem.position + 1 : 1;
     }
   },
-  methods: { get },
+  methods: {
+    get,
+    reorder({ newIndex: newPosition }) {
+      const items = this.elements;
+      this.$emit('update', { newPosition, items });
+    }
+  },
   components: { AddElement, Draggable }
 };
 </script>

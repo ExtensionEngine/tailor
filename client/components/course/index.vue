@@ -2,7 +2,7 @@
   <div class="repo-container">
     <v-tabs
       height="50"
-      color="primary"
+      background-color="primary"
       slider-color="grey lighten-4"
       dark
       class="elevation-2">
@@ -13,7 +13,7 @@
         active-class="tab-active"
         ripple
         exact
-        class="px-1">
+        class="px-4">
         <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
       </v-tab>
     </v-tabs>
@@ -67,10 +67,10 @@ export default {
     const existingSelection = this.activity && this.activity.courseId === courseId;
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
-    this.setupActivityApi(`/courses/${courseId}/activities`);
-    this.setupCommentsApi(`/courses/${courseId}/comments`);
-    this.setupRevisionApi(`/courses/${courseId}/revisions`);
-    this.setupTesApi(`/courses/${courseId}/tes`);
+    this.setupActivityApi(`/repositories/${courseId}/activities`);
+    this.setupCommentsApi(`/repositories/${courseId}/comments`);
+    this.setupRevisionApi(`/repositories/${courseId}/revisions`);
+    this.setupTesApi(`/repositories/${courseId}/content-elements`);
     const actions = [this.getActivities(), this.getUsers()];
     if (!this.course) actions.push(this.getCourse(courseId));
     await Promise.all(actions);
@@ -83,8 +83,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.repo-container, .tab-content, .tab-pane {
+<style lang="scss" scoped>
+.repo-container, .tab-content {
   width: 100%;
   height: 100%;
 }
@@ -101,5 +101,15 @@ export default {
 
 .v-tabs {
   z-index: 2;
+
+  ::v-deep .v-tabs-bar.theme--dark .v-tab {
+    &.v-tab--active {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    &:not(.v-tab--active) {
+      opacity: 1;
+    }
+  }
 }
 </style>

@@ -7,6 +7,7 @@
         :size="38"
         :username="comment.author.email"
         :initials="authorInitials"
+        :src="user.imgUrl"
         color="#ffffff" />
     </span>
     <div class="content-wrapper">
@@ -44,7 +45,7 @@
           </li>
         </ul>
         <timeago
-          :since="comment.createdAt"
+          :datetime="comment.createdAt"
           :auto-update="60"
           class="pull-right time" />
       </span>
@@ -138,7 +139,7 @@ $line-size: 20px;
     font-size: $font-size;
     line-height: $line-size;
 
-    &.deleted /deep/ .content span {
+    &.deleted ::v-deep .content span {
       color: $color-light;
       font-weight: 400;
       font-style: italic;

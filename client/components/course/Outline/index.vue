@@ -12,14 +12,14 @@
           <v-btn
             @click="toggleActivities"
             color="primary"
-            flat>
+            text>
             Toggle all
           </v-btn>
         </v-toolbar>
         <draggable
           @update="data => reorder(data, rootActivities)"
           :list="rootActivities"
-          :options="{ handle: '.activity' }">
+          v-bind="{ handle: '.activity' }">
           <activity
             v-for="(activity, index) in rootActivities"
             :key="activity._cid"
@@ -92,14 +92,14 @@ export default {
   overflow-y: scroll;
   overflow-y: overlay;
 
-  /deep/ {
+  ::v-deep {
     > :last-child {
       margin-bottom: 120px;
     }
   }
 }
 
-/deep/ .v-toolbar__content {
+::v-deep .v-toolbar__content {
   padding: 0;
 }
 </style>

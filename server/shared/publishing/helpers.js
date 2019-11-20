@@ -1,7 +1,10 @@
 'use strict';
 
-const { getLevelRelationships } = require('../../../config/shared/activities');
-const { TeachingElement } = require('../database');
+const {
+  getLevelRelationships, getSupportedContainers
+} = require('../../../config/shared/activities');
+const { containerRegistry } = require('../content-plugins');
+const { ContentElement } = require('../database');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
@@ -13,26 +16,27 @@ const omit = require('lodash/omit');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const reduce = require('lodash/reduce');
+const { resolveStatics } = require('../storage/helpers');
 const storage = require('../storage');
 const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
 
-const TES_ATTRS = [
+const CE_ATTRS = [
   'id', 'uid', 'type', 'contentId', 'contentSignature',
   'position', 'data', 'meta', 'refs', 'createdAt', 'updatedAt'
 ];
 
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
-    let { repository, predecessors, spine } = data;
+    const { repository, predecessors, spine } = data;
     predecessors.forEach(it => {
       const exists = find(spine.structure, { id: it.id });
       if (!exists) addToSpine(spine, it);
     });
     activity.publishedAt = new Date();
     addToSpine(spine, activity);
-    return publishContent(repository, activity).then(content => {
+    return publishContent(activity).then(content => {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
       return saveSpine(spine)
         .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
@@ -41,11 +45,22 @@ function publishActivity(activity) {
   });
 }
 
-function updateRepositoryCatalog(repository, publishedAt) {
+function getRepositoryCatalog() {
   return storage.getFile('repository/index.json').then(buffer => {
-    let catalog = (buffer && JSON.parse(buffer.toString('utf8'))) || [];
-    let existing = find(catalog, { id: repository.id });
-    const repositoryData = { ...getRepositoryAttrs(repository), publishedAt };
+    if (!buffer) return [];
+    return JSON.parse(buffer.toString('utf8'));
+  });
+}
+
+function updateRepositoryCatalog(repository, publishedAt) {
+  return getRepositoryCatalog().then(catalog => {
+    const existing = find(catalog, { id: repository.id });
+    if (!existing && repository.deletedAt) return;
+    const repositoryData = {
+      ...getRepositoryAttrs(repository),
+      publishedAt: publishedAt || existing.publishedAt,
+      detachedAt: repository.deletedAt
+    };
     if (existing) {
       Object.assign(existing, omit(repositoryData, ['id']));
     } else {
@@ -85,7 +100,7 @@ function unpublishActivity(repository, activity) {
 }
 
 function getStructureData(activity) {
-  const repoData = activity.getCourse().then(repository => {
+  const repoData = activity.getRepository().then(repository => {
     return getPublishedStructure(repository).then(spine => ({ repository, spine }));
   });
   return Promise.all([repoData, activity.predecessors()])
@@ -100,33 +115,31 @@ function getPublishedStructure(repository) {
   });
 }
 
-function fetchActivityContent(repository, activity) {
-  return Promise.all([
-    fetchContainers(repository, activity),
-    fetchAssessments(activity),
-    fetchExams(activity)
-  ]).spread((containers, assessments, exams) => ({ containers, assessments, exams }));
+async function fetchActivityContent(activity, signed = false) {
+  const res = await Promise
+    .all([fetchContainers(activity), fetchAssessments(activity)])
+    .spread((containers, assessments) => ({ containers, assessments }));
+  if (!signed) return res;
+  const [containers, assessments] = await Promise.all([
+    Promise.map(res.containers, resolveContainer),
+    resolveAssessments(res.assessments)
+  ]);
+  return Object.assign(res, { containers, assessments });
 }
 
-function publishContent(repository, activity) {
+function publishContent(activity) {
   return Promise.all([
-    publishContainers(repository, activity),
-    publishExams(activity),
+    publishContainers(activity),
     publishAssessments(activity)
-  ]).spread((containers, exams, assessments) => ({ containers, exams, assessments }));
+  ]).spread((containers, assessments) => ({ containers, assessments }));
 }
 
-function publishContainers(repository, parent) {
-  return fetchContainers(repository, parent)
-    .then(containers => Promise.map(containers, it => {
-      return saveFile(parent, `${it.id}.container`, it).then(() => it);
-    }));
-}
-
-function publishExams(parent) {
-  return fetchExams(parent).then(exams => Promise.map(exams, exam => {
-    return saveFile(parent, `${exam.id}.exam`, exam).then(() => exam);
-  }));
+function publishContainers(parent) {
+  return fetchContainers(parent)
+    .map(it => {
+      const { id, publishedAs = 'container' } = it;
+      return saveFile(parent, `${id}.${publishedAs}`, it).then(() => it);
+    });
 }
 
 function publishAssessments(parent) {
@@ -136,58 +149,60 @@ function publishAssessments(parent) {
   });
 }
 
-function fetchContainers(repository, parent) {
-  const config = find(repository.getSchemaConfig().structure, pick(parent, 'type'));
-  const containerTypes = get(config, 'contentContainers', []);
-  return parent.getChildren({ where: { type: containerTypes } })
-    .then(containers => Promise.map(containers, fetchContainer));
+function fetchContainers(parent) {
+  const typeConfigs = getSupportedContainers(parent.type);
+  const isCore = it => !containerRegistry.getStaticsResolver(it.type);
+  const coreTypes = typeConfigs.filter(isCore).map(it => it.type);
+
+  return Promise.all([
+    parent.getChildren({ where: { type: coreTypes } }).map(fetchDefaultContainer),
+    fetchCustomContainers(parent)
+  ])
+  .reduce((containers, groupedContainers) => {
+    const mappedContainers = groupedContainers.map(it => {
+      const config = find(typeConfigs, { type: it.type });
+      const publishedAs = get(config, 'publishedAs', 'container');
+      return { ...it, publishedAs };
+    });
+    return containers.concat(mappedContainers);
+  }, []);
 }
 
-function fetchContainer(container) {
+function fetchDefaultContainer(container) {
   const order = [['position', 'ASC']];
-  return container.getTeachingElements({ attributes: TES_ATTRS, order }).then(tes => ({
-    ...pick(container, ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt']),
-    elements: map(tes, (it, index) => {
-      it.position = index + 1;
-      return it;
-    })
-  }));
-}
-
-function fetchAssessments(parent) {
-  const options = { where: { type: 'ASSESSMENT' }, attributes: TES_ATTRS };
-  return parent.getTeachingElements(options);
-}
-
-function fetchExams(parent) {
-  return parent.getChildren({ where: { type: 'EXAM' } })
-    .then(exams => Promise.map(exams, fetchQuestionGroups))
-    .then(exams => map(exams, ({ exam, groups }) => {
-      const attrs = [
-        'id', 'uid', 'type', 'position', 'parentId', 'createdAt', 'updatedAt'
-      ];
-      return { ...pick(exam, attrs), groups };
+  return container
+    .getContentElements({ attributes: CE_ATTRS, order })
+    .then(ces => ({
+      ...pick(container, ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt']),
+      elements: map(ces, (it, pos) => Object.assign(it, { position: pos + 1 }))
     }));
 }
 
-async function fetchQuestionGroups(exam) {
-  const groups = await exam.getChildren({
-    include: [{ model: TeachingElement, attributes: TES_ATTRS }]
-  });
-  // TODO: Name relationship in order to avoid PascalCase
-  return {
-    exam,
-    groups: map(groups, group => ({
-      ...pick(group, ['id', 'uid', 'type', 'position', 'data', 'createdAt']),
-      intro: filter(group.TeachingElements, it => it.type !== 'ASSESSMENT'),
-      assessments: filter(group.TeachingElements, { type: 'ASSESSMENT' })
-    }))
-  };
+function fetchCustomContainers(parent) {
+  const options = { include: [{ model: ContentElement, attributes: CE_ATTRS }] };
+  return containerRegistry.fetch(parent, options);
+}
+
+function fetchAssessments(parent) {
+  const options = { where: { type: 'ASSESSMENT' }, attributes: CE_ATTRS };
+  return parent.getContentElements(options);
+}
+
+function resolveContainer(container) {
+  const { elements, type } = container;
+  const resolver = containerRegistry.getStaticsResolver(type);
+  return resolver
+    ? resolver(container, resolveStatics)
+    : Promise.map(elements, resolveStatics).then(() => container);
+}
+
+function resolveAssessments(assessments) {
+  return Promise.map(assessments, resolveStatics);
 }
 
 function saveFile(parent, key, data) {
   const buffer = Buffer.from(JSON.stringify(data), 'utf8');
-  const baseUrl = getBaseUrl(parent.courseId, parent.id);
+  const baseUrl = getBaseUrl(parent.repositoryId, parent.id);
   return storage.saveFile(`${baseUrl}/${key}.json`, buffer);
 }
 
@@ -211,7 +226,7 @@ function addToSpine(spine, activity) {
     }
   );
   renameKey(activity, 'data', 'meta');
-  let index = findIndex(spine.structure, { id: activity.id });
+  const index = findIndex(spine.structure, { id: activity.id });
   if (index < 0) {
     spine.structure.push(activity);
   } else {
@@ -220,7 +235,7 @@ function addToSpine(spine, activity) {
 }
 
 function getSpineChildren(spine, parent) {
-  let children = filter(spine.structure, { parentId: parent.id });
+  const children = filter(spine.structure, { parentId: parent.id });
   if (!children.length) return [];
   return children.concat(reduce(children, (acc, it) => {
     return acc.concat(getSpineChildren(spine, it));
@@ -229,26 +244,24 @@ function getSpineChildren(spine, parent) {
 
 function getRepositoryAttrs(repository) {
   const attrs = ['id', 'uid', 'schema', 'name', 'description', 'data'];
-  let temp = pick(repository, attrs);
+  const temp = pick(repository, attrs);
   renameKey(temp, 'data', 'meta');
   return temp;
 }
 
-function attachContentSummary(obj, { containers, exams, assessments }) {
+function attachContentSummary(obj, { containers, assessments }) {
   obj.contentContainers = map(containers, it => ({
-    ...pick(it, ['id', 'uid', 'type']),
-    elementCount: it.elements.length
+    ...pick(it, ['id', 'uid', 'type', 'publishedAs']),
+    elementCount: get(it.elements, 'length', 0)
   }));
-  obj.exams = map(exams, it => pick(it, ['id', 'uid']));
   obj.assessments = map(assessments, it => pick(it, ['id', 'uid']));
 }
 
 function getActivityFilenames(spineActivity) {
-  const { contentContainers = [], exams = [], assessments = [] } = spineActivity;
-  let filenames = [];
+  const { contentContainers = [], assessments = [] } = spineActivity;
+  const filenames = [];
   if (assessments.length) filenames.push(getAssessmentsKey(spineActivity));
-  filenames.push(...map(exams, it => `${it.id}.exam`));
-  filenames.push(...map(contentContainers, it => `${it.id}.container`));
+  filenames.push(...map(contentContainers, it => `${it.id}.${it.publishedAs}`));
   return filenames;
 }
 
@@ -274,8 +287,11 @@ function mapRelationships(relationships, activity) {
 }
 
 module.exports = {
+  getRepositoryCatalog,
   publishActivity,
   unpublishActivity,
   publishRepositoryDetails,
-  fetchActivityContent
+  updateRepositoryCatalog,
+  fetchActivityContent,
+  getRepositoryAttrs
 };
