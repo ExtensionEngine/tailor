@@ -1,6 +1,6 @@
 <template>
-  <div class="datepicker control">
-    <span class="title">{{ meta.label }}</span>
+  <div class="datepicker control my-3">
+    <span class="body-2">{{ meta.label }}</span>
     <div class="form-group">
       <datetime
         v-model="value"
