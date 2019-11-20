@@ -118,9 +118,11 @@ class Activity extends Model {
   }
 
   clone(repositoryId, parentId, position) {
-    return this.sequelize.transaction(t => {
+    return this.sequelize.transaction(transaction => {
       if (position) this.position = position;
-      return Activity.cloneActivities([this], repositoryId, parentId, t);
+      return Activity.cloneActivities(
+        [this], repositoryId, parentId, { transaction }
+      );
     });
   }
 

@@ -1,42 +1,42 @@
 <template>
-  <div class="well">
-    <div class="row">
-      <div :class="`col-md-${showLevelPicker ? 8 : 10}`">
-        <span
-          :class="{ 'has-error': vErrors.has('name') }"
-          class="form-group">
-          <input
-            v-model="name"
-            v-validate="{ required: true, min: 2, max: 250 }"
-            class="form-control"
-            type="text"
-            name="name"
-            autofocus=""
-            placeholder="Name">
-          <span v-show="vErrors.has('name')" class="help-block">
-            {{ vErrors.first('name') }}
-          </span>
-        </span>
-      </div>
-      <div v-if="showLevelPicker" class="col-md-2">
-        <multiselect
-          @input="onLevelSelected"
-          :value="level"
-          :options="levels"
-          :allow-empty="false" />
-      </div>
-      <div class="col-md-2">
-        <v-btn @click.stop="create" color="blue-grey" outlined>Add</v-btn>
-      </div>
-    </div>
-  </div>
+  <v-row class="item-container grey lighten-5 align-center">
+    <v-col class="grow">
+      <v-text-field
+        v-model="name"
+        v-validate="{ required: true, min: 2, max: 250 }"
+        :error-messages="vErrors.collect('name')"
+        :autofocus="true"
+        :placeholder="namePlaceholder"
+        name="name" />
+    </v-col>
+    <v-col v-if="showTypeSelect" class="col-3 type-container">
+      <v-select
+        v-model="type"
+        v-validate="{ required: true }"
+        :error-messages="vErrors.collect('type')"
+        :items="levels"
+        item-text="label"
+        item-value="type"
+        name="type"
+        placeholder="Type" />
+    </v-col>
+    <v-col class="shrink">
+      <v-btn
+        @click.stop="create"
+        :disabled="vErrors.any()"
+        color="secondary lighten-1"
+        depressed
+        class="px-5">
+        Create
+      </v-btn>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
-import multiselect from '../../common/Select';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -44,56 +44,44 @@ export default {
   data() {
     return {
       name: '',
-      level: null
+      type: null
     };
   },
   computed: {
     ...mapGetters('course', ['course', 'structure', 'activities']),
-    levels() {
-      return filter(this.structure, { level: 1 });
-    },
-    showLevelPicker() {
-      return this.levels.length > 1;
-    }
+    levels: vm => filter(vm.structure, { level: 1 }),
+    showTypeSelect: vm => vm.levels.length > 1,
+    namePlaceholder: vm => vm.showTypeSelect ? 'Name' : `${vm.levels[0].label} name`
   },
   methods: {
     ...mapActions('activities', ['save']),
     ...mapMutations('course', ['focusActivity']),
-    onLevelSelected(level) {
-      if (!level) return;
-      this.level = level;
-    },
-    create() {
-      this.$validator.validateAll().then(result => {
-        if (!result) return;
-        this.save({
-          type: this.level.type,
-          data: { name: this.name },
-          courseId: this.course.id,
-          position: 1
-        })
-        .then(() => {
-          const activity = first(this.activities);
-          if (activity) this.focusActivity(activity._cid);
-        });
+    async create() {
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) return;
+      await this.save({
+        type: this.type,
+        data: { name: this.name },
+        courseId: this.course.id,
+        position: 1
       });
+      const activity = first(this.activities);
+      if (activity) this.focusActivity(activity._cid);
     }
   },
   created() {
-    this.level = first(this.levels);
-  },
-  components: { multiselect }
+    if (!this.showTypeSelect) this.type = first(this.levels).type;
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.well {
-  background-color: white;
-  border: 1px solid #ccc;
+.item-container {
+  min-width: 100%;
+  padding: 0.75rem 2.5rem;
+}
 
-  input {
-    margin: 6px;
-    padding-left: 5px;
-  }
+.type-container {
+  min-width: 12.5rem;
 }
 </style>
