@@ -25,8 +25,8 @@
         @click.stop="create"
         :disabled="vErrors.any()"
         color="secondary lighten-1"
-        class="px-5"
-        depressed>
+        depressed
+        class="px-5">
         Create
       </v-btn>
     </v-col>
@@ -49,33 +49,24 @@ export default {
   },
   computed: {
     ...mapGetters('course', ['course', 'structure', 'activities']),
-    levels() {
-      return filter(this.structure, { level: 1 });
-    },
-    showTypeSelect() {
-      return this.levels.length > 1;
-    },
-    namePlaceholder() {
-      return this.showTypeSelect ? 'Name' : `${this.levels[0].label} name`;
-    }
+    levels: vm => filter(vm.structure, { level: 1 }),
+    showTypeSelect: vm => vm.levels.length > 1,
+    namePlaceholder: vm => vm.showTypeSelect ? 'Name' : `${vm.levels[0].label} name`
   },
   methods: {
     ...mapActions('activities', ['save']),
     ...mapMutations('course', ['focusActivity']),
-    create() {
-      this.$validator.validateAll().then(result => {
-        if (!result) return;
-        this.save({
-          type: this.type,
-          data: { name: this.name },
-          courseId: this.course.id,
-          position: 1
-        })
-        .then(() => {
-          const activity = first(this.activities);
-          if (activity) this.focusActivity(activity._cid);
-        });
+    async create() {
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) return;
+      await this.save({
+        type: this.type,
+        data: { name: this.name },
+        courseId: this.course.id,
+        position: 1
       });
+      const activity = first(this.activities);
+      if (activity) this.focusActivity(activity._cid);
     }
   },
   created() {
