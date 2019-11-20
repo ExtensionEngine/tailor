@@ -1,5 +1,5 @@
 <template>
-  <div class="discussion pa-4 mx-2 mt-5">
+  <div class="discussion px-4 py-2 mx-2 mt-5">
     <div class="header mt-3 mb-6">
       <span>Comments</span>
       <v-btn
@@ -98,7 +98,7 @@ export default {
 <style lang="scss" scoped>
 .discussion {
   background: #fafafa;
-  border: 1px dashed #aaa;
+  border: 1px solid #bbb;
 }
 
 .header {

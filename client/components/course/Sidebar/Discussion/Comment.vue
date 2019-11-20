@@ -35,8 +35,9 @@
           v-for="{ name, action, icon } in options"
           :key="name"
           @mousedown.prevent="action">
-          <v-list-item-title>
-            <v-icon small>{{ icon }}</v-icon>
+          <v-list-item-title class="text-left">
+            <v-icon small class="pr-1">{{ icon }}</v-icon>
+            {{ name }}
           </v-list-item-title>
         </v-list-item>
       </v-list>
@@ -64,8 +65,8 @@ export default {
     showOptions: vm => vm.isAuthor && !vm.isDeleted,
     options() {
       return [
-        { name: 'edit', action: this.toggleEdit, icon: 'mdi-pencil' },
-        { name: 'remove', action: this.remove, icon: 'mdi-delete' }
+        { name: 'Edit', action: this.toggleEdit, icon: 'mdi-pencil' },
+        { name: 'Remove', action: this.remove, icon: 'mdi-delete' }
       ];
     }
   },
@@ -112,5 +113,9 @@ export default {
     color: #888;
     font-size: 0.75rem;
   }
+}
+
+.v-menu__content {
+  cursor: pointer !important;
 }
 </style>
