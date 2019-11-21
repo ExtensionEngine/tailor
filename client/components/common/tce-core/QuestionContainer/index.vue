@@ -1,7 +1,7 @@
 <template>
   <div @selected="$emit('selected')" class="assessment-container">
     <div class="assessment">
-      <slot></slot>
+      <slot :isEditing="isEditing"></slot>
       <question
         @update="update"
         :assessment="editedElement"
@@ -15,7 +15,7 @@
         :is-graded="isGraded"
         :is-editing="isEditing"
         :errors="errors" />
-      <div :class="{ 'has-error': hintError }" class="form-group">
+      <div :class="{ 'has-error': hintError }" class="form-group hint">
         <span class="form-label">Hint</span>
         <input
           v-model="editedElement.data.hint"
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import * as yup from 'yup';
 import { getComponentName, processAnswerType } from '../utils';
 import cloneDeep from 'lodash/cloneDeep';
 import Controls from './Controls';
@@ -60,7 +61,6 @@ import map from 'lodash/map';
 import omit from 'lodash/omit';
 import Question from './Question';
 import toPath from 'lodash/toPath';
-import yup from 'yup';
 
 const validationOptions = { recursive: true, abortEarly: false };
 
@@ -154,24 +154,23 @@ export default {
     validate() {
       return this.schema.validate(this.editedElement.data, validationOptions);
     },
-    updateFeedback(feedback) {
-      const data = this.editedElement.data;
-      data.feedback = data.feedback || {};
-      Object.assign(data.feedback, feedback);
+    updateFeedback(data) {
+      const { editedElement: element } = this;
+      this.$set(element.data, 'feedback', { ...element.data.feedback, ...data });
     }
   },
   components: { Controls, Feedback, Question }
 };
 
 function errorProcessor(error) {
-  let item = error.value;
+  const item = error.value;
   if (item.type !== 'DD') return map(error.inner, it => it.path);
   // TODO: Nasty !!
   return map(error.inner, it => {
-    let path = toPath(it.path);
+    const path = toPath(it.path);
     if (path.length === 1) return it.path;
     if (last(path) !== 'value') return;
-    let key = get(error.value, dropRight(path).concat('key'));
+    const key = get(error.value, dropRight(path).concat('key'));
     return `${path[0]}${key}`;
   });
 }

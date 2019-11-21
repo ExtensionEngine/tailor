@@ -1,15 +1,15 @@
 <template>
   <div infinite-wrapper class="catalog-wrapper">
-    <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog">
-      <v-layout row class="catalog-actions">
+    <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog mt-3">
+      <v-row no-gutters class="catalog-actions">
         <create-repository />
-        <v-flex md4 sm10 offset-md4 offset-sm1>
+        <v-col md="4" sm="10" offset-md="4" offset-sm="1">
           <search @update="setSearch($event)" :value="queryParams.search" />
-        </v-flex>
-        <v-flex md3 sm1 class="text-sm-left pl-2">
+        </v-col>
+        <v-col md="3" sm="1" class="text-sm-left pl-2">
           <v-tooltip open-delay="800" right>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" @click="togglePinned()" icon flat>
+              <v-btn v-on="on" @click="togglePinned()" icon text class="my-1">
                 <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
                   mdi-pin
                 </v-icon>
@@ -18,17 +18,17 @@
             <span>Toggle pinned</span>
           </v-tooltip>
           <select-order @update="setOrder" :sort-by="sortBy" class="pl-2" />
-        </v-flex>
-      </v-layout>
-      <v-layout row wrap>
-        <v-flex
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col
           v-for="repository in repositories"
           :key="repository._cid"
-          xs4
+          cols="4"
           class="px-2 py-3">
           <repository-card :repository="repository" />
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
       <infinite-loading ref="loader" @infinite="load">
         <div slot="spinner" class="spinner">
           <v-progress-circular color="primary" indeterminate />
@@ -38,7 +38,7 @@
             :value="!loading"
             color="blue-grey lighten-4"
             icon="mdi-cloud-search-outline"
-            outline>
+            outlined>
             {{ noRepositoriesMessage }}
           </v-alert>
         </div>
@@ -129,8 +129,8 @@ export default {
 }
 
 .catalog {
-  @media (min-width: 1440px) {
-    max-width: 1185px !important;
+  @media (min-width: 1264px) {
+    max-width: 1185px;
   }
 
   &::before {
@@ -163,7 +163,7 @@ export default {
   margin-bottom: 20px;
   padding-top: 12px;
 
-  /deep/ .add-repo {
+  ::v-deep .add-repo {
     top: 10px;
     right: 12px;
   }

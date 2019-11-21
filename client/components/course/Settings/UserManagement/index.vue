@@ -14,12 +14,7 @@ import UserList from './UserList';
 
 export default {
   computed: {
-    roles() {
-      return map(role.course, it => ({
-        text: titleCase(it.replace('COURSE', '')),
-        value: it
-      }));
-    }
+    roles: () => map(role.repository, value => ({ text: titleCase(value), value }))
   },
   components: {
     AddUser,
@@ -30,6 +25,6 @@ export default {
 
 <style lang="scss" scoped>
 .settings {
-  padding: 30px 30px 10px;
+  padding: 30px;
 }
 </style>

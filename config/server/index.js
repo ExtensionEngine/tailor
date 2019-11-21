@@ -1,7 +1,10 @@
 'use strict';
 
+const auth = require('./auth');
 const isLocalhost = require('is-localhost');
+const mail = require('./mail');
 const parse = require('url-parse');
+const storage = require('./storage');
 
 const hostname = resolveHostname();
 const protocol = resolveProtocol(hostname);
@@ -14,8 +17,9 @@ module.exports = {
   hostname,
   port,
   origin,
-  auth: require('./auth'),
-  storage: require('./storage'),
+  auth,
+  mail,
+  storage,
   previewUrl
 };
 

@@ -1,10 +1,10 @@
 <template>
-  <div v-if="course" class="settings white elevation-1">
+  <v-card v-if="course" class="settings">
     <div class="actions">
       <v-btn
         @click="publish"
         :loading="publishing"
-        outline
+        outlined
         small
         class="pull-right">
         Publish info
@@ -22,7 +22,7 @@
       @update="updateKey"
       :meta="it"
       class="meta-input" />
-  </div>
+  </v-card>
 </template>
 
 <script>
@@ -78,7 +78,7 @@ export default {
 
 <style lang="scss" scoped>
 .settings {
-  padding: 30px 30px 10px;
+  padding: 30px;
   text-align: left;
 
   .meta-input {
@@ -95,7 +95,7 @@ export default {
 }
 
 .picker {
-  /deep/ .actions {
+  ::v-deep .actions {
     margin: 20px 0 0;
     text-align: left;
   }

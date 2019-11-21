@@ -1,8 +1,8 @@
 <template>
-  <v-toolbar color="grey lighten-5" app dense fixed>
+  <v-app-bar color="grey lighten-5" app dense fixed>
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
-      <v-avatar color="primary darken-1" size="34" class="mt-1">
-        <img :src="logo" alt="Logo" class="logo">
+      <v-avatar color="primary darken-1" size="34" class="mt-1 pa-2">
+        <img :src="logo" alt="Logo">
       </v-avatar>
       <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
     </router-link>
@@ -14,7 +14,7 @@
         :to="to"
         color="blue-grey darken-3"
         exact
-        flat>
+        text>
         <v-icon class="pr-1">mdi-{{ icon }}</v-icon>
         <span class="toolbar-route">{{ name }}</span>
       </v-btn>
@@ -24,21 +24,26 @@
       transition="slide-y-transition"
       offset-y
       z-index="1000">
-      <v-btn slot="activator" icon class="mr-2">
-        <v-avatar size="34" color="grey lighten-2">
-          <span class="grey--text text--darken-1 headline">{{ user.email[0] }}</span>
-        </v-avatar>
-      </v-btn>
-      <v-list>
-        <v-list-tile>
-          <v-list-tile-title>{{ user.email }}</v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile @click="logout">
-          <v-list-tile-title>Logout</v-list-tile-title>
-        </v-list-tile>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" icon class="mr-2">
+          <v-avatar size="34" color="grey lighten-2">
+            <img :src="user.imgUrl">
+          </v-avatar>
+        </v-btn>
+      </template>
+      <v-list class="text-left">
+        <v-list-item>
+          <v-list-item-title>{{ user.email }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: 'user-settings' }">
+          <v-list-item-title>Profile</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="logout">
+          <v-list-item-title>Logout</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <script>
@@ -80,6 +85,11 @@ $font-color: #333;
 
 .v-toolbar {
   z-index: 10;
+
+  .v-toolbar__content .v-btn.v-btn--icon {
+    width: unset;
+    height: unset;
+  }
 }
 
 .v-toolbar__items {
@@ -109,9 +119,5 @@ $font-color: #333;
   &:hover {
     color: darken($font-color, 20%);
   }
-}
-
-.logo {
-  width: 26px;
 }
 </style>

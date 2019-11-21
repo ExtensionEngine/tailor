@@ -190,7 +190,7 @@ export default {
     background: #585858;
   }
 
-  /deep/ object {
+  ::v-deep object {
     display: block;
     width: 100%;
     height: 100%;

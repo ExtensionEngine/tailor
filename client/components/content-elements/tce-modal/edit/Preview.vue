@@ -47,11 +47,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.modal /deep/ .modal-header {
+.modal ::v-deep .modal-header {
   display: none;
 }
 
-.modal /deep/ .modal-body {
+.modal ::v-deep .modal-body {
   padding: 0 8px;
 }
 
