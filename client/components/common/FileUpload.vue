@@ -1,48 +1,35 @@
 <template>
-  <div class="file-upload">
-    <circular-progress v-if="uploading" />
-    <form v-else @submit.prevent class="upload-form">
-      <input
-        :ref="id"
-        v-filefilter="'auto'"
-        v-validate="validate"
-        @change="upload"
-        :id="id"
-        :name="id"
-        type="file"
-        class="upload-input">
-      <label
-        v-if="!fileKey"
-        :for="id"
-        :class="[sm ? 'v-btn v-size--small my-1' : 'btn btn-material btn-sm upload-button']">
-        {{ label }}
-      </label>
-      <template v-else>
-        <v-btn @click="downloadFile" flat class="text-none" color="primary">
-          {{ fileName }}
-        </v-btn>
-        <v-btn @click="deleteFile" icon class="ml-2">
-          <v-icon color="primary lighten-1" size="22">mdi-delete</v-icon>
-        </v-btn>
-      </template>
-    </form>
-    <span class="help-block">{{ vErrors.first(id) }}</span>
-  </div>
+  <form @submit.prevent class="upload-form">
+    <v-file-input
+      v-if="!fileKey"
+      @change.native="upload"
+      :loading="uploading"
+      :disabled="uploading"
+      :label="label"
+      :accept="acceptedFileTypes"
+      dense />
+    <template v-else>
+      <v-btn @click="downloadFile" text class="text-none" color="primary">
+        {{ fileName | truncate(35) }}
+      </v-btn>
+      <v-btn @click="deleteFile" icon class="ml-2">
+        <v-icon color="primary lighten-1" size="22">mdi-delete</v-icon>
+      </v-btn>
+    </template>
+  </form>
 </template>
 
 <script>
-import CircularProgress from 'components/common/CircularProgress';
 import downloadMixin from 'utils/downloadMixin';
 import EventBus from 'EventBus';
 import uniqueId from 'lodash/uniqueId';
-import { withValidation } from 'utils/validation';
 
 const appChannel = EventBus.channel('app');
 
 export default {
   name: 'file-upload',
   inject: ['$storageService'],
-  mixins: [downloadMixin, withValidation()],
+  mixins: [downloadMixin],
   props: {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
@@ -54,6 +41,12 @@ export default {
   data() {
     return { uploading: false };
   },
+  computed: {
+    acceptedFileTypes() {
+      const { ext } = this.validate;
+      return ext.length ? `.${ext.join(',.')}` : '';
+    }
+  },
   methods: {
     createFileForm(e) {
       this.form = new FormData();
@@ -63,18 +56,15 @@ export default {
     },
     upload(e) {
       this.createFileForm(e);
-      this.$validator.validate(this.id).then(isValid => {
-        if (!isValid) return;
-        this.uploading = true;
-        return this.$storageService.upload(this.form)
-          .then(({ url, publicUrl, key }) => {
-            this.uploading = false;
-            const { name } = this.form.get('file');
-            this.$emit('upload', { url, publicUrl, key, name });
-          }).catch(() => {
-            this.error = 'An error has occurred!';
-          });
-      });
+      this.uploading = true;
+      return this.$storageService.upload(this.form)
+        .then(({ url, publicUrl, key }) => {
+          this.uploading = false;
+          const { name } = this.form.get('file');
+          this.$emit('upload', { url, publicUrl, key, name });
+        }).catch(() => {
+          this.error = 'An error has occurred!';
+        });
     },
     downloadFile() {
       return this.$storageService.getUrl(this.fileKey)
@@ -92,14 +82,14 @@ export default {
     uploading(val) {
       this.$emit('update:uploading', val);
     }
-  },
-  components: { CircularProgress }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.file-upload, .upload-form {
+.upload-form {
   display: inline-block;
+  min-width: 100%;
 }
 
 // Using width/height restriction on hidden element
