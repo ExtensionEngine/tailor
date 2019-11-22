@@ -4,7 +4,6 @@
       v-if="!fileKey"
       @change.native="upload"
       :loading="uploading"
-      :disabled="uploading"
       :label="label"
       :accept="acceptedFileTypes"
       dense />
