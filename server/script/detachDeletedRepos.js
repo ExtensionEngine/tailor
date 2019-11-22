@@ -1,5 +1,8 @@
 'use strict';
 
+require('dotenv').config();
+require('../shared/logger').enabled = false;
+
 const { getRepositoryAttrs, getRepositoryCatalog } = require('../shared/publishing/helpers');
 const each = require('lodash/each');
 const omit = require('lodash/omit');

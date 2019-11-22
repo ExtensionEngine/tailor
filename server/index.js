@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const config = require('../config/server');
 const database = require('./shared/database');
-const logger = require('./shared/logger');
+const logger = require('./shared/logger')();
 const runApp = promisify(app.listen.bind(app));
 
 database.initialize()

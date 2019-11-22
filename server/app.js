@@ -10,7 +10,7 @@ require('express-async-errors');
 
 const auth = require('./shared/auth');
 const config = require('../config/server');
-const logger = require('./shared/logger');
+const logger = require('./shared/logger')();
 const router = require('./router');
 
 const { STORAGE_PATH } = process.env;

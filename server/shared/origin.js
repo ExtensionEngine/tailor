@@ -1,7 +1,7 @@
 'use strict';
 
 const { hostname } = require('../../config/server');
-const logger = require('./logger');
+const logger = require('./logger')();
 
 const isProduction = process.env.NODE_ENV === 'production';
 
