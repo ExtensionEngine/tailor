@@ -1,8 +1,9 @@
 'use strict';
 
-const logger = require('../logger');
+const { createLogger, Level } = require('../logger');
 
 const isProduction = process.env.NODE_ENV === 'production';
+const logger = createLogger('db', { level: Level.DEBUG });
 
 module.exports = {
   ...readConfig(),
