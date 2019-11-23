@@ -6,7 +6,7 @@
         v-model="value"
         @input="value => $emit('update', meta.key, value)"
         :type="type"
-        :input-class="'form-control'" />
+        input-class="form-control" />
     </div>
   </div>
 </template>
