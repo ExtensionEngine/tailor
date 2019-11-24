@@ -11,7 +11,7 @@
     item-text="label"
     item-value="value"
     deletable-chips
-    outline />
+    outlined />
 </template>
 
 <script>

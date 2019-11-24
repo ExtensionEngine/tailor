@@ -3,13 +3,14 @@
     v-model="value"
     v-validate="meta.validate"
     @change="onChange"
-    :error-messages="vErrors.collect(meta.key)"
-    :label="meta.label"
     :name="meta.key"
+    :data-vv-as="meta.label"
+    :label="meta.label"
     :placeholder="meta.placeholder"
+    :error-messages="vErrors.collect(meta.key)"
     :rows="rows"
     auto-grow
-    box
+    outlined
     class="my-2" />
 </template>
 

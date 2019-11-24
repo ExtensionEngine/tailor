@@ -22,14 +22,20 @@ import ResetPassword from './components/auth/ResetPassword';
 import SystemSettings from './components/system-settings';
 import SystemUserManagement from './components/system-settings/UserManagement';
 import TreeView from './components/course/TreeView';
+import UserSettings from './components/user-settings';
 
 Vue.use(Router);
 
-let router = new Router({
+const router = new Router({
   routes: [{
     path: '/',
     name: 'catalog',
     component: Catalog,
+    meta: { auth: true }
+  }, {
+    path: '/settings',
+    name: 'user-settings',
+    component: UserSettings,
     meta: { auth: true }
   }, {
     path: '/course/:courseId',

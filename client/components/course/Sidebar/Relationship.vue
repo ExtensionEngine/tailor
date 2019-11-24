@@ -91,7 +91,7 @@ export default {
     },
     onRelationshipChanged(value) {
       const associations = compact(castArray(value));
-      let activity = cloneDeep(this.activity) || {};
+      const activity = cloneDeep(this.activity) || {};
       set(activity, `refs.${this.type}`, map(associations, 'id'));
       this.update(activity);
     }
@@ -104,6 +104,10 @@ export default {
 .relationship {
   margin-top: 40px;
   padding: 3px 8px;
+
+  ::v-deep .multiselect .multiselect__content {
+    padding-left: 0;
+  }
 
   label {
     margin-bottom: 10px;

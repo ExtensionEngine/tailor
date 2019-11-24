@@ -36,12 +36,12 @@ class Comment extends Model {
     hooks.add(this, Hooks, models);
   }
 
-  static associate({ Activity, Course, User }) {
+  static associate({ Activity, Repository, User }) {
     this.belongsTo(Activity, {
       foreignKey: { name: 'activityId', field: 'activity_id' }
     });
-    this.belongsTo(Course, {
-      foreignKey: { name: 'courseId', field: 'course_id' }
+    this.belongsTo(Repository, {
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.belongsTo(User, {
       as: 'author',

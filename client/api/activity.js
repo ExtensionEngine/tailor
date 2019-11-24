@@ -1,12 +1,16 @@
 import request from './request';
 
-function getActivities(courseId, params) {
-  return request.get(`/courses/${courseId}/activities`, { params })
+const urls = {
+  root: repositoryId => `/repositories/${repositoryId}/activities`
+};
+
+function getActivities(repositoryId, params) {
+  return request.get(urls.root(repositoryId), { params })
     .then(res => res.data.data);
 }
 
-function createPreview(courseId, activityId) {
-  return request.get(`courses/${courseId}/activities/${activityId}/preview`)
+function createPreview(repositoryId, activityId) {
+  return request.get(`${urls.root(repositoryId)}/${activityId}/preview`)
     .then(res => res.data.location);
 }
 
