@@ -11,7 +11,7 @@
             :disabled="isLoading"
             :loading="isLoading"
             color="blue-grey"
-            outline>
+            outlined>
             Reinvite
           </v-btn>
         </v-card-title>
@@ -22,6 +22,22 @@
             :error-messages="vErrors.collect('email')"
             label="E-mail"
             data-vv-name="email"
+            class="mb-3" />
+          <v-text-field
+            v-model="user.firstName"
+            v-validate="'required|min:2|max:50'"
+            :error-messages="vErrors.collect('firstName')"
+            label="First name"
+            data-vv-as="First name"
+            data-vv-name="firstName"
+            class="mb-3" />
+          <v-text-field
+            v-model="user.lastName"
+            v-validate="'required|min:2|max:50'"
+            :error-messages="vErrors.collect('lastName')"
+            label="Last name"
+            data-vv-as="Last name"
+            data-vv-name="lastName"
             class="mb-3" />
           <v-select
             v-model="user.role"
@@ -35,7 +51,7 @@
         <v-card-actions>
           <v-spacer />
           <v-btn @click="close">Cancel</v-btn>
-          <v-btn color="primary" type="submit" outline>Save</v-btn>
+          <v-btn color="primary" type="submit" outlined>Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>
@@ -49,12 +65,13 @@ import humanize from 'humanize-string';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { role } from 'shared';
-import without from 'lodash/without';
 import { withValidation } from 'utils/validation';
 
 const resetUser = () => {
   return {
     email: '',
+    firstName: '',
+    lastName: '',
     role: null
   };
 };
@@ -82,7 +99,7 @@ export default {
       }
     },
     roles() {
-      const roles = without(role.getRoleValues('user'), 'INTEGRATION');
+      const roles = role.getRoleValues('user');
       return map(roles, it => ({ text: humanize(it), value: it }));
     },
     isNewUser() {
@@ -113,17 +130,12 @@ export default {
       this.vErrors.clear();
       if (!isEmpty(this.userData)) this.user = cloneDeep(this.userData);
     }
-  },
-  mounted() {
-    if (this.$validator.rules['unique-email']) return;
-    this.$validator.extend('unique-email', {
-      getMessage: field => `The ${field} is not unique.`,
-      validate: (email, userData) => {
-        if (userData && email === userData.email) return true;
-        return api.fetch({ email })
-          .then(({ total }) => ({ valid: !total }));
-      }
-    });
   }
 };
 </script>
+
+<style lang="scss" scoped>
+::v-deep .v-list.v-sheet {
+  text-align: left;
+}
+</style>

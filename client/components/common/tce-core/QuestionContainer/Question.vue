@@ -4,7 +4,7 @@
     <div
       :class="{ editing: isEditing, 'question-error': questionError }"
       class="question">
-      <draggable v-model="question" :options="dragOptions" class="row">
+      <draggable v-model="question" v-bind="dragOptions" class="row">
         <contained-content
           v-for="element in question"
           :key="element.id"
@@ -82,7 +82,7 @@ export default {
     deleteElement(element) {
       const index = findIndex(this.assessment.data.question, { id: element.id });
       if (index === -1) return;
-      let question = cloneDeep(this.assessment.data.question);
+      const question = cloneDeep(this.assessment.data.question);
       pullAt(question, index);
       this.$emit('update', { question });
     }

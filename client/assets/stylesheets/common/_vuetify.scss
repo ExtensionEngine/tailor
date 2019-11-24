@@ -1,5 +1,14 @@
+// Customizations
+.v-input, .v-chip.v-size--small, .v-chip.v-chip--outlined, .v-btn--outlined {
+  border-radius: 2px !important;
+}
+
+.v-input--selection-controls__input input {
+  position: absolute;
+}
+
 // Patches in order for vuetify to work alongside bootstrap
-.v-input input, .v-input input[type=text][readonly] {
+.v-input input, .v-input textarea, .v-input input[type=text][readonly] {
   box-shadow: inherit;
   border: inherit;
 }
@@ -23,6 +32,21 @@ hr.v-divider--vertical {
   margin: 0;
 }
 
-.v-input--selection-controls__input input {
-  position: absolute;
+html {
+  font-size: 16px !important;
+}
+
+.v-application {
+  fieldset legend {
+    border: 0;
+  }
+
+  a:focus {
+    outline: none;
+  }
+
+  .row .no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+  }
 }

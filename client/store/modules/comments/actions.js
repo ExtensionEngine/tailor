@@ -26,7 +26,7 @@ const unsubscribe = () => {
   SSE_CLIENT.disconnect();
 };
 
-const remove = ({ state, commit }, comment) => {
+const remove = (_, comment) => {
   // Update locally and let real data update be pushed from server
   // after soft delete
   comment.deletedAt = new Date();

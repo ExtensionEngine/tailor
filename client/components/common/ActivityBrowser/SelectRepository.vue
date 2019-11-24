@@ -27,7 +27,7 @@ export default {
     };
   },
   created() {
-    return Promise.join(api.getCourses(), Promise.delay(700), repositories => {
+    return Promise.join(api.getRepositories(), Promise.delay(700), repositories => {
       this.repositories = sortBy(repositories, 'name');
       this.showLoader = false;
     });

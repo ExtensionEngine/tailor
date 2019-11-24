@@ -4,7 +4,7 @@
     <v-chip :color="config.color" label dark small class="type-label">
       {{ config.label.toUpperCase() }}
     </v-chip>
-    <div class="meta-element">
+    <div class="meta-elements">
       <meta-input
         v-for="it in metadata"
         :key="`${activity._cid}.${it.key}`"
@@ -71,7 +71,9 @@ export default {
   font-weight: 500;
 }
 
-.meta-element {
+.meta-elements {
+  padding-top: 10px;
+
   > * {
     padding-top: 20px;
   }

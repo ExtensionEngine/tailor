@@ -16,7 +16,8 @@
     item-text="data.name"
     deletable-chips
     return-object
-    box />
+    filled
+    dense />
 </template>
 
 <script>
@@ -109,7 +110,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .v-chip .v-chip__content {
-  z-index: 0;
+::v-deep {
+  .v-chip .v-chip__content {
+    z-index: 0;
+  }
+
+  .v-list-item__content {
+    flex: initial;
+  }
 }
 </style>

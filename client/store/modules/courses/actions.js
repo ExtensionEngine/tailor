@@ -10,7 +10,7 @@ const {
   reset,
   setEndpoint,
   update
-} = generateActions('/courses');
+} = generateActions('/repositories');
 
 const save = ({ commit, dispatch }, model) => {
   return api.post('/', model).then(() => {
@@ -40,7 +40,7 @@ const clone = ({ dispatch }, { id, name, description }) => {
 
 const pin = ({ commit, getters }, { id, pin }) => {
   return api.post(`/${id}/pin`, { pin }).then(({ data: { data } }) => {
-    commit('save', { ...find(getters.courses, { id }), courseUser: data });
+    commit('save', { ...find(getters.courses, { id }), repositoryUser: data });
   });
 };
 
@@ -59,7 +59,7 @@ export {
 function fetchCourses(params) {
   return api.fetch(params).then(courses => {
     forEach(courses, it => {
-      it.courseUser = getVal(it, 'courseUsers.0');
+      it.repositoryUser = getVal(it, 'repositoryUsers.0');
       it.lastChange = it.revisions[0];
     });
     return courses;

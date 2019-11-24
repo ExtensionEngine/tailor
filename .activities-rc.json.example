@@ -23,7 +23,7 @@
         "allowEmpty": true,
         "placeholder": "Click to select",
         "allowCircularLinks": false,
-        "allowInsideLineage": false
+        "allowInsideLineage": false,
         "allowedTypes": ["ACTIVITY_TYPE_1", "ACTIVITY_TYPE_2"]
       }, {
         "type": "replacements",
@@ -33,7 +33,9 @@
     "contentContainers": [{
       "type": "PAGE",
       "label": "Page",
-      "multiple": false
+      "multiple": false,
+      "publishedAs": "Page",
+      "required": false
     }]
   }]
 }

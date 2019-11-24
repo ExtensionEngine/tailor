@@ -1,27 +1,14 @@
 <template>
-  <div
-    @focusout="focusoutInput"
-    @mousedown.stop="focusInput"
-    :class="{ editing }"
-    class="input">
-    <label :for="meta.key">{{ meta.label }}</label>
-    <div
-      v-show="editing"
-      :class="{ 'has-error': vErrors.has(meta.key) }">
-      <input
-        :ref="meta.key"
-        v-model="value"
-        v-validate="meta.validate"
-        @keyup.enter="focusoutInput"
-        :name="meta.key"
-        :placeholder="meta.placeholder"
-        class="form-control">
-      <span class="help-block">{{ vErrors.first(meta.key) }}</span>
-    </div>
-    <div v-show="!editing" @click.stop="focusInput">
-      <div class="content">{{ value || meta.placeholder }}</div>
-    </div>
-  </div>
+  <v-text-field
+    v-model="value"
+    v-validate="meta.validate"
+    @change="onChange"
+    :name="meta.key"
+    :data-vv-as="meta.label"
+    :label="meta.label"
+    :placeholder="meta.placeholder"
+    :error-messages="vErrors.collect(meta.key)"
+    filled />
 </template>
 
 <script>
@@ -35,19 +22,13 @@ export default {
   },
   data() {
     return {
-      value: this.meta.value,
-      editing: false
+      value: this.meta.value
     };
   },
   methods: {
-    focusInput() {
-      this.editing = true;
-      setTimeout(() => this.$refs[this.meta.key].focus(), 0);
-    },
-    focusoutInput() {
-      this.$validator.validate(this.meta.key).then(result => {
-        if (!result) return;
-        this.editing = false;
+    onChange() {
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
         if (this.value === this.meta.value) return;
         this.$emit('update', this.meta.key, this.value);
       });
@@ -55,37 +36,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.input {
-  padding: 3px 8px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
-
-  &.editing:hover {
-    background-color: inherit;
-  }
-
-  label {
-    color: #808080;
-  }
-
-  input {
-    letter-spacing: inherit;
-  }
-
-  .form-control, .content {
-    font-size: 17px;
-  }
-
-  .content {
-    margin: 5px 3px 15px 0;
-    color: #333;
-    line-height: 24px;
-    word-wrap: break-word;
-  }
-}
-</style>
