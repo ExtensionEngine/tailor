@@ -9,8 +9,9 @@
     :search="search"
     transition
     open-all
+    dense
     class="mx-3 px-1 py-3 treeview">
-    <template v-slot:prepend="{ item, open }">
+    <template v-slot:prepend="{ item }">
       <v-icon
         v-if="item.level"
         @click="$emit('toggleSelect', item)"

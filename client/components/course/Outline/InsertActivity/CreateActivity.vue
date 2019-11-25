@@ -1,49 +1,69 @@
 <template>
-  <div class="create-activity">
-    <span
-      :class="{ 'has-error': vErrors.has('name') }"
-      class="form-group name-input">
-      <input
+  <v-row class="align-center mt-6 px-1">
+    <v-col>
+      <v-text-field
         v-model="name"
-        v-focus.lazy="true"
         v-validate="{ required: true, min: 2, max: 250 }"
-        class="form-control"
+        :error-messages="vErrors.collect('name')"
+        :autofocus="true"
+        height="24"
+        append-icon="mdi-pencil-outline"
+        label="Name"
         name="name"
-        placeholder="Title">
-      <span class="help-block">{{ vErrors.first('name') }}</span>
-    </span>
-    <multiselect
-      v-if="supportedLevels.length > 1"
-      v-model="level"
-      v-validate="'required'"
-      :options="supportedLevels"
-      :searchable="false"
-      data-vv-value-path="type"
-      data-vv-delay="0"
-      track-by="type"
-      name="type"
-      class="type-select" />
-    <div class="actions">
-      <button
-        @click.stop="$emit('close')"
-        class="btn btn-default btn-sm btn-material pull-right">
-        X
-      </button>
-      <button
+        filled
+        dense />
+    </v-col>
+    <v-col v-if="showTypeSelect" class="col-3 ml-1">
+      <v-select
+        v-model="levelType"
+        v-validate="{ required: true }"
+        :error-messages="vErrors.collect('type')"
+        :items="levels"
+        item-text="label"
+        item-value="type"
+        height="24"
+        label="Type"
+        name="type"
+        filled
+        dense>
+        <template slot="item" slot-scope="{ item }">
+          <div v-if="item.group" class="pr-5">
+            <v-icon color="grey" size="16" class="pr-1">mdi-folder-open-outline</v-icon>
+            <span class="pt-2">{{ item.group }}</span>
+          </div>
+          <div
+            v-else
+            :class="{ 'pl-6': item.level > parent.level }"
+            class="black--text">
+            <v-icon size="16" color="grey" class="pr-1">
+              mdi-{{ hasSubtypes(item) ? 'folder' : 'file-document-box-outline' }}
+            </v-icon>
+            {{ item.label }}
+          </div>
+        </template>
+      </v-select>
+    </v-col>
+    <v-col class="shrink action-buttons">
+      <v-btn @click.stop="$emit('close')" color="grey darken-1" outlined>
+        Cancel
+      </v-btn>
+      <v-btn
         @click.stop="create"
         :disabled="vErrors.any()"
-        class="btn btn-default btn-sm btn-material add pull-right">
+        color="primary lighten-2"
+        depressed
+        class="ml-2 px-5">
         Add
-      </button>
-    </div>
-  </div>
+      </v-btn>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
 import first from 'lodash/first';
-import { focus } from 'vue-focus';
 import { mapGetters } from 'vuex';
-import multiselect from 'components/common/Select';
+import partition from 'lodash/partition';
+import size from 'lodash/size';
 import { withValidation } from 'utils/validation';
 
 export default {
@@ -53,67 +73,44 @@ export default {
     supportedLevels: { type: Array, required: true }
   },
   data() {
-    return { name: '', level: null };
+    return { name: '', levelType: null };
   },
-  computed: mapGetters('course', ['structure']),
+  computed: {
+    ...mapGetters('course', ['structure']),
+    showTypeSelect: vm => vm.supportedLevels.length > 1,
+    levels() {
+      const { supportedLevels: types, parent } = this;
+      const [sameLevel, subLevel] = partition(types, { level: parent.level });
+      if (!subLevel.length) return sameLevel;
+      return [...sameLevel, { group: 'Sublevels', disabled: true }, ...subLevel];
+    }
+  },
   methods: {
-    create() {
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
-        this.$emit('create', { type: this.level.type, data: { name: this.name } });
-      });
+    async create() {
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) return;
+      this.$emit('create', { type: this.levelType, data: { name: this.name } });
+    },
+    hasSubtypes(item) {
+      return !!size(item.subLevels);
     }
   },
   created() {
-    this.level = first(this.supportedLevels);
-  },
-  directives: { focus },
-  components: { multiselect }
+    const { supportedLevels, showTypeSelect } = this;
+    if (!showTypeSelect) this.levelType = first(supportedLevels).type;
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.create-activity {
-  display: flex;
-  align-items: stretch;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  padding: 20px 5px;
-
-  input {
-    background-color: inherit;
-  }
-
-  .btn-sm.btn-material {
-    min-width: 68px;
-    padding: 8px 0;
-  }
-
-  .type-select {
-    min-width: 170px;
-    margin-left: 25px;
-
-    /deep/ .multiselect {
-      padding-top: 0;
-
-      .multiselect__select {
-        top: 0;
-      }
-    }
-  }
-
-  .actions {
-    width: 150px;
-    min-width: 150px;
-    margin-left: 10px;
-  }
-
-  .name-input {
-    width: 100%;
-  }
+.create-container {
+  min-width: 100%;
 }
 
-.btn.add {
-  margin-right: 3px;
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  min-width: 13.5rem;
+  padding: 0 0 1.5rem;
 }
 </style>

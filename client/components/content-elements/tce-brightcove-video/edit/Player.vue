@@ -156,7 +156,7 @@ function empty(el) {
 </script>
 
 <style lang="scss" scoped>
-.brightcove-player, .brightcove-player /deep/ .video-js {
+.brightcove-player, .brightcove-player ::v-deep .video-js {
   width: 100%;
   height: 360px;
 }
@@ -178,7 +178,7 @@ function empty(el) {
   .mdi { font-size: 42px; }
 }
 
-.brightcove-player /deep/ .vjs-error .vjs-error-display::before {
+.brightcove-player ::v-deep .vjs-error .vjs-error-display::before {
   content: "\F026";
   font-size: 42px;
   font-family: $font-family-icons;

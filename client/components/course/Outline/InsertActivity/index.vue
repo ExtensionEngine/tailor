@@ -95,9 +95,9 @@ export default {
       this.action = null;
     },
     formatActivity(it) {
-      const { id, courseId, type } = it;
-      if (this.action === 'copy') it = { srcId: id, srcCourseId: courseId, type };
-      it.courseId = this.anchor.courseId;
+      const { id: srcId, repositoryId: srcRepositoryId, type } = it;
+      if (this.action === 'copy') it = { srcId, srcRepositoryId, type };
+      it.repositoryId = this.anchor.repositoryId;
       it.parentId = this.resolveParent(it);
       it.position = this.calculatePosition(it);
       return it;
@@ -161,21 +161,21 @@ export default {
 
     .action {
       position: absolute;
-      top: -18px;
-      right: -32px;
+      top: -12px;
+      right: -24px;
       height: 0;
     }
-  }
 
-  .v-btn {
-    $size: 24px;
+    .v-btn {
+      $size: 24px;
 
-    width: $size;
-    min-width: $size;
-    height: $size;
+      width: $size;
+      min-width: $size;
+      height: $size;
 
-    .v-icon {
-      font-size: 20px;
+      .v-icon {
+        font-size: 20px;
+      }
     }
   }
 }

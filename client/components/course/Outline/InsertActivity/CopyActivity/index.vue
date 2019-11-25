@@ -12,7 +12,7 @@
           <v-progress-circular color="primary" indeterminate />
         </div>
         <div v-else-if="selectedRepository">
-          <v-container py-3 pr-5 mx-0 class="input-section">
+          <v-container class="py-3 pr-5 mx-0 input-section">
             <v-autocomplete
               @input="updateSelected"
               :value="selectedRepository"
@@ -43,7 +43,7 @@
           @click="$emit('copy', selected)"
           :disabled="!selected.length"
           color="primary"
-          outline>
+          outlined>
           {{ copyButtonLabel }}
         </v-btn>
       </v-card-actions>
@@ -144,7 +144,7 @@ export default {
   },
   created() {
     const { schema } = this.course;
-    return Promise.join(courseApi.getCourses(), Promise.delay(700), items => {
+    return Promise.join(courseApi.getRepositories(), Promise.delay(700), items => {
       this.repositories = sortBy(items, 'name').filter(it => it.schema === schema);
       this.showLoader = false;
       return this.updateSelected(this.repositories[0].id);
@@ -162,5 +162,9 @@ export default {
 <style lang="scss" scoped>
 .input-section {
   max-width: 60%;
+}
+
+::v-deep .v-list-item__content {
+  flex: initial;
 }
 </style>

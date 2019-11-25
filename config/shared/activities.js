@@ -1,5 +1,6 @@
 'use strict';
 
+const castArray = require('lodash/castArray');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const first = require('lodash/first');
@@ -64,7 +65,8 @@ function getLevel(type) {
 }
 
 function getTesMeta(schemaId, type) {
-  return find(getSchema(schemaId).tesMeta, { type }) || {};
+  const { tesMeta } = getSchema(schemaId);
+  return find(tesMeta, it => castArray(it.type).includes(type)) || {};
 }
 
 function getSiblingLevels(type) {
@@ -97,7 +99,7 @@ function getObjectives(schemaId) {
 function getRepositoryMeta(repository) {
   const config = get(getSchema(repository.schema), 'meta', []);
   return map(config, it => {
-    let value = get(repository, `data.${it.key}`);
+    const value = get(repository, `data.${it.key}`);
     return { ...it, value };
   });
 }

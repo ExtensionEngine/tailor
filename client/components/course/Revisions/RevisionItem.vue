@@ -2,7 +2,7 @@
   <li>
     <div
       @click="toggle"
-      :style="{ cursor: isTeachingElement ? 'pointer' : 'auto' }"
+      :style="{ cursor: isContentElement ? 'pointer' : 'auto' }"
       :class="{ expanded }"
       class="revision">
       <div :style="{ color }" class="acronym">{{ acronym }}</div>
@@ -58,8 +58,8 @@ export default {
     description() {
       return getFormatDescription(this.revision, this.activity);
     },
-    isTeachingElement() {
-      return this.revision.entity === 'TEACHING_ELEMENT';
+    isContentElement() {
+      return this.revision.entity === 'CONTENT_ELEMENT';
     }
   },
   methods: {
@@ -70,7 +70,7 @@ export default {
       return this.getOutlineLocation(this.getParent(current.id));
     },
     toggle() {
-      if (this.isTeachingElement) this.expanded = !this.expanded;
+      if (this.isContentElement) this.expanded = !this.expanded;
     }
   },
   components: { EntityRevisions }
