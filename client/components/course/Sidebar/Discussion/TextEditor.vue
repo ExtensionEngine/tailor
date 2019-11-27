@@ -2,11 +2,11 @@
   <div :class="{ preview }" class="comment-editor">
     <v-textarea
       v-model.trim="content"
-      v-focus.lazy="focused"
       @keydown.shift.enter.exact="() => false"
       @keydown.enter.exact.prevent="onEnter"
       @blur="onBlur"
       @input="$emit('input', content)"
+      :autofocus="focused"
       :placeholder="placeholder"
       rows="3"
       color="grey"
@@ -22,8 +22,6 @@
 </template>
 
 <script>
-import { focus } from 'vue-focus';
-
 export default {
   name: 'text-editor',
   props: {
@@ -48,8 +46,7 @@ export default {
     preview() {
       this.content = this.value;
     }
-  },
-  directives: { focus }
+  }
 };
 </script>
 

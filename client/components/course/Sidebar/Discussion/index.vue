@@ -1,6 +1,6 @@
 <template>
-  <div v-if="commentsFetched" class="discussion px-4 py-2 mx-2 mt-5">
-    <div class="header mt-3 mb-6">
+  <div v-if="commentsFetched" class="discussion">
+    <div class="header">
       <span>Comments</span>
       <v-btn
         v-if="commentsShownLimit < commentsCount"
@@ -56,10 +56,8 @@ export default {
     ...mapState({ user: state => state.auth.user }),
     ...mapGetters('course', ['activity']),
     ...mapGetters('comments', ['commentsFetched', 'commentsCount']),
-    commentsShownLimit: () => 5,
-    editor() {
-      return this.$refs.editor.$el;
-    }
+    commentsShownLimit: () => 4,
+    editor: vm => vm.$refs.editor.$el
   },
   methods: {
     ...mapActions('comments', [
@@ -108,11 +106,14 @@ export default {
 
 <style lang="scss" scoped>
 .discussion {
+  margin: 1.125rem 0.25rem 0;
+  padding: 0.375rem 1rem;
   background: #fafafa;
   border: 1px dashed #bbb;
 }
 
 .header {
+  margin: 0.875rem 0 1.625rem 0;
   font-size: 1.125rem;
   font-weight: 400;
 }
