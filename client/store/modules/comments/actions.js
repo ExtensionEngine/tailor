@@ -17,7 +17,7 @@ const subscribe = ({ state, commit, rootState }) => {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
 
   // Get token from the Auth module
-  const token = rootState.token;
+  const token = rootState.auth.token;
   SSE_CLIENT = new SSEClient(`/api/v1/${state.$apiUrl}/subscribe`, token);
   SSE_CLIENT.subscribe('comment_create', item => commit('sseAdd', item));
   SSE_CLIENT.subscribe('comment_update', item => commit('sseUpdate', item));
