@@ -40,7 +40,7 @@
         @click.stop="createGroup"
         :disabled="!container.id"
         color="primary"
-        outline
+        outlined
         class="my-5">
         <v-icon class="pr-2">mdi-file-tree</v-icon>
         Add Question Group

@@ -1,5 +1,7 @@
 'use strict';
 
+const Audience = require('../shared/auth/audience');
+const bcrypt = require('bcrypt');
 const config = require('../../config/server');
 const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
@@ -8,15 +10,10 @@ const map = require('lodash/map');
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
+const randomstring = require('randomstring');
 const { role: roles } = require('../../config/shared');
 
 const { user: { ADMIN, USER, INTEGRATION } } = roles;
-
-const bcrypt = Promise.promisifyAll(require('bcryptjs'));
-const AUTH_SECRET = process.env.AUTH_JWT_SECRET;
-
-const noop = Function.prototype;
-
 const gravatarConfig = { size: 130, default: 'identicon' };
 
 class User extends Model {
@@ -32,7 +29,8 @@ class User extends Model {
       },
       password: {
         type: STRING,
-        validate: { notEmpty: true, len: [5, 100] }
+        validate: { notEmpty: true, len: [5, 100] },
+        defaultValue: () => randomstring.generate()
       },
       role: {
         type: ENUM(ADMIN, USER, INTEGRATION),
@@ -65,10 +63,6 @@ class User extends Model {
           ]);
         }
       },
-      token: {
-        type: STRING,
-        unique: true
-      },
       createdAt: {
         type: DATE,
         field: 'created_at'
@@ -84,12 +78,12 @@ class User extends Model {
     };
   }
 
-  static associate({ Comment, Course, CourseUser }) {
+  static associate({ Comment, Repository, RepositoryUser }) {
     this.hasMany(Comment, {
       foreignKey: { name: 'authorId', field: 'author_id' }
     });
-    this.belongsToMany(Course, {
-      through: CourseUser,
+    this.belongsToMany(Repository, {
+      through: RepositoryUser,
       foreignKey: { name: 'userId', field: 'user_id' }
     });
   }
@@ -122,9 +116,11 @@ class User extends Model {
     };
   }
 
-  static invite(user, emailCb = noop) {
-    return this.create(user)
-      .then(user => this.sendInvitation(user, emailCb));
+  static invite(user) {
+    return this.create(user).then(user => {
+      this.sendInvitation(user);
+      return user.reload();
+    });
   }
 
   static inviteOrUpdate(data) {
@@ -136,10 +132,12 @@ class User extends Model {
     });
   }
 
-  static sendInvitation(user, emailCb = noop) {
-    user.token = user.createToken({ expiresIn: '5 days' });
-    mail.invite(user).asCallback(emailCb);
-    return user.save();
+  static sendInvitation(user) {
+    const token = user.createToken({
+      expiresIn: '5 days',
+      audience: Audience.Scope.Setup
+    });
+    mail.invite(user, token);
   }
 
   isAdmin() {
@@ -166,13 +164,25 @@ class User extends Model {
 
   createToken(options = {}) {
     const payload = { id: this.id, email: this.email };
-    return jwt.sign(payload, AUTH_SECRET, options);
+    Object.assign(options, {
+      issuer: config.auth.issuer,
+      audience: options.audience || Audience.Scope.Access
+    });
+    return jwt.sign(payload, this.getTokenSecret(options.audience), options);
   }
 
   sendResetToken() {
-    this.token = this.createToken({ expiresIn: '5 days' });
-    mail.resetPassword(this);
-    return this.save();
+    const token = this.createToken({
+      audience: Audience.Scope.Setup,
+      expiresIn: '2 days'
+    });
+    mail.resetPassword(this, token);
+  }
+
+  getTokenSecret(audience) {
+    const { secret } = config.auth;
+    if (audience === Audience.Scope.Access) return secret;
+    return [secret, this.password, this.createdAt.getTime()].join('');
   }
 }
 

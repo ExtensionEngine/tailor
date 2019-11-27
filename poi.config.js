@@ -3,7 +3,7 @@
 const path = require('path');
 const serverPort = require('./config/server').port;
 
-const { NODE_ENV, STORAGE_PATH } = process.env;
+const { AUTH_JWT_SCHEME, NODE_ENV, STORAGE_PATH } = process.env;
 const imagesPath = 'assets/img';
 const isProduction = NODE_ENV === 'production';
 const serverUrl = `http://127.0.0.1:${serverPort}`;
@@ -82,6 +82,11 @@ module.exports = {
   output: {
     dir: 'dist',
     sourceMap: !isProduction
+  },
+  envs: {
+    API_PATH: '/api/v1/',
+    AUTH_JWT_SCHEME,
+    PERSIST_STORAGE_KEY: 'TAILOR_USER'
   },
   babel: {
     transpileModules: [

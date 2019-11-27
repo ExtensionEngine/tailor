@@ -1,12 +1,12 @@
 'use strict';
 
-const { Activity, TeachingElement } = require('../shared/database');
+const { Activity, ContentElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 
-function list({ course, query, opts }, res) {
+function list({ query, opts }, res) {
   if (!query.detached) opts.where = { detached: false };
   if (query.ids) {
     const ids = query.ids.map(id => Number(id));
@@ -15,45 +15,43 @@ function list({ course, query, opts }, res) {
     opts.include = { model: Activity, attributes: [], where };
   }
 
-  const elements = query.integration
-    ? course.getTeachingElements(opts)
-    : TeachingElement.fetch(opts);
-  return elements.then(data => res.json({ data }));
+  return ContentElement.fetch(opts)
+    .then(data => res.json({ data }));
 }
 
 function show({ params }, res) {
-  const teId = parseInt(params.teId, 10);
-  return TeachingElement.fetch(teId)
-    .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
+  const id = parseInt(params.elementId, 10);
+  return ContentElement.fetch(id)
+    .then(asset => asset || createError(NOT_FOUND, 'Element not found'))
     .then(asset => res.json({ data: asset }));
 }
 
-function create({ body, params, user }, res) {
+function create({ user, repository, body }, res) {
   const attr = ['activityId', 'type', 'data', 'position', 'refs'];
-  const data = Object.assign(pick(body, attr), { courseId: params.courseId });
-  return TeachingElement.create(data, { context: { userId: user.id } })
+  const data = { ...pick(body, attr), repositoryId: repository.id };
+  return ContentElement.create(data, { context: { userId: user.id } })
     .then(asset => res.json({ data: asset }));
 }
 
-function patch({ body, params, user }, res) {
-  const attrs = ['refs', 'type', 'data', 'meta', 'position', 'courseId', 'deletedAt'];
+function patch({ user, body, params: { elementId } }, res) {
+  const attrs = ['type', 'data', 'position', 'meta', 'refs', 'deletedAt'];
   const data = pick(body, attrs);
   const paranoid = body.paranoid !== false;
-  return TeachingElement.findByPk(params.teId, { paranoid })
-    .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
+  return ContentElement.findByPk(elementId, { paranoid })
+    .then(asset => asset || createError(NOT_FOUND, 'Element not found'))
     .then(asset => asset.update(data, { context: { userId: user.id } }))
     .then(asset => res.json({ data: asset }));
 }
 
-function remove({ params, user }, res) {
-  return TeachingElement.findByPk(params.teId)
-    .then(asset => asset || createError(NOT_FOUND, 'TEL not found'))
+function remove({ user, params: { elementId } }, res) {
+  return ContentElement.findByPk(elementId)
+    .then(asset => asset || createError(NOT_FOUND, 'Element not found'))
     .then(asset => asset.destroy({ context: { userId: user.id } }))
     .then(() => res.end());
 }
 
-function reorder({ body, params }, res) {
-  return TeachingElement.findByPk(params.teId)
+function reorder({ body, params: { elementId } }, res) {
+  return ContentElement.findByPk(elementId)
     .then(asset => asset.reorder(body.position))
     .then(asset => res.json({ data: asset }));
 }

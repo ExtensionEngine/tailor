@@ -13,11 +13,11 @@ const fetch = ({ state, commit }, { id, courseId }) => {
   });
 };
 
-const subscribe = ({ state, commit, rootGetters }) => {
+const subscribe = ({ state, commit, rootState }) => {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
 
   // Get token from the Auth module
-  const token = rootGetters.token;
+  const token = rootState.token;
   SSE_CLIENT = new SSEClient(`/api/v1/${state.$apiUrl}/subscribe`, token);
   SSE_CLIENT.subscribe('comment_create', item => commit('sseAdd', item));
   SSE_CLIENT.subscribe('comment_update', item => commit('sseUpdate', item));
@@ -29,7 +29,7 @@ const unsubscribe = () => {
   SSE_CLIENT.disconnect();
 };
 
-const remove = ({ state, commit }, comment) => {
+const remove = (_, comment) => {
   // Update locally and let real data update be pushed from server
   // after soft delete
   comment.deletedAt = new Date();

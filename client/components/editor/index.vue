@@ -139,9 +139,9 @@ export default {
       this.showSidebar = this.metadata.length && this.showSidebar;
     }, 50));
     // TODO: Do this better!
-    const baseUrl = `/courses/${courseId}`;
+    const baseUrl = `/repositories/${courseId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
-    this.setupTesApi(`${baseUrl}/tes`);
+    this.setupTesApi(`${baseUrl}/content-elements`);
     const actions = [this.getActivities()];
     if (!this.course) actions.push(this.getCourse(courseId));
     Promise.all(actions).then(() => {
@@ -177,7 +177,7 @@ export default {
 }
 
 .editor {
-  padding: 20px 50px 0;
+  padding: 70px 50px 0;
   overflow-y: scroll;
   overflow-y: overlay;
 

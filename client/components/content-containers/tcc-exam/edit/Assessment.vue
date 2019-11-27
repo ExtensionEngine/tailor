@@ -7,8 +7,8 @@
     :expanded="expanded"
     :draggable="true">
     <template v-slot:header="{ isEditing }">
-      <v-layout v-if="objectives.length" justify-end class="pa-0 mt-2">
-        <v-flex xs4>
+      <v-row v-if="objectives.length" justify="end" no-gutters class="pa-0 mt-2">
+        <v-col cols="4">
           <multiselect
             v-model="objective"
             :options="objectives"
@@ -17,8 +17,8 @@
             :custom-label="getCustomLabel"
             :placeholder="objectiveLabel"
             track-by="id" />
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </template>
   </assessment-item>
 </template>

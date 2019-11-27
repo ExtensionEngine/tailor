@@ -4,26 +4,30 @@
     :items="users"
     :loading="isLoading"
     no-data-text="No assigned users."
-    hide-actions>
-    <template v-slot:items="{ item }">
-      <td class="text-xs-left">
-        <v-avatar size="40"><img :src="item.imgUrl"></v-avatar>
-      </td>
-      <td class="text-xs-left">{{ item.email }}</td>
-      <td class="text-xs-left">{{ item.firstName || '/' }}</td>
-      <td class="text-xs-left">{{ item.lastName || '/' }}</td>
-      <td class="role-select">
-        <v-select
-          @change="role => changeRole(item.email, role)"
-          :value="item.courseRole"
-          :items="roles"
-          icon />
-      </td>
-      <td class="actions">
-        <v-btn color="primary" icon flat small>
-          <v-icon @click="remove(item)">mdi-delete</v-icon>
-        </v-btn>
-      </td>
+    hide-default-footer>
+    <template v-slot:item="{ item }">
+      <tr>
+        <td class="text-left">
+          <v-avatar size="40">
+            <img :src="item.imgUrl">
+          </v-avatar>
+        </td>
+        <td class="text-left">{{ item.email }}</td>
+        <td class="text-left">{{ item.firstName || '/' }}</td>
+        <td class="text-left">{{ item.lastName || '/' }}</td>
+        <td class="role-select">
+          <v-select
+            @change="role => changeRole(item.email, role)"
+            :value="item.repositoryRole"
+            :items="roles"
+            icon />
+        </td>
+        <td class="actions">
+          <v-btn color="primary" icon>
+            <v-icon @click="remove(item)">mdi-delete</v-icon>
+          </v-btn>
+        </td>
+      </tr>
     </template>
   </v-data-table>
 </template>
@@ -78,7 +82,11 @@ export default {
   padding: 0 0 6px 0;
 }
 
-/deep/ .v-input__slot::before {
+::v-deep .v-input__slot::before {
   border: none !important;
+}
+
+::v-deep .v-list.v-sheet {
+  text-align: left;
 }
 </style>

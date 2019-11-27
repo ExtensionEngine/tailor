@@ -1,13 +1,13 @@
 <template>
-  <v-container class="mt-4">
-    <v-layout row align-start>
+  <v-container class="my-4">
+    <v-row align="start" no-gutters>
       <v-card>
         <sidebar @action="onActionClick" :is-publishing="isPublishing" />
       </v-card>
-      <v-flex ml-4>
+      <v-col class="ml-6">
         <router-view />
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
     <clone-modal @close="showCloneModal = false" :show="showCloneModal" />
     <progress-dialog :show="isPublishing" :status="publishPercentage" />
     <app-footer />
@@ -16,14 +16,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import api from '@/api/course';
 import AppFooter from '@/components/common/Footer';
 import CloneModal from './CloneModal';
 import EventBus from 'EventBus';
-import JSZip from 'jszip';
 import ProgressDialog from '@/components/common/ProgressDialog';
 import publishMixin from '@/components/common/mixins/publish';
-import saveAs from 'save-as';
 import Sidebar from './Sidebar';
 
 const appChannel = EventBus.channel('app');
@@ -43,12 +40,6 @@ export default {
   methods: {
     ...mapActions('courses', { removeCourse: 'remove' }),
     ...mapActions('activities', { publishActivity: 'publish' }),
-    downloadContentInventory() {
-      api.getContentInventory(this.$route.params.courseId)
-        .then(response => JSZip.loadAsync(response))
-        .then(zip => zip.generateAsync({ type: 'blob' }))
-        .then(file => saveAs(file, 'Content Inventory.xlsx'));
-    },
     showDeleteConfirmation() {
       appChannel.emit('showConfirmationModal', {
         title: 'Delete repository?',
@@ -60,8 +51,7 @@ export default {
       const actions = {
         publish: this.publishRepository,
         clone: this.clone,
-        delete: this.showDeleteConfirmation,
-        knewton: this.downloadContentInventory
+        delete: this.showDeleteConfirmation
       };
       actions[name]();
     },

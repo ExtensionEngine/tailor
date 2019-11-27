@@ -1,15 +1,15 @@
 <template>
   <v-form @submit.prevent="updateUser">
-    <v-layout column pt-2 px-4 mx-3>
-      <v-flex>
+    <v-row class="pt-2 px-4 mx-3">
+      <v-col cols="12">
         <v-text-field
           v-model="userData.email"
           v-validate="{ required: true, email: true, 'unique-email': user }"
           :error-messages="vErrors.collect('email')"
           name="email"
           label="Email" />
-      </v-flex>
-      <v-flex>
+      </v-col>
+      <v-col cols="12">
         <v-text-field
           v-model="userData.firstName"
           v-validate="'required|min:2|max:20'"
@@ -17,8 +17,8 @@
           data-vv-as="First name"
           data-vv-name="firstName"
           label="First name" />
-      </v-flex>
-      <v-flex>
+      </v-col>
+      <v-col cols="12">
         <v-text-field
           v-model="userData.lastName"
           v-validate="'required|min:2|max:20'"
@@ -26,23 +26,23 @@
           data-vv-as="Last Name"
           data-vv-name="lastName"
           label="Last name" />
-      </v-flex>
-    </v-layout>
-    <v-layout pb-3 px-4 mx-2>
+      </v-col>
+    </v-row>
+    <v-row class="pb-3 px-4 mx-6">
       <v-spacer />
       <v-btn
         @click="resetForm"
         :disabled="!hasChanges && !vErrors.any()"
-        flat>
+        text>
         Cancel
       </v-btn>
       <v-btn
         :disabled="!hasChanges || vErrors.any()"
-        outline
+        outlined
         type="submit">
         Update
       </v-btn>
-    </v-layout>
+    </v-row>
   </v-form>
 </template>
 

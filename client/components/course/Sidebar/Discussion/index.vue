@@ -22,7 +22,7 @@
           <v-btn
             @click="post"
             color="primary"
-            outline
+            outlined
             class="pull-right">
             Post
           </v-btn>
@@ -119,7 +119,7 @@ export default {
   },
   mounted() {
     const { courseId } = this.$route.params;
-    this.setEndpoint(`/courses/${courseId}/comments`);
+    this.setEndpoint(`/repositories/${courseId}/comments`);
     this.fetchComments();
     this.subscribe();
   },

@@ -13,8 +13,8 @@ async function fetchGroups(exam, { include }) {
     ...pick(exam, ATTRS),
     groups: groups.map(group => ({
       ...pick(group, ['id', 'uid', 'type', 'position', 'data', 'createdAt']),
-      intro: filter(group.TeachingElements, it => it.type !== 'ASSESSMENT'),
-      assessments: filter(group.TeachingElements, { type: 'ASSESSMENT' })
+      intro: filter(group.ContentElements, it => it.type !== 'ASSESSMENT'),
+      assessments: filter(group.ContentElements, { type: 'ASSESSMENT' })
     }))
   };
 }

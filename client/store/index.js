@@ -5,7 +5,7 @@ import course from './modules/course';
 import courses from './modules/courses';
 import createLogger from 'vuex/dist/logger';
 import editor from './modules/editor';
-import plugins from './plugins/';
+import plugins from './plugins';
 import revisions from './modules/revisions';
 import settings from '../settings';
 import tes from './modules/tes';

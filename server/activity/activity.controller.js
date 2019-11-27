@@ -10,43 +10,46 @@ const { previewUrl } = require('../../config/server');
 const publishingService = require('../shared/publishing/publishing.service');
 const request = require('axios');
 
-function create({ course, body, params, user }, res) {
-  const outlineConfig = find(getOutlineLevels(course.schema), { type: body.type });
-  const defaultMeta = !outlineConfig ? {} : get(outlineConfig, 'defaultMeta', {});
-  const data = Object.assign(
-    pick(body, ['type', 'parentId', 'position']),
-    { data: Object.assign({}, defaultMeta, body.data) },
-    { courseId: params.courseId });
+function list({ repository, query, opts }, res) {
+  if (!query.detached) opts.where = { detached: false };
+  return repository.getActivities(opts)
+    .then(data => res.json({ data }));
+}
+
+function create({ user, repository, body }, res) {
+  const outlineConfig = find(getOutlineLevels(repository.schema), { type: body.type });
+  const data = {
+    ...pick(body, ['type', 'parentId', 'position']),
+    data: { ...get(outlineConfig, 'defaultMeta', {}), ...body.data },
+    repositoryId: repository.id
+  };
   const opts = { context: { userId: user.id } };
-  return Activity.create(data, opts).then(data => res.json({ data }));
+  return Activity.create(data, opts)
+    .then(data => res.json({ data }));
 }
 
 function show({ activity }, res) {
   return res.json({ data: activity });
 }
 
-function patch({ activity, body, user }, res) {
+function patch({ user, activity, body }, res) {
   return activity.update(body, { context: { userId: user.id } })
     .then(data => res.json({ data }));
 }
 
-function list({ course, query, opts }, res) {
-  if (!query.detached) opts.where = { detached: false };
-  return course.getActivities(opts).then(data => res.json({ data }));
-}
-
-function remove({ course, activity, user }, res) {
+function remove({ user, repository, activity }, res) {
   const options = { recursive: true, soft: true, context: { userId: user.id } };
   const unpublish = activity.publishedAt
-    ? publishingService.unpublishActivity(course, activity)
+    ? publishingService.unpublishActivity(repository, activity)
     : Promise.resolve();
   return unpublish
     .then(() => activity.remove(options))
-    .then(data => res.json({ data: pick(data, ['id']) }));
+    .then(activity => res.json({ data: pick(activity, ['id']) }));
 }
 
 function reorder({ activity, body }, res) {
-  return activity.reorder(body.position).then(data => res.json({ data }));
+  return activity.reorder(body.position)
+    .then(data => res.json({ data }));
 }
 
 function publish({ activity }, res) {
@@ -55,8 +58,8 @@ function publish({ activity }, res) {
 }
 
 function clone({ activity, body }, res) {
-  const { courseId, parentId, position } = body;
-  return activity.clone(courseId, parentId, position).then(mappings => {
+  const { repositoryId, parentId, position } = body;
+  return activity.clone(repositoryId, parentId, position).then(mappings => {
     const opts = { where: { id: Object.values(mappings) } };
     return Activity.findAll(opts).then(data => res.json({ data }));
   });
@@ -67,7 +70,7 @@ function getPreviewUrl({ activity }, res) {
     .then(content => {
       const body = {
         ...pick(activity, ['id', 'uid', 'type']),
-        repositoryId: activity.courseId,
+        repositoryId: activity.repositoryId,
         meta: activity.data,
         ...content
       };

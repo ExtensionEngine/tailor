@@ -4,22 +4,22 @@
       <v-chip
         color="grey lighten-2"
         label
-        outline
+        outlined
         class="mt-2 ml-3 px-3 body-2">
         Profile
       </v-chip>
     </div>
     <v-container>
-      <v-layout justify-center>
-        <v-flex lg8 xl6>
+      <v-row justify="center">
+        <v-col class="lg8 xl6">
           <v-card>
             <user-security />
             <user-avatar />
             <v-divider />
             <user-info />
           </v-card>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>

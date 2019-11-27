@@ -89,7 +89,7 @@ export default {
   margin: 0;
 }
 
-.player /deep/ .video-js .vjs-big-play-button {
+.player ::v-deep .video-js .vjs-big-play-button {
   display: none;
 }
 </style>

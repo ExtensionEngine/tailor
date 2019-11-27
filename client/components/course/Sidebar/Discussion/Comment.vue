@@ -139,7 +139,7 @@ $line-size: 20px;
     font-size: $font-size;
     line-height: $line-size;
 
-    &.deleted /deep/ .content span {
+    &.deleted ::v-deep .content span {
       color: $color-light;
       font-weight: 400;
       font-style: italic;

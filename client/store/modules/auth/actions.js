@@ -2,16 +2,14 @@ import api from '@/api/auth';
 
 export const login = ({ commit }, credentials) => {
   return api.login(credentials)
-    .then(data => commit('login', data));
+    .then(({ user, token }) => commit('login', { user, token }));
 };
 
 export const logout = ({ commit }) => {
-  return api
-    .logout()
-    .then(() => setTimeout(() => {
-      commit('logout');
-      window.location.reload();
-    }, 0));
+  setTimeout(() => {
+    commit('logout');
+    window.location.reload();
+  }, 0);
 };
 
 export const changePassword = (_, { currentPassword, newPassword }) => {
