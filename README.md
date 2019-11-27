@@ -47,27 +47,27 @@ Use the `.brandrc.example` file as a template: `cp .brandrc.example .brandrc` an
 * `npm run start`
 
 ## :books: Content repository structure
-Repository stucture can be altered using activities configuration file.
+Repository stucture can be altered using tailor configuration file.
 Recongnized configuration filenames are (sorted by priority): 
-- `activities.config.js`
-- `.activitiesrc.js`
-- `.activitiesrc`
-- `.activitiesrc.json`
+- `tailor.config.js`
+- `.tailorrc.js`
+- `.tailorrc`
+- `.tailorrc.json`
 
-Use the `.activitiesrc.json.example` file as a template: 
+Use the `.tailorrc.json.example` file as a template: 
 ```
-$ cp .activitiesrc.json.example .activitiesrc.json
+$ cp .tailorrc.json.example .tailorrc.json
 ``` 
 and enter configuration details. It is also possible to use a commonjs module, 
 by using `module.exports` to export the repository structure.
 Configuration file is searched for inside current working directory by default. 
-If a custom location or a custom name is needed, it can be provided through the `--activities-config` flag passed to target npm script:
+If a custom location or a custom name is needed, it can be provided through the `--config` flag passed to target npm script:
 ```
-$ npm run dev:client -- --activities-config=path/to/custom/activities/config.js
+$ npm run dev:client -- --config=path/to/custom/tailor/config.js
 ```
-alternatively `TAILOR_ACTIVITIES_CONFIG` environment variable can be used:
+alternatively `TAILOR_CONFIG` environment variable can be used:
 ```
-$ TAILOR_ACTIVITIES_CONFIG=path/to/custom/activities/config.js npm run dev:server
+$ TAILOR_CONFIG=path/to/custom/activities/config.js npm run dev:server
 ```
 
 Content repository structures are defined using following properties:

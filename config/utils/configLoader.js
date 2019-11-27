@@ -1,14 +1,12 @@
 'use strict';
 
+const argv = require('minimost')(process.argv.slice(2));
 const dedent = require('dedent');
 const deprecate = require('depd')('config');
-const { flags } = require('minimost')(process.argv.slice(2));
 const JoyCon = require('joycon');
 const path = require('path');
-const pkg = require('../../package.json');
 const { readFileSync } = require('fs');
 const stripJsonComments = require('strip-json-comments');
-const to = require('to-case');
 
 const isObject = arg => arg !== null && typeof arg === 'object';
 const parseJSON = input => JSON.parse(stripJsonComments(input));
@@ -22,9 +20,9 @@ joycon.addLoader({
   loadSync: path => parseJSON(readFileSync(path, 'utf-8'))
 });
 
-module.exports = function configLoader(name) {
+module.exports = function configLoader(name, options) {
   return function () {
-    const config = loadConfig(name);
+    const config = loadConfig(name, options);
     const isWebpack = arguments.length > 0;
     if (!isWebpack) return config;
     return { code: createModule(config) };
@@ -35,10 +33,7 @@ function createModule(obj) {
   return `module.exports = () => (${JSON.stringify(obj, null, 2)});`;
 }
 
-function loadConfig(name) {
-  const flag = to.camel([name, 'config'].join('_'));
-  const envVar = to.constant([pkg.name, name, 'config'].join('_'));
-  const configPath = flags[flag] || process.env[envVar];
+function loadConfig(name, options) {
   const defaultFiles = [
     `${name}.config.js`,
     `.${name}rc.js`,
@@ -47,15 +42,16 @@ function loadConfig(name) {
   ];
   // TODO: Remove support for legacy configuration files.
   const legacyFiles = [
-    `.${name}-rc`,
-    `.${name}-rc.json`
+    '.activities-rc',
+    '.activities-rc.json'
   ];
+  const configPath = getConfigPath(options);
   const files = configPath
     ? [path.resolve(configPath)]
     : defaultFiles.concat(legacyFiles);
   const result = joycon.loadSync(files);
   if (result.path) result.filename = path.basename(result.path);
-  if (legacyFiles.includes(result.filename)) {
+  if (!configPath && legacyFiles.includes(result.filename)) {
     deprecate(dedent`Using legacy configuration file: ${result.filename}
       Supported configuration files: ${defaultFiles.join(', ')}`);
   }
@@ -66,4 +62,16 @@ function loadConfig(name) {
     throw new Error(`Failed to load configuration file: ${configPath}`);
   }
   return result.data;
+}
+
+function getConfigPath({ flag, envVar } = {}) {
+  let configPath;
+  if (flag) {
+    configPath = argv.flags[flag];
+  }
+  if (!configPath && envVar) {
+    configPath = process.env[envVar.toUpperCase()] ||
+      process.env[envVar.toLowerCase()];
+  }
+  return configPath;
 }
