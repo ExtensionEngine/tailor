@@ -3,6 +3,7 @@
     <div class="header mt-3 mb-6">
       <span>Comments</span>
       <v-btn
+        v-if="commentsShownLimit < commentsCount"
         @click="showAll = !showAll"
         text
         x-small
@@ -22,6 +23,7 @@
         v-else
         v-bind="$attrs"
         :user="user"
+        :min-displayed="commentsShownLimit"
         :show-all="showAll"
         sort-order="'asc'"
         class="mt-2" />
@@ -54,6 +56,7 @@ export default {
     ...mapState({ user: state => state.auth.user }),
     ...mapGetters('course', ['activity']),
     ...mapGetters('comments', ['commentsFetched', 'commentsCount']),
+    commentsShownLimit: () => 5,
     editor() {
       return this.$refs.editor.$el;
     }
