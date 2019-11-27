@@ -21,8 +21,8 @@ Adaptive course authoring platform.
 
 ## Dependencies
 
-- Node.js (>= 8.8.0)
-- npm (>= 5.4.2)
+- Node.js (>= 10.17.0)
+- npm (>= 6.11.0)
 - PostgreSQL (>= 9.6)
 
 ## Installation
