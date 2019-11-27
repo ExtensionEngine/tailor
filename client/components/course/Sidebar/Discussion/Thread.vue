@@ -12,6 +12,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import orderBy from 'lodash/orderBy';
+import takeRight from 'lodash/takeRight';
 import ThreadComment from './Comment';
 
 export default {
@@ -19,12 +20,14 @@ export default {
   props: {
     sortOrder: { type: String, default: 'desc' },
     showAll: { type: Boolean, default: false },
-    minDisplayed: { type: Number, default: 4 }
+    minDisplayed: { type: Number, default: 5 }
   },
   computed: {
     ...mapGetters(['comments']),
     thread: v => orderBy(v.comments, ['createdAt'], [v.sortOrder]),
-    visibleItems: v => v.showAll ? v.comments : v.comments.slice(0, v.minDisplayed)
+    visibleItems() {
+      return this.showAll ? this.thread : takeRight(this.thread, this.minDisplayed);
+    }
   },
   methods: {
     ...mapActions('comments', ['update', 'remove']),

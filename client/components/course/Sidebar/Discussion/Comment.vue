@@ -16,7 +16,6 @@
         :value="comment.content"
         :focused="isEditing"
         :preview="!isEditing"
-        :class="{ deleted: isDeleted }"
         class="content" />
       <timeago
         v-if="!isEditing"

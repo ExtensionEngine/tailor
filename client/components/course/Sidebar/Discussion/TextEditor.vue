@@ -8,8 +8,8 @@
       @blur="onBlur"
       @input="$emit('input', content)"
       :placeholder="placeholder"
-      append-icon="mdi-message"
       rows="3"
+      color="grey"
       outlined
       filled
       auto-grow

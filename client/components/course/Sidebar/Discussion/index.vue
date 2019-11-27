@@ -1,5 +1,5 @@
 <template>
-  <div class="discussion px-4 py-2 mx-2 mt-5">
+  <div v-if="commentsFetched" class="discussion px-4 py-2 mx-2 mt-5">
     <div class="header mt-3 mb-6">
       <span>Comments</span>
       <v-btn
@@ -11,7 +11,15 @@
       </v-btn>
     </div>
     <div>
+      <v-alert
+        v-if="!commentsCount"
+        color="grey lighten-3"
+        icon="mdi-comment"
+        prominent>
+        No comments yet!
+      </v-alert>
       <discussion-thread
+        v-else
         v-bind="$attrs"
         :user="user"
         :show-all="showAll"
@@ -98,7 +106,7 @@ export default {
 <style lang="scss" scoped>
 .discussion {
   background: #fafafa;
-  border: 1px solid #bbb;
+  border: 1px dashed #bbb;
 }
 
 .header {
