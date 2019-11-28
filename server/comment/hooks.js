@@ -1,13 +1,11 @@
 'use strict';
 
 const { broadcast, events } = require('./channel');
-const pick = require('lodash/pick');
 
 exports.add = (Comment, Hooks) => {
   Comment.addHook(Hooks.afterCreate, comment => {
     comment.getAuthor().then(a => {
-      const author = pick(a, ['id', 'email']);
-      broadcast(events.CREATE, { ...comment.toJSON(), author });
+      broadcast(events.CREATE, { ...comment.toJSON(), author: a.profile });
     });
   });
 

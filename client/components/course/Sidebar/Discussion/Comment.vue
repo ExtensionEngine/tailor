@@ -11,14 +11,18 @@
         </v-icon>
       </div>
       <text-editor
-        @blur="update"
-        @change="update"
-        :value="comment.content"
+        v-model="content"
         :focused="isEditing"
         :preview="!isEditing"
         class="content" />
+      <span v-if="isEditing" class="float-right">
+        <v-btn @click="reset" text small>Cancel</v-btn>
+        <v-btn @click="save" :disabled="!content.trim()" color="green" text small>
+          <v-icon class="pr-1">mdi-check</v-icon> Save changes
+        </v-btn>
+      </span>
       <timeago
-        v-if="!isEditing"
+        v-else
         :datetime="comment.createdAt"
         :auto-update="60"
         class="time" />
@@ -54,7 +58,7 @@ export default {
   props: {
     comment: { type: Object, required: true }
   },
-  data: () => ({ isEditing: false }),
+  data: vm => ({ isEditing: false, content: vm.comment.content }),
   computed: {
     ...mapState({ user: state => state.auth.user }),
     author: vm => vm.comment.author,
@@ -70,16 +74,28 @@ export default {
     }
   },
   methods: {
-    update(content) {
-      this.isEditing = false;
-      if (!content || content === this.comment.content) return;
-      this.$emit('update', this.comment, content);
+    toggleEdit() {
+      this.isEditing = !this.isEditing;
+    },
+    save() {
+      if (!this.content) return;
+      this.toggleEdit();
+      this.$emit('update', this.comment, this.content);
     },
     remove() {
       this.$emit('remove', this.comment);
     },
-    toggleEdit() {
-      this.isEditing = !this.isEditing;
+    reset() {
+      this.content = this.comment.content;
+      this.isEditing = false;
+    }
+  },
+  watch: {
+    comment: {
+      deep: true,
+      handler() {
+        this.reset();
+      }
     }
   },
   directives: { focus },
@@ -91,9 +107,11 @@ export default {
 .comment {
   display: flex;
   margin-bottom: 1.25rem;
+  font-family: Roboto, Arial, sans-serif;
 
   &-avatar {
     width: 2.5rem;
+    margin-top: 0.375rem;
   }
 
   &-body {

@@ -1,11 +1,8 @@
 <template>
   <div :class="{ preview }" class="comment-editor">
     <v-textarea
-      v-model.trim="content"
-      @keydown.shift.enter.exact="() => false"
-      @keydown.enter.exact.prevent="onEnter"
-      @blur="onBlur"
-      @input="$emit('input', content)"
+      @change="$emit('input', $event)"
+      :value="value"
       :autofocus="focused"
       :placeholder="placeholder"
       rows="3"
@@ -16,7 +13,7 @@
       clearable
       counter />
     <div class="content">
-      <pre><span>{{ content }}</span><br></pre>
+      <pre><span>{{ value }}</span><br></pre>
     </div>
   </div>
 </template>
@@ -28,24 +25,7 @@ export default {
     value: { type: String, required: true },
     focused: { type: Boolean, default: false },
     preview: { type: Boolean, default: false },
-    placeholder: { type: String, default: '' }
-  },
-  data: vm => ({ content: vm.value }),
-  methods: {
-    onEnter(e) {
-      this.$emit('change', this.content);
-    },
-    onBlur(e, content) {
-      this.$emit('blur', this.content, e);
-    }
-  },
-  watch: {
-    value() {
-      this.content = this.value;
-    },
-    preview() {
-      this.content = this.value;
-    }
+    placeholder: { type: String, default: 'Add a comment...' }
   }
 };
 </script>
@@ -66,7 +46,7 @@ export default {
     padding: 0 0.25rem 0.5rem 0;
     font: inherit;
     white-space: pre-wrap;
-    word-break: normal;
+    word-break: break-all;
     word-wrap: break-word;
     overflow-wrap: break-word;
     background: inherit;

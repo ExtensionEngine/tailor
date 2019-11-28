@@ -75,8 +75,8 @@ export default {
         createdAt: Date.now(),
         updatedAt: Date.now()
       };
-      await this.save(payload);
       this.comment = initCommentInput();
+      await this.save(payload);
       // Keep editor inside viewport.
       this.$nextTick(() => this.editor.scrollIntoView());
     }
@@ -106,8 +106,9 @@ export default {
 
 <style lang="scss" scoped>
 .discussion {
-  margin: 1.125rem 0.25rem 0;
+  margin: 1rem 0.25rem 1.75rem;
   padding: 0.375rem 1rem;
+  font-family: Roboto, Arial, sans-serif;
   background: #fafafa;
   border: 1px dashed #bbb;
 }

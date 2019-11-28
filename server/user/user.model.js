@@ -64,7 +64,7 @@ class User extends Model {
         type: VIRTUAL,
         get() {
           return pick(this, [
-            'id', 'email', 'role', 'firstName', 'lastName',
+            'id', 'email', 'role', 'firstName', 'lastName', 'fullName',
             'imgUrl', 'createdAt', 'updatedAt', 'deletedAt'
           ]);
         }
