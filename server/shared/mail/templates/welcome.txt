@@ -1,0 +1,15 @@
+Tailor
+=================================================
+
+Welcome {recipientName},
+
+An account has been created for you on {hostname}.
+Please finish your registration by clicking the URL below:
+
+{href}
+
+Or copy and paste this URL into your browser.
+
+
+-------------------------------------------------
+If you didn't request this, please ignore this email.
