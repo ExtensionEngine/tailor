@@ -16,8 +16,7 @@
     item-text="data.name"
     deletable-chips
     return-object
-    filled
-    dense />
+    outlined />
 </template>
 
 <script>
@@ -117,6 +116,14 @@ export default {
 
   .v-list-item__content {
     flex: initial;
+  }
+
+  .v-list-item .v-list-item__action:first-child {
+    margin-right: 16px;
+  }
+
+  .v-input__slot .v-select__slot .v-input__append-inner {
+    margin-top: 22px;
   }
 }
 </style>
