@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import BaseSelect from './BaseSelect';
 import Checkbox from './Checkbox';
 import ColorPicker from './ColorPicker';
 import DatePicker from './DatePicker';
@@ -14,6 +13,7 @@ import FileUpload from './File';
 import Html from './Html';
 import Input from './Input';
 import mapKeys from 'lodash/mapKeys';
+import Select from './Select';
 import Switch from './Switch';
 import Textarea from './Textarea';
 
@@ -24,8 +24,8 @@ const META_TYPES = {
   DATETIME: DatePicker,
   HTML: Html,
   INPUT: Input,
-  SELECT: BaseSelect,
-  MULTISELECT: BaseSelect,
+  SELECT: Select,
+  MULTISELECT: Select,
   SWITCH: Switch,
   TEXTAREA: Textarea,
   FILE: FileUpload
