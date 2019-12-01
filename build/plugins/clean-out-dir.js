@@ -2,6 +2,10 @@
 
 exports.name = 'clean-out-dir';
 
+/**
+ * @param {import('poi')} api
+ * @param {import('clean-webpack-plugin').Options} options
+ */
 exports.apply = (api, options = {}) => {
   api.hook('createWebpackChain', config => {
     if (!api.isProd || !api.config.output.clean) return;

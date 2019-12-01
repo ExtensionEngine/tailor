@@ -4,6 +4,12 @@ exports.name = 'output-filenames';
 
 const prefix = `${exports.name}-plugin:`;
 
+/**
+ * @param {import('poi')} api
+ * @param {Object} options
+ * @param {import('poi').Config.Output.FileNames} options.normal
+ * @param {import('poi').Config.Output.FileNames} options.vendor
+ */
 exports.apply = (api, { normal, vendor } = {}) => {
   const defaultFilenames = api.config.output.fileNames;
   normal = Object.assign({}, defaultFilenames, normal);
