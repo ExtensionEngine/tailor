@@ -1,6 +1,6 @@
 'use strict';
 
-const argv = require('minimost')(process.argv.slice(2));
+const argv = require('minimist')(process.argv.slice(2));
 const dedent = require('dedent');
 const deprecate = require('depd')('config');
 const JoyCon = require('joycon');
@@ -67,7 +67,7 @@ function loadConfig(name, options) {
 function getConfigPath({ flag, envVar } = {}) {
   let configPath;
   if (flag) {
-    configPath = argv.flags[flag];
+    configPath = argv[flag];
   }
   if (!configPath && envVar) {
     configPath = process.env[envVar.toUpperCase()] ||
