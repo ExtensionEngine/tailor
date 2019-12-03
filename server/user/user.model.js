@@ -52,6 +52,12 @@ class User extends Model {
           return [this.firstName, this.lastName].filter(Boolean).join(' ') || null;
         }
       },
+      label: {
+        type: VIRTUAL,
+        get() {
+          return this.fullName || this.email;
+        }
+      },
       imgUrl: {
         type: TEXT,
         field: 'img_url',
@@ -64,7 +70,7 @@ class User extends Model {
         type: VIRTUAL,
         get() {
           return pick(this, [
-            'id', 'email', 'role', 'firstName', 'lastName', 'fullName',
+            'id', 'email', 'role', 'firstName', 'lastName', 'fullName', 'label',
             'imgUrl', 'createdAt', 'updatedAt', 'deletedAt'
           ]);
         }

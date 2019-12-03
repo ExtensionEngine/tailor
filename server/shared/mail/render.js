@@ -6,7 +6,7 @@ const fs = require('fs');
 const map = require('lodash/map');
 const mapKeys = require('lodash/mapKeys');
 const mjml2html = require('mjml');
-const pupa = require('pupa');
+const mustache = require('mustache');
 
 module.exports = {
   renderHtml,
@@ -20,12 +20,12 @@ function renderHtml(templatePath, data, style) {
   $style.append(getAttributes($, style));
   const opts = { filePath: templatePath, minify: true };
   const output = mjml2html($.html(), opts).html;
-  return pupa(output, data);
+  return mustache.render(output, data);
 }
 
 function renderText(templatePath, data) {
   const template = fs.readFileSync(templatePath, 'utf8');
-  return pupa(template, data);
+  return mustache.render(template, data);
 }
 
 function getAttributes($, style = {}) {

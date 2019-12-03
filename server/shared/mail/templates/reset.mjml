@@ -5,7 +5,7 @@
     <mj-section mj-class="content">
       <mj-column>
         <mj-text mj-class="content">
-          Hello <strong>{recipientName}</strong>,
+          Hello <strong>{{recipientName}}</strong>,
         </mj-text>
         <mj-text mj-class="content" padding-bottom="0">
           You have requested password reset.
@@ -13,13 +13,13 @@
         <mj-text mj-class="content">
           Please reset your password by clicking the button below:
         </mj-text>
-        <mj-button mj-class="ctaButton" href="{href}">
+        <mj-button mj-class="ctaButton" href="{{href}}">
           Reset password
         </mj-button>
         <mj-text mj-class="content">
           Or copy and paste this URL into your browser:
         </mj-text>
-        <mj-text mj-class="content"><a href="{href}">{href}</a></mj-text>
+        <mj-text mj-class="content"><a href="{{href}}">{{href}}</a></mj-text>
         <mj-include path="./components/footer.mjml"/>
       </mj-column>
     </mj-section>

@@ -22,7 +22,8 @@ const resetUrl = token => urlJoin(origin, '/#/reset-password/', token);
 module.exports = {
   send,
   invite,
-  resetPassword
+  resetPassword,
+  sendCommentNotification
 };
 
 function invite(user, token) {
@@ -55,6 +56,20 @@ function resetPassword(user, token) {
     from,
     to: recipient,
     subject: 'Reset password',
+    text,
+    attachment: [{ data: html, alternative: true }]
+  });
+}
+
+function sendCommentNotification(users, comment) {
+  const recipients = users.concat(',');
+  const html = renderHtml(path.join(templatesDir, 'comment.mjml'), comment);
+  const text = renderText(path.join(templatesDir, 'comment.mjml'), comment);
+  logger.info({ recipients, sender: from }, '📧  Sending notification email to:', recipients);
+  return send({
+    from,
+    to: recipients,
+    subject: `${comment.author.label} left a comment on ${comment.repository}`,
     text,
     attachment: [{ data: html, alternative: true }]
   });

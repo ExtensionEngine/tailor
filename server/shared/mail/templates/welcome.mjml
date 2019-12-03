@@ -5,21 +5,21 @@
     <mj-section mj-class="content">
       <mj-column>
         <mj-text mj-class="content">
-          Welcome <strong class="name">{recipientName}</strong>,
+          Welcome <strong class="name">{{recipientName}}</strong>,
         </mj-text>
         <mj-text mj-class="content" padding-bottom="0">
-          An account has been created for you on <a href="{origin}">{hostname}</a>.
+          An account has been created for you on <a href="{{origin}}">{{hostname}}</a>.
         </mj-text>
         <mj-text mj-class="content">
           Please finish your registration by clicking the button below:
         </mj-text>
-        <mj-button mj-class="ctaButton" href="{href}">
+        <mj-button mj-class="ctaButton" href="{{href}}">
           Complete registration
         </mj-button>
         <mj-text mj-class="content">
           Or copy and paste this URL into your browser:
         </mj-text>
-        <mj-text mj-class="content"><a href="{href}">{href}</a></mj-text>
+        <mj-text mj-class="content"><a href="{{href}}">{{href}}</a></mj-text>
         <mj-include path="./components/footer.mjml"/>
       </mj-column>
     </mj-section>

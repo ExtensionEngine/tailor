@@ -1,11 +1,15 @@
 'use strict';
 
 const { broadcast, events } = require('./channel');
+const mail = require('../shared/mail');
+const map = require('lodash/map');
+const pick = require('lodash/pick');
 
-exports.add = (Comment, Hooks) => {
+exports.add = (Comment, Hooks, db) => {
   Comment.addHook(Hooks.afterCreate, comment => {
     comment.getAuthor().then(a => {
       broadcast(events.CREATE, { ...comment.toJSON(), author: a.profile });
+      sendEmailNotification(comment, db);
     });
   });
 
@@ -19,3 +23,26 @@ exports.add = (Comment, Hooks) => {
     });
   });
 };
+
+async function sendEmailNotification(comment, db) {
+  const { Repository, RepositoryUser, Activity, User } = db;
+  await comment.reload({
+    include: [
+      {
+        model: Repository,
+        include: [{ model: RepositoryUser, include: { model: User } }]
+      },
+      { model: Activity },
+      { model: User, as: 'author' }
+    ]
+  });
+  const { author, repository, activity } = comment;
+  const data = {
+    repository: repository.name,
+    topic: activity.data.name,
+    author: author.profile,
+    ...pick(comment, ['id', 'content', 'createdAt'])
+  };
+  const recipients = map(repository.repositoryUsers, it => it.user.email);
+  mail.sendCommentNotification(recipients, data);
+}

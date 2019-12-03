@@ -1,12 +1,12 @@
 Tailor
 =================================================
 
-Hello {recipientName},
+Hello {{recipientName}},
 
 You have requested password reset.
 Please reset your password by clicking the URL below:
 
-{href}
+{{href}}
 
 Or copy and paste this URL into your browser.
 
