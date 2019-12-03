@@ -92,14 +92,13 @@ export default {
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
     },
-    onRelationshipChanged(value) {
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
-        const associations = compact(castArray(value));
-        const activity = cloneDeep(this.activity) || {};
-        set(activity, `refs.${this.type}`, map(associations, 'id'));
-        this.update(activity);
-      });
+    async onRelationshipChanged(value) {
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) return;
+      const associations = compact(castArray(value));
+      const activity = cloneDeep(this.activity) || {};
+      set(activity, `refs.${this.type}`, map(associations, 'id'));
+      this.update(activity);
     }
   },
   created() {
@@ -119,11 +118,11 @@ export default {
   }
 
   .v-list-item .v-list-item__action:first-child {
-    margin-right: 16px;
+    margin-right: 1rem;
   }
 
   .v-input__slot .v-select__slot .v-input__append-inner {
-    margin-top: 22px;
+    margin-top: 1.375rem;
   }
 }
 </style>
