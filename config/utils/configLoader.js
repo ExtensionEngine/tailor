@@ -42,6 +42,7 @@ function loadConfig(name, options) {
   ];
   // TODO: Remove support for legacy configuration files.
   const legacyFiles = [
+    'activities.config.js',
     '.activities-rc',
     '.activities-rc.json'
   ];
