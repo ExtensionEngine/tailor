@@ -1,11 +1,9 @@
 import VuexPersistence from 'vuex-persist';
 
-const MODULES_TO_PERSIST = ['auth'];
-
 export default new VuexPersistence({
-  // The key to store the state on in the storage provider.
-  key: process.env.PERSIST_STORAGE_KEY,
-  modules: MODULES_TO_PERSIST,
+  // The key to store the state in the storage provider.
+  key: process.env.VUEX_STORAGE_KEY,
+  modules: ['auth'],
   // Use localStorage
   storage: window.localStorage
 }).plugin;
