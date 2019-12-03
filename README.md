@@ -88,7 +88,7 @@ $ npm run dev:client -- --config=path/to/custom/tailor/config.js
 alternatively `TAILOR_CONFIG` environment variable can be used:
 
 ```
-$ TAILOR_CONFIG=path/to/custom/activities/config.js npm run dev:server
+$ TAILOR_CONFIG=path/to/custom/tailor/config.js npm run dev:server
 ```
 
 Content repository structures are defined using following properties:
