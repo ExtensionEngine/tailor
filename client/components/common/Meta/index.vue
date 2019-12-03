@@ -13,7 +13,6 @@ import FileUpload from './File';
 import Html from './Html';
 import Input from './Input';
 import mapKeys from 'lodash/mapKeys';
-import Multiselect from './Multiselect';
 import Select from './Select';
 import Switch from './Switch';
 import Textarea from './Textarea';
@@ -26,7 +25,7 @@ const META_TYPES = {
   HTML: Html,
   INPUT: Input,
   SELECT: Select,
-  MULTISELECT: Multiselect,
+  MULTISELECT: Select,
   SWITCH: Switch,
   TEXTAREA: Textarea,
   FILE: FileUpload
