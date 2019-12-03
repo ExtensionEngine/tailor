@@ -61,11 +61,6 @@ export default {
   padding: 6px 15px;
 }
 
-.discussion {
-  margin-top: 32px;
-  margin-bottom: 8px;
-}
-
 .type-label {
   margin: 5px 5px 20px;
   font-weight: 500;

@@ -21,7 +21,7 @@ function unsubscribe(repositoryId, client) {
 }
 
 function subscribe(req, res) {
-  const { repositoryId } = req.params;
+  const { id: repositoryId } = req.repository;
   const client = res.sse;
   set(clients, [repositoryId, client.id], client);
   req.on('close', unsubscribe(repositoryId, client));
