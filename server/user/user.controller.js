@@ -11,7 +11,7 @@ const createFilter = q => map(['email', 'firstName', 'lastName'],
   it => ({ [it]: { [Op.iLike]: `%${q}%` } }));
 
 function list({ query: { email, role, filter, archived }, options }, res) {
-  const where = {};
+  const where = { [Op.and]: [] };
   if (filter) where[Op.or] = createFilter(filter);
   if (email) where[Op.and].push({ email });
   if (role) where[Op.and].push({ role });

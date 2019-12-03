@@ -1,44 +1,38 @@
 <template>
-  <ul class="thread">
+  <ul class="thread mt-2">
     <thread-comment
-      v-for="comment in thread"
+      v-for="comment in visibleItems"
       :key="comment._cid || comment.id"
       @update="onUpdate"
       @remove="onRemove"
-      :comment="comment"
-      :avatar="avatars"
-      class="clearfix comment" />
+      :comment="comment" />
   </ul>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import orderBy from 'lodash/orderBy';
+import takeRight from 'lodash/takeRight';
 import ThreadComment from './Comment';
 
 export default {
   name: 'discussion-thread',
   props: {
-    sort: { type: String, default: 'desc' },
-    showMore: { type: Boolean, default: false },
-    avatars: { type: Boolean, default: true },
-    minDisplayed: { type: Number, required: true }
+    sortOrder: { type: String, default: 'desc' },
+    showAll: { type: Boolean, default: false },
+    minDisplayed: { type: Number, default: 5 }
   },
   computed: {
     ...mapGetters(['comments']),
-    displayedComments() {
-      if (this.showMore) return this.comments;
-      return this.comments.slice(0, this.minDisplayed);
-    },
-    thread() {
-      return orderBy(this.displayedComments, ['createdAt'], [this.sort]);
+    thread: v => orderBy(v.comments, ['createdAt'], [v.sortOrder]),
+    visibleItems() {
+      return this.showAll ? this.thread : takeRight(this.thread, this.minDisplayed);
     }
   },
   methods: {
     ...mapActions('comments', ['update', 'remove']),
     onUpdate(comment, content) {
-      const updatedAt = Date.now();
-      this.update(Object.assign({}, comment, { content, updatedAt }));
+      this.update({ ...comment, content, updatedAt: Date.now() });
     },
     onRemove(comment) {
       this.remove(comment);
