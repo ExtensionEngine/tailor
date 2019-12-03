@@ -14,9 +14,9 @@
     <div>
       <v-alert
         v-if="!commentsCount"
-        color="grey lighten-3"
+        color="grey darken-1"
         icon="mdi-comment"
-        prominent>
+        outlined>
         No comments yet!
       </v-alert>
       <discussion-thread
