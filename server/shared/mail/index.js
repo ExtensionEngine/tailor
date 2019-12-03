@@ -64,7 +64,7 @@ function resetPassword(user, token) {
 function sendCommentNotification(users, comment) {
   const recipients = users.concat(',');
   const html = renderHtml(path.join(templatesDir, 'comment.mjml'), comment);
-  const text = renderText(path.join(templatesDir, 'comment.mjml'), comment);
+  const text = renderText(path.join(templatesDir, 'comment.txt'), comment);
   logger.info({ recipients, sender: from }, '📧  Sending notification email to:', recipients);
   return send({
     from,
