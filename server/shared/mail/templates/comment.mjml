@@ -2,12 +2,13 @@
   <mj-include path="./components/head.mjml"/>
   <mj-body>
     <mj-include path="./components/header.mjml"/>
-    <mj-section padding-bottom="10px">
+    <mj-section padding-bottom="10px" text-align="left">
       <mj-column
         padding-bottom="15px"
         border-bottom="1px solid #ccc">
         <mj-text
           mj-class="content"
+          padding-left="0"
           color="#444"
           font-size="16px">
           <b>{{author.label}}</b> left a comment on {{repository}}, {{topic}}.

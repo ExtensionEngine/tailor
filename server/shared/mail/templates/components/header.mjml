@@ -1,5 +1,20 @@
-<mj-section>
+<mj-section text-align="left">
+  <mj-column
+    width="26px"
+    background-color="#E91D63"
+    border-radius="6px">
+    <mj-text
+      padding="6px 15px"
+      color="#fff"
+      font-size="16px">
+      T
+    </mj-text>
+  </mj-column>
   <mj-column>
-    <mj-text mj-class="title">Tailor</mj-text>
+    <mj-text
+      mj-class="title"
+      padding="6px 24px">
+      Tailor
+    </mj-text>
   </mj-column>
 </mj-section>
