@@ -1,8 +1,10 @@
 <mjml>
   <mj-include path="./components/head.mjml"/>
-  <mj-body>
+  <mj-body padding="10px">
     <mj-include path="./components/header.mjml"/>
-    <mj-section padding-bottom="10px" text-align="left">
+    <mj-section
+      padding="10px 10px 20px 10px"
+      text-align="left">
       <mj-column
         padding-bottom="15px"
         border-bottom="1px solid #ccc">
@@ -15,7 +17,7 @@
         </mj-text>
       </mj-column>
     </mj-section>
-    <mj-section>
+    <mj-section padding="0 10px">
       <mj-column
         background-color="#f1f1f1"
         border-radius="8px">

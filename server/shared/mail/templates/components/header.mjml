@@ -1,20 +1,23 @@
-<mj-section text-align="left">
-  <mj-column
-    width="26px"
-    background-color="#E91D63"
-    border-radius="6px">
-    <mj-text
-      padding="6px 15px"
-      color="#fff"
-      font-size="16px">
-      T
-    </mj-text>
-  </mj-column>
-  <mj-column>
-    <mj-text
-      mj-class="title"
-      padding="6px 24px">
-      Tailor
-    </mj-text>
-  </mj-column>
+<mj-section padding="10px" text-align="left">
+  <mj-group width="130px">
+    <mj-column
+      width="18%"
+      background-color="#E91D63"
+      border-radius="4px">
+      <mj-text
+        padding="4px 15px"
+        color="#fff"
+        font-size="16px"
+        align="center">
+        T
+      </mj-text>
+    </mj-column>
+    <mj-column width="82%">
+      <mj-text
+        mj-class="title"
+        padding="3px 24px">
+        Tailor
+      </mj-text>
+    </mj-column>
+  </mj-group>
 </mj-section>
