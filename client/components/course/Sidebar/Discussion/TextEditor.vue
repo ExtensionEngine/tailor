@@ -6,7 +6,6 @@
       :autofocus="focused"
       :placeholder="placeholder"
       rows="3"
-      color="grey"
       outlined
       filled
       auto-grow
