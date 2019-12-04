@@ -121,8 +121,15 @@ export default {
     margin-right: 1rem;
   }
 
-  .v-input__slot .v-select__slot .v-input__append-inner {
-    margin-top: 1.375rem;
+  .v-input__slot .v-select__slot {
+    .v-input__append-inner {
+      margin-top: 1.375rem;
+    }
+
+    input[disabled] {
+      opacity: 0.7;
+      border-bottom: unset;
+    }
   }
 }
 </style>
