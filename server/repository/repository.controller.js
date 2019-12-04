@@ -9,6 +9,7 @@ const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
+const { repository: role } = require('../../config/shared').role;
 const sample = require('lodash/sample');
 
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
@@ -33,14 +34,20 @@ function index({ query, user, opts }, res) {
   return repositories.then(data => res.json({ data }));
 }
 
-function create({ user, body }, res) {
+async function create({ user, body }, res) {
   const defaultMeta = getVal(getSchema(body.schema), 'defaultMeta', {});
   const data = { color: sample(DEFAULT_COLORS), ...defaultMeta, ...body.data };
-  return Repository.create({ ...body, data }, {
+  const repository = await Repository.create({ ...body, data }, {
     isNewRecord: true,
     returning: true,
     context: { userId: user.id }
-  }).then(repository => res.json({ data: repository }));
+  });
+  await RepositoryUser.create({
+    repositoryId: repository.id,
+    userId: user.id,
+    role: role.ADMIN
+  });
+  return res.json({ data: repository });
 }
 
 function get({ repository }, res) {

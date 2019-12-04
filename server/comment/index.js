@@ -24,7 +24,6 @@ router.route('/')
   .post(ctrl.create);
 
 router.route('/:commentId')
-  .get(ctrl.show)
   .patch(canEdit, ctrl.patch)
   .delete(canEdit, ctrl.remove);
 

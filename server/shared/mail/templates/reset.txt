@@ -1,0 +1,15 @@
+Tailor
+=================================================
+
+Hello {{recipientName}},
+
+You have requested password reset.
+Please reset your password by clicking the URL below:
+
+{{href}}
+
+Or copy and paste this URL into your browser.
+
+
+-------------------------------------------------
+If you didn't request this, please ignore this email.
