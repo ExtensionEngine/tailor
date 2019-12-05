@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="visible" width="500">
     <template v-if="showActivator" v-slot:activator="{ on }">
-      <v-btn v-on="on" color="primary darken-2" text class="px-1">
+      <v-btn v-on="on" color="grey darken-3" text class="px-1">
         <v-icon class="pr-1">mdi-plus</v-icon>
         Create {{ hasSingleOption ? levels[0].label : '' }}
       </v-btn>
@@ -16,7 +16,7 @@
           </v-avatar>
           Create
         </v-card-title>
-        <v-card-text class="pt-8">
+        <v-card-text :key="visible" class="pt-8">
           <type-select
             v-model="activity.type"
             :options="levels"
