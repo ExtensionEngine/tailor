@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <div v-else>
+    <div v-else class="action-container">
       <select-action
         v-if="!action"
         @selected="selected => (action = selected)"
@@ -19,12 +19,13 @@
         @selected="executeAction"
         @close="hide"
         :selectable-levels="supportedLevels" />
-      <create-activity
+      <create-dialog
         v-else
-        @create="executeAction"
         @close="hide"
-        :parent="anchor"
-        :supported-levels="supportedLevels" />
+        @expand="$emit('expand')"
+        :repository-id="anchor.repositoryId"
+        :levels="supportedLevels"
+        :anchor="anchor" />
     </div>
   </div>
 </template>
@@ -34,7 +35,7 @@ import { getOutlineChildren, getParent } from 'utils/activity';
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import ActivityBrowser from 'components/common/ActivityBrowser';
 import calculatePosition from 'utils/calculatePosition';
-import CreateActivity from './CreateActivity';
+import CreateDialog from './CreateDialog';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
@@ -109,7 +110,7 @@ export default {
       return calculatePosition(context);
     }
   },
-  components: { ActivityBrowser, CreateActivity, SelectAction }
+  components: { ActivityBrowser, CreateDialog, SelectAction }
 };
 </script>
 
@@ -152,5 +153,9 @@ export default {
       }
     }
   }
+}
+
+.action-container {
+  min-height: 1.125rem;
 }
 </style>

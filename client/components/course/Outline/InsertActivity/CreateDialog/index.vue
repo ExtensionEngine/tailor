@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="500">
+  <v-dialog v-model="visible" width="500">
     <form @submit.prevent="create">
       <v-card>
         <v-card-title
@@ -22,7 +22,7 @@
         </v-card-text>
         <v-card-actions class="px-4 py-3">
           <v-spacer />
-          <v-btn @click="dialog = false" text>Cancel</v-btn>
+          <v-btn @click="visible = false" text>Cancel</v-btn>
           <v-btn color="primary" type="submit" text>Create</v-btn>
         </v-card-actions>
       </v-card>
@@ -49,7 +49,7 @@ export default {
   },
   data() {
     return {
-      dialog: true,
+      visible: true,
       activity: initActivityState(this.repositoryId)
     };
   },
@@ -74,7 +74,12 @@ export default {
       activity.position = this.calculateInsertPosition(activity, anchor);
       this.save({ ...activity });
       if (anchor.id === activity.parentId) this.$emit('expand');
-      this.dialog = false;
+      this.visible = false;
+    }
+  },
+  watch: {
+    visible(val) {
+      if (!val) this.$emit('close');
     }
   },
   components: { MetaInput, TypeSelect }
