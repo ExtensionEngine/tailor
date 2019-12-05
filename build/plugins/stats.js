@@ -4,6 +4,9 @@ const { writeFileSync } = require('fs');
 
 exports.name = 'stats';
 
+/**
+ * @param {import('poi')} api
+ */
 exports.cli = api => {
   api.command.option(
     '--print-stats',
@@ -27,6 +30,9 @@ class StatsPlugin {
   }
 }
 
+/**
+ * @param {import('poi')} api
+ */
 exports.apply = api => {
   api.hook('createWebpackChain', config => {
     if (!api.cli.options.printStats) return;
