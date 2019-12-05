@@ -5,6 +5,7 @@
     :value="value"
     :items="groupedOptions"
     :error-messages="vErrors.collect('type')"
+    :disabled="disabled"
     item-text="label"
     item-value="type"
     name="type"
@@ -40,7 +41,8 @@ export default {
   mixins: [withValidation({ inherit: true })],
   props: {
     value: { type: String, default: null },
-    options: { type: Array, required: true }
+    options: { type: Array, required: true },
+    disabled: { type: Boolean, default: false }
   },
   computed: {
     levels: vm => sortedUniq(vm.options.map(it => it.level)),

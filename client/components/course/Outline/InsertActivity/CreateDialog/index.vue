@@ -2,7 +2,8 @@
   <v-dialog v-model="visible" width="500">
     <template v-if="showActivator" v-slot:activator="{ on }">
       <v-btn v-on="on" color="primary darken-2" text class="px-1">
-        <v-icon class="pr-1">mdi-plus</v-icon>Create
+        <v-icon class="pr-1">mdi-plus</v-icon>
+        Create {{ hasSingleOption ? levels[0].label : '' }}
       </v-btn>
     </template>
     <form @submit.prevent="create">
@@ -16,7 +17,10 @@
           Create
         </v-card-title>
         <v-card-text class="pt-8">
-          <type-select v-model="activity.type" :options="levels" />
+          <type-select
+            v-model="activity.type"
+            :options="levels"
+            :disabled="hasSingleOption" />
           <template v-if="activity.type">
             <meta-input
               v-for="input in metadata"
@@ -42,7 +46,11 @@ import MetaInput from 'components/common/Meta';
 import TypeSelect from './TypeSelect';
 import { withValidation } from 'utils/validation';
 
-const initActivityState = repositoryId => ({ repositoryId, type: null, data: {} });
+const initActivityState = (repositoryId, levels) => ({
+  repositoryId,
+  type: levels.length > 1 ? null : levels[0].type,
+  data: {}
+});
 
 export default {
   name: 'create-activity-dialog',
@@ -56,12 +64,13 @@ export default {
   data() {
     return {
       visible: !this.showActivator,
-      activity: initActivityState(this.repositoryId)
+      activity: initActivityState(this.repositoryId, this.levels)
     };
   },
   computed: {
     ...mapGetters('course', ['getMetadata']),
     ...mapGetters('activities', ['calculateInsertPosition']),
+    hasSingleOption: vm => vm.levels.length === 1,
     metadata() {
       if (!this.activity.type) return null;
       return this.getMetadata({ type: this.activity.type });
@@ -91,7 +100,7 @@ export default {
     visible(val) {
       if (!val) {
         this.$emit('close');
-        this.activity = initActivityState(this.repositoryId);
+        this.activity = initActivityState(this.repositoryId, this.levels);
       }
     }
   },
