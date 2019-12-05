@@ -120,7 +120,6 @@ export default {
   padding: 8px 0;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.2s;
 
   &:hover {
     opacity: 1;
