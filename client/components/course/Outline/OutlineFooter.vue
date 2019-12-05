@@ -15,19 +15,16 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
 import CreateDialog from './InsertActivity/CreateDialog';
 import filter from 'lodash/filter';
 import last from 'lodash/last';
+import { mapGetters } from 'vuex';
 
 export default {
   computed: {
     ...mapGetters('course', ['course', 'structure', 'activities']),
     levels: vm => filter(vm.structure, { level: 1 }),
     anchor: vm => last(vm.activities)
-  },
-  methods: {
-    ...mapMutations('course', ['focusActivity'])
   },
   components: { CreateDialog }
 };

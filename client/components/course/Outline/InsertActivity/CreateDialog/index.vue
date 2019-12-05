@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { isSameLevel } from 'utils/activity';
 import MetaInput from 'components/common/Meta';
 import TypeSelect from './TypeSelect';
@@ -78,6 +78,7 @@ export default {
   },
   methods: {
     ...mapActions('activities', ['save']),
+    ...mapMutations('course', ['focusActivity']),
     setMetaValue(key, val) {
       this.activity.data[key] = val;
     },
@@ -91,9 +92,10 @@ export default {
           : anchor.id;
       }
       activity.position = this.calculateInsertPosition(activity, anchor);
-      this.save({ ...activity });
       if (anchor && (anchor.id === activity.parentId)) this.$emit('expand');
       this.visible = false;
+      this.save({ ...activity })
+        .then(activity => this.focusActivity(activity._cid));
     }
   },
   watch: {
