@@ -61,15 +61,35 @@ Adaptive course authoring platform.
 
 ## Content repository structure
 
-Repository stucture can be altered through `.activities-rc.json` file. Use the
-`.activities-rc.json.example` file as a template: `cp
-.activities-rc.json.example .activities-rc.json` and enter configuration
-details. It's also possible to use `.activities-rc.js`, by using
-`module.exports` to export the structure. By default, the file is searched for
-in the root of the project. If a custom location or a custom name is needed, it
-can be provided through the `activitiesConfig` param to any of the build scripts
-(without the extension), for example: `npm run dev:client --
---activitiesConfig=server/.custom-activities-rc`
+Repository stucture can be altered using tailor configuration file. Recongnized
+configuration filenames are (sorted by priority):
+
+- `tailor.config.js`
+- `.tailorrc.js`
+- `.tailorrc`
+- `.tailorrc.json`
+
+Use the `.tailorrc.json.example` file as a template:
+
+```
+$ cp .tailorrc.json.example .tailorrc.json
+```
+
+and enter configuration details. It is also possible to use a commonjs module,
+by using `module.exports` to export the repository structure. Configuration file
+is searched for inside current working directory by default. If a custom
+location or a custom name is needed, it can be provided through the `--config`
+flag passed to target npm script:
+
+```
+$ npm run dev:client -- --config=path/to/custom/tailor/config.js
+```
+
+alternatively `TAILOR_CONFIG` environment variable can be used:
+
+```
+$ TAILOR_CONFIG=path/to/custom/tailor/config.js npm run dev:server
+```
 
 Content repository structures are defined using following properties:
 
