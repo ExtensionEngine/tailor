@@ -15,8 +15,8 @@
 import { withValidation } from 'utils/validation';
 
 export default {
-  name: 'line-input',
-  mixins: [withValidation()],
+  name: 'meta-input',
+  mixins: [withValidation({ inherit: true })],
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   },

@@ -3,6 +3,10 @@
   border-radius: 2px !important;
 }
 
+.v-input.required label::after {
+  content: "*";
+}
+
 // Patches in order for vuetify to work alongside bootstrap
 .v-input input, .v-input textarea, .v-input input[type=text][readonly] {
   box-shadow: inherit;
