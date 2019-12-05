@@ -3,6 +3,10 @@
   border-radius: 2px !important;
 }
 
+.v-input--selection-controls__input input {
+  position: absolute;
+}
+
 // Patches in order for vuetify to work alongside bootstrap
 .v-input input, .v-input textarea, .v-input input[type=text][readonly] {
   box-shadow: inherit;
