@@ -10,6 +10,9 @@ const stripJsonComments = require('strip-json-comments');
 
 exports.name = 'tailor:brand';
 
+/**
+ * @param {import('poi')} api
+ */
 exports.cli = api => {
   api.command.option('--brand-config <path>', 'Set path to brand config file');
 };
@@ -39,6 +42,10 @@ const getStyleConfig = () => ({
   altBrandColor: '#5C6BC0'
 });
 
+/**
+ * @param {import('poi')} api
+ * @param {Object} options
+ */
 exports.apply = (api, { files, imagesPath } = {}) => {
   const brandConfig = loadConfig(api, files) || {};
   const constants = merge(getAppConfig(), brandConfig);
