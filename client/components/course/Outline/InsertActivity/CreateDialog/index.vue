@@ -1,5 +1,10 @@
 <template>
   <v-dialog v-model="visible" width="500">
+    <template v-if="showActivator" v-slot:activator="{ on }">
+      <v-btn v-on="on" color="primary darken-2" text class="px-1">
+        <v-icon class="pr-1">mdi-plus</v-icon>Create
+      </v-btn>
+    </template>
     <form @submit.prevent="create">
       <v-card>
         <v-card-title
@@ -45,11 +50,12 @@ export default {
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
-    anchor: { type: Object, default: null }
+    anchor: { type: Object, default: null },
+    showActivator: { type: Boolean, default: false }
   },
   data() {
     return {
-      visible: true,
+      visible: !this.showActivator,
       activity: initActivityState(this.repositoryId)
     };
   },
@@ -70,16 +76,23 @@ export default {
       const isValid = await this.$validator.validateAll();
       if (!isValid) return;
       const { activity, anchor } = this;
-      activity.parentId = isSameLevel(activity, anchor) ? anchor.parentId : anchor.id;
+      if (anchor) {
+        activity.parentId = isSameLevel(activity, anchor)
+          ? anchor.parentId
+          : anchor.id;
+      }
       activity.position = this.calculateInsertPosition(activity, anchor);
       this.save({ ...activity });
-      if (anchor.id === activity.parentId) this.$emit('expand');
+      if (anchor && (anchor.id === activity.parentId)) this.$emit('expand');
       this.visible = false;
     }
   },
   watch: {
     visible(val) {
-      if (!val) this.$emit('close');
+      if (!val) {
+        this.$emit('close');
+        this.activity = initActivityState(this.repositoryId);
+      }
     }
   },
   components: { MetaInput, TypeSelect }

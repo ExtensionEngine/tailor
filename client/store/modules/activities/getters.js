@@ -37,7 +37,7 @@ export const calculateInsertPosition = state => {
   return (activity, anchor) => {
     const items = getOutlineChildren(state.items, activity.parentId);
     const newPosition = anchor ? findIndex(items, { id: anchor.id }) : 1;
-    const isFirstChild = !isSameLevel(activity, anchor) || newPosition === -1;
+    const isFirstChild = !anchor || !isSameLevel(activity, anchor) || newPosition === -1;
     const context = { items, newPosition, isFirstChild, insert: true };
     return calculatePosition(context);
   };

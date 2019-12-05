@@ -28,7 +28,7 @@
             :level="1"
             :activities="outlineActivities" />
         </draggable>
-        <no-activities v-if="!rootActivities.length" />
+        <outline-footer />
       </div>
       <sidebar />
     </div>
@@ -42,7 +42,7 @@ import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import map from 'lodash/map';
-import NoActivities from './NoActivities';
+import OutlineFooter from './OutlineFooter';
 import reorderMixin from './reorderMixin';
 import Sidebar from '../Sidebar';
 
@@ -65,7 +65,7 @@ export default {
     }
   },
   methods: mapActions('course', ['toggleActivities']),
-  components: { Activity, Draggable, NoActivities, Sidebar }
+  components: { Activity, Draggable, OutlineFooter, Sidebar }
 };
 </script>
 
