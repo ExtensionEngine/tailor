@@ -5,8 +5,11 @@
       @change.native="upload"
       :loading="uploading"
       :label="label"
+      :clearable="false"
       :accept="acceptedFileTypes"
-      dense />
+      prepend-icon=""
+      prepend-inner-icon="mdi-paperclip"
+      outlined />
     <template v-else>
       <v-btn @click="downloadFile" text class="text-none" color="primary">
         {{ fileName | truncate(35) }}

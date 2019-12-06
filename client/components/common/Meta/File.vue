@@ -38,15 +38,6 @@ export default {
 .control {
   position: relative;
   min-height: 50px;
-  padding: 7px 8px;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
-
-  &.editing:hover {
-    background-color: inherit;
-  }
 
   .form-group {
     margin: 10px 0 0;
