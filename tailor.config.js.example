@@ -25,7 +25,7 @@ exports.SCHEMAS = [{
       placeholder: 'Click to select',
       allowCircularLinks: false,
       allowInsideLineage: false,
-      allowedTypes: ['ACTIVITY_TYPE_1', 'ACTIVITY_TYPE_2']
+      allowedTypes: ['GOAL']
     }, {
       type: 'replacements',
       label: 'replacements'
