@@ -2,7 +2,8 @@
   <component
     :is="component"
     @update="(key, value) => $emit('update', key, value)"
-    :meta="meta" />
+    :meta="meta"
+    :class="{ required: get(meta, 'validate.required') }" />
 </template>
 
 <script>
@@ -10,6 +11,7 @@ import Checkbox from './Checkbox';
 import ColorPicker from './ColorPicker';
 import DatePicker from './DatePicker';
 import FileUpload from './File';
+import get from 'lodash/get';
 import Html from './Html';
 import Input from './Input';
 import mapKeys from 'lodash/mapKeys';
@@ -40,6 +42,7 @@ export default {
     type: vm => (vm.meta.type || '').toUpperCase(),
     component: vm => META_TYPES[vm.type] || META_TYPES.INPUT
   },
+  methods: { get },
   components
 };
 </script>

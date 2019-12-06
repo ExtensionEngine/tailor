@@ -3,6 +3,10 @@
   border-radius: 2px !important;
 }
 
+.v-input.required label::after {
+  content: "*";
+}
+
 .v-input--selection-controls__input input {
   position: absolute;
 }

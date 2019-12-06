@@ -34,3 +34,7 @@ export function getAncestors(activities, activity) {
   const ancestors = getAncestors(activities, parent);
   return [...ancestors, parent];
 }
+
+export function isSameLevel(activityX, activityY) {
+  return getLevel(activityX.type).level === getLevel(activityY.type).level;
+}
