@@ -8,8 +8,7 @@
         :repository-id="course.id"
         :levels="levels"
         :anchor="anchor"
-        show-activator
-        class="pull-left" />
+        show-activator />
     </v-col>
   </v-row>
 </template>
