@@ -41,9 +41,9 @@ Vue.use(Timeago, {
   }
 });
 
-request.setStorageInterface({
-  getToken: () => store.state.auth.token,
-  clearAuthData: () => store.dispatch('logout')
+Object.defineProperty(request, 'token', {
+  get: () => store.state.auth.token,
+  set: value => !value && store.dispatch('logout')
 });
 
 const contentPluginRegistry = new ContentPluginRegistry(Vue);

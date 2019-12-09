@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import request from './api/request';
 import set from 'lodash/set';
 import unset from 'lodash/unset';
 
@@ -10,13 +11,14 @@ function listenerFactory(method) {
 }
 
 class SSEClient {
-  constructor(url, token) {
+  constructor(url) {
     this.url = url;
-    this.connection = SSEClient.initConnection(url, token);
+    this.connection = SSEClient.initConnection(url);
     this.listeners = {};
   }
 
-  static initConnection(url, token) {
+  static initConnection(url) {
+    const { token } = request;
     const headers = { Authorization: `JWT ${token}` };
     return new window.EventSource(url, { headers });
   }

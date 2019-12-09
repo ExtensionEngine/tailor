@@ -87,7 +87,7 @@ module.exports = {
     API_PATH: '/api/v1/',
     AUTH_JWT_SCHEME,
     // The key to store the Vuex state in the storage
-    VUEX_STORAGE_KEY: 'APP_STORE'
+    VUEX_STORAGE_KEY: 'TAILOR_APP_STATE'
   },
   babel: {
     transpileModules: [

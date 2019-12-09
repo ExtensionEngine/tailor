@@ -19,13 +19,8 @@ Object.defineProperty(client, 'base', {
   }
 });
 
-client.setStorageInterface = function ({ getToken, clearAuthData }) {
-  this._getAuthToken = getToken;
-  this._clearAuthData = clearAuthData;
-};
-
 client.interceptors.request.use(config => {
-  const token = client._getAuthToken();
+  const { token } = client;
   if (token) {
     config.headers.Authorization = [authScheme, token].join(' ');
     return config;
@@ -36,7 +31,7 @@ client.interceptors.request.use(config => {
 
 client.interceptors.response.use(res => res, err => {
   if (err.response && [FORBIDDEN, UNAUTHORIZED].includes(err.response.status)) {
-    client._clearAuthData();
+    client.token = null;
   }
   throw err;
 });
