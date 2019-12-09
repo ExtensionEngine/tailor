@@ -15,6 +15,7 @@ const fetch = ({ state, commit }, { id, courseId }) => {
 
 const subscribe = ({ state, commit }) => {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
+
   SSE_CLIENT = new SSEClient(`/api/v1${state.$apiUrl}/subscribe`);
   SSE_CLIENT.subscribe('comment_create', item => commit('sseAdd', item));
   SSE_CLIENT.subscribe('comment_update', item => commit('sseUpdate', item));

@@ -9,7 +9,6 @@ import plugins from './plugins';
 import revisions from './modules/revisions';
 import settings from '../settings';
 import tes from './modules/tes';
-
 import Vue from 'vue';
 import Vuex from 'vuex';
 
