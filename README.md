@@ -36,10 +36,10 @@ Adaptive course authoring platform.
 ### Setup
 
 - Run `npm install` in the repo directory
-- Create database in PostgreSQL
-- App is configured via environment variables contained in a file named `.env`.
-  Use the `.env.example` file as a template: `cp .env.example .env` and enter
-  configuration details.
+- Create a database in PostgreSQL
+- Application is configured via environment variables contained in a file named
+  `.env`. Use the `.env.example` file as a template: `cp .env.example .env` and
+  enter configuration details.
 - You can init the db (for development) by setting `ENABLE_DEFAULT_SCHEMA=1` and
   running `npm run db:seed`.
 - You can create admin user by running `npm run add:admin <email> <password>`
@@ -61,17 +61,36 @@ Adaptive course authoring platform.
 
 ## Content repository structure
 
-Repository stucture can be altered through `.activities-rc.json` file. Use the
-`.activities-rc.json.example` file as a template: `cp
-.activities-rc.json.example .activities-rc.json` and enter configuration
-details. It's also possible to use `.activities-rc.js`, by using
-`module.exports` to export the structure. By default, the file is searched for
-in the root of the project. If a custom location or a custom name is needed, it
-can be provided through the `activitiesConfig` param to any of the build scripts
-(without the extension), for example: `npm run dev:client --
---activitiesConfig=server/.custom-activities-rc`
+Repository structure can be altered using tailor configuration file. Recognized
+configuration filenames are (sorted by priority):
 
-Content repository structures are defined using following properties:
+- `tailor.config.js`
+- `.tailorrc.js`
+- `.tailorrc`
+- `.tailorrc.json`
+
+Use the `tailor.config.js.example` file as a template:
+
+```
+$ cp tailor.config.js.example tailor.config.js
+```
+
+and enter the configuration details. By default, the configuration file is
+searched inside the current working directory. If a custom location or a custom
+name is needed, it can be provided through the `--config` flag passed to target
+npm script:
+
+```
+$ npm run dev:client -- --config=path/to/custom/tailor/config.js
+```
+
+alternatively `TAILOR_CONFIG` environment variable can be used:
+
+```
+$ TAILOR_CONFIG=path/to/custom/tailor/config.js npm run dev:server
+```
+
+Content repository structures are defined using the following properties:
 
 ### `SCHEMAS`
 
@@ -109,19 +128,19 @@ properties:
 
 #### Relationship
 
-Defines the structure of an activity realtionship field.
+Defines the structure of an activity relationship field.
 
 - **type** `String` - Defines the name of the relationship. The relationship
   will be published under this value.
 - **label** `String` - Display label.
-- **placeholder** `String` - Display label for select picker.
+- **placeholder** `String` - Display label for the select picker.
 - **multiple** `Boolean` - Defines if the relationship can have multiple
   associations chosen. True by default.
 - **searchable** `Boolean` - Defines if the list of activities can be searched.
   True by default.
 - **allowEmpty** `Boolean` - Defines if the member list can be empty. True by
   default.
-- **allowCircularLinks** `Boolean` - Defines if member of a relationship
+- **allowCircularLinks** `Boolean` - Defines if a member of the relationship
   instance can set the owner of that instance as a member of its own instance of
   that relationship. Example, activity X sets activity Y as its prerequisite. If
   `allowCircualLinks` is set to true then activity Y can set activity X as its
@@ -145,8 +164,8 @@ Defines the structure of an activity metadata field.
 Defines validation rules on an activity metadata field.
 
 - **rules** `Object` - Contains the following properties:
-  - max `Number` - Maximum character count.
-  - required `Boolean` - Defines if the field is required.
+- max `Number` - Maximum character count.
+- required `Boolean` - Defines if the field is required.
 
 ### `CONTENT_CONTAINERS`
 
@@ -178,6 +197,6 @@ Configuration for content containers. Contains the following properties:
 ### `PREVIEW_URL`
 
 A string template that will be interpolated on the client using two route
-params, `repositoryId` and `activityId`, into a preview URL for each activiy.
+params, `repositoryId` and `activityId`, into a preview URL for each activity.
 Example:
 `https://my.url.com/#/repository/{repositoryId}/activity/{activityId}/preview`
