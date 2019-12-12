@@ -5,7 +5,7 @@
         <v-combobox
           v-model="email"
           v-validate="{ required: true, email: true }"
-          @update:searchInput="fetchUsers"
+          @update:search-input="fetchUsers"
           :error-messages="vErrors.collect('email')"
           :items="suggestedUsers"
           data-vv-name="email"
@@ -47,16 +47,14 @@ export default {
   },
   methods: {
     ...mapActions('course', ['upsertUser']),
-    addUser() {
-      const { email, role } = this;
-      const { courseId } = this.$route.params;
-      this.$validator.validateAll().then(async isValid => {
-        if (!isValid) return;
-        await this.upsertUser({ courseId, email, role });
-        this.email = '';
-        this.suggestedUsers = [];
-        this.$nextTick(() => this.$validator.reset());
-      });
+    async addUser() {
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) return;
+      const { email, role, $route: { params: { courseId } } } = this;
+      await this.upsertUser({ courseId, email, role });
+      this.email = '';
+      this.suggestedUsers = [];
+      this.$nextTick(() => this.$validator.reset());
     },
     fetchUsers: throttle(function (filter) {
       if (filter && filter.length > 1) {
