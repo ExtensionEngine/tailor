@@ -1,17 +1,12 @@
 <template>
-  <div class="control">
-    <span class="title">{{ meta.label }}</span>
-    <div class="form-group">
-      <file-upload
-        @upload="$emit('update', meta.key, $event)"
-        @delete="$emit('update', meta.key, null)"
-        v-bind="options" />
-    </div>
-  </div>
+  <file-upload
+    @upload="$emit('update', meta.key, $event)"
+    @delete="$emit('update', meta.key, null)"
+    v-bind="options" />
 </template>
 
 <script>
-import FileUpload from '../FileUpload.vue';
+import FileUpload from '../FileUpload';
 import get from 'lodash/get';
 
 export default {
@@ -26,21 +21,11 @@ export default {
         fileKey: get(this.meta, 'value.key', ''),
         fileName: get(this.meta, 'value.name', ''),
         validate: this.meta.validate,
-        label: this.meta.placeholder
+        label: this.meta.label,
+        placeholder: this.meta.placeholder
       };
     }
   },
   components: { FileUpload }
 };
 </script>
-
-<style lang="scss" scoped>
-.control {
-  position: relative;
-  min-height: 50px;
-
-  .form-group {
-    margin: 10px 0 0;
-  }
-}
-</style>

@@ -5,10 +5,9 @@
       @change.native="upload"
       :loading="uploading"
       :label="label"
+      :placeholder="placeholder"
       :clearable="false"
       :accept="acceptedFileTypes"
-      prepend-icon=""
-      prepend-inner-icon="mdi-paperclip"
       outlined />
     <template v-else>
       <v-btn @click="downloadFile" text class="text-none" color="primary">
@@ -24,6 +23,7 @@
 <script>
 import downloadMixin from 'utils/downloadMixin';
 import EventBus from 'EventBus';
+import get from 'lodash/get';
 import uniqueId from 'lodash/uniqueId';
 
 const appChannel = EventBus.channel('app');
@@ -38,6 +38,7 @@ export default {
     fileKey: { type: String, default: '' },
     validate: { type: Object, default: () => ({ ext: [] }) },
     label: { type: String, default: 'Choose a file' },
+    placeholder: { type: String, default: 'File upload' },
     sm: { type: Boolean, default: false }
   },
   data() {
@@ -45,7 +46,7 @@ export default {
   },
   computed: {
     acceptedFileTypes() {
-      const { ext } = this.validate;
+      const ext = get(this.validate, 'ext', []);
       return ext.length ? `.${ext.join(',.')}` : '';
     }
   },
