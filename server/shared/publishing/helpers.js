@@ -250,11 +250,18 @@ function getRepositoryAttrs(repository) {
 }
 
 function attachContentSummary(obj, { containers, assessments }) {
-  obj.contentContainers = map(containers, it => ({
-    ...pick(it, ['id', 'uid', 'type', 'publishedAs']),
-    elementCount: get(it.elements, 'length', 0)
-  }));
+  obj.contentContainers = map(containers, getContainerSummary);
   obj.assessments = map(assessments, it => pick(it, ['id', 'uid']));
+}
+
+function getContainerSummary(container) {
+  const customBuilder = containerRegistry.getSummaryBuilder(container.type);
+  return customBuilder
+    ? customBuilder(container)
+    : {
+      ...pick(container, ['id', 'uid', 'type', 'publishedAs']),
+      elementCount: get(container.elements, 'length', 0)
+    };
 }
 
 function getActivityFilenames(spineActivity) {
