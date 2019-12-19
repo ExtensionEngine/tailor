@@ -1,5 +1,5 @@
 <template>
-  <div class="v-flex">
+  <div class="d-flex">
     <date-picker
       @change="setDate"
       :value="date"
