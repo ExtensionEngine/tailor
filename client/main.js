@@ -8,6 +8,7 @@ import ContentPluginRegistry from './content-plugins';
 import { formatDate, truncate } from '@/filters';
 import FileFilter from '@/directives/file-filter';
 import QuestionContainer from 'tce-core/QuestionContainer';
+import request from './api/request';
 import { sync } from 'vuex-router-sync';
 import Timeago from 'vue-timeago';
 import VeeValidate from './utils/validation';
@@ -38,6 +39,11 @@ Vue.use(Timeago, {
   locales: {
     'en-US': require('@/assets/locales/timeago-en-US-short.json')
   }
+});
+
+Object.defineProperty(request, 'token', {
+  get: () => store.state.auth.token,
+  set: value => !value && store.dispatch('logout')
 });
 
 const contentPluginRegistry = new ContentPluginRegistry(Vue);

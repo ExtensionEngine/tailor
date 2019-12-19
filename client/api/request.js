@@ -1,6 +1,5 @@
 import { FORBIDDEN, UNAUTHORIZED } from 'http-status-codes';
 import axios from 'axios';
-import { EventEmitter } from 'events';
 
 const authScheme = process.env.AUTH_JWT_SCHEME;
 const config = {
@@ -9,30 +8,8 @@ const config = {
   headers: { 'Content-Type': 'application/json' }
 };
 
-class Auth extends EventEmitter {
-  constructor(storage = localStorage) {
-    super();
-    this.storage = storage;
-    this.storageKey = 'JWT_TOKEN';
-  }
-
-  get token() {
-    return this.storage.getItem(this.storageKey);
-  }
-
-  set token(val) {
-    if (!val) {
-      this.storage.removeItem(this.storageKey);
-      return this.emit('token:remove');
-    }
-    this.storage.setItem(this.storageKey, val);
-    this.emit('token:set', val);
-  }
-}
-
 // Instance of axios to be used for all API requests.
 const client = axios.create(config);
-client.auth = new Auth();
 
 // Attach additional instance without interceptors
 Object.defineProperty(client, 'base', {
@@ -43,7 +20,7 @@ Object.defineProperty(client, 'base', {
 });
 
 client.interceptors.request.use(config => {
-  const { token } = client.auth;
+  const { token } = client;
   if (token) {
     config.headers.Authorization = [authScheme, token].join(' ');
     return config;
@@ -54,7 +31,7 @@ client.interceptors.request.use(config => {
 
 client.interceptors.response.use(res => res, err => {
   if (err.response && [FORBIDDEN, UNAUTHORIZED].includes(err.response.status)) {
-    return client.auth.emit('error', err);
+    client.token = null;
   }
   throw err;
 });
