@@ -16,7 +16,7 @@ const contentElement = require('../content-element');
 
 router
   .param('repositoryId', getRepository)
-  .use(hasAccess);
+  .use('/:repositoryId', hasAccess);
 
 router.route('/')
   .get(processQuery, ctrl.index)

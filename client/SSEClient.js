@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import request from './api/request';
 import set from 'lodash/set';
 import unset from 'lodash/unset';
 
@@ -17,7 +18,7 @@ class SSEClient {
   }
 
   static initConnection(url) {
-    const token = window.localStorage.getItem('JWT_TOKEN');
+    const { token } = request;
     const headers = { Authorization: `JWT ${token}` };
     return new window.EventSource(url, { headers });
   }

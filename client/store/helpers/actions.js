@@ -32,6 +32,7 @@ export default function ($apiUrl) {
       const previous = state.items[model._cid];
       if (previous && previous._version === model._version) model._synced = true;
       commit('save', model);
+      return model;
     });
   };
 

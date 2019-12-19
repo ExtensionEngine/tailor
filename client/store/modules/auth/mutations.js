@@ -1,9 +1,10 @@
-export const login = (state, user) => {
+export const login = (state, { user, token }) => {
   state.user = user;
+  state.token = token;
 };
 
 export const logout = state => {
-  state.user = null;
+  Object.assign(state, { user: null, token: null });
 };
 
 export const setUser = (state, user) => {
