@@ -258,10 +258,11 @@ function getContainerSummary(container) {
   const customBuilder = containerRegistry.getSummaryBuilder(container.type);
   return customBuilder
     ? customBuilder(container)
-    : {
-      ...pick(container, ['id', 'uid', 'type', 'publishedAs']),
-      elementCount: get(container.elements, 'length', 0)
-    };
+    : defaultSummaryBuilder(container);
+}
+
+function defaultSummaryBuilder({ id, uid, type, publishedAs, elements = [] }) {
+  return { id, uid, type, publishedAs, elementCount: elements.length };
 }
 
 function getActivityFilenames(spineActivity) {
