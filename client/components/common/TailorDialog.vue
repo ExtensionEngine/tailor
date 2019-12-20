@@ -1,6 +1,5 @@
 <template>
   <v-dialog
-    v-hotkey="{ esc: hide }"
     v-on="$listeners"
     width="500"
     v-bind="$attrs">
