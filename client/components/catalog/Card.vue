@@ -30,7 +30,10 @@
       </div>
     </div>
     <v-card-actions class="px-2 py-1">
-      <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" text icon>
+      <v-btn
+        @mousedown.stop
+        @click.stop="pin({ id: repository.id, pin: !isPinned })"
+        text icon>
         <v-icon
           :color="isPinned ? 'pink': 'grey'"
           :class="{ 'mdi-rotate-45': isPinned }">

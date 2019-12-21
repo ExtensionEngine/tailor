@@ -1,0 +1,34 @@
+<mjml>
+  <mj-include path="./components/head.mjml"/>
+  <mj-body padding="10px">
+    <mj-include path="./components/header.mjml"/>
+    <mj-section
+      padding="10px 10px 20px 10px"
+      text-align="left">
+      <mj-column
+        padding-bottom="15px"
+        border-bottom="1px solid #ccc">
+        <mj-text
+          mj-class="content"
+          padding-left="0"
+          color="#444"
+          font-size="16px">
+          <b>{{author.label}}</b> left a comment on {{repository}}, {{topic}}.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="0 10px">
+      <mj-column
+        background-color="#f1f1f1"
+        border-radius="8px">
+        <mj-text
+          mj-class="content"
+          padding="20px"
+          color="#444"
+          font-size="16px">
+          {{content}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

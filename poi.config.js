@@ -85,7 +85,8 @@ module.exports = {
   },
   envs: {
     API_PATH: '/api/v1/',
-    AUTH_JWT_SCHEME
+    AUTH_JWT_SCHEME,
+    VUEX_STORAGE_KEY: 'TAILOR_APP_STATE'
   },
   babel: {
     transpileModules: [

@@ -11,17 +11,7 @@ const urls = {
 function login(credentials) {
   return request.base
     .post(urls.login, credentials)
-    .then(res => res.data.data)
-    .then(({ token, user }) => {
-      window.localStorage.setItem('JWT_TOKEN', token);
-      return user;
-    });
-}
-
-function logout() {
-  window.localStorage.removeItem('JWT_TOKEN');
-  // TODO(underscope): Add server side invalidation
-  return Promise.resolve(true);
+    .then(res => res.data.data);
 }
 
 function forgotPassword(email) {
@@ -42,7 +32,6 @@ function updateUserInfo(userData) {
 
 export default {
   login,
-  logout,
   forgotPassword,
   resetPassword,
   updateUserInfo,

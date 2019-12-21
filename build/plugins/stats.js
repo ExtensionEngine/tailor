@@ -4,6 +4,9 @@ const { writeFileSync } = require('fs');
 
 exports.name = 'stats';
 
+/**
+ * @param {import('poi')} api
+ */
 exports.cli = api => {
   api.command.option(
     '--print-stats',
@@ -13,24 +16,39 @@ exports.cli = api => {
 };
 
 class StatsPlugin {
-  constructor({ logger, path = 'stats.json' } = {}) {
+  constructor({ logger, ...options } = {}) {
+    options.path = options.path || 'stats.json';
+    options.stats = options.stats || {};
     this.logger = logger;
-    this.path = path;
+    this.options = options;
   }
 
+  /**
+   * @param {import('webpack').Compiler} compiler
+   */
   apply(compiler) {
     compiler.hooks.done.tap('write-stats', stats => {
       this.logger.log('\nGenerating webpack stats file');
-      writeFileSync(this.path, JSON.stringify(stats.toJson()), 'utf8');
-      this.logger.done(`Location: ${this.path}`);
+      const data = stats.toJson(this.options.stats);
+      const contents = JSON.stringify(data, (key, value) => {
+        if (key !== 'source') return value;
+      }, 2);
+      writeFileSync(this.options.path, contents, 'utf8');
+      this.logger.done(`Location: ${this.options.path}`);
     });
   }
 }
 
-exports.apply = api => {
+/**
+ * @param {import('poi')} api
+ * @param {Object} options
+ * @param {String} options.path
+ * @param {import('webpack').Stats.ToJsonOptions} options.stats
+ */
+exports.apply = (api, options = {}) => {
   api.hook('createWebpackChain', config => {
     if (!api.cli.options.printStats) return;
-    const options = { logger: api.logger };
+    options.logger = api.logger;
     config.plugin('generate-stats').use(StatsPlugin, [options]);
   });
 };
