@@ -1,74 +1,73 @@
 <template>
   <v-row class="pt-3 px-4 mr-2">
     <v-spacer />
-    <v-btn
-      @click="isVisible = true"
-      color="primary"
-      text>
-      <v-icon small class="mr-1">mdi-lock</v-icon>Change Password
-    </v-btn>
-    <v-dialog v-model="isVisible" v-hotkey="{ esc: hide }" width="700px">
-      <v-form @submit.prevent="submit">
-        <v-card class="pa-3">
-          <v-card-title class="headline">
-            <v-avatar color="primary" size="38" class="mr-2">
-              <v-icon color="white">mdi-lock</v-icon>
-            </v-avatar>
-            Change Password
-          </v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-model="currentPassword"
-              v-validate="{ required: true }"
-              :error-messages="vErrors.first('currentPassword')"
-              data-vv-as="Current Password"
-              data-vv-name="currentPassword"
-              type="password"
-              label="Current password" />
-            <v-text-field
-              ref="newPassword"
-              v-model="newPassword"
-              v-validate="{
-                required: true,
-                is_not: currentPassword,
-                alphanumerical: true,
-                min: 6
-              }"
-              :error-messages="vErrors.first('newPassword')"
-              data-vv-as="New password"
-              data-vv-name="newPassword"
-              type="password"
-              label="New password" />
-            <v-text-field
-              v-model="passwordConfirmation"
-              v-validate="{ required: true, confirmed: 'newPassword' }"
-              :error-messages="vErrors.first('passwordConfirmation')"
-              data-vv-as="Password confirmation"
-              data-vv-name="passwordConfirmation"
-              type="password"
-              label="Confirm new password" />
-          </v-card-text>
-          <v-card-actions class="mx-2">
-            <router-link :to="{ name: 'forgot-password' }">
-              Forgot password ?
-            </router-link>
-            <v-spacer />
-            <v-btn @click="hide" flat>Cancel</v-btn>
-            <v-btn
-              :disabled="vErrors.any()"
-              outline
-              type="submit">
-              Update
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-form>
-    </v-dialog>
+    <tailor-dialog v-model="isVisible" header-icon="mdi-lock">
+      <template v-slot:activator="{ on }">
+        <v-btn
+          v-on="on"
+          color="primary"
+          text>
+          <v-icon small class="mr-1">mdi-lock</v-icon>Change Password
+        </v-btn>
+      </template>
+      <template v-slot:header>Change Password</template>
+      <template v-slot:body>
+        <v-text-field
+          v-model="currentPassword"
+          v-validate="{ required: true }"
+          :error-messages="vErrors.first('currentPassword')"
+          type="password"
+          label="Current password"
+          data-vv-as="Current Password"
+          data-vv-name="currentPassword"
+          placeholder="Enter current password..."
+          outlined
+          class="mb-4" />
+        <v-text-field
+          ref="newPassword"
+          v-model="newPassword"
+          v-validate="{
+            required: true,
+            is_not: currentPassword,
+            alphanumerical: true,
+            min: 6
+          }"
+          :error-messages="vErrors.first('newPassword')"
+          type="password"
+          label="New password"
+          placeholder="Enter new password..."
+          data-vv-as="New password"
+          data-vv-name="newPassword"
+          outlined
+          class="mb-4" />
+        <v-text-field
+          v-model="passwordConfirmation"
+          v-validate="{ required: true, confirmed: 'newPassword' }"
+          :error-messages="vErrors.first('passwordConfirmation')"
+          data-vv-as="Password confirmation"
+          data-vv-name="passwordConfirmation"
+          type="password"
+          label="Confirm new password"
+          placeholder="Confirm new password..."
+          outlined
+          class="mb-4" />
+      </template>
+      <template v-slot:actions>
+        <router-link :to="{ name: 'forgot-password' }" class="mr-6">
+          Forgot password ?
+        </router-link>
+        <v-btn @click="hide" text>Cancel</v-btn>
+        <v-btn @click="submit" :disabled="vErrors.any()" color="primary" text>
+          Update
+        </v-btn>
+      </template>
+    </tailor-dialog>
   </v-row>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
+import TailorDialog from '@/components/common/TailorDialog';
 import { withValidation } from 'utils/validation';
 
 const defaultData = () => ({
@@ -108,7 +107,8 @@ export default {
     isVisible(val) {
       if (!val) return this.reset();
     }
-  }
+  },
+  components: { TailorDialog }
 };
 </script>
 
