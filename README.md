@@ -203,9 +203,7 @@ Example:
 
 ## EXTENSIONS
 
-Tailor supports creation of custom content elements and custom containers. Content
-elements are pieces of learning that a student would consume (text, image, etc.)
-while containers hold those content elements or other containers. These extensions
+Tailor supports creation of custom content elements and custom containers. These extensions
 can have unique content and structure that the default content elements and
 containers do not support. The template for creating custom content elements
 can be found [here](https://github.com/ExtensionEngine/tailor-element-template)
