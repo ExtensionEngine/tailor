@@ -19,7 +19,6 @@
                 <change-password-dialog />
               </v-row>
               <user-avatar />
-              <v-divider />
             </div>
             <user-info />
           </v-card>
