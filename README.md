@@ -200,3 +200,12 @@ A string template that will be interpolated on the client using two route
 params, `repositoryId` and `activityId`, into a preview URL for each activity.
 Example:
 `https://my.url.com/#/repository/{repositoryId}/activity/{activityId}/preview`
+
+## EXTENSIONS
+
+Tailor supports creation of custom content elements and custom containers. These extensions
+can have unique content and structure that the default content elements and
+containers do not support. The template for creating custom content elements
+can be found [here](https://github.com/ExtensionEngine/tailor-element-template)
+while the template for creating custom containers can be found
+[here](https://github.com/ExtensionEngine/tailor-container-template).
