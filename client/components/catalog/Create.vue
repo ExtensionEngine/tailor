@@ -50,7 +50,12 @@
     </template>
     <template v-slot:actions>
       <v-btn @click="hide" :disabled="showLoader" text>Cancel</v-btn>
-      <v-btn @click="submit" :loading="showLoader" color="primary" text>
+      <v-btn
+        @click="submit"
+        :disabled="vErrors.any()"
+        :loading="showLoader"
+        color="primary"
+        text>
         Create
       </v-btn>
     </template>
@@ -85,7 +90,7 @@ export default {
   methods: {
     ...mapActions('courses', ['save']),
     async submit() {
-      const isValid = this.$validator.validateAll();
+      const isValid = await this.$validator.validateAll();
       if (!isValid) return;
       this.showLoader = true;
       return Promise.join(this.save(this.repository), Promise.delay(1000))
