@@ -64,8 +64,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import Promise from 'bluebird';
+import api from '@/api/course';
+import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';
 import { withValidation } from 'utils/validation';
 
@@ -90,15 +90,13 @@ export default {
     schemas: () => SCHEMAS
   },
   methods: {
-    ...mapActions('courses', ['save']),
-    submit() {
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
-        this.showLoader = true;
-        return Promise.join(this.save(this.repository), Promise.delay(1000))
-          .then(() => this.hide())
-          .catch(() => this.vErrors.add('default', 'An error has occurred!'));
-      });
+    async submit() {
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) return;
+      this.showLoader = true;
+      return api.save(this.repository)
+        .then(() => this.$emit('created') && this.hide())
+        .catch(() => this.vErrors.add('default', 'An error has occurred!'));
     },
     hide() {
       this.repository = getDefaultData();
