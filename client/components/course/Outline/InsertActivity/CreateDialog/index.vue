@@ -1,5 +1,7 @@
 <template>
-  <tailor-dialog v-model="visible" header-icon="mdi-folder-plus-outline">
+  <tailor-dialog
+    v-model="visible"
+    header-icon="mdi-folder-plus-outline">
     <template v-if="showActivator" v-slot:activator="{ on }">
       <v-btn v-on="on" color="grey darken-3" text class="px-1">
         <v-icon class="pr-1">mdi-plus</v-icon>
@@ -52,7 +54,7 @@ export default {
   },
   data() {
     return {
-      visible: !this.showActivator,
+      visible: false,
       activity: initActivityState(this.repositoryId, this.levels)
     };
   },
@@ -89,11 +91,13 @@ export default {
   },
   watch: {
     visible(val) {
-      if (!val) {
-        this.$emit('close');
-        this.activity = initActivityState(this.repositoryId, this.levels);
-      }
+      if (val) return;
+      this.$emit('close');
+      this.activity = initActivityState(this.repositoryId, this.levels);
     }
+  },
+  mounted() {
+    this.visible = !this.showActivator;
   },
   components: { MetaInput, TailorDialog, TypeSelect }
 };
