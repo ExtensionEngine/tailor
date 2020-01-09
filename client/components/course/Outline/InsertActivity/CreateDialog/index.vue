@@ -12,7 +12,7 @@
         v-model="activity.type"
         :options="levels"
         :disabled="hasSingleOption" />
-      <template v-if="activity.type">
+      <template v-if="activity.type && visible">
         <meta-input
           v-for="input in metadata"
           :key="input.key"
