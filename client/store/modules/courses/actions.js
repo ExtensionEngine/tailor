@@ -12,14 +12,6 @@ const {
   update
 } = generateActions('/repositories');
 
-const save = ({ commit, dispatch }, model) => {
-  return api.post('/', model).then(() => {
-    commit('setOrder', { field: 'createdAt', order: 'DESC' });
-    commit('resetFilters');
-    dispatch('reset');
-  });
-};
-
 const fetch = ({ getters, commit }) => {
   const params = getters.courseQueryParams;
   const mutation = params.offset === 0 ? 'reset' : 'fetch';
@@ -51,7 +43,6 @@ export {
   pin,
   remove,
   reset,
-  save,
   setEndpoint,
   update
 };
