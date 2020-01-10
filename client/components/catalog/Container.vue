@@ -109,14 +109,15 @@ export default {
         this.loading = false;
       });
     },
-    reset() {
+    async reset() {
       this.setOrder({ field: 'createdAt', order: 'DESC' });
       this.resetFilters();
+      await this.load();
       this.loader.reset();
     },
     onFilterChange(filter, val) {
       filter(val);
-      this.loader.reset();
+      this.load();
     }
   },
   watch: {
