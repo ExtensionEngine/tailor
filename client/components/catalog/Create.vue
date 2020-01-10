@@ -63,8 +63,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import Promise from 'bluebird';
+import api from '@/api/course';
+import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';
 import TailorDialog from '@/components/common/TailorDialog';
 import { withValidation } from 'utils/validation';
@@ -88,13 +88,12 @@ export default {
     schemas: () => SCHEMAS
   },
   methods: {
-    ...mapActions('courses', ['save']),
     async submit() {
       const isValid = await this.$validator.validateAll();
       if (!isValid) return;
       this.showLoader = true;
-      return Promise.join(this.save(this.repository), Promise.delay(1000))
-        .then(() => this.hide())
+      return api.save(this.repository)
+        .then(() => this.$emit('created') && this.hide())
         .catch(() => this.vErrors.add('default', 'An error has occurred!'));
     },
     hide() {
