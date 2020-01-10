@@ -115,9 +115,10 @@ export default {
       await this.load();
       this.loader.reset();
     },
-    onFilterChange(filter, val) {
+    async onFilterChange(filter, val) {
       filter(val);
-      this.load();
+      await this.load();
+      await this.loader.reset();
     }
   },
   watch: {
