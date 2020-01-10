@@ -1,3 +1,4 @@
+import { extractData } from './helpers';
 import request from './request';
 
 const urls = {
@@ -8,20 +9,24 @@ const urls = {
   users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`
 };
 
+function save(repository) {
+  return request.post(urls.root, repository).then(extractData);
+}
+
 function getRepositories(params) {
-  return request.get(urls.root, { params }).then(res => res.data.data);
+  return request.get(urls.root, { params }).then(extractData);
 }
 
 function getUsers(courseId, params) {
   return request
     .get(urls.users(courseId), { params })
-    .then(res => res.data.data);
+    .then(extractData);
 }
 
 function upsertUser(courseId, data) {
   return request
     .post(urls.users(courseId), data)
-    .then(res => res.data.data.user);
+    .then(res => extractData(res).user);
 }
 
 function removeUser(courseId, userId) {
@@ -36,6 +41,7 @@ function publishRepositoryMeta(id) {
 
 export default {
   getRepositories,
+  save,
   getUsers,
   upsertUser,
   removeUser,

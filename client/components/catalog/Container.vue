@@ -2,14 +2,20 @@
   <div infinite-wrapper class="catalog-wrapper">
     <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog mt-3">
       <v-row no-gutters class="catalog-actions">
-        <create-repository />
+        <create-repository @created="reset" />
         <v-col md="4" sm="10" offset-md="4" offset-sm="1">
-          <search @update="setSearch($event)" :value="queryParams.search" />
+          <search
+            @update="onFilterChange(setSearch, $event)"
+            :value="queryParams.search" />
         </v-col>
         <v-col md="3" sm="1" class="text-sm-left pl-2">
           <v-tooltip open-delay="800" right>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" @click="togglePinned()" icon text class="my-1">
+              <v-btn
+                v-on="on"
+                @click="onFilterChange(togglePinned)"
+                icon text
+                class="my-1">
                 <v-icon :color="showPinned ? 'lime accent-3' : 'primary lighten-4'">
                   mdi-pin
                 </v-icon>
@@ -17,7 +23,10 @@
             </template>
             <span>Toggle pinned</span>
           </v-tooltip>
-          <select-order @update="setOrder" :sort-by="sortBy" class="pl-2" />
+          <select-order
+            @update="onFilterChange(setOrder, $event)"
+            :sort-by="sortBy"
+            class="pl-2" />
         </v-col>
       </v-row>
       <v-row>
@@ -53,8 +62,6 @@ import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import CreateRepository from './Create';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
-import isEqual from 'lodash/isEqual';
-import pick from 'lodash/pick';
 import RepositoryCard from './Card';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
@@ -91,26 +98,32 @@ export default {
   },
   methods: {
     ...mapActions('courses', ['fetch']),
-    ...mapMutations('courses', ['togglePinned', 'setSearch', 'setOrder']),
-    load() {
+    ...mapMutations('courses', [
+      'togglePinned', 'setSearch', 'setOrder', 'resetFilters'
+    ]),
+    async load() {
       this.loading = true;
-      return this.fetch().then(() => {
-        if (this.hasRepositories) this.loader.loaded();
-        if (!this.hasMoreResults) this.loader.complete();
-        this.loading = false;
-      });
+      await this.fetch();
+      if (this.hasRepositories) this.loader.loaded();
+      if (!this.hasMoreResults) this.loader.complete();
+      this.loading = false;
+    },
+    async reset() {
+      this.setOrder({ field: 'createdAt', order: 'DESC' });
+      this.resetFilters();
+      await this.load();
+      this.loader.reset();
+    },
+    async onFilterChange(filter, val) {
+      filter(val);
+      await this.load();
+      await this.loader.reset();
     }
   },
   watch: {
     repositories() {
       // If all items get unpinned
       if (!this.hasRepositories && this.showPinned) this.loader.reset();
-    },
-    queryParams(val, oldVal) {
-      const attrs = ['search', 'sortOrder', 'sortBy', 'pinned'];
-      const changedFilter = !isEqual(pick(val, attrs), pick(oldVal, attrs));
-      if (!changedFilter) return;
-      this.load().then(() => this.loader.reset());
     }
   },
   components: {
