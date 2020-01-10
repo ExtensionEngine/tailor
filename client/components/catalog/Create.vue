@@ -1,75 +1,75 @@
 <template>
-  <v-dialog
+  <tailor-dialog
     v-if="isAdmin"
     v-model="isVisible"
-    v-hotkey="{ esc: hide }"
-    width="700px">
+    header-icon="mdi-folder-plus-outline">
     <template v-slot:activator="{ on }">
       <v-btn
         v-on="on"
         color="pink"
-        fab
-        dark
-        absolute
+        fab dark absolute
         class="add-repo">
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </template>
-    <v-form @submit.prevent="submit">
-      <v-card class="pa-3">
-        <v-card-title class="headline">
-          <v-avatar color="secondary" size="38" class="mr-2">
-            <v-icon color="white">mdi-folder-plus-outline</v-icon>
-          </v-avatar>
-          New
-        </v-card-title>
-        <v-card-text>
-          <v-alert
-            :value="vErrors.has('default')"
-            color="error"
-            icon="mdi-alert-outline"
-            outlined>
-            {{ vErrors.first('default') }}
-          </v-alert>
-          <v-select
-            v-model="repository.schema"
-            v-validate="'required'"
-            :items="schemas"
-            :error-messages="vErrors.collect('schema')"
-            item-value="id"
-            item-text="name"
-            data-vv-name="schema"
-            class="mb-3" />
-          <v-text-field
-            v-model.trim="repository.name"
-            v-validate="{ required: true, min: 2, max: 250 }"
-            :error-messages="vErrors.collect('name')"
-            label="Name"
-            data-vv-name="name" />
-          <v-textarea
-            v-model.trim="repository.description"
-            v-validate="{ required: true, min: 2, max: 2000 }"
-            :error-messages="vErrors.collect('description')"
-            label="Description"
-            data-vv-name="description" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn @click="hide" :disabled="showLoader">Cancel</v-btn>
-          <v-btn :loading="showLoader" outlined type="submit">Create</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-form>
-  </v-dialog>
+    <template v-slot:header>New</template>
+    <template v-slot:body>
+      <v-alert
+        :value="vErrors.has('default')"
+        color="error"
+        icon="mdi-alert-outline"
+        outlined>
+        {{ vErrors.first('default') }}
+      </v-alert>
+      <v-select
+        v-model="repository.schema"
+        v-validate="'required'"
+        :items="schemas"
+        :error-messages="vErrors.collect('schema')"
+        item-value="id"
+        item-text="name"
+        data-vv-name="schema"
+        outlined
+        class="mb-3" />
+      <v-text-field
+        v-model.trim="repository.name"
+        v-validate="{ required: true, min: 2, max: 250 }"
+        :error-messages="vErrors.collect('name')"
+        label="Name"
+        placeholder="Enter name..."
+        data-vv-name="name"
+        outlined />
+      <v-textarea
+        v-model.trim="repository.description"
+        v-validate="{ required: true, min: 2, max: 2000 }"
+        :error-messages="vErrors.collect('description')"
+        label="Description"
+        placeholder="Enter description..."
+        data-vv-name="description"
+        outlined />
+    </template>
+    <template v-slot:actions>
+      <v-btn @click="hide" :disabled="showLoader" text>Cancel</v-btn>
+      <v-btn
+        @click="submit"
+        :disabled="vErrors.any()"
+        :loading="showLoader"
+        color="primary"
+        text>
+        Create
+      </v-btn>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
 import api from '@/api/course';
 import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';
+import TailorDialog from '@/components/common/TailorDialog';
 import { withValidation } from 'utils/validation';
 
-const getDefaultData = () => ({
+const resetData = () => ({
   schema: SCHEMAS[0].id,
   name: null,
   description: null
@@ -78,13 +78,11 @@ const getDefaultData = () => ({
 export default {
   name: 'create-repository',
   mixins: [withValidation()],
-  data() {
-    return {
-      repository: getDefaultData(),
-      isVisible: false,
-      showLoader: false
-    };
-  },
+  data: () => ({
+    repository: resetData(),
+    isVisible: false,
+    showLoader: false
+  }),
   computed: {
     ...mapGetters(['isAdmin']),
     schemas: () => SCHEMAS
@@ -99,7 +97,7 @@ export default {
         .catch(() => this.vErrors.add('default', 'An error has occurred!'));
     },
     hide() {
-      this.repository = getDefaultData();
+      this.repository = resetData();
       this.showLoader = false;
       this.isVisible = false;
     }
@@ -109,7 +107,8 @@ export default {
       if (!val) return;
       setTimeout(() => this.$validator.reset(), 60);
     }
-  }
+  },
+  components: { TailorDialog }
 };
 </script>
 
