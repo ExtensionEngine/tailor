@@ -101,13 +101,12 @@ export default {
     ...mapMutations('courses', [
       'togglePinned', 'setSearch', 'setOrder', 'resetFilters'
     ]),
-    load() {
+    async load() {
       this.loading = true;
-      return this.fetch().then(() => {
-        if (this.hasRepositories) this.loader.loaded();
-        if (!this.hasMoreResults) this.loader.complete();
-        this.loading = false;
-      });
+      await this.fetch();
+      if (this.hasRepositories) this.loader.loaded();
+      if (!this.hasMoreResults) this.loader.complete();
+      this.loading = false;
     },
     async reset() {
       this.setOrder({ field: 'createdAt', order: 'DESC' });
