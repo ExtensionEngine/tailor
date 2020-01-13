@@ -2,19 +2,23 @@
   <form @submit.prevent class="upload-form">
     <v-file-input
       v-if="!fileKey"
+      :ref="id"
       @change.native="upload"
+      @click:append="$refs[id].$el.querySelector('input').click()"
       :loading="uploading"
       :label="label"
       :placeholder="placeholder"
       :clearable="false"
       :accept="acceptedFileTypes"
+      prepend-icon=""
+      append-icon="mdi-upload"
       outlined />
     <template v-else>
-      <v-btn @click="downloadFile" text class="text-none" color="primary">
+      <v-btn @click="downloadFile" color="grey darken-4" text class="text-none">
         {{ fileName | truncate(35) }}
       </v-btn>
       <v-btn @click="deleteFile" icon class="ml-2">
-        <v-icon color="primary lighten-1" size="22">mdi-delete</v-icon>
+        <v-icon color="primary lighten-1" size="20">mdi-delete</v-icon>
       </v-btn>
     </template>
   </form>
