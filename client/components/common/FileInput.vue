@@ -1,16 +1,16 @@
 <template>
-  <form @submit.prevent class="upload-form">
+  <form @submit.prevent>
     <v-file-input
       v-if="!fileKey"
       :ref="id"
       @change.native="upload"
       @click:append="$refs[id].$el.querySelector('input').click()"
+      :accept="acceptedFileTypes"
       :label="label"
       :placeholder="placeholder"
-      :clearable="false"
-      :accept="acceptedFileTypes"
       :outlined="outlined"
       :dense="dense"
+      :clearable="false"
       :append-icon="uploading ? 'mdi-loading mdi-spin' : 'mdi-upload'"
       prepend-icon="" />
     <div v-else class="mb-5 px-1 grey--text text--darken-3">
@@ -18,7 +18,7 @@
       <v-btn
         @click="downloadFile(fileKey, fileName)"
         text
-        class="grey--text text--darken-4 text-none pa-0">
+        class="grey--text text--darken-4 text-none px-0">
         {{ fileName | truncate(35) }}
       </v-btn>
       <v-btn
@@ -45,8 +45,8 @@ export default {
     fileKey: { type: String, default: '' },
     fileName: { type: String, default: '' },
     validate: { type: Object, default: () => ({ ext: [] }) },
-    label: { type: String, default: 'Choose a file' },
-    placeholder: { type: String, default: 'File upload' },
+    label: { type: String, default: 'File upload' },
+    placeholder: { type: String, default: 'Choose a file' },
     outlined: { type: Boolean, default: false },
     dense: { type: Boolean, default: false }
   },
@@ -63,10 +63,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.upload-form {
-  display: inline-block;
-  width: 100%;
-}
-</style>
