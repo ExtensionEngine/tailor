@@ -2,7 +2,8 @@
   <file-upload
     @upload="$emit('update', meta.key, $event)"
     @delete="$emit('update', meta.key, null)"
-    v-bind="options" />
+    v-bind="options"
+    outlined />
 </template>
 
 <script>
