@@ -19,10 +19,14 @@
       </label>
       <span
         v-else
-        @click="downloadFile"
+        @click="downloadFile(fileKey, fileName)"
         class="file-name">{{ fileName }}
       </span>
-      <span v-if="fileKey" @click="deleteFile" class="mdi mdi-delete delete"></span>
+      <span
+        v-if="fileKey"
+        @click="deleteFile({ id, fileName })"
+        class="mdi mdi-delete delete">
+      </span>
     </form>
     <span class="help-block">{{ vErrors.first(id) }}</span>
   </div>
@@ -30,17 +34,14 @@
 
 <script>
 import CircularProgress from 'components/common/CircularProgress';
-import downloadMixin from 'utils/downloadMixin';
-import EventBus from 'EventBus';
 import uniqueId from 'lodash/uniqueId';
+import uploadMixin from '@/components/common/mixins/upload';
 import { withValidation } from 'utils/validation';
 
-const appChannel = EventBus.channel('app');
-
 export default {
-  name: 'file-upload',
+  name: 'upload-btn',
   inject: ['$storageService'],
-  mixins: [downloadMixin, withValidation()],
+  mixins: [uploadMixin, withValidation()],
   props: {
     id: { type: String, default: () => uniqueId('file_') },
     fileName: { type: String, default: '' },
@@ -48,43 +49,6 @@ export default {
     validate: { type: Object, default: () => ({ ext: [] }) },
     label: { type: String, default: 'Choose a file' },
     sm: { type: Boolean, default: false }
-  },
-  data() {
-    return { uploading: false };
-  },
-  methods: {
-    createFileForm(e) {
-      this.form = new FormData();
-      const [file] = e.target.files;
-      if (!file) return;
-      this.form.append('file', file, file.name);
-    },
-    upload(e) {
-      this.createFileForm(e);
-      this.$validator.validate(this.id).then(isValid => {
-        if (!isValid) return;
-        this.uploading = true;
-        return this.$storageService.upload(this.form)
-          .then(({ url, publicUrl, key }) => {
-            this.uploading = false;
-            const { name } = this.form.get('file');
-            this.$emit('upload', { url, publicUrl, key, name });
-          }).catch(() => {
-            this.error = 'An error has occurred!';
-          });
-      });
-    },
-    downloadFile() {
-      return this.$storageService.getUrl(this.fileKey)
-        .then(url => this.download(url, this.fileName));
-    },
-    deleteFile() {
-      appChannel.emit('showConfirmationModal', {
-        title: 'Delete file?',
-        message: `Are you sure you want to delete ${this.fileName}?`,
-        action: () => this.$emit('delete', this.id, null)
-      });
-    }
   },
   watch: {
     uploading(val) {

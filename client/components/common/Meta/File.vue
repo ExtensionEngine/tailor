@@ -1,15 +1,13 @@
 <template>
-  <div class="meta-file">
-    <label class="meta-name">{{ meta.label }}</label>
-    <file-upload
-      @upload="$emit('update', meta.key, $event)"
-      @delete="$emit('update', meta.key, null)"
-      v-bind="options" />
-  </div>
+  <file-input
+    @upload="$emit('update', meta.key, $event)"
+    @delete="$emit('update', meta.key, null)"
+    v-bind="options"
+    outlined />
 </template>
 
 <script>
-import FileUpload from '../FileUpload.vue';
+import FileInput from '../FileInput';
 import get from 'lodash/get';
 
 export default {
@@ -24,33 +22,11 @@ export default {
         fileKey: get(this.meta, 'value.key', ''),
         fileName: get(this.meta, 'value.name', ''),
         validate: this.meta.validate,
-        label: this.meta.placeholder
+        label: this.meta.label,
+        placeholder: this.meta.placeholder
       };
     }
   },
-  components: { FileUpload }
+  components: { FileInput }
 };
 </script>
-
-<style lang="scss" scoped>
-.meta-file {
-  position: relative;
-  min-height: 50px;
-  margin: 20px 0;
-  padding: 3px 8px;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
-
-  &.editing:hover {
-    background-color: inherit;
-  }
-
-  .meta-name {
-    width: 100%;
-    margin-bottom: 10px;
-    color: #808080;
-  }
-}
-</style>
