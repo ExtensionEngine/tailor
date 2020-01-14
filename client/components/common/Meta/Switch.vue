@@ -1,18 +1,18 @@
 <template>
-  <div class="control">
-    <span class="title">{{ meta.label }}</span>
+  <div class="px-1 pt-0 pb-10">
     <v-switch
       @change="value => $emit('update', meta.key, value)"
       :input-value="meta.value"
       :name="meta.key"
-      :label="meta.description"
-      color="primary" />
+      :label="meta.label"
+      color="primary lighten-1"
+      hide-details />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'switch-input',
+  name: 'meta-switch',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   }
@@ -20,17 +20,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.control {
-  padding: 3px 8px;
-
-  ::v-deep label.v-label {
-    margin-bottom: 0;
-  }
-}
-
-.title {
-  display: block;
-  margin-bottom: 10px;
-  color: #808080;
+::v-deep .v-label {
+  margin-bottom: 0;
+  padding-left: 0.375rem;
+  font-size: 0.875rem;
 }
 </style>
