@@ -22,7 +22,11 @@
         @click="downloadFile(fileKey, fileName)"
         class="file-name">{{ fileName }}
       </span>
-      <span v-if="fileKey" @click="deleteFile({ id, fileName })" class="mdi mdi-delete delete"></span>
+      <span
+        v-if="fileKey"
+        @click="deleteFile({ id, fileName })"
+        class="mdi mdi-delete delete">
+      </span>
     </form>
     <span class="help-block">{{ vErrors.first(id) }}</span>
   </div>

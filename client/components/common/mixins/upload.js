@@ -28,7 +28,7 @@ export default {
     },
     async downloadFile(key, name) {
       const url = await this.$storageService.getUrl(key);
-      this.download(url, name);
+      return this.download(url, name);
     },
     deleteFile(item) {
       appChannel.emit('showConfirmationModal', {
