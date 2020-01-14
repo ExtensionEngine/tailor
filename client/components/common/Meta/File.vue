@@ -1,5 +1,5 @@
 <template>
-  <file-upload
+  <file-input
     @upload="$emit('update', meta.key, $event)"
     @delete="$emit('update', meta.key, null)"
     v-bind="options"
@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import FileUpload from '../FileUpload';
+import FileInput from '../FileInput';
 import get from 'lodash/get';
 
 export default {
@@ -27,6 +27,6 @@ export default {
       };
     }
   },
-  components: { FileUpload }
+  components: { FileInput }
 };
 </script>
