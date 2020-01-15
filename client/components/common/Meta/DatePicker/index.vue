@@ -14,7 +14,7 @@
       v-if="date"
       @click="date = null"
       icon
-      class="ml-1 py-4">
+      class="ml-1 my-2">
       <v-icon>mdi-close</v-icon>
     </v-btn>
   </div>
