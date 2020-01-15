@@ -33,15 +33,16 @@ export default {
   methods: {
     setDate(input) {
       input = new Date(input);
-      this.date = set(this.date || new Date(), {
+      this.date = set(this.date || new Date().setHours(0, 0, 0, 0), {
         date: input.getDate(),
         month: input.getMonth(),
         year: input.getFullYear()
       });
     },
     setTime(input) {
+      if (!this.date) throw new Error('Date must be set first...');
       const [hours, minutes] = input.split(':').map(Number);
-      this.date = set(this.date || new Date(), { hours, minutes });
+      this.date = set(this.date, { hours, minutes });
     }
   },
   watch: {
