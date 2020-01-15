@@ -10,6 +10,13 @@
       @change="setTime"
       :value="date"
       :disabled="!date" />
+    <v-btn
+      v-if="date"
+      @click="date = null"
+      icon
+      class="ml-1 py-4">
+      <v-icon>mdi-close</v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -39,7 +46,7 @@ export default {
   },
   watch: {
     date(val) {
-      this.$emit('update', this.meta.key, val.toISOString());
+      this.$emit('update', this.meta.key, val && val.toISOString());
     }
   },
   components: { DatePicker, TimePicker }
