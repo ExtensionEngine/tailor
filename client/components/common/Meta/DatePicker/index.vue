@@ -47,7 +47,7 @@ export default {
   },
   watch: {
     date(val) {
-      this.$emit('update', this.meta.key, val && val.toISOString());
+      this.$emit('update', this.meta.key, val && val.toUTCString());
     }
   },
   components: { DatePicker, TimePicker }
