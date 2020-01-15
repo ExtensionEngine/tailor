@@ -1,6 +1,6 @@
 <template>
   <v-menu
-    v-model="showPicker"
+    v-model="showDialog"
     :close-on-content-click="false"
     min-width="260px"
     max-width="260px"
@@ -8,35 +8,28 @@
     <template v-slot:activator="{ on }">
       <v-text-field
         v-on="on"
-        :value="time | formatDate('hh:mm a')"
+        :value="value | formatDate('hh:mm a')"
         :disabled="disabled"
-        placeholder="Set Time"
-        outlined
-        readonly
+        placeholder="Set time..."
+        outlined readonly
         class="ml-1" />
     </template>
     <v-time-picker
-      v-if="showPicker"
-      @change="save"
-      :value="time | formatDate('HH:mm')"
-      ampm-in-title
+      v-if="showDialog"
+      @input="$emit('change', $event);"
+      @change="showDialog = false"
+      :value="value | formatDate('HH:mm')"
       color="primary"
-      full-width />
+      full-width no-title />
   </v-menu>
 </template>
 
 <script>
 export default {
   props: {
-    time: { type: String, default: null },
+    value: { type: Date, default: null },
     disabled: { type: Boolean, default: false }
   },
-  data: () => ({ showPicker: false }),
-  methods: {
-    save(value) {
-      this.$emit('change', value);
-      this.showPicker = false;
-    }
-  }
+  data: () => ({ showDialog: false })
 };
 </script>
