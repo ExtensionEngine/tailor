@@ -6,7 +6,7 @@
       :label="meta.label"
       :placeholder="meta.placeholder" />
     <time-picker
-      v-if="meta.type === 'DATETIME'"
+      v-if="date && (meta.type === 'DATETIME')"
       @change="setTime"
       :value="date"
       :disabled="!date" />
