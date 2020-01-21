@@ -1,34 +1,37 @@
 <template>
   <v-form @submit.prevent="updateUser">
-    <v-row class="pt-2 px-4 mx-3">
-      <v-col cols="12">
+    <v-row justify="center" class="pt-6 px-4">
+      <v-col cols="7">
         <v-text-field
           v-model="userData.email"
           v-validate="{ required: true, email: true, 'unique-email': user }"
           :error-messages="vErrors.collect('email')"
           name="email"
-          label="Email" />
+          label="Email"
+          outlined />
       </v-col>
-      <v-col cols="12">
+      <v-col cols="7">
         <v-text-field
           v-model="userData.firstName"
           v-validate="'required|min:2|max:20'"
           :error-messages="vErrors.collect('firstName')"
           data-vv-as="First name"
           data-vv-name="firstName"
-          label="First name" />
+          label="First name"
+          outlined />
       </v-col>
-      <v-col cols="12">
+      <v-col cols="7">
         <v-text-field
           v-model="userData.lastName"
           v-validate="'required|min:2|max:20'"
           :error-messages="vErrors.collect('lastName')"
           data-vv-as="Last Name"
           data-vv-name="lastName"
-          label="Last name" />
+          label="Last name"
+          outlined />
       </v-col>
     </v-row>
-    <v-row class="pb-3 px-4 mx-6">
+    <v-row class="pb-5 mr-12">
       <v-spacer />
       <v-btn
         @click="resetForm"
@@ -38,8 +41,9 @@
       </v-btn>
       <v-btn
         :disabled="!hasChanges || vErrors.any()"
-        outlined
-        type="submit">
+        type="submit"
+        color="primary"
+        text>
         Update
       </v-btn>
     </v-row>

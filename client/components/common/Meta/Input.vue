@@ -8,7 +8,8 @@
     :label="meta.label"
     :placeholder="meta.placeholder"
     :error-messages="vErrors.collect(meta.key)"
-    outlined />
+    outlined
+    class="my-2" />
 </template>
 
 <script>

@@ -1,7 +1,10 @@
 <template>
   <div v-if="commentsFetched" class="discussion">
     <div class="header">
-      <span>Comments</span>
+      <span class="grey--text text--darken-3">
+        <v-icon color="grey darken-2" class="pr-1">mdi-forum-outline</v-icon>
+        Comments
+      </span>
       <v-btn
         v-if="commentsShownLimit < commentsCount"
         @click="showAll = !showAll"
@@ -12,15 +15,8 @@
       </v-btn>
     </div>
     <div>
-      <v-alert
-        v-if="!commentsCount"
-        color="grey darken-1"
-        icon="mdi-comment"
-        outlined>
-        No comments yet!
-      </v-alert>
       <discussion-thread
-        v-else
+        v-if="commentsCount"
         v-bind="$attrs"
         :user="user"
         :min-displayed="commentsShownLimit"
@@ -32,7 +28,7 @@
           ref="editor"
           v-model="comment.content"
           @change="post"
-          placeholder="Add a comment..." />
+          :placeholder="!commentsCount ? 'Start the discussion...' : 'Add a comment...'" />
         <v-btn @click="post" icon>
           <v-icon>mdi-send</v-icon>
         </v-btn>
@@ -106,11 +102,10 @@ export default {
 
 <style lang="scss" scoped>
 .discussion {
-  margin: 1rem 0.25rem 1.75rem;
+  margin: 1rem 0 1.75rem;
   padding: 0.375rem 1rem;
   font-family: Roboto, Arial, sans-serif;
-  background: #fafafa;
-  border: 1px dashed #bbb;
+  border: 1px solid #bbb;
 }
 
 .header {

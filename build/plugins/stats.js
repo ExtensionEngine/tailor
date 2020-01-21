@@ -11,7 +11,7 @@ exports.cli = api => {
   api.command.option(
     '--print-stats',
     'Output webpack stats to `stats.json`',
-    { default: false, type: [Boolean] }
+    { default: false, type: Boolean }
   );
 };
 
