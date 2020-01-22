@@ -17,24 +17,27 @@
         </div>
         <v-progress-linear color="primary" indeterminate />
       </div>
-      <div v-else-if="selectedRepository">
-        <v-container class="mx-0 py-3">
+      <div v-else>
+        <div class="mx-3 py-3">
           <v-autocomplete
             @input="selectRepository"
             :value="selectedRepository"
             :items="repositories"
             :label="schema.name"
-            prepend-inner-icon="mdi-magnify"
+            placeholder="Select..."
             item-text="name"
+            prepend-inner-icon="mdi-magnify"
             outlined return-object />
           <v-text-field
+            v-if="selectedRepository"
             v-model="search"
             :placeholder="`Filter selected ${schema.name}...`"
             prepend-inner-icon="mdi-filter-outline"
             clear-icon="mdi-close-circle-outline"
             clearable outlined />
-        </v-container>
+        </div>
         <repository-tree
+          v-if="selectedRepository"
           @change="selectedActivities = $event"
           :schema-name="schema.name"
           :selectable-types="supportedLevels"
@@ -137,7 +140,6 @@ export default {
     const { schema } = this.course;
     const items = sortBy(await courseApi.getRepositories(), 'name');
     this.repositories = filter(items, { schema }).map(it => ({ ...it, activities: [] }));
-    this.selectRepository(this.repositories[0]);
     this.isFetchingRepositories = false;
   },
   filters: {
