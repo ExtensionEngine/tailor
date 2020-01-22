@@ -1,167 +1,167 @@
 <template>
-  <v-dialog :value="true" width="65vw" persistent>
-    <v-card class="pa-3">
-      <v-card-title class="headline">
-        <v-avatar color="secondary" size="38" class="mr-2">
-          <v-icon color="white">mdi-content-copy</v-icon>
-        </v-avatar>
-        Copy items from {{ schema.name | pluralize }}
-      </v-card-title>
-      <v-card-text>
-        <div v-if="showLoader" class="search-spinner">
-          <v-progress-circular color="primary" indeterminate />
-        </div>
-        <div v-else-if="selectedRepository">
-          <v-container class="py-3 pr-5 mx-0 input-section">
-            <v-autocomplete
-              @input="updateSelected"
-              :value="selectedRepository"
-              :items="repositories"
-              :label="schema.name"
-              prepend-inner-icon="mdi-magnify"
-              item-text="name"
-              item-value="id" />
-            <v-text-field
-              v-model="search"
-              :placeholder="`Filter selected ${schema.name}...`"
-              clearable
-              prepend-inner-icon="mdi-filter-outline"
-              clear-icon="mdi-close-circle-outline" />
-          </v-container>
-          <repository-tree
-            @toggleSelect="toggleSelect"
-            :activities="selectedRepository.children"
-            :search="search"
-            :selected="selected"
-            :schema-name="schema.name" />
-        </div>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn @click="$emit('cancel')">Cancel</v-btn>
-        <v-btn
-          @click="$emit('copy', selected)"
-          :disabled="!selected.length"
-          color="primary"
-          outlined>
-          {{ copyButtonLabel }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <tailor-dialog
+    :value="true"
+    header-icon="mdi-content-copy"
+    width="650"
+    persistent>
+    <template v-slot:header>
+      Copy items from {{ schema.name | pluralize }}
+    </template>
+    <template v-slot:body>
+      <div v-if="fetchingRepositories" class="search-spinner">
+        <v-progress-circular color="primary" indeterminate />
+      </div>
+      <div v-else-if="selectedRepository">
+        <v-container class="input-section mx-0 py-3 pr-5">
+          <v-autocomplete
+            @input="selectRepository"
+            :value="selectedRepository"
+            :items="repositories"
+            :label="schema.name"
+            prepend-inner-icon="mdi-magnify"
+            item-text="name"
+            outlined return-object />
+          <v-text-field
+            v-model="search"
+            :placeholder="`Filter selected ${schema.name}...`"
+            prepend-inner-icon="mdi-filter-outline"
+            clear-icon="mdi-close-circle-outline"
+            clearable outlined />
+        </v-container>
+        <repository-tree
+          @toggleSelect="toggleActivitySelection"
+          :schema-name="schema.name"
+          :activities="selectedRepository.activities || []"
+          :selected="selected"
+          :search="search" />
+      </div>
+    </template>
+    <template v-slot:actions>
+      <v-btn @click="$emit('cancel')" text>Cancel</v-btn>
+      <v-btn
+        @click="copySelection"
+        :disabled="!selected.length"
+        color="secondary"
+        text>
+        {{ copyBtnLabel }}
+      </v-btn>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import activityApi from 'client/api/activity';
 import courseApi from 'client/api/course';
+import filter from 'lodash/filter';
 import get from 'lodash/get';
+import { isSameLevel } from 'utils/activity';
 import keyBy from 'lodash/keyBy';
-import { mapGetters } from 'vuex';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
 import RepositoryTree from './RepositoryTree';
 import { SCHEMAS } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
+import TailorDialog from '@/components/common/TailorDialog';
+
+function buildActivityTree(activities, parentId, types, level = 1) {
+  return filter(activities, { parentId }).map(activity => ({
+    ...activity,
+    name: activity.data.name,
+    level: level,
+    selectable: types.find(it => it.type === activity.type),
+    children: buildActivityTree(activities, activity.id, types, level + 1)
+  }));
+}
 
 export default {
   props: {
-    supportedLevels: { type: Array, default: () => ([]) },
-    anchorType: { type: String, required: true }
+    anchor: { type: Object, required: true },
+    supportedLevels: { type: Array, required: true }
   },
-  data() {
-    return {
-      showLoader: true,
-      selected: [],
-      repositories: [],
-      selectedRepository: null,
-      search: ''
-    };
-  },
+  data: () => ({
+    fetchingRepositories: true,
+    repositories: [],
+    selectedRepository: null,
+    selected: [],
+    search: ''
+  }),
   computed: {
     ...mapGetters('course', ['course']),
-    schema() {
-      return SCHEMAS.find(it => it.id === this.course.schema);
-    },
-    structureTypes() {
-      return keyBy(this.schema.structure, 'type');
-    },
-    copyButtonLabel() {
-      const { selected, structureTypes, anchorType } = this;
+    schema: vm => SCHEMAS.find(it => it.id === vm.course.schema),
+    copyBtnLabel() {
+      const { selected, anchor } = this;
+      const supportedTypes = keyBy(this.supportedLevels, 'type');
       let label = 'Copy';
       if (!selected.length) return label;
-      if (selected.length > 1) label = label.concat(` ${selected.length} items`);
-      const itemLevel = structureTypes[selected[0].type].level;
-      const anchorLevel = structureTypes[anchorType].level;
+      if (selected.length > 1) label += ` ${selected.length} items`;
+      const itemLevel = supportedTypes[selected[0].type].level;
+      const anchorLevel = supportedTypes[anchor.type].level;
       return itemLevel > anchorLevel ? label.concat(' inside') : label;
     }
   },
   methods: {
-    updateSelected(id) {
-      if (id !== get(this.selectedRepository, 'id')) this.selected = [];
-      const repo = this.repositories.find(it => it.id === id);
-      if (repo.children) {
-        this.selectedRepository = repo;
-      } else {
-        return this.fetchActivities(repo).then(repository => {
-          this.selectedRepository = repository;
-        });
-      }
-    },
-    toggleSelect(item) {
+    ...mapActions('activities', ['clone']),
+    ...mapGetters('activities', ['calculateInsertPosition']),
+    toggleActivitySelection(item) {
       if (this.selected.find(({ id }) => id === item.id)) {
         this.selected = this.selected.filter(({ id }) => id !== item.id);
       } else {
         this.selected.push(item);
       }
     },
-    addChildren(children, activities) {
-      const { supportedLevels, addChildren } = this;
-      return children.map(it => {
-        it.name = it.data.name;
-        const supported = supportedLevels.find(({ type }) => type === it.type);
-        if (supported) it.level = supported.level;
-        const grandChildren = activities.filter(item => {
-          return item.data.name && item.parentId === it.id;
-        });
-        if (!grandChildren.length) return it;
-        it.children = addChildren(grandChildren, activities);
-        return it;
-      });
+    async selectRepository(repository) {
+      if (repository.id !== get(this.selectedRepository, 'id')) this.selected = [];
+      this.selectedRepository = repository;
+      if (repository.activities.length) return;
+      repository.activities = await this.fetchActivities(repository);
     },
-    fetchActivities(repository) {
-      if (repository.children) return repository;
-      return activityApi.getActivities(repository.id).then(items => {
-        let activities = sortBy(items, 'position');
-        activities = this.addChildren(activities, activities);
-        repository.children = activities.filter(it => it.parentId === null);
-        return repository;
-      });
+    async fetchActivities(repository) {
+      const items = await activityApi.getActivities(repository.id);
+      const activities = sortBy(items, 'position');
+      return buildActivityTree(activities, null, this.supportedLevels) || [];
     },
-    copy() {
-      const orderedItems = sortBy(this.selected, ['parentId', 'position']);
-      this.$emit('copy', orderedItems);
+    async copyActivity(activity) {
+      const { id: srcId, repositoryId: srcRepositoryId, type } = activity;
+      const payload = {
+        srcId,
+        srcRepositoryId,
+        repositoryId: this.anchor.repositoryId,
+        position: this.calculateInsertPosition(activity, this.anchor),
+        type
+      };
+      if (this.anchor) {
+        payload.parentId = isSameLevel(activity, this.anchor)
+          ? this.anchor.parentId
+          : this.anchor.id;
+      }
+      return this.clone(payload);
+    },
+    async copySelection() {
+      const items = sortBy(this.selected, ['parentId', 'position']);
+      await Promise.each(items, it => this.copyActivity(it));
+      this.$emit('completed', items[0]);
     }
   },
-  created() {
+  async created() {
     const { schema } = this.course;
-    return Promise.join(courseApi.getRepositories(), Promise.delay(700), items => {
-      this.repositories = sortBy(items, 'name').filter(it => it.schema === schema);
-      this.showLoader = false;
-      return this.updateSelected(this.repositories[0].id);
-    });
+    const items = sortBy(await courseApi.getRepositories(), 'name');
+    this.repositories = filter(items, { schema }).map(it => ({ ...it, activities: [] }));
+    this.selectRepository(this.repositories[0]);
+    this.fetchingRepositories = false;
   },
   filters: {
     pluralize(val) {
       return pluralize(val);
     }
   },
-  components: { RepositoryTree }
+  components: { RepositoryTree, TailorDialog }
 };
 </script>
 
 <style lang="scss" scoped>
 .input-section {
-  max-width: 60%;
+  max-width: 35rem;
 }
 
 ::v-deep .v-list-item__content {

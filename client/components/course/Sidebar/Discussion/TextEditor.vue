@@ -7,7 +7,6 @@
       :placeholder="placeholder"
       rows="3"
       outlined
-      filled
       auto-grow
       clearable
       counter />

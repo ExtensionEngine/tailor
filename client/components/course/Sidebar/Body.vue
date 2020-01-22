@@ -68,9 +68,5 @@ export default {
 
 .meta-elements {
   padding-top: 10px;
-
-  > * {
-    padding-top: 20px;
-  }
 }
 </style>

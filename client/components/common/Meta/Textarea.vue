@@ -18,8 +18,8 @@
 import { withValidation } from 'utils/validation';
 
 export default {
-  name: 'multiline-input',
-  mixins: [withValidation()],
+  name: 'meta-textarea',
+  mixins: [withValidation({ inherit: true })],
   props: {
     meta: { type: Object, default: () => ({ value: null }) },
     rows: { type: Number, default: 2 }

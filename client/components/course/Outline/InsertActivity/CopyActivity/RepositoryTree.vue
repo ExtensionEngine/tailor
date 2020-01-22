@@ -13,9 +13,9 @@
     class="mx-3 px-1 py-3 treeview">
     <template v-slot:prepend="{ item }">
       <v-icon
-        v-if="item.level"
+        v-if="item.selectable"
         @click="$emit('toggleSelect', item)"
-        :disabled="!isSupported(item.level)">
+        :disabled="!isSupported(item)">
         {{ getCheckIcon(item.id) }}
       </v-icon>
     </template>
@@ -35,8 +35,8 @@ export default {
       const isChecked = this.selected.find(it => it.id === id);
       return isChecked ? 'mdi-check-box-outline' : 'mdi-checkbox-blank-outline';
     },
-    isSupported(level) {
-      return !this.selected.length || this.selected[0].level === level;
+    isSupported(item) {
+      return !this.selected.length || (this.selected[0].level === item.level);
     }
   },
   watch: {

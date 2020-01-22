@@ -3,6 +3,10 @@
   border-radius: 2px !important;
 }
 
+.v-input.required label::after {
+  content: "*";
+}
+
 .v-input--selection-controls__input input {
   position: absolute;
 }
@@ -21,6 +25,11 @@
   input:focus, textarea:focus {
     box-shadow: none !important;
   }
+}
+
+// Fix precedence for disabled state
+.theme--light.v-text-field--outlined.v-input--is-disabled fieldset {
+  border-color: rgba(0, 0, 0, 0.26) !important;
 }
 
 a:hover, a:active, a:visited, a:focus {

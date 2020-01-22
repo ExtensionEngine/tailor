@@ -2,16 +2,14 @@ import api from '@/api/auth';
 
 export const login = ({ commit }, credentials) => {
   return api.login(credentials)
-    .then(user => commit('login', user));
+    .then(({ user, token }) => commit('login', { user, token }));
 };
 
-export const logout = () => {
-  return api
-    .logout()
-    .then(() => setTimeout(() => {
-      window.localStorage.removeItem('TAILOR_USER');
-      window.location.reload();
-    }, 0));
+export const logout = ({ commit }) => {
+  setTimeout(() => {
+    commit('logout');
+    window.location.reload();
+  }, 0);
 };
 
 export const changePassword = (_, { currentPassword, newPassword }) => {

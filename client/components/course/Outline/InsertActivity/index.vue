@@ -9,48 +9,38 @@
         </div>
       </div>
     </div>
-    <div v-else>
+    <div v-else class="action-container">
       <select-action
-        v-if="action !== 'create'"
+        v-if="!action"
         @selected="selected => (action = selected)"
         @close="hide" />
-      <progress-dialog
-        :show="isLoading"
-        :status="loading.status"
-        :label="loading.label"
-        :width="500" />
-      <template v-if="!isLoading">
-        <create-activity
-          v-if="action === 'create'"
-          @create="createActivity"
-          @close="hide"
-          :parent="anchor"
-          :supported-levels="supportedLevels" />
-        <copy-activity
-          v-if="action === 'copy'"
-          @copy="copyActivities"
-          @cancel="action = ''"
-          :supported-levels="supportedLevels"
-          :anchor-type="anchor.type" />
-      </template>
+      <copy-activity
+        v-else-if="action === 'copy'"
+        @completed="hide() || $emit('expand')"
+        @cancel="hide()"
+        :repository-id="anchor.repositoryId"
+        :anchor="anchor"
+        :supported-levels="supportedLevels" />
+      <create-dialog
+        v-else-if="action === 'create'"
+        @close="hide"
+        @expand="$emit('expand')"
+        :repository-id="anchor.repositoryId"
+        :levels="supportedLevels"
+        :anchor="anchor" />
     </div>
   </div>
 </template>
 
 <script>
-import { getOutlineChildren, getParent } from 'utils/activity';
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import calculatePosition from 'utils/calculatePosition';
 import CopyActivity from './CopyActivity';
-import CreateActivity from './CreateActivity';
+import CreateDialog from './CreateDialog';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
+import { getParent } from 'utils/activity';
 import map from 'lodash/map';
-import ProgressDialog from '@/components/common/ProgressDialog';
-import Promise from 'bluebird';
 import SelectAction from './SelectAction';
 
 export default {
@@ -93,49 +83,9 @@ export default {
     hide() {
       this.showActivityOptions(null);
       this.action = null;
-    },
-    formatActivity(it) {
-      const { id: srcId, repositoryId: srcRepositoryId, type } = it;
-      if (this.action === 'copy') it = { srcId, srcRepositoryId, type };
-      it.repositoryId = this.anchor.repositoryId;
-      it.parentId = this.resolveParent(it);
-      it.position = this.calculatePosition(it);
-      return it;
-    },
-    resetActivityState(item) {
-      if (this.anchor.id === item.parentId) this.$emit('expand');
-      this.hide();
-      this.loading = { status: 0, label: '' };
-    },
-    createActivity(item) {
-      const activity = this.formatActivity(item);
-      return this.create(activity).then(() => this.resetActivityState(item));
-    },
-    copyActivities(items) {
-      const increment = 100 / items.length;
-      return Promise.each(items, it => {
-        const activity = this.formatActivity(it);
-        this.loading.label = `Copying "${it.name}..."`;
-        return this.copy(activity).then(() => {
-          this.loading.status += increment;
-        });
-      }).then(() => this.resetActivityState(items[0]));
-    },
-    isSameLevel(activity) {
-      return getLevel(activity.type).level === getLevel(this.anchor.type).level;
-    },
-    resolveParent(activity) {
-      return this.isSameLevel(activity) ? this.anchor.parentId : this.anchor.id;
-    },
-    calculatePosition(activity) {
-      const items = getOutlineChildren(this.activities, activity.parentId);
-      const newPosition = findIndex(items, { id: this.anchor.id });
-      const isFirstChild = !this.isSameLevel(activity) || newPosition === -1;
-      const context = { items, newPosition, isFirstChild, insert: true };
-      return calculatePosition(context);
     }
   },
-  components: { CopyActivity, CreateActivity, ProgressDialog, SelectAction }
+  components: { CopyActivity, CreateDialog, SelectAction }
 };
 </script>
 
@@ -145,7 +95,6 @@ export default {
   padding: 8px 0;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.2s;
 
   &:hover {
     opacity: 1;
@@ -178,5 +127,9 @@ export default {
       }
     }
   }
+}
+
+.action-container {
+  min-height: 1.125rem;
 }
 </style>

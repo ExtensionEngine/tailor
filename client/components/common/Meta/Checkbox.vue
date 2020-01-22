@@ -1,18 +1,19 @@
 <template>
   <div class="control">
-    <span class="title">{{ meta.label }}</span>
+    <div v-if="meta.label" class="control-label">{{ meta.label }}</div>
     <v-checkbox
       @change="value => $emit('update', meta.key, value)"
       :input-value="meta.value"
       :name="meta.key"
       :label="meta.description"
-      color="primary" />
+      color="primary"
+      class="mt-1" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'checkbox-input',
+  name: 'meta-checkbox',
   props: {
     meta: { type: Object, default: () => ({ value: null }) }
   }
@@ -26,11 +27,11 @@ export default {
   ::v-deep label.v-label {
     margin-bottom: 0;
   }
-}
 
-.title {
-  display: block;
-  margin-bottom: 10px;
-  color: #808080;
+  &-label {
+    color: #0000008a;
+    font-size: 0.875rem;
+    font-weight: normal;
+  }
 }
 </style>

@@ -13,9 +13,13 @@
       <v-row justify="center">
         <v-col class="lg8 xl6">
           <v-card>
-            <user-security />
-            <user-avatar />
-            <v-divider />
+            <div class="primary">
+              <v-row class="pt-3 px-6">
+                <v-spacer />
+                <change-password-dialog />
+              </v-row>
+              <user-avatar />
+            </div>
             <user-info />
           </v-card>
         </v-col>
@@ -25,13 +29,17 @@
 </template>
 
 <script>
+import ChangePasswordDialog from './ChangePasswordDialog';
 import UserAvatar from './Avatar';
 import UserInfo from './Info';
-import UserSecurity from './Security';
 
 export default {
   name: 'user-settings',
-  components: { UserAvatar, UserInfo, UserSecurity }
+  components: {
+    ChangePasswordDialog,
+    UserAvatar,
+    UserInfo
+  }
 };
 </script>
 
