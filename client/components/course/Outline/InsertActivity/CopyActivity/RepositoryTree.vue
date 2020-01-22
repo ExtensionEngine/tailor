@@ -27,11 +27,11 @@
 </template>
 
 <script>
-import filter from 'lodash/filter';
+import { getOutlineChildren } from 'utils/activity';
 import xorBy from 'lodash/xorBy';
 
 function buildActivityTree(activities, types, parentId = null, level = 1) {
-  return filter(activities, { parentId }).map(activity => ({
+  return getOutlineChildren(activities, parentId).map(activity => ({
     ...activity,
     name: activity.data.name,
     level,
@@ -74,7 +74,7 @@ export default {
 
 <style lang="scss" scoped>
 .treeview {
-  max-height: 400px;
+  max-height: 300px;
   background-color: #fcfcfc;
   border: 1px solid #eee;
   text-align: left;
