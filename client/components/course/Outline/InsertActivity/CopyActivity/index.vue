@@ -12,7 +12,7 @@
         <v-progress-circular color="primary" indeterminate />
       </div>
       <div v-else-if="selectedRepository">
-        <v-container class="input-section mx-0 py-3 pr-5">
+        <v-container class="mx-0 py-3">
           <v-autocomplete
             @input="selectRepository"
             :value="selectedRepository"
@@ -29,10 +29,10 @@
             clearable outlined />
         </v-container>
         <repository-tree
-          @toggleSelect="toggleActivitySelection"
+          @change="selected = $event"
           :schema-name="schema.name"
+          :selectable-types="supportedLevels"
           :activities="selectedRepository.activities || []"
-          :selected="selected"
           :search="search" />
       </div>
     </template>
@@ -42,7 +42,8 @@
         @click="copySelection"
         :disabled="!selected.length"
         color="secondary"
-        text>
+        text
+        class="mr-1">
         {{ copyBtnLabel }}
       </v-btn>
     </template>
@@ -63,16 +64,6 @@ import RepositoryTree from './RepositoryTree';
 import { SCHEMAS } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
-
-function buildActivityTree(activities, parentId, types, level = 1) {
-  return filter(activities, { parentId }).map(activity => ({
-    ...activity,
-    name: activity.data.name,
-    level: level,
-    selectable: types.find(it => it.type === activity.type),
-    children: buildActivityTree(activities, activity.id, types, level + 1)
-  }));
-}
 
 export default {
   props: {
@@ -103,23 +94,11 @@ export default {
   methods: {
     ...mapActions('activities', ['clone']),
     ...mapGetters('activities', ['calculateInsertPosition']),
-    toggleActivitySelection(item) {
-      if (this.selected.find(({ id }) => id === item.id)) {
-        this.selected = this.selected.filter(({ id }) => id !== item.id);
-      } else {
-        this.selected.push(item);
-      }
-    },
     async selectRepository(repository) {
-      if (repository.id !== get(this.selectedRepository, 'id')) this.selected = [];
       this.selectedRepository = repository;
       if (repository.activities.length) return;
-      repository.activities = await this.fetchActivities(repository);
-    },
-    async fetchActivities(repository) {
-      const items = await activityApi.getActivities(repository.id);
-      const activities = sortBy(items, 'position');
-      return buildActivityTree(activities, null, this.supportedLevels) || [];
+      const activities = await activityApi.getActivities(repository.id);
+      repository.activities = sortBy(activities, 'position');
     },
     async copyActivity(activity) {
       const { id: srcId, repositoryId: srcRepositoryId, type } = activity;
@@ -140,7 +119,7 @@ export default {
     async copySelection() {
       const items = sortBy(this.selected, ['parentId', 'position']);
       await Promise.each(items, it => this.copyActivity(it));
-      this.$emit('completed', items[0]);
+      this.$emit('completed', this.anchor);
     }
   },
   async created() {
@@ -160,10 +139,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.input-section {
-  max-width: 35rem;
-}
-
 ::v-deep .v-list-item__content {
   flex: initial;
 }

@@ -1,46 +1,71 @@
 <template>
-  <div v-if="!activities.length" class="ma-3 mt-5">
+  <v-alert
+    v-if="!activities.length"
+    icon="mdi-information-outline"
+    color="primary lighten-1"
+    border="left"
+    dark dense
+    class="mx-3">
     Selected {{ schemaName }} is empty.
-  </div>
+  </v-alert>
   <v-treeview
     v-else
     ref="treeview"
-    :items="activities"
+    :items="activityTree"
     :search="search"
-    transition
-    open-all
-    dense
+    transition open-all dense
     class="mx-3 px-1 py-3 treeview">
     <template v-slot:prepend="{ item }">
       <v-icon
         v-if="item.selectable"
-        @click="$emit('toggleSelect', item)"
-        :disabled="!isSupported(item)">
-        {{ getCheckIcon(item.id) }}
+        @click="toggleSelection(item)"
+        :disabled="!isSelectable(item)">
+        mdi-check{{ isSelected(item) ? '-box-outline' : 'box-blank-outline' }}
       </v-icon>
     </template>
   </v-treeview>
 </template>
 
 <script>
+import filter from 'lodash/filter';
+import xorBy from 'lodash/xorBy';
+
+function buildActivityTree(activities, types, parentId = null, level = 1) {
+  return filter(activities, { parentId }).map(activity => ({
+    ...activity,
+    name: activity.data.name,
+    level,
+    selectable: types.find(it => it.type === activity.type),
+    children: buildActivityTree(activities, types, activity.id, level + 1)
+  }));
+}
+
 export default {
   props: {
+    schemaName: { type: String, required: true },
     activities: { type: Array, required: true },
-    selected: { type: Array, default: () => ([]) },
-    search: { type: String, default: '' },
-    schemaName: { type: String, required: true }
+    selectableTypes: { type: Array, required: true },
+    search: { type: String, default: '' }
+  },
+  data: () => ({ selected: [] }),
+  computed: {
+    activityTree: vm => buildActivityTree(vm.activities, vm.selectableTypes)
   },
   methods: {
-    getCheckIcon(id) {
-      const isChecked = this.selected.find(it => it.id === id);
-      return isChecked ? 'mdi-check-box-outline' : 'mdi-checkbox-blank-outline';
+    toggleSelection(item) {
+      this.selected = xorBy(this.selected, [item], 'id');
+      this.$emit('change', this.selected);
     },
-    isSupported(item) {
+    isSelected(item) {
+      return this.selected.find(it => it.id === item.id);
+    },
+    isSelectable(item) {
       return !this.selected.length || (this.selected[0].level === item.level);
     }
   },
   watch: {
     activities(val) {
+      this.selected = [];
       if (val.length) this.$nextTick(() => this.$refs.treeview.updateAll(true));
     }
   }
