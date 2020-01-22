@@ -1,8 +1,8 @@
 <template>
   <v-alert
     v-if="!activities.length"
-    icon="mdi-information-outline"
     color="primary lighten-1"
+    icon="mdi-information-outline"
     border="left"
     dark dense
     class="mx-3">
@@ -38,13 +38,13 @@
 import { getOutlineChildren } from 'utils/activity';
 import xorBy from 'lodash/xorBy';
 
-function buildActivityTree(activities, types, parentId = null, level = 1) {
+function toTreeFormat(activities, targetLevels, parentId = null, level = 1) {
   return getOutlineChildren(activities, parentId).map(activity => ({
     ...activity,
     name: activity.data.name,
     level,
-    selectable: types.find(it => it.type === activity.type),
-    children: buildActivityTree(activities, types, activity.id, level + 1)
+    selectable: targetLevels.find(it => it.type === activity.type),
+    children: toTreeFormat(activities, targetLevels, activity.id, level + 1)
   }));
 }
 
@@ -52,11 +52,11 @@ export default {
   props: {
     schemaName: { type: String, required: true },
     activities: { type: Array, required: true },
-    selectableTypes: { type: Array, required: true }
+    supportedLevels: { type: Array, required: true }
   },
   data: () => ({ selected: [], search: '' }),
   computed: {
-    activityTree: vm => buildActivityTree(vm.activities, vm.selectableTypes)
+    activityTree: vm => toTreeFormat(vm.activities, vm.supportedLevels)
   },
   methods: {
     toggleSelection(item) {
@@ -83,9 +83,9 @@ export default {
 <style lang="scss" scoped>
 .treeview {
   max-height: 300px;
+  text-align: left;
   background-color: #fcfcfc;
   border: 1px solid #eee;
-  text-align: left;
   overflow-y: scroll;
 }
 </style>

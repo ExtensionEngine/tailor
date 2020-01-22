@@ -15,7 +15,7 @@
         class="mt-4" />
       <div v-else-if="isCopyingActivities" class="ma-4">
         <div class="subtitle-1 text-center mb-2">
-          Copying {{ selectedActivities.length }} activities...
+          Copying {{ selectedActivities.length }} items...
         </div>
         <v-progress-linear color="primary" indeterminate />
       </div>
@@ -34,7 +34,7 @@
           v-if="selectedRepository && !isFetchingActivities"
           @change="selectedActivities = $event"
           :schema-name="schema.name"
-          :selectable-types="supportedLevels"
+          :supported-levels="supportedLevels"
           :activities="selectedRepository.activities || []" />
       </div>
     </template>
@@ -58,7 +58,6 @@
 import { mapActions, mapGetters } from 'vuex';
 import activityApi from 'client/api/activity';
 import courseApi from 'client/api/course';
-import filter from 'lodash/filter';
 import { isSameLevel } from 'utils/activity';
 import keyBy from 'lodash/keyBy';
 import pluralize from 'pluralize';
@@ -70,6 +69,7 @@ import TailorDialog from '@/components/common/TailorDialog';
 
 export default {
   props: {
+    repositoryId: { type: Number, required: true },
     anchor: { type: Object, required: true },
     supportedLevels: { type: Array, required: true }
   },
@@ -101,7 +101,7 @@ export default {
     async selectRepository(repository) {
       this.selectedRepository = repository;
       this.selectedActivities = [];
-      if (repository.activities.length) return;
+      if (repository.activities) return;
       this.isFetchingActivities = true;
       const activities = await activityApi.getActivities(repository.id);
       repository.activities = sortBy(activities, 'position');
@@ -112,9 +112,9 @@ export default {
       const payload = {
         srcId,
         srcRepositoryId,
-        repositoryId: this.anchor.repositoryId,
-        position: this.calculateInsertPosition(activity, this.anchor),
-        type
+        repositoryId: this.repositoryId,
+        type,
+        position: this.calculateInsertPosition(activity, this.anchor)
       };
       if (this.anchor) {
         payload.parentId = isSameLevel(activity, this.anchor)
@@ -133,14 +133,11 @@ export default {
   },
   async created() {
     const { schema } = this.course;
-    const items = sortBy(await courseApi.getRepositories(), 'name');
-    this.repositories = filter(items, { schema }).map(it => ({ ...it, activities: [] }));
+    this.repositories = sortBy(await courseApi.getRepositories({ schema }), 'name');
     this.isFetchingRepositories = false;
   },
   filters: {
-    pluralize(val) {
-      return pluralize(val);
-    }
+    pluralize: val => pluralize(val)
   },
   components: { RepositoryTree, TailorDialog }
 };
