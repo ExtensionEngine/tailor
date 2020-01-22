@@ -8,8 +8,14 @@
       Copy items from {{ schema.name | pluralize }}
     </template>
     <template v-slot:body>
-      <div v-if="fetchingRepositories" class="search-spinner">
+      <div v-if="isFetchingRepositories" class="search-spinner">
         <v-progress-circular color="primary" indeterminate />
+      </div>
+      <div v-else-if="isCopyingActivities" class="ma-4">
+        <div class="subtitle-1 text-center mb-2">
+          Copying {{ selectedActivities.length }} activities...
+        </div>
+        <v-progress-linear color="primary" indeterminate />
       </div>
       <div v-else-if="selectedRepository">
         <v-container class="mx-0 py-3">
@@ -29,7 +35,7 @@
             clearable outlined />
         </v-container>
         <repository-tree
-          @change="selected = $event"
+          @change="selectedActivities = $event"
           :schema-name="schema.name"
           :selectable-types="supportedLevels"
           :activities="selectedRepository.activities || []"
@@ -37,10 +43,12 @@
       </div>
     </template>
     <template v-slot:actions>
-      <v-btn @click="$emit('cancel')" text>Cancel</v-btn>
+      <v-btn @click="$emit('cancel')" :disabled="isCopyingActivities" text>
+        Cancel
+      </v-btn>
       <v-btn
         @click="copySelection"
-        :disabled="!selected.length"
+        :disabled="!selectedActivities.length || isCopyingActivities"
         color="secondary"
         text
         class="mr-1">
@@ -55,7 +63,6 @@ import { mapActions, mapGetters } from 'vuex';
 import activityApi from 'client/api/activity';
 import courseApi from 'client/api/course';
 import filter from 'lodash/filter';
-import get from 'lodash/get';
 import { isSameLevel } from 'utils/activity';
 import keyBy from 'lodash/keyBy';
 import pluralize from 'pluralize';
@@ -71,22 +78,23 @@ export default {
     supportedLevels: { type: Array, required: true }
   },
   data: () => ({
-    fetchingRepositories: true,
+    isFetchingRepositories: true,
+    isCopyingActivities: false,
     repositories: [],
     selectedRepository: null,
-    selected: [],
+    selectedActivities: [],
     search: ''
   }),
   computed: {
     ...mapGetters('course', ['course']),
     schema: vm => SCHEMAS.find(it => it.id === vm.course.schema),
     copyBtnLabel() {
-      const { selected, anchor } = this;
+      const { selectedActivities, anchor } = this;
       const supportedTypes = keyBy(this.supportedLevels, 'type');
       let label = 'Copy';
-      if (!selected.length) return label;
-      if (selected.length > 1) label += ` ${selected.length} items`;
-      const itemLevel = supportedTypes[selected[0].type].level;
+      if (!selectedActivities.length) return label;
+      if (selectedActivities.length > 1) label += ` ${selectedActivities.length} items`;
+      const itemLevel = supportedTypes[selectedActivities[0].type].level;
       const anchorLevel = supportedTypes[anchor.type].level;
       return itemLevel > anchorLevel ? label.concat(' inside') : label;
     }
@@ -96,6 +104,7 @@ export default {
     ...mapGetters('activities', ['calculateInsertPosition']),
     async selectRepository(repository) {
       this.selectedRepository = repository;
+      this.selectedActivities = [];
       if (repository.activities.length) return;
       const activities = await activityApi.getActivities(repository.id);
       repository.activities = sortBy(activities, 'position');
@@ -117,8 +126,10 @@ export default {
       return this.clone(payload);
     },
     async copySelection() {
-      const items = sortBy(this.selected, ['parentId', 'position']);
+      this.isCopyingActivities = true;
+      const items = sortBy(this.selectedActivities, ['parentId', 'position']);
       await Promise.each(items, it => this.copyActivity(it));
+      this.isCopyingActivities = false;
       this.$emit('completed', this.anchor);
     }
   },
@@ -127,7 +138,7 @@ export default {
     const items = sortBy(await courseApi.getRepositories(), 'name');
     this.repositories = filter(items, { schema }).map(it => ({ ...it, activities: [] }));
     this.selectRepository(this.repositories[0]);
-    this.fetchingRepositories = false;
+    this.isFetchingRepositories = false;
   },
   filters: {
     pluralize(val) {
