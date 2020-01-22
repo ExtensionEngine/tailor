@@ -8,9 +8,11 @@
       Copy items from {{ schema.name | pluralize }}
     </template>
     <template v-slot:body>
-      <div v-if="isFetchingRepositories" class="search-spinner">
-        <v-progress-circular color="primary" indeterminate />
-      </div>
+      <v-progress-circular
+        v-if="isFetchingRepositories"
+        color="primary"
+        indeterminate
+        class="mt-4" />
       <div v-else-if="isCopyingActivities" class="ma-4">
         <div class="subtitle-1 text-center mb-2">
           Copying {{ selectedActivities.length }} activities...
@@ -18,31 +20,22 @@
         <v-progress-linear color="primary" indeterminate />
       </div>
       <div v-else>
-        <div class="mx-3 py-3">
-          <v-autocomplete
-            @input="selectRepository"
-            :value="selectedRepository"
-            :items="repositories"
-            :label="schema.name"
-            placeholder="Select..."
-            item-text="name"
-            prepend-inner-icon="mdi-magnify"
-            outlined return-object />
-          <v-text-field
-            v-if="selectedRepository"
-            v-model="search"
-            :placeholder="`Filter selected ${schema.name}...`"
-            prepend-inner-icon="mdi-filter-outline"
-            clear-icon="mdi-close-circle-outline"
-            clearable outlined />
-        </div>
+        <v-autocomplete
+          @input="selectRepository"
+          :value="selectedRepository"
+          :items="repositories"
+          :label="schema.name"
+          placeholder="Select..."
+          item-text="name"
+          prepend-inner-icon="mdi-magnify"
+          outlined return-object
+          class="mx-3 pt-3" />
         <repository-tree
-          v-if="selectedRepository"
+          v-if="selectedRepository && !isFetchingActivities"
           @change="selectedActivities = $event"
           :schema-name="schema.name"
           :selectable-types="supportedLevels"
-          :activities="selectedRepository.activities || []"
-          :search="search" />
+          :activities="selectedRepository.activities || []" />
       </div>
     </template>
     <template v-slot:actions>
@@ -81,12 +74,12 @@ export default {
     supportedLevels: { type: Array, required: true }
   },
   data: () => ({
-    isFetchingRepositories: true,
-    isCopyingActivities: false,
     repositories: [],
     selectedRepository: null,
     selectedActivities: [],
-    search: ''
+    isFetchingRepositories: true,
+    isFetchingActivities: false,
+    isCopyingActivities: false
   }),
   computed: {
     ...mapGetters('course', ['course']),
@@ -109,8 +102,10 @@ export default {
       this.selectedRepository = repository;
       this.selectedActivities = [];
       if (repository.activities.length) return;
+      this.isFetchingActivities = true;
       const activities = await activityApi.getActivities(repository.id);
       repository.activities = sortBy(activities, 'position');
+      this.isFetchingActivities = false;
     },
     async copyActivity(activity) {
       const { id: srcId, repositoryId: srcRepositoryId, type } = activity;

@@ -8,22 +8,30 @@
     class="mx-3">
     Selected {{ schemaName }} is empty.
   </v-alert>
-  <v-treeview
-    v-else
-    ref="treeview"
-    :items="activityTree"
-    :search="search"
-    transition open-all dense
-    class="mx-3 px-1 py-3 treeview">
-    <template v-slot:prepend="{ item }">
-      <v-icon
-        v-if="item.selectable"
-        @click="toggleSelection(item)"
-        :disabled="!isSelectable(item)">
-        mdi-check{{ isSelected(item) ? '-box-outline' : 'box-blank-outline' }}
-      </v-icon>
-    </template>
-  </v-treeview>
+  <div v-else>
+    <v-text-field
+      v-model="search"
+      :placeholder="`Filter selected ${schemaName}...`"
+      prepend-inner-icon="mdi-filter-outline"
+      clear-icon="mdi-close-circle-outline"
+      clearable outlined
+      class="mx-3" />
+    <v-treeview
+      ref="treeview"
+      :items="activityTree"
+      :search="search"
+      transition open-all dense
+      class="mx-3 px-1 py-3 treeview">
+      <template v-slot:prepend="{ item }">
+        <v-icon
+          v-if="item.selectable"
+          @click="toggleSelection(item)"
+          :disabled="!isSelectable(item)">
+          mdi-check{{ isSelected(item) ? '-box-outline' : 'box-blank-outline' }}
+        </v-icon>
+      </template>
+    </v-treeview>
+  </div>
 </template>
 
 <script>
@@ -44,10 +52,9 @@ export default {
   props: {
     schemaName: { type: String, required: true },
     activities: { type: Array, required: true },
-    selectableTypes: { type: Array, required: true },
-    search: { type: String, default: '' }
+    selectableTypes: { type: Array, required: true }
   },
-  data: () => ({ selected: [] }),
+  data: () => ({ selected: [], search: '' }),
   computed: {
     activityTree: vm => buildActivityTree(vm.activities, vm.selectableTypes)
   },
@@ -66,6 +73,7 @@ export default {
   watch: {
     activities(val) {
       this.selected = [];
+      this.search = '';
       if (val.length) this.$nextTick(() => this.$refs.treeview.updateAll(true));
     }
   }
