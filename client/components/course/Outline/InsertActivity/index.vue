@@ -19,7 +19,7 @@
         @cancel="hide()"
         @completed="hide() || $emit('expand')"
         :repository-id="anchor.repositoryId"
-        :supported-levels="supportedLevels"
+        :levels="supportedLevels"
         :anchor="anchor" />
       <create-dialog
         v-else-if="action === 'create'"

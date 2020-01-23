@@ -34,7 +34,7 @@
           v-if="selectedRepository && !isFetchingActivities"
           @change="selectedActivities = $event"
           :schema-name="schema.name"
-          :supported-levels="supportedLevels"
+          :supported-levels="levels"
           :activities="selectedRepository.activities || []" />
       </div>
     </template>
@@ -71,7 +71,7 @@ export default {
   props: {
     repositoryId: { type: Number, required: true },
     anchor: { type: Object, required: true },
-    supportedLevels: { type: Array, required: true }
+    levels: { type: Array, required: true }
   },
   data: () => ({
     repositories: [],
@@ -86,7 +86,7 @@ export default {
     schema: vm => SCHEMAS.find(it => it.id === vm.course.schema),
     copyBtnLabel() {
       const { selectedActivities, anchor } = this;
-      const supportedTypes = keyBy(this.supportedLevels, 'type');
+      const supportedTypes = keyBy(this.levels, 'type');
       let label = 'Copy';
       if (!selectedActivities.length) return label;
       if (selectedActivities.length > 1) label += ` ${selectedActivities.length} items`;
