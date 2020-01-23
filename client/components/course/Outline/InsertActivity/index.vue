@@ -16,11 +16,11 @@
         @close="hide" />
       <copy-activity
         v-else-if="action === 'copy'"
-        @completed="hide() || $emit('expand')"
         @cancel="hide()"
+        @completed="hide() || $emit('expand')"
         :repository-id="anchor.repositoryId"
-        :anchor="anchor"
-        :supported-levels="supportedLevels" />
+        :supported-levels="supportedLevels"
+        :anchor="anchor" />
       <create-dialog
         v-else-if="action === 'create'"
         @close="hide"
@@ -47,21 +47,13 @@ export default {
   props: {
     anchor: { type: Object, required: true }
   },
-  data() {
-    return {
-      action: null,
-      loading: { status: 0, label: '' }
-    };
-  },
+  data: () => ({ action: null }),
   computed: {
     ...mapGetters(['activities']),
     ...mapGetters('course', ['structure']),
     ...mapState({ outlineState: s => s.course.outline }),
     showActions() {
       return this.anchor._cid === this.outlineState.showOptions;
-    },
-    isLoading() {
-      return !!this.loading.label;
     },
     supportedLevels() {
       const grandParent = getParent(this.activities, this.anchor);
