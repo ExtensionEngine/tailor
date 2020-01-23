@@ -70,8 +70,8 @@ import TailorDialog from '@/components/common/TailorDialog';
 export default {
   props: {
     repositoryId: { type: Number, required: true },
-    anchor: { type: Object, required: true },
-    levels: { type: Array, required: true }
+    levels: { type: Array, required: true },
+    anchor: { type: Object, default: null }
   },
   data: () => ({
     repositories: [],
@@ -91,8 +91,8 @@ export default {
       if (!selectedActivities.length) return label;
       if (selectedActivities.length > 1) label += ` ${selectedActivities.length} items`;
       const itemLevel = supportedTypes[selectedActivities[0].type].level;
-      const anchorLevel = supportedTypes[anchor.type].level;
-      return itemLevel > anchorLevel ? label.concat(' inside') : label;
+      const anchorLevel = anchor && supportedTypes[anchor.type].level;
+      return anchor && (itemLevel > anchorLevel) ? label.concat(' inside') : label;
     }
   },
   methods: {
