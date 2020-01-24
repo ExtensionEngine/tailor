@@ -1,6 +1,5 @@
 <template>
   <div class="body">
-    <publishing v-if="isAdmin || isCourseAdmin" />
     <v-chip :color="config.color" label dark small class="type-label">
       {{ config.label.toUpperCase() }}
     </v-chip>
@@ -25,7 +24,6 @@
 import { mapActions, mapGetters } from 'vuex';
 import Discussion from './Discussion';
 import Meta from 'components/common/Meta';
-import Publishing from './Publishing';
 import Relationship from './Relationship';
 
 export default {
@@ -48,7 +46,6 @@ export default {
   },
   components: {
     Discussion,
-    Publishing,
     Relationship,
     MetaInput: Meta
   }
