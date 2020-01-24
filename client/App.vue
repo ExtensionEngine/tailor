@@ -2,7 +2,7 @@
   <v-app id="app">
     <navbar v-if="user" :user="user" />
     <v-content>
-      <router-view class="view grey lighten-3" />
+      <router-view class="view grey lighten-4" />
     </v-content>
     <confirmation-modal />
   </v-app>
