@@ -1,12 +1,12 @@
 <template>
-  <v-card v-if="course" class="settings">
+  <div v-if="course" class="settings">
     <div class="actions">
       <v-btn
         @click="publish"
         :loading="publishing"
-        outlined
-        small
-        class="pull-right">
+        text small
+        class="float-right">
+        <v-icon class="pr-1">mdi-publish</v-icon>
         Publish info
       </v-btn>
     </div>
@@ -22,7 +22,7 @@
       @update="updateKey"
       :meta="it"
       class="meta-input" />
-  </v-card>
+  </div>
 </template>
 
 <script>

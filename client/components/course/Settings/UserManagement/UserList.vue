@@ -4,7 +4,8 @@
     :items="users"
     :loading="isLoading"
     no-data-text="No assigned users."
-    hide-default-footer>
+    hide-default-footer
+    class="grey lighten-4">
     <template v-slot:item="{ item }">
       <tr>
         <td class="text-left">
@@ -23,7 +24,7 @@
             icon />
         </td>
         <td class="actions">
-          <v-btn color="primary" icon>
+          <v-btn color="primary" icon class="pb-2">
             <v-icon @click="remove(item)">mdi-delete</v-icon>
           </v-btn>
         </td>
@@ -79,7 +80,6 @@ export default {
 
 .v-table .actions {
   max-width: 15px;
-  padding: 0 0 6px 0;
 }
 
 ::v-deep .v-input__slot::before {

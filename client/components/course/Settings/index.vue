@@ -1,10 +1,10 @@
 <template>
   <v-container class="my-4">
     <v-row align="start" no-gutters>
-      <v-card>
+      <div class="mr-5">
         <sidebar @action="onActionClick" :is-publishing="isPublishing" />
-      </v-card>
-      <v-col class="ml-6">
+      </div>
+      <v-col class="pl-6 settings-container">
         <router-view />
       </v-col>
     </v-row>
@@ -74,3 +74,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.settings-container {
+  border-left: 1px solid #ccc;
+}
+</style>
