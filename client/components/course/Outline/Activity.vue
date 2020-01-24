@@ -39,13 +39,9 @@
             class="mx-0">
             <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>
           </v-btn>
-          <v-btn
-            @click="focus(!showOptions)"
-            icon
-            small
-            class="ml-0">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+          <activity-options
+            :activity="{ id, parentId, type, data }"
+            class="activity-options" />
         </div>
       </div>
       <insert-activity
@@ -72,6 +68,7 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
+import ActivityOptions from '@/components/course/common/ActivityOptions';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -162,7 +159,7 @@ export default {
       this.toggleActivity({ _cid: this._cid, expanded });
     }
   },
-  components: { Draggable, InsertActivity }
+  components: { ActivityOptions, Draggable, InsertActivity }
 };
 </script>
 
@@ -202,6 +199,10 @@ export default {
 
     .v-btn {
       margin: 6px 8px;
+    }
+
+    .activity-options ::v-deep .v-btn {
+      height: 100%;
     }
   }
 }
