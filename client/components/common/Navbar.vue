@@ -1,10 +1,16 @@
 <template>
-  <v-app-bar color="grey lighten-5" app dense fixed>
+  <v-app-bar
+    color="blue-grey darken-3"
+    app dense fixed
+    class="elevation-5">
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
-      <v-avatar color="primary darken-1" size="34" class="mt-1 pa-2">
+      <v-avatar color="primary lighten-1" size="34" class="mt-1 pa-2">
         <img :src="logo" alt="Logo">
       </v-avatar>
-      <v-toolbar-title class="app-name">{{ title }}</v-toolbar-title>
+      <v-toolbar-title class="app-name grey--text text--lighten-5 text-uppercase">
+        {{ title }}
+        <span class="caption">author</span>
+      </v-toolbar-title>
     </router-link>
     <v-spacer />
     <v-toolbar-items>
@@ -12,9 +18,8 @@
         v-for="({ name, to, icon }) in routes"
         :key="name"
         :to="to"
-        color="blue-grey darken-3"
-        exact
-        text>
+        color="blue-grey lighten-4"
+        exact text>
         <v-icon class="pr-1">mdi-{{ icon }}</v-icon>
         <span class="toolbar-route">{{ name }}</span>
       </v-btn>
@@ -105,6 +110,7 @@ $font-color: #333;
     margin: 1px 0 0 10px;
     font-size: 20px;
     font-weight: 400;
+    letter-spacing: 1px;
     line-height: $container-height;
   }
 }
@@ -115,9 +121,5 @@ $font-color: #333;
   white-space: nowrap;
   text-decoration: none;
   overflow: hidden;
-
-  &:hover {
-    color: darken($font-color, 20%);
-  }
 }
 </style>
