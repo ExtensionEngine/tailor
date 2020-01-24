@@ -5,7 +5,7 @@
       <div :class="{ 'mt-12': isFlat }" class="activity-container">
         <v-toolbar
           v-if="!isFlat"
-          color="grey lighten-3"
+          color="grey lighten-4"
           flat
           dense>
           <v-spacer />

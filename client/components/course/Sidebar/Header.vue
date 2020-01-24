@@ -1,6 +1,6 @@
 <template>
   <div class="header pt-3">
-    <div class="mb-6">
+    <div class="mb-7 mt-3">
       <activity-options :activity="activity" class="float-right" />
     </div>
     <v-btn

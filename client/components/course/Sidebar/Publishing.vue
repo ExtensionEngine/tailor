@@ -22,7 +22,7 @@
         </v-list-item>
       </v-list>
     </v-menu>
-    <div class="pl-2 mt-4">
+    <div class="pl-2 mt-6 mb-2">
       {{ isPublishing ? publishStatus.message : publishedAtMessage }}
     </div>
   </span>
