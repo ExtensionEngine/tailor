@@ -1,18 +1,17 @@
 <template>
   <div class="repo-container">
     <v-tabs
-      height="50"
       background-color="primary"
-      slider-color="grey lighten-4"
+      slider-color="grey lighten-2"
+      slider-size="3"
       dark
-      class="elevation-2">
+      class="elevation-1">
       <v-tab
         v-for="tab in tabs"
         :key="tab.name"
         :to="{ name: tab.route }"
         active-class="tab-active"
-        ripple
-        exact
+        ripple exact dark
         class="px-4">
         <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
       </v-tab>
