@@ -47,7 +47,7 @@
         @mousedown.stop
         icon>
         <v-icon
-          :color="isPinned ? 'grey darken-3': 'grey'"
+          :color="isPinned ? 'grey darken-3': 'grey darken-1'"
           :class="{ 'mdi-rotate-45': isPinned }">
           mdi-pin
         </v-icon>

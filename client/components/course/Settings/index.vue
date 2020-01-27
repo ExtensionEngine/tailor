@@ -74,9 +74,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.settings-container {
-  border-left: 1px solid #ccc;
-}
-</style>

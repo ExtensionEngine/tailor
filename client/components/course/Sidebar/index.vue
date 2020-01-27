@@ -43,7 +43,7 @@ export default {
   overflow: auto;
   text-align: left;
   border-top: 1px solid #e8e8e8;
-  background-color: #fcfcfc;
+  background-color: #fafafa;
 }
 
 .placeholder {
