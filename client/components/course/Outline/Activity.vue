@@ -5,30 +5,20 @@
         @click="focus(showOptions)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
+        :style="{ 'border-left': `8px solid ${color}` }"
         :class="[isHighlighted ? 'elevation-9 selected': 'elevation-1']"
         class="activity">
-        <v-chip :color="color" label dark class="icon-container">
-          <v-btn
-            v-if="hasSubtypes"
-            @click="toggle()"
-            text
-            icon
-            small>
-            <v-icon size="26">mdi-{{ icon }}</v-icon>
-          </v-btn>
-          <v-icon v-else>mdi-file-document-box-outline</v-icon>
-        </v-chip>
-        <span class="activity-name grey--text text--darken-3">
-          {{ data.name }}
-        </span>
+        <v-btn v-if="hasSubtypes" @click="toggle()" icon class="activity-icon">
+          <v-icon color="primary darken-1" size="30">mdi-{{ icon }}</v-icon>
+        </v-btn>
+        <span class="activity-name grey--text text--darken-3">{{ data.name }}</span>
         <div v-show="isHighlighted" class="actions">
           <v-spacer />
           <v-btn
             v-show="isEditable"
             :to="{ name: 'editor', params: { activityId: id } }"
-            color="pink"
-            outlined
-            small>
+            color="primary darken-1"
+            outlined small>
             Open
           </v-btn>
           <v-btn
@@ -166,8 +156,9 @@ export default {
 <style lang="scss" scoped>
 .activity {
   display: flex;
-  font-size: 18px;
-  background: #fff;
+  padding: 0 0 0 0.375rem;
+  font-size: 1.125rem;
+  background-color: #fcfcfc;
   border-radius: 2px;
   cursor: pointer;
   transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -176,29 +167,17 @@ export default {
     color: #414141;
   }
 
-  .icon-container {
-    height: inherit;
-    margin: 0;
-    padding: 0;
-    border-radius: 0 !important;
-
-    ::v-deep span {
-      padding: 0 10px;
-      color: #fff;
-    }
-
-    .v-btn {
-      margin: 0;
-    }
+  &-icon {
+    margin: 0.125rem 0 0 0;
   }
 
   .actions {
     display: flex;
-    min-width: 165px;
+    min-width: 10.3125rem;
     margin-left: auto;
 
     .v-btn {
-      margin: 6px 8px;
+      margin: 0.375rem 0.5rem;
     }
 
     .activity-options ::v-deep .v-btn {
@@ -209,14 +188,14 @@ export default {
 
 .activity-name {
   display: block;
-  padding: 2px 12px 0;
-  line-height: 38px;
+  padding: 0.125rem 0.375rem 0;
+  line-height: 2.375rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
 .sub-activity {
-  margin-left: 44px;
+  margin-left: 2.125rem;
 }
 </style>
