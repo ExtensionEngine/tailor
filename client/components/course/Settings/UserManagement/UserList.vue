@@ -1,8 +1,8 @@
 <template>
   <v-data-table
+    v-if="!isLoading"
     :headers="headers"
     :items="users"
-    :loading="isLoading"
     no-data-text="No assigned users."
     hide-default-footer
     class="grey lighten-4">

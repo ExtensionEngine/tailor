@@ -20,7 +20,12 @@
           data-vv-name="role" />
       </v-col>
       <v-col cols="2">
-        <v-btn color="grey darken-3" type="submit" dark block>Add</v-btn>
+        <v-btn
+          type="submit"
+          color="grey darken-3"
+          dark small block>
+          Add
+        </v-btn>
       </v-col>
     </v-row>
   </form>
