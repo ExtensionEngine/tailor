@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col class="text-left py-1">
-      <v-alert v-if="!anchor" type="info" color="primary" prominent class="mb-5">
+      <v-alert v-if="!anchor" type="info" color="blue-grey darken-3" prominent class="mb-5">
         Click on the button bellow in order to create your first item!
       </v-alert>
       <create-dialog
