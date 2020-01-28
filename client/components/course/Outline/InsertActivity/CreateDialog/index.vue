@@ -83,10 +83,11 @@ export default {
           : anchor.id;
       }
       activity.position = this.calculateInsertPosition(activity, anchor);
-      if (anchor && (anchor.id === activity.parentId)) this.$emit('expand');
+      const item = await this.save({ ...activity });
+      if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
+      this.$emit('created', item);
+      this.focusActivity(item._cid);
       this.visible = false;
-      this.save({ ...activity })
-        .then(activity => this.focusActivity(activity._cid));
     }
   },
   watch: {

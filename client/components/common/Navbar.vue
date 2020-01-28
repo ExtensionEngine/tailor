@@ -116,7 +116,7 @@ $font-color: #333;
 }
 
 .toolbar-route {
-  max-width: 380px;
+  max-width: 200px;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-decoration: none;

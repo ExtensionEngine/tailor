@@ -1,6 +1,6 @@
 <template>
   <tailor-dialog
-    :value="true"
+    v-model="isVisible"
     header-icon="mdi-content-copy"
     width="650"
     persistent>
@@ -39,9 +39,7 @@
       </div>
     </template>
     <template v-slot:actions>
-      <v-btn @click="$emit('cancel')" :disabled="isCopyingActivities" text>
-        Cancel
-      </v-btn>
+      <v-btn @click="close" :disabled="isCopyingActivities" text>Cancel</v-btn>
       <v-btn
         @click="copySelection"
         :disabled="!selectedActivities.length || isCopyingActivities"
@@ -74,6 +72,7 @@ export default {
     anchor: { type: Object, default: null }
   },
   data: () => ({
+    isVisible: false,
     repositories: [],
     selectedRepository: null,
     selectedActivities: [],
@@ -127,14 +126,22 @@ export default {
       this.isCopyingActivities = true;
       const items = sortBy(this.selectedActivities, ['parentId', 'position']);
       await Promise.each(items, it => this.copyActivity(it));
+      this.$emit('completed', items[0].parentId);
       this.isCopyingActivities = false;
-      this.$emit('completed', this.anchor);
+      close();
+    },
+    close() {
+      this.isVisible = false;
+      this.$emit('close');
     }
   },
   async created() {
     const { schema } = this.course;
     this.repositories = sortBy(await courseApi.getRepositories({ schema }), 'name');
     this.isFetchingRepositories = false;
+  },
+  mounted() {
+    this.isVisible = true;
   },
   filters: {
     pluralize: val => pluralize(val)

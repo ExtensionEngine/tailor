@@ -30,7 +30,7 @@
             <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>
           </v-btn>
           <activity-options
-            :activity="{ id, parentId, type, data }"
+            :activity="{ id, _cid, repositoryId, parentId, type, position, data }"
             class="activity-options" />
         </div>
       </div>
