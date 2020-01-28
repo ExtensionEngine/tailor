@@ -94,7 +94,7 @@ export default {
     },
     menuOptions() {
       return [{
-        name: 'Add',
+        name: 'Insert',
         showHeading: true,
         options: this.addMenuOptions
       }, {

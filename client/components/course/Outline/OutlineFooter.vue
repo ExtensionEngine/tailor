@@ -20,10 +20,13 @@ import last from 'lodash/last';
 import { mapGetters } from 'vuex';
 
 export default {
+  props: {
+    rootActivities: { type: Array, required: true }
+  },
   computed: {
-    ...mapGetters('course', ['course', 'structure', 'activities']),
+    ...mapGetters('course', ['course', 'structure']),
     levels: vm => filter(vm.structure, { level: 1 }),
-    anchor: vm => last(vm.activities)
+    anchor: vm => last(vm.rootActivities)
   },
   components: { CreateDialog }
 };

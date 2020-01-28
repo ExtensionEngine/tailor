@@ -28,7 +28,7 @@
             :level="1"
             :activities="outlineActivities" />
         </draggable>
-        <outline-footer />
+        <outline-footer :root-activities="rootActivities" />
       </div>
       <sidebar />
     </div>
