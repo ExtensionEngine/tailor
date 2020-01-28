@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on }">
       <v-btn
         v-on="on"
-        color="grey lighten-4"
+        color="primary darken-1"
         text>
         <v-icon small class="mr-1">mdi-lock</v-icon>Change Password
       </v-btn>

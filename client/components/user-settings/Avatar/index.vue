@@ -6,8 +6,7 @@
           <div class="img-container">
             <img :src="image">
             <v-icon
-              dark
-              large
+              dark large
               class="overlay">
               mdi-camera
             </v-icon>
