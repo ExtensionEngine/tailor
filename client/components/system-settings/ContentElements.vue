@@ -1,11 +1,12 @@
 <template>
-  <v-card class="element-list-container">
+  <div class="element-list-container">
     <v-text-field
       v-model.trim="search"
       label="Search"
       append-icon="mdi-magnify"
-      clearable />
-    <v-list :expand="true" avatar two-line class="text-left">
+      outlined clearable
+      class="mx-2" />
+    <v-list :expand="true" avatar two-line class="grey lighten-4 text-left">
       <v-list-group
         v-for="(group, groupName) in filteredRegistry"
         :key="groupName"
@@ -29,7 +30,7 @@
         </v-list-item>
       </v-list-group>
     </v-list>
-  </v-card>
+  </div>
 </template>
 
 <script>

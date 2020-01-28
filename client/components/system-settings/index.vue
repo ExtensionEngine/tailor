@@ -1,9 +1,8 @@
 <template>
-  <div class="system-settings-container white">
-    <div class="heading primary elevation-5">
+  <div class="system-settings-container">
+    <div class="heading primary elevation-2">
       <v-chip
         color="grey lighten-2"
-        label
         outlined
         class="mt-2 ml-3 px-3 body-2">
         Admin
@@ -11,10 +10,10 @@
     </div>
     <v-container>
       <v-row align="start" no-gutters class="my-4">
-        <v-card>
+        <v-col class="sidebar-container">
           <sidebar />
-        </v-card>
-        <v-col class="ml-6">
+        </v-col>
+        <v-col>
           <router-view />
         </v-col>
       </v-row>
@@ -39,7 +38,7 @@ export default {
 .system-settings-container {
   width: 100%;
   height: 100%;
-  padding: 50px 0 60px;
+  padding: 3.125rem 0 3.75rem;
 }
 
 .heading {
@@ -47,10 +46,13 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  height: 46px;
-  color: #444;
+  height: 2.875rem;
   text-align: left;
   text-transform: uppercase;
   z-index: 2;
+}
+
+.sidebar-container {
+  max-width: 19rem;
 }
 </style>

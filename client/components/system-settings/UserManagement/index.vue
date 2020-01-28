@@ -1,14 +1,15 @@
 <template>
   <v-row justify="center" no-gutters>
     <v-col>
-      <v-card>
-        <v-toolbar color="white" flat>
+      <div>
+        <v-toolbar color="grey lighten-4" flat>
           <v-spacer />
-          <v-btn @click.stop="showUserDialog()" outlined>
+          <v-btn @click.stop="showUserDialog()" text>
+            <v-icon class="pr-2">mdi-account-multiple-plus</v-icon>
             Add user
           </v-btn>
         </v-toolbar>
-        <v-row class="filters">
+        <v-row no-gutters class="filters px-2 pb-1">
           <v-col>
             <v-switch
               v-model="showArchived"
@@ -21,9 +22,7 @@
               v-model="filter"
               append-icon="mdi-magnify"
               label="Search"
-              single-line
-              hide-details
-              clearable />
+              outlined hide-details clearable />
           </v-col>
         </v-row>
         <v-data-table
@@ -32,8 +31,8 @@
           :server-items-length="totalItems"
           :options.sync="dataTable"
           :must-sort="true"
-          :loading="loading"
-          :footer-props="{ itemsPerPageOptions: [10, 20, 50, 100] }">
+          :footer-props="{ itemsPerPageOptions: [10, 20, 50, 100] }"
+          class="grey lighten-4">
           <template slot="item" slot-scope="{ item }">
             <tr :key="item.id">
               <td class="text-no-wrap text-left">
@@ -66,7 +65,7 @@
             </tr>
           </template>
         </v-data-table>
-      </v-card>
+      </div>
       <user-dialog
         @updated="fetch(defaultPage)"
         @created="fetch(defaultPage)"
