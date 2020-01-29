@@ -1,37 +1,31 @@
 <template>
   <v-card @click="navigateTo()" class="repository-card">
     <div class="card-body blue-grey darken-4">
-      <v-chip
-        :color="repository.data.color"
-        x-small
-        class="mt-1 ml-4 px-1" />
-      <v-chip
-        color="blue-grey darken-4"
-        label small dark
-        class="mt-1 ml-0 px-1">
-        {{ schema }}
-      </v-chip>
+      <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
+      <span class="schema-name">{{ schema }}</span>
       <v-btn
         v-if="repository.hasAdminAccess"
         @click.stop="navigateTo('course-info')"
         @mousedown.stop
         color="blue-grey darken-1"
-        icon
-        class="btn-settings my-0 mr-1 pull-right">
+        icon small
+        class="mr-2 float-right">
         <v-icon>mdi-settings</v-icon>
       </v-btn>
-      <v-card-title class="grey--text text--lighten-3 pt-1">
+      <v-card-title class="grey--text text--lighten-3 pt-2">
         {{ name | truncate(70) }}
       </v-card-title>
-      <div class="grey--text text--lighten-4">
-        <v-avatar size="38" class="float-left ml-4 mt-2">
+      <div class="grey--text text--lighten-4 px-4">
+        <v-avatar size="38" class="float-left">
           <img :src="lastActivity.user.imgUrl">
         </v-avatar>
-        <div class="float-left mt-1 ml-4">
+        <div class="float-left ml-4">
           <div class="caption">Last edited by</div>
-          <div class="body-2">{{ lastActivity.user.label }}</div>
+          <div class="user-label body-2 text-truncate">
+            {{ lastActivity.user.label }}
+          </div>
         </div>
-        <div class="float-left ml-6">
+        <div class="float-left activity-date">
           <div class="subtitle-1">
             {{ lastActivity.createdAt | formatDate('H:mm') }}
           </div>
@@ -47,7 +41,7 @@
         @mousedown.stop
         icon>
         <v-icon
-          :color="isPinned ? 'grey darken-3': 'grey darken-1'"
+          :color="isPinned ? 'grey darken-3': 'grey'"
           :class="{ 'mdi-rotate-45': isPinned }">
           mdi-pin
         </v-icon>
@@ -93,23 +87,42 @@ export default {
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.18);
   }
 }
 
 .card-body {
-  height: 220px;
-  padding: 8px 0 0;
+  height: 14rem;
+  padding: 0.625rem 0 0;
   overflow: hidden;
 
-  .v-chip {
+  @media (max-width: 1263px) {
+    height: 17rem;
+  }
+
+  .schema-name {
+    padding: 0 0 0 0.25rem;
+    color: #fafafa;
+    font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 1px;
     text-transform: uppercase;
   }
 
-  @media (max-width: 1263px) {
-    height: 180px;
+  .v-avatar {
+    margin-top: 0.125rem;
+  }
+}
+
+.user-label {
+  max-width: 8.5rem;
+}
+
+.activity-date {
+  padding-left: 1rem;
+
+  .subtitle-1 {
+    line-height: 1.25rem;
   }
 }
 </style>
