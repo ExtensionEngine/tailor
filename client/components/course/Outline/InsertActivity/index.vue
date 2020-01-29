@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
+import { mapGetters, mapMutations, mapState } from 'vuex';
 import CopyActivity from './CopyActivity';
 import CreateDialog from './CreateDialog';
 import filter from 'lodash/filter';
@@ -66,7 +66,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', { copy: 'clone', create: 'save' }),
     ...mapMutations('course', ['showActivityOptions', 'focusActivity']),
     show() {
       this.showActivityOptions(this.anchor._cid);
