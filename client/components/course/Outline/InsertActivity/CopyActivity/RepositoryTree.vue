@@ -1,10 +1,8 @@
 <template>
   <v-alert
     v-if="!activities.length"
-    color="primary lighten-1"
-    icon="mdi-information-outline"
-    border="left"
-    dark dense
+    color="primary"
+    dark
     class="mx-3">
     Selected {{ schemaName }} is empty.
   </v-alert>
@@ -17,6 +15,7 @@
       clearable outlined
       class="mx-3" />
     <v-treeview
+      v-show="hasSearchResults"
       ref="treeview"
       :items="activityTree"
       :search="search"
@@ -31,6 +30,9 @@
         </v-icon>
       </template>
     </v-treeview>
+    <v-alert :value="!hasSearchResults" color="primary" dark class="mx-3">
+      No matches found.
+    </v-alert>
   </div>
 </template>
 
@@ -56,7 +58,12 @@ export default {
   },
   data: () => ({ selected: [], search: '' }),
   computed: {
-    activityTree: vm => toTreeFormat(vm.activities, vm.supportedLevels)
+    activityTree: vm => toTreeFormat(vm.activities, vm.supportedLevels),
+    hasSearchResults() {
+      if (!this.search || !this.$refs) return true;
+      const { excludedItems, nodes } = this.$refs.treeview;
+      return excludedItems.size !== Object.keys(nodes).length;
+    }
   },
   methods: {
     toggleSelection(item) {
