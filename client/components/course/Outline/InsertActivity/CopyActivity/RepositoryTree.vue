@@ -6,21 +6,20 @@
     class="mx-3">
     Selected {{ schemaName }} is empty.
   </v-alert>
-  <div v-else>
+  <div v-else class="mx-3">
     <v-text-field
       v-model="search"
       :placeholder="`Filter selected ${schemaName}...`"
       prepend-inner-icon="mdi-filter-outline"
       clear-icon="mdi-close-circle-outline"
-      clearable outlined
-      class="mx-3" />
+      clearable outlined />
     <v-treeview
       v-show="hasSearchResults"
       ref="treeview"
       :items="activityTree"
       :search="search"
       transition open-all dense
-      class="mx-3 px-1 py-3 treeview">
+      class="px-1 py-3 treeview">
       <template v-slot:prepend="{ item }">
         <v-icon
           v-if="item.selectable"
@@ -30,7 +29,7 @@
         </v-icon>
       </template>
     </v-treeview>
-    <v-alert :value="!hasSearchResults" color="primary" dark class="mx-3">
+    <v-alert :value="!hasSearchResults" color="primary" dark>
       No matches found.
     </v-alert>
   </div>
@@ -89,7 +88,7 @@ export default {
 
 <style lang="scss" scoped>
 .treeview {
-  max-height: 300px;
+  max-height: 19rem;
   text-align: left;
   background-color: #fcfcfc;
   border: 1px solid #eee;
