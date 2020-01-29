@@ -2,12 +2,12 @@
   <v-app-bar
     color="blue-grey darken-3"
     app dense fixed
-    class="elevation-5">
+    class="elevation-1">
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
       <v-avatar color="primary lighten-1" size="34" class="mt-1 pa-2">
         <img :src="logo" alt="Logo">
       </v-avatar>
-      <v-toolbar-title class="app-name grey--text text--lighten-5 text-uppercase">
+      <v-toolbar-title class="app-name">
         {{ title }}
         <span class="caption">author</span>
       </v-toolbar-title>
@@ -21,7 +21,7 @@
         color="blue-grey lighten-4"
         exact text>
         <v-icon class="pr-1">mdi-{{ icon }}</v-icon>
-        <span class="toolbar-route">{{ name }}</span>
+        <span class="toolbar-route text-truncate">{{ name }}</span>
       </v-btn>
     </v-toolbar-items>
     <v-menu
@@ -85,7 +85,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$container-height: 40px;
+$container-height: 2.5rem;
 $font-color: #333;
 
 .v-toolbar {
@@ -98,28 +98,26 @@ $font-color: #333;
 }
 
 .v-toolbar__items {
-  margin-right: 15px;
+  margin-right: 1rem;
 }
 
 .app-brand {
   display: flex;
-  padding-bottom: 2px;
+  padding-bottom: 0.125rem;
   cursor: pointer;
 
   .app-name {
-    margin: 1px 0 0 10px;
-    font-size: 20px;
+    margin: 0.125rem 0 0 0.625rem;
+    color: #fafafa;
+    font-size: 1.25rem;
     font-weight: 400;
     letter-spacing: 1px;
     line-height: $container-height;
+    text-transform: uppercase;
   }
 }
 
 .toolbar-route {
-  max-width: 200px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-decoration: none;
-  overflow: hidden;
+  max-width: 12.5rem;
 }
 </style>

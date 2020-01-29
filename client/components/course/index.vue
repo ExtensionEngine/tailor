@@ -1,7 +1,7 @@
 <template>
   <div class="repo-container">
     <v-tabs
-      background-color="primary"
+      background-color="blue-grey darken-3"
       slider-color="grey lighten-2"
       slider-size="3"
       dark
