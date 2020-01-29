@@ -5,13 +5,13 @@
         @click="focus(showOptions)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
+        :class="[isHighlighted ? 'elevation-9' : 'elevation-1']"
         :style="{ 'border-left': `8px solid ${color}` }"
-        :class="[isHighlighted ? 'elevation-9 selected': 'elevation-1']"
         class="activity">
         <v-btn v-if="hasSubtypes" @click="toggle()" icon class="activity-icon">
-          <v-icon color="primary darken-1" size="30">mdi-{{ icon }}</v-icon>
+          <v-icon size="30" color="primary darken-1">mdi-{{ icon }}</v-icon>
         </v-btn>
-        <span class="activity-name grey--text text--darken-3">{{ data.name }}</span>
+        <div class="activity-name text-truncate">{{ data.name }}</div>
         <div v-show="isHighlighted" class="actions">
           <v-spacer />
           <v-btn
@@ -163,10 +163,6 @@ export default {
   cursor: pointer;
   transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 
-  &.selected {
-    color: #414141;
-  }
-
   &-icon {
     margin: 0.125rem 0 0 0;
   }
@@ -187,12 +183,9 @@ export default {
 }
 
 .activity-name {
-  display: block;
   padding: 0.125rem 0.375rem 0;
+  color: #424242;
   line-height: 2.375rem;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 
 .sub-activity {
