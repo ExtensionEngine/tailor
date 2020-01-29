@@ -14,13 +14,15 @@
         v-if="!action"
         @selected="selected => (action = selected)"
         @close="hide" />
-      <activity-browser
-        v-else-if="action !== 'create'"
-        @selected="executeAction"
-        @close="hide"
-        :selectable-levels="supportedLevels" />
+      <copy-activity
+        v-else-if="action === 'copy'"
+        @cancel="hide()"
+        @completed="hide() || $emit('expand')"
+        :repository-id="anchor.repositoryId"
+        :levels="supportedLevels"
+        :anchor="anchor" />
       <create-dialog
-        v-else
+        v-else-if="action === 'create'"
         @close="hide"
         @expand="$emit('expand')"
         :repository-id="anchor.repositoryId"
@@ -31,16 +33,13 @@
 </template>
 
 <script>
-import { getOutlineChildren, getParent } from 'utils/activity';
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import ActivityBrowser from 'components/common/ActivityBrowser';
-import calculatePosition from 'utils/calculatePosition';
+import { mapGetters, mapMutations, mapState } from 'vuex';
+import CopyActivity from './CopyActivity';
 import CreateDialog from './CreateDialog';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
+import { getParent } from 'utils/activity';
 import map from 'lodash/map';
 import SelectAction from './SelectAction';
 
@@ -48,11 +47,7 @@ export default {
   props: {
     anchor: { type: Object, required: true }
   },
-  data() {
-    return {
-      action: null
-    };
-  },
+  data: () => ({ action: null }),
   computed: {
     ...mapGetters(['activities']),
     ...mapGetters('course', ['structure']),
@@ -71,7 +66,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', { copy: 'clone', create: 'save' }),
     ...mapMutations('course', ['showActivityOptions', 'focusActivity']),
     show() {
       this.showActivityOptions(this.anchor._cid);
@@ -80,37 +74,9 @@ export default {
     hide() {
       this.showActivityOptions(null);
       this.action = null;
-    },
-    executeAction(activity) {
-      if (this.action === 'copy') {
-        activity = {
-          srcId: activity.id,
-          srcRepositoryId: activity.repositoryId,
-          type: activity.type
-        };
-      }
-      activity.repositoryId = this.anchor.repositoryId;
-      activity.parentId = this.resolveParent(activity);
-      activity.position = this.calculatePosition(activity);
-      this[this.action](activity);
-      if (this.anchor.id === activity.parentId) this.$emit('expand');
-      this.hide();
-    },
-    isSameLevel(activity) {
-      return getLevel(activity.type).level === getLevel(this.anchor.type).level;
-    },
-    resolveParent(activity) {
-      return this.isSameLevel(activity) ? this.anchor.parentId : this.anchor.id;
-    },
-    calculatePosition(activity) {
-      const items = getOutlineChildren(this.activities, activity.parentId);
-      const newPosition = findIndex(items, { id: this.anchor.id });
-      const isFirstChild = !this.isSameLevel(activity) || newPosition === -1;
-      const context = { items, newPosition, isFirstChild, insert: true };
-      return calculatePosition(context);
     }
   },
-  components: { ActivityBrowser, CreateDialog, SelectAction }
+  components: { CopyActivity, CreateDialog, SelectAction }
 };
 </script>
 
