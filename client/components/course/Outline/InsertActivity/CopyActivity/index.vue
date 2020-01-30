@@ -1,9 +1,14 @@
 <template>
   <tailor-dialog
-    v-model="isVisible"
+    v-model="visible"
     header-icon="mdi-content-copy"
     width="650"
     persistent>
+    <template v-if="showActivator" v-slot:activator="{ on }">
+      <v-btn v-on="on" color="grey darken-3" text class="px-1">
+        <v-icon class="pr-1">mdi-content-copy</v-icon>Copy
+      </v-btn>
+    </template>
     <template v-slot:header>
       Copy items from {{ schema.name | pluralize }}
     </template>
@@ -69,10 +74,11 @@ export default {
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
-    anchor: { type: Object, default: null }
+    anchor: { type: Object, default: null },
+    showActivator: { type: Boolean, default: false }
   },
   data: () => ({
-    isVisible: false,
+    visible: false,
     repositories: [],
     selectedRepository: null,
     selectedActivities: [],
@@ -131,7 +137,7 @@ export default {
       close();
     },
     close() {
-      this.isVisible = false;
+      this.visible = false;
       this.$emit('close');
     }
   },
@@ -141,7 +147,7 @@ export default {
     this.isFetchingRepositories = false;
   },
   mounted() {
-    this.isVisible = true;
+    this.visible = !this.showActivator;
   },
   filters: {
     pluralize: val => pluralize(val)
