@@ -10,7 +10,7 @@
         @update="updateActivity"
         :meta="it" />
     </div>
-    <div class="relationships-element">
+    <div>
       <relationship
         v-for="relationship in config.relationships"
         :key="`${activity._cid}.${relationship.type}`"
