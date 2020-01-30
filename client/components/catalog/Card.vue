@@ -12,7 +12,7 @@
         class="mr-2 float-right">
         <v-icon>mdi-settings</v-icon>
       </v-btn>
-      <v-card-title class="grey--text text--lighten-3 pt-2">
+      <v-card-title class="grey--text text--lighten-3 text-break pt-2">
         {{ name | truncate(70) }}
       </v-card-title>
       <div class="grey--text text--lighten-4 px-4">
