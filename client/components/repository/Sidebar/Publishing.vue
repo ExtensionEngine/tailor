@@ -38,7 +38,7 @@ import publishMixin from 'components/common/mixins/publish';
 export default {
   mixins: [publishMixin],
   computed: {
-    ...mapGetters('course', ['activity', 'outlineActivities']),
+    ...mapGetters('repository', ['activity', 'outlineActivities']),
     config: vm => getLevel(vm.activity.type),
     publishedAtMessage() {
       const { publishedAt } = this.activity;

@@ -54,7 +54,7 @@ export default {
   },
   data: () => ({ value: null }),
   computed: {
-    ...mapGetters('course', ['activity', 'outlineActivities']),
+    ...mapGetters('repository', ['activity', 'outlineActivities']),
     ...mapGetters('activities', ['getLineage']),
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;

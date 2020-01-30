@@ -1,4 +1,4 @@
-import api from '@/api/course';
+import api from '@/api/repository';
 import filter from 'lodash/filter';
 
 export const toggleActivities = ({ getters, commit }) => {
@@ -7,17 +7,17 @@ export const toggleActivities = ({ getters, commit }) => {
 };
 
 export const getUsers = ({ rootState, commit }) => {
-  const { route: { params: { courseId } } } = rootState;
-  return api.getUsers(courseId)
+  const { route: { params: { repositoryId } } } = rootState;
+  return api.getUsers(repositoryId)
     .then(users => commit('setUsers', users));
 };
 
-export const upsertUser = ({ commit }, { courseId, email, role }) => {
-  return api.upsertUser(courseId, { email, role })
+export const upsertUser = ({ commit }, { repositoryId, email, role }) => {
+  return api.upsertUser(repositoryId, { email, role })
     .then(user => commit('upsertUser', user));
 };
 
-export const removeUser = ({ commit }, { courseId, userId }) => {
-  return api.removeUser(courseId, userId)
+export const removeUser = ({ commit }, { repositoryId, userId }) => {
+  return api.removeUser(repositoryId, userId)
     .then(() => commit('removeUser', userId));
 };

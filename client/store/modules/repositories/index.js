@@ -14,7 +14,7 @@ const state = {
       order: 'DESC',
       field: 'createdAt'
     },
-    allCoursesFetched: false
+    allRepositoriesFetched: false
   }
 };
 

@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import api from 'client/api/course';
+import api from 'client/api/repository';
 import CircularProgress from 'components/common/CircularProgress';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';

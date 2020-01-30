@@ -25,12 +25,13 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
+import get from 'lodash/get';
 import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
 export default {
   props: {
-    courseId: { type: Number, required: true }
+    repositoryId: { type: Number, required: true }
   },
   data() {
     return {
@@ -39,39 +40,40 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('course', ['course', 'activities', 'activity', 'isCourseAdmin']),
+    ...mapGetters('repository',
+      ['repository', 'activities', 'activity', 'isRepositoryAdmin']),
     tabs() {
       const items = [
-        { name: 'Structure', route: 'course', icon: 'file-tree' },
+        { name: 'Structure', route: 'repository', icon: 'file-tree' },
         { name: 'Graph View', route: 'tree-view', icon: 'source-fork mdi-rotate-180' },
-        { name: 'History', route: 'course-revisions', icon: 'history' },
-        { name: 'Settings', route: 'course-info', icon: 'settings-outline' }
+        { name: 'History', route: 'revisions', icon: 'history' },
+        { name: 'Settings', route: 'repository-settings', icon: 'settings-outline' }
       ];
-      if (!this.isAdmin && !this.isCourseAdmin) items.pop();
+      if (!this.isAdmin && !this.isRepositoryAdmin) items.pop();
       return items;
     }
   },
   methods: {
-    ...mapActions('course', ['getUsers']),
-    ...mapActions('courses', { getCourse: 'get' }),
+    ...mapActions('repository', ['getUsers']),
+    ...mapActions('repositories', { getRepository: 'get' }),
     ...mapActions('activities', { getActivities: 'fetch' }),
     ...mapActions('activities', { setupActivityApi: 'setEndpoint' }),
     ...mapActions('comments', { setupCommentsApi: 'setEndpoint' }),
     ...mapActions('revisions', { setupRevisionApi: 'setEndpoint' }),
     ...mapActions('tes', { setupTesApi: 'setEndpoint' }),
-    ...mapMutations('course', { resetActivityFocus: 'focusActivity' })
+    ...mapMutations('repository', { resetActivityFocus: 'focusActivity' })
   },
   async created() {
-    const { courseId } = this;
-    const existingSelection = this.activity && this.activity.courseId === courseId;
+    const { repositoryId, activity } = this;
+    const existingSelection = get(activity, 'repositoryId') === repositoryId;
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
-    this.setupActivityApi(`/repositories/${courseId}/activities`);
-    this.setupCommentsApi(`/repositories/${courseId}/comments`);
-    this.setupRevisionApi(`/repositories/${courseId}/revisions`);
-    this.setupTesApi(`/repositories/${courseId}/content-elements`);
+    this.setupActivityApi(`/repositories/${repositoryId}/activities`);
+    this.setupCommentsApi(`/repositories/${repositoryId}/comments`);
+    this.setupRevisionApi(`/repositories/${repositoryId}/revisions`);
+    this.setupTesApi(`/repositories/${repositoryId}/content-elements`);
     const actions = [this.getActivities(), this.getUsers()];
-    if (!this.course) actions.push(this.getCourse(courseId));
+    if (!this.repository) actions.push(this.getRepository(repositoryId));
     await Promise.all(actions);
     this.showLoader = false;
     const activities = filter(this.activities, { parentId: null });

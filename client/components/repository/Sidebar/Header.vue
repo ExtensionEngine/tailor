@@ -12,12 +12,12 @@
       <v-icon class="pr-1">mdi-open-in-app</v-icon>
       Open
     </v-btn>
-    <publishing v-if="isAdmin || isCourseAdmin" />
+    <publishing v-if="isAdmin || isRepositoryAdmin" />
   </div>
 </template>
 
 <script>
-import ActivityOptions from '@/components/course/common/ActivityOptions';
+import ActivityOptions from '@/components/repository/common/ActivityOptions';
 import get from 'lodash/get';
 import { isEditable } from 'shared/activities';
 import { mapGetters } from 'vuex';
@@ -26,7 +26,7 @@ import Publishing from './Publishing';
 export default {
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('course', ['activity', 'isCourseAdmin']),
+    ...mapGetters('repository', ['activity', 'isRepositoryAdmin']),
     isEditable() {
       const type = get(this.activity, 'type');
       return type && isEditable(type);

@@ -50,8 +50,8 @@ export default {
   data: () => ({ action: null }),
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters('course', ['structure']),
-    ...mapState({ outlineState: s => s.course.outline }),
+    ...mapGetters('repository', ['structure']),
+    ...mapState({ outlineState: s => s.repository.outline }),
     showActions() {
       return this.anchor._cid === this.outlineState.showOptions;
     },
@@ -66,7 +66,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('course', ['showActivityOptions', 'focusActivity']),
+    ...mapMutations('repository', ['showActivityOptions', 'focusActivity']),
     show() {
       this.showActivityOptions(this.anchor._cid);
       this.focusActivity(this.anchor._cid);

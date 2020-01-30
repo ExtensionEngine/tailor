@@ -5,7 +5,7 @@
       <span class="schema-name">{{ schema }}</span>
       <v-btn
         v-if="repository.hasAdminAccess"
-        @click.stop="navigateTo('course-info')"
+        @click.stop="navigateTo('repository-settings')"
         @mousedown.stop
         color="blue-grey darken-1"
         icon small
@@ -68,12 +68,12 @@ export default {
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false)
   },
   methods: {
-    ...mapActions('courses', ['pin']),
-    navigateTo(name = 'course') {
+    ...mapActions('repositories', ['pin']),
+    navigateTo(name = 'repository') {
       if (window.getSelection().toString()) return;
       this.$router.push({
         name,
-        params: { courseId: this.repository.id }
+        params: { repositoryId: this.repository.id }
       });
     }
   }

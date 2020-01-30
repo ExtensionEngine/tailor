@@ -10,7 +10,7 @@
         Click on the button bellow in order to create your first item!
       </v-alert>
       <create-dialog
-        :repository-id="course.id"
+        :repository-id="repository.id"
         :levels="levels"
         :anchor="anchor"
         show-activator />
@@ -29,7 +29,7 @@ export default {
     rootActivities: { type: Array, required: true }
   },
   computed: {
-    ...mapGetters('course', ['course', 'structure']),
+    ...mapGetters('repository', ['repository', 'structure']),
     levels: vm => filter(vm.structure, { level: 1 }),
     anchor: vm => last(vm.rootActivities)
   },

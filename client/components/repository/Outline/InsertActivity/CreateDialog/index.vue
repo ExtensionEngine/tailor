@@ -59,7 +59,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('course', ['getMetadata']),
+    ...mapGetters('repository', ['getMetadata']),
     ...mapGetters('activities', ['calculateInsertPosition']),
     hasSingleOption: vm => vm.levels.length === 1,
     metadata() {
@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     ...mapActions('activities', ['save']),
-    ...mapMutations('course', ['focusActivity']),
+    ...mapMutations('repository', ['focusActivity']),
     setMetaValue(key, val) {
       this.activity.data[key] = val;
     },

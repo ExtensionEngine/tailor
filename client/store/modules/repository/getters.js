@@ -8,25 +8,25 @@ import values from 'lodash/values';
 
 const isTes = element => !!element.activityId;
 
-export const course = (_state, _getters, { route }, { courses }) => {
-  const courseId = get(route, 'params.courseId');
-  if (!courseId) return;
-  return find(courses, { id: parseInt(courseId, 10) });
+export const repository = (_state, _getters, { route }, { repositories }) => {
+  const repositoryId = get(route, 'params.repositoryId');
+  if (!repositoryId) return;
+  return find(repositories, { id: parseInt(repositoryId, 10) });
 };
 
 export const schema = (_state, getters) => {
-  return getters.course ? getSchema(getters.course.schema).name : '';
+  return getters.repository ? getSchema(getters.repository.schema).name : '';
 };
 
-export const structure = (_, { course }) => {
-  if (!course) return;
-  return getOutlineLevels(course.schema);
+export const structure = (_, { repository }) => {
+  if (!repository) return;
+  return getOutlineLevels(repository.schema);
 };
 
-export const activities = (_state, { course }, _rootState, rootGetters) => {
-  if (!course) return;
+export const activities = (_state, { repository }, _rootState, rootGetters) => {
+  if (!repository) return;
   const { activities: items } = rootGetters;
-  return filter(items, { repositoryId: course.id });
+  return filter(items, { repositoryId: repository.id });
 };
 
 export const activity = (state, _getters, _rootState, { activities }) => {
@@ -43,17 +43,17 @@ export const isCollapsed = state => {
   return activity => activity && !state.outline.expanded[activity._cid];
 };
 
-export const revisions = (_state, { course }, _rootState, rootGetters) => {
-  if (!course) return [];
-  return filter(rootGetters.revisions, { repositoryId: course.id })
+export const revisions = (_state, { repository }, _rootState, rootGetters) => {
+  if (!repository) return [];
+  return filter(rootGetters.revisions, { repositoryId: repository.id })
     .map(rev => ({ ...rev, createdAt: new Date(rev.createdAt) }))
     .sort((rev1, rev2) => rev2.createdAt - rev1.createdAt);
 };
 
-export const getConfig = (_, { course }) => {
+export const getConfig = (_, { repository }) => {
   return element => {
     if (!element.type) return {};
-    if (isTes(element)) return getTesMeta(course.schema, element.type);
+    if (isTes(element)) return getTesMeta(repository.schema, element.type);
     return getLevel(element.type) || {};
   };
 };
@@ -72,9 +72,9 @@ export const getMetadata = (_, { getConfig }) => {
 
 export const users = state => values(state.users);
 
-export const isCourseAdmin = (state, _, rootState) => {
+export const isRepositoryAdmin = (state, _, rootState) => {
   const { user } = rootState.auth;
   if (!user) return;
-  const courseUser = find(state.users, { id: user.id });
-  return get(courseUser, 'repositoryRole') === role.repository.ADMIN;
+  const repositoryUser = find(state.users, { id: user.id });
+  return get(repositoryUser, 'repositoryRole') === role.repository.ADMIN;
 };

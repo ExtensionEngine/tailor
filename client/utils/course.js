@@ -1,10 +1,10 @@
 const get = require('lodash/get');
 
-const COURSE_COLORS = ['#689F38', '#FF5722', '#2196F3'];
+const REPOSITORY_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 
-export function getColor(course) {
-  const meta = get(course, 'data.color');
-  return meta || COURSE_COLORS[(course.id || 0) % 3];
+export function getColor(repository) {
+  const meta = get(repository, 'data.color');
+  return meta || REPOSITORY_COLORS[(repository.id || 0) % 3];
 }
 
 export function getAcronym(name) {

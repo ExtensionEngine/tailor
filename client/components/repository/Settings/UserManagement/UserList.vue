@@ -46,24 +46,24 @@ export default {
     return { isLoading: true };
   },
   computed: {
-    ...mapGetters('course', ['users']),
+    ...mapGetters('repository', ['users']),
     headers() {
       return HEADERS.map(text => ({ text, sortable: false }));
     }
   },
   methods: {
-    ...mapActions('course', ['getUsers', 'upsertUser', 'removeUser']),
+    ...mapActions('repository', ['getUsers', 'upsertUser', 'removeUser']),
     fetchUsers() {
       this.isLoading = true;
       return this.getUsers().then(() => (this.isLoading = false));
     },
     changeRole(email, role) {
-      const { courseId } = this.$route.params;
-      debounce(this.upsertUser, 500)({ courseId, email, role });
+      const { repositoryId } = this.$route.params;
+      debounce(this.upsertUser, 500)({ repositoryId, email, role });
     },
     remove(user) {
-      const { courseId } = this.$route.params;
-      this.removeUser({ userId: user.id, courseId });
+      const { repositoryId } = this.$route.params;
+      this.removeUser({ userId: user.id, repositoryId });
     }
   },
   created() {

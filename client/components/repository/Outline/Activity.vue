@@ -58,7 +58,7 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
-import ActivityOptions from '@/components/course/common/ActivityOptions';
+import ActivityOptions from '@/components/repository/common/ActivityOptions';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -91,12 +91,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('course', {
+    ...mapGetters('repository', {
       structure: 'structure',
       focusedActivity: 'activity',
       isCollapsed: 'isCollapsed'
     }),
-    ...mapState({ outlineState: s => s.course.outline }),
+    ...mapState({ outlineState: s => s.repository.outline }),
     config() {
       return find(this.structure, { type: this.type });
     },
@@ -139,7 +139,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('course',
+    ...mapMutations('repository',
       ['focusActivity', 'toggleActivity', 'showActivityOptions']),
     focus(options = false) {
       this.focusActivity(this._cid);

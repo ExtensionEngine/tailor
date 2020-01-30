@@ -40,7 +40,7 @@ export default {
     return { expanded: false };
   },
   computed: {
-    ...mapGetters('course', ['structure']),
+    ...mapGetters('repository', ['structure']),
     ...mapGetters('activities', ['getParent']),
     activity() {
       const { state } = this.revision;

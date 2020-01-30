@@ -52,7 +52,7 @@ export default {
     showLoader: { type: Boolean, default: false }
   },
   computed: {
-    ...mapGetters('course', ['structure', 'outlineActivities']),
+    ...mapGetters('repository', ['structure', 'outlineActivities']),
     isFlat() {
       const types = map(filter(this.structure, { level: 2 }), 'type');
       if (!types.length) return false;
@@ -64,7 +64,7 @@ export default {
         .sort((x, y) => x.position - y.position);
     }
   },
-  methods: mapActions('course', ['toggleActivities']),
+  methods: mapActions('repository', ['toggleActivities']),
   components: { Activity, Draggable, OutlineFooter, Sidebar }
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div :key="activity._cid" class="course-sidebar elevation-1">
+  <div :key="activity._cid" class="repository-sidebar elevation-1">
     <div v-if="activitySelected">
       <sidebar-header />
       <sidebar-body />
@@ -22,7 +22,7 @@ import SidebarHeader from './Header';
 
 export default {
   computed: {
-    ...mapGetters('course', ['activity']),
+    ...mapGetters('repository', ['activity']),
     activitySelected() {
       return !!this.activity._cid;
     }
@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.course-sidebar {
+.repository-sidebar {
   position: absolute;
   right: 0;
   width: 28.125rem;

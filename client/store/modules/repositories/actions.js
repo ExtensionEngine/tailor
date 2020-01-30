@@ -13,26 +13,26 @@ const {
 } = generateActions('/repositories');
 
 const fetch = ({ getters, commit }) => {
-  const params = getters.courseQueryParams;
+  const params = getters.repositoryQueryParams;
   const mutation = params.offset === 0 ? 'reset' : 'fetch';
-  return fetchCourses(params).then(items => {
+  return fetchRepositories(params).then(items => {
     commit(mutation, items);
     commit('setPagination', { offset: params.offset + params.limit });
-    commit('allCoursesFetched', Object.keys(items).length < params.limit);
+    commit('allRepositoriesFetched', Object.keys(items).length < params.limit);
   });
 };
 
 const clone = ({ dispatch }, { id, name, description }) => {
   return api.post(`/${id}/clone`, { name, description }).then(response => {
-    const { data: course } = response.data;
+    const { data: repository } = response.data;
     dispatch('reset');
-    return course.id;
+    return repository.id;
   });
 };
 
 const pin = ({ commit, getters }, { id, pin }) => {
   return api.post(`/${id}/pin`, { pin }).then(({ data: { data } }) => {
-    commit('save', { ...find(getters.courses, { id }), repositoryUser: data });
+    commit('save', { ...find(getters.repositories, { id }), repositoryUser: data });
   });
 };
 
@@ -47,12 +47,12 @@ export {
   update
 };
 
-function fetchCourses(params) {
-  return api.fetch(params).then(courses => {
-    forEach(courses, it => {
+function fetchRepositories(params) {
+  return api.fetch(params).then(repositories => {
+    forEach(repositories, it => {
       it.repositoryUser = getVal(it, 'repositoryUsers.0');
       it.lastChange = it.revisions[0];
     });
-    return courses;
+    return repositories;
   });
 }

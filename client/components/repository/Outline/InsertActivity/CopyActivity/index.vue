@@ -60,11 +60,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import activityApi from 'client/api/activity';
-import courseApi from 'client/api/course';
 import { isSameLevel } from 'utils/activity';
 import keyBy from 'lodash/keyBy';
 import pluralize from 'pluralize';
 import Promise from 'bluebird';
+import repositoryApi from 'client/api/repository';
 import RepositoryTree from './RepositoryTree';
 import { SCHEMAS } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
@@ -87,8 +87,8 @@ export default {
     isCopyingActivities: false
   }),
   computed: {
-    ...mapGetters('course', ['course']),
-    schema: vm => SCHEMAS.find(it => it.id === vm.course.schema),
+    ...mapGetters('repository', ['repository']),
+    schema: vm => SCHEMAS.find(it => it.id === vm.repository.schema),
     copyBtnLabel() {
       const { selectedActivities, anchor } = this;
       const supportedTypes = keyBy(this.levels, 'type');
@@ -142,8 +142,8 @@ export default {
     }
   },
   async created() {
-    const { schema } = this.course;
-    this.repositories = sortBy(await courseApi.getRepositories({ schema }), 'name');
+    const { schema } = this.repository;
+    this.repositories = sortBy(await repositoryApi.getRepositories({ schema }), 'name');
     this.isFetchingRepositories = false;
   },
   mounted() {

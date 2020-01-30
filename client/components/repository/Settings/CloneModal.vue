@@ -54,9 +54,9 @@ export default {
     show: { type: Boolean, required: true }
   },
   data: () => getDefaultState(),
-  computed: mapGetters('course', ['schema']),
+  computed: mapGetters('repository', ['schema']),
   methods: {
-    ...mapActions('courses', ['clone']),
+    ...mapActions('repositories', ['clone']),
     close() {
       this.$emit('close');
       Object.assign(this, getDefaultState());
@@ -66,8 +66,8 @@ export default {
       const isValid = await this.$validator.validateAll();
       if (!isValid) return;
       this.inProgress = true;
-      const { courseId } = this.$route.params;
-      const data = { id: courseId, ...pick(this, ['name', 'description']) };
+      const { repositoryId } = this.$route.params;
+      const data = { id: repositoryId, ...pick(this, ['name', 'description']) };
       await this.clone(data);
       this.close();
     }

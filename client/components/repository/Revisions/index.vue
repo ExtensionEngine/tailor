@@ -29,14 +29,14 @@ import reduce from 'lodash/reduce';
 import RevisionItem from './RevisionItem';
 
 export default {
-  name: 'course-revisions',
+  name: 'revisions',
   data() {
     return {
       bundledRevisionCount: 0
     };
   },
   computed: {
-    ...mapGetters('course', ['revisions']),
+    ...mapGetters('repository', ['revisions']),
     ...mapGetters('revisions', ['hasMoreResults']),
     bundledRevisions() {
       return reduce(this.revisions, (acc, it) => {

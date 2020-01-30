@@ -17,21 +17,21 @@ function getRepositories(params) {
   return request.get(urls.root, { params }).then(extractData);
 }
 
-function getUsers(courseId, params) {
+function getUsers(repositoryId, params) {
   return request
-    .get(urls.users(courseId), { params })
+    .get(urls.users(repositoryId), { params })
     .then(extractData);
 }
 
-function upsertUser(courseId, data) {
+function upsertUser(repositoryId, data) {
   return request
-    .post(urls.users(courseId), data)
+    .post(urls.users(repositoryId), data)
     .then(res => extractData(res).user);
 }
 
-function removeUser(courseId, userId) {
+function removeUser(repositoryId, userId) {
   return request
-    .delete(urls.users(courseId, userId))
+    .delete(urls.users(repositoryId, userId))
     .then(res => res.data);
 }
 

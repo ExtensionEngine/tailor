@@ -29,7 +29,8 @@ import Relationship from './Relationship';
 export default {
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('course', ['activity', 'getConfig', 'getMetadata', 'isCourseAdmin']),
+    ...mapGetters('repository',
+      ['activity', 'getConfig', 'getMetadata', 'isRepositoryAdmin']),
     config() {
       return this.getConfig(this.activity);
     },

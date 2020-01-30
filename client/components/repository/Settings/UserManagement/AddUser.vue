@@ -50,13 +50,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions('course', ['upsertUser']),
+    ...mapActions('repository', ['upsertUser']),
     addUser() {
       const { email, role } = this;
-      const { courseId } = this.$route.params;
+      const { repositoryId } = this.$route.params;
       this.$validator.validateAll().then(async isValid => {
         if (!isValid) return;
-        await this.upsertUser({ courseId, email, role });
+        await this.upsertUser({ repositoryId, email, role });
         this.email = '';
         this.suggestedUsers = [];
         this.$nextTick(() => this.$validator.reset());

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="course" class="settings">
+  <div v-if="repository" class="settings">
     <div class="actions">
       <v-btn
         @click="publish"
@@ -27,7 +27,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import api from '@/api/course';
+import api from '@/api/repository';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import { getRepositoryMeta } from 'shared/activities';
@@ -39,36 +39,36 @@ export default {
     return { publishing: false };
   },
   computed: {
-    ...mapGetters('course', ['course']),
+    ...mapGetters('repository', ['repository']),
     requiredData() {
       return [{
         key: 'name',
-        value: this.course.name,
+        value: this.repository.name,
         type: 'TEXTAREA',
         label: 'Name',
         validate: { required: true, min: 2, max: 250 }
       }, {
         key: 'description',
-        value: this.course.description,
+        value: this.repository.description,
         type: 'TEXTAREA',
         label: 'Description',
         validate: { required: true, min: 2, max: 2000 }
       }];
     },
     metadata() {
-      return getRepositoryMeta(this.course);
+      return getRepositoryMeta(this.repository);
     }
   },
   methods: {
-    ...mapActions('courses', ['update']),
+    ...mapActions('repositories', ['update']),
     updateKey(key, value) {
       if (find(this.metadata, { key })) key = `data.${key}`;
-      const data = cloneDeep(this.course);
+      const data = cloneDeep(this.repository);
       this.update(set(data, key, value));
     },
     publish() {
       this.publishing = true;
-      return api.publishRepositoryMeta(this.$route.params.courseId)
+      return api.publishRepositoryMeta(this.$route.params.repositoryId)
         .then(() => (this.publishing = false));
     }
   },

@@ -3,11 +3,11 @@ import Vue from 'vue';
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
 
-const save = (state, course) => {
+const save = (state, repository) => {
   const search = state.search && state.search.toLowerCase();
-  const name = course.name.toLowerCase();
+  const name = repository.name.toLowerCase();
   if (search && !name.includes(search)) return;
-  Vue.set(state.items, course._cid, course);
+  Vue.set(state.items, repository._cid, repository);
 };
 
 const togglePinned = state => {
@@ -39,13 +39,13 @@ const resetFilters = state => {
   state.showPinned = false;
 };
 
-const allCoursesFetched = (state, allFetched) => {
-  state.$internals.allCoursesFetched = allFetched;
+const allRepositoriesFetched = (state, allFetched) => {
+  state.$internals.allRepositoriesFetched = allFetched;
 };
 
 export {
   add,
-  allCoursesFetched,
+  allRepositoriesFetched,
   fetch,
   remove,
   reset,

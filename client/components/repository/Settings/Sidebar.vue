@@ -44,7 +44,7 @@ export default {
   computed: {
     routes() {
       return [
-        { label: 'General', name: 'course-info', icon: 'wrench' },
+        { label: 'General', name: 'repository-settings', icon: 'wrench' },
         { label: 'People', name: 'user-management', icon: 'account' }
       ];
     },

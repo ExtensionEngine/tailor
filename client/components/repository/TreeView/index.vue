@@ -24,7 +24,7 @@ import get from 'lodash/get';
 import includes from 'lodash/includes';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
-import Sidebar from 'components/course/Sidebar';
+import Sidebar from 'components/repository/Sidebar';
 import TreeGraph from './TreeGraph';
 
 const isActivityNode = node => node.depth > 0;
@@ -46,25 +46,29 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('course', ['activities', 'course', 'structure']),
+    ...mapGetters('repository', ['activities', 'repository', 'structure']),
     // TODO: Remove this hack!
     visibility() {
       return this.showLoader ? 'hidden' : 'visible';
     },
     graphData() {
-      // TODO: Make sure course is always available!
-      if (!this.course) return {};
+      // TODO: Make sure repository is always available!
+      if (!this.repository) return {};
       const allowedTypes = map(this.structure, 'type');
       const activities = filter(this.activities, it => {
         return includes(allowedTypes, it.type);
       });
-      const courseTree = tree(activities, this.structure);
-      const courseColor = get(this.course, 'data.color', '#FFFFFF');
-      return Object.assign({}, this.course, { color: courseColor }, courseTree);
+      const repositoryTree = tree(activities, this.structure);
+      const repositoryColor = get(this.repository, 'data.color', '#FFFFFF');
+      return {
+        ...this.repository,
+        color: repositoryColor,
+        ...repositoryTree
+      };
     }
   },
   methods: {
-    ...mapMutations('course', ['focusActivity']),
+    ...mapMutations('repository', ['focusActivity']),
     setSelected(node) {
       if (this.selectedNode) this.selectedNode.classList.remove('selected');
       this.selectedNode = node;
@@ -157,7 +161,7 @@ $accent: #337ab7;
     filter: url(#drop-shadow);
   }
 
-  // Disable all effects on root/course node.
+  // Disable all effects on root/repository node.
   .depth-0 .circle-wrapper {
     * {
       cursor: auto;

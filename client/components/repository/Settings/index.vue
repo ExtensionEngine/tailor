@@ -34,17 +34,18 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('course', ['course', 'outlineActivities', 'isCourseAdmin']),
+    ...mapGetters('repository',
+      ['repository', 'outlineActivities', 'isRepositoryAdmin']),
     publishPercentage: ({ publishStatus }) => publishStatus.progress * 100
   },
   methods: {
-    ...mapActions('courses', { removeCourse: 'remove' }),
+    ...mapActions('repositories', { removeRepository: 'remove' }),
     ...mapActions('activities', { publishActivity: 'publish' }),
     showDeleteConfirmation() {
       appChannel.emit('showConfirmationModal', {
         title: 'Delete repository?',
-        message: `Are you sure you want to delete repository ${this.course.name}?`,
-        action: () => this.removeCourse(this.course) && this.$router.push('/')
+        message: `Are you sure you want to delete repository ${this.repository.name}?`,
+        action: () => this.removeRepository(this.repository) && this.$router.push('/')
       });
     },
     onActionClick(name) {
@@ -63,8 +64,8 @@ export default {
     }
   },
   created() {
-    if (this.isAdmin || this.isCourseAdmin) return;
-    this.$router.push({ name: 'course' });
+    if (this.isAdmin || this.isRepositoryAdmin) return;
+    this.$router.push({ name: 'repository' });
   },
   components: {
     AppFooter,

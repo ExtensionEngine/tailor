@@ -70,7 +70,7 @@ export default {
   }),
   computed: {
     ...mapGetters(['activities']),
-    ...mapGetters('course', ['structure']),
+    ...mapGetters('repository', ['structure']),
     parent: vm => find(vm.activities, { id: vm.activity.parentId }),
     levels: vm => vm.sameLevel.concat(vm.subLevels),
     sameLevel() {
@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     ...mapActions('activities', ['remove']),
-    ...mapMutations('course', ['focusActivity', 'toggleActivity']),
+    ...mapMutations('repository', ['focusActivity', 'toggleActivity']),
     expandParent(item) {
       const { activity, parent } = this;
       const _cid = item.parentId === activity.id
