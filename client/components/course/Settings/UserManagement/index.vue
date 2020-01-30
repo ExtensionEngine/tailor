@@ -1,5 +1,5 @@
 <template>
-  <div class="settings">
+  <div>
     <add-user :roles="roles" />
     <user-list :roles="roles" />
   </div>
@@ -22,9 +22,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.settings {
-  padding: 30px;
-}
-</style>
