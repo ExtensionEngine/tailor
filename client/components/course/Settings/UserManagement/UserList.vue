@@ -24,7 +24,7 @@
             icon />
         </td>
         <td class="actions">
-          <v-btn color="primary" icon class="pb-2">
+          <v-btn color="primary" icon class="mb-2">
             <v-icon @click="remove(item)">mdi-delete</v-icon>
           </v-btn>
         </td>
@@ -75,11 +75,11 @@ export default {
 
 <style lang="scss" scoped>
 .role-select {
-  max-width: 120px;
+  max-width: 7.5rem;
 }
 
 .v-table .actions {
-  max-width: 15px;
+  max-width: 1rem;
 }
 
 ::v-deep .v-input__slot::before {
