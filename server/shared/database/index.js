@@ -16,11 +16,13 @@ const Umzug = require('umzug');
 // Require models.
 const User = require('../../user/user.model');
 const Repository = require('../../repository/repository.model');
+const RepositoryTag = require('../../tag/repositoryTag.model');
 const RepositoryUser = require('../../repository/repositoryUser.model');
 const Activity = require('../../activity/activity.model');
 const ContentElement = require('../../content-element/content-element.model');
 const Revision = require('../../revision/revision.model');
 const Comment = require('../../comment/comment.model');
+const Tag = require('../../tag/tag.model');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const sequelize = createConnection(config);
@@ -66,11 +68,13 @@ function initialize() {
 const models = {
   User: defineModel(User),
   Repository: defineModel(Repository),
+  RepositoryTag: defineModel(RepositoryTag),
   RepositoryUser: defineModel(RepositoryUser),
   Activity: defineModel(Activity),
   ContentElement: defineModel(ContentElement),
   Revision: defineModel(Revision),
-  Comment: defineModel(Comment)
+  Comment: defineModel(Comment),
+  Tag: defineModel(Tag)
 };
 
 function defineModel(Model, connection = sequelize) {
