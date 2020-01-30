@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer value="true" stateless>
+  <v-navigation-drawer :value="true" stateless class="grey lighten-4">
     <v-list class="grey--text text--darken-3 text-left">
       <v-list-item
         v-for="({ name, label, icon }) in routes"
@@ -32,6 +32,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.v-navigation-drawer {
+  ::v-deep .v-navigation-drawer__border {
+    display: none;
+  }
+}
+
 .v-list-item__title {
   font-size: 0.875rem;
   font-weight: 500;

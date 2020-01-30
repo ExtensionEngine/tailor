@@ -1,10 +1,11 @@
 <template>
   <v-data-table
+    v-if="!isLoading"
     :headers="headers"
     :items="users"
-    :loading="isLoading"
     no-data-text="No assigned users."
-    hide-default-footer>
+    hide-default-footer
+    class="grey lighten-4">
     <template v-slot:item="{ item }">
       <tr>
         <td class="text-left">
@@ -13,8 +14,7 @@
           </v-avatar>
         </td>
         <td class="text-left">{{ item.email }}</td>
-        <td class="text-left">{{ item.firstName || '/' }}</td>
-        <td class="text-left">{{ item.lastName || '/' }}</td>
+        <td class="text-left text-truncate">{{ item.fullName }}</td>
         <td class="role-select">
           <v-select
             @change="role => changeRole(item.email, role)"
@@ -23,7 +23,7 @@
             icon />
         </td>
         <td class="actions">
-          <v-btn color="primary" icon>
+          <v-btn color="primary" icon small class="mb-2">
             <v-icon @click="remove(item)">mdi-delete</v-icon>
           </v-btn>
         </td>
@@ -36,7 +36,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
 
-const HEADERS = ['User', 'Email', 'First Name', 'Last Name', 'Role', ''];
+const HEADERS = ['User', 'Email', 'Full Name', 'Role', ''];
 
 export default {
   props: {
@@ -73,13 +73,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.role-select {
-  max-width: 120px;
+td.text-truncate {
+  max-width: 11rem;
 }
 
-.v-table .actions {
-  max-width: 15px;
-  padding: 0 0 6px 0;
+td.role-select {
+  max-width: 7.5rem;
 }
 
 ::v-deep .v-input__slot::before {

@@ -5,30 +5,20 @@
         @click="focus(showOptions)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
-        :class="[isHighlighted ? 'elevation-9 selected': 'elevation-1']"
+        :class="[isHighlighted ? 'elevation-9' : 'elevation-1']"
+        :style="{ 'border-left': `8px solid ${color}` }"
         class="activity">
-        <v-chip :color="color" label dark class="icon-container">
-          <v-btn
-            v-if="hasSubtypes"
-            @click="toggle()"
-            text
-            icon
-            small>
-            <v-icon size="26">mdi-{{ icon }}</v-icon>
-          </v-btn>
-          <v-icon v-else>mdi-file-document-box-outline</v-icon>
-        </v-chip>
-        <span class="activity-name grey--text text--darken-3">
-          {{ data.name }}
-        </span>
+        <v-btn v-if="hasSubtypes" @click="toggle()" icon class="activity-icon">
+          <v-icon size="30" color="primary darken-1">mdi-{{ icon }}</v-icon>
+        </v-btn>
+        <div class="activity-name text-truncate">{{ data.name }}</div>
         <div v-show="isHighlighted" class="actions">
           <v-spacer />
           <v-btn
             v-show="isEditable"
             :to="{ name: 'editor', params: { activityId: id } }"
-            color="pink"
-            outlined
-            small>
+            color="primary darken-1"
+            outlined small>
             Open
           </v-btn>
           <v-btn
@@ -39,13 +29,9 @@
             class="mx-0">
             <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>
           </v-btn>
-          <v-btn
-            @click="focus(!showOptions)"
-            icon
-            small
-            class="ml-0">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+          <activity-options
+            :activity="{ id, _cid, repositoryId, parentId, type, position, data }"
+            class="activity-options" />
         </div>
       </div>
       <insert-activity
@@ -72,6 +58,7 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
+import ActivityOptions from '@/components/course/common/ActivityOptions';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -162,60 +149,46 @@ export default {
       this.toggleActivity({ _cid: this._cid, expanded });
     }
   },
-  components: { Draggable, InsertActivity }
+  components: { ActivityOptions, Draggable, InsertActivity }
 };
 </script>
 
 <style lang="scss" scoped>
 .activity {
   display: flex;
-  font-size: 18px;
-  background: #fff;
+  padding: 0 0 0 0.375rem;
+  font-size: 1.125rem;
+  background-color: #fcfcfc;
   border-radius: 2px;
   cursor: pointer;
   transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 
-  &.selected {
-    color: #414141;
-  }
-
-  .icon-container {
-    height: inherit;
-    margin: 0;
-    padding: 0;
-    border-radius: 0 !important;
-
-    ::v-deep span {
-      padding: 0 10px;
-      color: #fff;
-    }
-
-    .v-btn {
-      margin: 0;
-    }
+  &-icon {
+    margin: 0.125rem 0 0 0;
   }
 
   .actions {
     display: flex;
-    min-width: 165px;
+    min-width: 10.3125rem;
     margin-left: auto;
 
     .v-btn {
-      margin: 6px 8px;
+      margin: 0.375rem 0.5rem;
+    }
+
+    .activity-options ::v-deep .v-btn {
+      height: 100%;
     }
   }
 }
 
 .activity-name {
-  display: block;
-  padding: 2px 12px 0;
-  line-height: 38px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  padding: 0.125rem 0.375rem 0;
+  color: #424242;
+  line-height: 2.375rem;
 }
 
 .sub-activity {
-  margin-left: 44px;
+  margin-left: 2.125rem;
 }
 </style>

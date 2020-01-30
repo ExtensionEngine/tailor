@@ -1,9 +1,14 @@
 <template>
   <tailor-dialog
-    :value="true"
+    v-model="visible"
     header-icon="mdi-content-copy"
     width="650"
     persistent>
+    <template v-if="showActivator" v-slot:activator="{ on }">
+      <v-btn v-on="on" color="grey darken-3" text class="px-1">
+        <v-icon class="pr-1">mdi-content-copy</v-icon>Copy
+      </v-btn>
+    </template>
     <template v-slot:header>
       Copy items from {{ schema.name | pluralize }}
     </template>
@@ -39,9 +44,7 @@
       </div>
     </template>
     <template v-slot:actions>
-      <v-btn @click="$emit('cancel')" :disabled="isCopyingActivities" text>
-        Cancel
-      </v-btn>
+      <v-btn @click="close" :disabled="isCopyingActivities" text>Cancel</v-btn>
       <v-btn
         @click="copySelection"
         :disabled="!selectedActivities.length || isCopyingActivities"
@@ -71,9 +74,11 @@ export default {
   props: {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
-    anchor: { type: Object, default: null }
+    anchor: { type: Object, default: null },
+    showActivator: { type: Boolean, default: false }
   },
   data: () => ({
+    visible: false,
     repositories: [],
     selectedRepository: null,
     selectedActivities: [],
@@ -127,14 +132,22 @@ export default {
       this.isCopyingActivities = true;
       const items = sortBy(this.selectedActivities, ['parentId', 'position']);
       await Promise.each(items, it => this.copyActivity(it));
+      this.$emit('completed', items[0].parentId);
       this.isCopyingActivities = false;
-      this.$emit('completed', this.anchor);
+      close();
+    },
+    close() {
+      this.visible = false;
+      this.$emit('close');
     }
   },
   async created() {
     const { schema } = this.course;
     this.repositories = sortBy(await courseApi.getRepositories({ schema }), 'name');
     this.isFetchingRepositories = false;
+  },
+  mounted() {
+    this.visible = !this.showActivator;
   },
   filters: {
     pluralize: val => pluralize(val)

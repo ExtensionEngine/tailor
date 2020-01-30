@@ -1,10 +1,10 @@
 <template>
   <v-container class="my-4">
-    <v-row align="start" no-gutters>
-      <v-card>
-        <sidebar @action="onActionClick" :is-publishing="isPublishing" />
-      </v-card>
-      <v-col class="ml-6">
+    <v-row align="start">
+      <v-col cols="3">
+        <sidebar @action="onActionClick" />
+      </v-col>
+      <v-col cols="9">
         <router-view />
       </v-col>
     </v-row>

@@ -1,19 +1,21 @@
 <template>
-  <v-navigation-drawer value="true" stateless>
-    <v-list class="grey--text text--darken-2 text-left">
+  <v-navigation-drawer
+    :value="true"
+    stateless
+    class="grey lighten-4">
+    <v-list class="grey--text text--darken-3 text-left">
       <v-list-item
         v-for="({ name, label, icon }) in routes"
         :key="name"
         :to="{ name }"
-        active-class="grey--text text--darken-3"
-        exact
-        ripple>
-        <v-list-item-action class="pl-1">
-          <v-icon>{{ icon }}</v-icon>
+        active-class="grey lighten-5"
+        exact ripple>
+        <v-list-item-action>
+          <v-icon>mdi-{{ icon }}</v-icon>
         </v-list-item-action>
         <v-list-item-title>{{ label }}</v-list-item-title>
       </v-list-item>
-      <v-list-group value="true">
+      <v-list-group :value="true">
         <template v-slot:activator>
           <v-list-item class="pl-0">
             <v-list-item-title>Actions</v-list-item-title>
@@ -42,8 +44,8 @@ export default {
   computed: {
     routes() {
       return [
-        { label: 'General', name: 'course-info', icon: 'mdi-wrench' },
-        { label: 'People', name: 'user-management', icon: 'mdi-account' }
+        { label: 'General', name: 'course-info', icon: 'wrench' },
+        { label: 'People', name: 'user-management', icon: 'account' }
       ];
     },
     actions() {
@@ -58,6 +60,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.v-navigation-drawer {
+  ::v-deep .v-navigation-drawer__border {
+    display: none;
+  }
+}
+
 .v-list__group::after {
   background: none !important;
 }

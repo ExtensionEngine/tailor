@@ -1,41 +1,47 @@
 <template>
   <v-card @click="navigateTo()" class="repository-card">
-    <div class="card-heading blue-grey darken-4">
-      <v-chip :color="repository.data.color" small label class="ml-3 mt-1" />
-      <v-chip color="grey lighten-3" small label class="ml-0 mt-1">
-        {{ schema }}
-      </v-chip>
+    <div class="card-body blue-grey darken-4">
+      <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
+      <span class="schema-name">{{ schema }}</span>
       <v-btn
         v-if="repository.hasAdminAccess"
         @click.stop="navigateTo('course-info')"
-        icon
-        color="grey"
-        class="btn-settings text--darken-1 pull-right my-0 mr-1">
+        @mousedown.stop
+        color="blue-grey darken-1"
+        icon small
+        class="mr-2 float-right">
         <v-icon>mdi-settings</v-icon>
       </v-btn>
-      <v-card-title class="headline grey--text text--lighten-4 pt-1">
+      <v-card-title class="grey--text text--lighten-3 text-break pt-2">
         {{ name | truncate(70) }}
       </v-card-title>
-    </div>
-    <div class="card-body">
-      <div class="pb-2 grey--text text--darken-2">
-        <v-icon color="primary" class="pr-1">mdi-history</v-icon>
-        <template v-if="userAction">
-          <span>{{ userAction.createdAt | formatDate }}</span>
-          <div>{{ userAction.user.email }}</div>
-        </template>
+      <div class="grey--text text--lighten-4 px-4">
+        <v-avatar size="38" class="float-left">
+          <img :src="lastActivity.user.imgUrl">
+        </v-avatar>
+        <div class="float-left ml-4">
+          <div class="caption">Last edited by</div>
+          <div class="user-label body-2 text-truncate">
+            {{ lastActivity.user.label }}
+          </div>
+        </div>
+        <div class="float-left activity-date">
+          <div class="subtitle-1">
+            {{ lastActivity.createdAt | formatDate('H:mm') }}
+          </div>
+          <div class="subtitle-2">
+            {{ lastActivity.createdAt | formatDate('D/M/YY') }}
+          </div>
+        </div>
       </div>
-      <div class="desc grey--text text--darken-3">
-        {{ description | truncate(100) }}
-      </div>
     </div>
-    <v-card-actions class="px-2 py-1">
+    <v-card-actions class="pa-1 grey lighten-4">
       <v-btn
-        @mousedown.stop
         @click.stop="pin({ id: repository.id, pin: !isPinned })"
-        text icon>
+        @mousedown.stop
+        icon>
         <v-icon
-          :color="isPinned ? 'pink': 'grey'"
+          :color="isPinned ? 'grey darken-3': 'grey'"
           :class="{ 'mdi-rotate-45': isPinned }">
           mdi-pin
         </v-icon>
@@ -58,7 +64,7 @@ export default {
     name: ({ repository }) => repository.name,
     description: ({ repository }) => repository.description,
     schema: ({ repository }) => getSchema(repository.schema).name,
-    userAction: ({ repository }) => first(repository.revisions),
+    lastActivity: ({ repository }) => first(repository.revisions),
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false)
   },
   methods: {
@@ -81,37 +87,42 @@ export default {
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18);
-  }
-}
-
-.card-heading {
-  height: 146px;
-  padding: 8px 0 0;
-  overflow: hidden;
-
-  .v-chip {
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-
-  @media (max-width: 1263px) {
-    height: 180px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.18);
   }
 }
 
 .card-body {
-  margin-bottom: 10px;
-  padding: 14px 24px 0;
+  height: 14rem;
+  padding: 0.625rem 0 0;
+  overflow: hidden;
 
-  .desc {
-    height: 60px;
+  @media (max-width: 1263px) {
+    height: 17rem;
+  }
+
+  .schema-name {
+    padding: 0 0 0 0.25rem;
+    color: #fafafa;
+    font-size: 0.75rem;
     font-weight: 500;
-    overflow: hidden;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
 
-    @media (max-width: 1263px) {
-      height: 85px;
-    }
+  .v-avatar {
+    margin-top: 0.125rem;
+  }
+}
+
+.user-label {
+  max-width: 8.5rem;
+}
+
+.activity-date {
+  padding-left: 1rem;
+
+  .subtitle-1 {
+    line-height: 1.25rem;
   }
 }
 </style>

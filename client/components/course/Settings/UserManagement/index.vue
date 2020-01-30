@@ -1,8 +1,8 @@
 <template>
-  <v-card class="settings elevation-2">
+  <div>
     <add-user :roles="roles" />
     <user-list :roles="roles" />
-  </v-card>
+  </div>
 </template>
 
 <script>
@@ -22,9 +22,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.settings {
-  padding: 30px;
-}
-</style>

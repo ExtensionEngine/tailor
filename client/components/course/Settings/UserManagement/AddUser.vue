@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="addUser">
-    <v-row align="center" class="pl-3">
+    <v-row align="center">
       <v-col cols="7" class="pr-2">
         <v-combobox
           v-model="email"
@@ -17,11 +17,15 @@
           v-validate="'required'"
           :error-messages="vErrors.collect('role')"
           :items="roles"
-          data-vv-name="role"
-          text />
+          data-vv-name="role" />
       </v-col>
       <v-col cols="2">
-        <v-btn block type="submit" outlined>Add</v-btn>
+        <v-btn
+          type="submit"
+          color="grey darken-3"
+          dark small block>
+          Add
+        </v-btn>
       </v-col>
     </v-row>
   </form>

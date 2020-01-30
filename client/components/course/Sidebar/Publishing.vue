@@ -1,17 +1,14 @@
 <template>
-  <div :key="activity._cid" class="publish-container">
-    <div class="publish-date">
-      <span>{{ publishedAtMessage }}</span>
-    </div>
+  <span :key="activity._cid" class="publish-container">
     <v-menu offset-y left>
       <template v-slot:activator="{ on }">
         <v-btn
           v-on="on"
           :loading="isPublishing"
-          color="blue-grey darken-1"
-          outlined
-          small>
-          Publish
+          color="primary darken-1"
+          text
+          class="px-1">
+          <v-icon class="pr-1">mdi-publish</v-icon>Publish
         </v-btn>
       </template>
       <v-list class="text-left">
@@ -26,9 +23,9 @@
       </v-list>
     </v-menu>
     <div class="publish-status">
-      <span>{{ publishStatus.message }}</span>
+      {{ isPublishing ? publishStatus.message : publishedAtMessage }}
     </div>
-  </div>
+  </span>
 </template>
 
 <script>
@@ -42,9 +39,7 @@ export default {
   mixins: [publishMixin],
   computed: {
     ...mapGetters('course', ['activity', 'outlineActivities']),
-    config() {
-      return getLevel(this.activity.type);
-    },
+    config: vm => getLevel(vm.activity.type),
     publishedAtMessage() {
       const { publishedAt } = this.activity;
       return publishedAt
@@ -60,19 +55,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.publish-container {
-  min-height: 70px;
-  padding: 0 7px;
-
-  .publish-date {
-    width: 200px;
-    line-height: 44px;
-  }
-
-  .v-btn {
-    position: absolute;
-    top: 10px;
-    right: 24px;
-  }
+.publish-status {
+  padding: 1.125rem 0.375rem 0 0.375rem;
 }
 </style>

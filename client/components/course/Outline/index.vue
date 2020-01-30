@@ -5,13 +5,13 @@
       <div :class="{ 'mt-12': isFlat }" class="activity-container">
         <v-toolbar
           v-if="!isFlat"
-          color="grey lighten-3"
+          color="grey lighten-4"
           flat
           dense>
           <v-spacer />
           <v-btn
             @click="toggleActivities"
-            color="grey darken-3"
+            color="grey darken-4"
             text>
             Toggle all
           </v-btn>
@@ -28,7 +28,7 @@
             :level="1"
             :activities="outlineActivities" />
         </draggable>
-        <outline-footer />
+        <outline-footer :root-activities="rootActivities" />
       </div>
       <sidebar />
     </div>

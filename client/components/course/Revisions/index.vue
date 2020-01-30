@@ -1,13 +1,13 @@
 <template>
   <div>
-    <v-card v-if="revisions.length > 0" class="revisions">
+    <div v-if="revisions.length > 0" class="revisions">
       <ul>
         <revision-item
           v-for="revision in bundledRevisions"
           :key="revision._cid"
           :revision="revision" />
       </ul>
-    </v-card>
+    </div>
     <infinite-loading @infinite="fetchRevisions">
       <span slot="spinner">
         <div class="col-lg-12 loader-wrapper">
@@ -71,16 +71,16 @@ export default {
 
 <style lang="scss" scoped>
 .loader-wrapper {
-  margin: 120px 0;
+  margin: 7.5rem 0;
 }
 
 .revisions {
-  margin: 60px 60px 0;
-  padding: 30px;
+  padding: 1rem 0.75rem 1.875rem;
   text-align: left;
 
   ul {
-    padding: 8px 0;
+    max-width: 75rem;
+    padding: 0.5rem 0;
     list-style-type: none;
 
     li {

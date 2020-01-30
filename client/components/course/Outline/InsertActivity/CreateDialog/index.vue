@@ -4,7 +4,7 @@
     header-icon="mdi-folder-plus-outline">
     <template v-if="showActivator" v-slot:activator="{ on }">
       <v-btn v-on="on" color="grey darken-3" text class="px-1">
-        <v-icon class="pr-1">mdi-plus</v-icon>
+        <v-icon class="pr-1">mdi-folder-plus</v-icon>
         Create {{ hasSingleOption ? levels[0].label : '' }}
       </v-btn>
     </template>
@@ -83,10 +83,11 @@ export default {
           : anchor.id;
       }
       activity.position = this.calculateInsertPosition(activity, anchor);
-      if (anchor && (anchor.id === activity.parentId)) this.$emit('expand');
+      const item = await this.save({ ...activity });
+      if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
+      this.$emit('created', item);
+      this.focusActivity(item._cid);
       this.visible = false;
-      this.save({ ...activity })
-        .then(activity => this.focusActivity(activity._cid));
     }
   },
   watch: {

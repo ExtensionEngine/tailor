@@ -3,14 +3,15 @@
     <div
       @click="toggle"
       :style="{ cursor: isContentElement ? 'pointer' : 'auto' }"
-      :class="{ expanded }"
+      :class="{ expanded, expandable: isContentElement }"
       class="revision">
-      <div :style="{ color }" class="acronym">{{ acronym }}</div>
-      <div class="content">
-        <div class="description">{{ description }}</div>
-        <div class="name">{{ revision.user.email }}</div>
+      <v-avatar size="42" color="blue-grey darken-4">
+        <span :style="{ color }" class="headline">{{ acronym }}</span>
+      </v-avatar>
+      <div class="content ml-3">
+        <div class="text-truncate">{{ description }}</div>
+        <div class="body-2">{{ date }} {{ revision.user.label }}</div>
       </div>
-      <div class="date">{{ date }}</div>
     </div>
     <entity-revisions
       v-if="expanded"
@@ -81,49 +82,16 @@ export default {
 .revision {
   display: flex;
   align-items: center;
-  width: 100%;
-  min-height: 72px;
-  padding: 0 16px;
-
-  .acronym {
-    width: 40px;
-    height: 40px;
-    margin-right: 16px;
-    font-size: 20px;
-    line-height: 41px;
-    text-align: center;
-    border-radius: 50%;
-    background-color: #f1f1f1;
-  }
+  min-height: 4.5rem;
+  padding: 0 1rem;
 
   .content {
     flex: 1;
     overflow: hidden;
-
-    .description {
-      font-size: 16px;
-      word-wrap: break-word;
-    }
-
-    .name {
-      color: #808080;
-      font-size: 14px;
-    }
-  }
-
-  .date {
-    width: 128px;
-    color: #808080;
-    text-align: right;
-    font-size: 14px;
   }
 }
 
-.expanded, .revision:hover {
-  background-color: #f1f1f1;
-
-  .acronym {
-    background-color: #fff;
-  }
+.expandable.expanded, .expandable.revision:hover {
+  background-color: #dadada;
 }
 </style>

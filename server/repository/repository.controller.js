@@ -21,7 +21,12 @@ function index({ query, user, opts }, res) {
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
   opts.include = [{
     model: Revision,
-    include: [{ model: User, attributes: ['id', 'email'] }],
+    include: [{
+      model: User,
+      attributes: [
+        'id', 'email', 'firstName', 'lastName', 'fullName', 'label', 'imgUrl'
+      ]
+    }],
     order: [['createdAt', 'DESC']],
     limit: 1
   }];
