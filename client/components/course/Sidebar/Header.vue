@@ -1,14 +1,14 @@
 <template>
-  <div class="header pt-3">
-    <div class="mb-7 mt-3">
+  <div class="header">
+    <div class="options-container">
       <activity-options :activity="activity" class="float-right" />
     </div>
     <v-btn
       v-show="isEditable"
       @click.stop="edit"
       color="primary darken-1"
-      large text
-      class="px-2">
+      text
+      class="px-1">
       <v-icon class="pr-1">mdi-open-in-app</v-icon>
       Open
     </v-btn>
@@ -47,6 +47,10 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  padding: 15px 14px;
+  padding: 1rem;
+}
+
+.options-container {
+  min-height: 1.5rem;
 }
 </style>
