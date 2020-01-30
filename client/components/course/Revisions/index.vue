@@ -71,7 +71,7 @@ export default {
 
 <style lang="scss" scoped>
 .loader-wrapper {
-  margin: 120px 0;
+  margin: 7.5rem 0;
 }
 
 .revisions {
