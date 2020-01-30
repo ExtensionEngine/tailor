@@ -7,7 +7,7 @@
           :loading="isPublishing"
           color="primary darken-1"
           text
-          class="px-2">
+          class="px-1">
           <v-icon class="pr-1">mdi-publish</v-icon>Publish
         </v-btn>
       </template>
@@ -22,7 +22,7 @@
         </v-list-item>
       </v-list>
     </v-menu>
-    <div class="pl-2 mt-6 mb-2">
+    <div class="publish-status">
       {{ isPublishing ? publishStatus.message : publishedAtMessage }}
     </div>
   </span>
@@ -55,7 +55,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.publish-container {
-  min-height: 70px;
+.publish-status {
+  padding: 1.125rem 0.375rem 0 0.375rem;
 }
 </style>
