@@ -1,6 +1,6 @@
 <template>
   <div class="system-settings-container">
-    <div class="heading primary elevation-2">
+    <div class="heading primary elevation-1">
       <v-chip
         color="grey lighten-2"
         outlined
@@ -9,11 +9,11 @@
       </v-chip>
     </div>
     <v-container>
-      <v-row align="start" no-gutters class="my-4">
-        <v-col class="sidebar-container">
-          <sidebar />
+      <v-row align="start">
+        <v-col cols="3">
+          <admin-sidebar />
         </v-col>
-        <v-col>
+        <v-col cols="9">
           <router-view />
         </v-col>
       </v-row>
@@ -23,13 +23,13 @@
 </template>
 
 <script>
+import AdminSidebar from './Sidebar';
 import AppFooter from '@/components/common/Footer';
-import Sidebar from './Sidebar';
 
 export default {
   components: {
-    AppFooter,
-    Sidebar
+    AdminSidebar,
+    AppFooter
   }
 };
 </script>
@@ -50,9 +50,5 @@ export default {
   text-align: left;
   text-transform: uppercase;
   z-index: 2;
-}
-
-.sidebar-container {
-  max-width: 19rem;
 }
 </style>

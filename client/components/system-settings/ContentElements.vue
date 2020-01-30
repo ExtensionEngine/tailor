@@ -75,7 +75,7 @@ export default {
 
 <style lang="scss" scoped>
 .element-list-container {
-  padding: 30px;
+  padding: 1.875rem;
 }
 
 .theme--light.v-list {

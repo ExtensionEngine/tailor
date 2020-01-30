@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer value="true" stateless class="grey lighten-4">
+  <v-navigation-drawer :value="true" stateless class="grey lighten-4">
     <v-list class="grey--text text--darken-3 text-left">
       <v-list-item
         v-for="({ name, label, icon }) in routes"

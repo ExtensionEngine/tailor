@@ -1,8 +1,10 @@
 <template>
   <v-container class="my-4">
     <v-row align="start">
-      <sidebar @action="onActionClick" class="pr-5" />
-      <v-col>
+      <v-col cols="3">
+        <sidebar @action="onActionClick" />
+      </v-col>
+      <v-col cols="9">
         <router-view />
       </v-col>
     </v-row>

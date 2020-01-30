@@ -8,7 +8,7 @@
       </template>
       <v-list class="text-left text-uppercase">
         <span v-for="menuGroup in menuOptions" :key="menuGroup.name">
-          <v-subheader v-if="menuGroup.showHeading" class="pl-5">
+          <v-subheader v-if="menuGroup.showHeading" class="pl-4">
             {{ menuGroup.name }}
           </v-subheader>
           <v-divider v-else class="my-2" />
@@ -116,7 +116,9 @@ export default {
     ...mapMutations('course', ['focusActivity', 'toggleActivity']),
     expandParent(item) {
       const { activity, parent } = this;
-      const _cid = item.parentId === activity.id ? activity._cid : parent._cid;
+      const _cid = item.parentId === activity.id
+        ? activity._cid
+        : get(parent, '_cid');
       if (_cid) this.toggleActivity({ _cid, expanded: true });
     },
     getCreateOptions(items) {

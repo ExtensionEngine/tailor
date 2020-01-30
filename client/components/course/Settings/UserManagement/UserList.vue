@@ -14,8 +14,7 @@
           </v-avatar>
         </td>
         <td class="text-left">{{ item.email }}</td>
-        <td class="text-left">{{ item.firstName || '/' }}</td>
-        <td class="text-left">{{ item.lastName || '/' }}</td>
+        <td class="text-left text-truncate">{{ item.fullName }}</td>
         <td class="role-select">
           <v-select
             @change="role => changeRole(item.email, role)"
@@ -24,7 +23,7 @@
             icon />
         </td>
         <td class="actions">
-          <v-btn color="primary" icon class="mb-2">
+          <v-btn color="primary" icon small class="mb-2">
             <v-icon @click="remove(item)">mdi-delete</v-icon>
           </v-btn>
         </td>
@@ -37,7 +36,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import debounce from 'lodash/debounce';
 
-const HEADERS = ['User', 'Email', 'First Name', 'Last Name', 'Role', ''];
+const HEADERS = ['User', 'Email', 'Full Name', 'Role', ''];
 
 export default {
   props: {
@@ -74,12 +73,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.role-select {
-  max-width: 7.5rem;
+td.text-truncate {
+  max-width: 11rem;
 }
 
-.v-table .actions {
-  max-width: 1rem;
+td.role-select {
+  max-width: 7.5rem;
 }
 
 ::v-deep .v-input__slot::before {
