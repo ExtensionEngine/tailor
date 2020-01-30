@@ -9,7 +9,7 @@
         <span :style="{ color }" class="headline">{{ acronym }}</span>
       </v-avatar>
       <div class="content ml-3">
-        <div class="description">{{ description }}</div>
+        <div class="text-truncate">{{ description }}</div>
         <div class="body-2">{{ date }} {{ revision.user.label }}</div>
       </div>
     </div>
@@ -82,18 +82,12 @@ export default {
 .revision {
   display: flex;
   align-items: center;
-  width: 100%;
-  min-height: 72px;
-  padding: 0 16px;
+  min-height: 4.5rem;
+  padding: 0 1rem;
 
   .content {
     flex: 1;
     overflow: hidden;
-
-    .description {
-      font-size: 16px;
-      word-wrap: break-word;
-    }
   }
 }
 

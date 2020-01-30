@@ -58,7 +58,7 @@ $revision-padding: 32px;
 
 @mixin selected-revision {
   color: #fff;
-  background-color: #1e88e5;
+  background-color: #37474f;
 }
 
 .sidebar {
@@ -114,8 +114,7 @@ $revision-padding: 32px;
     border-radius: 50%;
 
     &:hover {
-      color: #fff;
-      background-color: #888;
+      color: #222;
     }
 
     .mdi {
@@ -128,7 +127,7 @@ $revision-padding: 32px;
   @include selected-revision;
 
   .rollback:hover {
-    background-color: #42a5f5;
+    background-color: #ddd;
   }
 }
 
