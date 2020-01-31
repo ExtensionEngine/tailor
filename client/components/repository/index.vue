@@ -47,7 +47,7 @@ export default {
         { name: 'Structure', route: 'repository', icon: 'file-tree' },
         { name: 'Graph View', route: 'tree-view', icon: 'source-fork mdi-rotate-180' },
         { name: 'History', route: 'revisions', icon: 'history' },
-        { name: 'Settings', route: 'repository-settings', icon: 'settings-outline' }
+        { name: 'Settings', route: 'repository-info', icon: 'settings-outline' }
       ];
       if (!this.isAdmin && !this.isRepositoryAdmin) items.pop();
       return items;

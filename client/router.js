@@ -51,7 +51,7 @@ const router = new Router({
       component: RepositorySettings,
       children: [{
         path: '',
-        name: 'repository-settings',
+        name: 'repository-info',
         component: General
       }, {
         path: 'users',

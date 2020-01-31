@@ -29,7 +29,7 @@ import reduce from 'lodash/reduce';
 import RevisionItem from './RevisionItem';
 
 export default {
-  name: 'revisions',
+  name: 'repository-revisions',
   data() {
     return {
       bundledRevisionCount: 0

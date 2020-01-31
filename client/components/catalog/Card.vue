@@ -5,7 +5,7 @@
       <span class="schema-name">{{ schema }}</span>
       <v-btn
         v-if="repository.hasAdminAccess"
-        @click.stop="navigateTo('repository-settings')"
+        @click.stop="navigateTo('repository-info')"
         @mousedown.stop
         color="blue-grey darken-1"
         icon small
