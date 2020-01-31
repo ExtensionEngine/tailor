@@ -92,8 +92,6 @@ module.exports = {
     transpileModules: [
       // NOTE: Packages do NOT contain transpiled code.
       'humanize-string', 'decamelize',
-      // NOTE: Component is consumed from source.
-      'vue-color',
       // NOTE: Unclear why is this necessary :/
       'vue-quill-editor'
     ]
