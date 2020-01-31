@@ -45,11 +45,12 @@ export default {
     tabs() {
       const items = [
         { name: 'Structure', route: 'repository', icon: 'file-tree' },
-        { name: 'Graph View', route: 'tree-view', icon: 'source-fork mdi-rotate-180' },
+        { name: 'Graph View', route: 'tree-view', icon: 'graph-outline' },
         { name: 'History', route: 'revisions', icon: 'history' },
         { name: 'Settings', route: 'repository-info', icon: 'settings-outline' }
       ];
       if (!this.isAdmin && !this.isRepositoryAdmin) items.pop();
+      if (!get(this.activities, 'length')) items.splice(1, 2);
       return items;
     }
   },
