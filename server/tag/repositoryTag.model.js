@@ -27,11 +27,11 @@ class RepositoryTag extends Model {
 
   static options() {
     return {
-      modelName: 'repository_tag',
+      modelName: 'repositoryTag',
+      tableName: 'repository_tag',
       underscored: true,
       timestamps: true,
-      paranoid: true,
-      freezeTableName: true
+      paranoid: true
     };
   }
 }
