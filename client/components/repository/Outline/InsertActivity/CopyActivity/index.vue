@@ -134,7 +134,7 @@ export default {
       await Promise.each(items, it => this.copyActivity(it));
       this.$emit('completed', items[0].parentId);
       this.isCopyingActivities = false;
-      close();
+      this.close();
     },
     close() {
       this.visible = false;
