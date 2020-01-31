@@ -79,7 +79,7 @@ export function getRevisionColor(rev) {
       const level = getLevel(rev.state.type);
       return level ? level.color : DEFAULT_COLOR;
     }
-    case 'COURSE':
+    case 'REPOSITORY':
       return '#00BCD4';
     case 'TEACHING_ELEMENT':
       return '#FF5722';

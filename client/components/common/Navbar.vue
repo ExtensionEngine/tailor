@@ -61,7 +61,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('course', { repository: 'course' }),
+    ...mapGetters('repository', ['repository']),
     title: () => BRAND_CONFIG.TITLE,
     logo: () => BRAND_CONFIG.LOGO_COMPACT,
     routes() {
@@ -73,7 +73,7 @@ export default {
       if (this.repository) {
         items.unshift({
           name: this.repository.name,
-          to: { name: 'course', params: { courseId: this.repository.id } },
+          to: { name: 'repository', params: { repositoryId: this.repository.id } },
           icon: 'card-text-outline'
         });
       }

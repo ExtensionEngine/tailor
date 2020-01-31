@@ -1,11 +1,11 @@
 import activities from './modules/activities';
 import auth from './modules/auth';
 import comments from './modules/comments';
-import course from './modules/course';
-import courses from './modules/courses';
 import createLogger from 'vuex/dist/logger';
 import editor from './modules/editor';
 import plugins from './plugins';
+import repositories from './modules/repositories';
+import repository from './modules/repository';
 import revisions from './modules/revisions';
 import settings from '../settings';
 import tes from './modules/tes';
@@ -21,8 +21,8 @@ const modules = {
   activities,
   auth,
   comments,
-  course,
-  courses,
+  repository,
+  repositories,
   editor,
   revisions,
   tes
@@ -44,7 +44,7 @@ export default new Vuex.Store({
   modules,
   plugins,
   getters: {
-    ...mapGetters('courses', ['courses', 'courseQueryParams']),
+    ...mapGetters('repositories', ['repositories', 'repositoryQueryParams']),
     ...mapGetters('activities', ['activities']),
     ...mapGetters('tes', ['tes']),
     ...mapGetters('revisions', ['revisions', 'revisionQueryParams']),

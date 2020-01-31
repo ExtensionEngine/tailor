@@ -5,7 +5,7 @@ import * as mutations from './mutations';
 const state = {
   items: {},
   activitiesFetched: {},
-  courseId: null,
+  repositoryId: null,
   $apiUrl: null
 };
 

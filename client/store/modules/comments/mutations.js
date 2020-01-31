@@ -4,8 +4,8 @@ import find from 'lodash/find';
 import pick from 'lodash/pick';
 import Vue from 'vue';
 
-const setCourse = (state, courseId) => {
-  state.courseId = courseId;
+const setRepository = (state, repositoryId) => {
+  state.repositoryId = repositoryId;
   state.activitiesFetched = {};
 };
 
@@ -33,7 +33,7 @@ export {
   remove,
   reset,
   save,
-  setCourse,
+  setRepository,
   setEndpoint,
   sseAdd,
   sseUpdate
