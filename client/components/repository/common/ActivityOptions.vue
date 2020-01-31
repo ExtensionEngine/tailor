@@ -7,23 +7,16 @@
         </v-btn>
       </template>
       <v-list class="text-left text-uppercase">
-        <span v-for="menuGroup in menuOptions" :key="menuGroup.name">
-          <v-subheader v-if="menuGroup.showHeading" class="pl-4">
-            {{ menuGroup.name }}
-          </v-subheader>
-          <v-divider v-else class="my-2" />
-          <v-list-item
-            v-for="it in menuGroup.options"
-            :key="it.name"
-            @click="it.action && it.action()"
-            :disabled="!it.action"
-            dense>
-            <v-list-item-title :class="{ 'pl-3': menuGroup.showHeading }">
-              <v-icon size="20" class="pr-1">mdi-{{ it.icon }}</v-icon>
-              {{ it.name }}
-            </v-list-item-title>
-          </v-list-item>
-        </span>
+        <v-list-item
+          v-for="it in menuOptions"
+          :key="it.name"
+          @click="it.action()"
+          dense>
+          <v-list-item-title>
+            <v-icon size="20" class="pr-1">mdi-{{ it.icon }}</v-icon>
+            {{ it.name }}
+          </v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
     <create-dialog
@@ -84,30 +77,27 @@ export default {
       return filter(this.structure, it => subLevels.includes(it.type));
     },
     addMenuOptions() {
-      const items = [{ name: 'Below', icon: 'arrow-down' }];
-      items.push(...this.getCreateOptions(this.sameLevel));
-      if (this.subLevels.length) {
-        items.push({ name: 'Inside', icon: 'subdirectory-arrow-right' });
-        items.push(...this.getCreateOptions(this.subLevels));
-      }
+      const items = [{
+        name: 'Add item after',
+        icon: 'arrow-down',
+        action: () => this.setCreateContext(this.sameLevel)
+      }, {
+        name: 'Add item into',
+        icon: 'subdirectory-arrow-right',
+        action: () => this.setCreateContext(this.subLevels)
+      }];
+      if (!this.subLevels.length) items.pop();
       return items;
     },
     menuOptions() {
-      return [{
-        name: 'Insert',
-        showHeading: true,
-        options: this.addMenuOptions
+      return [...this.addMenuOptions, {
+        name: 'Copy existing',
+        icon: 'content-copy',
+        action: () => this.setCopyContext()
       }, {
-        name: 'Other',
-        options: [{
-          name: 'Copy existing',
-          icon: 'content-copy',
-          action: () => this.setCopyContext()
-        }, {
-          name: 'Remove',
-          icon: 'delete',
-          action: () => this.delete(this.activity)
-        }]
+        name: 'Remove',
+        icon: 'delete',
+        action: () => this.delete(this.activity)
       }];
     }
   },
@@ -121,15 +111,9 @@ export default {
         : get(parent, '_cid');
       if (_cid) this.toggleActivity({ _cid, expanded: true });
     },
-    getCreateOptions(items) {
-      return items.map(it => ({
-        name: it.label,
-        action: () => this.setCreateContext(it)
-      }));
-    },
-    setCreateContext(level) {
+    setCreateContext(levels) {
       this.showCreateDialog = true;
-      this.supportedLevels = [level];
+      this.supportedLevels = levels;
     },
     setCopyContext() {
       this.showCopyDialog = true;
