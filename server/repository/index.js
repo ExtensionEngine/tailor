@@ -40,7 +40,7 @@ mount(router, '/:repositoryId', activity);
 mount(router, '/:repositoryId', revision);
 mount(router, '/:repositoryId', contentElement);
 mount(router, '/:repositoryId', comment);
-mount(router, '/:repositoryId/tags', tag);
+mount(router, '/:repositoryId', tag);
 
 function mount(router, mountPath, subrouter) {
   return router.use(path.join(mountPath, subrouter.path), subrouter.router);
