@@ -8,7 +8,7 @@
     </template>
     <v-form @submit.prevent>
       <v-card>
-        <v-card-title primary-title class="primary darken-1 white--text">
+        <v-card-title primary-title class="dialog-title primary darken-1">
           <v-avatar
             v-if="headerIcon"
             color="secondary"
@@ -16,7 +16,9 @@
             class="mr-3">
             <v-icon dark>{{ headerIcon }}</v-icon>
           </v-avatar>
-          <slot name="header"></slot>
+          <div class="text-truncate">
+            <slot name="header"></slot>
+          </div>
         </v-card-title>
         <v-card-text class="pt-7">
           <slot name="body"></slot>
@@ -39,3 +41,15 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.dialog-title {
+  display: flex;
+  color: #f1f1f1;
+
+  .text-truncate {
+    flex: 1;
+    text-align: left;
+  }
+}
+</style>
