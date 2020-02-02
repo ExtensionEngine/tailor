@@ -3,7 +3,7 @@
     <div v-if="!showActions" @click="show" class="divider-wrapper">
       <div class="divider">
         <div class="action">
-          <v-btn color="blue-grey darken-1" dark small>
+          <v-btn color="blue-grey darken-3" dark small>
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>
@@ -95,7 +95,7 @@ export default {
     position: relative;
     width: 100%;
     height: 2px;
-    background-color: #717171;
+    background-color: #555;
     opacity: inherit;
     transition-delay: 0.05s;
 
