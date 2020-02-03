@@ -27,7 +27,7 @@
       :levels="supportedLevels"
       :anchor="activity"
       :heading="`
-        Add ${supportedLevels === subLevels ? 'into' : 'after'}
+        Add ${supportedLevels === subLevels ? 'into' : 'below'}
         ${activity.data.name}`" />
     <copy-dialog
       v-if="showCopyDialog"
