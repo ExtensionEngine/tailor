@@ -81,7 +81,7 @@ export default {
     },
     addMenuOptions() {
       const items = [{
-        name: 'Add item after',
+        name: 'Add item below',
         icon: 'arrow-down',
         action: () => this.setCreateContext(this.sameLevel)
       }, {
