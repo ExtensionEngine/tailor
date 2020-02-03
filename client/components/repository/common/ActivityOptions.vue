@@ -25,7 +25,10 @@
       @created="expandParent"
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
-      :anchor="activity" />
+      :anchor="activity"
+      :heading="`
+        Add ${supportedLevels === subLevels ? 'into' : 'after'}
+        ${activity.data.name}`" />
     <copy-dialog
       v-if="showCopyDialog"
       @close="showCopyDialog = null"
