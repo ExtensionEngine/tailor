@@ -16,7 +16,7 @@ const Umzug = require('umzug');
 // Require models.
 const User = require('../../user/user.model');
 const Repository = require('../../repository/repository.model');
-const RepositoryTag = require('../../tag/repositoryTag.model');
+const EntityTag = require('../../tag/entityTag.model');
 const RepositoryUser = require('../../repository/repositoryUser.model');
 const Activity = require('../../activity/activity.model');
 const ContentElement = require('../../content-element/content-element.model');
@@ -68,7 +68,7 @@ function initialize() {
 const models = {
   User: defineModel(User),
   Repository: defineModel(Repository),
-  RepositoryTag: defineModel(RepositoryTag),
+  EntityTag: defineModel(EntityTag),
   RepositoryUser: defineModel(RepositoryUser),
   Activity: defineModel(Activity),
   ContentElement: defineModel(ContentElement),

@@ -4,10 +4,7 @@ const ctrl = require('./tag.controller');
 const router = require('express').Router();
 
 router
-.get('/', ctrl.list)
-.post('/', ctrl.create);
-// .patch('/:id', ctrl.patch)
-// .delete('/:id', ctrl.destroy);
+  .get('/', ctrl.list);
 
 module.exports = {
   path: '/tags',

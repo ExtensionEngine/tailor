@@ -1,9 +1,9 @@
 'use strict';
 
-const TABLE_NAME = 'repository_tag';
+const TABLE_NAME = 'entity_tag';
 
-module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable(TABLE_NAME, {
+exports.up = (queryInterface, Sequelize) => {
+  return queryInterface.createTable(TABLE_NAME, {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -19,6 +19,10 @@ module.exports = {
       field: 'repository_id',
       references: { model: 'repository', key: 'id' }
     },
+    type: {
+      type: Sequelize.ENUM(['REPOSITORY']),
+      allowNull: false
+    },
     createdAt: {
       type: Sequelize.DATE,
       field: 'created_at',
@@ -33,6 +37,7 @@ module.exports = {
       type: Sequelize.DATE,
       field: 'deleted_at'
     }
-  }),
-  down: queryInterface => queryInterface.dropTable(TABLE_NAME)
+  });
 };
+
+exports.down = queryInterface => queryInterface.dropTable(TABLE_NAME);

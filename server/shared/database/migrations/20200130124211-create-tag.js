@@ -2,15 +2,15 @@
 
 const TABLE_NAME = 'tag';
 
-module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable(TABLE_NAME, {
+exports.up = (queryInterface, Sequelize) => {
+  return queryInterface.createTable(TABLE_NAME, {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
     name: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING(20)
     },
     createdAt: {
       type: Sequelize.DATE,
@@ -26,6 +26,7 @@ module.exports = {
       type: Sequelize.DATE,
       field: 'deleted_at'
     }
-  }),
-  down: queryInterface => queryInterface.dropTable(TABLE_NAME)
+  });
 };
+
+exports.down = queryInterface => queryInterface.dropTable(TABLE_NAME);
