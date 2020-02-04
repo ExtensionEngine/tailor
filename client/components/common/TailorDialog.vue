@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     v-on="$listeners"
-    width="500"
+    :width="width"
     v-bind="$attrs">
     <template v-for="(_, slot) in $scopedSlots" v-slot:[slot]="scope">
       <slot :name="slot" v-bind="scope"></slot>
@@ -34,7 +34,8 @@
 export default {
   name: 'tailor-dialog',
   props: {
-    headerIcon: { type: String, default: null }
+    headerIcon: { type: String, default: null },
+    width: { type: [Number, String], default: 500 }
   }
 };
 </script>

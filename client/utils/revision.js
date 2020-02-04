@@ -73,13 +73,13 @@ export function getRevisionAcronym(rev) {
 }
 
 export function getRevisionColor(rev) {
-  const DEFAULT_COLOR = '#808080';
+  const DEFAULT_COLOR = '#ccc';
   switch (rev.entity) {
     case 'ACTIVITY': {
       const level = getLevel(rev.state.type);
       return level ? level.color : DEFAULT_COLOR;
     }
-    case 'COURSE':
+    case 'REPOSITORY':
       return '#00BCD4';
     case 'TEACHING_ELEMENT':
       return '#FF5722';

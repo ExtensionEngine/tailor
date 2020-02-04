@@ -6,7 +6,7 @@
     <template v-slot:activator="{ on }">
       <v-btn
         v-on="on"
-        color="pink"
+        color="secondary"
         fab dark absolute
         class="add-repo">
         <v-icon>mdi-plus</v-icon>
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import api from '@/api/course';
+import api from '@/api/repository';
 import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';
 import TailorDialog from '@/components/common/TailorDialog';

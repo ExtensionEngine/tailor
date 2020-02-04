@@ -7,21 +7,21 @@ import Vue from 'vue';
 
 import Auth from './components/auth/Container';
 import Catalog from './components/catalog/Container';
-import Course from './components/course';
-import CourseRevisions from './components/course/Revisions';
-import CourseSettings from './components/course/Settings';
+import Repository from './components/repository';
+import RepositoryRevisions from './components/repository/Revisions';
+import RepositorySettings from './components/repository/Settings';
 import Editor from './components/editor';
 import ForgotPassword from './components/auth/ForgotPassword';
-import General from './components/course/Settings/General';
+import General from './components/repository/Settings/General';
 import InstalledElements from './components/system-settings/ContentElements';
 import InstalledSchemas from './components/system-settings/StructureTypes';
 import Login from './components/auth/Login';
-import Outline from './components/course/Outline';
-import RepoUserManagement from './components/course/Settings/UserManagement';
+import Outline from './components/repository/Outline';
+import RepoUserManagement from './components/repository/Settings/UserManagement';
 import ResetPassword from './components/auth/ResetPassword';
 import SystemSettings from './components/system-settings';
 import SystemUserManagement from './components/system-settings/UserManagement';
-import TreeView from './components/course/TreeView';
+import TreeView from './components/repository/TreeView';
 import UserSettings from './components/user-settings';
 
 Vue.use(Router);
@@ -38,20 +38,20 @@ const router = new Router({
     component: UserSettings,
     meta: { auth: true }
   }, {
-    path: '/course/:courseId',
-    component: Course,
+    path: '/repository/:repositoryId',
+    component: Repository,
     props: numericParser,
     meta: { auth: true },
     children: [{
       path: '',
-      name: 'course',
+      name: 'repository',
       component: Outline
     }, {
       path: 'settings',
-      component: CourseSettings,
+      component: RepositorySettings,
       children: [{
         path: '',
-        name: 'course-info',
+        name: 'repository-info',
         component: General
       }, {
         path: 'users',
@@ -61,15 +61,15 @@ const router = new Router({
       }]
     }, {
       path: 'revisions',
-      name: 'course-revisions',
-      component: CourseRevisions
+      name: 'revisions',
+      component: RepositoryRevisions
     }, {
       path: 'tree-view',
       name: 'tree-view',
       component: TreeView
     }]
   }, {
-    path: '/course/:courseId/editor/:activityId',
+    path: '/repository/:repositoryId/editor/:activityId',
     name: 'editor',
     component: Editor,
     meta: { auth: true }

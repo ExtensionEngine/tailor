@@ -5,19 +5,19 @@
 </template>
 
 <script>
-import { getAcronym, getColor } from 'utils/course';
+import { getAcronym, getColor } from 'utils/repository';
 
 export default {
   name: 'acronym',
   props: {
-    course: { type: Object, required: true }
+    repository: { type: Object, required: true }
   },
   computed: {
     acronym() {
-      return getAcronym(this.course.name);
+      return getAcronym(this.repository.name);
     },
     color() {
-      return getColor(this.course);
+      return getColor(this.repository);
     }
   }
 };

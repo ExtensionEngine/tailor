@@ -69,7 +69,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('course', ['course', 'getMetadata']),
+    ...mapGetters('repository', ['repository', 'getMetadata']),
     ...mapGetters('editor', ['activity', 'contentContainers']),
     metadata() {
       if (!this.focusedElement) return [];
@@ -84,7 +84,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('courses', { getCourse: 'get' }),
+    ...mapActions('repositories', { getRepository: 'get' }),
     ...mapActions('activities', {
       getActivities: 'fetch',
       setupActivitiesApi: 'setEndpoint'
@@ -111,7 +111,7 @@ export default {
     }
   },
   created() {
-    const { courseId, activityId } = this.$route.params;
+    const { repositoryId, activityId } = this.$route.params;
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;
@@ -139,11 +139,11 @@ export default {
       this.showSidebar = this.metadata.length && this.showSidebar;
     }, 50));
     // TODO: Do this better!
-    const baseUrl = `/repositories/${courseId}`;
+    const baseUrl = `/repositories/${repositoryId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
     this.setupTesApi(`${baseUrl}/content-elements`);
     const actions = [this.getActivities()];
-    if (!this.course) actions.push(this.getCourse(courseId));
+    if (!this.repository) actions.push(this.getRepository(repositoryId));
     Promise.all(actions).then(() => {
       const ids = flatMap(this.contentContainers, it => map(it, 'id'));
       return this.getTeachingElements({ ids: [activityId, ...ids] });
