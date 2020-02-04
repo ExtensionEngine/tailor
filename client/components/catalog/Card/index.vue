@@ -46,11 +46,13 @@
           mdi-pin
         </v-icon>
       </v-btn>
+      <add-tag :repository="repository" />
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import AddTag from './AddTag';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
@@ -76,7 +78,8 @@ export default {
         params: { courseId: this.repository.id }
       });
     }
-  }
+  },
+  components: { AddTag }
 };
 </script>
 
