@@ -1,6 +1,6 @@
 'use strict';
 
-const { Repository, RepositoryUser, Revision, sequelize, User, Tag, EntityTag } = require('../shared/database');
+const { Repository, RepositoryUser, Revision, sequelize, User, Tag } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const getVal = require('lodash/get');
@@ -29,7 +29,7 @@ function index({ query, user, opts }, res) {
     }],
     order: [['createdAt', 'DESC']],
     limit: 1
-  }];
+  }, { model: Tag }];
   const repositoryUser = query.pinned
     ? { where: { userId: user.id, pinned: true }, required: true }
     : { where: { userId: user.id }, required: false };
@@ -134,13 +134,9 @@ function getTags({ repository }, res) {
 
 async function createTag({ body, repository }, res) {
   const tag = await Tag.create({ name: body.name });
+  const repo = await repository.addTags([tag], { through: { type: body.type } });
 
-  await EntityTag.create({
-    tagId: tag.id,
-    repositoryId: repository.id,
-    type: body.type
-  });
-  return res.json({ data: tag });
+  return res.json({ data: { tag, repo } });
 }
 
 module.exports = {
