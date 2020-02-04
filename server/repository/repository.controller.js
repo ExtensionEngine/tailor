@@ -1,6 +1,6 @@
 'use strict';
 
-const { Repository, RepositoryUser, Revision, sequelize, User } = require('../shared/database');
+const { Repository, RepositoryUser, Revision, sequelize, User, Tag, EntityTag } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const getVal = require('lodash/get');
@@ -127,6 +127,22 @@ function findOrCreateRole(repository, user, role) {
   .then(() => user);
 }
 
+function getTags({ repository }, res) {
+  return repository.getTags()
+    .then(tags => res.json({ data: tags }));
+}
+
+async function createTag({ body, repository }, res) {
+  const tag = await Tag.create({ name: body.name });
+
+  await EntityTag.create({
+    tagId: tag.id,
+    repositoryId: repository.id,
+    type: body.type
+  });
+  return res.json({ data: tag });
+}
+
 module.exports = {
   index,
   create,
@@ -138,5 +154,7 @@ module.exports = {
   getUsers,
   upsertUser,
   removeUser,
-  publishRepoInfo
+  publishRepoInfo,
+  getTags,
+  createTag
 };
