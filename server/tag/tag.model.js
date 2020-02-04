@@ -7,7 +7,8 @@ class Tag extends Model {
     return {
       name: {
         type: STRING,
-        allowNull: false
+        allowNull: false,
+        validate: { len: [2, 20] }
       },
       createdAt: {
         type: DATE,
@@ -26,9 +27,9 @@ class Tag extends Model {
     };
   }
 
-  static associate({ Repository, RepositoryTag }) {
+  static associate({ Repository, EntityTag }) {
     this.belongsToMany(Repository, {
-      through: RepositoryTag,
+      through: EntityTag,
       foreignKey: { name: 'tagId', field: 'tag_id' }
     });
   }
@@ -38,7 +39,6 @@ class Tag extends Model {
       modelName: 'tag',
       underscored: true,
       timestamps: true,
-      paranoid: true,
       freezeTableName: true
     };
   }
