@@ -44,7 +44,7 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('course', ['outlineActivities', 'isCourseAdmin']),
+    ...mapGetters('repository', ['outlineActivities', 'isRepositoryAdmin']),
     actions() {
       const { $router, activity: { repositoryId } } = this;
       const items = [{
@@ -54,9 +54,9 @@ export default {
       }, {
         title: 'Back',
         icon: 'arrow-left',
-        action: () => $router.push({ name: 'course', params: { courseId: repositoryId } })
+        action: () => $router.push({ name: 'repository', params: { repositoryId } })
       }];
-      if (!this.isAdmin && !this.isCourseAdmin) return items;
+      if (!this.isAdmin && !this.isRepositoryAdmin) return items;
       return [{
         title: 'Publish',
         icon: 'upload',
@@ -67,8 +67,8 @@ export default {
   methods: {
     ...mapActions('activities', { publishActivity: 'publish' }),
     previewContainer() {
-      const { courseId, id } = this.activity;
-      return api.createPreview(courseId, id)
+      const { repositoryId, id } = this.activity;
+      return api.createPreview(repositoryId, id)
         .then(location => window.open(location));
     }
   }

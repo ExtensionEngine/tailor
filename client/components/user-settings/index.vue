@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="heading primary elevation-3">
+    <div class="heading primary elevation-1">
       <v-chip
         color="grey lighten-2"
         label outlined
@@ -44,7 +44,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  height: 46px;
+  height: 2.875rem;
   color: #444;
   text-align: left;
   text-transform: uppercase;

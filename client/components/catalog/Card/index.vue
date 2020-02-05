@@ -5,14 +5,14 @@
       <span class="schema-name">{{ schema }}</span>
       <v-btn
         v-if="repository.hasAdminAccess"
-        @click.stop="navigateTo('course-info')"
+        @click.stop="navigateTo('repository-info')"
         @mousedown.stop
         color="blue-grey darken-1"
         icon small
         class="mr-2 float-right">
         <v-icon>mdi-settings</v-icon>
       </v-btn>
-      <v-card-title class="grey--text text--lighten-3 pt-2">
+      <v-card-title class="grey--text text--lighten-3 text-break pt-2">
         {{ name | truncate(70) }}
       </v-card-title>
       <div class="grey--text text--lighten-4 px-4">
@@ -70,12 +70,12 @@ export default {
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false)
   },
   methods: {
-    ...mapActions('courses', ['pin']),
-    navigateTo(name = 'course') {
+    ...mapActions('repositories', ['pin']),
+    navigateTo(name = 'repository') {
       if (window.getSelection().toString()) return;
       this.$router.push({
         name,
-        params: { courseId: this.repository.id }
+        params: { repositoryId: this.repository.id }
       });
     }
   },

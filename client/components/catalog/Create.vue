@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import api from '@/api/course';
+import api from '@/api/repository';
 import { mapGetters } from 'vuex';
 import { SCHEMAS } from 'shared/activities';
 import TailorDialog from '@/components/common/TailorDialog';
