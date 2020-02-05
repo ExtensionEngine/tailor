@@ -43,10 +43,20 @@ const allRepositoriesFetched = (state, allFetched) => {
   state.$internals.allRepositoriesFetched = allFetched;
 };
 
+const fetchTags = (state, tags) => {
+  state.tags = tags;
+};
+
+const saveTags = (state, { tag }) => {
+  state.tags.push(tag);
+};
+
 export {
   add,
   allRepositoriesFetched,
   fetch,
+  fetchTags,
+  saveTags,
   remove,
   reset,
   resetPagination,

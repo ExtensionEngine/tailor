@@ -132,11 +132,13 @@ function getTags({ repository }, res) {
     .then(tags => res.json({ data: tags }));
 }
 
-async function createTag({ body, repository }, res) {
-  const tag = await Tag.create({ name: body.name });
-  const repo = await repository.addTags([tag], { through: { type: body.type } });
-
-  return res.json({ data: { tag, repo } });
+function createTag({ body, repository }, res) {
+  const { name, type } = body;
+  return sequelize.transaction(async transaction => {
+    const [tag] = await Tag.findOrCreate({ where: { name }, transaction });
+    const repo = await repository.addTags([tag], { through: { type }, transaction });
+    return res.json({ data: { tag, repo } });
+  });
 }
 
 module.exports = {

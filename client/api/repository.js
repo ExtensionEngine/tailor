@@ -6,8 +6,7 @@ const urls = {
   resource: id => `${urls.root}/${id}`,
   contentInventory: id => `${urls.resource(id)}/content-inventory`,
   publish: id => `${urls.resource(id)}/publish`,
-  users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`,
-  tags: id => `${urls.resource(id)}/tags`
+  users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`
 };
 
 function save(repository) {
@@ -40,16 +39,11 @@ function publishRepositoryMeta(id) {
   return request.post(urls.publish(id)).then(res => res.data);
 }
 
-function addTag(courseId, data) {
-  return request.post(urls.tags(courseId), data).then(extractData);
-}
-
 export default {
   getRepositories,
   save,
   getUsers,
   upsertUser,
   removeUser,
-  publishRepositoryMeta,
-  addTag
+  publishRepositoryMeta
 };
