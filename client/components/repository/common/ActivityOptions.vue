@@ -25,7 +25,10 @@
       @created="expandParent"
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
-      :anchor="activity" />
+      :anchor="activity"
+      :heading="`
+        Add ${supportedLevels === subLevels ? 'into' : 'below'}
+        ${activity.data.name}`" />
     <copy-dialog
       v-if="showCopyDialog"
       @close="showCopyDialog = null"
@@ -78,7 +81,7 @@ export default {
     },
     addMenuOptions() {
       const items = [{
-        name: 'Add item after',
+        name: 'Add item below',
         icon: 'arrow-down',
         action: () => this.setCreateContext(this.sameLevel)
       }, {
