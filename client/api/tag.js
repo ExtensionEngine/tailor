@@ -16,8 +16,9 @@ function createRepositoryTag(data) {
     .then(extractData);
 }
 
-function deleteRepositoryTag(data) {
-  return request.delete(urls.repositoryTag(data.repositoryId, data.id));
+function deleteRepositoryTag({ repositoryId, tagId }) {
+  return request.delete(urls.repositoryTag(repositoryId, tagId))
+    .then(extractData);
 }
 
 export default {

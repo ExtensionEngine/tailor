@@ -12,12 +12,14 @@ exports.up = (queryInterface, Sequelize) => {
     tagId: {
       type: Sequelize.INTEGER,
       field: 'tag_id',
-      references: { model: 'tag', key: 'id' }
+      references: { model: 'tag', key: 'id' },
+      onDelete: 'CASCADE'
     },
     repositoryId: {
       type: Sequelize.INTEGER,
       field: 'repository_id',
-      references: { model: 'repository', key: 'id' }
+      references: { model: 'repository', key: 'id' },
+      onDelete: 'CASCADE'
     },
     type: {
       type: Sequelize.ENUM(['REPOSITORY']),

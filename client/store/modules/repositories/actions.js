@@ -42,7 +42,13 @@ const fetchTags = ({ commit }) => {
 };
 
 const saveTags = ({ commit }, data) => {
-  return tagApi.createRepositoryTag(data).then(tags => { commit('saveTags', tags); });
+  return tagApi.createRepositoryTag(data)
+    .then(tags => commit('saveTags', { tags, data }));
+};
+
+const removeTag = ({ commit }, data) => {
+  return tagApi.deleteRepositoryTag(data)
+    .then(tag => commit('removeTag', tag));
 };
 
 export {
@@ -53,6 +59,7 @@ export {
   get,
   pin,
   remove,
+  removeTag,
   reset,
   setEndpoint,
   update

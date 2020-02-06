@@ -1,6 +1,6 @@
 'use strict';
 
-const { Repository, RepositoryUser, Revision, sequelize, User, Tag } = require('../shared/database');
+const { Repository, RepositoryUser, Revision, sequelize, User, Tag, EntityTag } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const getVal = require('lodash/get');
@@ -141,6 +141,14 @@ function createTag({ body, repository }, res) {
   });
 }
 
+async function removeTag(req, res) {
+  const { params: { tagId, repositoryId } } = req;
+  const where = { tagId, repositoryId };
+  const entityTag = await EntityTag.findOne({ where });
+  return entityTag.destroy()
+    .then(() => res.json({ data: entityTag }));
+}
+
 module.exports = {
   index,
   create,
@@ -154,5 +162,6 @@ module.exports = {
   removeUser,
   publishRepoInfo,
   getTags,
-  createTag
+  createTag,
+  removeTag
 };

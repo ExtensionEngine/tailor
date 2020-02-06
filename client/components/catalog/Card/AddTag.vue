@@ -7,11 +7,15 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
       <v-col cols="12" sm="8" md="9">
-        <v-sheet elevation="10">
+        <v-sheet elevation="10" class="grey lighten-4 elevation-0">
           <v-chip-group
-            multiple
+            v-if="tags.length"
+            max="1"
             active-class="primary--text">
-            <v-chip v-for="({ id, name }) in tags" :key="id">
+            <v-chip
+              v-for="({ id, name }) in tags"
+              :key="id"
+              @click.stop="deleteTag(id)">
               {{ name }}
             </v-chip>
           </v-chip-group>
@@ -50,9 +54,12 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import EventBus from 'EventBus';
 import isObject from 'lodash/isObject';
 import TailorDialog from '@/components/common/TailorDialog';
 import { withValidation } from 'utils/validation';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   name: 'add-tag',
@@ -63,13 +70,14 @@ export default {
   data: () => ({
     isVisible: false,
     selectedTagIds: [],
-    newTag: null
+    newTag: null,
+    confirmationModal: { show: false }
   }),
   computed: mapState('repositories', {
     tags: state => state.tags
   }),
   methods: {
-    ...mapActions('repositories', ['fetchTags', 'saveTags']),
+    ...mapActions('repositories', ['fetchTags', 'saveTags', 'removeTag']),
     hide() {
       this.newTag = null;
       this.isVisible = false;
@@ -82,6 +90,14 @@ export default {
           this.newTag = null;
           this.isVisible = false;
         });
+    },
+    deleteTag(id) {
+      const data = { repositoryId: this.repository.id, tagId: id };
+      appChannel.emit('showConfirmationModal', {
+        title: 'Delete tag',
+        message: 'Are you sure you want to delete tag?',
+        action: () => this.removeTag(data)
+      });
     }
   },
   watch: {

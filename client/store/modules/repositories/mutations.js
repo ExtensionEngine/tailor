@@ -1,4 +1,5 @@
 import { add, fetch, remove, reset, setEndpoint } from '../../helpers/mutations';
+import find from 'lodash/find';
 import Vue from 'vue';
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
@@ -47,8 +48,14 @@ const fetchTags = (state, tags) => {
   state.tags = tags;
 };
 
-const saveTags = (state, { tag }) => {
-  state.tags.push(tag);
+const saveTags = (state, { tags, data }) => {
+  const repo = find(state.items, { id: data.repositoryId });
+  state.tags.push(data);
+  repo.tags.push(tags.tag);
+};
+
+const removeTag = (state, tag) => {
+  /* have to add logic which will remove deleted item from store */
 };
 
 export {
@@ -56,12 +63,13 @@ export {
   allRepositoriesFetched,
   fetch,
   fetchTags,
-  saveTags,
   remove,
+  removeTag,
   reset,
   resetPagination,
   resetFilters,
   save,
+  saveTags,
   setEndpoint,
   setPagination,
   setOrder,
