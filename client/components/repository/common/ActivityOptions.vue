@@ -41,8 +41,8 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import CopyDialog from '../Outline/InsertActivity/CopyActivity';
-import CreateDialog from '../Outline/InsertActivity/CreateDialog';
+import CopyDialog from '@/components/repository/common/CopyActivity';
+import CreateDialog from '@/components/repository/common/CreateDialog';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
