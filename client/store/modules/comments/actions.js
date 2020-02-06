@@ -1,14 +1,21 @@
 import generateActions from '../../helpers/actions';
+import map from 'lodash/map';
+import pickBy from 'lodash/pickBy';
 import SSEClient from '../../../SSEClient';
 
 const { api, get, save, setEndpoint, update } = generateActions();
 let SSE_CLIENT;
 
+const filterExistingComment = (existingComments, fetchedComments) => {
+  const existingId = map(existingComments, 'id');
+  return pickBy(fetchedComments, it => !existingId.includes(it.id));
+};
+
 const fetch = ({ state, commit }, { id, repositoryId }) => {
   const action = state.repositoryId === repositoryId ? 'fetch' : 'reset';
   if (action === 'reset') commit('setRepository', repositoryId);
   return api.fetch({ activityId: id }).then(items => {
-    commit(action, items);
+    commit(action, filterExistingComment(state.items, items));
     commit('commentsFetched', id);
   });
 };
