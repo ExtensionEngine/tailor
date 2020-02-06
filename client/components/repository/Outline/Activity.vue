@@ -34,9 +34,6 @@
             class="activity-options" />
         </div>
       </div>
-      <insert-activity
-        @expand="toggle(true)"
-        :anchor="{ id, _cid, parentId, repositoryId, type, position, level }" />
     </div>
     <div v-if="!isCollapsed({ _cid }) && hasChildren">
       <draggable
@@ -62,7 +59,6 @@ import ActivityOptions from '@/components/repository/common/ActivityOptions';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import InsertActivity from './InsertActivity';
 import { isEditable } from 'shared/activities';
 import map from 'lodash/map';
 import reorderMixin from './reorderMixin';
@@ -149,19 +145,20 @@ export default {
       this.toggleActivity({ _cid: this._cid, expanded });
     }
   },
-  components: { ActivityOptions, Draggable, InsertActivity }
+  components: { ActivityOptions, Draggable }
 };
 </script>
 
 <style lang="scss" scoped>
 .activity {
   display: flex;
+  margin: 0.875rem 0;
   padding: 0 0 0 0.375rem;
   font-size: 1.125rem;
   background-color: #fcfcfc;
   border-radius: 2px;
   cursor: pointer;
-  transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   &-icon {
     margin: 0.125rem 0 0 0;
