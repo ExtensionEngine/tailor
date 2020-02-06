@@ -13,6 +13,7 @@
       Open
     </v-btn>
     <create-dialog
+      v-if="subLevels.length"
       :repository-id="activity.repositoryId"
       :levels="subLevels"
       :anchor="activity"
