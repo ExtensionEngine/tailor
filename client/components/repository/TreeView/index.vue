@@ -24,7 +24,7 @@ import get from 'lodash/get';
 import includes from 'lodash/includes';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
-import Sidebar from 'components/repository/Sidebar';
+import Sidebar from 'components/repository/common/Sidebar';
 import TreeGraph from './TreeGraph';
 
 const isActivityNode = node => node.depth > 0;
