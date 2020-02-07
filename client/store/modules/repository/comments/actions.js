@@ -1,11 +1,11 @@
-import generateActions from '../../helpers/actions';
-import SSEClient from '../../../SSEClient';
+import generateActions from '../../../helpers/actions';
+import SSEClient from '../../../../SSEClient';
 
 const { api, get, save, setEndpoint, update } = generateActions();
 let SSE_CLIENT;
 
-const fetch = ({ state, commit }, { id, repositoryId }) => {
-  const action = state.repositoryId === repositoryId ? 'fetch' : 'reset';
+const fetch = ({ commit, rootGetters }, { id, repositoryId }) => {
+  const action = rootGetters['repository/id'] === repositoryId ? 'fetch' : 'reset';
   if (action === 'reset') commit('setRepository', repositoryId);
   return api.fetch({ activityId: id }).then(items => {
     commit(action, items);
@@ -15,8 +15,7 @@ const fetch = ({ state, commit }, { id, repositoryId }) => {
 
 const subscribe = ({ state, commit }) => {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
-
-  SSE_CLIENT = new SSEClient(`/api/v1${state.$apiUrl}/subscribe`);
+  SSE_CLIENT = new SSEClient(`/api/v1/${state.$apiUrl}/subscribe`);
   SSE_CLIENT.subscribe('comment_create', item => commit('sseAdd', item));
   SSE_CLIENT.subscribe('comment_update', item => commit('sseUpdate', item));
   SSE_CLIENT.subscribe('comment_delete', item => commit('sseUpdate', item));

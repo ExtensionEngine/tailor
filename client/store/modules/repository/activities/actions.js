@@ -1,5 +1,5 @@
 import calculatePosition from 'utils/calculatePosition';
-import generateActions from '../../helpers/actions';
+import generateActions from '../../../helpers/actions';
 import { getDescendants as getDeepChildren } from 'utils/activity';
 import request from '@/api/request';
 

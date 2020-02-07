@@ -1,4 +1,4 @@
-import { fetch, remove, reset, save, setEndpoint } from '../../helpers/mutations';
+import { fetch, remove, reset, save, setEndpoint } from '../../../helpers/mutations';
 import cuid from 'cuid';
 import find from 'lodash/find';
 import pick from 'lodash/pick';
