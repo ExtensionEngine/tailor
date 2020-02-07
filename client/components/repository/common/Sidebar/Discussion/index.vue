@@ -51,12 +51,12 @@ export default {
   computed: {
     ...mapState({ user: state => state.auth.user }),
     ...mapGetters('repository', ['activity']),
-    ...mapGetters('comments', ['commentsFetched', 'commentsCount']),
+    ...mapGetters('repository/comments', ['commentsFetched', 'commentsCount']),
     commentsShownLimit: () => 4,
     editor: vm => vm.$refs.editor.$el
   },
   methods: {
-    ...mapActions('comments', [
+    ...mapActions('repository/comments', [
       'setEndpoint', 'fetch', 'save', 'subscribe', 'unsubscribe']),
     fetchComments() {
       if (this.commentsFetched) return;
@@ -85,8 +85,6 @@ export default {
     }
   },
   mounted() {
-    const { repositoryId } = this.$route.params;
-    this.setEndpoint(`/repositories/${repositoryId}/comments`);
     this.fetchComments();
     this.subscribe();
   },

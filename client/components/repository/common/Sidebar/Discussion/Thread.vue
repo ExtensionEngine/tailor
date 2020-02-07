@@ -30,7 +30,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('comments', ['update', 'remove']),
+    ...mapActions('repository/comments', ['update', 'remove']),
     onUpdate(comment, content) {
       this.update({ ...comment, content, updatedAt: Date.now() });
     },

@@ -26,7 +26,6 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
-import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
 export default {
@@ -55,13 +54,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repository', ['getUsers']),
-    ...mapActions('repositories', { getRepository: 'get' }),
-    ...mapActions('activities', { getActivities: 'fetch' }),
-    ...mapActions('activities', { setupActivityApi: 'setEndpoint' }),
-    ...mapActions('comments', { setupCommentsApi: 'setEndpoint' }),
-    ...mapActions('revisions', { setupRevisionApi: 'setEndpoint' }),
-    ...mapActions('tes', { setupTesApi: 'setEndpoint' }),
+    ...mapActions('repository', ['initialize']),
     ...mapMutations('repository', { resetActivityFocus: 'focusActivity' })
   },
   async created() {
@@ -69,13 +62,7 @@ export default {
     const existingSelection = get(activity, 'repositoryId') === repositoryId;
     if (!existingSelection) this.resetActivityFocus();
     // TODO: Do this better!
-    this.setupActivityApi(`/repositories/${repositoryId}/activities`);
-    this.setupCommentsApi(`/repositories/${repositoryId}/comments`);
-    this.setupRevisionApi(`/repositories/${repositoryId}/revisions`);
-    this.setupTesApi(`/repositories/${repositoryId}/content-elements`);
-    const actions = [this.getActivities(), this.getUsers()];
-    if (!this.repository) actions.push(this.getRepository(repositoryId));
-    await Promise.all(actions);
+    await this.initialize(repositoryId);
     this.showLoader = false;
     const activities = filter(this.activities, { parentId: null });
     if (!existingSelection && activities.length) {

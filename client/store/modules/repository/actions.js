@@ -3,7 +3,7 @@ import each from 'lodash/each';
 import filter from 'lodash/filter';
 import Promise from 'bluebird';
 
-export const initialize = ({ dispatch }, id) => {
+export const initialize = ({ commit, dispatch }, id) => {
   const getRoute = entity => `repositories/${id}/${entity}`;
   const modules = {
     activities: 'activities',
@@ -11,7 +11,13 @@ export const initialize = ({ dispatch }, id) => {
     revisions: 'revisions',
     comments: 'comments'
   };
-  each(modules, (path, module) => dispatch(`${module}/setEndpoint`, getRoute(path)));
+  // Reset store and setup api endpoints
+  each(modules, (path, module) => {
+    commit(`${module}/reset`);
+    dispatch(`${module}/setEndpoint`, getRoute(path));
+  });
+  dispatch('revisions/resetPagination');
+  // Initialize repository state
   return Promise.all([
     dispatch('repositories/get', id, { root: true }),
     dispatch('activities/reset'),

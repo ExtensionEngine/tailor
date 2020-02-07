@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['getMetadata']),
-    ...mapGetters('activities', ['calculateInsertPosition']),
+    ...mapGetters('repository/activities', ['calculateInsertPosition']),
     metadata() {
       if (!this.activity.type) return null;
       return this.getMetadata({ type: this.activity.type });
@@ -73,7 +73,7 @@ export default {
     defaultLabel: vm => vm.hasSingleOption ? `Add ${vm.levels[0].label}` : 'Add'
   },
   methods: {
-    ...mapActions('activities', ['save']),
+    ...mapActions('repository/activities', ['save']),
     ...mapMutations('repository', ['focusActivity']),
     setMetaValue(key, val) {
       this.activity.data[key] = val;

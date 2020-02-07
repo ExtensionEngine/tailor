@@ -54,8 +54,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions('tes', ['save', 'update', 'remove']),
-    ...mapMutations('tes', ['add']),
+    ...mapActions('repository/tes', ['save', 'update', 'remove']),
+    ...mapMutations('repository/tes', ['add']),
     addAssessment(assessment) {
       this.add(assessment);
       this.selected.push(assessment._cid);
