@@ -1,5 +1,6 @@
 import { add, fetch, remove, reset, setEndpoint } from '../../helpers/mutations';
 import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
 import Vue from 'vue';
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
@@ -55,7 +56,9 @@ const saveTags = (state, { tags, data }) => {
 };
 
 const removeTag = (state, tag) => {
-  /* have to add logic which will remove deleted item from store */
+  const repo = find(state.items, { id: tag.repositoryId });
+  const tagIndex = findIndex(repo.tags, { id: tag.tagId });
+  repo.tags.splice(tagIndex, 1);
 };
 
 export {

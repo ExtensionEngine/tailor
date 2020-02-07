@@ -46,6 +46,19 @@
           mdi-pin
         </v-icon>
       </v-btn>
+      <v-col cols="12" sm="8" md="9" class="pa-0">
+        <v-chip
+          v-for="({ id, name: tagName }) in repositoryTags"
+          :key="id"
+          @click.stop="on"
+          @click:close="deleteTag(id, tagName)"
+          class="mr-1"
+          close
+          color="grey lighten-1"
+          text-color="white">
+          {{ tagName }}
+        </v-chip>
+      </v-col>
       <add-tag :repository="repository" />
     </v-card-actions>
   </v-card>
@@ -53,10 +66,13 @@
 
 <script>
 import AddTag from './AddTag';
+import EventBus from 'EventBus';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
 import { mapActions } from 'vuex';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   props: {
@@ -67,15 +83,26 @@ export default {
     description: ({ repository }) => repository.description,
     schema: ({ repository }) => getSchema(repository.schema).name,
     lastActivity: ({ repository }) => first(repository.revisions),
-    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false)
+    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),
+    repositoryTags() {
+      return this.repository.tags;
+    }
   },
   methods: {
-    ...mapActions('repositories', ['pin']),
+    ...mapActions('repositories', ['pin', 'removeTag']),
     navigateTo(name = 'repository') {
       if (window.getSelection().toString()) return;
       this.$router.push({
         name,
         params: { repositoryId: this.repository.id }
+      });
+    },
+    deleteTag(id, name) {
+      const data = { repositoryId: this.repository.id, tagId: id };
+      appChannel.emit('showConfirmationModal', {
+        title: 'Delete tag',
+        message: `Are you sure you want to delete tag ${name}?`,
+        action: () => this.removeTag(data)
       });
     }
   },

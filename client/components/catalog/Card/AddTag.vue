@@ -3,24 +3,9 @@
     v-model="isVisible"
     header-icon="mdi-pound-box-outline">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" @click.stop="on" icon>
+      <v-btn v-show="!showAddTag" v-on="on" @click.stop="" icon>
         <v-icon>mdi-plus</v-icon>
       </v-btn>
-      <v-col cols="12" sm="8" md="9">
-        <v-sheet elevation="10" class="grey lighten-4 elevation-0">
-          <v-chip-group
-            v-if="tags.length"
-            max="1"
-            active-class="primary--text">
-            <v-chip
-              v-for="({ id, name }) in tags"
-              :key="id"
-              @click.stop="deleteTag(id)">
-              {{ name }}
-            </v-chip>
-          </v-chip-group>
-        </v-sheet>
-      </v-col>
     </template>
     <template v-slot:header>Add Tag</template>
     <template v-slot:body>
@@ -33,11 +18,10 @@
       </v-alert>
       <v-combobox
         v-model="newTag"
-        :items="tags"
+        :items="availableTags"
         item-text="name"
         item-value="id"
-        label="Select a tag or create a new one"
-        multiple />
+        label="Select a tag or create a new one" />
     </template>
     <template v-slot:actions>
       <v-btn @click="hide" text>Cancel</v-btn>
@@ -54,12 +38,11 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import EventBus from 'EventBus';
-import isObject from 'lodash/isObject';
+import filter from 'lodash/filter';
 import TailorDialog from '@/components/common/TailorDialog';
 import { withValidation } from 'utils/validation';
 
-const appChannel = EventBus.channel('app');
+const TAG_LIMIT = 3;
 
 export default {
   name: 'add-tag',
@@ -73,9 +56,21 @@ export default {
     newTag: null,
     confirmationModal: { show: false }
   }),
-  computed: mapState('repositories', {
-    tags: state => state.tags
-  }),
+  computed: {
+    ...mapState('repositories', {
+      tags: state => state.tags
+    }),
+    repositoryTags() {
+      return this.repository.tags;
+    },
+    showAddTag() {
+      return this.repositoryTags.length === TAG_LIMIT;
+    },
+    availableTags() {
+      const existingTagIds = this.repositoryTags.map(it => it.id);
+      return filter(this.tags, it => !existingTagIds.includes(it.id));
+    }
+  },
   methods: {
     ...mapActions('repositories', ['fetchTags', 'saveTags', 'removeTag']),
     hide() {
@@ -83,21 +78,12 @@ export default {
       this.isVisible = false;
     },
     submit() {
-      const tagName = isObject(this.newTag[0]) ? this.newTag[0].name : this.newTag[0];
-      const data = { repositoryId: this.repository.id, name: tagName, type: 'REPOSITORY' };
+      const data = { ...this.newTag, repositoryId: this.repository.id, type: 'REPOSITORY' };
       return this.saveTags(data)
         .then(result => {
           this.newTag = null;
           this.isVisible = false;
         });
-    },
-    deleteTag(id) {
-      const data = { repositoryId: this.repository.id, tagId: id };
-      appChannel.emit('showConfirmationModal', {
-        title: 'Delete tag',
-        message: 'Are you sure you want to delete tag?',
-        action: () => this.removeTag(data)
-      });
     }
   },
   watch: {
