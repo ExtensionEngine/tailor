@@ -1,8 +1,8 @@
 <template>
   <div class="outline-page">
     <v-progress-circular v-if="showLoader" color="primary" indeterminate />
-    <div v-else class="outline">
-      <div :class="{ 'mt-12': isFlat }" class="activity-container">
+    <div v-else :class="{ 'pt-11': isFlat }" class="outline">
+      <div class="activity-container">
         <v-toolbar
           v-if="!isFlat"
           color="grey lighten-4"

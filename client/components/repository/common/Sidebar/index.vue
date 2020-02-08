@@ -1,6 +1,6 @@
 <template>
-  <div :key="activity._cid" class="repository-sidebar elevation-1">
-    <div v-if="activitySelected">
+  <v-navigation-drawer width="450" color="grey lighten-5" absolute right>
+    <div v-if="selectedActivity" :key="selectedActivity._cid">
       <sidebar-header />
       <sidebar-body />
     </div>
@@ -12,7 +12,7 @@
         to view and edit its details here.
       </div>
     </div>
-  </div>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -21,12 +21,7 @@ import SidebarBody from './Body';
 import SidebarHeader from './Header';
 
 export default {
-  computed: {
-    ...mapGetters('repository', ['activity']),
-    activitySelected() {
-      return !!this.activity._cid;
-    }
-  },
+  computed: mapGetters('repository', ['selectedActivity']),
   components: {
     SidebarBody,
     SidebarHeader
@@ -35,15 +30,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.repository-sidebar {
-  position: absolute;
-  right: 0;
-  width: 28.125rem;
-  height: 100%;
+.v-navigation-drawer {
   text-align: left;
-  background-color: #fafafa;
-  border-top: 1px solid #e8e8e8;
-  overflow: auto;
 }
 
 .placeholder {
