@@ -105,7 +105,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', ['remove']),
+    ...mapActions('repository/activities', ['remove']),
     ...mapMutations('repository', ['focusActivity', 'toggleActivity']),
     expandParent(item) {
       const { activity, parent } = this;
