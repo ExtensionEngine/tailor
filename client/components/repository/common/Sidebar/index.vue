@@ -1,8 +1,8 @@
 <template>
   <v-navigation-drawer width="450" color="grey lighten-5" absolute right>
     <div v-if="selectedActivity" :key="selectedActivity._cid">
-      <sidebar-header />
-      <sidebar-body />
+      <sidebar-header :activity="selectedActivity" />
+      <sidebar-body :activity="selectedActivity" />
     </div>
     <div v-else class="placeholder grey--text text--darken-3">
       <h4>Outline Sidebar</h4>
