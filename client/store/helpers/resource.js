@@ -44,8 +44,10 @@ export default class Resource {
    */
   processEntries(items) {
     return reduce(items, (acc, it) => {
-      this.setCid(it);
-      acc[it._cid] = it;
+      if (!this.getCid(it.id)) {
+        this.setCid(it);
+        acc[it._cid] = it;
+      }
       return acc;
     }, {});
   }

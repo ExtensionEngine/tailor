@@ -1,20 +1,14 @@
-import find from 'lodash/find';
 import generateActions from '../../helpers/actions';
-import omitBy from 'lodash/omitBy';
 import SSEClient from '../../../SSEClient';
 
 const { api, get, save, setEndpoint, update } = generateActions();
 let SSE_CLIENT;
 
-const omitExisting = (fetched, existing) => {
-  return omitBy(fetched, it => find(existing, { id: it.id }));
-};
-
 const fetch = ({ state, commit }, { id, repositoryId }) => {
   const action = state.repositoryId === repositoryId ? 'fetch' : 'reset';
   if (action === 'reset') commit('setRepository', repositoryId);
   return api.fetch({ activityId: id }).then(items => {
-    commit(action, omitExisting(items, state.items));
+    commit(action, items);
     commit('commentsFetched', id);
   });
 };
@@ -23,7 +17,10 @@ const subscribe = ({ state, commit }) => {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
 
   SSE_CLIENT = new SSEClient(`/api/v1${state.$apiUrl}/subscribe`);
-  SSE_CLIENT.subscribe('comment_create', item => commit('sseAdd', item));
+  SSE_CLIENT.subscribe('comment_create', item => {
+    commit('sseAdd', item);
+    api.setCid(item);
+  });
   SSE_CLIENT.subscribe('comment_update', item => commit('sseUpdate', item));
   SSE_CLIENT.subscribe('comment_delete', item => commit('sseUpdate', item));
 };
