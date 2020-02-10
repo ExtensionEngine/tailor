@@ -27,7 +27,21 @@
             @update="onFilterChange(setOrder, $event)"
             :sort-by="sortBy"
             class="pl-2" />
+          <filter-tag
+            @update="onTagFilterChange($event)"
+            :tags="nonSelectedTags" />
         </v-col>
+      </v-row>
+      <v-row>
+        <div>
+          <v-chip
+            v-for="tag in selectedTags"
+            :key="tag.id"
+            @click:close="removeTag(tag.id)"
+            close class="ma-2">
+            {{ tag.name }}
+          </v-chip>
+        </div>
       </v-row>
       <v-row>
         <v-col
@@ -60,6 +74,8 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import CreateRepository from './Create';
+import difference from 'lodash/difference';
+import FilterTag from './FilterTag';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import RepositoryCard from './Card';
@@ -69,12 +85,14 @@ import SelectOrder from './SelectOrder';
 export default {
   data() {
     return {
-      loading: true
+      loading: true,
+      selectedTags: []
     };
   },
   computed: {
     ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
+      tags: state => state.tags,
       showPinned: 'showPinned'
     }),
     ...mapGetters('repositories', {
@@ -94,6 +112,9 @@ export default {
       if (this.queryParams.search) return 'No matches found';
       if (this.showPinned) return '0 pinned items';
       return '0 available repositories';
+    },
+    nonSelectedTags() {
+      return difference(this.tags, this.selectedTags);
     }
   },
   methods: {
@@ -118,6 +139,12 @@ export default {
       filter(val);
       await this.load();
       await this.loader.reset();
+    },
+    onTagFilterChange(filter) {
+      this.selectedTags = [...this.selectedTags, filter];
+    },
+    removeTag(id) {
+      this.selectedTags = this.selectedTags.filter(it => it.id !== id);
     }
   },
   watch: {
@@ -128,6 +155,7 @@ export default {
   },
   components: {
     CreateRepository,
+    FilterTag,
     InfiniteLoading,
     RepositoryCard,
     Search,

@@ -1,6 +1,5 @@
 import { add, fetch, remove, reset, setEndpoint } from '../../helpers/mutations';
 import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
 import Vue from 'vue';
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
@@ -51,14 +50,14 @@ const fetchTags = (state, tags) => {
 
 const saveTags = (state, { tags, data }) => {
   const repo = find(state.items, { id: data.repositoryId });
-  state.tags.push(data);
-  repo.tags.push(tags.tag);
+  const isAdded = find(state.tags, { id: tags.tag.id });
+  if (!isAdded) state.tags = [...state.tags, tags.tag];
+  repo.tags = [...repo.tags, tags.tag];
 };
 
 const removeTag = (state, tag) => {
   const repo = find(state.items, { id: tag.repositoryId });
-  const tagIndex = findIndex(repo.tags, { id: tag.tagId });
-  repo.tags.splice(tagIndex, 1);
+  repo.tags = repo.tags.filter(it => it.id !== tag.tagId);
 };
 
 export {

@@ -18,18 +18,18 @@
       </v-alert>
       <v-combobox
         v-model="newTag"
+        v-validate="'required|min:2|max:20|unique-name'"
+        :error-messages="vErrors.collect('name')"
+        name="name"
         :items="availableTags"
         item-text="name"
         item-value="id"
-        label="Select a tag or create a new one" />
+        label="Select a tag or create a new one"
+        outlined />
     </template>
     <template v-slot:actions>
       <v-btn @click="hide" text>Cancel</v-btn>
-      <v-btn
-        @click="submit"
-        :disabled="vErrors.any()"
-        color="primary"
-        text>
+      <v-btn @click="submit" :disabled="vErrors.any()" color="primary" text>
         Save
       </v-btn>
     </template>
@@ -38,15 +38,15 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import filter from 'lodash/filter';
+import differenceBy from 'lodash/differenceBy';
+import isObject from 'lodash/isObject';
 import TailorDialog from '@/components/common/TailorDialog';
-import { withValidation } from 'utils/validation';
 
 const TAG_LIMIT = 3;
 
 export default {
   name: 'add-tag',
-  mixins: [withValidation()],
+  inject: ['$validator'],
   props: {
     repository: { type: Object, required: true }
   },
@@ -67,8 +67,7 @@ export default {
       return this.repositoryTags.length === TAG_LIMIT;
     },
     availableTags() {
-      const existingTagIds = this.repositoryTags.map(it => it.id);
-      return filter(this.tags, it => !existingTagIds.includes(it.id));
+      return differenceBy(this.tags, this.repositoryTags, 'id');
     }
   },
   methods: {
@@ -78,12 +77,16 @@ export default {
       this.isVisible = false;
     },
     submit() {
-      const data = { ...this.newTag, repositoryId: this.repository.id, type: 'REPOSITORY' };
-      return this.saveTags(data)
+      this.$validator.validateAll().then(isValid => {
+        if (!isValid) return;
+        const tagName = isObject(this.newTag) ? this.newTag.name : this.newTag;
+        const data = { name: tagName, repositoryId: this.repository.id, type: 'REPOSITORY' };
+        return this.saveTags(data)
         .then(result => {
           this.newTag = null;
           this.isVisible = false;
         });
+      });
     }
   },
   watch: {
@@ -94,6 +97,13 @@ export default {
   },
   mounted() {
     this.fetchTags();
+    this.$validator.extend('unique-name', {
+      getMessage: field => 'Tag with than name already exists.',
+      validate: name => {
+        return isObject(name)
+          ? true : !this.tags.find(it => it.name.toLowerCase() === name.toLowerCase());
+      }
+    });
   },
   components: { TailorDialog }
 };
