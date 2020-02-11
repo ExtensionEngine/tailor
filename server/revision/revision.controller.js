@@ -12,6 +12,7 @@ function index({ repository, query }, res) {
   }
   const include = [{
     model: User,
+    paranoid: false,
     attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'label']
   }];
   const opts = { where, include, order: [['createdAt', 'DESC']], limit, offset };
