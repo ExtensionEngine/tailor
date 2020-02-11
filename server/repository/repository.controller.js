@@ -14,22 +14,24 @@ const sample = require('lodash/sample');
 
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
 const lowercaseName = sequelize.fn('lower', sequelize.col('name'));
+const includeLastRevision = () => ({
+  model: Revision,
+  include: [{
+    model: User,
+    paranoid: false,
+    attributes: [
+      'id', 'email', 'firstName', 'lastName', 'fullName', 'label', 'imgUrl'
+    ]
+  }],
+  order: [['createdAt', 'DESC']],
+  limit: 1
+});
 
 function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
   if (query.schema) opts.where.schema = { [Op.eq]: query.schema };
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
-  opts.include = [{
-    model: Revision,
-    include: [{
-      model: User,
-      attributes: [
-        'id', 'email', 'firstName', 'lastName', 'fullName', 'label', 'imgUrl'
-      ]
-    }],
-    order: [['createdAt', 'DESC']],
-    limit: 1
-  }];
+  opts.include = [includeLastRevision()];
   const repositoryUser = query.pinned
     ? { where: { userId: user.id, pinned: true }, required: true }
     : { where: { userId: user.id }, required: false };
@@ -56,7 +58,8 @@ async function create({ user, body }, res) {
   return res.json({ data: repository });
 }
 
-function get({ repository }, res) {
+async function get({ repository }, res) {
+  await repository.reload({ include: [includeLastRevision()] });
   return res.json({ data: repository });
 }
 
