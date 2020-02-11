@@ -3,12 +3,12 @@
     v-model="visible"
     header-icon="mdi-folder-plus-outline">
     <template v-if="showActivator" v-slot:activator="{ on }">
-      <v-btn v-on="on" color="grey darken-3" text class="px-1">
-        <v-icon class="pr-1">mdi-folder-plus</v-icon>
-        Create {{ hasSingleOption ? levels[0].label : '' }}
+      <v-btn v-on="on" :color="activatorColor" text class="px-1">
+        <v-icon class="pr-1">{{ activatorIcon }}</v-icon>
+        {{ activatorLabel || defaultLabel }}
       </v-btn>
     </template>
-    <template v-slot:header>Create</template>
+    <template v-slot:header>{{ heading || defaultLabel }}</template>
     <template v-slot:body>
       <type-select
         v-model="activity.type"
@@ -50,7 +50,11 @@ export default {
     repositoryId: { type: Number, required: true },
     levels: { type: Array, required: true },
     anchor: { type: Object, default: null },
-    showActivator: { type: Boolean, default: false }
+    heading: { type: String, default: '' },
+    showActivator: { type: Boolean, default: false },
+    activatorLabel: { type: String, default: '' },
+    activatorColor: { type: String, default: 'grey darken-3' },
+    activatorIcon: { type: String, default: 'mdi-folder-plus' }
   },
   data() {
     return {
@@ -61,11 +65,12 @@ export default {
   computed: {
     ...mapGetters('repository', ['getMetadata']),
     ...mapGetters('activities', ['calculateInsertPosition']),
-    hasSingleOption: vm => vm.levels.length === 1,
     metadata() {
       if (!this.activity.type) return null;
       return this.getMetadata({ type: this.activity.type });
-    }
+    },
+    hasSingleOption: vm => vm.levels.length === 1,
+    defaultLabel: vm => vm.hasSingleOption ? `Add ${vm.levels[0].label}` : 'Add'
   },
   methods: {
     ...mapActions('activities', ['save']),

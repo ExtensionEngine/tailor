@@ -44,7 +44,7 @@ import find from 'lodash/find';
 import map from 'lodash/map';
 import OutlineFooter from './OutlineFooter';
 import reorderMixin from './reorderMixin';
-import Sidebar from '../Sidebar';
+import Sidebar from '../common/Sidebar';
 
 export default {
   mixins: [reorderMixin],

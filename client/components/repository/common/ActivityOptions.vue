@@ -25,7 +25,10 @@
       @created="expandParent"
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
-      :anchor="activity" />
+      :anchor="activity"
+      :heading="`
+        Add ${supportedLevels === subLevels ? 'into' : 'below'}
+        ${activity.data.name}`" />
     <copy-dialog
       v-if="showCopyDialog"
       @close="showCopyDialog = null"
@@ -38,8 +41,8 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import CopyDialog from '../Outline/InsertActivity/CopyActivity';
-import CreateDialog from '../Outline/InsertActivity/CreateDialog';
+import CopyDialog from '@/components/repository/common/CopyActivity';
+import CreateDialog from '@/components/repository/common/CreateDialog';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -78,7 +81,7 @@ export default {
     },
     addMenuOptions() {
       const items = [{
-        name: 'Add item after',
+        name: 'Add item below',
         icon: 'arrow-down',
         action: () => this.setCreateContext(this.sameLevel)
       }, {
