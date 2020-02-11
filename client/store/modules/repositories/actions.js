@@ -2,6 +2,7 @@ import find from 'lodash/find';
 import forEach from 'lodash/forEach';
 import generateActions from '../../helpers/actions';
 import getVal from 'lodash/get';
+import repositoryApi from '../../../api/repository';
 import tagApi from '../../../api/tag';
 
 const {
@@ -41,13 +42,13 @@ const fetchTags = ({ commit }) => {
   return tagApi.list().then(tags => { commit('fetchTags', tags); });
 };
 
-const saveTags = ({ commit }, data) => {
-  return tagApi.createRepositoryTag(data)
-    .then(tags => commit('saveTags', { tags, data }));
+const addTag = ({ commit }, data) => {
+  return repositoryApi.addTag({ ...data, type: 'REPOSITORY' })
+    .then(tags => commit('addTag', { tags, data }));
 };
 
 const removeTag = ({ commit }, data) => {
-  return tagApi.deleteRepositoryTag(data)
+  return repositoryApi.removeTag(data)
     .then(tag => commit('removeTag', tag));
 };
 
@@ -55,7 +56,7 @@ export {
   clone,
   fetch,
   fetchTags,
-  saveTags,
+  addTag,
   get,
   pin,
   remove,

@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <v-card-actions class="pa-1 grey lighten-4">
+    <v-card-actions class="pa-1 grey lighten-4 justify-space-between">
       <v-btn
         @click.stop="pin({ id: repository.id, pin: !isPinned })"
         @mousedown.stop
@@ -48,18 +48,18 @@
       </v-btn>
       <v-col cols="12" sm="8" md="9" class="pa-0">
         <v-chip
-          v-for="({ id, name: tagName }) in repositoryTags"
+          v-for="({ id, name: tagName }) in tags"
           :key="id"
-          @click.stop="on"
+          @click.stop
           @click:close="deleteTag(id, tagName)"
-          class="mr-1"
+          color="grey darker-1"
+          text-color="white"
           close
-          color="grey lighten-1"
-          text-color="white">
+          class="mr-1">
           {{ tagName }}
         </v-chip>
       </v-col>
-      <add-tag :repository="repository" />
+      <add-tag v-if="exceedTagLimit" :repository="repository" />
     </v-card-actions>
   </v-card>
 </template>
@@ -73,6 +73,7 @@ import { getSchema } from 'shared/activities';
 import { mapActions } from 'vuex';
 
 const appChannel = EventBus.channel('app');
+const TAG_LIMIT = 3;
 
 export default {
   props: {
@@ -84,9 +85,8 @@ export default {
     schema: ({ repository }) => getSchema(repository.schema).name,
     lastActivity: ({ repository }) => first(repository.revisions),
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),
-    repositoryTags() {
-      return this.repository.tags;
-    }
+    tags: ({ repository }) => repository.tags,
+    exceedTagLimit: ({ repository }) => repository.tags.length < TAG_LIMIT
   },
   methods: {
     ...mapActions('repositories', ['pin', 'removeTag']),

@@ -1,10 +1,10 @@
 <template>
   <tailor-dialog
     v-model="isVisible"
-    header-icon="mdi-pound-box-outline">
+    header-icon="mdi-tag-outline">
     <template v-slot:activator="{ on }">
-      <v-btn v-show="!showAddTag" v-on="on" @click.stop="" icon>
-        <v-icon>mdi-plus</v-icon>
+      <v-btn v-on="on" @click.stop icon>
+        <v-icon small class="pr-1">mdi-plus</v-icon>
       </v-btn>
     </template>
     <template v-slot:header>Add Tag</template>
@@ -17,11 +17,12 @@
         {{ vErrors.first('default') }}
       </v-alert>
       <v-combobox
-        v-model="newTag"
-        v-validate="'required|min:2|max:20|unique-name'"
+        v-model="tagInput"
+        v-validate="'required|min:2|max:20|unique-tag-name'"
+        @keyup.enter="submit"
         :error-messages="vErrors.collect('name')"
-        name="name"
         :items="availableTags"
+        name="name"
         item-text="name"
         item-value="id"
         label="Select a tag or create a new one"
@@ -41,69 +42,38 @@ import { mapActions, mapState } from 'vuex';
 import differenceBy from 'lodash/differenceBy';
 import isObject from 'lodash/isObject';
 import TailorDialog from '@/components/common/TailorDialog';
-
-const TAG_LIMIT = 3;
+import { withValidation } from 'utils/validation';
 
 export default {
   name: 'add-tag',
-  inject: ['$validator'],
+  mixins: [withValidation()],
   props: {
     repository: { type: Object, required: true }
   },
   data: () => ({
     isVisible: false,
-    selectedTagIds: [],
-    newTag: null,
-    confirmationModal: { show: false }
+    tagInput: null
   }),
   computed: {
-    ...mapState('repositories', {
-      tags: state => state.tags
-    }),
-    repositoryTags() {
-      return this.repository.tags;
-    },
-    showAddTag() {
-      return this.repositoryTags.length === TAG_LIMIT;
-    },
-    availableTags() {
-      return differenceBy(this.tags, this.repositoryTags, 'id');
-    }
+    ...mapState({ tags: state => state.repositories.tags }),
+    assignedTags: vm => vm.repository.tags,
+    availableTags: vm => differenceBy(vm.tags, vm.assignedTags, 'id')
   },
   methods: {
-    ...mapActions('repositories', ['fetchTags', 'saveTags', 'removeTag']),
+    ...mapActions('repositories', ['addTag', 'removeTag']),
     hide() {
-      this.newTag = null;
+      this.tagInput = null;
       this.isVisible = false;
     },
-    submit() {
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
-        const tagName = isObject(this.newTag) ? this.newTag.name : this.newTag;
-        const data = { name: tagName, repositoryId: this.repository.id, type: 'REPOSITORY' };
-        return this.saveTags(data)
-        .then(result => {
-          this.newTag = null;
-          this.isVisible = false;
-        });
-      });
+    async submit() {
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) return;
+      const tagName = isObject(this.tagInput) ? this.tagInput.name : this.tagInput;
+      const data = { name: tagName, repositoryId: this.repository.id };
+      await this.addTag(data);
+      this.tagInput = null;
+      this.isVisible = false;
     }
-  },
-  watch: {
-    isVisible(val) {
-      if (!val) return;
-      setTimeout(() => { this.$validator.reset(); }, 60);
-    }
-  },
-  mounted() {
-    this.fetchTags();
-    this.$validator.extend('unique-name', {
-      getMessage: field => 'Tag with than name already exists.',
-      validate: name => {
-        return isObject(name)
-          ? true : !this.tags.find(it => it.name.toLowerCase() === name.toLowerCase());
-      }
-    });
   },
   components: { TailorDialog }
 };

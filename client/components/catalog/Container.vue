@@ -28,20 +28,19 @@
             :sort-by="sortBy"
             class="pl-2" />
           <filter-tag
-            @update="onTagFilterChange($event)"
+            @update="onTagFilterChange"
             :tags="nonSelectedTags" />
         </v-col>
       </v-row>
       <v-row>
-        <div>
-          <v-chip
-            v-for="tag in selectedTags"
-            :key="tag.id"
-            @click:close="removeTag(tag.id)"
-            close class="ma-2">
-            {{ tag.name }}
-          </v-chip>
-        </div>
+        <v-chip
+          v-for="tag in selectedTags"
+          :key="tag.id"
+          @click:close="removeTag(tag.id)"
+          close
+          class="ma-2">
+          {{ tag.name }}
+        </v-chip>
       </v-row>
       <v-row>
         <v-col
@@ -113,12 +112,10 @@ export default {
       if (this.showPinned) return '0 pinned items';
       return '0 available repositories';
     },
-    nonSelectedTags() {
-      return difference(this.tags, this.selectedTags);
-    }
+    nonSelectedTags: vm => difference(vm.tags, vm.selectedTags)
   },
   methods: {
-    ...mapActions('repositories', ['fetch']),
+    ...mapActions('repositories', ['fetch', 'fetchTags']),
     ...mapMutations('repositories', [
       'togglePinned', 'setSearch', 'setOrder', 'resetFilters'
     ]),
@@ -152,6 +149,9 @@ export default {
       // If all items get unpinned
       if (!this.hasRepositories && this.showPinned) this.loader.reset();
     }
+  },
+  mounted() {
+    this.fetchTags();
   },
   components: {
     CreateRepository,

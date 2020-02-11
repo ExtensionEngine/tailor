@@ -48,7 +48,7 @@ const fetchTags = (state, tags) => {
   state.tags = tags;
 };
 
-const saveTags = (state, { tags, data }) => {
+const addTag = (state, { tags, data }) => {
   const repo = find(state.items, { id: data.repositoryId });
   const isAdded = find(state.tags, { id: tags.tag.id });
   if (!isAdded) state.tags = [...state.tags, tags.tag];
@@ -71,7 +71,7 @@ export {
   resetPagination,
   resetFilters,
   save,
-  saveTags,
+  addTag,
   setEndpoint,
   setPagination,
   setOrder,

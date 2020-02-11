@@ -22,7 +22,7 @@ const includeLastRevision = () => ({
     attributes: [
       'id', 'email', 'firstName', 'lastName', 'fullName', 'label', 'imgUrl'
     ]
-  }, { model: Tag }],
+  }],
   order: [['createdAt', 'DESC']],
   limit: 1
 });
@@ -31,7 +31,7 @@ function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
   if (query.schema) opts.where.schema = { [Op.eq]: query.schema };
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
-  opts.include = [includeLastRevision()];
+  opts.include = [includeLastRevision(), { model: Tag }];
   const repositoryUser = query.pinned
     ? { where: { userId: user.id, pinned: true }, required: true }
     : { where: { userId: user.id }, required: false };
@@ -135,7 +135,7 @@ function getTags({ repository }, res) {
     .then(tags => res.json({ data: tags }));
 }
 
-function createTag({ body, repository }, res) {
+function addTag({ body, repository }, res) {
   const { name, type } = body;
   return sequelize.transaction(async transaction => {
     const [tag] = await Tag.findOrCreate({ where: { name }, transaction });
@@ -165,6 +165,6 @@ module.exports = {
   removeUser,
   publishRepoInfo,
   getTags,
-  createTag,
+  addTag,
   removeTag
 };

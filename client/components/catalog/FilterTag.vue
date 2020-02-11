@@ -3,7 +3,7 @@
     <v-menu offset-y>
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" icon text class="my-1">
-          <v-icon color="primary lighten-4">mdi-cloud-tags</v-icon>
+          <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>
         </v-btn>
       </template>
       <v-list class="py-0">
