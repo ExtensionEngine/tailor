@@ -21,6 +21,7 @@ module.exports = {
   collectCoverageFrom: [
     // For now only the client folder
     '<rootDir>/client/**/*.{js,jsx}',
+    '<rootDir>/server/**/*.{js,jsx}',
     '!**/node_modules/**',
     '!**/vendor/**'
   ],
