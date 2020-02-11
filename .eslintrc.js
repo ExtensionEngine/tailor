@@ -4,7 +4,8 @@ module.exports = {
   root: true,
   extends: '@extensionengine',
   plugins: [
-    'vuetify'
+    'vuetify',
+    'jest'
   ],
   rules: {
     'vuetify/no-deprecated-classes': 'error',
@@ -17,7 +18,19 @@ module.exports = {
       parser: 'babel-eslint',
       sourceType: 'module'
     }
-  }],
+  },
+  {
+    files: ['tests/**'],
+    parserOptions: {
+      parser: 'babel-eslint',
+      sourceType: 'module'
+    },
+    env: {
+      jest: true
+    }
+  }
+],
+
   globals: {
     BRAND_CONFIG: true
   }
