@@ -33,7 +33,7 @@ function index({ query, user, opts }, res) {
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
   opts.include = [includeLastRevision()];
   const includeTag = { model: Tag };
-  if (query.filterTags && query.filterTags.length) {
+  if (query.filterTags) {
     includeTag.where = { id: { [Op.in]: query.filterTags } };
   }
   opts.include.push(includeTag);
