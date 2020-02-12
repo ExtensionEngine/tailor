@@ -87,39 +87,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository', {
-      structure: 'structure',
-      focusedActivity: 'activity',
-      isCollapsed: 'isCollapsed'
-    }),
+    ...mapGetters('repository', ['structure', 'selectedActivity', 'isCollapsed']),
     ...mapState({ outlineState: s => s.repository.outline }),
-    config() {
-      return find(this.structure, { type: this.type });
-    },
-    color() {
-      return this.config.color;
-    },
-    isEditable() {
-      return isEditable(this.type);
-    },
-    isSelected() {
-      return this.focusedActivity._cid === this._cid;
-    },
-    isHighlighted() {
-      return this.isHovered || this.isSelected;
-    },
-    isExpanded() {
-      return !this.isCollapsed({ _cid: this._cid });
-    },
-    hasSubtypes() {
-      return !!size(this.config.subLevels);
-    },
-    hasChildren() {
-      return (this.children.length > 0) && this.hasSubtypes;
-    },
-    showOptions() {
-      return this._cid === this.outlineState.showOptions;
-    },
+    config: vm => find(vm.structure, { type: vm.type }),
+    color: vm => vm.config.color,
+    isEditable: vm => isEditable(vm.type),
+    isSelected: vm => vm.selectedActivity && (vm.selectedActivity._cid === vm._cid),
+    isHighlighted: vm => vm.isHovered || vm.isSelected,
+    isExpanded: vm => !vm.isCollapsed({ _cid: vm._cid }),
+    hasSubtypes: vm => !!size(vm.config.subLevels),
+    hasChildren: vm => (vm.children.length > 0) && vm.hasSubtypes,
+    showOptions: vm => vm._cid === vm.outlineState.showOptions,
     children() {
       const level = this.level + 1;
       const types = map(filter(this.structure, { level }), 'type');
