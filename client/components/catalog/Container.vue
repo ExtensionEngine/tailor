@@ -28,7 +28,7 @@
             :sort-by="sortBy"
             class="pl-2" />
           <filter-tag
-            @update="onTagFilterChange"
+            @update="onFilterChange(setTagFilter, $event)"
             :tags="nonSelectedTags" />
         </v-col>
       </v-row>
@@ -84,14 +84,14 @@ import SelectOrder from './SelectOrder';
 export default {
   data() {
     return {
-      loading: true,
-      selectedTags: []
+      loading: true
     };
   },
   computed: {
     ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
       tags: state => state.tags,
+      selectedTags: state => state.selectedTags,
       showPinned: 'showPinned'
     }),
     ...mapGetters('repositories', {
@@ -117,7 +117,7 @@ export default {
   methods: {
     ...mapActions('repositories', ['fetch', 'fetchTags']),
     ...mapMutations('repositories', [
-      'togglePinned', 'setSearch', 'setOrder', 'resetFilters'
+      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'setTagFilter'
     ]),
     async load() {
       this.loading = true;
