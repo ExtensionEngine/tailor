@@ -9,6 +9,7 @@ const state = {
   search: '',
   showPinned: false,
   tags: [],
+  selectedTags: [],
   $internals: {
     pagination: PAGINATION_DEFAULTS,
     sort: {

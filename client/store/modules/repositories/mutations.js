@@ -60,6 +60,11 @@ const removeTag = (state, tag) => {
   repo.tags = repo.tags.filter(it => it.id !== tag.tagId);
 };
 
+const setTagFilter = (state, selectedTag) => {
+  resetPagination(state);
+  state.selectedTags = [...state.selectedTags, selectedTag];
+};
+
 export {
   add,
   allRepositoriesFetched,
@@ -76,5 +81,6 @@ export {
   setPagination,
   setOrder,
   setSearch,
+  setTagFilter,
   togglePinned
 };

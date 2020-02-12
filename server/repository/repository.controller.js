@@ -31,7 +31,12 @@ function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
   if (query.schema) opts.where.schema = { [Op.eq]: query.schema };
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
-  opts.include = [includeLastRevision(), { model: Tag }];
+  opts.include = [includeLastRevision()];
+  const includeTag = { model: Tag };
+  if (query.filterTags && query.filterTags.length) {
+    includeTag.where = { id: { [Op.in]: query.filterTags } };
+  }
+  opts.include.push(includeTag);
   const repositoryUser = query.pinned
     ? { where: { userId: user.id, pinned: true }, required: true }
     : { where: { userId: user.id }, required: false };
