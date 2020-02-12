@@ -1,0 +1,216 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Helpers - mutation test should add a item to the state 1`] = `
+Object {
+  "$apiUrl": "/repositories/1/activities",
+  "$internals": Object {},
+  "items": Object {
+    "ck6i4v82h00063h5wvhr7u0uc": Object {
+      "_cid": "ck6i4v82h00063h5wvhr7u0uc",
+      "_synced": false,
+      "_version": 1581440542361,
+      "activityId": 63,
+      "author": Object {
+        "createdAt": "2020-02-03T14:44:03.815Z",
+        "deletedAt": null,
+        "email": "admin@extensionengine.com",
+        "firstName": null,
+        "fullName": null,
+        "id": 1,
+        "imgUrl": "https://s.gravatar.com/avatar/b29ca01752b9c16029d61c1c8c8094cc?size=130&default=identicon",
+        "label": "admin@extensionengine.com",
+        "lastName": null,
+        "role": "ADMIN",
+        "updatedAt": "2020-02-03T14:44:03.815Z",
+      },
+      "content": "Here is the comment text",
+      "createdAt": 1581440542361,
+      "updatedAt": 1581440542361,
+    },
+  },
+}
+`;
+
+exports[`Helpers - mutation test should add a item to the state 2`] = `
+Object {
+  "$apiUrl": "/repositories/1/activities",
+  "$internals": Object {},
+  "items": Object {
+    "newCuid": Object {
+      "_cid": "newCuid",
+      "_synced": false,
+      "_version": 1581440542361,
+      "activityId": 63,
+      "author": Object {
+        "createdAt": "2020-02-03T14:44:03.815Z",
+        "deletedAt": null,
+        "email": "admin@extensionengine.com",
+        "firstName": null,
+        "fullName": null,
+        "id": 1,
+        "imgUrl": "https://s.gravatar.com/avatar/b29ca01752b9c16029d61c1c8c8094cc?size=130&default=identicon",
+        "label": "admin@extensionengine.com",
+        "lastName": null,
+        "role": "ADMIN",
+        "updatedAt": "2020-02-03T14:44:03.815Z",
+      },
+      "content": "Here is the comment text",
+      "createdAt": 1581440542361,
+      "updatedAt": 1581440542361,
+    },
+  },
+}
+`;
+
+exports[`Helpers - mutation test should reset mutation resets the comments in the vue instance 1`] = `
+Object {
+  "$apiUrl": "/repositories/1/activities",
+  "$internals": Object {},
+  "items": Object {
+    "ck6i0fsmg00003h5wqtirijkm": Object {
+      "_cid": "ck6i0fsmg00003h5wqtirijkm",
+      "createdAt": "2020-02-05T17:44:29.055Z",
+      "data": Object {
+        "name": "stolar",
+      },
+      "deletedAt": null,
+      "detached": false,
+      "id": 63,
+      "parentId": null,
+      "position": 1,
+      "publishedAt": null,
+      "refs": Object {},
+      "repositoryId": 1,
+      "type": "DEFAULT_SCHEMA/COMPETENCY",
+      "uid": "570149c9-52e1-46b9-8946-a55bdd636c9b",
+      "updatedAt": "2020-02-05T17:44:29.055Z",
+    },
+    "ck6i0fsmg00013h5w7hmh3r3a": Object {
+      "_cid": "ck6i0fsmg00013h5w7hmh3r3a",
+      "createdAt": "2020-02-05T21:02:07.902Z",
+      "data": Object {},
+      "deletedAt": null,
+      "detached": false,
+      "id": 69,
+      "parentId": 63,
+      "position": 1,
+      "publishedAt": null,
+      "refs": Object {},
+      "repositoryId": 1,
+      "type": "INTRO",
+      "uid": "9de9f40f-1a40-46fd-9ac6-3773cfea1e82",
+      "updatedAt": "2020-02-05T21:02:07.902Z",
+    },
+    "ck6i0fsmg00023h5wqbtdj1e1": Object {
+      "_cid": "ck6i0fsmg00023h5wqbtdj1e1",
+      "createdAt": "2020-02-06T13:27:21.611Z",
+      "data": Object {
+        "name": "prvi",
+      },
+      "deletedAt": null,
+      "detached": false,
+      "id": 80,
+      "parentId": 63,
+      "position": 1,
+      "publishedAt": null,
+      "refs": Object {},
+      "repositoryId": 1,
+      "type": "DEFAULT_SCHEMA/OBJECTIVE",
+      "uid": "25f656bb-990f-4ec1-978b-c5ff868ad11c",
+      "updatedAt": "2020-02-06T13:27:21.611Z",
+    },
+  },
+}
+`;
+
+exports[`Helpers - mutation test should save item to the state 1`] = `
+Object {
+  "$apiUrl": "/repositories/1/activities",
+  "$internals": Object {},
+  "items": Object {
+    "ck6i4v82h00063h5wvhr7u0uc": Object {
+      "_cid": "ck6i4v82h00063h5wvhr7u0uc",
+      "_synced": false,
+      "_version": 1581440542361,
+      "activityId": 63,
+      "author": Object {
+        "createdAt": "2020-02-03T14:44:03.815Z",
+        "deletedAt": null,
+        "email": "admin@extensionengine.com",
+        "firstName": null,
+        "fullName": null,
+        "id": 1,
+        "imgUrl": "https://s.gravatar.com/avatar/b29ca01752b9c16029d61c1c8c8094cc?size=130&default=identicon",
+        "label": "admin@extensionengine.com",
+        "lastName": null,
+        "role": "ADMIN",
+        "updatedAt": "2020-02-03T14:44:03.815Z",
+      },
+      "content": "Here is the comment text",
+      "createdAt": 1581440542361,
+      "updatedAt": 1581440542361,
+    },
+  },
+}
+`;
+
+exports[`Helpers - mutation test should test fetch mutation sets the vue instance state 1`] = `
+Object {
+  "$apiUrl": "/repositories/1/activities",
+  "$internals": Object {},
+  "items": Object {
+    "ck6i0fsmg00003h5wqtirijkm": Object {
+      "_cid": "ck6i0fsmg00003h5wqtirijkm",
+      "createdAt": "2020-02-05T17:44:29.055Z",
+      "data": Object {
+        "name": "stolar",
+      },
+      "deletedAt": null,
+      "detached": false,
+      "id": 63,
+      "parentId": null,
+      "position": 1,
+      "publishedAt": null,
+      "refs": Object {},
+      "repositoryId": 1,
+      "type": "DEFAULT_SCHEMA/COMPETENCY",
+      "uid": "570149c9-52e1-46b9-8946-a55bdd636c9b",
+      "updatedAt": "2020-02-05T17:44:29.055Z",
+    },
+    "ck6i0fsmg00013h5w7hmh3r3a": Object {
+      "_cid": "ck6i0fsmg00013h5w7hmh3r3a",
+      "createdAt": "2020-02-05T21:02:07.902Z",
+      "data": Object {},
+      "deletedAt": null,
+      "detached": false,
+      "id": 69,
+      "parentId": 63,
+      "position": 1,
+      "publishedAt": null,
+      "refs": Object {},
+      "repositoryId": 1,
+      "type": "INTRO",
+      "uid": "9de9f40f-1a40-46fd-9ac6-3773cfea1e82",
+      "updatedAt": "2020-02-05T21:02:07.902Z",
+    },
+    "ck6i0fsmg00023h5wqbtdj1e1": Object {
+      "_cid": "ck6i0fsmg00023h5wqbtdj1e1",
+      "createdAt": "2020-02-06T13:27:21.611Z",
+      "data": Object {
+        "name": "prvi",
+      },
+      "deletedAt": null,
+      "detached": false,
+      "id": 80,
+      "parentId": 63,
+      "position": 1,
+      "publishedAt": null,
+      "refs": Object {},
+      "repositoryId": 1,
+      "type": "DEFAULT_SCHEMA/OBJECTIVE",
+      "uid": "25f656bb-990f-4ec1-978b-c5ff868ad11c",
+      "updatedAt": "2020-02-06T13:27:21.611Z",
+    },
+  },
+}
+`;
