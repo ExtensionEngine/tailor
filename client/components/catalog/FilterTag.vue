@@ -1,6 +1,6 @@
 <template>
   <span>
-    <v-menu offset-y>
+    <v-menu :close-on-content-click="false" offset-y>
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" icon text class="my-1">
           <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>
