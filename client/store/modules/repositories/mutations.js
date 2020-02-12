@@ -65,6 +65,11 @@ const setTagFilter = (state, selectedTag) => {
   state.selectedTags = [...state.selectedTags, selectedTag];
 };
 
+const removeTagFilter = (state, id) => {
+  resetPagination(state);
+  state.selectedTags = [...state.selectedTags.filter(it => it.id !== id)];
+};
+
 export {
   add,
   allRepositoriesFetched,
@@ -72,6 +77,7 @@ export {
   fetchTags,
   remove,
   removeTag,
+  removeTagFilter,
   reset,
   resetPagination,
   resetFilters,

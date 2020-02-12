@@ -36,7 +36,7 @@
         <v-chip
           v-for="tag in selectedTags"
           :key="tag.id"
-          @click:close="removeTag(tag.id)"
+          @click:close="onFilterChange(removeTagFilter, tag.id)"
           close
           class="ma-2">
           {{ tag.name }}
@@ -117,7 +117,8 @@ export default {
   methods: {
     ...mapActions('repositories', ['fetch', 'fetchTags']),
     ...mapMutations('repositories', [
-      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'setTagFilter'
+      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'setTagFilter',
+      'removeTagFilter'
     ]),
     async load() {
       this.loading = true;
@@ -139,9 +140,6 @@ export default {
     },
     onTagFilterChange(filter) {
       this.selectedTags = [...this.selectedTags, filter];
-    },
-    removeTag(id) {
-      this.selectedTags = this.selectedTags.filter(it => it.id !== id);
     }
   },
   watch: {
