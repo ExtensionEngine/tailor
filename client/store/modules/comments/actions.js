@@ -18,8 +18,8 @@ const subscribe = ({ state, commit }) => {
 
   SSE_CLIENT = new SSEClient(`/api/v1${state.$apiUrl}/subscribe`);
   SSE_CLIENT.subscribe('comment_create', item => {
-    commit('sseAdd', item);
     api.setCid(item);
+    commit('sseAdd', item);
   });
   SSE_CLIENT.subscribe('comment_update', item => commit('sseUpdate', item));
   SSE_CLIENT.subscribe('comment_delete', item => commit('sseUpdate', item));

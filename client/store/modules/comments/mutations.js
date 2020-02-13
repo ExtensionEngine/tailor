@@ -1,5 +1,4 @@
 import { fetch, remove, reset, save, setEndpoint } from '../../helpers/mutations';
-import cuid from 'cuid';
 import find from 'lodash/find';
 import pick from 'lodash/pick';
 import Vue from 'vue';
@@ -16,7 +15,6 @@ const commentsFetched = (state, activityId) => {
 const sseAdd = (state, comment) => {
   const { id } = comment;
   if (find(state.items, { id })) return;
-  comment._cid = cuid();
   Vue.set(state.items, comment._cid, comment);
 };
 
