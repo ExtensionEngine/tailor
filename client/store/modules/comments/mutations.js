@@ -12,12 +12,6 @@ const commentsFetched = (state, activityId) => {
   Vue.set(state.activitiesFetched, activityId, true);
 };
 
-const sseAdd = (state, comment) => {
-  const { id } = comment;
-  if (find(state.items, { id })) return;
-  Vue.set(state.items, comment._cid, comment);
-};
-
 const sseUpdate = (state, comment) => {
   const existing = find(state.items, { id: comment.id });
   if (!existing) return;
@@ -33,6 +27,5 @@ export {
   save,
   setRepository,
   setEndpoint,
-  sseAdd,
   sseUpdate
 };
