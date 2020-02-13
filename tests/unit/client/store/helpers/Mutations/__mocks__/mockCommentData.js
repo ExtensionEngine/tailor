@@ -55,7 +55,7 @@ export const mockItems = () => {
   });
 };
 export const mockCommentState = () => ({ items: {}, $internals: {}, $apiUrl: '/repositories/1/activities' });
-export const mockAddCommentModel = (_cid = 'ck6i4v82h00063h5wvhr7u0uc') => ({
+export const mockCommentModel = (_cid = 'ck6i4v82h00063h5wvhr7u0uc') => ({
   content: 'Here is the comment text',
   author: {
     id: 1,

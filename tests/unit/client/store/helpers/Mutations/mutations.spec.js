@@ -1,5 +1,5 @@
 import { add, fetch, remove, reset, save, setEndpoint } from '@/store/helpers/mutations.js';
-import { mockAddCommentModel, mockCommentState, mockItems } from './__mocks__/mockCommentData';
+import { mockCommentModel, mockCommentState, mockItems } from './__mocks__/mockCommentData';
 
 jest.mock('cuid');
 // eslint-disable-next-line no-unused-vars
@@ -25,7 +25,7 @@ describe('Helpers - mutation test', () => {
 
   it('should add a item to the state', () => {
     let state = mockCommentState();
-    const model = mockAddCommentModel();
+    const model = mockCommentModel();
     add(state, model);
     expect(state).toMatchSnapshot();
     delete model._cid;
@@ -37,8 +37,8 @@ describe('Helpers - mutation test', () => {
 
   it('should remove a item from the state', () => {
     const state = mockCommentState();
-    const model1 = mockAddCommentModel();
-    const model2 = mockAddCommentModel('hereisAfakeCuild');
+    const model1 = mockCommentModel();
+    const model2 = mockCommentModel('hereisAfakeCuild');
     add(state, model1);
     add(state, model2);
     remove(state, [model1]);
@@ -47,7 +47,7 @@ describe('Helpers - mutation test', () => {
 
   it('should save item to the state', () => {
     const state = mockCommentState();
-    const model = mockAddCommentModel();
+    const model = mockCommentModel();
     save(state, model);
     expect(state).toMatchSnapshot();
   });
