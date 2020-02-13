@@ -16,7 +16,7 @@ module.exports = {
   transformIgnorePatterns: ['/node_modules/'],
   // support the same @ -> src alias mapping in source code
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/client/$1'
+    '^@/(.*)$': '<rootDir>/$1'
   },
   collectCoverageFrom: [
     // For now only the client folder
