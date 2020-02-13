@@ -40,7 +40,7 @@ export default {
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository',
-      ['repository', 'activities', 'activity', 'isRepositoryAdmin']),
+      ['repository', 'activities', 'selectedActivity', 'isRepositoryAdmin']),
     tabs() {
       const items = [
         { name: 'Structure', route: 'repository', icon: 'file-tree' },
@@ -55,19 +55,20 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['initialize']),
-    ...mapMutations('repository', { resetActivityFocus: 'focusActivity' })
+    ...mapMutations('repository', ['focusActivity'])
   },
   async created() {
-    const { repositoryId, activity } = this;
-    const existingSelection = get(activity, 'repositoryId') === repositoryId;
-    if (!existingSelection) this.resetActivityFocus();
-    // TODO: Do this better!
+    const { repositoryId, selectedActivity: activity } = this;
     await this.initialize(repositoryId);
-    this.showLoader = false;
-    const activities = filter(this.activities, { parentId: null });
-    if (!existingSelection && activities.length) {
-      this.resetActivityFocus(sortBy(activities, 'position')[0]._cid);
+    const isActivitySelected = get(activity, 'repositoryId') === repositoryId;
+    if (!isActivitySelected) {
+      const rootActivities = filter(this.activities, { parentId: null });
+      const activityCid = rootActivities.length
+        ? sortBy(rootActivities, 'position')[0]._cid
+        : null;
+      this.focusActivity(activityCid);
     }
+    this.showLoader = false;
   }
 };
 </script>
