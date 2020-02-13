@@ -1,10 +1,10 @@
-import { mockCommentModel, mockCommentState } from './__mocks__/mockCommentData';
-import generateActions from '@/store/helpers/actions';
+import { mockCommentModel, mockCommentState } from '../__mocks__/mockCommentData';
+import generateActions from '@/client/store/helpers/actions';
 const { fetch, get, reset, remove, save, setEndpoint, update } = generateActions();
 
 jest.mock('cuid');
 
-jest.mock('@/store/helpers/resource', () => {
+jest.mock('@/client/store/helpers/resource', () => {
   const mockResolve = () => Promise.resolve({});
   return jest.fn().mockImplementation(() => {
     return {

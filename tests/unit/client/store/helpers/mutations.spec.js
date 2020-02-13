@@ -1,5 +1,5 @@
-import { add, fetch, remove, reset, save, setEndpoint } from '@/store/helpers/mutations.js';
-import { mockCommentModel, mockCommentState, mockItems } from './__mocks__/mockCommentData';
+import { add, fetch, remove, reset, save, setEndpoint } from '@/client/store/helpers/mutations.js';
+import { mockCommentModel, mockCommentState, mockItems } from '../__mocks__/mockCommentData';
 
 jest.mock('cuid');
 // eslint-disable-next-line no-unused-vars
