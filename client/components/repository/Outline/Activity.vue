@@ -2,7 +2,7 @@
   <div>
     <div class="activity-wrapper">
       <div
-        @click="focus(showOptions)"
+        @click="focusActivity(_cid)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
         :class="[isHighlighted ? 'elevation-9' : 'elevation-1']"
@@ -88,7 +88,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['structure', 'selectedActivity', 'isCollapsed']),
-    ...mapState({ outlineState: s => s.repository.outline }),
+    ...mapState('repository', { outlineState: 'outline' }),
     config: vm => find(vm.structure, { type: vm.type }),
     color: vm => vm.config.color,
     isEditable: vm => isEditable(vm.type),
@@ -97,7 +97,6 @@ export default {
     isExpanded: vm => !vm.isCollapsed({ _cid: vm._cid }),
     hasSubtypes: vm => !!size(vm.config.subLevels),
     hasChildren: vm => (vm.children.length > 0) && vm.hasSubtypes,
-    showOptions: vm => vm._cid === vm.outlineState.showOptions,
     children() {
       const level = this.level + 1;
       const types = map(filter(this.structure, { level }), 'type');
@@ -113,12 +112,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('repository',
-      ['focusActivity', 'toggleActivity', 'showActivityOptions']),
-    focus(options = false) {
-      this.focusActivity(this._cid);
-      return this.showActivityOptions(options ? this._cid : null);
-    },
+    ...mapMutations('repository', ['focusActivity', 'toggleActivity']),
     toggle(expanded = !this.isExpanded) {
       this.toggleActivity({ _cid: this._cid, expanded });
     }

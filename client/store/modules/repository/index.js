@@ -8,7 +8,7 @@ import tes from './tes';
 
 const state = {
   activity: undefined,
-  outline: { expanded: {}, showOptions: null },
+  outline: { expanded: {} },
   users: {},
   $apiUrl: null
 };

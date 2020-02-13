@@ -6,10 +6,6 @@ export const focusActivity = (state, _cid) => {
   state.activity = _cid;
 };
 
-export const showActivityOptions = (state, _cid) => {
-  state.outline.showOptions = _cid;
-};
-
 export const toggleActivity = (state, { _cid, expanded }) => {
   const expandedItems = state.outline.expanded;
   expanded = expanded === undefined ? !expandedItems[_cid] : expanded;
