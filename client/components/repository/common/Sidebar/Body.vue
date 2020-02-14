@@ -42,7 +42,7 @@ export default {
     metadata: vm => vm.getMetadata(vm.activity)
   },
   methods: {
-    ...mapActions('activities', ['update']),
+    ...mapActions('repository/activities', ['update']),
     updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
       this.update({ _cid: this.activity._cid, data });
