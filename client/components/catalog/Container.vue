@@ -27,14 +27,14 @@
             @update="onFilterChange(setOrder, $event)"
             :sort-by="sortBy"
             class="pl-2" />
-          <filter-tag
+          <tag-filter
             @update="onFilterChange(setTagFilter, $event)"
             :tags="nonSelectedTags" />
         </v-col>
       </v-row>
       <v-row>
         <v-chip
-          v-for="tag in selectedTags"
+          v-for="tag in tagFilter"
           :key="tag.id"
           @click:close="onFilterChange(removeTagFilter, tag.id)"
           close
@@ -74,12 +74,12 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import CreateRepository from './Create';
 import difference from 'lodash/difference';
-import FilterTag from './FilterTag';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import RepositoryCard from './Card';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
+import TagFilter from './TagFilter';
 
 export default {
   data() {
@@ -91,7 +91,7 @@ export default {
     ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
       tags: state => state.tags,
-      selectedTags: state => state.selectedTags,
+      tagFilter: state => state.tagFilter,
       showPinned: 'showPinned'
     }),
     ...mapGetters('repositories', {
@@ -112,7 +112,7 @@ export default {
       if (this.showPinned) return '0 pinned items';
       return '0 available repositories';
     },
-    nonSelectedTags: vm => difference(vm.tags, vm.selectedTags)
+    nonSelectedTags: vm => difference(vm.tags, vm.tagFilter)
   },
   methods: {
     ...mapActions('repositories', ['fetch', 'fetchTags']),
@@ -137,9 +137,6 @@ export default {
       filter(val);
       await this.load();
       await this.loader.reset();
-    },
-    onTagFilterChange(filter) {
-      this.selectedTags = [...this.selectedTags, filter];
     }
   },
   watch: {
@@ -148,16 +145,16 @@ export default {
       if (!this.hasRepositories && this.showPinned) this.loader.reset();
     }
   },
-  mounted() {
+  created() {
     this.fetchTags();
   },
   components: {
     CreateRepository,
-    FilterTag,
     InfiniteLoading,
     RepositoryCard,
     Search,
-    SelectOrder
+    SelectOrder,
+    TagFilter
   }
 };
 </script>
