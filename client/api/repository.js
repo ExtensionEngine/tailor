@@ -4,7 +4,6 @@ import request from './request';
 const urls = {
   root: '/repositories',
   resource: id => `${urls.root}/${id}`,
-  contentInventory: id => `${urls.resource(id)}/content-inventory`,
   publish: id => `${urls.resource(id)}/publish`,
   users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`,
   tags: id => `${urls.resource(id)}/tags`,
@@ -41,14 +40,14 @@ function publishRepositoryMeta(id) {
   return request.post(urls.publish(id)).then(res => res.data);
 }
 
-function addTag(data) {
-  return request.post(urls.tags(data.repositoryId), data)
-    .then(extractData);
+function addTag({ name, repositoryId }) {
+  return request.post(urls.tags(repositoryId), { repositoryId, name })
+  .then(extractData);
 }
 
 function removeTag({ repositoryId, tagId }) {
   return request.delete(urls.repoTag(repositoryId, tagId))
-    .then(extractData);
+  .then(res => res.data);
 }
 
 export default {
