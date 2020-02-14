@@ -1,6 +1,8 @@
 'use strict';
 
-const { Repository, RepositoryUser, Revision, sequelize, User, Tag, EntityTag } = require('../shared/database');
+const {
+  Repository, RepositoryUser, Revision, sequelize, User, Tag, RepositoryTag
+} = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const getVal = require('lodash/get');
@@ -33,8 +35,8 @@ function index({ query, user, opts }, res) {
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
   opts.include = [includeLastRevision()];
   const includeTag = { model: Tag };
-  if (query.filterTags) {
-    includeTag.where = { id: { [Op.in]: query.filterTags } };
+  if (query.tagIds) {
+    includeTag.where = { id: { [Op.in]: query.tagIds } };
   }
   opts.include.push(includeTag);
   const repositoryUser = query.pinned
@@ -135,16 +137,11 @@ function findOrCreateRole(repository, user, role) {
   .then(() => user);
 }
 
-function getTags({ repository }, res) {
-  return repository.getTags()
-    .then(tags => res.json({ data: tags }));
-}
-
 function addTag({ body, repository }, res) {
-  const { name, type } = body;
+  const { name } = body;
   return sequelize.transaction(async transaction => {
     const [tag] = await Tag.findOrCreate({ where: { name }, transaction });
-    const repo = await repository.addTags([tag], { through: { type }, transaction });
+    const repo = await repository.addTags([tag], { transaction });
     return res.json({ data: { tag, repo } });
   });
 }
@@ -152,9 +149,9 @@ function addTag({ body, repository }, res) {
 async function removeTag(req, res) {
   const { params: { tagId, repositoryId } } = req;
   const where = { tagId, repositoryId };
-  const entityTag = await EntityTag.findOne({ where });
-  return entityTag.destroy()
-    .then(() => res.json({ data: entityTag }));
+  return RepositoryTag.destroy({ where, force: true })
+    .then(repoTagId =>
+      res.json({ data: { tagId: parseInt(tagId), repositoryId: repoTagId } }));
 }
 
 module.exports = {
@@ -169,7 +166,6 @@ module.exports = {
   upsertUser,
   removeUser,
   publishRepoInfo,
-  getTags,
   addTag,
   removeTag
 };

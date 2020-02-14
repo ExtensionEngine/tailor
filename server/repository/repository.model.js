@@ -48,7 +48,7 @@ class Repository extends Model {
   static associate(db) {
     const {
       Activity, Comment, RepositoryUser, Revision, ContentElement, User, Tag,
-      EntityTag
+      RepositoryTag
     } = db;
     this.hasMany(Activity, {
       foreignKey: { name: 'repositoryId', field: 'repository_id' }
@@ -66,7 +66,7 @@ class Repository extends Model {
       foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.belongsToMany(Tag, {
-      through: EntityTag,
+      through: RepositoryTag,
       foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
     this.belongsToMany(User, {
