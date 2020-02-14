@@ -34,7 +34,6 @@ router
   .get('/:repositoryId/users', ctrl.getUsers)
   .post('/:repositoryId/users', ctrl.upsertUser)
   .delete('/:repositoryId/users/:userId', ctrl.removeUser)
-  .get('/:repositoryId/tags', ctrl.getTags)
   .post('/:repositoryId/tags', ctrl.addTag)
   .delete('/:repositoryId/tags/:tagId', ctrl.removeTag);
 

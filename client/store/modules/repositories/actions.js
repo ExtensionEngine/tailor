@@ -39,17 +39,20 @@ const pin = ({ commit, getters }, { id, pin }) => {
 };
 
 const fetchTags = ({ commit }) => {
-  return tagApi.list().then(tags => { commit('fetchTags', tags); });
+  return tagApi.fetch().then(tags => commit('fetchTags', tags));
 };
 
 const addTag = ({ commit }, data) => {
-  return repositoryApi.addTag({ ...data, type: 'REPOSITORY' })
-    .then(tags => commit('addTag', { tags, data }));
+  return repositoryApi.addTag(data)
+    .then(tag => commit('addTag', tag));
 };
 
 const removeTag = ({ commit }, data) => {
   return repositoryApi.removeTag(data)
-    .then(tag => commit('removeTag', tag));
+    .then(({ data }) => {
+      commit('removeTag', data);
+    }
+    );
 };
 
 export {

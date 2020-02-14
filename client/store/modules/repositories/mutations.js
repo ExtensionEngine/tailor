@@ -48,26 +48,26 @@ const fetchTags = (state, tags) => {
   state.tags = tags;
 };
 
-const addTag = (state, { tags, data }) => {
-  const repo = find(state.items, { id: data.repositoryId });
-  const isAdded = find(state.tags, { id: tags.tag.id });
-  if (!isAdded) state.tags = [...state.tags, tags.tag];
-  repo.tags = [...repo.tags, tags.tag];
+const addTag = (state, { tag, repo }) => {
+  const repository = find(state.items, { id: repo[0].repositoryId });
+  const isAdded = find(state.tags, { id: tag.id });
+  if (!isAdded) state.tags = [...state.tags, tag];
+  repository.tags = [...repository.tags, tag];
 };
 
-const removeTag = (state, tag) => {
-  const repo = find(state.items, { id: tag.repositoryId });
-  repo.tags = repo.tags.filter(it => it.id !== tag.tagId);
+const removeTag = (state, { tagId, repositoryId }) => {
+  const repository = find(state.items, { id: repositoryId });
+  repository.tags = repository.tags.filter(it => it.id !== tagId);
 };
 
 const setTagFilter = (state, selectedTag) => {
   resetPagination(state);
-  state.selectedTags = [...state.selectedTags, selectedTag];
+  state.tagFilter = [...state.tagFilter, selectedTag];
 };
 
 const removeTagFilter = (state, id) => {
   resetPagination(state);
-  state.selectedTags = [...state.selectedTags.filter(it => it.id !== id)];
+  state.tagFilter = [...state.tagFilter.filter(it => it.id !== id)];
 };
 
 export {
