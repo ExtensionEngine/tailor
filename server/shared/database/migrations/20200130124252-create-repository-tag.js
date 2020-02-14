@@ -1,14 +1,9 @@
 'use strict';
 
-const TABLE_NAME = 'entity_tag';
+const TABLE_NAME = 'repository_tag';
 
 exports.up = (queryInterface, Sequelize) => {
   return queryInterface.createTable(TABLE_NAME, {
-    id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
     tagId: {
       type: Sequelize.INTEGER,
       field: 'tag_id',
@@ -20,10 +15,6 @@ exports.up = (queryInterface, Sequelize) => {
       field: 'repository_id',
       references: { model: 'repository', key: 'id' },
       onDelete: 'CASCADE'
-    },
-    type: {
-      type: Sequelize.ENUM(['REPOSITORY']),
-      allowNull: false
     },
     createdAt: {
       type: Sequelize.DATE,
@@ -39,6 +30,14 @@ exports.up = (queryInterface, Sequelize) => {
       type: Sequelize.DATE,
       field: 'deleted_at'
     }
+  }).then(async () => {
+    const table = await queryInterface.describeTable(TABLE_NAME);
+    if (table.repository_id.primaryKey && table.tag_id.primaryKey) return;
+    return queryInterface.addConstraint(
+      TABLE_NAME,
+      ['repository_id', 'tag_id'],
+      { type: 'primary key', name: 'repository_tag_pkey' }
+    );
   });
 };
 
