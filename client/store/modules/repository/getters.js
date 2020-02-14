@@ -42,12 +42,6 @@ export const selectedActivity = (state, _getters, rootState) => {
   return get(activities.items, state.activity, null);
 };
 
-// TODO: Temp duplicated; remove
-export const activity = (state, _getters, rootState) => {
-  const { repository: { activities } } = rootState;
-  return get(activities.items, state.activity, null);
-};
-
 export const isCollapsed = state => {
   return activity => activity && !state.outline.expanded[activity._cid];
 };
