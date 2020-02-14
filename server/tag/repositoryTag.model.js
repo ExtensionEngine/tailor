@@ -1,23 +1,21 @@
 'use strict';
 
 const { Model } = require('sequelize');
-const EntityTypes = require('../../config/shared/entityTypes');
-const values = require('lodash/values');
 
-class EntityTag extends Model {
-  static fields({ INTEGER, ENUM }) {
+class RepositoryTag extends Model {
+  static fields({ INTEGER }) {
     return {
       repositoryId: {
         type: INTEGER,
-        field: 'repository_id'
+        field: 'repository_id',
+        primaryKey: true,
+        unique: 'repository_tag_pkey'
       },
       tagId: {
         type: INTEGER,
-        field: 'tag_id'
-      },
-      type: {
-        type: ENUM(values(EntityTypes)),
-        allowNull: false
+        field: 'tag_id',
+        primaryKey: true,
+        unique: 'repository_tag_pkey'
       }
     };
   }
@@ -33,12 +31,12 @@ class EntityTag extends Model {
 
   static options() {
     return {
-      modelName: 'EntityTag',
-      tableName: 'entity_tag',
+      modelName: 'RepositoryTag',
+      tableName: 'repository_tag',
       underscored: true,
       timestamps: true
     };
   }
 }
 
-module.exports = EntityTag;
+module.exports = RepositoryTag;

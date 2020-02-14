@@ -9,7 +9,7 @@ class Tag extends Model {
         type: STRING,
         allowNull: false,
         unique: true,
-        validate: { len: [2, 20] }
+        validate: { notEmpty: true, len: [2, 20] }
       },
       createdAt: {
         type: DATE,
@@ -28,9 +28,9 @@ class Tag extends Model {
     };
   }
 
-  static associate({ Repository, EntityTag }) {
+  static associate({ Repository, RepositoryTag }) {
     this.belongsToMany(Repository, {
-      through: EntityTag,
+      through: RepositoryTag,
       foreignKey: { name: 'tagId', field: 'tag_id' }
     });
   }
