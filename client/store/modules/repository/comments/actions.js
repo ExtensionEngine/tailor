@@ -12,7 +12,10 @@ const fetch = ({ commit }, activityId) => {
 const subscribe = ({ state, commit }) => {
   if (SSE_CLIENT) SSE_CLIENT.disconnect();
   SSE_CLIENT = new SSEClient(`/api/v1/${state.$apiUrl}/subscribe`);
-  SSE_CLIENT.subscribe('comment_create', item => commit('add', item));
+  SSE_CLIENT.subscribe('comment_create', item => {
+    api.setCid(item);
+    commit('save', item);
+  });
   SSE_CLIENT.subscribe('comment_update', item => commit('sseUpdate', item));
   SSE_CLIENT.subscribe('comment_delete', item => commit('sseUpdate', item));
 };

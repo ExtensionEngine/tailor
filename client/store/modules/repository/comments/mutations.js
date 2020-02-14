@@ -1,4 +1,4 @@
-import { add, fetch, remove, reset, save, setEndpoint } from '../../../helpers/mutations';
+import { fetch, remove, reset, save, setEndpoint } from '../../../helpers/mutations';
 import find from 'lodash/find';
 import pick from 'lodash/pick';
 import Vue from 'vue';
@@ -11,7 +11,6 @@ const sseUpdate = (state, comment) => {
 };
 
 export {
-  add,
   fetch,
   remove,
   reset,
