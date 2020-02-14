@@ -65,8 +65,7 @@ export default {
     supportedLevels: []
   }),
   computed: {
-    ...mapGetters(['activities']),
-    ...mapGetters('repository', ['structure']),
+    ...mapGetters('repository', ['structure', 'activities']),
     parent: vm => find(vm.activities, { id: vm.activity.parentId }),
     levels: vm => vm.sameLevel.concat(vm.subLevels),
     sameLevel() {
