@@ -36,30 +36,34 @@
       </div>
     </div>
     <v-card-actions class="pa-1 grey lighten-4 justify-space-between">
-      <v-btn
-        @click.stop="pin({ id: repository.id, pin: !isPinned })"
-        @mousedown.stop
-        icon>
-        <v-icon
-          :color="isPinned ? 'grey darken-3': 'grey'"
-          :class="{ 'mdi-rotate-45': isPinned }">
-          mdi-pin
-        </v-icon>
-      </v-btn>
-      <v-col cols="12" sm="8" md="9" class="pa-0">
-        <v-chip
-          v-for="({ id, name: tagName }) in tags"
-          :key="id"
-          @click.stop
-          @click:close="deleteTag(id, tagName)"
-          color="grey darker-1"
-          text-color="white"
-          close
-          class="mr-1">
-          {{ tagName }}
-        </v-chip>
-      </v-col>
-      <add-tag v-if="exceedTagLimit" :repository="repository" />
+      <div class="d-flex">
+        <v-btn
+          @click.stop="pin({ id: repository.id, pin: !isPinned })"
+          @mousedown.stop
+          icon>
+          <v-icon
+            :color="isPinned ? 'grey darken-3': 'grey'"
+            :class="{ 'mdi-rotate-45': isPinned }">
+            mdi-pin
+          </v-icon>
+        </v-btn>
+        <div class="d-flex align-center">
+          <v-chip
+            v-for="tag in repository.tags"
+            :key="tag.id"
+            @click.stop
+            @click:close="showDeleteConfirmation(tag)"
+            color="grey darker-1"
+            text-color="white"
+            close
+            class="mr-1">
+            {{ tag.name }}
+          </v-chip>
+        </div>
+      </div>
+      <div class="d-flex">
+        <add-tag v-if="exceedTagLimit" :repository="repository" />
+      </div>
     </v-card-actions>
   </v-card>
 </template>
@@ -85,7 +89,6 @@ export default {
     schema: ({ repository }) => getSchema(repository.schema).name,
     lastActivity: ({ repository }) => first(repository.revisions),
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),
-    tags: ({ repository }) => repository.tags,
     exceedTagLimit: ({ repository }) => repository.tags.length < TAG_LIMIT
   },
   methods: {
@@ -97,11 +100,11 @@ export default {
         params: { repositoryId: this.repository.id }
       });
     },
-    deleteTag(id, name) {
-      const data = { repositoryId: this.repository.id, tagId: id };
+    showDeleteConfirmation(tag) {
+      const data = { repositoryId: this.repository.id, tagId: tag.id };
       appChannel.emit('showConfirmationModal', {
         title: 'Delete tag',
-        message: `Are you sure you want to delete tag ${name}?`,
+        message: `Are you sure you want to delete tag ${tag.name}?`,
         action: () => this.removeTag(data)
       });
     }
