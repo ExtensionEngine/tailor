@@ -3,8 +3,8 @@
     v-model="isVisible"
     header-icon="mdi-tag-outline">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" @click.stop icon>
-        <v-icon small class="pr-1">mdi-plus</v-icon>
+      <v-btn v-on="on" @click.stop icon x-small>
+        <v-icon class="pr-1">mdi-plus</v-icon>
       </v-btn>
     </template>
     <template v-slot:header>Add Tag</template>
@@ -17,15 +17,16 @@
         {{ vErrors.first('default') }}
       </v-alert>
       <v-combobox
-        v-model="tagInput"
         v-validate="'required|min:2|max:20|unique-tag-name'"
         @keyup.enter="submit"
+        @change="it => tagInput = it"
+        :value="tagInput"
         :error-messages="vErrors.collect('name')"
         :items="availableTags"
         name="name"
         item-text="name"
         item-value="id"
-        label="Select a tag or create a new one"
+        label="Select a tag or add a new one"
         outlined />
     </template>
     <template v-slot:actions>
@@ -41,6 +42,7 @@
 import { mapActions, mapState } from 'vuex';
 import differenceBy from 'lodash/differenceBy';
 import isObject from 'lodash/isObject';
+import tagApi from '@/api/tag';
 import TailorDialog from '@/components/common/TailorDialog';
 import { withValidation } from 'utils/validation';
 
@@ -55,13 +57,14 @@ export default {
     tagInput: null
   }),
   computed: {
-    ...mapState({ tags: state => state.repositories.tags }),
+    ...mapState('repositories', ['tags']),
     assignedTags: vm => vm.repository.tags,
     availableTags: vm => differenceBy(vm.tags, vm.assignedTags, 'id')
   },
   methods: {
     ...mapActions('repositories', ['addTag', 'removeTag']),
     hide() {
+      this.$validator.reset();
       this.tagInput = null;
       this.isVisible = false;
     },
@@ -71,8 +74,20 @@ export default {
       const tagName = isObject(this.tagInput) ? this.tagInput.name : this.tagInput;
       const data = { name: tagName, repositoryId: this.repository.id };
       await this.addTag(data);
-      this.tagInput = null;
-      this.isVisible = false;
+      this.hide();
+    }
+  },
+  mounted() {
+    if (!this.$validator.rules['unique-tag-name']) {
+      this.$validator.extend('unique-tag-name', {
+        getMessage: field => `Tag ${field} is not unique.`,
+        async validate(tag) {
+          const tags = await tagApi.fetch();
+          const name = isObject(tag) ? tag.name : tag;
+          const tagExists = tags.find(it => it.name.toLowerCase() === name.toLowerCase());
+          return ({ valid: isObject(tag) || !tagExists });
+        }
+      });
     }
   },
   components: { TailorDialog }
