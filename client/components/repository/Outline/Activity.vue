@@ -2,7 +2,7 @@
   <div>
     <div class="activity-wrapper">
       <div
-        @click="focusActivity(_cid)"
+        @click="selectActivity(_cid)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
         :class="[isHighlighted ? 'elevation-9' : 'elevation-1']"
@@ -112,7 +112,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('repository', ['focusActivity', 'toggleActivity']),
+    ...mapMutations('repository', ['selectActivity', 'toggleActivity']),
     toggle(expanded = !this.isExpanded) {
       this.toggleActivity({ _cid: this._cid, expanded });
     }

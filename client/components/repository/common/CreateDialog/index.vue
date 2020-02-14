@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     ...mapActions('repository/activities', ['save']),
-    ...mapMutations('repository', ['focusActivity']),
+    ...mapMutations('repository', ['selectActivity']),
     setMetaValue(key, val) {
       this.activity.data[key] = val;
     },
@@ -91,7 +91,7 @@ export default {
       const item = await this.save({ ...activity });
       if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
       this.$emit('created', item);
-      this.focusActivity(item._cid);
+      this.selectActivity(item._cid);
       this.visible = false;
     }
   },

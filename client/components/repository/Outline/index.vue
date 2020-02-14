@@ -6,8 +6,7 @@
         <v-toolbar
           v-if="!isFlat"
           color="grey lighten-4"
-          flat
-          dense>
+          flat dense>
           <v-spacer />
           <v-btn
             @click="toggleActivities"
@@ -74,27 +73,27 @@ export default {
   height: 100%;
 
   .v-progress-circular {
-    margin-top: 120px;
+    margin-top: 7.5rem;
   }
 }
 
 .outline {
   position: relative;
   height: 100%;
-  padding-right: 450px;
+  padding-right: 28.125rem;
 }
 
 .activity-container {
   width: 100%;
   height: 100%;
   float: left;
-  padding: 50px 90px 0 60px;
+  padding: 3.125rem 5.625rem 0 3.75rem;
   overflow-y: scroll;
   overflow-y: overlay;
 
   ::v-deep {
     > :last-child {
-      margin-bottom: 120px;
+      margin-bottom: 7.5rem;
     }
   }
 }

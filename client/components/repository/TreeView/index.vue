@@ -68,7 +68,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('repository', ['focusActivity']),
+    ...mapMutations('repository', ['selectActivity']),
     setSelected(node) {
       if (this.selectedNode) this.selectedNode.classList.remove('selected');
       this.selectedNode = node;
@@ -77,7 +77,7 @@ export default {
     onNodeSelect(node, activity, circle) {
       if (!isActivityNode(node)) return;
       this.setSelected(circle);
-      this.focusActivity(activity._cid);
+      this.selectActivity(activity._cid);
     }
   },
   components: {

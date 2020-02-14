@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['initialize']),
-    ...mapMutations('repository', ['focusActivity'])
+    ...mapMutations('repository', ['selectActivity'])
   },
   async created() {
     const { repositoryId, selectedActivity: activity } = this;
@@ -66,7 +66,7 @@ export default {
       const activityCid = rootActivities.length
         ? sortBy(rootActivities, 'position')[0]._cid
         : null;
-      this.focusActivity(activityCid);
+      this.selectActivity(activityCid);
     }
     this.showLoader = false;
   }
