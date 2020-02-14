@@ -4,15 +4,6 @@ import find from 'lodash/find';
 import pick from 'lodash/pick';
 import Vue from 'vue';
 
-const setRepository = (state, repositoryId) => {
-  state.repositoryId = repositoryId;
-  state.activitiesFetched = {};
-};
-
-const commentsFetched = (state, activityId) => {
-  Vue.set(state.activitiesFetched, activityId, true);
-};
-
 const sseAdd = (state, comment) => {
   const { id } = comment;
   if (find(state.items, { id })) return;
@@ -28,12 +19,10 @@ const sseUpdate = (state, comment) => {
 };
 
 export {
-  commentsFetched,
   fetch,
   remove,
   reset,
   save,
-  setRepository,
   setEndpoint,
   sseAdd,
   sseUpdate

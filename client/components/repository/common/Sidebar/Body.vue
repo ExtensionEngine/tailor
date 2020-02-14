@@ -17,9 +17,10 @@
       <relationship
         v-for="relationship in config.relationships"
         :key="`${activity._cid}.${relationship.type}`"
+        :activity="activity"
         v-bind="relationship" />
     </div>
-    <discussion />
+    <discussion :activity="activity" />
   </div>
 </template>
 

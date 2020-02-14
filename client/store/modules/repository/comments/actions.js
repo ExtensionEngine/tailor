@@ -4,13 +4,9 @@ import SSEClient from '../../../../SSEClient';
 const { api, get, save, setEndpoint, update } = generateActions();
 let SSE_CLIENT;
 
-const fetch = ({ commit, rootGetters }, { id, repositoryId }) => {
-  const action = rootGetters['repository/id'] === repositoryId ? 'fetch' : 'reset';
-  if (action === 'reset') commit('setRepository', repositoryId);
-  return api.fetch({ activityId: id }).then(items => {
-    commit(action, items);
-    commit('commentsFetched', id);
-  });
+const fetch = ({ commit }, activityId) => {
+  return api.fetch({ activityId })
+    .then(items => commit('fetch', items));
 };
 
 const subscribe = ({ state, commit }) => {

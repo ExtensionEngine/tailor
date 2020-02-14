@@ -7,7 +7,7 @@
     <div v-else class="placeholder grey--text text--darken-3">
       <h4>Outline Sidebar</h4>
       <v-icon>mdi-chevron-left</v-icon>
-      <div class="helper">
+      <div class="info-content">
         Please create your first Item on the left
         to view and edit its details here.
       </div>
@@ -37,7 +37,6 @@ export default {
 .placeholder {
   margin-top: 4.375rem;
   padding: 0 1rem;
-  color: #777;
 
   h4 {
     padding: 0.5rem 0 1.125rem;
@@ -52,8 +51,8 @@ export default {
     font-size: 2rem;
   }
 
-  .helper {
-    width: 20.625rem;
+  .info-content {
+    width: 22rem;
   }
 }
 </style>

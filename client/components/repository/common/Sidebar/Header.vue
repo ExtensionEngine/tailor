@@ -22,7 +22,10 @@
       activator-color="blue-grey darken-3"
       activator-icon="mdi-folder-plus-outline"
       show-activator />
-    <publishing v-if="isAdmin || isRepositoryAdmin" />
+    <publishing
+      v-if="isAdmin || isRepositoryAdmin"
+      :activity="activity"
+      :outline-activities="outlineActivities" />
   </div>
 </template>
 
@@ -41,7 +44,8 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository', ['structure', 'isRepositoryAdmin']),
+    ...mapGetters('repository',
+      ['structure', 'outlineActivities', 'isRepositoryAdmin']),
     isEditable() {
       const type = get(this.activity, 'type');
       return type && isEditable(type);
