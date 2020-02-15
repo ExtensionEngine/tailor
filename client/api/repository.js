@@ -5,6 +5,7 @@ const urls = {
   root: '/repositories',
   resource: id => `${urls.root}/${id}`,
   contentInventory: id => `${urls.resource(id)}/content-inventory`,
+  contentElements: id => `${urls.resource(id)}/content-elements`,
   publish: id => `${urls.resource(id)}/publish`,
   users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`
 };
@@ -15,6 +16,10 @@ function save(repository) {
 
 function getRepositories(params) {
   return request.get(urls.root, { params }).then(extractData);
+}
+
+function getContentElements({ id, ...params }) {
+  return request.get(urls.contentElements(id), { params }).then(extractData);
 }
 
 function getUsers(repositoryId, params) {
@@ -41,6 +46,7 @@ function publishRepositoryMeta(id) {
 
 export default {
   getRepositories,
+  getContentElements,
   save,
   getUsers,
   upsertUser,
