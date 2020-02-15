@@ -58,6 +58,18 @@ export const getConfig = (_, { repository }) => {
   };
 };
 
+export const getRelationships = (_, { getConfig }) => {
+  return element => {
+    if (!element) return [];
+    const config = getConfig(element);
+    if (!config.relationships) return [];
+    return map(config.relationships, it => {
+      const value = get(element, `relationships.${it.key}`);
+      return { ...it, value };
+    });
+  };
+};
+
 export const getMetadata = (_, { getConfig }) => {
   return element => {
     if (!element) return [];
