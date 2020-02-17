@@ -8,16 +8,13 @@
       </template>
       <v-list class="py-0">
         <v-list-item
-          v-for="it in tags"
+          v-for="it in items"
           :key="it.id"
           @click="$emit('update', it)"
           class="py-0 secondary--text text--lighten-1">
-          <v-list-item-title class="pr-3 text-left">
-            {{ it.name }}
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item v-if="!tags.length">
-          No available filters
+          <v-checkbox
+            v-model="it.isSelected"
+            :label="it.name" />
         </v-list-item>
       </v-list>
     </v-menu>
@@ -25,10 +22,18 @@
 </template>
 
 <script>
+import map from 'lodash/map';
+import { mapState } from 'vuex';
 
 export default {
-  props: {
-    tags: { type: Array, default: () => [] }
+  computed: {
+    ...mapState('repositories', ['tags', 'tagFilter']),
+    items() {
+      return map(this.tags, it => {
+        const isSelected = map(this.tagFilter, 'id').includes(it.id);
+        return { ...it, isSelected };
+      });
+    }
   }
 };
 </script>
