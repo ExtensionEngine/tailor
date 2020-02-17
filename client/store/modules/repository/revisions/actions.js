@@ -1,4 +1,4 @@
-import generateActions from '../../../helpers/actions';
+import generateActions from '@/store/helpers/actions';
 
 const { api, get, remove, reset, save, setEndpoint } = generateActions();
 const PAGINATION_DEFAULTS = { offset: 0, limit: 25 };

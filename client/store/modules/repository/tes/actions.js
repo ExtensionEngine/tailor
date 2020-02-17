@@ -1,5 +1,5 @@
 import calculatePosition from 'utils/calculatePosition.js';
-import generateActions from '../../../helpers/actions';
+import generateActions from '@/store/helpers/actions';
 
 const {
   api,

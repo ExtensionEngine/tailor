@@ -1,4 +1,6 @@
-import { add, fetch, remove, reset, save, setEndpoint } from '../../../helpers/mutations';
+import {
+  add, fetch, remove, reset, save, setEndpoint
+} from '@/store/helpers/mutations';
 
 const reorder = (state, { element, position }) => {
   state.items[element._cid].position = position;
