@@ -2,7 +2,7 @@
   <div>
     <circular-progress v-if="isFetching" />
     <div v-else>
-      <v-alert v-if="!hasRelatedableElements" type="warning">
+      <v-alert v-if="!hasAvailableElements" type="warning">
         No available elements.
       </v-alert>
       <div
@@ -48,7 +48,7 @@ export default {
     isFetching: false
   }),
   computed: {
-    hasRelatedableElements: ({ tes, allowedTypes }) =>
+    hasAvailableElements: ({ tes, allowedTypes }) =>
       tes.filter(te => allowedTypes.includes(te.type)).length
   },
   methods: {
