@@ -4,7 +4,7 @@
       <toolbar :element="focusedElement">
         <span slot="actions">
           <v-btn
-            v-if="metadata.length"
+            v-if="metadata.length || relationships.length"
             @click="showSidebar = !showSidebar"
             color="primary"
             fab
@@ -20,6 +20,7 @@
           v-if="showSidebar"
           :key="focusedElement._cid"
           :metadata="metadata"
+          :relationships="relationships"
           :element="focusedElement" />
       </transition>
     </template>
@@ -69,11 +70,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository', ['repository', 'getMetadata']),
+    ...mapGetters('repository', ['repository', 'getMetadata', 'getRelationships']),
     ...mapGetters('editor', ['activity', 'contentContainers']),
     metadata() {
       if (!this.focusedElement) return [];
       return this.getMetadata(this.focusedElement);
+    },
+    relationships() {
+      if (!this.focusedElement) return [];
+      return this.getRelationships(this.focusedElement);
     },
     showAssessments() {
       return config.hasAssessments(this.activity.type);
@@ -136,7 +141,7 @@ export default {
       }
       if (getElementId(this.focusedElement) === getElementId(element)) return;
       this.focusedElement = { ...element, parent: composite };
-      this.showSidebar = this.metadata.length && this.showSidebar;
+      this.showSidebar = (this.relationships.length || this.metadata.length) && this.showSidebar;
     }, 50));
     // TODO: Do this better!
     const baseUrl = `/repositories/${repositoryId}`;
@@ -164,7 +169,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~bootswatch/paper/variables';
+@import "~bootswatch/paper/variables";
 
 .editor-wrapper {
   display: flex;
