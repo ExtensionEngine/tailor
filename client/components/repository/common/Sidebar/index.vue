@@ -1,5 +1,8 @@
 <template>
-  <v-navigation-drawer width="450" color="grey lighten-5" absolute right>
+  <v-navigation-drawer
+    width="450"
+    color="grey lighten-5"
+    absolute right permanent>
     <div v-if="selectedActivity" :key="selectedActivity._cid">
       <sidebar-header :activity="selectedActivity" />
       <sidebar-body :activity="selectedActivity" />
