@@ -1,5 +1,5 @@
 import generateActions from '@/store/helpers/actions';
-import SSEClient from '../../../../SSEClient';
+import SSEClient from '@/SSEClient';
 
 const { api, get, save, setEndpoint, update } = generateActions();
 let SSE_CLIENT;
