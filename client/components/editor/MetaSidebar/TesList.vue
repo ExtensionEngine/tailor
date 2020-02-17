@@ -1,27 +1,32 @@
 <template>
   <div>
-    <v-alert v-if="!hasRelatedableElements" type="warning">
-      No available elements to relate to.
-    </v-alert>
-    <div
-      v-for="item in tes"
-      :key="item.id"
-      @click="toggleSelection(item)"
-      class="tes-wrapper">
-      <v-checkbox
-        v-model="selected"
-        @click.prevent
-        :disabled="isDisabled(item)"
-        :value="{ outlineId, containerId: item.activityId, id: item.id }" />
-      <teaching-element
-        disabled
-        :class="{ 'selected': isSelected(item)}"
-        :element="item" />
+    <circular-progress v-if="isFetching" />
+    <div v-else>
+      <v-alert v-if="!hasRelatedableElements" type="warning">
+        No available elements.
+      </v-alert>
+      <div
+        v-for="item in tes"
+        :key="item.id"
+        @click="toggleSelection(item)"
+        class="tes-wrapper">
+        <v-checkbox
+          v-model="selected"
+          @click.prevent
+          :disabled="isDisabled(item)"
+          :value="{ outlineId, containerId: item.activityId, id: item.id }" />
+        <teaching-element
+          disabled
+          :class="{ 'selected': isSelected(item)}"
+          :element="item" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import CircularProgress from 'components/common/CircularProgress';
+import { delay } from 'bluebird';
 import find from 'lodash/find';
 import repositoryApi from 'client/api/repository';
 import TeachingElement from 'components/editor/TeachingElement';
@@ -39,7 +44,8 @@ export default {
     selected: { type: Array, default: () => [] }
   },
   data: () => ({
-    tes: []
+    tes: [],
+    isFetching: false
   }),
   computed: {
     hasRelatedableElements: ({ tes, allowedTypes }) =>
@@ -67,14 +73,19 @@ export default {
       handler() {
         const { activityIds: ids, repositoryId: id } = this;
         if (!ids) return;
-        return repositoryApi.getContentElements({ id, ids })
-          .then(tes => { this.tes = tes; });
+        this.isFetching = true;
+        return Promise.all([
+          repositoryApi.getContentElements({ id, ids }),
+          delay(1000)
+        ]).then(([tes]) => { this.tes = tes; })
+        .finally(() => { this.isFetching = false; });
       },
       immediate: true,
       deep: true
     }
   },
   components: {
+    CircularProgress,
     TeachingElement
   }
 };

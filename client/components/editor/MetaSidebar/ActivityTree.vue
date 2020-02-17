@@ -23,7 +23,9 @@
       </template>
       <template v-slot:label="{ item: { id, data } }">
         {{ data.name }}
-        <v-chip v-if="groupedSelection[id]" rounded small class="custom-chip">
+        <v-chip
+          v-if="groupedSelection[id]"
+          rounded small class="custom-chip">
           {{ getLabel(groupedSelection[id]) }}
         </v-chip>
       </template>
@@ -31,8 +33,7 @@
         <v-btn
           v-if="isEditable(item.type)"
           @click="$emit('update:open', item)"
-          outlined small
-          color="primary">
+          color="primary" outlined small>
           View elements
         </v-btn>
       </template>
@@ -56,8 +57,7 @@ export default {
   },
   data: () => ({
     open: false,
-    search: '',
-    ids: []
+    search: ''
   }),
   computed: {
     ...mapGetters('repository', ['activities', 'structure']),

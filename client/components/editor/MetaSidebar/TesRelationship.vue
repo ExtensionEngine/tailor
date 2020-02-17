@@ -1,8 +1,8 @@
 <template>
   <v-list-item class="pl-0">
     <v-list-item-content>
-      <v-list-item-title>{{ relationship.label }}</v-list-item-title>
-      <v-list-item-subtitle v-if="subtitle">{{ subtitle }}</v-list-item-subtitle>
+      <v-list-item-title v-text="relationship.label" />
+      <v-list-item-subtitle v-text="subtitle" />
     </v-list-item-content>
     <v-list-item-action>
       <v-tooltip bottom>
@@ -32,7 +32,8 @@
     </v-list-item-action>
     <tailor-dialog
       v-model="show"
-      header-icon="mdi-content-copy"
+      @click:outside="cancel"
+      header-icon="mdi-transit-connection-variant"
       width="650">
       <template v-slot:header>
         {{ relationship.placeholder }}
@@ -57,10 +58,10 @@
         </v-expand-transition>
       </template>
       <template v-slot:actions>
-        <v-btn v-if="showTesList" @click="back" text outlined>
+        <v-btn v-if="showTesList" @click="showTesList = false" text outlined>
           <v-icon>mdi-arrow-left</v-icon> Back to Activities
         </v-btn>
-        <v-btn @click="close(true)" :disabled="isSaving" text class="ml-1">
+        <v-btn @click="cancel" :disabled="isSaving" text class="ml-1">
           Cancel
         </v-btn>
         <v-btn @click="save" :disabled="isSaving" color="secondary" text>
@@ -102,12 +103,10 @@ export default {
     subtitle() {
       const { activities, selected } = this;
       if (!selected.length) return null;
-      const groupedSelection = groupBy(selected, 'outlineId');
-      return reduce(activities, (acc, { id, data }) => {
-        if (!groupedSelection[id]) return acc;
-        acc.push(`${data.name} - ${groupedSelection[id].length}`);
-        return acc;
-      }, []).join(', ');
+      const grouped = groupBy(selected, 'outlineId');
+      return reduce(activities, (acc, { id, data }) =>
+        grouped[id] ? [...acc, `${data.name} (${grouped[id].length})`] : acc,
+      []).join(', ');
     }
   },
   methods: {
@@ -126,40 +125,33 @@ export default {
       this.selected = [];
     },
     openTesList({ id: activityId }) {
-      if (!activityId) {
-        this.showTesList = false;
-        this.activityIds = [];
-        return;
-      }
-      this.activityIds = reduce(this.activities, (acc, activity) => {
-        if (activity.parentId !== activityId) return acc;
-        acc.push(activity.id);
-        return acc;
-      }, [activityId]);
+      if (!activityId) return;
+      this.activityIds = reduce(this.activities,
+        (acc, { parentId, id }) => parentId === activityId ? [id, ...acc] : acc,
+        [activityId]
+      );
       this.outlineId = activityId;
       this.showTesList = true;
     },
-    close(isCancel = false) {
-      if (isCancel) {
-        this.selected = [...this.cancelState];
-        this.cancelState = [];
-      }
+    close() {
       this.showTesList = false;
-      this.activityIds = [];
       this.show = false;
     },
-    back() {
-      this.showTesList = false;
-      this.activityIds = [];
+    cancel() {
+      this.selected = [...this.cancelState];
+      this.close();
+    }
+  },
+  watch: {
+    show() {
+      this.cancelState = [...this.selected];
     }
   },
   created() {
     const { element, relationship } = this;
-    if (!element.refs[relationship.type]) return;
-    this.selected = Array.isArray(element.refs[relationship.type])
-      ? element.refs[relationship.type]
-      : [element.refs[relationship.type]];
-    this.cancelState = [...this.selected];
+    const selected = element.refs[relationship.type];
+    if (!selected) return;
+    this.selected = Array.isArray(selected) ? selected : [selected];
   },
   components: { ActivityTree, TailorDialog, TesList }
 };
