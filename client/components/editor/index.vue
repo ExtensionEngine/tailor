@@ -33,7 +33,6 @@
             :container-group="containerGroup"
             :parent-id="activity.id"
             v-bind="getContainerConfig(type)" />
-          <assessments v-if="showAssessments" />
         </template>
       </div>
     </div>
@@ -44,7 +43,6 @@
 import * as config from 'shared/activities';
 import { getElementId, isQuestion } from 'tce-core/utils';
 import { mapActions, mapGetters } from 'vuex';
-import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
@@ -74,9 +72,6 @@ export default {
     metadata() {
       if (!this.focusedElement) return [];
       return this.getMetadata(this.focusedElement);
-    },
-    showAssessments() {
-      return config.hasAssessments(this.activity.type);
     },
     containerConfigs() {
       if (!this.activity) return [];
@@ -111,7 +106,7 @@ export default {
     }
   },
   created() {
-    const { repositoryId, activityId } = this.$route.params;
+    const { repositoryId } = this.$route.params;
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;
@@ -146,7 +141,7 @@ export default {
     if (!this.repository) actions.push(this.getRepository(repositoryId));
     Promise.all(actions).then(() => {
       const ids = flatMap(this.contentContainers, it => map(it, 'id'));
-      return this.getTeachingElements({ ids: [activityId, ...ids] });
+      if (ids.length) return this.getTeachingElements({ ids });
     })
     .then(() => (this.showLoader = false));
   },
@@ -154,7 +149,6 @@ export default {
     this.unsubscribe();
   },
   components: {
-    Assessments,
     ContentContainers,
     MainSidebar,
     MetaSidebar,

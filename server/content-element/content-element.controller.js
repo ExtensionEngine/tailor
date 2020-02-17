@@ -9,14 +9,12 @@ const pick = require('lodash/pick');
 function list({ query, opts }, res) {
   if (!query.detached) opts.where = { detached: false };
   if (query.ids) {
-    const ids = query.ids.map(id => Number(id));
-    const cond = { [Op.in]: ids };
-    const where = { [Op.or]: [{ id: cond }, { parentId: cond }] };
+    const ids = query.ids.map(id => parseInt(id, 10));
+    const where = { id: { [Op.in]: ids } };
     opts.include = { model: Activity, attributes: [], where };
   }
 
-  return ContentElement.fetch(opts)
-    .then(data => res.json({ data }));
+  return ContentElement.fetch(opts).then(data => res.json({ data }));
 }
 
 function show({ params }, res) {

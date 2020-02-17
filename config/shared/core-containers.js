@@ -1,5 +1,6 @@
 'use strict';
 
 module.exports = [
-  'tcc-exam'
+  'tcc-exam',
+  'tcc-assessment-block'
 ];
