@@ -27,8 +27,8 @@ export const structure = (_, { repository }) => {
 
 export const activities = (_state, getters, rootState) => {
   if (!getters.repository) return [];
-  const { repository: { activities: { items: activities } } } = rootState;
-  return filter(activities, { repositoryId: getters.repository.id });
+  const { repository: { activities: { items } } } = rootState;
+  return Object.values(items);
 };
 
 export const outlineActivities = (_state, getters) => {
