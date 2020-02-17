@@ -8,6 +8,13 @@
         @update="updateElement"
         :meta="it" />
     </div>
+    <v-list v-if="relationships.length" class="element-relationships">
+      <tes-relationship
+        v-for="relationship in relationships"
+        :key="`${element._cid}.${relationship.type}`"
+        :element="element"
+        :relationship="relationship" />
+    </v-list>
   </div>
 </template>
 
@@ -15,12 +22,14 @@
 import cloneDeep from 'lodash/cloneDeep';
 import { mapActions } from 'vuex';
 import MetaInput from 'components/common/Meta';
+import TesRelationship from './TesRelationship';
 
 export default {
   name: 'sidebar',
   props: {
     element: { type: Object, required: true },
-    metadata: { type: Array, required: true }
+    metadata: { type: Array, required: true },
+    relationships: { type: Array, default: () => [] }
   },
   data() {
     return {
@@ -37,7 +46,7 @@ export default {
       });
     }
   },
-  components: { MetaInput }
+  components: { MetaInput, TesRelationship }
 };
 </script>
 
@@ -56,7 +65,7 @@ export default {
   padding: 25px 0 75px 20px;
   text-align: left;
   background: white;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 8px 8px rgba(0,0,0,0.18);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 8px 8px rgba(0, 0, 0, 0.18);
   overflow-y: auto;
   z-index: 98;
 }
