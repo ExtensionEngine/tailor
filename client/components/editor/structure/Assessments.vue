@@ -34,6 +34,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import AddElement from 'tce-core/AddElement';
 import AssessmentItem from './AssessmentItem';
 import capitalize from 'lodash/capitalize';
+import cuid from 'cuid';
 import EventBus from 'EventBus';
 import map from 'lodash/map';
 
@@ -57,8 +58,9 @@ export default {
     ...mapActions('repository/tes', ['save', 'update', 'remove']),
     ...mapMutations('repository/tes', ['add']),
     addAssessment(assessment) {
-      this.add(assessment);
-      this.selected.push(assessment._cid);
+      const data = { ...assessment, _cid: cuid() };
+      this.add(data);
+      this.selected.push(data._cid);
     },
     saveAssessment(assessment) {
       // TODO: Figure out why save is broken (for update)

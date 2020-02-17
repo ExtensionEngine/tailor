@@ -20,8 +20,8 @@ export const contentContainers = (_state, getters, { repository }) => {
   }, {});
 };
 
-export const assessments = (_state, getters, _rootState, rootGetters) => {
-  const { tes } = rootGetters;
+export const assessments = (_state, getters, rootState) => {
+  const { items: tes } = rootState.repository.tes;
   const { activity } = getters;
   if (!activity) return [];
   return filter(tes, { activityId: activity.id, type: 'ASSESSMENT' });
