@@ -101,8 +101,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', ['clone']),
-    ...mapGetters('activities', ['calculateInsertPosition']),
+    ...mapActions('repository/activities', ['clone']),
+    ...mapGetters('repository/activities', ['calculateInsertPosition']),
     async selectRepository(repository) {
       this.selectedRepository = repository;
       this.selectedActivities = [];

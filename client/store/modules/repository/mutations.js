@@ -2,12 +2,8 @@ import compact from 'lodash/compact';
 import transform from 'lodash/transform';
 import Vue from 'vue';
 
-export const focusActivity = (state, _cid) => {
+export const selectActivity = (state, _cid) => {
   state.activity = _cid;
-};
-
-export const showActivityOptions = (state, _cid) => {
-  state.outline.showOptions = _cid;
 };
 
 export const toggleActivity = (state, { _cid, expanded }) => {
