@@ -26,7 +26,6 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
-import Promise from 'bluebird';
 import sortBy from 'lodash/sortBy';
 
 export default {
@@ -41,7 +40,7 @@ export default {
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository',
-      ['repository', 'activities', 'activity', 'isRepositoryAdmin']),
+      ['repository', 'activities', 'selectedActivity', 'isRepositoryAdmin']),
     tabs() {
       const items = [
         { name: 'Structure', route: 'repository', icon: 'file-tree' },
@@ -55,32 +54,21 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repository', ['getUsers']),
-    ...mapActions('repositories', { getRepository: 'get' }),
-    ...mapActions('activities', { getActivities: 'fetch' }),
-    ...mapActions('activities', { setupActivityApi: 'setEndpoint' }),
-    ...mapActions('comments', { setupCommentsApi: 'setEndpoint' }),
-    ...mapActions('revisions', { setupRevisionApi: 'setEndpoint' }),
-    ...mapActions('tes', { setupTesApi: 'setEndpoint' }),
-    ...mapMutations('repository', { resetActivityFocus: 'focusActivity' })
+    ...mapActions('repository', ['initialize']),
+    ...mapMutations('repository', ['selectActivity'])
   },
   async created() {
-    const { repositoryId, activity } = this;
-    const existingSelection = get(activity, 'repositoryId') === repositoryId;
-    if (!existingSelection) this.resetActivityFocus();
-    // TODO: Do this better!
-    this.setupActivityApi(`/repositories/${repositoryId}/activities`);
-    this.setupCommentsApi(`/repositories/${repositoryId}/comments`);
-    this.setupRevisionApi(`/repositories/${repositoryId}/revisions`);
-    this.setupTesApi(`/repositories/${repositoryId}/content-elements`);
-    const actions = [this.getActivities(), this.getUsers()];
-    if (!this.repository) actions.push(this.getRepository(repositoryId));
-    await Promise.all(actions);
-    this.showLoader = false;
-    const activities = filter(this.activities, { parentId: null });
-    if (!existingSelection && activities.length) {
-      this.resetActivityFocus(sortBy(activities, 'position')[0]._cid);
+    const { repositoryId, selectedActivity: activity } = this;
+    await this.initialize(repositoryId);
+    const isActivitySelected = get(activity, 'repositoryId') === repositoryId;
+    if (!isActivitySelected) {
+      const rootActivities = filter(this.activities, { parentId: null });
+      const activityCid = rootActivities.length
+        ? sortBy(rootActivities, 'position')[0]._cid
+        : null;
+      this.selectActivity(activityCid);
     }
+    this.showLoader = false;
   }
 };
 </script>

@@ -55,7 +55,6 @@ import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
 import map from 'lodash/map';
 import MetaSidebar from './MetaSidebar';
-import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 
@@ -90,14 +89,8 @@ export default {
   },
   methods: {
     ...mapActions('repositories', { getRepository: 'get' }),
-    ...mapActions('activities', {
-      getActivities: 'fetch',
-      setupActivitiesApi: 'setEndpoint'
-    }),
-    ...mapActions('tes', {
-      getTeachingElements: 'fetch',
-      setupTesApi: 'setEndpoint'
-    }),
+    ...mapActions('repository', ['initialize']),
+    ...mapActions('repository/tes', { getTeachingElements: 'fetch' }),
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
     },
@@ -115,13 +108,14 @@ export default {
       }
     }
   },
-  created() {
+  async created() {
     const { repositoryId, activityId } = this.$route.params;
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;
       if (!focusedElement) return;
-      if (!['tes/save', 'tes/add', 'tes/update'].includes(type)) return;
+      const module = 'repository/tes';
+      if (![`${module}/save`, `${module}/add`, `${module}/update`].includes(type)) return;
       if (element._cid === focusedElement._cid) {
         this.focusedElement = { ...focusedElement, ...element };
         return;
@@ -143,17 +137,12 @@ export default {
       this.focusedElement = { ...element, parent: composite };
       this.showSidebar = (this.relationships.length || this.metadata.length) && this.showSidebar;
     }, 50));
-    // TODO: Do this better!
-    const baseUrl = `/repositories/${repositoryId}`;
-    this.setupActivitiesApi(`${baseUrl}/activities`);
-    this.setupTesApi(`${baseUrl}/content-elements`);
-    const actions = [this.getActivities()];
-    if (!this.repository) actions.push(this.getRepository(repositoryId));
-    Promise.all(actions).then(() => {
-      const ids = flatMap(this.contentContainers, it => map(it, 'id'));
-      return this.getTeachingElements({ ids: [activityId, ...ids] });
-    })
-    .then(() => (this.showLoader = false));
+    if (!this.repository || this.repository.id !== repositoryId) {
+      await this.initialize(repositoryId);
+    }
+    const ids = flatMap(this.contentContainers, it => map(it, 'id'));
+    await this.getTeachingElements({ ids: [activityId, ...ids] });
+    this.showLoader = false;
   },
   beforeDestroy() {
     this.unsubscribe();

@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['structure']),
-    ...mapGetters('activities', ['getParent']),
+    ...mapGetters('repository/activities', ['getParent']),
     activity() {
       const { state } = this.revision;
       const activityId = state.activityId || state.id;
