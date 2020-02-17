@@ -57,7 +57,7 @@
             text-color="white"
             close
             class="mr-1">
-            {{ tag.name }}
+            {{ tag.name | truncate(5) }}
           </v-chip>
         </div>
       </div>
