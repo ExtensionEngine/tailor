@@ -71,6 +71,7 @@ const router = new Router({
   }, {
     path: '/repository/:repositoryId/editor/:activityId',
     name: 'editor',
+    props: numericParser,
     component: Editor,
     meta: { auth: true }
   }, {

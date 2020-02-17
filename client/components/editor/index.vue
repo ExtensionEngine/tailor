@@ -58,6 +58,9 @@ import Toolbar from './Toolbar';
 
 export default {
   name: 'editor',
+  props: {
+    repositoryId: { type: Number, required: true }
+  },
   data() {
     return {
       showLoader: true,
@@ -106,7 +109,6 @@ export default {
     }
   },
   created() {
-    const { repositoryId } = this.$route.params;
     this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;
@@ -134,11 +136,11 @@ export default {
       this.showSidebar = this.metadata.length && this.showSidebar;
     }, 50));
     // TODO: Do this better!
-    const baseUrl = `/repositories/${repositoryId}`;
+    const baseUrl = `/repositories/${this.repositoryId}`;
     this.setupActivitiesApi(`${baseUrl}/activities`);
     this.setupTesApi(`${baseUrl}/content-elements`);
     const actions = [this.getActivities()];
-    if (!this.repository) actions.push(this.getRepository(repositoryId));
+    if (!this.repository) actions.push(this.getRepository(this.repositoryId));
     Promise.all(actions).then(() => {
       const ids = flatMap(this.contentContainers, it => map(it, 'id'));
       if (ids.length) return this.getTeachingElements({ ids });
