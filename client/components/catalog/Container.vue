@@ -27,9 +27,7 @@
             @update="onFilterChange(setOrder, $event)"
             :sort-by="sortBy"
             class="pl-2" />
-          <tag-filter
-            @update="onFilterChange(setTagFilter, $event)"
-            :tags="nonSelectedTags" />
+          <tag-filter @update="onFilterChange(setTagFilter, $event)" />
         </v-col>
       </v-row>
       <v-row>
@@ -73,7 +71,6 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import CreateRepository from './Create';
-import difference from 'lodash/difference';
 import get from 'lodash/get';
 import InfiniteLoading from 'vue-infinite-loading';
 import RepositoryCard from './Card';
@@ -111,8 +108,7 @@ export default {
       if (this.queryParams.search) return 'No matches found';
       if (this.showPinned) return '0 pinned items';
       return '0 available repositories';
-    },
-    nonSelectedTags: vm => difference(vm.tags, vm.tagFilter)
+    }
   },
   methods: {
     ...mapActions('repositories', ['fetch', 'fetchTags']),
