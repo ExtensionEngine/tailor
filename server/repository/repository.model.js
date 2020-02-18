@@ -4,6 +4,7 @@ const { getRepositoryRelationships, getSchema } = require('../../config/shared/a
 const { Model } = require('sequelize');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
+const hooks = require('./hooks');
 
 class Repository extends Model {
   static fields(DataTypes) {
@@ -78,6 +79,10 @@ class Repository extends Model {
       paranoid: true,
       freezeTableName: true
     };
+  }
+
+  static hooks(Hooks, models) {
+    hooks.add(this, Hooks, models);
   }
 
   /**
