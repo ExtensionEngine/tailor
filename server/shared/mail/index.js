@@ -23,7 +23,8 @@ module.exports = {
   send,
   invite,
   resetPassword,
-  sendCommentNotification
+  sendCommentNotification,
+  sendActivityDigest
 };
 
 function invite(user, token) {
@@ -70,6 +71,20 @@ function sendCommentNotification(users, comment) {
     from,
     to: recipients,
     subject: `${comment.author.label} left a comment on ${comment.repository}`,
+    text,
+    attachment: [{ data: html, alternative: true }]
+  });
+}
+
+function sendActivityDigest(users, changes){
+  const recipients = users.concat(',');
+  const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), changes);
+  const text = renderText(path.join(templatesDir, 'activity-digest.txt'), comment);
+  logger.info({ recipients, sender: from }, '📧  Sending weekly activity digest email to:', recipients);
+  return send({
+    from,
+    to: recipients,
+    subject: `Weekly activity digest`,
     text,
     attachment: [{ data: html, alternative: true }]
   });

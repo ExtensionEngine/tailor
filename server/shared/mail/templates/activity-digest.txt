@@ -1,0 +1,16 @@
+Tailor
+=================================================
+
+{% for change in var:changes %}
+
+{{change.repository}}
+
+Created: {{change.createdCount}}
+
+Updated: {{change.updatedCount}}
+
+Removed: {{change.removedCount}}
+
+{% endfor %}
+
+-------------------------------------------------
