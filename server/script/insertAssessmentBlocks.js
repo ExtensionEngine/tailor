@@ -1,7 +1,6 @@
 'use strict';
 
 const { Activity, ContentElement, sequelize } = require('../shared/database');
-const get = require('lodash/get');
 const Promise = require('bluebird');
 const { SCHEMAS } = require('../../config/shared/activities');
 
@@ -45,17 +44,8 @@ async function insertAssessmentBlock(activity, transaction) {
 
 async function createAssessmentBlock(activity, transaction) {
   const { id: parentId, repositoryId } = activity;
-  const position = await getPosition(parentId, transaction);
-  const data = { ...DEFAULTS, parentId, repositoryId, position };
+  const data = { ...DEFAULTS, parentId, repositoryId, position: 1 };
   return Activity.create(data, { transaction });
-}
-
-function getPosition(parentId, transaction) {
-  const where = { parentId };
-  const order = [['position', 'DESC']];
-  return Activity
-    .findOne({ where, order, transaction })
-    .then(it => get(it, 'position', 0) + 1);
 }
 
 function updateAssessments(blockId, activityId, transaction) {
