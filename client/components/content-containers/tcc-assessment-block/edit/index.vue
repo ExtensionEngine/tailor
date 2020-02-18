@@ -62,9 +62,9 @@ export default {
   },
   methods: {
     addAssessment(assessment) {
-      Object.assign(assessment, { _cid: cuid() });
-      this.$set(this.unsavedAssessments, assessment._cid, assessment);
-      this.selected.push(assessment._cid);
+      const data = { ...assessment, _cid: cuid() };
+      this.$set(this.unsavedAssessments, data._cid, data);
+      this.selected.push(data._cid);
     },
     saveAssessment(assessment) {
       // TODO: Figure out why save is broken (for update)

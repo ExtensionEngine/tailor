@@ -1,5 +1,5 @@
 <template>
-  <span :key="activity._cid" class="publish-container">
+  <span class="publish-container">
     <v-menu offset-y left>
       <template v-slot:activator="{ on }">
         <v-btn
@@ -11,7 +11,7 @@
           <v-icon class="pr-1">mdi-publish</v-icon>Publish
         </v-btn>
       </template>
-      <v-list class="text-left">
+      <v-list dense class="text-left">
         <v-list-item @click="confirmPublishing()">
           <v-list-item-title>{{ config.label }}</v-list-item-title>
         </v-list-item>
@@ -29,16 +29,19 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import fecha from 'fecha';
 import { getDescendants } from 'utils/activity';
 import { getLevel } from 'shared/activities';
+import { mapActions } from 'vuex';
 import publishMixin from 'components/common/mixins/publish';
 
 export default {
   mixins: [publishMixin],
+  props: {
+    activity: { type: Object, required: true },
+    outlineActivities: { type: Array, required: true }
+  },
   computed: {
-    ...mapGetters('repository', ['activity', 'outlineActivities']),
     config: vm => getLevel(vm.activity.type),
     publishedAtMessage() {
       const { publishedAt } = this.activity;
@@ -46,11 +49,11 @@ export default {
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
     },
-    activityWithDescendants({ activity, outlineActivities } = this) {
+    activityWithDescendants({ outlineActivities, activity } = this) {
       return [...getDescendants(outlineActivities, activity), activity];
     }
   },
-  methods: mapActions('activities', { publishActivity: 'publish' })
+  methods: mapActions('repository/activities', { publishActivity: 'publish' })
 };
 </script>
 

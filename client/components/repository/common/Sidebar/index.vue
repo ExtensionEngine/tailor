@@ -1,18 +1,21 @@
 <template>
-  <div :key="activity._cid" class="repository-sidebar elevation-1">
-    <div v-if="activitySelected">
-      <sidebar-header />
-      <sidebar-body />
+  <v-navigation-drawer
+    width="450"
+    color="grey lighten-5"
+    absolute right permanent>
+    <div v-if="selectedActivity" :key="selectedActivity._cid">
+      <sidebar-header :activity="selectedActivity" />
+      <sidebar-body :activity="selectedActivity" />
     </div>
     <div v-else class="placeholder grey--text text--darken-3">
       <h4>Outline Sidebar</h4>
       <v-icon>mdi-chevron-left</v-icon>
-      <div class="helper">
+      <div class="info-content">
         Please create your first Item on the left
         to view and edit its details here.
       </div>
     </div>
-  </div>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -21,12 +24,7 @@ import SidebarBody from './Body';
 import SidebarHeader from './Header';
 
 export default {
-  computed: {
-    ...mapGetters('repository', ['activity']),
-    activitySelected() {
-      return !!this.activity._cid;
-    }
-  },
+  computed: mapGetters('repository', ['selectedActivity']),
   components: {
     SidebarBody,
     SidebarHeader
@@ -35,21 +33,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.repository-sidebar {
-  position: absolute;
-  right: 0;
-  width: 28.125rem;
-  height: 100%;
+.v-navigation-drawer {
   text-align: left;
-  background-color: #fafafa;
-  border-top: 1px solid #e8e8e8;
-  overflow: auto;
 }
 
 .placeholder {
   margin-top: 4.375rem;
   padding: 0 1rem;
-  color: #777;
 
   h4 {
     padding: 0.5rem 0 1.125rem;
@@ -64,8 +54,8 @@ export default {
     font-size: 2rem;
   }
 
-  .helper {
-    width: 20.625rem;
+  .info-content {
+    width: 22rem;
   }
 }
 </style>

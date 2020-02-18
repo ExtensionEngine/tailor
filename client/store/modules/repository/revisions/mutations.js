@@ -1,4 +1,4 @@
-import { add, fetch, reset, save, setEndpoint } from '../../helpers/mutations';
+import { add, fetch, reset, save, setEndpoint } from '@/store/helpers/mutations';
 
 const setPagination = (state, changes) => {
   const $internals = state.$internals;
