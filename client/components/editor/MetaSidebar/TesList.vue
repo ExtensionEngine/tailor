@@ -72,11 +72,10 @@ export default {
     activityIds: {
       handler() {
         const { activityIds: ids, repositoryId: id } = this;
-        if (!ids) return;
         this.isFetching = true;
         return Promise.all([
           repositoryApi.getContentElements({ id, ids }),
-          delay(1000)
+          delay(700)
         ]).then(([tes]) => { this.tes = tes; })
         .finally(() => { this.isFetching = false; });
       },

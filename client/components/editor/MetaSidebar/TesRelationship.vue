@@ -2,7 +2,7 @@
   <v-list-item class="pl-0">
     <v-list-item-content>
       <v-list-item-title v-text="relationship.label" />
-      <v-list-item-subtitle v-text="subtitle" />
+      <v-list-item-subtitle v-text="relationshipTags" />
     </v-list-item-content>
     <v-list-item-action>
       <v-tooltip bottom>
@@ -16,13 +16,13 @@
             <v-icon v-else>mdi-pen</v-icon>
           </v-btn>
         </template>
-        <span>{{ relationship.placeholder }}</span>
+        <span>{{ relationship.placeholder || defaultPlaceholder }}</span>
       </v-tooltip>
       <v-tooltip v-if="selected.length" bottom>
         <template v-slot:activator="{ on }">
           <v-btn
             v-on="on"
-            @click="remove"
+            @click="clearAll"
             color="error" outlined icon>
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -36,7 +36,7 @@
       header-icon="mdi-transit-connection-variant"
       width="650">
       <template v-slot:header>
-        {{ relationship.placeholder }}
+        {{ relationship.placeholder || defaultPlaceholder }}
       </template>
       <template v-slot:body>
         <v-expand-transition>
@@ -76,12 +76,18 @@
 import { mapActions, mapGetters } from 'vuex';
 import ActivityTree from './ActivityTree';
 import cloneDeep from 'lodash/cloneDeep';
-import groupBy from 'lodash/groupBy';
+import { getChildren } from 'client/utils/activity';
 import reduce from 'lodash/reduce';
 import set from 'lodash/set';
 import TailorDialog from '@/components/common/TailorDialog';
 import TesList from './TesList';
 import unset from 'lodash/unset';
+
+const getRelationshipTagsByActivity = (activities, relationships) =>
+  reduce(activities, (relationshipTags, { id, data: { name } }) => {
+    const { length } = relationships.filter(({ outlineId }) => outlineId === id);
+    return length ? [...relationshipTags, `${name} (${length})`] : relationshipTags;
+  }, []);
 
 export default {
   props: {
@@ -100,17 +106,15 @@ export default {
   computed: {
     ...mapGetters('repository', ['activities', 'structure']),
     repositoryId: ({ activities }) => Object.values(activities)[0].repositoryId,
-    subtitle() {
-      const { activities, selected } = this;
+    relationshipTags: ({ activities, selected }) => {
       if (!selected.length) return null;
-      const grouped = groupBy(selected, 'outlineId');
-      return reduce(activities, (acc, { id, data }) =>
-        grouped[id] ? [...acc, `${data.name} (${grouped[id].length})`] : acc,
-      []).join(', ');
-    }
+      return getRelationshipTagsByActivity(activities, selected).join(', ');
+    },
+    defaultPlaceholder: ({ relationship: { multiple } }) =>
+      `Select ${multiple ? 'elements' : 'element'}`
   },
   methods: {
-    ...mapActions('tes', ['update']),
+    ...mapActions('repository/tes', ['update']),
     async save() {
       const { selected, relationship: { type, multiple } } = this;
       const element = cloneDeep(this.element) || {};
@@ -118,7 +122,7 @@ export default {
       await this.update(element);
       this.close();
     },
-    async remove() {
+    async clearAll() {
       const element = cloneDeep(this.element) || {};
       unset(element, `refs.${this.relationship.type}`);
       await this.update(element);
@@ -126,10 +130,10 @@ export default {
     },
     openTesList({ id: activityId }) {
       if (!activityId) return;
-      this.activityIds = reduce(this.activities,
-        (acc, { parentId, id }) => parentId === activityId ? [id, ...acc] : acc,
-        [activityId]
-      );
+      this.activityIds = [
+        activityId,
+        ...getChildren(this.activities, activityId).map(({ id }) => id)
+      ];
       this.outlineId = activityId;
       this.showTesList = true;
     },

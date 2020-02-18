@@ -9,16 +9,15 @@
     <v-treeview
       v-show="hasSearchResults"
       ref="treeview"
-      activatable
       :items="activityTree"
       :search="search"
-      transition open-all
+      activatable transition open-all
       class="px-1 py-3 treeview">
       <template v-slot:prepend="{ item: { type } }">
         <v-chip
-          :color="acitivityLabels[type].color"
+          :color="activityLabels[type].color"
           text-color="white" small rounded>
-          {{ acitivityLabels[type].label }}
+          {{ activityLabels[type].label }}
         </v-chip>
       </template>
       <template v-slot:label="{ item: { id, data } }">
@@ -26,7 +25,7 @@
         <v-chip
           v-if="groupedSelection[id]"
           rounded small class="custom-chip">
-          {{ getLabel(groupedSelection[id]) }}
+          {{ getChipLabel(groupedSelection[id]) }}
         </v-chip>
       </template>
       <template v-slot:append="{ item }">
@@ -51,6 +50,11 @@ import { mapGetters } from 'vuex';
 import pluralize from 'pluralize';
 import { toTreeFormat } from 'utils/activity';
 
+const groupActivityLabelsByType = structure =>
+  structure.reduce((acc, { label, type, color }) =>
+    ({ ...acc, [type]: { label, color } }),
+  {});
+
 export default {
   props: {
     selected: { type: Array, default: () => [] }
@@ -62,11 +66,7 @@ export default {
   computed: {
     ...mapGetters('repository', ['activities', 'structure']),
     groupedSelection: ({ selected }) => groupBy(selected, 'outlineId'),
-    acitivityLabels: ({ structure }) => structure.reduce((acc, it) => {
-      const { label, type, color } = it;
-      acc[type] = { label, color };
-      return acc;
-    }, {}),
+    activityLabels: ({ structure }) => groupActivityLabelsByType(structure),
     activityTree: vm => toTreeFormat(vm.activities, []),
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;
@@ -76,8 +76,8 @@ export default {
   },
   methods: {
     isEditable,
-    getLabel(elements) {
-      return `${elements.length} ${pluralize('element', elements.length)} selected`;
+    getChipLabel({ length }) {
+      return `${length} ${pluralize('element', length)} selected`;
     }
   }
 };
