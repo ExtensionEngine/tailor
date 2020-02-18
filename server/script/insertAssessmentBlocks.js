@@ -39,11 +39,8 @@ function getAssessedActivitites(types, transaction) {
 }
 
 async function insertAssessmentBlock(activity, transaction) {
-  const parentId = activity.id;
-  const assessmentBlock = await createAssessmentBlock(activity, transaction);
-  const updates = { activityId: assessmentBlock.id };
-  const options = { where: { activityId: parentId }, transaction };
-  return ContentElement.update(updates, options);
+  const { id } = await createAssessmentBlock(activity, transaction);
+  return updateAssessments(id, activity.id, transaction);
 }
 
 async function createAssessmentBlock(activity, transaction) {
@@ -59,4 +56,15 @@ function getPosition(parentId, transaction) {
   return Activity
     .findOne({ where, order, transaction })
     .then(it => get(it, 'position', 0) + 1);
+}
+
+function updateAssessments(blockId, activityId, transaction) {
+  const where = { activityId };
+  const order = [['id', 'ASC']];
+  return ContentElement
+    .findAll({ where, order, transaction })
+    .each((it, index) => {
+      const updates = { activityId: blockId, position: index + 1 };
+      return it.update(updates, { transaction });
+    });
 }
