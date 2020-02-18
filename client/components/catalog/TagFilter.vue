@@ -10,11 +10,13 @@
         <v-list-item
           v-for="it in items"
           :key="it.id"
-          @click="$emit('update', it)"
-          class="py-0 secondary--text text--lighten-1">
-          <v-checkbox
-            v-model="it.isSelected"
-            :label="it.name" />
+          @click="toggleTagFilter(it)">
+          <v-list-item-action class="mr-2">
+            <v-checkbox v-model="it.isSelected" @click="toggleTagFilter(it)" />
+          </v-list-item-action>
+          <v-list-item-content class="text-left">
+            <v-list-item-title>{{ it.name }}</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -33,6 +35,12 @@ export default {
         const isSelected = map(this.tagFilter, 'id').includes(it.id);
         return { ...it, isSelected };
       });
+    }
+  },
+  methods: {
+    toggleTagFilter(item) {
+      item.isSelected = !item.isSelected;
+      this.$emit('update', item);
     }
   }
 };
