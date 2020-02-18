@@ -23,6 +23,7 @@
       @add="addAssessment"
       :include="['ASSESSMENT']"
       :activity="container"
+      :position="nextPosition"
       :layout="false"
       large
       label="Add assessment" />
@@ -34,6 +35,7 @@ import AddElement from 'tce-core/AddElement';
 import AssessmentItem from '@/components/editor/structure/AssessmentItem';
 import cuid from 'cuid';
 import filter from 'lodash/filter';
+import last from 'lodash/last';
 import map from 'lodash/map';
 import pickBy from 'lodash/pickBy';
 
@@ -57,6 +59,10 @@ export default {
     assessments() {
       const { savedAssessments: saved, unsavedAssessments: unsaved } = this;
       return [...saved, ...Object.values(unsaved)];
+    },
+    nextPosition() {
+      const lastItem = last(this.assessments);
+      return lastItem ? lastItem.position + 1 : 1;
     },
     hasAssessments: vm => vm.assessments.length
   },
