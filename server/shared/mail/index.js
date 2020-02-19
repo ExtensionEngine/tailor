@@ -76,14 +76,14 @@ function sendCommentNotification(users, comment) {
   });
 }
 
-function sendActivityDigest(users, changes) {
-  const recipients = users.concat(',');
-  const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), changes);
-  const text = renderText(path.join(templatesDir, 'activity-digest.txt'), comment);
-  logger.info({ recipients, sender: from }, '📧  Sending weekly activity digest email to:', recipients);
+function sendActivityDigest(user, revisions) {
+  const recipient = user.email;
+  const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), revisions);
+  const text = renderText(path.join(templatesDir, 'activity-digest.txt'), revisions);
+  logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
   return send({
     from,
-    to: recipients,
+    to: recipient,
     subject: `Weekly activity digest`,
     text,
     attachment: [{ data: html, alternative: true }]

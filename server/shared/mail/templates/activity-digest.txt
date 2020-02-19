@@ -1,15 +1,15 @@
 Tailor
 =================================================
 
-{% for change in var:changes %}
+{% for revision in var:revisions %}
 
-{{change.repository}}
+{{revision.repository}}
 
-Created: {{change.createdCount}}
+Created: {{revision.createdCount}}
 
-Updated: {{change.updatedCount}}
+Updated: {{revision.updatedCount}}
 
-Removed: {{change.removedCount}}
+Removed: {{revision.removedCount}}
 
 {% endfor %}
 
