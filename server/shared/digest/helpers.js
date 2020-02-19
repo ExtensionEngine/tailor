@@ -19,11 +19,11 @@ const aggregateRevisions = revisions => {
       .map(subkey => {
         entities[name][subkey] = entities[name][subkey].length;
       });
-      final.push({ repoName: key, ...entities });
     });
+    final.push({ repoName: key, ...entities });
   });
-  console.log(final);
-  return result;
+  console.log(_.uniqWith(final, _.isEqual));
+  return _.uniqWith(final, _.isEqual);
 };
 
 module.exports = {

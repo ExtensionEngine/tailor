@@ -6,8 +6,16 @@ const { Op } = require('sequelize');
 const mail = require('../mail');
 const { aggregateRevisions } = require('./helpers');
 
+const scheduleOptions = {
+  minute: process.env.DIGEST_MINUTE,
+  hour: process.env.DIGEST_HOUR,
+  weekDay: process.env.DIGEST_DAY
+};
+
 function initiateDigest() {
-  cron.schedule('*/3 * * * *', () => {
+  const { minute, hour, weekDay } = scheduleOptions;
+  const scheduleString = `${minute} ${hour} * * ${weekDay}`;
+  cron.schedule(scheduleString, () => {
     const users = User.findAll({ attributes: ['id', 'email', 'fullName'], raw: true });
     users.map(async user => {
       const revisions = await Revision.findAll({
