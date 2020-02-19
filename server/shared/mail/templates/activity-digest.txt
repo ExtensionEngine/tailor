@@ -3,13 +3,35 @@ Tailor
 
 {% for revision in var:revisions %}
 
-{{revision.repository}}
+{{revision.repoName}}
 
-Created: {{revision.createdCount}}
 
-Updated: {{revision.updatedCount}}
 
-Removed: {{revision.removedCount}}
+Repository revisions:
+
+Created: {{revision.repository.createdCount}}
+
+Updated: {{revision.repository.updatedCount}}
+
+Removed: {{revision.repository.removedCount}}
+
+
+Content revisions:
+
+Created: {{revision.content.createdCount}}
+
+Updated: {{revision.content.updatedCount}}
+
+Removed: {{revision.content.removedCount}}
+
+
+Activity revisions:
+
+Created: {{revision.activity.createdCount}}
+
+Updated: {{revision.activity.updatedCount}}
+
+Removed: {{revision.activity.removedCount}}
 
 {% endfor %}
 

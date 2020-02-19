@@ -1,0 +1,29 @@
+<mj-section padding="0 10px" background-color="#f1f1f1">
+  <mj-column>
+    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
+      <b>Repository revisions</b>
+    </mj-text>
+  </mj-column>
+  <mj-column background-color="#f1f1f1" border-radius="8px">
+    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
+      Created:
+    </mj-text>
+    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
+      Updated:
+    </mj-text>
+    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
+      Removed:
+    </mj-text>
+  </mj-column>
+  <mj-column background-color="#f1f1f1" border-radius="8px">
+    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
+      {{revisions[revision].REPOSITORY.CREATE.length}}
+    </mj-text>
+    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
+      {{revisions[revision].REPOSITORY.UPDATE.length}}
+    </mj-text>
+    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
+      {{revisions[revision].REPOSITORY.REMOVE.length}}
+    </mj-text>
+  </mj-column>
+</mj-section>
