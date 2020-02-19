@@ -1,38 +1,34 @@
 Tailor
 =================================================
+{{#revisions}}
+{{repoName}}
 
-{% for revision in var:revisions %}
+    Repository revisions:
 
-{{revision.repoName}}
+        Created: {{REPOSITORY.CREATE}}
 
+        Updated: {{REPOSITORY.UPDATE}}
 
-
-Repository revisions:
-
-Created: {{revision.repository.createdCount}}
-
-Updated: {{revision.repository.updatedCount}}
-
-Removed: {{revision.repository.removedCount}}
+        Removed: {{REPOSITORY.REMOVE}}
 
 
-Content revisions:
+    Content revisions:
 
-Created: {{revision.content.createdCount}}
+        Created: {{CONTENT_CONTAINER.CREATE}}
 
-Updated: {{revision.content.updatedCount}}
+        Updated: {{CONTENT_CONTAINER.UPDATE}}
 
-Removed: {{revision.content.removedCount}}
+        Removed: {{CONTENT_CONTAINER.REMOVE}}
 
 
-Activity revisions:
+    Activity revisions:
 
-Created: {{revision.activity.createdCount}}
+        Created: {{ACTIVITY.CREATE}}
 
-Updated: {{revision.activity.updatedCount}}
+        Updated: {{ACTIVITY.UPDATE}}
 
-Removed: {{revision.activity.removedCount}}
+        Removed: {{ACTIVITY.REMOVE}}
 
-{% endfor %}
+{{/revisions}}
 
 -------------------------------------------------

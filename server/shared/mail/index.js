@@ -78,9 +78,11 @@ function sendCommentNotification(users, comment) {
 
 function sendActivityDigest(user, revisions) {
   const recipient = user.email;
-  const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), revisions);
-  const text = renderText(path.join(templatesDir, 'activity-digest.txt'), revisions);
+  const data = {revisions}
+  const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), data);
+  const text = renderText(path.join(templatesDir, 'activity-digest.txt'), data);
   logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
+
   return send({
     from,
     to: recipient,
