@@ -7,7 +7,7 @@ const mail = require('../mail');
 const { aggregateRevisions } = require('./helpers');
 
 function initiateDigest() {
-  cron.schedule('*/5 * * * * *', () => {
+  cron.schedule('*/3 * * * *', () => {
     const users = User.findAll({ attributes: ['id', 'email', 'fullName'], raw: true });
     users.map(async user => {
       const revisions = await Revision.findAll({
@@ -24,7 +24,7 @@ function initiateDigest() {
         },
         raw: true
       });
-      console.log(aggregateRevisions(revisions));
+      aggregateRevisions(revisions);
       // mail.sendActivityDigest(user, aggregateRevisions(revisions));
     });
   });
