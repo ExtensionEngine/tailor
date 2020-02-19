@@ -8,6 +8,7 @@ const contentPluginRegistry = require('./shared/content-plugins');
 const pkg = require('../package.json');
 const { promisify } = require('util');
 const sequelize = require('sequelize');
+const { initiateDigest } = require('./shared/digest');
 
 // NOTE: This needs to be done before db models get loaded!
 if (process.env.NODE_ENV !== 'production') {
@@ -19,11 +20,11 @@ const config = require('../config/server');
 const database = require('./shared/database');
 const logger = require('./shared/logger');
 const runApp = promisify(app.listen.bind(app));
-
 database.initialize()
   .then(() => logger.info('Database initialized'))
   .then(() => require('../config/shared/activities'))
   .then(() => contentPluginRegistry.initialize())
+  .then(() => initiateDigest())
   .then(() => runApp(config.port))
   .then(() => {
     logger.info(`Server listening on port ${config.port}`);

@@ -76,7 +76,7 @@ function sendCommentNotification(users, comment) {
   });
 }
 
-function sendActivityDigest(users, changes){
+function sendActivityDigest(users, changes) {
   const recipients = users.concat(',');
   const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), changes);
   const text = renderText(path.join(templatesDir, 'activity-digest.txt'), comment);
