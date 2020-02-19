@@ -24,6 +24,5 @@ async function resolve(block, resolveStatics) {
 module.exports = {
   ...info,
   fetch,
-  resolve,
-  publishedAs: 'assessments'
+  resolve
 };
