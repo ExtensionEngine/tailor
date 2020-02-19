@@ -150,8 +150,8 @@ async function removeTag(req, res) {
   const { params: { tagId, repositoryId } } = req;
   const where = { tagId, repositoryId };
   return RepositoryTag.destroy({ where, force: true })
-    .then(repoTagId =>
-      res.json({ data: { tagId: parseInt(tagId), repositoryId: repoTagId } }));
+    .then(() => res.json(
+      { data: { tagId: parseInt(tagId), repositoryId: parseInt(repositoryId) } }));
 }
 
 module.exports = {
