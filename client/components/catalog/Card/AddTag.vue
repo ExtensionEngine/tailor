@@ -3,8 +3,8 @@
     v-model="isVisible"
     header-icon="mdi-tag-outline">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" @click.stop icon x-small>
-        <v-icon class="pr-1">mdi-plus</v-icon>
+      <v-btn v-on="on" icon small>
+        <v-icon>mdi-plus</v-icon>
       </v-btn>
     </template>
     <template v-slot:header>Add Tag</template>
@@ -75,6 +75,12 @@ export default {
       const data = { name: tagName, repositoryId: this.repository.id };
       await this.addTag(data);
       this.hide();
+    }
+  },
+  watch: {
+    isVisible(val) {
+      if (!val) return;
+      this.$validator.reset();
     }
   },
   mounted() {
