@@ -1,6 +1,6 @@
 <template>
-  <v-card @click="navigateTo()" class="repository-card">
-    <div class="card-body blue-grey darken-4">
+  <v-card class="repository-card">
+    <div @click="navigateTo()" class="card-body blue-grey darken-4">
       <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
       <span class="schema-name">{{ schema }}</span>
       <v-btn
@@ -47,7 +47,7 @@
             mdi-pin
           </v-icon>
         </v-btn>
-        <div class="d-flex align-center">
+        <div class="d-flex align-center ml-1">
           <v-chip
             v-for="tag in repository.tags"
             :key="tag.id"
@@ -56,7 +56,7 @@
             color="grey darker-1"
             text-color="white"
             close
-            class="mr-1">
+            class="v-chip-font mr-1">
             {{ tag.name | truncate(5) }}
           </v-chip>
         </div>
@@ -158,4 +158,9 @@ export default {
     line-height: 1.25rem;
   }
 }
+
+.v-chip-font {
+  font-size: 0.75rem !important;
+}
+
 </style>
