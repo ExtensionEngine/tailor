@@ -14,7 +14,7 @@ const scheduleOptions = {
 
 function initiateDigest() {
   const { minute, hour, weekDay } = scheduleOptions;
-  const scheduleString = `${minute} ${hour} * * ${weekDay}`;
+  const scheduleString = `*/5 ${minute} ${hour} * * ${weekDay}`;
   cron.schedule(scheduleString, () => {
     const users = User.findAll({ attributes: ['id', 'email', 'fullName'], raw: true });
     users.map(async user => {
@@ -22,6 +22,7 @@ function initiateDigest() {
         attributes: ['id', 'entity', 'operation', 'repository_id'],
         include: [{
           model: Repository,
+          attributes: ['name'],
           paranoid: false
         }],
         where: {
@@ -32,8 +33,7 @@ function initiateDigest() {
         },
         raw: true
       });
-      aggregateRevisions(revisions);
-      // mail.sendActivityDigest(user, aggregateRevisions(revisions));
+      mail.sendActivityDigest(user, aggregateRevisions(revisions));
     });
   });
 }

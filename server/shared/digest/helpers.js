@@ -1,29 +1,32 @@
 'use strict';
+const flow = require('lodash/fp/flow');
+const map = require('lodash/fp/map');
+const values = require('lodash/fp/values');
 const _ = require('lodash');
 
 const aggregateRevisions = revisions => {
-  const final = [];
-
   const result = _.chain(revisions)
   .groupBy('repository.name')
-  .mapValues(values => _.chain(values)
-    .groupBy('entity').mapValues(vals => _.chain(vals).groupBy('operation').value())
+  .mapValues(changes => _.chain(changes)
+    .groupBy('entity')
+    .mapValues(operations => _.chain(operations)
+      .groupBy('operation')
+      .value())
     .value()
   ).value();
 
-  Object.keys(result).map(key => {
-    const entities = { ...result[key] };
-    final.push({ repoName: key, ...entities });
-    Object.keys(entities).map(name => {
-      Object.keys(entities[name])
-      .map(subkey => {
-        entities[name][subkey] = entities[name][subkey].length;
-      });
-    });
-    final.push({ repoName: key, ...entities });
-  });
-  console.log(_.uniqWith(final, _.isEqual));
-  return _.uniqWith(final, _.isEqual);
+  flow(
+    values,
+    map(activity => flow(
+      values,
+      map(x => {
+        Object.keys(x)
+        .map(elem => { x[elem] = x[elem].length; });
+      })
+    )(activity))
+  )(result);
+
+  return Object.keys(result).map(key => { return { repoName: key, ...result[key] }; });
 };
 
 module.exports = {
