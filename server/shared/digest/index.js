@@ -14,7 +14,7 @@ const scheduleOptions = {
 
 function initiateDigest() {
   const { minute, hour, weekDay } = scheduleOptions;
-  const scheduleString = `*/5 ${minute} ${hour} * * ${weekDay}`;
+  const scheduleString = `${minute} ${hour} * * ${weekDay}`;
   cron.schedule(scheduleString, () => {
     const users = User.findAll({ attributes: ['id', 'email', 'fullName'], raw: true });
     users.map(async user => {
@@ -33,7 +33,10 @@ function initiateDigest() {
         },
         raw: true
       });
-      mail.sendActivityDigest(user, aggregateRevisions(revisions));
+      const aggregate = aggregateRevisions(revisions);
+      // Komentar za Sergija:
+      // Logika je da se digest samo salje kad je bilo ikakvih promjena
+      if (aggregate.length) mail.sendActivityDigest(user, aggregate);
     });
   });
 }

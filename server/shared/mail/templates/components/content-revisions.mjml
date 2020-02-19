@@ -1,7 +1,7 @@
 <mj-section padding="0 10px" background-color="#f1f1f1">
   <mj-column>
     <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      <b>Content revisions</b>
+      <b>Content Elements</b>
     </mj-text>
   </mj-column>
   <mj-column background-color="#f1f1f1" border-radius="8px">

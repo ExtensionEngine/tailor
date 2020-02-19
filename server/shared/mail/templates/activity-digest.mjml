@@ -15,7 +15,7 @@
     <mj-section padding="0 10px" background-color="#f1f1f1" border-bottom="1px solid black">
       <mj-column>
         <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-          <b>{{repoName}}</b>
+          <b>Course: {{repoName}}</b>
         </mj-text>
       </mj-column>
     </mj-section>
