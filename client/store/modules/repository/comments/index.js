@@ -4,8 +4,6 @@ import * as mutations from './mutations';
 
 const state = {
   items: {},
-  activitiesFetched: {},
-  repositoryId: null,
   $apiUrl: null
 };
 

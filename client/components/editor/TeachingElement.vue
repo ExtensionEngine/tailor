@@ -25,8 +25,8 @@ export default {
     dragged: { type: Boolean, default: false }
   },
   methods: {
-    ...mapActions('tes', { saveElement: 'save', removeElement: 'remove' }),
-    ...mapMutations('tes', { addElement: 'add' }),
+    ...mapActions('repository/tes', { saveElement: 'save', removeElement: 'remove' }),
+    ...mapMutations('repository/tes', { addElement: 'add' }),
     add(element) {
       this.addElement({ ...this.element, ...cloneDeep(element) });
     },

@@ -65,8 +65,7 @@ export default {
     supportedLevels: []
   }),
   computed: {
-    ...mapGetters(['activities']),
-    ...mapGetters('repository', ['structure']),
+    ...mapGetters('repository', ['structure', 'activities']),
     parent: vm => find(vm.activities, { id: vm.activity.parentId }),
     levels: vm => vm.sameLevel.concat(vm.subLevels),
     sameLevel() {
@@ -105,8 +104,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', ['remove']),
-    ...mapMutations('repository', ['focusActivity', 'toggleActivity']),
+    ...mapActions('repository/activities', ['remove']),
+    ...mapMutations('repository', ['selectActivity', 'toggleActivity']),
     expandParent(item) {
       const { activity, parent } = this;
       const _cid = item.parentId === activity.id
@@ -132,7 +131,7 @@ export default {
           ? find(this.activities, { id: activity.parentId })
           : first(sortBy(filter(this.activities, rootFilter), 'position'));
         this.remove(this.activity);
-        if (focusNode) this.focusActivity(focusNode._cid);
+        if (focusNode) this.selectActivity(focusNode._cid);
       };
       const name = `${isTreeView ? `${activity.id}: ` : ''}${activity.data.name}`;
       appChannel.emit('showConfirmationModal', {

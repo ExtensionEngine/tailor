@@ -1,15 +1,12 @@
 <template>
-  <div :class="{ preview }" class="comment-editor">
+  <div :class="{ preview: showPreview }" class="comment-editor">
     <v-textarea
       @change="$emit('input', $event)"
       :value="value"
-      :autofocus="focused"
+      :autofocus="isFocused"
       :placeholder="placeholder"
       rows="3"
-      outlined
-      auto-grow
-      clearable
-      counter />
+      outlined auto-grow clearable counter />
     <div class="content">
       <pre><span>{{ value }}</span><br></pre>
     </div>
@@ -21,8 +18,8 @@ export default {
   name: 'text-editor',
   props: {
     value: { type: String, required: true },
-    focused: { type: Boolean, default: false },
-    preview: { type: Boolean, default: false },
+    isFocused: { type: Boolean, default: false },
+    showPreview: { type: Boolean, default: false },
     placeholder: { type: String, default: 'Add a comment...' }
   }
 };

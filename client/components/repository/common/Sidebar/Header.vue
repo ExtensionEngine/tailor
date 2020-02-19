@@ -22,7 +22,10 @@
       activator-color="blue-grey darken-3"
       activator-icon="mdi-folder-plus-outline"
       show-activator />
-    <publishing v-if="isAdmin || isRepositoryAdmin" />
+    <publishing
+      v-if="isAdmin || isRepositoryAdmin"
+      :activity="activity"
+      :outline-activities="outlineActivities" />
   </div>
 </template>
 
@@ -35,9 +38,14 @@ import { mapGetters } from 'vuex';
 import Publishing from './Publishing';
 
 export default {
+  name: 'activity-sidebar-header',
+  props: {
+    activity: { type: Object, required: true }
+  },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository', ['structure', 'activity', 'isRepositoryAdmin']),
+    ...mapGetters('repository',
+      ['structure', 'outlineActivities', 'isRepositoryAdmin']),
     isEditable() {
       const type = get(this.activity, 'type');
       return type && isEditable(type);

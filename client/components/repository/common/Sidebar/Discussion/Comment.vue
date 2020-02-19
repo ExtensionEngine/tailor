@@ -12,8 +12,8 @@
       </div>
       <text-editor
         v-model="content"
-        :focused="isEditing"
-        :preview="!isEditing"
+        :is-focused="isEditing"
+        :show-preview="!isEditing"
         class="content" />
       <span v-if="isEditing" class="float-right">
         <v-btn @click="reset" text small>Cancel</v-btn>
