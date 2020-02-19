@@ -12,7 +12,7 @@
           :key="it.id"
           @click="toggleTagFilter(it)">
           <v-list-item-action class="mr-2">
-            <v-checkbox v-model="it.isSelected" @click="toggleTagFilter(it)" />
+            <v-checkbox :value="it.isSelected" />
           </v-list-item-action>
           <v-list-item-content class="text-left">
             <v-list-item-title>{{ it.name }}</v-list-item-title>
