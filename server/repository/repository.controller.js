@@ -66,7 +66,7 @@ async function create({ user, body }, res) {
 }
 
 async function get({ repository }, res) {
-  await repository.reload({ include: [includeLastRevision()] });
+  await repository.reload({ include: [includeLastRevision(), { model: Tag }] });
   return res.json({ data: repository });
 }
 
