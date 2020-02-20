@@ -1,5 +1,5 @@
-import { fakeItems } from '../../data/fakeCommentData';
-import { reorder } from '@/client/store/modules/activities/mutations';
+import { fakeItems } from '../../../data/fakeCommentData';
+import { reorder } from '@/store/modules/repository/activities/mutations';
 
 describe('Test for module/activities/mutations', () => {
   it('should change the position of an state item', () => {

@@ -1,4 +1,4 @@
-import { add, fetch, remove, reset, save, setEndpoint } from '@/client/store/helpers/mutations.js';
+import { add, fetch, remove, reset, save, setEndpoint } from '@/store/helpers/mutations.js';
 import { fakeCommentModel, fakeCommentState, fakeItems } from '../data/fakeCommentData';
 
 jest.mock('cuid');

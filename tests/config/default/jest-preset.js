@@ -16,11 +16,10 @@ module.exports = {
   transformIgnorePatterns: ['/node_modules/'],
   // support the same @ -> src alias mapping in source code
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
+    '^@/(.*)$': '<rootDir>client/$1',
     '^utils/(.*)$': '<rootDir>/client/utils/$1',
-    '^shared/(.*)$': '<rootDir>/config/shared/$1',
+    '^shared(.*)$': '<rootDir>/config/shared$1',
     '^extensions/(.*)$': '<rootDir>/extensions/$1'
-    // 'shared/(.*)$': '<rootDir>/config/shared/$1'
   },
   modulePaths: ['<rootDir>/client/utils/activity/'],
   collectCoverageFrom: [

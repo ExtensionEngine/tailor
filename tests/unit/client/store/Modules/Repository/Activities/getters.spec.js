@@ -1,13 +1,13 @@
 
 import * as mockUtils from 'utils/activity';
-import { activities, calculateInsertPosition, getAncestors, getDescendants, getLineage, getParent } from '@/client/store/modules/activities/getters.js';
-import { fakeCommentModel, fakeItems } from '../../data/fakeCommentData';
+import { activities, calculateInsertPosition, getAncestors, getDescendants, getLineage, getParent } from '@/store/modules/repository/activities/getters.js';
+import { fakeItems } from '../../../data/fakeCommentData';
 
 describe('Test for modules/activities/getters', () => {
   const fillState = (items = fakeItems()) => ({ items });
   const mockDeepChildren = jest.spyOn(mockUtils, 'getDescendants');
   const mockedGetAncestors = jest.spyOn(mockUtils, 'getAncestors');
-  const mockedCalculatePosition = jest.spyOn(mockUtils, 'getAncestors');
+  jest.spyOn(mockUtils, 'getAncestors');
 
   beforeEach(() => jest.resetAllMocks());
 
