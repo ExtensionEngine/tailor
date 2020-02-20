@@ -118,8 +118,6 @@ properties:
 - **color** `String` - Display color in hexadecimal notation.
 - **contentContainers** `Array<String>` - Array of content container types that
   define which content containers can be added.
-- **hasAssessments** `Boolean` - Activity allows adding assessments activities
-  to it.
 - **hasExams** `Boolean` - Activity allows adding exam activities to it.
 - **exams** `Object` - Configuration for activity exams.
 - **relationships** `Array<Relationship>` - Defines what relationships this
