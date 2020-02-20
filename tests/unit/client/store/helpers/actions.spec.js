@@ -1,4 +1,4 @@
-import { mockCommentModel, mockCommentState } from '../__mocks__/mockCommentData';
+import { fakeCommentModel, fakeCommentState } from '../data/fakeCommentData';
 import generateActions from '@/client/store/helpers/actions';
 const { fetch, get, reset, remove, save, setEndpoint, update } = generateActions();
 
@@ -6,13 +6,14 @@ jest.mock('cuid');
 
 jest.mock('@/client/store/helpers/resource', () => {
   const mockResolve = () => Promise.resolve({});
+  const mockedData = require('../data/fakeCommentData');
   return jest.fn().mockImplementation(() => {
     return {
       getById: mockResolve,
       fetch: mockResolve,
-      save: () => Promise.resolve(mockCommentModel()),
-      update: () => Promise.resolve(mockCommentModel('newMockCid')),
-      remove: () => Promise.resolve(mockCommentModel())
+      save: () => Promise.resolve(mockedData.fakeCommentModel()),
+      update: () => Promise.resolve(mockedData.fakeCommentModel('newMockCid')),
+      remove: () => Promise.resolve(mockedData.fakeCommentModel())
     };
   });
 });
@@ -40,21 +41,21 @@ describe('helpers/actions tests', () => {
   it('should trigger save action with correct mutation name and correct payload', async () => {
     jest.spyOn(Date, 'now').mockImplementation(() => 1581440542361);
     const commit = jest.fn();
-    const mockedState = mockCommentState();
-    let mockedModel = mockCommentModel();
+    const mockedState = fakeCommentState();
+    let mockedModel = fakeCommentModel();
 
     await save({ state: mockedState, commit }, mockedModel);
     expect(commit).toHaveBeenNthCalledWith(1, 'save', mockedModel);
     expect(commit).toHaveBeenNthCalledWith(2, 'save', mockedModel);
 
-    mockedModel = mockCommentModel();
+    mockedModel = fakeCommentModel();
     delete mockedModel._cid;
     await save({ state: mockedState, commit }, mockedModel);
 
     expect(commit).toHaveBeenNthCalledWith(3, 'save', { ...mockedModel, _cid: 'mockCuid' });
 
     // If ther is not cuid present the function will insert a new one
-    mockedModel = mockCommentModel();
+    mockedModel = fakeCommentModel();
     mockedState.items = { ck6i4v82h00063h5wvhr7u0uc: { _version: 1581440542361 } };
     await save({ state: mockedState, commit }, mockedModel);
     // mockedModel._synced = true;
@@ -63,7 +64,7 @@ describe('helpers/actions tests', () => {
 
   it('should update the cid', async () => {
     const commit = jest.fn();
-    const mockModel = mockCommentModel();
+    const mockModel = fakeCommentModel();
 
     await update({ commit }, mockModel);
     expect(commit).toHaveBeenCalledWith('save', { ...mockModel, _cid: 'newMockCid' });
@@ -71,7 +72,7 @@ describe('helpers/actions tests', () => {
 
   it('should send the correct commit msg and payload', async () => {
     const commit = jest.fn();
-    const mockModel = mockCommentModel();
+    const mockModel = fakeCommentModel();
 
     await remove({ commit }, mockModel);
     expect(commit).toHaveBeenCalledWith('remove', [mockModel]);
