@@ -29,6 +29,7 @@ import CircularProgress from 'components/common/CircularProgress';
 import { delay } from 'bluebird';
 import find from 'lodash/find';
 import repositoryApi from 'client/api/repository';
+import sortBy from 'lodash/sortBy';
 import TeachingElement from 'components/editor/TeachingElement';
 import xorBy from 'lodash/xorBy';
 
@@ -76,7 +77,7 @@ export default {
         return Promise.all([
           repositoryApi.getContentElements({ id, ids }),
           delay(700)
-        ]).then(([tes]) => { this.tes = tes; })
+        ]).then(([tes]) => { this.tes = sortBy(tes, 'position'); })
         .finally(() => { this.isFetching = false; });
       },
       immediate: true,
