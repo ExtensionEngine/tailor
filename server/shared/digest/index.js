@@ -2,7 +2,8 @@
 
 const cron = require('node-cron');
 const { User, Revision, Repository } = require('../database');
-const { Op } = require('sequelize');
+const { sql } = require('../database/helpers');
+const { col, fn } = require('sequelize');
 const mail = require('../mail');
 const { aggregateRevisions } = require('./helpers');
 
@@ -14,30 +15,29 @@ const scheduleOptions = {
 
 function initiateDigest() {
   const { minute, hour, weekDay } = scheduleOptions;
-  const scheduleString = `${minute} ${hour} * * ${weekDay}`;
-  cron.schedule(scheduleString, () => {
-    const users = User.findAll({ attributes: ['id', 'email', 'fullName'], raw: true });
-    users.map(async user => {
-      const revisions = await Revision.findAll({
-        attributes: ['id', 'entity', 'operation', 'repository_id'],
-        include: [{
-          model: Repository,
-          attributes: ['name'],
-          paranoid: false
-        }],
-        where: {
-          user_id: user.id,
-          created_at: {
-            [Op.gte]: (new Date().setDate(new Date().getDate() - 7))
-          }
-        },
-        raw: true
-      });
-      const aggregate = aggregateRevisions(revisions);
-      // Komentar za Sergija:
-      // Logika je da se digest samo salje kad je bilo ikakvih promjena
-      if (aggregate.length) mail.sendActivityDigest(user, aggregate);
+  const scheduleString = `*/5 ${minute} ${hour} * * ${weekDay}`;
+  cron.schedule(scheduleString, async () => {
+    const revisions = await Revision.findAll({
+      attributes: [
+        [sql.concat(col('operation'), col('entity'), { separator: ' ' }), 'entity_operation'],
+        [fn('count', sql.concat('operation', 'entity')), 'count'],
+        'user_id',
+        'repository_id'
+      ],
+      group: ['repository_id', 'user.id', 'user_id', 'entity_operation', 'repository.name'],
+      include: [{
+        model: User,
+        attributes: ['email', 'fullName']
+      },
+      {
+        model: Repository,
+        attributes: ['name']
+      }
+      ],
+      raw: true
     });
+    // const aggregate = aggregateRevisions(revisions);
+    mail.sendActivityDigest(revisions);
   });
 }
 

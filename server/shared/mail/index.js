@@ -78,18 +78,22 @@ function sendCommentNotification(users, comment) {
 
 function sendActivityDigest(user, revisions) {
   const recipient = user.email;
-  // Potencijalno ako se makne provjera da li je empty iz digest/index
-  // mozemo vamo provjerit pa renderat neki default za kad nije bilo revizija
 
-  // if (!revisions) {
+  // if (!revisions.length) {
   //   const empty = renderHtml(path.join(templatesDir, 'default-digest.mjml'));
+  //   return send({
+  //     from,
+  //     to: recipient,
+  //     subject: 'Weekly activity digest',
+  //     empty,
+  //     attachment: [{ data: empty, alternative: true }]
+  //   });
   // }
 
   const data = { revisions };
   const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), data);
   const text = renderText(path.join(templatesDir, 'activity-digest.txt'), data);
   logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
-  // console.log(text);
   return send({
     from,
     to: recipient,
