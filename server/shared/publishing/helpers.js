@@ -151,14 +151,13 @@ function publishAssessments(parent) {
 
 function fetchContainers(parent) {
   const typeConfigs = getSupportedContainers(parent.type);
-  const isCore = it => !containerRegistry.getStaticsResolver(it.type);
-  const coreTypes = typeConfigs.filter(isCore).map(it => it.type);
+  const { defaults, custom } = getGroupedContainerTypes(typeConfigs);
 
-  return Promise.all([
-    parent.getChildren({ where: { type: coreTypes } }).map(fetchDefaultContainer),
-    fetchCustomContainers(parent)
-  ])
-  .reduce((containers, groupedContainers) => {
+  const fetches = [];
+  if (defaults.length) fetches.push(fetchDefaultContainers(parent, defaults));
+  if (custom.length) fetches.push(fetchCustomContainers(parent, custom));
+  if (!fetches.length) return [];
+  return Promise.all(fetches).reduce((containers, groupedContainers) => {
     const mappedContainers = groupedContainers.map(it => {
       const config = find(typeConfigs, { type: it.type });
       const publishedAs = get(config, 'publishedAs', 'container');
@@ -166,6 +165,20 @@ function fetchContainers(parent) {
     });
     return containers.concat(mappedContainers);
   }, []);
+}
+
+function getGroupedContainerTypes(typeConfigs) {
+  const hasDefaultStructure = it => !containerRegistry.getContentFetcher(it);
+  return typeConfigs.reduce((acc, { type }) => {
+    const group = hasDefaultStructure(type) ? 'defaults' : 'custom';
+    acc[group].push(type);
+    return acc;
+  }, { defaults: [], custom: [] });
+}
+
+function fetchDefaultContainers(parent, types) {
+  const where = { type: types };
+  return parent.getChildren({ where }).map(fetchDefaultContainer);
 }
 
 function fetchDefaultContainer(container) {
@@ -178,9 +191,9 @@ function fetchDefaultContainer(container) {
     }));
 }
 
-function fetchCustomContainers(parent) {
+function fetchCustomContainers(parent, types) {
   const options = { include: [{ model: ContentElement, attributes: CE_ATTRS }] };
-  return containerRegistry.fetch(parent, options);
+  return containerRegistry.fetch(types, parent, options);
 }
 
 function fetchAssessments(parent) {
