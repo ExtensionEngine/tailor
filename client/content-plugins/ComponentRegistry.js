@@ -40,7 +40,7 @@ export default class ComponentRegistry {
     const type = isQuestion(element.type)
       ? processAnswerType(element.subtype)
       : element.type;
-    const componentName = this._getName(type);
+    const componentName = this._getName(element.templateId || type);
     _registry.push({ ...pick(element, _attrs), componentName, position });
     Vue.component(componentName, element.Edit);
     if (element.Toolbar) Vue.component(getToolbarName(type), element.Toolbar);

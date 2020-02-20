@@ -21,7 +21,7 @@ class ContainerRegistry extends BaseRegistry {
 
   fetch(types, ...attrs) {
     return Promise.reduce(this._registry, async (acc, container) => {
-      if (!types.includes(container.type)) return acc;
+      if (!types.includes(container.templateId)) return acc;
       const data = await container.fetch(...attrs);
       return acc.concat(data);
     }, []);
@@ -29,22 +29,22 @@ class ContainerRegistry extends BaseRegistry {
 
   buildLookups() {
     this._registry.forEach(it => {
-      Object.assign(this._contentFetcher, { [it.type]: it.fetch });
-      Object.assign(this._staticsResolver, { [it.type]: it.resolve });
-      Object.assign(this._summaryBuilder, { [it.type]: it.buildSummary });
+      Object.assign(this._contentFetcher, { [it.templateId]: it.fetch });
+      Object.assign(this._staticsResolver, { [it.templateId]: it.resolve });
+      Object.assign(this._summaryBuilder, { [it.templateId]: it.buildSummary });
     });
   }
 
-  getContentFetcher(type) {
-    return this._contentFetcher[type];
+  getContentFetcher(templateId) {
+    return this._contentFetcher[templateId];
   }
 
-  getStaticsResolver(type) {
-    return this._staticsResolver[type];
+  getStaticsResolver(templateId) {
+    return this._staticsResolver[templateId];
   }
 
-  getSummaryBuilder(type) {
-    return this._summaryBuilder[type];
+  getSummaryBuilder(templateId) {
+    return this._summaryBuilder[templateId];
   }
 }
 

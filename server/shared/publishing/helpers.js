@@ -161,7 +161,8 @@ function fetchContainers(parent) {
     const mappedContainers = groupedContainers.map(it => {
       const config = find(typeConfigs, { type: it.type });
       const publishedAs = get(config, 'publishedAs', 'container');
-      return { ...it, publishedAs };
+      const { templateId } = config;
+      return { ...it, templateId, publishedAs };
     });
     return containers.concat(mappedContainers);
   }, []);
@@ -169,9 +170,12 @@ function fetchContainers(parent) {
 
 function getGroupedContainerTypes(typeConfigs) {
   const hasDefaultStructure = it => !containerRegistry.getContentFetcher(it);
-  return typeConfigs.reduce((acc, { type }) => {
-    const group = hasDefaultStructure(type) ? 'defaults' : 'custom';
-    acc[group].push(type);
+  return typeConfigs.reduce((acc, { type, templateId }) => {
+    if (hasDefaultStructure(templateId)) {
+      acc.defaults.push(type);
+    } else {
+      acc.custom.push(templateId);
+    }
     return acc;
   }, { defaults: [], custom: [] });
 }
@@ -202,8 +206,8 @@ function fetchAssessments(parent) {
 }
 
 function resolveContainer(container) {
-  const { elements, type } = container;
-  const resolver = containerRegistry.getStaticsResolver(type);
+  const { elements, templateId } = container;
+  const resolver = containerRegistry.getStaticsResolver(templateId);
   return resolver
     ? resolver(container, resolveStatics)
     : Promise.map(elements, resolveStatics).then(() => container);
@@ -268,7 +272,7 @@ function attachContentSummary(obj, { containers, assessments }) {
 }
 
 function getContainerSummary(container) {
-  const customBuilder = containerRegistry.getSummaryBuilder(container.type);
+  const customBuilder = containerRegistry.getSummaryBuilder(container.templateId);
   return customBuilder
     ? customBuilder(container)
     : defaultSummaryBuilder(container);
