@@ -24,10 +24,7 @@ const SCHEMAS = [{
     subLevels: ['OBJECTIVE'],
     label: 'Competency',
     color: '#42A5F5',
-    contentContainers: ['INTRO'],
-    hasAssessments: false,
-    hasExams: true,
-    exams: { objectives: ['TOPIC'] },
+    contentContainers: ['INTRO', 'EXAM'],
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -47,8 +44,6 @@ const SCHEMAS = [{
     label: 'Learning Objective',
     color: '#66BB6A',
     contentContainers: [],
-    hasAssessments: false,
-    hasExams: false,
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -67,9 +62,7 @@ const SCHEMAS = [{
     label: 'Topic',
     color: '#EC407A',
     isObjective: true,
-    contentContainers: ['PERSPECTIVE'],
-    hasAssessments: true,
-    hasExams: false,
+    contentContainers: ['PERSPECTIVE', 'ASSESSMENT_BLOCK'],
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -82,6 +75,21 @@ const SCHEMAS = [{
       placeholder: 'Click to add...',
       validate: { required: false, max: 250 }
     }]
+  }],
+  contentContainers: [{
+    type: 'EXAM',
+    label: 'Exam',
+    displayHeading: true,
+    multiple: true,
+    required: false,
+    publishedAs: 'exam',
+    config: {
+      objectives: ['COURSE/TOPIC']
+    }
+  }, {
+    type: 'ASSESSMENT_BLOCK',
+    label: 'Assessments',
+    publishedAs: 'assessments'
   }],
   tesMeta: [{
     type: 'ASSESSMENT',
