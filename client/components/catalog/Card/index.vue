@@ -53,7 +53,7 @@
             :key="tag.id"
             @click.stop
             @click:close="showDeleteConfirmation(tag)"
-            color="grey darker-1"
+            color="grey darken-1"
             text-color="white"
             close
             class="v-chip-font mr-1">
