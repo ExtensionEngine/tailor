@@ -105,7 +105,7 @@ function sendActivityDigest(revisions) {
     // Renderan test.txt file a ne oni tvoji da mos ti nesto minjat po voli
     const text = renderText(path.join(templatesDir, 'test.txt'), mustacheModel);
     // logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
-    // console.log(text);
+    console.log(text);
     // return send({
     //   from,
     //   to: user,
