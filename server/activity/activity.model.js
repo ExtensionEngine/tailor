@@ -1,8 +1,9 @@
 'use strict';
 
+const { getOutlineLevels, getSiblingLevels } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
-const { getSiblingLevels } = require('../../config/shared/activities');
+const hooks = require('./hooks');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -41,6 +42,10 @@ class Activity extends Model {
         type: DATE,
         field: 'published_at'
       },
+      modifiedAt: {
+        type: DATE,
+        field: 'modified_at'
+      },
       createdAt: {
         type: DATE,
         field: 'created_at'
@@ -76,6 +81,10 @@ class Activity extends Model {
     });
   }
 
+  static hooks(Hooks, models) {
+    hooks.add(this, Hooks, models);
+  }
+
   static scopes() {
     const notNull = { [Op.ne]: null };
     return {
@@ -102,7 +111,7 @@ class Activity extends Model {
     const dstActivities = await Activity.bulkCreate(map(src, it => ({
       repositoryId: dstRepositoryId,
       parentId: dstParentId,
-      ...pick(it, ['type', 'position', 'data', 'refs'])
+      ...pick(it, ['type', 'position', 'data', 'refs', 'modifiedAt'])
     })), { returning: true, transaction });
     const ContentElement = this.sequelize.model('ContentElement');
     return Promise.reduce(src, async (acc, it, index) => {
@@ -155,11 +164,14 @@ class Activity extends Model {
   }
 
   descendants(options = {}, nodes = [], leaves = []) {
-    const { attributes } = options;
+    const { attributes, skippedTypes } = options;
     const node = !isEmpty(attributes) ? pick(this, attributes) : this;
     nodes.push(node);
     return Promise.resolve(this.getChildren({ attributes }))
-      .map(it => it.descendants(options, nodes, leaves))
+      .map(it => {
+        if (skippedTypes && skippedTypes.includes(it.type)) return [];
+        return it.descendants(options, nodes, leaves);
+      })
       .then(children => {
         if (!isEmpty(children)) return { nodes, leaves };
         const leaf = !isEmpty(attributes) ? pick(this, attributes) : this;
@@ -202,6 +214,19 @@ class Activity extends Model {
         return this.save({ transaction });
       });
     });
+  }
+
+  getOutlineParent(types, transaction) {
+    if (types.includes(this.type)) return this;
+    return this.getParent({ transaction }).then(activity => {
+      return activity && activity.getOutlineParent(types, transaction);
+    });
+  }
+
+  async touchOutline(repository, transaction) {
+    const types = map(getOutlineLevels(repository.schema), 'type');
+    const outline = await this.getOutlineParent(types, transaction);
+    if (outline) outline.update({ modifiedAt: new Date() }, { transaction });
   }
 }
 

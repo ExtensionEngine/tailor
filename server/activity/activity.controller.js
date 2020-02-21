@@ -23,8 +23,8 @@ function create({ user, repository, body }, res) {
     data: { ...get(outlineConfig, 'defaultMeta', {}), ...body.data },
     repositoryId: repository.id
   };
-  const opts = { context: { userId: user.id } };
-  return Activity.create(data, opts)
+  const context = { userId: user.id, repository };
+  return Activity.create(data, { context })
     .then(data => res.json({ data }));
 }
 
@@ -32,13 +32,15 @@ function show({ activity }, res) {
   return res.json({ data: activity });
 }
 
-function patch({ user, activity, body }, res) {
-  return activity.update(body, { context: { userId: user.id } })
+function patch({ repository, user, activity, body }, res) {
+  const context = { userId: user.id, repository };
+  return activity.update(body, { context })
     .then(data => res.json({ data }));
 }
 
 function remove({ user, repository, activity }, res) {
-  const options = { recursive: true, soft: true, context: { userId: user.id } };
+  const context = { userId: user.id, repository };
+  const options = { recursive: true, soft: true, context };
   const unpublish = activity.publishedAt
     ? publishingService.unpublishActivity(repository, activity)
     : Promise.resolve();

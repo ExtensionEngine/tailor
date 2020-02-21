@@ -29,24 +29,27 @@ function show({ params }, res) {
 function create({ user, repository, body }, res) {
   const attr = ['activityId', 'type', 'data', 'position', 'refs'];
   const data = { ...pick(body, attr), repositoryId: repository.id };
-  return ContentElement.create(data, { context: { userId: user.id } })
+  const context = { userId: user.id, repository };
+  return ContentElement.create(data, { context })
     .then(asset => res.json({ data: asset }));
 }
 
-function patch({ user, body, params: { elementId } }, res) {
+function patch({ repository, user, body, params: { elementId } }, res) {
   const attrs = ['type', 'data', 'position', 'meta', 'refs', 'deletedAt'];
   const data = pick(body, attrs);
   const paranoid = body.paranoid !== false;
+  const context = { userId: user.id, repository };
   return ContentElement.findByPk(elementId, { paranoid })
     .then(asset => asset || createError(NOT_FOUND, 'Element not found'))
-    .then(asset => asset.update(data, { context: { userId: user.id } }))
+    .then(asset => asset.update(data, { context }))
     .then(asset => res.json({ data: asset }));
 }
 
-function remove({ user, params: { elementId } }, res) {
+function remove({ repository, user, params: { elementId } }, res) {
+  const context = { userId: user.id, repository };
   return ContentElement.findByPk(elementId)
     .then(asset => asset || createError(NOT_FOUND, 'Element not found'))
-    .then(asset => asset.destroy({ context: { userId: user.id } }))
+    .then(asset => asset.destroy({ context }))
     .then(() => res.end());
 }
 

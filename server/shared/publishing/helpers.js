@@ -1,10 +1,17 @@
 'use strict';
 
 const {
-  getLevelRelationships, getSupportedContainers
+  Activity,
+  ContentElement,
+  Sequelize: { Op },
+  sequelize
+} = require('../database');
+const {
+  getOutlineLevels,
+  getLevelRelationships,
+  getSupportedContainers
 } = require('../../../config/shared/activities');
 const { containerRegistry } = require('../content-plugins');
-const { ContentElement } = require('../database');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
@@ -40,6 +47,7 @@ function publishActivity(activity) {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
       return saveSpine(spine)
         .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+        .then(() => updateHasChangesFlag(repository, activity))
         .then(() => activity.save());
     });
   });
@@ -72,8 +80,9 @@ function updateRepositoryCatalog(repository, publishedAt) {
 }
 
 function publishRepositoryDetails(repository) {
-  return getPublishedStructure(repository).then(spine => {
+  return getPublishedStructure(repository).then(async spine => {
     Object.assign(spine, getRepositoryAttrs(repository));
+    await updateHasChangesFlag(repository);
     return saveSpine(spine)
       .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt));
   });
@@ -292,6 +301,21 @@ function mapRelationships(relationships, activity) {
   return relationships.reduce((acc, { type }) => {
     return Object.assign(acc, { [type]: get(activity, `refs.${type}`, []) });
   }, {});
+}
+
+async function updateHasChangesFlag(repository, activity) {
+  const outlineTypes = map(getOutlineLevels(repository.schema), 'type');
+  const where = {
+    repositoryId: repository.id,
+    type: outlineTypes,
+    [Op.or]: {
+      publishedAt: { [Op.eq]: null },
+      modifiedAt: { [Op.gt]: sequelize.col('published_at') }
+    }
+  };
+  if (activity) where.id = { [Op.ne]: activity.id };
+  const count = await Activity.count({ where });
+  if (!count) return repository.touch(false);
 }
 
 module.exports = {

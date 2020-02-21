@@ -99,7 +99,7 @@ export default {
   methods: {
     ...mapActions('repositories', ['fetch']),
     ...mapMutations('repositories', [
-      'togglePinned', 'setSearch', 'setOrder', 'resetFilters'
+      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'resetPagination'
     ]),
     async load() {
       this.loading = true;
@@ -125,6 +125,10 @@ export default {
       // If all items get unpinned
       if (!this.hasRepositories && this.showPinned) this.loader.reset();
     }
+  },
+  created() {
+    this.resetPagination();
+    this.load();
   },
   components: {
     CreateRepository,

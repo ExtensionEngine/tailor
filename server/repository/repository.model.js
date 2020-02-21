@@ -7,7 +7,7 @@ const Promise = require('bluebird');
 
 class Repository extends Model {
   static fields(DataTypes) {
-    const { DATE, JSONB, STRING, TEXT, UUID, UUIDV4 } = DataTypes;
+    const { BOOLEAN, DATE, JSONB, STRING, TEXT, UUID, UUIDV4 } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -29,6 +29,10 @@ class Repository extends Model {
       data: {
         type: JSONB,
         defaultValue: {}
+      },
+      hasChanges: {
+        type: BOOLEAN,
+        field: 'has_changes'
       },
       createdAt: {
         type: DATE,
@@ -80,6 +84,13 @@ class Repository extends Model {
     };
   }
 
+  static hooks(Hooks) {
+    [Hooks.beforeCreate, Hooks.beforeUpdate, Hooks.beforeDestroy]
+      .forEach(type => this.addHook(type, (repository, { context }) => {
+        if (context) repository.hasChanges = true;
+      }));
+  }
+
   /**
    * Maps references for cloned activities and content elements.
    * @param {Object} mappings Dict where keys represent old and values new ids.
@@ -116,6 +127,11 @@ class Repository extends Model {
       await dst.mapClonedReferences(idMap, transaction);
       return dst;
     });
+  }
+
+  touch(value = true) {
+    if (this.hasChanges === value) return this;
+    return this.update({ hasChanges: value });
   }
 
   getUser(user) {
