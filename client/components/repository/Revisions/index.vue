@@ -36,8 +36,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository', ['revisions']),
-    ...mapGetters('revisions', ['hasMoreResults']),
+    ...mapGetters('repository/revisions', {
+      revisions: 'items',
+      hasMoreResults: 'hasMoreResults'
+    }),
     bundledRevisions() {
       return reduce(this.revisions, (acc, it) => {
         const prevRevision = last(acc);
@@ -48,7 +50,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('revisions', ['fetch', 'resetPagination']),
+    ...mapActions('repository/revisions', ['fetch', 'resetPagination']),
     fetchRevisions($state) {
       this.fetch().then(() => {
         const diff = this.bundledRevisions.length - this.bundledRevisionCount;

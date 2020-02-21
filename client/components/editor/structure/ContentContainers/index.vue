@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import capitalize from 'lodash/capitalize';
 import ContentContainer from './Container';
 import EventBus from 'EventBus';
@@ -61,7 +61,8 @@ export default {
     required: { type: Boolean, default: true }
   },
   computed: {
-    ...mapGetters(['activities', 'tes']),
+    ...mapState('repository/activities', { activities: 'items' }),
+    ...mapState('repository/tes', { tes: 'items' }),
     containerName() {
       const { type, $ccRegistry: registry } = this;
       return registry.get(type) ? getContainerName(type) : 'content-container';
@@ -78,8 +79,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', ['save', 'update', 'remove']),
-    ...mapActions('tes', {
+    ...mapActions('repository/activities', ['save', 'update', 'remove']),
+    ...mapActions('repository/tes', {
       saveElement: 'save',
       updateElement: 'update',
       reorderElements: 'reorder',

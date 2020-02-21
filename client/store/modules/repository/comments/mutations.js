@@ -1,16 +1,7 @@
-import { fetch, remove, reset, save, setEndpoint } from '../../helpers/mutations';
+import { fetch, remove, reset, save, setEndpoint } from '@/store/helpers/mutations';
 import find from 'lodash/find';
 import pick from 'lodash/pick';
 import Vue from 'vue';
-
-const setRepository = (state, repositoryId) => {
-  state.repositoryId = repositoryId;
-  state.activitiesFetched = {};
-};
-
-const commentsFetched = (state, activityId) => {
-  Vue.set(state.activitiesFetched, activityId, true);
-};
 
 const sseUpdate = (state, comment) => {
   const existing = find(state.items, { id: comment.id });
@@ -20,12 +11,10 @@ const sseUpdate = (state, comment) => {
 };
 
 export {
-  commentsFetched,
   fetch,
   remove,
   reset,
   save,
-  setRepository,
   setEndpoint,
   sseUpdate
 };

@@ -1,5 +1,5 @@
 <template>
-  <span :key="activity._cid" class="publish-container">
+  <span class="publish-container">
     <v-menu offset-y left>
       <template v-slot:activator="{ on }">
         <v-btn
@@ -11,7 +11,7 @@
           <v-icon class="pr-1">mdi-publish</v-icon>Publish
         </v-btn>
       </template>
-      <v-list class="text-left">
+      <v-list dense class="text-left">
         <v-list-item @click="confirmPublishing()">
           <v-list-item-title>{{ config.label }}</v-list-item-title>
         </v-list-item>
@@ -44,12 +44,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 import api from '@/api/revision';
 import fecha from 'fecha';
 import get from 'lodash/get';
 import { getDescendants } from 'utils/activity';
 import { getLevel } from 'shared/activities';
+import { mapActions } from 'vuex';
 import Promise from 'bluebird';
 import PublishingBadge from 'components/common/PublishingBadge';
 import publishMixin from 'components/common/mixins/publish';
@@ -74,12 +74,15 @@ const getPublishingInfo = ({ hasChanges, users }) => {
 
 export default {
   mixins: [publishMixin],
+  props: {
+    activity: { type: Object, required: true },
+    outlineActivities: { type: Array, required: true }
+  },
   data: () => ({
     revisions: [],
     loading: true
   }),
   computed: {
-    ...mapGetters('repository', ['activity', 'outlineActivities']),
     config: vm => getLevel(vm.activity.type),
     publishingInfo: vm => getPublishingInfo(vm),
     publishedAtMessage() {
@@ -100,11 +103,11 @@ export default {
         .map(revision => get(revision, 'user.fullName'));
       return concat(uniq(users).slice(0, 3));
     },
-    activityWithDescendants({ activity, outlineActivities } = this) {
+    activityWithDescendants({ outlineActivities, activity } = this) {
       return [...getDescendants(outlineActivities, activity), activity];
     }
   },
-  methods: mapActions('activities', { publishActivity: 'publish' }),
+  methods: mapActions('repository/activities', { publishActivity: 'publish' }),
   created() {
     const { id: activityId, repositoryId } = this.activity;
     const params = getRevisionParams(activityId);
@@ -114,6 +117,7 @@ export default {
       .finally(() => (this.loading = false));
   },
   components: { PublishingBadge }
+
 };
 </script>
 

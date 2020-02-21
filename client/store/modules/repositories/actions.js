@@ -1,6 +1,6 @@
 import find from 'lodash/find';
 import forEach from 'lodash/forEach';
-import generateActions from '../../helpers/actions';
+import generateActions from '@/store/helpers/actions';
 import getVal from 'lodash/get';
 
 const {

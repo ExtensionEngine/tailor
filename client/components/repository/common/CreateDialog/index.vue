@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['getMetadata']),
-    ...mapGetters('activities', ['calculateInsertPosition']),
+    ...mapGetters('repository/activities', ['calculateInsertPosition']),
     metadata() {
       if (!this.activity.type) return null;
       return this.getMetadata({ type: this.activity.type });
@@ -73,8 +73,8 @@ export default {
     defaultLabel: vm => vm.hasSingleOption ? `Add ${vm.levels[0].label}` : 'Add'
   },
   methods: {
-    ...mapActions('activities', ['save']),
-    ...mapMutations('repository', ['focusActivity']),
+    ...mapActions('repository/activities', ['save']),
+    ...mapMutations('repository', ['selectActivity']),
     setMetaValue(key, val) {
       this.activity.data[key] = val;
     },
@@ -91,7 +91,7 @@ export default {
       const item = await this.save({ ...activity });
       if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
       this.$emit('created', item);
-      this.focusActivity(item._cid);
+      this.selectActivity(item._cid);
       this.visible = false;
     }
   },

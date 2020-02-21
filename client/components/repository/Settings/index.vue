@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     ...mapActions('repositories', { removeRepository: 'remove' }),
-    ...mapActions('activities', { publishActivity: 'publish' }),
+    ...mapActions('repository/activities', { publishActivity: 'publish' }),
     showDeleteConfirmation() {
       appChannel.emit('showConfirmationModal', {
         title: 'Delete repository?',

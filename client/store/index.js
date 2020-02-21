@@ -1,14 +1,10 @@
-import activities from './modules/activities';
 import auth from './modules/auth';
-import comments from './modules/comments';
 import createLogger from 'vuex/dist/logger';
 import editor from './modules/editor';
 import plugins from './plugins';
 import repositories from './modules/repositories';
 import repository from './modules/repository';
-import revisions from './modules/revisions';
 import settings from '../settings';
-import tes from './modules/tes';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -18,14 +14,10 @@ const isDevEnv = process.env.NODE_ENV !== 'production';
 const middlewares = settings.debug.state && isDevEnv ? [createLogger()] : [];
 
 const modules = {
-  activities,
   auth,
-  comments,
   repository,
   repositories,
-  editor,
-  revisions,
-  tes
+  editor
 };
 
 const mapGetters = (namespace, getters) => {

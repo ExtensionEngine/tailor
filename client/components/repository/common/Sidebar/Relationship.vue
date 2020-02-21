@@ -3,20 +3,18 @@
     v-model="value"
     v-validate="{ required: !allowEmpty }"
     @input="onRelationshipChanged"
-    :error-messages="vErrors.collect(type)"
     :items="groupedOptions"
-    :multiple="multiple"
-    :disabled="!options.length"
-    :placeholder="selectPlaceholder"
-    :label="label"
     :name="type"
+    :label="label"
+    :placeholder="selectPlaceholder"
     :data-vv-as="label"
+    :multiple="multiple"
     :chips="multiple"
     :clearable="!multiple"
+    :disabled="!options.length"
+    :error-messages="vErrors.collect(type)"
     item-text="data.name"
-    deletable-chips
-    return-object
-    outlined />
+    deletable-chips return-object outlined />
 </template>
 
 <script>
@@ -43,6 +41,7 @@ export default {
   name: 'activity-relationship',
   mixins: [withValidation()],
   props: {
+    activity: { type: Object, required: true },
     type: { type: String, required: true },
     label: { type: String, required: true },
     multiple: { type: Boolean, default: true },
@@ -54,8 +53,8 @@ export default {
   },
   data: () => ({ value: null }),
   computed: {
-    ...mapGetters('repository', ['activity', 'outlineActivities']),
-    ...mapGetters('activities', ['getLineage']),
+    ...mapGetters('repository', ['outlineActivities']),
+    ...mapGetters('repository/activities', ['getLineage']),
     options() {
       const { allowInsideLineage, allowCircularLinks, activity: { id } } = this;
       const activities = without(this.outlineActivities, this.activity);
