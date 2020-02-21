@@ -45,3 +45,10 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.v-list {
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+</style>
