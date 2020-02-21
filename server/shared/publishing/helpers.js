@@ -169,12 +169,11 @@ function fetchContainers(parent) {
 }
 
 function getGroupedContainerTypes(typeConfigs) {
-  const hasDefaultStructure = it => !containerRegistry.getContentFetcher(it);
   return typeConfigs.reduce((acc, { type, templateId }) => {
-    if (hasDefaultStructure(templateId)) {
-      acc.defaults.push(type);
-    } else {
+    if (containerRegistry.getContentFetcher(templateId)) {
       acc.custom.push(templateId);
+    } else {
+      acc.defaults.push(type);
     }
     return acc;
   }, { defaults: [], custom: [] });
