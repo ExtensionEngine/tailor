@@ -12,7 +12,7 @@
     <mj-section>
       <mj-column>
         <mj-text mj-class="content" padding-left="0" color="#444" font-size="16px">
-          There haven't been any changes made to any of your courses
+          There haven't been any changes made to any of your repositories
         </mj-text>
       </mj-column>
     </mj-section>

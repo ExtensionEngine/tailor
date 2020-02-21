@@ -11,24 +11,36 @@ function initiateDigest() {
   cron.schedule(parseInterval(), async () => {
     const revisions = await Revision.findAll({
       attributes: [
-        [sql.concat(col('operation'), col('entity'), { separator: ' ' }), 'entity_operation'],
+        [
+          sql.concat(col('operation'), col('entity'), { separator: ' ' }),
+          'entity_operation'
+        ],
         [fn('count', sql.concat('operation', 'entity')), 'count'],
         'user_id',
         'repository_id'
       ],
-      group: ['repository_id', 'user.id', 'user_id', 'entity_operation', 'repository.name', 'repository.created_at'],
-      include: [{
-        model: User,
-        attributes: ['email', 'fullName']
-      },
-      {
-        model: Repository,
-        attributes: ['name', 'created_at']
-      }
+      group: [
+        'repository_id',
+        'user.id',
+        'user_id',
+        'entity_operation',
+        'repository.name',
+        'repository.created_at'
+      ],
+      include: [
+        {
+          model: User,
+          attributes: ['email', 'fullName']
+        },
+        {
+          model: Repository,
+          attributes: ['name', 'created_at']
+        }
       ],
       raw: true
     });
-    mail.sendActivityDigest(processRevisions(revisions));
+
+    mail.sendActivityDigeqst(processRevisions(revisions));
   });
 }
 

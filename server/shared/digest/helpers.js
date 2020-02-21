@@ -5,7 +5,12 @@ const cronParser = require('cron-parser');
 const logger = require('../../shared/logger');
 
 const processRevisions = revisions => {
-  const groupedRevisions = groupArray(revisions, 'user.email', 'repository.name', 'entity_operation');
+  const groupedRevisions = groupArray(
+    revisions,
+    'user.email',
+    'repository.name',
+    'entity_operation'
+  );
   return groupedRevisions;
 };
 
@@ -23,7 +28,9 @@ const parseInterval = () => {
   const scheduleOptions = {
     minute: process.env.DIGEST_MINUTE,
     hour: process.env.DIGEST_HOUR,
-    weekDay: weekDays[process.env.DIGEST_DAY.toUpperCase()] ? weekDays[process.env.DIGEST_DAY.toUpperCase()] : 0
+    weekDay: weekDays[process.env.DIGEST_DAY.toUpperCase()]
+      ? weekDays[process.env.DIGEST_DAY.toUpperCase()]
+      : 0
   };
   const { minute, hour, weekDay } = scheduleOptions;
 
@@ -32,7 +39,8 @@ const parseInterval = () => {
     const interval = cronParser.parseExpression(scheduleString);
     logger.info('Next Delivery date: ', interval.next().toString());
   } catch (err) {
-    throw new Error('Schedule options invalid\n' + err);
+    logger.error(err);
+    throw new Error('Schedule options invalid\n');
   }
 
   return scheduleString;
