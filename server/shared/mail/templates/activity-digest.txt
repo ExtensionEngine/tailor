@@ -1,6 +1,6 @@
 Tailor
 =================================================
-{{#revisions}}
+{{#revision}}
 {{repoName}}
 
     Repository revisions:
@@ -29,6 +29,6 @@ Tailor
 
         Removed: {{ACTIVITY.REMOVE}}
 
-{{/revisions}}
+{{/revision}}
 
 -------------------------------------------------

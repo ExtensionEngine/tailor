@@ -25,6 +25,7 @@ database.initialize()
   .then(() => require('../config/shared/activities'))
   .then(() => contentPluginRegistry.initialize())
   .then(() => initiateDigest())
+  .then(() => logger.info('Digest email service running'))
   .then(() => runApp(config.port))
   .then(() => {
     logger.info(`Server listening on port ${config.port}`);

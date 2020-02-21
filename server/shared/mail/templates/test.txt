@@ -1,0 +1,26 @@
+Tailor
+=================================================
+ All changes made to your repositories this week: 
+
+ All changes you made to your repositories this week: 
+{{#data}}
+  {{repository}}
+    {{#revisions}}
+      Repositories:
+        created : {{ CREATE REPOSITORY}}{{^CREATE REPOSITORY}}0{{/CREATE REPOSITORY}} 
+        updated : {{ UPDATE REPOSITORY}}{{^UPDATE REPOSITORY}}0{{/UPDATE REPOSITORY}}
+        deleted : {{ DELETE REPOSITORY}}{{^DELETE REPOSITORY}}0{{/DELETE REPOSITORY}}
+
+      Activities:
+        created : {{ CREATE ACTIVITY}}{{^CREATE ACTIVITY}}0{{/CREATE ACTIVITY}}
+        updated : {{ UPDATE ACTIVITY}}{{^UPDATE ACTIVITY}}0{{/UPDATE ACTIVITY}}
+        deleted : {{ UPDATE ACTIVITY}}{{^DELETE ACTIVITY}}0{{/DELETE ACTIVITY}}
+
+      Content Elements:
+        created : {{ CREATE CONTENT_ELEMENT}}{{^CREATE CONTENT_ELEMENT}}0{{/CREATE CONTENT_ELEMENT}}
+        updated : {{ UPDATE CONTENT_ELEMENT}}{{^UPDATE CONTENT_ELEMENT}}0{{/UPDATE CONTENT_ELEMENT}}
+        deleted : {{ DELETE CONTENT_ELEMENT}}{{^DELETE CONTENT_ELEMENT}}0{{/DELETE CONTENT_ELEMENT}}
+
+    {{/revisions}}
+{{/data}}
+-------------------------------------------------

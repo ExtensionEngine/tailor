@@ -9,6 +9,8 @@ const pick = require('lodash/pick');
 const { promisify } = require('util');
 const { URL } = require('url');
 const urlJoin = require('url-join');
+const mapKeys = require('lodash/mapKeys');
+const util = require('util');
 
 const from = `${config.sender.name} <${config.sender.address}>`;
 const server = email.server.connect(config);
@@ -76,30 +78,41 @@ function sendCommentNotification(users, comment) {
   });
 }
 
-function sendActivityDigest(user, revisions) {
-  const recipient = user.email;
+function sendActivityDigest(revisions) {
+  mapKeys(revisions, (revision, user) => {
+    // ovaj user u tom ovom mapkeys je recipient
+    const data = { revision };
 
-  // if (!revisions.length) {
-  //   const empty = renderHtml(path.join(templatesDir, 'default-digest.mjml'));
-  //   return send({
-  //     from,
-  //     to: recipient,
-  //     subject: 'Weekly activity digest',
-  //     empty,
-  //     attachment: [{ data: empty, alternative: true }]
-  //   });
-  // }
+    // view model za template od maila
+    const mustacheModel = {
+      data: []
+    };
+    for (const prop in data.revision) {
+      mustacheModel.data.push({
+        repository: prop,
+        revisions: data.revision[prop]
+      });
+    }
 
-  const data = { revisions };
-  const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), data);
-  const text = renderText(path.join(templatesDir, 'activity-digest.txt'), data);
-  logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
-  return send({
-    from,
-    to: recipient,
-    subject: 'Weekly activity digest',
-    text,
-    attachment: [{ data: html, alternative: true }]
+    // Ovaj dio broji sve operacije i zamini array sa brojen
+    mustacheModel.data.map(elem => {
+      mapKeys(elem.revisions, (value, key) => { elem.revisions[key] = elem.revisions[key].length; });
+    });
+
+    console.log(util.inspect(mustacheModel, true, null, false));
+    const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), data);
+
+    // Renderan test.txt file a ne oni tvoji da mos ti nesto minjat po voli
+    const text = renderText(path.join(templatesDir, 'test.txt'), mustacheModel);
+    // logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
+    // console.log(text);
+    // return send({
+    //   from,
+    //   to: user,
+    //   subject: 'Weekly activity digest',
+    //   text,
+    //   attachment: [{ data: text, alternative: true }]
+    // });
   });
 }
 

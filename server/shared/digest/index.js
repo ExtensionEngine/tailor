@@ -24,20 +24,20 @@ function initiateDigest() {
         'user_id',
         'repository_id'
       ],
-      group: ['repository_id', 'user.id', 'user_id', 'entity_operation', 'repository.name'],
+      group: ['repository_id', 'user.id', 'user_id', 'entity_operation', 'repository.name', 'repository.created_at'],
       include: [{
         model: User,
         attributes: ['email', 'fullName']
       },
       {
         model: Repository,
-        attributes: ['name']
+        attributes: ['name', 'created_at']
       }
       ],
       raw: true
     });
-    // const aggregate = aggregateRevisions(revisions);
-    mail.sendActivityDigest(revisions);
+    const aggregate = aggregateRevisions(revisions);
+    mail.sendActivityDigest(aggregate);
   });
 }
 
