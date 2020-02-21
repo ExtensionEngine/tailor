@@ -11,13 +11,14 @@ import Promise from 'bluebird';
 const EXTENSIONS_LIST = 'index';
 
 export default class ComponentRegistry {
-  constructor(Vue, type, extensions, attrs, getName) {
+  constructor(Vue, type, extensions, attrs, getName, getCondition) {
     this._registry = [];
     this.Vue = Vue;
     this._type = type;
     this._extensions = extensions;
     this._attrs = attrs;
     this._getName = getName;
+    this._getCondition = getCondition;
   }
 
   async initialize() {
@@ -50,10 +51,10 @@ export default class ComponentRegistry {
     return cloneDeep(this._registry);
   }
 
-  get(type) {
-    if (!type) return this.all();
+  get(type, defaultToAll = true) {
+    if (!type) return defaultToAll ? this.all() : null;
     const { _registry: registry } = this;
-    const res = find(registry, it => it.subtype === type || it.type === type);
+    const res = find(registry, this._getCondition(type));
     return res && cloneDeep(res);
   }
 

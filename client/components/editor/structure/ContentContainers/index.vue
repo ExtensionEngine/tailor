@@ -45,6 +45,8 @@ import isEmpty from 'lodash/isEmpty';
 import maxBy from 'lodash/maxBy';
 import throttle from 'lodash/throttle';
 
+const DEFAULT_CONTAINER = 'content-container';
+
 const appChannel = EventBus.channel('app');
 
 export default {
@@ -57,6 +59,7 @@ export default {
     displayHeading: { type: Boolean, default: false },
     type: { type: String, required: true },
     label: { type: String, required: true },
+    templateId: { type: String, default: null },
     multiple: { type: Boolean, default: false },
     required: { type: Boolean, default: true }
   },
@@ -64,8 +67,8 @@ export default {
     ...mapState('repository/activities', { activities: 'items' }),
     ...mapState('repository/tes', { tes: 'items' }),
     containerName() {
-      const { type, $ccRegistry: registry } = this;
-      return registry.get(type) ? getContainerName(type) : 'content-container';
+      const { templateId: id, $ccRegistry: registry } = this;
+      return registry.get(id, false) ? getContainerName(id) : DEFAULT_CONTAINER;
     },
     name() {
       return this.label.toLowerCase();
