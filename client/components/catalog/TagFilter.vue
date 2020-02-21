@@ -6,7 +6,7 @@
           <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>
         </v-btn>
       </template>
-      <v-list class="py-0">
+      <v-list>
         <v-list-item
           v-for="it in items"
           :key="it.id"
@@ -49,6 +49,11 @@ export default {
 .v-list {
   max-height: 300px;
   overflow-y: scroll;
+  padding: 1.5rem 1rem;
+
+  &:first-child {
+    padding-top: 1rem;
+  }
 }
 
 </style>

@@ -30,7 +30,12 @@
           <tag-filter @update="onFilterChange(setTagFilter, $event)" />
         </v-col>
       </v-row>
-      <v-row>
+      <v-row class="align-center">
+        <v-btn
+          v-if="tagFilter.length"
+          @click="onFilterChange(removeAllTagFilters, $event)" small rounded>
+          Clear all
+        </v-btn>
         <v-chip
           v-for="tag in tagFilter"
           :key="tag.id"
@@ -114,7 +119,7 @@ export default {
     ...mapActions('repositories', ['fetch', 'fetchTags']),
     ...mapMutations('repositories', [
       'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'setTagFilter',
-      'removeTagFilter'
+      'removeTagFilter', 'removeAllTagFilters'
     ]),
     async load() {
       this.loading = true;
