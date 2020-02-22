@@ -1,5 +1,5 @@
 import { createLocalVue } from '@vue/test-utils';
-import { routes } from '@/client/router';
+import { routes } from '@/router';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 
