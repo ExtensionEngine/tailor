@@ -50,7 +50,7 @@
               :allowed-types="relationship.allowedTypes"
               :multiple="relationship.multiple"
               :selected="selected"
-              :activity-ids="activityIds"
+              :content-containers="contentContainers"
               :element-id="element.id"
               :outline-id="outlineId"
               :repository-id="repositoryId" />
@@ -76,9 +76,10 @@
 import { mapActions, mapGetters } from 'vuex';
 import ActivityTree from './ActivityTree';
 import cloneDeep from 'lodash/cloneDeep';
-import { getChildren } from 'client/utils/activity';
+import { getDescendants } from 'client/utils/activity';
 import reduce from 'lodash/reduce';
 import set from 'lodash/set';
+import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 import TesList from './TesList';
 import unset from 'lodash/unset';
@@ -98,7 +99,7 @@ export default {
     show: false,
     selected: [],
     cancelState: [],
-    activityIds: [],
+    contentContainers: [],
     showTesList: false,
     isSaving: false,
     outlineId: null
@@ -128,13 +129,10 @@ export default {
       await this.update(element);
       this.selected = [];
     },
-    openTesList({ id: activityId }) {
-      if (!activityId) return;
-      this.activityIds = [
-        activityId,
-        ...getChildren(this.activities, activityId).map(({ id }) => id)
-      ];
-      this.outlineId = activityId;
+    openTesList(activity) {
+      if (!activity) return;
+      this.contentContainers = sortBy(getDescendants(this.activities, activity), 'position');
+      this.outlineId = activity.id;
       this.showTesList = true;
     },
     close() {

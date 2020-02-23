@@ -5,20 +5,22 @@
       <v-alert v-if="!hasAvailableElements" type="warning">
         No available elements.
       </v-alert>
-      <div
-        v-for="item in tes"
-        :key="item.id"
-        @click="toggleSelection(item)"
-        class="tes-wrapper">
-        <v-checkbox
-          v-model="selected"
-          @click.prevent
-          :disabled="isDisabled(item)"
-          :value="{ outlineId, containerId: item.activityId, id: item.id }" />
-        <teaching-element
-          disabled
-          :class="{ 'selected': isSelected(item)}"
-          :element="item" />
+      <div v-for="{ id } in contentContainers" :key="id">
+        <div
+          v-for="item in getTes(id)"
+          :key="item.id"
+          @click="toggleSelection(item)"
+          class="tes-wrapper">
+          <v-checkbox
+            v-model="selected"
+            @click.prevent
+            :disabled="isDisabled(item)"
+            :value="{ outlineId, containerId: item.activityId, id: item.id }" />
+          <teaching-element
+            disabled
+            :class="{ 'selected': isSelected(item)}"
+            :element="item" />
+        </div>
       </div>
     </div>
   </div>
@@ -34,9 +36,9 @@ import TeachingElement from 'components/editor/TeachingElement';
 import xorBy from 'lodash/xorBy';
 
 export default {
-  name: 'tes-list',
+  name: 'relationship-tes-list',
   props: {
-    activityIds: { type: Array, required: true },
+    contentContainers: { type: Array, required: true },
     outlineId: { type: Number, required: true },
     repositoryId: { type: Number, required: true },
     elementId: { type: Number, required: true },
@@ -53,6 +55,12 @@ export default {
       tes.filter(te => allowedTypes.includes(te.type)).length
   },
   methods: {
+    getTes(id) {
+      return sortBy(
+        this.tes.filter(({ activityId }) => activityId === id),
+        'position'
+      );
+    },
     toggleSelection({ activityId: containerId, id, type }) {
       if (this.isDisabled({ id, type })) return;
       const { outlineId } = this;
@@ -70,14 +78,15 @@ export default {
     }
   },
   watch: {
-    activityIds: {
+    contentContainers: {
       handler() {
-        const { activityIds: ids, repositoryId: id } = this;
+        const { contentContainers, repositoryId } = this;
+        const ids = contentContainers.map(({ id }) => id);
         this.isFetching = true;
         return Promise.all([
-          repositoryApi.getContentElements({ id, ids }),
+          repositoryApi.getContentElements({ id: repositoryId, ids }),
           delay(700)
-        ]).then(([tes]) => { this.tes = sortBy(tes, 'position'); })
+        ]).then(([tes]) => { this.tes = tes; })
         .finally(() => { this.isFetching = false; });
       },
       immediate: true,
