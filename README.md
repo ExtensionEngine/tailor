@@ -178,7 +178,8 @@ Configuration for content containers. Contains the following properties:
 - **type** `String` - `const-cased` string for marking `ContentContainer` type.
 - **templateId** `String` - `const-cased` string that defines which custom
 `ContentContainer` is used to display this container. Needs to match the
-`templateId` property of the desired custom `ContentContainer`.
+`templateId` property of the desired custom `ContentContainer`. If not specified
+the default container is ued to display this container.
 - **label** `String` - String used for referencing `ContentContainer` on the UI.
 - **multiple** `Boolean` - Defines if there can be multiple instances of the
   `ContentContainer` inside a single `Activity`. False by default.
