@@ -12,6 +12,17 @@ const CONTENT_CONTAINERS = [{
   type: 'PERSPECTIVE',
   label: 'Perspective',
   multiple: true
+}, {
+  type: 'EXAM',
+  templateId: 'EXAM',
+  label: 'Exam',
+  displayHeading: true,
+  multiple: true,
+  required: false,
+  publishedAs: 'exam',
+  config: {
+    objectives: ['DEFAULT_SCHEMA/TOPIC']
+  }
 }];
 
 const SCHEMAS = [{
@@ -24,10 +35,8 @@ const SCHEMAS = [{
     subLevels: ['OBJECTIVE'],
     label: 'Competency',
     color: '#42A5F5',
-    contentContainers: ['INTRO'],
+    contentContainers: ['INTRO', 'EXAM'],
     hasAssessments: false,
-    hasExams: true,
-    exams: { objectives: ['TOPIC'] },
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -48,7 +57,6 @@ const SCHEMAS = [{
     color: '#66BB6A',
     contentContainers: [],
     hasAssessments: false,
-    hasExams: false,
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -69,7 +77,6 @@ const SCHEMAS = [{
     isObjective: true,
     contentContainers: ['PERSPECTIVE'],
     hasAssessments: true,
-    hasExams: false,
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
