@@ -10,6 +10,10 @@ import Promise from 'bluebird';
 
 const EXTENSIONS_LIST = 'index';
 
+function getType({ type, subtype }) {
+  return isQuestion(type) ? processAnswerType(subtype) : type;
+}
+
 export default class ComponentRegistry {
   constructor(Vue, type, extensions, attrs, getName, getCondition) {
     this._registry = [];
@@ -38,13 +42,11 @@ export default class ComponentRegistry {
     const element = isExtension
       ? (await import(`extensions/content-${_type}s/${path}`)).default
       : (await import(`components/content-${_type}s/${path}`)).default;
-    const type = isQuestion(element.type)
-      ? processAnswerType(element.subtype)
-      : element.type;
-    const componentName = this._getName(element.templateId || type);
+    const id = element.templateId || getType(element);
+    const componentName = this._getName(id);
     _registry.push({ ...pick(element, _attrs), componentName, position });
     Vue.component(componentName, element.Edit);
-    if (element.Toolbar) Vue.component(getToolbarName(type), element.Toolbar);
+    if (element.Toolbar) Vue.component(getToolbarName(id), element.Toolbar);
   }
 
   all() {
