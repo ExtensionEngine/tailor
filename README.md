@@ -177,9 +177,9 @@ Configuration for content containers. Contains the following properties:
 
 - **type** `String` - `const-cased` string for marking `ContentContainer` type.
 - **templateId** `String` - `const-cased` string that defines which custom
-`ContentContainer` is used to display this container. Needs to match the
-`templateId` property of the desired custom `ContentContainer`. If not specified
-the default container is ued to display this container.
+  `ContentContainer` is used to display this container. Needs to match the
+  `templateId` property of the desired custom `ContentContainer`. If not
+  specified the default `ContentContainer` is used to display this container.
 - **label** `String` - String used for referencing `ContentContainer` on the UI.
 - **multiple** `Boolean` - Defines if there can be multiple instances of the
   `ContentContainer` inside a single `Activity`. False by default.
@@ -193,10 +193,10 @@ the default container is ued to display this container.
 - **config** `Object` - Defines `ContentContainer` specific properties.
 - **required** `Boolean` - Defines if an instance of the `ContentContainer` is
   created if non exist. True by default.
-- **publishedAs** `String` - Defines the `ContentContainer` the name of the file
-  under which the container will be published. Defaults to `container`. The name
-  of the structure component used is the `kebab-cased` version of the `type`
-  property. (example: ABC_DEF -> abc-def)
+- **publishedAs** `String` - Defines the name of the file under which the
+  container will be published. Defaults to `container`. The name of the
+  structure component used is the `kebab-cased` version of the `type` property.
+  (example: ABC_DEF -> abc-def)
 
 ### `PREVIEW_URL`
 
