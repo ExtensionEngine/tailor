@@ -3,7 +3,7 @@
 const { Model } = require('sequelize');
 
 class RepositoryTag extends Model {
-  static fields({ INTEGER }) {
+  static fields({ INTEGER, DATE }) {
     return {
       repositoryId: {
         type: INTEGER,
@@ -16,6 +16,14 @@ class RepositoryTag extends Model {
         field: 'tag_id',
         primaryKey: true,
         unique: 'repository_tag_pkey'
+      },
+      createdAt: {
+        type: DATE,
+        field: 'created_at'
+      },
+      updatedAt: {
+        type: DATE,
+        field: 'updated_at'
       }
     };
   }

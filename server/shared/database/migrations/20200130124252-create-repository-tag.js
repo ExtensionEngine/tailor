@@ -25,14 +25,8 @@ exports.up = (queryInterface, Sequelize) => {
       type: Sequelize.DATE,
       field: 'updated_at',
       allowNull: false
-    },
-    deletedAt: {
-      type: Sequelize.DATE,
-      field: 'deleted_at'
     }
   }).then(async () => {
-    const table = await queryInterface.describeTable(TABLE_NAME);
-    if (table.repository_id.primaryKey && table.tag_id.primaryKey) return;
     return queryInterface.addConstraint(
       TABLE_NAME,
       ['repository_id', 'tag_id'],

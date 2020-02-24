@@ -35,9 +35,7 @@ function index({ query, user, opts }, res) {
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
   opts.include = [includeLastRevision()];
   const includeTag = { model: Tag };
-  if (query.tagIds) {
-    includeTag.where = { id: { [Op.in]: query.tagIds } };
-  }
+  if (query.tagIds) includeTag.where = { id: query.tagIds };
   opts.include.push(includeTag);
   const repositoryUser = query.pinned
     ? { where: { userId: user.id, pinned: true }, required: true }
@@ -137,8 +135,7 @@ function findOrCreateRole(repository, user, role) {
   .then(() => user);
 }
 
-function addTag({ body, repository }, res) {
-  const { name } = body;
+function addTag({ body: { name }, repository }, res) {
   return sequelize.transaction(async transaction => {
     const [tag] = await Tag.findOrCreate({ where: { name }, transaction });
     const repo = await repository.addTags([tag], { transaction });
@@ -146,10 +143,9 @@ function addTag({ body, repository }, res) {
   });
 }
 
-async function removeTag(req, res) {
-  const { params: { tagId, repositoryId } } = req;
+async function removeTag({ params: { tagId, repositoryId } }, res) {
   const where = { tagId, repositoryId };
-  return RepositoryTag.destroy({ where, force: true })
+  return RepositoryTag.destroy({ where })
     .then(() => res.json(
       { data: { tagId: parseInt(tagId), repositoryId: parseInt(repositoryId) } }));
 }
