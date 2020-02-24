@@ -1,9 +1,11 @@
 import { add, fetch, remove, reset, setEndpoint } from '@/store/helpers/mutations';
+import get from 'lodash/get';
 import Vue from 'vue';
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
 
 const save = (state, repository) => {
+  repository.repositoryUser = get(repository, 'repositoryUsers.0');
   const search = state.search && state.search.toLowerCase();
   const name = repository.name.toLowerCase();
   if (search && !name.includes(search)) return;

@@ -58,8 +58,9 @@ async function create({ user, body }, res) {
   return res.json({ data: repository });
 }
 
-async function get({ repository }, res) {
-  await repository.reload({ include: [includeLastRevision()] });
+async function get({ repository, user }, res) {
+  const repositoryUser = { model: RepositoryUser, where: { userId: user.id } };
+  await repository.reload({ include: [includeLastRevision(), repositoryUser] });
   return res.json({ data: repository });
 }
 
