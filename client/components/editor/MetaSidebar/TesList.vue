@@ -121,6 +121,10 @@ export default {
         display: none;
       }
     }
+
+    .ql-editor {
+      word-break: break-all;
+    }
   }
 }
 </style>
