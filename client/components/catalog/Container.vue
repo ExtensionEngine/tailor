@@ -30,7 +30,7 @@
           <tag-filter @update="onFilterChange(setTagFilter, $event)" />
         </v-col>
       </v-row>
-      <v-row class="align-center">
+      <v-row class="selected-tags align-center">
         <v-btn
           v-if="tagFilter.length"
           @click="onFilterChange(removeAllTagFilters, $event)" small rounded>
@@ -197,12 +197,15 @@ export default {
 
 .catalog-actions {
   position: relative;
-  margin-bottom: 20px;
   padding-top: 12px;
 
   ::v-deep .add-repo {
     top: 10px;
     right: 12px;
   }
+}
+
+.selected-tags {
+  min-height: 3rem;
 }
 </style>
