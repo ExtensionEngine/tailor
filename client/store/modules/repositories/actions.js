@@ -49,7 +49,7 @@ const addTag = ({ commit }, data) => {
 
 const removeTag = ({ commit }, data) => {
   return repositoryApi.removeTag(data)
-    .then(({ data }) => {
+    .then(data => {
       commit('removeTag', data);
     }
     );
