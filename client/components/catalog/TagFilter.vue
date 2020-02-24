@@ -47,7 +47,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .v-list {
-  max-height: 300px;
+  max-height: 18.75rem;
   overflow-y: scroll;
   padding: 1rem 1rem;
 }
