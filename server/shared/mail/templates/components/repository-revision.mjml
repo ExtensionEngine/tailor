@@ -1,29 +1,9 @@
 <mj-section padding="0 10px" background-color="#f1f1f1">
   <mj-column>
-    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      <b>Repositories</b>
-    </mj-text>
-  </mj-column>
-  <mj-column background-color="#f1f1f1" border-radius="8px">
-    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      Created:
-    </mj-text>
-    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      Updated:
-    </mj-text>
-    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      Removed:
-    </mj-text>
-  </mj-column>
-  <mj-column background-color="#f1f1f1" border-radius="8px">
-    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{ CREATE REPOSITORY}}{{^CREATE REPOSITORY}}0{{/CREATE REPOSITORY}} 
-    </mj-text>
-    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{ UPDATE REPOSITORY}}{{^UPDATE REPOSITORY}}0{{/UPDATE REPOSITORY}}
-    </mj-text>
-    <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{ DELETE REPOSITORY}}{{^DELETE REPOSITORY}}0{{/DELETE REPOSITORY}}
+    <mj-text mj-class="content" padding="20px" >
+      <b>{{#CREATE REPOSITORY}}Created on {{/CREATE REPOSITORY}}{{ CREATE REPOSITORY}}</b>
+      <b>{{#UPDATE REPOSITORY}}Updated {{UPDATE REPOSITORY}} times{{/UPDATE REPOSITORY}}</b>
+      <b>{{#DELETE REPOSITORY}}Deleted{{/DELETE REPOSITORY}}{{^DELETE REPOSITORY}}{{/DELETE REPOSITORY}}</b>
     </mj-text>
   </mj-column>
 </mj-section>

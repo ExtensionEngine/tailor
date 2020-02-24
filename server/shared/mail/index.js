@@ -10,6 +10,7 @@ const { promisify } = require('util');
 const { URL } = require('url');
 const urlJoin = require('url-join');
 const mapKeys = require('lodash/mapKeys');
+const util = require('util');
 
 const from = `${config.sender.name} <${config.sender.address}>`;
 const server = email.server.connect(config);
@@ -90,18 +91,8 @@ function sendCommentNotification(users, comment) {
 }
 
 function sendActivityDigest(recipient, activities) {
-  const activitiesQuantified = [];
-
-  mapKeys(activities, (changes, repository) => {
-    activitiesQuantified.push({ repositoryName: repository, data: {} });
-    mapKeys(changes, (listOfChanges, changeType) => {
-      activitiesQuantified[activitiesQuantified.length - 1].data[changeType] =
-        listOfChanges.length;
-    });
-  });
-
-  const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), { activitiesQuantified });
-  const text = renderText(path.join(templatesDir, 'activity-digest.txt'), { activitiesQuantified });
+  const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), { activities });
+  const text = renderText(path.join(templatesDir, 'activity-digest.txt'), { activities });
   logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
 
   return send({

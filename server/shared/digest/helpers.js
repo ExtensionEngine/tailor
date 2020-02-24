@@ -5,7 +5,6 @@ const cronParser = require('cron-parser');
 const mapKeys = require('lodash/mapKeys');
 const logger = require('../../shared/logger');
 const mail = require('../mail');
-const util = require('util');
 
 const processRevisions = revisions => {
   const groupedRevisions = groupArray(
@@ -51,12 +50,17 @@ const parseInterval = () => {
 
 const separateUsersAndSend = revisions => {
   mapKeys(revisions, (activity, user) => {
-    mapKeys(activity, (value, key) => {
-      if ('CREATE REPOSITORY' in activity[key]) {
-        activity[key]['CREATE REPOSITORY'] = activity[key]['CREATE REPOSITORY'][0]['repository.created_at'];
-      }
+    const activitiesQuantified = [];
+    mapKeys(activity, (changes, repository) => {
+      activitiesQuantified.push({ repositoryName: repository, data: {} });
+      mapKeys(changes, (listOfChanges, changeType) => {
+        activitiesQuantified[activitiesQuantified.length - 1].data[changeType] =
+          !(changeType === 'CREATE REPOSITORY')
+            ? listOfChanges.length
+            : changes['CREATE REPOSITORY'][0]['repository.created_at'];
+      });
     });
-    mail.sendActivityDigest(user, activity);
+    mail.sendActivityDigest(user, activitiesQuantified);
   });
 };
 

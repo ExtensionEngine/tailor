@@ -1,6 +1,6 @@
 <mjml>
   <mj-include path="./components/head.mjml" />
-  <mj-body padding="10px">
+  <mj-body padding="10px" border-radius="20px">
     <mj-include path="./components/header.mjml" />
     <mj-section padding="10px 10px 20px 10px" text-align="left">
       <mj-column padding-bottom="15px">
@@ -10,12 +10,12 @@
       </mj-column>
     </mj-section>
     <mj-raw>
-      {{#activitiesQuantified}}
+      {{#activities}}
     </mj-raw>
-    <mj-section padding="0 10px" background-color="#f1f1f1" border-bottom="1px solid black">
+    <mj-section padding="0 10px" background-color="#c2c0c0">
       <mj-column>
-        <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-          <b>Repository: {{repositoryName}}</b>
+        <mj-text mj-class="content" padding="20px" color="#444" font-size="20px">
+          <b>{{repositoryName}}</b>
         </mj-text>
       </mj-column>
     </mj-section>
@@ -28,8 +28,8 @@
     <mj-raw>
       {{/data}}
     </mj-raw>
-    <mj-raw>
-      {{/activitiesQuantified}}
+    <mj-raw margin-bottom="10px">
+      {{/activities}}
     </mj-raw>
   </mj-body>
 </mjml>

@@ -2,13 +2,12 @@ Tailor
 =================================================
 
  All changes you made to your repositories this week: 
-{{#activitiesQuantified}}
+{{#activities}}
   {{repositoryName}}
     {{#data}}
-      Repositories:
-        created : {{ CREATE REPOSITORY}}{{^CREATE REPOSITORY}}0{{/CREATE REPOSITORY}} 
-        updated : {{ UPDATE REPOSITORY}}{{^UPDATE REPOSITORY}}0{{/UPDATE REPOSITORY}}
-        deleted : {{ DELETE REPOSITORY}}{{^DELETE REPOSITORY}}0{{/DELETE REPOSITORY}}
+      {{#CREATE REPOSITORY}}Created on {{/CREATE REPOSITORY}}{{ CREATE REPOSITORY}}
+      {{#UPDATE REPOSITORY}}Updated {{UPDATE REPOSITORY}} times{{/UPDATE REPOSITORY}}
+      {{#DELETE REPOSITORY}}Deleted{{/DELETE REPOSITORY}}{{^DELETE REPOSITORY}}{{/DELETE REPOSITORY}}
 
       Activities:
         created : {{ CREATE ACTIVITY}}{{^CREATE ACTIVITY}}0{{/CREATE ACTIVITY}}
@@ -20,6 +19,6 @@ Tailor
         updated : {{ UPDATE CONTENT_ELEMENT}}{{^UPDATE CONTENT_ELEMENT}}0{{/UPDATE CONTENT_ELEMENT}}
         deleted : {{ DELETE CONTENT_ELEMENT}}{{^DELETE CONTENT_ELEMENT}}0{{/DELETE CONTENT_ELEMENT}}
     {{/data}}
-{{/activitiesQuantified}}
+{{/activities}}
 
 -------------------------------------------------
