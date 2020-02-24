@@ -88,9 +88,8 @@ export default {
       this.$validator.extend('unique-tag-name', {
         getMessage: field => `Tag ${field} is not unique.`,
         async validate(tag) {
-          const tags = await tagApi.fetch();
           const name = isObject(tag) ? tag.name : tag;
-          const tagExists = tags.find(it => it.name.toLowerCase() === name.toLowerCase());
+          const tagExists = await tagApi.fetch({ name });
           return ({ valid: isObject(tag) || !tagExists });
         }
       });

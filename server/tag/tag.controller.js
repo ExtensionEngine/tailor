@@ -3,12 +3,12 @@
 const { Tag } = require('../shared/database');
 const uniqBy = require('lodash/uniqBy');
 
-async function list({ user }, res) {
+async function list({ user, query: { name } }, res) {
+  if (name) return Tag.count({ where: { name } }).then(count => res.json({ data: count }));
   if (user.isAdmin()) return Tag.findAll().then(it => res.json({ data: it }));
   const repositories = await user.getRepositories({ include: [{ model: Tag }] });
-  const tags = repositories.reduce((acc, it) => acc.concat(it.tags), []);
-  const filtered = uniqBy(tags, 'id');
-  return res.json({ data: filtered });
+  const uniqTags = uniqBy(repositories.reduce((acc, it) => acc.concat(it.tags), []), 'id');
+  return res.json({ data: uniqTags });
 }
 
 module.exports = {
