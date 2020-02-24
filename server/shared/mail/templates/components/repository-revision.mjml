@@ -17,13 +17,13 @@
   </mj-column>
   <mj-column background-color="#f1f1f1" border-radius="8px">
     <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{REPOSITORY.CREATE}}
+      {{ CREATE REPOSITORY}}{{^CREATE REPOSITORY}}0{{/CREATE REPOSITORY}} 
     </mj-text>
     <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{REPOSITORY.UPDATE}}
+      {{ UPDATE REPOSITORY}}{{^UPDATE REPOSITORY}}0{{/UPDATE REPOSITORY}}
     </mj-text>
     <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{REPOSITORY.REMOVE}}
+      {{ DELETE REPOSITORY}}{{^DELETE REPOSITORY}}0{{/DELETE REPOSITORY}}
     </mj-text>
   </mj-column>
 </mj-section>

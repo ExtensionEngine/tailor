@@ -17,13 +17,13 @@
   </mj-column>
   <mj-column background-color="#f1f1f1" border-radius="8px">
     <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{ACTIVITY.CREATE}}
+      {{ CREATE ACTIVITY}}{{^CREATE ACTIVITY}}0{{/CREATE ACTIVITY}}
     </mj-text>
     <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{ACTIVITY.UPDATE}}
+      {{ UPDATE ACTIVITY}}{{^UPDATE ACTIVITY}}0{{/UPDATE ACTIVITY}}
     </mj-text>
     <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{ACTIVITY.REMOVE}}
+      {{ DELETE ACTIVITY}}{{^DELETE ACTIVITY}}0{{/DELETE ACTIVITY}}
     </mj-text>
   </mj-column>
 </mj-section>

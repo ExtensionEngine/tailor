@@ -17,13 +17,13 @@
   </mj-column>
   <mj-column background-color="#f1f1f1" border-radius="8px">
     <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{CONTENT_ELEMENT.CREATE}}
+      {{ CREATE CONTENT_ELEMENT}}{{^CREATE CONTENT_ELEMENT}}0{{/CREATE CONTENT_ELEMENT}}
     </mj-text>
     <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{CONTENT_ELEMENT.UPDATE}}
+      {{ UPDATE CONTENT_ELEMENT}}{{^UPDATE CONTENT_ELEMENT}}0{{/UPDATE CONTENT_ELEMENT}}
     </mj-text>
     <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-      {{CONTENT_ELEMENT.REMOVE}}
+      {{ DELETE CONTENT_ELEMENT}}{{^DELETE CONTENT_ELEMENT}}0{{/DELETE CONTENT_ELEMENT}}
     </mj-text>
   </mj-column>
 </mj-section>

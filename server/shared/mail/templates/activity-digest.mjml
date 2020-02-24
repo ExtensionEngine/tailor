@@ -5,25 +5,31 @@
     <mj-section padding="10px 10px 20px 10px" text-align="left">
       <mj-column padding-bottom="15px">
         <mj-text mj-class="content" padding-left="0" color="#444" font-size="16px">
-          Weekly activity digest
+          All changes you made to your repositories this week:
         </mj-text>
       </mj-column>
     </mj-section>
     <mj-raw>
-      {{#revisions}}
+      {{#activitiesQuantified}}
     </mj-raw>
     <mj-section padding="0 10px" background-color="#f1f1f1" border-bottom="1px solid black">
       <mj-column>
         <mj-text mj-class="content" padding="20px" color="#444" font-size="16px">
-          <b>Repository: {{repoName}}</b>
+          <b>Repository: {{repositoryName}}</b>
         </mj-text>
       </mj-column>
     </mj-section>
+    <mj-raw>
+      {{#data}}
+    </mj-raw>
     <mj-include path="./components/repository-revision.mjml" />
     <mj-include path="./components/content-revisions.mjml" />
     <mj-include path="./components/activity-revisions.mjml" />
     <mj-raw>
-      {{/revisions}}
+      {{/data}}
+    </mj-raw>
+    <mj-raw>
+      {{/activitiesQuantified}}
     </mj-raw>
   </mj-body>
 </mjml>

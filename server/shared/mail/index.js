@@ -6,12 +6,10 @@ const email = require('emailjs');
 const logger = require('../logger');
 const path = require('path');
 const pick = require('lodash/pick');
-const cloneDeep = require('lodash/cloneDeep');
 const { promisify } = require('util');
 const { URL } = require('url');
 const urlJoin = require('url-join');
 const mapKeys = require('lodash/mapKeys');
-const util = require('util');
 
 const from = `${config.sender.name} <${config.sender.address}>`;
 const server = email.server.connect(config);
@@ -91,7 +89,7 @@ function sendCommentNotification(users, comment) {
   });
 }
 
-function sendActivityDigest(user, activities) {
+function sendActivityDigest(recipient, activities) {
   const activitiesQuantified = [];
 
   mapKeys(activities, (changes, repository) => {
@@ -102,19 +100,17 @@ function sendActivityDigest(user, activities) {
     });
   });
 
-  const recipient = user.email;
-
-  // const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), data);
+  const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), { activitiesQuantified });
   const text = renderText(path.join(templatesDir, 'activity-digest.txt'), { activitiesQuantified });
   logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
-  console.log(text);
-  // return send({
-  //   from,
-  //   to: user,
-  //   subject: 'Weekly activity digest',
-  //   text,
-  //   attachment: [{ data: text, alternative: true }]
-  // });
+
+  return send({
+    from,
+    to: recipient,
+    subject: 'Weekly activity digest',
+    text,
+    attachment: [{ data: html, alternative: true }]
+  });
 }
 
 function getConfig(server) {
