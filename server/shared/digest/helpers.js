@@ -1,15 +1,17 @@
-'use strict';
+"use strict";
 
-const groupArray = require('group-array');
-const cronParser = require('cron-parser');
-const logger = require('../../shared/logger');
+const groupArray = require("group-array");
+const cronParser = require("cron-parser");
+const mapKeys = require("lodash/mapKeys");
+const logger = require("../../shared/logger");
+const mail = require('../mail');
 
 const processRevisions = revisions => {
   const groupedRevisions = groupArray(
     revisions,
-    'user.email',
-    'repository.name',
-    'entity_operation'
+    "user.email",
+    "repository.name",
+    "entity_operation"
   );
   return groupedRevisions;
 };
@@ -37,16 +39,23 @@ const parseInterval = () => {
   const scheduleString = `0 ${minute} ${hour} * * ${weekDay}`;
   try {
     const interval = cronParser.parseExpression(scheduleString);
-    logger.info('Next Delivery date: ', interval.next().toString());
+    logger.info("Next Delivery date: ", interval.next().toString());
   } catch (err) {
     logger.error(err);
-    throw new Error('Schedule options invalid\n');
+    throw new Error("Schedule options invalid\n");
   }
 
   return scheduleString;
 };
 
+const separateUsersAndSend = revisions => {
+  mapKeys(revisions, (activity, user) => {
+    mail.sendActivityDigest(user, activity);
+  });
+};
+
 module.exports = {
   processRevisions,
-  parseInterval
+  parseInterval,
+  separateUsersAndSend
 };

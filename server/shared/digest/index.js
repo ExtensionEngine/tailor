@@ -4,8 +4,7 @@ const cron = require('node-cron');
 const { User, Revision, Repository } = require('../database');
 const { sql } = require('../database/helpers');
 const { col, fn } = require('sequelize');
-const mail = require('../mail');
-const { processRevisions, parseInterval } = require('./helpers');
+const { processRevisions, parseInterval, separateUsersAndSend } = require('./helpers');
 
 function initiateDigest() {
   cron.schedule(parseInterval(), async () => {
@@ -40,7 +39,7 @@ function initiateDigest() {
       raw: true
     });
 
-    mail.sendActivityDigeqst(processRevisions(revisions));
+    separateUsersAndSend(processRevisions(revisions));
   });
 }
 
