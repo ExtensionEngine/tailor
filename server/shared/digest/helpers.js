@@ -1,17 +1,18 @@
-"use strict";
+'use strict';
 
-const groupArray = require("group-array");
-const cronParser = require("cron-parser");
-const mapKeys = require("lodash/mapKeys");
-const logger = require("../../shared/logger");
+const groupArray = require('group-array');
+const cronParser = require('cron-parser');
+const mapKeys = require('lodash/mapKeys');
+const logger = require('../../shared/logger');
 const mail = require('../mail');
+const util = require('util');
 
 const processRevisions = revisions => {
   const groupedRevisions = groupArray(
     revisions,
-    "user.email",
-    "repository.name",
-    "entity_operation"
+    'user.email',
+    'repository.name',
+    'entity_operation'
   );
   return groupedRevisions;
 };
@@ -39,10 +40,10 @@ const parseInterval = () => {
   const scheduleString = `0 ${minute} ${hour} * * ${weekDay}`;
   try {
     const interval = cronParser.parseExpression(scheduleString);
-    logger.info("Next Delivery date: ", interval.next().toString());
+    logger.info('Next Delivery date: ', interval.next().toString());
   } catch (err) {
     logger.error(err);
-    throw new Error("Schedule options invalid\n");
+    throw new Error('Schedule options invalid\n');
   }
 
   return scheduleString;
@@ -50,6 +51,11 @@ const parseInterval = () => {
 
 const separateUsersAndSend = revisions => {
   mapKeys(revisions, (activity, user) => {
+    mapKeys(activity, (value, key) => {
+      if ('CREATE REPOSITORY' in activity[key]) {
+        activity[key]['CREATE REPOSITORY'] = activity[key]['CREATE REPOSITORY'][0]['repository.created_at'];
+      }
+    });
     mail.sendActivityDigest(user, activity);
   });
 };
