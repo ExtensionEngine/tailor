@@ -49,11 +49,7 @@ export default {
 .v-list {
   max-height: 300px;
   overflow-y: scroll;
-  padding: 1.5rem 1rem;
-
-  &:first-child {
-    padding-top: 1rem;
-  }
+  padding: 1rem 1rem;
 }
 
 </style>
