@@ -17,15 +17,14 @@
         {{ vErrors.first('default') }}
       </v-alert>
       <v-combobox
-        v-validate="'required|min:2|max:20|unique-tag-name'"
-        @keyup.enter="submit"
-        @change="it => tagInput = it"
-        :value="tagInput"
+        v-model="tagInput"
+        v-validate="'required|min:2|max:20'"
         :error-messages="vErrors.collect('name')"
         :items="availableTags"
         name="name"
+        item-value="name"
         item-text="name"
-        item-value="id"
+        :return-object="false"
         label="Select a tag or add a new one"
         outlined />
     </template>
@@ -41,8 +40,6 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import differenceBy from 'lodash/differenceBy';
-import isObject from 'lodash/isObject';
-import tagApi from '@/api/tag';
 import TailorDialog from '@/components/common/TailorDialog';
 import { withValidation } from 'utils/validation';
 
@@ -71,8 +68,7 @@ export default {
     async submit() {
       const isValid = await this.$validator.validateAll();
       if (!isValid) return;
-      const tagName = isObject(this.tagInput) ? this.tagInput.name : this.tagInput;
-      const data = { name: tagName, repositoryId: this.repository.id };
+      const data = { name: this.tagInput, repositoryId: this.repository.id };
       await this.addTag(data);
       this.hide();
     }
@@ -81,18 +77,6 @@ export default {
     isVisible(val) {
       if (!val) return;
       this.$validator.reset();
-    }
-  },
-  mounted() {
-    if (!this.$validator.rules['unique-tag-name']) {
-      this.$validator.extend('unique-tag-name', {
-        getMessage: field => `Tag ${field} is not unique.`,
-        async validate(tag) {
-          const name = isObject(tag) ? tag.name : tag;
-          const tagExists = await tagApi.fetch({ name });
-          return ({ valid: isObject(tag) || !tagExists });
-        }
-      });
     }
   },
   components: { TailorDialog }
