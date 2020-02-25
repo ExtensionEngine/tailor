@@ -14,7 +14,7 @@ describe('Tests for repository/activities/actions', () => {
   });
   afterEach(() => jest.resetModules());
 
-  it('when I call clone method with commit and mapping it should call the commit method with right payload', async () => {
+  it('should call the commit method with right payload when I call clone method with commit and mapping ', async () => {
     mockApiHelper({ processEntries: () => 1 });
     const { clone } = require('@/store/modules/repository/activities/actions');
     post.mockImplementation(() => Promise.resolve({ data: { data: 12 } }));
@@ -29,7 +29,7 @@ describe('Tests for repository/activities/actions', () => {
     expect(commit).toHaveBeenCalledWith('fetch', 1);
   });
 
-  it('when I call publish action it should run a commit with payload', async () => {
+  it('should run a commit with payload when I call publish action', async () => {
     mockApiHelper({ get: () => Promise.resolve({ data: { data: { publishedAt: 1 } } }) });
     const { publish } = require('@/store/modules/repository/activities/actions');
 
@@ -39,7 +39,7 @@ describe('Tests for repository/activities/actions', () => {
 
     expect(commit).toHaveBeenCalledWith('save', { publishedAt: 1, activities: 1 });
   });
-  it('when I call remove action with a model it should remove that model', async () => {
+  it('should remove that model when I call remove action with a model', async () => {
     mockApiHelper({ remove: model => Promise.resolve({ data: { data: model } }) });
     const { remove } = require('@/store/modules/repository/activities/actions');
 
@@ -94,7 +94,7 @@ describe('Tests for repository/activities/actions', () => {
     expect(newResult).toBe(undefined);
   });
 
-  it('when I call reorder with activity and context it should run two commits with payload', async () => {
+  it('should run two commits with payload when I call reorder with activity and context', async () => {
     mockApiHelper({ post: () => Promise.resolve({ data: { data: { fake: '' } } }) });
     const { reorder } = require('@/store/modules/repository/activities/actions');
 

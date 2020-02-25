@@ -52,7 +52,7 @@ describe('Helpers - mutation test', () => {
     expect(state).toMatchSnapshot();
   });
 
-  it('test setting a end point for the apiUrl the state', () => {
+  it('should set a end point for the apiUrl the state', () => {
     const state = fakeCommentState();
     const url = '/some/ulr';
     setEndpoint(state, url);

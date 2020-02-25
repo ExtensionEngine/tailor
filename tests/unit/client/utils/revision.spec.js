@@ -2,7 +2,7 @@ import { getFormatDescription, getRevisionAcronym, isSameInstance } from '@/util
 
 describe('Tests for utils/revision', () => {
   beforeEach(() => jest.resetModules());
-  it('when I call isSameInstance with objects it should return true if its the same instance ', () => {
+  it('should return true if its the same instance when I call isSameInstance with objects ', () => {
     const instance = { entity: 1, state: { id: 1 } };
     const secondInstance = { entity: 1, state: { id: 1 }, someOther: 1 };
 
@@ -10,14 +10,14 @@ describe('Tests for utils/revision', () => {
     expect(isSameInstance(instance, secondInstance)).toEqual(true);
   });
 
-  it('when I call getRevisionAcronym it should return specific string value', () => {
+  it('should return specific string value when I call getRevisionAcronym ', () => {
     const rev = { entity: 'ACTIVITY', state: { type: 'some_fake_type' } };
     expect(getRevisionAcronym(rev)).toEqual('sf');
     expect(getRevisionAcronym({ })).toEqual('N/A');
     expect(getRevisionAcronym({ entity: 'REPOSITORY' })).toEqual('R');
     expect(getRevisionAcronym({ entity: 'CONTENT_ELEMENT' })).toEqual('CE');
   });
-  it('when I call getRevisionColor it should return specific string value', () => {
+  it('should return specific string value when I call getRevisionColor ', () => {
     const mockedGetLevel = jest.fn();
     jest.mock('shared/activities', () => {
       return {
@@ -37,7 +37,7 @@ describe('Tests for utils/revision', () => {
     expect(mockedGetLevel).toHaveBeenCalled();
   });
 
-  it('when I call getFormatDescription with REPOSITORY string it should return specific string value', () => {
+  it('should return specific string value when I call getFormatDescription with REPOSITORY string ', () => {
     const rev = { entity: 'REPOSITORY' };
     expect(getFormatDescription(rev)).toEqual('Changed repository');
 
@@ -51,7 +51,7 @@ describe('Tests for utils/revision', () => {
     expect(getFormatDescription(rev)).toEqual('Changed repository');
   });
 
-  it('when I call getFormatDescription with CONTENT_ELEMENT string it should return specific string value', () => {
+  it('should return specific string value when I call getFormatDescription with CONTENT_ELEMENT string', () => {
     const rev = {
       entity: 'CONTENT_ELEMENT',
       state: { type: 'ASSESSMENT', data: { type: 'SC' } },
@@ -70,7 +70,7 @@ describe('Tests for utils/revision', () => {
     expect(getFormatDescription(rev, activity)).toEqual('Changed fake state type element within \'surfing\' fake label');
   });
 
-  it('when I call getFormatDescription with ACTIVITY string it should return specific string value', () => {
+  it(' should return specific string value when I call getFormatDescription with ACTIVITY string', () => {
     const mockedGetLevel = jest.fn();
     jest.mock('shared/activities', () => {
       return {
