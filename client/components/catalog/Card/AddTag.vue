@@ -51,7 +51,7 @@ export default {
   },
   data: () => ({
     isVisible: false,
-    tagInput: null
+    tagInput: ''
   }),
   computed: {
     ...mapState('repositories', ['tags']),
@@ -62,7 +62,7 @@ export default {
     ...mapActions('repositories', ['addTag', 'removeTag']),
     hide() {
       this.$validator.reset();
-      this.tagInput = null;
+      this.tagInput = '';
       this.isVisible = false;
     },
     async submit() {
@@ -77,6 +77,7 @@ export default {
     isVisible(val) {
       if (!val) return;
       this.$validator.reset();
+      this.tagInput = '';
     }
   },
   components: { TailorDialog }
