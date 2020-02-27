@@ -41,12 +41,12 @@ function publishRepositoryMeta(id) {
 
 function addTag(name, repositoryId) {
   return request.post(urls.tags(repositoryId), { repositoryId, name })
-  .then(extractData);
+    .then(extractData);
 }
 
 function removeTag({ repositoryId, tagId }) {
   return request.delete(urls.tags(repositoryId, tagId))
-  .then(extractData);
+    .then(extractData);
 }
 
 export default {
