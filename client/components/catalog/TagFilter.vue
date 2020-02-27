@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import find from 'lodash/find';
 import map from 'lodash/map';
 import { mapState } from 'vuex';
 
@@ -30,7 +31,7 @@ export default {
     ...mapState('repositories', ['tags', 'tagFilter']),
     items() {
       return map(this.tags, it => {
-        const isSelected = map(this.tagFilter, 'id').includes(it.id);
+        const isSelected = find(this.tagFilter, item => item.id === it.id);
         return { ...it, isSelected };
       });
     }
