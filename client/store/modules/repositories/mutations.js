@@ -63,7 +63,8 @@ const removeTag = (state, { tagId, repositoryId }) => {
 
 const setTagFilter = (state, selectedTag) => {
   resetPagination(state);
-  state.tagFilter = selectedTag.isSelected ? [...state.tagFilter, selectedTag]
+  state.tagFilter = selectedTag.isSelected
+    ? [...state.tagFilter, selectedTag]
     : state.tagFilter.filter(it => it.id !== selectedTag.id);
 };
 
