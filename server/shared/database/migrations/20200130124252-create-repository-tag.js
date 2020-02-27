@@ -15,16 +15,6 @@ exports.up = (queryInterface, Sequelize) => {
       field: 'repository_id',
       references: { model: 'repository', key: 'id' },
       onDelete: 'CASCADE'
-    },
-    createdAt: {
-      type: Sequelize.DATE,
-      field: 'created_at',
-      allowNull: false
-    },
-    updatedAt: {
-      type: Sequelize.DATE,
-      field: 'updated_at',
-      allowNull: false
     }
   }).then(async () => {
     return queryInterface.addConstraint(

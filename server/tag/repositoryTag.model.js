@@ -16,14 +16,6 @@ class RepositoryTag extends Model {
         field: 'tag_id',
         primaryKey: true,
         unique: 'repository_tag_pkey'
-      },
-      createdAt: {
-        type: DATE,
-        field: 'created_at'
-      },
-      updatedAt: {
-        type: DATE,
-        field: 'updated_at'
       }
     };
   }
@@ -42,7 +34,7 @@ class RepositoryTag extends Model {
       modelName: 'RepositoryTag',
       tableName: 'repository_tag',
       underscored: true,
-      timestamps: true
+      timestamps: false
     };
   }
 }

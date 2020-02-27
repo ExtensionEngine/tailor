@@ -10,20 +10,6 @@ class Tag extends Model {
         allowNull: false,
         unique: true,
         validate: { notEmpty: true, len: [2, 20] }
-      },
-      createdAt: {
-        type: DATE,
-        allowNull: false,
-        field: 'created_at'
-      },
-      updatedAt: {
-        type: DATE,
-        allowNull: false,
-        field: 'updated_at'
-      },
-      deletedAt: {
-        type: DATE,
-        field: 'deleted_at'
       }
     };
   }
@@ -39,8 +25,8 @@ class Tag extends Model {
     return {
       modelName: 'tag',
       underscored: true,
-      timestamps: true,
-      freezeTableName: true
+      freezeTableName: true,
+      timestamps: false
     };
   }
 }
