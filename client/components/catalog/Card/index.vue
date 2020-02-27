@@ -6,7 +6,6 @@
       <v-btn
         v-if="repository.hasAdminAccess"
         @click.stop="navigateTo('repository-info')"
-        @mousedown.stop
         color="blue-grey darken-1"
         icon small
         class="mr-2 float-right">
@@ -37,10 +36,7 @@
     </div>
     <v-card-actions class="pa-1 grey lighten-4 justify-space-between">
       <div class="d-flex">
-        <v-btn
-          @click.stop="pin({ id: repository.id, pin: !isPinned })"
-          @mousedown.stop
-          icon>
+        <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" icon>
           <v-icon
             :color="isPinned ? 'grey darken-3': 'grey'"
             :class="{ 'mdi-rotate-45': isPinned }">
@@ -51,7 +47,6 @@
           <v-chip
             v-for="tag in repository.tags"
             :key="tag.id"
-            @click.stop
             @click:close="showDeleteConfirmation(tag)"
             color="grey darken-1"
             text-color="white"
