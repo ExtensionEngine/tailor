@@ -65,14 +65,19 @@ function initialize() {
     });
 }
 
+/**
+ * Revision needs to be before Content Element to ensure its hooks are triggered
+ * first. This is a temporary fix until a new system for setting up hooks is in
+ * place.
+ */
 const models = {
   User: defineModel(User),
   Repository: defineModel(Repository),
   RepositoryTag: defineModel(RepositoryTag),
   RepositoryUser: defineModel(RepositoryUser),
   Activity: defineModel(Activity),
-  ContentElement: defineModel(ContentElement),
   Revision: defineModel(Revision),
+  ContentElement: defineModel(ContentElement),
   Comment: defineModel(Comment),
   Tag: defineModel(Tag)
 };
