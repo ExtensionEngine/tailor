@@ -21,10 +21,10 @@
         v-validate="'required|min:2|max:20'"
         :error-messages="vErrors.collect('name')"
         :items="availableTags"
+        :return-object="false"
         name="name"
         item-value="name"
         item-text="name"
-        :return-object="false"
         label="Select a tag or add a new one"
         outlined />
     </template>
@@ -61,8 +61,6 @@ export default {
   methods: {
     ...mapActions('repositories', ['addTag', 'removeTag']),
     hide() {
-      this.$validator.reset();
-      this.tagInput = '';
       this.isVisible = false;
     },
     async submit() {
