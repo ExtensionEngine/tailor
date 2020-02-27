@@ -50,8 +50,7 @@
             @click:close="showDeleteConfirmation(tag)"
             color="grey darken-1"
             text-color="white"
-            close
-            class="v-chip-font mr-1">
+            close>
             {{ tag.name | truncate(5) }}
           </v-chip>
         </div>
@@ -154,8 +153,9 @@ export default {
   }
 }
 
-.v-chip-font {
-  font-size: 0.75rem !important;
+.v-card__actions .v-chip {
+  margin-right: 0.25rem;
+  font-size: 0.75rem;
 }
 
 </style>
