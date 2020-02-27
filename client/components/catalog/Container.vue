@@ -92,8 +92,8 @@ export default {
   computed: {
     ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
-      tags: state => state.tags,
-      tagFilter: state => state.tagFilter,
+      tags: 'tags',
+      tagFilter: 'tagFilter',
       showPinned: 'showPinned'
     }),
     ...mapGetters('repositories', {
