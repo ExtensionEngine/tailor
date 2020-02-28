@@ -44,35 +44,19 @@
           </v-icon>
         </v-btn>
         <div class="d-flex align-center ml-1">
-          <v-chip
-            v-for="tag in repository.tags"
-            :key="tag.id"
-            @click:close="showDeleteConfirmation(tag)"
-            color="grey darken-1"
-            text-color="white"
-            close>
-            {{ tagName(tag) }}
-          </v-chip>
+          <tags :repository="repository" />
         </div>
-      </div>
-      <div class="d-flex">
-        <add-tag v-if="exceedTagLimit" :repository="repository" />
       </div>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import AddTag from './AddTag';
-import EventBus from 'EventBus';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
 import { mapActions } from 'vuex';
-import truncate from 'lodash/truncate';
-
-const appChannel = EventBus.channel('app');
-const TAG_LIMIT = 3;
+import Tags from './Tags';
 
 export default {
   props: {
@@ -83,8 +67,7 @@ export default {
     description: ({ repository }) => repository.description,
     schema: ({ repository }) => getSchema(repository.schema).name,
     lastActivity: ({ repository }) => first(repository.revisions),
-    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),
-    exceedTagLimit: ({ repository }) => repository.tags.length < TAG_LIMIT
+    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false)
   },
   methods: {
     ...mapActions('repositories', ['pin', 'removeTag']),
@@ -94,26 +77,9 @@ export default {
         name,
         params: { repositoryId: this.repository.id }
       });
-    },
-    showDeleteConfirmation(tag) {
-      const data = { repositoryId: this.repository.id, tagId: tag.id };
-      appChannel.emit('showConfirmationModal', {
-        title: 'Delete tag',
-        message: `Are you sure you want to delete tag ${tag.name}?`,
-        action: () => this.removeTag(data)
-      });
-    },
-    tagName(tag) {
-      if (this.repository.tags.length === 2 && tag.name.length > 8) {
-        return truncate(tag.name, { length: 5 });
-      }
-      if (this.repository.tags.length === 3 && tag.name.length > 4) {
-        return truncate(tag.name, { length: 5 });
-      }
-      return tag.name;
     }
   },
-  components: { AddTag }
+  components: { Tags }
 };
 </script>
 
@@ -162,10 +128,4 @@ export default {
     line-height: 1.25rem;
   }
 }
-
-.v-card__actions .v-chip {
-  margin-right: 0.25rem;
-  font-size: 0.75rem;
-}
-
 </style>
