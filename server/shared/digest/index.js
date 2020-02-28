@@ -3,7 +3,7 @@
 const cron = require('node-cron');
 const { User, Revision, Repository } = require('../database');
 const { sql } = require('../database/helpers');
-const { col, fn } = require('sequelize');
+const { col, fn, Op } = require('sequelize');
 const { processRevisions, parseInterval, separateUsersAndSend } = require('./helpers');
 
 function initiateDigest() {
@@ -33,7 +33,12 @@ function initiateDigest() {
         },
         {
           model: Repository,
-          attributes: ['name', 'created_at']
+          attributes: ['name', 'created_at'],
+          where: {
+            created_at: {
+              [Op.gte]: new Date().setDate(new Date().getDate() - 7)
+            }
+          }
         }
       ],
       raw: true
