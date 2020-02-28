@@ -145,9 +145,8 @@ function addTag({ body: { name }, repository }, res) {
 
 async function removeTag({ params: { tagId, repositoryId } }, res) {
   const where = { tagId, repositoryId };
-  return RepositoryTag.destroy({ where })
-    .then(() => res.json(
-      { data: { tagId: parseInt(tagId), repositoryId: parseInt(repositoryId) } }));
+  await RepositoryTag.destroy({ where });
+  return res.status(204).send();
 }
 
 module.exports = {
