@@ -1,5 +1,6 @@
 import { add, fetch, remove, reset, setEndpoint } from '@/store/helpers/mutations';
 import find from 'lodash/find';
+import findKey from 'lodash/findKey';
 import Vue from 'vue';
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
@@ -50,10 +51,8 @@ const fetchTags = (state, tags) => {
 
 const addTag = (state, { tag, repositoryId }) => {
   const repository = find(state.items, { id: repositoryId });
-  const isAdded = find(state.tags, { id: tag.id });
-  const isAddedToRepo = find(repository.tags, { id: tag.id });
-  if (!isAdded) state.tags = [...state.tags, tag];
-  if (!isAddedToRepo) repository.tags = [...repository.tags, tag];
+  if (!findKey(state.tags, { id: tag.id })) state.tags = [...state.tags, tag];
+  if (!findKey(repository.tags, { id: tag.id })) repository.tags = [...repository.tags, tag];
 };
 
 const removeTag = (state, { tagId, repositoryId }) => {
