@@ -108,7 +108,7 @@ export default {
         return truncate(tag.name, { length: 5 });
       }
       if (this.repository.tags.length === 3 && tag.name.length > 4) {
-        return truncate(tag.name, { length: 4 });
+        return truncate(tag.name, { length: 5 });
       }
       return tag.name;
     }
