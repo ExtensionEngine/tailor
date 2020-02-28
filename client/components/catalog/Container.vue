@@ -27,7 +27,7 @@
             @update="onFilterChange(setOrder, $event)"
             :sort-by="sortBy"
             class="pl-2" />
-          <tag-filter @update="onFilterChange(setTagFilter, $event)" />
+          <tag-filter @update="onFilterChange(toggleTagFilter, $event)" />
         </v-col>
       </v-row>
       <v-row class="selected-tags align-center">
@@ -39,7 +39,7 @@
         <v-chip
           v-for="tag in tagFilter"
           :key="tag.id"
-          @click:close="onFilterChange(removeTagFilter, tag.id)"
+          @click:close="onFilterChange(toggleTagFilter, tag)"
           close
           class="ma-2">
           {{ tag.name }}
@@ -118,8 +118,8 @@ export default {
   methods: {
     ...mapActions('repositories', ['fetch', 'fetchTags']),
     ...mapMutations('repositories', [
-      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'setTagFilter',
-      'removeTagFilter', 'removeAllTagFilters'
+      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'toggleTagFilter',
+      'removeAllTagFilters'
     ]),
     async load() {
       this.loading = true;
