@@ -70,7 +70,7 @@ export default {
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false)
   },
   methods: {
-    ...mapActions('repositories', ['pin', 'removeTag']),
+    ...mapActions('repositories', ['pin']),
     navigateTo(name = 'repository') {
       if (window.getSelection().toString()) return;
       this.$router.push({
