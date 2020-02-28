@@ -60,16 +60,11 @@ const removeTag = (state, { tagId, repositoryId }) => {
   repository.tags = repository.tags.filter(it => it.id !== tagId);
 };
 
-const setTagFilter = (state, selectedTag) => {
+const toggleTagFilter = (state, tag) => {
   resetPagination(state);
-  state.tagFilter = selectedTag.isSelected
-    ? [...state.tagFilter, selectedTag]
-    : state.tagFilter.filter(it => it.id !== selectedTag.id);
-};
-
-const removeTagFilter = (state, id) => {
-  resetPagination(state);
-  state.tagFilter = [...state.tagFilter.filter(it => it.id !== id)];
+  state.tagFilter = tag.isSelected
+    ? [...state.tagFilter, tag]
+    : state.tagFilter.filter(it => it.id !== tag.id);
 };
 
 const removeAllTagFilters = state => {
@@ -84,7 +79,6 @@ export {
   fetchTags,
   remove,
   removeTag,
-  removeTagFilter,
   removeAllTagFilters,
   reset,
   resetPagination,
@@ -95,6 +89,6 @@ export {
   setPagination,
   setOrder,
   setSearch,
-  setTagFilter,
+  toggleTagFilter,
   togglePinned
 };
