@@ -48,12 +48,12 @@ const fetchTags = (state, tags) => {
   state.tags = tags;
 };
 
-const addTag = (state, { tag, repo }) => {
-  if (!repo) return;
-  const repository = find(state.items, { id: repo[0].repositoryId });
+const addTag = (state, { tag, repositoryId }) => {
+  const repository = find(state.items, { id: repositoryId });
   const isAdded = find(state.tags, { id: tag.id });
+  const isAddedToRepo = find(repository.tags, { id: tag.id });
   if (!isAdded) state.tags = [...state.tags, tag];
-  repository.tags = [...repository.tags, tag];
+  if (!isAddedToRepo) repository.tags = [...repository.tags, tag];
 };
 
 const removeTag = (state, { tagId, repositoryId }) => {

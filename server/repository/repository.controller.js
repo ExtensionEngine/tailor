@@ -138,8 +138,8 @@ function findOrCreateRole(repository, user, role) {
 function addTag({ body: { name }, repository }, res) {
   return sequelize.transaction(async transaction => {
     const [tag] = await Tag.findOrCreate({ where: { name }, transaction });
-    const repo = await repository.addTags([tag], { transaction });
-    return res.json({ data: { tag, repo } });
+    await repository.addTags([tag], { transaction });
+    return res.json({ data: tag });
   });
 }
 
