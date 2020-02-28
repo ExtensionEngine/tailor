@@ -48,19 +48,23 @@ const parseInterval = () => {
   return scheduleString;
 };
 
+const countActionOcurrences = activity => {
+  const activitiesQuantified = [];
+  mapKeys(activity, (changes, repository) => {
+    activitiesQuantified.push({ repositoryName: repository, data: {} });
+    mapKeys(changes, (listOfChanges, changeType) => {
+      activitiesQuantified[activitiesQuantified.length - 1].data[changeType] =
+        !(changeType === 'CREATE REPOSITORY')
+          ? listOfChanges.length
+          : changes['CREATE REPOSITORY'][0]['repository.created_at'];
+    });
+  });
+  return activitiesQuantified;
+};
+
 const separateUsersAndSend = revisions => {
   mapKeys(revisions, (activity, user) => {
-    const activitiesQuantified = [];
-    mapKeys(activity, (changes, repository) => {
-      activitiesQuantified.push({ repositoryName: repository, data: {} });
-      mapKeys(changes, (listOfChanges, changeType) => {
-        activitiesQuantified[activitiesQuantified.length - 1].data[changeType] =
-          !(changeType === 'CREATE REPOSITORY')
-            ? listOfChanges.length
-            : changes['CREATE REPOSITORY'][0]['repository.created_at'];
-      });
-    });
-    mail.sendActivityDigest(user, activitiesQuantified);
+    mail.sendActivityDigest(user, countActionOcurrences(activity));
   });
 };
 

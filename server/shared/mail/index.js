@@ -9,8 +9,6 @@ const pick = require('lodash/pick');
 const { promisify } = require('util');
 const { URL } = require('url');
 const urlJoin = require('url-join');
-const mapKeys = require('lodash/mapKeys');
-const util = require('util');
 
 const from = `${config.sender.name} <${config.sender.address}>`;
 const server = email.server.connect(config);
