@@ -1,13 +1,18 @@
 'use strict';
 
-const { Tag } = require('../shared/database');
-const uniqBy = require('lodash/uniqBy');
+const { Tag, Repository, User } = require('../shared/database');
 
-async function list({ user }, res) {
-  if (user.isAdmin()) return Tag.findAll().then(tags => res.json({ data: tags }));
-  const repositories = await user.getRepositories({ include: [{ model: Tag }] });
-  const tags = uniqBy(repositories.reduce((acc, it) => acc.concat(it.tags), []), 'id');
-  return res.json({ data: tags });
+function list({ user }, res) {
+  const include = [{
+    model: Repository,
+    as: 'repositories',
+    attributes: ['id'],
+    required: true,
+    include: [{ model: User, attributes: ['id'], where: { id: user.id } }]
+  }];
+  const options = {};
+  if (!user.isAdmin()) options.include = include;
+  return Tag.findAll(options).then(tags => res.json({ data: tags }));
 }
 
 module.exports = {
