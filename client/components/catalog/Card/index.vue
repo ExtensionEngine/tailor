@@ -51,7 +51,7 @@
             color="grey darken-1"
             text-color="white"
             close>
-            {{ tag.name | truncate(5) }}
+            {{ tagName(tag) }}
           </v-chip>
         </div>
       </div>
@@ -69,6 +69,7 @@ import first from 'lodash/first';
 import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
 import { mapActions } from 'vuex';
+import truncate from 'lodash/truncate';
 
 const appChannel = EventBus.channel('app');
 const TAG_LIMIT = 3;
@@ -101,6 +102,15 @@ export default {
         message: `Are you sure you want to delete tag ${tag.name}?`,
         action: () => this.removeTag(data)
       });
+    },
+    tagName(tag) {
+      if (this.repository.tags.length === 2 && tag.name.length > 8) {
+        return truncate(tag.name, { length: 5 });
+      }
+      if (this.repository.tags.length === 3 && tag.name.length > 4) {
+        return truncate(tag.name, { length: 4 });
+      }
+      return tag.name;
     }
   },
   components: { AddTag }
