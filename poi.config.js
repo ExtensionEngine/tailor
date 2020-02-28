@@ -119,10 +119,6 @@ module.exports = {
       .post()
       .use('val-loader')
       .loader(require.resolve('val-loader'));
-
-    config
-      .plugin('dotenv')
-      .use(require.resolve('dotenv-webpack'));
   },
   devServer
 };
