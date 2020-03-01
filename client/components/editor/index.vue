@@ -28,7 +28,7 @@
         <v-progress-circular v-if="showLoader" color="primary" indeterminate />
         <template v-else>
           <content-containers
-            v-for="(containerGroup, type) in contentContainers"
+            v-for="(containerGroup, type) in rootContainerGroups"
             :key="type"
             :container-group="containerGroup"
             :parent-id="activity.id"
@@ -49,10 +49,8 @@ import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
 import find from 'lodash/find';
-import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
-import map from 'lodash/map';
 import MetaSidebar from './MetaSidebar';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
@@ -69,7 +67,11 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['repository', 'getMetadata']),
-    ...mapGetters('editor', ['activity', 'contentContainers']),
+    ...mapGetters('editor', [
+      'activity',
+      'contentContainers',
+      'rootContainerGroups'
+    ]),
     metadata() {
       if (!this.focusedElement) return [];
       return this.getMetadata(this.focusedElement);
@@ -135,7 +137,7 @@ export default {
     if (!this.repository || this.repository.id !== repositoryId) {
       await this.initialize(repositoryId);
     }
-    const ids = flatMap(this.contentContainers, it => map(it, 'id'));
+    const ids = this.contentContainers.map(it => it.id);
     await this.getTeachingElements({ ids: [activityId, ...ids] });
     this.showLoader = false;
   },

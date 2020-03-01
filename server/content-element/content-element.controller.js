@@ -6,12 +6,10 @@ const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 
-function list({ query, opts }, res) {
-  if (!query.detached) opts.where = { detached: false };
-  if (query.ids) {
-    const ids = query.ids.map(id => Number(id));
-    const cond = { [Op.in]: ids };
-    const where = { [Op.or]: [{ id: cond }, { parentId: cond }] };
+function list({ query: { detached, ids }, opts }, res) {
+  if (!detached) opts.where = { detached: false };
+  if (ids) {
+    const where = { id: { [Op.in]: ids.map(Number) } };
     opts.include = { model: Activity, attributes: [], where };
   }
 
