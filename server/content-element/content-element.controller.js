@@ -3,13 +3,12 @@
 const { Activity, ContentElement } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
-const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 
 function list({ query: { detached, ids }, opts }, res) {
   if (!detached) opts.where = { detached: false };
   if (ids) {
-    const where = { id: { [Op.in]: ids.map(Number) } };
+    const where = { id: ids.map(Number) };
     opts.include = { model: Activity, attributes: [], where };
   }
 
