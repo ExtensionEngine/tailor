@@ -1,6 +1,5 @@
 import { add, fetch, remove, reset, setEndpoint } from '@/store/helpers/mutations';
 import find from 'lodash/find';
-import findKey from 'lodash/findKey';
 import Vue from 'vue';
 
 const PAGINATION_DEFAULTS = { offset: 0, limit: 21 };
@@ -49,10 +48,10 @@ const fetchTags = (state, tags) => {
   state.tags = tags;
 };
 
-const addTag = (state, { tag, repositoryId }) => {
+const addTag = (state, { tag, data: { repositoryId } }) => {
   const repository = find(state.items, { id: repositoryId });
-  if (!findKey(state.tags, { id: tag.id })) state.tags = [...state.tags, tag];
-  if (!findKey(repository.tags, { id: tag.id })) repository.tags = [...repository.tags, tag];
+  if (!find(state.tags, { id: tag.id })) state.tags = [...state.tags, tag];
+  if (!find(repository.tags, { id: tag.id })) repository.tags = [...repository.tags, tag];
 };
 
 const removeTag = (state, { tagId, repositoryId }) => {
@@ -62,12 +61,13 @@ const removeTag = (state, { tagId, repositoryId }) => {
 
 const toggleTagFilter = (state, tag) => {
   resetPagination(state);
+  tag.isSelected = !tag.isSelected;
   state.tagFilter = tag.isSelected
     ? [...state.tagFilter, tag]
     : state.tagFilter.filter(it => it.id !== tag.id);
 };
 
-const removeAllTagFilters = state => {
+const clearTagFilter = state => {
   resetPagination(state);
   state.tagFilter = [];
 };
@@ -79,7 +79,7 @@ export {
   fetchTags,
   remove,
   removeTag,
-  removeAllTagFilters,
+  clearTagFilter,
   reset,
   resetPagination,
   resetFilters,

@@ -42,9 +42,9 @@ const fetchTags = ({ commit }) => {
   return tagApi.fetch().then(tags => commit('fetchTags', tags));
 };
 
-const addTag = ({ commit }, { name, repositoryId }) => {
-  return repositoryApi.addTag(name, repositoryId)
-    .then(tag => commit('addTag', { tag, repositoryId }));
+const addTag = ({ commit }, data) => {
+  return repositoryApi.addTag(data)
+    .then(tag => commit('addTag', { tag, data }));
 };
 
 const removeTag = ({ commit }, data) => {
