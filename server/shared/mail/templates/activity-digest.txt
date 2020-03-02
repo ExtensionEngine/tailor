@@ -1,7 +1,7 @@
 Tailor
 =================================================
 
- All changes you made to your repositories this week: 
+ All changes you made to your repositories this week:
 {{#activities}}
   {{repositoryName}}
     {{#data}}
