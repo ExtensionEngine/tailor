@@ -35,7 +35,7 @@
       </div>
     </div>
     <v-card-actions class="pa-1 grey lighten-4 justify-space-between">
-      <div class="d-flex">
+      <div class="d-flex align-center">
         <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" icon>
           <v-icon
             :color="isPinned ? 'grey darken-3': 'grey'"
@@ -43,9 +43,7 @@
             mdi-pin
           </v-icon>
         </v-btn>
-        <div class="d-flex align-center ml-1">
-          <tags :repository="repository" />
-        </div>
+        <tags :repository="repository" />
       </div>
     </v-card-actions>
   </v-card>

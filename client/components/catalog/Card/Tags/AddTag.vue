@@ -59,7 +59,7 @@ export default {
     availableTags: vm => differenceBy(vm.tags, vm.assignedTags, 'id')
   },
   methods: {
-    ...mapActions('repositories', ['addTag', 'removeTag']),
+    ...mapActions('repositories', ['addTag']),
     hide() {
       this.isVisible = false;
     },
@@ -74,8 +74,8 @@ export default {
   watch: {
     isVisible(val) {
       if (!val) return;
-      this.$validator.reset();
       this.tagInput = '';
+      this.$validator.reset();
     }
   },
   components: { TailorDialog }
