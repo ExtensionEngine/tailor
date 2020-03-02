@@ -39,7 +39,7 @@ function publishRepositoryMeta(id) {
   return request.post(urls.publish(id)).then(res => res.data);
 }
 
-function addTag(name, repositoryId) {
+function addTag({ name, repositoryId }) {
   return request.post(urls.tags(repositoryId), { repositoryId, name })
     .then(extractData);
 }
