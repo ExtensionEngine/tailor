@@ -30,21 +30,7 @@
           <tag-filter @update="onFilterChange(toggleTagFilter, $event)" />
         </v-col>
       </v-row>
-      <v-row class="selected-tags align-center">
-        <v-btn
-          v-if="tagFilter.length"
-          @click="onFilterChange(removeAllTagFilters, $event)" small rounded>
-          Clear all
-        </v-btn>
-        <v-chip
-          v-for="tag in tagFilter"
-          :key="tag.id"
-          @click:close="onFilterChange(toggleTagFilter, tag)"
-          close
-          class="ma-2">
-          {{ tag.name }}
-        </v-chip>
-      </v-row>
+      <tag-filter-selected />
       <v-row>
         <v-col
           v-for="repository in repositories"
@@ -82,6 +68,7 @@ import RepositoryCard from './Card';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
 import TagFilter from './TagFilter';
+import TagFilterSelected from './TagFilterSelected';
 
 export default {
   data() {
@@ -93,7 +80,6 @@ export default {
     ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
       tags: 'tags',
-      tagFilter: 'tagFilter',
       showPinned: 'showPinned'
     }),
     ...mapGetters('repositories', {
@@ -118,8 +104,7 @@ export default {
   methods: {
     ...mapActions('repositories', ['fetch', 'fetchTags']),
     ...mapMutations('repositories', [
-      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'toggleTagFilter',
-      'removeAllTagFilters'
+      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'toggleTagFilter'
     ]),
     async load() {
       this.loading = true;
@@ -155,7 +140,8 @@ export default {
     RepositoryCard,
     Search,
     SelectOrder,
-    TagFilter
+    TagFilter,
+    TagFilterSelected
   }
 };
 </script>
@@ -203,9 +189,5 @@ export default {
     top: 10px;
     right: 12px;
   }
-}
-
-.selected-tags {
-  min-height: 3rem;
 }
 </style>
