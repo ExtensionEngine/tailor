@@ -7,7 +7,7 @@ const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
-const { NOT_FOUND } = require('http-status-codes');
+const { NOT_FOUND, NO_CONTENT } = require('http-status-codes');
 const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
@@ -146,7 +146,7 @@ function addTag({ body: { name }, repository }, res) {
 async function removeTag({ params: { tagId, repositoryId } }, res) {
   const where = { tagId, repositoryId };
   await RepositoryTag.destroy({ where });
-  return res.status(204).send();
+  return res.status(NO_CONTENT).send();
 }
 
 module.exports = {
