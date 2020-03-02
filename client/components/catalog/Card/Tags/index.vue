@@ -7,9 +7,9 @@
       color="grey darken-1"
       text-color="white"
       close>
-      {{ tagName(tag) }}
+      {{ truncateTagName(tag) }}
     </v-chip>
-    <add-tag v-if="exceedTagLimit" :repository="repository" />
+    <add-tag v-if="!exceedTagLimit" :repository="repository" />
   </div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
     repository: { type: Object, required: true }
   },
   computed: {
-    exceedTagLimit: ({ repository }) => repository.tags.length < TAG_LIMIT
+    exceedTagLimit: ({ repository }) => repository.tags.length >= TAG_LIMIT
   },
   methods: {
     ...mapActions('repositories', ['removeTag']),
@@ -39,14 +39,9 @@ export default {
         action: () => this.removeTag(data)
       });
     },
-    tagName(tag) {
-      if (this.repository.tags.length === 2 && tag.name.length > 8) {
-        return truncate(tag.name, { length: 6 });
-      }
-      if (this.repository.tags.length === 3 && tag.name.length > 4) {
-        return truncate(tag.name, { length: 5 });
-      }
-      return tag.name;
+    truncateTagName(tag) {
+      const length = [15, 6, 5][this.repository.tags.length - 1];
+      return truncate(tag.name, { length });
     }
   },
   components: { AddTag }
