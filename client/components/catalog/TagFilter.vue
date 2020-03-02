@@ -22,25 +22,22 @@
 </template>
 
 <script>
+import { mapMutations, mapState } from 'vuex';
 import find from 'lodash/find';
 import map from 'lodash/map';
-import { mapState } from 'vuex';
 
 export default {
   computed: {
     ...mapState('repositories', ['tags', 'tagFilter']),
     items() {
       return map(this.tags, it => {
-        const isSelected = find(this.tagFilter, item => item.id === it.id);
+        const isSelected = !!find(this.tagFilter, { id: it.id });
         return { ...it, isSelected };
       });
     }
   },
   methods: {
-    toggleTagFilter(item) {
-      item.isSelected = !item.isSelected;
-      this.$emit('update', item);
-    }
+    ...mapMutations('repositories', ['toggleTagFilter'])
   }
 };
 </script>
