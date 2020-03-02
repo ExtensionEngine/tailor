@@ -36,7 +36,7 @@ const parseInterval = () => {
   };
   const { minute, hour, weekDay } = scheduleOptions;
 
-  const scheduleString = `*/5 ${minute} ${hour} * * ${weekDay}`;
+  const scheduleString = `${minute} ${hour} * * ${weekDay}`;
   try {
     const interval = cronParser.parseExpression(scheduleString);
     logger.info('Next Delivery date: ', interval.next().toString());
