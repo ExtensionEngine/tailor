@@ -5,15 +5,44 @@ const cronParser = require('cron-parser');
 const mapKeys = require('lodash/mapKeys');
 const logger = require('../../shared/logger');
 const mail = require('../mail');
+const pick = require('lodash/pick');
 
-const processRevisions = revisions => {
-  const groupedRevisions = groupArray(
-    revisions,
-    'user.email',
+// Nova funkcija
+const processDigest = revisions => {
+  const processedRevisions = revisions.map(revision => {
+    // Pick stvara novi objekt od staroga sa tin keyevima sta pickas tu
+    return pick(revision,
+      [
+        'repository.users.email',
+        'repository.name',
+        'repository.data',
+        'repository.created_at',
+        'repository.repositoryUsers.repository_user_added',
+        'activity.parent_id',
+        'activity_id',
+        'activity_type',
+        'activity_data',
+        'content_id',
+        'content_type',
+        'content_data',
+        'repository.revisions.operation'
+      ]);
+  });
+
+  // grupira redom po tin keyevima znaci otpr ovako
+  // { 'admin@extensionengine.com':
+  //  { 'Reponame':
+  //     { '3':
+  //        { '4':
+  //           { '3':   ...
+  return groupArray(
+    processedRevisions,
+    'repository.users.email',
     'repository.name',
-    'entity_operation'
+    'activity.parent_id',
+    'activity_id',
+    'content_id'
   );
-  return groupedRevisions;
 };
 
 const parseInterval = () => {
@@ -69,7 +98,7 @@ const separateUsersAndSend = revisions => {
 };
 
 module.exports = {
-  processRevisions,
+  processDigest,
   parseInterval,
   separateUsersAndSend
 };

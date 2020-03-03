@@ -1,59 +1,74 @@
 'use strict';
 const CronTask = require('cron').CronJob;
-const { User, Revision, Repository } = require('../database');
-const { sql } = require('../database/helpers');
-const { col, fn, Op } = require('sequelize');
-const { processRevisions, parseInterval, separateUsersAndSend } = require('./helpers');
+const {
+  ContentElement,
+  Activity,
+  Repository,
+  RepositoryUser,
+  Revision,
+  User
+} = require('../database');
+const { Op } = require('sequelize');
+const { processDigest } = require('./helpers');
+const util = require('util');
 
-function initiateDigest() {
-  const digest = new CronTask(parseInterval(), async () => {
-    const revisions = await Revision.findAll({
-      attributes: [
-        [
-          sql.concat(col('operation'), col('entity'), { separator: ' ' }),
-          'entity_operation'
-        ],
-        [fn('count', sql.concat('operation', 'entity')), 'count'],
-        'user_id',
-        'repository_id',
-        'revision.created_at'
-      ],
-      group: [
-        'repository_id',
-        'user.id',
-        'user_id',
-        'entity_operation',
-        'repository.name',
-        'repository.created_at',
-        'revision.created_at'
-      ],
-      include: [
-        {
-          model: User,
-          attributes: ['email', 'fullName', 'created_at'],
-          where: {
-            created_at: {
-              [Op.lte]: new Date().setDate(new Date().getDate() - 7)
-            }
-          }
-        },
-        {
-          model: Repository,
-          attributes: ['name', 'created_at']
-        }
-      ],
-      where: {
-        created_at: {
-          [Op.gte]: new Date().setDate(new Date().getDate() - 7)
-        }
+async function initiateDigest() {
+  const elementActivity = await ContentElement.findAll({
+    attributes: [
+      ['id', 'content_id'],
+      'repository_id',
+      'activity_id',
+      ['type', 'content_type'],
+      ['created_at', 'content_element_created_at'],
+      ['data', 'content_data']
+    ],
+    include: [
+      {
+        model: Activity,
+        attributes: [
+          'data',
+          'parent_id',
+          'type'
+        ]
       },
-      raw: true
-    });
+      {
+        model: Repository,
+        attributes: [
+          'id',
+          'name',
+          'created_at',
+          'data'
+        ],
+        include: [
+          {
+            model: RepositoryUser,
+            attributes: ['user_id', ['created_at', 'repository_user_added']]
+          },
+          {
+            model: Revision,
+            attributes: [
+              'operation'
+            ],
+            where: {
+              created_at: {
+                [Op.gte]: new Date().setDate(new Date().getDate() - 7)
+              }
+            }
+          },
+          {
+            model: User,
+            attributes: [
+              'email'
+            ]
+          }
+        ]
+      }
+    ],
+    raw: true
+  });
 
-    separateUsersAndSend(processRevisions(revisions));
-  }, null, true);
-
-  digest.start();
+  // Vamo provjeravan kako izgleda query i pocetna obrada
+  console.log(util.inspect(processDigest(elementActivity), false, null, true));
 }
 
 module.exports = {
