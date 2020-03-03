@@ -48,7 +48,7 @@ const fetchTags = (state, tags) => {
   state.tags = tags;
 };
 
-const addTag = (state, { tag, data: { repositoryId } }) => {
+const addTag = (state, { tag, repositoryId }) => {
   const repository = find(state.items, { id: repositoryId });
   if (!find(state.tags, { id: tag.id })) state.tags = [...state.tags, tag];
   if (!find(repository.tags, { id: tag.id })) repository.tags = [...repository.tags, tag];

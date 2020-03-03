@@ -51,12 +51,12 @@ const fetchTags = ({ commit }) => {
 
 const addTag = ({ commit }, data) => {
   return repositoryApi.addTag(data)
-    .then(tag => commit('addTag', { tag, data }));
+    .then(tag => commit('addTag', { tag, repositoryId: data.repositoryId }));
 };
 
-const removeTag = ({ commit }, data) => {
-  return repositoryApi.removeTag(data)
-    .then(() => commit('removeTag', data));
+const removeTag = ({ commit }, { tagId, repositoryId }) => {
+  return repositoryApi.removeTag({ tagId, repositoryId })
+    .then(() => commit('removeTag', { tagId, repositoryId }));
 };
 
 export {
