@@ -7,7 +7,7 @@
     </template>
     <v-list>
       <v-list-item
-        v-for="it in items"
+        v-for="it in options"
         :key="it.id"
         @click="toggleTagFilter(it)">
         <v-list-item-action class="mr-2">
@@ -29,7 +29,7 @@ import map from 'lodash/map';
 export default {
   computed: {
     ...mapState('repositories', ['tags', 'tagFilter']),
-    items() {
+    options() {
       return map(this.tags, it => {
         const isSelected = !!find(this.tagFilter, { id: it.id });
         return { ...it, isSelected };
