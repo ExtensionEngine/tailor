@@ -30,7 +30,9 @@
           <tag-filter @update="onFilterChange(toggleTagFilter, $event)" />
         </v-col>
       </v-row>
-      <tag-filter-selection />
+      <tag-filter-selection
+        @close="onFilterChange(toggleTagFilter, $event)"
+        @clearAll="onFilterChange(clearTagFilter, $event)" />
       <v-row>
         <v-col
           v-for="repository in repositories"
@@ -104,7 +106,8 @@ export default {
   methods: {
     ...mapActions('repositories', ['fetch', 'fetchTags']),
     ...mapMutations('repositories', [
-      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'toggleTagFilter'
+      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'toggleTagFilter',
+      'clearTagFilter'
     ]),
     async load() {
       this.loading = true;

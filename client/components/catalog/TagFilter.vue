@@ -9,7 +9,7 @@
       <v-list-item
         v-for="it in options"
         :key="it.id"
-        @click="toggleTagFilter(it)">
+        @click="$emit('update', it)">
         <v-list-item-action class="mr-2">
           <v-checkbox :value="it.isSelected" />
         </v-list-item-action>
@@ -22,9 +22,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
 import find from 'lodash/find';
 import map from 'lodash/map';
+import { mapState } from 'vuex';
 
 export default {
   computed: {
@@ -35,8 +35,7 @@ export default {
         return { ...it, isSelected };
       });
     }
-  },
-  methods: mapMutations('repositories', ['toggleTagFilter'])
+  }
 };
 </script>
 
