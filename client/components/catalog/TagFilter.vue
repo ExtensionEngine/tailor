@@ -36,9 +36,7 @@ export default {
       });
     }
   },
-  methods: {
-    ...mapMutations('repositories', ['toggleTagFilter'])
-  }
+  methods: mapMutations('repositories', ['toggleTagFilter'])
 };
 </script>
 
