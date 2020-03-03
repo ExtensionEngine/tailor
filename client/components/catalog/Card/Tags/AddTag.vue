@@ -1,12 +1,8 @@
 <template>
   <tailor-dialog
-    v-model="isVisible"
+    @click:outside="$emit('close')"
+    :value="true"
     header-icon="mdi-tag-outline">
-    <template #activator="{ on }">
-      <v-btn v-on="on" icon small>
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-    </template>
     <template #header>Add Tag</template>
     <template #body>
       <v-alert
@@ -50,7 +46,6 @@ export default {
     repository: { type: Object, required: true }
   },
   data: () => ({
-    isVisible: false,
     tagInput: ''
   }),
   computed: {
@@ -61,7 +56,9 @@ export default {
   methods: {
     ...mapActions('repositories', ['addTag']),
     hide() {
-      this.isVisible = false;
+      this.tagInput = '';
+      this.$validator.reset();
+      this.$emit('close');
     },
     async submit() {
       const isValid = await this.$validator.validateAll();
@@ -69,13 +66,6 @@ export default {
       const data = { name: this.tagInput, repositoryId: this.repository.id };
       await this.addTag(data);
       this.hide();
-    }
-  },
-  watch: {
-    isVisible(val) {
-      if (!val) return;
-      this.tagInput = '';
-      this.$validator.reset();
     }
   },
   components: { TailorDialog }
