@@ -30,7 +30,7 @@
           <tag-filter @update="onFilterChange(toggleTagFilter, $event)" />
         </v-col>
       </v-row>
-      <tag-filter-selected />
+      <tag-filter-selection />
       <v-row>
         <v-col
           v-for="repository in repositories"
@@ -68,7 +68,7 @@ import RepositoryCard from './Card';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
 import TagFilter from './TagFilter';
-import TagFilterSelected from './TagFilterSelected';
+import TagFilterSelection from './TagFilterSelection';
 
 export default {
   data() {
@@ -141,7 +141,7 @@ export default {
     Search,
     SelectOrder,
     TagFilter,
-    TagFilterSelected
+    TagFilterSelection
   }
 };
 </script>
