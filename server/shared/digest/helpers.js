@@ -6,6 +6,74 @@ const mapKeys = require('lodash/mapKeys');
 const logger = require('../../shared/logger');
 const mail = require('../mail');
 const pick = require('lodash/pick');
+const {
+  ContentElement,
+  Activity,
+  Repository,
+  RepositoryUser,
+  Revision,
+  User
+} = require('../database');
+const { Op } = require('sequelize');
+
+const getRevisionsSinceDate = async lastDigestDate => {
+  const elementActivity = await User.findAll({
+    attributes: [
+      'email',
+      'updated_at',
+      'created_at'
+    ],
+    include: [
+      {
+        model: Repository,
+        attributes: [
+          'id',
+          'name',
+          'created_at',
+          'data'
+        ],
+        include: [
+          {
+            model: RepositoryUser,
+            attributes: ['user_id', ['created_at', 'repository_user_added']]
+          },
+          {
+            model: Revision,
+            attributes: [
+              'operation'
+            ],
+            where: {
+              created_at: {
+                [Op.gte]: lastDigestDate
+              }
+            }
+          },
+          {
+            model: Activity,
+            attributes: [
+              'data',
+              'parent_id',
+              'type'
+            ]
+          },
+          {
+            model: ContentElement,
+            attributes: [
+              ['id', 'content_id'],
+              'repository_id',
+              'activity_id',
+              ['type', 'content_type'],
+              ['created_at', 'content_element_created_at'],
+              ['data', 'content_data']
+            ]
+          }
+        ]
+      }
+    ],
+    raw: true
+  });
+  return elementActivity;
+};
 
 // Nova funkcija
 const processDigest = revisions => {
@@ -13,19 +81,21 @@ const processDigest = revisions => {
     // Pick stvara novi objekt od staroga sa tin keyevima sta pickas tu
     return pick(revision,
       [
-        'repository.users.email',
-        'repository.name',
-        'repository.data',
-        'repository.created_at',
-        'repository.repositoryUsers.repository_user_added',
-        'activity.parent_id',
-        'activity_id',
-        'activity_type',
-        'activity_data',
-        'content_id',
-        'content_type',
-        'content_data',
-        'repository.revisions.operation'
+        'email',
+        'updated_at',
+        'created_at',
+        'repositories.name',
+        'repositories.data',
+        'repositories.created_at',
+        'repositories.repositoryUsers.repository_user_added',
+        'repositories.activities.parent_id',
+        'repositories.activity_id',
+        'repositories.activity_type',
+        'repositories.activity_data',
+        'repositories.ContentElements.id',
+        'repositories.ContentElements.content_type',
+        'repositories.ContentElements.content_data',
+        'repositories.revisions.operation'
       ]);
   });
 
@@ -37,68 +107,12 @@ const processDigest = revisions => {
   //           { '3':   ...
   return groupArray(
     processedRevisions,
-    'repository.users.email',
-    'repository.name',
-    'activity.parent_id',
-    'activity_id',
-    'content_id'
+    'email',
+    'repositories.name'
   );
-};
-
-const parseInterval = () => {
-  const weekDays = {
-    SUNDAY: 0,
-    MONDAY: 1,
-    TUESDAY: 2,
-    WEDNESDAY: 3,
-    THURSDAY: 4,
-    FRIDAY: 5,
-    SATURDAY: 6
-  };
-
-  const scheduleOptions = {
-    minute: process.env.DIGEST_MINUTE,
-    hour: process.env.DIGEST_HOUR,
-    weekDay: weekDays[process.env.DIGEST_DAY.toUpperCase()]
-      ? weekDays[process.env.DIGEST_DAY.toUpperCase()]
-      : 0
-  };
-  const { minute, hour, weekDay } = scheduleOptions;
-
-  const scheduleString = `${minute} ${hour} * * ${weekDay}`;
-  try {
-    const interval = cronParser.parseExpression(scheduleString);
-    logger.info('Next Delivery date: ', interval.next().toString());
-  } catch (err) {
-    logger.error(err);
-    throw new Error('Schedule options invalid\n');
-  }
-
-  return scheduleString;
-};
-
-const countActionOcurrences = activity => {
-  const activitiesQuantified = [];
-  mapKeys(activity, (changes, repository) => {
-    activitiesQuantified.push({ repositoryName: repository, data: {} });
-    mapKeys(changes, (listOfChanges, changeType) => {
-      activitiesQuantified[activitiesQuantified.length - 1].data[changeType] =
-        !(changeType === 'CREATE REPOSITORY')
-          ? listOfChanges.length
-          : changes['CREATE REPOSITORY'][0]['repository.created_at'];
-    });
-  });
-  return activitiesQuantified;
-};
-
-const separateUsersAndSend = revisions => {
-  mapKeys(revisions, (activity, user) => {
-    mail.sendActivityDigest(user, countActionOcurrences(activity));
-  });
 };
 
 module.exports = {
   processDigest,
-  parseInterval,
-  separateUsersAndSend
+  getRevisionsSinceDate
 };
