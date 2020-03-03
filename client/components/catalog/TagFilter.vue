@@ -43,8 +43,8 @@ export default {
 <style lang="scss" scoped>
 .v-list {
   max-height: 18.75rem;
-  overflow-y: scroll;
-  padding: 1rem;
+  overflow-y: auto;
+  padding: 1rem, 0;
 }
 
 </style>
