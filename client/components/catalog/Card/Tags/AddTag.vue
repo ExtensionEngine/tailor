@@ -2,13 +2,13 @@
   <tailor-dialog
     v-model="isVisible"
     header-icon="mdi-tag-outline">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn v-on="on" icon small>
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </template>
-    <template v-slot:header>Add Tag</template>
-    <template v-slot:body>
+    <template #header>Add Tag</template>
+    <template #body>
       <v-alert
         :value="vErrors.has('default')"
         color="error"
@@ -28,7 +28,7 @@
         label="Select a tag or add a new one"
         outlined />
     </template>
-    <template v-slot:actions>
+    <template #actions>
       <v-btn @click="hide" text>Cancel</v-btn>
       <v-btn @click="submit" :disabled="vErrors.any()" color="primary" text>
         Save
