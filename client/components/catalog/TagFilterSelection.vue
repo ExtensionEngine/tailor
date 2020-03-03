@@ -3,24 +3,23 @@
     <v-chip
       v-for="tag in tagFilter"
       :key="tag.id"
-      @click:close="toggleTagFilter(tag)"
+      @click:close="$emit('close', tag)"
       close
       class="ma-2">
       {{ tag.name }}
     </v-chip>
     <v-btn
       v-if="tagFilter.length"
-      @click="clearTagFilter" small rounded>
+      @click="$emit('clearAll')" small rounded>
       Clear all
     </v-btn>
   </v-row>
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'vuex';
 export default {
-  computed: mapState('repositories', ['tagFilter']),
-  methods: mapMutations('repositories', ['clearTagFilter', 'toggleTagFilter'])
+  computed: mapState('repositories', ['tagFilter'])
 };
 </script>
 
