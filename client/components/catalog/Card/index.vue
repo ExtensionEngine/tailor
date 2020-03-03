@@ -34,17 +34,15 @@
         </div>
       </div>
     </div>
-    <v-card-actions class="pa-1 grey lighten-4 justify-space-between">
-      <div class="d-flex align-center">
-        <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" icon>
-          <v-icon
-            :color="isPinned ? 'grey darken-3': 'grey'"
-            :class="{ 'mdi-rotate-45': isPinned }">
-            mdi-pin
-          </v-icon>
-        </v-btn>
-        <tags :repository="repository" />
-      </div>
+    <v-card-actions class="pa-1 grey lighten-4">
+      <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" icon>
+        <v-icon
+          :color="isPinned ? 'grey darken-3': 'grey'"
+          :class="{ 'mdi-rotate-45': isPinned }">
+          mdi-pin
+        </v-icon>
+      </v-btn>
+      <tags :repository="repository" />
     </v-card-actions>
   </v-card>
 </template>

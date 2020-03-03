@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tags-container">
     <v-chip
       v-for="tag in repository.tags"
       :key="tag.id"
@@ -7,15 +7,22 @@
       color="grey darken-1"
       text-color="white"
       close>
-      {{ truncateTagName(tag) }}
+      {{ truncateTagName(tag.name) }}
     </v-chip>
-    <add-tag v-if="!exceedTagLimit" :repository="repository" />
+    <v-btn v-if="!exceededTagLimit" @click="showTagDialog = true" icon small>
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+    <add-tag
+      v-if="showTagDialog"
+      @close="showTagDialog = false"
+      :repository="repository" />
   </div>
 </template>
 
 <script>
 import AddTag from './AddTag';
 import EventBus from 'EventBus';
+import get from 'lodash/get';
 import { mapActions } from 'vuex';
 import truncate from 'lodash/truncate';
 
@@ -26,8 +33,9 @@ export default {
   props: {
     repository: { type: Object, required: true }
   },
+  data: () => ({ showTagDialog: false }),
   computed: {
-    exceedTagLimit: ({ repository }) => repository.tags.length >= TAG_LIMIT
+    exceededTagLimit: ({ repository }) => repository.tags.length >= TAG_LIMIT
   },
   methods: {
     ...mapActions('repositories', ['removeTag']),
@@ -40,8 +48,8 @@ export default {
       });
     },
     truncateTagName(tag) {
-      const length = [15, 6, 5][this.repository.tags.length - 1];
-      return truncate(tag.name, { length });
+      const length = [15, 6, 5][get(this.repository, 'tags.length', [2]) - 1];
+      return truncate(tag, { length });
     }
   },
   components: { AddTag }
@@ -50,7 +58,14 @@ export default {
 
 <style lang="scss" scoped>
 .v-card__actions .v-chip {
+  height: 1.75rem !important;
   margin-right: 0.25rem;
   font-size: 0.75rem;
+}
+
+.tags-container {
+  display: flex;
+  justify-content: space-between;
+  flex-basis: 100%;
 }
 </style>
