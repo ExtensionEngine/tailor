@@ -7,7 +7,6 @@ import tagApi from '@/api/tag';
 
 const {
   api,
-  get,
   remove,
   reset,
   setEndpoint,
@@ -17,10 +16,18 @@ const {
 const fetch = ({ getters, commit }) => {
   const params = getters.repositoryQueryParams;
   const mutation = params.offset === 0 ? 'reset' : 'fetch';
-  return fetchRepositories(params).then(items => {
+  return api.fetch(params).then(items => {
+    forEach(items, processRepository);
     commit(mutation, items);
     commit('setPagination', { offset: params.offset + params.limit });
     commit('allRepositoriesFetched', Object.keys(items).length < params.limit);
+  });
+};
+
+const get = ({ commit }, id) => {
+  return api.getById(id).then(repository => {
+    processRepository(repository);
+    commit('save', repository);
   });
 };
 
@@ -66,12 +73,7 @@ export {
   update
 };
 
-function fetchRepositories(params) {
-  return api.fetch(params).then(repositories => {
-    forEach(repositories, it => {
-      it.repositoryUser = getVal(it, 'repositoryUsers.0');
-      it.lastChange = it.revisions[0];
-    });
-    return repositories;
-  });
+function processRepository(it) {
+  it.repositoryUser = getVal(it, 'repositoryUsers.0');
+  it.lastChange = it.revisions[0];
 }
