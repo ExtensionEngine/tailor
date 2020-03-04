@@ -5,9 +5,17 @@ const logger = require('../logger');
 const cronParser = require('cron-parser');
 
 const parseCronString = scheduleParams => {
-  const { hour, minute, second, dayOfWeek, dayOfMonth, month } = JSON.parse(scheduleParams);
+  const {
+    hour,
+    minute,
+    second,
+    dayOfWeek,
+    dayOfMonth,
+    month
+  } = JSON.parse(scheduleParams);
+
   if (!hour || !minute || !dayOfWeek) {
-    logger.error('Must define hour minute and dayofWeek');
+    logger.error('Must define hour, minute and day of week');
     throw new Error('Undefined params');
   }
   const time = new CronTime(new Date());
@@ -22,7 +30,7 @@ const parseCronString = scheduleParams => {
   try {
     const interval = cronParser.parseExpression(time.toString());
     logger.info('Next Delivery date: ', interval.next().toString());
-    return true;
+    return time.toString();
   } catch (err) {
     logger.error('Invalid cron expression!');
     throw new Error(err);
@@ -30,8 +38,7 @@ const parseCronString = scheduleParams => {
 };
 
 const schedule = (scheduleSettings, task) => {
-  parseCronString(scheduleSettings);
-  const job = new CronJob(scheduleSettings, () => {
+  const job = new CronJob(parseCronString(scheduleSettings), () => {
     task();
   });
 
