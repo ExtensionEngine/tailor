@@ -43,7 +43,7 @@ export default {
 .v-list {
   max-height: 18.75rem;
   overflow-y: auto;
-  padding: 1rem, 0;
+  padding: 1rem 0;
 }
 
 </style>
