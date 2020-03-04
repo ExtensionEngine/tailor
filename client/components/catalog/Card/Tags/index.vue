@@ -57,15 +57,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-card__actions .v-chip {
-  height: 1.75rem !important;
-  margin-right: 0.25rem;
-  font-size: 0.75rem;
-}
-
 .tags-container {
   display: flex;
   justify-content: space-between;
   flex-basis: 100%;
+
+  .v-chip {
+    height: 1.75rem !important;
+    margin-right: 0.25rem;
+    font-size: 0.75rem;
+  }
 }
 </style>
