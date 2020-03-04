@@ -18,6 +18,7 @@
 
 <script>
 import { mapState } from 'vuex';
+
 export default {
   computed: mapState('repositories', ['tagFilter'])
 };
@@ -27,5 +28,4 @@ export default {
 .v-chip {
   height: 1.75rem !important;
 }
-
 </style>
