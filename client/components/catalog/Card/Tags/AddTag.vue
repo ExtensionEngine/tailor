@@ -56,8 +56,6 @@ export default {
   methods: {
     ...mapActions('repositories', ['addTag']),
     hide() {
-      this.tagInput = '';
-      this.$validator.reset();
       this.$emit('close');
     },
     async submit() {
