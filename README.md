@@ -213,7 +213,7 @@ Defines the structure of an teaching element relationship field.
 - **type** `String` - Defines the name of the relationship. The relationship
   will be published under this value.
 - **label** `String` - Display label.
-- **placeholder** `String` - Display label for the select picker.
+- **placeholder** `String` - Label for relationship add button and modal title.
 - **multiple** `Boolean` - Defines if the relationship can have multiple
   associations chosen. True by default.
 - **allowedTypes** `Array<String>` - Defines to what type of teaching elements
