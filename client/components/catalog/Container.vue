@@ -32,7 +32,7 @@
       </v-row>
       <tag-filter-selection
         @close="onFilterChange(toggleTagFilter, $event)"
-        @clearAll="onFilterChange(clearTagFilter, $event)" />
+        @clear:all="onFilterChange(clearTagFilter, $event)" />
       <v-row>
         <v-col
           v-for="repository in repositories"

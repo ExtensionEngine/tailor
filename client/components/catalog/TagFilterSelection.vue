@@ -10,7 +10,7 @@
     </v-chip>
     <v-btn
       v-if="tagFilter.length"
-      @click="$emit('clearAll')" small rounded>
+      @click="$emit('clear:all')" small rounded>
       Clear all
     </v-btn>
   </v-row>
