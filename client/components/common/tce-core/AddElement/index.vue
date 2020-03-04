@@ -20,16 +20,16 @@
       <div class="element-container">
         <v-toolbar v-if="layout" dense class="mb-2">
           <v-spacer />
-          <v-divider vertical class="mx-2" />
-          <v-btn-toggle v-model="elementWidth" mandatory>
-            <v-btn :value="100" text>
+          <v-divider vertical />
+          <v-btn-toggle v-model="elementWidth" tile borderless mandatory>
+            <v-btn :value="100" icon>
               <v-icon>mdi-square-outline</v-icon>
             </v-btn>
-            <v-btn :value="50" text>
+            <v-btn :value="50" icon>
               <v-icon>mdi-select-compare</v-icon>
             </v-btn>
           </v-btn-toggle>
-          <v-divider class="mx-2" vertical />
+          <v-divider class="mr-3" vertical />
           <v-chip label class="width-label">
             <span>Element width:</span>
             <span class="label-value px-1">{{ elementWidth }}</span>%
@@ -180,27 +180,27 @@ $accent-color: #d81b60;
 $disabled-color: #a1a1a1;
 
 .element-container {
-  min-height: 400px;
-  padding: 0 0 30px;
+  min-height: 25rem;
+  padding: 0 0 1.875rem;
   background: #fff;
 }
 
 .group-heading {
-  margin: 0 40px 5px;
-  padding-top: 20px;
+  margin: 0 2.5rem 0.375rem;
+  padding-top: 1.25rem;
   color: #555;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 500;
-  line-height: 28px;
+  line-height: 1.75rem;
   text-align: left;
 
   .v-icon, span {
-    line-height: 28px;
+    line-height: 1.75rem;
     vertical-align: middle;
   }
 
   .v-icon {
-    margin-right: 6px;
+    margin-right: 0.375rem;
     color: #546e7a;
   }
 }
@@ -208,27 +208,27 @@ $disabled-color: #a1a1a1;
 .group-elements {
   display: flex;
   width: 100%;
-  padding: 0 30px;
+  padding: 0 1.875rem;
   flex-wrap: wrap;
 }
 
 .element {
   align-self: center;
-  width: 130px;
-  min-width: 130px;
-  min-height: 70px;
-  padding: 5px;
+  width: 8.125rem;
+  min-width: 8.125rem;
+  min-height: 4.375rem;
+  padding: 0.375rem;
   color: $font-color;
-  font-size: 20px;
+  font-size: 1.25rem;
   border: 1px solid #fff;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   outline: none;
   cursor: pointer;
 
   .v-icon {
-    padding: 2px 0;
+    padding: 0.125rem 0;
     color: $font-color;
-    font-size: 30px;
+    font-size: 1.875rem;
   }
 
   &:disabled {
@@ -254,7 +254,7 @@ $disabled-color: #a1a1a1;
     margin: 0;
     padding: 0;
     font-weight: 500;
-    line-height: 20px;
+    line-height: 1.25rem;
   }
 }
 
@@ -264,8 +264,8 @@ $disabled-color: #a1a1a1;
   }
 
   .width-label {
-    min-width: 165px;
-    font-size: 14px;
+    min-width: 11.25rem;
+    font-size: 0.875rem;
     font-weight: 500;
   }
 
