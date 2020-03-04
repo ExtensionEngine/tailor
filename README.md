@@ -200,12 +200,11 @@ Configuration for content containers. Contains the following properties:
 
 Defines the structure of an teaching element metadata
 
-- **type** `String` - Type of teaching element 
-  (example: "IMAGE", "VIDEO", "HTML")
+- **type** `String` - Type of teaching element (example: "IMAGE", "HTML").
 - **relationships** `Array<TesRelationship>` - Defines what relationships this
   teaching element has to other teaching elements from the same 
   or other activities in the repository.
-- **meta** `Array<TesMetaFields>` - Defines what meta fields teaching element has
+- **meta** `Array<TesMetaFields>` - Defines what meta fields teaching element has.
 
 #### TesRelationship
 
@@ -218,8 +217,7 @@ Defines the structure of an teaching element relationship field.
 - **multiple** `Boolean` - Defines if the relationship can have multiple
   associations chosen. True by default.
 - **allowedTypes** `Array<String>` - Defines to what type of teaching elements
-   given teaching element can have relationship with 
-   (example: `['PDF', 'VIDEO']`).
+   given teaching element can have relationship with (example: `['VIDEO']`).
 
 #### TesMetaFields
 
@@ -228,7 +226,7 @@ Defines what meta fields teaching element has
 - **key** `String` - Unique key for the field.
 - **type** `String` - Type of the input component used on the client. 
 - **label** `String` - Display label.
-- **description** `String` - Description of meta field
+- **description** `String` - Description of meta field.
 - **options** `Array<Object>` - Options for certain types of input component.
   For example, for select component, options would be:
   ```json
