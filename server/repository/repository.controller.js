@@ -3,11 +3,11 @@
 const {
   Repository, RepositoryUser, Revision, sequelize, User, Tag, RepositoryTag
 } = require('../shared/database');
+const { NOT_FOUND, NO_CONTENT } = require('http-status-codes');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
-const { NOT_FOUND, NO_CONTENT } = require('http-status-codes');
 const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
