@@ -101,6 +101,9 @@ class User extends Model {
     this.hasMany(Revision, {
       foreignKey: { name: 'userId', field: 'user_id' }
     });
+    this.hasMany(RepositoryUser, {
+      foreignKey: { name: 'userId', field: 'user_id' }
+    });
   }
 
   static hooks(Hooks) {

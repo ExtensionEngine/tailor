@@ -41,9 +41,12 @@ class RepositoryUser extends Model {
     };
   }
 
-  static associate({ User }) {
+  static associate({ User, Repository }) {
     this.belongsTo(User, {
       foreignKey: { name: 'userId', field: 'user_id' }
+    });
+    this.belongsTo(Repository, {
+      foreignKey: { name: 'repositoryId', field: 'repository_id' }
     });
   }
 
