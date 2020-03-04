@@ -43,7 +43,7 @@ export default {
     repositoryId: { type: Number, required: true },
     elementId: { type: Number, required: true },
     allowedTypes: { type: Array, required: true },
-    multiple: { type: Boolean, required: true },
+    multiple: { type: Boolean, default: true },
     selected: { type: Array, default: () => [] }
   },
   data: () => ({
