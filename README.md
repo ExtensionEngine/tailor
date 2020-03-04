@@ -196,7 +196,7 @@ Configuration for content containers. Contains the following properties:
   of the structure component used is the `kebab-cased` version of the `type`
   property. (example: ABC_DEF -> abc-def)
 
-#### TesMetadata 
+#### TesMetadata
 
 Defines the structure of an teaching element metadata
 
@@ -229,8 +229,8 @@ Defines what meta fields teaching element has
 - **type** `String` - Type of the input component used on the client. 
 - **label** `String` - Display label.
 - **description** `String` - Description of meta field
-- **options** `Array<Object>` - options for certain types of input component
-  for example, for select component, options would be 
+- **options** `Array<Object>` - Options for certain types of input component.
+  For example, for select component, options would be:
   ```json
   "type": "SELECT"
   "options": [{
