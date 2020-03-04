@@ -30,6 +30,7 @@ const appChannel = EventBus.channel('app');
 const TAG_LIMIT = 3;
 
 export default {
+  name: 'repository-tags',
   props: {
     repository: { type: Object, required: true }
   },
