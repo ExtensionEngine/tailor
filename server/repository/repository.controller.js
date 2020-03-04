@@ -45,8 +45,11 @@ function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
   if (query.schema) opts.where.schema = { [Op.eq]: query.schema };
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
-  opts.include = [includeLastRevision(), includeRepositoryUser(user, query),
-    includeRepositoryTags(query)];
+  opts.include = [
+    includeLastRevision(),
+    includeRepositoryUser(user, query),
+    includeRepositoryTags(query)
+  ];
   const repositories = user.isAdmin()
     ? Repository.findAll(opts)
     : user.getRepositories(opts);
