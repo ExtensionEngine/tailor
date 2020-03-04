@@ -131,7 +131,10 @@ export default {
     },
     openTesList(activity) {
       if (!activity) return;
-      this.contentContainers = sortBy(getDescendants(this.activities, activity), 'position');
+      this.contentContainers = sortBy(
+        getDescendants(this.activities, activity),
+        'position'
+      );
       this.outlineId = activity.id;
       this.showTesList = true;
     },

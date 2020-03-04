@@ -15,7 +15,11 @@
             v-model="selected"
             @click.prevent
             :disabled="isDisabled(item)"
-            :value="{ outlineId, containerId: item.activityId, id: item.id }" />
+            :value="{
+              outlineId,
+              containerId: item.activityId,
+              id: item.id
+            }" />
           <teaching-element
             disabled
             :class="{ 'selected': isSelected(item)}"
