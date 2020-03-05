@@ -1,14 +1,16 @@
 <template>
   <div class="tags-container">
-    <v-chip
-      v-for="tag in repository.tags"
-      :key="tag.id"
-      @click:close="showDeleteConfirmation(tag)"
-      color="grey darken-1"
-      text-color="white"
-      close>
-      {{ truncateTagName(tag.name) }}
-    </v-chip>
+    <div>
+      <v-chip
+        v-for="tag in repository.tags"
+        :key="tag.id"
+        @click:close="showDeleteConfirmation(tag)"
+        color="grey darken-1"
+        text-color="white"
+        close>
+        {{ truncateTagName(tag.name) }}
+      </v-chip>
+    </div>
     <v-btn v-if="!exceededTagLimit" @click="showTagDialog = true" icon small>
       <v-icon>mdi-plus</v-icon>
     </v-btn>
