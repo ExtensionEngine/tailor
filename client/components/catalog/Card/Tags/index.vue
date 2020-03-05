@@ -52,8 +52,8 @@ export default {
       });
     },
     truncateTagName(tag) {
-      const tagsCount = get('this.repository', 'tags.length', 2);
-      const length = [15, 6, 5][clamp(tagsCount, 0, 2)];
+      const tagCount = get('this.repository', 'tags.length', 2);
+      const length = [15, 6, 5][clamp(tagCount, 0, 2)];
       return truncate(tag, { length });
     }
   },
