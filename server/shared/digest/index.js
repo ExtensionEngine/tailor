@@ -7,7 +7,7 @@ const { schedule } = require('../scheduler');
 
 function initiateDigest() {
   getRevisions();
-  // schedule(process.env.DIGEST_OPTIONS, getRevisions);
+  // schedule(process.env.DIGEST_OPTIONS, getRevisions());
 }
 
 module.exports = {

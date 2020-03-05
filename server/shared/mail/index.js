@@ -9,6 +9,7 @@ const pick = require('lodash/pick');
 const { promisify } = require('util');
 const { URL } = require('url');
 const urlJoin = require('url-join');
+const inspect = require('util').inspect;
 
 const from = `${config.sender.name} <${config.sender.address}>`;
 const server = email.server.connect(config);
@@ -88,18 +89,20 @@ function sendCommentNotification(users, comment) {
   });
 }
 
-function sendActivityDigest(recipient, activities) {
-  const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), { activities });
+function sendActivityDigest(user, activities) {
+  // console.log(inspect(activities, false, null, true));
+  // const recipient = user.email;
+  // const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), { activities });
   const text = renderText(path.join(templatesDir, 'activity-digest.txt'), { activities });
-  logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
-
-  return send({
-    from,
-    to: recipient,
-    subject: 'Weekly activity digest',
-    text,
-    attachment: [{ data: html, alternative: true }]
-  });
+  // logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
+  console.log(text);
+  // return send({
+  //   from,
+  //   to: recipient,
+  //   subject: 'Weekly activity digest',
+  //   text,
+  //   attachment: [{ data: html, alternative: true }]
+  // });
 }
 
 function getConfig(server) {
