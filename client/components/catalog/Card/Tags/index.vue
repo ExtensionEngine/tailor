@@ -25,6 +25,7 @@
 import AddTag from './AddTag';
 import clamp from 'lodash/clamp';
 import EventBus from 'EventBus';
+import get from 'lodash/get';
 import { mapActions } from 'vuex';
 import truncate from 'lodash/truncate';
 
@@ -51,7 +52,8 @@ export default {
       });
     },
     truncateTagName(tag) {
-      const length = [15, 6, 5][clamp(this.repository.tags.length, 0, 2)];
+      const tagsCount = get('this.repository', 'tags.length', 2);
+      const length = [15, 6, 5][clamp(tagsCount, 0, 2)];
       return truncate(tag, { length });
     }
   },
