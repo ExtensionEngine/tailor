@@ -31,7 +31,7 @@ const parseJsonCronParams = scheduleParams => {
   time._parseField(minute || '*', 'minute', CronTime.constraints[1]);
   time._parseField(hour || '*', 'hour', CronTime.constraints[2]);
   time._parseField(dayOfMonth || '*', 'dayOfMonth', CronTime.constraints[3]);
-  time._parseField(parsedMonth || '*', 'month', [1, 12]);
+  time._parseField(parsedMonth || '*', 'month', CronTime.constraints[4]);
   time._parseField(parsedDayOfWeek || '*', 'dayOfWeek', CronTime.constraints[5]);
   return time;
 };
