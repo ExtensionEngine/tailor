@@ -60,10 +60,9 @@ const schedule = (scheduleSettings, task) => {
   const job = new CronJob(parseExpression(scheduleSettings), () => {
     task();
   });
-
   job.start();
   logger.info(`${task.name} has been started`);
   logger.info(`Next time scheduled: ${job.nextDate()}`);
 };
 
-module.exports = { schedule };
+module.exports = schedule;

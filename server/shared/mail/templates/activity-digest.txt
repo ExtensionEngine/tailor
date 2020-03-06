@@ -2,10 +2,50 @@ Tailor
 =================================================
  All changes you made to your repositories this week:
 {{#activities}}
-  {{name}} {{createdAt}}
-    {{#revisions}}
-      {{entity}}
-    {{/revisions}}
+  {{repo}} | created: {{createdAt}}
+  {{#revisions}}
+  {{#ACTIVITY}}
+  Activities:
+    {{#INTRO}}
+      {{#CREATE}} {{CREATE}} intro created {{/CREATE}}
+      {{#UPDATE}} {{UPDATE}} intro updated {{/UPDATE}}
+      {{#DELETE}} {{DELETE}} intro deleted {{/DELETE}}
+    {{/INTRO}}
+    {{#PERSPECTIVE}}
+      {{#CREATE}} {{CREATE}} perspective created {{/CREATE}}
+      {{#UPDATE}} {{UPDATE}} perspective updated {{/UPDATE}}
+      {{#DELETE}} {{DELETE}} perspective deleted {{/DELETE}}
+    {{/PERSPECTIVE}}
+    {{#DEFAULT_SCHEMA/COMPETENCY}}
+      {{#CREATE}} {{CREATE}} competency created {{/CREATE}}
+      {{#UPDATE}} {{UPDATE}} competency updated {{/UPDATE}}
+      {{#DELETE}} {{DELETE}} competency deleted {{/DELETE}}
+    {{/DEFAULT_SCHEMA/COMPETENCY}}
+    {{#DEFAULT_SCHEMA/TOPIC}}
+      {{#CREATE}} {{CREATE}} topic created {{/CREATE}}
+      {{#UPDATE}} {{UPDATE}} topic updated {{/UPDATE}}
+      {{#DELETE}} {{DELETE}} topic credeletedated {{/DELETE}}
+    {{/DEFAULT_SCHEMA/TOPIC}}
+  {{/ACTIVITY}}
+  {{#CONTENT_ELEMENT}}
+  Content Elements:
+    {{#VIDEO}}
+      {{#CREATE}} {{CREATE}} video element created {{/CREATE}}
+      {{#UPDATE}} {{UPDATE}} video element updated {{/UPDATE}}
+      {{#DELETE}} {{DELETE}} video element deleted {{/DELETE}}
+    {{/VIDEO}}
+    {{#HTML}}
+      {{#CREATE}} {{CREATE}} html element created {{/CREATE}}
+      {{#UPDATE}} {{UPDATE}} html element updated {{/UPDATE}}
+      {{#DELETE}} {{DELETE}} html element deleted {{/DELETE}}
+    {{/HTML}}
+    {{#IMAGE}}
+      {{#CREATE}} {{CREATE}} image element created {{/CREATE}}
+      {{#UPDATE}} {{UPDATE}} image element updated {{/UPDATE}}
+      {{#DELETE}} {{DELETE}} image element deleted {{/DELETE}}
+    {{/IMAGE}}
+  {{/CONTENT_ELEMENT}}
+  {{/revisions}}
 {{/activities}}
 
 -------------------------------------------------

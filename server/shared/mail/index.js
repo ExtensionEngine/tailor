@@ -90,19 +90,23 @@ function sendCommentNotification(users, comment) {
 }
 
 function sendActivityDigest(user, activities) {
-  // console.log(inspect(activities, false, null, true));
-  // const recipient = user.email;
-  // const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), { activities });
-  const text = renderText(path.join(templatesDir, 'activity-digest.txt'), { activities });
-  // logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
-  console.log(text);
-  // return send({
-  //   from,
-  //   to: recipient,
-  //   subject: 'Weekly activity digest',
-  //   text,
-  //   attachment: [{ data: html, alternative: true }]
-  // });
+  const recipient = user.email;
+  let text, html;
+  if (activities.length < 1) {
+    text = renderText(path.join(templatesDir, 'default-digest.txt'));
+    html = renderHtml(path.join(templatesDir, 'default-digest.mjml'));
+  } else {
+    html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), { activities });
+    text = renderText(path.join(templatesDir, 'activity-digest.txt'), { activities });
+    logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
+  }
+  return send({
+    from,
+    to: recipient,
+    subject: 'Weekly activity digest',
+    text,
+    attachment: [{ data: html, alternative: true }]
+  });
 }
 
 function getConfig(server) {

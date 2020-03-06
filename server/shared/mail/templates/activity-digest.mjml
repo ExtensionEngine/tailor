@@ -15,20 +15,103 @@
     <mj-section padding="0 10px" background-color="#c2c0c0">
       <mj-column>
         <mj-text mj-class="content" padding="20px" color="#444" font-size="20px">
-          <b>{{repositoryName}}</b>
+          <b>{{repo}}</b>
+        </mj-text>
+      </mj-column>
+      <mj-column>
+        <mj-text background-color="#fefefe" mj-class="content" padding="20px" color="#444" font-size="20px">
+          <b>{{createdAt}}</b>
         </mj-text>
       </mj-column>
     </mj-section>
     <mj-raw>
-      {{#data}}
-    </mj-raw>
-    <mj-include path="./components/repository-revision.mjml" />
-    <mj-include path="./components/content-revisions.mjml" />
-    <mj-include path="./components/activity-revisions.mjml" />
     <mj-raw>
-      {{/data}}
+      {{#revisions}}
     </mj-raw>
-    <mj-raw margin-bottom="10px">
+    <mj-raw>
+      {{#ACTIVITY}}
+    </mj-raw>
+    <b>Activities</b>
+      {{#INTRO}}
+        {{#CREATE}}
+        <b> {{CREATE}} intro created </b>
+        {{/CREATE}}
+        {{#UPDATE}}
+        <b> {{UPDATE}} intro updated </b>
+        {{/UPDATE}}
+        {{#DELETE}}
+        <b>  {{DELETE}} intro deleted </b>
+        {{/DELETE}}
+      {{/INTRO}}
+      {{#PERSPECTIVE}}
+        {{#CREATE}}
+        <b> {{CREATE}} perspective created </b>
+        {{/CREATE}}
+        {{#UPDATE}}
+        <b> {{UPDATE}} perspective updated </b>
+        {{/UPDATE}}
+        {{#DELETE}}
+        <b>  {{DELETE}} perspective deleted </b>
+        {{/DELETE}}
+      {{/PERSPECTIVE}}
+      {{#DEFAULT_SCHEMA/COMPETENCY}}
+        {{#CREATE}}
+        <b> {{CREATE}} competency created </b>
+        {{/CREATE}}
+        {{#UPDATE}}
+        <b> {{UPDATE}} competency updated </b>
+        {{/UPDATE}}
+        {{#DELETE}}
+        <b>  {{DELETE}} competency deleted </b>
+        {{/DELETE}}
+      {{/DEFAULT_SCHEMA/COMPETENCY}}
+    <mj-raw>
+      {{/ACTIVITY}}
+    </mj-raw>
+    <mj-raw>
+      {{#CONTENT_ELEMENT}}
+    </mj-raw>
+  <b>Content element</b>
+      {{#VIDEO}}
+        {{#CREATE}}
+        <b> {{CREATE}} video element created </b>
+        {{/CREATE}}
+        {{#UPDATE}}
+        <b> {{UPDATE}} video element updated </b>
+        {{/UPDATE}}
+        {{#DELETE}}
+        <b>  {{DELETE}} video element deleted </b>
+        {{/DELETE}}
+      {{/VIDEO}}
+      {{#HTML}}
+        {{#CREATE}}
+        <b> {{CREATE}} html element created </b>
+        {{/CREATE}}
+        {{#UPDATE}}
+        <b> {{UPDATE}} html element updated </b>
+        {{/UPDATE}}
+        {{#DELETE}}
+        <b>  {{DELETE}} html element deleted </b>
+        {{/DELETE}}
+      {{/HTML}}
+      {{#IMAGE}}
+        {{#CREATE}}
+        <b> {{CREATE}} image element created </b>
+        {{/CREATE}}
+        {{#UPDATE}}
+        <b> {{UPDATE}} image element updated </b>
+        {{/UPDATE}}
+        {{#DELETE}}
+        <b>  {{DELETE}} image element deleted </b>
+        {{/DELETE}}
+      {{/IMAGE}}
+    <mj-raw>
+      {{/CONTENT_ELEMENT}}
+    </mj-raw>
+    <mj-raw>
+      {{/revisions}}
+    </mj-raw>
+    <mj-raw>
       {{/activities}}
     </mj-raw>
   </mj-body>

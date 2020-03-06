@@ -1,15 +1,10 @@
 'use strict';
 
-const {
-  getRevisions
-} = require('./helpers');
-const { schedule } = require('../scheduler');
+const processRepositoryRevisions = require('./lib');
+const schedule = require('../scheduler');
 
 function initiateDigest() {
-  getRevisions();
-  // schedule(process.env.DIGEST_OPTIONS, getRevisions());
+  schedule(process.env.DIGEST_OPTIONS, processRepositoryRevisions);
 }
 
-module.exports = {
-  initiateDigest
-};
+module.exports = initiateDigest;

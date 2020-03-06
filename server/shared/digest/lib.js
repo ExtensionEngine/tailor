@@ -4,8 +4,9 @@ const { Sequelize } = require('../database');
 const { Op } = require('sequelize');
 const { subDays } = require('date-fns');
 const { sendActivityDigest } = require('../mail');
-
-const inspect = require('util').inspect;
+const { format } = require('date-fns');
+const groupArray = require('group-array');
+const mapKeys = require('lodash/mapKeys');
 
 const getUsersThatLoggedIn = () => {
   return User.findAll({
@@ -16,6 +17,7 @@ const getUsersThatLoggedIn = () => {
 
 const filterRecentlyAddedRepositories = user => {
   return user.getRepositories({
+    attributes: ['id', 'data', 'name', 'createdAt'],
     include: [{
       model: RepositoryUser,
       attributes: ['created_at'],
@@ -28,9 +30,9 @@ const filterRecentlyAddedRepositories = user => {
 };
 
 const getRevisionsSinceDate = async (date, repo) => {
-  // not sure if working properly
   return {
     revisions: await repo.getRevisions({
+      attributes: ['entity', 'operation', 'state'],
       where: { created_at: { [Op.gte]: date } },
       raw: true
     }),
@@ -38,7 +40,18 @@ const getRevisionsSinceDate = async (date, repo) => {
   };
 };
 
-async function getRevisions() {
+const formatRevisions = revisions => {
+  return revisions.map(revision => {
+    return {
+      repo: revision.name,
+      color: revision.data.color,
+      createdAt: format(revision.createdAt, 'dd-MM-yyyy'),
+      revisions: revision.revisions
+    };
+  });
+};
+
+async function processRepositoryRevisions() {
   const users = await getUsersThatLoggedIn();
   users.map(async user => {
     const repos = await filterRecentlyAddedRepositories(user);
@@ -47,14 +60,21 @@ async function getRevisions() {
         ? getRevisionsSinceDate(subDays(new Date(), 7), repo)
         : getRevisionsSinceDate(repo.repositoryUser.dataValues.createdAt, repo);
     }));
+    const formattedRevisions = formatRevisions(revisions);
 
-    sendActivityDigest(user.get({ plain: true }), revisions);
+    formattedRevisions.map(repo => {
+      repo.revisions = groupArray(repo.revisions, 'entity', 'state.type', 'operation');
+      mapKeys(repo.revisions, (revision, revKey) => {
+        mapKeys(repo.revisions[revKey], (activity, activityKey) => {
+          mapKeys(repo.revisions[revKey][activityKey], (content, contentKey) => {
+            repo.revisions[revKey][activityKey][contentKey] = content.length;
+          });
+        });
+      });
+    });
+
+    sendActivityDigest(user.get({ plain: true }), formattedRevisions);
   });
 }
 
-module.exports = {
-  getUsersThatLoggedIn,
-  getRevisionsSinceDate,
-  filterRecentlyAddedRepositories,
-  getRevisions
-};
+module.exports = processRepositoryRevisions;

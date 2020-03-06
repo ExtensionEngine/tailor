@@ -8,7 +8,7 @@ const contentPluginRegistry = require('./shared/content-plugins');
 const pkg = require('../package.json');
 const { promisify } = require('util');
 const sequelize = require('sequelize');
-const { initiateDigest } = require('./shared/digest');
+const initiateDigest = require('./shared/digest');
 
 // NOTE: This needs to be done before db models get loaded!
 if (process.env.NODE_ENV !== 'production') {
