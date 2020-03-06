@@ -214,7 +214,10 @@ while the template for creating custom containers can be found
 
 1. copy (or git clone) extension files in `extensions/content-<elements or containers>/<my-extension-name>`
 2. create index.js file in `extensions/content-<elements or containers>` directory
-3. in the file from the previous step add `module.exports = ['my-extension-name'];`
+3. in the file from the previous step add
+```javascript
+module.exports = ['my-extension-name'];
+```
 
 Note that `module.exports` is an array and you can add as many extensions and just include their folder names in this array to include all of them.
-After installation, the extension is ready for use and should be listed in `activities.rc` config file.
+After installation, the extension is ready for use and should be listed in `tailor.config.js` file.
