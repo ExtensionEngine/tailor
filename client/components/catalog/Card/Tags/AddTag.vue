@@ -15,6 +15,7 @@
       <v-combobox
         v-model="tagInput"
         v-validate="'required|min:2|max:20'"
+        @keydown.enter="submit"
         :items="availableTags"
         :error-messages="vErrors.collect('name')"
         name="name"
