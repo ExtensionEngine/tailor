@@ -31,6 +31,13 @@
             @select="selectActivity(activity._cid)"
             @show="goTo(activity)"
             :activity="activity" />
+          <v-alert
+            :value="!filteredActivities.length"
+            color="primary darken-1"
+            outlined
+            class="mt-5">
+            No matches found
+          </v-alert>
         </template>
       </div>
       <sidebar />
