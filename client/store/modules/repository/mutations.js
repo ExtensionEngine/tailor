@@ -12,6 +12,11 @@ export const toggleActivity = (state, { _cid, expanded }) => {
   Vue.set(expandedItems, _cid, expanded);
 };
 
+export const expandParents = (state, parents) => {
+  const expanded = transform(parents, (acc, it) => (acc[it._cid] = true), {});
+  state.outline.expanded = expanded;
+};
+
 export const toggleActivities = (state, outline) => {
   const totalExpanded = compact(Object.values(state.outline.expanded)).length;
   const isOpen = totalExpanded < outline.length;
