@@ -25,7 +25,10 @@
       @created="expandParent"
       :repository-id="activity.repositoryId"
       :levels="supportedLevels"
-      :anchor="activity" />
+      :anchor="activity"
+      :heading="`
+        Add ${supportedLevels === subLevels ? 'into' : 'below'}
+        ${activity.data.name}`" />
     <copy-dialog
       v-if="showCopyDialog"
       @close="showCopyDialog = null"
@@ -38,8 +41,8 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import CopyDialog from '../Outline/InsertActivity/CopyActivity';
-import CreateDialog from '../Outline/InsertActivity/CreateDialog';
+import CopyDialog from '@/components/repository/common/CopyActivity';
+import CreateDialog from '@/components/repository/common/CreateDialog';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
@@ -62,8 +65,7 @@ export default {
     supportedLevels: []
   }),
   computed: {
-    ...mapGetters(['activities']),
-    ...mapGetters('repository', ['structure']),
+    ...mapGetters('repository', ['structure', 'activities']),
     parent: vm => find(vm.activities, { id: vm.activity.parentId }),
     levels: vm => vm.sameLevel.concat(vm.subLevels),
     sameLevel() {
@@ -78,7 +80,7 @@ export default {
     },
     addMenuOptions() {
       const items = [{
-        name: 'Add item after',
+        name: 'Add item below',
         icon: 'arrow-down',
         action: () => this.setCreateContext(this.sameLevel)
       }, {
@@ -102,8 +104,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', ['remove']),
-    ...mapMutations('repository', ['focusActivity', 'toggleActivity']),
+    ...mapActions('repository/activities', ['remove']),
+    ...mapMutations('repository', ['selectActivity', 'toggleActivity']),
     expandParent(item) {
       const { activity, parent } = this;
       const _cid = item.parentId === activity.id
@@ -129,7 +131,7 @@ export default {
           ? find(this.activities, { id: activity.parentId })
           : first(sortBy(filter(this.activities, rootFilter), 'position'));
         this.remove(this.activity);
-        if (focusNode) this.focusActivity(focusNode._cid);
+        if (focusNode) this.selectActivity(focusNode._cid);
       };
       const name = `${isTreeView ? `${activity.id}: ` : ''}${activity.data.name}`;
       appChannel.emit('showConfirmationModal', {

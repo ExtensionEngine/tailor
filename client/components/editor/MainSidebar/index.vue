@@ -65,7 +65,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', { publishActivity: 'publish' }),
+    ...mapActions('repository/activities', { publishActivity: 'publish' }),
     previewContainer() {
       const { repositoryId, id } = this.activity;
       return api.createPreview(repositoryId, id)

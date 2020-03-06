@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import CreateDialog from './InsertActivity/CreateDialog';
+import CreateDialog from '@/components/repository/common/CreateDialog';
 import filter from 'lodash/filter';
 import last from 'lodash/last';
 import { mapGetters } from 'vuex';

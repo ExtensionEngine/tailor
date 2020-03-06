@@ -2,7 +2,7 @@
   <div>
     <div class="activity-wrapper">
       <div
-        @click="focus(showOptions)"
+        @click="selectActivity(_cid)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
         :class="[isHighlighted ? 'elevation-9' : 'elevation-1']"
@@ -34,9 +34,6 @@
             class="activity-options" />
         </div>
       </div>
-      <insert-activity
-        @expand="toggle(true)"
-        :anchor="{ id, _cid, parentId, repositoryId, type, position, level }" />
     </div>
     <div v-if="!isCollapsed({ _cid }) && hasChildren">
       <draggable
@@ -62,7 +59,6 @@ import ActivityOptions from '@/components/repository/common/ActivityOptions';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import InsertActivity from './InsertActivity';
 import { isEditable } from 'shared/activities';
 import map from 'lodash/map';
 import reorderMixin from './reorderMixin';
@@ -91,39 +87,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository', {
-      structure: 'structure',
-      focusedActivity: 'activity',
-      isCollapsed: 'isCollapsed'
-    }),
-    ...mapState({ outlineState: s => s.repository.outline }),
-    config() {
-      return find(this.structure, { type: this.type });
-    },
-    color() {
-      return this.config.color;
-    },
-    isEditable() {
-      return isEditable(this.type);
-    },
-    isSelected() {
-      return this.focusedActivity._cid === this._cid;
-    },
-    isHighlighted() {
-      return this.isHovered || this.isSelected;
-    },
-    isExpanded() {
-      return !this.isCollapsed({ _cid: this._cid });
-    },
-    hasSubtypes() {
-      return !!size(this.config.subLevels);
-    },
-    hasChildren() {
-      return (this.children.length > 0) && this.hasSubtypes;
-    },
-    showOptions() {
-      return this._cid === this.outlineState.showOptions;
-    },
+    ...mapGetters('repository', ['structure', 'selectedActivity', 'isCollapsed']),
+    ...mapState('repository', { outlineState: 'outline' }),
+    config: vm => find(vm.structure, { type: vm.type }),
+    color: vm => vm.config.color,
+    isEditable: vm => isEditable(vm.type),
+    isSelected: vm => vm.selectedActivity && (vm.selectedActivity._cid === vm._cid),
+    isHighlighted: vm => vm.isHovered || vm.isSelected,
+    isExpanded: vm => !vm.isCollapsed({ _cid: vm._cid }),
+    hasSubtypes: vm => !!size(vm.config.subLevels),
+    hasChildren: vm => (vm.children.length > 0) && vm.hasSubtypes,
     children() {
       const level = this.level + 1;
       const types = map(filter(this.structure, { level }), 'type');
@@ -139,29 +112,25 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('repository',
-      ['focusActivity', 'toggleActivity', 'showActivityOptions']),
-    focus(options = false) {
-      this.focusActivity(this._cid);
-      return this.showActivityOptions(options ? this._cid : null);
-    },
+    ...mapMutations('repository', ['selectActivity', 'toggleActivity']),
     toggle(expanded = !this.isExpanded) {
       this.toggleActivity({ _cid: this._cid, expanded });
     }
   },
-  components: { ActivityOptions, Draggable, InsertActivity }
+  components: { ActivityOptions, Draggable }
 };
 </script>
 
 <style lang="scss" scoped>
 .activity {
   display: flex;
+  margin: 0.875rem 0;
   padding: 0 0 0 0.375rem;
   font-size: 1.125rem;
   background-color: #fcfcfc;
   border-radius: 2px;
   cursor: pointer;
-  transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   &-icon {
     margin: 0.125rem 0 0 0;

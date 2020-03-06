@@ -29,7 +29,7 @@ import Promise from 'bluebird';
 import TeachingElement from 'components/editor/TeachingElement';
 
 const WITHOUT_STATICS = [
-  'JODIT_HTML', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED', 'BREAK', 'HTML'
+  'JODIT_HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK', 'HTML'
 ];
 
 export default {
