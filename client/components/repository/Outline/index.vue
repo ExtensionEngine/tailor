@@ -27,7 +27,7 @@
           <search-result
             v-for="activity in filteredActivities"
             :key="activity._cid"
-            @select="selectActivity(activity)"
+            @select="selectActivity(activity._cid)"
             @show="goTo(activity)"
             :activity="activity" />
         </template>
