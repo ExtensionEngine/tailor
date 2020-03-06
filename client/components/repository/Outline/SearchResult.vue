@@ -1,8 +1,8 @@
 <template>
-  <v-card @click="$emit('select')" class="my-3 py-1 text-left">
-    <v-card-subtitle class="pb-1">
-      <v-chip :color="color" label x-small class="pa-2 mr-1" />
-      {{ typeLabel }}
+  <v-card @click="$emit('select')" :ripple="false" class="my-3 py-1 text-left">
+    <v-card-subtitle class="pb-1 d-flex align-center">
+      <v-chip :color="color" label x-small class="pa-2 mr-2" />
+      <span class="text-uppercase">{{ typeLabel }}</span>
     </v-card-subtitle>
     <v-card-title class="py-0 text-truncate">
       {{ activity.data.name }}
@@ -33,3 +33,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.v-card--link:focus {
+  background: #fafafa;
+
+  &::before {
+    display: none;
+  }
+}
+</style>
