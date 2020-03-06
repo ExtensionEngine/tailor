@@ -4,6 +4,7 @@
     <div v-else :class="{ 'pt-11': isFlat }" class="structure-container">
       <div ref="structure" class="structure">
         <structure-toolbar
+          v-if="!!rootActivities.length"
           @search="search = $event"
           :search="search"
           :is-flat="isFlat"
