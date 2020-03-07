@@ -5,13 +5,6 @@
     header-icon="mdi-tag-outline">
     <template #header>Add Tag</template>
     <template #body>
-      <v-alert
-        :value="vErrors.has('default')"
-        color="error"
-        icon="mdi-alert-outline"
-        outlined>
-        {{ vErrors.first('default') }}
-      </v-alert>
       <v-combobox
         v-model="tagInput"
         v-validate="'required|min:2|max:20'"
