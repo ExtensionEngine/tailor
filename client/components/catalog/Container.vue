@@ -27,8 +27,12 @@
             @update="onFilterChange(setOrder, $event)"
             :sort-by="sortBy"
             class="pl-2" />
+          <tag-filter @update="onFilterChange(toggleTagFilter, $event)" />
         </v-col>
       </v-row>
+      <tag-filter-selection
+        @close="onFilterChange(toggleTagFilter, $event)"
+        @clear:all="onFilterChange(clearTagFilter, $event)" />
       <v-row>
         <v-col
           v-for="repository in repositories"
@@ -65,6 +69,8 @@ import InfiniteLoading from 'vue-infinite-loading';
 import RepositoryCard from './Card';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
+import TagFilter from './TagFilter';
+import TagFilterSelection from './TagFilterSelection';
 
 export default {
   data() {
@@ -75,6 +81,7 @@ export default {
   computed: {
     ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
+      tags: 'tags',
       showPinned: 'showPinned'
     }),
     ...mapGetters('repositories', {
@@ -97,9 +104,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repositories', ['fetch']),
+    ...mapActions('repositories', ['fetch', 'fetchTags']),
     ...mapMutations('repositories', [
-      'togglePinned', 'setSearch', 'setOrder', 'resetFilters'
+      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'toggleTagFilter',
+      'clearTagFilter'
     ]),
     async load() {
       this.loading = true;
@@ -126,12 +134,17 @@ export default {
       if (!this.hasRepositories && this.showPinned) this.loader.reset();
     }
   },
+  created() {
+    this.fetchTags();
+  },
   components: {
     CreateRepository,
     InfiniteLoading,
     RepositoryCard,
     Search,
-    SelectOrder
+    SelectOrder,
+    TagFilter,
+    TagFilterSelection
   }
 };
 </script>
@@ -173,7 +186,6 @@ export default {
 
 .catalog-actions {
   position: relative;
-  margin-bottom: 20px;
   padding-top: 12px;
 
   ::v-deep .add-repo {
