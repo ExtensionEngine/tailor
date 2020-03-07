@@ -5,6 +5,7 @@
         @click="selectActivity(_cid)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
+        :id="`activity_${_cid}`"
         :class="[isHighlighted ? 'elevation-9' : 'elevation-1']"
         :style="{ 'border-left': `8px solid ${color}` }"
         class="activity">
