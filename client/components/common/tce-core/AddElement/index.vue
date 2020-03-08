@@ -221,7 +221,7 @@ $disabled-color: #a1a1a1;
   color: $font-color;
   font-size: 1.25rem;
   border: 1px solid #fff;
-  border-radius: 0.25rem;
+  border-radius: 4px;
   outline: none;
   cursor: pointer;
 
