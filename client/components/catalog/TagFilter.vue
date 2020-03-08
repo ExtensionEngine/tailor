@@ -17,6 +17,11 @@
           <v-list-item-title>{{ it.name }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item v-if="!options.length">
+        <v-list-item-content class="text-left">
+          <v-list-item-title>No available tags</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>
