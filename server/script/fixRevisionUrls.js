@@ -1,5 +1,6 @@
 'use strict';
 
+const { Revision, sequelize } = require('../shared/database');
 const get = require('lodash/get');
 const Promise = require('bluebird');
 
@@ -9,8 +10,6 @@ const Promise = require('bluebird');
  *  - repository/assests/:asset-name.ext
  */
 const regex = /(repository\/assets\/(\d+\/)?.+)\?/;
-
-const { Revision, sequelize } = require('../shared/database');
 
 fixRevisionUrls()
   .then(() => {

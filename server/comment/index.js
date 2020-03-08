@@ -5,9 +5,9 @@ const channel = require('./channel');
 const { Comment } = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const ctrl = require('./comment.controller');
-const { middleware: sse } = require('../shared/util/sse');
 const processQuery = require('../shared/util/processListQuery');
 const router = require('express').Router();
+const { middleware: sse } = require('../shared/util/sse');
 const { User } = require('../shared/database');
 
 const defaultListQuery = {

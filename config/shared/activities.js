@@ -14,8 +14,10 @@ const parseSchemas = require('./schema-parser');
 const sortBy = require('lodash/sortBy');
 const union = require('lodash/union');
 
+/* eslint-disable require-sort/require-sort */
 const defaultConfiguration = require('./activities-rc');
 const customConfiguration = require('./activities-rc.load')();
+/* eslint-enable */
 if (!process.env.ENABLE_DEFAULT_SCHEMA && !isEmpty(customConfiguration)) {
   defaultConfiguration.SCHEMAS = [];
 }
