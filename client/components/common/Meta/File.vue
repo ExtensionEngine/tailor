@@ -21,7 +21,7 @@ export default {
         id: this.meta.key,
         fileKey: get(this.meta, 'value.key', ''),
         fileName: get(this.meta, 'value.name', ''),
-        validate: get(this.meta, 'validate.rules', {}),
+        validate: this.meta.validate,
         label: this.meta.label,
         placeholder: this.meta.placeholder
       };

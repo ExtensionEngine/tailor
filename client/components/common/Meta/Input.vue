@@ -1,7 +1,7 @@
 <template>
   <v-text-field
     v-model="value"
-    v-validate="meta.validate ? meta.validate.rules : {}"
+    v-validate="meta.validate.rules"
     @change="onChange"
     :name="meta.key"
     :data-vv-as="meta.label"
