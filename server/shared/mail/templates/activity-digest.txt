@@ -15,9 +15,9 @@ Tailor
   Content elements:
   {{#CONTENT_ELEMENT}}
     {{#value}}
-      {{#CREATE}} {{CREATE}} {{key}} content elements created {{/CREATE}}
-      {{#UPDATE}} {{UPDATE}} {{key}} content elements updated {{/UPDATE}}
-      {{#DELETE}} {{DELETE}} {{key}} content elements deleted {{/DELETE}}
+      {{#CREATE}} {{CREATE}} {{elementInfo.text}} content elements created {{/CREATE}}
+      {{#UPDATE}} {{UPDATE}} {{elementInfo.text}} content elements updated {{/UPDATE}}
+      {{#DELETE}} {{DELETE}} {{elementInfo.text}} content elements deleted {{/DELETE}}
     {{/value}}
   {{/CONTENT_ELEMENT}}
   {{/revisions}}

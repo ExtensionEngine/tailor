@@ -10,6 +10,7 @@ const { promisify } = require('util');
 const { URL } = require('url');
 const urlJoin = require('url-join');
 const inspect = require('util').inspect;
+const fs = require('fs');
 
 const from = `${config.sender.name} <${config.sender.address}>`;
 const server = email.server.connect(config);
@@ -101,9 +102,7 @@ function sendActivityDigest(user, activities) {
     text = renderText(path.join(templatesDir, 'activity-digest.txt'), { activities });
     logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
   }
-
-  console.log(inspect(activities, false, null, true));
-  console.log(html);
+  fs.writeFileSync('./test.html', html);
   // return send({
   //   from,
   //   to: recipient,

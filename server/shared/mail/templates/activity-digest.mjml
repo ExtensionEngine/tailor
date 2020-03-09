@@ -5,10 +5,10 @@
     <mj-raw>
       {{#activities}}
     </mj-raw>
-    <mj-section padding="0 10px">
+    <mj-section padding="0">
       <mj-column background-color={{color}}>
         <mj-text mj-class="content" padding="20px" color="#444" font-size="20px">
-          <mj-text>{{repo}}</mj-text>
+          <mj-text><b>{{repo}}</b></mj-text>
         </mj-text>
       </mj-column>
       <mj-column background-color="#9aabb5">
@@ -20,8 +20,8 @@
     <mj-raw>
       {{#revisions}}
     </mj-raw>
-    <mj-section padding="0 10px">
-      <mj-column>
+    <mj-section padding="0 10px" background-color="#e6e6e6">
+      <mj-column padding="10px 20px">
         <mj-text mj-class="content" padding="10px 0" color="#444" font-size="25px">
           <b>Activities:</b>
         </mj-text>
@@ -48,8 +48,8 @@
         </mj-raw>
     </mj-section>
     </mj-column>
-    <mj-section padding="0 10px">
-      <mj-column>
+    <mj-section padding="0 10px" background-color= "#e6e6e6">
+      <mj-column padding="10px 20px">
         <mj-text mj-class="content" padding="10px 0" color="#444" font-size="25px">
           <b>Content elements:</b>
         </mj-text>
@@ -60,13 +60,22 @@
           {{#value}}
         </mj-raw>
         <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
-          {{#CREATE}} {{CREATE}} {{key}} created {{/CREATE}}
+          {{#CREATE}}
+            <span class="mdi {{elementInfo.icon}}"> </span>
+            {{elementInfo.text}} created x {{CREATE}}
+          {{/CREATE}}
         </mj-text>
         <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
-          {{#UPDATE}} {{UPDATE}} {{key}} updated {{/UPDATE}}
+          {{#UPDATE}}
+            <span class="mdi {{elementInfo.icon}}"> </span>
+            {{elementInfo.text}} updated x {{UPDATE}}
+          {{/UPDATE}}
         </mj-text>
         <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
-          {{#DELETE}} {{DELETE}} {{key}} deleted {{/DELETE}}
+          {{#DELETE}}
+            <span class="mdi {{elementInfo.icon}}"> </span>
+            {{elementInfo.text}} deleted x {{DELETE}}
+          {{/DELETE}}
         </mj-text>
         <mj-raw>
           {{/value}}

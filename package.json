@@ -69,7 +69,6 @@
     "fecha": "^3.0.3",
     "focus-trap": "^5.0.2",
     "gravatar": "^1.8.0",
-    "group-array": "^1.0.0",
     "hash-obj": "^2.0.0",
     "helmet": "^3.21.1",
     "hls.js": "^0.12.4",

@@ -1,29 +1,10 @@
 <mj-head>
   <mj-attributes>
-    <mj-class name="title"
-      font-size="20px"
-      color="#253239" />
-    <mj-class name="content"
-      color="#222222"
-      font-size="14px"
-      font-family="'Helvetica Neue', helvetica, arial, sans-serif"
-      background-color="white" />
-    <mj-class name="ctaButton"
-      width="300px"
-      height="50px"
-      inner-padding="0 25px"
-      padding="25px"
-      color="white"
-      font-size="16px"
-      background-color="#455B64" />
-    <mj-class name="footer"
-      color="#555"
-      font-size="12px"
-      background-color="white" />
-    <mj-class name="divider"
-      padding="20px 25px"
-      border-width="1px"
-      border-color="#eaeaea" />
+    <mj-class name="title" font-size="20px" color="#253239" />
+    <mj-class name="content" color="#222222" font-size="14px" font-family="'Helvetica Neue', helvetica, arial, sans-serif" background-color="white" />
+    <mj-class name="ctaButton" width="300px" height="50px" inner-padding="0 25px" padding="25px" color="white" font-size="16px" background-color="#455B64" />
+    <mj-class name="footer" color="#555" font-size="12px" background-color="white" />
+    <mj-class name="divider" padding="20px 25px" border-width="1px" border-color="#eaeaea" />
   </mj-attributes>
   <mj-style inline="inline">
     strong {
