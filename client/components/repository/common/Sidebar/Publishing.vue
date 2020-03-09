@@ -23,20 +23,12 @@
       </v-list>
     </v-menu>
     <div class="publish-status">
-      <div class="badge-wrapper">
-        <v-progress-circular
-          v-if="loading"
-          :size="20"
-          color="primary"
-          indeterminate />
-        <publishing-badge
-          v-else
-          :color="hasChanges ? 'orange' : 'green'"
-          :tooltip="{ bottom: true, maxWidth: 300 }">
-          {{ publishingInfo }}
-        </publishing-badge>
-      </div>
-      <span>
+      <publishing-badge
+        :color="hasChanges ? 'orange' : 'green'"
+        :tooltip="{ bottom: true, maxWidth: 300 }">
+        {{ publishingInfo }}
+      </publishing-badge>
+      <span class="pl-1">
         {{ isPublishing ? publishStatus.message : publishedAtMessage }}
       </span>
     </div>
@@ -50,7 +42,6 @@ import get from 'lodash/get';
 import { getDescendants } from 'utils/activity';
 import { getLevel } from 'shared/activities';
 import { mapActions } from 'vuex';
-import Promise from 'bluebird';
 import PublishingBadge from 'components/common/PublishingBadge';
 import publishMixin from 'components/common/mixins/publish';
 import uniq from 'lodash/uniq';
@@ -78,23 +69,16 @@ export default {
     activity: { type: Object, required: true },
     outlineActivities: { type: Array, required: true }
   },
-  data: () => ({
-    revisions: [],
-    loading: true
-  }),
+  data: () => ({ revisions: [] }),
   computed: {
     config: vm => getLevel(vm.activity.type),
+    hasChanges: vm => vm.activity.hasChanges,
     publishingInfo: vm => getPublishingInfo(vm),
     publishedAtMessage() {
       const { publishedAt } = this.activity;
       return publishedAt
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
-    },
-    hasChanges() {
-      const { modifiedAt, publishedAt } = this.activity;
-      if (!modifiedAt || !publishedAt) return true;
-      return isAfter(modifiedAt, publishedAt);
     },
     users() {
       const { revisions, activity: { publishedAt } } = this;
@@ -111,13 +95,10 @@ export default {
   created() {
     const { id: activityId, repositoryId } = this.activity;
     const params = getRevisionParams(activityId);
-    const getRevisions = api.fetch(repositoryId, params);
-    return Promise.join(getRevisions, Promise.delay(500))
-      .spread(revisions => (this.revisions = revisions))
-      .finally(() => (this.loading = false));
+    return api.fetch(repositoryId, params)
+      .then(revisions => (this.revisions = revisions));
   },
   components: { PublishingBadge }
-
 };
 </script>
 
@@ -126,9 +107,5 @@ export default {
   display: flex;
   align-items: center;
   padding: 1.125rem 0.375rem 0 0.375rem;
-
-  .badge-wrapper {
-    width: 25px;
-  }
 }
 </style>

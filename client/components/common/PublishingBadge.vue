@@ -18,14 +18,14 @@ export default {
     tooltip: { type: Object, default: () => ({}) }
   },
   computed: {
-    badgeConfig: vm => Object.assign({}, BADGE_DEFAULTS, vm.$attrs),
-    tooltipConfig: vm => Object.assign({}, TOOLTIP_DEFAULTS, vm.tooltip)
+    badgeConfig: vm => ({ ...BADGE_DEFAULTS, ...vm.$attrs }),
+    tooltipConfig: vm => ({ ...TOOLTIP_DEFAULTS, ...vm.tooltip })
   }
 };
 </script>
 
 <style lang="scss" scoped>
 ::v-deep .v-badge {
-  margin: 0 2px;
+  margin: 0 0.125rem;
 }
 </style>

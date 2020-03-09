@@ -2,7 +2,7 @@
   <div infinite-wrapper class="catalog-wrapper">
     <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog mt-3">
       <v-row no-gutters class="catalog-actions">
-        <create-repository @created="reset" />
+        <create-repository @created="onCreate" />
         <v-col md="4" sm="10" offset-md="4" offset-sm="1">
           <search
             @update="onFilterChange(setSearch, $event)"
@@ -99,7 +99,8 @@ export default {
   methods: {
     ...mapActions('repositories', ['fetch']),
     ...mapMutations('repositories', [
-      'togglePinned', 'setSearch', 'setOrder', 'resetFilters', 'resetPagination'
+      'togglePinned', 'setSearch', 'setOrder',
+      'reset', 'resetFilters', 'resetPagination'
     ]),
     async load() {
       this.loading = true;
@@ -108,7 +109,7 @@ export default {
       if (!this.hasMoreResults) this.loader.complete();
       this.loading = false;
     },
-    async reset() {
+    async onCreate() {
       this.setOrder({ field: 'createdAt', order: 'DESC' });
       this.resetFilters();
       await this.load();
@@ -128,7 +129,7 @@ export default {
   },
   created() {
     this.resetPagination();
-    this.load();
+    this.reset();
   },
   components: {
     CreateRepository,

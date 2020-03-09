@@ -1,3 +1,4 @@
+import { extractData } from './helpers';
 import request from './request';
 
 const urls = {
@@ -5,8 +6,7 @@ const urls = {
 };
 
 function fetch(repositoryId, params) {
-  return request.get(urls.root(repositoryId), { params })
-    .then(res => res.data.data);
+  return request.get(urls.root(repositoryId), { params }).then(extractData);
 }
 
 export default {

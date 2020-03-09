@@ -303,6 +303,8 @@ function mapRelationships(relationships, activity) {
   }, {});
 }
 
+// check if there is at least one outline activity with unpublished
+// changes and upadate repository model accordingly
 async function updateHasChangesFlag(repository, activity) {
   const outlineTypes = map(getOutlineLevels(repository.schema), 'type');
   const where = {

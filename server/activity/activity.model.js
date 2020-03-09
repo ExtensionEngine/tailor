@@ -11,7 +11,7 @@ const Promise = require('bluebird');
 
 class Activity extends Model {
   static fields(DataTypes) {
-    const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4 } = DataTypes;
+    const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4, VIRTUAL } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -45,6 +45,12 @@ class Activity extends Model {
       modifiedAt: {
         type: DATE,
         field: 'modified_at'
+      },
+      hasChanges: {
+        type: VIRTUAL,
+        get() {
+          return this.modifiedAt > this.publishedAt;
+        }
       },
       createdAt: {
         type: DATE,
