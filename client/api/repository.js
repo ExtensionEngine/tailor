@@ -4,7 +4,6 @@ import request from './request';
 const urls = {
   root: '/repositories',
   resource: id => `${urls.root}/${id}`,
-  contentInventory: id => `${urls.resource(id)}/content-inventory`,
   contentElements: id => `${urls.resource(id)}/content-elements`,
   publish: id => `${urls.resource(id)}/publish`,
   users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`,
