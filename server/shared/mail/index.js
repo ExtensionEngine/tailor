@@ -92,6 +92,7 @@ function sendCommentNotification(users, comment) {
 function sendActivityDigest(user, activities) {
   const recipient = user.email;
   let text, html;
+
   if (activities.length < 1) {
     text = renderText(path.join(templatesDir, 'default-digest.txt'));
     html = renderHtml(path.join(templatesDir, 'default-digest.mjml'));
@@ -100,13 +101,16 @@ function sendActivityDigest(user, activities) {
     text = renderText(path.join(templatesDir, 'activity-digest.txt'), { activities });
     logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
   }
-  return send({
-    from,
-    to: recipient,
-    subject: 'Weekly activity digest',
-    text,
-    attachment: [{ data: html, alternative: true }]
-  });
+
+  console.log(inspect(activities, false, null, true));
+  console.log(html);
+  // return send({
+  //   from,
+  //   to: recipient,
+  //   subject: 'Weekly activity digest',
+  //   text,
+  //   attachment: [{ data: html, alternative: true }]
+  // });
 }
 
 function getConfig(server) {

@@ -2,219 +2,78 @@
   <mj-include path="./components/head.mjml" />
   <mj-body padding="10px" border-radius="20px">
     <mj-include path="./components/header.mjml" />
-    <mj-section padding="10px 10px 20px 10px" text-align="left">
-      <mj-column padding-bottom="15px">
-        <mj-text mj-class="content" padding-left="0" color="#444" font-size="16px">
-          All changes you made to your repositories this week:
-        </mj-text>
-      </mj-column>
-    </mj-section>
     <mj-raw>
       {{#activities}}
     </mj-raw>
-    <mj-section padding="0 10px" background-color="#c2c0c0">
-      <mj-column background-color="aliceblue">
+    <mj-section padding="0 10px">
+      <mj-column background-color={{color}}>
         <mj-text mj-class="content" padding="20px" color="#444" font-size="20px">
           <mj-text>{{repo}}</mj-text>
         </mj-text>
       </mj-column>
-      <mj-column background-color="green">
-        <mj-text background-color="#fefefe" mj-class="content" padding="20px" color="#444" font-size="20px">
-          <mj-text>created: {{createdAt}}</mj-text>
+      <mj-column background-color="#9aabb5">
+        <mj-text mj-class="content" padding="20px" color="#444" font-size="20px">
+          <b>Created: {{createdAt}}</b>
         </mj-text>
       </mj-column>
     </mj-section>
     <mj-raw>
       {{#revisions}}
     </mj-raw>
-    <mj-section background-color="grey">
-      <mj-raw>
-        {{#ACTIVITY}}
-      </mj-raw>
-      <mj-column background-color="yellow">
-        <mj-text font-size="25px">Activities</mj-text>
-      </mj-column>
+    <mj-section padding="0 10px">
       <mj-column>
+        <mj-text mj-class="content" padding="10px 0" color="#444" font-size="25px">
+          <b>Activities:</b>
+        </mj-text>
         <mj-raw>
-          {{#INTRO}}
+          {{#ACTIVITY}}
         </mj-raw>
         <mj-raw>
-          {{#CREATE}}
+          {{#value}}
         </mj-raw>
-        <mj-text> {{CREATE}} intro created </mj-text>
+        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
+          {{#CREATE}} {{CREATE}} {{key}} created {{/CREATE}}
+        </mj-text>
+        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
+          {{#UPDATE}} {{UPDATE}} {{key}} updated {{/UPDATE}}
+        </mj-text>
+        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
+          {{#DELETE}} {{DELETE}} {{key}} deleted {{/DELETE}}
+        </mj-text>
         <mj-raw>
-          {{/CREATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#UPDATE}}
-        </mj-raw>
-        <mj-text> {{UPDATE}} intro updated </mj-text>
-        <mj-raw>
-          {{/UPDATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#DELETE}}
-        </mj-raw>
-        <mj-text> {{DELETE}} intro deleted </mj-text>
-        <mj-raw>
-          {{/DELETE}}
+          {{/value}}
         </mj-raw>
         <mj-raw>
-          {{/INTRO}}
+          {{/ACTIVITY}}
         </mj-raw>
-        <mj-raw>
-          {{#PERSPECTIVE}}
-        </mj-raw>
-        <mj-raw>
-          {{#CREATE}}
-        </mj-raw>
-        <mj-text> {{CREATE}} perspective created </mj-text>
-        <mj-raw>
-          {{/CREATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#UPDATE}}
-        </mj-raw>
-        <mj-text> {{UPDATE}} perspective updated </mj-text>
-        <mj-raw>
-          {{/UPDATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#DELETE}}
-        </mj-raw>
-        <mj-text> {{DELETE}} perspective deleted </mj-text>
-        <mj-raw>
-          {{/DELETE}}
-        </mj-raw>
-        <mj-raw>
-          {{/PERSPECTIVE}}
-        </mj-raw>
-        <mj-raw>
-          {{#DEFAULT_SCHEMA/COMPETENCY}}
-        </mj-raw>
-        <mj-raw>
-          {{#CREATE}}
-        </mj-raw>
-        <mj-text> {{CREATE}} competency created </mj-text>
-        <mj-raw>
-          {{/CREATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#UPDATE}}
-        </mj-raw>
-        <mj-text> {{UPDATE}} competency updated </mj-text>
-        <mj-raw>
-          {{/UPDATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#DELETE}}
-        </mj-raw>
-        <mj-text> {{DELETE}} competency deleted </mj-text>
-        <mj-raw>
-          {{/DELETE}}
-        </mj-raw>
-        <mj-raw>
-          {{/DEFAULT_SCHEMA/COMPETENCY}}
-        </mj-raw>
-      </mj-column>
-      <mj-raw>
-        {{/ACTIVITY}}
-      </mj-raw>
     </mj-section>
-    <mj-section>
-      <mj-raw>
-        {{#CONTENT_ELEMENT}}
-      </mj-raw>
-      <mj-column background-color="yellow">
-        <mj-text font-size="25px">Content element</mj-text>
-      </mj-column>
+    </mj-column>
+    <mj-section padding="0 10px">
       <mj-column>
+        <mj-text mj-class="content" padding="10px 0" color="#444" font-size="25px">
+          <b>Content elements:</b>
+        </mj-text>
         <mj-raw>
-          {{#VIDEO}}
+          {{#CONTENT_ELEMENT}}
         </mj-raw>
         <mj-raw>
-          {{#CREATE}}
+          {{#value}}
         </mj-raw>
-        <mj-text> {{CREATE}} video element created </mj-text>
+        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
+          {{#CREATE}} {{CREATE}} {{key}} created {{/CREATE}}
+        </mj-text>
+        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
+          {{#UPDATE}} {{UPDATE}} {{key}} updated {{/UPDATE}}
+        </mj-text>
+        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
+          {{#DELETE}} {{DELETE}} {{key}} deleted {{/DELETE}}
+        </mj-text>
         <mj-raw>
-          {{/CREATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#UPDATE}}
-        </mj-raw>
-        <mj-text> {{UPDATE}} video element updated </mj-text>
-        <mj-raw>
-          {{/UPDATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#DELETE}}
-        </mj-raw>
-        <mj-text> {{DELETE}} video element deleted </mj-text>
-        <mj-raw>
-          {{/DELETE}}
+          {{/value}}
         </mj-raw>
         <mj-raw>
-          {{/VIDEO}}
+          {{/CONTENT_ELEMENT}}
         </mj-raw>
-        <mj-raw>
-          {{#HTML}}
-        </mj-raw>
-        <mj-raw>
-          {{#CREATE}}
-        </mj-raw>
-        <mj-text> {{CREATE}} html element created </mj-text>
-        <mj-raw>
-          {{/CREATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#UPDATE}}
-        </mj-raw>
-        <mj-text> {{UPDATE}} html element updated </mj-text>
-        <mj-raw>
-          {{/UPDATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#DELETE}}
-        </mj-raw>
-        <mj-text> {{DELETE}} html element deleted </mj-text>
-        <mj-raw>
-          {{/DELETE}}
-        </mj-raw>
-        <mj-raw>
-
-          {{/HTML}}
-        </mj-raw>
-        <mj-raw>
-          {{#IMAGE}}
-        </mj-raw>
-        <mj-raw>
-          {{#CREATE}}
-        </mj-raw>
-        <mj-text> {{CREATE}} image element created </mj-text>
-        <mj-raw>
-          {{/CREATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#UPDATE}}
-        </mj-raw>
-        <mj-text> {{UPDATE}} image element updated </mj-text>
-        <mj-raw>
-          {{/UPDATE}}
-        </mj-raw>
-        <mj-raw>
-          {{#DELETE}}
-        </mj-raw>
-        <mj-text> {{DELETE}} image element deleted </mj-text>
-        <mj-raw>
-          {{/DELETE}}
-        </mj-raw>
-        <mj-raw>
-          {{/IMAGE}}
-        </mj-raw>
-      </mj-column>
-      <mj-raw>
-        {{/CONTENT_ELEMENT}}
-      </mj-raw>
     </mj-section>
     <mj-raw>
       {{/revisions}}

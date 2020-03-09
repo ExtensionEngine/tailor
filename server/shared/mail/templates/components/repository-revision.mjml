@@ -1,9 +1,0 @@
-<mj-section padding="0 10px" background-color="#f1f1f1">
-  <mj-column>
-    <mj-text mj-class="content" padding="20px" >
-      <b>{{#CREATE REPOSITORY}}Created on {{/CREATE REPOSITORY}}{{ CREATE REPOSITORY}}</b>
-      <b>{{#UPDATE REPOSITORY}}Updated {{UPDATE REPOSITORY}} times{{/UPDATE REPOSITORY}}</b>
-      <b>{{#DELETE REPOSITORY}}Deleted{{/DELETE REPOSITORY}}{{^DELETE REPOSITORY}}{{/DELETE REPOSITORY}}</b>
-    </mj-text>
-  </mj-column>
-</mj-section>

@@ -64,13 +64,17 @@ async function processRepositoryRevisions() {
 
     formattedRevisions.map(repo => {
       repo.revisions = groupArray(repo.revisions, 'entity', 'state.type', 'operation');
+      const listifiedRevisions = {};
       mapKeys(repo.revisions, (revision, revKey) => {
+        listifiedRevisions[revKey] = [];
         mapKeys(repo.revisions[revKey], (activity, activityKey) => {
+          listifiedRevisions[revKey].push({ key: activityKey, value: activity });
           mapKeys(repo.revisions[revKey][activityKey], (content, contentKey) => {
             repo.revisions[revKey][activityKey][contentKey] = content.length;
           });
         });
       });
+      repo.revisions = listifiedRevisions;
     });
 
     sendActivityDigest(user.get({ plain: true }), formattedRevisions);
