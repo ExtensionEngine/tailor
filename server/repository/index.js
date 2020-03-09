@@ -33,7 +33,9 @@ router
   .post('/:repositoryId/publish', ctrl.publishRepoInfo)
   .get('/:repositoryId/users', ctrl.getUsers)
   .post('/:repositoryId/users', ctrl.upsertUser)
-  .delete('/:repositoryId/users/:userId', ctrl.removeUser);
+  .delete('/:repositoryId/users/:userId', ctrl.removeUser)
+  .post('/:repositoryId/tags', ctrl.addTag)
+  .delete('/:repositoryId/tags/:tagId', ctrl.removeTag);
 
 mount(router, '/:repositoryId', activity);
 mount(router, '/:repositoryId', revision);
