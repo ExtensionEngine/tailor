@@ -70,9 +70,11 @@ export default {
       }).then(() => this.$set(revision, 'loading', false));
     },
     rollback(revision) {
+      const { repositoryId } = this;
       this.$set(revision, 'loading', true);
       const entity = { ...revision.state, paranoid: false };
-      axios.patch(`/repositories/${this.repositoryId}/tes/${entity.id}`, entity)
+      const path = `/repositories/${repositoryId}/content-elements/${entity.id}`;
+      axios.patch(path, entity)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);
