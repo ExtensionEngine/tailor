@@ -24,6 +24,11 @@ export const initialize = ({ commit, dispatch }, id) => {
     dispatch('getUsers')]);
 };
 
+export const expandParents = ({ getters, commit }, activity) => {
+  const parents = getters['activities/getAncestors'](activity);
+  commit('expandParents', parents);
+};
+
 export const toggleActivities = ({ getters, commit }) => {
   const outline = filter(getters.outlineActivities, it => !it.deletedAt);
   commit('toggleActivities', outline);

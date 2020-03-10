@@ -5,22 +5,13 @@
     header-icon="mdi-tag-outline">
     <template #header>Add Tag</template>
     <template #body>
-      <v-alert
-        :value="vErrors.has('default')"
-        color="error"
-        icon="mdi-alert-outline"
-        outlined>
-        {{ vErrors.first('default') }}
-      </v-alert>
       <v-combobox
         v-model="tagInput"
         v-validate="'required|min:2|max:20'"
-        :error-messages="vErrors.collect('name')"
+        @keydown.enter="submit"
         :items="availableTags"
-        :return-object="false"
+        :error-messages="vErrors.collect('name')"
         name="name"
-        item-value="name"
-        item-text="name"
         label="Select a tag or add a new one"
         outlined />
     </template>
@@ -36,6 +27,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import differenceBy from 'lodash/differenceBy';
+import map from 'lodash/map';
 import TailorDialog from '@/components/common/TailorDialog';
 import { withValidation } from 'utils/validation';
 
@@ -45,13 +37,11 @@ export default {
   props: {
     repository: { type: Object, required: true }
   },
-  data: () => ({
-    tagInput: ''
-  }),
+  data: () => ({ tagInput: '' }),
   computed: {
     ...mapState('repositories', ['tags']),
     assignedTags: vm => vm.repository.tags,
-    availableTags: vm => differenceBy(vm.tags, vm.assignedTags, 'id')
+    availableTags: vm => map(differenceBy(vm.tags, vm.assignedTags, 'id'), 'name')
   },
   methods: {
     ...mapActions('repositories', ['addTag']),
@@ -59,11 +49,14 @@ export default {
       this.$emit('close');
     },
     async submit() {
-      const isValid = await this.$validator.validateAll();
-      if (!isValid) return;
-      const data = { name: this.tagInput, repositoryId: this.repository.id };
-      await this.addTag(data);
-      this.hide();
+      // Temp timeout due to https://github.com/vuetifyjs/vuetify/issues/4679
+      setTimeout(async () => {
+        const isValid = await this.$validator.validateAll();
+        if (!isValid) return;
+        const data = { name: this.tagInput, repositoryId: this.repository.id };
+        await this.addTag(data);
+        this.hide();
+      });
     }
   },
   components: { TailorDialog }

@@ -36,9 +36,10 @@ const includeRepositoryUser = (user, query) => {
 };
 
 const includeRepositoryTags = query => {
-  const includeTag = { model: Tag };
-  if (query.tagIds) includeTag.where = { id: query.tagIds };
-  return includeTag;
+  const include = [{ model: Tag }];
+  return query.tagIds
+    ? [...include, { model: RepositoryTag, where: { tagId: query.tagIds } }]
+    : include;
 };
 
 function index({ query, user, opts }, res) {
@@ -48,7 +49,7 @@ function index({ query, user, opts }, res) {
   opts.include = [
     includeLastRevision(),
     includeRepositoryUser(user, query),
-    includeRepositoryTags(query)
+    ...includeRepositoryTags(query)
   ];
   const repositories = user.isAdmin()
     ? Repository.findAll(opts)
