@@ -3,7 +3,7 @@
 const { Model } = require('sequelize');
 
 class Tag extends Model {
-  static fields({ STRING, DATE }) {
+  static fields({ STRING }) {
     return {
       name: {
         type: STRING,
