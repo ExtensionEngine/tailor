@@ -13,39 +13,15 @@ async function processRepositoryRevisions() {
     await getUsersWithRepositoriesAndRevisions()
   );
 
-  // console.log(inspect(groupedData, false, null, true));
+  console.log(inspect(groupedData, false, null, true));
 }
 
+module.exports = processRepositoryRevisions;
+
 function groupByUsersAndRepositories(users) {
-  console.log(inspect(users, false, 3, true));
   return users.reduce((result, user) => {
     const { email } = user;
-    const formatRevision = revision => ({
-      entity: revision['repositories.revisions.entity'],
-      operation: revision['repositories.revisions.operation'],
-      createdAt: revision['repositories.revisions.created_at'],
-      type: revision['repositories.revisions.state'].type
-    });
-    const hasProp = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
-    const formatRepository = repository => ({
-      revisions: [formatRevision(repository)],
-      color: repository['repositories.data'].color,
-      name: repository['repositories.name'],
-      createdAt: repository['repositories.created_at'],
-      userAddedToRepository: repository['repositories.repositoryUser.createdAt']
-    });
-
-    if (!hasProp(result, email)) {
-      result[email] = {
-        [user['repositories.name']]: formatRepository(user)
-      };
-      return result;
-    }
-    if (hasProp(result[email], user['repositories.name'])) {
-      result[email][user['repositories.name']].revisions.push(formatRevision(user));
-      return result;
-    }
-    result[email][user['repositories.name']] = formatRepository(user);
+    result[email] = user.repositories.map(repo => formatRepository(repo));
     return result;
   }, {});
 }
@@ -57,7 +33,7 @@ function getUsersWithRepositoriesAndRevisions() {
     include: [
       {
         model: Repository,
-        attributes: ['name', 'data', 'created_at'],
+        attributes: ['name', 'data', 'created_at', 'schema'],
         include: [
           {
             model: Revision,
@@ -72,4 +48,28 @@ function getUsersWithRepositoriesAndRevisions() {
   });
 }
 
-module.exports = processRepositoryRevisions;
+function formatRevision(revision) {
+  const { entity, operation, state } = revision;
+  return {
+    entity,
+    operation,
+    createdAt: revision.get({ plain: true }).created_at,
+    type: state.type
+  };
+}
+
+function formatRepository(repo) {
+  const { name, revisions, repositoryUser, data, schema } = repo;
+  return {
+    revisions: revisions.map(revision => formatRevision(revision)),
+    color: data.color,
+    name,
+    schema,
+    userAddedToRepository: repositoryUser.createdAt,
+    createdAt: repo.get({ plain: true }).created_at
+  };
+}
+
+function hasProp(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
