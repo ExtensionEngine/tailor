@@ -6,7 +6,7 @@
       </v-btn>
     </template>
     <v-list>
-      <div class="tag-search">
+      <div>
         <v-text-field
           v-model="search"
           :hide-details="true"
