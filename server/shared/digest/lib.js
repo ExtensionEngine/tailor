@@ -56,7 +56,6 @@ function groupByUsersAndRepositories(users) {
     return result;
   }, {});
 }
-
 function getUsersWithRepositoriesAndRevisions() {
   return User.findAll({
     attributes: ['email'],
@@ -90,7 +89,6 @@ function formatRevision(revision, schema) {
     color: getActivityColor(schema, state.type)
   };
 }
-
 function formatRepository(repo) {
   const { name, revisions, repositoryUser, data, schema } = repo;
   return {
