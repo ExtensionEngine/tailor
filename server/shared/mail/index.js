@@ -1,16 +1,16 @@
 'use strict';
 
 const { mail: config, origin } = require('../../../config/server');
+const { promisify } = require('util');
 const { renderHtml, renderText } = require('./render');
+const { URL } = require('url');
 const email = require('emailjs');
+const fs = require('fs');
+const inspect = require('util').inspect;
 const logger = require('../logger');
 const path = require('path');
 const pick = require('lodash/pick');
-const { promisify } = require('util');
-const { URL } = require('url');
 const urlJoin = require('url-join');
-const inspect = require('util').inspect;
-const fs = require('fs');
 
 const from = `${config.sender.name} <${config.sender.address}>`;
 const server = email.server.connect(config);
