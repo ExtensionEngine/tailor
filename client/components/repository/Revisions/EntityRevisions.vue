@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import axios from 'client/api/request';
+import contentElementApi from '@/api/contentElement';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
 import get from 'lodash/get';
@@ -74,8 +74,7 @@ export default {
       const { repositoryId } = this;
       this.$set(revision, 'loading', true);
       const entity = { ...revision.state, paranoid: false };
-      const path = `/repositories/${repositoryId}/content-elements/${entity.id}`;
-      axios.patch(path, entity)
+      return contentElementApi.patch(repositoryId, entity.id, entity)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);
