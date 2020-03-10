@@ -26,6 +26,7 @@ import first from 'lodash/first';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import Promise from 'bluebird';
+import revisionApi from '@/api/revision';
 import TeachingElement from 'components/editor/TeachingElement';
 
 const WITHOUT_STATICS = ['HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK'];
@@ -51,7 +52,7 @@ export default {
     getRevisions() {
       const { entity, state } = this.revision;
       const params = { entity, entityId: state.id };
-      return axios.get(this.baseUrl, { params }).then(({ data: { data } }) => {
+      return revisionApi.fetch(this.repositoryId, params).then(data => {
         data.forEach(it => {
           if (includes(WITHOUT_STATICS, it.state.type)) it.resolved = true;
         });
@@ -63,7 +64,7 @@ export default {
       this.selectedRevision = revision;
       if (revision.resolved) return;
       this.$set(revision, 'loading', true);
-      return axios.get(`${this.baseUrl}${revision.id}`).then(({ data }) => {
+      return revisionApi.fetchOne(this.repositoryId, revision.id).then(data => {
         Object.assign(revision, { ...data, resolved: true });
         this.$set(this.selectedRevision, revision);
         return Promise.delay(600);
