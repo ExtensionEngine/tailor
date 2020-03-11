@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
 import differenceBy from 'lodash/differenceBy';
 import map from 'lodash/map';
+import { mapActions } from 'vuex';
 import TailorDialog from '@/components/common/TailorDialog';
 import { withValidation } from 'utils/validation';
 
@@ -35,11 +35,11 @@ export default {
   name: 'add-tag',
   mixins: [withValidation()],
   props: {
-    repository: { type: Object, required: true }
+    repository: { type: Object, required: true },
+    tags: { type: Array, required: true }
   },
   data: () => ({ tagInput: '' }),
   computed: {
-    ...mapState('repositories', ['tags']),
     assignedTags: vm => vm.repository.tags,
     availableTags: vm => map(differenceBy(vm.tags, vm.assignedTags, 'id'), 'name')
   },
