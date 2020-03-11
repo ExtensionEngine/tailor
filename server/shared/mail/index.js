@@ -5,8 +5,6 @@ const { promisify } = require('util');
 const { renderHtml, renderText } = require('./render');
 const { URL } = require('url');
 const email = require('emailjs');
-const fs = require('fs');
-const inspect = require('util').inspect;
 const logger = require('../logger');
 const path = require('path');
 const pick = require('lodash/pick');
@@ -91,25 +89,19 @@ function sendCommentNotification(users, comment) {
 }
 
 function sendActivityDigest(recipient, activities) {
-  let text, html;
-  console.log(inspect(activities, false, null, true));
+  if (activities.length < 1) return;
 
-  if (activities.length < 1) {
-    text = renderText(path.join(templatesDir, 'default-digest.txt'));
-    html = renderHtml(path.join(templatesDir, 'default-digest.mjml'));
-  } else {
-    html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), { activities });
-    text = renderText(path.join(templatesDir, 'activity-digest.txt'), { activities });
-  }
+  const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), { activities });
+  const text = renderText(path.join(templatesDir, 'activity-digest.txt'), { activities });
   logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
-  fs.writeFileSync('./test.html', html);
-  // return send({
-  //   from,
-  //   to: recipient,
-  //   subject: 'Weekly activity digest',
-  //   text,
-  //   attachment: [{ data: html, alternative: true }]
-  // });
+
+  return send({
+    from,
+    to: recipient,
+    subject: 'Weekly activity digest',
+    text,
+    attachment: [{ data: html, alternative: true }]
+  });
 }
 
 function getConfig(server) {

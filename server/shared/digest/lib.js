@@ -127,7 +127,7 @@ function groupByEntity(revisions) {
   return groupModel;
 }
 function groupByOperation(operation) {
-  return reduceEntity(operation).map(type => ({ color: type.color, type: type.type, operations: reduceEntityOperation(type.operations) }));
+  return reduceEntity(operation).map(type => ({ color: type.color, type: type.type, iconUrl: getIcon(type.type), operations: reduceEntityOperation(type.operations) }));
 }
 function reduceEntity(entity) {
   return entity.reduce((acc, next) => {
@@ -148,7 +148,6 @@ function reduceEntityOperation(entity) {
       acc.push({ operation: next.operation.toLowerCase(), count: 1 });
     } else {
       found.count += 1;
-      found.operation += 's';
     }
     return acc;
   }, []);
@@ -157,4 +156,26 @@ function getActivityColor(schema, type) {
   const element = getSchema(schema).structure
     .find(element => element.type === type);
   return element ? element.color : '#fefefe';
+}
+function getIcon(iconName) {
+  const baseUrlIconify = 'https://api.iconify.design/mdi:';
+  const iconMap = {
+    image: 'image.svg',
+    video: 'video.svg',
+    embed: 'arrange-bring-forward.svg',
+    audio: 'volume-high.svg',
+    'page-break': 'format-page-break.svg',
+    carousel: 'view-carousel.svg',
+    html: 'format-text.svg',
+    table: 'table.svg',
+    question: 'help.svg',
+    accordion: 'menu.svg',
+    pdf: 'file-pdf-box.svg',
+    default: 'content-paste.svg'
+  };
+
+  return baseUrlIconify +
+    (iconMap[iconName]
+      ? iconMap[iconName]
+      : iconMap.default);
 }

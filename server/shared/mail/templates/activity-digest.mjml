@@ -62,7 +62,7 @@
           {{#operations}}
         </mj-raw>
         <mj-text mj-class="content" vertical-align="middle" line-height="30px" padding="0" color="#444" font-size="15px">
-        <mj-raw><img width="20px" style='padding-right:5px;vertical-align:middle;' padding="0" src="https://api.iconify.design/mdi:video.svg"></img></mj-raw>
+        <mj-raw><img width="20px" style='padding-right:5px;vertical-align:middle;' padding="0" src={{iconUrl}}></img></mj-raw>
           <span>{{operation}}d {{type}} x{{count}}</span>
         </mj-text>
         <mj-raw>
