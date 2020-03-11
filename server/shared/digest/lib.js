@@ -148,6 +148,7 @@ function reduceEntityOperation(entity) {
       acc.push({ operation: next.operation.toLowerCase(), count: 1 });
     } else {
       found.count += 1;
+      found.operation += 's';
     }
     return acc;
   }, []);
