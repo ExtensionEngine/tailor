@@ -135,7 +135,7 @@ export default {
     }
   },
   created() {
-    this.fetchTags();
+    this.fetchTags({ addNewTag: false });
   },
   components: {
     CreateRepository,
