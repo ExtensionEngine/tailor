@@ -11,13 +11,14 @@
         {{ truncateTagName(tag.name) }}
       </v-chip>
     </div>
-    <v-btn v-if="!exceededTagLimit" @click="showTagDialog = true" icon small>
+    <v-btn v-if="!exceededTagLimit" @click="loadDialog" icon small>
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <add-tag
       v-if="showTagDialog"
       @close="showTagDialog = false"
-      :repository="repository" />
+      :repository="repository"
+      :tags="tags" />
   </div>
 </template>
 
@@ -37,12 +38,12 @@ export default {
   props: {
     repository: { type: Object, required: true }
   },
-  data: () => ({ showTagDialog: false }),
+  data: () => ({ showTagDialog: false, tags: [] }),
   computed: {
     exceededTagLimit: ({ repository }) => repository.tags.length >= TAG_LIMIT
   },
   methods: {
-    ...mapActions('repositories', ['removeTag']),
+    ...mapActions('repositories', ['removeTag', 'fetchTags']),
     showDeleteConfirmation(tag) {
       const data = { repositoryId: this.repository.id, tagId: tag.id };
       appChannel.emit('showConfirmationModal', {
@@ -55,6 +56,13 @@ export default {
       const tagCount = get(this.repository, 'tags.length', TAG_LIMIT) - 1;
       const length = [15, 6, 5][clamp(tagCount, 0, 2)];
       return truncate(tag, { length });
+    },
+    async loadDialog() {
+      await this.fetchTags({ addNewTag: true })
+        .then(tags => {
+          this.tags = tags;
+          this.showTagDialog = true;
+        });
     }
   },
   components: { AddTag }
