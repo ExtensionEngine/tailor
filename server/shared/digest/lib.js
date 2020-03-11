@@ -13,49 +13,24 @@ async function processRepositoryRevisions() {
   const groupedData = groupByUsersAndRepositories(
     await getUsersWithRepositoriesAndRevisions()
   );
-  const validRepos = filterNewRepos(groupedData);
-
+  const filteredRepos = filterRevisions(filterNewRepos(groupedData));
+  const templateData = mapValues(filteredRepos, (repositories, email) => (
+    repositories.map(repository => (
+      {
+        name: repository.name,
+        createdAt: repository.createdAt,
+        color: repository.color,
+        revisions: groupByEntity(repository.revisions)
+      }
+    )))
+    // sendActivityDigest(email, revisions);
+  );
+  console.log(require('util').inspect(templateData, false, null, true));
   // sendActivityDigest(filterRevisions(validRepos));
 }
 
 module.exports = processRepositoryRevisions;
 
-function filterNewRepos(groupedUsers) {
-  return mapValues(groupedUsers, (userRepositories, userEmail) => {
-    return userRepositories.filter(repo => {
-      if (repo.userAddedToRepository > subDays(new Date(), 3)) {
-        return false;
-      }
-      return true;
-    });
-  });
-}
-
-function filterRevisions(repos) {
-  const clonedRepos = cloneDeep(repos);
-  mapValues(repos, (repositories, userEmail) => {
-    repositories.forEach((repo, i) => {
-      if (repo.userAddedToRepository < subDays(new Date(), 10)) {
-        clonedRepos[userEmail][i].revisions = filterRevisionsSinceDate(repo.revisions, subDays(new Date(), 7));
-        return;
-      }
-      clonedRepos[userEmail][i].revisions = filterRevisionsSinceDate(repo.revisions, repo.userAddedToRepository);
-    });
-  });
-  return clonedRepos;
-}
-
-function filterRevisionsSinceDate(revisions, date) {
-  return revisions.filter(revision => revision.createdAt > date);
-}
-
-function groupByUsersAndRepositories(users) {
-  return users.reduce((result, user) => {
-    const { email } = user;
-    result[email] = user.repositories.map(repo => formatRepository(repo));
-    return result;
-  }, {});
-}
 function getUsersWithRepositoriesAndRevisions() {
   return User.findAll({
     attributes: ['email'],
@@ -77,17 +52,12 @@ function getUsersWithRepositoriesAndRevisions() {
     ]
   });
 }
-
-function formatRevision(revision, schema) {
-  const { entity, operation, state, id } = revision;
-  return {
-    id,
-    entity,
-    operation,
-    createdAt: revision.get({ plain: true }).created_at,
-    type: state.type,
-    color: getActivityColor(schema, state.type)
-  };
+function groupByUsersAndRepositories(users) {
+  return users.reduce((result, user) => {
+    const { email } = user;
+    result[email] = user.repositories.map(repo => formatRepository(repo));
+    return result;
+  }, {});
 }
 function formatRepository(repo) {
   const { name, revisions, repositoryUser, data, schema } = repo;
@@ -100,8 +70,89 @@ function formatRepository(repo) {
     createdAt: repo.get({ plain: true }).created_at
   };
 }
+function formatRevision(revision, schema) {
+  const { entity, operation, state, id } = revision;
+  return {
+    id,
+    entity,
+    operation,
+    createdAt: revision.get({ plain: true }).created_at,
+    type: state.type ? state.type.split('/').pop() : null,
+    color: getActivityColor(schema, state.type)
+  };
+}
+function filterNewRepos(groupedUsers) {
+  return mapValues(groupedUsers, (userRepositories, userEmail) => {
+    return userRepositories.filter(repo => {
+      if (repo.userAddedToRepository > subDays(new Date(), 3)) {
+        return false;
+      }
+      return true;
+    });
+  });
+}
+function filterRevisions(repos) {
+  const clonedRepos = cloneDeep(repos);
+  mapValues(repos, (repositories, userEmail) => {
+    repositories.forEach((repo, i) => {
+      if (repo.userAddedToRepository < subDays(new Date(), 10)) {
+        clonedRepos[userEmail][i].revisions = filterRevisionsSinceDate(repo.revisions, subDays(new Date(), 7));
+        return;
+      }
+      clonedRepos[userEmail][i].revisions = filterRevisionsSinceDate(repo.revisions, repo.userAddedToRepository);
+    });
+  });
+  return clonedRepos;
+}
+function filterRevisionsSinceDate(revisions, date) {
+  return revisions.filter(revision => revision.createdAt > date);
+}
+function groupByEntity(revisions) {
+  const groupModel = {
+    activity: [],
+    contentElement: []
+  };
+  revisions.forEach(revision => {
+    if (revision.entity === 'ACTIVITY') {
+      groupModel.activity.push(revision);
+    } else if (revision.entity === 'CONTENT_ELEMENT') {
+      groupModel.contentElement.push(revision);
+    }
+  });
 
+  groupModel.activity = groupByOperation(groupModel.activity);
+  groupModel.contentElement = groupByOperation(groupModel.contentElement);
+
+  return groupModel;
+}
+function groupByOperation(operation) {
+  return reduceEntity(operation).map(type => reduceEntityOperation(type.operations));
+}
+function reduceEntity(entity) {
+  return entity.reduce((acc, next) => {
+    const found = acc.find(current => current.type === next.type);
+    const value = { id: next.id, operation: next.operation };
+    if (!found) {
+      acc.push({ type: next.type, color: next.color, operations: [value] });
+    } else {
+      found.operations.push(value);
+    }
+    return acc;
+  }, []);
+}
+function reduceEntityOperation(entity) {
+  return entity.reduce((acc, next) => {
+    const found = acc.find(current => current.operation === next.operation);
+    if (!found) {
+      acc.push({ operation: next.operation, count: 1 });
+    } else {
+      found.count += 1;
+    }
+    return acc;
+  }, []);
+}
 function getActivityColor(schema, type) {
-  const element = getSchema(schema).structure.find(element => element.type === type);
+  const element = getSchema(schema).structure
+    .find(element => element.type === type);
   return element ? element.color : '#fefefe';
 }
