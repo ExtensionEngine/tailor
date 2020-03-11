@@ -5,7 +5,7 @@ const { Op } = require('sequelize');
 const { User, Repository, Revision } = require('../database');
 const { sendActivityDigest } = require('../mail');
 const { Sequelize } = require('../database');
-const { subDays } = require('date-fns');
+const { subDays, format } = require('date-fns');
 const cloneDeep = require('lodash/cloneDeep');
 const mapValues = require('lodash/mapValues');
 
@@ -18,15 +18,16 @@ async function processRepositoryRevisions() {
     repositories.map(repository => (
       {
         name: repository.name,
-        createdAt: repository.createdAt,
+        createdAt: format(repository.createdAt, 'MM-dd-yyyy'),
         color: repository.color,
         revisions: groupByEntity(repository.revisions)
       }
     )))
-    // sendActivityDigest(email, revisions);
   );
-  console.log(require('util').inspect(templateData, false, null, true));
-  // sendActivityDigest(filterRevisions(validRepos));
+
+  mapValues(templateData, (repositories, email) => {
+    sendActivityDigest(email, repositories);
+  });
 }
 
 module.exports = processRepositoryRevisions;
@@ -126,14 +127,14 @@ function groupByEntity(revisions) {
   return groupModel;
 }
 function groupByOperation(operation) {
-  return reduceEntity(operation).map(type => reduceEntityOperation(type.operations));
+  return reduceEntity(operation).map(type => ({ color: type.color, type: type.type, operations: reduceEntityOperation(type.operations) }));
 }
 function reduceEntity(entity) {
   return entity.reduce((acc, next) => {
-    const found = acc.find(current => current.type === next.type);
+    const found = acc.find(current => current.type.toLowerCase() === next.type.toLowerCase());
     const value = { id: next.id, operation: next.operation };
     if (!found) {
-      acc.push({ type: next.type, color: next.color, operations: [value] });
+      acc.push({ type: next.type.toLowerCase(), color: next.color, operations: [value] });
     } else {
       found.operations.push(value);
     }
@@ -142,9 +143,9 @@ function reduceEntity(entity) {
 }
 function reduceEntityOperation(entity) {
   return entity.reduce((acc, next) => {
-    const found = acc.find(current => current.operation === next.operation);
+    const found = acc.find(current => current.operation.toLowerCase() === next.operation.toLowerCase());
     if (!found) {
-      acc.push({ operation: next.operation, count: 1 });
+      acc.push({ operation: next.operation.toLowerCase(), count: 1 });
     } else {
       found.count += 1;
     }

@@ -90,9 +90,9 @@ function sendCommentNotification(users, comment) {
   });
 }
 
-function sendActivityDigest(user, activities) {
-  const recipient = user.email;
+function sendActivityDigest(recipient, activities) {
   let text, html;
+  console.log(inspect(activities, false, null, true));
 
   if (activities.length < 1) {
     text = renderText(path.join(templatesDir, 'default-digest.txt'));
@@ -100,8 +100,8 @@ function sendActivityDigest(user, activities) {
   } else {
     html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), { activities });
     text = renderText(path.join(templatesDir, 'activity-digest.txt'), { activities });
-    logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
   }
+  logger.info({ recipient, sender: from }, '📧  Sending weekly activity digest email to:', recipient);
   fs.writeFileSync('./test.html', html);
   // return send({
   //   from,

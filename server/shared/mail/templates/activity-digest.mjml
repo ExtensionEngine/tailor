@@ -7,13 +7,13 @@
     </mj-raw>
     <mj-section padding="0">
       <mj-column background-color={{color}}>
-        <mj-text mj-class="content" padding="20px" color="#444" font-size="20px">
-          <mj-text><b>{{repo}}</b></mj-text>
+        <mj-text line-height="31px" mj-class="content" color="#444" font-size="20px">
+          <mj-text><b>{{name}}</b></mj-text>
         </mj-text>
       </mj-column>
       <mj-column background-color="#9aabb5">
-        <mj-text mj-class="content" padding="20px" color="#444" font-size="20px">
-          <b>Created: {{createdAt}}</b>
+        <mj-text line-height="31px" mj-class="content" color="#444" font-size="12px">
+          Created: {{createdAt}}
         </mj-text>
       </mj-column>
     </mj-section>
@@ -26,62 +26,59 @@
           <b>Activities:</b>
         </mj-text>
         <mj-raw>
-          {{#ACTIVITY}}
+          {{#activity}}
         </mj-raw>
         <mj-raw>
-          {{#value}}
+          {{#operations}}
         </mj-raw>
-        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
-          {{#CREATE}} {{CREATE}} {{key}} created {{/CREATE}}
-        </mj-text>
-        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
-          {{#UPDATE}} {{UPDATE}} {{key}} updated {{/UPDATE}}
-        </mj-text>
-        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
-          {{#DELETE}} {{DELETE}} {{key}} deleted {{/DELETE}}
+        <mj-text mj-class="content" line-height="30px" padding="0" font-size="15px">
+          <b style="color: {{color}};">#</b>
+          {{operation}}d {{type}} x{{count}}
         </mj-text>
         <mj-raw>
-          {{/value}}
+          {{/operations}}
         </mj-raw>
         <mj-raw>
-          {{/ACTIVITY}}
+          {{/activity}}
         </mj-raw>
-    </mj-section>
+        <mj-raw>
+          {{^activity}}
+        </mj-raw>
+        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
+          No activities have been changed this week.
+        </mj-text>
+        <mj-raw>
+          {{/activity}}
+        </mj-raw>
     </mj-column>
-    <mj-section padding="0 10px" background-color= "#e6e6e6">
       <mj-column padding="10px 20px">
         <mj-text mj-class="content" padding="10px 0" color="#444" font-size="25px">
           <b>Content elements:</b>
         </mj-text>
         <mj-raw>
-          {{#CONTENT_ELEMENT}}
+          {{#contentElement}}
         </mj-raw>
         <mj-raw>
-          {{#value}}
+          {{#operations}}
         </mj-raw>
-        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
-          {{#CREATE}}
-            <span class="mdi {{elementInfo.icon}}"> </span>
-            {{elementInfo.text}} created x {{CREATE}}
-          {{/CREATE}}
-        </mj-text>
-        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
-          {{#UPDATE}}
-            <span class="mdi {{elementInfo.icon}}"> </span>
-            {{elementInfo.text}} updated x {{UPDATE}}
-          {{/UPDATE}}
-        </mj-text>
-        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
-          {{#DELETE}}
-            <span class="mdi {{elementInfo.icon}}"> </span>
-            {{elementInfo.text}} deleted x {{DELETE}}
-          {{/DELETE}}
+        <mj-text mj-class="content" vertical-align="middle" line-height="30px" padding="0" color="#444" font-size="15px">
+        <mj-raw><img width="20px" style='padding-right:5px;vertical-align:middle;' padding="0" src="https://api.iconify.design/mdi:video.svg"></img></mj-raw>
+          <span>{{operation}}d {{type}} x{{count}}</span>
         </mj-text>
         <mj-raw>
-          {{/value}}
+          {{/operations}}
         </mj-raw>
         <mj-raw>
-          {{/CONTENT_ELEMENT}}
+          {{/contentElement}}
+        </mj-raw>
+        <mj-raw>
+          {{^contentElement}}
+        </mj-raw>
+        <mj-text mj-class="content" padding="5px" color="#444" font-size="15px">
+          No elements have been changed this week.
+        </mj-text>
+        <mj-raw>
+          {{/contentElement}}
         </mj-raw>
     </mj-section>
     <mj-raw>

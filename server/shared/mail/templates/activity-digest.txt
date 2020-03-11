@@ -1,25 +1,22 @@
 Tailor
 =================================================
+
  All changes you made to your repositories this week:
 {{#activities}}
-  {{repo}} | created: {{createdAt}}
+  {{name}} | created: {{createdAt}}
   {{#revisions}}
   Activities:
-  {{#ACTIVITY}}
-    {{#value}}
-      {{#CREATE}} {{CREATE}} {{key}} created {{/CREATE}}
-      {{#UPDATE}} {{UPDATE}} {{key}} updated {{/UPDATE}}
-      {{#DELETE}} {{DELETE}} {{key}} deleted {{/DELETE}}
-    {{/value}}
-  {{/ACTIVITY}}
+  {{#activity}}
+    {{#operations}}
+    {{operation}}d {{type}} x{{count}}
+    {{/operations}}
+  {{/activity}}
   Content elements:
-  {{#CONTENT_ELEMENT}}
-    {{#value}}
-      {{#CREATE}} {{CREATE}} {{elementInfo.text}} content elements created {{/CREATE}}
-      {{#UPDATE}} {{UPDATE}} {{elementInfo.text}} content elements updated {{/UPDATE}}
-      {{#DELETE}} {{DELETE}} {{elementInfo.text}} content elements deleted {{/DELETE}}
-    {{/value}}
-  {{/CONTENT_ELEMENT}}
+  {{#contentElement}}
+    {{#operations}}
+    {{operation}}d {{type}} x{{count}}
+    {{/operations}}
+  {{/contentElement}}
   {{/revisions}}
 {{/activities}}
 
