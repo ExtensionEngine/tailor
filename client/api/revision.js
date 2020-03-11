@@ -2,20 +2,20 @@ import { extractData } from './helpers';
 import request from './request';
 
 const urls = {
-  root: repoId => `/repositories/${repoId}/revisions`,
-  resource: (repoId, id) => `${urls.root(repoId)}/${id}`
+  root: repositoryId => `/repositories/${repositoryId}/revisions`,
+  resource: (repositoryId, id) => `${urls.root(repositoryId)}/${id}`
 };
 
-function fetch(repoId, params) {
-  return request.get(urls.root(repoId), { params }).then(extractData);
+function fetch(repositoryId, params) {
+  return request.get(urls.root(repositoryId), { params }).then(extractData);
 }
 
-function fetchOne(repoId, id, params) {
-  return request.get(urls.resource(repoId, id), { params })
+function get(repositoryId, id, params) {
+  return request.get(urls.resource(repositoryId, id), { params })
     .then(res => res.data);
 }
 
 export default {
   fetch,
-  fetchOne
+  get
 };

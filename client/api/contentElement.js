@@ -1,11 +1,12 @@
 import request from './request';
 
 const urls = {
-  resource: (repoId, id) => `/repositories/${repoId}/content-elements/${id}`
+  root: repositoryId => `/repositories/${repositoryId}/content-elements`,
+  resource: (repositoryId, id) => `${urls.root(repositoryId)}/${id}`
 };
 
-function patch(repoId, id, data) {
-  return request.patch(urls.resource(repoId, id), data);
+function patch({ repositoryId, id }, data) {
+  return request.patch(urls.resource(repositoryId, id), data);
 }
 
 export default {

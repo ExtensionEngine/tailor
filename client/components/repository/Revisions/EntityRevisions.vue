@@ -64,17 +64,16 @@ export default {
       this.selectedRevision = revision;
       if (revision.resolved) return;
       this.$set(revision, 'loading', true);
-      return revisionApi.fetchOne(this.repositoryId, revision.id).then(data => {
+      return revisionApi.get(this.repositoryId, revision.id).then(data => {
         Object.assign(revision, { ...data, resolved: true });
         this.$set(this.selectedRevision, revision);
         return Promise.delay(600);
       }).then(() => this.$set(revision, 'loading', false));
     },
     rollback(revision) {
-      const { repositoryId } = this;
       this.$set(revision, 'loading', true);
       const entity = { ...revision.state, paranoid: false };
-      return contentElementApi.patch(repositoryId, entity.id, entity)
+      return contentElementApi.patch(entity, entity)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);
