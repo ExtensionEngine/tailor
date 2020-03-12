@@ -201,10 +201,10 @@ Configuration for content containers. Contains the following properties:
 Defines the structure of an content element metadata
 
 - **type** `String` - Type of content element (example: "IMAGE", "HTML").
+- **inputs** `Array<ElementMeta>` - Defines what meta fields content element has.
 - **relationships** `Array<ElementRelationship>` - Defines what relationship
   metadata content element has (relationships with content elements from the same 
   or other activities in the repository).
-- **meta** `Array<ElementMeta>` - Defines what meta fields content element has.
 
 #### ElementRelationship
 
