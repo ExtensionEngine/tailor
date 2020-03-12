@@ -105,8 +105,8 @@ An array of Schema objects.
   schema structure.
 - **contentContainers** `Array<ContentContainer>` - Array of content container
   configs
-- **tesMeta** `Array<TesMetadata>` - An array of objects defining
-  tailor teaching element metadata.
+- **elementMeta** `Array<ElementMetaConfig>` - An array of objects defining
+  content element metadata.
 
 #### ActivityConfig - Schema structure elements
 
@@ -124,11 +124,11 @@ properties:
   to it.
 - **hasExams** `Boolean` - Activity allows adding exam activities to it.
 - **exams** `Object` - Configuration for activity exams.
-- **relationships** `Array<Relationship>` - Defines what relationships this
+- **relationships** `Array<ActivityRelationship>` - Defines what relationships this
   activity has to other activities.
 - **meta** `Array<Metadata>` - An array of objects defining activity metadata.
 
-#### Relationship
+#### ActivityRelationship
 
 Defines the structure of an activity relationship field.
 
@@ -196,32 +196,32 @@ Configuration for content containers. Contains the following properties:
   of the structure component used is the `kebab-cased` version of the `type`
   property. (example: ABC_DEF -> abc-def)
 
-#### TesMetadata
+#### ElementMetaConfig
 
-Defines the structure of an teaching element metadata
+Defines the structure of an content element metadata
 
-- **type** `String` - Type of teaching element (example: "IMAGE", "HTML").
-- **relationships** `Array<TesRelationship>` - Defines what relationships this
-  teaching element has to other teaching elements from the same 
-  or other activities in the repository.
-- **meta** `Array<TesMetaFields>` - Defines what meta fields teaching element has.
+- **type** `String` - Type of content element (example: "IMAGE", "HTML").
+- **relationships** `Array<ElementRelationship>` - Defines what relationship
+  metadata content element has (relationships with content elements from the same 
+  or other activities in the repository).
+- **meta** `Array<ElementMeta>` - Defines what meta fields content element has.
 
-#### TesRelationship
+#### ElementRelationship
 
-Defines the structure of an teaching element relationship field.
+Defines the structure of an content element relationship field.
 
-- **type** `String` - Defines the name of the relationship. The relationship
+- **key** `String` - Defines the name of the relationship. The relationship
   will be published under this value.
 - **label** `String` - Display label.
 - **placeholder** `String` - Label for relationship add button and modal title.
 - **multiple** `Boolean` - Defines if the relationship can have multiple
   associations chosen. True by default.
-- **allowedTypes** `Array<String>` - Defines to what type of teaching elements
-   given teaching element can have relationship with (example: `['VIDEO']`).
+- **allowedTypes** `Array<String>` - Defines to what type of content elements
+   given content element can have relationship with (example: `['VIDEO']`).
 
-#### TesMetaFields
+#### ElementMeta
 
-Defines what meta fields teaching element has
+Defines what meta fields content element has
 
 - **key** `String` - Unique key for the field.
 - **type** `String` - Type of the input component used on the client. 

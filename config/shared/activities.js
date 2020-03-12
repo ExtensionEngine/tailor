@@ -65,8 +65,8 @@ function getLevel(type) {
 }
 
 function getTesMeta(schemaId, type) {
-  const { tesMeta } = getSchema(schemaId);
-  return find(tesMeta, it => castArray(it.type).includes(type)) || {};
+  const { elementMeta } = getSchema(schemaId);
+  return find(elementMeta, it => castArray(it.type).includes(type)) || {};
 }
 
 function getSiblingLevels(type) {
