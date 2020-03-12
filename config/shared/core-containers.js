@@ -2,5 +2,5 @@
 
 module.exports = [
   'tcc-exam',
-  'tcc-assessment-block'
+  'tcc-assessment-pool'
 ];

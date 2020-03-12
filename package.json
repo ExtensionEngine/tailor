@@ -30,7 +30,7 @@
     "integration:add": "node -r ./server/script/preflight ./server/script/addIntegration.js",
     "integration:token": "node -r ./server/script/preflight ./server/script/generateIntegrationToken.js",
     "detachDeletedRepos": "node -r ./server/script/preflight ./server/script/detachDeletedRepos.js",
-    "insertAssessmentBlocks": "node -r ./server/script/preflight ./server/script/insertAssessmentBlocks.js",
+    "migrateAssessmentPools": "node -r ./server/script/preflight ./server/script/migrateAssessmentPools.js",
     "fixRevisionUrls": "node -r ./server/script/preflight ./server/script/fixRevisionUrls.js",
     "start": "node -r ./server/script/preflight ./server",
     "postshrinkwrap": "rewrite-lockfile package-lock.json"

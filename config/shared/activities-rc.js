@@ -62,7 +62,7 @@ const SCHEMAS = [{
     label: 'Topic',
     color: '#EC407A',
     isObjective: true,
-    contentContainers: ['PERSPECTIVE', 'ASSESSMENT_BLOCK'],
+    contentContainers: ['PERSPECTIVE', 'ASSESSMENT_POOL'],
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -87,7 +87,7 @@ const SCHEMAS = [{
       objectives: ['COURSE/TOPIC']
     }
   }, {
-    type: 'ASSESSMENT_BLOCK',
+    type: 'ASSESSMENT_POOL',
     label: 'Assessments',
     publishedAs: 'assessments'
   }],

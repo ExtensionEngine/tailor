@@ -4,11 +4,11 @@ const { Activity, ContentElement, sequelize } = require('../shared/database');
 const Promise = require('bluebird');
 const { SCHEMAS } = require('../../config/shared/activities');
 
-const DEFAULTS = { data: {}, type: 'ASSESSMENT_BLOCK' };
+const DEFAULTS = { data: {}, type: 'ASSESSMENT_POOL' };
 
 const types = extractAssessedTypes(SCHEMAS);
 
-insertAssessmentBlocks(types)
+migrateAssessmentContainers(types)
   .then(() => {
     console.info('Inserted assessment blocks.');
     process.exit(0);
@@ -19,16 +19,17 @@ insertAssessmentBlocks(types)
   });
 
 function extractAssessedTypes(schemas) {
-  return schemas.reduce((types, { structure }) => {
-    structure.forEach(it => it.hasAssessments && types.push(it.type));
-    return types;
-  }, []);
+  return schemas
+    .reduce((items, { structure }) => {
+      return items.concat(structure.filter(it => it.hasAssessments));
+    }, [])
+    .map(it => it.type);
 }
 
-async function insertAssessmentBlocks(types) {
+async function migrateAssessmentContainers(types) {
   const transaction = await sequelize.transaction();
   const assessed = await getAssessedActivitites(types, transaction);
-  await Promise.each(assessed, it => insertAssessmentBlock(it, transaction));
+  await Promise.each(assessed, it => migrateAssessmentContainer(it, transaction));
   return transaction.commit();
 }
 
@@ -37,9 +38,9 @@ function getAssessedActivitites(types, transaction) {
   return Activity.findAll(options);
 }
 
-async function insertAssessmentBlock(activity, transaction) {
+async function migrateAssessmentContainer(activity, transaction) {
   const { id } = await createAssessmentBlock(activity, transaction);
-  return updateAssessments(id, activity.id, transaction);
+  return migrateContentElements(id, activity.id, transaction);
 }
 
 async function createAssessmentBlock(activity, transaction) {
@@ -48,7 +49,7 @@ async function createAssessmentBlock(activity, transaction) {
   return Activity.create(data, { transaction });
 }
 
-function updateAssessments(blockId, activityId, transaction) {
+function migrateContentElements(blockId, activityId, transaction) {
   const where = { activityId };
   const order = [['id', 'ASC']];
   return ContentElement
