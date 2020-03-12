@@ -6,14 +6,12 @@
       </v-btn>
     </template>
     <v-list>
-      <div>
-        <v-text-field
-          v-model="search"
-          :hide-details="true"
-          prepend-inner-icon="mdi-magnify"
-          placeholder="Search..."
-          solo />
-      </div>
+      <v-text-field
+        v-model="search"
+        :hide-details="true"
+        prepend-inner-icon="mdi-magnify"
+        placeholder="Search..."
+        solo />
       <div class="item-container">
         <v-list-item
           v-for="it in filteredTags"
