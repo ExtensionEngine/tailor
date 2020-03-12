@@ -89,6 +89,8 @@ function sendCommentNotification(users, comment) {
 }
 
 function sendActivityDigest(recipient, activities) {
+  console.log('penispeis');
+  console.log(activities);
   if (activities.length < 1) return;
 
   const html = renderHtml(path.join(templatesDir, 'activity-digest.mjml'), { activities });

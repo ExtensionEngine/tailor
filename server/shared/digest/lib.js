@@ -3,7 +3,6 @@
 const { getSchema } = require('../../../config/shared/activities');
 const { Op } = require('sequelize');
 const { User, Repository, Revision } = require('../database');
-const { sendActivityDigest } = require('../mail');
 const { Sequelize } = require('../database');
 const { subDays, format } = require('date-fns');
 const cloneDeep = require('lodash/cloneDeep');
@@ -24,10 +23,7 @@ async function processRepositoryRevisions() {
       }
     )))
   );
-
-  mapValues(templateData, (repositories, email) => {
-    sendActivityDigest(email, repositories);
-  });
+  return templateData;
 }
 
 module.exports = processRepositoryRevisions;
@@ -83,24 +79,19 @@ function formatRevision(revision, schema) {
   };
 }
 function filterNewRepos(groupedUsers) {
-  return mapValues(groupedUsers, (userRepositories, userEmail) => {
-    return userRepositories.filter(repo => {
-      if (repo.userAddedToRepository > subDays(new Date(), 3)) {
-        return false;
-      }
-      return true;
-    });
-  });
+  return mapValues(groupedUsers,
+    userRepositories => userRepositories
+      .filter(repo => (repo.userAddedToRepository > subDays(new Date(), 3))));
 }
 function filterRevisions(repos) {
   const clonedRepos = cloneDeep(repos);
   mapValues(repos, (repositories, userEmail) => {
     repositories.forEach((repo, i) => {
-      if (repo.userAddedToRepository < subDays(new Date(), 10)) {
-        clonedRepos[userEmail][i].revisions = filterRevisionsSinceDate(repo.revisions, subDays(new Date(), 7));
-        return;
-      }
-      clonedRepos[userEmail][i].revisions = filterRevisionsSinceDate(repo.revisions, repo.userAddedToRepository);
+      clonedRepos[userEmail][i].revisions = filterRevisionsSinceDate(
+        repo.revisions, repo.userAddedToRepository < subDays(new Date(), 10)
+          ? subDays(new Date(), 7)
+          : repo.userAddedToRepository
+      );
     });
   });
   return clonedRepos;
@@ -109,46 +100,57 @@ function filterRevisionsSinceDate(revisions, date) {
   return revisions.filter(revision => revision.createdAt > date);
 }
 function groupByEntity(revisions) {
-  const groupModel = {
+  const groupModel = revisions.reduce((acc, revision) => {
+    if (revision.entity === 'ACTIVITY') {
+      acc.activity.push(revision);
+    } else if (revision.entity === 'CONTENT_ELEMENT') {
+      acc.contentElement.push(revision);
+    }
+    return acc;
+  }, {
     activity: [],
     contentElement: []
-  };
-  revisions.forEach(revision => {
-    if (revision.entity === 'ACTIVITY') {
-      groupModel.activity.push(revision);
-    } else if (revision.entity === 'CONTENT_ELEMENT') {
-      groupModel.contentElement.push(revision);
-    }
   });
-
   groupModel.activity = groupByOperation(groupModel.activity);
   groupModel.contentElement = groupByOperation(groupModel.contentElement);
 
   return groupModel;
 }
 function groupByOperation(operation) {
-  return reduceEntity(operation).map(type => ({ color: type.color, type: type.type, iconUrl: getIcon(type.type), operations: reduceEntityOperation(type.operations) }));
+  return reduceEntity(operation).map(type => ({
+    color: type.color,
+    type: type.type,
+    iconUrl: getIcon(type.type),
+    operations: reduceEntityOperation(type.operations)
+  }));
 }
 function reduceEntity(entity) {
   return entity.reduce((acc, next) => {
-    const found = acc.find(current => current.type.toLowerCase() === next.type.toLowerCase());
+    const found = acc.find(current => (
+      current.type.toLowerCase() === next.type.toLowerCase()
+    ));
     const value = { id: next.id, operation: next.operation };
     if (!found) {
-      acc.push({ type: next.type.toLowerCase(), color: next.color, operations: [value] });
-    } else {
-      found.operations.push(value);
-    }
+      acc.push({
+        type: next.type.toLowerCase(),
+        color: next.color,
+        operations: [value]
+      });
+    } else found.operations.push(value);
     return acc;
   }, []);
 }
 function reduceEntityOperation(entity) {
   return entity.reduce((acc, next) => {
-    const found = acc.find(current => current.operation.toLowerCase() === next.operation.toLowerCase());
+    const found = acc.find(current => (
+      current.operation.toLowerCase() === next.operation.toLowerCase()
+    ));
     if (!found) {
-      acc.push({ operation: next.operation.toLowerCase(), count: 1 });
-    } else {
-      found.count += 1;
-    }
+      acc.push({
+        operation: next.operation.toLowerCase(),
+        count: 1
+      });
+    } else found.count += 1;
     return acc;
   }, []);
 }

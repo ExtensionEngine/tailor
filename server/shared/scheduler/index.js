@@ -21,7 +21,6 @@ function parseJsonCronParams(scheduleParams) {
     'month',
     'dayOfWeek'
   ];
-
   timeUnits.forEach((unit, index) => {
     time._parseField(
       parseAlias(scheduleParams[unit]) ||
@@ -33,9 +32,6 @@ function parseJsonCronParams(scheduleParams) {
   return time.toString();
 }
 function parseAlias(value) {
-  if (!value) {
-    return false;
-  }
   return value && value.length === 3
     ? CronTime.aliases[value].toString()
     : value.toString();
