@@ -38,6 +38,7 @@ import filter from 'lodash/filter';
 import last from 'lodash/last';
 import map from 'lodash/map';
 import pickBy from 'lodash/pickBy';
+import sortBy from 'lodash/sortBy';
 
 export default {
   name: 'assessment-block',
@@ -58,7 +59,7 @@ export default {
     },
     assessments() {
       const { savedAssessments: saved, unsavedAssessments: unsaved } = this;
-      return [...saved, ...Object.values(unsaved)];
+      return sortBy([...saved, ...Object.values(unsaved)], 'position');
     },
     nextPosition() {
       const lastItem = last(this.assessments);
