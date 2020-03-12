@@ -33,7 +33,17 @@ function parseJsonCronParams(scheduleParams) {
 }
 function parseAlias(value) {
   if (!value) return false;
-  return value && value.length === 3
-    ? CronTime.aliases[value].toString()
+  const val = value.includes(',')
+    ? value
+        .split(',')
+        .map(param => {
+          // Slight workaround the fact that jan is 0 which is a falsy value
+          return CronTime.aliases[param] || CronTime.aliases[param] === 0
+            ? CronTime.aliases[param].toString()
+            : param.toString();
+        })
+        .join(',')
     : value.toString();
+
+  return val;
 }
