@@ -6,14 +6,14 @@ const ATTRS = [
   'id', 'uid', 'type', 'position', 'parentId', 'createdAt', 'updatedAt'
 ];
 
-async function fetchBlock(block) {
+async function fetchContainer(block) {
   const elements = await block.getContentElements({ raw: true });
   return { ...pick(block, ATTRS), elements };
 }
 
 function fetch(parent) {
   const opts = { where: { type: info.type } };
-  return parent.getChildren(opts).map(fetchBlock);
+  return parent.getChildren(opts).map(fetchContainer);
 }
 
 async function resolve(block, resolveStatics) {
