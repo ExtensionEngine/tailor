@@ -162,14 +162,16 @@ function getIcon(iconName) {
   const iconMap = {
     image: 'image.svg',
     video: 'video.svg',
+    'brightcove-video': 'video.svg',
     embed: 'arrange-bring-forward.svg',
     audio: 'volume-high.svg',
-    'page-break': 'format-page-break.svg',
+    break: 'format-page-break.svg',
     carousel: 'view-carousel.svg',
     html: 'format-text.svg',
     table: 'table.svg',
-    question: 'help.svg',
+    assessment: 'help.svg',
     accordion: 'menu.svg',
+    modal: 'window-maximize.svg',
     pdf: 'file-pdf-box.svg',
     default: 'content-paste.svg'
   };
