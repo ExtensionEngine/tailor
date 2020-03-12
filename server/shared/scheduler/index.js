@@ -32,6 +32,7 @@ function parseJsonCronParams(scheduleParams) {
   return time.toString();
 }
 function parseAlias(value) {
+  if (!value) return false;
   return value && value.length === 3
     ? CronTime.aliases[value].toString()
     : value.toString();
