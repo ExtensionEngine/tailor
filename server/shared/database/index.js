@@ -1,26 +1,30 @@
 'use strict';
 
-const { migrationsPath } = require('../../../sequelize.config');
-const { wrapAsyncMethods } = require('./helpers');
 const config = require('./config');
 const forEach = require('lodash/forEach');
 const Hooks = require('./hooks');
 const invoke = require('lodash/invoke');
 const logger = require('../logger');
+const { migrationsPath } = require('../../../sequelize.config');
 const pick = require('lodash/pick');
 const pkg = require('../../../package.json');
 const semver = require('semver');
 const Sequelize = require('sequelize');
 const Umzug = require('umzug');
+const { wrapAsyncMethods } = require('./helpers');
 
 // Require models.
+/* eslint-disable require-sort/require-sort */
 const User = require('../../user/user.model');
 const Repository = require('../../repository/repository.model');
+const RepositoryTag = require('../../tag/repositoryTag.model');
 const RepositoryUser = require('../../repository/repositoryUser.model');
 const Activity = require('../../activity/activity.model');
 const ContentElement = require('../../content-element/content-element.model');
 const Revision = require('../../revision/revision.model');
 const Comment = require('../../comment/comment.model');
+const Tag = require('../../tag/tag.model');
+/* eslint-enable */
 
 const isProduction = process.env.NODE_ENV === 'production';
 const sequelize = createConnection(config);
@@ -71,11 +75,13 @@ function initialize() {
 const models = {
   User: defineModel(User),
   Repository: defineModel(Repository),
+  RepositoryTag: defineModel(RepositoryTag),
   RepositoryUser: defineModel(RepositoryUser),
   Activity: defineModel(Activity),
   Revision: defineModel(Revision),
   ContentElement: defineModel(ContentElement),
-  Comment: defineModel(Comment)
+  Comment: defineModel(Comment),
+  Tag: defineModel(Tag)
 };
 
 function defineModel(Model, connection = sequelize) {

@@ -27,12 +27,11 @@ export default {
     };
   },
   methods: {
-    onChange() {
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
-        if (this.value === this.meta.value) return;
-        this.$emit('update', this.meta.key, this.value);
-      });
+    async onChange() {
+      const isValid = await this.$validator.validate(this.meta.key);
+      if (!isValid) return;
+      if (this.value === this.meta.value) return;
+      this.$emit('update', this.meta.key, this.value);
     }
   }
 };

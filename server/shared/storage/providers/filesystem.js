@@ -1,14 +1,15 @@
 'use strict';
 
 const config = require('../../../../config/server');
-const Promise = require('bluebird');
 const exists = require('path-exists');
 const expandPath = require('untildify');
-const fs = Promise.promisifyAll(require('fs'));
 const Joi = require('joi');
-const mkdirp = Promise.promisify(require('mkdirp'));
 const path = require('path');
+const Promise = require('bluebird');
 const { validateConfig } = require('../validation');
+
+const fs = Promise.promisifyAll(require('fs'));
+const mkdirp = Promise.promisify(require('mkdirp'));
 
 const isNotFound = err => err.code === 'ENOENT';
 const resolvePath = str => path.resolve(expandPath(str));

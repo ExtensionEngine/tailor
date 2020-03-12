@@ -8,6 +8,8 @@ const state = {
   items: {},
   search: '',
   showPinned: false,
+  tags: [],
+  tagFilter: [],
   $internals: {
     pagination: PAGINATION_DEFAULTS,
     sort: {
