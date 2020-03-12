@@ -25,6 +25,7 @@ import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
+import pick from 'lodash/pick';
 import Promise from 'bluebird';
 import revisionApi from '@/api/revision';
 import TeachingElement from 'components/editor/TeachingElement';
@@ -73,7 +74,8 @@ export default {
     rollback(revision) {
       this.$set(revision, 'loading', true);
       const entity = { ...revision.state, paranoid: false };
-      return contentElementApi.patch(entity, entity)
+      const options = pick(entity, ['id', 'repositoryId']);
+      return contentElementApi.patch(options, entity)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);
