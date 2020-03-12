@@ -130,8 +130,9 @@ export default {
       this.showSidebar = this.metadata.length && this.showSidebar;
     }, 50));
 
-    const { repository, repositoryId: id } = this;
-    if (get(repository, 'id') !== id) await this.initialize(id);
+    const { repository, repositoryId: currentRepositoryId } = this;
+    const isNotCurrent = get(repository, 'id') !== currentRepositoryId;
+    if (isNotCurrent) await this.initialize(currentRepositoryId);
     const ids = flatMap(this.contentContainers, it => map(it, 'id'));
     if (ids.length) await this.getTeachingElements({ ids });
     this.showLoader = false;
