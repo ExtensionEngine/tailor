@@ -14,14 +14,14 @@
         solo />
       <div class="item-container">
         <v-list-item
-          v-for="it in filteredTags"
-          :key="it.id"
-          @click="$emit('update', it)">
+          v-for="tag in filteredTags"
+          :key="tag.id"
+          @click="$emit('update', tag)">
           <v-list-item-action class="mr-2">
-            <v-checkbox v-model="it.isSelected" />
+            <v-checkbox v-model="tag.isSelected" />
           </v-list-item-action>
           <v-list-item-content class="text-left">
-            <v-list-item-title>{{ it.name }}</v-list-item-title>
+            <v-list-item-title>{{ tag.name }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </div>
@@ -59,5 +59,4 @@ export default {
   max-height: 18.75rem;
   overflow-y: auto;
 }
-
 </style>

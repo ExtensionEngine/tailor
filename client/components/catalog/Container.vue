@@ -73,11 +73,7 @@ import TagFilter from './TagFilter';
 import TagFilterSelection from './TagFilterSelection';
 
 export default {
-  data() {
-    return {
-      loading: true
-    };
-  },
+  data: () => ({ loading: true }),
   computed: {
     ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
