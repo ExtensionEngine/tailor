@@ -1,7 +1,7 @@
 'use strict';
 
-const { auth: config } = require('../../../../config/server');
 const bcrypt = require('bcrypt');
+const { auth: config } = require('../../../../config/server');
 const Promise = require('bluebird');
 const times = (length, cb) => Array.from({ length }, (_, i) => cb(i));
 

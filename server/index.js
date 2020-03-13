@@ -15,9 +15,11 @@ if (process.env.NODE_ENV !== 'production') {
   bluebird.config({ longStackTraces: true });
 }
 
+/* eslint-disable require-sort/require-sort */
 const config = require('../config/server');
 const database = require('./shared/database');
 const logger = require('./shared/logger');
+/* eslint-enable */
 const runApp = promisify(app.listen.bind(app));
 
 database.initialize()

@@ -1,11 +1,19 @@
 'use strict';
 
-const { Repository, RepositoryUser, Revision, sequelize, User } = require('../shared/database');
+const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
+const {
+  Repository,
+  RepositoryTag,
+  RepositoryUser,
+  Revision,
+  sequelize,
+  Tag,
+  User
+} = require('../shared/database');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const getVal = require('lodash/get');
 const map = require('lodash/map');
-const { NOT_FOUND } = require('http-status-codes');
 const { Op } = require('sequelize');
 const pick = require('lodash/pick');
 const publishingService = require('../shared/publishing/publishing.service');
@@ -26,16 +34,29 @@ const includeLastRevision = () => ({
   order: [['createdAt', 'DESC']],
   limit: 1
 });
+const includeRepositoryUser = (user, query) => {
+  const options = query && query.pinned
+    ? { where: { userId: user.id, pinned: true }, required: true }
+    : { where: { userId: user.id }, required: false };
+  return { model: RepositoryUser, ...options };
+};
+
+const includeRepositoryTags = query => {
+  const include = [{ model: Tag }];
+  return query.tagIds
+    ? [...include, { model: RepositoryTag, where: { tagId: query.tagIds } }]
+    : include;
+};
 
 function index({ query, user, opts }, res) {
   if (query.search) opts.where.name = { [Op.iLike]: `%${query.search}%` };
   if (query.schema) opts.where.schema = { [Op.eq]: query.schema };
   if (getVal(opts, 'order.0.0') === 'name') opts.order[0][0] = lowercaseName;
-  opts.include = [includeLastRevision()];
-  const repositoryUser = query.pinned
-    ? { where: { userId: user.id, pinned: true }, required: true }
-    : { where: { userId: user.id }, required: false };
-  opts.include.push({ model: RepositoryUser, ...repositoryUser });
+  opts.include = [
+    includeLastRevision(),
+    includeRepositoryUser(user, query),
+    ...includeRepositoryTags(query)
+  ];
   const repositories = user.isAdmin()
     ? Repository.findAll(opts)
     : user.getRepositories(opts);
@@ -58,8 +79,9 @@ async function create({ user, body }, res) {
   return res.json({ data: repository });
 }
 
-async function get({ repository }, res) {
-  await repository.reload({ include: [includeLastRevision()] });
+async function get({ repository, user }, res) {
+  const include = [includeLastRevision(), includeRepositoryUser(user), { model: Tag }];
+  await repository.reload({ include });
   return res.json({ data: repository });
 }
 
@@ -130,6 +152,20 @@ function findOrCreateRole(repository, user, role) {
   .then(() => user);
 }
 
+function addTag({ body: { name }, repository }, res) {
+  return sequelize.transaction(async transaction => {
+    const [tag] = await Tag.findOrCreate({ where: { name }, transaction });
+    await repository.addTags([tag], { transaction });
+    return res.json({ data: tag });
+  });
+}
+
+async function removeTag({ params: { tagId, repositoryId } }, res) {
+  const where = { tagId, repositoryId };
+  await RepositoryTag.destroy({ where });
+  return res.status(NO_CONTENT).send();
+}
+
 module.exports = {
   index,
   create,
@@ -141,5 +177,7 @@ module.exports = {
   getUsers,
   upsertUser,
   removeUser,
-  publishRepoInfo
+  publishRepoInfo,
+  addTag,
+  removeTag
 };

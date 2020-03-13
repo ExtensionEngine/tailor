@@ -1,6 +1,6 @@
 <template>
-  <v-card @click="navigateTo()" class="repository-card">
-    <div class="card-body blue-grey darken-4">
+  <v-card class="repository-card">
+    <div @click="navigateTo()" class="card-body blue-grey darken-4">
       <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
       <span class="schema-name">{{ schema }}</span>
       <div class="controls float-right">
@@ -12,10 +12,9 @@
         <v-btn
           v-if="repository.hasAdminAccess"
           @click.stop="navigateTo('repository-info')"
-          @mousedown.stop
           color="blue-grey darken-1"
           icon small
-          class="mr-2">
+          class="mr-2 float-right">
           <v-icon>mdi-settings</v-icon>
         </v-btn>
       </div>
@@ -43,16 +42,14 @@
       </div>
     </div>
     <v-card-actions class="pa-1 grey lighten-4">
-      <v-btn
-        @click.stop="pin({ id: repository.id, pin: !isPinned })"
-        @mousedown.stop
-        icon>
+      <v-btn @click.stop="pin({ id: repository.id, pin: !isPinned })" icon>
         <v-icon
           :color="isPinned ? 'grey darken-3': 'grey'"
           :class="{ 'mdi-rotate-45': isPinned }">
           mdi-pin
         </v-icon>
       </v-btn>
+      <tags :repository="repository" />
     </v-card-actions>
   </v-card>
 </template>
@@ -63,6 +60,7 @@ import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
 import { mapActions } from 'vuex';
 import PublishingBadge from 'components/common/PublishingBadge';
+import Tags from './Tags';
 
 const getPublishingInfo = hasChanges => hasChanges
   ? 'Repository has unpublished content'
@@ -91,7 +89,7 @@ export default {
       });
     }
   },
-  components: { PublishingBadge }
+  components: { PublishingBadge, Tags }
 };
 </script>
 
