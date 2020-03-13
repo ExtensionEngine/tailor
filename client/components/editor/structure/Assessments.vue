@@ -15,15 +15,14 @@
         :key="it._cid"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @delete="$emit('deleteElement', it)"
+        @delete="requestRemoveConfirmation(it)"
         :assessment="it"
         :expanded="isSelected(it)" />
     </ul>
     <add-element
       @add="addAssessment"
       :include="['ASSESSMENT']"
-      :activity="container"
-      :position="nextPosition"
+      :activity="activity"
       :layout="false"
       large
       label="Add assessment" />
@@ -31,62 +30,45 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import AddElement from 'tce-core/AddElement';
 import AssessmentItem from 'tce-core/AssessmentItem';
+import capitalize from 'lodash/capitalize';
 import cuid from 'cuid';
-import filter from 'lodash/filter';
-import last from 'lodash/last';
+import EventBus from 'EventBus';
 import map from 'lodash/map';
-import pickBy from 'lodash/pickBy';
-import sortBy from 'lodash/sortBy';
+
+const appChannel = EventBus.channel('app');
 
 export default {
-  name: 'assessment-block',
-  props: {
-    container: { type: Object, required: true },
-    tes: { type: Object, required: true }
-  },
+  name: 'assessments',
   data() {
     return {
-      unsavedAssessments: {},
       selected: [],
       allSelected: false
     };
   },
   computed: {
-    savedAssessments() {
-      return filter(this.tes, { activityId: this.container.id });
-    },
-    assessments() {
-      const { savedAssessments: saved, unsavedAssessments: unsaved } = this;
-      return sortBy([...saved, ...Object.values(unsaved)], 'position');
-    },
-    nextPosition() {
-      const lastItem = last(this.assessments);
-      return lastItem ? lastItem.position + 1 : 1;
-    },
-    hasAssessments: vm => vm.assessments.length
+    ...mapGetters('editor', ['activity', 'assessments']),
+    hasAssessments() {
+      return this.assessments.length;
+    }
   },
   methods: {
+    ...mapActions('repository/tes', ['save', 'update', 'remove']),
+    ...mapMutations('repository/tes', ['add']),
     addAssessment(assessment) {
-      const cid = cuid();
-      const data = { ...assessment, _cid: cid };
-      this.unsavedAssessments = { ...this.unsavedAssessments, [cid]: data };
+      const data = { ...assessment, _cid: cuid() };
+      this.add(data);
       this.selected.push(data._cid);
     },
     saveAssessment(assessment) {
       // TODO: Figure out why save is broken (for update)
-      const event = assessment.id ? 'updateElement' : 'saveElement';
-      return this.$emit(event, assessment);
-    },
-    clearUnsavedAssessments(assessments) {
-      const ids = assessments.map(it => it._cid);
-      const cond = it => !ids.includes(it._cid);
-      this.unsavedAssessments = pickBy(this.unsavedAssessments, cond);
+      return assessment.id ? this.update(assessment) : this.save(assessment);
     },
     toggleSelect(assessment) {
-      const { question } = assessment.data;
-      const hasQuestion = question && question.length;
+      const question = assessment.data.question;
+      const hasQuestion = question && question.length > 0;
       if (this.isSelected(assessment) && !hasQuestion) {
         this.remove(assessment);
       } else if (this.isSelected(assessment)) {
@@ -101,10 +83,14 @@ export default {
     toggleAssessments() {
       this.allSelected = !this.allSelected;
       this.selected = this.allSelected ? map(this.assessments, it => it._cid) : [];
+    },
+    requestRemoveConfirmation(assessment) {
+      const actionPrefix = assessment.id ? 'delete' : 'discard';
+      const title = capitalize(`${actionPrefix} assessment?`);
+      const message = `Are you sure you want to ${actionPrefix} assessment?`;
+      const action = () => this.remove(assessment);
+      appChannel.emit('showConfirmationModal', { title, message, action });
     }
-  },
-  watch: {
-    savedAssessments: 'clearUnsavedAssessments'
   },
   components: { AddElement, AssessmentItem }
 };
