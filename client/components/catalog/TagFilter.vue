@@ -35,9 +35,7 @@ import map from 'lodash/map';
 import { mapState } from 'vuex';
 
 export default {
-  data() {
-    return { search: '' };
-  },
+  data: () => ({ search: '' }),
   computed: {
     ...mapState('repositories', ['tags', 'tagFilter']),
     options() {
