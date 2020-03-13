@@ -69,8 +69,9 @@ export default {
   },
   methods: {
     addAssessment(assessment) {
-      const data = { ...assessment, _cid: cuid() };
-      this.$set(this.unsavedAssessments, data._cid, data);
+      const cid = cuid();
+      const data = { ...assessment, _cid: cid };
+      this.unsavedAssessments = { ...this.unsavedAssessments, [cid]: data };
       this.selected.push(data._cid);
     },
     saveAssessment(assessment) {
