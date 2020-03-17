@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import filter from 'lodash/filter';
 import find from 'lodash/find';
 import map from 'lodash/map';
 import { mapState } from 'vuex';
@@ -46,9 +47,9 @@ export default {
     },
     filteredTags() {
       const { options, search } = this;
-      return search
-        ? options.filter(it => it.name.toLowerCase().includes(search.toLowerCase()))
-        : options;
+      if (!search) return options;
+      const reqex = new RegExp(search.trim(), 'i');
+      return filter(options, ({ name }) => reqex.test(name));
     }
   }
 };
