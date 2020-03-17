@@ -2,8 +2,8 @@
 
 const { Tag, Repository, User } = require('../shared/database');
 
-function list({ user, query: { addNewTag } }, res) {
-  const options = user.isAdmin() || addNewTag === 'true'
+function list({ user, query: { associated } }, res) {
+  const options = user.isAdmin() || associated === 'true'
     ? {}
     : {
       include: [{
