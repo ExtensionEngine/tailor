@@ -16,7 +16,7 @@
         clearable
         clear-icon="mdi-close-circle-outline" />
     </v-sheet>
-    <v-list>
+    <v-list v-if="filteredTags.length">
       <v-list-item
         v-for="tag in filteredTags"
         :key="tag.id"
@@ -28,6 +28,9 @@
           <v-list-item-title>{{ tag.name }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+    </v-list>
+    <v-list v-else>
+      <v-list-item>No tags found</v-list-item>
     </v-list>
   </v-menu>
 </template>
