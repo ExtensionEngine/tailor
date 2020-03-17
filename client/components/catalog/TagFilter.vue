@@ -5,26 +5,29 @@
         <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>
       </v-btn>
     </template>
-    <v-list>
+    <v-sheet class="pa-4 primary darken-1">
       <v-text-field
         v-model="search"
-        :hide-details="true"
-        prepend-inner-icon="mdi-magnify"
-        placeholder="Search..."
-        solo />
-      <div class="item-container">
-        <v-list-item
-          v-for="tag in filteredTags"
-          :key="tag.id"
-          @click="$emit('update', tag)">
-          <v-list-item-action class="mr-2">
-            <v-checkbox v-model="tag.isSelected" />
-          </v-list-item-action>
-          <v-list-item-content class="text-left">
-            <v-list-item-title>{{ tag.name }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </div>
+        label="Search Tags"
+        dark
+        flat
+        solo-inverted
+        hide-details
+        clearable
+        clear-icon="mdi-close-circle-outline" />
+    </v-sheet>
+    <v-list>
+      <v-list-item
+        v-for="tag in filteredTags"
+        :key="tag.id"
+        @click="$emit('update', tag)">
+        <v-list-item-action class="mr-2">
+          <v-checkbox :value="tag.isSelected" />
+        </v-list-item-action>
+        <v-list-item-content class="text-left">
+          <v-list-item-title>{{ tag.name }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>
@@ -56,7 +59,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.item-container {
+.v-list {
   max-height: 18.75rem;
   overflow-y: auto;
 }
