@@ -45,11 +45,8 @@ const pin = ({ commit, getters }, { id, pin }) => {
   });
 };
 
-const fetchTags = ({ commit }, payload) => {
-  return tagApi.fetch(payload).then(tags => {
-    if (payload.addNewTag) return tags;
-    commit('fetchTags', tags);
-  });
+const fetchTags = ({ commit }) => {
+  return tagApi.fetch().then(tags => commit('fetchTags', tags));
 };
 
 const addTag = ({ commit }, data) => {
