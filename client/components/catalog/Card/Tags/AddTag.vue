@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import api from '@/api/tag';
 import differenceBy from 'lodash/differenceBy';
 import map from 'lodash/map';
 import { mapActions } from 'vuex';
@@ -35,10 +36,9 @@ export default {
   name: 'add-tag',
   mixins: [withValidation()],
   props: {
-    repository: { type: Object, required: true },
-    tags: { type: Array, required: true }
+    repository: { type: Object, required: true }
   },
-  data: () => ({ tagInput: '' }),
+  data: () => ({ tagInput: '', tags: [] }),
   computed: {
     assignedTags: vm => vm.repository.tags,
     availableTags: vm => map(differenceBy(vm.tags, vm.assignedTags, 'id'), 'name')
@@ -58,6 +58,9 @@ export default {
         this.hide();
       });
     }
+  },
+  created() {
+    api.fetch(true).then(tags => (this.tags = tags));
   },
   components: { TailorDialog }
 };
