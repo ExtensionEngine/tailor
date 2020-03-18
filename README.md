@@ -198,7 +198,7 @@ Configuration for content containers. Contains the following properties:
 
 #### ElementMetaConfig
 
-Defines the structure of an content element metadata
+Defines the structure of an content element metadata.
 
 - **type** `String` - Type of content element (example: "IMAGE", "HTML").
 - **inputs** `Array<ElementMeta>` - Defines what meta fields content element has.
@@ -221,7 +221,7 @@ Defines the structure of an content element relationship field.
 
 #### ElementMeta
 
-Defines what meta fields content element has
+Defines what meta fields content element has.
 
 - **key** `String` - Unique key for the field.
 - **type** `String` - Type of the input component used on the client. 

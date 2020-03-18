@@ -30,7 +30,7 @@ import { mapActions, mapGetters } from 'vuex';
 import api from '@/api/repository';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
-import { getRepositoryMeta } from 'shared/activities';
+import { getRepositoryMetadata } from 'shared/activities';
 import Meta from 'components/common/Meta';
 import set from 'lodash/set';
 
@@ -56,7 +56,7 @@ export default {
       }];
     },
     metadata() {
-      return getRepositoryMeta(this.repository);
+      return getRepositoryMetadata(this.repository);
     }
   },
   methods: {

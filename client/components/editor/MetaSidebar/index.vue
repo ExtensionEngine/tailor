@@ -3,7 +3,7 @@
     <h2>Additional settings</h2>
     <div class="meta-element">
       <meta-input
-        v-for="it in metadata"
+        v-for="it in inputs"
         :key="`${element._cid}.${it.key}`"
         @update="updateElement"
         :meta="it" />
@@ -25,10 +25,10 @@ import MetaInput from 'components/common/Meta';
 import TesRelationship from './TesRelationship';
 
 export default {
-  name: 'sidebar',
+  name: 'metadata-sidebar',
   props: {
     element: { type: Object, required: true },
-    metadata: { type: Array, required: true },
+    inputs: { type: Array, required: true },
     relationships: { type: Array, default: () => [] }
   },
   data() {

@@ -4,7 +4,7 @@
       <toolbar :element="focusedElement">
         <span slot="actions">
           <v-btn
-            v-if="metadata.length || relationships.length"
+            v-if="!metadata.isEmpty"
             @click="showSidebar = !showSidebar"
             color="primary"
             fab
@@ -19,8 +19,8 @@
         <meta-sidebar
           v-if="showSidebar"
           :key="focusedElement._cid"
-          :metadata="metadata"
-          :relationships="relationships"
+          :inputs="metadata.inputs"
+          :relationships="metadata.relationships"
           :element="focusedElement" />
       </transition>
     </template>
@@ -42,8 +42,12 @@
 </template>
 
 <script>
-import * as config from 'shared/activities';
 import { getElementId, isQuestion } from 'tce-core/utils';
+import {
+  getElementMetadata,
+  getSupportedContainers,
+  hasAssessments
+} from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
@@ -60,31 +64,20 @@ import Toolbar from './Toolbar';
 
 export default {
   name: 'editor',
-  data() {
-    return {
-      showLoader: true,
-      focusedElement: null,
-      showSidebar: false,
-      mousedownCaptured: false
-    };
-  },
+  data: () => ({
+    showLoader: true,
+    focusedElement: null,
+    showSidebar: false,
+    mousedownCaptured: false
+  }),
   computed: {
-    ...mapGetters('repository', ['repository', 'getMetadata', 'getRelationships']),
+    ...mapGetters('repository', ['repository']),
     ...mapGetters('editor', ['activity', 'contentContainers']),
-    metadata() {
-      if (!this.focusedElement) return [];
-      return this.getMetadata(this.focusedElement);
-    },
-    relationships() {
-      if (!this.focusedElement) return [];
-      return this.getRelationships(this.focusedElement);
-    },
-    showAssessments() {
-      return config.hasAssessments(this.activity.type);
-    },
+    metadata: vm => getElementMetadata(get(vm.repository, 'schema'), vm.focusedElement),
+    showAssessments: vm => hasAssessments(vm.activity.type),
     containerConfigs() {
       if (!this.activity) return [];
-      return config.getSupportedContainers(this.activity.type);
+      return getSupportedContainers(this.activity.type);
     }
   },
   methods: {
@@ -135,7 +128,7 @@ export default {
       }
       if (getElementId(this.focusedElement) === getElementId(element)) return;
       this.focusedElement = { ...element, parent: composite };
-      this.showSidebar = (this.relationships.length || this.metadata.length) && this.showSidebar;
+      this.showSidebar = !this.metadata.isEmpty && this.showSidebar;
     }, 50));
     if (!this.repository || this.repository.id !== repositoryId) {
       await this.initialize(repositoryId);
