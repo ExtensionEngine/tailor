@@ -104,7 +104,7 @@ An array of Schema objects.
 - **structure** `Array<ActivityConfig>` - An array of objects which define
   schema structure.
 - **contentContainers** `Array<ContentContainer>` - Array of content container
-  configs
+  configs.
 - **elementMeta** `Array<ElementMetaConfig>` - An array of objects defining
   content element metadata.
 

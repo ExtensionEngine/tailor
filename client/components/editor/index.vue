@@ -73,7 +73,10 @@ export default {
   computed: {
     ...mapGetters('repository', ['repository']),
     ...mapGetters('editor', ['activity', 'contentContainers']),
-    metadata: vm => getElementMetadata(get(vm.repository, 'schema'), vm.focusedElement),
+    metadata() {
+      const { repository, focusedElement } = this;
+      return getElementMetadata(get(repository, 'schema'), focusedElement);
+    },
     showAssessments: vm => hasAssessments(vm.activity.type),
     containerConfigs() {
       if (!this.activity) return [];
