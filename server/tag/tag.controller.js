@@ -1,6 +1,6 @@
 'use strict';
 
-const { Tag, Repository, User } = require('../shared/database');
+const { Repository, Tag, User } = require('../shared/database');
 
 function list({ user, query: { associated } }, res) {
   const options = user.isAdmin() || associated === 'true'

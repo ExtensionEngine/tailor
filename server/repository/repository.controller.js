@@ -1,9 +1,15 @@
 'use strict';
 
+const { NO_CONTENT, NOT_FOUND } = require('http-status-codes');
 const {
-  Repository, RepositoryUser, Revision, sequelize, User, Tag, RepositoryTag
+  Repository,
+  RepositoryTag,
+  RepositoryUser,
+  Revision,
+  sequelize,
+  Tag,
+  User
 } = require('../shared/database');
-const { NOT_FOUND, NO_CONTENT } = require('http-status-codes');
 const { createError } = require('../shared/error/helpers');
 const { getSchema } = require('../../config/shared/activities');
 const getVal = require('lodash/get');
