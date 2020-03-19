@@ -5,7 +5,7 @@
       <span class="schema-name">{{ schema }}</span>
       <div class="controls float-right">
         <publishing-badge
-          :color="hasChanges ? 'orange' : 'green'"
+          :color="hasUnpublishedChanges ? 'orange' : 'green'"
           :tooltip="{ top: true }">
           {{ publishingInfo }}
         </publishing-badge>
@@ -14,7 +14,7 @@
           @click.stop="navigateTo('repository-info')"
           color="blue-grey darken-1"
           icon small
-          class="mr-2 float-right">
+          class="mr-2">
           <v-icon>mdi-settings</v-icon>
         </v-btn>
       </div>
@@ -62,7 +62,7 @@ import { mapActions } from 'vuex';
 import PublishingBadge from 'components/common/PublishingBadge';
 import Tags from './Tags';
 
-const getPublishingInfo = hasChanges => hasChanges
+const getPublishingInfo = hasUnpublishedChanges => hasUnpublishedChanges
   ? 'Repository has unpublished content'
   : 'Repository content is published';
 
@@ -72,12 +72,12 @@ export default {
   },
   computed: {
     name: ({ repository }) => repository.name,
-    hasChanges: ({ repository }) => repository.hasChanges,
     description: ({ repository }) => repository.description,
     schema: ({ repository }) => getSchema(repository.schema).name,
     lastActivity: ({ repository }) => first(repository.revisions),
+    hasUnpublishedChanges: ({ repository }) => repository.hasUnpublishedChanges,
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),
-    publishingInfo: ({ hasChanges }) => getPublishingInfo(hasChanges)
+    publishingInfo: ({ hasUnpublishedChanges }) => getPublishingInfo(hasUnpublishedChanges)
   },
   methods: {
     ...mapActions('repositories', ['pin']),

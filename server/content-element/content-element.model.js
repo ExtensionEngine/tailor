@@ -1,11 +1,11 @@
 'use strict';
 
 const { Model, Op } = require('sequelize');
-const { resolveStatics } = require('../shared/storage/helpers');
 const calculatePosition = require('../shared/util/calculatePosition');
 const hooks = require('./hooks');
 const isNumber = require('lodash/isNumber');
 const pick = require('lodash/pick');
+const { resolveStatics } = require('../shared/storage/helpers');
 
 class ContentElement extends Model {
   static fields(DataTypes) {

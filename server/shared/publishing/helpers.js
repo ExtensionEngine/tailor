@@ -7,8 +7,8 @@ const {
   sequelize
 } = require('../database');
 const {
-  getOutlineLevels,
   getLevelRelationships,
+  getOutlineLevels,
   getSupportedContainers
 } = require('../../../config/shared/activities');
 const { containerRegistry } = require('../content-plugins');
@@ -47,7 +47,7 @@ function publishActivity(activity) {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
       return saveSpine(spine)
         .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
-        .then(() => updateHasChangesFlag(repository, activity))
+        .then(() => updatePublishingStatus(repository, activity))
         .then(() => activity.save());
     });
   });
@@ -82,7 +82,7 @@ function updateRepositoryCatalog(repository, publishedAt) {
 function publishRepositoryDetails(repository) {
   return getPublishedStructure(repository).then(async spine => {
     Object.assign(spine, getRepositoryAttrs(repository));
-    await updateHasChangesFlag(repository);
+    await updatePublishingStatus(repository);
     return saveSpine(spine)
       .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt));
   });
@@ -305,7 +305,7 @@ function mapRelationships(relationships, activity) {
 
 // check if there is at least one outline activity with unpublished
 // changes and upadate repository model accordingly
-async function updateHasChangesFlag(repository, activity) {
+async function updatePublishingStatus(repository, activity) {
   const outlineTypes = map(getOutlineLevels(repository.schema), 'type');
   const where = {
     repositoryId: repository.id,

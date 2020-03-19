@@ -30,9 +30,9 @@ class Repository extends Model {
         type: JSONB,
         defaultValue: {}
       },
-      hasChanges: {
+      hasUnpublishedChanges: {
         type: BOOLEAN,
-        field: 'has_changes'
+        field: 'has_unpublished_changes'
       },
       createdAt: {
         type: DATE,
@@ -95,7 +95,7 @@ class Repository extends Model {
   static hooks(Hooks) {
     [Hooks.beforeCreate, Hooks.beforeUpdate, Hooks.beforeDestroy]
       .forEach(type => this.addHook(type, (repository, { context }) => {
-        if (context) repository.hasChanges = true;
+        if (context) repository.hasUnpublishedChanges = true;
       }));
   }
 
@@ -138,8 +138,8 @@ class Repository extends Model {
   }
 
   touch(value = true) {
-    if (this.hasChanges === value) return this;
-    return this.update({ hasChanges: value });
+    if (this.hasUnpublishedChanges === value) return this;
+    return this.update({ hasUnpublishedChanges: value });
   }
 
   getUser(user) {

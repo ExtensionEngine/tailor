@@ -16,38 +16,39 @@ const isOutline = it => /\//.test(it.type);
 
 exports.up = async (qi, { DATE }) => {
   await qi.addColumn(TABLE, COLUMN, { type: DATE });
-  await updateModifiedAt(qi);
+  await updateColumnValues(qi);
 };
 
 exports.down = qi => qi.removeColumn(TABLE, COLUMN);
 
-async function updateModifiedAt({ sequelize }) {
+async function updateColumnValues({ sequelize }) {
   const transaction = await sequelize.transaction();
   const repositories = await getRepositories(sequelize, transaction);
-  await Promise.map(repositories, async ({ id: repositoryId }) => {
+  await Promise.each(repositories, async ({ id: repositoryId }) => {
     const [activities, revisions] = await Promise.all([
       getActivities(sequelize, repositoryId, transaction),
       getRevisions(sequelize, repositoryId, transaction)
     ]);
     const cache = buildRevisionCache(activities, revisions);
     const outlineActivities = filter(activities, isOutline);
-    await Promise.map(outlineActivities, activity => {
+    await Promise.each(outlineActivities, activity => {
       const modifiedAt = resolveModifiedAt(activity, cache);
-      return setModifiedAt(sequelize, transaction, activity, modifiedAt);
+      const where = { modifiedAt, activityId: activity.id };
+      return setModifiedAt(sequelize, where, transaction);
     });
   });
   await transaction.commit();
 }
 
 async function getRepositories(sequelize, transaction) {
-  const sql = 'SELECT id AS "id" FROM repository;';
+  const sql = 'SELECT id FROM repository;';
   return head(await sequelize.query(sql, { transaction, raw: true }));
 }
 
 async function getRevisions(sequelize, repositoryId, transaction) {
   const sql = `
     SELECT
-      entity AS "entity",
+      entity,
       state -> 'id' AS "entityId",
       state -> 'parentId' AS "parentId",
       repository_id AS "repositoryId",
@@ -76,8 +77,8 @@ async function getRevisions(sequelize, repositoryId, transaction) {
 async function getActivities(sequelize, repositoryId, transaction) {
   const sql = `
     SELECT
-      id AS "id",
-      type AS "type",
+      id,
+      type,
       parent_id AS "parentId",
       repository_id AS "repositoryId"
     FROM
@@ -89,7 +90,7 @@ async function getActivities(sequelize, repositoryId, transaction) {
   return head(await sequelize.query(sql, options));
 }
 
-function setModifiedAt(sequelize, transaction, activity, modifiedAt) {
+function setModifiedAt(sequelize, where, transaction) {
   const sql = `
     UPDATE
       activity
@@ -98,8 +99,7 @@ function setModifiedAt(sequelize, transaction, activity, modifiedAt) {
     WHERE
       id = :activityId;
   `;
-  const replacements = { modifiedAt, activityId: activity.id };
-  return sequelize.query(sql, { transaction, replacements });
+  return sequelize.query(sql, { transaction, replacements: where });
 }
 
 function buildRevisionCache(activities, revisions) {

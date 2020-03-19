@@ -24,7 +24,7 @@
     </v-menu>
     <div class="publish-status">
       <publishing-badge
-        :color="hasChanges ? 'orange' : 'green'"
+        :color="hasUnpublishedChanges ? 'orange' : 'green'"
         :tooltip="{ bottom: true, maxWidth: 300 }">
         {{ publishingInfo }}
       </publishing-badge>
@@ -56,8 +56,8 @@ const getRevisionParams = id => ({
 const isAfter = (a, b) => new Date(a) > new Date(b);
 const concat = arr => arr.join(', ').replace(/, ([^,]*)$/, ' and $1');
 
-const getPublishingInfo = ({ hasChanges, users }) => {
-  if (!hasChanges) return 'Activity content is published';
+const getPublishingInfo = ({ hasUnpublishedChanges, users }) => {
+  if (!hasUnpublishedChanges) return 'Activity content is published';
   return users
     ? `This activity has unpublished changes made by ${users}`
     : 'This activity has unpublished changes';
@@ -72,13 +72,16 @@ export default {
   data: () => ({ revisions: [] }),
   computed: {
     config: vm => getLevel(vm.activity.type),
-    hasChanges: vm => vm.activity.hasChanges,
     publishingInfo: vm => getPublishingInfo(vm),
     publishedAtMessage() {
       const { publishedAt } = this.activity;
       return publishedAt
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
+    },
+    hasUnpublishedChanges() {
+      const { modifiedAt, publishedAt } = this.activity;
+      return isAfter(modifiedAt, publishedAt);
     },
     users() {
       const { revisions, activity: { publishedAt } } = this;
@@ -106,6 +109,6 @@ export default {
 .publish-status {
   display: flex;
   align-items: center;
-  padding: 1.125rem 0.375rem 0 0.375rem;
+  padding: 1.125rem 0.375rem 0 0.25rem;
 }
 </style>

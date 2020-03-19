@@ -1,7 +1,6 @@
 import calculatePosition from 'utils/calculatePosition';
 import generateActions from '@/store/helpers/actions';
 import { getDescendants as getDeepChildren } from 'utils/activity';
-import pick from 'lodash/pick';
 import request from '@/api/request';
 
 const { api, fetch, get, reset, save, setEndpoint, update } = generateActions();
@@ -25,8 +24,7 @@ const remove = ({ state, commit }, model) => {
 
 const publish = ({ commit }, activity) => {
   return api.get(`${activity.id}/publish`).then(({ data: { data } }) => {
-    const attrs = pick(data, ['hasChanges', 'publishedAt']);
-    commit('save', { ...activity, ...attrs });
+    commit('save', { ...activity, publishedAt: data.publishedAt });
   });
 };
 

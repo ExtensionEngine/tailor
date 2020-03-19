@@ -1,6 +1,9 @@
 'use strict';
 
-const { getOutlineLevels, getSiblingLevels } = require('../../config/shared/activities');
+const {
+  getSiblingLevels,
+  getLevel: isOutline
+} = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
 const hooks = require('./hooks');
@@ -11,7 +14,7 @@ const Promise = require('bluebird');
 
 class Activity extends Model {
   static fields(DataTypes) {
-    const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4, VIRTUAL } = DataTypes;
+    const { STRING, DOUBLE, JSONB, BOOLEAN, DATE, UUID, UUIDV4 } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -45,12 +48,6 @@ class Activity extends Model {
       modifiedAt: {
         type: DATE,
         field: 'modified_at'
-      },
-      hasChanges: {
-        type: VIRTUAL,
-        get() {
-          return this.modifiedAt > this.publishedAt;
-        }
       },
       createdAt: {
         type: DATE,
@@ -170,14 +167,12 @@ class Activity extends Model {
   }
 
   descendants(options = {}, nodes = [], leaves = []) {
-    const { attributes, skippedTypes } = options;
+    const { attributes, excludeTypes = [] } = options;
     const node = !isEmpty(attributes) ? pick(this, attributes) : this;
     nodes.push(node);
     return Promise.resolve(this.getChildren({ attributes }))
-      .map(it => {
-        if (skippedTypes && skippedTypes.includes(it.type)) return [];
-        return it.descendants(options, nodes, leaves);
-      })
+      .map(it => excludeTypes.includes(it.type) ? []
+        : it.descendants(options, nodes, leaves))
       .then(children => {
         if (!isEmpty(children)) return { nodes, leaves };
         const leaf = !isEmpty(attributes) ? pick(this, attributes) : this;
@@ -222,16 +217,15 @@ class Activity extends Model {
     });
   }
 
-  getOutlineParent(types, transaction) {
-    if (types.includes(this.type)) return this;
+  getOutlineParent(transaction) {
+    if (isOutline(this.type)) return this;
     return this.getParent({ transaction }).then(activity => {
-      return activity && activity.getOutlineParent(types, transaction);
+      return activity && activity.getOutlineParent(transaction);
     });
   }
 
   async touchOutline(repository, transaction) {
-    const types = map(getOutlineLevels(repository.schema), 'type');
-    const outline = await this.getOutlineParent(types, transaction);
+    const outline = await this.getOutlineParent(transaction);
     if (outline) outline.update({ modifiedAt: new Date() }, { transaction });
   }
 }
