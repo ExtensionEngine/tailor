@@ -4,11 +4,7 @@
       <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
       <span class="schema-name">{{ schema }}</span>
       <div class="controls float-right">
-        <publishing-badge
-          :color="hasUnpublishedChanges ? 'orange' : 'green'"
-          :tooltip="{ top: true }">
-          {{ publishingInfo }}
-        </publishing-badge>
+        <publishing-badge :has-changes="hasUnpublishedChanges" />
         <v-btn
           v-if="repository.hasAdminAccess"
           @click.stop="navigateTo('repository-info')"
@@ -62,10 +58,6 @@ import { mapActions } from 'vuex';
 import PublishingBadge from 'components/common/PublishingBadge';
 import Tags from './Tags';
 
-const getPublishingInfo = hasUnpublishedChanges => hasUnpublishedChanges
-  ? 'Repository has unpublished content'
-  : 'Repository content is published';
-
 export default {
   props: {
     repository: { type: Object, required: true }
@@ -76,8 +68,7 @@ export default {
     schema: ({ repository }) => getSchema(repository.schema).name,
     lastActivity: ({ repository }) => first(repository.revisions),
     hasUnpublishedChanges: ({ repository }) => repository.hasUnpublishedChanges,
-    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),
-    publishingInfo: ({ hasUnpublishedChanges }) => getPublishingInfo(hasUnpublishedChanges)
+    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false)
   },
   methods: {
     ...mapActions('repositories', ['pin']),
