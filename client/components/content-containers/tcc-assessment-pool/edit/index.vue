@@ -46,13 +46,11 @@ export default {
     container: { type: Object, required: true },
     tes: { type: Object, required: true }
   },
-  data() {
-    return {
-      unsavedAssessments: {},
-      selected: [],
-      allSelected: false
-    };
-  },
+  data: () => ({
+    unsavedAssessments: {},
+    selected: [],
+    allSelected: false
+  }),
   computed: {
     savedAssessments() {
       return filter(this.tes, { activityId: this.container.id });
