@@ -20,12 +20,14 @@
 </template>
 
 <script>
-import axios from 'client/api/request';
+import contentElementApi from '@/api/contentElement';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
+import pick from 'lodash/pick';
 import Promise from 'bluebird';
+import revisionApi from '@/api/revision';
 import TeachingElement from 'components/editor/TeachingElement';
 
 const WITHOUT_STATICS = ['HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK'];
@@ -51,7 +53,7 @@ export default {
     getRevisions() {
       const { entity, state } = this.revision;
       const params = { entity, entityId: state.id };
-      return axios.get(this.baseUrl, { params }).then(({ data: { data } }) => {
+      return revisionApi.fetch(this.repositoryId, params).then(data => {
         data.forEach(it => {
           if (includes(WITHOUT_STATICS, it.state.type)) it.resolved = true;
         });
@@ -63,7 +65,7 @@ export default {
       this.selectedRevision = revision;
       if (revision.resolved) return;
       this.$set(revision, 'loading', true);
-      return axios.get(`${this.baseUrl}${revision.id}`).then(({ data }) => {
+      return revisionApi.get(this.repositoryId, revision.id).then(data => {
         Object.assign(revision, { ...data, resolved: true });
         this.$set(this.selectedRevision, revision);
         return Promise.delay(600);
@@ -72,7 +74,8 @@ export default {
     rollback(revision) {
       this.$set(revision, 'loading', true);
       const entity = { ...revision.state, paranoid: false };
-      axios.patch(`/repositories/${this.repositoryId}/tes/${entity.id}`, entity)
+      const options = pick(entity, ['id', 'repositoryId']);
+      return contentElementApi.patch(options, entity)
         .then(this.getRevisions)
         .then(revisions => {
           const newRevision = first(revisions);
