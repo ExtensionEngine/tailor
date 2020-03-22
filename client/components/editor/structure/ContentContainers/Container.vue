@@ -16,7 +16,7 @@
       outlined>
       Click the button below to create content.
     </v-alert>
-    <tes-list
+    <element-list
       @add="addElement"
       @insert="insert"
       @update="reorder"
@@ -30,16 +30,16 @@
           :dragged="dragged"
           :element="item" />
       </template>
-    </tes-list>
+    </element-list>
   </v-card>
 </template>
 
 <script>
+import ElementList from '../ElementList';
 import filter from 'lodash/filter';
 import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
-import TesList from '../TesList';
 
 export default {
   name: 'content-container',
@@ -78,7 +78,7 @@ export default {
     }
   },
   components: {
-    TesList,
+    ElementList,
     TeachingElement
   }
 };
