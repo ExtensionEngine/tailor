@@ -118,11 +118,12 @@ export default {
   }
 
   .heading {
-    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
     padding: 0 0 0.5rem 0.125rem;
 
     .v-btn {
-      float: right;
       margin: 0.25rem 0 0;
       padding: 0;
     }
