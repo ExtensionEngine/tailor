@@ -10,7 +10,7 @@ const types = extractAssessedTypes(SCHEMAS);
 
 migrateAssessmentContainers(types)
   .then(() => {
-    console.info('Inserted assessment blocks.');
+    console.info('Inserted assessment pools.');
     process.exit(0);
   })
   .catch(error => {
@@ -26,36 +26,31 @@ function extractAssessedTypes(schemas) {
     .map(it => it.type);
 }
 
-async function migrateAssessmentContainers(types) {
+async function migrateAssessmentContainers(type) {
   const transaction = await sequelize.transaction();
-  const assessed = await getAssessedActivitites(types, transaction);
+  const assessed = await Activity.findAll({ where: { type }, transaction });
   await Promise.each(assessed, it => migrateAssessmentContainer(it, transaction));
   return transaction.commit();
 }
 
-function getAssessedActivitites(types, transaction) {
-  const options = { where: { type: types }, transaction };
-  return Activity.findAll(options);
-}
-
 async function migrateAssessmentContainer(activity, transaction) {
-  const { id } = await createAssessmentBlock(activity, transaction);
+  const { id } = await createAssessmentContainer(activity, transaction);
   return migrateContentElements(id, activity.id, transaction);
 }
 
-async function createAssessmentBlock(activity, transaction) {
+async function createAssessmentContainer(activity, transaction) {
   const { id: parentId, repositoryId } = activity;
   const data = { ...DEFAULTS, parentId, repositoryId, position: 1 };
   return Activity.create(data, { transaction });
 }
 
-function migrateContentElements(blockId, activityId, transaction) {
+function migrateContentElements(containerId, activityId, transaction) {
   const where = { activityId };
   const order = [['id', 'ASC']];
   return ContentElement
     .findAll({ where, order, transaction })
     .each((it, index) => {
-      const updates = { activityId: blockId, position: index + 1 };
+      const updates = { activityId: containerId, position: index + 1 };
       return it.update(updates, { transaction });
     });
 }

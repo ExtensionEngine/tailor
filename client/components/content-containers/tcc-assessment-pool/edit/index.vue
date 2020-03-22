@@ -41,7 +41,7 @@ import pickBy from 'lodash/pickBy';
 import sortBy from 'lodash/sortBy';
 
 export default {
-  name: 'assessment-block',
+  name: 'assessment-pool',
   props: {
     container: { type: Object, required: true },
     tes: { type: Object, required: true }
