@@ -2,7 +2,7 @@
   <transition name="slide-fade">
     <div class="revisions">
       <div class="preview">
-        <teaching-element
+        <content-element
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
           :disabled="true" />
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import ContentElement from 'components/editor/ContentElement';
 import contentElementApi from '@/api/contentElement';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';
@@ -28,7 +29,6 @@ import includes from 'lodash/includes';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
 import revisionApi from '@/api/revision';
-import TeachingElement from 'components/editor/TeachingElement';
 
 const WITHOUT_STATICS = ['HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK'];
 
@@ -94,7 +94,7 @@ export default {
     this.previewRevision(this.revision);
     Promise.delay(700).then(() => (this.expanded = true));
   },
-  components: { EntitySidebar, TeachingElement }
+  components: { ContentElement, EntitySidebar }
 };
 </script>
 

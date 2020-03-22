@@ -10,7 +10,7 @@
       </v-btn>
     </div>
     <v-alert
-      :value="!teachingElements.length"
+      :value="!contentElements.length"
       color="primary"
       icon="mdi-information-variant"
       outlined>
@@ -20,12 +20,12 @@
       @add="addElement"
       @insert="insert"
       @update="reorder"
-      :list="teachingElements"
+      :list="contentElements"
       :activity="container"
       :types="types"
       :layout="layout">
       <template v-slot:list-item="{ item, dragged, setWidth }">
-        <teaching-element
+        <content-element
           :set-width="setWidth"
           :dragged="dragged"
           :element="item" />
@@ -35,11 +35,11 @@
 </template>
 
 <script>
+import ContentElement from '../../ContentElement';
 import ElementList from '../ElementList';
 import filter from 'lodash/filter';
 import { mapActions } from 'vuex';
 import sortBy from 'lodash/sortBy';
-import TeachingElement from '../../TeachingElement';
 
 export default {
   name: 'content-container',
@@ -51,7 +51,7 @@ export default {
     layout: { type: Boolean, default: true }
   },
   computed: {
-    teachingElements() {
+    contentElements() {
       const activityId = this.container.id;
       return sortBy(filter(this.elements, { activityId }), 'position');
     }
@@ -63,24 +63,21 @@ export default {
       addElement: 'save'
     }),
     reorder({ newIndex: newPosition }) {
-      const items = this.teachingElements;
+      const items = this.contentElements;
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
     },
     insert(element) {
-      const items = this.teachingElements;
+      const items = this.contentElements;
       const { position: newPosition } = element;
       const isFirstChild = newPosition === -1;
       const context = { items, newPosition, isFirstChild, insert: true };
       this.insertElement({ element, context });
     }
   },
-  components: {
-    ElementList,
-    TeachingElement
-  }
+  components: { ContentElement, ElementList }
 };
 </script>
 
