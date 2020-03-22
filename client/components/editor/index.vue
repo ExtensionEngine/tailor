@@ -9,7 +9,7 @@
             color="primary"
             fab
             dark
-            title="Toggle teaching element sidebar">
+            title="Toggle content element sidebar">
             <v-icon>mdi-backburger</v-icon>
           </v-btn>
         </span>
@@ -83,7 +83,7 @@ export default {
   methods: {
     ...mapActions('repositories', { getRepository: 'get' }),
     ...mapActions('repository', ['initialize']),
-    ...mapActions('repository/tes', { getTeachingElements: 'fetch' }),
+    ...mapActions('repository/elements', { getElements: 'fetch' }),
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
     },
@@ -106,7 +106,7 @@ export default {
       const { type, payload: element } = mutation;
       const { focusedElement } = this;
       if (!focusedElement) return;
-      const module = 'repository/tes';
+      const module = 'repository/elements';
       if (![`${module}/save`, `${module}/add`, `${module}/update`].includes(type)) return;
       if (element._cid === focusedElement._cid) {
         this.focusedElement = { ...focusedElement, ...element };
@@ -134,7 +134,7 @@ export default {
     const isNotCurrent = get(repository, 'id') !== currentRepositoryId;
     if (isNotCurrent) await this.initialize(currentRepositoryId);
     const ids = flatMap(this.contentContainers, it => map(it, 'id'));
-    if (ids.length) await this.getTeachingElements({ ids });
+    if (ids.length) await this.getElements({ ids });
     this.showLoader = false;
   },
   beforeDestroy() {

@@ -7,7 +7,7 @@ export const initialize = ({ commit, dispatch }, id) => {
   const getRoute = entity => `repositories/${id}/${entity}`;
   const modules = {
     activities: 'activities',
-    tes: 'content-elements',
+    elements: 'content-elements',
     revisions: 'revisions',
     comments: 'comments'
   };

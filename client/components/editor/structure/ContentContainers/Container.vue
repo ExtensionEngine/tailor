@@ -57,7 +57,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repository/tes', {
+    ...mapActions('repository/elements', {
       reorderElements: 'reorder',
       insertElement: 'insert',
       addElement: 'save'

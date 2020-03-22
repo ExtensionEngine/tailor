@@ -62,7 +62,7 @@ export default {
   },
   computed: {
     ...mapState('repository/activities', { activities: 'items' }),
-    ...mapState('repository/tes', { elements: 'items' }),
+    ...mapState('repository/elements', { elements: 'items' }),
     containerName() {
       const { type, $ccRegistry: registry } = this;
       return registry.get(type) ? getContainerName(type) : 'content-container';
@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     ...mapActions('repository/activities', ['save', 'update', 'remove']),
-    ...mapActions('repository/tes', {
+    ...mapActions('repository/elements', {
       saveElement: 'save',
       updateElement: 'update',
       reorderElements: 'reorder',

@@ -1,7 +1,7 @@
 <template>
   <li :class="{ active: isActive }" class="container-fluid carousel-item">
     <div v-if="!hasElements" class="well">
-      Click the button below to Create your first teaching element.
+      Click the button below to Create your first content element.
     </div>
     <embedded-container
       @save="({ embeds }) => save(item, embeds)"

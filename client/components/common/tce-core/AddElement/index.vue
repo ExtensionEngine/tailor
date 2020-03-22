@@ -135,7 +135,7 @@ export default {
   methods: {
     add({ type, subtype, initState = () => ({}) }) {
       const element = { type, data: { width: this.processedWidth } };
-      // If teaching element within activity
+      // If content element within activity
       if (this.activity) {
         element.activityId = this.activity.id;
         element.position = this.position;

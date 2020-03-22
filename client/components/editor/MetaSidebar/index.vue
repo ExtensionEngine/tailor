@@ -28,7 +28,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('repository/tes', ['update']),
+    ...mapActions('repository/elements', ['update']),
     updateElement(key, value) {
       this.sidebarMeta = { ...this.sidebarMeta, [key]: value };
       return this.update({

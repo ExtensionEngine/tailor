@@ -51,7 +51,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repository/tes', { saveElement: 'save', removeElement: 'remove' }),
+    ...mapActions('repository/elements', {
+      saveElement: 'save',
+      removeElement: 'remove'
+    }),
     remove(element) {
       this.focusoutElement();
       if (element.embedded) return this.elementBus.emit('delete');

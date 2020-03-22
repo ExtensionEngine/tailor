@@ -3,8 +3,8 @@ import * as getters from './getters';
 import * as mutations from './mutations';
 import activities from './activities';
 import comments from './comments';
+import elements from './elements';
 import revisions from './revisions';
-import tes from './tes';
 
 const state = {
   activity: undefined,
@@ -22,7 +22,7 @@ export default {
   modules: {
     activities,
     comments,
-    revisions,
-    tes
+    elements,
+    revisions
   }
 };
