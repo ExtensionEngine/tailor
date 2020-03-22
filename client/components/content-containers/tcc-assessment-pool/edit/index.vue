@@ -111,7 +111,7 @@ export default {
 
 <style lang="scss" scoped>
 .assessments {
-  margin: 70px 0 250px;
+  margin: 4rem 0 15rem;
 
   .v-alert {
     color: #555;
@@ -119,11 +119,11 @@ export default {
 
   .heading {
     text-align: left;
-    padding: 0 0 8px 2px;
+    padding: 0 0 0.5rem 0.125rem;
 
     .v-btn {
       float: right;
-      margin: 4px 0 0;
+      margin: 0.25rem 0 0;
       padding: 0;
     }
   }
@@ -131,8 +131,8 @@ export default {
   h2 {
     display: inline-block;
     margin: 0;
-    font-size: 18px;
-    line-height: 30px;
+    font-size: 1.125rem;
+    line-height: 1.875rem;
     vertical-align: middle;
   }
 }
