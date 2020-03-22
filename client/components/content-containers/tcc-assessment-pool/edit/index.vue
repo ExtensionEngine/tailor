@@ -75,7 +75,6 @@ export default {
       this.selected.push(data._cid);
     },
     saveAssessment(assessment) {
-      // TODO: Figure out why save is broken (for update)
       const event = assessment.id ? 'updateElement' : 'saveElement';
       return this.$emit(event, assessment);
     },
