@@ -45,7 +45,7 @@ export default {
   name: 'content-container',
   props: {
     container: { type: Object, required: true },
-    tes: { type: Object, required: true },
+    elements: { type: Object, required: true },
     types: { type: Array, default: null },
     name: { type: String, required: true },
     layout: { type: Boolean, default: true }
@@ -53,7 +53,7 @@ export default {
   computed: {
     teachingElements() {
       const activityId = this.container.id;
-      return sortBy(filter(this.tes, { activityId }), 'position');
+      return sortBy(filter(this.elements, { activityId }), 'position');
     }
   },
   methods: {

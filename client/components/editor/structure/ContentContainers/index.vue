@@ -23,7 +23,7 @@
       :name="name"
       :position="index"
       :activities="activities"
-      :tes="tes"
+      :elements="elements"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="primary">
@@ -62,7 +62,7 @@ export default {
   },
   computed: {
     ...mapState('repository/activities', { activities: 'items' }),
-    ...mapState('repository/tes', { tes: 'items' }),
+    ...mapState('repository/tes', { elements: 'items' }),
     containerName() {
       const { type, $ccRegistry: registry } = this;
       return registry.get(type) ? getContainerName(type) : 'content-container';

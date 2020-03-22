@@ -44,7 +44,7 @@ export default {
   name: 'assessment-pool',
   props: {
     container: { type: Object, required: true },
-    tes: { type: Object, required: true }
+    elements: { type: Object, required: true }
   },
   data: () => ({
     unsavedAssessments: {},
@@ -53,7 +53,7 @@ export default {
   }),
   computed: {
     savedAssessments() {
-      return filter(this.tes, { activityId: this.container.id });
+      return filter(this.elements, { activityId: this.container.id });
     },
     assessments() {
       const { savedAssessments: saved, unsavedAssessments: unsaved } = this;
