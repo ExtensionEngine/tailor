@@ -42,7 +42,7 @@ export default {
     exceededTagLimit: ({ repository }) => repository.tags.length >= TAG_LIMIT
   },
   methods: {
-    ...mapActions('repositories', ['removeTag', 'fetchTags']),
+    ...mapActions('repositories', ['removeTag']),
     showDeleteConfirmation(tag) {
       const data = { repositoryId: this.repository.id, tagId: tag.id };
       appChannel.emit('showConfirmationModal', {

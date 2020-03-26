@@ -10,10 +10,7 @@
         v-model="search"
         label="Search Tags"
         clear-icon="mdi-close-circle-outline"
-        dark
-        flat
-        solo-inverted
-        hide-details
+        dark flat solo-inverted hide-details
         clearable />
     </v-sheet>
     <v-list v-if="filteredTags.length">
