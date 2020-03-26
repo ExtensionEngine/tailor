@@ -60,7 +60,7 @@ export default {
     }
   },
   created() {
-    api.fetch(true).then(tags => (this.tags = tags));
+    api.fetch({ associated: true }).then(tags => (this.tags = tags));
   },
   components: { TailorDialog }
 };
