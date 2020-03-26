@@ -9,12 +9,12 @@
       <v-text-field
         v-model="search"
         label="Search Tags"
+        clear-icon="mdi-close-circle-outline"
         dark
         flat
         solo-inverted
         hide-details
-        clearable
-        clear-icon="mdi-close-circle-outline" />
+        clearable />
     </v-sheet>
     <v-list v-if="filteredTags.length">
       <v-list-item
@@ -29,9 +29,9 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-list v-else>
-      <v-list-item>No tags found</v-list-item>
-    </v-list>
+    <div v-else class="no-result">
+      No tags found
+    </div>
   </v-menu>
 </template>
 
@@ -65,5 +65,11 @@ export default {
 .v-list {
   max-height: 18.75rem;
   overflow-y: auto;
+  border-radius: 0 !important;
+}
+
+.no-result {
+  padding: 0.75rem 0;
+  background: #fff;
 }
 </style>
