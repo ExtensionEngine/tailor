@@ -5,8 +5,7 @@ const urls = {
   root: '/tags'
 };
 
-function fetch(associated) {
-  const params = { associated: !!associated };
+function fetch(params) {
   return request.get(urls.root, { params }).then(extractData);
 }
 
