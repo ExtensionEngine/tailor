@@ -13,7 +13,9 @@
         dark flat solo-inverted hide-details
         clearable />
     </v-sheet>
-    <v-list v-if="filteredTags.length">
+    <v-list
+      v-if="filteredTags.length"
+      :tile="false">
       <v-list-item
         v-for="tag in filteredTags"
         :key="tag.id"
@@ -62,7 +64,6 @@ export default {
 .v-list {
   max-height: 18.75rem;
   overflow-y: auto;
-  border-radius: 0 !important;
 }
 
 .no-result {
