@@ -46,7 +46,8 @@ const pin = ({ commit, getters }, { id, pin }) => {
 };
 
 const fetchTags = ({ commit }) => {
-  return tagApi.fetch({ associated: true }).then(tags => commit('fetchTags', tags));
+  return tagApi.fetch({ associated: true })
+    .then(tags => commit('fetchTags', tags));
 };
 
 const addTag = ({ commit }, data) => {

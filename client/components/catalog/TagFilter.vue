@@ -5,7 +5,9 @@
         <v-icon color="primary lighten-4">mdi-tag-outline</v-icon>
       </v-btn>
     </template>
-    <v-sheet class="pa-4 primary darken-1">
+    <v-sheet
+      class="pa-4 primary darken-1"
+      tile>
       <v-text-field
         v-model="search"
         label="Search Tags"
@@ -13,9 +15,7 @@
         dark flat solo-inverted hide-details
         clearable />
     </v-sheet>
-    <v-list
-      v-if="filteredTags.length"
-      :tile="false">
+    <v-list v-if="filteredTags.length">
       <v-list-item
         v-for="tag in filteredTags"
         :key="tag.id"
@@ -28,7 +28,7 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <div v-else class="no-result">
+    <div v-else class="white py-3">
       No tags found
     </div>
   </v-menu>
@@ -66,8 +66,4 @@ export default {
   overflow-y: auto;
 }
 
-.no-result {
-  padding: 0.75rem 0;
-  background: #fff;
-}
 </style>

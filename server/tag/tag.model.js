@@ -30,7 +30,7 @@ class Tag extends Model {
       attributes: ['id'],
       required: true
     };
-    if (!user.isAdmin()) {
+    if (user && !user.isAdmin()) {
       includeRepository.include = [{ model: User, attributes: ['id'], where: { id: user.id } }];
     }
     return includeRepository;
