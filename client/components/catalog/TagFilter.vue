@@ -11,9 +11,7 @@
       <v-text-field
         v-model="search"
         label="Search Tags"
-        clear-icon="mdi-close-circle-outline"
-        dark flat solo-inverted hide-details
-        clearable />
+        flat hide-details solo clearable />
     </v-sheet>
     <v-list v-if="filteredTags.length">
       <v-list-item
