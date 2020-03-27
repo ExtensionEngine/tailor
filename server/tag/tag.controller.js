@@ -3,11 +3,11 @@
 const { Tag } = require('../shared/database');
 const yn = require('yn');
 
-function list({ user, query: { associated } }, res) {
-  const options = yn(associated)
-    ? { include: [Tag.getAssociated(user)] }
-    : {};
-  return Tag.findAll(options).then(tags => res.json({ data: tags }));
+async function list({ user, query: { associated } }, res) {
+  const tags = await (yn(associated)
+    ? Tag.getAssociated(user)
+    : Tag.findAll());
+  return res.json({ data: tags });
 }
 
 module.exports = {

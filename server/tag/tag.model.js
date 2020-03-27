@@ -24,6 +24,7 @@ class Tag extends Model {
   static getAssociated(user) {
     const Repository = this.sequelize.model('Repository');
     const User = this.sequelize.model('User');
+    const Tag = this.sequelize.model('Tag');
     const includeRepository = {
       model: Repository,
       as: 'repositories',
@@ -33,7 +34,7 @@ class Tag extends Model {
     if (user && !user.isAdmin()) {
       includeRepository.include = [{ model: User, attributes: ['id'], where: { id: user.id } }];
     }
-    return includeRepository;
+    return Tag.findAll({ include: [includeRepository] });
   }
 
   static options() {
