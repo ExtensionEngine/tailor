@@ -1,6 +1,6 @@
 <template>
   <v-menu
-    @update:return-value="search = ''"
+    @update:return-value="close"
     :close-on-content-click="false"
     offset-y>
     <template v-slot:activator="{ on }">
@@ -16,7 +16,7 @@
         label="Search Tags"
         flat hide-details solo clearable />
     </v-sheet>
-    <v-list v-if="filteredTags.length">
+    <v-list v-if="filteredTags.length" :key="listKey">
       <v-list-item
         v-for="tag in filteredTags"
         :key="tag.id"
@@ -42,7 +42,7 @@ import map from 'lodash/map';
 import { mapState } from 'vuex';
 
 export default {
-  data: () => ({ search: '' }),
+  data: () => ({ search: '', listKey: 0 }),
   computed: {
     ...mapState('repositories', ['tags', 'tagFilter']),
     options() {
@@ -56,6 +56,12 @@ export default {
       if (!search) return options;
       const reqex = new RegExp(search.trim(), 'i');
       return filter(options, ({ name }) => reqex.test(name));
+    }
+  },
+  methods: {
+    close() {
+      this.search = '';
+      this.listKey++;
     }
   }
 };
