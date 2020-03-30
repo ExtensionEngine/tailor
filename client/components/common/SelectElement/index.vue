@@ -1,26 +1,23 @@
 <template>
   <tailor-dialog
-    v-model="isVisible"
     @click:outside="close"
+    :value="true"
     header-icon="mdi-transit-connection-variant"
     width="650">
-    <template v-slot:header>
-      {{ heading || defaultHeading }}
-    </template>
+    <template v-slot:header>{{ heading }}</template>
     <template v-slot:body>
       <select-activity
         v-if="!selectedActivity"
         @selected="showActivityElements($event)"
-        :selected="selectedElements" />
-      <div v-else>
-        <select-element
-          @toggle="toggleElementSelection($event)"
-          :content-containers="contentContainers"
-          :allowed-types="allowedTypes"
-          :multiple="multiple"
-          :selected="selectedElements"
-          selectable />
-      </div>
+        :selected-elements="selectedElements" />
+      <select-element
+        v-else
+        @toggle="toggleElementSelection($event)"
+        :selected="selectedElements"
+        :content-containers="contentContainers"
+        :allowed-types="allowedTypes"
+        :multiple="multiple"
+        selectable />
     </template>
     <template v-slot:actions>
       <v-btn
@@ -36,29 +33,26 @@
 </template>
 
 <script>
-import { getDescendants } from 'client/utils/activity';
+import { getDescendants } from '@/utils/activity';
 import { mapGetters } from 'vuex';
 import SelectActivity from './SelectActivity';
-import SelectElement from './ContentPreview';
+import SelectElement from '@/components/common/ContentPreview';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 
 export default {
   props: {
-    heading: { type: String, default: '' },
     selected: { type: Array, default: () => [] },
+    heading: { type: String, required: true },
     multiple: { type: Boolean, default: true },
     allowedTypes: { type: Array, default: () => [] }
   },
   data: () => ({
-    isVisible: false,
     selectedActivity: null,
     contentContainers: [],
     selectedElements: []
   }),
-  computed: {
-    ...mapGetters('repository', ['activities', 'structure'])
-  },
+  computed: mapGetters('repository', ['activities']),
   methods: {
     showActivityElements(activity) {
       this.selectedActivity = activity;
@@ -66,33 +60,27 @@ export default {
         getDescendants(this.activities, activity), 'position');
     },
     toggleElementSelection(element) {
-      const existing = this.selectedElements.find(it => it.id === element.id);
+      const { selectedActivity: activity, selectedElements: elements } = this;
+      const elementLocation = {
+        containerId: element.activityId,
+        outlineId: activity.id
+      };
+      const existing = elements.find(it => it.id === element.id);
       this.selectedElements = existing
-        ? this.selectedElements.filter(it => it.id !== element.id)
-        : [...this.selectedElements, element];
+        ? elements.filter(it => it.id !== element.id)
+        : [...this.elements, { id: element.id, ...elementLocation }];
     },
     async save() {
-      this.$element('selected', [...this.selectedElements]);
+      this.$emit('selected', [...this.selectedElements]);
       this.close();
     },
     close() {
-      this.selectedElements = [...this.selected];
-      this.isVisible = false;
+      this.$emit('close');
     }
   },
-  watch: {
-    isVisible(val) {
-      if (!val) return;
-      this.selectedElements = [...this.selected];
-    }
+  created() {
+    this.selectedElements = [...this.selected];
   },
   components: { SelectActivity, SelectElement, TailorDialog }
 };
 </script>
-
-<style lang="scss" scoped>
-.v-list-item__action {
-  display: flex;
-  flex-direction: row;
-}
-</style>

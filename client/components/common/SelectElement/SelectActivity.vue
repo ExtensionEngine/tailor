@@ -52,7 +52,7 @@ export default {
   },
   data: () => ({ search: '' }),
   computed: {
-    ...mapGetters('repository', ['activities', 'structure']),
+    ...mapGetters('repository', ['activities']),
     groupedSelection: vm => groupBy(vm.selectedElements, 'activityId'),
     activityTree: vm => toTreeFormat(vm.activities, []),
     hasSearchResults() {
