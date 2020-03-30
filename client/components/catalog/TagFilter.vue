@@ -1,6 +1,6 @@
 <template>
   <v-menu
-    @update:return-value="search=''"
+    @update:return-value="search = ''"
     :close-on-content-click="false"
     offset-y>
     <template v-slot:activator="{ on }">
@@ -9,8 +9,8 @@
       </v-btn>
     </template>
     <v-sheet
-      class="pa-4 primary darken-1"
-      tile>
+      tile
+      class="pa-4 primary darken-1">
       <v-text-field
         v-model="search"
         label="Search Tags"
