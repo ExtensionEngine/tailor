@@ -45,7 +45,6 @@ import TailorDialog from '@/components/common/TailorDialog';
 
 export default {
   props: {
-    repositoryId: { type: Number, required: true },
     heading: { type: String, default: '' },
     selected: { type: Array, default: () => [] },
     multiple: { type: Boolean, default: true },
@@ -58,8 +57,7 @@ export default {
     selectedElements: []
   }),
   computed: {
-    ...mapGetters('repository', ['activities', 'structure']),
-    defaultHeading: vm => `Select element${vm.multiple ? 's' : ''}`
+    ...mapGetters('repository', ['activities', 'structure'])
   },
   methods: {
     showActivityElements(activity) {
