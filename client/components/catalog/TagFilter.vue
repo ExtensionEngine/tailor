@@ -22,7 +22,7 @@
         :key="tag.id"
         @click="$emit('update', tag)">
         <v-list-item-action class="mr-2">
-          <v-checkbox :value="tag.isSelected" />
+          <v-checkbox :input-value="tag.isSelected" />
         </v-list-item-action>
         <v-list-item-content class="text-left">
           <v-list-item-title>{{ tag.name }}</v-list-item-title>
