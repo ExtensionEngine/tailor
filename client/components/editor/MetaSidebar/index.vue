@@ -1,7 +1,9 @@
 <template>
   <div class="sidebar">
     <h3>Additional settings</h3>
-    <element-metadata :inputs="inputs" :relationships="relationships" />
+    <element-metadata
+      :inputs="inputs"
+      :relationships="relationships" />
   </div>
 </template>
 
@@ -12,7 +14,7 @@ export default {
   name: 'element-sidebar',
   props: {
     element: { type: Object, required: true },
-    inputs: { type: Array, required: true },
+    inputs: { type: Array, default: () => [] },
     relationships: { type: Array, default: () => [] }
   },
   components: { ElementMetadata }

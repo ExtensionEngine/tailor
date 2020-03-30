@@ -53,7 +53,7 @@ export default {
   data: () => ({ search: '' }),
   computed: {
     ...mapGetters('repository', ['activities']),
-    groupedSelection: vm => groupBy(vm.selectedElements, 'activityId'),
+    groupedSelection: vm => groupBy(vm.selectedElements, 'outlineId'),
     activityTree: vm => toTreeFormat(vm.activities, []),
     hasSearchResults() {
       if (!this.search || !this.$refs) return true;

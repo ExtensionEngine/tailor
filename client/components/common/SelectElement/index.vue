@@ -8,11 +8,11 @@
     <template v-slot:body>
       <select-activity
         v-if="!selectedActivity"
-        @selected="showActivityElements($event)"
+        @selected="activity => showActivityElements(activity)"
         :selected-elements="selectedElements" />
       <select-element
         v-else
-        @toggle="toggleElementSelection($event)"
+        @toggle="element => toggleElementSelection(element)"
         :selected="selectedElements"
         :content-containers="contentContainers"
         :allowed-types="allowedTypes"
@@ -41,6 +41,7 @@ import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
 
 export default {
+  name: 'select-element',
   props: {
     selected: { type: Array, default: () => [] },
     heading: { type: String, required: true },
@@ -68,9 +69,9 @@ export default {
       const existing = elements.find(it => it.id === element.id);
       this.selectedElements = existing
         ? elements.filter(it => it.id !== element.id)
-        : [...this.elements, { id: element.id, ...elementLocation }];
+        : [...elements, { id: element.id, ...elementLocation }];
     },
-    async save() {
+    save() {
       this.$emit('selected', [...this.selectedElements]);
       this.close();
     },

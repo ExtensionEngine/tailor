@@ -33,6 +33,7 @@
     <select-element
       v-if="showElementBrowser"
       @save="$emit('save', $event)"
+      @close="showElementBrowser = false"
       :selected="value"
       :heading="defaultPlaceholder"
       :multiple="multiple"
@@ -42,11 +43,10 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import reduce from 'lodash/reduce';
 import SelectElement from '@/components/common/SelectElement';
 
 function getTotalsByActivity(activities, relationships) {
-  return reduce(activities, (acc, { id, data: { name } }) => {
+  return activities.reduce((acc, { id, data: { name } }) => {
     const { length } = relationships.filter(({ outlineId }) => outlineId === id);
     return length ? [...acc, `${name} (${length})`] : acc;
   }, []);
@@ -64,7 +64,7 @@ export default {
   },
   data: () => ({ showElementBrowser: false }),
   computed: {
-    ...mapGetters('repository', ['activities', 'structure']),
+    ...mapGetters('repository', ['activities']),
     hasRelationships: vm => !!vm.value.length,
     defaultPlaceholder: vm => `Select element${vm.multiple ? 's' : ''}`,
     overview: ({ activities, value, hasRelationships }) => {

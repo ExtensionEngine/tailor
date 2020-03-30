@@ -1,6 +1,6 @@
 <template>
   <div class="element-metadata">
-    <div class="meta-inputs">
+    <div v-if="inputs.length" class="meta-inputs">
       <meta-input
         v-for="input in inputs"
         :key="`${element._cid}.${input.key}`"
