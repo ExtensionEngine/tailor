@@ -18,6 +18,7 @@
 
 <script>
 import ContentElement from './Element';
+import keyBy from 'lodash/keyBy';
 
 export default {
   name: 'content-preview',
@@ -32,9 +33,7 @@ export default {
     isSelectionDisabled() {
       return this.selectable && !this.multiple && !!this.selected.length;
     },
-    selectionMap() {
-      return this.selected.reduce((acc, { id }) => (acc[id] = true), {});
-    },
+    selectionMap: vm => keyBy(vm.selected, 'id'),
     processedContainers() {
       const { contentContainers: containers, allowedTypes } = this;
       return containers.map(container => ({

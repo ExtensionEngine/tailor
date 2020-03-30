@@ -32,7 +32,7 @@
     </v-list-item-action>
     <select-element
       v-if="showElementBrowser"
-      @save="$emit('save', $event)"
+      @selected="$emit('save', $event)"
       @close="showElementBrowser = false"
       :selected="value"
       :heading="defaultPlaceholder"

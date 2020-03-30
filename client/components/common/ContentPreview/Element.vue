@@ -4,7 +4,7 @@
       v-if="selectable"
       @click.prevent
       :value="isSelected"
-      :disabled="selectionDisabled" />
+      :disabled="disabled" />
     <teaching-element
       :element="element"
       :class="{ selected: isSelected }"
@@ -23,9 +23,12 @@ export default {
     isSelected: { type: Boolean, default: false },
     selectionDisabled: { type: Boolean, default: false }
   },
+  computed: {
+    disabled: vm => vm.selectionDisabled && !vm.isSelected
+  },
   methods: {
     toggleSelection() {
-      if (!this.selectable || this.selectionDisabled) return;
+      if (!this.selectable || this.disabled) return;
       this.$emit('toggle');
     }
   },
