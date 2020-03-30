@@ -30,10 +30,10 @@ export default {
   },
   computed: {
     isSelectionDisabled() {
-      return this.selectable && !this.multiple && !!this.selectedElements.length;
+      return this.selectable && !this.multiple && !!this.selected.length;
     },
     selectionMap() {
-      return this.selectedElements.reduce((acc, id) => (acc[id] = true), {});
+      return this.selected.reduce((acc, { id }) => (acc[id] = true), {});
     },
     processedContainers() {
       const { contentContainers: containers, allowedTypes } = this;

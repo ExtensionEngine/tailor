@@ -4,7 +4,7 @@
       v-for="relationship in relationships"
       :key="`${element._cid}.${relationship.key}`"
       @save="save(relationship.key, $event)"
-      :v-bind="relationship" />
+      v-bind="relationship" />
   </v-list>
 </template>
 

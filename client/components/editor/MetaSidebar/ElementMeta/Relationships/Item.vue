@@ -55,7 +55,6 @@ function getTotalsByActivity(activities, relationships) {
 export default {
   name: 'relationship-type',
   props: {
-    key: { type: String, required: true },
     value: { type: Array, default: () => [] },
     label: { type: String, required: true },
     placeholder: { type: String, default: '' },

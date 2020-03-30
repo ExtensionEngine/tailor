@@ -2,13 +2,14 @@
   <div class="sidebar">
     <h3>Additional settings</h3>
     <element-metadata
+      :element="element"
       :inputs="inputs"
       :relationships="relationships" />
   </div>
 </template>
 
 <script>
-import ElementMetadata from 'ElementMeta';
+import ElementMetadata from './ElementMeta';
 
 export default {
   name: 'element-sidebar',
