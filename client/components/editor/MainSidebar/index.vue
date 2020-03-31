@@ -1,54 +1,29 @@
 <template>
-  <v-navigation-drawer
-    permanent absolute
-    width="420">
+  <v-navigation-drawer width="400" permanent absolute>
     <v-row no-gutters class="fill-height">
-      <v-navigation-drawer
-        top="55"
-        mini-variant-width="60"
-        mini-variant absolute permanent stateless
-        class="blue-grey lighten-4 actions">
-        <v-toolbar flat height="fit-content" class="transparent pa-1">
-          <v-list>
-            <v-tooltip
-              v-for="({ title, icon, action }) in actions"
-              :key="title"
-              color="blue-grey darken-3"
-              right>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  v-on="on"
-                  @click.stop="action"
-                  color="blue-grey darken-4"
-                  icon text>
-                  <v-icon>mdi-{{ icon }}</v-icon>
-                </v-btn>
-              </template>
-              <span>{{ title }}</span>
-            </v-tooltip>
-          </v-list>
-        </v-toolbar>
-      </v-navigation-drawer>
-      <div class="structure-navigation grow">
+      <div class="sidebar-container grow">
         <element-sidebar
           v-if="focusedElement && !metadata.isEmpty"
           :key="focusedElement._cid"
           :element="focusedElement"
           :metadata="metadata" />
-        <template v-else>
+        <div
+          :class="{ 'toolbar-visible': focusedElement && metadata.isEmpty }"
+          class="pt-2 mx-4">
+          <h4 class="body-1 ma-1">Navigation</h4>
           <v-text-field
             v-model="search"
             label="Search by name..."
             clear-icon="mdi-close"
             clearable hide-details
-            class="my-2 mx-3" />
+            class="mb-2 mx-1" />
           <v-treeview
             @update:active="navigateTo"
             :items="repositoryTree"
             :search="search"
             dense activatable hoverable
             open-all />
-        </template>
+        </div>
       </div>
     </v-row>
   </v-navigation-drawer>
@@ -76,24 +51,6 @@ export default {
     metadata() {
       const { repository, focusedElement } = this;
       return getElementMetadata(get(repository, 'schema'), focusedElement);
-    },
-    actions() {
-      const { $router, activity: { repositoryId } } = this;
-      const items = [{
-        title: 'Preview',
-        icon: 'eye',
-        action: () => this.previewContainer()
-      }, {
-        title: 'Back',
-        icon: 'arrow-left',
-        action: () => $router.push({ name: 'repository', params: { repositoryId } })
-      }];
-      if (!this.isAdmin && !this.isRepositoryAdmin) return items;
-      return [{
-        title: 'Publish',
-        icon: 'upload',
-        action: () => this.confirmPublishing()
-      }].concat(items);
     },
     repositoryTree: vm => toTreeFormat(vm.outlineActivities, [])
   },
@@ -129,8 +86,8 @@ export default {
   }
 }
 
-.structure-navigation {
-  padding: 3.75rem 0 0 4rem;
+.sidebar-container {
+  padding: 3.75rem 0 0;
   text-align: left;
 
   ::v-deep {
@@ -138,5 +95,9 @@ export default {
       cursor: pointer;
     }
   }
+}
+
+.toolbar-visible {
+  margin-top: 3.5rem;
 }
 </style>
