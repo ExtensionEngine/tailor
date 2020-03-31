@@ -3,7 +3,7 @@
     <v-checkbox
       v-if="selectable"
       @click.prevent
-      :value="isSelected"
+      :input-value="isSelected"
       :disabled="disabled" />
     <teaching-element
       :element="element"
