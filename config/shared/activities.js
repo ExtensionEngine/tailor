@@ -104,8 +104,7 @@ function getConfig(schemaId, item = {}) {
 
 function getActivityConfig(type) {
   const schemaId = getSchemaId(type);
-  if (!schemaId) return {};
-  return schemaId && find(getOutlineLevels(schemaId), { type });
+  return schemaId ? find(getOutlineLevels(schemaId), { type }) : null;
 }
 
 function getElementConfig(schemaId, type) {
