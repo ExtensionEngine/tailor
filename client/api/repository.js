@@ -4,7 +4,6 @@ import request from './request';
 const urls = {
   root: '/repositories',
   resource: id => `${urls.root}/${id}`,
-  contentElements: id => `${urls.resource(id)}/content-elements`,
   publish: id => `${urls.resource(id)}/publish`,
   users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`,
   tags: (id, tagId = '') => `${urls.resource(id)}/tags/${tagId}`
@@ -16,10 +15,6 @@ function save(repository) {
 
 function getRepositories(params) {
   return request.get(urls.root, { params }).then(extractData);
-}
-
-function getContentElements({ id, ...params }) {
-  return request.get(urls.contentElements(id), { params }).then(extractData);
 }
 
 function getUsers(repositoryId, params) {
@@ -56,7 +51,6 @@ function removeTag({ repositoryId, tagId }) {
 
 export default {
   getRepositories,
-  getContentElements,
   save,
   getUsers,
   upsertUser,

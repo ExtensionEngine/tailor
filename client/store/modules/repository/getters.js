@@ -1,12 +1,10 @@
-import { getLevel, getOutlineLevels, getSchema, getTesMeta } from 'shared/activities';
+import { getOutlineLevels, getSchema } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import { role } from 'shared';
 import values from 'lodash/values';
-
-const isTes = element => !!element.activityId;
 
 export const id = (_state, _getters, { route: { params: { repositoryId } } }) => {
   return repositoryId ? parseInt(repositoryId, 10) : null;
@@ -44,38 +42,6 @@ export const selectedActivity = (state, _getters, rootState) => {
 
 export const isCollapsed = state => {
   return activity => activity && !state.outline.expanded[activity._cid];
-};
-
-export const getConfig = (_, { repository }) => {
-  return element => {
-    if (!element.type) return {};
-    if (isTes(element)) return getTesMeta(repository.schema, element.type);
-    return getLevel(element.type) || {};
-  };
-};
-
-export const getRelationships = (_, { getConfig }) => {
-  return element => {
-    if (!element) return [];
-    const config = getConfig(element);
-    if (!config.relationships) return [];
-    return map(config.relationships, it => {
-      const value = get(element, `relationships.${it.key}`);
-      return { ...it, value };
-    });
-  };
-};
-
-export const getMetadata = (_, { getConfig }) => {
-  return element => {
-    if (!element) return [];
-    const config = getConfig(element);
-    if (!config.meta) return [];
-    return map(config.meta, it => {
-      const value = get(element, `${isTes(element) ? 'meta' : 'data'}.${it.key}`);
-      return { ...it, value };
-    });
-  };
 };
 
 export const users = state => values(state.users);

@@ -30,12 +30,11 @@
         </v-toolbar>
       </v-navigation-drawer>
       <div class="structure-navigation grow">
-        <meta-sidebar
-          v-if="focusedElement && hasMetadata"
+        <element-sidebar
+          v-if="focusedElement && !metadata.isEmpty"
           :key="focusedElement._cid"
-          :metadata="metadata"
-          :relationships="relationships"
-          :element="focusedElement" />
+          :element="focusedElement"
+          :metadata="metadata" />
         <template v-else>
           <v-text-field
             v-model="search"
@@ -58,7 +57,9 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import api from '@/api/activity';
-import MetaSidebar from '../MetaSidebar';
+import ElementSidebar from '../ElementSidebar';
+import get from 'lodash/get';
+import { getElementMetadata } from 'shared/activities';
 import publishMixin from 'components/common/mixins/publish';
 import { toTreeFormat } from 'utils/activity';
 
@@ -71,8 +72,11 @@ export default {
   data: () => ({ search: '' }),
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository', ['outlineActivities', 'isRepositoryAdmin']),
-    ...mapGetters('repository', ['getMetadata', 'getRelationships']),
+    ...mapGetters('repository', ['repository', 'outlineActivities', 'isRepositoryAdmin']),
+    metadata() {
+      const { repository, focusedElement } = this;
+      return getElementMetadata(get(repository, 'schema'), focusedElement);
+    },
     actions() {
       const { $router, activity: { repositoryId } } = this;
       const items = [{
@@ -91,18 +95,7 @@ export default {
         action: () => this.confirmPublishing()
       }].concat(items);
     },
-    repositoryTree: vm => toTreeFormat(vm.outlineActivities, []),
-    hasMetadata() {
-      return this.metadata.length || this.relationships.length;
-    },
-    metadata() {
-      if (!this.focusedElement) return [];
-      return this.getMetadata(this.focusedElement);
-    },
-    relationships() {
-      if (!this.focusedElement) return [];
-      return this.getRelationships(this.focusedElement);
-    }
+    repositoryTree: vm => toTreeFormat(vm.outlineActivities, [])
   },
   methods: {
     ...mapActions('repository/activities', { publishActivity: 'publish' }),
@@ -116,7 +109,7 @@ export default {
       this.$router.push({ name: 'editor', params: { activityId } });
     }
   },
-  components: { MetaSidebar }
+  components: { ElementSidebar }
 };
 </script>
 

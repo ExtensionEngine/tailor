@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import * as config from 'shared/activities';
 import { getElementId, isQuestion } from 'tce-core/utils';
+import { getSupportedContainers, hasAssessments } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
@@ -41,23 +41,18 @@ import Toolbar from './Toolbar';
 
 export default {
   name: 'editor',
-  data() {
-    return {
-      showLoader: true,
-      focusedElement: null,
-      showSidebar: false,
-      mousedownCaptured: false
-    };
-  },
+  data: () => ({
+    showLoader: true,
+    focusedElement: null,
+    mousedownCaptured: false
+  }),
   computed: {
     ...mapGetters('repository', ['repository']),
     ...mapGetters('editor', ['activity', 'contentContainers']),
-    showAssessments() {
-      return config.hasAssessments(this.activity.type);
-    },
+    showAssessments: vm => hasAssessments(vm.activity.type),
     containerConfigs() {
       if (!this.activity) return [];
-      return config.getSupportedContainers(this.activity.type);
+      return getSupportedContainers(this.activity.type);
     }
   },
   methods: {
@@ -103,12 +98,10 @@ export default {
     EventBus.on('element:focus', throttle((element, composite) => {
       if (!element) {
         this.focusedElement = null;
-        this.showSidebar = false;
         return;
       }
       if (getElementId(this.focusedElement) === getElementId(element)) return;
       this.focusedElement = { ...element, parent: composite };
-      this.showSidebar = (this.relationships.length || this.metadata.length) && this.showSidebar;
     }, 50));
     if (!this.repository || this.repository.id !== repositoryId) {
       await this.initialize(repositoryId);
