@@ -1,10 +1,12 @@
 <template>
   <div>
-    <div v-if="!hasItems" class="well">
-      Use the toolbar to add the first item to the carousel.
-    </div>
+    <v-card v-if="!hasItems" class="grey lighten-4">
+      <v-card-text>
+        Use the toolbar to add the first item to the carousel.
+      </v-card-text>
+    </v-card>
     <div v-else :style="{ height: `${height}px` }" class="carousel">
-      <ul :style="{ height: height - 40 + 'px' }" class="carousel-items">
+      <ul :style="{ height: height - 50 + 'px' }" class="carousel-items">
         <carousel-item
           v-for="it in items"
           :key="it.id"
@@ -14,15 +16,16 @@
           :embeds="embedsByItem[it.id]"
           :active-item="activeItem" />
       </ul>
-      <ul class="indicators">
-        <li
+      <v-list class="d-flex justify-center p0">
+        <v-list-item
           v-for="it in items"
-          :key="it.id"
-          @click="activateItem(it)"
-          :class="{ 'active': activeItem === it.id }"
-          class="indicator-item">
-        </li>
-      </ul>
+          :key="it.id">
+          <v-icon
+            @click="activateItem(it)">
+            {{ `mdi-${activeItem === it.id ? 'circle' : 'circle-outline'}` }}
+          </v-icon>
+        </v-list-item>
+      </v-list>
     </div>
   </div>
 </template>
@@ -134,31 +137,8 @@ export default {
   list-style-type: none;
 }
 
-.indicators {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 22px;
-  margin: 0;
-  padding-left: 0;
-  text-align: center;
-  list-style-type: none;
-
-  .indicator-item {
-    display: inline-block;
-    position: relative;
-    width: 16px;
-    height: 16px;
-    margin: 0 12px;
-    background-color: #ddd;
-    transition: background-color 0.3s;
-    border-radius: 50%;
-    cursor: pointer;
-
-    &.active {
-      background-color: #444;
-    }
-  }
+.v-list-item {
+  max-width: 30px;
+  justify-content: center;
 }
 </style>
