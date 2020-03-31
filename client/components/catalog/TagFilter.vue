@@ -43,8 +43,9 @@ import map from 'lodash/map';
 import { mapState } from 'vuex';
 
 export default {
-  data: () => ({ search: '', listKey: 0 }),
+  data: () => ({ search: '' }),
   computed: {
+    isVisible: vm => vm.$refs.filter.isActive,
     ...mapState('repositories', ['tags', 'tagFilter']),
     options() {
       return map(this.tags, it => {
@@ -57,8 +58,7 @@ export default {
       if (!search) return options;
       const reqex = new RegExp(search.trim(), 'i');
       return filter(options, ({ name }) => reqex.test(name));
-    },
-    isVisible: vm => vm.$refs.filter.isActive
+    }
   }
 };
 </script>
