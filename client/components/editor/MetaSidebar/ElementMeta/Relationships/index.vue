@@ -13,7 +13,7 @@ import { mapActions } from 'vuex';
 import RelationshipType from './Item';
 
 export default {
-  name: 'relationship-types',
+  name: 'element-meta-relationships',
   props: {
     element: { type: Object, required: true },
     relationships: { type: Array, default: () => [] }

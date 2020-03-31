@@ -16,7 +16,6 @@
 
 <script>
 import ElementRelationships from './Relationships';
-import { mapActions } from 'vuex';
 import MetaInput from '@/components/common/Meta';
 
 export default {
@@ -25,14 +24,6 @@ export default {
     element: { type: Object, required: true },
     inputs: { type: Array, default: () => [] },
     relationships: { type: Array, default: () => [] }
-  },
-  methods: {
-    ...mapActions('repository/tes', ['update']),
-    updateElement(key, value) {
-      const meta = { ...this.element.meta };
-      meta[key] = value;
-      return this.update({ _cid: this.element._cid, meta });
-    }
   },
   components: { MetaInput, ElementRelationships }
 };
