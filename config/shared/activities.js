@@ -12,7 +12,7 @@ const mergeConfig = require('../utils/mergeConfig');
 const parseSchemas = require('./schema-parser');
 const union = require('lodash/union');
 
-/* eslint-disable require-sort/require-sort */
+/* eslint-disable */
 const defaultConfiguration = require('./activities-rc');
 const customConfiguration = require('./activities-rc.load')();
 /* eslint-enable */
@@ -82,7 +82,7 @@ function getElementInputs(schemaId, element) {
 
 function getElementRelationships(schemaId, element) {
   if (!schemaId || !element) return [];
-  return getMetadata(schemaId, element, 'relationships');
+  return getMetadata(schemaId, element, 'relationships', 'refs');
 }
 
 function getMetadata(schemaId, item, configKey = 'meta', storageKey = configKey) {

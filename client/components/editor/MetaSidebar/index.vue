@@ -1,72 +1,46 @@
 <template>
   <div class="sidebar">
-    <h2>Additional settings</h2>
-    <div class="meta-element">
-      <meta-input
-        v-for="it in inputs"
-        :key="`${element._cid}.${it.key}`"
-        @update="updateElement"
-        :meta="it" />
-    </div>
-    <v-list v-if="relationships.length" class="element-relationships">
-      <tes-relationship
-        v-for="relationship in relationships"
-        :key="`${element._cid}.${relationship.type}`"
-        :element="element"
-        :relationship="relationship" />
-    </v-list>
+    <h3>Additional settings</h3>
+    <element-metadata
+      :element="element"
+      :inputs="inputs"
+      :relationships="relationships" />
   </div>
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
-import { mapActions } from 'vuex';
-import MetaInput from 'components/common/Meta';
-import TesRelationship from './TesRelationship';
+import ElementMetadata from './ElementMeta';
 
 export default {
-  name: 'metadata-sidebar',
+  name: 'element-sidebar',
   props: {
     element: { type: Object, required: true },
-    inputs: { type: Array, required: true },
+    inputs: { type: Array, default: () => [] },
     relationships: { type: Array, default: () => [] }
   },
-  data() {
-    return {
-      sidebarMeta: cloneDeep(this.element.meta)
-    };
-  },
-  methods: {
-    ...mapActions('repository/tes', ['update']),
-    updateElement(key, value) {
-      this.sidebarMeta = { ...this.sidebarMeta, [key]: value };
-      return this.update({
-        _cid: this.element._cid,
-        meta: { ...this.sidebarMeta }
-      });
-    }
-  },
-  components: { MetaInput, TesRelationship }
+  components: { ElementMetadata }
 };
 </script>
 
 <style lang="scss" scoped>
 .sidebar {
-  h2 {
-    margin: 100px 5px 20px;
-    font-size: 18px;
-  }
-
   position: absolute;
-  top: 50px;
+  top: 3.125rem;
   right: 0;
   bottom: 0;
-  width: 380px;
-  padding: 25px 0 75px 20px;
+  width: 23.75rem;
+  padding: 1.5625rem 0 4.6875rem 1.25rem;
   text-align: left;
   background: white;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 8px 8px rgba(0, 0, 0, 0.18);
   overflow-y: auto;
   z-index: 98;
+  box-shadow:
+    0 0.625rem 1.25rem rgba(0, 0, 0, 0.2),
+    0 0.5rem 0.5rem rgba(0, 0, 0, 0.18);
+
+  h3 {
+    margin: 6.25rem 0.3125rem 1.25rem;
+    font-size: 1.125rem;
+  }
 }
 </style>
