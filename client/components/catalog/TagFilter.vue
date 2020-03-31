@@ -1,6 +1,7 @@
 <template>
   <v-menu
-    @update:return-value="close"
+    ref="filter"
+    @update:return-value="search = ''"
     :close-on-content-click="false"
     offset-y>
     <template v-slot:activator="{ on }">
@@ -16,7 +17,7 @@
         label="Search Tags"
         flat hide-details solo clearable />
     </v-sheet>
-    <v-list v-if="filteredTags.length" :key="listKey">
+    <v-list v-if="filteredTags.length" :key="isVisible">
       <v-list-item
         v-for="tag in filteredTags"
         :key="tag.id"
@@ -56,13 +57,8 @@ export default {
       if (!search) return options;
       const reqex = new RegExp(search.trim(), 'i');
       return filter(options, ({ name }) => reqex.test(name));
-    }
-  },
-  methods: {
-    close() {
-      this.search = '';
-      this.listKey++;
-    }
+    },
+    isVisible: vm => vm.$refs.filter.isActive
   }
 };
 </script>
