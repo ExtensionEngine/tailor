@@ -35,10 +35,10 @@
 </template>
 
 <script>
+import contentElementApi from 'client/api/contentElement';
 import ContentPreview from '@/components/common/ContentPreview';
 import { getDescendants } from '@/utils/activity';
 import { mapGetters } from 'vuex';
-import repositoryApi from 'client/api/repository';
 import SelectActivity from './SelectActivity';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
@@ -64,8 +64,10 @@ export default {
       this.loadingContent = true;
       const { repository, activities } = this;
       const containers = sortBy(getDescendants(activities, activity), 'position');
-      const queryOpts = { id: repository.id, ids: containers.map(it => it.id) };
-      const elements = await repositoryApi.getContentElements(queryOpts);
+      const elements = await contentElementApi.fetch({
+        repositoryId: repository.id,
+        ids: containers.map(it => it.id)
+      });
       this.contentContainers = containers.map(container => ({
         ...container,
         elements: elements.filter(element => element.activityId === container.id)
