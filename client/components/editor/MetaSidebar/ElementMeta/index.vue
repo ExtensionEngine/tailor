@@ -1,12 +1,9 @@
 <template>
   <div class="element-metadata">
-    <div v-if="inputs.length" class="meta-inputs">
-      <meta-input
-        v-for="input in inputs"
-        :key="`${element._cid}.${input.key}`"
-        @update="updateElement"
-        :meta="input" />
-    </div>
+    <element-inputs
+      v-if="inputs.length"
+      :element="element"
+      :inputs="inputs" />
     <element-relationships
       v-if="relationships.length"
       :element="element"
@@ -15,8 +12,8 @@
 </template>
 
 <script>
+import ElementInputs from './Inputs';
 import ElementRelationships from './Relationships';
-import MetaInput from '@/components/common/Meta';
 
 export default {
   name: 'element-metadata',
@@ -25,6 +22,6 @@ export default {
     inputs: { type: Array, default: () => [] },
     relationships: { type: Array, default: () => [] }
   },
-  components: { MetaInput, ElementRelationships }
+  components: { ElementInputs, ElementRelationships }
 };
 </script>

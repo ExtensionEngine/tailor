@@ -10,6 +10,7 @@
 
 <script>
 import { mapActions } from 'vuex';
+import MetaInput from '@/components/common/Meta';
 
 export default {
   name: 'element-meta-inputs',
@@ -24,6 +25,7 @@ export default {
       meta[key] = value;
       return this.update({ _cid: this.element._cid, meta });
     }
-  }
+  },
+  components: { MetaInput }
 };
 </script>
