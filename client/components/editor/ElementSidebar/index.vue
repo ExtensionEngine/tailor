@@ -1,29 +1,25 @@
 <template>
-  <div class="sidebar">
+  <div class="element-sidebar">
     <h3>Additional settings</h3>
-    <element-metadata
-      :element="element"
-      :inputs="inputs"
-      :relationships="relationships" />
+    <element-meta :element="element" v-bind="metadata" />
   </div>
 </template>
 
 <script>
-import ElementMetadata from './ElementMeta';
+import ElementMeta from './ElementMeta';
 
 export default {
   name: 'element-sidebar',
   props: {
     element: { type: Object, required: true },
-    inputs: { type: Array, default: () => [] },
-    relationships: { type: Array, default: () => [] }
+    metadata: { type: Object, default: () => ({}) }
   },
-  components: { ElementMetadata }
+  components: { ElementMeta }
 };
 </script>
 
 <style lang="scss" scoped>
-.sidebar {
+.element-sidebar {
   position: absolute;
   top: 3.125rem;
   right: 0;
@@ -31,12 +27,12 @@ export default {
   width: 23.75rem;
   padding: 1.5625rem 0 4.6875rem 1.25rem;
   text-align: left;
-  background: white;
+  background: #fff;
   overflow-y: auto;
   z-index: 98;
   box-shadow:
-    0 0.625rem 1.25rem rgba(0, 0, 0, 0.2),
-    0 0.5rem 0.5rem rgba(0, 0, 0, 0.18);
+    0 10px 20px rgba(0,0,0,0.2),
+    0 8px 8px rgba(0,0,0,0.18);
 
   h3 {
     margin: 6.25rem 0.3125rem 1.25rem;

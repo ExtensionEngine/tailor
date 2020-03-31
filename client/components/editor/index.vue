@@ -16,12 +16,11 @@
       </toolbar>
       <main-sidebar :activity="activity" :focused-element="focusedElement" />
       <transition name="slide">
-        <meta-sidebar
+        <element-sidebar
           v-if="showSidebar"
           :key="focusedElement._cid"
-          :inputs="metadata.inputs"
-          :relationships="metadata.relationships"
-          :element="focusedElement" />
+          :element="focusedElement"
+          :metadata="metadata" />
       </transition>
     </template>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
@@ -52,13 +51,13 @@ import { mapActions, mapGetters } from 'vuex';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
+import ElementSidebar from './ElementSidebar';
 import EventBus from 'EventBus';
 import find from 'lodash/find';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
 import map from 'lodash/map';
-import MetaSidebar from './MetaSidebar';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 
@@ -146,8 +145,8 @@ export default {
   components: {
     Assessments,
     ContentContainers,
+    ElementSidebar,
     MainSidebar,
-    MetaSidebar,
     Toolbar
   }
 };
