@@ -130,7 +130,7 @@ properties:
 
 #### ActivityRelationship
 
-Defines the structure of an activity relationship field.
+Defines the structure of the activity relationship field.
 
 - **type** `String` - Defines the name of the relationship. The relationship
   will be published under this value.
@@ -152,7 +152,7 @@ Defines the structure of an activity relationship field.
 
 #### Metadata
 
-Defines the structure of an activity metadata field.
+Defines the structure of the activity metadata field.
 
 - **key** `String` - Unique key for the field.
 - **type** `String` - Type of the input component used on the client.
