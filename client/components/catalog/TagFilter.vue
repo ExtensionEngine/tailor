@@ -45,8 +45,8 @@ import { mapState } from 'vuex';
 export default {
   data: () => ({ search: '' }),
   computed: {
-    isVisible: vm => vm.$refs.filter.isActive,
     ...mapState('repositories', ['tags', 'tagFilter']),
+    isVisible: vm => vm.$refs.filter.isActive,
     options() {
       return map(this.tags, it => {
         const isSelected = !!find(this.tagFilter, { id: it.id });
