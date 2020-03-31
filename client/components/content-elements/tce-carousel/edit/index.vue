@@ -16,7 +16,7 @@
           :embeds="embedsByItem[it.id]"
           :active-item="activeItem" />
       </ul>
-      <v-list class="d-flex justify-center p0">
+      <v-list class="d-flex justify-center pa-0">
         <v-list-item
           v-for="it in items"
           :key="it.id">
