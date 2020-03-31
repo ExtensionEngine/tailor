@@ -1,6 +1,6 @@
 <template>
   <div class="element-sidebar">
-    <h3>Additional settings</h3>
+    <h3 class="body-1">Additional settings</h3>
     <element-meta :element="element" v-bind="metadata" />
   </div>
 </template>
@@ -25,7 +25,7 @@ export default {
   right: 0;
   bottom: 0;
   width: 23.75rem;
-  padding: 1.5625rem 0 4.6875rem 1.25rem;
+  padding: 1.5rem 0.875rem 4.75rem;
   text-align: left;
   background: #fff;
   overflow-y: auto;
@@ -35,8 +35,7 @@ export default {
     0 8px 8px rgba(0,0,0,0.18);
 
   h3 {
-    margin: 6.25rem 0.3125rem 1.25rem;
-    font-size: 1.125rem;
+    margin: 6.25rem 0.25rem 1.5rem;
   }
 }
 </style>
