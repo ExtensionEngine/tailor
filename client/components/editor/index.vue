@@ -1,28 +1,10 @@
 <template>
   <div class="editor-wrapper">
     <template v-if="activity">
-      <toolbar :element="focusedElement">
-        <span slot="actions">
-          <v-btn
-            v-if="metadata.length || relationships.length"
-            @click="showSidebar = !showSidebar"
-            color="primary"
-            fab
-            dark
-            title="Toggle teaching element sidebar">
-            <v-icon>mdi-backburger</v-icon>
-          </v-btn>
-        </span>
-      </toolbar>
-      <main-sidebar :activity="activity" :focused-element="focusedElement" />
-      <transition name="slide">
-        <meta-sidebar
-          v-if="showSidebar"
-          :key="focusedElement._cid"
-          :metadata="metadata"
-          :relationships="relationships"
-          :element="focusedElement" />
-      </transition>
+      <toolbar :element="focusedElement" />
+      <main-sidebar
+        :activity="activity"
+        :focused-element="focusedElement" />
     </template>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
       <div class="container">
@@ -54,7 +36,6 @@ import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
 import map from 'lodash/map';
-import MetaSidebar from './MetaSidebar';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 
@@ -69,16 +50,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository', ['repository', 'getMetadata', 'getRelationships']),
+    ...mapGetters('repository', ['repository']),
     ...mapGetters('editor', ['activity', 'contentContainers']),
-    metadata() {
-      if (!this.focusedElement) return [];
-      return this.getMetadata(this.focusedElement);
-    },
-    relationships() {
-      if (!this.focusedElement) return [];
-      return this.getRelationships(this.focusedElement);
-    },
     showAssessments() {
       return config.hasAssessments(this.activity.type);
     },
@@ -151,7 +124,6 @@ export default {
     Assessments,
     ContentContainers,
     MainSidebar,
-    MetaSidebar,
     Toolbar
   }
 };

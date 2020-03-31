@@ -1,6 +1,6 @@
 <template>
-  <div class="sidebar">
-    <h2>Additional settings</h2>
+  <div class="sidebar px-3">
+    <h3>Element settings</h3>
     <div class="meta-element">
       <meta-input
         v-for="it in metadata"
@@ -52,21 +52,9 @@ export default {
 
 <style lang="scss" scoped>
 .sidebar {
-  h2 {
-    margin: 100px 5px 20px;
-    font-size: 18px;
+  h3 {
+    margin: 4.5rem 0.3125rem 1.25rem;
+    font-size: 1rem;
   }
-
-  position: absolute;
-  top: 50px;
-  right: 0;
-  bottom: 0;
-  width: 380px;
-  padding: 25px 0 75px 20px;
-  text-align: left;
-  background: white;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 8px 8px rgba(0, 0, 0, 0.18);
-  overflow-y: auto;
-  z-index: 98;
 }
 </style>

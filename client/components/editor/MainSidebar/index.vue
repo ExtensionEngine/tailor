@@ -30,17 +30,26 @@
         </v-toolbar>
       </v-navigation-drawer>
       <div class="structure-navigation grow">
-        <v-text-field
-          v-model="search"
-          label="Search by name..."
-          clear-icon="mdi-close"
-          clearable hide-details
-          class="my-2 mx-3" />
-        <v-treeview
-          @update:active="navigateTo"
-          :items="repositoryTree"
-          :search="search"
-          transition dense activatable hoverable />
+        <meta-sidebar
+          v-if="focusedElement && hasMetadata"
+          :key="focusedElement._cid"
+          :metadata="metadata"
+          :relationships="relationships"
+          :element="focusedElement" />
+        <template v-else>
+          <v-text-field
+            v-model="search"
+            label="Search by name..."
+            clear-icon="mdi-close"
+            clearable hide-details
+            class="my-2 mx-3" />
+          <v-treeview
+            @update:active="navigateTo"
+            :items="repositoryTree"
+            :search="search"
+            dense activatable hoverable
+            open-all />
+        </template>
       </div>
     </v-row>
   </v-navigation-drawer>
@@ -49,6 +58,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import api from '@/api/activity';
+import MetaSidebar from '../MetaSidebar';
 import publishMixin from 'components/common/mixins/publish';
 import { toTreeFormat } from 'utils/activity';
 
@@ -62,6 +72,7 @@ export default {
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['outlineActivities', 'isRepositoryAdmin']),
+    ...mapGetters('repository', ['getMetadata', 'getRelationships']),
     actions() {
       const { $router, activity: { repositoryId } } = this;
       const items = [{
@@ -80,7 +91,18 @@ export default {
         action: () => this.confirmPublishing()
       }].concat(items);
     },
-    repositoryTree: vm => toTreeFormat(vm.outlineActivities, [])
+    repositoryTree: vm => toTreeFormat(vm.outlineActivities, []),
+    hasMetadata() {
+      return this.metadata.length || this.relationships.length;
+    },
+    metadata() {
+      if (!this.focusedElement) return [];
+      return this.getMetadata(this.focusedElement);
+    },
+    relationships() {
+      if (!this.focusedElement) return [];
+      return this.getRelationships(this.focusedElement);
+    }
   },
   methods: {
     ...mapActions('repository/activities', { publishActivity: 'publish' }),
@@ -93,7 +115,8 @@ export default {
       if (this.activity.id === activityId) return;
       this.$router.push({ name: 'editor', params: { activityId } });
     }
-  }
+  },
+  components: { MetaSidebar }
 };
 </script>
 
