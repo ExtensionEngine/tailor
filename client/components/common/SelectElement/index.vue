@@ -14,9 +14,9 @@
       <content-preview
         v-else
         @toggle="element => toggleElementSelection(element)"
-        :heading="heading"
-        :selected="selectedElements"
         :content-containers="contentContainers"
+        :selected="selectedElements"
+        :heading="heading"
         :allowed-types="allowedTypes"
         :multiple="multiple"
         selectable />
@@ -25,7 +25,8 @@
       <v-btn
         v-if="selectedActivity"
         @click="selectedActivity = null"
-        text outlined>
+        text outlined
+        class="mr-2">
         <v-icon>mdi-arrow-left</v-icon> Back
       </v-btn>
       <v-btn @click="close" text class="ml-1">Cancel</v-btn>
