@@ -20,19 +20,10 @@ export default {
 
 <style lang="scss" scoped>
 .element-sidebar {
-  position: absolute;
-  top: 0.5rem;
-  right: 0;
-  bottom: 0;
-  width: 22.5rem;
-  padding: 1.5rem 0.875rem 4.75rem;
-  text-align: left;
-  background: #fff;
-  overflow-y: auto;
-  z-index: 98;
+  padding: 0 0.875rem 1.5rem;
 
   h3 {
-    margin: 6.25rem 0.25rem 1.5rem;
+    margin: 4.875rem 0.25rem 1.5rem;
   }
 }
 </style>
