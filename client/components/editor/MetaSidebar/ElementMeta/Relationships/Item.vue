@@ -21,7 +21,7 @@
         <template v-slot:activator="{ on }">
           <v-btn
             v-on="on"
-            @click="save([])"
+            @click="$emit('save', [])"
             color="error"
             outlined icon>
             <v-icon>mdi-close</v-icon>
