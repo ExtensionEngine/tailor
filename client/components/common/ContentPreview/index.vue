@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-alert v-if="!elements.length" type="warning">
+    <v-alert v-if="!elements.length" color="grey darken-4" text class="mx-4">
       No available elements.
     </v-alert>
     <div v-for="container in processedContainers" :key="container.id">
@@ -36,11 +36,10 @@ export default {
     selectionMap: vm => keyBy(vm.selected, 'id'),
     processedContainers() {
       const { contentContainers: containers, allowedTypes } = this;
+      if (!allowedTypes.length) return containers;
       return containers.map(container => ({
         ...container,
-        elements: allowedTypes.length
-          ? container.elements.filter(it => allowedTypes.includes(it.type))
-          : container.elements
+        elements: container.elements.filter(it => allowedTypes.includes(it.type))
       }));
     },
     elements() {
