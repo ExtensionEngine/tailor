@@ -1,0 +1,63 @@
+<template>
+  <v-toolbar flat dense class="transparent">
+    <v-list class="py-1 px-2">
+      <v-tooltip
+        v-for="({ title, icon, action }) in actions"
+        :key="title"
+        color="blue-grey darken-3"
+        bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            v-on="on"
+            @click.stop="action"
+            color="blue-grey darken-4"
+            icon small
+            class="mx-2">
+            <v-icon>mdi-{{ icon }}</v-icon>
+          </v-btn>
+        </template>
+        <span>{{ title }}</span>
+      </v-tooltip>
+    </v-list>
+  </v-toolbar>
+</template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex';
+import activityApi from '@/api/activity';
+
+export default {
+  name: 'activity-toolbar',
+  computed: {
+    ...mapGetters(['isAdmin']),
+    ...mapGetters('editor', ['activity']),
+    ...mapGetters('repository', ['isRepositoryAdmin']),
+    actions() {
+      const { $router } = this;
+      const items = [{
+        title: 'Back',
+        icon: 'arrow-left',
+        action: () => $router.push({ name: 'repository' })
+      }, {
+        title: 'Preview',
+        icon: 'eye',
+        action: () => this.preview()
+      }];
+      if (!this.isAdmin && !this.isRepositoryAdmin) return items;
+      return items.concat({
+        title: 'Publish',
+        icon: 'upload',
+        action: () => this.confirmPublishing()
+      });
+    }
+  },
+  methods: {
+    ...mapActions('repository/activities', { publishActivity: 'publish' }),
+    preview() {
+      const { repositoryId, id } = this.activity;
+      return activityApi.createPreview(repositoryId, id)
+        .then(location => window.open(location));
+    }
+  }
+};
+</script>
