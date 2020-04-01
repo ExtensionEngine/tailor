@@ -30,37 +30,27 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import api from '@/api/activity';
 import ElementSidebar from '../ElementSidebar';
 import get from 'lodash/get';
 import { getElementMetadata } from 'shared/activities';
-import publishMixin from 'components/common/mixins/publish';
+import { mapGetters } from 'vuex';
 import { toTreeFormat } from 'utils/activity';
 
 export default {
-  mixins: [publishMixin],
   props: {
     activity: { type: Object, required: true },
     focusedElement: { type: Object, default: null }
   },
   data: () => ({ search: '' }),
   computed: {
-    ...mapGetters(['isAdmin']),
-    ...mapGetters('repository', ['repository', 'outlineActivities', 'isRepositoryAdmin']),
+    ...mapGetters('repository', ['repository', 'outlineActivities']),
+    repositoryTree: vm => toTreeFormat(vm.outlineActivities, []),
     metadata() {
       const { repository, focusedElement } = this;
       return getElementMetadata(get(repository, 'schema'), focusedElement);
-    },
-    repositoryTree: vm => toTreeFormat(vm.outlineActivities, [])
+    }
   },
   methods: {
-    ...mapActions('repository/activities', { publishActivity: 'publish' }),
-    previewContainer() {
-      const { repositoryId, id } = this.activity;
-      return api.createPreview(repositoryId, id)
-        .then(location => window.open(location));
-    },
     navigateTo([activityId]) {
       if (this.activity.id === activityId) return;
       this.$router.push({ name: 'editor', params: { activityId } });
@@ -71,21 +61,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.actions {
-  position: fixed;
-  padding-top: 6.5rem;
-}
-
-::v-deep .v-toolbar__content {
-  padding: 0;
-
-  .v-btn.v-btn--icon.v-size--default {
-    width: 2.25rem;
-    height: 2.25rem;
-    margin: 0.375rem;
-  }
-}
-
 .sidebar-container {
   padding: 3.75rem 0 0;
   text-align: left;

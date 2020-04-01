@@ -25,9 +25,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import activityApi from '@/api/activity';
+import publishMixin from 'components/common/mixins/publish';
 
 export default {
   name: 'activity-actions',
+  mixins: [publishMixin],
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('editor', ['activity']),
