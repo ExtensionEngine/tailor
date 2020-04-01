@@ -5,7 +5,7 @@
       color="grey darken-3"
       transition="fade-transition"
       dismissible text dense
-      class="mb-5 text-left">
+      class="mb-7 text-left">
       {{ message }}
     </v-alert>
     <form @submit.prevent="submit" novalidate>
@@ -18,7 +18,8 @@
         label="Email"
         placeholder="Email"
         prepend-inner-icon="mdi-email-outline"
-        outlined />
+        outlined
+        class="mb-1" />
       <v-text-field
         v-model="password"
         v-validate="{ required: true }"

@@ -1,7 +1,7 @@
 <template>
   <div class="auth-container">
     <div class="auth-panel elevation-2">
-      <div class="auth-header py-6">
+      <div class="auth-header py-8">
         <v-avatar size="50" color="blue-grey darken-3" class="my-1 pa-2">
           <img :src="logo" alt="Logo" class="logo">
         </v-avatar>
