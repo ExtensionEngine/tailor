@@ -21,7 +21,7 @@
         <template v-slot:activator="{ on }">
           <v-btn
             v-on="on"
-            @click="$emit('save', [])"
+            @click="removeAll"
             color="error"
             outlined icon>
             <v-icon>mdi-close</v-icon>
@@ -42,8 +42,12 @@
 </template>
 
 <script>
+import EventBus from 'EventBus';
 import { mapGetters } from 'vuex';
+import pluralize from 'pluralize';
 import SelectElement from '@/components/common/SelectElement';
+
+const appChannel = EventBus.channel('app');
 
 function getTotalsByActivity(activities, relationships) {
   return activities.reduce((acc, { id, data: { name } }) => {
@@ -70,6 +74,17 @@ export default {
       return hasRelationships
         ? getTotalsByActivity(activities, value).join(', ')
         : '';
+    }
+  },
+  methods: {
+    removeAll() {
+      let label = this.label.toLowerCase();
+      label = this.multiple ? pluralize(label) : label;
+      appChannel.emit('showConfirmationModal', {
+        title: `Remove ${label}?`,
+        message: `Are you sure you want to remove ${label}?`,
+        action: () => this.$emit('save', [])
+      });
     }
   },
   components: { SelectElement }
