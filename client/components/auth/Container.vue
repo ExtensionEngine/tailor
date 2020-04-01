@@ -1,9 +1,11 @@
 <template>
   <div class="auth-container">
     <div class="auth-panel elevation-2">
-      <div class="auth-header">
-        <img :src="logo" alt="Logo" class="logo">
-        <h1>{{ title }}</h1>
+      <div class="auth-header pt-6">
+        <v-avatar size="50" color="blue-grey darken-3" class="my-1 pa-2">
+          <img :src="logo" alt="Logo" class="logo">
+        </v-avatar>
+        <h1 class="headline primary--text text--darken-1">{{ title }}</h1>
       </div>
       <div class="auth-body">
         <router-view />
@@ -27,30 +29,27 @@ export default {
 }
 
 .auth-panel {
-  width: 480px;
+  width: 25.625rem;
   margin: auto;
   background-color: #fff;
   border-radius: 4px;
+  border-top: 4px solid var(--v-primary-darken1);
 
   h1 {
     margin: 0;
-    color: white;
-    font-size: 22px;
+    font-size: 1.25rem;
   }
 
   .auth-header {
-    padding-bottom: 20px;
-    background-color: var(--v-primary-darken1);
-    border-radius: 4px 4px 0 0;
+    padding-bottom: 0;
 
     .logo {
-      width: 75px;
-      margin: 30px 0;
+      width: 2.75rem;
     }
   }
 
   .auth-body {
-    padding: 25px 30px;
+    padding: 0.25rem 1.5rem 0.875rem;
 
     a {
       color: inherit;
@@ -59,11 +58,11 @@ export default {
   }
 
   .message {
-    min-height: 16px;
-    margin-bottom: 20px;
+    min-height: 1rem;
+    margin-bottom: 1.25rem;
     color: var(--v-secondary-base);
-    font-size: 16px;
-    line-height: 16px;
+    font-size: 1rem;
+    line-height: 1rem;
   }
 }
 </style>
