@@ -27,7 +27,7 @@ import { mapActions, mapGetters } from 'vuex';
 import activityApi from '@/api/activity';
 
 export default {
-  name: 'activity-toolbar',
+  name: 'activity-actions',
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('editor', ['activity']),

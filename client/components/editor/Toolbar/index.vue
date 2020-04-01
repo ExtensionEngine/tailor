@@ -3,10 +3,10 @@
     <div
       v-show="activity"
       class="activity-toolbar primary elevation-1">
-      <v-chip :color="config.color" label dark class="mr-3">
-        {{ config.label }}
-      </v-chip>
-      <h1 class="text-truncate">{{ activity.data.name }}</h1>
+      <activity-actions class="activity-actions" />
+      <h1 class="headline text-truncate pt-2">
+        <span>{{ config.label }}</span> - {{ activity.data.name }}
+      </h1>
     </div>
     <element-toolbar
       v-if="element && element.parent"
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import ActivityActions from './ActivityActions';
 import { ElementToolbar } from 'tce-core';
 import { getLevel } from 'shared/activities';
 import { mapGetters } from 'vuex';
@@ -47,7 +48,7 @@ export default {
       return getLevel(this.activity.type);
     }
   },
-  components: { ElementToolbar }
+  components: { ActivityActions, ElementToolbar }
 };
 </script>
 
@@ -60,27 +61,21 @@ export default {
 
 .activity-toolbar {
   display: flex;
-  height: 50px;
-  padding: 0 5px;
+  height: 3.125rem;
+  padding: 0 0.375rem 0 0;
   z-index: 999;
-
-  .v-chip {
-    max-width: 300px;
-    height: 26px;
-    margin: 12px 10px;
-    font-size: 13px;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
 
   h1 {
     flex: 1;
     margin: 0;
-    padding-top: 13px;
     color: #fff;
-    font-size: 22px;
-    font-weight: 300;
+    font-size: 1.375rem;
     text-align: left;
   }
+}
+
+.activity-actions {
+  max-width: 11.25rem;
+  margin-top: 0.0625rem;
 }
 </style>
