@@ -9,7 +9,7 @@
             color="primary"
             fab
             dark
-            title="Toggle teaching element sidebar">
+            title="Toggle content element sidebar">
             <v-icon>mdi-backburger</v-icon>
           </v-btn>
         </span>

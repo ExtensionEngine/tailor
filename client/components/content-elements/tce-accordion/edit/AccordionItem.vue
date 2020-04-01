@@ -15,7 +15,7 @@
     <transition name="slide-fade">
       <div v-show="!isCollapsed" class="container-fluid accordion-body">
         <div v-if="!hasElements" class="well">
-          Click the button below to Create your first teaching element.
+          Click the button below to Add your first content element.
         </div>
         <embedded-container
           @save="({ embeds }) => save(item, embeds)"

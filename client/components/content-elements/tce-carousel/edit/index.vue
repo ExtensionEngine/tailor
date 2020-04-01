@@ -1,32 +1,22 @@
 <template>
   <div>
-    <v-card v-if="!hasItems" class="grey lighten-4">
-      <v-card-text>
-        Use the toolbar to add the first item to the carousel.
-      </v-card-text>
-    </v-card>
-    <div v-else :style="{ height: `${height}px` }" class="carousel">
-      <ul :style="{ height: height - 50 + 'px' }" class="carousel-items">
+    <v-alert v-if="!hasItems" type="info">
+      Use the toolbar to add the first item to the carousel.
+    </v-alert>
+    <v-carousel
+      v-else
+      :show-arrows="false">
+      <v-carousel-item
+        v-for="(item,i) in items"
+        :key="i">
         <carousel-item
-          v-for="it in items"
-          :key="it.id"
           @save="saveItem"
           @delete="deleteItem"
-          :item="it"
-          :embeds="embedsByItem[it.id]"
+          :item="item"
+          :embeds="embedsByItem[item.id]"
           :active-item="activeItem" />
-      </ul>
-      <v-list class="d-flex justify-center pa-0">
-        <v-list-item
-          v-for="it in items"
-          :key="it.id">
-          <v-icon
-            @click="activateItem(it)">
-            {{ `mdi-${activeItem === it.id ? 'circle' : 'circle-outline'}` }}
-          </v-icon>
-        </v-list-item>
-      </v-list>
-    </div>
+      </v-carousel-item>
+    </v-carousel>
   </div>
 </template>
 
@@ -124,21 +114,3 @@ export default {
   components: { CarouselItem }
 };
 </script>
-
-<style lang="scss" scoped>
-.carousel {
-  position: relative;
-  width: 100%;
-}
-
-.carousel-items {
-  margin: 0;
-  padding-left: 0;
-  list-style-type: none;
-}
-
-.v-list-item {
-  max-width: 30px;
-  justify-content: center;
-}
-</style>
