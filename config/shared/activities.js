@@ -77,7 +77,7 @@ function getElementMetadata(schemaId, element) {
 
 function getElementInputs(schemaId, element) {
   if (!schemaId || !element) return [];
-  return getMetadata(schemaId, element, 'meta');
+  return getMetadata(schemaId, element, 'inputs', 'meta');
 }
 
 function getElementRelationships(schemaId, element) {
