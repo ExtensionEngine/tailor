@@ -43,7 +43,7 @@ export default {
       }));
     },
     elements() {
-      const { contentContainers: containers } = this;
+      const { processedContainers: containers } = this;
       return containers.reduce((acc, it) => acc.concat(it.elements), []);
     }
   },

@@ -1,0 +1,16 @@
+{
+  "watch": [
+    "*.*",
+    ".env"
+  ],
+  "ignore": [
+    "build",
+    "client",
+    "data",
+    "dist",
+    "*.config.js"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

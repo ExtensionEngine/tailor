@@ -40,6 +40,7 @@ import contentElementApi from 'client/api/contentElement';
 import ContentPreview from '@/components/common/ContentPreview';
 import { getDescendants } from '@/utils/activity';
 import { mapGetters } from 'vuex';
+import Promise from 'bluebird';
 import SelectActivity from './SelectActivity';
 import sortBy from 'lodash/sortBy';
 import TailorDialog from '@/components/common/TailorDialog';
@@ -63,12 +64,9 @@ export default {
     async showActivityElements(activity) {
       this.selectedActivity = activity;
       this.loadingContent = true;
-      const { repository, activities } = this;
+      const { activities } = this;
       const containers = sortBy(getDescendants(activities, activity), 'position');
-      const elements = await contentElementApi.fetch({
-        repositoryId: repository.id,
-        ids: containers.map(it => it.id)
-      });
+      const elements = await this.fetchElements(containers);
       this.contentContainers = containers.map(container => ({
         ...container,
         elements: elements.filter(element => element.activityId === container.id)
@@ -85,6 +83,14 @@ export default {
       this.selectedElements = existing
         ? elements.filter(it => it.id !== element.id)
         : [...elements, { id: element.id, ...elementLocation }];
+    },
+    fetchElements(containers) {
+      const { repository: { id: repositoryId } } = this;
+      const queryOpts = { repositoryId, ids: containers.map(it => it.id) };
+      return Promise.all([
+        contentElementApi.fetch(queryOpts),
+        Promise.delay(500)]
+      ).then(([elements]) => elements);
     },
     save() {
       this.$emit('selected', [...this.selectedElements]);

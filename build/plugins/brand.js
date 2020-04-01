@@ -1,11 +1,11 @@
 'use strict';
 
-const { readFileSync } = require('fs');
 const isObject = require('lodash/isObject');
 const JoyCon = require('joycon');
 const map = require('lodash/map');
 const merge = require('lodash/merge');
 const path = require('path');
+const { readFileSync } = require('fs');
 const stripJsonComments = require('strip-json-comments');
 
 exports.name = 'tailor:brand';
