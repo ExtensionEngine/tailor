@@ -109,8 +109,11 @@ function getActivityConfig(type) {
 
 function getElementConfig(schemaId, type) {
   if (!schemaId) return {};
-  const { elementMeta } = getSchema(schemaId);
-  return find(elementMeta, it => castArray(it.type).includes(type)) || {};
+  // tesMeta used to support legacy config
+  const { elementMeta, tesMeta } = getSchema(schemaId);
+  if (!elementMeta && !tesMeta) return {};
+  const config = elementMeta || map(tesMeta, it => ({ ...it, inputs: it.meta }));
+  return find(config, it => castArray(it.type).includes(type)) || {};
 }
 
 function getSiblingLevels(type) {
