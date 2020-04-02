@@ -1,8 +1,8 @@
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getSupportedContainers } from 'shared/activities';
-import reduce from 'lodash/reduce';
+import { getContentContainers } from 'utils/activity';
+import groupBy from 'lodash/groupBy';
 
 export const activity = (_state, _getters, { route, repository }) => {
   const id = parseInt(get(route, 'params.activityId'), 10);
@@ -13,11 +13,7 @@ export const contentContainers = (_state, getters, { repository }) => {
   const { items: activities } = repository.activities;
   const { activity } = getters;
   if (!activity) return {};
-  const containers = getSupportedContainers(activity.type);
-  return reduce(containers, (acc, { type }) => {
-    acc[type] = filter(activities, { parentId: activity.id, type });
-    return acc;
-  }, {});
+  return groupBy(getContentContainers(activities, activity), 'type');
 };
 
 export const assessments = (_state, getters, rootState) => {
