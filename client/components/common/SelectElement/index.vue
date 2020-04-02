@@ -38,7 +38,7 @@
 <script>
 import contentElementApi from 'client/api/contentElement';
 import ContentPreview from '@/components/common/ContentPreview';
-import { getDescendants } from '@/utils/activity';
+import { getContentContainers as getContainers } from '@/utils/activity';
 import { mapGetters } from 'vuex';
 import Promise from 'bluebird';
 import SelectActivity from './SelectActivity';
@@ -65,7 +65,7 @@ export default {
       this.selectedActivity = activity;
       this.loadingContent = true;
       const { activities } = this;
-      const containers = sortBy(getDescendants(activities, activity), 'position');
+      const containers = sortBy(getContainers(activities, activity), 'position');
       const elements = await this.fetchElements(containers);
       this.contentContainers = containers.map(container => ({
         ...container,
