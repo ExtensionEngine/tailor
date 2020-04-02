@@ -3,12 +3,12 @@
     <v-row no-gutters class="fill-height">
       <div class="sidebar-container grow">
         <element-sidebar
-          v-if="focusedElement && !metadata.isEmpty"
-          :key="focusedElement._cid"
-          :element="focusedElement"
+          v-if="selectedElement && !metadata.isEmpty"
+          :key="selectedElement._cid"
+          :element="selectedElement"
           :metadata="metadata" />
         <div
-          :class="{ 'toolbar-visible': focusedElement && metadata.isEmpty }"
+          :class="{ 'toolbar-visible': selectedElement && metadata.isEmpty }"
           class="pt-2 mx-4">
           <h4 class="body-1 ma-1">Navigation</h4>
           <v-text-field
@@ -39,15 +39,15 @@ import { toTreeFormat } from 'utils/activity';
 export default {
   props: {
     activity: { type: Object, required: true },
-    focusedElement: { type: Object, default: null }
+    selectedElement: { type: Object, default: null }
   },
   data: () => ({ search: '' }),
   computed: {
     ...mapGetters('repository', ['repository', 'outlineActivities']),
     repositoryTree: vm => toTreeFormat(vm.outlineActivities, []),
     metadata() {
-      const { repository, focusedElement } = this;
-      return getElementMetadata(get(repository, 'schema'), focusedElement);
+      const { repository, selectedElement } = this;
+      return getElementMetadata(get(repository, 'schema'), selectedElement);
     }
   },
   methods: {
