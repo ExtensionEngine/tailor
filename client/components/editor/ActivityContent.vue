@@ -131,6 +131,7 @@ export default {
 
   .content-containers-wrapper {
     max-width: 68.75rem;
+    margin: auto;
   }
 }
 

@@ -4,7 +4,8 @@
       v-show="activity"
       class="activity-toolbar primary elevation-1">
       <activity-actions class="activity-actions" />
-      <h1 class="headline text-truncate pt-2">
+      <h1 class="pt-2 pl-1 headline text-truncate">
+        <v-icon dark class="mr-1 pb-1">mdi-file-document</v-icon>
         <span>{{ config.label }}</span> - {{ activity.data.name }}
       </h1>
     </div>
