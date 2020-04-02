@@ -4,6 +4,7 @@ const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
+const { getLevel: isOutlineType } = require('../../config/shared/activities');
 
 module.exports = { add };
 
@@ -39,13 +40,20 @@ function add(ContentElement, Hooks, Models) {
 
   function touchRepository(_, element, { context = {} }) {
     if (!isRepository(context.repository)) return Promise.resolve();
-    return context.repository.touch();
+    return context.repository.update({ hasUnpublishedChanges: true });
   }
 
-  function touchOutline(_, element, { context = {} }) {
+  async function touchOutline(_, element, { context = {} }) {
     if (!isRepository(context.repository)) return Promise.resolve();
-    return element.getActivity().then(activity => {
-      return activity && activity.touchOutline(context.repository);
-    });
+    const activity = await resolveOutlineActivity(element);
+    return activity && activity.touch();
   }
+}
+
+function resolveOutlineActivity(element) {
+  return element.getActivity().then(activity => {
+    return activity && isOutlineType(activity.type)
+      ? activity
+      : activity.getOutlineParent();
+  });
 }

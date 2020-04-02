@@ -4,7 +4,17 @@
       <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
       <span class="schema-name">{{ schema }}</span>
       <div class="controls float-right">
-        <publishing-badge :has-changes="hasUnpublishedChanges" />
+        <v-tooltip open-delay="800" top>
+          <template v-slot:activator="{ on }">
+            <span v-on="on">
+              <v-badge
+                :color="hasUnpublishedChanges ? 'orange' : 'green'"
+                inline
+                dot />
+            </span>
+          </template>
+          {{ publishingInfo }}
+        </v-tooltip>
         <v-btn
           v-if="repository.hasAdminAccess"
           @click.stop="navigateTo('repository-info')"
@@ -55,8 +65,11 @@ import first from 'lodash/first';
 import get from 'lodash/get';
 import { getSchema } from 'shared/activities';
 import { mapActions } from 'vuex';
-import PublishingBadge from 'components/common/PublishingBadge';
 import Tags from './Tags';
+
+const getPublishingInfo = hasChanges => hasChanges
+  ? 'Repository has unpublished content.'
+  : 'Repository content is published.';
 
 export default {
   props: {
@@ -68,7 +81,8 @@ export default {
     schema: ({ repository }) => getSchema(repository.schema).name,
     lastActivity: ({ repository }) => first(repository.revisions),
     hasUnpublishedChanges: ({ repository }) => repository.hasUnpublishedChanges,
-    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false)
+    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),
+    publishingInfo: vm => getPublishingInfo(vm.hasUnpublishedChanges)
   },
   methods: {
     ...mapActions('repositories', ['pin']),
@@ -80,7 +94,7 @@ export default {
       });
     }
   },
-  components: { PublishingBadge, Tags }
+  components: { Tags }
 };
 </script>
 

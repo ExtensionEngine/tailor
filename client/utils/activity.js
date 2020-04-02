@@ -38,3 +38,11 @@ export function getAncestors(activities, activity) {
 export function isSameLevel(activityX, activityY) {
   return getLevel(activityX.type).level === getLevel(activityY.type).level;
 }
+
+export function isChanged(activity) {
+  return new Date(activity.modifiedAt) > new Date(activity.publishedAt);
+}
+
+export function getLabel(activity) {
+  return getLevel(activity.type).label;
+}

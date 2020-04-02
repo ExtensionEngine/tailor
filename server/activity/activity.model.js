@@ -2,7 +2,7 @@
 
 const {
   getSiblingLevels,
-  getLevel: isOutline
+  getLevel: isOutlineType
 } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
@@ -167,12 +167,11 @@ class Activity extends Model {
   }
 
   descendants(options = {}, nodes = [], leaves = []) {
-    const { attributes, excludeTypes = [] } = options;
+    const { attributes } = options;
     const node = !isEmpty(attributes) ? pick(this, attributes) : this;
     nodes.push(node);
     return Promise.resolve(this.getChildren({ attributes }))
-      .map(it => excludeTypes.includes(it.type) ? []
-        : it.descendants(options, nodes, leaves))
+      .map(it => it.descendants(options, nodes, leaves))
       .then(children => {
         if (!isEmpty(children)) return { nodes, leaves };
         const leaf = !isEmpty(attributes) ? pick(this, attributes) : this;
@@ -218,15 +217,15 @@ class Activity extends Model {
   }
 
   getOutlineParent(transaction) {
-    if (isOutline(this.type)) return this;
-    return this.getParent({ transaction }).then(activity => {
-      return activity && activity.getOutlineParent(transaction);
+    return this.getParent({ transaction }).then(parent => {
+      if (!parent) return Promise.resolve();
+      if (isOutlineType(parent.type)) return parent;
+      return parent.getOutlineParent(transaction);
     });
   }
 
-  async touchOutline(repository, transaction) {
-    const outline = await this.getOutlineParent(transaction);
-    if (outline) outline.update({ modifiedAt: new Date() }, { transaction });
+  touch(transaction) {
+    return this.update({ modifiedAt: new Date() }, { transaction });
   }
 }
 

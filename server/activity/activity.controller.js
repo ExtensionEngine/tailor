@@ -1,10 +1,13 @@
 'use strict';
 
+const {
+  getOutlineLevels,
+  getLevel: isOutlineType
+} = require('../../config/shared/activities');
 const { Activity } = require('../shared/database');
 const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');
 const get = require('lodash/get');
-const { getOutlineLevels } = require('../../config/shared/activities');
 const pick = require('lodash/pick');
 const { previewUrl } = require('../../config/server');
 const publishingService = require('../shared/publishing/publishing.service');
@@ -45,8 +48,11 @@ function remove({ user, repository, activity }, res) {
     ? publishingService.unpublishActivity(repository, activity)
     : Promise.resolve();
   return unpublish
-    .then(() => activity.remove(options))
-    .then(activity => res.json({ data: pick(activity, ['id']) }));
+    .then(async () => {
+      const deleted = await activity.remove(options);
+      await updatePublishingStatus(repository, activity);
+      return res.json({ data: pick(deleted, ['id']) });
+    });
 }
 
 function reorder({ activity, body }, res) {
@@ -81,6 +87,11 @@ function getPreviewUrl({ activity }, res) {
     .then(({ data: { url } }) => {
       return res.json({ location: `${new URL(url, previewUrl)}` });
     });
+}
+
+function updatePublishingStatus(repository, activity) {
+  if (!isOutlineType(activity.type)) return Promise.resolve();
+  return publishingService.updatePublishingStatus(repository);
 }
 
 module.exports = {

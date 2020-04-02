@@ -135,7 +135,7 @@ export default {
     }
   },
   created() {
-    // repositories must be reloaded for publishing-badge to work properly
+    // repositories must be reloaded for publishing badge to work properly
     // reset state manually to trigger "infinite" event in all cases
     this.resetPagination();
     this.reset();

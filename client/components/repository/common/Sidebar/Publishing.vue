@@ -23,9 +23,7 @@
       </v-list>
     </v-menu>
     <div class="publish-status">
-      <publishing-badge
-        :has-changes="hasUnpublishedChanges"
-        :activity="activity" />
+      <publishing-badge :activity="activity" />
       <span class="pl-1">
         {{ isPublishing ? publishStatus.message : publishedAtMessage }}
       </span>
@@ -38,7 +36,7 @@ import fecha from 'fecha';
 import { getDescendants } from 'utils/activity';
 import { getLevel } from 'shared/activities';
 import { mapActions } from 'vuex';
-import PublishingBadge from 'components/common/PublishingBadge';
+import PublishingBadge from './Badge';
 import publishMixin from 'components/common/mixins/publish';
 
 export default {
@@ -47,7 +45,6 @@ export default {
     activity: { type: Object, required: true },
     outlineActivities: { type: Array, required: true }
   },
-  data: () => ({ revisions: [] }),
   computed: {
     config: vm => getLevel(vm.activity.type),
     publishedAtMessage() {
@@ -55,10 +52,6 @@ export default {
       return publishedAt
         ? `Published on ${fecha.format(new Date(publishedAt), 'M/D/YY HH:mm')}`
         : 'Not published';
-    },
-    hasUnpublishedChanges() {
-      const { modifiedAt, publishedAt } = this.activity;
-      return new Date(modifiedAt) > new Date(publishedAt);
     },
     activityWithDescendants({ outlineActivities, activity } = this) {
       return [...getDescendants(outlineActivities, activity), activity];

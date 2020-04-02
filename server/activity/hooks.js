@@ -1,23 +1,32 @@
 'use strict';
 
+const { getLevel: isOutlineType } = require('../../config/shared/activities');
+
 module.exports = { add };
 
 function add(Activity, Hooks, Models) {
   [Hooks.afterCreate, Hooks.afterUpdate, Hooks.afterDestroy]
     .forEach(type => {
-      Activity.addHook(type, touchRepository);
+      Activity.addHook(type, Hooks.withType(type, touchRepository));
       Activity.addHook(type, touchOutline);
     });
 
   const isRepository = it => it instanceof Models.Repository;
 
-  function touchRepository(activity, { context = {} }) {
+  function touchRepository(hookType, activity, { context = {} }) {
     if (!isRepository(context.repository)) return Promise.resolve();
-    return context.repository.touch();
+    // setting correct hasUnpublishedChanges value is handled by
+    // remove activity middleware for outline activities
+    return hookType === Hooks.afterDestroy && isOutlineType(activity.type)
+      ? Promise.resolve()
+      : context.repository.update({ hasUnpublishedChanges: true });
   }
 
-  function touchOutline(activity, { context = {}, transaction }) {
+  async function touchOutline(activity, { context = {}, transaction }) {
     if (!isRepository(context.repository)) return Promise.resolve();
-    return activity.touchOutline(context.repository, transaction);
+    const outlineActivity = isOutlineType(activity.type)
+      ? activity
+      : await activity.getOutlineParent(transaction);
+    return outlineActivity && outlineActivity.touch(transaction);
   }
 }

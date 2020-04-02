@@ -1,10 +1,8 @@
 'use strict';
 
 const filter = require('lodash/filter');
-const get = require('lodash/get');
 const head = require('lodash/head');
 const keyBy = require('lodash/keyBy');
-const map = require('lodash/map');
 const max = require('lodash/max');
 const Promise = require('bluebird');
 const transform = require('lodash/transform');
@@ -12,7 +10,7 @@ const transform = require('lodash/transform');
 const TABLE = 'activity';
 const COLUMN = 'modified_at';
 
-const isOutline = it => /\//.test(it.type);
+const isOutlineActivity = it => /\//.test(it.type);
 
 exports.up = async (qi, { DATE }) => {
   await qi.addColumn(TABLE, COLUMN, { type: DATE });
@@ -29,12 +27,12 @@ async function updateColumnValues({ sequelize }) {
       getActivities(sequelize, repositoryId, transaction),
       getRevisions(sequelize, repositoryId, transaction)
     ]);
-    const cache = buildRevisionCache(activities, revisions);
-    const outlineActivities = filter(activities, isOutline);
-    await Promise.each(outlineActivities, activity => {
-      const modifiedAt = resolveModifiedAt(activity, cache);
-      const where = { modifiedAt, activityId: activity.id };
-      return setModifiedAt(sequelize, where, transaction);
+    const cache = buildModifiedAtCache(activities, revisions);
+    const outlineActivities = filter(activities, isOutlineActivity);
+    await Promise.each(outlineActivities, ({ id }) => {
+      const maxDate = (cache[id] || new Date()).toISOString();
+      const data = { modifiedAt: maxDate, activityId: id };
+      return setModifiedAt(sequelize, data, transaction);
     });
   });
   await transaction.commit();
@@ -90,7 +88,7 @@ async function getActivities(sequelize, repositoryId, transaction) {
   return head(await sequelize.query(sql, options));
 }
 
-function setModifiedAt(sequelize, where, transaction) {
+function setModifiedAt(sequelize, data, transaction) {
   const sql = `
     UPDATE
       activity
@@ -99,26 +97,21 @@ function setModifiedAt(sequelize, where, transaction) {
     WHERE
       id = :activityId;
   `;
-  return sequelize.query(sql, { transaction, replacements: where });
+  return sequelize.query(sql, { transaction, replacements: data });
 }
 
-function buildRevisionCache(activities, revisions) {
+function buildModifiedAtCache(activities, revisions) {
   const keyedActivities = keyBy(activities, 'id');
-  return transform(revisions, (acc, revision) => {
-    const outlineId = getOutlineParentId(revision, keyedActivities);
-    (acc[outlineId] || (acc[outlineId] = [])).push(revision);
+  return transform(revisions, (acc, { activityId, createdAt }) => {
+    const id = getOutlineParentId(activityId, keyedActivities);
+    acc[id] = max([createdAt, acc[id]]);
   }, {});
 }
 
-function getOutlineParentId(revision, activities) {
-  let activity = activities[revision.activityId];
-  while (activity && !isOutline(activity)) {
-    activity = activities[activity.parentId];
-  }
-  return get(activity, 'id');
-}
-
-function resolveModifiedAt(activity, cache) {
-  const date = max(map(cache[activity.id], 'createdAt'));
-  return (date || new Date()).toISOString();
+function getOutlineParentId(activityId, activities) {
+  const activity = activities[activityId];
+  if (!activity) return null;
+  return isOutlineActivity(activity)
+    ? activity.id
+    : getOutlineParentId(activity.parentId, activities);
 }

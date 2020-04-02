@@ -310,14 +310,15 @@ async function updatePublishingStatus(repository, activity) {
   const where = {
     repositoryId: repository.id,
     type: outlineTypes,
+    detached: false,
     [Op.or]: {
       publishedAt: { [Op.eq]: null },
       modifiedAt: { [Op.gt]: sequelize.col('published_at') }
     }
   };
   if (activity) where.id = { [Op.ne]: activity.id };
-  const count = await Activity.count({ where });
-  if (!count) return repository.touch(false);
+  const unpublishedCount = await Activity.count({ where });
+  return repository.update({ hasUnpublishedChanges: !!unpublishedCount });
 }
 
 module.exports = {
@@ -326,6 +327,7 @@ module.exports = {
   unpublishActivity,
   publishRepositoryDetails,
   updateRepositoryCatalog,
+  updatePublishingStatus,
   fetchActivityContent,
   getRepositoryAttrs
 };

@@ -137,11 +137,6 @@ class Repository extends Model {
     });
   }
 
-  touch(value = true) {
-    if (this.hasUnpublishedChanges === value) return this;
-    return this.update({ hasUnpublishedChanges: value });
-  }
-
   getUser(user) {
     return this.getUsers({ where: { id: user.id } })
       .then(users => users[0]);

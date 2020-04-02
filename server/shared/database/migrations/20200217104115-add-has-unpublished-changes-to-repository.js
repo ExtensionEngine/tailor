@@ -23,15 +23,17 @@ async function updateColumnValues({ sequelize }) {
   const repositories = await getRepositories(sequelize, t);
   await Promise.each(repositories, async ({ id }) => {
     const activities = await getOutlineActivities(sequelize, id, t);
-    const hasUnpublishedChanges = activities ? some(activities, isModified) : true;
+    const hasUnpublishedChanges = activities.length
+      ? some(activities, isModified)
+      : true;
     return setColumnValue(sequelize, { id, hasUnpublishedChanges }, t);
   });
   await t.commit();
 }
 
 async function getRepositories(sequelize, transaction) {
-  const sql = 'SELECT id AS "id" FROM repository;';
-  return head(await sequelize.query(sql, { transaction, raw: true }));
+  const sql = 'SELECT id FROM repository;';
+  return head(await sequelize.query(sql, { transaction, raw: true })) || [];
 }
 
 async function getOutlineActivities(sequelize, repositoryId, transaction) {
