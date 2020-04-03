@@ -2,7 +2,11 @@
   <div class="editor-container">
     <template v-if="!isLoading">
       <toolbar :element="selectedElement" />
-      <sidebar :activity="activity" :selected-element="selectedElement" />
+      <sidebar
+        :repository="repository"
+        :activities="outlineActivities"
+        :selected-activity="activity"
+        :selected-element="selectedElement" />
       <activity-content
         :key="activity.id"
         @selected="selectedElement = $event"
@@ -30,7 +34,7 @@ export default {
     selectedElement: null
   }),
   computed: {
-    ...mapGetters('repository', ['repository']),
+    ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('editor', ['activity', 'contentContainers'])
   },
   methods: mapActions('repository', ['initialize']),

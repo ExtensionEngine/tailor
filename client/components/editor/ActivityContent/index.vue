@@ -2,7 +2,7 @@
   <div
     @mousedown="mousedownCaptured = true"
     @click="onClick"
-    class="editor blue-grey lighten-5">
+    class="activity-content blue-grey lighten-5">
     <div class="content-containers-wrapper">
       <content-loader v-if="isLoading" class="loader" />
       <template v-else>
@@ -34,13 +34,14 @@ import { mapActions } from 'vuex';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
-const ELEMENT_MODULE = 'repository/tes';
+const CE_FOCUS_EVENT = 'element:focus';
+const CE_MODULE = 'repository/tes';
 const ELEMENT_MUTATIONS = [
-  `${ELEMENT_MODULE}/save`, `${ELEMENT_MODULE}/add`, `${ELEMENT_MODULE}/update`
+  `${CE_MODULE}/save`, `${CE_MODULE}/add`, `${CE_MODULE}/update`
 ];
 
 export default {
-  name: 'content-editor',
+  name: 'activity-content',
   props: {
     repository: { type: Object, required: true },
     activity: { type: Object, required: true },
@@ -72,7 +73,7 @@ export default {
       }
     },
     initElementChangeWatcher() {
-      this.unsubscribe = this.$store.subscribe(debounce((mutation, state) => {
+      this.storeUnsubscribe = this.$store.subscribe(debounce((mutation, state) => {
         const { type, payload: element } = mutation;
         const { focusedElement } = this;
         if (!focusedElement || !ELEMENT_MUTATIONS.includes(type)) return;
@@ -89,7 +90,7 @@ export default {
       }, 100));
     },
     initElementFocusListener() {
-      EventBus.on('element:focus', throttle((element, composite) => {
+      this.eventBus = EventBus.on(CE_FOCUS_EVENT, throttle((element, composite) => {
         if (!element) {
           this.focusedElement = null;
           return;
@@ -121,7 +122,8 @@ export default {
     this.initElementChangeWatcher();
   },
   beforeDestroy() {
-    this.unsubscribe();
+    this.storeUnsubscribe();
+    this.eventBus.$off(CE_FOCUS_EVENT);
   },
   components: {
     Assessments,
@@ -132,7 +134,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.editor {
+.activity-content {
   min-height: 100%;
   padding: 4.375rem 1.5625rem 0 26.25rem;
   overflow-y: scroll;

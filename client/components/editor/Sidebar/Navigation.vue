@@ -56,7 +56,7 @@ export default {
       this.$router.push({ name: 'editor', params: { activityId } });
     },
     isActivityEditable(activity) {
-      return this.editableTypes.find(type => type === activity.type);
+      return this.editableTypes.includes(activity.type);
     }
   },
   watch: {

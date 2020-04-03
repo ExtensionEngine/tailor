@@ -6,8 +6,8 @@
     <activity-navigation
       v-if="isNavigationVisible"
       :repository="repository"
-      :activities="outlineActivities"
-      :selected="activity"
+      :activities="activities"
+      :selected="selectedActivity"
       :class="{ 'toolbar-visible': selectedElement }" />
     <element-sidebar
       v-else
@@ -22,16 +22,16 @@ import ActivityNavigation from './Navigation';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementMetadata } from 'shared/activities';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'editor-sidebar',
   props: {
-    activity: { type: Object, required: true },
+    repository: { type: Object, required: true },
+    activities: { type: Array, required: true },
+    selectedActivity: { type: Object, required: true },
     selectedElement: { type: Object, default: null }
   },
   computed: {
-    ...mapGetters('repository', ['repository', 'outlineActivities']),
     isNavigationVisible: vm => !vm.selectedElement || vm.metadata.isEmpty,
     metadata() {
       const { repository, selectedElement } = this;
