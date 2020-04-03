@@ -7,7 +7,7 @@
       <v-card v-if="isLoading" class="loader-wrapper py-10 px-3">
         <v-skeleton-loader type="article" class="mb-2" />
         <v-skeleton-loader
-          v-for="i in 7"
+          v-for="i in 4"
           :key="i"
           type="text"
           class="mb-1 mx-4" />

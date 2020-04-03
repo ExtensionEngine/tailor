@@ -84,6 +84,10 @@ export default {
   .v-treeview-node__content {
     margin-left: 0;
   }
+
+  .v-treeview-node__level {
+    width: 0.75rem;
+  }
 }
 
 .selectable {
