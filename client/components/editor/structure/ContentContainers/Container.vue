@@ -12,7 +12,8 @@
     <v-alert
       :value="!teachingElements.length"
       color="primary darken-1"
-      outlined>
+      outlined
+      class="my-5 mx-3">
       Click the button below to create content.
     </v-alert>
     <tes-list

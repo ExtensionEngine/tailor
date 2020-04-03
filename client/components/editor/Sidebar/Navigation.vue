@@ -76,8 +76,14 @@ export default {
   padding: 1rem 1rem 0.25rem 0.75rem;
 }
 
-.v-treeview ::v-deep .v-treeview-node__toggle {
-  outline: none;
+.v-treeview ::v-deep {
+  .v-treeview-node__toggle {
+    outline: none;
+  }
+
+  .v-treeview-node__content {
+    margin-left: 0;
+  }
 }
 
 .selectable {
