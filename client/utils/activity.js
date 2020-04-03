@@ -44,7 +44,7 @@ export function toTreeFormat(activities, targetLevels, parentId = null, level = 
     ...activity,
     name: activity.data.name,
     level,
-    selectable: targetLevels.find(it => it.type === activity.type),
+    selectable: !!targetLevels.find(it => it.type === activity.type),
     children: toTreeFormat(activities, targetLevels, activity.id, level + 1)
   }));
 }

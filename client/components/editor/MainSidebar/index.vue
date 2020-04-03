@@ -7,56 +7,37 @@
           :key="selectedElement._cid"
           :element="selectedElement"
           :metadata="metadata" />
-        <div
-          :class="{ 'toolbar-visible': selectedElement && metadata.isEmpty }"
-          class="pt-2 mx-4">
-          <h4 class="body-1 ma-1">Navigation</h4>
-          <v-text-field
-            v-model="search"
-            label="Search by name..."
-            clear-icon="mdi-close"
-            clearable hide-details
-            class="mb-2 mx-1" />
-          <v-treeview
-            @update:active="navigateTo"
-            :items="repositoryTree"
-            :search="search"
-            dense activatable hoverable
-            open-all />
-        </div>
+        <activity-navigation
+          :repository="repository"
+          :activities="outlineActivities"
+          :selected="activity"
+          :class="{ 'toolbar-visible': selectedElement && metadata.isEmpty }" />
       </div>
     </v-row>
   </v-navigation-drawer>
 </template>
 
 <script>
+import ActivityNavigation from './Navigation';
 import ElementSidebar from '../ElementSidebar';
 import get from 'lodash/get';
 import { getElementMetadata } from 'shared/activities';
 import { mapGetters } from 'vuex';
-import { toTreeFormat } from 'utils/activity';
 
 export default {
+  name: 'editor-sidebar',
   props: {
     activity: { type: Object, required: true },
     selectedElement: { type: Object, default: null }
   },
-  data: () => ({ search: '' }),
   computed: {
     ...mapGetters('repository', ['repository', 'outlineActivities']),
-    repositoryTree: vm => toTreeFormat(vm.outlineActivities, []),
     metadata() {
       const { repository, selectedElement } = this;
       return getElementMetadata(get(repository, 'schema'), selectedElement);
     }
   },
-  methods: {
-    navigateTo([activityId]) {
-      if (this.activity.id === activityId) return;
-      this.$router.push({ name: 'editor', params: { activityId } });
-    }
-  },
-  components: { ElementSidebar }
+  components: { ActivityNavigation, ElementSidebar }
 };
 </script>
 
@@ -64,12 +45,6 @@ export default {
 .sidebar-container {
   padding: 3.75rem 0 0;
   text-align: left;
-
-  ::v-deep {
-    .v-treeview-node__content {
-      cursor: pointer;
-    }
-  }
 }
 
 .toolbar-visible {
