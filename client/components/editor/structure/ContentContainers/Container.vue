@@ -4,15 +4,14 @@
       <v-btn
         @click="$emit('delete')"
         color="error"
-        outlined
+        text
         class="pull-right">
         Delete {{ name }}
       </v-btn>
     </div>
     <v-alert
       :value="!teachingElements.length"
-      color="primary"
-      icon="mdi-information-variant"
+      color="primary darken-1"
       outlined>
       Click the button below to create content.
     </v-alert>

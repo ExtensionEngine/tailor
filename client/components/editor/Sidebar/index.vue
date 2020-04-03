@@ -44,9 +44,9 @@ export default {
 
 <style lang="scss" scoped>
 .sidebar {
-  padding: 3.75rem 0 0;
+  padding: 3.125rem 0 0;
   text-align: left;
-  border-left: 0.875rem solid #333;
+  background: #fafafa;
 }
 
 .toolbar-visible {

@@ -1,12 +1,14 @@
 <template>
-  <div class="mx-4 pt-2">
-    <h4 class="body-1 ma-1">Navigation</h4>
-    <v-text-field
-      v-model="search"
-      label="Search"
-      clear-icon="mdi-close"
-      clearable hide-details
-      class="my-2 mx-1" />
+  <div>
+    <v-sheet color="transparent" class="navigation-header">
+      <h4 class="body-1 my-2 mx-1">Navigation</h4>
+      <v-text-field
+        v-model="search"
+        label="Search"
+        clear-icon="mdi-close"
+        clearable hide-details outlined
+        class="my-3 mx-1" />
+    </v-sheet>
     <v-treeview
       @update:active="navigateTo"
       :items="activityTree"
@@ -60,3 +62,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.navigation-header {
+  padding: 1rem 1rem 0.25rem 0.75rem;
+}
+</style>

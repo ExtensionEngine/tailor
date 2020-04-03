@@ -2,7 +2,7 @@
   <div
     @mousedown="mousedownCaptured = true"
     @click="onClick"
-    class="editor">
+    class="editor blue-grey lighten-5">
     <div class="content-containers-wrapper">
       <v-progress-circular v-if="isLoading" color="primary" indeterminate />
       <template v-else>
@@ -125,6 +125,7 @@ export default {
 
 <style lang="scss" scoped>
 .editor {
+  min-height: 100%;
   padding: 4.375rem 1.5625rem 0 26.25rem;
   overflow-y: scroll;
   overflow-y: overlay;
