@@ -14,7 +14,7 @@
       :items="activityTree"
       :active.sync="active"
       :search="search"
-      activatable hoverable dense>
+      open-all activatable hoverable dense>
       <template v-slot:label="{ item: { name, selectable } }">
         <span :class="{ selectable }">{{ name }}</span>
       </template>
