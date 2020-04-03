@@ -106,6 +106,8 @@ export default {
     }
   },
   async created() {
+    // Reset element focus
+    this.$emit('selected', null);
     const { activity } = this;
     const ids = flatMap(this.contentContainers, it => map(it, 'id'));
     await this.getTeachingElements({ ids: [activity.id, ...ids] });
