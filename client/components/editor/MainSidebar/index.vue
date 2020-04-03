@@ -8,6 +8,7 @@
           :element="selectedElement"
           :metadata="metadata" />
         <activity-navigation
+          v-else
           :repository="repository"
           :activities="outlineActivities"
           :selected="activity"
