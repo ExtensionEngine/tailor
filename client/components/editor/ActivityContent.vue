@@ -4,7 +4,15 @@
     @click="onClick"
     class="editor blue-grey lighten-5">
     <div class="content-containers-wrapper">
-      <v-progress-circular v-if="isLoading" color="primary" indeterminate />
+      <v-card v-if="isLoading" class="loader-wrapper py-10 px-3">
+        <v-skeleton-loader type="article" class="mb-2" />
+        <v-skeleton-loader
+          v-for="i in 7"
+          :key="i"
+          type="text"
+          class="mb-1 mx-4" />
+        <v-skeleton-loader type="article" />
+      </v-card>
       <template v-else>
         <content-containers
           v-for="(containerGroup, type) in contentContainers"
@@ -30,6 +38,7 @@ import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import map from 'lodash/map';
 import { mapActions } from 'vuex';
+import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
 const ELEMENT_MODULE = 'repository/tes';
@@ -110,7 +119,10 @@ export default {
     this.$emit('selected', null);
     const { activity } = this;
     const ids = flatMap(this.contentContainers, it => map(it, 'id'));
-    await this.getTeachingElements({ ids: [activity.id, ...ids] });
+    await Promise.all([
+      this.getTeachingElements({ ids: [activity.id, ...ids] }),
+      Promise.delay(800)
+    ]);
     this.isLoading = false;
     this.initElementFocusListener();
     this.initElementChangeWatcher();
@@ -138,8 +150,7 @@ export default {
   }
 }
 
-.v-progress-circular {
-  align-self: center;
-  margin-top: 7.5rem;
+.loader-wrapper {
+  margin-top: 4.375rem;
 }
 </style>
