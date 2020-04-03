@@ -2,7 +2,7 @@
   <div class="editor-container">
     <template v-if="!isLoading">
       <toolbar :element="selectedElement" />
-      <main-sidebar :activity="activity" :selected-element="selectedElement" />
+      <sidebar :activity="activity" :selected-element="selectedElement" />
       <activity-content
         :key="activity.id"
         @selected="selectedElement = $event"
@@ -17,7 +17,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
-import MainSidebar from './MainSidebar';
+import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
 
 export default {
@@ -45,7 +45,7 @@ export default {
   },
   components: {
     ActivityContent,
-    MainSidebar,
+    Sidebar,
     Toolbar
   }
 };
