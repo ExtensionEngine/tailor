@@ -62,8 +62,11 @@ import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
 
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const blankRegex = /(@blank)/g;
 const htmlRegex = /<\/?[^>]+(>|$)/g;
+
+const getTextAssets = item => filter(item, it => TEXT_CONTAINERS.includes(it.type));
 
 export default {
   name: 'assessment-item',
@@ -81,7 +84,7 @@ export default {
       return this.$teRegistry.get(this.assessment.data.type);
     },
     question() {
-      const textAssets = filter(this.assessment.data.question, { type: 'HTML' });
+      const textAssets = getTextAssets(this.assessment.data.question);
       const question = map(textAssets, 'data.content').join(' ');
       return question.replace(htmlRegex, '').replace(blankRegex, () => '____');
     }
