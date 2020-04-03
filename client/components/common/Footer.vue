@@ -1,5 +1,5 @@
 <template>
-  <v-footer height="46" color="primary" absolute>
+  <v-footer height="46" color="blue-grey darken-3" absolute>
     <v-row justify="center" no-gutters>
       <v-col
         cols="12"

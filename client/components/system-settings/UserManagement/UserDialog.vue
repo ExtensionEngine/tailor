@@ -1,61 +1,52 @@
 <template>
-  <v-dialog v-model="show" v-hotkey="{ esc: close }" width="700">
-    <v-form @submit.prevent="save">
-      <v-card class="pa-3">
-        <v-card-title class="headline pr-0">
-          <span>{{ userData ? 'Edit' : 'Create' }} User</span>
-          <v-spacer />
-          <v-btn
-            v-if="!isNewUser"
-            @click="reinvite"
-            :disabled="isLoading"
-            :loading="isLoading"
-            color="blue-grey"
-            outlined>
-            Reinvite
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="user.email"
-            v-validate="{ required: true, email: true, 'unique-email': userData }"
-            :error-messages="vErrors.collect('email')"
-            label="E-mail"
-            data-vv-name="email"
-            class="mb-3" />
-          <v-text-field
-            v-model="user.firstName"
-            v-validate="'required|min:2|max:50'"
-            :error-messages="vErrors.collect('firstName')"
-            label="First name"
-            data-vv-as="First name"
-            data-vv-name="firstName"
-            class="mb-3" />
-          <v-text-field
-            v-model="user.lastName"
-            v-validate="'required|min:2|max:50'"
-            :error-messages="vErrors.collect('lastName')"
-            label="Last name"
-            data-vv-as="Last name"
-            data-vv-name="lastName"
-            class="mb-3" />
-          <v-select
-            v-model="user.role"
-            v-validate="{ required: true }"
-            :items="roles"
-            :error-messages="vErrors.collect('role')"
-            label="Role"
-            data-vv-name="role"
-            class="mb-3" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn @click="close">Cancel</v-btn>
-          <v-btn color="primary" type="submit" outlined>Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-form>
-  </v-dialog>
+  <tailor-dialog v-model="show" header-icon="mdi-account">
+    <template v-slot:header>{{ userData ? 'Edit' : 'Create' }} User</template>
+    <template v-slot:body>
+      <v-text-field
+        v-model="user.email"
+        v-validate="{ required: true, email: true, 'unique-email': userData }"
+        :error-messages="vErrors.collect('email')"
+        label="E-mail"
+        placeholder="Enter email..."
+        data-vv-name="email"
+        outlined
+        class="mb-3" />
+      <v-text-field
+        v-model="user.firstName"
+        v-validate="'required|min:2|max:50'"
+        :error-messages="vErrors.collect('firstName')"
+        label="First name"
+        placeholder="Enter first name..."
+        data-vv-as="First name"
+        data-vv-name="firstName"
+        outlined
+        class="mb-3" />
+      <v-text-field
+        v-model="user.lastName"
+        v-validate="'required|min:2|max:50'"
+        :error-messages="vErrors.collect('lastName')"
+        label="Last name"
+        placeholder="Enter last name..."
+        data-vv-as="Last name"
+        data-vv-name="lastName"
+        outlined
+        class="mb-3" />
+      <v-select
+        v-model="user.role"
+        v-validate="{ required: true }"
+        :items="roles"
+        :error-messages="vErrors.collect('role')"
+        label="Role"
+        placeholder="Select role..."
+        data-vv-name="role"
+        outlined
+        class="mb-3" />
+    </template>
+    <template v-slot:actions>
+      <v-btn @click="close" text>Cancel</v-btn>
+      <v-btn @click="save" color="primary" text>Save</v-btn>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
@@ -64,17 +55,16 @@ import cloneDeep from 'lodash/cloneDeep';
 import humanize from 'humanize-string';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
-import { role } from 'shared';
+import { user as roles } from 'shared/role';
+import TailorDialog from '@/components/common/TailorDialog';
 import { withValidation } from 'utils/validation';
 
-const resetUser = () => {
-  return {
-    email: '',
-    firstName: '',
-    lastName: '',
-    role: null
-  };
-};
+const resetUser = () => ({
+  email: '',
+  firstName: '',
+  lastName: '',
+  role: null
+});
 
 export default {
   name: 'user-dialog',
@@ -83,13 +73,10 @@ export default {
     visible: { type: Boolean, default: false },
     userData: { type: Object, default: () => ({}) }
   },
-  data() {
-    return {
-      user: resetUser(),
-      isLoading: false
-    };
-  },
+  data: () => ({ user: resetUser(), isLoading: false }),
   computed: {
+    isNewUser: vm => !vm.user.id,
+    roles: vm => map(roles, it => ({ text: humanize(it), value: it })),
     show: {
       get() {
         return this.visible;
@@ -97,13 +84,6 @@ export default {
       set(value) {
         if (!value) this.close();
       }
-    },
-    roles() {
-      const roles = role.getRoleValues('user');
-      return map(roles, it => ({ text: humanize(it), value: it }));
-    },
-    isNewUser() {
-      return !this.user.id;
     }
   },
   methods: {
@@ -111,13 +91,12 @@ export default {
       this.user = resetUser();
       this.$emit('update:visible', false);
     },
-    save() {
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) return;
-        const action = this.isNewUser ? 'create' : 'update';
-        api.upsert(this.user).then(() => this.$emit(`${action}d`));
-        this.close();
-      });
+    async save() {
+      const isValid = await this.$validator.validateAll();
+      if (!isValid) return;
+      const action = this.isNewUser ? 'create' : 'update';
+      api.upsert(this.user).then(() => this.$emit(`${action}d`));
+      this.close();
     },
     reinvite() {
       this.isLoading = true;
@@ -130,7 +109,8 @@ export default {
       this.vErrors.clear();
       if (!isEmpty(this.userData)) this.user = cloneDeep(this.userData);
     }
-  }
+  },
+  components: { TailorDialog }
 };
 </script>
 

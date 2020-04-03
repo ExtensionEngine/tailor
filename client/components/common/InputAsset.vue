@@ -10,7 +10,7 @@
       color="info">
       <v-icon>mdi-open-in-new</v-icon>
     </v-btn>
-    <file-upload
+    <upload-btn
       v-if="allowFileUpload"
       v-show="!file && isEditing"
       @upload="val => (file = val) && (urlInput = null)"
@@ -57,10 +57,10 @@
 </template>
 
 <script>
-import FileUpload from '@/components/common/FileUpload';
 import get from 'lodash/get';
 import last from 'lodash/last';
 import pick from 'lodash/pick';
+import UploadBtn from 'tce-core/UploadBtn';
 
 function isUploaded(url) {
   try {
@@ -110,7 +110,7 @@ export default {
       this.$emit('input', payload);
     }
   },
-  components: { FileUpload }
+  components: { UploadBtn }
 };
 </script>
 

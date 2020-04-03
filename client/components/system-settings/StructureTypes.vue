@@ -1,10 +1,11 @@
 <template>
-  <v-card class="schema-list-container">
+  <div class="schema-list-container">
     <v-text-field
       v-model.trim="search"
       label="Search"
       append-icon="mdi-magnify"
-      clearable />
+      outlined clearable
+      class="mx-2" />
     <v-treeview
       :items="schemas"
       :search="search"
@@ -17,7 +18,7 @@
         </v-icon>
       </template>
     </v-treeview>
-  </v-card>
+  </div>
 </template>
 
 <script>
@@ -53,11 +54,11 @@ export default {
 
 <style lang="scss" scoped>
 .schema-list-container {
-  padding: 30px;
+  padding: 1.875rem;
   text-align: left;
 
   ::v-deep .v-treeview-node__label {
-    font-size: 17px;
+    font-size: 1rem;
   }
 }
 </style>

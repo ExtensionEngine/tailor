@@ -1,14 +1,10 @@
-import activities from './modules/activities';
 import auth from './modules/auth';
-import comments from './modules/comments';
-import course from './modules/course';
-import courses from './modules/courses';
 import createLogger from 'vuex/dist/logger';
 import editor from './modules/editor';
 import plugins from './plugins';
-import revisions from './modules/revisions';
+import repositories from './modules/repositories';
+import repository from './modules/repository';
 import settings from '../settings';
-import tes from './modules/tes';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -18,14 +14,10 @@ const isDevEnv = process.env.NODE_ENV !== 'production';
 const middlewares = settings.debug.state && isDevEnv ? [createLogger()] : [];
 
 const modules = {
-  activities,
   auth,
-  comments,
-  course,
-  courses,
-  editor,
-  revisions,
-  tes
+  repository,
+  repositories,
+  editor
 };
 
 const mapGetters = (namespace, getters) => {
@@ -44,7 +36,7 @@ export default new Vuex.Store({
   modules,
   plugins,
   getters: {
-    ...mapGetters('courses', ['courses', 'courseQueryParams']),
+    ...mapGetters('repositories', ['repositories', 'repositoryQueryParams']),
     ...mapGetters('activities', ['activities']),
     ...mapGetters('tes', ['tes']),
     ...mapGetters('revisions', ['revisions', 'revisionQueryParams']),

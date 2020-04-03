@@ -12,7 +12,9 @@ const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
 
 const STORAGE_PROTOCOL = 'storage://';
-const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
+const PRIMITIVES = [
+  'JODIT_HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED', 'HTML'
+];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);

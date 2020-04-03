@@ -7,10 +7,10 @@
         @blur="expanded = false"
         @input="emitChange"
         :value="value"
+        :background-color="expanded ? 'blue-grey' : 'blue-grey darken-3'"
         prepend-inner-icon="mdi-magnify"
-        solo
-        clearable
-        placeholder="Search..." />
+        placeholder="Search..."
+        solo clearable dark />
     </div>
   </div>
 </template>

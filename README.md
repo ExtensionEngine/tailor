@@ -104,7 +104,9 @@ An array of Schema objects.
 - **structure** `Array<ActivityConfig>` - An array of objects which define
   schema structure.
 - **contentContainers** `Array<ContentContainer>` - Array of content container
-  configs
+  configs.
+- **elementMeta** `Array<ElementMetaConfig>` - An array of objects defining
+  content element metadata.
 
 #### ActivityConfig - Schema structure elements
 
@@ -122,13 +124,13 @@ properties:
   to it.
 - **hasExams** `Boolean` - Activity allows adding exam activities to it.
 - **exams** `Object` - Configuration for activity exams.
-- **relationships** `Array<Relationship>` - Defines what relationships this
+- **relationships** `Array<ActivityRelationship>` - Defines what relationships this
   activity has to other activities.
 - **meta** `Array<Metadata>` - An array of objects defining activity metadata.
 
-#### Relationship
+#### ActivityRelationship
 
-Defines the structure of an activity relationship field.
+Defines the structure of the activity relationship field.
 
 - **type** `String` - Defines the name of the relationship. The relationship
   will be published under this value.
@@ -150,7 +152,7 @@ Defines the structure of an activity relationship field.
 
 #### Metadata
 
-Defines the structure of an activity metadata field.
+Defines the structure of the activity metadata field.
 
 - **key** `String` - Unique key for the field.
 - **type** `String` - Type of the input component used on the client.
@@ -194,9 +196,74 @@ Configuration for content containers. Contains the following properties:
   of the structure component used is the `kebab-cased` version of the `type`
   property. (example: ABC_DEF -> abc-def)
 
+#### ElementMetaConfig
+
+Defines the structure of an content element metadata.
+
+- **type** `String` - Type of content element (example: "IMAGE", "HTML").
+- **inputs** `Array<ElementMeta>` - Defines what meta fields content element has.
+- **relationships** `Array<ElementRelationship>` - Defines what relationship
+  metadata content element has (relationships with content elements from the same 
+  or other activities in the repository).
+
+#### ElementRelationship
+
+Defines the structure of an content element relationship field.
+
+- **key** `String` - Defines the name of the relationship. The relationship
+  will be published under this value.
+- **label** `String` - Display label.
+- **placeholder** `String` - Label for relationship add button and modal title.
+- **multiple** `Boolean` - Defines if the relationship can have multiple
+  associations chosen. True by default.
+- **allowedTypes** `Array<String>` - Defines to what type of content elements
+   given content element can have relationship with (example: `['VIDEO']`).
+
+#### ElementMeta
+
+Defines what meta fields content element has.
+
+- **key** `String` - Unique key for the field.
+- **type** `String` - Type of the input component used on the client. 
+- **label** `String` - Display label.
+- **description** `String` - Description of meta field.
+- **options** `Array<Object>` - Options for certain types of input component.
+  For example, for select component, options would be:
+  ```json
+  "type": "SELECT"
+  "options": [{
+      "label": "First",
+      "value": "first"
+    }, {
+      "label": "Second",
+      "value": "second"
+    }]
+  ```
+
 ### `PREVIEW_URL`
 
 A string template that will be interpolated on the client using two route
 params, `repositoryId` and `activityId`, into a preview URL for each activity.
 Example:
 `https://my.url.com/#/repository/{repositoryId}/activity/{activityId}/preview`
+
+## EXTENSIONS
+
+Tailor supports creation of custom content elements and custom containers. These extensions
+can have unique content and structure that the default content elements and
+containers do not support. The template for creating custom content elements
+can be found [here](https://github.com/ExtensionEngine/tailor-element-template)
+while the template for creating custom containers can be found
+[here](https://github.com/ExtensionEngine/tailor-container-template).
+
+### Installing extensions
+
+1. copy (or git clone) extension files in `extensions/content-<elements or containers>/<my-extension-name>`
+2. create index.js file in `extensions/content-<elements or containers>` directory
+3. in the file from the previous step add
+```javascript
+module.exports = ['my-extension-name'];
+```
+
+Note that `module.exports` is an array and you can add as many extensions and just include their folder names in this array to include all of them.
+After installation, the extension is ready for use and should be listed in `tailor.config.js` file.

@@ -10,8 +10,12 @@
     <slot name="embed-toolbar"></slot>
     <div class="delete-element">
       <slot name="actions"></slot>
-      <v-btn v-if="!embed" @click="requestDeleteConfirmation" color="error" fab dark>
-        <v-icon>mdi-delete</v-icon>
+      <v-btn
+        v-if="!embed"
+        @click="requestDeleteConfirmation"
+        color="blue-grey darken-2"
+        fab dark>
+        <v-icon size="22">mdi-delete</v-icon>
       </v-btn>
     </div>
   </div>
@@ -51,7 +55,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('tes', { saveElement: 'save', removeElement: 'remove' }),
+    ...mapActions('repository/tes', { saveElement: 'save', removeElement: 'remove' }),
     remove(element) {
       this.focusoutElement();
       if (element.embedded) return this.elementBus.emit('delete');
@@ -88,7 +92,7 @@ export default {
   position: absolute;
   z-index: 999;
   right: 0;
-  transform: translate(-90%, -45%);
+  transform: translate(-90%, -55%);
 
   .v-btn {
     margin: 4px;

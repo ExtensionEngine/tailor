@@ -10,7 +10,11 @@ function index({ repository, query }, res) {
     where.entity = entity;
     where.state = { id: entityId };
   }
-  const include = [{ model: User, attributes: ['id', 'email'] }];
+  const include = [{
+    model: User,
+    paranoid: false,
+    attributes: ['id', 'email', 'firstName', 'lastName', 'fullName', 'label']
+  }];
   const opts = { where, include, order: [['createdAt', 'DESC']], limit, offset };
   return Revision.findAll(opts).then(data => res.json({ data }));
 }

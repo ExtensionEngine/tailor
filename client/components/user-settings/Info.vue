@@ -1,48 +1,45 @@
 <template>
-  <v-form @submit.prevent="updateUser">
-    <v-row class="pt-2 px-4 mx-3">
-      <v-col cols="12">
-        <v-text-field
-          v-model="userData.email"
-          v-validate="{ required: true, email: true, 'unique-email': user }"
-          :error-messages="vErrors.collect('email')"
-          name="email"
-          label="Email" />
-      </v-col>
-      <v-col cols="12">
-        <v-text-field
-          v-model="userData.firstName"
-          v-validate="'required|min:2|max:20'"
-          :error-messages="vErrors.collect('firstName')"
-          data-vv-as="First name"
-          data-vv-name="firstName"
-          label="First name" />
-      </v-col>
-      <v-col cols="12">
-        <v-text-field
-          v-model="userData.lastName"
-          v-validate="'required|min:2|max:20'"
-          :error-messages="vErrors.collect('lastName')"
-          data-vv-as="Last Name"
-          data-vv-name="lastName"
-          label="Last name" />
-      </v-col>
-    </v-row>
-    <v-row class="pb-3 px-4 mx-6">
-      <v-spacer />
-      <v-btn
-        @click="resetForm"
-        :disabled="!hasChanges && !vErrors.any()"
-        text>
-        Cancel
-      </v-btn>
-      <v-btn
-        :disabled="!hasChanges || vErrors.any()"
-        outlined
-        type="submit">
-        Update
-      </v-btn>
-    </v-row>
+  <v-form @submit.prevent="updateUser" class="pt-4 px-4">
+    <v-text-field
+      v-model="userData.email"
+      v-validate="{ required: true, email: true, 'unique-email': user }"
+      :error-messages="vErrors.collect('email')"
+      name="email"
+      label="Email"
+      outlined />
+    <v-text-field
+      v-model="userData.firstName"
+      v-validate="'required|min:2|max:20'"
+      :error-messages="vErrors.collect('firstName')"
+      data-vv-as="First name"
+      data-vv-name="firstName"
+      label="First name"
+      outlined />
+    <v-text-field
+      v-model="userData.lastName"
+      v-validate="'required|min:2|max:20'"
+      :error-messages="vErrors.collect('lastName')"
+      data-vv-as="Last Name"
+      data-vv-name="lastName"
+      label="Last name"
+      outlined />
+    <div>
+      <div class="float-right">
+        <v-btn
+          @click="resetForm"
+          :disabled="!hasChanges && !vErrors.any()"
+          text>
+          Cancel
+        </v-btn>
+        <v-btn
+          :disabled="!hasChanges || vErrors.any()"
+          type="submit"
+          color="primary"
+          text>
+          Update
+        </v-btn>
+      </div>
+    </div>
   </v-form>
 </template>
 

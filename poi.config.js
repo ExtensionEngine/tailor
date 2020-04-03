@@ -90,10 +90,10 @@ module.exports = {
   },
   babel: {
     transpileModules: [
+      // NOTE: Remove after new version of tce-jodit
+      'auto-bind',
       // NOTE: Packages do NOT contain transpiled code.
       'humanize-string', 'decamelize',
-      // NOTE: Component is consumed from source.
-      'vue-color',
       // NOTE: Unclear why is this necessary :/
       'vue-quill-editor'
     ]
@@ -121,10 +121,6 @@ module.exports = {
       .post()
       .use('val-loader')
       .loader(require.resolve('val-loader'));
-
-    config
-      .plugin('dotenv')
-      .use(require.resolve('dotenv-webpack'));
   },
   devServer
 };

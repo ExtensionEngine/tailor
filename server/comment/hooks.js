@@ -4,6 +4,7 @@ const { broadcast, events } = require('./channel');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
+const without = require('lodash/without');
 
 exports.add = (Comment, Hooks, db) => {
   Comment.addHook(Hooks.afterCreate, comment => {
@@ -43,6 +44,7 @@ async function sendEmailNotification(comment, db) {
     author: author.profile,
     ...pick(comment, ['id', 'content', 'createdAt'])
   };
-  const recipients = map(repository.repositoryUsers, it => it.user.email);
-  mail.sendCommentNotification(recipients, data);
+  const collaborators = map(repository.repositoryUsers, 'user.email');
+  const recipients = without(collaborators, author.email);
+  if (recipients.length) mail.sendCommentNotification(recipients, data);
 }
