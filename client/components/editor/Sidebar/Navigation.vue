@@ -12,8 +12,7 @@
       :items="activityTree"
       :active.sync="active"
       :search="search"
-      activatable hoverable dense
-      open-all open-on-click />
+      activatable hoverable dense />
   </div>
 </template>
 
