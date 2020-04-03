@@ -3,8 +3,8 @@
     <v-btn
       v-if="large"
       @click.stop="isVisible = true"
-      outlined
       color="primary"
+      text
       class="mt-3 mb-4">
       <v-icon class="pr-2">{{ icon }}</v-icon>{{ label }}
     </v-btn>
