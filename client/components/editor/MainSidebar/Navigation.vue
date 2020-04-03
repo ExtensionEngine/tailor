@@ -30,7 +30,7 @@ export default {
   },
   data() {
     return {
-      active: this.selected.id,
+      active: [this.selected.id],
       search: ''
     };
   },
