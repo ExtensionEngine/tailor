@@ -122,8 +122,8 @@ export default {
     this.initElementChangeWatcher();
   },
   beforeDestroy() {
-    this.storeUnsubscribe();
-    this.eventBus.$off(CE_FOCUS_EVENT);
+    this.storeUnsubscribe && this.storeUnsubscribe();
+    this.eventBus && this.eventBus.$off(CE_FOCUS_EVENT);
   },
   components: {
     Assessments,
