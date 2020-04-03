@@ -4,20 +4,7 @@
     @click="onClick"
     class="editor blue-grey lighten-5">
     <div class="content-containers-wrapper">
-      <v-card v-if="isLoading" class="loader-wrapper px-11">
-        <div class="d-flex mb-10">
-          <v-spacer />
-          <v-skeleton-loader type="button" />
-        </div>
-        <v-skeleton-loader
-          v-for="i in 2"
-          :key="i"
-          type="image"
-          class="mb-3" />
-        <div class="d-flex mt-10">
-          <v-skeleton-loader type="button" class="mx-auto" />
-        </div>
-      </v-card>
+      <content-loader v-if="isLoading" class="loader" />
       <template v-else>
         <content-containers
           v-for="(containerGroup, type) in contentContainers"
@@ -34,8 +21,9 @@
 <script>
 import { getElementId, isQuestion } from 'tce-core/utils';
 import { getSupportedContainers, hasAssessments } from 'shared/activities';
-import Assessments from './structure/Assessments';
-import ContentContainers from './structure/ContentContainers';
+import Assessments from '../structure/Assessments';
+import ContentContainers from '../structure/ContentContainers';
+import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
 import find from 'lodash/find';
@@ -137,7 +125,8 @@ export default {
   },
   components: {
     Assessments,
-    ContentContainers
+    ContentContainers,
+    ContentLoader
   }
 };
 </script>
@@ -155,8 +144,7 @@ export default {
   }
 }
 
-.loader-wrapper {
+.loader {
   margin-top: 4.375rem;
-  padding: 1rem 0 5rem;
 }
 </style>
