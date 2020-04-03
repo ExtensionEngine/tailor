@@ -4,13 +4,19 @@
     @click="onClick"
     class="editor blue-grey lighten-5">
     <div class="content-containers-wrapper">
-      <v-card v-if="isLoading" class="loader-wrapper px-2">
+      <v-card v-if="isLoading" class="loader-wrapper px-11">
+        <div class="d-flex mb-10">
+          <v-spacer />
+          <v-skeleton-loader type="button" />
+        </div>
         <v-skeleton-loader
           v-for="i in 2"
           :key="i"
           type="image"
-          class="mb-3 mx-9" />
-        <v-skeleton-loader type="article" class="mx-5" />
+          class="mb-3" />
+        <div class="d-flex mt-10">
+          <v-skeleton-loader type="button" class="mx-auto" />
+        </div>
       </v-card>
       <template v-else>
         <content-containers
@@ -151,6 +157,6 @@ export default {
 
 .loader-wrapper {
   margin-top: 4.375rem;
-  padding: 5.5rem 0 5rem;
+  padding: 1rem 0 5rem;
 }
 </style>
