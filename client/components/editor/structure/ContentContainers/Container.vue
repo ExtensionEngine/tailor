@@ -86,7 +86,7 @@ export default {
 <style lang="scss" scoped>
 .actions {
   width: 100%;
-  min-height: 36px;
-  margin-bottom: 25px;
+  min-height: 2.25rem;
+  margin-bottom: 0.5rem;
 }
 </style>

@@ -14,7 +14,11 @@
       :items="activityTree"
       :active.sync="active"
       :search="search"
-      activatable hoverable dense />
+      activatable hoverable dense>
+      <template v-slot:label="{ item: { name, selectable } }">
+        <span :class="{ selectable }">{{ name }}</span>
+      </template>
+    </v-treeview>
   </div>
 </template>
 
@@ -36,9 +40,13 @@ export default {
     };
   },
   computed: {
-    activityTypes: vm => getOutlineLevels(vm.repository.schema).map(it => it.type),
-    editableTypes: vm => vm.activityTypes.filter(isEditable),
-    activityTree: vm => toTreeFormat(vm.activities, [])
+    activityTree: vm => toTreeFormat(vm.activities, vm.editableActivityConfigs),
+    activityConfigs: vm => getOutlineLevels(vm.repository.schema),
+    activityTypes: vm => vm.activityConfigs.map(it => it.type),
+    editableTypes: vm => vm.editableActivityConfigs.map(it => it.type),
+    editableActivityConfigs() {
+      return this.activityConfigs.filter(it => isEditable(it.type));
+    }
   },
   methods: {
     navigateTo([activityId]) {
@@ -66,5 +74,13 @@ export default {
 <style lang="scss" scoped>
 .navigation-header {
   padding: 1rem 1rem 0.25rem 0.75rem;
+}
+
+.v-treeview ::v-deep .v-treeview-node__toggle {
+  outline: none;
+}
+
+.selectable {
+  cursor: pointer;
 }
 </style>
