@@ -39,6 +39,7 @@
 <script>
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import map from 'lodash/map';
 import { mapState } from 'vuex';
 
@@ -46,7 +47,7 @@ export default {
   data: () => ({ search: '' }),
   computed: {
     ...mapState('repositories', ['tags', 'tagFilter']),
-    isVisible: vm => vm.$refs.filter.isActive,
+    isVisible: vm => get(vm.$refs.filter, 'isActive', false),
     options() {
       return map(this.tags, it => {
         const isSelected = !!find(this.tagFilter, { id: it.id });
