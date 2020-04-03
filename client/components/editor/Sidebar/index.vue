@@ -1,20 +1,19 @@
 <template>
-  <v-navigation-drawer width="400" permanent absolute>
-    <v-row no-gutters class="fill-height">
-      <div class="sidebar-container grow">
-        <element-sidebar
-          v-if="selectedElement && !metadata.isEmpty"
-          :key="selectedElement._cid"
-          :element="selectedElement"
-          :metadata="metadata" />
-        <activity-navigation
-          v-else
-          :repository="repository"
-          :activities="outlineActivities"
-          :selected="activity"
-          :class="{ 'toolbar-visible': selectedElement && metadata.isEmpty }" />
-      </div>
-    </v-row>
+  <v-navigation-drawer
+    width="400"
+    absolute permanent
+    class="sidebar">
+    <activity-navigation
+      v-if="isNavigationVisible"
+      :repository="repository"
+      :activities="outlineActivities"
+      :selected="activity"
+      :class="{ 'toolbar-visible': selectedElement }" />
+    <element-sidebar
+      v-else
+      :key="selectedElement._cid"
+      :element="selectedElement"
+      :metadata="metadata" />
   </v-navigation-drawer>
 </template>
 
@@ -33,6 +32,7 @@ export default {
   },
   computed: {
     ...mapGetters('repository', ['repository', 'outlineActivities']),
+    isNavigationVisible: vm => !vm.selectedElement || vm.metadata.isEmpty,
     metadata() {
       const { repository, selectedElement } = this;
       return getElementMetadata(get(repository, 'schema'), selectedElement);
@@ -43,9 +43,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.sidebar-container {
+.sidebar {
   padding: 3.75rem 0 0;
   text-align: left;
+  border-left: 0.875rem solid #333;
 }
 
 .toolbar-visible {
