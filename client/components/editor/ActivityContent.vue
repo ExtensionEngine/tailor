@@ -4,14 +4,13 @@
     @click="onClick"
     class="editor blue-grey lighten-5">
     <div class="content-containers-wrapper">
-      <v-card v-if="isLoading" class="loader-wrapper py-10 px-3">
-        <v-skeleton-loader type="article" class="mb-2" />
+      <v-card v-if="isLoading" class="loader-wrapper px-2">
         <v-skeleton-loader
-          v-for="i in 4"
+          v-for="i in 2"
           :key="i"
-          type="text"
-          class="mb-1 mx-4" />
-        <v-skeleton-loader type="article" />
+          type="image"
+          class="mb-3 mx-9" />
+        <v-skeleton-loader type="article" class="mx-5" />
       </v-card>
       <template v-else>
         <content-containers
@@ -152,5 +151,6 @@ export default {
 
 .loader-wrapper {
   margin-top: 4.375rem;
+  padding: 5.5rem 0 5rem;
 }
 </style>
