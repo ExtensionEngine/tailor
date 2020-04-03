@@ -50,6 +50,6 @@ export default {
 }
 
 .toolbar-visible {
-  margin-top: 3.5rem;
+  margin-top: 3.125rem;
 }
 </style>
