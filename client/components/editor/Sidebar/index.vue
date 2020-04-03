@@ -20,7 +20,7 @@
 
 <script>
 import ActivityNavigation from './Navigation';
-import ElementSidebar from '../ElementSidebar';
+import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementMetadata } from 'shared/activities';
 import { mapGetters } from 'vuex';
