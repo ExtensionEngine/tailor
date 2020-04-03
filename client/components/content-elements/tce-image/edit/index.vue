@@ -82,7 +82,7 @@ export default {
     load(dataUrl) {
       this.currentImage = dataUrl;
       this.persistedImage = dataUrl;
-      if (dataUrl) this.$refs.cropper.replace(dataUrl);
+      if (dataUrl && this.$refs.cropper) this.$refs.cropper.replace(dataUrl);
     },
     save(image) {
       getImageDimensions(image).then(({ width, height }) => {
@@ -105,7 +105,8 @@ export default {
     }
   },
   mounted() {
-    toDataUrl(this.element.data.url).then(dataUrl => this.load(dataUrl));
+    toDataUrl(this.element.data.url)
+      .then(dataUrl => this.load(dataUrl));
 
     this.$elementBus.on('upload', dataUrl => {
       if (this.currentImage) this.$refs.cropper.replace(dataUrl);
