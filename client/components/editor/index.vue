@@ -4,7 +4,7 @@
       <toolbar :element="focusedElement">
         <span slot="actions">
           <v-btn
-            v-if="metadata.length"
+            v-if="!metadata.isEmpty"
             @click="showSidebar = !showSidebar"
             color="primary"
             fab
@@ -16,11 +16,11 @@
       </toolbar>
       <main-sidebar :activity="activity" :focused-element="focusedElement" />
       <transition name="slide">
-        <meta-sidebar
+        <element-sidebar
           v-if="showSidebar"
           :key="focusedElement._cid"
-          :metadata="metadata"
-          :element="focusedElement" />
+          :element="focusedElement"
+          :metadata="metadata" />
       </transition>
     </template>
     <div @mousedown="onMousedown" @click="onClick" class="editor">
@@ -41,45 +41,45 @@
 </template>
 
 <script>
-import * as config from 'shared/activities';
 import { getElementId, isQuestion } from 'tce-core/utils';
+import {
+  getElementMetadata,
+  getSupportedContainers,
+  hasAssessments
+} from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import Assessments from './structure/Assessments';
 import ContentContainers from './structure/ContentContainers';
 import debounce from 'lodash/debounce';
+import ElementSidebar from './ElementSidebar';
 import EventBus from 'EventBus';
 import find from 'lodash/find';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import MainSidebar from './MainSidebar';
 import map from 'lodash/map';
-import MetaSidebar from './MetaSidebar';
 import throttle from 'lodash/throttle';
 import Toolbar from './Toolbar';
 
 export default {
   name: 'editor',
-  data() {
-    return {
-      showLoader: true,
-      focusedElement: null,
-      showSidebar: false,
-      mousedownCaptured: false
-    };
-  },
+  data: () => ({
+    showLoader: true,
+    focusedElement: null,
+    showSidebar: false,
+    mousedownCaptured: false
+  }),
   computed: {
-    ...mapGetters('repository', ['repository', 'getMetadata']),
+    ...mapGetters('repository', ['repository']),
     ...mapGetters('editor', ['activity', 'contentContainers']),
     metadata() {
-      if (!this.focusedElement) return [];
-      return this.getMetadata(this.focusedElement);
+      const { repository, focusedElement } = this;
+      return getElementMetadata(get(repository, 'schema'), focusedElement);
     },
-    showAssessments() {
-      return config.hasAssessments(this.activity.type);
-    },
+    showAssessments: vm => hasAssessments(vm.activity.type),
     containerConfigs() {
       if (!this.activity) return [];
-      return config.getSupportedContainers(this.activity.type);
+      return getSupportedContainers(this.activity.type);
     }
   },
   methods: {
@@ -130,7 +130,7 @@ export default {
       }
       if (getElementId(this.focusedElement) === getElementId(element)) return;
       this.focusedElement = { ...element, parent: composite };
-      this.showSidebar = this.metadata.length && this.showSidebar;
+      this.showSidebar = !this.metadata.isEmpty && this.showSidebar;
     }, 50));
     if (!this.repository || this.repository.id !== repositoryId) {
       await this.initialize(repositoryId);
@@ -145,15 +145,15 @@ export default {
   components: {
     Assessments,
     ContentContainers,
+    ElementSidebar,
     MainSidebar,
-    MetaSidebar,
     Toolbar
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import '~bootswatch/paper/variables';
+@import "~bootswatch/paper/variables";
 
 .editor-wrapper {
   display: flex;
