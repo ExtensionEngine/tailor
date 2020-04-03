@@ -31,6 +31,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { getActivityMetadata } from 'shared/activities';
 import { isSameLevel } from 'utils/activity';
 import MetaInput from 'components/common/Meta';
 import TailorDialog from '@/components/common/TailorDialog';
@@ -63,11 +64,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository', ['getMetadata']),
     ...mapGetters('repository/activities', ['calculateInsertPosition']),
     metadata() {
       if (!this.activity.type) return null;
-      return this.getMetadata({ type: this.activity.type });
+      return getActivityMetadata(this.activity);
     },
     hasSingleOption: vm => vm.levels.length === 1,
     defaultLabel: vm => vm.hasSingleOption ? `Add ${vm.levels[0].label}` : 'Add'

@@ -1,5 +1,5 @@
-const info = require('./info');
 const filter = require('lodash/filter');
+const info = require('./info');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 

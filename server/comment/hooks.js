@@ -3,8 +3,8 @@
 const { broadcast, events } = require('./channel');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
-const without = require('lodash/without');
 const pick = require('lodash/pick');
+const without = require('lodash/without');
 
 exports.add = (Comment, Hooks, db) => {
   Comment.addHook(Hooks.afterCreate, comment => {

@@ -87,7 +87,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activities', ['update']),
+    ...mapActions('repository/activities', ['update']),
     getAssociationIds(activity) {
       return get(activity, `refs.${this.type}`, []);
     },

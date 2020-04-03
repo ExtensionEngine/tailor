@@ -83,7 +83,7 @@ const SCHEMAS = [{
       validate: { required: false, max: 250 }
     }]
   }],
-  tesMeta: [{
+  elementMeta: [{
     type: 'ASSESSMENT',
     label: 'Assessment',
     meta: [{
