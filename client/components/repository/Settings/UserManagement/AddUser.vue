@@ -21,7 +21,7 @@
         :items="suggestedUsers"
         :error-messages="vErrors.collect('email')"
         label="Email"
-        placeholder="Email..."
+        placeholder="Enter email..."
         data-vv-name="email"
         outlined />
       <v-select
