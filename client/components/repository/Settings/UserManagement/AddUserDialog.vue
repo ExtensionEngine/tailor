@@ -108,9 +108,3 @@ export default {
   components: { TailorDialog }
 };
 </script>
-
-<style lang="scss" scoped>
-::v-deep .v-list-item__content {
-  text-align: left;
-}
-</style>
