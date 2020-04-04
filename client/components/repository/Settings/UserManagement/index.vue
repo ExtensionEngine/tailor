@@ -1,6 +1,9 @@
 <template>
   <div>
-    <add-user :roles="roles" />
+    <div class="d-flex">
+      <v-spacer />
+      <add-user :roles="roles" />
+    </div>
     <user-list :roles="roles" />
   </div>
 </template>
