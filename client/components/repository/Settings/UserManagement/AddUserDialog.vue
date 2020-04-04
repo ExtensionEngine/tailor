@@ -1,5 +1,6 @@
 <template>
   <tailor-dialog
+    :key="isVisible"
     v-model="isVisible"
     header-icon="mdi-account"
     persistent>
@@ -53,6 +54,10 @@ import TailorDialog from '@/components/common/TailorDialog';
 import throttle from 'lodash/throttle';
 import { withValidation } from 'utils/validation';
 
+function getDefaultData(roles) {
+  return { email: '', role: roles[0].value };
+}
+
 export default {
   name: 'add-user-dialog',
   mixins: [withValidation()],
@@ -63,9 +68,8 @@ export default {
     return {
       isVisible: false,
       isSaving: false,
-      email: '',
       suggestedUsers: [],
-      role: this.roles[0].value
+      ...getDefaultData(this.roles)
     };
   },
   methods: {
@@ -77,7 +81,6 @@ export default {
         this.isSaving = true;
         const { email, role, $route: { params: { repositoryId } } } = this;
         await this.upsertUser({ repositoryId, email, role });
-        this.email = '';
         this.suggestedUsers = [];
         this.isVisible = false;
         this.isSaving = false;
@@ -94,7 +97,11 @@ export default {
   },
   watch: {
     isVisible(val) {
-      if (val) this.$validator.reset();
+      if (!val) {
+        Object.assign(this, getDefaultData(this.roles));
+        return;
+      }
+      this.$validator.reset();
     }
   },
   components: { TailorDialog }
