@@ -27,7 +27,7 @@
         outlined />
       <v-select
         v-model="role"
-        v-validate="'required'"
+        v-validate="{ required: true }"
         :items="roles"
         :error-messages="vErrors.collect('role')"
         label="Role"
@@ -36,9 +36,10 @@
         outlined />
     </template>
     <template v-slot:actions>
-      <v-btn @click="isVisible = false" :disabled="isSaving" text>Cancel</v-btn>
+      <v-btn @click="close" :disabled="isSaving" text>Cancel</v-btn>
       <v-btn
         @click="addUser"
+        :disabled="isSaving"
         color="primary darken-2"
         text>
         Add
@@ -82,26 +83,26 @@ export default {
         const { email, role, $route: { params: { repositoryId } } } = this;
         await this.upsertUser({ repositoryId, email, role });
         this.suggestedUsers = [];
-        this.isVisible = false;
         this.isSaving = false;
+        this.close();
       });
     },
-    fetchUsers: throttle(function (filter) {
-      if (filter && filter.length > 1) {
-        return api.fetch({ filter }).then(({ items }) => {
-          this.suggestedUsers = items.map(it => it.email);
-        });
+    fetchUsers: throttle(async function (filter) {
+      if (!filter || !filter.length) {
+        this.suggestedUsers = [];
+        return;
       }
-      this.suggestedUsers = [];
-    }, 350)
+      const { items: users } = await api.fetch({ filter });
+      this.suggestedUsers = users.map(it => it.email);
+    }, 350),
+    close() {
+      this.isVisible = false;
+      Object.assign(this, getDefaultData(this.roles));
+    }
   },
   watch: {
     isVisible(val) {
-      if (!val) {
-        Object.assign(this, getDefaultData(this.roles));
-        return;
-      }
-      this.$validator.reset();
+      if (val) this.$validator.reset();
     }
   },
   components: { TailorDialog }
