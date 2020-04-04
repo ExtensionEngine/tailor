@@ -54,6 +54,7 @@ import throttle from 'lodash/throttle';
 import { withValidation } from 'utils/validation';
 
 export default {
+  name: 'add-user-dialog',
   mixins: [withValidation()],
   props: {
     roles: { type: Array, required: true }
