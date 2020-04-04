@@ -88,7 +88,7 @@ export default {
       });
     },
     fetchUsers: throttle(async function (filter) {
-      if (!filter || !filter.length) {
+      if (!filter || (filter.length < 2)) {
         this.suggestedUsers = [];
         return;
       }
