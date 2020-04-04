@@ -17,6 +17,7 @@
         name="email"
         label="Email"
         placeholder="Email"
+        autocomplete="username"
         prepend-inner-icon="mdi-email-outline"
         outlined
         class="mb-1" />
@@ -29,7 +30,7 @@
         label="Password"
         placeholder="Password"
         prepend-inner-icon="mdi-lock-outline"
-        browser-autocomplete="new-password"
+        autocomplete="current-password"
         outlined />
       <div class="d-flex">
         <v-spacer />
