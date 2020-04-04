@@ -8,6 +8,7 @@
     :label="meta.label"
     :multiple="isMultiSelect"
     :chips="isMultiSelect"
+    :small-chips="!hasImgProp"
     item-text="label"
     item-value="value"
     deletable-chips
@@ -56,18 +57,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .v-list-item__content {
-  flex: initial;
+::v-deep {
+  .v-list-item__content {
+    flex: initial;
+  }
+
+  .v-select__slot .v-select__selections {
+    min-height: 2.625rem !important;
+  }
 }
 
 .img {
-  width: 32px;
-  height: 32px;
-  margin-right: 12px;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.75rem;
 }
 
 .v-chip__content .img {
-  width: 26px;
-  height: 26px;
+  width: 1.625rem;
+  height: 1.625rem;
 }
 </style>
