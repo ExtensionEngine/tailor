@@ -36,7 +36,7 @@
         :layout="layout"
         :show="isElementDrawerVisible"
         :large="!embedded"
-        :icon="embedded ? 'mdi-plus' : 'mdi-pencil-plus'" />
+        :icon="embedded ? 'mdi-plus' : 'mdi-toy-brick-plus'" />
     </div>
   </div>
 </template>
