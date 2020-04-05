@@ -3,22 +3,22 @@
     <v-expansion-panel-header>
       <v-row>
         <v-col cols="7">
-          <v-text-field v-model="header" :disabled="!isEditingHeader" />
+          <v-text-field v-model="header" :readonly="!isEditingHeader" />
         </v-col>
         <v-col class="d-flex align-center">
           <div v-if="!isEditingHeader">
-            <v-btn @click.stop="editHeader" icon small>
+            <v-btn @click="editHeader" icon small>
               <v-icon small>mdi-pencil</v-icon>
             </v-btn>
-            <v-btn @click.stop="deleteItem" icon small>
+            <v-btn @click="deleteItem" icon small>
               <v-icon small>mdi-delete</v-icon>
             </v-btn>
           </div>
           <div v-else>
-            <v-btn @click.stop="saveHeader" icon small>
+            <v-btn @click="saveHeader" icon small>
               <v-icon small>mdi-content-save</v-icon>
             </v-btn>
-            <v-btn @click.stop="isEditingHeader = false" icon small>
+            <v-btn @click="isEditingHeader = false" icon small>
               <v-icon small>mdi-close</v-icon>
             </v-btn>
           </div>
