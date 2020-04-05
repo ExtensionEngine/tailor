@@ -1,11 +1,19 @@
 <template>
   <div class="tce-image">
-    <div v-if="showPlaceholder" class="well image-placeholder">
-      <div class="message">
-        <span class="heading">Image placeholder</span>
-        <span>Click to edit</span>
+    <v-sheet v-if="showPlaceholder" class="pa-12">
+      <v-avatar size="60" color="blue-grey darken-4">
+        <v-icon :size="isFocused ? 38 : 30" color="white">mdi-image-plus</v-icon>
+      </v-avatar>
+      <div class="headline my-4">Image component</div>
+      <div class="subtitle-1">
+        <template v-if="!isFocused">Select to edit</template>
+        <template v-else>
+          Use toolbar
+          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
+          to upload the image
+        </template>
       </div>
-    </div>
+    </v-sheet>
     <div v-else :class="{ 'hide-cropper': !showCropper }" class="image-wrapper">
       <cropper
         v-show="showCropper"
@@ -59,13 +67,11 @@ export default {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      currentImage: null,
-      persistedImage: null,
-      showCropper: false
-    };
-  },
+  data: () => ({
+    currentImage: null,
+    persistedImage: null,
+    showCropper: false
+  }),
   computed: {
     showPlaceholder() {
       const imageAvailable = !isEmpty(this.element.data.url);
@@ -93,11 +99,7 @@ export default {
   watch: {
     isFocused(focused) {
       if (focused) return;
-
-      if (this.persistedImage !== this.currentImage) {
-        this.save(this.currentImage);
-      }
-
+      if (this.persistedImage !== this.currentImage) this.save(this.currentImage);
       if (this.currentImage) this.$refs.cropper.clear();
     },
     'element.data.url'(imageUrl) {
@@ -143,20 +145,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.image-placeholder {
-  margin-bottom: 0;
-  padding: 100px;
-
-  .message {
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
+.subtitle-1 {
+  font-size: 1.125rem !important;
 }
 
 .hide-cropper ::v-deep .cropper-container {
