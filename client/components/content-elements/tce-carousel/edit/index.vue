@@ -1,8 +1,32 @@
 <template>
   <div>
-    <v-alert v-if="!hasItems" type="info">
-      Use the toolbar to add the first item to the carousel.
-    </v-alert>
+    <v-chip
+      v-if="hasItems"
+      class="ma-2"
+      color="grey darken-1"
+      text-color="white">
+      <v-avatar left>
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-avatar>
+      Carousel
+      <v-avatar right>
+        <v-icon>mdi-arrow-right</v-icon>
+      </v-avatar>
+    </v-chip>
+    <v-sheet v-if="!hasItems" class="pa-12">
+      <v-avatar size="60" color="blue-grey darken-4">
+        <v-icon :size="isFocused ? 38 : 30" color="white">mdi-view-carousel</v-icon>
+      </v-avatar>
+      <div class="headline my-4">Carousel component</div>
+      <div class="subtitle-1">
+        <template v-if="!isFocused">Select to edit</template>
+        <template v-else>
+          Use toolbar
+          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
+          to add first slide to carousel
+        </template>
+      </div>
+    </v-sheet>
     <v-carousel
       v-else
       :show-arrows="false">
@@ -24,6 +48,7 @@
 import CarouselItem from './CarouselItem';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
@@ -63,6 +88,9 @@ export default {
     },
     height() {
       return this.element.data.height;
+    },
+    isFocused() {
+      return get(this.$attrs, 'is-focused', false);
     }
   },
   methods: {
