@@ -68,8 +68,8 @@ import { mapActions } from 'vuex';
 import Tags from './Tags';
 
 const getPublishingInfo = hasChanges => hasChanges
-  ? 'Has unpublished content.'
-  : 'Content is published.';
+  ? 'Has unpublished changes.'
+  : 'Published.';
 
 export default {
   props: {
