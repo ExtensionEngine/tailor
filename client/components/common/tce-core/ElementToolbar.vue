@@ -13,9 +13,9 @@
       <v-btn
         v-if="!embed"
         @click="requestDeleteConfirmation"
-        color="blue-grey darken-2"
+        color="blue-grey darken-4"
         fab dark>
-        <v-icon size="22">mdi-delete</v-icon>
+        <v-icon size="24">mdi-delete</v-icon>
       </v-btn>
     </div>
   </div>
