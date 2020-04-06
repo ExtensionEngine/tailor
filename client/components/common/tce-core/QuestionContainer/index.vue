@@ -62,6 +62,7 @@ import omit from 'lodash/omit';
 import Question from './Question';
 import toPath from 'lodash/toPath';
 
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const validationOptions = { recursive: true, abortEarly: false };
 
 export default {
@@ -180,7 +181,7 @@ const question = yup.array().test(
 );
 
 function containsText(asset) {
-  return asset.type === 'HTML' &&
+  return TEXT_CONTAINERS.includes(asset.type) &&
     asset.data.content &&
     asset.data.content.trim().length > 0;
 }

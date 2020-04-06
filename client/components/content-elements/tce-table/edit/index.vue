@@ -82,7 +82,7 @@ export default {
       return find(rows, row => row.cells[cellId]);
     },
     focusElement(cell) {
-      this.$emit('focus', {}, { ...cell, type: 'HTML' }, this.element);
+      this.$emit('focus', {}, { ...cell, type: 'JODIT_HTML' }, this.element);
     },
     addRow(cellId, direction = Direction.AFTER) {
       const row = this.findRow(cellId);

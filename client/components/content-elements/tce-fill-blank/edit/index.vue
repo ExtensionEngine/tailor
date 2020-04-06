@@ -44,12 +44,15 @@ import get from 'lodash/get';
 import reduce from 'lodash/reduce';
 import times from 'lodash/times';
 
+const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const PLACEHOLDER = /(@blank)/g;
 const ALERT = {
   type: 'alert-danger',
   text: `Question and blanks are out of sync !
         Please delete unnecessary answers or add blanks in the question !`
 };
+
+const getTextAssets = item => filter(item, it => TEXT_CONTAINERS.includes(it.type));
 
 export default {
   props: {
@@ -72,7 +75,7 @@ export default {
       return this.answerGroups.length !== this.blanksCount;
     },
     blanksCount() {
-      const textAssets = filter(this.question, { type: 'HTML' });
+      const textAssets = getTextAssets(this.question);
       return reduce(textAssets, (count, it) => {
         const content = get(it, 'data.content', '');
         return count + (content.match(PLACEHOLDER) || []).length;

@@ -21,7 +21,7 @@ const { repository: role } = require('../../config/shared').role;
 const sample = require('lodash/sample');
 
 const DEFAULT_COLORS = ['#689F38', '#FF5722', '#2196F3'];
-const lowercaseName = sequelize.fn('lower', sequelize.col('name'));
+const lowercaseName = sequelize.fn('lower', sequelize.col('repository.name'));
 const includeLastRevision = () => ({
   model: Revision,
   include: [{

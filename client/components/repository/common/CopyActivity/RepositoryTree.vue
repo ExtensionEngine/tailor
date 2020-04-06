@@ -36,18 +36,8 @@
 </template>
 
 <script>
-import { getOutlineChildren } from 'utils/activity';
+import { toTreeFormat } from 'utils/activity';
 import xorBy from 'lodash/xorBy';
-
-function toTreeFormat(activities, targetLevels, parentId = null, level = 1) {
-  return getOutlineChildren(activities, parentId).map(activity => ({
-    ...activity,
-    name: activity.data.name,
-    level,
-    selectable: targetLevels.find(it => it.type === activity.type),
-    children: toTreeFormat(activities, targetLevels, activity.id, level + 1)
-  }));
-}
 
 export default {
   props: {

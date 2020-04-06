@@ -1,20 +1,13 @@
 'use strict';
 
-const { Repository, Tag, User } = require('../shared/database');
+const { Tag } = require('../shared/database');
+const yn = require('yn');
 
-function list({ user }, res) {
-  const options = user.isAdmin()
-    ? {}
-    : {
-      include: [{
-        model: Repository,
-        as: 'repositories',
-        attributes: ['id'],
-        required: true,
-        include: [{ model: User, attributes: ['id'], where: { id: user.id } }]
-      }]
-    };
-  return Tag.findAll(options).then(tags => res.json({ data: tags }));
+async function list({ user, query: { associated } }, res) {
+  const tags = await (yn(associated)
+    ? Tag.getAssociated(user)
+    : Tag.findAll());
+  return res.json({ data: tags });
 }
 
 module.exports = {

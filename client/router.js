@@ -72,6 +72,7 @@ const router = new Router({
     path: '/repository/:repositoryId/editor/:activityId',
     name: 'editor',
     component: Editor,
+    props: numericParser,
     meta: { auth: true }
   }, {
     path: '/system-settings',
