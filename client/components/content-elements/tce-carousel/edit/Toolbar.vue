@@ -36,11 +36,7 @@ export default {
   props: {
     element: { type: Object, required: true }
   },
-  data() {
-    return {
-      height: this.element.data.height || 500
-    };
-  },
+  data: vm => ({ height: vm.element.data.height || 500 }),
   methods: {
     add() {
       this.$elementBus.emit('add');
