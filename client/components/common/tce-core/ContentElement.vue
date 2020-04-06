@@ -52,6 +52,7 @@ export default {
     }
   },
   created() {
+    this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
     this.elementBus.on('delete', () => this.$emit('delete'));
     EventBus.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);

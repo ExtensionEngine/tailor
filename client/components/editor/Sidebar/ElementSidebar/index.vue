@@ -7,12 +7,23 @@
 
 <script>
 import ElementMeta from './ElementMeta';
+import EventBus from 'EventBus';
+import { getElementId } from 'tce-core/utils';
 
 export default {
   name: 'element-sidebar',
   props: {
     element: { type: Object, required: true },
     metadata: { type: Object, default: () => ({}) }
+  },
+  computed: {
+    id: vm => getElementId(vm.element),
+    elementBus: vm => EventBus.channel(`element:${vm.id}`)
+  },
+  provide() {
+    return {
+      $elementBus: this.elementBus
+    };
   },
   components: { ElementMeta }
 };
