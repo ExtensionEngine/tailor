@@ -4,13 +4,13 @@
       <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
       <span class="schema-name">{{ schema }}</span>
       <div class="controls float-right">
-        <v-tooltip open-delay="800" top>
+        <v-tooltip open-delay="100" top>
           <template v-slot:activator="{ on }">
             <span v-on="on">
               <v-badge
                 :color="hasUnpublishedChanges ? 'orange' : 'green'"
-                inline
-                dot />
+                inline dot
+                class="pa-1" />
             </span>
           </template>
           {{ publishingInfo }}
@@ -68,8 +68,8 @@ import { mapActions } from 'vuex';
 import Tags from './Tags';
 
 const getPublishingInfo = hasChanges => hasChanges
-  ? 'Repository has unpublished content.'
-  : 'Repository content is published.';
+  ? 'Has unpublished content.'
+  : 'Content is published.';
 
 export default {
   props: {
@@ -82,7 +82,7 @@ export default {
     lastActivity: ({ repository }) => first(repository.revisions),
     hasUnpublishedChanges: ({ repository }) => repository.hasUnpublishedChanges,
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),
-    publishingInfo: vm => getPublishingInfo(vm.hasUnpublishedChanges)
+    publishingInfo: vm => getPublishingInfo(vm.schema, vm.hasUnpublishedChanges)
   },
   methods: {
     ...mapActions('repositories', ['pin']),
