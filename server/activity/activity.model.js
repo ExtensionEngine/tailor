@@ -205,13 +205,13 @@ class Activity extends Model {
     });
   }
 
-  reorder(index) {
+  reorder(index, context) {
     return this.sequelize.transaction(transaction => {
       const types = getSiblingLevels(this.type).map(it => it.type);
       const filter = { type: types };
       return this.siblings({ filter, transaction }).then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
-        return this.save({ transaction });
+        return this.save({ transaction, context });
       });
     });
   }

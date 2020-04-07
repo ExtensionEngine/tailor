@@ -55,8 +55,9 @@ function remove({ user, repository, activity }, res) {
     });
 }
 
-function reorder({ activity, body }, res) {
-  return activity.reorder(body.position)
+function reorder({ activity, body, repository, user }, res) {
+  const context = { userId: user.id, repository };
+  return activity.reorder(body.position, context)
     .then(data => res.json({ data }));
 }
 
