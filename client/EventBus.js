@@ -12,8 +12,8 @@ function channel(channelName) {
       subscriptions.push(name);
       bus.$on(`${channelName}/${name}`, ...args);
     },
-    off(name, ...args) {
-      bus.$off(`${channelName}/${name}`, ...args);
+    off(name) {
+      bus.$off(`${channelName}/${name}`);
     },
     unsubscribe() {
       subscriptions.forEach(name => bus.$off(`${channelName}/${name}`));
