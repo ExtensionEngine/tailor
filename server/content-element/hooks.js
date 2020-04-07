@@ -26,6 +26,10 @@ function add(ContentElement, Hooks, Models) {
   const isRepository = it => it instanceof Models.Repository;
 
   function processAssets(hookType, element) {
+    // pruneVirtualProps
+    // data.assets is an obj containing asset urls where key represents location
+    // within data (where it should be resolved). If asset is internal
+    // it will have storage:// protocol set.
     const assets = get(element, 'data.assets', {});
     forEach(assets, key => delete element.data[key]);
     const isUpdate = hookType === Hooks.beforeUpdate;
