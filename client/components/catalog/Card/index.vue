@@ -82,7 +82,7 @@ export default {
     lastActivity: ({ repository }) => first(repository.revisions),
     hasUnpublishedChanges: ({ repository }) => repository.hasUnpublishedChanges,
     isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),
-    publishingInfo: vm => getPublishingInfo(vm.schema, vm.hasUnpublishedChanges)
+    publishingInfo: vm => getPublishingInfo(vm.hasUnpublishedChanges)
   },
   methods: {
     ...mapActions('repositories', ['pin']),
