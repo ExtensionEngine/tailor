@@ -16,9 +16,10 @@ export default {
     element: { type: Object, required: true },
     metadata: { type: Object, default: () => ({}) }
   },
-  computed: {
-    id: vm => getElementId(vm.element),
-    elementBus: vm => EventBus.channel(`element:${vm.id}`)
+  data() {
+    return {
+      elementBus: EventBus.channel(`element:${getElementId(this.element)}`)
+    };
   },
   provide() {
     return {

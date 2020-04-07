@@ -2,19 +2,28 @@ import Vue from 'vue';
 
 const bus = new Vue();
 
-function channel(name) {
+function channel(channelName) {
+  const subscriptions = [];
   return {
-    emit(event, ...args) {
-      bus.$emit(`${name}/${event}`, ...args);
+    emit(name, ...args) {
+      bus.$emit(`${channelName}/${name}`, ...args);
     },
-    on(event, ...args) {
-      bus.$on(`${name}/${event}`, ...args);
+    on(name, ...args) {
+      subscriptions.push(name);
+      bus.$on(`${channelName}/${name}`, ...args);
+    },
+    off(name, ...args) {
+      bus.$off(`${channelName}/${name}`, ...args);
+    },
+    unsubscribe() {
+      subscriptions.forEach(name => bus.$off(`${channelName}/${name}`));
     }
   };
 }
 
 export default {
   channel,
-  emit: (event, ...args) => bus.$emit(event, ...args),
-  on: (event, ...args) => bus.$on(event, ...args)
+  emit: (name, ...args) => bus.$emit(name, ...args),
+  on: (name, ...args) => bus.$on(name, ...args),
+  off: name => bus.$off(name)
 };
