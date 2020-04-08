@@ -1,62 +1,45 @@
 <template>
-  <div class="form-group">
-    <span class="form-label">
-      {{ isGraded ? 'Select correct  answer' : 'Options' }}
-    </span>
-    <ul :class="{ 'non-graded': !isGraded }">
-      <li>
-        <span :class="{ 'has-error': correctError }">
-          <input
-            v-model="correct"
-            @change="update"
-            :disabled="disabled"
-            :value="true"
-            type="radio">
-        </span>
-        <span class="answers">True</span>
-      </li>
-      <li>
-        <span :class="{ 'has-error': correctError }">
-          <input
-            v-model="correct"
-            @change="update"
-            :disabled="disabled"
-            :value="false"
-            type="radio">
-        </span>
-        <span class="answers">False</span>
-      </li>
-    </ul>
+  <div class="true-false">
+    <span class="title">{{ title }}</span>
+    <v-radio-group v-model="correct" @change="update" :error="error">
+      <v-radio
+        v-for="(answer, idx) in [true, false]"
+        :key="idx"
+        :value="answer"
+        :disabled="disabled"
+        :label="getLabel(answer)"
+        :color="disabled ? 'grey' : 'blue darken-2'"
+        :off-icon="isGraded ? 'mdi-circle-outline' : 'mdi-circle'"
+        :class="['answer', {'non-graded': !isGraded }]" />
+    </v-radio-group>
   </div>
 </template>
 
 <script>
 import { defaults } from 'utils/assessment';
+import { sentence } from 'to-case';
+
+const getTitle = isGraded => isGraded ? 'Select correct  answer' : 'Options';
+const getLabel = answer => sentence(answer.toString());
 
 export default {
   props: {
     assessment: { type: Object, default: defaults.TF },
-    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
-    isEditing: { type: Boolean, default: false }
+    isEditing: { type: Boolean, default: false },
+    isGraded: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      correct: this.assessment.correct
-    };
-  },
+  data: vm => ({ correct: vm.assessment.correct }),
   computed: {
-    correctError() {
-      return this.errors.includes('correct');
-    },
-    disabled() {
-      return !this.isEditing || !this.isGraded;
-    }
+    title: vm => getTitle(vm.isGraded),
+    error: vm => vm.errors.includes('correct'),
+    disabled: vm => !vm.isEditing || !vm.isGraded
   },
   methods: {
-    update() {
-      this.$emit('update', { correct: this.correct });
-    }
+    update(correct) {
+      this.$emit('update', { correct });
+    },
+    getLabel
   },
   watch: {
     isEditing(newVal) {
@@ -67,50 +50,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-group {
+.true-false {
   width: 100%;
-  margin: 0 auto;
-  padding: 25px 20px 15px;
+  padding: 1.5rem 1.25rem 1rem;
   text-align: left;
   overflow: hidden;
-}
 
-.form-label {
-  font-size: 20px;
-}
+  .title {
+    font-weight: 400;
+  }
 
-ul {
-  padding: 10px 0 0 50px;
+  .answer {
+    padding: 0.25rem 3rem;
 
-  li {
-    display: inline-block;
-    position: relative;
-    width: 100%;
-    margin: 10px 0;
-
-    .answers {
-      vertical-align: bottom;
-      font-size: 16px;
+    // override global bootstrap
+    ::v-deep .v-label {
+      margin-bottom: 0;
     }
   }
-}
 
-.non-graded {
-  padding-left: 30px;
-
-  input {
-    margin: 5px 3px 0 0;
-
-    &[disabled]::after {
-      background: #eee;
-      border: none;
-    }
+  .non-graded {
+    padding-left: 1rem;
   }
-}
 
-@media (max-width: 850px) {
-  ul {
-    padding-left: 0;
+  @media (max-width: 850px) {
+    .answer, .non-graded {
+      padding-left: 0;
+    }
   }
 }
 </style>
