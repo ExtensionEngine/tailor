@@ -5,7 +5,7 @@
       :element="element"
       :inputs="inputs" />
     <element-relationships
-      v-if="relationships.length"
+      v-if="relationships.length && element.activityId"
       :element="element"
       :relationships="relationships" />
   </div>

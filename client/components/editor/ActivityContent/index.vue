@@ -139,6 +139,7 @@ export default {
   padding: 4.375rem 1.5625rem 0 26.25rem;
   overflow-y: scroll;
   overflow-y: overlay;
+  overflow-x: hidden;
 
   .content-containers-wrapper {
     max-width: 68.75rem;
