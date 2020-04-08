@@ -1,6 +1,6 @@
 'use strict';
 
-const { getLevel: isOutlineType } = require('../../config/shared/activities');
+const { isOutlineActivity } = require('../../config/shared/activities');
 
 module.exports = { add };
 
@@ -24,7 +24,7 @@ function add(Activity, Hooks, Models) {
 
   async function touchOutline(activity, { context = {}, transaction }) {
     if (!isRepository(context.repository)) return Promise.resolve();
-    const outlineActivity = isOutlineType(activity.type)
+    const outlineActivity = isOutlineActivity(activity.type)
       ? activity
       : await activity.getOutlineParent(transaction);
     return outlineActivity && outlineActivity.touch(transaction);

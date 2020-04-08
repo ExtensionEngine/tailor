@@ -2,7 +2,7 @@
 
 const {
   getSiblingLevels,
-  getLevel: isOutlineType
+  isOutlineActivity
 } = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
@@ -219,7 +219,7 @@ class Activity extends Model {
   getOutlineParent(transaction) {
     return this.getParent({ transaction }).then(parent => {
       if (!parent) return Promise.resolve();
-      if (isOutlineType(parent.type)) return parent;
+      if (isOutlineActivity(parent.type)) return parent;
       return parent.getOutlineParent(transaction);
     });
   }
