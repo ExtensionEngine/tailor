@@ -20,7 +20,7 @@
     </div>
     <template v-slot:append>
       <v-tabs
-        v-model="tabs"
+        :value="selectedTabIndex"
         background-color="grey darken-4"
         icons-and-text fixed-tabs dark>
         <v-tabs-slider />
@@ -54,6 +54,7 @@ export default {
   },
   data: () => ({ selectedTab: 'comments' }),
   computed: {
+    selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
     tabs: vm => ([
       { name: 'browser', label: 'Browse', icon: 'file-tree' },
       { name: 'comments', label: 'Comments', icon: 'forum-outline' },
@@ -61,12 +62,23 @@ export default {
         name: 'element',
         label: 'Element',
         icon: 'toy-brick-outline',
-        disabled: !vm.selectedElement || vm.metadata.isEmpty
+        disabled: !vm.elementSidebarEnabled
       }
     ]),
+    elementSidebarEnabled: vm => vm.selectedElement && !vm.metadata.isEmpty,
     metadata() {
       const { repository, selectedElement } = this;
       return getElementMetadata(get(repository, 'schema'), selectedElement);
+    }
+  },
+  watch: {
+    selectedElement() {
+      if (this.elementSidebarEnabled) {
+        this.selectedTab = 'element';
+        return;
+      }
+      if (this.selectedTab !== 'element') return;
+      this.selectedTab = 'browser';
     }
   },
   components: { ActivityDiscussion, ActivityNavigation, ElementSidebar }
