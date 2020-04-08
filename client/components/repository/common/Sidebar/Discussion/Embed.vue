@@ -15,7 +15,7 @@
     </div>
     <v-alert
       v-if="!commentsCount && showNotifications"
-      color="pink darken-3"
+      color="pink darken-4"
       icon="mdi-chat"
       prominent text>
       Be the First to Comment!
