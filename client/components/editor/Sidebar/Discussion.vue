@@ -1,6 +1,9 @@
 <template>
   <div class="my-4 pa-4">
-    <discussion :activity="activity" show-notifications />
+    <discussion
+      @change="$emit('change', $event)"
+      :activity="activity"
+      show-notifications />
   </div>
 </template>
 

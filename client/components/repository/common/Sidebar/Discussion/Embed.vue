@@ -85,6 +85,11 @@ export default {
       this.$nextTick(() => this.editor.scrollIntoView());
     }
   },
+  watch: {
+    commentsCount() {
+      this.$emit('change', this.thread);
+    }
+  },
   async created() {
     await this.fetch(this.activity.id);
     this.comment = initCommentInput();

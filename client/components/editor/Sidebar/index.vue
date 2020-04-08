@@ -10,10 +10,11 @@
         :activities="activities"
         :selected="selectedActivity" />
       <activity-discussion
-        v-else-if="selectedTab === 'comments'"
+        v-show="selectedTab === 'comments'"
+        @change="comments => commentCount = comments.length"
         :activity="selectedActivity" />
       <element-sidebar
-        v-else-if="selectedTab === 'element'"
+        v-if="selectedTab === 'element'"
         :key="selectedElement._cid"
         :element="selectedElement"
         :metadata="metadata" />
@@ -31,6 +32,12 @@
           :disabled="!!tab.disabled">
           {{ tab.label }}
           <v-icon>mdi-{{ tab.icon }}</v-icon>
+          <v-badge
+            v-if="tab.badgeData"
+            color="secondary"
+            :content="tab.badgeData"
+            offset-y="18"
+            offset-x="-16" />
         </v-tab>
       </v-tabs>
     </template>
@@ -52,19 +59,24 @@ export default {
     selectedActivity: { type: Object, required: true },
     selectedElement: { type: Object, default: null }
   },
-  data: () => ({ selectedTab: 'comments' }),
+  data: () => ({ selectedTab: 'browser', commentCount: 0 }),
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
-    tabs: vm => ([
-      { name: 'browser', label: 'Browse', icon: 'file-tree' },
-      { name: 'comments', label: 'Comments', icon: 'forum-outline' },
-      {
-        name: 'element',
-        label: 'Element',
-        icon: 'toy-brick-outline',
-        disabled: !vm.elementSidebarEnabled
-      }
-    ]),
+    tabs: vm => ([{
+      name: 'browser',
+      label: 'Browse',
+      icon: 'file-tree'
+    }, {
+      name: 'comments',
+      label: 'Comments',
+      icon: 'forum-outline',
+      badgeData: vm.commentCount
+    }, {
+      name: 'element',
+      label: 'Element',
+      icon: 'toy-brick-outline',
+      disabled: !vm.elementSidebarEnabled
+    }]),
     elementSidebarEnabled: vm => vm.selectedElement && !vm.metadata.isEmpty,
     metadata() {
       const { repository, selectedElement } = this;
