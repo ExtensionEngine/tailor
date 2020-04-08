@@ -1,10 +1,13 @@
 <template>
-  <div class="tce-accordion-toolbar">
-    <ul>
-      <li @click="add" class="btn btn-link btn-sm">
-        <span class="mdi mdi-plus"></span> Add item
-      </li>
-    </ul>
+  <div class="accordion-toolbar-container">
+    <div class="navigation-sidebar">
+    </div>
+    <div class="accordion-action">
+      <v-btn @click="add" text>
+        <v-icon small>mdi-plus</v-icon>
+        Add item
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -24,34 +27,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tce-accordion-toolbar {
-  position: relative;
-  width: 100%;
-  height: 48px;
+.accordion-toolbar-container {
+  display: flex;
+  flex-wrap: wrap;
+  height: 2.8125rem;
 
-  ul {
-    float: left;
-    height: 100%;
-    margin: 0;
-    padding: 0 30px 0 10px;
+  .navigation-sidebar {
+    display: flex;
+    width: 25rem;
+  }
 
-    li {
-      height: 100%;
-      padding-top: 15px;
-      color: #444;
-
-      .mdi {
-        display: inline-block;
-        margin-right: 5px;
-        font-size: 20px;
-        line-height: 20px;
-        vertical-align: middle;
-      }
-
-      &.active {
-        background-color: #e8e8e8;
-      }
-    }
+  .accordion-action {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>
