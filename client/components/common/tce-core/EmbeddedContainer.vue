@@ -6,7 +6,8 @@
     :supported-types="types">
     <template v-slot:list-item="{ element, isDragged }">
       <contained-content
-        @save="data => saveItem(element, data)"
+        @save="save(element, 'data', $event)"
+        @save:meta="save(element, 'meta', $event)"
         @delete="$emit('delete', element)"
         :element="element"
         :is-dragged="isDragged"
@@ -28,7 +29,7 @@ export default {
   inheritAttrs: false,
   props: {
     container: { type: Object, required: true },
-    types: { type: Array, default: () => ['JODIT_HTML', 'IMAGE', 'HTML'] },
+    types: { type: Array, default: () => ['JODIT_HTML', 'IMAGE', 'HTML', 'VIDEO'] },
     enableAdd: { type: Boolean, default: true }
   },
   computed: {
@@ -56,9 +57,9 @@ export default {
       reordered.position = resolveElementPosition(context);
       this.$emit('save', container);
     },
-    saveItem(item, data) {
+    save(item, key, value) {
       const container = cloneDeep(this.container);
-      container.embeds[item.id] = { ...item, data };
+      container.embeds[item.id] = { ...item, [key]: value };
       this.$emit('save', container);
     }
   },
