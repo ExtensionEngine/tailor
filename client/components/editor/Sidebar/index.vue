@@ -34,8 +34,8 @@
           <v-icon>mdi-{{ tab.icon }}</v-icon>
           <v-badge
             v-if="tab.badgeData"
-            color="secondary"
             :content="tab.badgeData"
+            color="secondary"
             offset-y="18"
             offset-x="-16" />
         </v-tab>
