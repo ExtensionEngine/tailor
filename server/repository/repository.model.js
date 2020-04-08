@@ -7,7 +7,7 @@ const Promise = require('bluebird');
 
 class Repository extends Model {
   static fields(DataTypes) {
-    const { DATE, JSONB, STRING, TEXT, UUID, UUIDV4 } = DataTypes;
+    const { BOOLEAN, DATE, JSONB, STRING, TEXT, UUID, UUIDV4 } = DataTypes;
     return {
       uid: {
         type: UUID,
@@ -29,6 +29,10 @@ class Repository extends Model {
       data: {
         type: JSONB,
         defaultValue: {}
+      },
+      hasUnpublishedChanges: {
+        type: BOOLEAN,
+        field: 'has_unpublished_changes'
       },
       createdAt: {
         type: DATE,
@@ -86,6 +90,13 @@ class Repository extends Model {
       paranoid: true,
       freezeTableName: true
     };
+  }
+
+  static hooks(Hooks) {
+    [Hooks.beforeCreate, Hooks.beforeUpdate, Hooks.beforeDestroy]
+      .forEach(type => this.addHook(type, (repository, { context }) => {
+        if (context) repository.hasUnpublishedChanges = true;
+      }));
   }
 
   /**
