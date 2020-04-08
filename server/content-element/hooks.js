@@ -4,7 +4,7 @@ const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 const forEach = require('lodash/forEach');
 const get = require('lodash/get');
 const hash = require('hash-obj');
-const { getLevel: isOutlineType } = require('../../config/shared/activities');
+const { isOutlineActivity } = require('../../config/shared/activities');
 
 module.exports = { add };
 
@@ -56,7 +56,7 @@ function add(ContentElement, Hooks, Models) {
 
 function resolveOutlineActivity(element) {
   return element.getActivity().then(activity => {
-    return activity && isOutlineType(activity.type)
+    return activity && isOutlineActivity(activity.type)
       ? activity
       : activity.getOutlineParent();
   });
