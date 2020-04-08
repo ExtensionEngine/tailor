@@ -2,7 +2,7 @@
 
 const {
   getOutlineLevels,
-  getLevel: isOutlineType
+  isOutlineActivity
 } = require('../../config/shared/activities');
 const { Activity } = require('../shared/database');
 const { fetchActivityContent } = require('../shared/publishing/helpers');
@@ -91,7 +91,7 @@ function getPreviewUrl({ activity }, res) {
 }
 
 function updatePublishingStatus(repository, activity) {
-  if (!isOutlineType(activity.type)) return Promise.resolve();
+  if (!isOutlineActivity(activity.type)) return Promise.resolve();
   return publishingService.updatePublishingStatus(repository);
 }
 

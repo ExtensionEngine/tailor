@@ -17,7 +17,7 @@ function add(Activity, Hooks, Models) {
     if (!isRepository(context.repository)) return Promise.resolve();
     // setting correct hasUnpublishedChanges value is handled by
     // remove activity middleware for outline activities
-    return hookType === Hooks.afterDestroy && isOutlineType(activity.type)
+    return hookType === Hooks.afterDestroy && isOutlineActivity(activity.type)
       ? Promise.resolve()
       : context.repository.update({ hasUnpublishedChanges: true });
   }
