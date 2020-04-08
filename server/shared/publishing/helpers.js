@@ -1,10 +1,17 @@
 'use strict';
 
 const {
-  getLevelRelationships, getSupportedContainers
+  Activity,
+  ContentElement,
+  Sequelize: { Op },
+  sequelize
+} = require('../database');
+const {
+  getLevelRelationships,
+  getOutlineLevels,
+  getSupportedContainers
 } = require('../../../config/shared/activities');
 const { containerRegistry } = require('../content-plugins');
-const { ContentElement } = require('../database');
 const filter = require('lodash/filter');
 const find = require('lodash/find');
 const findIndex = require('lodash/findIndex');
@@ -40,6 +47,7 @@ function publishActivity(activity) {
       attachContentSummary(find(spine.structure, { id: activity.id }), content);
       return saveSpine(spine)
         .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt))
+        .then(() => updatePublishingStatus(repository, activity))
         .then(() => activity.save());
     });
   });
@@ -72,8 +80,9 @@ function updateRepositoryCatalog(repository, publishedAt) {
 }
 
 function publishRepositoryDetails(repository) {
-  return getPublishedStructure(repository).then(spine => {
+  return getPublishedStructure(repository).then(async spine => {
     Object.assign(spine, getRepositoryAttrs(repository));
+    await updatePublishingStatus(repository);
     return saveSpine(spine)
       .then(savedSpine => updateRepositoryCatalog(repository, savedSpine.publishedAt));
   });
@@ -294,12 +303,31 @@ function mapRelationships(relationships, activity) {
   }, {});
 }
 
+// check if there is at least one outline activity with unpublished
+// changes and upadate repository model accordingly
+async function updatePublishingStatus(repository, activity) {
+  const outlineTypes = map(getOutlineLevels(repository.schema), 'type');
+  const where = {
+    repositoryId: repository.id,
+    type: outlineTypes,
+    detached: false,
+    [Op.or]: {
+      publishedAt: { [Op.eq]: null },
+      modifiedAt: { [Op.gt]: sequelize.col('published_at') }
+    }
+  };
+  if (activity) where.id = { [Op.ne]: activity.id };
+  const unpublishedCount = await Activity.count({ where });
+  return repository.update({ hasUnpublishedChanges: !!unpublishedCount });
+}
+
 module.exports = {
   getRepositoryCatalog,
   publishActivity,
   unpublishActivity,
   publishRepositoryDetails,
   updateRepositoryCatalog,
+  updatePublishingStatus,
   fetchActivityContent,
   getRepositoryAttrs
 };

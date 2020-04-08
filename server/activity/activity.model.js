@@ -1,8 +1,12 @@
 'use strict';
 
+const {
+  getSiblingLevels,
+  getLevel: isOutlineType
+} = require('../../config/shared/activities');
 const { Model, Op } = require('sequelize');
 const calculatePosition = require('../shared/util/calculatePosition');
-const { getSiblingLevels } = require('../../config/shared/activities');
+const hooks = require('./hooks');
 const isEmpty = require('lodash/isEmpty');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -41,6 +45,10 @@ class Activity extends Model {
         type: DATE,
         field: 'published_at'
       },
+      modifiedAt: {
+        type: DATE,
+        field: 'modified_at'
+      },
       createdAt: {
         type: DATE,
         field: 'created_at'
@@ -76,6 +84,10 @@ class Activity extends Model {
     });
   }
 
+  static hooks(Hooks, models) {
+    hooks.add(this, Hooks, models);
+  }
+
   static scopes() {
     const notNull = { [Op.ne]: null };
     return {
@@ -102,7 +114,7 @@ class Activity extends Model {
     const dstActivities = await Activity.bulkCreate(map(src, it => ({
       repositoryId: dstRepositoryId,
       parentId: dstParentId,
-      ...pick(it, ['type', 'position', 'data', 'refs'])
+      ...pick(it, ['type', 'position', 'data', 'refs', 'modifiedAt'])
     })), { returning: true, transaction });
     const ContentElement = this.sequelize.model('ContentElement');
     return Promise.reduce(src, async (acc, it, index) => {
@@ -193,15 +205,27 @@ class Activity extends Model {
     });
   }
 
-  reorder(index) {
+  reorder(index, context) {
     return this.sequelize.transaction(transaction => {
       const types = getSiblingLevels(this.type).map(it => it.type);
       const filter = { type: types };
       return this.siblings({ filter, transaction }).then(siblings => {
         this.position = calculatePosition(this.id, index, siblings);
-        return this.save({ transaction });
+        return this.save({ transaction, context });
       });
     });
+  }
+
+  getOutlineParent(transaction) {
+    return this.getParent({ transaction }).then(parent => {
+      if (!parent) return Promise.resolve();
+      if (isOutlineType(parent.type)) return parent;
+      return parent.getOutlineParent(transaction);
+    });
+  }
+
+  touch(transaction) {
+    return this.update({ modifiedAt: new Date() }, { transaction });
   }
 }
 

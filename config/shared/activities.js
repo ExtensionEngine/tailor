@@ -30,6 +30,7 @@ module.exports = {
   getSchema,
   getLevel: getActivityConfig,
   getOutlineLevels,
+  isOutlineActivity,
   getRepositoryMetadata,
   getActivityMetadata,
   getElementMetadata,
@@ -57,6 +58,12 @@ function getSchema(id) {
 
 function getOutlineLevels(schemaId) {
   return getSchema(schemaId).structure;
+}
+
+function isOutlineActivity(type) {
+  const schema = getSchemaId(type);
+  if (!schema) return false;
+  return !!find(getOutlineLevels(schema), { type });
 }
 
 function getActivityMetadata(activity = {}) {
