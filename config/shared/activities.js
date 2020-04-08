@@ -7,6 +7,7 @@ const first = require('lodash/first');
 const flatMap = require('lodash/flatMap');
 const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
+const isString = require('lodash/isString');
 const map = require('lodash/map');
 const mergeConfig = require('../utils/mergeConfig');
 const parseSchemas = require('./schema-parser');
@@ -29,6 +30,7 @@ module.exports = {
   getSchema,
   getLevel: getActivityConfig,
   getOutlineLevels,
+  isOutlineActivity,
   getRepositoryMetadata,
   getActivityMetadata,
   getElementMetadata,
@@ -56,6 +58,12 @@ function getSchema(id) {
 
 function getOutlineLevels(schemaId) {
   return getSchema(schemaId).structure;
+}
+
+function isOutlineActivity(type) {
+  const schema = getSchemaId(type);
+  if (!schema) return false;
+  return !!find(getOutlineLevels(schema), { type });
 }
 
 function getActivityMetadata(activity = {}) {
@@ -96,9 +104,9 @@ function getMetadata(schemaId, item, configKey = 'meta', storageKey = configKey)
 
 // Get activity or content element config
 function getConfig(schemaId, item = {}) {
-  const { type, activityId } = item;
+  const { id, activityId, type } = item;
   if (!schemaId || !type) return {};
-  const isElement = !!activityId;
+  const isElement = !!activityId || isString(id);
   return isElement ? getElementConfig(schemaId, type) : getActivityConfig(type);
 }
 

@@ -11,10 +11,10 @@
     </template>
     <v-sheet
       tile
-      class="pa-4 primary darken-1">
+      class="pa-3 blue-grey darken-4">
       <v-text-field
         v-model="search"
-        label="Search Tags"
+        label="Filter tags..."
         flat hide-details solo clearable />
     </v-sheet>
     <v-list v-if="filteredTags.length" :key="isVisible">
@@ -67,6 +67,7 @@ export default {
 <style lang="scss" scoped>
 .v-list {
   max-height: 18.75rem;
+  border-radius: 0;
   overflow-y: auto;
 }
 

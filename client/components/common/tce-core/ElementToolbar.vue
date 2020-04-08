@@ -38,12 +38,14 @@ export default {
     element: { type: Object, required: true },
     embed: { type: Object, default: null }
   },
+  data() {
+    return {
+      elementBus: EventBus.channel(`element:${getElementId(this.element)}`)
+    };
+  },
   computed: {
     id() {
       return getElementId(this.element);
-    },
-    elementBus() {
-      return EventBus.channel(`element:${this.id}`);
     },
     componentName() {
       const { type } = this.element;
@@ -71,6 +73,9 @@ export default {
         action: () => this.remove(this.element.parent || this.element)
       });
     }
+  },
+  beforeDestroy() {
+    this.elementBus.unsubscribe();
   },
   provide() {
     return {

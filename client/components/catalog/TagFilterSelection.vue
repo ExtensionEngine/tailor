@@ -5,7 +5,7 @@
       :key="tag.id"
       @click:close="$emit('close', tag)"
       close
-      class="ma-2">
+      class="mx-2">
       {{ tag.name }}
     </v-chip>
     <v-btn
@@ -25,6 +25,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.selected-tags {
+  min-height: 2.5rem;
+}
+
 .v-chip {
   height: 1.75rem !important;
 }

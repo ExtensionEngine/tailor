@@ -5,6 +5,14 @@ import get from 'lodash/get';
 import reduce from 'lodash/reduce';
 import sortBy from 'lodash/sortBy';
 
+export function isChanged(activity) {
+  return new Date(activity.modifiedAt) > new Date(activity.publishedAt);
+}
+
+export function getLabel(activity) {
+  return getLevel(activity.type).label;
+}
+
 export function getParent(activities, activity) {
   const id = get(activity, 'parentId', null);
   return id && find(activities, { id });

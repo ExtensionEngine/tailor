@@ -10,7 +10,8 @@
         :background-color="expanded ? 'blue-grey' : 'blue-grey darken-3'"
         prepend-inner-icon="mdi-magnify"
         placeholder="Search..."
-        solo clearable dark />
+        clearable hide-details solo dark
+        class="pb-5" />
     </div>
   </div>
 </template>
