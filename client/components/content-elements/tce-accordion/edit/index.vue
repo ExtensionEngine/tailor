@@ -1,8 +1,32 @@
 <template>
   <div class="tce-accordion">
-    <v-alert v-if="!hasItems" color="grey lighten-3">
-      Use the toolbar to add the first item to the accordion.
-    </v-alert>
+    <v-chip
+      v-if="hasItems"
+      class="ma-2"
+      color="grey darken-1"
+      text-color="white">
+      <v-avatar left>
+        <v-icon>mdi-chevron-down</v-icon>
+      </v-avatar>
+      Accordion
+      <v-avatar right>
+        <v-icon>mdi-chevron-up</v-icon>
+      </v-avatar>
+    </v-chip>
+    <v-sheet v-if="!hasItems" class="pa-12">
+      <v-avatar size="60" color="blue-grey darken-4">
+        <v-icon :size="isFocused ? 38 : 30" color="white">mdi-expand-all-outline</v-icon>
+      </v-avatar>
+      <div class="headline my-4">Accordion component</div>
+      <div class="subtitle-1">
+        <template v-if="!isFocused">Select to edit</template>
+        <template v-else>
+          Use toolbar
+          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
+          to add first slide to carousel
+        </template>
+      </div>
+    </v-sheet>
     <v-expansion-panels>
       <v-expansion-panel
         v-for="(item,i) in items"
@@ -48,6 +72,9 @@ export default {
         acc[item.id] = pick(this.embeds, Object.keys(item.body));
         return acc;
       }, {});
+    },
+    isFocused() {
+      return get(this.$attrs, 'is-focused', false);
     }
   },
   methods: {
