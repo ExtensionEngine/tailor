@@ -1,6 +1,6 @@
 <template>
   <div class="my-4 pa-4">
-    <discussion :activity="activity" />
+    <discussion :activity="activity" show-notifications />
   </div>
 </template>
 

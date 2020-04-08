@@ -1,8 +1,8 @@
 <template>
   <div class="embedded-discussion">
-    <div :class="{ 'pb-7': !showHeading }">
+    <div :class="{ 'pb-7': !showHeading && showAllToggle }">
       <v-btn
-        v-if="commentsShownLimit < thread.length"
+        v-if="showAllToggle"
         @click="showAll = !showAll"
         text x-small
         class="float-right mt-1">
@@ -13,6 +13,13 @@
       <v-icon color="grey darken-2" class="pr-1">mdi-forum-outline</v-icon>
       Comments
     </div>
+    <v-alert
+      v-if="!commentsCount && showNotifications"
+      color="pink darken-3"
+      icon="mdi-chat"
+      prominent text>
+      Be the First to Comment!
+    </v-alert>
     <discussion-thread
       v-if="thread.length"
       :items="thread"
@@ -46,7 +53,8 @@ export default {
   inheritAttrs: true,
   props: {
     activity: { type: Object, required: true },
-    showHeading: { type: Boolean, default: false }
+    showHeading: { type: Boolean, default: false },
+    showNotifications: { type: Boolean, default: false }
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {
@@ -56,6 +64,7 @@ export default {
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
     commentsShownLimit: vm => 5,
+    showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
     editor: vm => vm.$refs.editor.$el
   },
   methods: {
