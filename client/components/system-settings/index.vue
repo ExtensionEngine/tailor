@@ -1,13 +1,12 @@
 <template>
   <div class="system-settings-container">
-    <div class="heading primary elevation-1">
-      <v-chip
-        color="grey lighten-2"
-        outlined
-        class="mt-2 ml-3 px-3 body-2">
-        Admin
-      </v-chip>
-    </div>
+    <v-toolbar height="48" absolute class="heading blue-grey darken-3 elevation-2">
+      <v-toolbar-title>
+        <v-chip color="secondary lighten-1" small class="px-3 body-2">
+          Admin
+        </v-chip>
+      </v-toolbar-title>
+    </v-toolbar>
     <v-container>
       <v-row align="start">
         <v-col cols="3">
@@ -42,12 +41,7 @@ export default {
 }
 
 .heading {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 2.875rem;
-  text-align: left;
   text-transform: uppercase;
   z-index: 2;
 }
