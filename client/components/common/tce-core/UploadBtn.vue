@@ -1,7 +1,6 @@
 <template>
   <div class="file-upload">
-    <circular-progress v-if="uploading" />
-    <form v-else @submit.prevent class="upload-form">
+    <form @submit.prevent class="upload-form">
       <input
         :ref="id"
         v-filefilter="'auto'"
@@ -11,12 +10,15 @@
         :name="id"
         type="file"
         class="upload-input">
-      <label
+      <v-btn
         v-if="!fileKey"
-        :for="id"
-        :class="[sm ? 'v-btn v-size--small my-1' : 'btn btn-material btn-sm upload-button']">
+        @click="$refs[id].click()"
+        :loading="uploading"
+        color="grey darken-4"
+        text>
+        <v-icon color="secondary" class="mr-2">mdi-cloud-upload-outline</v-icon>
         {{ label }}
-      </label>
+      </v-btn>
       <span
         v-else
         @click="downloadFile(fileKey, fileName)"
@@ -33,7 +35,6 @@
 </template>
 
 <script>
-import CircularProgress from 'components/common/CircularProgress';
 import uniqueId from 'lodash/uniqueId';
 import uploadMixin from '@/components/common/mixins/upload';
 import { withValidation } from 'utils/validation';
@@ -54,8 +55,7 @@ export default {
     uploading(val) {
       this.$emit('update:uploading', val);
     }
-  },
-  components: { CircularProgress }
+  }
 };
 </script>
 
@@ -71,10 +71,6 @@ export default {
   visibility: hidden;
   max-width: 0;
   max-height: 0;
-}
-
-.upload-button {
-  background-color: #eee;
 }
 
 .file-name {
