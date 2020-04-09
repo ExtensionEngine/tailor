@@ -8,7 +8,7 @@
         Toggle edit
       </v-btn>
       <v-text-field
-        v-model="height"
+        v-model="title"
         label="Title"
         hide-details solo>
         <v-icon slot="prepend-inner" class="mr-2" small>mdi-format-title</v-icon>
