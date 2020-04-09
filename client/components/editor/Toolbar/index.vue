@@ -1,11 +1,8 @@
 <template>
   <div class="toolbar-wrapper">
-    <div
-      v-show="activity"
-      class="activity-toolbar primary elevation-1">
+    <div v-show="activity" class="activity-toolbar blue-grey darken-3">
       <activity-actions class="activity-actions" />
-      <h1 class="pt-2 pl-1 headline text-truncate">
-        <v-icon dark class="mr-1 pb-1">mdi-file-document</v-icon>
+      <h1 class="pt-2 headline text-truncate">
         <span>{{ config.label }}</span> - {{ activity.data.name }}
       </h1>
     </div>
@@ -63,7 +60,7 @@ export default {
 .activity-toolbar {
   display: flex;
   height: 3.125rem;
-  padding: 0 0.375rem 0 0;
+  padding: 0;
   z-index: 999;
 
   h1 {
@@ -76,7 +73,6 @@ export default {
 }
 
 .activity-actions {
-  max-width: 11.25rem;
-  margin-top: 0.0625rem;
+  max-width: 10.75rem;
 }
 </style>

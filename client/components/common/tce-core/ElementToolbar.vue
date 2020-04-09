@@ -1,5 +1,7 @@
 <template>
-  <div :key="id" class="element-toolbar-wrapper white elevation-1">
+  <div
+    :key="id"
+    class="element-toolbar-wrapper grey lighten-4 elevation-3">
     <component
       :is="componentName"
       v-if="componentExists"
@@ -13,9 +15,11 @@
       <v-btn
         v-if="!embed"
         @click="requestDeleteConfirmation"
-        color="blue-grey darken-4"
-        fab dark>
-        <v-icon size="24">mdi-delete</v-icon>
+        color="secondary darken-1"
+        dark fab small
+        absolute right top
+        class="mr-8">
+        <v-icon>mdi-delete</v-icon>
       </v-btn>
     </div>
   </div>
@@ -90,17 +94,6 @@ export default {
 .element-toolbar-wrapper {
   position: absolute;
   width: 100%;
-  min-height: 45px;
-}
-
-.delete-element {
-  position: absolute;
-  z-index: 999;
-  right: 0;
-  transform: translate(-90%, -55%);
-
-  .v-btn {
-    margin: 4px;
-  }
+  min-height: 3.5rem;
 }
 </style>
