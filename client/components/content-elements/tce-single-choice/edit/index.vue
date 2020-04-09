@@ -1,41 +1,34 @@
 <template>
-  <div class="form-group">
-    <span class="form-label">{{ isGraded ? 'Answers' : 'Options' }}</span>
-    <button
+  <div class="single-choice">
+    <span class="title">{{ title }}</span>
+    <v-btn
       @click="addAnswer"
       :disabled="disabled"
-      class="btn btn-link answers-add">
-      <span class="mdi mdi-plus"></span>
-    </button>
-    <ul :class="{ 'non-graded': !isGraded }">
-      <li
-        v-for="(answer, index) in answers"
-        :key="index">
-        <span
-          v-if="isGraded"
-          :class="{ 'has-error': correctError }"
-          class="answers-radio">
-          <input
-            @change="selectAnswer(index)"
-            :checked="correct === index"
-            :disabled="disabled"
-            type="radio">
-        </span>
-        <v-avatar v-else size="32" color="primary">{{ index + 1 }}</v-avatar>
-        <span :class="{ 'has-error': answerError(index) }" class="answers-input">
-          <input
-            :ref="`input${index}`"
-            @change="updateAnswer(index)"
-            :value="answer"
-            :disabled="disabled"
-            :placeholder="isGraded ? 'Answer...' : 'Option...'"
-            type="text">
-        </span>
-        <button @click="removeAnswer(index)" :disabled="disabled" class="destroy">
-          <span class="mdi mdi-close"></span>
-        </button>
-      </li>
-    </ul>
+      small icon tile class="float-right">
+      <v-icon small>mdi-plus</v-icon>
+    </v-btn>
+    <v-radio-group
+      v-model="correct"
+      @change="selectAnswer"
+      :error="correctError"
+      :class="['answers', {'non-graded': !isGraded }]">
+      <v-text-field
+        v-for="(answer, idx) in answers" :key="idx"
+        @change="updateAnswer($event, idx)"
+        :placeholder="placeholder"
+        :error="answerError(idx)"
+        :disabled="disabled">
+        <template slot="prepend">
+          <v-radio v-if="isGraded" :value="idx" :color="color" />
+          <v-avatar v-else size="32" color="primary">{{ idx + 1 }}</v-avatar>
+        </template>
+        <template slot="append">
+          <v-btn @click="removeAnswer(idx)" small icon tile class="remove">
+            <v-icon small>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-text-field>
+    </v-radio-group>
   </div>
 </template>
 
@@ -43,50 +36,43 @@
 import cloneDeep from 'lodash/cloneDeep';
 import { defaults } from 'utils/assessment';
 import range from 'lodash/range';
+import set from 'lodash/set';
 
 const customAlert = {
   type: 'alert-danger',
   text: 'Please make at least two answers available !'
 };
 
+const getTitle = isGraded => isGraded ? 'Answers' : 'Options';
+const getPlaceholder = isGraded => isGraded ? 'Answer...' : 'Option...';
+
 export default {
   props: {
     assessment: { type: Object, default: defaults.SC },
-    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
+    isGraded: { type: Boolean, default: false },
     isEditing: { type: Boolean, default: false }
   },
+  data: vm => ({ correct: vm.assessment.correct }),
   computed: {
-    answers() {
-      return this.assessment.answers;
-    },
-    correct() {
-      return this.assessment.correct;
-    },
-    feedback() {
-      return this.assessment.feedback;
-    },
-    correctError() {
-      return this.errors.includes('correct');
-    },
-    disabled() {
-      return !this.isEditing;
-    }
+    disabled: vm => !vm.isEditing,
+    answers: vm => vm.assessment.answers,
+    feedback: vm => vm.assessment.feedback,
+    color: vm => vm.disabled ? 'grey' : 'blue darken-2',
+    correctError: vm => vm.errors.includes('correct'),
+    placeholder: vm => getPlaceholder(vm.isGraded),
+    title: vm => getTitle(vm.isGraded)
   },
   methods: {
     addAnswer() {
-      const answers = cloneDeep(this.answers);
-      answers.push('');
-      this.update({ answers });
+      this.update({ answers: [...cloneDeep(this.answers), ''] });
     },
-    updateAnswer(index) {
-      const answers = cloneDeep(this.answers);
-      answers[index] = this.$refs[`input${index}`][0].value;
-      this.update({ answers });
+    updateAnswer(value, index) {
+      this.update({ answers: set(cloneDeep(this.answers), index, value) });
     },
     removeAnswer(index) {
+      let { correct } = this;
       const answers = cloneDeep(this.answers);
-      let correct = cloneDeep(this.correct);
       const feedback = cloneDeep(this.feedback);
 
       answers.splice(index, 1);
@@ -103,7 +89,8 @@ export default {
         delete feedback[answers.length];
       }
 
-      this.update({ answers, correct, feedback });
+      this.correct = correct;
+      this.$emit('update', { answers, correct, feedback });
     },
     selectAnswer(index) {
       this.update({ correct: index });
@@ -130,101 +117,47 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-group {
-  text-align: left;
+.single-choice {
   width: 100%;
-  margin: 0 auto;
-  padding: 25px 20px 15px;
+  padding: 1.5rem 1.25rem 1rem;
+  text-align: left;
   overflow: hidden;
-}
 
-.form-label {
-  font-size: 20px;
-}
-
-.answers-add {
-  float: right;
-  font-size: 16px;
-}
-
-.destroy {
-  display: none;
-  position: absolute;
-  right: 10px;
-  bottom: 8px;
-  padding: 0;
-  background-color: transparent;
-  opacity: 0.6;
-  transition: all 0.2s;
-  border: 0;
-
-  span {
-    font-size: 16px;
-  }
-}
-
-.destroy:focus {
-  outline: none;
-}
-
-ul {
-  padding: 10px 0 0 50px;
-
-  &.non-graded {
-    padding-left: 30px;
+  .title {
+    font-weight: 400;
   }
 
-  li {
-    display: inline-block;
-    position: relative;
-    width: 100%;
-    margin: 10px 0;
+  .answers {
+    padding: 0.25rem 0 0 3rem;
 
-    .answers-radio {
-      float: left;
-      width: 19px;
-      margin-top: 7px;
+    .remove {
+      display: none;
+    }
 
-      input {
-        padding-bottom: 9px;
-      }
+    .v-input:hover .remove {
+      display: block;
+    }
+
+    .v-radio {
+      position: relative;
+      left: 0.4rem;
     }
 
     .v-avatar {
-      float: left;
-      margin-top: 4px;
-      margin-right: 6px;
+      position: relative;
+      bottom: 0.1rem;
       color: #fff;
-      font-weight: 700;
-    }
-
-    .answers-input {
-      display: block;
-      overflow: hidden;
-
-      input {
-        width: 100%;
-        height: 40px;
-        margin-left: 3px;
-        padding: 0 33px 0 10px;
-      }
-
-      input:focus {
-        outline: none;
-      }
     }
   }
 
-  li:hover {
-    .destroy:enabled {
-      display: inline;
-    }
+  .non-graded {
+    padding-left: 1rem;
   }
-}
 
-@media (max-width: 850px) {
-  ul {
-    padding-left: 0;
+  @media (max-width: 850px) {
+    .answers, .non-graded {
+      padding-left: 0;
+    }
   }
 }
 </style>
