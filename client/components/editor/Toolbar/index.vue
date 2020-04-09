@@ -23,7 +23,7 @@
     </element-toolbar>
     <element-toolbar
       v-else-if="element"
-      :key="element._cid || element.id"
+      :key="getElementId(element)"
       :element="element">
       <template slot="actions">
         <slot name="actions"></slot>
@@ -35,6 +35,7 @@
 <script>
 import ActivityActions from './ActivityActions';
 import { ElementToolbar } from 'tce-core';
+import { getElementId } from 'tce-core/utils';
 import { getLevel } from 'shared/activities';
 import { mapGetters } from 'vuex';
 
@@ -48,6 +49,9 @@ export default {
     config() {
       return getLevel(this.activity.type);
     }
+  },
+  methods: {
+    getElementId
   },
   components: { ActivityActions, ElementToolbar }
 };
