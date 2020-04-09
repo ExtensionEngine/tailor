@@ -6,14 +6,14 @@
         @change="upload"
         :label="isUploaded ? 'Upload new image' : 'Click to upload an image'" />
       <template v-if="isUploaded">
-        <v-btn @click="toggleTool('cropper')" small text>
+        <v-btn @click="toggleTool('cropper')" text>
           {{ currentTool === 'cropper' ? 'Hide' : 'Show' }} cropper
         </v-btn>
         <template v-if="currentTool === 'cropper'">
-          <v-btn @click="undo" small text>
+          <v-btn @click="undo" text>
             <v-icon class="pr-2">mdi-undo</v-icon> Undo crop
           </v-btn>
-          <v-btn @click="crop" small text>
+          <v-btn @click="crop" text>
             <v-icon class="pr-2">mdi-crop</v-icon> Crop
           </v-btn>
         </template>
