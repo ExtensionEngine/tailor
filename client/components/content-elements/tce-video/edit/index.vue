@@ -134,7 +134,7 @@ function mimetype({ pathname }) {
     position: relative;
     top: 45%;
     color: #d81a60;
-    font-size: 22px;
+    font-size: 1.375rem;
   }
 }
 
@@ -152,16 +152,16 @@ function mimetype({ pathname }) {
   left: 50%;
   transform: translate(-50%, -50%);
   color: #fff;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 500;
 
   .icon {
-    font-size: 42px;
+    font-size: 2.625rem;
   }
 }
 
 .player {
-  height: 410px;
+  height: 25.625rem;
   background: #000;
 
   ::v-deep {

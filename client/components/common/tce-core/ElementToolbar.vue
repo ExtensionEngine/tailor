@@ -1,7 +1,7 @@
 <template>
   <div
     :key="id"
-    class="element-toolbar-wrapper grey lighten-4 elevation-3">
+    class="element-toolbar-wrapper grey lighten-5 elevation-3">
     <component
       :is="componentName"
       v-if="componentExists"
@@ -19,7 +19,7 @@
         dark fab small
         absolute right top
         class="mr-8">
-        <v-icon>mdi-delete</v-icon>
+        <v-icon color="grey lighten-3">mdi-delete</v-icon>
       </v-btn>
     </div>
   </div>

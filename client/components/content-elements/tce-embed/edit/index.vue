@@ -1,12 +1,19 @@
 <template>
   <div :style="{ height: `${height}px` }" class="tce-embed">
-    <div v-if="showPlaceholder">
-      <div :style="{ height: `${height}px` }" class="well placeholder">
-        <span class="heading">Embed placeholder</span>
-        <span v-show="!isFocused" class="message">Select to edit</span>
-        <span v-show="isFocused" class="message">Please use toolbar to enter url</span>
+    <v-sheet v-if="showPlaceholder" class="pa-12">
+      <v-avatar size="60" color="blue-grey darken-4">
+        <v-icon :size="isFocused ? 36 : 30" color="white">mdi-iframe</v-icon>
+      </v-avatar>
+      <div class="headline my-4">Embed component</div>
+      <div class="subtitle-1">
+        <template v-if="!isFocused">Select to edit</template>
+        <template v-else>
+          Use toolbar
+          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
+          to enter url
+        </template>
       </div>
-    </div>
+    </v-sheet>
     <div v-else>
       <div class="content">
         <div v-show="!isFocused" class="overlay">
@@ -17,9 +24,9 @@
           v-if="!isDragged"
           ref="frame"
           :src="url"
-          class="content"
           frameborder="0"
-          sandbox="allow-forms allow-same-origin allow-scripts">
+          sandbox="allow-forms allow-same-origin allow-scripts"
+          class="content">
         </iframe>
       </div>
     </div>
@@ -36,15 +43,9 @@ export default {
     isDragged: { type: Boolean, default: false }
   },
   computed: {
-    url() {
-      return this.element.data.url;
-    },
-    height() {
-      return this.element.data.height;
-    },
-    showPlaceholder() {
-      return !this.element.data.url;
-    }
+    url: vm => vm.element.data.url,
+    height: vm => vm.element.data.height,
+    showPlaceholder: vm => !vm.element.data.url
   },
   mounted() {
     this.$elementBus.on('save', data => this.$emit('save', data));
@@ -56,20 +57,6 @@ export default {
 .tce-embed {
   position: relative;
   overflow: auto;
-}
-
-.placeholder {
-  margin: 0;
-  padding: 119px;
-
-  .heading {
-    font-size: 24px;
-  }
-
-  .message {
-    display: block;
-    font-size: 18px;
-  }
 }
 
 .overlay {
@@ -85,8 +72,8 @@ export default {
   opacity: 0.9;
 
   .message {
-    color: green;
-    font-size: 22px;
+    color: #d81a60;
+    font-size: 1.375rem;
   }
 }
 
