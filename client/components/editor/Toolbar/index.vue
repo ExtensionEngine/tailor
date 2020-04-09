@@ -3,7 +3,11 @@
     <div v-show="activity" class="activity-toolbar blue-grey darken-3">
       <activity-actions class="activity-actions" />
       <h1 class="pt-2 headline text-truncate">
-        <span>{{ config.label }}</span> - {{ activity.data.name }}
+        <span>{{ config.label }}</span>
+        <span class="px-2 grey--text">|</span>
+        <span class="secondary--text text--lighten-2">
+          {{ activity.data.name }}
+        </span>
       </h1>
     </div>
     <element-toolbar
