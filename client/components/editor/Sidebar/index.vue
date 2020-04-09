@@ -2,7 +2,7 @@
   <v-navigation-drawer
     width="400"
     absolute permanent
-    class="sidebar">
+    class="sidebar grey lighten-4 elevation-2">
     <div :class="{ 'toolbar-visible': selectedElement }">
       <activity-navigation
         v-if="selectedTab === 'browser'"
@@ -22,7 +22,7 @@
     <template v-slot:append>
       <v-tabs
         :value="selectedTabIndex"
-        background-color="grey darken-4"
+        background-color="blue-grey darken-4"
         icons-and-text fixed-tabs dark>
         <v-tabs-slider />
         <v-tab
@@ -105,6 +105,6 @@ export default {
 }
 
 .toolbar-visible {
-  margin-top: 3.125rem;
+  margin-top: 4rem;
 }
 </style>
