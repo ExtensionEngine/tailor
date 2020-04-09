@@ -15,7 +15,7 @@
         :activity="selectedActivity" />
       <element-sidebar
         v-if="selectedTab === 'element'"
-        :key="selectedElement._cid"
+        :key="getElementId(selectedElement)"
         :element="selectedElement"
         :metadata="metadata" />
     </div>
@@ -49,6 +49,7 @@ import ActivityDiscussion from './Discussion';
 import ActivityNavigation from './Navigation';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
+import { getElementId } from 'tce-core/utils';
 import { getElementMetadata } from 'shared/activities';
 
 export default {
@@ -82,6 +83,9 @@ export default {
       const { repository, selectedElement } = this;
       return getElementMetadata(get(repository, 'schema'), selectedElement);
     }
+  },
+  methods: {
+    getElementId
   },
   watch: {
     selectedElement() {
