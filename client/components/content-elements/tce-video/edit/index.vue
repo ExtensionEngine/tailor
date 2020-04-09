@@ -1,14 +1,19 @@
 <template>
   <div class="tce-video">
-    <div v-if="showPlaceholder">
-      <div class="well video-placeholder">
-        <div class="message">
-          <span class="heading">Video placeholder</span>
-          <span v-if="!isFocused">Select to edit</span>
-          <span v-else>Please use toolbar to enter url</span>
-        </div>
+    <v-sheet v-if="showPlaceholder" class="pa-12">
+      <v-avatar size="60" color="blue-grey darken-4">
+        <v-icon :size="isFocused ? 38 : 30" color="white">mdi-video-image</v-icon>
+      </v-avatar>
+      <div class="headline my-4">Video component</div>
+      <div class="subtitle-1">
+        <template v-if="!isFocused">Select to edit</template>
+        <template v-else>
+          Use toolbar
+          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
+          to upload the video
+        </template>
       </div>
-    </div>
+    </v-sheet>
     <div v-else>
       <div v-if="!isFocused" class="overlay">
         <div class="message">Double click to preview</div>
@@ -117,21 +122,6 @@ function mimetype({ pathname }) {
   position: relative;
 }
 
-.video-placeholder {
-  .message {
-    padding: 155px 20px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
-}
-
 .overlay {
   position: absolute;
   z-index: 3;
@@ -143,7 +133,7 @@ function mimetype({ pathname }) {
   .message {
     position: relative;
     top: 45%;
-    color: green;
+    color: #d81a60;
     font-size: 22px;
   }
 }
@@ -168,10 +158,6 @@ function mimetype({ pathname }) {
   .icon {
     font-size: 42px;
   }
-}
-
-.well {
-  margin: 0;
 }
 
 .player {

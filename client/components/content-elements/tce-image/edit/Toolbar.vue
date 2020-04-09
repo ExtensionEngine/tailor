@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar class="tce-image-toolbar elevation-0">
+  <v-toolbar color="transparent" class="tce-image-toolbar elevation-0">
     <v-toolbar-title class="pl-1">Image toolbar</v-toolbar-title>
     <v-toolbar-items class="mx-auto">
       <upload-btn
