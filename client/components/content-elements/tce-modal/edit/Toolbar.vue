@@ -1,20 +1,19 @@
 <template>
-  <div class="tce-modal-toolbar">
-    <ul>
-      <li @click="toggleEdit" class="btn btn-link btn-sm">
-        <span class="mdi mdi-pencil"></span>
-        <span>Toggle Edit</span>
-      </li>
-      <li class="title form-inline">
-        <label for="titleInput">Title</label>
-        <input
-          v-model="title"
-          id="titleInput"
-          class="form-control"
-          type="text"
-          placeholder="Title">
-      </li>
-    </ul>
+  <div class="modal-toolbar-container">
+    <div class="navigation-sidebar">
+    </div>
+    <div class="modal-action">
+      <v-btn @click="toggleEdit" text>
+        <v-icon small>mdi-pencil-outline</v-icon>
+        Toggle edit
+      </v-btn>
+      <v-text-field
+        v-model="height"
+        label="Title"
+        hide-details solo>
+        <v-icon slot="prepend-inner" class="mr-2" small>mdi-format-title</v-icon>
+      </v-text-field>
+    </div>
   </div>
 </template>
 
@@ -27,11 +26,7 @@ export default {
   props: {
     element: { type: Object, required: true }
   },
-  data() {
-    return {
-      title: this.element.data.title
-    };
-  },
+  data: vm => ({ title: vm.element.data.title }),
   methods: {
     toggleEdit() {
       this.$elementBus.emit('toggleEdit');
@@ -48,58 +43,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tce-modal-toolbar {
-  position: relative;
-  width: 100%;
-  height: 50px;
+.modal-toolbar-container {
+  display: flex;
+  flex-wrap: wrap;
 
-  ul {
-    float: left;
-    height: 100%;
-    margin: 0;
-    padding: 0 30px 0 10px;
+  .navigation-sidebar {
+    display: flex;
+    width: 25rem;
+  }
 
-    li {
-      height: 100%;
-      color: #444;
+  .modal-action {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
 
-      &.btn {
-        padding-top: 15px;
-      }
-
-      .mdi {
-        display: inline-block;
-        margin-right: 5px;
-        font-size: 18px;
-        line-height: 18px;
-        vertical-align: middle;
-      }
-
-      &.active {
-        background-color: #e8e8e8;
-      }
+    .v-input {
+      max-width: 12.5rem;
+      margin-left: 0.625rem;
     }
-  }
-}
-
-.title {
-  display: inline-block;
-  margin: 0 0 0 10px;
-  padding: 0;
-  font-size: 14px !important;
-
-  input {
-    min-width: 250px;
-    height: 20px;
-    font-size: 14px;
-    line-height: 14px;
-  }
-
-  label {
-    padding: 2px 10px;
-    font-size: 12px;
-    line-height: 12px;
-    text-transform: uppercase;
   }
 }
 </style>
