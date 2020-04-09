@@ -21,6 +21,9 @@ export default {
       elementBus: EventBus.channel(`element:${getElementId(this.element)}`)
     };
   },
+  beforeDestroy() {
+    this.elementBus.unsubscribe();
+  },
   provide() {
     return {
       $elementBus: this.elementBus
