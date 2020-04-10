@@ -1,14 +1,19 @@
 <template>
   <div class="tce-pdf">
-    <div v-show="showPlaceholder">
-      <div class="well pdf-placeholder">
-        <div class="message">
-          <span class="heading">Pdf placeholder</span>
-          <span v-if="!isFocused">Select to edit</span>
-          <span v-else>Please use toolbar to enter url</span>
-        </div>
+    <v-sheet v-if="showPlaceholder" class="pa-12">
+      <v-avatar size="60" color="blue-grey darken-4">
+        <v-icon :size="isFocused ? 38 : 30" color="white">mdi-file-pdf</v-icon>
+      </v-avatar>
+      <div class="headline my-4">PDF component</div>
+      <div class="subtitle-1">
+        <template v-if="!isFocused">Select to edit</template>
+        <template v-else>
+          Use toolbar
+          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
+          to upload the pdf
+        </template>
       </div>
-    </div>
+    </v-sheet>
     <div v-show="!showPlaceholder">
       <div v-if="!isFocused" class="overlay">
         <div class="message">Click to preview</div>
@@ -115,21 +120,6 @@ export default {
   position: relative;
 }
 
-.pdf-placeholder {
-  .message {
-    padding: 100px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
-}
-
 .overlay {
   position: absolute;
   z-index: 3;
@@ -141,8 +131,8 @@ export default {
   .message {
     position: relative;
     top: 45%;
-    color: #008000;
-    font-size: 22px;
+    color: #d81a60;
+    font-size: 1.375rem;
   }
 }
 
@@ -162,19 +152,15 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   color: #fff;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 500;
 
-  .icon { font-size: 42px; }
-}
-
-.well {
-  margin: 0;
+  .icon { font-size: 2.625rem; }
 }
 
 .pdf-container {
   position: relative;
-  height: 360px;
+  height: 22.5rem;
 }
 
 .pdf {
