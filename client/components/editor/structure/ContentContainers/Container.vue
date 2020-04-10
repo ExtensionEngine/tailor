@@ -3,7 +3,7 @@
     <div class="actions">
       <v-btn
         @click="$emit('delete')"
-        color="error"
+        color="secondary darken-1"
         text
         class="pull-right">
         Delete {{ name }}
