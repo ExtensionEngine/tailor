@@ -109,6 +109,6 @@ export default {
 }
 
 .toolbar-visible {
-  margin-top: 4rem;
+  margin-top: 4.5rem;
 }
 </style>

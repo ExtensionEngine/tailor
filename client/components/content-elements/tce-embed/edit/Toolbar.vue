@@ -1,6 +1,6 @@
 <template>
   <v-toolbar
-    height="68"
+    height="72"
     color="transparent"
     class="tce-embed-toolbar elevation-0">
     <v-toolbar-title>Embed component</v-toolbar-title>

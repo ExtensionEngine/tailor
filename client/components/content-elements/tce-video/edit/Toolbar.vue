@@ -1,5 +1,8 @@
 <template>
-  <v-toolbar color="transparent" class="tce-video-toolbar elevation-0">
+  <v-toolbar
+    height="72"
+    color="transparent"
+    class="tce-video-toolbar elevation-0">
     <v-toolbar-title>Video component</v-toolbar-title>
     <input-asset
       @input="save"
