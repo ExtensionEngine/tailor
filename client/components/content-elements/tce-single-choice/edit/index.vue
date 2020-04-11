@@ -15,9 +15,11 @@
       <v-text-field
         v-for="(answer, idx) in answers" :key="idx"
         @change="updateAnswer($event, idx)"
-        :placeholder="placeholder"
+        :value="answer"
+        :disabled="disabled"
         :error="answerError(idx)"
-        :disabled="disabled">
+        :placeholder="placeholder"
+        hide-details class="my-2">
         <template slot="prepend">
           <v-radio v-if="isGraded" :value="idx" :color="color" />
           <v-avatar v-else size="32" color="primary">{{ idx + 1 }}</v-avatar>
@@ -80,6 +82,7 @@ export default {
       if (this.isGraded) {
         if (correct === index) correct = null;
         if (correct && correct >= index) correct -= 1;
+        this.correct = correct;
       }
 
       if (feedback) {
@@ -88,30 +91,23 @@ export default {
         });
         delete feedback[answers.length];
       }
-
-      this.correct = correct;
       this.$emit('update', { answers, correct, feedback });
     },
     selectAnswer(index) {
       this.update({ correct: index });
     },
-    answerError(index) {
-      return this.errors.includes(`answers[${index}]`);
-    },
     validate() {
       this.$emit('alert', this.answers.length < 2 ? customAlert : {});
+    },
+    answerError(index) {
+      return this.errors.includes(`answers[${index}]`);
     },
     update(data) {
       this.$emit('update', data);
     }
   },
   watch: {
-    assessment: {
-      deep: true,
-      handler: function () {
-        this.validate();
-      }
-    }
+    'assessment.answers'() { this.validate(); }
   }
 };
 </script>

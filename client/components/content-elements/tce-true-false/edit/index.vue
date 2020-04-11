@@ -1,7 +1,7 @@
 <template>
   <div class="true-false">
     <span class="title">{{ title }}</span>
-    <v-radio-group v-model="correct" @change="update" :error="error">
+    <v-radio-group v-model="correct" @change="update" :error="correctError">
       <v-radio
         v-for="(answer, idx) in [true, false]"
         :key="idx"
@@ -32,8 +32,8 @@ export default {
   data: vm => ({ correct: vm.assessment.correct }),
   computed: {
     title: vm => getTitle(vm.isGraded),
-    error: vm => vm.errors.includes('correct'),
-    disabled: vm => !vm.isEditing || !vm.isGraded
+    disabled: vm => !vm.isEditing || !vm.isGraded,
+    correctError: vm => vm.errors.includes('correct')
   },
   methods: {
     update(correct) {
