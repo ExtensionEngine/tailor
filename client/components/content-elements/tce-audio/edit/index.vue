@@ -1,14 +1,19 @@
 <template>
   <div class="tce-audio">
-    <div v-show="showPlaceholder">
-      <div class="audio-placeholder">
-        <div class="message">
-          <span class="heading">Audio placeholder</span>
-          <p v-if="!isFocused">Select to edit</p>
-          <p v-else>Please use toolbar to enter url</p>
-        </div>
+    <v-sheet v-if="showPlaceholder" class="pa-12">
+      <v-avatar size="60" color="blue-grey darken-4">
+        <v-icon :size="isFocused ? 38 : 30" dark>mdi-speaker</v-icon>
+      </v-avatar>
+      <div class="headline my-4">Audio component</div>
+      <div class="subtitle-1">
+        <template v-if="!isFocused">Select to edit</template>
+        <template v-else>
+          Use toolbar
+          <v-icon size="24" color="secondary darken-1">mdi-transfer-up</v-icon>
+          to upload the audio file
+        </template>
       </div>
-    </div>
+    </v-sheet>
     <div v-show="!showPlaceholder">
       <div v-if="!isFocused && !error" class="overlay">
         <div class="message">Click to preview</div>
@@ -103,22 +108,6 @@ export default {
     margin: 0;
   }
 
-  .audio-placeholder {
-    padding: 1.25rem;
-    background-color: #f1f1f1;
-
-    .message {
-      .heading {
-        font-size: 24px;
-      }
-
-      p {
-        margin: 0;
-        font-size: 18px;
-      }
-    }
-  }
-
   .overlay, .error {
     position: absolute;
     width: 100%;
@@ -138,7 +127,7 @@ export default {
     z-index: 3;
 
     .message {
-      color: #008000;
+      color: #d81a60;
       font-size: 1.8rem;
       line-height: 40px;
     }
