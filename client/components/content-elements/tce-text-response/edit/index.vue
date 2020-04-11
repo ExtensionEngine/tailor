@@ -1,38 +1,32 @@
 <template>
-  <div class="form-group">
-    <span class="form-label">{{ isGraded ? 'Answer' : 'Response' }}</span>
-    <span :class="{ 'has-error': correctError }" class="answer">
-      <textarea
-        v-model="correct"
-        @blur="update"
-        :disabled="!isEditing || !isGraded"
-        class="form-control"
-        rows="6"
-        type="text">
-      </textarea>
-    </span>
+  <div class="text-response">
+    <span class="title">{{ title }}</span>
+    <v-textarea
+      v-model="correct"
+      @blur="update"
+      :disabled="disabled"
+      :error="correctError"
+      rows="6" class="mt-0" />
   </div>
 </template>
 
 <script>
 import { defaults } from 'utils/assessment';
 
+const getTitle = isGraded => isGraded ? 'Answer' : 'Response';
+
 export default {
   props: {
     assessment: { type: Object, default: defaults.TR },
-    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
-    isEditing: { type: Boolean, default: false }
+    isEditing: { type: Boolean, default: false },
+    isGraded: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      correct: this.assessment.correct
-    };
-  },
+  data: vm => ({ correct: vm.assessment.correct }),
   computed: {
-    correctError() {
-      return this.errors.includes('correct');
-    }
+    disabled: vm => !vm.isEditing || !vm.isGraded,
+    correctError: vm => vm.errors.includes('correct'),
+    title: vm => getTitle(vm.isGraded)
   },
   methods: {
     update() {
@@ -48,21 +42,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-group {
+.text-response {
   width: 100%;
-  margin: 0 auto;
-  padding: 25px 20px 15px;
+  padding: 1.5rem 1.25rem 1rem;
   text-align: left;
   overflow: hidden;
-}
 
-.form-label {
-  font-size: 20px;
-}
-
-.answer {
-  margin: 10px 0;
-  padding: 10px 0 0 50px;
-  font-size: 16px;
+  .title {
+    font-weight: 400;
+  }
 }
 </style>

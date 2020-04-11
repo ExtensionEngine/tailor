@@ -14,7 +14,8 @@
       :disabled="disabled"
       :error="answerError(idx)"
       :placeholder="placeholder"
-      hide-details :class="['answer', { 'non-graded': !isGraded }]">
+      :class="['answer', { 'non-graded': !isGraded }]"
+      hide-details>
       <template slot="prepend">
         <v-checkbox
           v-if="isGraded"
