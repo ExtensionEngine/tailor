@@ -1,13 +1,13 @@
 <template>
   <v-expansion-panel>
-    <v-expansion-panel-header>
+    <v-expansion-panel-header color="blue-grey lighten-4">
       <v-text-field
         v-if="isEditingHeader"
         v-model="header"
         hide-details filled dense />
       <div v-else class="pl-3">{{ item.header }}</div>
       <div v-if="isEditingHeader" class="actions">
-        <v-btn @click.stop="saveHeader" color="green" icon>
+        <v-btn @click.stop="saveHeader" color="green darken-2" icon>
           <v-icon>mdi-check</v-icon>
         </v-btn>
         <v-btn @click.stop="isEditingHeader = false" icon>
@@ -33,12 +33,13 @@
         </v-tooltip>
       </div>
     </v-expansion-panel-header>
-    <v-expansion-panel-content>
+    <v-expansion-panel-content color="blue-grey lighten-5">
       <v-alert
         v-if="!hasElements"
-        color="grey darken-3"
+        color="blue-grey darken-2"
         icon="mdi-information-variant"
-        text prominent>
+        text prominent
+        class="mt-6">
         Click the button below to add content element.
       </v-alert>
       <embedded-container
