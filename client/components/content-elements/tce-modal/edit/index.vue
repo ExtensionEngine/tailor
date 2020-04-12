@@ -2,7 +2,7 @@
   <div class="tce-modal">
     <div v-if="isEditing" class="container-fluid">
       <div v-if="!hasElements" class="well">
-        Click the button below to Add first teaching element to your modal.
+        Click the button below to Add first content element to your modal.
       </div>
       <embedded-container
         @save="$emit('save', $event)"
