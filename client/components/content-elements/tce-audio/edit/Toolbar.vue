@@ -9,7 +9,7 @@
       :url="url"
       :public-url="publicUrl"
       :extensions="[
-        '.mp3', '.mp4', '.aac', '.ogg', '.wma', '.flac', '.alac', '.m4a', '.wav'
+        '.mp3', '.mp4', '.aac', '.ogg', '.wma', '.flac', '.m4a', '.wav'
       ]"
       upload-label="Upload audio file"
       class="mx-auto" />
