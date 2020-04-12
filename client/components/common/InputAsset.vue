@@ -27,7 +27,7 @@
       </v-btn>
       <v-text-field
         :value="fileName"
-        readonly hide-details filled dense />
+        readonly hide-details filled />
     </template>
     <v-text-field
       v-if="!uploading && (urlInput || !hasAsset)"
