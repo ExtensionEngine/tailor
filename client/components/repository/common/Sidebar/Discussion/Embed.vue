@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import DiscussionThread from './Thread';
 import orderBy from 'lodash/orderBy';
 import TextEditor from './TextEditor';
@@ -54,13 +54,15 @@ export default {
   props: {
     activity: { type: Object, required: true },
     showHeading: { type: Boolean, default: false },
-    showNotifications: { type: Boolean, default: false }
+    showNotifications: { type: Boolean, default: false },
+    isVisible: { type: Boolean, default: false }
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {
     ...mapState({ user: state => state.auth.user }),
-    ...mapGetters('repository/comments', ['getActivityComments']),
+    ...mapGetters('repository/comments', ['getActivityComments', 'getUnseenComments']),
     comments: vm => vm.getActivityComments(vm.activity.id),
+    unseenComments: vm => vm.getUnseenComments(vm.activity.id),
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
     commentsShownLimit: vm => 5,
@@ -70,6 +72,7 @@ export default {
   methods: {
     ...mapActions('repository/comments',
       ['fetch', 'save', 'subscribe', 'unsubscribe']),
+    ...mapMutations('repository/comments', ['setSeenComment']),
     async post() {
       if (!this.comment.content) return;
       const payload = {
@@ -88,6 +91,12 @@ export default {
   watch: {
     commentsCount() {
       this.$emit('change', this.thread);
+    },
+    isVisible(val) {
+      if (!val) return;
+      if (this.unseenComments.length) {
+        setTimeout(() => this.setSeenComment(this.activity.id), 1000);
+      }
     }
   },
   async created() {

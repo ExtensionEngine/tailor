@@ -12,7 +12,8 @@
       <activity-discussion
         v-show="selectedTab === 'comments'"
         @change="comments => commentCount = comments.length"
-        :activity="selectedActivity" />
+        :activity="selectedActivity"
+        :is-visible="selectedTab === 'comments'" />
       <element-sidebar
         v-if="selectedTab === 'element'"
         :key="getElementId(selectedElement)"
@@ -51,6 +52,7 @@ import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
 import { getElementMetadata } from 'shared/activities';
+import { mapState } from 'vuex';
 
 export default {
   name: 'editor-sidebar',
@@ -63,6 +65,7 @@ export default {
   data: () => ({ selectedTab: 'browser', commentCount: 0 }),
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
+    ...mapState({ seenByActivity: state => state.seenByActivity }),
     tabs: vm => ([{
       name: 'browser',
       label: 'Browse',
