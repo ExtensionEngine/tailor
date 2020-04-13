@@ -38,7 +38,6 @@ export default new Vuex.Store({
   getters: {
     ...mapGetters('repositories', ['repositories', 'repositoryQueryParams']),
     ...mapGetters('activities', ['activities']),
-    ...mapGetters('elements', ['elements']),
     ...mapGetters('revisions', ['revisions', 'revisionQueryParams']),
     ...mapGetters('comments', ['comments'])
   },
