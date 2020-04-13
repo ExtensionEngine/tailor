@@ -3,7 +3,7 @@ import * as getters from './getters';
 import * as mutations from './mutations';
 import activities from './activities';
 import comments from './comments';
-import elements from './elements';
+import contentElements from './content-elements';
 import revisions from './revisions';
 
 const state = {
@@ -22,7 +22,7 @@ export default {
   modules: {
     activities,
     comments,
-    elements,
+    contentElements,
     revisions
   }
 };

@@ -57,7 +57,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repository/elements', {
+    ...mapActions('repository/contentElements', {
       reorderElements: 'reorder',
       insertElement: 'insert',
       addElement: 'save'

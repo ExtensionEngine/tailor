@@ -26,12 +26,12 @@ export default {
     dragged: { type: Boolean, default: false }
   },
   methods: {
-    ...mapActions('repository/elements', {
+    ...mapActions('repository/contentElements', {
       saveElement: 'save',
       updateElement: 'update',
       removeElement: 'remove'
     }),
-    ...mapMutations('repository/elements', { addElement: 'add' }),
+    ...mapMutations('repository/contentElements', { addElement: 'add' }),
     add(element) {
       this.addElement({ ...this.element, ...cloneDeep(element) });
     },

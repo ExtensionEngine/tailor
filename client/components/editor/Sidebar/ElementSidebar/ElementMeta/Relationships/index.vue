@@ -19,7 +19,7 @@ export default {
     relationships: { type: Array, default: () => [] }
   },
   methods: {
-    ...mapActions('repository/elements', ['update']),
+    ...mapActions('repository/contentElements', ['update']),
     async save(key, val) {
       const element = {
         ...this.element,

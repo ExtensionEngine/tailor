@@ -33,7 +33,7 @@ import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
 const CE_FOCUS_EVENT = 'element:focus';
-const CE_MODULE = 'repository/elements';
+const CE_MODULE = 'repository/contentElements';
 const ELEMENT_MUTATIONS = [
   `${CE_MODULE}/save`, `${CE_MODULE}/add`, `${CE_MODULE}/update`
 ];
@@ -55,7 +55,7 @@ export default {
     containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },
   methods: {
-    ...mapActions('repository/elements', { getContentElements: 'fetch' }),
+    ...mapActions('repository/contentElements', { getContentElements: 'fetch' }),
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
     },

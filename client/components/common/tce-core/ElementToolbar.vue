@@ -57,7 +57,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repository/elements', {
+    ...mapActions('repository/contentElements', {
       saveElement: 'save',
       removeElement: 'remove'
     }),
