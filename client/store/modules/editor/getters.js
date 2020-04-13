@@ -9,9 +9,8 @@ export const activity = (_state, _getters, { route, repository }) => {
   return find(repository.activities.items, { id });
 };
 
-export const contentContainers = (_state, getters, { repository }) => {
+export const contentContainers = (_state, { activity }, { repository }) => {
   const { items: activities } = repository.activities;
-  const { activity } = getters;
   if (!activity) return {};
   const containers = getSupportedContainers(activity.type);
   return reduce(containers, (acc, { type }) => {

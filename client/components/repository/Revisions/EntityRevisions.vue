@@ -30,7 +30,9 @@ import pick from 'lodash/pick';
 import Promise from 'bluebird';
 import revisionApi from '@/api/revision';
 
-const WITHOUT_STATICS = ['HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK'];
+const WITHOUT_STATICS = [
+  'JODIT_HTML', 'BRIGHTCOVE_VIDEO', 'EMBED', 'BREAK', 'HTML'
+];
 
 export default {
   name: 'entity-revisions',

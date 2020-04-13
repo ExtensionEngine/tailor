@@ -23,7 +23,10 @@
       </v-list>
     </v-menu>
     <div class="publish-status">
-      {{ isPublishing ? publishStatus.message : publishedAtMessage }}
+      <publishing-badge :activity="activity" />
+      <span class="pl-1">
+        {{ isPublishing ? publishStatus.message : publishedAtMessage }}
+      </span>
     </div>
   </span>
 </template>
@@ -33,6 +36,7 @@ import fecha from 'fecha';
 import { getDescendants } from 'utils/activity';
 import { getLevel } from 'shared/activities';
 import { mapActions } from 'vuex';
+import PublishingBadge from './Badge';
 import publishMixin from 'components/common/mixins/publish';
 
 export default {
@@ -53,12 +57,15 @@ export default {
       return [...getDescendants(outlineActivities, activity), activity];
     }
   },
-  methods: mapActions('repository/activities', { publishActivity: 'publish' })
+  methods: mapActions('repository/activities', { publishActivity: 'publish' }),
+  components: { PublishingBadge }
 };
 </script>
 
 <style lang="scss" scoped>
 .publish-status {
-  padding: 1.125rem 0.375rem 0 0.375rem;
+  display: flex;
+  align-items: center;
+  padding: 1.125rem 0.375rem 0 0.25rem;
 }
 </style>

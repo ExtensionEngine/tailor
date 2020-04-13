@@ -1,10 +1,13 @@
 'use strict';
 
+const {
+  getOutlineLevels,
+  isOutlineActivity
+} = require('../../config/shared/activities');
 const { Activity } = require('../shared/database');
 const { fetchActivityContent } = require('../shared/publishing/helpers');
 const find = require('lodash/find');
 const get = require('lodash/get');
-const { getOutlineLevels } = require('../../config/shared/activities');
 const pick = require('lodash/pick');
 const { previewUrl } = require('../../config/server');
 const publishingService = require('../shared/publishing/publishing.service');
@@ -23,8 +26,8 @@ function create({ user, repository, body }, res) {
     data: { ...get(outlineConfig, 'defaultMeta', {}), ...body.data },
     repositoryId: repository.id
   };
-  const opts = { context: { userId: user.id } };
-  return Activity.create(data, opts)
+  const context = { userId: user.id, repository };
+  return Activity.create(data, { context })
     .then(data => res.json({ data }));
 }
 
@@ -32,23 +35,29 @@ function show({ activity }, res) {
   return res.json({ data: activity });
 }
 
-function patch({ user, activity, body }, res) {
-  return activity.update(body, { context: { userId: user.id } })
+function patch({ repository, user, activity, body }, res) {
+  const context = { userId: user.id, repository };
+  return activity.update(body, { context })
     .then(data => res.json({ data }));
 }
 
 function remove({ user, repository, activity }, res) {
-  const options = { recursive: true, soft: true, context: { userId: user.id } };
+  const context = { userId: user.id, repository };
+  const options = { recursive: true, soft: true, context };
   const unpublish = activity.publishedAt
     ? publishingService.unpublishActivity(repository, activity)
     : Promise.resolve();
   return unpublish
-    .then(() => activity.remove(options))
-    .then(activity => res.json({ data: pick(activity, ['id']) }));
+    .then(async () => {
+      const deleted = await activity.remove(options);
+      await updatePublishingStatus(repository, activity);
+      return res.json({ data: pick(deleted, ['id']) });
+    });
 }
 
-function reorder({ activity, body }, res) {
-  return activity.reorder(body.position)
+function reorder({ activity, body, repository, user }, res) {
+  const context = { userId: user.id, repository };
+  return activity.reorder(body.position, context)
     .then(data => res.json({ data }));
 }
 
@@ -79,6 +88,11 @@ function getPreviewUrl({ activity }, res) {
     .then(({ data: { url } }) => {
       return res.json({ location: `${new URL(url, previewUrl)}` });
     });
+}
+
+function updatePublishingStatus(repository, activity) {
+  if (!isOutlineActivity(activity.type)) return Promise.resolve();
+  return publishingService.updatePublishingStatus(repository);
 }
 
 module.exports = {

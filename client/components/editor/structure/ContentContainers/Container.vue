@@ -4,16 +4,16 @@
       <v-btn
         @click="$emit('delete')"
         color="error"
-        outlined
+        text
         class="pull-right">
         Delete {{ name }}
       </v-btn>
     </div>
     <v-alert
       :value="!contentElements.length"
-      color="primary"
-      icon="mdi-information-variant"
-      outlined>
+      color="primary darken-1"
+      outlined
+      class="my-5 mx-3">
       Click the button below to create content.
     </v-alert>
     <element-list
@@ -84,7 +84,7 @@ export default {
 <style lang="scss" scoped>
 .actions {
   width: 100%;
-  min-height: 36px;
-  margin-bottom: 25px;
+  min-height: 2.25rem;
+  margin-bottom: 0.5rem;
 }
 </style>

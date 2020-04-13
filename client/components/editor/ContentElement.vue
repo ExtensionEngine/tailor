@@ -2,6 +2,7 @@
   <contained-content
     @add="add"
     @save="save"
+    @save:meta="meta => updateElement({ _cid: element._cid, meta })"
     @delete="remove"
     v-bind="$attrs"
     :element="element"
@@ -27,6 +28,7 @@ export default {
   methods: {
     ...mapActions('repository/elements', {
       saveElement: 'save',
+      updateElement: 'update',
       removeElement: 'remove'
     }),
     ...mapMutations('repository/elements', { addElement: 'add' }),

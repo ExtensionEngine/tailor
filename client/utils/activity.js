@@ -1,8 +1,17 @@
+import { getLevel, getSupportedContainers } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import { getLevel } from 'shared/activities';
+import reduce from 'lodash/reduce';
 import sortBy from 'lodash/sortBy';
+
+export function isChanged(activity) {
+  return new Date(activity.modifiedAt) > new Date(activity.publishedAt);
+}
+
+export function getLabel(activity) {
+  return getLevel(activity.type).label;
+}
 
 export function getParent(activities, activity) {
   const id = get(activity, 'parentId', null);
@@ -18,6 +27,13 @@ export function getOutlineChildren(activities, parentId) {
   if (!parentId || !children.length) return children;
   const types = getLevel(find(activities, { id: parentId }).type).subLevels;
   return filter(children, it => types.includes(it.type));
+}
+
+export function getContentContainers(activities, activity) {
+  const containers = getSupportedContainers(activity.type);
+  return reduce(containers, (acc, { type }) => {
+    return acc.concat(filter(activities, { parentId: activity.id, type }));
+  }, []);
 }
 
 export function getDescendants(activities, activity) {
@@ -37,4 +53,14 @@ export function getAncestors(activities, activity) {
 
 export function isSameLevel(activityX, activityY) {
   return getLevel(activityX.type).level === getLevel(activityY.type).level;
+}
+
+export function toTreeFormat(activities, targetLevels, parentId = null, level = 1) {
+  return getOutlineChildren(activities, parentId).map(activity => ({
+    ...activity,
+    name: activity.data.name,
+    level,
+    selectable: !!targetLevels.find(it => it.type === activity.type),
+    children: toTreeFormat(activities, targetLevels, activity.id, level + 1)
+  }));
 }

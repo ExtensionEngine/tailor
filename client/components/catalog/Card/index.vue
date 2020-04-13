@@ -3,14 +3,27 @@
     <div @click="navigateTo()" class="card-body blue-grey darken-4">
       <v-chip :color="repository.data.color" x-small class="ml-4 px-1" />
       <span class="schema-name">{{ schema }}</span>
-      <v-btn
-        v-if="repository.hasAdminAccess"
-        @click.stop="navigateTo('repository-info')"
-        color="blue-grey darken-1"
-        icon small
-        class="mr-2 float-right">
-        <v-icon>mdi-settings</v-icon>
-      </v-btn>
+      <div class="controls float-right">
+        <v-tooltip open-delay="100" top>
+          <template v-slot:activator="{ on }">
+            <span v-on="on">
+              <v-badge
+                :color="hasUnpublishedChanges ? 'orange' : 'green'"
+                inline dot
+                class="pa-1" />
+            </span>
+          </template>
+          {{ publishingInfo }}
+        </v-tooltip>
+        <v-btn
+          v-if="repository.hasAdminAccess"
+          @click.stop="navigateTo('repository-info')"
+          color="blue-grey darken-1"
+          icon small
+          class="mr-2">
+          <v-icon>mdi-settings</v-icon>
+        </v-btn>
+      </div>
       <v-card-title class="grey--text text--lighten-3 text-break pt-2">
         {{ name | truncate(70) }}
       </v-card-title>
@@ -54,6 +67,10 @@ import { getSchema } from 'shared/activities';
 import { mapActions } from 'vuex';
 import Tags from './Tags';
 
+const getPublishingInfo = hasChanges => hasChanges
+  ? 'Has unpublished changes.'
+  : 'Published.';
+
 export default {
   props: {
     repository: { type: Object, required: true }
@@ -63,7 +80,9 @@ export default {
     description: ({ repository }) => repository.description,
     schema: ({ repository }) => getSchema(repository.schema).name,
     lastActivity: ({ repository }) => first(repository.revisions),
-    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false)
+    hasUnpublishedChanges: ({ repository }) => repository.hasUnpublishedChanges,
+    isPinned: ({ repository }) => get(repository, 'repositoryUser.pinned', false),
+    publishingInfo: vm => getPublishingInfo(vm.hasUnpublishedChanges)
   },
   methods: {
     ...mapActions('repositories', ['pin']),
@@ -106,6 +125,11 @@ export default {
     font-weight: 500;
     letter-spacing: 1px;
     text-transform: uppercase;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
   }
 
   .v-avatar {

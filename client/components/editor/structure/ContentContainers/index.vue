@@ -128,27 +128,27 @@ export default {
 
 <style lang="scss" scoped>
 .content-containers {
-  margin: 70px 0;
+  margin: 4.375rem 0;
 
   > .v-alert {
-    margin: 30px 0;
+    margin: 1.875rem 0;
     color: #555;
   }
 }
 
 h2 {
-  margin: 50px 0 20px;
+  margin: 3.125rem 0 1.25rem;
   padding: 0;
   color: #444;
-  font-size: 18px;
+  font-size: 1.125rem;
   text-align: left;
 }
 
 .content-container {
   width: 100%;
-  min-height: 245px;
-  margin: 25px 0;
-  padding: 20px 40px;
+  min-height: 15.3125rem;
+  margin: 1.5rem 0;
+  padding: 0.625rem;
   background-color: #fff;
 }
 </style>

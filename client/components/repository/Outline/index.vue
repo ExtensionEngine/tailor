@@ -1,10 +1,10 @@
 <template>
   <div class="structure-page">
     <v-progress-circular v-if="showLoader" color="primary" indeterminate />
-    <div v-else :class="{ 'pt-11': isFlat }" class="structure-container">
+    <div v-else class="structure-container">
       <div ref="structure" class="structure">
         <structure-toolbar
-          v-if="!!rootActivities.length"
+          v-if="hasActivities"
           @search="search = $event"
           :search="search"
           :is-flat="isFlat"
@@ -66,6 +66,7 @@ export default {
   data: () => ({ search: '' }),
   computed: {
     ...mapGetters('repository', ['structure', 'outlineActivities']),
+    hasActivities: vm => !!vm.rootActivities.length,
     isFlat() {
       const types = map(filter(this.structure, { level: 2 }), 'type');
       if (!types.length) return false;

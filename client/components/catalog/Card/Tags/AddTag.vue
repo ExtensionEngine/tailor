@@ -25,9 +25,10 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import api from '@/api/tag';
 import differenceBy from 'lodash/differenceBy';
 import map from 'lodash/map';
+import { mapActions } from 'vuex';
 import TailorDialog from '@/components/common/TailorDialog';
 import { withValidation } from 'utils/validation';
 
@@ -37,9 +38,8 @@ export default {
   props: {
     repository: { type: Object, required: true }
   },
-  data: () => ({ tagInput: '' }),
+  data: () => ({ tagInput: '', tags: [] }),
   computed: {
-    ...mapState('repositories', ['tags']),
     assignedTags: vm => vm.repository.tags,
     availableTags: vm => map(differenceBy(vm.tags, vm.assignedTags, 'id'), 'name')
   },
@@ -58,6 +58,9 @@ export default {
         this.hide();
       });
     }
+  },
+  created() {
+    api.fetch().then(tags => (this.tags = tags));
   },
   components: { TailorDialog }
 };

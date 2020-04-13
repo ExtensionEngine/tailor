@@ -4,6 +4,7 @@ const {
   publishActivity,
   publishRepositoryDetails,
   unpublishActivity,
+  updatePublishingStatus,
   updateRepositoryCatalog
 } = require('./helpers');
 const PromiseQueue = require('promise-queue');
@@ -27,6 +28,10 @@ class PublishingService {
 
   updateRepositoryCatalog(repository) {
     return this.queue.add(() => updateRepositoryCatalog(repository));
+  }
+
+  updatePublishingStatus(repository, activity) {
+    return this.queue.add(() => updatePublishingStatus(repository, activity));
   }
 }
 

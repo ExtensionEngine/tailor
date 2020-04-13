@@ -3,7 +3,7 @@
 const CONTENT_CONTAINERS = [{
   type: 'INTRO',
   label: 'Introduction',
-  types: ['HTML', 'IMAGE', 'VIDEO'],
+  types: ['JODIT_HTML', 'IMAGE', 'VIDEO', 'HTML'],
   displayHeading: true
 }, {
   type: 'PAGE',
@@ -91,7 +91,7 @@ const SCHEMAS = [{
     label: 'Assessments',
     publishedAs: 'assessments'
   }],
-  tesMeta: [{
+  elementMeta: [{
     type: 'ASSESSMENT',
     label: 'Assessment',
     meta: [{
