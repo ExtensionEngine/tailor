@@ -1,56 +1,50 @@
 <template>
-  <div class="form-group">
-    <span class="form-label">Answers</span>
-    <span
-      v-if="isEditing"
+  <div class="numerical-response">
+    <span class="title">Answers</span>
+    <v-btn
       @click="addAnswer"
-      class="btn-add-answer btn btn-link mdi mdi-plus pull-right">
-    </span>
-    <ul>
-      <li
-        v-for="(answer, index) in correct"
-        :key="index"
-        :class="{ 'has-error': isValidAnswer(index) }"
-        class="answer row">
-        <div class="col-xs-3">
-          <input
-            @input="updateAnswer('prefixes', $event.target.value, index)"
-            :disabled="!isEditing"
-            :value="prefixes[index]"
-            type="text"
-            placeholder="Prefix..."
-            class="form-control">
-        </div>
-        <div :class="`col-xs-${ correct.length > 1 ? 5 : 6 }`">
-          <input
-            @input="updateAnswer('correct', $event.target.value, index)"
-            :disabled="!isEditing"
-            :value="correct[index]"
-            type="text"
-            placeholder="Correct value..."
-            class="form-control">
-        </div>
-        <div class="col-xs-3">
-          <input
-            @input="updateAnswer('suffixes', $event.target.value, index)"
-            :disabled="!isEditing"
-            :value="suffixes[index]"
-            type="text"
-            placeholder="Suffix..."
-            class="form-control">
-        </div>
-        <div
+      :disabled="disabled"
+      small icon tile class="float-right">
+      <v-icon small>mdi-plus</v-icon>
+    </v-btn>
+    <v-row v-for="(answer, idx) in correct" :key="idx">
+      <v-col cols="3">
+        <v-text-field
+          @input="updateAnswer('prefixes', $event, idx)"
+          :disabled="disabled"
+          :value="prefixes[idx]"
+          placeholder="Prefix..."
+          hide-details />
+      </v-col>
+      <v-col :cols="correct.length > 1 ? 5 : 6">
+        <v-text-field
+          @input="updateAnswer('correct', $event, idx)"
+          :disabled="disabled"
+          :value="correct[idx]"
+          :error="answerError(idx)"
+          placeholder="Correct value..."
+          hide-details />
+      </v-col>
+      <v-col cols="3">
+        <v-text-field
+          @input="updateAnswer('suffixes', $event, idx)"
+          :disabled="disabled"
+          :value="suffixes[idx]"
+          placeholder="Suffix..."
+          hide-details />
+      </v-col>
+      <v-col cols="1" class="controls">
+        <v-btn
           v-if="isEditing && correct.length > 1"
-          class="col-xs-1">
-          <span
-            @click="removeAnswer(index)"
-            class="btn-remove mdi mdi-close">
-          </span>
-        </div>
-      </li>
-    </ul>
-    <div :class="{ 'has-error': !isValid }">
-      <span class="help-block">
+          @click="removeAnswer(idx)"
+          :disabled="disabled"
+          small icon tile>
+          <v-icon small>mdi-close</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+    <div v-if="correctError">
+      <span>
         Only numerical input allowed, if decimal number is needed please
         use . to separate numbers (e.g. '3.14').
       </span>
@@ -61,13 +55,15 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import { defaults } from 'utils/assessment';
-import find from 'lodash/find';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import last from 'lodash/last';
 import pullAt from 'lodash/pullAt';
+import some from 'lodash/some';
 import startsWith from 'lodash/startsWith';
 import toNumber from 'lodash/toNumber';
+
+const startsWithCorrect = it => startsWith(it, 'correct');
 
 export default {
   props: {
@@ -76,23 +72,13 @@ export default {
     isEditing: { type: Boolean, default: false }
   },
   computed: {
-    isValid() {
-      return !find(this.errors, err => startsWith(err, 'correct'));
-    },
-    correct() {
-      return get(this.assessment, 'correct', []);
-    },
-    prefixes() {
-      return get(this.assessment, 'prefixes', []);
-    },
-    suffixes() {
-      return get(this.assessment, 'suffixes', []);
-    }
+    disabled: vm => !vm.isEditing,
+    correct: vm => get(vm.assessment, 'correct', []),
+    prefixes: vm => get(vm.assessment, 'prefixes', []),
+    suffixes: vm => get(vm.assessment, 'suffixes', []),
+    correctError: vm => some(vm.errors, startsWithCorrect)
   },
   methods: {
-    isValidAnswer(index) {
-      return includes(this.errors, `correct[${index}]`);
-    },
     addAnswer() {
       const { correct, prefixes, suffixes } = cloneDeep(this.assessment);
       prefixes.push('');
@@ -117,58 +103,31 @@ export default {
       pullAt(correct, index);
       this.update({ prefixes, suffixes, correct });
     },
+    answerError(index) {
+      return includes(this.errors, `correct[${index}]`);
+    },
     update(data) {
-      this.$emit('update', data, true /* validate */);
+      this.$emit('update', data, true);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.form-group {
+.numerical-response {
   width: 100%;
-  margin: 0 auto;
-  padding: 25px 20px 15px;
+  padding: 1.5rem 1.25rem 1rem;
   text-align: left;
   overflow: hidden;
-}
 
-.form-label {
-  display: inline-block;
-  padding: 5px;
-  font-size: 20px;
-}
-
-.btn-add-answer {
-  padding: 4px 10px;
-  font-size: 20px;
-  border-radius: 2px;
-}
-
-ul {
-  padding: 0;
-  list-style: none;
-}
-
-.answer {
-  margin: 20px 0;
-  font-size: 16px;
-
-  .btn-remove {
-    display: inline-block;
-    height: 34px;
-    color: #888;
-    line-height: 34px;
-    cursor: pointer;
-
-    &:hover {
-      color: darken(#888, 20%);
-    }
+  .title {
+    font-weight: 400;
   }
-}
 
-input.form-control {
-  padding-left: 10px;
+  .controls {
+    display: flex;
+    align-items: flex-end;
+  }
 }
 
 .help-block {
