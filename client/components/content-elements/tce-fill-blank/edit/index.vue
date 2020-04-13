@@ -1,35 +1,41 @@
 <template>
-  <div v-if="hasAnswers" :class="{ disabled }">
-    <h5>Answers</h5>
+  <div v-if="hasAnswers" class="fill-blank">
+    <span class="title">Answers</span>
     <draggable @update="update" :list="answerGroups" v-bind="dragOptions">
-      <div v-for="(answers, i) in answerGroups" :key="i" class="answer-group">
+      <div v-for="(answers, i) in answerGroups" :key="i" class="mt-2">
         <span class="drag-handle">
           <span class="mdi mdi-drag-vertical"></span>
         </span>
-        <span class="label">{{ i + 1 }}</span>
-        <span
+        <v-chip label small>{{ i + 1 }}</v-chip>
+        <v-btn
           @click="addAnswer(i)"
-          class="mdi mdi-plus btn btn-link pull-right">
-        </span>
-        <span
+          :disabled="disabled"
+          small icon tile class="float-right">
+          <v-icon small>mdi-plus</v-icon>
+        </v-btn>
+        <v-btn
           v-if="hasExtraAnswers"
           @click="removeAnswerGroup(i)"
-          class="mdi mdi-delete btn btn-link pull-right">
-        </span>
-        <ul>
-          <li
-            v-for="(answer, j) in answers"
-            :key="`${i}.${j}`"
-            :class="errorClass(i, j)">
-            <input
-              v-model="answers[j]"
-              :disabled="disabled"
-              type="text"
-              class="form-control"
-              placeholder="Answer...">
-            <span @click="removeAnswer(i, j)" class="btn-remove mdi mdi-close"></span>
-          </li>
-        </ul>
+          :disabled="disabled"
+          small icon tile class="float-right">
+          <v-icon small>mdi-delete</v-icon>
+        </v-btn>
+        <!-- todo: fix -->
+        <v-text-field
+          v-for="(answer, j) in answers"
+          :key="`${i}.${j}`"
+          v-model="answers[j]"
+          :disabled="disabled"
+          placeholder="Answer...">
+          <template slot="append">
+            <v-btn
+              v-if="answers.length > 1"
+              @click="removeAnswer(i, j)"
+              small icon tile class="remove">
+              <v-icon small>mdi-close</v-icon>
+            </v-btn>
+          </template>
+        </v-text-field>
       </div>
     </draggable>
   </div>
@@ -62,27 +68,17 @@ export default {
     isEditing: { type: Boolean, default: false }
   },
   computed: {
-    question() {
-      return this.assessment.question;
-    },
-    answerGroups() {
-      return this.assessment.correct;
-    },
-    hasAnswers() {
-      return get(this.answerGroups, 'length') > 0;
-    },
-    hasExtraAnswers() {
-      return this.answerGroups.length !== this.blanksCount;
-    },
+    disabled: vm => !vm.isEditing,
+    question: vm => vm.assessment.question,
+    answerGroups: vm => vm.assessment.correct,
+    hasAnswers: vm => get(vm.answerGroups, 'length') > 0,
+    hasExtraAnswers: vm => vm.answerGroups.length !== vm.blanksCount,
     blanksCount() {
       const textAssets = getTextAssets(this.question);
       return reduce(textAssets, (count, it) => {
         const content = get(it, 'data.content', '');
         return count + (content.match(PLACEHOLDER) || []).length;
       }, 0);
-    },
-    disabled() {
-      return !this.isEditing;
     },
     dragOptions() {
       return {
@@ -129,6 +125,7 @@ export default {
   },
   watch: {
     isEditing(newVal) {
+      // todo: fix
       if (!newVal) this.answerGroups = this.assessment.answerGroups;
     },
     question: debounce(function (newVal, oldVal) {
@@ -141,16 +138,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h5 {
-  display: block;
-  margin: 30px 0 10px;
-  font-size: 18px;
+.fill-blank {
+  width: 100%;
+  padding: 1.5rem 1.25rem 1rem;
   text-align: left;
-}
+  overflow: hidden;
 
-.answer-group {
-  padding: 10px;
-  text-align: left;
+  .title {
+    font-weight: 400;
+  }
 
   .drag-handle {
     float: left;
@@ -158,44 +154,9 @@ h5 {
 
     .mdi {
       color: #888;
-      font-size: 22px;
-      line-height: 24px;
+      font-size: 1.375rem;
+      line-height: 1.5rem;
     }
   }
-
-  .label {
-    padding: 1px 10px;
-    font-size: 12px;
-    line-height: 24px;
-    border-radius: 1px;
-    background-color: #aaa;
-  }
-}
-
-ul {
-  padding: 0 0 0 10px;
-  list-style: none;
-
-  li {
-    position: relative;
-    margin: 20px 0;
-  }
-
-  .btn-remove {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-    padding: 5px;
-    color: #888;
-    cursor: pointer;
-
-    &:hover {
-      color: darken(#888, 20%);
-    }
-  }
-}
-
-.disabled {
-  pointer-events: none;
 }
 </style>
