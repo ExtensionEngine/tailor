@@ -1,21 +1,21 @@
 <template>
   <div>
-    <v-chip
+    <v-toolbar
       v-if="hasItems"
-      class="ma-2"
-      color="grey darken-1"
-      text-color="white">
-      <v-avatar left>
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-avatar>
-      Carousel
-      <v-avatar right>
-        <v-icon>mdi-arrow-right</v-icon>
-      </v-avatar>
-    </v-chip>
+      height="32"
+      color="grey darken-3"
+      dark
+      class="text-left elevation-5">
+      <span class="subtitle-2 mr-4">Carousel</span>
+      <span class="text-truncate">
+        Use the bottom navigation to switch to the next item
+      </span>
+    </v-toolbar>
     <v-sheet v-if="!hasItems" class="pa-12">
       <v-avatar size="60" color="blue-grey darken-4">
-        <v-icon :size="isFocused ? 38 : 30" color="white">mdi-view-carousel</v-icon>
+        <v-icon :size="isFocused ? 38 : 30" color="white">
+          mdi-view-carousel
+        </v-icon>
       </v-avatar>
       <div class="headline my-4">Carousel component</div>
       <div class="subtitle-1">
@@ -23,23 +23,19 @@
         <template v-else>
           Use toolbar
           <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
-          to add first slide to carousel
+          to add the first slide to the carousel
         </template>
       </div>
     </v-sheet>
-    <v-carousel
-      v-else
-      :show-arrows="false">
-      <v-carousel-item
-        v-for="(item,i) in items"
-        :key="i">
-        <carousel-item
-          @save="saveItem"
-          @delete="deleteItem"
-          :item="item"
-          :embeds="embedsByItem[item.id]"
-          :active-item="activeItem" />
-      </v-carousel-item>
+    <v-carousel v-else :show-arrows="false">
+      <carousel-item
+        v-for="item in items"
+        :key="item.id"
+        @save="saveItem"
+        @delete="deleteItem"
+        :item="item"
+        :embeds="embedsByItem[item.id]"
+        :active-item="activeItem" />
     </v-carousel>
   </div>
 </template>
@@ -48,7 +44,6 @@
 import CarouselItem from './CarouselItem';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
-import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
@@ -62,7 +57,8 @@ export default {
   name: 'tce-carousel',
   inject: ['$elementBus'],
   props: {
-    element: { type: Object, required: true }
+    element: { type: Object, required: true },
+    isFocused: { type: Boolean, required: true }
   },
   data() {
     const indices = getIndices(this.element.data.items || {});
@@ -71,26 +67,15 @@ export default {
     };
   },
   computed: {
-    items() {
-      return this.element.data.items || {};
-    },
-    embeds() {
-      return this.element.data.embeds || {};
-    },
+    height: vm => vm.element.data.height,
+    items: vm => vm.element.data.items || {},
+    hasItems: vm => !isEmpty(vm.items),
+    embeds: vm => vm.element.data.embeds || {},
     embedsByItem() {
       return reduce(this.items, (acc, item) => {
         acc[item.id] = pick(this.embeds, Object.keys(item.body));
         return acc;
       }, {});
-    },
-    hasItems() {
-      return !isEmpty(this.items);
-    },
-    height() {
-      return this.element.data.height;
-    },
-    isFocused() {
-      return get(this.$attrs, 'is-focused', false);
     }
   },
   methods: {

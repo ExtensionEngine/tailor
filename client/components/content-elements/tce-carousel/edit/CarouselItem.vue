@@ -1,13 +1,18 @@
 <template>
-  <div>
-    <div v-if="!hasElements" class="well">
-      Click the button below to Add your first content element.
-    </div>
+  <v-carousel-item class="blue-grey lighten-5">
+    <v-alert
+      v-if="!hasElements"
+      color="blue-grey darken-2"
+      icon="mdi-information-variant"
+      text prominent
+      class="ma-6">
+      Click the button below to add content element.
+    </v-alert>
     <embedded-container
       @save="({ embeds }) => save(item, embeds)"
       @delete="deleteEmbed($event)"
       :container="{ embeds }" />
-  </div>
+  </v-carousel-item>
 </template>
 
 <script>
@@ -24,12 +29,8 @@ export default {
     activeItem: { type: Number, default: null }
   },
   computed: {
-    isActive() {
-      return this.item.id === this.activeItem;
-    },
-    hasElements() {
-      return !isEmpty(this.embeds);
-    }
+    isActive: vm => vm.item.id === vm.activeItem,
+    hasElements: vm => !isEmpty(vm.embeds)
   },
   methods: {
     save(item, embeds = {}) {
@@ -50,33 +51,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.carousel-item {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: inherit;
-  opacity: 0;
-  z-index: 1;
-  overflow-y: auto;
-  transition: opacity 300ms cubic-bezier(0.165, 0.84, 0.44, 1);
-
-  .mdi {
-    color: #707070;
-    font-size: 22px;
-
-    &:hover {
-      color: #444;
-      cursor: pointer;
-    }
-  }
-}
-
-.active {
-  opacity: 1;
-  z-index: 2;
-}
-
 .disabled .add-element {
   display: none;
 }
