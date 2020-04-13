@@ -18,10 +18,3 @@ export const contentContainers = (_state, { activity }, { repository }) => {
     return acc;
   }, {});
 };
-
-export const assessments = (_state, getters, rootState) => {
-  const { items: elements } = rootState.repository.elements;
-  const { activity } = getters;
-  if (!activity) return [];
-  return filter(elements, { activityId: activity.id, type: 'ASSESSMENT' });
-};
