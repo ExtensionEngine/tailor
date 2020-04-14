@@ -32,6 +32,7 @@
     <v-btn
       v-if="hasItems || isFocused"
       @click="add"
+      :class="{ 'mt-0': !hasItems && isFocused }"
       color="blue-grey darken-3"
       text
       class="my-6">
