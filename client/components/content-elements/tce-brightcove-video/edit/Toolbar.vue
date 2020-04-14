@@ -1,5 +1,8 @@
 <template>
-  <v-toolbar height="72" class="tce-brightcove-toolbar">
+  <v-toolbar
+    height="72"
+    color="transparent"
+    class="tce-brightcove-toolbar elevation-0">
     <v-toolbar-title>Brightcove Video</v-toolbar-title>
     <v-toolbar-items class="mx-auto">
       <v-text-field

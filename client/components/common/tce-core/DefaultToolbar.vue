@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar height="72">
+  <v-toolbar height="72" color="grey lighten-5" class="elevation-0">
     <v-toolbar-title>{{ label }}</v-toolbar-title>
   </v-toolbar>
 </template>

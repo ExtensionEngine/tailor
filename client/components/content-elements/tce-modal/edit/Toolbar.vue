@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar height="72" class="tce-modal-toolbar">
+  <v-toolbar height="72" color="transparent" class="tce-modal-toolbar">
     <v-toolbar-title>Modal component</v-toolbar-title>
     <v-toolbar-items class="mx-auto">
       <v-text-field
