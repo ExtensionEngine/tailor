@@ -1,67 +1,42 @@
 <template>
-  <div :class="{ disabled: !isEditing }">
-    <div class="row">
-      <div
-        v-for="(groupName, groupKey, index) in groups"
+  <div :class="['drag-drop', { disabled }]">
+    <v-row>
+      <v-col
+        v-for="(groupName, groupKey) in groups"
         :key="groupKey"
-        :class="{ clear: index % 2 === 0 }"
-        class="col-md-6 group">
-        <div :class="{ flip: isFocused(groupKey) }" class="drop-container">
-          <div @click="focus(groupKey)" class="group-view front center">
-            <span :class="hasError(`groups${groupKey}`)">
-              {{ groupName || (isEditing ? 'Click to edit group name' : 'Group') }}
-            </span>
-            <span
-              v-show="!minGroups(groupKey) && isEditing"
-              @click.stop="removeGroup(groupKey)"
-              class="destroy mdi mdi-close">
-            </span>
-          </div>
-          <input
-            :ref="`group${groupKey}`"
-            v-focus="{ groupKey }"
-            @change="updateGroupName(groupKey)"
-            @keyup.enter.esc="focus(groupKey)"
-            @blur="isFocused(groupKey) && focus(groupKey)"
-            :value="groupName"
-            class="form-control group-input back"
-            placeholder="Insert text here ...">
-        </div>
-        <ul>
-          <li
-            v-for="(answer, answerKey) in getGroupAnswers(groupKey)"
-            :key="answerKey"
-            :class="{ flip: isFocused(groupKey, answerKey) }"
-            class="answer-container">
-            <div
-              @click="focus(groupKey, answerKey)"
-              class="response-view front center">
-              <span :class="hasError(`answers${answerKey}`)">
-                {{ answer || (isEditing ? 'Click to edit answer' : 'Answer') }}
-              </span>
-              <span
-                v-show="!minAnswers(groupKey) && isEditing"
-                @click.stop="removeAnswer(groupKey, answerKey)"
-                class="destroy mdi mdi-close">
-              </span>
-            </div>
-            <input
-              :ref="`answer${answerKey}`"
-              v-focus="{ groupKey, answerKey }"
-              @change="updateAnswer(answerKey)"
-              @keyup.enter.esc="focus(groupKey, answerKey)"
-              @blur="isFocused(groupKey, answerKey) && focus(groupKey, answerKey)"
-              :value="answer"
-              class="form-control response-input back"
-              placeholder="Insert text here ...">
-          </li>
-        </ul>
-        <span @click="addAnswer(groupKey)" class="add-answer mdi mdi-plus"></span>
-      </div>
-    </div>
-    <button @click="addGroup" class="btn btn-primary add-group">
-      <span class="mdi mdi-plus"></span> Add Group
-    </button>
+        cols="6">
+        <v-text-field
+          @change="updateGroupName(groupKey, $event)"
+          :value="groupName"
+          :error="hasError(`groups${groupKey}`)"
+          placeholder="Group">
+          <template slot="append">
+            <v-btn @click="removeGroup(groupKey)" small icon tile>
+              <v-icon small>mdi-close</v-icon>
+            </v-btn>
+          </template>
+        </v-text-field>
+        <v-text-field
+          v-for="(answer, answerKey) in getGroupAnswers(groupKey)"
+          :key="answerKey"
+          @change="updateAnswer(answerKey, $event)"
+          :value="answer"
+          :error="hasError(`answers${answerKey}`)"
+          placeholder="Answer">
+          <template slot="append">
+            <v-btn @click="removeAnswer(groupKey, answerKey)" small icon tile>
+              <v-icon small>mdi-close</v-icon>
+            </v-btn>
+          </template>
+        </v-text-field>
+        <v-btn @click="addAnswer(groupKey)" :disabled="disabled" small icon>
+          <v-icon small>mdi-plus</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-btn @click="addGroup" :disabled="disabled">
+      <v-icon small>mdi-plus</v-icon> Add Group
+    </v-btn>
   </div>
 </template>
 
@@ -85,29 +60,24 @@ export default {
     };
   },
   computed: {
-    groups() {
-      return this.assessment.groups || {};
-    },
-    answers() {
-      return this.assessment.answers || {};
-    },
-    correct() {
-      return this.assessment.correct || {};
-    }
+    disabled: vm => !vm.isEditing,
+    groups: vm => vm.assessment.groups || {},
+    answers: vm => vm.assessment.answers || {},
+    correct: vm => vm.assessment.correct || {}
   },
   methods: {
     getGroupAnswers(groupKey) {
       const keys = this.correct[groupKey] || [];
       return pick(this.answers, keys);
     },
-    updateGroupName(groupKey) {
+    updateGroupName(groupKey, value) {
       const groups = cloneDeep(this.groups);
-      groups[groupKey] = this.$refs[`group${groupKey}`][0].value;
+      groups[groupKey] = value;
       this.update({ groups }, true);
     },
-    updateAnswer(answerKey) {
+    updateAnswer(answerKey, value) {
       const answers = cloneDeep(this.answers);
-      answers[answerKey] = this.$refs[`answer${answerKey}`][0].value;
+      answers[answerKey] = value;
       this.update({ answers }, true);
     },
     addGroup() {
@@ -161,121 +131,21 @@ export default {
       this.update({ groups, answers, correct });
     },
     hasError(key) {
-      return this.errors.includes(key) ? 'error' : '';
+      return this.errors.includes(key);
     },
     update(data) {
       this.$emit('update', data, true);
-    }
-  },
-  directives: {
-    focus: {
-      update(el, binding, vnode) {
-        const { groupKey, answerKey } = vnode.context.focused;
-        const { groupKey: newGroupKey, answerKey: newAnswerKey } = binding.value;
-        if (groupKey === newGroupKey && answerKey === newAnswerKey) {
-          el.focus();
-        } else {
-          el.blur();
-        }
-      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.group {
-  margin-top: 45px;
-}
-
-.add-group {
-  margin-top: 80px;
-  padding: 5px 20px;
-}
-
-.center {
-  padding: 14px 21px;
-}
-
-.mdi:hover {
-  color: #42b983;
-  cursor: pointer;
-}
-
-.add-answer {
-  font-size: 20px;
-}
-
-.destroy {
-  position: absolute;
-  top: 14px;
-  right: 6px;
-}
-
-.drop-container, .answer-container {
-  transition: 0.5s;
-  transform-style: preserve-3d;
-
-  .front, .back {
-    backface-visibility: hidden;
-  }
-
-  .front {
-    transform: rotateX(0deg);
-  }
-
-  .back {
-    transform: rotateX(180deg);
-  }
-
-  &.flip {
-    transform: rotateX(180deg);
-  }
-}
-
-.group-view {
-  background-color: rgb(217, 217, 217);
-  border: 1px solid rgb(89, 89, 89);
-  word-wrap: break-word;
-}
-
-.response-view {
-  background-color: rgb(238, 238, 238);
-  border: 1px dashed rgb(89, 89, 89);
-  word-wrap: break-word;
-}
-
-.group-input, .response-input {
-  position: absolute;
-  top: 0;
-  height: 100%;
-}
-
-ul {
-  margin: 15px 0;
-  padding: 0;
-  list-style: none;
-
-  li {
-    margin: 10px 0;
-  }
-}
-
-.error {
-  border-bottom: 0;
-  box-shadow: inset 0 -2px 0 #e51c23;
+.drag-drop ::v-deep input {
+  text-align: center;
 }
 
 .disabled {
   pointer-events: none;
-
-  .add-answer, .add-group {
-    visibility: hidden;
-  }
-}
-
-.clear {
-  clear: left;
-  margin-bottom: 10px;
 }
 </style>
