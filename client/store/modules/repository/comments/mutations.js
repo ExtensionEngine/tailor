@@ -1,6 +1,5 @@
 import { fetch, remove, reset, save, setEndpoint } from '@/store/helpers/mutations';
 import find from 'lodash/find';
-import findKey from 'lodash/findKey';
 import pick from 'lodash/pick';
 import Vue from 'vue';
 
@@ -11,12 +10,10 @@ const sseUpdate = (state, comment) => {
   Vue.set(state.items, existing._cid, { ...existing, ...data });
 };
 
-const setSeenComment = (state, activityUid) => {
-  const key = findKey(state.items);
-  const item = state.items[key];
+const setSeenComment = (state, { recentComment, activityUid }) => {
   state.seenByActivity = {
     ...state.seenByActivity,
-    [activityUid]: new Date(item.createdAt).getTime()
+    [activityUid]: recentComment
   };
 };
 

@@ -43,6 +43,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import DiscussionThread from './Thread';
+import get from 'lodash/get';
 import orderBy from 'lodash/orderBy';
 import TextEditor from './TextEditor';
 
@@ -62,6 +63,7 @@ export default {
     ...mapState({ user: state => state.auth.user }),
     ...mapGetters('repository/comments', ['getActivityComments']),
     comments: vm => vm.getActivityComments(vm.activity.id),
+    recentComment: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
     commentsShownLimit: vm => 5,
@@ -93,7 +95,11 @@ export default {
     },
     isVisible(val) {
       if (!val) return;
-      setTimeout(() => this.setSeenComment(this.activity.uid), 1000);
+      const latestComment = {
+        activityUid: this.activity.uid,
+        recentComment: this.recentComment
+      };
+      setTimeout(() => this.setSeenComment(latestComment), 1000);
     }
   },
   async created() {
