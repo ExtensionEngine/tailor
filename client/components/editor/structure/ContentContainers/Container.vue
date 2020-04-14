@@ -11,8 +11,9 @@
     </div>
     <v-alert
       :value="!teachingElements.length"
-      color="primary darken-1"
-      outlined
+      color="blue-grey darken-3"
+      icon="mdi-information-variant"
+      text prominent
       class="my-5 mx-3">
       Click the button below to create content.
     </v-alert>
