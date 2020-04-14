@@ -68,7 +68,7 @@ export default {
     ...mapState({ seenByActivity: state => state.seenByActivity }),
     ...mapGetters('repository/comments', ['getActivityComments', 'getUnseenComments']),
     activityComments: vm => vm.getActivityComments(vm.selectedActivity.id),
-    unseenComments: vm => vm.getUnseenComments(vm.activityComments, vm.selectedActivity.id),
+    unseenComments: vm => vm.getUnseenComments(vm.activityComments, vm.selectedActivity.uid),
     tabs: vm => ([{
       name: 'browser',
       label: 'Browse',

@@ -11,12 +11,12 @@ const sseUpdate = (state, comment) => {
   Vue.set(state.items, existing._cid, { ...existing, ...data });
 };
 
-const setSeenComment = (state, activityId) => {
+const setSeenComment = (state, activityUid) => {
   const key = findKey(state.items);
   const item = state.items[key];
   state.seenByActivity = {
     ...state.seenByActivity,
-    [activityId]: new Date(item.createdAt).getTime()
+    [activityUid]: new Date(item.createdAt).getTime()
   };
 };
 

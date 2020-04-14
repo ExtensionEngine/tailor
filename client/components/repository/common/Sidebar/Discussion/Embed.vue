@@ -93,7 +93,7 @@ export default {
     },
     isVisible(val) {
       if (!val) return;
-      setTimeout(() => this.setSeenComment(this.activity.id), 1000);
+      setTimeout(() => this.setSeenComment(this.activity.uid), 1000);
     }
   },
   async created() {
