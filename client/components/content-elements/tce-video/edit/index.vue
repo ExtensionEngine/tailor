@@ -9,12 +9,11 @@
       active-icon="mdi-arrow-up" />
     <div v-else>
       <div v-if="!isFocused" class="overlay">
-        <div class="message">Double click to preview</div>
+        <div class="message headline secondary--text">Double click to preview</div>
       </div>
-      <div v-if="showError" class="error">
-        <div class="message">
-          <span class="icon mdi mdi-alert"></span>
-          <p>Error loading media!</p>
+      <div v-if="showError" class="overlay">
+        <div class="message headline secondary--text">
+          <v-icon>mdi-alert</v-icon> Error loading media!
         </div>
       </div>
       <div class="player">
@@ -121,36 +120,11 @@ function mimetype({ pathname }) {
   z-index: 3;
   width: 100%;
   height: 100%;
-  background-color: #333;
-  opacity: 0.9;
+  background: rgba(16, 16, 16, 0.85);
 
   .message {
     position: relative;
     top: 45%;
-    color: #d81a60;
-    font-size: 1.375rem;
-  }
-}
-
-.error {
-  position: absolute;
-  z-index: 98;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-}
-
-.error .message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  font-size: 1.125rem;
-  font-weight: 500;
-
-  .icon {
-    font-size: 2.625rem;
   }
 }
 

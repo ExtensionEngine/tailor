@@ -3,7 +3,7 @@
     height="72"
     color="transparent"
     class="tce-video-toolbar elevation-0">
-    <v-toolbar-title>Video component</v-toolbar-title>
+    <v-toolbar-title class="pl-1">Video component</v-toolbar-title>
     <input-asset
       @input="save"
       :url="url"
@@ -42,11 +42,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tce-video-toolbar {
-  position: relative;
-  width: 100%;
-}
-
 .v-toolbar__title {
   min-width: 23.875rem;
   text-align: left;
