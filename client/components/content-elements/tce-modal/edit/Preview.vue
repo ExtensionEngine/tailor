@@ -1,61 +1,45 @@
 <template>
-  <modal :show="visible" class="modal">
-    <div slot="header"></div>
-    <div slot="body">
-      <div class="row">
+  <v-dialog v-model="visible" width="800">
+    <template v-slot:activator="{ on }">
+      <v-btn
+        v-on="on"
+        :disabled="!elements.length"
+        text
+        class="my-3">
+        {{ label }}
+      </v-btn>
+    </template>
+    <v-card>
+      <v-card-text class="pa-8">
         <content-element
           v-for="it in elements"
           :key="it.id"
           :element="it"
-          :is-disabled="true"
-          :frame="false" />
-      </div>
-    </div>
-    <div slot="footer">
-      <button @click="visible = false" class="btn btn-primary" type="button">
-        Close
-      </button>
-    </div>
-  </modal>
+          :frame="false"
+          is-disabled />
+      </v-card-text>
+      <v-card-actions class="py-2 px-6">
+        <v-spacer />
+        <v-btn @click="visible = false" text>Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 import { ContentElement } from 'tce-core';
-import Modal from './Modal';
 
 export default {
   name: 'tce-modal-preview',
   props: {
-    elements: { type: Array, default: () => ([]) }
+    label: { type: String, default: 'Show dialog' },
+    elements: { type: Array, default: () => [] }
   },
   data() {
     return { visible: false };
   },
-  watch: {
-    visible(val) {
-      if (!val) setTimeout(() => this.$emit('close'), 0);
-    }
-  },
-  mounted() {
-    this.visible = true;
-  },
   components: {
-    ContentElement,
-    Modal
+    ContentElement
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.modal ::v-deep .modal-header {
-  display: none;
-}
-
-.modal ::v-deep .modal-body {
-  padding: 0 8px;
-}
-
-.modal.in[backdrop] {
-  background-color: rgba(0,0,0,0.4);
-}
-</style>
