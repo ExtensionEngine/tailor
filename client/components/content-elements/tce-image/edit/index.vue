@@ -85,7 +85,7 @@ export default {
       if (dataUrl && this.$refs.cropper) this.$refs.cropper.replace(dataUrl);
     },
     save(image) {
-      getImageDimensions(image).then(({ width, height }) => {
+      return getImageDimensions(image).then(({ width, height }) => {
         this.$emit('save', { url: image, meta: { width, height } });
       });
     }
@@ -139,10 +139,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.subtitle-1 {
-  font-size: 1.125rem !important;
-}
-
 .hide-cropper ::v-deep .cropper-container {
   display: none;
 }
