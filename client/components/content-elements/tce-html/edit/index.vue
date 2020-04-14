@@ -5,7 +5,8 @@
       :is-focused="isFocused"
       name="Text (deprecated)"
       icon="mdi-text"
-      active-icon="mdi-arrow-up" />
+      active-icon="mdi-arrow-up"
+      class="element-placeholder" />
     <div v-else>
       <quill-editor
         v-if="isFocused"
@@ -104,23 +105,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.text-placeholder {
-  .message {
-    padding: 9px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
-}
-
-.well {
-  margin-bottom: 0;
+::v-deep .element-placeholder {
+  padding: 0.5rem !important;
 }
 </style>
 
@@ -131,7 +117,7 @@ export default {
 }
 
 .ql-editor {
-  min-height: 120px;
+  min-height: 10.5rem;
 
   &.ql-blank::before {
     width: 100%;

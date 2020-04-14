@@ -71,7 +71,8 @@ $icon-size: 18px;
 .tce-html-toolbar {
   display: flex;
   align-items: center;
-  height: 45px;
+  height: 4.5rem;
+  padding: 0 0.5rem;
   text-align: initial;
 }
 
