@@ -6,8 +6,8 @@ export const getActivityComments = state => activityId => {
   return orderBy(activityComments, 'createdAt', 'desc');
 };
 
-export const getUnseenComments = state => activityId => {
+export const getUnseenComments = state => (comments, activityId) => {
   const lastSeen = state.seenByActivity[activityId] || 0;
-  return filter(state.items, it =>
+  return filter(comments, it =>
     new Date(it.createdAt).getTime() > new Date(lastSeen).getTime());
 };

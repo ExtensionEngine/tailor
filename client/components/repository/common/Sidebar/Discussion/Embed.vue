@@ -60,9 +60,8 @@ export default {
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {
     ...mapState({ user: state => state.auth.user }),
-    ...mapGetters('repository/comments', ['getActivityComments', 'getUnseenComments']),
+    ...mapGetters('repository/comments', ['getActivityComments']),
     comments: vm => vm.getActivityComments(vm.activity.id),
-    unseenComments: vm => vm.getUnseenComments(vm.activity.id),
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
     commentsShownLimit: vm => 5,
@@ -94,9 +93,7 @@ export default {
     },
     isVisible(val) {
       if (!val) return;
-      if (this.unseenComments.length) {
-        setTimeout(() => this.setSeenComment(this.activity.id), 1000);
-      }
+      setTimeout(() => this.setSeenComment(this.activity.id), 1000);
     }
   },
   async created() {

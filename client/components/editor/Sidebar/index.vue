@@ -46,13 +46,13 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 import ActivityDiscussion from './Discussion';
 import ActivityNavigation from './Navigation';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
 import { getElementMetadata } from 'shared/activities';
-import { mapState } from 'vuex';
 
 export default {
   name: 'editor-sidebar',
@@ -66,6 +66,9 @@ export default {
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
     ...mapState({ seenByActivity: state => state.seenByActivity }),
+    ...mapGetters('repository/comments', ['getActivityComments', 'getUnseenComments']),
+    activityComments: vm => vm.getActivityComments(vm.selectedActivity.id),
+    unseenComments: vm => vm.getUnseenComments(vm.activityComments, vm.selectedActivity.id),
     tabs: vm => ([{
       name: 'browser',
       label: 'Browse',
@@ -74,7 +77,7 @@ export default {
       name: 'comments',
       label: 'Comments',
       icon: 'forum-outline',
-      badgeData: vm.commentCount
+      badgeData: vm.unseenComments.length
     }, {
       name: 'element',
       label: 'Element',
