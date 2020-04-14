@@ -48,4 +48,8 @@ export default {
   min-width: 23.875rem;
   text-align: left;
 }
+
+.v-text-field {
+  min-width: 22.5rem;
+}
 </style>
