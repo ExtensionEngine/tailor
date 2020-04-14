@@ -1,19 +1,12 @@
 <template>
   <div class="tce-audio">
-    <v-sheet v-if="showPlaceholder" class="py-4 px-12">
-      <v-avatar size="60" color="blue-grey darken-4">
-        <v-icon :size="isFocused ? 38 : 30" dark>mdi-speaker</v-icon>
-      </v-avatar>
-      <div class="headline my-4">Audio component</div>
-      <div class="subtitle-1">
-        <template v-if="!isFocused">Select to edit</template>
-        <template v-else>
-          Use toolbar
-          <v-icon size="24" color="secondary">mdi-transfer-up</v-icon>
-          to upload the audio file
-        </template>
-      </div>
-    </v-sheet>
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      name="Audio"
+      icon="mdi-speaker"
+      active-placeholder="Use toolbar to upload the audio file"
+      active-icon="mdi-arrow-up" />
     <div v-show="!showPlaceholder" class="audio-container">
       <aplayer
         v-if="source"
@@ -33,6 +26,7 @@
 
 <script>
 import Aplayer from 'vue-aplayer';
+import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
 
 export default {
@@ -84,7 +78,7 @@ export default {
       });
     }
   },
-  components: { Aplayer }
+  components: { Aplayer, ElementPlaceholder }
 };
 </script>
 

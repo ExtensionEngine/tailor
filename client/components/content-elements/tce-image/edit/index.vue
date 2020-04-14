@@ -1,19 +1,12 @@
 <template>
   <div class="tce-image">
-    <v-sheet v-if="showPlaceholder" class="pa-12">
-      <v-avatar size="60" color="blue-grey darken-4">
-        <v-icon :size="isFocused ? 38 : 30" color="white">mdi-image-plus</v-icon>
-      </v-avatar>
-      <div class="headline my-4">Image component</div>
-      <div class="subtitle-1">
-        <template v-if="!isFocused">Select to edit</template>
-        <template v-else>
-          Use toolbar
-          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
-          to upload the image
-        </template>
-      </div>
-    </v-sheet>
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      name="Image"
+      icon="mdi-image-plus"
+      active-placeholder="Use toolbar to upload the image"
+      active-icon="mdi-arrow-up" />
     <div v-else :class="{ 'hide-cropper': !showCropper }" class="image-wrapper">
       <cropper
         v-show="showCropper"
@@ -39,6 +32,7 @@
 
 <script>
 import Cropper from './Cropper';
+import { ElementPlaceholder } from 'tce-core';
 import { imgSrcToDataURL } from 'blob-util';
 import isEmpty from 'lodash/isEmpty';
 
@@ -140,7 +134,7 @@ export default {
   beforeDestroy() {
     if (this.$refs.cropper) this.$refs.cropper.destroy();
   },
-  components: { Cropper }
+  components: { Cropper, ElementPlaceholder }
 };
 </script>
 

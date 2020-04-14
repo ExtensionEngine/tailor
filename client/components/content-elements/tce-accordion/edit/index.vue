@@ -12,23 +12,13 @@
     <v-expansion-panels
       multiple tile hover
       class="tce-accordion">
-      <v-sheet v-if="!hasItems" class="pt-4 px-12">
-        <v-avatar size="60" color="blue-grey darken-4">
-          <v-icon :size="isFocused ? 38 : 30" dark>mdi-view-list</v-icon>
-        </v-avatar>
-        <div class="headline my-4">Accordion component</div>
-        <div v-if="isFocused" class="subtitle-1">
-          Click button bellow
-          <v-icon
-            size="24"
-            color="secondary"
-            class="mdi-rotate-180">
-            mdi-transfer-up
-          </v-icon>
-          to create the first item
-        </div>
-        <div v-else class="subtitle-1 pb-4">Select to edit</div>
-      </v-sheet>
+      <element-placeholder
+        v-if="!hasItems"
+        :is-focused="isFocused"
+        name="Accordion"
+        icon="mdi-view-list"
+        active-placeholder="Click the button bellow to create the first item"
+        active-icon="mdi-arrow-down" />
       <template v-else>
         <accordion-item
           v-for="it in items"
@@ -55,6 +45,7 @@
 import AccordionItem from './AccordionItem';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
+import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
@@ -102,6 +93,6 @@ export default {
       this.$emit('save', { items, embeds: omit(embeds, removedEmbeds) });
     }
   },
-  components: { AccordionItem }
+  components: { AccordionItem, ElementPlaceholder }
 };
 </script>

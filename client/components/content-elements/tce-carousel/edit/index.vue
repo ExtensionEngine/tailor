@@ -11,22 +11,13 @@
         Use the bottom navigation to switch to the next item
       </span>
     </v-toolbar>
-    <v-sheet v-if="!hasItems" class="pa-12">
-      <v-avatar size="60" color="blue-grey darken-4">
-        <v-icon :size="isFocused ? 38 : 30" color="white">
-          mdi-view-carousel
-        </v-icon>
-      </v-avatar>
-      <div class="headline my-4">Carousel component</div>
-      <div class="subtitle-1">
-        <template v-if="!isFocused">Select to edit</template>
-        <template v-else>
-          Use toolbar
-          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
-          to add the first slide to the carousel
-        </template>
-      </div>
-    </v-sheet>
+    <element-placeholder
+      v-if="!hasItems"
+      :is-focused="isFocused"
+      name="Carousel"
+      icon="mdi-view-carousel"
+      active-placeholder="Use toolbar to add the first slide to the carousel"
+      active-icon="mdi-arrow-up" />
     <v-carousel v-else :show-arrows="false">
       <carousel-item
         v-for="item in items"
@@ -43,6 +34,7 @@
 <script>
 import CarouselItem from './CarouselItem';
 import cloneDeep from 'lodash/cloneDeep';
+import { ElementPlaceholder } from 'tce-core';
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
@@ -124,6 +116,6 @@ export default {
       this.$emit('save', data);
     });
   },
-  components: { CarouselItem }
+  components: { CarouselItem, ElementPlaceholder }
 };
 </script>

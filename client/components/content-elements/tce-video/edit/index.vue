@@ -1,19 +1,12 @@
 <template>
   <div class="tce-video">
-    <v-sheet v-if="showPlaceholder" class="pa-12">
-      <v-avatar size="60" color="blue-grey darken-4">
-        <v-icon :size="isFocused ? 38 : 30" color="white">mdi-video-image</v-icon>
-      </v-avatar>
-      <div class="headline my-4">Video component</div>
-      <div class="subtitle-1">
-        <template v-if="!isFocused">Select to edit</template>
-        <template v-else>
-          Use toolbar
-          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
-          to upload the video
-        </template>
-      </div>
-    </v-sheet>
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      name="Video"
+      icon="mdi-video-image"
+      active-placeholder="Use toolbar to upload the video"
+      active-icon="mdi-arrow-up" />
     <div v-else>
       <div v-if="!isFocused" class="overlay">
         <div class="message">Double click to preview</div>
@@ -43,6 +36,7 @@
 </template>
 
 <script>
+import { ElementPlaceholder } from 'tce-core';
 import { extname } from 'path';
 import get from 'lodash/get';
 import { PlyrueComponent as Plyrue } from 'plyrue';
@@ -104,7 +98,7 @@ export default {
   mounted() {
     this.$elementBus.on('save', ({ data }) => this.$emit('save', data));
   },
-  components: { Plyrue }
+  components: { ElementPlaceholder, Plyrue }
 };
 
 function isShareLink({ hostname }) {

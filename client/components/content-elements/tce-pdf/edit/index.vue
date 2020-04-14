@@ -1,19 +1,12 @@
 <template>
   <div class="tce-pdf">
-    <v-sheet v-if="showPlaceholder" class="pa-12">
-      <v-avatar size="60" color="blue-grey darken-4">
-        <v-icon :size="isFocused ? 38 : 30" color="white">mdi-file-pdf</v-icon>
-      </v-avatar>
-      <div class="headline my-4">PDF component</div>
-      <div class="subtitle-1">
-        <template v-if="!isFocused">Select to edit</template>
-        <template v-else>
-          Use toolbar
-          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
-          to upload the pdf
-        </template>
-      </div>
-    </v-sheet>
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      name="PDF"
+      icon="mdi-file-pdf"
+      active-placeholder="Use toolbar to upload the pdf"
+      active-icon="mdi-arrow-up" />
     <div v-show="!showPlaceholder">
       <div v-if="!isFocused" class="overlay">
         <div class="message">Click to preview</div>
@@ -47,6 +40,7 @@
 
 <script>
 import CircularProgress from './CircularProgress';
+import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
 import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';
@@ -111,7 +105,7 @@ export default {
   beforeDestroy() {
     this.pdfObject = null;
   },
-  components: { CircularProgress }
+  components: { CircularProgress, ElementPlaceholder }
 };
 </script>
 
