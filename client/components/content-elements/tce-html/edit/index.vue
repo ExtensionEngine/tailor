@@ -111,7 +111,7 @@ export default {
 
 <style lang="scss">
 .ql-container.ql-snow {
-  font-size: 16px;
+  font-size: 1rem;
   border: none;
 }
 
