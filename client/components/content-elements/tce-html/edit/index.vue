@@ -5,7 +5,6 @@
       :is-focused="isFocused"
       name="Text (deprecated)"
       icon="mdi-text"
-      active-icon="mdi-arrow-up"
       class="element-placeholder" />
     <div v-else>
       <quill-editor
