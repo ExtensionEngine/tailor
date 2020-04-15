@@ -1,10 +1,14 @@
 <template>
   <div class="system-settings-container">
-    <v-toolbar height="48" absolute class="heading blue-grey darken-3 elevation-2">
+    <v-toolbar
+      height="48"
+      absolute
+      color="blue-grey darken-3"
+      class="heading elevation-2">
       <v-chip
-        color="secondary lighten-2"
-        small dark
-        class="ml-1 px-9 body-2">
+        color="blue-grey lighten-3"
+        small
+        class="ml-1 px-8 body-2">
         Admin
       </v-chip>
     </v-toolbar>
