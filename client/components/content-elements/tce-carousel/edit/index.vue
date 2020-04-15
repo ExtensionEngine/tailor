@@ -18,15 +18,16 @@
       icon="mdi-view-carousel"
       active-placeholder="Use toolbar to add the first slide to the carousel"
       active-icon="mdi-arrow-up" />
-    <v-carousel v-else :show-arrows="false">
+    <v-carousel
+      v-else
+      v-model="activeItem"
+      :show-arrows="false">
       <carousel-item
         v-for="item in items"
         :key="item.id"
         @save="saveItem"
-        @delete="deleteItem"
         :item="item"
-        :embeds="embedsByItem[item.id]"
-        :active-item="activeItem" />
+        :embeds="embedsByItem[item.id]" />
     </v-carousel>
   </div>
 </template>
@@ -35,7 +36,7 @@
 import CarouselItem from './CarouselItem';
 import cloneDeep from 'lodash/cloneDeep';
 import { ElementPlaceholder } from 'tce-core';
-import find from 'lodash/find';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
@@ -53,9 +54,8 @@ export default {
     isFocused: { type: Boolean, required: true }
   },
   data() {
-    const indices = getIndices(this.element.data.items || {});
     return {
-      activeItem: indices.length ? indices[indices.length - 1] : null
+      activeItem: 0
     };
   },
   computed: {
@@ -79,20 +79,18 @@ export default {
         embeds: Object.assign(cloneDeep(this.embeds), embeds)
       });
     },
-    deleteItem(itemId) {
-      const items = cloneDeep(this.items);
-      const embeds = cloneDeep(this.embeds);
-      const removedEmbeds = Object.keys(items[itemId].body);
+    deleteItem(index) {
+      const indices = getIndices(this.items);
+      const itemId = indices[index];
+      const items = { ...this.items };
+      const embeds = { ...this.embeds };
+      const removedEmbeds = Object.keys(get(items[itemId], 'body', {}));
       delete items[itemId];
       this.$emit('save', { items, embeds: omit(embeds, removedEmbeds) });
-      const indices = getIndices(items);
-      const previousId = indices.length
-        ? find(indices, it => it < itemId) || indices[indices.length - 1]
-        : null;
-      if (previousId) this.activateItem({ id: previousId });
+      this.activateItem(index > 0 ? index - 1 : 0);
     },
-    activateItem(item) {
-      this.activeItem = item.id;
+    activateItem(index) {
+      this.activeItem = index;
     }
   },
   mounted() {
@@ -107,7 +105,7 @@ export default {
       }
       element.data.items[id] = { id, body: {} };
       this.$emit('save', element.data);
-      this.activateItem({ id });
+      this.activateItem(indices.length);
     });
     this.$elementBus.on('remove', () => this.deleteItem(this.activeItem));
     this.$elementBus.on('height', height => {

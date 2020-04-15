@@ -25,11 +25,9 @@ export default {
   name: 'carousel-item',
   props: {
     item: { type: Object, required: true },
-    embeds: { type: Object, default: () => ({}) },
-    activeItem: { type: Number, default: null }
+    embeds: { type: Object, default: () => ({}) }
   },
   computed: {
-    isActive: vm => vm.item.id === vm.activeItem,
     hasElements: vm => !isEmpty(vm.embeds)
   },
   methods: {
@@ -39,8 +37,8 @@ export default {
       this.$emit('save', { item, embeds });
     },
     deleteEmbed(embed) {
-      const embeds = cloneDeep(this.embeds);
-      const item = cloneDeep(this.item);
+      const embeds = { ...this.embeds };
+      const item = { ...this.item };
       delete embeds[embed.id];
       delete item.body[embed.id];
       this.$emit('save', { item, embeds });
