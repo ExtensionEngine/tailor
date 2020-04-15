@@ -4,7 +4,7 @@
       <v-btn
         v-on="on"
         :disabled="!elements.length"
-        text
+        color="blue-grey lighten-4"
         class="my-3">
         {{ label }}
       </v-btn>
