@@ -4,6 +4,7 @@
       <v-text-field
         v-if="isEditingHeader"
         v-model="header"
+        @click.stop
         hide-details filled dense />
       <div v-else class="pl-3">{{ item.header }}</div>
       <div v-if="isEditingHeader" class="actions">
@@ -53,8 +54,11 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import { EmbeddedContainer } from 'tce-core';
+import EventBus from 'EventBus';
 import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
+
+const appChannel = EventBus.channel('app');
 
 export default {
   name: 'accordion-item',
@@ -86,7 +90,11 @@ export default {
       this.$emit('save', { item, embeds });
     },
     deleteItem() {
-      this.$emit('delete', this.item.id);
+      appChannel.emit('showConfirmationModal', {
+        title: 'Delete accordion item',
+        message: 'Are you sure you want to delete selected item?',
+        action: () => this.$emit('delete', this.item.id)
+      });
     },
     deleteEmbed(embed) {
       const embeds = cloneDeep(this.embeds);
