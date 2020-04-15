@@ -1,21 +1,25 @@
 <template>
-  <div :key="id" class="element-toolbar-wrapper white elevation-1">
+  <div
+    :key="id"
+    class="element-toolbar-wrapper grey lighten-5 elevation-3">
     <component
       :is="componentName"
       v-if="componentExists"
       @save="saveElement"
       :element="element"
       :embed="embed" />
-    <default-toolbar v-else />
+    <default-toolbar v-else :label="config.name" />
     <slot name="embed-toolbar"></slot>
     <div class="delete-element">
       <slot name="actions"></slot>
       <v-btn
         v-if="!embed"
         @click="requestDeleteConfirmation"
-        color="blue-grey darken-2"
-        fab dark>
-        <v-icon size="22">mdi-delete</v-icon>
+        color="secondary darken-1"
+        dark fab small
+        absolute right top
+        class="mr-8">
+        <v-icon color="grey lighten-3">mdi-delete</v-icon>
       </v-btn>
     </div>
   </div>
@@ -33,6 +37,7 @@ const appBus = EventBus.channel('app');
 
 export default {
   name: 'element-toolbar-wrapper',
+  inject: ['$teRegistry'],
   mixins: [withValidation()],
   props: {
     element: { type: Object, required: true },
@@ -44,9 +49,8 @@ export default {
     };
   },
   computed: {
-    id() {
-      return getElementId(this.element);
-    },
+    id: vm => getElementId(vm.element),
+    config: vm => vm.$teRegistry.get(vm.element.type),
     componentName() {
       const { type } = this.element;
       if (isQuestion(type)) return;
@@ -90,17 +94,6 @@ export default {
 .element-toolbar-wrapper {
   position: absolute;
   width: 100%;
-  min-height: 45px;
-}
-
-.delete-element {
-  position: absolute;
-  z-index: 999;
-  right: 0;
-  transform: translate(-90%, -55%);
-
-  .v-btn {
-    margin: 4px;
-  }
+  min-height: 3.5rem;
 }
 </style>

@@ -1,11 +1,12 @@
 <template>
   <div class="tce-image">
-    <div v-if="showPlaceholder" class="well image-placeholder">
-      <div class="message">
-        <span class="heading">Image placeholder</span>
-        <span>Click to edit</span>
-      </div>
-    </div>
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      name="Image"
+      icon="mdi-image-plus"
+      active-placeholder="Use toolbar to upload the image"
+      active-icon="mdi-arrow-up" />
     <div v-else :class="{ 'hide-cropper': !showCropper }" class="image-wrapper">
       <cropper
         v-show="showCropper"
@@ -31,6 +32,7 @@
 
 <script>
 import Cropper from './Cropper';
+import { ElementPlaceholder } from 'tce-core';
 import { imgSrcToDataURL } from 'blob-util';
 import isEmpty from 'lodash/isEmpty';
 
@@ -59,13 +61,11 @@ export default {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      currentImage: null,
-      persistedImage: null,
-      showCropper: false
-    };
-  },
+  data: () => ({
+    currentImage: null,
+    persistedImage: null,
+    showCropper: false
+  }),
   computed: {
     showPlaceholder() {
       const imageAvailable = !isEmpty(this.element.data.url);
@@ -85,7 +85,7 @@ export default {
       if (dataUrl && this.$refs.cropper) this.$refs.cropper.replace(dataUrl);
     },
     save(image) {
-      getImageDimensions(image).then(({ width, height }) => {
+      return getImageDimensions(image).then(({ width, height }) => {
         this.$emit('save', { url: image, meta: { width, height } });
       });
     }
@@ -93,11 +93,7 @@ export default {
   watch: {
     isFocused(focused) {
       if (focused) return;
-
-      if (this.persistedImage !== this.currentImage) {
-        this.save(this.currentImage);
-      }
-
+      if (this.persistedImage !== this.currentImage) this.save(this.currentImage);
       if (this.currentImage) this.$refs.cropper.clear();
     },
     'element.data.url'(imageUrl) {
@@ -138,27 +134,11 @@ export default {
   beforeDestroy() {
     if (this.$refs.cropper) this.$refs.cropper.destroy();
   },
-  components: { Cropper }
+  components: { Cropper, ElementPlaceholder }
 };
 </script>
 
 <style lang="scss" scoped>
-.image-placeholder {
-  margin-bottom: 0;
-  padding: 100px;
-
-  .message {
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
-}
-
 .hide-cropper ::v-deep .cropper-container {
   display: none;
 }

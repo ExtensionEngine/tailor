@@ -1,8 +1,8 @@
 <template>
   <v-app-bar
     color="blue-grey darken-3"
-    app dense fixed
-    class="elevation-1">
+    app fixed dense
+    class="elevation-0">
     <router-link :to="{ name: 'catalog' }" tag="span" class="app-brand">
       <v-avatar color="primary lighten-1" size="34" class="mt-1 pa-2">
         <img :src="logo" alt="Logo">
@@ -19,8 +19,9 @@
         :key="name"
         :to="to"
         color="blue-grey lighten-4"
+        active-class="secondary--text"
         exact text>
-        <v-icon class="pr-1">mdi-{{ icon }}</v-icon>
+        <v-icon v-if="icon" class="pr-1">mdi-{{ icon }}</v-icon>
         <span class="toolbar-route text-truncate">{{ name }}</span>
       </v-btn>
     </v-toolbar-items>
@@ -66,15 +67,14 @@ export default {
     logo: () => BRAND_CONFIG.LOGO_COMPACT,
     routes() {
       const items = [
-        { name: 'Catalog', to: { name: 'catalog' }, icon: 'view-list' },
-        { name: 'Admin', to: { name: 'system-user-management' }, icon: 'settings' }
+        { name: 'Catalog', to: { name: 'catalog' } },
+        { name: 'Admin', to: { name: 'system-user-management' } }
       ];
       if (!this.isAdmin) items.pop();
       if (this.repository) {
         items.unshift({
-          name: this.repository.name,
-          to: { name: 'repository', params: { repositoryId: this.repository.id } },
-          icon: 'card-text-outline'
+          name: `${this.repository.name} structure`,
+          to: { name: 'repository', params: { repositoryId: this.repository.id } }
         });
       }
       return items;

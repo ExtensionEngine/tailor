@@ -1,76 +1,51 @@
 <template>
-  <div class="tce-audio-toolbar">
-    <input
-      v-model="url"
-      :disabled="!edit"
-      class="form-control"
-      type="text"
-      placeholder="URL">
-    <button
-      v-if="edit"
-      @click="save"
-      class="btn btn-success"
-      type="button">
-      Save
-    </button>
-    <button
-      v-else
-      @click="edit = true"
-      class="btn btn-default"
-      type="button">
-      Edit
-    </button>
-  </div>
+  <v-toolbar
+    height="72"
+    color="transparent"
+    class="tce-audio-toolbar elevation-0">
+    <v-toolbar-title class="pl-1">Audio Component</v-toolbar-title>
+    <input-asset
+      @input="save"
+      :url="url"
+      :public-url="publicUrl"
+      :extensions="[
+        '.mp3', '.mp4', '.aac', '.ogg', '.wma', '.flac', '.m4a', '.wav'
+      ]"
+      upload-label="Upload audio file"
+      class="mx-auto" />
+  </v-toolbar>
 </template>
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import get from 'lodash/get';
+import InputAsset from '@/components/common/InputAsset';
+import set from 'lodash/set';
 
 export default {
   name: 'tce-audio-toolbar',
+  inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true }
   },
-  data() {
-    return {
-      url: '',
-      edit: !this.element.data.url,
-      ...cloneDeep(this.element.data)
-    };
+  computed: {
+    publicUrl: vm => get(vm.element, 'data.url'),
+    url: vm => get(vm.element, 'data.assets.url')
   },
   methods: {
-    save() {
-      this.edit = false;
+    save({ url, publicUrl }) {
       const element = cloneDeep(this.element);
-      element.data.url = this.url;
+      set(element.data, 'assets.url', url);
       this.$emit('save', element);
     }
-  }
+  },
+  components: { InputAsset }
 };
 </script>
 
 <style lang="scss" scoped>
-.tce-audio-toolbar {
-  position: relative;
-  z-index: 999;
-  width: 100%;
-  height: 60px;
-  padding: 13px 45px 0;
-
-  .form-control {
-    display: inline-block;
-    max-width: 600px;
-    margin: 0 20px;
-    padding: 0 7px;
-  }
-
-  .btn {
-    padding: 6px 15px;
-    font-size: 11px;
-
-    &:active {
-      outline: none;
-    }
-  }
+.v-toolbar__title {
+  min-width: 23.875rem;
+  text-align: left;
 }
 </style>
