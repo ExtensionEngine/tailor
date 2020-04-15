@@ -5,6 +5,7 @@
         v-if="isEditingHeader"
         v-model="header"
         @click.stop
+        @keyup.space.prevent
         hide-details filled dense />
       <div v-else class="pl-3">{{ item.header }}</div>
       <div v-if="isEditingHeader" class="actions">
