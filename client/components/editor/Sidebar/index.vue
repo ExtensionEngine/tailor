@@ -105,7 +105,6 @@ export default {
 .sidebar {
   padding: 3.125rem 0 0;
   text-align: left;
-  background: #fafafa;
 }
 
 .toolbar-visible {
