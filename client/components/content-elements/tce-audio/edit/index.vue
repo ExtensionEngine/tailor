@@ -6,7 +6,8 @@
       name="Audio"
       icon="mdi-speaker"
       active-placeholder="Use toolbar to upload the audio file"
-      active-icon="mdi-arrow-up" />
+      active-icon="mdi-arrow-up"
+      class="element-placeholder" />
     <div v-show="!showPlaceholder" class="audio-container">
       <aplayer
         v-if="source"
@@ -86,6 +87,10 @@ export default {
 .tce-audio {
   position: relative;
   min-height: 4.5rem;
+
+  ::v-deep .element-placeholder {
+    padding: 0.5rem !important;
+  }
 
   .aplayer {
     margin: 0;
