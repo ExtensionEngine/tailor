@@ -42,11 +42,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tce-pdf-toolbar {
-  position: relative;
-  width: 100%;
-}
-
 .v-toolbar__title {
   min-width: 23.875rem;
   text-align: left;

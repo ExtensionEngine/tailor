@@ -29,8 +29,8 @@
           :src="source.src">
         <div v-show="showError" class="error">
           <div class="message">
-            <span class="icon mdi mdi-alert"></span>
-            <p>Error loading PDF file!</p>
+            <v-icon>mdi-alert</v-icon>
+            Error loading PDF file!
           </div>
         </div>
       </div>
@@ -126,7 +126,7 @@ export default {
     position: relative;
     top: 45%;
     color: #d81a60;
-    font-size: 1.375rem;
+    font-size: 1.25rem;
   }
 }
 
