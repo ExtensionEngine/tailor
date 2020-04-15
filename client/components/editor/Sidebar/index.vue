@@ -3,7 +3,11 @@
     width="400"
     absolute permanent
     class="sidebar grey lighten-4 elevation-2">
-    <div :class="{ 'toolbar-visible': selectedElement }">
+    <div
+      :class="{
+        'toolbar-visible': selectedElement,
+        'toolbar-composite': selectedElement && selectedElement.parent
+      }">
       <activity-navigation
         v-if="selectedTab === 'browser'"
         :repository="repository"
@@ -109,5 +113,9 @@ export default {
 
 .toolbar-visible {
   margin-top: 4.5rem;
+
+  &.toolbar-composite {
+    margin-top: 7.5rem;
+  }
 }
 </style>
