@@ -3,7 +3,7 @@
     height="72"
     color="transparent"
     class="tce-brightcove-toolbar elevation-0">
-    <v-toolbar-title>Brightcove Video</v-toolbar-title>
+    <v-toolbar-title class="pl-1">Brightcove Video</v-toolbar-title>
     <v-toolbar-items class="mx-auto">
       <v-text-field
         v-model="accountId"
