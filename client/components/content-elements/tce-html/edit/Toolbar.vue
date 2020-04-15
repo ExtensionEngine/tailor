@@ -66,7 +66,7 @@ export default {
 <style lang="scss">
 $icon-color: #333;
 $icon-accent-color: #ff6590;
-$icon-size: 18px;
+$icon-size: 1.125rem;
 
 .tce-html-toolbar {
   display: flex;
@@ -141,14 +141,14 @@ $icon-size: 18px;
 .ql-toolbar .tooltip {
   $background-color: #2a2a2a;
   $text-color: #fff;
-  $offset: 2px;
-  $arrow-size: 5px;
+  $offset: 0.125rem;
+  $arrow-size: 0.375rem;
 
   display: block;
   position: absolute;
   z-index: 999;
   margin-top: $arrow-size + $offset;
-  padding: 6px 12px;
+  padding: 0.375rem 0.75rem;
   line-height: 1.42;
   background: $background-color;
   border: 1px solid #fff;
