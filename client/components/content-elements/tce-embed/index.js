@@ -1,7 +1,7 @@
 import Edit from './edit';
 import Toolbar from './edit/Toolbar';
 
-const initState = () => ({ url: null, height: 300 });
+const initState = () => ({ url: null, height: 260 });
 
 export default {
   name: 'Embed',

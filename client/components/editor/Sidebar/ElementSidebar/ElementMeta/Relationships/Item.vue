@@ -1,5 +1,5 @@
 <template>
-  <v-list-item class="px-0">
+  <v-list-item class="px-1">
     <v-list-item-content>
       <v-list-item-title v-text="label" />
       <v-list-item-subtitle v-text="overview" />

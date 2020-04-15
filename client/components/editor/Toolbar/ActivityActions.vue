@@ -1,6 +1,6 @@
 <template>
   <v-toolbar flat dense class="transparent">
-    <v-list class="py-1 px-2">
+    <v-list color="transparent">
       <v-tooltip
         v-for="({ title, icon, action }) in actions"
         :key="title"
@@ -10,9 +10,9 @@
           <v-btn
             v-on="on"
             @click.stop="action"
-            color="blue-grey darken-4"
-            icon small
-            class="mx-2">
+            color="grey lighten-3"
+            icon
+            class="mr-1">
             <v-icon>mdi-{{ icon }}</v-icon>
           </v-btn>
         </template>
@@ -63,3 +63,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.v-toolbar ::v-deep .v-toolbar__content {
+  padding: 0 0.5rem;
+}
+</style>

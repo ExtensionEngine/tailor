@@ -1,13 +1,11 @@
 <template>
   <div class="tce-html">
-    <div v-if="!isFocused && !content && showPlaceholder">
-      <div class="well text-placeholder">
-        <div class="message">
-          <span class="heading">Text (deprecated) placeholder</span>
-          <span>Click to edit</span>
-        </div>
-      </div>
-    </div>
+    <element-placeholder
+      v-if="!isFocused && !content && showPlaceholder"
+      :is-focused="isFocused"
+      name="Text (deprecated)"
+      icon="mdi-text"
+      class="element-placeholder" />
     <div v-else>
       <quill-editor
         v-if="isFocused"
@@ -27,6 +25,7 @@
 import { Quill, quillEditor as QuillEditor } from 'vue-quill-editor';
 import createCustomTheme from './theme';
 import debounce from 'lodash/debounce';
+import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
 
 const CustomTheme = createCustomTheme(Quill);
@@ -100,39 +99,24 @@ export default {
       this.save();
     }, 4000)
   },
-  components: { QuillEditor }
+  components: { ElementPlaceholder, QuillEditor }
 };
 </script>
 
 <style lang="scss" scoped>
-.text-placeholder {
-  .message {
-    padding: 9px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
-}
-
-.well {
-  margin-bottom: 0;
+::v-deep .element-placeholder {
+  padding: 0.5rem !important;
 }
 </style>
 
 <style lang="scss">
 .ql-container.ql-snow {
-  font-size: 16px;
+  font-size: 1rem;
   border: none;
 }
 
 .ql-editor {
-  min-height: 120px;
+  min-height: 10.5rem;
 
   &.ql-blank::before {
     width: 100%;
