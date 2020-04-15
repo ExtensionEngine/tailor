@@ -9,10 +9,10 @@
       active-icon="mdi-arrow-up" />
     <div v-else>
       <div v-if="!isFocused" class="overlay">
-        <div class="message headline secondary--text">Double click to preview</div>
+        <div class="message secondary--text">Double click to preview</div>
       </div>
       <div v-if="showError" class="overlay">
-        <div class="message headline secondary--text">
+        <div class="message secondary--text">
           <v-icon>mdi-alert</v-icon> Error loading media!
         </div>
       </div>
@@ -125,6 +125,7 @@ function mimetype({ pathname }) {
   .message {
     position: relative;
     top: 45%;
+    font-size: 1.25rem !important;
   }
 }
 
