@@ -1,7 +1,7 @@
 <template>
   <div class="system-settings-container">
     <v-toolbar
-      height="48"
+      height="42"
       absolute
       color="blue-grey darken-3"
       class="heading elevation-2">

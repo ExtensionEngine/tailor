@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar
-      height="48"
+      height="42"
       color="blue-grey darken-3"
       absolute
       class="heading elevation-2">
