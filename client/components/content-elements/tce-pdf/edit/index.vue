@@ -29,7 +29,7 @@
           :src="source.src">
         <div v-show="showError" class="error">
           <div class="message">
-            <v-icon>mdi-alert</v-icon>
+            <v-icon size="28">mdi-alert</v-icon>
             Error loading PDF file!
           </div>
         </div>
@@ -148,8 +148,6 @@ export default {
   color: #fff;
   font-size: 1.125rem;
   font-weight: 500;
-
-  .icon { font-size: 2.625rem; }
 }
 
 .pdf-container {
