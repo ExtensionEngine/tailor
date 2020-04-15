@@ -76,7 +76,7 @@ export default {
 
 .file-name {
   color: #00f;
-  font-size: 16px;
+  font-size: 1rem;
   text-decoration: underline;
   cursor: pointer;
 }
