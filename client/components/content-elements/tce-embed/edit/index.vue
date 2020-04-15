@@ -71,7 +71,7 @@ export default {
 
   .message {
     color: #d81a60;
-    font-size: 1.375rem;
+    font-size: 1.25rem;
   }
 }
 
