@@ -1,27 +1,19 @@
 <template>
   <div class="tce-video">
-    <v-sheet v-if="showPlaceholder" class="pa-12">
-      <v-avatar size="60" color="blue-grey darken-4">
-        <v-icon :size="isFocused ? 38 : 30" color="white">mdi-video-image</v-icon>
-      </v-avatar>
-      <div class="headline my-4">Video component</div>
-      <div class="subtitle-1">
-        <template v-if="!isFocused">Select to edit</template>
-        <template v-else>
-          Use toolbar
-          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
-          to upload the video
-        </template>
-      </div>
-    </v-sheet>
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      name="Video"
+      icon="mdi-video-image"
+      active-placeholder="Use toolbar to upload the video"
+      active-icon="mdi-arrow-up" />
     <div v-else>
       <div v-if="!isFocused" class="overlay">
-        <div class="message">Double click to preview</div>
+        <div class="message secondary--text">Double click to preview</div>
       </div>
-      <div v-if="showError" class="error">
-        <div class="message">
-          <span class="icon mdi mdi-alert"></span>
-          <p>Error loading media!</p>
+      <div v-if="showError" class="overlay">
+        <div class="message secondary--text">
+          <v-icon>mdi-alert</v-icon> Error loading media!
         </div>
       </div>
       <div class="player">
@@ -43,6 +35,7 @@
 </template>
 
 <script>
+import { ElementPlaceholder } from 'tce-core';
 import { extname } from 'path';
 import get from 'lodash/get';
 import { PlyrueComponent as Plyrue } from 'plyrue';
@@ -104,7 +97,7 @@ export default {
   mounted() {
     this.$elementBus.on('save', ({ data }) => this.$emit('save', data));
   },
-  components: { Plyrue }
+  components: { ElementPlaceholder, Plyrue }
 };
 
 function isShareLink({ hostname }) {
@@ -127,36 +120,12 @@ function mimetype({ pathname }) {
   z-index: 3;
   width: 100%;
   height: 100%;
-  background-color: #333;
-  opacity: 0.9;
+  background: rgba(16, 16, 16, 0.85);
 
   .message {
     position: relative;
     top: 45%;
-    color: #d81a60;
-    font-size: 1.375rem;
-  }
-}
-
-.error {
-  position: absolute;
-  z-index: 98;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-}
-
-.error .message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  font-size: 1.125rem;
-  font-weight: 500;
-
-  .icon {
-    font-size: 2.625rem;
+    font-size: 1.25rem !important;
   }
 }
 

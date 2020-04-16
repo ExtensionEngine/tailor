@@ -27,14 +27,15 @@
       </v-btn>
       <v-text-field
         :value="fileName"
-        readonly hide-details filled dense />
+        readonly hide-details filled />
     </template>
     <v-text-field
       v-if="!uploading && (urlInput || !hasAsset)"
       v-model="urlInput"
       :disabled="!isEditing"
-      :placeholder="allowFileUpload ? 'or paste a URL' : 'Paste a URL'"
-      hide-details filled dense />
+      :placeholder="allowFileUpload ? 'or paste a URL...' : 'Paste a URL...'"
+      label="URL"
+      hide-details filled />
     <v-btn
       v-if="!isEditing"
       @click.stop="isEditing = true"
@@ -108,7 +109,7 @@ export default {
 <style lang="scss" scoped>
 .v-text-field {
   min-width: 21.875rem;
-  margin: 0.75rem 0.75rem 0 1.75rem;
+  margin: 0.5rem 0.75rem 0 1.75rem;
 }
 
 .action ::v-deep .v-btn__content {
@@ -119,7 +120,7 @@ export default {
   height: 100%;
 
   .v-btn__content {
-    padding: 1.25rem 0;
+    padding: 1.5rem 0;
   }
 }
 </style>

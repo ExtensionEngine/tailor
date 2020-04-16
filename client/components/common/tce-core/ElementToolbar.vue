@@ -8,7 +8,7 @@
       @save="saveElement"
       :element="element"
       :embed="embed" />
-    <default-toolbar v-else />
+    <default-toolbar v-else :label="config.name" />
     <slot name="embed-toolbar"></slot>
     <div class="delete-element">
       <slot name="actions"></slot>
@@ -37,6 +37,7 @@ const appBus = EventBus.channel('app');
 
 export default {
   name: 'element-toolbar-wrapper',
+  inject: ['$teRegistry'],
   mixins: [withValidation()],
   props: {
     element: { type: Object, required: true },
@@ -48,9 +49,8 @@ export default {
     };
   },
   computed: {
-    id() {
-      return getElementId(this.element);
-    },
+    id: vm => getElementId(vm.element),
+    config: vm => vm.$teRegistry.get(vm.element.type),
     componentName() {
       const { type } = this.element;
       if (isQuestion(type)) return;

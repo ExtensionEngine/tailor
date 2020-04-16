@@ -1,15 +1,15 @@
 <template>
   <v-toolbar
-    height="68"
+    height="72"
     color="transparent"
     class="tce-embed-toolbar elevation-0">
-    <v-toolbar-title>Embed component</v-toolbar-title>
+    <v-toolbar-title class="pl-1">Embed component</v-toolbar-title>
     <div class="input-container">
       <v-text-field
         v-model="height"
         @input="onChange"
-        name="height"
         type="number"
+        name="height"
         label="Height (px)"
         placeholder="Height..."
         prepend-icon="mdi-resize"
@@ -60,11 +60,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tce-embed-toolbar {
-  position: relative;
-  width: 100%;
-}
-
 .v-toolbar__title {
   min-width: 23.875rem;
   text-align: left;

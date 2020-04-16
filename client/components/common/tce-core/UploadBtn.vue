@@ -24,11 +24,12 @@
         @click="downloadFile(fileKey, fileName)"
         class="file-name">{{ fileName }}
       </span>
-      <span
+      <v-btn
         v-if="fileKey"
         @click="deleteFile({ id, fileName })"
-        class="mdi mdi-delete delete">
-      </span>
+        icon small>
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
     </form>
     <span class="help-block">{{ vErrors.first(id) }}</span>
   </div>
@@ -75,19 +76,8 @@ export default {
 
 .file-name {
   color: #00f;
-  font-size: 16px;
+  font-size: 1rem;
   text-decoration: underline;
   cursor: pointer;
-}
-
-.delete {
-  padding: 0 5px;
-  color: #808080;
-  font-size: 18px;
-  cursor: pointer;
-
-  &:hover {
-    color: #555;
-  }
 }
 </style>

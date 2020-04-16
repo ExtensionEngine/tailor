@@ -7,7 +7,7 @@
         @blur="expanded = false"
         @input="emitChange"
         :value="value"
-        :background-color="expanded ? 'blue-grey darken-2' : 'blue-grey darken-4'"
+        :background-color="`blue-grey darken-${expanded ? 2 : 4}`"
         prepend-inner-icon="mdi-magnify"
         placeholder="Search..."
         clearable hide-details solo dark

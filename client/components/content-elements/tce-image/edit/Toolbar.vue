@@ -1,10 +1,13 @@
 <template>
-  <v-toolbar color="transparent" class="tce-image-toolbar elevation-0">
+  <v-toolbar
+    height="72"
+    color="transparent"
+    class="tce-image-toolbar elevation-0">
     <v-toolbar-title class="pl-1">Image toolbar</v-toolbar-title>
     <v-toolbar-items class="mx-auto">
       <upload-btn
         @change="upload"
-        :label="isUploaded ? 'Upload new image' : 'Click to upload an image'" />
+        :label="isUploaded ? 'Upload a new image' : 'Upload image'" />
       <template v-if="isUploaded">
         <v-btn @click="toggleTool('cropper')" text>
           {{ currentTool === 'cropper' ? 'Hide' : 'Show' }} cropper
@@ -72,11 +75,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tce-image-toolbar {
-  position: relative;
-  width: 100%;
-}
-
 .v-toolbar__title {
   min-width: 23.875rem;
   text-align: left;

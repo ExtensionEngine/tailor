@@ -1,19 +1,12 @@
 <template>
   <div :style="{ height: `${height}px` }" class="tce-embed">
-    <v-sheet v-if="showPlaceholder" class="pa-12">
-      <v-avatar size="60" color="blue-grey darken-4">
-        <v-icon :size="isFocused ? 36 : 30" color="white">mdi-iframe</v-icon>
-      </v-avatar>
-      <div class="headline my-4">Embed component</div>
-      <div class="subtitle-1">
-        <template v-if="!isFocused">Select to edit</template>
-        <template v-else>
-          Use toolbar
-          <v-icon size="22" color="secondary">mdi-transfer-up</v-icon>
-          to enter url
-        </template>
-      </div>
-    </v-sheet>
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      name="Embed"
+      icon="mdi-iframe"
+      active-placeholder="Use toolbar to enter the url"
+      active-icon="mdi-arrow-up" />
     <div v-else>
       <div class="content">
         <div v-show="!isFocused" class="overlay">
@@ -34,6 +27,8 @@
 </template>
 
 <script>
+import { ElementPlaceholder } from 'tce-core';
+
 export default {
   name: 'tce-embed',
   inject: ['$elementBus'],
@@ -49,6 +44,9 @@ export default {
   },
   mounted() {
     this.$elementBus.on('save', data => this.$emit('save', data));
+  },
+  components: {
+    ElementPlaceholder
   }
 };
 </script>
@@ -73,7 +71,7 @@ export default {
 
   .message {
     color: #d81a60;
-    font-size: 1.375rem;
+    font-size: 1.25rem;
   }
 }
 

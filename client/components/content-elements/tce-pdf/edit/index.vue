@@ -1,14 +1,12 @@
 <template>
   <div class="tce-pdf">
-    <div v-show="showPlaceholder">
-      <div class="well pdf-placeholder">
-        <div class="message">
-          <span class="heading">Pdf placeholder</span>
-          <span v-if="!isFocused">Select to edit</span>
-          <span v-else>Please use toolbar to enter url</span>
-        </div>
-      </div>
-    </div>
+    <element-placeholder
+      v-if="showPlaceholder"
+      :is-focused="isFocused"
+      name="PDF"
+      icon="mdi-file-pdf"
+      active-placeholder="Use toolbar to upload the pdf"
+      active-icon="mdi-arrow-up" />
     <div v-show="!showPlaceholder">
       <div v-if="!isFocused" class="overlay">
         <div class="message">Click to preview</div>
@@ -31,8 +29,8 @@
           :src="source.src">
         <div v-show="showError" class="error">
           <div class="message">
-            <span class="icon mdi mdi-alert"></span>
-            <p>Error loading PDF file!</p>
+            <v-icon size="28">mdi-alert</v-icon>
+            Error loading PDF file!
           </div>
         </div>
       </div>
@@ -42,6 +40,7 @@
 
 <script>
 import CircularProgress from './CircularProgress';
+import { ElementPlaceholder } from 'tce-core';
 import get from 'lodash/get';
 import isIE from 'is-iexplorer';
 import isSafari from 'is-safari';
@@ -106,28 +105,13 @@ export default {
   beforeDestroy() {
     this.pdfObject = null;
   },
-  components: { CircularProgress }
+  components: { CircularProgress, ElementPlaceholder }
 };
 </script>
 
 <style lang="scss" scoped>
 .tce-pdf {
   position: relative;
-}
-
-.pdf-placeholder {
-  .message {
-    padding: 100px;
-
-    .heading {
-      font-size: 24px;
-    }
-
-    span {
-      display: block;
-      font-size: 18px;
-    }
-  }
 }
 
 .overlay {
@@ -141,8 +125,8 @@ export default {
   .message {
     position: relative;
     top: 45%;
-    color: #008000;
-    font-size: 22px;
+    color: #d81a60;
+    font-size: 1.25rem;
   }
 }
 
@@ -162,19 +146,13 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   color: #fff;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 500;
-
-  .icon { font-size: 42px; }
-}
-
-.well {
-  margin: 0;
 }
 
 .pdf-container {
   position: relative;
-  height: 360px;
+  height: 22.5rem;
 }
 
 .pdf {

@@ -1,11 +1,11 @@
 <template>
-  <div
-    class="tce-break blue-grey darken-3">
+  <v-sheet
+    class="tce-break pa-1 blue-grey darken-3">
     Section break
     <v-icon size="24" color="secondary lighten-2" class="ml-2 pb-1">
       mdi-format-page-break
     </v-icon>
-  </div>
+  </v-sheet>
 </template>
 
 <script>
@@ -16,9 +16,7 @@ export default {
 
 <style lang="scss" scoped>
 .tce-break {
-  width: 100%;
-  padding: 0.5rem;
-  color: #fafafa;
+  color: #eee;
   font-size: 1.125rem;
 }
 </style>
