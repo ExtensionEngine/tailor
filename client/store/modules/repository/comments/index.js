@@ -4,7 +4,8 @@ import * as mutations from './mutations';
 
 const state = {
   items: {},
-  $apiUrl: null
+  $apiUrl: null,
+  seenByActivity: {}
 };
 
 export default {

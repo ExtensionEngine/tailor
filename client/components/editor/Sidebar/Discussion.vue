@@ -3,6 +3,7 @@
     <discussion
       @change="$emit('change', $event)"
       :activity="activity"
+      :is-visible="isVisible"
       show-notifications />
   </div>
 </template>
@@ -13,7 +14,8 @@ import Discussion from '@/components/repository/common/Sidebar/Discussion/Embed'
 export default {
   name: 'editor-discussion',
   props: {
-    activity: { type: Object, required: true }
+    activity: { type: Object, required: true },
+    isVisible: { type: Boolean, default: false }
   },
   components: {
     Discussion

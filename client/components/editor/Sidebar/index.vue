@@ -16,7 +16,8 @@
       <activity-discussion
         v-show="selectedTab === 'comments'"
         @change="comments => commentCount = comments.length"
-        :activity="selectedActivity" />
+        :activity="selectedActivity"
+        :is-visible="selectedTab === 'comments'" />
       <element-sidebar
         v-if="selectedTab === 'element'"
         :key="getElementId(selectedElement)"
@@ -49,6 +50,7 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 import ActivityDiscussion from './Discussion';
 import ActivityNavigation from './Navigation';
 import ElementSidebar from './ElementSidebar';
@@ -67,6 +69,10 @@ export default {
   data: () => ({ selectedTab: 'browser', commentCount: 0 }),
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
+    ...mapState({ seenByActivity: state => state.seenByActivity }),
+    ...mapGetters('repository/comments', ['getActivityComments', 'getUnseenComments']),
+    activityComments: vm => vm.getActivityComments(vm.selectedActivity.id),
+    unseenComments: vm => vm.getUnseenComments(vm.activityComments, vm.selectedActivity.uid),
     tabs: vm => ([{
       name: 'browser',
       label: 'Browse',
@@ -75,7 +81,7 @@ export default {
       name: 'comments',
       label: 'Comments',
       icon: 'forum-outline',
-      badgeData: vm.commentCount
+      badgeData: vm.unseenComments.length
     }, {
       name: 'element',
       label: 'Element',
