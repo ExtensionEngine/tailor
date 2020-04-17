@@ -155,7 +155,7 @@ export default {
 
   .actions {
     display: flex;
-    min-width: 10.3125rem;
+    min-width: 11.5rem;
     margin-left: auto;
 
     .v-btn {
