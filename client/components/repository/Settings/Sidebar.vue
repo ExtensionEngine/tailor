@@ -2,16 +2,16 @@
   <v-navigation-drawer
     :value="true"
     stateless
-    class="grey lighten-4">
-    <v-list class="grey--text text--darken-3 text-left">
+    class="transparent">
+    <v-list class="blue-grey--text text--darken-4 text-left">
       <v-list-item
         v-for="({ name, label, icon }) in routes"
         :key="name"
         :to="{ name }"
-        active-class="grey lighten-5"
+        active-class="blue-grey lighten-5"
         exact ripple>
         <v-list-item-action>
-          <v-icon>mdi-{{ icon }}</v-icon>
+          <v-icon color="blue-grey darken-3">mdi-{{ icon }}</v-icon>
         </v-list-item-action>
         <v-list-item-title>{{ label }}</v-list-item-title>
       </v-list-item>
