@@ -1,14 +1,5 @@
 <template>
   <div class="embedded-discussion">
-    <div :class="{ 'pb-7': !showHeading && showAllToggle }">
-      <v-btn
-        v-if="showAllToggle"
-        @click="showAll = !showAll"
-        text x-small
-        class="float-right mt-1">
-        Show {{ showAll ? 'less' : 'more' }}
-      </v-btn>
-    </div>
     <div v-if="showHeading" class="header grey--text text--darken-3">
       <v-icon color="grey darken-2" class="pr-1">mdi-forum-outline</v-icon>
       Comments
@@ -24,8 +15,6 @@
       v-if="thread.length"
       :items="thread"
       :user="user"
-      :min-displayed="commentsShownLimit"
-      :show-all="showAll"
       class="mt-2" />
     <div class="text-right">
       <text-editor
@@ -58,7 +47,7 @@ export default {
     showNotifications: { type: Boolean, default: false },
     isVisible: { type: Boolean, default: false }
   },
-  data: () => ({ showAll: false, comment: initCommentInput() }),
+  data: () => ({ comment: initCommentInput() }),
   computed: {
     ...mapState({ user: state => state.auth.user }),
     ...mapGetters('repository/comments', ['getActivityComments']),
@@ -66,8 +55,6 @@ export default {
     recentComment: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
-    commentsShownLimit: vm => 5,
-    showAllToggle: vm => vm.commentsShownLimit < vm.thread.length,
     editor: vm => vm.$refs.editor.$el
   },
   methods: {
