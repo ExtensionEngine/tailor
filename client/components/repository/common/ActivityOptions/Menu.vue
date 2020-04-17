@@ -46,8 +46,8 @@ import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
-import helperMixin from './common';
 import { mapActions } from 'vuex';
+import optionsMixin from './common';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
@@ -55,7 +55,7 @@ const TREE_VIEW_ROUTE = 'tree-view';
 
 export default {
   name: 'activity-options-menu',
-  mixins: [helperMixin],
+  mixins: [optionsMixin],
   props: {
     activity: { type: Object, required: true }
   },

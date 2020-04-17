@@ -31,8 +31,8 @@
 
 <script>
 import CreateDialog from '@/components/repository/common/CreateDialog';
-import helperMixin from './common';
 import isEqual from 'lodash/isEqual';
+import optionsMixin from './common';
 
 const getOptions = vm => {
   const items = [{
@@ -60,7 +60,7 @@ const getOptions = vm => {
 
 export default {
   name: 'activity-options-toolbar',
-  mixins: [helperMixin],
+  mixins: [optionsMixin],
   props: {
     activity: { type: Object, required: true }
   },
