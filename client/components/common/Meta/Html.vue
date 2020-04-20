@@ -8,7 +8,7 @@
         @focus="enableEditing"
         @blur="update"
         :name="meta.key"
-        :options="quillOptions"
+        :options="options"
         :disabled="!editing"
         :class="{ 'meta-quill-disabled': !editing }" />
     </div>
@@ -33,14 +33,16 @@ const quillOptions = () => ({
 export default {
   name: 'html-input',
   props: {
-    meta: { type: Object, default: () => ({ value: null }) },
-    quillOptions: { type: Object, default: quillOptions }
+    meta: { type: Object, default: () => ({ value: null }) }
   },
   data() {
     return {
       content: this.meta.value,
       editing: false
     };
+  },
+  computed: {
+    options: ({ meta }) => ({ ...quillOptions(), ...meta.options })
   },
   methods: {
     update(quill) {
