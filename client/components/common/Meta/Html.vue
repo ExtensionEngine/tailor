@@ -50,7 +50,7 @@ export default {
     },
     enableEditing() {
       this.editing = true;
-      const { quill } = this.$refs.html;
+      const { quill } = this.$refs[this.meta.key];
       return this.$nextTick(() => quill.focus());
     },
     getActiveTooltips(quill) {
