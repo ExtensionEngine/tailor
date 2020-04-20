@@ -18,10 +18,18 @@
     </v-btn>
     <v-bottom-sheet v-model="isVisible" max-width="1240" inset>
       <div class="element-container">
-        <v-toolbar v-if="layout" dense class="mb-2">
+        <v-toolbar
+          v-if="layout"
+          color="blue-grey darken-4"
+          dense
+          class="mb-2 elevation-1">
           <v-spacer />
           <v-divider vertical />
-          <v-btn-toggle v-model="elementWidth" tile borderless mandatory>
+          <v-btn-toggle
+            v-model="elementWidth"
+            active-class="blue-grey darken-2"
+            background-color="transparent"
+            dark tile borderless mandatory>
             <v-btn :value="100" icon>
               <v-icon>mdi-square-outline</v-icon>
             </v-btn>
@@ -30,16 +38,15 @@
             </v-btn>
           </v-btn-toggle>
           <v-divider class="mr-3" vertical />
-          <v-chip label class="width-label">
-            <span>Element width:</span>
-            <span class="label-value px-1">{{ elementWidth }}</span>%
-          </v-chip>
+          <div class="width-label px-1 subtitle-1 grey--text text--lighten-4">
+            Element width
+            <span class="px-1">{{ elementWidth }}</span>%
+          </div>
         </v-toolbar>
         <div
           v-for="group in library"
           :key="group.name">
-          <div class="group-heading">
-            <v-icon>{{ group.icon }}</v-icon>
+          <div class="group-heading blue-grey--text text--darken-4">
             <span>{{ group.name }}</span>
           </div>
           <div class="group-elements">
@@ -188,7 +195,6 @@ $disabled-color: #a1a1a1;
 .group-heading {
   margin: 0 2.5rem 0.375rem;
   padding-top: 1.25rem;
-  color: #555;
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.75rem;
@@ -265,12 +271,6 @@ $disabled-color: #a1a1a1;
 
   .width-label {
     min-width: 11.25rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .label-value {
-    color: $accent-color;
   }
 }
 </style>

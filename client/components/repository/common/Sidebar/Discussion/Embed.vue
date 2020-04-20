@@ -6,7 +6,7 @@
     </div>
     <v-alert
       v-if="!commentsCount && showNotifications"
-      color="grey darken-3"
+      color="blue-grey darken-3"
       icon="mdi-chat"
       prominent text>
       Be the First to Comment!

@@ -40,22 +40,22 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
 import CopyDialog from '@/components/repository/common/CopyActivity';
 import CreateDialog from '@/components/repository/common/CreateDialog';
 import EventBus from 'EventBus';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import first from 'lodash/first';
-import get from 'lodash/get';
-import map from 'lodash/map';
+import { mapActions } from 'vuex';
+import optionsMixin from './common';
 import sortBy from 'lodash/sortBy';
 
 const appChannel = EventBus.channel('app');
 const TREE_VIEW_ROUTE = 'tree-view';
 
 export default {
-  name: 'activity-options',
+  name: 'activity-options-menu',
+  mixins: [optionsMixin],
   props: {
     activity: { type: Object, required: true }
   },
@@ -65,19 +65,6 @@ export default {
     supportedLevels: []
   }),
   computed: {
-    ...mapGetters('repository', ['structure', 'activities']),
-    parent: vm => find(vm.activities, { id: vm.activity.parentId }),
-    levels: vm => vm.sameLevel.concat(vm.subLevels),
-    sameLevel() {
-      const sameLevelTypes = this.parent
-        ? get(find(this.structure, { type: this.parent.type }), 'subLevels', [])
-        : map(filter(this.structure, { level: 1 }), 'type');
-      return filter(this.structure, it => sameLevelTypes.includes(it.type));
-    },
-    subLevels() {
-      const { subLevels = [] } = find(this.structure, { type: this.activity.type });
-      return filter(this.structure, it => subLevels.includes(it.type));
-    },
     addMenuOptions() {
       const items = [{
         name: 'Add item below',
@@ -105,14 +92,6 @@ export default {
   },
   methods: {
     ...mapActions('repository/activities', ['remove']),
-    ...mapMutations('repository', ['selectActivity', 'toggleActivity']),
-    expandParent(item) {
-      const { activity, parent } = this;
-      const _cid = item.parentId === activity.id
-        ? activity._cid
-        : get(parent, '_cid');
-      if (_cid) this.toggleActivity({ _cid, expanded: true });
-    },
     setCreateContext(levels) {
       this.showCreateDialog = true;
       this.supportedLevels = levels;
