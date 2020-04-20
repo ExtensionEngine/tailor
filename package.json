@@ -1,6 +1,6 @@
 {
   "name": "tailor",
-  "version": "4.0.0-beta4",
+  "version": "4.0.0-rc.1",
   "codename": "velour",
   "description": "Content authoring platform",
   "author": "ExtensionEngine <info@extensionengine.com>",
