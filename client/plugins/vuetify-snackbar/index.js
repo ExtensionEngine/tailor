@@ -1,3 +1,4 @@
+import debounce from 'lodash/debounce';
 import Queue from 'promise-queue';
 import Snackbar from './Snackbar';
 
@@ -14,13 +15,14 @@ export const install = (Vue, { parent } = {}) => {
       element.appendChild(vm.$el);
     }, 1000);
   });
+  const show = debounce((msg, opts) => queue.add(() => vm.show(msg, opts)), 2500);
   const $snackbar = {
-    show: (msg, opts) => queue.add(() => vm.show(msg, opts)),
+    show: (msg, opts) => show(msg, opts),
     close: () => vm.close,
-    success: (msg, opts) => $snackbar.show(msg, { ...opts, color: 'success' }),
-    info: (msg, opts) => $snackbar.show(msg, { ...opts, color: 'info' }),
-    warning: (msg, opts) => $snackbar.show(msg, { ...opts, color: 'warning' }),
-    error: (msg, opts) => $snackbar.show(msg, { ...opts, color: 'error' })
+    success: (msg, opts) => show(msg, { ...opts, color: 'success' }),
+    info: (msg, opts) => show(msg, { ...opts, color: 'info' }),
+    warning: (msg, opts) => show(msg, { ...opts, color: 'warning' }),
+    error: (msg, opts) => show(msg, { ...opts, color: 'error' })
   };
   Object.assign(Vue.prototype, { $snackbar });
 };
