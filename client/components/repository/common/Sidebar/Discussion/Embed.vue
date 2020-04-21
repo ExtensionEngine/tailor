@@ -41,9 +41,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import DiscussionThread from './Thread';
-import get from 'lodash/get';
 import orderBy from 'lodash/orderBy';
 import TextEditor from './TextEditor';
 
@@ -55,15 +54,13 @@ export default {
   props: {
     activity: { type: Object, required: true },
     showHeading: { type: Boolean, default: false },
-    showNotifications: { type: Boolean, default: false },
-    isVisible: { type: Boolean, default: false }
+    showNotifications: { type: Boolean, default: false }
   },
   data: () => ({ showAll: false, comment: initCommentInput() }),
   computed: {
     ...mapState({ user: state => state.auth.user }),
     ...mapGetters('repository/comments', ['getActivityComments']),
     comments: vm => vm.getActivityComments(vm.activity.id),
-    lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
     commentsShownLimit: vm => 5,
@@ -73,7 +70,6 @@ export default {
   methods: {
     ...mapActions('repository/comments',
       ['fetch', 'save', 'subscribe', 'unsubscribe']),
-    ...mapMutations('repository/comments', ['markSeenComments']),
     async post() {
       if (!this.comment.content) return;
       const payload = {
@@ -92,14 +88,6 @@ export default {
   watch: {
     commentsCount() {
       this.$emit('change', this.thread);
-    },
-    isVisible(val) {
-      if (!val) return;
-      const latestComment = {
-        activityUid: this.activity.uid,
-        lastCommentAt: this.lastCommentAt
-      };
-      setTimeout(() => this.markSeenComments(latestComment), 1000);
     }
   },
   async created() {
