@@ -10,10 +10,10 @@ const sseUpdate = (state, comment) => {
   Vue.set(state.items, existing._cid, { ...existing, ...data });
 };
 
-const setSeenComment = (state, { recentComment, activityUid }) => {
+const markSeenComments = (state, { activityUid, lastCommentAt }) => {
   state.seenByActivity = {
     ...state.seenByActivity,
-    [activityUid]: recentComment
+    [activityUid]: lastCommentAt
   };
 };
 
@@ -24,5 +24,5 @@ export {
   save,
   setEndpoint,
   sseUpdate,
-  setSeenComment
+  markSeenComments
 };

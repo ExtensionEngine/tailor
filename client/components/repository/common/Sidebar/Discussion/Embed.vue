@@ -63,7 +63,7 @@ export default {
     ...mapState({ user: state => state.auth.user }),
     ...mapGetters('repository/comments', ['getActivityComments']),
     comments: vm => vm.getActivityComments(vm.activity.id),
-    recentComment: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
+    lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime(),
     thread: vm => orderBy(vm.comments, ['createdAt'], ['asc']),
     commentsCount: vm => vm.thread.length,
     commentsShownLimit: vm => 5,
@@ -73,7 +73,7 @@ export default {
   methods: {
     ...mapActions('repository/comments',
       ['fetch', 'save', 'subscribe', 'unsubscribe']),
-    ...mapMutations('repository/comments', ['setSeenComment']),
+    ...mapMutations('repository/comments', ['markSeenComments']),
     async post() {
       if (!this.comment.content) return;
       const payload = {
@@ -97,9 +97,9 @@ export default {
       if (!val) return;
       const latestComment = {
         activityUid: this.activity.uid,
-        recentComment: this.recentComment
+        lastCommentAt: this.lastCommentAt
       };
-      setTimeout(() => this.setSeenComment(latestComment), 1000);
+      setTimeout(() => this.markSeenComments(latestComment), 1000);
     }
   },
   async created() {
