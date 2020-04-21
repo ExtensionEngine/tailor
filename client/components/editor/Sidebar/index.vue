@@ -81,7 +81,7 @@ export default {
       name: 'comments',
       label: 'Comments',
       icon: 'forum-outline',
-      badgeData: vm.unseenComments.length
+      badgeData: get(vm.unseenComments.length)
     }, {
       name: 'element',
       label: 'Element',
