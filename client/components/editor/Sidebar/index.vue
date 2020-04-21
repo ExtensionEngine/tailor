@@ -17,7 +17,7 @@
         v-show="selectedTab === 'comments'"
         @change="comments => commentCount = comments.length"
         :activity="selectedActivity"
-        :is-visible="selectedTab === 'comments'" />
+        :is-visible="discussionTabVisible" />
       <element-sidebar
         v-if="selectedTab === 'element'"
         :key="getElementId(selectedElement)"
@@ -73,6 +73,7 @@ export default {
     ...mapGetters('repository/comments', ['getActivityComments', 'getUnseenComments']),
     activityComments: vm => vm.getActivityComments(vm.selectedActivity.id),
     unseenComments: vm => vm.getUnseenComments(vm.activityComments, vm.selectedActivity.uid),
+    discussionTabVisible: vm => vm.selectedTab === 'comments',
     tabs: vm => ([{
       name: 'browser',
       label: 'Browse',
@@ -81,7 +82,7 @@ export default {
       name: 'comments',
       label: 'Comments',
       icon: 'forum-outline',
-      badgeData: get(vm.unseenComments.length)
+      badgeData: vm.unseenComments.length
     }, {
       name: 'element',
       label: 'Element',
