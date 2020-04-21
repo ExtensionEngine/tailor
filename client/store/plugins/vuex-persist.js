@@ -1,5 +1,12 @@
 import VuexPersistence from 'vuex-persist';
 
+const MUTATIONS = [
+  'login',
+  'logout',
+  'setUser',
+  'repository/comments/markSeenComments'
+];
+
 export default new VuexPersistence({
   key: process.env.VUEX_STORAGE_KEY,
   reducer: state => ({
@@ -10,5 +17,6 @@ export default new VuexPersistence({
       }
     }
   }),
-  storage: window.localStorage
+  storage: window.localStorage,
+  filter: mutation => MUTATIONS.includes(mutation.type)
 }).plugin;
