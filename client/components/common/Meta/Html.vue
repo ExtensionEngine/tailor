@@ -19,7 +19,7 @@
 import { quillEditor as QuillEditor } from 'vue-quill-editor';
 import some from 'lodash/some';
 
-const quillOptions = () => ({
+const defaultOptions = () => ({
   modules: {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -42,7 +42,7 @@ export default {
     };
   },
   computed: {
-    options: ({ meta }) => ({ ...quillOptions(), ...meta.options })
+    options: ({ meta }) => ({ ...defaultOptions(), ...meta.editorOptions })
   },
   methods: {
     update(quill) {
