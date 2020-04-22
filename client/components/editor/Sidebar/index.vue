@@ -53,6 +53,7 @@
 import { mapGetters, mapState } from 'vuex';
 import ActivityDiscussion from './Discussion';
 import ActivityNavigation from './Navigation';
+import debounce from 'lodash/debounce';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
@@ -66,7 +67,7 @@ export default {
     selectedActivity: { type: Object, required: true },
     selectedElement: { type: Object, default: null }
   },
-  data: () => ({ selectedTab: 'browser', commentCount: 0 }),
+  data: () => ({ selectedTab: 'browser', commentCount: 0, unseenCount: 0 }),
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
     ...mapState({ seenByActivity: state => state.seenByActivity }),
@@ -82,7 +83,7 @@ export default {
       name: 'comments',
       label: 'Comments',
       icon: 'forum-outline',
-      badgeData: vm.unseenComments.length
+      badgeData: vm.unseenCount
     }, {
       name: 'element',
       label: 'Element',
@@ -106,7 +107,11 @@ export default {
       }
       if (this.selectedTab !== 'element') return;
       this.selectedTab = 'browser';
-    }
+    },
+    unseenComments: debounce(function (val) {
+      this.unseenCount = val.length;
+    }, 200)
+
   },
   components: { ActivityDiscussion, ActivityNavigation, ElementSidebar }
 };
