@@ -1,6 +1,8 @@
 <template>
-  <div class="meta-quill-input">
-    <label :for="meta.key">{{ meta.label }}</label>
+  <v-input :class="{ editing }" class="meta-quill-input">
+    <label class="quill-input-label grey lighten-5 px-1" :for="meta.key">
+      {{ meta.label }}
+    </label>
     <div class="editor-wrapper">
       <quill-editor
         :ref="meta.key"
@@ -12,7 +14,7 @@
         :disabled="!editing"
         :class="{ 'meta-quill-disabled': !editing }" />
     </div>
-  </div>
+  </v-input>
 </template>
 
 <script>
@@ -72,12 +74,30 @@ export default {
   position: relative;
   margin: 0 0 20px 0;
   padding: 10px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  border-radius: 2px;
   cursor: pointer;
 
-  .meta-quill-disabled {
-    .ql-toolbar.ql-snow {
-      background: #f5f5f5;
-    }
+  &.editing {
+    border-width: 2px;
+  }
+
+  &.editing, &:hover {
+    border-color: currentColor;
+  }
+
+  .quill-input-label {
+    position: absolute;
+    top: -23px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .editor-wrapper {
+    flex: 1;
+  }
+
+  .ql-toolbar.ql-snow {
+    border-bottom: 1px solid currentColor;
   }
 
   .ql-container {
