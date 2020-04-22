@@ -33,8 +33,9 @@
             :activity="activity" />
           <v-alert
             :value="!filteredActivities.length"
-            color="primary darken-1"
-            outlined
+            color="blue-grey darken-3"
+            icon="mdi-magnify"
+            prominent text
             class="mt-5">
             No matches found
           </v-alert>
