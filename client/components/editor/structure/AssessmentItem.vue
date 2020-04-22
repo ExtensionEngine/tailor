@@ -9,9 +9,8 @@
     </span>
     <tce-question-container
       v-if="expanded"
-      @selected="$emit('selected')"
-      @delete="$emit('delete')"
       @save="save"
+      @delete="$emit('delete')"
       :element="assessment">
       <template v-slot:default="{ isEditing }">
         <div class="pb-5">

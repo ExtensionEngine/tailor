@@ -1,49 +1,47 @@
 <template>
-  <div @selected="$emit('selected')" class="assessment-container">
-    <div class="assessment">
-      <slot :isEditing="isEditing"></slot>
-      <question
-        @update="update"
-        :assessment="editedElement"
-        :is-editing="isEditing"
-        :errors="errors" />
-      <component
-        :is="resolveComponentName(element)"
-        @update="update"
-        @alert="setAlert"
-        :assessment="editedElement.data"
-        :is-graded="isGraded"
-        :is-editing="isEditing"
-        :errors="errors" />
-      <div :class="{ 'has-error': hintError }" class="form-group hint">
-        <span class="form-label">Hint</span>
-        <input
-          v-model="editedElement.data.hint"
-          :disabled="!isEditing"
-          class="form-control"
-          type="text"
-          placeholder="Optional hint">
-      </div>
-      <feedback
-        v-if="showFeedback"
-        @update="updateFeedback"
-        :answers="editedElement.data.answers"
-        :feedback="editedElement.data.feedback"
-        :is-graded="isGraded"
-        :is-editing="isEditing" />
-      <div class="alert-container">
-        <div v-show="alert.text" :class="alert.type" class="alert">
-          <strong>{{ alert.text }}</strong>
-        </div>
-      </div>
-      <controls
-        @edit="edit"
-        @save="save"
-        @remove="remove"
-        @cancel="cancel"
-        class="controls"
-        :is-editing="isEditing" />
+  <div class="tce-question-container">
+    <slot :isEditing="isEditing"></slot>
+    <question
+      @update="update"
+      :assessment="editedElement"
+      :is-editing="isEditing"
+      :errors="errors" />
+    <component
+      :is="resolveComponentName(element)"
+      @update="update"
+      @alert="setAlert"
+      :assessment="editedElement.data"
+      :is-graded="isGraded"
+      :is-editing="isEditing"
+      :errors="errors" />
+    <div :class="{ 'has-error': hintError }" class="form-group hint">
+      <span class="form-label">Hint</span>
+      <input
+        v-model="editedElement.data.hint"
+        :disabled="!isEditing"
+        class="form-control"
+        type="text"
+        placeholder="Optional hint">
     </div>
+    <feedback
+      v-if="showFeedback"
+      @update="updateFeedback"
+      :answers="editedElement.data.answers"
+      :feedback="editedElement.data.feedback"
+      :is-graded="isGraded"
+      :is-editing="isEditing" />
+    <div class="alert-container">
+      <div v-show="alert.text" :class="alert.type" class="alert">
+        <strong>{{ alert.text }}</strong>
+      </div>
+    </div>
+    <controls
+      @edit="edit"
+      @save="save"
+      @remove="remove"
+      @cancel="cancel"
+      class="controls"
+      :is-editing="isEditing" />
   </div>
 </template>
 
@@ -196,7 +194,7 @@ const baseSchema = {
 </script>
 
 <style lang="scss" scoped>
-.assessment {
+.tce-question-container {
   min-height: 400px;
   margin: 10px auto;
   padding: 10px 30px 30px;
