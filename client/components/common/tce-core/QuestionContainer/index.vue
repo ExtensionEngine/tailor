@@ -9,19 +9,20 @@
     <component
       :is="resolveComponentName(element)"
       @update="update"
-      @alert="setAlert"
+      :alert.sync="alert"
       :assessment="editedElement.data"
-      :is-graded="isGraded"
       :is-editing="isEditing"
-      :errors="errors" />
-    <div :class="{ 'has-error': hintError }" class="form-group hint">
-      <span class="form-label">Hint</span>
-      <input
+      :is-graded="isGraded"
+      :errors="errors"
+      class="tce-answer" />
+    <div class="hint text-left">
+      <span class="title">{{ hintTitle }}</span>
+      <v-text-field
         v-model="editedElement.data.hint"
+        :placeholder="hintPlaceholder"
         :disabled="!isEditing"
-        class="form-control"
-        type="text"
-        placeholder="Optional hint">
+        :error="hintError"
+        class="pt-0" />
     </div>
     <feedback
       v-if="showFeedback"
@@ -30,11 +31,9 @@
       :feedback="editedElement.data.feedback"
       :is-graded="isGraded"
       :is-editing="isEditing" />
-    <div class="alert-container">
-      <div v-show="alert.text" :class="alert.type" class="alert">
-        <strong>{{ alert.text }}</strong>
-      </div>
-    </div>
+    <v-alert v-show="alert.text" :type="alert.type" dense class="mt-4">
+      {{ alert.text }}
+    </v-alert>
     <controls
       @edit="edit"
       @save="save"
@@ -60,8 +59,12 @@ import omit from 'lodash/omit';
 import Question from './Question';
 import toPath from 'lodash/toPath';
 
+const WITH_FEEDBACK = ['MC', 'SC', 'TF'];
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const validationOptions = { recursive: true, abortEarly: false };
+
+const HINT_TITLE = 'Hint';
+const HINT_PLACEHOLDER = 'Optional hint';
 
 export default {
   name: 'tce-question-container',
@@ -69,16 +72,13 @@ export default {
   props: {
     element: { type: Object, required: true }
   },
-  data() {
-    const isEditing = !this.element.id;
-    return {
-      isEditing,
-      editedElement: cloneDeep(this.element),
-      undoState: cloneDeep(this.element),
-      alert: {},
-      errors: []
-    };
-  },
+  data: vm => ({
+    isEditing: !vm.element.id,
+    editedElement: cloneDeep(vm.element),
+    undoState: cloneDeep(vm.element),
+    errors: [],
+    alert: {}
+  }),
   computed: {
     schema() {
       const elementSchema = this.$teRegistry.get(this.answerType).schema;
@@ -87,20 +87,12 @@ export default {
         ...this.isGraded ? elementSchema : omit(elementSchema, ['correct'])
       });
     },
-    answerType() {
-      return this.element.data.type;
-    },
-    isGraded() {
-      return this.element.type === 'ASSESSMENT';
-    },
-    hintError() {
-      return this.errors.includes('hint');
-    },
-    showFeedback() {
-      const { answerType } = this;
-      const feedbackSupported = ['MC', 'SC', 'TF'].indexOf(answerType) > -1;
-      return feedbackSupported;
-    }
+    answerType: vm => vm.element.data.type,
+    isGraded: vm => vm.element.type === 'ASSESSMENT',
+    showFeedback: vm => WITH_FEEDBACK.includes(vm.answerType),
+    hintError: vm => vm.errors.includes('hint'),
+    hintPlaceholder: () => HINT_PLACEHOLDER,
+    hintTitle: () => HINT_TITLE
   },
   methods: {
     resolveComponentName(element) {
@@ -132,23 +124,14 @@ export default {
       this.$emit('add', cloneDeep(this.undoState));
       this.editedElement = cloneDeep(this.undoState);
       this.isEditing = false;
-      this.setAlert();
       this.errors = [];
-    },
-    close() {
-      this.$emit('selected');
+      this.alert = {};
     },
     remove() {
       this.$emit('remove');
     },
-    setAlert(data = {}) {
-      this.alert = data;
-      const { type, message } = data;
-      if (type && type !== 'alert-danger') {
-        setTimeout(() => {
-          if (message === this.alert.message) this.setAlert();
-        }, 3000);
-      }
+    setAlert(alert = {}) {
+      this.alert = alert;
     },
     validate() {
       return this.schema.validate(this.editedElement.data, validationOptions);
@@ -195,45 +178,22 @@ const baseSchema = {
 
 <style lang="scss" scoped>
 .tce-question-container {
-  min-height: 400px;
-  margin: 10px auto;
-  padding: 10px 30px 30px;
-  background-color: white;
+  min-height: 25rem;
+  margin: 1.25rem 0;
+  background-color: #fff;
   overflow: visible;
+  text-align: left;
 
   ::v-deep .title {
     font-weight: 400;
   }
 
-  .alert {
-    display: inline-block;
-    margin: 0 auto;
-    padding: 3px 7px;
-    text-align: center;
+  .tce-answer {
+    margin: 0 3rem 0.5rem;
   }
 
-  .assessment-type {
-    margin: 10px 0 20px;
-    padding: 4px 15px;
-    font-size: 13px;
-    background-color: #707070;
-    border-radius: 1px;
-  }
-
-  .form-group {
-    text-align: left;
-    width: 100%;
-    margin: 0 auto;
-    padding: 25px 20px 15px;
-    overflow: hidden;
-  }
-
-  .form-label {
-    font-size: 20px;
-  }
-
-  input.form-control {
-    padding-left: 10px;
+  .hint, .feedback, .v-alert {
+    margin: 1.5rem 3rem;
   }
 }
 

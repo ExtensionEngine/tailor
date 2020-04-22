@@ -51,8 +51,6 @@ export default {
 
 <style lang="scss" scoped>
 .true-false {
-  width: 100%;
-  padding: 1.5rem 1.25rem 1rem;
   text-align: left;
   overflow: hidden;
 

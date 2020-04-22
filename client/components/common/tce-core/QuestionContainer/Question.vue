@@ -1,6 +1,6 @@
 <template>
   <div class="question-container">
-    <span class="title">Question</span>
+    <span class="title">{{ title }}</span>
     <div :class="['question', { 'question-error': questionError }]">
       <draggable v-model="question" v-bind="dragOptions" class="row">
         <contained-content
@@ -13,6 +13,7 @@
       <add-element
         @add="addElement"
         :layout="false"
+        :disabled="!isEditing"
         :include="['JODIT_HTML', 'IMAGE', 'EMBED', 'HTML']"
         :class="['add-element', { invisible: !isEditing }]" />
     </div>
@@ -33,6 +34,7 @@ import { helperText } from 'utils/assessment';
 import pullAt from 'lodash/pullAt';
 import set from 'lodash/set';
 
+const TITLE = 'Question';
 const DRAG_OPTIONS = {
   handle: '.drag-handle',
   scrollSensitivity: 125,
@@ -57,7 +59,8 @@ export default {
     },
     helperText: vm => get(helperText[vm.assessment.data.type], 'question'),
     questionError: vm => vm.errors.includes('question'),
-    dragOptions: () => DRAG_OPTIONS
+    dragOptions: () => DRAG_OPTIONS,
+    title: () => TITLE
   },
   methods: {
     addElement(element) {
@@ -91,16 +94,15 @@ export default {
 <style lang="scss" scoped>
 .question-container {
   clear: both;
-  width: 100%;
-  text-align: left;
+  margin: 0 1.5rem;
 
   .question {
-    padding: 0.8rem;
+    padding: 0.8rem 0.8rem 0;
     font-size: 1.375rem;
     text-align: center;
 
     .add-element {
-      margin-top: 0.3rem;
+      margin-top: 0.4rem;
     }
 
     .invisible {

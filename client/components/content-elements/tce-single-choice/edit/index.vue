@@ -40,8 +40,8 @@ import { defaults } from 'utils/assessment';
 import range from 'lodash/range';
 import set from 'lodash/set';
 
-const customAlert = {
-  type: 'alert-danger',
+const ALERT = {
+  type: 'error',
   text: 'Please make at least two answers available !'
 };
 
@@ -97,7 +97,7 @@ export default {
       this.update({ correct: index });
     },
     validate() {
-      this.$emit('alert', this.answers.length < 2 ? customAlert : {});
+      this.$emit('alert', this.answers.length < 2 ? ALERT : {});
     },
     answerError(index) {
       return this.errors.includes(`answers[${index}]`);
