@@ -3,9 +3,9 @@
     <v-col class="text-left">
       <v-alert
         v-if="!anchor"
-        type="info"
-        color="grey darken-3"
-        prominent outlined
+        color="blue-grey darken-4"
+        icon="mdi-information-variant"
+        prominent text
         class="mb-5">
         Click on the button bellow in order to create your first item!
       </v-alert>

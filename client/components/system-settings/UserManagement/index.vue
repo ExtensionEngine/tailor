@@ -1,8 +1,12 @@
 <template>
   <div>
-    <v-toolbar color="grey lighten-4" flat>
+    <v-toolbar color="transparent" flat>
       <v-spacer />
-      <v-btn @click.stop="showUserDialog()" text class="px-1">
+      <v-btn
+        @click.stop="showUserDialog()"
+        color="blue-grey darken-4"
+        text
+        class="px-1">
         <v-icon class="pr-2">mdi-account-multiple-plus</v-icon>
         Add user
       </v-btn>
@@ -12,7 +16,7 @@
         <v-switch
           v-model="showArchived"
           label="Archived"
-          color="primary"
+          color="blue-grey darken-3"
           hide-details />
       </v-col>
       <v-col>
@@ -24,13 +28,14 @@
       </v-col>
     </v-row>
     <v-data-table
+      v-show="!!totalItems"
       :headers="headers"
       :items="users"
       :server-items-length="totalItems"
       :options.sync="dataTable"
       :must-sort="true"
       :footer-props="{ itemsPerPageOptions: [10, 20, 50, 100] }"
-      class="grey lighten-4">
+      class="transparent">
       <template slot="item" slot-scope="{ item }">
         <tr :key="item.id">
           <td class="text-no-wrap text-left">
@@ -46,17 +51,15 @@
           <td class="text-no-wrap text-center">
             <v-btn
               @click="showUserDialog(item)"
-              small
-              text
-              icon>
+              color="blue-grey darken-3"
+              small icon>
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
             <v-btn
               @click="archiveOrRestore(item)"
               :disabled="user.id === item.id"
-              small
-              text
-              icon>
+              color="blue-grey darken-3"
+              small icon>
               <v-icon>
                 mdi-account-{{ item.deletedAt ? 'convert' : 'off' }}
               </v-icon>

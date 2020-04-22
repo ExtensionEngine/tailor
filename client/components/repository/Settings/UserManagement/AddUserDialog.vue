@@ -9,8 +9,7 @@
         v-on="on"
         color="primary darken-1"
         text>
-        <v-icon x-small class="mr-1">mdi-plus</v-icon>
-        <v-icon small class="mr-1">mdi-account</v-icon>Add User
+        <v-icon class="mr-2">mdi-account-plus</v-icon>Add User
       </v-btn>
     </template>
     <template v-slot:header>Add user</template>

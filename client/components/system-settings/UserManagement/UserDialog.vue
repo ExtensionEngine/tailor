@@ -44,7 +44,7 @@
     </template>
     <template v-slot:actions>
       <v-btn @click="close" text>Cancel</v-btn>
-      <v-btn @click="save" color="primary" text>Save</v-btn>
+      <v-btn @click="save" color="blue-grey darken-4" text>Save</v-btn>
     </template>
   </tailor-dialog>
 </template>

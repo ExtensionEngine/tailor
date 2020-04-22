@@ -57,10 +57,11 @@ export default {
   },
   methods: {
     ...mapActions('repositories', ['update']),
-    updateKey(key, value) {
+    async updateKey(key, value) {
       if (find(this.metadata, { key })) key = `data.${key}`;
       const data = cloneDeep(this.repository);
-      this.update(set(data, key, value));
+      await this.update(set(data, key, value));
+      this.$snackbar.show('Saved', { class: 'mb-12' });
     },
     publish() {
       this.publishing = true;
