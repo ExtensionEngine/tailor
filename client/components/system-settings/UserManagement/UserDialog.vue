@@ -6,6 +6,7 @@
         v-model="user.email"
         v-validate="{ required: true, email: true, 'unique-email': userData }"
         :error-messages="vErrors.collect('email')"
+        :disabled="!isNewUser"
         label="E-mail"
         placeholder="Enter email..."
         data-vv-name="email"
@@ -44,7 +45,7 @@
     </template>
     <template v-slot:actions>
       <v-btn @click="close" text>Cancel</v-btn>
-      <v-btn @click="save" color="primary" text>Save</v-btn>
+      <v-btn @click="save" color="blue-grey darken-4" text>Save</v-btn>
     </template>
   </tailor-dialog>
 </template>

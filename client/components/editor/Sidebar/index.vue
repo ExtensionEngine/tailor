@@ -2,8 +2,12 @@
   <v-navigation-drawer
     width="400"
     absolute permanent
-    class="sidebar">
-    <div :class="{ 'toolbar-visible': selectedElement }">
+    class="sidebar grey lighten-4 elevation-2">
+    <div
+      :class="{
+        'toolbar-visible': selectedElement,
+        'toolbar-composite': selectedElement && selectedElement.parent
+      }">
       <activity-navigation
         v-if="selectedTab === 'browser'"
         :repository="repository"
@@ -15,14 +19,14 @@
         :activity="selectedActivity" />
       <element-sidebar
         v-if="selectedTab === 'element'"
-        :key="selectedElement._cid"
+        :key="getElementId(selectedElement)"
         :element="selectedElement"
         :metadata="metadata" />
     </div>
     <template v-slot:append>
       <v-tabs
         :value="selectedTabIndex"
-        background-color="grey darken-4"
+        background-color="blue-grey darken-4"
         icons-and-text fixed-tabs dark>
         <v-tabs-slider />
         <v-tab
@@ -49,6 +53,7 @@ import ActivityDiscussion from './Discussion';
 import ActivityNavigation from './Navigation';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
+import { getElementId } from 'tce-core/utils';
 import { getElementMetadata } from 'shared/activities';
 
 export default {
@@ -83,6 +88,9 @@ export default {
       return getElementMetadata(get(repository, 'schema'), selectedElement);
     }
   },
+  methods: {
+    getElementId
+  },
   watch: {
     selectedElement() {
       if (this.elementSidebarEnabled) {
@@ -101,10 +109,13 @@ export default {
 .sidebar {
   padding: 3.125rem 0 0;
   text-align: left;
-  background: #fafafa;
 }
 
 .toolbar-visible {
-  margin-top: 3.125rem;
+  margin-top: 4.5rem;
+
+  &.toolbar-composite {
+    margin-top: 7.5rem;
+  }
 }
 </style>

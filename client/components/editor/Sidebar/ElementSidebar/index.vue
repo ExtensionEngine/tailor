@@ -21,6 +21,9 @@ export default {
       elementBus: EventBus.channel(`element:${getElementId(this.element)}`)
     };
   },
+  beforeDestroy() {
+    this.elementBus.unsubscribe();
+  },
   provide() {
     return {
       $elementBus: this.elementBus
@@ -32,10 +35,10 @@ export default {
 
 <style lang="scss" scoped>
 .element-sidebar {
-  padding: 0 0.875rem 1.5rem;
+  padding: 1.75rem 0.875rem 1.5rem;
 
   h3 {
-    margin: 4.875rem 0.25rem 1.5rem;
+    margin: 0 0.25rem 1.5rem;
   }
 }
 </style>

@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import ActivityOptions from '@/components/repository/common/ActivityOptions';
+import ActivityOptions from '@/components/repository/common/ActivityOptions/Menu';
 import CreateDialog from '@/components/repository/common/CreateDialog';
 import get from 'lodash/get';
 import { isEditable } from 'shared/activities';

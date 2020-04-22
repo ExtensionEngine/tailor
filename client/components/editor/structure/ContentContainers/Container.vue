@@ -3,7 +3,7 @@
     <div class="actions">
       <v-btn
         @click="$emit('delete')"
-        color="error"
+        color="secondary darken-1"
         text
         class="pull-right">
         Delete {{ name }}
@@ -11,8 +11,9 @@
     </div>
     <v-alert
       :value="!teachingElements.length"
-      color="primary darken-1"
-      outlined
+      color="blue-grey darken-3"
+      icon="mdi-information-variant"
+      text prominent
       class="my-5 mx-3">
       Click the button below to create content.
     </v-alert>

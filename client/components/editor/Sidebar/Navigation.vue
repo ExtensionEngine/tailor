@@ -1,12 +1,13 @@
 <template>
   <div>
     <v-sheet color="transparent" class="navigation-header">
-      <h4 class="body-1 my-2 mx-1">Navigation</h4>
       <v-text-field
         v-model="search"
-        label="Search"
+        label="Search..."
+        background-color="grey lighten-2"
         clear-icon="mdi-close"
-        clearable hide-details outlined
+        prepend-inner-icon="mdi-magnify"
+        solo clearable hide-details
         class="my-3 mx-1" />
     </v-sheet>
     <v-treeview
@@ -73,7 +74,7 @@ export default {
 
 <style lang="scss" scoped>
 .navigation-header {
-  padding: 1rem 1rem 0.25rem 0.75rem;
+  padding: 1.5rem 1rem 0.25rem 0.75rem;
 }
 
 .v-treeview ::v-deep {
