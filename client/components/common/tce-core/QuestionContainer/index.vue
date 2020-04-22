@@ -201,6 +201,10 @@ const baseSchema = {
   background-color: white;
   overflow: visible;
 
+  ::v-deep .title {
+    font-weight: 400;
+  }
+
   .alert {
     display: inline-block;
     margin: 0 auto;
