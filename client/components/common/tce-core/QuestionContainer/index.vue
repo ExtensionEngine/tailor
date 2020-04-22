@@ -190,6 +190,7 @@ const baseSchema = {
 
   .tce-answer {
     margin: 0 3rem 0.5rem;
+    overflow: hidden;
   }
 
   .hint, .feedback, .v-alert {
