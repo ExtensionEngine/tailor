@@ -6,6 +6,7 @@
         v-model="user.email"
         v-validate="{ required: true, email: true, 'unique-email': userData }"
         :error-messages="vErrors.collect('email')"
+        :disabled="!isNewUser"
         label="E-mail"
         placeholder="Enter email..."
         data-vv-name="email"
