@@ -1,13 +1,11 @@
 <template>
   <div class="feedback">
-    <span class="heading">
-      Feedback
-      <span
-        @click="isExpanded = !isExpanded"
-        class="btn btn-link btn-xs">
-        {{ isExpanded ? 'hide' : 'show' }}
-      </span>
-    </span>
+    <span class="title">Feedback</span>
+    <v-btn
+      @click="isExpanded = !isExpanded"
+      text small class="mb-1 mx-2">
+      {{ isExpanded ? 'hide' : 'show' }}
+    </v-btn>
     <transition name="fade">
       <ul v-if="isExpanded">
         <feedback-item
@@ -30,6 +28,8 @@
 import FeedbackItem from './FeedbackItem';
 import isArray from 'lodash/isArray';
 
+// todo: finish veutify and cleanup
+
 export default {
   name: 'feedback',
   props: {
@@ -38,15 +38,11 @@ export default {
     isGraded: { type: Boolean, default: false },
     isEditing: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      isExpanded: this.isEditing
-    };
-  },
+  data: vm => ({
+    isExpanded: vm.isEditing
+  }),
   computed: {
-    processedAnswers() {
-      return isArray(this.answers) ? this.answers : ['True', 'False'];
-    }
+    processedAnswers: vm => isArray(vm.answers) ? vm.answers : ['True', 'False']
   },
   watch: {
     isEditing(val) {
@@ -58,15 +54,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.heading {
-  font-size: 20px;
-
-  .btn {
-    margin-left: 15px;
-    padding: 3px 10px;
-  }
-}
-
 ul {
   margin-top: 20px;
   list-style: none;

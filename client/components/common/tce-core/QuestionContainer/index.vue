@@ -6,6 +6,7 @@
       :assessment="editedElement"
       :is-editing="isEditing"
       :errors="errors" />
+    <!-- todo: cleanup questions [2, 8] -->
     <component
       :is="resolveComponentName(element)"
       @update="update"
