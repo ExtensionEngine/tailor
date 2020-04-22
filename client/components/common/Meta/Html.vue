@@ -1,6 +1,8 @@
 <template>
   <v-input :class="{ editing }" class="meta-quill-input">
-    <label class="quill-input-label grey lighten-5 px-1" :for="meta.key">
+    <label
+      :for="meta.key"
+      class="quill-label v-label theme--light grey lighten-5 px-1">
       {{ meta.label }}
     </label>
     <div class="editor-wrapper">
@@ -86,10 +88,10 @@ export default {
     border-color: currentColor;
   }
 
-  .quill-input-label {
+  .quill-label {
     position: absolute;
-    top: -23px;
-    color: rgba(0, 0, 0, 0.6);
+    top: -21px;
+    font-size: 14px;
   }
 
   .editor-wrapper {
