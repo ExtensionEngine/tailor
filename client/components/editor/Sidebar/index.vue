@@ -108,8 +108,8 @@ export default {
       if (this.selectedTab !== 'element') return;
       this.selectedTab = 'browser';
     },
-    unseenComments: debounce(function (val) {
-      this.unseenCount = val.length;
+    unseenComments: debounce(function (val, oldVal) {
+      if (val.length !== oldVal.length) this.unseenCount = val.length;
     }, 200)
 
   },
