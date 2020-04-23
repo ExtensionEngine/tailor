@@ -35,7 +35,7 @@
       :disabled="!isEditing"
       :placeholder="allowFileUpload ? 'or paste a URL...' : 'Paste a URL...'"
       label="URL"
-      hide-details filled />
+      hide-details filled clearable />
     <v-btn
       v-if="!isEditing"
       @click.stop="isEditing = true"

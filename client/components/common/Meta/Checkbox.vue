@@ -32,6 +32,7 @@ export default {
     color: #0000008a;
     font-size: 0.875rem;
     font-weight: normal;
+    text-align: left;
   }
 }
 </style>
