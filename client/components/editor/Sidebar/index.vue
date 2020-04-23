@@ -15,7 +15,6 @@
         :selected="selectedActivity" />
       <activity-discussion
         v-show="discussionTabVisible"
-        @change="comments => activityCommments = [...comments]"
         :activity="selectedActivity"
         :is-visible="discussionTabVisible" />
       <element-sidebar
@@ -50,7 +49,6 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
 import ActivityDiscussion from './Discussion';
 import ActivityNavigation from './Navigation';
 import debounce from 'lodash/debounce';
@@ -58,6 +56,7 @@ import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
 import { getElementMetadata } from 'shared/activities';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'editor-sidebar',
@@ -67,12 +66,11 @@ export default {
     selectedActivity: { type: Object, required: true },
     selectedElement: { type: Object, default: null }
   },
-  data: () => ({ selectedTab: 'browser', activityCommments: [], unseenCount: 0 }),
+  data: () => ({ selectedTab: 'browser', unseenCount: 0 }),
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
-    ...mapState({ seenByActivity: state => state.seenByActivity }),
     ...mapGetters('repository/comments', ['getUnseenComments']),
-    unseenComments: vm => vm.getUnseenComments(vm.commments, vm.selectedActivity.uid),
+    unseenComments: vm => vm.getUnseenComments(vm.selectedActivity),
     discussionTabVisible: vm => vm.selectedTab === 'comments',
     tabs: vm => ([{
       name: 'browser',
