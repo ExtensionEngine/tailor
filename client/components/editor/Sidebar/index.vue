@@ -15,7 +15,7 @@
         :selected="selectedActivity" />
       <activity-discussion
         v-show="discussionTabVisible"
-        @change="comments => commentCount = comments.length"
+        @change="comments => activityCommments = [...comments]"
         :activity="selectedActivity"
         :is-visible="discussionTabVisible" />
       <element-sidebar
@@ -67,13 +67,12 @@ export default {
     selectedActivity: { type: Object, required: true },
     selectedElement: { type: Object, default: null }
   },
-  data: () => ({ selectedTab: 'browser', commentCount: 0, unseenCount: 0 }),
+  data: () => ({ selectedTab: 'browser', activityCommments: [], unseenCount: 0 }),
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
     ...mapState({ seenByActivity: state => state.seenByActivity }),
-    ...mapGetters('repository/comments', ['getActivityComments', 'getUnseenComments']),
-    activityComments: vm => vm.getActivityComments(vm.selectedActivity.id),
-    unseenComments: vm => vm.getUnseenComments(vm.activityComments, vm.selectedActivity.uid),
+    ...mapGetters('repository/comments', ['getUnseenComments']),
+    unseenComments: vm => vm.getUnseenComments(vm.commments, vm.selectedActivity.uid),
     discussionTabVisible: vm => vm.selectedTab === 'comments',
     tabs: vm => ([{
       name: 'browser',
