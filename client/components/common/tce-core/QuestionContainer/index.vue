@@ -198,10 +198,10 @@ const baseSchema = {
   }
 
   .hint, .feedback, .v-alert {
-    margin: 1.5rem 3rem;
+    margin: 1rem 3rem;
 
     @media (max-width: 1263px) {
-      margin: 1.5rem 0.25rem;
+      margin: 1rem 0.25rem;
     }
   }
 }
