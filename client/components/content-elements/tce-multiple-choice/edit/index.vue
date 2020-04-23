@@ -1,10 +1,10 @@
 <template>
-  <div class="multiple-choice">
+  <div>
     <span class="title">{{ title }}</span>
     <v-btn
+      v-if="isEditing"
       @click="addAnswer"
-      :disabled="disabled"
-      small icon tile class="float-right">
+      small icon class="float-right">
       <v-icon small>mdi-plus</v-icon>
     </v-btn>
     <v-text-field
@@ -20,7 +20,6 @@
         <v-checkbox
           v-if="isGraded"
           v-model="correct"
-          @change="toggleAnswer(idx)"
           :value="idx"
           :color="color"
           :disabled="disabled"
@@ -29,7 +28,7 @@
         <v-avatar v-else size="32" color="primary">{{ idx + 1 }}</v-avatar>
       </template>
       <template slot="append">
-        <v-btn @click="removeAnswer(idx)" small icon tile class="remove">
+        <v-btn v-if="isEditing" @click="removeAnswer(idx)" small icon>
           <v-icon small>mdi-close</v-icon>
         </v-btn>
       </template>
@@ -43,9 +42,9 @@ import { defaults } from 'utils/assessment';
 import range from 'lodash/range';
 import set from 'lodash/set';
 
-const ALERT = {
-  type: 'error',
-  text: 'Please make at least two answers available !'
+const MIN_TWO_ANSWERS = {
+  text: 'Please make at least two answers available!',
+  type: 'error'
 };
 
 const getTitle = isGraded => isGraded ? 'Answers' : 'Options';
@@ -58,8 +57,11 @@ export default {
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
   },
-  data: vm => ({ correct: vm.assessment.correct }),
   computed: {
+    correct: {
+      get() { return this.assessment.correct; },
+      set(index) { this.update({ correct: index }); }
+    },
     disabled: vm => !vm.isEditing,
     answers: vm => vm.assessment.answers,
     feedback: vm => vm.assessment.feedback,
@@ -100,9 +102,8 @@ export default {
 
       this.update({ answers, correct, feedback });
     },
-
     validate() {
-      this.$emit('alert', this.answers.length < 2 ? ALERT : {});
+      this.$emit('alert', this.answers.length < 2 ? MIN_TWO_ANSWERS : {});
     },
     answerError(index) {
       return this.errors.includes(`answers[${index}]`);
@@ -118,50 +119,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.multiple-choice {
-  width: 100%;
-  padding: 1.5rem 1.25rem 1rem;
-  text-align: left;
-  overflow: hidden;
+.answer {
+  margin: 0.5rem 0 0.5rem 3rem;
 
-  .title {
-    font-weight: 400;
+  @media (max-width: 1263px) {
+    margin-left: 0.25rem;
   }
 
-  .answer {
-    margin-top: 0.5rem;
-    padding-left: 3rem;
-
-    .remove {
-      display: none;
-    }
-
-    &:hover .remove {
-      display: block;
-    }
-
-    .checkbox {
-      position: relative;
-      left: 0.25rem;
-      margin: 0;
-      padding: 0;
-    }
-
-    .v-avatar {
-      position: relative;
-      bottom: 0.1rem;
-      color: #fff;
-    }
+  .checkbox {
+    position: relative;
+    left: 0.25rem;
+    margin: 0;
+    padding: 0;
   }
 
-  .non-graded {
-    padding-left: 1rem;
+  .v-avatar {
+    position: relative;
+    bottom: 0.1rem;
+    color: #fff;
   }
+}
 
-  @media (max-width: 850px) {
-    .answer, .non-graded {
-      padding-left: 0;
-    }
-  }
+.non-graded {
+  margin-left: 1rem;
 }
 </style>

@@ -9,7 +9,6 @@
     </v-btn>
     <v-radio-group
       v-model="correct"
-      @change="selectAnswer"
       :error="correctError"
       :class="['answers', {'non-graded': !isGraded }]">
       <v-text-field
@@ -55,8 +54,11 @@ export default {
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
   },
-  data: vm => ({ correct: vm.assessment.correct }),
   computed: {
+    correct: {
+      get() { return this.assessment.correct; },
+      set(index) { this.update({ correct: index }); }
+    },
     disabled: vm => !vm.isEditing,
     answers: vm => vm.assessment.answers,
     feedback: vm => vm.assessment.feedback,
@@ -92,9 +94,6 @@ export default {
         delete feedback[answers.length];
       }
       this.$emit('update', { answers, correct, feedback });
-    },
-    selectAnswer(index) {
-      this.update({ correct: index });
     },
     validate() {
       this.$emit('alert', this.answers.length < 2 ? MIN_TWO_ANSWERS : {});
@@ -133,6 +132,6 @@ export default {
 }
 
 .non-graded {
-  padding-left: 1rem;
+  margin-left: 1rem;
 }
 </style>
