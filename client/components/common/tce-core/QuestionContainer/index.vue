@@ -9,13 +9,13 @@
     <component
       :is="resolveComponentName(element)"
       @update="update"
-      :alert.sync="alert"
+      @alert="alert = $event"
       :assessment="editedElement.data"
       :is-editing="isEditing"
       :is-graded="isGraded"
       :errors="errors"
       class="tce-answer" />
-    <div class="hint text-left">
+    <div class="hint">
       <span class="title">{{ hintTitle }}</span>
       <v-text-field
         v-model="editedElement.data.hint"
@@ -129,9 +129,6 @@ export default {
     },
     remove() {
       this.$emit('remove');
-    },
-    setAlert(alert = {}) {
-      this.alert = alert;
     },
     validate() {
       return this.schema.validate(this.editedElement.data, validationOptions);

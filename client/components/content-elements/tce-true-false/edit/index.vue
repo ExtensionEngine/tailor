@@ -44,7 +44,11 @@ export default {
 
 <style lang="scss" scoped>
 .answer {
-  padding: 0.25rem 3rem;
+  margin: 0.25rem 3rem;
+
+  @media (max-width: 1263px) {
+    margin: 0.25rem 1rem;
+  }
 
   // override global bootstrap
   ::v-deep .v-label {
@@ -53,6 +57,6 @@ export default {
 }
 
 .non-graded {
-  padding-left: 1.2rem;
+  margin-left: 1rem;
 }
 </style>

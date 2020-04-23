@@ -1,10 +1,10 @@
 <template>
-  <div class="single-choice">
+  <div>
     <span class="title">{{ title }}</span>
     <v-btn
+      v-if="isEditing"
       @click="addAnswer"
-      :disabled="disabled"
-      small icon tile class="float-right">
+      small icon class="float-right">
       <v-icon small>mdi-plus</v-icon>
     </v-btn>
     <v-radio-group
@@ -19,13 +19,13 @@
         :disabled="disabled"
         :error="answerError(idx)"
         :placeholder="placeholder"
-        hide-details class="my-2">
+        hide-details class="mb-2">
         <template slot="prepend">
           <v-radio v-if="isGraded" :value="idx" :color="color" />
-          <v-avatar v-else size="32" color="primary">{{ idx + 1 }}</v-avatar>
+          <v-avatar v-else size="32" color="primary" class="">{{ idx + 1 }}</v-avatar>
         </template>
         <template slot="append">
-          <v-btn @click="removeAnswer(idx)" small icon tile class="remove">
+          <v-btn v-if="isEditing" @click="removeAnswer(idx)" small icon>
             <v-icon small>mdi-close</v-icon>
           </v-btn>
         </template>
@@ -40,9 +40,9 @@ import { defaults } from 'utils/assessment';
 import range from 'lodash/range';
 import set from 'lodash/set';
 
-const ALERT = {
-  type: 'error',
-  text: 'Please make at least two answers available !'
+const MIN_TWO_ANSWERS = {
+  text: 'Please make at least two answers available!',
+  type: 'error'
 };
 
 const getTitle = isGraded => isGraded ? 'Answers' : 'Options';
@@ -52,15 +52,15 @@ export default {
   props: {
     assessment: { type: Object, default: defaults.SC },
     errors: { type: Array, default: () => ([]) },
-    isGraded: { type: Boolean, default: false },
-    isEditing: { type: Boolean, default: false }
+    isEditing: { type: Boolean, default: false },
+    isGraded: { type: Boolean, default: false }
   },
   data: vm => ({ correct: vm.assessment.correct }),
   computed: {
     disabled: vm => !vm.isEditing,
     answers: vm => vm.assessment.answers,
     feedback: vm => vm.assessment.feedback,
-    color: vm => vm.disabled ? 'grey' : 'blue darken-2',
+    color: vm => vm.disabled ? 'grey' : 'primary',
     correctError: vm => vm.errors.includes('correct'),
     placeholder: vm => getPlaceholder(vm.isGraded),
     title: vm => getTitle(vm.isGraded)
@@ -97,7 +97,7 @@ export default {
       this.update({ correct: index });
     },
     validate() {
-      this.$emit('alert', this.answers.length < 2 ? ALERT : {});
+      this.$emit('alert', this.answers.length < 2 ? MIN_TWO_ANSWERS : {});
     },
     answerError(index) {
       return this.errors.includes(`answers[${index}]`);
@@ -113,47 +113,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.single-choice {
-  width: 100%;
-  padding: 1.5rem 1.25rem 1rem;
-  text-align: left;
-  overflow: hidden;
+.answers {
+  margin-left: 3rem;
 
-  .title {
-    font-weight: 400;
+  @media (max-width: 1263px) {
+    margin-left: 0.25rem;
   }
 
-  .answers {
-    padding: 0.25rem 0 0 3rem;
-
-    .remove {
-      display: none;
-    }
-
-    .v-input:hover .remove {
-      display: block;
-    }
-
-    .v-radio {
-      position: relative;
-      left: 0.4rem;
-    }
-
-    .v-avatar {
-      position: relative;
-      bottom: 0.1rem;
-      color: #fff;
-    }
+  .v-radio {
+    position: relative;
+    left: 0.4rem;
   }
 
-  .non-graded {
-    padding-left: 1rem;
+  .v-avatar {
+    position: relative;
+    bottom: 0.1rem;
+    color: #fff;
   }
+}
 
-  @media (max-width: 850px) {
-    .answers, .non-graded {
-      padding-left: 0;
-    }
-  }
+.non-graded {
+  padding-left: 1rem;
 }
 </style>
