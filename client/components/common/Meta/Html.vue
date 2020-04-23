@@ -1,6 +1,10 @@
 <template>
-  <div class="meta-quill-input">
-    <label :for="meta.key">{{ meta.label }}</label>
+  <v-input :class="{ editing }" class="meta-quill-input">
+    <label
+      :for="meta.key"
+      class="quill-label v-label theme--light grey lighten-5 px-1">
+      {{ meta.label }}
+    </label>
     <div class="editor-wrapper">
       <quill-editor
         :ref="meta.key"
@@ -8,18 +12,18 @@
         @focus="enableEditing"
         @blur="update"
         :name="meta.key"
-        :options="quillOptions"
+        :options="options"
         :disabled="!editing"
         :class="{ 'meta-quill-disabled': !editing }" />
     </div>
-  </div>
+  </v-input>
 </template>
 
 <script>
 import { quillEditor as QuillEditor } from 'vue-quill-editor';
 import some from 'lodash/some';
 
-const quillOptions = () => ({
+const defaultOptions = () => ({
   modules: {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -33,14 +37,16 @@ const quillOptions = () => ({
 export default {
   name: 'html-input',
   props: {
-    meta: { type: Object, default: () => ({ value: null }) },
-    quillOptions: { type: Object, default: quillOptions }
+    meta: { type: Object, default: () => ({ value: null }) }
   },
   data() {
     return {
       content: this.meta.value,
       editing: false
     };
+  },
+  computed: {
+    options: ({ meta }) => ({ ...defaultOptions(), ...meta.editorOptions })
   },
   methods: {
     update(quill) {
@@ -50,7 +56,7 @@ export default {
     },
     enableEditing() {
       this.editing = true;
-      const { quill } = this.$refs.html;
+      const { quill } = this.$refs[this.meta.key];
       return this.$nextTick(() => quill.focus());
     },
     getActiveTooltips(quill) {
@@ -68,23 +74,37 @@ export default {
 <style lang="scss">
 .meta-quill-input {
   position: relative;
-  margin: 0 0 20px 0;
-  padding: 10px 8px;
+  margin: 0 0 1.25rem 0;
+  padding: 0.625rem 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  border-radius: 0.125rem;
   cursor: pointer;
 
-  .meta-quill-disabled {
-    .ql-toolbar.ql-snow {
-      background: #f5f5f5;
-    }
+  &.editing {
+    border-width: 0.125rem;
+  }
+
+  .quill-label {
+    position: absolute;
+    top: -1.375rem;
+    font-size: 0.875rem;
+  }
+
+  .editor-wrapper {
+    flex: 1;
+  }
+
+  .ql-toolbar.ql-snow {
+    border-bottom: 1px solid currentColor;
   }
 
   .ql-container {
-    max-height: 230px;
+    max-height: 15rem;
     overflow: auto;
   }
 
   .ql-tooltip {
-    left: 30px !important;
+    left: 1.875rem !important;
   }
 }
 </style>
