@@ -74,24 +74,20 @@ export default {
 <style lang="scss">
 .meta-quill-input {
   position: relative;
-  margin: 0 0 20px 0;
-  padding: 10px 8px;
+  margin: 0 0 1.25rem 0;
+  padding: 0.625rem 0.5rem;
   border: 1px solid rgba(0, 0, 0, 0.6);
-  border-radius: 2px;
+  border-radius: 0.125rem;
   cursor: pointer;
 
   &.editing {
-    border-width: 2px;
-  }
-
-  &.editing, &:hover {
-    border-color: currentColor;
+    border-width: 0.125rem;
   }
 
   .quill-label {
     position: absolute;
-    top: -21px;
-    font-size: 14px;
+    top: -1.375rem;
+    font-size: 0.875rem;
   }
 
   .editor-wrapper {
@@ -103,12 +99,12 @@ export default {
   }
 
   .ql-container {
-    max-height: 230px;
+    max-height: 15rem;
     overflow: auto;
   }
 
   .ql-tooltip {
-    left: 30px !important;
+    left: 1.875rem !important;
   }
 }
 </style>
