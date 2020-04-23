@@ -1,12 +1,11 @@
 <template>
-  <div class="text-response">
+  <div>
     <span class="title">{{ title }}</span>
     <v-textarea
-      v-model="correct"
-      @blur="update"
+      @change="correct = $event"
+      :value="correct"
       :disabled="disabled"
-      :error="correctError"
-      rows="6" class="mt-0" />
+      :error="correctError" />
   </div>
 </template>
 
@@ -22,34 +21,14 @@ export default {
     isEditing: { type: Boolean, default: false },
     isGraded: { type: Boolean, default: false }
   },
-  data: vm => ({ correct: vm.assessment.correct }),
   computed: {
+    correct: {
+      get() { return this.assessment.correct; },
+      set(correct) { this.$emit('update', { correct }); }
+    },
+    title: vm => getTitle(vm.isGraded),
     disabled: vm => !vm.isEditing || !vm.isGraded,
-    correctError: vm => vm.errors.includes('correct'),
-    title: vm => getTitle(vm.isGraded)
-  },
-  methods: {
-    update() {
-      this.$emit('update', { correct: this.correct });
-    }
-  },
-  watch: {
-    isEditing(newVal) {
-      if (this.isGraded && !newVal) this.correct = this.assessment.correct;
-    }
+    correctError: vm => vm.errors.includes('correct')
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.text-response {
-  width: 100%;
-  padding: 1.5rem 1.25rem 1rem;
-  text-align: left;
-  overflow: hidden;
-
-  .title {
-    font-weight: 400;
-  }
-}
-</style>
