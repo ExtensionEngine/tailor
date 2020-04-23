@@ -14,7 +14,7 @@
         :activities="activities"
         :selected="selectedActivity" />
       <activity-discussion
-        v-show="selectedTab === 'comments'"
+        v-show="discussionTabVisible"
         @change="comments => commentCount = comments.length"
         :activity="selectedActivity"
         :is-visible="discussionTabVisible" />

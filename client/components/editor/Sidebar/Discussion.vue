@@ -23,9 +23,7 @@ export default {
     comments: vm => vm.getActivityComments(vm.activity.id),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
-  methods: {
-    ...mapMutations('repository/comments', ['markSeenComments'])
-  },
+  methods: mapMutations('repository/comments', ['markSeenComments']),
   watch: {
     isVisible(val) {
       if (!val) return;
