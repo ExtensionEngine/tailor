@@ -45,7 +45,10 @@ export default {
       appChannel.emit('showConfirmationModal', {
         title: 'Delete repository?',
         message: `Are you sure you want to delete repository ${this.repository.name}?`,
-        action: () => this.removeRepository(this.repository) && this.$router.push('/')
+        action: async () => {
+          await this.removeRepository(this.repository);
+          this.$router.push('/');
+        }
       });
     },
     onActionClick(name) {
