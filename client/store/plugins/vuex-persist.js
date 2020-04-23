@@ -1,6 +1,6 @@
 import VuexPersistence from 'vuex-persist';
 
-const MUTATIONS = [
+const OBSERVED_MUTATIONS = [
   'login',
   'logout',
   'setUser',
@@ -18,5 +18,5 @@ export default new VuexPersistence({
     }
   }),
   storage: window.localStorage,
-  filter: mutation => MUTATIONS.includes(mutation.type)
+  filter: mutation => OBSERVED_MUTATIONS.includes(mutation.type)
 }).plugin;
