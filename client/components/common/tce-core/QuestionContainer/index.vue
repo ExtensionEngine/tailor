@@ -6,7 +6,6 @@
       :assessment="editedElement"
       :is-editing="isEditing"
       :errors="errors" />
-    <!-- todo: cleanup questions [2, 8] -->
     <component
       :is="resolveComponentName(element)"
       @update="update"
@@ -23,7 +22,7 @@
         :placeholder="hintPlaceholder"
         :disabled="!isEditing"
         :error="hintError"
-        class="pt-0" />
+        dense />
     </div>
     <feedback
       v-if="showFeedback"
@@ -190,12 +189,20 @@ const baseSchema = {
   }
 
   .tce-answer {
-    margin: 0 3rem 0.5rem;
+    margin: 0 3rem;
     overflow: hidden;
+
+    @media (max-width: 1263px) {
+      margin: 0 0.25rem;
+    }
   }
 
   .hint, .feedback, .v-alert {
     margin: 1.5rem 3rem;
+
+    @media (max-width: 1263px) {
+      margin: 1.5rem 0.25rem;
+    }
   }
 }
 

@@ -28,8 +28,6 @@
 import FeedbackItem from './FeedbackItem';
 import isArray from 'lodash/isArray';
 
-// todo: finish veutify and cleanup
-
 export default {
   name: 'feedback',
   props: {

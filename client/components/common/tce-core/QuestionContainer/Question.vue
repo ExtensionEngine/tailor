@@ -96,6 +96,10 @@ export default {
   clear: both;
   margin: 0 1.5rem;
 
+  @media (max-width: 1263px) {
+    margin: 0;
+  }
+
   .question {
     padding: 0.8rem 0.8rem 0;
     font-size: 1.375rem;
