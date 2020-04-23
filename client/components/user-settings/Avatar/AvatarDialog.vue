@@ -1,35 +1,31 @@
 <template>
-  <v-dialog v-model="visible" width="640" eager>
-    <v-card>
-      <v-card-title class="headline">
-        <v-avatar color="primary" size="38" class="mr-2">
-          <v-icon color="white">mdi-image</v-icon>
-        </v-avatar>
-        Change Avatar
-      </v-card-title>
-      <v-card-text>
-        <v-row justify="center">
-          <croppa
-            ref="croppa"
-            @file-choose="visible = true"
-            v-bind="options"
-            prevent-white-space />
-        </v-row>
-      </v-card-text>
-      <v-card-actions>
-        <v-row class="pb-3 pr-3">
-          <v-spacer />
-          <v-btn @click="close" text>Cancel</v-btn>
-          <v-btn @click="confirm" outlined>
-            Update
-          </v-btn>
-        </v-row>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <tailor-dialog
+    v-model="isVisible"
+    width="640"
+    header-icon="mdi-image"
+    eager>
+    <template v-slot:header>Change Avatar</template>
+    <template v-slot:body>
+      <v-row justify="center">
+        <croppa
+          ref="croppa"
+          @file-choose="isVisible = true"
+          v-bind="options"
+          prevent-white-space />
+      </v-row>
+    </template>
+    <template v-slot:actions>
+      <v-btn @click="close" text>Cancel</v-btn>
+      <v-btn @click="confirm" color="blue-grey darken-4" text>
+        Update
+      </v-btn>
+    </template>
+  </tailor-dialog>
 </template>
 
 <script>
+import TailorDialog from '@/components/common/TailorDialog';
+
 const AVATAR_OPTS = { compressionRate: 0.6, mimetype: 'image/jpeg' };
 
 export default {
@@ -38,7 +34,7 @@ export default {
     imgUrl: { type: String, required: true }
   },
   data() {
-    return { visible: false };
+    return { isVisible: false };
   },
   computed: {
     options: vm => ({
@@ -49,7 +45,7 @@ export default {
   },
   methods: {
     close() {
-      this.visible = false;
+      this.isVisible = false;
     },
     confirm() {
       const { mimetype, compressionRate } = AVATAR_OPTS;
@@ -57,23 +53,24 @@ export default {
       this.$emit('update', imgUrl);
       this.close();
     }
-  }
+  },
+  components: { TailorDialog }
 };
 </script>
 
 <style lang="scss" scoped>
 $image-border: 8px solid #e3e3e3;
 $image-bg-color: #f5f5f5;
-$image-width: 240px;
-$image-height: 240px;
+$image-width: 15rem;
+$image-height: 15rem;
 
 .croppa-container {
-  overflow: hidden;
-  border-radius: 50%;
   width: $image-width;
   height: $image-height;
   background-color: $image-bg-color;
   border: $image-border;
+  border-radius: 50%;
+  overflow: hidden;
   cursor: pointer;
 
   &.croppa--has-target {
@@ -86,14 +83,6 @@ $image-height: 240px;
 
     &:active { cursor: grab; }
     &.croppa--disabled { cursor: auto; }
-  }
-}
-
-.v-list {
-  padding: 0;
-
-  ::v-deep .v-list__tile {
-    padding: 0;
   }
 }
 </style>
