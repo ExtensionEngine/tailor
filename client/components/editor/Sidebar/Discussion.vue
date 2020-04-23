@@ -29,6 +29,7 @@ export default {
   watch: {
     isVisible(val) {
       if (!val) return;
+      if (!this.lastCommentAt) return;
       const latestComment = {
         activityUid: this.activity.uid,
         lastCommentAt: this.lastCommentAt
