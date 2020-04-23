@@ -3,7 +3,6 @@
     <discussion
       @change="$emit('change', $event)"
       :activity="activity"
-      :is-visible="isVisible"
       show-notifications />
   </div>
 </template>
