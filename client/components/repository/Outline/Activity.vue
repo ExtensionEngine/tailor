@@ -6,33 +6,37 @@
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
         :id="`activity_${_cid}`"
-        :class="[isHighlighted ? 'elevation-9' : 'elevation-1']"
-        :style="{ 'border-left': `8px solid ${color}` }"
+        :class="{
+          selected: isSelected,
+          'elevation-6': isHighlighted,
+          'elevation-1': !isHighlighted
+        }"
+        :style="{ 'border-left-color': color }"
         class="activity">
-        <v-btn v-if="hasSubtypes" @click="toggle()" icon class="activity-icon">
-          <v-icon size="30" color="primary darken-1">mdi-{{ icon }}</v-icon>
+        <v-btn
+          v-if="hasSubtypes"
+          @click.stop="toggle()"
+          icon
+          class="activity-icon">
+          <v-icon size="30" color="blue-grey darken-3">mdi-{{ icon }}</v-icon>
         </v-btn>
         <div class="activity-name text-truncate">{{ data.name }}</div>
         <div v-show="isHighlighted" class="actions">
           <v-spacer />
-          <v-btn
-            v-show="isEditable"
-            :to="{ name: 'editor', params: { activityId: id } }"
-            color="primary darken-1"
-            outlined small>
-            Open
-          </v-btn>
+          <options-toolbar
+            :activity="{ id, _cid, repositoryId, parentId, type, position, data }"
+            class="options-toolbar" />
           <v-btn
             v-show="hasSubtypes"
             @click="toggle()"
-            icon
-            small
+            color="blue-grey darken-4"
+            icon small
             class="mx-0">
             <v-icon>mdi-chevron-{{ isExpanded ? 'up' : 'down' }}</v-icon>
           </v-btn>
-          <activity-options
+          <options-menu
             :activity="{ id, _cid, repositoryId, parentId, type, position, data }"
-            class="activity-options" />
+            class="options-menu" />
         </div>
       </div>
     </div>
@@ -56,12 +60,13 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex';
-import ActivityOptions from '@/components/repository/common/ActivityOptions';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import { isEditable } from 'shared/activities';
 import map from 'lodash/map';
+import OptionsMenu from '../common/ActivityOptions/Menu';
+import OptionsToolbar from '../common/ActivityOptions/Toolbar';
 import reorderMixin from './reorderMixin';
 import size from 'lodash/size';
 
@@ -118,7 +123,7 @@ export default {
       this.toggleActivity({ _cid: this._cid, expanded });
     }
   },
-  components: { ActivityOptions, Draggable }
+  components: { Draggable, OptionsMenu, OptionsToolbar }
 };
 </script>
 
@@ -126,12 +131,23 @@ export default {
 .activity {
   display: flex;
   margin: 0.875rem 0;
-  padding: 0 0 0 0.375rem;
+  padding: 0 0 0 0.5rem;
   font-size: 1.125rem;
-  background-color: #fcfcfc;
+  background-color: #fafafa;
   border-radius: 2px;
   cursor: pointer;
-  transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-left-width: 8px;
+  border-left-style: solid;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  &.selected {
+    background: #f5f5f5;
+    border-left-width: 28px;
+
+    > * {
+      color: #111;
+    }
+  }
 
   &-icon {
     margin: 0.125rem 0 0 0;
@@ -139,15 +155,19 @@ export default {
 
   .actions {
     display: flex;
-    min-width: 10.3125rem;
+    min-width: 11.5rem;
     margin-left: auto;
 
     .v-btn {
       margin: 0.375rem 0.5rem;
     }
 
-    .activity-options ::v-deep .v-btn {
+    .options-menu ::v-deep .v-btn {
       height: 100%;
+    }
+
+    .options-toolbar {
+      padding-top: 0.125rem;
     }
   }
 }

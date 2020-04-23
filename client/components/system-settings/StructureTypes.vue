@@ -9,11 +9,11 @@
     <v-treeview
       :items="schemas"
       :search="search"
-      open-on-click
       item-text="label"
+      open-all open-on-click
       class="pt-3">
       <template v-slot:prepend="{ item, open }">
-        <v-icon :color="item.color">
+        <v-icon color="blue-grey darken-3">
           {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
         </v-icon>
       </template>

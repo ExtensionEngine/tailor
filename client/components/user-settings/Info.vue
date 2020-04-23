@@ -34,7 +34,7 @@
         <v-btn
           :disabled="!hasChanges || vErrors.any()"
           type="submit"
-          color="primary"
+          color="blue-grey darken-4"
           text>
           Update
         </v-btn>
