@@ -20,26 +20,9 @@ const modules = {
   editor
 };
 
-const mapGetters = (namespace, getters) => {
-  return getters.reduce((acc, name) => {
-    const path = [namespace, name].join('/');
-    return Object.assign(acc, {
-      [name](_, getters) {
-        return getters[path];
-      }
-    });
-  }, {});
-};
-
 export default new Vuex.Store({
   middlewares,
   modules,
   plugins,
-  getters: {
-    ...mapGetters('repositories', ['repositories', 'repositoryQueryParams']),
-    ...mapGetters('activities', ['activities']),
-    ...mapGetters('revisions', ['revisions', 'revisionQueryParams']),
-    ...mapGetters('comments', ['comments'])
-  },
   strict: false
 });
