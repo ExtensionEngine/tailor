@@ -66,7 +66,7 @@ export default {
     selectedActivity: { type: Object, required: true },
     selectedElement: { type: Object, default: null }
   },
-  data: () => ({ selectedTab: 'browser', unseenCount: 0 }),
+  data: () => ({ selectedTab: 'browser', unseenCommentCount: 0 }),
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
     ...mapGetters('repository/comments', ['getUnseenComments']),
@@ -80,7 +80,7 @@ export default {
       name: 'comments',
       label: 'Comments',
       icon: 'forum-outline',
-      badgeData: vm.unseenCount
+      badgeData: vm.unseenCommentCount
     }, {
       name: 'element',
       label: 'Element',
@@ -106,7 +106,7 @@ export default {
       this.selectedTab = 'browser';
     },
     unseenComments: debounce(function (val, oldVal) {
-      if (val.length !== oldVal.length) this.unseenCount = val.length;
+      if (val.length !== oldVal.length) this.unseenCommentCount = val.length;
     }, 200)
 
   },
