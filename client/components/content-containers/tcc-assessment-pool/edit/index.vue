@@ -9,7 +9,7 @@
     <v-alert :value="!hasAssessments" color="white" icon="mdi-information-variant">
       Click the button below to create first assessment.
     </v-alert>
-    <ul class="list-group">
+    <ul class="list-group pl-0">
       <assessment-item
         v-for="it in assessments"
         :key="it._cid"
