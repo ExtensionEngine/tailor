@@ -13,5 +13,5 @@ export const getUnseenComments = (state, _, rootState) => activity => {
   return filter(items, it =>
     it.authorId !== user.id &&
     it.activityId === activity.id &&
-    new Date(it.createdAt).getTime() > new Date(lastSeen));
+    new Date(it.createdAt).getTime() > lastSeen);
 };
