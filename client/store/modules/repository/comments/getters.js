@@ -6,12 +6,12 @@ export const getActivityComments = state => activityId => {
   return orderBy(activityComments, 'createdAt', 'desc');
 };
 
-export const getUnseenComments = (state, _, rootState) => ({ id, uid }) => {
+export const getUnseenComments = (state, _, rootState) => activity => {
   const { items, seenByActivity } = state;
   const { user } = rootState.auth;
-  const lastSeen = seenByActivity[uid] || 0;
+  const lastSeen = seenByActivity[activity.uid] || 0;
   return filter(items, it =>
     it.authorId !== user.id &&
-    it.activityId === id &&
+    it.activityId === activity.id &&
     new Date(it.createdAt).getTime() > new Date(lastSeen));
 };
