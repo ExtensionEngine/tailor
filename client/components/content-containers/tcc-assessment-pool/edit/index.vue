@@ -36,8 +36,6 @@ import AssessmentItem from 'tce-core/AssessmentItem';
 import cuid from 'cuid';
 import filter from 'lodash/filter';
 import last from 'lodash/last';
-import map from 'lodash/map';
-import pickBy from 'lodash/pickBy';
 import sortBy from 'lodash/sortBy';
 
 export default {
@@ -47,17 +45,14 @@ export default {
     elements: { type: Object, required: true }
   },
   data: () => ({
-    unsavedAssessments: {},
     selected: [],
     allSelected: false
   }),
   computed: {
-    savedAssessments() {
-      return filter(this.elements, { activityId: this.container.id });
-    },
     assessments() {
-      const { savedAssessments: saved, unsavedAssessments: unsaved } = this;
-      return sortBy([...saved, ...Object.values(unsaved)], 'position');
+      const activityId = this.container.id;
+      const assessments = filter(this.elements, { activityId });
+      return sortBy(assessments, 'position');
     },
     nextPosition() {
       const lastItem = last(this.assessments);
@@ -68,24 +63,18 @@ export default {
   methods: {
     addAssessment(assessment) {
       const cid = cuid();
-      const data = { ...assessment, _cid: cid };
-      this.unsavedAssessments = { ...this.unsavedAssessments, [cid]: data };
-      this.selected.push(data._cid);
+      this.$emit('addElement', { ...assessment, _cid: cid });
+      this.selected.push(cid);
     },
     saveAssessment(assessment) {
       const event = assessment.id ? 'updateElement' : 'saveElement';
       return this.$emit(event, assessment);
     },
-    clearUnsavedAssessments(assessments) {
-      const ids = assessments.map(it => it._cid);
-      const cond = it => !ids.includes(it._cid);
-      this.unsavedAssessments = pickBy(this.unsavedAssessments, cond);
-    },
     toggleSelect(assessment) {
       const { question } = assessment.data;
       const hasQuestion = question && question.length;
       if (this.isSelected(assessment) && !hasQuestion) {
-        this.remove(assessment);
+        this.$emit('deleteElement', assessment);
       } else if (this.isSelected(assessment)) {
         this.selected.splice(this.selected.indexOf(assessment._cid), 1);
       } else {
@@ -95,13 +84,17 @@ export default {
     isSelected(assessment) {
       return this.selected.includes(assessment._cid);
     },
+    clearSelected() {
+      const ids = this.assessments.map(it => it._cid);
+      this.selected = this.selected.filter(it => ids.includes(it));
+    },
     toggleAssessments() {
       this.allSelected = !this.allSelected;
-      this.selected = this.allSelected ? map(this.assessments, it => it._cid) : [];
+      this.selected = this.allSelected ? this.assessments.map(it => it._cid) : [];
     }
   },
   watch: {
-    savedAssessments: 'clearUnsavedAssessments'
+    assessments: 'clearSelected'
   },
   components: { AddElement, AssessmentItem }
 };

@@ -15,6 +15,7 @@
       @addSubcontainer="save"
       @updateSubcontainer="update"
       @deleteSubcontainer="requestContainerDeletion"
+      @addElement="addElement"
       @saveElement="saveContentElement"
       @updateElement="updateElement"
       @reorderElement="reorderContentElements"
@@ -82,6 +83,7 @@ export default {
   methods: {
     ...mapActions('repository/activities', ['save', 'update', 'remove']),
     ...mapActions('repository/contentElements', {
+      addElement: 'add',
       saveElement: 'save',
       updateElement: 'update',
       reorderElements: 'reorder',
