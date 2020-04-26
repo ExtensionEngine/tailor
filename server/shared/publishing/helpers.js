@@ -22,6 +22,7 @@ const without = require('lodash/without');
 
 const { FLAT_REPO_STRUCTURE } = process.env;
 
+const CC_ATTRS = ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt'];
 const CE_ATTRS = [
   'id', 'uid', 'type', 'contentId', 'contentSignature',
   'position', 'data', 'meta', 'refs', 'createdAt', 'updatedAt'
@@ -151,52 +152,38 @@ function publishAssessments(parent) {
 
 function fetchContainers(parent) {
   const typeConfigs = getSupportedContainers(parent.type);
-  const { defaults, custom } = getGroupedContainerTypes(typeConfigs);
 
-  const fetches = [];
-  if (defaults.length) fetches.push(fetchDefaultContainers(parent, defaults));
-  if (custom.length) fetches.push(fetchCustomContainers(parent, custom));
-  if (!fetches.length) return [];
-  return Promise.all(fetches).reduce((containers, groupedContainers) => {
+  return Promise.all([
+    fetchDefaultContainers(parent, typeConfigs),
+    fetchCustomContainers(parent, typeConfigs)
+  ])
+  .reduce((containers, groupedContainers) => {
     const mappedContainers = groupedContainers.map(it => {
       const config = find(typeConfigs, { type: it.type });
       const publishedAs = get(config, 'publishedAs', 'container');
-      const { templateId } = config;
-      return { ...it, templateId, publishedAs };
+      return { ...it, publishedAs, templateId: config.templateId };
     });
     return containers.concat(mappedContainers);
   }, []);
 }
 
-function getGroupedContainerTypes(typeConfigs) {
-  return typeConfigs.reduce((acc, { type, templateId }) => {
-    if (containerRegistry.getContentFetcher(templateId)) {
-      acc.custom.push(templateId);
-    } else {
-      acc.defaults.push(type);
-    }
-    return acc;
-  }, { defaults: [], custom: [] });
-}
-
-function fetchDefaultContainers(parent, types) {
+function fetchDefaultContainers(parent, config) {
+  const include = [{ model: ContentElement.scope('publish') }];
+  const types = config.filter(it => !it.templateId).map(it => it.type);
   const where = { type: types };
-  return parent.getChildren({ where }).map(fetchDefaultContainer);
+  return parent
+    .getChildren({ attributes: CC_ATTRS, where, include })
+    .map(container => {
+      const { ContentElements: ces, ...data } = container.toJSON();
+      const elements = map(ces, (it, pos) => ({ ...it, position: pos + 1 }));
+      return { ...data, elements };
+    });
 }
 
-function fetchDefaultContainer(container) {
-  const order = [['position', 'ASC']];
-  return container
-    .getContentElements({ attributes: CE_ATTRS, order })
-    .then(ces => ({
-      ...pick(container, ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt']),
-      elements: map(ces, (it, pos) => Object.assign(it, { position: pos + 1 }))
-    }));
-}
-
-function fetchCustomContainers(parent, types) {
-  const options = { include: [{ model: ContentElement, attributes: CE_ATTRS }] };
-  return containerRegistry.fetch(types, parent, options);
+function fetchCustomContainers(parent, config) {
+  const types = config.filter(it => it.templateId).map(it => it.templateId);
+  const include = [{ model: ContentElement.scope('publish') }];
+  return containerRegistry.fetch(types, parent, { include });
 }
 
 function fetchAssessments(parent) {
