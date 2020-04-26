@@ -20,10 +20,6 @@ export const typeInfo = {
   DD: { type: 'DD', title: 'Drag & Drop', class: 'drag-drop' }
 };
 
-export const helperText = {
-  FB: { question: 'Type "@blank" when new blank is needed.' }
-};
-
 const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
 const BLANK_PLACEHOLDER = /(@blank)/g;
 

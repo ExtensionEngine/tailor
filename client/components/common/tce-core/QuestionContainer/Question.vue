@@ -22,9 +22,6 @@
         label="Add question block"
         large />
     </div>
-    <span v-if="isEditing && helperText" class="help-block">
-      {{ helperText }}
-    </span>
   </v-sheet>
 </template>
 
@@ -34,8 +31,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import Draggable from 'vuedraggable';
 import findIndex from 'lodash/findIndex';
-import get from 'lodash/get';
-import { helperText } from 'utils/assessment';
 import pullAt from 'lodash/pullAt';
 import set from 'lodash/set';
 
@@ -62,7 +57,6 @@ export default {
         this.$emit('update', { question });
       }
     },
-    helperText: vm => get(helperText[vm.assessment.data.type], 'question'),
     questionError: vm => vm.errors.includes('question'),
     dragOptions: () => DRAG_OPTIONS,
     title: () => TITLE

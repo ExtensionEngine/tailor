@@ -1,162 +1,174 @@
 <template>
-  <div v-if="hasAnswers" class="fill-blank">
-    <span class="title">Answers</span>
-    <draggable @update="update" :list="answerGroups" v-bind="dragOptions">
-      <div v-for="(answers, i) in answerGroups" :key="i" class="mt-2">
-        <span class="drag-handle">
+  <div>
+    <div class="d-flex justify-space-between align-center">
+      <span v-if="isGraded" class="title">{{ title }}</span>
+      <span v-if="isEditing" class="body-2">{{ info }}</span>
+    </div>
+    <draggable v-model="correct" handle=".drag-handle">
+      <v-card v-for="(group, i) in correct" :key="i" outlined class="group">
+        <span :class="['drag-handle', { invisible: disabled }]">
           <span class="mdi mdi-drag-vertical"></span>
         </span>
         <v-chip label small>{{ i + 1 }}</v-chip>
         <v-btn
+          v-if="isEditing"
           @click="addAnswer(i)"
-          :disabled="disabled"
-          small icon tile class="float-right">
+          small icon class="float-right mr-4">
           <v-icon small>mdi-plus</v-icon>
         </v-btn>
         <v-btn
-          v-if="hasExtraAnswers"
+          v-if="isEditing && !isSynced"
           @click="removeAnswerGroup(i)"
-          :disabled="disabled"
-          small icon tile class="float-right">
-          <v-icon small>mdi-delete</v-icon>
+          small icon class="float-right mr-1">
+          <v-icon color="error" small>mdi-delete</v-icon>
         </v-btn>
-        <!-- todo: fix -->
         <v-text-field
-          v-for="(answer, j) in answers"
-          :key="`${i}.${j}`"
-          v-model="answers[j]"
+          v-for="(answer, j) in group" :key="`${i}.${j}`"
+          @change="updateAnswer(i, j, $event)"
+          :value="answer"
           :disabled="disabled"
-          placeholder="Answer...">
+          :error="answerError(i, j)"
+          :placeholder="placeholder"
+          class="answer">
           <template slot="append">
             <v-btn
-              v-if="answers.length > 1"
+              v-if="isEditing && group.length > 1"
               @click="removeAnswer(i, j)"
-              small icon tile class="remove">
+              small icon>
               <v-icon small>mdi-close</v-icon>
             </v-btn>
           </template>
         </v-text-field>
-      </div>
+      </v-card>
     </draggable>
   </div>
 </template>
 
 <script>
-import debounce from 'lodash/debounce';
+import cloneDeep from 'lodash/cloneDeep';
 import { defaults } from 'utils/assessment';
-import draggable from 'vuedraggable';
-import filter from 'lodash/filter';
+import Draggable from 'vuedraggable';
 import get from 'lodash/get';
+import pullAt from 'lodash/pullAt';
 import reduce from 'lodash/reduce';
+import size from 'lodash/size';
 import times from 'lodash/times';
 
-const TEXT_CONTAINERS = ['JODIT_HTML', 'HTML'];
-const PLACEHOLDER = /(@blank)/g;
-const ALERT = {
-  type: 'alert-danger',
-  text: `Question and blanks are out of sync !
-        Please delete unnecessary answers or add blanks in the question !`
+const TEXT_TYPES = ['JODIT_HTML', 'HTML'];
+const BLANK = /(@blank)/g;
+
+const TITLE = 'Answers';
+const PLACEHOLDER = 'Answer...';
+const INFO = 'Type "@blank" above when new blank is needed.';
+const OUT_OF_SYNC_ALERT = {
+  type: 'error',
+  text: `Question and blanks are out of sync!
+    Please delete unnecessary answers or add blanks in the question!`
 };
 
-const getTextAssets = item => filter(item, it => TEXT_CONTAINERS.includes(it.type));
+const getBlankCount = question => {
+  return reduce(question, (count, element) => {
+    if (!TEXT_TYPES.includes(element.type)) return count;
+    const content = get(element, 'data.content', '');
+    return count + size(content.match(BLANK));
+  }, 0);
+};
 
 export default {
   props: {
     assessment: { type: Object, default: defaults.FB },
-    isGraded: { type: Boolean, default: false },
     errors: { type: Array, default: () => ([]) },
-    isEditing: { type: Boolean, default: false }
+    isEditing: { type: Boolean, default: false },
+    isGraded: { type: Boolean, default: false }
   },
   computed: {
-    disabled: vm => !vm.isEditing,
-    question: vm => vm.assessment.question,
-    answerGroups: vm => vm.assessment.correct,
-    hasAnswers: vm => get(vm.answerGroups, 'length') > 0,
-    hasExtraAnswers: vm => vm.answerGroups.length !== vm.blanksCount,
-    blanksCount() {
-      const textAssets = getTextAssets(this.question);
-      return reduce(textAssets, (count, it) => {
-        const content = get(it, 'data.content', '');
-        return count + (content.match(PLACEHOLDER) || []).length;
-      }, 0);
+    // Each @blank has a corresponding array of possible
+    // answers (answer group) in assessment.correct array
+    correct: {
+      get() { return this.assessment.correct; },
+      set(correct) { this.update({ correct }); }
     },
-    dragOptions() {
-      return {
-        disabled: this.disabled || !(this.answerGroups.length > 1),
-        handle: '.drag-handle'
-      };
-    }
+    title: () => TITLE,
+    info: () => INFO,
+    placeholder: () => PLACEHOLDER,
+    disabled: vm => !vm.isEditing,
+    hasAnswers: vm => !!size(vm.correct),
+    question: vm => vm.assessment.question,
+    isSynced: vm => vm.blankCount === size(vm.correct),
+    blankCount: vm => getBlankCount(vm.question)
   },
   methods: {
-    update() {
-      this.validate();
-      this.$emit('update', { correct: this.answerGroups });
+    addAnswer(groupIndex) {
+      const correct = cloneDeep(this.correct);
+      correct[groupIndex].push('');
+      this.update({ correct });
     },
-    addAnswer(index) {
-      this.answerGroups[index].push('');
-      this.update();
+    updateAnswer(groupIndex, answerIndex, value) {
+      const correct = cloneDeep(this.correct);
+      correct[groupIndex][answerIndex] = value;
+      this.update({ correct });
     },
     removeAnswer(groupIndex, answerIndex) {
-      if (this.answerGroups[groupIndex].length === 1) return;
-      this.answerGroups[groupIndex].splice(answerIndex, 1);
-      this.update();
+      const correct = cloneDeep(this.correct);
+      pullAt(correct[groupIndex], answerIndex);
+      this.update({ correct });
     },
-    removeAnswerGroup(index) {
-      this.answerGroups.splice(index, 1);
-      this.update();
+    removeAnswerGroup(groupIndex) {
+      const correct = cloneDeep(this.correct);
+      pullAt(correct, groupIndex);
+      this.update({ correct });
+    },
+    attemptToSync() {
+      const count = this.blankCount - this.correct.length;
+      if (count <= 0) return;
+      const correct = cloneDeep(this.correct);
+      correct.push(...times(count, () => ['']));
+      this.update({ correct });
     },
     validate() {
-      this.$emit('alert', this.hasExtraAnswers ? ALERT : {});
+      this.$emit('alert', this.isSynced ? {} : OUT_OF_SYNC_ALERT);
     },
-    parse() {
-      const count = this.blanksCount - this.answerGroups.length;
-      this.answerGroups.push(...times(count, () => ['']));
-      this.update();
+    update(value) {
+      this.$emit('update', value);
     },
-    errorClass(groupIndex, answerIndex) {
-      const answer = `correct[${groupIndex}][${answerIndex}]`;
-      return { 'has-error': this.errors.includes(answer) };
-    },
-    hasChanges(newVal, oldVal) {
-      const v1 = reduce(oldVal, (r, it) => r + get(it, 'data.content', ''), '');
-      const v2 = reduce(newVal, (r, it) => r + get(it, 'data.content', ''), '');
-      return v1 !== v2;
+    answerError(groupIndex, answerIndex) {
+      return this.errors.includes(`correct[${groupIndex}][${answerIndex}]`);
     }
   },
   watch: {
-    isEditing(newVal) {
-      // todo: fix
-      if (!newVal) this.answerGroups = this.assessment.answerGroups;
-    },
-    question: debounce(function (newVal, oldVal) {
-      if (!this.isGraded || !this.hasChanges(newVal, oldVal)) return;
-      this.parse();
-    }, 200)
+    question() { if (this.isGraded) this.attemptToSync(); },
+    isSynced() { if (this.isGraded) this.validate(); }
   },
-  components: { draggable }
+  created() {
+    if (this.isGraded) this.validate();
+  },
+  components: { Draggable }
 };
 </script>
 
 <style lang="scss" scoped>
-.fill-blank {
-  width: 100%;
-  padding: 1.5rem 1.25rem 1rem;
-  text-align: left;
-  overflow: hidden;
+.drag-handle {
+  float: left;
+  cursor: pointer;
 
-  .title {
-    font-weight: 400;
+  .invisible {
+    visibility: none;
   }
 
-  .drag-handle {
-    float: left;
-    cursor: pointer;
+  .mdi {
+    color: #888;
+    font-size: 1.375rem;
+    line-height: 1.5rem;
+  }
+}
 
-    .mdi {
-      color: #888;
-      font-size: 1.375rem;
-      line-height: 1.5rem;
-    }
+.group {
+  margin: 1rem 0;
+  padding: 1rem 0.5rem 0;
+
+  .answer {
+    margin-right: 1rem;
+    margin-left: 1.375rem;
   }
 }
 </style>
