@@ -55,13 +55,13 @@ export default {
   inject: ['$ccRegistry'],
   props: {
     containerGroup: { type: Array, default() { return []; } },
-    parentId: { type: Number, required: true },
-    displayHeading: { type: Boolean, default: false },
     type: { type: String, required: true },
-    label: { type: String, required: true },
     templateId: { type: String, default: null },
+    parentId: { type: Number, required: true },
+    label: { type: String, required: true },
+    required: { type: Boolean, default: true },
     multiple: { type: Boolean, default: false },
-    required: { type: Boolean, default: true }
+    displayHeading: { type: Boolean, default: false }
   },
   computed: {
     ...mapState('repository/activities', { activities: 'items' }),
