@@ -10,7 +10,13 @@ import Promise from 'bluebird';
 
 const EXTENSIONS_LIST = 'index';
 
-function getType({ type, subtype }) {
+/**
+ * This method is used to find the component that should be used for rendering
+ * this element or container. If a templateId exists then use it. If not it tries
+ * to find which type to use.
+ */
+function getIdentifier({ templateId, type, subtype }) {
+  if (templateId) return templateId;
   return isQuestion(type) ? processAnswerType(subtype) : type;
 }
 
@@ -42,7 +48,7 @@ export default class ComponentRegistry {
     const element = isExtension
       ? (await import(`extensions/content-${_type}s/${path}`)).default
       : (await import(`components/content-${_type}s/${path}`)).default;
-    const id = element.templateId || getType(element);
+    const id = getIdentifier(element);
     const componentName = this._getName(id);
     _registry.push({ ...pick(element, _attrs), componentName, position });
     Vue.component(componentName, element.Edit);
