@@ -1,9 +1,11 @@
 import ComponentRegistry from './ComponentRegistry';
 import containerList from 'shared/core-containers';
-import { getContainerName } from 'tce-core/utils';
+import { getContainerName as getName } from 'tce-core/utils';
 
-const ATTRS = ['type', 'templateId', 'version'];
-const getCondition = templateId => it => it.templateId === templateId;
-const options = ['container', containerList, ATTRS, getContainerName, getCondition];
-
-export default Vue => new ComponentRegistry(Vue, ...options);
+export default Vue => new ComponentRegistry(Vue, {
+  type: 'container',
+  extensions: containerList,
+  attrs: ['type', 'templateId', 'version'],
+  getCondition: id => it => it.templateId === id,
+  getName
+});

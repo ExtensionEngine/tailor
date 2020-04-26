@@ -15,7 +15,7 @@ function getType({ type, subtype }) {
 }
 
 export default class ComponentRegistry {
-  constructor(Vue, type, extensions, attrs, getName, getCondition) {
+  constructor(Vue, { type, extensions, attrs, getName, getCondition }) {
     this._registry = [];
     this.Vue = Vue;
     this._type = type;
