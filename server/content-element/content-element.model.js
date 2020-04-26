@@ -110,7 +110,14 @@ class ContentElement extends Model {
   static scopes() {
     const notNull = { [Op.ne]: null };
     return {
-      withReferences: { where: { 'refs.objectiveId': notNull } }
+      withReferences: { where: { 'refs.objectiveId': notNull } },
+      publish: {
+        attributes: [
+          'id', 'uid', 'type', 'contentId', 'contentSignature',
+          'position', 'data', 'meta', 'refs', 'createdAt', 'updatedAt'
+        ],
+        order: [['position', 'ASC']]
+      }
     };
   }
 
