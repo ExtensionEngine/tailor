@@ -7,6 +7,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import pick from 'lodash/pick';
 import Promise from 'bluebird';
+import sortBy from 'lodash/sortBy';
 
 const EXTENSIONS_LIST = 'index';
 
@@ -55,12 +56,12 @@ export default class ComponentRegistry {
     if (element.Toolbar) Vue.component(getToolbarName(id), element.Toolbar);
   }
 
-  all() {
-    return cloneDeep(this._registry);
+  get all() {
+    return sortBy(cloneDeep(this._registry), 'position');
   }
 
-  get(type, defaultToAll = true) {
-    if (!type) return defaultToAll ? this.all() : null;
+  get(type) {
+    if (!type) return null;
     const { _registry: registry } = this;
     const res = find(registry, this._getCondition(type));
     return res && cloneDeep(res);

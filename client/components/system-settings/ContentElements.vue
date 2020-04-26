@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import sortBy from 'lodash/sortBy';
 import startCase from 'lodash/startCase';
 
 const QUESTION_TYPES = ['ASSESSMENT', 'QUESTION'];
@@ -46,9 +45,8 @@ export default {
   },
   computed: {
     registry() {
-      const list = sortBy(this.$teRegistry.get(), 'position');
       const icon = 'mdi-help-rhombus';
-      return list.reduce((registry, { type, ui, ...item }) => {
+      return this.$teRegistry.all.reduce((registry, { type, ui, ...item }) => {
         const searchable = item.name.toLowerCase();
         const group = QUESTION_TYPES.includes(type) ? 'questions' : 'contentElements';
         registry[group].push({ searchable, ...item, ui: { icon, ...ui } });

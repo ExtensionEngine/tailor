@@ -68,7 +68,7 @@ export default {
     ...mapState('repository/tes', { tes: 'items' }),
     containerName() {
       const { templateId: id, $ccRegistry: registry } = this;
-      return registry.get(id, false) ? getContainerName(id) : DEFAULT_CONTAINER;
+      return registry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
     },
     name() {
       return this.label.toLowerCase();
