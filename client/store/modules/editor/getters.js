@@ -2,6 +2,7 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
+import { getDescendants as getDeepChildren } from 'utils/activity';
 import { getSupportedContainers } from 'shared/activities';
 import reduce from 'lodash/reduce';
 
@@ -23,10 +24,12 @@ export const rootContainerGroups = (_state, getters, { repository }) => {
 
 export const contentContainers = (_state, getters, { repository }) => {
   const { rootContainerGroups } = getters;
-  const { items: activities } = repository.activities;
+  const activities = repository.activities.items;
   const parents = flatMap(rootContainerGroups);
-  const children = findChildren(activities, parents);
-  return [...parents, ...children];
+  return parents.reduce((acc, parent) => {
+    acc.push(parent, ...getDeepChildren(activities, parent));
+    return acc;
+  }, []);
 };
 
 export const assessments = (_state, getters, rootState) => {
@@ -35,9 +38,3 @@ export const assessments = (_state, getters, rootState) => {
   if (!activity) return [];
   return filter(tes, { activityId: activity.id, type: 'ASSESSMENT' });
 };
-
-function findChildren(activities, parents) {
-  const children = filter(activities, it => find(parents, { id: it.parentId }));
-  if (children.length) children.push(...findChildren(activities, children));
-  return children;
-}
