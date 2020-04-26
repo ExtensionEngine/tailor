@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { getActivityMetadata, getLevel } from 'shared/activities';
 import { mapActions, mapGetters } from 'vuex';
 import Discussion from './Discussion';
 import Meta from 'components/common/Meta';
@@ -37,15 +38,16 @@ export default {
   },
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository', ['getConfig', 'getMetadata', 'isRepositoryAdmin']),
-    config: vm => vm.getConfig(vm.activity),
-    metadata: vm => vm.getMetadata(vm.activity)
+    ...mapGetters('repository', ['isRepositoryAdmin']),
+    config: vm => getLevel(vm.activity.type),
+    metadata: vm => getActivityMetadata(vm.activity)
   },
   methods: {
     ...mapActions('repository/activities', ['update']),
-    updateActivity(key, value) {
+    async updateActivity(key, value) {
       const data = { ...this.activity.data, [key]: value };
-      this.update({ _cid: this.activity._cid, data });
+      await this.update({ _cid: this.activity._cid, data });
+      this.$snackbar.show(`${this.config.label} saved`);
     }
   },
   components: {

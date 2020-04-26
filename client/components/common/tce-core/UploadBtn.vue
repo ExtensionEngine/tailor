@@ -1,7 +1,6 @@
 <template>
   <div class="file-upload">
-    <circular-progress v-if="uploading" />
-    <form v-else @submit.prevent class="upload-form">
+    <form @submit.prevent class="upload-form">
       <input
         :ref="id"
         v-filefilter="'auto'"
@@ -11,29 +10,32 @@
         :name="id"
         type="file"
         class="upload-input">
-      <label
+      <v-btn
         v-if="!fileKey"
-        :for="id"
-        :class="[sm ? 'v-btn v-size--small my-1' : 'btn btn-material btn-sm upload-button']">
+        @click="$refs[id].click()"
+        :loading="uploading"
+        color="grey darken-4"
+        text>
+        <v-icon color="secondary" class="mr-2">mdi-cloud-upload-outline</v-icon>
         {{ label }}
-      </label>
+      </v-btn>
       <span
         v-else
         @click="downloadFile(fileKey, fileName)"
         class="file-name">{{ fileName }}
       </span>
-      <span
+      <v-btn
         v-if="fileKey"
         @click="deleteFile({ id, fileName })"
-        class="mdi mdi-delete delete">
-      </span>
+        icon small>
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
     </form>
     <span class="help-block">{{ vErrors.first(id) }}</span>
   </div>
 </template>
 
 <script>
-import CircularProgress from 'components/common/CircularProgress';
 import uniqueId from 'lodash/uniqueId';
 import uploadMixin from '@/components/common/mixins/upload';
 import { withValidation } from 'utils/validation';
@@ -54,8 +56,7 @@ export default {
     uploading(val) {
       this.$emit('update:uploading', val);
     }
-  },
-  components: { CircularProgress }
+  }
 };
 </script>
 
@@ -73,25 +74,10 @@ export default {
   max-height: 0;
 }
 
-.upload-button {
-  background-color: #eee;
-}
-
 .file-name {
   color: #00f;
-  font-size: 16px;
+  font-size: 1rem;
   text-decoration: underline;
   cursor: pointer;
-}
-
-.delete {
-  padding: 0 5px;
-  color: #808080;
-  font-size: 18px;
-  cursor: pointer;
-
-  &:hover {
-    color: #555;
-  }
 }
 </style>

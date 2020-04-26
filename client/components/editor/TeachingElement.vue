@@ -2,6 +2,7 @@
   <contained-content
     @add="add"
     @save="save"
+    @save:meta="meta => updateElement({ _cid: element._cid, meta })"
     @delete="remove"
     v-bind="$attrs"
     :element="element"
@@ -25,7 +26,11 @@ export default {
     dragged: { type: Boolean, default: false }
   },
   methods: {
-    ...mapActions('repository/tes', { saveElement: 'save', removeElement: 'remove' }),
+    ...mapActions('repository/tes', {
+      saveElement: 'save',
+      updateElement: 'update',
+      removeElement: 'remove'
+    }),
     ...mapMutations('repository/tes', { addElement: 'add' }),
     add(element) {
       this.addElement({ ...this.element, ...cloneDeep(element) });

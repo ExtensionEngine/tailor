@@ -12,7 +12,9 @@ const toPairs = require('lodash/toPairs');
 const values = require('lodash/values');
 
 const STORAGE_PROTOCOL = 'storage://';
-const PRIMITIVES = ['HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED'];
+const PRIMITIVES = [
+  'JODIT_HTML', 'TABLE-CELL', 'IMAGE', 'BRIGHTCOVE_VIDEO', 'VIDEO', 'EMBED', 'HTML'
+];
 const DEFAULT_IMAGE_EXTENSION = 'png';
 const isPrimitive = asset => PRIMITIVES.indexOf(asset.type) > -1;
 const isQuestion = type => ['QUESTION', 'REFLECTION', 'ASSESSMENT'].includes(type);
@@ -91,6 +93,10 @@ async function defaultStaticsResolver(item) {
   const element = await (isQuestion(item.type)
     ? resolveQuestion(item)
     : resolveAsset(item));
+  return resolveAssetsMap(element);
+}
+
+async function resolveAssetsMap(element) {
   if (!element.data.assets) return element;
   await Promise.map(toPairs(element.data.assets), async ([key, url]) => {
     const isStorageResource = url.startsWith(STORAGE_PROTOCOL);
@@ -114,11 +120,12 @@ function resolveAsset(element) {
 }
 
 function resolvePrimitive(primitive) {
-  if (!resolver[primitive.type]) return Promise.resolve(primitive);
-  return resolver[primitive.type](primitive);
+  const primitiveResolver = resolver[primitive.type] || resolveAssetsMap;
+  return primitiveResolver(primitive);
 }
 
-function resolveComposite(composite) {
+async function resolveComposite(composite) {
+  await resolveAssetsMap(composite);
   return Promise.each(values(composite.data.embeds), resolvePrimitive)
     .then(() => composite);
 }

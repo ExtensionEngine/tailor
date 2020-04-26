@@ -23,7 +23,7 @@ export const repositories = (state, _getters, _rootState, rootGetters) => {
 
 export const repositoryQueryParams = state => {
   const { pagination, sort } = state.$internals;
-  const { search, showPinned } = state;
+  const { search, showPinned, tagFilter } = state;
 
   return {
     search,
@@ -33,7 +33,8 @@ export const repositoryQueryParams = state => {
     sortBy: sort.field,
     ...{
       pinned: showPinned || undefined
-    }
+    },
+    tagIds: tagFilter.map(({ id }) => id)
   };
 };
 

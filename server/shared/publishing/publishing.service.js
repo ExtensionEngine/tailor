@@ -1,12 +1,13 @@
 'use strict';
 
-const PromiseQueue = require('promise-queue');
 const {
-  updateRepositoryCatalog,
   publishActivity,
   publishRepositoryDetails,
-  unpublishActivity
+  unpublishActivity,
+  updatePublishingStatus,
+  updateRepositoryCatalog
 } = require('./helpers');
+const PromiseQueue = require('promise-queue');
 
 class PublishingService {
   constructor() {
@@ -27,6 +28,10 @@ class PublishingService {
 
   updateRepositoryCatalog(repository) {
     return this.queue.add(() => updateRepositoryCatalog(repository));
+  }
+
+  updatePublishingStatus(repository, activity) {
+    return this.queue.add(() => updatePublishingStatus(repository, activity));
   }
 }
 

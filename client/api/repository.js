@@ -4,9 +4,9 @@ import request from './request';
 const urls = {
   root: '/repositories',
   resource: id => `${urls.root}/${id}`,
-  contentInventory: id => `${urls.resource(id)}/content-inventory`,
   publish: id => `${urls.resource(id)}/publish`,
-  users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`
+  users: (id, userId = '') => `${urls.resource(id)}/users/${userId}`,
+  tags: (id, tagId = '') => `${urls.resource(id)}/tags/${tagId}`
 };
 
 function save(repository) {
@@ -39,11 +39,23 @@ function publishRepositoryMeta(id) {
   return request.post(urls.publish(id)).then(res => res.data);
 }
 
+function addTag({ name, repositoryId }) {
+  return request.post(urls.tags(repositoryId), { repositoryId, name })
+    .then(extractData);
+}
+
+function removeTag({ repositoryId, tagId }) {
+  return request.delete(urls.tags(repositoryId, tagId))
+    .then(extractData);
+}
+
 export default {
   getRepositories,
   save,
   getUsers,
   upsertUser,
   removeUser,
-  publishRepositoryMeta
+  publishRepositoryMeta,
+  addTag,
+  removeTag
 };

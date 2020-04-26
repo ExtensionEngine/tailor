@@ -1,19 +1,11 @@
 'use strict';
 
 const { Model, Op } = require('sequelize');
-const { processStatics, resolveStatics } = require('../shared/storage/helpers');
 const calculatePosition = require('../shared/util/calculatePosition');
-const forEach = require('lodash/forEach');
-const get = require('lodash/get');
-const hash = require('hash-obj');
+const hooks = require('./hooks');
 const isNumber = require('lodash/isNumber');
 const pick = require('lodash/pick');
-
-const pruneVirtualProps = element => {
-  const assets = get(element, 'data.assets', {});
-  forEach(assets, key => delete element.data[key]);
-  return element;
-};
+const { resolveStatics } = require('../shared/storage/helpers');
 
 class ContentElement extends Model {
   static fields(DataTypes) {
@@ -85,26 +77,8 @@ class ContentElement extends Model {
     });
   }
 
-  static hooks(Hooks) {
-    return {
-      [Hooks.beforeCreate](element) {
-        pruneVirtualProps(element);
-        element.contentSignature = hash(element.data, { algorithm: 'sha1' });
-        return processStatics(element);
-      },
-      [Hooks.beforeUpdate](element) {
-        pruneVirtualProps(element);
-        if (!element.changed('data')) return Promise.resolve();
-        element.contentSignature = hash(element.data, { algorithm: 'sha1' });
-        return processStatics(element);
-      },
-      [Hooks.afterCreate](element) {
-        return resolveStatics(element);
-      },
-      [Hooks.afterUpdate](element) {
-        return resolveStatics(element);
-      }
-    };
+  static hooks(Hooks, models) {
+    hooks.add(this, Hooks, models);
   }
 
   static scopes() {

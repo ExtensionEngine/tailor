@@ -2,7 +2,7 @@
   <div infinite-wrapper class="catalog-wrapper">
     <v-container :class="{ 'catalog-empty': !hasRepositories }" class="catalog mt-3">
       <v-row no-gutters class="catalog-actions">
-        <create-repository @created="reset" />
+        <create-repository @created="onCreate" />
         <v-col md="4" sm="10" offset-md="4" offset-sm="1">
           <search
             @update="onFilterChange(setSearch, $event)"
@@ -27,8 +27,12 @@
             @update="onFilterChange(setOrder, $event)"
             :sort-by="sortBy"
             class="pl-2" />
+          <tag-filter @update="onFilterChange(toggleTagFilter, $event)" />
         </v-col>
       </v-row>
+      <tag-filter-selection
+        @close="onFilterChange(toggleTagFilter, $event)"
+        @clear:all="onFilterChange(clearTagFilter, $event)" />
       <v-row>
         <v-col
           v-for="repository in repositories"
@@ -65,16 +69,15 @@ import InfiniteLoading from 'vue-infinite-loading';
 import RepositoryCard from './Card';
 import Search from './Search';
 import SelectOrder from './SelectOrder';
+import TagFilter from './TagFilter';
+import TagFilterSelection from './TagFilterSelection';
 
 export default {
-  data() {
-    return {
-      loading: true
-    };
-  },
+  data: () => ({ loading: true }),
   computed: {
     ...mapState('repositories', {
       sortBy: state => state.$internals.sort,
+      tags: 'tags',
       showPinned: 'showPinned'
     }),
     ...mapGetters('repositories', {
@@ -97,9 +100,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repositories', ['fetch']),
+    ...mapActions('repositories', ['fetch', 'fetchTags']),
     ...mapMutations('repositories', [
-      'togglePinned', 'setSearch', 'setOrder', 'resetFilters'
+      'togglePinned', 'setSearch', 'setOrder', 'reset', 'resetFilters',
+      'resetPagination', 'toggleTagFilter', 'clearTagFilter'
     ]),
     async load() {
       this.loading = true;
@@ -108,7 +112,7 @@ export default {
       if (!this.hasMoreResults) this.loader.complete();
       this.loading = false;
     },
-    async reset() {
+    async onCreate() {
       this.setOrder({ field: 'createdAt', order: 'DESC' });
       this.resetFilters();
       await this.load();
@@ -126,12 +130,21 @@ export default {
       if (!this.hasRepositories && this.showPinned) this.loader.reset();
     }
   },
+  created() {
+    // repositories must be reloaded for publishing badge to work properly
+    // reset state manually to trigger "infinite" event in all cases
+    this.resetPagination();
+    this.reset();
+    this.fetchTags();
+  },
   components: {
     CreateRepository,
     InfiniteLoading,
     RepositoryCard,
     Search,
-    SelectOrder
+    SelectOrder,
+    TagFilter,
+    TagFilterSelection
   }
 };
 </script>
@@ -152,7 +165,7 @@ export default {
     left: 0;
     width: 100%;
     height: 230px;
-    background: #455a64;
+    background: #37474f;
     box-shadow:
       0 3px 5px -1px rgba(0,0,0,0.2),
       0 5px 8px 0 rgba(0,0,0,0.14),
@@ -173,7 +186,6 @@ export default {
 
 .catalog-actions {
   position: relative;
-  margin-bottom: 20px;
   padding-top: 12px;
 
   ::v-deep .add-repo {

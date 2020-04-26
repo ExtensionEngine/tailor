@@ -1,12 +1,14 @@
 <template>
   <div class="toolbar-wrapper">
-    <div
-      v-show="activity"
-      class="activity-toolbar primary elevation-1">
-      <v-chip :color="config.color" label dark class="mr-3">
-        {{ config.label }}
-      </v-chip>
-      <h1 class="text-truncate">{{ activity.data.name }}</h1>
+    <div v-show="activity" class="activity-toolbar blue-grey darken-3">
+      <activity-actions class="activity-actions" />
+      <h1 class="pt-2 headline text-truncate">
+        <span>{{ config.label }}</span>
+        <span class="px-2 grey--text">|</span>
+        <span class="secondary--text text--lighten-2">
+          {{ activity.data.name }}
+        </span>
+      </h1>
     </div>
     <element-toolbar
       v-if="element && element.parent"
@@ -22,7 +24,7 @@
     </element-toolbar>
     <element-toolbar
       v-else-if="element"
-      :key="element._cid || element.id"
+      :key="getElementId(element)"
       :element="element">
       <template slot="actions">
         <slot name="actions"></slot>
@@ -32,7 +34,9 @@
 </template>
 
 <script>
+import ActivityActions from './ActivityActions';
 import { ElementToolbar } from 'tce-core';
+import { getElementId } from 'tce-core/utils';
 import { getLevel } from 'shared/activities';
 import { mapGetters } from 'vuex';
 
@@ -47,7 +51,10 @@ export default {
       return getLevel(this.activity.type);
     }
   },
-  components: { ElementToolbar }
+  methods: {
+    getElementId
+  },
+  components: { ActivityActions, ElementToolbar }
 };
 </script>
 
@@ -60,27 +67,20 @@ export default {
 
 .activity-toolbar {
   display: flex;
-  height: 50px;
-  padding: 0 5px;
+  height: 3.125rem;
+  padding: 0;
   z-index: 999;
-
-  .v-chip {
-    max-width: 300px;
-    height: 26px;
-    margin: 12px 10px;
-    font-size: 13px;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
 
   h1 {
     flex: 1;
     margin: 0;
-    padding-top: 13px;
     color: #fff;
-    font-size: 22px;
-    font-weight: 300;
+    font-size: 1.375rem;
     text-align: left;
   }
+}
+
+.activity-actions {
+  max-width: 10.75rem;
 }
 </style>

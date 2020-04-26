@@ -3,17 +3,18 @@
     <div class="actions">
       <v-btn
         @click="$emit('delete')"
-        color="error"
-        outlined
+        color="secondary darken-1"
+        text
         class="pull-right">
         Delete {{ name }}
       </v-btn>
     </div>
     <v-alert
       :value="!teachingElements.length"
-      color="primary"
+      color="blue-grey darken-3"
       icon="mdi-information-variant"
-      outlined>
+      text prominent
+      class="my-5 mx-3">
       Click the button below to create content.
     </v-alert>
     <tes-list
@@ -87,7 +88,7 @@ export default {
 <style lang="scss" scoped>
 .actions {
   width: 100%;
-  min-height: 36px;
-  margin-bottom: 25px;
+  min-height: 2.25rem;
+  margin-bottom: 0.5rem;
 }
 </style>

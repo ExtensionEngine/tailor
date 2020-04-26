@@ -2,10 +2,9 @@ import Edit from './edit';
 import Toolbar from './edit/Toolbar';
 
 const initState = () => {
-  const id = 1;
   return {
     embeds: {},
-    items: { [id]: { id, body: {} } },
+    items: {},
     height: 500
   };
 };

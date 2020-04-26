@@ -31,7 +31,10 @@ export default {
     frame: { type: Boolean, default: true }
   },
   data() {
-    return { isFocused: false };
+    return {
+      isFocused: false,
+      elementBus: EventBus.channel(`element:${getElementId(this.element)}`)
+    };
   },
   computed: {
     id() {
@@ -39,9 +42,6 @@ export default {
     },
     componentName() {
       return getComponentName(this.element.type);
-    },
-    elementBus() {
-      return EventBus.channel(`element:${this.id}`);
     }
   },
   methods: {
@@ -52,10 +52,14 @@ export default {
     }
   },
   created() {
+    this.elementBus.on('save:meta', meta => this.$emit('save:meta', meta));
     this.elementBus.on('delete', () => this.$emit('delete'));
     EventBus.on('element:focus', element => {
       this.isFocused = !!element && (getElementId(element) === this.id);
     });
+  },
+  beforeDestroy() {
+    this.elementBus.unsubscribe();
   },
   provide() {
     return {

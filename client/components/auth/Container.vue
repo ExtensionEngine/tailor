@@ -1,9 +1,11 @@
 <template>
   <div class="auth-container">
     <div class="auth-panel elevation-2">
-      <div class="auth-header">
-        <img :src="logo" alt="Logo" class="logo">
-        <h1>{{ title }}</h1>
+      <div class="auth-header py-8">
+        <v-avatar size="50" color="blue-grey darken-3" class="my-1 pa-2">
+          <img :src="logo" alt="Logo" class="logo">
+        </v-avatar>
+        <h1 class="ma-0 headline primary--text text--darken-1">{{ title }}</h1>
       </div>
       <div class="auth-body">
         <router-view />
@@ -27,43 +29,27 @@ export default {
 }
 
 .auth-panel {
-  width: 480px;
+  width: 26.5rem;
   margin: auto;
   background-color: #fff;
   border-radius: 4px;
-
-  h1 {
-    margin: 0;
-    color: white;
-    font-size: 22px;
-  }
+  border-top: 4px solid var(--v-primary-darken1);
 
   .auth-header {
-    padding-bottom: 20px;
-    background-color: var(--v-primary-darken1);
-    border-radius: 4px 4px 0 0;
+    padding-bottom: 0;
 
     .logo {
-      width: 75px;
-      margin: 30px 0;
+      width: 2.75rem;
     }
   }
 
   .auth-body {
-    padding: 25px 30px;
+    padding: 0.25rem 1.5rem 0.875rem;
 
     a {
       color: inherit;
       font-weight: 400;
     }
-  }
-
-  .message {
-    min-height: 16px;
-    margin-bottom: 20px;
-    color: var(--v-secondary-base);
-    font-size: 16px;
-    line-height: 16px;
   }
 }
 </style>
