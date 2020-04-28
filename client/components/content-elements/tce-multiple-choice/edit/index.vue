@@ -1,12 +1,6 @@
 <template>
-  <div>
-    <span class="title">{{ title }}</span>
-    <v-btn
-      v-if="isEditing"
-      @click="addAnswer"
-      small icon class="float-right">
-      <v-icon small>mdi-plus</v-icon>
-    </v-btn>
+  <div class="py-4">
+    <div class="mb-5 subtitle-2">{{ title }}</div>
     <v-text-field
       v-for="(answer, idx) in answers" :key="idx"
       @change="updateAnswer($event, idx)"
@@ -15,8 +9,8 @@
       :error="answerError(idx)"
       :placeholder="placeholder"
       :class="['answer', { 'non-graded': !isGraded }]"
-      hide-details>
-      <template slot="prepend">
+      filled>
+      <template slot="prepend-inner">
         <v-checkbox
           v-if="isGraded"
           v-model="correct"
@@ -25,7 +19,13 @@
           :disabled="disabled"
           :error="correctError"
           hide-details class="checkbox" />
-        <v-avatar v-else size="32" color="primary">{{ idx + 1 }}</v-avatar>
+        <v-avatar
+          v-else
+          size="26"
+          color="blue-grey darken-3"
+          class="mr-3 subtitle-2">
+          {{ idx + 1 }}
+        </v-avatar>
       </template>
       <template slot="append">
         <v-btn v-if="isEditing" @click="removeAnswer(idx)" small icon>
@@ -33,6 +33,13 @@
         </v-btn>
       </template>
     </v-text-field>
+    <div class="d-flex mb-5">
+      <v-spacer />
+      <v-btn v-if="isEditing" @click="addAnswer" text>
+        <v-icon>mdi-plus</v-icon>
+        Add option
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -65,7 +72,7 @@ export default {
     disabled: vm => !vm.isEditing,
     answers: vm => vm.assessment.answers,
     feedback: vm => vm.assessment.feedback,
-    color: vm => vm.disabled ? 'grey' : 'blue darken-2',
+    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
     correctError: vm => vm.errors.includes('correct'),
     placeholder: vm => getPlaceholder(vm.isGraded),
     title: vm => getTitle(vm.isGraded)
@@ -120,12 +127,6 @@ export default {
 
 <style lang="scss" scoped>
 .answer {
-  margin: 0.5rem 0 0.5rem 3rem;
-
-  @media (max-width: 1263px) {
-    margin-left: 0.25rem;
-  }
-
   .checkbox {
     position: relative;
     left: 0.25rem;
