@@ -32,6 +32,15 @@ export default {
         lastCommentAt: this.lastCommentAt
       };
       setTimeout(() => this.markSeenComments(latestComment), 1000);
+    },
+    comments(val, oldVal) {
+      if (!this.isVisible) return;
+      if (val === oldVal) return;
+      const latestComment = {
+        activityUid: this.activity.uid,
+        lastCommentAt: this.lastCommentAt
+      };
+      setTimeout(() => this.markSeenComments(latestComment), 2000);
     }
   },
   components: {
