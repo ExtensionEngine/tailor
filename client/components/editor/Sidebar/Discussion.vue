@@ -22,25 +22,26 @@ export default {
     comments: vm => vm.getActivityComments(vm.activity.id),
     lastCommentAt: vm => new Date(get(vm.comments[0], 'createdAt', 0)).getTime()
   },
-  methods: mapMutations('repository/comments', ['markSeenComments']),
+  methods: {
+    ...mapMutations('repository/comments', ['markSeenComments']),
+    setLastSeenComment(timeout) {
+      const latestComment = {
+        activityUid: this.activity.uid,
+        lastCommentAt: this.lastCommentAt
+      };
+      setTimeout(() => this.markSeenComments(latestComment), timeout);
+    }
+  },
   watch: {
     isVisible(val) {
       if (!val) return;
       if (!this.lastCommentAt) return;
-      const latestComment = {
-        activityUid: this.activity.uid,
-        lastCommentAt: this.lastCommentAt
-      };
-      setTimeout(() => this.markSeenComments(latestComment), 1000);
+      this.setLastSeenComment(1000);
     },
     comments(val, oldVal) {
       if (!this.isVisible) return;
       if (val === oldVal) return;
-      const latestComment = {
-        activityUid: this.activity.uid,
-        lastCommentAt: this.lastCommentAt
-      };
-      setTimeout(() => this.markSeenComments(latestComment), 2000);
+      this.setLastSeenComment(2000);
     }
   },
   components: {
