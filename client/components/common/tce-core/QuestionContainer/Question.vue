@@ -1,6 +1,8 @@
 <template>
-  <div class="question-container">
-    <span class="title">{{ title }}</span>
+  <v-sheet class="question-container grey lighten-4 elevation-1 pa-5 mb-4">
+    <span class="subtitle-2 grey--text text--darken-4">
+      {{ title }}
+    </span>
     <div :class="['question', { 'question-error': questionError }]">
       <draggable v-model="question" v-bind="dragOptions" class="row">
         <contained-content
@@ -15,12 +17,14 @@
         :layout="false"
         :disabled="!isEditing"
         :include="['JODIT_HTML', 'IMAGE', 'EMBED', 'HTML']"
-        :class="['add-element', { invisible: !isEditing }]" />
+        :class="['add-element', { invisible: !isEditing }]"
+        label="Add question block"
+        large />
     </div>
     <span v-if="isEditing && helperText" class="help-block">
       {{ helperText }}
     </span>
-  </div>
+  </v-sheet>
 </template>
 
 <script>

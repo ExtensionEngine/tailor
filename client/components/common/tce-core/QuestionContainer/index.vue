@@ -1,5 +1,13 @@
 <template>
-  <div class="tce-question-container">
+  <v-card class="tce-question-container grey lighten-5">
+    <v-toolbar
+      color="grey darken-3"
+      height="36"
+      dark
+      class="mb-5 px-0 elevation-2 text-left">
+      <v-icon color="secondary lighten-2" size="16" class="mr-1">mdi-help</v-icon>
+      <span class="subtitle-2">{{ conifg.name }}</span>
+    </v-toolbar>
     <slot :isEditing="isEditing"></slot>
     <question
       @update="update"
@@ -15,33 +23,32 @@
       :is-graded="isGraded"
       :errors="errors"
       class="tce-answer" />
-    <div class="hint">
-      <span class="title">{{ hintTitle }}</span>
+    <div class="px-7">
       <v-text-field
         v-model="editedElement.data.hint"
-        :placeholder="hintPlaceholder"
+        :label="hintTitle"
+        :errors="hintError"
         :disabled="!isEditing"
-        :error="hintError"
-        dense />
+        filled />
+      <feedback
+        v-if="showFeedback"
+        @update="updateFeedback"
+        :answers="editedElement.data.answers"
+        :feedback="editedElement.data.feedback"
+        :is-graded="isGraded"
+        :is-editing="isEditing" />
+      <v-alert v-show="alert.text" :type="alert.type" dense class="mt-4">
+        {{ alert.text }}
+      </v-alert>
+      <controls
+        @edit="edit"
+        @save="save"
+        @remove="remove"
+        @cancel="cancel"
+        :is-editing="isEditing"
+        class="controls" />
     </div>
-    <feedback
-      v-if="showFeedback"
-      @update="updateFeedback"
-      :answers="editedElement.data.answers"
-      :feedback="editedElement.data.feedback"
-      :is-graded="isGraded"
-      :is-editing="isEditing" />
-    <v-alert v-show="alert.text" :type="alert.type" dense class="mt-4">
-      {{ alert.text }}
-    </v-alert>
-    <controls
-      @edit="edit"
-      @save="save"
-      @remove="remove"
-      @cancel="cancel"
-      class="controls"
-      :is-editing="isEditing" />
-  </div>
+  </v-card>
 </template>
 
 <script>
@@ -80,8 +87,9 @@ export default {
     alert: {}
   }),
   computed: {
+    conifg: vm => vm.$teRegistry.get(vm.answerType),
     schema() {
-      const elementSchema = this.$teRegistry.get(this.answerType).schema;
+      const elementSchema = this.conifg.schema;
       return yup.object().shape({
         ...baseSchema,
         ...this.isGraded ? elementSchema : omit(elementSchema, ['correct'])
@@ -176,7 +184,6 @@ const baseSchema = {
 <style lang="scss" scoped>
 .tce-question-container {
   min-height: 25rem;
-  margin: 1.25rem 0;
   background-color: #fff;
   overflow: visible;
   text-align: left;
@@ -186,7 +193,7 @@ const baseSchema = {
   }
 
   .tce-answer {
-    margin: 0 3rem;
+    margin: 0 1.75rem;
     overflow: hidden;
 
     @media (max-width: 1263px) {
