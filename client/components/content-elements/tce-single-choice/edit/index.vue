@@ -1,16 +1,7 @@
 <template>
   <div>
-    <span class="title">{{ title }}</span>
-    <v-btn
-      v-if="isEditing"
-      @click="addAnswer"
-      small icon class="float-right">
-      <v-icon small>mdi-plus</v-icon>
-    </v-btn>
-    <v-radio-group
-      v-model="correct"
-      :error="correctError"
-      :class="['answers', {'non-graded': !isGraded }]">
+    <div class="py-2 subtitle-2">{{ title }}</div>
+    <v-radio-group v-model="correct" :error="correctError">
       <v-text-field
         v-for="(answer, idx) in answers" :key="idx"
         @change="updateAnswer($event, idx)"
@@ -18,8 +9,9 @@
         :disabled="disabled"
         :error="answerError(idx)"
         :placeholder="placeholder"
-        hide-details class="mb-2">
-        <template slot="prepend">
+        filled
+        class="ml-1">
+        <template slot="prepend-inner">
           <v-radio v-if="isGraded" :value="idx" :color="color" />
           <v-avatar v-else size="32" color="primary" class="">{{ idx + 1 }}</v-avatar>
         </template>
@@ -30,6 +22,16 @@
         </template>
       </v-text-field>
     </v-radio-group>
+    <div class="d-flex">
+      <v-spacer />
+      <v-btn
+        v-if="isEditing"
+        @click="addAnswer"
+        text>
+        <v-icon dense class="mr-1">mdi-plus</v-icon>
+        Add answer
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -113,12 +115,6 @@ export default {
 
 <style lang="scss" scoped>
 .answers {
-  margin-left: 3rem;
-
-  @media (max-width: 1263px) {
-    margin-left: 0.25rem;
-  }
-
   .v-radio {
     position: relative;
     left: 0.4rem;
@@ -129,9 +125,5 @@ export default {
     bottom: 0.1rem;
     color: #fff;
   }
-}
-
-.non-graded {
-  margin-left: 1rem;
 }
 </style>
