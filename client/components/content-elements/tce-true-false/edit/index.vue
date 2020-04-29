@@ -1,6 +1,6 @@
 <template>
-  <div class="subtitle-2 pt-2">
-    <span>{{ title }}</span>
+  <div>
+    <div class="subtitle-2 pt-2">{{ title }}</div>
     <v-radio-group v-model="correct" :error="correctError">
       <v-radio
         v-for="(answer, index) in [true, false]"
@@ -19,7 +19,7 @@
 import { defaults } from 'utils/assessment';
 import { sentence } from 'to-case';
 
-const getTitle = isGraded => isGraded ? 'Select correct  answer' : 'Options';
+const getTitle = isGraded => isGraded ? 'Select correct answer' : 'Options';
 const getLabel = answer => sentence(answer.toString());
 
 export default {
