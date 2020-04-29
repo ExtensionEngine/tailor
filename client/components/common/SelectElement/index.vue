@@ -38,7 +38,7 @@
 <script>
 import contentElementApi from 'client/api/contentElement';
 import ContentPreview from '@/components/common/ContentPreview';
-import { getContentContainers as getContainers } from '@/utils/activity';
+import { getDescendants as getContainers } from '@/utils/activity';
 import { mapGetters } from 'vuex';
 import Promise from 'bluebird';
 import SelectActivity from './SelectActivity';
