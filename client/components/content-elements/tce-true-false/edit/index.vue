@@ -10,7 +10,7 @@
         :label="getLabel(answer)"
         :color="disabled ? 'grey' : 'blue-grey darken-3'"
         :off-icon="isGraded ? 'mdi-circle-outline' : 'mdi-circle'"
-        class="answer ml-1" />
+        class="answer pl-3" />
     </v-radio-group>
   </div>
 </template>
@@ -43,10 +43,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.answer {
-  // override global bootstrap
-  ::v-deep .v-label {
-    margin-bottom: 0;
-  }
+// override global bootstrap
+.answer ::v-deep .v-label {
+  margin-bottom: 0;
 }
 </style>
