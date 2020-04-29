@@ -42,7 +42,7 @@
       <v-alert
         v-show="alert.text"
         :type="alert.type"
-        prominent dismissible
+        prominent
         class="mt-4">
         {{ alert.text }}
       </v-alert>
