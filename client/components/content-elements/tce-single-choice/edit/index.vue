@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="py-2 subtitle-2">{{ title }}</div>
-    <v-radio-group v-model="correct" :error="correctError">
+    <v-radio-group v-model="correct" :error="correctError" hide-details>
       <v-text-field
         v-for="(answer, idx) in answers" :key="idx"
         @change="updateAnswer($event, idx)"
@@ -23,12 +23,8 @@
         </template>
       </v-text-field>
     </v-radio-group>
-    <div class="d-flex">
-      <v-spacer />
-      <v-btn
-        v-if="isEditing"
-        @click="addAnswer"
-        text>
+    <div class="d-flex justify-end">
+      <v-btn v-if="isEditing" @click="addAnswer" text>
         <v-icon dense class="mr-1">mdi-plus</v-icon>
         Add answer
       </v-btn>
