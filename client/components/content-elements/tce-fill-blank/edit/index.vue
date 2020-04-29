@@ -84,8 +84,6 @@ export default {
     isGraded: { type: Boolean, default: false }
   },
   computed: {
-    // Each @blank has a corresponding array of possible
-    // answers (answer group) in assessment.correct array
     correct: {
       get() { return this.assessment.correct; },
       set(correct) { this.update({ correct }); }

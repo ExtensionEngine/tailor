@@ -1,62 +1,63 @@
 <template>
-  <div :class="['matching-question', { disabled }]">
-    <v-row justify="center">
-      <v-col cols="1" />
-      <v-col cols="4">
+  <div>
+    <v-row>
+      <v-col cols="4" offset="1">
         <v-text-field
-          @blur="e => updateHeading({ premise: e.target.value })"
-          :error="errors.includes('headings.premise')"
-          :value="headings.premise" />
+          @change="updateHeading('premise', $event)"
+          :value="headings.premise"
+          :disabled="disabled"
+          :error="errors.includes('headings.premise')" />
       </v-col>
-      <v-col cols="1" />
-      <v-col cols="4">
+      <v-col cols="4" offset="2">
         <v-text-field
-          @blur="e => updateHeading({ response: e.target.value })"
-          :error="errors.includes('headings.response')"
-          :value="headings.response" />
+          @change="updateHeading('response', $event)"
+          :value="headings.response"
+          :disabled="disabled"
+          :error="errors.includes('headings.response')" />
       </v-col>
-      <v-col cols="1" />
     </v-row>
     <v-row
       v-for="(responseKey, premiseKey) in correct"
       :key="responseKey"
-      justify="center"
-      align="end">
-      <v-col cols="1" />
-      <v-col cols="4">
+      align="center">
+      <v-col cols="4" offset="1">
         <v-text-field
           @change="updatePremiseContent(premiseKey, $event)"
           :value="getPremiseContent(premiseKey)"
-          placeholder="Insert text here ..."
-          hide-details />
+          :disabled="disabled"
+          :placeholder="contentPlaceholder"
+          :error="hasError(premiseKey, 'premises')"
+          hide-details filled />
       </v-col>
-      <v-col cols="1">
+      <v-col cols="2" class="text-center">
         <v-icon small>mdi-arrow-right</v-icon>
       </v-col>
       <v-col cols="4">
         <v-text-field
           @change="updateResponseContent(responseKey, $event)"
           :value="getResponseContent(responseKey)"
-          placeholder="Insert text here ..."
-          hide-details />
+          :disabled="disabled"
+          :placeholder="contentPlaceholder"
+          :error="hasError(responseKey, 'responses')"
+          hide-details filled />
       </v-col>
       <v-col cols="1">
         <v-btn
-          v-show="!minItems && isEditing"
+          v-show="isEditing && pairsCount > 2"
           @click="removeItems(premiseKey, responseKey)"
           :disabled="disabled"
-          small icon tile>
+          small icon>
           <v-icon small>mdi-close</v-icon>
         </v-btn>
       </v-col>
     </v-row>
-    <v-row v-show="!maxItems && isEditing" justify="center">
-      <v-col cols="12" class="mt-2">
-        <v-btn @click="addItems" :disabled="disabled" icon>
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </v-col>
-    </v-row>
+    <div class="d-flex justify-center my-2">
+      <v-btn
+        v-if="isEditing && pairsCount < 10"
+        @click="addItems" icon>
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -65,9 +66,12 @@ import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import { defaults } from 'utils/assessment';
 import find from 'lodash/find';
-import keys from 'lodash/keys';
 import pull from 'lodash/pull';
+import set from 'lodash/set';
 import shuffle from 'lodash/shuffle';
+import size from 'lodash/size';
+
+const CONTENT_PLACEHOLDER = 'Insert text here...';
 
 export default {
   props: {
@@ -77,16 +81,28 @@ export default {
   },
   computed: {
     disabled: vm => !vm.isEditing,
-    headings: vm => ({ premise: null, response: null, ...vm.assessment.headings }),
-    premises: vm => vm.assessment.premises || {},
-    responses: vm => vm.assessment.responses || {},
-    correct: vm => vm.assessment.correct || {},
-    maxItems: vm => keys(vm.correct).length >= 10,
-    minItems: vm => keys(vm.correct).length <= 2
+    correct: vm => vm.assessment.correct,
+    headings: vm => vm.assessment.headings,
+    premises: vm => vm.assessment.premises,
+    responses: vm => vm.assessment.responses,
+    pairsCount: vm => size(vm.correct),
+    contentPlaceholder: () => CONTENT_PLACEHOLDER
   },
   methods: {
-    updateHeading(val) {
-      this.update({ headings: { ...this.headings, ...val } });
+    updateHeading(key, value) {
+      this.update({ headings: set(cloneDeep(this.headings), key, value) });
+    },
+    getPremiseContent(key) {
+      return this.getPremiseItem(key).value;
+    },
+    getResponseContent(key) {
+      return this.getResponseItem(key).value;
+    },
+    getPremiseItem(key, premises = this.premises) {
+      return find(premises, { key });
+    },
+    getResponseItem(key, responses = this.responses) {
+      return find(responses, { key });
     },
     updatePremiseContent(key, value) {
       const premises = cloneDeep(this.premises);
@@ -97,27 +113,6 @@ export default {
       const responses = cloneDeep(this.responses);
       this.getResponseItem(key, responses).value = value;
       this.update({ responses: shuffle(responses) });
-    },
-    getResponseContent(key) {
-      return this.getResponseItem(key).value;
-    },
-    getPremiseContent(key) {
-      return this.getPremiseItem(key).value;
-    },
-    getPremiseItem(key, premises = this.premises) {
-      return find(premises, { key });
-    },
-    getResponseItem(key, responses = this.responses) {
-      return find(responses, { key });
-    },
-    removeItems(premiseKey, responseKey) {
-      const premises = cloneDeep(this.premises);
-      const responses = cloneDeep(this.responses);
-      const correct = cloneDeep(this.correct);
-      pull(premises, this.getPremiseItem(premiseKey, premises));
-      pull(responses, this.getResponseItem(responseKey, responses));
-      delete correct[premiseKey];
-      this.update({ premises, responses, correct });
     },
     addItems() {
       const premises = cloneDeep(this.premises);
@@ -134,6 +129,15 @@ export default {
         correct
       });
     },
+    removeItems(premiseKey, responseKey) {
+      const premises = cloneDeep(this.premises);
+      const responses = cloneDeep(this.responses);
+      const correct = cloneDeep(this.correct);
+      pull(premises, this.getPremiseItem(premiseKey, premises));
+      pull(responses, this.getResponseItem(responseKey, responses));
+      delete correct[premiseKey];
+      this.update({ premises, responses, correct });
+    },
     update(data = {}) {
       this.$emit('update', data, true);
     },
@@ -141,23 +145,14 @@ export default {
       const index = type === 'premises'
         ? this.premises.indexOf(this.getPremiseItem(key))
         : this.responses.indexOf(this.getResponseItem(key));
-      const answer = `${type}[${index}].value`;
-      return { error: this.errors.includes(answer) };
+      return this.errors.includes(`${type}[${index}].value`);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.matching-question {
+::v-deep input {
   text-align: center;
-
-  ::v-deep input {
-    text-align: center;
-  }
-}
-
-.disabled {
-  pointer-events: none;
 }
 </style>
