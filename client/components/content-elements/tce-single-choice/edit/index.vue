@@ -9,11 +9,12 @@
         :disabled="disabled"
         :error="answerError(idx)"
         :placeholder="placeholder"
-        filled
-        class="ml-1">
+        filled class="ml-1">
         <template slot="prepend-inner">
           <v-radio v-if="isGraded" :value="idx" :color="color" />
-          <v-avatar v-else size="32" color="primary" class="">{{ idx + 1 }}</v-avatar>
+          <v-avatar v-else size="24" color="primary" class="mr-2">
+            {{ idx + 1 }}
+          </v-avatar>
         </template>
         <template slot="append">
           <v-btn v-if="isEditing" @click="removeAnswer(idx)" small icon>
@@ -114,16 +115,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.answers {
-  .v-radio {
-    position: relative;
-    left: 0.4rem;
-  }
-
-  .v-avatar {
-    position: relative;
-    bottom: 0.1rem;
-    color: #fff;
-  }
+.v-avatar {
+  color: #fff;
 }
 </style>
