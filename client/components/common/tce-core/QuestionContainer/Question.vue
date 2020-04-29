@@ -10,7 +10,8 @@
           @save="updateElement(element, $event)"
           @delete="deleteElement(element)"
           :element="element"
-          :is-disabled="!isEditing" />
+          :is-disabled="!isEditing"
+          dense />
       </draggable>
       <add-element
         @add="addElement"
