@@ -1,11 +1,12 @@
 <template>
   <div>
-    <span class="title">{{ title }}</span>
+    <div class="py-3 subtitle-2">{{ title }}</div>
     <v-textarea
       @change="correct = $event"
       :value="correct"
       :disabled="disabled"
-      :error="correctError" />
+      :error="correctError"
+      filled clearable />
   </div>
 </template>
 
