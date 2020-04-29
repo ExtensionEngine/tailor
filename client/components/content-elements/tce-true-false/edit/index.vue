@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <span class="title">{{ title }}</span>
+  <div class="subtitle-2 pt-2">
+    <span>{{ title }}</span>
     <v-radio-group v-model="correct" :error="correctError">
       <v-radio
         v-for="(answer, index) in [true, false]"
@@ -8,9 +8,9 @@
         :value="answer"
         :disabled="disabled"
         :label="getLabel(answer)"
-        :color="disabled ? 'grey' : 'primary'"
+        :color="disabled ? 'grey' : 'blue-grey darken-3'"
         :off-icon="isGraded ? 'mdi-circle-outline' : 'mdi-circle'"
-        :class="['answer', {'non-graded': !isGraded }]" />
+        class="answer ml-1" />
     </v-radio-group>
   </div>
 </template>
@@ -44,19 +44,9 @@ export default {
 
 <style lang="scss" scoped>
 .answer {
-  margin: 0.25rem 3rem;
-
-  @media (max-width: 1263px) {
-    margin: 0.25rem 1rem;
-  }
-
   // override global bootstrap
   ::v-deep .v-label {
     margin-bottom: 0;
   }
-}
-
-.non-graded {
-  margin-left: 1rem;
 }
 </style>
