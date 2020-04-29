@@ -140,8 +140,4 @@ export default {
     color: #fff;
   }
 }
-
-.non-graded {
-  margin-left: 1rem;
-}
 </style>

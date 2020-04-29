@@ -24,6 +24,7 @@
       :errors="errors"
       class="tce-answer" />
     <div class="px-7">
+      <div class="subtitle-2 mb-2">{{ hintTitle }}</div>
       <v-text-field
         v-model="editedElement.data.hint"
         :label="hintTitle"
@@ -36,8 +37,13 @@
         :answers="editedElement.data.answers"
         :feedback="editedElement.data.feedback"
         :is-graded="isGraded"
-        :is-editing="isEditing" />
-      <v-alert v-show="alert.text" :type="alert.type" dense class="mt-4">
+        :is-editing="isEditing"
+        class="px-1" />
+      <v-alert
+        v-show="alert.text"
+        :type="alert.type"
+        prominent dismissible
+        class="mt-4">
         {{ alert.text }}
       </v-alert>
       <controls
@@ -46,6 +52,7 @@
         @remove="remove"
         @cancel="cancel"
         :is-editing="isEditing"
+        :has-errors="hasErrors"
         class="controls" />
     </div>
   </v-card>
@@ -95,6 +102,7 @@ export default {
         ...this.isGraded ? elementSchema : omit(elementSchema, ['correct'])
       });
     },
+    hasErrors: vm => !!vm.errors.length,
     answerType: vm => vm.element.data.type,
     isGraded: vm => vm.element.type === 'ASSESSMENT',
     showFeedback: vm => WITH_FEEDBACK.includes(vm.answerType),
@@ -198,14 +206,6 @@ const baseSchema = {
 
     @media (max-width: 1263px) {
       margin: 0 0.25rem;
-    }
-  }
-
-  .hint, .feedback, .v-alert {
-    margin: 1rem 3rem;
-
-    @media (max-width: 1263px) {
-      margin: 1rem 0.25rem;
     }
   }
 }

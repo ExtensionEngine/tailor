@@ -1,8 +1,11 @@
 <template>
   <div class="feedback">
-    <div class="d-flex align-end">
-      <span class="title mr-2">{{ title }}</span>
-      <v-btn @click="toggleExpand" text small>
+    <div>
+      <span class="subtitle-2">{{ title }}</span>
+      <v-btn
+        @click="toggleExpand"
+        text small
+        class="ml-1">
         {{ buttonLabel }}
       </v-btn>
     </div>
@@ -10,17 +13,16 @@
       <div v-if="isExpanded" class="feedback-content">
         <v-row v-for="(answer, i) in processedAnswers" :key="i">
           <v-col>
-            <div class="feedback-info">
-              <span class="answer-type">
-                {{ answerType }} {{ i + 1 }}:
-              </span>
+            <div class="feedback-info mb-4">
+              <span class="answer-type subtitle-2">{{ answerType }} {{ i + 1 }}:</span>
               <span>{{ answer || noAnswer }}</span>
             </div>
             <quill-editor
               v-if="isEditing"
               @change="updateFeedback($event, i)"
               :options="quillOptions"
-              :content="feedback[i]" />
+              :content="feedback[i]"
+              class="grey lighten-3" />
             <div v-else class="feedback-preview">
               <!-- eslint-disable-next-line vue/no-v-html -->
               <div v-if="feedback[i]" v-html="feedback[i]"></div>
@@ -94,23 +96,3 @@ export default {
   components: { QuillEditor }
 };
 </script>
-
-<style lang="scss" scoped>
-.feedback-content {
-  margin: 0.5rem 2rem 0;
-
-  @media (max-width: 1263px) {
-    margin: 0.5rem 0 0;
-  }
-}
-
-.feedback-info, .feedback-preview {
-  margin: 0 0.9rem 1rem;
-}
-
-.answer-type {
-  margin-right: 0.25rem;
-  color: #444;
-  font-weight: 700;
-}
-</style>
