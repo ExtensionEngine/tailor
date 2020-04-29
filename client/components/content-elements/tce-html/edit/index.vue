@@ -3,8 +3,10 @@
     <element-placeholder
       v-if="!isFocused && !content && showPlaceholder"
       :is-focused="isFocused"
+      :is-disabled="isDisabled"
       name="Text (deprecated)"
       icon="mdi-text"
+      dense
       class="element-placeholder" />
     <div v-else>
       <quill-editor
@@ -57,7 +59,9 @@ export default {
   props: {
     element: { type: Object, required: true },
     isFocused: { type: Boolean, default: false },
-    showPlaceholder: { type: Boolean, default: true }
+    isDisabled: { type: Boolean, default: false },
+    showPlaceholder: { type: Boolean, default: true },
+    dense: { type: Boolean, default: false }
   },
   data() {
     return {

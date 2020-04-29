@@ -3,10 +3,12 @@
     <element-placeholder
       v-if="showPlaceholder"
       :is-focused="isFocused"
+      :is-disabled="isDisabled"
       name="Image"
       icon="mdi-image-plus"
       active-placeholder="Use toolbar to upload the image"
-      active-icon="mdi-arrow-up" />
+      active-icon="mdi-arrow-up"
+      dense />
     <div v-else :class="{ 'hide-cropper': !showCropper }" class="image-wrapper">
       <cropper
         v-show="showCropper"
@@ -59,7 +61,9 @@ export default {
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
-    isFocused: { type: Boolean, default: false }
+    isFocused: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false },
+    dense: { type: Boolean, default: false }
   },
   data: () => ({
     currentImage: null,
