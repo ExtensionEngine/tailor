@@ -1,26 +1,28 @@
 <template>
   <div>
-    <div class="d-flex justify-space-between align-center">
-      <span v-if="isGraded" class="title">{{ title }}</span>
-      <span v-if="isEditing" class="body-2">{{ info }}</span>
+    <div class="d-flex justify-space-between subtitle-2 my-2">
+      <span v-if="isGraded">{{ title }}</span>
+      <span v-if="isEditing">{{ info }}</span>
     </div>
     <draggable v-model="correct" handle=".drag-handle">
-      <v-card v-for="(group, i) in correct" :key="i" outlined class="group">
-        <span :class="['drag-handle', { invisible: disabled }]">
+      <v-card
+        v-for="(group, i) in correct" :key="i"
+        class="transparent elevation-0 py-2 my-4">
+        <span v-if="isEditing" class="drag-handle">
           <span class="mdi mdi-drag-vertical"></span>
         </span>
         <v-chip label small>{{ i + 1 }}</v-chip>
         <v-btn
           v-if="isEditing"
           @click="addAnswer(i)"
-          small icon class="float-right mr-4">
+          small icon class="float-right mr-3">
           <v-icon small>mdi-plus</v-icon>
         </v-btn>
         <v-btn
           v-if="isEditing && !isSynced"
           @click="removeAnswerGroup(i)"
           small icon class="float-right mr-1">
-          <v-icon color="error" small>mdi-delete</v-icon>
+          <v-icon small>mdi-delete</v-icon>
         </v-btn>
         <v-text-field
           v-for="(answer, j) in group" :key="`${i}.${j}`"
@@ -29,7 +31,7 @@
           :disabled="disabled"
           :error="answerError(i, j)"
           :placeholder="placeholder"
-          class="answer">
+          hide-details filled class="my-4">
           <template slot="append">
             <v-btn
               v-if="isEditing && group.length > 1"
@@ -60,10 +62,10 @@ const BLANK = /(@blank)/g;
 const TITLE = 'Answers';
 const PLACEHOLDER = 'Answer...';
 const INFO = 'Type "@blank" above when new blank is needed.';
-const OUT_OF_SYNC_ALERT = {
+const OUT_OF_SYNC = {
   type: 'error',
-  text: `Question and blanks are out of sync!
-    Please delete unnecessary answers or add blanks in the question!`
+  text: `Question and blanks are out of sync! Please delete
+    unnecessary answers or add blanks in the question!`
 };
 
 const getBlankCount = question => {
@@ -126,7 +128,7 @@ export default {
       this.update({ correct });
     },
     validate() {
-      this.$emit('alert', this.isSynced ? {} : OUT_OF_SYNC_ALERT);
+      this.$emit('alert', this.isSynced ? {} : OUT_OF_SYNC);
     },
     update(value) {
       this.$emit('update', value);
@@ -151,24 +153,10 @@ export default {
   float: left;
   cursor: pointer;
 
-  .invisible {
-    visibility: none;
-  }
-
   .mdi {
     color: #888;
     font-size: 1.375rem;
     line-height: 1.5rem;
-  }
-}
-
-.group {
-  margin: 1rem 0;
-  padding: 1rem 0.5rem 0;
-
-  .answer {
-    margin-right: 1rem;
-    margin-left: 1.375rem;
   }
 }
 </style>
