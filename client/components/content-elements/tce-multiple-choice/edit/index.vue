@@ -33,8 +33,7 @@
         </v-btn>
       </template>
     </v-text-field>
-    <div class="d-flex mb-5">
-      <v-spacer />
+    <div class="d-flex justify-end mb-5">
       <v-btn v-if="isEditing" @click="addAnswer" text class="px-2">
         <v-icon>mdi-plus</v-icon>
         Add option
