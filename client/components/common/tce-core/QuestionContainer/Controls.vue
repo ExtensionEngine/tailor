@@ -5,7 +5,6 @@
       <v-btn @click="$emit('cancel')" text large>Cancel</v-btn>
       <v-btn
         @click="save"
-        :disabled="hasErrors"
         color="green darken-3"
         text large>
         <v-icon class="pr-1">mdi-check</v-icon>

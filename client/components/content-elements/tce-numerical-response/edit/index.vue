@@ -1,20 +1,14 @@
 <template>
-  <div class="numerical-response">
-    <span class="title">Answers</span>
-    <v-btn
-      @click="addAnswer"
-      :disabled="disabled"
-      small icon tile class="float-right">
-      <v-icon small>mdi-plus</v-icon>
-    </v-btn>
-    <v-row v-for="(answer, idx) in correct" :key="idx">
+  <v-container class="px-0 pr-12">
+    <div class="subtitle-2">Answers</div>
+    <v-row v-for="(answer, idx) in correct" :key="idx" class="pr-2">
       <v-col cols="3">
         <v-text-field
           @input="updateAnswer('prefixes', $event, idx)"
           :disabled="disabled"
           :value="prefixes[idx]"
           placeholder="Prefix..."
-          hide-details />
+          filled clearable />
       </v-col>
       <v-col :cols="correct.length > 1 ? 5 : 6">
         <v-text-field
@@ -23,7 +17,7 @@
           :value="correct[idx]"
           :error="answerError(idx)"
           placeholder="Correct value..."
-          hide-details />
+          filled clearable />
       </v-col>
       <v-col cols="3">
         <v-text-field
@@ -31,25 +25,40 @@
           :disabled="disabled"
           :value="suffixes[idx]"
           placeholder="Suffix..."
-          hide-details />
+          filled clearable />
       </v-col>
-      <v-col cols="1" class="controls">
+      <v-col v-if="correct.length > 1" cols="1">
         <v-btn
-          v-if="isEditing && correct.length > 1"
+          v-if="isEditing"
           @click="removeAnswer(idx)"
           :disabled="disabled"
-          small icon tile>
+          icon
+          class="my-3">
           <v-icon small>mdi-close</v-icon>
         </v-btn>
       </v-col>
     </v-row>
-    <div v-if="correctError">
-      <span>
-        Only numerical input allowed, if decimal number is needed please
-        use . to separate numbers (e.g. '3.14').
-      </span>
+    <div class="d-flex">
+      <v-spacer />
+      <v-btn
+        @click="addAnswer"
+        :disabled="disabled"
+        color="blue-grey darken-4"
+        text>
+        <v-icon small>mdi-plus</v-icon>
+        Add answer
+      </v-btn>
     </div>
-  </div>
+    <v-alert
+      v-if="correctError"
+      type="error"
+      color="red darken-4"
+      prominent text
+      class="mt-5">
+      Only numerical input allowed, if decimal number is needed please
+      use . to separate numbers (e.g. '3.14').
+    </v-alert>
+  </v-container>
 </template>
 
 <script>
@@ -112,25 +121,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.numerical-response {
-  width: 100%;
-  padding: 1.5rem 1.25rem 1rem;
-  text-align: left;
-  overflow: hidden;
-
-  .title {
-    font-weight: 400;
-  }
-
-  .controls {
-    display: flex;
-    align-items: flex-end;
-  }
-}
-
-.help-block {
-  margin-top: 30px;
-}
-</style>
