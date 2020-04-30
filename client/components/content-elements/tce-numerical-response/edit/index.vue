@@ -1,6 +1,6 @@
 <template>
   <v-container class="px-0 pr-12">
-    <div class="subtitle-2">Answers</div>
+    <div class="subtitle-2">{{ title }}</div>
     <v-row v-for="(answer, idx) in correct" :key="idx" class="pr-2">
       <v-col cols="3">
         <v-text-field
@@ -77,6 +77,7 @@ import toNumber from 'lodash/toNumber';
 
 const startsWithCorrect = it => startsWith(it, 'correct');
 
+const TITLE = 'Answers';
 const PREFIX_PLACEHOLDER = 'Prefix...';
 const SUFFIX_PLACEHOLDER = 'Suffix...';
 const VALUE_PLACEHOLDER = 'Correct value...';
@@ -96,7 +97,8 @@ export default {
     color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
     prefixPlaceholder: () => PREFIX_PLACEHOLDER,
     suffixPlaceholder: () => SUFFIX_PLACEHOLDER,
-    valuePlaceholder: () => VALUE_PLACEHOLDER
+    valuePlaceholder: () => VALUE_PLACEHOLDER,
+    title: () => TITLE
   },
   methods: {
     addAnswer() {

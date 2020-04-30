@@ -44,7 +44,7 @@ const MIN_TWO_ANSWERS = {
   type: 'error'
 };
 
-const getTitle = isGraded => isGraded ? 'Answers' : 'Options';
+const getTitle = isGraded => isGraded ? 'Select correct answer' : 'Options';
 const getPlaceholder = isGraded => isGraded ? 'Answer...' : 'Option...';
 
 export default {
