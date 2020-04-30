@@ -41,13 +41,15 @@
           <v-btn
             v-if="isEditing"
             @click="addAnswer(groupKey)"
-            small icon class="my-2">
+            text
+            class="px-2 mt-4">
             <v-icon small>mdi-plus</v-icon>
+            {{ addAnswerLabel }}
           </v-btn>
         </div>
       </v-col>
     </v-row>
-    <div class="d-flex justify-center">
+    <div class="d-flex justify-center mt-2">
       <v-btn v-if="isEditing" @click="addGroup" text class="px-2">
         <v-icon small>mdi-plus</v-icon>
         {{ addGroupLabel }}
@@ -67,6 +69,7 @@ import size from 'lodash/size';
 
 const GROUP_PLACEHOLDER = 'Group';
 const ANSWER_PLACEHOLDER = 'Answer';
+const ADD_ANSWER_LABEL = 'Add answer';
 const ADD_GROUP_LABEL = 'Add group';
 
 export default {
@@ -84,6 +87,7 @@ export default {
     color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
     groupPlaceholder: () => GROUP_PLACEHOLDER,
     answerPlaceholder: () => ANSWER_PLACEHOLDER,
+    addAnswerLabel: () => ADD_ANSWER_LABEL,
     addGroupLabel: () => ADD_GROUP_LABEL
   },
   methods: {

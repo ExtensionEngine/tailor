@@ -55,11 +55,13 @@
         </v-btn>
       </v-col>
     </v-row>
-    <div class="d-flex justify-center my-2">
+    <div class="d-flex justify-center mt-4">
       <v-btn
         v-if="isEditing && pairsCount < 10"
-        @click="addItems" icon>
+        @click="addItems"
+        text class="px-2">
         <v-icon>mdi-plus</v-icon>
+        {{ addButtonLabel }}
       </v-btn>
     </div>
   </div>
@@ -76,6 +78,7 @@ import shuffle from 'lodash/shuffle';
 import size from 'lodash/size';
 
 const CONTENT_PLACEHOLDER = 'Insert text here...';
+const ADD_BUTTON_LABEL = 'Add correct pair';
 
 export default {
   props: {
@@ -90,6 +93,7 @@ export default {
     premises: vm => vm.assessment.premises,
     responses: vm => vm.assessment.responses,
     pairsCount: vm => size(vm.correct),
+    addButtonLabel: () => ADD_BUTTON_LABEL,
     contentPlaceholder: () => CONTENT_PLACEHOLDER,
     color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3'
   },

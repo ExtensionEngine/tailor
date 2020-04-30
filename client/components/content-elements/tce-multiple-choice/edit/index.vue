@@ -32,7 +32,7 @@
     <div class="d-flex justify-end mb-5">
       <v-btn v-if="isEditing" @click="addAnswer" text class="px-2">
         <v-icon>mdi-plus</v-icon>
-        Add option
+        {{ addButtonLabel }}
       </v-btn>
     </div>
   </div>
@@ -51,6 +51,7 @@ const MIN_TWO_ANSWERS = {
 
 const getTitle = isGraded => isGraded ? 'Select correct answer(s)' : 'Options';
 const getPlaceholder = isGraded => isGraded ? 'Answer...' : 'Option...';
+const getButtonLabel = isGraded => isGraded ? 'Add answer' : 'Add option';
 
 export default {
   props: {
@@ -69,6 +70,7 @@ export default {
     feedback: vm => vm.assessment.feedback,
     color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
     correctError: vm => vm.errors.includes('correct'),
+    addButtonLabel: vm => getButtonLabel(vm.isGraded),
     placeholder: vm => getPlaceholder(vm.isGraded),
     title: vm => getTitle(vm.isGraded)
   },

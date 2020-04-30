@@ -41,15 +41,14 @@
         </v-btn>
       </v-col>
     </v-row>
-    <div class="d-flex">
-      <v-spacer />
+    <div class="d-flex justify-end">
       <v-btn
         @click="addAnswer"
         :disabled="disabled"
-        color="blue-grey darken-4"
-        text>
+        :color="color"
+        text class="px-2">
         <v-icon small>mdi-plus</v-icon>
-        Add answer
+        {{ addButtonLabel }}
       </v-btn>
     </div>
     <v-alert
@@ -81,6 +80,7 @@ const TITLE = 'Answers';
 const PREFIX_PLACEHOLDER = 'Prefix...';
 const SUFFIX_PLACEHOLDER = 'Suffix...';
 const VALUE_PLACEHOLDER = 'Correct value...';
+const ADD_BUTTON_LABEL = 'Add answer';
 
 export default {
   props: {
@@ -95,6 +95,7 @@ export default {
     suffixes: vm => get(vm.assessment, 'suffixes', []),
     correctError: vm => some(vm.errors, startsWithCorrect),
     color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
+    addButtonLabel: () => ADD_BUTTON_LABEL,
     prefixPlaceholder: () => PREFIX_PLACEHOLDER,
     suffixPlaceholder: () => SUFFIX_PLACEHOLDER,
     valuePlaceholder: () => VALUE_PLACEHOLDER,

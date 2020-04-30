@@ -16,16 +16,14 @@
           {{ i + 1 }}
         </v-chip>
         <v-btn
-          v-if="isEditing"
-          @click="addAnswer(i)"
-          small icon class="float-right mr-3">
-          <v-icon small>mdi-plus</v-icon>
-        </v-btn>
-        <v-btn
           v-if="isEditing && !isSynced"
           @click="removeAnswerGroup(i)"
-          small icon class="float-right mr-1">
+          text
+          small
+          color="error"
+          class="float-right px-2">
           <v-icon small>mdi-delete</v-icon>
+          {{ deleteButtonLabel }}
         </v-btn>
         <v-text-field
           v-for="(answer, j) in group" :key="`${i}.${j}`"
@@ -45,6 +43,12 @@
             </v-btn>
           </template>
         </v-text-field>
+        <div class="d-flex justify-end mb-5">
+          <v-btn v-if="isEditing" @click="addAnswer(i)" text class="px-2">
+            <v-icon>mdi-plus</v-icon>
+            {{ addButtonLabel }}
+          </v-btn>
+        </div>
       </v-card>
     </draggable>
   </div>
@@ -66,6 +70,8 @@ const BLANK = /(@blank)/g;
 
 const TITLE = 'Answers';
 const PLACEHOLDER = 'Answer...';
+const ADD_BUTTON_LABEL = 'Add answer';
+const DELETE_BUTTON_LABEL = 'Delete answer group';
 const INFO = 'Type "@blank" above when new blank is needed.';
 const OUT_OF_SYNC = {
   type: 'error',
@@ -102,6 +108,8 @@ export default {
     blankCountInfo: vm => getCountInfo(vm.blankCount),
     isSynced: vm => vm.blankCount === size(vm.correct),
     color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
+    deleteButtonLabel: () => DELETE_BUTTON_LABEL,
+    addButtonLabel: () => ADD_BUTTON_LABEL,
     placeholder: () => PLACEHOLDER,
     title: () => TITLE,
     info: () => INFO
