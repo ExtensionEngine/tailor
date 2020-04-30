@@ -44,7 +44,11 @@
           </template>
         </v-text-field>
         <div class="d-flex justify-end mb-5">
-          <v-btn v-if="isEditing" @click="addAnswer(i)" text class="px-2">
+          <v-btn
+            v-if="isEditing"
+            @click="addAnswer(i)"
+            color="color"
+            text class="px-2">
             <v-icon>mdi-plus</v-icon>
             {{ addButtonLabel }}
           </v-btn>

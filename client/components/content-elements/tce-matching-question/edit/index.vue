@@ -5,17 +5,17 @@
         <v-text-field
           @change="updateHeading('premise', $event)"
           :value="headings.premise"
-          :color="color"
           :disabled="disabled"
-          :error="errors.includes('headings.premise')" />
+          :error="errors.includes('headings.premise')"
+          color="blue-grey darken-3" />
       </v-col>
       <v-col cols="4" offset="2">
         <v-text-field
           @change="updateHeading('response', $event)"
           :value="headings.response"
-          :color="color"
           :disabled="disabled"
-          :error="errors.includes('headings.response')" />
+          :error="errors.includes('headings.response')"
+          color="blue-grey darken-3" />
       </v-col>
     </v-row>
     <v-row
@@ -26,10 +26,10 @@
         <v-text-field
           @change="updatePremiseContent(premiseKey, $event)"
           :value="getPremiseContent(premiseKey)"
-          :color="color"
           :disabled="disabled"
           :placeholder="contentPlaceholder"
           :error="hasError(premiseKey, 'premises')"
+          color="blue-grey darken-3"
           hide-details filled />
       </v-col>
       <v-col cols="2" class="text-center">
@@ -39,10 +39,10 @@
         <v-text-field
           @change="updateResponseContent(responseKey, $event)"
           :value="getResponseContent(responseKey)"
-          :color="color"
           :disabled="disabled"
           :placeholder="contentPlaceholder"
           :error="hasError(responseKey, 'responses')"
+          color="blue-grey darken-3"
           hide-details filled />
       </v-col>
       <v-col cols="1">
@@ -59,6 +59,7 @@
       <v-btn
         v-if="isEditing && pairsCount < 10"
         @click="addItems"
+        color="blue-grey darken-3"
         text class="px-2">
         <v-icon>mdi-plus</v-icon>
         {{ addButtonLabel }}
@@ -94,8 +95,7 @@ export default {
     responses: vm => vm.assessment.responses,
     pairsCount: vm => size(vm.correct),
     addButtonLabel: () => ADD_BUTTON_LABEL,
-    contentPlaceholder: () => CONTENT_PLACEHOLDER,
-    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3'
+    contentPlaceholder: () => CONTENT_PLACEHOLDER
   },
   methods: {
     updateHeading(key, value) {

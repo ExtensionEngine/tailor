@@ -5,10 +5,10 @@
         <v-text-field
           @change="updateGroupName(groupKey, $event)"
           :value="groupName"
-          :color="color"
           :disabled="disabled"
           :placeholder="groupPlaceholder"
-          :error="hasError(`groups${groupKey}`)">
+          :error="hasError(`groups${groupKey}`)"
+          color="blue-grey darken-3">
           <template slot="append">
             <v-btn
               v-if="isEditing && groupCount > 2"
@@ -22,11 +22,11 @@
           v-for="(answer, answerKey) in getAnswers(groupKey)"
           :key="answerKey"
           @change="updateAnswer(answerKey, $event)"
-          :color="color"
           :value="answer"
           :disabled="disabled"
           :placeholder="answerPlaceholder"
           :error="hasError(`answers${answerKey}`)"
+          color="blue-grey darken-3"
           hide-details filled class="my-2">
           <template slot="append">
             <v-btn
@@ -41,8 +41,8 @@
           <v-btn
             v-if="isEditing"
             @click="addAnswer(groupKey)"
-            text
-            class="px-2 mt-4">
+            color="blue-grey darken-3"
+            text class="px-2 mt-4">
             <v-icon small>mdi-plus</v-icon>
             {{ addAnswerLabel }}
           </v-btn>
@@ -50,7 +50,11 @@
       </v-col>
     </v-row>
     <div class="d-flex justify-center mt-2">
-      <v-btn v-if="isEditing" @click="addGroup" text class="px-2">
+      <v-btn
+        v-if="isEditing"
+        @click="addGroup"
+        color="blue-grey darken-3"
+        text class="px-2">
         <v-icon small>mdi-plus</v-icon>
         {{ addGroupLabel }}
       </v-btn>
@@ -84,7 +88,6 @@ export default {
     answers: vm => vm.assessment.answers,
     groups: vm => vm.assessment.groups,
     groupCount: vm => size(vm.groups),
-    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
     groupPlaceholder: () => GROUP_PLACEHOLDER,
     answerPlaceholder: () => ANSWER_PLACEHOLDER,
     addAnswerLabel: () => ADD_ANSWER_LABEL,

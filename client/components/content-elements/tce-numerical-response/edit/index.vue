@@ -7,27 +7,27 @@
           @input="updateAnswer('prefixes', $event, idx)"
           :disabled="disabled"
           :value="prefixes[idx]"
-          :color="color"
           :placeholder="prefixPlaceholder"
+          color="blue-grey darken-3"
           filled clearable />
       </v-col>
       <v-col :cols="correct.length > 1 ? 5 : 6">
         <v-text-field
           @input="updateAnswer('correct', $event, idx)"
           :value="correct[idx]"
-          :color="color"
           :disabled="disabled"
           :error="answerError(idx)"
           :placeholder="valuePlaceholder"
+          color="blue-grey darken-3"
           filled clearable />
       </v-col>
       <v-col cols="3">
         <v-text-field
           @input="updateAnswer('suffixes', $event, idx)"
           :value="suffixes[idx]"
-          :color="color"
           :disabled="disabled"
           :placeholder="suffixPlaceholder"
+          color="blue-grey darken-3"
           filled clearable />
       </v-col>
       <v-col v-if="correct.length > 1" cols="1">
@@ -43,9 +43,9 @@
     </v-row>
     <div class="d-flex justify-end">
       <v-btn
+        v-if="isEditing"
         @click="addAnswer"
-        :disabled="disabled"
-        :color="color"
+        color="blue-grey darken-3"
         text class="px-2">
         <v-icon small>mdi-plus</v-icon>
         {{ addButtonLabel }}
@@ -94,7 +94,6 @@ export default {
     prefixes: vm => get(vm.assessment, 'prefixes', []),
     suffixes: vm => get(vm.assessment, 'suffixes', []),
     correctError: vm => some(vm.errors, startsWithCorrect),
-    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
     addButtonLabel: () => ADD_BUTTON_LABEL,
     prefixPlaceholder: () => PREFIX_PLACEHOLDER,
     suffixPlaceholder: () => SUFFIX_PLACEHOLDER,

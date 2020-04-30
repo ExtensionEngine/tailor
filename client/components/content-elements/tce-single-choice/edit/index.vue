@@ -25,7 +25,11 @@
       </v-text-field>
     </v-radio-group>
     <div class="d-flex justify-end mb-5">
-      <v-btn v-if="isEditing" @click="addAnswer" text class="px-2">
+      <v-btn
+        v-if="isEditing"
+        @click="addAnswer"
+        :color="color"
+        text class="px-2">
         <v-icon dense class="mr-1">mdi-plus</v-icon>
         {{ addButtonLabel }}
       </v-btn>
