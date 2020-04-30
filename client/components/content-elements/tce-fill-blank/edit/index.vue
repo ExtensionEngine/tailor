@@ -2,6 +2,7 @@
   <div>
     <div class="d-flex justify-space-between subtitle-2 my-2">
       <span v-if="isGraded">{{ title }}</span>
+      <span v-else-if="isEditing">{{ blankCountInfo }}</span>
       <span v-if="isEditing">{{ info }}</span>
     </div>
     <draggable v-model="correct" handle=".drag-handle">
@@ -54,6 +55,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { defaults } from 'utils/assessment';
 import Draggable from 'vuedraggable';
 import get from 'lodash/get';
+import pluralize from 'pluralize';
 import pullAt from 'lodash/pullAt';
 import reduce from 'lodash/reduce';
 import size from 'lodash/size';
@@ -79,6 +81,8 @@ const getBlankCount = question => {
   }, 0);
 };
 
+const getCountInfo = count => `${count} ${pluralize('blank', count)} detected.`;
+
 export default {
   props: {
     assessment: { type: Object, default: defaults.FB },
@@ -92,12 +96,13 @@ export default {
       set(correct) { this.update({ correct }); }
     },
     question: vm => vm.assessment.question,
-    placeholder: () => PLACEHOLDER,
     disabled: vm => !vm.isEditing,
     hasAnswers: vm => !!size(vm.correct),
     blankCount: vm => getBlankCount(vm.question),
+    blankCountInfo: vm => getCountInfo(vm.blankCount),
     isSynced: vm => vm.blankCount === size(vm.correct),
     color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
+    placeholder: () => PLACEHOLDER,
     title: () => TITLE,
     info: () => INFO
   },
