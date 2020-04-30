@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="py-2 subtitle-2">{{ title }}</div>
-    <v-radio-group v-model="correct" :error="correctError" hide-details>
+    <v-radio-group v-model="correct" :error="correctError">
       <v-text-field
         v-for="(answer, idx) in answers" :key="idx"
         @change="updateAnswer($event, idx)"

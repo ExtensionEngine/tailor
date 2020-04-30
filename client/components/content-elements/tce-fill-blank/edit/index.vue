@@ -9,22 +9,24 @@
       <v-card
         v-for="(group, i) in correct" :key="i"
         class="transparent elevation-0 py-2 my-4">
-        <span v-if="isEditing" class="drag-handle">
-          <span class="mdi mdi-drag-vertical"></span>
-        </span>
-        <v-chip :color="color" text-color="white" label small>
-          {{ i + 1 }}
-        </v-chip>
-        <v-btn
-          v-if="isEditing && !isSynced"
-          @click="removeAnswerGroup(i)"
-          text
-          small
-          color="error"
-          class="float-right px-2">
-          <v-icon small>mdi-delete</v-icon>
-          {{ deleteButtonLabel }}
-        </v-btn>
+        <div class="mb-4">
+          <span v-if="isEditing" class="drag-handle">
+            <span class="mdi mdi-drag-vertical"></span>
+          </span>
+          <v-chip :color="color" text-color="white" label small>
+            {{ i + 1 }}
+          </v-chip>
+          <v-btn
+            v-if="isEditing && !isSynced"
+            @click="removeAnswerGroup(i)"
+            text
+            small
+            color="error"
+            class="float-right px-2">
+            <v-icon small>mdi-delete</v-icon>
+            {{ deleteButtonLabel }}
+          </v-btn>
+        </div>
         <v-text-field
           v-for="(answer, j) in group" :key="`${i}.${j}`"
           @change="updateAnswer(i, j, $event)"
@@ -33,7 +35,7 @@
           :disabled="disabled"
           :error="answerError(i, j)"
           :placeholder="placeholder"
-          hide-details filled class="my-4">
+          filled>
           <template slot="append">
             <v-btn
               v-if="isEditing && group.length > 1"

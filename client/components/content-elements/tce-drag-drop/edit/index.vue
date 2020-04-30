@@ -27,7 +27,7 @@
           :placeholder="answerPlaceholder"
           :error="hasError(`answers${answerKey}`)"
           color="blue-grey darken-3"
-          hide-details filled class="my-2">
+          filled>
           <template slot="append">
             <v-btn
               v-if="isEditing && answerCount(groupKey) > 1"
@@ -42,7 +42,7 @@
             v-if="isEditing"
             @click="addAnswer(groupKey)"
             color="blue-grey darken-3"
-            text class="px-2 mt-4">
+            text class="px-2 mt-2">
             <v-icon small>mdi-plus</v-icon>
             {{ addAnswerLabel }}
           </v-btn>

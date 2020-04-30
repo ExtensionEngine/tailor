@@ -18,10 +18,7 @@
           color="blue-grey darken-3" />
       </v-col>
     </v-row>
-    <v-row
-      v-for="(responseKey, premiseKey) in correct"
-      :key="responseKey"
-      align="center">
+    <v-row v-for="(responseKey, premiseKey) in correct" :key="responseKey">
       <v-col cols="4" offset="1">
         <v-text-field
           @change="updatePremiseContent(premiseKey, $event)"
@@ -30,10 +27,10 @@
           :placeholder="contentPlaceholder"
           :error="hasError(premiseKey, 'premises')"
           color="blue-grey darken-3"
-          hide-details filled />
+          filled />
       </v-col>
       <v-col cols="2" class="text-center">
-        <v-icon small>mdi-arrow-right</v-icon>
+        <v-icon small class="arrow">mdi-arrow-right</v-icon>
       </v-col>
       <v-col cols="4">
         <v-text-field
@@ -43,7 +40,7 @@
           :placeholder="contentPlaceholder"
           :error="hasError(responseKey, 'responses')"
           color="blue-grey darken-3"
-          hide-details filled />
+          filled />
       </v-col>
       <v-col cols="1">
         <v-btn
@@ -161,6 +158,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.arrow {
+  position: relative;
+  top: 1rem;
+}
+
 ::v-deep input {
   text-align: center;
 }
