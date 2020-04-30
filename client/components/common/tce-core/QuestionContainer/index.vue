@@ -30,6 +30,7 @@
         :label="hintTitle"
         :errors="hintError"
         :disabled="!isEditing"
+        color="blue-darken darken-3"
         filled />
       <feedback
         v-if="showFeedback"
