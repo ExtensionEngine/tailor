@@ -5,10 +5,11 @@
         <v-text-field
           @change="updateGroupName(groupKey, $event)"
           :value="groupName"
+          :label="groupLabel"
           :disabled="disabled"
-          :placeholder="groupPlaceholder"
           :error="hasError(`groups${groupKey}`)"
-          color="blue-grey darken-3">
+          color="blue-grey darken-3"
+          filled>
           <template slot="append">
             <v-btn
               v-if="isEditing && groupCount > 2"
@@ -71,7 +72,7 @@ import pick from 'lodash/pick';
 import pull from 'lodash/pull';
 import size from 'lodash/size';
 
-const GROUP_PLACEHOLDER = 'Group';
+const GROUP_LABEL = 'Group name';
 const ANSWER_PLACEHOLDER = 'Answer';
 const ADD_ANSWER_LABEL = 'Add answer';
 const ADD_GROUP_LABEL = 'Add group';
@@ -88,7 +89,7 @@ export default {
     answers: vm => vm.assessment.answers,
     groups: vm => vm.assessment.groups,
     groupCount: vm => size(vm.groups),
-    groupPlaceholder: () => GROUP_PLACEHOLDER,
+    groupLabel: () => GROUP_LABEL,
     answerPlaceholder: () => ANSWER_PLACEHOLDER,
     addAnswerLabel: () => ADD_ANSWER_LABEL,
     addGroupLabel: () => ADD_GROUP_LABEL

@@ -6,16 +6,20 @@
           @change="updateHeading('premise', $event)"
           :value="headings.premise"
           :disabled="disabled"
+          :placeholder="premisePlaceholder"
           :error="errors.includes('headings.premise')"
-          color="blue-grey darken-3" />
+          color="blue-grey darken-3"
+          filled />
       </v-col>
       <v-col cols="4" offset="2">
         <v-text-field
           @change="updateHeading('response', $event)"
           :value="headings.response"
           :disabled="disabled"
+          :placeholder="responsePlaceholder"
           :error="errors.includes('headings.response')"
-          color="blue-grey darken-3" />
+          color="blue-grey darken-3"
+          filled />
       </v-col>
     </v-row>
     <v-row v-for="(responseKey, premiseKey) in correct" :key="responseKey">
@@ -47,7 +51,7 @@
           v-show="isEditing && pairsCount > 2"
           @click="removeItems(premiseKey, responseKey)"
           :disabled="disabled"
-          small icon>
+          small icon class="remove">
           <v-icon small>mdi-close</v-icon>
         </v-btn>
       </v-col>
@@ -75,6 +79,8 @@ import set from 'lodash/set';
 import shuffle from 'lodash/shuffle';
 import size from 'lodash/size';
 
+const PREMISE_PLACEHOLDER = 'Premise';
+const RESPONSE_PLACEHOLDER = 'Response';
 const CONTENT_PLACEHOLDER = 'Insert text here...';
 const ADD_BUTTON_LABEL = 'Add correct pair';
 
@@ -91,6 +97,8 @@ export default {
     premises: vm => vm.assessment.premises,
     responses: vm => vm.assessment.responses,
     pairsCount: vm => size(vm.correct),
+    premisePlaceholder: () => PREMISE_PLACEHOLDER,
+    responsePlaceholder: () => RESPONSE_PLACEHOLDER,
     addButtonLabel: () => ADD_BUTTON_LABEL,
     contentPlaceholder: () => CONTENT_PLACEHOLDER
   },
@@ -158,7 +166,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.arrow {
+.arrow, .remove {
   position: relative;
   top: 1rem;
 }
