@@ -7,24 +7,27 @@
           @input="updateAnswer('prefixes', $event, idx)"
           :disabled="disabled"
           :value="prefixes[idx]"
-          placeholder="Prefix..."
+          :color="color"
+          :placeholder="prefixPlaceholder"
           filled clearable />
       </v-col>
       <v-col :cols="correct.length > 1 ? 5 : 6">
         <v-text-field
           @input="updateAnswer('correct', $event, idx)"
-          :disabled="disabled"
           :value="correct[idx]"
+          :color="color"
+          :disabled="disabled"
           :error="answerError(idx)"
-          placeholder="Correct value..."
+          :placeholder="valuePlaceholder"
           filled clearable />
       </v-col>
       <v-col cols="3">
         <v-text-field
           @input="updateAnswer('suffixes', $event, idx)"
-          :disabled="disabled"
           :value="suffixes[idx]"
-          placeholder="Suffix..."
+          :color="color"
+          :disabled="disabled"
+          :placeholder="suffixPlaceholder"
           filled clearable />
       </v-col>
       <v-col v-if="correct.length > 1" cols="1">
@@ -74,6 +77,10 @@ import toNumber from 'lodash/toNumber';
 
 const startsWithCorrect = it => startsWith(it, 'correct');
 
+const PREFIX_PLACEHOLDER = 'Prefix...';
+const SUFFIX_PLACEHOLDER = 'Suffix...';
+const VALUE_PLACEHOLDER = 'Correct value...';
+
 export default {
   props: {
     assessment: { type: Object, default: defaults.NR },
@@ -85,7 +92,11 @@ export default {
     correct: vm => get(vm.assessment, 'correct', []),
     prefixes: vm => get(vm.assessment, 'prefixes', []),
     suffixes: vm => get(vm.assessment, 'suffixes', []),
-    correctError: vm => some(vm.errors, startsWithCorrect)
+    correctError: vm => some(vm.errors, startsWithCorrect),
+    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
+    prefixPlaceholder: () => PREFIX_PLACEHOLDER,
+    suffixPlaceholder: () => SUFFIX_PLACEHOLDER,
+    valuePlaceholder: () => VALUE_PLACEHOLDER
   },
   methods: {
     addAnswer() {

@@ -5,6 +5,7 @@
         <v-text-field
           @change="updateHeading('premise', $event)"
           :value="headings.premise"
+          :color="color"
           :disabled="disabled"
           :error="errors.includes('headings.premise')" />
       </v-col>
@@ -12,6 +13,7 @@
         <v-text-field
           @change="updateHeading('response', $event)"
           :value="headings.response"
+          :color="color"
           :disabled="disabled"
           :error="errors.includes('headings.response')" />
       </v-col>
@@ -24,6 +26,7 @@
         <v-text-field
           @change="updatePremiseContent(premiseKey, $event)"
           :value="getPremiseContent(premiseKey)"
+          :color="color"
           :disabled="disabled"
           :placeholder="contentPlaceholder"
           :error="hasError(premiseKey, 'premises')"
@@ -36,6 +39,7 @@
         <v-text-field
           @change="updateResponseContent(responseKey, $event)"
           :value="getResponseContent(responseKey)"
+          :color="color"
           :disabled="disabled"
           :placeholder="contentPlaceholder"
           :error="hasError(responseKey, 'responses')"
@@ -86,7 +90,8 @@ export default {
     premises: vm => vm.assessment.premises,
     responses: vm => vm.assessment.responses,
     pairsCount: vm => size(vm.correct),
-    contentPlaceholder: () => CONTENT_PLACEHOLDER
+    contentPlaceholder: () => CONTENT_PLACEHOLDER,
+    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3'
   },
   methods: {
     updateHeading(key, value) {

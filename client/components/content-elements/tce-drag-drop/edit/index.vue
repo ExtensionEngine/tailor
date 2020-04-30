@@ -5,6 +5,7 @@
         <v-text-field
           @change="updateGroupName(groupKey, $event)"
           :value="groupName"
+          :color="color"
           :disabled="disabled"
           :placeholder="groupPlaceholder"
           :error="hasError(`groups${groupKey}`)">
@@ -21,6 +22,7 @@
           v-for="(answer, answerKey) in getAnswers(groupKey)"
           :key="answerKey"
           @change="updateAnswer(answerKey, $event)"
+          :color="color"
           :value="answer"
           :disabled="disabled"
           :placeholder="answerPlaceholder"
@@ -79,6 +81,7 @@ export default {
     answers: vm => vm.assessment.answers,
     groups: vm => vm.assessment.groups,
     groupCount: vm => size(vm.groups),
+    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
     groupPlaceholder: () => GROUP_PLACEHOLDER,
     answerPlaceholder: () => ANSWER_PLACEHOLDER,
     addGroupLabel: () => ADD_GROUP_LABEL

@@ -6,13 +6,14 @@
         v-for="(answer, idx) in answers" :key="idx"
         @change="updateAnswer($event, idx)"
         :value="answer"
+        :color="color"
         :disabled="disabled"
         :error="answerError(idx)"
         :placeholder="placeholder"
         filled class="ml-1">
         <template slot="prepend-inner">
           <v-radio v-if="isGraded" :value="idx" :color="color" />
-          <v-avatar v-else size="24" color="primary" class="mr-2">
+          <v-avatar v-else size="24" :color="color" class="subtitle-2 mr-2">
             {{ idx + 1 }}
           </v-avatar>
         </template>
@@ -61,7 +62,7 @@ export default {
     disabled: vm => !vm.isEditing,
     answers: vm => vm.assessment.answers,
     feedback: vm => vm.assessment.feedback,
-    color: vm => vm.disabled ? 'grey' : 'primary',
+    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
     correctError: vm => vm.errors.includes('correct'),
     placeholder: vm => getPlaceholder(vm.isGraded),
     title: vm => getTitle(vm.isGraded)

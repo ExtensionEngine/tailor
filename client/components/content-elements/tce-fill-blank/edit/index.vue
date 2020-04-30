@@ -11,7 +11,9 @@
         <span v-if="isEditing" class="drag-handle">
           <span class="mdi mdi-drag-vertical"></span>
         </span>
-        <v-chip label small>{{ i + 1 }}</v-chip>
+        <v-chip :color="color" text-color="white" label small>
+          {{ i + 1 }}
+        </v-chip>
         <v-btn
           v-if="isEditing"
           @click="addAnswer(i)"
@@ -28,6 +30,7 @@
           v-for="(answer, j) in group" :key="`${i}.${j}`"
           @change="updateAnswer(i, j, $event)"
           :value="answer"
+          :color="color"
           :disabled="disabled"
           :error="answerError(i, j)"
           :placeholder="placeholder"
@@ -88,14 +91,15 @@ export default {
       get() { return this.assessment.correct; },
       set(correct) { this.update({ correct }); }
     },
-    title: () => TITLE,
-    info: () => INFO,
+    question: vm => vm.assessment.question,
     placeholder: () => PLACEHOLDER,
     disabled: vm => !vm.isEditing,
     hasAnswers: vm => !!size(vm.correct),
-    question: vm => vm.assessment.question,
+    blankCount: vm => getBlankCount(vm.question),
     isSynced: vm => vm.blankCount === size(vm.correct),
-    blankCount: vm => getBlankCount(vm.question)
+    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
+    title: () => TITLE,
+    info: () => INFO
   },
   methods: {
     addAnswer(groupIndex) {

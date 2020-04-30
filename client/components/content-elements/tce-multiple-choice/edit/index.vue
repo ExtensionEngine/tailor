@@ -5,6 +5,7 @@
       v-for="(answer, idx) in answers" :key="idx"
       @change="updateAnswer($event, idx)"
       :value="answer"
+      :color="color"
       :disabled="disabled"
       :error="answerError(idx)"
       :placeholder="placeholder"
@@ -19,11 +20,7 @@
           :disabled="disabled"
           :error="correctError"
           hide-details class="checkbox" />
-        <v-avatar
-          v-else
-          size="26"
-          color="blue-grey darken-3"
-          class="mr-3 subtitle-2">
+        <v-avatar v-else size="24" :color="color" class="subtitle-2 mr-2">
           {{ idx + 1 }}
         </v-avatar>
       </template>
