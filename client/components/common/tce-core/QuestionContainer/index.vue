@@ -14,16 +14,16 @@
       :assessment="editedElement"
       :is-editing="isEditing"
       :errors="errors" />
-    <component
-      :is="resolveComponentName(element)"
-      @update="update"
-      @alert="alert = $event"
-      :assessment="editedElement.data"
-      :is-editing="isEditing"
-      :is-graded="isGraded"
-      :errors="errors"
-      class="tce-answer" />
-    <div class="px-7">
+    <div class="content">
+      <component
+        :is="resolveComponentName(element)"
+        @update="update"
+        @alert="alert = $event"
+        :assessment="editedElement.data"
+        :is-editing="isEditing"
+        :is-graded="isGraded"
+        :errors="errors"
+        class="tce-answer" />
       <div class="subtitle-2 mb-2">{{ hintTitle }}</div>
       <v-text-field
         v-model="editedElement.data.hint"
@@ -202,11 +202,14 @@ const baseSchema = {
   }
 
   .tce-answer {
-    margin: 0 1.75rem;
     overflow: hidden;
+  }
+
+  .content {
+    padding: 0 1.25rem;
 
     @media (max-width: 1263px) {
-      margin: 0 0.5rem;
+      padding: 0.5rem;
     }
   }
 }
