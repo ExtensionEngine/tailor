@@ -31,7 +31,7 @@
         :errors="hintError"
         :disabled="!isEditing"
         color="blue-darken darken-3"
-        filled />
+        filled clearable />
       <feedback
         v-if="showFeedback"
         @update="updateFeedback"
