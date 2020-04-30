@@ -51,7 +51,7 @@
             @click="addAnswer(i)"
             color="color"
             text class="px-2">
-            <v-icon>mdi-plus</v-icon>
+            <v-icon small>mdi-plus</v-icon>
             {{ addButtonLabel }}
           </v-btn>
         </div>
