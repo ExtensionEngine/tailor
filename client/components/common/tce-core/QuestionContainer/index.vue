@@ -206,7 +206,7 @@ const baseSchema = {
     overflow: hidden;
 
     @media (max-width: 1263px) {
-      margin: 0 0.25rem;
+      margin: 0 0.5rem;
     }
   }
 }

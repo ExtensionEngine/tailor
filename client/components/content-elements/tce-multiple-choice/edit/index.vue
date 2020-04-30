@@ -9,7 +9,6 @@
       :disabled="disabled"
       :error="answerError(idx)"
       :placeholder="placeholder"
-      :class="['answer', { 'non-graded': !isGraded }]"
       filled>
       <template slot="prepend-inner">
         <v-checkbox
@@ -19,7 +18,7 @@
           :color="color"
           :disabled="disabled"
           :error="correctError"
-          hide-details class="checkbox" />
+          hide-details class="pt-0 mt-0" />
         <v-avatar v-else size="24" :color="color" class="subtitle-2 mr-2">
           {{ idx + 1 }}
         </v-avatar>
@@ -122,18 +121,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.answer {
-  .checkbox {
-    position: relative;
-    left: 0.25rem;
-    margin: 0;
-    padding: 0;
-  }
-
-  .v-avatar {
-    position: relative;
-    bottom: 0.1rem;
-    color: #fff;
-  }
+.v-avatar {
+  color: #fff;
 }
 </style>
