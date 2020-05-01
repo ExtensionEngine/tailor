@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.12.0
+version: v1.14.1
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -8,3 +8,648 @@ patch:
         patched: '2018-10-03T09:31:40.291Z'
     - passport-jwt > jsonwebtoken > joi > topo > hoek:
         patched: '2018-10-03T09:31:40.291Z'
+  SNYK-JS-LODASH-567746:
+    - lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@babel/core > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - eslint > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - sequelize-cli > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - stylelint > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - cheerio > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - sequelize > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - yup > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@babel/core > @babel/traverse > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > @poi/plugin-html-entry > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@extensionengine/stylelint-config > stylelint-order > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@extensionengine/stylelint-config > stylelint-scss > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@poi/plugin-bundle-report > webpack-bundle-analyzer > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - eslint > table > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - stylelint > table > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@poi/plugin-eslint > eslint > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - babel-eslint > @babel/traverse > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - eslint > inquirer > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - eslint-plugin-vue > vue-eslint-parser > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > html-webpack-plugin > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > webpack-merge > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - stylelint > postcss-reporter > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > inquirer > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-accordion > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-body > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-button > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-carousel > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-column > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-divider > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-group > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-attributes > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-breakpoint > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-font > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-preview > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-style > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-title > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-hero > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-image > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-navbar > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-raw > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-section > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-social > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-spacer > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-table > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-text > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > @snyk/dep-graph > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > snyk-config > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > snyk-mvn-plugin > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > snyk-nodejs-lockfile-parser > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > snyk-nuget-plugin > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@babel/core > @babel/helpers > @babel/traverse > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > @babel/preset-env > @babel/plugin-transform-block-scoping > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - stylelint > postcss-jsx > @babel/core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@extensionengine/stylelint-config > stylelint-order > postcss-sorting > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@poi/plugin-eslint > eslint > inquirer > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@poi/plugin-eslint > eslint > table > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - babel-eslint > @babel/traverse > @babel/generator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - eslint-plugin-vuetify > eslint-plugin-vue > vue-eslint-parser > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > thread-loader > async > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > webpack-dev-server > http-proxy-middleware > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-accordion > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-body > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-button > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-carousel > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-column > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-divider > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-group > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-attributes > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-breakpoint > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-font > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-preview > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-style > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-title > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-hero > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-image > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-navbar > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-raw > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-section > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-social > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-spacer > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-table > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-text > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-section > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi-preset-sass-resources > sass-resources-loader > async > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > @snyk/dep-graph > graphlib > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > snyk-go-plugin > graphlib > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > snyk-nodejs-lockfile-parser > graphlib > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > @snyk/snyk-cocoapods-plugin > @snyk/dep-graph > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > snyk-nuget-plugin > dotnet-deps-parser > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > snyk-php-plugin > @snyk/composer-lockfile-parser > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@babel/core > @babel/helpers > @babel/traverse > @babel/generator > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > @babel/preset-env > @babel/plugin-transform-modules-umd > @babel/helper-module-transforms > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - babel-eslint > @babel/traverse > @babel/generator > @babel/types > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - stylelint > postcss-jsx > @babel/core > @babel/traverse > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > webpack-dev-server > portfinder > async > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-accordion > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-body > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-button > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-carousel > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-column > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-divider > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-group > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-attributes > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-breakpoint > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-font > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-preview > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-style > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-title > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-hero > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-image > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-navbar > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-raw > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-section > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-social > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-spacer > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-table > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-text > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-accordion > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-body > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-button > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-carousel > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-column > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-divider > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-group > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-attributes > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-breakpoint > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-font > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-preview > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-style > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-title > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-hero > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-image > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-navbar > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-raw > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-section > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-social > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-spacer > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-table > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-text > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-accordion > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-body > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-button > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-carousel > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-column > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-divider > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-group > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-attributes > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-breakpoint > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-font > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-preview > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-style > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-title > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-hero > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-image > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-navbar > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-raw > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-section > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-social > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-spacer > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-table > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-text > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > @snyk/snyk-cocoapods-plugin > @snyk/dep-graph > graphlib > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > @snyk/snyk-cocoapods-plugin > @snyk/cocoapods-lockfile-parser > @snyk/ruby-semver > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@babel/core > @babel/helpers > @babel/traverse > @babel/helper-split-export-declaration > @babel/types > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > @babel/preset-env > @babel/plugin-transform-unicode-regex > @babel/helper-create-regexp-features-plugin > @babel/helper-regex > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - stylelint > postcss-jsx > @babel/core > @babel/helpers > @babel/traverse > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - babel-eslint > @babel/traverse > @babel/helper-function-name > @babel/template > @babel/types > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - tce-jodit > jodit-vue > jodit > mocha > yargs-unparser > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > mjml-migrate > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-accordion > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-body > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-button > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-carousel > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-column > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-divider > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-group > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-attributes > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-breakpoint > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-font > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-preview > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-style > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-title > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-hero > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-image > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-navbar > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-raw > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-section > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-social > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-spacer > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-table > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-text > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-accordion > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-body > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-button > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-carousel > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-column > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-divider > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-group > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-attributes > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-breakpoint > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-font > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-preview > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-style > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-title > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-hero > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-image > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-navbar > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-raw > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-section > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-social > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-spacer > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-table > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-text > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - snyk > @snyk/snyk-cocoapods-plugin > @snyk/cocoapods-lockfile-parser > @snyk/dep-graph > graphlib > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > @babel/preset-env > @babel/plugin-transform-exponentiation-operator > @babel/helper-builder-binary-assignment-operator-visitor > @babel/helper-explode-assignable-expression > @babel/traverse > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - stylelint > postcss-jsx > @babel/core > @babel/helpers > @babel/traverse > @babel/generator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - '@babel/core > @babel/helpers > @babel/traverse > @babel/helper-function-name > @babel/helper-get-function-arity > @babel/types > lodash':
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > mjml-migrate > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-accordion > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-body > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-button > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-carousel > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-column > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-divider > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-group > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-attributes > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-breakpoint > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-font > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-preview > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-style > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-title > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-hero > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-image > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-navbar > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-raw > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-section > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-social > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-spacer > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-table > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-text > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-accordion > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-body > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-button > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-carousel > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-cli > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-column > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-divider > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-group > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-attributes > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-breakpoint > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-font > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-preview > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-style > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-head-title > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-hero > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-image > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-navbar > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-raw > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-section > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-social > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-spacer > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-table > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-text > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > mjml-migrate > mjml-core > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - stylelint > postcss-jsx > @babel/core > @babel/helpers > @babel/traverse > @babel/helper-split-export-declaration > @babel/types > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > @babel/preset-env > @babel/plugin-transform-exponentiation-operator > @babel/helper-builder-binary-assignment-operator-visitor > @babel/helper-explode-assignable-expression > @babel/traverse > @babel/generator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > mjml-migrate > mjml-core > mjml-parser-xml > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - mjml > mjml-wrapper > mjml-section > mjml-core > mjml-migrate > mjml-core > mjml-validator > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - stylelint > postcss-jsx > @babel/core > @babel/helpers > @babel/traverse > @babel/helper-function-name > @babel/helper-get-function-arity > @babel/types > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > @babel/preset-env > @babel/plugin-transform-exponentiation-operator > @babel/helper-builder-binary-assignment-operator-visitor > @babel/helper-explode-assignable-expression > @babel/traverse > @babel/helper-split-export-declaration > @babel/types > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
+    - poi > @babel/preset-env > @babel/plugin-transform-exponentiation-operator > @babel/helper-builder-binary-assignment-operator-visitor > @babel/helper-explode-assignable-expression > @babel/traverse > @babel/helper-function-name > @babel/template > @babel/types > lodash:
+        patched: '2020-05-01T04:49:42.155Z'
