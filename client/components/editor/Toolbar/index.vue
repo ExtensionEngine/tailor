@@ -1,5 +1,5 @@
 <template>
-  <div class="toolbar-wrapper">
+  <div class="toolbar-wrapper primary elevation-1">
     <div v-show="activity" class="activity-toolbar blue-grey darken-3">
       <activity-actions class="activity-actions" />
       <h1 class="pt-2 headline text-truncate">

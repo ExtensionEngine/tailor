@@ -1,21 +1,24 @@
 <template>
   <div class="repo-container">
-    <v-tabs
-      background-color="blue-grey darken-3"
-      slider-color="grey lighten-2"
-      slider-size="3"
-      dark
-      class="elevation-1">
-      <v-tab
-        v-for="tab in tabs"
-        :key="tab.name"
-        :to="{ name: tab.route }"
-        active-class="tab-active"
-        ripple exact
-        class="px-4">
-        <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
-      </v-tab>
-    </v-tabs>
+    <div class="repository-header primary elevation-2">
+      <v-tabs
+        background-color="blue-grey darken-3"
+        slider-color="grey lighten-2"
+        slider-size="3"
+        dark
+        class="elevation-1">
+        <v-tab
+          v-for="tab in tabs"
+          :key="tab.name"
+          :to="{ name: tab.route }"
+          active-class="tab-active"
+          ripple exact
+          class="px-4">
+          <v-icon class="pr-2">mdi-{{ tab.icon }}</v-icon>{{ tab.name }}
+        </v-tab>
+      </v-tabs>
+      <active-users :users="getActiveUsers('repository', repositoryId)" />
+    </div>
     <div class="tab-content" infinite-wrapper>
       <router-view :show-loader="showLoader" />
     </div>
@@ -24,6 +27,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import ActiveUsers from 'components/common/ActiveUsers';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
@@ -38,6 +42,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('activeUsers', ['getActiveUsers']),
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository',
       ['repository', 'activities', 'selectedActivity', 'isRepositoryAdmin']),
@@ -55,6 +60,7 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['initialize']),
+    // ...mapActions('activeUsers', { setupActivityUsersApi: 'setEndpoint' }),
     ...mapMutations('repository', ['selectActivity'])
   },
   async created() {
@@ -69,7 +75,8 @@ export default {
       this.selectActivity(activityCid);
     }
     this.showLoader = false;
-  }
+  },
+  components: { ActiveUsers }
 };
 </script>
 
@@ -82,6 +89,11 @@ export default {
 .repo-container {
   display: flex;
   flex-direction: column;
+
+  .repository-header {
+    display: flex;
+    justify-content: space-between;
+  }
 
   .tab-content {
     overflow-y: scroll;

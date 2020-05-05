@@ -2,6 +2,9 @@
   <div class="editor-container">
     <template v-if="!isLoading">
       <toolbar :element="selectedElement" />
+      <template slot="active-users">
+        <active-users :users="getActiveUsers('activity', activityId)" />
+      </template>
       <sidebar
         :repository="repository"
         :activities="outlineActivities"
@@ -19,27 +22,36 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import ActiveUsers from 'components/common/ActiveUsers';
 import ActivityContent from './ActivityContent';
 import get from 'lodash/get';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
+import withActiveUsers from 'components/common/mixins/activeUsers';
 
 export default {
   name: 'content-editor',
+  mixins: [withActiveUsers],
   props: {
-    repositoryId: { type: Number, required: true }
+    repositoryId: { type: Number, required: true },
+    activityId: { type: Number, required: true }
   },
   data: () => ({
     isLoading: true,
     selectedElement: null
   }),
   computed: {
+    ...mapGetters('activeUsers', ['getActiveUsers']),
     ...mapGetters('repository', ['repository', 'outlineActivities']),
     ...mapGetters('editor', ['activity', 'contentContainers'])
   },
-  methods: mapActions('repository', ['initialize']),
+  methods: {
+    ...mapActions('activeUsers', { setupActivityUsersApi: 'setEndpoint' }),
+    ...mapActions('repository', ['initialize'])
+  },
   async created() {
     const { repositoryId: currentRepositoryId, repository: storeRepository } = this;
+    this.setupActivityUsersApi(`/repository/${currentRepositoryId}/active-users`);
     const repositoryLoaded = !!storeRepository;
     const repositoryChanged = get(storeRepository, 'id') !== currentRepositoryId;
     if (!repositoryLoaded || repositoryChanged) {
@@ -48,6 +60,7 @@ export default {
     this.isLoading = false;
   },
   components: {
+    ActiveUsers,
     ActivityContent,
     Sidebar,
     Toolbar
