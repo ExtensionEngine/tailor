@@ -1,34 +1,39 @@
 import generateActions from '@/store/helpers/actions';
 import SSEClient from '@/SSEClient';
+import urlJoin from 'url-join';
 
 const { api, get, save, setEndpoint, update } = generateActions();
-let SSE_CLIENT;
+const baseUrl = process.env.API_PATH;
+const feed = new SSEClient();
+
+const Events = {
+  Create: 'comment:create',
+  Update: 'comment:update',
+  Delete: 'comment:delete'
+};
 
 const fetch = ({ commit }, activityId) => {
   return api.fetch({ activityId })
     .then(items => commit('fetch', items));
 };
 
-const subscribe = ({ state, commit }) => {
-  if (SSE_CLIENT) SSE_CLIENT.disconnect();
-  SSE_CLIENT = new SSEClient(`/api/v1/${state.$apiUrl}/subscribe`);
-  SSE_CLIENT.subscribe('comment_create', item => {
-    api.setCid(item);
-    commit('save', item);
-  });
-  SSE_CLIENT.subscribe('comment_update', item => commit('sseUpdate', item));
-  SSE_CLIENT.subscribe('comment_delete', item => commit('sseUpdate', item));
+const subscribe = ({ rootState, commit }) => {
+  const { repositoryId } = rootState.route.params;
+  const token = localStorage.getItem('JWT_TOKEN');
+  const params = { repositoryId, token };
+  const url = urlJoin(baseUrl, api.url('/subscribe'));
+  feed
+    .connect(url, { params })
+    .subscribe(Events.Create, item => api.setCid(item) || commit('sseAdd', item))
+    .subscribe(Events.Update, item => commit('sseUpdate', item))
+    .subscribe(Events.Delete, item => commit('sseUpdate', item));
 };
 
-const unsubscribe = () => {
-  if (!SSE_CLIENT) return;
-  SSE_CLIENT.disconnect();
-};
+const unsubscribe = () => feed.disconnect();
 
-const remove = (_, comment) => {
-  // Update locally and let real data update be pushed from server
-  // after soft delete
+const remove = ({ commit }, comment) => {
   comment.deletedAt = new Date();
+  commit('save', comment);
   return api.remove(comment);
 };
 
