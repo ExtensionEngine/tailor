@@ -25,11 +25,11 @@ export default {
   methods: {
     ...mapMutations('repository/comments', ['markSeenComments']),
     setLastSeenComment(timeout) {
-      const latestComment = {
+      const payload = {
         activityUid: this.activity.uid,
         lastCommentAt: this.lastCommentAt
       };
-      setTimeout(() => this.markSeenComments(latestComment), timeout);
+      setTimeout(() => this.markSeenComments(payload), timeout);
     }
   },
   watch: {
