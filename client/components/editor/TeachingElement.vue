@@ -1,20 +1,25 @@
 <template>
-  <contained-content
-    @add="add"
-    @save="save"
-    @save:meta="meta => updateElement({ _cid: element._cid, meta })"
-    @delete="remove"
-    v-bind="$attrs"
-    :element="element"
-    :is-dragged="dragged"
-    :is-disabled="disabled" />
+  <div>
+    <slot></slot>
+    <contained-content
+      @add="add"
+      @save="save"
+      @save:meta="meta => updateElement({ _cid: element._cid, meta })"
+      @delete="remove"
+      v-bind="$attrs"
+      :element="element"
+      :is-dragged="dragged"
+      :is-disabled="disabled"
+      :style="elementStyle" />
+  </div>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import cloneDeep from 'lodash/cloneDeep';
 import { ContainedContent } from 'tce-core';
 import EventBus from 'EventBus';
+import omit from 'lodash/omit';
 import throttle from 'lodash/throttle';
 
 export default {
@@ -23,9 +28,23 @@ export default {
   props: {
     element: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
-    dragged: { type: Boolean, default: false }
+    dragged: { type: Boolean, default: false },
+    elementStyle: { type: Object, default: () => null }
+  },
+  data: () => ({ isFocused: false }),
+  computed: {
+    ...mapState('activeUsers', ['sseId']),
+    context() {
+      const { repositoryId, activityId, contentId: elementId } = this.element;
+      const { sseId } = this;
+      return { repositoryId, activityId, elementId, sseId };
+    }
   },
   methods: {
+    ...mapActions('activeUsers', {
+      addActiveUserContext: 'add',
+      removeActiveUserContext: 'remove'
+    }),
     ...mapActions('repository/tes', {
       saveElement: 'save',
       updateElement: 'update',
@@ -50,6 +69,24 @@ export default {
         this.$nextTick(() => EventBus.emit('element:focus'));
       });
     }
+  },
+  watch: {
+    isFocused() {
+      this.context.created = new Date();
+      if (this.isFocused) {
+        this.addActiveUserContext(this.context);
+        return;
+      }
+      this.removeActiveUserContext(this.context);
+    }
+  },
+  created() {
+    EventBus.on('element:focus', element => {
+      this.isFocused = !!element && (element.id === this.element.id);
+    });
+  },
+  beforeDestroy() {
+    this.removeActiveUserContext(omit(this.context, 'created'));
   },
   components: { ContainedContent }
 };
