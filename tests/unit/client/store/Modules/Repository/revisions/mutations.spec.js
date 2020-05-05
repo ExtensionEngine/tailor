@@ -7,4 +7,10 @@ describe('Test for store/modules/repository/revisions/mutations', () => {
     mutations.setPagination(state, change);
     expect(state).toEqual({ $internals: { pagination: { 1: 1, 2: 21, 3: 31, 6: 61 } } });
   });
+  it('put allFetched into $internats of state', () => {
+    const state = { $internals: {} };
+    const change = 'fakeallRevisionsFetched';
+    mutations.allRevisionsFetched(state, change);
+    expect(state).toEqual({ $internals: { allRevisionsFetched: 'fakeallRevisionsFetched' } });
+  });
 });
