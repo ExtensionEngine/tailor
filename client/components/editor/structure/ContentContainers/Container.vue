@@ -29,15 +29,29 @@
         <teaching-element
           :set-width="setWidth"
           :dragged="dragged"
-          :element="item" />
+          :element="item"
+          :element-style="getElementStyle(item.contentId)">
+          <div
+            :class="{ inactive: !hasActiveUsers(item.contentId) }"
+            class="active-users-wrapper">
+            <active-users
+              v-if="getActiveUsers('element', item.contentId)"
+              :users="getActiveUsers('element', item.contentId)"
+              :size="26"
+              vertical
+              tooltip-right />
+          </div>
+        </teaching-element>
       </template>
     </tes-list>
   </v-card>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import ActiveUsers from 'components/common/ActiveUsers';
 import filter from 'lodash/filter';
-import { mapActions } from 'vuex';
+import first from 'lodash/first';
 import sortBy from 'lodash/sortBy';
 import TeachingElement from '../../TeachingElement';
 import TesList from '../TesList';
@@ -52,6 +66,7 @@ export default {
     layout: { type: Boolean, default: true }
   },
   computed: {
+    ...mapGetters('activeUsers', ['getActiveUsers']),
     teachingElements() {
       const activityId = this.container.id;
       return sortBy(filter(this.tes, { activityId }), 'position');
@@ -76,9 +91,21 @@ export default {
       const isFirstChild = newPosition === -1;
       const context = { items, newPosition, isFirstChild, insert: true };
       this.insertElement({ element, context });
+    },
+    hasActiveUsers(elementId) {
+      const activeUsers = this.getActiveUsers('element', elementId);
+      return activeUsers.length;
+    },
+    getElementStyle(elementId) {
+      const activeUsers = this.getActiveUsers('element', elementId);
+      if (!activeUsers.length) return;
+      const { palette, profileImage } = first(activeUsers);
+      const color = palette[profileImage ? 'border' : 'background'];
+      return { boxShadow: `0 0 0 2px ${color}` };
     }
   },
   components: {
+    ActiveUsers,
     TesList,
     TeachingElement
   }
@@ -90,5 +117,18 @@ export default {
   width: 100%;
   min-height: 2.25rem;
   margin-bottom: 0.5rem;
+}
+
+/deep/ .active-users-wrapper {
+  position: absolute;
+  right: -1.25rem;
+  margin-top: 1rem;
+  transition: all 0.5s ease;
+
+  &.inactive {
+    opacity: 0;
+    transition: all 0.5s ease;
+  }
+  .active-users { margin-right: 0; }
 }
 </style>
