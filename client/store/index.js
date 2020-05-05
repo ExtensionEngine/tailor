@@ -1,3 +1,4 @@
+import activeUsers from './modules/activeUsers';
 import auth from './modules/auth';
 import createLogger from 'vuex/dist/logger';
 import editor from './modules/editor';
@@ -14,6 +15,7 @@ const isDevEnv = process.env.NODE_ENV !== 'production';
 const middlewares = settings.debug.state && isDevEnv ? [createLogger()] : [];
 
 const modules = {
+  activeUsers,
   auth,
   repository,
   repositories,
