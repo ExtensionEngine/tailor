@@ -58,9 +58,10 @@ import reorderMixin from './reorderMixin';
 import SearchResult from './SearchResult';
 import Sidebar from '../common/Sidebar';
 import StructureToolbar from './Toolbar';
+import withActiveUsers from 'components/common/mixins/activeUsers';
 
 export default {
-  mixins: [reorderMixin],
+  mixins: [reorderMixin, withActiveUsers],
   props: {
     showLoader: { type: Boolean, default: false }
   },
