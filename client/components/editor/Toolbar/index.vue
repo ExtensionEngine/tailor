@@ -9,6 +9,7 @@
           {{ activity.data.name }}
         </span>
       </h1>
+      <slot name="active-users"></slot>
     </div>
     <element-toolbar
       v-if="element && element.parent"
