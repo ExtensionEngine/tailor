@@ -106,7 +106,7 @@ export default {
       this.selectedTab = 'browser';
     },
     unseenComments: debounce(function (val) {
-      this.unseenCommentCount = val.length ? val.length : 0;
+      this.unseenCommentCount = val.length;
     }, 200)
 
   },
