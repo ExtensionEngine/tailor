@@ -3,6 +3,12 @@
 const hooks = require('./hooks');
 const { Model } = require('sequelize');
 
+const Events = {
+  Create: 'comment:create',
+  Update: 'comment:update',
+  Delete: 'comment:delete'
+};
+
 class Comment extends Model {
   static fields(DataTypes) {
     const { DATE, TEXT } = DataTypes;
@@ -56,6 +62,10 @@ class Comment extends Model {
       paranoid: true,
       freezeTableName: true
     };
+  }
+
+  static get Events() {
+    return Events;
   }
 }
 
