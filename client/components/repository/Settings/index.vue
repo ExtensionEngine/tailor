@@ -8,7 +8,9 @@
         <router-view />
       </v-col>
     </v-row>
-    <clone-modal @close="showCloneModal = false" :show="showCloneModal" />
+    <clone-modal
+      v-if="showCloneModal"
+      @close="showCloneModal = false" />
     <progress-dialog :show="isPublishing" :status="publishPercentage" />
     <app-footer />
   </v-container>
