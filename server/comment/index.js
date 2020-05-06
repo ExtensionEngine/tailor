@@ -7,7 +7,7 @@ const { createError } = require('../shared/error/helpers');
 const ctrl = require('./comment.controller');
 const processQuery = require('../shared/util/processListQuery');
 const router = require('express').Router();
-const { middleware: sse } = require('../shared/util/sse');
+const { middleware: sse } = require('../shared/sse');
 const { User } = require('../shared/database');
 
 const defaultListQuery = {
