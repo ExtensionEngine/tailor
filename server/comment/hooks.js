@@ -4,23 +4,31 @@ const { broadcast, events } = require('./channel');
 const mail = require('../shared/mail');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
+const sse = require('../shared/sse');
 const without = require('lodash/without');
 
 exports.add = (Comment, Hooks, db) => {
+  const { Events } = Comment;
+
   Comment.addHook(Hooks.afterCreate, comment => {
     comment.getAuthor().then(a => {
+      const author = { id: a.id, email: a.email };
+      const channel = sse.channel(comment.repositoryId);
+      if (channel) channel.send(Events.Create, { ...comment.toJSON(), author });
       broadcast(events.CREATE, { ...comment.toJSON(), author: a.profile });
       sendEmailNotification(comment, db);
     });
   });
 
   Comment.addHook(Hooks.afterUpdate, comment => {
-    broadcast(events.UPDATE, comment);
+    const channel = sse.channel(comment.courseId);
+    if (channel) channel.send(Events.Update, comment);
   });
 
   Comment.addHook(Hooks.afterDestroy, comment => {
-    Comment.findByPk(comment.id, { paranoid: false }).then(deleted => {
-      broadcast(events.DELETE, deleted);
+    Comment.findByPk(comment.id, { paranoid: false }).then(comment => {
+      const channel = sse.channel(comment.courseId);
+      if (channel) channel.send(Events.Delete, comment);
     });
   });
 };
