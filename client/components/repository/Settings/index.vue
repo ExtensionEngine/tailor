@@ -8,7 +8,9 @@
         <router-view />
       </v-col>
     </v-row>
-    <clone-modal @close="showCloneModal = false" :show="showCloneModal" />
+    <clone-modal
+      v-if="showCloneModal"
+      @close="showCloneModal = false" />
     <progress-dialog :show="isPublishing" :status="publishPercentage" />
     <app-footer />
   </v-container>
@@ -45,7 +47,10 @@ export default {
       appChannel.emit('showConfirmationModal', {
         title: 'Delete repository?',
         message: `Are you sure you want to delete repository ${this.repository.name}?`,
-        action: () => this.removeRepository(this.repository) && this.$router.push('/')
+        action: async () => {
+          await this.removeRepository(this.repository);
+          this.$router.push('/');
+        }
       });
     },
     onActionClick(name) {
