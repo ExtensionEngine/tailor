@@ -1,6 +1,7 @@
 'use strict';
 
 const { NOT_FOUND, UNAUTHORIZED } = require('http-status-codes');
+const activeUsersRouter = require('../active-user').router;
 const { authorize } = require('../shared/auth/mw');
 const { createError } = require('../shared/error/helpers');
 const ctrl = require('./repository.controller');
@@ -37,7 +38,8 @@ router
   .post('/:repositoryId/users', ctrl.upsertUser)
   .delete('/:repositoryId/users/:userId', ctrl.removeUser)
   .post('/:repositoryId/tags', ctrl.addTag)
-  .delete('/:repositoryId/tags/:tagId', ctrl.removeTag);
+  .delete('/:repositoryId/tags/:tagId', ctrl.removeTag)
+  .use('/:repositoryId/active-users', activeUsersRouter);
 
 mount(router, '/:repositoryId', activity);
 mount(router, '/:repositoryId', revision);
