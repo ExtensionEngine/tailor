@@ -66,7 +66,8 @@ export default {
   },
   data: () => ({ search: '' }),
   computed: {
-    ...mapGetters('repository', ['structure', 'outlineActivities']),
+    ...mapGetters('repository',
+      ['structure', 'outlineActivities', 'selectedActivity']),
     hasActivities: vm => !!vm.rootActivities.length,
     isFlat() {
       const types = map(filter(this.structure, { level: 2 }), 'type');
@@ -90,13 +91,26 @@ export default {
     ...mapMutations('repository', ['selectActivity']),
     goTo(activity) {
       this.search = '';
-      this.selectActivity(activity._cid);
+      this.$router.push({
+        name: 'repository',
+        params: { activityId: activity.id }
+      });
       this.expandParents(activity);
+      this.scrollToActivity(activity);
+    },
+    scrollToActivity(activity, timeout = 500) {
       setTimeout(() => {
         const elementId = `#activity_${activity._cid}`;
         const element = this.$refs.structure.querySelector(elementId);
         element.scrollIntoView();
-      }, 500);
+      }, timeout);
+    }
+  },
+  watch: {
+    showLoader(val) {
+      if (!val && this.selectedActivity) {
+        this.scrollToActivity(this.selectedActivity, 200);
+      }
     }
   },
   components: {

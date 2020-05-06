@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
@@ -53,21 +53,21 @@ export default {
       return items;
     }
   },
-  methods: {
-    ...mapActions('repository', ['initialize']),
-    ...mapMutations('repository', ['selectActivity'])
-  },
+  methods: mapActions('repository', ['initialize', 'expandParents']),
   async created() {
-    const { repositoryId, selectedActivity: activity } = this;
+    const { repositoryId } = this;
     await this.initialize(repositoryId);
-    const isActivitySelected = get(activity, 'repositoryId') === repositoryId;
-    if (!isActivitySelected) {
+    if (!this.selectedActivity) {
       const rootActivities = filter(this.activities, { parentId: null });
-      const activityCid = rootActivities.length
-        ? sortBy(rootActivities, 'position')[0]._cid
+      const activity = rootActivities.length
+        ? sortBy(rootActivities, 'position')[0]
         : null;
-      this.selectActivity(activityCid);
+      this.$router.push({
+        name: 'repository',
+        params: { activityId: activity.id }
+      });
     }
+    this.expandParents(this.selectedActivity);
     this.showLoader = false;
   }
 };

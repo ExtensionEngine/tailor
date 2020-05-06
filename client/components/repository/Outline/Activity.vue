@@ -2,7 +2,7 @@
   <div>
     <div class="activity-wrapper">
       <div
-        @click="selectActivity(_cid)"
+        @click="selectActivity"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
         :id="`activity_${_cid}`"
@@ -118,9 +118,16 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('repository', ['selectActivity', 'toggleActivity']),
+    ...mapMutations('repository', ['toggleActivity']),
     toggle(expanded = !this.isExpanded) {
       this.toggleActivity({ _cid: this._cid, expanded });
+    },
+    selectActivity() {
+      if (this.selectedActivity.id === this.id) return;
+      this.$router.push({
+        name: 'repository',
+        params: { activityId: this.id }
+      });
     }
   },
   components: { Draggable, OptionsMenu, OptionsToolbar }

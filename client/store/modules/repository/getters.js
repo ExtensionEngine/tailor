@@ -35,9 +35,13 @@ export const outlineActivities = (_state, getters) => {
   return filter(activities, it => outlineTypes.includes(it.type));
 };
 
-export const selectedActivity = (state, _getters, rootState) => {
-  const { repository: { activities } } = rootState;
-  return get(activities.items, state.activity, null);
+export const selectedActivity = (_state, _getters, rootState) => {
+  const {
+    repository: { activities },
+    route: { params: { activityId } }
+  } = rootState;
+  if (!activityId) return;
+  return find(activities.items, { id: parseInt(activityId, 10) });
 };
 
 export const isCollapsed = state => {

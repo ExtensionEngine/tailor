@@ -43,10 +43,6 @@ const router = new Router({
     props: numericParser,
     meta: { auth: true },
     children: [{
-      path: '',
-      name: 'repository',
-      component: Outline
-    }, {
       path: 'settings',
       component: RepositorySettings,
       children: [{
@@ -67,6 +63,10 @@ const router = new Router({
       path: 'tree-view',
       name: 'tree-view',
       component: TreeView
+    }, {
+      path: ':activityId?',
+      name: 'repository',
+      component: Outline
     }]
   }, {
     path: '/repository/:repositoryId/editor/:activityId',
