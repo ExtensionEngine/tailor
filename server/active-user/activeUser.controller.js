@@ -18,7 +18,7 @@ function add({ body, user }, res) {
   const { context } = body;
   user = pick(user, ['id', 'email', 'firstName', 'lastName']);
   ActiveUsers.addContext(user, context);
-  const channel = sse.channel(context.courseId);
+  const channel = sse.channel(context.repositoryId);
   if (channel) channel.send(Events.Add, { user, context });
 }
 
@@ -30,19 +30,19 @@ function remove({ body, user }, res) {
   ActiveUsers.removeContext(user, ({ created, ...context }) => {
     return isEqual(context, targetContext);
   });
-  const channel = sse.channel(context.courseId);
+  const channel = sse.channel(context.repositoryId);
   if (channel) channel.send(Events.Remove, { user, context });
 }
 
-function subscribe({ course, user }, { sse }) {
+function subscribe({ repository, user }, { sse }) {
   const { id: sseId } = sse;
-  sse.join(course.id);
-  sse.on('close', () => onUnsubscribe({ course, sseId, user }));
+  sse.join(repository.id);
+  sse.on('close', () => onUnsubscribe({ repository, sseId, user }));
 }
 
-function onUnsubscribe({ course, sseId, user }) {
+function onUnsubscribe({ repository, sseId, user }) {
   ActiveUsers.removeContext(user, context => context.sseId === sseId);
-  const channel = sse.channel(course.id);
+  const channel = sse.channel(repository.id);
   const { id: userId } = user;
   if (channel) channel.send(Events.RemoveSession, { userId, sseId });
 }
