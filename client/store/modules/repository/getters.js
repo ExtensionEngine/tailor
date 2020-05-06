@@ -10,8 +10,9 @@ export const id = (_state, _getters, { route: { params: { repositoryId } } }) =>
   return repositoryId ? parseInt(repositoryId, 10) : null;
 };
 
-export const repository = (_state, getters, _rootState, { repositories }) => {
+export const repository = (_state, getters, _rootState, rootGetters) => {
   if (!getters.id) return;
+  const repositories = rootGetters['repositories/repositories'];
   return find(repositories, { id: getters.id });
 };
 

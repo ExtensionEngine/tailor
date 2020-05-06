@@ -5,7 +5,7 @@
       @click.prevent
       :input-value="isSelected"
       :disabled="disabled" />
-    <teaching-element
+    <content-element
       :element="element"
       :class="{ selected: isSelected }"
       disabled />
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import TeachingElement from '@/components/editor/TeachingElement';
+import ContentElement from '@/components/editor/ContentElement';
 
 export default {
   name: 'content-element-preview',
@@ -32,7 +32,7 @@ export default {
       this.$emit('toggle');
     }
   },
-  components: { TeachingElement }
+  components: { ContentElement }
 };
 </script>
 

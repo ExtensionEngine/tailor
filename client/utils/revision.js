@@ -81,7 +81,7 @@ export function getRevisionColor(rev) {
     }
     case 'REPOSITORY':
       return '#00BCD4';
-    case 'TEACHING_ELEMENT':
+    case 'CONTENT_ELEMENT':
       return '#FF5722';
     default:
       return DEFAULT_COLOR;
