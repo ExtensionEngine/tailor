@@ -2,6 +2,7 @@ import calculatePosition from 'utils/calculatePosition.js';
 import generateActions from '@/store/helpers/actions';
 
 const {
+  add,
   api,
   fetch,
   get,
@@ -24,6 +25,7 @@ const reorder = ({ commit }, { element, context }) => {
 };
 
 export {
+  add,
   get,
   fetch,
   insert,

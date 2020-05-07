@@ -23,7 +23,7 @@ import omit from 'lodash/omit';
 import throttle from 'lodash/throttle';
 
 export default {
-  name: 'teaching-element',
+  name: 'content-element',
   inheritAttrs: false,
   props: {
     element: { type: Object, required: true },
@@ -41,16 +41,16 @@ export default {
     }
   },
   methods: {
-    ...mapActions('activeUsers', {
-      addActiveUserContext: 'add',
-      removeActiveUserContext: 'remove'
-    }),
-    ...mapActions('repository/tes', {
+    ...mapActions('repository/contentElements', {
       saveElement: 'save',
       updateElement: 'update',
       removeElement: 'remove'
     }),
-    ...mapMutations('repository/tes', { addElement: 'add' }),
+    ...mapActions('activeUsers', {
+      addActiveUserContext: 'add',
+      removeActiveUserContext: 'remove'
+    }),
+    ...mapMutations('repository/contentElements', { addElement: 'add' }),
     add(element) {
       this.addElement({ ...this.element, ...cloneDeep(element) });
     },

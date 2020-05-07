@@ -10,23 +10,24 @@
       </v-btn>
     </div>
     <v-alert
-      :value="!teachingElements.length"
+      :value="!contentElements.length"
       color="blue-grey darken-3"
       icon="mdi-information-variant"
-      text prominent
+      text
+      prominent
       class="my-5 mx-3">
       Click the button below to create content.
     </v-alert>
-    <tes-list
+    <element-list
       @add="addElement"
       @insert="insert"
       @update="reorder"
-      :list="teachingElements"
+      :list="contentElements"
       :activity="container"
       :types="types"
       :layout="layout">
       <template v-slot:list-item="{ item, dragged, setWidth }">
-        <teaching-element
+        <content-element
           :set-width="setWidth"
           :dragged="dragged"
           :element="item"
@@ -41,52 +42,52 @@
               vertical
               tooltip-right />
           </div>
-        </teaching-element>
+        </content-element>
       </template>
-    </tes-list>
+    </element-list>
   </v-card>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import ActiveUsers from 'components/common/ActiveUsers';
+import ContentElement from '../../ContentElement';
+import ElementList from '../ElementList';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
 import sortBy from 'lodash/sortBy';
-import TeachingElement from '../../TeachingElement';
-import TesList from '../TesList';
 
 export default {
   name: 'content-container',
   props: {
     container: { type: Object, required: true },
-    tes: { type: Object, required: true },
+    elements: { type: Object, required: true },
     types: { type: Array, default: null },
     name: { type: String, required: true },
     layout: { type: Boolean, default: true }
   },
   computed: {
     ...mapGetters('activeUsers', ['getActiveUsers']),
-    teachingElements() {
+    contentElements() {
       const activityId = this.container.id;
-      return sortBy(filter(this.tes, { activityId }), 'position');
+      return sortBy(filter(this.elements, { activityId }), 'position');
     }
   },
   methods: {
-    ...mapActions('repository/tes', {
+    ...mapActions('repository/contentElements', {
       reorderElements: 'reorder',
       insertElement: 'insert',
       addElement: 'save'
     }),
     reorder({ newIndex: newPosition }) {
-      const items = this.teachingElements;
+      const items = this.contentElements;
       const element = items[newPosition];
       const isFirstChild = newPosition === 0;
       const context = { items, newPosition, isFirstChild };
       this.reorderElements({ element, context });
     },
     insert(element) {
-      const items = this.teachingElements;
+      const items = this.contentElements;
       const { position: newPosition } = element;
       const isFirstChild = newPosition === -1;
       const context = { items, newPosition, isFirstChild, insert: true };
@@ -104,11 +105,7 @@ export default {
       return { boxShadow: `0 0 0 2px ${color}` };
     }
   },
-  components: {
-    ActiveUsers,
-    TesList,
-    TeachingElement
-  }
+  components: { ActiveUsers, ContentElement, ElementList }
 };
 </script>
 

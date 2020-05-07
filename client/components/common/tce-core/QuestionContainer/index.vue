@@ -39,7 +39,6 @@
       <controls
         @edit="edit"
         @save="save"
-        @remove="remove"
         @cancel="cancel"
         class="controls"
         :is-editing="isEditing" />
@@ -139,9 +138,6 @@ export default {
     },
     close() {
       this.$emit('selected');
-    },
-    remove() {
-      this.$emit('remove');
     },
     setAlert(data = {}) {
       this.alert = data;

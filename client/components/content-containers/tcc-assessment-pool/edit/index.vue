@@ -9,20 +9,21 @@
     <v-alert :value="!hasAssessments" color="white" icon="mdi-information-variant">
       Click the button below to create first assessment.
     </v-alert>
-    <ul class="list-group">
+    <ul class="list-group pl-0">
       <assessment-item
         v-for="it in assessments"
         :key="it._cid"
         @selected="toggleSelect(it)"
         @save="saveAssessment"
-        @delete="requestRemoveConfirmation(it)"
+        @delete="$emit('deleteElement', it)"
         :assessment="it"
         :expanded="isSelected(it)" />
     </ul>
     <add-element
       @add="addAssessment"
       :include="['ASSESSMENT']"
-      :activity="activity"
+      :activity="container"
+      :position="nextPosition"
       :layout="false"
       large
       label="Add assessment" />
@@ -30,47 +31,50 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
 import AddElement from 'tce-core/AddElement';
-import AssessmentItem from './AssessmentItem';
-import capitalize from 'lodash/capitalize';
+import AssessmentItem from 'tce-core/AssessmentItem';
 import cuid from 'cuid';
-import EventBus from 'EventBus';
-import map from 'lodash/map';
-
-const appChannel = EventBus.channel('app');
+import filter from 'lodash/filter';
+import last from 'lodash/last';
+import sortBy from 'lodash/sortBy';
 
 export default {
-  name: 'assessments',
-  data() {
-    return {
-      selected: [],
-      allSelected: false
-    };
+  name: 'assessment-pool',
+  props: {
+    container: { type: Object, required: true },
+    elements: { type: Object, required: true }
   },
+  data: () => ({
+    selected: [],
+    allSelected: false
+  }),
   computed: {
-    ...mapGetters('editor', ['activity', 'assessments']),
-    hasAssessments() {
-      return this.assessments.length;
-    }
+    assessments() {
+      const activityId = this.container.id;
+      const assessments = filter(this.elements, { activityId });
+      return sortBy(assessments, 'position');
+    },
+    nextPosition() {
+      const lastItem = last(this.assessments);
+      return lastItem ? lastItem.position + 1 : 1;
+    },
+    hasAssessments: vm => vm.assessments.length
   },
   methods: {
-    ...mapActions('repository/tes', ['save', 'update', 'remove']),
-    ...mapMutations('repository/tes', ['add']),
     addAssessment(assessment) {
-      const data = { ...assessment, _cid: cuid() };
-      this.add(data);
-      this.selected.push(data._cid);
+      const cid = cuid();
+      this.$emit('addElement', { ...assessment, _cid: cid });
+      this.selected.push(cid);
     },
     saveAssessment(assessment) {
-      // TODO: Figure out why save is broken (for update)
-      return assessment.id ? this.update(assessment) : this.save(assessment);
+      const event = assessment.id ? 'updateElement' : 'saveElement';
+      return this.$emit(event, assessment);
     },
     toggleSelect(assessment) {
-      const question = assessment.data.question;
-      const hasQuestion = question && question.length > 0;
+      const { question } = assessment.data;
+      const hasQuestion = question && question.length;
       if (this.isSelected(assessment) && !hasQuestion) {
-        this.remove(assessment);
+        this.$emit('deleteElement', assessment);
       } else if (this.isSelected(assessment)) {
         this.selected.splice(this.selected.indexOf(assessment._cid), 1);
       } else {
@@ -80,17 +84,17 @@ export default {
     isSelected(assessment) {
       return this.selected.includes(assessment._cid);
     },
+    clearSelected() {
+      const ids = this.assessments.map(it => it._cid);
+      this.selected = this.selected.filter(it => ids.includes(it));
+    },
     toggleAssessments() {
       this.allSelected = !this.allSelected;
-      this.selected = this.allSelected ? map(this.assessments, it => it._cid) : [];
-    },
-    requestRemoveConfirmation(assessment) {
-      const actionPrefix = assessment.id ? 'delete' : 'discard';
-      const title = capitalize(`${actionPrefix} assessment?`);
-      const message = `Are you sure you want to ${actionPrefix} assessment?`;
-      const action = () => this.remove(assessment);
-      appChannel.emit('showConfirmationModal', { title, message, action });
+      this.selected = this.allSelected ? this.assessments.map(it => it._cid) : [];
     }
+  },
+  watch: {
+    assessments: 'clearSelected'
   },
   components: { AddElement, AssessmentItem }
 };
@@ -98,19 +102,20 @@ export default {
 
 <style lang="scss" scoped>
 .assessments {
-  margin: 70px 0 250px;
+  margin: 4rem 0 15rem;
 
   .v-alert {
     color: #555;
   }
 
   .heading {
-    text-align: left;
-    padding: 0 0 8px 2px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    padding: 0 0 0.5rem 0.125rem;
 
     .v-btn {
-      float: right;
-      margin: 4px 0 0;
+      margin: 0.25rem 0 0;
       padding: 0;
     }
   }
@@ -118,8 +123,8 @@ export default {
   h2 {
     display: inline-block;
     margin: 0;
-    font-size: 18px;
-    line-height: 30px;
+    font-size: 1.125rem;
+    line-height: 1.875rem;
     vertical-align: middle;
   }
 }
