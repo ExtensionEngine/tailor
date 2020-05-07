@@ -108,7 +108,8 @@ export default {
   },
   watch: {
     showLoader(val) {
-      if (!val && this.selectedActivity) {
+      const { selectedActivity: activity, rootActivities } = this;
+      if (!val && activity && (rootActivities[0].id !== activity.id)) {
         this.scrollToActivity(this.selectedActivity, 200);
       }
     }
