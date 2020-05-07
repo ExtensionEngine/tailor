@@ -5,6 +5,7 @@ const url = {
 };
 
 function fetch(repositoryId) {
+  console.log('RepositoryId ne vata: ', repositoryId);
   return request.get(url.root(repositoryId)).then(res => res.data.data);
 }
 

@@ -39,7 +39,7 @@ router
   .delete('/:repositoryId/users/:userId', ctrl.removeUser)
   .post('/:repositoryId/tags', ctrl.addTag)
   .delete('/:repositoryId/tags/:tagId', ctrl.removeTag)
-  .use('/:repositoryId/active-users', activeUsersRouter);
+  .get('/:repositoryId/active-users', activeUsersRouter);
 
 mount(router, '/:repositoryId', activity);
 mount(router, '/:repositoryId', revision);

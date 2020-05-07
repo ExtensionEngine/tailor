@@ -19,7 +19,8 @@ const fetch = ({ commit }, activityId) => {
 
 const subscribe = ({ rootState, commit }) => {
   const { repositoryId } = rootState.route.params;
-  const token = localStorage.getItem('JWT_TOKEN');
+  // const token = localStorage.getItem('JWT_TOKEN');
+  const token = rootState.auth.token;
   const params = { repositoryId, token };
   const url = urlJoin(baseUrl, api.url('/subscribe'));
   feed

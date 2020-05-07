@@ -1,5 +1,5 @@
 import assign from 'lodash/assign';
-import axios from '@/api/request';
+import client from '@/api/request';
 import cloneDeep from 'lodash/cloneDeep';
 import cuid from 'cuid';
 import join from 'url-join';
@@ -118,12 +118,12 @@ export default class Resource {
       // if server id is not provided but exist inside resource cache
       if (!model.id && this.getKey(model._cid)) this.setKey(model);
       const action = model.id ? 'patch' : 'post';
-      const url = this.url(model.id ? model.id.toString() : '');
-      return axios[action](url, this.clean(model)).then(response => {
-        if (!model.id) this.map(model._cid, response.data.data.id);
-        model = cloneDeep(model);
-        return assign(model, response.data.data);
-      });
+      return client[action](this.url(model.id), this.clean(model))
+        .then(response => {
+          if (!model.id) this.map(model._cid, response.data.data.id);
+          model = cloneDeep(model);
+          return assign(model, response.data.data);
+        });
     });
   }
 
@@ -163,26 +163,26 @@ export default class Resource {
   }
 
   get(path, params = {}) {
-    return axios.get(this.url(path), { params });
+    return client.get(this.url(path), { params });
   }
 
   head(path, config) {
-    return axios.head(this.url(path), config);
+    return client.head(this.url(path), config);
   }
 
   post(path, data, config) {
-    return this.queue.add(() => axios.post(this.url(path), data, config));
+    return this.queue.add(() => client.post(this.url(path), data, config));
   }
 
   put(path, data, config) {
-    return this.queue.add(() => axios.put(this.url(path), data, config));
+    return this.queue.add(() => client.put(this.url(path), data, config));
   }
 
   patch(path, data, config) {
-    return this.queue.add(() => axios.patch(this.url(path), data, config));
+    return this.queue.add(() => client.patch(this.url(path), data, config));
   }
 
   delete(path, config) {
-    return this.queue.add(() => axios.delete(this.url(path), config));
+    return this.queue.add(() => client.delete(this.url(path), config));
   }
 }
