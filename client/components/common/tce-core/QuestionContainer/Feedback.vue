@@ -1,5 +1,5 @@
 <template>
-  <div class="feedback">
+  <div>
     <div>
       <span class="subtitle-2">{{ title }}</span>
       <v-btn

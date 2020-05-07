@@ -1,12 +1,13 @@
 <template>
   <div>
+    <div class="subtitle-2 pb-2">{{ title }}</div>
     <v-row>
       <v-col cols="4" offset="1">
         <v-text-field
           @change="updateHeading('premise', $event)"
           :value="headings.premise"
           :disabled="disabled"
-          :placeholder="premisePlaceholder"
+          :placeholder="premisePlaceholders[0]"
           :error="errors.includes('headings.premise')"
           color="blue-grey darken-3"
           filled />
@@ -16,7 +17,7 @@
           @change="updateHeading('response', $event)"
           :value="headings.response"
           :disabled="disabled"
-          :placeholder="responsePlaceholder"
+          :placeholder="responsePlaceholders[0]"
           :error="errors.includes('headings.response')"
           color="blue-grey darken-3"
           filled />
@@ -28,7 +29,7 @@
           @change="updatePremiseContent(premiseKey, $event)"
           :value="getPremiseContent(premiseKey)"
           :disabled="disabled"
-          :placeholder="contentPlaceholder"
+          :placeholder="premisePlaceholders[1]"
           :error="hasError(premiseKey, 'premises')"
           color="blue-grey darken-3"
           filled />
@@ -41,7 +42,7 @@
           @change="updateResponseContent(responseKey, $event)"
           :value="getResponseContent(responseKey)"
           :disabled="disabled"
-          :placeholder="contentPlaceholder"
+          :placeholder="responsePlaceholders[1]"
           :error="hasError(responseKey, 'responses')"
           color="blue-grey darken-3"
           filled />
@@ -56,7 +57,7 @@
         </v-btn>
       </v-col>
     </v-row>
-    <div class="d-flex justify-center mt-4">
+    <div class="d-flex justify-center my-2">
       <v-btn
         v-if="isEditing && pairsCount < 10"
         @click="addItems"
@@ -79,9 +80,9 @@ import set from 'lodash/set';
 import shuffle from 'lodash/shuffle';
 import size from 'lodash/size';
 
-const PREMISE_PLACEHOLDER = 'Premise';
-const RESPONSE_PLACEHOLDER = 'Response';
-const CONTENT_PLACEHOLDER = 'Insert text here...';
+const TITLE = 'Answers';
+const PREMISE_PLACEHOLDERS = ['Premise heading...', 'Premise value...'];
+const RESPONSE_PLACEHOLDERS = ['Response heading...', 'Response value...'];
 const ADD_BUTTON_LABEL = 'Add correct pair';
 
 export default {
@@ -97,10 +98,10 @@ export default {
     premises: vm => vm.assessment.premises,
     responses: vm => vm.assessment.responses,
     pairsCount: vm => size(vm.correct),
-    premisePlaceholder: () => PREMISE_PLACEHOLDER,
-    responsePlaceholder: () => RESPONSE_PLACEHOLDER,
+    premisePlaceholders: () => PREMISE_PLACEHOLDERS,
+    responsePlaceholders: () => RESPONSE_PLACEHOLDERS,
     addButtonLabel: () => ADD_BUTTON_LABEL,
-    contentPlaceholder: () => CONTENT_PLACEHOLDER
+    title: vm => TITLE
   },
   methods: {
     updateHeading(key, value) {

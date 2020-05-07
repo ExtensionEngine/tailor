@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="d-flex justify-space-between subtitle-2 my-2">
+  <div :class="{ 'pb-4': !hasAnswers }">
+    <div class="d-flex justify-space-between subtitle-2">
       <span v-if="isGraded">{{ title }}</span>
       <span v-else-if="isEditing">{{ blankCountInfo }}</span>
       <span v-if="isEditing">{{ info }}</span>
@@ -8,7 +8,7 @@
     <draggable v-model="correct" handle=".drag-handle">
       <v-card
         v-for="(group, i) in correct" :key="i"
-        class="transparent elevation-0 py-2 my-4">
+        class="transparent elevation-0 pt-2 mt-2">
         <div class="mb-4">
           <span v-if="isEditing" class="drag-handle">
             <span class="mdi mdi-drag-vertical"></span>
@@ -64,12 +64,15 @@
 import cloneDeep from 'lodash/cloneDeep';
 import { defaults } from 'utils/assessment';
 import Draggable from 'vuedraggable';
+import EventBus from 'EventBus';
 import get from 'lodash/get';
 import pluralize from 'pluralize';
 import pullAt from 'lodash/pullAt';
 import reduce from 'lodash/reduce';
 import size from 'lodash/size';
 import times from 'lodash/times';
+
+const appChannel = EventBus.channel('app');
 
 const TEXT_TYPES = ['JODIT_HTML', 'HTML'];
 const BLANK = /(@blank)/g;
@@ -83,6 +86,10 @@ const OUT_OF_SYNC = {
   type: 'error',
   text: `Question and blanks are out of sync! Please delete
     unnecessary answers or add blanks in the question!`
+};
+const MODAL_OPTIONS = {
+  title: 'Delete answer group',
+  message: 'Are you sure you want to delete this answer group?'
 };
 
 const getBlankCount = question => {
@@ -137,9 +144,14 @@ export default {
       this.update({ correct });
     },
     removeAnswerGroup(groupIndex) {
-      const correct = cloneDeep(this.correct);
-      pullAt(correct, groupIndex);
-      this.update({ correct });
+      appChannel.emit('showConfirmationModal', {
+        ...MODAL_OPTIONS,
+        action: () => {
+          const correct = cloneDeep(this.correct);
+          pullAt(correct, groupIndex);
+          this.update({ correct });
+        }
+      });
     },
     attemptToSync() {
       const count = this.blankCount - this.correct.length;
@@ -172,6 +184,7 @@ export default {
 <style lang="scss" scoped>
 .drag-handle {
   float: left;
+  margin-left: -0.375rem;
   cursor: pointer;
 
   .mdi {

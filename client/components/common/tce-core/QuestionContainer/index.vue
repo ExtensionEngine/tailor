@@ -38,8 +38,7 @@
         :answers="editedElement.data.answers"
         :feedback="editedElement.data.feedback"
         :is-graded="isGraded"
-        :is-editing="isEditing"
-        class="px-1" />
+        :is-editing="isEditing" />
       <v-alert
         v-show="alert.text"
         :type="alert.type"
@@ -206,7 +205,7 @@ const baseSchema = {
   }
 
   .content {
-    padding: 0 1.25rem;
+    padding: 0.5rem 1.425rem;
 
     @media (max-width: 1263px) {
       padding: 0.5rem;

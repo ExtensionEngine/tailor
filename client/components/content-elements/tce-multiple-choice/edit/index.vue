@@ -1,6 +1,6 @@
 <template>
-  <div class="py-4">
-    <div class="mb-5 subtitle-2">{{ title }}</div>
+  <div>
+    <div class="subtitle-2 pb-4">{{ title }}</div>
     <v-text-field
       v-for="(answer, idx) in answers" :key="idx"
       @change="updateAnswer($event, idx)"
@@ -29,7 +29,7 @@
         </v-btn>
       </template>
     </v-text-field>
-    <div class="d-flex justify-end mb-5">
+    <div :class="['d-flex', 'justify-end', { 'pb-2': isEditing }]">
       <v-btn
         v-if="isEditing"
         @click="addAnswer"

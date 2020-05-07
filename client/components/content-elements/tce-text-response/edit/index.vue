@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2 py-3 ">{{ title }}</div>
+    <div class="subtitle-2 pb-4">{{ title }}</div>
     <v-textarea
       @change="correct = $event"
       :value="correct"

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="subtitle-2 pt-2">{{ title }}</div>
+    <div class="subtitle-2">{{ title }}</div>
     <v-radio-group v-model="correct" :error="correctError">
       <v-radio
         v-for="(answer, index) in [true, false]"

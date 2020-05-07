@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="py-2 subtitle-2">{{ title }}</div>
-    <v-radio-group v-model="correct" :error="correctError">
+    <div class="subtitle-2">{{ title }}</div>
+    <v-radio-group v-model="correct" :error="correctError" hide-details>
       <v-text-field
         v-for="(answer, idx) in answers" :key="idx"
         @change="updateAnswer($event, idx)"
@@ -10,7 +10,7 @@
         :disabled="disabled"
         :error="answerError(idx)"
         :placeholder="placeholder"
-        filled class="ml-1">
+        filled>
         <template slot="prepend-inner">
           <v-radio v-if="isGraded" :value="idx" :color="color" />
           <v-avatar v-else size="24" :color="color" class="subtitle-2 mr-2">
@@ -24,7 +24,7 @@
         </template>
       </v-text-field>
     </v-radio-group>
-    <div class="d-flex justify-end mb-5">
+    <div :class="['d-flex', 'justify-end', { 'pb-2': isEditing }]">
       <v-btn
         v-if="isEditing"
         @click="addAnswer"
