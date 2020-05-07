@@ -14,9 +14,9 @@
         :activities="activities"
         :selected="selectedActivity" />
       <activity-discussion
-        v-show="selectedTab === 'comments'"
-        @change="comments => commentCount = comments.length"
-        :activity="selectedActivity" />
+        v-show="discussionTabVisible"
+        :activity="selectedActivity"
+        :is-visible="discussionTabVisible" />
       <element-sidebar
         v-if="selectedTab === 'element'"
         :key="getElementId(selectedElement)"
@@ -51,10 +51,12 @@
 <script>
 import ActivityDiscussion from './Discussion';
 import ActivityNavigation from './Navigation';
+import debounce from 'lodash/debounce';
 import ElementSidebar from './ElementSidebar';
 import get from 'lodash/get';
 import { getElementId } from 'tce-core/utils';
 import { getElementMetadata } from 'shared/activities';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'editor-sidebar',
@@ -64,9 +66,12 @@ export default {
     selectedActivity: { type: Object, required: true },
     selectedElement: { type: Object, default: null }
   },
-  data: () => ({ selectedTab: 'browser', commentCount: 0 }),
+  data: () => ({ selectedTab: 'browser', unseenCommentCount: 0 }),
   computed: {
     selectedTabIndex: vm => vm.tabs.map(it => it.name).indexOf(vm.selectedTab),
+    ...mapGetters('repository/comments', ['getUnseenComments']),
+    unseenComments: vm => vm.getUnseenComments(vm.selectedActivity),
+    discussionTabVisible: vm => vm.selectedTab === 'comments',
     tabs: vm => ([{
       name: 'browser',
       label: 'Browse',
@@ -75,7 +80,7 @@ export default {
       name: 'comments',
       label: 'Comments',
       icon: 'forum-outline',
-      badgeData: vm.commentCount
+      badgeData: vm.unseenCommentCount
     }, {
       name: 'element',
       label: 'Element',
@@ -99,7 +104,11 @@ export default {
       }
       if (this.selectedTab !== 'element') return;
       this.selectedTab = 'browser';
-    }
+    },
+    unseenComments: debounce(function (val) {
+      this.unseenCommentCount = val.length;
+    }, 200)
+
   },
   components: { ActivityDiscussion, ActivityNavigation, ElementSidebar }
 };

@@ -40,12 +40,12 @@ Adaptive course authoring platform.
 - Application is configured via environment variables contained in a file named
   `.env`. Use the `.env.example` file as a template: `cp .env.example .env` and
   enter configuration details.
-- You can init the db (for development) by setting `ENABLE_DEFAULT_SCHEMA=1` and
-  running `npm run db:seed`.
+- Initialize database by running `npm run db migrate`
+- Enable default repository schema by setting env variable `ENABLE_DEFAULT_SCHEMA=1` or define a custom one (more details below).
 - You can create admin user by running `npm run add:admin <email> <password>`
 - App branding is configured via values set in a file named `.brandrc` (or
   `.brandrc.js`). Use the `.brandrc.example` file as a template: `cp
-  .brandrc.example .brandrc` and enter configuration details.
+  .brandrc.example .brandrc` and enter configuration details (Optional).
 
 ## Launch
 
@@ -120,8 +120,6 @@ properties:
 - **color** `String` - Display color in hexadecimal notation.
 - **contentContainers** `Array<String>` - Array of content container types that
   define which content containers can be added.
-- **hasAssessments** `Boolean` - Activity allows adding assessments activities
-  to it.
 - **hasExams** `Boolean` - Activity allows adding exam activities to it.
 - **exams** `Object` - Configuration for activity exams.
 - **relationships** `Array<ActivityRelationship>` - Defines what relationships this

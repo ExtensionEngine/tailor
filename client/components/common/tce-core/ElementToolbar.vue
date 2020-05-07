@@ -50,10 +50,17 @@ export default {
   },
   computed: {
     id: vm => getElementId(vm.element),
-    config: vm => vm.$teRegistry.get(vm.element.type),
+    isQuestion: vm => isQuestion(vm.element.type),
+    config() {
+      const { element, isQuestion } = this;
+      const type = isQuestion
+        ? element.data.type
+        : element.type;
+      return this.$teRegistry.get(type);
+    },
     componentName() {
+      if (this.isQuestion) return;
       const { type } = this.element;
-      if (isQuestion(type)) return;
       return getToolbarName(type);
     },
     componentExists() {
@@ -61,7 +68,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repository/tes', { saveElement: 'save', removeElement: 'remove' }),
+    ...mapActions('repository/contentElements', {
+      saveElement: 'save',
+      removeElement: 'remove'
+    }),
     remove(element) {
       this.focusoutElement();
       if (element.embedded) return this.elementBus.emit('delete');

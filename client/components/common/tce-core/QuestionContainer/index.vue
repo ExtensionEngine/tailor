@@ -49,7 +49,6 @@
       <controls
         @edit="edit"
         @save="save"
-        @remove="remove"
         @cancel="cancel"
         :is-editing="isEditing"
         :has-errors="hasErrors"
@@ -142,9 +141,6 @@ export default {
       this.isEditing = false;
       this.errors = [];
       this.alert = {};
-    },
-    remove() {
-      this.$emit('remove');
     },
     validate() {
       return this.schema.validate(this.editedElement.data, validationOptions);

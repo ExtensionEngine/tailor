@@ -1,8 +1,7 @@
-import { getLevel, getSupportedContainers } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import reduce from 'lodash/reduce';
+import { getLevel } from 'shared/activities';
 import sortBy from 'lodash/sortBy';
 
 export function isChanged(activity) {
@@ -27,13 +26,6 @@ export function getOutlineChildren(activities, parentId) {
   if (!parentId || !children.length) return children;
   const types = getLevel(find(activities, { id: parentId }).type).subLevels;
   return filter(children, it => types.includes(it.type));
-}
-
-export function getContentContainers(activities, activity) {
-  const containers = getSupportedContainers(activity.type);
-  return reduce(containers, (acc, { type }) => {
-    return acc.concat(filter(activities, { parentId: activity.id, type }));
-  }, []);
 }
 
 export function getDescendants(activities, activity) {

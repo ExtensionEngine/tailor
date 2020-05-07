@@ -15,7 +15,7 @@
         :is-focused="isFocused"
         name="Accordion"
         icon="mdi-view-list"
-        active-placeholder="Click the button bellow to create the first item"
+        active-placeholder="Click the button below to create the first item"
         active-icon="mdi-arrow-down" />
       <template v-else>
         <accordion-item

@@ -94,7 +94,7 @@ function unpublishActivity(repository, activity) {
     if (!spineActivity) return;
     const deleted = getSpineChildren(spine, activity).concat(spineActivity);
     return Promise.map(deleted, it => {
-      const filenames = getActivityFilenames(it);
+      const filenames = getContentContainerFilenames(it);
       return Promise.map(filenames, filename => {
         const key = `${getBaseUrl(repository.id, it.id)}/${filename}.json`;
         return storage.deleteFile(key);
@@ -125,22 +125,13 @@ function getPublishedStructure(repository) {
 }
 
 async function fetchActivityContent(activity, signed = false) {
-  const res = await Promise
-    .all([fetchContainers(activity), fetchAssessments(activity)])
-    .spread((containers, assessments) => ({ containers, assessments }));
-  if (!signed) return res;
-  const [containers, assessments] = await Promise.all([
-    Promise.map(res.containers, resolveContainer),
-    resolveAssessments(res.assessments)
-  ]);
-  return Object.assign(res, { containers, assessments });
+  let containers = await fetchContainers(activity);
+  if (signed) containers = await Promise.map(containers, resolveContainer);
+  return { containers };
 }
 
 function publishContent(activity) {
-  return Promise.all([
-    publishContainers(activity),
-    publishAssessments(activity)
-  ]).spread((containers, assessments) => ({ containers, assessments }));
+  return publishContainers(activity).then(containers => ({ containers }));
 }
 
 function publishContainers(parent) {
@@ -149,13 +140,6 @@ function publishContainers(parent) {
       const { id, publishedAs = 'container' } = it;
       return saveFile(parent, `${id}.${publishedAs}`, it).then(() => it);
     });
-}
-
-function publishAssessments(parent) {
-  return fetchAssessments(parent).then(assessments => {
-    const key = getAssessmentsKey(parent);
-    return saveFile(parent, key, assessments).then(() => assessments);
-  });
 }
 
 function fetchContainers(parent) {
@@ -192,21 +176,12 @@ function fetchCustomContainers(parent) {
   return containerRegistry.fetch(parent, options);
 }
 
-function fetchAssessments(parent) {
-  const options = { where: { type: 'ASSESSMENT' }, attributes: CE_ATTRS };
-  return parent.getContentElements(options);
-}
-
 function resolveContainer(container) {
   const { elements, type } = container;
   const resolver = containerRegistry.getStaticsResolver(type);
   return resolver
     ? resolver(container, resolveStatics)
     : Promise.map(elements, resolveStatics).then(() => container);
-}
-
-function resolveAssessments(assessments) {
-  return Promise.map(assessments, resolveStatics);
 }
 
 function saveFile(parent, key, data) {
@@ -258,9 +233,8 @@ function getRepositoryAttrs(repository) {
   return temp;
 }
 
-function attachContentSummary(obj, { containers, assessments }) {
+function attachContentSummary(obj, { containers }) {
   obj.contentContainers = map(containers, getContainerSummary);
-  obj.assessments = map(assessments, it => pick(it, ['id', 'uid']));
 }
 
 function getContainerSummary(container) {
@@ -274,21 +248,13 @@ function defaultSummaryBuilder({ id, uid, type, publishedAs, elements = [] }) {
   return { id, uid, type, publishedAs, elementCount: elements.length };
 }
 
-function getActivityFilenames(spineActivity) {
-  const { contentContainers = [], assessments = [] } = spineActivity;
-  const filenames = [];
-  if (assessments.length) filenames.push(getAssessmentsKey(spineActivity));
-  filenames.push(...map(contentContainers, it => `${it.id}.${it.publishedAs}`));
-  return filenames;
+function getContentContainerFilenames({ contentContainers = [] }) {
+  return map(contentContainers, it => `${it.id}.${it.publishedAs}`);
 }
 
 function renameKey(obj, key, newKey) {
   obj[newKey] = obj[key];
   delete obj[key];
-}
-
-function getAssessmentsKey(parent) {
-  return FLAT_REPO_STRUCTURE ? `${parent.id}.assessments` : 'assessments';
 }
 
 function getBaseUrl(repoId, parentId) {

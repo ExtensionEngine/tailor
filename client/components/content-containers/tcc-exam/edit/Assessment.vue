@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import AssessmentItem from '@/components/editor/structure/AssessmentItem';
+import AssessmentItem from 'tce-core/AssessmentItem';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import Multiselect from '@/components/common/Select';
