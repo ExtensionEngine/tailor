@@ -18,7 +18,9 @@ export default {
       return filter(this.structure, it => sameLevelTypes.includes(it.type));
     },
     subLevels() {
-      const { subLevels = [] } = find(this.structure, { type: this.activity.type });
+      if (!this.activity) return [];
+      const config = find(this.structure, { type: this.activity.type });
+      const subLevels = get(config, 'subLevels', []);
       return filter(this.structure, it => subLevels.includes(it.type));
     }
   },

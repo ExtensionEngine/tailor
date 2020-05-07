@@ -17,12 +17,12 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import map from 'lodash/map';
+import { mapGetters } from 'vuex';
 import reduce from 'lodash/reduce';
 import Sidebar from 'components/repository/common/Sidebar';
 import TreeGraph from './TreeGraph';
@@ -46,7 +46,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository', ['activities', 'repository', 'structure']),
+    ...mapGetters('repository',
+      ['repository', 'structure', 'activities', 'selectedActivity']),
     // TODO: Remove this hack!
     visibility() {
       return this.showLoader ? 'hidden' : 'visible';
@@ -68,16 +69,18 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('repository', ['selectActivity']),
     setSelected(node) {
       if (this.selectedNode) this.selectedNode.classList.remove('selected');
       this.selectedNode = node;
       this.selectedNode.classList.add('selected');
     },
     onNodeSelect(node, activity, circle) {
+      if (activity.id === this.selectedActivity.id) return;
       if (!isActivityNode(node)) return;
       this.setSelected(circle);
-      this.selectActivity(activity._cid);
+      this.$router.push({
+        params: { repositoryId: activity.repositoryId, activityId: activity.id }
+      });
     }
   },
   components: {
