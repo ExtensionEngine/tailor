@@ -60,12 +60,13 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['initialize']),
-    // ...mapActions('activeUsers', { setupActivityUsersApi: 'setEndpoint' }),
+    ...mapActions('activeUsers', { setupActivityUsersApi: 'setEndpoint' }),
     ...mapMutations('repository', ['selectActivity'])
   },
   async created() {
     const { repositoryId, selectedActivity: activity } = this;
     await this.initialize(repositoryId);
+    this.setupActivityUsersApi(`/repository/${repositoryId}/active-users`);
     const isActivitySelected = get(activity, 'repositoryId') === repositoryId;
     if (!isActivitySelected) {
       const rootActivities = filter(this.activities, { parentId: null });
