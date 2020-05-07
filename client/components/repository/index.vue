@@ -9,7 +9,7 @@
       <v-tab
         v-for="tab in tabs"
         :key="tab.name"
-        :to="{ name: tab.route }"
+        :to="{ name: tab.route, params: tab.params }"
         active-class="tab-active"
         ripple exact
         class="px-4">
@@ -32,19 +32,19 @@ export default {
   props: {
     repositoryId: { type: Number, required: true }
   },
-  data() {
-    return {
-      showLoader: true
-    };
-  },
+  data: () => ({ showLoader: true, lastSelectedActivity: null }),
   computed: {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository',
       ['repository', 'activities', 'selectedActivity', 'isRepositoryAdmin']),
     tabs() {
+      const params = {
+        repositoryId: get(this.lastSelectedActivity, 'repositoryId'),
+        activityId: get(this.lastSelectedActivity, 'id')
+      };
       const items = [
-        { name: 'Structure', route: 'repository', icon: 'file-tree' },
-        { name: 'Graph View', route: 'tree-view', icon: 'graph-outline' },
+        { name: 'Structure', route: 'repository', icon: 'file-tree', params },
+        { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', params },
         { name: 'History', route: 'revisions', icon: 'history' },
         { name: 'Settings', route: 'repository-info', icon: 'settings-outline' }
       ];
@@ -54,6 +54,11 @@ export default {
     }
   },
   methods: mapActions('repository', ['initialize', 'expandParents']),
+  watch: {
+    selectedActivity(val) {
+      if (val) this.lastSelectedActivity = val;
+    }
+  },
   async created() {
     const { repositoryId } = this;
     await this.initialize(repositoryId);

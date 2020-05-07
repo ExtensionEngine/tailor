@@ -60,7 +60,7 @@ const router = new Router({
       name: 'revisions',
       component: RepositoryRevisions
     }, {
-      path: 'tree-view',
+      path: 'tree-view/:activityId?',
       name: 'tree-view',
       component: TreeView
     }, {
