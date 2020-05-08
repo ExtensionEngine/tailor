@@ -20,7 +20,7 @@
       <active-users :users="getActiveUsers('repository', repositoryId)" />
     </div>
     <div class="tab-content" infinite-wrapper>
-      <router-view :show-loader="showLoader" />
+      <router-view :show-loader="showLoader" :repository-id="repositoryId" />
     </div>
   </div>
 </template>
