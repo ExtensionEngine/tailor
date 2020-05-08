@@ -63,7 +63,8 @@ import withActiveUsers from 'components/common/mixins/activeUsers';
 export default {
   mixins: [reorderMixin, withActiveUsers],
   props: {
-    showLoader: { type: Boolean, default: false }
+    showLoader: { type: Boolean, default: false },
+    repositoryId: { type: Number, required: true }
   },
   data: () => ({ search: '' }),
   computed: {
