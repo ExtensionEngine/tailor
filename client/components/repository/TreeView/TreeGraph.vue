@@ -134,7 +134,7 @@ export default {
         .attr('y', d => {
           // Calculate text padding.
           if (d.depth === 0) return -30;
-          return d.children ? -25 : 25;
+          return d.children ? -28 : 28;
         });
 
       // Create node wrapper.
