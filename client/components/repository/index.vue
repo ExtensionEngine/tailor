@@ -63,7 +63,8 @@ export default {
     const { repositoryId } = this;
     await this.initialize(repositoryId);
     this.showLoader = false;
-    if (!this.selectedActivity && this.activities.length) {
+    if (!this.activities.length) return;
+    if (!this.selectedActivity) {
       const rootActivities = filter(this.activities, { parentId: null });
       const activity = rootActivities.length
         ? sortBy(rootActivities, 'position')[0]

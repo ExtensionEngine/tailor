@@ -63,6 +63,7 @@ import { mapGetters, mapMutations, mapState } from 'vuex';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import { isEditable } from 'shared/activities';
 import map from 'lodash/map';
 import OptionsMenu from '../common/ActivityOptions/Menu';
@@ -123,7 +124,7 @@ export default {
       this.toggleActivity({ _cid: this._cid, expanded });
     },
     selectActivity() {
-      if (this.selectedActivity.id === this.id) return;
+      if (get(this.selectedActivity, 'id') === this.id) return;
       this.$router.push({
         name: 'repository',
         params: { activityId: this.id }

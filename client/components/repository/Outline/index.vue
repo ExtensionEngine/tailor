@@ -28,7 +28,7 @@
           <search-result
             v-for="activity in filteredActivities"
             :key="activity._cid"
-            @select="selectActivity(activity._cid)"
+            @select="selectActivity(activity)"
             @show="goTo(activity)"
             :activity="activity" />
           <v-alert
@@ -47,11 +47,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import Activity from './Activity';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import map from 'lodash/map';
 import OutlineFooter from './OutlineFooter';
 import reorderMixin from './reorderMixin';
@@ -90,15 +91,15 @@ export default {
   },
   methods: {
     ...mapActions('repository', ['expandParents']),
-    ...mapMutations('repository', ['selectActivity']),
     goTo(activity) {
       this.search = '';
-      this.$router.push({
-        name: 'repository',
-        params: { activityId: activity.id }
-      });
+      this.selectActivity(activity);
       this.expandParents(activity);
       this.scrollToActivity(activity);
+    },
+    selectActivity(activity) {
+      if (activity.id === get(this.selectedActivity, 'id')) return;
+      this.$router.push({ params: { activityId: activity.id } });
     },
     scrollToActivity(activity, timeout = 500) {
       setTimeout(() => {
