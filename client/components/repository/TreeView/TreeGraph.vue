@@ -128,7 +128,7 @@ export default {
       // Append label.
       node.append('text')
         .classed('label subtitle-2', true)
-        .text(({ data: { shortId, data } }) => shortId || data.name)
+        .text(({ data: { shortId, name } }) => name || shortId)
         .style('text-anchor', 'middle')
         .attr('dy', '.35em')
         .attr('y', d => {
