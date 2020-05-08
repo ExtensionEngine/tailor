@@ -62,7 +62,8 @@ export default {
   async created() {
     const { repositoryId } = this;
     await this.initialize(repositoryId);
-    if (!this.selectedActivity) {
+    this.showLoader = false;
+    if (!this.selectedActivity && this.activities.length) {
       const rootActivities = filter(this.activities, { parentId: null });
       const activity = rootActivities.length
         ? sortBy(rootActivities, 'position')[0]
@@ -73,7 +74,6 @@ export default {
       });
     }
     this.expandParents(this.selectedActivity);
-    this.showLoader = false;
   }
 };
 </script>
