@@ -1,11 +1,10 @@
 import request from './request';
 
 const url = {
-  root: repositoryId => `/repository/${repositoryId}/active-users`
+  root: repositoryId => `/repositories/${repositoryId}/active-users`
 };
 
 function fetch(repositoryId) {
-  console.log('RepositoryId ne vata: ', repositoryId);
   return request.get(url.root(repositoryId)).then(res => res.data.data);
 }
 
