@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ grabbing }" class="graph"></div>
+  <div ref="graph" :class="{ grabbing }" class="graph"></div>
 </template>
 
 <script>
@@ -42,7 +42,8 @@ export default {
     nodeSize: { type: Object, required: true },
     nodeDiameterRange: { type: Object, required: true },
     zoomRange: { type: Object, default: () => zoomOptions },
-    padding: { type: Number, default: 60 }
+    padding: { type: Number, default: 60 },
+    selectedNodeId: { type: Number, default: null }
   },
   data() {
     return {
@@ -123,6 +124,7 @@ export default {
       const node = graph.selectAll('.node')
         .data(data).enter().append('g')
         .attr('class', d => `node depth-${d.depth}`)
+        .attr('id', d => `activity${d.data.id}`)
         .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
       // Append label.
@@ -178,6 +180,17 @@ export default {
     hovered(node) {
       if (!node) return this.$emit('node:focusout');
       if (node.depth > 0) this.$emit('node:focus', node, node.data);
+    },
+    selectedNodeId(val) {
+      if (!val) return;
+      const selection = this.$refs.graph.querySelector('.selected');
+      if (selection) selection.classList.remove('selected');
+      const id = `#activity${val}`;
+      this.$nextTick(() => {
+        const el = this.$refs.graph.querySelector(id);
+        if (!el) return;
+        el.classList.add('selected');
+      });
     }
   },
   mounted() {

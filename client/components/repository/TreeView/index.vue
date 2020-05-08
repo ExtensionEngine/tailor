@@ -10,6 +10,7 @@
         @node:select="onNodeSelect"
         v-bind="graphOptions"
         :data="graphData"
+        :selected-node-id="selectedActivity && selectedActivity.id"
         class="tree" />
       <sidebar />
     </div>
@@ -62,16 +63,10 @@ export default {
     }
   },
   methods: {
-    setSelected(node) {
-      if (this.selectedNode) this.selectedNode.classList.remove('selected');
-      this.selectedNode = node;
-      this.selectedNode.classList.add('selected');
-    },
     onNodeSelect(node, activity, circle) {
       if (activity.id === this.selectedActivity.id) return;
       if (!isActivityNode(node)) return;
       this.$router.push({ params: { activityId: activity.id } });
-      this.setSelected(circle);
     }
   },
   components: {
