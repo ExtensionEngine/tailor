@@ -127,8 +127,8 @@ export default {
 
       // Append label.
       node.append('text')
-        .classed('label', true)
-        .text(d => d.data.name || d.data.id)
+        .classed('label subtitle-2', true)
+        .text(({ data: { shortId, data } }) => shortId || data.name)
         .style('text-anchor', 'middle')
         .attr('dy', '.35em')
         .attr('y', d => {
@@ -245,9 +245,9 @@ function rangeToArray(start, end, size) {
 
 <style lang="scss">
 $font: 14px $font-family-secondary;
-$text-color: #5a5a5a;
+$text-color: #263238;
 $node-color: #b9b9b9;
-$link-color: #ababab;
+$link-color: #b0bec5;
 
 .graph {
   svg {
