@@ -12,10 +12,14 @@ class SSEClient {
     if (this._connection) this.disconnect();
     const searchParams = new URLSearchParams(Object.entries(params));
     url = [url, searchParams].filter(Boolean).join('?');
+    const jwt = 'JWT ' + params.token;
     this._connection = new EventSource(url, {
       ...options,
       // NOTE: This is used by `event-source-polyfill`.
-      headers: { 'Connection-Timeout': timeout },
+      headers: {
+        'Connection-Timeout': timeout,
+        Authorization: jwt
+      },
       heartbeatTimeout: timeout
     });
     return this;
