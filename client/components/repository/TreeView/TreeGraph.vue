@@ -8,6 +8,7 @@ import { hierarchy, tree } from 'd3-hierarchy';
 import clamp from 'lodash/clamp';
 import flatten from 'lodash/flatten';
 import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 import range from 'lodash/range';
 import { zoom } from 'd3-zoom';
 
@@ -181,7 +182,8 @@ export default {
   },
   mounted() {
     // Re-render chart when data changes.
-    this.$watch('nodes', nodes => {
+    this.$watch('nodes', (val, prevVal) => {
+      if (isEqual(val, prevVal)) return;
       this.renderTree();
     }, { immediate: true });
   }

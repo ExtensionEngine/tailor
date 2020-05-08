@@ -17,11 +17,8 @@
 </template>
 
 <script>
-import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import includes from 'lodash/includes';
-import map from 'lodash/map';
 import { mapGetters } from 'vuex';
 import reduce from 'lodash/reduce';
 import Sidebar from 'components/repository/common/Sidebar';
@@ -47,19 +44,15 @@ export default {
   },
   computed: {
     ...mapGetters('repository',
-      ['repository', 'structure', 'activities', 'selectedActivity']),
+      ['repository', 'structure', 'outlineActivities', 'selectedActivity']),
     // TODO: Remove this hack!
     visibility() {
       return this.showLoader ? 'hidden' : 'visible';
     },
     graphData() {
       // TODO: Make sure repository is always available!
-      if (!this.repository) return {};
-      const allowedTypes = map(this.structure, 'type');
-      const activities = filter(this.activities, it => {
-        return includes(allowedTypes, it.type);
-      });
-      const repositoryTree = tree(activities, this.structure);
+      if (!this.outlineActivities) return {};
+      const repositoryTree = tree(this.outlineActivities, this.structure);
       const repositoryColor = get(this.repository, 'data.color', '#FFFFFF');
       return {
         ...this.repository,
@@ -77,10 +70,8 @@ export default {
     onNodeSelect(node, activity, circle) {
       if (activity.id === this.selectedActivity.id) return;
       if (!isActivityNode(node)) return;
+      this.$router.push({ params: { activityId: activity.id } });
       this.setSelected(circle);
-      this.$router.push({
-        params: { repositoryId: activity.repositoryId, activityId: activity.id }
-      });
     }
   },
   components: {
