@@ -2,9 +2,12 @@ import { getOutlineLevels, getSchema } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import HashKit from 'hashkit';
 import map from 'lodash/map';
 import { role } from 'shared';
 import values from 'lodash/values';
+
+const hashkit = new HashKit({ chars: 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789' });
 
 export const id = (_state, _getters, { route: { params: { repositoryId } } }) => {
   return repositoryId ? parseInt(repositoryId, 10) : null;
@@ -26,7 +29,10 @@ export const structure = (_, { repository }) => {
 export const activities = (_state, getters, rootState) => {
   if (!getters.repository) return [];
   const { repository: { activities: { items } } } = rootState;
-  return Object.values(items);
+  return map(items, it => ({
+    ...it,
+    shortId: `A-${hashkit.encode(it.id)}`
+  }));
 };
 
 export const outlineActivities = (_state, getters) => {
@@ -35,13 +41,10 @@ export const outlineActivities = (_state, getters) => {
   return filter(activities, it => outlineTypes.includes(it.type));
 };
 
-export const selectedActivity = (_state, _getters, rootState) => {
-  const {
-    repository: { activities },
-    route: { params: { activityId } }
-  } = rootState;
+export const selectedActivity = (_state, getters, rootState) => {
+  const { route: { params: { activityId } } } = rootState;
   if (!activityId) return;
-  return find(activities.items, { id: parseInt(activityId, 10) });
+  return find(getters.activities, { id: parseInt(activityId, 10) });
 };
 
 export const isCollapsed = state => {

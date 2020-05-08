@@ -3,8 +3,14 @@
     <v-chip
       :color="config.color"
       label dark small
-      class="type-label">
+      class="body-label">
       {{ config.label.toUpperCase() }}
+    </v-chip>
+    <v-chip
+      color="blue-grey lighten-5"
+      label small
+      class="body-label subtitle-2">
+      {{ activity.shortId }}
     </v-chip>
     <div class="meta-elements">
       <meta-input
@@ -64,7 +70,7 @@ export default {
   padding: 0.375rem 1rem;
 }
 
-.type-label {
+.body-label {
   margin: 0.25rem 0.25rem 1.25rem;
   font-weight: 500;
 }

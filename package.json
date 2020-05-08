@@ -71,6 +71,7 @@
     "focus-trap": "^5.0.2",
     "gravatar": "^1.8.0",
     "hash-obj": "^2.0.0",
+    "hashkit": "^1.0.0",
     "helmet": "^3.21.1",
     "hls.js": "^0.12.4",
     "http-errors": "^1.7.3",

@@ -83,7 +83,9 @@ export default {
       const { outlineActivities: activities, search } = this;
       if (!search) return activities;
       const regex = new RegExp(search.trim(), 'i');
-      return filter(activities, ({ data: { name } }) => regex.test(name));
+      return filter(activities, ({ shortId, data: { name } }) => {
+        return regex.test(shortId) || regex.test(name);
+      });
     }
   },
   methods: {
