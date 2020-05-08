@@ -6,12 +6,19 @@
       class="body-label">
       {{ config.label.toUpperCase() }}
     </v-chip>
-    <v-chip
-      color="blue-grey lighten-5"
-      label small
-      class="body-label subtitle-2">
-      {{ activity.shortId }}
-    </v-chip>
+    <v-tooltip open-delay="500" bottom>
+      <template v-slot:activator="{ on }">
+        <span v-on="on">
+          <v-chip
+            color="blue-grey lighten-5"
+            label small
+            class="body-label subtitle-2">
+            {{ activity.shortId }}
+          </v-chip>
+        </span>
+      </template>
+      {{ config.label }} ID
+    </v-tooltip>
     <div class="meta-elements">
       <meta-input
         v-for="it in metadata"
