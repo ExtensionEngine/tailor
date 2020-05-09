@@ -91,7 +91,7 @@ export default {
       if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
       this.$emit('created', item);
       this.visible = false;
-      this.$router.push({ params: { activityId: item.id } });
+      this.$router.push({ query: { activityId: item.id } });
     }
   },
   watch: {

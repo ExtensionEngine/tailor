@@ -42,7 +42,7 @@ export const outlineActivities = (_state, getters) => {
 };
 
 export const selectedActivity = (_state, getters, rootState) => {
-  const { route: { params: { activityId } } } = rootState;
+  const { route: { query: { activityId } } } = rootState;
   if (!activityId) return;
   return find(getters.activities, { id: parseInt(activityId, 10) });
 };

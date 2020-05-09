@@ -9,7 +9,7 @@
       <v-tab
         v-for="tab in tabs"
         :key="tab.name"
-        :to="{ name: tab.route, params: tab.params }"
+        :to="{ name: tab.route, query: tab.query }"
         active-class="tab-active"
         ripple exact
         class="px-4">
@@ -38,13 +38,10 @@ export default {
     ...mapGetters('repository',
       ['repository', 'activities', 'selectedActivity', 'isRepositoryAdmin']),
     tabs() {
-      const params = {
-        repositoryId: get(this.lastSelectedActivity, 'repositoryId'),
-        activityId: get(this.lastSelectedActivity, 'id')
-      };
+      const query = { activityId: get(this.lastSelectedActivity, 'id') };
       const items = [
-        { name: 'Structure', route: 'repository', icon: 'file-tree', params },
-        { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', params },
+        { name: 'Structure', route: 'repository', icon: 'file-tree', query },
+        { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', query },
         { name: 'History', route: 'revisions', icon: 'history' },
         { name: 'Settings', route: 'repository-info', icon: 'settings-outline' }
       ];
@@ -71,7 +68,7 @@ export default {
         : null;
       this.$router.push({
         name: 'repository',
-        params: { activityId: activity.id }
+        query: { activityId: activity.id }
       });
     }
     this.expandParents(this.selectedActivity);

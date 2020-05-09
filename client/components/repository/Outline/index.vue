@@ -99,7 +99,7 @@ export default {
     },
     selectActivity(activity) {
       if (activity.id === get(this.selectedActivity, 'id')) return;
-      this.$router.push({ params: { activityId: activity.id } });
+      this.$router.push({ query: { activityId: activity.id } });
     },
     scrollToActivity(activity, timeout = 500) {
       setTimeout(() => {

@@ -127,7 +127,7 @@ export default {
       if (get(this.selectedActivity, 'id') === this.id) return;
       this.$router.push({
         name: 'repository',
-        params: { activityId: this.id }
+        query: { activityId: this.id }
       });
     }
   },

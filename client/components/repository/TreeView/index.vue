@@ -66,7 +66,7 @@ export default {
     onNodeSelect(node, activity, circle) {
       if (activity.id === this.selectedActivity.id) return;
       if (!isActivityNode(node)) return;
-      this.$router.push({ params: { activityId: activity.id } });
+      this.$router.push({ query: { activityId: activity.id } });
     }
   },
   components: {
