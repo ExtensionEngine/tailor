@@ -19,6 +19,28 @@
       </template>
       {{ config.label }} ID
     </v-tooltip>
+    <div class="mb-2">
+      <v-btn
+        v-clipboard:copy="activity.shortId"
+        v-clipboard:success="() => $snackbar.show('ID copied')"
+        v-clipboard:error="() => $snackbar.show('Not able to copy the ID')"
+        color="blue-grey darken-3"
+        text small
+        class="px-1 mr-2">
+        <v-icon dense class="pr-2">mdi-identifier</v-icon>
+        Copy id
+      </v-btn>
+      <v-btn
+        v-clipboard:copy="href"
+        v-clipboard:success="() => $snackbar.show('Link copied')"
+        v-clipboard:error="() => $snackbar.show('Not able to copy the link')"
+        color="blue-grey darken-3"
+        text small
+        class="px-1">
+        <v-icon class="pr-2">mdi-link</v-icon>
+        Copy link
+      </v-btn>
+    </div>
     <div class="meta-elements">
       <meta-input
         v-for="it in metadata"
@@ -53,7 +75,8 @@ export default {
     ...mapGetters(['isAdmin']),
     ...mapGetters('repository', ['isRepositoryAdmin']),
     config: vm => getLevel(vm.activity.type),
-    metadata: vm => getActivityMetadata(vm.activity)
+    metadata: vm => getActivityMetadata(vm.activity),
+    href: () => window.location.href
   },
   methods: {
     ...mapActions('repository/activities', ['update']),
