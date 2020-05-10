@@ -174,6 +174,16 @@ export default {
       const { default: defScale, max: maxScale } = this.zoomRange;
       const scale = clamp(ratio, defScale, maxScale);
       this.zoomHandler.scaleTo(svg, scale);
+    },
+    selectNode(activityId) {
+      const selection = this.$refs.graph.querySelector('.selected');
+      if (selection) selection.classList.remove('selected');
+      const id = `#activity${activityId}`;
+      this.$nextTick(() => {
+        const el = this.$refs.graph.querySelector(id);
+        if (!el) return;
+        el.classList.add('selected');
+      });
     }
   },
   watch: {
@@ -183,14 +193,7 @@ export default {
     },
     selectedNodeId(val) {
       if (!val) return;
-      const selection = this.$refs.graph.querySelector('.selected');
-      if (selection) selection.classList.remove('selected');
-      const id = `#activity${val}`;
-      this.$nextTick(() => {
-        const el = this.$refs.graph.querySelector(id);
-        if (!el) return;
-        el.classList.add('selected');
-      });
+      this.selectNode(val);
     }
   },
   mounted() {
@@ -199,6 +202,7 @@ export default {
       if (isEqual(val, prevVal)) return;
       this.renderTree();
     }, { immediate: true });
+    this.$nextTick(() => this.selectNode(this.selectedNodeId));
   }
 };
 

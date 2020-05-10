@@ -144,7 +144,6 @@ $accent: #37474f;
 
     .label {
       fill: $accent;
-      font-size: 1rem !important;
       font-weight: bold;
     }
   }
