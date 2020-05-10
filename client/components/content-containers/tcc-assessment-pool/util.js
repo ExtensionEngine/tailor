@@ -11,8 +11,8 @@ async function fetchContainer(container) {
   return { ...pick(container, ATTRS), elements };
 }
 
-function fetch(parent) {
-  const opts = { where: { type: info.type } };
+function fetch(parent, type) {
+  const opts = { where: { type } };
   return parent.getChildren(opts).map(fetchContainer);
 }
 

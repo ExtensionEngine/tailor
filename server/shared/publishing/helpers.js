@@ -158,7 +158,9 @@ function fetchContainers(parent) {
 
 function fetchDefaultContainers(parent, config) {
   const include = [{ model: ContentElement.scope('publish') }];
-  const types = config.filter(it => !it.templateId).map(it => it.type);
+  const types = config
+    .filter(it => !containerRegistry.getPublishStructureBuilder(it.templateId))
+    .map(it => it.type);
   const where = { type: types };
   return parent
     .getChildren({ attributes: CC_ATTRS, where, include })
@@ -169,10 +171,14 @@ function fetchDefaultContainers(parent, config) {
     });
 }
 
-function fetchCustomContainers(parent, config) {
-  const types = config.filter(it => it.templateId).map(it => it.templateId);
+async function fetchCustomContainers(parent, config) {
   const include = [{ model: ContentElement.scope('publish') }];
-  return containerRegistry.fetch(types, parent, { include });
+  return Promise.reduce(config, async (containers, it) => {
+    const builder = containerRegistry.getPublishStructureBuilder(it.templateId);
+    if (!builder) return containers;
+    const customContainers = await builder(parent, it.type, { include });
+    return containers.concat(customContainers);
+  }, []);
 }
 
 function resolveContainer(container) {
