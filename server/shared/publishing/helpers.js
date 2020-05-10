@@ -30,10 +30,6 @@ const without = require('lodash/without');
 const { FLAT_REPO_STRUCTURE } = process.env;
 
 const CC_ATTRS = ['id', 'uid', 'type', 'position', 'createdAt', 'updatedAt'];
-const CE_ATTRS = [
-  'id', 'uid', 'type', 'contentId', 'contentSignature',
-  'position', 'data', 'meta', 'refs', 'createdAt', 'updatedAt'
-];
 
 function publishActivity(activity) {
   return getStructureData(activity).then(data => {
