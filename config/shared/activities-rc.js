@@ -12,22 +12,6 @@ const CONTENT_CONTAINERS = [{
   type: 'PERSPECTIVE',
   label: 'Perspective',
   multiple: true
-}, {
-  type: 'EXAM',
-  templateId: 'EXAM',
-  label: 'Exam',
-  displayHeading: true,
-  multiple: true,
-  required: false,
-  publishedAs: 'exam',
-  config: {
-    objectives: ['DEFAULT_SCHEMA/TOPIC']
-  }
-}, {
-  type: 'ASSESSMENT_POOL',
-  templateId: 'ASSESSMENT_POOL',
-  label: 'Assessments',
-  publishedAs: 'assessments'
 }];
 
 const SCHEMAS = [{
@@ -91,6 +75,23 @@ const SCHEMAS = [{
       placeholder: 'Click to add...',
       validate: { required: false, max: 250 }
     }]
+  }],
+  contentContainers: [{
+    type: 'EXAM',
+    templateId: 'EXAM',
+    label: 'Exam',
+    displayHeading: true,
+    multiple: true,
+    required: false,
+    publishedAs: 'exam',
+    config: {
+      objectives: ['DEFAULT_SCHEMA/TOPIC']
+    }
+  }, {
+    type: 'ASSESSMENT_POOL',
+    templateId: 'ASSESSMENT_POOL',
+    label: 'Assessments',
+    publishedAs: 'assessments'
   }],
   elementMeta: [{
     type: 'ASSESSMENT',
