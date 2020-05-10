@@ -36,7 +36,6 @@ const SCHEMAS = [{
     label: 'Competency',
     color: '#42A5F5',
     contentContainers: ['INTRO', 'EXAM'],
-    hasAssessments: false,
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -56,7 +55,6 @@ const SCHEMAS = [{
     label: 'Learning Objective',
     color: '#66BB6A',
     contentContainers: [],
-    hasAssessments: false,
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -75,8 +73,7 @@ const SCHEMAS = [{
     label: 'Topic',
     color: '#EC407A',
     isObjective: true,
-    contentContainers: ['PERSPECTIVE'],
-    hasAssessments: true,
+    contentContainers: ['PERSPECTIVE', 'ASSESSMENT_POOL'],
     relationships: [{
       type: 'prerequisites',
       label: 'Prerequisites',
@@ -89,6 +86,21 @@ const SCHEMAS = [{
       placeholder: 'Click to add...',
       validate: { required: false, max: 250 }
     }]
+  }],
+  contentContainers: [{
+    type: 'EXAM',
+    label: 'Exam',
+    displayHeading: true,
+    multiple: true,
+    required: false,
+    publishedAs: 'exam',
+    config: {
+      objectives: ['COURSE/TOPIC']
+    }
+  }, {
+    type: 'ASSESSMENT_POOL',
+    label: 'Assessments',
+    publishedAs: 'assessments'
   }],
   elementMeta: [{
     type: 'ASSESSMENT',

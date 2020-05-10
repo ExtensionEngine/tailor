@@ -18,7 +18,7 @@ import EventBus from 'EventBus';
 import throttle from 'lodash/throttle';
 
 export default {
-  name: 'teaching-element',
+  name: 'content-element',
   inheritAttrs: false,
   props: {
     element: { type: Object, required: true },
@@ -26,12 +26,12 @@ export default {
     dragged: { type: Boolean, default: false }
   },
   methods: {
-    ...mapActions('repository/tes', {
+    ...mapActions('repository/contentElements', {
       saveElement: 'save',
       updateElement: 'update',
       removeElement: 'remove'
     }),
-    ...mapMutations('repository/tes', { addElement: 'add' }),
+    ...mapMutations('repository/contentElements', { addElement: 'add' }),
     add(element) {
       this.addElement({ ...this.element, ...cloneDeep(element) });
     },

@@ -20,6 +20,8 @@ export default function ($apiUrl) {
     return api.fetch(opts).then(res => commit('reset', res));
   };
 
+  const add = ({ commit }, model) => commit('add', model);
+
   const save = ({ state, commit }, model) => {
     if (!model._cid) model._cid = cuid();
     model._synced = false;
@@ -60,6 +62,7 @@ export default function ($apiUrl) {
   };
 
   return {
+    add,
     api,
     fetch,
     filter,

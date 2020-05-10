@@ -7,7 +7,7 @@
         icon="mdi-information-variant"
         prominent text
         class="mb-5">
-        Click on the button bellow in order to create your first item!
+        Click on the button below in order to create your first item!
       </v-alert>
       <create-dialog
         :repository-id="repository.id"

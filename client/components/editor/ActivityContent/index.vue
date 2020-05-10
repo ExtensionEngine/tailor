@@ -12,7 +12,6 @@
           :container-group="containerGroup"
           :parent-id="activity.id"
           v-bind="getContainerConfig(type)" />
-        <assessments v-if="showAssessments" />
       </template>
     </div>
   </div>
@@ -20,20 +19,19 @@
 
 <script>
 import { getElementId, isQuestion } from 'tce-core/utils';
-import { getSupportedContainers, hasAssessments } from 'shared/activities';
-import Assessments from '../structure/Assessments';
 import ContentContainers from '../structure/ContentContainers';
 import ContentLoader from './Loader';
 import debounce from 'lodash/debounce';
 import EventBus from 'EventBus';
 import find from 'lodash/find';
 import get from 'lodash/get';
+import { getSupportedContainers } from 'shared/activities';
 import { mapActions } from 'vuex';
 import Promise from 'bluebird';
 import throttle from 'lodash/throttle';
 
 const CE_FOCUS_EVENT = 'element:focus';
-const CE_MODULE = 'repository/tes';
+const CE_MODULE = 'repository/contentElements';
 const ELEMENT_MUTATIONS = [
   `${CE_MODULE}/save`, `${CE_MODULE}/add`, `${CE_MODULE}/update`
 ];
@@ -53,11 +51,10 @@ export default {
     focusedElement: null
   }),
   computed: {
-    containerConfigs: vm => getSupportedContainers(vm.activity.type),
-    showAssessments: vm => hasAssessments(vm.activity.type)
+    containerConfigs: vm => getSupportedContainers(vm.activity.type)
   },
   methods: {
-    ...mapActions('repository/tes', { getTeachingElements: 'fetch' }),
+    ...mapActions('repository/contentElements', { getContentElements: 'fetch' }),
     getContainerConfig(type) {
       return find(this.containerConfigs, { type });
     },
@@ -110,10 +107,9 @@ export default {
   async created() {
     // Reset element focus
     this.$emit('selected', null);
-    const { activity } = this;
     const ids = this.contentContainers.map(it => it.id);
     await Promise.all([
-      this.getTeachingElements({ ids: [activity.id, ...ids] }),
+      this.getContentElements({ ids }),
       Promise.delay(800)
     ]);
     this.isLoading = false;
@@ -125,7 +121,6 @@ export default {
     this.eventBus && this.eventBus.$off(CE_FOCUS_EVENT);
   },
   components: {
-    Assessments,
     ContentContainers,
     ContentLoader
   }

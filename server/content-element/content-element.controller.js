@@ -5,15 +5,15 @@ const { createError } = require('../shared/error/helpers');
 const { NOT_FOUND } = require('http-status-codes');
 const pick = require('lodash/pick');
 
-function list({ query: { detached, ids }, opts }, res) {
+function list({ query, opts }, res) {
+  const { detached, ids } = query;
   if (!detached) opts.where = { detached: false };
   if (ids) {
     const where = { id: ids.map(Number) };
     opts.include = { model: Activity, attributes: [], where };
   }
 
-  return ContentElement.fetch(opts)
-    .then(data => res.json({ data }));
+  return ContentElement.fetch(opts).then(data => res.json({ data }));
 }
 
 function show({ params }, res) {

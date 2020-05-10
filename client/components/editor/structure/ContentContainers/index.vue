@@ -15,6 +15,7 @@
       @addSubcontainer="save"
       @updateSubcontainer="update"
       @deleteSubcontainer="requestContainerDeletion"
+      @addElement="addElement"
       @saveElement="saveContentElement"
       @updateElement="updateElement"
       @reorderElement="reorderContentElements"
@@ -24,7 +25,7 @@
       :name="name"
       :position="index"
       :activities="activities"
-      :tes="tes"
+      :elements="elements"
       v-bind="$attrs" />
     <div v-if="addBtnEnabled">
       <v-btn @click="addContainer" color="blue-grey darken-3" text class="mt-4">
@@ -66,7 +67,7 @@ export default {
   },
   computed: {
     ...mapState('repository/activities', { activities: 'items' }),
-    ...mapState('repository/tes', { tes: 'items' }),
+    ...mapState('repository/contentElements', { elements: 'items' }),
     containerName() {
       const { templateId: id, $ccRegistry: registry } = this;
       return registry.get(id) ? getContainerName(id) : DEFAULT_CONTAINER;
@@ -84,7 +85,8 @@ export default {
   },
   methods: {
     ...mapActions('repository/activities', ['save', 'update', 'remove']),
-    ...mapActions('repository/tes', {
+    ...mapActions('repository/contentElements', {
+      addElement: 'add',
       saveElement: 'save',
       updateElement: 'update',
       reorderElements: 'reorder',
