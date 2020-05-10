@@ -110,7 +110,7 @@ export default {
           ? find(this.activities, { id: activity.parentId })
           : first(sortBy(filter(this.activities, rootFilter), 'position'));
         this.remove(this.activity);
-        if (focusNode) this.selectActivity(focusNode._cid);
+        if (focusNode) this.selectActivity(focusNode);
       };
       const name = `${isTreeView ? `${activity.id}: ` : ''}${activity.data.name}`;
       appChannel.emit('showConfirmationModal', {

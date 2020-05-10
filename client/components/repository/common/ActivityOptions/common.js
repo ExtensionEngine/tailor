@@ -32,6 +32,9 @@ export default {
         ? activity._cid
         : get(parent, '_cid');
       if (_cid) this.toggleActivity({ _cid, expanded: true });
+    },
+    selectActivity(activity) {
+      this.$router.push({ query: { activityId: activity.id } });
     }
   }
 };
