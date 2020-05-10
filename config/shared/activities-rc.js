@@ -23,6 +23,11 @@ const CONTENT_CONTAINERS = [{
   config: {
     objectives: ['DEFAULT_SCHEMA/TOPIC']
   }
+}, {
+  type: 'ASSESSMENT_POOL',
+  templateId: 'ASSESSMENT_POOL',
+  label: 'Assessments',
+  publishedAs: 'assessments'
 }];
 
 const SCHEMAS = [{
@@ -86,21 +91,6 @@ const SCHEMAS = [{
       placeholder: 'Click to add...',
       validate: { required: false, max: 250 }
     }]
-  }],
-  contentContainers: [{
-    type: 'EXAM',
-    label: 'Exam',
-    displayHeading: true,
-    multiple: true,
-    required: false,
-    publishedAs: 'exam',
-    config: {
-      objectives: ['COURSE/TOPIC']
-    }
-  }, {
-    type: 'ASSESSMENT_POOL',
-    label: 'Assessments',
-    publishedAs: 'assessments'
   }],
   elementMeta: [{
     type: 'ASSESSMENT',
