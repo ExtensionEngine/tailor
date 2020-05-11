@@ -261,7 +261,7 @@ function rangeToArray(start, end, size) {
 </script>
 
 <style lang="scss">
-$font: 14px $font-family-secondary;
+$font: 0.875rem $font-family-secondary;
 $text-color: #263238;
 $node-color: #b9b9b9;
 $link-color: #b0bec5;
