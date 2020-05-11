@@ -7,7 +7,6 @@ import revisions from './revisions';
 import tes from './tes';
 
 const state = {
-  activity: undefined,
   outline: { expanded: {} },
   users: {},
   $apiUrl: null
