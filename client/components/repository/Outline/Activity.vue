@@ -125,10 +125,7 @@ export default {
     },
     selectActivity() {
       if (get(this.selectedActivity, 'id') === this.id) return;
-      this.$router.push({
-        name: 'repository',
-        query: { activityId: this.id }
-      });
+      this.$router.push({ query: { activityId: this.id } });
     }
   },
   components: { Draggable, OptionsMenu, OptionsToolbar }
