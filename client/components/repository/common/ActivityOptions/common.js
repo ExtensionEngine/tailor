@@ -4,8 +4,10 @@ import find from 'lodash/find';
 import get from 'lodash/get';
 import { isEditable } from 'shared/activities';
 import map from 'lodash/map';
+import selectActivity from '@/components/repository/common/selectActivity';
 
 export default {
+  mixins: [selectActivity],
   computed: {
     ...mapGetters('repository', ['structure', 'activities']),
     parent: vm => find(vm.activities, { id: vm.activity.parentId }),
@@ -25,16 +27,13 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('repository', ['selectActivity', 'toggleActivity']),
+    ...mapMutations('repository', ['toggleActivity']),
     expandParent(item) {
       const { activity, parent } = this;
       const _cid = item.parentId === activity.id
         ? activity._cid
         : get(parent, '_cid');
       if (_cid) this.toggleActivity({ _cid, expanded: true });
-    },
-    selectActivity(activity) {
-      this.$router.push({ query: { activityId: activity.id } });
     }
   }
 };

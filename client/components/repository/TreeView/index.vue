@@ -22,6 +22,7 @@ import find from 'lodash/find';
 import get from 'lodash/get';
 import { mapGetters } from 'vuex';
 import reduce from 'lodash/reduce';
+import selectActivity from '@/components/repository/common/selectActivity';
 import Sidebar from 'components/repository/common/Sidebar';
 import TreeGraph from './TreeGraph';
 
@@ -34,6 +35,7 @@ const graphOptions = {
 
 export default {
   name: 'tree-view',
+  mixins: [selectActivity],
   props: {
     showLoader: { type: Boolean, default: false }
   },
@@ -44,8 +46,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository',
-      ['repository', 'structure', 'outlineActivities', 'selectedActivity']),
+    ...mapGetters('repository', ['repository', 'structure', 'outlineActivities']),
     // TODO: Remove this hack!
     visibility() {
       return this.showLoader ? 'hidden' : 'visible';
@@ -66,7 +67,7 @@ export default {
     onNodeSelect(node, activity, circle) {
       if (activity.id === this.selectedActivity.id) return;
       if (!isActivityNode(node)) return;
-      this.$router.push({ query: { activityId: activity.id } });
+      this.selectActivity(activity.id);
     }
   },
   components: {

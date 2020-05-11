@@ -28,7 +28,7 @@
           <search-result
             v-for="activity in filteredActivities"
             :key="activity._cid"
-            @select="selectActivity(activity)"
+            @select="selectActivity(activity.id)"
             @show="goTo(activity)"
             :activity="activity" />
           <v-alert
@@ -52,23 +52,22 @@ import Activity from './Activity';
 import Draggable from 'vuedraggable';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import get from 'lodash/get';
 import map from 'lodash/map';
 import OutlineFooter from './OutlineFooter';
 import reorderMixin from './reorderMixin';
 import SearchResult from './SearchResult';
+import selectActivity from '@/components/repository/common/selectActivity';
 import Sidebar from '../common/Sidebar';
 import StructureToolbar from './Toolbar';
 
 export default {
-  mixins: [reorderMixin],
+  mixins: [reorderMixin, selectActivity],
   props: {
     showLoader: { type: Boolean, default: false }
   },
   data: () => ({ search: '' }),
   computed: {
-    ...mapGetters('repository',
-      ['structure', 'outlineActivities', 'selectedActivity']),
+    ...mapGetters('repository', ['structure', 'outlineActivities']),
     hasActivities: vm => !!vm.rootActivities.length,
     isFlat() {
       const types = map(filter(this.structure, { level: 2 }), 'type');
@@ -93,13 +92,9 @@ export default {
     ...mapActions('repository', ['expandParents']),
     goTo(activity) {
       this.search = '';
-      this.selectActivity(activity);
+      this.selectActivity(activity.id);
       this.expandParents(activity);
       this.scrollToActivity(activity);
-    },
-    selectActivity(activity) {
-      if (activity.id === get(this.selectedActivity, 'id')) return;
-      this.$router.push({ query: { activityId: activity.id } });
     },
     scrollToActivity(activity, timeout = 500) {
       setTimeout(() => {

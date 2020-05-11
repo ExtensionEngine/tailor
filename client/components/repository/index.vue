@@ -26,17 +26,18 @@
 import { mapActions, mapGetters } from 'vuex';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
+import selectActivity from '@/components/repository/common/selectActivity';
 import sortBy from 'lodash/sortBy';
 
 export default {
+  mixins: [selectActivity],
   props: {
     repositoryId: { type: Number, required: true }
   },
   data: () => ({ showLoader: true, lastSelectedActivity: null }),
   computed: {
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository',
-      ['repository', 'activities', 'selectedActivity', 'isRepositoryAdmin']),
+    ...mapGetters('repository', ['repository', 'activities', 'isRepositoryAdmin']),
     tabs() {
       const query = { activityId: get(this.lastSelectedActivity, 'id') };
       const items = [
@@ -66,10 +67,7 @@ export default {
       const activity = rootActivities.length
         ? sortBy(rootActivities, 'position')[0]
         : null;
-      this.$router.push({
-        name: 'repository',
-        query: { activityId: activity.id }
-      });
+      this.selectActivity(activity.id);
     }
     this.expandParents(this.selectedActivity);
   }
