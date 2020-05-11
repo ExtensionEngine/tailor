@@ -22,7 +22,7 @@
     <div class="mb-2">
       <v-btn
         v-clipboard:copy="activity.shortId"
-        v-clipboard:success="() => $snackbar.show('ID copied')"
+        v-clipboard:success="() => $snackbar.show('ID copied', { immediate: true })"
         v-clipboard:error="() => $snackbar.show('Not able to copy the ID')"
         color="blue-grey darken-3"
         text small
@@ -32,7 +32,7 @@
       </v-btn>
       <v-btn
         v-clipboard:copy="href"
-        v-clipboard:success="() => $snackbar.show('Link copied')"
+        v-clipboard:success="() => $snackbar.show('Link copied', { immediate: true })"
         v-clipboard:error="() => $snackbar.show('Not able to copy the link')"
         color="blue-grey darken-3"
         text small
