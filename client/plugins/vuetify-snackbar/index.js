@@ -15,7 +15,13 @@ export const install = (Vue, { parent } = {}) => {
       element.appendChild(vm.$el);
     }, 1000);
   });
-  const show = debounce((msg, opts) => queue.add(() => vm.show(msg, opts)), 2500);
+
+  const toQueue = (msg, opts) => queue.add(() => vm.show(msg, opts));
+  const debouncedQueue = debounce(toQueue, 2500);
+  const show = (msg, opts) => {
+    return (opts && opts.immediate ? toQueue : debouncedQueue)(msg, opts);
+  };
+
   const $snackbar = {
     show: (msg, opts) => show(msg, opts),
     close: () => vm.close,

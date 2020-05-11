@@ -2,7 +2,7 @@
   <div>
     <div class="activity-wrapper">
       <div
-        @click="selectActivity(_cid)"
+        @click="selectActivity(id)"
         @mouseover="isHovered = true"
         @mouseout="isHovered = false"
         :id="`activity_${_cid}`"
@@ -68,11 +68,12 @@ import map from 'lodash/map';
 import OptionsMenu from '../common/ActivityOptions/Menu';
 import OptionsToolbar from '../common/ActivityOptions/Toolbar';
 import reorderMixin from './reorderMixin';
+import selectActivity from '@/components/repository/common/selectActivity';
 import size from 'lodash/size';
 
 export default {
   name: 'activity',
-  mixins: [reorderMixin],
+  mixins: [reorderMixin, selectActivity],
   inheritAttrs: false,
   props: {
     /* eslint-disable-next-line vue/prop-name-casing */
@@ -93,7 +94,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('repository', ['structure', 'selectedActivity', 'isCollapsed']),
+    ...mapGetters('repository', ['structure', 'isCollapsed']),
     ...mapState('repository', { outlineState: 'outline' }),
     config: vm => find(vm.structure, { type: vm.type }),
     color: vm => vm.config.color,
@@ -118,7 +119,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('repository', ['selectActivity', 'toggleActivity']),
+    ...mapMutations('repository', ['toggleActivity']),
     toggle(expanded = !this.isExpanded) {
       this.toggleActivity({ _cid: this._cid, expanded });
     }
