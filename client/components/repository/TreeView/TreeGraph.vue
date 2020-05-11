@@ -119,7 +119,7 @@ export default {
         .classed('link', true)
         .attr('d', link);
     },
-    renderNodes(data, graph, { padding = 24 } = {}) {
+    renderNodes(data, graph, { padding = 32 } = {}) {
       // Create node group.
       const node = graph.selectAll('.node')
         .data(data).enter().append('g')
