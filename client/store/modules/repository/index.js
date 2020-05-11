@@ -7,7 +7,6 @@ import contentElements from './content-elements';
 import revisions from './revisions';
 
 const state = {
-  activity: undefined,
   outline: { expanded: {} },
   users: {},
   $apiUrl: null

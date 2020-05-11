@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { getActivityMetadata } from 'shared/activities';
 import { isSameLevel } from 'utils/activity';
 import MetaInput from 'components/common/Meta';
@@ -74,7 +74,6 @@ export default {
   },
   methods: {
     ...mapActions('repository/activities', ['save']),
-    ...mapMutations('repository', ['selectActivity']),
     setMetaValue(key, val) {
       this.activity.data[key] = val;
     },
@@ -91,8 +90,8 @@ export default {
       const item = await this.save({ ...activity });
       if (anchor && (anchor.id === activity.parentId)) this.$emit('expand', anchor);
       this.$emit('created', item);
-      this.selectActivity(item._cid);
       this.visible = false;
+      this.$router.push({ query: { activityId: item.id } });
     }
   },
   watch: {

@@ -5,7 +5,7 @@
       @click:clear="$emit('search', '')"
       :value="search"
       prepend-inner-icon="mdi-magnify"
-      placeholder="Search by name..."
+      placeholder="Search by name or id..."
       hide-details clearable />
     <v-spacer />
     <v-btn

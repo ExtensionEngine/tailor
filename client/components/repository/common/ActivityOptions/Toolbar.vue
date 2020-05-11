@@ -7,7 +7,7 @@
       <template v-slot:activator="{ on }">
         <v-btn
           v-on="on"
-          @click="it.action()"
+          @click.stop="it.action()"
           color="blue-grey darken-4"
           icon
           class="mr-1">
