@@ -2,12 +2,13 @@ import { getOutlineLevels, getSchema } from 'shared/activities';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import get from 'lodash/get';
-import HashKit from 'hashkit';
+import Hashids from 'hashids';
 import map from 'lodash/map';
 import { role } from 'shared';
 import values from 'lodash/values';
 
-const hashkit = new HashKit({ chars: 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789' });
+const HASH_ALPHABET = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
+const hashids = new Hashids('', 0, HASH_ALPHABET);
 
 export const id = (_state, _getters, { route: { params: { repositoryId } } }) => {
   return repositoryId ? parseInt(repositoryId, 10) : null;
@@ -31,7 +32,7 @@ export const activities = (_state, getters, rootState) => {
   const { repository: { activities: { items } } } = rootState;
   return map(items, it => ({
     ...it,
-    shortId: `A-${hashkit.encode(it.id)}`
+    shortId: `A-${hashids.encode(it.id)}`
   }));
 };
 
