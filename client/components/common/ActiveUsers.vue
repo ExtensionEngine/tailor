@@ -58,8 +58,9 @@ export default {
     transition: all 0.2s;
 
     &:hover {
-      z-index: 1;
       margin-top: -5px;
+      margin-left: 5px;
+      z-index: 1;
     }
   }
   &.shadow-grey div { box-shadow: 0 0 0 1px #d0d0d0; }
