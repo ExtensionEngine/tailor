@@ -4,8 +4,10 @@ import find from 'lodash/find';
 import get from 'lodash/get';
 import { isEditable } from 'shared/activities';
 import map from 'lodash/map';
+import selectActivity from '@/components/repository/common/selectActivity';
 
 export default {
+  mixins: [selectActivity],
   computed: {
     ...mapGetters('repository', ['structure', 'activities']),
     parent: vm => find(vm.activities, { id: vm.activity.parentId }),
@@ -18,12 +20,14 @@ export default {
       return filter(this.structure, it => sameLevelTypes.includes(it.type));
     },
     subLevels() {
-      const { subLevels = [] } = find(this.structure, { type: this.activity.type });
+      if (!this.activity) return [];
+      const config = find(this.structure, { type: this.activity.type });
+      const subLevels = get(config, 'subLevels', []);
       return filter(this.structure, it => subLevels.includes(it.type));
     }
   },
   methods: {
-    ...mapMutations('repository', ['selectActivity', 'toggleActivity']),
+    ...mapMutations('repository', ['toggleActivity']),
     expandParent(item) {
       const { activity, parent } = this;
       const _cid = item.parentId === activity.id

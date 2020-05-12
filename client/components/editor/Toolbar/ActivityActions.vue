@@ -39,7 +39,12 @@ export default {
       const items = [{
         title: 'Back',
         icon: 'arrow-left',
-        action: () => $router.push({ name: 'repository' })
+        action: () => {
+          return $router.push({
+            name: 'repository',
+            query: { activityId: this.activity.id }
+          });
+        }
       }, {
         title: 'Preview',
         icon: 'eye',

@@ -30,26 +30,24 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import ActiveUsers from 'components/common/ActiveUsers';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
+import selectActivity from '@/components/repository/common/selectActivity';
 import sortBy from 'lodash/sortBy';
 
 export default {
+  mixins: [selectActivity],
   props: {
     repositoryId: { type: Number, required: true }
   },
-  data() {
-    return {
-      showLoader: true
-    };
-  },
+  data: () => ({ showLoader: true, lastSelectedActivity: null }),
   computed: {
     ...mapGetters('activeUsers', ['getActiveUsers']),
     ...mapGetters(['isAdmin']),
-    ...mapGetters('repository',
-      ['repository', 'activities', 'selectedActivity', 'isRepositoryAdmin']),
+    ...mapGetters('repository', ['repository', 'activities', 'isRepositoryAdmin']),
     tabs() {
+      const query = { activityId: get(this.lastSelectedActivity, 'id') };
       const items = [
-        { name: 'Structure', route: 'repository', icon: 'file-tree' },
-        { name: 'Graph View', route: 'tree-view', icon: 'graph-outline' },
+        { name: 'Structure', route: 'repository', icon: 'file-tree', query },
+        { name: 'Graph View', route: 'tree-view', icon: 'graph-outline', query },
         { name: 'History', route: 'revisions', icon: 'history' },
         { name: 'Settings', route: 'repository-info', icon: 'settings-outline' }
       ];
@@ -59,23 +57,29 @@ export default {
     }
   },
   methods: {
-    ...mapActions('repository', ['initialize']),
+    ...mapActions('repository', ['initialize', 'expandParents']),
     ...mapActions('activeUsers', { setupActivityUsersApi: 'setEndpoint' }),
     ...mapMutations('repository', ['selectActivity'])
   },
+  watch: {
+    selectedActivity(val) {
+      if (val) this.lastSelectedActivity = val;
+    }
+  },
   async created() {
-    const { repositoryId, selectedActivity: activity } = this;
+    const { repositoryId } = this;
     await this.initialize(repositoryId);
     this.setupActivityUsersApi(`/repository/${repositoryId}/active-users`);
-    const isActivitySelected = get(activity, 'repositoryId') === repositoryId;
-    if (!isActivitySelected) {
-      const rootActivities = filter(this.activities, { parentId: null });
-      const activityCid = rootActivities.length
-        ? sortBy(rootActivities, 'position')[0]._cid
-        : null;
-      this.selectActivity(activityCid);
-    }
     this.showLoader = false;
+    if (!this.activities.length) return;
+    if (!this.selectedActivity) {
+      const rootActivities = filter(this.activities, { parentId: null });
+      const activity = rootActivities.length
+        ? sortBy(rootActivities, 'position')[0]
+        : null;
+      this.selectActivity(activity.id);
+    }
+    this.expandParents(this.selectedActivity);
   },
   components: { ActiveUsers }
 };

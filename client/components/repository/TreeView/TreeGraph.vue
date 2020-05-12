@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ grabbing }" class="graph"></div>
+  <div ref="graph" :class="{ grabbing }" class="graph"></div>
 </template>
 
 <script>
@@ -8,6 +8,7 @@ import { hierarchy, tree } from 'd3-hierarchy';
 import clamp from 'lodash/clamp';
 import flatten from 'lodash/flatten';
 import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 import range from 'lodash/range';
 import { zoom } from 'd3-zoom';
 
@@ -41,7 +42,8 @@ export default {
     nodeSize: { type: Object, required: true },
     nodeDiameterRange: { type: Object, required: true },
     zoomRange: { type: Object, default: () => zoomOptions },
-    padding: { type: Number, default: 60 }
+    padding: { type: Number, default: 60 },
+    selectedNodeId: { type: Number, default: null }
   },
   data() {
     return {
@@ -117,23 +119,24 @@ export default {
         .classed('link', true)
         .attr('d', link);
     },
-    renderNodes(data, graph, { padding = 24 } = {}) {
+    renderNodes(data, graph, { padding = 32 } = {}) {
       // Create node group.
       const node = graph.selectAll('.node')
         .data(data).enter().append('g')
         .attr('class', d => `node depth-${d.depth}`)
+        .attr('id', d => `activity${d.data.id}`)
         .attr('transform', d => `translate(${d.x}, ${d.y})`);
 
       // Append label.
       node.append('text')
-        .classed('label', true)
-        .text(d => d.data.name || d.data.id)
+        .classed('label subtitle-2', true)
+        .text(({ data: { shortId, name } }) => name || shortId)
         .style('text-anchor', 'middle')
         .attr('dy', '.35em')
         .attr('y', d => {
           // Calculate text padding.
           if (d.depth === 0) return -30;
-          return d.children ? -25 : 25;
+          return d.children ? -28 : 28;
         });
 
       // Create node wrapper.
@@ -171,19 +174,35 @@ export default {
       const { default: defScale, max: maxScale } = this.zoomRange;
       const scale = clamp(ratio, defScale, maxScale);
       this.zoomHandler.scaleTo(svg, scale);
+    },
+    selectNode(activityId) {
+      const selection = this.$refs.graph.querySelector('.selected');
+      if (selection) selection.classList.remove('selected');
+      const id = `#activity${activityId}`;
+      this.$nextTick(() => {
+        const el = this.$refs.graph.querySelector(id);
+        if (!el) return;
+        el.classList.add('selected');
+      });
     }
   },
   watch: {
     hovered(node) {
       if (!node) return this.$emit('node:focusout');
       if (node.depth > 0) this.$emit('node:focus', node, node.data);
+    },
+    selectedNodeId(val) {
+      if (!val) return;
+      this.selectNode(val);
     }
   },
   mounted() {
     // Re-render chart when data changes.
-    this.$watch('nodes', nodes => {
+    this.$watch('nodes', (val, prevVal) => {
+      if (isEqual(val, prevVal)) return;
       this.renderTree();
     }, { immediate: true });
+    this.$nextTick(() => this.selectNode(this.selectedNodeId));
   }
 };
 
@@ -242,10 +261,10 @@ function rangeToArray(start, end, size) {
 </script>
 
 <style lang="scss">
-$font: 14px $font-family-secondary;
-$text-color: #5a5a5a;
+$font: 0.875rem $font-family-secondary;
+$text-color: #263238;
 $node-color: #b9b9b9;
-$link-color: #ababab;
+$link-color: #b0bec5;
 
 .graph {
   svg {
