@@ -4,11 +4,11 @@
       v-if="showPlaceholder"
       :is-focused="isFocused"
       :is-disabled="isDisabled"
+      :dense="dense"
       name="Image"
       icon="mdi-image-plus"
       active-placeholder="Use toolbar to upload the image"
-      active-icon="mdi-arrow-up"
-      dense />
+      active-icon="mdi-arrow-up" />
     <div v-else :class="{ 'hide-cropper': !showCropper }" class="image-wrapper">
       <cropper
         v-show="showCropper"

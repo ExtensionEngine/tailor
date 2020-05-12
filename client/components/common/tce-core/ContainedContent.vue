@@ -39,8 +39,8 @@ export default {
   },
   computed: {
     bindings() {
-      const { element, isDisabled, isDragged, $attrs: attrs } = this;
-      return { element, isDisabled, isDragged, ...attrs };
+      const { element, isDisabled, isDragged, dense, $attrs: attrs } = this;
+      return { element, isDisabled, isDragged, dense, ...attrs };
     },
     widthClass() {
       const { element, setWidth } = this;

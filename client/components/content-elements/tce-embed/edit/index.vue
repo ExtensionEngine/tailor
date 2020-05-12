@@ -4,11 +4,11 @@
       v-if="showPlaceholder"
       :is-focused="isFocused"
       :is-disabled="isDisabled"
+      :dense="dense"
       name="Embed"
       icon="mdi-iframe"
       active-placeholder="Use toolbar to enter the url"
-      active-icon="mdi-arrow-up"
-      dense />
+      active-icon="mdi-arrow-up" />
     <div v-else>
       <div class="content">
         <div v-show="!isFocused" class="overlay">

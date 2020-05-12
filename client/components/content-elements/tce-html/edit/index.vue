@@ -4,9 +4,9 @@
       v-if="!isFocused && !content && showPlaceholder"
       :is-focused="isFocused"
       :is-disabled="isDisabled"
+      :dense="dense"
       name="Text (deprecated)"
       icon="mdi-text"
-      dense
       class="element-placeholder" />
     <div v-else>
       <quill-editor
