@@ -1,8 +1,6 @@
 <template>
-  <v-sheet class="question-container grey lighten-4 elevation-1 pa-5 mb-4">
-    <span class="subtitle-2 grey--text text--darken-4">
-      {{ title }}
-    </span>
+  <v-sheet class="question-container mb-4 pa-5 grey lighten-4 elevation-1">
+    <span class="subtitle-2 grey--text text--darken-4">Question</span>
     <div :class="['question', { 'question-error': questionError }]">
       <draggable v-model="question" v-bind="dragOptions" class="row">
         <contained-content
@@ -34,7 +32,6 @@ import findIndex from 'lodash/findIndex';
 import pullAt from 'lodash/pullAt';
 import set from 'lodash/set';
 
-const TITLE = 'Question';
 const DRAG_OPTIONS = {
   handle: '.drag-handle',
   scrollSensitivity: 125,
@@ -58,8 +55,7 @@ export default {
       }
     },
     questionError: vm => vm.errors.includes('question'),
-    dragOptions: () => DRAG_OPTIONS,
-    title: () => TITLE
+    dragOptions: () => DRAG_OPTIONS
   },
   methods: {
     addElement(element) {
@@ -100,12 +96,12 @@ export default {
   }
 
   .question {
-    padding: 0.8rem 0.8rem 0;
+    padding: 0.75rem 0.75rem 0;
     font-size: 1.375rem;
     text-align: center;
 
     .add-element {
-      margin-top: 0.4rem;
+      margin-top: 0.375rem;
     }
 
     .invisible {

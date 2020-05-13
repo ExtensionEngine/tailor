@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="px-1">
     <div>
-      <span class="subtitle-2">{{ title }}</span>
+      <span class="subtitle-2">Feedback</span>
       <v-btn
         @click="toggleExpand"
         text small
@@ -15,7 +15,7 @@
           <v-col>
             <div class="feedback-info mb-4">
               <span class="answer-type subtitle-2">{{ answerType }} {{ i + 1 }}:</span>
-              <span>{{ answer || noAnswer }}</span>
+              <span>{{ answer || 'Answer not added.' }}</span>
             </div>
             <quill-editor
               v-if="isEditing"
@@ -26,7 +26,7 @@
             <div v-else class="feedback-preview">
               <!-- eslint-disable-next-line vue/no-v-html -->
               <div v-if="feedback[i]" v-html="feedback[i]"></div>
-              <i v-else>{{ noFeedback }}</i>
+              <i v-else>Feedback not added.</i>
             </div>
           </v-col>
         </v-row>
@@ -40,9 +40,6 @@ import isArray from 'lodash/isArray';
 import { quillEditor as QuillEditor } from 'vue-quill-editor';
 import some from 'lodash/some';
 
-const TITLE = 'Feedback';
-const NO_ANSWER = 'Answer not added.';
-const NO_FEEDBACK = 'Feedback not added.';
 const QUILL_OPTIONS = {
   modules: {
     toolbar: [
@@ -71,9 +68,6 @@ export default {
     isExpanded: some(vm.feedback)
   }),
   computed: {
-    title: () => TITLE,
-    noAnswer: () => NO_ANSWER,
-    noFeedback: () => NO_FEEDBACK,
     quillOptions: () => QUILL_OPTIONS,
     answerType: vm => getAnswerType(vm.isGraded),
     buttonLabel: vm => getButtonLabel(vm.isExpanded),
