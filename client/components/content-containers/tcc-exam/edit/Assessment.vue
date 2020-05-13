@@ -14,7 +14,8 @@
             :items="objectives"
             item-text="data.name"
             :disabled="!isEditing"
-            :placeholder="objectiveLabel" />
+            :placeholder="objectiveLabel"
+            return-object />
         </v-col>
       </v-row>
     </template>
