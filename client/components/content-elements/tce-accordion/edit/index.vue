@@ -13,6 +13,7 @@
       <element-placeholder
         v-if="!hasItems"
         :is-focused="isFocused"
+        :is-disabled="isDisabled"
         name="Accordion"
         icon="mdi-view-list"
         active-placeholder="Click the button below to create the first item"

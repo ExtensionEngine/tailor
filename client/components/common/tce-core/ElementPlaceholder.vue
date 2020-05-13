@@ -8,7 +8,7 @@
       </v-icon>
     </v-avatar>
     <div class="headline my-4">{{ name }} component</div>
-    <div class="subtitle-1">
+    <div v-if="!isDisabled" class="subtitle-1">
       <template v-if="!isFocused">{{ placeholder }}</template>
       <template v-else>
         <span>{{ activePlaceholder }}</span>
@@ -33,6 +33,7 @@ export default {
     activePlaceholder: { type: String, default: 'Use toolbar to edit' },
     activeIcon: { type: String, default: null },
     activeColor: { type: String, default: '#fff' },
+    isDisabled: { type: Boolean, default: false },
     isFocused: { type: Boolean, default: false }
   }
 };
