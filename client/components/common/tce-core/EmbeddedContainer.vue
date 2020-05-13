@@ -4,7 +4,7 @@
     @update="reorderItem"
     :elements="embeds"
     :supported-types="types"
-    :enable-add="enableAdd">
+    :enable-add="!isDisabled && enableAdd">
     <template v-slot:list-item="{ element, isDragged }">
       <contained-content
         @save="save(element, 'data', $event)"
@@ -12,6 +12,7 @@
         @delete="$emit('delete', element)"
         :element="element"
         :is-dragged="isDragged"
+        :is-disabled="isDisabled"
         v-bind="$attrs" />
     </template>
   </element-list>
@@ -31,6 +32,7 @@ export default {
   props: {
     container: { type: Object, required: true },
     types: { type: Array, default: () => ['JODIT_HTML', 'IMAGE', 'HTML', 'VIDEO'] },
+    isDisabled: { type: Boolean, default: false },
     enableAdd: { type: Boolean, default: true }
   },
   computed: {
