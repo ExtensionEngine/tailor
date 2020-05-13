@@ -11,7 +11,8 @@
     <embedded-container
       @save="({ embeds }) => save(item, embeds)"
       @delete="deleteEmbed($event)"
-      :container="{ embeds }" />
+      :container="{ embeds }"
+      :is-disabled="isDisabled" />
   </v-carousel-item>
 </template>
 
@@ -25,7 +26,8 @@ export default {
   name: 'carousel-item',
   props: {
     item: { type: Object, required: true },
-    embeds: { type: Object, default: () => ({}) }
+    embeds: { type: Object, default: () => ({}) },
+    isDisabled: { type: Boolean, default: false }
   },
   computed: {
     hasElements: vm => !isEmpty(vm.embeds)
