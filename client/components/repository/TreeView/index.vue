@@ -54,7 +54,9 @@ export default {
     graphData() {
       // TODO: Make sure repository is always available!
       if (!this.outlineActivities) return {};
-      const repositoryTree = tree(this.outlineActivities, this.structure);
+      // Render graph only for persisted activities
+      const savedActivities = this.outlineActivities.filter(it => it.id);
+      const repositoryTree = tree(savedActivities, this.structure);
       const repositoryColor = get(this.repository, 'data.color', '#FFFFFF');
       return {
         ...this.repository,
