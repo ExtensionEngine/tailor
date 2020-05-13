@@ -5,9 +5,9 @@
       v-for="(answer, idx) in answers" :key="idx"
       @change="updateAnswer($event, idx)"
       :value="answer"
-      :color="color"
-      :disabled="disabled"
       :error="answerError(idx)"
+      :disabled="disabled"
+      :color="color"
       :placeholder="placeholder"
       filled>
       <template slot="prepend-inner">
@@ -15,11 +15,12 @@
           v-if="isGraded"
           v-model="correct"
           :value="idx"
-          :color="color"
-          :disabled="disabled"
           :error="correctError"
-          hide-details class="pt-0 mt-0" />
-        <v-avatar v-else size="24" :color="color" class="subtitle-2 mr-2">
+          :disabled="disabled"
+          :color="color"
+          hide-details
+          class="pt-0 mt-0" />
+        <v-avatar v-else :color="color" size="24" class="subtitle-2 mr-2">
           {{ idx + 1 }}
         </v-avatar>
       </template>
@@ -34,7 +35,8 @@
         v-if="isEditing"
         @click="addAnswer"
         :color="color"
-        text class="px-2">
+        text
+        class="px-2">
         <v-icon>mdi-plus</v-icon>
         {{ addButtonLabel }}
       </v-btn>
@@ -48,9 +50,9 @@ import { defaults } from 'utils/assessment';
 import range from 'lodash/range';
 import set from 'lodash/set';
 
-const MIN_TWO_ANSWERS = {
-  text: 'Please make at least two answers available!',
-  type: 'error'
+const MIN_ANSWER_ALERT = {
+  type: 'error',
+  text: 'Please make at least two answers available!'
 };
 
 const getTitle = isGraded => isGraded ? 'Select correct answer(s)' : 'Options';
@@ -72,15 +74,15 @@ export default {
     disabled: vm => !vm.isEditing,
     answers: vm => vm.assessment.answers,
     feedback: vm => vm.assessment.feedback,
-    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
+    color: vm => vm.disabled ? 'grey' : 'grey darken-3',
     correctError: vm => vm.errors.includes('correct'),
-    addButtonLabel: vm => getButtonLabel(vm.isGraded),
+    title: vm => getTitle(vm.isGraded),
     placeholder: vm => getPlaceholder(vm.isGraded),
-    title: vm => getTitle(vm.isGraded)
+    addButtonLabel: vm => getButtonLabel(vm.isGraded)
   },
   methods: {
     addAnswer() {
-      this.update({ answers: [...cloneDeep(this.answers), ''] });
+      this.update({ answers: [...this.answers, ''] });
     },
     updateAnswer(value, index) {
       this.update({ answers: set(cloneDeep(this.answers), index, value) });
@@ -98,7 +100,6 @@ export default {
         correct.forEach((it, i) => {
           if (it >= answerIndex) correct[i] = it - 1;
         });
-        this.correct = correct;
       }
 
       if (feedback) {
@@ -111,7 +112,7 @@ export default {
       this.update({ answers, correct, feedback });
     },
     validate() {
-      this.$emit('alert', this.answers.length < 2 ? MIN_TWO_ANSWERS : {});
+      this.$emit('alert', this.answers.length < 2 ? MIN_ANSWER_ALERT : {});
     },
     answerError(index) {
       return this.errors.includes(`answers[${index}]`);

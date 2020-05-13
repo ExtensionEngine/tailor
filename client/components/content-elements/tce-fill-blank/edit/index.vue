@@ -1,40 +1,39 @@
 <template>
   <div :class="{ 'pb-4': !hasAnswers }">
     <div class="d-flex justify-space-between subtitle-2">
-      <span v-if="isGraded">{{ title }}</span>
+      <span v-if="isGraded">Answers</span>
       <span v-else-if="isEditing">{{ blankCountInfo }}</span>
-      <span v-if="isEditing">{{ info }}</span>
+      <span v-if="isEditing">
+        Type "@blank" above when new blank is needed.
+      </span>
     </div>
     <draggable v-model="correct" handle=".drag-handle">
       <v-card
         v-for="(group, i) in correct" :key="i"
-        class="transparent elevation-0 pt-2 mt-2">
+        class="mt-2 pt-2 transparent elevation-0">
         <div class="mb-4">
           <span v-if="isEditing" class="drag-handle">
-            <span class="mdi mdi-drag-vertical"></span>
+            <v-icon>mdi-drag-vertical</v-icon>
           </span>
-          <v-chip :color="color" text-color="white" label small>
-            {{ i + 1 }}
-          </v-chip>
+          <v-chip :color="color" dark label small>{{ i + 1 }}</v-chip>
           <v-btn
             v-if="isEditing && !isSynced"
             @click="removeAnswerGroup(i)"
-            text
-            small
-            color="error"
+            color="secondary darken-1"
+            text small
             class="float-right px-2">
-            <v-icon small>mdi-delete</v-icon>
-            {{ deleteButtonLabel }}
+            <v-icon small class="mr-2">mdi-delete</v-icon>
+            Delete answer group
           </v-btn>
         </div>
         <v-text-field
           v-for="(answer, j) in group" :key="`${i}.${j}`"
           @change="updateAnswer(i, j, $event)"
           :value="answer"
-          :color="color"
-          :disabled="disabled"
           :error="answerError(i, j)"
-          :placeholder="placeholder"
+          :disabled="disabled"
+          :color="color"
+          placeholder="Answer..."
           filled>
           <template slot="append">
             <v-btn
@@ -50,9 +49,10 @@
             v-if="isEditing"
             @click="addAnswer(i)"
             color="color"
-            text class="px-2">
-            <v-icon small>mdi-plus</v-icon>
-            {{ addButtonLabel }}
+            text
+            class="px-2">
+            <v-icon small class="mr-1">mdi-plus</v-icon>
+            Add answer
           </v-btn>
         </div>
       </v-card>
@@ -77,19 +77,11 @@ const appChannel = EventBus.channel('app');
 const TEXT_TYPES = ['JODIT_HTML', 'HTML'];
 const BLANK = /(@blank)/g;
 
-const TITLE = 'Answers';
-const PLACEHOLDER = 'Answer...';
-const ADD_BUTTON_LABEL = 'Add answer';
-const DELETE_BUTTON_LABEL = 'Delete answer group';
-const INFO = 'Type "@blank" above when new blank is needed.';
-const OUT_OF_SYNC = {
+const OUT_OF_SYNC_ERR = {
   type: 'error',
-  text: `Question and blanks are out of sync! Please delete
-    unnecessary answers or add blanks in the question!`
-};
-const MODAL_OPTIONS = {
-  title: 'Delete answer group',
-  message: 'Are you sure you want to delete this answer group?'
+  text: `
+    Question and blanks are out of sync!
+    Please delete unnecessary answers or add blanks in the question!`
 };
 
 const getBlankCount = question => {
@@ -120,12 +112,7 @@ export default {
     blankCount: vm => getBlankCount(vm.question),
     blankCountInfo: vm => getCountInfo(vm.blankCount),
     isSynced: vm => vm.blankCount === size(vm.correct),
-    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
-    deleteButtonLabel: () => DELETE_BUTTON_LABEL,
-    addButtonLabel: () => ADD_BUTTON_LABEL,
-    placeholder: () => PLACEHOLDER,
-    title: () => TITLE,
-    info: () => INFO
+    color: vm => vm.disabled ? 'grey' : 'grey darken-3'
   },
   methods: {
     addAnswer(groupIndex) {
@@ -145,7 +132,8 @@ export default {
     },
     removeAnswerGroup(groupIndex) {
       appChannel.emit('showConfirmationModal', {
-        ...MODAL_OPTIONS,
+        title: 'Delete answer group',
+        message: 'Are you sure you want to delete this answer group?',
         action: () => {
           const correct = cloneDeep(this.correct);
           pullAt(correct, groupIndex);
@@ -161,7 +149,7 @@ export default {
       this.update({ correct });
     },
     validate() {
-      this.$emit('alert', this.isSynced ? {} : OUT_OF_SYNC);
+      this.$emit('alert', this.isSynced ? {} : OUT_OF_SYNC_ERR);
     },
     update(value) {
       this.$emit('update', value);

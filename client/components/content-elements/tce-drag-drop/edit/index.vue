@@ -1,41 +1,37 @@
 <template>
   <div>
-    <div class="subtitle-2">{{ title }}</div>
+    <div class="subtitle-2">Answer groups</div>
     <v-card
       v-for="(groupName, groupKey, i) in groups" :key="groupKey"
-      class="transparent elevation-0 pt-4">
+      class="pt-4 transparent elevation-0">
       <div class="mb-4">
-        <v-chip :color="color" text-color="white" label small>
-          {{ i + 1 }}
-        </v-chip>
+        <v-chip :color="color" label dark small>{{ i + 1 }}</v-chip>
         <v-btn
           v-if="isEditing && groupCount > 2"
           @click="removeGroup(groupKey)"
           :color="color"
-          text
-          small
-          class="float-right px-2">
-          <v-icon small>mdi-delete</v-icon>
-          {{ deleteGroupLabel }}
+          text small
+          class="ml-1 px-2">
+          Remove answer group
         </v-btn>
       </div>
       <v-text-field
         @change="updateGroupName(groupKey, $event)"
         :value="groupName"
-        :label="groupLabel"
-        :disabled="disabled"
         :error="hasError(`groups${groupKey}`)"
+        :disabled="disabled"
         :color="color"
+        label="Group name"
         filled />
       <v-text-field
         v-for="(answer, answerKey) in getAnswers(groupKey)"
         :key="answerKey"
         @change="updateAnswer(answerKey, $event)"
         :value="answer"
-        :disabled="disabled"
-        :placeholder="answerPlaceholder"
         :error="hasError(`answers${answerKey}`)"
+        :disabled="disabled"
         :color="color"
+        placeholder="Answer..."
         filled>
         <template slot="append">
           <v-btn
@@ -46,13 +42,14 @@
           </v-btn>
         </template>
       </v-text-field>
-      <div v-if="isEditing" class="d-flex justify-end mb-4">
+      <div v-if="isEditing" class="mb-4 d-flex justify-end">
         <v-btn
           @click="addAnswer(groupKey)"
           :color="color"
-          text class="px-2">
-          <v-icon small>mdi-plus</v-icon>
-          {{ addAnswerLabel }}
+          text
+          class="px-2">
+          <v-icon dense class="mr-1">mdi-plus</v-icon>
+          Add answer
         </v-btn>
       </div>
     </v-card>
@@ -61,9 +58,10 @@
         v-if="isEditing"
         @click="addGroup"
         :color="color"
-        text class="px-2">
-        <v-icon small>mdi-plus</v-icon>
-        {{ addGroupLabel }}
+        text
+        class="px-2">
+        <v-icon dense class="mr-1">mdi-plus</v-icon>
+        Add answer group
       </v-btn>
     </div>
   </div>
@@ -81,17 +79,6 @@ import size from 'lodash/size';
 
 const appChannel = EventBus.channel('app');
 
-const TITLE = 'Answer groups';
-const GROUP_LABEL = 'Group name...';
-const ANSWER_PLACEHOLDER = 'Answer...';
-const ADD_ANSWER_LABEL = 'Add answer';
-const ADD_GROUP_LABEL = 'Add answer group';
-const DELETE_GROUP_LABEL = 'Delete answer group';
-const MODAL_OPTIONS = {
-  title: 'Delete answer group',
-  message: 'Are you sure you want to delete this answer group?'
-};
-
 export default {
   props: {
     assessment: { type: Object, default: defaults.DD },
@@ -104,13 +91,7 @@ export default {
     answers: vm => vm.assessment.answers,
     groups: vm => vm.assessment.groups,
     groupCount: vm => size(vm.groups),
-    color: vm => vm.disabled ? 'grey' : 'blue-grey darken-3',
-    title: () => TITLE,
-    groupLabel: () => GROUP_LABEL,
-    answerPlaceholder: () => ANSWER_PLACEHOLDER,
-    addAnswerLabel: () => ADD_ANSWER_LABEL,
-    addGroupLabel: () => ADD_GROUP_LABEL,
-    deleteGroupLabel: () => DELETE_GROUP_LABEL
+    color: vm => vm.disabled ? 'grey' : 'grey darken-3'
   },
   methods: {
     updateGroupName(groupKey, value) {
@@ -158,7 +139,8 @@ export default {
     },
     removeGroup(groupKey) {
       appChannel.emit('showConfirmationModal', {
-        ...MODAL_OPTIONS,
+        title: 'Delete answer group',
+        message: 'Are you sure you want to delete this answer group?',
         action: () => {
           const groups = cloneDeep(this.groups);
           const answers = cloneDeep(this.answers);

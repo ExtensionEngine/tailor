@@ -6,9 +6,9 @@
         v-for="(answer, index) in [true, false]"
         :key="index"
         :value="answer"
-        :disabled="disabled"
+        :disabled="answerDisabled"
         :label="getLabel(answer)"
-        :color="disabled ? 'grey' : 'blue-grey darken-3'"
+        :color="answerDisabled ? 'grey' : 'blue-grey darken-3'"
         :off-icon="isGraded ? 'mdi-circle-outline' : 'mdi-circle'"
         class="answer pl-3" />
     </v-radio-group>
@@ -16,11 +16,11 @@
 </template>
 
 <script>
+import { capital } from 'to-case';
 import { defaults } from 'utils/assessment';
-import { sentence } from 'to-case';
 
 const getTitle = isGraded => isGraded ? 'Select correct answer' : 'Options';
-const getLabel = answer => sentence(answer.toString());
+const getLabel = answer => capital(answer.toString());
 
 export default {
   props: {
@@ -35,7 +35,7 @@ export default {
       set(correct) { this.$emit('update', { correct }); }
     },
     title: vm => getTitle(vm.isGraded),
-    disabled: vm => !vm.isEditing || !vm.isGraded,
+    answerDisabled: vm => !vm.isEditing || !vm.isGraded,
     correctError: vm => vm.errors.includes('correct')
   },
   methods: { getLabel }

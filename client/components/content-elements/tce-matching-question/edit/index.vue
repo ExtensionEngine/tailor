@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div class="subtitle-2 pb-2">{{ title }}</div>
+    <div class="subtitle-2 pb-2">Answers</div>
     <v-row>
       <v-col cols="4" offset="1">
         <v-text-field
           @change="updateHeading('premise', $event)"
           :value="headings.premise"
-          :disabled="disabled"
-          :placeholder="premisePlaceholders[0]"
           :error="errors.includes('headings.premise')"
+          :disabled="disabled"
+          placeholder="Premise heading..."
           color="blue-grey darken-3"
           filled />
       </v-col>
@@ -16,9 +16,9 @@
         <v-text-field
           @change="updateHeading('response', $event)"
           :value="headings.response"
-          :disabled="disabled"
-          :placeholder="responsePlaceholders[0]"
           :error="errors.includes('headings.response')"
+          :disabled="disabled"
+          placeholder="Response heading..."
           color="blue-grey darken-3"
           filled />
       </v-col>
@@ -28,9 +28,9 @@
         <v-text-field
           @change="updatePremiseContent(premiseKey, $event)"
           :value="getPremiseContent(premiseKey)"
-          :disabled="disabled"
-          :placeholder="premisePlaceholders[1]"
           :error="hasError(premiseKey, 'premises')"
+          :disabled="disabled"
+          placeholder="Premise value...'"
           color="blue-grey darken-3"
           filled />
       </v-col>
@@ -41,9 +41,9 @@
         <v-text-field
           @change="updateResponseContent(responseKey, $event)"
           :value="getResponseContent(responseKey)"
-          :disabled="disabled"
-          :placeholder="responsePlaceholders[1]"
           :error="hasError(responseKey, 'responses')"
+          :disabled="disabled"
+          placeholder="Response value..."
           color="blue-grey darken-3"
           filled />
       </v-col>
@@ -52,7 +52,8 @@
           v-show="isEditing && pairsCount > 2"
           @click="removeItems(premiseKey, responseKey)"
           :disabled="disabled"
-          small icon class="remove">
+          small icon
+          class="remove">
           <v-icon small>mdi-close</v-icon>
         </v-btn>
       </v-col>
@@ -61,10 +62,11 @@
       <v-btn
         v-if="isEditing && pairsCount < 10"
         @click="addItems"
-        color="blue-grey darken-3"
-        text class="px-2">
-        <v-icon>mdi-plus</v-icon>
-        {{ addButtonLabel }}
+        color="blue-grey darken-4"
+        text
+        class="px-2">
+        <v-icon class="mr-2">mdi-plus</v-icon>
+        Add pair
       </v-btn>
     </div>
   </div>
@@ -80,11 +82,6 @@ import set from 'lodash/set';
 import shuffle from 'lodash/shuffle';
 import size from 'lodash/size';
 
-const TITLE = 'Answers';
-const PREMISE_PLACEHOLDERS = ['Premise heading...', 'Premise value...'];
-const RESPONSE_PLACEHOLDERS = ['Response heading...', 'Response value...'];
-const ADD_BUTTON_LABEL = 'Add correct pair';
-
 export default {
   props: {
     assessment: { type: Object, default: defaults.MQ },
@@ -97,15 +94,11 @@ export default {
     headings: vm => vm.assessment.headings,
     premises: vm => vm.assessment.premises,
     responses: vm => vm.assessment.responses,
-    pairsCount: vm => size(vm.correct),
-    premisePlaceholders: () => PREMISE_PLACEHOLDERS,
-    responsePlaceholders: () => RESPONSE_PLACEHOLDERS,
-    addButtonLabel: () => ADD_BUTTON_LABEL,
-    title: vm => TITLE
+    pairsCount: vm => size(vm.correct)
   },
   methods: {
     updateHeading(key, value) {
-      this.update({ headings: set(cloneDeep(this.headings), key, value) });
+      this.update({ headings: set({ ...this.headings }, key, value) });
     },
     getPremiseContent(key) {
       return this.getPremiseItem(key).value;

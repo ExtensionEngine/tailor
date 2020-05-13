@@ -4,10 +4,10 @@
     <v-textarea
       @change="correct = $event"
       :value="correct"
-      :disabled="disabled"
+      :disabled="answerDisabled"
       :error="correctError"
       color="blue-grey darken-3"
-      filled clearable />
+      filled clearable auto-grow />
   </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
       set(correct) { this.$emit('update', { correct }); }
     },
     title: vm => getTitle(vm.isGraded),
-    disabled: vm => !vm.isEditing || !vm.isGraded,
+    answerDisabled: vm => !vm.isEditing || !vm.isGraded,
     correctError: vm => vm.errors.includes('correct')
   }
 };
