@@ -50,7 +50,7 @@
         @save="({ embeds }) => save(item, embeds)"
         @delete="deleteEmbed($event)"
         :container="{ embeds }"
-        :enable-add="!isDisabled" />
+        :is-disabled="isDisabled" />
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
