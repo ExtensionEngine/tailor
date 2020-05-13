@@ -8,32 +8,34 @@
         @keyup.space.prevent
         hide-details filled dense />
       <div v-else class="pl-3">{{ item.header }}</div>
-      <div v-if="isEditingHeader" class="actions">
-        <v-btn @click.stop="saveHeader" color="green darken-2" icon>
-          <v-icon>mdi-check</v-icon>
-        </v-btn>
-        <v-btn @click.stop="isEditingHeader = false" icon>
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </div>
-      <div v-else class="actions">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <v-btn v-on="on" @click.stop="editHeader" icon>
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-          </template>
-          <span>Edit heading</span>
-        </v-tooltip>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <v-btn v-on="on" @click.stop="deleteItem" icon>
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </template>
-          <span>Delete item</span>
-        </v-tooltip>
-      </div>
+      <template v-if="!isDisabled">
+        <div v-if="isEditingHeader" class="actions">
+          <v-btn @click.stop="saveHeader" color="green darken-2" icon>
+            <v-icon>mdi-check</v-icon>
+          </v-btn>
+          <v-btn @click.stop="isEditingHeader = false" icon>
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </div>
+        <div v-else class="actions">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" @click.stop="editHeader" icon>
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+            </template>
+            <span>Edit heading</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" @click.stop="deleteItem" icon>
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+            <span>Delete item</span>
+          </v-tooltip>
+        </div>
+      </template>
     </v-expansion-panel-header>
     <v-expansion-panel-content color="blue-grey lighten-5">
       <v-alert
@@ -47,7 +49,8 @@
       <embedded-container
         @save="({ embeds }) => save(item, embeds)"
         @delete="deleteEmbed($event)"
-        :container="{ embeds }" />
+        :container="{ embeds }"
+        :enable-add="!isDisabled" />
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
@@ -65,7 +68,8 @@ export default {
   name: 'accordion-item',
   props: {
     item: { type: Object, required: true },
-    embeds: { type: Object, default: () => ({}) }
+    embeds: { type: Object, default: () => ({}) },
+    isDisabled: { type: Boolean, default: false }
   },
   data() {
     return {

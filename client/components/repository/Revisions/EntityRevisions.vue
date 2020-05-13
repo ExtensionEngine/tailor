@@ -5,7 +5,7 @@
         <content-element
           v-if="selectedRevision.resolved"
           :element="selectedRevision.state"
-          :disabled="true" />
+          is-disabled />
       </div>
       <entity-sidebar
         v-show="expanded"
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import ContentElement from 'components/editor/ContentElement';
+import ContentElement from 'tce-core/ContentElement';
 import contentElementApi from '@/api/contentElement';
 import EntitySidebar from './EntitySidebar';
 import first from 'lodash/first';

@@ -12,7 +12,8 @@
       v-bind="$attrs"
       :element="element"
       :is-focused="isFocused"
-      :is-dragged="isDragged" />
+      :is-dragged="isDragged"
+      :is-disabled="isDisabled" />
   </div>
 </template>
 

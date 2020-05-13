@@ -24,11 +24,12 @@
           @save="saveItem"
           @delete="deleteItem"
           :item="it"
-          :embeds="embedsByItem[it.id]" />
+          :embeds="embedsByItem[it.id]"
+          :is-disabled="isDisabled" />
       </template>
     </v-expansion-panels>
     <v-btn
-      v-if="hasItems || isFocused"
+      v-if="!isDisabled && (hasItems || isFocused)"
       @click="add"
       :class="{ 'mt-0': !hasItems && isFocused }"
       color="blue-grey darken-3"
@@ -56,7 +57,8 @@ export default {
   inject: ['$elementBus'],
   props: {
     element: { type: Object, required: true },
-    isFocused: { type: Boolean, required: true }
+    isFocused: { type: Boolean, required: true },
+    isDisabled: { type: Boolean, default: false }
   },
   computed: {
     items: vm => get(vm.element, 'data.items', {}),
