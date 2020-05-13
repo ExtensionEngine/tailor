@@ -23,11 +23,7 @@ export default {
     vertical: { type: Boolean, default: false },
     tooltipRight: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      activeUsers: []
-    };
-  },
+  data: () => ({ activeUsers: [] }),
   methods: {
     setActiveUsers(users) {
       this.activeUsers = users;
