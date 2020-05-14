@@ -47,6 +47,7 @@
         {{ alert.text }}
       </v-alert>
       <controls
+        v-if="!isDisabled"
         @edit="edit"
         @save="save"
         @cancel="cancel"
@@ -80,7 +81,8 @@ export default {
   name: 'tce-question-container',
   inject: ['$teRegistry'],
   props: {
-    element: { type: Object, required: true }
+    element: { type: Object, required: true },
+    isDisabled: { type: Boolean, default: false }
   },
   data: vm => ({
     isEditing: !vm.element.id,
